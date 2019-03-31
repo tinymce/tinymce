@@ -7,7 +7,7 @@
 
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const getSelectionStartFromSelector = (selector: string) => (editor: Editor) => Option.from(editor.dom.getParent(editor.selection.getStart(), selector)).map(Element.fromDom);
 

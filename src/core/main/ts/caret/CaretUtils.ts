@@ -5,16 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node, Range } from '@ephox/dom-globals';
+import { Option, Fun } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 import TreeWalker from '../api/dom/TreeWalker';
 import NodeType from '../dom/NodeType';
 import * as CaretContainer from './CaretContainer';
 import * as CaretCandidate from './CaretCandidate';
-import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
-import { Option, Fun } from '@ephox/katamari';
-import { HDirection } from 'tinymce/core/caret/CaretWalker';
-import { isFakeCaretTarget } from 'tinymce/core/caret/FakeCaret';
-import { Node, Range } from '@ephox/dom-globals';
-import { Element } from '@ephox/sugar';
+import { CaretPosition } from './CaretPosition';
+import { HDirection } from './CaretWalker';
+import { isFakeCaretTarget } from './FakeCaret';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;

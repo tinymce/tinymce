@@ -8,7 +8,7 @@
 import Tools from './Tools';
 
 /**
- * This utilitiy class is used for easier inheritance.
+ * This utility class is used for easier inheritance.
  *
  * Features:
  * * Exposed super functions: this._super();
@@ -23,23 +23,46 @@ const each = Tools.each, extend = Tools.extend;
 
 let extendClass, initializing;
 
-const Class: any = function () {
+interface Prop {
+  Mixins?: any;
+  Methods?: any;
+  Properties?: any;
+  Statics?: any;
+  Defaults?: any;
+}
+
+interface Class {
+  prototype: Class;
+
+  extend (prop: Prop): ExtendedClass;
+}
+
+export interface ExtendedClass extends Class {
+  constructor: ExtendedClass;
+
+  init? (...args: any[]): void;
+
+  // TODO See if we can type this to allow adding the props dynamically
+  [key: string]: any;
+}
+
+const Class: Class = function () {
 };
 
 // Provides classical inheritance, based on code made by John Resig
-Class.extend = extendClass = function (prop) {
+Class.extend = extendClass = function (prop: Prop): ExtendedClass {
   const self = this;
   const _super = self.prototype;
   let prototype, name, member;
 
   // The dummy class constructor
-  const Class: any = function () {
+  const Class = function () {
     let i, mixins, mixin;
     const self = this;
 
     // All construction is actually done in the init method
     if (!initializing) {
-      // Run class constuctor
+      // Run class constructor
       if (self.init) {
         self.init.apply(self, arguments);
       }
@@ -159,7 +182,7 @@ Class.extend = extendClass = function (prop) {
   // Enforce the constructor to be what we expect
   Class.constructor = Class;
 
-  // And make this class extendible
+  // And make this class extendable
   Class.extend = extendClass;
 
   return Class;

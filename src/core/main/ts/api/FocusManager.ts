@@ -17,6 +17,10 @@ import { Element } from '@ephox/dom-globals';
  * @class tinymce.FocusManager
  */
 
+interface FocusManager {
+  isEditorUIElement: (elm: Element) => boolean;
+}
+
 /**
  * Returns true if the specified element is part of the UI for example an button or text input.
  *
@@ -30,6 +34,8 @@ const isEditorUIElement = function (elm: Element) {
   return elm.className.toString().indexOf('tox-') !== -1 || elm.className.toString().indexOf('mce-') !== -1;
 };
 
-export default {
+const FocusManager: FocusManager = {
   isEditorUIElement
 };
+
+export default FocusManager;

@@ -1,5 +1,6 @@
 import { Chain, Pipeline, UiFinder, Step, NamedChain, GeneralSteps, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Types } from '@ephox/bridge';
 import { Body, Element, Attr } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
@@ -33,7 +34,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
       `Dialog should have "aria-labelledby" for config "${JSON.stringify(params)}"`,
       GeneralSteps.sequence([
         Step.sync(() => {
-            const dialogSpec = {
+            const dialogSpec: Types.Dialog.DialogApi<{}> = {
               title: 'Silver Test Inline (Toolbar) Dialog',
               body: {
                 type: 'panel',

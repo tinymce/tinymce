@@ -1,5 +1,5 @@
 import { Assertions } from '@ephox/agar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Settings from 'tinymce/plugins/toc/api/Settings';
 import { UnitTest } from '@ephox/bedrock';

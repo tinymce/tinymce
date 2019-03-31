@@ -10,13 +10,14 @@ import { Cell, Fun } from '@ephox/katamari';
 import ApplyFormat from '../fmt/ApplyFormat';
 import * as CaretFormat from '../fmt/CaretFormat';
 import * as FormatChanged from '../fmt/FormatChanged';
-import FormatRegistry from '../fmt/FormatRegistry';
+import { FormatRegistry } from '../fmt/FormatRegistry';
 import MatchFormat from '../fmt/MatchFormat';
 import Preview from '../fmt/Preview';
 import RemoveFormat from '../fmt/RemoveFormat';
 import ToggleFormat from '../fmt/ToggleFormat';
 import FormatShortcuts from '../keyboard/FormatShortcuts';
-import { Format, Formats, FormatVars } from './fmt/Format';
+import { Format, FormatVars } from './fmt/Format';
+import Editor from './Editor';
 
 /**
  * Text formatter engine class. This class is used to apply formats like bold, italic, font size
@@ -41,23 +42,19 @@ interface RangeLikeObject {
   endOffset: number;
 }
 
-export interface Formatter {
-  get: (name?: string) => Formats | Format[];
-  has: (name: string) => boolean;
-  register: (name: string | Formats, format?: Format[] | Format) => void;
-  unregister: (name: string) => Formats;
-  apply: (name: string, vars?: FormatVars, node?: Node | RangeLikeObject) => void;
-  remove: (name: string, vars?: FormatVars, node?: Node | RangeLikeObject, similar?: boolean) => void;
-  toggle: (name: string, vars?: FormatVars, node?: Node) => void;
-  match: (name: string, vars?: FormatVars, node?: Node) => boolean;
-  matchAll: (names: string[], vars?: FormatVars) => Format[];
-  matchNode: (node: Node, name: string, vars?: FormatVars, similar?: boolean) => boolean;
-  canApply: (name: string) => boolean;
-  formatChanged: (names: string, callback: FormatChanged.FormatChangeCallback, similar?: boolean) => { unbind: () => void };
-  getCssText: (format: string | Format) => string;
+interface Formatter extends FormatRegistry {
+  apply (name: string, vars?: FormatVars, node?: Node | RangeLikeObject): void;
+  remove (name: string, vars?: FormatVars, node?: Node | RangeLikeObject, similar?: boolean): void;
+  toggle (name: string, vars?: FormatVars, node?: Node): void;
+  match (name: string, vars?: FormatVars, node?: Node): boolean;
+  matchAll (names: string[], vars?: FormatVars): Format[];
+  matchNode (node: Node, name: string, vars?: FormatVars, similar?: boolean): boolean;
+  canApply (name: string): boolean;
+  formatChanged (names: string, callback: FormatChanged.FormatChangeCallback, similar?: boolean): { unbind: () => void };
+  getCssText (format: string | Format): string;
 }
 
-export default function (editor) {
+const Formatter = function (editor: Editor): Formatter {
   const formats = FormatRegistry(editor);
   const formatChangeState = Cell(null);
 
@@ -196,4 +193,6 @@ export default function (editor) {
      */
     getCssText: Fun.curry(Preview.getCssText, editor)
   };
-}
+};
+
+export default Formatter;

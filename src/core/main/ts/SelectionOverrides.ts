@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Range, Element, Node, HTMLElement, MouseEvent } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Remove, Element as SugarElement, Attr, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import DragDropOverrides from './DragDropOverrides';
@@ -21,9 +22,8 @@ import CefFocus from './focus/CefFocus';
 import * as CefUtils from './keyboard/CefUtils';
 import VK from './api/util/VK';
 import { FakeCaret, isFakeCaretTarget } from './caret/FakeCaret';
-import { Editor } from 'tinymce/core/api/Editor';
-import EditorFocus from 'tinymce/core/focus/EditorFocus';
-import { Range, Element, Node, HTMLElement, MouseEvent } from '@ephox/dom-globals';
+import Editor from './api/Editor';
+import EditorFocus from './focus/EditorFocus';
 import { isBeforeContentEditableFalse, isAfterContentEditableFalse } from './caret/CaretPositionPredicates';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
@@ -155,7 +155,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
 
     editor.on('ResizeWindow FullscreenStateChanged', () => fakeCaret.reposition());
 
-    const handleTouchSelect = function (editor) {
+    const handleTouchSelect = function (editor: Editor) {
       let moved = false;
 
       editor.on('touchstart', function () {
@@ -272,7 +272,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
       }
     });
 
-    editor.on('getSelectionRange', function (e) {
+    editor.on('GetSelectionRange', function (e) {
       let rng = e.range;
 
       if (selectedContentEditableNode) {
@@ -287,7 +287,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
       }
     });
 
-    editor.on('setSelectionRange', function (e) {
+    editor.on('SetSelectionRange', function (e) {
       let rng;
 
       rng = setContentEditableSelection(e.range, e.forward);
@@ -296,14 +296,14 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
       }
     });
 
-    const isPasteBin = (node: HTMLElement): boolean => {
+    const isPasteBin = (node: Element): boolean => {
       return node.id === 'mcepastebin';
     };
 
     editor.on('AfterSetSelectionRange', function (e) {
       const rng = e.range;
 
-      if (!isRangeInCaretContainer(rng) && !isPasteBin(rng.startContainer.parentNode)) {
+      if (!isRangeInCaretContainer(rng) && !isPasteBin(rng.startContainer.parentNode as Element)) {
         hideFakeCaret();
       }
 

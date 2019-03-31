@@ -5,7 +5,7 @@ import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { navigator } from '@ephox/dom-globals';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (success, failure) => {
 

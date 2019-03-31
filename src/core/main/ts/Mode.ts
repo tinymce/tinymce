@@ -5,14 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
 import { Element, Class } from '@ephox/sugar';
-import Events from 'tinymce/core/api/Events';
+import Editor from './api/Editor';
+import Events from './api/Events';
 
-export const enum EditorMode {
-  Design = 'design',
-  ReadOnly = 'readonly'
-}
+export type EditorMode = 'readonly' | 'design';
 
 const setEditorCommandState = (editor: Editor, cmd: string, state: boolean) => {
   try {
@@ -54,17 +51,17 @@ const setMode = (editor: Editor, mode: EditorMode) => {
   }
 
   if (editor.initialized) {
-    toggleReadOnly(editor, mode === EditorMode.ReadOnly);
+    toggleReadOnly(editor, mode === 'readonly');
   } else {
     editor.on('init', function () {
-      toggleReadOnly(editor, mode === EditorMode.ReadOnly);
+      toggleReadOnly(editor, mode === 'readonly');
     });
   }
 
   Events.fireSwitchMode(editor, mode);
 };
 
-const getMode = (editor: Editor) => editor.readonly ? EditorMode.ReadOnly : EditorMode.Design;
+const getMode = (editor: Editor) => editor.readonly ? 'readonly' : 'design';
 
 const isReadOnly = (editor: Editor) => editor.readonly === true;
 

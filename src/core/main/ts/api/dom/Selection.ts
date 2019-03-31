@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Selection as NativeSelection, HTMLElement, Node, Range, Element, ClientRect, Window } from '@ephox/dom-globals';
 import { Compare, Element as SugarElement } from '@ephox/sugar';
 import Env from '../Env';
 import BookmarkManager from './BookmarkManager';
@@ -20,10 +21,9 @@ import NormalizeRange from '../../selection/NormalizeRange';
 import SelectionBookmark from '../../selection/SelectionBookmark';
 import SetSelectionContent from '../../selection/SetSelectionContent';
 import * as ElementSelection from '../../selection/ElementSelection';
-import { moveEndPoint, hasAnyRanges } from 'tinymce/core/selection/SelectionUtils';
-import { Editor } from 'tinymce/core/api/Editor';
-import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
-import { Selection as NativeSelection, HTMLElement, Node, Range, Element, ClientRect, Window } from '@ephox/dom-globals';
+import { moveEndPoint, hasAnyRanges } from '../../selection/SelectionUtils';
+import Editor from '../Editor';
+import DOMUtils from './DOMUtils';
 import SelectorChanged from './SelectorChanged';
 
 /**
@@ -54,7 +54,7 @@ const isValidRange = function (rng: Range) {
   }
 };
 
-export interface Selection {
+interface Selection {
   bookmarkManager: any;
   controlSelection: ControlSelection;
   dom: any;
@@ -106,7 +106,7 @@ export interface Selection {
  * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
  * @param {tinymce.Editor} editor Editor instance of the selection.
  */
-export const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Editor): Selection {
+const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Editor): Selection {
   let bookmarkManager, controlSelection: ControlSelection;
   let selectedRange, explicitRange;
 
@@ -593,3 +593,5 @@ export const Selection = function (dom: DOMUtils, win: Window, serializer, edito
 
   return exports;
 };
+
+export default Selection;

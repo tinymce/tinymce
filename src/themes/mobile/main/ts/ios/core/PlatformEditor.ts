@@ -118,7 +118,7 @@ const getActiveApi = function (editor) {
           frame: Fun.constant(frame),
 
           onKeyup: getOrListen(editor, doc, 'onKeyup', 'keyup'),
-          onNodeChanged: getOrListen(editor, doc, 'onNodeChanged', 'selectionchange'),
+          onNodeChanged: getOrListen(editor, doc, 'onNodeChanged', 'SelectionChange'),
           onDomChanged: editor.onDomChanged, // consider defaulting with MutationObserver
 
           onScrollToCursor: editor.onScrollToCursor,

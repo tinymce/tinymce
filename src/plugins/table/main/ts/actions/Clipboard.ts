@@ -12,7 +12,7 @@ import { Element, Elements, Node, Replication } from '@ephox/sugar';
 import TableTargets from '../queries/TableTargets';
 import Ephemera from '../selection/Ephemera';
 import SelectionTypes from '../selection/SelectionTypes';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { TableActions } from 'tinymce/plugins/table/actions/TableActions';
 import { Selections } from 'tinymce/plugins/table/selection/Selections';
 

@@ -8,7 +8,7 @@
 import { SketchSpec } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Merger, Obj, Option } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { getRemovedMenuItems } from '../../../api/Settings';
 import { renderCommonDropdown } from '../../dropdown/CommonDropdown';

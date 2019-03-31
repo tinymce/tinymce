@@ -3,9 +3,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import JSONRequest from 'tinymce/core/api/util/JSONRequest';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.asyncTest('Successful request - send method', function (editor, done) {

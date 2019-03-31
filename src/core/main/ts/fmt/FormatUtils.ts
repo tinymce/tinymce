@@ -5,12 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node, Range } from '@ephox/dom-globals';
 import TreeWalker from '../api/dom/TreeWalker';
-import { Selection } from '../api/dom/Selection';
-import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
-import { Range } from '@ephox/dom-globals';
+import Selection from '../api/dom/Selection';
+import DOMUtils from '../api/dom/DOMUtils';
+import Editor from '../api/Editor';
 
-const isInlineBlock = function (node) {
+const isInlineBlock = function (node: Node): boolean {
   return node && /^(IMG)$/.test(node.nodeName);
 };
 
@@ -68,7 +69,7 @@ const getNonWhiteSpaceSibling = function (node, next?, inc?) {
   }
 };
 
-const isTextBlock = function (editor, name) {
+const isTextBlock = function (editor: Editor, name) {
   if (name.nodeType) {
     name = name.nodeName;
   }
@@ -76,11 +77,11 @@ const isTextBlock = function (editor, name) {
   return !!editor.schema.getTextBlockElements()[name.toLowerCase()];
 };
 
-const isValid = function (ed, parent, child) {
+const isValid = function (ed: Editor, parent: string, child: string) {
   return ed.schema.isValidChild(parent, child);
 };
 
-const isWhiteSpaceNode = function (node) {
+const isWhiteSpaceNode = function (node: Node) {
   return node && node.nodeType === 3 && /^([\t \r\n]+|)$/.test(node.nodeValue);
 };
 
@@ -92,7 +93,7 @@ const isWhiteSpaceNode = function (node) {
  * @param {Object} vars Name/value array with variables to replace.
  * @return {String} New value with replaced variables.
  */
-const replaceVars = function (value, vars) {
+const replaceVars = function <T>(value: string | ((vars: T) => string), vars: T): string {
   if (typeof value !== 'string') {
     value = value(vars);
   } else if (vars) {
@@ -122,7 +123,7 @@ const isEq = function (str1, str2) {
   return str1.toLowerCase() === str2.toLowerCase();
 };
 
-const normalizeStyleValue = function (dom, value, name) {
+const normalizeStyleValue = function (dom: DOMUtils, value, name: string) {
   // Force the format to hex
   if (name === 'color' || name === 'backgroundColor') {
     value = dom.toHex(value);
@@ -141,11 +142,11 @@ const normalizeStyleValue = function (dom, value, name) {
   return '' + value;
 };
 
-const getStyle = function (dom, node, name) {
+const getStyle = function (dom: DOMUtils, node: Node, name: string) {
   return normalizeStyleValue(dom, dom.getStyle(node, name), name);
 };
 
-const getTextDecoration = function (dom, node) {
+const getTextDecoration = function (dom: DOMUtils, node: Node) {
   let decoration;
 
   dom.getParent(node, function (n) {
@@ -156,7 +157,7 @@ const getTextDecoration = function (dom, node) {
   return decoration;
 };
 
-const getParents = function (dom, node, selector?) {
+const getParents = function (dom: DOMUtils, node: Node, selector?: string) {
   return dom.getParents(node, selector, dom.getRoot());
 };
 

@@ -5,13 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node } from '@ephox/dom-globals';
 import NodeType from '../dom/NodeType';
+
+interface SplitRange {
+  startContainer: Node;
+  startOffset: number;
+  endContainer: Node;
+  endOffset: number;
+}
 
 const splitText = function (node, offset) {
   return node.splitText(offset);
 };
 
-const split = function (rng) {
+const split = function (rng): SplitRange {
   let startContainer = rng.startContainer,
     startOffset = rng.startOffset,
     endContainer = rng.endContainer,
@@ -54,6 +62,7 @@ const split = function (rng) {
   };
 };
 
-export default {
-  split
+export {
+  split,
+  SplitRange
 };

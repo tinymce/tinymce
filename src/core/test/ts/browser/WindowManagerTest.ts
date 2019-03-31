@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', function (success, failure) {

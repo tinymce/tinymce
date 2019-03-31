@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
-import { Editor } from 'tinymce/core/api/Editor';
+import { Element } from '@ephox/dom-globals';
+import Editor from 'tinymce/core/api/Editor';
 
 import Unlink from './Unlink';
 
@@ -20,7 +20,7 @@ const unlink = function (editor: Editor) {
   collapseSelectionToEnd(editor);
 };
 
-const changeHref = function (editor: Editor, elm: Node, url: string) {
+const changeHref = function (editor: Editor, elm: Element, url: string) {
   editor.focus();
   editor.dom.setAttrib(elm, 'href', url);
   collapseSelectionToEnd(editor);

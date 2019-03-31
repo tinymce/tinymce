@@ -7,7 +7,7 @@
 
 import { Element } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -136,7 +136,7 @@ const setup = (editor: Editor, oldSize: Cell<number>) => {
     });
   });
 
-  editor.on('nodechange setcontent keyup FullscreenStateChanged', function (e) {
+  editor.on('NodeChange SetContent keyup FullscreenStateChanged', function (e) {
     resize(editor, oldSize);
   });
 

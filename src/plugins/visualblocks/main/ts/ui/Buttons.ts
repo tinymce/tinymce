@@ -6,7 +6,7 @@
  */
 
 import { Cell } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const toggleActiveState = (editor: Editor, enabledState: Cell<boolean>) => (api) => {
   api.setActive(enabledState.get());

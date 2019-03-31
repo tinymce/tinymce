@@ -8,7 +8,7 @@
 import { AlloyComponent, Highlighting, AlloyTriggers, NativeEvents } from '@ephox/alloy';
 import { Event } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 export interface AutocompleterUiApi {
   onKeypress: { cancel: () => void, throttle: (evt: Event) => void };

@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
-import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
-import { isTextBlock } from 'tinymce/core/dom/ElementType';
-import { Element as SugarElement } from '@ephox/sugar';
-import NodeType from 'tinymce/core/dom/NodeType';
-import CaretFinder from 'tinymce/core/caret/CaretFinder';
-import RangeNormalizer from 'tinymce/core/selection/RangeNormalizer';
 import { Node, Element } from '@ephox/dom-globals';
+import { Element as SugarElement } from '@ephox/sugar';
+import Editor from '../api/Editor';
+import { CaretPosition } from '../caret/CaretPosition';
+import { isTextBlock } from '../dom/ElementType';
+import NodeType from '../dom/NodeType';
+import CaretFinder from '../caret/CaretFinder';
+import RangeNormalizer from './RangeNormalizer';
 
 const isTextBlockNode = (node: Node): node is Element => NodeType.isElement(node) && isTextBlock(SugarElement.fromDom(node));
 

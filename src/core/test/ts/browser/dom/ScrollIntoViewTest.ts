@@ -5,7 +5,7 @@ import { Element } from '@ephox/sugar';
 import ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function () {

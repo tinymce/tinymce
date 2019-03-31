@@ -5,7 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import EventDispatcher from './EventDispatcher';
+import EventDispatcher, { EditorEvent, NativeEventMap } from './EventDispatcher';
+
+interface Observable<T extends NativeEventMap> {
+  fire <K extends keyof T>(name: K, args?: T[K], bubble?: boolean): EditorEvent<T[K]>;
+  fire <U = any>(name: string, args?: U, bubble?: boolean): EditorEvent<U>;
+  on <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void, prepend?: boolean): EventDispatcher<T>;
+  on <U = any>(name: string, callback: (event: EditorEvent<U>) => void, prepend?: boolean): EventDispatcher<T>;
+  off <K extends keyof T>(name?: K, callback?: (event: EditorEvent<T[K]>) => void): EventDispatcher<T>;
+  off <U = any>(name?: string, callback?: (event: EditorEvent<U>) => void): EventDispatcher<T>;
+  once <K extends keyof T>(name: K,  callback: (event: EditorEvent<T[K]>) => void): EventDispatcher<T>;
+  once <U = any>(name: string, callback: (event: EditorEvent<U>) => void): EventDispatcher<T>;
+  hasEventListeners (name: string): boolean;
+}
 
 /**
  * This mixin will add event binding logic to classes.
@@ -13,7 +25,7 @@ import EventDispatcher from './EventDispatcher';
  * @mixin tinymce.util.Observable
  */
 
-const getEventDispatcher = function (obj) {
+const getEventDispatcher = function (obj): EventDispatcher<any> {
   if (!obj._eventDispatcher) {
     obj._eventDispatcher = new EventDispatcher({
       scope: obj,
@@ -28,7 +40,7 @@ const getEventDispatcher = function (obj) {
   return obj._eventDispatcher;
 };
 
-export default {
+const Observable: Observable<any> = {
   /**
    * Fires the specified event by name. Consult the
    * <a href="/docs/advanced/events">event reference</a> for more details on each event.
@@ -41,26 +53,27 @@ export default {
    * @example
    * instance.fire('event', {...});
    */
-  fire (name, args, bubble) {
+  fire (name, args?, bubble?) {
     const self = this;
 
     // Prevent all events except the remove/detach event after the instance has been removed
     if (self.removed && name !== 'remove' && name !== 'detach') {
-      return args;
+      // TODO should we be patching the EventArgs here like EventDispatcher?
+      return args as any;
     }
 
-    args = getEventDispatcher(self).fire(name, args, bubble);
+    const dispatcherArgs = getEventDispatcher(self).fire(name, args);
 
     // Bubble event up to parents
     if (bubble !== false && self.parent) {
       let parent = self.parent();
-      while (parent && !args.isPropagationStopped()) {
-        parent.fire(name, args, false);
+      while (parent && !dispatcherArgs.isPropagationStopped()) {
+        parent.fire(name, dispatcherArgs, false);
         parent = parent.parent();
       }
     }
 
-    return args;
+    return dispatcherArgs;
   },
 
   /**
@@ -70,14 +83,14 @@ export default {
    * @method on
    * @param {String} name Event name or space separated list of events to bind.
    * @param {callback} callback Callback to be executed when the event occurs.
-   * @param {Boolean} first Optional flag if the event should be prepended. Use this with care.
+   * @param {Boolean} prepend Optional flag if the event should be prepended. Use this with care.
    * @return {Object} Current class instance.
    * @example
    * instance.on('event', function(e) {
    *     // Callback logic
    * });
    */
-  on (name, callback, prepend) {
+  on (name, callback, prepend?) {
     return getEventDispatcher(this).on(name, callback, prepend);
   },
 
@@ -99,7 +112,7 @@ export default {
    * // Unbind all events
    * instance.off();
    */
-  off (name, callback) {
+  off (name?, callback?) {
     return getEventDispatcher(this).off(name, callback);
   },
 
@@ -127,3 +140,5 @@ export default {
     return getEventDispatcher(this).has(name);
   }
 };
+
+export default Observable;

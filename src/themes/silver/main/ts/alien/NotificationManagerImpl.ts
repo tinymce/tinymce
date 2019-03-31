@@ -11,10 +11,11 @@ import { Arr, Option } from '@ephox/katamari';
 
 import { Notification } from '../ui/general/Notification';
 import { UiFactoryBackstage } from '../backstage/Backstage';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
+import { NotificationManagerImpl, NotificationSpec } from 'tinymce/core/api/NotificationManager';
 
-export default function (editor: Editor, extras, uiMothership) {
+export default function (editor: Editor, extras, uiMothership): NotificationManagerImpl {
   const backstage: UiFactoryBackstage = extras.backstage;
 
   const getEditorContainer = function (editor) {
@@ -48,7 +49,7 @@ export default function (editor: Editor, extras, uiMothership) {
     positionNotifications(notifications);
   };
 
-  const open = function (settings, closeCallback) {
+  const open = function (settings: NotificationSpec, closeCallback: () => void) {
     const close = () => {
       closeCallback();
       InlineView.hide(notificationWrapper);
@@ -58,7 +59,7 @@ export default function (editor: Editor, extras, uiMothership) {
       Notification.sketch({
         text: settings.text,
         level: Arr.contains(['success', 'error', 'warning', 'info'], settings.type) ? settings.type : undefined,
-        progress: settings.progressBar === true ? true : false,
+        progress: settings.progressBar === true,
         icon: Option.from(settings.icon),
         onAction: close,
         iconProvider: backstage.shared.providers.icons,

@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HTMLElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Insert, Element } from '@ephox/sugar';
 import CaretFinder from '../caret/CaretFinder';
@@ -14,13 +15,14 @@ import TreeWalker from '../api/dom/TreeWalker';
 import BoundaryLocation from '../keyboard/BoundaryLocation';
 import InlineUtils from '../keyboard/InlineUtils';
 import NormalizeRange from '../selection/NormalizeRange';
-import { Selection } from '../api/dom/Selection';
-import { HTMLElement } from '@ephox/dom-globals';
+import Selection from '../api/dom/Selection';
 import { rangeInsertNode } from '../selection/RangeInsertNode';
-import { Editor } from '../api/Editor';
+import Editor from '../api/Editor';
+import DOMUtils from '../api/dom/DOMUtils';
+import Schema from '../api/html/Schema';
 
 // Walks the parent block to the right and look for BR elements
-const hasRightSideContent = function (schema, container, parentBlock) {
+const hasRightSideContent = function (schema: Schema, container, parentBlock) {
   const walker = new TreeWalker(container, parentBlock);
   let node;
   const nonEmptyElementsMap = schema.getNonEmptyElements();
@@ -32,7 +34,7 @@ const hasRightSideContent = function (schema, container, parentBlock) {
   }
 };
 
-const scrollToBr = function (dom, selection: Selection, brElm) {
+const scrollToBr = function (dom: DOMUtils, selection: Selection, brElm) {
   // Insert temp marker and scroll to that
   const marker = dom.create('span', {}, '&nbsp;');
   brElm.parentNode.insertBefore(marker, brElm);
@@ -40,7 +42,7 @@ const scrollToBr = function (dom, selection: Selection, brElm) {
   dom.remove(marker);
 };
 
-const moveSelectionToBr = function (dom, selection: Selection, brElm, extraBr) {
+const moveSelectionToBr = function (dom: DOMUtils, selection: Selection, brElm, extraBr) {
   const rng = dom.createRng();
 
   if (!extraBr) {
@@ -112,13 +114,13 @@ const insertBrAtCaret = function (editor: Editor, evt?) {
   editor.undoManager.add();
 };
 
-const insertBrBefore = function (editor, inline) {
+const insertBrBefore = function (editor: Editor, inline) {
   const br = Element.fromTag('br');
   Insert.before(Element.fromDom(inline), br);
   editor.undoManager.add();
 };
 
-const insertBrAfter = function (editor, inline) {
+const insertBrAfter = function (editor: Editor, inline) {
   if (!hasBrAfter(editor.getBody(), inline)) {
     Insert.after(Element.fromDom(inline), Element.fromTag('br'));
   }
@@ -157,13 +159,13 @@ const isInsideAnchor = function (location) {
   );
 };
 
-const readInlineAnchorLocation = function (editor) {
+const readInlineAnchorLocation = function (editor: Editor) {
   const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
   const position = CaretPosition.fromRangeStart(editor.selection.getRng());
   return BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), position).filter(isInsideAnchor);
 };
 
-const insertBrOutsideAnchor = function (editor, location) {
+const insertBrOutsideAnchor = function (editor: Editor, location) {
   location.fold(
     Fun.noop,
     Fun.curry(insertBrBefore, editor),
@@ -172,7 +174,7 @@ const insertBrOutsideAnchor = function (editor, location) {
   );
 };
 
-const insert = function (editor, evt?) {
+const insert = function (editor: Editor, evt?) {
   const anchorLocation = readInlineAnchorLocation(editor);
 
   if (anchorLocation.isSome()) {

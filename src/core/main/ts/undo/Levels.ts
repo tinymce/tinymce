@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Document, document } from '@ephox/dom-globals';
 import { Arr, Cell, Option } from '@ephox/katamari';
+import { Element, Html, Remove, SelectorFilter } from '@ephox/sugar';
+import Editor from '../api/Editor';
+import { Bookmark } from '../bookmark/BookmarkTypes';
 import TrimHtml from '../dom/TrimHtml';
 import Fragments from './Fragments';
-import { Editor } from 'tinymce/core/api/Editor';
-import { Element, Html, Remove, SelectorFilter } from '@ephox/sugar';
-import { Bookmark } from 'tinymce/core/bookmark/BookmarkTypes';
-import { Document, document } from '@ephox/dom-globals';
 
 export const enum UndoLevelType {
   Fragmented = 'fragmented',

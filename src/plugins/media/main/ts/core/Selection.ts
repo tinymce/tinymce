@@ -29,7 +29,7 @@ const setup = function (editor) {
     }
   });
 
-  editor.on('objectResized', function (e) {
+  editor.on('ObjectResized', function (e) {
     const target = e.target;
     let html;
 

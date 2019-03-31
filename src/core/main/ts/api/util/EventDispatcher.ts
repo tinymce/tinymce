@@ -5,7 +5,83 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { ClipboardEvent, DataTransfer, DragEvent, Event, FocusEvent, KeyboardEvent, MouseEvent, PointerEvent, TouchEvent, WheelEvent } from '@ephox/dom-globals';
 import Tools from './Tools';
+
+// InputEvent is experimental so we don't have an actual type
+// See https://developer.mozilla.org/en-US/docs/Web/API/InputEvent
+interface InputEvent extends Event {
+  readonly data: string;
+  readonly dataTransfer: DataTransfer;
+  readonly inputType: string;
+  readonly isComposing: boolean;
+}
+
+export interface NativeEventMap {
+  'beforepaste': Event;
+  'blur': FocusEvent;
+  'click': MouseEvent;
+  'compositionend': Event;
+  'compositionstart': Event;
+  'compositionupdate': Event;
+  'contextmenu': PointerEvent;
+  'copy': ClipboardEvent;
+  'cut': ClipboardEvent;
+  'dblclick': MouseEvent;
+  'drag': DragEvent;
+  'dragdrop': DragEvent;
+  'dragend': DragEvent;
+  'draggesture': DragEvent;
+  'dragover': DragEvent;
+  'dragstart': DragEvent;
+  'drop': DragEvent;
+  'focus': FocusEvent;
+  'focusin': FocusEvent;
+  'focusout': FocusEvent;
+  'input': InputEvent;
+  'keydown': KeyboardEvent;
+  'keypress': KeyboardEvent;
+  'keyup': KeyboardEvent;
+  'mousedown': MouseEvent;
+  'mouseenter': MouseEvent;
+  'mouseleave': MouseEvent;
+  'mousemove': MouseEvent;
+  'mouseout': MouseEvent;
+  'mouseover': MouseEvent;
+  'mouseup': MouseEvent;
+  'paste': ClipboardEvent;
+  'selectionchange': Event;
+  'submit': Event;
+  'touchend': TouchEvent;
+  'touchmove': TouchEvent;
+  'touchstart': TouchEvent;
+  'wheel': WheelEvent;
+}
+
+export type EditorEvent<T> = T & {
+  target: any;
+  type: string;
+  preventDefault (): void;
+  isDefaultPrevented (): boolean;
+  stopPropagation (): void;
+  isPropagationStopped (): boolean;
+  stopImmediatePropagation (): void;
+  isImmediatePropagationStopped (): boolean;
+};
+
+export interface EventDispatcherSettings {
+  scope?: {};
+  toggleEvent?: (name: string, state: boolean) => void | boolean;
+  beforeFire?: <T>(args: EditorEvent<T>) => void;
+}
+
+export interface EventDispatcherConstructor<T extends NativeEventMap> {
+  readonly prototype: EventDispatcher<T>;
+
+  new (settings?: EventDispatcherSettings): EventDispatcher<T>;
+
+  isNative (name: string): boolean;
+}
 
 /**
  * This class lets you add/remove and fire events by name on the specified scope. This makes
@@ -27,21 +103,37 @@ const nativeEvents = Tools.makeMap(
   ' '
 );
 
-const Dispatcher: any = function (settings) {
-  const self = this;
-  let scope, bindings = {}, toggleEvent;
+const returnFalse = function () {
+  return false;
+};
 
-  const returnFalse = function () {
-    return false;
-  };
+const returnTrue = function () {
+  return true;
+};
 
-  const returnTrue = function () {
-    return true;
-  };
+class EventDispatcher<T extends NativeEventMap> {
+  /**
+   * Returns true/false if the specified event name is a native browser event or not.
+   *
+   * @method isNative
+   * @param {String} name Name to check if it's native.
+   * @return {Boolean} true/false if the event is native or not.
+   * @static
+   */
+  public static isNative (name: string): boolean {
+    return !!nativeEvents[name.toLowerCase()];
+  }
 
-  settings = settings || {};
-  scope = settings.scope || self;
-  toggleEvent = settings.toggleEvent || returnFalse;
+  private readonly settings: Record<string, any>;
+  private readonly scope: {};
+  private readonly toggleEvent: (name: string, toggle: boolean) => void;
+  private bindings = {};
+
+  constructor (settings?: Record<string, any>) {
+    this.settings = settings || {};
+    this.scope = this.settings.scope || this;
+    this.toggleEvent = this.settings.toggleEvent || returnFalse;
+  }
 
   /**
    * Fires the specified event by name.
@@ -53,7 +145,9 @@ const Dispatcher: any = function (settings) {
    * @example
    * instance.fire('event', {...});
    */
-  const fire = function (name, args) {
+  public fire <K extends keyof T>(name: K, args?: T[K]): EditorEvent<T[K]>;
+  public fire <U = any>(name: string, args?: U): EditorEvent<U>;
+  public fire (name: string, args?: any): EditorEvent<any> {
     let handlers, i, l, callback;
 
     name = name.toLowerCase();
@@ -62,7 +156,7 @@ const Dispatcher: any = function (settings) {
 
     // Setup target is there isn't one
     if (!args.target) {
-      args.target = scope;
+      args.target = this.scope;
     }
 
     // Add event delegation methods if they are missing
@@ -88,18 +182,18 @@ const Dispatcher: any = function (settings) {
       args.isImmediatePropagationStopped = returnFalse;
     }
 
-    if (settings.beforeFire) {
-      settings.beforeFire(args);
+    if (this.settings.beforeFire) {
+      this.settings.beforeFire(args);
     }
 
-    handlers = bindings[name];
+    handlers = this.bindings[name];
     if (handlers) {
       for (i = 0, l = handlers.length; i < l; i++) {
         callback = handlers[i];
 
         // Unbind handlers marked with "once"
         if (callback.once) {
-          off(name, callback.func);
+          this.off(name, callback.func);
         }
 
         // Stop immediate propagation if needed
@@ -109,7 +203,7 @@ const Dispatcher: any = function (settings) {
         }
 
         // If callback returns false then prevent default and stop all propagation
-        if (callback.func.call(scope, args) === false) {
+        if (callback.func.call(this.scope, args) === false) {
           args.preventDefault();
           return args;
         }
@@ -117,7 +211,7 @@ const Dispatcher: any = function (settings) {
     }
 
     return args;
-  };
+  }
 
   /**
    * Binds an event listener to a specific event by name.
@@ -125,14 +219,17 @@ const Dispatcher: any = function (settings) {
    * @method on
    * @param {String} name Event name or space separated list of events to bind.
    * @param {callback} callback Callback to be executed when the event occurs.
-   * @param {Boolean} first Optional flag if the event should be prepended. Use this with care.
+   * @param {Boolean} prepend Optional flag if the event should be prepended. Use this with care.
    * @return {Object} Current class instance.
    * @example
    * instance.on('event', function(e) {
    *     // Callback logic
    * });
    */
-  const on = function (name, callback, prepend, extra) {
+  public on <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void, prepend?: boolean, extra?: {}): this;
+  public on <U = any>(name: string, callback: (event: EditorEvent<U>) => void, prepend?: boolean, extra?: {}): this;
+  public on (name: string, callback: false, prepend?: boolean, extra?: {}): this;
+  public on (name: string, callback: false | ((event: EditorEvent<any>) => void), prepend?: boolean, extra?: {}): this {
     let handlers, names, i;
 
     if (callback === false) {
@@ -140,34 +237,34 @@ const Dispatcher: any = function (settings) {
     }
 
     if (callback) {
-      callback = {
+      const wrappedCallback = {
         func: callback
       };
 
       if (extra) {
-        Tools.extend(callback, extra);
+        Tools.extend(wrappedCallback, extra);
       }
 
       names = name.toLowerCase().split(' ');
       i = names.length;
       while (i--) {
         name = names[i];
-        handlers = bindings[name];
+        handlers = this.bindings[name];
         if (!handlers) {
-          handlers = bindings[name] = [];
-          toggleEvent(name, true);
+          handlers = this.bindings[name] = [];
+          this.toggleEvent(name, true);
         }
 
         if (prepend) {
-          handlers.unshift(callback);
+          handlers.unshift(wrappedCallback);
         } else {
-          handlers.push(callback);
+          handlers.push(wrappedCallback);
         }
       }
     }
 
-    return self;
-  };
+    return this;
+  }
 
   /**
    * Unbinds an event listener to a specific event by name.
@@ -186,7 +283,10 @@ const Dispatcher: any = function (settings) {
    * // Unbind all events
    * instance.off();
    */
-  const off = function (name, callback) {
+  public off <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void): this;
+  public off <U = any>(name: string, callback: (event: EditorEvent<U>) => void): this;
+  public off (name?: string): this;
+  public off (name?: string, callback?: (event: EditorEvent<any>) => void): this {
     let i, handlers, bindingName, names, hi;
 
     if (name) {
@@ -194,16 +294,16 @@ const Dispatcher: any = function (settings) {
       i = names.length;
       while (i--) {
         name = names[i];
-        handlers = bindings[name];
+        handlers = this.bindings[name];
 
         // Unbind all handlers
         if (!name) {
-          for (bindingName in bindings) {
-            toggleEvent(bindingName, false);
-            delete bindings[bindingName];
+          for (bindingName in this.bindings) {
+            this.toggleEvent(bindingName, false);
+            delete this.bindings[bindingName];
           }
 
-          return self;
+          return this;
         }
 
         if (handlers) {
@@ -216,27 +316,27 @@ const Dispatcher: any = function (settings) {
             while (hi--) {
               if (handlers[hi].func === callback) {
                 handlers = handlers.slice(0, hi).concat(handlers.slice(hi + 1));
-                bindings[name] = handlers;
+                this.bindings[name] = handlers;
               }
             }
           }
 
           if (!handlers.length) {
-            toggleEvent(name, false);
-            delete bindings[name];
+            this.toggleEvent(name, false);
+            delete this.bindings[name];
           }
         }
       }
     } else {
-      for (name in bindings) {
-        toggleEvent(name, false);
+      for (name in this.bindings) {
+        this.toggleEvent(name, false);
       }
 
-      bindings = {};
+      this.bindings = {};
     }
 
-    return self;
-  };
+    return this;
+  }
 
   /**
    * Binds an event listener to a specific event by name
@@ -245,16 +345,18 @@ const Dispatcher: any = function (settings) {
    * @method once
    * @param {String} name Event name or space separated list of events to bind.
    * @param {callback} callback Callback to be executed when the event occurs.
-   * @param {Boolean} first Optional flag if the event should be prepended. Use this with care.
+   * @param {Boolean} prepend Optional flag if the event should be prepended. Use this with care.
    * @return {Object} Current class instance.
    * @example
    * instance.once('event', function(e) {
    *     // Callback logic
    * });
    */
-  const once = function (name, callback, prepend) {
-    return on(name, callback, prepend, { once: true });
-  };
+  public once <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void, prepend?: boolean): this;
+  public once <U = any>(name: string, callback: (event: EditorEvent<U>) => void, prepend?: boolean): this;
+  public once (name: string, callback: (event: EditorEvent<any>) => void, prepend?: boolean): this {
+    return this.on(name, callback, prepend, { once: true });
+  }
 
   /**
    * Returns true/false if the dispatcher has a event of the specified name.
@@ -263,29 +365,10 @@ const Dispatcher: any = function (settings) {
    * @param {String} name Name of the event to check for.
    * @return {Boolean} true/false if the event exists or not.
    */
-  const has = function (name) {
+  public has (name: string): boolean {
     name = name.toLowerCase();
-    return !(!bindings[name] || bindings[name].length === 0);
-  };
+    return !(!this.bindings[name] || this.bindings[name].length === 0);
+  }
+}
 
-  // Expose
-  self.fire = fire;
-  self.on = on;
-  self.off = off;
-  self.once = once;
-  self.has = has;
-};
-
-/**
- * Returns true/false if the specified event name is a native browser event or not.
- *
- * @method isNative
- * @param {String} name Name to check if it's native.
- * @return {Boolean} true/false if the event is native or not.
- * @static
- */
-Dispatcher.isNative = function (name) {
-  return !!nativeEvents[name.toLowerCase()];
-};
-
-export default Dispatcher;
+export default EventDispatcher;

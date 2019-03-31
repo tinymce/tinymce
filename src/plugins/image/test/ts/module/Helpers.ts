@@ -2,7 +2,7 @@ import { Assertions, Chain, Guard, Mouse, NamedChain, UiControls, UiFinder } fro
 import { Arr, Obj, Result } from '@ephox/katamari';
 import { document } from '@ephox/dom-globals';
 import { Body, Checked, Element, Focus, Node, SelectTag, Value } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { TinyUi } from '@ephox/mcagar';
 
 export type ImageDialogData = {
@@ -177,7 +177,7 @@ const cleanHtml = (html: string) => html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, 
 const cAssertCleanHtml = (label: string, expected: string) => Chain.control(
   NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-    NamedChain.direct('editor', Chain.mapper((editor: Editor) => cleanHtml(editor.getContent() as string)), 'content'),
+    NamedChain.direct('editor', Chain.mapper((editor: Editor) => cleanHtml(editor.getContent())), 'content'),
     NamedChain.direct('content', Assertions.cAssertHtml(label, expected), 'result'),
     NamedChain.outputInput
   ]),

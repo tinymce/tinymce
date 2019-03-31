@@ -3,7 +3,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import GetSelectionContent from 'tinymce/core/selection/GetSelectionContent';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 import Env from 'tinymce/core/api/Env';
 

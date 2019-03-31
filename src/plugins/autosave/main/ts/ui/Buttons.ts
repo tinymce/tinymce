@@ -6,7 +6,7 @@
  */
 
 import * as Storage from '../core/Storage';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
 
 const makeSetupHandler = (editor: Editor, started: Cell<boolean>) => (api) => {

@@ -14,7 +14,7 @@ import CaretPosition from '../caret/CaretPosition';
 import * as MergeText from './MergeText';
 import Empty from '../dom/Empty';
 import NodeType from '../dom/NodeType';
-import { Editor } from '../api/Editor';
+import Editor from '../api/Editor';
 
 const needsReposition = function (pos, elm) {
   const container = pos.container();
@@ -85,15 +85,15 @@ const findCaretPositionForward = function (rootElement, elm) {
   });
 };
 
-const findCaretPosition = function (forward, rootElement, elm) {
+const findCaretPosition = function (forward: boolean, rootElement, elm) {
   return forward ? findCaretPositionForward(rootElement, elm) : findCaretPositionBackwards(rootElement, elm);
 };
 
-const findCaretPosOutsideElmAfterDelete = function (forward, rootElement, elm) {
+const findCaretPosOutsideElmAfterDelete = function (forward: boolean, rootElement, elm) {
   return findCaretPosition(forward, rootElement, elm).map(Fun.curry(reposition, elm));
 };
 
-const setSelection = function (editor, forward, pos) {
+const setSelection = function (editor: Editor, forward: boolean, pos: Option<CaretPosition>) {
   pos.fold(
     function () {
       editor.focus();
@@ -110,7 +110,7 @@ const eqRawNode = function (rawNode: Node) {
   };
 };
 
-const isBlock = function (editor, elm) {
+const isBlock = function (editor: Editor, elm) {
   return elm && editor.schema.getBlockElements().hasOwnProperty(SugarNode.name(elm));
 };
 

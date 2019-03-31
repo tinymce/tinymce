@@ -5,17 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { document, Element } from '@ephox/dom-globals';
 import { Merger } from '@ephox/katamari';
 import Events from '../api/Events';
 import Tools from '../api/util/Tools';
-import { Editor } from 'tinymce/core/api/Editor';
-import { document } from '@ephox/dom-globals';
+import Editor from '../api/Editor';
 
-const preProcess = function (editor: Editor, node, args) {
+const preProcess = function (editor: Editor, node: Element, args) {
   let impl, doc, oldDoc;
   const dom = editor.dom;
 
-  node = node.cloneNode(true);
+  node = node.cloneNode(true) as Element;
 
   // Nodes needs to be attached to something in WebKit/Opera
   // This fix will make DOM ranges and make Sizzle happy!
@@ -50,11 +50,11 @@ const preProcess = function (editor: Editor, node, args) {
   return node;
 };
 
-const shouldFireEvent = function (editor, args) {
+const shouldFireEvent = function (editor: Editor, args) {
   return editor && editor.hasEventListeners('PreProcess') && !args.no_events;
 };
 
-const process = function (editor, node, args) {
+const process = function (editor: Editor, node: Element, args) {
   return shouldFireEvent(editor, args) ? preProcess(editor, node, args) : node;
 };
 

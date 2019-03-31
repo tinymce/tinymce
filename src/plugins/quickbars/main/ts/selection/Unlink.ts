@@ -9,7 +9,7 @@ import Bookmark from './Bookmark';
 import Tools from 'tinymce/core/api/util/Tools';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { HTMLElement, Node } from '@ephox/dom-globals';
 
 /**
@@ -20,10 +20,10 @@ import { HTMLElement, Node } from '@ephox/dom-globals';
  */
 
 const getSelectedElements = function (rootElm: HTMLElement, startNode: Node, endNode: Node) {
-  let walker, node;
+  let node;
   const elms = [];
 
-  walker = new TreeWalker(startNode, rootElm);
+  const walker = new TreeWalker(startNode, rootElm);
   for (node = startNode; node; node = walker.next()) {
     if (node.nodeType === 1) {
       elms.push(node);
@@ -37,7 +37,7 @@ const getSelectedElements = function (rootElm: HTMLElement, startNode: Node, end
   return elms;
 };
 
-const unwrapElements = function (editor: Editor, elms: HTMLElement) {
+const unwrapElements = function (editor: Editor, elms: HTMLElement[]) {
   let bookmark, dom, selection;
 
   dom = editor.dom;

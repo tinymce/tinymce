@@ -8,7 +8,7 @@
 import Env from 'tinymce/core/api/Env';
 import NodeType from './NodeType';
 import { DocumentFragment, Node } from '@ephox/dom-globals';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const createTextBlock = (editor: Editor, contentNode: Node): DocumentFragment => {
   const dom = editor.dom;

@@ -5,14 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { document, HTMLElementEventMap, window } from '@ephox/dom-globals';
 import Env from '../Env';
 import Delay from '../util/Delay';
-import { document, window } from '@ephox/dom-globals';
 
-export type EditorEvent<T> = T & {
-  isDefaultPrevented: () => boolean;
-  isPropagationStopped: () => boolean;
-  isImmediatePropagationStopped: () => boolean;
+export type EventUtilsCallback<T> = (event: EventUtilsEvent<T>) => void;
+
+export type EventUtilsEvent<T> = T & {
+  type: string;
+  target: any;
+  isDefaultPrevented (): boolean;
+  preventDefault (): void;
+  isPropagationStopped (): boolean;
+  stopPropagation (): void;
+  isImmediatePropagationStopped (): boolean;
+  stopImmediatePropagation (): void;
 };
 
 /**
@@ -84,7 +91,7 @@ const getTargetFromShadowDom = function (event, defaultTarget) {
 /**
  * Normalizes a native event object or just adds the event specific methods on a custom event.
  */
-const fix = function (originalEvent, data?) {
+const fix = function <T extends any>(originalEvent: T, data?): EventUtilsEvent<T> {
   let name;
   const event = data || {};
 
@@ -238,51 +245,36 @@ const bindOnReady = function (win, callback, eventUtils) {
   addEvent(win, 'load', readyHandler);
 };
 
+export interface EventUtilsConstructor {
+  readonly prototype: EventUtils;
+
+  Event: EventUtils;
+
+  new (): EventUtils;
+}
+
 /**
  * This class enables you to bind/unbind native events to elements and normalize it's behavior across browsers.
  */
-const EventUtils: any = function () {
-  const self = this;
-  let events = {}, count, expando, hasFocusIn, hasMouseEnterLeave, mouseEnterLeave;
-
-  expando = eventExpandoPrefix + (+new Date()).toString(32);
-  hasMouseEnterLeave = 'onmouseenter' in document.documentElement;
-  hasFocusIn = 'onfocusin' in document.documentElement;
-  mouseEnterLeave = { mouseenter: 'mouseover', mouseleave: 'mouseout' };
-  count = 1;
+class EventUtils {
+  public static Event: EventUtils = new EventUtils();
 
   // State if the DOMContentLoaded was executed or not
-  self.domLoaded = false;
-  self.events = events;
+  public domLoaded: boolean = false;
+  public events: Record<string, any> = {};
 
-  /**
-   * Executes all event handler callbacks for a specific event.
-   *
-   * @private
-   * @param {Event} evt Event object.
-   * @param {String} id Expando id value to look for.
-   */
-  const executeHandlers = function (evt, id) {
-    let callbackList, i, l, callback;
-    const container = events[id];
+  private readonly expando;
+  private hasFocusIn: boolean;
+  private hasMouseEnterLeave: boolean;
+  private mouseEnterLeave: { mouseenter: 'mouseover', mouseleave: 'mouseout' };
+  private count: number = 1;
 
-    callbackList = container && container[evt.type];
-    if (callbackList) {
-      for (i = 0, l = callbackList.length; i < l; i++) {
-        callback = callbackList[i];
-
-        // Check if callback exists might be removed if a unbind is called inside the callback
-        if (callback && callback.func.call(callback.scope, evt) === false) {
-          evt.preventDefault();
-        }
-
-        // Should we stop propagation to immediate listeners
-        if (evt.isImmediatePropagationStopped()) {
-          return;
-        }
-      }
-    }
-  };
+  constructor () {
+    this.expando = eventExpandoPrefix + (+new Date()).toString(32);
+    this.hasMouseEnterLeave = 'onmouseenter' in document.documentElement;
+    this.hasFocusIn = 'onfocusin' in document.documentElement;
+    this.count = 1;
+  }
 
   /**
    * Binds a callback to an event on the specified target.
@@ -294,13 +286,16 @@ const EventUtils: any = function () {
    * @param {Object} scope Scope to call the callback function on, defaults to target.
    * @return {function} Callback function that got bound.
    */
-  self.bind = function (target, names, callback, scope) {
+  public bind <K extends keyof HTMLElementEventMap>(target: any, name: K, callback: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: {}): EventUtilsCallback<HTMLElementEventMap[K]>;
+  public bind <T = any>(target: any, names: string, callback: EventUtilsCallback<T>, scope?: {}): EventUtilsCallback<T>;
+  public bind (target: any, names: string, callback: EventUtilsCallback<any>, scope?: {}): EventUtilsCallback<any> {
+    const self = this;
     let id, callbackList, i, name, fakeName, nativeHandler, capture;
     const win = window;
 
     // Native event handler function patches the event and executes the callbacks for the expando
     const defaultNativeHandler = function (evt) {
-      executeHandlers(fix(evt || win.event), id);
+      self.executeHandlers(fix(evt || win.event), id);
     };
 
     // Don't bind to text nodes or comments
@@ -309,22 +304,22 @@ const EventUtils: any = function () {
     }
 
     // Create or get events id for the target
-    if (!target[expando]) {
-      id = count++;
-      target[expando] = id;
-      events[id] = {};
+    if (!target[self.expando]) {
+      id = self.count++;
+      target[self.expando] = id;
+      self.events[id] = {};
     } else {
-      id = target[expando];
+      id = target[self.expando];
     }
 
     // Setup the specified scope or use the target as a default
     scope = scope || target;
 
     // Split names and bind each event, enables you to bind multiple events with one call
-    names = names.split(' ');
-    i = names.length;
+    const namesList = names.split(' ');
+    i = namesList.length;
     while (i--) {
-      name = names[i];
+      name = namesList[i];
       nativeHandler = defaultNativeHandler;
       fakeName = capture = false;
 
@@ -340,8 +335,8 @@ const EventUtils: any = function () {
       }
 
       // Handle mouseenter/mouseleaver
-      if (!hasMouseEnterLeave) {
-        fakeName = mouseEnterLeave[name];
+      if (!self.hasMouseEnterLeave) {
+        fakeName = self.mouseEnterLeave[name];
 
         if (fakeName) {
           nativeHandler = function (evt) {
@@ -366,27 +361,27 @@ const EventUtils: any = function () {
               evt = fix(evt || win.event);
               evt.type = evt.type === 'mouseout' ? 'mouseleave' : 'mouseenter';
               evt.target = current;
-              executeHandlers(evt, id);
+              self.executeHandlers(evt, id);
             }
           };
         }
       }
 
       // Fake bubbling of focusin/focusout
-      if (!hasFocusIn && (name === 'focusin' || name === 'focusout')) {
+      if (!self.hasFocusIn && (name === 'focusin' || name === 'focusout')) {
         capture = true;
         fakeName = name === 'focusin' ? 'focus' : 'blur';
         nativeHandler = function (evt) {
           evt = fix(evt || win.event);
           evt.type = evt.type === 'focus' ? 'focusin' : 'focusout';
-          executeHandlers(evt, id);
+          self.executeHandlers(evt, id);
         };
       }
 
       // Setup callback list and bind native event
-      callbackList = events[id][name];
+      callbackList = self.events[id][name];
       if (!callbackList) {
-        events[id][name] = callbackList = [{ func: callback, scope }];
+        self.events[id][name] = callbackList = [{ func: callback, scope }];
         callbackList.fakeName = fakeName;
         callbackList.capture = capture;
         // callbackList.callback = callback;
@@ -403,7 +398,7 @@ const EventUtils: any = function () {
         }
       } else {
         if (name === 'ready' && self.domLoaded) {
-          callback({ type: name });
+          callback(fix({ type: name }) as EventUtilsEvent<any>);
         } else {
           // If it already has an native handler then just push the callback
           callbackList.push({ func: callback, scope });
@@ -414,7 +409,7 @@ const EventUtils: any = function () {
     target = callbackList = 0; // Clean memory for IE
 
     return callback;
-  };
+  }
 
   /**
    * Unbinds the specified event by name, name and callback or all events on the target.
@@ -425,25 +420,28 @@ const EventUtils: any = function () {
    * @param {function} callback Optional callback function to unbind.
    * @return {EventUtils} Event utils instance.
    */
-  self.unbind = function (target, names, callback) {
+  public unbind <K extends keyof HTMLElementEventMap>(target: any, name: K, callback?: EventUtilsCallback<HTMLElementEventMap[K]>): this;
+  public unbind <T = any>(target: any, names: string, callback?: EventUtilsCallback<T>): this;
+  public unbind (target: any): this;
+  public unbind (target: any, names?: string, callback?: EventUtilsCallback<any>): this {
     let id, callbackList, i, ci, name, eventMap;
 
     // Don't bind to text nodes or comments
     if (!target || target.nodeType === 3 || target.nodeType === 8) {
-      return self;
+      return this;
     }
 
     // Unbind event or events if the target has the expando
-    id = target[expando];
+    id = target[this.expando];
     if (id) {
-      eventMap = events[id];
+      eventMap = this.events[id];
 
       // Specific callback
       if (names) {
-        names = names.split(' ');
-        i = names.length;
+        const namesList = names.split(' ');
+        i = namesList.length;
         while (i--) {
-          name = names[i];
+          name = namesList[i];
           callbackList = eventMap[name];
 
           // Unbind the event if it exists in the map
@@ -486,24 +484,24 @@ const EventUtils: any = function () {
 
       // Check if object is empty, if it isn't then we won't remove the expando map
       for (name in eventMap) {
-        return self;
+        return this;
       }
 
       // Delete event object
-      delete events[id];
+      delete this.events[id];
 
       // Remove expando from target
       try {
         // IE will fail here since it can't delete properties from window
-        delete target[expando];
+        delete target[this.expando];
       } catch (ex) {
         // IE will set it to null
-        target[expando] = null;
+        target[this.expando] = null;
       }
     }
 
-    return self;
-  };
+    return this;
+  }
 
   /**
    * Fires the specified event on the specified target.
@@ -514,32 +512,32 @@ const EventUtils: any = function () {
    * @param {Object} args Optional arguments to send to the observers.
    * @return {EventUtils} Event utils instance.
    */
-  self.fire = function (target, name, args) {
+  public fire (target: any, name: string, args?: {}): this {
     let id;
 
     // Don't bind to text nodes or comments
     if (!target || target.nodeType === 3 || target.nodeType === 8) {
-      return self;
+      return this;
     }
 
     // Build event object by patching the args
-    args = fix(null, args);
-    args.type = name;
-    args.target = target;
+    const event = fix(null, args);
+    event.type = name;
+    event.target = target;
 
     do {
       // Found an expando that means there is listeners to execute
-      id = target[expando];
+      id = target[this.expando];
       if (id) {
-        executeHandlers(args, id);
+        this.executeHandlers(event, id);
       }
 
       // Walk up the DOM
       target = target.parentNode || target.ownerDocument || target.defaultView || target.parentWindow;
-    } while (target && !args.isPropagationStopped());
+    } while (target && !event.isPropagationStopped());
 
-    return self;
-  };
+    return this;
+  }
 
   /**
    * Removes all bound event listeners for the specified target. This will also remove any bound
@@ -549,18 +547,17 @@ const EventUtils: any = function () {
    * @param {Object} target Target node/window object.
    * @return {EventUtils} Event utils instance.
    */
-  self.clean = function (target) {
+  public clean (target: any): this {
     let i, children;
-    const unbind = self.unbind;
 
     // Don't bind to text nodes or comments
     if (!target || target.nodeType === 3 || target.nodeType === 8) {
-      return self;
+      return this;
     }
 
     // Unbind any element on the specified target
-    if (target[expando]) {
-      unbind(target);
+    if (target[this.expando]) {
+      this.unbind(target);
     }
 
     // Target doesn't have getElementsByTagName it's probably a window object then use it's document to find the children
@@ -570,41 +567,67 @@ const EventUtils: any = function () {
 
     // Remove events from each child element
     if (target && target.getElementsByTagName) {
-      unbind(target);
+      this.unbind(target);
 
       children = target.getElementsByTagName('*');
       i = children.length;
       while (i--) {
         target = children[i];
 
-        if (target[expando]) {
-          unbind(target);
+        if (target[this.expando]) {
+          this.unbind(target);
         }
       }
     }
 
-    return self;
-  };
+    return this;
+  }
 
   /**
    * Destroys the event object. Call this on IE to remove memory leaks.
    */
-  self.destroy = function () {
-    events = {};
-  };
+  public destroy () {
+    this.events = {};
+  }
 
   // Legacy function for canceling events
-  self.cancel = function (e) {
+  public cancel <T = any>(e: EventUtilsEvent<T>): boolean {
     if (e) {
       e.preventDefault();
       e.stopImmediatePropagation();
     }
 
     return false;
-  };
-};
+  }
 
-EventUtils.Event = new EventUtils();
-EventUtils.Event.bind(window, 'ready', function () { });
+  /**
+   * Executes all event handler callbacks for a specific event.
+   *
+   * @private
+   * @param {Event} evt Event object.
+   * @param {String} id Expando id value to look for.
+   */
+  private executeHandlers (evt, id) {
+    let callbackList, i, l, callback;
+    const container = this.events[id];
+
+    callbackList = container && container[evt.type];
+    if (callbackList) {
+      for (i = 0, l = callbackList.length; i < l; i++) {
+        callback = callbackList[i];
+
+        // Check if callback exists might be removed if a unbind is called inside the callback
+        if (callback && callback.func.call(callback.scope, evt) === false) {
+          evt.preventDefault();
+        }
+
+        // Should we stop propagation to immediate listeners
+        if (evt.isImmediatePropagationStopped()) {
+          return;
+        }
+      }
+    }
+  }
+}
 
 export default EventUtils;

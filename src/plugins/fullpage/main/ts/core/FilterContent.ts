@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document } from '@ephox/dom-globals';
-import { Editor } from 'tinymce/core/api/Editor';
+import { document, HTMLLinkElement } from '@ephox/dom-globals';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Parser from './Parser';
@@ -92,8 +92,8 @@ const handleSetContent = function (editor: Editor, headState, footState, evt) {
     styleElm.appendChild(document.createTextNode(styles));
   }
 
-  const currentStyleSheetsMap = {};
-  Tools.each(headElm.getElementsByTagName('link'), function (stylesheet) {
+  const currentStyleSheetsMap: Record<string, HTMLLinkElement> = {};
+  Tools.each(headElm.getElementsByTagName('link'), function (stylesheet: HTMLLinkElement) {
     if (stylesheet.rel === 'stylesheet' && stylesheet.getAttribute('data-mce-fullpage')) {
       currentStyleSheetsMap[stylesheet.href] = stylesheet;
     }

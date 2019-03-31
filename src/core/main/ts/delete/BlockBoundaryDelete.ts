@@ -8,8 +8,9 @@
 import { Element } from '@ephox/sugar';
 import BlockMergeBoundary from './BlockMergeBoundary';
 import MergeBlocks from './MergeBlocks';
+import Editor from '../api/Editor';
 
-const backspaceDelete = function (editor, forward) {
+const backspaceDelete = function (editor: Editor, forward) {
   let position;
   const rootNode = Element.fromDom(editor.getBody());
 

@@ -6,7 +6,7 @@
  */
 
 import { Menu } from '@ephox/bridge';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import ColorCache from './ColorCache';
 import { Arr } from '@ephox/katamari';
 

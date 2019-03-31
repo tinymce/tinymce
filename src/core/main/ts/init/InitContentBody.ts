@@ -5,17 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { document, window } from '@ephox/dom-globals';
 import { Insert, Element, Attr } from '@ephox/sugar';
 import EditorUpload from '../api/EditorUpload';
 import ForceBlocks from '../ForceBlocks';
-import NodeChange from '../NodeChange';
+import { NodeChange } from '../NodeChange';
 import SelectionOverrides from '../SelectionOverrides';
 import UndoManager from '../api/UndoManager';
 import Annotator from '../api/Annotator';
 import Formatter from '../api/Formatter';
-import Serializer from '../api/dom/Serializer';
+import DomSerializer from '../api/dom/Serializer';
 import DOMUtils from '../api/dom/DOMUtils';
-import { Selection } from '../api/dom/Selection';
+import Selection from '../api/dom/Selection';
 import DomParser from '../api/html/DomParser';
 import Node from '../api/html/Node';
 import Schema from '../api/html/Schema';
@@ -23,10 +24,9 @@ import KeyboardOverrides from '../keyboard/KeyboardOverrides';
 import Delay from '../api/util/Delay';
 import Quirks from '../util/Quirks';
 import Tools from '../api/util/Tools';
-import { Editor } from 'tinymce/core/api/Editor';
-import * as MultiClickSelection from 'tinymce/core/selection/MultiClickSelection';
+import Editor from '../api/Editor';
+import * as MultiClickSelection from '../selection/MultiClickSelection';
 import * as DetailsElement from '../selection/DetailsElement';
-import { document, window } from '@ephox/dom-globals';
 import Settings from '../api/Settings';
 
 declare const escape: any;
@@ -41,7 +41,7 @@ const appendStyle = function (editor: Editor, text: string) {
   Insert.append(head, tag);
 };
 
-const createParser = function (editor: Editor) {
+const createParser = function (editor: Editor): DomParser {
   const parser = DomParser(editor.settings, editor.schema);
 
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
@@ -56,7 +56,7 @@ const createParser = function (editor: Editor) {
       internalName = 'data-mce-' + name;
 
       // Add internal attribute if we need to we don't on a refresh of the document
-      if (!node.attributes.map[internalName]) {
+      if (!node.attr(internalName)) {
         // Don't duplicate these since they won't get modified by any browser
         if (value.indexOf('data:') === 0 || value.indexOf('blob:') === 0) {
           continue;
@@ -214,7 +214,6 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
     url_converter: editor.convertURL,
     url_converter_scope: editor,
     hex_colors: settings.force_hex_style_colors,
-    class_filter: settings.class_filter,
     update_styles: true,
     root_element: editor.inline ? editor.getBody() : null,
     collect: () => editor.inline,
@@ -226,7 +225,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   });
 
   editor.parser = createParser(editor);
-  editor.serializer = Serializer(settings, editor);
+  editor.serializer = DomSerializer(settings, editor);
   editor.selection = Selection(editor.dom, editor.getWin(), editor.serializer, editor);
   editor.annotator = Annotator(editor);
   editor.formatter = Formatter(editor);

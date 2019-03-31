@@ -7,7 +7,7 @@
 
 import { KeyboardEvent } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
-import { EditorEvent } from 'tinymce/core/api/dom/EventUtils';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Delay from 'tinymce/core/api/util/Delay';
 import VK from 'tinymce/core/api/util/VK';
 import { PatternSet } from '../api/Pattern';

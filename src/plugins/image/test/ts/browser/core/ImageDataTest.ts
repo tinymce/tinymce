@@ -3,7 +3,7 @@ import { Element, Html, SelectorFind, Node } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
 import { read, write, create, isImage, isFigure, defaultData, getStyleValue } from 'tinymce/plugins/image/core/ImageData';
 import { Merger, Obj, Arr } from '@ephox/katamari';
-import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success, failure) => {
   const cSetHtml = (html) => {

@@ -8,8 +8,10 @@
 import ApplyFormat from './ApplyFormat';
 import MatchFormat from './MatchFormat';
 import RemoveFormat from './RemoveFormat';
+import Editor from '../api/Editor';
+import { FormatRegistry } from './FormatRegistry';
 
-const toggle = function (editor, formats, name, vars, node) {
+const toggle = function (editor: Editor, formats: FormatRegistry, name: string, vars, node) {
   const fmt = formats.get(name);
 
   if (MatchFormat.match(editor, name, vars, node) && (!('toggle' in fmt[0]) || fmt[0].toggle)) {

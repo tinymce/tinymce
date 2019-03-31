@@ -17,7 +17,7 @@ import URI from 'tinymce/core/api/util/URI';
 import * as Settings from '../api/Settings';
 import ImageSize from './ImageSize';
 import * as Proxy from './Proxy';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { HTMLImageElement, Blob } from '@ephox/dom-globals';
 import { SelectorFind, Element } from '@ephox/sugar';
 

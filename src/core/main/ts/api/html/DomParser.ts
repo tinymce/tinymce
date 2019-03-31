@@ -13,14 +13,6 @@ import SaxParser from './SaxParser';
 import Schema from './Schema';
 import Tools from '../util/Tools';
 
-export type ParserArgs = any;
-export type ParserFilterCallback = (nodes: Node[], name: string, args: ParserArgs) => void;
-
-export interface ParserFilter {
-  name: string;
-  callbacks: ParserFilterCallback[];
-}
-
 /**
  * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
  * sure that the node tree is valid according to the specified schema.
@@ -36,7 +28,51 @@ export interface ParserFilter {
 
 const makeMap = Tools.makeMap, each = Tools.each, explode = Tools.explode, extend = Tools.extend;
 
-export default function (settings?, schema = Schema()) {
+export interface ParserArgs {
+  getInner?: boolean | number;
+  forced_root_block?: boolean | string;
+  context?: string;
+  isRootContent?: boolean;
+
+  // TODO finish typing the parser args
+  [key: string]: any;
+}
+
+export type ParserFilterCallback = (nodes: Node[], name: string, args: ParserArgs) => void;
+
+export interface ParserFilter {
+  name: string;
+  callbacks: ParserFilterCallback[];
+}
+
+export interface DomParserSettings {
+  allow_conditional_comments?: boolean;
+  allow_html_in_named_anchor?: boolean;
+  allow_script_urls?: boolean;
+  allow_unsafe_link_target?: boolean;
+  convert_fonts_to_spans?: boolean;
+  fix_list_elements?: boolean;
+  font_size_legacy_values?: string;
+  forced_root_block?: boolean | string;
+  forced_root_block_attrs?: Record<string, string>;
+  inline_styles?: boolean | Record<string, string>;
+  padd_empty_with_br?: boolean;
+  remove_trailing_brs?: boolean;
+  root_name?: string;
+  validate?: boolean;
+}
+
+interface DomParser {
+  schema: Schema;
+  addAttributeFilter (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void): void;
+  getAttributeFilters (): ParserFilter[];
+  addNodeFilter (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void): void;
+  getNodeFilters (): ParserFilter[];
+  filterNode (node: Node): Node;
+  parse (html: string, args?: ParserArgs): Node;
+}
+
+const DomParser = function (settings?: DomParserSettings, schema = Schema()): DomParser {
   const nodeFilters = {};
   const attributeFilters = [];
   let matchedNodes = {};
@@ -169,7 +205,7 @@ export default function (settings?, schema = Schema()) {
    * Runs the specified node though the element and attributes filters.
    *
    * @method filterNode
-   * @param {tinymce.html.Node} Node the node to run filters on.
+   * @param {tinymce.html.Node} node the node to run filters on.
    * @return {tinymce.html.Node} The passed in node.
    */
   const filterNode = (node: Node): Node => {
@@ -255,7 +291,7 @@ export default function (settings?, schema = Schema()) {
    *  }
    * });
    * @method addAttributeFilter
-   * @method {String} name Comma separated list of nodes to collect.
+   * @param {String} name Comma separated list of nodes to collect.
    * @param {function} callback Callback function to execute once it has collected nodes.
    */
   const addAttributeFilter = (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void) => {
@@ -618,7 +654,7 @@ export default function (settings?, schema = Schema()) {
 
           if (elementRule.removeEmpty && isEmpty(schema, nonEmptyElements, whiteSpaceElements, node)) {
             // Leave nodes that have a name like <a name="name">
-            if (!node.attributes.map.name && !node.attr('id')) {
+            if (!node.attr('name') && !node.attr('id')) {
               tempNode = node.parent;
 
               if (blockElements[node.name]) {
@@ -718,4 +754,6 @@ export default function (settings?, schema = Schema()) {
   LegacyFilter.register(exports, settings);
 
   return exports;
-}
+};
+
+export default DomParser;

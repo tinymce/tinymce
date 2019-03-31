@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Obj } from '@ephox/katamari';
 import { Element, Node } from '@ephox/dom-globals';
-import { Editor } from 'tinymce/core/api/Editor';
-import Tools from 'tinymce/core/api/util/Tools';
+import { Arr, Cell, Obj } from '@ephox/katamari';
+import Editor from '../api/Editor';
+import Tools from '../api/util/Tools';
 import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';
 

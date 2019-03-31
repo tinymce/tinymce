@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Text, KeyboardEvent } from '@ephox/dom-globals';
+import { Cell } from '@ephox/katamari';
 import BlockBoundaryDelete from '../delete/BlockBoundaryDelete';
 import BlockRangeDelete from '../delete/BlockRangeDelete';
 import CefDelete from '../delete/CefDelete';
@@ -14,11 +16,9 @@ import InlineFormatDelete from '../delete/InlineFormatDelete';
 import TableDelete from '../delete/TableDelete';
 import MatchKeys from './MatchKeys';
 import VK from '../api/util/VK';
-import { Editor } from 'tinymce/core/api/Editor';
-import { Cell } from '@ephox/katamari';
-import { EditorEvent } from 'tinymce/core/api/dom/EventUtils';
-import { Text, KeyboardEvent } from '@ephox/dom-globals';
+import Editor from '../api/Editor';
 import PageBreakDelete from '../delete/ImageBlockDelete';
+import { EditorEvent } from '../api/util/EventDispatcher';
 
 const executeKeydownOverride = function (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) {
   MatchKeys.execute([

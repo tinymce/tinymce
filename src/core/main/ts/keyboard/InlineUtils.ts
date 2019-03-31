@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Element, Selectors } from '@ephox/sugar';
 import * as EditorSettings from '../EditorSettings';
@@ -14,8 +15,7 @@ import * as CaretUtils from '../caret/CaretUtils';
 import DOMUtils from '../api/dom/DOMUtils';
 import NodeType from '../dom/NodeType';
 import * as Bidi from '../text/Bidi';
-import { Editor } from 'tinymce/core/api/Editor';
-import { Node } from '@ephox/dom-globals';
+import Editor from '../api/Editor';
 
 const isInlineTarget = function (editor: Editor, elm: Node): boolean {
   const selector = EditorSettings.getString(editor, 'inline_boundaries_selector').getOr('a[href],code');

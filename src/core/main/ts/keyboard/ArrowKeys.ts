@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Text, KeyboardEvent } from '@ephox/dom-globals';
+import { Cell } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import BoundarySelection from './BoundarySelection';
 import * as CefNavigation from './CefNavigation';
@@ -12,9 +14,7 @@ import * as TableNavigation from './TableNavigation';
 import * as ContentEndpointNavigation from './ContentEndpointNavigation';
 import MatchKeys from './MatchKeys';
 import VK from '../api/util/VK';
-import { Editor } from 'tinymce/core/api/Editor';
-import { Cell } from '@ephox/katamari';
-import { Text, KeyboardEvent } from '@ephox/dom-globals';
+import Editor from '../api/Editor';
 
 const executeKeydownOverride = function (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) {
   const os = PlatformDetection.detect().os;

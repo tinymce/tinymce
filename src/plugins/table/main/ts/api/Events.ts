@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { HTMLElement } from '@ephox/dom-globals';
 
 const fireNewRow = (editor: Editor, row: HTMLElement) => editor.fire('newrow', { node: row });

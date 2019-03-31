@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
+import { Unicode } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
 import { PatternSet } from '../api/Pattern';
 import { findBlockPattern, findNestedInlinePatterns, textBefore } from './FindPatterns';
 import { applyBlockPattern, applyInlinePatterns } from './PatternApplication';
-import { Unicode } from '@ephox/katamari';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
   const inlineAreas = findNestedInlinePatterns(editor.dom, patternSet.inlinePatterns, editor.selection.getRng(), false);

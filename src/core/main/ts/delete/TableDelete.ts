@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Range } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Compare, Element, Node } from '@ephox/sugar';
 import CaretFinder from '../caret/CaretFinder';
@@ -16,8 +17,7 @@ import Empty from '../dom/Empty';
 import PaddingBr from '../dom/PaddingBr';
 import Parents from '../dom/Parents';
 import TableCellSelection from '../selection/TableCellSelection';
-import { Editor } from 'tinymce/core/api/Editor';
-import { Range } from '@ephox/dom-globals';
+import Editor from '../api/Editor';
 import { isBeforeTable, isAfterTable } from '../caret/CaretPositionPredicates';
 
 const emptyCells = (editor: Editor, cells) => {

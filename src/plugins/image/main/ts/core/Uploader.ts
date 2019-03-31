@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { FormData } from '@ephox/dom-globals';
 import { XMLHttpRequest } from '@ephox/sand';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
-import { FormData } from '@ephox/dom-globals';
-import { BlobCache, BlobInfo } from '../../../../../core/main/ts/api/file/BlobCache';
+import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 
 /**
  * This is basically cut down version of tinymce.core.file.Uploader, which we could use directly
@@ -19,7 +19,7 @@ import { BlobCache, BlobInfo } from '../../../../../core/main/ts/api/file/BlobCa
 export type SuccessCallback = (path: string) => void;
 export type FailureCallback = (error: string) => void;
 export type ProgressCallback = (percent: number) => void;
-export type UploadHandler = (blobInfo: BlobCache, success: SuccessCallback, failure: FailureCallback, progress: ProgressCallback) => void;
+export type UploadHandler = (blobInfo: BlobInfo, success: SuccessCallback, failure: FailureCallback, progress: ProgressCallback) => void;
 
 export interface UploaderSettings {
   url?: string;
@@ -78,7 +78,7 @@ export default function (settings: UploaderSettings) {
     xhr.send(formData);
   };
 
-  const uploadBlob = function (blobInfo: BlobCache, handler: UploadHandler) {
+  const uploadBlob = function (blobInfo: BlobInfo, handler: UploadHandler) {
     return new Promise<string>(function (resolve, reject) {
       try {
         handler(blobInfo, resolve, reject, noop);
@@ -92,7 +92,7 @@ export default function (settings: UploaderSettings) {
     return handler === defaultHandler;
   };
 
-  const upload = function (blobInfo: BlobCache): Promise<string> {
+  const upload = function (blobInfo: BlobInfo): Promise<string> {
     return (!settings.url && isDefaultHandler(settings.handler)) ? Promise.reject('Upload url missing from the settings.') : uploadBlob(blobInfo, settings.handler);
   };
 

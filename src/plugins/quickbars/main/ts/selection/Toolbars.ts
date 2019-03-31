@@ -6,7 +6,7 @@
  */
 
 import Settings from '../api/Settings';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const addToEditor = (editor: Editor) => {
   editor.ui.registry.addContextToolbar('imageselection', {

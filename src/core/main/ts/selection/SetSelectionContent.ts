@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from '../api/Editor';
+import Editor from '../api/Editor';
 import ScrollIntoView from '../dom/ScrollIntoView';
 import { Range, DocumentFragment, Text } from '@ephox/dom-globals';
 import { Option, Options } from '@ephox/katamari';

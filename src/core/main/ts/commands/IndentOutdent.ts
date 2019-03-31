@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
-import { Arr } from '@ephox/katamari';
 import { HTMLElement } from '@ephox/dom-globals';
-import { isListItem, isList, isTable } from '../dom/ElementType';
+import { Arr } from '@ephox/katamari';
 import { Element, Traverse, Css, PredicateFind } from '@ephox/sugar';
+import Editor from '../api/Editor';
+import { isListItem, isList, isTable } from '../dom/ElementType';
 import Settings from '../api/Settings';
 import NodeType from '../dom/NodeType';
 

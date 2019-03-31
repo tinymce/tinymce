@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const isValidId = function (id: string) {
   // Follows HTML4 rules: https://www.w3.org/TR/html401/types.html#type-id

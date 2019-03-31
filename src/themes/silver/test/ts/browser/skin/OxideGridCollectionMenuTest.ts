@@ -19,7 +19,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 
 import Theme from '../../../../../silver/main/ts/Theme';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Menu } from '@ephox/bridge';
 import { TestHelpers } from '@ephox/alloy';
 

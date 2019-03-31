@@ -1,7 +1,7 @@
 import { Arr, Cell, Option, Thunk } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Element, Node } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import TableTargets from '../queries/TableTargets';
 import { Selections } from './Selections';
 import * as TableSelection from './TableSelection';
@@ -63,7 +63,7 @@ export const SelectionTargets = (editor: Editor, selections: Selections) => {
   const onSetupMergeable = (api) => onSetup(api, (targets) => targets.mergable().isNone());
   const onSetupUnmergeable = (api) => onSetup(api, (targets) => targets.unmergable().isNone());
 
-  editor.on('nodechange', resetTargets);
+  editor.on('NodeChange', resetTargets);
 
   return {
     onSetupTable,

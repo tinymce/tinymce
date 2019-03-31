@@ -18,6 +18,25 @@
 
 const min = Math.min, max = Math.max, round = Math.round;
 
+interface RGB {
+  r: number;
+  g: number;
+  b: number;
+}
+
+interface HSV {
+  h: number;
+  s: number;
+  v: number;
+}
+
+interface Color {
+  toRgb (): RGB;
+  toHsv (): HSV;
+  toHex (): string;
+  parse (value: string | RGB | HSV): Color;
+}
+
 /**
  * Constructs a new color instance.
  *
@@ -25,7 +44,7 @@ const min = Math.min, max = Math.max, round = Math.round;
  * @method Color
  * @param {String} value Optional initial value to parse.
  */
-const Color = function (value?) {
+const Color = function (value?): Color {
   const self: any = {};
   let r = 0, g = 0, b = 0;
 

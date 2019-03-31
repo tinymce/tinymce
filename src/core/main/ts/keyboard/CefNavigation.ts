@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Range, Element } from '@ephox/dom-globals';
+import { Fun, Arr } from '@ephox/katamari';
 import Env from '../api/Env';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
@@ -16,12 +18,10 @@ import NodeType from '../dom/NodeType';
 import * as CefUtils from './CefUtils';
 import * as RangeNodes from '../selection/RangeNodes';
 import ArrUtils from '../util/ArrUtils';
-import { Range, Element } from '@ephox/dom-globals';
-import { Fun, Arr } from '@ephox/katamari';
-import InlineUtils from 'tinymce/core/keyboard/InlineUtils';
+import InlineUtils from '../keyboard/InlineUtils';
 import Settings from '../api/Settings';
 import { isBeforeContentEditableFalse, isAfterContentEditableFalse, isBeforeTable, isAfterTable } from '../caret/CaretPositionPredicates';
-import { Editor } from '../api/Editor';
+import Editor from '../api/Editor';
 import { getPositionsUntilNextLine, getPositionsUntilPreviousLine } from '../caret/LineReader';
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;

@@ -13,6 +13,7 @@ import DeleteUtils from './DeleteUtils';
 import * as ElementType from '../dom/ElementType';
 import Parents from '../dom/Parents';
 import * as CaretFormat from '../fmt/CaretFormat';
+import Editor from '../api/Editor';
 
 const getParentInlines = function (rootElm, startElm) {
   const parents = Parents.parentsAndSelf(startElm, rootElm);
@@ -28,7 +29,7 @@ const hasOnlyOneChild = function (elm) {
   return Traverse.children(elm).length === 1;
 };
 
-const deleteLastPosition = function (forward, editor, target, parentInlines) {
+const deleteLastPosition = function (forward: boolean, editor: Editor, target, parentInlines) {
   const isFormatElement = Fun.curry(CaretFormat.isFormatElement, editor);
   const formatNodes = Arr.map(Arr.filter(parentInlines, isFormatElement), function (elm) {
     return elm.dom();
@@ -42,7 +43,7 @@ const deleteLastPosition = function (forward, editor, target, parentInlines) {
   }
 };
 
-const deleteCaret = function (editor, forward) {
+const deleteCaret = function (editor: Editor, forward: boolean) {
   const rootElm = Element.fromDom(editor.getBody());
   const startElm = Element.fromDom(editor.selection.getStart());
   const parentInlines = Arr.filter(getParentInlines(rootElm, startElm), hasOnlyOneChild);
@@ -58,7 +59,7 @@ const deleteCaret = function (editor, forward) {
   }).getOr(false);
 };
 
-const backspaceDelete = function (editor, forward) {
+const backspaceDelete = function (editor: Editor, forward: boolean) {
   return editor.selection.isCollapsed() ? deleteCaret(editor, forward) : false;
 };
 

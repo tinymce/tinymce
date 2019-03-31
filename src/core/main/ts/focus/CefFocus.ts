@@ -5,11 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { document } from '@ephox/dom-globals';
 import { Throttler } from '@ephox/katamari';
 import * as CefUtils from '../keyboard/CefUtils';
-import { document } from '@ephox/dom-globals';
+import Editor from '../api/Editor';
 
-const setup = function (editor) {
+const setup = function (editor: Editor) {
   const renderFocusCaret = Throttler.first(function () {
     // AP-24 Added the second condition in this if because of a race condition with setting focus on the PowerPaste
     // remove/keep formatting dialog on paste in IE11. Without this, because we paste twice on IE11, focus ends up set

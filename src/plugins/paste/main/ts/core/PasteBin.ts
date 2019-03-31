@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element, document, HTMLElement, Range } from '@ephox/dom-globals';
+import { Cell } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
 import Env from 'tinymce/core/api/Env';
-import { Editor } from 'tinymce/core/api/Editor';
-import { Cell } from '@ephox/katamari';
-import { Element, document, HTMLElement, Range } from '@ephox/dom-globals';
+import Editor from 'tinymce/core/api/Editor';
 
 // We can't attach the pastebin to a H1 inline element on IE since it won't allow H1 or other
 // non valid parents to be pasted into the pastebin so we need to attach it to the body
@@ -98,7 +98,7 @@ const getEl = (editor: Editor) => {
  *
  * @return {String} Get the contents of the paste bin.
  */
-const getHtml = (editor: Editor) => {
+const getHtml = (editor: Editor): string => {
   let pasteBinElm, pasteBinClones, i, dirtyWrappers, cleanWrapper;
 
   // Since WebKit/Chrome might clone the paste bin when pasting
@@ -111,7 +111,7 @@ const getHtml = (editor: Editor) => {
   };
 
   // find only top level elements (there might be more nested inside them as well, see TINY-1162)
-  pasteBinClones = Tools.grep(getPasteBinParent(editor).childNodes, function (elm) {
+  pasteBinClones = Tools.grep(getPasteBinParent(editor).childNodes, function (elm: Element) {
     return elm.id === 'mcepastebin';
   });
   pasteBinElm = pasteBinClones.shift();
@@ -143,7 +143,7 @@ const isDefaultContent = (pasteBinDefaultContent: string, content: string) => {
   return content === pasteBinDefaultContent;
 };
 
-const isPasteBin = (elm) => {
+const isPasteBin = (elm: Element): boolean => {
   return elm && elm.id === 'mcepastebin';
 };
 

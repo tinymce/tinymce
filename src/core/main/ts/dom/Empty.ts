@@ -34,7 +34,7 @@ const isBogus = NodeType.hasAttribute('data-mce-bogus');
 const isBogusAll = NodeType.hasAttributeValue('data-mce-bogus', 'all');
 
 const isEmptyNode = function (targetNode) {
-  let walker, node, brCount = 0;
+  let node, brCount = 0;
 
   if (isContent(targetNode, targetNode)) {
     return false;
@@ -44,7 +44,7 @@ const isEmptyNode = function (targetNode) {
       return true;
     }
 
-    walker = new TreeWalker(node, targetNode);
+    const walker = new TreeWalker(node, targetNode);
     do {
       if (isBogusAll(node)) {
         node = walker.next(true);

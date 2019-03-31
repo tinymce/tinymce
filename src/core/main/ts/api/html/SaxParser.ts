@@ -9,8 +9,6 @@ import Schema from './Schema';
 import Entities from './Entities';
 import Tools from '../util/Tools';
 
-declare const unescape: any;
-
 /**
  * This class parses HTML code using pure JavaScript and executes various events for each item it finds. It will
  * always execute the events in the right order for tag soup code like <b><p></b></p>. It will also remove elements
@@ -52,15 +50,40 @@ declare const unescape: any;
  * @version 3.4
  */
 
-const isValidPrefixAttrName = function (name) {
+type AttrList = Array<{ name: string, value: string }> & { map: Record<string, string> };
+
+export interface SaxParserSettings {
+  allow_conditional_comments?: boolean;
+  allow_html_data_urls?: boolean;
+  allow_script_urls?: boolean;
+  allow_svg_data_urls?: boolean;
+  fix_self_closing?: boolean;
+  remove_internals?: boolean;
+  self_closing_elements?: Record<string, {}>;
+  validate?: boolean;
+
+  cdata? (text: string): void;
+  comment? (text: string): void;
+  doctype? (text: string): void;
+  end? (name: string): void;
+  pi? (name: string, text: string): void;
+  start? (name: string, attrs: AttrList, empty: boolean): void;
+  text? (text: string, raw?: boolean): void;
+}
+
+interface SaxParser {
+  parse (html: string): void;
+}
+
+const isValidPrefixAttrName = function (name: string): boolean {
   return name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
 };
 
-const trimComments = function (text) {
+const trimComments = function (text: string): string {
   return text.replace(/<!--|-->/g, '');
 };
 
-const isInvalidUri = (settings, uri: string) => {
+const isInvalidUri = (settings: SaxParserSettings, uri: string) => {
   if (settings.allow_html_data_urls) {
     return false;
   } else if (/^data:image\//i.test(uri)) {
@@ -81,7 +104,7 @@ const isInvalidUri = (settings, uri: string) => {
  * @param {Number} startIndex Indext to start searching at should be after the start tag.
  * @return {Number} Index of the end tag.
  */
-const findEndTagIndex = function (schema, html, startIndex) {
+const findEndTagIndex = function (schema: Schema, html: string, startIndex: number): number {
   let count = 1, index, matches, tokenRegExp, shortEndedElements;
 
   shortEndedElements = schema.getShortEndedElements();
@@ -109,7 +132,7 @@ const findEndTagIndex = function (schema, html, startIndex) {
   return index;
 };
 
-const checkBogusAttribute = (regExp: RegExp, attrString: string) => {
+const checkBogusAttribute = (regExp: RegExp, attrString: string): string | null => {
   const matches = regExp.exec(attrString);
 
   if (matches) {
@@ -130,7 +153,7 @@ const checkBogusAttribute = (regExp: RegExp, attrString: string) => {
  * @param {Object} settings Name/value collection of settings. comment, cdata, text, start and end are callbacks.
  * @param {tinymce.html.Schema} schema HTML Schema class to use when parsing.
  */
-export function SaxParser(settings, schema = Schema()) {
+function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
   const noop = function () { };
 
   settings = settings || {};
@@ -527,7 +550,7 @@ export function SaxParser(settings, schema = Schema()) {
   };
 }
 
-export namespace SaxParser {
+namespace SaxParser {
   export const findEndTag = findEndTagIndex;
 }
 

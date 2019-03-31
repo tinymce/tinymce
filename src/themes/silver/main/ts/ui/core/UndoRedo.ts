@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Menu } from '@ephox/bridge';
 
 const toggleUndoRedoState = (api: Menu.MenuItemInstanceApi, editor: Editor, type: 'hasUndo' | 'hasRedo') => {

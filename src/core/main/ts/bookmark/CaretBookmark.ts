@@ -6,7 +6,7 @@
  */
 
 import NodeType from '../dom/NodeType';
-import DomUtils from '../api/dom/DOMUtils';
+import DOMUtils from '../api/dom/DOMUtils';
 import ArrUtils from '../util/ArrUtils';
 import CaretPosition from '../caret/CaretPosition';
 import { Node } from '@ephox/dom-globals';
@@ -33,7 +33,7 @@ import { Fun } from '@ephox/katamari';
 
 const isText = NodeType.isText;
 const isBogus = NodeType.isBogus;
-const nodeIndex = DomUtils.nodeIndex;
+const nodeIndex = DOMUtils.nodeIndex;
 
 const normalizedParent = (node: Node): Node => {
   const parentNode = node.parentNode;

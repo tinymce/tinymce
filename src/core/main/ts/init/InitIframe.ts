@@ -5,18 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { document, window } from '@ephox/dom-globals';
 import { Element, Attr, Class } from '@ephox/sugar';
 import Env from '../api/Env';
 import Settings from '../api/Settings';
 import DOMUtils from '../api/dom/DOMUtils';
 import InitContentBody from './InitContentBody';
 import Uuid from '../util/Uuid';
-import { document, window } from '@ephox/dom-globals';
 import { TranslatedString } from '../api/util/I18n';
+import Editor from '../api/Editor';
 
 const DOM = DOMUtils.DOM;
 
-const relaxDomain = function (editor, ifr) {
+const relaxDomain = function (editor: Editor, ifr) {
   // Domain relaxing is required since the user has messed around with document.domain
   // This only applies to IE 11 other browsers including Edge seems to handle document.domain
   if (document.domain !== window.location.hostname && Env.ie && Env.ie < 12) {
@@ -56,7 +57,7 @@ const createIframeElement = function (id: string, title: TranslatedString, heigh
   return iframe;
 };
 
-const getIframeHtml = function (editor) {
+const getIframeHtml = function (editor: Editor) {
   let bodyId, bodyClass, iframeHTML;
 
   iframeHTML = Settings.getDocType(editor) + '<html><head>';
@@ -83,7 +84,7 @@ const getIframeHtml = function (editor) {
   return iframeHTML;
 };
 
-const createIframe = function (editor, o) {
+const createIframe = function (editor: Editor, o) {
   const title = editor.editorManager.translate(
     'Rich Text Area. Press ALT-0 for help.'
   );
@@ -106,7 +107,7 @@ const createIframe = function (editor, o) {
   return isDomainRelaxed;
 };
 
-const init = function (editor, boxInfo) {
+const init = function (editor: Editor, boxInfo) {
   const isDomainRelaxed = createIframe(editor, boxInfo);
 
   if (boxInfo.editorContainer) {

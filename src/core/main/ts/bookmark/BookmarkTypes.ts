@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Tools from 'tinymce/core/api/util/Tools';
 import { Range } from '@ephox/dom-globals';
+import Tools from '../api/util/Tools';
 
 export interface StringPathBookmark {
   start: string;

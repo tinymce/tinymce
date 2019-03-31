@@ -7,7 +7,7 @@
 
 import { Cell, Option } from '@ephox/katamari';
 import { KeyboardEvent } from '@ephox/dom-globals';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import Clipboard from './actions/Clipboard';
 import { TableActions } from './actions/TableActions';

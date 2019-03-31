@@ -6,7 +6,7 @@
  */
 
 import Events from '../api/Events';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
 
 const toggleVisualBlocks = function (editor: Editor, pluginUrl: string, enabledState: Cell<boolean>) {

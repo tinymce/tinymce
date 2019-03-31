@@ -9,7 +9,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Prism from './Prism';
 import Utils from '../util/Utils';
 import { Option } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const getSelectedCodeSample = (editor: Editor) => {
   const node = editor.selection ? editor.selection.getNode() : null;

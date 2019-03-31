@@ -5,19 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
-import Node from 'tinymce/core/api/html/Node';
-import Tools from 'tinymce/core/api/util/Tools';
-import Serializer from 'tinymce/core/api/html/Serializer';
-import * as FilterNode from '../html/FilterNode';
-import { Option, Fun } from '@ephox/katamari';
-import Settings from 'tinymce/core/api/Settings';
-import EditorFocus from 'tinymce/core/focus/EditorFocus';
-import CaretFinder from 'tinymce/core/caret/CaretFinder';
-import NodeType from 'tinymce/core/dom/NodeType';
-import { Element } from '@ephox/sugar';
-import { isWsPreserveElement } from 'tinymce/core/dom/ElementType';
 import { HTMLElement } from '@ephox/dom-globals';
+import { Option, Fun } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+import Editor from '../api/Editor';
+import Node from '../api/html/Node';
+import Tools from '../api/util/Tools';
+import Serializer from '../api/html/Serializer';
+import * as FilterNode from '../html/FilterNode';
+import Settings from '../api/Settings';
+import EditorFocus from '../focus/EditorFocus';
+import CaretFinder from '../caret/CaretFinder';
+import NodeType from '../dom/NodeType';
+import { isWsPreserveElement } from '../dom/ElementType';
 
 const defaultFormat = 'html';
 

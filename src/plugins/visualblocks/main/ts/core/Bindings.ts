@@ -7,7 +7,7 @@
 
 import Settings from '../api/Settings';
 import VisualBlocks from './VisualBlocks';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
 
 const setup = function (editor: Editor, pluginUrl: string, enabledState: Cell<boolean>) {

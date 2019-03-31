@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const shouldBlockDrop = (editor: Editor): boolean => {
   return editor.getParam('paste_block_drop', false);

@@ -7,9 +7,7 @@ import { window } from '@ephox/dom-globals';
 
 declare const document: any;
 
-UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
   const eventUtils = EventUtils.Event;
 
@@ -353,7 +351,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function () {
   suite.test('bind unbind fire clean on null', function () {
     eventUtils.bind(null, 'click', function () {});
     eventUtils.unbind(null, 'click', function () {});
-    eventUtils.fire(null, {});
+    eventUtils.fire(null, 'click', {});
     eventUtils.clean(null);
     LegacyUnit.equal(true, true, 'No exception');
   });

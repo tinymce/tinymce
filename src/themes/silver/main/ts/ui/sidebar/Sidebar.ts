@@ -25,7 +25,7 @@ import { Sidebar as BridgeSidebar } from '@ephox/bridge';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Id, Option, Obj, Cell, Fun } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';

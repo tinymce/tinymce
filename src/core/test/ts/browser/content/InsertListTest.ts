@@ -5,6 +5,7 @@ import DomParser from 'tinymce/core/api/html/DomParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import InsertList from 'tinymce/core/content/InsertList';
 import { UnitTest } from '@ephox/bedrock';
+import { DocumentFragment, HTMLUListElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.content.InsertListTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
@@ -17,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertListTest', (success, fail
     return fragment;
   };
 
-  const createDomFragment = function (html) {
+  const createDomFragment = function (html): DocumentFragment {
     return DOMUtils.DOM.createFragment(html);
   };
 
@@ -34,14 +35,14 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertListTest', (success, fail
   });
 
   suite.test('listItems', function () {
-    const list = createDomFragment('<ul><li>a</li><li>b</li><li>c</li></ul>').firstChild;
+    const list = createDomFragment('<ul><li>a</li><li>b</li><li>c</li></ul>').firstChild as HTMLUListElement;
 
     LegacyUnit.equal(InsertList.listItems(list).length, 3);
     LegacyUnit.equal(InsertList.listItems(list)[0].nodeName, 'LI');
   });
 
   suite.test('trimListItems', function () {
-    const list = createDomFragment('<ul><li>a</li><li>b</li><li></li></ul>').firstChild;
+    const list = createDomFragment('<ul><li>a</li><li>b</li><li></li></ul>').firstChild as HTMLUListElement;
 
     LegacyUnit.equal(InsertList.listItems(list).length, 3);
     LegacyUnit.equal(InsertList.trimListItems(InsertList.listItems(list)).length, 2);

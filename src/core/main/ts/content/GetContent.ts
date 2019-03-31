@@ -5,23 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
-import Node from 'tinymce/core/api/html/Node';
-import Tools from 'tinymce/core/api/util/Tools';
-import TrimHtml from 'tinymce/core/dom/TrimHtml';
-import { Option, Fun } from '@ephox/katamari';
-import Zwsp from 'tinymce/core/text/Zwsp';
-import Settings from 'tinymce/core/api/Settings';
-import { Element } from '@ephox/sugar';
-import { isWsPreserveElement } from 'tinymce/core/dom/ElementType';
 import { HTMLElement } from '@ephox/dom-globals';
+import { Option, Fun } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+import Editor from '../api/Editor';
+import Node from '../api/html/Node';
+import Tools from '../api/util/Tools';
+import TrimHtml from '../dom/TrimHtml';
+import Zwsp from '../text/Zwsp';
+import Settings from '../api/Settings';
+import { isWsPreserveElement } from '../dom/ElementType';
 
 const defaultFormat = 'html';
 
 type Content = string | Node;
 
 export interface GetContentArgs {
-  format?: string;
+  format?: 'raw' | 'text' | 'html' | 'tree';
   get?: boolean;
   content?: string;
   getInner?: boolean;

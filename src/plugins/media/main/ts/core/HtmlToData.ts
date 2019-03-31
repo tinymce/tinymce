@@ -28,7 +28,6 @@ const htmlToDataSax = function (prefixes, html) {
   SaxParser({
     validate: false,
     allow_conditional_comments: true,
-    special: 'script,noscript',
     start (name, attrs) {
       if (!data.source1 && name === 'param') {
         data.source1 = attrs.map.movie;

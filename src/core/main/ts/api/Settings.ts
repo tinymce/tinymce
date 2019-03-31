@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
-import Tools from 'tinymce/core/api/util/Tools';
 import { HTMLImageElement } from '@ephox/dom-globals';
 import { Fun, Type, Strings, Arr } from '@ephox/katamari';
-import { UploadHandler } from 'tinymce/core/file/Uploader';
+import Editor from './Editor';
+import Tools from './util/Tools';
+import { UploadHandler } from '../file/Uploader';
 
 const getBodySetting = (editor: Editor, name: string, defaultValue: string) => {
   const value = editor.getParam(name, defaultValue);
@@ -125,19 +125,19 @@ const shouldUseContentCssCors = (editor: Editor): boolean => {
   return editor.getParam('content_css_cors', false, 'boolean');
 };
 
-const getLanguageCode = (editor: Editor) => {
+const getLanguageCode = (editor: Editor): string => {
   return editor.getParam('language', 'en', 'string');
 };
 
-const getLanguageUrl = (editor: Editor) => {
+const getLanguageUrl = (editor: Editor): string => {
   return editor.getParam('language_url', '', 'string');
 };
 
-const shouldIndentUseMargin = (editor: Editor) => {
+const shouldIndentUseMargin = (editor: Editor): boolean => {
   return editor.getParam('indent_use_margin', false);
 };
 
-const getIndentation = (editor: Editor) => {
+const getIndentation = (editor: Editor): string => {
   return editor.getParam('indentation', '40px', 'string');
 };
 

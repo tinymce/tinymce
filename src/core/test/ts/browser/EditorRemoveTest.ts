@@ -2,7 +2,7 @@ import { Chain, Logger, Pipeline, RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor as McEditor } from '@ephox/mcagar';
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Theme from 'tinymce/themes/silver/Theme';
 

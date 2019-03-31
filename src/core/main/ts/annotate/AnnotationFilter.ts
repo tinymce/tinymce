@@ -9,12 +9,12 @@ import { Option, Arr } from '@ephox/katamari';
 
 import { AnnotationsRegistry, AnnotatorSettings } from './AnnotationsRegistry';
 import * as Markings from './Markings';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from '../api/Editor';
+import Node from '../api/html/Node';
 
 const setup = (editor: Editor, registry: AnnotationsRegistry): void => {
-  const identifyParserNode = (span): Option<AnnotatorSettings> => {
-    const optAnnotation = Option.from(span.attributes.map[Markings.dataAnnotation()]) as Option<string>;
-    return optAnnotation.bind(registry.lookup);
+  const identifyParserNode = (span: Node): Option<AnnotatorSettings> => {
+    return Option.from(span.attr(Markings.dataAnnotation())).bind(registry.lookup);
   };
 
   editor.on('init', () => {

@@ -7,7 +7,7 @@ import { Element, Body, Css } from '@ephox/sugar';
 
 import Theme from '../../../../main/ts/Theme';
 import Env from 'tinymce/core/api/Env';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
   Theme();

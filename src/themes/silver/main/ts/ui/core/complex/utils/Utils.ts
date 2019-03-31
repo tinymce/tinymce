@@ -7,7 +7,7 @@
 
 import { Toolbar } from '@ephox/bridge';
 import { Cell, Option } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { FormatItem } from '../BespokeSelect';
 
 type Unbinder = () => void;

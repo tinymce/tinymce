@@ -7,6 +7,7 @@
 
 import NodeType from '../dom/NodeType';
 import NewLineUtils from './NewLineUtils';
+import Editor from '../api/Editor';
 
 const hasFirstChild = function (elm, name) {
   return elm.firstChild && elm.firstChild.nodeName === name;
@@ -50,7 +51,7 @@ const isFirstOrLastLi = function (containerBlock, parentBlock, first) {
 };
 
 // Inserts a block or br before/after or in the middle of a split list of the LI is empty
-const insert = function (editor, createNewBlock, containerBlock, parentBlock, newBlockName) {
+const insert = function (editor: Editor, createNewBlock, containerBlock, parentBlock, newBlockName) {
   const dom = editor.dom;
   const rng = editor.selection.getRng();
 

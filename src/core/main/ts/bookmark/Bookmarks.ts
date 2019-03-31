@@ -7,7 +7,7 @@
 
 import GetBookmark from './GetBookmark';
 import ResolveBookmark from './ResolveBookmark';
-import { Selection } from '../api/dom/Selection';
+import Selection from '../api/dom/Selection';
 import NodeType from '../dom/NodeType';
 import { Bookmark } from './BookmarkTypes';
 import { Node } from '@ephox/dom-globals';

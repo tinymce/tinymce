@@ -16,7 +16,8 @@ import { PasteBin } from './PasteBin';
 import ProcessFilters from './ProcessFilters';
 import SmartPaste from './SmartPaste';
 import Utils from './Utils';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { Cell, Futures, Future, Arr } from '@ephox/katamari';
 import { DataTransfer, ClipboardEvent, HTMLImageElement, Range, Image, Event, DragEvent, navigator, KeyboardEvent, File } from '@ephox/dom-globals';
 
@@ -350,7 +351,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     return pasteBin.getLastRng() || editor.selection.getRng();
   };
 
-  editor.on('paste', function (e) {
+  editor.on('paste', function (e: EditorEvent<ClipboardEvent & { ieFake: boolean }>) {
     // Getting content from the Clipboard can take some time
     const clipboardTimer = new Date().getTime();
     const clipboardContent = getClipboardContent(editor, e);
@@ -456,7 +457,7 @@ const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteForma
       let i = nodes.length;
 
       while (i--) {
-        src = nodes[i].attributes.map.src;
+        src = nodes[i].attr('src');
 
         if (!src) {
           continue;

@@ -7,16 +7,15 @@
 
 import { Debugging } from '@ephox/alloy';
 import { Fun, Id } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
-import ThemeManager from 'tinymce/core/api/ThemeManager';
+import ThemeManager, { Theme } from 'tinymce/core/api/ThemeManager';
 import NotificationManagerImpl from './alien/NotificationManagerImpl';
 import { Autocompleter } from './Autocompleter';
 import Render, { RenderInfo } from './Render';
 import FormatControls from './ui/core/FormatControls';
 import WindowManager from './ui/dialog/WindowManager';
 
-ThemeManager.add('silver', (editor: Editor) => {
-  const {mothership, uiMothership, backstage, renderUI, getUi}: RenderInfo = Render.setup(editor);
+ThemeManager.add('silver', (editor): Theme => {
+  const { mothership, uiMothership, backstage, renderUI, getUi }: RenderInfo = Render.setup(editor);
 
   FormatControls.setup(editor, backstage);
 

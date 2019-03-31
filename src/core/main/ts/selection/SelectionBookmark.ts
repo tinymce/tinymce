@@ -5,10 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { document } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, Element, Node, Text, Traverse, Selection } from '@ephox/sugar';
-import { document } from '@ephox/dom-globals';
+import Editor from '../api/Editor';
 
 const browser = PlatformDetection.detect().browser;
 
@@ -43,7 +44,7 @@ const isRngInRoot = function (root) {
   };
 };
 
-const shouldStore = function (editor) {
+const shouldStore = function (editor: Editor) {
   return editor.inline === true || browser.isIE();
 };
 
@@ -83,13 +84,13 @@ const bookmarkToNativeRng = function (bookmark) {
   }
 };
 
-const store = function (editor) {
+const store = function (editor: Editor) {
   const newBookmark = shouldStore(editor) ? getBookmark(Element.fromDom(editor.getBody())) : Option.none();
 
   editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
 };
 
-const storeNative = function (editor, rng) {
+const storeNative = function (editor: Editor, rng) {
   const root = Element.fromDom(editor.getBody());
   const range = shouldStore(editor) ? Option.from(rng) : Option.none();
 
@@ -99,7 +100,7 @@ const storeNative = function (editor, rng) {
   editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
 };
 
-const getRng = function (editor) {
+const getRng = function (editor: Editor) {
   const bookmark = editor.bookmark ? editor.bookmark : Option.none();
 
   return bookmark
@@ -107,7 +108,7 @@ const getRng = function (editor) {
     .bind(bookmarkToNativeRng);
 };
 
-const restore = function (editor) {
+const restore = function (editor: Editor) {
   getRng(editor).each(function (rng) {
     editor.selection.setRng(rng);
   });

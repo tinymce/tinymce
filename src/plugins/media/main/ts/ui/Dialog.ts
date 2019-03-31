@@ -7,7 +7,7 @@
 
 import { Merger, Obj, Arr, Type } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 import Settings from '../api/Settings';
 import HtmlToData from '../core/HtmlToData';

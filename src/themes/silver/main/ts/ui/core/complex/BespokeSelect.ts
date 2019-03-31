@@ -8,7 +8,7 @@
 import { AlloyComponent } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Arr, Option, Cell, Fun } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
@@ -136,12 +136,12 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, datas
   const onAttach = spec.nodeChangeHandler.map((f) => (comp) => {
     const handler = f(comp);
     onDestroyCell.set(handler);
-    editor.on('nodeChange', handler);
+    editor.on('NodeChange', handler);
   }).getOr(Fun.noop);
   const onDetach = spec.nodeChangeHandler.map((_f) => (_comp) => {
     const onDestroy = onDestroyCell.get();
     if (onDestroy !== undefined) {
-      editor.off('nodeChange', onDestroy);
+      editor.off('NodeChange', onDestroy);
     }
   }).getOr(Fun.noop);
 

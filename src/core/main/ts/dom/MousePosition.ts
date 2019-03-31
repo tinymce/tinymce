@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from '../api/Editor';
+
 /**
  * This module calculates an absolute coordinate inside the editor body for both local and global mouse events.
  *
@@ -26,16 +28,16 @@ const getAbsolutePosition = function (elm) {
   };
 };
 
-const getBodyPosition = function (editor) {
+const getBodyPosition = function (editor: Editor) {
   return editor.inline ? getAbsolutePosition(editor.getBody()) : { left: 0, top: 0 };
 };
 
-const getScrollPosition = function (editor) {
+const getScrollPosition = function (editor: Editor) {
   const body = editor.getBody();
   return editor.inline ? { left: body.scrollLeft, top: body.scrollTop } : { left: 0, top: 0 };
 };
 
-const getBodyScroll = function (editor) {
+const getBodyScroll = function (editor: Editor) {
   const body = editor.getBody(), docElm = editor.getDoc().documentElement;
   const inlineScroll = { left: body.scrollLeft, top: body.scrollTop };
   const iframeScroll = { left: body.scrollLeft || docElm.scrollLeft, top: body.scrollTop || docElm.scrollTop };
@@ -43,7 +45,7 @@ const getBodyScroll = function (editor) {
   return editor.inline ? inlineScroll : iframeScroll;
 };
 
-const getMousePosition = function (editor, event) {
+const getMousePosition = function (editor: Editor, event) {
   if (event.target.ownerDocument !== editor.getDoc()) {
     const iframePosition = getAbsolutePosition(editor.getContentAreaContainer());
     const scrollPosition = getBodyScroll(editor);
@@ -67,7 +69,7 @@ const calculatePosition = function (bodyPosition, scrollPosition, mousePosition)
   };
 };
 
-const calc = function (editor, event) {
+const calc = function (editor: Editor, event) {
   return calculatePosition(getBodyPosition(editor), getScrollPosition(editor), getMousePosition(editor, event));
 };
 

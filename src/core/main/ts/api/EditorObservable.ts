@@ -5,12 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node, Event } from '@ephox/dom-globals';
+import { isReadOnly } from '../Mode';
 import Observable from './util/Observable';
 import DOMUtils from './dom/DOMUtils';
 import Tools from './util/Tools';
-import { Editor } from 'tinymce/core/api/Editor';
-import { isReadOnly } from 'tinymce/core/Mode';
-import { Node, Event } from '@ephox/dom-globals';
+import Editor from './Editor';
+import { EditorEventMap } from './EventTypes';
 
 /**
  * This mixin contains the event logic for the tinymce.Editor class.
@@ -134,7 +135,15 @@ const bindEventDelegate = function (editor: Editor, eventName: string) {
   }
 };
 
-let EditorObservable = {
+interface EditorObservable extends Observable<EditorEventMap> {
+  bindPendingEventDelegates (): void;
+  toggleNativeEvent (name: string, state: boolean);
+  unbindAllNativeEvents (): void;
+}
+
+const EditorObservable: EditorObservable = {
+  ...Observable,
+
   /**
    * Bind any pending event delegates. This gets executed after the target body/document is created.
    *
@@ -209,7 +218,5 @@ let EditorObservable = {
     }
   }
 };
-
-EditorObservable = Tools.extend({}, Observable, EditorObservable);
 
 export default EditorObservable;

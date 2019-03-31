@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { Element } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 import Theme from 'tinymce/themes/silver/Theme';
 

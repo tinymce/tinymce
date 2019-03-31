@@ -8,6 +8,7 @@
 import DOMUtils from '../api/dom/DOMUtils';
 import Tools from '../api/util/Tools';
 import Schema from '../api/html/Schema';
+import Editor from '../api/Editor';
 
 /**
  * Internal class for generating previews styles for formats.
@@ -22,7 +23,7 @@ import Schema from '../api/html/Schema';
 const each = Tools.each;
 const dom = DOMUtils.DOM;
 
-const parsedSelectorToHtml = function (ancestry, editor) {
+const parsedSelectorToHtml = function (ancestry, editor: Editor) {
   let elm, item, fragment;
   const schema = editor && editor.schema || Schema({});
 
@@ -184,7 +185,7 @@ const parseSelector = function (selector) {
   }).reverse();
 };
 
-const getCssText = function (editor, format) {
+const getCssText = function (editor: Editor, format) {
   let name, previewFrag, previewElm, items;
   let previewCss = '', parentFontSize, previewStyles;
 

@@ -2,7 +2,7 @@ import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import JqueryIntegration from 'tinymce/core/JqueryIntegration';
 import PluginManager from 'tinymce/core/api/PluginManager';

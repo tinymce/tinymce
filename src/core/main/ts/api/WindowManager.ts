@@ -8,7 +8,7 @@
 import { Arr, Option } from '@ephox/katamari';
 import SelectionBookmark from '../selection/SelectionBookmark';
 import WindowManagerImpl from '../ui/WindowManagerImpl';
-import { Editor } from './Editor';
+import Editor from './Editor';
 import { Types } from '@ephox/bridge';
 
 /**
@@ -33,13 +33,6 @@ import { Types } from '@ephox/bridge';
  * });
  */
 
-export interface WindowManager {
-  open: <T>(config: Types.Dialog.DialogApi<T>, params?) => Types.Dialog.DialogInstanceApi<T>;
-  alert: (message: string, callback?: () => void, scope?) => void;
-  confirm: (message: string, callback?: (state: boolean) => void, scope?) => void;
-  close: () => void;
-}
-
 export interface WindowManagerImpl {
   open: <T>(config: Types.Dialog.DialogApi<T>, params, closeWindow: (dialog: Types.Dialog.DialogInstanceApi<T>) => void) => Types.Dialog.DialogInstanceApi<T>;
   alert: (message: string, callback: () => void) => void;
@@ -47,7 +40,14 @@ export interface WindowManagerImpl {
   close: (dialog: Types.Dialog.DialogInstanceApi<any>) => void;
 }
 
-export default function (editor: Editor): WindowManager {
+interface WindowManager {
+  open: <T>(config: Types.Dialog.DialogApi<T>, params?) => Types.Dialog.DialogInstanceApi<T>;
+  alert: (message: string, callback?: () => void, scope?) => void;
+  confirm: (message: string, callback?: (state: boolean) => void, scope?) => void;
+  close: () => void;
+}
+
+const WindowManager = function (editor: Editor): WindowManager {
   let dialogs: Types.Dialog.DialogInstanceApi<any>[] = [];
 
   const getImplementation = function (): WindowManagerImpl {
@@ -179,4 +179,6 @@ export default function (editor: Editor): WindowManager {
      */
     close
   };
-}
+};
+
+export default WindowManager;

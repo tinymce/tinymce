@@ -6,11 +6,13 @@
  */
 
 import { AlloyTriggers, Attachment, Swapping } from '@ephox/alloy';
+import { HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Element, Focus, Node } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import ThemeManager from 'tinymce/core/api/ThemeManager';
+import Editor from 'tinymce/core/api/Editor';
 
 import TinyCodeDupe from './alien/TinyCodeDupe';
 import * as Settings from './api/Settings';
@@ -24,13 +26,13 @@ import IosRealm from './ui/IosRealm';
 import CssUrls from './util/CssUrls';
 import FormatChangers from './util/FormatChangers';
 import SkinLoaded from './util/SkinLoaded';
-import { HTMLElement } from '@ephox/dom-globals';
+import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
 
 /// not to be confused with editor mode
 const READING = Fun.constant('toReading'); /// 'hide the keyboard'
 const EDITING = Fun.constant('toEditing'); /// 'show the keyboard'
 
-export const renderMobileTheme = function (editor) {
+const renderMobileTheme = function (editor: Editor) {
   const renderUI = function () {
     const targetNode = editor.getElement();
     const cssUrls = CssUrls.derive(editor);
@@ -43,7 +45,7 @@ export const renderMobileTheme = function (editor) {
     }
 
     const doScrollIntoView = function () {
-      editor.fire('scrollIntoView');
+      editor.fire('ScrollIntoView');
     };
 
     const realm = PlatformDetection.detect().os.isAndroid() ? AndroidRealm(doScrollIntoView) : IosRealm(doScrollIntoView);
@@ -122,12 +124,12 @@ export const renderMobileTheme = function (editor) {
           },
 
           onScrollToCursor (handler) {
-            editor.on('scrollIntoView', function (tinyEvent) {
+            editor.on('ScrollIntoView', function (tinyEvent) {
               handler(tinyEvent);
             });
 
             const unbind = function () {
-              editor.off('scrollIntoView');
+              editor.off('ScrollIntoView');
               orientation.destroy();
             };
 
@@ -254,7 +256,7 @@ export const renderMobileTheme = function (editor) {
     });
 
     return {
-      iframeContainer: realm.socket().element().dom() as HTMLElement,
+      iframeContainer: realm.socket().element().dom() as HTMLIFrameElement,
       editorContainer: realm.element().dom() as HTMLElement
     };
   };
@@ -263,12 +265,13 @@ export const renderMobileTheme = function (editor) {
     getNotificationManagerImpl () {
       return {
         open: Fun.constant({
-          progressBar: { value: Fun.noop},
-          close: Fun.noop
+          progressBar: { value: Fun.noop },
+          close: Fun.noop,
+          text: Fun.noop
         }),
         close: Fun.noop,
         reposition: Fun.noop,
-        getArgs: Fun.identity
+        getArgs: Fun.constant({} as NotificationSpec)
       };
     },
     renderUI

@@ -6,9 +6,7 @@ import DomParser from 'tinymce/core/api/html/DomParser';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
 
-UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   const schema = Schema({ valid_elements: '*[class|title]' });
@@ -638,7 +636,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function () {
   suite.test('Pad empty with br', function () {
     const schema = Schema();
     const parser = DomParser({ padd_empty_with_br: true }, schema);
-    const serializer = Serializer({ padd_empty_with_br: true }, schema);
+    const serializer = Serializer({ }, schema);
     const root = parser.parse('<p>a</p><p></p>');
     LegacyUnit.equal(serializer.serialize(root), '<p>a</p><p><br /></p>');
   });

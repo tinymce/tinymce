@@ -9,7 +9,7 @@ import { Attachment, Docking, Focusing, SplitToolbar } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 import { Class, Css, Element, Height, Location } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { getToolbarDrawer, ToolbarDrawer, getUiContainer, useFixedContainer } from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
@@ -136,7 +136,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     updateChromeUi();
     show();
 
-    editor.on('nodeChange ResizeWindow', updateChromeUi);
+    editor.on('NodeChange ResizeWindow', updateChromeUi);
     editor.on('activate', show);
     editor.on('deactivate', hide);
 

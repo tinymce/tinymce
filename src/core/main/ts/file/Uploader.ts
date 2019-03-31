@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { FormData } from '@ephox/dom-globals';
+import { Type } from '@ephox/katamari';
 import { XMLHttpRequest } from '@ephox/sand';
 import Promise from '../api/util/Promise';
 import Tools from '../api/util/Tools';
-import { FormData } from '@ephox/dom-globals';
-import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
-import { Type } from '@ephox/katamari';
+import { BlobInfo } from '../api/file/BlobCache';
 
 /**
  * Upload blobs or blob infos to the specified URL or handler.
@@ -34,7 +34,18 @@ import { Type } from '@ephox/katamari';
 
 export type UploadHandler = (blobInfo: BlobInfo, success: (url: string) => void, failure: (err: string) => void, progress?: (percent: number) => void) => void;
 
-export default function (uploadStatus, settings) {
+export interface UploadResult {
+  url: string;
+  blobInfo: BlobInfo;
+  status: boolean;
+  error?: string;
+}
+
+export interface Uploader {
+  upload (blobInfos: BlobInfo[], openNotification: () => void): Promise<UploadResult[]>;
+}
+
+export function Uploader(uploadStatus, settings): Uploader {
   const pendingPromises = {};
 
   const pathJoin = function (path1, path2) {
@@ -84,13 +95,13 @@ export default function (uploadStatus, settings) {
     xhr.send(formData);
   };
 
-  const noUpload = function () {
+  const noUpload = function (): Promise<UploadResult[]> {
     return new Promise(function (resolve) {
       resolve([]);
     });
   };
 
-  const handlerSuccess = function (blobInfo, url) {
+  const handlerSuccess = function (blobInfo: BlobInfo, url: string): UploadResult {
     return {
       url,
       blobInfo,
@@ -98,7 +109,7 @@ export default function (uploadStatus, settings) {
     };
   };
 
-  const handlerFailure = function (blobInfo, error) {
+  const handlerFailure = function (blobInfo: BlobInfo, error): UploadResult {
     return {
       url: '',
       blobInfo,
@@ -115,7 +126,7 @@ export default function (uploadStatus, settings) {
     delete pendingPromises[blobUri];
   };
 
-  const uploadBlobInfo = function (blobInfo, handler, openNotification) {
+  const uploadBlobInfo = function (blobInfo: BlobInfo, handler, openNotification): Promise<UploadResult> {
     uploadStatus.markPending(blobInfo.blobUri());
 
     return new Promise(function (resolve) {
@@ -169,7 +180,7 @@ export default function (uploadStatus, settings) {
     return handler === defaultHandler;
   };
 
-  const pendingUploadBlobInfo = function (blobInfo) {
+  const pendingUploadBlobInfo = function (blobInfo: BlobInfo): Promise<UploadResult> {
     const blobUri = blobInfo.blobUri();
 
     return new Promise(function (resolve) {
@@ -178,12 +189,12 @@ export default function (uploadStatus, settings) {
     });
   };
 
-  const uploadBlobs = function (blobInfos, openNotification) {
+  const uploadBlobs = function (blobInfos: BlobInfo[], openNotification): Promise<UploadResult[]> {
     blobInfos = Tools.grep(blobInfos, function (blobInfo) {
       return !uploadStatus.isUploaded(blobInfo.blobUri());
     });
 
-    return Promise.all(Tools.map(blobInfos, function (blobInfo) {
+    return Promise.all(Tools.map(blobInfos, function (blobInfo: BlobInfo) {
       return uploadStatus.isPending(blobInfo.blobUri()) ?
         pendingUploadBlobInfo(blobInfo) : uploadBlobInfo(blobInfo, settings.handler, openNotification);
     }));

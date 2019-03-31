@@ -162,7 +162,7 @@ export default function (editor, lazyResize) {
     editor.on('mouseup', mouseUp);
     editor.on('keyup', keyup);
     editor.on('keydown', keydown);
-    editor.on('nodechange', syncSelection);
+    editor.on('NodeChange', syncSelection);
 
     handlers = Option.some(handlerStruct({
       mousedown: mouseDown,

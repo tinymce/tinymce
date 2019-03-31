@@ -10,7 +10,7 @@ import { ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Option, Options, Result, Type } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
 import {
   renderSplitButton,

@@ -186,9 +186,9 @@ UnitTest.asynctest(
             editor.nodeChanged();
             focusDiv();
 
-            editor.on('getSelectionRange', modifyRange);
+            editor.on('GetSelectionRange', modifyRange);
             const elm = editor.selection.getNode();
-            editor.off('getSelectedRange', modifyRange);
+            editor.off('GetSelectedRange', modifyRange);
 
             Assertions.assertEq('Expect event to change the selection from a to b', 'b', elm.innerHTML);
           }),

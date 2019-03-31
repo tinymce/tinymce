@@ -4,7 +4,7 @@ import { PlatformDetection } from '@ephox/sand';
 import * as EditorSettings from 'tinymce/core/EditorSettings';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 
 UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
@@ -128,7 +128,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
 
         Logger.t('Getters for varous setting types', Step.sync(function () {
           const settings = EditorSettings.getEditorSettings(
-            {},
+            {} as Editor,
             'id',
             'documentBaseUrl',
             {
@@ -146,7 +146,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
 
           const fakeEditor = {
             settings
-          };
+          } as Editor;
 
           Assertions.assertEq('Should be none for non existing setting', true, EditorSettings.get(fakeEditor, 'non_existing').isNone());
           Assertions.assertEq('Should be none for existing null setting', true, EditorSettings.get(fakeEditor, 'non_existing').isNone());
@@ -163,7 +163,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
 
         Logger.t('Mobile override', Step.sync(function () {
           const settings = EditorSettings.getEditorSettings(
-            {},
+            {} as Editor,
             'id',
             'documentBaseUrl',
             {
@@ -179,7 +179,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
 
           const fakeEditor = {
             settings
-          };
+          } as Editor;
 
           Assertions.assertEq('Should only have the mobile setting on touch', EditorSettings.get(fakeEditor, 'settingA').getOr(false), isTouch);
           Assertions.assertEq('Should not have a mobile setting on desktop', EditorSettings.get(fakeEditor, 'settingA').isNone(), !isTouch);

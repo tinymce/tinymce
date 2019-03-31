@@ -7,14 +7,14 @@
 
 import { Element, Node, Range } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import { Editor } from '../api/Editor';
-import { DOMUtils } from '../api/dom/DOMUtils';
+import Editor from '../api/Editor';
+import DOMUtils from '../api/dom/DOMUtils';
 import CaretPosition from '../caret/CaretPosition';
 import * as CaretUtils from '../caret/CaretUtils';
 import { CaretWalker, HDirection } from '../caret/CaretWalker';
 import NodeType from '../dom/NodeType';
 import * as CefUtils from '../keyboard/CefUtils';
-import InlineUtils from 'tinymce/core/keyboard/InlineUtils';
+import InlineUtils from '../keyboard/InlineUtils';
 import { isBeforeContentEditableFalse, isAfterContentEditableFalse } from '../caret/CaretPositionPredicates';
 
 const trimEmptyTextNode = (dom: DOMUtils, node: Node) => {

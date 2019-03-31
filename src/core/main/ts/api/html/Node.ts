@@ -150,7 +150,10 @@ class Node {
    * @param {String} value Optional value to set.
    * @return {String/tinymce.html.Node} String or undefined on a get operation or the current node on a set operation.
    */
-  public attr (name: string | Record<string, string>, value?: string): String | Node {
+  public attr (name: string, value: string): string | Node;
+  public attr (name: Record<string, string>): Node;
+  public attr (name: string): string;
+  public attr (name: string | Record<string, string>, value?: string): string | Node {
     const self = this;
     let attrs: Attributes, i;
 
@@ -474,7 +477,7 @@ class Node {
       do {
         if (node.type === 1) {
           // Ignore bogus elements
-          if (node.attributes.map['data-mce-bogus']) {
+          if (node.attr('data-mce-bogus')) {
             continue;
           }
 
