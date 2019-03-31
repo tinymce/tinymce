@@ -1267,6 +1267,6 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function () {
     },
     custom_elements: 'custom1,~custom2',
     extended_valid_elements: 'custom1,custom2',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

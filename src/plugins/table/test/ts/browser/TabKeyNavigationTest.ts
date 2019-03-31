@@ -47,6 +47,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TabKeyNavigationTest', (succes
       '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
     },
     theme: 'silver',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

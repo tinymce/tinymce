@@ -185,7 +185,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
   }, {
     plugins: 'fullpage',
     indent: false,
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     theme: 'silver',
     protect: [
       /<!--([\s\S]*?)-->/g

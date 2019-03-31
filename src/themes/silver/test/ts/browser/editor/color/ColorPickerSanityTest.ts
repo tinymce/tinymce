@@ -93,6 +93,6 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
     plugins: '',
     theme: 'silver',
     toolbar: '',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteCommandsTest', function ()
       ]))
     ], onSuccess, onFailure);
   }, {
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     indent: false
   }, success, failure);
 });

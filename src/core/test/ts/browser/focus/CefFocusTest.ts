@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function (success,
     return Chain.asStep({}, [
       McEditor.cFromHtml(html, {
         inline: true,
-        base_url: '/project/js/tinymce'
+        base_url: '/project/tinymce/js/tinymce'
       })
     ]);
   };

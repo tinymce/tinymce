@@ -15,12 +15,12 @@ UnitTest.asynctest('browser.tinymce.core.dom.ContentCssCorsTest', (success, fail
 
   Pipeline.async({}, Env.ie < 12 ? [] : [
     Logger.t('assert crossorigin link presence with setting set', Chain.asStep({}, [
-      McEditor.cFromSettings({ content_css_cors: true, skin_url: '/project/js/tinymce/skins/lightgray' }),
+      McEditor.cFromSettings({ content_css_cors: true, skin_url: '/project/tinymce/js/tinymce/skins/lightgray' }),
       cAssertCorsLinkPresence(true),
       McEditor.cRemove
     ])),
     Logger.t('assert crossorigin link presence with no setting set', Chain.asStep({}, [
-      McEditor.cFromSettings({ skin_url: '/project/js/tinymce/skins/lightgray' }),
+      McEditor.cFromSettings({ skin_url: '/project/tinymce/js/tinymce/skins/lightgray' }),
       cAssertCorsLinkPresence(false),
       McEditor.cRemove
     ]))

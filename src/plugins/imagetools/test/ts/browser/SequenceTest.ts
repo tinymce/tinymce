@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', (success, 
     return success();
   }
 
-  const srcUrl = '/project/src/plugins/imagetools/demo/img/dogleft.jpg';
+  const srcUrl = '/project/tinymce/src/plugins/imagetools/demo/img/dogleft.jpg';
   // var corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
 
   Plugin();
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', (success, 
     theme: 'silver',
     plugins: 'imagetools',
     imagetools_cors_hosts: ['moxiecode.cachefly.net'],
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     toolbar: 'editimage',
   }, success, failure);
 });

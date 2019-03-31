@@ -164,6 +164,6 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
     plugins: 'link',
     toolbar: 'link',
     theme: 'silver',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

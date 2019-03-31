@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.themes.mobile.EditorRemoveTest', (success, f
       McEditor.cFromSettings({
         theme: 'mobile',
         inline: false,
-        base_url: '/project/js/tinymce'
+        base_url: '/project/tinymce/js/tinymce'
       }),
       Chain.op((editor) => {
         const wrapperElm = Element.fromHtml('<div class="tinymce-editor"></div>');

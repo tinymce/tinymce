@@ -100,6 +100,6 @@ UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', function () {
     disable_nodechange: true,
     indent: false,
     entities: 'raw',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

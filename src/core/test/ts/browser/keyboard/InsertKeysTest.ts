@@ -219,6 +219,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, fai
     ], onSuccess, onFailure);
   }, {
     indent: false,
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

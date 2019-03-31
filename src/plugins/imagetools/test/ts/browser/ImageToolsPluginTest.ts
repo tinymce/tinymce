@@ -12,7 +12,7 @@ import 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (success, failure) => {
   const uploadHandlerState = ImageUtils.createStateContainer();
 
-  const srcUrl = '/project/src/plugins/imagetools/demo/img/dogleft.jpg';
+  const srcUrl = '/project/tinymce/src/plugins/imagetools/demo/img/dogleft.jpg';
 
   Plugin();
 
@@ -80,6 +80,6 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (s
     plugins: 'imagetools',
     automatic_uploads: false,
     images_upload_handler: uploadHandlerState.handler(srcUrl),
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

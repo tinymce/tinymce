@@ -42,6 +42,6 @@ UnitTest.asynctest('browser.tinymce.themes.mobile.ThemeTest', (success, failure)
     insert_toolbar: 'quickimage media quicktable',
     selection_toolbar: 'bold italic | quicklink h1 h2 blockquote',
     inline: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

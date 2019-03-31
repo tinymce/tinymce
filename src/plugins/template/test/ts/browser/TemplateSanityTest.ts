@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
 
       Log.stepsAsStep('TBA', 'Template: Test loading in snippet from other file', [
         tinyApis.sSetContent(''),
-        tinyApis.sSetSetting('templates', [{ title: 'a', description: '<strong>b</strong>', url: '/project/src/plugins/template/test/html/test_template.html' }]),
+        tinyApis.sSetSetting('templates', [{ title: 'a', description: '<strong>b</strong>', url: '/project/tinymce/src/plugins/template/test/html/test_template.html' }]),
         Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         Chain.asStep(docBody, [
@@ -69,6 +69,6 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
     plugins: 'template',
     toolbar: 'template',
     indent: false,
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

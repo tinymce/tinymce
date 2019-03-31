@@ -57,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, fai
     plugins: 'emoticons',
     toolbar: 'emoticons',
     theme: 'silver',
-    base_url: '/project/js/tinymce',
-    emoticons_database_url: '/project/src/plugins/emoticons/main/js/emojis.js'
+    base_url: '/project/tinymce/js/tinymce',
+    emoticons_database_url: '/project/tinymce/src/plugins/emoticons/main/js/emojis.js'
   }, success, failure);
 });

@@ -98,7 +98,7 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
       theme: 'silver',
       menubar: true,
       toolbar: 'dialog-button',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       setup: (ed: Editor) => {
         ed.ui.registry.addButton('dialog-button', {
           type: 'button',

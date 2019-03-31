@@ -164,7 +164,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
     },
     {
       theme: 'silver',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       setup: (ed: Editor) => {
         ed.ui.registry.addContextForm('test-form', {
           launch: {

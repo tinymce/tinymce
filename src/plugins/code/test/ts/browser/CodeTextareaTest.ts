@@ -50,6 +50,6 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeTextareaTest', (success, fa
     plugins: 'code',
     theme: 'silver',
     toolbar: 'code',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

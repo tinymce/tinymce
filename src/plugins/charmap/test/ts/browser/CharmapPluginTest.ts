@@ -107,6 +107,6 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
     theme: 'silver',
     plugins: 'charmap',
     indent: false,
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

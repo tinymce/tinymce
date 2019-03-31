@@ -31,7 +31,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', (success, failure) 
         add_unload_trigger: false,
         indent: false,
         plugins: 'paste',
-        base_url: '/project/js/tinymce'
+        base_url: '/project/tinymce/js/tinymce'
       })),
       Guard.addLogging(`Create editor using settings ${settings}`)
     );

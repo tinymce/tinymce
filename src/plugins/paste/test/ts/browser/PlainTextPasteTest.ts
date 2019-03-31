@@ -15,7 +15,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
   const cCreateEditorFromSettings = function (settings, html?) {
     return Chain.control(
       McEditor.cFromSettings(Merger.merge(settings, {
-        base_url: '/project/js/tinymce',
+        base_url: '/project/tinymce/js/tinymce',
         indent: false
       })),
       Guard.addLogging(`Create editor from ${settings}`)

@@ -28,6 +28,6 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontsizeFormatTest', function () {
   }, {
     toolbar: 'fontsizeselect',
     fontsize_formats: '1em',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

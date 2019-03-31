@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorOnHiddenElementTest', fu
   // Firefox specific test, errors were thrown when the editor was initialised on hidden element.
   Chain.pipeline([
     Editor.cFromHtml('<textarea style="display:none;"></textarea>', {
-      base_url: '/project/js/tinymce'
+      base_url: '/project/tinymce/js/tinymce'
     }),
     ApiChains.cFocus
   ],

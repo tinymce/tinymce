@@ -314,7 +314,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
     },
     {
       theme: 'silver',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       setup: (ed: Editor) => {
         ed.ui.registry.addAutocompleter('Plus1', {
           ch: '+',

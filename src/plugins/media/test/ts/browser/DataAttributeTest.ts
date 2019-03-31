@@ -66,6 +66,6 @@ UnitTest.asynctest('browser.plugins.media.DataAttributeTest', function (success,
     media_url_resolver (data, resolve) {
       resolve({ html: '<div data-ephox-embed-iri="' + data.url + '" style="max-width: 300px; max-height: 150px"></div>' });
     },
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

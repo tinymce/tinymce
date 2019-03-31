@@ -373,7 +373,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
     {
       theme: 'silver',
       toolbar: 'align fontselect fontsizeselect formatselect styleselect',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       content_css: 'project/src/themes/silver/test/css/content.css'
     },
     () => {

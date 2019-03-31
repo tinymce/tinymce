@@ -38,7 +38,7 @@ UnitTest.asynctest(
           iframeContainer: elm.dom().lastChild
         };
       },
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       init_instance_callback (editor) {
         editor.fire('SkinLoaded');
       }

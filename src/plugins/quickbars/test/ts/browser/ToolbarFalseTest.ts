@@ -41,6 +41,6 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ToolbarFalseTest', (succes
     menubar: false,
     quickbars_insert_toolbar: false,
     quickbars_selection_toolbar: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

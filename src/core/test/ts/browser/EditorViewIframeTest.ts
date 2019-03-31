@@ -87,6 +87,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function (succes
       ]))
     ], onSuccess, onFailure);
   }, {
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

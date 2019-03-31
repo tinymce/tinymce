@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.MultiClickSelectionTest', (su
     }, {
       plugins: '',
       toolbar: '',
-      base_url: '/project/js/tinymce'
+      base_url: '/project/tinymce/js/tinymce'
     }, function () {
       success();
     }, failure);

@@ -40,6 +40,6 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', functi
     toolbar: 'media',
     theme: 'silver',
     media_dimensions: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

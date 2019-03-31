@@ -41,14 +41,14 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.DifferentEmojiDatabaseTest
       plugins: 'emoticons',
       toolbar: 'emoticons',
       theme: 'silver',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       emoticons_database_url: databaseUrl
     }, onStepSuccess, onStepFailure);
   });
 
   Pipeline.async({},
     Log.steps('TBA', 'Emoticon: Loading databases from different urls', [
-      sTestEditorWithSettings([ 'All', 'People' ], '/project/src/plugins/emoticons/test/js/test-emojis.js'),
-      sTestEditorWithSettings([ 'All', 'Travel and Places' ], '/project/src/plugins/emoticons/test/js/test-emojis-alt.js')
+      sTestEditorWithSettings([ 'All', 'People' ], '/project/tinymce/src/plugins/emoticons/test/js/test-emojis.js'),
+      sTestEditorWithSettings([ 'All', 'Travel and Places' ], '/project/tinymce/src/plugins/emoticons/test/js/test-emojis-alt.js')
     ]), success, failure);
 });

@@ -88,7 +88,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       plugins: 'table',
       width: 400,
       theme: 'silver',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
     })),
 
     // when table is resized by one of the handlers it should retain the dimension units after the resize, be it px or %
