@@ -1,4 +1,5 @@
 Version 5.0.4 (TBD)
+    Added the new premium plugins to the Help dialog plugins tab #TINY-3496
     Fixed positioning of the styleselect menu in iOS while using mobile theme #TINY-3505
     Removed redundant mobile wrapper #TINY-3480
     Added missing throbber functionality when calling editor.setProgressState(true) #TINY-3453

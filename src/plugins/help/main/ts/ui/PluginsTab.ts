@@ -22,6 +22,8 @@ const tab = (editor: Editor) => {
       // TODO: Add other premium plugins such as permanent pen when they are included in the website
       'Accessibility Checker',
       'Advanced Code Editor',
+      'Case Change',
+      'Checklist',
       'Tiny Comments',
       'Tiny Drive',
       'Enhanced Media Embed',
@@ -29,6 +31,8 @@ const tab = (editor: Editor) => {
       'Link Checker',
       'Mentions',
       'MoxieManager',
+      'Page Embed',
+      'Permanent Pen',
       'PowerPaste',
       'Spell Checker Pro'
     ];
