@@ -77,6 +77,11 @@ export interface DialogApi<T extends DialogData> {
   onTabChange?: DialogTabChangeHandler<T>;
 }
 
+export interface UrlDialogApi<T extends DialogData> {
+  title: string;
+  url?: string;
+}
+
 export interface DialogButton {
   type: 'submit' | 'cancel' | 'custom';
   name: string;
@@ -99,6 +104,11 @@ export interface Dialog<T> {
   onClose: DialogCloseHandler;
   onCancel: DialogCancelHandler<T>;
   onTabChange: DialogTabChangeHandler<T>;
+}
+
+export interface UrlDialog<T> {
+  title: string;
+  url: string;
 }
 
 export const dialogButtonSchema = ValueSchema.objOf([
@@ -133,6 +143,11 @@ export const dialogSchema = ValueSchema.objOf([
   FieldSchema.defaultedFunction('onClose', Fun.noop),
   FieldSchema.defaultedFunction('onCancel', Fun.noop),
   FieldSchema.defaulted('onTabChange', Fun.noop),
+]);
+
+export const urlDialogSchema = ValueSchema.objOf([
+  FieldSchema.strictString('title'),
+  FieldSchema.strictString('url')
 ]);
 
 export const createDialog = <T>(spec: DialogApi<T>): Result<Dialog<T>, ValueSchema.SchemaError<any>> => {
