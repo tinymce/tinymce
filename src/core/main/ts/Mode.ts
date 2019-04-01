@@ -9,7 +9,7 @@ import { Editor } from 'tinymce/core/api/Editor';
 import { Element, Class } from '@ephox/sugar';
 import Events from 'tinymce/core/api/Events';
 
-const enum EditorMode {
+export const enum EditorMode {
   Design = 'design',
   ReadOnly = 'readonly'
 }
@@ -69,7 +69,6 @@ const getMode = (editor: Editor) => editor.readonly ? EditorMode.ReadOnly : Edit
 const isReadOnly = (editor: Editor) => editor.readonly === true;
 
 export {
-  EditorMode,
   setMode,
   getMode,
   isReadOnly
