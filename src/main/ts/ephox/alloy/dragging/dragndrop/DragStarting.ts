@@ -4,9 +4,9 @@ import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Class, Css, Element, Insert, Remove, SelectorFilter, Traverse } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
-
 import * as DataTransfers from './DataTransfers';
-import { AlloyComponent, SimulatedEvent } from '@ephox/alloy';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 export interface DragStartingInfo {
   type: string;
@@ -19,7 +19,7 @@ export interface DragStartingInfo {
   imageParent: Option<Element>;
   canDrag: (component: AlloyComponent, target) => boolean;
   onDragstart: (component: AlloyComponent) => void;
-  onDragover: (component: AlloyComponent, simulatedEvent: SimulatedEvent<any>) => void;
+  onDragover: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragend: (component: AlloyComponent) => void;
   phoneyTypes: string[];
   dropEffect: string;
@@ -34,18 +34,17 @@ export interface DragStartingInfo {
 }
 
 const schema: FieldProcessorAdt[] = [
-  FieldSchema.strict('type'),
-  FieldSchema.strict('getData'),
-  FieldSchema.option('getImage'),
+  FieldSchema.strictString('type'),
+  FieldSchema.strictFunction('getData'),
+  FieldSchema.optionFunction('getImage'),
   FieldSchema.option('imageParent'),
   // Use this to ensure that drag and dropping only happens when within this selector.
-  FieldSchema.defaulted('canDrag', Fun.constant(true)),
-  FieldSchema.defaulted('onDragstart', Fun.identity),
-  FieldSchema.defaulted('onDragover', Fun.identity),
-  FieldSchema.defaulted('onDragend', Fun.identity),
+  FieldSchema.defaultedFunction('canDrag', Fun.constant(true)),
+  FieldSchema.defaultedFunction('onDragstart', Fun.identity),
+  FieldSchema.defaultedFunction('onDragover', Fun.identity),
+  FieldSchema.defaultedFunction('onDragend', Fun.identity),
   FieldSchema.defaulted('phoneyTypes', []),
-  // Maybe valid this.
-  FieldSchema.defaulted('dropEffect', 'copy'),
+  FieldSchema.defaultedStringEnum('dropEffect', 'copy', ['copy', 'move', 'link', 'none']),
   FieldSchema.state('instance', () => {
     const ghost = Element.fromTag('div');
 
@@ -87,7 +86,6 @@ const schema: FieldProcessorAdt[] = [
             const target = simulatedEvent.event().target();
 
             if (dragInfo.canDrag(component, target)) {
-
               const transfer = simulatedEvent.event().raw().dataTransfer;
               const types = [dragInfo.type].concat(dragInfo.phoneyTypes);
               const data = dragInfo.getData(component);

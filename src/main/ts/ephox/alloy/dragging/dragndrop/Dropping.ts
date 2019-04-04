@@ -1,18 +1,18 @@
 import * as EventHandler from '../../construct/EventHandler';
 import * as DomModification from '../../dom/DomModification';
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
-
+import * as Fields from '../../data/Fields';
 import * as DataTransfers from './DataTransfers';
-import { AlloyComponent, SugarEvent, SimulatedEvent } from '@ephox/alloy';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
-interface DroppingInfo {
+export interface DroppingInfo {
   type: string;
-  onDrop: (component: AlloyComponent, simulatedEvent: SugarEvent) => void;
-  onDrag: (component: AlloyComponent, simulatedEvent: SimulatedEvent<any>) => void;
-  onDragover: (component: AlloyComponent, simulatedEvent: SimulatedEvent<any>) => void;
-  onDragenter: (component: AlloyComponent, simulatedEvent: SimulatedEvent<any>) => void;
-  onDragleave: (component: AlloyComponent, simulatedEvent: SimulatedEvent<any>) => void;
+  onDrop: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  onDrag: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  onDragover: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  onDragenter: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  onDragleave: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   instance: {
     exhibit: () => any;
     handlers: (dragInfo: DroppingInfo) => {
@@ -26,13 +26,12 @@ interface DroppingInfo {
 }
 
 const schema: FieldProcessorAdt[] = [
-  FieldSchema.strict('type'),
-  FieldSchema.strict('onDrop'),
-  // TODO: Use fields handler
-  FieldSchema.defaulted('onDrag', Fun.noop),
-  FieldSchema.defaulted('onDragover', Fun.noop),
-  FieldSchema.defaulted('onDragenter', Fun.noop),
-  FieldSchema.defaulted('onDragleave', Fun.noop),
+  FieldSchema.strictString('type'),
+  Fields.onHandler('onDrop'),
+  Fields.onHandler('onDrag'),
+  Fields.onHandler('onDragover'),
+  Fields.onHandler('onDragenter'),
+  Fields.onHandler('onDragleave'),
   FieldSchema.state('instance', () => {
     // http://www.quirksmode.org/blog/archives/2009/09/the_html5_drag.html
     // For the drop event to fire at all, you have to cancel the defaults of both the dragover and the dragenter event.

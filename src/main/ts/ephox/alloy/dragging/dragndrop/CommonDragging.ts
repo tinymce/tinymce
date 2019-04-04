@@ -1,7 +1,8 @@
 import { Fun } from '@ephox/katamari';
 import { Replication } from '@ephox/sugar';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
-const getImageClone = (comp) => {
+const getImageClone = (comp: AlloyComponent) => {
   return {
     element () {
       return Replication.deep(comp.element());
