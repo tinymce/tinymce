@@ -4,10 +4,12 @@ import { DataTransfer, Element } from '@ephox/dom-globals';
 
 const platform = PlatformDetection.detect();
 
+// IE 11 only supports 'Text' or 'URL' types see: https://msdn.microsoft.com/en-us/ie/ms536744(v=vs.94)
+const getPlatformType = (type: string) => platform.browser.isIE() ? 'text' : type;
+
 const setDataTransfer = (transfer: DataTransfer, types: string[], data: string) => {
-  Arr.each(types, (rawType) => {
-    const type = platform.browser.isIE() && rawType.indexOf('text') === 0 ? 'text' : rawType;
-    transfer.setData(type, data);
+  Arr.each(types, (type) => {
+    transfer.setData(getPlatformType(type), data);
   });
 };
 
@@ -25,9 +27,8 @@ const setData = (transfer: DataTransfer, types: string[], data: string) => {
   set(transfer, types, data);
 };
 
-const getData = (transfer: DataTransfer, rawType: string) => {
-  const type = platform.browser.isIE() && rawType.indexOf('text') === 0 ? 'text' : rawType;
-  return transfer.getData(type);
+const getData = (transfer: DataTransfer, type: string) => {
+  return transfer.getData(getPlatformType(type));
 };
 
 const setDragImage = (transfer: DataTransfer, image: Element, x: number, y: number) => {
