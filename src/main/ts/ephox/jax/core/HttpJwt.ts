@@ -3,7 +3,6 @@ import * as Http from './Http';
 import { FutureResult } from '@ephox/katamari';
 import { ResponseBodyDataTypes, ResponseTypeMap } from './HttpData';
 import { HttpError, HttpErrorCode } from './HttpError';
-import { DataType } from './DataType';
 
 const headers = (headersInput: HttpRequest<ResponseBodyDataTypes>['headers'], token: string) => {
   const authHeader = { Authorization: 'Bearer ' + token };

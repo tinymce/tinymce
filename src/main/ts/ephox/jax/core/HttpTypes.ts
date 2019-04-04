@@ -1,7 +1,6 @@
 import { FutureResult } from '@ephox/katamari';
 import { ResponseBodyDataTypes, RequestBody, ResponseBody } from './HttpData';
 import { HttpError } from './HttpError';
-import { DataType } from '../api/Main';
 
 export const enum HttpMethod {
   Get = 'get',
@@ -19,6 +18,7 @@ export interface HttpRequest<T extends ResponseBodyDataTypes> {
   body: RequestBody;
   url: string;
   method: HttpMethod;
+  query?: Record<string, string>;
   progress?: ProgressFunction;
   headers?: Record<string, string>;
   credentials?: boolean;

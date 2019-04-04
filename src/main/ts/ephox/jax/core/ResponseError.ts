@@ -1,7 +1,7 @@
 import { Future, Option } from '@ephox/katamari';
 import * as JsonResponse from './JsonResponse';
 import { ResponseBodyDataTypes } from './HttpData';
-import { XMLHttpRequest, Blob, FileReader } from '@ephox/dom-globals';
+import { XMLHttpRequest } from '@ephox/dom-globals';
 import { HttpError } from './HttpError';
 import { DataType } from './DataType';
 import { readBlobAsText } from './BlobReader';
