@@ -40,7 +40,19 @@ export default (): void => {
               type: 'text/html',
               onDrop (zone, event) {
                 event.kill();
-                console.log(event);
+                // console.log('onDrop');
+              },
+              onDrag: (component, simulatedEvent) => {
+                // console.log('onDrag', simulatedEvent.event().raw().target);
+              },
+              onDragover: (component, simulatedEvent) => {
+                // console.log('onDragover', simulatedEvent.event().raw().target);
+              },
+              onDragenter: (component, simulatedEvent) => {
+                // console.log('onDragenter', simulatedEvent.event().raw().target);
+              },
+              onDragleave: (component, simulatedEvent) => {
+                // console.log('onDragleave', simulatedEvent.event().raw().target);
               }
             })
           ]),
@@ -65,7 +77,6 @@ export default (): void => {
               getData (button) {
                 return '<button>Hi there</button>';
               },
-    
               getImage (button) {
                 return {
                   element () {
@@ -76,7 +87,21 @@ export default (): void => {
                   x: Fun.constant(0),
                   y: Fun.constant(0)
                 };
-              }
+              },
+              canDrag: (component, target) => {
+                // console.log('canDrag');
+                return true;
+              },
+              onDragstart: (component) => {
+                // console.log('onDragstart', component.element().dom());
+              },
+              onDragover: (component, simulatedEvent) => {
+                // console.log('onDragover', component.element().dom());
+              },
+              onDragend: (component) => {
+                // console.log('onDragend', component.element().dom());
+              },
+              dropEffect: 'move'
             })
           ])
         })

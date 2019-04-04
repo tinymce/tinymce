@@ -5,10 +5,11 @@ import * as Fields from '../../data/Fields';
 import * as DataTransfers from './DataTransfers';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { SugarEvent } from '../../alien/TypeDefinitions';
 
 export interface DroppingInfo {
   type: string;
-  onDrop: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  onDrop: (component: AlloyComponent, simulatedEvent: SugarEvent) => void;
   onDrag: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragover: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragenter: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;

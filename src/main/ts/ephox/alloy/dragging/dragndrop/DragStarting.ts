@@ -10,14 +10,14 @@ import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 export interface DragStartingInfo {
   type: string;
-  getData: (component: AlloyComponent) => any;
+  getData: (component: AlloyComponent) => string;
   getImage: Option<(component: AlloyComponent) => {
     element: () => Element;
     x: () => number;
     y: () => number;
   }>;
   imageParent: Option<Element>;
-  canDrag: (component: AlloyComponent, target) => boolean;
+  canDrag: (component: AlloyComponent, target: Element) => boolean;
   onDragstart: (component: AlloyComponent) => void;
   onDragover: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragend: (component: AlloyComponent) => void;

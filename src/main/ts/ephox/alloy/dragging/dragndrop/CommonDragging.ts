@@ -1,8 +1,14 @@
 import { Fun } from '@ephox/katamari';
-import { Replication } from '@ephox/sugar';
+import { Replication, Element } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-const getImageClone = (comp: AlloyComponent) => {
+export interface DragnDropImageRecord {
+  element: () => Element;
+  x: () => number;
+  y: () => number;
+}
+
+const getImageClone = (comp: AlloyComponent): DragnDropImageRecord => {
   return {
     element () {
       return Replication.deep(comp.element());
