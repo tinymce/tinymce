@@ -1,14 +1,15 @@
 import * as EventHandler from '../../construct/EventHandler';
 import * as DomModification from '../../dom/DomModification';
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
-import { Arr, Fun, Option } from '@ephox/katamari';
-import { Class, Css, Element, Insert, Remove, SelectorFilter, Traverse } from '@ephox/sugar';
-import { document } from '@ephox/dom-globals';
+import { Fun, Option } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+import { DataTransfer } from '@ephox/dom-globals';
 import * as DataTransfers from './DataTransfers';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { setImageClone } from './ImageClone';
 
-export interface DragStartingInfo {
+export interface DragStartingConfig {
   type: string;
   getData: (component: AlloyComponent) => string;
   getImage: Option<(component: AlloyComponent) => {
@@ -16,7 +17,6 @@ export interface DragStartingInfo {
     x: () => number;
     y: () => number;
   }>;
-  imageParent: Option<Element>;
   canDrag: (component: AlloyComponent, target: Element) => boolean;
   onDragstart: (component: AlloyComponent) => void;
   onDragover: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
@@ -25,7 +25,7 @@ export interface DragStartingInfo {
   dropEffect: string;
   instance: {
     exhibit: () => DomModification.DomModification;
-    handlers: (dragInfo: DragStartingInfo) => {
+    handlers: (dragInfo: DragStartingConfig) => {
       dragover: any;
       dragend: any;
       dragstart: any;
@@ -33,11 +33,25 @@ export interface DragStartingInfo {
   };
 }
 
+const dragStart = (component: AlloyComponent, target: Element, config: DragStartingConfig, transfer: DataTransfer) => {
+  const data = config.getData(component);
+  const types = [config.type].concat(config.phoneyTypes);
+
+  DataTransfers.setData(transfer, types, data);
+  DataTransfers.setDropEffect(transfer, config.dropEffect);
+
+  config.getImage.each((f) => {
+    const image = f(component);
+    setImageClone(transfer, image);
+  });
+
+  config.onDragstart(component);
+};
+
 const schema: FieldProcessorAdt[] = [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictFunction('getData'),
+  FieldSchema.defaultedString('type', 'text/plain'),
+  FieldSchema.defaultedFunction('getData', Fun.constant('')),
   FieldSchema.optionFunction('getImage'),
-  FieldSchema.option('imageParent'),
   // Use this to ensure that drag and dropping only happens when within this selector.
   FieldSchema.defaultedFunction('canDrag', Fun.constant(true)),
   FieldSchema.defaultedFunction('onDragstart', Fun.identity),
@@ -46,20 +60,6 @@ const schema: FieldProcessorAdt[] = [
   FieldSchema.defaulted('phoneyTypes', []),
   FieldSchema.defaultedStringEnum('dropEffect', 'copy', ['copy', 'move', 'link', 'none']),
   FieldSchema.state('instance', () => {
-    const ghost = Element.fromTag('div');
-
-    // Taken from the tech preview. The idea is that it has to be visible, but the ghost's image
-    // for the drag effect is repositioned so we just need to put it offscreen.
-    Class.add(ghost, 'ghost');
-    Css.setAll(ghost, {
-      'position': 'absolute',
-      'top': '-1000px',
-      'max-height': '1000px',
-      'max-width': '400px',
-      'overflow-y': 'hidden'
-    });
-    document.body.appendChild(ghost.dom());
-
     const exhibit = () => {
       return DomModification.nu({
         attributes: {
@@ -68,49 +68,21 @@ const schema: FieldProcessorAdt[] = [
       });
     };
 
-    // Inspired by the ideas here. On mousedown, spawn an iamge at pageX, pageY
-    // Fire dragDrop on that image
-    // remove the image in a setTimeout( 0 )
-    // http://jsfiddle.net/stevendwood/akScu/21/
-
-    const handlers = (dragInfo: DragStartingInfo) => {
+    const handlers = (config: DragStartingConfig) => {
       return {
         dragover: EventHandler.nu({
-          run: dragInfo.onDragover
+          run: config.onDragover
         }),
         dragend: EventHandler.nu({
-          run: dragInfo.onDragend
+          run: config.onDragend
         }),
         dragstart: EventHandler.nu({
           run: (component, simulatedEvent) => {
             const target = simulatedEvent.event().target();
+            const transfer: DataTransfer = simulatedEvent.event().raw().dataTransfer;
 
-            if (dragInfo.canDrag(component, target)) {
-              const transfer = simulatedEvent.event().raw().dataTransfer;
-              const types = [dragInfo.type].concat(dragInfo.phoneyTypes);
-              const data = dragInfo.getData(component);
-
-              DataTransfers.setData(transfer, types, data);
-              dragInfo.getImage.each((f) => {
-                const parent = dragInfo.imageParent.getOrThunk(function () {
-                  const doc = Traverse.owner(component.element());
-                  return Element.fromDom(doc.dom().body);
-                });
-
-                const image = f(component);
-
-                // TODO: Pretty hacky. Why does it keep recreating them?
-                const ghosts = SelectorFilter.descendants(parent, '.ghost');
-                Arr.each(ghosts, Remove.remove);
-
-                Remove.empty(ghost);
-                Insert.append(ghost, image.element());
-                Insert.append(parent, ghost);
-                DataTransfers.setDragImage(transfer, ghost.dom(), image.x(), image.y());
-              });
-              DataTransfers.setDropEffect(transfer, dragInfo.dropEffect);
-
-              dragInfo.onDragstart(component);
+            if (config.canDrag(component, target)) {
+              dragStart(component, target, config, transfer);
             } else {
               simulatedEvent.event().prevent();
             }

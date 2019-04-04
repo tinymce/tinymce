@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { DataTransfer, Element } from '@ephox/dom-globals';
 
@@ -28,10 +28,15 @@ const setData = (transfer: DataTransfer, types: string[], data: string) => {
 };
 
 const getData = (transfer: DataTransfer, type: string) => {
-  return transfer.getData(getPlatformType(type));
+  const data = transfer.getData(getPlatformType(type));
+
+  // IE 11 will return null on drag/drop of files
+  return Type.isNull(data) ? '' : data;
 };
 
 const setDragImage = (transfer: DataTransfer, image: Element, x: number, y: number) => {
+  // IE 11 and Edge doesn't have support for setting drag image we can't really
+  // fake it either since it shows the element being dragged instead
   if (transfer.setDragImage) {
     transfer.setDragImage(image, x, y);
   }
@@ -41,9 +46,14 @@ const setDropEffect = (transfer: DataTransfer, effect: string) => {
   transfer.dropEffect = effect;
 };
 
+const getFiles = (transfer: DataTransfer) => {
+  return Arr.from(transfer.files);
+};
+
 export {
   setData,
   getData,
   setDragImage,
-  setDropEffect
+  setDropEffect,
+  getFiles
 };

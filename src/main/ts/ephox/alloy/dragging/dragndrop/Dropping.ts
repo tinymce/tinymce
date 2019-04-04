@@ -2,21 +2,20 @@ import * as EventHandler from '../../construct/EventHandler';
 import * as DomModification from '../../dom/DomModification';
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import * as Fields from '../../data/Fields';
-import * as DataTransfers from './DataTransfers';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
-import { SugarEvent } from '../../alien/TypeDefinitions';
+import { createDropEventDetails, DropEvent } from './DropEvent';
 
-export interface DroppingInfo {
+export interface DroppingConfig {
   type: string;
-  onDrop: (component: AlloyComponent, simulatedEvent: SugarEvent) => void;
+  onDrop: (component: AlloyComponent, simulatedEvent: DropEvent) => void;
   onDrag: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragover: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragenter: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragleave: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   instance: {
     exhibit: () => any;
-    handlers: (dragInfo: DroppingInfo) => {
+    handlers: (dragInfo: DroppingConfig) => {
       dragover: any;
       dragleave: any;
       drag: any;
@@ -27,7 +26,7 @@ export interface DroppingInfo {
 }
 
 const schema: FieldProcessorAdt[] = [
-  FieldSchema.strictString('type'),
+  FieldSchema.defaultedString('type', 'text/plain'),
   Fields.onHandler('onDrop'),
   Fields.onHandler('onDrag'),
   Fields.onHandler('onDragover'),
@@ -39,41 +38,39 @@ const schema: FieldProcessorAdt[] = [
 
     const exhibit = () => DomModification.nu({ });
 
-    const handlers = (dragInfo: DroppingInfo) => {
+    const handlers = (config: DroppingConfig) => {
       return {
         // TODO: Make constants in NativeEvents
         dragover: EventHandler.nu({
           // Consider using abort.
           run: (comp, simulatedEvent) => {
-            dragInfo.onDragover(comp, simulatedEvent);
+            config.onDragover(comp, simulatedEvent);
             simulatedEvent.stop();
           }
         }),
 
         dragleave: EventHandler.nu({
           run: (comp, simulatedEvent) => {
-            dragInfo.onDragleave(comp, simulatedEvent);
+            config.onDragleave(comp, simulatedEvent);
           }
         }),
 
         drag: EventHandler.nu({
           run: (comp, simulatedEvent) => {
-            dragInfo.onDrag(comp, simulatedEvent);
+            config.onDrag(comp, simulatedEvent);
           }
         }),
 
         dragenter: EventHandler.nu({
           run: (comp, simulatedEvent) => {
-            dragInfo.onDragenter(comp, simulatedEvent);
+            config.onDragenter(comp, simulatedEvent);
             simulatedEvent.stop();
           }
         }),
 
         drop: EventHandler.nu({
           run (component, simulatedEvent) {
-            const transfer = simulatedEvent.event().raw().dataTransfer;
-            const data = DataTransfers.getData(transfer, dragInfo.type);
-            dragInfo.onDrop(component, simulatedEvent.event());
+            config.onDrop(component, createDropEventDetails(config, simulatedEvent));
           }
         })
       };

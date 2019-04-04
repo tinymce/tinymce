@@ -1,6 +1,5 @@
-import { Class, Css, Element, Replication, Insert } from '@ephox/sugar';
+import { Class, Css, Element, Replication } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import { Unselecting } from 'ephox/alloy/api/behaviour/Unselecting';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Button } from 'ephox/alloy/api/ui/Button';
@@ -27,20 +26,25 @@ export default (): void => {
         Container.sketch({
           dom: {
             tag: 'div',
-            innerHtml: 'Drop zone',
+            innerHtml: 'Drop zone, drop files, text or draggable elements here and check console for messages',
             styles: {
               margin: '10px 10px 20px 10px',
+              padding: '20px',
               height: '200px',
-              border: '1px dashed black'
+              border: '3px dashed black',
+              'text-align': 'center'
             }
           },
           containerBehaviours: Behaviour.derive([
             DragnDrop.config({
               mode: 'drop',
-              type: 'text/html',
-              onDrop (zone, event) {
-                event.kill();
-                // console.log('onDrop');
+              type: 'text/plain',
+              onDrop (component, simulatedEvent) {
+                simulatedEvent.event().kill();
+                console.log('onDrop', {
+                  data: simulatedEvent.data,
+                  files: simulatedEvent.files
+                });
               },
               onDrag: (component, simulatedEvent) => {
                 // console.log('onDrag', simulatedEvent.event().raw().target);
@@ -70,10 +74,9 @@ export default (): void => {
             }
           },
           buttonBehaviours: Behaviour.derive([
-            Unselecting.config({ }),
             DragnDrop.config({
               mode: 'drag',
-              type: 'text/html',
+              type: 'text/plain',
               getData (button) {
                 return '<button>Hi there</button>';
               },
@@ -101,7 +104,8 @@ export default (): void => {
               onDragend: (component) => {
                 // console.log('onDragend', component.element().dom());
               },
-              dropEffect: 'move'
+              dropEffect: 'move',
+              phoneyTypes: ['-x-alloy/something']
             })
           ])
         })
