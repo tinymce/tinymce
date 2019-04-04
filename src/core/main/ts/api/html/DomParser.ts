@@ -699,6 +699,9 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
     if (!args.invalid) {
       // Run node filters
       for (name in matchedNodes) {
+        if (!matchedNodes.hasOwnProperty(name)) {
+          continue;
+        }
         list = nodeFilters[name];
         nodes = matchedNodes[name];
 
