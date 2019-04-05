@@ -18,9 +18,9 @@ export interface DragStartingConfig {
     y: () => number;
   }>;
   canDrag: (component: AlloyComponent, target: Element) => boolean;
-  onDragstart: (component: AlloyComponent) => void;
+  onDragstart: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragover: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
-  onDragend: (component: AlloyComponent) => void;
+  onDragend: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   phoneyTypes: string[];
   dropEffect: string;
   instance: {
@@ -44,8 +44,6 @@ const dragStart = (component: AlloyComponent, target: Element, config: DragStart
     const image = f(component);
     setImageClone(transfer, image);
   });
-
-  config.onDragstart(component);
 };
 
 const schema: FieldProcessorAdt[] = [
@@ -83,6 +81,7 @@ const schema: FieldProcessorAdt[] = [
 
             if (config.canDrag(component, target)) {
               dragStart(component, target, config, transfer);
+              config.onDragstart(component, simulatedEvent);
             } else {
               simulatedEvent.event().prevent();
             }

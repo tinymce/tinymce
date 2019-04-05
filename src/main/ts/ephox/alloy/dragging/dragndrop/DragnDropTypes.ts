@@ -19,9 +19,9 @@ export interface StartingDragndropConfigSpec {
   getData?: (component: AlloyComponent) => string;
   getImage?: (component: AlloyComponent) => DragnDropImageClone;
   canDrag?: (component: AlloyComponent, target: Element) => boolean;
-  onDragstart?: (component: AlloyComponent) => void;
+  onDragstart?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragover?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
-  onDragend?: (component: AlloyComponent) => void;
+  onDragend?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   phoneyTypes?: string[];
   dropEffect?: 'copy' | 'move' | 'link' | 'none';
 }

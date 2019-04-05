@@ -40,7 +40,8 @@ export default (): void => {
               mode: 'drop',
               type: 'text/plain',
               onDrop (component, simulatedEvent) {
-                simulatedEvent.event().kill();
+                simulatedEvent.event().prevent();
+
                 console.log('onDrop', {
                   data: simulatedEvent.data,
                   files: simulatedEvent.files
@@ -68,8 +69,58 @@ export default (): void => {
             innerHtml: 'Drag me!',
             styles: {
               padding: '10px',
+              margin: '10px',
               display: 'inline-block',
-              background: '#333',
+              background: '#00AA00',
+              color: '#fff'
+            }
+          },
+          buttonBehaviours: Behaviour.derive([
+            DragnDrop.config({
+              mode: 'drag',
+              type: 'text/plain',
+              dropEffect: 'none',
+              phoneyTypes: ['-x-alloy/something'],
+              getData (component) {
+                return 'the green button data';
+              },
+              getImage (component) {
+                return {
+                  element () {
+                    const clone = Replication.deep(component.element());
+                    Css.set(clone, 'background-color', 'blue');
+                    return clone;
+                  },
+                  x: Fun.constant(0),
+                  y: Fun.constant(0)
+                };
+              },
+              canDrag: (component, target) => {
+                // console.log('canDrag');
+                return true;
+              },
+              onDragstart: (component, simulatedEvent) => {
+                // console.log('onDragstart', component.element().dom());
+              },
+              onDragover: (component, simulatedEvent) => {
+                // console.log('onDragover', component.element().dom());
+              },
+              onDragend: (component, simulatedEvent) => {
+                // console.log('onDragend', component.element().dom());
+              }
+            })
+          ])
+        }),
+
+        Button.sketch({
+          dom: {
+            tag: 'span',
+            innerHtml: 'Drag or me!',
+            styles: {
+              padding: '10px',
+              margin: '10px',
+              display: 'inline-block',
+              background: '#AA0000',
               color: '#fff'
             }
           },
@@ -78,7 +129,7 @@ export default (): void => {
               mode: 'drag',
               type: 'text/plain',
               getData (button) {
-                return '<button>Hi there</button>';
+                return 'the red button data';
               },
               getImage (button) {
                 return {
