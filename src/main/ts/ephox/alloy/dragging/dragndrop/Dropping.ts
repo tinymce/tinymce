@@ -2,31 +2,24 @@ import * as EventHandler from '../../construct/EventHandler';
 import * as DomModification from '../../dom/DomModification';
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import * as Fields from '../../data/Fields';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import { createDropEventDetails } from './DropEvent';
+import * as DataTransfers from './DataTransfers';
+import { DroppingConfig } from './DragnDropTypes';
+import { DataTransfer } from '@ephox/dom-globals';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
-import { createDropEventDetails, DropEvent } from './DropEvent';
 
-export interface DroppingConfig {
-  type: string;
-  onDrop: (component: AlloyComponent, simulatedEvent: DropEvent) => void;
-  onDrag: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
-  onDragover: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
-  onDragenter: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
-  onDragleave: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
-  instance: {
-    exhibit: () => any;
-    handlers: (dragInfo: DroppingConfig) => {
-      dragover: any;
-      dragleave: any;
-      drag: any;
-      dragenter: any;
-      drop: any;
-    };
-  };
-}
+const getDataTransferFromEvent = (simulatedEvent: NativeSimulatedEvent): DataTransfer => {
+  const rawEvent: any = simulatedEvent.event().raw();
+  return rawEvent.dataTransfer;
+};
+
+const setDropEffectOnEvent = (simulatedEvent: NativeSimulatedEvent, dropEffect: string) => {
+  DataTransfers.setDropEffect(getDataTransferFromEvent(simulatedEvent), dropEffect);
+};
 
 const schema: FieldProcessorAdt[] = [
   FieldSchema.defaultedString('type', 'text/plain'),
+  FieldSchema.defaultedStringEnum('dropEffect', 'copy', ['copy', 'move', 'link', 'none']),
   Fields.onHandler('onDrop'),
   Fields.onHandler('onDrag'),
   Fields.onHandler('onDragover'),
@@ -44,8 +37,9 @@ const schema: FieldProcessorAdt[] = [
         dragover: EventHandler.nu({
           // Consider using abort.
           run: (comp, simulatedEvent) => {
-            config.onDragover(comp, simulatedEvent);
             simulatedEvent.stop();
+            setDropEffectOnEvent(simulatedEvent, config.dropEffect);
+            config.onDragover(comp, simulatedEvent);
           }
         }),
 
@@ -63,14 +57,22 @@ const schema: FieldProcessorAdt[] = [
 
         dragenter: EventHandler.nu({
           run: (comp, simulatedEvent) => {
-            config.onDragenter(comp, simulatedEvent);
+            const transfer: DataTransfer = simulatedEvent.event().raw().dataTransfer;
+            DataTransfers.setDropEffect(transfer, config.dropEffect);
+    
             simulatedEvent.stop();
+            setDropEffectOnEvent(simulatedEvent, config.dropEffect);
+            config.onDragenter(comp, simulatedEvent);
           }
         }),
 
         drop: EventHandler.nu({
           run (component, simulatedEvent) {
-            config.onDrop(component, createDropEventDetails(config, simulatedEvent));
+            setDropEffectOnEvent(simulatedEvent, config.dropEffect);
+
+            if (DataTransfers.isValidDrop(getDataTransferFromEvent(simulatedEvent))) {
+              config.onDrop(component, createDropEventDetails(config, simulatedEvent));
+            }
           }
         })
       };

@@ -1,7 +1,7 @@
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { DataTransfer, File } from '@ephox/dom-globals';
-import { DroppingConfig } from './Dropping';
 import * as DataTransfers from './DataTransfers';
+import { DroppingConfig } from './DragnDropTypes';
 
 export interface DropEvent extends NativeSimulatedEvent {
   data: string;
