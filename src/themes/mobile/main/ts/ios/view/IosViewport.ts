@@ -170,7 +170,6 @@ const takeover = function (viewport, contentBody, toolbar, dropup) {
       Attr.set(viewport, yFixedData, newToolbarHeight + 'px');
       Css.set(viewport, 'height', newHeight + 'px');
 
-      Css.set(dropup, 'bottom', -(newToolbarHeight + newHeight + dropupHeight) + 'px');
       DeviceZones.updatePadding(contentBody, viewport, dropup);
     }
   };
