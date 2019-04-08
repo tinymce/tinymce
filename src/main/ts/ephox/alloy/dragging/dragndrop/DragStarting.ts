@@ -1,4 +1,5 @@
-import * as EventHandler from '../../construct/EventHandler';
+import * as AlloyEvents from '../../api/events/AlloyEvents';
+import * as NativeEvents from '../../api/events/NativeEvents';
 import * as DomModification from '../../dom/DomModification';
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
@@ -8,6 +9,7 @@ import * as DataTransfers from './DataTransfers';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { setImageClone } from './ImageClone';
 import { DragStartingConfig } from './DragnDropTypes';
+import { SugarEvent } from '../../alien/TypeDefinitions';
 
 const dragStart = (component: AlloyComponent, target: Element, config: DragStartingConfig, transfer: DataTransfer) => {
   const data = config.getData(component);
@@ -48,29 +50,21 @@ const schema: FieldProcessorAdt[] = [
       });
     };
 
-    const handlers = (config: DragStartingConfig) => {
-      return {
-        dragover: EventHandler.nu({
-          run: config.onDragover
-        }),
-        dragend: EventHandler.nu({
-          run: config.onDragend
-        }),
-        dragstart: EventHandler.nu({
-          run: (component, simulatedEvent) => {
-            const target = simulatedEvent.event().target();
-            const transfer: DataTransfer = simulatedEvent.event().raw().dataTransfer;
+    const handlers = (config: DragStartingConfig): AlloyEvents.AlloyEventRecord => AlloyEvents.derive([
+      AlloyEvents.run(NativeEvents.dragover(), config.onDragover),
+      AlloyEvents.run(NativeEvents.dragend(), config.onDragend),
+      AlloyEvents.run<SugarEvent>(NativeEvents.dragstart(), (component, simulatedEvent) => {
+        const target = simulatedEvent.event().target();
+        const transfer: DataTransfer = DataTransfers.getDataTransferFromEvent(simulatedEvent);
 
-            if (config.canDrag(component, target)) {
-              dragStart(component, target, config, transfer);
-              config.onDragstart(component, simulatedEvent);
-            } else {
-              simulatedEvent.event().prevent();
-            }
-          }
-        })
-      };
-    };
+        if (config.canDrag(component, target)) {
+          dragStart(component, target, config, transfer);
+          config.onDragstart(component, simulatedEvent);
+        } else {
+          simulatedEvent.event().prevent();
+        }
+      })
+    ]);
 
     return {
       exhibit,

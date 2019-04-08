@@ -1,6 +1,7 @@
 import { Arr, Type, Strings } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { DataTransfer, Element } from '@ephox/dom-globals';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 const platform = PlatformDetection.detect();
 
@@ -70,6 +71,15 @@ const isValidDrop = (transfer: DataTransfer) => {
   return effectAllowed === 'all' || Strings.contains(effectAllowed, dropEffect);
 };
 
+const getDataTransferFromEvent = (simulatedEvent: NativeSimulatedEvent): DataTransfer => {
+  const rawEvent: any = simulatedEvent.event().raw();
+  return rawEvent.dataTransfer;
+};
+
+const setDropEffectOnEvent = (simulatedEvent: NativeSimulatedEvent, dropEffect: string) => {
+  setDropEffect(getDataTransferFromEvent(simulatedEvent), dropEffect);
+};
+
 export {
   setData,
   getData,
@@ -78,5 +88,7 @@ export {
   setDropEffect,
   setEffectAllowed,
   getFiles,
-  isValidDrop
+  isValidDrop,
+  getDataTransferFromEvent,
+  setDropEffectOnEvent
 };
