@@ -1,4 +1,4 @@
-import { Behaviour } from '@ephox/alloy';
+import * as Behaviour from './Behaviour';
 import DragnDropBranches from '../../behaviour/dragndrop/DragnDropBranches';
 import { DragnDropBehaviour } from '../../dragging/dragndrop/DragnDropTypes';
 
