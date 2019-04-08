@@ -20,7 +20,8 @@ import { Processor, ValueSchema } from '@ephox/boulder';
 import { DialogManager, Types } from '@ephox/bridge';
 
 import { formCancelEvent } from '../general/FormEvents';
-import { renderDialog, renderUrlDialog } from '../window/SilverDialog';
+import { renderDialog } from '../window/SilverDialog';
+import { renderUrlDialog } from '../window/SilverUrlDialog';
 import { renderInlineDialog } from '../window/SilverInlineDialog';
 import * as AlertDialog from './AlertDialog';
 import * as ConfirmDialog from './ConfirmDialog';
@@ -48,21 +49,28 @@ const setup = (extras: WindowManagerSetup) => {
     }
   };
 
-  const openUrl = <T extends Types.Dialog.DialogData>(config: Types.Dialog.UrlDialogApi<T>, params, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void) => {
+  const openUrl = (config: Types.UrlDialog.UrlDialogApi, params, closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void) => {
     return openModalUrlDialog(config, closeWindow);
   };
 
-  const openModalUrlDialog = <T extends Types.Dialog.DialogData>(config/*: Types.Dialog.UrlDialogApi<T>*/, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void) => {
-    const factory = (contents: Types.Dialog.Dialog<T>, internalInitialData: T, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
+  const openModalUrlDialog = (config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void) => {
+    const factory = (contents: Types.UrlDialog.UrlDialog): Types.UrlDialog.UrlDialogInstanceApi => {
       const dialog = renderUrlDialog(
-        config.title, config.url, extras.backstage
+        contents,
+        {
+          closeWindow: () => {
+            ModalDialog.hide(dialog.dialog);
+            closeWindow(dialog.instanceApi);
+          }
+        },
+        extras.backstage
       );
 
       ModalDialog.show(dialog.dialog);
-      return dialog.instanceApi as Types.Dialog.DialogInstanceApi<T>;
+      return dialog.instanceApi;
     };
 
-    return DialogManager.DialogManager.open(factory, config);
+    return DialogManager.DialogManager.openUrl(factory, config);
   };
 
   const openModalDialog = <T extends Types.Dialog.DialogData>(config: Types.Dialog.DialogApi<T>, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void): Types.Dialog.DialogInstanceApi<T> => {

@@ -12,6 +12,7 @@ export default function () {
 
   return {
     open: unimplemented,
+    openUrl: unimplemented,
     alert: unimplemented,
     confirm: unimplemented,
     close: unimplemented,

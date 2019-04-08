@@ -5,16 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, Behaviour, ModalDialog, Reflecting } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
+import { AlloySpec, Behaviour, Focusing, ModalDialog, Reflecting, Tabstopping, Keying } from '@ephox/alloy';
+import { Fun, Option } from '@ephox/katamari';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { renderBodyPanel } from '../dialog/BodyPanel';
 import { renderTabPanel } from '../dialog/TabPanel';
-import { renderIFrame } from '../dialog/IFrame';
 import { bodyChannel } from './DialogChannels';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { Types } from '@ephox/bridge';
+import NavigableObject from 'tinymce/themes/silver/ui/general/NavigableObject';
 
 // TypeScript allows some pretty weird stuff.
 type WindowBodyFoo = {
@@ -81,32 +81,55 @@ const renderInlineBody = (foo: WindowBodyFoo, contentId: string, backstage: UiFa
 };
 
 const renderModalBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage) => {
-  const pieceofShit = renderBody(foo, Option.none(), backstage, false);
+  const bodySpec = renderBody(foo, Option.none(), backstage, false);
   return ModalDialog.parts().body(
-    pieceofShit
+    bodySpec
   );
 };
 
-type iframe = 'iframe';
-
-const renderUrlBody = (url: string, backstage: UiFactoryBackstage) => {
-  const type = 'iframe' as iframe;
-
-  const iframe = {
-    type,
-    name: 'iframe',
-    label: Option.none(),
-    sandboxed: true,
-    url: Option.some(url)
+const renderIframeBody = (spec: Types.UrlDialog.UrlDialog) => {
+  const bodySpec = {
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-dialog__content-js' ]
+    },
+    components: [
+      {
+        dom: {
+          tag: 'div',
+          classes: [ 'tox-dialog__body-iframe' ]
+        },
+        components: [
+          NavigableObject.craft({
+            dom: {
+              tag: 'iframe',
+              attributes: {
+                src: spec.url
+              }
+            },
+            behaviours: Behaviour.derive([
+              Tabstopping.config({ }),
+              Focusing.config({ })
+            ])
+          })
+        ]
+      }
+    ],
+    behaviours: Behaviour.derive([
+      Keying.config({
+        mode: 'acyclic',
+        useTabstopAt: Fun.not(NavigableObject.isPseudoStop)
+      })
+    ])
   };
-  const stuff = renderIFrame(iframe, backstage.shared.providers);
+
   return ModalDialog.parts().body(
-    stuff
+    bodySpec
   );
 };
 
 export {
   renderInlineBody,
   renderModalBody,
-  renderUrlBody
+  renderIframeBody
 };

@@ -54,29 +54,13 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
 
 const renderIFrame = (spec: Types.Iframe.Iframe, providersBackstage: UiFactoryBackstageProviders) => {
   const isSandbox = platformNeedsSandboxing && spec.sandboxed;
-  const src = spec.url.fold(() => {
-    return {};
-  }, (url) => {
-    return {src: url};
-  });
 
   const attributes = {
     ...spec.label.map<{ title?: string }>((title) => ({title})).getOr({}),
-    ...isSandbox ? { sandbox : 'allow-scripts allow-same-origin' } : { },
-    ...src
+    ...isSandbox ? { sandbox : 'allow-scripts allow-same-origin' } : { }
   };
 
-  const normalBehaviours = [
-    Tabstopping.config({ }),
-    Focusing.config({ })
-  ];
-
-  const representingBehaviours = spec.url.fold(() => {
-    const sourcing = getDynamicSource(isSandbox);
-    return [
-      RepresentingConfigs.withComp(Option.none(), sourcing.getValue, sourcing.setValue)
-    ]
-  }, () => []);
+  const sourcing = getDynamicSource(isSandbox);
 
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
@@ -89,7 +73,11 @@ const renderIFrame = (spec: Types.Iframe.Iframe, providersBackstage: UiFactoryBa
           tag: 'iframe',
           attributes
         },
-        behaviours: Behaviour.derive(normalBehaviours.concat(representingBehaviours))
+        behaviours: Behaviour.derive([
+          Tabstopping.config({ }),
+          Focusing.config({ }),
+          RepresentingConfigs.withComp(Option.none(), sourcing.getValue, sourcing.setValue)
+        ])
       }
     );
   };

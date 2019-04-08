@@ -5,117 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-// DUPE with SilverDialog. Cleaning up.
-import {
-  AddEventsBehaviour,
-  AlloyComponent,
-  AlloyTriggers,
-  Behaviour,
-  Composing,
-  DomFactory,
-  GuiFactory,
-  ModalDialog,
-  Reflecting,
-  SystemEvents,
-  Focusing,
-  AlloyEvents,
-  NativeEvents,
-  Keying,
-} from '@ephox/alloy';
-import { DialogManager, Types } from '@ephox/bridge';
+import { AlloyComponent, Composing, ModalDialog } from '@ephox/alloy';
+import { DialogManager } from '@ephox/bridge';
 import { Option } from '@ephox/katamari';
-import { Attr, Body, Class, Node } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
-import { RepresentingConfigs } from '../alien/RepresentingConfigs';
-import { FormBlockEvent, formCancelEvent } from '../general/FormEvents';
-import NavigableObject from '../general/NavigableObject';
-import { dialogChannel } from './DialogChannels';
-import { renderModalBody, renderUrlBody } from './SilverDialogBody';
+import { renderModalBody } from './SilverDialogBody';
 import { SilverDialogEvents } from './SilverDialogEvents';
 import { renderModalFooter } from './SilverDialogFooter';
-import { renderModalHeader } from './SilverDialogHeader';
 import { getDialogApi } from './SilverDialogInstanceApi';
-
-interface WindowExtra<T> {
-  redial: (newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>;
-  closeWindow: () => void;
-}
-
-const getHeader = (title: string, backstage: UiFactoryBackstage) => {
-  return renderModalHeader({
-    title: backstage.shared.providers.translate(title),
-    draggable: true
-  }, backstage.shared.providers);
-};
-
-const renderUrlDialog = (title: string, url: string, backstage: UiFactoryBackstage) => {
-  const header = getHeader(title, backstage);
-  const body = renderUrlBody(url, backstage);
-
-  const dialog = GuiFactory.build(
-    ModalDialog.sketch({
-      lazySink: backstage.shared.getSink,
-      // TODO: Disable while validating
-      onEscape(c) {
-        AlloyTriggers.emit(c, formCancelEvent);
-        return Option.some(true);
-      },
-
-      useTabstopAt: (elem) => {
-        return !NavigableObject.isPseudoStop(elem) && (
-          Node.name(elem) !== 'button' || Attr.get(elem, 'disabled') !== 'disabled'
-        );
-      },
-
-      modalBehaviours: Behaviour.derive([
-        Focusing.config({})
-      ]),
-
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-dialog', 'tox-dialog--width-lg' ],
-        styles: {
-          position: 'relative'
-        }
-      },
-      components: [
-        header,
-        body
-      ],
-      dragBlockClass: 'tox-dialog-wrap',
-      parts: {
-        blocker: {
-          dom: DomFactory.fromHtml('<div class="tox-dialog-wrap"></div>'),
-          components: [
-            {
-              dom: {
-                tag: 'div',
-                classes: [ 'tox-dialog-wrap__backdrop' ]
-              }
-            }
-          ]
-        }
-      }
-    })
-  );
-
-  // TODO implement instance API
-  const instanceApi = {
-    close: () => {}
-  };
-
-  return {
-    dialog,
-    instanceApi
-  };
-};
+import { getEventExtras, getHeader, renderModalDialog, WindowExtra } from './SilverDialogCommon';
 
 const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowExtra<T>, backstage: UiFactoryBackstage) => {
-  const updateState = (_comp, incoming: DialogManager.DialogInit<T>) => {
-    return Option.some(incoming);
-  };
-
   const header = getHeader(dialogInit.internalDialog.title, backstage);
 
   const body = renderModalBody({
@@ -126,120 +27,15 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowE
     buttons: dialogInit.internalDialog.buttons
   }, backstage.shared.providers);
 
-  const dialogEvents = SilverDialogEvents.init(
-    () => instanceApi,
-    {
-      onClose: () => extra.closeWindow(),
-      onBlock: (blockEvent: FormBlockEvent) => {
-        ModalDialog.setBusy(dialog, (d, bs) => {
-          return {
-            dom: {
-              tag: 'div',
-              classes: [ 'tox-dialog__busy-spinner' ],
-              attributes: {
-                'aria-label': blockEvent.message()
-              },
-              styles: {
-                left: '0px',
-                right: '0px',
-                bottom: '0px',
-                top: '0px',
-                position: 'absolute'
-              }
-            },
-            behaviours: bs,
-            components: [
-              {
-                dom: DomFactory.fromHtml(`<div class="tox-spinner"><div></div><div></div><div></div></div>`)
-              }
-            ]
-          };
-        });
-      },
-      onUnblock: () => {
-        ModalDialog.setIdle(dialog);
-      }
-    }
-  );
+  const dialogEvents = SilverDialogEvents.initDialog(() => instanceApi, getEventExtras(() => dialog, extra));
 
   const dialogSize = dialogInit.internalDialog.size !== 'normal'
     ? dialogInit.internalDialog.size === 'large'
-      ? 'tox-dialog--width-lg'
-      : 'tox-dialog--width-md'
+      ? [ 'tox-dialog--width-lg' ]
+      : [ 'tox-dialog--width-md' ]
     : [];
 
-  const dialog = GuiFactory.build(
-    ModalDialog.sketch({
-      lazySink: backstage.shared.getSink,
-      // TODO: Disable while validating
-      onEscape(c) {
-        AlloyTriggers.emit(c, formCancelEvent);
-        return Option.some(true);
-      },
-
-      useTabstopAt: (elem) => {
-        return !NavigableObject.isPseudoStop(elem) && (
-          Node.name(elem) !== 'button' || Attr.get(elem, 'disabled') !== 'disabled'
-        );
-      },
-
-      modalBehaviours: Behaviour.derive([
-        Reflecting.config({
-          channel: dialogChannel,
-          updateState,
-          initialData: dialogInit
-        }),
-        Focusing.config({}),
-        AddEventsBehaviour.config('execute-on-form', dialogEvents.concat([
-          AlloyEvents.runOnSource(NativeEvents.focusin(), (comp, se) => {
-            Keying.focusIn(comp);
-          })
-        ])),
-        AddEventsBehaviour.config('scroll-lock', [
-          AlloyEvents.runOnAttached(() => {
-            Class.add(Body.body(), 'tox-dialog__disable-scroll');
-          }),
-          AlloyEvents.runOnDetached(() => {
-            Class.remove(Body.body(), 'tox-dialog__disable-scroll');
-          }),
-        ]),
-        RepresentingConfigs.memory({ })
-      ]),
-
-      eventOrder: {
-        [SystemEvents.execute()]: [ 'execute-on-form' ],
-        [SystemEvents.attachedToDom()]: [ 'scroll-lock', 'reflecting', 'execute-on-form', 'alloy.base.behaviour' ],
-        [SystemEvents.detachedFromDom()]: [ 'alloy.base.behaviour', 'execute-on-form', 'reflecting', 'scroll-lock' ],
-      },
-
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-dialog' ].concat(dialogSize),
-        styles: {
-          position: 'relative'
-        }
-      },
-      components: [
-        header,
-        body,
-        footer
-      ],
-      dragBlockClass: 'tox-dialog-wrap',
-      parts: {
-        blocker: {
-          dom: DomFactory.fromHtml('<div class="tox-dialog-wrap"></div>'),
-          components: [
-            {
-              dom: {
-                tag: 'div',
-                classes: [ 'tox-dialog-wrap__backdrop' ]
-              }
-            }
-          ]
-        }
-      }
-    })
-  );
+  const dialog = renderModalDialog(dialogInit, dialogEvents, backstage, header, body, Option.some(footer), dialogSize);
 
   const modalAccess = (() => {
     const getForm = (): AlloyComponent => {
@@ -265,6 +61,5 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowE
 };
 
 export {
-  renderDialog,
-  renderUrlDialog
+  renderDialog
 };
