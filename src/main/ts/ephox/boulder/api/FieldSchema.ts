@@ -100,12 +100,16 @@ const optionFunction = function (key: string): FieldProcessorAdt {
   return optionOf(key, ValueSchema.func);
 };
 
+const optionArrayOf = function (key: string, schema: Processor): FieldProcessorAdt {
+  return optionOf(key, arrOf(schema));
+};
+
 const optionObjOf = function (key: string, objSchema: FieldProcessorAdt[]): FieldProcessorAdt {
-  return field(key, key, FieldPresence.asOption(), objOf(objSchema));
+  return optionOf(key, objOf(objSchema));
 };
 
 const optionObjOfOnly = function (key: string, objSchema: FieldProcessorAdt[]): FieldProcessorAdt {
-  return field(key, key, FieldPresence.asOption(), objOfOnly(objSchema));
+  return optionOf(key, objOfOnly(objSchema));
 };
 
 const defaulted = function (key: string, fallback: any): FieldProcessorAdt {
@@ -137,16 +141,11 @@ const defaultedFunction = function (key: string, fallback: (...x: any[]) => any)
 };
 
 const defaultedArrayOf = function (key: string, fallback: any[], schema: Processor): FieldProcessorAdt {
-  return field(
-    key,
-    key,
-    FieldPresence.defaulted(fallback),
-    arrOf(schema)
-  );
+  return defaultedOf(key, fallback, arrOf(schema));
 };
 
 const defaultedObjOf = function (key: string, fallback: object, objSchema: FieldProcessorAdt[]): FieldProcessorAdt {
-  return field(key, key, FieldPresence.defaulted(fallback), objOf(objSchema));
+  return defaultedOf(key, fallback, objOf(objSchema));
 };
 
 const state = function (okey: string, instantiator: any): FieldProcessorAdt {
@@ -176,6 +175,7 @@ export {
   optionFunction,
   optionObjOf,
   optionObjOfOnly,
+  optionArrayOf,
 
   defaulted,
   defaultedOf,
