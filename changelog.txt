@@ -1,5 +1,5 @@
 Version 5.0.4 (TBD)
-    Fixed keyboard navigation to work as expected when `toolbar_drawer: sliding` is configured #TINY-3533
+    Fixed toolbar drawer sliding mode keyboard navigation incorrectly focusing the editor when tabbing #TINY-3533
     Added the new premium plugins to the Help dialog plugins tab #TINY-3496
     Fixed positioning of the styleselect menu in iOS while using mobile theme #TINY-3505
     Removed redundant mobile wrapper #TINY-3480
