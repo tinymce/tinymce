@@ -71,8 +71,7 @@ export default (): void => {
           margin: '10px',
           border: '1px solid black',
           display: 'inline-block',
-          background: 'gray',
-          color: 'white'
+          background: 'gray'
         }
       },
       buttonBehaviours: Behaviour.derive([
@@ -118,17 +117,31 @@ export default (): void => {
     'Drag the gray boxes into the drop zones and check console log for messages.',
     Container.sketch({
       components: [
-        createDropZone('copy'),
-        createDropZone('link'),
-        createDropZone('move'),
- 
-        createDraggable('copy', 'custom data for copy'),
-        createDraggable('link', 'custom data for link'),
-        createDraggable('move', 'custom data for move'),
-        createDraggable('all', 'custom data for all'),
-        createDraggable('copyLink', 'custom data for copyLink'),
-        createDraggable('linkMove', 'custom data for linkMove'),
-        createDraggable('copyMove', 'custom data for copyMove')
+        Container.sketch({
+          components: [
+            createDropZone('copy'),
+            createDropZone('link'),
+            createDropZone('move')
+          ]
+        }),
+
+        Container.sketch({
+          dom: {
+            styles: {
+              // Gets inherited by the drag image ghost
+              color: 'white'
+            }
+          },
+          components: [
+            createDraggable('copy', 'custom data for copy'),
+            createDraggable('link', 'custom data for link'),
+            createDraggable('move', 'custom data for move'),
+            createDraggable('all', 'custom data for all'),
+            createDraggable('copyLink', 'custom data for copyLink'),
+            createDraggable('linkMove', 'custom data for linkMove'),
+            createDraggable('copyMove', 'custom data for copyMove')
+          ]
+        })
       ]
     })
   );
