@@ -1,5 +1,5 @@
 import { Behaviour } from '@ephox/alloy';
-import DragnDropBranches from '../../dragging/dragndrop/DragnDropBranches';
+import DragnDropBranches from '../../behaviour/dragndrop/DragnDropBranches';
 import { DragnDropBehaviour } from '../../dragging/dragndrop/DragnDropTypes';
 
 const DragnDrop = Behaviour.createModes({

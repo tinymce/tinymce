@@ -1,6 +1,6 @@
 import { FieldProcessorAdt } from '@ephox/boulder';
-import DragStarting from './DragStarting';
-import Dropping from './Dropping';
+import DragStarting from '../../dragging/dragndrop/DragStarting';
+import Dropping from '../../dragging/dragndrop/Dropping';
 
 const ex: {
   drag: FieldProcessorAdt[];
