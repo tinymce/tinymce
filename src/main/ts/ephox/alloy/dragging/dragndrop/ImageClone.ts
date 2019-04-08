@@ -42,8 +42,7 @@ const setDragImageFromClone = (transfer: DataTransfer, parent: Element, image: D
   }, 0);
 };
 
-// IE and Edge doesn't support setDragImage so this code simply hides the clone in theory we could
-// manage our own clone using dragover etc but not sure it's worth the effort on dying browsers.
+// IE and Edge doesn't support setDragImage so this fallback will hide the target from being used as a ghost
 const blockDefaultGhost = (target: Element) => {
   const targetClone = Replication.deep(target);
   const oldStyles = Arr.map(['position', 'visibility'], (name) => {
@@ -74,8 +73,9 @@ const setDragImageFromCloneEdgeFallback = (image: DragnDropImageClone, parent: E
   const ghostState = Cell(Option.none());
 
   const drag = DomEvent.bind(target, 'drag', (evt) => {
-    const x = evt.x() + image.x() + 1;
-    const y = evt.y() + image.y() + 1;
+    // The calculated position needs to at least be cord + 1 since it would otherwise interfere with dropping
+    const x = evt.x() + Math.max(image.x() + 1, 1);
+    const y = evt.y() + Math.max(image.y() + 1, 1);
 
     const ghost = ghostState.get().getOrThunk(() => {
       const newGhost = createGhostClone(image);
