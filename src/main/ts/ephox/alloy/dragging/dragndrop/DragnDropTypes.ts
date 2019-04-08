@@ -19,6 +19,7 @@ export interface StartingDragndropConfigSpec {
   phoneyTypes?: string[];
   effectAllowed?: string;
   getData?: (component: AlloyComponent) => string;
+  getImageParent?: (component: AlloyComponent) => Element;
   getImage?: (component: AlloyComponent) => DragnDropImageClone;
   canDrag?: (component: AlloyComponent, target: Element) => boolean;
   onDragstart?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
@@ -31,6 +32,7 @@ export interface DragStartingConfig {
   phoneyTypes: string[];
   effectAllowed: string;
   getData: (component: AlloyComponent) => string;
+  getImageParent: Option<(component: AlloyComponent) => Element>;
   getImage: Option<(component: AlloyComponent) => {
     element: () => Element;
     x: () => number;

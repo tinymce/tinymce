@@ -1,7 +1,10 @@
-import { Replication, Element, Css, Insert, Body, Remove } from '@ephox/sugar';
-import { DataTransfer } from '@ephox/dom-globals';
+import { Replication, Element, Css, Insert, Body, Remove, DomEvent, Traverse } from '@ephox/sugar';
+import { DataTransfer, alert } from '@ephox/dom-globals';
 import * as DataTransfers from './DataTransfers';
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Option, Cell } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
+
+const platform = PlatformDetection.detect();
 
 export interface DragnDropImageClone {
   element: () => Element;
@@ -9,24 +12,29 @@ export interface DragnDropImageClone {
   y: () => number;
 }
 
-// Inspired by the ideas here. On mousedown, spawn an image at pageX, pageY
-// Fire dragDrop on that image
-// remove the image in a setTimeout( 0 )
-// http://jsfiddle.net/stevendwood/akScu/21/
-const setDragImageFromClone = (transfer: DataTransfer, image: DragnDropImageClone) => {
+const createGhostClone = (image: DragnDropImageClone) => {
   const ghost = Replication.deep(image.element());
 
+  // Firefox will scale down non ghost images to 175px so lets limit the size to 175px in general
   Css.setAll(ghost, {
     'position': 'absolute',
     'top': '-300px',
-    // Firefox will scale down non ghost images to 175px so lets limit the size to 175px in general
     'max-width': '175px',
     'max-height': '175px',
     'overflow': 'hidden'
   });
 
-  Insert.append(Body.body(), ghost);
+  return ghost;
+};
 
+// Inspired by the ideas here. On mousedown, spawn an image at pageX, pageY
+// Fire dragDrop on that image
+// remove the image in a setTimeout( 0 )
+// http://jsfiddle.net/stevendwood/akScu/21/
+const setDragImageFromClone = (transfer: DataTransfer, parent: Element, image: DragnDropImageClone) => {
+  const ghost = createGhostClone(image);
+
+  Insert.append(parent, ghost);
   DataTransfers.setDragImage(transfer, ghost.dom(), image.x(), image.y());
 
   setTimeout(() => {
@@ -60,10 +68,50 @@ const blockDefaultGhost = (target: Element) => {
   }, 0);
 };
 
-const setImageClone = (transfer: DataTransfer, image: DragnDropImageClone, target: Element) => {
+// Edge doesn't have setDragImage support and just hiding the target element will position the drop icon incorrectly so we need custom ghost
+// TODO: Get rid of this once Edge switches to Chromium we feature detect setDragImage support so once they have it should use that instead
+const setDragImageFromCloneEdgeFallback = (image: DragnDropImageClone, parent: Element, target: Element) => {
+  const ghostState = Cell(Option.none());
+
+  const drag = DomEvent.bind(target, 'drag', (evt) => {
+    const x = evt.x() + image.x() + 1;
+    const y = evt.y() + image.y() + 1;
+
+    const ghost = ghostState.get().getOrThunk(() => {
+      const newGhost = createGhostClone(image);
+
+      ghostState.set(Option.some(newGhost));
+      Css.set(newGhost, 'position', 'fixed');
+
+      Insert.append(parent, newGhost);
+
+      return newGhost;
+    });
+
+    Css.setAll(ghost, {
+      left: `${x}px`,
+      top: `${y}px`,
+      margin: '0',
+      opacity: '0.6'
+    })
+  });
+
+  const dragEnd = DomEvent.bind(target, 'dragend', (_) => {
+    ghostState.get().each(Remove.remove);
+    drag.unbind();
+    dragEnd.unbind();
+  });
+
+  blockDefaultGhost(target);
+};
+
+const setImageClone = (transfer: DataTransfer, image: DragnDropImageClone, parent: Element, target: Element) => {
   if (DataTransfers.hasDragImageSupport(transfer)) {
-    setDragImageFromClone(transfer, image);
+    setDragImageFromClone(transfer, parent, image);
+  } else if (platform.browser.isEdge()) {
+    setDragImageFromCloneEdgeFallback(image, parent, target);
   } else {
+    // We can't provide a fallback on IE 11 since the drag event doesn't update the mouse position
     blockDefaultGhost(target);
   }
 };
