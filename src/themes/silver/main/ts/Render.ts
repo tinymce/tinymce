@@ -226,7 +226,7 @@ const setup = (editor: Editor): RenderInfo => {
       behaviours: Behaviour.derive(mode.getBehaviours(editor).concat([
         Keying.config({
           mode: 'cyclic',
-          selector: '.tox-menubar, .tox-toolbar, .tox-toolbar__primary, .tox-sidebar__overflow--open, .tox-statusbar__path, .tox-statusbar__wordcount, .tox-statusbar__branding a'
+          selector: '.tox-menubar, .tox-toolbar, .tox-toolbar__primary, .tox-toolbar__overflow--open, .tox-sidebar__overflow--open, .tox-statusbar__path, .tox-statusbar__wordcount, .tox-statusbar__branding a'
         })
       ]))
     } as OuterContainerSketchSpec)
