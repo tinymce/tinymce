@@ -1,4 +1,4 @@
-import { Blob, XMLHttpRequest, FormData, File, fetch, console, Response, Headers } from '@ephox/dom-globals';
+import { Blob, XMLHttpRequest, FormData, File, fetch, Response, Headers } from '@ephox/dom-globals';
 import { FutureResult, Result, Option, Obj, Type, Strings, Global } from '@ephox/katamari';
 import * as ResponseError from './ResponseError';
 import * as ResponseSuccess from './ResponseSuccess';
@@ -6,6 +6,7 @@ import * as HttpTypes from './HttpTypes';
 import { HttpError, HttpErrorCode } from './HttpError';
 import { DataType } from './DataType';
 import { RequestBody, ResponseBodyDataTypes, ResponseTypeMap, textData } from './HttpData';
+import { buildUrl } from './UrlBuilder';
 
 const getContentType = (requestBody: RequestBody): Option<string> => {
   return Option.from(requestBody).bind((b) => {
@@ -87,7 +88,7 @@ const getData = (body: RequestBody) => Option.from(body).map((b) => {
 const send = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>) => {
   return FutureResult.nu<ResponseTypeMap[T], HttpError>((callback) => {
     const request = new XMLHttpRequest();
-    request.open(init.method, init.url, true); // enforced async! enforced type as String!
+    request.open(init.method, buildUrl(init.url, Option.from(init.query)), true); // enforced async! enforced type as String!
 
     const options = createOptions(init);
     applyOptions(request, options);

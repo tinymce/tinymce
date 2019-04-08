@@ -84,6 +84,39 @@
     "request": {
       "method": "get",
       "path": "/custom/sample/get/1",
+      "headers": { },
+      "query": {
+        "alpha": "1",
+        "beta": "2"
+      }
+    },
+
+    "response": {
+      "json": { "good": [ "alpha", "beta" ] }
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/sample/get/2",
+      "headers": { },
+      "query": {
+        "alpha": "1",
+        "beta": "2",
+        "gamma": "3"
+      }
+    },
+
+    "response": {
+      "json": { "good": [ "alpha", "beta", "gamma" ] }
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/sample/get/1",
       "headers": {
         "X-custom-header": "X-custom-header-value"
       },

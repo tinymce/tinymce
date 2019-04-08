@@ -67,12 +67,43 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
         responseType: DataType.JSON,
       }
     )),
+
     expectValue('GET Query parameters correct', {
       results: { good: [ 'alpha' ] }
     }, Http.get(
       {
         url: '/custom/sample/get/1?word=alpha',
         responseType: DataType.JSON,
+      }
+    )),
+
+    expectValue('GET with query parameters alpha, beta', {
+      good: [ 'alpha', 'beta' ]
+    }, Http.get(
+      {
+        url: '/custom/sample/get/1',
+        query: { alpha: '1', beta: '2' },
+        responseType: DataType.JSON
+      }
+    )),
+
+    expectValue('GET with url query parameter alpha and query parameter beta', {
+      good: [ 'alpha', 'beta' ]
+    }, Http.get(
+      {
+        url: '/custom/sample/get/1?alpha=1',
+        query: { beta: '2' },
+        responseType: DataType.JSON
+      }
+    )),
+
+    expectValue('GET with url query parameters alpha and beeta and query parameter gamma', {
+      good: [ 'alpha', 'beta', 'gamma' ]
+    }, Http.get(
+      {
+        url: '/custom/sample/get/2?alpha=1&beta=2',
+        query: { gamma: '3' },
+        responseType: DataType.JSON
       }
     )),
 
