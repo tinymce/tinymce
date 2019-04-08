@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.10.10] - 2019-04-10
+### Changed
+- Made footers an optional part in modal dialogs
+
 # [4.10.7] - 2019-03-15
 ### Added
 - Keyboard navigation for sliding split toolbars
