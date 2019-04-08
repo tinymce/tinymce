@@ -1491,6 +1491,7 @@ tokenize = Sizzle.tokenize = function (selector, parseOnly) {
 
     // Filters
     for (type in Expr.filter) {
+      if (!Expr.filter.hasOwnProperty(type)) continue;
       if ((match = matchExpr[type].exec(soFar)) && (!preFilters[type] ||
         (match = preFilters[type](match)))) {
         matched = match.shift();
