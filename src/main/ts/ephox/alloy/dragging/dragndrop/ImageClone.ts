@@ -1,4 +1,4 @@
-import { Replication, Element, Css, Insert, Body, Remove, DomEvent, Traverse } from '@ephox/sugar';
+import { Replication, Element, Css, Insert, Body, Remove, DomEvent, Traverse, Attr } from '@ephox/sugar';
 import { DataTransfer, alert } from '@ephox/dom-globals';
 import * as DataTransfers from './DataTransfers';
 import { Arr, Option, Cell } from '@ephox/katamari';
@@ -81,7 +81,14 @@ const setDragImageFromCloneEdgeFallback = (image: DragnDropImageClone, parent: E
       const newGhost = createGhostClone(image);
 
       ghostState.set(Option.some(newGhost));
-      Css.set(newGhost, 'position', 'fixed');
+
+      Css.setAll(newGhost, {
+        position: 'fixed',
+        margin: '0',
+        opacity: '0.6'
+      });
+
+      Attr.set(newGhost, 'role', 'presentation');
 
       Insert.append(parent, newGhost);
 
@@ -90,9 +97,7 @@ const setDragImageFromCloneEdgeFallback = (image: DragnDropImageClone, parent: E
 
     Css.setAll(ghost, {
       left: `${x}px`,
-      top: `${y}px`,
-      margin: '0',
-      opacity: '0.6'
+      top: `${y}px`
     })
   });
 
