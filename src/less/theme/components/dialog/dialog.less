@@ -287,6 +287,28 @@
     width: 100%;
     z-index: @z-index-dialogs;
   }
+
+  // Make iframe/url dialogs stretch contents to fit the height and width of parent container
+  .tox-dialog__body-iframe {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    -ms-flex-preferred-size: auto;
+
+    .tox-navobj {
+      display: flex;
+      flex: 1;
+      -ms-flex-preferred-size: auto;
+    }
+
+    // the nav object spec is surrounded by tab stop objects, so apply flex to the middle element
+    .tox-navobj :nth-child(2) {
+      flex: 1;
+      -ms-flex-preferred-size: auto;
+      // IE 11
+      height: 100%;
+    }
+  }
 }
 
 // Added to the body to disable scrolling when dialogs are open
