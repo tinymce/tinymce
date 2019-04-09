@@ -11,7 +11,7 @@ import { SugarEvent } from '../../alien/TypeDefinitions';
 
 const schema: FieldProcessorAdt[] = [
   FieldSchema.defaultedString('type', 'text/plain'),
-  FieldSchema.defaultedStringEnum('dropEffect', 'copy', ['copy', 'move', 'link', 'none']),
+  FieldSchema.defaultedStringEnum('dropEffect', 'move', ['copy', 'move', 'link', 'none']),
   Fields.onHandler('onDrop'),
   Fields.onHandler('onDrag'),
   Fields.onHandler('onDragover'),
@@ -42,6 +42,7 @@ const schema: FieldProcessorAdt[] = [
       }),
 
       AlloyEvents.run<SugarEvent>(NativeEvents.drop(), (comp, simulatedEvent) => {
+        simulatedEvent.stop();
         DataTransfers.setDropEffectOnEvent(simulatedEvent, config.dropEffect);
 
         if (DataTransfers.isValidDrop(DataTransfers.getDataTransferFromEvent(simulatedEvent))) {

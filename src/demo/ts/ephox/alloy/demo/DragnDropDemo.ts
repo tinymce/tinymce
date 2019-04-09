@@ -37,8 +37,6 @@ export default (): void => {
           type: 'text/plain',
           dropEffect,
           onDrop (component, simulatedEvent) {
-            simulatedEvent.event().prevent();
-
             console.log(`onDrop`, {
               data: simulatedEvent.data,
               files: simulatedEvent.files
