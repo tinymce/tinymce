@@ -128,8 +128,9 @@ const renderModalDialog = (initialData, dialogEvents: AlloyEvents.AlloyEventKeyA
 
       eventOrder: {
         [SystemEvents.execute()]: [ 'execute-on-form' ],
-        [SystemEvents.attachedToDom()]: [ 'scroll-lock', 'reflecting', 'execute-on-form', 'alloy.base.behaviour' ],
-        [SystemEvents.detachedFromDom()]: [ 'alloy.base.behaviour', 'execute-on-form', 'reflecting', 'scroll-lock' ],
+        [SystemEvents.receive()]: [ 'reflecting', 'receiving' ],
+        [SystemEvents.attachedToDom()]: [ 'scroll-lock', 'reflecting', 'messages', 'execute-on-form', 'alloy.base.behaviour' ],
+        [SystemEvents.detachedFromDom()]: [ 'alloy.base.behaviour', 'execute-on-form', 'messages', 'reflecting', 'scroll-lock' ],
       },
 
       dom: {

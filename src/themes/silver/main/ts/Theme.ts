@@ -24,7 +24,7 @@ ThemeManager.add('silver', (editor): Theme => {
 
   Autocompleter.register(editor, backstage.shared);
 
-  const windowMgr = WindowManager.setup({backstage});
+  const windowMgr = WindowManager.setup({ editor, backstage });
 
   return {
     renderUI,

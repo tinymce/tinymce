@@ -6,6 +6,7 @@
  */
 
 import { AlloySpec, Behaviour, Focusing, ModalDialog, Reflecting, Tabstopping, Keying } from '@ephox/alloy';
+import { Types } from '@ephox/bridge';
 import { Fun, Option } from '@ephox/katamari';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -13,8 +14,7 @@ import { renderBodyPanel } from '../dialog/BodyPanel';
 import { renderTabPanel } from '../dialog/TabPanel';
 import { bodyChannel } from './DialogChannels';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
-import { Types } from '@ephox/bridge';
-import NavigableObject from 'tinymce/themes/silver/ui/general/NavigableObject';
+import NavigableObject from '../general/NavigableObject';
 
 // TypeScript allows some pretty weird stuff.
 type WindowBodyFoo = {

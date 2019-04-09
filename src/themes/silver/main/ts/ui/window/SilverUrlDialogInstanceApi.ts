@@ -10,6 +10,7 @@ import { Types } from '@ephox/bridge';
 import { Type } from '@ephox/katamari';
 
 import { formBlockEvent, formCloseEvent, formUnblockEvent } from '../general/FormEvents';
+import { bodySendMessageChannel } from '../window/DialogChannels';
 
 const getUrlDialogApi = (root: AlloyComponent): Types.UrlDialog.UrlDialogInstanceApi => {
   const withRoot = <T>(f: (r: AlloyComponent) => void): void => {
@@ -39,10 +40,17 @@ const getUrlDialogApi = (root: AlloyComponent): Types.UrlDialog.UrlDialogInstanc
     });
   };
 
+  const sendMessage = (data) => {
+    withRoot((root) => {
+      root.getSystem().broadcastOn([ bodySendMessageChannel ], data);
+    });
+  };
+
   return {
     block,
     unblock,
-    close
+    close,
+    sendMessage
   };
 };
 

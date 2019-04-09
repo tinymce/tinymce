@@ -93,8 +93,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
           type: 'iframe',
           name: 'frame-a',
           label: Option.some('iframe label'),
-          sandboxed: true,
-          url: Option.none()
+          sandboxed: true
         }, TestProviders)
       );
     },

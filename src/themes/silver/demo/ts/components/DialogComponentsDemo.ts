@@ -65,8 +65,7 @@ export default () => {
     type: 'iframe',
     name: 'iframe',
     label: Option.some('Iframe'),
-    sandboxed: true,
-    url: Option.none()
+    sandboxed: true
   }, sharedBackstage.providers);
 
   const inputSpec = renderInput({

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IFrame responder</title>
+  <script>
+    var targetOrigin = window.location.origin;
+
+    // Setup a listener to receive messages and return the message back
+    window.addEventListener('message', function (e) {
+      window.parent.postMessage(e.data, targetOrigin);
+    });
+  </script>
+</head>
+<body>
+</body>
+</html>

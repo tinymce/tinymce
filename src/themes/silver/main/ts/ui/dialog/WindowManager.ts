@@ -19,6 +19,8 @@ import {
 import { Processor, ValueSchema } from '@ephox/boulder';
 import { DialogManager, Types } from '@ephox/bridge';
 
+import Editor from 'tinymce/core/api/Editor';
+
 import { formCancelEvent } from '../general/FormEvents';
 import { renderDialog } from '../window/SilverDialog';
 import { renderUrlDialog } from '../window/SilverUrlDialog';
@@ -29,6 +31,7 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 
 export interface WindowManagerSetup {
   backstage: UiFactoryBackstage;
+  editor: Editor;
 }
 
 const validateData = <T extends Types.Dialog.DialogData>(data: T, validator: Processor) => {
@@ -63,6 +66,7 @@ const setup = (extras: WindowManagerSetup) => {
             closeWindow(dialog.instanceApi);
           }
         },
+        extras.editor,
         extras.backstage
       );
 

@@ -32,7 +32,7 @@ import {
   formUnblockEvent,
   FormUnblockEvent,
   formTabChangeEvent,
-  FormTabChangeEvent,
+  FormTabChangeEvent
 } from '../general/FormEvents';
 import NavigableObject from '../general/NavigableObject';
 
@@ -79,7 +79,6 @@ const initUrlDialog = <T>(getInstanceApi: () => Types.UrlDialog.UrlDialogInstanc
       f(currentDialog, c);
     });
   };
-
   return [
     ...initCommonEvents(fireApiEvent, extras),
 
