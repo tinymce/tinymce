@@ -21,7 +21,6 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@ephox/agar": "latest",
     "@ephox/bedrock": "latest",
     "@ephox/tslint-rules": "latest",
     "ts-loader": "^5.3.0",
