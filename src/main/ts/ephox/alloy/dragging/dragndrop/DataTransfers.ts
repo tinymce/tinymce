@@ -8,7 +8,7 @@ const platform = PlatformDetection.detect();
 // IE 11 only supports 'Text' or 'URL' types see: https://msdn.microsoft.com/en-us/ie/ms536744(v=vs.94)
 const getPlatformType = (type: string) => platform.browser.isIE() ? 'text' : type;
 
-const setDataTransfer = (transfer: DataTransfer, types: string[], data: string) => {
+const setDataTransferFallback = (transfer: DataTransfer, types: string[], data: string) => {
   Arr.each(types, (type) => {
     const platformType = getPlatformType(type);
 
@@ -28,10 +28,15 @@ const setDataItems = (transfer: DataTransfer, types: string[], data: string) => 
 };
 
 const setData = (transfer: DataTransfer, types: string[], data: string) => {
-  // If we use setDataItems on Firefox and Linux, it basically gets into a failed state
-  // which corrupts all drag and drops on that Firefox process. Avoid.
-  const set = platform.browser.isChrome() ? setDataItems : setDataTransfer;
-  set(transfer, types, data);
+  // IE only supports the transfer.setData api with 'text'
+  // Edge throws exceptions when setting custom mime types
+  // Firefox (ESR 60) and older will corrupt all drag/drop handling is you use the items api
+  const oldFirefox = platform.browser.isFirefox() && platform.browser.version.major < 66;
+  if (platform.browser.isIE() || platform.browser.isEdge() || oldFirefox) {
+    setDataTransferFallback(transfer, types, data);
+  } else {
+    setDataItems(transfer, types, data);
+  }
 };
 
 const getData = (transfer: DataTransfer, type: string) => {
@@ -68,7 +73,7 @@ const isValidDrop = (transfer: DataTransfer) => {
   const effectAllowed = transfer.effectAllowed.toLowerCase();
   const dropEffect = transfer.dropEffect.toLowerCase();
 
-  return effectAllowed === 'all' || Strings.contains(effectAllowed, dropEffect);
+  return effectAllowed === 'all' || effectAllowed === 'uninitialized' || Strings.contains(effectAllowed, dropEffect);
 };
 
 const getDataTransferFromEvent = (simulatedEvent: NativeSimulatedEvent): DataTransfer => {
