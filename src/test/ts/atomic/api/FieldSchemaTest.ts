@@ -64,4 +64,6 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', function () {
   assertOptionalFieldValue({ key: Option.some('b') }, { key: 'b' }, FieldSchema.optionStringEnum('key', ['a', 'b']));
   assertFieldError('Should be fail on unspecified value', { key: 'c' }, FieldSchema.optionStringEnum('key', ['a', 'b']));
   assertOptionalFieldValue({ key: Option.none() }, { }, FieldSchema.optionStringEnum('key', ['a', 'b']));
+  assertOptionalFieldValue({ key: Option.some(['b'])}, { key: ['b'] }, FieldSchema.optionArrayOf('key', ValueSchema.string));
+  assertOptionalFieldValue({ key: Option.none()}, { }, FieldSchema.optionArrayOf('key', ValueSchema.string));
 });
