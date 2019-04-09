@@ -6,6 +6,7 @@ export interface UrlDialogInstanceApi {
   block: (msg: string) => void;
   unblock: () => void;
   close: () => void;
+  sendMessage: (msg: any) => void;
 }
 
 export interface UrlDialogActionDetails {
@@ -16,6 +17,7 @@ export interface UrlDialogActionDetails {
 export type UrlDialogActionHandler = (api: UrlDialogInstanceApi, actions: UrlDialogActionDetails) => void;
 export type UrlDialogCloseHandler = () => void;
 export type UrlDialogCancelHandler = (api: UrlDialogInstanceApi) => void;
+export type UrlDialogMessageHandler = (api: UrlDialogInstanceApi, message: any) => void;
 
 // Allow the same button structure as dialogs, but remove the ability to have submit buttons
 export interface UrlDialogButtonApi extends DialogButtonApi {
@@ -42,6 +44,9 @@ export interface UrlDialogApi {
 
   // Gets fired when the dialog is manually closed using Esc key or cancel/X button
   onCancel?: UrlDialogCancelHandler;
+
+  // Gets fired when the dialog receives a message via window.postMessage() from the url
+  onMessage?: UrlDialogMessageHandler;
 }
 
 export interface UrlDialog {
@@ -54,6 +59,7 @@ export interface UrlDialog {
   onAction: UrlDialogActionHandler;
   onClose: UrlDialogCloseHandler;
   onCancel: UrlDialogCancelHandler;
+  onMessage: UrlDialogMessageHandler;
 }
 
 export const urlDialogButtonSchema = ValueSchema.objOf([
@@ -69,7 +75,8 @@ export const urlDialogSchema = ValueSchema.objOf([
   FieldSchema.optionArrayOf('buttons', urlDialogButtonSchema),
   FieldSchema.defaultedFunction('onAction', Fun.noop),
   FieldSchema.defaultedFunction('onCancel', Fun.noop),
-  FieldSchema.defaultedFunction('onClose', Fun.noop)
+  FieldSchema.defaultedFunction('onClose', Fun.noop),
+  FieldSchema.defaultedFunction('onMessage', Fun.noop)
 ]);
 
 export const createUrlDialog = (spec: UrlDialogApi): Result<UrlDialog, ValueSchema.SchemaError<any>> => {
