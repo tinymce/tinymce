@@ -1,7 +1,8 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
+import * as AlloyEvents from '../../api/events/AlloyEvents';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Element } from '@ephox/sugar';
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { NativeSimulatedEvent, EventFormat } from '../../events/SimulatedEvent';
 import { DragnDropImageClone } from './ImageClone';
 import { DropEvent } from './DropEvent';
 import { Option } from '@ephox/katamari';
@@ -45,9 +46,9 @@ export interface DragStartingConfig {
   instance: {
     exhibit: () => DomModification;
     handlers: (dragInfo: DragStartingConfig) => {
-      dragover: any;
-      dragend: any;
-      dragstart: any;
+      dragover: AlloyEvents.AlloyEventHandler<EventFormat>;
+      dragend: AlloyEvents.AlloyEventHandler<EventFormat>;
+      dragstart: AlloyEvents.AlloyEventHandler<EventFormat>;
     };
   };
 }
@@ -56,7 +57,7 @@ export interface DropDragndropConfigSpec {
   mode: 'drop',
   type?: string;
   dropEffect?: string;
-  onDrop?: (component: AlloyComponent, simulatedEvent: DropEvent) => void;
+  onDrop?: (component: AlloyComponent, dropEvent: DropEvent) => void;
   onDrag?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragover?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragenter?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
@@ -66,19 +67,19 @@ export interface DropDragndropConfigSpec {
 export interface DroppingConfig {
   type: string;
   dropEffect: string;
-  onDrop: (component: AlloyComponent, simulatedEvent: DropEvent) => void;
+  onDrop: (component: AlloyComponent, dropEvent: DropEvent) => void;
   onDrag: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragover: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragenter: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragleave: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   instance: {
-    exhibit: () => any;
+    exhibit: () => DomModification;
     handlers: (dragInfo: DroppingConfig) => {
-      dragover: any;
-      dragleave: any;
-      drag: any;
-      dragenter: any;
-      drop: any;
+      dragover: AlloyEvents.AlloyEventHandler<EventFormat>;
+      dragleave: AlloyEvents.AlloyEventHandler<EventFormat>;
+      drag: AlloyEvents.AlloyEventHandler<EventFormat>;
+      dragenter: AlloyEvents.AlloyEventHandler<EventFormat>;
+      drop: AlloyEvents.AlloyEventHandler<EventFormat>;
     };
   };
 }
