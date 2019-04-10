@@ -27,6 +27,13 @@ import * as Icons from 'tinymce/themes/silver/ui/icons/Icons';
 import { formChangeEvent } from '../general/FormEvents';
 
 export const renderSelectBox = (spec: Types.SelectBox.SelectBox, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+  const translatedOptions = Arr.map(spec.items, (item) => {
+    return {
+      text: providersBackstage.translate(item.text),
+      value: item.value
+    };
+  });
+
   // DUPE with TextField.
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
@@ -36,7 +43,7 @@ export const renderSelectBox = (spec: Types.SelectBox.SelectBox, providersBackst
     selectAttributes: {
       size: spec.size
     },
-    options: spec.items,
+    options: translatedOptions,
     factory: AlloyHtmlSelect,
     selectBehaviours: Behaviour.derive([
       Tabstopping.config({ }),

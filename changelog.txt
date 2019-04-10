@@ -1,4 +1,5 @@
 Version 5.0.4 (TBD)
+    Fixed selectbox and colorswatch items not being translated #TINY-3546
     Fixed toolbar drawer sliding mode keyboard navigation incorrectly focusing the editor when tabbing #TINY-3533
     Added the new premium plugins to the Help dialog plugins tab #TINY-3496
     Fixed positioning of the styleselect menu in iOS while using mobile theme #TINY-3505
