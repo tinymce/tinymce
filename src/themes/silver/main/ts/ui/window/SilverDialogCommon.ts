@@ -37,6 +37,15 @@ export interface WindowExtra<T> {
   closeWindow: () => void;
 }
 
+export interface DialogSpec {
+  header: AlloySpec;
+  body: AlloyParts.ConfiguredPart;
+  footer: Option<AlloyParts.ConfiguredPart>;
+  extraClasses: string[];
+  extraStyles: Record<string, string>;
+  extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
+}
+
 const getHeader = (title: string, backstage: UiFactoryBackstage) => {
   return renderModalHeader({
     title: backstage.shared.providers.translate(title),
@@ -79,10 +88,7 @@ const getEventExtras = (lazyDialog, extra: WindowExtra<any>) => {
   };
 };
 
-const renderModalDialog = (initialData, dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[], backstage: UiFactoryBackstage,
-                           header: AlloySpec, body: AlloyParts.ConfiguredPart, footer: Option<AlloyParts.ConfiguredPart>,
-                           extraClasses: string[] = [], extraStyles: Record<string, string> = {},
-                           extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[] = []) => {
+const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[], backstage: UiFactoryBackstage) => {
   const updateState = (_comp, incoming) => {
     return Option.some(incoming);
   };
@@ -123,7 +129,7 @@ const renderModalDialog = (initialData, dialogEvents: AlloyEvents.AlloyEventKeyA
             Class.remove(Body.body(), 'tox-dialog__disable-scroll');
           }),
         ]),
-        ...extraBehaviours
+        ...spec.extraBehaviours
       ]),
 
       eventOrder: {
@@ -135,16 +141,16 @@ const renderModalDialog = (initialData, dialogEvents: AlloyEvents.AlloyEventKeyA
 
       dom: {
         tag: 'div',
-        classes: [ 'tox-dialog' ].concat(extraClasses),
+        classes: [ 'tox-dialog' ].concat(spec.extraClasses),
         styles: {
           position: 'relative',
-          ...extraStyles
+          ...spec.extraStyles
         }
       },
       components: [
-        header,
-        body,
-        ...footer.toArray()
+        spec.header,
+        spec.body,
+        ...spec.footer.toArray()
       ],
       dragBlockClass: 'tox-dialog-wrap',
       parts: {

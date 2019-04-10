@@ -4,7 +4,7 @@ import { Body } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { Types } from '@ephox/bridge';
-import { Cell } from '@ephox/katamari';
+import { Cell, Strings } from '@ephox/katamari';
 import { TestHelpers } from '@ephox/alloy';
 import TestExtras from '../../module/TestExtras';
 
@@ -32,8 +32,13 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
         ],
         onClose: store.adder('onClose'),
         onAction: store.adder('onAction'),
-        onMessage: store.adder('onMessage')
-      }, {}, () => store.adder('closeWindow')());
+        onMessage: (api, data) => {
+          // Webpack dev server also postsMessages from the same domain, so just ignore them
+          if (data.type === undefined || !Strings.contains(data.type, 'webpack')) {
+            store.adder('onMessage')();
+          }
+        }
+      }, () => store.adder('closeWindow')());
     }),
 
     Chain.op((dialogApi) => {
@@ -56,15 +61,19 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
       }),
       Body.body()
     ),
-    // Wait a little to make sure the page has loaded
-    Step.wait(500),
+    Waiter.sTryUntil(
+      'Waiting for an initial message to be received from the iframe',
+      store.sAssertEq('Checking stuff', [ 'onMessage' ]),
+      100,
+      3000
+    ),
     Step.label('Sending message to iframe', Step.sync(() => {
       // Send a message to the iframe
       currentApi.get().sendMessage({ message: 'Some message' });
     })),
     Waiter.sTryUntil(
-      'Waiting for a message to be received from the iframe',
-      store.sAssertEq('Checking stuff', [ 'onMessage' ]),
+      'Waiting for the reply message to be received from the iframe',
+      store.sAssertEq('Checking stuff', [ 'onMessage', 'onMessage' ]),
       100,
       3000
     ),
@@ -73,6 +82,7 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
     Waiter.sTryUntil(
       'Waiting for all dialog events when closing',
       store.sAssertEq('Checking stuff', [
+        'onMessage',
         'onMessage',
         'onAction',
         'closeWindow',

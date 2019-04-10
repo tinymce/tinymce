@@ -52,7 +52,7 @@ const setup = (extras: WindowManagerSetup) => {
     }
   };
 
-  const openUrl = (config: Types.UrlDialog.UrlDialogApi, params, closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void) => {
+  const openUrl = (config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void) => {
     return openModalUrlDialog(config, closeWindow);
   };
 

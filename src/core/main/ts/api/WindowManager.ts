@@ -33,26 +33,26 @@ import Editor from './Editor';
  * });
  */
 
-type DialogInstanceApi<T> = Types.UrlDialog.UrlDialogInstanceApi | Types.Dialog.DialogInstanceApi<T>;
+type InstanceApi<T> = Types.UrlDialog.UrlDialogInstanceApi | Types.Dialog.DialogInstanceApi<T>;
 
 export interface WindowManagerImpl {
   open: <T>(config: Types.Dialog.DialogApi<T>, params, closeWindow: (dialog: Types.Dialog.DialogInstanceApi<T>) => void) => Types.Dialog.DialogInstanceApi<T>;
-  openUrl: <T>(config: Types.UrlDialog.UrlDialogApi, params, closeWindow: (dialog: Types.UrlDialog.UrlDialogInstanceApi) => void) => Types.UrlDialog.UrlDialogInstanceApi;
+  openUrl: <T>(config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialog: Types.UrlDialog.UrlDialogInstanceApi) => void) => Types.UrlDialog.UrlDialogInstanceApi;
   alert: (message: string, callback: () => void) => void;
   confirm: (message: string, callback: (state: boolean) => void) => void;
-  close: (dialog: DialogInstanceApi<any>) => void;
+  close: (dialog: InstanceApi<any>) => void;
 }
 
 interface WindowManager {
   open: <T>(config: Types.Dialog.DialogApi<T>, params?) => Types.Dialog.DialogInstanceApi<T>;
-  openUrl: <T>(config: Types.UrlDialog.UrlDialogApi, params?) => Types.UrlDialog.UrlDialogInstanceApi;
+  openUrl: <T>(config: Types.UrlDialog.UrlDialogApi) => Types.UrlDialog.UrlDialogInstanceApi;
   alert: (message: string, callback?: () => void, scope?) => void;
   confirm: (message: string, callback?: (state: boolean) => void, scope?) => void;
   close: () => void;
 }
 
 const WindowManager = function (editor: Editor): WindowManager {
-  let dialogs: DialogInstanceApi<any>[] = [];
+  let dialogs: InstanceApi<any>[] = [];
 
   const getImplementation = function (): WindowManagerImpl {
     const theme = editor.theme;
@@ -65,24 +65,24 @@ const WindowManager = function (editor: Editor): WindowManager {
     };
   };
 
-  const fireOpenEvent = function <T>(dialog: DialogInstanceApi<T>) {
+  const fireOpenEvent = function <T>(dialog: InstanceApi<T>) {
     editor.fire('OpenWindow', {
       dialog
     });
   };
 
-  const fireCloseEvent = function <T>(dialog: DialogInstanceApi<T>) {
+  const fireCloseEvent = function <T>(dialog: InstanceApi<T>) {
     editor.fire('CloseWindow', {
       dialog
     });
   };
 
-  const addDialog = function <T>(dialog: DialogInstanceApi<T>) {
+  const addDialog = function <T>(dialog: InstanceApi<T>) {
     dialogs.push(dialog);
     fireOpenEvent(dialog);
   };
 
-  const closeDialog = function <T>(dialog: DialogInstanceApi<T>) {
+  const closeDialog = function <T>(dialog: InstanceApi<T>) {
     fireCloseEvent(dialog);
     dialogs = Arr.filter(dialogs, function (otherDialog) {
       return otherDialog !== dialog;
@@ -97,7 +97,7 @@ const WindowManager = function (editor: Editor): WindowManager {
     return Option.from(dialogs[dialogs.length - 1]);
   };
 
-  const storeSelectionAndOpenDialog = <T extends DialogInstanceApi<any>>(openDialog: () => T) => {
+  const storeSelectionAndOpenDialog = <T extends InstanceApi<any>>(openDialog: () => T) => {
     editor.editorManager.setActive(editor);
     SelectionBookmark.store(editor);
 
@@ -110,8 +110,8 @@ const WindowManager = function (editor: Editor): WindowManager {
     return storeSelectionAndOpenDialog(() => getImplementation().open<T>(args, params, closeDialog));
   };
 
-  const openUrl = function (args, params?): Types.UrlDialog.UrlDialogInstanceApi {
-    return storeSelectionAndOpenDialog(() => getImplementation().openUrl(args, params, closeDialog));
+  const openUrl = function (args): Types.UrlDialog.UrlDialogInstanceApi {
+    return storeSelectionAndOpenDialog(() => getImplementation().openUrl(args, closeDialog));
   };
 
   const alert = function (message, callback?: () => void, scope?) {

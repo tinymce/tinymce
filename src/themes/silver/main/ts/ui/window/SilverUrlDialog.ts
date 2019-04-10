@@ -38,7 +38,8 @@ const handleMessage = (editor: Editor, api: Types.UrlDialog.UrlDialogInstanceApi
       editor.setContent(data.content);
       break;
     case 'execCommand':
-      editor.execCommand(data.cmd, data.ui || false, data.value);
+      const ui = Type.isBoolean(data.ui) ? data.ui : false;
+      editor.execCommand(data.cmd, ui, data.value);
       break;
     case 'close':
       api.close();
@@ -52,10 +53,10 @@ const handleMessage = (editor: Editor, api: Types.UrlDialog.UrlDialogInstanceApi
   }
 };
 
-const renderUrlDialog = (spec: Types.UrlDialog.UrlDialog, extra: WindowExtra<any>, editor: Editor, backstage: UiFactoryBackstage) => {
-  const header = getHeader(spec.title, backstage);
-  const body = renderIframeBody(spec);
-  const footer = spec.buttons.bind((buttons) => {
+const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: WindowExtra<any>, editor: Editor, backstage: UiFactoryBackstage) => {
+  const header = getHeader(internalDialog.title, backstage);
+  const body = renderIframeBody(internalDialog);
+  const footer = internalDialog.buttons.bind((buttons) => {
     // Don't render a footer if no buttons are specified
     if (buttons.length === 0) {
       return Option.none();
@@ -68,15 +69,15 @@ const renderUrlDialog = (spec: Types.UrlDialog.UrlDialog, extra: WindowExtra<any
 
   // Add the styles for the modal width/height
   const styles = {
-    ...spec.height.fold(() => ({}), (height) => ({ 'height': height + 'px', 'max-height': height + 'px' })),
-    ...spec.width.fold(() => ({}), (width) => ({ 'width': width + 'px', 'max-width': width + 'px' })),
+    ...internalDialog.height.fold(() => ({}), (height) => ({ 'height': height + 'px', 'max-height': height + 'px' })),
+    ...internalDialog.width.fold(() => ({}), (width) => ({ 'width': width + 'px', 'max-width': width + 'px' })),
   };
 
   // Default back to using a large sized dialog, if no dimensions are specified
-  const classes = spec.width.isNone() && spec.height.isNone() ? [ 'tox-dialog--width-lg' ] : [];
+  const classes = internalDialog.width.isNone() && internalDialog.height.isNone() ? [ 'tox-dialog--width-lg' ] : [];
 
   // Determine the iframe urls domain, so we can target that specifically when sending messages
-  const iframeUri = new URI(spec.url, { base_uri: new URI(window.location.href) });
+  const iframeUri = new URI(internalDialog.url, { base_uri: new URI(window.location.href) });
   const iframeDomain = `${iframeUri.protocol}://${iframeUri.host}${iframeUri.port ? ':' + iframeUri.port : ''}`;
   const messageHandlerUnbinder = Cell(Option.none());
 
@@ -94,7 +95,7 @@ const renderUrlDialog = (spec: Types.UrlDialog.UrlDialog, extra: WindowExtra<any
             if (!isCustomMessage(data)) {
               handleMessage(editor, instanceApi, data);
             } else {
-              spec.onMessage(instanceApi, data);
+              internalDialog.onMessage(instanceApi, data);
             }
           }
         });
@@ -121,7 +122,16 @@ const renderUrlDialog = (spec: Types.UrlDialog.UrlDialog, extra: WindowExtra<any
     })
   ];
 
-  const dialog = renderModalDialog(spec, dialogEvents, backstage, header, body, footer, classes, styles, extraBehaviours);
+  const spec = {
+    header,
+    body,
+    footer,
+    extraClasses: classes,
+    extraBehaviours,
+    extraStyles: styles
+  };
+
+  const dialog = renderModalDialog(spec, internalDialog, dialogEvents, backstage);
 
   const instanceApi = getUrlDialogApi(dialog);
 

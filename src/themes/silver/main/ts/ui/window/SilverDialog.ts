@@ -35,7 +35,16 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowE
       : [ 'tox-dialog--width-md' ]
     : [];
 
-  const dialog = renderModalDialog(dialogInit, dialogEvents, backstage, header, body, Option.some(footer), dialogSize);
+  const spec = {
+    header,
+    body,
+    footer: Option.some(footer),
+    extraClasses: dialogSize,
+    extraBehaviours: [],
+    extraStyles: {}
+  };
+
+  const dialog = renderModalDialog(spec, dialogInit, dialogEvents, backstage);
 
   const modalAccess = (() => {
     const getForm = (): AlloyComponent => {
