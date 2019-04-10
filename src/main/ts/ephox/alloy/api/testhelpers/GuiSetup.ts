@@ -7,7 +7,8 @@ import * as Gui from '../system/Gui';
 import { document, console } from '@ephox/dom-globals';
 import { AlloyComponent } from '../component/ComponentApi';
 
-const setup = (createComponent, f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store) => Array<Step<any, any>>, success, failure) => {
+const setup = (createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
+  f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Array<Step<any, any>>, success, failure) => {
   const store = TestStore();
 
   const gui = Gui.create();
