@@ -10,7 +10,7 @@ interface DialogManager {
 }
 
 export type DialogFactory<T extends DialogData> = (internalDialog: Dialog<T>, initialData: T, dataValidator: Processor) => DialogInstanceApi<T>;
-export type UrlDialogFactory= (internalDialog: UrlDialog) => UrlDialogInstanceApi;
+export type UrlDialogFactory = (internalDialog: UrlDialog) => UrlDialogInstanceApi;
 
 export interface DialogInit<T extends DialogData> {
   internalDialog: Dialog<T>;
