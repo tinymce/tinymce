@@ -28,6 +28,7 @@ import TabSectionDemo from './TabSectionDemo';
 import ToolbarsDemo from './ToolbarsDemo';
 import TooltippingDemo from './TooltippingDemo';
 import TypeaheadDemo from './TypeaheadDemo';
+import DragnDropDemo from './DragnDropDemo';
 
 declare const window: any;
 
@@ -61,5 +62,6 @@ window.demos = {
   TabSectionDemo,
   ToolbarsDemo,
   TooltippingDemo,
-  TypeaheadDemo
+  TypeaheadDemo,
+  DragnDropDemo
 };
