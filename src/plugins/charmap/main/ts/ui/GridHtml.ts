@@ -37,7 +37,7 @@ const getHtml = function (charmap) {
           chrText = chr ? String.fromCharCode(charCode) : '&nbsp;';
         }
 
-        const title = chr[2] && chr[2] instanceof String ? chr[2] : chr[1];
+        const title = chr[2] && typeof chr[2] === 'string' ? chr[2] : '';
         gridHtml += (
           '<td title="' + title + '">' +
           '<div tabindex="-1" title="' + title + '" role="button" data-chr="' + charCode4DataAttr.join(';') + '">' +
