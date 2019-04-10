@@ -22,6 +22,13 @@ const click = Fun.constant('click');
 const transitionend = Fun.constant('transitionend');
 const selectstart = Fun.constant('selectstart');
 const paste = Fun.constant('paste');
+const dragover = Fun.constant('dragover');
+const dragend = Fun.constant('dragend');
+const dragstart = Fun.constant('dragstart');
+const dragleave = Fun.constant('dragleave');
+const dragenter = Fun.constant('dragenter');
+const drop = Fun.constant('drop');
+const drag = Fun.constant('drag');
 
 export {
   contextmenu,
@@ -49,5 +56,13 @@ export {
 
   transitionend,
   selectstart,
-  paste
+  paste,
+
+  dragover,
+  dragend,
+  dragstart,
+  dragleave,
+  dragenter,
+  drop,
+  drag
 };

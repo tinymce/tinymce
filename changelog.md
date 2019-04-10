@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.11.0] - 2019-04-04
+### Added
+- Added new DragnDrop behaviour for support of browser native drag/drop
+
 # [4.10.7] - 2019-03-15
 ### Added
 - Keyboard navigation for sliding split toolbars
