@@ -4,7 +4,7 @@ import { Body } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { Types } from '@ephox/bridge';
-import { Cell, Strings } from '@ephox/katamari';
+import { Cell } from '@ephox/katamari';
 import { TestHelpers } from '@ephox/alloy';
 import TestExtras from '../../module/TestExtras';
 
@@ -32,12 +32,7 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
         ],
         onClose: store.adder('onClose'),
         onAction: store.adder('onAction'),
-        onMessage: (api, data) => {
-          // Webpack dev server also postsMessages from the same domain, so just ignore them
-          if (data.type === undefined || !Strings.contains(data.type, 'webpack')) {
-            store.adder('onMessage')();
-          }
-        }
+        onMessage: store.adder('onMessage')
       }, () => store.adder('closeWindow')());
     }),
 

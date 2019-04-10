@@ -8,7 +8,7 @@
 import { Receiving, AddEventsBehaviour, AlloyEvents } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { window } from '@ephox/dom-globals';
-import { Cell, Option, Type } from '@ephox/katamari';
+import { Cell, Obj, Option, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import URI from 'tinymce/core/api/util/URI';
@@ -25,8 +25,12 @@ import { DomEvent, Element, SelectorFind } from '@ephox/sugar';
 // A list of supported message actions
 const SUPPORTED_MESSAGE_ACTIONS = ['insertContent', 'setContent', 'execCommand', 'close', 'block', 'unblock'];
 
+const isSupportedMessage = (data: any): boolean => {
+  return Type.isObject(data) && SUPPORTED_MESSAGE_ACTIONS.indexOf(data.mceAction) !== -1;
+};
+
 const isCustomMessage = (data: any): boolean => {
-  return !Type.isObject(data) || SUPPORTED_MESSAGE_ACTIONS.indexOf(data.mceAction) === -1;
+  return !isSupportedMessage(data) && Type.isObject(data) && Obj.has(data, 'mceAction');
 };
 
 const handleMessage = (editor: Editor, api: Types.UrlDialog.UrlDialogInstanceApi, data: any) => {
@@ -91,10 +95,10 @@ const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: Windo
           if (iframeUri.isSameOrigin(new URI(e.raw().origin))) {
             const data = e.raw().data;
 
-            // Handle the message if it's a supported type, otherwise pass it to the onMessage handler to be handled manually
-            if (!isCustomMessage(data)) {
+            // Handle the message if it has the 'mceAction' key, otherwise just ignore it
+            if (isSupportedMessage(data)) {
               handleMessage(editor, instanceApi, data);
-            } else {
+            } else if (isCustomMessage(data)) {
               internalDialog.onMessage(instanceApi, data);
             }
           }
