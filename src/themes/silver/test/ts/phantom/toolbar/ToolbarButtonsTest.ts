@@ -1,13 +1,14 @@
 import { ApproxStructure, Assertions, Logger, Mouse, Step, Waiter } from '@ephox/agar';
 import { GuiFactory, AlloyComponent, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
-import { Toolbar } from '@ephox/bridge';
+import { Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { Attr, Class, SelectorFind } from '@ephox/sugar';
 
 import { renderToolbarButton, renderToolbarToggleButton, renderSplitButton } from '../../../../main/ts/ui/toolbar/button/ToolbarButtons';
 import TestExtras from '../../module/TestExtras';
 import TestProviders from '../../module/TestProviders';
+import { renderMenuButton } from 'tinymce/themes/silver/ui/menus/menubar/Integration';
 
 UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
 
@@ -112,6 +113,36 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                 }, helpers.shared)
               ]
             },
+
+            {
+              dom: {
+                tag: 'div',
+                classes: [ 'button4-container' ]
+              },
+              components: [
+                renderMenuButton({
+                  type: 'menubutton',
+                  tooltip: Option.some('tooltip'),
+                  icon: Option.none(),
+                  text: Option.some('button4'),
+                  fetch: (callback) => {
+                    callback([
+                      {
+                        type: 'menuitem',
+                        text: 'Item 1',
+                        onAction: (api: Menu.MenuItemInstanceApi) => {
+                          store.adder('onAction.4')();
+                        },
+                      }
+                    ]);
+                  },
+                  onSetup: (api: Toolbar.ToolbarMenuButtonInstanceApi) => {
+                    store.adder('onSetup.4')();
+                    return () => { };
+                  },
+                }, 'tox-mbtn', helpers.shared, Option.none())
+              ]
+            },
           ]
         }
       );
@@ -152,6 +183,13 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
 
       return Arr.flatten([
         (() => {
+          return [
+            store.sAssertEq('Store should have setups only', ['onSetup.1', 'onSetup.2', 'onSetup.3', 'onSetup.4']),
+            store.sClear
+          ];
+        })(),
+
+        (() => {
           const button1 = getButton('.button1-container .tox-tbtn');
           return Logger.ts(
             'First button (button1): normal button',
@@ -175,8 +213,6 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                 }),
                 button1.element()
               ),
-              store.sAssertEq('Store should have setups only', [ 'onSetup.1', 'onSetup.2', 'onSetup.3' ]),
-              store.sClear,
               Mouse.sClickOn(component.element(), '.button1-container .tox-tbtn'),
               store.sAssertEq('Store should now have action1', [ 'onAction.1' ]),
               sAssertButtonDisabledState('Enabled', false, button1),
@@ -331,6 +367,49 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
             store.sClear,
             sAssertSplitButtonDisabledState('Disabled', true, button3),
             sAssertSplitButtonActiveState('Off still', false, button3)
+          ]);
+        })(),
+
+        (() => {
+          const button4 = getButton('.button4-container .tox-mbtn');
+
+          return Logger.ts('Fourth button (button4): menu button', [
+            Assertions.sAssertStructure(
+              'Checking initial structure',
+              ApproxStructure.build((s, str, arr) => {
+                return s.element('button', {
+                  classes: [
+                    arr.has('tox-mbtn'),
+                    arr.has('tox-mbtn--select')
+                  ],
+                  attrs: {
+                    'type': str.is('button'),
+                    'title': str.is('tooltip'),
+                    'aria-label': str.is('tooltip'),
+                    'aria-expanded': str.is('false'),
+                    'aria-haspopup': str.is('true')
+                  },
+                  children: [
+                    s.element('span', {
+                      classes: [ arr.has('tox-mbtn__select-label') ]
+                    }),
+                    s.element('div', {
+                      classes: [ arr.has('tox-mbtn__select-chevron') ]
+                    })
+                  ]
+                });
+              }),
+              button4.element()
+            ),
+
+            // Select menu item
+            Mouse.sClickOn(component.element(), '.button4-container .tox-mbtn'),
+            Waiter.sTryUntil('Wait for button menu to show',
+              Mouse.sClickOn(body, '.tox-collection .tox-collection__item'),
+              100, 1000
+            ),
+            store.sAssertEq('Store should have item action4', [ 'onAction.4' ]),
+            store.sClear
           ]);
         })()
       ]);

@@ -7,7 +7,7 @@
 
 import { AlloyComponent } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Arr, Option, Cell, Fun } from '@ephox/katamari';
+import { Arr, Option, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
@@ -130,20 +130,22 @@ const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, dataset:
 };
 
 const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
-  const {items, getStyleItems} = createMenuItems(editor, backstage, dataset, spec);
-  const onDestroyCell = Cell(undefined);
+  const { items, getStyleItems } = createMenuItems(editor, backstage, dataset, spec);
 
-  const onAttach = spec.nodeChangeHandler.map((f) => (comp) => {
-    const handler = f(comp);
-    onDestroyCell.set(handler);
-    editor.on('NodeChange', handler);
-  }).getOr(Fun.noop);
-  const onDetach = spec.nodeChangeHandler.map((_f) => (_comp) => {
-    const onDestroy = onDestroyCell.get();
-    if (onDestroy !== undefined) {
-      editor.off('NodeChange', onDestroy);
-    }
-  }).getOr(Fun.noop);
+  const getApi = (comp) => {
+    return { getComponent: () => comp };
+  };
+
+  const onSetup = (api) => {
+    return spec.nodeChangeHandler.map((f) => {
+      const handler = f(api.getComponent());
+      editor.on('NodeChange', handler);
+
+      return () => {
+        editor.off('NodeChange', handler);
+      };
+    }).getOr(Fun.noop);
+  };
 
   return renderCommonDropdown(
     {
@@ -152,8 +154,8 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, datas
       tooltip: Option.from(spec.tooltip),
       role: Option.none(),
       fetch: items.getFetch(backstage, getStyleItems),
-      onAttach,
-      onDetach,
+      onSetup,
+      getApi,
       columns: 1,
       presets: 'normal',
       classes: spec.icon.isSome() ? [] : [ 'bespoke' ]
