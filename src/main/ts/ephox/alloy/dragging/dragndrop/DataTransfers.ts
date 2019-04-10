@@ -30,7 +30,7 @@ const setDataItems = (transfer: DataTransfer, types: string[], data: string) => 
 const setData = (transfer: DataTransfer, types: string[], data: string) => {
   // IE only supports the transfer.setData api with 'text'
   // Edge throws exceptions when setting custom mime types
-  // Firefox (ESR 60) and older will corrupt all drag/drop handling is you use the items api
+  // Firefox (ESR 60) and older will corrupt all drag/drop handling if you use the items api
   const oldFirefox = platform.browser.isFirefox() && platform.browser.version.major < 66;
   if (platform.browser.isIE() || platform.browser.isEdge() || oldFirefox) {
     setDataTransferFallback(transfer, types, data);
