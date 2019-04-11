@@ -21,10 +21,10 @@ const getGroups = Thunk.cached(function (realm, editor) {
       items: [
         SerialisedDialog.sketch({
           fields: [
-            Inputs.field('url', editor.translate('Type or paste URL')),
-            Inputs.field('text', editor.translate('Link text')),
-            Inputs.field('title', editor.translate('Link title')),
-            Inputs.field('target', editor.translate('Link target')),
+            Inputs.field('url', 'Type or paste URL'),
+            Inputs.field('text', 'Link text'),
+            Inputs.field('title', 'Link title'),
+            Inputs.field('target', 'Link target'),
             Inputs.hidden('link')
           ],
 
