@@ -101,8 +101,7 @@ export interface Dialog<T> {
   onTabChange: DialogTabChangeHandler<T>;
 }
 
-export const dialogButtonSchema = ValueSchema.objOf([
-  FieldSchema.strictStringEnum('type', ['submit', 'cancel', 'custom']),
+export const dialogButtonFields = [
   FieldSchema.field(
     'name',
     'name',
@@ -116,6 +115,11 @@ export const dialogButtonSchema = ValueSchema.objOf([
   FieldSchema.defaultedStringEnum('align', 'end', ['start', 'end']),
   FieldSchema.defaultedBoolean('primary', false),
   FieldSchema.defaultedBoolean('disabled', false)
+];
+
+export const dialogButtonSchema = ValueSchema.objOf([
+  FieldSchema.strictStringEnum('type', ['submit', 'cancel', 'custom']),
+  ...dialogButtonFields
 ]);
 
 export const dialogSchema = ValueSchema.objOf([

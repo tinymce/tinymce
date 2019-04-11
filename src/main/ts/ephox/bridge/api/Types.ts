@@ -17,6 +17,7 @@ import * as ImageTools from '../components/dialog/ImageTools';
 import * as Table from '../components/dialog/Table';
 import { ColumnTypes, PresetTypes, PresetItemTypes } from '../components/toolbar/ToolbarSplitButton';
 import * as Label from '../components/dialog/Label';
+import * as UrlDialog from '../components/dialog/UrlDialog';
 // tslint:disable-next-line:no-duplicate-imports
 import { DialogButton } from '../components/dialog/Dialog';
 import { HtmlPanelPresetTypes } from '../components/dialog/HtmlPanel';
@@ -46,5 +47,6 @@ export {
   PresetItemTypes,
   HtmlPanelPresetTypes,
   Label,
-  Table
+  Table,
+  UrlDialog
 };
