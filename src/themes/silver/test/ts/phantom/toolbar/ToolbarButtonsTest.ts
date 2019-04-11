@@ -5,8 +5,7 @@ import { Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { Attr, Class, SelectorFind } from '@ephox/sugar';
 
-import { renderToolbarButton, renderToolbarToggleButton, renderSplitButton } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
-import { renderMenuButton } from 'tinymce/themes/silver/ui/menus/menubar/Integration';
+import { renderMenuButton, renderToolbarButton, renderToolbarToggleButton, renderSplitButton } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
 import TestExtras from '../../module/TestExtras';
 import TestProviders from '../../module/TestProviders';
 

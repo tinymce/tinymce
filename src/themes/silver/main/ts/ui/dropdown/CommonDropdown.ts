@@ -60,6 +60,7 @@ export interface CommonDropdownSpec<T> {
   columns: Types.ColumnTypes;
   presets: Types.PresetTypes;
   classes: string[];
+  dropdownBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
 }
 // TODO: Use renderCommonStructure here.
 const renderCommonDropdown = <T>(spec: CommonDropdownSpec<T>, prefix: string, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
@@ -130,6 +131,7 @@ const renderCommonDropdown = <T>(spec: CommonDropdownSpec<T>, prefix: string, sh
 
       // TODO: Not quite working. Can still get the button focused.
       dropdownBehaviours: Behaviour.derive([
+        ...spec.dropdownBehaviours,
         DisablingConfigs.button(spec.disabled),
         Unselecting.config({ }),
         Replacing.config({ }),
