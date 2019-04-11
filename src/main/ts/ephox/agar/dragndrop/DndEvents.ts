@@ -59,7 +59,12 @@ const dispatchDndEvent = (event: DragEvent, target: Element): DragEvent => {
   return event;
 };
 
+const getWindowFromElement = (element: Element) => {
+  return element.dom().ownerDocument.defaultView;
+};
+
 export {
+  createDndEvent,
   createDragoverEvent,
   createDragendEvent,
   createDragstartEvent,
@@ -68,5 +73,6 @@ export {
   createDropEvent,
   createDragEvent,
   isDefaultPrevented,
-  dispatchDndEvent
+  dispatchDndEvent,
+  getWindowFromElement
 };

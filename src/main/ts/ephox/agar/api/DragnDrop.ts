@@ -1,13 +1,9 @@
 import { Step, Chain } from '@ephox/agar';
 import { Options, Arr } from '@ephox/katamari';
 import { SelectorFind, Body, Element, Node, Attr } from '@ephox/sugar';
-import { dispatchDndEvent, createDragstartEvent, createDragEvent, createDragenterEvent, createDragoverEvent, createDropEvent, createDragendEvent, isDefaultPrevented } from '../dragndrop/DndEvents';
+import { dispatchDndEvent, createDragstartEvent, createDragEvent, createDragenterEvent, createDragoverEvent, createDropEvent, createDragendEvent, isDefaultPrevented, getWindowFromElement } from '../dragndrop/DndEvents';
 import { File, DragEvent } from '@ephox/dom-globals';
 import { createDataTransfer, getDragImage } from '../datatransfer/DataTransfer';
-
-const getWindowFromElement = (element: Element) => {
-  return element.dom().ownerDocument.defaultView;
-};
 
 const isDraggable = (element: Element) => {
   if (Node.name(element) === 'img') {
