@@ -25,6 +25,8 @@ import {
 } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 
+import I18n from 'tinymce/core/api/util/I18n';
+
 import Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
 
@@ -32,7 +34,7 @@ const clearInputBehaviour = 'input-clearing';
 
 const field = function (name, placeholder) {
   const inputSpec = Memento.record(Input.sketch({
-    inputAttributes: { placeholder },
+    inputAttributes: { placeholder: I18n.translate(placeholder) },
     onSetValue (input, data) {
       // If the value changes, inform the container so that it can update whether the "x" is visible
       AlloyTriggers.emit(input, NativeEvents.input());
