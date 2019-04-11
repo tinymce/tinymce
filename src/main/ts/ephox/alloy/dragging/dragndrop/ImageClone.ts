@@ -1,8 +1,8 @@
-import { Replication, Element, Css, Insert, Body, Remove, DomEvent, Traverse, Attr } from '@ephox/sugar';
-import { DataTransfer, alert } from '@ephox/dom-globals';
-import * as DataTransfers from './DataTransfers';
-import { Arr, Option, Cell } from '@ephox/katamari';
+import { DataTransfer, setTimeout } from '@ephox/dom-globals';
+import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { Attr, Css, DomEvent, Element, Insert, Remove, Replication } from '@ephox/sugar';
+import * as DataTransfers from './DataTransfers';
 
 const platform = PlatformDetection.detect();
 
@@ -121,6 +121,4 @@ const setImageClone = (transfer: DataTransfer, image: DragnDropImageClone, paren
   }
 };
 
-export {
-  setImageClone
-};
+export { setImageClone };

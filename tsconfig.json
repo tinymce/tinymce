@@ -15,7 +15,8 @@
       "ephox/alloy/demo/*": ["src/demo/ts/ephox/alloy/demo/*"],
       "ephox/alloy/*": ["src/main/ts/ephox/alloy/*"],
       "@ephox/alloy": ["src/main/ts/ephox/alloy/api/Main.ts"]
-    }
+    },
+    "types": []
   },
   "include": [
     "src/demo/ts",
