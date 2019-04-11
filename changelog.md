@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.11.1] - 2019-04-10
+### Changed
+- Made footers an optional part in modal dialogs
+
 # [4.11.0] - 2019-04-04
 ### Added
 - Added new DragnDrop behaviour for support of browser native drag/drop

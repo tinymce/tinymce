@@ -65,7 +65,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     name: 'body'
   }),
 
-  PartType.required({
+  PartType.optional({
     factory: basic,
     schema:  [ FieldSchema.strict('dom') ],
     name: 'footer'
