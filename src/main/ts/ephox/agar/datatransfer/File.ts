@@ -9,6 +9,11 @@ const createFile = (name: string, lastModified: number, blob: Blob): File => {
   return Object.freeze(newBlob);
 };
 
+const createFileFromString = (name: string, lastModified: number, text: string, mime: string): File => {
+  return createFile(name, lastModified, new Blob([ text ], { type: mime }));
+};
+
 export {
-  createFile
+  createFile,
+  createFileFromString
 };

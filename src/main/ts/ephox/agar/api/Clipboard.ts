@@ -2,16 +2,15 @@ import { File, DataTransfer } from "@ephox/dom-globals";
 import { Chain } from "./Main";
 import { cFindIn } from "./UiFinder";
 import { Body, Element } from "@ephox/sugar";
-import { createDndEvent, getWindowFromElement } from "../dragndrop/DndEvents";
+import { getWindowFromElement } from "../dragndrop/DndEvents";
 import { createDataTransfer } from "../datatransfer/DataTransfer";
 import { Arr, Obj } from "@ephox/katamari";
-
-const createPasterEvent = createDndEvent('paste');
+import { createPasteEvent } from "../clipboard/ClipboardEvents";
 
 const cPasteDataTransfer = (mutator: (dataTransfer: DataTransfer) => void) => Chain.op<Element>((target) => {
   const win = getWindowFromElement(target);
   const dataTransfer = createDataTransfer();
-  const event = createPasterEvent(win, 0, 0, dataTransfer);
+  const event = createPasteEvent(win, 0, 0, dataTransfer);
 
   mutator(dataTransfer);
 

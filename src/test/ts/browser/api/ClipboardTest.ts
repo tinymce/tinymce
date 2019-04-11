@@ -6,6 +6,7 @@ import { Cell, Option } from '@ephox/katamari';
 import { sPasteItems, sPasteFiles, sPasteDataTransfer } from 'ephox/agar/api/Clipboard';
 import { createFile } from 'ephox/agar/api/Files';
 import { Blob, DataTransfer } from '@ephox/dom-globals';
+import { createFileFromString } from 'ephox/agar/datatransfer/File';
 
 UnitTest.asynctest('ClipboardTest', (success, failure) => {
   const pastebin = Element.fromHtml('<div class="pastebin"></div>');
@@ -14,7 +15,7 @@ UnitTest.asynctest('ClipboardTest', (success, failure) => {
   Insert.append(Body.body(), pastebin);
 
   const pasteUnbinder = DomEvent.bind(pastebin, 'paste', (evt) => {
-    const dataTransfer = evt.raw().dataTransfer;
+    const dataTransfer = evt.raw().clipboardData;
     state.set(Option.some(dataTransfer))
   });
 
@@ -34,8 +35,8 @@ UnitTest.asynctest('ClipboardTest', (success, failure) => {
 
     Logger.t('Paste text and html files', GeneralSteps.sequence([
       sPasteFiles([
-        createFile('a.txt', 123, new Blob(['Hello world!'], { type: 'text/plain' })),
-        createFile('a.html', 123, new Blob(['<b>Hello world!</b>'], { type: 'text/html' }))
+        createFileFromString('a.txt', 123, 'Hello world!', 'text/plain'),
+        createFileFromString('a.html', 123, '<b>Hello world!</b>', 'text/html')
       ], '.pastebin'),
       Step.sync(() => {
         const dataTransfer = state.get().getOrDie('Could not get dataTransfer from state');

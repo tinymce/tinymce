@@ -1,5 +1,6 @@
-import { createFile } from "../datatransfer/File";
+import { createFile, createFileFromString } from "../datatransfer/File";
 
 export {
-  createFile
+  createFile,
+  createFileFromString
 };
