@@ -1,4 +1,4 @@
-import { document, Window, DataTransfer, DragEvent, console, alert } from '@ephox/dom-globals';
+import { document, Window, DataTransfer, DragEvent } from '@ephox/dom-globals';
 import { Element } from '@ephox/sugar';
 import { setReadWriteMode, setReadOnlyMode, setProtectedMode } from '../datatransfer/Mode';
 import { PlatformDetection } from '@ephox/sand';

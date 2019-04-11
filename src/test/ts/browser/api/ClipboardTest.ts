@@ -5,7 +5,7 @@ import { Logger, GeneralSteps, Step, RawAssertions } from 'ephox/agar/api/Main';
 import { Cell, Option } from '@ephox/katamari';
 import { sPasteItems, sPasteFiles, sPasteDataTransfer } from 'ephox/agar/api/Clipboard';
 import { createFile } from 'ephox/agar/api/Files';
-import { Blob, DataTransfer } from '@ephox/dom-globals';
+import { Blob, DataTransfer, navigator } from '@ephox/dom-globals';
 import { createFileFromString } from 'ephox/agar/datatransfer/File';
 
 UnitTest.asynctest('ClipboardTest', (success, failure) => {
@@ -19,7 +19,7 @@ UnitTest.asynctest('ClipboardTest', (success, failure) => {
     state.set(Option.some(dataTransfer))
   });
 
-  Pipeline.async({}, [
+  Pipeline.async({}, /phantom/i.test(navigator.userAgent) ? [] : [
     Logger.t('Paste text and html items', GeneralSteps.sequence([
       sPasteItems({
         'text/plain': 'Hello world!',
