@@ -1,13 +1,13 @@
+import { console, document } from '@ephox/dom-globals';
+import { Fun } from '@ephox/katamari';
 import { Class, Css, Element, Replication } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { DragnDrop } from 'ephox/alloy/api/behaviour/DragnDrop';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import { document } from '@ephox/dom-globals';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { DragnDrop } from 'ephox/alloy/api/behaviour/DragnDrop';
-import { Fun } from '@ephox/katamari';
 
 export default (): void => {
   const gui = Gui.create();
