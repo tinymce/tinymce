@@ -23,7 +23,7 @@ const checkDefaultPrevented = (evt: DragEvent) => {
   }
 };
 
-const dragAndDrop = (from: Element, to: Element) => {
+const dragnDrop = (from: Element, to: Element) => {
   const fromWin = getWindowFromElement(from);
   const toWin = getWindowFromElement(to);
   const fromRect = from.dom().getBoundingClientRect();
@@ -42,7 +42,7 @@ const dragAndDrop = (from: Element, to: Element) => {
   dispatchDndEvent(createDragendEvent(fromWin, fromRect.left, fromRect.top, transfer), from);
 };
 
-const dropFilesOn = (files: File[], to: Element) => {
+const dropFiles = (files: File[], to: Element) => {
   const toWin = getWindowFromElement(to);
   const toRect = to.dom().getBoundingClientRect();
   const transfer = createDataTransfer();
@@ -56,31 +56,31 @@ const dropFilesOn = (files: File[], to: Element) => {
   checkDefaultPrevented(dispatchDndEvent(createDropEvent(toWin, toRect.left, toRect.top, transfer), to));
 }
 
-const sSelectorDragAndDrop = (fromSelector: string, toSelector: string) => {
+const sDragnDrop = (fromSelector: string, toSelector: string) => {
   return Step.sync(() => {
     Options.lift(
       SelectorFind.descendant(Body.body(), fromSelector),
       SelectorFind.descendant(Body.body(), toSelector),
-      (from, to) => dragAndDrop(from, to)
+      (from, to) => dragnDrop(from, to)
     ).getOrDie('Could not find from/to elements.');
   });
 };
 
-const sSelectorDropFilesOn = (files: File[], toSelector: string) => {
+const sDropFiles = (files: File[], toSelector: string) => {
   return Step.sync(() => {
-    SelectorFind.descendant(Body.body(), toSelector).each((to) => dropFilesOn(files, to));
+    SelectorFind.descendant(Body.body(), toSelector).each((to) => dropFiles(files, to));
   });
 };
 
-const cDropFilesOn = (files: File[]) => Chain.on<Element, Element>((elm) => {
-  dropFilesOn(files, elm);
+const cDropFiles = (files: File[]) => Chain.on<Element, Element>((elm) => {
+  dropFiles(files, elm);
 });
 
 export {
-  dragAndDrop,
-  dropFilesOn,
-  sSelectorDragAndDrop,
-  sSelectorDropFilesOn,
-  cDropFilesOn,
+  dragnDrop,
+  dropFiles,
+  sDragnDrop,
+  sDropFiles,
+  cDropFiles,
   getDragImage
 };

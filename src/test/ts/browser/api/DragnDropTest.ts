@@ -1,7 +1,7 @@
 import { UnitTest } from '@ephox/bedrock';
 import { Element, Insert, Remove, Body, DomEvent, SelectorFind } from '@ephox/sugar';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
-import { sSelectorDragAndDrop, dragAndDrop, sSelectorDropFilesOn, dropFilesOn } from 'ephox/agar/api/DragnDrop';
+import { sDragnDrop, dragnDrop, sDropFiles, dropFiles } from 'ephox/agar/api/DragnDrop';
 import { Step } from 'ephox/agar/api/Step';
 import { RawAssertions, Logger, GeneralSteps } from 'ephox/agar/api/Main';
 import { createFile } from 'ephox/agar/api/Files';
@@ -61,7 +61,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
   Pipeline.async({}, [
     Logger.t('Drag/drop element with data using selectors', GeneralSteps.sequence([
       sClearStore,
-      sSelectorDragAndDrop('.draggable', '.dropzone'),
+      sDragnDrop('.draggable', '.dropzone'),
       sAssertStoreItems(['dragstart', 'dragenter', 'dragover', 'drop text: hello', 'dragend'])  
     ])),
 
@@ -71,14 +71,14 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
         const from = SelectorFind.descendant(Body.body(), '.draggable').getOrDie('Could not find from element.');
         const to = SelectorFind.descendant(Body.body(), '.dropzone').getOrDie('Could not find to element.');
 
-        dragAndDrop(from, to);
+        dragnDrop(from, to);
       }),
       sAssertStoreItems(['dragstart', 'dragenter', 'dragover', 'drop text: hello', 'dragend'])
     ])),
 
     Logger.t('Drop files using selector', GeneralSteps.sequence([
       sClearStore,
-      sSelectorDropFilesOn([
+      sDropFiles([
         createFile('a.txt', 123, new Blob([''], { type: 'text/plain' })),
         createFile('b.html', 123, new Blob([''], { type: 'text/html' }))
       ], '.dropzone'),
@@ -90,7 +90,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
       Step.sync(() => {
         const to = SelectorFind.descendant(Body.body(), '.dropzone').getOrDie('Could not find to element.');
 
-        dropFilesOn([
+        dropFiles([
           createFile('a.txt', 123, new Blob([''], { type: 'text/plain' })),
           createFile('b.html', 123, new Blob([''], { type: 'text/html' }))
         ], to);
