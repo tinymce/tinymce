@@ -32,7 +32,7 @@ export interface DragStartingConfig {
   type: string;
   phoneyTypes: string[];
   effectAllowed: string;
-  getData: (component: AlloyComponent) => string;
+  getData: Option<(component: AlloyComponent) => string>;
   getImageParent: Option<(component: AlloyComponent) => Element>;
   getImage: Option<(component: AlloyComponent) => {
     element: () => Element;
