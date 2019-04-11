@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { SketchSpec } from '@ephox/alloy';
+import { AlloyComponent, Disabling, SketchSpec } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Merger, Obj, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import { UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import { getRemovedMenuItems } from '../../../api/Settings';
 import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
 import ItemResponse from '../item/ItemResponse';
@@ -36,6 +36,12 @@ const defaultMenus = {
 };
 
 export const renderMenuButton = (spec: Toolbar.ToolbarMenuButton, prefix: string, sharedBackstage: UiFactoryBackstageShared, role: Option<string>): SketchSpec => {
+  const getApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonInstanceApi => {
+    return {
+      isDisabled: () => Disabling.isDisabled(component),
+      setDisabled: (state) => state ? Disabling.disable(component) : Disabling.enable(component)
+    };
+  };
 
   return renderCommonDropdown({
     text: spec.text,
@@ -50,8 +56,8 @@ export const renderMenuButton = (spec: Toolbar.ToolbarMenuButton, prefix: string
         );
       });
     },
-    onAttach: () => { },
-    onDetach: () => { },
+    onSetup: spec.onSetup,
+    getApi,
     columns: 1,
     presets: 'normal',
     classes: []

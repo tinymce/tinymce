@@ -26,7 +26,7 @@ import {
   Unselecting,
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Future, Id, Merger, Option, Arr } from '@ephox/katamari';
+import { Future, Id, Merger, Option, Arr, Cell, Fun } from '@ephox/katamari';
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
@@ -35,6 +35,7 @@ import * as Icons from '../icons/Icons';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
+import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Controls';
 
 export const updateMenuText = Id.generate('update-menu-text');
 export const updateMenuIcon = Id.generate('update-menu-icon');
@@ -47,22 +48,22 @@ export interface UpdateMenuIconEvent extends CustomEvent {
   icon: () => string;
 }
 
-export interface CommonDropdownSpec {
+export interface CommonDropdownSpec<T> {
   text: Option<string>;
   icon: Option<string>;
   disabled?: boolean;
   tooltip: Option<string>;
   role: Option<string>;
   fetch: (callback: (tdata: Option<TieredData>) => void) => void;
-  onAttach: (comp: AlloyComponent) => void;
-  onDetach: (comp: AlloyComponent) => void;
+  onSetup: (itemApi: T) => OnDestroy<T>;
+  getApi: (comp: AlloyComponent) => T;
   columns: Types.ColumnTypes;
   presets: Types.PresetTypes;
   classes: string[];
 }
 // TODO: Use renderCommonStructure here.
-const renderCommonDropdown = (spec: CommonDropdownSpec, prefix: string, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
-
+const renderCommonDropdown = <T>(spec: CommonDropdownSpec<T>, prefix: string, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
+  const editorOffCell = Cell(Fun.noop);
   const optMemDisplayText = spec.text.map((text) => Memento.record(renderLabel(text, prefix, sharedBackstage.providers)));
   const optMemDisplayIcon = spec.icon.map((iconName) => Memento.record(renderReplacableIconFromPack(iconName, sharedBackstage.providers.icons)));
 
@@ -132,9 +133,11 @@ const renderCommonDropdown = (spec: CommonDropdownSpec, prefix: string, sharedBa
         DisablingConfigs.button(spec.disabled),
         Unselecting.config({ }),
         Replacing.config({ }),
+        AddEventsBehaviour.config('dropdown-events', [
+          onControlAttached(spec, editorOffCell),
+          onControlDetached(spec, editorOffCell)
+        ]),
         AddEventsBehaviour.config('menubutton-update-display-text', [
-          AlloyEvents.runOnAttached(spec.onAttach),
-          AlloyEvents.runOnDetached(spec.onDetach),
           AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
             optMemDisplayText.bind((mem) => mem.getOpt(comp)).each((displayText) => {
               Replacing.set(displayText, [ GuiFactory.text(sharedBackstage.providers.translate(se.event().text())) ] );
