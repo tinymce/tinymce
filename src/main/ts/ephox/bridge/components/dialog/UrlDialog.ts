@@ -14,10 +14,16 @@ export interface UrlDialogActionDetails {
   value?: any;
 }
 
+export interface UrlDialogMessage {
+  mceAction: string;
+
+  [key: string]: any;
+}
+
 export type UrlDialogActionHandler = (api: UrlDialogInstanceApi, actions: UrlDialogActionDetails) => void;
 export type UrlDialogCloseHandler = () => void;
 export type UrlDialogCancelHandler = (api: UrlDialogInstanceApi) => void;
-export type UrlDialogMessageHandler = (api: UrlDialogInstanceApi, message: any) => void;
+export type UrlDialogMessageHandler = (api: UrlDialogInstanceApi, message: UrlDialogMessage) => void;
 
 // Allow the same button structure as dialogs, but remove the ability to have submit buttons
 export interface UrlDialogButtonApi extends DialogButtonApi {
