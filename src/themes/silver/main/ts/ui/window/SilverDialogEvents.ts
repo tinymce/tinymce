@@ -32,7 +32,7 @@ import {
   formUnblockEvent,
   FormUnblockEvent,
   formTabChangeEvent,
-  FormTabChangeEvent,
+  FormTabChangeEvent
 } from '../general/FormEvents';
 import NavigableObject from '../general/NavigableObject';
 
@@ -42,11 +42,57 @@ export interface ExtraListeners {
   onClose: () => void;
 }
 
-const init = <T>(getInstanceApi: () => Types.Dialog.DialogInstanceApi<T>, extras: ExtraListeners) => {
-  const fireApiEvent = <E extends CustomEvent>(eventName: string, f: (spec: Types.Dialog.Dialog<T>, e: E, c: AlloyComponent) => void) => {
+const initCommonEvents = (fireApiEvent: <E extends CustomEvent>(name: string, f: Function) => any, extras: ExtraListeners) => {
+  return [
+    // When focus moves onto a tab-placeholder, skip to the next thing in the tab sequence
+    AlloyEvents.runWithTarget(NativeEvents.focusin(), NavigableObject.onFocus),
+
+    // TODO: Test if disabled first.
+    fireApiEvent<FormCloseEvent>(formCloseEvent, (api, spec) => {
+      extras.onClose();
+      spec.onClose();
+    }),
+
+    // TODO: Test if disabled first.
+    fireApiEvent<FormCancelEvent>(formCancelEvent, (api, spec, _event, self) => {
+      spec.onCancel(api);
+      AlloyTriggers.emit(self, formCloseEvent);
+    }),
+
+    AlloyEvents.run<FormUnblockEvent>(formUnblockEvent, (c, se) => extras.onUnblock()),
+
+    AlloyEvents.run<FormBlockEvent>(formBlockEvent, (c, se) => extras.onBlock(se.event()))
+  ];
+};
+
+const initUrlDialog = <T>(getInstanceApi: () => Types.UrlDialog.UrlDialogInstanceApi, extras: ExtraListeners) => {
+  const fireApiEvent = <E extends CustomEvent>(eventName: string, f: (api: Types.UrlDialog.UrlDialogInstanceApi, spec: Types.UrlDialog.UrlDialog, e: E, c: AlloyComponent) => void) => {
     return AlloyEvents.run<E>(eventName, (c, se) => {
       withSpec(c, (spec, _c) => {
-        f(spec, se.event(), c);
+        f(getInstanceApi(), spec, se.event(), c);
+      });
+    });
+  };
+
+  const withSpec = (c: AlloyComponent, f: (spec: Types.UrlDialog.UrlDialog, c: AlloyComponent) => void): void => {
+    Reflecting.getState(c).get().each((currentDialog: Types.UrlDialog.UrlDialog) => {
+      f(currentDialog, c);
+    });
+  };
+  return [
+    ...initCommonEvents(fireApiEvent, extras),
+
+    fireApiEvent<FormActionEvent>(formActionEvent, (api, spec, event) => {
+      spec.onAction(api, { name: event.name() });
+    })
+  ];
+};
+
+const initDialog = <T>(getInstanceApi: () => Types.Dialog.DialogInstanceApi<T>, extras: ExtraListeners) => {
+  const fireApiEvent = <E extends CustomEvent>(eventName: string, f: (api: Types.Dialog.DialogInstanceApi<T>, spec: Types.Dialog.Dialog<T>, e: E, c: AlloyComponent) => void) => {
+    return AlloyEvents.run<E>(eventName, (c, se) => {
+      withSpec(c, (spec, _c) => {
+        f(getInstanceApi(), spec, se.event(), c);
       });
     });
   };
@@ -58,47 +104,31 @@ const init = <T>(getInstanceApi: () => Types.Dialog.DialogInstanceApi<T>, extras
   };
 
   return [
-    // When focus moves onto a tab-placeholder, skip to the next thing in the tab sequence
-    AlloyEvents.runWithTarget(NativeEvents.focusin(), NavigableObject.onFocus),
+    ...initCommonEvents(fireApiEvent, extras),
 
-    fireApiEvent<FormSubmitEvent>(formSubmitEvent, (spec) => spec.onSubmit(getInstanceApi())),
+    fireApiEvent<FormSubmitEvent>(formSubmitEvent, (api, spec) => spec.onSubmit(api)),
 
-    fireApiEvent<FormChangeEvent<T>>(formChangeEvent, (spec, event) => {
-      spec.onChange(getInstanceApi(), { name: event.name() });
+    fireApiEvent<FormChangeEvent<T>>(formChangeEvent, (api, spec, event) => {
+      spec.onChange(api, { name: event.name() });
     }),
 
-    fireApiEvent<FormActionEvent>(formActionEvent, (spec, event) => {
-      spec.onAction(getInstanceApi(), { name: event.name(), value: event.value() });
+    fireApiEvent<FormActionEvent>(formActionEvent, (api, spec, event) => {
+      spec.onAction(api, { name: event.name(), value: event.value() });
     }),
 
-    fireApiEvent<FormTabChangeEvent>(formTabChangeEvent, (spec, event) => {
-      spec.onTabChange(getInstanceApi(), event.title());
-    }),
-
-    // TODO: Test if disabled first.
-    fireApiEvent<FormCloseEvent>(formCloseEvent, (spec) => {
-      extras.onClose();
-      spec.onClose();
-    }),
-
-    // TODO: Test if disabled first.
-    fireApiEvent<FormCancelEvent>(formCancelEvent, (spec, _event, self) => {
-      spec.onCancel(getInstanceApi());
-      AlloyTriggers.emit(self, formCloseEvent);
+    fireApiEvent<FormTabChangeEvent>(formTabChangeEvent, (api, spec, event) => {
+      spec.onTabChange(api, event.title());
     }),
 
     // When the dialog is being closed, store the current state of the form
     AlloyEvents.runOnDetached((component) => {
       const api = getInstanceApi();
       Representing.setValue(component, api.getData());
-    }),
-
-    AlloyEvents.run<FormUnblockEvent>(formUnblockEvent, (c, se) => extras.onUnblock()),
-
-    AlloyEvents.run<FormBlockEvent>(formBlockEvent, (c, se) => extras.onBlock(se.event()))
+    })
   ];
 };
 
 export const SilverDialogEvents = {
-  init
+  initUrlDialog,
+  initDialog
 };

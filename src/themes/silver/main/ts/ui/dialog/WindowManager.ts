@@ -19,8 +19,11 @@ import {
 import { Processor, ValueSchema } from '@ephox/boulder';
 import { DialogManager, Types } from '@ephox/bridge';
 
+import Editor from 'tinymce/core/api/Editor';
+
 import { formCancelEvent } from '../general/FormEvents';
 import { renderDialog } from '../window/SilverDialog';
+import { renderUrlDialog } from '../window/SilverUrlDialog';
 import { renderInlineDialog } from '../window/SilverInlineDialog';
 import * as AlertDialog from './AlertDialog';
 import * as ConfirmDialog from './ConfirmDialog';
@@ -28,6 +31,7 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 
 export interface WindowManagerSetup {
   backstage: UiFactoryBackstage;
+  editor: Editor;
 }
 
 const validateData = <T extends Types.Dialog.DialogData>(data: T, validator: Processor) => {
@@ -46,6 +50,31 @@ const setup = (extras: WindowManagerSetup) => {
     } else {
       return openModalDialog(config, closeWindow);
     }
+  };
+
+  const openUrl = (config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void) => {
+    return openModalUrlDialog(config, closeWindow);
+  };
+
+  const openModalUrlDialog = (config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void) => {
+    const factory = (contents: Types.UrlDialog.UrlDialog): Types.UrlDialog.UrlDialogInstanceApi => {
+      const dialog = renderUrlDialog(
+        contents,
+        {
+          closeWindow: () => {
+            ModalDialog.hide(dialog.dialog);
+            closeWindow(dialog.instanceApi);
+          }
+        },
+        extras.editor,
+        extras.backstage
+      );
+
+      ModalDialog.show(dialog.dialog);
+      return dialog.instanceApi;
+    };
+
+    return DialogManager.DialogManager.openUrl(factory, config);
   };
 
   const openModalDialog = <T extends Types.Dialog.DialogData>(config: Types.Dialog.DialogApi<T>, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void): Types.Dialog.DialogInstanceApi<T> => {
@@ -149,6 +178,7 @@ const setup = (extras: WindowManagerSetup) => {
 
   return {
     open,
+    openUrl,
     alert,
     close,
     confirm

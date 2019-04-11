@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>URL Dialog Iframe Demo</title>
+</head>
+<body>
+  <div>
+    <div>Content:</div>
+    <textarea id="content" cols="120" rows="10">Some content</textarea>
+  </div>
+  <div>
+    <button id="insert">Insert Content</button>
+    <button id="setcontent">Set Content</button>
+    <button id="execcommand">Exec Command (Indent)</button>
+    <button id="custom">Custom Message</button>
+    <button id="close">Close Dialog</button>
+  </div>
+
+  <script>
+    var content = document.getElementById('content');
+    var insert = document.getElementById('insert');
+    var setContent = document.getElementById('setcontent');
+    var execCommand = document.getElementById('execcommand');
+    var custom = document.getElementById('custom');
+    var close = document.getElementById('close');
+
+    var targetOrigin = window.location.origin;
+
+    const sendMessage = function (data) {
+      window.parent.postMessage(data, targetOrigin);
+    };
+
+    // Setup button click events
+    insert.addEventListener('click', function () {
+      sendMessage({ mceAction: 'insertContent', content: content.value });
+    });
+
+    setContent.addEventListener('click', function () {
+      sendMessage({ mceAction: 'setContent', content: content.value });
+    });
+
+    execCommand.addEventListener('click', function () {
+      sendMessage({ mceAction: 'execCommand', cmd: 'indent' });
+    });
+
+    custom.addEventListener('click', function () {
+      sendMessage({ mceAction: 'custom', data: content.value });
+    });
+
+    close.addEventListener('click', function () {
+      sendMessage({ mceAction: 'close' });
+    });
+
+    // Setup a listener to receive messages
+    window.addEventListener('message', function (e) {
+      console.log('Received message from parent window', e.data);
+    });
+  </script>
+</body>
+</html>
