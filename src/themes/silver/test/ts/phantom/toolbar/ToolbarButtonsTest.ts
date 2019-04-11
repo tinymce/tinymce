@@ -5,10 +5,10 @@ import { Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { Attr, Class, SelectorFind } from '@ephox/sugar';
 
-import { renderToolbarButton, renderToolbarToggleButton, renderSplitButton } from '../../../../main/ts/ui/toolbar/button/ToolbarButtons';
+import { renderToolbarButton, renderToolbarToggleButton, renderSplitButton } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
+import { renderMenuButton } from 'tinymce/themes/silver/ui/menus/menubar/Integration';
 import TestExtras from '../../module/TestExtras';
 import TestProviders from '../../module/TestProviders';
-import { renderMenuButton } from 'tinymce/themes/silver/ui/menus/menubar/Integration';
 
 UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
 

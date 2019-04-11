@@ -35,7 +35,7 @@ import * as Icons from '../icons/Icons';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
-import { onControlAttached, onControlDetached, OnDestroy } from 'tinymce/themes/silver/ui/controls/Controls';
+import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Controls';
 
 export const updateMenuText = Id.generate('update-menu-text');
 export const updateMenuIcon = Id.generate('update-menu-icon');
