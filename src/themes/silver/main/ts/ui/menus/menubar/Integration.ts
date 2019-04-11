@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Disabling, SketchSpec } from '@ephox/alloy';
+import { AlloyComponent, Disabling, SketchSpec } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Merger, Obj, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
@@ -36,7 +36,7 @@ const defaultMenus = {
 };
 
 export const renderMenuButton = (spec: Toolbar.ToolbarMenuButton, prefix: string, sharedBackstage: UiFactoryBackstageShared, role: Option<string>): SketchSpec => {
-  const getApi = (component): Toolbar.ToolbarMenuButtonInstanceApi => {
+  const getApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonInstanceApi => {
     return {
       isDisabled: () => Disabling.isDisabled(component),
       setDisabled: (state) => state ? Disabling.disable(component) : Disabling.enable(component)

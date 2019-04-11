@@ -56,6 +56,10 @@ export interface SelectData {
   getFlattenedKeys: () => string[];
 }
 
+interface BespokeSelectApi {
+  getComponent: () => AlloyComponent;
+}
+
 const enum IrrelevantStyleItemResponse { Hide, Disable }
 
 const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec) => {
@@ -132,11 +136,11 @@ const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, dataset:
 const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
   const { items, getStyleItems } = createMenuItems(editor, backstage, dataset, spec);
 
-  const getApi = (comp) => {
+  const getApi = (comp: AlloyComponent): BespokeSelectApi => {
     return { getComponent: () => comp };
   };
 
-  const onSetup = (api) => {
+  const onSetup = (api: BespokeSelectApi): () => void => {
     return spec.nodeChangeHandler.map((f) => {
       const handler = f(api.getComponent());
       editor.on('NodeChange', handler);

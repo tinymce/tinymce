@@ -9,7 +9,7 @@ import { AlloySpec, SketchSpec } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
-import { Arr, Fun, Obj, Option, Options, Result, Type } from '@ephox/katamari';
+import { Arr, Obj, Option, Options, Result, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
 import {
@@ -70,10 +70,7 @@ const defaultToolbar = [
 
 const renderFromBridge = <BI, ToolbarButton>(bridgeBuilder: (i: BI) => Result<ToolbarButton, ValueSchema.SchemaError<any>>, render: (o: ToolbarButton, extras) => AlloySpec) => {
   return (spec, extras) => {
-    const internal = bridgeBuilder(spec).fold(
-      Fun.compose(Result.error, ValueSchema.formatError),
-      Result.value
-    ).getOrDie();
+    const internal = bridgeBuilder(spec).mapError((errInfo) => ValueSchema.formatError(errInfo)).getOrDie();
 
     return render(internal, extras);
   };

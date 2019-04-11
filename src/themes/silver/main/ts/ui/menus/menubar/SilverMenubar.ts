@@ -71,10 +71,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
       };
 
       // Convert to an internal bridge spec
-      const internal = Toolbar.createMenuButton(buttonSpec).fold(
-        Fun.compose(Result.error, ValueSchema.formatError),
-        Result.value
-      ).getOrDie();
+      const internal = Toolbar.createMenuButton(buttonSpec).mapError((errInfo) => ValueSchema.formatError(errInfo)).getOrDie();
 
       return renderMenuButton(internal,
         MenuButtonClasses.Button,
