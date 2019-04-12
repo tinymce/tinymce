@@ -29,6 +29,8 @@ import * as UiControls from './UiControls';
 import * as UiFinder from './UiFinder';
 import * as UnitTest from './UnitTest';
 import * as Waiter from './Waiter';
+import * as DragnDrop from './DragnDrop';
+import * as Files from './Files';
 
 export {
   ApproxStructure,
@@ -63,5 +65,7 @@ export {
   Truncate,
   StructAssert,
   StructAssertBasic,
-  StructAssertAdv
+  StructAssertAdv,
+  DragnDrop,
+  Files
 };

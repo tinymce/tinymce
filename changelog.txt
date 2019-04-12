@@ -1,3 +1,10 @@
+Version 4.12.0
+
+Date 2019-04-11
+
+* Added support for mock testing native drag and drop
+* Added support for mock testing cut, copy, paste
+
 Version 4.11.0
 
 Date 2019-01-03
