@@ -6,7 +6,7 @@ import * as EditorContent from 'tinymce/core/content/EditorContent';
 import Serializer from 'tinymce/core/api/html/Serializer';
 import Node from 'tinymce/core/api/html/Node';
 
-UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTreeTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, failure) => {
   const getFontTree = () => {
     const body = new Node('body', 1);
     const font = new Node('font', 1);

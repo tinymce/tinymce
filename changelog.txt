@@ -8,6 +8,7 @@ Version 5.0.4 (TBD)
     Added missing throbber functionality when calling editor.setProgressState(true) #TINY-3453
     Fixed the menubutton onSetup callback not executing when menubuttons were rendered #TINY-3547
     Added back url dialog functionality, which is now available via `editor.windowManager.openUrl()` #TINY-3382
+    Added function to reset the editor content and undo/dirty state via `editor.resetContent()` #TINY-3435
 Version 5.0.3 (2019-03-19)
     Changed empty nested-menu items within the style formats menu to be disabled or hidden if the value of `style_formats_autohide` is `true` #TINY-3310
     Changed the entire phrase 'Powered by Tiny' in the status bar to be a link instead of just the word 'Tiny' #TINY-3366
