@@ -12,11 +12,14 @@ import { DragStartingConfig } from './DragnDropTypes';
 import { SugarEvent } from '../../alien/TypeDefinitions';
 
 const dragStart = (component: AlloyComponent, target: Element, config: DragStartingConfig, transfer: DataTransfer) => {
-  const data = config.getData(component);
-  const types = [config.type].concat(config.phoneyTypes);
-
   DataTransfers.setEffectAllowed(transfer, config.effectAllowed);
-  DataTransfers.setData(transfer, types, data);
+
+  config.getData.each((getData) => {
+    const data = getData(component);
+    const types = [config.type].concat(config.phoneyTypes);
+
+    DataTransfers.setData(transfer, types, data);
+  });
 
   config.getImage.each((f) => {
     const image = f(component);
@@ -33,7 +36,7 @@ const schema: FieldProcessorAdt[] = [
   FieldSchema.defaultedString('type', 'text/plain'),
   FieldSchema.defaulted('phoneyTypes', []),
   FieldSchema.defaultedStringEnum('effectAllowed', 'all', ['copy', 'move', 'link', 'all', 'copyLink', 'linkMove', 'copyMove']),
-  FieldSchema.defaultedFunction('getData', Fun.constant('')),
+  FieldSchema.optionFunction('getData'),
   FieldSchema.optionFunction('getImageParent'),
   FieldSchema.optionFunction('getImage'),
   // Use this to ensure that drag and dropping only happens when within this selector.

@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.11.7] - 2019-04-12
+### Added
+- Tests for native DragnDrop behaviour
+
+### Changed
+- Draggable items without a provided setData function will no longer mutate dataTransfer
+
 # [4.11.1] - 2019-04-10
 ### Changed
 - Made footers an optional part in modal dialogs

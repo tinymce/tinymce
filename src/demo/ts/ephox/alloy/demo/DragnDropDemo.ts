@@ -36,10 +36,10 @@ export default (): void => {
           mode: 'drop',
           type: 'text/plain',
           dropEffect,
-          onDrop (component, simulatedEvent) {
+          onDrop (component, dropEvent) {
             console.log(`onDrop`, {
-              data: simulatedEvent.data,
-              files: simulatedEvent.files
+              data: dropEvent.data,
+              files: dropEvent.files
             });
           },
           onDrag: (component, simulatedEvent) => {
