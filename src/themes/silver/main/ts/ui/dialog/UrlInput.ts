@@ -27,7 +27,7 @@ import {
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Arr, Future, FutureResult, Id, Option, Result, Fun } from '@ephox/katamari';
-import { Class, Traverse } from '@ephox/sugar';
+import { Traverse, Attr } from '@ephox/sugar';
 
 import { UiFactoryBackstageShared, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { UiFactoryBackstageForUrlInput } from '../../backstage/UrlInputBackstage';
@@ -90,6 +90,8 @@ const renderInputButton = (label: Option<string>, eventName: string, className: 
   });
 };
 
+const errorId = Id.generate('aria-invalid');
+
 export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: UiFactoryBackstageShared, urlBackstage: UiFactoryBackstageForUrlInput): SketchSpec => {
 
   const updateHistory = (component: AlloyComponent): void => {
@@ -103,6 +105,10 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
     dismissOnBlur: true,
     inputClasses: ['tox-textfield'],
     sandboxClasses: ['tox-dialog__popups'],
+    inputAttributes: {
+      'aria-autocomplete': 'list',
+      'aria-errormessage': errorId
+    },
     minChars: 0,
     responseTime: 0,
     fetch: (input: AlloyComponent) => {
@@ -124,21 +130,17 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
           getRoot: (comp) => Traverse.parent(comp.element()),
           invalidClass: 'tox-control-wrap--status-invalid',
           notify: {
+            onInvalid: (comp: AlloyComponent, err: string) => {
+              memInvalidIcon.getOpt(comp).each((invalidComp) => {
+                Attr.set(invalidComp.element(), 'title', sharedBackstage.providers.translate(err));
+              });
+            }
           },
           validator: {
             validate: (input) => {
               const urlEntry = Representing.getValue(input);
               return FutureResult.nu((completer) => {
                 handler({ type: spec.filetype, url: urlEntry.value }, (validation) => {
-                  memUrlBox.getOpt(input).each((urlBox) => {
-                    // TODO: Move to UrlIndicator
-                    const toggle = (component: AlloyComponent, clazz: string, b: boolean) => {
-                      (b ? Class.add : Class.remove)(component.element(), clazz);
-                    };
-                    // TODO handle the aria implications of the other 3 states
-                    toggle(urlBox, 'tox-control-wrap--status-valid', validation.status === 'valid');
-                    toggle(urlBox, 'tox-control-wrap--status-unknown', validation.status === 'unknown');
-                  });
                   completer((validation.status === 'invalid' ? Result.error : Result.value)(validation.message));
                 });
               });
@@ -205,18 +207,23 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
 
   // TODO: Consider a way of merging with Checkbox.
   const makeIcon = (name, icon = name, label = name) => {
-    // TODO: Aria this, most likley be an aria live because its dynamic
     return ({
       dom: {
         tag: 'div',
         classes: ['tox-icon', 'tox-control-wrap__status-icon-' + name],
         innerHtml: Icons.get(icon, sharedBackstage.providers.icons),
         attributes: {
-          title: sharedBackstage.providers.translate(label)   // TODO: tooltips AP-213
+          'title': sharedBackstage.providers.translate(label),
+          'aria-live': 'polite',
+          'id': errorId
         }
       }
     });
   };
+
+  const memInvalidIcon = Memento.record(
+    makeIcon('invalid', 'warning')
+  );
 
   const memStatus = Memento.record({
     dom: {
@@ -224,9 +231,8 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
       classes: ['tox-control-wrap__status-icon-wrap']
     },
     components: [
-      makeIcon('valid', 'checkmark',  'valid'),
-      makeIcon('unknown', 'warning'),
-      makeIcon('invalid', 'warning')
+      // Include the 'valid' and 'unknown' icons here only if they are to be displayed
+      memInvalidIcon.asSpec()
     ]
   });
 
@@ -238,7 +244,11 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
     {
       dom: {
         tag: 'div',
-        classes: ['tox-control-wrap']
+        classes: ['tox-control-wrap'],
+        attributes: {
+          'role': 'combobox',
+          'aria-haspopup': 'listbox'
+        }
       },
       components: [pField, memStatus.asSpec()]
     }
