@@ -118,7 +118,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       return sCheckIsInvalidOf(label, component, true);
     };
 
-    const sCheckHasTitleOf = (label, comp, titlePrefix) => {
+    const sCheckHasAriaInvalidOf = (label, comp) => {
       return Logger.t(
         label,
         Step.control(
@@ -127,7 +127,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
             ApproxStructure.build((s, str, arr) => {
               return s.element('input', {
                 attrs: {
-                  title: str.startsWith(titlePrefix)
+                  'aria-invalid': str.is('true')
                 }
               });
             }),
@@ -138,7 +138,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       );
     };
 
-    const sCheckHasNoTitleOf = (label, comp) => {
+    const sCheckHasNoAriaInvalidOf = (label, comp) => {
       return Logger.t(
         label,
         Step.control(
@@ -147,7 +147,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
             ApproxStructure.build((s, str, arr) => {
               return s.element('input', {
                 attrs: {
-                  title: str.none()
+                  'aria-invalid': str.is('false')
                 }
               });
             }),
@@ -158,12 +158,12 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       );
     };
 
-    const sCheckHasTitle = (label, titlePrefix) => {
-      return sCheckHasTitleOf(label, component, titlePrefix);
+    const sCheckHasAriaInvalid = (label) => {
+      return sCheckHasAriaInvalidOf(label, component);
     };
 
-    const sCheckHasNoTitle = (label) => {
-      return sCheckHasNoTitleOf(label, component);
+    const sCheckHasNoAriaInvalid = (label) => {
+      return sCheckHasNoAriaInvalidOf(label, component);
     };
 
     const sValidate = GeneralSteps.sequence([
@@ -227,7 +227,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
       sCheckValid('after 1xmarkValid, should be valid'),
       sCheckIsValid('the isInvalid API should return false'),
-      sCheckHasNoTitle('the field should no longer have a title'),
+      sCheckHasNoAriaInvalid('the field should no longer have aria-invalid'),
 
       Step.sync(() => {
         Invalidating.markInvalid(component, 'programmatic bad value');
@@ -235,7 +235,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
       sCheckInvalid('after markInvalid, should be invalid'),
       sCheckIsInvalid('the isInvalid API should return true'),
-      sCheckHasTitle('the field should have a title', 'programmatic'),
+      sCheckHasAriaInvalid('the field should have aria-invalid'),
 
       UiControls.sSetValueOn(gui.element(), 'input', 'good-value'),
       sValidate,
@@ -244,7 +244,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       UiControls.sSetValueOn(gui.element(), 'input', 'bad-value'),
       sValidate,
       sCheckInvalid('validation should fail (eventually... because future based)'),
-      sCheckHasTitle('the field should have a title', 'bad value:'),
+      sCheckHasAriaInvalid('the field should have aria-invalid'),
 
       Chain.asStep({ }, [
         cQueryApi,

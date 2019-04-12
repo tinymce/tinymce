@@ -21,7 +21,7 @@ const markValid = (component: AlloyComponent, invalidConfig: InvalidatingConfig/
   Class.remove(elem, invalidConfig.invalidClass);
   invalidConfig.notify.each((notifyInfo) => {
     if (isAriaElement(component.element())) {
-      Attr.remove(elem, 'title');
+      Attr.set(component.element(), 'aria-invalid', false);
     }
     notifyInfo.getContainer(component).each((container) => {
       Html.set(container, notifyInfo.validHtml);
@@ -36,11 +36,8 @@ const markInvalid = (component: AlloyComponent, invalidConfig: InvalidatingConfi
   Class.add(elem, invalidConfig.invalidClass);
   invalidConfig.notify.each((notifyInfo) => {
     if (isAriaElement(component.element())) {
-      // Setting the title on the element allows chrome to read it out properly
-      Attr.set(component.element(), 'title', text);
+      Attr.set(component.element(), 'aria-invalid', true);
     }
-    // TODO: Use the aria string property here, and maybe want to make "Body" configurable as well?
-    AriaVoice.shout(Body.body(), text);
     notifyInfo.getContainer(component).each((container) => {
       // TODO: Should we just use Text here, not HTML?
       Html.set(container, text);

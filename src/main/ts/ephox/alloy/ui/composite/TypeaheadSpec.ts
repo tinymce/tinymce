@@ -1,6 +1,6 @@
 import { Objects } from '@ephox/boulder';
 import { Arr, Fun, Merger, Obj, Option } from '@ephox/katamari';
-import { Focus, Value } from '@ephox/sugar';
+import { Focus, Value, Traverse } from '@ephox/sugar';
 
 import { SugarEvent } from '../../alien/TypeDefinitions';
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -28,7 +28,7 @@ import { TieredData } from '../../ui/types/TieredMenuTypes';
 import { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
 import * as TypeaheadEvents from './TypeaheadEvents';
-import { console } from '@ephox/dom-globals'
+import { console } from '@ephox/dom-globals';
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 
 interface ItemExecuteEvent extends CustomEvent {
@@ -206,9 +206,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     Toggling.config({
       toggleClass: detail.markers.openClass,
       aria: {
-        // TODO: Maybe this should just be expanded?
-        mode: 'pressed',
-        syncWithExpanded: true
+        mode: 'expanded'
       }
     }),
 
@@ -216,8 +214,8 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       others: {
         sandbox (hotspot) {
           return DropdownUtils.makeSandbox(detail, hotspot, {
-            onOpen: Fun.identity,
-            onClose: Fun.identity
+            onOpen: () => Toggling.on(hotspot),
+            onClose: () => Toggling.off(hotspot)
           });
         }
       }

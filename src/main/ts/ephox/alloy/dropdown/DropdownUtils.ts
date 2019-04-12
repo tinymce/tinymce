@@ -1,5 +1,5 @@
 import { Fun, Future, Merger, Option, Result } from '@ephox/katamari';
-import { Width, Element, Css } from '@ephox/sugar';
+import { Width, Element, Css, Traverse, Attr } from '@ephox/sugar';
 
 import * as ComponentStructure from '../alien/ComponentStructure';
 import * as Behaviour from '../api/behaviour/Behaviour';
@@ -149,16 +149,20 @@ const getSink = (anyInSystem: AlloyComponent, sinkDetail: SinkDetail): () => Ret
 const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyComponent, extras) => {
   const ariaOwner = AriaOwner.manager();
 
+  const hotspotParentElement = Traverse.parent(hotspot.element()).getOr(hotspot.element());
+
   const onOpen = (component, menu) => {
     const anchor = getAnchor(detail, hotspot);
-    ariaOwner.link(hotspot.element());
+    ariaOwner.link(hotspotParentElement);
+    Attr.set(hotspot.element(), 'aria-controls', ariaOwner.id());
     if (detail.matchWidth) { matchWidth(anchor.hotspot, menu, detail.useMinWidth); }
     detail.onOpen(anchor, component, menu);
     if (extras !== undefined && extras.onOpen !== undefined) { extras.onOpen(component, menu); }
   };
 
   const onClose = (component, menu) => {
-    ariaOwner.unlink(hotspot.element());
+    ariaOwner.unlink(hotspotParentElement);
+    Attr.remove(hotspot.element(), 'aria-controls');
     if (extras !== undefined && extras.onClose !== undefined) { extras.onClose(component, menu); }
   };
 
@@ -169,7 +173,8 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
       tag: 'div',
       classes: detail.sandboxClasses,
       attributes: {
-        id: ariaOwner.id()
+        id: ariaOwner.id(),
+        role: 'listbox'
       }
     },
     behaviours: SketchBehaviours.augment(
