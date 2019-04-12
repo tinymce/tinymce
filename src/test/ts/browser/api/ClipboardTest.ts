@@ -1,22 +1,31 @@
 import { UnitTest } from '@ephox/bedrock';
-import { Element, Insert, Remove, Body, DomEvent, SelectorFind } from '@ephox/sugar';
-import { Pipeline } from 'ephox/agar/api/Pipeline';
-import { Logger, GeneralSteps, Step, RawAssertions } from 'ephox/agar/api/Main';
+import { DataTransfer, navigator } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
-import { sPasteItems, sPasteFiles, sPasteDataTransfer } from 'ephox/agar/api/Clipboard';
-import { createFile } from 'ephox/agar/api/Files';
-import { Blob, DataTransfer, navigator } from '@ephox/dom-globals';
-import { createFileFromString } from 'ephox/agar/datatransfer/File';
+import { Body, DomEvent, Element, Insert, Remove } from '@ephox/sugar';
+import { cCopy, cCut, sPasteDataTransfer, sPasteFiles, sPasteItems } from 'ephox/agar/api/Clipboard';
+import { createFileFromString } from 'ephox/agar/api/Files';
+import { Chain, GeneralSteps, Logger, RawAssertions, Step } from 'ephox/agar/api/Main';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
 
 UnitTest.asynctest('ClipboardTest', (success, failure) => {
   const pastebin = Element.fromHtml('<div class="pastebin"></div>');
-  const state = Cell(Option.none<DataTransfer>());
+  const pasteState = Cell(Option.none<DataTransfer>());
 
   Insert.append(Body.body(), pastebin);
 
+  const cutUnbinder = DomEvent.bind(pastebin, 'cut', (evt) => {
+    const dataTransfer = evt.raw().clipboardData;
+    dataTransfer.setData('text/plain', 'cut-data');
+  });
+
+  const copyUnbinder = DomEvent.bind(pastebin, 'copy', (evt) => {
+    const dataTransfer = evt.raw().clipboardData;
+    dataTransfer.setData('text/plain', 'copy-data');
+  });
+
   const pasteUnbinder = DomEvent.bind(pastebin, 'paste', (evt) => {
     const dataTransfer = evt.raw().clipboardData;
-    state.set(Option.some(dataTransfer))
+    pasteState.set(Option.some(dataTransfer));
   });
 
   Pipeline.async({}, /phantom/i.test(navigator.userAgent) ? [] : [
@@ -26,7 +35,7 @@ UnitTest.asynctest('ClipboardTest', (success, failure) => {
         'text/html': '<b>Hello world!</b>'
       }, '.pastebin'),
       Step.sync(() => {
-        const dataTransfer = state.get().getOrDie('Could not get dataTransfer from state');
+        const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
         RawAssertions.assertEq('Should be expected plain text', 'Hello world!', dataTransfer.getData('text/plain'));
         RawAssertions.assertEq('Should be expected html', '<b>Hello world!</b>', dataTransfer.getData('text/html'));
@@ -39,7 +48,7 @@ UnitTest.asynctest('ClipboardTest', (success, failure) => {
         createFileFromString('a.html', 123, '<b>Hello world!</b>', 'text/html')
       ], '.pastebin'),
       Step.sync(() => {
-        const dataTransfer = state.get().getOrDie('Could not get dataTransfer from state');
+        const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
         RawAssertions.assertEq('Should be expected mime type', 'text/plain', dataTransfer.items[0].type);
         RawAssertions.assertEq('Should be expected mime type', 'text/plain', dataTransfer.files[0].type);
@@ -51,11 +60,11 @@ UnitTest.asynctest('ClipboardTest', (success, failure) => {
 
     Logger.t('Paste using dataTransfer mutator', GeneralSteps.sequence([
       sPasteDataTransfer((dataTransfer) => {
-        dataTransfer.items.add(createFile('a.txt', 123, new Blob(['Hello world!'], { type: 'text/plain' })));
+        dataTransfer.items.add(createFileFromString('a.txt', 123, 'Hello world!', 'text/plain'));
         dataTransfer.items.add('<b>Hello world!</b>', 'text/html');
       }, '.pastebin'),
       Step.sync(() => {
-        const dataTransfer = state.get().getOrDie('Could not get dataTransfer from state');
+        const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
         RawAssertions.assertEq('Should be expected mime type', 'text/plain', dataTransfer.items[0].type);
         RawAssertions.assertEq('Should be expected mime type', 'file', dataTransfer.items[0].kind);
@@ -64,9 +73,25 @@ UnitTest.asynctest('ClipboardTest', (success, failure) => {
         RawAssertions.assertEq('Should be expected mime type', 'string', dataTransfer.items[1].kind);
       })
     ])),
+
+    Logger.t('Cut', Chain.asStep(pastebin, [
+      cCut,
+      Chain.op((dataTransfer: DataTransfer) => {
+        RawAssertions.assertEq('Should be extected cut data', 'cut-data', dataTransfer.getData('text/plain'));
+      })
+    ])),
+
+    Logger.t('Copy', Chain.asStep(pastebin, [
+      cCopy,
+      Chain.op((dataTransfer: DataTransfer) => {
+        RawAssertions.assertEq('Should be extected copy data', 'copy-data', dataTransfer.getData('text/plain'));
+      })
+    ]))
   ], () => {
-    Remove.remove(pastebin);
+    cutUnbinder.unbind();
+    copyUnbinder.unbind();
     pasteUnbinder.unbind();
+    Remove.remove(pastebin);
     success();
   }, failure);
 });

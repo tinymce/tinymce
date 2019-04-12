@@ -5,7 +5,7 @@ import { Body, Element } from "@ephox/sugar";
 import { getWindowFromElement } from "../dragndrop/DndEvents";
 import { createDataTransfer } from "../datatransfer/DataTransfer";
 import { Arr, Obj } from "@ephox/katamari";
-import { createPasteEvent } from "../clipboard/ClipboardEvents";
+import { createPasteEvent, createCopyEvent, createCutEvent } from "../clipboard/ClipboardEvents";
 
 const cPasteDataTransfer = (mutator: (dataTransfer: DataTransfer) => void) => Chain.op<Element>((target) => {
   const win = getWindowFromElement(target);
@@ -51,11 +51,33 @@ const sPasteFiles = (files: File[], selector: string) => Chain.asStep({}, [
   cPasteFiles(files)
 ]);
 
+const cCut = Chain.mapper<Element, DataTransfer>((target) => {
+  const win = getWindowFromElement(target);
+  const dataTransfer = createDataTransfer();
+  const event = createCutEvent(win, 0, 0, dataTransfer);
+
+  target.dom().dispatchEvent(event);
+
+  return dataTransfer;
+});
+
+const cCopy = Chain.mapper<Element, DataTransfer>((target) => {
+  const win = getWindowFromElement(target);
+  const dataTransfer = createDataTransfer();
+  const event = createCopyEvent(win, 0, 0, dataTransfer);
+
+  target.dom().dispatchEvent(event);
+
+  return dataTransfer;
+});
+
 export {
   cPasteDataTransfer,
   cPasteItems,
   cPasteFiles,
   sPasteDataTransfer,
   sPasteItems,
-  sPasteFiles
+  sPasteFiles,
+  cCut,
+  cCopy
 };

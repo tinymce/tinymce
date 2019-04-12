@@ -18,8 +18,12 @@ const createClipboardEvent = (name: string) => (win: Window, x: number, y: numbe
   return event;
 };
 
+const createCutEvent = createClipboardEvent('cut');
+const createCopyEvent = createClipboardEvent('copy');
 const createPasteEvent = createClipboardEvent('paste');
 
 export {
+  createCutEvent,
+  createCopyEvent,
   createPasteEvent
 };
