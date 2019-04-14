@@ -4,7 +4,6 @@ import { NestedMenuItemContents } from '../../api/Menu';
 
 export type ToolbarMenuButtonItemTypes = NestedMenuItemContents;
 export type SuccessCallback = (menu: string | ToolbarMenuButtonItemTypes[]) => void;
-export type SelectPredicate = (value: string) => boolean;
 
 export interface ToolbarMenuButtonApi {
   type?: 'menubutton';
@@ -27,6 +26,8 @@ export interface ToolbarMenuButton {
 export interface ToolbarMenuButtonInstanceApi {
   isDisabled: () => boolean;
   setDisabled: (state: boolean) => void;
+  isActive: () => boolean;
+  setActive: (state: boolean) => void;
 }
 
 export const MenuButtonSchema = ValueSchema.objOf([
