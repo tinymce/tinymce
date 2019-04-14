@@ -27,7 +27,7 @@ import {
 } from '@ephox/alloy';
 import { Toolbar, Types } from '@ephox/bridge';
 import { Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
-import { Attr, SelectorFind } from '@ephox/sugar';
+import { Attr, Class, SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
@@ -75,8 +75,19 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
   return {
     isDisabled: () => Disabling.isDisabled(component),
     setDisabled: (state) => state ? Disabling.disable(component) : Disabling.enable(component),
-    setActive: (state) => Toggling.set(component, state),
-    isActive: () => Toggling.isOn(component)
+    setActive: (state: boolean) => {
+      // Note: We can't use the toggling behaviour here, as the dropdown for the menu also relies on it.
+      // As such, we'll need to do this manually
+      const elm = component.element();
+      if (state) {
+        Class.add(elm, ToolbarButtonClasses.Ticked);
+        Attr.set(elm, 'aria-pressed', true);
+      } else {
+        Class.remove(elm, ToolbarButtonClasses.Ticked);
+        Attr.remove(elm, 'aria-pressed');
+      }
+    },
+    isActive: () => Class.has(component.element(), ToolbarButtonClasses.Ticked)
   };
 };
 
@@ -363,9 +374,7 @@ const renderMenuButton = (spec: Toolbar.ToolbarMenuButton, prefix: string, share
       columns: 1,
       presets: 'normal',
       classes: [],
-      dropdownBehaviours: [
-        Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, aria: { mode: 'pressed' }, toggleOnExecute: false })
-      ]
+      dropdownBehaviours: []
     },
     prefix,
     sharedBackstage);
