@@ -101,8 +101,45 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
           sClickButton,
           store.sAssertEq('Execute did not get past disabled button', [ 'execute.reached' ])
         ])
-      )
+      ),
 
+      Logger.t(
+        'Set button to disabled state',
+        Step.sync(() => {
+          Disabling.set(button, true);
+        })
+      ),
+
+      Assertions.sAssertStructure(
+        'Disabled should have a disabled attribute',
+        ApproxStructure.build((s, str, arr) => {
+          return s.element('button', {
+            attrs: {
+              disabled: str.is('disabled')
+            }
+          });
+        }),
+        button.element()
+      ),
+
+      Logger.t(
+        'Set button to enabled state',
+        Step.sync(() => {
+          Disabling.set(button, false);
+        })
+      ),
+
+      Assertions.sAssertStructure(
+        'After re-enabling, the disabled attribute should be removed',
+        ApproxStructure.build((s, str, arr) => {
+          return s.element('button', {
+            attrs: {
+              disabled: str.none()
+            }
+          });
+        }),
+        button.element()
+      )
     ];
   }, () => { success(); }, failure);
 });
