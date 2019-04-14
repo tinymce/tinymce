@@ -23,7 +23,7 @@ const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: 
       },
       isActive: () => Toggling.isOn(component),
       isDisabled: () => Disabling.isDisabled(component),
-      setDisabled: (state) => state ? Disabling.disable(component) : Disabling.enable(component)
+      setDisabled: (state: boolean) => Disabling.set(component, state)
     };
   };
 
