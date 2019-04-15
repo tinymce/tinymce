@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.11.9] - 2019-04-15
+
+### Added
+- Added `Disabling.set(comp, disabled)` function to handle setting the disabled state based on a boolean value
+
 # [4.11.7] - 2019-04-12
 ### Added
 - Tests for native DragnDrop behaviour

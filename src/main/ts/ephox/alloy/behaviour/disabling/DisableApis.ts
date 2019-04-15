@@ -63,9 +63,15 @@ const isDisabled = (component: AlloyComponent): boolean => {
   return hasNative(component) ? nativeIsDisabled(component) : ariaIsDisabled(component);
 };
 
+const set = (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless, disabled: boolean) => {
+  const f = disabled ? disable : enable;
+  f(component, disableConfig, disableState);
+};
+
 export {
   enable,
   disable,
   isDisabled,
-  onLoad
+  onLoad,
+  set
 };
