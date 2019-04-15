@@ -25,10 +25,7 @@ const getSelectedImage = (editor: Editor): HTMLElement => {
     return editor.dom.select('img', figureElm)[0];
   }
 
-  if (imgElm &&
-    (imgElm.nodeName !== 'IMG' ||
-      imgElm.getAttribute('data-mce-object') ||
-      imgElm.getAttribute('data-mce-placeholder'))) {
+  if (imgElm && (imgElm.nodeName !== 'IMG' || Utils.isPlaceholderImage(imgElm))) {
     return null;
   }
 
