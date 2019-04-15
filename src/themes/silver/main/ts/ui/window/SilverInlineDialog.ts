@@ -66,7 +66,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
     }, backstage.shared.providers)
   );
 
-  const dialogEvents = SilverDialogEvents.init(
+  const dialogEvents = SilverDialogEvents.initDialog(
     () => instanceApi,
     {
       // TODO: Implement block and unblock for inline dialogs
