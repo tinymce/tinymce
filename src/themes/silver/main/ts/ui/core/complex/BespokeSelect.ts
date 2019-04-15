@@ -162,7 +162,8 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, datas
       getApi,
       columns: 1,
       presets: 'normal',
-      classes: spec.icon.isSome() ? [] : [ 'bespoke' ]
+      classes: spec.icon.isSome() ? [] : [ 'bespoke' ],
+      dropdownBehaviours: []
     },
     ToolbarButtonClasses.Button,
     backstage.shared

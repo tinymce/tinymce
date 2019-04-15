@@ -16,6 +16,7 @@ import {
   renderSplitButton,
   renderToolbarButton,
   renderToolbarToggleButton,
+  renderMenuButton
 } from './button/ToolbarButtons';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
@@ -24,7 +25,6 @@ import { createFontSelect } from '../core/complex/FontSelect';
 import { createFontsizeSelect } from '../core/complex/FontsizeSelect';
 import { createFormatSelect } from '../core/complex/FormatSelect';
 import { createStyleSelect } from '../core/complex/StyleSelect';
-import { renderMenuButton } from '../menus/menubar/Integration';
 import { RenderUiConfig } from '../../Render';
 import { ToolbarGroup } from './CommonToolbar';
 

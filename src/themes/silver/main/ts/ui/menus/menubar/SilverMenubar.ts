@@ -29,8 +29,8 @@ import { TranslatedString } from 'tinymce/core/api/util/I18n';
 
 import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
 import { MenuButtonClasses } from '../../toolbar/button/ButtonClasses';
+import { renderMenuButton } from '../../toolbar/button/ToolbarButtons';
 import { SingleMenuItemApi } from '../menu/SingleMenu';
-import { renderMenuButton } from './Integration';
 
 export interface SilverMenubarSpec extends Sketcher.SingleSketchSpec {
   dom: RawDomSchema;
