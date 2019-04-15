@@ -2,18 +2,11 @@ import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
-import { EditorMode, getMode, setMode } from 'tinymce/core/Mode';
 import Editor from 'tinymce/core/api/Editor';
 import {  Class, Element } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
   Theme();
-
-  const sAssertMode = (editor: Editor, expectedMode: EditorMode) => {
-    return Step.label('sAssertMode: checking editor is in mode ' + expectedMode, Step.sync(() => {
-      Assertions.assertEq('Should be the expected mode', expectedMode, getMode(editor));
-    }));
-  };
 
   const sAssertBodyClass = (editor: Editor, cls: string, state: boolean) => {
     return Step.label('sAssertBodyClass: checking editor ' + (state ? 'has' : 'doesn\'t have') + ' class ' + cls, Step.sync(() => {
@@ -21,22 +14,28 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
     }));
   };
 
-  const sSetMode = (editor: Editor, mode: EditorMode) => {
-    return Step.label('sSetMode: setting the editor mode to ' + mode, Step.sync(() => {
-      setMode(editor, mode);
-    }));
-  };
-
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    const sAssertMode = (expectedMode: string) => {
+      return Step.label('sAssertMode: checking editor is in mode ' + expectedMode, Step.sync(() => {
+        Assertions.assertEq('Should be the expected mode', expectedMode, editor.mode.get());
+      }));
+    };
+
+    const sSetMode = (mode: string) => {
+      return Step.label('sSetMode: setting the editor mode to ' + mode, Step.sync(() => {
+        editor.mode.set(mode);
+      }));
+    };
+
     Pipeline.async({}, [
       Logger.t('Should toggle readonly on/off and have a readonly class', GeneralSteps.sequence([
-        sAssertMode(editor, 'readonly'),
+        sAssertMode('readonly'),
         sAssertBodyClass(editor, 'mce-content-readonly', true),
-        sSetMode(editor, 'design'),
-        sAssertMode(editor, 'design'),
+        sSetMode('design'),
+        sAssertMode('design'),
         sAssertBodyClass(editor, 'mce-content-readonly', false),
-        sSetMode(editor, 'readonly'),
-        sAssertMode(editor, 'readonly'),
+        sSetMode('readonly'),
+        sAssertMode('readonly'),
         sAssertBodyClass(editor, 'mce-content-readonly', true)
       ]))
     ], onSuccess, onFailure);

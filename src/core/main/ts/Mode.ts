@@ -11,62 +11,73 @@ import Events from './api/Events';
 
 export type EditorMode = 'readonly' | 'design';
 
-const setEditorCommandState = (editor: Editor, cmd: string, state: boolean) => {
-  try {
-    editor.getDoc().execCommand(cmd, false, state);
-  } catch (ex) {
-    // Ignore
-  }
-};
+export const create = (editor: Editor) => {
 
-const toggleClass = (elm, cls, state: boolean) => {
-  if (Class.has(elm, cls) && state === false) {
-    Class.remove(elm, cls);
-  } else if (state) {
-    Class.add(elm, cls);
-  }
-};
+  const setEditorCommandState = (cmd: string, state: boolean) => {
+    try {
+      editor.getDoc().execCommand(cmd, false, state);
+    } catch (ex) {
+      // Ignore
+    }
+  };
 
-const toggleReadOnly = (editor: Editor, state: boolean) => {
-  toggleClass(Element.fromDom(editor.getBody()), 'mce-content-readonly', state);
+  const toggleClass = (elm, cls, state: boolean) => {
+    if (Class.has(elm, cls) && state === false) {
+      Class.remove(elm, cls);
+    } else if (state) {
+      Class.add(elm, cls);
+    }
+  };
 
-  if (state) {
-    editor.selection.controlSelection.hideResizeRect();
-    editor.readonly = true;
-    editor.getBody().contentEditable = 'false';
-  } else {
-    editor.readonly = false;
-    editor.getBody().contentEditable = 'true';
-    setEditorCommandState(editor, 'StyleWithCSS', false);
-    setEditorCommandState(editor, 'enableInlineTableEditing', false);
-    setEditorCommandState(editor, 'enableObjectResizing', false);
-    editor.focus();
-    editor.nodeChanged();
-  }
-};
+  const toggleReadOnly = (state: boolean) => {
+    toggleClass(Element.fromDom(editor.getBody()), 'mce-content-readonly', state);
 
-const setMode = (editor: Editor, mode: EditorMode) => {
-  if (mode === getMode(editor)) {
-    return;
-  }
+    if (state) {
+      editor.selection.controlSelection.hideResizeRect();
+      editor.readonly = true;
+      editor.getBody().contentEditable = 'false';
+    } else {
+      editor.readonly = false;
+      editor.getBody().contentEditable = 'true';
+      setEditorCommandState('StyleWithCSS', false);
+      setEditorCommandState('enableInlineTableEditing', false);
+      setEditorCommandState('enableObjectResizing', false);
+      editor.focus();
+      editor.nodeChanged();
+    }
+  };
 
-  if (editor.initialized) {
-    toggleReadOnly(editor, mode === 'readonly');
-  } else {
-    editor.on('init', function () {
-      toggleReadOnly(editor, mode === 'readonly');
-    });
-  }
+  const setMode = (mode: EditorMode) => {
+    if (mode === getMode()) {
+      return;
+    }
 
-  Events.fireSwitchMode(editor, mode);
-};
+    if (editor.initialized) {
+      toggleReadOnly(mode === 'readonly');
+    } else {
+      editor.on('init', function () {
+        toggleReadOnly(mode === 'readonly');
+      });
+    }
 
-const getMode = (editor: Editor) => editor.readonly ? 'readonly' : 'design';
+    Events.fireSwitchMode(editor, mode);
+  };
 
-const isReadOnly = (editor: Editor) => editor.readonly === true;
+  const getMode = () => editor.readonly ? 'readonly' : 'design';
 
-export {
-  setMode,
-  getMode,
-  isReadOnly
+  const isReadOnly = () => editor.readonly === true;
+
+  const register = (mode: EditorMode, options: Record<string, any>) => {
+
+  };
+
+
+  return {
+    setMode,
+    getMode,
+    isReadOnly,
+    set: setMode,
+    get: getMode,
+    register
+  };
 };

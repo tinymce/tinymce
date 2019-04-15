@@ -20,7 +20,7 @@ import { getEditorSettings, getParam, ParamTypeMap } from '../EditorSettings';
 import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import EditorFocus from '../focus/EditorFocus';
 import Render from '../init/Render';
-import * as Mode from '../Mode';
+import { EditorMode, create } from '../Mode';
 import AddOnManager from './AddOnManager';
 import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';
@@ -68,6 +68,12 @@ import { Plugin } from './PluginManager';
 
 export interface Ui {
   registry: Registry.Registry;
+}
+
+export interface Mode {
+  set: (mode: string) => void;
+  get: () => string;
+  register: (mode: string, options: Record<string, any>) => void;
 }
 
 export interface EditorConstructor {
@@ -173,6 +179,14 @@ class Editor implements EditorObservable {
    * @type tinymce.Editor.ui
    */
   public ui: Ui;
+
+  /**
+   * Editor mode API
+   *
+   * @property mode
+   * @type tinymce.Editor.mode
+   */
+  public mode: Mode;
 
   /**
    * Dom query instance with default scope to the editor document and default element is the body of the editor.
@@ -302,6 +316,11 @@ class Editor implements EditorObservable {
     this.ui = {
       registry: registry()
     };
+
+    const self = this;
+    const modeInstance = create(self);
+    this.mode = modeInstance;
+    this.setMode = modeInstance.setMode;
 
     // Call setup
     editorManager.fire('SetupEditor', { editor: this });
@@ -881,9 +900,7 @@ class Editor implements EditorObservable {
    * @method setMode
    * @param {String} mode Mode to set the editor in.
    */
-  public setMode (mode: Mode.EditorMode) {
-    Mode.setMode(this, mode);
-  }
+  public setMode: (mode: EditorMode) => void
 
   /**
    * Returns the editors container element. The container element wrappes in
