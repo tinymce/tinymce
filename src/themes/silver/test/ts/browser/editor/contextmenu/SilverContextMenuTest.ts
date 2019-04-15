@@ -70,21 +70,19 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
 
     const imgSrc = '../img/dogleft.jpg';
 
-    const imageInTableHtml = '<table style="width: 100%;">' +
-    '<tbody>' +
-      '<tr>' +
-        '<td><img src="' + imgSrc + '" width="160" height="100"/></td>' +
-      '</tr>' +
-    '</tbody>' +
-    '</table>';
+    const contentInTableHtml = (content: string) => {
+      return '<table style="width: 100%;">' +
+       '<tbody>' +
+          '<tr>' +
+            `<td>${content}</td>` +
+          '</tr>' +
+        '</tbody>' +
+      '</table>';
+    };
 
-    const linkInTableHtml = '<table style="width: 100%;">' +
-    '<tbody>' +
-      '<tr>' +
-        '<td><a href="http://tiny.cloud/">Tiny</a></td>' +
-      '</tr>' +
-    '</tbody>' +
-    '</table>';
+    const imageInTableHtml = contentInTableHtml('<img src="' + imgSrc + '" width="160" height="100"/>');
+    const placeholderImageInTableHtml = contentInTableHtml('<img src="' + imgSrc + '" width="160" height="100" data-mce-placeholder="1"/>');
+    const linkInTableHtml = contentInTableHtml('<a href="http://tiny.cloud/">Tiny</a>');
 
     // In Firefox we add a a bogus br element after the link that fixes a gecko link bug when,
     // a link is placed at the end of block elements there is no way to move the caret behind the link.
@@ -163,10 +161,12 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         sAssertFocusOnItem('Table Properties', '.tox-collection__item:contains("Table properties")'),
         sPressDownArrowKey,
         sAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")'),
+        // Navigate back to the "Image"" menu item
         sRepeatDownArrowKey(2),
         sPressEnterKey,
         sWaitForAndCloseDialog,
         sOpenContextMenu('img'),
+        // Navigate to the "Image tools" menu item
         sRepeatDownArrowKey(2),
         sPressEnterKey,
         sWaitForAndCloseDialog
@@ -190,6 +190,23 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         sPressDownArrowKey,
         sAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")')
       ]),
+      Log.stepsAsStep('TBA', 'Test context menus on placeholder image inside a table', [
+        // Placeholder images shouldn't show the image/image tools options
+        tinyApis.sSetContent(placeholderImageInTableHtml),
+        tinyApis.sSelect('img', []),
+        sOpenContextMenu('img'),
+        sAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")'),
+        sPressDownArrowKey,
+        sAssertFocusOnItem('Cell', '.tox-collection__item:contains("Cell")'),
+        sPressDownArrowKey,
+        sAssertFocusOnItem('Row', '.tox-collection__item:contains("Row")'),
+        sPressDownArrowKey,
+        sAssertFocusOnItem('Column', '.tox-collection__item:contains("Column")'),
+        sPressDownArrowKey,
+        sAssertFocusOnItem('Table Properties', '.tox-collection__item:contains("Table properties")'),
+        sPressDownArrowKey,
+        sAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")'),
+      ])
     ], onSuccess, onFailure);
   }, {
     theme: 'silver',

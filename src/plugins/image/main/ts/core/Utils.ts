@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { document, Element } from '@ephox/dom-globals';
+import { Result } from '@ephox/katamari';
 import { FileReader } from '@ephox/sand';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
 import Settings from '../api/Settings';
-import { document } from '@ephox/dom-globals';
-import { StyleMap } from '../../../../../core/main/ts/api/html/Styles';
-import { Result } from '@ephox/katamari';
+import { StyleMap } from 'tinymce/core/api/html/Styles';
 
 /**
  * @class tinymce.image.core.Utils
@@ -181,6 +181,10 @@ const blobToDataUri = function (blob) {
   });
 };
 
+const isPlaceholderImage = (imgElm: Element): boolean => {
+  return imgElm.nodeName === 'IMG' && (imgElm.hasAttribute('data-mce-object') || imgElm.hasAttribute('data-mce-placeholder'));
+};
+
 export default {
   getImageSize,
   buildListItems,
@@ -189,5 +193,6 @@ export default {
   mergeMargins,
   createImageList,
   waitLoadImage,
-  blobToDataUri
+  blobToDataUri,
+  isPlaceholderImage
 };

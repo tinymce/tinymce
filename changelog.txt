@@ -1,4 +1,5 @@
 Version 5.0.4 (TBD)
+    Fixed image context menu items showing on placeholder images #TINY-3280
     Fixed selectbox and colorswatch items not being translated #TINY-3546
     Added linkchecker context menu items to default configuration #TINY-3543
     Fixed toolbar drawer sliding mode keyboard navigation incorrectly focusing the editor when tabbing #TINY-3533

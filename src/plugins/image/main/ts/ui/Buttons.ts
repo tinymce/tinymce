@@ -6,14 +6,15 @@
  */
 
 import { Menu } from '@ephox/bridge';
-import { Node } from '@ephox/dom-globals';
-import { Element, Node as SugarNode, Traverse } from '@ephox/sugar';
+import { Element, Node } from '@ephox/dom-globals';
+import { Element as SugarElement, Node as SugarNode, Traverse } from '@ephox/sugar';
 import { Dialog } from './Dialog';
 import { isFigure, isImage } from '../core/ImageData';
+import Utils from '../core/Utils';
 import Editor from 'tinymce/core/api/Editor';
 
-const getRootElement = (elm: Element): Element => {
-  return Traverse.parent(elm).filter((parentElm: Element) => SugarNode.name(parentElm) === 'figure').getOr(elm);
+const getRootElement = (elm: SugarElement): SugarElement => {
+  return Traverse.parent(elm).filter((parentElm: SugarElement) => SugarNode.name(parentElm) === 'figure').getOr(elm);
 };
 
 const register = (editor: Editor) => {
@@ -24,7 +25,7 @@ const register = (editor: Editor) => {
       onAction: () => {
         // Ensure the figure/image is selected before opening the image edit dialog
         // as some browsers don't do this when right clicking
-        const rootElm = getRootElement(Element.fromDom(node));
+        const rootElm = getRootElement(SugarElement.fromDom(node));
         editor.selection.select(rootElm.dom());
         // Open the dialog now that the image is selected
         Dialog(editor).open();
@@ -47,7 +48,7 @@ const register = (editor: Editor) => {
 
   editor.ui.registry.addContextMenu('image', {
     update: (element: Node): Menu.ContextMenuItem[] => {
-      return isFigure(element) || isImage(element) ? [makeContextMenuItem(element)] : [];
+      return isFigure(element) || (isImage(element) && !Utils.isPlaceholderImage(element as Element)) ? [makeContextMenuItem(element)] : [];
     }
   });
 
