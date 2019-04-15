@@ -56,7 +56,7 @@ interface Specialisation<T> {
 const getButtonApi = (component: AlloyComponent): Toolbar.ToolbarButtonInstanceApi => {
   return {
     isDisabled: () => Disabling.isDisabled(component),
-    setDisabled: (state) => state ? Disabling.disable(component) : Disabling.enable(component)
+    setDisabled: (state: boolean) => Disabling.set(component, state)
   };
 };
 
@@ -67,14 +67,14 @@ const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonIns
     },
     isActive: () => Toggling.isOn(component),
     isDisabled: () => Disabling.isDisabled(component),
-    setDisabled: (state) => state ? Disabling.disable(component) : Disabling.enable(component)
+    setDisabled: (state: boolean) => Disabling.set(component, state)
   };
 };
 
 const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonInstanceApi => {
   return {
     isDisabled: () => Disabling.isDisabled(component),
-    setDisabled: (state) => state ? Disabling.disable(component) : Disabling.enable(component),
+    setDisabled: (state: boolean) => Disabling.set(component, state),
     setActive: (state: boolean) => {
       // Note: We can't use the toggling behaviour here, as the dropdown for the menu also relies on it.
       // As such, we'll need to do this manually
@@ -268,7 +268,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
   const getApi = (comp: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => {
     return {
       isDisabled: () => Disabling.isDisabled(comp),
-      setDisabled: (state) => state ? Disabling.disable(comp) : Disabling.enable(comp),
+      setDisabled: (state: boolean) => Disabling.set(comp, state),
       setIconFill: (id, value) => {
         SelectorFind.descendant(comp.element(), 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
           Attr.set(underlinePath, 'fill', value);

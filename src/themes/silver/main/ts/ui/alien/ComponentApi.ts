@@ -64,7 +64,7 @@ const component = (spec, component: AlloyComponent) => {
     // Expose more as required
     element: component.element().dom(),
     isDisabled: () => Disabling.isDisabled(component),
-    setDisabled: (state: boolean) => state ? Disabling.disable(component) : Disabling.enable(component)
+    setDisabled: (state: boolean) => Disabling.set(component, state)
   };
 
   return Merger.merge(defaults, togglingConf, representingConf, replaceingConf);
