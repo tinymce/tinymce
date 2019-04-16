@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
   };
 
   TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {
-    const sRegisterDefaultMode = Step.label('validate default modes cannot be overwritten', Step.async((next, die) => {
+    const sOverrideDefaultMode = Step.label('validate default modes cannot be overwritten', Step.async((next, die) => {
       try {
         editor.mode.register('design', {
           activate: Fun.noop,
@@ -40,6 +40,30 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
       next();
     }));
 
+    const sRegisterTestModes = Step.sync(() => {
+      editor.mode.register('customDesign', {
+        activate: Fun.noop,
+        deactivate: Fun.noop,
+        editorReadOnly: false
+      });
+      editor.mode.register('customReadonly', {
+        activate: Fun.noop,
+        deactivate: Fun.noop,
+        editorReadOnly: true
+      });
+
+      editor.mode.register('failingActivateReadonly', {
+        activate: Fun.die('whoops'),
+        deactivate: Fun.noop,
+        editorReadOnly: true
+      });
+      editor.mode.register('failingDeactivateDesign', {
+        activate: Fun.noop,
+        deactivate: Fun.die('haha'),
+        editorReadOnly: false
+      });
+    });
+
     const sAssertMode = (expectedMode: string) => {
       return Step.label('sAssertMode: checking editor is in mode ' + expectedMode, Step.sync(() => {
         Assertions.assertEq('Should be the expected mode', expectedMode, editor.mode.get());
@@ -54,20 +78,9 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
 
     Pipeline.async({}, [
       Logger.t('Should toggle readonly on/off and have a readonly class', GeneralSteps.sequence([
-        sRegisterDefaultMode,
-        Step.sync(() => {
-          // TODO: test order of activate and deactivate (or at least that they're actually used)
-          editor.mode.register('customDesign', {
-            activate: Fun.noop,
-            deactivate: Fun.noop,
-            editorReadOnly: false
-          });
-          editor.mode.register('customReadonly', {
-            activate: Fun.noop,
-            deactivate: Fun.noop,
-            editorReadOnly: true
-          });
-        }),
+        sOverrideDefaultMode,
+        sRegisterTestModes,
+        // default API
         sAssertMode('readonly'),
         sAssertBodyClass(editor, 'mce-content-readonly', true),
         sSetMode('design'),
@@ -76,11 +89,25 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
         sSetMode('readonly'),
         sAssertMode('readonly'),
         sAssertBodyClass(editor, 'mce-content-readonly', true),
+
+        // custom modes (aliases of design and readonly)
         sSetMode('customDesign'),
         sAssertMode('customDesign'),
         sAssertBodyClass(editor, 'mce-content-readonly', false),
         sSetMode('customReadonly'),
         sAssertMode('customReadonly'),
+        sAssertBodyClass(editor, 'mce-content-readonly', true),
+
+        // failing to activate a readonly-like mode leaves the editor in design
+        sSetMode('design'),
+        sSetMode('failingActivateReadonly'),
+        sAssertMode('design'),
+        sAssertBodyClass(editor, 'mce-content-readonly', false),
+
+        // failing to deactivate a design-like mode still switches to readonly
+        sSetMode('failingDeactivateDesign'),
+        sSetMode('readonly'),
+        sAssertMode('readonly'),
         sAssertBodyClass(editor, 'mce-content-readonly', true),
       ]))
     ], onSuccess, onFailure);

@@ -18,17 +18,24 @@ import { console } from '@ephox/dom-globals';
 
 export interface ModeApi {
   /**
-   * Function called during a mode switch, before deactivating the previous mode
+   * Handler to activate this mode, called before deactivating the previous mode
+   *
+   * @method activate
    */
   activate: () => void
 
   /**
-   * Function called during a mode switch, after activating the new mode
+   * Handler to deactivate this mode, called after activating the new mode
+   *
+   * @method deactivate
    */
   deactivate: () => void
 
   /**
    * Flags whether the editor should be made readonly while this mode is active
+   *
+   * @property editorReadOnly
+   * @type boolean
    */
   editorReadOnly: boolean
 }
@@ -90,10 +97,18 @@ export const create = (editor: Editor) => {
     const oldMode = availableModes[activeMode];
     const newMode = availableModes[mode];
 
+    // if activate fails, hope nothing bad happened and abort
+    try {
+      newMode.activate();
+    } catch (e) {
+      console.error(`problem while activating editor mode ${mode}:`);
+      console.error(e);
+      return;
+    }
     oldMode.deactivate();
-    newMode.activate();
     if (oldMode.editorReadOnly !== newMode.editorReadOnly) toggleReadOnly(newMode.editorReadOnly);
     activeMode = mode;
+    Events.fireSwitchMode(editor, mode);
   }
 
   const setMode = (mode: string) => {
@@ -106,8 +121,6 @@ export const create = (editor: Editor) => {
     } else {
       editor.on('init', () => switchToMode(mode));
     }
-
-    Events.fireSwitchMode(editor, mode);
   };
 
   const getMode = () => activeMode;
@@ -118,19 +131,13 @@ export const create = (editor: Editor) => {
     if (defaultModes.indexOf(mode) > -1) throw new Error('Cannot override default mode ' + mode);
     availableModes[mode] = {
       ...api,
-      // wrap custom APIs so they can't break the editor
-      activate: () => {
-        try {
-          api.activate();
-        } catch (e) {
-          console.error('problem while activating custom editor mode', e);
-        }
-      },
       deactivate: () => {
+        // wrap custom deactivate APIs so they can't break the editor
         try {
           api.deactivate();
         } catch (e) {
-          console.error('problem while deactivating custom editor mode', e);
+          console.error(`problem while deactivating editor mode ${mode}:`);
+          console.error(e);
         }
       },
     };
