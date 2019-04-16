@@ -28,15 +28,14 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
         blockArea.each((pattern) => applyBlockPattern(editor, pattern));
         // find the spot before the cursor position
         const range = editor.selection.getRng();
-        const block = editor.dom.getParent(range.startContainer, editor.dom.isBlock);
-        const spot = textBefore(range.startContainer, range.startOffset, block);
+        const spot = textBefore(range.startContainer, range.startOffset);
         editor.execCommand('mceInsertNewLine');
         // clean up the cursor position we used to preserve the format
         spot.each((s) => {
-          if (s.node.data.charAt(s.offset - 1) === Unicode.zeroWidth()) {
-            s.node.deleteData(s.offset - 1, 1);
-            if (editor.dom.isEmpty(s.node.parentNode)) {
-              editor.dom.remove(s.node.parentNode);
+          if (s.element().data.charAt(s.offset() - 1) === Unicode.zeroWidth()) {
+            s.element().deleteData(s.offset() - 1, 1);
+            if (editor.dom.isEmpty(s.element().parentNode)) {
+              editor.dom.remove(s.element().parentNode);
             }
           }
         });

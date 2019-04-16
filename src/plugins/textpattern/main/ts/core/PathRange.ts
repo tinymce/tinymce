@@ -1,10 +1,10 @@
-import { Node, Text, HTMLElement } from '@ephox/dom-globals';
+import { Node, Text, HTMLElement, Range, document } from '@ephox/dom-globals';
 import { Option, Arr } from '@ephox/katamari';
 import { NodeTypes } from '@ephox/sugar';
 
 export interface PathRange {
-  start: number[];
-  end: number[];
+  startPath: number[];
+  endPath: number[];
 }
 
 const isElement = (node: Node): node is HTMLElement => node.nodeType === NodeTypes.ELEMENT;
@@ -32,7 +32,26 @@ const generatePath = (root: Node, node: Text, offset: number): Option<number[]> 
 const generatePathRange = (root: Node, startNode: Text, startOffset: number, endNode: Text, endOffset: number): Option<PathRange> => {
   return generatePath(root, startNode, startOffset).bind((start) => {
     return generatePath(root, endNode, endOffset).map((end) => {
-      return { start, end };
+      return { startPath: start, endPath: end };
+    });
+  });
+};
+
+const convertRangeToPathRange = (root: Node, rng: Range): Option<PathRange> => {
+  return generatePath(root, rng.startContainer as Text, rng.startOffset).bind((start) => {
+    return generatePath(root, rng.endContainer as Text, rng.endOffset).map((end) => {
+      return { startPath: start, endPath: end };
+    });
+  });
+};
+
+const convertPathRangeToRange = (root: Node, rng: PathRange): Option<Range> => {
+  return resolvePath(root, rng.startPath).bind((start) => {
+    return resolvePath(root, rng.endPath).map((end) => {
+      const rng = document.createRange();
+      rng.setStart(start.node, start.offset);
+      rng.setEnd(end.node, end.offset);
+      return rng;
     });
   });
 };
@@ -50,19 +69,12 @@ const resolvePath = (root: Node, path: number[]): Option<{node: Text, offset: nu
   });
 };
 
-const resolvePathRange = (root: Node, range: PathRange) => {
-  return resolvePath(root, range.start).bind(({node: startNode, offset: startOffset}) => {
-    return resolvePath(root, range.end).map(({node: endNode, offset: endOffset}) => {
-      return { startNode, startOffset, endNode, endOffset };
-    });
-  });
-};
-
 export {
   isElement,
   isText,
+  convertPathRangeToRange,
+  convertRangeToPathRange,
   generatePath,
   generatePathRange,
-  resolvePath,
-  resolvePathRange,
+  resolvePath
 };

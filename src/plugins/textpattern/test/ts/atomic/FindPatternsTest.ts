@@ -11,7 +11,7 @@ UnitTest.test('atomic.tinymce.plugins.textpattern.FindPatternTest', function () 
   ];
 
   const testFindStartPattern = function (text: string, expectedPattern: string) {
-    const actual = findPattern(defaultPatterns, text);
+    const actual = findPattern(defaultPatterns, text).getOrDie();
 
     RawAssertions.assertEq('Assert correct pattern', expectedPattern, actual.start);
   };

@@ -101,8 +101,8 @@ UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failur
           }
         });
         // prepend a 0 because we always add a root node
-        Assertions.assertEq('start path does not match', [0].concat(expected.start), actual.range.start);
-        Assertions.assertEq('end path does not match', [0].concat(expected.end), actual.range.end);
+        Assertions.assertEq('start path does not match', [0].concat(expected.start), actual.start.startPath);
+        Assertions.assertEq('end path does not match', [0].concat(expected.end), actual.end.endPath);
       }
     });
   };

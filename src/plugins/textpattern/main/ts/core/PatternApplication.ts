@@ -5,28 +5,46 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Text, HTMLElement } from '@ephox/dom-globals';
+import { Text, Range, Node } from '@ephox/dom-globals';
 import { Strings, Arr, Id, Option, Options, Type, Obj } from '@ephox/katamari';
-import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
+import { DomDescent } from '@ephox/phoenix';
+import { DomTextSearch } from '@ephox/robin';
+import { Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import Formatter from 'tinymce/core/api/Formatter';
 import Tools from 'tinymce/core/api/util/Tools';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { BlockPattern } from '../api/Pattern';
 import { InlinePatternMatch } from './FindPatterns';
-import { resolvePath, isElement, isText } from './PathRange';
-import Formatter from 'tinymce/core/api/Formatter';
+import { convertPathRangeToRange, isElement } from './PathRange';
 
-// assumes start is not equal to end
-const isCollapsed = (start: Node, end: Node, root: HTMLElement) => {
-  const walker = new TreeWalker(start, root);
-  while (walker.next()) {
-    const node = walker.current();
-    if (isText(node) && node.data.length === 0) {
-      continue;
-    }
-    return node === end;
+const cleanEmptyNodes = (dom: DOMUtils, node: Node) => {
+  // Recursively walk up the tree while we have a parent and the node is empty. If the node is empty, then remove it.
+  if (node && dom.isEmpty(node)) {
+    const parent = node.parentNode;
+    dom.remove(node);
+    cleanEmptyNodes(dom, parent);
   }
-  return false;
+};
+
+const deleteRng = (dom: DOMUtils, rng: Range, clean = true) => {
+  const startParent = rng.startContainer.parentNode;
+  const endParent = rng.endContainer.parentNode;
+  rng.deleteContents();
+
+  // Clean up any empty nodes if required
+  if (clean) {
+    if (rng.startContainer.textContent.length === 0) {
+      dom.remove(rng.startContainer);
+    }
+    if (rng.endContainer.textContent.length === 0) {
+      dom.remove(rng.endContainer);
+    }
+    cleanEmptyNodes(dom, startParent);
+    if (startParent !== endParent) {
+      cleanEmptyNodes(dom, endParent);
+    }
+  }
 };
 
 // Handles inline formats like *abc* and **abc**
@@ -39,11 +57,7 @@ const applyInlinePatterns = (editor: Editor, areas: InlinePatternMatch[]) => {
     return Options.lift(start, end, (start, end) => {
       const range = dom.createRng();
       range.setStartAfter(start);
-      if (!isCollapsed(start, end, dom.getRoot())) {
-        range.setEndBefore(end);
-      } else {
-        range.collapse(true);
-      }
+      range.setEndBefore(end);
       return range;
     });
   };
@@ -53,31 +67,41 @@ const applyInlinePatterns = (editor: Editor, areas: InlinePatternMatch[]) => {
       start: markerPrefix + '_' + i + '_start',
       end: markerPrefix + '_' + i + '_end',
     };
-});
+  });
   // store the cursor position
   const cursor = editor.selection.getBookmark();
   // add marks for the left and right sides of the ranges and delete the pattern start/end
   for (let i = areas.length - 1; i >= 0; i--) {
     // insert right side marker
-    const { pattern, range } = areas[i];
-    const { node: endNode, offset: endOffset } = resolvePath(dom.getRoot(), range.end).getOrDie('Failed to resolve range[' + i + '].end');
-    const textOutsideRange = endOffset === 0 ? endNode : endNode.splitText(endOffset);
-    textOutsideRange.parentNode.insertBefore(newMarker(markerIds[i].end), textOutsideRange);
+    const { pattern, end } = areas[i];
+    const endRng = convertPathRangeToRange(dom.getRoot(), end).getOrDie('Failed to resolve range[' + i + '].end');
+    const endNode = endRng.endContainer;
+    const endOffset = endRng.endOffset;
+
+    // Split the content and insert an end marker
+    const textOutsideRange = endOffset === 0 ? endNode : (endNode as Text).splitText(endOffset);
+    textOutsideRange.parentNode.insertBefore(newMarker(markerIds[ i ].end), textOutsideRange);
+
     if (pattern.start.length > 0) {
-      endNode.deleteData(endOffset - pattern.end.length, pattern.end.length);
+      // Delete the end pattern, if we have a pattern that has content
+      deleteRng(dom, endRng);
     }
   }
   for (let i = 0; i < areas.length; i++) {
     // insert left side marker
-    const { pattern, range } = areas[i];
-    const { node: startNode, offset: startOffset } = resolvePath(dom.getRoot(), range.start).getOrDie('Failed to resolve range.start');
+    const { pattern, start } = areas[i];
+    const startRng = convertPathRangeToRange(dom.getRoot(), start).getOrDie('Failed to resolve range[' + i + '].start');
+    const startNode = startRng.endContainer as Text;
+    const startOffset = startRng.endOffset;
+
     const textInsideRange = startOffset === 0 ? startNode : startNode.splitText(startOffset);
     textInsideRange.parentNode.insertBefore(newMarker(markerIds[i].start), textInsideRange);
+
     // delete the start pattern
     if (pattern.start.length > 0) {
-      textInsideRange.deleteData(0, pattern.start.length);
+      deleteRng(dom, startRng);
     } else {
-      textInsideRange.deleteData(0, pattern.end.length);
+      markerRange(markerIds[i]).each((range) => deleteRng(dom, range));
     }
   }
   // apply the patterns
@@ -116,37 +140,36 @@ const applyBlockPattern = (editor: Editor, pattern: BlockPattern) => {
     return;
   }
 
-  const walker = new TreeWalker(block, block);
-  let node: Node;
-  let firstTextNode: Text;
-  while ((node = walker.next())) {
-    if (isText(node)) {
-      firstTextNode = node;
-      break;
-    }
-  }
-  if (!firstTextNode) {
+  const blockText = Tools.trim(block.textContent);
+  if (!Strings.startsWith(blockText, pattern.start) || blockText.length === pattern.start.length) {
     return;
   }
-  if (!Strings.startsWith(firstTextNode.data, pattern.start)) {
-    return;
-  }
-  if (Tools.trim(block.textContent).length === pattern.start.length) {
-    return;
-  }
+
+  const stripPattern = () => {
+    // The pattern could be across fragmented text nodes, so we need to find the end
+    // of the pattern and then remove all elements between the start/end range
+    const firstTextNode = DomDescent.freefallLtr(Element.fromDom(block)).element();
+    DomTextSearch.scanRight(firstTextNode, pattern.start.length).each((end) => {
+      const rng = dom.createRng();
+      rng.setStart(block, 0);
+      rng.setEnd(end.element().dom(), end.offset());
+
+      deleteRng(dom, rng);
+    });
+  };
 
   // add a marker to store the cursor position
   const cursor = editor.selection.getBookmark();
   if (pattern.type === 'block-format') {
     if (isBlockFormatName(pattern.format, editor.formatter)) {
       editor.undoManager.transact(() => {
-        firstTextNode.deleteData(0, pattern.start.length);
+        stripPattern();
         editor.formatter.apply(pattern.format);
       });
     }
   } else if (pattern.type === 'block-command') {
     editor.undoManager.transact(() => {
-      firstTextNode.deleteData(0, pattern.start.length);
+      stripPattern();
       editor.execCommand(pattern.cmd, false, pattern.value);
     });
   }

@@ -156,6 +156,18 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
         tinyActions.sContentKeystroke(Keys.enter(), {}),
         tinyApis.sAssertContentPresence({ ul: 0 })
       ])),
+      Step.label('inline format with fragmented start sequence', GeneralSteps.sequence([
+        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '<span data-mce-spellcheck="invalid">*</span>*a**', 4, [0, 1]),
+        Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.inlineBlockStructHelper('strong', 'a')))
+      ])),
+      Step.label('inline format with fragmented end sequence', GeneralSteps.sequence([
+        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '**a*<span data-mce-spellcheck="invalid">*</span>', 1, [0, 1]),
+        Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.inlineBlockStructHelper('strong', 'a')))
+      ])),
+      Step.label('block format with fragmented start sequence', GeneralSteps.sequence([
+        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '<span data-mce-spellcheck="invalid">1</span>. a', 3, [0, 1]),
+        tinyApis.sAssertContentPresence({ ol: 1, li: 2 })
+      ])),
       Step.label('getPatterns/setPatterns', Step.sync(function () {
         // Store the original patterns
         const origPatterns = editor.plugins.textpattern.getPatterns();
