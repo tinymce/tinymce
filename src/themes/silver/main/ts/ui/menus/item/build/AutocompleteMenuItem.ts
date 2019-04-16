@@ -27,12 +27,17 @@ const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryB
         lazySink: sharedBackstage.getSink,
         tooltipDom: {
           tag: 'div',
+          classes: [ 'tox-tooltip-worker-container' ]
         },
         tooltipComponents: [
         ],
         anchor: (comp) => ({
           anchor: 'submenu',
-          item: comp
+          item: comp,
+          overrides: {
+            // NOTE: this avoids it setting overflow and max-height.
+            maxHeightFunction: () => { }
+          }
         }),
         mode: 'follow-highlight',
         onShow: (component, _tooltip) => {
