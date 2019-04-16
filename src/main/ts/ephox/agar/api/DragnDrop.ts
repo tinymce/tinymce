@@ -1,6 +1,6 @@
-import { Step, Chain } from '@ephox/agar';
-import { Options, Arr } from '@ephox/katamari';
-import { SelectorFind, Body, Element, Node, Attr } from '@ephox/sugar';
+import { Chain, UiFinder, NamedChain } from '@ephox/agar';
+import { Arr } from '@ephox/katamari';
+import { Body, Element, Node, Attr } from '@ephox/sugar';
 import { dispatchDndEvent, createDragstartEvent, createDragEvent, createDragenterEvent, createDragoverEvent, createDropEvent, createDragendEvent, isDefaultPrevented, getWindowFromElement } from '../dragndrop/DndEvents';
 import { File, DragEvent } from '@ephox/dom-globals';
 import { createDataTransfer, getDragImage } from '../datatransfer/DataTransfer';
@@ -56,29 +56,34 @@ const dropFiles = (files: File[], to: Element) => {
   checkDefaultPrevented(dispatchDndEvent(createDropEvent(toWin, toRect.left, toRect.top, transfer), to));
 }
 
+const cDragnDrop = (fromSelector: string, toSelector: string): Chain<Element, Element> => {
+  return NamedChain.asChain([
+    NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(fromSelector), 'from'),
+    NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(toSelector), 'to'),
+    Chain.op((obj) => dragnDrop(obj.from, obj.to)),
+    NamedChain.output(NamedChain.inputName())
+  ]);
+};
+
 const sDragnDrop = (fromSelector: string, toSelector: string) => {
-  return Step.sync(() => {
-    Options.lift(
-      SelectorFind.descendant(Body.body(), fromSelector),
-      SelectorFind.descendant(Body.body(), toSelector),
-      (from, to) => dragnDrop(from, to)
-    ).getOrDie('Could not find from/to elements.');
-  });
+  return Chain.asStep(Body.body(), [ cDragnDrop(fromSelector, toSelector) ]);
 };
 
 const sDropFiles = (files: File[], toSelector: string) => {
-  return Step.sync(() => {
-    SelectorFind.descendant(Body.body(), toSelector).each((to) => dropFiles(files, to));
-  });
+  return Chain.asStep(Body.body(), [
+    UiFinder.cFindIn(toSelector),
+    cDropFiles(files)
+  ]);
 };
 
-const cDropFiles = (files: File[]) => Chain.on<Element, Element>((elm) => {
+const cDropFiles = (files: File[]) => Chain.op<Element>((elm) => {
   dropFiles(files, elm);
 });
 
 export {
   dragnDrop,
   dropFiles,
+  cDragnDrop,
   sDragnDrop,
   sDropFiles,
   cDropFiles,
