@@ -88,13 +88,11 @@ export interface HotspotAnchor extends AnchorDetail<HotspotAnchor>, HasLayoutAnc
 
 export interface SubmenuAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
   anchor: 'submenu';
-  overrides?: AnchorOverrides;
   item: AlloyComponent;
 }
 
 export interface SubmenuAnchor extends AnchorDetail<SubmenuAnchor>, HasLayoutAnchor {
   item: AlloyComponent;
-  overrides: AnchorOverrides;
 }
 
 export interface MakeshiftAnchorSpec extends CommonAnchorSpec {
