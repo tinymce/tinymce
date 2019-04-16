@@ -190,7 +190,7 @@ const render = function (editor: Editor) {
 
     // Reset contents in editor when the form is reset
     editor.on('reset', function () {
-      editor.setContent(editor.startContent, { format: 'raw' });
+      editor.resetContent();
     });
 
     // Check page uses id="submit" or name="submit" for it's submit button

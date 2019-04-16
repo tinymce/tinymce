@@ -25,6 +25,7 @@ interface UndoManager {
   undo: () => UndoLevel;
   redo: () => UndoLevel;
   clear: () => void;
+  reset: () => void;
   hasUndo: () => boolean;
   hasRedo: () => boolean;
   transact: (callback: () => void) => UndoLevel;
@@ -32,7 +33,7 @@ interface UndoManager {
   extra: (callback1: () => void, callback2: () => void) => void;
 }
 
-const UndoManager = function (editor: Editor) {
+const UndoManager = function (editor: Editor): UndoManager {
   let self: UndoManager = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, locks = 0;
 
   const isUnlocked = function () {
@@ -330,6 +331,16 @@ const UndoManager = function (editor: Editor) {
       self.typing = false;
       self.data = data;
       editor.fire('ClearUndos');
+    },
+
+    /**
+     * Resets the undo manager levels by clearing all levels and then adding an initial level.
+     *
+     * @method reset
+     */
+    reset () {
+      self.clear();
+      self.add();
     },
 
     /**
