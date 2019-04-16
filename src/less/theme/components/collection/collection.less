@@ -117,13 +117,6 @@
     user-select: none;
   }
 
-  // Disabled item
-  .tox-collection__item--state-disabled {
-    background-color: unset;
-    color: @collection-item-label-disabled-text-color;
-    cursor: default;
-  }
-
   .tox-collection--list .tox-collection__item {
     padding: @collection-item-padding;
   }
@@ -167,6 +160,16 @@
   .tox-collection--grid .tox-collection__item--active {
     background-color: @collection-grid-item-active-background-color;
     color: @collection-grid-item-label-active-text-color;
+  }
+
+  // Disabled item
+  .tox-collection__item--state-disabled,
+  .tox-collection--list .tox-collection__item--active.tox-collection__item--state-disabled,
+  .tox-collection--toolbar .tox-collection__item--active.tox-collection__item--state-disabled,
+  .tox-collection--grid .tox-collection__item--active.tox-collection__item--state-disabled {
+    background-color: unset;
+    color: @collection-item-label-disabled-text-color;
+    cursor: default;
   }
 
   .tox-collection__item-icon {
