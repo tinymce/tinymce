@@ -20,7 +20,7 @@ import { getEditorSettings, getParam, ParamTypeMap } from '../EditorSettings';
 import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import EditorFocus from '../focus/EditorFocus';
 import Render from '../init/Render';
-import { EditorMode, create } from '../Mode';
+import { create } from '../Mode';
 import AddOnManager from './AddOnManager';
 import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';
@@ -900,7 +900,7 @@ class Editor implements EditorObservable {
    * @method setMode
    * @param {String} mode Mode to set the editor in.
    */
-  public setMode: (mode: EditorMode) => void
+  public setMode: (mode: string) => void
 
   /**
    * Returns the editors container element. The container element wrappes in

@@ -8,7 +8,6 @@
 import { Types } from '@ephox/bridge';
 import { Element, Event, FocusEvent, HTMLElement, Node, Range, UIEvent } from '@ephox/dom-globals';
 import Editor from './Editor';
-import { EditorMode } from '../Mode';
 import { NativeEventMap } from './util/EventDispatcher';
 import { GetContentArgs } from '../content/GetContent';
 import { SetContentArgs } from '../content/SetContent';
@@ -32,7 +31,7 @@ export type SetSelectionRangeEvent = { range: Range, forward: boolean };
 
 export type ShowCaretEvent = { target: Node, direction: number, before: boolean };
 
-export type SwitchModeEvent = { mode: EditorMode };
+export type SwitchModeEvent = { mode: string };
 
 export type AddUndoEvent = { level: UndoLevel, lastLevel: UndoLevel, originalEvent: Event };
 export type UndoRedoEvent = { level: UndoLevel };

@@ -7,7 +7,6 @@
 
 import { HTMLElement } from '@ephox/dom-globals';
 import Editor from './Editor';
-import { EditorMode } from '../Mode';
 
 const firePreProcess = (editor: Editor, args) => editor.fire('PreProcess', args);
 
@@ -17,7 +16,7 @@ const fireRemove = (editor: Editor) => editor.fire('remove');
 
 const fireDetach = (editor: Editor) => editor.fire('detach');
 
-const fireSwitchMode = (editor: Editor, mode: EditorMode) => editor.fire('SwitchMode', { mode });
+const fireSwitchMode = (editor: Editor, mode: string) => editor.fire('SwitchMode', { mode });
 
 const fireObjectResizeStart = (editor: Editor, target: HTMLElement, width: number, height: number) => {
   editor.fire('ObjectResizeStart', { target, width, height });
