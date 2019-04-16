@@ -19,7 +19,7 @@ const placement = (component: AlloyComponent, submenuInfo: SubmenuAnchor, origin
     NuAnchoring({
       anchorBox: anchorBox,
       bubble: Bubble.fallback(),
-      overrides: { },
+      overrides: submenuInfo.overrides,
       layouts: layouts,
       placer: Option.none()
     })
@@ -29,5 +29,6 @@ const placement = (component: AlloyComponent, submenuInfo: SubmenuAnchor, origin
 export default [
   FieldSchema.strict('item'),
   AnchorLayouts.schema(),
+  FieldSchema.defaulted('overrides', { }),
   Fields.output('placement', placement)
 ];
