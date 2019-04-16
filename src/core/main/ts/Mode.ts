@@ -4,6 +4,11 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
+/**
+ * TinyMCE 5 Mode API.
+ *
+ * @class tinymce.editor.mode
+ */
 
 import { Element, Class } from '@ephox/sugar';
 import Editor from './api/Editor';
@@ -12,8 +17,19 @@ import { Obj, Fun } from '@ephox/katamari';
 import { console } from '@ephox/dom-globals';
 
 export interface ModeApi {
+  /**
+   * Function called during a mode switch, before deactivating the previous mode
+   */
   activate: () => void
+
+  /**
+   * Function called during a mode switch, after activating the new mode
+   */
   deactivate: () => void
+
+  /**
+   * Flags whether the editor should be made readonly while this mode is active
+   */
   editorReadOnly: boolean
 }
 
@@ -98,21 +114,21 @@ export const create = (editor: Editor) => {
 
   const isReadOnly = () => editor.readonly === true;
 
-  const register = (mode: string, options: ModeApi) => {
+  const register = (mode: string, api: ModeApi) => {
     if (defaultModes.indexOf(mode) > -1) throw new Error('Cannot override default mode ' + mode);
-    activeMode[mode] = {
-      ...options,
+    availableModes[mode] = {
+      ...api,
       // wrap custom APIs so they can't break the editor
       activate: () => {
         try {
-          options.activate();
+          api.activate();
         } catch (e) {
           console.error('problem while activating custom editor mode', e);
         }
       },
       deactivate: () => {
         try {
-          options.deactivate();
+          api.deactivate();
         } catch (e) {
           console.error('problem while deactivating custom editor mode', e);
         }

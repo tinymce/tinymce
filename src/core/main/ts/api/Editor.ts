@@ -20,7 +20,7 @@ import { getEditorSettings, getParam, ParamTypeMap } from '../EditorSettings';
 import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import EditorFocus from '../focus/EditorFocus';
 import Render from '../init/Render';
-import { create } from '../Mode';
+import { create, ModeApi } from '../Mode';
 import AddOnManager from './AddOnManager';
 import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';
@@ -73,7 +73,7 @@ export interface Ui {
 export interface Mode {
   set: (mode: string) => void;
   get: () => string;
-  register: (mode: string, options: Record<string, any>) => void;
+  register: (mode: string, api: ModeApi) => void;
 }
 
 export interface EditorConstructor {
