@@ -28,7 +28,6 @@ import { TieredData } from '../../ui/types/TieredMenuTypes';
 import { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
 import * as TypeaheadEvents from './TypeaheadEvents';
-import { console } from '@ephox/dom-globals';
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 
 interface ItemExecuteEvent extends CustomEvent {

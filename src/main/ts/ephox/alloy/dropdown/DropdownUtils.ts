@@ -1,5 +1,5 @@
 import { Fun, Future, Merger, Option, Result } from '@ephox/katamari';
-import { Width, Element, Css, Traverse, Attr } from '@ephox/sugar';
+import { Width, Element, Css } from '@ephox/sugar';
 
 import * as ComponentStructure from '../alien/ComponentStructure';
 import * as Behaviour from '../api/behaviour/Behaviour';
@@ -149,20 +149,16 @@ const getSink = (anyInSystem: AlloyComponent, sinkDetail: SinkDetail): () => Ret
 const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyComponent, extras) => {
   const ariaOwner = AriaOwner.manager();
 
-  const hotspotParentElement = Traverse.parent(hotspot.element()).getOr(hotspot.element());
-
   const onOpen = (component, menu) => {
     const anchor = getAnchor(detail, hotspot);
-    ariaOwner.link(hotspotParentElement);
-    Attr.set(hotspot.element(), 'aria-controls', ariaOwner.id());
+    ariaOwner.link(hotspot.element());
     if (detail.matchWidth) { matchWidth(anchor.hotspot, menu, detail.useMinWidth); }
     detail.onOpen(anchor, component, menu);
     if (extras !== undefined && extras.onOpen !== undefined) { extras.onOpen(component, menu); }
   };
 
   const onClose = (component, menu) => {
-    ariaOwner.unlink(hotspotParentElement);
-    Attr.remove(hotspot.element(), 'aria-controls');
+    ariaOwner.unlink(hotspot.element());
     if (extras !== undefined && extras.onClose !== undefined) { extras.onClose(component, menu); }
   };
 
