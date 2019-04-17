@@ -13,7 +13,7 @@
 
 @status-invalid-color: @color-error;
 @status-unknown-color: orange;
-@status-valid-color: transparent; // Valid state is invisible by default
+@status-valid-color: green; // Valid state is invisible by default
 
 .tox {
   .tox-control-wrap {
@@ -31,11 +31,13 @@
     svg {
       display: block;
     }
+  }
 
-    // Add padding to textfield.
-    .tox-textfield {
-      padding-right: @control-wrap-padding-for-icon;
-    }
+  // Add padding to textfield when displaying the icons
+  .tox-control-wrap--status-invalid .tox-textfield,
+  .tox-control-wrap--status-unknown .tox-textfield,
+  .tox-control-wrap--status-valid .tox-textfield, {
+    padding-right: @control-wrap-padding-for-icon;
   }
 
   // Position status component
