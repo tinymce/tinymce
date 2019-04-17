@@ -53,7 +53,6 @@ export const create = (editor: Editor) => {
   let activeMode = 'design';
   const defaultModes = ['design', 'readonly'];
 
-  // TODO: remember what I was going to TODO here
   const availableModes: Record<string, ModeApi> = {
     design: {
       activate: Fun.noop,
