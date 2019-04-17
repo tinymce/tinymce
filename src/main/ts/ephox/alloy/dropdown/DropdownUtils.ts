@@ -1,8 +1,7 @@
-import { Fun, Future, Merger, Option, Result } from '@ephox/katamari';
+import { Fun, Future, Option, Result } from '@ephox/katamari';
 import { Width, Element, Css } from '@ephox/sugar';
 
 import * as ComponentStructure from '../alien/ComponentStructure';
-import * as Behaviour from '../api/behaviour/Behaviour';
 import { Composing } from '../api/behaviour/Composing';
 import { Coupling } from '../api/behaviour/Coupling';
 import { Focusing } from '../api/behaviour/Focusing';

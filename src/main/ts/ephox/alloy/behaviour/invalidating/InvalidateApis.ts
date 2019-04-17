@@ -1,7 +1,6 @@
 import { Future, Result, Arr } from '@ephox/katamari';
-import { Body, Class, Html, Attr, Node } from '@ephox/sugar';
+import { Class, Html, Attr, Node } from '@ephox/sugar';
 
-import * as AriaVoice from '../../alien/AriaVoice';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { InvalidatingConfig } from '../../behaviour/invalidating/InvalidateTypes';
 import { Stateless } from '../../behaviour/common/BehaviourState';

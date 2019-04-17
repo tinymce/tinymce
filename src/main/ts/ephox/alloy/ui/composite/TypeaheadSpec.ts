@@ -1,9 +1,8 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Fun, Merger, Obj, Option } from '@ephox/katamari';
-import { Focus, Value, Traverse } from '@ephox/sugar';
+import { Arr, Fun, Obj, Option } from '@ephox/katamari';
+import { Focus, Value } from '@ephox/sugar';
 
 import { SugarEvent } from '../../alien/TypeDefinitions';
-import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Composing } from '../../api/behaviour/Composing';
 import { Coupling } from '../../api/behaviour/Coupling';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -21,7 +20,7 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { DatasetRepresentingState } from '../../behaviour/representing/RepresentState';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
-import { SimulatedEvent, EventFormat, CustomEvent } from '../../events/SimulatedEvent';
+import { SimulatedEvent, CustomEvent } from '../../events/SimulatedEvent';
 import { setCursorAtEnd, setValueFromItem } from '../../ui/typeahead/TypeaheadModel';
 import { NormalItemSpec } from '../../ui/types/ItemTypes';
 import { TieredData } from '../../ui/types/TieredMenuTypes';
