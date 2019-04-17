@@ -22,14 +22,14 @@ export interface ModeApi {
    *
    * @method activate
    */
-  activate: () => void
+  activate: () => void;
 
   /**
    * Handler to deactivate this mode, called after activating the new mode
    *
    * @method deactivate
    */
-  deactivate: () => void
+  deactivate: () => void;
 
   /**
    * Flags whether the editor should be made readonly while this mode is active
@@ -37,7 +37,7 @@ export interface ModeApi {
    * @property editorReadOnly
    * @type boolean
    */
-  editorReadOnly: boolean
+  editorReadOnly: boolean;
 }
 
 // Not quite sugar Class.toggle, it's more of a Class.set
@@ -106,14 +106,18 @@ export const create = (editor: Editor) => {
       return;
     }
     oldMode.deactivate();
-    if (oldMode.editorReadOnly !== newMode.editorReadOnly) toggleReadOnly(newMode.editorReadOnly);
+    if (oldMode.editorReadOnly !== newMode.editorReadOnly) {
+      toggleReadOnly(newMode.editorReadOnly);
+    }
     activeMode = mode;
     Events.fireSwitchMode(editor, mode);
-  }
+  };
 
-  const setMode = (mode: string) => {
-    if (mode === activeMode || !Obj.has(availableModes, mode)) {
+  const set = (mode: string) => {
+    if (mode === activeMode) {
       return;
+    } else if (!Obj.has(availableModes, mode)) {
+      throw new Error(`Editor mode '${mode}' is invalid`);
     }
 
     if (editor.initialized) {
@@ -123,12 +127,14 @@ export const create = (editor: Editor) => {
     }
   };
 
-  const getMode = () => activeMode;
+  const get = () => activeMode;
 
   const isReadOnly = () => editor.readonly === true;
 
   const register = (mode: string, api: ModeApi) => {
-    if (defaultModes.indexOf(mode) > -1) throw new Error('Cannot override default mode ' + mode);
+    if (defaultModes.indexOf(mode) > -1) {
+      throw new Error('Cannot override default mode ' + mode);
+    }
     availableModes[mode] = {
       ...api,
       deactivate: () => {
@@ -143,13 +149,10 @@ export const create = (editor: Editor) => {
     };
   };
 
-
   return {
-    setMode,
-    getMode,
     isReadOnly,
-    set: setMode,
-    get: getMode,
+    set,
+    get,
     register
   };
 };

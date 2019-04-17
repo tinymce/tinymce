@@ -22,20 +22,20 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
           activate: Fun.noop,
           deactivate: Fun.noop,
           editorReadOnly: false
-        })
+        });
         die('registering a new design mode should fail');
       } catch (e) {
-        //pass
+        // pass
       }
       try {
         editor.mode.register('readonly', {
           activate: Fun.noop,
           deactivate: Fun.noop,
           editorReadOnly: false
-        })
+        });
         die('registering a new readonly mode should fail');
       } catch (e) {
-        //pass
+        // pass
       }
       next();
     }));

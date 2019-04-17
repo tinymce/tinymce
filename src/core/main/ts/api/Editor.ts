@@ -71,8 +71,26 @@ export interface Ui {
 }
 
 export interface Mode {
+  /**
+   * Sets the editor mode. Mode can be for example "design", "code" or "readonly".
+   *
+   * @method set
+   * @param {String} mode Mode to set the editor in.
+   */
   set: (mode: string) => void;
+
+  /**
+   * @method get
+   * @return {String} The active editor mode.
+   */
   get: () => string;
+
+  /**
+   * Registers a new editor mode.
+   *
+   * @method register
+   * @param {ModeApi} api Activation and Deactivation API for the new mode.
+   */
   register: (mode: string, api: ModeApi) => void;
 }
 
@@ -187,6 +205,12 @@ class Editor implements EditorObservable {
    * @type tinymce.Editor.mode
    */
   public mode: Mode;
+
+  /**
+   *
+   * @deprecated now an alias for editor.mode.set()
+   */
+  public setMode: (mode: string) => void;
 
   /**
    * Dom query instance with default scope to the editor document and default element is the body of the editor.
@@ -320,7 +344,7 @@ class Editor implements EditorObservable {
     const self = this;
     const modeInstance = create(self);
     this.mode = modeInstance;
-    this.setMode = modeInstance.setMode;
+    this.setMode = modeInstance.set;
 
     // Call setup
     editorManager.fire('SetupEditor', { editor: this });
@@ -893,14 +917,6 @@ class Editor implements EditorObservable {
       this.fire('dirty');
     }
   }
-
-  /**
-   * Sets the editor mode. Mode can be for example "design", "code" or "readonly".
-   *
-   * @method setMode
-   * @param {String} mode Mode to set the editor in.
-   */
-  public setMode: (mode: string) => void
 
   /**
    * Returns the editors container element. The container element wrappes in
