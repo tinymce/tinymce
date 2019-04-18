@@ -80,7 +80,7 @@ const getInitialData = (info: LinkDialogInfo, defaultTarget): LinkDialogData => 
   anchor: info.anchor.url.getOr(''),
   link: info.anchor.url.getOr(''),
   rel: info.anchor.rel.getOr(''),
-  target: info.anchor.target.getOr(defaultTarget.getOr('')),
+  target: info.anchor.target.or(defaultTarget).getOr(''),
   linkClass: info.anchor.linkClass.getOr('')
 });
 
