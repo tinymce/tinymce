@@ -20,7 +20,7 @@ import { getEditorSettings, getParam, ParamTypeMap } from '../EditorSettings';
 import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import EditorFocus from '../focus/EditorFocus';
 import Render from '../init/Render';
-import { create, ModeApi } from '../Mode';
+import { create, Mode } from '../Mode';
 import AddOnManager from './AddOnManager';
 import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';
@@ -68,30 +68,6 @@ import { Plugin } from './PluginManager';
 
 export interface Ui {
   registry: Registry.Registry;
-}
-
-export interface Mode {
-  /**
-   * Sets the editor mode. Mode can be for example "design", "code" or "readonly".
-   *
-   * @method set
-   * @param {String} mode Mode to set the editor in.
-   */
-  set: (mode: string) => void;
-
-  /**
-   * @method get
-   * @return {String} The active editor mode.
-   */
-  get: () => string;
-
-  /**
-   * Registers a new editor mode.
-   *
-   * @method register
-   * @param {ModeApi} api Activation and Deactivation API for the new mode.
-   */
-  register: (mode: string, api: ModeApi) => void;
 }
 
 export interface EditorConstructor {

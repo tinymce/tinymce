@@ -1,10 +1,10 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { TinyLoader } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/silver/Theme';
+import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Arr, Fun } from '@ephox/katamari';
+import { TinyLoader } from '@ephox/mcagar';
+import { Class, Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import {  Class, Element } from '@ephox/sugar';
-import { Fun } from '@ephox/katamari';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
   Theme();
@@ -17,6 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
 
   TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {
     const sOverrideDefaultMode = Step.label('validate default modes cannot be overwritten', Step.async((next, die) => {
+      // TODO: once `assert.throws` supports error objects simplify this
       try {
         editor.mode.register('design', {
           activate: Fun.noop,
@@ -24,6 +25,7 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
           editorReadOnly: false
         });
         die('registering a new design mode should fail');
+        return;
       } catch (e) {
         // pass
       }
@@ -34,6 +36,7 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
           editorReadOnly: false
         });
         die('registering a new readonly mode should fail');
+        return;
       } catch (e) {
         // pass
       }
@@ -76,11 +79,12 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
       }));
     };
 
-    Pipeline.async({}, [
-      Logger.t('Should toggle readonly on/off and have a readonly class', GeneralSteps.sequence([
+    Pipeline.async({}, Arr.flatten([
+      [
         sOverrideDefaultMode,
         sRegisterTestModes,
-        // default API
+      ],
+      Logger.ts('test default API', [
         sAssertMode('readonly'),
         sAssertBodyClass(editor, 'mce-content-readonly', true),
         sSetMode('design'),
@@ -89,30 +93,30 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
         sSetMode('readonly'),
         sAssertMode('readonly'),
         sAssertBodyClass(editor, 'mce-content-readonly', true),
-
-        // custom modes (aliases of design and readonly)
+      ]),
+      Logger.ts('test custom modes (aliases of design and readonly)', [
         sSetMode('customDesign'),
         sAssertMode('customDesign'),
         sAssertBodyClass(editor, 'mce-content-readonly', false),
         sSetMode('customReadonly'),
         sAssertMode('customReadonly'),
         sAssertBodyClass(editor, 'mce-content-readonly', true),
-
-        // failing to activate a readonly-like mode leaves the editor in design
+      ]),
+      Logger.ts('test failing to activate a readonly-like mode leaves the editor in design', [
         sSetMode('design'),
         sSetMode('failingActivateReadonly'),
         sAssertMode('design'),
         sAssertBodyClass(editor, 'mce-content-readonly', false),
-
-        // failing to deactivate a design-like mode still switches to readonly
+      ]),
+      Logger.ts('test failing to deactivate a design-like mode still switches to readonly', [
         sSetMode('failingDeactivateDesign'),
         sSetMode('readonly'),
         sAssertMode('readonly'),
         sAssertBodyClass(editor, 'mce-content-readonly', true),
-      ]))
-    ], onSuccess, onFailure);
+      ])
+    ]), onSuccess, onFailure);
   }, {
-    base_url: '/project/tinymce/js/tinymce',
-    readonly: true
-  }, success, failure);
+      base_url: '/project/tinymce/js/tinymce',
+      readonly: true
+    }, success, failure);
 });

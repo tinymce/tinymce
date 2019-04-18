@@ -13,26 +13,57 @@
 import { Element, Class } from '@ephox/sugar';
 import Editor from './api/Editor';
 import Events from './api/Events';
-import { Obj, Fun } from '@ephox/katamari';
+import { Obj, Fun, Arr } from '@ephox/katamari';
 import { console } from '@ephox/dom-globals';
+
+
+export interface Mode {
+  /**
+   * @method isReadOnly
+   * @return {Boolean} true if the editor is in a readonly state.
+   */
+  isReadOnly: () => boolean
+
+  /**
+   * Sets the editor mode. Mode can be for example "design", "code" or "readonly".
+   *
+   * @method set
+   * @param {String} mode Mode to set the editor in.
+   */
+  set: (mode: string) => void;
+
+  /**
+   * @method get
+   * @return {String} The active editor mode.
+   */
+  get: () => string;
+
+  /**
+   * Registers a new editor mode.
+   *
+   * @method register
+   * @param {ModeApi} api Activation and Deactivation API for the new mode.
+   */
+  register: (mode: string, api: ModeApi) => void;
+}
 
 export interface ModeApi {
   /**
-   * Handler to activate this mode, called before deactivating the previous mode
+   * Handler to activate this mode, called before deactivating the previous mode.
    *
    * @method activate
    */
   activate: () => void;
 
   /**
-   * Handler to deactivate this mode, called after activating the new mode
+   * Handler to deactivate this mode, called after activating the new mode.
    *
    * @method deactivate
    */
   deactivate: () => void;
 
   /**
-   * Flags whether the editor should be made readonly while this mode is active
+   * Flags whether the editor should be made readonly while this mode is active.
    *
    * @property editorReadOnly
    * @type boolean
@@ -49,7 +80,7 @@ const toggleClass = (elm, cls, state: boolean) => {
   }
 };
 
-export const create = (editor: Editor) => {
+export const create = (editor: Editor): Mode => {
   let activeMode = 'design';
   const defaultModes = ['design', 'readonly'];
 
@@ -100,8 +131,7 @@ export const create = (editor: Editor) => {
     try {
       newMode.activate();
     } catch (e) {
-      console.error(`problem while activating editor mode ${mode}:`);
-      console.error(e);
+      console.error(`problem while activating editor mode ${mode}:`, e);
       return;
     }
     oldMode.deactivate();
@@ -131,8 +161,8 @@ export const create = (editor: Editor) => {
   const isReadOnly = () => editor.readonly === true;
 
   const register = (mode: string, api: ModeApi) => {
-    if (defaultModes.indexOf(mode) > -1) {
-      throw new Error('Cannot override default mode ' + mode);
+    if (Arr.contains(defaultModes, mode)) {
+      throw new Error(`Cannot override default mode ${mode}`);
     }
     availableModes[mode] = {
       ...api,
