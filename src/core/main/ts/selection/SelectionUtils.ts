@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Range } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { Compare, Element, Node, Traverse } from '@ephox/sugar';
 import NodeType from '../dom/NodeType';
 import Env from '../api/Env';
 import TreeWalker from '../api/dom/TreeWalker';
 import Tools from '../api/util/Tools';
-import { Editor } from 'tinymce/core/api/Editor';
-import { Range } from '@ephox/dom-globals';
+import Editor from '../api/Editor';
 
 const getStartNode = function (rng) {
   const sc = rng.startContainer, so = rng.startOffset;

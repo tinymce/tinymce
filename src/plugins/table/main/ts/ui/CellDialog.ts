@@ -7,7 +7,7 @@
 
 import { HTMLTableCellElement, Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Styles from '../actions/Styles';
 import * as Util from '../alien/Util';

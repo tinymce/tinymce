@@ -911,6 +911,6 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteTest', (success, failur
     },
     content_style: '.mce-content-body { line-height: normal; }', // Breaks tests in phantomjs unless we have this
     theme: 'silver',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

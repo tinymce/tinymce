@@ -23,7 +23,7 @@ UnitTest.asynctest(
         }))
       ], onSuccess, onFailure);
     }, {
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       iframe_attrs: {
         'id': 'x',
         'data-custom1': 'a',

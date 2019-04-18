@@ -2,7 +2,7 @@ import { Pipeline, Step, RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyLoader } from '@ephox/mcagar';
 import { Node } from '@ephox/dom-globals';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 import Plugin from 'tinymce/plugins/wordcount/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -34,6 +34,6 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, fai
   }, {
     plugins: 'wordcount',
     theme: 'silver',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

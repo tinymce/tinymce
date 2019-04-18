@@ -21,15 +21,16 @@ import {
   Tabstopping,
   AlloyComponent,
 } from '@ephox/alloy';
-import { FieldSchema } from '@ephox/boulder';
+import { Toolbar } from '@ephox/bridge';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Fun, Option, Result } from '@ephox/katamari';
 import { Compare, SelectorFind } from '@ephox/sugar';
 import { TranslatedString } from 'tinymce/core/api/util/I18n';
 
 import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
 import { MenuButtonClasses } from '../../toolbar/button/ButtonClasses';
+import { renderMenuButton } from '../../toolbar/button/ToolbarButtons';
 import { SingleMenuItemApi } from '../menu/SingleMenu';
-import { renderMenuButton } from './Integration';
 
 export interface SilverMenubarSpec extends Sketcher.SingleSketchSpec {
   dom: RawDomSchema;
@@ -61,20 +62,18 @@ export interface MenubarItemSpec {
 const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubarSpec> = function (detail, spec) {
   const setMenus = (comp: AlloyComponent, menus: MenubarItemSpec[]) => {
     const newMenus = Arr.map(menus, (m) => {
-      // FIX: this. Make it go through bridge.
       const buttonSpec = {
-
-        // TODO: backstage me
-        text: Option.some(m.text),
-        icon: Option.none(),
-        tooltip: Option.none(),
+        type: 'menubutton',
+        text: m.text,
         fetch: (callback) => {
           callback(m.getItems());
         }
       };
 
-      // FIX: any reference
-      return renderMenuButton(buttonSpec as any,
+      // Convert to an internal bridge spec
+      const internal = Toolbar.createMenuButton(buttonSpec).mapError((errInfo) => ValueSchema.formatError(errInfo)).getOrDie();
+
+      return renderMenuButton(internal,
         MenuButtonClasses.Button,
         {
           getSink: detail.getSink,

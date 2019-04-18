@@ -7,11 +7,23 @@
 
 import DOMUtils from '../dom/DOMUtils';
 
-export default {
+export interface JSONPSettings {
+  count?: number;
+  url: string;
+  callback (json: string): void;
+}
+
+interface JSONP {
+  callbacks: {};
+  count: number;
+  send (settings: JSONPSettings): void;
+}
+
+const JSONP = {
   callbacks: {},
   count: 0,
 
-  send (settings) {
+  send (settings: JSONPSettings) {
     const self = this, dom = DOMUtils.DOM, count = settings.count !== undefined ? settings.count : self.count;
     const id = 'tinymce_jsonp_' + count;
 
@@ -31,3 +43,5 @@ export default {
     self.count++;
   }
 };
+
+export default JSONP;

@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyLoader } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { IconManager } from 'tinymce/core/api/IconManager';
+import IconManager from 'tinymce/core/api/IconManager';
 
 UnitTest.asynctest('browser.tinymce.core.init.InitEditorIconTest', (success, failure) => {
 
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorIconTest', (success, fai
     ], onSuccess, onFailure);
   }, {
     icons: 'custom',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     setup: (editor) => {
       editor.ui.registry.addIcon('custom-icon', 'override-icon');
     }

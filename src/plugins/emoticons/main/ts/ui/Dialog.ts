@@ -10,7 +10,7 @@ import { Arr, Cell, Throttler, Option } from '@ephox/katamari';
 import { ALL_CATEGORY, EmojiDatabase } from '../core/EmojiDatabase';
 import { emojisFrom } from '../core/Lookup';
 import { insertEmoticon } from '../core/Actions';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Types } from '@ephox/bridge';
 
 const patternName = 'pattern';

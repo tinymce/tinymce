@@ -115,6 +115,6 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ProcessFiltersTest', (success,
     add_unload_trigger: false,
     indent: false,
     plugins: 'paste',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

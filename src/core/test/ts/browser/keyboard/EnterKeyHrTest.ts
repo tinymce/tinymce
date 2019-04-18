@@ -70,6 +70,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyHrTest', function () {
     plugins: '',
     toolbar: '',
     indent: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

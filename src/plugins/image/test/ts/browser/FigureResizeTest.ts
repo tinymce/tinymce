@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
         indent: false,
         image_caption: true,
         height: 400,
-        base_url: '/project/js/tinymce'
+        base_url: '/project/tinymce/js/tinymce'
       }),
       UiChains.cClickOnToolbar('click image button', 'button[aria-label="Insert/edit image"]'),
 

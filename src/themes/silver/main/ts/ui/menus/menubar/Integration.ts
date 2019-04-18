@@ -5,15 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { SketchSpec } from '@ephox/alloy';
-import { Toolbar } from '@ephox/bridge';
-import { Arr, Merger, Obj, Option } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
-import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import { Arr, Merger, Obj } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 import { getRemovedMenuItems } from '../../../api/Settings';
-import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
-import ItemResponse from '../item/ItemResponse';
-import * as NestedMenus from '../menu/NestedMenus';
 import { MenubarItemSpec } from './SilverMenubar';
 
 export interface MenuRegistry {
@@ -33,31 +27,6 @@ const defaultMenus = {
   tools: { title: 'Tools', items: 'spellchecker spellcheckerlanguage | a11ycheck code wordcount' },
   table: { title: 'Table', items: 'inserttable tableprops deletetable row column cell' }, // TODO
   help: { title: 'Help', items: 'help' }
-};
-
-export const renderMenuButton = (spec: Toolbar.ToolbarMenuButton, prefix: string, sharedBackstage: UiFactoryBackstageShared, role: Option<string>): SketchSpec => {
-
-  return renderCommonDropdown({
-    text: spec.text,
-    icon: spec.icon,
-    tooltip: spec.tooltip,
-     // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
-    role,
-    fetch: (callback) => {
-      spec.fetch((items) => {
-        callback(
-          NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, sharedBackstage.providers)
-        );
-      });
-    },
-    onAttach: () => { },
-    onDetach: () => { },
-    columns: 1,
-    presets: 'normal',
-    classes: []
-  },
-  prefix,
-  sharedBackstage);
 };
 
 const make = (menu: {title: string, items: string[]}, registry: MenuRegistry, editor): MenubarItemSpec => {

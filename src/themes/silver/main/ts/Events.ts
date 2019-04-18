@@ -9,7 +9,7 @@ import { Channels, Attachment, SystemEvents } from '@ephox/alloy';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { DomEvent, Element } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const setup = (editor: Editor, mothership, uiMothership) => {
   const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', function (evt) {

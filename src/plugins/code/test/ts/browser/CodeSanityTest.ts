@@ -5,7 +5,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import CodePlugin from 'tinymce/plugins/code/Plugin';
 import 'tinymce/themes/silver/Theme';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, failure) => {
 
@@ -67,6 +67,6 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, fail
     plugins: 'code',
     theme: 'silver',
     toolbar: 'code',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

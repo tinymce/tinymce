@@ -1,7 +1,8 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
+import { Element } from '@ephox/dom-globals';
 import { Arr, Obj } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import { Element as SugarElement } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 const sAnnotate = (editor: Editor, name: string, uid: string, data: { }) => Step.sync(() => {
   editor.annotator.annotate(name, {
@@ -21,7 +22,7 @@ const sAssertHtmlContent = (tinyApis, children: string[]) => {
   );
 };
 
-const assertMarker = (editor: Editor, expected, nodes: any[]) => {
+const assertMarker = (editor: Editor, expected, nodes: Element[]) => {
   const { uid, name } = expected;
   Arr.each(nodes, (node) => {
     Assertions.assertEq('Wrapper must be in content', true, editor.getBody().contains(node));
@@ -35,7 +36,7 @@ const assertMarker = (editor: Editor, expected, nodes: any[]) => {
           }
         });
       }),
-      Element.fromDom(node)
+      SugarElement.fromDom(node)
     );
   });
 };
@@ -48,9 +49,7 @@ const sAssertGetAll = (editor: Editor, expected: Record<string, number>, name: s
   Assertions.assertEq('Checking keys of getAll response', expectedKeys, sortedKeys);
   Obj.each(annotations, (markers, uid) => {
     Assertions.assertEq('Checking number of markers for uid', expected[uid], markers.length);
-    Arr.each(markers, (marker) => {
-      assertMarker(editor, { uid, name }, marker);
-    });
+    assertMarker(editor, { uid, name }, markers);
   });
 });
 

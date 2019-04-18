@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Obj, Arr } from '@ephox/katamari';
 
 const patchPipeConfig = (config) => typeof config === 'string' ? config.split(/[ ,]/) : config;
@@ -22,7 +22,7 @@ const getMenuItems = (editor: Editor, name: string, defaultItems: string) => {
 };
 
 const getContextMenu = function (editor: Editor): string[] {
-  return getMenuItems(editor, 'contextmenu', 'link image imagetools table spellchecker configurepermanentpen');
+  return getMenuItems(editor, 'contextmenu', 'link linkchecker image imagetools table spellchecker configurepermanentpen');
 };
 
 export default {

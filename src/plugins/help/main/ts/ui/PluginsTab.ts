@@ -6,7 +6,7 @@
  */
 
 import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import PluginUrls from '../data/PluginUrls';
 import { Types } from '@ephox/bridge';
@@ -22,6 +22,8 @@ const tab = (editor: Editor) => {
       // TODO: Add other premium plugins such as permanent pen when they are included in the website
       'Accessibility Checker',
       'Advanced Code Editor',
+      'Case Change',
+      'Checklist',
       'Tiny Comments',
       'Tiny Drive',
       'Enhanced Media Embed',
@@ -29,6 +31,8 @@ const tab = (editor: Editor) => {
       'Link Checker',
       'Mentions',
       'MoxieManager',
+      'Page Embed',
+      'Permanent Pen',
       'PowerPaste',
       'Spell Checker Pro'
     ];

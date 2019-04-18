@@ -8,7 +8,7 @@
 import { Toolbar } from '@ephox/bridge';
 import { HTMLAnchorElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 import Actions from '../core/Actions';
 import Utils from '../core/Utils';

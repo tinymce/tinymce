@@ -11,7 +11,7 @@ import EventProcessRanges from './EventProcessRanges';
 import FragmentReader from './FragmentReader';
 import MultiRange from './MultiRange';
 import Zwsp from '../text/Zwsp';
-import { Editor } from '../api/Editor';
+import Editor from '../api/Editor';
 
 const getTextContent = (editor: Editor): string => {
   return Option.from(editor.selection.getRng()).map((rng) => {

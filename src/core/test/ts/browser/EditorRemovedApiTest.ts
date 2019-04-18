@@ -105,7 +105,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function () {
       ]))
     ], onSuccess, onFailure);
   }, {
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     test_callback () {
     }
   }, success, failure);

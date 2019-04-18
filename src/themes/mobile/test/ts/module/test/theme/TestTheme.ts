@@ -75,7 +75,7 @@ const setup = function (info, onSuccess, onFailure) {
         f(realm, apis, toolbar, socket, buttons, onS, onF);
       }, {
         theme: name,
-        base_url: '/project/js/tinymce'
+        base_url: '/project/tinymce/js/tinymce'
       }, onSuccess, onFailure);
     }
   };

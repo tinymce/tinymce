@@ -4,7 +4,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Element, Body, Attr, Traverse, Class } from '@ephox/sugar';
 
 import Theme from '../../../../../silver/main/ts/Theme';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Result } from '@ephox/katamari';
 
 UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
@@ -26,7 +26,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
     {
       theme: 'silver',
       menubar: true,
-      base_url: '/project/js/tinymce'
+      base_url: '/project/tinymce/js/tinymce'
     },
     () => {
       success();

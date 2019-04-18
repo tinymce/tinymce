@@ -8,18 +8,19 @@
 import { Element, Selectors } from '@ephox/sugar';
 import Settings from '../api/Settings';
 import NewLineUtils from './NewLineUtils';
+import Editor from '../api/Editor';
 
-const matchesSelector = function (editor, selector) {
+const matchesSelector = function (editor: Editor, selector: string) {
   return NewLineUtils.getParentBlock(editor).filter(function (parentBlock) {
     return selector.length > 0 && Selectors.is(Element.fromDom(parentBlock), selector);
   }).isSome();
 };
 
-const shouldInsertBr = function (editor) {
+const shouldInsertBr = function (editor: Editor) {
   return matchesSelector(editor, Settings.getBrNewLineSelector(editor));
 };
 
-const shouldBlockNewLine = function (editor) {
+const shouldBlockNewLine = function (editor: Editor) {
   return matchesSelector(editor, Settings.getNoNewLineSelector(editor));
 };
 

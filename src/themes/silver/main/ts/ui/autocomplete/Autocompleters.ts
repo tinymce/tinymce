@@ -8,7 +8,7 @@
 import { ValueSchema } from '@ephox/boulder';
 import { InlineContent } from '@ephox/bridge';
 import { Obj, Arr, Unique } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 export interface AutocompleterDatabase {
   dataset: Record<string, InlineContent.Autocompleter>;

@@ -93,7 +93,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
   suite.test('TestCase-TBA: Charmap: Insert character', function (editor) {
     let lastEvt;
 
-    editor.on('insertCustomChar', function (e) {
+    editor.on('InsertCustomChar', function (e) {
       lastEvt = e;
     });
 
@@ -107,6 +107,6 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
     theme: 'silver',
     plugins: 'charmap',
     indent: false,
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

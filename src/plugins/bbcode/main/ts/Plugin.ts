@@ -11,11 +11,11 @@ import Convert from './core/Convert';
 PluginManager.add('bbcode', function () {
   return {
     init (editor) {
-      editor.on('beforeSetContent', function (e) {
+      editor.on('BeforeSetContent', function (e) {
         e.content = Convert.bbcode2html(e.content);
       });
 
-      editor.on('postProcess', function (e) {
+      editor.on('PostProcess', function (e) {
         if (e.set) {
           e.content = Convert.bbcode2html(e.content);
         }

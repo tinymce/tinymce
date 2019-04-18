@@ -2,7 +2,7 @@ import { GeneralSteps, Keys, Logger, Pipeline, Assertions, Step } from '@ephox/a
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysContentEndpointBrModeTest', (success, failure) => {
     Theme();
@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysContentEndpointBrMode
     }, {
       forced_root_block: false,
       add_unload_trigger: false,
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       indent: false
     }, success, failure);
   }

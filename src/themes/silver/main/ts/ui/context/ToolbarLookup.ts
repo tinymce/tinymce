@@ -8,7 +8,7 @@
 import { Toolbar } from '@ephox/bridge';
 import { Option, Options } from '@ephox/katamari';
 import { Element, TransformFind } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 import { ScopedToolbars } from './ToolbarScopes';
 

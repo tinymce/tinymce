@@ -12,9 +12,9 @@ import * as CefDeleteAction from './CefDeleteAction';
 import DeleteElement from './DeleteElement';
 import DeleteUtils from './DeleteUtils';
 import NodeType from '../dom/NodeType';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from '../api/Editor';
 
-const deleteElement = function (editor, forward) {
+const deleteElement = function (editor: Editor, forward) {
   return function (element) {
     editor._selectionOverrides.hideFakeCaret();
     DeleteElement.deleteElement(editor, forward, Element.fromDom(element));
@@ -22,7 +22,7 @@ const deleteElement = function (editor, forward) {
   };
 };
 
-const moveToElement = function (editor, forward) {
+const moveToElement = function (editor: Editor, forward) {
   return function (element) {
     const pos = forward ? CaretPosition.before(element) : CaretPosition.after(element);
     editor.selection.setRng(pos.toRange());
@@ -30,14 +30,14 @@ const moveToElement = function (editor, forward) {
   };
 };
 
-const moveToPosition = function (editor) {
+const moveToPosition = function (editor: Editor) {
   return function (pos) {
     editor.selection.setRng(pos.toRange());
     return true;
   };
 };
 
-const backspaceDeleteCaret = function (editor, forward) {
+const backspaceDeleteCaret = function (editor: Editor, forward: boolean) {
   const result = CefDeleteAction.read(editor.getBody(), forward, editor.selection.getRng()).map(function (deleteAction) {
     return deleteAction.fold(
       deleteElement(editor, forward),
@@ -53,7 +53,7 @@ const deleteOffscreenSelection = function (rootElement) {
   Arr.each(SelectorFilter.descendants(rootElement, '.mce-offscreen-selection'), Remove.remove);
 };
 
-const backspaceDeleteRange = function (editor, forward) {
+const backspaceDeleteRange = function (editor: Editor, forward: boolean) {
   const selectedElement = editor.selection.getNode();
   if (NodeType.isContentEditableFalse(selectedElement)) {
     deleteOffscreenSelection(Element.fromDom(editor.getBody()));

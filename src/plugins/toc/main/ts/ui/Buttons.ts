@@ -7,7 +7,7 @@
 
 import Settings from '../api/Settings';
 import Toc from '../core/Toc';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from '@ephox/bridge';
 
 const toggleState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi) => {

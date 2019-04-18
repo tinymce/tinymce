@@ -61,6 +61,6 @@ UnitTest.asynctest('browser.tinymce.plugins.link.UrlInputTest', (success, failur
   }, {
     plugins: 'link',
     toolbar: 'link',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

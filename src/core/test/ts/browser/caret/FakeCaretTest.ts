@@ -11,9 +11,7 @@ import { Element } from '@ephox/sugar';
 import { isFakeCaretTableBrowser } from 'tinymce/core/keyboard/TableNavigation';
 import { Fun } from '@ephox/katamari';
 
-UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 

@@ -9,6 +9,7 @@ import Bookmarks from '../bookmark/Bookmarks';
 import TreeWalker from '../api/dom/TreeWalker';
 import FormatUtils from './FormatUtils';
 import * as RangeNodes from '../selection/RangeNodes';
+import Editor from '../api/Editor';
 
 const isBookmarkNode = Bookmarks.isBookmarkNode;
 const getParents = FormatUtils.getParents, isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode, isTextBlock = FormatUtils.isTextBlock;
@@ -100,7 +101,7 @@ const findSpace = function (start, remove, node, offset?) {
 };
 
 const findWordEndPoint = function (dom, body, container, offset, start, remove) {
-  let walker, node, pos, lastTextNode;
+  let node, pos, lastTextNode;
 
   if (container.nodeType === 3) {
     pos = findSpace(start, remove, container, offset);
@@ -113,7 +114,7 @@ const findWordEndPoint = function (dom, body, container, offset, start, remove) 
   }
 
   // Walk the nodes inside the block
-  walker = new TreeWalker(container, dom.getParent(container, dom.isBlock) || body);
+  const walker = new TreeWalker(container, dom.getParent(container, dom.isBlock) || body);
   while ((node = walker[start ? 'prev' : 'next']())) {
     if (node.nodeType === 3 && !isBookmarkNode(node.parentNode)) {
       lastTextNode = node;
@@ -164,7 +165,7 @@ const findSelectorEndPoint = function (dom, format, rng, container, siblingName)
   return container;
 };
 
-const findBlockEndPoint = function (editor, format, container, siblingName) {
+const findBlockEndPoint = function (editor: Editor, format, container, siblingName) {
   let node;
   const dom = editor.dom;
   const root = dom.getRoot();
@@ -247,7 +248,7 @@ const findParentContainer = function (dom, format, startContainer, startOffset, 
   return container;
 };
 
-const expandRng = function (editor, rng, format, remove?) {
+const expandRng = function (editor: Editor, rng, format, remove?) {
   let endPoint,
     startContainer = rng.startContainer,
     startOffset = rng.startOffset,

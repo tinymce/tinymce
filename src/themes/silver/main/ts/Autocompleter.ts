@@ -23,7 +23,7 @@ import {
   FocusMode,
 } from './ui/menus/menu/SingleMenu';
 import ItemResponse from './ui/menus/item/ItemResponse';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => {
   const autocompleter = GuiFactory.build(

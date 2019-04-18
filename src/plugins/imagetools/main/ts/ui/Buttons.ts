@@ -6,7 +6,7 @@
  */
 
 import Actions from '../core/Actions';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const register = function (editor: Editor) {
   const cmd = (command: string) => () => editor.execCommand(command);

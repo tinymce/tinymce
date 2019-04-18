@@ -2,7 +2,7 @@ import { GeneralSteps, Logger, Pipeline, Step, Waiter, Chain, Cursors } from '@e
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { PlatformDetection } from '@ephox/sand';
 import { Element, Insert } from '@ephox/sugar';
 import { Arr, Fun } from '@ephox/katamari';
@@ -219,6 +219,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, fai
     ], onSuccess, onFailure);
   }, {
     indent: false,
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

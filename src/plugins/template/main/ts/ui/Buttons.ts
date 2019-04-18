@@ -7,7 +7,7 @@
 
 import Templates from '../core/Templates';
 import Dialog from './Dialog';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const showDialog = function (editor: Editor) {
   return function (templates) {

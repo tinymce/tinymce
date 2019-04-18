@@ -1,5 +1,5 @@
 import { console } from '@ephox/dom-globals';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 export default {
   setup: (ed: Editor) => {

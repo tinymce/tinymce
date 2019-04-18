@@ -8,7 +8,7 @@
 import { console } from '@ephox/dom-globals';
 import { Future, Option, Options } from '@ephox/katamari';
 import Delay from 'tinymce/core/api/util/Delay';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 import { LinkDialogOutput } from './DialogTypes';
 

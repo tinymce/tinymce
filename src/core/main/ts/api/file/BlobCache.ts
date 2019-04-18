@@ -39,7 +39,7 @@ export interface BlobInfo {
   uri: () => string;
 }
 
-export default function (): BlobCache {
+export const BlobCache = function (): BlobCache {
   let cache: BlobInfo[] = [];
 
   const mimeToExt = function (mime) {
@@ -141,4 +141,4 @@ export default function (): BlobCache {
     removeByUri,
     destroy
   };
-}
+};

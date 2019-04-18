@@ -114,6 +114,6 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefBoundaryDeleteTest',  (succes
       sTestDelete(editor, tinyApis, tinyActions)
     ], onSuccess, onFailure);
   }, {
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

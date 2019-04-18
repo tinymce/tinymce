@@ -60,7 +60,7 @@ TinyLoader.setup(function (editor, onSuccess, onFailure) {
 }, {
   plugins: 'searchreplace',
   toolbar: 'searchreplace',
-  base_url: '/project/js/tinymce',
+  base_url: '/project/tinymce/js/tinymce',
   theme: 'silver'
 }, success, failure);
 });

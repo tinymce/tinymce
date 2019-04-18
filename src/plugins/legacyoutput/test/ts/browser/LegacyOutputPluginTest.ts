@@ -101,7 +101,7 @@ UnitTest.asynctest(
     }, {
       plugins: 'legacyoutput',
       indent: false,
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       font_formats: 'Arial=arial,helvetica,sans-serif;'
     }, success, failure);
   }

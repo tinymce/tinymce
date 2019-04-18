@@ -5,11 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Menu } from '@ephox/bridge';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Actions from '../core/Actions';
 import ListUtils from '../core/ListUtils';
-import { Editor } from '../../../../../core/main/ts/api/Editor';
 
 const enum ListType {
   OrderedList = 'OL',
@@ -48,7 +49,7 @@ const addSplitButton = function (editor: Editor, id, tooltip, cmd, nodeName, sty
     presets: 'listpreview',
     columns: 3,
     fetch: (callback) => {
-      const items = Tools.map(styles, (styleValue) => {
+      const items = Tools.map(styles, (styleValue): Menu.ChoiceMenuItemApi => {
         const iconStyle = nodeName === ListType.OrderedList ? 'num' : 'bull';
         const iconName = styleValue === 'disc' || styleValue === 'decimal' ? 'default' : styleValue;
         const itemValue = styleValue === 'default' ? '' : styleValue;
@@ -57,8 +58,7 @@ const addSplitButton = function (editor: Editor, id, tooltip, cmd, nodeName, sty
           type: 'choiceitem',
           value: itemValue,
           icon: 'list-' +  iconStyle + '-' + iconName,
-          text: displayText,
-          ariaLabel: displayText
+          text: displayText
         };
       });
       callback(items);
@@ -77,9 +77,9 @@ const addSplitButton = function (editor: Editor, id, tooltip, cmd, nodeName, sty
       const nodeChangeHandler = (e) => {
         api.setActive(isWithinList(editor, e, nodeName));
       };
-      editor.on('nodeChange', nodeChangeHandler);
+      editor.on('NodeChange', nodeChangeHandler);
 
-      return () => editor.off('nodeChange', nodeChangeHandler);
+      return () => editor.off('NodeChange', nodeChangeHandler);
     }
   });
 };
@@ -93,9 +93,9 @@ const addButton = function (editor: Editor, id, tooltip, cmd, nodeName, styles) 
       const nodeChangeHandler = (e) => {
         api.setActive(isWithinList(editor, e, nodeName));
       };
-      editor.on('nodeChange', nodeChangeHandler);
+      editor.on('NodeChange', nodeChangeHandler);
 
-      return () => editor.off('nodeChange', nodeChangeHandler);
+      return () => editor.off('NodeChange', nodeChangeHandler);
     },
     onAction: () => editor.execCommand(cmd)
   });

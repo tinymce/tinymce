@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { Element } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -141,6 +141,6 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', (success, failu
     ], onSuccess, onFailure);
   }, {
     indent: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

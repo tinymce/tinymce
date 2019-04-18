@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
     const doc = Element.fromDom(document);
     const imgOps = ImageOps(editor);
 
-    const srcUrl = '/project/src/plugins/imagetools/demo/img/dogleft.jpg';
+    const srcUrl = '/project/tinymce/src/plugins/imagetools/demo/img/dogleft.jpg';
 
     const sOpenContextToolbar = (source) => {
       return GeneralSteps.sequence([
@@ -125,7 +125,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
     ], onSuccess, onFailure);
   }, {
     plugins: 'image imagetools',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     height: 900
   }, success, failure);
 });

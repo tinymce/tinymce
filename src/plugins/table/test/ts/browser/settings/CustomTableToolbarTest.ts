@@ -42,6 +42,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.CustomTableToolbarTest', funct
   }, {
     plugins: 'table',
     table_toolbar: 'tableprops tabledelete',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

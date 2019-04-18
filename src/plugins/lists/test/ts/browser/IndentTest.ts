@@ -396,6 +396,6 @@ UnitTest.asynctest('tinymce.lists.browser.IndentTest', (success, failure) => {
         'margin-bottom,margin-left,display,position,top,left,list-style-type'
     },
     theme: 'silver',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

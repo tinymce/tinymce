@@ -203,6 +203,6 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function () 
   }, {
     add_unload_trigger: false,
     indent: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

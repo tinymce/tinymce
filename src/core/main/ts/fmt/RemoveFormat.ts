@@ -5,6 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
+import { Element, Traverse, InsertAll, Insert } from '@ephox/sugar';
 import Bookmarks from '../bookmark/Bookmarks';
 import NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
@@ -14,14 +17,11 @@ import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';
 import RangeWalk from '../selection/RangeWalk';
 import Tools from '../api/util/Tools';
-import { Selection } from '../api/dom/Selection';
-import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
-import { Editor } from 'tinymce/core/api/Editor';
-import SplitRange from 'tinymce/core/selection/SplitRange';
-import { Node } from '@ephox/dom-globals';
-import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
-import { Element, Traverse, InsertAll, Insert } from '@ephox/sugar';
-import { Option } from '@ephox/katamari';
+import Selection from '../api/dom/Selection';
+import GetBookmark from '../bookmark/GetBookmark';
+import Editor from '../api/Editor';
+import * as SplitRange from '../selection/SplitRange';
+import DOMUtils from '../api/dom/DOMUtils';
 import Settings from '../api/Settings';
 
 const MCE_ATTR_RE = /^(src|href|style)$/;
@@ -307,7 +307,7 @@ const removeFormat = function (ed, format, vars?, node?, compareNode?) {
   }
 };
 
-const findFormatRoot = function (editor, container, name, vars, similar) {
+const findFormatRoot = function (editor: Editor, container, name, vars, similar) {
   let formatRoot;
 
   // Find format root
@@ -327,7 +327,7 @@ const findFormatRoot = function (editor, container, name, vars, similar) {
   return formatRoot;
 };
 
-const wrapAndSplit = function (editor, formatList, formatRoot, container, target, split, format, vars) {
+const wrapAndSplit = function (editor: Editor, formatList, formatRoot, container, target, split, format, vars) {
   let parent, clone, lastClone, firstClone, i, formatRootParent;
   const dom = editor.dom;
 

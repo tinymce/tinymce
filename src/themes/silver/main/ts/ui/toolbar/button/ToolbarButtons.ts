@@ -27,9 +27,7 @@ import {
 } from '@ephox/alloy';
 import { Toolbar, Types } from '@ephox/bridge';
 import { Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
-import { Attr, SelectorFind } from '@ephox/sugar';
-import { ToolbarButtonClasses } from 'tinymce/themes/silver/ui/toolbar/button/ButtonClasses';
-import { onToolbarButtonExecute, toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
+import { Attr, Class, SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
@@ -44,6 +42,10 @@ import { deriveMenuMovement } from '../../menus/menu/MenuMovement';
 import * as MenuParts from '../../menus/menu/MenuParts';
 import { createPartialChoiceMenu, createTieredDataFrom } from '../../menus/menu/SingleMenu';
 import ItemResponse from '../../menus/item/ItemResponse';
+import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
+import * as NestedMenus from '../../menus/menu/NestedMenus';
+import { ToolbarButtonClasses } from '../button/ButtonClasses';
+import { onToolbarButtonExecute, toolbarButtonEventOrder } from '../button/ButtonEvents';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
@@ -51,21 +53,41 @@ interface Specialisation<T> {
   onSetup: (api: T) => OnDestroy<T>;
 }
 
-const getButtonApi = (component): Toolbar.ToolbarButtonInstanceApi => {
+const getButtonApi = (component: AlloyComponent): Toolbar.ToolbarButtonInstanceApi => {
   return {
     isDisabled: () => Disabling.isDisabled(component),
-    setDisabled: (state) => state ? Disabling.disable(component) : Disabling.enable(component)
+    setDisabled: (state: boolean) => Disabling.set(component, state)
   };
 };
 
-const getToggleApi = (component): Toolbar.ToolbarToggleButtonInstanceApi => {
+const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonInstanceApi => {
   return {
     setActive: (state) => {
       Toggling.set(component, state);
     },
     isActive: () => Toggling.isOn(component),
     isDisabled: () => Disabling.isDisabled(component),
-    setDisabled: (state) => state ? Disabling.disable(component) : Disabling.enable(component)
+    setDisabled: (state: boolean) => Disabling.set(component, state)
+  };
+};
+
+const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonInstanceApi => {
+  return {
+    isDisabled: () => Disabling.isDisabled(component),
+    setDisabled: (state: boolean) => Disabling.set(component, state),
+    setActive: (state: boolean) => {
+      // Note: We can't use the toggling behaviour here, as the dropdown for the menu also relies on it.
+      // As such, we'll need to do this manually
+      const elm = component.element();
+      if (state) {
+        Class.add(elm, ToolbarButtonClasses.Ticked);
+        Attr.set(elm, 'aria-pressed', true);
+      } else {
+        Class.remove(elm, ToolbarButtonClasses.Ticked);
+        Attr.remove(elm, 'aria-pressed');
+      }
+    },
+    isActive: () => Class.has(component.element(), ToolbarButtonClasses.Ticked)
   };
 };
 
@@ -246,7 +268,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
   const getApi = (comp: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => {
     return {
       isDisabled: () => Disabling.isDisabled(comp),
-      setDisabled: (state) => state ? Disabling.disable(comp) : Disabling.enable(comp),
+      setDisabled: (state: boolean) => Disabling.set(comp, state),
       setIconFill: (id, value) => {
         SelectorFind.descendant(comp.element(), 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
           Attr.set(underlinePath, 'fill', value);
@@ -333,11 +355,37 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
   });
 };
 
+const renderMenuButton = (spec: Toolbar.ToolbarMenuButton, prefix: string, sharedBackstage: UiFactoryBackstageShared, role: Option<string>): SketchSpec => {
+  return renderCommonDropdown({
+      text: spec.text,
+      icon: spec.icon,
+      tooltip: spec.tooltip,
+      // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
+      role,
+      fetch: (callback) => {
+        spec.fetch((items) => {
+          callback(
+            NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, sharedBackstage.providers)
+          );
+        });
+      },
+      onSetup: spec.onSetup,
+      getApi: getMenuButtonApi,
+      columns: 1,
+      presets: 'normal',
+      classes: [],
+      dropdownBehaviours: []
+    },
+    prefix,
+    sharedBackstage);
+};
+
 export {
   renderCommonStructure,
   renderToolbarButton,
   renderToolbarButtonWith,
   renderToolbarToggleButton,
   renderToolbarToggleButtonWith,
-  renderSplitButton
+  renderSplitButton,
+  renderMenuButton
 };

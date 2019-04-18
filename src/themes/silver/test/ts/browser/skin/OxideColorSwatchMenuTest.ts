@@ -19,7 +19,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
@@ -126,7 +126,7 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
       theme: 'silver',
       menubar: true,
       toolbar: 'swatch-button',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       setup: (ed: Editor) => {
         ed.ui.registry.addSplitButton('swatch-button', {
           type: 'splitbutton',

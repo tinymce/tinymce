@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveTrailingWhitespaceFormatTest'
       ], onSuccess, onFailure);
     }, {
       toolbar: 'bold',
-      base_url: '/project/js/tinymce'
+      base_url: '/project/tinymce/js/tinymce'
     }, success, failure);
   }
 );

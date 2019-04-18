@@ -2,7 +2,7 @@ import { GeneralSteps, Log, Pipeline, UiFinder, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 import QuickbarsPlugin from 'tinymce/plugins/quickbars/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -41,6 +41,6 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ToolbarFalseTest', (succes
     menubar: false,
     quickbars_insert_toolbar: false,
     quickbars_selection_toolbar: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

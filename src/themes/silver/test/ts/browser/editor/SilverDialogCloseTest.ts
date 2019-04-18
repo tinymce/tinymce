@@ -19,7 +19,7 @@ UnitTest.asynctest('Editor (Silver) Configuration Close test', (success, failure
     },
     {
       theme: 'silver',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       setup: (ed) => {
         ed.on('init', () => {
           ed.windowManager.open({

@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorForcedSettingsTest', function () 
       Assertions.sAssertEq('Validate should true since inline was set to true', true, editor.inline)
     ], onSuccess, onFailure);
   }, {
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
 
     // Setting exposed as another forced setting
     inline: true,

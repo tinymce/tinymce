@@ -10,8 +10,8 @@ import BoundarySelection from './BoundarySelection';
 import DeleteBackspaceKeys from './DeleteBackspaceKeys';
 import EnterKey from './EnterKey';
 import SpaceKey from './SpaceKey';
-import CaretContainerInput from 'tinymce/core/caret/CaretContainerInput';
-import { Editor } from 'tinymce/core/api/Editor';
+import CaretContainerInput from '../caret/CaretContainerInput';
+import Editor from '../api/Editor';
 import * as InputKeys from './InputKeys';
 import HomeEndKeys from './HomeEndKeys';
 

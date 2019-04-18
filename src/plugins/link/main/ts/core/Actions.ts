@@ -88,8 +88,8 @@ const setupGotoLinks = function (editor) {
 const toggleActiveState = function (editor) {
   return function (api) {
     const nodeChangeHandler = (e) => api.setActive(!editor.readonly && !!Utils.getAnchorElement(editor, e.element));
-    editor.on('nodechange', nodeChangeHandler);
-    return () => editor.off('nodechange', nodeChangeHandler);
+    editor.on('NodeChange', nodeChangeHandler);
+    return () => editor.off('NodeChange', nodeChangeHandler);
   };
 };
 
@@ -97,8 +97,8 @@ const toggleEnabledState = function (editor) {
   return function (api) {
     api.setDisabled(!Utils.hasLinks(editor.dom.getParents(editor.selection.getStart())));
     const nodeChangeHandler = (e) => api.setDisabled(!Utils.hasLinks(e.parents));
-    editor.on('nodechange', nodeChangeHandler);
-    return () => editor.off('nodechange', nodeChangeHandler);
+    editor.on('NodeChange', nodeChangeHandler);
+    return () => editor.off('NodeChange', nodeChangeHandler);
   };
 };
 

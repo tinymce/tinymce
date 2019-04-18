@@ -11,7 +11,7 @@ import { Toolbar } from '@ephox/bridge';
 import { Element as DomElement } from '@ephox/dom-globals';
 import { Cell, Id, Merger, Option, Thunk, Result } from '@ephox/katamari';
 import { Css, DomEvent, Element, Focus } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { showContextToolbarEvent } from './ui/context/ContextEditorEvents';
 import { ContextForm } from './ui/context/ContextForm';
@@ -208,7 +208,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
   editor.on('init', () => {
     // FIX: Make it go away when the action makes it go away. E.g. deleting a column deletes the table.
-    editor.on('click keyup setContent ObjectResized ResizeEditor', (e) => {
+    editor.on('click keyup SetContent ObjectResized ResizeEditor', (e) => {
       // Fixing issue with chrome focus on img.
       resetTimer(
         Delay.setEditorTimeout(editor, launchContextToolbar, 0)
@@ -224,7 +224,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       }, 0);
     });
 
-    editor.on('nodeChange', (e) => {
+    editor.on('NodeChange', (e) => {
       Focus.search(contextbar.element()).fold(
         () => {
           resetTimer(

@@ -5,9 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { BeforeUnloadEvent, document, Element, HTMLFormElement, Window } from '@ephox/dom-globals';
 import { Arr, Type } from '@ephox/katamari';
-import { AddOnManager } from './AddOnManager';
-import { Editor } from './Editor';
+import AddOnManager from './AddOnManager';
+import Editor from './Editor';
+import { RawEditorSettings } from './SettingsTypes';
 import Env from './Env';
 import ErrorReporter from '../ErrorReporter';
 import DOMUtils from './dom/DOMUtils';
@@ -18,9 +20,9 @@ import Observable from './util/Observable';
 import Promise from './util/Promise';
 import Tools from './util/Tools';
 import URI from './util/URI';
-import { document } from '@ephox/dom-globals';
+import { EditorManagerEventMap } from './EventTypes';
 
-declare const window: any;
+declare const window: Window & { tinymce: any; tinyMCEPreInit: any; };
 
 /**
  * This class used as a factory for manager for tinymce.Editor instances.
@@ -35,7 +37,7 @@ declare const window: any;
 
 const DOM = DOMUtils.DOM;
 const explode = Tools.explode, each = Tools.each, extend = Tools.extend;
-let instanceCounter = 0, beforeUnloadDelegate, EditorManager, boundGlobalEvents = false;
+let instanceCounter = 0, beforeUnloadDelegate, boundGlobalEvents = false;
 const legacyEditors = [];
 let editors = [];
 
@@ -112,8 +114,48 @@ const purgeDestroyedEditor = function (editor) {
   return editor;
 };
 
-EditorManager = {
+interface EditorManager extends Observable<EditorManagerEventMap> {
+  $: any;
+  _beforeUnloadHandler: (event: BeforeUnloadEvent) => string;
+  defaultSettings: Record<string, any>;
+  majorVersion: string;
+  minorVersion: string;
+  releaseDate: string;
+  editors: Editor[];
+  activeEditor: Editor;
+  focusedEditor: Editor;
+  settings: RawEditorSettings;
+  baseURI: URI;
+  baseURL: string;
+  documentBaseURL: string;
+  i18n: I18n;
+  suffix: string;
+
+  add (editor: Editor): Editor;
+  addI18n (code: string, item: Record<string, string>): void;
+  createEditor (id: string, settings: RawEditorSettings): Editor;
+  execCommand (cmd: string, ui: boolean, value: any): boolean;
+  get (): Editor[];
+  get (id: number | string): Editor;
+  init (settings: RawEditorSettings): Promise<Editor[]>;
+  overrideDefaults (defaultSettings: Partial<RawEditorSettings>): void;
+  remove (): void;
+  remove (selector: string | Editor): Editor | void;
+  setActive (editor: Editor): void;
+  setup (): void;
+  translate (text: string): string;
+  triggerSave (): void;
+}
+
+const EditorManager: EditorManager = {
+  ...Observable,
+
+  _beforeUnloadHandler: null,
+  baseURI: null,
+  baseURL: null,
   defaultSettings: {},
+  documentBaseURL: null,
+  suffix: null,
 
   /**
    * Dom query instance.
@@ -173,11 +215,12 @@ EditorManager = {
    * tinymce.EditorManager.activeEditor.selection.getContent();
    */
   activeEditor: null,
+  focusedEditor: null,
 
   settings: {},
 
   setup () {
-    const self = this;
+    const self: EditorManager = this;
     let baseURL, documentBaseURL, suffix = '', preInit, src;
 
     // Get base URL for the current document
@@ -315,7 +358,7 @@ EditorManager = {
    * });
    */
   init (settings) {
-    const self = this;
+    const self: EditorManager = this;
     let result, invalidInlineTargets;
 
     invalidInlineTargets = Tools.makeMap(
@@ -362,7 +405,7 @@ EditorManager = {
       return className.constructor === RegExp ? className.test(elm.className) : DOM.hasClass(elm, className);
     };
 
-    const findTargets = function (settings) {
+    const findTargets = function (settings): Element[] {
       let l, targets = [];
 
       if (Env.ie && Env.ie < 11) {
@@ -397,8 +440,8 @@ EditorManager = {
               if ((elm = DOM.get(id))) {
                 targets.push(elm);
               } else {
-                each(document.forms, function (f) {
-                  each(f.elements, function (e) {
+                each(document.forms, function (f: HTMLFormElement) {
+                  each(f.elements, function (e: HTMLFormElement) {
                     if (e.name === id) {
                       id = 'mce_editor_' + instanceCounter++;
                       DOM.setAttrib(e, 'id', id);
@@ -435,7 +478,7 @@ EditorManager = {
     const initEditors = function () {
       let initCount = 0;
       const editors = [];
-      let targets;
+      let targets: Element[];
 
       const createEditor = function (id, settings, targetElm) {
         const editor: Editor = new Editor(id, settings, self);
@@ -530,7 +573,7 @@ EditorManager = {
    *    ed.windowManager.alert('Hello world!');
    * });
    */
-  get (id) {
+  get (id?: number | string) {
     if (arguments.length === 0) {
       return editors.slice(0);
     } else if (Type.isString(id)) {
@@ -552,7 +595,7 @@ EditorManager = {
    * @return {tinymce.Editor} The same instance that got passed in.
    */
   add (editor) {
-    const self = this;
+    const self: EditorManager = this;
     let existingEditor;
 
     // Prevent existing editors from beeing added again this could happen
@@ -625,7 +668,7 @@ EditorManager = {
    * @param {tinymce.Editor/String/Object} [selector] CSS selector or editor instance to remove.
    * @return {tinymce.Editor} The editor that got passed in will be return if it was found otherwise null.
    */
-  remove (selector) {
+  remove (selector?: string | Editor) {
     const self = this;
     let i, editor;
 
@@ -781,8 +824,6 @@ EditorManager = {
     this.activeEditor = editor;
   }
 };
-
-extend(EditorManager, Observable);
 
 EditorManager.setup();
 

@@ -6,7 +6,7 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import VersionPanel from '../ui/VersionPanel';
 
 const getVersionPanel = function (editor: Editor): Types.Dialog.BodyComponentApi {

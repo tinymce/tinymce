@@ -12,7 +12,8 @@ import CaretPosition from '../caret/CaretPosition';
 import DeleteUtils from './DeleteUtils';
 import MergeBlocks from './MergeBlocks';
 import * as ElementType from '../dom/ElementType';
-import { Selection } from '../api/dom/Selection';
+import Selection from '../api/dom/Selection';
+import Editor from '../api/Editor';
 
 const deleteRangeMergeBlocks = function (rootNode, selection: Selection) {
   const rng = selection.getRng();
@@ -51,19 +52,19 @@ const isEverythingSelected = function (root, rng) {
   return !isSelectionInTable(root, rng) && noPrevious && noNext;
 };
 
-const emptyEditor = function (editor) {
+const emptyEditor = function (editor: Editor) {
   editor.setContent('');
   editor.selection.setCursorLocation();
   return true;
 };
 
-const deleteRange = function (editor) {
+const deleteRange = function (editor: Editor) {
   const rootNode = Element.fromDom(editor.getBody());
   const rng = editor.selection.getRng();
   return isEverythingSelected(rootNode, rng) ? emptyEditor(editor) : deleteRangeMergeBlocks(rootNode, editor.selection);
 };
 
-const backspaceDelete = function (editor, forward) {
+const backspaceDelete = function (editor: Editor, forward: boolean) {
   return editor.selection.isCollapsed() ? false : deleteRange(editor);
 };
 

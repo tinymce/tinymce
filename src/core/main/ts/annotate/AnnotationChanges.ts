@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AnnotationsRegistry } from 'tinymce/core/annotate/AnnotationsRegistry';
-import { Editor } from 'tinymce/core/api/Editor';
 import { Throttler, Option, Arr, Cell, Obj } from '@ephox/katamari';
+import Editor from '../api/Editor';
+import { AnnotationsRegistry } from './AnnotationsRegistry';
 import { identify } from './Identification';
 
 export interface AnnotationChanges {
@@ -97,7 +97,7 @@ const setup = (editor: Editor, registry: AnnotationsRegistry): AnnotationChanges
     onNodeChange.cancel();
   });
 
-  editor.on('nodeChange', () => {
+  editor.on('NodeChange', () => {
     onNodeChange.throttle();
   });
 

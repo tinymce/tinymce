@@ -17,7 +17,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Menu } from '@ephox/bridge';
 import { TestHelpers } from '@ephox/alloy';
 
@@ -159,7 +159,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
       theme: 'silver',
       menubar: true,
       toolbar: 'toolbar-collection',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       setup: (ed: Editor) => {
         ed.ui.registry.addSplitButton('toolbar-collection', {
           type: 'splitbutton',

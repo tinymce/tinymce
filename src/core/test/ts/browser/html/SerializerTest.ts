@@ -5,9 +5,7 @@ import Serializer from 'tinymce/core/api/html/Serializer';
 import Schema from 'tinymce/core/api/html/Schema';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.html.SerializerTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.html.SerializerTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('Basic serialization', function () {

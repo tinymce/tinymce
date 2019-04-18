@@ -6,7 +6,7 @@
  */
 
 import { window, Storage } from '@ephox/dom-globals';
-import * as FakeStorage from 'tinymce/core/api/util/FakeStorage';
+import * as FakeStorage from './FakeStorage';
 
 /**
  * @class tinymce.util.LocalStorage

@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Types } from '@ephox/bridge';
 import { Arr, Option } from '@ephox/katamari';
 import SelectionBookmark from '../selection/SelectionBookmark';
 import WindowManagerImpl from '../ui/WindowManagerImpl';
-import { Editor } from './Editor';
-import { Types } from '@ephox/bridge';
+import Editor from './Editor';
 
 /**
  * This class handles the creation of native windows and dialogs. This class can be extended to provide for example inline dialogs.
@@ -33,22 +33,26 @@ import { Types } from '@ephox/bridge';
  * });
  */
 
-export interface WindowManager {
+type InstanceApi<T> = Types.UrlDialog.UrlDialogInstanceApi | Types.Dialog.DialogInstanceApi<T>;
+
+export interface WindowManagerImpl {
+  open: <T>(config: Types.Dialog.DialogApi<T>, params, closeWindow: (dialog: Types.Dialog.DialogInstanceApi<T>) => void) => Types.Dialog.DialogInstanceApi<T>;
+  openUrl: <T>(config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialog: Types.UrlDialog.UrlDialogInstanceApi) => void) => Types.UrlDialog.UrlDialogInstanceApi;
+  alert: (message: string, callback: () => void) => void;
+  confirm: (message: string, callback: (state: boolean) => void) => void;
+  close: (dialog: InstanceApi<any>) => void;
+}
+
+interface WindowManager {
   open: <T>(config: Types.Dialog.DialogApi<T>, params?) => Types.Dialog.DialogInstanceApi<T>;
+  openUrl: <T>(config: Types.UrlDialog.UrlDialogApi) => Types.UrlDialog.UrlDialogInstanceApi;
   alert: (message: string, callback?: () => void, scope?) => void;
   confirm: (message: string, callback?: (state: boolean) => void, scope?) => void;
   close: () => void;
 }
 
-export interface WindowManagerImpl {
-  open: <T>(config: Types.Dialog.DialogApi<T>, params, closeWindow: (dialog: Types.Dialog.DialogInstanceApi<T>) => void) => Types.Dialog.DialogInstanceApi<T>;
-  alert: (message: string, callback: () => void) => void;
-  confirm: (message: string, callback: (state: boolean) => void) => void;
-  close: (dialog: Types.Dialog.DialogInstanceApi<any>) => void;
-}
-
-export default function (editor: Editor): WindowManager {
-  let dialogs: Types.Dialog.DialogInstanceApi<any>[] = [];
+const WindowManager = function (editor: Editor): WindowManager {
+  let dialogs: InstanceApi<any>[] = [];
 
   const getImplementation = function (): WindowManagerImpl {
     const theme = editor.theme;
@@ -61,24 +65,24 @@ export default function (editor: Editor): WindowManager {
     };
   };
 
-  const fireOpenEvent = function <T>(dialog: Types.Dialog.DialogInstanceApi<T>) {
+  const fireOpenEvent = function <T>(dialog: InstanceApi<T>) {
     editor.fire('OpenWindow', {
       dialog
     });
   };
 
-  const fireCloseEvent = function <T>(dialog: Types.Dialog.DialogInstanceApi<T>) {
+  const fireCloseEvent = function <T>(dialog: InstanceApi<T>) {
     editor.fire('CloseWindow', {
       dialog
     });
   };
 
-  const addDialog = function <T>(dialog: Types.Dialog.DialogInstanceApi<T>) {
+  const addDialog = function <T>(dialog: InstanceApi<T>) {
     dialogs.push(dialog);
     fireOpenEvent(dialog);
   };
 
-  const closeDialog = function <T>(dialog: Types.Dialog.DialogInstanceApi<T>) {
+  const closeDialog = function <T>(dialog: InstanceApi<T>) {
     fireCloseEvent(dialog);
     dialogs = Arr.filter(dialogs, function (otherDialog) {
       return otherDialog !== dialog;
@@ -93,13 +97,21 @@ export default function (editor: Editor): WindowManager {
     return Option.from(dialogs[dialogs.length - 1]);
   };
 
-  const open = function <T>(args, params?): Types.Dialog.DialogInstanceApi<T> {
+  const storeSelectionAndOpenDialog = <T extends InstanceApi<any>>(openDialog: () => T) => {
     editor.editorManager.setActive(editor);
     SelectionBookmark.store(editor);
 
-    const dialog = getImplementation().open<T>(args, params, closeDialog);
+    const dialog = openDialog();
     addDialog(dialog);
     return dialog;
+  };
+
+  const open = function <T>(args, params?): Types.Dialog.DialogInstanceApi<T> {
+    return storeSelectionAndOpenDialog(() => getImplementation().open<T>(args, params, closeDialog));
+  };
+
+  const openUrl = function (args): Types.UrlDialog.UrlDialogInstanceApi {
+    return storeSelectionAndOpenDialog(() => getImplementation().openUrl(args, closeDialog));
   };
 
   const alert = function (message, callback?: () => void, scope?) {
@@ -128,16 +140,25 @@ export default function (editor: Editor): WindowManager {
      * Opens a new window.
      *
      * @method open
+     * @param {Object} args Optional name/value settings collection contains things like title/body etc.
+     * @param {Object} params Options like title, file, width, height etc.
+     * @option {String} title Window title.
+     * @option {Object} body Object containing the items to render in the window.
+     */
+    open,
+
+    /**
+     * Opens a new window for the specified url.
+     *
+     * @method openUrl
      * @param {Object} args Optional name/value settings collection contains things like width/height/url etc.
      * @param {Object} params Options like title, file, width, height etc.
      * @option {String} title Window title.
-     * @option {String} file URL of the file to open in the window.
+     * @option {String} url URL of the file to open in the window.
      * @option {Number} width Width in pixels.
      * @option {Number} height Height in pixels.
-     * @option {Boolean} autoScroll Specifies whether the popup window can have scrollbars if required (i.e. content
-     * larger than the popup size specified).
      */
-    open,
+    openUrl,
 
     /**
      * Creates a alert dialog. Please don't use the blocking behavior of this
@@ -179,4 +200,6 @@ export default function (editor: Editor): WindowManager {
      */
     close
   };
-}
+};
+
+export default WindowManager;

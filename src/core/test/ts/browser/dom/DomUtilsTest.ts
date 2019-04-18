@@ -5,12 +5,10 @@ import Schema from 'tinymce/core/api/html/Schema';
 import HtmlUtils from '../../module/test/HtmlUtils';
 import Tools from 'tinymce/core/api/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
-import { document, window } from '@ephox/dom-globals';
+import { document, Element, HTMLLinkElement, window } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
+UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, failure) {
   const DOM = DOMUtils(document, { keep_values : true, schema : Schema() });
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
   const suite = LegacyUnit.createSuite();
 
   suite.test('parseStyle', function () {
@@ -483,7 +481,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
 
     DOM.loadCSS('tinymce/dom/test.css?a=1,tinymce/dom/test.css?a=2,tinymce/dom/test.css?a=3');
 
-    Tools.each(document.getElementsByTagName('link'), function (n) {
+    Tools.each(document.getElementsByTagName('link'), function (n: HTMLLinkElement) {
       if (n.href.indexOf('test.css?a=') !== -1) {
         c++;
       }
@@ -566,7 +564,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
     );
 
     DOM.setHTML('test', 'test');
-    LegacyUnit.equal(Tools.trim(DOM.getOuterHTML(DOM.get('test').firstChild)), 'test');
+    LegacyUnit.equal(Tools.trim(DOM.getOuterHTML(DOM.get('test').firstChild as Element)), 'test');
 
     DOM.remove('test');
   });

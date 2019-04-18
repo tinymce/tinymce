@@ -44,6 +44,6 @@ UnitTest.asynctest('browser.core.MediaEmbedTest', function (success, failure) {
           'controls="controls">\n<source src="' + data.url + '" />\n</video>'
       });
     },
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

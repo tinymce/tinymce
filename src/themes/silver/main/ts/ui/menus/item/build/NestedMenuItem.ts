@@ -1,4 +1,4 @@
-import { Disabling, ItemTypes } from '@ephox/alloy';
+import { AlloyComponent, Disabling, ItemTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Fun, Option } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
@@ -10,10 +10,10 @@ import { buildData, renderCommonItem } from './CommonMenuItem';
 // Note, this does not create a valid SketchSpec.
 const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true): ItemTypes.ItemSpec => {
   const caret = renderSubmenuCaret(providersBackstage.icons);
-  const getApi = (component): Menu.NestedMenuItemInstanceApi => {
+  const getApi = (component: AlloyComponent): Menu.NestedMenuItemInstanceApi => {
     return {
       isDisabled: () => Disabling.isDisabled(component),
-      setDisabled: (state) => state ? Disabling.disable(component) : Disabling.enable(component)
+      setDisabled: (state: boolean) => Disabling.set(component, state)
     };
   };
 

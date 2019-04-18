@@ -8,7 +8,7 @@
 import { AlloyComponent, Attachment, Disabling, SplitToolbar } from '@ephox/alloy';
 import { Cell, Option } from '@ephox/katamari';
 import { Body, Element, Selectors, Position } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import * as Settings from '../api/Settings';
 import OuterContainer from '../ui/general/OuterContainer';

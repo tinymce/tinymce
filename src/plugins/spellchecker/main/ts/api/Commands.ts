@@ -6,7 +6,7 @@
  */
 
 import Actions, { LastSuggestion } from '../core/Actions';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
 import { DomTextMatcher } from 'tinymce/plugins/spellchecker/core/DomTextMatcher';
 

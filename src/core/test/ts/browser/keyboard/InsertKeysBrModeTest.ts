@@ -2,7 +2,7 @@ import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysBrModeTest', (success, failure) => {
   Theme();
@@ -124,6 +124,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysBrModeTest', (succes
   }, {
     indent: false,
     forced_root_block: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

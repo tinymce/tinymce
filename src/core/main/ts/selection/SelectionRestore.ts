@@ -5,17 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { document } from '@ephox/dom-globals';
 import { Throttler } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import DOMUtils from '../api/dom/DOMUtils';
 import SelectionBookmark from './SelectionBookmark';
-import { document } from '@ephox/dom-globals';
+import Editor from '../api/Editor';
 
 const isManualNodeChange = function (e) {
   return e.type === 'nodechange' && e.selectionChange;
 };
 
-const registerPageMouseUp = function (editor, throttledStore) {
+const registerPageMouseUp = function (editor: Editor, throttledStore) {
   const mouseUpPage = function () {
     throttledStore.throttle();
   };
@@ -27,19 +28,19 @@ const registerPageMouseUp = function (editor, throttledStore) {
   });
 };
 
-const registerFocusOut = function (editor) {
+const registerFocusOut = function (editor: Editor) {
   editor.on('focusout', function () {
     SelectionBookmark.store(editor);
   });
 };
 
-const registerMouseUp = function (editor, throttledStore) {
+const registerMouseUp = function (editor: Editor, throttledStore) {
   editor.on('mouseup touchend', function (e) {
     throttledStore.throttle();
   });
 };
 
-const registerEditorEvents = function (editor, throttledStore) {
+const registerEditorEvents = function (editor: Editor, throttledStore) {
   const browser = PlatformDetection.detect().browser;
 
   if (browser.isIE()) {
@@ -48,14 +49,14 @@ const registerEditorEvents = function (editor, throttledStore) {
     registerMouseUp(editor, throttledStore);
   }
 
-  editor.on('keyup nodechange', function (e) {
+  editor.on('keyup NodeChange', function (e) {
     if (!isManualNodeChange(e)) {
       SelectionBookmark.store(editor);
     }
   });
 };
 
-const register = function (editor) {
+const register = function (editor: Editor) {
   const throttledStore = Throttler.first(function () {
     SelectionBookmark.store(editor);
   }, 0);

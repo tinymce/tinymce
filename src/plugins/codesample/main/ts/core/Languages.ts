@@ -7,7 +7,7 @@
 
 import Settings from '../api/Settings';
 import CodeSample from './CodeSample';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 export interface LanguageSpec {
   text: string;

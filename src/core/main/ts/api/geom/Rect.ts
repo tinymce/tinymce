@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { ClientRect } from '@ephox/dom-globals';
+
 /**
  * Contains various tools for rect/position calculation.
  *
@@ -16,6 +18,16 @@ export interface GeomRect {
   y: number;
   w: number;
   h: number;
+}
+
+interface Rect {
+  inflate (rect: GeomRect, w: number, h: number): GeomRect;
+  relativePosition (rect: GeomRect, targetRect: GeomRect, rel: string): GeomRect;
+  findBestRelativePosition (rect, targetRect, constrainRect, rels): GeomRect | null;
+  intersect (rect: GeomRect, cropRect: GeomRect): GeomRect | null;
+  clamp (rect: GeomRect, clampRect: GeomRect, fixedSize?: boolean): GeomRect;
+  create (x: number, y: number, w: number, h: number): GeomRect;
+  fromClientRect (clientRect: ClientRect): GeomRect;
 }
 
 const min = Math.min, max = Math.max, round = Math.round;
@@ -203,7 +215,7 @@ const fromClientRect = function (clientRect) {
   return create(clientRect.left, clientRect.top, clientRect.width, clientRect.height);
 };
 
-export default {
+const Rect: Rect = {
   inflate,
   relativePosition,
   findBestRelativePosition,
@@ -212,3 +224,5 @@ export default {
   create,
   fromClientRect
 };
+
+export default Rect;

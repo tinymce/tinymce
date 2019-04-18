@@ -1,7 +1,7 @@
 import { GeneralSteps, Pipeline, Logger, Assertions, ApproxStructure } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import { sAnnotate, sAssertHtmlContent } from '../../module/test/AnnotationAsserts';
@@ -207,7 +207,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
       sTestInThreeParagraphs
     ], onSuccess, onFailure);
   }, {
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
       ed.on('init', () => {
         ed.annotator.register('test-annotation', {

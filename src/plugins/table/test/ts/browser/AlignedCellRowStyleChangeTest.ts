@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from '../../../../../themes/silver/main/ts/Theme';
 import TableTestUtils from '../module/test/TableTestUtils';
@@ -63,6 +63,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.AlignedCellRowStyleChangeTest'
       '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
     },
     theme: 'silver',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

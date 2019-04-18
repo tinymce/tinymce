@@ -22,7 +22,7 @@ UnitTest.asynctest('TextcolorCommandsTest', (success, failure) => {
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
 
-      editor.on('execCommand', function (e) {
+      editor.on('ExecCommand', function (e) {
         state.set(e.command);
       });
 
@@ -63,7 +63,7 @@ UnitTest.asynctest('TextcolorCommandsTest', (success, failure) => {
       ], onSuccess, onFailure);
     }, {
       toolbar: 'forecolor backcolor',
-      base_url: '/project/js/tinymce'
+      base_url: '/project/tinymce/js/tinymce'
     }, success, failure);
   }
 );

@@ -3,7 +3,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { EditorMode, getMode, setMode } from 'tinymce/core/Mode';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import {  Class, Element } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
@@ -30,18 +30,18 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, [
       Logger.t('Should toggle readonly on/off and have a readonly class', GeneralSteps.sequence([
-        sAssertMode(editor, EditorMode.ReadOnly),
+        sAssertMode(editor, 'readonly'),
         sAssertBodyClass(editor, 'mce-content-readonly', true),
-        sSetMode(editor, EditorMode.Design),
-        sAssertMode(editor, EditorMode.Design),
+        sSetMode(editor, 'design'),
+        sAssertMode(editor, 'design'),
         sAssertBodyClass(editor, 'mce-content-readonly', false),
-        sSetMode(editor, EditorMode.ReadOnly),
-        sAssertMode(editor, EditorMode.ReadOnly),
+        sSetMode(editor, 'readonly'),
+        sAssertMode(editor, 'readonly'),
         sAssertBodyClass(editor, 'mce-content-readonly', true)
       ]))
     ], onSuccess, onFailure);
   }, {
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     readonly: true
   }, success, failure);
 });

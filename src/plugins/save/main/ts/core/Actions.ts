@@ -60,9 +60,8 @@ const cancel = function (editor) {
     return;
   }
 
-  editor.setContent(h);
-  editor.undoManager.clear();
-  editor.nodeChanged();
+  // Reset the editor content back to the initial state
+  editor.resetContent(h);
 };
 
 export default {

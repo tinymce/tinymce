@@ -1,7 +1,7 @@
 import { Pipeline, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 
 import SilverTheme from '../../../../../themes/silver/main/ts/Theme';
@@ -33,6 +33,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellPropsStyleTest', (suc
     plugins: 'table',
     indent : false,
     theme : 'silver',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure );
 });

@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.core.bookmark.BookmarksTest', (success, fail
   };
 
   const cCreateNamedEditor = NamedChain.write('editor', Editor.cFromSettings({
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }));
 
   const cSetupEditor = (content, startPath, startOffset, endPath, endOffset) => {

@@ -55,6 +55,6 @@ UnitTest.asynctest('Browser Test: .RemoveTrailingBlockquoteTest', (success, fail
     plugins: 'lists',
     toolbar: '',
     theme: 'silver',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

@@ -8,7 +8,7 @@
 import { HexColour, RgbaColour } from '@ephox/acid';
 import { Menu, Toolbar, Types } from '@ephox/bridge';
 import { Cell, Option, Strings } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Settings from './Settings';
 
 export interface ColorSwatchDialogData {

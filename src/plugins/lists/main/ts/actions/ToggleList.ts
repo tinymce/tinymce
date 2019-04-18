@@ -14,7 +14,7 @@ import { HTMLElement } from '@ephox/dom-globals';
 import { flattenListSelection } from './Indendation';
 import { fireListEvent } from '../api/Events';
 import { isCustomList } from '../core/Util';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { listToggleActionFromListName } from '../core/ListAction';
 
 const updateListStyle = function (dom, el, detail) {

@@ -5,7 +5,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element, Body } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 import { PlatformDetection } from '@ephox/sand';
 import { TestHelpers } from '@ephox/alloy';
@@ -164,7 +164,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
     },
     {
       theme: 'silver',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       setup: (ed: Editor) => {
         ed.ui.registry.addContextForm('test-form', {
           launch: {

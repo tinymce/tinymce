@@ -5,22 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { document, Element, FocusEvent } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import FocusManager from '../api/FocusManager';
 import DOMUtils from '../api/dom/DOMUtils';
 import SelectionRestore from '../selection/SelectionRestore';
 import Delay from '../api/util/Delay';
-import { document } from '@ephox/dom-globals';
+import EditorManager from '../api/EditorManager';
+import Editor from '../api/Editor';
 
 let documentFocusInHandler;
 const DOM = DOMUtils.DOM;
 
-const isEditorUIElement = function (elm) {
+const isEditorUIElement = function (elm: Element) {
   // Since this can be overridden by third party we need to use the API reference here
   return FocusManager.isEditorUIElement(elm);
 };
 
-const isUIElement = function (editor, elm) {
+const isUIElement = function (editor: Editor, elm: Element) {
   const customSelector = editor ? editor.settings.custom_ui_selector : '';
   const parent = DOM.getParent(elm, function (elm) {
     return (
@@ -31,7 +33,7 @@ const isUIElement = function (editor, elm) {
   return parent !== null;
 };
 
-const getActiveElement = function () {
+const getActiveElement = function (): Element {
   try {
     return document.activeElement;
   } catch (ex) {
@@ -41,13 +43,13 @@ const getActiveElement = function () {
   }
 };
 
-const registerEvents = function (editorManager, e) {
+const registerEvents = function (editorManager: EditorManager, e: { editor: Editor }) {
   const editor = e.editor;
 
   SelectionRestore.register(editor);
 
   editor.on('focusin', function () {
-    const self = this;
+    const self: Editor = this;
     const focusedEditor = editorManager.focusedEditor;
 
     if (focusedEditor !== self) {
@@ -63,7 +65,7 @@ const registerEvents = function (editorManager, e) {
   });
 
   editor.on('focusout', function () {
-    const self = this;
+    const self: Editor = this;
     Delay.setEditorTimeout(self, function () {
       const focusedEditor = editorManager.focusedEditor;
 
@@ -78,7 +80,7 @@ const registerEvents = function (editorManager, e) {
   // Check if focus is moved to an element outside the active editor by checking if the target node
   // isn't within the body of the activeEditor nor a UI element such as a dialog child control
   if (!documentFocusInHandler) {
-    documentFocusInHandler = function (e) {
+    documentFocusInHandler = function (e: FocusEvent) {
       const activeEditor = editorManager.activeEditor;
       let target;
 
@@ -97,7 +99,7 @@ const registerEvents = function (editorManager, e) {
   }
 };
 
-const unregisterDocumentEvents = function (editorManager, e) {
+const unregisterDocumentEvents = function (editorManager: EditorManager, e: { editor: Editor }) {
   if (editorManager.focusedEditor === e.editor) {
     editorManager.focusedEditor = null;
   }
@@ -108,7 +110,7 @@ const unregisterDocumentEvents = function (editorManager, e) {
   }
 };
 
-const setup = function (editorManager) {
+const setup = function (editorManager: EditorManager) {
   editorManager.on('AddEditor', Fun.curry(registerEvents, editorManager));
   editorManager.on('RemoveEditor', Fun.curry(unregisterDocumentEvents, editorManager));
 };

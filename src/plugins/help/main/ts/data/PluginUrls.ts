@@ -48,7 +48,7 @@ const urls = [
   { key: 'visualblocks', name: 'Visual Blocks' },
   { key: 'visualchars', name: 'Visual Characters' },
   { key: 'wordcount', name: 'Word Count' },
-  // TODO: Add other premium plugins such as permanent pen when they are included in the website
+  // TODO: Add other premium plugins when they are included in the website
   { key: 'advcode', name: 'Advanced Code Editor*'},
   { key: 'formatpainter', name: 'Format Painter*'},
   { key: 'powerpaste', name: 'PowerPaste*'},
@@ -57,7 +57,12 @@ const urls = [
   { key: 'a11ychecker', name: 'Accessibility Checker*'},
   { key: 'linkchecker', name: 'Link Checker*'},
   { key: 'mentions', name: 'Mentions*'},
-  { key: 'mediaembed', name: 'Enhanced Media Embed*'}
+  { key: 'mediaembed', name: 'Enhanced Media Embed*'},
+  { key: 'checklist', name: 'Checklist*'},
+  { key: 'casechange', name: 'Case Change*'},
+  { key: 'permanentpen', name: 'Permanent Pen*'},
+  { key: 'pageembed', name: 'Page Embed*'},
+  { key: 'tinycomments', name: 'Tiny Comments*'}
 ];
 
 export default {

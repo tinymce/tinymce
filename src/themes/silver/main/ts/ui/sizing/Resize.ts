@@ -10,7 +10,7 @@ import { Css, Element, Height, Width } from '@ephox/sugar';
 import { getMaxHeightSetting, getMaxWidthSetting, getMinHeightSetting, getMinWidthSetting } from '../../api/Settings';
 import Events from '../../api/Events';
 import Utils from './Utils';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 interface EditorDimensions {
   height?: number;

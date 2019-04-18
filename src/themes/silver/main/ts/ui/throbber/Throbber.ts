@@ -8,7 +8,7 @@
 import { AlloyComponent, AlloySpec, Behaviour, DomFactory, Focusing, Keying, Replacing } from '@ephox/alloy';
 import { Cell, Option, Type } from '@ephox/katamari';
 import { Attr, Css } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../backstage/Backstage';
 

@@ -5,14 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { UrlObject, AddOnManager } from './AddOnManager';
-import { Editor } from 'tinymce/core/api/Editor';
+import { HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
+import AddOnManager from './AddOnManager';
+import Editor from './Editor';
+import { NotificationManagerImpl } from './NotificationManager';
+import { DomQueryConstructor } from './dom/DomQuery';
+import { WindowManagerImpl } from './WindowManager';
 
-// TODO: Remove this when TypeScript 2.8 is out!
-// Needed because of this: https://github.com/Microsoft/TypeScript/issues/9944
-export interface ThemeManager extends AddOnManager {
-  add: (id: string, addOn: (editor: Editor, url: string) => any, dependencies?: any) => (editor: Editor, url: string) => any;
-  createUrl: (baseUrl: UrlObject, dep: string | UrlObject) => UrlObject;
-}
+export type Theme = {
+  ui?: any;
+  execCommand? (command: string, ui?: boolean, value?: any): boolean;
+  destroy? (): void;
+  init? (editor: Editor, url: string, $: DomQueryConstructor);
+  renderUI? (): { iframeContainer?: HTMLIFrameElement, editorContainer: HTMLElement };
+  getNotificationManagerImpl? (): NotificationManagerImpl;
+  getWindowManagerImpl? (): WindowManagerImpl;
+};
 
-export default AddOnManager.ThemeManager as ThemeManager;
+export default AddOnManager.ThemeManager as AddOnManager<Theme>;

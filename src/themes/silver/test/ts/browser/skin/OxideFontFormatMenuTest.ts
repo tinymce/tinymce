@@ -235,7 +235,7 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
         { title: 'Red paragraph', block: 'p', styles: { color: 'rgb(255, 0, 0)' } },
         { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
       ],
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       setup: (ed) => {
 
       }

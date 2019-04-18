@@ -40,14 +40,14 @@ interface NormalItemSpec {
   ariaLabel: Option<string>;
 }
 
-const renderColorStructure = (itemText: Option<string>, itemValue: string, iconSvg: Option<string>): ItemStructure => {
+const renderColorStructure = (itemText: Option<string>, itemValue: string, iconSvg: Option<string>, providerBackstage: UiFactoryBackstageProviders): ItemStructure => {
   const colorPickerCommand = 'custom';
   const removeColorCommand = 'remove';
 
   const getDom = () => {
     const common = ItemClasses.colorClass;
     const icon = iconSvg.getOr('');
-    const title = itemText.map((text) => ` title="${text}"`).getOr('');
+    const title = itemText.map((text) => ` title="${providerBackstage.translate(text)}"`).getOr('');
 
     if (itemValue === colorPickerCommand) {
       return DomFactory.fromHtml(`<button class="${common} tox-swatches__picker-btn"${title}>${icon}</button>`);
@@ -110,7 +110,7 @@ const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiF
   );
 
   if (info.presets === 'color') {
-    return renderColorStructure(info.ariaLabel, info.value, icon);
+    return renderColorStructure(info.ariaLabel, info.value, icon, providersBackstage);
   } else {
     return renderNormalItemStructure(info, icon, renderIcons, textRender);
   }

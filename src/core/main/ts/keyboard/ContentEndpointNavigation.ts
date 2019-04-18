@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from '../api/Editor';
+import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
 import { Fun, Arr } from '@ephox/katamari';
 import { Insert, Element, Compare, PredicateFind, Node, Attr } from '@ephox/sugar';

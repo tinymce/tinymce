@@ -7,7 +7,7 @@
 
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { Element, Fragment, InsertAll, Remove } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Selection from '../core/Selection';
 import { composeList } from './ComposeList';
 import { Entry, isIndented, isSelected } from './Entry';

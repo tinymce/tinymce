@@ -64,6 +64,6 @@ UnitTest.asynctest('browser.tinymce.core.delete.ImageBlockDeleteTest',  (success
     ], onSuccess, onFailure);
   }, {
     content_style: 'img.block { display: block }',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

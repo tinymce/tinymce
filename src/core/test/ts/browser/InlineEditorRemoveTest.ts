@@ -9,7 +9,7 @@ UnitTest.asynctest('browser.tinymce.core.InlineEditorRemoveTest', (success, fail
 
   const settings = {
     inline: true,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   };
 
   const cAssertBogusNotExist = Chain.async((val, next, die) => {

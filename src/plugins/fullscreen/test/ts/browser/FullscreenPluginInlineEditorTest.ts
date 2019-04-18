@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginInlineEdi
     Pipeline.async({}, [ Log.step('TBA', 'FullScreen: Assert isFullscreen api function is present and fullscreen button is absent',
       Step.sync(() => {
         RawAssertions.assertEq('should have isFullsceen api function', false, editor.plugins.fullscreen.isFullscreen());
-        RawAssertions.assertEq('should not have the fullscreen button', 'undefined', typeof editor.buttons.fullscreen);
+        RawAssertions.assertEq('should not have the fullscreen button', 'undefined', typeof editor.ui.registry.getAll().buttons.fullscreen);
       })
     )], onSuccess, onFailure);
   }, {
@@ -23,6 +23,6 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginInlineEdi
     plugins: 'fullscreen link',
     toolbar: 'fullscreen link',
     theme: 'silver',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

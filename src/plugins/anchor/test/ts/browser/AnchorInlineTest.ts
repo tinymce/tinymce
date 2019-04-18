@@ -42,6 +42,6 @@ UnitTest.asynctest('Browser Test: .AnchorInlineTest', (success, failure) => {
     theme: 'silver',
     plugins: 'anchor',
     toolbar: 'anchor',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

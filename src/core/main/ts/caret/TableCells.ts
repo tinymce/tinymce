@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, SelectorFilter } from '@ephox/sugar';
-import { Arr, Fun, Option } from '@ephox/katamari';
-import { findClosestHorizontalPosition, getLastLinePositions, getFirstLinePositions } from 'tinymce/core/caret/LineReader';
-import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 import { ClientRect, HTMLElement } from '@ephox/dom-globals';
+import { Arr, Fun, Option } from '@ephox/katamari';
+import { Element, SelectorFilter } from '@ephox/sugar';
+import { findClosestHorizontalPosition, getLastLinePositions, getFirstLinePositions } from './LineReader';
+import { CaretPosition } from './CaretPosition';
 import { clone as roundRect } from '../geom/ClientRect';
 
 type GetAxisValue = (rect: ClientRect) => number;

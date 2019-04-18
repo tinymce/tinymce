@@ -478,6 +478,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     extended_valid_elements: 'div[id|style|contenteditable],span[id|style|contenteditable],#dt,#dd',
     entities: 'raw',
     indent: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

@@ -7,7 +7,7 @@
 
 import { getContent, GetContentArgs } from './GetContent';
 import { setContent, SetContentArgs } from './SetContent';
-import Node from 'tinymce/core/api/html/Node';
+import Node from '../api/html/Node';
 
 type Content = string | Node;
 

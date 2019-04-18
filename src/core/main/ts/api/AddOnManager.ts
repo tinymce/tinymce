@@ -8,8 +8,8 @@
 import { Arr } from '@ephox/katamari';
 import ScriptLoader from './dom/ScriptLoader';
 import Tools from './util/Tools';
-import { Editor } from 'tinymce/core/api/Editor';
-import I18n from 'tinymce/core/api/util/I18n';
+import Editor from './Editor';
+import I18n from './util/I18n';
 
 /**
  * This class handles the loading of themes/plugins or other add-ons and their language packs.
@@ -81,23 +81,25 @@ const each = Tools.each;
 
 export interface UrlObject { prefix: string; resource: string; suffix: string; }
 
-export interface AddOnManager {
-  items: any[];
+export type AddOnCallback<T> = (editor: Editor, url: string) => T;
+
+interface AddOnManager<T> {
+  items: AddOnCallback<T>[];
   urls: Record<string, string>;
   lookup: {};
-  _listeners: any[];
-  get: (name: string) => any;
-  dependencies: (name: string) => any;
-  requireLangPack: (name: string, languages: string) => void;
-  add: (id: string, addOn: (editor: Editor, url: string) => any, dependencies?: any) => (editor: Editor, url: string) => any;
-  remove: (name: string) => void;
-  createUrl: (baseUrl: UrlObject, dep: string | UrlObject) => UrlObject;
-  addComponents: (pluginName: string, scripts: string[]) => void;
-  load: (name: string, addOnUrl: string | UrlObject, success?: any, scope?: any, failure?: any) => void;
-  waitFor: (name: string, callback: (...x: any[]) => any) => void;
+  _listeners: { name: string, callback: () => void }[];
+  get (name: string): any;
+  dependencies (name: string): any;
+  requireLangPack (name: string, languages: string): void;
+  add (id: string, addOn: AddOnCallback<T>, dependencies?: any): AddOnCallback<T>;
+  remove (name: string): void;
+  createUrl (baseUrl: UrlObject, dep: string | UrlObject): UrlObject;
+  addComponents (pluginName: string, scripts: string[]): void;
+  load (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: {}, failure?: () => void): void;
+  waitFor (name: string, callback: () => void): void;
 }
 
-export function AddOnManager(): AddOnManager {
+function AddOnManager<T>(): AddOnManager<T> {
   const items = [];
   const urls: Record<string, string> = {};
   const lookup = {};
@@ -179,7 +181,7 @@ export function AddOnManager(): AddOnManager {
     });
   };
 
-  const loadDependencies = function (name: string, addOnUrl: string | UrlObject, success: Function, scope: any) {
+  const loadDependencies = function (name: string, addOnUrl: string | UrlObject, success: () => void, scope: any) {
     const deps = dependencies(name);
 
     each(deps, function (dep) {
@@ -197,7 +199,7 @@ export function AddOnManager(): AddOnManager {
     }
   };
 
-  const load = (name: string, addOnUrl: string | UrlObject, success?: Function, scope?: any, failure?: Function) => {
+  const load = (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: {}, failure?: () => void) => {
     if (urls[name]) {
       return;
     }
@@ -217,7 +219,7 @@ export function AddOnManager(): AddOnManager {
     }
   };
 
-  const waitFor = (name: string, callback: Function) => {
+  const waitFor = (name: string, callback: () => void) => {
     if (lookup.hasOwnProperty(name)) {
       callback();
     } else {
@@ -318,10 +320,12 @@ export function AddOnManager(): AddOnManager {
   };
 }
 
-export namespace AddOnManager {
+namespace AddOnManager {
   export let language;
   export let languageLoad;
   export let baseURL;
-  export const PluginManager = AddOnManager();
-  export const ThemeManager = AddOnManager();
+  export const PluginManager: AddOnManager<any> = AddOnManager();
+  export const ThemeManager: AddOnManager<any> = AddOnManager();
 }
+
+export default AddOnManager;

@@ -17,6 +17,7 @@ import TableRowDialogSpec from './spec/TableRowDialogSpec';
 import TemplateDialogSpec from './spec/TemplateDialogSpec';
 import AlertBannerDialogSpec from './spec/AlertBannerDialogSpec';
 import CustomRediallingSpec from './spec/CustomRediallingSpec';
+import UrlDialogDemo from './UrlDialogDemo';
 
 declare let window: any;
 
@@ -42,5 +43,6 @@ const demo = () => {
 };
 
 window.dialogdemos = {
-  demo
+  demo,
+  UrlDialogDemo
 };

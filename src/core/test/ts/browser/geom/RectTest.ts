@@ -4,9 +4,7 @@ import Rect from 'tinymce/core/api/geom/Rect';
 import Tools from 'tinymce/core/api/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('relativePosition', function () {
@@ -27,11 +25,11 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function () {
         ['br-bl', 50, 40, 20, 30]
       ];
 
-    Tools.each(tests, function (item) {
+    Tools.each(tests, function (item: any[]) {
       LegacyUnit.deepEqual(
         Rect.relativePosition(sourceRect, targetRect, item[0]),
         Rect.create(item[1], item[2], item[3], item[4]),
-        item[0]
+        item[0] as string
       );
     });
   });
@@ -46,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function () {
         [['tl-bl', 'tr-tl', 'bl-tl'], 10, 20, 40, 100, 'bl-tl']
       ];
 
-    Tools.each(tests, function (item) {
+    Tools.each(tests, function (item: any[]) {
       LegacyUnit.equal(
         Rect.findBestRelativePosition(sourceRect, targetRect, Rect.create(item[1], item[2], item[3], item[4]), item[0]),
         item[5],
@@ -92,7 +90,7 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function () {
   });
 
   suite.test('fromClientRect', function () {
-    LegacyUnit.deepEqual(Rect.fromClientRect({ left: 10, top: 20, width: 30, height: 40 }), { x: 10, y: 20, w: 30, h: 40 });
+    LegacyUnit.deepEqual(Rect.fromClientRect({ left: 10, top: 20, width: 30, height: 40, bottom: 60, right: 40 }), { x: 10, y: 20, w: 30, h: 40 });
   });
 
   Pipeline.async({}, suite.toSteps({}), function () {

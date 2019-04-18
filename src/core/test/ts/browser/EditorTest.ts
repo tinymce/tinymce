@@ -459,6 +459,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
     extended_valid_elements: 'custom1,custom2,script[*]',
     entities: 'raw',
     indent: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

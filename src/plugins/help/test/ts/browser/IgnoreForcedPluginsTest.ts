@@ -36,6 +36,6 @@ UnitTest.asynctest('browser.plugin.IgnoreForcedPluginsTest', (success, failure) 
     toolbar: 'help',
     theme: 'silver',
     forced_plugins: ['link'],
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

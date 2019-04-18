@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-export default function () {
+export function NotificationManagerImpl() {
   const unimplemented = function () {
     throw new Error('Theme did not provide a NotificationManager implementation.');
   };

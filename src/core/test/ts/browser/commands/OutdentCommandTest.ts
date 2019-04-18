@@ -2,7 +2,7 @@ import { GeneralSteps, Logger, Pipeline, Step, Assertions } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.commands.OutdentCommandTest', (success, failure) => {
   Theme();
@@ -136,7 +136,7 @@ UnitTest.asynctest('browser.tinymce.core.commands.OutdentCommandTest', (success,
       ]))
     ], onSuccess, onFailure);
   }, {
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     indent: false
   }, success, failure);
 });

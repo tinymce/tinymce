@@ -5,7 +5,7 @@ import { UnitTest } from '@ephox/bedrock';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import KeyUtils from '../../module/test/KeyUtils';
 import Env from 'tinymce/core/api/Env';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const sAssertUndoManagerDataLength = (editor: Editor, expected: number) =>
   Step.sync(() => RawAssertions.assertEq('should have correct length', expected, editor.undoManager.data.length));
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.FirefoxFakeCaretBeforeTableTypeTest', (
       ]))
     ] : [], onSuccess, onFailure);
   }, {
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     plugins: 'table'
   }, success, failure);
 });

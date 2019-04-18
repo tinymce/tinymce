@@ -7,7 +7,7 @@ import { Element, Body, Css } from '@ephox/sugar';
 
 import Theme from '../../../../main/ts/Theme';
 import Env from 'tinymce/core/api/Env';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
   Theme();
@@ -322,7 +322,7 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
       menu: {
         menutest: { title: 'test', items: 'x1'}
       },
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       setup: (ed: Editor) => {
         ed.ui.registry.addButton('custom1', {
           type: 'button',

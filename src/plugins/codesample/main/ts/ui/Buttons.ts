@@ -6,7 +6,7 @@
  */
 
 import Dialog from './Dialog';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const isCodeSampleSelection = (editor) => {
   const node = editor.selection.getStart();
@@ -22,8 +22,8 @@ const register = function (editor: Editor) {
       const nodeChangeHandler = () => {
         api.setActive(isCodeSampleSelection(editor));
       };
-      editor.on('nodeChange', nodeChangeHandler);
-      return () => editor.off('nodeChange', nodeChangeHandler);
+      editor.on('NodeChange', nodeChangeHandler);
+      return () => editor.off('NodeChange', nodeChangeHandler);
     },
   });
 

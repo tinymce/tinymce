@@ -9,6 +9,8 @@ import { Behaviour, Receiving, Toggling } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Arr, Option, Type } from '@ephox/katamari';
 
+import Editor from 'tinymce/core/api/Editor';
+
 import Receivers from '../channels/Receivers';
 import TinyChannels from '../channels/TinyChannels';
 import Styles from '../style/Styles';
@@ -39,7 +41,7 @@ const identify = function (settings) {
   return Type.isArray(toolbar) ? identifyFromArray(toolbar) : extract(toolbar);
 };
 
-const setup = function (realm, editor) {
+const setup = function (realm, editor: Editor) {
   const commandSketch = function (name) {
     return function () {
       return Buttons.forToolbarCommand(editor, name);
@@ -125,8 +127,9 @@ const setup = function (realm, editor) {
     return {
       isSupported () {
         // NOTE: forall is true for none
+        const buttons = editor.ui.registry.getAll().buttons;
         return prereq.forall(function (p) {
-          return Objects.hasKey(editor.buttons, p);
+          return Objects.hasKey(buttons, p);
         });
       },
       sketch

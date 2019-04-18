@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Option } from '@ephox/katamari';
-import Events from 'tinymce/core/api/Events';
+import Editor from './api/Editor';
+import DOMUtils from './api/dom/DOMUtils';
+import Events from './api/Events';
 
 const DOM = DOMUtils.DOM;
 

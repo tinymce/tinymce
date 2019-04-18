@@ -101,7 +101,7 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
             {
               name: 'f4-charmap',
               type: 'collection',
-              columns: 'auto'
+              // columns: 'auto'
             },
             {
               name: 'f5-checkbox',

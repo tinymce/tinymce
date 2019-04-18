@@ -8,7 +8,7 @@
 import Promise from 'tinymce/core/api/util/Promise';
 import Settings from '../api/Settings';
 import DataToHtml, { MediaDialogData, DataToHtmlCallback } from './DataToHtml';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const cache = {};
 const embedPromise = function (data: MediaDialogData, dataToHtml: DataToHtmlCallback, handler) {

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
 import Scan from '../core/Scan';
 import { CharMap } from '../core/CharMap';

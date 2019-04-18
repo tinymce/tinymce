@@ -6,6 +6,8 @@
  */
 
 import FormatUtils from './FormatUtils';
+import Editor from '../api/Editor';
+import { Format, SelectorFormat } from '../api/fmt/Format';
 
 const isEq = FormatUtils.isEq;
 
@@ -23,7 +25,7 @@ const matchesUnInheritedFormatSelector = function (ed, node, name) {
   return false;
 };
 
-const matchParents = function (editor, node, name, vars) {
+const matchParents = function (editor: Editor, node, name, vars) {
   const root = editor.dom.getRoot();
 
   if (node === root) {
@@ -131,7 +133,7 @@ const matchNode = function (ed, node, name, vars?, similar?) {
   }
 };
 
-const match = function (editor, name, vars, node) {
+const match = function (editor: Editor, name, vars, node) {
   let startNode;
 
   // Check specified node
@@ -156,7 +158,7 @@ const match = function (editor, name, vars, node) {
   return false;
 };
 
-const matchAll = function (editor, names, vars) {
+const matchAll = function (editor: Editor, names, vars) {
   let startElement;
   const matchedFormatNames = [];
   const checkedMap = {};
@@ -179,8 +181,8 @@ const matchAll = function (editor, names, vars) {
   return matchedFormatNames;
 };
 
-const canApply = function (editor, name) {
-  const formatList = editor.formatter.get(name);
+const canApply = function (editor: Editor, name) {
+  const formatList = editor.formatter.get(name) as Format[];
   let startNode, parents, i, x, selector;
   const dom = editor.dom;
 
@@ -189,11 +191,11 @@ const canApply = function (editor, name) {
     parents = FormatUtils.getParents(dom, startNode);
 
     for (x = formatList.length - 1; x >= 0; x--) {
-      selector = formatList[x].selector;
+      selector = (formatList[x] as SelectorFormat).selector;
 
       // Format is not selector based then always return TRUE
       // Is it has a defaultBlock then it's likely it can be applied for example align on a non block element line
-      if (!selector || formatList[x].defaultBlock) {
+      if (!selector || (formatList[x] as SelectorFormat).defaultBlock) {
         return true;
       }
 

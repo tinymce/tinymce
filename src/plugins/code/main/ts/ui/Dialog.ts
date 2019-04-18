@@ -6,7 +6,7 @@
  */
 
 import Content from '../core/Content';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const open = function (editor: Editor) {
   const editorContent: string = Content.getContent(editor);

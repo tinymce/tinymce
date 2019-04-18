@@ -13,12 +13,13 @@ import BoundaryDelete from './InlineBoundaryDelete';
 import TableDelete from './TableDelete';
 import InlineFormatDelete from './InlineFormatDelete';
 import CefBoundaryDelete from './CefBoundaryDelete';
+import Editor from '../api/Editor';
 
-const nativeCommand = function (editor, command) {
+const nativeCommand = function (editor: Editor, command: string) {
   editor.getDoc().execCommand(command, false, null);
 };
 
-const deleteCommand = function (editor) {
+const deleteCommand = function (editor: Editor) {
   if (CefDelete.backspaceDelete(editor, false)) {
     return;
   } else if (CefBoundaryDelete.backspaceDelete(editor, false)) {
@@ -39,7 +40,7 @@ const deleteCommand = function (editor) {
   }
 };
 
-const forwardDeleteCommand = function (editor) {
+const forwardDeleteCommand = function (editor: Editor) {
   if (CefDelete.backspaceDelete(editor, true)) {
     return;
   } else if (CefBoundaryDelete.backspaceDelete(editor, true)) {

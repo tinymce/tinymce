@@ -12,6 +12,8 @@ import NodeType from './dom/NodeType';
 import Parents from './dom/Parents';
 import EditorFocus from './focus/EditorFocus';
 import Settings from './api/Settings';
+import Editor from './api/Editor';
+import { Node } from '@ephox/dom-globals';
 
 /**
  * Makes sure that everything gets wrapped in paragraphs.
@@ -54,10 +56,10 @@ const shouldRemoveTextNode = (blockElements, node) => {
   return false;
 };
 
-const addRootBlocks = function (editor) {
+const addRootBlocks = function (editor: Editor) {
   const dom = editor.dom, selection = editor.selection;
   const schema = editor.schema, blockElements = schema.getBlockElements();
-  let node = selection.getStart();
+  let node: Node = selection.getStart();
   const rootNode = editor.getBody();
   let rng;
   let startContainer, startOffset, endContainer, endOffset, rootBlockNode;
@@ -95,7 +97,7 @@ const addRootBlocks = function (editor) {
       }
 
       if (!rootBlockNode) {
-        rootBlockNode = dom.create(forcedRootBlock, editor.settings.forced_root_block_attrs);
+        rootBlockNode = dom.create(forcedRootBlock, Settings.getForcedRootBlockAttrs(editor));
         node.parentNode.insertBefore(rootBlockNode, node);
         wrapped = true;
       }
@@ -117,7 +119,7 @@ const addRootBlocks = function (editor) {
   }
 };
 
-const setup = function (editor) {
+const setup = function (editor: Editor) {
   if (Settings.getForcedRootBlock(editor)) {
     editor.on('NodeChange', Fun.curry(addRootBlocks, editor));
   }

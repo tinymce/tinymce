@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
-import { EditorMode } from 'tinymce/core/Mode';
 import { HTMLElement } from '@ephox/dom-globals';
+import Editor from './Editor';
+import { EditorMode } from '../Mode';
 
 const firePreProcess = (editor: Editor, args) => editor.fire('PreProcess', args);
 

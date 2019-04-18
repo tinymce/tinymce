@@ -10,6 +10,7 @@ import { Element } from '@ephox/sugar';
 import * as ElementType from '../dom/ElementType';
 import NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
+import Editor from '../api/Editor';
 
 const firstNonWhiteSpaceNodeSibling = function (node) {
   while (node) {
@@ -21,9 +22,8 @@ const firstNonWhiteSpaceNodeSibling = function (node) {
   }
 };
 
-const moveToCaretPosition = function (editor, root) {
-  // tslint:disable-next-line:prefer-const
-  let walker, node, rng, lastNode = root, tempElm;
+const moveToCaretPosition = function (editor: Editor, root) {
+  let node, rng, lastNode = root;
   const dom = editor.dom;
   const moveCaretBeforeOnEnterElementsMap = editor.schema.getMoveCaretBeforeOnEnterElements();
 
@@ -43,7 +43,7 @@ const moveToCaretPosition = function (editor, root) {
   root.normalize();
 
   if (root.hasChildNodes()) {
-    walker = new TreeWalker(root, root);
+    const walker = new TreeWalker(root, root);
 
     while ((node = walker.current())) {
       if (NodeType.isText(node)) {
@@ -82,9 +82,6 @@ const moveToCaretPosition = function (editor, root) {
   }
 
   editor.selection.setRng(rng);
-
-  // Remove tempElm created for old IE:s
-  dom.remove(tempElm);
   editor.selection.scrollIntoView(root);
 };
 
@@ -105,11 +102,11 @@ const getEditableRoot = function (dom, node) {
   return parent !== root ? editableRoot : root;
 };
 
-const getParentBlock = function (editor) {
+const getParentBlock = function (editor: Editor) {
   return Option.from(editor.dom.getParent(editor.selection.getStart(true), editor.dom.isBlock));
 };
 
-const getParentBlockName = function (editor) {
+const getParentBlockName = function (editor: Editor) {
   return getParentBlock(editor).fold(
     Fun.constant(''),
     function (parentBlock) {
@@ -118,7 +115,7 @@ const getParentBlockName = function (editor) {
   );
 };
 
-const isListItemParentBlock = function (editor) {
+const isListItemParentBlock = function (editor: Editor) {
   return getParentBlock(editor).filter(function (elm) {
     return ElementType.isListItem(Element.fromDom(elm));
   }).isSome();

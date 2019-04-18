@@ -87,7 +87,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
       ]))
     ], onSuccess, onFailure);
   }, {
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     toolbar: 'fontsizeselect fontselect',
     content_style: [
       '.mce-content-body { font-family: Helvetica; font-size: 42px; }',

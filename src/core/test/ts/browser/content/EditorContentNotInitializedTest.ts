@@ -2,7 +2,7 @@ import { Chain, Logger, Pipeline, RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor as McEditor } from '@ephox/mcagar';
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Theme from 'tinymce/themes/silver/Theme';
 import Node from 'tinymce/core/api/html/Node';
@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentNotInitializedTest
   Theme();
 
   const settings = {
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   };
 
   const cCreateEditor = Chain.mapper((_) => new Editor('editor', {}, EditorManager));

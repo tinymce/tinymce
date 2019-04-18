@@ -23,7 +23,7 @@ const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemRespo
       },
       isActive: () => Toggling.isOn(component),
       isDisabled: () => Disabling.isDisabled(component),
-      setDisabled: (state) => state ? Disabling.disable(component) : Disabling.enable(component)
+      setDisabled: (state: boolean) => Disabling.set(component, state)
     };
   };
 

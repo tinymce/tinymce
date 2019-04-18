@@ -19,8 +19,11 @@ import {
 import { Processor, ValueSchema } from '@ephox/boulder';
 import { DialogManager, Types } from '@ephox/bridge';
 
+import Editor from 'tinymce/core/api/Editor';
+
 import { formCancelEvent } from '../general/FormEvents';
 import { renderDialog } from '../window/SilverDialog';
+import { renderUrlDialog } from '../window/SilverUrlDialog';
 import { renderInlineDialog } from '../window/SilverInlineDialog';
 import * as AlertDialog from './AlertDialog';
 import * as ConfirmDialog from './ConfirmDialog';
@@ -28,9 +31,10 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 
 export interface WindowManagerSetup {
   backstage: UiFactoryBackstage;
+  editor: Editor;
 }
 
-const validateData = (data: Record<string, string>, validator: Processor) => {
+const validateData = <T extends Types.Dialog.DialogData>(data: T, validator: Processor) => {
   return ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
 };
 
@@ -38,8 +42,7 @@ const setup = (extras: WindowManagerSetup) => {
   const alertDialog = AlertDialog.setup(extras);
   const confirmDialog = ConfirmDialog.setup(extras);
 
-  // Some plugins break with this API type specified. Investigate.
-  const open = (config/*: Types.Dialog.DialogApi<T>*/, params, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<any>) => void) => {
+  const open = <T extends Types.Dialog.DialogData>(config: Types.Dialog.DialogApi<T>, params, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void): Types.Dialog.DialogInstanceApi<T> => {
     if (params !== undefined && params.inline === 'toolbar') {
       return openInlineDialog(config, extras.backstage.shared.anchors.toolbar(), closeWindow, params.ariaAttrs);
     } else if (params !== undefined && params.inline === 'cursor') {
@@ -49,8 +52,33 @@ const setup = (extras: WindowManagerSetup) => {
     }
   };
 
-  const openModalDialog = (config/*: Types.Dialog.DialogApi<T>*/, closeWindow) => {
-    const factory = <T extends Record<string, any>>(contents: Types.Dialog.Dialog<T>, internalInitialData, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
+  const openUrl = (config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void) => {
+    return openModalUrlDialog(config, closeWindow);
+  };
+
+  const openModalUrlDialog = (config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void) => {
+    const factory = (contents: Types.UrlDialog.UrlDialog): Types.UrlDialog.UrlDialogInstanceApi => {
+      const dialog = renderUrlDialog(
+        contents,
+        {
+          closeWindow: () => {
+            ModalDialog.hide(dialog.dialog);
+            closeWindow(dialog.instanceApi);
+          }
+        },
+        extras.editor,
+        extras.backstage
+      );
+
+      ModalDialog.show(dialog.dialog);
+      return dialog.instanceApi;
+    };
+
+    return DialogManager.DialogManager.openUrl(factory, config);
+  };
+
+  const openModalDialog = <T extends Types.Dialog.DialogData>(config: Types.Dialog.DialogApi<T>, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void): Types.Dialog.DialogInstanceApi<T> => {
+    const factory = (contents: Types.Dialog.Dialog<T>, internalInitialData: T, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
       // We used to validate data here, but it's done by the instanceApi.setData call below.
       const initialData = internalInitialData;
 
@@ -77,12 +105,12 @@ const setup = (extras: WindowManagerSetup) => {
       return dialog.instanceApi;
     };
 
-    return DialogManager.DialogManager.open(factory, config);
+    return DialogManager.DialogManager.open<T>(factory, config);
   };
 
-  const openInlineDialog = (config/*: Types.Dialog.DialogApi<T>*/, anchor, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<any>) => void, ariaAttrs) => {
-    const factory = <T extends Record<string, any>>(contents: Types.Dialog.Dialog<T>, internalInitialData: Record<string, string>, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
-      const initialData = validateData(internalInitialData, dataValidator);
+  const openInlineDialog = <T extends Types.Dialog.DialogData>(config/*: Types.Dialog.DialogApi<T>*/, anchor, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void, ariaAttrs): Types.Dialog.DialogInstanceApi<T> => {
+    const factory = (contents: Types.Dialog.Dialog<T>, internalInitialData: T, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
+      const initialData = validateData<T>(internalInitialData, dataValidator);
 
       const dialogInit = {
         dataValidator,
@@ -129,7 +157,7 @@ const setup = (extras: WindowManagerSetup) => {
       return dialogUi.instanceApi;
     };
 
-    return DialogManager.DialogManager.open(factory, config);
+    return DialogManager.DialogManager.open<T>(factory, config);
   };
 
   const confirm = (message: string, callback: (state: boolean) => void) => {
@@ -144,12 +172,13 @@ const setup = (extras: WindowManagerSetup) => {
     });
   };
 
-  const close = (instanceApi) => {
+  const close = <T extends Types.Dialog.DialogData>(instanceApi: Types.Dialog.DialogInstanceApi<T>) => {
     instanceApi.close();
   };
 
   return {
     open,
+    openUrl,
     alert,
     close,
     confirm

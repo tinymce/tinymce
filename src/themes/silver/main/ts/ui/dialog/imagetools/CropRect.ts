@@ -126,7 +126,7 @@ export default function (currentRect, viewPortRect, clampRect, containerElm, act
     repaint(currentRect);
 
     DomQuery(containerElm).on('focusin focusout', function (e) {
-      DomQuery(e.target).attr('aria-grabbed', e.type === 'focus');
+      DomQuery(e.target).attr('aria-grabbed', e.type === 'focus' ? 'true' : 'false');
     });
 
     DomQuery(containerElm).on('keydown', function (e) {

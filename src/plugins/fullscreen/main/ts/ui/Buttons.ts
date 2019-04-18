@@ -6,7 +6,7 @@
  */
 
 import { Cell } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const makeSetupHandler = (editor: Editor, fullscreenState: Cell<object>) => (api) => {
   api.setActive(fullscreenState.get() !== null);

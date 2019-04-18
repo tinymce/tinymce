@@ -32,7 +32,7 @@ const toggleContentEditableState = function (state) {
 };
 
 const setup = function (editor) {
-  editor.on('preInit', function () {
+  editor.on('PreInit', function () {
     editor.parser.addNodeFilter('figure', toggleContentEditableState(true));
     editor.serializer.addNodeFilter('figure', toggleContentEditableState(false));
   });

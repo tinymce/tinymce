@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import CodeSample from '../core/CodeSample';
 import Languages, { LanguageSpec } from '../core/Languages';
 import { Arr } from '@ephox/katamari';

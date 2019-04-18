@@ -5,7 +5,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('Editor resize test', (success, failure) => {
   Theme();
@@ -95,7 +95,7 @@ UnitTest.asynctest('Editor resize test', (success, failure) => {
   },
   {
     theme: 'silver',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
     resize: 'both',
     min_height: 300,
     min_width: 300,

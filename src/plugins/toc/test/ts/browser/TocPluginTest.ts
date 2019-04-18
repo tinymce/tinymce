@@ -189,6 +189,6 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
     toc_class: 'tst-toc',
     toc_depth: 2,
     toc_header: 'h3',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

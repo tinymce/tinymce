@@ -21,7 +21,6 @@ const sanitize = function (editor, html) {
   SaxParser({
     validate: false,
     allow_conditional_comments: false,
-    special: 'script,noscript',
 
     comment (text) {
       writer.comment(text);

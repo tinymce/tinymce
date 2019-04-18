@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import NodeType from 'tinymce/core/dom/NodeType';
 import { Node, Range } from '@ephox/dom-globals';
+import NodeType from '../dom/NodeType';
 
 const isAfterNbsp = (container: Node, offset: number) => {
   return NodeType.isText(container) && container.nodeValue[offset - 1] === '\u00a0';

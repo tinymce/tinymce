@@ -20,7 +20,7 @@ import { Type } from '@ephox/katamari';
  * var str = tinymce.util.JSON.serialize(obj);
  */
 
-const serialize = (obj: any) => {
+const serialize = (obj: {}) => {
   const data = JSON.stringify(obj);
 
   if (!Type.isString(data)) {
@@ -34,7 +34,12 @@ const serialize = (obj: any) => {
   });
 };
 
-export default {
+interface JSONUtils {
+  serialize (obj: {}): string;
+  parse (text: string): any;
+}
+
+const JSONUtils: JSONUtils = {
   /**
    * Serializes the specified object as a JSON string.
    *
@@ -51,13 +56,13 @@ export default {
    * @param {string} text JSON String to parse into a JavaScript object.
    * @return {Object} Object from input JSON string or undefined if it failed.
    */
-  parse (text: string) {
+  parse (text: string): any {
     try {
       return JSON.parse(text);
     } catch (ex) {
       // Ignore
     }
   }
-
-  /**#@-*/
 };
+
+export default JSONUtils;

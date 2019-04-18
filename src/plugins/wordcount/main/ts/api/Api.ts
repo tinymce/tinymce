@@ -6,7 +6,7 @@
  */
 
 import * as WordCount from '../text/WordCount';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const get = (editor: Editor) => {
   const getCount = () => {

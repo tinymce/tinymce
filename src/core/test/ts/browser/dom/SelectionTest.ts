@@ -6,7 +6,7 @@ import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function () {
   const success = arguments[arguments.length - 2];
@@ -1267,6 +1267,6 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function () {
     },
     custom_elements: 'custom1,~custom2',
     extended_valid_elements: 'custom1,custom2',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

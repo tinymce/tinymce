@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node, HTMLElement, Text } from '@ephox/dom-globals';
 import { Arr, Cell, Fun } from '@ephox/katamari';
 import CaretContainerRemove from '../caret/CaretContainerRemove';
 import CaretPosition from '../caret/CaretPosition';
@@ -12,9 +13,8 @@ import BoundaryCaret from './BoundaryCaret';
 import BoundaryLocation from './BoundaryLocation';
 import InlineUtils from './InlineUtils';
 import WordSelection from '../selection/WordSelection';
-import { Editor } from 'tinymce/core/api/Editor';
-import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
-import { Node, HTMLElement, Text } from '@ephox/dom-globals';
+import Editor from '../api/Editor';
+import DOMUtils from '../api/dom/DOMUtils';
 
 const setCaretPosition = function (editor: Editor, pos: CaretPosition) {
   const rng = editor.dom.createRng();

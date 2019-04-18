@@ -11,7 +11,7 @@ import * as Api from './api/Api';
 import * as BeforeUnload from './core/BeforeUnload';
 import * as Buttons from './ui/Buttons';
 import * as Storage from './core/Storage';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import * as Settings from './api/Settings';
 
 /**

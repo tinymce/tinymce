@@ -8,6 +8,7 @@ import Env from 'tinymce/core/api/Env';
 import Conversions from 'tinymce/core/file/Conversions';
 import Theme from 'tinymce/themes/silver/Theme';
 import Delay from 'tinymce/core/api/util/Delay';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
@@ -52,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     return elm.src.indexOf('blob:') === 0;
   };
 
-  suite.asyncTest('_scanForImages', function (editor, done, fail) {
+  suite.asyncTest('_scanForImages', function (editor: Editor, done, fail) {
     editor.setContent(imageHtml(testBlobDataUri));
 
     editor._scanForImages().then(function (result) {
@@ -364,6 +365,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     automatic_uploads: false,
     entities: 'raw',
     indent: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

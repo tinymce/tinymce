@@ -7,7 +7,7 @@
 
 import { Element, HTMLAnchorElement } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import { AttachState, LinkDialogOutput } from '../ui/DialogTypes';
@@ -112,8 +112,12 @@ const createLink = (editor: Editor, selectedElm: Element, text: Option<string>, 
     linkImageFigure(editor, selectedElm, linkAttrs);
   } else {
     text.fold(
-      () => editor.execCommand('mceInsertLink', false, linkAttrs),
-      (text) => editor.insertContent(editor.dom.createHTML('a', linkAttrs, editor.dom.encode(text)))
+      () => {
+        editor.execCommand('mceInsertLink', false, linkAttrs);
+      },
+      (text) => {
+        editor.insertContent(editor.dom.createHTML('a', linkAttrs, editor.dom.encode(text)));
+      }
     );
   }
 };

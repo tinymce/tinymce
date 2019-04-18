@@ -5,8 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { KeyboardEvent } from '@ephox/dom-globals';
 import Tools from './util/Tools';
 import Env from './Env';
+import Editor from './Editor';
 
 /**
  * Contains logic for handling keyboard shortcuts.
@@ -38,12 +40,112 @@ const keyCodeLookup = {
 
 const modifierNames = Tools.makeMap('alt,ctrl,shift,meta,access');
 
-export default function (editor) {
-  const self = this;
-  const shortcuts = {};
-  let pendingPatterns = [];
+interface Shortcut {
+  ctrl: boolean;
+  shift: boolean;
+  meta: boolean;
+  alt: boolean;
+  keyCode: number;
+  charCode: number;
+  subpatterns?: Shortcut[];
+  desc?: string;
+}
 
-  const parseShortcut = function (pattern) {
+export interface ShortcutsConstructor {
+  readonly prototype: Shortcuts;
+
+  new (editor: Editor): Shortcuts;
+}
+
+class Shortcuts {
+  private readonly editor: Editor;
+  private readonly shortcuts: Record<string, Shortcut> = {};
+  private pendingPatterns = [];
+
+  constructor(editor: Editor) {
+    this.editor = editor;
+    const self = this;
+
+    editor.on('keyup keypress keydown', function (e) {
+      if ((self.hasModifier(e) || self.isFunctionKey(e)) && !e.isDefaultPrevented()) {
+        each(self.shortcuts, function (shortcut) {
+          if (self.matchShortcut(e, shortcut)) {
+            self.pendingPatterns = shortcut.subpatterns.slice(0);
+
+            if (e.type === 'keydown') {
+              self.executeShortcutAction(shortcut);
+            }
+
+            return true;
+          }
+        });
+
+        if (self.matchShortcut(e, self.pendingPatterns[0])) {
+          if (self.pendingPatterns.length === 1) {
+            if (e.type === 'keydown') {
+              self.executeShortcutAction(self.pendingPatterns[0]);
+            }
+          }
+
+          self.pendingPatterns.shift();
+        }
+      }
+    });
+  }
+
+  /**
+   * Adds a keyboard shortcut for some command or function.
+   *
+   * @method add
+   * @param {String} pattern Shortcut pattern. Like for example: ctrl+alt+o.
+   * @param {String} desc Text description for the command.
+   * @param {String/Function} cmdFunc Command name string or function to execute when the key is pressed.
+   * @param {Object} scope Optional scope to execute the function in.
+   * @return {Boolean} true/false state if the shortcut was added or not.
+   */
+  public add (pattern: string, desc: string, cmdFunc: string | any[] | Function, scope?: {}): boolean {
+    const self = this;
+    let cmd;
+
+    cmd = cmdFunc;
+
+    if (typeof cmdFunc === 'string') {
+      cmdFunc = function () {
+        self.editor.execCommand(cmd, false, null);
+      };
+    } else if (Tools.isArray(cmd)) {
+      cmdFunc = function () {
+        self.editor.execCommand(cmd[0], cmd[1], cmd[2]);
+      };
+    }
+
+    each(explode(Tools.trim(pattern.toLowerCase())), function (pattern) {
+      const shortcut = self.createShortcut(pattern, desc, cmdFunc, scope);
+      self.shortcuts[shortcut.id] = shortcut;
+    });
+
+    return true;
+  }
+
+  /**
+   * Remove a keyboard shortcut by pattern.
+   *
+   * @method remove
+   * @param {String} pattern Shortcut pattern. Like for example: ctrl+alt+o.
+   * @return {Boolean} true/false state if the shortcut was removed or not.
+   */
+  public remove (pattern: string): boolean {
+    const shortcut = this.createShortcut(pattern);
+
+    if (this.shortcuts[shortcut.id]) {
+      delete this.shortcuts[shortcut.id];
+      return true;
+    }
+
+    return false;
+  }
+
+  private parseShortcut (pattern: string): Shortcut {
     let id, key;
     const shortcut: any = {};
 
@@ -95,32 +197,32 @@ export default function (editor) {
     }
 
     return shortcut;
-  };
+  }
 
-  const createShortcut = function (pattern, desc?, cmdFunc?, scope?) {
+  private createShortcut (pattern: string, desc?: string, cmdFunc?, scope?) {
     let shortcuts;
 
-    shortcuts = Tools.map(explode(pattern, '>'), parseShortcut);
+    shortcuts = Tools.map(explode(pattern, '>'), this.parseShortcut);
     shortcuts[shortcuts.length - 1] = Tools.extend(shortcuts[shortcuts.length - 1], {
       func: cmdFunc,
-      scope: scope || editor
+      scope: scope || this.editor
     });
 
     return Tools.extend(shortcuts[0], {
-      desc: editor.translate(desc),
+      desc: this.editor.translate(desc),
       subpatterns: shortcuts.slice(1)
     });
-  };
+  }
 
-  const hasModifier = function (e) {
+  private hasModifier (e: KeyboardEvent): boolean {
     return e.altKey || e.ctrlKey || e.metaKey;
-  };
+  }
 
-  const isFunctionKey = function (e) {
+  private isFunctionKey (e: KeyboardEvent): boolean {
     return e.type === 'keydown' && e.keyCode >= 112 && e.keyCode <= 123;
-  };
+  }
 
-  const matchShortcut = function (e, shortcut) {
+  private matchShortcut (e: KeyboardEvent, shortcut: Shortcut) {
     if (!shortcut) {
       return false;
     }
@@ -139,86 +241,11 @@ export default function (editor) {
     }
 
     return false;
-  };
+  }
 
-  const executeShortcutAction = function (shortcut) {
+  private executeShortcutAction (shortcut) {
     return shortcut.func ? shortcut.func.call(shortcut.scope) : null;
-  };
-
-  editor.on('keyup keypress keydown', function (e) {
-    if ((hasModifier(e) || isFunctionKey(e)) && !e.isDefaultPrevented()) {
-      each(shortcuts, function (shortcut) {
-        if (matchShortcut(e, shortcut)) {
-          pendingPatterns = shortcut.subpatterns.slice(0);
-
-          if (e.type === 'keydown') {
-            executeShortcutAction(shortcut);
-          }
-
-          return true;
-        }
-      });
-
-      if (matchShortcut(e, pendingPatterns[0])) {
-        if (pendingPatterns.length === 1) {
-          if (e.type === 'keydown') {
-            executeShortcutAction(pendingPatterns[0]);
-          }
-        }
-
-        pendingPatterns.shift();
-      }
-    }
-  });
-
-  /**
-   * Adds a keyboard shortcut for some command or function.
-   *
-   * @method add
-   * @param {String} pattern Shortcut pattern. Like for example: ctrl+alt+o.
-   * @param {String} desc Text description for the command.
-   * @param {String/Function} cmdFunc Command name string or function to execute when the key is pressed.
-   * @param {Object} scope Optional scope to execute the function in.
-   * @return {Boolean} true/false state if the shortcut was added or not.
-   */
-  self.add = function (pattern, desc, cmdFunc, scope) {
-    let cmd;
-
-    cmd = cmdFunc;
-
-    if (typeof cmdFunc === 'string') {
-      cmdFunc = function () {
-        editor.execCommand(cmd, false, null);
-      };
-    } else if (Tools.isArray(cmd)) {
-      cmdFunc = function () {
-        editor.execCommand(cmd[0], cmd[1], cmd[2]);
-      };
-    }
-
-    each(explode(Tools.trim(pattern.toLowerCase())), function (pattern) {
-      const shortcut = createShortcut(pattern, desc, cmdFunc, scope);
-      shortcuts[shortcut.id] = shortcut;
-    });
-
-    return true;
-  };
-
-  /**
-   * Remove a keyboard shortcut by pattern.
-   *
-   * @method remove
-   * @param {String} pattern Shortcut pattern. Like for example: ctrl+alt+o.
-   * @return {Boolean} true/false state if the shortcut was removed or not.
-   */
-  self.remove = function (pattern) {
-    const shortcut = createShortcut(pattern);
-
-    if (shortcuts[shortcut.id]) {
-      delete shortcuts[shortcut.id];
-      return true;
-    }
-
-    return false;
-  };
+  }
 }
+
+export default Shortcuts;

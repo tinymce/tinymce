@@ -7,7 +7,7 @@
 
 import { Blob } from '@ephox/dom-globals';
 import { Id } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const createTableHtml = function (cols: number, rows: number) {
   let x, y, html;

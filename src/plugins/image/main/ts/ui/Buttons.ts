@@ -10,7 +10,8 @@ import { Node } from '@ephox/dom-globals';
 import { Element, Node as SugarNode, Traverse } from '@ephox/sugar';
 import { Dialog } from './Dialog';
 import { isFigure, isImage } from '../core/ImageData';
-import { Editor } from 'tinymce/core/api/Editor';
+import Utils from '../core/Utils';
+import Editor from 'tinymce/core/api/Editor';
 
 const getRootElement = (elm: Element): Element => {
   return Traverse.parent(elm).filter((parentElm: Element) => SugarNode.name(parentElm) === 'figure').getOr(elm);
@@ -46,8 +47,8 @@ const register = (editor: Editor) => {
   });
 
   editor.ui.registry.addContextMenu('image', {
-    update: (element: Node): Menu.ContextMenuItem[] => {
-      return isFigure(element) || isImage(element) ? [makeContextMenuItem(element)] : [];
+    update: (element): Menu.ContextMenuItem[] => {
+      return isFigure(element) || (isImage(element) && !Utils.isPlaceholderImage(element)) ? [makeContextMenuItem(element)] : [];
     }
   });
 

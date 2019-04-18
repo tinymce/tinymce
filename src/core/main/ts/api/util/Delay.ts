@@ -5,8 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { clearInterval, clearTimeout, document, HTMLElement, setInterval, setTimeout, window } from '@ephox/dom-globals';
+import Editor from '../Editor';
 import Promise from './Promise';
-import { clearInterval, clearTimeout, document, setInterval, setTimeout, window } from '@ephox/dom-globals';
+
+type DebounceFunc = (...args: any[]) => { stop: () => void; };
+
+interface Delay {
+  requestAnimationFrame (callback: () => void, element?: HTMLElement): void;
+  setEditorInterval (editor: Editor, callback: () => void, time?: number): number;
+  setEditorTimeout (editor: Editor, callback: () => void, time?: number): number;
+  setInterval (callback: () => void, time?: number): number;
+  setTimeout (callback: () => void, time?: number): number;
+  clearInterval (id: number): void;
+  clearTimeout (id: number): void;
+  debounce (callback: (...args: any[]) => void, time?: number): DebounceFunc;
+  throttle (callback: (...args: any[]) => void, time?: number): DebounceFunc;
+}
 
 /**
  * Utility class for working with delayed actions like setTimeout.
@@ -43,7 +58,7 @@ const wrappedSetTimeout = function (callback, time?) {
   return setTimeout(callback, time);
 };
 
-const wrappedSetInterval = function (callback, time?) {
+const wrappedSetInterval = function (callback: Function, time?: number): number {
   if (typeof time !== 'number') {
     time = 1; // IE 8 needs it to be > 0
   }
@@ -51,20 +66,18 @@ const wrappedSetInterval = function (callback, time?) {
   return setInterval(callback, time);
 };
 
-const wrappedClearTimeout = function (id) {
+const wrappedClearTimeout = function (id: number) {
   return clearTimeout(id);
 };
 
-const wrappedClearInterval = function (id) {
+const wrappedClearInterval = function (id: number) {
   return clearInterval(id);
 };
 
-const debounce = function (callback, time?) {
+const debounce = function (callback: (...args: any[]) => void, time?: number): DebounceFunc {
   let timer, func;
 
-  func = function () {
-    const args = arguments;
-
+  func = function (...args) {
     clearTimeout(timer);
 
     timer = wrappedSetTimeout(function () {
@@ -79,7 +92,7 @@ const debounce = function (callback, time?) {
   return func;
 };
 
-export default {
+const Delay: Delay = {
   /**
    * Requests an animation frame and fallbacks to a timeout on older browsers.
    *
@@ -192,3 +205,5 @@ export default {
    */
   clearTimeout: wrappedClearTimeout
 };
+
+export default Delay;

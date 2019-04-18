@@ -8,7 +8,7 @@
 import { NodeAnchorSpec, MakeshiftAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Element } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Option } from '@ephox/katamari';
 
 const nu = function (x, y): MakeshiftAnchorSpec {

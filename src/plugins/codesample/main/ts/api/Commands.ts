@@ -7,7 +7,7 @@
 
 import Dialog from '../ui/Dialog';
 import Utils from '../util/Utils';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const register = function (editor: Editor) {
   editor.addCommand('codesample', function () {

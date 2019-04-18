@@ -28,7 +28,7 @@ export interface CommonFormat<T> {
 }
 
 export interface CommonApplyFormat<T> extends CommonFormat<T> {
-  attributes?: Record<string, string | ((vars?: FormatVars) => string)>;
+  attributes?: Record<string, string | ((vars?: FormatVars) => string | number)>;
   preview?: string | boolean;
   styles?: Record<string, string>;
   toggle?: boolean;

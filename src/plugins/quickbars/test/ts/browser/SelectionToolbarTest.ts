@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Log, Pipeline,
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import QuickbarsPlugin from 'tinymce/plugins/quickbars/Plugin';
@@ -111,6 +111,6 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.SelectionToolbarTest', (su
     inline: true,
     toolbar: false,
     menubar: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

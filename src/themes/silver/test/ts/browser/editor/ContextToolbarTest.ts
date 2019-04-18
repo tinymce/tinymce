@@ -4,7 +4,7 @@ import { Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('Editor ContextToolbar test', (success, failure) => {
@@ -33,7 +33,7 @@ UnitTest.asynctest('Editor ContextToolbar test', (success, failure) => {
     },
     {
       theme: 'silver',
-      base_url: '/project/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce',
       setup: (ed: Editor) => {
         ed.ui.registry.addButton('alpha', {
           text: 'Alpha',

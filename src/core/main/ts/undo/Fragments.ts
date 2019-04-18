@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Entities from '../api/html/Entities';
-import Diff from './Diff';
-import NodeType from 'tinymce/core/dom/NodeType';
 import { Node, DocumentFragment, document, Element } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
+import Entities from '../api/html/Entities';
+import Diff from './Diff';
+import NodeType from '../dom/NodeType';
 
 /**
  * This module reads and applies html fragments from/to dom nodes.

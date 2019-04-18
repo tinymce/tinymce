@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const getEmoticonDatabaseUrl = (editor: Editor, pluginUrl: string): string => {
   return editor.getParam('emoticons_database_url', `${pluginUrl}/js/emojis${editor.suffix}.js`);

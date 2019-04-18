@@ -5,13 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { document } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
 import DOMUtils from './api/dom/DOMUtils';
 import MousePosition from './dom/MousePosition';
 import NodeType from './dom/NodeType';
 import Delay from './api/util/Delay';
-import { document } from '@ephox/dom-globals';
 import Predicate from './util/Predicate';
-import { Arr } from '@ephox/katamari';
+import Editor from './api/Editor';
 
 /**
  * This module contains logic overriding the drag/drop logic of the editor.
@@ -27,16 +28,12 @@ const isDraggable = function (rootElm, elm) {
   return isContentEditableFalse(elm) && elm !== rootElm;
 };
 
-const isValidDropTarget = function (editor, targetElement, dragElement) {
+const isValidDropTarget = function (editor: Editor, targetElement, dragElement) {
   if (targetElement === dragElement || editor.dom.isChildOf(targetElement, dragElement)) {
     return false;
   }
 
-  if (isContentEditableFalse(targetElement)) {
-    return false;
-  }
-
-  return true;
+  return !isContentEditableFalse(targetElement);
 };
 
 const cloneElement = function (elm) {
@@ -45,7 +42,7 @@ const cloneElement = function (elm) {
   return cloneElm;
 };
 
-const createGhost = function (editor, elm, width, height) {
+const createGhost = function (editor: Editor, elm, width, height) {
   const clonedElm = elm.cloneNode(true);
 
   editor.dom.setStyles(clonedElm, { width, height });
@@ -124,7 +121,7 @@ const applyRelPos = function (state, position) {
   };
 };
 
-const start = function (state, editor) {
+const start = function (state, editor: Editor) {
   return function (e) {
     if (isLeftMouseButtonPressed(e)) {
       const ceElm = Arr.find(editor.dom.getParents(e.target), Predicate.or(isContentEditableFalse, isContentEditableTrue)).getOr(null);
@@ -149,7 +146,7 @@ const start = function (state, editor) {
   };
 };
 
-const move = function (state, editor) {
+const move = function (state, editor: Editor) {
   // Reduces laggy drag behavior on Gecko
   const throttledPlaceCaretAt = Delay.throttle(function (clientX, clientY) {
     editor._selectionOverrides.hideFakeCaret();
@@ -187,7 +184,7 @@ const getRawTarget = function (selection) {
   return startContainer.nodeType === 3 ? startContainer.parentNode : startContainer;
 };
 
-const drop = function (state, editor) {
+const drop = function (state, editor: Editor) {
   return function (e) {
     if (state.dragging) {
       if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
@@ -215,7 +212,7 @@ const drop = function (state, editor) {
   };
 };
 
-const stop = function (state, editor) {
+const stop = function (state, editor: Editor) {
   return function () {
     if (state.dragging) {
       editor.fire('dragend');
@@ -230,7 +227,7 @@ const removeDragState = function (state) {
   removeElement(state.ghost);
 };
 
-const bindFakeDragEvents = function (editor) {
+const bindFakeDragEvents = function (editor: Editor) {
   const state = {};
   let pageDom, dragStartHandler, dragHandler, dropHandler, dragEndHandler, rootDocument;
 
@@ -254,7 +251,7 @@ const bindFakeDragEvents = function (editor) {
   });
 };
 
-const blockIeDrop = function (editor) {
+const blockIeDrop = function (editor: Editor) {
   editor.on('drop', function (e) {
     // FF doesn't pass out clientX/clientY for drop since this is for IE we just use null instead
     const realTarget = typeof e.clientX !== 'undefined' ? editor.getDoc().elementFromPoint(e.clientX, e.clientY) : null;
@@ -265,7 +262,7 @@ const blockIeDrop = function (editor) {
   });
 };
 
-const init = function (editor) {
+const init = function (editor: Editor) {
   bindFakeDragEvents(editor);
   blockIeDrop(editor);
 };

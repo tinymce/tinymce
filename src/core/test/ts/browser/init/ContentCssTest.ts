@@ -1,7 +1,7 @@
 import { RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { appendContentCssFromSettings } from 'tinymce/core/init/ContentCss';
 
 UnitTest.test('browser.tinymce.core.init.ContentCssTest', () => {

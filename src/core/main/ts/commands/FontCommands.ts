@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
-import Settings from 'tinymce/core/api/Settings';
-import FontInfo from 'tinymce/core/fmt/FontInfo';
-import { Option } from '@ephox/katamari';
-import CaretFinder from 'tinymce/core/caret/CaretFinder';
-import NodeType from 'tinymce/core/dom/NodeType';
 import { Range, Node } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
+import Editor from '../api/Editor';
+import Settings from '../api/Settings';
+import FontInfo from '../fmt/FontInfo';
+import CaretFinder from '../caret/CaretFinder';
+import NodeType from '../dom/NodeType';
 
 const findFirstCaretElement = (editor: Editor) => {
   return CaretFinder.firstPositionIn(editor.getBody()).map((caret) => {

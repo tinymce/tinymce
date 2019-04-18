@@ -8,11 +8,28 @@
 import Env from '../Env';
 import { KeyboardEvent } from '@ephox/dom-globals';
 
+interface VK {
+  BACKSPACE: number;
+  DELETE: number;
+  DOWN: number;
+  ENTER: number;
+  LEFT: number;
+  RIGHT: number;
+  SPACEBAR: number;
+  TAB: number;
+  UP: number;
+  END: number;
+  HOME: number;
+
+  modifierPressed (e: KeyboardEvent): boolean;
+  metaKeyPressed (e: KeyboardEvent): boolean;
+}
+
 /**
  * This file exposes a set of the common KeyCodes for use. Please grow it as needed.
  */
 
-export default {
+const VK: VK = {
   BACKSPACE: 8,
   DELETE: 46,
   DOWN: 40,
@@ -34,3 +51,5 @@ export default {
     return (Env.mac ? e.metaKey : e.ctrlKey && !e.altKey);
   }
 };
+
+export default VK;

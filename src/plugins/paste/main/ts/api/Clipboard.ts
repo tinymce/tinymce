@@ -8,7 +8,7 @@
 import { ClipboardContents, registerEventsAndFilters, pasteHtml, pasteText, pasteImageData, getDataTransferItems, hasContentType, hasHtmlOrText } from '../core/Clipboard';
 import { PasteBin } from '../core/PasteBin';
 import { Cell } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { ClipboardEvent, DragEvent, Range, DataTransfer } from '@ephox/dom-globals';
 
 export interface Clipboard {
@@ -24,7 +24,7 @@ export interface Clipboard {
 export const Clipboard = (editor: Editor, pasteFormat: Cell<string>): Clipboard => {
   const pasteBin = PasteBin(editor);
 
-  editor.on('preInit', () => registerEventsAndFilters(editor, pasteBin, pasteFormat));
+  editor.on('PreInit', () => registerEventsAndFilters(editor, pasteBin, pasteFormat));
 
   return {
     pasteFormat,

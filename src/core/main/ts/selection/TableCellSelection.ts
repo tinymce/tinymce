@@ -9,14 +9,14 @@ import { Arr } from '@ephox/katamari';
 import { Element, SelectorFilter } from '@ephox/sugar';
 import * as ElementType from '../dom/ElementType';
 import MultiRange from './MultiRange';
+import Editor from '../api/Editor';
 
 const getCellsFromRanges = function (ranges) {
   return Arr.filter(MultiRange.getSelectedNodes(ranges), ElementType.isTableCell);
 };
 
 const getCellsFromElement = function (elm) {
-  const selectedCells = SelectorFilter.descendants(elm, 'td[data-mce-selected],th[data-mce-selected]');
-  return selectedCells;
+  return SelectorFilter.descendants(elm, 'td[data-mce-selected],th[data-mce-selected]');
 };
 
 const getCellsFromElementOrRanges = function (ranges, element) {
@@ -25,7 +25,7 @@ const getCellsFromElementOrRanges = function (ranges, element) {
   return selectedCells.length > 0 ? selectedCells : rangeCells;
 };
 
-const getCellsFromEditor = function (editor) {
+const getCellsFromEditor = function (editor: Editor) {
   return getCellsFromElementOrRanges(MultiRange.getRanges(editor.selection.getSel()), Element.fromDom(editor.getBody()));
 };
 

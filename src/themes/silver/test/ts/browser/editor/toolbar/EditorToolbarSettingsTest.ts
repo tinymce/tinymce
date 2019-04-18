@@ -17,7 +17,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
     toolbar9: toolbarVal9,
     toolbar20: toolbarVal20,
     theme: 'silver',
-    base_url: '/project/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce',
   });
 
   const cAssertIsDefaultToolbar = Assertions.cAssertStructure(

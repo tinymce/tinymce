@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Element, Direction } from '@ephox/sugar';
 
 const getNodeChangeHandler = (editor: Editor, dir: 'ltr' | 'rtl') => {
@@ -14,9 +14,9 @@ const getNodeChangeHandler = (editor: Editor, dir: 'ltr' | 'rtl') => {
       const element = Element.fromDom(e.element);
       api.setActive(Direction.getDirection(element) === dir);
     };
-    editor.on('nodeChange', nodeChangeHandler);
+    editor.on('NodeChange', nodeChangeHandler);
 
-    return () => editor.off('nodeChange', nodeChangeHandler);
+    return () => editor.off('NodeChange', nodeChangeHandler);
   };
 };
 

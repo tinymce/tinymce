@@ -7,7 +7,8 @@
 
 import ArrUtils from '../util/ArrUtils';
 import NodeType from '../dom/NodeType';
-import $ from '../api/dom/DomQuery';
+import DomQuery from '../api/dom/DomQuery';
+import Editor from '../api/Editor';
 
 /**
  * Internal class for overriding formatting.
@@ -28,13 +29,13 @@ const addPostProcessHook = function (name, hook) {
   postProcessHooks[name].push(hook);
 };
 
-const postProcess = function (name, editor) {
+const postProcess = function (name: string, editor: Editor) {
   each(postProcessHooks[name], function (hook) {
     hook(editor);
   });
 };
 
-addPostProcessHook('pre', function (editor) {
+addPostProcessHook('pre', function (editor: Editor) {
   const rng = editor.selection.getRng();
   let isPre, blocks;
 
@@ -43,8 +44,8 @@ addPostProcessHook('pre', function (editor) {
   };
 
   const joinPre = function (pre1, pre2) {
-    $(pre2).remove();
-    $(pre1).append('<br><br>').append(pre2.childNodes);
+    DomQuery(pre2).remove();
+    DomQuery(pre1).append('<br><br>').append(pre2.childNodes);
   };
 
   isPre = NodeType.matchNodeNames('pre');

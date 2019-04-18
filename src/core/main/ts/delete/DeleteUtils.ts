@@ -10,6 +10,8 @@ import { Compare, Element, PredicateFind } from '@ephox/sugar';
 import CaretFinder from '../caret/CaretFinder';
 import * as ElementType from '../dom/ElementType';
 import InlineUtils from '../keyboard/InlineUtils';
+import Editor from '../api/Editor';
+import CaretPosition from '../caret/CaretPosition';
 
 const isBeforeRoot = function (rootNode) {
   return function (elm) {
@@ -23,20 +25,20 @@ const getParentBlock = function (rootNode, elm) {
   }, isBeforeRoot(rootNode)) : Option.none();
 };
 
-const placeCaretInEmptyBody = function (editor) {
+const placeCaretInEmptyBody = function (editor: Editor) {
   const body = editor.getBody();
   const node = body.firstChild && editor.dom.isBlock(body.firstChild) ? body.firstChild : body;
   editor.selection.setCursorLocation(node, 0);
 };
 
-const paddEmptyBody = function (editor) {
+const paddEmptyBody = function (editor: Editor) {
   if (editor.dom.isEmpty(editor.getBody())) {
     editor.setContent('');
     placeCaretInEmptyBody(editor);
   }
 };
 
-const willDeleteLastPositionInElement = function (forward, fromPos, elm) {
+const willDeleteLastPositionInElement = function (forward: boolean, fromPos: CaretPosition, elm) {
   return Options.liftN([
     CaretFinder.firstPositionIn(elm),
     CaretFinder.lastPositionIn(elm)

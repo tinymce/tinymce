@@ -5,7 +5,7 @@ import { Remove, Replication, Element, Attr, Html, SelectorFilter } from '@ephox
 import TableDelete from 'tinymce/core/delete/TableDelete';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', (success, failure) => {
   Theme();
@@ -283,6 +283,6 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', (success, fail
     ], onSuccess, onFailure);
   }, {
     indent: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

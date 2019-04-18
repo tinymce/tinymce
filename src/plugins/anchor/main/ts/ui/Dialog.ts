@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Anchor from '../core/Anchor';
 
 const insertAnchor = function (editor: Editor, newId: string) {

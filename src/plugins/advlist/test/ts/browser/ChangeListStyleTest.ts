@@ -93,6 +93,6 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.ChangeListStyleTest', functi
     indent: false,
     plugins: 'lists advlist',
     toolbar: 'numlist bullist',
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

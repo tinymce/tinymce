@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Compare, Focus, Element } from '@ephox/sugar';
 import Env from '../api/Env';
@@ -12,10 +13,9 @@ import CaretFinder from '../caret/CaretFinder';
 import * as ElementType from '../dom/ElementType';
 import * as RangeNodes from '../selection/RangeNodes';
 import SelectionBookmark from '../selection/SelectionBookmark';
-import { Selection } from '../api/dom/Selection';
+import Selection from '../api/dom/Selection';
 import { CaretPosition } from '../caret/CaretPosition';
-import { Editor } from 'tinymce/core/api/Editor';
-import { Node, Range } from '@ephox/dom-globals';
+import Editor from '../api/Editor';
 
 const getContentEditableHost = (editor: Editor, node: Node) => {
   return editor.dom.getParent(node, function (node) {
@@ -70,12 +70,12 @@ const hasIframeFocus = (editor: Editor): boolean => {
   return editor.iframeElement && Focus.hasFocus(Element.fromDom(editor.iframeElement));
 };
 
-const hasInlineFocus = (editor: Editor) => {
+const hasInlineFocus = (editor: Editor): boolean => {
   const rawBody = editor.getBody();
   return rawBody && hasElementFocus(Element.fromDom(rawBody));
 };
 
-const hasFocus = (editor: Editor) => editor.inline ? hasInlineFocus(editor) : hasIframeFocus(editor);
+const hasFocus = (editor: Editor): boolean => editor.inline ? hasInlineFocus(editor) : hasIframeFocus(editor);
 
 const focusEditor = (editor: Editor) => {
   const selection: Selection = editor.selection;

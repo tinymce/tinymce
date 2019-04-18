@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { Type, Option } from '@ephox/katamari';
 
 export interface StringMap {
@@ -58,7 +58,7 @@ const getCloneElements = (editor: Editor): Option<string[]> => {
 
 const hasObjectResizing = (editor: Editor): boolean => {
   const objectResizing = editor.getParam('object_resizing', true);
-  return objectResizing === 'table' || objectResizing;
+  return Type.isString(objectResizing) ? objectResizing === 'table' : objectResizing;
 };
 
 export {

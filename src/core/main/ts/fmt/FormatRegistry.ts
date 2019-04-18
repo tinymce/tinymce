@@ -9,8 +9,16 @@ import { Obj, Type } from '@ephox/katamari';
 import DefaultFormats from './DefaultFormats';
 import { Format, Formats } from '../api/fmt/Format';
 import Tools from '../api/util/Tools';
+import Editor from '../api/Editor';
 
-export default function (editor) {
+export interface FormatRegistry {
+  get (name?: string): Formats | Format[];
+  has (name: string): boolean;
+  register (name: string | Formats, format?: Format[] | Format): void;
+  unregister (name: string): Formats;
+}
+
+export function FormatRegistry(editor: Editor): FormatRegistry {
   const formats: Record<string, Format[]> = {};
 
   const get = (name?: string): Formats | Format[] => {
@@ -33,7 +41,7 @@ export default function (editor) {
           format = [format];
         }
 
-        Tools.each(format, function (format) {
+        Tools.each(format, function (format: any) {
           // Set deep to false by default on selector formats this to avoid removing
           // alignment on images inside paragraphs when alignment is changed on paragraphs
           if (typeof format.deep === 'undefined') {

@@ -2,7 +2,7 @@ import { Logger, Pipeline, Step, GeneralSteps } from '@ephox/agar';
 import { TinyLoader, TinyApis } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.selection.MultiClickSelectionTest', (success, failure) => {
     Theme();
@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.MultiClickSelectionTest', (su
     }, {
       plugins: '',
       toolbar: '',
-      base_url: '/project/js/tinymce'
+      base_url: '/project/tinymce/js/tinymce'
     }, function () {
       success();
     }, failure);

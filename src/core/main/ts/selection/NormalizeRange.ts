@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node, HTMLElement, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import * as CaretContainer from '../caret/CaretContainer';
 import NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
 import RangeCompare from './RangeCompare';
-import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
-import { isCaretNode } from 'tinymce/core/fmt/FormatContainer';
-import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
-import { Node, HTMLElement, Range } from '@ephox/dom-globals';
+import DOMUtils from '../api/dom/DOMUtils';
+import { isCaretNode } from '../fmt/FormatContainer';
+import { CaretPosition } from '../caret/CaretPosition';
 
 const findParent = (node: Node, rootNode: Node, predicate: (node: Node) => boolean) => {
   while (node && node !== rootNode) {
@@ -78,12 +78,12 @@ const hasContentEditableFalseParent = (body: HTMLElement, node: Node) => {
 // Walks the dom left/right to find a suitable text node to move the endpoint into
 // It will only walk within the current parent block or body and will stop if it hits a block or a BR/IMG
 const findTextNodeRelative = (dom: DOMUtils, isAfterNode: boolean, collapsed: boolean, left: boolean, startNode: Node): Option<CaretPosition> => {
-  let walker, lastInlineElement, parentBlockContainer;
+  let lastInlineElement;
   const body = dom.getRoot();
   let node;
   const nonEmptyElementsMap = dom.schema.getNonEmptyElements();
 
-  parentBlockContainer = dom.getParent(startNode.parentNode, dom.isBlock) || body;
+  const parentBlockContainer = dom.getParent(startNode.parentNode, dom.isBlock) || body;
 
   // Lean left before the BR element if it's the only BR within a block element. Gecko bug: #6680
   // This: <p><br>|</p> becomes <p>|<br></p>
@@ -92,7 +92,7 @@ const findTextNodeRelative = (dom: DOMUtils, isAfterNode: boolean, collapsed: bo
   }
 
   // Walk left until we hit a text node we can move to or a block/br/img
-  walker = new TreeWalker(startNode, parentBlockContainer);
+  const walker = new TreeWalker(startNode, parentBlockContainer);
   while ((node = walker[left ? 'prev' : 'next']())) {
     // Break if we hit a non content editable node
     if (dom.getContentEditableParent(node) === 'false' || isCeFalseCaretContainer(node, body)) {
@@ -125,7 +125,7 @@ const findTextNodeRelative = (dom: DOMUtils, isAfterNode: boolean, collapsed: bo
 };
 
 const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rng: Range): Option<CaretPosition> => {
-  let container, offset, walker;
+  let container, offset;
   const body = dom.getRoot();
   let node, nonEmptyElementsMap;
   let directionLeft, isAfterNode, normalized = false;
@@ -185,7 +185,7 @@ const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rn
       if (container.hasChildNodes() && isTable(container) === false) {
         // Walk the DOM to find a text node to place the caret at or a BR
         node = container;
-        walker = new TreeWalker(container, body);
+        const walker = new TreeWalker(container, body);
 
         do {
           if (NodeType.isContentEditableFalse(node) || CaretContainer.isCaretContainer(node)) {

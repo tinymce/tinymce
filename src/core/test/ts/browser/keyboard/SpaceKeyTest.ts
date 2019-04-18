@@ -70,6 +70,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.SpaceKeyTest', (success, failu
     ], onSuccess, onFailure);
   }, {
     indent: false,
-    base_url: '/project/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

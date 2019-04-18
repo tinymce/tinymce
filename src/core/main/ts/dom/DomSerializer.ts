@@ -5,21 +5,41 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element as DOMElement } from '@ephox/dom-globals';
 import { Fun, Merger } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 import Events from '../api/Events';
 import DOMUtils from '../api/dom/DOMUtils';
 import DomSerializerFilters from './DomSerializerFilters';
 import DomSerializerPreProcess from './DomSerializerPreProcess';
-import DomParser from '../api/html/DomParser';
-import Schema from '../api/html/Schema';
-import Serializer from '../api/html/Serializer';
+import DomParser, { DomParserSettings, ParserArgs } from '../api/html/DomParser';
+import Schema, { SchemaSettings } from '../api/html/Schema';
+import Serializer, { SerializerSettings } from '../api/html/Serializer';
 import Zwsp from '../text/Zwsp';
 import Tools from '../api/util/Tools';
-import { Element } from '@ephox/sugar';
-import { isWsPreserveElement } from 'tinymce/core/dom/ElementType';
-import Node from 'tinymce/core/api/html/Node';
-import { Editor } from 'tinymce/core/api/Editor';
-import { HTMLElement } from '@ephox/dom-globals';
+import { isWsPreserveElement } from './ElementType';
+import Node from '../api/html/Node';
+import Editor from '../api/Editor';
+
+export interface SerializerArgs extends ParserArgs {
+  format?: string;
+}
+
+interface DomSerializerSettings extends DomParserSettings, SchemaSettings, SerializerSettings {
+  entity_encoding?: string;
+}
+
+interface DomSerializer {
+  schema: Schema;
+  addNodeFilter (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void): void;
+  addAttributeFilter (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void): void;
+  serialize (node: DOMElement, parserArgs: { format: 'tree' } & SerializerArgs): Node;
+  serialize (node: DOMElement, parserArgs?: SerializerArgs): string;
+  addRules (rules: string): void;
+  setRules (rules: string): void;
+  addTempAttr (name: string): void;
+  getTempAttrs (): string[];
+}
 
 const addTempAttr = function (htmlParser, tempAttrs, name) {
   if (Tools.inArray(tempAttrs, name) === -1) {
@@ -35,7 +55,7 @@ const addTempAttr = function (htmlParser, tempAttrs, name) {
   }
 };
 
-const postProcess = function (editor, args, content) {
+const postProcess = function (editor: Editor, args, content: string) {
   if (!args.no_events && editor) {
     const outArgs = Events.firePostProcess(editor, Merger.merge(args, { content }));
     return outArgs.content;
@@ -44,7 +64,7 @@ const postProcess = function (editor, args, content) {
   }
 };
 
-const getHtmlFromNode = function (dom: DOMUtils, node: HTMLElement, args) {
+const getHtmlFromNode = function (dom: DOMUtils, node: DOMElement, args) {
   const html = Zwsp.trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node));
   return args.selection || isWsPreserveElement(Element.fromDom(node)) ? html : Tools.trim(html);
 };
@@ -56,17 +76,17 @@ const parseHtml = function (htmlParser, html: string, args) {
   return rootNode;
 };
 
-const serializeNode = function (settings, schema: Schema, node: Node) {
+const serializeNode = function (settings: SerializerSettings, schema: Schema, node: Node) {
   const htmlSerializer = Serializer(settings, schema);
   return htmlSerializer.serialize(node);
 };
 
-const toHtml = function (editor: Editor, settings, schema: Schema, rootNode: Node, args) {
+const toHtml = function (editor: Editor, settings: SerializerSettings, schema: Schema, rootNode: Node, args) {
   const content = serializeNode(settings, schema, rootNode);
   return postProcess(editor, args, content);
 };
 
-export default function (settings, editor: Editor) {
+const DomSerializer = function (settings: DomSerializerSettings, editor: Editor): DomSerializer {
   let dom: DOMUtils, schema: Schema, htmlParser;
   const tempAttrs = ['data-mce-selected'];
 
@@ -102,4 +122,9 @@ export default function (settings, editor: Editor) {
       return tempAttrs;
     }
   };
-}
+};
+
+export {
+  DomSerializer,
+  DomSerializerSettings
+};

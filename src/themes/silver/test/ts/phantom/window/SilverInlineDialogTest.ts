@@ -19,7 +19,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
 
   const sTestOpen = (params) => Chain.asStep({ }, [
     Chain.mapper((_) => {
-      const dialogSpec = {
+      const dialogSpec: Types.Dialog.DialogApi<{ fred: string }> = {
         title: 'Silver Test Inline (Toolbar) Dialog',
         body: {
           type: 'panel',

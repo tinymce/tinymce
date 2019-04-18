@@ -8,7 +8,7 @@
 import Delay from 'tinymce/core/api/util/Delay';
 import * as WordCount from '../text/WordCount';
 import * as Events from '../api/Events';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const updateCount = (editor: Editor) => {
   const wordCount = WordCount.getEditorWordcount(editor);
@@ -21,7 +21,7 @@ const setup = (editor: Editor) => {
   editor.on('init', () => {
     updateCount(editor);
     Delay.setEditorTimeout(editor, () => {
-      editor.on('setcontent beforeaddundo undo redo keyup', debouncedUpdate);
+      editor.on('SetContent BeforeAddUndo Undo Redo keyup', debouncedUpdate);
     }, 0);
   });
 };

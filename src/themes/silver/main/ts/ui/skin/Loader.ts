@@ -6,7 +6,7 @@
  */
 
 import { getSkinUrl, isSkinDisabled } from '../../api/Settings';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import SkinLoaded from './SkinLoaded';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Fun } from '@ephox/katamari';

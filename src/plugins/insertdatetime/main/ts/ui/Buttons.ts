@@ -5,11 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Menu } from '@ephox/bridge';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Actions from '../core/Actions';
 import { Cell } from '@ephox/katamari';
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 const register = function (editor: Editor) {
   const formats = Settings.getFormats(editor);
@@ -22,7 +23,7 @@ const register = function (editor: Editor) {
       return value === defaultFormat.get();
     },
     fetch: (done) => {
-      done(Tools.map(formats, (format) => ({type: 'choiceitem', text: Actions.getDateTime(editor, format), value: format})));
+      done(Tools.map(formats, (format): Menu.ChoiceMenuItemApi => ({type: 'choiceitem', text: Actions.getDateTime(editor, format), value: format})));
     },
     onAction: (...args) => {
       Actions.insertDateTime(editor, defaultFormat.get());
@@ -41,7 +42,7 @@ const register = function (editor: Editor) {
   editor.ui.registry.addNestedMenuItem('insertdatetime', {
     icon: 'insert-time',
     text: 'Date/time',
-    getSubmenuItems: () => Tools.map(formats, (format) => ({type: 'menuitem', text: Actions.getDateTime(editor, format), onAction: makeMenuItemHandler(format)}))
+    getSubmenuItems: () => Tools.map(formats, (format): Menu.MenuItemApi => ({type: 'menuitem', text: Actions.getDateTime(editor, format), onAction: makeMenuItemHandler(format)}))
   });
 };
 

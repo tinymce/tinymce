@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element, Event, Node, document } from '@ephox/dom-globals';
 import { Element as SugarElement, Selectors } from '@ephox/sugar';
 import NodeType from '../../dom/NodeType';
 import RangePoint from '../../dom/RangePoint';
@@ -12,17 +13,16 @@ import Env from '../Env';
 import Delay from '../util/Delay';
 import Tools from '../util/Tools';
 import VK from '../util/VK';
-import { Selection } from './Selection';
-import { Editor } from 'tinymce/core/api/Editor';
-import Events from 'tinymce/core/api/Events';
-import { Element, Event, Node, document } from '@ephox/dom-globals';
+import Selection from './Selection';
+import Editor from '../Editor';
+import Events from '../Events';
 
 interface ControlSelection {
-  isResizable: (elm: Element) => boolean;
-  showResizeRect: (elm: Element) => void;
-  hideResizeRect: () => void;
-  updateResizeRect: (evt: Event) => void;
-  destroy: () => void;
+  isResizable (elm: Element): boolean;
+  showResizeRect (elm: Element): void;
+  hideResizeRect (): void;
+  updateResizeRect (evt: Event): void;
+  destroy (): void;
 }
 
 /**

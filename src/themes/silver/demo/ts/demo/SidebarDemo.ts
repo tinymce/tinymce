@@ -1,7 +1,7 @@
 import { console } from '@ephox/dom-globals';
 import { Element } from '@ephox/sugar';
 
-import { Editor } from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 
 // import ButtonSetupDemo from './ButtonSetupDemo';
 declare let tinymce: any;
