@@ -20,7 +20,7 @@ import { getEditorSettings, getParam, ParamTypeMap } from '../EditorSettings';
 import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import EditorFocus from '../focus/EditorFocus';
 import Render from '../init/Render';
-import * as Mode from '../Mode';
+import { create, Mode } from '../Mode';
 import AddOnManager from './AddOnManager';
 import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';
@@ -175,6 +175,20 @@ class Editor implements EditorObservable {
   public ui: Ui;
 
   /**
+   * Editor mode API
+   *
+   * @property mode
+   * @type tinymce.Editor.mode
+   */
+  public mode: Mode;
+
+  /**
+   *
+   * @deprecated now an alias for editor.mode.set()
+   */
+  public setMode: (mode: string) => void;
+
+  /**
    * Dom query instance with default scope to the editor document and default element is the body of the editor.
    *
    * @property $
@@ -302,6 +316,11 @@ class Editor implements EditorObservable {
     this.ui = {
       registry: registry()
     };
+
+    const self = this;
+    const modeInstance = create(self);
+    this.mode = modeInstance;
+    this.setMode = modeInstance.set;
 
     // Call setup
     editorManager.fire('SetupEditor', { editor: this });
@@ -873,16 +892,6 @@ class Editor implements EditorObservable {
     if (state && state !== oldState) {
       this.fire('dirty');
     }
-  }
-
-  /**
-   * Sets the editor mode. Mode can be for example "design", "code" or "readonly".
-   *
-   * @method setMode
-   * @param {String} mode Mode to set the editor in.
-   */
-  public setMode (mode: Mode.EditorMode) {
-    Mode.setMode(this, mode);
   }
 
   /**
