@@ -34,7 +34,6 @@ function scale(image: HTMLImageElement | HTMLCanvasElement, dW: number, dH: numb
   });
 }
 
-
 function _scale(image: HTMLImageElement | HTMLCanvasElement, wRatio: number, hRatio: number): Promise<HTMLCanvasElement> {
   return new Promise(function (resolve) {
     const sW = ImageSize.getWidth(image);

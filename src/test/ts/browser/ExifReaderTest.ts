@@ -5,7 +5,7 @@ import Assertion from 'ephox/imagetools/test/Assertion';
 import { JPEGMeta } from 'ephox/imagetools/api/Main';
 import { Promise } from 'ephox/imagetools/util/Promise';
 
-let problematiJPEGs: Record<string, any>[] = [
+const problematiJPEGs: Record<string, any>[] = [
   {
     desc: '',
     path: 'exif/00da154a-0107-11e4-8336-3377b25ece3d.jpg',
@@ -52,7 +52,7 @@ let problematiJPEGs: Record<string, any>[] = [
     }
   },
   {
-    desc: "Doesn't resize, #1146",
+    desc: 'Doesn\'t resize, #1146',
     path: 'exif/img_0647.jpg',
     expect: {
       tiff: {
@@ -69,12 +69,12 @@ let problematiJPEGs: Record<string, any>[] = [
     }
   },
   {
-    desc: "Doesn't resize, #1146",
+    desc: 'Doesn\'t resize, #1146',
     path: 'exif/19da5c1e-511e-11e4-98b8-477c078e31c6.jpg',
     hasThumb: true
   },
   {
-    desc: "Valid jpeg with embedded thumb.",
+    desc: 'Valid jpeg with embedded thumb.',
     path: 'exif/IMG_2232.JPG',
     hasThumb: true
   }
@@ -85,20 +85,19 @@ const urlToBlob = function (url: string): Promise<Blob> {
     const xhr = new XMLHttpRequest();
     xhr.responseType = 'blob';
     xhr.open('get', '/project/@ephox/imagetools/src/test/resources/' + url);
-    xhr.onload = function() {
+    xhr.onload = function () {
       if (this.status === 200) {
         resolve(this.response);
       } else {
         reject(`${url} cannot be loaded.`);
       }
     };
-    xhr.onerror = function() {
+    xhr.onerror = function () {
       reject(`${url} cannot be loaded.`);
     };
     xhr.send();
   });
 };
-
 
 UnitTest.asynctest('ExifReaderTest', function (success, failure) {
 

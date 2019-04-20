@@ -27,7 +27,7 @@ const extractFrom = function (blob: Blob): Promise<JPEGMeta> {
       if (br.SHORT(0) === 0xFFD8) { // is JPEG
         const headers = extractHeaders(br);
         const app1 = headers.filter((header) => header.name === 'APP1'); // APP1 contains Exif, Gps, etc
-        const meta = {
+        const meta: JPEGMeta = {
           rawHeaders: headers
         } as JPEGMeta;
 
@@ -78,7 +78,7 @@ const extractHeaders = function (br: BinaryReader): Header[] {
         hex: marker,
         name: 'APP' + (marker & 0x000F),
         start: idx,
-        length: length,
+        length,
         segment: br.SEGMENT(idx, length)
       });
     }

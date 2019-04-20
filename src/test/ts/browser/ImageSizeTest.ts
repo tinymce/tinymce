@@ -4,14 +4,14 @@ import Assertion from 'ephox/imagetools/test/Assertion';
 import * as Conversions from 'ephox/imagetools/util/Conversions';
 import * as ImageSize from 'ephox/imagetools/util/ImageSize';
 
-UnitTest.asynctest('ImageSizeTest', function(success, failure) {
+UnitTest.asynctest('ImageSizeTest', function (success, failure) {
 
   //   QUnit.asyncTest('getWidth', function() {
   //   imagetools.Conversions.blobToImage(testBlob).then(function(image) {
   //     QUnit.equal(ImageSize.getWidth(image), 320);
   //   }).then(QUnit.start);
   // });
-  const canvas = document.createElement("canvas");
+  const canvas = document.createElement('canvas');
   canvas.width = 320;
   canvas.height = 200;
 
@@ -27,4 +27,3 @@ UnitTest.asynctest('ImageSizeTest', function(success, failure) {
     }).catch(failure);
   });
 });
-

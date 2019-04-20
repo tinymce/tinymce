@@ -2,7 +2,7 @@ import Assertion from 'ephox/imagetools/test/Assertion';
 import * as ColorMatrix from 'ephox/imagetools/transformations/ColorMatrix';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('ColorMatrixTest', function() {
+UnitTest.test('ColorMatrixTest', function () {
   const checkIdentity = function (label: string, input: ColorMatrix.Matrix) {
     Assertion.assertEq(input, ColorMatrix.identity(), label);
   };
@@ -59,4 +59,3 @@ UnitTest.test('ColorMatrixTest', function() {
     0.12, 0.12, 0.12, 0.12, 0
   ]);
 });
-

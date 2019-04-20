@@ -14,27 +14,29 @@ function colorFilter(ir: ImageResultType, matrix: ColorMatrix.Matrix): Promise<I
 function applyColorFilter(canvas: HTMLCanvasElement, type: string, matrix: ColorMatrix.Matrix): Promise<ImageResultType> {
   const context = Canvas.get2dContext(canvas);
 
-  function applyMatrix(pixels: ImageData, m: ColorMatrix.Matrix) {
+  function applyMatrix(pixelsData: ImageData, m: ColorMatrix.Matrix) {
+    // tslint:disable-next-line:one-variable-per-declaration
     let r, g, b, a;
-    const d = pixels.data,
+    // tslint:disable-next-line:one-variable-per-declaration
+    const data = pixelsData.data,
       m0 = m[0], m1 = m[1], m2 = m[2], m3 = m[3], m4 = m[4],
       m5 = m[5], m6 = m[6], m7 = m[7], m8 = m[8], m9 = m[9],
       m10 = m[10], m11 = m[11], m12 = m[12], m13 = m[13], m14 = m[14],
       m15 = m[15], m16 = m[16], m17 = m[17], m18 = m[18], m19 = m[19];
 
-    for (let i = 0; i < d.length; i += 4) {
-      r = d[i];
-      g = d[i + 1];
-      b = d[i + 2];
-      a = d[i + 3];
+    for (let i = 0; i < data.length; i += 4) {
+      r = data[i];
+      g = data[i + 1];
+      b = data[i + 2];
+      a = data[i + 3];
 
-      d[i] = r * m0 + g * m1 + b * m2 + a * m3 + m4;
-      d[i + 1] = r * m5 + g * m6 + b * m7 + a * m8 + m9;
-      d[i + 2] = r * m10 + g * m11 + b * m12 + a * m13 + m14;
-      d[i + 3] = r * m15 + g * m16 + b * m17 + a * m18 + m19;
+      data[i] = r * m0 + g * m1 + b * m2 + a * m3 + m4;
+      data[i + 1] = r * m5 + g * m6 + b * m7 + a * m8 + m9;
+      data[i + 2] = r * m10 + g * m11 + b * m12 + a * m13 + m14;
+      data[i + 3] = r * m15 + g * m16 + b * m17 + a * m18 + m19;
     }
 
-    return pixels;
+    return pixelsData;
   }
 
   const pixels = applyMatrix(context.getImageData(0, 0, canvas.width, canvas.height), matrix);
@@ -52,7 +54,7 @@ function convoluteFilter(ir: ImageResultType, matrix: ColorMatrix.Matrix): Promi
 function applyConvoluteFilter(canvas: HTMLCanvasElement, type: string, matrix: ColorMatrix.Matrix): Promise<ImageResultType> {
   const context = Canvas.get2dContext(canvas);
 
-  function applyMatrix(pixelsIn: ImageData, pixelsOut: ImageData, matrix: ColorMatrix.Matrix): ImageData {
+  function applyMatrix(pIn: ImageData, pOut: ImageData, aMatrix: ColorMatrix.Matrix): ImageData {
     function clamp(value: number, min: number, max: number): number {
       if (value > max) {
         value = max;
@@ -64,17 +66,19 @@ function applyConvoluteFilter(canvas: HTMLCanvasElement, type: string, matrix: C
     }
 
     // Calc side and half side of matrix
-    const side = Math.round(Math.sqrt(matrix.length));
+    const side = Math.round(Math.sqrt(aMatrix.length));
     const halfSide = Math.floor(side / 2);
-    const rgba = pixelsIn.data;
-    const drgba = pixelsOut.data;
-    const w = pixelsIn.width;
-    const h = pixelsIn.height;
+    const rgba = pIn.data;
+    const drgba = pOut.data;
+    const w = pIn.width;
+    const h = pIn.height;
 
     // Apply convolution matrix to pixels
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
-        let r = 0, g = 0, b = 0;
+        let r = 0;
+        let g = 0;
+        let b = 0;
 
         for (let cy = 0; cy < side; cy++) {
           for (let cx = 0; cx < side; cx++) {
@@ -83,11 +87,11 @@ function applyConvoluteFilter(canvas: HTMLCanvasElement, type: string, matrix: C
             const scy = clamp(y + cy - halfSide, 0, h - 1);
 
             // Calc r, g, b
-            const offset = (scy * w + scx) * 4;
-            const wt = matrix[cy * side + cx];
-            r += rgba[offset] * wt;
-            g += rgba[offset + 1] * wt;
-            b += rgba[offset + 2] * wt;
+            const innerOffset = (scy * w + scx) * 4;
+            const wt = aMatrix[cy * side + cx];
+            r += rgba[innerOffset] * wt;
+            g += rgba[innerOffset + 1] * wt;
+            b += rgba[innerOffset + 2] * wt;
           }
         }
 
@@ -99,7 +103,7 @@ function applyConvoluteFilter(canvas: HTMLCanvasElement, type: string, matrix: C
       }
     }
 
-    return pixelsOut;
+    return pOut;
   }
 
   const pixelsIn = context.getImageData(0, 0, canvas.width, canvas.height);
@@ -115,16 +119,16 @@ function functionColorFilter(colorFn: (color: number, value: number) => number):
     const context = Canvas.get2dContext(canvas);
     const lookup = new Array(256);
 
-    function applyLookup(pixels: ImageData, lookup: number[]) {
-      const d = pixels.data;
+    function applyLookup(pixelsData: ImageData, lookupData: number[]) {
+      const data = pixelsData.data;
 
-      for (let i = 0; i < d.length; i += 4) {
-        d[i] = lookup[d[i]];
-        d[i + 1] = lookup[d[i + 1]];
-        d[i + 2] = lookup[d[i + 2]];
+      for (let i = 0; i < data.length; i += 4) {
+        data[i] = lookupData[data[i]];
+        data[i + 1] = lookupData[data[i + 1]];
+        data[i + 2] = lookupData[data[i + 2]];
       }
 
-      return pixels;
+      return pixelsData;
     }
 
     for (let i = 0; i < lookup.length; i++) {

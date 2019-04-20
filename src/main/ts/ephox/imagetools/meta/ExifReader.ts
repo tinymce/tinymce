@@ -1,6 +1,5 @@
 import { BinaryReader } from './BinaryReader';
 
-
 // See https://www.exif.org/Exif2-2.PDF for types
 export interface TiffTags {
   Orientation?: number;
@@ -104,12 +103,12 @@ const tags: Record<string, any> = {
 };
 
 const tagDescs: Record<string, any> = {
-  'ColorSpace': {
+  ColorSpace: {
     1: 'sRGB',
     0: 'Uncalibrated'
   },
 
-  'MeteringMode': {
+  MeteringMode: {
     0: 'Unknown',
     1: 'Average',
     2: 'CenterWeightedAverage',
@@ -120,7 +119,7 @@ const tagDescs: Record<string, any> = {
     255: 'Other'
   },
 
-  'LightSource': {
+  LightSource: {
     1: 'Daylight',
     2: 'Fliorescent',
     3: 'Tungsten',
@@ -143,7 +142,7 @@ const tagDescs: Record<string, any> = {
     255: 'Other'
   },
 
-  'Flash': {
+  Flash: {
     0x0000: 'Flash did not fire',
     0x0001: 'Flash fired',
     0x0005: 'Strobe return light not detected',
@@ -168,60 +167,60 @@ const tagDescs: Record<string, any> = {
     0x005F: 'Flash fired, auto mode, return light detected, red-eye reduction mode'
   },
 
-  'ExposureMode': {
+  ExposureMode: {
     0: 'Auto exposure',
     1: 'Manual exposure',
     2: 'Auto bracket'
   },
 
-  'WhiteBalance': {
+  WhiteBalance: {
     0: 'Auto white balance',
     1: 'Manual white balance'
   },
 
-  'SceneCaptureType': {
+  SceneCaptureType: {
     0: 'Standard',
     1: 'Landscape',
     2: 'Portrait',
     3: 'Night scene'
   },
 
-  'Contrast': {
+  Contrast: {
     0: 'Normal',
     1: 'Soft',
     2: 'Hard'
   },
 
-  'Saturation': {
+  Saturation: {
     0: 'Normal',
     1: 'Low saturation',
     2: 'High saturation'
   },
 
-  'Sharpness': {
+  Sharpness: {
     0: 'Normal',
     1: 'Soft',
     2: 'Hard'
   },
 
   // GPS related
-  'GPSLatitudeRef': {
+  GPSLatitudeRef: {
     N: 'North latitude',
     S: 'South latitude'
   },
 
-  'GPSLongitudeRef': {
+  GPSLongitudeRef: {
     E: 'East longitude',
     W: 'West longitude'
   }
 };
 
 interface Offsets {
-  tiffHeader: 10,
-  IFD0: null | number,
-  IFD1: null | number,
-  exifIFD: null | number,
-  gpsIFD: null | number
+  tiffHeader: 10;
+  IFD0: null | number;
+  IFD1: null | number;
+  exifIFD: null | number;
+  gpsIFD: null | number;
 }
 
 export class ExifReader {
@@ -244,16 +243,16 @@ export class ExifReader {
     this._idx = this._offsets.tiffHeader;
 
     // Check if that's APP1 and that it has EXIF
-    if (this.SHORT(0) !== 0xFFE1 || this.STRING(4, 5).toUpperCase() !== "EXIF\0") {
-      throw new Error("Exif data cannot be read or not available.");
+    if (this.SHORT(0) !== 0xFFE1 || this.STRING(4, 5).toUpperCase() !== 'EXIF\0') {
+      throw new Error('Exif data cannot be read or not available.');
     }
 
     // Set read order of multi-byte data
-    this._reader.littleEndian = (this.SHORT(this._idx) == 0x4949);
+    this._reader.littleEndian = (this.SHORT(this._idx) === 0x4949);
 
     // Check if always present bytes are indeed present
     if (this.SHORT(this._idx += 2) !== 0x002A) {
-      throw new Error("Invalid Exif data.");
+      throw new Error('Invalid Exif data.');
     }
 
     this._offsets.IFD0 = this._offsets.tiffHeader + this.LONG(this._idx += 2);
@@ -278,38 +277,38 @@ export class ExifReader {
 
   // The following methods are "inherited" from BinaryReader
 
-  BYTE(idx: number): number {
+  public BYTE(idx: number): number {
       return this._reader.BYTE(idx);
   }
 
-  SHORT(idx: number): number {
+  public SHORT(idx: number): number {
       return this._reader.SHORT(idx);
   }
 
-  LONG(idx: number): number {
+  public LONG(idx: number): number {
       return this._reader.LONG(idx);
   }
 
-  SLONG(idx: number): number {
+  public SLONG(idx: number): number {
       return this._reader.SLONG(idx);
   }
 
-  CHAR(idx: number): string {
+  public CHAR(idx: number): string {
       return this._reader.CHAR(idx);
   }
 
-  STRING(idx: number, count: number): string {
+  public STRING(idx: number, count: number): string {
       return this._reader.STRING(idx, count);
   }
 
-  SEGMENT(idx: number, size: number): ArrayBuffer {
+  public SEGMENT(idx: number, size: number): ArrayBuffer {
       return this._reader.SEGMENT(idx, size);
   }
 
-  asArray(type: 'STRING' | 'CHAR', idx: number, count: number): string[];
-  asArray(type: 'SEGMENT', idx: number, count: number): ArrayBuffer[];
-  asArray(type: string, idx: number, count: number): number[];
-  asArray(type: string, idx: number, count: number): (number | string | ArrayBuffer)[] {
+  public asArray(type: 'STRING' | 'CHAR', idx: number, count: number): string[];
+  public asArray(type: 'SEGMENT', idx: number, count: number): ArrayBuffer[];
+  public asArray(type: string, idx: number, count: number): number[];
+  public asArray(type: string, idx: number, count: number): (number | string | ArrayBuffer)[] {
       // I have to override asArray because of the 'this[type]'
       const values = [];
 
@@ -319,33 +318,33 @@ export class ExifReader {
       return values;
   }
 
-  length(): number {
+  public length(): number {
       return this._reader.length();
   }
 
   // End of "inherited" methods
 
-  UNDEFINED(idx: number): number {
+  public UNDEFINED(idx: number): number {
     return this.BYTE(idx);
   }
 
-  RATIONAL(idx: number): number {
+  public RATIONAL(idx: number): number {
     return this.LONG(idx) / this.LONG(idx + 4);
   }
 
-  SRATIONAL(idx: number): number {
+  public SRATIONAL(idx: number): number {
     return this.SLONG(idx) / this.SLONG(idx + 4);
   }
 
-  ASCII(idx: number): string {
+  public ASCII(idx: number): string {
     return this.CHAR(idx);
   }
 
-  TIFF(): TiffTags {
+  public TIFF(): TiffTags {
     return this._tiffTags;
   }
 
-  EXIF(): ExifTags | null {
+  public EXIF(): ExifTags | null {
     const self = this;
     let Exif = null;
 
@@ -359,8 +358,8 @@ export class ExifReader {
       // Fix formatting of some tags
       if (Exif.ExifVersion && Array.isArray(Exif.ExifVersion)) {
         let exifVersion = '';
-        for (let i = 0; i < Exif.ExifVersion.length; i++) {
-          exifVersion += String.fromCharCode(Exif.ExifVersion[i]);
+        for (const ch of Exif.ExifVersion) {
+          exifVersion += String.fromCharCode(ch);
         }
         Exif.ExifVersion = exifVersion;
       }
@@ -369,7 +368,7 @@ export class ExifReader {
     return Exif;
   }
 
-  GPS(): GPSTags | null {
+  public GPS(): GPSTags | null {
     const self = this;
     let GPS = null;
 
@@ -389,7 +388,7 @@ export class ExifReader {
     return GPS;
   }
 
-  thumb(): ArrayBuffer | null {
+  public thumb(): ArrayBuffer | null {
     const self = this;
 
     if (self._offsets.IFD1) {
@@ -399,7 +398,9 @@ export class ExifReader {
         if ('JPEGInterchangeFormat' in IFD1Tags) {
           return self.SEGMENT(self._offsets.tiffHeader + IFD1Tags.JPEGInterchangeFormat, IFD1Tags.JPEGInterchangeFormatLength);
         }
-      } catch (ex) { }
+      } catch (ex) {
+        // tslint:disable-next-line:no-trailing-whitespace
+      }
     }
     return null;
   }
@@ -420,14 +421,14 @@ export class ExifReader {
     };
 
     const sizes: Record<string, number> = {
-      'BYTE' 		  : 1,
-      'UNDEFINED'	: 1,
-      'ASCII'		  : 1,
-      'SHORT'		  : 2,
-      'LONG' 		  : 4,
-      'RATIONAL' 	: 8,
-      'SLONG'		  : 4,
-      'SRATIONAL'	: 8
+      BYTE 		  : 1,
+      UNDEFINED	: 1,
+      ASCII		  : 1,
+      SHORT		  : 2,
+      LONG 		  : 4,
+      RATIONAL 	: 8,
+      SLONG		  : 4,
+      SRATIONAL	: 8
     };
 
     // Ensure we don't try to read something that doesn't exist
@@ -456,7 +457,7 @@ export class ExifReader {
       const size = sizes[type];
 
       if (!size) {
-        throw new Error("Invalid Exif data.");
+        throw new Error('Invalid Exif data.');
       }
 
       offset += 4;
@@ -469,7 +470,7 @@ export class ExifReader {
 
       // in case we left the boundaries of data throw an early exception
       if (offset + size * count >= self.length()) {
-        throw new Error("Invalid Exif data.");
+        throw new Error('Invalid Exif data.');
       }
 
       // special care for the string
@@ -479,9 +480,9 @@ export class ExifReader {
         continue;
       } else {
         values = self.asArray(type, offset, count);
-        const value = (count == 1 ? values[0] : values);
+        const value = (count === 1 ? values[0] : values);
 
-        if (tagDescs.hasOwnProperty(tag) && typeof value != 'object') {
+        if (tagDescs.hasOwnProperty(tag) && typeof value !== 'object') {
           hash[tag] = tagDescs[tag][value];
         } else {
           hash[tag] = value;

@@ -3,8 +3,8 @@ import * as ResultConversions from 'ephox/imagetools/api/ResultConversions';
 import * as ImageTransformations from 'ephox/imagetools/api/ImageTransformations';
 import { ImageResult } from 'ephox/imagetools/util/ImageResult';
 
-function isSelect (el: HTMLElement): el is HTMLSelectElement {
-  return el.tagName === "SELECT";
+function isSelect(el: HTMLElement): el is HTMLSelectElement {
+  return el.tagName === 'SELECT';
 }
 
 function getValue(el: HTMLSelectElement | HTMLButtonElement): string {
@@ -18,7 +18,7 @@ function getValue(el: HTMLSelectElement | HTMLButtonElement): string {
 }
 
 function modify(image: HTMLImageElement, op: string, args: any[]) {
-  ResultConversions.imageToImageResult(image).then(function(ir) {
+  ResultConversions.imageToImageResult(image).then(function (ir) {
     args.unshift(ir);
     return (ImageTransformations as any)[op].apply(null, args)
       .then(function (imageResult: ImageResult) {
@@ -28,21 +28,22 @@ function modify(image: HTMLImageElement, op: string, args: any[]) {
 }
 
 const forms = document.querySelectorAll('.options') as NodeListOf<HTMLFormElement>;
+// tslint:disable-next-line:prefer-for-of
 for (let i = 0; i < forms.length; i++) {
-  (function(form: HTMLFormElement) {
+  (function (form: HTMLFormElement) {
     form.onsubmit = function (_) {
       const selector = document.getElementById('selector') as HTMLSelectElement;
       const currOp = getValue(selector);
       const image = document.getElementById('editor') as HTMLImageElement;
-      modify(image, currOp, [].slice.call((<HTMLFormElement>this).elements)
-        .filter(function(el: HTMLElement) {
-          return el.tagName != 'BUTTON';
+      modify(image, currOp, [].slice.call((<HTMLFormElement> this).elements)
+        .filter(function (el: HTMLElement) {
+          return el.tagName !== 'BUTTON';
         })
         .map(function (el: HTMLButtonElement) {
           return getValue(el);
         })
       );
       return false;
-    }
+    };
   }(forms[i]));
 }

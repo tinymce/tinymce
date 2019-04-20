@@ -13,9 +13,9 @@ function guessMimeType(uri: string): string {
     return matches ? matches[1] : '';
   } else {
     const mimes: Record<string, string> = {
-      'jpg': 'image/jpeg',
-      'jpeg': 'image/jpeg',
-      'png': 'image/png'
+      jpg: 'image/jpeg',
+      jpeg: 'image/jpeg',
+      png: 'image/png'
     };
 
     const parts = getUriPathName(uri).split('.');

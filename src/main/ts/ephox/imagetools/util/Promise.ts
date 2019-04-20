@@ -1,3 +1,4 @@
+/* tslint:disable:no-shadowed-variable */
 import { setTimeout, Window } from '@ephox/dom-globals';
 
 /* eslint-disable */
@@ -44,10 +45,14 @@ interface PromisePolyfillConstructor extends PromiseConstructor {
   immediateFn? (handler: (...args: any[]) => void): void;
 }
 
-const promise = <T>() => {
+const promise = <T>(): PromisePolyfillConstructor => {
   const Promise = function (this: PromisePolyfill<T>, fn: Executor<T>) {
-    if (typeof this !== 'object') throw new TypeError('Promises must be constructed via new');
-    if (typeof fn !== 'function') throw new TypeError('not a function');
+    if (typeof this !== 'object') {
+      throw new TypeError('Promises must be constructed via new');
+    }
+    if (typeof fn !== 'function') {
+      throw new TypeError('not a function');
+    }
     this._state = null;
     this._value = null;
     this._deferreds = [];
@@ -66,7 +71,7 @@ const promise = <T>() => {
     };
   }
 
-  const isArray = Array.isArray || function (value) { return Object.prototype.toString.call(value) === "[object Array]"; };
+  const isArray = Array.isArray || function (value) { return Object.prototype.toString.call(value) === '[object Array]'; };
 
   function handle(this: PromisePolyfill<T>, deferred: Deferred<T>) {
     const me = this;
@@ -83,8 +88,7 @@ const promise = <T>() => {
       let ret;
       try {
         ret = cb(me._value);
-      }
-      catch (e) {
+      } catch (e) {
         deferred.reject(e);
         return;
       }
@@ -93,8 +97,11 @@ const promise = <T>() => {
   }
 
   function resolve(this: PromisePolyfill<T>, newValue: any) {
-    try { //Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
-      if (newValue === this) throw new TypeError('A promise cannot be resolved with itself.');
+    try {
+      // Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
+      if (newValue === this) {
+        throw new TypeError('A promise cannot be resolved with itself.');
+      }
       if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
         const then = newValue.then;
         if (typeof then === 'function') {
@@ -115,8 +122,8 @@ const promise = <T>() => {
   }
 
   function finale(this: PromisePolyfill<T>) {
-    for (let i = 0, len = this._deferreds.length; i < len; i++) {
-      handle.call(this, this._deferreds[i]);
+    for (const deferred of this._deferreds) {
+      handle.call(this, deferred);
     }
     this._deferreds = [];
   }
@@ -138,16 +145,22 @@ const promise = <T>() => {
     let done = false;
     try {
       fn(function (value) {
-        if (done) return;
+        if (done) {
+          return;
+        }
         done = true;
         onFulfilled(value as T);
       }, function (reason) {
-        if (done) return;
+        if (done) {
+          return;
+        }
         done = true;
         onRejected(reason);
       });
     } catch (ex) {
-      if (done) return;
+      if (done) {
+        return;
+      }
       done = true;
       onRejected(ex);
     }
@@ -168,7 +181,9 @@ const promise = <T>() => {
     const args = Array.prototype.slice.call(values.length === 1 && isArray(values[0]) ? values[0] : values);
 
     return new Promise(function (resolve, reject) {
-      if (args.length === 0) return resolve([]);
+      if (args.length === 0) {
+        return resolve([]);
+      }
       let remaining = args.length;
       function res(i: number, val: any) {
         try {
@@ -211,13 +226,13 @@ const promise = <T>() => {
 
   Promise.race = function <U>(values: PromiseLike<U>[]): PromisePolyfill<U> {
     return new Promise(function (resolve, reject) {
-      for (let i = 0, len = values.length; i < len; i++) {
-        values[i].then(resolve, reject);
+      for (const value of values) {
+        value.then(resolve, reject);
       }
     });
   };
 
-  return Promise as never as PromisePolyfillConstructor;
+  return Promise;
 };
 
 declare const window: Window & { Promise: PromiseConstructor };

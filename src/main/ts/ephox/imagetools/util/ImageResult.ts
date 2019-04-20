@@ -6,13 +6,13 @@ import { Promise } from './Promise';
 
 export interface ImageResult {
   getType (): string;
-  toBlob (): Promise<Blob>,
-  toDataURL (): string,
-  toBase64 (): string,
-  toAdjustedBlob (type?: string, quality?: number): Promise<Blob>,
-  toAdjustedDataURL (type?: string, quality?: number): Promise<string>,
-  toAdjustedBase64 (type?: string, quality?: number): Promise<string>,
-  toCanvas (): Promise<HTMLCanvasElement>
+  toBlob (): Promise<Blob>;
+  toDataURL (): string;
+  toBase64 (): string;
+  toAdjustedBlob (type?: string, quality?: number): Promise<Blob>;
+  toAdjustedDataURL (type?: string, quality?: number): Promise<string>;
+  toAdjustedBase64 (type?: string, quality?: number): Promise<string>;
+  toCanvas (): Promise<HTMLCanvasElement>;
 }
 
 function create(getCanvas: Promise<HTMLCanvasElement>, blob: Blob, uri: string): ImageResult {

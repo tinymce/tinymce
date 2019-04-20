@@ -11,8 +11,10 @@
     "@ephox/katamari": "latest",
     "@ephox/bedrock": "latest",
     "@ephox/sand": "latest",
+    "@ephox/tslint-rules": "latest",
     "awesome-typescript-loader": "^5.2.1",
     "source-map-loader": "^0.2.3",
+    "tslint": "^5.12.1",
     "typescript": "~3.3.0"
   },
   "dependencies": {
@@ -21,7 +23,8 @@
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts",
-    "prepublishOnly": "tsc"
+    "prepublishOnly": "tsc",
+    "lint": "tslint --project ."
   },
   "repository": {
     "type": "git",
@@ -36,6 +39,7 @@
     "lib/test",
     "src",
     "tsconfig.json",
+    "tslint.json",
     "readme.md",
     "LEGAL.txt",
     "CHANGELOG.txt",

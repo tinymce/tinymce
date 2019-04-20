@@ -36,7 +36,7 @@ interface Shaders {
     VERTEX_SHADER: string;
     FRAGMENT_SHADER: string;
     [key: string]: string;
-  }
+  };
 }
 
 const shaders: Shaders = {
@@ -113,16 +113,15 @@ const shaders: Shaders = {
   }
 };
 
-
 function _drawImage(canvas: HTMLCanvasElement, image: HTMLImageElement, wRatio: number, hRatio: number): void {
   const gl = Canvas.get3dContext(canvas);
   if (!gl) {
-    throw "Your environment doesn't support WebGL.";
+    throw new Error('Your environment doesn\'t support WebGL.');
   }
 
   const maxTexSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
   if (image.width > maxTexSize || image.height > maxTexSize) {
-    throw "Width or/and height of the original image exceed max allowed texture size (of " + maxTexSize + " px).";
+    throw new Error('Width or/and height of the original image exceed max allowed texture size (of ' + maxTexSize + ' px).');
   }
 
   // we need a gap around the edges to avoid a black frame
@@ -132,7 +131,7 @@ function _drawImage(canvas: HTMLCanvasElement, image: HTMLImageElement, wRatio: 
   const program = _createProgram(gl);
   gl.useProgram(program);
 
-  _loadFloatBuffer(gl, program, "a_dest_xy", [
+  _loadFloatBuffer(gl, program, 'a_dest_xy', [
     0, 0,
     canvas.width, 0,
     0, canvas.height,
@@ -153,18 +152,15 @@ function _drawImage(canvas: HTMLCanvasElement, image: HTMLImageElement, wRatio: 
 
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 
-
-  const uResolution = gl.getUniformLocation(program, "u_wh");
+  const uResolution = gl.getUniformLocation(program, 'u_wh');
   gl.uniform2f(uResolution, ImageSize.getWidth(image), ImageSize.getHeight(image));
 
-  const uRatio = gl.getUniformLocation(program, "u_ratio");
+  const uRatio = gl.getUniformLocation(program, 'u_ratio');
   gl.uniform2f(uRatio, wRatio, hRatio);
-
 
   // lets draw...
   gl.drawArrays(gl.TRIANGLES, 0, 6);
 }
-
 
 function _loadFloatBuffer(gl: WebGLRenderingContext, program: WebGLProgram, attrName: string, bufferData: ArrayLike<number> | ArrayBufferLike) {
   const attr = gl.getAttribLocation(program, attrName);
@@ -175,23 +171,23 @@ function _loadFloatBuffer(gl: WebGLRenderingContext, program: WebGLProgram, attr
   gl.vertexAttribPointer(attr, 2, gl.FLOAT, false, 0, 0);
 }
 
-
 function _createProgram(gl: WebGLRenderingContext): WebGLProgram {
   const program = gl.createProgram() as WebGLProgram;
 
-  for (let type in shaders.bilinear) {
-    gl.attachShader(program, _loadShader(gl, shaders.bilinear[type], type));
+  for (const type in shaders.bilinear) {
+    if (Object.hasOwnProperty.call(shaders.bilinear, type)) {
+      gl.attachShader(program, _loadShader(gl, shaders.bilinear[type], type));
+    }
   }
 
   gl.linkProgram(program);
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
     const err = gl.getProgramInfoLog(program);
     gl.deleteProgram(program);
-    throw "Cannot create a program: " + err;
+    throw new Error('Cannot create a program: ' + err);
   }
   return program;
 }
-
 
 function _loadShader(gl: WebGLRenderingContext, source: string, type: string) {
   const shader = gl.createShader((gl as any)[type]);
@@ -201,7 +197,7 @@ function _loadShader(gl: WebGLRenderingContext, source: string, type: string) {
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
     const err = gl.getShaderInfoLog(shader);
     gl.deleteShader(shader);
-    throw "Cannot compile a " + type + " shader: " + err;
+    throw new Error('Cannot compile a ' + type + ' shader: ' + err);
   }
   return shader;
 }

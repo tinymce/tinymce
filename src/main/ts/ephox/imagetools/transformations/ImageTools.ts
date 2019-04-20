@@ -11,19 +11,20 @@ function rotate(ir: ImageResult.ImageResult, angle: number): Promise<ImageResult
 function applyRotate(image: HTMLImageElement | HTMLCanvasElement, type: string, angle: number): Promise<ImageResult.ImageResult> {
   const canvas = Canvas.create(image.width, image.height);
   const context = Canvas.get2dContext(canvas);
-  let translateX = 0, translateY = 0;
+  let translateX = 0;
+  let translateY = 0;
 
   angle = angle < 0 ? 360 + angle : angle;
 
-  if (angle == 90 || angle == 270) {
+  if (angle === 90 || angle === 270) {
     Canvas.resize(canvas, canvas.height, canvas.width);
   }
 
-  if (angle == 90 || angle == 180) {
+  if (angle === 90 || angle === 180) {
     translateX = canvas.width;
   }
 
-  if (angle == 270 || angle == 180) {
+  if (angle === 270 || angle === 180) {
     translateY = canvas.height;
   }
 
@@ -43,7 +44,7 @@ function applyFlip(image: HTMLImageElement | HTMLCanvasElement, type: string, ax
   const canvas = Canvas.create(image.width, image.height);
   const context = Canvas.get2dContext(canvas);
 
-  if (axis == 'v') {
+  if (axis === 'v') {
     context.scale(1, -1);
     context.drawImage(image, 0, -canvas.height);
   } else {
@@ -67,7 +68,6 @@ function applyCrop(image: HTMLImageElement | HTMLCanvasElement, type: string, x:
 
   return ImageResult.fromCanvas(canvas, type);
 }
-
 
 function resize(ir: ImageResult.ImageResult, w: number, h: number): Promise<ImageResult.ImageResult> {
   return ir.toCanvas().then(function (canvas) {

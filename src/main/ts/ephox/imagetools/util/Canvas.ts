@@ -12,15 +12,16 @@ function clone(canvas: HTMLCanvasElement) {
 }
 
 function get2dContext(canvas: HTMLCanvasElement) {
-  return canvas.getContext("2d") as CanvasRenderingContext2D;
+  return canvas.getContext('2d') as CanvasRenderingContext2D;
 }
 
 function get3dContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
   let gl = null;
   try {
-    gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+    gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  } catch (e) {
+    // tslint:disable-next-line:no-trailing-whitespace
   }
-  catch (e) { }
 
   if (!gl) { // it seems that sometimes it doesn't throw exception, but still fails to get context
     gl = null;

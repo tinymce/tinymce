@@ -71,7 +71,7 @@ function anyUriToBlob(url: string): Promise<Blob> {
     xhr.responseType = 'blob';
 
     xhr.onload = function () {
-      if (this.status == 200) {
+      if (this.status === 200) {
         resolve(this.response);
       }
     };
@@ -101,7 +101,7 @@ function dataUriToBlobSync(uri: string): Option<Blob> {
   const data = uri.split(',');
 
   const matches = /data:([^;]+)/.exec(data[0]);
-  if (!matches) return Option.none();
+  if (!matches) { return Option.none(); }
 
   const mimetype = matches[1];
   const base64 = data[1];
@@ -118,6 +118,7 @@ function dataUriToBlobSync(uri: string): Option<Blob> {
     const end = Math.min(begin + sliceSize, bytesLength);
 
     const bytes = new Array(end - begin);
+    // tslint:disable-next-line:one-variable-per-declaration
     for (let offset = begin, i = 0; offset < end; ++i, ++offset) {
       bytes[i] = byteCharacters[offset].charCodeAt(0);
     }
