@@ -1,25 +1,28 @@
-import Canvas from '../util/Canvas';
-import ImageResult from '../util/ImageResult';
-import ColorMatrix from './ColorMatrix';
+import { HTMLCanvasElement, ImageData } from '@ephox/dom-globals';
+import * as Canvas from '../util/Canvas';
+import * as ImageResult from '../util/ImageResult';
+import * as ColorMatrix from './ColorMatrix';
 
-function colorFilter(ir, matrix) {
+type ImageResultType = ImageResult.ImageResult;
+
+function colorFilter(ir: ImageResultType, matrix: ColorMatrix.Matrix): Promise<ImageResultType> {
   return ir.toCanvas().then(function (canvas) {
     return applyColorFilter(canvas, ir.getType(), matrix);
   });
 }
 
-function applyColorFilter(canvas, type, matrix) {
-  var context = Canvas.get2dContext(canvas);
-  var pixels;
+function applyColorFilter(canvas: HTMLCanvasElement, type: string, matrix: ColorMatrix.Matrix): Promise<ImageResultType> {
+  const context = Canvas.get2dContext(canvas);
 
-  function applyMatrix(pixels, m) {
-    var d = pixels.data, r, g, b, a, i,
+  function applyMatrix(pixels: ImageData, m: ColorMatrix.Matrix) {
+    let r, g, b, a;
+    const d = pixels.data,
       m0 = m[0], m1 = m[1], m2 = m[2], m3 = m[3], m4 = m[4],
       m5 = m[5], m6 = m[6], m7 = m[7], m8 = m[8], m9 = m[9],
       m10 = m[10], m11 = m[11], m12 = m[12], m13 = m[13], m14 = m[14],
       m15 = m[15], m16 = m[16], m17 = m[17], m18 = m[18], m19 = m[19];
 
-    for (i = 0; i < d.length; i += 4) {
+    for (let i = 0; i < d.length; i += 4) {
       r = d[i];
       g = d[i + 1];
       b = d[i + 2];
@@ -34,27 +37,23 @@ function applyColorFilter(canvas, type, matrix) {
     return pixels;
   }
 
-  pixels = applyMatrix(context.getImageData(0, 0, canvas.width, canvas.height), matrix);
+  const pixels = applyMatrix(context.getImageData(0, 0, canvas.width, canvas.height), matrix);
   context.putImageData(pixels, 0, 0);
 
   return ImageResult.fromCanvas(canvas, type);
 }
 
-function convoluteFilter(ir, matrix) {
+function convoluteFilter(ir: ImageResultType, matrix: ColorMatrix.Matrix): Promise<ImageResultType> {
   return ir.toCanvas().then(function (canvas) {
     return applyConvoluteFilter(canvas, ir.getType(), matrix);
   });
 }
 
-function applyConvoluteFilter(canvas, type, matrix) {
-  var context = Canvas.get2dContext(canvas);
-  var pixelsIn, pixelsOut;
+function applyConvoluteFilter(canvas: HTMLCanvasElement, type: string, matrix: ColorMatrix.Matrix): Promise<ImageResultType> {
+  const context = Canvas.get2dContext(canvas);
 
-  function applyMatrix(pixelsIn, pixelsOut, matrix) {
-    var rgba, drgba, side, halfSide, x, y, r, g, b,
-      cx, cy, scx, scy, offset, wt, w, h;
-
-    function clamp(value, min, max) {
+  function applyMatrix(pixelsIn: ImageData, pixelsOut: ImageData, matrix: ColorMatrix.Matrix): ImageData {
+    function clamp(value: number, min: number, max: number): number {
       if (value > max) {
         value = max;
       } else if (value < min) {
@@ -65,27 +64,27 @@ function applyConvoluteFilter(canvas, type, matrix) {
     }
 
     // Calc side and half side of matrix
-    side = Math.round(Math.sqrt(matrix.length));
-    halfSide = Math.floor(side / 2);
-    rgba = pixelsIn.data;
-    drgba = pixelsOut.data;
-    w = pixelsIn.width;
-    h = pixelsIn.height;
+    const side = Math.round(Math.sqrt(matrix.length));
+    const halfSide = Math.floor(side / 2);
+    const rgba = pixelsIn.data;
+    const drgba = pixelsOut.data;
+    const w = pixelsIn.width;
+    const h = pixelsIn.height;
 
     // Apply convolution matrix to pixels
-    for (y = 0; y < h; y++) {
-      for (x = 0; x < w; x++) {
-        r = g = b = 0;
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        let r = 0, g = 0, b = 0;
 
-        for (cy = 0; cy < side; cy++) {
-          for (cx = 0; cx < side; cx++) {
+        for (let cy = 0; cy < side; cy++) {
+          for (let cx = 0; cx < side; cx++) {
             // Calc relative x, y based on matrix
-            scx = clamp(x + cx - halfSide, 0, w - 1);
-            scy = clamp(y + cy - halfSide, 0, h - 1);
+            const scx = clamp(x + cx - halfSide, 0, w - 1);
+            const scy = clamp(y + cy - halfSide, 0, h - 1);
 
             // Calc r, g, b
-            offset = (scy * w + scx) * 4;
-            wt = matrix[cy * side + cx];
+            const offset = (scy * w + scx) * 4;
+            const wt = matrix[cy * side + cx];
             r += rgba[offset] * wt;
             g += rgba[offset + 1] * wt;
             b += rgba[offset + 2] * wt;
@@ -93,7 +92,7 @@ function applyConvoluteFilter(canvas, type, matrix) {
         }
 
         // Set new RGB to destination buffer
-        offset = (y * w + x) * 4;
+        const offset = (y * w + x) * 4;
         drgba[offset] = clamp(r, 0, 255);
         drgba[offset + 1] = clamp(g, 0, 255);
         drgba[offset + 2] = clamp(b, 0, 255);
@@ -103,23 +102,23 @@ function applyConvoluteFilter(canvas, type, matrix) {
     return pixelsOut;
   }
 
-  pixelsIn = context.getImageData(0, 0, canvas.width, canvas.height);
-  pixelsOut = context.getImageData(0, 0, canvas.width, canvas.height);
+  const pixelsIn = context.getImageData(0, 0, canvas.width, canvas.height);
+  let pixelsOut = context.getImageData(0, 0, canvas.width, canvas.height);
   pixelsOut = applyMatrix(pixelsIn, pixelsOut, matrix);
   context.putImageData(pixelsOut, 0, 0);
 
   return ImageResult.fromCanvas(canvas, type);
 }
 
-function functionColorFilter(colorFn) {
-  var filterImpl = function (canvas, type, value) {
-    var context = Canvas.get2dContext(canvas);
-    var pixels, i, lookup = new Array(256);
+function functionColorFilter(colorFn: (color: number, value: number) => number): (ir: ImageResultType, value: number) => Promise<ImageResultType> {
+  const filterImpl = function (canvas: HTMLCanvasElement, type: string, value: number) {
+    const context = Canvas.get2dContext(canvas);
+    const lookup = new Array(256);
 
-    function applyLookup(pixels, lookup) {
-      var d = pixels.data, i;
+    function applyLookup(pixels: ImageData, lookup: number[]) {
+      const d = pixels.data;
 
-      for (i = 0; i < d.length; i += 4) {
+      for (let i = 0; i < d.length; i += 4) {
         d[i] = lookup[d[i]];
         d[i + 1] = lookup[d[i + 1]];
         d[i + 2] = lookup[d[i + 2]];
@@ -128,79 +127,90 @@ function functionColorFilter(colorFn) {
       return pixels;
     }
 
-    for (i = 0; i < lookup.length; i++) {
+    for (let i = 0; i < lookup.length; i++) {
       lookup[i] = colorFn(i, value);
     }
 
-    pixels = applyLookup(context.getImageData(0, 0, canvas.width, canvas.height), lookup);
+    const pixels = applyLookup(context.getImageData(0, 0, canvas.width, canvas.height), lookup);
     context.putImageData(pixels, 0, 0);
 
     return ImageResult.fromCanvas(canvas, type);
   };
 
-  return function (ir, value) {
+  return function (ir: ImageResultType, value: number) {
     return ir.toCanvas().then(function (canvas) {
       return filterImpl(canvas, ir.getType(), value);
     });
   };
 }
 
-function complexAdjustableColorFilter(matrixAdjustFn) {
-  return function (ir, adjust) {
+function complexAdjustableColorFilter(matrixAdjustFn: (matrix: ColorMatrix.Matrix, adjust: number) => ColorMatrix.Matrix): (ir: ImageResultType, adjust: number) => Promise<ImageResultType> {
+  return function (ir: ImageResultType, adjust: number) {
     return colorFilter(ir, matrixAdjustFn(ColorMatrix.identity(), adjust));
   };
 }
 
-function basicColorFilter(matrix) {
-  return function (ir) {
+function basicColorFilter(matrix: ColorMatrix.Matrix): (ir: ImageResultType) => Promise<ImageResultType> {
+  return function (ir: ImageResultType) {
     return colorFilter(ir, matrix);
   };
 }
 
-function basicConvolutionFilter(kernel) {
-  return function (ir) {
+function basicConvolutionFilter(kernel: ColorMatrix.Matrix): (ir: ImageResultType) => Promise<ImageResultType> {
+  return function (ir: ImageResultType) {
     return convoluteFilter(ir, kernel);
   };
 }
 
-export default <any> {
-  invert: basicColorFilter([
-    -1, 0, 0, 0, 255,
-    0, -1, 0, 0, 255,
-    0, 0, -1, 0, 255,
-    0, 0, 0, 1, 0
-  ]),
+const invert = basicColorFilter([
+  -1, 0, 0, 0, 255,
+  0, -1, 0, 0, 255,
+  0, 0, -1, 0, 255,
+  0, 0, 0, 1, 0
+]);
 
-  brightness: complexAdjustableColorFilter(ColorMatrix.adjustBrightness),
-  hue: complexAdjustableColorFilter(ColorMatrix.adjustHue),
-  saturate: complexAdjustableColorFilter(ColorMatrix.adjustSaturation),
-  contrast: complexAdjustableColorFilter(ColorMatrix.adjustContrast),
-  grayscale: complexAdjustableColorFilter(ColorMatrix.adjustGrayscale),
-  sepia: complexAdjustableColorFilter(ColorMatrix.adjustSepia),
-  colorize: function (ir, adjustR, adjustG, adjustB) {
-    return colorFilter(ir, ColorMatrix.adjustColors(ColorMatrix.identity(), adjustR, adjustG, adjustB));
-  },
+const brightness = complexAdjustableColorFilter(ColorMatrix.adjustBrightness);
+const hue = complexAdjustableColorFilter(ColorMatrix.adjustHue);
+const saturate = complexAdjustableColorFilter(ColorMatrix.adjustSaturation);
+const contrast = complexAdjustableColorFilter(ColorMatrix.adjustContrast);
+const grayscale = complexAdjustableColorFilter(ColorMatrix.adjustGrayscale);
+const sepia = complexAdjustableColorFilter(ColorMatrix.adjustSepia);
+const colorize = function (ir: ImageResultType, adjustR: number, adjustG: number, adjustB: number): Promise<ImageResultType> {
+  return colorFilter(ir, ColorMatrix.adjustColors(ColorMatrix.identity(), adjustR, adjustG, adjustB));
+};
+const sharpen = basicConvolutionFilter([
+  0, -1, 0,
+  -1, 5, -1,
+  0, -1, 0
+]);
 
-  sharpen: basicConvolutionFilter([
-    0, -1, 0,
-    -1, 5, -1,
-    0, -1, 0
-  ]),
+const emboss = basicConvolutionFilter([
+  -2, -1, 0,
+  -1, 1, 1,
+  0, 1, 2
+]);
 
-  emboss: basicConvolutionFilter([
-    -2, -1, 0,
-    -1, 1, 1,
-    0, 1, 2
-  ]),
+const gamma = functionColorFilter(function (color, value) {
+  return Math.pow(color / 255, 1 - value) * 255;
+});
 
-  gamma: functionColorFilter(function (color, value) {
-    return Math.pow(color / 255, 1 - value) * 255;
-  }),
+const exposure = functionColorFilter(function (color, value) {
+  return 255 * (1 - Math.exp(-(color / 255) * value));
+});
 
-  exposure: functionColorFilter(function (color, value) {
-    return 255 * (1 - Math.exp(-(color / 255) * value));
-  }),
-
+export {
+  invert,
+  brightness,
+  hue,
+  saturate,
+  contrast,
+  grayscale,
+  sepia,
+  colorize,
+  sharpen,
+  emboss,
+  gamma,
+  exposure,
   colorFilter,
   convoluteFilter
 };

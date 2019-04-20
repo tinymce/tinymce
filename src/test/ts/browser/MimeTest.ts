@@ -1,10 +1,10 @@
 import Assertion from 'ephox/imagetools/test/Assertion';
-import Mime from 'ephox/imagetools/util/Mime';
+import * as Mime from 'ephox/imagetools/util/Mime';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('MimeTest', function() {
-  var check = function (expected, input) {
-    var label = input;
+  const check = function (expected: string | undefined, input: string) {
+    const label = input;
     Assertion.assertEq(expected, Mime.guessMimeType(input), label);
   };
 

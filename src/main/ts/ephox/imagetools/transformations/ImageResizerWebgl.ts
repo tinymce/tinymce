@@ -1,7 +1,7 @@
-import Promise from '../util/Promise';
-import Conversions from '../util/Conversions';
-import Canvas from '../util/Canvas';
-import ImageSize from '../util/ImageSize';
+import { HTMLCanvasElement, HTMLImageElement, WebGLProgram, WebGLRenderingContext } from '@ephox/dom-globals';
+import { Promise } from '../util/Promise';
+import * as Canvas from '../util/Canvas';
+import * as ImageSize from '../util/ImageSize';
 
 /**
  * @method scale
@@ -11,14 +11,14 @@ import ImageSize from '../util/ImageSize';
  * @param dH {Number} Height that the image should be scaled to
  * @returns {Promise}
  */
-function scale(image, dW, dH) {
+function scale(image: HTMLImageElement, dW: number, dH: number): Promise<HTMLCanvasElement> {
   return new Promise(function (resolve, reject) {
-    var sW = ImageSize.getWidth(image);
-    var sH = ImageSize.getHeight(image);
-    var wRatio = dW / sW;
-    var hRatio = dH / sH;
+    const sW = ImageSize.getWidth(image);
+    const sH = ImageSize.getHeight(image);
+    const wRatio = dW / sW;
+    const hRatio = dH / sH;
 
-    var canvas = Canvas.create(dW, dH);
+    const canvas = Canvas.create(dW, dH);
 
     try {
       _drawImage(canvas, image, wRatio, hRatio);
@@ -31,7 +31,15 @@ function scale(image, dW, dH) {
   });
 }
 
-var shaders = {
+interface Shaders {
+  bilinear: {
+    VERTEX_SHADER: string;
+    FRAGMENT_SHADER: string;
+    [key: string]: string;
+  }
+}
+
+const shaders: Shaders = {
   bilinear: {
     VERTEX_SHADER: '\
             attribute vec2 a_dest_xy;\
@@ -106,13 +114,13 @@ var shaders = {
 };
 
 
-function _drawImage(canvas, image, wRatio, hRatio) {
-  var gl = Canvas.get3dContext(canvas);
+function _drawImage(canvas: HTMLCanvasElement, image: HTMLImageElement, wRatio: number, hRatio: number): void {
+  const gl = Canvas.get3dContext(canvas);
   if (!gl) {
     throw "Your environment doesn't support WebGL.";
   }
 
-  var maxTexSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+  const maxTexSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
   if (image.width > maxTexSize || image.height > maxTexSize) {
     throw "Width or/and height of the original image exceed max allowed texture size (of " + maxTexSize + " px).";
   }
@@ -121,7 +129,7 @@ function _drawImage(canvas, image, wRatio, hRatio) {
   wRatio = canvas.width / (ImageSize.getWidth(image) + 2);
   hRatio = canvas.height / (ImageSize.getHeight(image) + 2);
 
-  var program = _createProgram(gl);
+  const program = _createProgram(gl);
   gl.useProgram(program);
 
   _loadFloatBuffer(gl, program, "a_dest_xy", [
@@ -134,7 +142,7 @@ function _drawImage(canvas, image, wRatio, hRatio) {
   ]);
 
   // load the texture
-  var texture = gl.createTexture();
+  const texture = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, texture);
 
   // without this we won't be able to process images of arbitrary dimensions
@@ -146,10 +154,10 @@ function _drawImage(canvas, image, wRatio, hRatio) {
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 
 
-  var uResolution = gl.getUniformLocation(program, "u_wh");
+  const uResolution = gl.getUniformLocation(program, "u_wh");
   gl.uniform2f(uResolution, ImageSize.getWidth(image), ImageSize.getHeight(image));
 
-  var uRatio = gl.getUniformLocation(program, "u_ratio");
+  const uRatio = gl.getUniformLocation(program, "u_ratio");
   gl.uniform2f(uRatio, wRatio, hRatio);
 
 
@@ -158,9 +166,9 @@ function _drawImage(canvas, image, wRatio, hRatio) {
 }
 
 
-function _loadFloatBuffer(gl, program, attrName, bufferData) {
-  var attr = gl.getAttribLocation(program, attrName);
-  var buffer = gl.createBuffer();
+function _loadFloatBuffer(gl: WebGLRenderingContext, program: WebGLProgram, attrName: string, bufferData: ArrayLike<number> | ArrayBufferLike) {
+  const attr = gl.getAttribLocation(program, attrName);
+  const buffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(bufferData), gl.STATIC_DRAW);
   gl.enableVertexAttribArray(attr);
@@ -168,16 +176,16 @@ function _loadFloatBuffer(gl, program, attrName, bufferData) {
 }
 
 
-function _createProgram(gl) {
-  var program = gl.createProgram();
+function _createProgram(gl: WebGLRenderingContext): WebGLProgram {
+  const program = gl.createProgram() as WebGLProgram;
 
-  for (var type in shaders.bilinear) {
+  for (let type in shaders.bilinear) {
     gl.attachShader(program, _loadShader(gl, shaders.bilinear[type], type));
   }
 
   gl.linkProgram(program);
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    var err = gl.getProgramInfoLog(program);
+    const err = gl.getProgramInfoLog(program);
     gl.deleteProgram(program);
     throw "Cannot create a program: " + err;
   }
@@ -185,19 +193,19 @@ function _createProgram(gl) {
 }
 
 
-function _loadShader(gl, source, type) {
-  var shader = gl.createShader(gl[type]);
+function _loadShader(gl: WebGLRenderingContext, source: string, type: string) {
+  const shader = gl.createShader((gl as any)[type]);
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
 
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    var err = gl.getShaderInfoLog(shader);
+    const err = gl.getShaderInfoLog(shader);
     gl.deleteShader(shader);
     throw "Cannot compile a " + type + " shader: " + err;
   }
   return shader;
 }
 
-export default <any> {
+export default {
   scale
 };
