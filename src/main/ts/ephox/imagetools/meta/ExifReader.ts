@@ -255,7 +255,7 @@ export class ExifReader {
       throw new Error('Invalid Exif data.');
     }
 
-    this._offsets.IFD0 = this._offsets.tiffHeader + this.LONG(this._idx += 2);
+    this._offsets.IFD0 = this._offsets.tiffHeader + this.LONG(this._idx += 2)!;
     this._tiffTags = this.extractTags<TiffTags>(this._offsets.IFD0, tags.tiff);
 
     if ('ExifIFDPointer' in this._tiffTags) {
@@ -269,7 +269,7 @@ export class ExifReader {
     }
 
     // check if we have a thumb as well
-    const IFD1Offset = this.LONG(this._offsets.IFD0 + this.SHORT(this._offsets.IFD0) * 12 + 2);
+    const IFD1Offset = this.LONG(this._offsets.IFD0 + this.SHORT(this._offsets.IFD0)! * 12 + 2);
     if (IFD1Offset) {
       this._offsets.IFD1 = this._offsets.tiffHeader + IFD1Offset;
     }
@@ -277,19 +277,19 @@ export class ExifReader {
 
   // The following methods are "inherited" from BinaryReader
 
-  public BYTE(idx: number): number {
+  public BYTE(idx: number): number | null {
       return this._reader.BYTE(idx);
   }
 
-  public SHORT(idx: number): number {
+  public SHORT(idx: number): number | null {
       return this._reader.SHORT(idx);
   }
 
-  public LONG(idx: number): number {
+  public LONG(idx: number): number | null {
       return this._reader.LONG(idx);
   }
 
-  public SLONG(idx: number): number {
+  public SLONG(idx: number): number | null {
       return this._reader.SLONG(idx);
   }
 
@@ -324,16 +324,16 @@ export class ExifReader {
 
   // End of "inherited" methods
 
-  public UNDEFINED(idx: number): number {
+  public UNDEFINED(idx: number): number | null {
     return this.BYTE(idx);
   }
 
   public RATIONAL(idx: number): number {
-    return this.LONG(idx) / this.LONG(idx + 4);
+    return this.LONG(idx)! / this.LONG(idx + 4)!;
   }
 
   public SRATIONAL(idx: number): number {
-    return this.SLONG(idx) / this.SLONG(idx + 4);
+    return this.SLONG(idx)! / this.SLONG(idx + 4)!;
   }
 
   public ASCII(idx: number): string {
@@ -436,7 +436,7 @@ export class ExifReader {
       return hash;
     }
 
-    const length = self.SHORT(IFD_offset);
+    const length = self.SHORT(IFD_offset)!;
 
     // The size of APP1 including all these elements shall not exceed the 64 Kbytes specified in the JPEG standard.
 
@@ -446,14 +446,14 @@ export class ExifReader {
       // Set binary reader pointer to beginning of the next tag
       let offset = IFD_offset + 2 + i * 12;
 
-      const tag = tags2extract[self.SHORT(offset)];
+      const tag = tags2extract[self.SHORT(offset)!];
 
       if (tag === undefined) {
         continue; // Not the tag we requested
       }
 
-      const type = types[self.SHORT(offset += 2)];
-      const count = self.LONG(offset += 2);
+      const type = types[self.SHORT(offset += 2)!];
+      const count = self.LONG(offset += 2)!;
       const size = sizes[type];
 
       if (!size) {
@@ -465,7 +465,7 @@ export class ExifReader {
       // tag can only fit 4 bytes of data, if data is larger we should look outside
       if (size * count > 4) {
         // instead of data tag contains an offset of the data
-        offset = self.LONG(offset) + self._offsets.tiffHeader;
+        offset = self.LONG(offset)! + self._offsets.tiffHeader;
       }
 
       // in case we left the boundaries of data throw an early exception

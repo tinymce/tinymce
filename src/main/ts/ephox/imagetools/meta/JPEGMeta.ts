@@ -57,7 +57,7 @@ const extractHeaders = function (br: BinaryReader): Header[] {
   let idx = 2;
 
   while (idx + 2 <= br.length()) {
-    marker = br.SHORT(idx);
+    marker = br.SHORT(idx)!;
 
     // omit RST (restart) markers
     if (marker >= 0xFFD0 && marker <= 0xFFD7) {
@@ -70,7 +70,7 @@ const extractHeaders = function (br: BinaryReader): Header[] {
       break;
     }
 
-    const length = br.SHORT(idx + 2) + 2;
+    const length = br.SHORT(idx + 2)! + 2;
 
     // APPn marker detected
     if (marker >= 0xFFE1 && marker <= 0xFFEF) {

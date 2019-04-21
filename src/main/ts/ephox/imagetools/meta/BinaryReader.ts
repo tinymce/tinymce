@@ -26,54 +26,26 @@ export class BinaryReader {
     return sum;
   }
 
-  public BYTE(idx: number): number {
-    const num = this.read(idx, 1);
-    if (num !== null) {
-      return num;
-    } else {
-      // TODO is this right?
-      throw new Error('No more data to read');
-    }
+  public BYTE(idx: number): number | null {
+    return this.read(idx, 1);
   }
 
-  public SHORT(idx: number): number {
-    const num = this.read(idx, 2);
-    if (num !== null) {
-      return num;
-    } else {
-      // TODO is this right?
-      throw new Error('No more data to read');
-    }
+  public SHORT(idx: number): number | null {
+    return this.read(idx, 2);
   }
 
-  public LONG(idx: number): number {
+  public LONG(idx: number): number | null {
+    return this.read(idx, 4);
+  }
+
+  public SLONG(idx: number): number | null { // 2's complement notation
     const num = this.read(idx, 4);
-    if (num !== null) {
-      return num;
-    } else {
-      // TODO is this right?
-      throw new Error('No more data to read');
-    }
-  }
-
-  public SLONG(idx: number): number { // 2's complement notation
-    const num = this.read(idx, 4);
-    if (num !== null) {
-      return (num > 2147483647 ? num - 4294967296 : num);
-    } else {
-      // TODO is this right?
-      throw new Error('No more data to read');
-    }
+    return num === null ? null : (num > 2147483647 ? num - 4294967296 : num);
   }
 
   public CHAR(idx: number): string {
     const num = this.read(idx, 1);
-    if (num !== null) {
-      return String.fromCharCode(num);
-    } else {
-      // TODO is this right?
-      throw new Error('No more data to read');
-    }
+    return num === null ? '' : String.fromCharCode(num);
   }
 
   public STRING(idx: number, count: number): string {
