@@ -117,13 +117,6 @@
     user-select: none;
   }
 
-  // Disabled item
-  .tox-collection__item--state-disabled {
-    background-color: unset;
-    color: @collection-item-label-disabled-text-color;
-    cursor: default;
-  }
-
   .tox-collection--list .tox-collection__item {
     padding: @collection-item-padding;
   }
@@ -144,7 +137,7 @@
     color: @collection-list-item-label-enabled-text-color;
   }
 
-  .tox-collection--list .tox-collection__item--active {
+  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     background-color: @collection-list-item-active-background-color;
     color: @collection-list-item-label-active-text-color;
   }
@@ -154,7 +147,7 @@
     color: @collection-toolbar-item-label-enabled-text-color;
   }
 
-  .tox-collection--toolbar .tox-collection__item--active {
+  .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     background-color: @collection-toolbar-item-active-background-color;
     color: @collection-toolbar-item-label-active-text-color;
   }
@@ -164,9 +157,16 @@
     color: @collection-grid-item-label-enabled-text-color;
   }
 
-  .tox-collection--grid .tox-collection__item--active {
+  .tox-collection--grid .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     background-color: @collection-grid-item-active-background-color;
     color: @collection-grid-item-label-active-text-color;
+  }
+
+  // Disabled item
+  .tox-collection__item--state-disabled {
+    background-color: transparent;
+    color: @collection-item-label-disabled-text-color;
+    cursor: default;
   }
 
   .tox-collection__item-icon {
