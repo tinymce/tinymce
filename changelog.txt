@@ -1,19 +1,22 @@
-Version 5.0.4 (TBD)
+Version 5.0.4 (2019-04-23)
+    Added back URL dialog functionality, which is now available via `editor.windowManager.openUrl()` #TINY-3382
+    Added the missing throbber functionality when calling `editor.setProgressState(true)` #TINY-3453
+    Added function to reset the editor content and undo/dirty state via `editor.resetContent()` #TINY-3435
+    Added the ability to set menu buttons as active #TINY-3274
+    Added `editor.mode` API, featuring a custom editor mode API #TINY-3406
+    Added better styling to floating toolbar drawer #TINY-3479
+    Added the new premium plugins to the Help dialog plugins tab #TINY-3496
+    Added the linkchecker context menu items to the default configuration #TINY-3543
     Fixed image context menu items showing on placeholder images #TINY-3280
     Fixed dialog labels and text color contrast within notifications/alert banners to satisfy WCAG 4.5:1 contrast ratio for accessibility #TINY-3351
-    Fixed selectbox and colorswatch items not being translated #TINY-3546
-    Added linkchecker context menu items to default configuration #TINY-3543
-    Fixed toolbar drawer sliding mode keyboard navigation incorrectly focusing the editor when tabbing #TINY-3533
-    Added the new premium plugins to the Help dialog plugins tab #TINY-3496
-    Fixed positioning of the styleselect menu in iOS while using mobile theme #TINY-3505
+    Fixed selectbox and colorpicker items not being translated #TINY-3546
+    Fixed toolbar drawer sliding mode to correctly focus the editor when tabbing via keyboard navigation #TINY-3533
+    Fixed positioning of the styleselect menu in iOS while using the mobile theme #TINY-3505
+    Fixed the menubutton `onSetup` callback to be correctly executed when rendering the menu buttons #TINY-3547
+    Fixed `default_link_target` setting to be correctly utilized when creating a link #TINY-3508
+    Fixed colorpicker floating marginally outside its container #TINY-3026
+    Fixed disabled menu items displaying as active when hovered #TINY-3027
     Removed redundant mobile wrapper #TINY-3480
-    Added missing throbber functionality when calling editor.setProgressState(true) #TINY-3453
-    Fixed the menubutton onSetup callback not executing when menubuttons were rendered #TINY-3547
-    Added back url dialog functionality, which is now available via `editor.windowManager.openUrl()` #TINY-3382
-    Added the ability to set menu buttons as active #TINY-3274
-    Added function to reset the editor content and undo/dirty state via `editor.resetContent()` #TINY-3435
-    Fixed `default_link_target` setting not being utilized correctly when creating a link #TINY-3508
-    Added `editor.mode` API, featuring a custom editor mode API #TINY-3406
 Version 5.0.3 (2019-03-19)
     Changed empty nested-menu items within the style formats menu to be disabled or hidden if the value of `style_formats_autohide` is `true` #TINY-3310
     Changed the entire phrase 'Powered by Tiny' in the status bar to be a link instead of just the word 'Tiny' #TINY-3366
