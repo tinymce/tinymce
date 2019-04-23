@@ -1,4 +1,5 @@
 import { BinaryReader } from './BinaryReader';
+import { Matrix } from 'ephox/imagetools/transformations/ColorMatrix';
 
 // See https://www.exif.org/Exif2-2.PDF for types
 export interface TiffTags {
@@ -399,7 +400,7 @@ export class ExifReader {
           return self.SEGMENT(self._offsets.tiffHeader + IFD1Tags.JPEGInterchangeFormat, IFD1Tags.JPEGInterchangeFormatLength);
         }
       } catch (ex) {
-        // tslint:disable-next-line:no-trailing-whitespace
+        // tslint:disable-next-line:no-empty
       }
     }
     return null;

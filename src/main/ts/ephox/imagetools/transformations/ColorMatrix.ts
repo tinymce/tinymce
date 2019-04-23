@@ -37,8 +37,8 @@ const DELTA_INDEX = [
 ];
 
 function multiply(matrix1: Matrix, matrix2: Matrix): Matrix {
-  const col: number[] = [];
-  const out: number[] = new Array(10);
+  const col: Matrix = [];
+  const out: Matrix = new Array(10);
   let val;
 
   for (let i = 0; i < 5; i++) {

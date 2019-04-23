@@ -20,7 +20,7 @@ function get3dContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
   try {
     gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
   } catch (e) {
-    // tslint:disable-next-line:no-trailing-whitespace
+    // tslint:disable-next-line:no-empty
   }
 
   if (!gl) { // it seems that sometimes it doesn't throw exception, but still fails to get context
