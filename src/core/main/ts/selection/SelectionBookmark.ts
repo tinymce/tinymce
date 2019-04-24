@@ -10,6 +10,7 @@ import { Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, Element, Node, Text, Traverse, Selection } from '@ephox/sugar';
 import Editor from '../api/Editor';
+import Tools from '../api/util/Tools';
 
 const browser = PlatformDetection.detect().browser;
 
@@ -35,7 +36,7 @@ const normalizeRng = function (rng) {
 };
 
 const isOrContains = function (root, elm) {
-  return Compare.contains(root, elm) || Compare.eq(root, elm);
+  return !(elm && Tools.isRestricted(elm.dom())) && (Compare.contains(root, elm) || Compare.eq(root, elm));
 };
 
 const isRngInRoot = function (root) {
