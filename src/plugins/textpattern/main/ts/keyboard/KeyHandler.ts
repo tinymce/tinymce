@@ -10,9 +10,10 @@ import { Unicode } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
 import { PatternSet } from '../api/Pattern';
-import { applyBlockPatterns, applyNestedInlinePatterns } from './ApplyPatterns';
-import { textBefore } from './TextSearch';
-import { cleanEmptyNodes } from './Utils';
+import * as BlockPattern from '../core/BlockPattern';
+import * as InlinePattern from '../core/InlinePattern';
+import { textBefore } from '../text/TextSearch';
+import { cleanEmptyNodes } from '../core/Utils';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
   if (editor.selection.isCollapsed()) {
@@ -24,8 +25,8 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
       () => {
         // create a cursor position that we can move to avoid the inline formats
         editor.insertContent(Unicode.zeroWidth());
-        applyNestedInlinePatterns(editor, patternSet.inlinePatterns);
-        applyBlockPatterns(editor, patternSet.blockPatterns);
+        InlinePattern.applyPatterns(editor, patternSet.inlinePatterns);
+        BlockPattern.applyPatterns(editor, patternSet.blockPatterns);
         // find the spot before the cursor position
         const range = editor.selection.getRng();
         const spot = textBefore(range.startContainer, range.startOffset, editor.dom.getRoot());
@@ -46,7 +47,7 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
 
 const handleInlineKey = (editor: Editor, patternSet: PatternSet): void => {
   editor.undoManager.transact(() => {
-    applyNestedInlinePatterns(editor, patternSet.inlinePatterns);
+    InlinePattern.applyPatterns(editor, patternSet.inlinePatterns);
   });
 };
 

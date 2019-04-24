@@ -9,9 +9,9 @@ import { Node, Text } from '@ephox/dom-globals';
 import { Adt, Option } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
-import * as Spot from './Spot';
+import { isText } from '../core/Utils';
+import * as Spot from '../core/Spot';
 import { TextWalker } from './TextWalker';
-import { isText } from './Utils';
 
 export interface OutcomeAdt extends Adt {
   fold: <R, T = any>(aborted: () => R, edge: (edge: Node) => R, success: (info: T) => R) => R;

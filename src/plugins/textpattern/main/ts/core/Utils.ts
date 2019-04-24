@@ -6,9 +6,10 @@
  */
 
 import { HTMLElement, Node, Range, Text } from '@ephox/dom-globals';
-import { Arr, Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Option, Type } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Formatter from 'tinymce/core/api/Formatter';
+import { Pattern } from '../api/Pattern';
 
 const isElement = (node: Node): node is HTMLElement => node.nodeType === Node.ELEMENT_NODE;
 const isText = (node: Node): node is Text => node.nodeType === Node.TEXT_NODE;
@@ -47,9 +48,28 @@ const isBlockFormatName = (name: string, formatter: Formatter): boolean => {
   return Type.isArray(formatSet) && Arr.head(formatSet).exists((format) => Obj.has(format as any, 'block'));
 };
 
+// Finds a matching pattern to the specified text
+const findPattern = <P extends Pattern>(patterns: P[], text: string): Option<P> => {
+  for (let i = 0; i < patterns.length; i++) {
+    const pattern: any = patterns[i];
+    if (text.indexOf(pattern.start) !== 0) {
+      continue;
+    }
+
+    if (pattern.end && text.lastIndexOf(pattern.end) !== (text.length - pattern.end.length)) {
+      continue;
+    }
+
+    return Option.some(pattern);
+  }
+
+  return Option.none();
+};
+
 export {
   cleanEmptyNodes,
   deleteRng,
+  findPattern,
   isBlockFormatName,
   isElement,
   isText

@@ -8,7 +8,7 @@ import { Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import { SpotPoint } from 'tinymce/plugins/textpattern/core/Spot';
-import * as TextSearch from 'tinymce/plugins/textpattern/core/TextSearch';
+import * as TextSearch from 'tinymce/plugins/textpattern/text/TextSearch';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import Utils from '../module/test/Utils';
