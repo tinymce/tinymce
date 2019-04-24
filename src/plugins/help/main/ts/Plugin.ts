@@ -6,6 +6,7 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
+import * as Api from './api/Api';
 import Commands from './api/Commands';
 import Buttons from './ui/Buttons';
 
@@ -13,6 +14,7 @@ PluginManager.add('help', function (editor) {
   Buttons.register(editor);
   Commands.register(editor);
   editor.shortcuts.add('Alt+0', 'Open help dialog', 'mceHelp');
+  return Api.get(editor);
 });
 
 export default function () {}

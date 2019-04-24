@@ -10,16 +10,18 @@ import Editor from 'tinymce/core/api/Editor';
 import KeyboardShortcutsTab from './KeyboardShortcutsTab';
 import PluginsTab from './PluginsTab';
 import VersionTab from './VersionTab';
+import Settings from '../api/Settings';
 
 const opener = function (editor: Editor) {
   return function () {
+    const extraTabs = Settings.getExtraTabs(editor);
     const body: Types.Dialog.TabPanelApi = {
       type: 'tabpanel',
       tabs: [
         KeyboardShortcutsTab.tab(),
         PluginsTab.tab(editor),
         VersionTab.tab(editor)
-      ]
+      ].concat(extraTabs)
     };
     editor.windowManager.open(
       {

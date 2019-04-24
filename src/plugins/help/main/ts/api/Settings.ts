@@ -9,10 +9,20 @@ import { Types } from '@ephox/bridge';
 import Editor from 'tinymce/core/api/Editor';
 import VersionPanel from '../ui/VersionPanel';
 
-const getVersionPanel = function (editor: Editor): Types.Dialog.BodyComponentApi {
+const getVersionPanel = (editor: Editor): Types.Dialog.BodyComponentApi => {
   return editor.getParam('help_version', VersionPanel.defaultPanel, 'function')();
+};
+
+const getExtraTabs = (editor: Editor) => {
+  return editor.getParam('help_extend_tabs', []);
+};
+
+const setExtraTabs = (editor: Editor, newTabs) => {
+  editor.settings.help_extend_tabs = newTabs;
 };
 
 export default {
   getVersionPanel,
+  getExtraTabs,
+  setExtraTabs
 };
