@@ -5,12 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node } from '@ephox/dom-globals';
 import { Unicode } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
 import { PatternSet } from '../api/Pattern';
-import { textBefore } from './Utils';
 import { applyBlockPatterns, applyNestedInlinePatterns } from './ApplyPatterns';
+import { textBefore } from './TextSearch';
+import { cleanEmptyNodes } from './Utils';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
   if (editor.selection.isCollapsed()) {
@@ -26,15 +28,13 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
         applyBlockPatterns(editor, patternSet.blockPatterns);
         // find the spot before the cursor position
         const range = editor.selection.getRng();
-        const spot = textBefore(range.startContainer, range.startOffset);
+        const spot = textBefore(range.startContainer, range.startOffset, editor.dom.getRoot());
         editor.execCommand('mceInsertNewLine');
         // clean up the cursor position we used to preserve the format
         spot.each((s) => {
-          if (s.element().data.charAt(s.offset() - 1) === Unicode.zeroWidth()) {
-            s.element().deleteData(s.offset() - 1, 1);
-            if (editor.dom.isEmpty(s.element().parentNode)) {
-              editor.dom.remove(s.element().parentNode);
-            }
+          if (s.element.data.charAt(s.offset - 1) === Unicode.zeroWidth()) {
+            s.element.deleteData(s.offset - 1, 1);
+            cleanEmptyNodes(editor.dom, s.element.parentNode, (e: Node) => e === editor.dom.getRoot());
           }
         });
       }
