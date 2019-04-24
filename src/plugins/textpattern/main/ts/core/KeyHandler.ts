@@ -9,13 +9,11 @@ import { Unicode } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
 import { PatternSet } from '../api/Pattern';
-import { findBlockPattern, findNestedInlinePatterns, textBefore } from './FindPatterns';
-import { applyBlockPattern, applyInlinePatterns } from './PatternApplication';
+import { textBefore } from './Utils';
+import { applyBlockPatterns, applyNestedInlinePatterns } from './ApplyPatterns';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
-  const inlineAreas = findNestedInlinePatterns(editor.dom, patternSet.inlinePatterns, editor.selection.getRng(), false);
-  const blockArea = findBlockPattern(editor.dom, patternSet.blockPatterns, editor.selection.getRng());
-  if (editor.selection.isCollapsed() && (inlineAreas.length > 0 || blockArea.isSome())) {
+  if (editor.selection.isCollapsed()) {
     editor.undoManager.add();
     editor.undoManager.extra(
       () => {
@@ -24,8 +22,8 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
       () => {
         // create a cursor position that we can move to avoid the inline formats
         editor.insertContent(Unicode.zeroWidth());
-        applyInlinePatterns(editor, inlineAreas);
-        blockArea.each((pattern) => applyBlockPattern(editor, pattern));
+        applyNestedInlinePatterns(editor, patternSet.inlinePatterns);
+        applyBlockPatterns(editor, patternSet.blockPatterns);
         // find the spot before the cursor position
         const range = editor.selection.getRng();
         const spot = textBefore(range.startContainer, range.startOffset);
@@ -47,12 +45,9 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
 };
 
 const handleInlineKey = (editor: Editor, patternSet: PatternSet): void => {
-  const areas = findNestedInlinePatterns(editor.dom, patternSet.inlinePatterns, editor.selection.getRng(), true);
-  if (areas.length > 0) {
-    editor.undoManager.transact(() => {
-      applyInlinePatterns(editor, areas);
-    });
-  }
+  editor.undoManager.transact(() => {
+    applyNestedInlinePatterns(editor, patternSet.inlinePatterns);
+  });
 };
 
 const checkKeyEvent = (codes, event, predicate) => {
