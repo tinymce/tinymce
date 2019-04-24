@@ -67,6 +67,7 @@ const setupDemo = () => {
         icons: () => <Record<string, string>> {},
         menuItems: () => <Record<string, any>> {},
         translate: I18n.translate,
+        colors: () => [ ]
       },
       interpreter: (x) => x,
       getSink: () => Result.value(sink),

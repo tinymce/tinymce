@@ -53,7 +53,8 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
             providers: {
               icons: () => <Record<string, string>> {},
               menuItems: () => <Record<string, any>> {},
-              translate: I18n.translate
+              translate: I18n.translate,
+              colors: () => [ ]
             },
             getSink: () => {
               return memSink.getOpt(container).fold(

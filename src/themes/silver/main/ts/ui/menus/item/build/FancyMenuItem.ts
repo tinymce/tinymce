@@ -9,9 +9,12 @@ import { Menu } from '@ephox/bridge';
 import { renderInsertTableMenuItem } from './InsertTableMenuItem';
 import { Option } from '@ephox/katamari';
 import { ItemTypes } from '@ephox/alloy';
+import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
+import { renderColorSwatchItem } from './ColorSwatchItem';
 
-const fancyMenuItems: Record<keyof Menu.FancyActionArgsMap, (mi: Menu.FancyMenuItem) => ItemTypes.WidgetItemSpec> = {
-  inserttable: renderInsertTableMenuItem
+const fancyMenuItems: Record<keyof Menu.FancyActionArgsMap, (mi: Menu.FancyMenuItem, pb: UiFactoryBackstageProviders) => ItemTypes.WidgetItemSpec> = {
+  inserttable: renderInsertTableMenuItem,
+  colorswatch: renderColorSwatchItem
 };
 
 const valueOpt = <T>(obj: Record<string, T>, key): Option<T> => {
@@ -20,8 +23,8 @@ const valueOpt = <T>(obj: Record<string, T>, key): Option<T> => {
     : Option.none();
 };
 
-const renderFancyMenuItem = (spec: Menu.FancyMenuItem): Option<ItemTypes.WidgetItemSpec> => {
-  return valueOpt(fancyMenuItems, spec.fancytype).map((render) => render(spec));
+const renderFancyMenuItem = (spec: Menu.FancyMenuItem, providersBackstage: UiFactoryBackstageProviders): Option<ItemTypes.WidgetItemSpec> => {
+  return valueOpt(fancyMenuItems, spec.fancytype).map((render) => render(spec, providersBackstage));
 };
 
 export {

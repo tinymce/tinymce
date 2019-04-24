@@ -57,6 +57,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
                  icons: () => <Record<string, string>> {},
                  menuItems: () => <Record<string, any>> {},
                  translate: I18n.translate,
+                 colors: () => [ ]
               }
              }, {
                colorPicker: (callback, value) => {},

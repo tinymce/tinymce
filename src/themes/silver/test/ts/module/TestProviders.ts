@@ -4,4 +4,5 @@ export default {
   icons: () => <Record<string, string>> {},
   menuItems: () => <Record<string, any>> {},
   translate: I18n.translate,
+  colors: () => [ ]
 };

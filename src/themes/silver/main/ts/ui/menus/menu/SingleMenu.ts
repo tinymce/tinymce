@@ -63,7 +63,7 @@ const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemRes
     case 'fancymenuitem':
       return BridgeMenu.createFancyMenuItem(item).fold(
         handleError,
-        (d) => MenuItems.fancy(d)
+        (d) => MenuItems.fancy(d, providersBackstage)
       );
     default: {
       console.error('Unknown item in general menu', item);

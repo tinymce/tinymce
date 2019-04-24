@@ -225,6 +225,18 @@ const register = (editor: Editor) => {
   const lastBackColor = Cell(null);
   registerTextColorButton(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);
+
+  editor.ui.registry.addNestedMenuItem('forecolor', {
+    text: 'Text color',
+    getSubmenuItems: () => [
+      {
+        type: 'fancymenuitem',
+        fancytype: 'colorswatch',
+        onAction: (value) => {
+        }
+      }
+    ]
+  });
 };
 
-export default { register, getFetch, colorPickerDialog, getCurrentColor, getColorCols, calcCols};
+export default { register, getFetch, colorPickerDialog, getCurrentColor, getColorCols, calcCols };
