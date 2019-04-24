@@ -11,17 +11,24 @@ import KeyboardShortcutsTab from './KeyboardShortcutsTab';
 import PluginsTab from './PluginsTab';
 import VersionTab from './VersionTab';
 import Settings from '../api/Settings';
+import { Arr, Cell } from '@ephox/katamari';
 
-const opener = function (editor: Editor) {
-  return function () {
-    const extraTabs = Settings.getExtraTabs(editor);
-    const body: Types.Dialog.TabPanelApi = {
-      type: 'tabpanel',
-      tabs: [
+const init = (editor: Editor, extraApiTabs: Cell<any>) => {
+  return () => {
+    const tabsFromSettings = Settings.getExtraTabs(editor);
+    const tabsFromApi = extraApiTabs.get();
+    const tabs = Arr.flatten([
+      [
         KeyboardShortcutsTab.tab(),
         PluginsTab.tab(editor),
-        VersionTab.tab(editor)
-      ].concat(extraTabs)
+      ],
+      tabsFromSettings,
+      tabsFromApi,
+      [ VersionTab.tab(editor) ]
+    ]);
+    const body: Types.Dialog.TabPanelApi = {
+      type: 'tabpanel',
+      tabs
     };
     editor.windowManager.open(
       {
@@ -43,5 +50,5 @@ const opener = function (editor: Editor) {
 };
 
 export default {
-  opener
+  init
 };

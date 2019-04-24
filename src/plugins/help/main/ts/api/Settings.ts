@@ -17,12 +17,7 @@ const getExtraTabs = (editor: Editor) => {
   return editor.getParam('help_extend_tabs', []);
 };
 
-const setExtraTabs = (editor: Editor, newTabs) => {
-  editor.settings.help_extend_tabs = newTabs;
-};
-
 export default {
   getVersionPanel,
-  getExtraTabs,
-  setExtraTabs
+  getExtraTabs
 };
