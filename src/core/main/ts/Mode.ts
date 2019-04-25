@@ -44,6 +44,14 @@ export interface Mode {
    * @param {ModeApi} api Activation and Deactivation API for the new mode.
    */
   register: (mode: string, api: ModeApi) => void;
+
+  /**
+   * If true, focus will be altered on mode changes
+   *
+   * @method focusOnChange
+   * @param {Boolean} focus If true, focus should not be altered on mode changes, default false
+   */
+  focusOnChange: (focus: boolean) => void;
 }
 
 export interface ModeApi {
@@ -81,6 +89,7 @@ const toggleClass = (elm, cls, state: boolean) => {
 
 export const create = (editor: Editor): Mode => {
   let activeMode = 'design';
+  let changeFocus = true;
   const defaultModes = ['design', 'readonly'];
 
   const availableModes: Record<string, ModeApi> = {
@@ -117,7 +126,9 @@ export const create = (editor: Editor): Mode => {
       setEditorCommandState('StyleWithCSS', false);
       setEditorCommandState('enableInlineTableEditing', false);
       setEditorCommandState('enableObjectResizing', false);
-      editor.focus();
+      if (changeFocus) {
+        editor.focus();
+      }
       editor.nodeChanged();
     }
   };
@@ -177,10 +188,15 @@ export const create = (editor: Editor): Mode => {
     };
   };
 
+  const focusOnChange = (focus: boolean) => {
+    changeFocus = focus;
+  };
+
   return {
     isReadOnly,
     set,
     get,
-    register
+    register,
+    focusOnChange
   };
 };
