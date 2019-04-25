@@ -1,4 +1,16 @@
-export type Matrix = number[];
+export type Matrix = [
+  number, number, number, number, number,
+  number, number, number, number, number,
+  number, number, number, number, number,
+  number, number, number, number, number,
+  number, number, number, number, number
+];
+
+export type ConvolutionMatrix = [
+  number, number, number,
+  number, number, number,
+  number, number, number
+];
 
 function clamp(value: string | number, min: number, max: number): number {
   let parsedValue = typeof value === 'string' ? parseFloat(value) : value;
@@ -12,7 +24,7 @@ function clamp(value: string | number, min: number, max: number): number {
   return parsedValue;
 }
 
-function identity(): number[] {
+function identity(): Matrix {
   return [
     1, 0, 0, 0, 0,
     0, 1, 0, 0, 0,
@@ -37,8 +49,8 @@ const DELTA_INDEX = [
 ];
 
 function multiply(matrix1: Matrix, matrix2: Matrix): Matrix {
-  const col: Matrix = [];
-  const out: Matrix = new Array(10);
+  const col: number[] = [];
+  const out: Matrix = new Array(25) as Matrix;
   let val;
 
   for (let i = 0; i < 5; i++) {
@@ -63,7 +75,7 @@ function multiply(matrix1: Matrix, matrix2: Matrix): Matrix {
 function adjust(matrix: Matrix, adjustValue: number): Matrix {
   adjustValue = clamp(adjustValue, 0, 1);
 
-  return matrix.map(function (value, index) {
+  return matrix.map(function (value, index): number {
     if (index % 6 === 0) {
       value = 1.0 - ((1 - value) * adjustValue);
     } else {
@@ -71,7 +83,7 @@ function adjust(matrix: Matrix, adjustValue: number): Matrix {
     }
 
     return clamp(value, 0, 1);
-  });
+  }) as Matrix;
 }
 
 function adjustContrast(matrix: Matrix, value: number) {

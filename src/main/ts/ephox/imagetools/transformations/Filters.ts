@@ -45,16 +45,16 @@ function applyColorFilter(canvas: HTMLCanvasElement, type: string, matrix: Color
   return ImageResult.fromCanvas(canvas, type);
 }
 
-function convoluteFilter(ir: ImageResultType, matrix: ColorMatrix.Matrix): Promise<ImageResultType> {
+function convoluteFilter(ir: ImageResultType, matrix: ColorMatrix.ConvolutionMatrix): Promise<ImageResultType> {
   return ir.toCanvas().then(function (canvas) {
     return applyConvoluteFilter(canvas, ir.getType(), matrix);
   });
 }
 
-function applyConvoluteFilter(canvas: HTMLCanvasElement, type: string, matrix: ColorMatrix.Matrix): Promise<ImageResultType> {
+function applyConvoluteFilter(canvas: HTMLCanvasElement, type: string, matrix: ColorMatrix.ConvolutionMatrix): Promise<ImageResultType> {
   const context = Canvas.get2dContext(canvas);
 
-  function applyMatrix(pIn: ImageData, pOut: ImageData, aMatrix: ColorMatrix.Matrix): ImageData {
+  function applyMatrix(pIn: ImageData, pOut: ImageData, aMatrix: ColorMatrix.ConvolutionMatrix): ImageData {
     function clamp(value: number, min: number, max: number): number {
       if (value > max) {
         value = max;
@@ -160,7 +160,7 @@ function basicColorFilter(matrix: ColorMatrix.Matrix): (ir: ImageResultType) => 
   };
 }
 
-function basicConvolutionFilter(kernel: ColorMatrix.Matrix): (ir: ImageResultType) => Promise<ImageResultType> {
+function basicConvolutionFilter(kernel: ColorMatrix.ConvolutionMatrix): (ir: ImageResultType) => Promise<ImageResultType> {
   return function (ir: ImageResultType) {
     return convoluteFilter(ir, kernel);
   };
@@ -170,7 +170,8 @@ const invert = basicColorFilter([
   -1, 0, 0, 0, 255,
   0, -1, 0, 0, 255,
   0, 0, -1, 0, 255,
-  0, 0, 0, 1, 0
+  0, 0, 0, 1, 0,
+  0, 0, 0, 0, 1
 ]);
 
 const brightness = complexAdjustableColorFilter(ColorMatrix.adjustBrightness);
