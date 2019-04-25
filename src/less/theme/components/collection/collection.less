@@ -230,5 +230,12 @@
     display: flex;
     margin-left: @pad-md;
     min-height: @collection-item-list-icon-height;
+
+    // Workaround for the above not centering items in IE11. See https://github.com/philipwalton/flexbugs/issues/231#issuecomment-362790042
+    &::after {
+      content: '';
+      font-size: 0;
+      min-height: inherit;
+    }
   }
 }
