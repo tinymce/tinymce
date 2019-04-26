@@ -28,7 +28,7 @@
     "@ephox/bedrock": "latest",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
-    "typescript": "^3.0.1"
+    "typescript": "~3.3.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
