@@ -15,8 +15,6 @@ tinymce.init({
     { start: '####', format: 'h4' },
     { start: '#####', format: 'h5' },
     { start: '######', format: 'h6' },
-    { start: '1. ', cmd: 'InsertOrderedList' },
-    { start: '* ', cmd: 'InsertUnorderedList' },
     { start: '* ', cmd: 'InsertUnorderedList', value: { 'list-style-type': 'disc' } },
     { start: '1. ', cmd: 'InsertOrderedList', value: { 'list-style-type': 'decimal' } },
     { start: '1) ', cmd: 'InsertOrderedList', value: { 'list-style-type': 'decimal' } },
