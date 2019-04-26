@@ -1,4 +1,5 @@
 import AttachingDemo from './AttachingDemo';
+import AllowBubblingDemo from './AllowBubblingDemo';
 import ButtonDemo from './ButtonDemo';
 import CardMenuDemo from './CardMenuDemo';
 import * as DemoContent from './DemoContent';
@@ -34,6 +35,7 @@ declare const window: any;
 
 window.demos = {
   AttachingDemo,
+  AllowBubblingDemo,
   ButtonDemo,
   CardMenuDemo,
   DemoContent,

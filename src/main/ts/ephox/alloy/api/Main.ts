@@ -18,6 +18,7 @@ import * as AlloyParts from '../parts/AlloyParts';
 import * as PartType from '../parts/PartType';
 import * as AddEventsBehaviour from './behaviour/AddEventsBehaviour';
 import * as Behaviour from './behaviour/Behaviour';
+import { AllowBubbling } from './behaviour/AllowBubbling';
 import { Composing } from './behaviour/Composing';
 import { Coupling } from './behaviour/Coupling';
 import { Disabling } from './behaviour/Disabling';
@@ -136,6 +137,7 @@ import TestHelpers from './testhelpers/TestHelpers';
 export {
   AddEventsBehaviour,
   Behaviour,
+  AllowBubbling,
   Composing,
   Coupling,
   Disabling,
