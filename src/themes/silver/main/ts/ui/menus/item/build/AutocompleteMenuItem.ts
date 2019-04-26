@@ -7,7 +7,7 @@
 
 import { HTMLElement } from '@ephox/dom-globals';
 import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
-import { Behaviour, GuiFactory, ItemTypes, Tooltipping } from '@ephox/alloy';
+import { Behaviour, GuiFactory, ItemTypes, Tooltipping, MaxHeight } from '@ephox/alloy';
 import { Obj, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { InlineContent, Types } from '@ephox/bridge';
@@ -36,7 +36,7 @@ const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryB
           item: comp,
           overrides: {
             // NOTE: this avoids it setting overflow and max-height.
-            maxHeightFunction: () => { }
+            maxHeightFunction: MaxHeight.expandable
           }
         }),
         mode: 'follow-highlight',
