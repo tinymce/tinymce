@@ -60,6 +60,12 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
           Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 5050), 10, 3000),
           Waiter.sTryUntil('wait for editor height', sAssertEditorHeightAbove(editor, 5050), 10, 3000)
         ]),
+        Log.stepsAsStep('TBA', 'AutoResize: Editor size increase with floated content', [
+          tinyApis.sSetContent('<div style="height: 5000px; float: right;">a</div>'),
+          // Content height + bottom margin = 5050
+          Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 5050), 10, 3000),
+          Waiter.sTryUntil('wait for editor height', sAssertEditorHeightAbove(editor, 5050), 10, 3000)
+        ]),
         Log.stepsAsStep('TBA', 'AutoResize: Editor size decrease based on content size', [
           tinyApis.sSetContent('<div style="height: 1000px;">a</div>'),
           Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 1050), 10, 3000),
