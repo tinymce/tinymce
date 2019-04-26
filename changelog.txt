@@ -1,4 +1,5 @@
 Version 5.0.5 (TBD)
+    Fixed submenus anchoring #TINY-3564
     Fixed autoresize not working with floating elements #TINY-3545
 Version 5.0.4 (2019-04-23)
     Added back URL dialog functionality, which is now available via `editor.windowManager.openUrl()` #TINY-3382
