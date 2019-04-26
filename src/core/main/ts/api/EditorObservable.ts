@@ -61,7 +61,9 @@ const fireEvent = (editor: Editor, eventName: string, e: Event) => {
   if (isListening(editor)) {
     editor.fire(eventName, e);
   } else if (editor.readonly) {
-    e.preventDefault();
+    if (!(eventName === 'touchstart' || eventName === 'touchmove' || eventName === 'touchend')) {
+      e.preventDefault();
+    }
   }
 };
 
@@ -85,6 +87,13 @@ const bindEventDelegate = function (editor: Editor, eventName: string) {
   }
 
   eventRootElm = getEventTarget(editor, eventName);
+
+  let options: any;
+  if (eventName === 'touchstart' || eventName === 'touchmove' || eventName === 'touchend') {
+    options = {
+      passive: true
+    };
+  }
 
   if (editor.settings.event_root) {
     if (!customEventRootDelegates) {
@@ -123,13 +132,13 @@ const bindEventDelegate = function (editor: Editor, eventName: string) {
     };
 
     customEventRootDelegates[eventName] = delegate;
-    DOM.bind(eventRootElm, eventName, delegate);
+    DOM.bind(eventRootElm, eventName, delegate, null, options);
   } else {
     delegate = function (e) {
       fireEvent(editor, eventName, e);
     };
 
-    DOM.bind(eventRootElm, eventName, delegate);
+    DOM.bind(eventRootElm, eventName, delegate, null, options);
     editor.delegates[eventName] = delegate;
   }
 };

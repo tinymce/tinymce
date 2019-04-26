@@ -233,8 +233,8 @@ interface DOMUtils {
   createRng (): Range;
   nodeIndex (node: Node, normalized?: boolean): number;
   split (parentElm: Node, splitElm: Node, replacementElm?: Node): Node;
-  bind <K extends keyof HTMLElementEventMap>(target: Target, name: K, func: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: {}): any;
-  bind <T = any>(target: Target, name: string, func: EventUtilsCallback<T>, scope?: {}): any;
+  bind <K extends keyof HTMLElementEventMap>(target: Target, name: K, func: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: {}, options?: any): any;
+  bind <T = any>(target: Target, name: string, func: EventUtilsCallback<T>, scope?: {}, options?: any): any;
   unbind <K extends keyof HTMLElementEventMap>(target: Target, name: K, func: EventUtilsCallback<HTMLElementEventMap[K]>): any;
   unbind <T = any>(target: Target, name?: string, func?: EventUtilsCallback<T>): any;
   fire (target: Target, name: string, evt?: {}): EventUtils;
@@ -1105,13 +1105,13 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
-  const bind = (target: Target, name: string, func: EventUtilsCallback<any>, scope?: any) => {
+  const bind = (target: Target, name: string, func: EventUtilsCallback<any>, scope?: any, options?: any) => {
     if (Tools.isArray(target)) {
       let i = target.length;
       const rv = [];
 
       while (i--) {
-        rv[i] = bind(target[i], name, func, scope);
+        rv[i] = bind(target[i], name, func, scope, options);
       }
 
       return rv;
@@ -1122,7 +1122,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       boundEvents.push([target, name, func, scope]);
     }
 
-    return events.bind(target, name, func, scope || self);
+    return events.bind(target, name, func, scope || self, options);
   };
 
   const unbind = (target: Target, name?: string, func?: EventUtilsCallback<any>) => {

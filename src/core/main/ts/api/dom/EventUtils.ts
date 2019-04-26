@@ -286,9 +286,9 @@ class EventUtils {
    * @param {Object} scope Scope to call the callback function on, defaults to target.
    * @return {function} Callback function that got bound.
    */
-  public bind <K extends keyof HTMLElementEventMap>(target: any, name: K, callback: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: {}): EventUtilsCallback<HTMLElementEventMap[K]>;
-  public bind <T = any>(target: any, names: string, callback: EventUtilsCallback<T>, scope?: {}): EventUtilsCallback<T>;
-  public bind (target: any, names: string, callback: EventUtilsCallback<any>, scope?: {}): EventUtilsCallback<any> {
+  public bind <K extends keyof HTMLElementEventMap>(target: any, name: K, callback: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: {}, options?: any): EventUtilsCallback<HTMLElementEventMap[K]>;
+  public bind <T = any>(target: any, names: string, callback: EventUtilsCallback<T>, scope?: {}, options?: any): EventUtilsCallback<T>;
+  public bind (target: any, names: string, callback: EventUtilsCallback<any>, scope?: {}, options?: any): EventUtilsCallback<any> {
     const self = this;
     let id, callbackList, i, name, fakeName, nativeHandler, capture;
     const win = window;
@@ -394,7 +394,12 @@ class EventUtils {
         if (name === 'ready') {
           bindOnReady(target, nativeHandler, self);
         } else {
-          addEvent(target, fakeName || name, nativeHandler, capture);
+          if (options) {
+            options.capture = capture;
+            addEvent(target, fakeName || name, nativeHandler, options);
+          } else {
+            addEvent(target, fakeName || name, nativeHandler, capture);
+          }
         }
       } else {
         if (name === 'ready' && self.domLoaded) {
