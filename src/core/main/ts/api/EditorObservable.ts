@@ -6,7 +6,6 @@
  */
 
 import { Node, Event } from '@ephox/dom-globals';
-import { isReadOnly } from '../Mode';
 import Observable from './util/Observable';
 import DOMUtils from './dom/DOMUtils';
 import Tools from './util/Tools';
@@ -61,7 +60,7 @@ const isListening = (editor: Editor) => !editor.hidden && !editor.readonly;
 const fireEvent = (editor: Editor, eventName: string, e: Event) => {
   if (isListening(editor)) {
     editor.fire(eventName, e);
-  } else if (isReadOnly(editor)) {
+  } else if (editor.readonly) {
     e.preventDefault();
   }
 };
