@@ -1,4 +1,3 @@
-import { HTMLElement } from '@ephox/sand';
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
