@@ -1,5 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Fun, Obj, Option } from '@ephox/katamari';
+import { Arr, Fun, Obj, Option, Merger } from '@ephox/katamari';
 import { Focus, Value } from '@ephox/sugar';
 
 import { SugarEvent } from '../../alien/TypeDefinitions';
@@ -246,7 +246,14 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
 
   return {
     uid: detail.uid,
-    dom: InputBase.dom(detail),
+    dom: InputBase.dom(Merger.deepMerge(detail, {
+      // TODO: Add aria-activedescendant attribute
+      inputAttributes: {
+        'role': 'combobox',
+        'aria-autocomplete': 'list',
+        'aria-haspopup': 'true'
+      }
+    })),
     behaviours: {
       ...focusBehaviours,
       ...SketchBehaviours.augment(
