@@ -19,11 +19,14 @@ interface Marker {
   end: Node;
 }
 
-interface MatchDetails {
+interface PatternDetails {
   pattern: InlinePattern;
   remainingPatterns: InlinePattern[];
+  currentPos: Spot.SpotPoint<Text>;
+}
+
+interface MatchDetails extends PatternDetails {
   marker: Marker;
-  spot: Spot.SpotPoint<Node>;
 }
 
 const newMarker = (dom: DOMUtils, id: string) => dom.create('span', { 'data-mce-type': 'bookmark', 'id': id });
@@ -126,7 +129,7 @@ const applyPatternWithContent = (editor: Editor, pattern: InlinePattern, startMa
   applyPattern(editor, pattern, { start: startMarker.end, end: endMarker.start });
 };
 
-const processPatternMatch = (editor: Editor, block: Node, markerPrefix: string, details: MatchDetails): Option<Spot.SpotPoint<Node>> => {
+const processPatternMatch = (editor: Editor, block: Node, markerPrefix: string, details: MatchDetails): Option<Spot.SpotPoint<Text>> => {
   const dom = editor.dom;
   const isRoot = (e: Node) => e === block;
   const pattern = details.pattern;
@@ -137,7 +140,7 @@ const processPatternMatch = (editor: Editor, block: Node, markerPrefix: string, 
   if (pattern.start.length > 0 && pattern.end.length > 0) {
     // Apply any nested patterns, making sure not to process the current pattern again
     const previousSpotOpt = findAndApplyPatternsRec(editor, details.remainingPatterns, endMarker.start, 0, block);
-    const previousSpot = previousSpotOpt.getOr(details.spot);
+    const previousSpot = previousSpotOpt.getOr(details.currentPos);
 
     // Find the start of the matched pattern
     const start = findPatternStart(dom, pattern, previousSpot.element, previousSpot.offset, block, previousSpotOpt.isNone());
@@ -157,7 +160,7 @@ const processPatternMatch = (editor: Editor, block: Node, markerPrefix: string, 
       Utils.cleanEmptyNodes(dom, startMarker.end, isRoot);
       Utils.cleanEmptyNodes(dom, startMarker.start, isRoot);
 
-      return Spot.point(startRng.startContainer, startRng.startOffset);
+      return Spot.point(startRng.startContainer as Text, startRng.startOffset);
     });
   } else {
     // Remove the replacement text
@@ -167,8 +170,56 @@ const processPatternMatch = (editor: Editor, block: Node, markerPrefix: string, 
     // Apply the pattern
     applyPattern(editor, pattern, endMarker);
 
-    return Option.some(details.spot);
+    return Option.some(details.currentPos);
   }
+};
+
+const findAndApplyPattern = (editor: Editor, block: Node, details: PatternDetails): { match: Option<Spot.SpotPoint<Text>>; currentPos: Spot.SpotPoint<Text> } => {
+  const dom = editor.dom;
+  const isRoot = (e: Node) => e === block;
+  const endNode = details.currentPos.element;
+  const endOffset = details.currentPos.offset;
+
+  // Lean left to find the start of the end pattern, as it could be across fragmented nodes
+  return TextSearch.scanLeft(endNode, endOffset - details.pattern.end.length, block).map((spot) => {
+    // Store the current selection
+    const cursor = editor.selection.getBookmark();
+    const markerPrefix = Id.generate('mce_textpattern');
+
+    // Create the end markers
+    const textEnd = endOffset === 0 ? endNode : endNode.splitText(endOffset);
+    const textStart = spot.offset === 0 ? spot.element : spot.element.splitText(spot.offset);
+    const endMarker = {
+      end: textEnd.parentNode.insertBefore(newMarker(dom, markerPrefix + '_end-end'), textEnd),
+      start: textStart.parentNode.insertBefore(newMarker(dom, markerPrefix + '_end-start'), textStart)
+    };
+
+    try {
+      // Process the matched pattern
+      const match = processPatternMatch(editor, block, markerPrefix, {
+        ...details,
+        marker: endMarker,
+        currentPos: spot
+      });
+
+      return {
+        match,
+        currentPos: Spot.point(textStart, textStart.data.length)
+      };
+    } finally {
+      // Remove the end markers
+      // Note: Use dom.get() here instead of endMarker.end/start, as applying the format/command can
+      // clone the nodes meaning the old reference isn't usable
+      Utils.cleanEmptyNodes(dom, dom.get(markerPrefix + '_end-end'), isRoot);
+      Utils.cleanEmptyNodes(dom, dom.get(markerPrefix + '_end-start'), isRoot);
+
+      // restore the selection
+      editor.selection.moveToBookmark(cursor);
+    }
+  }).getOr({
+    match: Option.none(),
+    currentPos: details.currentPos
+  });
 };
 
 // Assumptions:
@@ -178,9 +229,8 @@ const processPatternMatch = (editor: Editor, block: Node, markerPrefix: string, 
 // 3. Patterns will not extend outside of the root element
 // 4. All pattern ends must be directly before the cursor (represented by node + offset)
 // 5. Only text nodes matter
-const findAndApplyPatternsRec = (editor: Editor, patterns: InlinePattern[], node: Node, offset: number, block: Node): Option<Spot.SpotPoint<Node>> => {
+const findAndApplyPatternsRec = (editor: Editor, patterns: InlinePattern[], node: Node, offset: number, block: Node): Option<Spot.SpotPoint<Text>> => {
   const dom = editor.dom;
-  const isRoot = (e: Node) => e === block;
 
   return TextSearch.textBefore(node, offset, dom.getRoot()).bind((endSpot) => {
     const rng = dom.createRng();
@@ -188,54 +238,29 @@ const findAndApplyPatternsRec = (editor: Editor, patterns: InlinePattern[], node
     rng.setEnd(node, offset);
     const text = rng.toString();
 
-    let endNode = endSpot.element;
-    let endOffset = endSpot.offset;
+    let currentPos = endSpot;
     for (let i = 0; i < patterns.length; i++) {
       const pattern = patterns[i];
       if (!Strings.endsWith(text, pattern.end)) {
         continue;
       }
 
-      // Lean left to find the start of the end pattern, as it could be across fragmented nodes
-      const match = TextSearch.scanLeft(endNode, endOffset - pattern.end.length, block).bind((spot) => {
-        // Store the current selection
-        const cursor = editor.selection.getBookmark();
-        const markerPrefix = Id.generate('mce_textpattern');
+      // Generate a new array without the current pattern
+      const patternsWithoutCurrent = patterns.slice();
+      patternsWithoutCurrent.splice(i, 1);
 
-        // Create the end markers
-        const textEnd = endOffset === 0 ? endNode : endNode.splitText(endOffset);
-        const textStart = spot.offset === 0 ? spot.element : spot.element.splitText(spot.offset);
-        const endMarker = {
-          end: textEnd.parentNode.insertBefore(newMarker(dom, markerPrefix + '_end-end'), textEnd),
-          start: textStart.parentNode.insertBefore(newMarker(dom, markerPrefix + '_end-start'), textStart)
-        };
-
-        endNode = textStart;
-        endOffset = textStart.data.length;
-
-        try {
-          const patternsWithoutCurrent = patterns.slice();
-          patternsWithoutCurrent.splice(i, 1);
-          return processPatternMatch(editor, block, markerPrefix, {
-            pattern,
-            remainingPatterns: patternsWithoutCurrent,
-            marker: endMarker,
-            spot
-          });
-        } finally {
-          // Remove the end markers
-          // Note: Use dom.get() here instead of endMarker.end/start, as applying the format/command can
-          // clone the nodes meaning the old reference isn't usable
-          Utils.cleanEmptyNodes(dom, dom.get(markerPrefix + '_end-end'), isRoot);
-          Utils.cleanEmptyNodes(dom, dom.get(markerPrefix + '_end-start'), isRoot);
-
-          // restore the selection
-          editor.selection.moveToBookmark(cursor);
-        }
+      // Try to find and apply the current pattern
+      const result = findAndApplyPattern(editor, block, {
+        pattern,
+        remainingPatterns: patternsWithoutCurrent,
+        currentPos
       });
 
-      if (match.isSome()) {
-        return match;
+      // If a match was found then return that, otherwise update the current search position
+      if (result.match.isSome()) {
+        return result.match;
+      } else {
+        currentPos = result.currentPos;
       }
     }
 
