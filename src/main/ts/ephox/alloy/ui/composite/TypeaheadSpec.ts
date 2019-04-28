@@ -1,9 +1,8 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Fun, Merger, Obj, Option } from '@ephox/katamari';
+import { Arr, Fun, Obj, Option, Merger } from '@ephox/katamari';
 import { Focus, Value } from '@ephox/sugar';
 
 import { SugarEvent } from '../../alien/TypeDefinitions';
-import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Composing } from '../../api/behaviour/Composing';
 import { Coupling } from '../../api/behaviour/Coupling';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -21,14 +20,13 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { DatasetRepresentingState } from '../../behaviour/representing/RepresentState';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
-import { SimulatedEvent, EventFormat, CustomEvent } from '../../events/SimulatedEvent';
+import { SimulatedEvent, CustomEvent } from '../../events/SimulatedEvent';
 import { setCursorAtEnd, setValueFromItem } from '../../ui/typeahead/TypeaheadModel';
 import { NormalItemSpec } from '../../ui/types/ItemTypes';
 import { TieredData } from '../../ui/types/TieredMenuTypes';
 import { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
 import * as TypeaheadEvents from './TypeaheadEvents';
-import { console } from '@ephox/dom-globals'
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 
 interface ItemExecuteEvent extends CustomEvent {
@@ -206,9 +204,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     Toggling.config({
       toggleClass: detail.markers.openClass,
       aria: {
-        // TODO: Maybe this should just be expanded?
-        mode: 'pressed',
-        syncWithExpanded: true
+        mode: 'expanded'
       }
     }),
 
@@ -216,8 +212,8 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       others: {
         sandbox (hotspot) {
           return DropdownUtils.makeSandbox(detail, hotspot, {
-            onOpen: Fun.identity,
-            onClose: Fun.identity
+            onOpen: () => Toggling.on(hotspot),
+            onClose: () => Toggling.off(hotspot)
           });
         }
       }
@@ -250,7 +246,14 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
 
   return {
     uid: detail.uid,
-    dom: InputBase.dom(detail),
+    dom: InputBase.dom(Merger.deepMerge(detail, {
+      // TODO: Add aria-activedescendant attribute
+      inputAttributes: {
+        'role': 'combobox',
+        'aria-autocomplete': 'list',
+        'aria-haspopup': 'true'
+      }
+    })),
     behaviours: {
       ...focusBehaviours,
       ...SketchBehaviours.augment(

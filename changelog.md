@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 # [4.11.15] - 2019-04-26
+### Fixed
+- Fixed aria attributes for typeahead text fields
 
 ### Added
 - Added `AnchorOverrides` to the SubmenuAnchor and SubmenuAnchorSpec

@@ -1,13 +1,13 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Logger, Step, UiControls, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Cell, Future, Option, Result } from '@ephox/katamari';
-import { Value, Attr } from '@ephox/sugar';
+import { Value } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Invalidating } from 'ephox/alloy/api/behaviour/Invalidating';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
@@ -66,7 +66,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       );
     };
 
-    const sCheckInvalidOf = (label, comp) => {
+    const sCheckInvalidOf = (label: string, comp: AlloyComponent) => {
       return Logger.t(
         label,
         Step.control(
@@ -86,15 +86,15 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       );
     };
 
-    const sCheckValid = (label) => {
+    const sCheckValid = (label: string) => {
       return sCheckValidOf(label, component);
     };
 
-    const sCheckInvalid = (label) => {
+    const sCheckInvalid = (label: string) => {
       return sCheckInvalidOf(label, component);
     };
 
-    const sCheckIsInvalidOf = (label, comp, expected) => {
+    const sCheckIsInvalidOf = (label: string, comp: AlloyComponent, expected: boolean) => {
       return Logger.t(
         label,
         Step.control(
@@ -110,15 +110,15 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       );
     };
 
-    const sCheckIsValid = (label) => {
+    const sCheckIsValid = (label: string) => {
       return sCheckIsInvalidOf(label, component, false);
     };
 
-    const sCheckIsInvalid = (label) => {
+    const sCheckIsInvalid = (label: string) => {
       return sCheckIsInvalidOf(label, component, true);
     };
 
-    const sCheckHasTitleOf = (label, comp, titlePrefix) => {
+    const sCheckHasAriaInvalidOf = (label: string, comp: AlloyComponent) => {
       return Logger.t(
         label,
         Step.control(
@@ -127,7 +127,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
             ApproxStructure.build((s, str, arr) => {
               return s.element('input', {
                 attrs: {
-                  title: str.startsWith(titlePrefix)
+                  'aria-invalid': str.is('true')
                 }
               });
             }),
@@ -138,7 +138,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       );
     };
 
-    const sCheckHasNoTitleOf = (label, comp) => {
+    const sCheckHasNoAriaInvalidOf = (label: string, comp: AlloyComponent) => {
       return Logger.t(
         label,
         Step.control(
@@ -147,7 +147,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
             ApproxStructure.build((s, str, arr) => {
               return s.element('input', {
                 attrs: {
-                  title: str.none()
+                  'aria-invalid': str.is('false')
                 }
               });
             }),
@@ -158,12 +158,12 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       );
     };
 
-    const sCheckHasTitle = (label, titlePrefix) => {
-      return sCheckHasTitleOf(label, component, titlePrefix);
+    const sCheckHasAriaInvalid = (label: string) => {
+      return sCheckHasAriaInvalidOf(label, component);
     };
 
-    const sCheckHasNoTitle = (label) => {
-      return sCheckHasNoTitleOf(label, component);
+    const sCheckHasNoAriaInvalid = (label: string) => {
+      return sCheckHasNoAriaInvalidOf(label, component);
     };
 
     const sValidate = GeneralSteps.sequence([
@@ -188,7 +188,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       });
     });
 
-    const cCheckValidationFails = (label, expected) => {
+    const cCheckValidationFails = (label: string, expected: string) => {
       return Chain.op((res: Result<any, any>) => {
         res.fold((err) => {
           Assertions.assertEq(label, expected, err);
@@ -198,7 +198,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       });
     };
 
-    const cCheckValidationPasses = (label, expected) => {
+    const cCheckValidationPasses = (label: string, expected: string) => {
       return Chain.op((res: Result<any, any>) => {
         res.fold((err) => {
           throw new Error(label + ': Unexpected error: ' + err);
@@ -227,7 +227,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
       sCheckValid('after 1xmarkValid, should be valid'),
       sCheckIsValid('the isInvalid API should return false'),
-      sCheckHasNoTitle('the field should no longer have a title'),
+      sCheckHasNoAriaInvalid('the field should no longer have aria-invalid'),
 
       Step.sync(() => {
         Invalidating.markInvalid(component, 'programmatic bad value');
@@ -235,7 +235,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
       sCheckInvalid('after markInvalid, should be invalid'),
       sCheckIsInvalid('the isInvalid API should return true'),
-      sCheckHasTitle('the field should have a title', 'programmatic'),
+      sCheckHasAriaInvalid('the field should have aria-invalid'),
 
       UiControls.sSetValueOn(gui.element(), 'input', 'good-value'),
       sValidate,
@@ -244,7 +244,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       UiControls.sSetValueOn(gui.element(), 'input', 'bad-value'),
       sValidate,
       sCheckInvalid('validation should fail (eventually... because future based)'),
-      sCheckHasTitle('the field should have a title', 'bad value:'),
+      sCheckHasAriaInvalid('the field should have aria-invalid'),
 
       Chain.asStep({ }, [
         cQueryApi,
