@@ -106,7 +106,6 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
     inputClasses: ['tox-textfield'],
     sandboxClasses: ['tox-dialog__popups'],
     inputAttributes: {
-      'aria-autocomplete': 'list',
       'aria-errormessage': errorId
     },
     minChars: 0,
@@ -206,7 +205,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
   const pLabel = spec.label.map((label) => renderLabel(label, sharedBackstage.providers)) as Option<AlloySpec>;
 
   // TODO: Consider a way of merging with Checkbox.
-  const makeIcon = (name, icon = name, label = name) => {
+  const makeIcon = (name, errId: Option<string>, icon = name, label = name) => {
     return ({
       dom: {
         tag: 'div',
@@ -215,14 +214,14 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
         attributes: {
           'title': sharedBackstage.providers.translate(label),
           'aria-live': 'polite',
-          'id': errorId
+          ...errId.fold(() => ({ }), (id) => ({ id }))
         }
       }
     });
   };
 
   const memInvalidIcon = Memento.record(
-    makeIcon('invalid', 'warning')
+    makeIcon('invalid', Option.some(errorId), 'warning')
   );
 
   const memStatus = Memento.record({
@@ -244,11 +243,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
     {
       dom: {
         tag: 'div',
-        classes: ['tox-control-wrap'],
-        attributes: {
-          'role': 'combobox',
-          'aria-haspopup': 'listbox'
-        }
+        classes: ['tox-control-wrap']
       },
       components: [pField, memStatus.asSpec()]
     }
