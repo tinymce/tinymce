@@ -6,10 +6,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-# [4.11.11] - 2019-04-15
+# [4.11.15] - 2019-04-26
 ### Fixed
-- Fixed aria attributes for URL input and typeahead text fields
+- Fixed aria attributes for typeahead text fields
 
+### Added
+- Added `AnchorOverrides` to the SubmenuAnchor and SubmenuAnchorSpec
+
+# [4.11.11] - 2019-04-16
+### Added
+- Added new AllowBubbling behaviour
+
+# [4.11.9] - 2019-04-15
 ### Added
 - Added `Disabling.set(comp, disabled)` function to handle setting the disabled state based on a boolean value
 

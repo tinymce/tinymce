@@ -6,7 +6,7 @@ import { NativeSimulatedEvent, EventFormat } from '../../events/SimulatedEvent';
 import { DragnDropImageClone } from './ImageClone';
 import { DropEvent } from './DropEvent';
 import { Option } from '@ephox/katamari';
-import { DomModification } from 'ephox/alloy/dom/DomModification';
+import { DomModification } from '../../dom/DomModification';
 
 export interface DragnDropBehaviour extends Behaviour.AlloyBehaviour<DragnDropConfigSpec, DragnDropConfig> {
   config: (config: DragnDropConfigSpec) => Behaviour.NamedConfiguredBehaviour<DragnDropConfigSpec, DragnDropConfig>;
