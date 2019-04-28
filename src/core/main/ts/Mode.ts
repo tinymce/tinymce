@@ -16,13 +16,12 @@ import Events from './api/Events';
 import { Obj, Fun, Arr } from '@ephox/katamari';
 import { console } from '@ephox/dom-globals';
 
-
 export interface Mode {
   /**
    * @method isReadOnly
    * @return {Boolean} true if the editor is in a readonly state.
    */
-  isReadOnly: () => boolean
+  isReadOnly: () => boolean;
 
   /**
    * Sets the editor mode. Mode can be for example "design", "code" or "readonly".
