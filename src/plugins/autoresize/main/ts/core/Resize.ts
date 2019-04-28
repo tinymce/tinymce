@@ -73,13 +73,14 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
     return;
   }
 
-  const body = doc.body;
+  const docEle = doc.documentElement;
+  const resizeBottomMargin = Settings.getAutoResizeBottomMargin(editor);
   resizeHeight = Settings.getAutoResizeMinHeight(editor);
 
-  // Calculate outer height of the body element using CSS styles
-  const marginTop = parseCssValueToInt(dom, body, 'margin-top', true);
-  const marginBottom = parseCssValueToInt(dom, body, 'margin-bottom', true);
-  contentHeight = body.offsetHeight + marginTop + marginBottom;
+  // Calculate outer height of the doc element using CSS styles
+  const marginTop = parseCssValueToInt(dom, docEle, 'margin-top', true);
+  const marginBottom = parseCssValueToInt(dom, docEle, 'margin-bottom', true);
+  contentHeight = docEle.offsetHeight + marginTop + marginBottom + resizeBottomMargin;
 
   // Make sure we have a valid height
   // Note: Previously we had to do some fallbacks here for IE/Webkit, as the height calculation above didn't work.
@@ -124,13 +125,11 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
 const setup = (editor: Editor, oldSize: Cell<number>) => {
   editor.on('init', () => {
     const overflowPadding = Settings.getAutoResizeOverflowPadding(editor);
-    const bottomMargin = Settings.getAutoResizeBottomMargin(editor);
     const dom = editor.dom;
 
     dom.setStyles(editor.getBody(), {
       'paddingLeft': overflowPadding,
       'paddingRight': overflowPadding,
-      'paddingBottom': bottomMargin,
       // IE & Edge have a min height of 150px by default on the body, so override that
       'min-height': 0
     });
