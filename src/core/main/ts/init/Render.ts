@@ -64,13 +64,20 @@ const loadTheme = function (scriptLoader: ScriptLoader, editor: Editor, suffix, 
   }
 };
 
-const loadIcons = (editor: Editor) => {
-  const iconPackName: any = Tools.trim(editor.getParam('icons', '', 'string'));
+const getIconsUrl = (editor: Editor, icons: string): string => {
+  const iconsUrl = Tools.trim(editor.getParam('icons_url', '', 'string'));
+  return iconsUrl ?
+    editor.documentBaseURI.toAbsolute(iconsUrl) :
+    `${editor.editorManager.baseURL}/icons/${icons}`;
+};
+
+const loadIcons = (scriptLoader: ScriptLoader, editor: Editor) => {
+  const icons: any = Tools.trim(editor.getParam('icons', '', 'string'));
 
   // Ignore if the icon pack is already loaded
-  if (iconPackName.length > 0 && !IconManager.has(iconPackName)) {
-    const urlString = `${editor.editorManager.baseURL}/icons/${iconPackName}/icons.js`;
-    ScriptLoader.ScriptLoader.add(urlString);
+  if (icons.length > 0 && !IconManager.has(icons)) {
+    const iconsUrl = getIconsUrl(editor, icons);
+    scriptLoader.add(iconsUrl + '/icons.js');
   }
 };
 
@@ -119,7 +126,7 @@ const loadScripts = function (editor: Editor, suffix: string) {
 
   loadTheme(scriptLoader, editor, suffix, function () {
     loadLanguage(scriptLoader, editor);
-    loadIcons(editor);
+    loadIcons(scriptLoader, editor);
     loadPlugins(editor.settings, suffix);
 
     scriptLoader.loadQueue(function () {
