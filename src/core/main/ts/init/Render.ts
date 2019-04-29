@@ -64,20 +64,20 @@ const loadTheme = function (scriptLoader: ScriptLoader, editor: Editor, suffix, 
   }
 };
 
-const getIconsUrl = (editor: Editor, icons: string): string => {
-  const iconsUrl = Tools.trim(editor.getParam('icons_url', '', 'string'));
+const composeIconsUrl = (editor: Editor, icons: string): string => {
+  const iconsUrl = Settings.getIconsUrl(editor);
+
   return iconsUrl ?
     editor.documentBaseURI.toAbsolute(iconsUrl) :
     `${editor.editorManager.baseURL}/icons/${icons}`;
 };
 
 const loadIcons = (scriptLoader: ScriptLoader, editor: Editor) => {
-  const icons: any = Tools.trim(editor.getParam('icons', '', 'string'));
+  const icons: string = Settings.getIcons(editor);
 
   // Ignore if the icon pack is already loaded
   if (icons.length > 0 && !IconManager.has(icons)) {
-    const iconsUrl = getIconsUrl(editor, icons);
-    scriptLoader.add(iconsUrl + '/icons.js');
+    scriptLoader.add(composeIconsUrl(editor, icons) + '/icons.js');
   }
 };
 

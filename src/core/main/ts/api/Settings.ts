@@ -105,6 +105,14 @@ const shouldReplaceBlobUris = (editor: Editor): boolean => {
   return editor.getParam('images_replace_blob_uris', true, 'boolean');
 };
 
+const getIcons = (editor: Editor) => {
+  return editor.getParam('icons', '', 'string');
+};
+
+const getIconsUrl = (editor: Editor): string => {
+  return editor.getParam('icons_url', '', 'string');
+};
+
 const getImageUploadUrl = (editor: Editor): string => {
   return editor.getParam('images_upload_url', '', 'string');
 };
@@ -171,6 +179,8 @@ export default {
   shouldEndContainerOnEmptyBlock,
   getFontStyleValues,
   getFontSizeClasses,
+  getIcons,
+  getIconsUrl,
   getImagesDataImgFilter,
   isAutomaticUploadsEnabled,
   shouldReuseFileName,
