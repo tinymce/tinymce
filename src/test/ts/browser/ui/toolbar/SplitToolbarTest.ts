@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Button } from 'ephox/alloy/api/ui/Button';
@@ -8,6 +8,7 @@ import { SplitToolbar } from 'ephox/alloy/api/ui/SplitToolbar';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 import * as TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
+import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('SplitToolbarTest', (success, failure) => {
   // Tests requiring 'flex' do not currently work on phantom. Use the remote to see how it is
@@ -23,13 +24,7 @@ UnitTest.asynctest('SplitToolbarTest', (success, failure) => {
       shell: true
     });
 
-    const pOverflow = SplitToolbar.parts().overflow({
-      dom: {
-        tag: 'div',
-        classes: [ 'test-toolbar-overflow' ]
-      },
-      shell: true
-    });
+    const sinkComp = Sinks.relativeSink();
 
     return GuiFactory.build(
       SplitToolbar.sketch({
@@ -41,9 +36,11 @@ UnitTest.asynctest('SplitToolbarTest', (success, failure) => {
             outline: '2px solid blue'
           }
         },
+        lazySink (comp) {
+          return Result.value(sinkComp);
+        },
         components: [
-          pPrimary,
-          pOverflow
+          pPrimary
         ],
 
         markers: {
@@ -64,11 +61,17 @@ UnitTest.asynctest('SplitToolbarTest', (success, failure) => {
               classes: [ 'more-button' ],
               innerHtml: '+'
             }
+          },
+          'overflow': {
+            dom: {
+              tag: 'div',
+              classes: [ 'test-toolbar-overflow' ]
+            },
+            shell: true
           }
         }
       })
     );
-
   }, (doc, body, gui, component, store) => {
 
     const makeButton = (itemSpec) => {

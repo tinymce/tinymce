@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Option, Result } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
@@ -10,6 +10,8 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 import * as DemoRenders from './forms/DemoRenders';
 import { document, console, window } from '@ephox/dom-globals';
+import * as DemoSink from 'ephox/alloy/demo/DemoSink';
+import { LazySink } from 'ephox/alloy/api/component/CommonTypes';
 
 // tslint:disable:no-console
 
@@ -18,6 +20,12 @@ export default (): void => {
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
+
+  const sink = DemoSink.make();
+
+  const lazySink: LazySink = (_) => {
+    return Result.value(sink);
+  };
 
   const groups = () => {
     return Arr.map([
@@ -123,6 +131,7 @@ export default (): void => {
       dom: {
         tag: 'div'
       },
+      lazySink,
       parts: {
         'overflow-group': DemoRenders.toolbarGroup({
           items: [ ]
@@ -132,6 +141,15 @@ export default (): void => {
             tag: 'button',
             innerHtml: 'More'
           }
+        },
+        'overflow': {
+          dom: {
+            tag: 'div',
+            styles: {
+              'display': 'flex',
+              'flex-wrap': 'wrap'
+            }
+          }
         }
       },
       components: [
@@ -140,15 +158,6 @@ export default (): void => {
             tag: 'div',
             styles: {
               display: 'flex'
-            }
-          }
-        }),
-        SplitToolbar.parts().overflow({
-          dom: {
-            tag: 'div',
-            styles: {
-              'display': 'flex',
-              'flex-wrap': 'wrap'
             }
           }
         })

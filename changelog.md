@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.12.0] - 2019-04-30
+
+### Changed
+- Made the `SplitToolbar` component a more self contained component, so it handles both floating and sliding internally
+
+### Fixed
+- Improved the `SplitToolbar` component accessibility for floating toolbars
+
 # [4.11.18] - 2019-04-30
 ### Added
 - Added `AnchorOverrides` to all remaining Anchors and AnchorSpecs, as well as dropdowns
