@@ -19,8 +19,7 @@ const placement = (component: AlloyComponent, anchorInfo: MakeshiftAnchor, origi
     NuAnchoring({
       anchorBox: anchorBox,
       bubble: anchorInfo.bubble,
-      // maxHeightFunction: MaxHeight.available()),
-      overrides: { },
+      overrides: anchorInfo.overrides,
       layouts: layouts,
       placer: Option.none()
     })
@@ -33,6 +32,7 @@ export default [
   FieldSchema.defaulted('height', 0),
   FieldSchema.defaulted('width', 0),
   FieldSchema.defaulted('bubble', Bubble.fallback()),
+  FieldSchema.defaulted('overrides', { }),
   AnchorLayouts.schema(),
   Fields.output('placement', placement)
 ];

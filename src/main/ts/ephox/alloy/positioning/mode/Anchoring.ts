@@ -79,11 +79,13 @@ export interface HotspotAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec
   anchor: 'hotspot';
   hotspot: AlloyComponent;
   bubble?: Bubble;
+  overrides?: AnchorOverrides;
 }
 
 export interface HotspotAnchor extends AnchorDetail<HotspotAnchor>, HasLayoutAnchor {
   hotspot: AlloyComponent;
   bubble: Option<Bubble>;
+  overrides: AnchorOverrides;
 }
 
 export interface SubmenuAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
@@ -94,7 +96,7 @@ export interface SubmenuAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec
 
 export interface SubmenuAnchor extends AnchorDetail<SubmenuAnchor>, HasLayoutAnchor {
   item: AlloyComponent;
-  overrides?: AnchorOverrides;
+  overrides: AnchorOverrides;
 }
 
 export interface MakeshiftAnchorSpec extends CommonAnchorSpec {
@@ -104,14 +106,16 @@ export interface MakeshiftAnchorSpec extends CommonAnchorSpec {
   height?: number;
   width?: number;
   bubble?: Bubble;
+  overrides?: AnchorOverrides;
 }
 
 export interface MakeshiftAnchor extends AnchorDetail<MakeshiftAnchor>, HasLayoutAnchor {
   x: number;
   y: number;
-  height?: number;
-  width?: number;
-  bubble?: Bubble;
+  height: number;
+  width: number;
+  bubble: Bubble;
+  overrides: AnchorOverrides;
 }
 
 export interface Anchoring {

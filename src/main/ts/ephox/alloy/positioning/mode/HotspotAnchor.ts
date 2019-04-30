@@ -18,7 +18,7 @@ const placement = (component, anchorInfo: HotspotAnchor, origin) => {
     NuAnchor({
       anchorBox: anchorBox,
       bubble: anchorInfo.bubble.getOr(Bubble.fallback()),
-      overrides: { },
+      overrides: anchorInfo.overrides,
       layouts: layouts,
       placer: Option.none()
     })
@@ -28,6 +28,7 @@ const placement = (component, anchorInfo: HotspotAnchor, origin) => {
 export default [
   FieldSchema.strict('hotspot'),
   FieldSchema.option('bubble'),
+  FieldSchema.defaulted('overrides', { }),
   AnchorLayouts.schema(),
   Fields.output('placement', placement)
 ];

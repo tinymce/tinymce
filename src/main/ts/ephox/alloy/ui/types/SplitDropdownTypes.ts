@@ -7,11 +7,9 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import { AnchorOverrides } from '../../positioning/mode/Anchoring';
 
 export interface SplitDropdownDetail extends CommonDropdownDetail<TieredData> {
-  uid: string;
-  dom: RawDomSchema;
-  components: AlloySpec[ ];
   splitDropdownBehaviours: SketchBehaviours;
   toggleClass: string;
 
@@ -29,6 +27,7 @@ export interface SplitDropdownSpec extends CompositeSketchSpec {
   sandboxClasses?: string[];
   sandboxBehaviours?: AlloyBehaviourRecord;
   getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
+  getOverrides?: () => AnchorOverrides;
 
   onExecute: (comp: AlloyComponent, button: AlloyComponent) => void;
   onItemExecute: (comp: AlloyComponent, button: AlloyComponent, item: AlloyComponent) => void;

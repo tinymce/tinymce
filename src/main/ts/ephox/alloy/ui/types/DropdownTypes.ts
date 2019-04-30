@@ -5,7 +5,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { AnchorSpec } from '../../positioning/mode/Anchoring';
+import { AnchorSpec, AnchorOverrides } from '../../positioning/mode/Anchoring';
 import { TieredData, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 import { Element } from '@ephox/sugar';
 import { AnchorLayout } from '../../positioning/layout/LayoutTypes';
@@ -23,8 +23,9 @@ export interface CommonDropdownDetail<F> extends CompositeSketchDetail {
   onOpen: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
 
   lazySink: Option<LazySink>;
-  // TODO test getHotspot
+  // TODO test getHotspot and overrides
   getHotspot: (comp: AlloyComponent) => Option<AlloyComponent>;
+  getOverrides: () => AnchorOverrides;
   layouts: Option<{
     onLtr: (elem: Element) => AnchorLayout[];
     onRtl: (elem: Element) => AnchorLayout[];
@@ -60,6 +61,7 @@ export interface DropdownSpec extends CompositeSketchSpec {
   sandboxClasses?: string[];
   sandboxBehaviours?: AlloyBehaviourRecord;
   getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
+  getOverrides?: () => () => AnchorOverrides;
   layouts?: Option<{
     onLtr: (elem: Element) => AnchorLayout[];
     onRtl: (elem: Element) => AnchorLayout[];
