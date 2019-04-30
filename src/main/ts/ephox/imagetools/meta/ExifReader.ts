@@ -400,7 +400,7 @@ export class ExifReader {
           return self.SEGMENT(self._offsets.tiffHeader + IFD1Tags.JPEGInterchangeFormat, IFD1Tags.JPEGInterchangeFormatLength);
         }
       } catch (ex) {
-        // tslint:disable-next-line:no-empty
+        return null;
       }
     }
     return null;
@@ -422,14 +422,14 @@ export class ExifReader {
     };
 
     const sizes: Record<string, number> = {
-      BYTE 		  : 1,
-      UNDEFINED	: 1,
-      ASCII		  : 1,
-      SHORT		  : 2,
-      LONG 		  : 4,
-      RATIONAL 	: 8,
-      SLONG		  : 4,
-      SRATIONAL	: 8
+      BYTE      : 1,
+      UNDEFINED : 1,
+      ASCII     : 1,
+      SHORT     : 2,
+      LONG      : 4,
+      RATIONAL  : 8,
+      SLONG     : 4,
+      SRATIONAL : 8
     };
 
     // Ensure we don't try to read something that doesn't exist
