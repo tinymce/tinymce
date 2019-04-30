@@ -73,8 +73,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
           Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 5585), 10, 3000),
           Step.sync(() => {
             // Update the img element to load an image
-            editor.$('img').attr('src', 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png')
-              .css('height', 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png');
+            editor.$('img').attr('src', 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png');
           }),
           // Content height + div image height (84px) + bottom margin = 5634
           Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 5634), 10, 3000),
