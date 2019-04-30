@@ -32,24 +32,23 @@ const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern) => {
 const applyPattern = (editor: Editor, block: Node, pattern: BlockPattern): boolean => {
   // add a marker to store the cursor position
   const cursor = editor.selection.getBookmark();
-  try {
-    if (pattern.type === 'block-format') {
-      if (Utils.isBlockFormatName(pattern.format, editor.formatter)) {
-        editor.undoManager.transact(() => {
-          stripPattern(editor.dom, block, pattern);
-          editor.formatter.apply(pattern.format);
-        });
-      }
-    } else if (pattern.type === 'block-command') {
+
+  if (pattern.type === 'block-format') {
+    if (Utils.isBlockFormatName(pattern.format, editor.formatter)) {
       editor.undoManager.transact(() => {
         stripPattern(editor.dom, block, pattern);
-        editor.execCommand(pattern.cmd, false, pattern.value);
+        editor.formatter.apply(pattern.format);
       });
     }
-  } finally {
-    // restore the selection
-    editor.selection.moveToBookmark(cursor);
+  } else if (pattern.type === 'block-command') {
+    editor.undoManager.transact(() => {
+      stripPattern(editor.dom, block, pattern);
+      editor.execCommand(pattern.cmd, false, pattern.value);
+    });
   }
+
+  // restore the selection
+  editor.selection.moveToBookmark(cursor);
 
   return true;
 };

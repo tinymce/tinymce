@@ -194,28 +194,26 @@ const findAndApplyPattern = (editor: Editor, block: Node, details: PatternDetail
       start: textStart.parentNode.insertBefore(newMarker(dom, markerPrefix + '_end-start'), textStart)
     };
 
-    try {
-      // Process the matched pattern
-      const match = processPatternMatch(editor, block, markerPrefix, {
-        ...details,
-        marker: endMarker,
-        currentPos: spot
-      });
+    // Process the matched pattern
+    const match = processPatternMatch(editor, block, markerPrefix, {
+      ...details,
+      marker: endMarker,
+      currentPos: spot
+    });
 
-      return {
-        match,
-        currentPos: Spot.point(textStart, textStart.data.length)
-      };
-    } finally {
-      // Remove the end markers
-      // Note: Use dom.get() here instead of endMarker.end/start, as applying the format/command can
-      // clone the nodes meaning the old reference isn't usable
-      Utils.cleanEmptyNodes(dom, dom.get(markerPrefix + '_end-end'), isRoot);
-      Utils.cleanEmptyNodes(dom, dom.get(markerPrefix + '_end-start'), isRoot);
+    // Remove the end markers
+    // Note: Use dom.get() here instead of endMarker.end/start, as applying the format/command can
+    // clone the nodes meaning the old reference isn't usable
+    Utils.cleanEmptyNodes(dom, dom.get(markerPrefix + '_end-end'), isRoot);
+    Utils.cleanEmptyNodes(dom, dom.get(markerPrefix + '_end-start'), isRoot);
 
-      // restore the selection
-      editor.selection.moveToBookmark(cursor);
-    }
+    // restore the selection
+    editor.selection.moveToBookmark(cursor);
+
+    return {
+      match,
+      currentPos: Spot.point(textStart, textStart.data.length)
+    };
   }).getOr({
     match: Option.none(),
     currentPos: details.currentPos
