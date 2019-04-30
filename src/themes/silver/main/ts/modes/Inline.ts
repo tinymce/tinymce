@@ -7,7 +7,7 @@
 
 import { Attachment, Docking, Focusing, SplitToolbar } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
-import { Class, Css, Element, Height, Location } from '@ephox/sugar';
+import { Css, Element, Height, Location } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import { getToolbarDrawer, ToolbarDrawer, getUiContainer, useFixedContainer } from '../api/Settings';
@@ -25,7 +25,6 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   const splitSetting = getToolbarDrawer(editor);
   const split = splitSetting === ToolbarDrawer.sliding || splitSetting === ToolbarDrawer.floating;
-  const floating = splitSetting === ToolbarDrawer.floating;
 
   loadInlineSkin(editor);
 
@@ -76,33 +75,16 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const show = () => {
     Css.set(uiComponents.outerContainer.element(), 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
+    Css.remove(uiComponents.uiMothership.element(), 'display');
     updateChromeUi();
-
-    if (floating) {
-      const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
-      toolbar.each((tb) => {
-        const overflow = SplitToolbar.getOverflow(tb);
-        overflow.each((overf) => {
-          Class.remove(overf.element(), 'tox-toolbar__overflow--closed');
-        });
-      });
-    }
   };
 
   const hide = () => {
     if (uiComponents.outerContainer) {
       Css.set(uiComponents.outerContainer.element(), 'display', 'none');
       DOM.removeClass(editor.getBody(), 'mce-edit-focus');
-      if (floating) {
-        const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
-        toolbar.each((tb) => {
-          const overflow = SplitToolbar.getOverflow(tb);
-          overflow.each((overf) => {
-            Class.add(overf.element(), 'tox-toolbar__overflow--closed');
-          });
-        });
-      }
     }
+    Css.set(uiComponents.uiMothership.element(), 'display', 'none');
   };
 
   const render = () => {

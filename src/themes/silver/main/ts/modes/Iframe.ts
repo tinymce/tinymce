@@ -127,7 +127,15 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 
   if (drawer === Settings.ToolbarDrawer.sliding || drawer === Settings.ToolbarDrawer.floating) {
-    editor.on('ResizeContent', refreshDrawer);
+    const lastWidth = Cell(0);
+    editor.on('ResizeContent', () => {
+      // Check if the width has changed, if so then refresh the toolbar drawer. We don't care if height changes.
+      const width = editor.contentWindow.innerWidth;
+      if (width !== lastWidth.get()) {
+        refreshDrawer();
+      }
+      lastWidth.set(width);
+    });
   }
 
   return {
