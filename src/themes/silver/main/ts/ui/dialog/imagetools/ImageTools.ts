@@ -18,7 +18,7 @@ import {
   SimulatedEvent,
 } from '@ephox/alloy';
 import { Blob, console } from '@ephox/dom-globals';
-import { ResultConversions } from '@ephox/imagetools';
+import { ImageResult, ResultConversions } from '@ephox/imagetools';
 import { Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { ComposingConfigs } from 'tinymce/themes/silver/ui/alien/ComposingConfigs';
@@ -65,7 +65,7 @@ export const renderImageTools = (detail, providersBackstage: UiFactoryBackstageP
     });
   };
 
-  const imageResultToBlob = (ir: any): Blob => {
+  const imageResultToBlob = (ir: ImageResult): Promise<Blob> => {
     return ir.toBlob();
   };
 
@@ -85,7 +85,7 @@ export const renderImageTools = (detail, providersBackstage: UiFactoryBackstageP
     return imagePanel.updateSrc(anyInSystem, src);
   };
 
-  const blobManipulate = (anyInSystem: AlloyComponent, blob: Blob, filter: (ir: any) => any, action: (blob: Blob) => string, swap: () => void): Promise<Option<Element>> => {
+  const blobManipulate = (anyInSystem: AlloyComponent, blob: Blob, filter: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>, action: (blob: Blob) => string, swap: () => void): Promise<Option<Element>> => {
     block(anyInSystem);
     return ResultConversions.blobToImageResult(blob).
       then(filter).
@@ -101,22 +101,23 @@ export const renderImageTools = (detail, providersBackstage: UiFactoryBackstageP
       }).catch((err) => {
         console.log(err); // TODO: Notify the user?
         unblock(anyInSystem);
+        return err;
       });
   };
 
-  const manipulate = (anyInSystem: AlloyComponent, filter: (ir: any) => any, swap: () => void): void => {
+  const manipulate = (anyInSystem: AlloyComponent, filter: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>, swap: () => void): void => {
     const blob = state.getBlobState().blob;
     const action = (blob) => state.updateTempState(blob);
     blobManipulate(anyInSystem, blob, filter, action, swap);
   };
 
-  const tempManipulate = (anyInSystem: AlloyComponent, filter: (ir: any) => any): void => {
+  const tempManipulate = (anyInSystem: AlloyComponent, filter: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>): void => {
     const blob = state.getTempState().blob;
     const action = (blob) => state.addTempState(blob);
     blobManipulate(anyInSystem, blob, filter, action, Fun.noop);
   };
 
-  const manipulateApply = (anyInSystem: AlloyComponent, filter: (ir: any) => any, swap: () => void): void => {
+  const manipulateApply = (anyInSystem: AlloyComponent, filter: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>, swap: () => void): void => {
     const blob = state.getBlobState().blob;
     const action = (blob) => {
       const url = state.addBlobState(blob);
