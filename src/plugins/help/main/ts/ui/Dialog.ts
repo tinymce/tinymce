@@ -6,29 +6,69 @@
  */
 
 import { Types } from '@ephox/bridge';
+import { Arr, Cell, Obj, Option, Options } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import KeyboardShortcutsTab from './KeyboardShortcutsTab';
-import PluginsTab from './PluginsTab';
-import VersionTab from './VersionTab';
-import Settings from '../api/Settings';
-import { Arr, Cell } from '@ephox/katamari';
+import * as Settings from '../api/Settings';
 
-const init = (editor: Editor, extraApiTabs: Cell<any>) => {
+export type TabSpec = {
+  title: string,
+  items: Types.Dialog.BodyComponentApi[];
+};
+
+export type HelpTabSpec = {
+  name: string,
+  spec: TabSpec;
+};
+
+const parseHelpTabsSetting = (tabsFromSettings: Settings.HelpTabsSetting, customTabs: Cell<Record<string, TabSpec>>): string[] => {
+  const tabs: Record<string, TabSpec> = customTabs.get();
+  const names = Arr.map(tabsFromSettings, (tab) => {
+    if (typeof tab === 'string') {
+      return tab;
+    } else {
+      // Assume this is a HelpTabSpec
+      tabs[tab.name] = tab.spec;
+      return tab.name;
+    }
+  });
+  customTabs.set(tabs);
+  return names;
+};
+
+const getNamesFromTabs = (customTabs: Cell<Record<string, TabSpec>>): string[] => {
+  const tabs = customTabs.get();
+  const names = Obj.keys(tabs);
+  return names;
+};
+
+const parseCustomTabs = (editor: Editor, customTabs: Cell<Record<string, TabSpec>>) => {
+  const tabNames: string[] = Settings.getHelpTabs(editor).fold(
+    () => getNamesFromTabs(customTabs),
+    (tabsFromSettings: Settings.HelpTabsSetting) => parseHelpTabsSetting(tabsFromSettings, customTabs)
+  );
+
+  // Move the versions tab to the end if it exists
+  const versionsIdx = Arr.indexOf(tabNames, 'versions');
+  versionsIdx.each((idx) => {
+    tabNames.splice(idx, 1);
+    tabNames.push('versions');
+  });
+
+  return tabNames;
+};
+
+const init = (editor: Editor, customTabs: Cell<Record<string, TabSpec>>): () => void => {
   return () => {
-    const tabsFromSettings = Settings.getExtraTabs(editor);
-    const tabsFromApi = extraApiTabs.get();
-    const tabs = Arr.flatten([
-      [
-        KeyboardShortcutsTab.tab(),
-        PluginsTab.tab(editor),
-      ],
-      tabsFromSettings,
-      tabsFromApi,
-      [ VersionTab.tab(editor) ]
-    ]);
+    const tabSpecs = customTabs.get();
+    const tabOrder = parseCustomTabs(editor, customTabs);
+    const foundTabs: Option<TabSpec>[] = Arr.map(tabOrder, (name) => {
+      return Obj.get(tabSpecs, name);
+    });
+    const dialogTabs: TabSpec[] = Options.cat(foundTabs);
+
     const body: Types.Dialog.TabPanelApi = {
       type: 'tabpanel',
-      tabs
+      tabs: dialogTabs
     };
     editor.windowManager.open(
       {
@@ -49,6 +89,4 @@ const init = (editor: Editor, extraApiTabs: Cell<any>) => {
   };
 };
 
-export default {
-  init
-};
+export { init };

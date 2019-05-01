@@ -9,13 +9,14 @@ import { Arr } from '@ephox/katamari';
 import KeyboardShortcuts from '../data/KeyboardShortcuts';
 import ConvertShortcut from '../alien/ConvertShortcut';
 import { Types } from '@ephox/bridge';
+import { TabSpec } from './Dialog';
 
 export interface ShortcutActionPairType {
   shortcuts: string[];
   action: string;
 }
 
-const tab = () => {
+const tab = (): TabSpec => {
   const shortcutList = Arr.map(KeyboardShortcuts.shortcuts, (shortcut: ShortcutActionPairType) => {
     const shortcutText = Arr.map(shortcut.shortcuts, ConvertShortcut.convertText).join(' or ');
     return [ shortcut.action, shortcutText ];

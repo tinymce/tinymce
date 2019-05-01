@@ -1,3 +1,6 @@
+import { Cell } from '@ephox/katamari';
+import { TabSpec } from '../ui/Dialog';
+
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
@@ -5,17 +8,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const get = (extraTabs) => {
-  const addTabs = (newTabs) => {
-    const currentExtraTabs = extraTabs.get();
-    extraTabs.set(currentExtraTabs.concat(newTabs));
+const get = (customTabs: Cell<Record<string, TabSpec>>) => {
+  const addTab = (name: string, newTab: TabSpec): void => {
+    const currentCustomTabs = customTabs.get();
+    currentCustomTabs[name] = newTab;
+    customTabs.set(currentCustomTabs);
   };
 
   return {
-    addTabs
+    addTab
   };
 };
 
-export {
-  get
-};
+export { get };

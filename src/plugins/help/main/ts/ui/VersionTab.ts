@@ -5,14 +5,28 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Editor from 'tinymce/core/api/Editor';
-import Settings from '../api/Settings';
+import { Types } from '@ephox/bridge';
+import EditorManager from 'tinymce/core/api/EditorManager';
+import I18n from 'tinymce/core/api/util/I18n';
+import { TabSpec } from './Dialog';
 
-const tab = (editor: Editor) => {
+const tab = (): TabSpec => {
+  const getVersion = (major: string, minor: string) => {
+    return major.indexOf('@') === 0 ? 'X.X.X' : major + '.' + minor;
+  };
+  const version = getVersion(EditorManager.majorVersion, EditorManager.minorVersion);
+  const changeLogLink = '<a href="https://www.tinymce.com/docs/changelog/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" target="_blank">TinyMCE ' + version + '</a>';
+
+  const htmlPanel: Types.Dialog.BodyComponentApi = {
+    type: 'htmlpanel',
+    html: '<p>' + I18n.translate(['You are using {0}', changeLogLink]) + '</p>',
+    presets: 'document'
+  };
+
   return {
     title: 'Version',
     items: [
-      Settings.getVersionPanel(editor)
+      htmlPanel
     ]
   };
 };

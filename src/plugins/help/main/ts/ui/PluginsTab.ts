@@ -10,13 +10,14 @@ import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import PluginUrls from '../data/PluginUrls';
 import { Types } from '@ephox/bridge';
+import { TabSpec } from './Dialog';
 
 export interface PluginUrlType {
   key: string;
   name: string;
 }
 
-const tab = (editor: Editor) => {
+const tab = (editor: Editor): TabSpec => {
   const availablePlugins = () => {
     const premiumPlugins = [
       // TODO: Add other premium plugins such as permanent pen when they are included in the website
