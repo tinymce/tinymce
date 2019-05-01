@@ -12,6 +12,9 @@
 .tox {
   .tox-textarea {
     &:extend(.tox .tox-textfield);
+    // restore appearance for scrollbars
+    appearance: textarea;
+
     // This is required to allow white-spaces and new lines within textareas in Firefox
     white-space: pre-wrap;
   }
