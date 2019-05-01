@@ -1,31 +1,32 @@
-import Conversions from '../util/Conversions';
+import { Blob, HTMLImageElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
+import * as Conversions from '../util/Conversions';
 
-var blobToImage = function (image) {
-  return Conversions.blobToImage(image);
+const blobToImage = function (blob: Blob): Promise<HTMLImageElement> {
+  return Conversions.blobToImage(blob);
 };
 
-var imageToBlob = function (blob) {
-  return Conversions.imageToBlob(blob);
+const imageToBlob = function (image: HTMLImageElement): Promise<Blob> {
+  return Conversions.imageToBlob(image);
 };
 
-var blobToDataUri = function (blob) {
+const blobToDataUri = function (blob: Blob): Promise<string> {
   return Conversions.blobToDataUri(blob);
 };
 
-var blobToBase64 = function (blob) {
+const blobToBase64 = function (blob: Blob): Promise<string> {
   return Conversions.blobToBase64(blob);
 };
 
-var dataUriToBlobSync = function (uri) {
+const dataUriToBlobSync = function (uri: string): Option<Blob> {
   return Conversions.dataUriToBlobSync(uri);
 };
 
-var uriToBlob = function (uri) {
+const uriToBlob = function (uri: string): Option<Promise<Blob>> {
   return Option.from(Conversions.uriToBlob(uri));
 };
 
-export default <any> {
+export {
   // used outside
   blobToImage,
   imageToBlob,

@@ -1,43 +1,49 @@
-import ResultConversions from 'ephox/imagetools/api/ResultConversions';
-import ImageTransformations from 'ephox/imagetools/api/ImageTransformations';
-import { document } from '@ephox/dom-globals';
+import { document, HTMLButtonElement, HTMLElement, HTMLFormElement, HTMLImageElement, HTMLSelectElement, NodeListOf } from '@ephox/dom-globals';
+import * as ResultConversions from 'ephox/imagetools/api/ResultConversions';
+import * as ImageTransformations from 'ephox/imagetools/api/ImageTransformations';
+import { ImageResult } from 'ephox/imagetools/util/ImageResult';
 
-function getValue(el) {
-    var value;
-    if (el.tagName == "SELECT") {
-        value = el.options[el.selectedIndex].value;
-    } else {
-        value = el.value;
-    }
-    return value.trim();
+function isSelect(el: HTMLElement): el is HTMLSelectElement {
+  return el.tagName === 'SELECT';
 }
 
-function modify(image, op, args) {
-    ResultConversions.imageToImageResult(image).then(function(ir) {
-        args.unshift(ir);
-        return ImageTransformations[op].apply(null, args)
-            .then(function (imageResult) {
-                image.src = imageResult.toDataURL();
-            });
-    });
+function getValue(el: HTMLSelectElement | HTMLButtonElement): string {
+  let value;
+  if (isSelect(el)) {
+    value = el.options[el.selectedIndex].value;
+  } else {
+    value = el.value;
+  }
+  return value.trim();
 }
 
-var forms = document.querySelectorAll('.options');
-for (var i = 0; i < forms.length; i++) {
-    (function(form:any) {
-        form.onsubmit = function (el) {
-            var selector = document.getElementById('selector');
-            var currOp = getValue(selector);
-            var image = document.getElementById('editor');
-            modify(image, currOp, [].slice.call(this.elements)
-                    .filter(function(el) {
-                        return el.tagName != 'BUTTON';
-                    })
-                    .map(function (el) {
-                        return getValue(el);
-                    })
-            );
-            return false;
-        }
-    }(forms[i]));
+function modify(image: HTMLImageElement, op: string, args: any[]) {
+  ResultConversions.imageToImageResult(image).then(function (ir) {
+    args.unshift(ir);
+    return (ImageTransformations as any)[op].apply(null, args)
+      .then(function (imageResult: ImageResult) {
+        image.src = imageResult.toDataURL();
+      });
+  });
+}
+
+const forms = document.querySelectorAll('.options') as NodeListOf<HTMLFormElement>;
+// tslint:disable-next-line:prefer-for-of
+for (let i = 0; i < forms.length; i++) {
+  (function (form: HTMLFormElement) {
+    form.onsubmit = function (_) {
+      const selector = document.getElementById('selector') as HTMLSelectElement;
+      const currOp = getValue(selector);
+      const image = document.getElementById('editor') as HTMLImageElement;
+      modify(image, currOp, [].slice.call((<HTMLFormElement> this).elements)
+        .filter(function (el: HTMLElement) {
+          return el.tagName !== 'BUTTON';
+        })
+        .map(function (el: HTMLButtonElement) {
+          return getValue(el);
+        })
+      );
+      return false;
+    };
+  }(forms[i]));
 }

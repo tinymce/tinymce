@@ -1,101 +1,101 @@
-import Filters from '../transformations/Filters';
-import ImageTools from '../transformations/ImageTools';
-import JPEGMeta from '../meta/JPEGMeta';
-import ImageResult from 'ephox/imagetools/util/ImageResult';
+import * as Filters from '../transformations/Filters';
+import * as ImageTools from '../transformations/ImageTools';
+import * as JPEGMeta from '../meta/JPEGMeta';
+import { ImageResult } from '../util/ImageResult';
 
-var invert = function (ir) {
+const invert = function (ir: ImageResult): Promise<ImageResult> {
   return Filters.invert(ir);
 };
 
-var sharpen = function (ir) {
+const sharpen = function (ir: ImageResult): Promise<ImageResult> {
   return Filters.sharpen(ir);
 };
 
-var emboss = function (ir) {
+const emboss = function (ir: ImageResult): Promise<ImageResult> {
   return Filters.emboss(ir);
 };
 
-var gamma = function (ir, value) {
+const gamma = function (ir: ImageResult, value: number): Promise<ImageResult> {
   return Filters.gamma(ir, value);
 };
 
-var exposure = function (ir, value) {
+const exposure = function (ir: ImageResult, value: number): Promise<ImageResult> {
   return Filters.exposure(ir, value);
 };
 
-var colorize = function (ir, adjustR, adjustG, adjustB) {
+const colorize = function (ir: ImageResult, adjustR: number, adjustG: number, adjustB: number): Promise<ImageResult> {
   return Filters.colorize(ir, adjustR, adjustG, adjustB);
 };
 
-var brightness = function (ir, adjust) {
+const brightness = function (ir: ImageResult, adjust: number): Promise<ImageResult> {
   return Filters.brightness(ir, adjust);
 };
 
-var hue = function (ir, adjust) {
+const hue = function (ir: ImageResult, adjust: number): Promise<ImageResult> {
   return Filters.hue(ir, adjust);
 };
 
-var saturate = function (ir, adjust) {
+const saturate = function (ir: ImageResult, adjust: number): Promise<ImageResult> {
   return Filters.saturate(ir, adjust);
 };
 
-var contrast = function (ir, adjust) {
+const contrast = function (ir: ImageResult, adjust: number): Promise<ImageResult> {
   return Filters.contrast(ir, adjust);
 };
 
-var grayscale = function (ir, adjust) {
+const grayscale = function (ir: ImageResult, adjust: number): Promise<ImageResult> {
   return Filters.grayscale(ir, adjust);
 };
 
-var sepia = function (ir, adjust) {
+const sepia = function (ir: ImageResult, adjust: number): Promise<ImageResult> {
   return Filters.sepia(ir, adjust);
 };
 
-var flip = function (ir, axis) {
+const flip = function (ir: ImageResult, axis: 'h' | 'v'): Promise<ImageResult> {
   return ImageTools.flip(ir, axis);
 };
 
-var crop = function (ir, x, y, w, h) {
+const crop = function (ir: ImageResult, x: number, y: number, w: number, h: number): Promise<ImageResult> {
   return ImageTools.crop(ir, x, y, w, h);
 };
 
-var resize = function (ir, w, h) {
+const resize = function (ir: ImageResult, w: number, h: number): Promise<ImageResult> {
   return ImageTools.resize(ir, w, h);
 };
 
-var rotate = function (ir, angle) {
+const rotate = function (ir: ImageResult, angle: number): Promise<ImageResult> {
   return ImageTools.rotate(ir, angle);
 };
 
 /* ImageResult -> ImageResult */
-var exifRotate = (ir) => {
+const exifRotate = (ir: ImageResult): Promise<ImageResult> => {
   // EXIF orientation is represented by numbers 1-8. We don't want to deal with
   // all the cases, but these three are probably the most common.
-  // Explanation of numbers: https://magnushoff.com/jpeg-orientation.html 
+  // Explanation of numbers: https://magnushoff.com/jpeg-orientation.html
   const ROTATE_90 = 6; // image is rotated left by 90 degrees
   const ROTATE_180 = 3; // image is upside down
   const ROTATE_270 = 8; // image is rotated right by 90 degrees
 
-  var checkRotation = (data) => {
-    var orientation = data.tiff.Orientation;
+  const checkRotation = (data: JPEGMeta.JPEGMeta) => {
+    const orientation = data.tiff.Orientation;
     switch (orientation) {
-      case ROTATE_90: 
-        return rotate(ir, 90); 
-      case ROTATE_180: 
+      case ROTATE_90:
+        return rotate(ir, 90);
+      case ROTATE_180:
         return rotate(ir, 180);
-      case ROTATE_270: 
-        return rotate(ir, 270); 
+      case ROTATE_270:
+        return rotate(ir, 270);
       default:
-        return ir;      
-    };
+        return ir;
+    }
   };
 
-  var notJpeg = () => ir;
+  const notJpeg = (): ImageResult => ir;
 
-  return ir.toBlob().then(JPEGMeta.extractFrom).then(checkRotation, notJpeg); 
+  return ir.toBlob().then(JPEGMeta.extractFrom).then(checkRotation, notJpeg);
 };
 
-export default {
+export {
   invert,
   sharpen,
   emboss,

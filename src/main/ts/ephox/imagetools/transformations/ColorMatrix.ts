@@ -1,16 +1,30 @@
-function clamp(value, min, max) {
-  value = parseFloat(value);
+export type Matrix = [
+  number, number, number, number, number,
+  number, number, number, number, number,
+  number, number, number, number, number,
+  number, number, number, number, number,
+  number, number, number, number, number
+];
 
-  if (value > max) {
-    value = max;
-  } else if (value < min) {
-    value = min;
+export type ConvolutionMatrix = [
+  number, number, number,
+  number, number, number,
+  number, number, number
+];
+
+function clamp(value: string | number, min: number, max: number): number {
+  let parsedValue = typeof value === 'string' ? parseFloat(value) : value;
+
+  if (parsedValue > max) {
+    parsedValue = max;
+  } else if (parsedValue < min) {
+    parsedValue = min;
   }
 
-  return value;
+  return parsedValue;
 }
 
-function identity() {
+function identity(): Matrix {
   return [
     1, 0, 0, 0, 0,
     0, 1, 0, 0, 0,
@@ -20,7 +34,7 @@ function identity() {
   ];
 }
 
-var DELTA_INDEX = [
+const DELTA_INDEX = [
   0, 0.01, 0.02, 0.04, 0.05, 0.06, 0.07, 0.08, 0.1, 0.11,
   0.12, 0.14, 0.15, 0.16, 0.17, 0.18, 0.20, 0.21, 0.22, 0.24,
   0.25, 0.27, 0.28, 0.30, 0.32, 0.34, 0.36, 0.38, 0.40, 0.42,
@@ -34,18 +48,20 @@ var DELTA_INDEX = [
   10.0
 ];
 
-function multiply(matrix1, matrix2) {
-  var i, j, k, val, col = [], out = new Array(10);
+function multiply(matrix1: Matrix, matrix2: Matrix): Matrix {
+  const col: number[] = [];
+  const out: Matrix = new Array(25) as Matrix;
+  let val;
 
-  for (i = 0; i < 5; i++) {
-    for (j = 0; j < 5; j++) {
+  for (let i = 0; i < 5; i++) {
+    for (let j = 0; j < 5; j++) {
       col[j] = matrix2[j + i * 5];
     }
 
-    for (j = 0; j < 5; j++) {
+    for (let j = 0; j < 5; j++) {
       val = 0;
 
-      for (k = 0; k < 5; k++) {
+      for (let k = 0; k < 5; k++) {
         val += matrix1[j + k * 5] * col[k];
       }
 
@@ -56,10 +72,10 @@ function multiply(matrix1, matrix2) {
   return out;
 }
 
-function adjust(matrix, adjustValue) {
+function adjust(matrix: Matrix, adjustValue: number): Matrix {
   adjustValue = clamp(adjustValue, 0, 1);
 
-  return matrix.map(function (value, index) {
+  return matrix.map(function (value, index): number {
     if (index % 6 === 0) {
       value = 1.0 - ((1 - value) * adjustValue);
     } else {
@@ -67,11 +83,11 @@ function adjust(matrix, adjustValue) {
     }
 
     return clamp(value, 0, 1);
-  });
+  }) as Matrix;
 }
 
-function adjustContrast(matrix, value) {
-  var x;
+function adjustContrast(matrix: Matrix, value: number) {
+  let x: number;
 
   value = clamp(value, -1, 1);
   value *= 100;
@@ -100,14 +116,12 @@ function adjustContrast(matrix, value) {
   ]);
 }
 
-function adjustSaturation(matrix, value) {
-  var x, lumR, lumG, lumB;
-
+function adjustSaturation(matrix: Matrix, value: number): Matrix {
   value = clamp(value, -1, 1);
-  x = 1 + ((value > 0) ? 3 * value : value);
-  lumR = 0.3086;
-  lumG = 0.6094;
-  lumB = 0.0820;
+  const x = 1 + ((value > 0) ? 3 * value : value);
+  const lumR = 0.3086;
+  const lumG = 0.6094;
+  const lumB = 0.0820;
 
   return multiply(matrix, [
     lumR * (1 - x) + x, lumG * (1 - x), lumB * (1 - x), 0, 0,
@@ -118,15 +132,13 @@ function adjustSaturation(matrix, value) {
   ]);
 }
 
-function adjustHue(matrix, angle) {
-  var cosVal, sinVal, lumR, lumG, lumB;
-
+function adjustHue(matrix: Matrix, angle: number): Matrix {
   angle = clamp(angle, -180, 180) / 180 * Math.PI;
-  cosVal = Math.cos(angle);
-  sinVal = Math.sin(angle);
-  lumR = 0.213;
-  lumG = 0.715;
-  lumB = 0.072;
+  const cosVal = Math.cos(angle);
+  const sinVal = Math.sin(angle);
+  const lumR = 0.213;
+  const lumG = 0.715;
+  const lumB = 0.072;
 
   return multiply(matrix, [
     lumR + cosVal * (1 - lumR) + sinVal * (-lumR), lumG + cosVal * (-lumG) + sinVal * (-lumG),
@@ -140,7 +152,7 @@ function adjustHue(matrix, angle) {
   ]);
 }
 
-function adjustBrightness(matrix, value) {
+function adjustBrightness(matrix: Matrix, value: number): Matrix {
   value = clamp(255 * value, -255, 255);
 
   return multiply(matrix, [
@@ -152,7 +164,7 @@ function adjustBrightness(matrix, value) {
   ]);
 }
 
-function adjustColors(matrix, adjustR, adjustG, adjustB) {
+function adjustColors(matrix: Matrix, adjustR: number, adjustG: number, adjustB: number): Matrix {
   adjustR = clamp(adjustR, 0, 2);
   adjustG = clamp(adjustG, 0, 2);
   adjustB = clamp(adjustB, 0, 2);
@@ -166,7 +178,7 @@ function adjustColors(matrix, adjustR, adjustG, adjustB) {
   ]);
 }
 
-function adjustSepia(matrix, value) {
+function adjustSepia(matrix: Matrix, value: number): Matrix {
   value = clamp(value, 0, 1);
 
   return multiply(matrix, adjust([
@@ -178,7 +190,7 @@ function adjustSepia(matrix, value) {
   ], value));
 }
 
-function adjustGrayscale(matrix, value) {
+function adjustGrayscale(matrix: Matrix, value: number): Matrix {
   value = clamp(value, 0, 1);
 
   return multiply(matrix, adjust([
@@ -190,7 +202,7 @@ function adjustGrayscale(matrix, value) {
   ], value));
 }
 
-export default <any> {
+export {
   identity,
   adjust,
   multiply,

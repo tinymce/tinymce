@@ -1,11 +1,12 @@
-import { setTimeout } from '@ephox/dom-globals';
+/* tslint:disable:no-shadowed-variable */
+import { setTimeout, Window } from '@ephox/dom-globals';
 
 /* eslint-disable */
 
 /* jshint ignore:start */
 
 /**
- * Modifed to be a feature fill and wrapped as tinymce module.
+ * Modified to be a feature fill and wrapped as tinymce module.
  *
  * Promise polyfill under MIT license: https://github.com/taylorhakes/promise-polyfill
  */
@@ -14,47 +15,80 @@ import { setTimeout } from '@ephox/dom-globals';
 
 /* eslint-enable */
 
-let promise = () => {
-  var Promise:any = function (fn) {
-    if (typeof this !== 'object') throw new TypeError('Promises must be constructed via new');
-    if (typeof fn !== 'function') throw new TypeError('not a function');
+type Callback<T, TResult = T> = ((value: T) => TResult | PromiseLike<TResult>);
+type RejectFn = (reason?: any) => void;
+type ResolveFn<T> = (value?: T | PromiseLike<T>) => void;
+type Executor<T> = (resolve: ResolveFn<T>, reject: RejectFn) => void;
+
+interface Deferred<T, TResult1 = T, TResult2 = never> {
+  onFulfilled: Callback<T, TResult1> | null;
+  onRejected: Callback<any, TResult2> | null;
+  reject: RejectFn;
+  resolve: ResolveFn<TResult1 | TResult2>;
+}
+
+interface PromisePolyfill<T> extends Promise<T> {
+  _state: any;
+  _value: any;
+  _deferreds: Deferred<T>[];
+
+  then<TResult1 = T, TResult2 = never>(onFulfilled?: Callback<T, TResult1> | undefined | null, onRejected?: Callback<any, TResult2> | undefined | null): PromisePolyfill<TResult1 | TResult2>;
+
+  catch<TResult = never>(onRejected?: Callback<any, TResult> | undefined | null): Promise<T | TResult>;
+}
+
+interface PromisePolyfillConstructor extends PromiseConstructor {
+  prototype: PromisePolyfill<any>;
+
+  new <T>(executor: Executor<T>): PromisePolyfill<T>;
+
+  immediateFn? (handler: (...args: any[]) => void): void;
+}
+
+const promise = <T>(): PromisePolyfillConstructor => {
+  const Promise = function (this: PromisePolyfill<T>, fn: Executor<T>) {
+    if (typeof this !== 'object') {
+      throw new TypeError('Promises must be constructed via new');
+    }
+    if (typeof fn !== 'function') {
+      throw new TypeError('not a function');
+    }
     this._state = null;
     this._value = null;
     this._deferreds = [];
 
     doResolve(fn, bind(resolve, this), bind(reject, this));
-  };
+  } as unknown as PromisePolyfillConstructor;
 
   // Use polyfill for setImmediate for performance gains
-  var asap = Promise.immediateFn || (typeof window.setImmediate === 'function' && window.setImmediate) ||
-    function (fn) { setTimeout(fn, 1); };
+  const asap = Promise.immediateFn || (typeof window.setImmediate === 'function' && window.setImmediate) ||
+    function (fn: (handler: (...args: any[]) => void) => void) { setTimeout(fn, 1); };
 
   // Polyfill for Function.prototype.bind
-  function bind(fn, thisArg) {
+  function bind(fn: Function, thisArg: any) {
     return function () {
-      fn.apply(thisArg, arguments);
+      return fn.apply(thisArg, arguments);
     };
   }
 
-  var isArray = Array.isArray || function (value) { return Object.prototype.toString.call(value) === "[object Array]"; };
+  const isArray = Array.isArray || function (value) { return Object.prototype.toString.call(value) === '[object Array]'; };
 
-  function handle(deferred) {
-    var me = this;
+  function handle(this: PromisePolyfill<T>, deferred: Deferred<T>) {
+    const me = this;
     if (this._state === null) {
       this._deferreds.push(deferred);
       return;
     }
     asap(function () {
-      var cb = me._state ? deferred.onFulfilled : deferred.onRejected;
+      const cb = me._state ? deferred.onFulfilled : deferred.onRejected;
       if (cb === null) {
         (me._state ? deferred.resolve : deferred.reject)(me._value);
         return;
       }
-      var ret;
+      let ret;
       try {
         ret = cb(me._value);
-      }
-      catch (e) {
+      } catch (e) {
         deferred.reject(e);
         return;
       }
@@ -62,11 +96,14 @@ let promise = () => {
     });
   }
 
-  function resolve(newValue) {
-    try { //Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
-      if (newValue === this) throw new TypeError('A promise cannot be resolved with itself.');
+  function resolve(this: PromisePolyfill<T>, newValue: any) {
+    try {
+      // Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
+      if (newValue === this) {
+        throw new TypeError('A promise cannot be resolved with itself.');
+      }
       if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
-        var then = newValue.then;
+        const then = newValue.then;
         if (typeof then === 'function') {
           doResolve(bind(then, newValue), bind(resolve, this), bind(reject, this));
           return;
@@ -78,20 +115,20 @@ let promise = () => {
     } catch (e) { reject.call(this, e); }
   }
 
-  function reject(newValue) {
+  function reject(this: PromisePolyfill<T>, newValue: any) {
     this._state = false;
     this._value = newValue;
     finale.call(this);
   }
 
-  function finale() {
-    for (var i = 0, len = this._deferreds.length; i < len; i++) {
-      handle.call(this, this._deferreds[i]);
+  function finale(this: PromisePolyfill<T>) {
+    for (const deferred of this._deferreds) {
+      handle.call(this, deferred);
     }
-    this._deferreds = null;
+    this._deferreds = [];
   }
 
-  function Handler(onFulfilled, onRejected, resolve, reject) {
+  function Handler<TResult1 = T, TResult2 = never>(this: Deferred<T, TResult1, TResult2>, onFulfilled: Callback<T, TResult1> | null | undefined, onRejected: Callback<any, TResult2> | null | undefined, resolve: ResolveFn<TResult1 | TResult2>, reject: RejectFn) {
     this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null;
     this.onRejected = typeof onRejected === 'function' ? onRejected : null;
     this.resolve = resolve;
@@ -104,48 +141,56 @@ let promise = () => {
    *
    * Makes no guarantees about asynchrony.
    */
-  function doResolve(fn, onFulfilled, onRejected) {
-    var done = false;
+  function doResolve<TResult1 = T, TResult2 = never>(fn: Executor<T>, onFulfilled: Callback<T, TResult1>, onRejected: Callback<any, TResult2>) {
+    let done = false;
     try {
       fn(function (value) {
-        if (done) return;
+        if (done) {
+          return;
+        }
         done = true;
-        onFulfilled(value);
+        onFulfilled(value as T);
       }, function (reason) {
-        if (done) return;
+        if (done) {
+          return;
+        }
         done = true;
         onRejected(reason);
       });
     } catch (ex) {
-      if (done) return;
+      if (done) {
+        return;
+      }
       done = true;
       onRejected(ex);
     }
   }
 
-  Promise.prototype['catch'] = function (onRejected) {
+  Promise.prototype.catch = function <TResult = never>(onRejected?: Callback<any, TResult> | null): PromisePolyfill<T | TResult> {
     return this.then(null, onRejected);
   };
 
-  Promise.prototype.then = function (onFulfilled, onRejected) {
-    var me = this;
+  Promise.prototype.then = function <TResult1 = T, TResult2 = never>(onFulfilled?: Callback<T, TResult1> | null, onRejected?: Callback<any, TResult2> | null): PromisePolyfill<TResult1 | TResult2> {
+    const me = this;
     return new Promise(function (resolve, reject) {
-      handle.call(me, new Handler(onFulfilled, onRejected, resolve, reject));
+      handle.call(me, new (Handler as any)(onFulfilled, onRejected, resolve, reject));
     });
   };
 
-  Promise.all = function () {
-    var args = Array.prototype.slice.call(arguments.length === 1 && isArray(arguments[0]) ? arguments[0] : arguments);
+  Promise.all = function <U>(...values: any[]): PromisePolyfill<any> {
+    const args = Array.prototype.slice.call(values.length === 1 && isArray(values[0]) ? values[0] : values);
 
     return new Promise(function (resolve, reject) {
-      if (args.length === 0) return resolve([]);
-      var remaining = args.length;
-      function res(i, val) {
+      if (args.length === 0) {
+        return resolve([]);
+      }
+      let remaining = args.length;
+      function res(i: number, val: any) {
         try {
           if (val && (typeof val === 'object' || typeof val === 'function')) {
-            var then = val.then;
+            const then = val.then;
             if (typeof then === 'function') {
-              then.call(val, function (val) { res(i, val); }, reject);
+              then.call(val, function (val: any) { res(i, val); }, reject);
               return;
             }
           }
@@ -157,15 +202,15 @@ let promise = () => {
           reject(ex);
         }
       }
-      for (var i = 0; i < args.length; i++) {
+      for (let i = 0; i < args.length; i++) {
         res(i, args[i]);
       }
     });
   };
 
-  Promise.resolve = function (value) {
+  Promise.resolve = function <U>(value?: U | PromiseLike<U>): PromisePolyfill<U | void> {
     if (value && typeof value === 'object' && value.constructor === Promise) {
-      return value;
+      return value as PromisePolyfill<U | void>;
     }
 
     return new Promise(function (resolve) {
@@ -173,16 +218,16 @@ let promise = () => {
     });
   };
 
-  Promise.reject = function (value) {
+  Promise.reject = function <U = never>(reason?: any): PromisePolyfill<U> {
     return new Promise(function (resolve, reject) {
-      reject(value);
+      reject(reason);
     });
   };
 
-  Promise.race = function (values) {
+  Promise.race = function <U>(values: PromiseLike<U>[]): PromisePolyfill<U> {
     return new Promise(function (resolve, reject) {
-      for (var i = 0, len = values.length; i < len; i++) {
-        values[i].then(resolve, reject);
+      for (const value of values) {
+        value.then(resolve, reject);
       }
     });
   };
@@ -190,6 +235,10 @@ let promise = () => {
   return Promise;
 };
 
-declare const window: any;
+declare const window: Window & { Promise: PromiseConstructor };
 
-export default <any> window.Promise ? window.Promise : promise();
+const Promise: PromiseConstructor = window.Promise ? window.Promise : promise();
+
+export {
+  Promise
+};

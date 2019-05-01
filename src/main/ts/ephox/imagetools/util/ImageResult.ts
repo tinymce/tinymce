@@ -1,12 +1,24 @@
-import Canvas from './Canvas';
-import Conversions from './Conversions';
-import Promise from './Promise';
+import { Blob, HTMLCanvasElement, HTMLImageElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
+import * as Canvas from './Canvas';
+import * as Conversions from './Conversions';
+import { Promise } from './Promise';
 
-function create(getCanvas, blob, uri) {
-  var initialType = blob.type;
+export interface ImageResult {
+  getType (): string;
+  toBlob (): Promise<Blob>;
+  toDataURL (): string;
+  toBase64 (): string;
+  toAdjustedBlob (type?: string, quality?: number): Promise<Blob>;
+  toAdjustedDataURL (type?: string, quality?: number): Promise<string>;
+  toAdjustedBase64 (type?: string, quality?: number): Promise<string>;
+  toCanvas (): Promise<HTMLCanvasElement>;
+}
 
-  var getType = Fun.constant(initialType);
+function create(getCanvas: Promise<HTMLCanvasElement>, blob: Blob, uri: string): ImageResult {
+  const initialType = blob.type;
+
+  const getType = Fun.constant(initialType);
 
   function toBlob() {
     return Promise.resolve(blob);
@@ -20,19 +32,19 @@ function create(getCanvas, blob, uri) {
     return uri.split(',')[1];
   }
 
-  function toAdjustedBlob(type, quality) {
+  function toAdjustedBlob(type: string, quality: number) {
     return getCanvas.then(function (canvas) {
       return Conversions.canvasToBlob(canvas, type, quality);
     });
   }
 
-  function toAdjustedDataURL(type, quality) {
+  function toAdjustedDataURL(type?: string, quality?: number) {
     return getCanvas.then(function (canvas) {
       return Conversions.canvasToDataURL(canvas, type, quality);
     });
   }
 
-  function toAdjustedBase64(type, quality) {
+  function toAdjustedBase64(type: string, quality: number) {
     return toAdjustedDataURL(type, quality).then(function (dataurl) {
       return dataurl.split(',')[1];
     });
@@ -54,29 +66,29 @@ function create(getCanvas, blob, uri) {
   };
 }
 
-function fromBlob(blob) {
+function fromBlob(blob: Blob): Promise<ImageResult> {
   return Conversions.blobToDataUri(blob).then(function (uri) {
     return create(Conversions.blobToCanvas(blob), blob, uri);
   });
 }
 
-function fromCanvas(canvas, type) {
+function fromCanvas(canvas: HTMLCanvasElement, type?: string): Promise<ImageResult> {
   return Conversions.canvasToBlob(canvas, type).then(function (blob) {
     return create(Promise.resolve(canvas), blob, canvas.toDataURL());
   });
 }
 
-function fromImage(image) {
+function fromImage(image: HTMLImageElement): Promise<ImageResult> {
   return Conversions.imageToBlob(image).then(function (blob) {
     return fromBlob(blob);
   });
 }
 
-var fromBlobAndUrlSync = function (blob, url) {
+const fromBlobAndUrlSync = function (blob: Blob, url: string): ImageResult {
   return create(Conversions.blobToCanvas(blob), blob, url);
 };
 
-export default <any> {
+export {
   fromBlob,
   fromCanvas,
   fromImage,

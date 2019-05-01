@@ -1,19 +1,19 @@
 import Assertion from 'ephox/imagetools/test/Assertion';
-import ColorMatrix from 'ephox/imagetools/transformations/ColorMatrix';
+import * as ColorMatrix from 'ephox/imagetools/transformations/ColorMatrix';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('ColorMatrixTest', function() {
-  var checkIdentity = function (label, input) {
-    Assertion.assertEq(input, ColorMatrix.identity(input), label);
+UnitTest.test('ColorMatrixTest', function () {
+  const checkIdentity = function (label: string, input: ColorMatrix.Matrix) {
+    Assertion.assertEq(input, ColorMatrix.identity(), label);
   };
 
-  var checkAdjust = function (label, expected, input, adjustment) {
-    var actual = ColorMatrix.adjust(input, adjustment);
+  const checkAdjust = function (label: string, expected: ColorMatrix.Matrix, input: ColorMatrix.Matrix, adjustment: number) {
+    const actual = ColorMatrix.adjust(input, adjustment);
     Assertion.assertEq(expected, actual, label);
   };
 
-  var checkMultiply = function (label, expected, input, matrix) {
-    var actual = ColorMatrix.multiply(input, matrix);
+  const checkMultiply = function (label: string, expected: ColorMatrix.Matrix, input: ColorMatrix.Matrix, matrix: ColorMatrix.Matrix) {
+    const actual = ColorMatrix.multiply(input, matrix);
     Assertion.assertEq(expected, actual, label);
   };
 
@@ -59,4 +59,3 @@ UnitTest.test('ColorMatrixTest', function() {
     0.12, 0.12, 0.12, 0.12, 0
   ]);
 });
-

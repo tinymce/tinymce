@@ -1,20 +1,20 @@
-import ImageResult from '../util/ImageResult';
+import { Blob, HTMLImageElement } from '@ephox/dom-globals';
+import { ImageResult, fromBlob, fromBlobAndUrlSync as fromBlobAndUrl, fromImage } from '../util/ImageResult';
 
-var blobToImageResult = function (blob) {
-  return ImageResult.fromBlob(blob);
+const blobToImageResult = function (blob: Blob): Promise<ImageResult> {
+  return fromBlob(blob);
 };
 
-var fromBlobAndUrlSync = function (blob, uri) {
+const fromBlobAndUrlSync = function (blob: Blob, uri: string): ImageResult {
   // we have no reason to doubt the uri is valid
-  return ImageResult.fromBlobAndUrlSync(blob, uri);
+  return fromBlobAndUrl(blob, uri);
 };
 
-var imageToImageResult = function (image) {
-  return ImageResult.fromImage(image);
-
+const imageToImageResult = function (image: HTMLImageElement): Promise<ImageResult> {
+  return fromImage(image);
 };
 
-var imageResultToBlob = function (ir, type, quality) {
+const imageResultToBlob = function (ir: ImageResult, type?: string, quality?: number): Promise<Blob> {
   // Shortcut to not lose the blob filename when we aren't editing the image
   if (type === undefined && quality === undefined) {
     return imageResultToOriginalBlob(ir);
@@ -23,15 +23,15 @@ var imageResultToBlob = function (ir, type, quality) {
   }
 };
 
-var imageResultToOriginalBlob = function (ir) {
+const imageResultToOriginalBlob = function (ir: ImageResult): Promise<Blob> {
   return ir.toBlob();
 };
 
-var imageResultToDataURL = function (ir) {
+const imageResultToDataURL = function (ir: ImageResult): string {
   return ir.toDataURL();
 };
 
-export default <any> {
+export {
   // used outside
   blobToImageResult,
   fromBlobAndUrlSync,

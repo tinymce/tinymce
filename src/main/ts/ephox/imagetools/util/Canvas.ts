@@ -1,27 +1,27 @@
-import { document } from '@ephox/dom-globals';
+import { document, HTMLCanvasElement, WebGLRenderingContext, CanvasRenderingContext2D } from '@ephox/dom-globals';
 
-function create(width, height) {
+function create(width: number, height: number) {
   return resize(document.createElement('canvas'), width, height);
 }
 
-function clone(canvas) {
-  var tCanvas, ctx;
-  tCanvas = create(canvas.width, canvas.height);
-  ctx = get2dContext(tCanvas);
+function clone(canvas: HTMLCanvasElement) {
+  const tCanvas = create(canvas.width, canvas.height);
+  const ctx = get2dContext(tCanvas);
   ctx.drawImage(canvas, 0, 0);
   return tCanvas;
 }
 
-function get2dContext(canvas) {
-  return canvas.getContext("2d");
+function get2dContext(canvas: HTMLCanvasElement) {
+  return canvas.getContext('2d') as CanvasRenderingContext2D;
 }
 
-function get3dContext(canvas) {
-  var gl = null;
+function get3dContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
+  let gl = null;
   try {
-    gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+    gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  } catch (e) {
+    return null;
   }
-  catch (e) { }
 
   if (!gl) { // it seems that sometimes it doesn't throw exception, but still fails to get context
     gl = null;
@@ -29,14 +29,14 @@ function get3dContext(canvas) {
   return gl;
 }
 
-function resize(canvas, width, height) {
+function resize(canvas: HTMLCanvasElement, width: number, height: number) {
   canvas.width = width;
   canvas.height = height;
 
   return canvas;
 }
 
-export default <any> {
+export {
   create,
   clone,
   resize,

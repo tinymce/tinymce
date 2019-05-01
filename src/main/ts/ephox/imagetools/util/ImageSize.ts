@@ -1,12 +1,14 @@
-function getWidth(image) {
-  return image.naturalWidth || image.width;
+import { HTMLCanvasElement, HTMLImageElement } from '@ephox/dom-globals';
+
+function getWidth(image: HTMLImageElement | HTMLCanvasElement): number {
+  return (image as HTMLImageElement).naturalWidth || image.width;
 }
 
-function getHeight(image) {
-  return image.naturalHeight || image.height;
+function getHeight(image: HTMLImageElement | HTMLCanvasElement): number {
+  return (image as HTMLImageElement).naturalHeight || image.height;
 }
 
-export default <any> {
+export {
   getWidth,
   getHeight
 };

@@ -1,14 +1,11 @@
-import Canvas from './Canvas';
-import ImageSize from './ImageSize';
-import Promise from './Promise';
+import { Blob, HTMLCanvasElement, HTMLImageElement, Image, URL, XMLHttpRequest } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Blob } from '@ephox/sand';
-import { FileReader } from '@ephox/sand';
-import { Uint8Array } from '@ephox/sand';
-import { Window } from '@ephox/sand';
-import { URL, Image, XMLHttpRequest, HTMLCanvasElement } from '@ephox/dom-globals';
+import { Blob as SandBlob, FileReader, Uint8Array, Window } from '@ephox/sand';
+import * as Canvas from './Canvas';
+import * as ImageSize from './ImageSize';
+import { Promise } from './Promise';
 
-function loadImage(image) {
+function loadImage(image: HTMLImageElement): Promise<HTMLImageElement> {
   return new Promise(function (resolve) {
     function loaded() {
       image.removeEventListener('load', loaded);
@@ -23,8 +20,8 @@ function loadImage(image) {
   });
 }
 
-function imageToBlob(image) {
-  var src = image.src;
+function imageToBlob(image: HTMLImageElement): Promise<Blob> {
+  const src = image.src;
 
   if (src.indexOf('data:') === 0) {
     return dataUriToBlob(src);
@@ -33,13 +30,13 @@ function imageToBlob(image) {
   return anyUriToBlob(src);
 }
 
-function blobToImage(blob) {
+function blobToImage(blob: Blob): Promise<HTMLImageElement> {
   return new Promise(function (resolve, reject) {
-    var blobUrl = URL.createObjectURL(blob);
+    const blobUrl = URL.createObjectURL(blob);
 
-    var image = new Image();
+    const image = new Image();
 
-    var removeListeners = function () {
+    const removeListeners = function () {
       image.removeEventListener('load', loaded);
       image.removeEventListener('error', error);
     };
@@ -64,9 +61,9 @@ function blobToImage(blob) {
   });
 }
 
-function anyUriToBlob(url) {
+function anyUriToBlob(url: string): Promise<Blob> {
   return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
 
     xhr.open('GET', url, true);
 
@@ -74,7 +71,7 @@ function anyUriToBlob(url) {
     xhr.responseType = 'blob';
 
     xhr.onload = function () {
-      if (this.status == 200) {
+      if (this.status === 200) {
         resolve(this.response);
       }
     };
@@ -85,14 +82,14 @@ function anyUriToBlob(url) {
        * That was optimised away into a single AJAX call, but the result was no ability to detect 'your canvas is tainted, you need a proxy'.
        * We now create a custom JS error object with extra properties to look like a tainted canvas error.
        */
-      var corsError = () => {
-        var obj = new Error('No access to download image') as any;
+      const corsError = () => {
+        const obj = new Error('No access to download image') as any;
         obj.code = 18;
         obj.name = 'SecurityError';
         return obj;
-      }
+      };
 
-      var genericError = () => new Error('Error ' + this.status + ' downloading image');
+      const genericError = () => new Error('Error ' + this.status + ' downloading image');
       reject(this.status === 0 ? corsError() : genericError());
     };
 
@@ -100,36 +97,37 @@ function anyUriToBlob(url) {
   });
 }
 
-function dataUriToBlobSync(uri) {
-  var data = uri.split(',');
+function dataUriToBlobSync(uri: string): Option<Blob> {
+  const data = uri.split(',');
 
-  var matches = /data:([^;]+)/.exec(data[0]);
-  if (!matches) return Option.none();
+  const matches = /data:([^;]+)/.exec(data[0]);
+  if (!matches) { return Option.none(); }
 
-  var mimetype = matches[1];
-  var base64 = data[1];
+  const mimetype = matches[1];
+  const base64 = data[1];
 
   // al gore rhythm via http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
-  var sliceSize = 1024;
-  var byteCharacters = Window.atob(base64);
-  var bytesLength = byteCharacters.length;
-  var slicesCount = Math.ceil(bytesLength / sliceSize);
-  var byteArrays = new Array(slicesCount);
+  const sliceSize = 1024;
+  const byteCharacters = Window.atob(base64);
+  const bytesLength = byteCharacters.length;
+  const slicesCount = Math.ceil(bytesLength / sliceSize);
+  const byteArrays = new Array(slicesCount);
 
-  for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
-    var begin = sliceIndex * sliceSize;
-    var end = Math.min(begin + sliceSize, bytesLength);
+  for (let sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+    const begin = sliceIndex * sliceSize;
+    const end = Math.min(begin + sliceSize, bytesLength);
 
-    var bytes = new Array(end - begin);
-    for (var offset = begin, i = 0; offset < end; ++i, ++offset) {
+    const bytes = new Array(end - begin);
+    // tslint:disable-next-line:one-variable-per-declaration
+    for (let offset = begin, i = 0; offset < end; ++i, ++offset) {
       bytes[i] = byteCharacters[offset].charCodeAt(0);
     }
     byteArrays[sliceIndex] = Uint8Array(bytes);
   }
-  return Option.some(Blob(byteArrays, { type: mimetype }));
+  return Option.some(SandBlob(byteArrays, { type: mimetype }));
 }
 
-function dataUriToBlob(uri) {
+function dataUriToBlob(uri: string): Promise<Blob> {
   return new Promise(function (resolve, reject) {
     dataUriToBlobSync(uri).fold(function () {
       // uri isn't valid
@@ -138,7 +136,7 @@ function dataUriToBlob(uri) {
   });
 }
 
-function uriToBlob(url) {
+function uriToBlob(url: string): Promise<Blob> | null {
   if (url.indexOf('blob:') === 0) {
     return anyUriToBlob(url);
   }
@@ -150,13 +148,17 @@ function uriToBlob(url) {
   return null;
 }
 
-function canvasToBlob(canvas, type, quality) {
+function canvasToBlob(canvas: HTMLCanvasElement, type?: string, quality?: number): Promise<Blob> {
   type = type || 'image/png';
 
   if (HTMLCanvasElement.prototype.toBlob) {
-    return new Promise(function (resolve) {
+    return new Promise<Blob>(function (resolve, reject) {
       canvas.toBlob(function (blob) {
-        resolve(blob);
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject();
+        }
       }, type, quality);
     });
   } else {
@@ -164,31 +166,27 @@ function canvasToBlob(canvas, type, quality) {
   }
 }
 
-function canvasToDataURL(getCanvas, type, quality) {
+function canvasToDataURL(canvas: HTMLCanvasElement, type?: string, quality?: number): string {
   type = type || 'image/png';
-  return getCanvas.then(function (canvas) {
-    return canvas.toDataURL(type, quality);
-  });
+  return canvas.toDataURL(type, quality);
 }
 
-function blobToCanvas(blob) {
+function blobToCanvas(blob: Blob): Promise<HTMLCanvasElement> {
   return blobToImage(blob).then(function (image) {
     // we aren't retaining the image, so revoke the URL immediately
     revokeImageUrl(image);
 
-    var context, canvas;
-
-    canvas = Canvas.create(ImageSize.getWidth(image), ImageSize.getHeight(image));
-    context = Canvas.get2dContext(canvas);
+    const canvas = Canvas.create(ImageSize.getWidth(image), ImageSize.getHeight(image));
+    const context = Canvas.get2dContext(canvas);
     context.drawImage(image, 0, 0);
 
     return canvas;
   });
 }
 
-function blobToDataUri(blob) {
+function blobToDataUri(blob: Blob): Promise<string> {
   return new Promise(function (resolve) {
-    var reader = FileReader();
+    const reader = FileReader();
 
     reader.onloadend = function () {
       resolve(reader.result);
@@ -198,9 +196,9 @@ function blobToDataUri(blob) {
   });
 }
 
-function blobToArrayBuffer(blob) {
+function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
   return new Promise(function (resolve) {
-    var reader = FileReader();
+    const reader = FileReader();
 
     reader.onloadend = function () {
       resolve(reader.result);
@@ -210,17 +208,17 @@ function blobToArrayBuffer(blob) {
   });
 }
 
-function blobToBase64(blob) {
+function blobToBase64(blob: Blob): Promise<string> {
   return blobToDataUri(blob).then(function (dataUri) {
     return dataUri.split(',')[1];
   });
 }
 
-function revokeImageUrl(image) {
+function revokeImageUrl(image: HTMLImageElement): void {
   URL.revokeObjectURL(image.src);
 }
 
-export default <any> {
+export {
   // used outside
   blobToImage,
   imageToBlob,
