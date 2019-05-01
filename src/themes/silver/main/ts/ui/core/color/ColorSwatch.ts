@@ -7,7 +7,7 @@
 
 import { HexColour, RgbaColour } from '@ephox/acid';
 import { Menu, Toolbar, Types } from '@ephox/bridge';
-import { Cell, Option, Strings } from '@ephox/katamari';
+import { Cell, Fun, Option, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Settings from './Settings';
 
@@ -104,10 +104,12 @@ const applyColour = function (editor: Editor, format, value, onChoice: (v: strin
   }
 };
 
+const getMenuColors = (colors: Menu.ChoiceMenuItemApi[], hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
+  return colors.concat(Settings.getCurrentColors().concat(getAdditionalColors(hasCustom)));
+};
+
 const getFetch = (colors: Menu.ChoiceMenuItemApi[], hasCustom: boolean) => (callback) => {
-  callback(
-    colors.concat(Settings.getCurrentColors().concat(getAdditionalColors(hasCustom)))
-  );
+  callback(getMenuColors(colors, hasCustom));
 };
 
 const setIconColor = (splitButtonApi: Toolbar.ToolbarSplitButtonInstanceApi, name: string, newColor: string) => {
@@ -156,6 +158,22 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
 
       return () => { };
     }
+  });
+};
+
+const registerTextColorMenuItem = (editor: Editor, name: string, format: string, text: string) => {
+  editor.ui.registry.addNestedMenuItem(name, {
+    text,
+    icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
+    getSubmenuItems: () => [
+      {
+        type: 'fancymenuitem',
+        fancytype: 'colorswatch',
+        onAction: (data) => {
+          applyColour(editor, format, data.value, Fun.noop);
+        }
+      }
+    ]
   });
 };
 
@@ -226,17 +244,8 @@ const register = (editor: Editor) => {
   registerTextColorButton(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);
 
-  editor.ui.registry.addNestedMenuItem('forecolor', {
-    text: 'Text color',
-    getSubmenuItems: () => [
-      {
-        type: 'fancymenuitem',
-        fancytype: 'colorswatch',
-        onAction: (value) => {
-        }
-      }
-    ]
-  });
+  registerTextColorMenuItem(editor, 'forecolor', 'forecolor', 'Text color');
+  registerTextColorMenuItem(editor, 'backcolor', 'hilitecolor', 'Background color');
 };
 
-export default { register, getFetch, colorPickerDialog, getCurrentColor, getColorCols, calcCols };
+export default { register, getColors: getMenuColors, getFetch, colorPickerDialog, getCurrentColor, getColorCols, calcCols };

@@ -22,6 +22,7 @@ import {
   Representing,
   SimpleSpec,
   Tabstopping,
+  AlloyComponent,
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Future, Id, Option, Result } from '@ephox/katamari';
@@ -108,25 +109,23 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
     });
   };
 
-  const onItemAction = (value) => {
-    sharedBackstage.getSink().each((sink) => {
-      memColorButton.getOpt(sink).each((colorBit) => {
-        if (value === 'custom') {
-          colorInputBackstage.colorPicker((valueOpt) => {
-            valueOpt.fold(
-              () => AlloyTriggers.emit(colorBit, colorPickerCancelEvent),
-              (value) => {
-                emitSwatchChange(colorBit, value);
-                Settings.addColor(value);
-              }
-            );
-          }, '#ffffff');
-        } else if (value === 'remove') {
-          emitSwatchChange(colorBit, '');
-        } else {
-          emitSwatchChange(colorBit, value);
-        }
-      });
+  const onItemAction = (comp: AlloyComponent, value) => {
+    memColorButton.getOpt(comp).each((colorBit) => {
+      if (value === 'custom') {
+        colorInputBackstage.colorPicker((valueOpt) => {
+          valueOpt.fold(
+            () => AlloyTriggers.emit(colorBit, colorPickerCancelEvent),
+            (value) => {
+              emitSwatchChange(colorBit, value);
+              Settings.addColor(value);
+            }
+          );
+        }, '#ffffff');
+      } else if (value === 'remove') {
+        emitSwatchChange(colorBit, '');
+      } else {
+        emitSwatchChange(colorBit, value);
+      }
     });
   };
 
@@ -144,6 +143,8 @@ export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackst
       }),
       components: [],
       fetch: ColorSwatch.getFetch(colorInputBackstage.getColors(), colorInputBackstage.hasCustomColors()),
+      columns: colorInputBackstage.getColorCols(),
+      presets: 'color',
       onItemAction
     }, sharedBackstage)
   );

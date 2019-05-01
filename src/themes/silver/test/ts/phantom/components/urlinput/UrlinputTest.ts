@@ -1,54 +1,34 @@
 import { Assertions, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, ApproxStructure, Chain, UiControls } from '@ephox/agar';
-import { AlloyTriggers, Behaviour, Focusing, GuiFactory, Memento, NativeEvents, Positioning, Representing, TestHelpers } from '@ephox/alloy';
+import { AlloyTriggers, Focusing, GuiFactory, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
-import { Future, Option, Result } from '@ephox/katamari';
-import { SelectorFind, Value } from '@ephox/sugar';
+import { document } from '@ephox/dom-globals';
+import { Future, Option } from '@ephox/katamari';
+import { Element, SelectorFind, Value } from '@ephox/sugar';
 
+import { UrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import { LinkTargetType } from 'tinymce/themes/silver/ui/core/LinkTargets';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
-import { UrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
-import I18n from 'tinymce/core/api/util/I18n';
+
+import TestExtras from '../../../module/TestExtras';
 
 UnitTest.asynctest('UrlInput component Test', (success, failure) => {
+  const helpers = TestExtras();
+  const sink = Element.fromDom(document.querySelector('.mce-silver-sink'));
+
   TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
-      const memSink = Memento.record(
-        {
-          dom: {
-            tag: 'div'
-          },
-          behaviours: Behaviour.derive([
-            Positioning.config({ })
-          ])
-        }
-      );
-
-      const self = GuiFactory.build(
+      return GuiFactory.build(
         {
           dom: {
             tag: 'div'
           },
           components: [
-            memSink.asSpec(),
             renderUrlInput({
               type: 'urlinput',
               label: Option.some('UrlInput label'),
               name: 'col1',
               filetype: 'file'
-            }, {
-              getSink: () => {
-                return memSink.getOpt(self).fold(
-                  () => Result.error('No sink'),
-                  Result.value
-                );
-              },
-              providers: {
-                icons: () => <Record<string, string>> {},
-                menuItems: () => <Record<string, any>> {},
-                translate: I18n.translate,
-                colors: () => [ ]
-              }
-            }, {
+            }, helpers.backstage, {
               getHistory: (fileType) => [],
               addToHistory: (url, filetype) => store.adder('addToHistory')(),
               getLinkInformation: () => Option.some({
@@ -80,8 +60,6 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           ]
         }
       );
-
-      return self;
     },
     (doc, body, gui, component, store) => {
 
@@ -105,14 +83,14 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
         Waiter.sTryUntil(
           'Waiting for menu to appear',
           UiFinder.sExists(
-            component.element(),
+            sink,
             '.tox-menu .tox-collection__item'
           ),
           100,
           4000
         ),
 
-        Chain.asStep(component.element(), [
+        Chain.asStep(sink, [
           UiFinder.cFindIn('[role="menu"]'),
           Assertions.cAssertStructure(
             'Checking structure of menu (especially text)',
@@ -159,7 +137,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
         }),
         Waiter.sTryUntil(
           'Waiting for the menu to update',
-          Chain.asStep(component.element(), [
+          Chain.asStep(sink, [
             UiFinder.cFindAllIn('.tox-collection__item'),
             Chain.op((menuItems) => {
               if (menuItems.length > 2) {
@@ -170,7 +148,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           100,
           3000
         ),
-        Chain.asStep(component.element(), [
+        Chain.asStep(sink, [
           UiFinder.cFindIn('[role="menu"]'),
           Assertions.cAssertStructure(
             'Checking the menu shows items that match the input string',
@@ -249,8 +227,10 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
 
         TestHelpers.GuiSetup.mRemoveStyles
       ];
+    }, () => {
+      helpers.destroy();
+      success();
     },
-    success,
     failure
   );
 });

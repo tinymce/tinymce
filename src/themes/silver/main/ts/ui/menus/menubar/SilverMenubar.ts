@@ -23,11 +23,11 @@ import {
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Option, Result } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { Compare, SelectorFind } from '@ephox/sugar';
 import { TranslatedString } from 'tinymce/core/api/util/I18n';
 
-import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
+import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { MenuButtonClasses } from '../../toolbar/button/ButtonClasses';
 import { renderMenuButton } from '../../toolbar/button/ToolbarButtons';
 import { SingleMenuItemApi } from '../menu/SingleMenu';
@@ -36,8 +36,7 @@ export interface SilverMenubarSpec extends Sketcher.SingleSketchSpec {
   dom: RawDomSchema;
   onEscape: (comp: AlloyComponent) => void;
   onSetup: (comp: AlloyComponent) => void;
-  getSink: () => Result<AlloyComponent, Error>;
-  providers: UiFactoryBackstageProviders;
+  backstage: UiFactoryBackstage;
 }
 
 export interface SilverMenubarDetail extends Sketcher.SingleSketchDetail {
@@ -45,8 +44,7 @@ export interface SilverMenubarDetail extends Sketcher.SingleSketchDetail {
   dom: RawDomSchema;
   onEscape: (comp: AlloyComponent) => void;
   onSetup: (comp: AlloyComponent) => void;
-  getSink: () => Result<AlloyComponent, Error>;
-  providers: UiFactoryBackstageProviders;
+  backstage: UiFactoryBackstage;
 }
 
 export interface SilverMenubarSketch extends Sketcher.SingleSketch<SilverMenubarSpec, SilverMenubarDetail> {
@@ -75,10 +73,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
 
       return renderMenuButton(internal,
         MenuButtonClasses.Button,
-        {
-          getSink: detail.getSink,
-          providers: detail.providers
-        },
+        spec.backstage,
          // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
         Option.some('menuitem')
       );
@@ -159,8 +154,7 @@ export default Sketcher.single({
     FieldSchema.strict('dom'),
     FieldSchema.strict('uid'),
     FieldSchema.strict('onEscape'),
-    FieldSchema.strict('getSink'),
-    FieldSchema.strict('providers'),
+    FieldSchema.strict('backstage'),
     FieldSchema.defaulted('onSetup', Fun.noop)
   ],
   apis: {

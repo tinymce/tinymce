@@ -116,7 +116,7 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
   const getFetch = (backstage, getStyleItems) => (callback) => {
     const preItems = getStyleItems();
     const items = validateItems(preItems);
-    const menu = NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage.shared.providers);
+    const menu = NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage);
     callback(menu);
   };
 

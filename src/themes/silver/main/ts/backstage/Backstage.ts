@@ -26,7 +26,6 @@ export interface UiFactoryBackstageProviders {
   icons: IconProvider;
   menuItems: () => Record<string, Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.ToggleMenuItemApi>;
   translate: (any) => TranslatedString;
-  colors: () => Menu.ChoiceMenuItemApi[];
 }
 
 type UiFactoryBackstageForStyleButton = SelectData;
@@ -53,15 +52,12 @@ export interface UiFactoryBackstage {
 }
 
 const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyMoreButton: () => AlloyComponent): UiFactoryBackstage => {
-  const colorInputBackstage = ColorInputBackstage(editor);
-
   const backstage: UiFactoryBackstage = {
     shared: {
       providers: {
         icons: () => editor.ui.registry.getAll().icons,
         menuItems: () => editor.ui.registry.getAll().menuItems,
-        translate: I18n.translate,
-        colors: colorInputBackstage.getColors
+        translate: I18n.translate
       },
       interpreter: (s) => {
         return UiFactory.interpretWithoutForm(s, backstage);
@@ -71,7 +67,7 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
     },
     urlinput: UrlInputBackstage(editor),
     styleselect: initStyleFormatBackstage(editor),
-    colorinput: colorInputBackstage
+    colorinput: ColorInputBackstage(editor)
   };
 
   return backstage;

@@ -4,51 +4,52 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
+
 import { ItemTypes, ItemWidget, Menu as AlloyMenu } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Id } from '@ephox/katamari';
+import { Id, Merger } from '@ephox/katamari';
 
-import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
+import { UiFactoryBackstage } from '../../../../backstage/Backstage';
+import ColorSwatch from '../../../core/color/ColorSwatch';
 import { deriveMenuMovement } from '../../menu/MenuMovement';
 import * as MenuParts from '../../menu/MenuParts';
 import { createPartialChoiceMenu } from '../../menu/SingleMenu';
 import ItemResponse from '../ItemResponse';
 
-export function renderColorSwatchItem(spec: Menu.FancyMenuItem, providersBackstage: UiFactoryBackstageProviders): ItemTypes.WidgetItemSpec {
-  // TODO: Probably find a better place to put this.
-  const items = providersBackstage.colors();
-
-  // TODO: Where should this come from?
-  const columns = 5;
+export function renderColorSwatchItem(spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): ItemTypes.WidgetItemSpec {
+  const items = ColorSwatch.getColors(backstage.colorinput.getColors(), backstage.colorinput.hasCustomColors());
+  const columns = backstage.colorinput.getColorCols();
   const presets = 'color';
 
   const menuSpec = createPartialChoiceMenu(
     Id.generate('menu-value'),
     items,
     (value) => {
-      spec.onAction(value);
+      spec.onAction({ value });
     },
     columns,
     presets,
     ItemResponse.CLOSE_ON_EXECUTE,
     () => false,
-    providersBackstage
+    backstage.shared.providers
   );
+
+  const widgetSpec = Merger.deepMerge({
+    ...menuSpec,
+    markers: MenuParts.markers(presets),
+    movement: deriveMenuMovement(columns, presets)
+  });
 
   return {
     type: 'widget',
     data: { value: Id.generate('widget-id')},
     dom: {
       tag: 'div',
-      classes: ['tox-fancymenuitem'],
+      classes: [ 'tox-fancymenuitem' ],
     },
     autofocus: true,
-    components: [ItemWidget.parts().widget(
-      AlloyMenu.sketch({
-        ...menuSpec,
-        markers: MenuParts.markers('color'),
-        movement: deriveMenuMovement(columns, presets)
-      } as any)
-    )]
+    components: [
+      ItemWidget.parts().widget(AlloyMenu.sketch(widgetSpec))
+    ]
   };
 }

@@ -68,7 +68,7 @@ const factories: Record<string, FormPartRenderer> = {
   listbox: make((spec, backstage) => renderListbox(spec, backstage.shared.providers)),
   label: make((spec, backstage) => renderLabel(spec, backstage.shared)),
   iframe: makeIframe((spec, backstage) => renderIFrame(spec, backstage.shared.providers)),
-  autocomplete: make((spec, backstage) => renderAutocomplete(spec, backstage.shared)),
+  autocomplete: make((spec, backstage) => renderAutocomplete(spec, backstage)),
   button: make((spec, backstage) => renderDialogButton(spec, backstage.shared.providers)),
   checkbox: make((spec, backstage) => renderCheckbox(spec, backstage.shared.providers)),
   colorinput: make((spec, backstage) => renderColorInput(spec, backstage.shared, backstage.colorinput)),
@@ -77,11 +77,7 @@ const factories: Record<string, FormPartRenderer> = {
   grid: make((spec, backstage) => renderGrid(spec, backstage.shared)),
   selectbox: make((spec, backstage) => renderSelectBox(spec, backstage.shared.providers)),
   sizeinput: make((spec, backstage) => renderSizeInput(spec, backstage.shared.providers)),
-  urlinput: make((spec, backstage) => {
-    return renderUrlInput(
-      spec, backstage.shared, backstage.urlinput
-    );
-  }),
+  urlinput: make((spec, backstage) => renderUrlInput(spec, backstage, backstage.urlinput)),
   customeditor: make(renderCustomEditor),
   htmlpanel: make(renderHtmlPanel),
   imagetools: make((spec, backstage) => renderImageTools(spec, backstage.shared.providers)),

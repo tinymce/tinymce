@@ -13,8 +13,7 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
       unselected: '<svg></svg>'
     },
     menuItems: () => <Record<string, any>> {},
-    translate: I18n.translate,
-    colors: () => [ ]
+    translate: I18n.translate
   };
 
   TestHelpers.GuiSetup.setup(

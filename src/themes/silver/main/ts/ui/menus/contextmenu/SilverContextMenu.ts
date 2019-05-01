@@ -14,7 +14,7 @@ import * as MenuParts from '../menu/MenuParts';
 import * as NestedMenus from '../menu/NestedMenus';
 import { getPointAnchor, getNodeAnchor } from './Coords';
 import Settings from './Settings';
-import { UiFactoryBackstageShared } from '../../../backstage/Backstage';
+import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import ItemResponse from '../item/ItemResponse';
 
 type MenuItem =  string | Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.SeparatorMenuItemApi;
@@ -105,7 +105,7 @@ const isNativeOverrideKeyEvent = function (editor: Editor, e) {
   return e.ctrlKey && !Settings.shouldNeverUseNative(editor);
 };
 
-export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, sharedBackstage: UiFactoryBackstageShared) => {
+export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
   const contextmenu = GuiFactory.build(
     InlineView.sketch({
       dom: {
@@ -147,7 +147,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
 
       const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
 
-      NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, sharedBackstage.providers).map((menuData) => {
+      NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage).map((menuData) => {
         e.preventDefault();
 
         // show the context menu, with items set to close on click

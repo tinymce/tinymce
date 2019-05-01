@@ -1,80 +1,48 @@
 import { ApproxStructure, Assertions, FocusTools, GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, Keys, Keyboard, Log, Chain } from '@ephox/agar';
-import {
-  AlloyTriggers,
-  Behaviour,
-  Container,
-  GuiFactory,
-  Invalidating,
-  Memento,
-  NativeEvents,
-  Positioning,
-  Representing,
-  TestHelpers,
-} from '@ephox/alloy';
+import { AlloyTriggers, Container, GuiFactory, Invalidating, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
-import { Option, Result } from '@ephox/katamari';
-import { SelectorFind, Traverse } from '@ephox/sugar';
+import { Option } from '@ephox/katamari';
+import { Element, SelectorFind, Traverse } from '@ephox/sugar';
 
 import { renderColorInput } from 'tinymce/themes/silver/ui/dialog/ColorInput';
-import I18n from 'tinymce/core/api/util/I18n';
+
+import TestExtras from '../../../module/TestExtras';
+import { document } from '@ephox/dom-globals';
 
 const choiceItem: 'choiceitem' = 'choiceitem';
 
 // TODO: Expose properly through alloy.
 UnitTest.asynctest('Color input component Test', (success, failure) => {
-  const memSink = Memento.record({
-    dom: {
-      tag: 'div',
-      classes: [ 'test-sink' ]
-    },
-    behaviours: Behaviour.derive([
-      Positioning.config({ })
-    ])
-  });
+  const helpers = TestExtras();
+  const sink = Element.fromDom(document.querySelector('.mce-silver-sink'));
 
   TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
-      const me = GuiFactory.build(
+      return GuiFactory.build(
         Container.sketch({
           dom: {
             classes: [ 'colorinput-container' ]
           },
           components: [
-            memSink.asSpec(),
             renderColorInput({
               type: 'colorinput',
               name: 'alpha',
               label: Option.some('test-color-input'),
-             }, {
-               interpreter: (x) => x,
-               getSink: () => {
-                 return memSink.getOpt(me).fold(
-                   () => Result.error('Could not find the sink!'),
-                   Result.value
-                 );
-               },
-               providers: {
-                 icons: () => <Record<string, string>> {},
-                 menuItems: () => <Record<string, any>> {},
-                 translate: I18n.translate,
-                 colors: () => [ ]
-              }
-             }, {
-               colorPicker: (callback, value) => {},
-               hasCustomColors: () => true,
-               getColors: () => [
+            }, helpers.shared, {
+              colorPicker: (callback, value) => {},
+              hasCustomColors: () => true,
+              getColors: () => [
                 { type: choiceItem, text: 'Turquoise', value: '#18BC9B' },
                 { type: choiceItem, text: 'Green', value: '#2FCC71' },
                 { type: choiceItem, text: 'Blue', value: '#3598DB' },
                 { type: choiceItem, text: 'Purple', value: '#9B59B6' },
                 { type: choiceItem, text: 'Navy Blue', value: '#34495E' }
-               ]
-             })
+              ],
+              getColorCols: () => 3
+            })
           ]
         })
       );
-
-      return me;
     },
     (doc, body, gui, component, store) => {
       const input = component.getSystem().getByDom(
@@ -88,7 +56,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
 
       const sSetColorInputValue = (newValue: string) => Step.sync(() => {
         // Once we put more identifying marks on a colorinput, use that instead.
-        const colorinput = component.components()[1];
+        const colorinput = component.components()[0];
         Representing.setValue(colorinput, newValue);
       });
 
@@ -96,11 +64,11 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
         'Clicking the legend should bring up the colorswatch',
         GeneralSteps.sequence([
           Mouse.sClickOn(legend.element(), 'root:span'),
-          UiFinder.sWaitFor('Waiting for colorswatch to show up!', component.element(), '.tox-swatches')
+          UiFinder.sWaitFor('Waiting for colorswatch to show up!', sink, '.tox-swatches')
         ])
       );
 
-      const sAssertFocusedValue = (label: string, expected: string) => Logger.t(label, Chain.asStep(component.element(), [
+      const sAssertFocusedValue = (label: string, expected: string) => Logger.t(label, Chain.asStep(sink, [
         FocusTools.cGetActiveValue,
         Assertions.cAssertEq('Checking value of focused element', expected)
       ]));
@@ -137,16 +105,15 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
 
       return [
         TestHelpers.GuiSetup.mAddStyles(doc, [
-          '.tox-textbox-field-invalid input { outline: 2px solid red; }'
+          '.tox-textbox-field-invalid input { outline: 2px solid red; }',
+          '.tox-color-input span { padding: 4px 8px; }',
+          '.tox-swatch { padding: 8px 4px }'
         ]),
         Assertions.sAssertStructure(
           'Checking initial structure',
           ApproxStructure.build((s, str, arr) => {
             return s.element('div', {
               children: [
-                s.element('div', {
-                  classes: [ arr.has('test-sink') ]
-                }),
                 s.element('div', {
                   children: [
                     // Ignore other information because it is subject to change. No oxide example yet.
@@ -204,15 +171,15 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
           Keyboard.sKeydown(doc, Keys.enter(), { }),
           FocusTools.sTryOnSelector('Focus should be back on colorinput button (after escape)', doc, '.colorinput-container input'),
           sAssertFocusedValue('After pressing <enter> in hex', '#18BC9B'),
-          UiFinder.sNotExists(component.element(), '.tox-swatches')
+          UiFinder.sNotExists(sink, '.tox-swatches')
         ]),
 
         Log.stepsAsStep('TBA', 'Check that pressing escape inside the picker refocuses the colorinput button', [
           sOpenPicker,
           FocusTools.sTryOnSelector('Focus should be on a swatch', doc, 'div.tox-swatch'),
           Keyboard.sKeydown(doc, Keys.escape(), { }),
-          FocusTools.sTryOnSelector('Focus should be back on colorinput button (after escape)', doc, '.colorinput-container > div:not(.test-sink) span'),
-          UiFinder.sNotExists(component.element(), '.tox-swatches')
+          FocusTools.sTryOnSelector('Focus should be back on colorinput button (after escape)', doc, '.colorinput-container > div:not(.mce-silver-sink) span'),
+          UiFinder.sNotExists(sink, '.tox-swatches')
         ]),
 
         Log.stepsAsStep('TBA', 'Check that validating an empty string passes (first time)', [
@@ -235,8 +202,10 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
 
         TestHelpers.GuiSetup.mRemoveStyles
       ];
+    }, () => {
+      helpers.destroy();
+      success();
     },
-    success,
     failure
   );
 });

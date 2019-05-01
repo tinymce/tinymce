@@ -68,7 +68,7 @@ const defaultToolbar = [
   }
 ];
 
-const renderFromBridge = <BI, ToolbarButton>(bridgeBuilder: (i: BI) => Result<ToolbarButton, ValueSchema.SchemaError<any>>, render: (o: ToolbarButton, extras) => AlloySpec) => {
+const renderFromBridge = <BI, ToolbarButton>(bridgeBuilder: (i: BI) => Result<ToolbarButton, ValueSchema.SchemaError<any>>, render: (o: ToolbarButton, extras: Extras) => AlloySpec) => {
   return (spec, extras) => {
     const internal = bridgeBuilder(spec).mapError((errInfo) => ValueSchema.formatError(errInfo)).getOrDie();
 
@@ -102,7 +102,7 @@ const types = {
       return renderMenuButton(
         s,
         ToolbarButtonClasses.Button,
-        extras.backstage.shared,
+        extras.backstage,
         Option.none()
       );
     }
