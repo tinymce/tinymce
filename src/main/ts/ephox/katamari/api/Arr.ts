@@ -3,10 +3,12 @@ import * as Type from './Type';
 
 type Morphism<T, U> = (a: T) => U;
 type Catamorphism<T, U> = (acc: U, x: T) => U;
-type ArrayMorphism<T, U> = (x: T, i: number, xs: ReadonlyArray<T>) => U;
+type ArrayMorphism<T, U> = (x: T, i: number, xs: ArrayLike<T>) => U;
 type ArrayPredicate<T> = ArrayMorphism<T, boolean>;
 type Predicate<T> = Morphism<T, boolean>;
 type Comparator<T> = (a: T, b: T) => number;
+
+const slice = Array.prototype.slice;
 
 // Use the native Array.indexOf if it is available (IE9+) otherwise fall back to manual iteration
 // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
@@ -20,19 +22,19 @@ const rawIndexOf = (() => {
   return pIndexOf === undefined ? slowIndex : fastIndex;
 })();
 
-export const indexOf = <T = any>(xs: ReadonlyArray<T>, x: T): Option<number> => {
+export const indexOf = <T = any>(xs: ArrayLike<T>, x: T): Option<number> => {
   // The rawIndexOf method does not wrap up in an option. This is for performance reasons.
   const r = rawIndexOf(xs, x);
   return r === -1 ? Option.none() : Option.some(r);
 };
 
-export const contains = <T = any>(xs: ReadonlyArray<T>, x: T): boolean => {
+export const contains = <T = any>(xs: ArrayLike<T>, x: T): boolean => {
   return rawIndexOf(xs, x) > -1;
 };
 
 // Using findIndex is likely less optimal in Chrome (dynamic return type instead of bool)
 // but if we need that micro-optimisation we can inline it later.
-export const exists = <T = any>(xs: ReadonlyArray<T>, pred: ArrayPredicate<T>): boolean => {
+export const exists = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): boolean => {
   return findIndex(xs, pred).isSome();
 };
 
@@ -51,16 +53,16 @@ export const range = <T = any>(num: number, f: Morphism<number, T>): T[] => {
 // - not using push
 // http://jsperf.com/array-direct-assignment-vs-push/2
 
-export const chunk = <T = any>(array: ReadonlyArray<T>, size: number): T[][] => {
+export const chunk = <T = any>(array: ArrayLike<T>, size: number): T[][] => {
   const r: T[][] = [];
   for (let i = 0; i < array.length; i += size) {
-    const s = array.slice(i, i + size);
+    const s: T[] = slice.call(array, i, i + size);
     r.push(s);
   }
   return r;
 };
 
-export const map = <T = any, U = any>(xs: ReadonlyArray<T>, f: ArrayMorphism<T, U>): U[] => {
+export const map = <T = any, U = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, U>): U[] => {
   // pre-allocating array size when it's guaranteed to be known
   // http://jsperf.com/push-allocated-vs-dynamic/22
   const len = xs.length;
@@ -75,21 +77,21 @@ export const map = <T = any, U = any>(xs: ReadonlyArray<T>, f: ArrayMorphism<T, 
 // Unwound implementing other functions in terms of each.
 // The code size is roughly the same, and it should allow for better optimisation.
 // const each = function<T, U>(xs: T[], f: (x: T, i?: number, xs?: T[]) => void): void {
-export const each = <T = any>(xs: ReadonlyArray<T>, f: ArrayMorphism<T, void>): void => {
+export const each = <T = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, void>): void => {
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
     f(x, i, xs);
   }
 };
 
-export const eachr = <T = any>(xs: ReadonlyArray<T>, f: ArrayMorphism<T, void>): void => {
+export const eachr = <T = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, void>): void => {
   for (let i = xs.length - 1; i >= 0; i--) {
     const x = xs[i];
     f(x, i, xs);
   }
 };
 
-export const partition = <T = any>(xs: ReadonlyArray<T>, pred: ArrayPredicate<T>): { pass: T[], fail: T[] } => {
+export const partition = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): { pass: T[], fail: T[] } => {
   const pass = [];
   const fail = [];
   for (let i = 0, len = xs.length; i < len; i++) {
@@ -100,7 +102,7 @@ export const partition = <T = any>(xs: ReadonlyArray<T>, pred: ArrayPredicate<T>
   return { pass: pass, fail: fail };
 };
 
-export const filter = <T = any>(xs: ReadonlyArray<T>, pred: ArrayPredicate<T>): T[] => {
+export const filter = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[] => {
   const r = [];
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
@@ -122,7 +124,7 @@ export const filter = <T = any>(xs: ReadonlyArray<T>, pred: ArrayPredicate<T>): 
  *  For a good explanation, see the group function (which is a special case of groupBy)
  *  http://hackage.haskell.org/package/base-4.7.0.0/docs/Data-List.html#v:group
  */
-export const groupBy = <T = any>(xs: ReadonlyArray<T>, f: Morphism<T, any>): T[][] => {
+export const groupBy = <T = any>(xs: ArrayLike<T>, f: Morphism<T, any>): T[][] => {
   if (xs.length === 0) {
     return [];
   } else {
@@ -147,21 +149,21 @@ export const groupBy = <T = any>(xs: ReadonlyArray<T>, f: Morphism<T, any>): T[]
   }
 };
 
-export const foldr = <T = any, U = any>(xs: ReadonlyArray<T>, f: Catamorphism<T, U>, acc: U): U => {
+export const foldr = <T = any, U = any>(xs: ArrayLike<T>, f: Catamorphism<T, U>, acc: U): U => {
   eachr(xs, function (x) {
     acc = f(acc, x);
   });
   return acc;
 };
 
-export const foldl = <T = any, U = any>(xs: ReadonlyArray<T>, f: Catamorphism<T, U>, acc: U): U => {
+export const foldl = <T = any, U = any>(xs: ArrayLike<T>, f: Catamorphism<T, U>, acc: U): U => {
   each(xs, function (x) {
     acc = f(acc, x);
   });
   return acc;
 };
 
-export const find = <T = any>(xs: ReadonlyArray<T>, pred: ArrayPredicate<T>): Option<T> => {
+export const find = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Option<T> => {
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
     if (pred(x, i, xs)) {
@@ -171,7 +173,7 @@ export const find = <T = any>(xs: ReadonlyArray<T>, pred: ArrayPredicate<T>): Op
   return Option.none();
 };
 
-export const findIndex = <T = any>(xs: ReadonlyArray<T>, pred: ArrayPredicate<T>): Option<number> => {
+export const findIndex = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Option<number> => {
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
     if (pred(x, i, xs)) {
@@ -182,7 +184,7 @@ export const findIndex = <T = any>(xs: ReadonlyArray<T>, pred: ArrayPredicate<T>
   return Option.none();
 };
 
-const slowIndexOf = <T = any>(xs: ReadonlyArray<T>, x: T): number => {
+const slowIndexOf = <T = any>(xs: ArrayLike<T>, x: T): number => {
   for (let i = 0, len = xs.length; i < len; ++i) {
     if (xs[i] === x) {
       return i;
@@ -193,7 +195,7 @@ const slowIndexOf = <T = any>(xs: ReadonlyArray<T>, x: T): number => {
 };
 
 const push = Array.prototype.push;
-export const flatten = <T = any>(xs: ReadonlyArray<ReadonlyArray<T> | T[]>): T[] => {
+export const flatten = <T = any>(xs: ArrayLike<ArrayLike<T> | T[]>): T[] => {
   // Note, this is possible because push supports multiple arguments:
   // http://jsperf.com/concat-push/6
   // Note that in the past, concat() would silently work (very slowly) for array-like objects.
@@ -207,12 +209,12 @@ export const flatten = <T = any>(xs: ReadonlyArray<ReadonlyArray<T> | T[]>): T[]
   return r;
 };
 
-export const bind = <T = any, U = any>(xs: ReadonlyArray<T>, f: ArrayMorphism<T, U[]>): U[] => {
+export const bind = <T = any, U = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, U[]>): U[] => {
   const output = map(xs, f);
   return flatten(output);
 };
 
-export const forall = <T = any>(xs: ReadonlyArray<T>, pred: ArrayPredicate<T>): boolean => {
+export const forall = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): boolean => {
   for (let i = 0, len = xs.length; i < len; ++i) {
     const x = xs[i];
     if (pred(x, i, xs) !== true) {
@@ -222,22 +224,21 @@ export const forall = <T = any>(xs: ReadonlyArray<T>, pred: ArrayPredicate<T>): 
   return true;
 };
 
-export const equal = <T = any>(a1: ReadonlyArray<T>, a2: T[]) => {
+export const equal = <T = any>(a1: ArrayLike<T>, a2: T[]) => {
   return a1.length === a2.length && forall(a1, (x, i) => x === a2[i]);
 };
 
-const slice = Array.prototype.slice;
-export const reverse = <T = any>(xs: ReadonlyArray<T>): T[] => {
-  const r = slice.call(xs, 0);
+export const reverse = <T = any>(xs: ArrayLike<T>): T[] => {
+  const r: T[] = slice.call(xs, 0);
   r.reverse();
   return r;
 };
 
-export const difference = <T = any>(a1: ReadonlyArray<T>, a2: ReadonlyArray<T>): T[] => {
+export const difference = <T = any>(a1: ArrayLike<T>, a2: ArrayLike<T>): T[] => {
   return filter(a1, (x) => !contains(a2, x));
 };
 
-export const mapToObject = <T = any, U = any>(xs: ReadonlyArray<T>, f: (x: T, i: number) => U): Record<string, U> => {
+export const mapToObject = <T = any, U = any>(xs: ArrayLike<T>, f: (x: T, i: number) => U): Record<string, U> => {
   const r: Record<string, U> = {};
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
@@ -248,14 +249,14 @@ export const mapToObject = <T = any, U = any>(xs: ReadonlyArray<T>, f: (x: T, i:
 
 export const pure = <T = any>(x: T): T[] => [x];
 
-export const sort = <T = any>(xs: ReadonlyArray<T>, comparator?: Comparator<T>): T[] => {
+export const sort = <T = any>(xs: ArrayLike<T>, comparator?: Comparator<T>): T[] => {
   const copy: T[] = slice.call(xs, 0);
   copy.sort(comparator);
   return copy;
 };
 
-export const head = <T = any>(xs: ReadonlyArray<T>): Option<T> => xs.length === 0 ? Option.none() : Option.some(xs[0]);
+export const head = <T = any>(xs: ArrayLike<T>): Option<T> => xs.length === 0 ? Option.none() : Option.some(xs[0]);
 
-export const last = <T = any>(xs: ReadonlyArray<T>): Option<T> => xs.length === 0 ? Option.none() : Option.some(xs[xs.length - 1]);
+export const last = <T = any>(xs: ArrayLike<T>): Option<T> => xs.length === 0 ? Option.none() : Option.some(xs[xs.length - 1]);
 
 export const from: <T = any>(x: ArrayLike<T>) => T[] = Type.isFunction(Array.from) ? Array.from : (x) => slice.call(x)
