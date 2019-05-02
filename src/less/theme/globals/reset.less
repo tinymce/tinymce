@@ -9,28 +9,16 @@
 // Resets
 //
 
-.tox,
-.tox *:not(svg) {
-  background: transparent;
-  border: 0;
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
+.tox {
   box-sizing: content-box;
   color: @color-black;
   cursor: auto;
   direction: ltr;
-  float: none;
   font-family: @font-stack;
   font-size: @font-size-base;
   font-style: normal;
   font-weight: normal;
-  height: auto;
   line-height: normal;
-  margin: 0;
-  max-width: none;
-  outline: 0;
-  padding: 0;
-  position: static;
   -webkit-tap-highlight-color: transparent;
   text-align: left;
   text-decoration: none;
@@ -38,11 +26,38 @@
   text-transform: none;
   vertical-align: initial;
   white-space: normal;
-  width: auto;
-}
 
-.tox *:not(svg) {
-  color: inherit;
-  cursor: inherit;
-  font-size: inherit;
+  *:not(svg) {
+    // inherit everything in the tox selector, so components have a chance to override it
+    box-sizing: inherit;
+    color: inherit;
+    cursor: inherit;
+    direction: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    -webkit-tap-highlight-color: inherit;
+    text-align: inherit;
+    text-decoration: inherit;
+    text-shadow: inherit;
+    text-transform: inherit;
+    vertical-align: inherit;
+    white-space: inherit;
+  }
+
+  *:not(svg) { /* stylelint-disable-line no-duplicate-selectors */
+    // remaining specific reset styles for properties that shouldn't be inherited
+    background: transparent;
+    border: 0;
+    float: none;
+    height: auto;
+    margin: 0;
+    max-width: none;
+    outline: 0;
+    padding: 0;
+    position: static;
+    width: auto;
+  }
 }
