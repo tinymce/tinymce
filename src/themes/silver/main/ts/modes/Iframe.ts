@@ -7,7 +7,7 @@
 
 import { AlloyComponent, Attachment, Disabling, SplitToolbar } from '@ephox/alloy';
 import { Cell, Option } from '@ephox/katamari';
-import { Body, Element, Selectors, Position } from '@ephox/sugar';
+import { Body, DomEvent, Element, Selectors, Position } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import * as Settings from '../api/Settings';
@@ -38,6 +38,37 @@ const handleSwitchMode = (uiComponents: RenderUiComponents) => {
   };
 };
 
+const setupEvents = (editor: Editor) => {
+  const contentWindow = editor.getWin();
+  const documentEle = editor.getDoc().documentElement;
+
+  const lastWindowDimensions = Cell(Position(contentWindow.innerWidth, contentWindow.innerHeight));
+  const lastDocumentDimensions = Cell(Position(documentEle.offsetWidth, documentEle.offsetHeight));
+
+  const resize = () => {
+    // Check if the window or document dimensions have changed and if so then trigger a content resize event
+    const outer = lastWindowDimensions.get();
+    const inner = lastDocumentDimensions.get();
+    if (outer.left() !== contentWindow.innerWidth || outer.top() !== contentWindow.innerHeight) {
+      lastWindowDimensions.set(Position(contentWindow.innerWidth, contentWindow.innerHeight));
+      Events.fireResizeContent(editor);
+    } else if (inner.left() !== documentEle.offsetWidth || inner.top() !== documentEle.offsetHeight) {
+      lastDocumentDimensions.set(Position(documentEle.offsetWidth, documentEle.offsetHeight));
+      Events.fireResizeContent(editor);
+    }
+  };
+
+  DOM.bind(contentWindow, 'resize', resize);
+
+  // Bind to async load events and trigger a content resize event if the size has changed
+  const elementLoad = DomEvent.capture(Element.fromDom(editor.getBody()), 'load', resize);
+
+  editor.on('remove', () => {
+    elementLoad.unbind();
+    DOM.unbind(contentWindow, 'resize', resize);
+  });
+};
+
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   loadIframeSkin(editor);
 
@@ -65,26 +96,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       handleSwitchMode(uiComponents)({mode: 'readonly'});
     }
 
-    const lastDimensions = Cell<Position>(Position(0, 0));
-
-    const window = editor.contentWindow;
-
-    const resize = () => {
-      const last = lastDimensions.get();
-      if (last.left() !== window.innerWidth || last.top() !== window.innerHeight) {
-        const next = Position(window.innerWidth, window.innerHeight);
-        lastDimensions.set(next);
-        Events.fireResizeContent(editor);
-      }
-    };
-
-    DOM.bind(window, 'resize', resize);
-
-    const removeResize = function () {
-      DOM.unbind(window, 'resize', resize);
-    };
-
-    editor.on('remove', removeResize);
+    setupEvents(editor);
   });
 
   const socket = OuterContainer.getSocket(uiComponents.outerContainer).getOrDie('Could not find expected socket element');

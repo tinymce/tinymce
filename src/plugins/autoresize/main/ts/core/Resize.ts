@@ -7,7 +7,6 @@
 
 import { Element } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
-import { DomEvent, Element as SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -134,15 +133,9 @@ const setup = (editor: Editor, oldSize: Cell<number>) => {
       // IE & Edge have a min height of 150px by default on the body, so override that
       'min-height': 0
     });
-
-    // Bind to async load events and resize once fired
-    const elementLoad = DomEvent.capture(SugarElement.fromDom(editor.getBody()), 'load', () => {
-      resize(editor, oldSize);
-    });
-    editor.on('remove', () => elementLoad.unbind());
   });
 
-  editor.on('NodeChange SetContent keyup FullscreenStateChanged', function (e) {
+  editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', function (e) {
     resize(editor, oldSize);
   });
 
