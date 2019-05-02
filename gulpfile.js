@@ -199,21 +199,6 @@ gulp.task('cleanTmp', function () {
   .pipe(clean());
 });
 
-const runBackstopCommand = (command) => {
-  const runner = require('./tools/tasks/run_backstop');
-  return (done) => {
-    // must be lazy loaded otherwise backstop is required to run _any_ gulp task
-    const backstop = require(backstopJsPath);
-    runner(backstop, browserSync(), done, command)
-  }
-}
-
-gulp.task('backstop:test', gulp.series('getTestDeps', runBackstopCommand('test')));
-
-gulp.task('backstop:approve', gulp.series('getTestDeps', runBackstopCommand('approve')));
-
-gulp.task('backstop:reference', gulp.series('getTestDeps', runBackstopCommand('reference')));
-
 //
 // clean all the things
 //
@@ -224,3 +209,18 @@ gulp.task('clean', gulp.series('cleanBuild', 'cleanTmp'));
 //
 gulp.task('build', gulp.series('clean', 'buildHtml', 'lint', 'less', 'minify-css', 'copyFiles', 'setupIconManager', 'buildSkinSwitcher'));
 gulp.task('default', gulp.series('build', 'getDemoDeps', 'serve'));
+
+const runBackstopCommand = (command) => {
+  const runner = require('./tools/tasks/run_backstop');
+  return (done) => {
+    // must be lazy loaded otherwise backstop is required to run _any_ gulp task
+    const backstop = require(backstopJsPath);
+    runner(backstop, browserSync(), done, command)
+  }
+}
+
+gulp.task('backstop:test', gulp.series('build', 'getTestDeps', runBackstopCommand('test')));
+
+gulp.task('backstop:approve', gulp.series('getTestDeps', runBackstopCommand('approve')));
+
+gulp.task('backstop:reference', gulp.series('getTestDeps', runBackstopCommand('reference')));
