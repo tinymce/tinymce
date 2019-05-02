@@ -71,7 +71,6 @@ export default [
   FieldSchema.strict('root'),
   FieldSchema.option('bubble'),
   AnchorLayouts.schema(),
-  // chiefly MaxHeight.expandable()
   FieldSchema.defaulted('overrides', { }),
   FieldSchema.defaulted('showAbove', false),
   Fields.output('placement', placement)

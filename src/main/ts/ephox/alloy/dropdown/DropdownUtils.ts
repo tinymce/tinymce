@@ -22,12 +22,13 @@ import { LazySink } from '../api/component/CommonTypes';
 export enum HighlightOnOpen { HighlightFirst, HighlightNone }
 
 const getAnchor = (detail: CommonDropdownDetail<TieredData>, component: AlloyComponent): HotspotAnchorSpec => {
-  const ourHotspot = detail.getHotspot(component).getOr(component);
-  const anchor: 'hotspot' = 'hotspot';
+  const hotspot = detail.getHotspot(component).getOr(component);
+  const anchor = 'hotspot';
+  const overrides = detail.getAnchorOverrides();
   return detail.layouts.fold(() => {
-    return { anchor, hotspot: ourHotspot };
+    return { anchor, hotspot, overrides };
   }, (layouts) => {
-    return { anchor, hotspot: ourHotspot, layouts };
+    return { anchor, hotspot, overrides, layouts };
   });
 };
 
