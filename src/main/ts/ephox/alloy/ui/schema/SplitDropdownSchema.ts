@@ -19,7 +19,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('fetch'),
   Fields.onStrictHandler('onExecute'),
   FieldSchema.defaulted('getHotspot', Option.some),
-  FieldSchema.defaulted('getOverrides', () => ({ })),
+  FieldSchema.defaulted('getAnchorOverrides', () => ({ })),
   FieldSchema.defaulted('layouts', Option.none()),
   Fields.onStrictHandler('onItemExecute'),
   FieldSchema.option('lazySink'),

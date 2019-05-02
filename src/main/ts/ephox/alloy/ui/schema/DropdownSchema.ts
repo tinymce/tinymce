@@ -19,7 +19,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.onHandler('onOpen'),
   Fields.onKeyboardHandler('onExecute'),
   FieldSchema.defaulted('getHotspot', Option.some),
-  FieldSchema.defaulted('getOverrides', () => ({ })),
+  FieldSchema.defaulted('getAnchorOverrides', () => ({ })),
   FieldSchema.defaulted('layouts', Option.none()),
   SketchBehaviours.field('dropdownBehaviours', [ Toggling, Coupling, Keying, Focusing ]),
   FieldSchema.strict('toggleClass'),

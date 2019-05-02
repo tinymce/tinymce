@@ -24,7 +24,7 @@ export enum HighlightOnOpen { HighlightFirst, HighlightNone }
 const getAnchor = (detail: CommonDropdownDetail<TieredData>, component: AlloyComponent): HotspotAnchorSpec => {
   const hotspot = detail.getHotspot(component).getOr(component);
   const anchor = 'hotspot';
-  const overrides = detail.getOverrides();
+  const overrides = detail.getAnchorOverrides();
   return detail.layouts.fold(() => {
     return { anchor, hotspot, overrides };
   }, (layouts) => {

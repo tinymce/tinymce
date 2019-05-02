@@ -25,7 +25,7 @@ export interface CommonDropdownDetail<F> extends CompositeSketchDetail {
   lazySink: Option<LazySink>;
   // TODO test getHotspot and overrides
   getHotspot: (comp: AlloyComponent) => Option<AlloyComponent>;
-  getOverrides: () => AnchorOverrides;
+  getAnchorOverrides: () => AnchorOverrides;
   layouts: Option<{
     onLtr: (elem: Element) => AnchorLayout[];
     onRtl: (elem: Element) => AnchorLayout[];
@@ -61,7 +61,7 @@ export interface DropdownSpec extends CompositeSketchSpec {
   sandboxClasses?: string[];
   sandboxBehaviours?: AlloyBehaviourRecord;
   getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
-  getOverrides?: () => () => AnchorOverrides;
+  getAnchorOverrides?: () => () => AnchorOverrides;
   layouts?: Option<{
     onLtr: (elem: Element) => AnchorLayout[];
     onRtl: (elem: Element) => AnchorLayout[];

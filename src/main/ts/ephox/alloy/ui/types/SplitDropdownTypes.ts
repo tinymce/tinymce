@@ -27,7 +27,7 @@ export interface SplitDropdownSpec extends CompositeSketchSpec {
   sandboxClasses?: string[];
   sandboxBehaviours?: AlloyBehaviourRecord;
   getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
-  getOverrides?: () => AnchorOverrides;
+  getAnchorOverrides?: () => AnchorOverrides;
 
   onExecute: (comp: AlloyComponent, button: AlloyComponent) => void;
   onItemExecute: (comp: AlloyComponent, button: AlloyComponent, item: AlloyComponent) => void;
