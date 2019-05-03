@@ -57,7 +57,7 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
       providers: {
         icons: () => editor.ui.registry.getAll().icons,
         menuItems: () => editor.ui.registry.getAll().menuItems,
-        translate: I18n.translate,
+        translate: I18n.translate
       },
       interpreter: (s) => {
         return UiFactory.interpretWithoutForm(s, backstage);

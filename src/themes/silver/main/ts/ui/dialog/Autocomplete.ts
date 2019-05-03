@@ -12,7 +12,7 @@ import { renderFormField, renderLabel } from 'tinymce/themes/silver/ui/alien/Fie
 
 import * as MenuParts from '../menus/menu/MenuParts';
 import * as NestedMenus from '../menus/menu/NestedMenus';
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 import ItemResponse from '../menus/item/ItemResponse';
 
 // tslint:disable:no-console
@@ -25,8 +25,8 @@ export interface AutocompleteGoo {
   getItems: (v: string) => Menu.MenuItemApi[];
 }
 
-export const renderAutocomplete = (spec: AutocompleteGoo, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
-  const pLabel = renderLabel(spec.label.getOr('?'), sharedBackstage.providers);
+export const renderAutocomplete = (spec: AutocompleteGoo, backstage: UiFactoryBackstage): SketchSpec => {
+  const pLabel = renderLabel(spec.label.getOr('?'), backstage.shared.providers);
 
   const pField = AlloyFormField.parts().field({
     factory: Typeahead,
@@ -36,7 +36,7 @@ export const renderAutocomplete = (spec: AutocompleteGoo, sharedBackstage: UiFac
     fetch: (input) => {
       const value = Representing.getValue(input);
       const items = spec.getItems(value);
-      const tdata = NestedMenus.build(items, ItemResponse.BUBBLE_TO_SANDBOX, sharedBackstage.providers);
+      const tdata = NestedMenus.build(items, ItemResponse.BUBBLE_TO_SANDBOX, backstage);
       return Future.pure(tdata);
     },
 
@@ -45,7 +45,7 @@ export const renderAutocomplete = (spec: AutocompleteGoo, sharedBackstage: UiFac
       openClass: 'dog'
     },
 
-    lazySink: sharedBackstage.getSink,
+    lazySink: backstage.shared.getSink,
     parts : {
       menu: MenuParts.part(false, 1, 'normal')
     }

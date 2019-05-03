@@ -13,36 +13,29 @@ import {
   Log,
   Mouse,
 } from '@ephox/agar';
-import { Behaviour, GuiFactory, Memento, Positioning, TestHelpers } from '@ephox/alloy';
+import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
-import { Result, Fun, Arr, Strings } from '@ephox/katamari';
-import { SelectorFind, Selectors } from '@ephox/sugar';
+import { document } from '@ephox/dom-globals';
+import { Fun, Arr, Strings } from '@ephox/katamari';
+import { Element, SelectorFind, Selectors } from '@ephox/sugar';
 
-import SilverMenubar from '../../../../main/ts/ui/menus/menubar/SilverMenubar';
-import I18n from 'tinymce/core/api/util/I18n';
+import SilverMenubar from 'tinymce/themes/silver/ui/menus/menubar/SilverMenubar';
+
+import TestExtras from '../../module/TestExtras';
 
 // TODO: Expose properly through alloy.
 UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
+  const helpers = TestExtras();
+  const sink = Element.fromDom(document.querySelector('.mce-silver-sink'));
 
   TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
-      const memSink = Memento.record({
-        dom: {
-          tag: 'div',
-          classes: [ 'test-sink' ]
-        },
-        behaviours: Behaviour.derive([
-          Positioning.config({ })
-        ])
-      });
-
-      const container = GuiFactory.build({
+      return GuiFactory.build({
         dom: {
           tag: 'div',
           classes: [ 'silvermenubar-test-container' ]
         },
         components: [
-          memSink.asSpec(),
           SilverMenubar.sketch({
             dom: {
               tag: 'div',
@@ -50,22 +43,10 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
             },
             onEscape: store.adder('Menubar.escape'),
             onSetup: store.adder('Menubar.setup'),
-            providers: {
-              icons: () => <Record<string, string>> {},
-              menuItems: () => <Record<string, any>> {},
-              translate: I18n.translate
-            },
-            getSink: () => {
-              return memSink.getOpt(container).fold(
-                () => Result.error('Could not find the sink for some reason'),
-                Result.value
-              );
-            }
+            backstage: helpers.backstage
           })
         ]
       });
-
-      return container;
     },
     (doc, body, gui, testContainer, store) => {
       const menubarEl = SelectorFind.descendant(testContainer.element(), '.test-menubar').getOrDie('Could not find menubar to test');
@@ -80,7 +61,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
         );
 
       const sAssertActiveToggleItemHasOneCheckmark = (itemText: string) =>
-        Chain.asStep(testContainer.element(), [
+        Chain.asStep(sink, [
           UiFinder.cFindIn('.tox-selected-menu [role=menuitemcheckbox]:contains("' + itemText + '")'),
           Chain.op((menu) => {
             const checkMarks = Selectors.all('.tox-collection__item-icon');
@@ -106,7 +87,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
         // Wait for menu to appear
         Waiter.sTryUntil(
           'Waiting for menu to be in DOM',
-          UiFinder.sExists(testContainer.element(), '.tox-menu'),
+          UiFinder.sExists(sink, '.tox-menu'),
           100,
           1000
         );
@@ -114,14 +95,14 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
       const sWaitForMenuToDisappear = () =>
         Waiter.sTryUntil(
           'Waiting for menu to NO LONGER be in DOM',
-          UiFinder.sNotExists(testContainer.element(), '.tox-menu'),
+          UiFinder.sNotExists(sink, '.tox-menu'),
           100,
           1000
         );
 
       const sAssertMenuItemGroups = (label: string, groups: string[][]) => Logger.t(
         label,
-        Chain.asStep(testContainer.element(), [
+        Chain.asStep(sink, [
           UiFinder.cFindIn('.tox-selected-menu'),
           Assertions.cAssertStructure(
             'Checking contents of menu',
@@ -312,11 +293,11 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
         Log.stepsAsStep('TBA', 'AP-307: Once a menu is expanded, hovering on buttons should switch which menu is expanded', [
           Mouse.sHoverOn(menubar.element(), 'button[role="menuitem"]:contains("Basic Menu Button")'),
           Step.wait(100),
-          UiFinder.sNotExists(testContainer.element(), '[role="menu"]'),
+          UiFinder.sNotExists(sink, '[role="menu"]'),
           Mouse.sClickOn(menubar.element(), 'button[role="menuitem"]:contains("Changes")'),
           UiFinder.sWaitForVisible(
             'Waiting for changes menu',
-            testContainer.element(),
+            sink,
             '.tox-collection__item:contains("Remember me")'
           ),
           sAssertMenuItemGroups('After clicking on "Changes"', [
@@ -325,14 +306,14 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
           Mouse.sHoverOn(menubar.element(), 'button[role="menuitem"]:contains("Basic Menu Button")'),
           UiFinder.sWaitForVisible(
             'Waiting for basic menu',
-            testContainer.element(),
+            sink,
             '.tox-collection__item:contains("Item1")'
           ),
           // Focus the menu item, not the toolbar item
           Keyboard.sKeydown(doc, Keys.down(), { }),
           UiFinder.sWaitForVisible(
             'Wait for basic menu to get selected class',
-            testContainer.element(),
+            sink,
             '.tox-selected-menu .tox-collection__item:contains("Item1")'
           ),
           // This is failing because tox-selected-menu is not set.
@@ -342,8 +323,10 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
           ])
         ])
       ];
+    }, () => {
+      helpers.destroy();
+      success();
     },
-    success,
     failure
   );
 });

@@ -16,21 +16,24 @@ import {
   AlloyComponent,
   LayoutTypes
 } from '@ephox/alloy';
+import { Types } from '@ephox/bridge';
 import { Future, Id, Option, Merger } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 import * as MenuParts from '../menus/menu/MenuParts';
 import { createTieredDataFrom, createPartialChoiceMenu } from 'tinymce/themes/silver/ui/menus/menu/SingleMenu';
 import { deriveMenuMovement } from 'tinymce/themes/silver/ui/menus/menu/MenuMovement';
-import { Element } from '@ephox/sugar';
 import ItemResponse from '../menus/item/ItemResponse';
 
 export interface SwatchPanelButtonFoo {
   dom: RawDomSchema;
   components: AlloySpec[];
   fetch: (callback: Function) => void;
+  columns: number;
+  presets: Types.PresetTypes;
   getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
-  onItemAction: (value) => void;
+  onItemAction: (comp: AlloyComponent, value) => void;
   layouts?: Option<{
     onLtr: (elem: Element) => LayoutTypes.AnchorLayout[];
     onRtl: (elem: Element) => LayoutTypes.AnchorLayout[];
@@ -53,7 +56,7 @@ export const renderPanelButton = (spec: SwatchPanelButtonFoo, sharedBackstage: U
     sandboxClasses: ['tox-dialog__popups'],
 
     lazySink: sharedBackstage.getSink,
-    fetch: () => {
+    fetch: (comp) => {
       return Future.nu((callback) => {
         return spec.fetch(callback);
       }).map((items) => {
@@ -63,17 +66,17 @@ export const renderPanelButton = (spec: SwatchPanelButtonFoo, sharedBackstage: U
               Id.generate('menu-value'),
               items,
               (value) => {
-                spec.onItemAction(value);
+                spec.onItemAction(comp, value);
               },
-              5,
-              'color',
+              spec.columns,
+              spec.presets,
               ItemResponse.CLOSE_ON_EXECUTE,
               // No colour is ever selected on opening
               () => false,
               sharedBackstage.providers
             ),
             {
-              movement: deriveMenuMovement(5, 'color')
+              movement: deriveMenuMovement(spec.columns, spec.presets)
             }
           )
         ));
@@ -81,7 +84,7 @@ export const renderPanelButton = (spec: SwatchPanelButtonFoo, sharedBackstage: U
     },
 
     parts: {
-      menu: MenuParts.part(false, 1, 'color')
+      menu: MenuParts.part(false, 1, spec.presets)
     }
   });
 };

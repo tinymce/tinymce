@@ -10,7 +10,7 @@ import {
 import { Menu, Types } from '@ephox/bridge';
 import { ValueSchema } from '@ephox/boulder';
 import { console } from '@ephox/dom-globals';
-import { Arr, Id, Option, Fun } from '@ephox/katamari';
+import { Arr, Id, Option } from '@ephox/katamari';
 import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
 
 import { renderAutocomplete } from 'tinymce/themes/silver/ui/dialog/Autocomplete';
@@ -28,7 +28,7 @@ import { renderTypeahead } from 'tinymce/themes/silver/ui/dialog/TypeAheadInput'
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
 import { renderButton } from 'tinymce/themes/silver/ui/general/Button';
 import { renderListbox } from 'tinymce/themes/silver/ui/general/Listbox';
-import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import { UiFactoryBackstageShared, UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
 import { renderCollection } from 'tinymce/themes/silver/ui/dialog/Collection';
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
@@ -39,6 +39,7 @@ import { setupDemo } from './DemoHelpers';
 export default () => {
   const helpers = setupDemo();
 
+  const backstage: UiFactoryBackstage = helpers.extras.backstage;
   const sharedBackstage: UiFactoryBackstageShared = {
     getSink: helpers.extras.backstage.shared.getSink,
     providers: helpers.extras.backstage.shared.providers,
@@ -59,7 +60,7 @@ export default () => {
         }
       ], (d) => makeItem(d.text));
     }
-  }, sharedBackstage);
+  }, backstage);
 
   const iframeSpec = renderIFrame({
     type: 'iframe',
@@ -215,47 +216,11 @@ export default () => {
     };
   })();
 
-  const choiceItem: 'choiceitem' = 'choiceitem';
-
-  // This is fake because ColorInputBackstage requires Editor constructor
-  const fakecolorinputBackstage = {
-    colorPicker: Fun.noop,
-    hasCustomColors: Fun.constant(false),
-    getColors: () => [
-      { type: choiceItem, text: 'Turquoise', value: '#18BC9B' },
-      { type: choiceItem, text: 'Green', value: '#2FCC71' },
-      { type: choiceItem, text: 'Blue', value: '#3598DB' },
-      { type: choiceItem, text: 'Purple', value: '#9B59B6' },
-      { type: choiceItem, text: 'Navy Blue', value: '#34495E' },
-
-      { type: choiceItem, text: 'Dark Turquoise', value: '#18A085' },
-      { type: choiceItem, text: 'Dark Green', value: '#27AE60' },
-      { type: choiceItem, text: 'Medium Blue', value: '#2880B9' },
-      { type: choiceItem, text: 'Medium Purple', value: '#8E44AD' },
-      { type: choiceItem, text: 'Midnight Blue', value: '#2B3E50' },
-
-      { type: choiceItem, text: 'Yellow', value: '#F1C40F' },
-      { type: choiceItem, text: 'Orange', value: '#E67E23' },
-      { type: choiceItem, text: 'Red', value: '#E74C3C' },
-      { type: choiceItem, text: 'Light Gray', value: '#ECF0F1' },
-      { type: choiceItem, text: 'Gray', value: '#95A5A6' },
-
-      { type: choiceItem, text: 'Dark Yellow', value: '#F29D12' },
-      { type: choiceItem, text: 'Dark Orange', value: '#D35400' },
-      { type: choiceItem, text: 'Dark Red', value: '#E74C3C' },
-      { type: choiceItem, text: 'Medium Gray', value: '#BDC3C7' },
-      { type: choiceItem, text: 'Dark Gray', value: '#7E8C8D' },
-
-      { type: choiceItem, text: 'Black', value: '#000000' },
-      { type: choiceItem, text: 'White', value: '#ffffff' }
-    ]
-  };
-
   const colorInputSpec = renderColorInput({
     type: 'colorinput',
     name: 'colorinput-demo',
     label: Option.some('Color input label')
-  }, sharedBackstage, fakecolorinputBackstage);
+  }, sharedBackstage, backstage.colorinput);
 
   const colorPickerSpec = renderColorPicker({
     type: 'colorpicker',
@@ -307,7 +272,7 @@ export default () => {
     name: 'blah',
     label: Option.some('Url'),
     filetype: 'image' // 'image' || 'media'
-  }, helpers.extras.backstage.shared, helpers.extras.backstage.urlinput);
+  }, backstage, backstage.urlinput);
 
   const linkInputSpec = renderTypeahead({
     label: Option.some('Url'),
@@ -326,7 +291,7 @@ export default () => {
         }
       ], (d) => makeItem(d.text));
     }
-  }, sharedBackstage);
+  }, backstage);
 
   const customEditorSpec = renderCustomEditor({
       tag: 'textarea',

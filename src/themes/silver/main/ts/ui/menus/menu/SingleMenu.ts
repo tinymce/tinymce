@@ -10,7 +10,7 @@ import { ValueSchema } from '@ephox/boulder';
 import { InlineContent, Menu as BridgeMenu, Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Arr, Merger, Option, Options } from '@ephox/katamari';
-import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
+import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
 import ItemResponse from '../item/ItemResponse';
@@ -36,7 +36,8 @@ export type SingleMenuItemApi = BridgeMenu.MenuItemApi | BridgeMenu.NestedMenuIt
 const hasIcon = (item) => item.icon !== undefined || item.type === 'togglemenuitem' || item.type === 'choicemenuitem';
 const menuHasIcons = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasIcon);
 
-const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, menuHasIcons: boolean = true): Option<ItemTypes.ItemSpec> => {
+const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, backstage: UiFactoryBackstage, menuHasIcons: boolean = true): Option<ItemTypes.ItemSpec> => {
+  const providersBackstage = backstage.shared.providers;
   switch (item.type) {
     case 'menuitem':
       return BridgeMenu.createMenuItem(item).fold(
@@ -63,7 +64,7 @@ const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemRes
     case 'fancymenuitem':
       return BridgeMenu.createFancyMenuItem(item).fold(
         handleError,
-        (d) => MenuItems.fancy(d)
+        (d) => MenuItems.fancy(d, backstage)
       );
     default: {
       console.error('Unknown item in general menu', item);
@@ -170,12 +171,12 @@ export const createPartialChoiceMenu = (value: string, items: SingleMenuItemApi[
   return createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, columns, presets);
 };
 
-export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): Partial<MenuTypes.MenuSpec> => {
+export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, backstage: UiFactoryBackstage): Partial<MenuTypes.MenuSpec> => {
   const hasIcons = menuHasIcons(items);
 
   const alloyItems = Options.cat(
     Arr.map(items, (item: SingleMenuItemApi) => {
-      const createItem = (i: SingleMenuItemApi) => createMenuItemFromBridge(i, itemResponse, providersBackstage, hasIcons);
+      const createItem = (i: SingleMenuItemApi) => createMenuItemFromBridge(i, itemResponse, backstage, hasIcons);
       if (item.type === 'nestedmenuitem' && item.getSubmenuItems().length <= 0) {
         return createItem(Merger.merge(item, {disabled: true}));
       } else {

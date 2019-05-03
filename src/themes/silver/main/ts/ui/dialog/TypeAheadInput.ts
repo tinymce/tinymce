@@ -7,7 +7,7 @@
 
 import { Behaviour, Button as AlloyButton, Container as AlloyContainer, SketchSpec } from '@ephox/alloy';
 import { AutocompleteGoo, renderAutocomplete } from 'tinymce/themes/silver/ui/dialog/Autocomplete';
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
@@ -17,18 +17,18 @@ export interface TypeaheadInput extends AutocompleteGoo {
   icon: string;
 }
 
-export const renderTypeahead = (spec: TypeaheadInput, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
+export const renderTypeahead = (spec: TypeaheadInput, backstage: UiFactoryBackstage): SketchSpec => {
   return AlloyContainer.sketch({
     dom: {
       tag: 'div'
     },
     components: [
-      renderAutocomplete(spec, sharedBackstage),
+      renderAutocomplete(spec, backstage),
 
       AlloyButton.sketch({
         dom: {
           tag: 'button',
-          innerHtml: Icons.get(spec.icon, sharedBackstage.providers.icons)
+          innerHtml: Icons.get(spec.icon, backstage.shared.providers.icons)
         }
       })
     ],

@@ -29,7 +29,7 @@ import { Toolbar, Types } from '@ephox/bridge';
 import { Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
 import { Attr, Class, SelectorFind } from '@ephox/sugar';
 
-import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
+import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
@@ -355,7 +355,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
   });
 };
 
-const renderMenuButton = (spec: Toolbar.ToolbarMenuButton, prefix: string, sharedBackstage: UiFactoryBackstageShared, role: Option<string>): SketchSpec => {
+const renderMenuButton = (spec: Toolbar.ToolbarMenuButton, prefix: string, backstage: UiFactoryBackstage, role: Option<string>): SketchSpec => {
   return renderCommonDropdown({
       text: spec.text,
       icon: spec.icon,
@@ -365,7 +365,7 @@ const renderMenuButton = (spec: Toolbar.ToolbarMenuButton, prefix: string, share
       fetch: (callback) => {
         spec.fetch((items) => {
           callback(
-            NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, sharedBackstage.providers)
+            NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage)
           );
         });
       },
@@ -377,7 +377,7 @@ const renderMenuButton = (spec: Toolbar.ToolbarMenuButton, prefix: string, share
       dropdownBehaviours: []
     },
     prefix,
-    sharedBackstage);
+    backstage.shared);
 };
 
 export {

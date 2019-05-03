@@ -61,12 +61,49 @@ const setupDemo = () => {
     }
   };
 
+  const choiceItem: 'choiceitem' = 'choiceitem';
+
+  // This is fake because ColorInputBackstage requires Editor constructor
+  const fakecolorinputBackstage = {
+    colorPicker: Fun.noop,
+    hasCustomColors: Fun.constant(false),
+    getColors: () => [
+      { type: choiceItem, text: 'Turquoise', value: '#18BC9B' },
+      { type: choiceItem, text: 'Green', value: '#2FCC71' },
+      { type: choiceItem, text: 'Blue', value: '#3598DB' },
+      { type: choiceItem, text: 'Purple', value: '#9B59B6' },
+      { type: choiceItem, text: 'Navy Blue', value: '#34495E' },
+
+      { type: choiceItem, text: 'Dark Turquoise', value: '#18A085' },
+      { type: choiceItem, text: 'Dark Green', value: '#27AE60' },
+      { type: choiceItem, text: 'Medium Blue', value: '#2880B9' },
+      { type: choiceItem, text: 'Medium Purple', value: '#8E44AD' },
+      { type: choiceItem, text: 'Midnight Blue', value: '#2B3E50' },
+
+      { type: choiceItem, text: 'Yellow', value: '#F1C40F' },
+      { type: choiceItem, text: 'Orange', value: '#E67E23' },
+      { type: choiceItem, text: 'Red', value: '#E74C3C' },
+      { type: choiceItem, text: 'Light Gray', value: '#ECF0F1' },
+      { type: choiceItem, text: 'Gray', value: '#95A5A6' },
+
+      { type: choiceItem, text: 'Dark Yellow', value: '#F29D12' },
+      { type: choiceItem, text: 'Dark Orange', value: '#D35400' },
+      { type: choiceItem, text: 'Dark Red', value: '#E74C3C' },
+      { type: choiceItem, text: 'Medium Gray', value: '#BDC3C7' },
+      { type: choiceItem, text: 'Dark Gray', value: '#7E8C8D' },
+
+      { type: choiceItem, text: 'Black', value: '#000000' },
+      { type: choiceItem, text: 'White', value: '#ffffff' }
+    ],
+    getColorCols: Fun.constant(5)
+  };
+
   const backstage: UiFactoryBackstage = {
     shared: {
       providers: {
         icons: () => <Record<string, string>> {},
         menuItems: () => <Record<string, any>> {},
-        translate: I18n.translate,
+        translate: I18n.translate
       },
       interpreter: (x) => x,
       getSink: () => Result.value(sink),
@@ -108,6 +145,7 @@ const setupDemo = () => {
         }
       }
     },
+    colorinput: fakecolorinputBackstage,
     urlinput: {
       getHistory: fakeHistory,
       addToHistory: (url: string, fileType: string) => {},
