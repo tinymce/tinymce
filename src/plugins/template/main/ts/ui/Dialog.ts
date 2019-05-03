@@ -14,6 +14,7 @@ import XHR from 'tinymce/core/api/util/XHR';
 import Settings from '../api/Settings';
 import Templates from '../core/Templates';
 import * as Utils from '../core/Utils';
+import I18n from 'tinymce/core/api/util/I18n';
 
 interface TemplateValues {
   title: string;
@@ -51,13 +52,16 @@ const getPreviewContent = (editor: Editor, html: string) => {
       bodyClass = bodyClass[editor.id] || '';
     }
 
+    const directionality = editor.getParam('directionality', I18n.isRtl() ? 'rtl' : undefined);
+    const dirAttr = directionality ? ' dir="' + directionality + '"' : '';
+
     html = (
       '<!DOCTYPE html>' +
       '<html>' +
       '<head>' +
       contentCssLinks +
       '</head>' +
-      '<body class="' + bodyClass + '">' +
+      '<body class="' + bodyClass + '"' + dirAttr + '>' +
       html +
       '</body>' +
       '</html>'

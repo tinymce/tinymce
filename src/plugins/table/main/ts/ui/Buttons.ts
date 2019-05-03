@@ -9,6 +9,7 @@ import { Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import { getToolbar } from '../api/Settings';
 import { SelectionTargets } from '../selection/SelectionTargets';
+import I18n from 'tinymce/core/api/util/I18n';
 
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets) => {
   editor.ui.registry.addMenuButton('table', {
@@ -85,14 +86,16 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets) => {
   editor.ui.registry.addButton('tableinsertcolbefore', {
     tooltip: 'Insert column before',
     onAction: cmd('mceTableInsertColBefore'),
-    icon: 'table-insert-column-before',
+    // TODO TINY-3598: Use css to transform the icons when dir=rtl instead of swapping them
+    icon: I18n.isRtl() ? 'table-insert-column-after' : 'table-insert-column-before',
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
   editor.ui.registry.addButton('tableinsertcolafter', {
     tooltip: 'Insert column after',
     onAction: cmd('mceTableInsertColAfter'),
-    icon: 'table-insert-column-after',
+    // TODO TINY-3598: Use css to transform the icons when dir=rtl instead of swapping them
+    icon: I18n.isRtl() ? 'table-insert-column-before' : 'table-insert-column-after',
     onSetup: selectionTargets.onSetupCellOrRow
   });
 

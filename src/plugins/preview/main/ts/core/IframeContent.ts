@@ -8,6 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
+import I18n from 'tinymce/core/api/util/I18n';
 
 const getPreviewHtml = function (editor: Editor) {
   let headHtml = '';
@@ -48,7 +49,8 @@ const getPreviewHtml = function (editor: Editor) {
     '</script> '
   );
 
-  const dirAttr = editor.settings.directionality ? ' dir="' + editor.settings.directionality + '"' : '';
+  const directionality = editor.getParam('directionality', I18n.isRtl() ? 'rtl' : undefined);
+  const dirAttr = directionality ? ' dir="' + encode(directionality) + '"' : '';
 
   const previewHtml = (
     '<!DOCTYPE html>' +
@@ -56,7 +58,7 @@ const getPreviewHtml = function (editor: Editor) {
     '<head>' +
     headHtml +
     '</head>' +
-    '<body id="' + encode(bodyId) + '" class="mce-content-body ' + encode(bodyClass) + '"' + encode(dirAttr) + '>' +
+    '<body id="' + encode(bodyId) + '" class="mce-content-body ' + encode(bodyClass) + '"' + dirAttr + '>' +
     editor.getContent() +
     preventClicksOnLinksScript +
     '</body>' +
