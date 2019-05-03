@@ -21,7 +21,6 @@
     box-sizing: border-box;
     display: flex;
     height: 100%;
-    margin-right: 15px;
   }
 
   .tox-sv-palette-spectrum {
@@ -54,7 +53,6 @@
   .tox-hue-slider {
     box-sizing: border-box;
     height: 100%;
-    margin-right: 15px;
     width: 25px;
   }
 
@@ -102,10 +100,6 @@
     border: 1px solid red !important;
   }
 
-  .tox-rgb-form label {
-    margin-right: .5em;
-  }
-
   .tox-rgb-form .tox-rgba-preview {
     border: 1px solid black;
     flex-grow: 2;
@@ -113,20 +107,31 @@
   }
 }
 
+.tox:not([dir=rtl]) {
+  .tox-sv-palette {
+    margin-right: 15px;
+  }
+
+  .tox-hue-slider {
+    margin-right: 15px;
+  }
+
+  .tox-rgb-form label {
+    margin-right: .5em;
+  }
+}
+
 // RTL
 .tox[dir=rtl] {
   .tox-sv-palette {
     margin-left: 15px;
-    margin-right: unset;
   }
 
   .tox-hue-slider {
     margin-left: 15px;
-    margin-right: unset;
   }
 
   .tox-rgb-form label {
     margin-left: .5em;
-    margin-right: unset;
   }
 }

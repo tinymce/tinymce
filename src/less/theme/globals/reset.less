@@ -13,7 +13,6 @@
   box-sizing: content-box;
   color: @color-black;
   cursor: auto;
-  direction: ltr;
   font-family: @font-stack;
   font-size: @font-size-base;
   font-style: normal;
@@ -62,7 +61,6 @@
   }
 }
 
-// RTL
-.tox[dir=rtl] {
-  direction: rtl;
+.tox:not([dir=rtl]) {
+  direction: ltr;
 }

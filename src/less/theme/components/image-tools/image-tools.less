@@ -38,20 +38,6 @@
     background: url(data:image/gif;base64,R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==);
   }
 
-  // Spacing between multiple sliders
-  .tox-image-tools__toolbar > .tox-slider:not(:first-of-type) {
-    margin-left: @pad-sm;
-  }
-
-  // Spacing between button and slider
-  .tox-image-tools__toolbar > .tox-button + .tox-slider {
-    margin-left: @pad-xl;
-  }
-
-  .tox-image-tools__toolbar > .tox-slider + .tox-button {
-    margin-left: @pad-xl;
-  }
-
   .tox-image-tools__toolbar > .tox-spacer {
     flex: 1;
     -ms-flex-preferred-size: auto;
@@ -113,22 +99,35 @@
   }
 }
 
+.tox:not([dir=rtl]) {
+  // Spacing between multiple sliders
+  .tox-image-tools__toolbar > .tox-slider:not(:first-of-type) {
+    margin-left: @pad-sm;
+  }
+
+  // Spacing between button and slider
+  .tox-image-tools__toolbar > .tox-button + .tox-slider {
+    margin-left: @pad-xl;
+  }
+
+  .tox-image-tools__toolbar > .tox-slider + .tox-button {
+    margin-left: @pad-xl;
+  }
+}
+
 // RTL
 .tox[dir=rtl] {
   // Spacing between multiple sliders
   .tox-image-tools__toolbar > .tox-slider:not(:first-of-type) {
-    margin-left: unset;
     margin-right: @pad-sm;
   }
 
   // Spacing between button and slider
   .tox-image-tools__toolbar > .tox-button + .tox-slider {
-    margin-left: unset;
     margin-right: @pad-xl;
   }
 
   .tox-image-tools__toolbar > .tox-slider + .tox-button {
-    margin-left: unset;
     margin-right: @pad-xl;
   }
 }

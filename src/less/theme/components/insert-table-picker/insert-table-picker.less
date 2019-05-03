@@ -29,11 +29,6 @@
       height: @insert-table-picker-cell-size;
       width: @insert-table-picker-cell-size;
 
-      // Remove border on last cell of every row
-      &:nth-child(10n) {
-        border-right: 0;
-      }
-
       // Option for removing colors on bottom row
       &:nth-last-child(-n+10) {
         //
@@ -60,5 +55,25 @@
     padding: @pad-xs;
     text-align: center;
     width: 100%;
+  }
+}
+
+.tox:not([dir=rtl]) {
+  // Remove border on last cell of every row
+  /* stylelint-disable-next-line no-descending-specificity */
+  .tox-insert-table-picker > div {
+    &:nth-last-child(10n) {
+      border-right: 0;
+    }
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  /* stylelint-disable-next-line no-descending-specificity */
+  .tox-insert-table-picker > div {
+    &:nth-last-child(10n+1) {
+      border-right: 0;
+    }
   }
 }

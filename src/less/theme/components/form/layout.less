@@ -64,10 +64,6 @@
   .tox-form__controls-h-stack {
     align-items: center;
     display: flex;
-
-    > *:not(:first-child) {
-      margin-left: @form-group-horizontal-spacing;
-    }
   }
 
   .tox-form__group--inline {
@@ -105,11 +101,18 @@
   }
 }
 
+.tox:not([dir=rtl]) {
+  .tox-form__controls-h-stack {
+    > *:not(:first-child) {
+      margin-left: @form-group-horizontal-spacing;
+    }
+  }
+}
+
 // RTL
 .tox[dir=rtl] {
   .tox-form__controls-h-stack {
     > *:not(:first-child) {
-      margin-left: unset;
       margin-right: @form-group-horizontal-spacing;
     }
   }

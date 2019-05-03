@@ -41,7 +41,7 @@
 @dialog-body-font-weight: @font-weight-normal;
 @dialog-body-line-height: @line-height-base;
 @dialog-body-text-align: left;
-@dialog-body-text-align-rtl: start;
+@dialog-body-text-align-rtl: right;
 @dialog-body-text-color: @text-color;
 @dialog-body-text-transform: normal;
 
@@ -150,7 +150,6 @@
     align-items: flex-start;
     display: flex;
     flex-direction: column;
-    margin-right: @pad-xl;
   }
 
   .tox-dialog__body-nav-item {
@@ -317,6 +316,12 @@ body.tox-dialog__disable-scroll {
   overflow: hidden;
 }
 
+.tox:not([dir=rtl]) {
+  .tox-dialog__body-nav {
+    margin-right: @pad-xl;
+  }
+}
+
 // RTL
 .tox[dir=rtl] {
   .tox-dialog__body {
@@ -325,7 +330,6 @@ body.tox-dialog__disable-scroll {
 
   .tox-dialog__body-nav {
     margin-left: @pad-xl;
-    margin-right: unset;
   }
 }
 

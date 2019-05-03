@@ -61,8 +61,7 @@
     white-space: nowrap;
   }
 
-  .tox-statusbar__wordcount,
-  .tox-statusbar__branding {
+  .tox-statusbar__wordcount {
     flex: 0 0 auto;
     margin-left: 1ch;
   }
@@ -85,14 +84,15 @@
   }
 }
 
+.tox:not([dir=rtl]) {
+  .tox-statusbar__branding {
+    margin-left: 1ch;
+  }
+}
+
 // RTL
 .tox[dir=rtl] {
-  .tox-statusbar__branding {
-    margin-left: unset;
-  }
-
-  .tox-statusbar__resize-handle {
-    bottom: 0;
-    position: absolute;
+  .tox-statusbar {
+    flex-direction: row-reverse;
   }
 }
