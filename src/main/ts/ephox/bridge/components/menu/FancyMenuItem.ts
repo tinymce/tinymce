@@ -14,12 +14,15 @@ export interface FancyMenuItem {
 }
 
 export interface FancyActionArgsMap {
-  'inserttable': {numRows: Number, numColumns: Number};
+  'inserttable': { numRows: Number, numColumns: Number };
+  'colorswatch': { value: string };
 }
+
+const fancyTypes: (keyof FancyActionArgsMap)[] = ['inserttable', 'colorswatch']; // These will need to match the keys of FancyActionArgsMap above
 
 export const fancyMenuItemSchema = ValueSchema.objOf([
   FieldSchema.strictString('type'),
-  FieldSchema.strictStringEnum('fancytype', ['inserttable']), // These will need to match the keys of FancyActionArgsMap above
+  FieldSchema.strictStringEnum('fancytype', fancyTypes),
   FieldSchema.defaultedFunction('onAction', Fun.noop)
 ]);
 
