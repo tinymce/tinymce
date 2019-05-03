@@ -22,7 +22,7 @@ const forSwatch = (columns: number | 'auto') => {
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-menu' ]
+      classes: [ 'tox-menu', 'tox-swatches-menu' ]
     },
     components: [
       {
