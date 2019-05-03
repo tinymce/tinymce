@@ -22,6 +22,12 @@
     margin: @toolbar-button-spacing-y 0 (@toolbar-button-spacing-y + 1) @toolbar-group-padding-x;
   }
 
+  // Remove menu border/padding when swatch is used in a collection list context
+  .tox-collection--list .tox-collection__group .tox-swatches-menu {
+    border: 0;
+    margin: -@collection-item-separator-margin-y 0;
+  }
+
   .tox-swatches__row {
     display: flex;
   }
