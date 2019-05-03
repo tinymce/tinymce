@@ -104,3 +104,13 @@
     }
   }
 }
+
+// RTL
+.tox[dir=rtl] {
+  .tox-form__controls-h-stack {
+    > *:not(:first-child) {
+      margin-left: unset;
+      margin-right: @form-group-horizontal-spacing;
+    }
+  }
+}

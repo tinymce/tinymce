@@ -239,3 +239,20 @@
     }
   }
 }
+
+// RTL
+.tox[dir=rtl] {
+  .tox-collection--list .tox-collection__item > *:not(:first-child) {
+    margin-left: unset;
+    margin-right: @pad-sm;
+  }
+
+  .tox-collection__item-caret {
+    transform: rotateY(180deg);
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  .tox-collection__item-label {
+    text-align: right;
+  }
+}

@@ -35,9 +35,9 @@
 
   .tox-sv-palette-thumb {
     background: none;
-    box-sizing: content-box;
     border: 1px solid black;
     border-radius: 50%;
+    box-sizing: content-box;
     height: 12px;
     position: absolute;
     width: 12px;
@@ -71,9 +71,9 @@
   }
 
   .tox-hue-slider-thumb {
-    box-sizing: content-box;
     background: white;
     border: 1px solid black;
+    box-sizing: content-box;
     height: 4px;
     margin-left: -1px;
     width: 100%;
@@ -110,5 +110,23 @@
     border: 1px solid black;
     flex-grow: 2;
     margin-bottom: 0;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-sv-palette {
+    margin-left: 15px;
+    margin-right: unset;
+  }
+
+  .tox-hue-slider {
+    margin-left: 15px;
+    margin-right: unset;
+  }
+
+  .tox-rgb-form label {
+    margin-left: .5em;
+    margin-right: unset;
   }
 }

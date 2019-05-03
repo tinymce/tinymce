@@ -112,3 +112,23 @@
     top: 200px;
   }
 }
+
+// RTL
+.tox[dir=rtl] {
+  // Spacing between multiple sliders
+  .tox-image-tools__toolbar > .tox-slider:not(:first-of-type) {
+    margin-left: unset;
+    margin-right: @pad-sm;
+  }
+
+  // Spacing between button and slider
+  .tox-image-tools__toolbar > .tox-button + .tox-slider {
+    margin-left: unset;
+    margin-right: @pad-xl;
+  }
+
+  .tox-image-tools__toolbar > .tox-slider + .tox-button {
+    margin-left: unset;
+    margin-right: @pad-xl;
+  }
+}
