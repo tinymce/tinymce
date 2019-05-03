@@ -41,7 +41,6 @@
 @dialog-body-font-weight: @font-weight-normal;
 @dialog-body-line-height: @line-height-base;
 @dialog-body-text-align: left;
-@dialog-body-text-align-rtl: right;
 @dialog-body-text-color: @text-color;
 @dialog-body-text-transform: normal;
 
@@ -325,11 +324,10 @@ body.tox-dialog__disable-scroll {
 // RTL
 .tox[dir=rtl] {
   .tox-dialog__body {
-    text-align: @dialog-body-text-align-rtl;
+    text-align: right;
   }
 
   .tox-dialog__body-nav {
     margin-left: @pad-xl;
   }
 }
-
