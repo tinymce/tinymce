@@ -27,6 +27,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.onHandler('onOpen'),
   // TODO: Remove dupe with Dropdown
   FieldSchema.defaulted('getHotspot', Option.some),
+  FieldSchema.defaulted('getAnchorOverrides', Fun.constant({ })),
   FieldSchema.defaulted('layouts', Option.none()),
   FieldSchema.defaulted('eventOrder', { }),
   FieldSchema.defaultedObjOf('model', { }, [
