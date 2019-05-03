@@ -52,8 +52,10 @@ const getPreviewContent = (editor: Editor, html: string) => {
       bodyClass = bodyClass[editor.id] || '';
     }
 
+    const encode = editor.dom.encode;
+
     const directionality = editor.getParam('directionality', I18n.isRtl() ? 'rtl' : undefined);
-    const dirAttr = directionality ? ' dir="' + directionality + '"' : '';
+    const dirAttr = directionality ? ' dir="' + encode(directionality) + '"' : '';
 
     html = (
       '<!DOCTYPE html>' +
@@ -61,7 +63,7 @@ const getPreviewContent = (editor: Editor, html: string) => {
       '<head>' +
       contentCssLinks +
       '</head>' +
-      '<body class="' + bodyClass + '"' + dirAttr + '>' +
+      '<body class="' + encode(bodyClass) + '"' + dirAttr + '>' +
       html +
       '</body>' +
       '</html>'
