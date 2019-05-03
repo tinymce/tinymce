@@ -40,20 +40,23 @@ const handleSwitchMode = (uiComponents: RenderUiComponents) => {
 
 const setupEvents = (editor: Editor) => {
   const contentWindow = editor.getWin();
-  const documentEle = editor.getDoc().documentElement;
+  const initialDocEle = editor.getDoc().documentElement;
 
   const lastWindowDimensions = Cell(Position(contentWindow.innerWidth, contentWindow.innerHeight));
-  const lastDocumentDimensions = Cell(Position(documentEle.offsetWidth, documentEle.offsetHeight));
+  const lastDocumentDimensions = Cell(Position(initialDocEle.offsetWidth, initialDocEle.offsetHeight));
 
   const resize = () => {
+    // Don't use the initial doc ele, as there's a small chance it may have changed
+    const docEle = editor.getDoc().documentElement;
+
     // Check if the window or document dimensions have changed and if so then trigger a content resize event
     const outer = lastWindowDimensions.get();
     const inner = lastDocumentDimensions.get();
     if (outer.left() !== contentWindow.innerWidth || outer.top() !== contentWindow.innerHeight) {
       lastWindowDimensions.set(Position(contentWindow.innerWidth, contentWindow.innerHeight));
       Events.fireResizeContent(editor);
-    } else if (inner.left() !== documentEle.offsetWidth || inner.top() !== documentEle.offsetHeight) {
-      lastDocumentDimensions.set(Position(documentEle.offsetWidth, documentEle.offsetHeight));
+    } else if (inner.left() !== docEle.offsetWidth || inner.top() !== docEle.offsetHeight) {
+      lastDocumentDimensions.set(Position(docEle.offsetWidth, docEle.offsetHeight));
       Events.fireResizeContent(editor);
     }
   };

@@ -1,6 +1,6 @@
 Version 5.0.5 (TBD)
     Fixed submenus anchoring #TINY-3564
-    Fixed autoresize not working with floating elements or asynchronously loaded media elements #TINY-3545
+    Fixed autoresize not working with floating elements or when media elements finished loading #TINY-3545
     Removed unused and hidden validation icons to avoid displaying phantom tooltips #TINY-2329
     Fixed the textpattern plugin not working with fragmented text #TINY-3089
 Version 5.0.4 (2019-04-23)
