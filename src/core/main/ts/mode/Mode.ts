@@ -5,49 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Class } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import Events from '../api/Events';
 import { Obj, Arr, Cell } from '@ephox/katamari';
 import { console } from '@ephox/dom-globals';
 import { ModeApi } from '../api/Mode';
+import { toggleReadOnly } from './Readonly';
 
 const defaultModes = ['design', 'readonly'];
-
-// Not quite sugar Class.toggle, it's more of a Class.set
-const toggleClass = (elm: Element, cls: string, state: boolean) => {
-  if (Class.has(elm, cls) && state === false) {
-    Class.remove(elm, cls);
-  } else if (state) {
-    Class.add(elm, cls);
-  }
-};
-
-const setEditorCommandState = (editor: Editor, cmd: string, state: boolean) => {
-  try {
-    editor.getDoc().execCommand(cmd, false, state);
-  } catch (ex) {
-    // Ignore
-  }
-};
-
-const toggleReadOnly = (editor: Editor, state: boolean) => {
-  toggleClass(Element.fromDom(editor.getBody()), 'mce-content-readonly', state);
-
-  if (state) {
-    editor.selection.controlSelection.hideResizeRect();
-    editor.readonly = true;
-    editor.getBody().contentEditable = 'false';
-  } else {
-    editor.readonly = false;
-    editor.getBody().contentEditable = 'true';
-    setEditorCommandState(editor, 'StyleWithCSS', false);
-    setEditorCommandState(editor, 'enableInlineTableEditing', false);
-    setEditorCommandState(editor, 'enableObjectResizing', false);
-    editor.focus();
-    editor.nodeChanged();
-  }
-};
 
 const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: Record<string, ModeApi>, mode: string) => {
   const oldMode = availableModes[activeMode.get()];
@@ -82,8 +47,6 @@ const setMode = (editor: Editor, availableModes: Record<string, ModeApi>, active
   }
 };
 
-const isReadOnly = (editor: Editor) => editor.readonly === true;
-
 const registerMode = (availableModes: Record<string, ModeApi>, mode: string, api: ModeApi) => {
   if (Arr.contains(defaultModes, mode)) {
     throw new Error(`Cannot override default mode ${mode}`);
@@ -103,7 +66,6 @@ const registerMode = (availableModes: Record<string, ModeApi>, mode: string, api
 };
 
 export {
-  isReadOnly,
   setMode,
   registerMode
 };
