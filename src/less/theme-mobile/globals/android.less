@@ -7,19 +7,19 @@
 
 .tinymce-mobile-android-container {
   &.tinymce-mobile-android-maximized {
-    /* Android WebView only */
-    /* The min-height: 100vh is required for webview which we aren't supporting yet.
-    It breaks normal mode by making the container larger than the window height */
-    /*min-height: 100vh;*/
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    border: none;
+    // Android WebView only
+    // The min-height: 100vh is required for webview which we aren't supporting yet.
+    // It breaks normal mode by making the container larger than the window height
+    // min-height: 100vh;
     background: @android-background-color;
+    border: none;
+    bottom: 0;
     display: flex;
     flex-direction: column;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
   }
 
   &:not(.tinymce-mobile-android-maximized) {
@@ -32,8 +32,8 @@
 
     iframe {
       display: flex !important;
-      height: auto !important;
       flex-grow: 1;
+      height: auto !important;
     }
   }
 }

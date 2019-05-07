@@ -7,24 +7,24 @@
 
 .tinymce-mobile-serialised-dialog {
   display: flex;
+  min-height: 1.5em;
   overflow: hidden;
+  padding-left: 0;
+  padding-right: 0;
   position: relative;
   width: 100%;
-  min-height: 1.5em;
-  padding-left: 0em;
-  padding-right: 0em;
 
   .tinymce-mobile-serialised-dialog-chain {
-    transition: left cubic-bezier(.4, 0, 1, 1) @quick-animation-time;
     display: flex;
-    width: 100%;
     height: 100%;
+    transition: left cubic-bezier(.4, 0, 1, 1) @quick-animation-time;
+    width: 100%;
 
     .tinymce-mobile-serialised-dialog-screen {
-      flex: 0 0 auto;
-      width: 100%;
       display: flex;
+      flex: 0 0 auto;
       justify-content: space-between;
+      width: 100%;
 
       input {
         font-family: @toolstrip-input-font-family;
@@ -36,17 +36,17 @@
         position: relative;
 
         .tinymce-mobile-input-container-x {
-          position: absolute;
-          right: 0px;
-          color: @toolstrip-input-icons-color;
-          font-size: 0.6em;
-          font-weight: bold;
-          background: inherit;
-          border-radius: 50%;
-          border: none;
           align-self: center;
+          background: inherit;
+          border: none;
+          border-radius: 50%;
+          color: @toolstrip-input-icons-color;
+          font-size: .6em;
+          font-weight: bold;
           height: 100%;
           padding-right: 2px;
+          position: absolute;
+          right: 0;
         }
 
         &.tinymce-mobile-input-container-empty .tinymce-mobile-input-container-x {
@@ -54,20 +54,21 @@
         }
       }
 
-      .tinymce-mobile-icon-previous, .tinymce-mobile-icon-next {
-        display: flex;
+      .tinymce-mobile-icon-previous,
+      .tinymce-mobile-icon-next {
         align-items: center;
+        display: flex;
 
-        &:before {
-          padding-left: 0.5em;
-          padding-right: 0.5em;
-          height: 100%;
-          display: flex;
+        &::before {
           align-items: center;
+          display: flex;
           font-weight: bold;
+          height: 100%;
+          padding-left: .5em;
+          padding-right: .5em;
         }
 
-        &.tinymce-mobile-toolbar-navigation-disabled:before {
+        &.tinymce-mobile-toolbar-navigation-disabled::before {
           visibility: hidden;
         }
       }
@@ -76,11 +77,11 @@
 }
 
 .tinymce-mobile-dot-item {
-  margin: 0 2px;
+  color: @toolstrip-button-selected-color;
   font-size: 10px;
   line-height: 10px;
+  margin: 0 2px;
   padding-top: 3px;
-  color: @toolstrip-button-selected-color;
 
   &.tinymce-mobile-dot-active {
     color: @toolstrip-button-selected-background-color;
