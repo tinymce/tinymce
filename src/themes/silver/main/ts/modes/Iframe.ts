@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Attachment, Disabling, SplitToolbar } from '@ephox/alloy';
+import { AlloyComponent, Attachment, Disabling } from '@ephox/alloy';
 import { Cell, Option } from '@ephox/katamari';
 import { Body, DomEvent, Element, Selectors, Position } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -73,6 +73,8 @@ const setupEvents = (editor: Editor) => {
 };
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
+  const lastToolbarWidth = Cell(0);
+
   loadIframeSkin(editor);
 
   Attachment.attachSystemAfter(Element.fromDom(args.targetNode), uiComponents.mothership);
@@ -122,19 +124,17 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const drawer = Settings.getToolbarDrawer(editor);
 
   const refreshDrawer = () => {
-    const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
-    toolbar.each(SplitToolbar.refresh);
+    OuterContainer.refreshToolbar(uiComponents.outerContainer);
   };
 
   if (drawer === Settings.ToolbarDrawer.sliding || drawer === Settings.ToolbarDrawer.floating) {
-    const lastWidth = Cell(0);
     editor.on('ResizeContent', () => {
       // Check if the width has changed, if so then refresh the toolbar drawer. We don't care if height changes.
-      const width = editor.contentWindow.innerWidth;
-      if (width !== lastWidth.get()) {
+      const width = editor.getWin().innerWidth;
+      if (width !== lastToolbarWidth.get()) {
         refreshDrawer();
       }
-      lastWidth.set(width);
+      lastToolbarWidth.set(width);
     });
   }
 

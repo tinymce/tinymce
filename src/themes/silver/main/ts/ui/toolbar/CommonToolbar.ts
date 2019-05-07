@@ -5,14 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Focusing, Keying, SplitToolbar as SplitAlloyToolbar, Tabstopping, Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup } from '@ephox/alloy';
+import {
+  AddEventsBehaviour,
+  AlloyComponent,
+  AlloyEvents,
+  AlloySpec,
+  Behaviour,
+  Focusing,
+  Keying,
+  SplitFloatingToolbar as AlloySplitFloatingToolbar,
+  SplitSlidingToolbar as AlloySplitSlidingToolbar,
+  Tabstopping,
+  Toolbar as AlloyToolbar,
+  ToolbarGroup as AlloyToolbarGroup
+} from '@ephox/alloy';
 import { Arr, Option, Result } from '@ephox/katamari';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderIconButtonSpec } from '../general/Button';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
 
 export interface MoreDrawerData {
-  floating: boolean;
   lazyMoreButton: () => AlloyComponent;
   lazyToolbar: () => AlloyComponent;
 }
@@ -82,25 +94,15 @@ const getToolbarbehaviours = (toolbarSpec, modeName) => {
   ]);
 };
 
-const renderMoreToolbar = (toolbarSpec: ToolbarSpec) => {
-  const modeName: any = toolbarSpec.cyclicKeying ? 'cyclic' : 'acyclic';
+const renderMoreToolbarCommon = (toolbarSpec: ToolbarSpec) => {
+  const modeName = toolbarSpec.cyclicKeying ? 'cyclic' : 'acyclic';
 
-  const primary = SplitAlloyToolbar.parts().primary({
-    dom: {
-      tag: 'div',
-      classes: ['tox-toolbar__primary']
-    }
-  });
-
-  return SplitAlloyToolbar.sketch({
+  return {
     uid: toolbarSpec.uid,
     dom: {
       tag: 'div',
       classes: ['tox-toolbar-overlord']
     },
-    lazySink: toolbarSpec.getSink,
-    floating: toolbarSpec.moreDrawerData.floating,
-    floatingAnchor: () => Option.some(toolbarSpec.backstage.shared.anchors.toolbarOverflow()),
     parts: {
       // This already knows it is a toolbar group
       'overflow-group': renderToolbarGroupCommon({
@@ -112,8 +114,29 @@ const renderMoreToolbar = (toolbarSpec: ToolbarSpec) => {
         icon: Option.some('more-drawer'),
         disabled: false,
         tooltip: Option.some('More...')
-      }, Option.none(), toolbarSpec.backstage.shared.providers),
-      'overflow': {
+      }, Option.none(), toolbarSpec.backstage.shared.providers)
+    },
+    splitToolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName)
+  };
+};
+
+const renderFloatingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
+  const baseSpec = renderMoreToolbarCommon(toolbarSpec);
+
+  const primary = AlloySplitFloatingToolbar.parts().primary({
+    dom: {
+      tag: 'div',
+      classes: ['tox-toolbar__primary']
+    }
+  });
+
+  return AlloySplitFloatingToolbar.sketch({
+    ...baseSpec,
+    lazySink: toolbarSpec.getSink,
+    getAnchor: () => toolbarSpec.backstage.shared.anchors.toolbarOverflow(),
+    parts: {
+      ...baseSpec.parts,
+      overflow: {
         dom: {
           tag: 'div',
           classes: ['tox-toolbar__overflow']
@@ -122,18 +145,43 @@ const renderMoreToolbar = (toolbarSpec: ToolbarSpec) => {
     },
     components: [ primary ],
     markers: {
+      overflowToggledClass: ToolbarButtonClasses.Ticked
+    },
+  });
+};
+
+const renderSlidingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
+  const primary = AlloySplitSlidingToolbar.parts().primary({
+    dom: {
+      tag: 'div',
+      classes: ['tox-toolbar__primary']
+    }
+  });
+
+  const overflow = AlloySplitSlidingToolbar.parts().overflow({
+    dom: {
+      tag: 'div',
+      classes: ['tox-toolbar__overflow']
+    }
+  });
+
+  const baseSpec = renderMoreToolbarCommon(toolbarSpec);
+
+  return AlloySplitSlidingToolbar.sketch({
+    ...baseSpec,
+    components: [ primary, overflow ],
+    markers: {
       openClass: 'tox-toolbar__overflow--open',
       closedClass: 'tox-toolbar__overflow--closed',
       growingClass: 'tox-toolbar__overflow--growing',
       shrinkingClass: 'tox-toolbar__overflow--shrinking',
       overflowToggledClass: ToolbarButtonClasses.Ticked
-    },
-    splitToolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName)
+    }
   });
 };
 
 const renderToolbar = (toolbarSpec: ToolbarSpec) => {
-  const modeName: any = toolbarSpec.cyclicKeying ? 'cyclic' : 'acyclic';
+  const modeName = toolbarSpec.cyclicKeying ? 'cyclic' : 'acyclic';
 
   return AlloyToolbar.sketch({
     uid: toolbarSpec.uid,
@@ -149,4 +197,4 @@ const renderToolbar = (toolbarSpec: ToolbarSpec) => {
   });
 };
 
-export { renderToolbarGroup, renderToolbar, renderMoreToolbar };
+export { renderToolbarGroup, renderToolbar, renderFloatingMoreToolbar, renderSlidingMoreToolbar };

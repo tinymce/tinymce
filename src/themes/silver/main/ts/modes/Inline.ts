@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Attachment, Docking, Focusing, SplitToolbar } from '@ephox/alloy';
+import { Attachment, Docking, Focusing } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 import { Css, Element, Height, Location } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -63,7 +63,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
     // SplitToolbar
     if (split) {
-      toolbar.each(SplitToolbar.refresh);
+      OuterContainer.refreshToolbar(uiComponents.outerContainer);
     }
 
     // Positioning and Docking
