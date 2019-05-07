@@ -257,6 +257,13 @@
     margin-right: @pad-xs;
   }
 
+  .tox-collection__item-icon-rtl {
+    /* stylelint-disable-next-line no-descending-specificity */
+    .tox-collection__item-icon svg {
+      transform: rotateY(180deg);
+    }
+  }
+
   .tox-collection__item-caret {
     margin-right: @pad-md;
     transform: rotateY(180deg);
