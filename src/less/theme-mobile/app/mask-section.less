@@ -1,0 +1,31 @@
+.mixin-menu-item {
+  border-radius: 50%;
+  width: @mask-button-size;
+  height: @mask-button-size;
+  .mixin-flex-and-centre;
+}
+
+.tinymce-mobile-content-tap-section {
+  font-size: @mask-button-font-size-large;
+  @media @tablets {
+    font-size: @mask-button-font-size-small;
+  }
+
+  .mixin-flex-and-centre;
+  flex-direction: column;
+
+  .tinymce-mobile-mask-tap-icon {
+    .mixin-menu-item;
+    color: @mask-button-background-color;
+    background-color: @mask-button-foreground-color;
+  }
+
+  .tinymce-mobile-mask-tap-icon:before {
+    font-family: 'tinymce-mobile';
+    content: "\e900"
+  }
+
+  &:not(.tinymce-mobile-mask-tap-icon-selected) .tinymce-mobile-mask-tap-icon {
+    z-index: @tinymce-mobile-mask-menu-zindex + 1;
+  }
+}

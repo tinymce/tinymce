@@ -1,0 +1,40 @@
+/* dropup */
+/* TODO min-height for device size and orientation */
+.tinymce-mobile-ios-container .tinymce-mobile-dropup:not(.tinymce-mobile-dropup-closed) {
+    min-height: 200px;
+}
+
+@media @landscape {
+    .tinymce-mobile-dropup:not(.tinymce-mobile-dropup-closed) {
+        min-height: 200px;
+    }
+}
+
+@media @iphone-small-landscape {
+    .tinymce-mobile-ios-container .tinymce-mobile-dropup:not(.tinymce-mobile-dropup-closed) {
+        min-height: 150px;
+    }
+}
+
+.tinymce-mobile-dropup {
+    background: @dropup-background-color;
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+
+    &.tinymce-mobile-dropup-shrinking {
+        transition: height 0.3s ease-out;
+    }
+
+    &.tinymce-mobile-dropup-growing {
+        transition: height 0.3s ease-in;
+    }
+
+    &.tinymce-mobile-dropup-closed {
+        flex-grow: 0;
+    }
+
+    &.tinymce-mobile-dropup-open:not(.tinymce-mobile-dropup-growing) {
+        flex-grow: 1;
+    }
+}

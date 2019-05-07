@@ -1,0 +1,77 @@
+/* styles menu */
+.tinymce-mobile-styles-menu {
+    overflow: hidden;
+    outline: 4px solid black;
+    position: relative;
+    width: 100%;
+    font-family: sans-serif;
+
+    [role="menu"] {
+        /*display: inline-block;*/
+        height: 100%;
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    [role="menu"].transitioning {
+        transition: transform 0.5s ease-in-out;
+    }
+
+    & .tinymce-mobile-styles-item {
+        cursor: pointer;
+        padding: 1em 1em;
+        position: relative;
+        display: flex;
+        border-bottom: 1px solid #ddd;
+        color: @toolstrip-foreground-color;
+    }
+
+    & .tinymce-mobile-styles-collapser .tinymce-mobile-styles-collapse-icon:before {
+        font-family: 'tinymce-mobile';
+        content: "\e314";
+        color: @toolstrip-foreground-color;
+    }
+
+    & .tinymce-mobile-styles-item.tinymce-mobile-styles-item-is-menu:after {
+        font-family: 'tinymce-mobile';
+        content: "\e315";
+        position: absolute;
+        padding-left: 1em;
+        padding-right: 1em;
+        right: 0px;
+        color: @toolstrip-foreground-color;
+    }
+
+    & .tinymce-mobile-styles-item.tinymce-mobile-format-matches:after {
+        font-family: 'tinymce-mobile';
+        position: absolute;
+        padding-left: 1em;
+        padding-right: 1em;
+        right: 0px;
+    }
+
+    .tinymce-mobile-styles-separator, & .tinymce-mobile-styles-collapser {
+        border-top: rgb(69, 90, 100);
+        display: flex;
+        min-height: 2.5em;
+        padding-left: 1em;
+        padding-right: 1em;
+        align-items: center;
+        background: @toolstrip-background-color;
+        color: @toolstrip-foreground-color;
+    }
+
+    [data-transitioning-destination="before"][data-transitioning-state], [data-transitioning-state="before"] {
+        transform: translate(-100%);
+    }
+
+    [data-transitioning-destination="current"][data-transitioning-state], [data-transitioning-state="current"] { 
+        transform: translate(0%);
+    }
+
+    [data-transitioning-destination="after"][data-transitioning-state], [data-transitioning-state="after"] {
+        transform: translate(100%);
+    }
+}
