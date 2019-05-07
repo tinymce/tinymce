@@ -8,7 +8,7 @@
 import { Cell, Fun } from '@ephox/katamari';
 import { registerMode, setMode } from '../mode/Mode';
 import Editor from './Editor';
-import { isReadOnly } from '../mode/Readonly';
+import { isReadOnly, registerReadonlyContentFilters } from '../mode/Readonly';
 
 /**
  * TinyMCE 5 Mode API.
@@ -84,6 +84,8 @@ export const create = (editor: Editor): Mode => {
       editorReadOnly: true
     }
   };
+
+  registerReadonlyContentFilters(editor);
 
   return {
     isReadOnly: Fun.curry(isReadOnly, editor),
