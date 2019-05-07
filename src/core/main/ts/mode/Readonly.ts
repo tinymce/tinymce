@@ -7,7 +7,8 @@
 
 import { Class, Element, SelectorFilter, Attr } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
+import { Event, HTMLElement } from '@ephox/dom-globals';
 
 const internalContentEditableAttr = 'data-mce-contenteditable';
 
@@ -46,6 +47,16 @@ const switchOnContentEditableTrue = (elm: Element) => {
   });
 };
 
+const removeFakeSelection = (editor: Editor) => {
+  Option.from(editor.selection.getNode()).each((elm) => {
+    elm.removeAttribute('data-mce-selection');
+  });
+};
+
+const restoreFakeSelection = (editor: Editor) => {
+  editor.selection.setRng(editor.selection.getRng());
+};
+
 const toggleReadOnly = (editor: Editor, state: boolean) => {
   const body = Element.fromDom(editor.getBody());
 
@@ -53,6 +64,8 @@ const toggleReadOnly = (editor: Editor, state: boolean) => {
 
   if (state) {
     editor.selection.controlSelection.hideResizeRect();
+    editor._selectionOverrides.hideFakeCaret();
+    removeFakeSelection(editor);
     editor.readonly = true;
     setContentEditable(body, false);
     switchOffContentEditableTrue(body);
@@ -64,6 +77,7 @@ const toggleReadOnly = (editor: Editor, state: boolean) => {
     setEditorCommandState(editor, 'enableInlineTableEditing', false);
     setEditorCommandState(editor, 'enableObjectResizing', false);
     editor.focus();
+    restoreFakeSelection(editor);
     editor.nodeChanged();
   }
 };
@@ -80,7 +94,7 @@ const registerFilters = (editor: Editor) => {
   editor.serializer.addTempAttr(internalContentEditableAttr);
 };
 
-const registerReadonlyContentFilters = (editor: Editor) => {
+const registerReadOnlyContentFilters = (editor: Editor) => {
   if (editor.serializer) {
     registerFilters(editor);
   } else {
@@ -88,8 +102,16 @@ const registerReadonlyContentFilters = (editor: Editor) => {
   }
 };
 
+const preventReadOnlyEvents = (e: Event) => {
+  const target = e.target as HTMLElement;
+  if (e.type === 'click' && target.tagName === 'A') {
+    e.preventDefault();
+  }
+};
+
 export {
   isReadOnly,
   toggleReadOnly,
-  registerReadonlyContentFilters
+  registerReadOnlyContentFilters,
+  preventReadOnlyEvents
 };

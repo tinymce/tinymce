@@ -11,6 +11,7 @@ import DOMUtils from './dom/DOMUtils';
 import Tools from './util/Tools';
 import Editor from './Editor';
 import { EditorEventMap } from './EventTypes';
+import { isReadOnly, preventReadOnlyEvents } from '../mode/Readonly';
 
 /**
  * This mixin contains the event logic for the tinymce.Editor class.
@@ -55,13 +56,13 @@ const getEventTarget = function (editor: Editor, eventName: string): Node {
   return editor.getBody();
 };
 
-const isListening = (editor: Editor) => !editor.hidden && !editor.readonly;
+const isListening = (editor: Editor) => !editor.hidden && !isReadOnly(editor);
 
 const fireEvent = (editor: Editor, eventName: string, e: Event) => {
   if (isListening(editor)) {
     editor.fire(eventName, e);
-  } else if (editor.readonly) {
-    e.preventDefault();
+  } else if (isReadOnly(editor)) {
+    preventReadOnlyEvents(e);
   }
 };
 
