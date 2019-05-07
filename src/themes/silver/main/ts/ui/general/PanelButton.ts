@@ -22,8 +22,9 @@ import { Element } from '@ephox/sugar';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 import * as MenuParts from '../menus/menu/MenuParts';
-import { createTieredDataFrom, createPartialChoiceMenu } from 'tinymce/themes/silver/ui/menus/menu/SingleMenu';
-import { deriveMenuMovement } from 'tinymce/themes/silver/ui/menus/menu/MenuMovement';
+import { createTieredDataFrom } from '../menus/menu/SingleMenu';
+import { createPartialChoiceMenu } from '../menus/menu/MenuChoice';
+import { deriveMenuMovement } from '../menus/menu/MenuMovement';
 import ItemResponse from '../menus/item/ItemResponse';
 
 export interface SwatchPanelButtonFoo {

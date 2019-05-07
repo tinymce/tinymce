@@ -10,7 +10,7 @@ import { Arr, Strings, Option } from '@ephox/katamari';
 
 import { LinkTarget, LinkTargetType } from '../core/LinkTargets';
 import { LinkInformation } from '../../backstage/UrlInputBackstage';
-import { SingleMenuItemApi } from '../menus/menu/SingleMenu';
+import { SingleMenuItemApi } from '../menus/menu/SingleMenuTypes';
 
 const separator: BridgeMenu.SeparatorMenuItemApi = {
   type: 'separator'
