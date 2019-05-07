@@ -26,7 +26,7 @@ import {
   TieredMenuTypes,
 } from '@ephox/alloy';
 import { Toolbar, Types } from '@ephox/bridge';
-import { Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
+import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
 import { Attr, Class, SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
@@ -46,6 +46,7 @@ import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
 import * as NestedMenus from '../../menus/menu/NestedMenus';
 import { ToolbarButtonClasses } from '../button/ButtonClasses';
 import { onToolbarButtonExecute, toolbarButtonEventOrder } from '../button/ButtonEvents';
+import I18n from 'tinymce/core/api/util/I18n';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
@@ -108,15 +109,40 @@ interface GeneralToolbarButton<T> {
 
 const focusButtonEvent = Id.generate('focus-button');
 
+// TODO:
+// Icons that have `-rtl` equivalents
+const rtlIcon = [
+  'checklist',
+  'ordered-list'
+];
+
+// Icons that need to be transformed in RTL
+const rtlTransform = [
+  'indent',
+  'outdent',
+  'table-insert-column-after',
+  'table-insert-column-before',
+  'unordered-list'
+];
+
 const renderCommonStructure = (icon: Option<string>, text: Option<string>, tooltip: Option<string>, receiver: Option<string>, behaviours: Option<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[]>, providersBackstage: UiFactoryBackstageProviders) => {
+
+  // If RTL and icon is in whitelist, add RTL icon class for icons that don't have a `-rtl` icon available.
+  // Use `-rtl` icon suffix for icons that do.
+
+  const getIconName = (iconName: string): string => {
+    return I18n.isRtl() && Arr.contains(rtlIcon, iconName) ? iconName + '-rtl' : iconName;
+  };
+  const needsRtlClass = I18n.isRtl() && (icon.filter((name) => Arr.contains(rtlTransform, name))).isSome();
+
   return {
     dom: {
       tag: 'button',
-      classes: [ ToolbarButtonClasses.Button ].concat(text.isSome() ? [ ToolbarButtonClasses.MatchWidth ] : []),
+      classes: [ ToolbarButtonClasses.Button ].concat(text.isSome() ? [ ToolbarButtonClasses.MatchWidth ] : []).concat(needsRtlClass ? [ ToolbarButtonClasses.IconRtl ] : []),
       attributes: getTooltipAttributes(tooltip, providersBackstage)
     },
     components: componentRenderPipeline([
-      icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
+      icon.map((iconName) => renderIconFromPack(getIconName(iconName), providersBackstage.icons)),
       text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
     ]),
 
@@ -143,7 +169,7 @@ const renderCommonStructure = (icon: Option<string>, text: Option<string>, toolt
             initialData: { icon, text },
             renderComponents: (data, _state) => {
               return componentRenderPipeline([
-                data.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
+                data.icon.map((iconName) => renderIconFromPack(getIconName(iconName), providersBackstage.icons)),
                 data.text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
               ]);
             }

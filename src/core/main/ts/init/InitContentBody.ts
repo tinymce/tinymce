@@ -28,7 +28,6 @@ import Editor from '../api/Editor';
 import * as MultiClickSelection from '../selection/MultiClickSelection';
 import * as DetailsElement from '../selection/DetailsElement';
 import Settings from '../api/Settings';
-import I18n from '../api/util/I18n';
 
 declare const escape: any;
 
@@ -249,8 +248,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   editor.quirks = Quirks(editor);
   editor.fire('PostRender');
 
-  const directionality = editor.getParam('directionality', I18n.isRtl() ? 'rtl' : undefined);
-
+  const directionality = Settings.getDirectionality(editor);
   if (directionality !== undefined) {
     body.dir = directionality;
   }

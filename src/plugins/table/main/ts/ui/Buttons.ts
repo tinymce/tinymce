@@ -86,16 +86,14 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets) => {
   editor.ui.registry.addButton('tableinsertcolbefore', {
     tooltip: 'Insert column before',
     onAction: cmd('mceTableInsertColBefore'),
-    // TODO TINY-3598: Use css to transform the icons when dir=rtl instead of swapping them
-    icon: I18n.isRtl() ? 'table-insert-column-after' : 'table-insert-column-before',
+    icon: 'table-insert-column-before',
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
   editor.ui.registry.addButton('tableinsertcolafter', {
     tooltip: 'Insert column after',
     onAction: cmd('mceTableInsertColAfter'),
-    // TODO TINY-3598: Use css to transform the icons when dir=rtl instead of swapping them
-    icon: I18n.isRtl() ? 'table-insert-column-before' : 'table-insert-column-after',
+    icon: 'table-insert-column-after',
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
