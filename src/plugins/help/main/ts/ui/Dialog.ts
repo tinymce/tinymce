@@ -16,7 +16,7 @@ export type TabSpec = {
 };
 
 export type HelpTabSpec = {
-  name: string,
+  tabName: string,
   spec: TabSpec;
 };
 
@@ -27,8 +27,8 @@ const parseHelpTabsSetting = (tabsFromSettings: Settings.HelpTabsSetting, custom
       return tab;
     } else {
       // Assume this is a HelpTabSpec
-      tabs[tab.name] = tab.spec;
-      return tab.name;
+      tabs[tab.tabName] = tab.spec;
+      return tab.tabName;
     }
   });
   customTabs.set(tabs);
@@ -38,23 +38,22 @@ const parseHelpTabsSetting = (tabsFromSettings: Settings.HelpTabsSetting, custom
 const getNamesFromTabs = (customTabs: Cell<Record<string, TabSpec>>): string[] => {
   const tabs = customTabs.get();
   const names = Obj.keys(tabs);
+
+  // Move the versions tab to the end if it exists
+  const versionsIdx = Arr.indexOf(names, 'versions');
+  versionsIdx.each((idx) => {
+    names.splice(idx, 1);
+    names.push('versions');
+  });
+
   return names;
 };
 
 const parseCustomTabs = (editor: Editor, customTabs: Cell<Record<string, TabSpec>>) => {
-  const tabNames: string[] = Settings.getHelpTabs(editor).fold(
+  return Settings.getHelpTabs(editor).fold(
     () => getNamesFromTabs(customTabs),
     (tabsFromSettings: Settings.HelpTabsSetting) => parseHelpTabsSetting(tabsFromSettings, customTabs)
   );
-
-  // Move the versions tab to the end if it exists
-  const versionsIdx = Arr.indexOf(tabNames, 'versions');
-  versionsIdx.each((idx) => {
-    tabNames.splice(idx, 1);
-    tabNames.push('versions');
-  });
-
-  return tabNames;
 };
 
 const init = (editor: Editor, customTabs: Cell<Record<string, TabSpec>>): () => void => {

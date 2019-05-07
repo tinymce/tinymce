@@ -18,7 +18,7 @@ tinymce.init({
     'shortcuts',
     'plugins',
     {
-      name: 'versions', // this will override the default versions tab
+      tabName: 'versions', // this will override the default versions tab
       spec: {
         title: 'Version',
         items: [{
@@ -28,7 +28,7 @@ tinymce.init({
       }
     },
     {
-      name: 'extraTab',
+      tabName: 'extraTab',
       spec: {
         title: 'Extra',
         items: [
@@ -90,11 +90,11 @@ tinymce.init({
   menubar: 'view insert tools help',
   help_tabs: [
     'shortcuts',
-    'versions', // this will get moved to the end of the list
+    'versions',
     'extra4',
     'extra3',
     {
-      name: 'extra1',
+      tabName: 'extra1',
       spec: {
         title: 'Extra',
         items: [
@@ -106,7 +106,7 @@ tinymce.init({
       }
     },
     {
-      name: 'extra2',
+      tabName: 'extra2',
       spec: {
         title: 'Extra2',
         items: [
