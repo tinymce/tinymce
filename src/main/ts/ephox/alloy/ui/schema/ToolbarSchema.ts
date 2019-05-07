@@ -7,6 +7,7 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as PartType from '../../parts/PartType';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
+  FieldSchema.strict('dom'),
   FieldSchema.defaulted('shell', true),
   SketchBehaviours.field('toolbarBehaviours', [ Replacing ])
 ]);

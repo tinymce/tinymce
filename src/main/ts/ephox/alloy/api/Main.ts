@@ -93,7 +93,8 @@ import * as Sketcher from './ui/Sketcher';
 import { Slider } from './ui/Slider';
 import { SlotContainer } from './ui/SlotContainer';
 import { SplitDropdown } from './ui/SplitDropdown';
-import { SplitToolbar } from './ui/SplitToolbar';
+import { SplitFloatingToolbar } from './ui/SplitFloatingToolbar';
+import { SplitSlidingToolbar } from './ui/SplitSlidingToolbar';
 import { Tabbar } from './ui/Tabbar';
 import { TabButton } from './ui/TabButton';
 import { TabSection } from './ui/TabSection';
@@ -205,7 +206,10 @@ export {
   Slider,
   SlotContainer,
   SplitDropdown,
-  SplitToolbar,
+  // Needed for better backwards compatibility
+  SplitSlidingToolbar as SplitToolbar,
+  SplitFloatingToolbar,
+  SplitSlidingToolbar,
   Tabbar,
   TabButton,
   TabSection,

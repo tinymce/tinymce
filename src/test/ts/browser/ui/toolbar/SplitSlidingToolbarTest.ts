@@ -1,22 +1,21 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Result } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Button } from 'ephox/alloy/api/ui/Button';
-import { SplitToolbar } from 'ephox/alloy/api/ui/SplitToolbar';
+import { SplitSlidingToolbar } from 'ephox/alloy/api/ui/SplitSlidingToolbar';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 import * as TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
-import * as Sinks from 'ephox/alloy/test/Sinks';
 
-UnitTest.asynctest('SplitToolbarTest', (success, failure) => {
+UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
   // Tests requiring 'flex' do not currently work on phantom. Use the remote to see how it is
   // viewed as an invalid value.
   if (PhantomSkipper.skip()) { return success(); }
 
   GuiSetup.setup((store, doc, body) => {
-    const pPrimary = SplitToolbar.parts().primary({
+    const pPrimary = SplitSlidingToolbar.parts().primary({
       dom: {
         tag: 'div',
         classes: [ 'test-toolbar-primary' ]
@@ -24,10 +23,16 @@ UnitTest.asynctest('SplitToolbarTest', (success, failure) => {
       shell: true
     });
 
-    const sinkComp = Sinks.relativeSink();
+    const pOverflow = SplitSlidingToolbar.parts().overflow({
+      dom: {
+        tag: 'div',
+        classes: [ 'test-toolbar-overflow' ]
+      },
+      shell: true
+    });
 
     return GuiFactory.build(
-      SplitToolbar.sketch({
+      SplitSlidingToolbar.sketch({
         dom: {
           tag: 'div',
           classes: [ 'test-split-toolbar' ],
@@ -36,11 +41,9 @@ UnitTest.asynctest('SplitToolbarTest', (success, failure) => {
             outline: '2px solid blue'
           }
         },
-        lazySink (comp) {
-          return Result.value(sinkComp);
-        },
         components: [
-          pPrimary
+          pPrimary,
+          pOverflow
         ],
 
         markers: {
@@ -61,13 +64,6 @@ UnitTest.asynctest('SplitToolbarTest', (success, failure) => {
               classes: [ 'more-button' ],
               innerHtml: '+'
             }
-          },
-          'overflow': {
-            dom: {
-              tag: 'div',
-              classes: [ 'test-toolbar-overflow' ]
-            },
-            shell: true
           }
         }
       })
@@ -86,7 +82,7 @@ UnitTest.asynctest('SplitToolbarTest', (success, failure) => {
     const sResetWidth = (px) => {
       return Step.sync(() => {
         Css.set(component.element(), 'width', px);
-        SplitToolbar.refresh(component);
+        SplitSlidingToolbar.refresh(component);
       });
     };
 
@@ -171,7 +167,8 @@ UnitTest.asynctest('SplitToolbarTest', (success, failure) => {
           { items: Arr.map([ { text: 'C' }, { text: 'D' } ], makeButton) },
           { items: Arr.map([ { text: 'E' }, { text: 'F' }, { text: 'G' } ], makeButton) }
         ]);
-        SplitToolbar.setGroups(component, groups);
+        SplitSlidingToolbar.setGroups(component, groups);
+        SplitSlidingToolbar.toggle(component);
       }),
 
       sAssertGroups('width=400px (1 +)', [ group1, oGroup ], [ group2, group3 ]),

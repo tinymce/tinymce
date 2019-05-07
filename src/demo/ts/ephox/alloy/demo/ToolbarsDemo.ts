@@ -1,9 +1,10 @@
-import { Arr, Option, Result } from '@ephox/katamari';
+import { Arr, Result } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import { SplitToolbar } from 'ephox/alloy/api/ui/SplitToolbar';
+import { SplitFloatingToolbar } from 'ephox/alloy/api/ui/SplitFloatingToolbar';
+import { SplitSlidingToolbar } from 'ephox/alloy/api/ui/SplitSlidingToolbar';
 import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
@@ -12,6 +13,7 @@ import * as DemoRenders from './forms/DemoRenders';
 import { document, console, window } from '@ephox/dom-globals';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import { LazySink } from 'ephox/alloy/api/component/CommonTypes';
+import * as Layout from 'ephox/alloy/positioning/layout/Layout';
 
 // tslint:disable:no-console
 
@@ -22,6 +24,7 @@ export default (): void => {
   Attachment.attachSystem(body, gui);
 
   const sink = DemoSink.make();
+  gui.add(sink);
 
   const lazySink: LazySink = (_) => {
     return Result.value(sink);
@@ -125,13 +128,77 @@ export default (): void => {
 
   const subject2 = HtmlDisplay.section(
     gui,
-    'This toolbar has overflow behaviour that uses a more drawer',
-    SplitToolbar.sketch({
-      uid: 'demo-toolstrip',
+    'This toolbar has overflow behaviour that uses a sliding more drawer',
+    SplitSlidingToolbar.sketch({
+      uid: 'demo-toolstrip-sliding',
+      dom: {
+        tag: 'div'
+      },
+      parts: {
+        'overflow-group': DemoRenders.toolbarGroup({
+          items: [ ]
+        }),
+        'overflow-button': {
+          dom: {
+            tag: 'button',
+            innerHtml: 'More'
+          }
+        }
+      },
+      components: [
+        SplitSlidingToolbar.parts().primary({
+          dom: {
+            tag: 'div',
+            styles: {
+              display: 'flex'
+            }
+          }
+        }),
+        SplitSlidingToolbar.parts().overflow({
+          dom: {
+            tag: 'div',
+              styles: {
+              'display': 'flex',
+              'flex-wrap': 'wrap'
+            }
+          }
+        })
+      ],
+
+      markers: {
+        openClass: 'demo-sliding-open',
+        closedClass: 'demo-sliding-closed',
+        growingClass: 'demo-sliding-height-growing',
+        shrinkingClass: 'demo-sliding-height-shrinking',
+        overflowToggledClass: 'demo-more-button-toggled'
+      }
+    })
+  );
+
+  const splitSlidingToolbar = subject2;
+  const gps2 = Arr.map(groups(), ToolbarGroup.sketch);
+  console.log('gps2', gps2);
+  SplitSlidingToolbar.setGroups(splitSlidingToolbar, gps2);
+
+  const subject3 = HtmlDisplay.section(
+    gui,
+    'This toolbar has overflow behaviour that uses a floating more drawer',
+    SplitFloatingToolbar.sketch({
+      uid: 'demo-toolstrip-floating',
       dom: {
         tag: 'div'
       },
       lazySink,
+      getAnchor: (comp) => {
+        return {
+          anchor: 'hotspot',
+          hotspot: SplitFloatingToolbar.getMoreButton(comp).getOrDie(),
+          layouts: {
+            onRtl: () => [ Layout.southeast ],
+            onLtr: () => [ Layout.southwest ]
+          }
+        }
+      },
       parts: {
         'overflow-group': DemoRenders.toolbarGroup({
           items: [ ]
@@ -153,7 +220,7 @@ export default (): void => {
         }
       },
       components: [
-        SplitToolbar.parts().primary({
+        SplitFloatingToolbar.parts().primary({
           dom: {
             tag: 'div',
             styles: {
@@ -164,21 +231,18 @@ export default (): void => {
       ],
 
       markers: {
-        openClass: 'demo-sliding-open',
-        closedClass: 'demo-sliding-closed',
-        growingClass: 'demo-sliding-height-growing',
-        shrinkingClass: 'demo-sliding-height-shrinking',
         overflowToggledClass: 'demo-more-button-toggled'
       }
     })
   );
 
-  const splitToolbar = subject2;
-  const gps2 = Arr.map(groups(), ToolbarGroup.sketch);
-  console.log('gps2', gps2);
-  SplitToolbar.setGroups(splitToolbar, gps2);
+  const splitFloatingToolbar = subject3;
+  const gps3 = Arr.map(groups(), ToolbarGroup.sketch);
+  console.log('gps3', gps3);
+  SplitFloatingToolbar.setGroups(splitFloatingToolbar, gps3);
 
   window.addEventListener('resize', () => {
-    SplitToolbar.refresh(splitToolbar);
+    SplitSlidingToolbar.refresh(splitSlidingToolbar);
+    SplitFloatingToolbar.refresh(splitFloatingToolbar);
   });
 };

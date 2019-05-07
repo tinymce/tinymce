@@ -9,10 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 # [4.12.0] - 2019-04-30
 
 ### Changed
-- Made the `SplitToolbar` component a more self contained component, so it handles both floating and sliding internally
+- Broke the `SplitToolbar` component into separate self contained components, so it now has a separate component for floating (`SplitFloatingToolbar`) and sliding (`SplitSlidingToolbar`).
 
 ### Fixed
-- Improved the `SplitToolbar` component accessibility for floating toolbars
+- Improved the `SplitToolbar` component accessibility for floating toolbars.
 
 # [4.11.18] - 2019-04-30
 ### Added
