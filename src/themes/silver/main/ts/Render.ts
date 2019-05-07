@@ -120,8 +120,7 @@ const setup = (editor: Editor): RenderInfo => {
       tag: 'div',
       classes: [ 'tox-menubar' ]
     },
-    getSink: lazySink,
-    providers: backstage.shared.providers,
+    backstage,
     onEscape () {
       editor.focus();
     }
@@ -294,7 +293,7 @@ const setup = (editor: Editor): RenderInfo => {
   };
 
   const renderUI = function (): ModeRenderInfo {
-    SilverContextMenu.setup(editor, lazySink, backstage.shared);
+    SilverContextMenu.setup(editor, lazySink, backstage);
     Sidebar.setup(editor);
     Throbber.setup(editor, lazyThrobber, backstage.shared);
 

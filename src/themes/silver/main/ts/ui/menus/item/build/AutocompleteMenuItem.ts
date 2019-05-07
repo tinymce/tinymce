@@ -7,7 +7,7 @@
 
 import { HTMLElement } from '@ephox/dom-globals';
 import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
-import { Behaviour, GuiFactory, ItemTypes, Tooltipping } from '@ephox/alloy';
+import { Behaviour, GuiFactory, ItemTypes, Tooltipping, MaxHeight } from '@ephox/alloy';
 import { Obj, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { InlineContent, Types } from '@ephox/bridge';
@@ -27,12 +27,17 @@ const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryB
         lazySink: sharedBackstage.getSink,
         tooltipDom: {
           tag: 'div',
+          classes: [ 'tox-tooltip-worker-container' ]
         },
         tooltipComponents: [
         ],
         anchor: (comp) => ({
           anchor: 'submenu',
-          item: comp
+          item: comp,
+          overrides: {
+            // NOTE: this avoids it setting overflow and max-height.
+            maxHeightFunction: MaxHeight.expandable
+          }
         }),
         mode: 'follow-highlight',
         onShow: (component, _tooltip) => {

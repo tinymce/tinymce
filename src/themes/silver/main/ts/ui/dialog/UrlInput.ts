@@ -27,9 +27,9 @@ import {
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Arr, Future, FutureResult, Id, Option, Result, Fun } from '@ephox/katamari';
-import { Class, Traverse } from '@ephox/sugar';
+import { Traverse, Attr } from '@ephox/sugar';
 
-import { UiFactoryBackstageShared, UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { UiFactoryBackstageProviders, UiFactoryBackstage } from '../../backstage/Backstage';
 import { UiFactoryBackstageForUrlInput } from '../../backstage/UrlInputBackstage';
 import { renderFormFieldDom, renderLabel } from '../alien/FieldLabeller';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';
@@ -90,7 +90,10 @@ const renderInputButton = (label: Option<string>, eventName: string, className: 
   });
 };
 
-export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: UiFactoryBackstageShared, urlBackstage: UiFactoryBackstageForUrlInput): SketchSpec => {
+const errorId = Id.generate('aria-invalid');
+
+export const renderUrlInput = (spec: Types.UrlInput.UrlInput, backstage: UiFactoryBackstage, urlBackstage: UiFactoryBackstageForUrlInput): SketchSpec => {
+  const providersBackstage = backstage.shared.providers;
 
   const updateHistory = (component: AlloyComponent): void => {
     const urlEntry = Representing.getValue(component);
@@ -103,11 +106,14 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
     dismissOnBlur: true,
     inputClasses: ['tox-textfield'],
     sandboxClasses: ['tox-dialog__popups'],
+    inputAttributes: {
+      'aria-errormessage': errorId
+    },
     minChars: 0,
     responseTime: 0,
     fetch: (input: AlloyComponent) => {
       const items = getItems(spec.filetype, input, urlBackstage);
-      const tdata = NestedMenus.build(items, ItemResponse.BUBBLE_TO_SANDBOX, sharedBackstage.providers);
+      const tdata = NestedMenus.build(items, ItemResponse.BUBBLE_TO_SANDBOX, backstage);
       return Future.pure(tdata);
     },
 
@@ -124,21 +130,17 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
           getRoot: (comp) => Traverse.parent(comp.element()),
           invalidClass: 'tox-control-wrap--status-invalid',
           notify: {
+            onInvalid: (comp: AlloyComponent, err: string) => {
+              memInvalidIcon.getOpt(comp).each((invalidComp) => {
+                Attr.set(invalidComp.element(), 'title', providersBackstage.translate(err));
+              });
+            }
           },
           validator: {
             validate: (input) => {
               const urlEntry = Representing.getValue(input);
               return FutureResult.nu((completer) => {
                 handler({ type: spec.filetype, url: urlEntry.value }, (validation) => {
-                  memUrlBox.getOpt(input).each((urlBox) => {
-                    // TODO: Move to UrlIndicator
-                    const toggle = (component: AlloyComponent, clazz: string, b: boolean) => {
-                      (b ? Class.add : Class.remove)(component.element(), clazz);
-                    };
-                    // TODO handle the aria implications of the other 3 states
-                    toggle(urlBox, 'tox-control-wrap--status-valid', validation.status === 'valid');
-                    toggle(urlBox, 'tox-control-wrap--status-unknown', validation.status === 'unknown');
-                  });
                   completer((validation.status === 'invalid' ? Result.error : Result.value)(validation.message));
                 });
               });
@@ -187,7 +189,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
       openClass: 'dog'
     },
 
-    lazySink: sharedBackstage.getSink,
+    lazySink: backstage.shared.getSink,
 
     parts: {
       menu: MenuParts.part(false, 1, 'normal')
@@ -201,22 +203,27 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
     }
   });
 
-  const pLabel = spec.label.map((label) => renderLabel(label, sharedBackstage.providers)) as Option<AlloySpec>;
+  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage)) as Option<AlloySpec>;
 
   // TODO: Consider a way of merging with Checkbox.
-  const makeIcon = (name, icon = name, label = name) => {
-    // TODO: Aria this, most likley be an aria live because its dynamic
+  const makeIcon = (name, errId: Option<string>, icon = name, label = name) => {
     return ({
       dom: {
         tag: 'div',
         classes: ['tox-icon', 'tox-control-wrap__status-icon-' + name],
-        innerHtml: Icons.get(icon, sharedBackstage.providers.icons),
+        innerHtml: Icons.get(icon, providersBackstage.icons),
         attributes: {
-          title: sharedBackstage.providers.translate(label)   // TODO: tooltips AP-213
+          'title': providersBackstage.translate(label),
+          'aria-live': 'polite',
+          ...errId.fold(() => ({ }), (id) => ({ id }))
         }
       }
     });
   };
+
+  const memInvalidIcon = Memento.record(
+    makeIcon('invalid', Option.some(errorId), 'warning')
+  );
 
   const memStatus = Memento.record({
     dom: {
@@ -224,9 +231,8 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
       classes: ['tox-control-wrap__status-icon-wrap']
     },
     components: [
-      makeIcon('valid', 'checkmark',  'valid'),
-      makeIcon('unknown', 'warning'),
-      makeIcon('invalid', 'warning')
+      // Include the 'valid' and 'unknown' icons here only if they are to be displayed
+      memInvalidIcon.asSpec()
     ]
   });
 
@@ -252,7 +258,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, sharedBackstage: U
       },
       components: Arr.flatten([
         [memUrlBox.asSpec()],
-        optUrlPicker.map(() => renderInputButton(spec.label, browseUrlEvent, 'tox-browse-url', 'browse', sharedBackstage.providers)).toArray()
+        optUrlPicker.map(() => renderInputButton(spec.label, browseUrlEvent, 'tox-browse-url', 'browse', providersBackstage)).toArray()
       ])
     };
   };

@@ -139,7 +139,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                     store.adder('onSetup.4')();
                     return () => { };
                   },
-                }, 'tox-mbtn', helpers.shared, Option.none())
+                }, 'tox-mbtn', helpers.backstage, Option.none())
               ]
             },
           ]

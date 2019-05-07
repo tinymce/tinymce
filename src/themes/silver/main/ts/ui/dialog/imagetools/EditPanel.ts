@@ -21,7 +21,7 @@ import {
   Disabling,
   AddEventsBehaviour
 } from '@ephox/alloy';
-import { ImageTransformations } from '@ephox/imagetools';
+import { ImageResult, ImageTransformations } from '@ephox/imagetools';
 import { Fun, Option } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
@@ -81,7 +81,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   const emitDisable = (component) => AlloyTriggers.emit(component, ImageToolsEvents.external.disable());
   const emitEnable = (component) => AlloyTriggers.emit(component, ImageToolsEvents.external.enable());
 
-  const emitTransform = (comp: AlloyComponent, transform: (ir: any) => any): void => {
+  const emitTransform = (comp: AlloyComponent, transform: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>): void => {
     emitDisable(comp);
     emit(comp, ImageToolsEvents.internal.transform(), {
       transform
@@ -89,7 +89,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     emitEnable(comp);
   };
 
-  const emitTempTransform = (comp: AlloyComponent, transform: (ir: any) => any): void => {
+  const emitTempTransform = (comp: AlloyComponent, transform: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>): void => {
     emitDisable(comp);
     emit(comp, ImageToolsEvents.internal.tempTransform(), {
       transform
@@ -103,7 +103,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     });
   };
 
-  const emitTransformApply = (comp: AlloyComponent, transform: (ir: any) => any): void => {
+  const emitTransformApply = (comp: AlloyComponent, transform: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>): void => {
     emitDisable(comp);
     emit(comp, ImageToolsEvents.internal.transformApply(), {
       transform,
@@ -134,7 +134,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     }), true, true);
   };
 
-  const makeCropTransform = (): ((ir: any) => any) => (ir: any): any => {
+  const makeCropTransform = (): ((ir: ImageResult) => Promise<ImageResult>) => (ir: ImageResult): Promise<ImageResult> => {
     const rect = imagePanel.getRect();
     return ImageTransformations.crop(ir, rect.x, rect.y, rect.w, rect.h);
   };
@@ -173,7 +173,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     }, providersBackstage)
   );
 
-  const makeResizeTransform = (width: number, height: number): ((ir: any) => any) => (ir: any): any => {
+  const makeResizeTransform = (width: number, height: number): ((ir: ImageResult) => Promise<ImageResult>) => (ir: ImageResult): Promise<ImageResult> => {
     return ImageTransformations.resize(ir, width, height);
   };
 
@@ -208,7 +208,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     ])
   });
 
-  const makeValueTransform = (transform: (ir: any, value: any) => any, value: any) => (ir: any): any => transform(ir, value);
+  const makeValueTransform = (transform: (ir: ImageResult, value: any) => Promise<ImageResult>, value: any) => (ir: ImageResult): Promise<ImageResult> => transform(ir, value);
 
   const horizontalFlip = makeValueTransform(ImageTransformations.flip, 'h');
   const verticalFlip = makeValueTransform(ImageTransformations.flip, 'v');
@@ -308,7 +308,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     }));
   };
 
-  const makeVariableSlider = (label: string, transform: (ir: any, adjust: any) => any, min: number, value: number, max: number): Memento.MementoRecord => {
+  const makeVariableSlider = (label: string, transform: (ir: ImageResult, adjust: number) => Promise<ImageResult>, min: number, value: number, max: number): Memento.MementoRecord => {
     const onChoose = (slider: AlloyComponent, thumb: AlloyComponent, value: SliderTypes.SliderValueX): void => {
       const valTransform = makeValueTransform(transform, value.x() / 100);
       // TODO: Fire the disable event on mousedown and enable on mouseup for silder
@@ -325,7 +325,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     ];
   };
 
-  const createVariableFilterPanel = (label: string, transform: (ir: any, adjust: any) => any, min: number, value: number, max: number) => {
+  const createVariableFilterPanel = (label: string, transform: (ir: ImageResult, adjust: number) => Promise<ImageResult>, min: number, value: number, max: number) => {
     const filterPanelComponents = variableFilterPanelComponents(label, transform, min, value, max);
     return Container.sketch({
       dom: panelDom,
@@ -359,7 +359,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   const ContrastPanel = createVariableFilterPanel('Contrast', ImageTransformations.contrast, -100, 0, 100);
   const GammaPanel = createVariableFilterPanel('Gamma', ImageTransformations.gamma, -100, 0, 100);
 
-  const makeColorTransform = (red: number, green: number, blue: number): ((ir: any) => any) => (ir: any): any => ImageTransformations.colorize(ir, red, green, blue);
+  const makeColorTransform = (red: number, green: number, blue: number): ((ir: ImageResult) => Promise<ImageResult>) => (ir: ImageResult): Promise<ImageResult> => ImageTransformations.colorize(ir, red, green, blue);
 
   const makeColorSlider = (label: string) => {
     const onChoose = (slider: AlloyComponent, thumb: AlloyComponent, value: SliderTypes.SliderValueX): void => {
@@ -402,7 +402,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     components: colorizePanelComponents.map((mem) => mem.asSpec())
   });
 
-  const getTransformPanelEvent = (panel: AlloySpec, transform: Option<(ir: any) => any>, update: (container: AlloyComponent) => void): ((button: AlloyComponent) => void) => (button: AlloyComponent): void => {
+  const getTransformPanelEvent = (panel: AlloySpec, transform: Option<(ir: ImageResult) => Promise<ImageResult>>, update: (container: AlloyComponent) => void): ((button: AlloyComponent) => void) => (button: AlloyComponent): void => {
     const swap = () => {
       memContainer.getOpt(button).each((container) => {
         Replacing.set(container, [panel]);

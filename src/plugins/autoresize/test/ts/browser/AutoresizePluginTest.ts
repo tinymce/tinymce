@@ -26,11 +26,12 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
     }));
   };
 
-  // Default the diff to 37, as the default margins in oxide is 16px (top & bottom) and then add another 5px just for some leniency
-  const sAssertEditorContentApproxHeight = (editor: Editor, height: number, diff: number = 37) => {
+  const sAssertEditorContentApproxHeight = (editor: Editor, height: number, expectedDiff: number = 5) => {
     return Logger.t(`Assert editor content height is approx ${height}`, Step.sync(() => {
-      const editorContentHeight = editor.getContentAreaContainer().offsetHeight;
-      RawAssertions.assertEq(`should be approx (within ${diff}px): ${editorContentHeight}~=${height}`, true, Math.abs(editorContentHeight - height) < diff);
+      // Get the editor height, but exclude the 10px margin from the calculations
+      const editorContentHeight = editor.getContentAreaContainer().offsetHeight - 10;
+      const actualDiff = Math.abs(editorContentHeight - height);
+      RawAssertions.assertEq(`should be approx (within ${expectedDiff}px): ${editorContentHeight} ~= ${height}`, true,  actualDiff <= expectedDiff);
     }));
   };
 
@@ -59,6 +60,24 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
           // Content height + bottom margin = 5050
           Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 5050), 10, 3000),
           Waiter.sTryUntil('wait for editor height', sAssertEditorHeightAbove(editor, 5050), 10, 3000)
+        ]),
+        Log.stepsAsStep('TBA', 'AutoResize: Editor size increase with floated content', [
+          tinyApis.sSetContent('<div style="height: 5500px; float: right;">a</div>'),
+          // Content height + bottom margin = 5550
+          Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 5550), 10, 3000),
+          Waiter.sTryUntil('wait for editor height', sAssertEditorHeightAbove(editor, 5550), 10, 3000)
+        ]),
+        Log.stepsAsStep('TBA', 'AutoResize: Editor size increase with async loaded content', [
+          // Note: Use a min-height here to account for different browsers rendering broken images differently
+          tinyApis.sSetContent('<div style="min-height: 35px;"><img src="#" /></div><div style="height: 5500px;"></div>'),
+          Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 5585), 10, 3000),
+          Step.sync(() => {
+            // Update the img element to load an image
+            editor.$('img').attr('src', 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png');
+          }),
+          // Content height + div image height (84px) + bottom margin = 5634
+          Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 5634), 10, 3000),
+          Waiter.sTryUntil('wait for editor height', sAssertEditorHeightAbove(editor, 5634), 10, 3000)
         ]),
         Log.stepsAsStep('TBA', 'AutoResize: Editor size decrease based on content size', [
           tinyApis.sSetContent('<div style="height: 1000px;">a</div>'),
@@ -89,6 +108,9 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
     plugins: 'autoresize fullscreen',
     toolbar: 'autoresize',
     base_url: '/project/tinymce/js/tinymce',
-    autoresize_bottom_margin: 50
+    autoresize_bottom_margin: 50,
+    autoresize_on_init: false,
+    // Override the content css margins, so they don't come into play
+    content_style: 'body { margin: 0; margin-top: 10px; }'
   }, success, failure);
 });

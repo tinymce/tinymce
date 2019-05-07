@@ -9,7 +9,7 @@ import { Cell } from '@ephox/katamari';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import Api from './api/Api';
 import * as Settings from './api/Settings';
-import Keyboard from './core/Keyboard';
+import Keyboard from './keyboard/Keyboard';
 
 PluginManager.add('textpattern', (editor) => {
   const patternsState = Cell(Settings.getPatternSet(editor.settings));

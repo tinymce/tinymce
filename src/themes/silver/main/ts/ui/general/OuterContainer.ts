@@ -122,8 +122,7 @@ const partMenubar = Composite.partType.optional({
   factory: SilverMenubar,
   name: 'menubar',
   schema: [
-    FieldSchema.strict('dom'),
-    FieldSchema.strict('getSink')
+    FieldSchema.strict('backstage')
   ]
 });
 const partToolbar = Composite.partType.optional({
