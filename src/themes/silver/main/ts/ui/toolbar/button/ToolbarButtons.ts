@@ -109,7 +109,7 @@ interface GeneralToolbarButton<T> {
 
 const focusButtonEvent = Id.generate('focus-button');
 
-// TODO:
+// TODO TINY-3598: Implement a permanent solution to render rtl icons
 // Icons that have `-rtl` equivalents
 const rtlIcon = [
   'checklist',

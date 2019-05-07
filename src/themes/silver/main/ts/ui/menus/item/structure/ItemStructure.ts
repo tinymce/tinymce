@@ -95,6 +95,7 @@ const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>, r
   return menuItem;
 };
 
+// TODO TINY-3598: Implement a permanent solution to render rtl icons
 // Icons that have `-rtl` equivalents
 const rtlIcon = [
   'list-num-default',
