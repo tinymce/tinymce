@@ -1,9 +1,8 @@
 import { Arr, Option } from '@ephox/katamari';
-import { Css, Width } from '@ephox/sugar';
+import { Css, Width, Focus } from '@ephox/sugar';
 
 import { Coupling } from '../api/behaviour/Coupling';
 import { Focusing } from '../api/behaviour/Focusing';
-import { Keying } from '../api/behaviour/Keying';
 import { Replacing } from '../api/behaviour/Replacing';
 import { Toggling } from '../api/behaviour/Toggling';
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -18,6 +17,14 @@ const setStoredGroups = (toolbar: AlloyComponent, storedGroups: AlloyComponent[]
   Toolbar.setGroups(toolbar, bGroups);
 };
 
+const findFocusedComp = (overflow: Option<AlloyComponent>, overflowButton: Option<AlloyComponent>): Option<AlloyComponent> => {
+  return overflow.bind((overf) => {
+    return Focus.search(overf.element()).bind((focusedElm) => overf.getSystem().getByDom(focusedElm).toOption());
+  }).orThunk(() => {
+    return overflowButton.filter(Focusing.isFocused);
+  });
+};
+
 const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, overflow: Option<AlloyComponent>, isOpen: (overf: AlloyComponent) => boolean) => {
   const primary = AlloyParts.getPartOrDie(toolbar, detail, 'primary');
   const overflowButton = AlloyParts.getPart(toolbar, detail, 'overflow-button');
@@ -26,8 +33,8 @@ const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, overfl
   // Set the primary toolbar to have visibility hidden;
   Css.set(primary.element(), 'visibility', 'hidden');
 
-  // Store the current overflow button focus state
-  const buttonFocusState = overflowButton.fold(() => false, Focusing.isFocused);
+  // Store the current focus state
+  const focusedComp = findFocusedComp(overflow, overflowButton);
 
   // Clear the overflow toolbar
   overflow.each((overf) => {
@@ -66,15 +73,8 @@ const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, overfl
 
   // Restore the focus and toggle state
   overflow.each((overf) => {
-    if (isOpen(overf)) {
-      overflowButton.each(Toggling.on);
-      Keying.focusIn(overf);
-    } else {
-      overflowButton.each(Toggling.off);
-      if (buttonFocusState === true) {
-        overflowButton.each(Focusing.focus);
-      }
-    }
+    overflowButton.each((button) => Toggling.set(button, isOpen(overf)));
+    focusedComp.each(Focusing.focus)
   });
 };
 
