@@ -196,13 +196,13 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
         sSetMode('design'),
         tinyApis.sSetContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
         tinyApis.sSetCursor([0, 0, 0, 0, 0], 0),
-        UiFinder.sWaitFor('', Body.body(), '.tox-pop'),
+        UiFinder.sWaitFor('Waited for context toolbar', Body.body(), '.tox-pop'),
         sSetMode('readonly'),
         UiFinder.sNotExists(Body.body(), '.tox-pop'),
         sSetMode('design'),
         tinyApis.sSetContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
         tinyApis.sSetCursor([0, 0, 0, 0, 0], 0),
-        UiFinder.sWaitFor('', Body.body(), '.tox-pop')
+        UiFinder.sWaitFor('Waited for context toolbar', Body.body(), '.tox-pop')
       ])
     ], onSuccess, onFailure);
   }, {
