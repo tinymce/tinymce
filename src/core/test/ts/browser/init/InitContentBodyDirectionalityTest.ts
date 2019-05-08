@@ -51,6 +51,15 @@ UnitTest.asynctest('browser.tinymce.core.init.InitContentBodyDirectionalityTest'
       },
       'Directionality should be set to `ltr` as per the config option setting',
       'ltr'
-    ))
+    )),
+
+    Log.step('TBA', 'Test directionality of editor when using a language with no directionality set', makeStep(
+      {
+        base_url: '/project/tinymce/js/tinymce',
+        language: 'en'
+      },
+      'Directionality should not be set if the editor language does not have a directionality',
+      ''
+    )),
   ], success, failure);
 });
