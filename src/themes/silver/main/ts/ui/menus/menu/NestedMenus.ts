@@ -11,7 +11,8 @@ import { Objects } from '@ephox/boulder';
 import { Id, Merger, Obj, Option } from '@ephox/katamari';
 
 import { expand } from './MenuConversion';
-import { createPartialMenu, SingleMenuItemApi } from './SingleMenu';
+import { createPartialMenu } from './SingleMenu';
+import { SingleMenuItemApi } from './SingleMenuTypes';
 import ItemResponse from '../item/ItemResponse';
 
 // TODO: Consider moving the expansion part to alloy?

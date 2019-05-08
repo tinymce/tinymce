@@ -9,7 +9,7 @@ import { Objects } from '@ephox/boulder';
 import { Menu } from '@ephox/bridge';
 import { Arr, Obj, Id, Merger, Type } from '@ephox/katamari';
 
-import { SingleMenuItemApi } from './SingleMenu';
+import { SingleMenuItemApi } from './SingleMenuTypes';
 
 type MenuItemRegistry = Record<string, Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.ToggleMenuItemApi>;
 

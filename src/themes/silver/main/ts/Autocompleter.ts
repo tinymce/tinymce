@@ -19,9 +19,9 @@ import * as Autocompleters from './ui/autocomplete/Autocompleters';
 import {
   createAutocompleteItems,
   createMenuFrom,
-  createPartialMenuWithAlloyItems,
   FocusMode,
 } from './ui/menus/menu/SingleMenu';
+import { createPartialMenuWithAlloyItems } from './ui/menus/menu/MenuUtils';
 import ItemResponse from './ui/menus/item/ItemResponse';
 import Editor from 'tinymce/core/api/Editor';
 

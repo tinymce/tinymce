@@ -33,7 +33,7 @@ const defaultColors = [
 
   { type: choiceItem, text: 'Dark Yellow', value: '#F29D12' },
   { type: choiceItem, text: 'Dark Orange', value: '#D35400' },
-  { type: choiceItem, text: 'Dark Red', value: '#E74C3C' },
+  { type: choiceItem, text: 'Dark Red', value: '#C0392B' },
   { type: choiceItem, text: 'Medium Gray', value: '#BDC3C7' },
   { type: choiceItem, text: 'Dark Gray', value: '#7E8C8D' },
 

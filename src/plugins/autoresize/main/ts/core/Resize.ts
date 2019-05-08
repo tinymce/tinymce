@@ -135,7 +135,7 @@ const setup = (editor: Editor, oldSize: Cell<number>) => {
     });
   });
 
-  editor.on('NodeChange SetContent keyup FullscreenStateChanged', function (e) {
+  editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', function (e) {
     resize(editor, oldSize);
   });
 
