@@ -186,11 +186,6 @@
     width: @collection-item-list-icon-width * 2;
   }
 
-  // Make a space between all elements within a list item
-  .tox-collection--list .tox-collection__item > *:not(:first-child) {
-    margin-left: @pad-sm;
-  }
-
   // Tickable items that are not ticked hide the check mark SVG (not the entire icon so there is still a gap)
   .tox-collection__item[role="menuitemcheckbox"]:not(.tox-collection__item--enabled) .tox-collection__item-checkmark svg {
     display: none;
@@ -209,11 +204,6 @@
     word-break: break-all;
   }
 
-  // Create a slight padding for lists containing no icons
-  .tox-collection--list .tox-collection__item-label:first-child {
-    margin-left: @pad-xs;
-  }
-
   .tox-collection__item-accessory {
     color: @text-color-muted;
     display: inline-block;
@@ -228,7 +218,6 @@
   .tox-collection__item-caret {
     align-items: center;
     display: flex;
-    margin-left: @pad-md;
     min-height: @collection-item-list-icon-height;
 
     // Workaround for the above not centering items in IE11. See https://github.com/philipwalton/flexbugs/issues/231#issuecomment-362790042
@@ -237,5 +226,46 @@
       font-size: 0;
       min-height: inherit;
     }
+  }
+}
+
+.tox:not([dir=rtl]) {
+  // Make a space between all elements within a list item
+  .tox-collection--list .tox-collection__item > *:not(:first-child) {
+    margin-left: @pad-sm;
+  }
+
+  // Create a slight padding for lists containing no icons
+  .tox-collection--list .tox-collection__item-label:first-child {
+    margin-left: @pad-xs;
+  }
+
+  .tox-collection__item-caret {
+    margin-left: @pad-md;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  // Make a space between all elements within a list item
+  .tox-collection--list .tox-collection__item > *:not(:first-child) {
+    margin-right: @pad-sm;
+  }
+
+  // Create a slight padding for lists containing no icons
+  .tox-collection--list .tox-collection__item-label:first-child {
+    margin-right: @pad-xs;
+  }
+
+  .tox-collection__item-icon-rtl {
+    /* stylelint-disable-next-line no-descending-specificity */
+    .tox-collection__item-icon svg {
+      transform: rotateY(180deg);
+    }
+  }
+
+  .tox-collection__item-caret {
+    margin-right: @pad-md;
+    transform: rotateY(180deg);
   }
 }

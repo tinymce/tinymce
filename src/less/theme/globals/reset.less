@@ -13,14 +13,12 @@
   box-sizing: content-box;
   color: @color-black;
   cursor: auto;
-  direction: ltr;
   font-family: @font-stack;
   font-size: @font-size-base;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
   -webkit-tap-highlight-color: transparent;
-  text-align: left;
   text-decoration: none;
   text-shadow: none;
   text-transform: none;
@@ -60,4 +58,14 @@
     position: static;
     width: auto;
   }
+}
+
+.tox:not([dir=rtl]) {
+  direction: ltr;
+  text-align: left;
+}
+
+.tox[dir=rtl] {
+  direction: rtl;
+  text-align: right;
 }

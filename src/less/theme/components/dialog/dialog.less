@@ -149,7 +149,6 @@
     align-items: flex-start;
     display: flex;
     flex-direction: column;
-    margin-right: @pad-xl;
   }
 
   .tox-dialog__body-nav-item {
@@ -314,4 +313,21 @@
 // Added to the body to disable scrolling when dialogs are open
 body.tox-dialog__disable-scroll {
   overflow: hidden;
+}
+
+.tox:not([dir=rtl]) {
+  .tox-dialog__body-nav {
+    margin-right: @pad-xl;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-dialog__body {
+    text-align: right;
+  }
+
+  .tox-dialog__body-nav {
+    margin-left: @pad-xl;
+  }
 }
