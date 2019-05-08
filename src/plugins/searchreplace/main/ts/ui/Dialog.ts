@@ -11,6 +11,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 
 import Actions from '../core/Actions';
 import { Types } from '@ephox/bridge';
+import I18n from 'tinymce/core/api/util/I18n';
 
 export interface DialogData {
   findtext: string;
@@ -145,7 +146,8 @@ const open = function (editor: Editor, currentIndexState) {
         name: 'prev',
         text: 'Previous',
         align: 'end',
-        icon: 'arrow-left',
+        // TODO TINY-3598: Use css to transform the icons when dir=rtl instead of swapping them
+        icon: I18n.isRtl() ? 'arrow-right' : 'arrow-left',
         disabled: true,
       },
       {
@@ -153,7 +155,8 @@ const open = function (editor: Editor, currentIndexState) {
         name: 'next',
         text: 'Next',
         align: 'end',
-        icon: 'arrow-right',
+        // TODO TINY-3598: Use css to transform the icons when dir=rtl instead of swapping them
+        icon: I18n.isRtl() ? 'arrow-left' : 'arrow-right',
         disabled: true,
       }
     ],
