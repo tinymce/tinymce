@@ -49,7 +49,7 @@ const switchOnContentEditableTrue = (elm: Element) => {
 
 const removeFakeSelection = (editor: Editor) => {
   Option.from(editor.selection.getNode()).each((elm) => {
-    elm.removeAttribute('data-mce-selection');
+    elm.removeAttribute('data-mce-selected');
   });
 };
 
@@ -85,10 +85,21 @@ const toggleReadOnly = (editor: Editor, state: boolean) => {
 const isReadOnly = (editor: Editor) => editor.readonly === true;
 
 const registerFilters = (editor: Editor) => {
+  editor.parser.addAttributeFilter('contenteditable', (nodes) => {
+    if (isReadOnly(editor)) {
+      Arr.each(nodes, (node) => {
+        node.attr(internalContentEditableAttr, node.attr('contenteditable'));
+        node.attr('contenteditable', 'false');
+      });
+    }
+  });
+
   editor.serializer.addAttributeFilter(internalContentEditableAttr, (nodes) => {
-    Arr.each(nodes, (node) => {
-      node.attr('contenteditable', node.attr(internalContentEditableAttr));
-    });
+    if (isReadOnly(editor)) {
+      Arr.each(nodes, (node) => {
+        node.attr('contenteditable', node.attr(internalContentEditableAttr));
+      });
+    }
   });
 
   editor.serializer.addTempAttr(internalContentEditableAttr);
@@ -109,9 +120,24 @@ const preventReadOnlyEvents = (e: Event) => {
   }
 };
 
+const registerReadOnlySelectionBlockers = (editor: Editor) => {
+  editor.on('ShowCaret', (e) => {
+    if (isReadOnly(editor)) {
+      e.preventDefault();
+    }
+  });
+
+  editor.on('ObjectSelected', (e) => {
+    if (isReadOnly(editor)) {
+      e.preventDefault();
+    }
+  });
+};
+
 export {
   isReadOnly,
   toggleReadOnly,
   registerReadOnlyContentFilters,
-  preventReadOnlyEvents
+  preventReadOnlyEvents,
+  registerReadOnlySelectionBlockers
 };

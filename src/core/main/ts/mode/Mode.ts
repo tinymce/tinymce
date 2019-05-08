@@ -47,21 +47,25 @@ const setMode = (editor: Editor, availableModes: Record<string, ModeApi>, active
   }
 };
 
-const registerMode = (availableModes: Record<string, ModeApi>, mode: string, api: ModeApi) => {
+const registerMode = (availableModes: Record<string, ModeApi>, mode: string, api: ModeApi): Record<string, ModeApi> => {
   if (Arr.contains(defaultModes, mode)) {
     throw new Error(`Cannot override default mode ${mode}`);
   }
-  availableModes[mode] = {
-    ...api,
-    deactivate: () => {
-      // wrap custom deactivate APIs so they can't break the editor
-      try {
-        api.deactivate();
-      } catch (e) {
-        console.error(`problem while deactivating editor mode ${mode}:`);
-        console.error(e);
+
+  return {
+    ...availableModes,
+    [mode]: {
+      ...api,
+      deactivate: () => {
+        // wrap custom deactivate APIs so they can't break the editor
+        try {
+          api.deactivate();
+        } catch (e) {
+          console.error(`problem while deactivating editor mode ${mode}:`);
+          console.error(e);
+        }
       }
-    },
+    }
   };
 };
 
