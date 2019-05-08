@@ -5,18 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
 import { Unicode } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
 import { PatternSet } from '../api/Pattern';
-import * as BlockPattern from '../core/BlockPattern';
-import * as InlinePattern from '../core/InlinePattern';
-import { textBefore } from '../text/TextSearch';
-import { cleanEmptyNodes } from '../core/Utils';
+import { findBlockPattern, findNestedInlinePatterns, textBefore } from './FindPatterns';
+import { applyBlockPattern, applyInlinePatterns } from './PatternApplication';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
-  if (editor.selection.isCollapsed()) {
+  const inlineAreas = findNestedInlinePatterns(editor.dom, patternSet.inlinePatterns, editor.selection.getRng(), false);
+  const blockArea = findBlockPattern(editor.dom, patternSet.blockPatterns, editor.selection.getRng());
+  if (editor.selection.isCollapsed() && (inlineAreas.length > 0 || blockArea.isSome())) {
     editor.undoManager.add();
     editor.undoManager.extra(
       () => {
@@ -25,17 +24,20 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
       () => {
         // create a cursor position that we can move to avoid the inline formats
         editor.insertContent(Unicode.zeroWidth());
-        InlinePattern.applyPatterns(editor, patternSet.inlinePatterns);
-        BlockPattern.applyPatterns(editor, patternSet.blockPatterns);
+        applyInlinePatterns(editor, inlineAreas);
+        blockArea.each((pattern) => applyBlockPattern(editor, pattern));
         // find the spot before the cursor position
         const range = editor.selection.getRng();
-        const spot = textBefore(range.startContainer, range.startOffset, editor.dom.getRoot());
+        const block = editor.dom.getParent(range.startContainer, editor.dom.isBlock);
+        const spot = textBefore(range.startContainer, range.startOffset, block);
         editor.execCommand('mceInsertNewLine');
         // clean up the cursor position we used to preserve the format
         spot.each((s) => {
-          if (s.element.data.charAt(s.offset - 1) === Unicode.zeroWidth()) {
-            s.element.deleteData(s.offset - 1, 1);
-            cleanEmptyNodes(editor.dom, s.element.parentNode, (e: Node) => e === editor.dom.getRoot());
+          if (s.node.data.charAt(s.offset - 1) === Unicode.zeroWidth()) {
+            s.node.deleteData(s.offset - 1, 1);
+            if (editor.dom.isEmpty(s.node.parentNode)) {
+              editor.dom.remove(s.node.parentNode);
+            }
           }
         });
       }
@@ -46,9 +48,12 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
 };
 
 const handleInlineKey = (editor: Editor, patternSet: PatternSet): void => {
-  editor.undoManager.transact(() => {
-    InlinePattern.applyPatterns(editor, patternSet.inlinePatterns);
-  });
+  const areas = findNestedInlinePatterns(editor.dom, patternSet.inlinePatterns, editor.selection.getRng(), true);
+  if (areas.length > 0) {
+    editor.undoManager.transact(() => {
+      applyInlinePatterns(editor, areas);
+    });
+  }
 };
 
 const checkKeyEvent = (codes, event, predicate) => {
