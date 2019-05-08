@@ -11,9 +11,9 @@ import { Id, Merger } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../../../backstage/Backstage';
 import ColorSwatch from '../../../core/color/ColorSwatch';
+import { createPartialChoiceMenu } from '../../menu/MenuChoice';
 import { deriveMenuMovement } from '../../menu/MenuMovement';
 import * as MenuParts from '../../menu/MenuParts';
-import { createPartialChoiceMenu } from '../../menu/SingleMenu';
 import ItemResponse from '../ItemResponse';
 
 export function renderColorSwatchItem(spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): ItemTypes.WidgetItemSpec {
