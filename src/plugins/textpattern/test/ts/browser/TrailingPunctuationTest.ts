@@ -37,7 +37,7 @@ UnitTest.asynctest(
                           s.text(str.is(rawText))
                         ]
                       }),
-                      s.text(str.is(trigger), true)
+                      s.text(str.is(trigger))
                     ]
                   })
                 ]

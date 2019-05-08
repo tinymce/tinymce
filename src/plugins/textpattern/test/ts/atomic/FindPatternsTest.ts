@@ -1,17 +1,17 @@
 import { RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
 import * as Settings from 'tinymce/plugins/textpattern/api/Settings';
-import { findPattern } from 'tinymce/plugins/textpattern/core/Utils';
+import { UnitTest } from '@ephox/bedrock';
+import { findPattern } from '../../../main/ts/core/FindPatterns';
 
 UnitTest.test('atomic.tinymce.plugins.textpattern.FindPatternTest', function () {
-  const patternSet = Settings.getPatternSet({});
+  const inlinePatterns = Settings.getPatternSet({}).inlinePatterns;
   const defaultPatterns = [
-    ...patternSet.inlinePatterns,
-    ...patternSet.blockPatterns
+    ...inlinePatterns,
+    ...Settings.getPatternSet({}).blockPatterns,
   ];
 
   const testFindStartPattern = function (text: string, expectedPattern: string) {
-    const actual = findPattern(defaultPatterns, text).getOrNull();
+    const actual = findPattern(defaultPatterns, text);
 
     RawAssertions.assertEq('Assert correct pattern', expectedPattern, actual.start);
   };
