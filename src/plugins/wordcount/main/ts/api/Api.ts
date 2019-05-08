@@ -8,13 +8,29 @@
 import * as WordCount from '../text/WordCount';
 import Editor from 'tinymce/core/api/Editor';
 
-const get = (editor: Editor) => {
+export interface WordCountApi {
+  getCount: () => number;
+  getCharacterCount: () => number;
+  getCharacterCountNoSpaces: () => number;
+}
+
+const get = (editor: Editor): WordCountApi => {
   const getCount = () => {
-    return WordCount.getEditorWordcount(editor).words;
+    return WordCount.getEditorCount(editor).words;
+  };
+
+  const getCharacterCount = () => {
+    return WordCount.getEditorCount(editor).characters;
+  };
+
+  const getCharacterCountNoSpaces = () => {
+    return WordCount.getEditorCount(editor).charactersNoSpace;
   };
 
   return {
-    getCount
+    getCount,
+    getCharacterCount,
+    getCharacterCountNoSpaces
   };
 };
 

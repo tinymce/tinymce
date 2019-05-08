@@ -11,7 +11,7 @@ import * as Events from '../api/Events';
 import Editor from 'tinymce/core/api/Editor';
 
 const updateCount = (editor: Editor) => {
-  const wordCount = WordCount.getEditorWordcount(editor);
+  const wordCount = WordCount.getEditorCount(editor);
   Events.fireWordCountUpdate(editor, wordCount);
 };
 

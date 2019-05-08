@@ -6,11 +6,11 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { getEditorWordcount, getSelectionWordcount } from '../text/WordCount';
+import { getEditorCount, getSelectionCount } from '../text/WordCount';
 
 const open = (editor: Editor) => {
-  const documentCount = getEditorWordcount(editor);
-  const selectionCount = getSelectionWordcount(editor);
+  const documentCount = getEditorCount(editor);
+  const selectionCount = getSelectionCount(editor);
   editor.windowManager.open({
     title: 'Word Count',
     body: {
