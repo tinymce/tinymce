@@ -100,9 +100,7 @@ export default function (wire, direction, hdirection) {
       },
       (table) => {
         hoverTable = Option.some(table);
-        hoverTable.each(function (ht) {
-          Bars.refresh(wire, ht, hdirection, direction);
-        });
+        Bars.refresh(wire, table, hdirection, direction);
       }
     );
   });
