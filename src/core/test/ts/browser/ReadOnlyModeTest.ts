@@ -1,11 +1,14 @@
-import { Log, Pipeline, Step, RawAssertions, Waiter, ApproxStructure } from '@ephox/agar';
+import { Log, Pipeline, Step, RawAssertions, ApproxStructure, Mouse, Chain, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
+import TablePlugin from 'tinymce/plugins/table/Plugin';
+import { Element, Css, SelectorFind } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) => {
   Theme();
+  TablePlugin();
 
   TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
@@ -48,9 +51,29 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
       );
     };
 
-    const sAssertFakeSelection = (expectedState: boolean) => Waiter.sTryUntil('', Step.sync(() => {
+    const sAssertFakeSelection = (expectedState: boolean) => Step.sync(() => {
       RawAssertions.assertEq('Selected element should have expected state', expectedState, editor.selection.getNode().hasAttribute('data-mce-selected'));
-    }), 10, 1000);
+    });
+
+    const sAssertResizeBars = (expectedState: boolean) => {
+      return Step.sync(() => {
+        SelectorFind.descendant(Element.fromDom(editor.getDoc().documentElement), '.ephox-snooker-resizer-bar').fold(
+          () => {
+            RawAssertions.assertEq('Was expecting to find resize bars', expectedState, false);
+          },
+          (bar) => {
+            const actualDisplay = Css.get(bar, 'display');
+            const expectedDisplay = expectedState ? 'block' : 'none';
+            RawAssertions.assertEq('Should be expected display state on resize bar', expectedDisplay, actualDisplay);
+          }
+        );
+      });
+    };
+
+    const sMouseOverTable = Chain.asStep(Element.fromDom(editor.getBody()), [
+      UiFinder.cFindIn('table'),
+      Mouse.cMouseOver
+    ]);
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Swiching to readonly mode while having cef selection should remove fake selection', [
@@ -154,9 +177,24 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
         tinyApis.sSetContent('<div contenteditable="false">a<span contenteditable="true">b</span>c</div>'),
         tinyApis.sSelect('div[contenteditable="false"]', []),
         sAssertNestedContentEditableTrueDisabled(false, true)
+      ]),
+      Log.stepsAsStep('TBA', 'Resize bars for tables should be hidden while in readonly mode', [
+        sSetMode('design'),
+        tinyApis.sSetContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
+        tinyApis.sSetCursor([0, 0, 0, 0, 0], 0),
+        sMouseOverTable,
+        sAssertResizeBars(true),
+        sSetMode('readonly'),
+        sAssertResizeBars(false),
+        sMouseOverTable,
+        sAssertResizeBars(false),
+        sSetMode('design'),
+        sMouseOverTable,
+        sAssertResizeBars(true)
       ])
     ], onSuccess, onFailure);
   }, {
-      base_url: '/project/tinymce/js/tinymce'
+      base_url: '/project/tinymce/js/tinymce',
+      plugins: 'table'
     }, success, failure);
 });
