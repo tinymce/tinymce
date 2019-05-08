@@ -9,14 +9,22 @@ import { Node } from '@ephox/dom-globals';
 import { Unicode } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
-import { PatternSet } from '../api/Pattern';
 import * as BlockPattern from '../core/BlockPattern';
 import * as InlinePattern from '../core/InlinePattern';
+import { PatternSet } from '../core/PatternTypes';
 import { textBefore } from '../text/TextSearch';
-import { cleanEmptyNodes } from '../core/Utils';
+import { cleanEmptyNodes } from '../utils/Utils';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
-  if (editor.selection.isCollapsed()) {
+  // Skip checking when the selection isn't collapsed
+  if (!editor.selection.isCollapsed()) {
+    return false;
+  }
+
+  // Find any matches
+  const inlineMatches = InlinePattern.findPatterns(editor, patternSet.inlinePatterns, false);
+  const blockMatches = BlockPattern.findPatterns(editor, patternSet.blockPatterns);
+  if (blockMatches.length > 0 || inlineMatches.length > 0) {
     editor.undoManager.add();
     editor.undoManager.extra(
       () => {
@@ -25,8 +33,8 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
       () => {
         // create a cursor position that we can move to avoid the inline formats
         editor.insertContent(Unicode.zeroWidth());
-        InlinePattern.applyPatterns(editor, patternSet.inlinePatterns);
-        BlockPattern.applyPatterns(editor, patternSet.blockPatterns);
+        InlinePattern.applyMatches(editor, inlineMatches);
+        BlockPattern.applyMatches(editor, blockMatches);
         // find the spot before the cursor position
         const range = editor.selection.getRng();
         const spot = textBefore(range.startContainer, range.startOffset, editor.dom.getRoot());
@@ -46,9 +54,12 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
 };
 
 const handleInlineKey = (editor: Editor, patternSet: PatternSet): void => {
-  editor.undoManager.transact(() => {
-    InlinePattern.applyPatterns(editor, patternSet.inlinePatterns);
-  });
+  const inlineMatches = InlinePattern.findPatterns(editor, patternSet.inlinePatterns, true);
+  if (inlineMatches.length > 0) {
+    editor.undoManager.transact(() => {
+      InlinePattern.applyMatches(editor, inlineMatches);
+    });
+  }
 };
 
 const checkKeyEvent = (codes, event, predicate) => {

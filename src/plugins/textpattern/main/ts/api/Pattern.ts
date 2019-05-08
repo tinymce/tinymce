@@ -6,62 +6,7 @@
  */
 
 import { Arr, Result, Type } from '@ephox/katamari';
-
-export interface RawPattern {
-  start?: any;
-  end?: any;
-  format?: any;
-  cmd?: any;
-  value?: any;
-  replacement?: any;
-}
-
-export interface PatternError {
-  message: string;
-  pattern: RawPattern;
-}
-
-interface InlineBasePattern {
-  start: string;
-  end: string;
-}
-
-export interface InlineFormatPattern extends InlineBasePattern {
-  type: 'inline-format';
-  format: string[];
-}
-
-export interface InlineCmdPattern extends InlineBasePattern {
-  type: 'inline-command';
-  cmd: string;
-  value?: any;
-}
-
-export type InlinePattern = InlineFormatPattern | InlineCmdPattern;
-
-interface BlockBasePattern {
-  start: string;
-}
-
-export interface BlockFormatPattern extends BlockBasePattern {
-  type: 'block-format';
-  format: string;
-}
-
-export interface BlockCmdPattern extends BlockBasePattern {
-  type: 'block-command';
-  cmd: string;
-  value?: any;
-}
-
-export type BlockPattern = BlockFormatPattern | BlockCmdPattern;
-
-export type Pattern = InlinePattern | BlockPattern;
-
-export interface PatternSet {
-  inlinePatterns: InlinePattern[];
-  blockPatterns: BlockPattern[];
-}
+import { BlockPattern, InlineCmdPattern, InlinePattern, Pattern, PatternError, PatternSet, RawPattern } from '../core/PatternTypes';
 
 const isInlinePattern = (pattern: Pattern): pattern is InlinePattern => {
   return pattern.type === 'inline-command' || pattern.type === 'inline-format';
