@@ -18,26 +18,20 @@ tinymce.init({
     'shortcuts',
     'plugins',
     {
-      tabName: 'versions', // this will override the default versions tab
-      spec: {
-        title: 'Version',
-        items: [{
-          type: 'htmlpanel',
-          html: '<p>This is a custom version panel...</p>'
-        }]
-      }
+      name: 'versions', // this will override the default versions tab
+      title: 'Version',
+      items: [{
+        type: 'htmlpanel',
+        html: '<p>This is a custom version panel...</p>'
+      }]
     },
     {
-      tabName: 'extraTab',
-      spec: {
-        title: 'Extra',
-        items: [
-          {
-            type: 'htmlpanel',
-            html: '<p>This is an extra tab</p>',
-          }
-        ]
-      }
+      name: 'extraTab',
+      title: 'Extra',
+      items: [{
+        type: 'htmlpanel',
+        html: '<p>This is an extra tab</p>',
+      }]
     },
   ]
 });
@@ -50,33 +44,27 @@ tinymce.init({
   menubar: 'view insert tools help',
   setup: (editor) => {
     editor.on('init', () => {
-      editor.plugins.help.addTab('extraTab3',
-        {
-          title: 'Extra1',
-          items: [
-            {
-              type: 'htmlpanel',
-              html: '<p>This is an extra tab</p>',
-            }
-          ]
-        }
-      );
+      editor.plugins.help.addTab({
+        name: 'extraTab3',
+        title: 'Extra1',
+        items: [{
+          type: 'htmlpanel',
+          html: '<p>This is an extra tab</p>',
+        }]
+      });
     });
 
     editor.ui.registry.addButton('addTab', {
       text: 'Add tab',
       onAction: () => {
-        editor.plugins.help.addTab('extraTab4',
-          {
-            title: 'Extra2',
-            items: [
-              {
-                type: 'htmlpanel',
-                html: '<p>This is another extra tab</p>',
-              }
-            ]
-          }
-        );
+        editor.plugins.help.addTab({
+          name: 'extraTab4',
+          title: 'Extra2',
+          items: [{
+            type: 'htmlpanel',
+            html: '<p>This is another extra tab</p>',
+          }]
+        });
       }
     });
   }
@@ -94,70 +82,63 @@ tinymce.init({
     'extra4',
     'extra3',
     {
-      tabName: 'extra1',
-      spec: {
-        title: 'Extra',
-        items: [
-          {
-            type: 'htmlpanel',
-            html: '<p>This is an extra tab</p>',
-          }
-        ]
-      }
+      name: 'extra1',
+      title: 'Extra',
+      items: [
+        {
+          type: 'htmlpanel',
+          html: '<p>This is an extra tab</p>',
+        }
+      ]
     },
     {
-      tabName: 'extra2',
-      spec: {
-        title: 'Extra2',
-        items: [
-          {
-            type: 'htmlpanel',
-            html: '<p>This is another extra tab</p>',
-          }
-        ]
-      }
+      name: 'extra2',
+      title: 'Extra2',
+      items: [
+        {
+          type: 'htmlpanel',
+          html: '<p>This is another extra tab</p>',
+        }
+      ]
     }
   ],
   setup: (editor) => {
     editor.on('init', () => {
-      editor.plugins.help.addTab('extra3',
-        {
-          title: 'Extra3',
-          items: [
-            {
-              type: 'htmlpanel',
-              html: '<p>This is yet another extra tab</p>',
-            }
-          ]
-        }
+      editor.plugins.help.addTab({
+        name: 'extra3',
+        title: 'Extra3',
+        items: [
+          {
+            type: 'htmlpanel',
+            html: '<p>This is yet another extra tab</p>',
+          }
+        ]}
       );
-      editor.plugins.help.addTab('extra5',
-        {
-          title: 'Extra5',
-          items: [
-            {
-              type: 'htmlpanel',
-              html: '<p>This is another extra tab but it should not be displayed because it is not in help_tabs.</p>',
-            }
-          ]
-        }
-      );
+      editor.plugins.help.addTab({
+        name: 'extra5',
+        title: 'Extra5',
+        items: [
+          {
+            type: 'htmlpanel',
+            html: '<p>This is another extra tab but it should not be displayed because it is not in help_tabs.</p>',
+          }
+        ]
+      });
     });
 
     editor.ui.registry.addButton('addTab', {
       text: 'Add tab',
       onAction: () => {
-        editor.plugins.help.addTab('extra4',
-          {
-            title: 'Extra4',
-            items: [
-              {
-                type: 'htmlpanel',
-                html: '<p>This is yet another another extra tab</p>',
-              }
-            ]
-          }
-        );
+        editor.plugins.help.addTab({
+          name: 'extra4',
+          title: 'Extra4',
+          items: [
+            {
+              type: 'htmlpanel',
+              html: '<p>This is yet another another extra tab</p>',
+            }
+          ]
+        });
       }
     });
   }

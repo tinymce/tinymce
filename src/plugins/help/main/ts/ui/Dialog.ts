@@ -6,37 +6,39 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Arr, Cell, Obj, Option, Options } from '@ephox/katamari';
+import { Arr, Obj, Option, Options, Merger } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../api/Settings';
+import { CustomTabSpecs, TabSpecs } from '../Plugin';
+import KeyboardShortcutsTab from './KeyboardShortcutsTab';
+import PluginsTab from './PluginsTab';
+import VersionTab from './VersionTab';
 
-export type TabSpec = {
-  title: string,
-  items: Types.Dialog.BodyComponentApi[];
-};
+interface TabData {
+  tabs: TabSpecs;
+  names: string[];
+}
 
-export type HelpTabSpec = {
-  tabName: string,
-  spec: TabSpec;
-};
-
-const parseHelpTabsSetting = (tabsFromSettings: Settings.HelpTabsSetting, customTabs: Cell<Record<string, TabSpec>>): string[] => {
-  const tabs: Record<string, TabSpec> = customTabs.get();
-  const names = Arr.map(tabsFromSettings, (tab) => {
-    if (typeof tab === 'string') {
-      return tab;
+const parseHelpTabsSetting = (tabsFromSettings: Settings.HelpTabsSetting, tabs: TabSpecs): TabData => {
+  const newTabs = {};
+  const names = Arr.map(tabsFromSettings, (t) => {
+    if (typeof t === 'string') {
+      // Code below shouldn't care if a tab name doesn't have a spec.
+      // If we find it does, we'll need to make this smarter.
+      // CustomTabsTest has a case for this.
+      if (Obj.has(tabs, t)) {
+        newTabs[t] = tabs[t];
+      }
+      return t;
     } else {
-      // Assume this is a HelpTabSpec
-      tabs[tab.tabName] = tab.spec;
-      return tab.tabName;
+      newTabs[t.name] = t;
+      return t.name;
     }
   });
-  customTabs.set(tabs);
-  return names;
+  return {tabs: newTabs, names};
 };
 
-const getNamesFromTabs = (customTabs: Cell<Record<string, TabSpec>>): string[] => {
-  const tabs = customTabs.get();
+const getNamesFromTabs = (tabs: TabSpecs): TabData => {
   const names = Obj.keys(tabs);
 
   // Move the versions tab to the end if it exists
@@ -46,24 +48,34 @@ const getNamesFromTabs = (customTabs: Cell<Record<string, TabSpec>>): string[] =
     names.push('versions');
   });
 
-  return names;
+  return {tabs, names};
 };
 
-const parseCustomTabs = (editor: Editor, customTabs: Cell<Record<string, TabSpec>>) => {
+const parseCustomTabs = (editor: Editor, customTabs: CustomTabSpecs) => {
+  const shortcuts = KeyboardShortcutsTab.tab();
+  const plugins = PluginsTab.tab(editor);
+  const versions = VersionTab.tab();
+  const tabs = {
+    [shortcuts.name]: shortcuts,
+    [plugins.name]: plugins,
+    [versions.name]: versions,
+    ...customTabs.get()
+  };
+
   return Settings.getHelpTabs(editor).fold(
-    () => getNamesFromTabs(customTabs),
-    (tabsFromSettings: Settings.HelpTabsSetting) => parseHelpTabsSetting(tabsFromSettings, customTabs)
+    () => getNamesFromTabs(tabs),
+    (tabsFromSettings: Settings.HelpTabsSetting) => parseHelpTabsSetting(tabsFromSettings, tabs)
   );
 };
 
-const init = (editor: Editor, customTabs: Cell<Record<string, TabSpec>>): () => void => {
+const init = (editor: Editor, customTabs: CustomTabSpecs): () => void => {
   return () => {
-    const tabSpecs = customTabs.get();
-    const tabOrder = parseCustomTabs(editor, customTabs);
-    const foundTabs: Option<TabSpec>[] = Arr.map(tabOrder, (name) => {
-      return Obj.get(tabSpecs, name);
+    // const tabSpecs: Record<string, Types.Dialog.TabApi> = customTabs.get();
+    const {tabs, names} = parseCustomTabs(editor, customTabs);
+    const foundTabs: Option<Types.Dialog.TabApi>[] = Arr.map(names, (name) => {
+      return Obj.get(tabs, name);
     });
-    const dialogTabs: TabSpec[] = Options.cat(foundTabs);
+    const dialogTabs: Types.Dialog.TabApi[] = Options.cat(foundTabs);
 
     const body: Types.Dialog.TabPanelApi = {
       type: 'tabpanel',

@@ -1,5 +1,5 @@
-import { Cell } from '@ephox/katamari';
-import { TabSpec } from '../ui/Dialog';
+import { CustomTabSpecs } from '../Plugin';
+import { Types } from '@ephox/bridge';
 
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
@@ -8,10 +8,10 @@ import { TabSpec } from '../ui/Dialog';
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const get = (customTabs: Cell<Record<string, TabSpec>>) => {
-  const addTab = (name: string, newTab: TabSpec): void => {
+const get = (customTabs: CustomTabSpecs) => {
+  const addTab = (spec: Types.Dialog.TabApi): void => {
     const currentCustomTabs = customTabs.get();
-    currentCustomTabs[name] = newTab;
+    currentCustomTabs[spec.name] = spec;
     customTabs.set(currentCustomTabs);
   };
 

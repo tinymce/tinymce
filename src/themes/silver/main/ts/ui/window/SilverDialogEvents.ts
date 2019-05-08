@@ -117,7 +117,7 @@ const initDialog = <T>(getInstanceApi: () => Types.Dialog.DialogInstanceApi<T>, 
     }),
 
     fireApiEvent<FormTabChangeEvent>(formTabChangeEvent, (api, spec, event) => {
-      spec.onTabChange(api, event.title());
+      spec.onTabChange(api, event.title(), event.oldTitle());
     }),
 
     // When the dialog is being closed, store the current state of the form

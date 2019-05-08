@@ -7,9 +7,9 @@
 
 import { Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { HelpTabSpec } from '../ui/Dialog';
+import { Types } from '@ephox/bridge';
 
-export type HelpTabsSetting = (string | HelpTabSpec)[];
+export type HelpTabsSetting = (string | Types.Dialog.TabApi)[];
 
 const getHelpTabs = (editor: Editor): Option<HelpTabsSetting> => {
   return Option.from(editor.getParam('help_tabs'));

@@ -8,9 +8,8 @@
 import { Types } from '@ephox/bridge';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import I18n from 'tinymce/core/api/util/I18n';
-import { TabSpec } from './Dialog';
 
-const tab = (): TabSpec => {
+const tab = (): Types.Dialog.TabApi => {
   const getVersion = (major: string, minor: string) => {
     return major.indexOf('@') === 0 ? 'X.X.X' : major + '.' + minor;
   };
@@ -24,6 +23,7 @@ const tab = (): TabSpec => {
   };
 
   return {
+    name: 'versions',
     title: 'Version',
     items: [
       htmlPanel

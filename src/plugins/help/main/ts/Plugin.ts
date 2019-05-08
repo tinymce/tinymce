@@ -5,23 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Types } from '@ephox/bridge';
 import { Cell } from '@ephox/katamari';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import * as Api from './api/Api';
 import Commands from './api/Commands';
 import Buttons from './ui/Buttons';
 import * as Dialog from './ui/Dialog';
-import KeyboardShortcutsTab from './ui/KeyboardShortcutsTab';
-import PluginsTab from './ui/PluginsTab';
-import VersionTab from './ui/VersionTab';
+
+export type TabSpecs = Record<string, Types.Dialog.TabApi>;
+export type CustomTabSpecs = Cell<TabSpecs>;
 
 PluginManager.add('help', (editor) => {
-  const customTabs = Cell<Record<string, Dialog.TabSpec>>({});
+  const customTabs: CustomTabSpecs = Cell({});
   const api = Api.get(customTabs);
-
-  api.addTab('shortcuts', KeyboardShortcutsTab.tab());
-  api.addTab('plugins', PluginsTab.tab(editor));
-  api.addTab('versions', VersionTab.tab());
 
   const dialogOpener: () => void = Dialog.init(editor, customTabs);
   Buttons.register(editor, dialogOpener);
