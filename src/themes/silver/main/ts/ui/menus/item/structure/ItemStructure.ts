@@ -121,7 +121,7 @@ const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiF
     return iconName.map((name) => I18n.isRtl() && Arr.contains(rtlIcon, name) ? name + '-rtl' : name);
   };
 
-  const needRtlClass = I18n.isRtl() && (info.iconContent.filter((name) => Arr.contains(rtlTransform, name))).isSome();
+  const needRtlClass = I18n.isRtl() && info.iconContent.exists((name) => Arr.contains(rtlTransform, name));
 
   // TODO: TINY-3036 Work out a better way of dealing with custom icons
   const icon = getIconName(info.iconContent).map((iconName) => Icons.getOr(iconName, providersBackstage.icons, fallbackIcon));

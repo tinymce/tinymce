@@ -133,7 +133,7 @@ const renderCommonStructure = (icon: Option<string>, text: Option<string>, toolt
   const getIconName = (iconName: string): string => {
     return I18n.isRtl() && Arr.contains(rtlIcon, iconName) ? iconName + '-rtl' : iconName;
   };
-  const needsRtlClass = I18n.isRtl() && (icon.filter((name) => Arr.contains(rtlTransform, name))).isSome();
+  const needsRtlClass = I18n.isRtl() && icon.exists((name) => Arr.contains(rtlTransform, name));
 
   return {
     dom: {
