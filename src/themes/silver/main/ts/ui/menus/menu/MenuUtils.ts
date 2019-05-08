@@ -11,7 +11,7 @@ import { SingleMenuItemApi } from './SingleMenuTypes';
 export const hasIcon = (item) => item.icon !== undefined || item.type === 'togglemenuitem' || item.type === 'choicemenuitem';
 export const menuHasIcons = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasIcon);
 
-export const handleError = (error) => {
+export const handleError = (error: ValueSchema.SchemaError<any>) => {
   // tslint:disable-next-line:no-console
   console.error(ValueSchema.formatError(error));
   console.log(error);
