@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Attachment, Disabling } from '@ephox/alloy';
+import { AlloyComponent, Attachment, Disabling, Channels, Gui } from '@ephox/alloy';
 import { Cell, Option } from '@ephox/katamari';
 import { Body, DomEvent, Element, Selectors, Position } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -21,17 +21,26 @@ import Events from '../api/Events';
 
 const DOM = DOMUtils.DOM;
 
+const broadcastReadonlyMode = (system: Gui.GuiSystem, target: Element) => {
+  system.broadcastOn(['silver.moretoolbar.dismiss'], { });
+  system.broadcastOn([ Channels.dismissPopups() ], {
+    target
+  });
+};
+
 const handleSwitchMode = (uiComponents: RenderUiComponents) => {
   return (e) => {
     const outerContainer = uiComponents.outerContainer;
+    const readonly = e.mode === 'readonly';
+
+    if (readonly) {
+      broadcastReadonlyMode(uiComponents.uiMothership, outerContainer.element());
+    }
+
     Selectors.all('*', outerContainer.element()).forEach((elm) => {
       outerContainer.getSystem().getByDom(elm).each((comp: AlloyComponent) => {
         if (comp.hasConfigured(Disabling)) {
-          if (e.mode === 'readonly') {
-            Disabling.disable(comp);
-          } else {
-            Disabling.enable(comp);
-          }
+          Disabling.set(comp, readonly);
         }
       });
     });

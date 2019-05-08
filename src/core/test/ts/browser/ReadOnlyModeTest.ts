@@ -4,7 +4,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import { Element, Css, SelectorFind } from '@ephox/sugar';
+import { Element, Css, SelectorFind, Body } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) => {
   Theme();
@@ -191,6 +191,18 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
         sSetMode('design'),
         sMouseOverTable,
         sAssertResizeBars(true)
+      ]),
+      Log.stepsAsStep('TBA', 'Context toolbar should hide in readonly mode', [
+        sSetMode('design'),
+        tinyApis.sSetContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
+        tinyApis.sSetCursor([0, 0, 0, 0, 0], 0),
+        UiFinder.sWaitFor('', Body.body(), '.tox-pop'),
+        sSetMode('readonly'),
+        UiFinder.sNotExists(Body.body(), '.tox-pop'),
+        sSetMode('design'),
+        tinyApis.sSetContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
+        tinyApis.sSetCursor([0, 0, 0, 0, 0], 0),
+        UiFinder.sWaitFor('', Body.body(), '.tox-pop')
       ])
     ], onSuccess, onFailure);
   }, {
