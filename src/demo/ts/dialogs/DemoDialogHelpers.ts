@@ -22,11 +22,11 @@ const createDemoApi = <T>(internalStructure: Dialog<T>, initalData: T, dataValid
       data.set(newInternalData);
     },
     redial: () => { },
-    focus: (name: string) => {},
-    showTab: (title: string) => {},
-    disable: (name: string) => {},
-    enable: (name: string) => {},
-    block: (message: string) => {},
+    focus: (_name: string) => {},
+    showTab: (_title: string) => {},
+    disable: (_name: string) => {},
+    enable: (_name: string) => {},
+    block: (_message: string) => {},
     unblock: () => {},
     close: () => {}
   };

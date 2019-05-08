@@ -2,7 +2,7 @@ import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Id, Option, Result } from '@ephox/katamari';
 import { BodyComponentApi } from './BodyComponent';
 import { InternalPanel, PanelApi, panelFields } from './Panel';
-import { InternalTabPanel, TabPanelApi, tabPanelFields } from './TabPanel';
+import { ExternalTab, InternalTabPanel, TabPanelApi, tabPanelFields } from './TabPanel';
 
 export interface DialogButtonApi {
   type: 'submit' | 'cancel' | 'custom';
@@ -16,6 +16,7 @@ export interface DialogButtonApi {
 
 export type PanelApi = PanelApi;
 export type TabPanelApi = TabPanelApi;
+export type TabApi = ExternalTab;
 export type BodyComponentApi = BodyComponentApi;
 
 export type DialogDataItem = any;
@@ -26,7 +27,7 @@ export interface DialogInstanceApi<T extends DialogData> {
   setData: (data: Partial<T>) => void;
   disable: (name: string) => void;
   focus: (name: string) => void;
-  showTab: (title: string) => void;
+  showTab: (name: string) => void;
   redial: (nu: DialogApi<T>) => void;
   enable: (name: string) => void;
   block: (msg: string) => void;
@@ -48,7 +49,7 @@ export type DialogChangeHandler<T> = (api: DialogInstanceApi<T>, details: Dialog
 export type DialogSubmitHandler<T> = (api: DialogInstanceApi<T>) => void;
 export type DialogCloseHandler = () => void;
 export type DialogCancelHandler<T> = (api: DialogInstanceApi<T>) => void;
-export type DialogTabChangeHandler<T> = (api: DialogInstanceApi<T>, title: string) => void;
+export type DialogTabChangeHandler<T> = (api: DialogInstanceApi<T>, newTabName: string, oldTabName: string) => void;
 
 export type DialogSize = 'normal' | 'medium' | 'large';
 export interface DialogApi<T extends DialogData> {
