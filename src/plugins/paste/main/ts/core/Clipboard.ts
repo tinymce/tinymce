@@ -243,7 +243,7 @@ const isKeyboardPasteEvent = (e: KeyboardEvent) => {
 };
 
 const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: Cell<string>) => {
-  let keyboardPasteTimeStamp = 0;
+  let keyboardPasteEvent = null;
   let keyboardPastePlainTextState;
 
   editor.on('keydown', function (e) {
@@ -267,7 +267,12 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
       // Prevent undoManager keydown handler from making an undo level with the pastebin in it
       e.stopImmediatePropagation();
 
-      keyboardPasteTimeStamp = new Date().getTime();
+      // track that this is a keyboard paste event but remove it once the paste event
+      // has had enough time to be added to the stack first
+      keyboardPasteEvent = e;
+      window.setTimeout(() => {
+        keyboardPasteEvent = null;
+      }, 100);
 
       // IE doesn't support Ctrl+Shift+V and it doesn't even produce a paste event
       // so lets fake a paste event and let IE use the execCommand/dataTransfer methods
@@ -351,12 +356,9 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
   };
 
   editor.on('paste', function (e) {
-    // Getting content from the Clipboard can take some time
-    const clipboardTimer = new Date().getTime();
+    const isKeyBoardPaste = keyboardPasteEvent !== null;
     const clipboardContent = getClipboardContent(editor, e);
-    const clipboardDelay = new Date().getTime() - clipboardTimer;
 
-    const isKeyBoardPaste = (new Date().getTime() - keyboardPasteTimeStamp - clipboardDelay) < 1000;
     const plainTextMode = pasteFormat.get() === 'text' || keyboardPastePlainTextState;
     let internal = hasContentType(clipboardContent, InternalHtml.internalHtmlMime());
 
