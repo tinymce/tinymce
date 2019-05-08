@@ -2,12 +2,12 @@ import { ApproxStructure, GeneralSteps, Keys, Logger, Step } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 
 const sSetContentAndFireKeystroke = function (key) {
-  return function (tinyApis, tinyActions, content: string, offset = content.length) {
+  return function (tinyApis, tinyActions, content: string, offset = content.length, elementPath = [0, 0]) {
     return Logger.t(`Set content and press ${key}`, GeneralSteps.sequence([
       tinyApis.sSetContent('<p>' + content + '</p>'),
       tinyApis.sFocus,
       tinyApis.sSetCursor(
-        [0, 0],
+        elementPath,
         offset
       ),
       tinyActions.sContentKeystroke(key, {}),
@@ -15,12 +15,12 @@ const sSetContentAndFireKeystroke = function (key) {
   };
 };
 
-const sSetContentAndPressSpace = (tinyApis, tinyActions, content: string, offset = content.length) => {
+const sSetContentAndPressSpace = (tinyApis, tinyActions, content: string, offset = content.length, elementPath = [0, 0]) => {
   return Step.label(`Set content and press space`, GeneralSteps.sequence([
     tinyApis.sSetContent('<p>' + content + '</p>'),
     tinyApis.sFocus,
     tinyApis.sSetCursor(
-      [0, 0],
+      elementPath,
       offset
     ),
     tinyApis.sExecCommand('mceInsertContent', ' '),

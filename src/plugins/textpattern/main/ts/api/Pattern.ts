@@ -121,7 +121,7 @@ const normalizePattern = (pattern: RawPattern): Result<Pattern, PatternError> =>
     }
     let start = pattern.start;
     let end = pattern.end;
-    // when the end is empty swap with start as it is more efficent
+    // when the end is empty swap with start as it is more efficient
     if (end.length === 0) {
       end = start;
       start = '';
