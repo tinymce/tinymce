@@ -9,7 +9,6 @@ import { Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import { getToolbar } from '../api/Settings';
 import { SelectionTargets } from '../selection/SelectionTargets';
-import I18n from 'tinymce/core/api/util/I18n';
 
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets) => {
   editor.ui.registry.addMenuButton('table', {
