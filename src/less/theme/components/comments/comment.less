@@ -118,10 +118,6 @@
       margin-bottom: @pad-sm;
       width: 100%;
     }
-
-    > *:last-child {
-      margin-left: @pad-sm;
-    }
   }
 
   .tox-comment__edit {
@@ -222,3 +218,20 @@
   }
 }
 //end tox
+
+.tox:not([dir=rtl]) {
+  .tox-comment__reply {
+    > *:last-child {
+      margin-left: @pad-sm;
+    }
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-comment__reply {
+    > *:last-child {
+      margin-right: @pad-sm;
+    }
+  }
+}
