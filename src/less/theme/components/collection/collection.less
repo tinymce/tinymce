@@ -210,8 +210,6 @@
     font-size: @font-size-sm;
     height: @collection-item-list-icon-height;
     line-height: @collection-item-list-icon-height;
-    margin-left: @pad-md;
-    text-align: right;
     text-transform: normal;
   }
 
@@ -240,6 +238,11 @@
     margin-left: @pad-xs;
   }
 
+  .tox-collection__item-accessory {
+    margin-left: @pad-md;
+    text-align: right;
+  }
+
   .tox-collection__item-caret {
     margin-left: @pad-md;
   }
@@ -262,6 +265,11 @@
     .tox-collection__item-icon svg {
       transform: rotateY(180deg);
     }
+  }
+
+  .tox-collection__item-accessory {
+    margin-right: @pad-md;
+    text-align: left;
   }
 
   .tox-collection__item-caret {
