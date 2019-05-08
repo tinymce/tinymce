@@ -225,13 +225,6 @@
     justify-content: space-between;
     margin-top: @pad-md;
     padding: @dialog-footer-padding;
-
-    .tox-dialog__footer-start,
-    .tox-dialog__footer-end {
-      > * {
-        margin-left: @pad-sm;
-      }
-    }
   }
 
   // Make a dialog disabled for user input
@@ -319,6 +312,15 @@ body.tox-dialog__disable-scroll {
   .tox-dialog__body-nav {
     margin-right: @pad-xl;
   }
+
+  .tox-dialog__footer {
+    .tox-dialog__footer-start,
+    .tox-dialog__footer-end {
+      > * {
+        margin-left: @pad-sm;
+      }
+    }
+  }
 }
 
 // RTL
@@ -329,5 +331,14 @@ body.tox-dialog__disable-scroll {
 
   .tox-dialog__body-nav {
     margin-left: @pad-xl;
+  }
+
+  .tox-dialog__footer {
+    .tox-dialog__footer-start,
+    .tox-dialog__footer-end {
+      > * {
+        margin-right: @pad-sm;
+      }
+    }
   }
 }

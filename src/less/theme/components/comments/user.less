@@ -24,7 +24,6 @@
 
   .tox-user__avatar svg {
     fill: @user-avatar-color;
-    margin-right: @pad-sm;
   }
 
   .tox-user__name {
@@ -34,8 +33,25 @@
     font-weight: @user-name-font-weight;
     text-transform: @user-name-text-transform;
   }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-user__avatar svg {
+    margin-right: @pad-sm;
+  }
 
   .tox-user__avatar + .tox-user__name {
     margin-left: @pad-sm;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-user__avatar svg {
+    margin-left: @pad-sm;
+  }
+
+  .tox-user__avatar + .tox-user__name {
+    margin-right: @pad-sm;
   }
 }
