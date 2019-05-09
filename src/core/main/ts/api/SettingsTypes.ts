@@ -54,10 +54,8 @@ export interface RawEditorSettings {
   color_map?: string[];
   content_css?: boolean | string | string[];
   content_css_cors?: boolean;
-  content_document?: Document;
   content_security_policy?: string;
   content_style?: string;
-  content_window?: Window;
   contextmenu?: string;
   contextmenu_never_use_native?: boolean;
   convert_fonts_to_spans?: boolean;
