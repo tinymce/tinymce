@@ -8,17 +8,17 @@
 import { Attachment } from '@ephox/alloy';
 import { Cell, Option } from '@ephox/katamari';
 import { Body, DomEvent, Element, Position } from '@ephox/sugar';
-import Editor from 'tinymce/core/api/Editor';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
+import Events from '../api/Events';
 import * as Settings from '../api/Settings';
+import { UiFactoryBackstage } from '../backstage/Backstage';
+import { setupReadonlyModeSwitch } from '../ReadOnly';
+import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { identifyButtons } from '../ui/toolbar/Integration';
 import { iframe as loadIframeSkin } from './../ui/skin/Loader';
-import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '../Render';
-import { UiFactoryBackstage } from '../backstage/Backstage';
-import Events from '../api/Events';
-import { toggleToReadOnly } from '../ReadOnly';
 
 const DOM = DOMUtils.DOM;
 
@@ -81,21 +81,12 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       rawUiConfig.sidebar
     );
 
-    // Force an update of the ui components disabled states if in readonly mode
-    if (editor.readonly) {
-      toggleToReadOnly(uiComponents, true);
-    }
-
     setupEvents(editor);
   });
 
   const socket = OuterContainer.getSocket(uiComponents.outerContainer).getOrDie('Could not find expected socket element');
 
-  editor.on('SwitchMode', () => toggleToReadOnly(uiComponents, editor.readonly));
-
-  if (Settings.isReadOnly(editor)) {
-    editor.setMode('readonly');
-  }
+  setupReadonlyModeSwitch(editor, uiComponents);
 
   editor.addCommand('ToggleSidebar', (ui: boolean, value: string) => {
     OuterContainer.toggleSidebar(uiComponents.outerContainer, value);

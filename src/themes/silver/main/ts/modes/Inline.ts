@@ -10,14 +10,14 @@ import { Option } from '@ephox/katamari';
 import { Css, Element, Height, Location } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { getToolbarDrawer, ToolbarDrawer, getUiContainer, useFixedContainer } from '../api/Settings';
+import { getToolbarDrawer, getUiContainer, ToolbarDrawer, useFixedContainer } from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
+import { setupReadonlyModeSwitch } from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { identifyButtons } from '../ui/toolbar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
-import { toggleToReadOnly } from '../ReadOnly';
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   let floatContainer;
@@ -133,14 +133,9 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     if (editor.hasFocus()) {
       render();
     }
-
-    // Force an update of the ui components disabled states if in readonly mode
-    if (editor.readonly) {
-      toggleToReadOnly(uiComponents, true);
-    }
   });
 
-  editor.on('SwitchMode', () => toggleToReadOnly(uiComponents, editor.readonly));
+  setupReadonlyModeSwitch(editor, uiComponents);
 
   return {
     editorContainer: uiComponents.outerContainer.element().dom()

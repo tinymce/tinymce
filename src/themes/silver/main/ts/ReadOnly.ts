@@ -5,10 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Disabling, Channels } from '@ephox/alloy';
+import { AlloyComponent, Channels, Disabling } from '@ephox/alloy';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Selectors } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
+import * as Settings from './api/Settings';
 import { RenderUiComponents } from './Render';
-import { ValueSchema, FieldSchema } from '@ephox/boulder';
 
 export const ReadOnlyChannel = 'silver.readonly';
 
@@ -54,4 +56,19 @@ export const toggleToReadOnly = (uiComponents: RenderUiComponents, readonly: boo
       }
     });
   });
+};
+
+export const setupReadonlyModeSwitch = (editor: Editor, uiComponents: RenderUiComponents) => {
+  editor.on('init', () => {
+    // Force an update of the ui components disabled states if in readonly mode
+    if (editor.readonly) {
+      toggleToReadOnly(uiComponents, true);
+    }
+  });
+
+  editor.on('SwitchMode', () => toggleToReadOnly(uiComponents, editor.readonly));
+
+  if (Settings.isReadOnly(editor)) {
+    editor.setMode('readonly');
+  }
 };
