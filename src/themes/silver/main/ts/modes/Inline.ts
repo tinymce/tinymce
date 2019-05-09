@@ -17,6 +17,7 @@ import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { identifyButtons } from '../ui/toolbar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
+import { toggleToReadOnly } from '../ReadOnly';
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   let floatContainer;
@@ -132,7 +133,14 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     if (editor.hasFocus()) {
       render();
     }
+
+    // Force an update of the ui components disabled states if in readonly mode
+    if (editor.readonly) {
+      toggleToReadOnly(uiComponents, true);
+    }
   });
+
+  editor.on('SwitchMode', () => toggleToReadOnly(uiComponents, editor.readonly));
 
   return {
     editorContainer: uiComponents.outerContainer.element().dom()
