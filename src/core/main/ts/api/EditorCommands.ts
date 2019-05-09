@@ -485,7 +485,7 @@ class EditorCommands {
         anchor = editor.dom.getParent(editor.selection.getNode(), 'a');
 
         // Spaces are never valid in URLs and it's a very common mistake for people to make so we fix it here.
-        value.href = value.href.replace(' ', '%20');
+        value.href = value.href.replace(/ /g, '%20');
 
         // Remove existing links if there could be child links or that the href isn't specified
         if (!anchor || !value.href) {
