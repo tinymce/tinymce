@@ -78,7 +78,6 @@ const getDefaultSettings = function (id, documentBaseUrl, editor: Editor): RawEd
     font_size_legacy_values: 'xx-small,small,medium,large,x-large,xx-large,300%',
     forced_root_block: 'p',
     hidden_input: true,
-    render_ui: true,
     inline_styles: true,
     convert_fonts_to_spans: true,
     indent: true,

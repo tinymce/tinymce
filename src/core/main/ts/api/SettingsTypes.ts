@@ -141,7 +141,6 @@ export interface RawEditorSettings {
   remove_script_host?: boolean;
   remove_trailing_brs?: boolean;
   removed_menuitems?: string;
-  render_ui?: boolean;
   resize?: boolean | 'both';
   resize_img_proportional?: boolean;
   root_name?: string;
