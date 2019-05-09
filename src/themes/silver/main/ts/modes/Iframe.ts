@@ -85,6 +85,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       uiComponents.outerContainer,
       identifyButtons(editor, rawUiConfig, {backstage}, Option.none())
     );
+    lastToolbarWidth.set(editor.getWin().innerWidth);
 
     OuterContainer.setMenubar(
       uiComponents.outerContainer,
