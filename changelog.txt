@@ -11,8 +11,6 @@ Version 5.0.5 (2019-05-09)
     Fixed incorrect vertical caret positioning in IE 11 #TINY-3188
     Fixed submenu anchoring hiding overflowed content #TINY-3564
     Removed unused and hidden validation icons to avoid displaying phantom tooltips #TINY-2329
-    Added default directionality for when the dir="rtl" attribute is present #TINY-2621
-    Added styles, icons and tests for rtl mode #TINY-2621
 Version 5.0.4 (2019-04-23)
     Added back URL dialog functionality, which is now available via `editor.windowManager.openUrl()` #TINY-3382
     Added the missing throbber functionality when calling `editor.setProgressState(true)` #TINY-3453
