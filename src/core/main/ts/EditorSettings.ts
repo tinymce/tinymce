@@ -72,7 +72,6 @@ const getDefaultSettings = function (id, documentBaseUrl, editor: Editor): RawEd
     object_resizing: true,
     doctype: '<!DOCTYPE html>',
     visual: true,
-    font_size_style_values: 'xx-small,x-small,small,medium,large,x-large,xx-large',
 
     // See: http://www.w3.org/TR/CSS2/fonts.html#propdef-font-size
     font_size_legacy_values: 'xx-small,small,medium,large,x-large,xx-large,300%',
