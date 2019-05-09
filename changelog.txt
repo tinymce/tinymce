@@ -5,7 +5,7 @@ Version 5.0.5 (TBD)
     Removed unused and hidden validation icons to avoid displaying phantom tooltips #TINY-2329
     Added default directionality for when the dir="rtl" attribute is present #TINY-2621
     Added styles, icons and tests for rtl mode #TINY-2621
-    Added character count api to the wordcount plugin and improved character count logic #TINY-3578
+    Added new api endpoints to the wordcount plugin and improved character count logic #TINY-3578
 Version 5.0.4 (2019-04-23)
     Added back URL dialog functionality, which is now available via `editor.windowManager.openUrl()` #TINY-3382
     Added the missing throbber functionality when calling `editor.setProgressState(true)` #TINY-3453

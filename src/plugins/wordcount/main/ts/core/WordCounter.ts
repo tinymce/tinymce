@@ -6,20 +6,19 @@
  */
 
 import Delay from 'tinymce/core/api/util/Delay';
-import * as WordCount from '../text/WordCount';
 import * as Events from '../api/Events';
 import Editor from 'tinymce/core/api/Editor';
+import { WordCountApi } from '../api/Api';
 
-const updateCount = (editor: Editor) => {
-  const wordCount = WordCount.getEditorCount(editor);
-  Events.fireWordCountUpdate(editor, wordCount);
+const updateCount = (editor: Editor, api: WordCountApi) => {
+  Events.fireWordCountUpdate(editor, api);
 };
 
-const setup = (editor: Editor) => {
-  const debouncedUpdate = Delay.debounce(() => updateCount(editor), 300);
+const setup = (editor: Editor, api: WordCountApi) => {
+  const debouncedUpdate = Delay.debounce(() => updateCount(editor, api), 300);
 
   editor.on('init', () => {
-    updateCount(editor);
+    updateCount(editor, api);
     Delay.setEditorTimeout(editor, () => {
       editor.on('SetContent BeforeAddUndo Undo Redo keyup', debouncedUpdate);
     }, 0);

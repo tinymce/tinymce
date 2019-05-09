@@ -6,17 +6,8 @@
  */
 
 import { CharacterData, Node } from '@ephox/dom-globals';
-import { Words } from '@ephox/polaris';
-import { Fun } from '@ephox/katamari';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
-import Editor from 'tinymce/core/api/Editor';
 import Schema, { SchemaMap } from 'tinymce/core/api/html/Schema';
-
-export interface WordCount {
-  words: number;
-  characters: number;
-  charactersNoSpace: number;
-}
 
 const getText = (node: Node, schema: Schema): string[] => {
   const blockElements: SchemaMap = schema.getBlockElements();
@@ -46,32 +37,6 @@ const getText = (node: Node, schema: Schema): string[] => {
   return textBlocks;
 };
 
-const getCharacterCount = (str: string): number => {
-  return str.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, '_').length;
-};
-
-const getCount = (textBlocks: string[]): WordCount => {
-  const textWithoutNewline = textBlocks.join('');
-  const textWithNewline = textBlocks.join('\n');
-
-  return {
-    words: Words.getWords(textWithNewline.split(''), Fun.identity).length,
-    characters: getCharacterCount(textWithoutNewline),
-    charactersNoSpace: getCharacterCount(textWithoutNewline.replace(/\s/g, ''))
-  };
-};
-
-const getEditorCount = (editor: Editor) => {
-  return getCount(getText(editor.getBody(), editor.schema));
-};
-
-const getSelectionCount = (editor: Editor) => {
-  const selectedText = getText(editor.selection.getRng().cloneContents(), editor.schema);
-  return editor.selection.isCollapsed() ? getCount(['']) : getCount(selectedText);
-};
-
 export {
-  getText,
-  getEditorCount,
-  getSelectionCount
+  getText
 };

@@ -6,11 +6,9 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { getEditorCount, getSelectionCount } from '../text/WordCount';
+import { WordCountApi } from '../api/Api';
 
-const open = (editor: Editor) => {
-  const documentCount = getEditorCount(editor);
-  const selectionCount = getSelectionCount(editor);
+const open = (editor: Editor, api: WordCountApi) => {
   editor.windowManager.open({
     title: 'Word Count',
     body: {
@@ -22,18 +20,18 @@ const open = (editor: Editor) => {
           cells: [
             [
               'Words',
-              String(documentCount.words),
-              String(selectionCount.words)
+              String(api.body.getWordCount()),
+              String(api.selection.getWordCount())
             ],
             [
               'Characters (no spaces)',
-              String(documentCount.charactersNoSpace),
-              String(selectionCount.charactersNoSpace)
+              String(api.body.getCharacterCountWithoutSpaces()),
+              String(api.selection.getCharacterCountWithoutSpaces())
             ],
             [
               'Characters',
-              String(documentCount.characters),
-              String(selectionCount.characters)
+              String(api.body.getCharacterCount()),
+              String(api.selection.getCharacterCount())
             ],
           ]
         }

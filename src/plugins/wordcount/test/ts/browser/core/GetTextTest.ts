@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import Plugin from 'tinymce/plugins/wordcount/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import * as WordCount from 'tinymce/plugins/wordcount/text/WordCount';
+import { getText } from 'tinymce/plugins/wordcount/core/GetText';
 
 UnitTest.asynctest('browser.tinymce.plugins.wordcount.GetTextTest', (success, failure) => {
   Plugin();
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.GetTextTest', (success, fa
   TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {
     const sAssertGetText = (node: Node, expected) => {
       return Step.sync(() => {
-        const actual = WordCount.getText(node, editor.schema);
+        const actual = getText(node, editor.schema);
 
         RawAssertions.assertEq('should be the same', expected, actual);
       });
