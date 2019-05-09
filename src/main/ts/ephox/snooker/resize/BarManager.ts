@@ -6,7 +6,7 @@ import Styles from '../style/Styles';
 import CellUtils from '../util/CellUtils';
 import BarMutation from './BarMutation';
 import Bars from './Bars';
-import { isContentEditableTrue, findClosestContentEditableContext } from '../alien/ContentEditable';
+import { isContentEditableTrue, findClosestContentEditable } from '../alien/ContentEditable';
 
 const resizeBarDragging = Styles.resolve('resizer-bar-dragging');
 
@@ -81,7 +81,7 @@ export default function (wire, direction, hdirection) {
 
   const findClosestEditableTable = (target: Element): Option<Element> => {
     return SelectorFind.closest(target, 'table', isRoot).filter((table) => {
-      return findClosestContentEditableContext(table, isRoot).exists(isContentEditableTrue);
+      return findClosestContentEditable(table, isRoot).exists(isContentEditableTrue);
     });
   };
 

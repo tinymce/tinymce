@@ -1,19 +1,13 @@
-import { Fun, Option } from '@ephox/katamari';
-import { Attr, Element, PredicateFind } from '@ephox/sugar';
+import { Option } from '@ephox/katamari';
+import { Attr, Element, SelectorFind } from '@ephox/sugar';
 
-const matchContentEditable = (value: string, e: Element) => Attr.get(e, 'contenteditable') === value;
+const isContentEditableTrue = (elm: Element) => Attr.get(elm, 'contenteditable') === 'true';
 
-const isContentEditableTrue = Fun.curry(matchContentEditable, 'true');
-const isContentEditableFalse = Fun.curry(matchContentEditable, 'false');
-
-const findClosestContentEditableContext = (target: Element, isRoot: (elm: Element) => boolean): Option<Element> => {
-  return PredicateFind.ancestor(target, (ancestor) => {
-    return isContentEditableTrue(ancestor) || isContentEditableFalse(ancestor);
-  }, isRoot);
+const findClosestContentEditable = (target: Element, isRoot: (elm: Element) => boolean): Option<Element> => {
+  return SelectorFind.closest(target, '[contenteditable]', isRoot);
 };
 
 export {
   isContentEditableTrue,
-  isContentEditableFalse,
-  findClosestContentEditableContext
+  findClosestContentEditable
 };
