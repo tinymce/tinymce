@@ -137,7 +137,6 @@ export interface RawEditorSettings {
   override_viewport?: boolean;
   plugin_base_urls?: Record<string, string>;
   plugins?: string | string[];
-  popup_css?: string;
   preview_styles?: boolean | string;
   protect?: RegExp[];
   readonly?: boolean;

@@ -61,7 +61,6 @@ const getDefaultSettings = function (id, documentBaseUrl, editor: Editor): RawEd
   return {
     id,
     theme: 'silver',
-    popup_css: '',
     plugins: '',
     document_base_url: documentBaseUrl,
     add_form_submit_trigger: true,
