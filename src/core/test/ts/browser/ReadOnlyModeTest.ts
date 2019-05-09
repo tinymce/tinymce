@@ -4,7 +4,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import { Element, Css, SelectorFind, Body } from '@ephox/sugar';
+import { Element, Css, SelectorFind, Body, Attr } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) => {
   Theme();
@@ -73,6 +73,13 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
     const sMouseOverTable = Chain.asStep(Element.fromDom(editor.getBody()), [
       UiFinder.cFindIn('table'),
       Mouse.cMouseOver
+    ]);
+
+    const sAssertToolbarDisabled = (expectedState: boolean) => Chain.asStep(Body.body(), [
+      UiFinder.cFindIn('button[title="Bold"]'),
+      Chain.op((elm) => {
+        RawAssertions.assertEq('Button should have expected disabled state', expectedState, Attr.has(elm, 'disabled'));
+      })
     ]);
 
     Pipeline.async({}, [
@@ -203,10 +210,29 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
         tinyApis.sSetContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
         tinyApis.sSetCursor([0, 0, 0, 0, 0], 0),
         UiFinder.sWaitFor('Waited for context toolbar', Body.body(), '.tox-pop')
+      ]),
+      Log.stepsAsStep('TBA', 'Main toolbar should disable when switching to readonly mode', [
+        sSetMode('design'),
+        sAssertToolbarDisabled(false),
+        sSetMode('readonly'),
+        sAssertToolbarDisabled(true),
+        sSetMode('design'),
+        sAssertToolbarDisabled(false)
+      ]),
+      Log.stepsAsStep('TBA', 'Menus should close when switching to readonly mode', [
+        sSetMode('design'),
+        Chain.asStep(Body.body(), [
+          UiFinder.cFindIn('.tox-mbtn:contains("File")'),
+          Mouse.cClick
+        ]),
+        UiFinder.sWaitFor('Waited for menu', Body.body(), '.tox-menu'),
+        sSetMode('readonly'),
+        UiFinder.sNotExists(Body.body(), '.tox-menu')
       ])
     ], onSuccess, onFailure);
   }, {
       base_url: '/project/tinymce/js/tinymce',
+      toolbar: 'bold',
       plugins: 'table'
     }, success, failure);
 });
