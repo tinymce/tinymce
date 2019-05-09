@@ -51,13 +51,18 @@ const getPreviewContent = (editor: Editor, html: string) => {
       bodyClass = bodyClass[editor.id] || '';
     }
 
+    const encode = editor.dom.encode;
+
+    const directionality = editor.getBody().dir;
+    const dirAttr = directionality ? ' dir="' + encode(directionality) + '"' : '';
+
     html = (
       '<!DOCTYPE html>' +
       '<html>' +
       '<head>' +
       contentCssLinks +
       '</head>' +
-      '<body class="' + bodyClass + '">' +
+      '<body class="' + encode(bodyClass) + '"' + dirAttr + '>' +
       html +
       '</body>' +
       '</html>'

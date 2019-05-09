@@ -48,7 +48,8 @@ const getPreviewHtml = function (editor: Editor) {
     '</script> '
   );
 
-  const dirAttr = editor.settings.directionality ? ' dir="' + editor.settings.directionality + '"' : '';
+  const directionality = editor.getBody().dir;
+  const dirAttr = directionality ? ' dir="' + encode(directionality) + '"' : '';
 
   const previewHtml = (
     '<!DOCTYPE html>' +
@@ -56,7 +57,7 @@ const getPreviewHtml = function (editor: Editor) {
     '<head>' +
     headHtml +
     '</head>' +
-    '<body id="' + encode(bodyId) + '" class="mce-content-body ' + encode(bodyClass) + '"' + encode(dirAttr) + '>' +
+    '<body id="' + encode(bodyId) + '" class="mce-content-body ' + encode(bodyClass) + '"' + dirAttr + '>' +
     editor.getContent() +
     preventClicksOnLinksScript +
     '</body>' +

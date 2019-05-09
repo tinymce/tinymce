@@ -10,6 +10,7 @@ import { Fun, Type, Strings, Arr } from '@ephox/katamari';
 import Editor from './Editor';
 import Tools from './util/Tools';
 import { UploadHandler } from '../file/Uploader';
+import I18n from './util/I18n';
 
 const getBodySetting = (editor: Editor, name: string, defaultValue: string) => {
   const value = editor.getParam(name, defaultValue);
@@ -155,6 +156,10 @@ const getContentCss = (editor: Editor): string[] => {
   }
 };
 
+const getDirectionality = (editor: Editor): string | undefined => {
+  return editor.getParam('directionality', I18n.isRtl() ? 'rtl' : undefined);
+};
+
 export default {
   getIframeAttrs,
   getDocType,
@@ -184,5 +189,6 @@ export default {
   getLanguageUrl,
   shouldIndentUseMargin,
   getIndentation,
-  getContentCss
+  getContentCss,
+  getDirectionality
 };

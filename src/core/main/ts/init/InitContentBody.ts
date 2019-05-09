@@ -248,8 +248,9 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   editor.quirks = Quirks(editor);
   editor.fire('PostRender');
 
-  if (settings.directionality) {
-    body.dir = settings.directionality;
+  const directionality = Settings.getDirectionality(editor);
+  if (directionality !== undefined) {
+    body.dir = directionality;
   }
 
   if (settings.protect) {
