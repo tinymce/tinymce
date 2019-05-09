@@ -65,7 +65,6 @@ interface Env {
   ceFalse: boolean;
   cacheSuffix: any;
   container: any;
-  overrideViewPort: any;
   experimentalShadowDom: boolean;
   canHaveCSP: boolean;
   desktop: boolean;
@@ -197,7 +196,6 @@ const Env: Env = {
 
   cacheSuffix: null,
   container: null,
-  overrideViewPort: null,
   experimentalShadowDom: false,
 
   /**

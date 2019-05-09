@@ -134,7 +134,6 @@ export interface RawEditorSettings {
   non_empty_elements?: string;
   nowrap?: boolean;
   object_resizing?: boolean | string;
-  override_viewport?: boolean;
   plugin_base_urls?: Record<string, string>;
   plugins?: string | string[];
   preview_styles?: boolean | string;

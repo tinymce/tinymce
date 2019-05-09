@@ -309,10 +309,6 @@ class Editor implements EditorObservable {
       Env.cacheSuffix = this.settings.cache_suffix.replace(/^[\?\&]+/, '');
     }
 
-    if (this.settings.override_viewport === false) {
-      Env.overrideViewPort = false;
-    }
-
     this.ui = {
       registry: registry()
     };
