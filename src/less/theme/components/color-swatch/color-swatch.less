@@ -62,7 +62,6 @@
     display: flex;
     height: @swatch-size;
     justify-content: center;
-    margin-left: auto;
     outline: none;
     padding: 0;
     width: @swatch-size;
@@ -75,5 +74,18 @@
     &:hover {
       background: @toolbar-button-hover-background-color;
     }
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-swatches__picker-btn {
+    margin-left: auto;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-swatches__picker-btn {
+    margin-right: auto;
   }
 }

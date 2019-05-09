@@ -33,17 +33,9 @@
     }
   }
 
-  // Add padding to textfield when displaying the icons
-  .tox-control-wrap--status-invalid .tox-textfield,
-  .tox-control-wrap--status-unknown .tox-textfield,
-  .tox-control-wrap--status-valid .tox-textfield, {
-    padding-right: @control-wrap-padding-for-icon;
-  }
-
   // Position status component
   .tox-control-wrap__status-icon-wrap {
     position: absolute;
-    right: @pad-xs;
     top: 50%;
     transform: translateY(-50%);
   }
@@ -58,5 +50,34 @@
 
   .tox-control-wrap__status-icon-valid svg {
     fill: @status-valid-color;
+  }
+}
+
+.tox:not([dir=rtl]) {
+  // Add padding to textfield when displaying the icons
+  .tox-control-wrap--status-invalid .tox-textfield,
+  .tox-control-wrap--status-unknown .tox-textfield,
+  .tox-control-wrap--status-valid .tox-textfield, {
+    padding-right: @control-wrap-padding-for-icon;
+  }
+
+  // Position status component
+  .tox-control-wrap__status-icon-wrap {
+    right: @pad-xs;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  // Add padding to textfield when displaying the icons
+  .tox-control-wrap--status-invalid .tox-textfield,
+  .tox-control-wrap--status-unknown .tox-textfield,
+  .tox-control-wrap--status-valid .tox-textfield, {
+    padding-left: @control-wrap-padding-for-icon;
+  }
+
+  // Position status component
+  .tox-control-wrap__status-icon-wrap {
+    left: @pad-xs;
   }
 }

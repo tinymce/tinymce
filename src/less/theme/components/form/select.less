@@ -31,8 +31,20 @@
   .tox-selectfield svg {
     pointer-events: none;
     position: absolute;
-    right: @pad-sm;
     top: 50%;
     transform: translateY(-50%);
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-selectfield svg {
+    right: @pad-sm;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-selectfield svg {
+    left: @pad-sm;
   }
 }

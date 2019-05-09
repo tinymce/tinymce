@@ -103,24 +103,29 @@ gulp.task('buildHtml', function() {
 //
 // Copy Files
 //
-gulp.task('copyFilesA', function() {
+gulp.task('copyFilesDemo', function() {
   return gulp.src(['./src/demo/styles.css', './src/demo/scripts.js'])
     .pipe(gulp.dest('./build'));
 });
 
-gulp.task('copyFilesB', function() {
+gulp.task('copyFilesSkinTool', function() {
   return gulp.src(['./src/demo/skin-tool/*.less', './src/demo/skin-tool/*.css', './src/demo/skin-tool/*.js'])
     .pipe(gulp.dest('./build/skin-tool'));
 });
 
-gulp.task('copyFilesC', function() {
+gulp.task('copyFilesTheme', function() {
   return gulp.src(['./src/less/theme/**'])
     .pipe(gulp.dest('./build/skin-tool/theme/'));
 });
 
-gulp.task('copyFilesD', function() {
+gulp.task('copyFilesEditorDemos', function() {
   return gulp.src(['./src/demo/editor-demos/*.js'])
     .pipe(gulp.dest('./build/editor-demos/'));
+});
+
+gulp.task('copyFilesLangs', function() {
+  return gulp.src(['./src/demo/langs/*.js'])
+    .pipe(gulp.dest('./build/langs/'));
 });
 
 //
@@ -143,7 +148,7 @@ gulp.task('buildSkinSwitcher', (done) => {
   done();
 });
 
-gulp.task('copyFiles', gulp.series('copyFilesA', 'copyFilesB', 'copyFilesC', 'copyFilesD', 'setupIconManager'));
+gulp.task('copyFiles', gulp.series('copyFilesDemo', 'copyFilesSkinTool', 'copyFilesTheme', 'copyFilesEditorDemos', 'copyFilesLangs','setupIconManager'));
 
 //
 // Browsersync
@@ -155,7 +160,7 @@ gulp.task('serve', function() {
     open: false // Don't open a browser by default.
   });
 
-  gulp.watch('./src/**/*.less', gulp.series('lint', 'copyFilesC', 'less-serve', 'minify-css'));
+  gulp.watch('./src/**/*.less', gulp.series('lint', 'copyFilesTheme', 'less-serve', 'minify-css'));
   gulp.watch('./src/demo/**/*.html', gulp.series('buildHtml', 'copyFiles', 'buildSkinSwitcher'));
   gulp.watch(['./src/demo/**/*.css', './src/demo/**/*.js'], gulp.series('buildHtml', 'copyFiles'));
   gulp.watch('./build/**/*.*').on('change', browserSync().reload);

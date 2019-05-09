@@ -21,7 +21,6 @@
     box-sizing: border-box;
     display: flex;
     height: 100%;
-    margin-right: 15px;
   }
 
   .tox-sv-palette-spectrum {
@@ -35,9 +34,9 @@
 
   .tox-sv-palette-thumb {
     background: none;
-    box-sizing: content-box;
     border: 1px solid black;
     border-radius: 50%;
+    box-sizing: content-box;
     height: 12px;
     position: absolute;
     width: 12px;
@@ -54,7 +53,6 @@
   .tox-hue-slider {
     box-sizing: border-box;
     height: 100%;
-    margin-right: 15px;
     width: 25px;
   }
 
@@ -71,9 +69,9 @@
   }
 
   .tox-hue-slider-thumb {
-    box-sizing: content-box;
     background: white;
     border: 1px solid black;
+    box-sizing: content-box;
     height: 4px;
     margin-left: -1px;
     width: 100%;
@@ -102,13 +100,38 @@
     border: 1px solid red !important;
   }
 
-  .tox-rgb-form label {
-    margin-right: .5em;
-  }
-
   .tox-rgb-form .tox-rgba-preview {
     border: 1px solid black;
     flex-grow: 2;
     margin-bottom: 0;
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-sv-palette {
+    margin-right: 15px;
+  }
+
+  .tox-hue-slider {
+    margin-right: 15px;
+  }
+
+  .tox-rgb-form label {
+    margin-right: .5em;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-sv-palette {
+    margin-left: 15px;
+  }
+
+  .tox-hue-slider {
+    margin-left: 15px;
+  }
+
+  .tox-rgb-form label {
+    margin-left: .5em;
   }
 }
