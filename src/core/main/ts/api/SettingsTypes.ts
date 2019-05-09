@@ -109,7 +109,7 @@ export interface RawEditorSettings {
   inline?: boolean;
   inline_boundaries?: boolean;
   inline_boundaries_selector?: string;
-  inline_styles?: boolean | Record<string, string>;
+  inline_styles?: boolean;
   invalid_elements?: string;
   invalid_styles?: string;
   keep_styles?: boolean;
