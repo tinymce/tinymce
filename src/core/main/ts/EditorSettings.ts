@@ -89,8 +89,7 @@ const getDefaultSettings = function (id, documentBaseUrl, editor: Editor): RawEd
     'tfoot,tbody,tr,section,summary,article,hgroup,aside,figure,figcaption,option,optgroup,datalist',
     entity_encoding: 'named',
     url_converter: editor.convertURL,
-    url_converter_scope: editor,
-    ie7_compat: true
+    url_converter_scope: editor
   };
 };
 

@@ -99,7 +99,6 @@ export interface RawEditorSettings {
   hidden_input?: boolean;
   icons?: string;
   id?: string;
-  ie7_compat?: boolean;
   images_dataimg_filter?: (imgElm: HTMLImageElement) => boolean;
   images_replace_blob_uris?: boolean;
   images_reuse_filename?: boolean;
