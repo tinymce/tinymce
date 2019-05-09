@@ -20,7 +20,6 @@
       content: '';
       cursor: pointer;
       height: 1em;
-      margin-left: -1.5em;
       margin-top: .125em;
       position: absolute;
       width: 1em;
@@ -29,5 +28,26 @@
 
   li:not(.tox-checklist--hidden).tox-checklist--checked::before {
     background-image: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/checklist-checked.svg');
+  }
+}
+
+.mce-content-body:not([dir=rtl]) {
+  .tox-checklist {
+    > li:not(.tox-checklist--hidden) {
+      &::before {
+        margin-left: -1.5em;
+      }
+    }
+  }
+}
+
+// RTL
+.mce-content-body[dir=rtl] {
+  .tox-checklist {
+    > li:not(.tox-checklist--hidden) {
+      &::before {
+        margin-right: -1.5em;
+      }
+    }
   }
 }
