@@ -10,8 +10,8 @@ import * as Sketcher from './Sketcher';
 
 const toggleToolbar = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) => {
   AlloyParts.getPart(toolbar, detail, 'overflow').each((overf) => {
-    Sliding.toggleGrow(overf);
     refresh(toolbar, detail);
+    Sliding.toggleGrow(overf);
   });
 };
 
