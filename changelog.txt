@@ -1,5 +1,5 @@
 Version 5.0.6 (TBD)
-    
+    Fixed the textpattern plugin not working with fragmented text #TINY-3089
 Version 5.0.5 (2019-05-09)
     Added menu items to match the forecolor/backcolor toolbar buttons #TINY-2878
     Added default directionality based on the configured language #TINY-2621

@@ -6,7 +6,8 @@
  */
 
 import { Cell, Results, Arr } from '@ephox/katamari';
-import { PatternSet, createPatternSet, normalizePattern, RawPattern, denormalizePattern } from './Pattern';
+import { PatternSet, RawPattern } from '../core/PatternTypes';
+import { createPatternSet, normalizePattern, denormalizePattern } from './Pattern';
 
 const get = (patternsState: Cell<PatternSet>) => {
   const setPatterns = (newPatterns: RawPattern[]) => {

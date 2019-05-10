@@ -7,13 +7,14 @@
 
 import { KeyboardEvent } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Delay from 'tinymce/core/api/util/Delay';
 import VK from 'tinymce/core/api/util/VK';
-import { PatternSet } from '../api/Pattern';
+import { PatternSet } from '../core/PatternTypes';
 import KeyHandler from './KeyHandler';
 
-const setup = function (editor, patternsState: Cell<PatternSet>) {
+const setup = function (editor: Editor, patternsState: Cell<PatternSet>) {
   const charCodes = [',', '.', ';', ':', '!', '?'];
   const keyCodes = [32];
 
