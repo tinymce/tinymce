@@ -1,11 +1,12 @@
 import { Dragger } from '@ephox/dragster';
 import { Fun, Option } from '@ephox/katamari';
 import { Event, Events } from '@ephox/porkbun';
-import { Attr, Body, Class, Compare, Css, DomEvent, Node, SelectorExists, SelectorFind } from '@ephox/sugar';
+import { Attr, Body, Class, Compare, Css, DomEvent, Element, SelectorFind } from '@ephox/sugar';
 import Styles from '../style/Styles';
 import CellUtils from '../util/CellUtils';
 import BarMutation from './BarMutation';
 import Bars from './Bars';
+import { isContentEditableTrue, findClosestContentEditable } from '../alien/ContentEditable';
 
 const resizeBarDragging = Styles.resolve('resizer-bar-dragging');
 
@@ -76,23 +77,32 @@ export default function (wire, direction, hdirection) {
     if (Bars.isColBar(event.target())) { handler(event.target(), 'left'); }
   });
 
-  const isRoot = function (e) { return Compare.eq(e, wire.view()); };
+  const isRoot = function (e: Element) { return Compare.eq(e, wire.view()); };
+
+  const findClosestEditableTable = (target: Element): Option<Element> => {
+    return SelectorFind.closest(target, 'table', isRoot).filter((table) => {
+      return findClosestContentEditable(table, isRoot).exists(isContentEditableTrue);
+    });
+  };
 
   /* mouseover on table: When the mouse moves within the CONTENT AREA (NOT THE TABLE), refresh the bars. */
   const mouseover = DomEvent.bind(wire.view(), 'mouseover', function (event) {
-    if (Node.name(event.target()) === 'table' || SelectorExists.closest(event.target(), 'table', isRoot)) {
-      hoverTable = Node.name(event.target()) === 'table' ? Option.some(event.target()) : SelectorFind.ancestor(event.target(), 'table', isRoot);
-      hoverTable.each(function (ht) {
-        Bars.refresh(wire, ht, hdirection, direction);
-      });
-    } else if (Body.inBody(event.target())) {
-      /*
-       * mouseout is not reliable within ContentEditable, so for all other mouseover events we clear bars.
-       * This is fairly safe to do frequently; it's a single querySelectorAll() on the content and Arr.map on the result.
-       * If we _really_ need to optimise it further, we can start caching the bar references in the wire somehow.
-       */
-      Bars.destroy(wire);
-    }
+    findClosestEditableTable(event.target()).fold(
+      () => {
+        /*
+        * mouseout is not reliable within ContentEditable, so for all other mouseover events we clear bars.
+        * This is fairly safe to do frequently; it's a single querySelectorAll() on the content and Arr.map on the result.
+        * If we _really_ need to optimise it further, we can start caching the bar references in the wire somehow.
+        */
+        if (Body.inBody(event.target())) {
+          Bars.destroy(wire);
+        }
+      },
+      (table) => {
+        hoverTable = Option.some(table);
+        Bars.refresh(wire, table, hdirection, direction);
+      }
+    );
   });
 
   const destroy = function () {
