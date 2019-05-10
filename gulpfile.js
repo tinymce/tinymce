@@ -56,6 +56,19 @@ gulp.task('minify-css', function() {
 });
 
 //
+// watch and rebuild CSS for oxide demos (TODO move to oxide-test-data)
+//
+gulp.task('copyFilesTheme', function() {
+  return gulp.src(['./src/less/theme/**'])
+    .pipe(gulp.dest('./build/skin-tool/theme/'));
+});
+
+gulp.task('serve', function () {
+  gulp.watch('./src/**/*.less', gulp.series('lint', 'copyFilesTheme', 'minify-css'));
+});
+
+
+//
 // clean builds
 //
 gulp.task('clean', function () {
@@ -71,3 +84,5 @@ gulp.task('clean', function () {
 //
 gulp.task('build', gulp.series('clean', 'lint', 'less', 'minify-css'));
 gulp.task('default', gulp.series('build'));
+
+gulp.task('watch', gulp.series('build', 'copyFilesTheme', 'serve'));
