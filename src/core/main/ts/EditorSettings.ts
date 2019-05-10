@@ -61,7 +61,6 @@ const getDefaultSettings = function (id, documentBaseUrl, editor: Editor): RawEd
   return {
     id,
     theme: 'silver',
-    popup_css: '',
     plugins: '',
     document_base_url: documentBaseUrl,
     add_form_submit_trigger: true,
@@ -73,13 +72,11 @@ const getDefaultSettings = function (id, documentBaseUrl, editor: Editor): RawEd
     object_resizing: true,
     doctype: '<!DOCTYPE html>',
     visual: true,
-    font_size_style_values: 'xx-small,x-small,small,medium,large,x-large,xx-large',
 
     // See: http://www.w3.org/TR/CSS2/fonts.html#propdef-font-size
     font_size_legacy_values: 'xx-small,small,medium,large,x-large,xx-large,300%',
     forced_root_block: 'p',
     hidden_input: true,
-    render_ui: true,
     inline_styles: true,
     convert_fonts_to_spans: true,
     indent: true,
@@ -89,8 +86,7 @@ const getDefaultSettings = function (id, documentBaseUrl, editor: Editor): RawEd
     'tfoot,tbody,tr,section,summary,article,hgroup,aside,figure,figcaption,option,optgroup,datalist',
     entity_encoding: 'named',
     url_converter: editor.convertURL,
-    url_converter_scope: editor,
-    ie7_compat: true
+    url_converter_scope: editor
   };
 };
 

@@ -180,13 +180,10 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
     });
 
     DOM.addClass(targetElm, 'mce-content-body');
-    editor.contentDocument = doc = settings.content_document || document;
-    editor.contentWindow = settings.content_window || window;
+    editor.contentDocument = doc = document;
+    editor.contentWindow = window;
     editor.bodyElement = targetElm;
     editor.contentAreaContainer = targetElm;
-
-    // Prevent leak in IE
-    settings.content_document = settings.content_window = null;
 
     // TODO: Fix this
     settings.root_name = targetElm.nodeName.toLowerCase();
