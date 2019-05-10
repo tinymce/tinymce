@@ -37,7 +37,17 @@
   }
 
   .tox-toolbar__overflow.tox-toolbar__overflow--closed {
-    display: none;
+    height: 0;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .tox-toolbar__overflow--growing {
+    transition: height .3s ease, opacity .2s linear .1s;
+  }
+
+  .tox-toolbar__overflow--shrinking {
+    transition: opacity .3s ease, height .2s linear .1s, visibility 0s linear .3s;
   }
 
   .tox-pop .tox-toolbar {
