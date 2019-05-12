@@ -1,13 +1,13 @@
-import { Assertions, Chain, Pipeline, Step } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Log, Pipeline } from '@ephox/agar';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { Obj, Arr } from '@ephox/katamari';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import * as Settings from 'tinymce/plugins/textpattern/api/Settings';
-import { document, Range, Node, HTMLElement } from '@ephox/dom-globals';
-import { InlinePatternMatch, findNestedInlinePatterns } from '../../../main/ts/core/FindPatterns';
-import { Obj, Arr, Type } from '@ephox/katamari';
-import { InlinePattern } from '../../../main/ts/api/Pattern';
-import DOMUtils from '../../../../../core/main/ts/api/dom/DOMUtils';
-import { PlatformDetection } from '@ephox/sand';
+import { findPatterns } from 'tinymce/plugins/textpattern/core/InlinePattern';
+import { InlinePattern, InlinePatternMatch } from 'tinymce/plugins/textpattern/core/PatternTypes';
+import { PathRange } from 'tinymce/plugins/textpattern/utils/PathRange';
 
 UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failure) => {
 
@@ -20,43 +20,7 @@ UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failur
     { start: 'asap', replacement: 'as soon as possible'}
   ]}).inlinePatterns;
 
-  interface HtmlItem {
-    n: string;
-    cs: Array<HtmlItem | string>;
-  }
-
-  const createComplex = function (item: HtmlItem | string): Node {
-    if (Type.isString(item)) {
-      return document.createTextNode(item);
-    } else {
-      const i = document.createElement(item.n);
-      Arr.each(item.cs, (child) => {
-        i.appendChild(createComplex(child));
-      });
-      return i;
-    }
-  };
-
-  const createComplexRng = (n: HtmlItem | string, startPos: number[], endPos: number[]): {root: HTMLElement, range: Range} => {
-    const root = document.createElement('div');
-    const ele = createComplex(n);
-    root.appendChild(ele);
-    const select = (node: Node, pos: number[]) => pos.length === 0 ? node : select(node.childNodes[pos[0]], pos.slice(1));
-    const startOffset = startPos.pop();
-    const start = select(ele, startPos);
-    const endOffset = endPos.pop();
-    const end = select(ele, endPos);
-    const range = document.createRange();
-    range.setStart(start, startOffset);
-    range.setEnd(end, endOffset);
-    return { root, range };
-  };
-
-  const createRng = function (text: string, startOffset: number, endOffset: number) {
-    return createComplexRng(text, [startOffset], [endOffset]);
-  };
-
-  const cGetInlinePattern = function (patterns: InlinePattern[], space: boolean) {
+  const cGetInlinePattern = function (patterns: InlinePattern[], space: boolean = false) {
     const asStr = (p: InlinePattern) => {
       if (p.type === 'inline-format') {
         return p.start + 'TEXT' + p.end + ' = ' + JSON.stringify(p.format);
@@ -67,23 +31,16 @@ UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failur
     };
 
     return Chain.label('Get inline ' + Arr.map(patterns, asStr).join(', '),
-      Chain.mapper<{root: HTMLElement, range: Range}, InlinePatternMatch[]>(function (input) {
-        const dom = DOMUtils(input.root.ownerDocument, { root_element: input.root });
-        return findNestedInlinePatterns(dom, patterns, input.range, space);
+      Chain.mapper<Editor, InlinePatternMatch[]>(function (editor) {
+        return findPatterns(editor, patterns, space);
       })
     );
   };
 
   interface ExpectedPatternMatch {
-    pattern: Partial<{
-      start: string;
-      end: string;
-      format: string[];
-      cmd: string;
-      value: any;
-    }>;
-    start: number[];
-    end: number[];
+    pattern: Partial<InlinePattern>;
+    startRng: PathRange;
+    endRng: PathRange;
   }
 
   const cAssertPatterns = function (expectedMatches: ExpectedPatternMatch[]) {
@@ -101,202 +58,267 @@ UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failur
           }
         });
         // prepend a 0 because we always add a root node
-        Assertions.assertEq('start path does not match', [0].concat(expected.start), actual.range.start);
-        Assertions.assertEq('end path does not match', [0].concat(expected.end), actual.range.end);
+        Assertions.assertEq('start range - start path does not match', [0].concat(expected.startRng.start), actual.startRng.start);
+        Assertions.assertEq('start range - end path does not match', [0].concat(expected.startRng.end), actual.startRng.end);
+        Assertions.assertEq('end range - start path does not match', [0].concat(expected.endRng.start), actual.endRng.start);
+        Assertions.assertEq('end range - end path does not match', [0].concat(expected.endRng.end), actual.endRng.end);
       }
     });
   };
 
-  const cAssertSimpleMatch = function (matchStart: string, matchEnd: string, formats: string[], startPath: number[], endPath: number[]) {
-    return cAssertPatterns([{pattern: {start: matchStart, end: matchEnd, format: formats}, start: startPath, end: endPath}]);
+  const cAssertSimpleMatch = function (matchStart: string, matchEnd: string, formats: string[], startRng: PathRange, endRng: PathRange) {
+    return cAssertPatterns([{pattern: {start: matchStart, end: matchEnd, format: formats}, startRng, endRng}]);
   };
 
-  const browser = PlatformDetection.detect().browser;
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
+    const tinyApis = TinyApis(editor);
 
-  Pipeline.async({}, [
-    Step.label('Run on text without pattern returns no matching patterns', Chain.asStep(
-      createRng('text', 4, 4),
-      [
-        cGetInlinePattern(inlinePatterns, false),
-        cAssertPatterns([])
-      ]
-    )),
-    Step.label('Run on range that is not on a text node without pattern returns no match', Chain.asStep(
-      createComplexRng({n: 'p', cs: ['text']}, [1], [1]),
-      [
-        cGetInlinePattern(inlinePatterns, false),
-        cAssertPatterns([])
-      ]
-    )),
-    // IE mutates the range so the start container is inside the paragraph
-    // leaving the end on the paragraph, this results in the range not being
-    // collapsed which causes the test to fail, unless you print the range
-    // and startContainer to the console in which case it mutates both the start
-    // and end of the range to point at the text node inside the paragraph and passes...
-    // I am not sure how to test a collapsed range not directly on a text node in IE.
-    browser.isIE() ? Step.pass :
-    Step.label('Run on range that is not on a text node with pattern returns a match', Chain.asStep(
-      createComplexRng({n: 'p', cs: ['*a*']}, [1], [1]),
-      [
-        cGetInlinePattern(inlinePatterns, false),
-        cAssertSimpleMatch('*', '*', ['italic'], [0, 0], [0, 3])
-      ]
-    )),
-    Step.label('inline * pattern with no gap to matching token returns no match', Chain.asStep(createRng('*x***', 5, 5), [
-      cGetInlinePattern(inlinePatterns, false),
-      cAssertPatterns([])
-    ])),
-    Step.label('inline * with uncollapsed range returns no match', Chain.asStep(createRng('*x* ', 3, 4), [
-      cGetInlinePattern(inlinePatterns, false),
-      cAssertPatterns([])
-    ])),
-    Step.label('inline * pattern end without content returns no match', Chain.asStep(createRng('**', 2, 2), [
-      cGetInlinePattern(inlinePatterns, false),
-      cAssertPatterns([])
-    ])),
-    Step.label('inline * and ** end pattern without start pattern no match', Chain.asStep(createRng('***', 3, 3), [
-      cGetInlinePattern(inlinePatterns, false),
-      cAssertPatterns([])
-    ])),
-    Step.label('cursor in middle of pattern returns no match', Chain.asStep(createRng('*** x***', 4, 4), [
-      cGetInlinePattern(inlinePatterns, true),
-      cAssertPatterns([])
-    ])),
+    const sSetContentAndCursor = (content: string, elementPath: number[], offset: number) => {
+      return GeneralSteps.sequence([
+        tinyApis.sSetRawContent(`<div>${content}</div>`),
+        tinyApis.sSetCursor([0].concat(elementPath), offset),
+      ]);
+    };
 
-    Step.label('inline * without content before or after', Chain.asStep(createRng('*x*', 3, 3), [
-      cGetInlinePattern(inlinePatterns, false),
-      cAssertSimpleMatch('*', '*', ['italic'], [0], [3])
-    ])),
-    Step.label('inline * with content before', Chain.asStep(createRng('a *x*', 5, 5), [
-      cGetInlinePattern(inlinePatterns, false),
-      cAssertSimpleMatch('*', '*', ['italic'], [2], [5])
-    ])),
-    Step.label('inline * with content before and after', Chain.asStep(createRng('a *x* b', 5, 5), [
-      cGetInlinePattern(inlinePatterns, false),
-      cAssertSimpleMatch('*', '*', ['italic'], [2], [5])
-    ])),
-    Step.label('inline * with content before and after, with space', Chain.asStep(createRng('***x* **', 6, 6), [
-      cGetInlinePattern(inlinePatterns, true),
-      cAssertSimpleMatch('*', '*', ['italic'], [2], [5])
-    ])),
-    Step.label('inline ** without content before or after', Chain.asStep(createRng('**x**', 5, 5), [
-      cGetInlinePattern(inlinePatterns, false),
-      cAssertSimpleMatch('**', '**', ['bold'], [0], [5])
-    ])),
-    Step.label('inline ** with content before', Chain.asStep(createRng('a **x**', 7, 7), [
-      cGetInlinePattern(inlinePatterns, false),
-      cAssertSimpleMatch('**', '**', ['bold'], [2], [7])
-    ])),
-    Step.label('inline ** with content before and after', Chain.asStep(createRng('a **x** b', 7, 7), [
-      cGetInlinePattern(inlinePatterns, false),
-      cAssertSimpleMatch('**', '**', ['bold'], [2], [7])
-    ])),
-    Step.label('inline * and ** without content before or after', Chain.asStep(createRng('***x***', 7, 7), [
-      cGetInlinePattern(inlinePatterns, false),
-      cAssertPatterns([
-        {pattern: {start: '**', end: '**', format: ['bold']}, start: [1], end: [6]},
-        {pattern: {start: '*', end: '*', format: ['italic']}, start: [0], end: [7]}
+    const sSetContentAndSelection = (content: string, startPath: number[], soffset: number, finishPath: number[], foffset: number) => {
+      return GeneralSteps.sequence([
+        tinyApis.sSetRawContent(`<div>${content}</div>`),
+        tinyApis.sSetSelection([0].concat(startPath), soffset, [0].concat(finishPath), foffset),
+      ]);
+    };
+
+    Pipeline.async({}, [
+      Log.stepsAsStep('TBA', 'Run on text without pattern returns no matching patterns', [
+        sSetContentAndCursor('text', [0], 4),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertPatterns([])
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'Run on range that is not on a text node without pattern returns no match', [
+        sSetContentAndCursor('<p>text</p>', [0], 1),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertPatterns([])
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'Run on range that is not on a text node with pattern returns a match', [
+        sSetContentAndCursor('<p>*a*</p>', [0], 1),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertSimpleMatch('*', '*', ['italic'], { start: [0, 0, 0], end: [0, 0, 1] }, { start: [0, 0, 2], end: [0, 0, 3] })
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'inline * pattern with no gap to matching token returns no match', [
+        sSetContentAndCursor('*x***', [0], 5),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertPatterns([])
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'inline * with uncollapsed range returns no match', [
+        sSetContentAndSelection('*x*&nbsp;', [0], 3,  [0], 4),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns, true),
+          cAssertPatterns([])
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'inline * pattern end without content returns no match', [
+        sSetContentAndCursor('**', [0], 2),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertPatterns([])
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'inline * and ** end pattern without start pattern no match', [
+        sSetContentAndCursor('***', [0], 3),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertPatterns([])
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'cursor in middle of pattern returns no match', [
+        sSetContentAndCursor('*** x***', [0], 4),
+          Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns, true),
+          cAssertPatterns([])
+        ])
+      ]),
+
+      Log.stepsAsStep('TBA', 'inline * without content before or after', [
+        sSetContentAndCursor('*x*', [0], 3),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertSimpleMatch('*', '*', ['italic'], { start: [0, 0], end: [0, 1] }, { start: [0, 2], end: [0, 3] })
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'inline * with content before', [
+        sSetContentAndCursor('a *x*', [0], 5),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertSimpleMatch('*', '*', ['italic'], { start: [0, 2], end: [0, 3] }, { start: [0, 4], end: [0, 5] })
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'inline * with content before and after', [
+        sSetContentAndCursor('a *x* b', [0], 5),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertSimpleMatch('*', '*', ['italic'], { start: [0, 2], end: [0, 3] }, { start: [0, 4], end: [0, 5] })
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'inline * with content before and after, with space', [
+        sSetContentAndCursor('***x* **', [0], 6),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns, true),
+          cAssertSimpleMatch('*', '*', ['italic'], { start: [0, 2], end: [0, 3] }, { start: [0, 4], end: [0, 5] })
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'inline ** without content before or after', [
+        sSetContentAndCursor('**x**', [0], 5),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertSimpleMatch('**', '**', ['bold'], { start: [0, 0], end: [0, 2] }, { start: [0, 3], end: [0, 5] })
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'inline ** with content before', [
+        sSetContentAndCursor('a **x**', [0], 7),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertSimpleMatch('**', '**', ['bold'], { start: [0, 2], end: [0, 4]}, { start: [0, 5], end: [0, 7] })
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'inline ** with content before and after', [
+        sSetContentAndCursor('a **x** b', [0], 7),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertSimpleMatch('**', '**', ['bold'], { start: [0, 2], end: [0, 4]}, { start: [0, 5], end: [0, 7] })
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'inline * and ** without content before or after', [
+        sSetContentAndCursor('***x***', [0], 7),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertPatterns([
+            { pattern: { start: '**', end: '**', format: ['bold'] }, startRng: { start: [0, 1], end: [0, 3] }, endRng: { start: [0, 4], end: [0, 6] } },
+            { pattern: { start: '*', end: '*', format: ['italic'] }, startRng: { start: [0, 0], end: [0, 1] }, endRng: { start: [0, 6], end: [0, 7] } }
+          ])
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'inline * and ** with content before', [
+        sSetContentAndCursor('a ***x***', [0], 9),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertPatterns([
+            { pattern: { start: '**', end: '**', format: ['bold'] }, startRng: { start: [0, 3], end: [0, 5] }, endRng: { start: [0, 6], end: [0, 8] } },
+            { pattern: { start: '*', end: '*', format: ['italic'] }, startRng: { start: [0, 2], end: [0, 3] }, endRng: { start: [0, 8], end: [0, 9] } }
+          ])
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'inline * and ** with content before and after', [
+        sSetContentAndCursor('a ***x*** b', [0], 9),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertPatterns([
+            { pattern: { start: '**', end: '**', format: ['bold'] }, startRng: { start: [0, 3], end: [0, 5] }, endRng: { start: [0, 6], end: [0, 8] } },
+            { pattern: { start: '*', end: '*', format: ['italic'] }, startRng: { start: [0, 2], end: [0, 3] }, endRng: { start: [0, 8], end: [0, 9] } }
+          ])
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'force only ** pattern and test return on not existing *** pattern', [
+        sSetContentAndCursor('***x***', [0], 7),
+        Chain.asStep(editor, [
+          cGetInlinePattern([{ type: 'inline-format', start: '**', end: '**', format: ['bold'] }]),
+          cAssertSimpleMatch('**', '**', ['bold'], { start: [0, 1], end: [0, 3] }, { start: [0, 5], end: [0, 7] })
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'force only ** pattern and test return on not existing *** pattern', [
+        sSetContentAndCursor('y ***x***', [0], 9),
+        Chain.asStep(editor, [
+          cGetInlinePattern([{ type: 'inline-format', start: '**', end: '**', format: ['bold'] }]),
+          cAssertSimpleMatch('**', '**', ['bold'], { start: [0, 3], end: [0, 5] }, { start: [0, 7], end: [0, 9] })
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'force only ** pattern and test return on not existing *** pattern', [
+        sSetContentAndCursor('y ***x*** **', [0], 9),
+        Chain.asStep(editor, [
+          cGetInlinePattern([{ type: 'inline-format', start: '**', end: '**', format: ['bold'] }]),
+          cAssertSimpleMatch('**', '**', ['bold'], { start: [0, 3], end: [0, 5] }, { start: [0, 7], end: [0, 9] })
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'Check match when input pattern has an empty start value', [
+        sSetContentAndCursor('brb', [0], 3),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertPatterns([
+            { pattern: { start: '', end: 'brb', value: 'be right back' }, startRng: { start: [0, 0], end: [0, 3] }, endRng: { start: [0, 0], end: [0, 3] } }
+          ])
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'Check match when input pattern has an empty end value', [
+        sSetContentAndCursor('irl', [0], 3),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertPatterns([
+            { pattern: { start: '', end: 'irl', value: 'in real life' }, startRng: { start: [0, 0], end: [0, 3] }, endRng: { start: [0, 0], end: [0, 3] } }
+          ])
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'Check match when input pattern uses replacement syntax', [
+        sSetContentAndCursor('asap', [0], 4),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertPatterns([
+            { pattern: { start: '', end: 'asap', value: 'as soon as possible' }, startRng: { start: [0, 0], end: [0, 4] }, endRng: { start: [0, 0], end: [0, 4] } }
+          ])
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'Check nested match', [
+        sSetContentAndCursor('Bring those reports ***asap***!', [0], 31),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns, true),
+          cAssertPatterns([
+            { pattern: { start: '', end: 'asap', value: 'as soon as possible' }, startRng: { start: [0, 23], end: [0, 27] }, endRng: { start: [0, 23], end: [0, 27] } },
+            { pattern: { start: '**', end: '**', format: ['bold'] }, startRng: { start: [0, 21], end: [0, 23] }, endRng: { start: [0, 27], end: [0, 29] } },
+            { pattern: { start: '*', end: '*', format: ['italic'] }, startRng: { start: [0, 20], end: [0, 21] }, endRng: { start: [0, 29], end: [0, 30] } }
+          ])
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'Check that a pattern will be matched across tag boundaries', [
+        sSetContentAndCursor('<span>*text</span><span>*</span>', [1, 0], 1),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertPatterns([
+            { pattern: { start: '*', end: '*', format: ['italic'] }, startRng: { start: [0, 0, 0], end: [0, 0, 1] }, endRng: { start: [1, 0, 0], end: [1, 0, 1] } }
+          ])
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'Check that a pattern will be matched across tag boundaries 2', [
+        sSetContentAndCursor('<span>**text*</span><span>*</span>', [1, 0], 1),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertPatterns([
+            { pattern: { start: '**', end: '**', format: ['bold'] }, startRng: { start: [0, 0, 0], end: [0, 0, 2] }, endRng: { start: [0, 0, 6], end: [1, 0, 1] } }
+          ])
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'Check that a pattern will not be matched across block boundaries', [
+        sSetContentAndCursor('<p>*text</p><p>*</p>', [1, 0], 1),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertPatterns([])
+        ])
+      ]),
+      Log.stepsAsStep('TBA', 'Check that a pattern will not be matched across block boundaries 2', [
+        sSetContentAndCursor('<p>*text</p><span>*</span>', [1, 0], 1),
+        Chain.asStep(editor, [
+          cGetInlinePattern(inlinePatterns),
+          cAssertPatterns([])
+        ])
       ])
-    ])),
-    Step.label('inline * and ** with content before', Chain.asStep(createRng('a ***x***', 9, 9), [
-      cGetInlinePattern(inlinePatterns, false),
-      cAssertPatterns([
-        {pattern: {start: '**', end: '**', format: ['bold']}, start: [3], end: [8]},
-        {pattern: {start: '*', end: '*', format: ['italic']}, start: [2], end: [9]}
-      ])
-    ])),
-    Step.label('inline * and ** with content before and after', Chain.asStep(createRng('a ***x*** b', 9, 9), [
-      cGetInlinePattern(inlinePatterns, false),
-      cAssertPatterns([
-        {pattern: {start: '**', end: '**', format: ['bold']}, start: [3], end: [8]},
-        {pattern: {start: '*', end: '*', format: ['italic']}, start: [2], end: [9]}
-      ])
-    ])),
-    Step.label('force only ** pattern and test return on not existing *** pattern', Chain.asStep(createRng('***x***', 7, 7), [
-      cGetInlinePattern([{ type: 'inline-format', start: '**', end: '**', format: ['bold'] }], false),
-      cAssertSimpleMatch('**', '**', ['bold'], [1], [7])
-    ])),
-    Step.label('force only ** pattern and test return on not existing *** pattern', Chain.asStep(createRng('y ***x***', 9, 9), [
-      cGetInlinePattern([{ type: 'inline-format',  start: '**', end: '**', format: ['bold'] }], false),
-      cAssertSimpleMatch('**', '**', ['bold'], [3], [9])
-    ])),
-    Step.label('force only ** pattern and test return on not existing *** pattern', Chain.asStep(createRng('y ***x*** **', 9, 9), [
-      cGetInlinePattern([{ type: 'inline-format',  start: '**', end: '**', format: ['bold'] }], false),
-      cAssertSimpleMatch('**', '**', ['bold'], [3], [9])
-    ])),
-    Step.label('Check match when input pattern has an empty start value', Chain.asStep(
-      createRng('brb', 3, 3),
-      [
-        cGetInlinePattern(inlinePatterns, false),
-        cAssertPatterns([
-          {pattern: {start: '', end: 'brb', value: 'be right back'}, start: [0], end: [3]}
-        ])
-      ]
-    )),
-    Step.label('Check match when input pattern has an empty end value', Chain.asStep(
-      createRng('irl', 3, 3),
-      [
-        cGetInlinePattern(inlinePatterns, false),
-        cAssertPatterns([
-          {pattern: {start: '', end: 'irl', value: 'in real life'}, start: [0], end: [3]}
-        ])
-      ]
-    )),
-    Step.label('Check match when input pattern uses replacement syntax', Chain.asStep(
-      createRng('asap', 4, 4),
-      [
-        cGetInlinePattern(inlinePatterns, false),
-        cAssertPatterns([
-          {pattern: {start: '', end: 'asap', value: 'as soon as possible'}, start: [0], end: [4]}
-        ])
-      ]
-    )),
-    Step.label('Check nested match', Chain.asStep(
-      createRng('Bring those reports ***asap***!', 31, 31),
-      [
-        cGetInlinePattern(inlinePatterns, true),
-        cAssertPatterns([
-          {pattern: {start: '', end: 'asap', value: 'as soon as possible'}, start: [23], end: [27]},
-          {pattern: {start: '**', end: '**', format: ['bold']}, start: [21], end: [29]},
-          {pattern: {start: '*', end: '*', format: ['italic']}, start: [20], end: [30]}
-        ])
-      ]
-    )),
-    Step.label('Check that a pattern will be matched across text boundaries', Chain.asStep(
-      createComplexRng({n: 'p', cs: ['*text', '*']}, [1, 1], [1, 1]),
-      [
-        cGetInlinePattern(inlinePatterns, false),
-        cAssertPatterns([
-          {pattern: {start: '*', end: '*', format: ['italic']}, start: [0, 0], end: [1, 1]}
-        ])
-      ]
-    )),
-    Step.label('Check that a pattern will be matched across tag boundaries', Chain.asStep(
-      createComplexRng({n: 'p', cs: [{n: 'span', cs: ['*text']}, {n: 'span', cs: ['*']}]}, [1, 0, 1], [1, 0, 1]),
-      [
-        cGetInlinePattern(inlinePatterns, false),
-        cAssertPatterns([
-          {pattern: {start: '*', end: '*', format: ['italic']}, start: [0, 0, 0], end: [1, 0, 1]}
-        ])
-      ]
-    )),
-    Step.label('Check that a pattern will not be matched across block boundaries', Chain.asStep(
-      createComplexRng({n: 'div', cs: [{n: 'p', cs: ['*text']}, {n: 'p', cs: ['*']}]}, [1, 0, 1], [1, 0, 1]),
-      [
-        cGetInlinePattern(inlinePatterns, false),
-        cAssertPatterns([
-        ])
-      ]
-    )),
-    Step.label('Check that a pattern will not be matched across block boundaries 2', Chain.asStep(
-      createComplexRng({n: 'div', cs: [{n: 'p', cs: ['*text']}, {n: 'span', cs: ['*']}]}, [1, 0, 1], [1, 0, 1]),
-      [
-        cGetInlinePattern(inlinePatterns, false),
-        cAssertPatterns([
-        ])
-      ]
-    ))
-  ], function () {
-    success();
-  }, failure);
+    ], onSuccess, onFailure);
+  }, {
+    forced_root_block: false,
+    plugins: 'textpattern lists',
+    base_url: '/project/tinymce/js/tinymce'
+  }, success, failure);
 });

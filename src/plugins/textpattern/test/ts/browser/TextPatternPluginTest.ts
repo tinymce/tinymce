@@ -1,9 +1,6 @@
-import {
-    ApproxStructure, Assertions, Keys, Pipeline, Step, GeneralSteps
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Keys, Pipeline, Step, GeneralSteps } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
-import { PlatformDetection } from '@ephox/sand';
 
 import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -11,22 +8,12 @@ import Theme from 'tinymce/themes/silver/Theme';
 import Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', (success, failure) => {
-  const detection = PlatformDetection.detect();
-
   TextpatternPlugin();
   Theme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
-
-    // TODO TINY-3258 renable this test when issues with Chrome 72 are sorted out
-    const browserSpecificTests = !detection.browser.isChrome() ? [
-      Step.label('test inline and block at the same time', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '* **important list**'),
-        tinyApis.sAssertContentPresence({ ul: 1, li: 2, strong: 1 })
-      ]))
-    ] : [];
 
     const steps = Utils.withTeardown([
       Step.label('Space on ** without content does nothing', GeneralSteps.sequence([
@@ -156,6 +143,22 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
         tinyActions.sContentKeystroke(Keys.enter(), {}),
         tinyApis.sAssertContentPresence({ ul: 0 })
       ])),
+      Step.label('test inline and block at the same time', GeneralSteps.sequence([
+        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '* **important list**'),
+        tinyApis.sAssertContentPresence({ ul: 1, li: 2, strong: 1 })
+      ])),
+      Step.label('inline format with fragmented start sequence', GeneralSteps.sequence([
+        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '<span data-mce-spellcheck="invalid">*</span>*a**', 4, [0, 1]),
+        Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.inlineBlockStructHelper('strong', 'a')))
+      ])),
+      Step.label('inline format with fragmented end sequence', GeneralSteps.sequence([
+        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '**a*<span data-mce-spellcheck="invalid">*</span>', 1, [0, 1]),
+        Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.inlineBlockStructHelper('strong', 'a')))
+      ])),
+      Step.label('block format with fragmented start sequence', GeneralSteps.sequence([
+        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '<span data-mce-spellcheck="invalid">1</span>. a', 3, [0, 1]),
+        tinyApis.sAssertContentPresence({ ol: 1, li: 2 })
+      ])),
       Step.label('getPatterns/setPatterns', Step.sync(function () {
         // Store the original patterns
         const origPatterns = editor.plugins.textpattern.getPatterns();
@@ -189,7 +192,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
         // Restore the original patterns
         editor.plugins.textpattern.setPatterns(origPatterns);
       }))
-    ].concat(browserSpecificTests), tinyApis.sSetContent(''));
+    ], tinyApis.sSetContent(''));
 
     Pipeline.async({}, steps, onSuccess, onFailure);
   }, {

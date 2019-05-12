@@ -87,7 +87,8 @@ const shouldEndContainerOnEmptyBlock = (editor: Editor): boolean => {
   return editor.getParam('end_container_on_empty_block', false);
 };
 
-const getFontStyleValues = (editor: Editor): string[] => Tools.explode(editor.getParam('font_size_style_values', ''));
+const getFontStyleValues = (editor: Editor): string[] => Tools.explode(editor.getParam('font_size_style_values', 'xx-small,x-small,small,medium,large,x-large,xx-large'));
+
 const getFontSizeClasses = (editor: Editor): string[] => Tools.explode(editor.getParam('font_size_classes', ''));
 
 const getImagesDataImgFilter = (editor: Editor): (imgElm: HTMLImageElement) => boolean => {

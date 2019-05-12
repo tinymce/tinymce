@@ -88,6 +88,10 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.ReplacementTest', (succe
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '#*brb*'),
         sAssertContentAndCursor('<h1><em>be right back</em></h1><p>&nbsp;|</p>'),
       ])),
+      Logger.t('Apply replacement pattern italic pattern and block pattern on enter', GeneralSteps.sequence([
+        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '<span data-mce-spelling="invalid">#</span>*brb<span data-mce-spelling="invalid">*</span>', 3, [0]),
+        sAssertContentAndCursor('<h1><em>be right back</em></h1><p>&nbsp;|</p>'),
+      ])),
     ], tinyApis.sSetContent(''));
 
     Pipeline.async({}, steps, onSuccess, onFailure);

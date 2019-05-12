@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Document, Element, HTMLElement, HTMLImageElement, Node, Window } from '@ephox/dom-globals';
+import { Element, HTMLElement, HTMLImageElement, Node } from '@ephox/dom-globals';
 import { UploadHandler } from '../file/Uploader';
 import { AllowedFormat } from './fmt/StyleFormat';
 import { Formats } from './fmt/Format';
@@ -40,11 +40,9 @@ export interface RawEditorSettings {
   auto_focus?: string | true;
   automatic_uploads?: boolean;
   base_url?: string;
-  block_elements?: string;
   block_formats?: string;
   body_id?: string;
   body_class?: string;
-  boolean_attributes?: string;
   br_in_pre?: boolean;
   br_newline_selector?: string;
   browser_spellcheck?: boolean;
@@ -54,10 +52,8 @@ export interface RawEditorSettings {
   color_map?: string[];
   content_css?: boolean | string | string[];
   content_css_cors?: boolean;
-  content_document?: Document;
   content_security_policy?: string;
   content_style?: string;
-  content_window?: Window;
   contextmenu?: string;
   contextmenu_never_use_native?: boolean;
   convert_fonts_to_spans?: boolean;
@@ -67,7 +63,6 @@ export interface RawEditorSettings {
   custom_ui_selector?: string;
   custom_undo_redo_levels?: number;
   directionality?: 'ltr' | 'rtl';
-  disable_nodechange?: boolean;
   doctype?: string;
   document_base_url?: string;
   element_format?: 'xhtml' | 'html';
@@ -90,7 +85,6 @@ export interface RawEditorSettings {
   font_size_style_values?: string;
   fontsize_formats?: string;
   force_hex_style_colors?: boolean;
-  forced_plugins?: string | string[];
   forced_root_block?: boolean | string;
   forced_root_block_attrs?: Record<string, string>;
   formats?: Formats;
@@ -99,7 +93,6 @@ export interface RawEditorSettings {
   hidden_input?: boolean;
   icons?: string;
   id?: string;
-  ie7_compat?: boolean;
   images_dataimg_filter?: (imgElm: HTMLImageElement) => boolean;
   images_replace_blob_uris?: boolean;
   images_reuse_filename?: boolean;
@@ -116,7 +109,7 @@ export interface RawEditorSettings {
   inline?: boolean;
   inline_boundaries?: boolean;
   inline_boundaries_selector?: string;
-  inline_styles?: boolean | Record<string, string>;
+  inline_styles?: boolean;
   invalid_elements?: string;
   invalid_styles?: string;
   keep_styles?: boolean;
@@ -130,15 +123,10 @@ export interface RawEditorSettings {
   min_height?: number;
   min_width?: number;
   mobile?: RawEditorSettings;
-  move_caret_before_on_enter_elements?: string;
   no_newline_selector?: string;
-  non_empty_elements?: string;
   nowrap?: boolean;
   object_resizing?: boolean | string;
-  override_viewport?: boolean;
-  plugin_base_urls?: Record<string, string>;
   plugins?: string | string[];
-  popup_css?: string;
   preview_styles?: boolean | string;
   protect?: RegExp[];
   readonly?: boolean;
@@ -146,16 +134,12 @@ export interface RawEditorSettings {
   remove_script_host?: boolean;
   remove_trailing_brs?: boolean;
   removed_menuitems?: string;
-  render_ui?: boolean;
   resize?: boolean | 'both';
   resize_img_proportional?: boolean;
   root_name?: string;
   schema?: SchemaType;
   selector?: string;
-  self_closing_elements?: string;
-  service_message?: string;
   setup?: SetupCallback;
-  short_ended_elements?: string;
   skin?: boolean | string;
   skin_url?: string;
   statusbar?: boolean;
@@ -163,10 +147,7 @@ export interface RawEditorSettings {
   style_formats_autohide?: boolean;
   style_formats_merge?: boolean;
   submit_patch?: boolean;
-  suffix?: string;
   target?: Element;
-  text_block_elements?: string;
-  text_inline_elements?: string;
   theme?: string | ThemeInitFunc;
   theme_url?: string;
   toolbar?: boolean | string | string[] | { name: string, items: string[]}[];
@@ -188,11 +169,9 @@ export interface RawEditorSettings {
   valid_classes?: string | Record<string, string>;
   valid_elements?: string;
   valid_styles?: string | Record<string, string>;
-  validate?: boolean;
   visual?: boolean;
   visual_anchor_class?: string;
   visual_table_class?: string;
-  whitespace_elements?: string;
   width?: number | string;
 
   // Deprecated settings
@@ -201,6 +180,28 @@ export interface RawEditorSettings {
   elements?: string;
   mode?: 'exact' | 'textareas' | 'specific_textareas';
   types?: Record<string, any>[];
+
+  // Considered for deprecation (Schema settings)
+  block_elements?: string;
+  boolean_attributes?: string;
+  move_caret_before_on_enter_elements?: string;
+  non_empty_elements?: string;
+  self_closing_elements?: string;
+  short_ended_elements?: string;
+  text_block_elements?: string;
+  text_inline_elements?: string;
+  whitespace_elements?: string;
+
+  // Internal settings (used by cloud or tests)
+  disable_nodechange?: boolean;
+  forced_plugins?: string | string[];
+  plugin_base_urls?: Record<string, string>;
+  service_message?: string;
+  suffix?: string;
+
+  // Special always forced on setting
+  // TODO: Get rid of this one
+  validate?: boolean;
 
   // Allow additional dynamic settings
   [key: string]: any;
