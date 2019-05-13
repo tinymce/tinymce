@@ -5,38 +5,22 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Attachment, Disabling } from '@ephox/alloy';
+import { Attachment } from '@ephox/alloy';
 import { Cell, Option } from '@ephox/katamari';
-import { Body, DomEvent, Element, Selectors, Position } from '@ephox/sugar';
-import Editor from 'tinymce/core/api/Editor';
+import { Body, DomEvent, Element, Position } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
+import Events from '../api/Events';
 import * as Settings from '../api/Settings';
+import { UiFactoryBackstage } from '../backstage/Backstage';
+import { setupReadonlyModeSwitch } from '../ReadOnly';
+import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { identifyButtons } from '../ui/toolbar/Integration';
 import { iframe as loadIframeSkin } from './../ui/skin/Loader';
-import { RenderUiComponents, RenderUiConfig, RenderArgs, ModeRenderInfo } from '../Render';
-import { UiFactoryBackstage } from '../backstage/Backstage';
-import Events from '../api/Events';
 
 const DOM = DOMUtils.DOM;
-
-const handleSwitchMode = (uiComponents: RenderUiComponents) => {
-  return (e) => {
-    const outerContainer = uiComponents.outerContainer;
-    Selectors.all('*', outerContainer.element()).forEach((elm) => {
-      outerContainer.getSystem().getByDom(elm).each((comp: AlloyComponent) => {
-        if (comp.hasConfigured(Disabling)) {
-          if (e.mode === 'readonly') {
-            Disabling.disable(comp);
-          } else {
-            Disabling.enable(comp);
-          }
-        }
-      });
-    });
-  };
-};
 
 const setupEvents = (editor: Editor) => {
   const contentWindow = editor.getWin();
@@ -97,21 +81,12 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       rawUiConfig.sidebar
     );
 
-    // Force an update of the ui components disabled states if in readonly mode
-    if (editor.readonly) {
-      handleSwitchMode(uiComponents)({mode: 'readonly'});
-    }
-
     setupEvents(editor);
   });
 
   const socket = OuterContainer.getSocket(uiComponents.outerContainer).getOrDie('Could not find expected socket element');
 
-  editor.on('SwitchMode', handleSwitchMode(uiComponents));
-
-  if (Settings.isReadOnly(editor)) {
-    editor.setMode('readonly');
-  }
+  setupReadonlyModeSwitch(editor, uiComponents);
 
   editor.addCommand('ToggleSidebar', (ui: boolean, value: string) => {
     OuterContainer.toggleSidebar(uiComponents.outerContainer, value);

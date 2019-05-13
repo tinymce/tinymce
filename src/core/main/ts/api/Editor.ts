@@ -20,7 +20,7 @@ import { getEditorSettings, getParam, ParamTypeMap } from '../EditorSettings';
 import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import EditorFocus from '../focus/EditorFocus';
 import Render from '../init/Render';
-import { create, Mode } from '../Mode';
+import { create, Mode } from './Mode';
 import AddOnManager from './AddOnManager';
 import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';

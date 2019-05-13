@@ -130,6 +130,16 @@ export const ResizeHandler = function (editor: Editor): ResizeHandler {
     }
   });
 
+  editor.on('SwitchMode', () => {
+    lazyResize().each(function (resize) {
+      if (editor.readonly) {
+        resize.hideBars();
+      } else {
+        resize.showBars();
+      }
+    });
+  });
+
   return {
     lazyResize,
     lazyWire,
