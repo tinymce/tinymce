@@ -19,7 +19,7 @@ interface CountGetters {
 export interface WordCountApi {
   body: CountGetters;
   selection: CountGetters;
-  getCount: CountGetter; // TODO: Deprecate, replaced with body.words()
+  getCount: CountGetter; // TODO: Deprecate
 }
 
 const createBodyCounter = (editor: Editor, count: Counter): CountGetter => {
@@ -30,10 +30,14 @@ const createSelectionCounter = (editor: Editor, count: Counter): CountGetter => 
   return () => count(editor.selection.getRng().cloneContents(), editor.schema);
 };
 
+const createBodyWordCounter = (editor: Editor): CountGetter => {
+  return createBodyCounter(editor, countWords);
+};
+
 const get = (editor: Editor): WordCountApi => {
   return {
     body: {
-      getWordCount: createBodyCounter(editor, countWords),
+      getWordCount: createBodyWordCounter(editor),
       getCharacterCount: createBodyCounter(editor, countCharacters),
       getCharacterCountWithoutSpaces: createBodyCounter(editor, countCharactersWithoutSpaces)
     },
@@ -42,7 +46,7 @@ const get = (editor: Editor): WordCountApi => {
       getCharacterCount: createSelectionCounter(editor, countCharacters),
       getCharacterCountWithoutSpaces: createSelectionCounter(editor, countCharactersWithoutSpaces)
     },
-    getCount: createBodyCounter(editor, countWords)
+    getCount: createBodyWordCounter(editor)
   };
 };
 
