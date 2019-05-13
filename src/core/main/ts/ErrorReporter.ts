@@ -34,24 +34,22 @@ const logError = (msg: string) => {
   console.error(msg);
 };
 
-const pluginLoadError = (url: string, name?: string) => {
-  const message =  name ?
-    ['Failed to load plugin: {0} from url {1}', name, url] :
-    ['Failed to load plugin url: {0}', url];
+const createLoadError = (type: string, url: string, name?: string) => {
+  return name ?
+    `Failed to load ${type}: ${name} from url ${url}` :
+    `Failed to load ${type} url: ${url}`;
+};
 
-  logError(I18n.translate(message));
+const pluginLoadError = (url: string, name?: string) => {
+  logError(createLoadError('plugin', url, name));
 };
 
 const iconsLoadError = (url: string, name?: string) => {
-  const message =  name ?
-    ['Failed to load icons: {0} from url {1}', name, url] :
-    ['Failed to load icons url: {0}', url];
-
-  logError(I18n.translate(message));
+  logError(createLoadError('icons', url, name));
 };
 
 const languageLoadError = (url: string, name: string) => {
-  logError(I18n.translate(['Failed to load language: {0} from url {1}', name, url]));
+  logError(createLoadError('language', url, name));
 };
 
 const pluginInitError = (editor: Editor, name: string, err) => {
