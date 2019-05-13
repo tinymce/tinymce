@@ -59,7 +59,7 @@ gulp.task('copyFilesTheme', function() {
     .pipe(gulp.dest('./build/skin-tool/theme/'));
 });
 
-gulp.task('serve', function () {
+gulp.task('monitor', function () {
   gulp.watch('./src/**/*.less', gulp.series('css', 'copyFilesTheme'));
 });
 
@@ -82,4 +82,4 @@ gulp.task('css', gulp.series('lint', 'less', 'minify-css'))
 gulp.task('build', gulp.series('clean', 'css'));
 gulp.task('default', gulp.series('build'));
 
-gulp.task('watch', gulp.series('build', 'copyFilesTheme', 'serve'));
+gulp.task('watch', gulp.series('build', 'copyFilesTheme', 'monitor'));
