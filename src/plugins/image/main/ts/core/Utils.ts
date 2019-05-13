@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element } from '@ephox/dom-globals';
+import { document, Element, Blob, HTMLElement } from '@ephox/dom-globals';
 import { Result } from '@ephox/katamari';
 import { FileReader } from '@ephox/sand';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -13,36 +13,39 @@ import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
 import Settings from '../api/Settings';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
+import Editor from 'tinymce/core/api/Editor';
+import { ImageData } from './ImageData';
 
-/**
- * @class tinymce.image.core.Utils
- * @private
- */
+export interface ImageDimensions {
+  width: number;
+  height: number;
+}
 
-const parseIntAndGetMax = function (val1, val2) {
+// TODO: Figure out if these can be numbers
+const parseIntAndGetMax = (val1: any, val2: any) => {
   return Math.max(parseInt(val1, 10), parseInt(val2, 10));
 };
 
-const getImageSize = function (url, callback) {
+const getImageSize = (url: string, callback: (dimensions: Result<ImageDimensions, string>) => void) => {
   const img = document.createElement('img');
 
-  function done(dimensions) {
+  const done = (dimensions) => {
     if (img.parentNode) {
       img.parentNode.removeChild(img);
     }
 
     callback(dimensions);
-  }
+  };
 
-  img.onload = function () {
+  img.onload = () => {
     const width = parseIntAndGetMax(img.width, img.clientWidth);
     const height = parseIntAndGetMax(img.height, img.clientHeight);
-    const dimensions = {width, height};
+    const dimensions = { width, height };
     done(Result.value(dimensions));
   };
 
-  img.onerror = function () {
-    done(Result.error(undefined));
+  img.onerror = () => {
+    done(Result.error(`Failed to get image dimensions for: ${url}`));
   };
 
   const style = img.style;
@@ -92,9 +95,8 @@ const addPixelSuffix = (value: string): string => {
   return value;
 };
 
-const mergeMargins = function (css: StyleMap) {
+const mergeMargins = (css: StyleMap) => {
   if (css.margin) {
-
     const splitMargin = String(css.margin).split(' ');
 
     switch (splitMargin.length) {
@@ -122,12 +124,15 @@ const mergeMargins = function (css: StyleMap) {
         css['margin-bottom'] = css['margin-bottom'] || splitMargin[2];
         css['margin-left'] = css['margin-left'] || splitMargin[3];
     }
+
     delete css.margin;
   }
+
   return css;
 };
 
-const createImageList = function (editor, callback) {
+// TODO: Input on this callback should really be validated
+const createImageList = (editor: Editor, callback: (imageList: any) => void) => {
   const imageList = Settings.getImageList(editor);
 
   if (typeof imageList === 'string') {
@@ -144,21 +149,21 @@ const createImageList = function (editor, callback) {
   }
 };
 
-const waitLoadImage = function (editor, data, imgElm) {
-  function selectImage() {
+const waitLoadImage = (editor: Editor, data: ImageData, imgElm: HTMLElement) => {
+  const selectImage = () => {
     imgElm.onload = imgElm.onerror = null;
 
     if (editor.selection) {
       editor.selection.select(imgElm);
       editor.nodeChanged();
     }
-  }
+  };
 
-  imgElm.onload = function () {
+  imgElm.onload = () => {
     if (!data.width && !data.height && Settings.hasDimensions(editor)) {
       editor.dom.setAttribs(imgElm, {
-        width: imgElm.clientWidth,
-        height: imgElm.clientHeight
+        width: String(imgElm.clientWidth),
+        height: String(imgElm.clientHeight)
       });
     }
 
@@ -168,13 +173,13 @@ const waitLoadImage = function (editor, data, imgElm) {
   imgElm.onerror = selectImage;
 };
 
-const blobToDataUri = function (blob) {
-  return new Promise<string>(function (resolve, reject) {
+const blobToDataUri = (blob: Blob) => {
+  return new Promise<string>((resolve, reject) => {
     const reader = FileReader();
-    reader.onload = function () {
+    reader.onload = () => {
       resolve(reader.result);
     };
-    reader.onerror = function () {
+    reader.onerror = () => {
       reject(reader.error.message);
     };
     reader.readAsDataURL(blob);

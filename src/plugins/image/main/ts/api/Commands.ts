@@ -6,8 +6,9 @@
  */
 
 import { Dialog } from '../ui/Dialog';
+import Editor from 'tinymce/core/api/Editor';
 
-const register = function (editor) {
+const register = (editor: Editor) => {
   editor.addCommand('mceImage', Dialog(editor).open);
 };
 

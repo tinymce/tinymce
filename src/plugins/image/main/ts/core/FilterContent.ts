@@ -6,22 +6,24 @@
  */
 
 import Tools from 'tinymce/core/api/util/Tools';
+import Node from 'tinymce/core/api/html/Node';
+import Editor from 'tinymce/core/api/Editor';
 
-const hasImageClass = function (node) {
+const hasImageClass = (node: Node) => {
   const className = node.attr('class');
   return className && /\bimage\b/.test(className);
 };
 
-const toggleContentEditableState = function (state) {
-  return function (nodes) {
-    let i = nodes.length, node;
+const toggleContentEditableState = (state: boolean) => {
+  return (nodes: Node[]) => {
+    let i = nodes.length;
 
-    const toggleContentEditable = function (node) {
+    const toggleContentEditable = (node: Node) => {
       node.attr('contenteditable', state ? 'true' : null);
     };
 
     while (i--) {
-      node = nodes[i];
+      const node = nodes[i];
 
       if (hasImageClass(node)) {
         node.attr('contenteditable', state ? 'false' : null);
@@ -31,8 +33,8 @@ const toggleContentEditableState = function (state) {
   };
 };
 
-const setup = function (editor) {
-  editor.on('PreInit', function () {
+const setup = (editor: Editor) => {
+  editor.on('PreInit', () => {
     editor.parser.addNodeFilter('figure', toggleContentEditableState(true));
     editor.serializer.addNodeFilter('figure', toggleContentEditableState(false));
   });

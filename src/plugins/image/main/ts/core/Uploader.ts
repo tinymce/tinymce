@@ -10,6 +10,7 @@ import { XMLHttpRequest } from '@ephox/sand';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
+import { Fun } from '@ephox/katamari';
 
 /**
  * This is basically cut down version of tinymce.core.file.Uploader, which we could use directly
@@ -28,9 +29,7 @@ export interface UploaderSettings {
   handler?: UploadHandler;
 }
 
-const noop = function () {};
-
-const pathJoin = function (path1: string | undefined, path2: string) {
+const pathJoin = (path1: string | undefined, path2: string) => {
   if (path1) {
     return path1.replace(/\/$/, '') + '/' + path2.replace(/^\//, '');
   }
@@ -38,23 +37,23 @@ const pathJoin = function (path1: string | undefined, path2: string) {
   return path2;
 };
 
-export default function (settings: UploaderSettings) {
-  const defaultHandler = function (blobInfo: BlobInfo, success: SuccessCallback, failure: FailureCallback, progress: ProgressCallback) {
+export default (settings: UploaderSettings) => {
+  const defaultHandler = (blobInfo: BlobInfo, success: SuccessCallback, failure: FailureCallback, progress: ProgressCallback) => {
     let xhr, formData;
 
     xhr = XMLHttpRequest();
     xhr.open('POST', settings.url);
     xhr.withCredentials = settings.credentials;
 
-    xhr.upload.onprogress = function (e) {
+    xhr.upload.onprogress = (e) => {
       progress(e.loaded / e.total * 100);
     };
 
-    xhr.onerror = function () {
+    xhr.onerror = () => {
       failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
     };
 
-    xhr.onload = function () {
+    xhr.onload = () => {
       let json;
 
       if (xhr.status < 200 || xhr.status >= 300) {
@@ -78,21 +77,21 @@ export default function (settings: UploaderSettings) {
     xhr.send(formData);
   };
 
-  const uploadBlob = function (blobInfo: BlobInfo, handler: UploadHandler) {
-    return new Promise<string>(function (resolve, reject) {
+  const uploadBlob = (blobInfo: BlobInfo, handler: UploadHandler) => {
+    return new Promise<string>((resolve, reject) => {
       try {
-        handler(blobInfo, resolve, reject, noop);
+        handler(blobInfo, resolve, reject, Fun.noop);
       } catch (ex) {
         reject(ex.message);
       }
     });
   };
 
-  const isDefaultHandler = function (handler: Function) {
+  const isDefaultHandler = (handler: Function) => {
     return handler === defaultHandler;
   };
 
-  const upload = function (blobInfo: BlobInfo): Promise<string> {
+  const upload = (blobInfo: BlobInfo): Promise<string> => {
     return (!settings.url && isDefaultHandler(settings.handler)) ? Promise.reject('Upload url missing from the settings.') : uploadBlob(blobInfo, settings.handler);
   };
 
@@ -104,4 +103,4 @@ export default function (settings: UploaderSettings) {
   return {
     upload
   };
-}
+};

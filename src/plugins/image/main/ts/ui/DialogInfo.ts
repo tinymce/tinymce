@@ -12,9 +12,9 @@ import { readImageDataFromSelection } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
 import Utils from '../core/Utils';
 import { ImageDialogInfo, ListItem } from './DialogTypes';
+import Editor from 'tinymce/core/api/Editor';
 
-const collect = (editor): Future<ImageDialogInfo> => {
-
+const collect = (editor: Editor): Future<ImageDialogInfo> => {
   const urlListSanitizer = ListUtils.sanitizer((item) => {
     return editor.convertURL(item.value || item.url, 'src');
   });

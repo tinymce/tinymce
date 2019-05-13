@@ -5,60 +5,62 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const hasDimensions = function (editor) {
-  return editor.settings.image_dimensions === false ? false : true;
+import Editor from 'tinymce/core/api/Editor';
+
+const hasDimensions = (editor: Editor) => {
+  return editor.getParam('image_dimensions', true, 'boolean');
 };
 
-const hasAdvTab = function (editor) {
-  return editor.settings.image_advtab === true ? true : false;
+const hasAdvTab = (editor: Editor) => {
+  return editor.getParam('image_advtab', false, 'boolean');
 };
 
-const getPrependUrl = function (editor) {
-  return editor.getParam('image_prepend_url', '');
+const getPrependUrl = (editor: Editor) => {
+  return editor.getParam('image_prepend_url', '', 'string');
 };
 
-const getClassList = function (editor) {
+const getClassList = (editor: Editor) => {
   return editor.getParam('image_class_list');
 };
 
-const hasDescription = function (editor) {
-  return editor.settings.image_description === false ? false : true;
+const hasDescription = (editor: Editor) => {
+  return editor.getParam('image_description', true, 'boolean');
 };
 
-const hasImageTitle = function (editor) {
-  return editor.settings.image_title === true ? true : false;
+const hasImageTitle = (editor: Editor) => {
+  return editor.getParam('image_title', false, 'boolean');
 };
 
-const hasImageCaption = function (editor) {
-  return editor.settings.image_caption === true ? true : false;
+const hasImageCaption = (editor: Editor) => {
+  return editor.getParam('image_caption', false, 'boolean');
 };
 
-const getImageList = function (editor) {
+const getImageList = (editor: Editor) => {
   return editor.getParam('image_list', false);
 };
 
-const hasUploadUrl = function (editor) {
-  return !!editor.getParam('images_upload_url', false);
+const hasUploadUrl = (editor: Editor) => {
+  return !!editor.getParam('images_upload_url', '', 'string');
 };
 
-const hasUploadHandler = function (editor) {
-  return !!editor.getParam('images_upload_handler', false);
+const hasUploadHandler = (editor: Editor) => {
+  return !!editor.getParam('images_upload_handler', null, 'function');
 };
 
-const getUploadUrl = function (editor) {
-  return editor.getParam('images_upload_url');
+const getUploadUrl = (editor: Editor) => {
+  return editor.getParam('images_upload_url', '', 'string');
 };
 
-const getUploadHandler = function (editor) {
-  return editor.getParam('images_upload_handler');
+const getUploadHandler = (editor: Editor) => {
+  return editor.getParam('images_upload_handler', null, 'function');
 };
 
-const getUploadBasePath = function (editor) {
-  return editor.getParam('images_upload_base_path');
+const getUploadBasePath = (editor: Editor) => {
+  return editor.getParam('images_upload_base_path', null, 'string');
 };
 
-const getUploadCredentials = function (editor) {
-  return editor.getParam('images_upload_credentials');
+const getUploadCredentials = (editor: Editor) => {
+  return editor.getParam('images_upload_credentials', false, 'boolean');
 };
 
 export default {
