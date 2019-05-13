@@ -66,35 +66,39 @@ const loadTheme = function (scriptLoader: ScriptLoader, editor: Editor, suffix, 
   }
 };
 
-interface IconsMeta {
+interface UrlMeta {
   url: string;
   name: Option<string>;
 }
 
-const getIconsUrl = (editor: Editor): Option<IconsMeta> => {
-  const url = Settings.getIconsUrl(editor);
-  if (url !== '') {
-    return Option.some({
-      url,
-      name: Option.none()
+const getIconsUrlMetaFromUrl = (editor: Editor): Option<UrlMeta> => {
+  return Option.from(Settings.getIconsUrl(editor))
+    .filter((url) => url.length > 0)
+    .map((url) => {
+      return {
+        url,
+        name: Option.none()
+      };
     });
-  }
+};
 
-  const name = Settings.getIconPackName(editor);
-  if (name !== '' && !IconManager.has(name)) {
-    return Option.some({
-      url: `${editor.editorManager.baseURL}/icons/${name}/icons.js`,
-      name: Option.some(name)
+const getIconsUrlMetaFromName = (editor: Editor): Option<UrlMeta> => {
+  return Option.from(Settings.getIconPackName(editor))
+    .filter((name) => name.length > 0 && !IconManager.has(name))
+    .map((name) => {
+      return {
+        url: `${editor.editorManager.baseURL}/icons/${name}/icons.js`,
+        name: Option.some(name)
+      };
     });
-  }
-
-  return Option.none();
 };
 
 const loadIcons = (scriptLoader: ScriptLoader, editor: Editor) => {
-  getIconsUrl(editor).each((iconsMeta) => {
-    scriptLoader.add(iconsMeta.url, Fun.noop, undefined, () => {
-      ErrorReporter.iconsLoadError(iconsMeta.url, iconsMeta.name.getOrUndefined());
+  getIconsUrlMetaFromUrl(editor)
+    .orThunk(() => getIconsUrlMetaFromName(editor))
+    .each((urlMeta) => {
+    scriptLoader.add(urlMeta.url, Fun.noop, undefined, () => {
+      ErrorReporter.iconsLoadError(urlMeta.url, urlMeta.name.getOrUndefined());
     });
   });
 };
