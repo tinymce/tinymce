@@ -5,42 +5,22 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema, SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { ToolbarGroupSpec } from '../../ui/types/ToolbarGroupTypes';
-import { Element } from '@ephox/sugar';
+import { ToolbarGroupSpec } from '../types/ToolbarGroupTypes';
 
-export interface SplitToolbarDetail extends CompositeSketchDetail {
+export interface SplitToolbarBaseDetail extends CompositeSketchDetail {
   uid: string;
   dom: RawDomSchema;
   components: AlloySpec[ ];
   splitToolbarBehaviours: SketchBehaviours;
-  floating: boolean;
-  overflow: (toolbar: AlloyComponent) => Option<AlloyComponent>;
 
   builtGroups: Cell<AlloyComponent[]>;
-  markers: {
-    closedClass: string;
-    openClass: string;
-    shrinkingClass: string;
-    growingClass: string;
-    overflowToggledClass: string;
-  };
 }
 
-export interface SplitToolbarSpec extends CompositeSketchSpec {
+export interface SplitToolbarBaseSpec extends CompositeSketchSpec {
   uid?: string;
   dom: RawDomSchema;
   components?: AlloySpec[];
   splitToolbarBehaviours?: AlloyBehaviourRecord;
-  floating?: boolean;
-  overflow?: (toolbar: AlloyComponent) => Option<AlloyComponent>;
-
-  markers: {
-    closedClass: string;
-    openClass: string;
-    shrinkingClass: string;
-    growingClass: string;
-    overflowToggledClass: string;
-  };
 
   parts: {
     'overflow-group': Partial<ToolbarGroupSpec>,
@@ -48,9 +28,10 @@ export interface SplitToolbarSpec extends CompositeSketchSpec {
   };
 }
 
-export interface SplitToolbarSketcher extends CompositeSketch<SplitToolbarSpec, SplitToolbarDetail> {
+export interface SplitToolbarBaseSketcher<T extends SplitToolbarBaseSpec, U extends SplitToolbarBaseDetail> extends CompositeSketch<T, U> {
   setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
   refresh: (toolbar: AlloyComponent) => void;
+  toggle: (toolbar: AlloyComponent) => void;
   getMoreButton: (toolbar: AlloyComponent) => Option<AlloyComponent>;
   getOverflow: (toolbar: AlloyComponent) => Option<AlloyComponent>;
 }

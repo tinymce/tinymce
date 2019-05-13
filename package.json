@@ -1,6 +1,6 @@
 {
   "name": "@ephox/alloy",
-  "version": "4.11.21",
+  "version": "4.12.0",
   "description": "Ui Framework",
   "dependencies": {
     "@ephox/agar": "latest",
