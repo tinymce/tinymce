@@ -5,16 +5,48 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import * as WordCount from '../text/WordCount';
 import Editor from 'tinymce/core/api/Editor';
+import { countWords, countCharacters, countCharactersWithoutSpaces, Counter } from '../core/Count';
 
-const get = (editor: Editor) => {
-  const getCount = () => {
-    return WordCount.getEditorWordcount(editor).words;
-  };
+export type CountGetter = () => number;
 
+interface CountGetters {
+  getWordCount: CountGetter;
+  getCharacterCount: CountGetter;
+  getCharacterCountWithoutSpaces: CountGetter;
+}
+
+export interface WordCountApi {
+  body: CountGetters;
+  selection: CountGetters;
+  getCount: CountGetter; // TODO: Deprecate
+}
+
+const createBodyCounter = (editor: Editor, count: Counter): CountGetter => {
+  return () => count(editor.getBody(), editor.schema);
+};
+
+const createSelectionCounter = (editor: Editor, count: Counter): CountGetter => {
+  return () => count(editor.selection.getRng().cloneContents(), editor.schema);
+};
+
+const createBodyWordCounter = (editor: Editor): CountGetter => {
+  return createBodyCounter(editor, countWords);
+};
+
+const get = (editor: Editor): WordCountApi => {
   return {
-    getCount
+    body: {
+      getWordCount: createBodyWordCounter(editor),
+      getCharacterCount: createBodyCounter(editor, countCharacters),
+      getCharacterCountWithoutSpaces: createBodyCounter(editor, countCharactersWithoutSpaces)
+    },
+    selection: {
+      getWordCount: createSelectionCounter(editor, countWords),
+      getCharacterCount: createSelectionCounter(editor, countCharacters),
+      getCharacterCountWithoutSpaces: createSelectionCounter(editor, countCharactersWithoutSpaces)
+    },
+    getCount: createBodyWordCounter(editor)
   };
 };
 

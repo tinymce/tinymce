@@ -10,10 +10,12 @@ import * as Api from './api/Api';
 import * as Wordcounter from './core/WordCounter';
 import * as Buttons from './ui/Buttons';
 
-PluginManager.add('wordcount', function (editor) {
-  Buttons.register(editor);
-  Wordcounter.setup(editor);
-  return Api.get(editor);
+PluginManager.add('wordcount', (editor) => {
+  const api = Api.get(editor);
+
+  Buttons.register(editor, api);
+  Wordcounter.setup(editor, api);
+  return api;
 });
 
 export default function () { }

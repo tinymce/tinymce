@@ -1,6 +1,7 @@
 Version 5.0.6 (TBD)
     Fixed the textpattern plugin not working with fragmented text #TINY-3089
     Fixed various toolbar drawer accessibility issues and added an animation #TINY-3554
+    Added new api endpoints to the wordcount plugin and improved character count logic #TINY-3578
 Version 5.0.5 (2019-05-09)
     Added menu items to match the forecolor/backcolor toolbar buttons #TINY-2878
     Added default directionality based on the configured language #TINY-2621
