@@ -19,10 +19,11 @@ import {
   Toolbar as AlloyToolbar,
   ToolbarGroup as AlloyToolbarGroup
 } from '@ephox/alloy';
-import { Arr, Option, Result } from '@ephox/katamari';
+import { Arr, Option, Result, Fun } from '@ephox/katamari';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderIconButtonSpec } from '../general/Button';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
+import { createReadonlyReceivingForOverflow } from '../../ReadOnly';
 
 export interface MoreDrawerData {
   lazyMoreButton: () => AlloyComponent;
@@ -77,7 +78,7 @@ const renderToolbarGroup = (toolbarGroup: ToolbarGroup) => {
   return AlloyToolbarGroup.sketch(renderToolbarGroupCommon(toolbarGroup));
 };
 
-const getToolbarbehaviours = (toolbarSpec, modeName) => {
+const getToolbarbehaviours = (toolbarSpec: ToolbarSpec, modeName, getOverflow: (comp: AlloyComponent) => Option<AlloyComponent>) => {
   const onAttached = AlloyEvents.runOnAttached(function (component) {
     const groups = Arr.map(toolbarSpec.initGroups, renderToolbarGroup);
     AlloyToolbar.setGroups(component, groups);
@@ -90,11 +91,12 @@ const getToolbarbehaviours = (toolbarSpec, modeName) => {
       onEscape: toolbarSpec.onEscape,
       selector: '.tox-toolbar__group'
     }),
-    AddEventsBehaviour.config('toolbar-events', [ onAttached ])
+    AddEventsBehaviour.config('toolbar-events', [ onAttached ]),
+    createReadonlyReceivingForOverflow(getOverflow)
   ]);
 };
 
-const renderMoreToolbarCommon = (toolbarSpec: ToolbarSpec) => {
+const renderMoreToolbarCommon = (toolbarSpec: ToolbarSpec, getOverflow: (comp: AlloyComponent) => Option<AlloyComponent>) => {
   const modeName = toolbarSpec.cyclicKeying ? 'cyclic' : 'acyclic';
 
   return {
@@ -116,12 +118,12 @@ const renderMoreToolbarCommon = (toolbarSpec: ToolbarSpec) => {
         tooltip: Option.some('More...')
       }, Option.none(), toolbarSpec.backstage.shared.providers)
     },
-    splitToolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName)
+    splitToolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName, getOverflow)
   };
 };
 
 const renderFloatingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
-  const baseSpec = renderMoreToolbarCommon(toolbarSpec);
+  const baseSpec = renderMoreToolbarCommon(toolbarSpec, AlloySplitFloatingToolbar.getOverflow);
 
   const primary = AlloySplitFloatingToolbar.parts().primary({
     dom: {
@@ -165,7 +167,7 @@ const renderSlidingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
     }
   });
 
-  const baseSpec = renderMoreToolbarCommon(toolbarSpec);
+  const baseSpec = renderMoreToolbarCommon(toolbarSpec, AlloySplitSlidingToolbar.getOverflow);
 
   return AlloySplitSlidingToolbar.sketch({
     ...baseSpec,
@@ -193,7 +195,7 @@ const renderToolbar = (toolbarSpec: ToolbarSpec) => {
       AlloyToolbar.parts().groups({})
     ],
 
-    toolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName)
+    toolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName, Fun.constant(Option.none()))
   });
 };
 

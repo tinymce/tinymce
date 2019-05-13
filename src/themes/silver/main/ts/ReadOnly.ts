@@ -5,12 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Channels, Disabling } from '@ephox/alloy';
+import { AlloyComponent, Channels, Disabling, Receiving } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Selectors } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from './api/Settings';
 import { RenderUiComponents } from './Render';
+import { Option } from '@ephox/katamari';
 
 export const ReadOnlyChannel = 'silver.readonly';
 
@@ -41,6 +42,7 @@ const broadcastReadonly = (uiComponents: RenderUiComponents, readonly: boolean) 
     uiComponents.uiMothership.broadcastOn([ Channels.dismissPopups() ], { target });
   }
 
+  uiComponents.mothership.broadcastOn([ ReadOnlyChannel ], { readonly });
   uiComponents.uiMothership.broadcastOn([ ReadOnlyChannel ], { readonly });
 };
 
@@ -71,4 +73,19 @@ export const setupReadonlyModeSwitch = (editor: Editor, uiComponents: RenderUiCo
   if (Settings.isReadOnly(editor)) {
     editor.setMode('readonly');
   }
+};
+
+export const createReadonlyReceivingForOverflow = (getOverflow: (comp: AlloyComponent) => Option<AlloyComponent>) => {
+  return Receiving.config({
+    channels: {
+      [ReadOnlyChannel]: {
+        schema: ReadOnlyDataSchema,
+        onReceive: (comp, data: ReadOnlyData) => {
+          getOverflow(comp).each((toolbar) => {
+            setDisabledAll(toolbar, data.readonly);
+          });
+        }
+      }
+    }
+  });
 };
