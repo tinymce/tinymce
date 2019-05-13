@@ -44,11 +44,11 @@ const getImageList = (editor: Editor) => {
 };
 
 const hasUploadUrl = (editor: Editor) => {
-  return !!editor.getParam('images_upload_url', '', 'string');
+  return !!getUploadUrl(editor);
 };
 
 const hasUploadHandler = (editor: Editor) => {
-  return !!editor.getParam('images_upload_handler');
+  return !!getUploadHandler(editor);
 };
 
 const getUploadUrl = (editor: Editor) => {
@@ -56,11 +56,11 @@ const getUploadUrl = (editor: Editor) => {
 };
 
 const getUploadHandler = (editor: Editor) => {
-  return editor.getParam('images_upload_handler');
+  return editor.getParam('images_upload_handler', undefined, 'function');
 };
 
 const getUploadBasePath = (editor: Editor) => {
-  return editor.getParam('images_upload_base_path', null, 'string');
+  return editor.getParam('images_upload_base_path', undefined, 'string');
 };
 
 const getUploadCredentials = (editor: Editor) => {
