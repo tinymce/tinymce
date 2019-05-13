@@ -4,15 +4,11 @@ var less = require('gulp-less');
 var lessAutoprefix = require('less-plugin-autoprefix');
 var gulpStylelint = require('gulp-stylelint');
 var variablesOutput = require('less-plugin-variables-output');
-var concat = require('gulp-concat');
-var fileinclude = require('gulp-file-include');
 var header = require('gulp-header');
-var shell = require('gulp-shell');
 var cleanCSS = require('gulp-clean-css');
 var sourcemaps = require('gulp-sourcemaps');
 var rename = require('gulp-rename');
 const fs = require('fs');
-const path = require('path');
 
 var autoprefix = new lessAutoprefix({ browsers: ['IE 11', 'last 2 Safari versions', 'iOS 9.0', 'last 2 Chrome versions', 'Firefox ESR'] });
 var exportLessVariablesToJson = new variablesOutput({ filename: 'build/skin-tool/less-variables.json' });
@@ -64,7 +60,7 @@ gulp.task('copyFilesTheme', function() {
 });
 
 gulp.task('serve', function () {
-  gulp.watch('./src/**/*.less', gulp.series('lint', 'copyFilesTheme', 'minify-css'));
+  gulp.watch('./src/**/*.less', gulp.series('css', 'copyFilesTheme'));
 });
 
 
@@ -82,7 +78,8 @@ gulp.task('clean', function () {
 //
 // Build project and watch LESS file changes
 //
-gulp.task('build', gulp.series('clean', 'lint', 'less', 'minify-css'));
+gulp.task('css', gulp.series('lint', 'less', 'minify-css'))
+gulp.task('build', gulp.series('clean', 'css'));
 gulp.task('default', gulp.series('build'));
 
 gulp.task('watch', gulp.series('build', 'copyFilesTheme', 'serve'));
