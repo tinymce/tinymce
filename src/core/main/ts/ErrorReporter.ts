@@ -5,64 +5,56 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import AddOnManager from './api/AddOnManager';
-import { window } from '@ephox/dom-globals';
+import { window, console } from '@ephox/dom-globals';
 import I18n from './api/util/I18n';
 import Editor from 'tinymce/core/api/Editor';
 
-/**
- * Various error reporting helper functions.
- *
- * @class tinymce.ErrorReporter
- * @private
- */
-
-const PluginManager = AddOnManager.PluginManager;
-
-const resolvePluginName = function (targetUrl, suffix) {
-  for (const name in PluginManager.urls) {
-    const matchUrl = PluginManager.urls[name] + '/plugin' + suffix + '.js';
-    if (matchUrl === targetUrl) {
-      return name;
-    }
-  }
-
-  return null;
-};
-
-const pluginUrlToMessage = function (editor: Editor, url: string) {
-  const plugin = resolvePluginName(url, editor.suffix);
-  return plugin ?
-    I18n.translate(['Failed to load plugin: {0} from url {1}', plugin, url]) :
-    I18n.translate(['Failed to load plugin url: {0}', url]);
-};
-
-const displayNotification = function (editor: Editor, message: string) {
+const displayNotification = (editor: Editor, message: string) => {
   editor.notificationManager.open({
     type: 'error',
     text: message
   });
 };
 
-const displayError = function (editor: Editor, message: string) {
+const displayError = (editor: Editor, message: string) => {
   if (editor._skinLoaded) {
     displayNotification(editor, message);
   } else {
-    editor.on('SkinLoaded', function () {
+    editor.on('SkinLoaded', () => {
       displayNotification(editor, message);
     });
   }
 };
 
-const uploadError = function (editor: Editor, message: string) {
+const uploadError = (editor: Editor, message: string) => {
   displayError(editor, I18n.translate(['Failed to upload image: {0}', message]));
 };
 
-const pluginLoadError = function (editor: Editor, url: string) {
-  displayError(editor, pluginUrlToMessage(editor, url));
+const logError = (msg: string) => {
+  console.error(msg);
 };
 
-const pluginInitError = function (editor: Editor, name: string, err) {
+const pluginLoadError = (url: string, name?: string) => {
+  const message =  name ?
+    ['Failed to load plugin: {0} from url {1}', name, url] :
+    ['Failed to load plugin url: {0}', url];
+
+  logError(I18n.translate(message));
+};
+
+const iconsLoadError = (url: string, name?: string) => {
+  const message =  name ?
+    ['Failed to load icons: {0} from url {1}', name, url] :
+    ['Failed to load icons url: {0}', url];
+
+  logError(I18n.translate(message));
+};
+
+const languageLoadError = (url: string, name: string) => {
+  logError(I18n.translate(['Failed to load language: {0} from url {1}', name, url]));
+};
+
+const pluginInitError = (editor: Editor, name: string, err) => {
   const message = I18n.translate(['Failed to initialize plugin: {0}', name]);
   initError(message, err);
   displayError(editor, message);
@@ -81,6 +73,8 @@ const initError = function (message: string, ...x: any[]) {
 
 export default {
   pluginLoadError,
+  iconsLoadError,
+  languageLoadError,
   pluginInitError,
   uploadError,
   displayError,
