@@ -15,16 +15,16 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
   SilverTheme();
   Plugin();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const api = TinyApis(editor);
     const ui = TinyUi(editor);
 
-    const sAssertImageTab = function (title, isPresent) {
+    const sAssertImageTab = (title: string, isPresent: boolean) => {
       return Logger.t('Assert image tab is present', GeneralSteps.sequence([
         ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
         Chain.asStep({}, [
           ui.cWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-          Chain.op(function (container) {
+          Chain.op((container) => {
             const expected = {};
             expected['.tox-tab:contains("' + title + '")'] = isPresent ? 1 : 0;
             Assertions.assertPresence('Asserting presence', expected, container);
@@ -34,8 +34,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       ]));
     };
 
-    const sTriggerUpload = Logger.t('Trigger upload', Step.async(function (next, die) {
-      Conversions.uriToBlob(b64).then(function (blob) {
+    const sTriggerUpload = Logger.t('Trigger upload', Step.async((next, die) => {
+      Conversions.uriToBlob(b64).then((blob) => {
         Pipeline.async({}, [
           sRunStepOnPatchedFileInput([Files.createFile('logo.png', 0, blob)], Chain.asStep({}, [
             // cPopupToDialog('div[role="dialog"]'),
@@ -66,11 +66,24 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       sAssertImageTab('Advanced', true)
     ]);
 
+    const uploadTabNotPresentOnUploadUrlWithUploadTabDisabled = Log.stepsAsStep('TBA', 'Image: Upload tab should be not be present when images_upload_url is set to some truthy value and image_uploadtab is set to false', [
+      api.sSetContent('<p><img src="' + src + '" /></p>'),
+      api.sSelect('img', []),
+      api.sSetSetting('image_uploadtab', false),
+      api.sSetSetting('images_upload_handler', (blobInfo, success) => {
+        return success('file.jpg');
+      }),
+      sAssertImageTab('Upload', false),
+      api.sSetSetting('image_advtab', true),
+      api.sDeleteSetting('image_uploadtab'),
+      sAssertImageTab('Upload', true)
+    ]);
+
     const uploadTabPresentOnUploadHandler = Log.stepsAsStep('TBA', 'Image: Upload tab should be present when images_upload_handler is set to some truthy value', [
       api.sSetContent('<p><img src="' + src + '" /></p>'),
       api.sSelect('img', []),
       api.sSetSetting('image_advtab', false), // make sure that Advanced tab appears separately
-      api.sSetSetting('images_upload_handler', function (blobInfo, success) {
+      api.sSetSetting('images_upload_handler', (blobInfo, success) => {
         return success('file.jpg');
       }),
       sAssertImageTab('Upload', true),
@@ -84,7 +97,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
     const sAssertSrcTextValue = (expectedValue: string) => {
       return Waiter.sTryUntil('Waited for input to change to expected value', Chain.asStep(Body.body(), [
         UiFinder.cFindIn('label.tox-label:contains("Source") + div > div > input.tox-textfield'),
-        Chain.op(function (input) {
+        Chain.op((input) => {
           Assertions.assertEq('Assert field source value ', expectedValue, input.dom().value);
         })
       ]), 10, 10000);
@@ -136,6 +149,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
     Pipeline.async({}, [
       uploadTabNotPresent,
       uploadTabPresentOnUploadUrl,
+      uploadTabNotPresentOnUploadUrlWithUploadTabDisabled,
       uploadTabPresentOnUploadHandler,
       uploadWithCustomRoute,
       uploadWithCustomHandler,

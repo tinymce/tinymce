@@ -33,6 +33,7 @@ const collect = (editor: Editor): Future<ImageDialogInfo> => {
   });
   const classList = ListUtils.sanitize(Settings.getClassList(editor));
   const hasAdvTab = Settings.hasAdvTab(editor);
+  const hasUploadTab = Settings.hasUploadTab(editor);
   const hasUploadUrl = Settings.hasUploadUrl(editor);
   const hasUploadHandler = Settings.hasUploadHandler(editor);
   const image = readImageDataFromSelection(editor);
@@ -53,6 +54,7 @@ const collect = (editor: Editor): Future<ImageDialogInfo> => {
       imageList,
       classList,
       hasAdvTab,
+      hasUploadTab,
       hasUploadUrl,
       hasUploadHandler,
       hasDescription,

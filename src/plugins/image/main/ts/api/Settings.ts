@@ -15,6 +15,10 @@ const hasAdvTab = (editor: Editor) => {
   return editor.getParam('image_advtab', false, 'boolean');
 };
 
+const hasUploadTab = (editor: Editor) => {
+  return editor.getParam('image_uploadtab', true, 'boolean');
+};
+
 const getPrependUrl = (editor: Editor) => {
   return editor.getParam('image_prepend_url', '', 'string');
 };
@@ -44,7 +48,7 @@ const hasUploadUrl = (editor: Editor) => {
 };
 
 const hasUploadHandler = (editor: Editor) => {
-  return !!editor.getParam('images_upload_handler', null, 'function');
+  return !!editor.getParam('images_upload_handler');
 };
 
 const getUploadUrl = (editor: Editor) => {
@@ -52,7 +56,7 @@ const getUploadUrl = (editor: Editor) => {
 };
 
 const getUploadHandler = (editor: Editor) => {
-  return editor.getParam('images_upload_handler', null, 'function');
+  return editor.getParam('images_upload_handler');
 };
 
 const getUploadBasePath = (editor: Editor) => {
@@ -65,6 +69,7 @@ const getUploadCredentials = (editor: Editor) => {
 
 export default {
   hasDimensions,
+  hasUploadTab,
   hasAdvTab,
   getPrependUrl,
   getClassList,
