@@ -7,7 +7,7 @@
 
 import { GuiFactory, InlineView, Menu, Highlighting, ItemTypes } from '@ephox/alloy';
 import { InlineContent, Types } from '@ephox/bridge';
-import { console, Range, Text } from '@ephox/dom-globals';
+import { console, Range } from '@ephox/dom-globals';
 import { Arr, Option, Options, Throttler, Thunk } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
@@ -64,8 +64,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
         choices,
         (itemValue, itemMeta) => {
           const nr = editor.selection.getRng();
-          const textNode = nr.startContainer as Text; // TODO: Investigate if this is safe
-          getContext(nr, triggerChar, textNode.data, nr.startOffset).fold(
+          getContext(editor.dom, nr, triggerChar).fold(
             () => console.error('Lost context. Cursor probably moved'),
             ({ rng }) => {
               const autocompleterApi: InlineContent.AutocompleterInstanceApi = {

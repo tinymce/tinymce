@@ -5,8 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range } from '@ephox/dom-globals';
+import { Range, Text } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { Phase, repeatLeft } from '../../alien/TextSearch';
 
 // TODO: Obviously, move out of UI
 
@@ -16,7 +18,7 @@ const isValidTextRange = (rng: Range): boolean => {
 
 const whiteSpace = /[\u00a0 \t\r\n]/;
 
-const parse = (text: string, index: number, ch: string, minChars): Option<string> => {
+const parse = (text: string, index: number, ch: string, minChars: number): Option<string> => {
   // Identify the `char` in, and start the text from that point forward. If there is ever any whitespace, fail
   let i;
 
@@ -37,21 +39,32 @@ const parse = (text: string, index: number, ch: string, minChars): Option<string
   return Option.some(text.substring(i + 1, index));
 };
 
-const getContext = (initRange: Range, ch: string, text: string, index: number, minChars: number = 0 ): Option<{ rng: Range, text: string }> => {
+const getContext = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Option<{ rng: Range, text: string }> => {
   if (!isValidTextRange(initRange)) {
     return Option.none();
   }
 
-  return parse(text, index, ch, minChars).map((newText) => {
-    const rng = initRange.cloneRange();
-    rng.setStart(initRange.startContainer, initRange.startOffset - newText.length - 1);
-    rng.setEnd(initRange.startContainer, initRange.startOffset);
+  const findTriggerCh = (phase: Phase<{ rng: Range, text: string }>, element: Text, text: string, optOffset: Option<number>) => {
+    const index = optOffset.getOr(text.length);
+    return parse(text, index, ch, 1).fold(
+      () => {
+        // Abort if we find whitespace, otherwise continue searching
+        return text.match(whiteSpace) ? phase.abort() : phase.kontinue();
+      },
+      (newText) => {
+        const rng = initRange.cloneRange();
+        rng.setStart(element, index - newText.length - 1);
+        rng.setEnd(initRange.endContainer, initRange.endOffset);
 
-    return {
-      text: newText,
-      rng
-    };
-  });
+        const text = rng.toString().substring(ch.length);
+
+        // If the match is less than the minimum number of chars, then abort
+        return text.length < minChars ? phase.abort() : phase.finish({ text, rng });
+      }
+    );
+  };
+
+  return repeatLeft(dom, initRange.startContainer, initRange.startOffset, findTriggerCh).fold(Option.none, Option.none, Option.some);
 };
 
 export {
