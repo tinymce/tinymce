@@ -3,14 +3,10 @@
   "version": "1.0.201",
   "description": "TinyMCE 5 Oxide skin",
   "scripts": {
-    "test": "echo 'No tests hooked up yet'",
+    "test": "echo 'No tests'",
     "build": "gulp build",
-    "start": "gulp",
-    "prepublishOnly": "npm run build",
-    "backstop:test": "gulp backstop:test",
-    "backstop:report": "backstop openReport",
-    "backstop:approve": "gulp backstop:approve",
-    "backstop:reference": "gulp backstop:reference"
+    "start": "gulp watch",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "TinyMCE"
@@ -21,16 +17,12 @@
   "author": "Ephox Corporation",
   "license": "LGPL-2.1",
   "devDependencies": {
-    "@tinymce/oxide-icons-default": "latest",
     "gulp": "^4.0.0",
     "gulp-clean": "^0.4.0",
     "gulp-clean-css": "^4.0.0",
-    "gulp-concat": "^2.6.1",
-    "gulp-file-include": "^2.0.1",
     "gulp-header": "^2.0.7",
     "gulp-less": "^4.0.1",
     "gulp-rename": "^1.4.0",
-    "gulp-shell": "^0.7.0",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-stylelint": "^8.0.0",
     "less-plugin-autoprefix": "^2.0.0",
