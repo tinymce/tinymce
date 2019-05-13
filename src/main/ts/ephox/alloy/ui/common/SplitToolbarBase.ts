@@ -110,4 +110,4 @@ const spec = <T extends SplitToolbarBaseDetail, U extends SplitToolbarBaseSpec>(
 export {
   schema,
   spec
-}
+};

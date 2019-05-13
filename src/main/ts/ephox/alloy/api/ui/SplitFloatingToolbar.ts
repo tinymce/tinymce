@@ -105,7 +105,7 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
     coupling: {
       sandbox (toolbar) {
         return makeSandbox(toolbar, detail)
-      },
+      }
     }
   });
 };

@@ -1,5 +1,6 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
+
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';
@@ -63,7 +64,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
               mode: 'expanded'
             },
             toggleOnExecute: false
-          }),
+          })
         ])
       };
     }

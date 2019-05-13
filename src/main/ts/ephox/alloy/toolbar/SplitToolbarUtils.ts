@@ -74,7 +74,7 @@ const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, overfl
   // Restore the focus and toggle state
   overflow.each((overf) => {
     overflowButton.each((button) => Toggling.set(button, isOpen(overf)));
-    focusedComp.each(Focusing.focus)
+    focusedComp.each(Focusing.focus);
   });
 };
 
