@@ -10,7 +10,7 @@ UnitTest.test('FitmentIVTest', function () {
   const browser = PlatformDetection.detect().browser;
 
   // Note: cycles 500, min 1, max 200 ~ 22secs (on nodejs, anyway)
-  const CYCLES = browser.isIE() || browser.isEdge() || browser.isFirefox() ? 1 : 250;
+  const CYCLES = browser.isIE() || browser.isEdge() || browser.isFirefox() ? 1 : 100;
   const GRID_MIN = 1;   // 1x1 grid is the min
   const GRID_MAX = 200;
 
