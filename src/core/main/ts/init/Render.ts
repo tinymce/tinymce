@@ -139,11 +139,7 @@ const loadPlugins = (settings: RawEditorSettings, suffix: string) => {
           suffix: '/plugin' + suffix + '.js'
         };
 
-        PluginManager.load(plugin, {
-          prefix: 'plugins/',
-          resource: plugin,
-          suffix: '/plugin' + suffix + '.js'
-        }, Fun.noop, undefined, () => {
+        PluginManager.load(plugin, url, Fun.noop, undefined, () => {
           ErrorReporter.pluginLoadError(url.prefix + url.resource + url.suffix, plugin);
         });
       }
