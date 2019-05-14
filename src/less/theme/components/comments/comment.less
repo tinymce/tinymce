@@ -88,10 +88,6 @@
   .tox-comment__buttonspacing {
     padding-top: @pad-md;
     text-align: center;
-
-    > *:last-child {
-      margin-left: @pad-sm;
-    }
   }
 
   .tox-comment-thread__overlay::after {
@@ -220,6 +216,7 @@
 //end tox
 
 .tox:not([dir=rtl]) {
+  .tox-comment__buttonspacing,
   .tox-comment__reply {
     > *:last-child {
       margin-left: @pad-sm;
@@ -229,6 +226,7 @@
 
 // RTL
 .tox[dir=rtl] {
+  .tox-comment__buttonspacing,
   .tox-comment__reply {
     > *:last-child {
       margin-right: @pad-sm;
