@@ -33,16 +33,12 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     Step.sync(() => {
       const elm = UiFinder.findIn(contentAreaContainer, selector).getOrDie();
       Scroll.intoView(elm, false);
-    }),
+    })
   ]);
 
-  const sScrollToElementAndSelect = (tinyApis, contentAreaContainer: Element, selector: string) => GeneralSteps.sequence([
+  const sScrollToElementAndActivate = (tinyApis, contentAreaContainer: Element, selector: string) => Step.label('Activate editor', GeneralSteps.sequence([
     sScrollToElement(contentAreaContainer, selector),
     tinyApis.sSelect(selector, []),
-    tinyApis.sNodeChanged
-  ]);
-
-  const sActivateEditor = (tinyApis) => Step.label('Activate editor', GeneralSteps.sequence([
     tinyApis.sFocus,
     tinyApis.sNodeChanged,
     UiFinder.sWaitForVisible('Wait for editor to be visible', Body.body(), '.tox.tox-tinymce-inline')
@@ -70,27 +66,23 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
           contentAreaContainer.dom().parentNode.insertBefore(prependContent, contentAreaContainer.dom());
         }),
         tinyApis.sSetContent(content),
-        Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content (docked position)', [
-          sActivateEditor(tinyApis),
-          sScrollToElementAndSelect(tinyApis, contentAreaContainer, ':last-child'),
-          sAssertDockedPos(uiContainer),
-          sDeactivateEditor(editor)
-        ]),
-        Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position)', [
-          sActivateEditor(tinyApis),
-          sScrollToElementAndSelect(tinyApis, contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
-          sAssertDockedPos(uiContainer),
-          sDeactivateEditor(editor)
-        ]),
         Log.stepsAsStep('TINY-3621', 'Select item at the top of the content (absolute position)', [
-          sActivateEditor(tinyApis),
-          sScrollToElementAndSelect(tinyApis, contentAreaContainer, ':first-child'),
+          sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
           sAssertAbsolutePos(uiContainer),
           sDeactivateEditor(editor)
         ]),
+        Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position)', [
+          sScrollToElementAndActivate(tinyApis, contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
+          sAssertDockedPos(uiContainer),
+          sDeactivateEditor(editor)
+        ]),
+        Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content (docked position)', [
+          sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child'),
+          sAssertDockedPos(uiContainer),
+          sDeactivateEditor(editor)
+        ]),
         Log.stepsAsStep('TINY-3621', 'Select item at the top of the content and scroll to middle and back', [
-          sActivateEditor(tinyApis),
-          sScrollToElementAndSelect(tinyApis, contentAreaContainer, ':first-child'),
+          sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
           sAssertAbsolutePos(uiContainer),
           sScrollToElement(contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
           sAssertDockedPos(uiContainer),
