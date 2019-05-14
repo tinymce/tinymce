@@ -214,7 +214,88 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, fai
           sFireKeyPress(editor),
           Waiter.sTryUntil('', tinyApis.sAssertContent('<p>a b</p>'), 10, 1000),
           tinyApis.sAssertSelection([0, 0], 3, [0, 0], 3),
-        ] : []))
+        ] : [])),
+
+        Logger.t('Nbsp in pre', GeneralSteps.sequence([
+          Logger.t('Trim nbsp at beginning of text in pre element', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<pre>&nbsp;a</pre>'),
+            tinyApis.sSetCursor([0, 0], 2),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 0], 2, [0, 0], 2),
+            tinyApis.sAssertContent('<pre> a</pre>')
+          ])),
+          Logger.t('Trim nbsp at end of text in pre element', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<pre>a&nbsp;</pre>'),
+            tinyApis.sSetCursor([0, 0], 2),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 0], 2, [0, 0], 2),
+            tinyApis.sAssertContent('<pre>a </pre>')
+          ])),
+          Logger.t('Trim nbsp middle of text in pre element', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<pre>a&nbsp;b</pre>'),
+            tinyApis.sSetCursor([0, 0], 2),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 0], 2, [0, 0], 2),
+            tinyApis.sAssertContent('<pre>a b</pre>')
+          ]))
+        ])),
+
+        Logger.t('Nbsp in pre: white-space: pre-wrap', GeneralSteps.sequence([
+          Logger.t('Trim nbsp at start of text in white-space: pre-line element', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<pre style="white-space: pre-wrap;">&nbsp;a</pre>'),
+            tinyApis.sSetCursor([0, 0], 2),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 0], 2, [0, 0], 2),
+            tinyApis.sAssertContent('<pre style="white-space: pre-wrap;"> a</pre>')
+          ])),
+          Logger.t('Trim nbsp at end of text in white-space: pre-line element', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<pre style="white-space: pre-wrap;">a&nbsp;</pre>'),
+            tinyApis.sSetCursor([0, 0], 2),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 0], 2, [0, 0], 2),
+            tinyApis.sAssertContent('<pre style="white-space: pre-wrap;">a </pre>')
+          ])),
+          Logger.t('Trim nbsp in middle of text in in white-space: pre-line element', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<pre style="white-space: pre-wrap;">a&nbsp;b</pre>'),
+            tinyApis.sSetCursor([0, 0], 2),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 0], 2, [0, 0], 2),
+            tinyApis.sAssertContent('<pre style="white-space: pre-wrap;">a b</pre>')
+          ]))
+        ])),
+
+        Logger.t('Nbsp in pre: white-space: pre-line', GeneralSteps.sequence([
+          Logger.t('Do not trim nbsp at beginning of text in white-space: pre-line element', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<pre style="white-space: pre-line;">&nbsp;a</pre>'),
+            tinyApis.sSetCursor([0, 0], 2),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 0], 2, [0, 0], 2),
+            tinyApis.sAssertContent('<pre style="white-space: pre-line;">&nbsp;a</pre>')
+          ])),
+          Logger.t('Do not trim nbsp at end of text in white-space: pre-line element', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<pre style="white-space: pre-line;">a&nbsp;</pre>'),
+            tinyApis.sSetCursor([0, 0], 2),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 0], 2, [0, 0], 2),
+            tinyApis.sAssertContent('<pre style="white-space: pre-line;">a&nbsp;</pre>')
+          ])),
+          Logger.t('Trim nbsp in middle of text in in white-space: pre-line element', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<pre style="white-space: pre-line;">a&nbsp;b</pre>'),
+            tinyApis.sSetCursor([0, 0], 2),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 0], 2, [0, 0], 2),
+            tinyApis.sAssertContent('<pre style="white-space: pre-line;">a b</pre>')
+          ]))
+        ]))
       ]))
     ], onSuccess, onFailure);
   }, {

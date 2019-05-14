@@ -45,7 +45,7 @@ const hasSpaceAfter = (root: Element, pos: CaretPosition): boolean => {
   }
 };
 
-const isPreValue = (value: string) => Arr.contains([ 'pre', 'pre-line', 'pre-wrap' ], value);
+const isPreValue = (value: string) => Arr.contains([ 'pre', 'pre-wrap' ], value);
 
 const isInPre = (pos: CaretPosition) => {
   return getElementFromPosition(pos)
