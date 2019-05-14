@@ -9,7 +9,6 @@ import { document, Element, Blob, HTMLElement } from '@ephox/dom-globals';
 import { Result } from '@ephox/katamari';
 import { FileReader } from '@ephox/sand';
 import Promise from 'tinymce/core/api/util/Promise';
-import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
 import Settings from '../api/Settings';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
@@ -21,7 +20,7 @@ export interface ImageDimensions {
   height: number;
 }
 
-// TODO: Figure out if these can be numbers
+// TODO: Figure out if these would ever be something other than numbers. This was added in: #TINY-1350
 const parseIntAndGetMax = (val1: any, val2: any) => {
   return Math.max(parseInt(val1, 10), parseInt(val2, 10));
 };
@@ -29,7 +28,7 @@ const parseIntAndGetMax = (val1: any, val2: any) => {
 const getImageSize = (url: string, callback: (dimensions: Result<ImageDimensions, string>) => void) => {
   const img = document.createElement('img');
 
-  const done = (dimensions) => {
+  const done = (dimensions: Result<ImageDimensions, string>) => {
     if (img.parentNode) {
       img.parentNode.removeChild(img);
     }
@@ -56,29 +55,6 @@ const getImageSize = (url: string, callback: (dimensions: Result<ImageDimensions
 
   document.body.appendChild(img);
   img.src = url;
-};
-
-const buildListItems = function (inputList, itemCallback, startItems?) {
-  function appendItems(values, output?) {
-    output = output || [];
-
-    Tools.each(values, function (item) {
-      const menuItem: any = { text: item.text || item.title };
-
-      if (item.menu) {
-        menuItem.menu = appendItems(item.menu);
-      } else {
-        menuItem.value = item.value;
-        itemCallback(menuItem);
-      }
-
-      output.push(menuItem);
-    });
-
-    return output;
-  }
-
-  return appendItems(inputList, startItems || []);
 };
 
 const removePixelSuffix = (value: string): string => {
@@ -192,7 +168,6 @@ const isPlaceholderImage = (imgElm: Element): boolean => {
 
 export default {
   getImageSize,
-  buildListItems,
   removePixelSuffix,
   addPixelSuffix,
   mergeMargins,
