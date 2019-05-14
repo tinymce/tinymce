@@ -11,15 +11,15 @@ import Editor from 'tinymce/core/api/Editor';
 UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => {
   Theme();
 
-  const sAssertAbsolutePos = (container: Element) => Step.sync(() => {
+  const sAssertAbsolutePos = (container: Element) => Waiter.sTryUntil('Wait for toolbar to be absolute', Step.sync(() => {
     Assertions.assertEq(`Container should be absolutely positioned`, 'absolute', Css.get(container, 'position'));
     const top = Css.get(container, 'top');
     const left = Css.get(container, 'left');
     Assertions.assertEq(`Container top position (${top}) should be an integer`, true, top.indexOf('.') === -1);
     Assertions.assertEq(`Container left position (${left}) should be 0px`, '0px', left);
-  });
+  }), 100, 1000);
 
-  const sAssertDockedPos = (container: Element) => Step.sync(() => {
+  const sAssertDockedPos = (container: Element) => Waiter.sTryUntil('Wait for toolbar to be docked', Step.sync(() => {
     Assertions.assertEq(`Container should be docked (fixed position)`, 'fixed', Css.get(container, 'position'));
     const top = Css.get(container, 'top');
     const left = Css.get(container, 'left');
@@ -27,7 +27,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     Assertions.assertEq(`Container top position (${top}) should be 0px`, '0px', top);
     Assertions.assertEq(`Container left position (${left}) should be 0px`, '0px', left);
     Assertions.assertEq(`Container previous top position (${prevTop}) should be an integer`, true, prevTop.indexOf('.') === -1);
-  });
+  }), 100, 1000);
 
   const sScrollToElement = (contentAreaContainer: Element, selector: string) => GeneralSteps.sequence([
     Step.sync(() => {
@@ -70,10 +70,10 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
           contentAreaContainer.dom().parentNode.insertBefore(prependContent, contentAreaContainer.dom());
         }),
         tinyApis.sSetContent(content),
-        Log.stepsAsStep('TINY-3621', 'Select item at the top of the content (absolute position)', [
+        Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content (docked position)', [
           sActivateEditor(tinyApis),
-          sScrollToElementAndSelect(tinyApis, contentAreaContainer, ':first-child'),
-          sAssertAbsolutePos(uiContainer),
+          sScrollToElementAndSelect(tinyApis, contentAreaContainer, ':last-child'),
+          sAssertDockedPos(uiContainer),
           sDeactivateEditor(editor)
         ]),
         Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position)', [
@@ -82,10 +82,10 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
           sAssertDockedPos(uiContainer),
           sDeactivateEditor(editor)
         ]),
-        Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content (docked position)', [
+        Log.stepsAsStep('TINY-3621', 'Select item at the top of the content (absolute position)', [
           sActivateEditor(tinyApis),
-          sScrollToElementAndSelect(tinyApis, contentAreaContainer, ':last-child'),
-          sAssertDockedPos(uiContainer),
+          sScrollToElementAndSelect(tinyApis, contentAreaContainer, ':first-child'),
+          sAssertAbsolutePos(uiContainer),
           sDeactivateEditor(editor)
         ]),
         Log.stepsAsStep('TINY-3621', 'Select item at the top of the content and scroll to middle and back', [
@@ -93,9 +93,9 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
           sScrollToElementAndSelect(tinyApis, contentAreaContainer, ':first-child'),
           sAssertAbsolutePos(uiContainer),
           sScrollToElement(contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
-          Waiter.sTryUntil('Wait for toolbar to be docked', sAssertDockedPos(uiContainer), 100, 1000),
+          sAssertDockedPos(uiContainer),
           sScrollToElement(contentAreaContainer, ':first-child'),
-          Waiter.sTryUntil('Wait for toolbar to be absolute', sAssertAbsolutePos(uiContainer), 100, 1000),
+          sAssertAbsolutePos(uiContainer),
           sDeactivateEditor(editor)
         ]),
         Step.sync(() => {
