@@ -1,5 +1,10 @@
 Version 5.0.6 (TBD)
     Fixed the textpattern plugin not working with fragmented text #TINY-3089
+    Fixed various toolbar drawer accessibility issues and added an animation #TINY-3554
+    Added new api endpoints to the wordcount plugin and improved character count logic #TINY-3578
+    Fixed issues with selection and ui components when toggling readonly mode #TINY-3592
+    Fixed so readonly mode works with inline editors. #TINY-3592
+    Added `icons_url` editor settings to enable icon packs to be loaded from a custom url #TINY-3585
     Fixed docked inline toolbar positioning when scrolled #TINY-3621
 Version 5.0.5 (2019-05-09)
     Added menu items to match the forecolor/backcolor toolbar buttons #TINY-2878

@@ -224,6 +224,13 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       }, 0);
     });
 
+    editor.on('SwitchMode', () => {
+      if (editor.readonly) {
+        lastAnchor.set(Option.none());
+        InlineView.hide(contextbar);
+      }
+    });
+
     editor.on('NodeChange', (e) => {
       Focus.search(contextbar.element()).fold(
         () => {

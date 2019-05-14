@@ -92,6 +92,7 @@ export interface RawEditorSettings {
   height?: number | string;
   hidden_input?: boolean;
   icons?: string;
+  icons_url?: string;
   id?: string;
   images_dataimg_filter?: (imgElm: HTMLImageElement) => boolean;
   images_replace_blob_uris?: boolean;

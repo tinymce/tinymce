@@ -8,14 +8,13 @@
 import {
   AlloyComponent,
   AlloySpec,
+  Behaviour,
   Composite,
   Keying,
   RawDomSchema,
   Sketcher,
-  Toolbar as AlloyToolbar,
-  UiSketcher,
-  Behaviour,
-  SplitToolbar
+  SketchSpec,
+  UiSketcher
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Option } from '@ephox/katamari';
@@ -23,7 +22,7 @@ import { Arr, Option } from '@ephox/katamari';
 import SilverMenubar from '../menus/menubar/SilverMenubar';
 import * as Sidebar from '../sidebar/Sidebar';
 import * as Throbber from '../throbber/Throbber';
-import { renderMoreToolbar, renderToolbarGroup, renderToolbar, ToolbarSpec } from '../toolbar/CommonToolbar';
+import { renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbarGroup, renderToolbar, ToolbarSpec } from '../toolbar/CommonToolbar';
 import { ToolbarDrawer } from '../../api/Settings';
 
 export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
@@ -48,11 +47,18 @@ interface OuterContainerApis {
   // Maybe just change to ToolbarAnchor.
   getToolbar: (comp: AlloyComponent) => Option<AlloyComponent>;
   setToolbar: (comp: AlloyComponent, groups) => void;
+  refreshToolbar: (comp: AlloyComponent) => void;
   getMoreButton: (comp: AlloyComponent) => Option<AlloyComponent>;
   getThrobber: (comp: AlloyComponent) => Option<AlloyComponent>;
   focusToolbar: (comp: AlloyComponent) => void;
   setMenubar: (comp: AlloyComponent, groups) => void;
   focusMenubar: (comp: AlloyComponent) => void;
+}
+
+interface ToolbarApis {
+  setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
+  refresh: (toolbar: AlloyComponent) => void;
+  getMoreButton: (toolbar: AlloyComponent) => Option<AlloyComponent>;
 }
 
 const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, OuterContainerSketchSpec> = function (detail, components, spec) {
@@ -79,14 +85,20 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
       return Composite.parts.getPart(comp, detail, 'toolbar');
     },
     setToolbar(comp, groups) {
-      Composite.parts.getPart(comp, detail, 'toolbar').each(function (toolbar) {
-        AlloyToolbar.setGroups(toolbar, groups);
+      Composite.parts.getPart(comp, detail, 'toolbar').each((toolbar) => {
+        toolbar.getApis<ToolbarApis>().setGroups(toolbar, groups);
+      });
+    },
+    refreshToolbar(comp) {
+      const toolbar = Composite.parts.getPart(comp, detail, 'toolbar');
+      toolbar.each((toolbar) => {
+        return toolbar.getApis<ToolbarApis>().refresh(toolbar);
       });
     },
     getMoreButton(comp) {
       const toolbar = Composite.parts.getPart(comp, detail, 'toolbar');
       return toolbar.bind((toolbar) => {
-        return SplitToolbar.getMoreButton(toolbar);
+        return toolbar.getApis<ToolbarApis>().getMoreButton(toolbar);
       });
     },
     getThrobber(comp) {
@@ -125,10 +137,21 @@ const partMenubar = Composite.partType.optional({
     FieldSchema.strict('backstage')
   ]
 });
+
+const toolbarFactory = (spec) => {
+  if (spec.split === ToolbarDrawer.sliding) {
+    return renderSlidingMoreToolbar;
+  } else if (spec.split === ToolbarDrawer.floating) {
+    return renderFloatingMoreToolbar;
+  } else {
+    return renderToolbar;
+  }
+};
+
 const partToolbar = Composite.partType.optional({
   factory: {
     sketch: (spec) => {
-      const renderer = (spec.split === ToolbarDrawer.sliding || spec.split === ToolbarDrawer.floating) ? renderMoreToolbar : renderToolbar;
+      const renderer = toolbarFactory(spec);
       const toolbarSpec: ToolbarSpec = {
         uid: spec.uid,
         onEscape: () => {
@@ -140,7 +163,6 @@ const partToolbar = Composite.partType.optional({
         getSink: spec.getSink,
         backstage: spec.backstage,
         moreDrawerData: {
-          floating: spec.split === ToolbarDrawer.floating,
           lazyToolbar: spec.lazyToolbar,
           lazyMoreButton: spec.lazyMoreButton
         }
@@ -224,6 +246,9 @@ export default Sketcher.composite({
     },
     getMoreButton(apis, comp) {
       return apis.getMoreButton(comp);
+    },
+    refreshToolbar(apis, comp) {
+      return apis.refreshToolbar(comp);
     },
     getThrobber(apis, comp) {
       return apis.getThrobber(comp);

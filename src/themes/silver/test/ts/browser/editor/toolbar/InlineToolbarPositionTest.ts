@@ -88,7 +88,6 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
           sAssertDockedPos(uiContainer),
           sDeactivateEditor(editor)
         ]),
-        sDeactivateEditor(editor),
         Log.stepsAsStep('TINY-3621', 'Select item at the top of the content and scroll to middle and back', [
           sActivateEditor(tinyApis),
           sScrollToElementAndSelect(tinyApis, contentAreaContainer, ':first-child'),

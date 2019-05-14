@@ -5,14 +5,27 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Attachment, Behaviour, Focusing, GuiFactory, Keying, Memento, Positioning, SplitToolbar as SplitAlloyToolbar, Tabstopping, Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup } from '@ephox/alloy';
-import { Arr, Option, Result } from '@ephox/katamari';
+import {
+  AddEventsBehaviour,
+  AlloyComponent,
+  AlloyEvents,
+  AlloySpec,
+  Behaviour,
+  Focusing,
+  Keying,
+  SplitFloatingToolbar as AlloySplitFloatingToolbar,
+  SplitSlidingToolbar as AlloySplitSlidingToolbar,
+  Tabstopping,
+  Toolbar as AlloyToolbar,
+  ToolbarGroup as AlloyToolbarGroup
+} from '@ephox/alloy';
+import { Arr, Option, Result, Fun } from '@ephox/katamari';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderIconButtonSpec } from '../general/Button';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
+import { createReadonlyReceivingForOverflow } from '../../ReadOnly';
 
 export interface MoreDrawerData {
-  floating: boolean;
   lazyMoreButton: () => AlloyComponent;
   lazyToolbar: () => AlloyComponent;
 }
@@ -65,35 +78,12 @@ const renderToolbarGroup = (toolbarGroup: ToolbarGroup) => {
   return AlloyToolbarGroup.sketch(renderToolbarGroupCommon(toolbarGroup));
 };
 
-const getToolbarbehaviours = (toolbarSpec, modeName, overflowOpt) => {
+const getToolbarbehaviours = (toolbarSpec: ToolbarSpec, modeName, getOverflow: (comp: AlloyComponent) => Option<AlloyComponent>) => {
   const onAttached = AlloyEvents.runOnAttached(function (component) {
     const groups = Arr.map(toolbarSpec.initGroups, renderToolbarGroup);
     AlloyToolbar.setGroups(component, groups);
   });
 
-  const eventBehaviours = overflowOpt.fold(() => [
-    onAttached
-  ],
-    (memOverflow) => [
-      onAttached,
-      AlloyEvents.run('alloy.toolbar.toggle', (toolbar, se) => {
-        toolbarSpec.getSink().toOption().each((sink) => {
-          memOverflow.getOpt(sink).fold(() => {
-            // overflow isn't there yet ... so add it, and return the built thing
-            const builtoverFlow = GuiFactory.build(memOverflow.asSpec());
-            Attachment.attach(sink, builtoverFlow);
-            Positioning.position(sink, toolbarSpec.backstage.shared.anchors.toolbarOverflow(), builtoverFlow);
-            SplitAlloyToolbar.refresh(toolbar);
-            SplitAlloyToolbar.getMoreButton(toolbar).each(Focusing.focus);
-            Keying.focusIn(builtoverFlow);
-            // return builtoverFlow;
-          }, (builtOverflow) => {
-            Attachment.detach(builtOverflow);
-          });
-        });
-      })
-    ]
-  );
   return Behaviour.derive([
     Keying.config({
       // Tabs between groups
@@ -101,78 +91,20 @@ const getToolbarbehaviours = (toolbarSpec, modeName, overflowOpt) => {
       onEscape: toolbarSpec.onEscape,
       selector: '.tox-toolbar__group'
     }),
-    AddEventsBehaviour.config('toolbar-events', eventBehaviours)
+    AddEventsBehaviour.config('toolbar-events', [ onAttached ]),
+    createReadonlyReceivingForOverflow(getOverflow)
   ]);
 };
 
-const renderMoreToolbar = (toolbarSpec: ToolbarSpec) => {
-  const modeName: any = toolbarSpec.cyclicKeying ? 'cyclic' : 'acyclic';
+const renderMoreToolbarCommon = (toolbarSpec: ToolbarSpec, getOverflow: (comp: AlloyComponent) => Option<AlloyComponent>) => {
+  const modeName = toolbarSpec.cyclicKeying ? 'cyclic' : 'acyclic';
 
-  const memOverflow = Memento.record(
-    AlloyToolbar.sketch({
-      dom: {
-        tag: 'div',
-        classes: ['tox-toolbar__overflow']
-      },
-      toolbarBehaviours: Behaviour.derive([
-        Keying.config({
-        // THIS IS USED FOR FLOATING AND NOT SLIDING
-        mode: 'cyclic',
-          onEscape: () => {
-            AlloyTriggers.emit(toolbarSpec.moreDrawerData.lazyToolbar(), 'alloy.toolbar.toggle');
-            Keying.focusIn(toolbarSpec.moreDrawerData.lazyMoreButton());
-            return Option.some(true);
-          }
-        })
-      ])
-    })
-  );
-
-  const getOverflow = (toolbar) => {
-    return toolbarSpec.getSink().toOption().bind((sink) => {
-      return memOverflow.getOpt(sink).bind(
-        (overflow) => {
-          return SplitAlloyToolbar.getMoreButton(toolbar).bind((_moreButton) => {
-            if (overflow.getSystem().isConnected()) {
-              // you have the build thing, so just return it
-              Positioning.position(sink, toolbarSpec.backstage.shared.anchors.toolbarOverflow(), overflow);
-              return Option.some(overflow);
-            } else {
-              return Option.none();
-            }
-          });
-        }
-      );
-    });
-  };
-
-  const primary = SplitAlloyToolbar.parts().primary({
-    dom: {
-      tag: 'div',
-      classes: ['tox-toolbar__primary']
-    }
-  });
-
-  const splitToolbarComponents = toolbarSpec.moreDrawerData.floating ? [
-    primary
-  ] : [
-    primary,
-    SplitAlloyToolbar.parts().overflow({
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-toolbar__overflow' ]
-      }
-    })
-  ];
-
-  return SplitAlloyToolbar.sketch({
+  return {
     uid: toolbarSpec.uid,
     dom: {
       tag: 'div',
       classes: ['tox-toolbar-overlord']
     },
-    floating: toolbarSpec.moreDrawerData.floating,
-    overflow: getOverflow,
     parts: {
       // This already knows it is a toolbar group
       'overflow-group': renderToolbarGroupCommon({
@@ -186,20 +118,72 @@ const renderMoreToolbar = (toolbarSpec: ToolbarSpec) => {
         tooltip: Option.some('More...')
       }, Option.none(), toolbarSpec.backstage.shared.providers)
     },
-    components: splitToolbarComponents,
+    splitToolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName, getOverflow)
+  };
+};
+
+const renderFloatingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
+  const baseSpec = renderMoreToolbarCommon(toolbarSpec, AlloySplitFloatingToolbar.getOverflow);
+
+  const primary = AlloySplitFloatingToolbar.parts().primary({
+    dom: {
+      tag: 'div',
+      classes: ['tox-toolbar__primary']
+    }
+  });
+
+  return AlloySplitFloatingToolbar.sketch({
+    ...baseSpec,
+    lazySink: toolbarSpec.getSink,
+    getAnchor: () => toolbarSpec.backstage.shared.anchors.toolbarOverflow(),
+    parts: {
+      ...baseSpec.parts,
+      overflow: {
+        dom: {
+          tag: 'div',
+          classes: ['tox-toolbar__overflow']
+        }
+      }
+    },
+    components: [ primary ],
+    markers: {
+      overflowToggledClass: ToolbarButtonClasses.Ticked
+    },
+  });
+};
+
+const renderSlidingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
+  const primary = AlloySplitSlidingToolbar.parts().primary({
+    dom: {
+      tag: 'div',
+      classes: ['tox-toolbar__primary']
+    }
+  });
+
+  const overflow = AlloySplitSlidingToolbar.parts().overflow({
+    dom: {
+      tag: 'div',
+      classes: ['tox-toolbar__overflow']
+    }
+  });
+
+  const baseSpec = renderMoreToolbarCommon(toolbarSpec, AlloySplitSlidingToolbar.getOverflow);
+
+  return AlloySplitSlidingToolbar.sketch({
+    ...baseSpec,
+    components: [ primary, overflow ],
     markers: {
       openClass: 'tox-toolbar__overflow--open',
       closedClass: 'tox-toolbar__overflow--closed',
       growingClass: 'tox-toolbar__overflow--growing',
       shrinkingClass: 'tox-toolbar__overflow--shrinking',
       overflowToggledClass: ToolbarButtonClasses.Ticked
-    },
-    splitToolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName, Option.some(memOverflow))
+    }
   });
 };
 
 const renderToolbar = (toolbarSpec: ToolbarSpec) => {
-  const modeName: any = toolbarSpec.cyclicKeying ? 'cyclic' : 'acyclic';
+  const modeName = toolbarSpec.cyclicKeying ? 'cyclic' : 'acyclic';
 
   return AlloyToolbar.sketch({
     uid: toolbarSpec.uid,
@@ -211,8 +195,8 @@ const renderToolbar = (toolbarSpec: ToolbarSpec) => {
       AlloyToolbar.parts().groups({})
     ],
 
-    toolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName, Option.none())
+    toolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName, Fun.constant(Option.none()))
   });
 };
 
-export { renderToolbarGroup, renderToolbar, renderMoreToolbar };
+export { renderToolbarGroup, renderToolbar, renderFloatingMoreToolbar, renderSlidingMoreToolbar };
