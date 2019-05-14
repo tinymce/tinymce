@@ -22,7 +22,7 @@ const findNearest = (editor: Editor, getStyles, parents: Element[]) => {
   });
 };
 
-const getCurrentSelectionParents = (editor): Element[] => {
+const getCurrentSelectionParents = (editor: Editor): Element[] => {
   const currentNode = editor.selection.getStart(true) || editor.getBody();
   return editor.dom.getParents(currentNode, () => true, editor.getBody());
 };
