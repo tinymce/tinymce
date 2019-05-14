@@ -9,9 +9,7 @@ import { Element } from '@ephox/dom-globals';
 import { Arr, Option, Options } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
-const findNearest = (editor: Editor, getStyles, nodeChangeEvent) => {
-  const parents: Element[] = nodeChangeEvent.parents;
-
+const findNearest = (editor: Editor, getStyles, parents: Element[]) => {
   const styles = getStyles();
 
   return Options.findMap(parents, (parent) => {
@@ -24,6 +22,12 @@ const findNearest = (editor: Editor, getStyles, nodeChangeEvent) => {
   });
 };
 
+const getCurrentSelectionParents = (editor): Element[] => {
+  const currentNode = editor.selection.getStart(true) || editor.getBody();
+  return editor.dom.getParents(currentNode, () => true, editor.getBody());
+};
+
 export {
-  findNearest
+  findNearest,
+  getCurrentSelectionParents
 };

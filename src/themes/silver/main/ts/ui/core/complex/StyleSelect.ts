@@ -5,14 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyTriggers } from '@ephox/alloy';
+import { AlloyTriggers, AlloyComponent } from '@ephox/alloy';
+import { Element } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { getStyleFormats } from 'tinymce/themes/silver/ui/core/complex/StyleFormat';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { onActionToggleFormat } from './utils/Utils';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
-import { findNearest } from './utils/FormatDetection';
+import { findNearest, getCurrentSelectionParents } from './utils/FormatDetection';
 
 const getSpec = (editor): SelectSpec => {
   const isSelectedFor = (format) => {
@@ -34,19 +35,26 @@ const getSpec = (editor): SelectSpec => {
     return subs !== undefined && subs.length > 0 ? Arr.bind(subs, flatten) : [ fmt.format ];
   };
 
-  const nodeChangeHandler = Option.some((comp) => {
+  const updateSelectMenuText = (parents: Element[], comp: AlloyComponent) => {
     const getFormatItems = (fmt) => {
       const subs = fmt.items;
       return subs !== undefined && subs.length > 0 ? Arr.bind(subs, getFormatItems) : [ { title: fmt.title, format: fmt.format } ];
     };
     const flattenedItems = Arr.bind(getStyleFormats(editor), getFormatItems);
-    return (e) => {
-      const detectedFormat = findNearest(editor, () => flattenedItems, e);
-      const text = detectedFormat.fold(() => 'Paragraph', (fmt) => fmt.title);
-      AlloyTriggers.emitWith(comp, updateMenuText, {
-        text
-      });
-    };
+    const detectedFormat = findNearest(editor, () => flattenedItems, parents);
+    const text = detectedFormat.fold(() => 'Paragraph', (fmt) => fmt.title);
+    AlloyTriggers.emitWith(comp, updateMenuText, {
+      text
+    });
+  };
+
+  const nodeChangeHandler = Option.some((comp) => {
+    return (e) => updateSelectMenuText(e.parents, comp);
+  });
+
+  const setInitialValue = Option.some((comp) => {
+    const parents = getCurrentSelectionParents(editor);
+    updateSelectMenuText(parents, comp);
   });
 
   return {
@@ -55,6 +63,7 @@ const getSpec = (editor): SelectSpec => {
     isSelectedFor,
     getPreviewFor,
     onAction: onActionToggleFormat(editor),
+    setInitialValue,
     nodeChangeHandler,
     shouldHide: editor.getParam('style_formats_autohide', false, 'boolean'),
     isInvalid: (item) => !editor.formatter.canApply(item.format)

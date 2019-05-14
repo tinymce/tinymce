@@ -5,14 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyTriggers } from '@ephox/alloy';
+import { AlloyTriggers, AlloyComponent } from '@ephox/alloy';
+import { Element } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { onActionToggleFormat } from './utils/Utils';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
-import { findNearest } from './utils/FormatDetection';
+import { findNearest, getCurrentSelectionParents } from './utils/FormatDetection';
 
 const defaultBlocks = (
   'Paragraph=p;' +
@@ -44,14 +45,21 @@ const getSpec = (editor): SelectSpec & { dataset } => {
     });
   };
 
-  const nodeChangeHandler = Option.some((comp) => {
-    return (e) => {
-      const detectedFormat = getMatchingValue(e);
-      const text = detectedFormat.fold(() => 'Paragraph', (fmt) => fmt.title);
-      AlloyTriggers.emitWith(comp, updateMenuText, {
-        text
-      });
-    };
+  const updateSelectMenuText = (parents: Element[], comp: AlloyComponent) => {
+    const detectedFormat = getMatchingValue(parents);
+    const text = detectedFormat.fold(() => 'Paragraph', (fmt) => fmt.title);
+    AlloyTriggers.emitWith(comp, updateMenuText, {
+      text
+    });
+  };
+
+  const nodeChangeHandler = Option.some((comp: AlloyComponent) => {
+    return (e) => updateSelectMenuText(e.parents, comp);
+  });
+
+  const setInitialValue = Option.some((comp: AlloyComponent) => {
+    const parents = getCurrentSelectionParents(editor);
+    updateSelectMenuText(parents, comp);
   });
 
   const dataset = buildBasicSettingsDataset(editor, 'block_formats', defaultBlocks, Delimiter.SemiColon);
@@ -62,6 +70,7 @@ const getSpec = (editor): SelectSpec & { dataset } => {
     isSelectedFor,
     getPreviewFor,
     onAction: onActionToggleFormat(editor),
+    setInitialValue,
     nodeChangeHandler,
     dataset,
     shouldHide: false,

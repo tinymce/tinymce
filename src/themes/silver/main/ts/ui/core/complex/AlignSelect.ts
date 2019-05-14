@@ -51,6 +51,7 @@ const getSpec = (editor: Editor) => {
     isSelectedFor,
     getPreviewFor,
     onAction: onActionToggleFormat(editor),
+    setInitialValue: Option.none(),
     nodeChangeHandler,
     dataset,
     shouldHide: false,
