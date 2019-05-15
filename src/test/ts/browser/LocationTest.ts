@@ -13,11 +13,9 @@ import * as Css from 'ephox/sugar/api/properties/Css';
 import * as Location from 'ephox/sugar/api/view/Location';
 import * as Scroll from 'ephox/sugar/api/view/Scroll';
 
-UnitTest.asynctest('LocationTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
-  const browser = PlatformDetection.detect().browser;
+UnitTest.asynctest('LocationTest', (success, failure) => {
+  const detect = PlatformDetection.detect();
+  const browser = detect.browser;
   const scrollBarWidth = Scroll.scrollBarWidth();
 
   const leftScrollBarWidth = (doc) => {
@@ -114,8 +112,16 @@ UnitTest.asynctest('LocationTest', function () {
     pos = Location.viewport(body);
     assert.eq(0, pos.top());
     assert.eq(0, pos.left());
-    assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50, 'scroll bar width, got=' + scrollBarWidth);
-
+    try {
+      assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50, 'scroll bar width, got=' + scrollBarWidth);
+    } catch (e) {
+      // Mac might have scrollbars hidden
+      if (detect.os.isOSX()) {
+        assert.eq(0, scrollBarWidth, 'scroll bar width, got=' + scrollBarWidth);
+      } else {
+        throw e;
+      }
+    }
   };
 
   const disconnectedChecks = function () {

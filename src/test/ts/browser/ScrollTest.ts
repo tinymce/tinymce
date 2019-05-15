@@ -12,10 +12,9 @@ import * as Location from 'ephox/sugar/api/view/Location';
 import * as Scroll from 'ephox/sugar/api/view/Scroll';
 import * as Width from 'ephox/sugar/api/view/Width';
 
-UnitTest.asynctest('ScrollTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const browser = PlatformDetection.detect().browser;
+UnitTest.asynctest('ScrollTest', (success, failure) => {
+  const detect = PlatformDetection.detect();
+  const browser = detect.browser;
 
   if (!Math.sign) { // For IE: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sign
     Math.sign = function (x) {
@@ -119,7 +118,16 @@ UnitTest.asynctest('ScrollTest', function () {
     const cX = Math.round(center.left());
     const cY = Math.round(center.top());
 
-    assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50, 'scroll bar width, got=' + scrollBarWidth);
+    try {
+      assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50, 'scroll bar width, got=' + scrollBarWidth);
+    } catch (e) {
+      // Mac might have scrollbars hidden
+      if (detect.os.isOSX()) {
+        assert.eq(0, scrollBarWidth, 'scroll bar width, got=' + scrollBarWidth);
+      } else {
+        throw e;
+      }
+    }
 
     scrollCheck(0, 0, 0, 0, doc, 'start pos');
 
