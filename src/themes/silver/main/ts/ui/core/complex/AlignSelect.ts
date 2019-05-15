@@ -33,15 +33,17 @@ const getSpec = (editor: Editor) => {
     return Option.none<PreviewSpec>();
   };
 
-  const nodeChangeHandler = Option.some((comp: AlloyComponent) => {
-    return () => {
-      const match = getMatchingValue();
-      const alignment = match.fold(() => 'left', (item) => item.title.toLowerCase());
-      AlloyTriggers.emitWith(comp, updateMenuIcon, {
-        icon: `align-${alignment}`
-      });
-    };
-  });
+  const updateSelectMenuIcon = (comp: AlloyComponent) => {
+    const match = getMatchingValue();
+    const alignment = match.fold(() => 'left', (item) => item.title.toLowerCase());
+    AlloyTriggers.emitWith(comp, updateMenuIcon, {
+      icon: `align-${alignment}`
+    });
+  };
+
+  const nodeChangeHandler = Option.some((comp: AlloyComponent) => () => updateSelectMenuIcon(comp));
+
+  const setInitialValue = Option.some((comp) => updateSelectMenuIcon(comp));
 
   const dataset = buildBasicStaticDataset(alignMenuItems);
 
@@ -51,6 +53,7 @@ const getSpec = (editor: Editor) => {
     isSelectedFor,
     getPreviewFor,
     onAction: onActionToggleFormat(editor),
+    setInitialValue,
     nodeChangeHandler,
     dataset,
     shouldHide: false,
