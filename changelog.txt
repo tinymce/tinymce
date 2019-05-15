@@ -5,6 +5,7 @@ Version 5.0.6 (TBD)
     Fixed issues with selection and ui components when toggling readonly mode #TINY-3592
     Fixed so readonly mode works with inline editors. #TINY-3592
     Added `icons_url` editor settings to enable icon packs to be loaded from a custom url #TINY-3585
+    Fixed docked inline toolbar positioning when scrolled #TINY-3621
     Fixed initial value not being set on bespoke select in quickbars and toolbar drawer #TINY-3591
 Version 5.0.5 (2019-05-09)
     Added menu items to match the forecolor/backcolor toolbar buttons #TINY-2878

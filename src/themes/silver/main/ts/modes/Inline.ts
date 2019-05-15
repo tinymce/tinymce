@@ -6,8 +6,8 @@
  */
 
 import { Attachment, Docking, Focusing } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
-import { Css, Element, Height, Location } from '@ephox/sugar';
+import { Obj, Option } from '@ephox/katamari';
+import { Attr, Css, Element, Height, Location } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import { getToolbarDrawer, getUiContainer, ToolbarDrawer, useFixedContainer } from '../api/Settings';
@@ -19,6 +19,11 @@ import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { identifyButtons } from '../ui/toolbar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
 
+interface Position {
+  top: number;
+  left: number;
+}
+
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   let floatContainer;
   const DOM = DOMUtils.DOM;
@@ -29,17 +34,18 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   loadInlineSkin(editor);
 
-  const calcPosition = (offset: number = 0) => {
+  const calcPosition = (offset: number = 0): Position => {
     // Note: The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
     // so we need to round this to account for that.
     const location = Location.absolute(Element.fromDom(editor.getBody()));
     return {
-      top: Math.round(location.top() - Height.get(floatContainer.element())) + offset + 'px',
-      left: Math.round(location.left()) + 'px'
+      top: Math.round(location.top() - Height.get(floatContainer.element())) + offset,
+      left: Math.round(location.left())
     };
   };
 
   const setChromePosition = (toolbar) => {
+    const isDocked = Css.getRaw(floatContainer.element(), 'position').is('fixed');
     // We need to always recalculate the toolbar's position so Docking switches between fixed and
     // absolute correctly. Only recalculating when position: absolute breaks transition on window
     // resize behaviour (chrome gets stuck fixed to the top of the viewport).
@@ -47,7 +53,14 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
       return tbar.components().length > 1 ? Height.get(tbar.components()[1].element()) : 0;
     }) : 0;
-    Css.setAll(floatContainer.element(), calcPosition(offset));
+    const position = calcPosition(offset);
+
+    // If we're docked then we need to update the dock attributes instead, so that when it transitions back to absolute it has the correct position
+    if (isDocked) {
+      Attr.setAll(floatContainer.element(), Obj.tupleMap(position, (value, key) => ({ k: `data-dock-${key}`, v: value })));
+    } else {
+      Css.setAll(floatContainer.element(), Obj.map(position, (value) => value + 'px'));
+    }
 
     // Let Docking handle fixed <-> absolute transitions, etc.
     Docking.refresh(floatContainer);

@@ -33,7 +33,7 @@ const getSpec = (editor: Editor) => {
     return Option.none<PreviewSpec>();
   };
 
-  const updateSelectMenuText = (comp: AlloyComponent) => {
+  const updateSelectMenuIcon = (comp: AlloyComponent) => {
     const match = getMatchingValue();
     const alignment = match.fold(() => 'left', (item) => item.title.toLowerCase());
     AlloyTriggers.emitWith(comp, updateMenuIcon, {
@@ -41,9 +41,9 @@ const getSpec = (editor: Editor) => {
     });
   };
 
-  const nodeChangeHandler = Option.some((comp: AlloyComponent) => () => updateSelectMenuText(comp));
+  const nodeChangeHandler = Option.some((comp: AlloyComponent) => () => updateSelectMenuIcon(comp));
 
-  const setInitialValue = Option.some((comp) => updateSelectMenuText(comp));
+  const setInitialValue = Option.some((comp) => updateSelectMenuIcon(comp));
 
   const dataset = buildBasicStaticDataset(alignMenuItems);
 
