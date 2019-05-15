@@ -13,7 +13,7 @@ import { isReadOnly, registerReadOnlyContentFilters, registerReadOnlySelectionBl
 /**
  * TinyMCE 5 Mode API.
  *
- * @class tinymce.editor.mode
+ * @class tinymce.EditorMode
  */
 
 export interface Mode {

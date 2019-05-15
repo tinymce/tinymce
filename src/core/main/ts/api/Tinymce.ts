@@ -183,6 +183,10 @@ export interface Tinymce extends EditorManager {
  * @include ../../../../../tools/docs/tinymce.ResizeEvent.js
  */
 
+/**
+ * @include ../../../../../tools/docs/tinymce.editor.ui.Ui.js
+ */
+
 const publicApi = {
   geom: {
     Rect
