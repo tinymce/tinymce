@@ -79,7 +79,7 @@ UnitTest.asynctest('Example for Tutorial', function () {
       Chain.inject(body),
       Chain.control(
         UiFinder.cFindIn('.dialog'),
-        Guard.tryUntilNot('Keep going until .dialog is not in the DOM', 100, 1000)
+        Guard.tryUntilNot('Keep going until .dialog is not in the DOM', 100, 2000)
       )
     ])
   ], function () {
