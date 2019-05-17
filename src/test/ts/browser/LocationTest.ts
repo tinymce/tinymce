@@ -112,16 +112,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     pos = Location.viewport(body);
     assert.eq(0, pos.top());
     assert.eq(0, pos.left());
-    try {
-      assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50, 'scroll bar width, got=' + scrollBarWidth);
-    } catch (e) {
-      // Mac might have scrollbars hidden
-      if (detect.os.isOSX()) {
-        assert.eq(0, scrollBarWidth, 'scroll bar width, got=' + scrollBarWidth);
-      } else {
-        throw e;
-      }
-    }
+    assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50 || (detect.os.isOSX() && scrollBarWidth === 0), 'scroll bar width, got=' + scrollBarWidth);
   };
 
   const disconnectedChecks = function () {
