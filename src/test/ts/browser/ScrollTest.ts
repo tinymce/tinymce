@@ -13,8 +13,7 @@ import * as Scroll from 'ephox/sugar/api/view/Scroll';
 import * as Width from 'ephox/sugar/api/view/Width';
 
 UnitTest.asynctest('ScrollTest', (success, failure) => {
-  const detect = PlatformDetection.detect();
-  const browser = detect.browser;
+  const platform = PlatformDetection.detect();
 
   if (!Math.sign) { // For IE: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sign
     Math.sign = function (x) {
@@ -118,12 +117,12 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
     const cX = Math.round(center.left());
     const cY = Math.round(center.top());
 
-    assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50 || (detect.os.isOSX() && scrollBarWidth === 0), 'scroll bar width, got=' + scrollBarWidth);
+    assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50 || (platform.os.isOSX() && scrollBarWidth === 0), 'scroll bar width, got=' + scrollBarWidth);
 
     scrollCheck(0, 0, 0, 0, doc, 'start pos');
 
     //  TBIO-5131 - skip tests for IE and EDGE RTL (x coords go -ve from left to right on the screen in RTL mode)
-    if ( !(doc.rtl && (browser.isIE() || browser.isEdge())) ) {
+    if ( !(doc.rtl && (platform.browser.isIE() || platform.browser.isEdge())) ) {
 
       const cPos = Location.absolute(cEl);
       setToElement(doc, cEl, cPos.left(), cPos.top(), 1, 1, 'set to centre el');
