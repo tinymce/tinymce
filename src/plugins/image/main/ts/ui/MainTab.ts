@@ -8,7 +8,7 @@
 import { ImageDialogInfo, ListItem } from './DialogTypes';
 import { Arr } from '@ephox/katamari';
 
-const makeItems = function (info: ImageDialogInfo) {
+const makeItems = (info: ImageDialogInfo) => {
   const imageUrl = {
     name: 'src',
     type: 'urlinput',
@@ -78,7 +78,7 @@ const makeItems = function (info: ImageDialogInfo) {
   ]);
 };
 
-const makeTab = function (info: ImageDialogInfo) {
+const makeTab = (info: ImageDialogInfo) => {
   return {
     title: 'General',
     items: makeItems(info)

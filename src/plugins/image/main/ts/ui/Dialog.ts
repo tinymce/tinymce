@@ -6,7 +6,7 @@
  */
 
 import { File } from '@ephox/dom-globals';
-import { Arr, FutureResult, Option, Result, Type, Merger } from '@ephox/katamari';
+import { Arr, FutureResult, Option, Type, Merger } from '@ephox/katamari';
 import { URL } from '@ephox/sand';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -35,7 +35,7 @@ interface Size {
 
 interface Helpers {
   onSubmit: (info: ImageDialogInfo) => (api: API) => void;
-  imageSize: (url: string) => FutureResult<Size, void>;
+  imageSize: (url: string) => FutureResult<Size, string>;
   createBlobCache: (file: File, blobUri: string, dataUrl: string) => BlobInfo;
   alertErr: (api: API, message: string) => void;
   normalizeCss: (cssText: string) => string;
@@ -321,7 +321,7 @@ const makeDialogBody = (info: ImageDialogInfo) => {
       tabs: Arr.flatten([
         [MainTab.makeTab(info)],
         info.hasAdvTab ? [AdvTab.makeTab(info)] : [],
-        info.hasUploadUrl || info.hasUploadHandler ? [UploadTab.makeTab(info)] : []
+        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [UploadTab.makeTab(info)] : []
       ])
     };
     return tabPanel;
@@ -372,14 +372,16 @@ const submitHandler = (editor: Editor) => (info: ImageDialogInfo) => (api: API) 
   api.close();
 };
 
-const imageSize = (editor: Editor) => (url: string): FutureResult<Size, void> => {
+const imageSize = (editor: Editor) => (url: string): FutureResult<Size, string> => {
   return FutureResult.nu((completer) => {
-    Utils.getImageSize(editor.documentBaseURI.toAbsolute(url), function (data) {
-      const result = data.bind((dimensions) => {
-        return ((Type.isString(dimensions.width) || Type.isNumber(dimensions.width)) && (Type.isString(dimensions.height) || Type.isNumber(dimensions.height))) ?
-          Result.value({ width: String(dimensions.width), height: String(dimensions.height) }) :
-          Result.error(undefined);
+    Utils.getImageSize(editor.documentBaseURI.toAbsolute(url), (data) => {
+      const result = data.map((dimensions) => {
+        return {
+          width: String(dimensions.width),
+          height: String(dimensions.height)
+        };
       });
+
       completer(result);
     });
   });

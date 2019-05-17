@@ -29,6 +29,7 @@ export interface ImageDialogInfo {
   imageList: Option<ListItem[]>;
   classList: Option<ListItem[]>;
   hasAdvTab: boolean;
+  hasUploadTab: boolean;
   hasUploadUrl: boolean;
   hasUploadHandler: boolean;
   hasDescription: boolean;
