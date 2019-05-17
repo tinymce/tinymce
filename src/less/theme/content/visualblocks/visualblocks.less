@@ -117,3 +117,55 @@
     background-image: url(data:image/gif;base64,R0lGODlhDQAKAIABALu7u////yH5BAEAAAEALAAAAAANAAoAAAIXjI8GybEOnmOvUoWznTqeuEjNSCqeGRUAOw==);
   }
 }
+
+.mce-visualblocks:not([dir=rtl]) {
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  div:not([data-mce-bogus]),
+  section,
+  article,
+  blockquote,
+  address,
+  pre,
+  figure,
+  figcaption,
+  hgroup,
+  aside,
+  ul,
+  ol,
+  dl {
+    margin-left: 3px;
+  }
+}
+
+// RTL
+.mce-visualblocks[dir=rtl] {
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  div:not([data-mce-bogus]),
+  section,
+  article,
+  blockquote,
+  address,
+  pre,
+  figure,
+  figcaption,
+  hgroup,
+  aside,
+  ul,
+  ol,
+  dl {
+    background-position-x: right;
+    margin-right: 3px;
+  }
+}

@@ -63,10 +63,6 @@
     //
   }
 
-  .tox-checkbox__label {
-    margin-left: @pad-xs;
-  }
-
   input.tox-checkbox__input:checked + .tox-checkbox__icons {
     .tox-checkbox-icon__unchecked svg {
       display: none;
@@ -92,10 +88,29 @@
     box-shadow: @checkbox-focus-box-shadow;
     padding: calc(@button-padding-y - @button-border-width);
   }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-checkbox__label {
+    margin-left: @pad-xs;
+  }
 
   .tox-bar {
     .tox-checkbox {
       margin-left: @pad-xs;
+    }
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-checkbox__label {
+    margin-right: @pad-xs;
+  }
+
+  .tox-bar {
+    .tox-checkbox {
+      margin-right: @pad-xs;
     }
   }
 }

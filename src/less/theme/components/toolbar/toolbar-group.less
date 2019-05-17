@@ -22,12 +22,21 @@
     padding: 0 @toolbar-group-padding-x;
   }
 
-  .tox-toolbar__group:not(:last-of-type) {
-    border-right: 1px solid @toolbar-group-separator-color;
-  }
-
   // Align toolbar group to the right
   .tox-toolbar__group--pull-right {
     margin-left: auto;
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-toolbar__group:not(:last-of-type) {
+    border-right: 1px solid @toolbar-group-separator-color;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-toolbar__group:not(:last-of-type) {
+    border-left: 1px solid @toolbar-group-separator-color;
   }
 }

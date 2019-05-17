@@ -25,10 +25,6 @@
 
       &:nth-child(1) { animation-delay: -.32s; }
       &:nth-child(2) { animation-delay: -.16s; }
-
-      &:not(:first-child) {
-        margin-left: @spinner-size / 2;
-      }
     }
   }
 
@@ -41,6 +37,24 @@
 
     40% {
       transform: scale(1);
+    }
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-spinner > div:not(:first-child) {
+    margin-left: @spinner-size / 2;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-spinner {
+    /* stylelint-disable-next-line no-descending-specificity */
+    > div {
+      &:not(:first-child) {
+        margin-right: @spinner-size / 2;
+      }
     }
   }
 }

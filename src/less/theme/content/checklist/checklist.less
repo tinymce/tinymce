@@ -20,6 +20,7 @@
       content: '';
       cursor: pointer;
       height: 1em;
+      margin-left: -1.5em;
       margin-top: .125em;
       position: absolute;
       width: 1em;
@@ -31,23 +32,10 @@
   }
 }
 
-.mce-content-body:not([dir=rtl]) {
-  .tox-checklist {
-    > li:not(.tox-checklist--hidden) {
-      &::before {
-        margin-left: -1.5em;
-      }
-    }
-  }
-}
-
 // RTL
-.mce-content-body[dir=rtl] {
-  .tox-checklist {
-    > li:not(.tox-checklist--hidden) {
-      &::before {
-        margin-right: -1.5em;
-      }
-    }
+[dir=rtl] {
+  .tox-checklist > li:not(.tox-checklist--hidden)::before {
+    margin-left: 0;
+    margin-right: -1.5em;
   }
 }

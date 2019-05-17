@@ -15,10 +15,6 @@
     position: relative;
   }
 
-  .tox-selectfield select:extend(.tox .tox-textfield) {
-    padding-right: @pad-lg;
-  }
-
   // Hide OS rendered chevrons
   .tox-selectfield select::-ms-expand {
     display: none;
@@ -37,6 +33,10 @@
 }
 
 .tox:not([dir=rtl]) {
+  .tox-selectfield select:extend(.tox .tox-textfield) {
+    padding-right: @pad-lg;
+  }
+
   .tox-selectfield svg {
     right: @pad-sm;
   }
@@ -44,6 +44,10 @@
 
 // RTL
 .tox[dir=rtl] {
+  .tox-selectfield select:extend(.tox .tox-textfield) {
+    padding-left: @pad-lg;
+  }
+
   .tox-selectfield svg {
     left: @pad-sm;
   }

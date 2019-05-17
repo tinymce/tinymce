@@ -60,10 +60,6 @@
     margin-bottom: 3px;
     margin-top: 2px;
     max-width: 250px;
-
-    + * {
-      margin-left: @pad-xs;
-    }
   }
 
   .tox-naked-btn {
@@ -80,6 +76,23 @@
     svg {
       display: block;
       fill: @text-color;
+    }
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-toolbar-textfield {
+    + * {
+      margin-left: @pad-xs;
+    }
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-toolbar-textfield {
+    + * {
+      margin-right: @pad-xs;
     }
   }
 }

@@ -20,8 +20,6 @@
    text-shadow: 0 1px white;
    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;;
    font-size: .875rem;
-   direction: ltr;
-   text-align: left;
    white-space: pre;
    word-spacing: normal;
    word-break: normal;
@@ -146,4 +144,24 @@
  .token.entity {
    cursor: help;
  }
+
+:not([dir=rtl]) {
+  code[class*="language-"],
+  pre[class*="language-"] {
+    direction: ltr;
+    text-align: left;
+  }
+ }
+
+
+ // RTL
+[dir=rtl] {
+  code[class*="language-"],
+  pre[class*="language-"] {
+    direction: rtl;
+    text-align: right;
+  }
+ }
+
+
  /* stylelint-enable */

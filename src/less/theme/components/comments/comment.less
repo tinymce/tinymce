@@ -120,12 +120,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
-    margin-left: @pad-sm;
     margin-top: @pad-md;
-
-    > *:last-child {
-      margin-left: @pad-sm;
-    }
   }
 
   .tox-comment__gradient::after {
@@ -216,7 +211,12 @@
 //end tox
 
 .tox:not([dir=rtl]) {
+  .tox-comment__edit {
+    margin-left: @pad-sm;
+  }
+
   .tox-comment__buttonspacing,
+  .tox-comment__edit,
   .tox-comment__reply {
     > *:last-child {
       margin-left: @pad-sm;
@@ -226,7 +226,12 @@
 
 // RTL
 .tox[dir=rtl] {
+  .tox-comment__edit {
+    margin-right: @pad-sm;
+  }
+
   .tox-comment__buttonspacing,
+  .tox-comment__edit,
   .tox-comment__reply {
     > *:last-child {
       margin-right: @pad-sm;
