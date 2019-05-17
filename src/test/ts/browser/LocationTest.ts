@@ -13,11 +13,8 @@ import * as Css from 'ephox/sugar/api/properties/Css';
 import * as Location from 'ephox/sugar/api/view/Location';
 import * as Scroll from 'ephox/sugar/api/view/Scroll';
 
-UnitTest.asynctest('LocationTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
-  const browser = PlatformDetection.detect().browser;
+UnitTest.asynctest('LocationTest', (success, failure) => {
+  const platform = PlatformDetection.detect();
   const scrollBarWidth = Scroll.scrollBarWidth();
 
   const leftScrollBarWidth = (doc) => {
@@ -114,8 +111,7 @@ UnitTest.asynctest('LocationTest', function () {
     pos = Location.viewport(body);
     assert.eq(0, pos.top());
     assert.eq(0, pos.left());
-    assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50, 'scroll bar width, got=' + scrollBarWidth);
-
+    assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50 || (platform.os.isOSX() && scrollBarWidth === 0), 'scroll bar width, got=' + scrollBarWidth);
   };
 
   const disconnectedChecks = function () {
@@ -303,7 +299,7 @@ UnitTest.asynctest('LocationTest', function () {
     // Chrome has a weird 2px bug where the offsetTop of a table cell is 2px less than every other browser, even though
     // the difference between table.getBoundingClientRect() and cell.getBoundingClientRect() is correct.
     // I don't want to make every browser pay for Chrome's mistake in a scenario we don't need for TBIO, so we're living with it.
-    if (PlatformDetection.detect().browser.isChrome()) {
+    if (platform.browser.isChrome()) {
       const chromeDifference = -2;
       Arr.each(tests, function (t) {
         if (t.id !== 'table-1') {
@@ -345,7 +341,7 @@ UnitTest.asynctest('LocationTest', function () {
     ];
 
     // relative scroll
-    const leftScroll = (doc.rtl && (browser.isIE() || browser.isEdge())) ? -1000 : 1000; // IE has RTL -ve direction from left to right
+    const leftScroll = (doc.rtl && (platform.browser.isIE() || platform.browser.isEdge())) ? -1000 : 1000; // IE has RTL -ve direction from left to right
     const topScroll = 2000;
     // GUESS: 1px differences from JQuery is due to the 1px margin on the body
     const withScroll = [
