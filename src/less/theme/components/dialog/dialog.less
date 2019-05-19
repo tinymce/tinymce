@@ -54,6 +54,8 @@
     justify-content: center;
     left: 0;
     position: fixed;
+    // Needed for IE11 so that content text doesn't float on top of dialogs
+    position: -ms-device-fixed;
     right: 0;
     top: 0;
     z-index: @z-index-dialogs;
