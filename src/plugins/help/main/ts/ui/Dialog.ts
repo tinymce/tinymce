@@ -6,7 +6,7 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Arr, Obj, Option, Options, Merger } from '@ephox/katamari';
+import { Arr, Obj, Option, Options } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../api/Settings';
 import { CustomTabSpecs, TabSpecs } from '../Plugin';

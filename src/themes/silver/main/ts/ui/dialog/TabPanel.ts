@@ -44,7 +44,7 @@ export const renderTabPanel = <I>(spec: InternalTabApi<I>, backstage: UiFactoryB
 
   const allTabs = Arr.map(spec.tabs, function (tab) {
     return {
-      value: tab.title,
+      value: tab.name,
       dom: {
         tag: 'div',
         classes: [ 'tox-dialog__body-nav-item' ],
@@ -104,12 +104,12 @@ export const renderTabPanel = <I>(spec: InternalTabApi<I>, backstage: UiFactoryB
     },
 
     onChangeTab: (section, button, _viewItems) => {
-      const title = Representing.getValue(button);
+      const name = Representing.getValue(button);
       AlloyTriggers.emitWith(section, formTabChangeEvent, {
-        title,
-        oldTitle: oldTab.get()
+        name,
+        oldName: oldTab.get()
       });
-      oldTab.set(title);
+      oldTab.set(name);
     },
 
     tabs: allTabs,

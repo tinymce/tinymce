@@ -43,8 +43,8 @@ export interface FormUnblockEvent extends CustomEvent {
 }
 
 export interface FormTabChangeEvent extends CustomEvent {
-  title: () => string;
-  oldTitle: () => string;
+  name: () => string;
+  oldName: () => string;
 }
 
 const formChangeEvent = Id.generate('form-component-change');

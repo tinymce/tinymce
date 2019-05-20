@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Throttler, Option } from '@ephox/katamari';
-
+import { Types } from '@ephox/bridge';
+import { Arr, Option, Throttler } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
+import { insertEmoticon } from '../core/Actions';
 import { ALL_CATEGORY, EmojiDatabase } from '../core/EmojiDatabase';
 import { emojisFrom } from '../core/Lookup';
-import { insertEmoticon } from '../core/Actions';
-import Editor from 'tinymce/core/api/Editor';
-import { Types } from '@ephox/bridge';
 
 const patternName = 'pattern';
 
@@ -31,12 +30,9 @@ const open = function (editor: Editor, database: EmojiDatabase) {
     });
   };
 
-  const updateFilter = Throttler.last((dialogApi) => {
-    const category = currentTab.get();
-    scan(dialogApi, category);
+  const updateFilter = Throttler.last((dialogApi, tabChangeDetails) => {
+    scan(dialogApi, tabChangeDetails.newTabName);
   }, 200);
-
-  const currentTab = Cell(ALL_CATEGORY);
 
   const searchField: Types.Dialog.BodyComponentApi = {
     label: 'Search',
@@ -57,6 +53,7 @@ const open = function (editor: Editor, database: EmojiDatabase) {
       // All tabs have the same fields.
       tabs: Arr.map(database.listCategories(), (cat) => ({
         title: cat,
+        name: cat,
         items: [searchField, resultsField]
       }))
     };
@@ -65,9 +62,8 @@ const open = function (editor: Editor, database: EmojiDatabase) {
       size: 'normal',
       body,
       initialData: initialState,
-      onTabChange: (dialogApi, title: string) => {
-        currentTab.set(title);
-        updateFilter.throttle(dialogApi);
+      onTabChange: (dialogApi, details) => {
+        updateFilter.throttle(dialogApi, details);
       },
       onChange: updateFilter.throttle,
       onAction: (dialogApi, actionData) => {
