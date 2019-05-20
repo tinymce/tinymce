@@ -62,8 +62,6 @@ gulp.task('copyFonts', function() {
   }, gulp.src('./src/fonts/**'));
 });
 
-// Add code here to achieve the above.
-
 //
 // watch and rebuild CSS for oxide demos (TODO move to oxide-test-data)
 //
