@@ -48,6 +48,7 @@ UnitTest.asynctest('WindowManager:tabbed-dialog Test', (success, failure) => {
           tabs: [
             {
               title: 'Basic',
+              name: 'basic',
               items: [
                 {
                   name: 'basic1',
@@ -57,6 +58,7 @@ UnitTest.asynctest('WindowManager:tabbed-dialog Test', (success, failure) => {
             },
             {
               title: 'Advanced',
+              name: 'advanced',
               items: [
                 {
                   name: 'advanced1',
@@ -93,7 +95,7 @@ UnitTest.asynctest('WindowManager:tabbed-dialog Test', (success, failure) => {
           advanced1: 'Textarea value'
         },
         onAction: (api, a) => {
-          const target = a.name === 'gotoBasic' ? 'Basic' : 'Advanced';
+          const target = a.name === 'gotoBasic' ? 'basic' : 'advanced';
           api.showTab(target);
         },
         onSubmit: () => {

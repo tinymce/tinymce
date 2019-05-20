@@ -17,6 +17,7 @@ const makeTab = (info: ImageDialogInfo) => {
   ];
   return {
     title: 'Upload',
+    name: 'upload',
     items
   };
 };

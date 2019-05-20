@@ -125,6 +125,7 @@ const open = (editor: Editor) => {
     tabs: [
       {
         title: 'General',
+        name: 'general',
         items: RowDialogGeneralTab.items(editor)
       },
       Helpers.getAdvancedTab()

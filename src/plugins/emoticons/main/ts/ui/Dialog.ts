@@ -6,7 +6,7 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Arr, Option, Throttler } from '@ephox/katamari';
+import { Arr, Cell, Option, Throttler } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { insertEmoticon } from '../core/Actions';
 import { ALL_CATEGORY, EmojiDatabase } from '../core/EmojiDatabase';
@@ -21,8 +21,11 @@ const open = function (editor: Editor, database: EmojiDatabase) {
     results: emojisFrom(database.listAll(), '', Option.some(300))
   };
 
-  const scan = (dialogApi, category: string) => {
+  const currentTab = Cell(ALL_CATEGORY);
+
+  const scan = (dialogApi) => {
     const dialogData = dialogApi.getData();
+    const category = currentTab.get();
     const candidates = database.listCategory(category);
     const results = emojisFrom(candidates, dialogData[patternName], category === ALL_CATEGORY ? Option.some(300) : Option.none());
     dialogApi.setData({
@@ -30,8 +33,8 @@ const open = function (editor: Editor, database: EmojiDatabase) {
     });
   };
 
-  const updateFilter = Throttler.last((dialogApi, tabChangeDetails) => {
-    scan(dialogApi, tabChangeDetails.newTabName);
+  const updateFilter = Throttler.last((dialogApi) => {
+    scan(dialogApi);
   }, 200);
 
   const searchField: Types.Dialog.BodyComponentApi = {
@@ -63,7 +66,8 @@ const open = function (editor: Editor, database: EmojiDatabase) {
       body,
       initialData: initialState,
       onTabChange: (dialogApi, details) => {
-        updateFilter.throttle(dialogApi, details);
+        currentTab.set(details.newTabName);
+        updateFilter.throttle(dialogApi);
       },
       onChange: updateFilter.throttle,
       onAction: (dialogApi, actionData) => {

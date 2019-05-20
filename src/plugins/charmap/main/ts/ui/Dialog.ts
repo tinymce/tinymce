@@ -6,10 +6,10 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Arr, Throttler } from '@ephox/katamari';
+import { Arr, Cell, Throttler } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Actions from '../core/Actions';
-import { CharMap } from '../core/CharMap';
+import { CharMap, UserDefined } from '../core/CharMap';
 import Scan from '../core/Scan';
 
 const patternName = 'pattern';
@@ -43,8 +43,10 @@ const open = function (editor: Editor, charMap: CharMap[]) {
 
   const makeTabPanel = (): Types.Dialog.TabPanelApi => ({ type: 'tabpanel', tabs: makeTabs() });
 
-  const scanAndSet = (dialogApi: Types.Dialog.DialogInstanceApi<typeof initialData>, tabChangeDetails, pattern: string) => {
-    Arr.find(charMap, (group) => group.name === tabChangeDetails.newTabName).each((f) => {
+  const currentTab = charMap.length === 1 ? Cell(UserDefined) : Cell('All');
+
+  const scanAndSet = (dialogApi: Types.Dialog.DialogInstanceApi<typeof initialData>, pattern: string) => {
+    Arr.find(charMap, (group) => group.name === currentTab.get()).each((f) => {
       const items = Scan.scan(f, pattern);
       dialogApi.setData({
         results: items
@@ -54,9 +56,9 @@ const open = function (editor: Editor, charMap: CharMap[]) {
 
   const SEARCH_DELAY = 40;
 
-  const updateFilter = Throttler.last((dialogApi: Types.Dialog.DialogInstanceApi<typeof initialData>, tabChangeDetails) => {
+  const updateFilter = Throttler.last((dialogApi: Types.Dialog.DialogInstanceApi<typeof initialData>) => {
     const pattern = dialogApi.getData().pattern;
-    scanAndSet(dialogApi, tabChangeDetails, pattern);
+    scanAndSet(dialogApi, pattern);
   }, SEARCH_DELAY);
 
   const body = charMap.length === 1 ? makePanel() : makeTabPanel();
@@ -87,7 +89,8 @@ const open = function (editor: Editor, charMap: CharMap[]) {
     },
 
     onTabChange: (dialogApi, details) => {
-      updateFilter.throttle(dialogApi, details);
+      currentTab.set(details.newTabName);
+      updateFilter.throttle(dialogApi);
     },
 
     onChange: (dialogApi, changeData) => {
