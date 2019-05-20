@@ -52,6 +52,12 @@ gulp.task('minify-css', function() {
 });
 
 //
+// Copy icon font used by the mobile skin to each skin folder in /build
+//
+
+// Add code here to achieve the above.
+
+//
 // watch and rebuild CSS for oxide demos (TODO move to oxide-test-data)
 //
 gulp.task('copyFilesTheme', function() {
