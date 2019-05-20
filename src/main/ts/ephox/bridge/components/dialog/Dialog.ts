@@ -44,12 +44,17 @@ export interface DialogChangeDetails<T> {
   name: keyof T;
 }
 
+export interface DialogTabChangeDetails {
+  newTabName: string;
+  oldTabName: string;
+}
+
 export type DialogActionHandler<T> = (api: DialogInstanceApi<T>, details: DialogActionDetails) => void;
 export type DialogChangeHandler<T> = (api: DialogInstanceApi<T>, details: DialogChangeDetails<T>) => void;
 export type DialogSubmitHandler<T> = (api: DialogInstanceApi<T>) => void;
 export type DialogCloseHandler = () => void;
 export type DialogCancelHandler<T> = (api: DialogInstanceApi<T>) => void;
-export type DialogTabChangeHandler<T> = (api: DialogInstanceApi<T>, newTabName: string, oldTabName: string) => void;
+export type DialogTabChangeHandler<T> = (api: DialogInstanceApi<T>, details: DialogTabChangeDetails) => void;
 
 export type DialogSize = 'normal' | 'medium' | 'large';
 export interface DialogApi<T extends DialogData> {

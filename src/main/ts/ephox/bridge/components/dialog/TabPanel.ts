@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, FieldPresence } from '@ephox/boulder';
 import { Id, Result } from '@ephox/katamari';
 import { BodyComponent, BodyComponentApi } from './BodyComponent';
 import { itemSchema } from './ItemSchema';
@@ -26,7 +26,14 @@ export interface InternalTabPanel {
 }
 
 export const tabFields = [
-  FieldSchema.defaultedString('name', Id.generate('tab-')),
+  FieldSchema.field(
+    'name',
+    'name',
+    FieldPresence.defaultedThunk(() => {
+      return Id.generate('tab-name');
+    }),
+    ValueSchema.string
+  ),
   FieldSchema.strictString('title'),
   FieldSchema.strictArrayOf('items', itemSchema)
 ];
