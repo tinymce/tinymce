@@ -1,7 +1,7 @@
 import { Arr, Type, Id, Option } from '@ephox/katamari';
 import { Element, DataTransfer, DataTransferItemList } from '@ephox/dom-globals';
 import { createDataTransferItemList } from './DataTransferItemList';
-import { createFileList } from './FileList';
+import { createFileList } from '../file/FileList';
 import { getData } from './DataTransferItem';
 import { setReadWriteMode, isInProtectedMode, isInReadWriteMode } from './Mode';
 

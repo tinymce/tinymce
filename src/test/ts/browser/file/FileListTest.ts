@@ -2,7 +2,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { RawAssertions } from 'ephox/agar/api/Main';
 import { createFile } from 'ephox/agar/api/Files';
 import { Blob } from '@ephox/dom-globals';
-import { createFileList } from 'ephox/agar/datatransfer/FileList';
+import { createFileList } from 'ephox/agar/file/FileList';
 import { Type } from '@ephox/katamari';
 
 UnitTest.test('FileListTest', () => {
