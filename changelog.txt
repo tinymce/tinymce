@@ -1,9 +1,23 @@
-Version 5.0.5 (TBD)
-    Added menu items to match the forecolor/backcolor toolbar buttons #TINY-2878
-    Fixed submenus anchoring #TINY-3564
-    Fixed autoresize not working with floating elements or when media elements finished loading #TINY-3545
-    Removed unused and hidden validation icons to avoid displaying phantom tooltips #TINY-2329
+Version 5.0.6 (TBD)
     Fixed the textpattern plugin not working with fragmented text #TINY-3089
+    Fixed various toolbar drawer accessibility issues and added an animation #TINY-3554
+    Added new api endpoints to the wordcount plugin and improved character count logic #TINY-3578
+    Fixed issues with selection and ui components when toggling readonly mode #TINY-3592
+    Fixed so readonly mode works with inline editors. #TINY-3592
+    Added `icons_url` editor settings to enable icon packs to be loaded from a custom url #TINY-3585
+    Changed plugin, language and icon loading errors to log in the console instead of a notification #TINY-3585
+    Fixed docked inline toolbar positioning when scrolled #TINY-3621
+    Fixed initial value not being set on bespoke select in quickbars and toolbar drawer #TINY-3591
+    Added `image_uploadtab` editor settings to control the visibility of the upload tab in the image dialog. #TINY-3606
+    Fixed so that nbsp entities isn't trimmed in white-space: pre-line elements. #TINY-3642
+Version 5.0.5 (2019-05-09)
+    Added menu items to match the forecolor/backcolor toolbar buttons #TINY-2878
+    Added default directionality based on the configured language #TINY-2621
+    Added styles, icons and tests for rtl mode #TINY-2621
+    Fixed autoresize not working with floating elements or when media elements finished loading #TINY-3545
+    Fixed incorrect vertical caret positioning in IE 11 #TINY-3188
+    Fixed submenu anchoring hiding overflowed content #TINY-3564
+    Removed unused and hidden validation icons to avoid displaying phantom tooltips #TINY-2329
 Version 5.0.4 (2019-04-23)
     Added back URL dialog functionality, which is now available via `editor.windowManager.openUrl()` #TINY-3382
     Added the missing throbber functionality when calling `editor.setProgressState(true)` #TINY-3453

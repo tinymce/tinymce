@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { createPatternSet, PatternSet, normalizePattern } from './Pattern';
-import { Obj, Type, Results, Arr, Global } from '@ephox/katamari';
 import { Console } from '@ephox/dom-globals';
+import { Obj, Type, Results, Arr, Global } from '@ephox/katamari';
+import { PatternSet } from '../core/PatternTypes';
+import { createPatternSet, normalizePattern } from './Pattern';
 
 const error = function (...args: Parameters<Console['error']>) {
   const console: Console = Global.console;

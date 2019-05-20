@@ -11,7 +11,8 @@ export const enum ToolbarButtonClasses {
   Icon = 'tox-icon',
   Ticked = 'tox-tbtn--enabled',
   SplitButton = 'tox-split-button',
-  MatchWidth = 'tox-tbtn--select'
+  MatchWidth = 'tox-tbtn--select',
+  IconRtl = 'tox-tbtn__icon-rtl'
 }
 
 export const enum MenuButtonClasses {

@@ -1,6 +1,6 @@
 {
   "name": "tinymce",
-  "version": "5.0.4",
+  "version": "5.0.5",
   "private": true,
   "repository": {
     "type": "git",
@@ -36,7 +36,6 @@
     "@ephox/katamari": "latest",
     "@ephox/mcagar": "latest",
     "@ephox/oxide": "latest",
-    "@ephox/oxide-icons-default": "latest",
     "@ephox/polaris": "latest",
     "@ephox/robin": "latest",
     "@ephox/sand": "latest",

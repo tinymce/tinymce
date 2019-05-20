@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyTriggers } from '@ephox/alloy';
+import { AlloyTriggers, AlloyComponent } from '@ephox/alloy';
 import { Arr, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
@@ -94,16 +94,18 @@ const getSpec = (editor) => {
     });
   };
 
-  const nodeChangeHandler = Option.some((comp) => {
-    return () => {
-      const fontFamily = editor.queryCommandValue('FontName');
-      const match = getMatchingValue();
-      const text = match.fold(() => fontFamily, (item) => item.title);
-      AlloyTriggers.emitWith(comp, updateMenuText, {
-        text
-      });
-    };
-  });
+  const updateSelectMenuText = (comp: AlloyComponent) => {
+    const fontFamily = editor.queryCommandValue('FontName');
+    const match = getMatchingValue();
+    const text = match.fold(() => fontFamily, (item) => item.title);
+    AlloyTriggers.emitWith(comp, updateMenuText, {
+      text
+    });
+  };
+
+  const nodeChangeHandler = Option.some((comp) => () => updateSelectMenuText(comp));
+
+  const setInitialValue = Option.some((comp) => updateSelectMenuText(comp));
 
   const dataset = buildBasicSettingsDataset(editor, 'font_formats', defaultFontsFormats, Delimiter.SemiColon);
 
@@ -113,6 +115,7 @@ const getSpec = (editor) => {
     isSelectedFor,
     getPreviewFor,
     onAction,
+    setInitialValue,
     nodeChangeHandler,
     dataset,
     shouldHide: false,

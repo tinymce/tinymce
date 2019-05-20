@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
+import { HTMLElement, Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import { defaultData, read, ImageData, create, isFigure, write } from 'tinymce/plugins/image/core/ImageData';
 import Utils from 'tinymce/plugins/image/core/Utils';
@@ -35,7 +35,7 @@ const getSelectedImage = (editor: Editor): HTMLElement => {
 const splitTextBlock = (editor: Editor, figure: HTMLElement) => {
   const dom = editor.dom;
 
-  const textBlock = dom.getParent(figure.parentNode, function (node) {
+  const textBlock = dom.getParent(figure.parentNode, (node: Node) => {
     return editor.schema.getTextBlockElements()[node.nodeName];
   }, editor.getBody());
 

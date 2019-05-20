@@ -10,6 +10,7 @@ import { Fun, Type, Strings, Arr } from '@ephox/katamari';
 import Editor from './Editor';
 import Tools from './util/Tools';
 import { UploadHandler } from '../file/Uploader';
+import I18n from './util/I18n';
 
 const getBodySetting = (editor: Editor, name: string, defaultValue: string) => {
   const value = editor.getParam(name, defaultValue);
@@ -86,7 +87,8 @@ const shouldEndContainerOnEmptyBlock = (editor: Editor): boolean => {
   return editor.getParam('end_container_on_empty_block', false);
 };
 
-const getFontStyleValues = (editor: Editor): string[] => Tools.explode(editor.getParam('font_size_style_values', ''));
+const getFontStyleValues = (editor: Editor): string[] => Tools.explode(editor.getParam('font_size_style_values', 'xx-small,x-small,small,medium,large,x-large,xx-large'));
+
 const getFontSizeClasses = (editor: Editor): string[] => Tools.explode(editor.getParam('font_size_classes', ''));
 
 const getImagesDataImgFilter = (editor: Editor): (imgElm: HTMLImageElement) => boolean => {
@@ -103,6 +105,14 @@ const shouldReuseFileName = (editor: Editor): boolean => {
 
 const shouldReplaceBlobUris = (editor: Editor): boolean => {
   return editor.getParam('images_replace_blob_uris', true, 'boolean');
+};
+
+const getIconPackName = (editor: Editor) => {
+  return editor.getParam('icons', '', 'string');
+};
+
+const getIconsUrl = (editor: Editor): string => {
+  return editor.getParam('icons_url', '', 'string');
 };
 
 const getImageUploadUrl = (editor: Editor): string => {
@@ -155,6 +165,10 @@ const getContentCss = (editor: Editor): string[] => {
   }
 };
 
+const getDirectionality = (editor: Editor): string | undefined => {
+  return editor.getParam('directionality', I18n.isRtl() ? 'rtl' : undefined);
+};
+
 export default {
   getIframeAttrs,
   getDocType,
@@ -171,6 +185,8 @@ export default {
   shouldEndContainerOnEmptyBlock,
   getFontStyleValues,
   getFontSizeClasses,
+  getIconPackName,
+  getIconsUrl,
   getImagesDataImgFilter,
   isAutomaticUploadsEnabled,
   shouldReuseFileName,
@@ -184,5 +200,6 @@ export default {
   getLanguageUrl,
   shouldIndentUseMargin,
   getIndentation,
-  getContentCss
+  getContentCss,
+  getDirectionality
 };

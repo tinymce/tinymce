@@ -5,18 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Attachment, Docking, Focusing, SplitToolbar } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
-import { Class, Css, Element, Height, Location } from '@ephox/sugar';
+import { Attachment, Docking, Focusing } from '@ephox/alloy';
+import { Obj, Option } from '@ephox/katamari';
+import { Attr, Css, Element, Height, Location } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { getToolbarDrawer, ToolbarDrawer, getUiContainer, useFixedContainer } from '../api/Settings';
+import { getToolbarDrawer, getUiContainer, ToolbarDrawer, useFixedContainer } from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
+import { setupReadonlyModeSwitch } from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { identifyButtons } from '../ui/toolbar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
+
+interface Position {
+  top: number;
+  left: number;
+}
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   let floatContainer;
@@ -25,21 +31,21 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   const splitSetting = getToolbarDrawer(editor);
   const split = splitSetting === ToolbarDrawer.sliding || splitSetting === ToolbarDrawer.floating;
-  const floating = splitSetting === ToolbarDrawer.floating;
 
   loadInlineSkin(editor);
 
-  const calcPosition = (offset: number = 0) => {
+  const calcPosition = (offset: number = 0): Position => {
     // Note: The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
     // so we need to round this to account for that.
     const location = Location.absolute(Element.fromDom(editor.getBody()));
     return {
-      top: Math.round(location.top() - Height.get(floatContainer.element())) + offset + 'px',
-      left: Math.round(location.left()) + 'px'
+      top: Math.round(location.top() - Height.get(floatContainer.element())) + offset,
+      left: Math.round(location.left())
     };
   };
 
   const setChromePosition = (toolbar) => {
+    const isDocked = Css.getRaw(floatContainer.element(), 'position').is('fixed');
     // We need to always recalculate the toolbar's position so Docking switches between fixed and
     // absolute correctly. Only recalculating when position: absolute breaks transition on window
     // resize behaviour (chrome gets stuck fixed to the top of the viewport).
@@ -47,7 +53,14 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
       return tbar.components().length > 1 ? Height.get(tbar.components()[1].element()) : 0;
     }) : 0;
-    Css.setAll(floatContainer.element(), calcPosition(offset));
+    const position = calcPosition(offset);
+
+    // If we're docked then we need to update the dock attributes instead, so that when it transitions back to absolute it has the correct position
+    if (isDocked) {
+      Attr.setAll(floatContainer.element(), Obj.tupleMap(position, (value, key) => ({ k: `data-dock-${key}`, v: value })));
+    } else {
+      Css.setAll(floatContainer.element(), Obj.map(position, (value) => value + 'px'));
+    }
 
     // Let Docking handle fixed <-> absolute transitions, etc.
     Docking.refresh(floatContainer);
@@ -64,7 +77,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
     // SplitToolbar
     if (split) {
-      toolbar.each(SplitToolbar.refresh);
+      OuterContainer.refreshToolbar(uiComponents.outerContainer);
     }
 
     // Positioning and Docking
@@ -76,33 +89,16 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const show = () => {
     Css.set(uiComponents.outerContainer.element(), 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
+    Css.remove(uiComponents.uiMothership.element(), 'display');
     updateChromeUi();
-
-    if (floating) {
-      const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
-      toolbar.each((tb) => {
-        const overflow = SplitToolbar.getOverflow(tb);
-        overflow.each((overf) => {
-          Class.remove(overf.element(), 'tox-toolbar__overflow--closed');
-        });
-      });
-    }
   };
 
   const hide = () => {
     if (uiComponents.outerContainer) {
       Css.set(uiComponents.outerContainer.element(), 'display', 'none');
       DOM.removeClass(editor.getBody(), 'mce-edit-focus');
-      if (floating) {
-        const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
-        toolbar.each((tb) => {
-          const overflow = SplitToolbar.getOverflow(tb);
-          overflow.each((overf) => {
-            Class.add(overf.element(), 'tox-toolbar__overflow--closed');
-          });
-        });
-      }
     }
+    Css.set(uiComponents.uiMothership.element(), 'display', 'none');
   };
 
   const render = () => {
@@ -151,6 +147,8 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       render();
     }
   });
+
+  setupReadonlyModeSwitch(editor, uiComponents);
 
   return {
     editorContainer: uiComponents.outerContainer.element().dom()

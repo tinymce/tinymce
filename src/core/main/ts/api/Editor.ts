@@ -20,7 +20,7 @@ import { getEditorSettings, getParam, ParamTypeMap } from '../EditorSettings';
 import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import EditorFocus from '../focus/EditorFocus';
 import Render from '../init/Render';
-import { create, Mode } from '../Mode';
+import { create, Mode } from './Mode';
 import AddOnManager from './AddOnManager';
 import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';
@@ -170,7 +170,7 @@ class Editor implements EditorObservable {
    * Editor ui components
    *
    * @property ui
-   * @type tinymce.Editor.ui
+   * @type tinymce.editor.ui.Ui
    */
   public ui: Ui;
 
@@ -178,7 +178,7 @@ class Editor implements EditorObservable {
    * Editor mode API
    *
    * @property mode
-   * @type tinymce.Editor.mode
+   * @type tinymce.EditorMode
    */
   public mode: Mode;
 
@@ -307,10 +307,6 @@ class Editor implements EditorObservable {
 
     if (this.settings.cache_suffix) {
       Env.cacheSuffix = this.settings.cache_suffix.replace(/^[\?\&]+/, '');
-    }
-
-    if (this.settings.override_viewport === false) {
-      Env.overrideViewPort = false;
     }
 
     this.ui = {
@@ -774,9 +770,6 @@ class Editor implements EditorObservable {
    * // Sets the HTML contents of the activeEditor editor
    * tinymce.activeEditor.setContent('<span>some</span> html');
    *
-   * // Sets the raw contents of the activeEditor editor
-   * tinymce.activeEditor.setContent('<span>some</span> html', {format: 'raw'});
-   *
    * // Sets the content of a specific editor (my_editor in this example)
    * tinymce.get('my_editor').setContent(data);
    *
@@ -800,8 +793,8 @@ class Editor implements EditorObservable {
    * // Get the HTML contents of the currently active editor
    * console.debug(tinymce.activeEditor.getContent());
    *
-   * // Get the raw contents of the currently active editor
-   * tinymce.activeEditor.getContent({format: 'raw'});
+   * // Get the contents of the currently active editor as plain text
+   * tinymce.activeEditor.getContent({format: 'text'});
    *
    * // Get content of a specific editor:
    * tinymce.get('content id').getContent()

@@ -26,6 +26,7 @@ const accessoryClass = 'tox-collection__item-accessory';
 const caretClass = 'tox-collection__item-caret';
 const checkmarkClass = 'tox-collection__item-checkmark';
 const activeClass = 'tox-collection__item--active';
+const iconClassRtl = 'tox-collection__item-icon-rtl';
 
 const classForPreset = (presets: Types.PresetTypes): string => {
   return Objects.readOptFrom<string>(presetClasses, presets).getOr(navClass);
@@ -45,5 +46,6 @@ export {
   iconClass,
   accessoryClass,
   caretClass,
-  checkmarkClass
+  checkmarkClass,
+  iconClassRtl
 };

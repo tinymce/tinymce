@@ -9,7 +9,7 @@ import { HTMLElement, Node, Range, Text } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Type } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Formatter from 'tinymce/core/api/Formatter';
-import { InlinePattern, Pattern } from '../api/Pattern';
+import { InlinePattern, Pattern } from '../core/PatternTypes';
 
 const isElement = (node: Node): node is HTMLElement => node.nodeType === Node.ELEMENT_NODE;
 const isText = (node: Node): node is Text => node.nodeType === Node.TEXT_NODE;
@@ -52,6 +52,10 @@ const isInlinePattern = (pattern: Pattern): pattern is InlinePattern => {
   return Obj.has(pattern as Record<string, any>, 'end');
 };
 
+const isReplacementPattern = (pattern: InlinePattern) => {
+  return pattern.start.length === 0;
+};
+
 // Finds a matching pattern to the specified text
 const findPattern = <P extends Pattern>(patterns: P[], text: string): Option<P> => {
   return Arr.find(patterns, (pattern) => {
@@ -73,5 +77,6 @@ export {
   findPattern,
   isBlockFormatName,
   isElement,
+  isReplacementPattern,
   isText
 };

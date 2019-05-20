@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyTriggers } from '@ephox/alloy';
+import { AlloyTriggers, AlloyComponent } from '@ephox/alloy';
 import { Arr, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
@@ -62,16 +62,18 @@ const getSpec = (editor) => {
     });
   };
 
-  const nodeChangeHandler = Option.some((comp) => {
-    return () => {
-      const { matchOpt, px } = getMatchingValue();
+  const updateSelectMenuText = (comp: AlloyComponent) => {
+    const { matchOpt, px } = getMatchingValue();
 
-      const text = matchOpt.fold(() => px, (match) => match.title);
-      AlloyTriggers.emitWith(comp, updateMenuText, {
-        text
-      });
-    };
-  });
+    const text = matchOpt.fold(() => px, (match) => match.title);
+    AlloyTriggers.emitWith(comp, updateMenuText, {
+      text
+    });
+  };
+
+  const nodeChangeHandler = Option.some((comp) => () => updateSelectMenuText(comp));
+
+  const setInitialValue = Option.some((comp) => updateSelectMenuText(comp));
 
   const dataset = buildBasicSettingsDataset(editor, 'fontsize_formats', defaultFontsizeFormats, Delimiter.Space);
 
@@ -81,6 +83,7 @@ const getSpec = (editor) => {
     isSelectedFor,
     getPreviewFor,
     onAction,
+    setInitialValue,
     nodeChangeHandler,
     dataset,
     shouldHide: false,

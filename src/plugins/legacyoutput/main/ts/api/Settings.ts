@@ -24,7 +24,7 @@ const setFontFormats = (editor: Editor, font_formats: string) => {
 };
 
 const getFontSizeStyleValues = (editor: Editor): string => {
-  return editor.getParam('font_size_style_values');
+  return editor.getParam('font_size_style_values', 'xx-small,x-small,small,medium,large,x-large,xx-large');
 };
 
 const setInlineStyles = (editor: Editor, inline_styles: boolean) => {

@@ -9,8 +9,8 @@ import { Node, Text } from '@ephox/dom-globals';
 import { Adt, Option } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
-import { isText } from '../core/Utils';
-import * as Spot from '../core/Spot';
+import { isText } from '../utils/Utils';
+import * as Spot from '../utils/Spot';
 import { TextWalker } from './TextWalker';
 
 export interface OutcomeAdt extends Adt {

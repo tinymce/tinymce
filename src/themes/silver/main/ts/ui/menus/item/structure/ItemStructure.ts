@@ -7,7 +7,7 @@
 
 import { AlloySpec, DomFactory, RawDomSchema } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Fun, Merger, Obj, Option } from '@ephox/katamari';
+import { Fun, Merger, Obj, Option, Arr } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
@@ -65,7 +65,7 @@ const renderColorStructure = (itemText: Option<string>, itemValue: string, iconS
 };
 
 // TODO: Maybe need aria-label
-const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>, renderIcons: boolean, textRender: (text: string) => AlloySpec): ItemStructure => {
+const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>, renderIcons: boolean, textRender: (text: string) => AlloySpec, rtlClass: boolean): ItemStructure => {
   // checkmark has priority, otherwise render icon if we have one, otherwise empty icon for spacing
   const leftIcon = renderIcons ? info.checkMark.orThunk(() => icon.or(Option.some('')).map(renderIcon)) : Option.none();
   const domTitle = info.ariaLabel.map((label): {attributes?: {title: string}} => {
@@ -80,7 +80,7 @@ const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>, r
 
   const dom = Merger.merge({
     tag: 'div',
-    classes: [ ItemClasses.navClass, ItemClasses.selectableClass ],
+    classes: [ ItemClasses.navClass, ItemClasses.selectableClass ].concat(rtlClass ? [ ItemClasses.iconClassRtl ] : []),
   }, domTitle);
 
   const menuItem = {
@@ -95,10 +95,36 @@ const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>, r
   return menuItem;
 };
 
+// TODO TINY-3598: Implement a permanent solution to render rtl icons
+// Icons that have `-rtl` equivalents
+const rtlIcon = [
+  'list-num-default',
+  'list-num-lower-alpha',
+  'list-num-lower-greek',
+  'list-num-lower-roman',
+  'list-num-upper-alpha',
+  'list-num-upper-roman'
+];
+
+// Icons that need to be transformed in RTL
+const rtlTransform = [
+  'list-bull-circle',
+  'list-bull-default',
+  'list-bull-square'
+];
+
 // TODO: Maybe need aria-label
 const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean, fallbackIcon: Option<string> = Option.none()): { dom: RawDomSchema, optComponents: Array<Option<AlloySpec>> } => {
+  // If RTL and icon is in whitelist, add RTL icon class for icons that don't have a `-rtl` icon available.
+  // Use `-rtl` icon suffix for icons that do.
+  const getIconName = (iconName: Option<string>): Option<string> => {
+    return iconName.map((name) => I18n.isRtl() && Arr.contains(rtlIcon, name) ? name + '-rtl' : name);
+  };
+
+  const needRtlClass = I18n.isRtl() && info.iconContent.exists((name) => Arr.contains(rtlTransform, name));
+
   // TODO: TINY-3036 Work out a better way of dealing with custom icons
-  const icon = info.iconContent.map((iconName) => Icons.getOr(iconName, providersBackstage.icons, fallbackIcon));
+  const icon = getIconName(info.iconContent).map((iconName) => Icons.getOr(iconName, providersBackstage.icons, fallbackIcon));
 
   // Style items and autocompleter both have meta. Need to branch on style
   // This could probably be more stable...
@@ -112,7 +138,7 @@ const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiF
   if (info.presets === 'color') {
     return renderColorStructure(info.ariaLabel, info.value, icon, providersBackstage);
   } else {
-    return renderNormalItemStructure(info, icon, renderIcons, textRender);
+    return renderNormalItemStructure(info, icon, renderIcons, textRender, needRtlClass);
   }
 };
 

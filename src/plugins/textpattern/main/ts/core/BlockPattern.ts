@@ -6,13 +6,15 @@
  */
 
 import { Node } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Tools from 'tinymce/core/api/util/Tools';
 import Editor from 'tinymce/core/api/Editor';
-import { BlockPattern } from '../api/Pattern';
 import * as TextSearch from '../text/TextSearch';
 import { TextWalker } from '../text/TextWalker';
-import * as Utils from './Utils';
+import { generatePathRange, resolvePathRange } from '../utils/PathRange';
+import * as Utils from '../utils/Utils';
+import { BlockPattern, BlockPatternMatch } from './PatternTypes';
 
 const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern) => {
   // The pattern could be across fragmented text nodes, so we need to find the end
@@ -29,9 +31,11 @@ const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern) => {
   });
 };
 
-const applyPattern = (editor: Editor, block: Node, pattern: BlockPattern): boolean => {
-  // add a marker to store the cursor position
-  const cursor = editor.selection.getBookmark();
+const applyPattern = (editor: Editor, match: BlockPatternMatch): boolean => {
+  const dom = editor.dom;
+  const pattern = match.pattern;
+  const rng = resolvePathRange(dom.getRoot(), match.range).getOrDie('Unable to resolve path range');
+  const block = dom.getParent(rng.startContainer, dom.isBlock);
 
   if (pattern.type === 'block-format') {
     if (Utils.isBlockFormatName(pattern.format, editor.formatter)) {
@@ -47,19 +51,16 @@ const applyPattern = (editor: Editor, block: Node, pattern: BlockPattern): boole
     });
   }
 
-  // restore the selection
-  editor.selection.moveToBookmark(cursor);
-
   return true;
 };
 
-const applyPatterns = (editor: Editor, patterns: BlockPattern[]): boolean => {
+const findPatterns = (editor: Editor, patterns: BlockPattern[]): BlockPatternMatch[] => {
   const dom = editor.dom;
   const rng = editor.selection.getRng();
   const block = dom.getParent(rng.startContainer, dom.isBlock);
 
   if (!(dom.is(block, 'p') && Utils.isElement(block))) {
-    return false;
+    return [];
   }
 
   // Get the block text
@@ -69,12 +70,25 @@ const applyPatterns = (editor: Editor, patterns: BlockPattern[]): boolean => {
   const matchedPattern = Utils.findPattern(patterns, blockText);
   return matchedPattern.map((pattern) => {
     if (Tools.trim(blockText).length === pattern.start.length) {
-      return false;
+      return [];
     }
 
-    // Apply the pattern
-    return applyPattern(editor, block, pattern);
-  }).getOr(false);
+    return [{
+      pattern,
+      range: generatePathRange(dom.getRoot(), block, 0, block, 0)
+    }];
+  }).getOr([]);
 };
 
-export { applyPatterns };
+const applyMatches = (editor: Editor, matches: BlockPatternMatch[]) => {
+  if (matches.length === 0) {
+    return;
+  }
+
+  // Store the current selection and then apply the matched patterns
+  const bookmark = editor.selection.getBookmark();
+  Arr.each(matches, (match) => applyPattern(editor, match));
+  editor.selection.moveToBookmark(bookmark);
+};
+
+export { applyMatches, findPatterns };

@@ -49,6 +49,9 @@ export interface SelectSpec {
   shouldHide: boolean;
   // This determines if an item is applicable
   isInvalid: (item: FormatItem) => boolean;
+
+  // This is used for assigning initial values
+  setInitialValue: Option<(comp: AlloyComponent) => void>;
 }
 
 export interface SelectData {
@@ -141,6 +144,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, datas
   };
 
   const onSetup = (api: BespokeSelectApi): () => void => {
+    spec.setInitialValue.each((f) => f(api.getComponent()));
     return spec.nodeChangeHandler.map((f) => {
       const handler = f(api.getComponent());
       editor.on('NodeChange', handler);
