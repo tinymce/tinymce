@@ -24,6 +24,7 @@ import { Coupling } from './behaviour/Coupling';
 import { Disabling } from './behaviour/Disabling';
 import { Docking } from './behaviour/Docking';
 import { Dragging } from './behaviour/Dragging';
+import { DragnDrop } from './behaviour/DragnDrop';
 import { Focusing } from './behaviour/Focusing';
 import { Highlighting } from './behaviour/Highlighting';
 import { Invalidating } from './behaviour/Invalidating';
@@ -144,6 +145,7 @@ export {
   Disabling,
   Docking,
   Dragging,
+  DragnDrop,
   Focusing,
   Highlighting,
   Invalidating,
