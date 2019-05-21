@@ -49,12 +49,8 @@
 
 // RTL
 .tox[dir=rtl] {
-  .tox-spinner {
-    /* stylelint-disable-next-line no-descending-specificity */
-    > div {
-      &:not(:first-child) {
-        margin-right: @spinner-size / 2;
-      }
-    }
+  .tox-spinner > div:not(:first-child) {
+    margin-right: @spinner-size / 2;
   }
 }
+
