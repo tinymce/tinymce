@@ -10,7 +10,11 @@ Version 5.0.6 (TBD)
     Fixed initial value not being set on bespoke select in quickbars and toolbar drawer #TINY-3591
     Added `image_uploadtab` editor settings to control the visibility of the upload tab in the image dialog. #TINY-3606
     Fixed so that nbsp entities isn't trimmed in white-space: pre-line elements. #TINY-3642
+<<<<<<< HEAD
     Fixed `mceInsertLink` command inserting spaces instead of url encoded characters #GH-4990
+=======
+    Fixed text content floating on top of dialogs in IE11 #TINY-3640
+>>>>>>> master
 Version 5.0.5 (2019-05-09)
     Added menu items to match the forecolor/backcolor toolbar buttons #TINY-2878
     Added default directionality based on the configured language #TINY-2621

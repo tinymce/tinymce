@@ -24,6 +24,7 @@ import * as Sidebar from './ui/sidebar/Sidebar';
 import * as Throbber from './ui/throbber/Throbber';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
+import { PlatformDetection } from '@ephox/sand';
 
 export interface RenderInfo {
   mothership: Gui.GuiSystem;
@@ -69,6 +70,10 @@ const setup = (editor: Editor): RenderInfo => {
   const mode = isInline ? Inline : Iframe;
   let lazyOuterContainer: Option<AlloyComponent> = Option.none();
 
+  const platform = PlatformDetection.detect();
+  const isIE = platform.browser.isIE();
+  const platformClasses = isIE ? ['tox-platform-ie'] : [];
+
   const dirAttributes = I18n.isRtl() ? {
     attributes: {
       dir: 'rtl'
@@ -78,7 +83,7 @@ const setup = (editor: Editor): RenderInfo => {
   const sink = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: ['tox', 'tox-silver-sink', 'tox-tinymce-aux'],
+      classes: ['tox', 'tox-silver-sink', 'tox-tinymce-aux'].concat(platformClasses),
       ...dirAttributes
     },
     behaviours: Behaviour.derive([
@@ -214,7 +219,7 @@ const setup = (editor: Editor): RenderInfo => {
     OuterContainer.sketch({
       dom: {
         tag: 'div',
-        classes: ['tox', 'tox-tinymce'].concat(isInline ? ['tox-tinymce-inline'] : []),
+        classes: ['tox', 'tox-tinymce'].concat(isInline ? ['tox-tinymce-inline'] : []).concat(platformClasses),
         styles: {
           // This is overridden by the skin, it helps avoid FOUC
           visibility: 'hidden'
