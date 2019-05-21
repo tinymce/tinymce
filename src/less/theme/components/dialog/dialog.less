@@ -54,8 +54,6 @@
     justify-content: center;
     left: 0;
     position: fixed;
-    // Needed for IE11 so that content text doesn't float on top of dialogs
-    position: -ms-device-fixed;
     right: 0;
     top: 0;
     z-index: @z-index-dialogs;
@@ -308,6 +306,13 @@
 // Added to the body to disable scrolling when dialogs are open
 body.tox-dialog__disable-scroll {
   overflow: hidden;
+}
+
+.tox.tox-platform-ie {
+  /* IE11 CSS styles go here */
+  .tox-dialog-wrap {
+    position: -ms-device-fixed;
+  }
 }
 
 .tox:not([dir=rtl]) {
