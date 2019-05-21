@@ -1134,6 +1134,12 @@ define("tinymce/Editor", [
 							body.focus();
 						}
 					} else {
+						// Restore previous selection before focus to prevent Chrome from
+						// jumping to the top of the document in long inline editors
+						if (self.inline && document.activeElement !== body) {
+							self.selection.setRng(self.lastRng);
+						}
+
 						body.focus();
 					}
 
