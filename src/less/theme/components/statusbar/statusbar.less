@@ -13,13 +13,14 @@
 @statusbar-height: 18px;
 @statusbar-padding-x: @pad-sm;
 @statusbar-separator-color: @border-color;
+@statusbar-text-color: contrast(@statusbar-background-color, @text-color-muted, @color-white);
 
 .tox {
   .tox-statusbar {
     align-items: center;
     background-color: @statusbar-background-color;
     border-top: 1px solid @statusbar-separator-color;
-    color: @text-color-muted;
+    color: @statusbar-text-color;
     display: flex;
     flex: 0 0 auto;
     font-size: @font-size-xs;
@@ -60,7 +61,7 @@
   .tox-statusbar a,
   .tox-statusbar__path-item,
   .tox-statusbar__wordcount {
-    color: @text-color-muted;
+    color: @statusbar-text-color;
     text-decoration: none;
 
     &:hover {
@@ -82,7 +83,7 @@
 
     svg {
       display: block;
-      fill: @text-color-muted;
+      fill: @statusbar-text-color;
     }
   }
 }
