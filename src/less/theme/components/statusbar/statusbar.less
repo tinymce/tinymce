@@ -30,15 +30,6 @@
     text-transform: uppercase;
   }
 
-  .tox-statusbar a {
-    color: @text-color-muted;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
   .tox-statusbar__text-container {
     display: flex;
     flex: 1 1 auto;
@@ -64,6 +55,18 @@
   .tox-statusbar__wordcount {
     flex: 0 0 auto;
     margin-left: 1ch;
+  }
+
+  .tox-statusbar a,
+  .tox-statusbar__path-item,
+  .tox-statusbar__wordcount {
+    color: @text-color-muted;
+    text-decoration: none;
+
+    &:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
   }
 
   .tox-statusbar__resize-handle {
