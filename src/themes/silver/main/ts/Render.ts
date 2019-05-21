@@ -72,6 +72,7 @@ const setup = (editor: Editor): RenderInfo => {
 
   const platform = PlatformDetection.detect();
   const isIE = platform.browser.isIE();
+  const platformClasses = isIE ? ['tox-platform-ie'] : [];
 
   const dirAttributes = I18n.isRtl() ? {
     attributes: {
@@ -82,7 +83,7 @@ const setup = (editor: Editor): RenderInfo => {
   const sink = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: ['tox', 'tox-silver-sink', 'tox-tinymce-aux'].concat(isIE ? ['tox-platform-ie'] : []),
+      classes: ['tox', 'tox-silver-sink', 'tox-tinymce-aux'].concat(platformClasses),
       ...dirAttributes
     },
     behaviours: Behaviour.derive([
@@ -218,7 +219,7 @@ const setup = (editor: Editor): RenderInfo => {
     OuterContainer.sketch({
       dom: {
         tag: 'div',
-        classes: ['tox', 'tox-tinymce'].concat(isInline ? ['tox-tinymce-inline'] : []).concat(isIE ? ['tox-platform-ie'] : []),
+        classes: ['tox', 'tox-tinymce'].concat(isInline ? ['tox-tinymce-inline'] : []).concat(platformClasses),
         styles: {
           // This is overridden by the skin, it helps avoid FOUC
           visibility: 'hidden'
