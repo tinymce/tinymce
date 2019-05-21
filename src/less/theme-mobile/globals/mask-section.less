@@ -1,0 +1,41 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+.mixin-menu-item {
+  .mixin-flex-and-centre;
+
+  border-radius: 50%;
+  height: @mask-button-size;
+  width: @mask-button-size;
+}
+
+.tinymce-mobile-content-tap-section {
+  .mixin-flex-and-centre;
+
+  flex-direction: column;
+  font-size: @mask-button-font-size-large;
+
+  @media @tablets {
+    font-size: @mask-button-font-size-small;
+  }
+
+  .tinymce-mobile-mask-tap-icon {
+    .mixin-menu-item;
+
+    background-color: @mask-button-foreground-color;
+    color: @mask-button-background-color;
+  }
+
+  .tinymce-mobile-mask-tap-icon::before {
+    content: "\e900";
+    font-family: 'tinymce-mobile', sans-serif;
+  }
+
+  &:not(.tinymce-mobile-mask-tap-icon-selected) .tinymce-mobile-mask-tap-icon {
+    z-index: @tinymce-mobile-mask-menu-zindex + 1;
+  }
+}
