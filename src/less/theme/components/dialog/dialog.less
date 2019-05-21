@@ -297,6 +297,8 @@
     .tox-navobj :nth-child(2) {
       flex: 1;
       -ms-flex-preferred-size: auto;
+      // IE 11
+      height: 100%;
     }
   }
 }
@@ -310,12 +312,6 @@ body.tox-dialog__disable-scroll {
   /* IE11 CSS styles go here */
   .tox-dialog-wrap {
     position: -ms-device-fixed;
-  }
-
-  .tox-dialog__body-iframe {
-    .tox-navobj :nth-child(2) {
-      height: 100%;
-    }
   }
 }
 
