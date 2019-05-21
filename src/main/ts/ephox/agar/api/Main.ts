@@ -31,6 +31,7 @@ import * as UnitTest from './UnitTest';
 import * as Waiter from './Waiter';
 import * as DragnDrop from './DragnDrop';
 import * as Files from './Files';
+import * as FileInput from './FileInput';
 
 export {
   ApproxStructure,
@@ -67,5 +68,6 @@ export {
   StructAssertBasic,
   StructAssertAdv,
   DragnDrop,
-  Files
+  Files,
+  FileInput
 };

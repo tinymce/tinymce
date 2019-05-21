@@ -1,3 +1,9 @@
+Version 4.13.1
+
+Date 2019-05-20
+
+* Added new FileInput to enable simulating file picking.
+
 Version 4.12.3
 
 Date 2019-04-16

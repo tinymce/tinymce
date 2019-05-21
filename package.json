@@ -1,6 +1,6 @@
 {
   "name": "@ephox/agar",
-  "version": "4.12.7",
+  "version": "4.13.0",
   "description": "Testing infrastructure",
   "repository": {
     "type": "git",
@@ -9,7 +9,7 @@
   "scripts": {
     "prepublishOnly": "tsc",
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
-    "test-manual": "bedrock -d src/test/ts"
+    "test-manual": "bedrock --testdirs src/test/ts/browser src/test/ts/atomic"
   },
   "keywords": [
     "testing",
