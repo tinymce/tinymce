@@ -71,6 +71,11 @@
     border: 1px solid @pop-border-color;
     border-radius: @pop-border-radius;
     box-shadow: @pop-box-shadow;
+  }
+}
+
+.tox.tox-tinymce-aux:not([dir=rtl]) {
+  .tox-toolbar__overflow {
     margin-left: @pad-xs;
   }
 }
@@ -79,5 +84,10 @@
 .tox[dir=rtl] {
   .tox-tbtn__icon-rtl svg {
     transform: rotateY(180deg);
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  .tox-toolbar__overflow {
+    margin-right: @pad-xs;
   }
 }
