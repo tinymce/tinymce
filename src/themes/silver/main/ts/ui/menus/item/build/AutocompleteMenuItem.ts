@@ -61,7 +61,7 @@ const replaceText = (text: string, matchText: string): string => {
     const translated = I18n.translate(text);
     const encoded = encodeText(translated);
     const escapedMatchRegex = new RegExp(escapeRegExp(matchText), 'g');
-    return encoded.replace(escapedMatchRegex, `<span style="font-weight: bold;">${matchText}</span>`);
+    return encoded.replace(escapedMatchRegex, `<span class="tox-autocompleter-highlight">${matchText}</span>`);
   } else {
     return text;
   }

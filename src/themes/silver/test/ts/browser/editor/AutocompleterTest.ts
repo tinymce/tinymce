@@ -83,9 +83,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
               children: [
                 s.text(str.is(d.text)),
                 s.element('span', {
-                  style: {
-                    'font-weight': str.is('bold')
-                  },
+                  classes: [ arr.has('tox-autocompleter-highlight') ],
                   children: [
                     s.text(str.is(d.boldText))
                   ]
