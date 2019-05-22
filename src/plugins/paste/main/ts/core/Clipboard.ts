@@ -17,7 +17,7 @@ import ProcessFilters from './ProcessFilters';
 import SmartPaste from './SmartPaste';
 import Utils from './Utils';
 import { Editor } from 'tinymce/core/api/Editor';
-import { Cell, Futures, Future, Arr } from '@ephox/katamari';
+import { Cell, Futures, Future, Arr, Singleton } from '@ephox/katamari';
 import { DataTransfer, ClipboardEvent, HTMLImageElement, Range, Image, Event, DragEvent, navigator, KeyboardEvent, File } from '@ephox/dom-globals';
 
 declare let window: any;
@@ -243,7 +243,7 @@ const isKeyboardPasteEvent = (e: KeyboardEvent) => {
 };
 
 const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: Cell<string>) => {
-  let keyboardPasteEvent = null;
+  let keyboardPasteEvent = Singleton.value();
   let keyboardPastePlainTextState;
 
   editor.on('keydown', function (e) {
@@ -269,9 +269,9 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
 
       // track that this is a keyboard paste event but remove it once the paste event
       // has had enough time to be added to the stack first
-      keyboardPasteEvent = e;
+      keyboardPasteEvent.set(e);
       window.setTimeout(() => {
-        keyboardPasteEvent = null;
+        keyboardPasteEvent.clear();
       }, 100);
 
       // IE doesn't support Ctrl+Shift+V and it doesn't even produce a paste event
@@ -356,7 +356,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
   };
 
   editor.on('paste', function (e) {
-    const isKeyBoardPaste = keyboardPasteEvent !== null;
+    const isKeyBoardPaste = keyboardPasteEvent.isSet();
     const clipboardContent = getClipboardContent(editor, e);
 
     const plainTextMode = pasteFormat.get() === 'text' || keyboardPastePlainTextState;
