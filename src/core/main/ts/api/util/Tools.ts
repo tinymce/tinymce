@@ -90,10 +90,6 @@ const hasOwnProperty = function (obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 };
 
-const isRestricted = function (element) {
-  return !!element && !Object.getPrototypeOf(element);
-};
-
 /**
  * Creates a class, subclass or static singleton.
  * More details on this method can be found in the Wiki.
@@ -450,15 +446,6 @@ export default {
   inArray: ArrUtils.indexOf,
 
   hasOwn: hasOwnProperty,
-
-  /**
-   * Returns true if element is Restricted (due to cross origin limitation or not visible on quantum engine)
-   *
-   * @method isRestricted
-   * @param {any} a dom element, unassigned safe
-   * @return true if object is restricted, otherwise false
-  */
-  isRestricted,
 
   extend,
   create,

@@ -13,6 +13,8 @@ const isNodeType = function (type) {
   };
 };
 
+const isRestrictedNode = (node: Node): boolean => !!node && !Object.getPrototypeOf(node);
+
 const isElement = isNodeType(1) as (node: Node) => node is HTMLElement;
 
 const matchNodeNames = function (names: string) {
@@ -110,6 +112,7 @@ export default {
   isBr,
   isContentEditableTrue,
   isContentEditableFalse,
+  isRestrictedNode,
   matchNodeNames,
   hasPropValue,
   hasAttribute,
