@@ -53,7 +53,8 @@ const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryB
 };
 
 const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, matchText: string, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: ItemValueHandler, itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared, renderIcons: boolean = true): ItemTypes.ItemSpec => {
-  const replaceText = (text: string): string => matchText.length > 0 ? text.replace(new RegExp(matchText, 'g'), `<span style="font-weight: bold;">${matchText}</span>`) : text;
+  const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const replaceText = (text: string): string => matchText.length > 0 ? text.replace(new RegExp(escapeRegExp(matchText), 'g'), `<span style="font-weight: bold;">${matchText}</span>`) : text;
 
   const structure = renderItemStructure({
     presets,
