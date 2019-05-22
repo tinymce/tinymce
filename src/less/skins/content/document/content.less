@@ -41,12 +41,6 @@ table td {
   padding: .4rem;
 }
 
-blockquote {
-  border-left: 2px solid #ccc;
-  margin-left: 1.5rem;
-  padding-left: 1rem;
-}
-
 figure figcaption {
   color: #999;
   margin-top: .25rem;
@@ -57,4 +51,21 @@ hr {
   border-color: #ccc;
   border-style: solid;
   border-width: 1px 0 0 0;
+}
+
+.mce-content-body:not([dir=rtl]) {
+  blockquote {
+    border-left: 2px solid #ccc;
+    margin-left: 1.5rem;
+    padding-left: 1rem;
+  }
+}
+
+// RTL
+.mce-content-body[dir=rtl] {
+  blockquote {
+    border-right: 2px solid #ccc;
+    margin-right: 1.5rem;
+    padding-right: 1rem;
+  }
 }

@@ -25,10 +25,6 @@
 
       &:nth-child(1) { animation-delay: -.32s; }
       &:nth-child(2) { animation-delay: -.16s; }
-
-      &:not(:first-child) {
-        margin-left: @spinner-size / 2;
-      }
     }
   }
 
@@ -44,3 +40,17 @@
     }
   }
 }
+
+.tox:not([dir=rtl]) {
+  .tox-spinner > div:not(:first-child) {
+    margin-left: @spinner-size / 2;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-spinner > div:not(:first-child) {
+    margin-right: @spinner-size / 2;
+  }
+}
+

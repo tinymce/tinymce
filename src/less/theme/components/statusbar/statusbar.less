@@ -57,7 +57,6 @@
 
   .tox-statusbar__path > * {
     display: inline;
-    margin-right: @pad-xs;
     white-space: nowrap;
   }
 
@@ -85,6 +84,10 @@
 }
 
 .tox:not([dir=rtl]) {
+  .tox-statusbar__path > * {
+    margin-right: @pad-xs;
+  }
+
   .tox-statusbar__branding {
     margin-left: 1ch;
   }
@@ -94,5 +97,9 @@
 .tox[dir=rtl] {
   .tox-statusbar {
     flex-direction: row-reverse;
+  }
+
+  .tox-statusbar__path > * {
+    margin-left: @pad-xs;
   }
 }

@@ -25,12 +25,6 @@ table td {
   padding: .4rem;
 }
 
-blockquote {
-  border-left: 2px solid #ccc;
-  margin-left: 1.5rem;
-  padding-left: 1rem;
-}
-
 figure {
   display: table;
   margin: 1rem auto;
@@ -53,4 +47,21 @@ code {
   background-color: #e8e8e8;
   border-radius: 3px;
   padding: .1rem .2rem;
+}
+
+.mce-content-body:not([dir=rtl]) {
+  blockquote {
+    border-left: 2px solid #ccc;
+    margin-left: 1.5rem;
+    padding-left: 1rem;
+  }
+}
+
+// RTL
+.mce-content-body[dir=rtl] {
+  blockquote {
+    border-right: 2px solid #ccc;
+    margin-right: 1.5rem;
+    padding-right: 1rem;
+  }
 }

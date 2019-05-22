@@ -71,15 +71,25 @@
     border: 1px solid @pop-border-color;
     border-radius: @pop-border-radius;
     box-shadow: @pop-box-shadow;
+  }
+}
+
+.tox.tox-tinymce-aux:not([dir=rtl]) {
+  .tox-toolbar__overflow {
     margin-left: @pad-xs;
   }
 }
 
 // RTL
 .tox[dir=rtl] {
-  .tox-tbtn__icon-rtl {
-    .tox-tbtn__icon-wrap svg {
-      transform: rotateY(180deg);
+  .tox-tbtn__icon-rtl svg {
+    transform: rotateY(180deg);
+  }
+
+  &.tox-tinymce-aux {
+    .tox-toolbar__overflow {
+      margin-right: @pad-xs;
     }
   }
 }
+
