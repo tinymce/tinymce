@@ -86,6 +86,15 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
     });
   }
 
+  // TINY-3636: We want a way to use the dialog even when tablegrid true.
+  // If tablegrid false then inserttable and inserttabledialog are the same,
+  // but that's preferrable to breaking things at this point.
+  editor.ui.registry.addMenuItem('inserttabledialog', {
+    text: 'Table',
+    icon: 'table',
+    onAction: cmd('mceInsertTable')
+  });
+
   editor.ui.registry.addMenuItem('tableprops', tableProperties);
   editor.ui.registry.addMenuItem('deletetable', deleteTable);
   editor.ui.registry.addNestedMenuItem('row', row);
