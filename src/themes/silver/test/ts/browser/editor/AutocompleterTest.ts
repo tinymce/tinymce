@@ -23,6 +23,18 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
     groups: { title: string; icon?: string }[][];
   }
 
+  interface Scenario {
+    triggerChar: string;
+    structure: AutocompleterStructure;
+    choice: Step<any, any>;
+    assertion: Step<any, any>;
+    content?: string;
+    cursorPos?: {
+      elementPath: number[];
+      offset: number;
+    };
+  }
+
   type AutocompleterStructure = AutocompleterListStructure | AutocompleterGridStructure;
 
   TinyLoader.setup(
@@ -127,12 +139,12 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         ]);
       };
 
-      const sTestAutocompleter = (scenario: { triggerChar: string, structure: AutocompleterStructure, choice: Step<any, any>, assertion: Step<any, any>, content?: string }) => {
+      const sTestAutocompleter = (scenario: Scenario) => {
         const content = scenario.content || scenario.triggerChar;
         return GeneralSteps.sequence([
           store.sClear,
           tinyApis.sSetContent(`<p>${content}</p>`),
-          tinyApis.sSetCursor([ 0, 0 ], content.length),
+          scenario.cursorPos ? tinyApis.sSetCursor(scenario.cursorPos.elementPath, scenario.cursorPos.offset) : tinyApis.sSetCursor([ 0, 0 ], content.length),
           Keyboard.sKeypress(eDoc, scenario.triggerChar.charCodeAt(0), { }),
           tinyUi.sWaitForPopup('wait for autocompleter to appear', '.tox-autocompleter div[role="menu"]'),
           sAssertAutocompleterStructure(scenario.structure),
@@ -245,6 +257,30 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         assertion: tinyApis.sAssertContent('<p>test=two</p>')
       });
 
+      const sTestAutocompleteFragmentedText = sTestAutocompleter({
+        triggerChar: '*',
+        content: '*<span data-mce-spelling="invalid">ha</span>p',
+        cursorPos: {
+          elementPath: [0, 2],
+          offset: 1,
+        },
+        structure: {
+          type: 'grid',
+          groups: [
+            [
+              { title: 'asterisk-a', icon: '*' },
+              { title: 'asterisk-b', icon: '*' },
+              { title: 'asterisk-c', icon: '*' },
+              { title: 'asterisk-d', icon: '*' }
+            ]
+          ]
+        },
+        choice: GeneralSteps.sequence([
+          Keyboard.sKeydown(eDoc, Keys.enter(), { })
+        ]),
+        assertion: tinyApis.sAssertContent('<p>asterisk-a</p>')
+      });
+
       const sSetContentAndTrigger = (content: string, triggerCharCode: number) => {
         return GeneralSteps.sequence([
           tinyApis.sSetContent(`<p>${content}</p>`),
@@ -308,7 +344,8 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             Logger.t('Checking third autocomplete (columns = auto) trigger: "~"', sTestThirdAutocomplete),
             Logger.t('Checking forth autocomplete, (columns = 1), trigger: "!", no icons', sTestFourthAutocomplete),
             Logger.t('Checking fifth autocomplete, trigger: "=", custom activation check', sTestFifthAutocomplete),
-            Logger.t('Checking autocomplete activation based on content', sTestAutocompleteActivation)
+            Logger.t('Checking autocomplete activation based on content', sTestAutocompleteActivation),
+            Logger.t('Checking autocomplete over fragmented text', sTestAutocompleteFragmentedText)
           ]
         ), onSuccess, onFailure);
     },
@@ -444,6 +481,29 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           onAction: (autocompleteApi, rng, value) => {
             ed.selection.setRng(rng);
             ed.insertContent('=' + value);
+            autocompleteApi.hide();
+          }
+        });
+
+        ed.ui.registry.addAutocompleter('Asterisk', {
+          ch: '*',
+          minChars: 2,
+          columns: 'auto',
+          fetch: (pattern, maxResults) => {
+            return new Promise((resolve) => {
+              resolve(
+                Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
+                  value: `asterisk-${letter}`,
+                  text: `asterisk-${letter}`,
+                  icon: '*'
+                }))
+              );
+            });
+          },
+          onAction: (autocompleteApi, rng, value) => {
+            store.adder('asterisk:' + value)();
+            ed.selection.setRng(rng);
+            ed.insertContent(value);
             autocompleteApi.hide();
           }
         });
