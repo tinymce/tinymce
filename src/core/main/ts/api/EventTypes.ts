@@ -92,5 +92,5 @@ export interface EditorEventMap extends NativeEventMap {
 export interface EditorManagerEventMap extends NativeEventMap {
   'AddEditor': { editor: Editor };
   'RemoveEditor': { editor: Editor };
-  'BeforeUnload': { };
+  'BeforeUnload': { returnValue: any };
 }

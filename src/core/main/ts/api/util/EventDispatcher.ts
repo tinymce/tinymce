@@ -62,7 +62,6 @@ export interface NativeEventMap {
 export type EditorEvent<T> = T & {
   target: any;
   type: string;
-  returnValue: any;
   preventDefault (): void;
   isDefaultPrevented (): boolean;
   stopPropagation (): void;
