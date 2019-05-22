@@ -8,9 +8,8 @@
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
-import { window } from '@ephox/dom-globals';
 
-EditorManager._beforeUnloadHandler = () => {
+const beforeUnloadHandler = (e) => {
   let msg;
 
   Tools.each(EditorManager.get(), (editor) => {
@@ -25,11 +24,14 @@ EditorManager._beforeUnloadHandler = () => {
     }
   });
 
-  return msg;
+  if (msg) {
+    e.preventDefault();
+    e.returnValue = msg;
+  }
 };
 
 const setup = (editor) => {
-  window.onbeforeunload = EditorManager._beforeUnloadHandler;
+  editor.editorManager.on('BeforeUnload', beforeUnloadHandler);
 };
 
 export {
