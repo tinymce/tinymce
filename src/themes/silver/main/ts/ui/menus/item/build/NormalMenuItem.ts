@@ -26,6 +26,7 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
     presets: 'normal',
     iconContent: spec.icon,
     textContent: spec.text,
+    htmlContent: Option.none(),
     ariaLabel: spec.text,
     caret: Option.none(),
     checkMark: Option.none(),

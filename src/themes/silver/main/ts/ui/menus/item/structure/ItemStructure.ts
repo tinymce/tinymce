@@ -12,7 +12,7 @@ import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
 import * as ItemClasses from '../ItemClasses';
-import { renderIcon, renderShortcut, renderStyledText, renderText } from './ItemSlices';
+import { renderIcon, renderShortcut, renderStyledText, renderText, renderHtml } from './ItemSlices';
 
 export interface ItemStructure {
   dom: RawDomSchema;
@@ -23,6 +23,7 @@ export interface ItemStructureSpec {
   presets: Types.PresetItemTypes;
   iconContent: Option<string>;
   textContent: Option<string>;
+  htmlContent: Option<string>;
   ariaLabel: Option<string>;
   shortcutContent: Option<string>;
   checkMark: Option<AlloySpec>;
@@ -34,6 +35,7 @@ export interface ItemStructureSpec {
 interface NormalItemSpec {
   iconContent: Option<string>;
   textContent: Option<string>;
+  htmlContent: Option<string>;
   shortcutContent: Option<string>;
   checkMark: Option<AlloySpec>;
   caret: Option<AlloySpec>;
@@ -83,11 +85,15 @@ const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>, r
     classes: [ ItemClasses.navClass, ItemClasses.selectableClass ].concat(rtlClass ? [ ItemClasses.iconClassRtl ] : []),
   }, domTitle);
 
+  const content = info.htmlContent.fold(() => info.textContent.map(textRender),
+    (html) => Option.some(renderHtml(html))
+  );
+
   const menuItem = {
     dom,
     optComponents: [
       leftIcon,
-      info.textContent.map(textRender),
+      content,
       info.shortcutContent.map(renderShortcut),
       info.caret
     ]

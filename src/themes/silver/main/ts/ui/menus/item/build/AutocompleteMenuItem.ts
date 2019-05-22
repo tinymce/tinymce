@@ -52,11 +52,11 @@ const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryB
   }).getOr([]);
 };
 
-const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: ItemValueHandler, itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared, renderIcons: boolean = true): ItemTypes.ItemSpec => {
-
+const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, matchText: string, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: ItemValueHandler, itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared, renderIcons: boolean = true): ItemTypes.ItemSpec => {
   const structure = renderItemStructure({
     presets,
-    textContent:  useText ? spec.text : Option.none(),
+    textContent: Option.none(),
+    htmlContent: useText ? spec.text.map((text) => text.replace(new RegExp(matchText, 'g'), `<span style="font-weight: bold;">${matchText}</span>`)) : Option.none(),
     ariaLabel: spec.text,
     iconContent: spec.icon,
     shortcutContent: Option.none(),

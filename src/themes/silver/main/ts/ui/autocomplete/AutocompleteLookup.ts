@@ -35,6 +35,7 @@ const getTriggerContext = (dom: DOMUtils, initRange: Range, database: Autocomple
 };
 
 export interface AutocompleteLookupData {
+  context: any;
   items: InlineContent.AutocompleterItemApi[];
   columns: Types.ColumnTypes;
   onAction: (autoApi: InlineContent.AutocompleterInstanceApi, rng, value: string, meta: Record<string, any>) => void;
@@ -53,6 +54,7 @@ const lookup = (editor: Editor, getDatabase: () => AutocompleterDatabase): Optio
       // TODO: Find a sensible way to do maxResults
       const fetchResult = ac.fetch(context.text, ac.maxResults);
       return fetchResult.then((results) => ({
+        context,
         items: results,
         columns: ac.columns,
         onAction: ac.onAction
