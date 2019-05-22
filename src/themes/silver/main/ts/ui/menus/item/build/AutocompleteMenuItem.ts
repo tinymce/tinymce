@@ -57,13 +57,13 @@ const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryB
 const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const encodeText = (text: string) => DOMUtils.DOM.encode(text);
 const replaceText = (text: string, matchText: string): string => {
+  const translated = I18n.translate(text);
+  const encoded = encodeText(translated);
   if (matchText.length > 0) {
-    const translated = I18n.translate(text);
-    const encoded = encodeText(translated);
     const escapedMatchRegex = new RegExp(escapeRegExp(matchText), 'g');
     return encoded.replace(escapedMatchRegex, `<span class="tox-autocompleter-highlight">${matchText}</span>`);
   } else {
-    return text;
+    return encoded;
   }
 };
 
