@@ -30,6 +30,7 @@ const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: 
   const structure = renderItemStructure({
     presets,
     textContent:  useText ? spec.text : Option.none(),
+    htmlContent: Option.none(),
     ariaLabel: spec.text,
     iconContent: spec.icon,
     shortcutContent: useText ? spec.shortcut : Option.none(),

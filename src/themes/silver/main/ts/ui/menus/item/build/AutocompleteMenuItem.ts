@@ -14,6 +14,8 @@ import { InlineContent, Types } from '@ephox/bridge';
 import ItemResponse from 'tinymce/themes/silver/ui/menus/item/ItemResponse';
 import { renderItemStructure } from 'tinymce/themes/silver/ui/menus/item/structure/ItemStructure';
 import { buildData, renderCommonItem } from 'tinymce/themes/silver/ui/menus/item/build/CommonMenuItem';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import I18n from 'tinymce/core/api/util/I18n';
 
 type ItemValueHandler = (itemValue: string, itemMeta: Record<string, any>) => void;
 type TooltipWorker = (success: (elem: HTMLElement) => void) => void;
@@ -52,11 +54,24 @@ const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryB
   }).getOr([]);
 };
 
-const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: ItemValueHandler, itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared, renderIcons: boolean = true): ItemTypes.ItemSpec => {
+const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const encodeText = (text: string) => DOMUtils.DOM.encode(text);
+const replaceText = (text: string, matchText: string): string => {
+  if (matchText.length > 0) {
+    const translated = I18n.translate(text);
+    const encoded = encodeText(translated);
+    const escapedMatchRegex = new RegExp(escapeRegExp(matchText), 'g');
+    return encoded.replace(escapedMatchRegex, `<span class="tox-autocompleter-highlight">${matchText}</span>`);
+  } else {
+    return text;
+  }
+};
 
+const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, matchText: string, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: ItemValueHandler, itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared, renderIcons: boolean = true): ItemTypes.ItemSpec => {
   const structure = renderItemStructure({
     presets,
-    textContent:  useText ? spec.text : Option.none(),
+    textContent: Option.none(),
+    htmlContent: useText ? spec.text.map((text) => replaceText(text, matchText)) : Option.none(),
     ariaLabel: spec.text,
     iconContent: spec.icon,
     shortcutContent: Option.none(),

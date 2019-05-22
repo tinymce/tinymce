@@ -62,6 +62,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
 
       return createAutocompleteItems(
         choices,
+        match.matchText,
         (itemValue, itemMeta) => {
           const nr = editor.selection.getRng();
           getContext(editor.dom, nr, triggerChar).fold(

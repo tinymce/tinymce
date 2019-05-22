@@ -15,12 +15,12 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
   interface AutocompleterListStructure {
     type: 'list';
     hasIcons: boolean;
-    groups: { title: string; text: string; icon?: string }[][];
+    groups: { title: string; text: string; icon?: string; boldText?: string}[][];
   }
 
   interface AutocompleterGridStructure {
     type: 'grid';
-    groups: { title: string; icon?: string }[][];
+    groups: { title: string; icon?: string; boldText?: string }[][];
   }
 
   interface Scenario {
@@ -60,6 +60,35 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             s.element('div', {
               classes: [ arr.has('tox-collection__item-label') ],
               html: str.is(d.text)
+            })
+          ]
+        });
+      };
+
+      const structWithTitleAndIconAndTextAndBoldText = (d) => (s, str, arr) => {
+        return s.element('div', {
+          classes: [ arr.has('tox-collection__item') ],
+          attrs: {
+            title: str.is(d.title)
+          },
+          children: [
+            s.element('div', {
+              classes: [ arr.has('tox-collection__item-icon') ],
+              children: [
+                s.text(str.is(d.icon))
+              ]
+            }),
+            s.element('div', {
+              classes: [ arr.has('tox-collection__item-label') ],
+              children: [
+                s.text(str.is(d.text)),
+                s.element('span', {
+                  classes: [ arr.has('tox-autocompleter-highlight') ],
+                  children: [
+                    s.text(str.is(d.boldText))
+                  ]
+                })
+              ]
             })
           ]
         });
@@ -121,7 +150,11 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                         children: Arr.map(group, (d) => {
                           if (structure.type === 'list') {
                             if (structure.hasIcons) {
-                              return structWithTitleAndIconAndText(d)(s, str, arr);
+                              if (d.boldText) {
+                                return structWithTitleAndIconAndTextAndBoldText(d)(s, str, arr);
+                              } else {
+                                return structWithTitleAndIconAndText(d)(s, str, arr);
+                              }
                             } else {
                               return structWithTitleAndText(d)(s, str, arr);
                             }
@@ -162,6 +195,27 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           groups: [
             [
               { title: 'p-a', text: 'p-a', icon: '+' },
+              { title: 'p-b', text: 'p-b', icon: '+' },
+              { title: 'p-c', text: 'p-c', icon: '+' },
+              { title: 'p-d', text: 'p-d', icon: '+' }
+            ]
+          ]
+        },
+        choice: GeneralSteps.sequence([
+          Keyboard.sKeydown(eDoc, Keys.down(), { }),
+          Keyboard.sKeydown(eDoc, Keys.enter(), { })
+        ]),
+        assertion: tinyApis.sAssertContent('<p>plus-b</p>')
+      });
+
+      const sTestFirstAutocomplete2 = sTestAutocompleter({
+        triggerChar: '+a',
+        structure: {
+          type: 'list',
+          hasIcons: true,
+          groups: [
+            [
+              { title: 'p-a', text: 'p-', icon: '+', boldText: 'a' },
               { title: 'p-b', text: 'p-b', icon: '+' },
               { title: 'p-c', text: 'p-c', icon: '+' },
               { title: 'p-d', text: 'p-d', icon: '+' }
@@ -340,6 +394,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           [
             tinyApis.sFocus,
             Logger.t('Checking first autocomplete (columns = 1) trigger: "+"', sTestFirstAutocomplete),
+            Logger.t('Checking first autocomplete (columns = 1) trigger: "+"', sTestFirstAutocomplete2),
             Logger.t('Checking second autocomplete (columns = 2), two sources, trigger ":"', sTestSecondAutocomplete),
             Logger.t('Checking third autocomplete (columns = auto) trigger: "~"', sTestThirdAutocomplete),
             Logger.t('Checking forth autocomplete, (columns = 1), trigger: "!", no icons', sTestFourthAutocomplete),

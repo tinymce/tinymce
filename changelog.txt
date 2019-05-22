@@ -1,4 +1,5 @@
 Version 5.0.7 (TBD)
+    Added highlighting of matched text in autocompleter items #TINY-3687
     Fixed the autocompleter not working with fragmented text #TINY-3459
 Version 5.0.6 (2019-05-22)
     Added `icons_url` editor settings to enable icon packs to be loaded from a custom url #TINY-3585
