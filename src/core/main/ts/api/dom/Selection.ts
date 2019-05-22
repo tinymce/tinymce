@@ -11,6 +11,7 @@ import Env from '../Env';
 import BookmarkManager from './BookmarkManager';
 import CaretPosition from '../../caret/CaretPosition';
 import ControlSelection from './ControlSelection';
+import NodeType from '../../dom/NodeType';
 import ScrollIntoView from '../../dom/ScrollIntoView';
 import EditorFocus from '../../focus/EditorFocus';
 import CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
@@ -25,7 +26,6 @@ import { moveEndPoint, hasAnyRanges } from '../../selection/SelectionUtils';
 import Editor from '../Editor';
 import DOMUtils from './DOMUtils';
 import SelectorChanged from './SelectorChanged';
-import Tools from '../util/Tools';
 
 /**
  * This class handles text and control selection it's an crossbrowser utility class.
@@ -321,7 +321,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
     }
 
     try {
-      if ((selection = getSel()) && !Tools.isRestricted(selection.anchorNode)) {
+      if ((selection = getSel()) && !NodeType.isRestrictedNode(selection.anchorNode)) {
         if (selection.rangeCount > 0) {
           rng = selection.getRangeAt(0);
         } else {

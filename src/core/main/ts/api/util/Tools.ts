@@ -21,7 +21,6 @@ interface Tools {
   toArray <T>(obj: ArrayLike<T>): T[];
   hasOwn (obj: any, name: string): boolean;
   makeMap <T>(items: ArrayLike<T> | string, delim?: string | RegExp, map?: Record<string, T | string>): Record<string, T | string>;
-  isRestricted (element: any): boolean;
   each <T>(arr: ReadonlyArray<T>, cb: ArrayCallback<T, any>, scope?: any): void;
   each <T>(obj: T, cb: ObjCallback<T, any>, scope?: any): void;
   map <T, U>(arr: ReadonlyArray<T>, cb: ArrayCallback<T, U>, scope?: any): Array<U>;
@@ -114,10 +113,6 @@ const makeMap = function (items, delim?, map?) {
  */
 const hasOwnProperty = function (obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
-};
-
-const isRestricted = function (element) {
-  return !!element && !Object.getPrototypeOf(element);
 };
 
 /**
@@ -476,15 +471,6 @@ const Tools: Tools = {
   inArray: ArrUtils.indexOf,
 
   hasOwn: hasOwnProperty,
-
-  /**
-   * Returns true if element is Restricted (due to cross origin limitation or not visible on quantum engine)
-   *
-   * @method isRestricted
-   * @param {any} a dom element, unassigned safe
-   * @return true if object is restricted, otherwise false
-  */
-  isRestricted,
 
   extend,
   create,
