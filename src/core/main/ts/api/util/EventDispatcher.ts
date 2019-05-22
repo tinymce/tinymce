@@ -7,6 +7,7 @@
 
 import { ClipboardEvent, DataTransfer, DragEvent, Event, FocusEvent, KeyboardEvent, MouseEvent, PointerEvent, TouchEvent, WheelEvent } from '@ephox/dom-globals';
 import Tools from './Tools';
+import { Fun } from '@ephox/katamari';
 
 // InputEvent is experimental so we don't have an actual type
 // See https://developer.mozilla.org/en-US/docs/Web/API/InputEvent
@@ -103,14 +104,6 @@ const nativeEvents = Tools.makeMap(
   ' '
 );
 
-const returnFalse = function () {
-  return false;
-};
-
-const returnTrue = function () {
-  return true;
-};
-
 class EventDispatcher<T extends NativeEventMap> {
   /**
    * Returns true/false if the specified event name is a native browser event or not.
@@ -132,7 +125,7 @@ class EventDispatcher<T extends NativeEventMap> {
   constructor (settings?: Record<string, any>) {
     this.settings = settings || {};
     this.scope = this.settings.scope || this;
-    this.toggleEvent = this.settings.toggleEvent || returnFalse;
+    this.toggleEvent = this.settings.toggleEvent || Fun.never;
   }
 
   /**
@@ -163,23 +156,23 @@ class EventDispatcher<T extends NativeEventMap> {
     if (!args.preventDefault) {
       // Add preventDefault method
       args.preventDefault = function () {
-        args.isDefaultPrevented = returnTrue;
+        args.isDefaultPrevented = Fun.always;
       };
 
       // Add stopPropagation
       args.stopPropagation = function () {
-        args.isPropagationStopped = returnTrue;
+        args.isPropagationStopped = Fun.always;
       };
 
       // Add stopImmediatePropagation
       args.stopImmediatePropagation = function () {
-        args.isImmediatePropagationStopped = returnTrue;
+        args.isImmediatePropagationStopped = Fun.always;
       };
 
       // Add event delegation states
-      args.isDefaultPrevented = returnFalse;
-      args.isPropagationStopped = returnFalse;
-      args.isImmediatePropagationStopped = returnFalse;
+      args.isDefaultPrevented = Fun.never;
+      args.isPropagationStopped = Fun.never;
+      args.isImmediatePropagationStopped = Fun.never;
     }
 
     if (this.settings.beforeFire) {
@@ -233,7 +226,7 @@ class EventDispatcher<T extends NativeEventMap> {
     let handlers, names, i;
 
     if (callback === false) {
-      callback = returnFalse;
+      callback = Fun.never;
     }
 
     if (callback) {
