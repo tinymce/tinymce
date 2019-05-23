@@ -34,17 +34,7 @@ const getTableCaptionDeltaY = function (elm) {
   }
 };
 
-const hasChild = function (elm, child) {
-  if (elm && elm.children) {
-    for (let i = 0; i < elm.children.length; i++) {
-      if (elm.children[i] === child) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-};
+const hasChild = (elm, child) => elm.children && Arr.contains(elm.children, child);
 
 const getPos = function (body, elm, rootElm) {
   let x = 0, y = 0, offsetParent;
