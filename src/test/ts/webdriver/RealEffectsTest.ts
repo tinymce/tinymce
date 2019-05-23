@@ -19,7 +19,7 @@ UnitTest.asynctest('Real Effects Test', function (success, failure) {
   const platform = PlatformDetection.detect();
 
   // Firefox was disabled before, and IE never passes unless watched
-  if (platform.browser.isIE() || platform.browser.isFirefox()) {
+  if (platform.browser.isIE() || platform.browser.isFirefox() || platform.os.isOSX()) {
     return success();
   }
 

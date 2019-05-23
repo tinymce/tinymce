@@ -17,7 +17,7 @@ UnitTest.asynctest('RealMouseTest', function (success, failure) {
   const detection = PlatformDetection.detect();
 
   // Firefox was disabled before, and IE never passes unless watched
-  if (detection.browser.isIE() || detection.browser.isFirefox()) {
+  if (detection.browser.isIE() || detection.browser.isFirefox() || detection.os.isOSX()) {
     return success();
   }
 
