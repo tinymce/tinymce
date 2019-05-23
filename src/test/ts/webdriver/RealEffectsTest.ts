@@ -14,16 +14,19 @@ import * as UiControls from 'ephox/agar/api/UiControls';
 import * as UiFinder from 'ephox/agar/api/UiFinder';
 import * as Waiter from 'ephox/agar/api/Waiter';
 
-UnitTest.asynctest('Real Effects Test', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Real Effects Test', function (success, failure) {
+
+  const platform = PlatformDetection.detect();
+
+  // Firefox was disabled before, and IE never passes unless watched
+  if (platform.browser.isIE() || platform.browser.isFirefox() || platform.os.isOSX()) {
+    return success();
+  }
 
   const head = Element.fromDom(document.head);
   const body = Element.fromDom(document.body);
 
   const container = Element.fromTag('div');
-
-  const platform = PlatformDetection.detect();
 
   const sCreateWorld = Step.sync(function () {
     const input = Element.fromTag('input');
