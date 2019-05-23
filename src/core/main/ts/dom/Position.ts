@@ -34,6 +34,18 @@ const getTableCaptionDeltaY = function (elm) {
   }
 };
 
+const hasChild = function (elm, child) {
+  if (elm && elm.children) {
+    for (let i = 0; i < elm.children.length; i++) {
+      if (elm.children[i] === child) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
 const getPos = function (body, elm, rootElm) {
   let x = 0, y = 0, offsetParent;
   const doc = body.ownerDocument;
@@ -56,14 +68,14 @@ const getPos = function (body, elm, rootElm) {
     }
 
     offsetParent = elm;
-    while (offsetParent && offsetParent !== rootElm && offsetParent.nodeType) {
+    while (offsetParent && offsetParent !== rootElm && offsetParent.nodeType && !hasChild(offsetParent, rootElm)) {
       x += offsetParent.offsetLeft || 0;
       y += offsetParent.offsetTop || 0;
       offsetParent = offsetParent.offsetParent;
     }
 
     offsetParent = elm.parentNode;
-    while (offsetParent && offsetParent !== rootElm && offsetParent.nodeType) {
+    while (offsetParent && offsetParent !== rootElm && offsetParent.nodeType && !hasChild(offsetParent, rootElm)) {
       x -= offsetParent.scrollLeft || 0;
       y -= offsetParent.scrollTop || 0;
       offsetParent = offsetParent.parentNode;
