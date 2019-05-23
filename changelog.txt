@@ -1,5 +1,6 @@
 Version 5.0.7 (TBD)
     Added highlighting of matched text in autocompleter items #TINY-3687
+    Changed annotations navigation to work the same as inline boundaries #TINY-3396
     Fixed the autocompleter not working with fragmented text #TINY-3459
     Fixed the autosave plugin no longer overwrites window.onbeforeunload #TINY-3688
     Fixed infinite loop in the paste plugin when IE11 takes a long time to process paste events. Patch contributed by lRawd. #GH-4987
