@@ -32,6 +32,7 @@ const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemRespo
   const structure = renderItemStructure({
     iconContent: Option.none(),
     textContent: spec.text,
+    htmlContent: Option.none(),
     ariaLabel: spec.text,
     checkMark: Option.some(renderCheckmark(providersBackstage.icons)),
     caret: Option.none(),

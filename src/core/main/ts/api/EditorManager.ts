@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { BeforeUnloadEvent, document, Element, HTMLFormElement, Window } from '@ephox/dom-globals';
+import { document, Element, HTMLFormElement, Window, BeforeUnloadEvent } from '@ephox/dom-globals';
 import { Arr, Type } from '@ephox/katamari';
 import AddOnManager from './AddOnManager';
 import Editor from './Editor';
@@ -37,7 +37,8 @@ declare const window: Window & { tinymce: any; tinyMCEPreInit: any; };
 
 const DOM = DOMUtils.DOM;
 const explode = Tools.explode, each = Tools.each, extend = Tools.extend;
-let instanceCounter = 0, beforeUnloadDelegate, boundGlobalEvents = false;
+let instanceCounter = 0, boundGlobalEvents = false;
+let beforeUnloadDelegate: (e: BeforeUnloadEvent) => any;
 const legacyEditors = [];
 let editors = [];
 
@@ -116,7 +117,6 @@ const purgeDestroyedEditor = function (editor) {
 
 interface EditorManager extends Observable<EditorManagerEventMap> {
   $: any;
-  _beforeUnloadHandler: (event: BeforeUnloadEvent) => string;
   defaultSettings: Record<string, any>;
   majorVersion: string;
   minorVersion: string;
@@ -150,7 +150,6 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
 const EditorManager: EditorManager = {
   ...Observable,
 
-  _beforeUnloadHandler: null,
   baseURI: null,
   baseURL: null,
   defaultSettings: {},
@@ -626,11 +625,17 @@ const EditorManager: EditorManager = {
     self.fire('AddEditor', { editor });
 
     if (!beforeUnloadDelegate) {
-      beforeUnloadDelegate = function () {
-        self.fire('BeforeUnload');
+      beforeUnloadDelegate = function (e) {
+        const event = self.fire('BeforeUnload');
+        if (event.returnValue) {
+          // browsers are all a little bit special about this: https://developer.mozilla.org/en-US/docs/Web/API/BeforeUnloadEvent
+          e.preventDefault();
+          e.returnValue = event.returnValue;
+          return event.returnValue;
+        }
       };
 
-      DOM.bind(window, 'beforeunload', beforeUnloadDelegate);
+      window.addEventListener('beforeunload', beforeUnloadDelegate);
     }
 
     return editor;
@@ -707,7 +712,7 @@ const EditorManager: EditorManager = {
     }
 
     if (editors.length === 0) {
-      DOM.unbind(window, 'beforeunload', beforeUnloadDelegate);
+      window.removeEventListener('beforeunload', beforeUnloadDelegate);
     }
 
     editor.remove();

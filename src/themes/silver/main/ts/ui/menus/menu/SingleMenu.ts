@@ -63,7 +63,7 @@ const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemRes
   }
 };
 
-export const createAutocompleteItems = (items: InlineContent.AutocompleterItemApi[], onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, columns: 'auto' | number,  itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared) => {
+export const createAutocompleteItems = (items: InlineContent.AutocompleterItemApi[], matchText: string, onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void, columns: 'auto' | number,  itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared) => {
   // Render text and icons if we're using a single column, otherwise only render icons
   const renderText = columns === 1;
   const renderIcons = !renderText || menuHasIcons(items);
@@ -72,7 +72,7 @@ export const createAutocompleteItems = (items: InlineContent.AutocompleterItemAp
       return InlineContent.createAutocompleterItem(item).fold(
         handleError,
         (d: InlineContent.AutocompleterItem) => Option.some(
-          MenuItems.autocomplete(d, renderText, 'normal', onItemValueHandler, itemResponse, sharedBackstage, renderIcons)
+          MenuItems.autocomplete(d, matchText, renderText, 'normal', onItemValueHandler, itemResponse, sharedBackstage, renderIcons)
         )
       );
     })
