@@ -10,10 +10,13 @@
 //
 
 @statusbar-background-color: @background-color;
+@statusbar-font-size: @font-size-xs;
+@statusbar-font-weight: @font-weight-normal;
 @statusbar-height: 18px;
 @statusbar-padding-x: @pad-sm;
 @statusbar-separator-color: @border-color;
 @statusbar-text-color: contrast(@statusbar-background-color, @text-color-muted, @color-white);
+@statusbar-text-transform: uppercase;
 
 .tox {
   .tox-statusbar {
@@ -23,12 +26,13 @@
     color: @statusbar-text-color;
     display: flex;
     flex: 0 0 auto;
-    font-size: @font-size-xs;
+    font-size: @statusbar-font-size;
+    font-weight: @statusbar-font-weight;
     height: @statusbar-height;
     overflow: hidden;
     padding: 0 @statusbar-padding-x;
     position: relative;
-    text-transform: uppercase;
+    text-transform: @statusbar-text-transform;
   }
 
   .tox-statusbar__text-container {
