@@ -169,6 +169,10 @@ const getDirectionality = (editor: Editor): string | undefined => {
   return editor.getParam('directionality', I18n.isRtl() ? 'rtl' : undefined);
 };
 
+const getInlineBoundarySelector = (editor: Editor): string => {
+  return editor.getParam('inline_boundaries_selector', 'a[href],code,.mce-annotation', 'string');
+};
+
 export default {
   getIframeAttrs,
   getDocType,
@@ -201,5 +205,6 @@ export default {
   shouldIndentUseMargin,
   getIndentation,
   getContentCss,
-  getDirectionality
+  getDirectionality,
+  getInlineBoundarySelector
 };

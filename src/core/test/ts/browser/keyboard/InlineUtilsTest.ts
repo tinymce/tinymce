@@ -43,7 +43,8 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function () 
 
   const createFakeEditor = function (settings) {
     return {
-      settings
+      settings,
+      getParam: (name: string, defaultVal?: any, type?: string) => settings[name] || defaultVal
     } as any;
   };
 
@@ -51,6 +52,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function () 
     Logger.t('isInlineTarget with various editor settings', Step.sync(function () {
       Assertions.assertEq('Links should be inline target', true, InlineUtils.isInlineTarget(createFakeEditor({ }), Element.fromHtml('<a href="a">').dom()));
       Assertions.assertEq('Code should be inline target', true, InlineUtils.isInlineTarget(createFakeEditor({ }), Element.fromHtml('<code>').dom()));
+      Assertions.assertEq('Annotations should be inline target', true, InlineUtils.isInlineTarget(createFakeEditor({ }), Element.fromHtml('<span class="mce-annotation"></span>').dom()));
       Assertions.assertEq('None link anchor should not be inline target', false, InlineUtils.isInlineTarget(createFakeEditor({ }), Element.fromHtml('<a>').dom()));
       Assertions.assertEq('Bold should not be inline target', false, InlineUtils.isInlineTarget(createFakeEditor({ }), Element.fromHtml('<b>').dom()));
       Assertions.assertEq('Bold should be inline target if configured', true, InlineUtils.isInlineTarget(createFakeEditor({
