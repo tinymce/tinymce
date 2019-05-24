@@ -80,7 +80,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
           Waiter.sTryUntil('wait for editor height', sAssertEditorHeightBelow(editor, 1200), 10, 3000)
         ]),
         Log.step('TBA', 'AutoResize: Should fire ResizeEditor events when resizing', Step.sync(() => {
-          Assertions.assertEq('Should have fired 3 ResizeEditor events', 3, resizeEventsCount.get());
+          Assertions.assertEq('Should have fired at least 3 ResizeEditor events', true, resizeEventsCount.get() >= 3);
         })),
         Log.stepsAsStep('TBA', 'AutoResize: Editor size increase with async loaded content', [
           // Note: Use a min-height here to account for different browsers rendering broken images differently
