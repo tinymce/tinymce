@@ -10,33 +10,29 @@
 //
 
 @statusbar-background-color: @background-color;
+@statusbar-font-size: @font-size-xs;
+@statusbar-font-weight: @font-weight-normal;
 @statusbar-height: 18px;
 @statusbar-padding-x: @pad-sm;
 @statusbar-separator-color: @border-color;
+@statusbar-text-color: contrast(@statusbar-background-color, @text-color-muted, @color-white);
+@statusbar-text-transform: uppercase;
 
 .tox {
   .tox-statusbar {
     align-items: center;
     background-color: @statusbar-background-color;
     border-top: 1px solid @statusbar-separator-color;
-    color: @text-color-muted;
+    color: @statusbar-text-color;
     display: flex;
     flex: 0 0 auto;
-    font-size: @font-size-xs;
+    font-size: @statusbar-font-size;
+    font-weight: @statusbar-font-weight;
     height: @statusbar-height;
     overflow: hidden;
     padding: 0 @statusbar-padding-x;
     position: relative;
-    text-transform: uppercase;
-  }
-
-  .tox-statusbar a {
-    color: @text-color-muted;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
+    text-transform: @statusbar-text-transform;
   }
 
   .tox-statusbar__text-container {
@@ -65,6 +61,19 @@
     margin-left: 1ch;
   }
 
+  .tox-statusbar a,
+  .tox-statusbar__path-item,
+  .tox-statusbar__wordcount {
+    color: @statusbar-text-color;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+
   .tox-statusbar__resize-handle {
     align-items: flex-end;
     align-self: stretch;
@@ -78,7 +87,7 @@
 
     svg {
       display: block;
-      fill: @text-color-muted;
+      fill: @statusbar-text-color;
     }
   }
 }
