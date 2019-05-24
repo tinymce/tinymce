@@ -1,5 +1,5 @@
 import { assert, UnitTest} from '@ephox/bedrock';
-import * as AutocompleteContext from 'tinymce/themes/silver/ui/autocomplete/AutocompleteContext';
+import * as AutocompleteContext from 'tinymce/themes/silver/autocomplete/AutocompleteContext';
 
 UnitTest.test('atomic - AutocompleteContext', function () {
   const testParse = function () {
