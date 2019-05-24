@@ -6,6 +6,7 @@ Version 5.0.7 (TBD)
     Fixed infinite loop in the paste plugin when IE11 takes a long time to process paste events. Patch contributed by lRawd. #GH-4987
     Fixed image handle locations when using `fixed_toolbar_container`. Patch contributed by t00. #GH-4966
     Fixed the autoresize plugin not firing ResizeEditor events #TINY-3587
+    Fixed editor in fullscreen mode not extending to the bottom of the screen #TINY-3701
 Version 5.0.6 (2019-05-22)
     Added `icons_url` editor settings to enable icon packs to be loaded from a custom url #TINY-3585
     Added `image_uploadtab` editor setting to control the visibility of the upload tab in the image dialog #TINY-3606
