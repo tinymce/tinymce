@@ -6,7 +6,8 @@
     "test": "echo 'No tests'",
     "build": "gulp build",
     "start": "gulp watch",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "yarn ci",
+    "ci": "gulp build --no-color"
   },
   "keywords": [
     "TinyMCE"
@@ -36,6 +37,7 @@
     "build/skins/content/**/*.css.map",
     "build/skins/ui/**/*.css",
     "build/skins/ui/**/*.css.map",
+    "build/skins/ui/**/*.woff",
     "src/less/**/*",
     "src/svg/**/*",
     "README.md",
