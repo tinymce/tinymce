@@ -84,6 +84,12 @@
     position: relative;
     width: 95vw;
     z-index: @z-index-dialogs + 2;
+
+    @media @breakpoint-sm {
+      align-self: flex-start;
+      margin: @pad-sm auto;
+      width: calc(100vw - @pad-md);
+    }
   }
 
   .tox-dialog__header {
@@ -143,12 +149,23 @@
     padding: @dialog-body-padding;
     text-align: @dialog-body-text-align;
     text-transform: @dialog-body-text-transform;
+
+    @media @breakpoint-sm {
+      flex-direction: column;
+    }
   }
 
   .tox-dialog__body-nav {
     align-items: flex-start;
     display: flex;
     flex-direction: column;
+
+    @media @breakpoint-sm {
+      flex-direction: row;
+      margin-bottom: @pad-sm;
+      -webkit-overflow-scrolling: touch;
+      overflow-x: auto;
+    }
   }
 
   .tox-dialog__body-nav-item {
@@ -159,6 +176,7 @@
     line-height: @line-height-base;
     margin-bottom: @pad-sm;
     text-decoration: none;
+    white-space: nowrap;
   }
 
   .tox-dialog__body-nav-item--active {
@@ -173,6 +191,8 @@
     -ms-flex-preferred-size: auto;
     max-height: 650px; // TODO (verify max-height for dialogs)
     overflow: auto; //overflow controls all scrolling in the dialogs
+    -webkit-overflow-scrolling: touch;
+
 
     > * {
       margin-bottom: 0;
@@ -318,6 +338,18 @@ body.tox-dialog__disable-scroll {
 .tox:not([dir=rtl]) {
   .tox-dialog__body-nav {
     margin-right: @pad-xl;
+
+    @media @breakpoint-sm {
+      margin-right: 0;
+    }
+  }
+
+  .tox-dialog__body-nav-item {
+    @media @breakpoint-sm {
+      &:not(:first-child) {
+        margin-left: @pad-sm;
+      }
+    }
   }
 
   .tox-dialog__footer {
@@ -338,6 +370,18 @@ body.tox-dialog__disable-scroll {
 
   .tox-dialog__body-nav {
     margin-left: @pad-xl;
+
+    @media @breakpoint-sm {
+      margin-left: 0;
+    }
+  }
+
+  .tox-dialog__body-nav-item {
+    @media @breakpoint-sm {
+      &:not(:first-child) {
+        margin-right: @pad-sm;
+      }
+    }
   }
 
   .tox-dialog__footer {
