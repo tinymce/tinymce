@@ -30,11 +30,8 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteTest', (success, failur
   });
 
   suite.test('TestCase-TBA: Lists: Backspace at end of single LI in UL', function (editor) {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' +
-      '<li><span>a</span></li>' +
-      '</ul>'
-    );
+    const content = '<ul><li><span>a</span></li></ul>';
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(content);
 
     editor.focus();
     // Special set rng, puts selection here: <li><span>a</span>|</li>
@@ -46,19 +43,15 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteTest', (success, failur
 
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(editor.getContent(),
-      '<ul><li><span>a</span></li></ul>'
-    );
+    // The content doesn't change here as it's not a real backspace, we're just ensuring the "delete list" code doesn't fire
+    LegacyUnit.equal(editor.getContent(), content);
 
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
   suite.test('TestCase-TBA: Lists: Backspace at end of single LI in UL', function (editor) {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' +
-      '<li><span>a</span><strong>b</strong></li>' +
-      '</ul>'
-    );
+    const content = '<ul><li><span>a</span><strong>b</strong></li></ul>';
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(content);
 
     editor.focus();
     // Special set rng, puts selection here: <li><span>a</span><strong>|b</strong></li>
@@ -70,9 +63,8 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteTest', (success, failur
 
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(editor.getContent(),
-      '<ul><li><span>a</span><strong>b</strong></li></ul>'
-    );
+    // The content doesn't change here as it's not a real backspace, we're just ensuring the "delete list" code doesn't fire
+    LegacyUnit.equal(editor.getContent(), content);
 
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'STRONG');
   });
