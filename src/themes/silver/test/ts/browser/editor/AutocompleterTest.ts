@@ -170,10 +170,10 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           hasIcons: true,
           groups: [
             [
-              { title: 'p-a', text: 'p-a', icon: '+' },
-              { title: 'p-b', text: 'p-b', icon: '+' },
-              { title: 'p-c', text: 'p-c', icon: '+' },
-              { title: 'p-d', text: 'p-d', icon: '+' }
+              { title: 'p-aA', text: 'p-aA', icon: '+' },
+              { title: 'p-bB', text: 'p-bB', icon: '+' },
+              { title: 'p-cC', text: 'p-cC', icon: '+' },
+              { title: 'p-dD', text: 'p-dD', icon: '+' }
             ]
           ]
         },
@@ -181,7 +181,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           Keyboard.sKeydown(eDoc, Keys.down(), { }),
           Keyboard.sKeydown(eDoc, Keys.enter(), { })
         ]),
-        assertion: tinyApis.sAssertContent('<p>plus-b</p>')
+        assertion: tinyApis.sAssertContent('<p>plus-bB</p>')
       });
 
       const sTestFirstAutocomplete2 = sTestAutocompleter({
@@ -191,10 +191,10 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           hasIcons: true,
           groups: [
             [
-              { title: 'p-a', text: 'p-<span class="tox-autocompleter-highlight">a</span>', icon: '+' },
-              { title: 'p-b', text: 'p-b', icon: '+' },
-              { title: 'p-c', text: 'p-c', icon: '+' },
-              { title: 'p-d', text: 'p-d', icon: '+' }
+              { title: 'p-aA', text: 'p-<span class="tox-autocompleter-highlight">a</span><span class="tox-autocompleter-highlight">A</span>', icon: '+' },
+              { title: 'p-bB', text: 'p-bB', icon: '+' },
+              { title: 'p-cC', text: 'p-cC', icon: '+' },
+              { title: 'p-dD', text: 'p-dD', icon: '+' }
             ]
           ]
         },
@@ -202,7 +202,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           Keyboard.sKeydown(eDoc, Keys.down(), { }),
           Keyboard.sKeydown(eDoc, Keys.enter(), { })
         ]),
-        assertion: tinyApis.sAssertContent('<p>plus-b</p>')
+        assertion: tinyApis.sAssertContent('<p>plus-bB</p>')
       });
 
       const sTestSecondAutocomplete = sTestAutocompleter({
@@ -411,7 +411,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           fetch: (pattern, maxResults) => {
             return new Promise((resolve) => {
               resolve(
-                Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
+                Arr.map([ 'aA', 'bB', 'cC', 'dD' ], (letter) => ({
                   value: `plus-${letter}`,
                   text: `p-${letter}`,
                   icon: '+'
