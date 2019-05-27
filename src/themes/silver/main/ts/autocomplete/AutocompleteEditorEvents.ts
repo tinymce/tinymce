@@ -18,7 +18,7 @@ export interface AutocompleterUiApi {
   getView: () => Option<AlloyComponent>;
   isMenuOpen: () => boolean;
   isActive: () => boolean;
-  closeIfNecessary: () => void;
+  cancelIfNecessary: () => void;
 }
 
 const setup = (api: AutocompleterUiApi, editor: Editor) => {
@@ -44,7 +44,7 @@ const setup = (api: AutocompleterUiApi, editor: Editor) => {
     if (api.isActive()) {
       // Pressing <esc> closes the autocompleter
       if (e.which === 27) {
-        api.closeIfNecessary();
+        api.cancelIfNecessary();
       }
 
       if (api.isMenuOpen()) {
@@ -80,7 +80,7 @@ const setup = (api: AutocompleterUiApi, editor: Editor) => {
       } else {
         // Pressing <enter>, <down> or <up> closes the autocompleter
         if (e.which === 13 || e.which === 37 || e.which === 40) {
-          api.closeIfNecessary();
+          api.cancelIfNecessary();
         }
       }
     }
@@ -89,7 +89,7 @@ const setup = (api: AutocompleterUiApi, editor: Editor) => {
   editor.on('NodeChange', (e) => {
     // Close if active and we're no longer inside the autocompleter span
     if (api.isActive() && AutocompleteTag.detect(Element.fromDom(e.element)).isNone()) {
-      api.closeIfNecessary();
+      api.cancelIfNecessary();
     }
   });
 };

@@ -22,10 +22,14 @@ import { createAutocompleteItems, createMenuFrom, FocusMode } from './ui/menus/m
 import { createPartialMenuWithAlloyItems } from './ui/menus/menu/MenuUtils';
 import ItemResponse from './ui/menus/item/ItemResponse';
 
+interface ActiveAutocompleter {
+  triggerChar: string;
+  element: Element;
+  matchLength: number;
+}
+
 const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => {
-  const currentContext = Cell(Option.none<AutocompleteContext>());
-  const lastElement = Cell(Option.none<Element>());
-  const lastMatch = Cell<number>(0);
+  const activeAutocompleter = Cell<Option<ActiveAutocompleter>>(Option.none());
 
   const autocompleter = GuiFactory.build(
     InlineView.sketch({
@@ -37,7 +41,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
       fireDismissalEventInstead: { },
       inlineBehaviours: Behaviour.derive([
         AddEventsBehaviour.config('dismissAutocompleter', [
-          AlloyEvents.run(SystemEvents.dismissRequested(), () => closeIfNecessary())
+          AlloyEvents.run(SystemEvents.dismissRequested(), () => cancelIfNecessary())
         ])
       ]),
       lazySink: sharedBackstage.getSink
@@ -45,7 +49,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
   );
 
   const isMenuOpen = () => InlineView.isOpen(autocompleter);
-  const isActive = () => currentContext.get().isSome();
+  const isActive = () => activeAutocompleter.get().isSome();
 
   const hideIfNecessary = () => {
     if (isActive()) {
@@ -53,16 +57,15 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     }
   };
 
-  const closeIfNecessary = () => {
+  const cancelIfNecessary = () => {
     if (isActive()) {
       // Unwrap the content if an incomplete mention
-      AutocompleteTag.detect(lastElement.get().getOr(Element.fromDom(editor.selection.getNode()))).each(Remove.unwrap);
+      const lastElement = activeAutocompleter.get().map((ac) => ac.element);
+      AutocompleteTag.detect(lastElement.getOr(Element.fromDom(editor.selection.getNode()))).each(Remove.unwrap);
 
       // Hide the menu and reset
       hideIfNecessary();
-      lastElement.set(Option.none());
-      currentContext.set(Option.none());
-      lastMatch.set(0);
+      activeAutocompleter.set(Option.none());
     }
   };
 
@@ -85,13 +88,11 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
         match.matchText,
         (itemValue, itemMeta) => {
           const nr = editor.selection.getRng();
-          // Don't reuse the stored context here, as the dom may have changed meaning the
-          // stored context range would have been altered
           getContext(editor.dom, nr, triggerChar).fold(
             () => console.error('Lost context. Cursor probably moved'),
             ({ range }) => {
               const autocompleterApi: InlineContent.AutocompleterInstanceApi = {
-                hide: closeIfNecessary
+                hide: cancelIfNecessary
               };
               match.onAction(autocompleterApi, range, itemValue, itemMeta);
             }
@@ -109,14 +110,21 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     const wrapper = AutocompleteTag.create(editor, context.range);
 
     // store the element/context
-    lastElement.set(Option.some(wrapper));
-    currentContext.set(Option.some(context));
+    activeAutocompleter.set(Option.some({
+      triggerChar: context.triggerChar,
+      element: wrapper,
+      matchLength: context.text.length
+    }));
 
     // Show the menu
     display(context, lookupData, items);
   };
 
   const display = (context: AutocompleteContext, lookupData: AutocompleteLookupData[], items: ItemTypes.ItemSpec[]) => {
+    // Update the last displayed matched length
+    activeAutocompleter.get().map((ac) => ac.matchLength = context.text.length);
+
+    // Display the autocompleter menu
     const columns: Types.ColumnTypes = Options.findMap(lookupData, (ld) => Option.from(ld.columns)).getOr(1);
     const contextRng = context.range;
     InlineView.showAt(
@@ -148,29 +156,27 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
   };
 
   const doLookup = (): Option<AutocompleteLookupInfo> => {
-    return currentContext.get().map((context) => {
-      const newContextOpt = getContext(editor.dom, editor.selection.getRng(), context.triggerChar);
-      currentContext.set(newContextOpt);
-      return newContextOpt.map((newContext) => lookupWithContext(editor, getAutocompleters, newContext));
+    return activeAutocompleter.get().map((ac) => {
+      return getContext(editor.dom, editor.selection.getRng(), ac.triggerChar).map((newContext) => lookupWithContext(editor, getAutocompleters, newContext));
     }).getOrThunk(() => lookup(editor, getAutocompleters));
   };
 
   const onKeypress = Throttler.last(() => {
     doLookup().fold(
-      closeIfNecessary,
+      cancelIfNecessary,
       (lookupInfo) => {
         lookupInfo.lookupData.then((lookupData) => {
           const context = lookupInfo.context;
+          const lastMatchLength = activeAutocompleter.get().map((c) => c.matchLength).getOr(0);
           const combinedItems = getCombinedItems(context.triggerChar, lookupData);
 
           // Open the autocompleter if there are items to show
           if (combinedItems.length > 0) {
-            lastMatch.set(context.text.length);
             const func = isActive() ? display : commence;
             func(context, lookupData, combinedItems);
           // close if we haven't found any matches in the last 10 chars
-          } else if (context.text.length - lastMatch.get() >= 10) {
-            closeIfNecessary();
+          } else if (context.text.length - lastMatchLength >= 10) {
+            cancelIfNecessary();
           // otherwise just hide the menu
           } else {
             hideIfNecessary();
@@ -182,7 +188,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
 
   const autocompleterUiApi: AutocompleterUiApi = {
     onKeypress,
-    closeIfNecessary,
+    cancelIfNecessary,
     isMenuOpen,
     isActive,
     getView: () => InlineView.getContent(autocompleter),
