@@ -111,8 +111,18 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
     });
 
     const sTestBackspace = sTestAutocompleter({
-      action: sSetContentAndTrigger(':', Keys.backspace()),
-      assertion: (s, str) => [ expectedSimplePara(':')(s, str) ]
+      action: GeneralSteps.sequence([
+        tinyApis.sExecCommand('delete'),
+        tinyApis.sExecCommand('delete'),
+        tinyActions.sContentKeystroke(Keys.backspace())
+      ]),
+      assertion: (s) => [
+        s.element('p', {
+          children: [
+            s.element('br', { })
+          ]
+        })
+      ]
     });
 
     const sTestKeyNavigation = (key: number) => sTestAutocompleter({
@@ -176,12 +186,11 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
         Logger.t('Checking changing to different node cancels the autocompleter', sTestNodeChange),
         Logger.t('Checking pressing down cancels the autocompleter', sTestKeyNavigation(Keys.down())),
         Logger.t('Checking pressing up cancels the autocompleter', sTestKeyNavigation(Keys.up())),
-        Logger.t('Checking deleting trigger char cancels the autocompleter', sTestBackspace),
         Logger.t('Checking clicking outside cancels the autocompleter', sTestClickOutsideMenu)
       // TODO: IE 11 doesn't send the keydown event for these tests (works outside tests), so investigate why that's happening
       ].concat(platform.browser.isIE() ? [] : [
         Logger.t('Checking escape in menu cancels the autocompleter', sTestEscapeMenu),
-        Logger.t('Checking deleting trigger char cancels the autocompleter', sTestBackspace),
+        Logger.t('Checking deleting trigger char cancels the autocompleter', sTestBackspace)
       ])
     ), onSuccess, onFailure);
   }, {
