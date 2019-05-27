@@ -53,7 +53,11 @@ const getText = (rng: Range, ch: string) => {
   return text.replace(/\u00A0/g, ' ').replace(/\uFEFF/g, '');
 };
 
-const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0) => {
+const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Option<AutocompleteContext> => {
+  if (!isValidTextRange(initRange)) {
+    return Option.none();
+  }
+
   const findTriggerCh = (phase: Phase<AutocompleteContext>, element: Text, text: string, optOffset: Option<number>) => {
     const index = optOffset.getOr(text.length);
     return parse(text, index, ch, 1).fold(
@@ -76,10 +80,6 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
 };
 
 const getContext = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Option<AutocompleteContext> => {
-  if (!isValidTextRange(initRange)) {
-    return Option.none();
-  }
-
   return AutocompleteTag.detect(Element.fromDom(initRange.startContainer)).fold(
     () => findStart(dom, initRange, ch, minChars),
     (elm) => {
