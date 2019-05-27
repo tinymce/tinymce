@@ -79,7 +79,7 @@ const setup = (api: AutocompleterUiApi, editor: Editor) => {
         }
       } else {
         // Pressing <enter>, <down> or <up> closes the autocompleter
-        if (e.which === 13 || e.which === 37 || e.which === 40) {
+        if (e.which === 13 || e.which === 38 || e.which === 40) {
           api.cancelIfNecessary();
         }
       }
