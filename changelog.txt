@@ -1,5 +1,6 @@
 Version 5.0.7 (TBD)
     Added highlighting of matched text in autocompleter items #TINY-3687
+    Added the ability for autocompleters to work with matches that include spaces #TINY-3704
     Changed annotations navigation to work the same as inline boundaries #TINY-3396
     Fixed the autocompleter not working with fragmented text #TINY-3459
     Fixed the autosave plugin no longer overwrites window.onbeforeunload #TINY-3688
