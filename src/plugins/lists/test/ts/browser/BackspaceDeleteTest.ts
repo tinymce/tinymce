@@ -29,6 +29,54 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteTest', (success, failur
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
+  suite.test('TestCase-TBA: Lists: Backspace at end of single LI in UL', function (editor) {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+      '<ul>' +
+      '<li><span>a</span></li>' +
+      '</ul>'
+    );
+
+    editor.focus();
+    // Special set rng, puts selection here: <li><span>a</span>|</li>
+    const li = editor.dom.select('li')[0];
+    const rng = editor.dom.createRng();
+    rng.setStart(li, 1);
+    rng.setEnd(li, 1);
+    editor.selection.setRng(rng);
+
+    editor.plugins.lists.backspaceDelete();
+
+    LegacyUnit.equal(editor.getContent(),
+      '<ul><li><span>a</span></li></ul>'
+    );
+
+    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+  });
+
+  suite.test('TestCase-TBA: Lists: Backspace at end of single LI in UL', function (editor) {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+      '<ul>' +
+      '<li><span>a</span><strong>b</strong></li>' +
+      '</ul>'
+    );
+
+    editor.focus();
+    // Special set rng, puts selection here: <li><span>a</span><strong>|b</strong></li>
+    const strong = editor.dom.select('strong')[0];
+    const rng = editor.dom.createRng();
+    rng.setStart(strong, 0);
+    rng.setEnd(strong, 0);
+    editor.selection.setRng(rng);
+
+    editor.plugins.lists.backspaceDelete();
+
+    LegacyUnit.equal(editor.getContent(),
+      '<ul><li><span>a</span><strong>b</strong></li></ul>'
+    );
+
+    LegacyUnit.equal(editor.selection.getNode().nodeName, 'STRONG');
+  });
+
   suite.test('TestCase-TBA: Lists: Backspace at beginning of first LI in UL', function (editor) {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
