@@ -75,6 +75,34 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AssumeExternalTargetsTest', (su
           TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="google.com"]': 1 }),
         ])),
       ]),
+
+      Log.stepsAsStep('TBA', 'link_assume_external_targets: http', [
+        tinyApis.sSetSetting('link_assume_external_targets', 'http'),
+
+        Logger.t('add http:// prefix to www-urls', GeneralSteps.sequence([
+          TestLinkUi.sInsertLink('www.google.com'),
+          TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="http://www.google.com"]': 1 }),
+        ])),
+
+        Logger.t('add http:// prefix to other urls', GeneralSteps.sequence([
+          TestLinkUi.sInsertLink('google.com'),
+          TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="http://google.com"]': 1 }),
+        ])),
+      ]),
+
+      Log.stepsAsStep('TBA', 'link_assume_external_targets: https', [
+        tinyApis.sSetSetting('link_assume_external_targets', 'https'),
+
+        Logger.t('add https:// prefix to www-urls', GeneralSteps.sequence([
+          TestLinkUi.sInsertLink('www.google.com'),
+          TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="https://www.google.com"]': 1 }),
+        ])),
+
+        Logger.t('add https:// prefix to other urls', GeneralSteps.sequence([
+          TestLinkUi.sInsertLink('google.com'),
+          TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="https://google.com"]': 1 }),
+        ])),
+      ]),
     ], onSuccess, onFailure);
   }, {
     plugins: 'link',

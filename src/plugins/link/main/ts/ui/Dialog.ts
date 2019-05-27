@@ -11,6 +11,7 @@ import { Arr, Future, Option, Options } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 import Settings from '../api/Settings';
+import { AssumeExternalTargets } from '../api/Types';
 import { ListOptions } from '../core/ListOptions';
 import Utils from '../core/Utils';
 import { DialogChanges } from './DialogChanges';
@@ -18,7 +19,7 @@ import { DialogConfirms } from './DialogConfirms';
 import { DialogInfo } from './DialogInfo';
 import { LinkDialogData, LinkDialogInfo } from './DialogTypes';
 
-const handleSubmit = (editor: Editor, info: LinkDialogInfo, assumeExternalTargets: boolean) => (api: Types.Dialog.DialogInstanceApi<LinkDialogData>) => {
+const handleSubmit = (editor: Editor, info: LinkDialogInfo, assumeExternalTargets: AssumeExternalTargets) => (api: Types.Dialog.DialogInstanceApi<LinkDialogData>) => {
   const data: LinkDialogData = api.getData();
 
   if (!data.url.value) {

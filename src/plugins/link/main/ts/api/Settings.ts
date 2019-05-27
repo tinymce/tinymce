@@ -5,8 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const assumeExternalTargets = function (editorSettings) {
-  return typeof editorSettings.link_assume_external_targets === 'boolean' ? editorSettings.link_assume_external_targets : false;
+import { AssumeExternalTargets } from './Types';
+
+const assumeExternalTargets = function (editorSettings): AssumeExternalTargets {
+  const externalTargets = editorSettings.link_assume_external_targets;
+  if (typeof externalTargets === 'boolean' && externalTargets) {
+    return AssumeExternalTargets.WARN;
+  } else if (typeof externalTargets === 'string'
+      && (externalTargets === AssumeExternalTargets.ALWAYS_HTTP
+        || externalTargets === AssumeExternalTargets.ALWAYS_HTTPS)) {
+    return externalTargets;
+  }
+  return AssumeExternalTargets.OFF;
 };
 
 const hasContextToolbar = function (editorSettings) {
