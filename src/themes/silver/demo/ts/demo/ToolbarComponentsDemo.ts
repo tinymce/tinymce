@@ -2,7 +2,7 @@ import { GuiFactory } from '@ephox/alloy';
 import { console } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 
-import { identifyButtons } from '../../../main/ts/ui/toolbar/Integration';
+import { identifyButtons } from 'tinymce/themes/silver/ui/toolbar/Integration';
 import { setupDemo } from '../components/DemoHelpers';
 import Editor from 'tinymce/core/api/Editor';
 

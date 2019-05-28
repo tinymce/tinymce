@@ -1,7 +1,7 @@
 import { AlloyComponent, GuiFactory, Behaviour, Focusing, Keying, Toolbar, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 
-import { renderToolbar, renderToolbarGroup } from '../../../../main/ts/ui/toolbar/CommonToolbar';
+import { renderToolbar, renderToolbarGroup } from 'tinymce/themes/silver/ui/toolbar/CommonToolbar';
 import { Step, Assertions, ApproxStructure, FocusTools, Keyboard, Keys, GeneralSteps, Logger } from '@ephox/agar';
 import { Arr, Option, Result } from '@ephox/katamari';
 import TestBackstage from '../../module/TestBackstage';

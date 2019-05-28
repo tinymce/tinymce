@@ -4,10 +4,10 @@ import { document } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
-import { composeList } from '../../../main/ts/listModel/ComposeList';
-import { Entry } from '../../../main/ts/listModel/Entry';
-import { normalizeEntries } from '../../../main/ts/listModel/NormalizeEntries';
-import { parseLists } from '../../../main/ts/listModel/ParseLists';
+import { composeList } from 'tinymce/plugins/lists/listModel/ComposeList';
+import { Entry } from 'tinymce/plugins/lists/listModel/Entry';
+import { normalizeEntries } from 'tinymce/plugins/lists/listModel/NormalizeEntries';
+import { parseLists } from 'tinymce/plugins/lists/listModel/ParseLists';
 import { ListType } from 'tinymce/plugins/lists/listModel/Util';
 
 UnitTest.test('tinymce.lists.browser.ListModelTest', () => {

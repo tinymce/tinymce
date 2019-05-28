@@ -18,8 +18,8 @@ import { Arr, Option, Options, Result } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { Body, Element, Attr } from '@ephox/sugar';
 
-import Theme from '../../../../../silver/main/ts/Theme';
 import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {

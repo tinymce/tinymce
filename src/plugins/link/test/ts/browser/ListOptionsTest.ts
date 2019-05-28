@@ -6,11 +6,11 @@ import { Option } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 
-import { AnchorListOptions } from '../../../main/ts/ui/sections/AnchorListOptions';
-import { ClassListOptions } from '../../../main/ts/ui/sections/ClassListOptions';
-import { LinkListOptions } from '../../../main/ts/ui/sections/LinkListOptions';
-import { RelOptions } from '../../../main/ts/ui/sections/RelOptions';
-import { TargetOptions } from '../../../main/ts/ui/sections/TargetOptions';
+import { AnchorListOptions } from 'tinymce/plugins/link/ui/sections/AnchorListOptions';
+import { ClassListOptions } from 'tinymce/plugins/link/ui/sections/ClassListOptions';
+import { LinkListOptions } from 'tinymce/plugins/link/ui/sections/LinkListOptions';
+import { RelOptions } from 'tinymce/plugins/link/ui/sections/RelOptions';
+import { TargetOptions } from 'tinymce/plugins/link/ui/sections/TargetOptions';
 import { TestLinkUi } from '../module/TestLinkUi';
 
 UnitTest.asynctest('browser.tinymce.plugins.link.ListOptionsTest', (success, failure) => {

@@ -7,7 +7,7 @@
 
 import { Arr, Merger, Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { getRemovedMenuItems } from '../../../api/Settings';
+import { getRemovedMenuItems } from 'tinymce/themes/silver/api/Settings';
 import { MenubarItemSpec } from './SilverMenubar';
 
 export interface MenuRegistry {

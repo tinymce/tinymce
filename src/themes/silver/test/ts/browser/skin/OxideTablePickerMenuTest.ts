@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyLoader } from '@ephox/mcagar';
 import { document } from '@ephox/dom-globals';
 
-import Theme from '../../../../../silver/main/ts/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { Body, Element } from '@ephox/sugar';
 import { Menu } from '@ephox/bridge';
 

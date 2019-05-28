@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Mouse } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 
-import { renderButton } from '../../../../../main/ts/ui/general/Button';
+import { renderButton } from 'tinymce/themes/silver/ui/general/Button';
 import { Option } from '@ephox/katamari';
 import TestProviders from '../../../module/TestProviders';
 

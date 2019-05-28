@@ -9,7 +9,7 @@ import { AlloyEvents, FocusManagers, ItemTypes, Keying, MenuTypes, TieredMenu } 
 import { InlineContent, Menu as BridgeMenu, Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Arr, Merger, Option, Options } from '@ephox/katamari';
-import { UiFactoryBackstage, UiFactoryBackstageShared } from '../../../backstage/Backstage';
+import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
 import ItemResponse from '../item/ItemResponse';

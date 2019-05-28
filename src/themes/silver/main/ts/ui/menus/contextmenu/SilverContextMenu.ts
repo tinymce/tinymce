@@ -14,7 +14,7 @@ import * as MenuParts from '../menu/MenuParts';
 import * as NestedMenus from '../menu/NestedMenus';
 import { getPointAnchor, getNodeAnchor } from './Coords';
 import Settings from './Settings';
-import { UiFactoryBackstage } from '../../../backstage/Backstage';
+import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import ItemResponse from '../item/ItemResponse';
 
 type MenuItem =  string | Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.SeparatorMenuItemApi;

@@ -24,7 +24,7 @@ import {
 import { ImageResult, ImageTransformations } from '@ephox/imagetools';
 import { Fun, Option } from '@ephox/katamari';
 
-import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
+import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderButton, renderIconButton } from '../../general/Button';
 import { renderSizeInput } from '../SizeInput';
 import * as ImageToolsEvents from './ImageToolsEvents';
