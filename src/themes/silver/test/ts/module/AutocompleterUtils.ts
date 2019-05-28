@@ -122,4 +122,4 @@ export {
   structWithTitleAndIconAndText,
   structWithTitleAndText,
   sWaitForAutocompleteToClose
-}
+};
