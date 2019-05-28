@@ -7,7 +7,7 @@
 
 import { Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Awareness, CursorPosition, Element, Insert, SelectorFind } from '@ephox/sugar';
+import { Awareness, CursorPosition, Element, Insert, SelectorFind, Traverse } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 const autocompleteSelector = '[data-mce-type="autocompleter"]';
@@ -22,6 +22,7 @@ const create = (editor: Editor, range: Range): Element => {
     // Wrap the content
     Insert.append(wrapper, Element.fromDom(range.extractContents()));
     range.insertNode(wrapper.dom());
+    Traverse.parent(wrapper).each((elm) => elm.dom().normalize());
 
     // Update the cursor position
     CursorPosition.last(wrapper).map((last) => {

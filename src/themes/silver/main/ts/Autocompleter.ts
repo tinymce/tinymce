@@ -161,7 +161,12 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     }).getOrThunk(() => lookup(editor, getAutocompleters));
   };
 
-  const onKeypress = Throttler.last(() => {
+  const onKeypress = Throttler.last((e) => {
+    // IE will pass the escape key here, so just don't do anything on escape
+    if (e.which === 27) {
+      return;
+    }
+
     doLookup().fold(
       cancelIfNecessary,
       (lookupInfo) => {
