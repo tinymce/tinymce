@@ -86,7 +86,7 @@ const isCorsWithCredentialsImage = function (editor: Editor, img) {
   return Tools.inArray(Settings.getCredentialsHosts(editor), new URI(img.src).host) !== -1;
 };
 
-const imageToBlob = function (editor: Editor, img: HTMLImageElement) {
+const defaultFetchImage = (editor: Editor, img: HTMLImageElement) => {
   let src = img.src, apiKey;
 
   if (isCorsImage(editor, img)) {
@@ -101,6 +101,13 @@ const imageToBlob = function (editor: Editor, img: HTMLImageElement) {
   }
 
   return BlobConversions.imageToBlob(img);
+};
+
+const imageToBlob = (editor: Editor, img: HTMLImageElement): Promise<Blob> => {
+  return Settings.getFetchImage(editor).fold(
+    () => defaultFetchImage(editor, img),
+    (customFetchImage) => customFetchImage(img)
+  );
 };
 
 const findBlob = function (editor: Editor, img) {
