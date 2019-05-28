@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AssumeExternalTargetsTest', (su
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Default setting', [
-        Logger.t('www-urls are prompted to add http:// prefix', GeneralSteps.sequence([
+        Logger.t('www-urls are prompted to add http:// prefix, accept', GeneralSteps.sequence([
           TestLinkUi.sInsertLink('www.google.com'),
           TestLinkUi.sWaitForUi(
             'wait for dialog',
@@ -24,6 +24,16 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AssumeExternalTargetsTest', (su
           ),
           TestLinkUi.sClickConfirmYes,
           TestLinkUi.sAssertContentPresence(tinyApis, { a: 1 }),
+        ])),
+
+        Logger.t('www-urls are prompted to add http:// prefix, cancel', GeneralSteps.sequence([
+          TestLinkUi.sInsertLink('www.google.com'),
+          TestLinkUi.sWaitForUi(
+            'wait for dialog',
+            'p:contains("The URL you entered seems to be an external link. Do you want to add the required http:// prefix?")'
+          ),
+          TestLinkUi.sClickConfirmNo,
+          TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="www.google.com"]': 1}),
         ])),
 
         Logger.t('others urls are not prompted' , GeneralSteps.sequence([
@@ -53,6 +63,16 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AssumeExternalTargetsTest', (su
           ),
           TestLinkUi.sClickConfirmYes,
           TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="http://google.com"]': 1 }),
+        ])),
+
+        Logger.t('url not updated when prompt canceled', GeneralSteps.sequence([
+          TestLinkUi.sInsertLink('google.com'),
+          TestLinkUi.sWaitForUi(
+            'wait for dialog',
+            'p:contains("The URL you entered seems to be an external link. Do you want to add the required http:// prefix?")'
+          ),
+          TestLinkUi.sClickConfirmNo,
+          TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="google.com"]': 1 }),
         ])),
       ]),
     ], onSuccess, onFailure);
