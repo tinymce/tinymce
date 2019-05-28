@@ -834,5 +834,5 @@ module.exports = function (grunt) {
   grunt.registerTask('start', ['webpack-dev-server']);
 
   grunt.registerTask('default', ['clean', 'prod']);
-  grunt.registerTask('test', ['bedrock-auto:phantomjs']);
+  grunt.registerTask('test', ['bedrock-auto:standard']);
 };
