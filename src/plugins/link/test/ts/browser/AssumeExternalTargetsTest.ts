@@ -24,11 +24,11 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AssumeExternalTargetsTest', (su
           'p:contains("The URL you entered seems to be an external link. Do you want to add the required http:// prefix?")'
         ),
         TestLinkUi.sClickConfirmYes,
-        TestLinkUi.sAssertContentPresence(tinyApis, { a: 1 }),
+        TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="http://www.google.com"]': 1}),
         tinyApis.sSetContent(''),
 
         TestLinkUi.sInsertLink('google.com'),
-        TestLinkUi.sAssertContentPresence(tinyApis, { a: 1 }),
+        TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="google.com"]': 1 }),
         tinyApis.sSetContent(''),
 
         // with link_assume_external_targets: true, prompts on all, even without protocol
@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AssumeExternalTargetsTest', (su
           'p:contains("The URL you entered seems to be an external link. Do you want to add the required http:// prefix?")'
         ),
         TestLinkUi.sClickConfirmYes,
-        TestLinkUi.sAssertContentPresence(tinyApis, { a: 1 }),
+        TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="http://www.google.com"]': 1 }),
         tinyApis.sSetContent(''),
 
         TestLinkUi.sInsertLink('google.com'),
