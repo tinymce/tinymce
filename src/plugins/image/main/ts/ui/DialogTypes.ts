@@ -54,6 +54,7 @@ export interface ImageDialogData {
       title?: string;
       class?: string;
       style?: string;
+      caption?: boolean;
       vspace?: string;
       border?: string;
       hspace?: string;

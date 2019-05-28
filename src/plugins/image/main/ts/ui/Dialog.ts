@@ -112,44 +112,49 @@ const addPrependUrl = (info: ImageDialogInfo, api: API) => {
   });
 };
 
-const formFillFromMeta2 = (info: ImageDialogInfo, data: ImageDialogData): Option<ImageDialogData> => {
-  const meta = data.src.meta;
+const formFillFromMeta2 = (info: ImageDialogInfo, _data: ImageDialogData): Option<ImageDialogData> => {
+  const meta = _data.src.meta;
   if (meta !== undefined) {
-    const dataCopy: ImageDialogData = Merger.deepMerge({}, data);
+    const data: ImageDialogData = Merger.deepMerge({}, _data);
     if (info.hasDescription && Type.isString(meta.alt)) {
-      dataCopy.alt = meta.alt;
+      data.alt = meta.alt;
     }
     if (info.hasImageTitle && Type.isString(meta.title)) {
-      dataCopy.title = meta.title;
+      data.title = meta.title;
     }
     if (info.hasDimensions) {
       if (Type.isString(meta.width)) {
-        dataCopy.dimensions.width = meta.width;
+        data.dimensions.width = meta.width;
       }
       if (Type.isString(meta.height)) {
-        dataCopy.dimensions.height = meta.height;
+        data.dimensions.height = meta.height;
       }
     }
     if (Type.isString(meta.class)) {
       ListUtils.findEntry(info.classList, meta.class).each((entry) => {
-        dataCopy.classes = entry.value;
+        data.classes = entry.value;
       });
+    }
+    if (info.hasImageCaption) {
+      if (Type.isBoolean(meta.caption)) {
+        data.caption = meta.caption;
+      }
     }
     if (info.hasAdvTab) {
       if (Type.isString(meta.vspace)) {
-        dataCopy.vspace = meta.vspace;
+        data.vspace = meta.vspace;
       }
       if (Type.isString(meta.border)) {
-        dataCopy.border = meta.border;
+        data.border = meta.border;
       }
       if (Type.isString(meta.hspace)) {
-        dataCopy.hspace = meta.hspace;
+        data.hspace = meta.hspace;
       }
       if (Type.isString(meta.borderstyle)) {
-        dataCopy.borderstyle = meta.borderstyle;
+        data.borderstyle = meta.borderstyle;
       }
     }
-    return Option.some(dataCopy);
+    return Option.some(data);
   }
   return Option.none();
 };
