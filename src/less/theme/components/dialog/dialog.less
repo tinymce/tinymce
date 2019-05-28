@@ -193,7 +193,6 @@
     overflow: auto; //overflow controls all scrolling in the dialogs
     -webkit-overflow-scrolling: touch;
 
-
     > * {
       margin-bottom: 0;
       margin-top: @pad-md;
@@ -345,7 +344,7 @@ body.tox-dialog__disable-scroll {
   }
 
   .tox-dialog__body-nav-item {
-    @media @breakpoint-sm {
+    @media @breakpoint-sm { /* stylelint-disable-line */
       &:not(:first-child) {
         margin-left: @pad-sm;
       }
@@ -377,7 +376,7 @@ body.tox-dialog__disable-scroll {
   }
 
   .tox-dialog__body-nav-item {
-    @media @breakpoint-sm {
+    @media @breakpoint-sm { /* stylelint-disable-line */
       &:not(:first-child) {
         margin-right: @pad-sm;
       }
