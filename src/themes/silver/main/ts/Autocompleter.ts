@@ -105,19 +105,18 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     });
   };
 
-  const commence = (context: AutocompleteContext, lookupData: AutocompleteLookupData[], items: ItemTypes.ItemSpec[]) => {
-    // Create the wrapper
-    const wrapper = AutocompleteTag.create(editor, context.range);
+  const commenceIfNecessary = (context: AutocompleteContext) => {
+    if (!isActive()) {
+      // Create the wrapper
+      const wrapper = AutocompleteTag.create(editor, context.range);
 
-    // store the element/context
-    activeAutocompleter.set(Option.some({
-      triggerChar: context.triggerChar,
-      element: wrapper,
-      matchLength: context.text.length
-    }));
-
-    // Show the menu
-    display(context, lookupData, items);
+      // store the element/context
+      activeAutocompleter.set(Option.some({
+        triggerChar: context.triggerChar,
+        element: wrapper,
+        matchLength: context.text.length
+      }));
+    }
   };
 
   const display = (context: AutocompleteContext, lookupData: AutocompleteLookupData[], items: ItemTypes.ItemSpec[]) => {
@@ -170,6 +169,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     doLookup().fold(
       cancelIfNecessary,
       (lookupInfo) => {
+        commenceIfNecessary(lookupInfo.context);
         lookupInfo.lookupData.then((lookupData) => {
           const context = lookupInfo.context;
           const lastMatchLength = activeAutocompleter.get().map((c) => c.matchLength).getOr(0);
@@ -177,8 +177,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
 
           // Open the autocompleter if there are items to show
           if (combinedItems.length > 0) {
-            const func = isActive() ? display : commence;
-            func(context, lookupData, combinedItems);
+            display(context, lookupData, combinedItems);
           // close if we haven't found any matches in the last 10 chars
           } else if (context.text.length - lastMatchLength >= 10) {
             cancelIfNecessary();
