@@ -4,8 +4,8 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import SilverTheme from '../../../../../themes/silver/main/ts/Theme';
-import Helpers from '../../../main/ts/ui/Helpers';
+import Helpers from 'tinymce/plugins/table/ui/Helpers';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failure) => {
   Plugin();

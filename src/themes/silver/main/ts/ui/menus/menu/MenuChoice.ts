@@ -2,7 +2,7 @@ import { MenuTypes } from '@ephox/alloy';
 import { Menu as BridgeMenu, Types } from '@ephox/bridge';
 import { Arr, Option, Options } from '@ephox/katamari';
 
-import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
+import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderChoiceItem } from '../item/build/ChoiceItem';
 import ItemResponse from '../item/ItemResponse';
 import { createPartialMenuWithAlloyItems, handleError, menuHasIcons } from './MenuUtils';

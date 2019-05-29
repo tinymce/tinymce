@@ -9,7 +9,7 @@ import { AlloySpec, DomFactory, RawDomSchema } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Fun, Merger, Obj, Option, Arr } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
-import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
+import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
 import * as ItemClasses from '../ItemClasses';
 import { renderIcon, renderShortcut, renderStyledText, renderText, renderHtml } from './ItemSlices';

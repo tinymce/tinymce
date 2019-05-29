@@ -1,4 +1,4 @@
-import { SizeUnit } from '../../../../../main/ts/ui/sizeinput/SizeInputModel';
+import { SizeUnit } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 
 export const units: SizeUnit[] = ['', 'cm', 'mm', 'in', 'px', 'pt', 'pc', 'em', 'ex', 'ch', 'rem', 'vw', 'vh', 'vmin', 'vmax', '%'];
 export const convertableUnits: SizeUnit[] = ['', 'cm', 'mm', 'in', 'px', 'pt', 'pc'];

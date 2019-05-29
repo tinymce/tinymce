@@ -5,7 +5,7 @@ import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import Env from 'tinymce/core/api/Env';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import SilverTheme from '../../../../../themes/silver/main/ts/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.quirks.KeyboardCellNavigationTest', (success, failure) => {
     TablePlugin();

@@ -17,7 +17,7 @@ import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 
-import Theme from '../../../../../silver/main/ts/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { PlatformDetection } from '@ephox/sand';
 import { TestHelpers } from '@ephox/alloy';
 

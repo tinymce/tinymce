@@ -1,5 +1,5 @@
 import { UnitTest } from '@ephox/bedrock';
-import { IconProvider, get } from '../../../../main/ts/ui/icons/Icons';
+import { IconProvider, get } from 'tinymce/themes/silver/ui/icons/Icons';
 import { Assertions, Pipeline, Step } from '@ephox/agar';
 import { getAll as getAllOxide } from '@tinymce/oxide-icons-default';
 import { TinyLoader } from '@ephox/mcagar';

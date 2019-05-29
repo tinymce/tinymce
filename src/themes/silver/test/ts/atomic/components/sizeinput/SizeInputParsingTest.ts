@@ -2,7 +2,7 @@ import { UnitTest, assert } from '@ephox/bedrock';
 import { Result, Arr } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
-import { parseSize, Size, nuSize, SizeUnit } from '../../../../../main/ts/ui/sizeinput/SizeInputModel';
+import { parseSize, Size, nuSize, SizeUnit } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 import { units, largeSensible } from './SizeInputShared';
 
 UnitTest.test('SizeInputParsingTest', () => {

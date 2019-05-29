@@ -8,7 +8,7 @@
 import { Disabling, Toggling } from '@ephox/alloy';
 import { Menu, Types } from '@ephox/bridge';
 import { Merger, Option } from '@ephox/katamari';
-import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
+import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import * as ItemClasses from '../ItemClasses';
 import ItemResponse from '../ItemResponse';
 import { renderCheckmark } from '../structure/ItemSlices';
