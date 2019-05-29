@@ -12,6 +12,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
+import { toLeaf } from '../alien/TextDescent';
 import { Phase, repeatLeft } from '../alien/TextSearch';
 import { AutocompleteContext, getContext } from './AutocompleteContext';
 import { AutocompleterDatabase } from './Autocompleters';
@@ -35,7 +36,10 @@ const isStartOfWord = (dom: DOMUtils) => {
     return (index === 0) ? phase.kontinue() : phase.finish(/\s/.test(text.charAt(index - 1)));
   };
 
-  return (rng: Range) => repeatLeft(dom, rng.startContainer as Text, rng.startOffset, process).fold(Fun.constant(true), Fun.constant(true), Fun.identity);
+  return (rng: Range) => {
+    const leaf = toLeaf(rng.startContainer, rng.startOffset);
+    return repeatLeft(dom, leaf.element, leaf.offset, process).fold(Fun.constant(true), Fun.constant(true), Fun.identity);
+  };
 };
 
 const getTriggerContext = (dom: DOMUtils, initRange: Range, database: AutocompleterDatabase): Option<AutocompleteContext> => {
