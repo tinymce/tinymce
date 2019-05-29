@@ -5,9 +5,9 @@ import { Cell, Arr } from '@ephox/katamari';
 import { TinyLoader, TinyApis } from '@ephox/mcagar';
 import { Element, Body, Css } from '@ephox/sugar';
 
-import Theme from '../../../../main/ts/Theme';
 import Env from 'tinymce/core/api/Env';
 import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
   Theme();

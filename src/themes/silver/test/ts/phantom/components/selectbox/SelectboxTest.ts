@@ -3,7 +3,7 @@ import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
 
-import { renderSelectBox } from '../../../../../main/ts/ui/dialog/SelectBox';
+import { renderSelectBox } from 'tinymce/themes/silver/ui/dialog/SelectBox';
 import { DomSteps } from '../../../module/DomSteps';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 import TestProviders from '../../../module/TestProviders';

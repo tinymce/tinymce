@@ -4,7 +4,7 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
 import Tools from 'tinymce/core/api/util/Tools';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import SilverTheme from '../../../../../themes/silver/main/ts/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();

@@ -1,6 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 
-import { addToHistory, clearHistory, getHistory } from '../../../../../main/ts/backstage/UrlInputHistory';
+import { addToHistory, clearHistory, getHistory } from 'tinymce/themes/silver/backstage/UrlInputHistory';
 
 UnitTest.test('HistoryTest', () => {
   const filetype = 'test';

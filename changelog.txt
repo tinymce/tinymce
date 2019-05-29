@@ -1,6 +1,7 @@
 Version 5.0.7 (TBD)
     Added highlighting of matched text in autocompleter items #TINY-3687
     Added the ability for autocompleters to work with matches that include spaces #TINY-3704
+    Added a new imagetools_fetch_image callback to allow custom implementations for cors loading of images. #TINY-3658
     Changed annotations navigation to work the same as inline boundaries #TINY-3396
     Fixed the autocompleter not working with fragmented text #TINY-3459
     Fixed the autosave plugin no longer overwrites window.onbeforeunload #TINY-3688
@@ -9,6 +10,7 @@ Version 5.0.7 (TBD)
     Fixed the autoresize plugin not firing ResizeEditor events #TINY-3587
     Fixed editor in fullscreen mode not extending to the bottom of the screen #TINY-3701
     Fixed list removal when pressing backspace after the start of the list item #TINY-3697
+    Fixed autocomplete not triggering from compositionend events #TINY-3711
     Fixed an exception being thrown when a file or number input has focus during initialization. Patch contributed by t00 #GH-2194
 Version 5.0.6 (2019-05-22)
     Added `icons_url` editor settings to enable icon packs to be loaded from a custom url #TINY-3585

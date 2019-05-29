@@ -5,7 +5,7 @@ import { LegacyUnit, TinyLoader, TinyApis } from '@ephox/mcagar';
 
 import Tools from 'tinymce/core/api/util/Tools';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import SilverTheme from '../../../../../themes/silver/main/ts/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', (success, failure) => {
 

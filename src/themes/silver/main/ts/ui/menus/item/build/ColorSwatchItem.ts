@@ -9,8 +9,8 @@ import { ItemTypes, ItemWidget, Menu as AlloyMenu } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Id, Merger } from '@ephox/katamari';
 
-import { UiFactoryBackstage } from '../../../../backstage/Backstage';
-import ColorSwatch from '../../../core/color/ColorSwatch';
+import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 import { createPartialChoiceMenu } from '../../menu/MenuChoice';
 import { deriveMenuMovement } from '../../menu/MenuMovement';
 import * as MenuParts from '../../menu/MenuParts';

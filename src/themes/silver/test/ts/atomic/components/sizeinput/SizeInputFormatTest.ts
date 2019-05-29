@@ -1,5 +1,5 @@
 import { UnitTest, assert } from '@ephox/bedrock';
-import { formatSize } from '../../../../../main/ts/ui/sizeinput/SizeInputModel';
+import { formatSize } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 
 UnitTest.test('SizeInputFormatTest', function () {
   // pixel measurements do not get decimals

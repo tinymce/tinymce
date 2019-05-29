@@ -1,27 +1,17 @@
 import 'tinymce/themes/silver/Theme';
 
-import { Logger, Pipeline, Keyboard, Step, Keys, Chain, UiFinder, ApproxStructure, Assertions, GeneralSteps, Waiter, Guard } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { TinyLoader, TinyUi, TinyApis } from '@ephox/mcagar';
-import Editor from 'tinymce/core/api/Editor';
-import { Element, Body } from '@ephox/sugar';
-import { Arr } from '@ephox/katamari';
-import Promise from 'tinymce/core/api/util/Promise';
+import { Logger, Pipeline, Keyboard, Step, Keys, UiFinder, GeneralSteps, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
+import { UnitTest } from '@ephox/bedrock';
+import { Arr } from '@ephox/katamari';
+import { TinyLoader, TinyUi, TinyApis } from '@ephox/mcagar';
+import { Element, Body } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
+import Promise from 'tinymce/core/api/util/Promise';
+import { AutocompleterStructure, sAssertAutocompleterStructure, sWaitForAutocompleteToClose } from '../../module/AutocompleterUtils';
 
 UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
   const store = TestHelpers.TestStore();
-
-  interface AutocompleterListStructure {
-    type: 'list';
-    hasIcons: boolean;
-    groups: { title: string; text: string; icon?: string; boldText?: string}[][];
-  }
-
-  interface AutocompleterGridStructure {
-    type: 'grid';
-    groups: { title: string; icon?: string; boldText?: string }[][];
-  }
 
   interface Scenario {
     triggerChar: string;
@@ -36,112 +26,12 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
     };
   }
 
-  type AutocompleterStructure = AutocompleterListStructure | AutocompleterGridStructure;
-
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
       const tinyUi = TinyUi(editor);
       const tinyApis = TinyApis(editor);
 
       const eDoc = Element.fromDom(editor.getDoc());
-
-      const structWithTitleAndIconAndText = (d) => (s, str, arr) => {
-        return s.element('div', {
-          classes: [ arr.has('tox-collection__item') ],
-          attrs: {
-            title: str.is(d.title)
-          },
-          children: [
-            s.element('div', {
-              classes: [ arr.has('tox-collection__item-icon') ],
-              children: [
-                s.text(str.is(d.icon))
-              ]
-            }),
-            s.element('div', {
-              classes: [ arr.has('tox-collection__item-label') ],
-              html: str.is(d.text)
-            })
-          ]
-        });
-      };
-
-      const structWithTitleAndText = (d) => (s, str, arr) => {
-        return s.element('div', {
-          classes: [ arr.has('tox-collection__item') ],
-          attrs: {
-            title: str.is(d.title)
-          },
-          children: [
-            s.element('div', {
-              classes: [ arr.has('tox-collection__item-label') ],
-              html: str.is(d.text)
-            })
-          ]
-        });
-      };
-
-      const structWithTitleAndIcon = (d) => (s, str, arr) => {
-        return s.element('div', {
-          classes: [ arr.has('tox-collection__item') ],
-          attrs: {
-            title: str.is(d.title)
-          },
-          children: [
-            s.element('div', {
-              classes: [ arr.has('tox-collection__item-icon') ],
-              children: [
-                s.text(str.is(d.icon))
-              ]
-            })
-          ]
-        });
-      };
-
-      const sWaitForAutocompleteToClose = Waiter.sTryUntil(
-        'Autocompleter should disappear',
-        UiFinder.sNotExists(Body.body(), '.tox-autocompleter'),
-        100,
-        1000
-      );
-
-      const sAssertAutocompleterStructure = (structure: AutocompleterStructure) => {
-        return Chain.asStep(Body.body(), [
-          UiFinder.cFindIn('.tox-autocompleter'),
-          Chain.control(
-            Assertions.cAssertStructure(
-              'Checking the autocompleter',
-              ApproxStructure.build((s, str, arr) => {
-                return s.element('div', {
-                  classes: [ arr.has('tox-autocompleter') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-menu'), arr.has(`tox-collection--${structure.type}`), arr.has('tox-collection') ],
-                      children: Arr.map(structure.groups, (group) => {
-                        return s.element('div', {
-                          classes: [ arr.has('tox-collection__group') ],
-                          children: Arr.map(group, (d) => {
-                            if (structure.type === 'list') {
-                              if (structure.hasIcons) {
-                                return structWithTitleAndIconAndText(d)(s, str, arr);
-                              } else {
-                                return structWithTitleAndText(d)(s, str, arr);
-                              }
-                            } else {
-                              return structWithTitleAndIcon(d)(s, str, arr);
-                            }
-                          })
-                        });
-                      })
-                    })
-                  ]
-                });
-              })
-            ),
-            Guard.tryUntil('Waiting for autocompleter structure to match' , 100, 1000)
-          )
-        ]);
-      };
 
       const sTestAutocompleter = (scenario: Scenario) => {
         const initialContent = scenario.initialContent || scenario.triggerChar;
