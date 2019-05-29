@@ -13,6 +13,8 @@ const isNodeType = function (type) {
   };
 };
 
+// Firefox can allow you to get a selection on a restricted node, such as file/number inputs. These nodes
+// won't implement the Object prototype, so Object.getPrototypeOf() will return null or something similar.
 const isRestrictedNode = (node: Node): boolean => !!node && !Object.getPrototypeOf(node);
 
 const isElement = isNodeType(1) as (node: Node) => node is HTMLElement;
