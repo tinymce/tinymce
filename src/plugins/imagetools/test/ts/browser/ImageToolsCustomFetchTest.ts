@@ -8,6 +8,7 @@ import { BlobConversions } from '@ephox/imagetools';
 import { Cell, Option } from '@ephox/katamari';
 import { document } from '@ephox/dom-globals';
 import { Body } from '@ephox/sugar';
+import Promise from 'tinymce/core/api/util/Promise';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest', (success, failure) => {
   const uploadHandlerState = ImageUtils.createStateContainer();
