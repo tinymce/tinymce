@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
-import SilverTheme from '../../../../../themes/silver/main/ts/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.MergeCellCommandTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();

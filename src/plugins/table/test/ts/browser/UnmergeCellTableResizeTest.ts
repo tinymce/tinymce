@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { Editor, TinyDom } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
-import SilverTheme from '../../../../../themes/silver/main/ts/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import { SelectorFind } from '@ephox/sugar';
 import TableTestUtils from '../module/test/TableTestUtils';
 

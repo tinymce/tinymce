@@ -19,8 +19,8 @@ import {
 } from '@ephox/alloy';
 import { Arr, Cell, Fun, Merger, Option } from '@ephox/katamari';
 
-import { DisablingConfigs } from '../../../alien/DisablingConfigs';
-import { onControlAttached, onControlDetached, OnDestroy } from '../../../controls/Controls';
+import { DisablingConfigs } from 'tinymce/themes/silver/ui/alien/DisablingConfigs';
+import { onControlAttached, onControlDetached, OnDestroy } from 'tinymce/themes/silver/ui/controls/Controls';
 import { menuItemEventOrder, onMenuItemExecute } from '../ItemEvents';
 import { ItemStructure } from '../structure/ItemStructure';
 import ItemResponse from '../ItemResponse';

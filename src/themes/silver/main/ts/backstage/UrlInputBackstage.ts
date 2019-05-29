@@ -7,8 +7,8 @@
 
 import { Future, Obj, Option, Type } from '@ephox/katamari';
 
-import Editor from '../../../../../core/main/ts/api/Editor';
-import Tools from '../../../../../core/main/ts/api/util/Tools';
+import Editor from 'tinymce/core/api/Editor';
+import Tools from 'tinymce/core/api/util/Tools';
 import { LinkTarget, LinkTargets } from '../ui/core/LinkTargets';
 import { addToHistory, getHistory } from './UrlInputHistory';
 import { Types } from '@ephox/bridge';

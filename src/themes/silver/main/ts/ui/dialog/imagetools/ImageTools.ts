@@ -23,7 +23,7 @@ import { Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { ComposingConfigs } from 'tinymce/themes/silver/ui/alien/ComposingConfigs';
 
-import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
+import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import * as EditPanel from './EditPanel';
 import * as ImagePanel from './ImagePanel';
 import * as ImageToolsEvents from './ImageToolsEvents';

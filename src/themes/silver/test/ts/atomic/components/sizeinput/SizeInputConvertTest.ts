@@ -1,7 +1,7 @@
 import { UnitTest, assert } from '@ephox/bedrock';
 import Jsc from '@ephox/wrap-jsverify';
 
-import { convertUnit, nuSize, SizeUnit, Size } from '../../../../../main/ts/ui/sizeinput/SizeInputModel';
+import { convertUnit, nuSize, SizeUnit, Size } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 import { convertableUnits, largeSensible, units } from './SizeInputShared';
 import { Option, Arr } from '@ephox/katamari';
 

@@ -9,7 +9,7 @@ import { Menu } from '@ephox/bridge';
 import { renderInsertTableMenuItem } from './InsertTableMenuItem';
 import { Option } from '@ephox/katamari';
 import { ItemTypes } from '@ephox/alloy';
-import { UiFactoryBackstage } from '../../../../backstage/Backstage';
+import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderColorSwatchItem } from './ColorSwatchItem';
 
 const fancyMenuItems: Record<keyof Menu.FancyActionArgsMap, (mi: Menu.FancyMenuItem, bs: UiFactoryBackstage) => ItemTypes.WidgetItemSpec> = {
