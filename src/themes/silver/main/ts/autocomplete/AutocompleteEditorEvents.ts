@@ -23,7 +23,7 @@ export interface AutocompleterUiApi {
 
 const setup = (api: AutocompleterUiApi, editor: Editor) => {
 
-  editor.on('keypress', api.onKeypress.throttle);
+  editor.on('keypress compositionend', api.onKeypress.throttle);
 
   editor.on('remove', api.onKeypress.cancel);
 
