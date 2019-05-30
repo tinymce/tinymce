@@ -1,4 +1,5 @@
 Version 5.0.7 (TBD)
+    Added new toolbar button and menu item for inserting tables via dialog #TINY-3636
     Added methods for adding/removing/changing tabs in the Help dialog #TINY-3535
     Changed tabpanel API by adding a `name` field and changing relevant methods to use it #TINY-3535
     Added highlighting of matched text in autocompleter items #TINY-3687

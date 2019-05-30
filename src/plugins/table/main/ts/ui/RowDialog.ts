@@ -126,7 +126,7 @@ const open = (editor: Editor) => {
       {
         title: 'General',
         name: 'general',
-        items: RowDialogGeneralTab.items(editor)
+        items: RowDialogGeneralTab.getItems(editor)
       },
       Helpers.getAdvancedTab()
     ]
@@ -137,7 +137,7 @@ const open = (editor: Editor) => {
       {
         type: 'grid',
         columns: 2,
-        items: RowDialogGeneralTab.items(editor)
+        items: RowDialogGeneralTab.getItems(editor)
       }
     ]
   };
