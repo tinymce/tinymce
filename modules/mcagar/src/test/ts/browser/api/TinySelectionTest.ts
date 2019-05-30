@@ -37,6 +37,8 @@ UnitTest.asynctest('TinySelectionTest', (success, failure) => {
       apis.sAssertSelection([ 0 ], 1, [ 0 ], 2)
     ], loadSuccess, loadFailure);
 
-  }, {}, success, failure);
+  }, {
+    base_url: '/project/tinymce/js/tinymce',
+  }, success, failure);
 });
 

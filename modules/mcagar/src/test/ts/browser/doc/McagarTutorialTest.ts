@@ -52,6 +52,7 @@ UnitTest.asynctest('McagarTutorialTest', (success, failure) => {
       setup: silverSetup,
       menubar: false,
       toolbar: 'tutorial-button',
+      base_url: '/project/tinymce/js/tinymce',
     }, success, failure);
 });
 

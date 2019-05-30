@@ -10,7 +10,7 @@ UnitTest.asynctest('SelectionTest', (success, failure) => {
 
   Pipeline.async({}, [
     Chain.asStep({}, [
-      Editor.cCreateInline,
+      Editor.cFromSettings({base_url: '/project/tinymce/js/tinymce', inline: true}),
       ApiChains.cFocus,
       cAssertEditorExists,
       Editor.cRemove

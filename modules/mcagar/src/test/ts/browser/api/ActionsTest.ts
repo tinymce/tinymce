@@ -34,7 +34,7 @@ UnitTest.asynctest('ActionTest', (success, failure) =>  {
   };
 
   const sTestStep = (major, minor) => Chain.asStep({}, [
-    Editor.cCreate,
+    Editor.cFromSettings({base_url: '/project/tinymce/js/tinymce'}),
     cAssertContentKeyboardEvent(ActionChains.cContentKeypress, {
       type: 'keypress',
       code: 88,

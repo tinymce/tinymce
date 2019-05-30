@@ -7,7 +7,7 @@ import { UnitTest } from '@ephox/bedrock';
 UnitTest.asynctest('SelectionTest', (success, failure) => {
 
   const sTestStep = Chain.asStep({}, [
-    Editor.cCreate,
+    Editor.cFromSettings({base_url: '/project/tinymce/js/tinymce'}),
     ApiChains.cFocus,
     ApiChains.cSetContent('<p>this is one paragraph</p><p>This is another</p>'),
     ApiChains.cSetSelection([ 0, 0 ], 'this'.length, [ 1, 0 ], 'This is'.length),

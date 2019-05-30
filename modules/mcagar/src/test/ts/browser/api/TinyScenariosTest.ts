@@ -54,6 +54,8 @@ UnitTest.asynctest('TinyScenariosTest', (success, failure) => {
       }),
     ], loadSuccess, loadFailure);
 
-  }, {}, success, failure);
+  }, {
+    base_url: '/project/tinymce/js/tinymce',
+  }, success, failure);
 });
 

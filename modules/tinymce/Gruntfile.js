@@ -325,7 +325,7 @@ module.exports = function (grunt) {
             {
               expand: true,
               flatten: true,
-              cwd: 'node_modules/@tinymce/oxide/build/skins/ui/' + name,
+              cwd: '../oxide/build/skins/ui/' + name,
               src: '**',
               dest: 'js/tinymce/skins/ui/' + mappedName
             }
@@ -336,7 +336,7 @@ module.exports = function (grunt) {
         files: [
           {
             expand: true,
-            cwd: 'node_modules/@tinymce/oxide/build/skins/content',
+            cwd: '../oxide/build/skins/content',
             src: '**',
             dest: 'js/tinymce/skins/content'
           },
@@ -801,6 +801,7 @@ module.exports = function (grunt) {
 
   require('load-grunt-tasks')(grunt, {
     requireResolution: true,
+    config: "../../package.json",
     pattern: ['grunt-*', '@ephox/bedrock', '@ephox/swag', 'rollup']
   });
   grunt.loadTasks('tools/tasks');
