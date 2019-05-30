@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="26px" viewBox="0 0 24 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-table-delete-table</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M4,6 L20,6 L20,20 L4,20 L4,6 Z M4.953125,8 L4.953125,19 L19,19 L19,8 L4.953125,8 Z M16.65625,16.703125 L15.15625,18.203125 L11.953125,15 L8.75,18.203125 L7.25,16.703125 L10.453125,13.5 L7.25,10.296875 L8.75,8.796875 L11.953125,12 L15.15625,8.796875 L16.65625,10.296875 L13.453125,13.5 L16.65625,16.703125 Z" fill="#000000"></path>
+    </g>
+</svg>

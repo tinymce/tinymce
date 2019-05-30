@@ -1,0 +1,31 @@
+{
+  "name": "@tinymce/oxide-icons-default",
+  "version": "1.0.40",
+  "description": "The default icon pack for TinyMCE",
+  "main": "dist/js/icons.js",
+  "scripts": {
+    "build": "gulp",
+    "prepublishOnly": "yarn ci",
+    "ci": "gulp --no-color"
+  },
+  "keywords": [
+    "TinyMCE",
+    "Icons"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.txt"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "author": "Ephox Corporation",
+  "license": "LGPL-2.1",
+  "dependencies": {},
+  "devDependencies": {
+    "@ephox/oxide-icons-tools": "latest",
+    "gulp": "^4.0.0",
+    "gulp-clean": "^0.4.0"
+  }
+}
