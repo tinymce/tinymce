@@ -1,4 +1,6 @@
 Version 5.0.7 (TBD)
+    Added methods for adding/removing/changing tabs in the Help dialog #TINY-3535
+    Changed tabpanel API by adding a `name` field and changing relevant methods to use it #TINY-3535
     Added highlighting of matched text in autocompleter items #TINY-3687
     Added the ability for autocompleters to work with matches that include spaces #TINY-3704
     Added a new imagetools_fetch_image callback to allow custom implementations for cors loading of images. #TINY-3658
