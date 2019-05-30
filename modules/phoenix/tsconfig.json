@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "importHelpers": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "target": "es5",
+    "module": "es2015",
+    "lib": ["es2015"],
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "lib",
+    "baseUrl": ".",
+    "paths": {
+      "ephox/phoenix/test/*": ["src/test/ts/module/ephox/phoenix/test/*"],
+      "ephox/phoenix/demo/*": ["src/demo/ts/ephox/phoenix/demo/*"],
+      "ephox/phoenix/*": ["src/main/ts/ephox/phoenix/*"],
+      "@ephox/phoenix": ["src/main/ts/ephox/phoenix/api/Main.ts"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts",
+    "node_modules/@ephox/**/*/api/Main.d.ts"
+  ]
+}

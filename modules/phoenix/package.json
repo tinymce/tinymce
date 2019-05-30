@@ -1,0 +1,47 @@
+{
+  "name": "@ephox/phoenix",
+  "description": "DOM node text gathering library, rose from the ashes of some other projects we can't remember the names of now (edit: seek, sherlock, gift)",
+  "version": "5.0.18",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/phoenix"
+  },
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "@ephox/boss": "latest",
+    "@ephox/dom-globals": "latest",
+    "@ephox/katamari": "latest",
+    "@ephox/polaris": "latest",
+    "tslib": "^1.9.3"
+  },
+  "devDependencies": {
+    "@ephox/bedrock": "latest",
+    "@ephox/sugar": "latest",
+    "awesome-typescript-loader": "^3.4.1",
+    "source-map-loader": "^0.2.3",
+    "typescript": "~3.3.0",
+    "webpack": "^3.10.0"
+  },
+  "scripts": {
+    "test-manual": "bedrock -d src/test",
+    "prepublishOnly": "tsc"
+  },
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/phoenix/api/Main.js",
+  "module": "./lib/main/ts/ephox/phoenix/api/Main.js",
+  "types": "./lib/main/ts/ephox/phoenix/api/Main.d.ts"
+}
