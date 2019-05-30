@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+  <!-- values shamelessly borrowed from JQuery tests -->
+  <style type="text/css">
+    div.absolute { position: absolute; margin: 1px; border: 2px solid #000; padding: 5px; width: 100px; height: 100px; background: #fff; }
+    #absolute-1 { top: 0; left: 0; }
+      #absolute-1-1 { top: 1px; left: 1px; }
+        #absolute-1-1-1 { top: 1px; left: 1px; }
+    #absolute-2 { top: 19px; left: 19px; }
+    #positionTest { position: absolute; }
+    div.fixed { position: fixed; margin: 1px; border: 2px solid #000; padding: 5px; width: 100px; height: 100px; background: #fff; overflow: hidden; }
+    #fixed-1 { top: 0; left: 0; }
+    #fixed-2 { top: 20px; left: 20px; }
+    #forceScroll { width: 5000px; height: 5000px; }
+    div.relative { position: relative; top: 0; left: 0; margin: 1px; border: 2px solid #000; padding: 5px; width: 100px; height: 100px; background: #fff; overflow: hidden; }
+    #relative-2 { top: 20px; left: 20px; }
+    #relative-toolbar-container { position: relative; width: 100px; height: 100px;}
+    #relative-toolbar { position: absolute; left: 0px; top: -40px; height: 40px; width: 100%;}
+    div.static { position: static; top: 0; left: 0; margin: 1px; border: 2px solid #000; padding: 5px; width: 100px; height: 100px; background: #fff; overflow: hidden; }
+    #static-2 { top: 20px; left: 20px; }
+    table { border: 2px solid #000; border-spacing: 2px; }
+    th, td { padding: 1px; border: 1px solid #000; width: 100px; height: 100px; }
+  </style>
+</head>
+<body>
+  <!-- having them all in one page causes the top value to be off, but I'm too lazy to make multiple tests -->
+  <div id="absolute-1" class="absolute">absolute-1
+    <div id="absolute-1-1" class="absolute">absolute-1-1
+      <div id="absolute-1-1-1" class="absolute">absolute-1-1-1</div>
+    </div>
+  </div>
+  <div id="absolute-2" class="absolute">absolute-2</div>
+  <div id="positionTest">Has absolute position but no values set for the location ('auto').</div>
+  <div id="fixed-1" class="fixed"></div>
+  <div id="fixed-2" class="fixed"></div>
+  <div id="fixed-no-top-left" class="fixed"></div>
+  <div id="relative-1" class="relative"><div id="relative-1-1" class="relative"><div id="relative-1-1-1" class="relative"></div></div></div>
+  <div id="relative-2" class="relative"></div>
+  <div id="static-1" class="static"><div id="static-1-1" class="static"><div id="static-1-1-1" class="static"></div></div></div>
+  <div id="static-2" class="static"></div>
+  <table id="table-1">
+    <thead>
+      <tr valign="top">
+        <th id="th-1">th-1</th>
+        <th id="th-2">th-2</th>
+        <th id="th-3">th-3</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr valign="top">
+        <td id="td-1">td-1</td>
+        <td id="td-2">td-2</td>
+        <td id="td-3">td-3</td>
+      </tr>
+    </tbody>
+  </table>
+  <div id="relative-toolbar-container"><div id="relative-toolbar"></div></div>
+
+  <div id="forceScroll"></div></body>
+</html>
