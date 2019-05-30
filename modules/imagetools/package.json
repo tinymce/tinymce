@@ -1,0 +1,53 @@
+{
+  "name": "@ephox/imagetools",
+  "version": "3.1.2",
+  "description": "Image tools for tinymce and textbox.io",
+  "keywords": [
+    "image",
+    "editor",
+    "ephox"
+  ],
+  "devDependencies": {
+    "@ephox/katamari": "latest",
+    "@ephox/bedrock": "latest",
+    "@ephox/sand": "latest",
+    "@ephox/tslint-rules": "latest",
+    "awesome-typescript-loader": "^5.2.1",
+    "source-map-loader": "^0.2.3",
+    "tslint": "^5.12.1",
+    "typescript": "~3.3.0"
+  },
+  "dependencies": {
+    "@ephox/dom-globals": "latest"
+  },
+  "scripts": {
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts",
+    "prepublishOnly": "tsc",
+    "lint": "tslint --project ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/imagetools-js"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "tslint.json",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/imagetools/api/Main.js",
+  "module": "./lib/main/ts/ephox/imagetools/api/Main.js",
+  "types": "./lib/main/ts/ephox/imagetools/api/Main.d.ts"
+}

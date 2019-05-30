@@ -1,0 +1,11 @@
+Dependency:
+  name: promise-polyfill
+  version: 6.0.2
+  repository: https://github.com/taylorhakes/promise-polyfill
+  licenses: MIT
+
+Dependency:
+  name: EaselJS
+  version: 0.8.2
+  repository: https://github.com/CreateJS/EaselJS
+  licenses: MIT
