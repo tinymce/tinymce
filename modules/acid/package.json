@@ -1,17 +1,17 @@
 {
   "name": "@ephox/acid",
   "description": "Color library including Alloy UI component for a color picker",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/acid"
   },
   "dependencies": {
-    "@ephox/alloy": "^4.0.0",
-    "@ephox/boulder": "^3.3.0",
+    "@ephox/alloy": "^4.12.5",
+    "@ephox/boulder": "^3.3.12",
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^2.0.0",
-    "@ephox/sugar": "^4.6.0",
+    "@ephox/katamari": "^2.4.17",
+    "@ephox/sugar": "^4.6.17",
     "tslib": "^1.9.3"
   },
   "author": "Ephox Corporation",

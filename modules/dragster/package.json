@@ -1,7 +1,7 @@
 {
   "name": "@ephox/dragster",
   "description": "This project handles dragging.",
-  "version": "4.0.8",
+  "version": "4.0.9",
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/dragster"
@@ -19,9 +19,9 @@
   ],
   "dependencies": {
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^2.0.0",
-    "@ephox/porkbun": "^4.0.0",
-    "@ephox/sugar": "^4.6.0"
+    "@ephox/katamari": "^2.4.17",
+    "@ephox/porkbun": "^4.0.7",
+    "@ephox/sugar": "^4.6.17"
   },
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test",

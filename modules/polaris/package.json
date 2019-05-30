@@ -1,7 +1,7 @@
 {
   "name": "@ephox/polaris",
   "description": "This project does data manipulation on arrays and strings.",
-  "version": "3.0.20",
+  "version": "3.0.21",
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/polaris"
@@ -19,7 +19,7 @@
   ],
   "dependencies": {
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^2.0.0",
+    "@ephox/katamari": "^2.4.17",
     "tslib": "^1.9.3"
   },
   "scripts": {

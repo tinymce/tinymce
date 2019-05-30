@@ -1,7 +1,7 @@
 {
   "name": "@ephox/echo",
   "description": "This project handles ARIA attributes.",
-  "version": "3.0.15",
+  "version": "3.0.16",
   "files": [
     "lib/main",
     "lib/demo",
@@ -19,9 +19,9 @@
   },
   "dependencies": {
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^2.0.0",
-    "@ephox/sand": "^2.0.0",
-    "@ephox/sugar": "^4.6.0"
+    "@ephox/katamari": "^2.4.17",
+    "@ephox/sand": "^2.0.13",
+    "@ephox/sugar": "^4.6.17"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
