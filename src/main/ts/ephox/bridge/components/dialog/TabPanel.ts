@@ -1,11 +1,10 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Result } from '@ephox/katamari';
-
+import { FieldSchema, ValueSchema, FieldPresence } from '@ephox/boulder';
+import { Id, Result } from '@ephox/katamari';
 import { BodyComponent, BodyComponentApi } from './BodyComponent';
 import { itemSchema } from './ItemSchema';
 
 export interface ExternalTab {
-  // TODO: Consider adding a name here, because title will be translated.
+  name?: string;
   title: string;
   items: BodyComponentApi[];
 }
@@ -16,6 +15,7 @@ export interface TabPanelApi {
 }
 
 export interface InternalTab {
+  name: string;
   title: string;
   items: BodyComponent[];
 }
@@ -26,6 +26,14 @@ export interface InternalTabPanel {
 }
 
 export const tabFields = [
+  FieldSchema.field(
+    'name',
+    'name',
+    FieldPresence.defaultedThunk(() => {
+      return Id.generate('tab-name');
+    }),
+    ValueSchema.string
+  ),
   FieldSchema.strictString('title'),
   FieldSchema.strictArrayOf('items', itemSchema)
 ];
