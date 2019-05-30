@@ -15,7 +15,7 @@ export interface ShortcutActionPairType {
   action: string;
 }
 
-const tab = () => {
+const tab = (): Types.Dialog.TabApi => {
   const shortcutList = Arr.map(KeyboardShortcuts.shortcuts, (shortcut: ShortcutActionPairType) => {
     const shortcutText = Arr.map(shortcut.shortcuts, ConvertShortcut.convertText).join(' or ');
     return [ shortcut.action, shortcutText ];
@@ -28,6 +28,7 @@ const tab = () => {
     cells: shortcutList
   };
   return {
+    name: 'shortcuts',
     title: 'Handy Shortcuts',
     items: [
       tablePanel

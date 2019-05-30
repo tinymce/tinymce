@@ -140,7 +140,8 @@ const open = (editor: Editor) => {
     tabs: [
       {
         title: 'General',
-        items: CellDialogGeneralTab.items(editor)
+        name: 'general',
+        items: CellDialogGeneralTab.getItems(editor)
       },
       Helpers.getAdvancedTab()
     ]
@@ -151,7 +152,7 @@ const open = (editor: Editor) => {
       {
         type: 'grid',
         columns: 2,
-        items: CellDialogGeneralTab.items(editor)
+        items: CellDialogGeneralTab.getItems(editor)
       },
     ]
   };

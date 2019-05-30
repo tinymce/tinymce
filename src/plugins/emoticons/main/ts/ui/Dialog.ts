@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Throttler, Option } from '@ephox/katamari';
-
+import { Types } from '@ephox/bridge';
+import { Arr, Cell, Option, Throttler } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
+import { insertEmoticon } from '../core/Actions';
 import { ALL_CATEGORY, EmojiDatabase } from '../core/EmojiDatabase';
 import { emojisFrom } from '../core/Lookup';
-import { insertEmoticon } from '../core/Actions';
-import Editor from 'tinymce/core/api/Editor';
-import { Types } from '@ephox/bridge';
 
 const patternName = 'pattern';
 
@@ -22,8 +21,11 @@ const open = function (editor: Editor, database: EmojiDatabase) {
     results: emojisFrom(database.listAll(), '', Option.some(300))
   };
 
-  const scan = (dialogApi, category: string) => {
+  const currentTab = Cell(ALL_CATEGORY);
+
+  const scan = (dialogApi) => {
     const dialogData = dialogApi.getData();
+    const category = currentTab.get();
     const candidates = database.listCategory(category);
     const results = emojisFrom(candidates, dialogData[patternName], category === ALL_CATEGORY ? Option.some(300) : Option.none());
     dialogApi.setData({
@@ -32,11 +34,8 @@ const open = function (editor: Editor, database: EmojiDatabase) {
   };
 
   const updateFilter = Throttler.last((dialogApi) => {
-    const category = currentTab.get();
-    scan(dialogApi, category);
+    scan(dialogApi);
   }, 200);
-
-  const currentTab = Cell(ALL_CATEGORY);
 
   const searchField: Types.Dialog.BodyComponentApi = {
     label: 'Search',
@@ -57,6 +56,7 @@ const open = function (editor: Editor, database: EmojiDatabase) {
       // All tabs have the same fields.
       tabs: Arr.map(database.listCategories(), (cat) => ({
         title: cat,
+        name: cat,
         items: [searchField, resultsField]
       }))
     };
@@ -65,8 +65,8 @@ const open = function (editor: Editor, database: EmojiDatabase) {
       size: 'normal',
       body,
       initialData: initialState,
-      onTabChange: (dialogApi, title: string) => {
-        currentTab.set(title);
+      onTabChange: (dialogApi, details) => {
+        currentTab.set(details.newTabName);
         updateFilter.throttle(dialogApi);
       },
       onChange: updateFilter.throttle,

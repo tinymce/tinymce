@@ -5,14 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
+import { Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import VersionPanel from '../ui/VersionPanel';
+import { Types } from '@ephox/bridge';
 
-const getVersionPanel = function (editor: Editor): Types.Dialog.BodyComponentApi {
-  return editor.getParam('help_version', VersionPanel.defaultPanel, 'function')();
+export type HelpTabsSetting = (string | Types.Dialog.TabApi)[];
+
+const getHelpTabs = (editor: Editor): Option<HelpTabsSetting> => {
+  return Option.from(editor.getParam('help_tabs'));
 };
 
-export default {
-  getVersionPanel,
+export {
+  getHelpTabs
 };

@@ -7,6 +7,7 @@ export default {
     tabs: [
       {
         title: 'General',
+        name: 'general',
         items: [
           {
             type: 'input',
@@ -32,6 +33,7 @@ export default {
       },
       {
         title: 'Advanced',
+        name: 'advanced',
         items: [
           {
             type: 'input',

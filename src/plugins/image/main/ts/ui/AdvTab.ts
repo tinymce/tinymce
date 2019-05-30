@@ -10,6 +10,7 @@ import { ImageDialogInfo } from './DialogTypes';
 const makeTab = (info: ImageDialogInfo) => {
   return {
     title: 'Advanced',
+    name: 'advanced',
     items: [
       {
         type: 'input',

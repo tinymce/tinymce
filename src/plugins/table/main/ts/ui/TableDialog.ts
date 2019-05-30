@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Types } from '@ephox/bridge';
 import { Element } from '@ephox/dom-globals';
 import { Fun, Merger, Type } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -14,9 +15,9 @@ import { StyleMap } from 'tinymce/core/api/html/Styles';
 import InsertTable from '../actions/InsertTable';
 import Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
-import { getTableClassList, hasAdvancedTableTab, hasAppearanceOptions, shouldStyleWithCss, getDefaultAttributes, getDefaultStyles } from '../api/Settings';
+import { getDefaultAttributes, getDefaultStyles, getTableClassList, hasAdvancedTableTab, shouldStyleWithCss } from '../api/Settings';
 import Helpers, { TableData } from './Helpers';
-import { Types } from '@ephox/bridge';
+import TableDialogGeneralTab from './TableDialogGeneralTab';
 
 // Explore the layers of the table till we find the first layer of tds or ths
 const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?: string | number) => {
@@ -130,9 +131,9 @@ const onSubmitTableForm = (editor: Editor, tableElm, api: Types.Dialog.DialogIns
   });
 };
 
-const open = (editor: Editor, isNew?: boolean) => {
+const open = (editor: Editor, insertNewTable: boolean) => {
   const dom = editor.dom;
-  let tableElm;
+  let tableElm: Element;
   let data = Helpers.extractDataFromSettings(editor, hasAdvancedTableTab(editor));
 
   // Cases for creation/update of tables:
@@ -141,7 +142,7 @@ const open = (editor: Editor, isNew?: boolean) => {
   // 2. isNew == false && selection parent is a table - update the table
   // 3. isNew == false && selection parent isn't a table - open dialog with default values and insert a table
 
-  if (isNew === false) {
+  if (insertNewTable === false) {
     tableElm = dom.getParent(editor.selection.getStart(), 'table');
     if (tableElm) {
       // Case 2 - isNew == false && table parent
@@ -173,118 +174,34 @@ const open = (editor: Editor, isNew?: boolean) => {
     }
   }
 
-  const rowColCountItems: Types.Dialog.BodyComponentApi[] = !isNew ? [] : [
-    {
-      type: 'input',
-      name: 'cols',
-      label: 'Cols'
-    },
-    {
-      type: 'input',
-      name: 'rows',
-      label: 'Rows'
-    }
-  ];
-
-  const alwaysItems: Types.Dialog.BodyComponentApi[] = [
-    {
-      type: 'input',
-      name: 'width',
-      label: 'Width'
-    },
-    {
-      type: 'input',
-      name: 'height',
-      label: 'Height'
-    }
-  ];
-
-  const appearanceItems: Types.Dialog.BodyComponentApi[] = hasAppearanceOptions(editor) ? [
-    {
-      type: 'input',
-      name: 'cellspacing',
-      label: 'Cell spacing'
-    },
-    {
-      type: 'input',
-      name: 'cellpadding',
-      label: 'Cell padding'
-    },
-    {
-      type: 'input',
-      name: 'border',
-      label: 'Border width'
-    },
-    {
-      type: 'label',
-      label: 'Caption',
-      items: [
-        {
-          type: 'checkbox',
-          name: 'caption',
-          label: 'Show caption'
-        }
-      ]
-    }
-  ] : [];
-
-  const alignmentItem: Types.Dialog.BodyComponentApi[] = [
-    {
-      type: 'selectbox',
-      name: 'align',
-      label: 'Alignment',
-      items: [
-        { text: 'None', value: '' },
-        { text: 'Left', value: 'left' },
-        { text: 'Center', value: 'center' },
-        { text: 'Right', value: 'right' }
-      ]
-    }
-  ];
-
-  const classListItem: Types.Dialog.BodyComponentApi[] = hasClasses ? [
-    {
-      type: 'selectbox',
-      name: 'class',
-      label: 'Class',
-      items: Helpers.buildListItems(
-        getTableClassList(editor),
-        (item) => {
-          if (item.value) {
-            item.textStyle = () => {
-              return editor.formatter.getCssText({ block: 'table', classes: [item.value] });
-            };
-          }
-        }
-      )
-    }
-  ] : [];
-
-  const generalTabItems = rowColCountItems.concat(alwaysItems).concat(appearanceItems).concat(alignmentItem).concat(classListItem);
-
   const generalPanel: Types.Dialog.BodyComponentApi = {
     type: 'grid',
     columns: 2,
-    items: generalTabItems
+    items: TableDialogGeneralTab.getItems(editor, hasClasses, insertNewTable)
   };
 
-  const nonAdvancedForm: Types.Dialog.PanelApi = {
-    type: 'panel',
-    items: [ generalPanel ]
+  const nonAdvancedForm = (): Types.Dialog.PanelApi => {
+    return {
+      type: 'panel',
+      items: [ generalPanel ]
+    };
   };
 
-  const advancedForm: Types.Dialog.TabPanelApi = {
-    type: 'tabpanel',
-    tabs: [
-      {
-        title: 'General',
-        items: [ generalPanel ]
-      },
-      Helpers.getAdvancedTab()
-    ]
+  const advancedForm = (): Types.Dialog.TabPanelApi => {
+    return {
+      type: 'tabpanel',
+      tabs: [
+        {
+          title: 'General',
+          name: 'general',
+          items: [ generalPanel ]
+        },
+        Helpers.getAdvancedTab()
+      ]
+    };
   };
 
-  const dialogBody = hasAdvancedTableTab(editor) ? advancedForm : nonAdvancedForm;
+  const dialogBody = hasAdvancedTableTab(editor) ? advancedForm() : nonAdvancedForm();
 
   editor.windowManager.open({
     title: 'Table Properties',

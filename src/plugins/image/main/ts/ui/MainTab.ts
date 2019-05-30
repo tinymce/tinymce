@@ -81,6 +81,7 @@ const makeItems = (info: ImageDialogInfo) => {
 const makeTab = (info: ImageDialogInfo) => {
   return {
     title: 'General',
+    name: 'general',
     items: makeItems(info)
   };
 };

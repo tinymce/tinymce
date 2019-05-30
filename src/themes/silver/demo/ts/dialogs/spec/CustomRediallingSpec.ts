@@ -20,12 +20,14 @@ export default {
           tabs: [
             {
               title: 'Alpha',
+              name: 'alpha',
               items: [
                 { type: 'input', name: 'alpha.1' }
               ]
             },
             {
               title: 'Beta',
+              name: 'beta',
               items: [ ]
             }
           ]

@@ -199,6 +199,7 @@ const showDialog = function (editor: Editor) {
 
   const generalTab = {
       title: 'General',
+      name: 'general',
       items: Arr.flatten<Types.Dialog.BodyComponentApi>([mediaInput, sizeInput])
     };
 
@@ -237,6 +238,7 @@ const showDialog = function (editor: Editor) {
 
   const advancedTab = {
     title: 'Advanced',
+    name: 'advanced',
     items: advancedFormItems
   };
 
