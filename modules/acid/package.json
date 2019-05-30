@@ -7,24 +7,12 @@
     "url": "https://github.com/ephox/acid"
   },
   "dependencies": {
-    "@ephox/dom-globals": "latest",
-    "@ephox/katamari": "latest",
-    "@ephox/sugar": "latest",
-    "@ephox/boulder": "latest",
-    "@ephox/alloy": "latest",
+    "@ephox/alloy": "^4.0.0",
+    "@ephox/boulder": "^3.3.0",
+    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/katamari": "^2.0.0",
+    "@ephox/sugar": "^4.6.0",
     "tslib": "^1.9.3"
-  },
-  "devDependencies": {
-    "@ephox/bedrock": "latest",
-    "@ephox/tslint-rules": "latest",
-    "awesome-typescript-loader": "^4.0.0",
-    "source-map-loader": "^0.2.3",
-    "tslint": "^5.14.0",
-    "typescript": "^3.0.1",
-    "webpack-cli": "^3.3.0"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",

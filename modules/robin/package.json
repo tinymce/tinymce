@@ -6,9 +6,6 @@
     "type": "git",
     "url": "https://github.com/ephox/robin"
   },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
   "files": [
     "lib/main",
     "lib/demo",
@@ -21,21 +18,11 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/boss": "latest",
-    "@ephox/dom-globals": "latest",
-    "@ephox/katamari": "latest",
-    "@ephox/phoenix": "latest",
-    "@ephox/polaris": "latest"
-  },
-  "devDependencies": {
-    "@ephox/agar": "latest",
-    "@ephox/bedrock": "latest",
-    "@ephox/sand": "latest",
-    "@ephox/sugar": "latest",
-    "@ephox/wrap-jsverify": "latest",
-    "awesome-typescript-loader": "^5.2.1",
-    "source-map-loader": "^0.2.3",
-    "typescript": "^3.1.5"
+    "@ephox/boss": "^3.0.0",
+    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/katamari": "^2.0.0",
+    "@ephox/phoenix": "^5.0.0",
+    "@ephox/polaris": "^3.0.0"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",

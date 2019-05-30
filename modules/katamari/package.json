@@ -11,22 +11,11 @@
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts"
   },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ephox/dom-globals": "latest",
+    "@ephox/dom-globals": "^1.1.2",
     "tslib": "^1.9.3"
-  },
-  "devDependencies": {
-    "@ephox/bedrock": "latest",
-    "@ephox/wrap-jsverify": "latest",
-    "awesome-typescript-loader": "^3.4.1",
-    "source-map-loader": "^0.2.3",
-    "typescript": "~3.3.0",
-    "webpack": "^3.10.0"
   },
   "files": [
     "lib/main",

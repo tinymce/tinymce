@@ -18,20 +18,10 @@
     "url": "https://github.com/ephox/echo"
   },
   "dependencies": {
-    "@ephox/dom-globals": "latest",
-    "@ephox/katamari": "latest",
-    "@ephox/sand": "latest",
-    "@ephox/sugar": "latest"
-  },
-  "devDependencies": {
-    "@ephox/agar": "latest",
-    "@ephox/bedrock": "latest",
-    "awesome-typescript-loader": "^3.4.1",
-    "source-map-loader": "^0.2.3",
-    "typescript": "~3.3.0"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/katamari": "^2.0.0",
+    "@ephox/sand": "^2.0.0",
+    "@ephox/sugar": "^4.6.0"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",

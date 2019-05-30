@@ -21,18 +21,9 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ephox/dom-globals": "latest",
-    "@ephox/katamari": "latest",
-    "@ephox/sand": "latest"
-  },
-  "devDependencies": {
-    "@ephox/tslint-rules": "latest",
-    "tslint": "^5.12.0",
-    "@ephox/bedrock": "latest",
-    "awesome-typescript-loader": "^5.2.1",
-    "source-map-loader": "^0.2.3",
-    "typescript": "^3.1.5",
-    "webpack": "^3.10.0"
+    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/katamari": "^2.0.0",
+    "@ephox/sand": "^2.0.0"
   },
   "files": [
     "lib/main",
@@ -47,8 +38,5 @@
   ],
   "main": "./lib/main/ts/ephox/sugar/api/Main.js",
   "module": "./lib/main/ts/ephox/sugar/api/Main.js",
-  "types": "./lib/main/ts/ephox/sugar/api/Main.d.ts",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  }
+  "types": "./lib/main/ts/ephox/sugar/api/Main.d.ts"
 }

@@ -17,24 +17,14 @@
     "CHANGELOG.txt",
     "LICENSE.txt"
   ],
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
   "dependencies": {
-    "@ephox/dom-globals": "latest",
-    "@ephox/katamari": "latest",
-    "@ephox/phoenix": "latest",
-    "@ephox/robin": "latest",
-    "@ephox/sand": "latest",
-    "@ephox/snooker": "latest",
-    "@ephox/sugar": "latest"
-  },
-  "devDependencies": {
-    "awesome-typescript-loader": "^3.4.1",
-    "source-map-loader": "^0.2.3",
-    "typescript": "^3.0.1",
-    "webpack": "^3.10.0",
-    "webpack-cli": "^3.2.3"
+    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/katamari": "^2.0.0",
+    "@ephox/phoenix": "^5.0.0",
+    "@ephox/robin": "^7.0.0",
+    "@ephox/sand": "^2.0.0",
+    "@ephox/snooker": "^4.0.0",
+    "@ephox/sugar": "^4.6.0"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",

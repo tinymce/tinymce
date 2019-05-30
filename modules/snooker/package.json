@@ -18,26 +18,13 @@
     "url": "https://github.com/ephox/snooker"
   },
   "dependencies": {
-    "@ephox/dom-globals": "latest",
-    "@ephox/dragster": "latest",
-    "@ephox/echo": "latest",
-    "@ephox/katamari": "latest",
-    "@ephox/porkbun": "latest",
-    "@ephox/robin": "latest",
-    "@ephox/sugar": "latest"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
-  "devDependencies": {
-    "@ephox/agar": "latest",
-    "@ephox/bedrock": "latest",
-    "@ephox/sand": "latest",
-    "@ephox/tslint-rules": "latest",
-    "awesome-typescript-loader": "^3.4.1",
-    "source-map-loader": "^0.2.3",
-    "tslint": "^5.12.1",
-    "typescript": "~3.3.1"
+    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/dragster": "^4.0.0",
+    "@ephox/echo": "^3.0.0",
+    "@ephox/katamari": "^2.0.0",
+    "@ephox/porkbun": "^4.0.0",
+    "@ephox/robin": "^7.0.0",
+    "@ephox/sugar": "^4.6.0"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",

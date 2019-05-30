@@ -18,25 +18,15 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/dom-globals": "latest",
-    "@ephox/katamari": "latest",
-    "@ephox/sugar": "latest",
+    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/katamari": "^2.0.0",
+    "@ephox/sugar": "^4.6.0",
     "tslib": "^1.9.3"
-  },
-  "devDependencies": {
-    "@ephox/bedrock": "latest",
-    "awesome-typescript-loader": "^3.4.1",
-    "source-map-loader": "^0.2.3",
-    "typescript": "^3.0.1",
-    "webpack": "^3.10.0"
   },
   "scripts": {
     "prepublishOnly": "tsc",
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",

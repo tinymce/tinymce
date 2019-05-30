@@ -17,23 +17,12 @@
     "CHANGELOG.txt",
     "LICENSE.txt"
   ],
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
   "dependencies": {
-    "@ephox/boss": "latest",
-    "@ephox/dom-globals": "latest",
-    "@ephox/katamari": "latest",
-    "@ephox/polaris": "latest",
+    "@ephox/boss": "^3.0.0",
+    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/katamari": "^2.0.0",
+    "@ephox/polaris": "^3.0.0",
     "tslib": "^1.9.3"
-  },
-  "devDependencies": {
-    "@ephox/bedrock": "latest",
-    "@ephox/sugar": "latest",
-    "awesome-typescript-loader": "^3.4.1",
-    "source-map-loader": "^0.2.3",
-    "typescript": "~3.3.0",
-    "webpack": "^3.10.0"
   },
   "scripts": {
     "test-manual": "bedrock -d src/test",

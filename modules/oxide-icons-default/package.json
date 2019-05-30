@@ -17,15 +17,6 @@
     "README.md",
     "LICENSE.txt"
   ],
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
   "author": "Ephox Corporation",
-  "license": "LGPL-2.1",
-  "dependencies": {},
-  "devDependencies": {
-    "@ephox/oxide-icons-tools": "latest",
-    "gulp": "^4.0.0",
-    "gulp-clean": "^0.4.0"
-  }
+  "license": "LGPL-2.1"
 }

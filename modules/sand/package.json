@@ -27,22 +27,11 @@
   ],
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
-  "devDependencies": {
-    "@ephox/bedrock": "latest",
-    "awesome-typescript-loader": "^3.4.1",
-    "source-map-loader": "^0.2.3",
-    "typescript": "^3.0.1",
-    "webpack": "^3.10.0",
-    "chromedriver": "latest"
-  },
   "dependencies": {
-    "@ephox/dom-globals": "latest",
-    "@ephox/katamari": "latest"
+    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/katamari": "^2.0.0"
   },
   "main": "./lib/main/ts/ephox/sand/api/Main.js",
   "module": "./lib/main/ts/ephox/sand/api/Main.js",
-  "types": "./lib/main/ts/ephox/sand/api/Main.d.ts",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  }
+  "types": "./lib/main/ts/ephox/sand/api/Main.d.ts"
 }

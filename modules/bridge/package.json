@@ -12,27 +12,12 @@
     "lint": "tslint src/**/*.ts"
   },
   "dependencies": {
-    "@ephox/boulder": "latest",
-    "@ephox/dom-globals": "latest",
-    "@ephox/katamari": "latest"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "@ephox/boulder": "^3.3.0",
+    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/katamari": "^2.0.0"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
-  "devDependencies": {
-    "@ephox/tslint-rules": "^1.0.2",
-    "awesome-typescript-loader": "^5.0.0-1",
-    "grunt": "^1.0.2",
-    "grunt-tslint": "^5.0.1",
-    "grunt-webpack": "^3.1.1",
-    "load-grunt-tasks": "^3.5.2",
-    "tslint": "^5.11.0",
-    "typescript": "^3.1.4",
-    "webpack": "^4.2.0",
-    "webpack-livereload-plugin": "^2.1.1"
-  },
   "files": [
     "lib/main",
     "lib/demo",

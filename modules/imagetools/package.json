@@ -7,18 +7,8 @@
     "editor",
     "ephox"
   ],
-  "devDependencies": {
-    "@ephox/katamari": "latest",
-    "@ephox/bedrock": "latest",
-    "@ephox/sand": "latest",
-    "@ephox/tslint-rules": "latest",
-    "awesome-typescript-loader": "^5.2.1",
-    "source-map-loader": "^0.2.3",
-    "tslint": "^5.12.1",
-    "typescript": "~3.3.0"
-  },
   "dependencies": {
-    "@ephox/dom-globals": "latest"
+    "@ephox/dom-globals": "^1.1.2"
   },
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
@@ -29,9 +19,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/imagetools-js"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
   },
   "files": [
     "lib/main",
