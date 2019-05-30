@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "es5",
+    "module": "es2015",
+    "importHelpers": true,
+    "lib": ["es2015"],
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "lib",
+    "baseUrl": ".",
+    "paths": {
+      "ephox/katamari/test/*": ["src/test/ts/module/ephox/katamari/test/*"],
+      "ephox/katamari/demo/*": ["src/demo/ts/ephox/katamari/demo/*"],
+      "ephox/katamari/*": ["src/main/ts/ephox/katamari/*"],
+      "@ephox/katamari": ["src/main/ts/ephox/katamari/api/Main.ts"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts",
+    "node_modules/@ephox/**/*/api/Main.d.ts"
+  ]
+}
