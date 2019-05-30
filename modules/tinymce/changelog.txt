@@ -1,4 +1,5 @@
 Version 5.0.8 (TBD)
+    Added back support for multiple toolbars #TINY-2195
     Fixed the build to remove duplicate iife wrappers #TINY-3689
 Version 5.0.7 (2019-06-05)
     Added new toolbar button and menu item for inserting tables via dialog #TINY-3636
