@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "es5",
+    "module": "es2015",
+    "lib": ["es2015"],
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "lib",
+    "baseUrl": ".",
+    "paths": {
+      "ephox/snooker/test/*": ["src/test/ts/module/ephox/snooker/test/*"],
+      "ephox/snooker/demo/*": ["src/demo/ts/ephox/snooker/demo/*"],
+      "ephox/snooker/*": ["src/main/ts/ephox/snooker/*"],
+      "@ephox/snooker": ["src/main/ts/ephox/snooker/api/Main.ts"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts",
+    "node_modules/@ephox/**/*/api/Main.d.ts"
+  ]
+}

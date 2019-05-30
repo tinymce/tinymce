@@ -1,0 +1,42 @@
+<html>
+<head>
+  <title>Border collapse, margins, padding, border size, fun</title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+<p>Separated, width=75, padding=5, margin=10, border=3</p>
+<table style="border-collapse: separate">
+  <tr>
+    <td id='a1' style="width: 75px; padding: 5px; margin: 10px; border: 3px solid black;">A</td>
+    <td id='a2' style="width: 75px; padding: 5px; margin: 10px; border: 3px solid black;">A</td>
+    <td id='a3' style="width: 75px; padding: 5px; margin: 10px; border: 3px solid black;">A</td>
+    <td id='a4' style="width: 75px; padding: 5px; margin: 10px; border: 3px solid black;">A</td>
+  </tr>
+</table>
+
+<p>collapsed, width=75, padding=5, margin=10, border=3</p>
+<table style="border-collapse: collapse">
+  <tr>
+    <td id='b1' style="width: 75px; padding: 5px; margin: 10px; border: 3px solid black;">A</td>
+    <td id='b2' style="width: 75px; padding: 5px; margin: 10px; border: 3px solid black;">A</td>
+    <td id='b3' style="width: 75px; padding: 5px; margin: 10px; border: 3px solid black;">A</td>
+    <td id='b4' style="width: 75px; padding: 5px; margin: 10px; border: 3px solid black;">A</td>
+  </tr>
+</table>
+
+<script>
+  $(function () {
+    $('td').each(function () {
+      var cell = $(this);
+      console.log(cell.attr('id'), 'outer', cell.outerWidth(), 'inner', cell.innerWidth(), 'width', cell.width(), 'outer(true)', cell.outerWidth(true));
+
+    })
+  });
+
+</script>
+
+</body>
+</html>
