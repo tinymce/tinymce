@@ -1,0 +1,249 @@
+[
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/service/1/auth/google/start",
+      "query": {
+        "apiKey": "123"
+      }
+    },
+
+    "response": {
+      "status": 302,
+      "headers": {
+        "location": "/project/src/test/html/google_oauth_success.html"
+      },
+      "json": {}
+    }
+  },
+
+  {
+    "request": {
+      "method": "post",
+      "path": "/custom/service/1/upload/create",
+      "headers": {
+        "Authorization": "Bearer faketoken"
+      },
+      "query": {
+        "apiKey": "123"
+      }
+    },
+
+    "response": {
+      "json_file": "create_result.json"
+    }
+  },
+
+  {
+    "request": {
+      "method": "post",
+      "path": "/custom/upload"
+    },
+
+    "response": {
+      "json": {}
+    }
+  },
+
+  {
+    "request": {
+      "method": "post",
+      "path": "/custom/service/1/upload/commit/7cf7e619-9f45-4be3-a37f-e36affd8cb7c",
+      "headers": {
+        "Authorization": "Bearer faketoken"
+      },
+      "query": {
+        "apiKey": "123"
+      }
+    },
+
+    "response": {
+      "json": { "status": "ok" }
+    }
+  },
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/sample/get/1",
+      "headers": { },
+      "query": {
+        "word": "alpha"
+      }
+    },
+
+    "response": {
+      "json": {
+        "results": {
+          "good": [ "alpha" ]
+        }
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/sample/get/1",
+      "headers": { },
+      "query": {
+        "alpha": "1",
+        "beta": "2"
+      }
+    },
+
+    "response": {
+      "json": { "good": [ "alpha", "beta" ] }
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/sample/get/2",
+      "headers": { },
+      "query": {
+        "alpha": "1",
+        "beta": "2",
+        "gamma": "3"
+      }
+    },
+
+    "response": {
+      "json": { "good": [ "alpha", "beta", "gamma" ] }
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/sample/get/1",
+      "headers": {
+        "X-custom-header": "X-custom-header-value"
+      },
+      "query": {
+        "word": "beta"
+      }
+    },
+
+    "response": {
+      "json": {
+        "results": {
+          "bad": "custom-header"
+        }
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "post",
+      "path": "/custom/sample/post/1",
+      "headers": { },
+      "json": {
+        "send-data": "10"
+      }
+    },
+    "response": {
+      "json": {
+        "post-output": [ "Australia", "US" ]
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "put",
+      "path": "/custom/sample/put/1",
+      "headers": { },
+      "json": {
+        "send-data": "15"
+      }
+    },
+    "response": {
+      "json": {
+        "put-output": [ "Australia", "US" ]
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "delete",
+      "path": "/custom/sample/del/1",
+      "headers": { },
+      "query": {
+        "word": "alpha"
+      }
+    },
+
+    "response": {
+      "json": {
+        "results": {
+          "del-good": [ "alpha" ]
+        }
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "delete",
+      "path": "/custom/sample/del/1",
+      "headers": {
+        "X-custom-header": "X-del-custom-header-value"
+      },
+      "query": {
+        "word": "beta"
+      }
+    },
+
+    "response": {
+      "json": {
+        "results": {
+          "del-bad": "custom-header"
+        }
+      }
+    }
+  },
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/sample/token/invalid"
+    },
+
+    "response": {
+      "status": 401,
+      "json": {}
+    }
+  },
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/sample/token/valid"
+    },
+
+    "response": {
+      "status": 200,
+      "json": {}
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/blob",
+      "headers": {
+        "x-custom-header": "custom"
+      }
+    },
+
+    "response": {
+      "status": 200,
+      "json": {
+        "results": {
+          "data": "123"
+        }
+      }
+    }
+  }
+]
