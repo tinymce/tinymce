@@ -1,0 +1,51 @@
+{
+  "name": "@ephox/acid",
+  "description": "Color library including Alloy UI component for a color picker",
+  "version": "1.0.13",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/acid"
+  },
+  "dependencies": {
+    "@ephox/dom-globals": "latest",
+    "@ephox/katamari": "latest",
+    "@ephox/sugar": "latest",
+    "@ephox/boulder": "latest",
+    "@ephox/alloy": "latest",
+    "tslib": "^1.9.3"
+  },
+  "devDependencies": {
+    "@ephox/bedrock": "latest",
+    "@ephox/tslint-rules": "latest",
+    "awesome-typescript-loader": "^4.0.0",
+    "source-map-loader": "^0.2.3",
+    "tslint": "^5.14.0",
+    "typescript": "^3.0.1",
+    "webpack-cli": "^3.3.0"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "main": "./lib/main/ts/ephox/acid/api/Main.js",
+  "module": "./lib/main/ts/ephox/acid/api/Main.js",
+  "types": "./lib/main/ts/ephox/acid/api/Main.d.ts",
+  "scripts": {
+    "prepublishOnly": "tsc",
+    "lint": "tslint --project tsconfig.json --config tslint.json",
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts"
+  }
+}

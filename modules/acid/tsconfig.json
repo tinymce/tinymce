@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "es5",
+    "module": "es2015",
+    "lib": ["es2015"],
+    "types": [],
+    "importHelpers": true,
+    "declaration": true,
+    "sourceMap": true,
+    "strict": true,
+    "outDir": "lib",
+    "baseUrl": ".",
+    "paths": {
+      "ephox/acid/test/*": ["src/test/ts/module/ephox/acid/test/*"],
+      "ephox/acid/demo/*": ["src/demo/ts/ephox/acid/demo/*"],
+      "ephox/acid/*": ["src/main/ts/ephox/acid/*"],
+      "@ephox/acid": ["src/main/ts/ephox/acid/api/Main.ts"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts",
+    "node_modules/@ephox/**/*/api/Main.d.ts"
+  ]
+}
