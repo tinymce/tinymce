@@ -1,1 +1,0 @@
-No external production dependencies as of 2016-12-09
