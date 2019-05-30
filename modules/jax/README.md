@@ -122,6 +122,6 @@ Ajax.get(
 
 # Running Tests
 
-`$ npm test`
+`$ yarn test`
 
 These tests require [bedrock](https://www.npmjs.com/package/@ephox/bedrock) and phantomjs.

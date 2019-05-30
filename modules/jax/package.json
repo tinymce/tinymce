@@ -7,9 +7,9 @@
     "url": "https://github.com/ephox/jax"
   },
   "scripts": {
-    "prepublishOnly": "npm run lint && npm run build",
+    "prepublishOnly": "yarn run lint && yarn run build",
     "lint": "tslint src/**/*.ts",
-    "build": "tsc",
+    "build": "tsc -b",
     "test": "bedrock-auto -b phantomjs --customRoutes src/test/json/routes.json -d src/test/ts/",
     "test-manual": "bedrock --customRoutes src/test/json/routes.json -d src/test/ts/",
     "start": "webpack-dev-server --open-page './src/demo/html'",

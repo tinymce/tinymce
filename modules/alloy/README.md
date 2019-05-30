@@ -10,7 +10,7 @@ A webserver to run demos, npm, webpack is required to run and develop alloy
 
 `alloy` is available as an `npm` package. You can install it via the npm package `@ephox/alloy`
 
-`npm install` install the dependencies
+`yarn` install the dependencies
 `webpack` compile the src code
 
 # Usage
@@ -28,7 +28,7 @@ There are four kinds of tests that alloy runs:
 
 ### Running PhantomJS Tests
 
-`$ npm run test`
+`$ yarn run test`
 
 Note, will run phantomjs tests.
 

@@ -158,4 +158,4 @@ https://developer.mozilla.org/en/docs/XMLSerializer
 
 # Running Tests
 
-$ npm test
+$ yarn test

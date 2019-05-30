@@ -27,4 +27,4 @@
 
 `sugar` uses [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) to run tests. This is packaged as a dev dependency of `sugar`. To run the tests, use:
 
-`$ npm test`
+`$ yarn test`

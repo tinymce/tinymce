@@ -31,7 +31,7 @@
   "module": "./lib/main/ts/ephox/acid/api/Main.js",
   "types": "./lib/main/ts/ephox/acid/api/Main.d.ts",
   "scripts": {
-    "prepublishOnly": "tsc",
+    "prepublishOnly": "tsc -b",
     "lint": "tslint --project tsconfig.json --config tslint.json",
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts"

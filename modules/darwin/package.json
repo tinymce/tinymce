@@ -32,7 +32,7 @@
   "module": "./lib/main/ts/ephox/darwin/api/Main.js",
   "types": "./lib/main/ts/ephox/darwin/api/Main.d.ts",
   "scripts": {
-    "test": "tsc",
-    "prepublishOnly": "tsc"
+    "test": "tsc -b",
+    "prepublishOnly": "tsc -b"
   }
 }

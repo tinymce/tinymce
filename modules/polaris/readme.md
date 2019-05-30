@@ -17,4 +17,4 @@
 # Tests
 `polaris` uses `bolt` to run atomic tests.
 ## Running Tests
-`$ npm test`
+`$ yarn test`

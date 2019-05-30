@@ -36,7 +36,7 @@ module.exports = function (grunt) {
     pkg: packageData,
 
     shell: {
-      tsc: { command: 'npx tsc' }
+      tsc: { command: 'tsc -b' }
     },
 
     tslint: {

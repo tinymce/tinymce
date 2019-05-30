@@ -55,5 +55,5 @@ Below is a list of commonly used parts of `katamari`
 
 ## Running Tests
 
-`$ npm test`
+`$ yarn test`
 

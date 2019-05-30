@@ -13,7 +13,7 @@
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts",
-    "prepublishOnly": "tsc",
+    "prepublishOnly": "tsc -b",
     "lint": "tslint --project ."
   },
   "repository": {

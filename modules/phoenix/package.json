@@ -26,7 +26,7 @@
   },
   "scripts": {
     "test-manual": "bedrock -d src/test",
-    "prepublishOnly": "tsc"
+    "prepublishOnly": "tsc -b"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",

@@ -21,7 +21,7 @@ As mentioned earlier, `agar` contains testing infrastructure for _keyboard_, _mo
 * browser tests
 * webdriver tests
 
-The default `npm test` command just runs browser tests using `Chrome`.
+The default `yarn test` command just runs browser tests using `Chrome`.
 
 ## Running Browser Tests
 
