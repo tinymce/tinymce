@@ -112,55 +112,55 @@ const addPrependUrl = (info: ImageDialogInfo, api: API) => {
   });
 };
 
-const formFillFromMeta2 = (info: ImageDialogInfo, _data: ImageDialogData): Option<ImageDialogData> => {
-  const meta = _data.src.meta;
-  if (meta !== undefined) {
-    const data: ImageDialogData = Merger.deepMerge({}, _data);
-    if (info.hasDescription && Type.isString(meta.alt)) {
-      data.alt = meta.alt;
-    }
-    if (info.hasImageTitle && Type.isString(meta.title)) {
-      data.title = meta.title;
-    }
-    if (info.hasDimensions) {
-      if (Type.isString(meta.width)) {
-        data.dimensions.width = meta.width;
-      }
-      if (Type.isString(meta.height)) {
-        data.dimensions.height = meta.height;
-      }
-    }
-    if (Type.isString(meta.class)) {
-      ListUtils.findEntry(info.classList, meta.class).each((entry) => {
-        data.classes = entry.value;
-      });
-    }
-    if (info.hasImageCaption) {
-      if (Type.isBoolean(meta.caption)) {
-        data.caption = meta.caption;
-      }
-    }
-    if (info.hasAdvTab) {
-      if (Type.isString(meta.vspace)) {
-        data.vspace = meta.vspace;
-      }
-      if (Type.isString(meta.border)) {
-        data.border = meta.border;
-      }
-      if (Type.isString(meta.hspace)) {
-        data.hspace = meta.hspace;
-      }
-      if (Type.isString(meta.borderstyle)) {
-        data.borderstyle = meta.borderstyle;
-      }
-    }
-    return Option.some(data);
+const formFillFromMeta2 = (info: ImageDialogInfo, data: ImageDialogData, meta: ImageDialogData['src']['meta']): void => {
+  if (info.hasDescription && Type.isString(meta.alt)) {
+    data.alt = meta.alt;
   }
-  return Option.none();
+  if (info.hasImageTitle && Type.isString(meta.title)) {
+    data.title = meta.title;
+  }
+  if (info.hasDimensions) {
+    if (Type.isString(meta.width)) {
+      data.dimensions.width = meta.width;
+    }
+    if (Type.isString(meta.height)) {
+      data.dimensions.height = meta.height;
+    }
+  }
+  if (Type.isString(meta.class)) {
+    ListUtils.findEntry(info.classList, meta.class).each((entry) => {
+      data.classes = entry.value;
+    });
+  }
+  if (info.hasImageCaption) {
+    if (Type.isBoolean(meta.caption)) {
+      data.caption = meta.caption;
+    }
+  }
+  if (info.hasAdvTab) {
+    if (Type.isString(meta.vspace)) {
+      data.vspace = meta.vspace;
+    }
+    if (Type.isString(meta.border)) {
+      data.border = meta.border;
+    }
+    if (Type.isString(meta.hspace)) {
+      data.hspace = meta.hspace;
+    }
+    if (Type.isString(meta.borderstyle)) {
+      data.borderstyle = meta.borderstyle;
+    }
+  }
 };
 
 const formFillFromMeta = (info: ImageDialogInfo, api: API) => {
-  formFillFromMeta2(info, api.getData()).each((data) => api.setData(data));
+  const data = api.getData();
+  const meta = data.src.meta;
+  if (meta !== undefined) {
+    const newData = Merger.deepMerge({}, data);
+    formFillFromMeta2(info, newData, meta);
+    api.setData(newData);
+  }
 };
 
 const calculateImageSize = (helpers: Helpers, info: ImageDialogInfo, state: ImageDialogState, api: API) => {
