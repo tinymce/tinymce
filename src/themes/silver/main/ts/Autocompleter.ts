@@ -119,26 +119,18 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     }
   };
 
-  const display = (context: AutocompleteContext, lookupData: AutocompleteLookupData[], items: ItemTypes.ItemSpec[]) => {
+  const display = (ac: ActiveAutocompleter, context: AutocompleteContext, lookupData: AutocompleteLookupData[], items: ItemTypes.ItemSpec[]) => {
     // Update the last displayed matched length
-    activeAutocompleter.get().map((ac) => ac.matchLength = context.text.length);
+    ac.matchLength = context.text.length;
 
     // Display the autocompleter menu
     const columns: Types.ColumnTypes = Options.findMap(lookupData, (ld) => Option.from(ld.columns)).getOr(1);
-    const contextRng = context.range;
     InlineView.showAt(
       autocompleter,
       {
-        anchor: 'selection',
+        anchor: 'node',
         root: Element.fromDom(editor.getBody()),
-        getSelection: () => {
-          return Option.some({
-            start: () => Element.fromDom(contextRng.startContainer),
-            soffset: () => contextRng.startOffset,
-            finish: () => Element.fromDom(contextRng.endContainer),
-            foffset: () => contextRng.endOffset
-          });
-        }
+        node: Option.from(ac.element)
       },
       Menu.sketch(
         createMenuFrom(
@@ -170,21 +162,30 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
       cancelIfNecessary,
       (lookupInfo) => {
         commenceIfNecessary(lookupInfo.context);
-        lookupInfo.lookupData.then((lookupData) => {
-          const context = lookupInfo.context;
-          const lastMatchLength = activeAutocompleter.get().map((c) => c.matchLength).getOr(0);
-          const combinedItems = getCombinedItems(context.triggerChar, lookupData);
 
-          // Open the autocompleter if there are items to show
-          if (combinedItems.length > 0) {
-            display(context, lookupData, combinedItems);
-          // close if we haven't found any matches in the last 10 chars
-          } else if (context.text.length - lastMatchLength >= 10) {
-            cancelIfNecessary();
-          // otherwise just hide the menu
-          } else {
-            hideIfNecessary();
-          }
+        // Wait for the results to return and then display the menu
+        lookupInfo.lookupData.then((lookupData) => {
+          // Lookup the active autocompleter to make sure it's still active, if it isn't then do nothing
+          activeAutocompleter.get().map((ac) => {
+            const context = lookupInfo.context;
+
+            // Ensure the active autocompleter trigger matches, as the old one may have closed
+            // and a new one may have opened. If it doesn't match, then do nothing.
+            if (ac.triggerChar === context.triggerChar) {
+              const combinedItems = getCombinedItems(context.triggerChar, lookupData);
+
+              // Open the autocompleter if there are items to show
+              if (combinedItems.length > 0) {
+                display(ac, context, lookupData, combinedItems);
+              // close if we haven't found any matches in the last 10 chars
+              } else if (context.text.length - ac.matchLength >= 10) {
+                cancelIfNecessary();
+              // otherwise just hide the menu
+              } else {
+                hideIfNecessary();
+              }
+            }
+          });
         });
       }
     );
