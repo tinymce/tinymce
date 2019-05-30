@@ -113,13 +113,13 @@ const getDialogApi = <T>(
     });
   };
 
-  const showTab = (title: string) => {
+  const showTab = (name: string) => {
     withRoot((_) => {
       const body = access.getBody();
       const bodyState = Reflecting.getState(body);
       if (bodyState.get().exists((b) => b.isTabPanel())) {
         Composing.getCurrent(body).each((tabSection) => {
-          TabSection.showTab(tabSection, title);
+          TabSection.showTab(tabSection, name);
         });
       }
     });

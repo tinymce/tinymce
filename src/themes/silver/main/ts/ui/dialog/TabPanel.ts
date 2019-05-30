@@ -5,41 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  AlloyTriggers,
-  Behaviour,
-  Composing,
-  Form as AlloyForm,
-  Keying,
-  Receiving,
-  Representing,
-  SketchSpec,
-  Tabbar as AlloyTabbar,
-  TabSection as AlloyTabSection,
-  Tabstopping,
-  AlloyComponent
-} from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Composing, Form as AlloyForm, Keying, Receiving, Representing, SketchSpec, Tabbar as AlloyTabbar, TabSection as AlloyTabSection, Tabstopping } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Arr, Cell, Fun, Merger } from '@ephox/katamari';
 import { toValidValues } from 'tinymce/themes/silver/ui/general/FormValues';
 import { interpretInForm } from 'tinymce/themes/silver/ui/general/UiFactory';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { setMode } from '../alien/DialogTabHeight';
 import { formTabChangeEvent } from '../general/FormEvents';
 import NavigableObject from '../general/NavigableObject';
-import { setMode } from '../alien/DialogTabHeight';
 
 const SendDataToSectionChannel = 'send-data-to-section';
 const SendDataToViewChannel = 'send-data-to-view';
 
-export interface TabPanelFoo<I> {
-  tabs: Array<{ title: string, items: I[]}>;
+export interface InternalTabApi<I> {
+  tabs: Array<{ name: string, title: string, items: I[]}>;
 }
 
 export type TabData = Record<string, any>;
 
-export const renderTabPanel = <I>(spec: TabPanelFoo<I>, backstage: UiFactoryBackstage): SketchSpec => {
+export const renderTabPanel = <I>(spec: InternalTabApi<I>, backstage: UiFactoryBackstage): SketchSpec => {
   const storedValue = Cell<TabData>({ });
 
   const updateDataWithForm = (form: AlloyComponent): void => {
@@ -59,7 +44,7 @@ export const renderTabPanel = <I>(spec: TabPanelFoo<I>, backstage: UiFactoryBack
 
   const allTabs = Arr.map(spec.tabs, function (tab) {
     return {
-      value: tab.title,
+      value: tab.name,
       dom: {
         tag: 'div',
         classes: [ 'tox-dialog__body-nav-item' ],
@@ -119,12 +104,12 @@ export const renderTabPanel = <I>(spec: TabPanelFoo<I>, backstage: UiFactoryBack
     },
 
     onChangeTab: (section, button, _viewItems) => {
-      const title = Representing.getValue(button);
+      const name = Representing.getValue(button);
       AlloyTriggers.emitWith(section, formTabChangeEvent, {
-        title,
-        oldTitle: oldTab.get()
+        name,
+        oldName: oldTab.get()
       });
-      oldTab.set(title);
+      oldTab.set(name);
     },
 
     tabs: allTabs,

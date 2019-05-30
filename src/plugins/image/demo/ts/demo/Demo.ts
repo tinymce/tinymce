@@ -20,7 +20,7 @@ tinymce.init({
   ],
   images_upload_url: 'postAcceptor.php',
   file_picker_callback(callback, value, meta) {
-    callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
+    callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text', caption: true });
   },
   images_upload_handler: (blobInfo, success, failure, progress) => {
     console.log(blobInfo);

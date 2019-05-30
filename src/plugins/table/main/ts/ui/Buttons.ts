@@ -103,7 +103,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets) => {
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
-  // TODO: THESE CAN BE DEPRECATED?? Not documented, don't have icons.
+  // TODO: Need icons!!
   editor.ui.registry.addButton('tablecutrow', {
     tooltip: 'Cut row',
     onAction: cmd('mceTableCutRow'),
@@ -131,6 +131,13 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets) => {
     icon: 'temporary-placeholder',
     onSetup: selectionTargets.onSetupCellOrRow
   });
+
+  editor.ui.registry.addButton('tableinsertdialog', {
+    tooltip: 'Insert table',
+    onAction: cmd('mceInsertTable'),
+    icon: 'table'
+  });
+
 };
 
 const addToolbars = (editor: Editor) => {

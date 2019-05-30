@@ -112,50 +112,55 @@ const addPrependUrl = (info: ImageDialogInfo, api: API) => {
   });
 };
 
-const formFillFromMeta2 = (info: ImageDialogInfo, data: ImageDialogData): Option<ImageDialogData> => {
-  const meta = data.src.meta;
-  if (meta !== undefined) {
-    const dataCopy: ImageDialogData = Merger.deepMerge({}, data);
-    if (info.hasDescription && Type.isString(meta.alt)) {
-      dataCopy.alt = meta.alt;
-    }
-    if (info.hasImageTitle && Type.isString(meta.title)) {
-      dataCopy.title = meta.title;
-    }
-    if (info.hasDimensions) {
-      if (Type.isString(meta.width)) {
-        dataCopy.dimensions.width = meta.width;
-      }
-      if (Type.isString(meta.height)) {
-        dataCopy.dimensions.height = meta.height;
-      }
-    }
-    if (Type.isString(meta.class)) {
-      ListUtils.findEntry(info.classList, meta.class).each((entry) => {
-        dataCopy.classes = entry.value;
-      });
-    }
-    if (info.hasAdvTab) {
-      if (Type.isString(meta.vspace)) {
-        dataCopy.vspace = meta.vspace;
-      }
-      if (Type.isString(meta.border)) {
-        dataCopy.border = meta.border;
-      }
-      if (Type.isString(meta.hspace)) {
-        dataCopy.hspace = meta.hspace;
-      }
-      if (Type.isString(meta.borderstyle)) {
-        dataCopy.borderstyle = meta.borderstyle;
-      }
-    }
-    return Option.some(dataCopy);
+const formFillFromMeta2 = (info: ImageDialogInfo, data: ImageDialogData, meta: ImageDialogData['src']['meta']): void => {
+  if (info.hasDescription && Type.isString(meta.alt)) {
+    data.alt = meta.alt;
   }
-  return Option.none();
+  if (info.hasImageTitle && Type.isString(meta.title)) {
+    data.title = meta.title;
+  }
+  if (info.hasDimensions) {
+    if (Type.isString(meta.width)) {
+      data.dimensions.width = meta.width;
+    }
+    if (Type.isString(meta.height)) {
+      data.dimensions.height = meta.height;
+    }
+  }
+  if (Type.isString(meta.class)) {
+    ListUtils.findEntry(info.classList, meta.class).each((entry) => {
+      data.classes = entry.value;
+    });
+  }
+  if (info.hasImageCaption) {
+    if (Type.isBoolean(meta.caption)) {
+      data.caption = meta.caption;
+    }
+  }
+  if (info.hasAdvTab) {
+    if (Type.isString(meta.vspace)) {
+      data.vspace = meta.vspace;
+    }
+    if (Type.isString(meta.border)) {
+      data.border = meta.border;
+    }
+    if (Type.isString(meta.hspace)) {
+      data.hspace = meta.hspace;
+    }
+    if (Type.isString(meta.borderstyle)) {
+      data.borderstyle = meta.borderstyle;
+    }
+  }
 };
 
 const formFillFromMeta = (info: ImageDialogInfo, api: API) => {
-  formFillFromMeta2(info, api.getData()).each((data) => api.setData(data));
+  const data = api.getData();
+  const meta = data.src.meta;
+  if (meta !== undefined) {
+    const newData = Merger.deepMerge({}, data);
+    formFillFromMeta2(info, newData, meta);
+    api.setData(newData);
+  }
 };
 
 const calculateImageSize = (helpers: Helpers, info: ImageDialogInfo, state: ImageDialogState, api: API) => {
@@ -282,7 +287,7 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
         const blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
         uploader.upload(blobInfo).then((url: string) => {
           api.setData({ src: { value: url, meta: { } } });
-          api.showTab('General');
+          api.showTab('general');
           changeSrc(helpers, info, state, api);
           finalize();
         }).catch((err) => {

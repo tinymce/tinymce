@@ -117,6 +117,7 @@ const getAdvancedTab = () => {
   ];
   return {
     title: 'Advanced',
+    name: 'advanced',
     items
   };
 };
