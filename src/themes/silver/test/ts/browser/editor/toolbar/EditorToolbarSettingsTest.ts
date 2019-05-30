@@ -2,7 +2,7 @@ import { Log, Pipeline, UiFinder, NamedChain, Assertions, ApproxStructure } from
 import { UnitTest } from '@ephox/bedrock';
 import { Editor as McagarEditor } from '@ephox/mcagar';
 
-import '../../../../../../silver/main/ts/Theme';
+import 'tinymce/themes/silver/Theme';
 import { Body } from '@ephox/sugar';
 import { Result, Arr, Id } from '@ephox/katamari';
 import { cCountNumber, cExtractOnlyOne } from '../../../module/UiChainUtils';

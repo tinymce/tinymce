@@ -1,15 +1,30 @@
-Version 5.0.6 (TBD)
+Version 5.0.7 (TBD)
+    Added highlighting of matched text in autocompleter items #TINY-3687
+    Added the ability for autocompleters to work with matches that include spaces #TINY-3704
+    Added a new imagetools_fetch_image callback to allow custom implementations for cors loading of images. #TINY-3658
+    Changed annotations navigation to work the same as inline boundaries #TINY-3396
+    Fixed the autocompleter not working with fragmented text #TINY-3459
+    Fixed the autosave plugin no longer overwrites window.onbeforeunload #TINY-3688
+    Fixed infinite loop in the paste plugin when IE11 takes a long time to process paste events. Patch contributed by lRawd. #GH-4987
+    Fixed image handle locations when using `fixed_toolbar_container`. Patch contributed by t00. #GH-4966
+    Fixed the autoresize plugin not firing ResizeEditor events #TINY-3587
+    Fixed editor in fullscreen mode not extending to the bottom of the screen #TINY-3701
+    Fixed list removal when pressing backspace after the start of the list item #TINY-3697
+    Fixed autocomplete not triggering from compositionend events #TINY-3711
+Version 5.0.6 (2019-05-22)
+    Added `icons_url` editor settings to enable icon packs to be loaded from a custom url #TINY-3585
+    Added `image_uploadtab` editor setting to control the visibility of the upload tab in the image dialog #TINY-3606
+    Added new api endpoints to the wordcount plugin and improved character count logic #TINY-3578
+    Changed plugin, language and icon loading errors to log in the console instead of a notification #TINY-3585
     Fixed the textpattern plugin not working with fragmented text #TINY-3089
     Fixed various toolbar drawer accessibility issues and added an animation #TINY-3554
-    Added new api endpoints to the wordcount plugin and improved character count logic #TINY-3578
     Fixed issues with selection and ui components when toggling readonly mode #TINY-3592
-    Fixed so readonly mode works with inline editors. #TINY-3592
-    Added `icons_url` editor settings to enable icon packs to be loaded from a custom url #TINY-3585
-    Changed plugin, language and icon loading errors to log in the console instead of a notification #TINY-3585
+    Fixed so readonly mode works with inline editors #TINY-3592
     Fixed docked inline toolbar positioning when scrolled #TINY-3621
     Fixed initial value not being set on bespoke select in quickbars and toolbar drawer #TINY-3591
-    Added `image_uploadtab` editor settings to control the visibility of the upload tab in the image dialog. #TINY-3606
-    Fixed so that nbsp entities isn't trimmed in white-space: pre-line elements. #TINY-3642
+    Fixed so that nbsp entities aren't trimmed in white-space: pre-line elements #TINY-3642
+    Fixed `mceInsertLink` command inserting spaces instead of url encoded characters #GH-4990
+    Fixed text content floating on top of dialogs in IE11 #TINY-3640
 Version 5.0.5 (2019-05-09)
     Added menu items to match the forecolor/backcolor toolbar buttons #TINY-2878
     Added default directionality based on the configured language #TINY-2621

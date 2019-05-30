@@ -1,10 +1,11 @@
 import { Assertions, Log, Logger, Pipeline, RawAssertions, Step, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { navigator } from '@ephox/dom-globals';
+import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import AutoresizePlugin from 'tinymce/plugins/autoresize/Plugin';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
-import { navigator } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (success, failure) => {
@@ -44,11 +45,17 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
+    const resizeEventsCount = Cell(0);
 
     Pipeline.async({},
       // These tests doesn't work on phantom since measuring things seems broken there
       navigator.userAgent.indexOf('PhantomJS') === -1 ?
       [
+        Step.sync(() => {
+          editor.on('ResizeEditor', () => {
+            resizeEventsCount.set(resizeEventsCount.get() + 1);
+          });
+        }),
         Log.stepsAsStep('TBA', 'AutoResize: Fullscreen toggle scroll state', [
           tinyApis.sExecCommand('mceFullScreen'),
           sAssertScroll(editor, true),
@@ -67,6 +74,14 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
           Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 5550), 10, 3000),
           Waiter.sTryUntil('wait for editor height', sAssertEditorHeightAbove(editor, 5550), 10, 3000)
         ]),
+        Log.stepsAsStep('TBA', 'AutoResize: Editor size decrease based on content size', [
+          tinyApis.sSetContent('<div style="height: 1000px;">a</div>'),
+          Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 1050), 10, 3000),
+          Waiter.sTryUntil('wait for editor height', sAssertEditorHeightBelow(editor, 1200), 10, 3000)
+        ]),
+        Log.step('TBA', 'AutoResize: Should fire ResizeEditor events when resizing', Step.sync(() => {
+          Assertions.assertEq('Should have fired at least 3 ResizeEditor events', true, resizeEventsCount.get() >= 3);
+        })),
         Log.stepsAsStep('TBA', 'AutoResize: Editor size increase with async loaded content', [
           // Note: Use a min-height here to account for different browsers rendering broken images differently
           tinyApis.sSetContent('<div style="min-height: 35px;"><img src="#" /></div><div style="height: 5500px;"></div>'),
@@ -78,11 +93,6 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
           // Content height + div image height (84px) + bottom margin = 5634
           Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 5634), 10, 3000),
           Waiter.sTryUntil('wait for editor height', sAssertEditorHeightAbove(editor, 5634), 10, 3000)
-        ]),
-        Log.stepsAsStep('TBA', 'AutoResize: Editor size decrease based on content size', [
-          tinyApis.sSetContent('<div style="height: 1000px;">a</div>'),
-          Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 1050), 10, 3000),
-          Waiter.sTryUntil('wait for editor height', sAssertEditorHeightBelow(editor, 1200), 10, 3000)
         ]),
         Log.stepsAsStep('TBA', 'AutoResize: Editor size content set to 10 and autoresize_bottom_margin set to 100', [
           tinyApis.sSetSetting('autoresize_bottom_margin', 100),

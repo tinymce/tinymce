@@ -2,7 +2,7 @@ import { GeneralSteps, Logger, Pipeline, ApproxStructure, Waiter } from '@ephox/
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import SilverTheme from '../../../../../../themes/silver/main/ts/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import TableTestUtils from '../../module/test/TableTestUtils';
 
 /* This requires a menubar. Cannot migrate yet. */

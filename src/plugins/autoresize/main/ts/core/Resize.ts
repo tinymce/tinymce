@@ -11,6 +11,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Delay from 'tinymce/core/api/util/Delay';
+import Events from '../api/Events';
 import Settings from '../api/Settings';
 
 /**
@@ -113,6 +114,7 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
     deltaSize = resizeHeight - oldSize.get();
     dom.setStyle(editor.getContainer(), 'height', resizeHeight + 'px');
     oldSize.set(resizeHeight);
+    Events.fireResizeEditor(editor);
 
     // WebKit doesn't decrease the size of the body element until the iframe gets resized
     // So we need to continue to resize the iframe down until the size gets fixed

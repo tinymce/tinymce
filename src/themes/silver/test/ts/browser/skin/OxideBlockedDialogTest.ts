@@ -4,8 +4,8 @@ import { Cell } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 
-import Theme from '../../../../../silver/main/ts/Theme';
 import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
 

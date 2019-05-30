@@ -6,7 +6,7 @@ import 'tinymce/themes/silver/Theme';
 
 import { Element, SelectorFilter } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
-import ColorSwatch from '../../../../../main/ts/ui/core/color/ColorSwatch';
+import ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 
 UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
   // mutation is yummy

@@ -7,7 +7,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element, Height, Hierarchy, Width, Attr } from '@ephox/sugar';
 
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import SilverTheme from '../../../../../themes/silver/main/ts/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, failure) => {
   SilverTheme();

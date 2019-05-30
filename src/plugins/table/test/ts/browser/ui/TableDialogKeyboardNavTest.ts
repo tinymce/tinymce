@@ -1,8 +1,8 @@
 import { Pipeline, Log, FocusTools, Keyboard, Keys } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import Plugin from '../../../../main/ts/Plugin';
-import SilverTheme from '../../../../../../themes/silver/main/ts/Theme';
+import Plugin from 'tinymce/plugins/table/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import { Element } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
 

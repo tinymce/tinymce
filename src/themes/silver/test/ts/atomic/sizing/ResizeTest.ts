@@ -1,7 +1,7 @@
 import { Assertions, Log, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
-import { calcCappedSize, getDimensions, ResizeTypes } from '../../../../main/ts/ui/sizing/Resize';
+import { calcCappedSize, getDimensions, ResizeTypes } from 'tinymce/themes/silver/ui/sizing/Resize';
 
 const mockEditor = (containerHeight, contentAreaHeight) => {
   const settings = {

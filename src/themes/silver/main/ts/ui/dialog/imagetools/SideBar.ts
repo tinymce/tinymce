@@ -8,7 +8,7 @@
 import { AlloyComponent, AlloyTriggers, Container, Disabling, Memento, SketchSpec } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 
-import { UiFactoryBackstageProviders } from '../../../backstage/Backstage';
+import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderIconButton } from '../../general/Button';
 import * as ImageToolsEvents from './ImageToolsEvents';
 

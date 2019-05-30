@@ -175,7 +175,7 @@ const backspaceDeleteFromListToListCaret = function (editor, isForward) {
 
       return true;
     } else if (!otherLi) {
-      if (!isForward) {
+      if (!isForward && rng.startOffset === 0 && rng.endOffset === 0) {
         flattenListSelection(editor);
         return true;
       }

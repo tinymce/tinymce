@@ -1,4 +1,4 @@
-import Editor from '../../../../../../core/main/ts/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import { fontSelectMenu } from './complex/FontSelect';
 import { styleSelectMenu } from './complex/StyleSelect';
 import { formatSelectMenu } from './complex/FormatSelect';

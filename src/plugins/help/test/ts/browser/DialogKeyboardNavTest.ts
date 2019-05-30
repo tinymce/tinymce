@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
-import Theme from '../../../../../themes/silver/main/ts/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 
 UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (success, failure) => {

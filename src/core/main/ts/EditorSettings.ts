@@ -150,15 +150,9 @@ const getEditorSettings = function (editor: Editor, id: string, documentBaseUrl:
   return combineSettings(isTouch, defaultSettings, defaultOverrideSettings, settings);
 };
 
-const get = <K extends keyof EditorSettings>(editor: Editor, name: K): Option<EditorSettings[K]> => {
-  return Option.from(editor.settings[name]);
-};
-
 const getFiltered = <K extends keyof EditorSettings> (predicate: (x: any) => boolean, editor: Editor, name: K): Option<EditorSettings[K]> => {
   return Option.from(editor.settings[name]).filter(predicate);
 };
-
-const getString = Fun.curry(getFiltered, Type.isString);
 
 const getParamObject = (value: string) => {
   let output = {};
@@ -208,8 +202,6 @@ const getParam = (editor: Editor, name: string, defaultVal?: any, type?: string)
 
 export {
   getEditorSettings,
-  get,
-  getString,
   getParam,
   combineSettings
 };

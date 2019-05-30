@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Editor from '../../../../../core/main/ts/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import ColorSwatch from '../ui/core/color/ColorSwatch';
 import Settings from '../ui/core/color/Settings';
 import { Menu } from '@ephox/bridge';

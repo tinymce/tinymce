@@ -1,14 +1,12 @@
-import { Assertions, Chain, Files, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { Assertions, Chain, Files, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder, Waiter, FileInput } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import Conversions from 'tinymce/core/file/Conversions';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { sRunStepOnPatchedFileInput } from '../module/PatchInputFiles';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, failure) => {
-
   const src = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
   const b64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=';
 
@@ -37,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
     const sTriggerUpload = Logger.t('Trigger upload', Step.async((next, die) => {
       Conversions.uriToBlob(b64).then((blob) => {
         Pipeline.async({}, [
-          sRunStepOnPatchedFileInput([Files.createFile('logo.png', 0, blob)], Chain.asStep({}, [
+          FileInput.sRunOnPatchedFileInput([Files.createFile('logo.png', 0, blob)], Chain.asStep({}, [
             // cPopupToDialog('div[role="dialog"]'),
             ui.cWaitForPopup('Locate popup', 'div[role="dialog"]'),
             UiFinder.cFindIn('input[type="file"]'),
