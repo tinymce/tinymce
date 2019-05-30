@@ -1,13 +1,10 @@
 {
+  "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
-    "moduleResolution": "node",
-    "target": "es5",
-    "module": "es2015",
-    "importHelpers": true,
-    "lib": ["es2015"],
-    "declaration": true,
-    "sourceMap": true,
+    "noUnusedLocals": false,
+    "strict": false,
     "outDir": "lib",
+    "rootDir": "src",
     "baseUrl": ".",
     "paths": {
       "ephox/katamari/test/*": ["src/test/ts/module/ephox/katamari/test/*"],
@@ -20,6 +17,5 @@
     "src/demo/ts",
     "src/main/ts",
     "src/test/ts",
-    "node_modules/@ephox/**/*/api/Main.d.ts"
   ]
 }

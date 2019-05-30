@@ -1,0 +1,33 @@
+{
+  "name": "root",
+  "private": true,
+  "workspaces": ["modules/*"],
+  "scripts": {
+    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('You must use Yarn to install, not NPM')\"",
+    "tinymce-grunt": "grunt --gruntfile modules/tinymce/Gruntfile.js",
+    "tinymce-dev": "yarn -s oxide-build && yarn -s tinymce-grunt dev",
+    "tinymce-ci": "yarn oxide-ci && yarn tinymce-grunt dev",
+    "tinymce-rollup": "yarn -s tinymce-grunt dev rollup",
+    "tinymce-start": "yarn -s tinymce-grunt start",
+    "oxide-icons-build": "yarn -s --cwd modules/oxide-icons-default build",
+    "oxide-icons-ci": "yarn --cwd modules/oxide-icons-default ci",
+    "oxide-build": "yarn -s --cwd modules/oxide build",
+    "oxide-watch": "yarn -s --cwd modules/oxide start",
+    "oxide-ci": "yarn --cwd modules/oxide ci",
+    "tsc": "tsc -b",
+    "watch": "tsc -b -w",
+    "tslint": "lerna exec --stream --no-bail -- tslint --project . -c ../../tslint.json",
+    "tslint-strict": "yarn -s tslint -c ../../tslint.strict.json",
+    "tslint-ci": "yarn -s tinymce-grunt tslint",
+    "start": "run-p watch tinymce-start",
+    "dev": "yarn -s oxide-icons-build && run-p tsc tinymce-dev",
+    "ci": "yarn oxide-icons-ci && run-p tsc tinymce-ci",
+    "ci-all": "run-p tslint-ci ci",
+    "local-ci": "yarn -s ci-all && grunt phantomjs-auto browser-auto",
+    "prepublishOnly": "yarn oxide-icons-ci",
+    "browser-test": "yarn -s grunt browser-auto",
+    "browser-test-manual": "yarn -s grunt browser-manual",
+    "phantomjs-test": "yarn -s grunt phantomjs-auto",
+    "phantomjs-test-manual": "yarn -s grunt phantomjs-manual"
+  }
+}

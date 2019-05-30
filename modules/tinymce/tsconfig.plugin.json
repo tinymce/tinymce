@@ -1,8 +1,6 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "lib",
-    "baseUrl": ".",
     "paths": {
       "tinymce": ["src/core/dist/tinymce"],
       "tinymce/core/*": ["lib/globals/tinymce/core/*"],
@@ -51,12 +49,5 @@
       "tinymce/plugins/visualchars/*": ["src/plugins/visualchars/main/ts/*"],
       "tinymce/plugins/wordcount/*": ["src/plugins/wordcount/main/ts/*"]
     }
-  },
-  "include": [
-    "src/plugins/*/main/ts",
-    "src/plugins/*/src/demo/ts",
-    "src/plugins/*/src/test/ts",
-    "src/core/dist/globals/tinymce/core/",
-    "src/core/dist/globals/**/*.ts",
-  ]
+  }
 }

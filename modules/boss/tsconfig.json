@@ -1,17 +1,8 @@
 {
+  "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
-    "importHelpers": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "strict": true,
-    "moduleResolution": "node",
-    "target": "es5",
-    "module": "es2015",
-    "lib": ["es2015"],
-    "declaration": true,
-    "sourceMap": true,
     "outDir": "lib",
+    "rootDir": "src",
     "baseUrl": ".",
     "paths": {
       "ephox/boss/test/*": ["src/test/ts/module/ephox/boss/test/*"],
@@ -23,7 +14,10 @@
   "include": [
     "src/demo/ts",
     "src/main/ts",
-    "src/test/ts",
-    "node_modules/@ephox/**/*/api/Main.d.ts"
+    "src/test/ts"
+  ],
+  "references": [
+    { "path": "../katamari" },
+    { "path": "../sugar" },
   ]
 }

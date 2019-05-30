@@ -1,0 +1,17 @@
+{
+  "extends": [
+    "@ephox/tslint-rules/tslint.json"
+  ],
+  "rules": {
+    "prefer-for-of": false,
+    "no-shadowed-variable": true,
+    "forin": false,
+    "no-empty": true,
+    "no-empty-interface": true,
+    "no-conditional-assignment": true,
+    "no-bitwise": true,
+    "interface-over-type-literal": false
+  },
+  "alwaysShowStatus": true,
+  "rulesDirectory": []
+}

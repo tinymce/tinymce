@@ -1,23 +1,9 @@
 {
+  "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
-    "importHelpers": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "strictNullChecks": true,
-    "strict": true,
-    "moduleResolution": "node",
-    "target": "es5",
-    "module": "es2015",
-    "lib": ["es2015"],
-    "declaration": true,
-    "sourceMap": true,
     "outDir": "lib",
+    "rootDir": "src",
     "baseUrl": ".",
-    "types": [],
     "paths": {
       "ephox/polaris/test/*": ["src/test/ts/module/ephox/polaris/test/*"],
       "ephox/polaris/demo/*": ["src/demo/ts/ephox/polaris/demo/*"],
@@ -29,6 +15,8 @@
     "src/demo/ts",
     "src/main/ts",
     "src/test/ts",
-    "node_modules/@ephox/**/*/api/Main.d.ts"
+  ],
+  "references": [
+    { "path": "../katamari" },
   ]
 }

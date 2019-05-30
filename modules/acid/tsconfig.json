@@ -1,15 +1,8 @@
 {
+  "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
-    "moduleResolution": "node",
-    "target": "es5",
-    "module": "es2015",
-    "lib": ["es2015"],
-    "types": [],
-    "importHelpers": true,
-    "declaration": true,
-    "sourceMap": true,
-    "strict": true,
     "outDir": "lib",
+    "rootDir": "src",
     "baseUrl": ".",
     "paths": {
       "ephox/acid/test/*": ["src/test/ts/module/ephox/acid/test/*"],
@@ -20,8 +13,14 @@
   },
   "include": [
     "src/demo/ts",
+    "src/demo/i18n",
     "src/main/ts",
-    "src/test/ts",
-    "node_modules/@ephox/**/*/api/Main.d.ts"
+    "src/test/ts"
+  ],
+  "references": [
+    { "path": "../alloy" },
+    { "path": "../boulder" },
+    { "path": "../katamari" },
+    { "path": "../sugar" },
   ]
 }

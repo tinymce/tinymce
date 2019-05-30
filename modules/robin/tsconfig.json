@@ -1,12 +1,10 @@
 {
+  "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
-    "moduleResolution": "node",
-    "target": "es5",
-    "module": "es2015",
-    "lib": ["es2015"],
-    "declaration": true,
-    "sourceMap": true,
+    "noUnusedLocals": false,
+    "strict": false,
     "outDir": "lib",
+    "rootDir": "src",
     "baseUrl": ".",
     "paths": {
       "ephox/robin/test/*": ["src/test/ts/module/ephox/robin/test/*"],
@@ -19,6 +17,14 @@
     "src/demo/ts",
     "src/main/ts",
     "src/test/ts",
-    "node_modules/@ephox/**/*/api/Main.d.ts"
+  ],
+  "references": [
+    { "path": "../agar" },
+    { "path": "../boss" },
+    { "path": "../katamari" },
+    { "path": "../phoenix" },
+    { "path": "../polaris" },
+    { "path": "../sand" },
+    { "path": "../sugar" },
   ]
 }

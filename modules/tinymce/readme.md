@@ -3,28 +3,13 @@ TinyMCE - JavaScript Library for Rich Text Editing
 
 Building TinyMCE
 -----------------
-Install [Node.js](https://nodejs.org/en/) on your system.
-Clone this repository on your system
-```
-$ git clone https://github.com/tinymce/tinymce.git
-```
-Open a console and go to the project directory.
-```
-$ cd tinymce/
-```
-Install `grunt` command line tool globally.
-```
-$ npm i -g grunt-cli
-```
-Install all package dependencies.
-```
-$ npm install
-```
-Now, build TinyMCE by using `grunt`.
-```
-$ grunt
-```
+See the monorepo root readme file for installation instructions.
 
+```
+Now, build TinyMCE by using `grunt`. If you don't have `grunt-cli` installed globally, prefix with `yarn` to execute the local grunt.
+```
+$ yarn grunt
+```
 
 Build tasks
 ------------
