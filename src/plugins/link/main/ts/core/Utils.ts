@@ -10,7 +10,10 @@ import { Arr, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
+import { AssumeExternalTargets } from '../api/Types';
 import { AttachState, LinkDialogOutput } from '../ui/DialogTypes';
+
+const hasProtocol = (url: string): boolean => /^\w+:/i.test(url);
 
 const getHref = (elm: HTMLAnchorElement): string => {
   // Returns the real href value not the resolved a.href value
@@ -93,6 +96,15 @@ const getLinkAttrs = (data: LinkDialogOutput): Record<string, string> => {
   });
 };
 
+const handleExternalTargets = (href: string, assumeExternalTargets: AssumeExternalTargets): string => {
+  if ((assumeExternalTargets === AssumeExternalTargets.ALWAYS_HTTP
+        || assumeExternalTargets === AssumeExternalTargets.ALWAYS_HTTPS)
+      && !hasProtocol(href)) {
+    return assumeExternalTargets + '://' + href;
+  }
+  return href;
+};
+
 const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Option<string>, linkAttrs: Record<string, string>) => {
   // If we have text, then update the anchor elements text content
   text.each((text) => {
@@ -132,6 +144,8 @@ const link = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) 
       const newRel = applyRelTargetRules(linkAttrs.rel, linkAttrs.target === '_blank');
       linkAttrs.rel = newRel ? newRel : null;
     }
+
+    linkAttrs.href = handleExternalTargets(linkAttrs.href, Settings.assumeExternalTargets(editor.settings));
 
     if (data.href === attachState.href) {
       attachState.attach();
@@ -190,5 +204,6 @@ export default {
   isOnlyTextSelected,
   getAnchorElement,
   getAnchorText,
-  applyRelTargetRules
+  applyRelTargetRules,
+  hasProtocol
 };

@@ -4,6 +4,7 @@ Version 5.0.7 (TBD)
     Added highlighting of matched text in autocompleter items #TINY-3687
     Added the ability for autocompleters to work with matches that include spaces #TINY-3704
     Added a new imagetools_fetch_image callback to allow custom implementations for cors loading of images. #TINY-3658
+    Added `'http'` and `https` options to `link_assume_external_targets` to prepend `http://` or `https://` prefixes when URL does not contain a protocol prefix. Patch contributed by francoisfreitag. #GH-4335
     Changed annotations navigation to work the same as inline boundaries #TINY-3396
     Fixed the autocompleter not working with fragmented text #TINY-3459
     Fixed the autosave plugin no longer overwrites window.onbeforeunload #TINY-3688
