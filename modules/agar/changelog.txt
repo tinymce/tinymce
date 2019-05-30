@@ -1,0 +1,90 @@
+Version 4.13.1
+
+Date 2019-05-20
+
+* Added new FileInput to enable simulating file picking.
+
+Version 4.12.3
+
+Date 2019-04-16
+
+* Added new DragnDrop.cDragnDrop
+
+Version 4.12.0
+
+Date 2019-04-11
+
+* Added support for mock testing native drag and drop
+* Added support for mock testing cut, copy, paste
+
+Version 4.11.0
+
+Date 2019-01-03
+
+* adds ability for approx structure assertions to match on multiple nodes
+* adds new structure assertion methods: either, repeat, zeroOrOne, zeroOrMore, oneOrMore and theRest
+* changed text structure assertion to take a new optional parameter specifying if it should match on multiple text nodes
+
+Version 4.10.0
+
+Date 2018-12-18
+
+* Exposed Clicks.point on Mouse api.
+
+Version 4.9.0
+
+Date 2018-12-05
+
+* Added cExists and cNotExists to UiFinder.
+
+Version 4.8.0
+
+Date 2018-12-04
+
+* fixed Chain.fromParent so logs are retained from the child chains
+
+Version 4.7.0
+
+Date 2018-11-07
+
+* changed Guard.tryUntil and Guard.tryUntilNot to measure full elapsed time
+
+Version 4.6.0
+
+Date 2018-11-05
+
+* adds Chain.label to allow the Chain equivalent of Logger.t
+* adds Step.label as an alternative for Logger.t
+* changed Chain.log and Step.log to write an entry in the TestLogs object
+* removed Logger.suite as it was never implemented (use Log module instead)
+
+Version 4.4.0
+
+Date 2018-09-05
+
+* adds chainsAsStep to Log
+
+Version 4.3.0
+
+Date 2018-09-03
+
+* adds cClick to RealMouse
+
+Version 4.2.0
+
+Date 2018-08-30
+
+* adds Log module for QA reporting
+* adds convenience methods for StepAssertions
+
+Version 2.4.0
+
+Date: 2017-12-05
+
+* update synethetic key events to work with Firefox Quantum
+
+Version 2.0.0
+
+Date: 2016-12-12
+
+* implements basic testing infrastructure
