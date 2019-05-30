@@ -92,7 +92,7 @@ const children: Types.Dialog.BodyComponentApi[] = [
   }
 ];
 
-const getItems = (editor): Types.Dialog.BodyComponentApi[] => {
+const getItems = (editor: Editor): Types.Dialog.BodyComponentApi[] => {
 
   return getClassList(editor).fold(
     () => children,

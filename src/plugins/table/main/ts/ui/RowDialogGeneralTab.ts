@@ -65,7 +65,7 @@ const formChildren: Types.Dialog.BodyComponentApi[] = [
   },
 ];
 
-const getItems = (editor) => {
+const getItems = (editor: Editor) => {
   return getClassList(editor).fold(
     () => formChildren,
     (classes) => formChildren.concat(classes)

@@ -132,7 +132,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets) => {
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
-  editor.ui.registry.addButton('tableinsert', {
+  editor.ui.registry.addButton('tableinsertdialog', {
     tooltip: 'Insert table',
     onAction: cmd('mceInsertTable'),
     icon: 'table'

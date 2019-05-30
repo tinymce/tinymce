@@ -90,7 +90,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
   // If tablegrid false then inserttable and inserttabledialog are the same,
   // but that's preferrable to breaking things at this point.
   editor.ui.registry.addMenuItem('inserttabledialog', {
-    text: 'Table',
+    text: 'Insert Table',
     icon: 'table',
     onAction: cmd('mceInsertTable')
   });
