@@ -11,3 +11,6 @@ scratch
 lib
 tsconfig.tsbuildinfo
 modules/*/LICENSE.TXT
+
+/js
+/tmp
