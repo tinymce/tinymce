@@ -37,7 +37,7 @@
     "@ephox/dom-globals": "^1.1.2",
     "@ephox/oxide-icons-tools": "^2.0.2",
     "@ephox/swag": "^4.1.4",
-    "@ephox/tslint-rules": "^1.0.9",
+    "@ephox/tslint-rules": "^1.0.11",
     "@ephox/wrap-jsverify": "^2.0.1",
     "awesome-typescript-loader": "^5.2.0",
     "grunt": "^1.0.2",

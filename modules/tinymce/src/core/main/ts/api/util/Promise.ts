@@ -11,6 +11,8 @@
  * Promise polyfill under MIT license: https://github.com/taylorhakes/promise-polyfill
  */
 
+// tslint:disable: no-unimported-promise
+
 import { setImmediate, setTimeout } from '@ephox/dom-globals';
 
 declare const window: any;
