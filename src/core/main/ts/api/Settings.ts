@@ -119,6 +119,10 @@ const shouldUseContentCssCors = (editor: Editor): boolean => {
   return editor.getParam('content_css_cors', false, 'boolean');
 };
 
+const getInlineBoundarySelector = (editor: Editor): string => {
+  return editor.getParam('inline_boundaries_selector', 'a[href],code,.mce-annotation', 'string');
+};
+
 export default {
   getIframeAttrs,
   getDocType,
@@ -143,5 +147,6 @@ export default {
   getImageUploadBasePath,
   getImagesUploadCredentials,
   getImagesUploadHandler,
-  shouldUseContentCssCors
+  shouldUseContentCssCors,
+  getInlineBoundarySelector
 };

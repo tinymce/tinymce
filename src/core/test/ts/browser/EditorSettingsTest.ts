@@ -7,9 +7,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { Editor } from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 
-UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success, failure) {
   const detection = PlatformDetection.detect();
   const isTouch = detection.deviceType.isTouch();
 
@@ -125,9 +123,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
           Assertions.assertEq('Should be just forced and user plugins', 'a b c d', settings.plugins);
         })),
 
-        Logger.t('Getters for varous setting types', Step.sync(function () {
+        Logger.t('Getters for various setting types', Step.sync(function () {
           const settings = EditorSettings.getEditorSettings(
-            {},
+            {} as Editor,
             'id',
             'documentBaseUrl',
             {
@@ -145,24 +143,24 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
 
           const fakeEditor = {
             settings
-          };
+          } as Editor;
 
-          Assertions.assertEq('Should be none for non existing setting', true, EditorSettings.get(fakeEditor, 'non_existing').isNone());
-          Assertions.assertEq('Should be none for existing null setting', true, EditorSettings.get(fakeEditor, 'non_existing').isNone());
-          Assertions.assertEq('Should be none for existing undefined setting', true, EditorSettings.get(fakeEditor, 'undef').isNone());
-          Assertions.assertEq('Should be some for existing string setting', 'a', EditorSettings.get(fakeEditor, 'string').getOrDie());
-          Assertions.assertEq('Should be some for existing number setting', 1, EditorSettings.get(fakeEditor, 'number').getOrDie());
-          Assertions.assertEq('Should be some for existing bool setting', true, EditorSettings.get(fakeEditor, 'boolTrue').getOrDie());
-          Assertions.assertEq('Should be some for existing bool setting', false, EditorSettings.get(fakeEditor, 'boolFalse').getOrDie());
-          Assertions.assertEq('Should be none for non existing setting', true, EditorSettings.getString(fakeEditor, 'non_existing').isNone());
-          Assertions.assertEq('Should be some for existing string setting', 'a', EditorSettings.getString(fakeEditor, 'string').getOrDie());
-          Assertions.assertEq('Should be none for existing number setting', true, EditorSettings.getString(fakeEditor, 'number').isNone());
-          Assertions.assertEq('Should be none for existing bool setting', true, EditorSettings.getString(fakeEditor, 'boolTrue').isNone());
+          Assertions.assertEq('Should be undefined for non existing setting', undefined, EditorSettings.getParam(fakeEditor, 'non_existing'));
+          Assertions.assertEq('Should be undefined for existing null setting', undefined, EditorSettings.getParam(fakeEditor, 'non_existing'));
+          Assertions.assertEq('Should be undefined for existing undefined setting', undefined, EditorSettings.getParam(fakeEditor, 'undef'));
+          Assertions.assertEq('Should be some for existing string setting', 'a', EditorSettings.getParam(fakeEditor, 'string'));
+          Assertions.assertEq('Should be some for existing number setting', 1, EditorSettings.getParam(fakeEditor, 'number'));
+          Assertions.assertEq('Should be some for existing bool setting', true, EditorSettings.getParam(fakeEditor, 'boolTrue'));
+          Assertions.assertEq('Should be some for existing bool setting', false, EditorSettings.getParam(fakeEditor, 'boolFalse'));
+          Assertions.assertEq('Should be undefined for non existing setting', undefined, EditorSettings.getParam(fakeEditor, 'non_existing', undefined, 'string'));
+          Assertions.assertEq('Should be some for existing string setting', 'a', EditorSettings.getParam(fakeEditor, 'string', undefined, 'string'));
+          Assertions.assertEq('Should be undefined for existing number setting', undefined, EditorSettings.getParam(fakeEditor, 'number', undefined, 'string'));
+          Assertions.assertEq('Should be undefined for existing bool setting', undefined, EditorSettings.getParam(fakeEditor, 'boolTrue', undefined, 'string'));
         })),
 
         Logger.t('Mobile override', Step.sync(function () {
           const settings = EditorSettings.getEditorSettings(
-            {},
+            {} as Editor,
             'id',
             'documentBaseUrl',
             {
@@ -178,12 +176,11 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
 
           const fakeEditor = {
             settings
-          };
+          } as Editor;
 
-          Assertions.assertEq('Should only have the mobile setting on touch', EditorSettings.get(fakeEditor, 'settingA').getOr(false), isTouch);
-          Assertions.assertEq('Should not have a mobile setting on desktop', EditorSettings.get(fakeEditor, 'settingA').isNone(), !isTouch);
-          Assertions.assertEq('Should have the expected mobile setting value on touch', EditorSettings.get(fakeEditor, 'settingB').getOr(false), isTouch);
-          Assertions.assertEq('Should have the expected desktop setting on desktop', EditorSettings.get(fakeEditor, 'settingB').getOr(true), isTouch);
+          Assertions.assertEq('Should only have the mobile setting on touch', EditorSettings.getParam(fakeEditor, 'settingA', false), isTouch);
+          Assertions.assertEq('Should have the expected mobile setting value on touch', EditorSettings.getParam(fakeEditor, 'settingB', false), isTouch);
+          Assertions.assertEq('Should have the expected desktop setting on desktop', EditorSettings.getParam(fakeEditor, 'settingB', true), isTouch);
         }))
       ])),
 
