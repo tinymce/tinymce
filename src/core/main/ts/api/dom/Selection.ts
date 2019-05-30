@@ -11,6 +11,7 @@ import Env from '../Env';
 import BookmarkManager from './BookmarkManager';
 import CaretPosition from '../../caret/CaretPosition';
 import ControlSelection from './ControlSelection';
+import NodeType from '../../dom/NodeType';
 import ScrollIntoView from '../../dom/ScrollIntoView';
 import EditorFocus from '../../focus/EditorFocus';
 import CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
@@ -320,7 +321,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
     }
 
     try {
-      if ((selection = getSel())) {
+      if ((selection = getSel()) && !NodeType.isRestrictedNode(selection.anchorNode)) {
         if (selection.rangeCount > 0) {
           rng = selection.getRangeAt(0);
         } else {
