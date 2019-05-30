@@ -1,0 +1,27 @@
+{
+	"folders":
+	[
+		{
+			"file_exclude_patterns":
+			[
+				"config/bolt/bootstrap*.js"
+			],
+			"folder_exclude_patterns":
+			[
+				"dist",
+				"scratch",
+				"dependency"
+			],
+			"path": "."
+		}
+	],
+	"settings":
+	  {
+	    "detect_indentation": false,
+	    "tab_size": 2,
+	    "translate_tabs_to_spaces": true,
+	    "use_tab_stops": true,
+      "trim_trailing_white_space_on_save": true,
+      "word_separators": "./\\()\"'-:,.;<>~!@#$%^&*|+=[]{}`~?_"
+	  }
+}
