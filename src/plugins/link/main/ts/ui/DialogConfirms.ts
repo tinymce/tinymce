@@ -10,6 +10,8 @@ import { Future, Option, Options } from '@ephox/katamari';
 import Delay from 'tinymce/core/api/util/Delay';
 import Editor from 'tinymce/core/api/Editor';
 
+import { AssumeExternalTargets } from '../api/Types';
+import Utils from '../core/Utils';
 import { LinkDialogOutput } from './DialogTypes';
 
 // Delay confirm since onSubmit will move focus
@@ -38,11 +40,11 @@ const tryEmailTransform = (data: LinkDialogOutput): Option<Transformer> => {
   }) : Option.none();
 };
 
-const tryProtocolTransform = (assumeExternalTargets: boolean) => (data: LinkDialogOutput): Option<Transformer> => {
+const tryProtocolTransform = (assumeExternalTargets: AssumeExternalTargets) => (data: LinkDialogOutput): Option<Transformer> => {
   const url = data.href;
   const suggestProtocol = (
-    assumeExternalTargets === true && !/^\w+:/i.test(url) ||
-    assumeExternalTargets === false && /^\s*www[\.|\d\.]/i.test(url)
+    assumeExternalTargets === AssumeExternalTargets.WARN && !Utils.hasProtocol(url) ||
+    assumeExternalTargets === AssumeExternalTargets.OFF && /^\s*www[\.|\d\.]/i.test(url)
   );
 
   return suggestProtocol ? Option.some({
@@ -51,7 +53,7 @@ const tryProtocolTransform = (assumeExternalTargets: boolean) => (data: LinkDial
   }) : Option.none();
 };
 
-const preprocess = (editor: Editor, assumeExternalTargets: boolean, data: LinkDialogOutput): Future<LinkDialogOutput> => {
+const preprocess = (editor: Editor, assumeExternalTargets: AssumeExternalTargets, data: LinkDialogOutput): Future<LinkDialogOutput> => {
   return Options.findMap(
     [ tryEmailTransform, tryProtocolTransform(assumeExternalTargets) ],
     (f) => f(data)
