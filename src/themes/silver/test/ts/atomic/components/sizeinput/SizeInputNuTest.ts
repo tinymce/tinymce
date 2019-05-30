@@ -1,5 +1,5 @@
 import { UnitTest, assert } from '@ephox/bedrock';
-import { nuSize } from '../../../../../main/ts/ui/sizeinput/SizeInputModel';
+import { nuSize } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 
 UnitTest.test('SizeInputNuTest', () => {
   assert.eq({value: 4, unit: 'px'}, nuSize(4, 'px'));

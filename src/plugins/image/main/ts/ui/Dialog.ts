@@ -282,7 +282,7 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
         const blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
         uploader.upload(blobInfo).then((url: string) => {
           api.setData({ src: { value: url, meta: { } } });
-          api.showTab('General');
+          api.showTab('general');
           changeSrc(helpers, info, state, api);
           finalize();
         }).catch((err) => {

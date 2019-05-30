@@ -2,8 +2,8 @@ import { ApproxStructure, Assertions, Chain, Log, Mouse, NamedChain, Pipeline, U
 import { UnitTest } from '@ephox/bedrock';
 import { Editor } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
-import Wordcount from '../../../../../../plugins/wordcount/main/ts/Plugin';
-import Theme from '../../../../main/ts/Theme';
+import Wordcount from 'tinymce/plugins/wordcount/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
 

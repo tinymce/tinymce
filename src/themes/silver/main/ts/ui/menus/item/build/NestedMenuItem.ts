@@ -1,7 +1,7 @@
 import { AlloyComponent, Disabling, ItemTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Fun, Option } from '@ephox/katamari';
-import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
+import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import ItemResponse from '../ItemResponse';
 import { renderSubmenuCaret } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
@@ -21,6 +21,7 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
     presets: 'normal',
     iconContent: spec.icon,
     textContent: spec.text,
+    htmlContent: Option.none(),
     ariaLabel: spec.text,
     caret: Option.some(caret),
     checkMark: Option.none(),

@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { Editor, ApiChains } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
-import SilverTheme from '../../../../../themes/silver/main/ts/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import { Cell } from '@ephox/katamari';
 import TableTestUtils from '../module/test/TableTestUtils';
 

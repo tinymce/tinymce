@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import Theme from '../../../../../../themes/silver/main/ts/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import { document } from '@ephox/dom-globals';
 
 /*

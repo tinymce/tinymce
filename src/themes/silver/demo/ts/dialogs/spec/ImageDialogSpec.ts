@@ -7,6 +7,7 @@ export default {
     tabs: [
       {
         title: 'General',
+        name: 'general',
         items: [
           {
             name: 'source',
@@ -25,6 +26,7 @@ export default {
       },
       {
         title: 'Advanced',
+        name: 'advanced',
         items: [
           {
             name: 'vspace',

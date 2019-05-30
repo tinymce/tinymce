@@ -7,6 +7,7 @@ export default {
     tabs: [
       {
         title: 'General',
+        name: 'general',
         items: [
           {
             type: 'grid',
@@ -63,6 +64,7 @@ export default {
       },
       {
         title: 'Advanced',
+        name: 'advanced',
         items: [
           {
             name: 'borderstyle',

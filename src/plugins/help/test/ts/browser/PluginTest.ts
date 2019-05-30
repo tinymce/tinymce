@@ -4,7 +4,7 @@ import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
-import Theme from '../../../../../themes/silver/main/ts/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
 import PluginAssert from '../module/PluginAssert';
 import Selectors from '../module/Selectors';

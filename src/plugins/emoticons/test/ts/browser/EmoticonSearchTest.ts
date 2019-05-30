@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, fai
           cFakeEvent('input')
         ]),
         Waiter.sTryUntil(
-          'Wait until Euro is the first choice (search should filter)',
+          'Wait until rainbow is the first choice (search should filter)',
           Chain.asStep(Body.body(), [
             UiFinder.cFindIn('.tox-collection__item:first'),
             Chain.mapper((item) => {

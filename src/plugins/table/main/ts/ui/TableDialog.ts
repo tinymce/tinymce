@@ -193,6 +193,7 @@ const open = (editor: Editor, insertNewTable: boolean) => {
       tabs: [
         {
           title: 'General',
+          name: 'general',
           items: [ generalPanel ]
         },
         Helpers.getAdvancedTab()

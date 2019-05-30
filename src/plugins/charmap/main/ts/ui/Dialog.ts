@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Types } from '@ephox/bridge';
 import { Arr, Cell, Throttler } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Actions from '../core/Actions';
+import { CharMap, UserDefined } from '../core/CharMap';
 import Scan from '../core/Scan';
-import { UserDefined, CharMap } from '../core/CharMap';
-import { Types } from '@ephox/bridge';
 
 const patternName = 'pattern';
 
@@ -33,16 +33,17 @@ const open = function (editor: Editor, charMap: CharMap[]) {
     return Arr.map(charMap, (charGroup) => {
       return {
         title: charGroup.name,
+        name: charGroup.name,
         items: makeGroupItems()
       };
     });
   };
 
-  const currentTab = charMap.length === 1 ? Cell(UserDefined) : Cell('All');
-
   const makePanel = (): Types.Dialog.PanelApi => ({ type: 'panel', items: makeGroupItems() });
 
   const makeTabPanel = (): Types.Dialog.TabPanelApi => ({ type: 'tabpanel', tabs: makeTabs() });
+
+  const currentTab = charMap.length === 1 ? Cell(UserDefined) : Cell('All');
 
   const scanAndSet = (dialogApi: Types.Dialog.DialogInstanceApi<typeof initialData>, pattern: string) => {
     Arr.find(charMap, (group) => group.name === currentTab.get()).each((f) => {
@@ -87,8 +88,8 @@ const open = function (editor: Editor, charMap: CharMap[]) {
       }
     },
 
-    onTabChange: (dialogApi, title: string) => {
-      currentTab.set(title);
+    onTabChange: (dialogApi, details) => {
+      currentTab.set(details.newTabName);
       updateFilter.throttle(dialogApi);
     },
 

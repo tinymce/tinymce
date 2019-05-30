@@ -11,28 +11,6 @@ import { window, document } from '@ephox/dom-globals';
 
 const DOM = DOMUtils.DOM;
 
-const getWindowSize = function () {
-  let w;
-  let h;
-  const win = window;
-  const doc = document;
-  const body = doc.body;
-
-  // Old IE
-  if (body.offsetWidth) {
-    w = body.offsetWidth;
-    h = body.offsetHeight;
-  }
-
-  // Modern browsers
-  if (win.innerWidth && win.innerHeight) {
-    w = win.innerWidth;
-    h = win.innerHeight;
-  }
-
-  return { w, h };
-};
-
 const getScrollPos = function () {
   const vp = DOM.getViewPort();
 
@@ -53,14 +31,6 @@ const toggleFullscreen = function (editor, fullscreenState) {
   let editorContainer, iframe, iframeStyle;
   const fullscreenInfo = fullscreenState.get();
 
-  const resize = function () {
-    DOM.setStyle(iframe, 'height', getWindowSize().h - (editorContainer.clientHeight - iframe.clientHeight));
-  };
-
-  const removeResize = function () {
-    DOM.unbind(window, 'resize', resize);
-  };
-
   editorContainer = editor.getContainer();
   editorContainerStyle = editorContainer.style;
   iframe = editor.getContentAreaContainer().firstChild;
@@ -72,9 +42,7 @@ const toggleFullscreen = function (editor, fullscreenState) {
       containerWidth: editorContainerStyle.width,
       containerHeight: editorContainerStyle.height,
       iframeWidth: iframeStyle.width,
-      iframeHeight: iframeStyle.height,
-      resizeHandler: resize,
-      removeHandler: removeResize
+      iframeHeight: iframeStyle.height
     };
 
     iframeStyle.width = iframeStyle.height = '100%';
@@ -83,11 +51,6 @@ const toggleFullscreen = function (editor, fullscreenState) {
     DOM.addClass(body, 'tox-fullscreen');
     DOM.addClass(documentElement, 'tox-fullscreen');
     DOM.addClass(editorContainer, 'tox-fullscreen');
-
-    DOM.bind(window, 'resize', resize);
-    editor.on('remove', removeResize);
-
-    resize();
 
     fullscreenState.set(newFullScreenInfo);
     Events.fireFullscreenStateChanged(editor, true);
@@ -107,9 +70,6 @@ const toggleFullscreen = function (editor, fullscreenState) {
     DOM.removeClass(documentElement, 'tox-fullscreen');
     DOM.removeClass(editorContainer, 'tox-fullscreen');
     setScrollPos(fullscreenInfo.scrollPos);
-
-    DOM.unbind(window, 'resize', fullscreenInfo.resizeHandler);
-    editor.off('remove', fullscreenInfo.removeHandler);
 
     fullscreenState.set(null);
     Events.fireFullscreenStateChanged(editor, false);

@@ -1,5 +1,5 @@
 import { UnitTest, assert } from '@ephox/bedrock';
-import { SizeConversion, Size, noSizeConversion, SizeUnit, ratioSizeConversion, nuSize, makeRatioConverter } from '../../../../../main/ts/ui/sizeinput/SizeInputModel';
+import { SizeConversion, Size, noSizeConversion, SizeUnit, ratioSizeConversion, nuSize, makeRatioConverter } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 import { Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 import { largeSensible, units } from './SizeInputShared';

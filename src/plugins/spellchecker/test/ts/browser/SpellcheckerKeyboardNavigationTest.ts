@@ -7,7 +7,7 @@ import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { document } from '@ephox/dom-globals';
 import { Element } from '@ephox/sugar';
-import Tools from '../../../../../core/main/ts/api/util/Tools';
+import Tools from 'tinymce/core/api/util/Tools';
 
 UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', function () {
   const success = arguments[arguments.length - 2];

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { UiFactoryBackstage } from '../../../backstage/Backstage';
+import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { TieredData, TieredMenu } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Id, Merger, Obj, Option } from '@ephox/katamari';

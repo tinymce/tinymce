@@ -27,6 +27,14 @@ const renderText = (text: string): AlloySpec => ({
   components: [ GuiFactory.text(I18n.translate(text)) ]
 });
 
+const renderHtml = (html: string): AlloySpec => ({
+  dom: {
+    tag: 'div',
+    classes: [ ItemClasses.textClass ],
+    innerHtml: html
+  }
+});
+
 interface StyleProps {
   tag: string;
   styleAttr: string;
@@ -75,6 +83,7 @@ const renderSubmenuCaret = (icons: IconProvider): AlloySpec => ({
 export {
   renderIcon,
   renderText,
+  renderHtml,
   renderStyledText,
   renderShortcut,
   renderCheckmark,

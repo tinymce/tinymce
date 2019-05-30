@@ -2,9 +2,9 @@ import { Logger, Pipeline, RawAssertions, Step, Log } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
 import 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
-import ColorSwatch from '../../../../../main/ts/ui/core/color/ColorSwatch';
-import Settings from '../../../../../main/ts/ui/core/color/Settings';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
+import ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
+import Settings from 'tinymce/themes/silver/ui/core/color/Settings';
 
 UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
 
