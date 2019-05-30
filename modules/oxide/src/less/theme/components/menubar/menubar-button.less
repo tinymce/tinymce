@@ -1,0 +1,113 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Menubar buttons
+//
+
+@menubar-select-background-color: @toolbar-button-background-color;
+@menubar-select-border-radius: @toolbar-button-border-radius;
+@menubar-select-border: @toolbar-button-border;
+@menubar-select-box-shadow: @toolbar-button-box-shadow;
+@menubar-select-enable-chevron: false;
+@menubar-select-font-size: @toolbar-button-font-size;
+@menubar-select-font-style: @toolbar-button-font-style;
+@menubar-select-font-weight: @toolbar-button-font-weight;
+@menubar-select-height: @toolbar-button-height;
+@menubar-select-spacing-x: @toolbar-button-spacing-x;
+@menubar-select-spacing-y: @toolbar-button-spacing-y;
+@menubar-select-text-color: @toolbar-button-text-color;
+@menubar-select-text-transform: @toolbar-button-text-transform;
+
+@menubar-select-disabled-background-color: @toolbar-button-background-color;
+@menubar-select-disabled-border-color: @toolbar-button-background-color;
+@menubar-select-disabled-box-shadow: @toolbar-button-box-shadow;
+@menubar-select-disabled-text-color: fade(@toolbar-button-text-color, 50%);
+
+@menubar-select-hover-background-color: @toolbar-button-hover-background-color;
+@menubar-select-hover-box-shadow: @toolbar-button-hover-box-shadow;
+@menubar-select-hover-text-color: @toolbar-button-hover-text-color;
+
+@menubar-select-focus-background-color: @menubar-select-hover-background-color;
+@menubar-select-focus-box-shadow: @menubar-select-hover-box-shadow;
+@menubar-select-focus-text-color: @menubar-select-hover-text-color;
+
+@menubar-select-active-background-color: @toolbar-button-active-background-color;
+@menubar-select-active-box-shadow: @toolbar-button-active-box-shadow;
+@menubar-select-active-text-color: @toolbar-button-active-text-color;
+
+.tox {
+  .tox-mbtn {
+    align-items: center;
+    background: @menubar-select-background-color;
+    border: @menubar-select-border;
+    border-radius: @menubar-select-border-radius;
+    box-shadow: @menubar-select-box-shadow;
+    color: @menubar-select-text-color;
+    display: flex;
+    flex: 0 0 auto;
+    font-size: @menubar-select-font-size;
+    font-style: @menubar-select-font-style;
+    font-weight: @menubar-select-font-weight;
+    height: @menubar-select-height;
+    justify-content: center;
+    margin: @menubar-select-spacing-y @menubar-select-spacing-x (@menubar-select-spacing-y + 1px) 0;
+    outline: none;
+    overflow: hidden;
+    padding: 0 4px;
+    text-transform: @menubar-select-text-transform;
+    width: auto;
+  }
+
+  .tox-mbtn[disabled] {
+    background-color: @menubar-select-disabled-background-color;
+    border-color: @menubar-select-disabled-border-color;
+    box-shadow: @menubar-select-disabled-box-shadow;
+    color: @menubar-select-disabled-text-color;
+    cursor: not-allowed;
+  }
+
+  .tox-mbtn:hover:not(:disabled) {
+    background: @menubar-select-hover-background-color;
+    box-shadow: @menubar-select-hover-box-shadow;
+    color: @menubar-select-hover-text-color;
+  }
+
+  .tox-mbtn:focus:not(:disabled) {
+    background: @menubar-select-focus-background-color;
+    box-shadow: @menubar-select-focus-box-shadow;
+    color: @menubar-select-text-color;
+  }
+
+  // Active state applied using class
+  .tox-mbtn--active {
+    background: @menubar-select-active-background-color;
+    box-shadow: @menubar-select-active-box-shadow;
+    color: @menubar-select-active-text-color;
+  }
+
+  .tox-mbtn__select-label {
+    cursor: default;
+    font-weight: @menubar-select-font-weight;
+    margin: 0 4px;
+  }
+
+  .tox-mbtn[disabled] .tox-mbtn__select-label {
+    cursor: not-allowed;
+  }
+
+  .tox-mbtn__select-chevron {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 16px;
+
+    & when (@menubar-select-enable-chevron = false) {
+      display: none;
+    }
+  }
+}

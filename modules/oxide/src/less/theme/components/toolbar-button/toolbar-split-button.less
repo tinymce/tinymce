@@ -1,0 +1,60 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Toolbar split button
+//
+
+.tox {
+  .tox-split-button {
+    border: 0;
+    border-radius: @toolbar-button-border-radius;
+    box-sizing: border-box;
+    display: flex;
+    margin: @toolbar-button-spacing-y @toolbar-button-spacing-x (@toolbar-button-spacing-y + 1px) 0;
+    overflow: hidden;
+  }
+
+  .tox-split-button:hover {
+    box-shadow: 0 0 0 1px @toolbar-button-hover-background-color inset;
+  }
+
+  .tox-split-button:focus {
+    background: @toolbar-button-focus-background-color;
+    box-shadow: @toolbar-button-focus-box-shadow;
+    color: @toolbar-button-focus-text-color;
+  }
+
+  .tox-split-button > * {
+    border-radius: 0;
+  }
+
+  .tox-split-button__chevron {
+    width: @toolbar-button-chevron-width;
+  }
+
+  .tox-split-button__chevron svg {
+    fill: @toolbar-button-chevron-color;
+  }
+
+  .tox-pop .tox-split-button__chevron svg {
+    transform: rotate(-90deg);
+  }
+
+  .tox-split-button .tox-tbtn {
+    margin: 0;
+  }
+
+  .tox-split-button.tox-tbtn--disabled:hover,
+  .tox-split-button.tox-tbtn--disabled:focus,
+  .tox-split-button.tox-tbtn--disabled .tox-tbtn:hover,
+  .tox-split-button.tox-tbtn--disabled .tox-tbtn:focus {
+    background: @toolbar-button-disabled-background-color;
+    box-shadow: @toolbar-button-disabled-box-shadow;
+    color: @toolbar-button-disabled-text-color;
+  }
+}

@@ -1,0 +1,61 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Global styling
+//
+
+@tinymce-border-color: @border-color;
+@tinymce-border-radius: 0;
+@tinymce-border-width: 1px;
+@tinymce-box-shadow: none;
+
+.tox-tinymce {
+  border: @tinymce-border-width solid @tinymce-border-color;
+  border-radius: @tinymce-border-radius;
+  box-shadow: @tinymce-box-shadow;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  font-family: @font-stack;
+  overflow: hidden;
+  position: relative;
+  visibility: inherit !important;
+}
+
+// styles for making statusbar appear above toolbars when making the editor height very small
+.tox-editor-container {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow: hidden;
+
+  > *:first-child {
+    // !important required because we don't know
+    // if menubar, toolbar or edit area comes first
+    border-top: none !important;
+  }
+}
+
+.tox-tinymce-aux {
+  font-family: @font-stack;
+}
+
+// Reset focus states
+.tox-tinymce *:focus,
+.tox-tinymce-aux *:focus {
+  outline: none;
+}
+
+// Reset firefox focus states
+button::-moz-focus-inner {
+  border: 0;
+}
+
+.tox-silver-sink {
+  z-index: @z-index-sink;
+}

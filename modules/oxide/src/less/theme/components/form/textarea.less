@@ -1,0 +1,25 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Textarea
+//
+
+.tox {
+  .tox-textarea {
+    &:extend(.tox .tox-textfield);
+    // restore appearance for scrollbars
+    appearance: textarea;
+
+    // This is required to allow white-spaces and new lines within textareas in Firefox
+    white-space: pre-wrap;
+  }
+
+  .tox-textarea:focus {
+    &:extend(.tox .tox-textfield:focus);
+  }
+}

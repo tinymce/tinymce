@@ -1,0 +1,55 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Spinner
+//
+
+@spinner-color: @text-color-muted;
+@spinner-size: @base-value / 2;
+
+.tox {
+  .tox-spinner {
+    display: flex;
+
+    > div {
+      animation: tam-bouncing-dots 1.5s ease-in-out 0s infinite both;
+      background-color: @spinner-color;
+      border-radius: 100%;
+      height: @spinner-size;
+      width: @spinner-size;
+
+      &:nth-child(1) { animation-delay: -.32s; }
+      &:nth-child(2) { animation-delay: -.16s; }
+    }
+  }
+
+  @keyframes tam-bouncing-dots {
+    0%,
+    80%,
+    100% {
+      transform: scale(0);
+    }
+
+    40% {
+      transform: scale(1);
+    }
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-spinner > div:not(:first-child) {
+    margin-left: @spinner-size / 2;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-spinner > div:not(:first-child) {
+    margin-right: @spinner-size / 2;
+  }
+}

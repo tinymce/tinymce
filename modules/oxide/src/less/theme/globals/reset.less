@@ -1,0 +1,71 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Resets
+//
+
+.tox {
+  box-sizing: content-box;
+  color: @color-black;
+  cursor: auto;
+  font-family: @font-stack;
+  font-size: @font-size-base;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  -webkit-tap-highlight-color: transparent;
+  text-decoration: none;
+  text-shadow: none;
+  text-transform: none;
+  vertical-align: initial;
+  white-space: normal;
+
+  *:not(svg) {
+    // inherit everything in the tox selector, so components have a chance to override it
+    box-sizing: inherit;
+    color: inherit;
+    cursor: inherit;
+    direction: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    -webkit-tap-highlight-color: inherit;
+    text-align: inherit;
+    text-decoration: inherit;
+    text-shadow: inherit;
+    text-transform: inherit;
+    vertical-align: inherit;
+    white-space: inherit;
+  }
+
+  *:not(svg) { /* stylelint-disable-line no-duplicate-selectors */
+    // remaining specific reset styles for properties that shouldn't be inherited
+    background: transparent;
+    border: 0;
+    float: none;
+    height: auto;
+    margin: 0;
+    max-width: none;
+    outline: 0;
+    padding: 0;
+    position: static;
+    width: auto;
+  }
+}
+
+.tox:not([dir=rtl]) {
+  direction: ltr;
+  text-align: left;
+}
+
+.tox[dir=rtl] {
+  direction: rtl;
+  text-align: right;
+}

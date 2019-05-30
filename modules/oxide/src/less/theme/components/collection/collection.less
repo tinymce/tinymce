@@ -1,0 +1,279 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Collection
+// A list of items that can be arranged as vertical list, horizontal toolbar or a grid.
+//
+
+@collection-item-padding: @pad-xs @pad-sm;
+@collection-item-separator-color: contrast(@background-color, @border-color, lighten(@border-color, 10%));
+@collection-item-separator-margin-y: @pad-xs;
+
+@collection-item-label-font-size: @font-size-sm;
+@collection-item-label-font-style: normal;
+@collection-item-label-font-weight: @font-weight-normal;
+@collection-item-label-text-color: @text-color;
+@collection-item-label-text-transform: none;
+
+@collection-item-label-disabled-text-color: fade(@collection-item-label-text-color, 50%);
+
+@collection-list-item-active-background-color: @toolbar-button-hover-background-color;
+@collection-list-item-label-active-text-color: contrast(@collection-list-item-active-background-color, @color-black, @color-white);
+@collection-list-item-enabled-background-color: inherit;
+@collection-list-item-label-enabled-text-color: contrast(@collection-list-item-enabled-background-color, @color-black, @color-white);
+
+@collection-toolbar-item-active-background-color: @toolbar-button-hover-background-color;
+@collection-toolbar-item-label-active-text-color: contrast(@collection-toolbar-item-active-background-color, @color-black, @color-white);
+@collection-toolbar-item-enabled-background-color: @toolbar-button-enabled-background-color;
+@collection-toolbar-item-label-enabled-text-color: contrast(@collection-toolbar-item-enabled-background-color, @color-black, @color-white);
+
+@collection-grid-item-active-background-color: @toolbar-button-hover-background-color;
+@collection-grid-item-label-active-text-color: contrast(@collection-grid-item-active-background-color, @color-black, @color-white);
+@collection-grid-item-enabled-background-color: @toolbar-button-enabled-background-color;
+@collection-grid-item-label-enabled-text-color: contrast(@collection-grid-item-enabled-background-color, @color-black, @color-white);
+
+@collection-item-list-icon-height: 24px;
+@collection-item-list-icon-width: 24px;
+
+@collection-group-label-background-color: lighten(@collection-item-separator-color, 10%);
+@collection-group-label-font-size: @font-size-xs;
+@collection-group-label-font-style: normal;
+@collection-group-label-font-weight: @font-weight-normal;
+@collection-group-label-text-color:contrast(@collection-group-label-background-color, @text-color-muted, @color-white);
+@collection-group-label-text-transform: none;
+
+.tox {
+  .tox-collection {
+    //
+  }
+
+  .tox-collection--list {
+    //
+  }
+
+  .tox-collection--toolbar {
+    //
+  }
+
+  .tox-collection--grid {
+    //
+  }
+
+  .tox-collection--toolbar .tox-collection__group {
+    display: flex;
+    padding: 0;
+  }
+
+  .tox-collection--grid .tox-collection__group {
+    display: flex;
+    flex-wrap: wrap;
+    max-height: (32px * 6) + (32px / 2);
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 0;
+  }
+
+  .tox-collection--list .tox-collection__group {
+    border-bottom-width: 0;
+    border-color: @collection-item-separator-color;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-style: solid;
+    border-top-width: 1px;
+    padding: @collection-item-separator-margin-y 0;
+
+    &:first-child {
+      border-top-width: 0;
+    }
+  }
+
+  // Group headings should only be used on collection lists.
+  .tox-collection__group-heading {
+    background-color: @collection-group-label-background-color;
+    color: @collection-group-label-text-color;
+    cursor: default;
+    font-size: @collection-group-label-font-size;
+    font-style: @collection-group-label-font-style;
+    font-weight: @collection-group-label-font-weight;
+    margin-bottom: @collection-item-separator-margin-y;
+    margin-top: -@collection-item-separator-margin-y;
+    padding: @collection-item-padding;
+    text-transform: @collection-group-label-text-transform;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
+  .tox-collection__item {
+    align-items: center;
+    color: @collection-item-label-text-color;
+    cursor: pointer;
+    display: flex;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
+  .tox-collection--list .tox-collection__item {
+    padding: @collection-item-padding;
+  }
+
+  .tox-collection--toolbar .tox-collection__item {
+    border-radius: @toolbar-button-border-radius;
+    padding: @pad-xs;
+  }
+
+  .tox-collection--grid .tox-collection__item {
+    border-radius: @toolbar-button-border-radius;
+    padding: @pad-xs;
+  }
+
+  // Note: Ensure "enabled" is before "active", as active styles should have a higher precedence
+  .tox-collection--list .tox-collection__item--enabled {
+    background-color: @collection-list-item-enabled-background-color;
+    color: @collection-list-item-label-enabled-text-color;
+  }
+
+  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+    background-color: @collection-list-item-active-background-color;
+    color: @collection-list-item-label-active-text-color;
+  }
+
+  .tox-collection--toolbar .tox-collection__item--enabled {
+    background-color: @collection-toolbar-item-enabled-background-color;
+    color: @collection-toolbar-item-label-enabled-text-color;
+  }
+
+  .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+    background-color: @collection-toolbar-item-active-background-color;
+    color: @collection-toolbar-item-label-active-text-color;
+  }
+
+  .tox-collection--grid .tox-collection__item--enabled {
+    background-color: @collection-grid-item-enabled-background-color;
+    color: @collection-grid-item-label-enabled-text-color;
+  }
+
+  .tox-collection--grid .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+    background-color: @collection-grid-item-active-background-color;
+    color: @collection-grid-item-label-active-text-color;
+  }
+
+  // Disabled item
+  .tox-collection__item--state-disabled {
+    background-color: transparent;
+    color: @collection-item-label-disabled-text-color;
+    cursor: default;
+  }
+
+  .tox-collection__item-icon {
+    align-items: center;
+    display: flex;
+    height: @collection-item-list-icon-height;
+    justify-content: center;
+    width: @collection-item-list-icon-width;
+
+    svg {
+      fill: currentColor;
+    }
+  }
+
+  .tox-collection--toolbar-lg .tox-collection__item-icon {
+    height: @collection-item-list-icon-height * 2;
+    width: @collection-item-list-icon-width * 2;
+  }
+
+  // Tickable items that are not ticked hide the check mark SVG (not the entire icon so there is still a gap)
+  .tox-collection__item[role="menuitemcheckbox"]:not(.tox-collection__item--enabled) .tox-collection__item-checkmark svg {
+    display: none;
+  }
+
+  .tox-collection__item-label {
+    color: currentColor;
+    display: inline-block;
+    flex: 1;
+    -ms-flex-preferred-size: auto;
+    font-size: @collection-item-label-font-size;
+    font-style: @collection-item-label-font-style;
+    font-weight: @collection-item-label-font-weight;
+    line-height: @collection-item-list-icon-height;
+    text-transform: @collection-item-label-text-transform;
+    word-break: break-all;
+  }
+
+  .tox-collection__item-accessory {
+    color: @text-color-muted;
+    display: inline-block;
+    font-size: @font-size-sm;
+    height: @collection-item-list-icon-height;
+    line-height: @collection-item-list-icon-height;
+    text-transform: normal;
+  }
+
+  .tox-collection__item-caret {
+    align-items: center;
+    display: flex;
+    min-height: @collection-item-list-icon-height;
+
+    // Workaround for the above not centering items in IE11. See https://github.com/philipwalton/flexbugs/issues/231#issuecomment-362790042
+    &::after {
+      content: '';
+      font-size: 0;
+      min-height: inherit;
+    }
+  }
+}
+
+.tox:not([dir=rtl]) {
+  // Make a space between all elements within a list item
+  .tox-collection--list .tox-collection__item > *:not(:first-child) {
+    margin-left: @pad-sm;
+  }
+
+  // Create a slight padding for lists containing no icons
+  .tox-collection--list .tox-collection__item-label:first-child {
+    margin-left: @pad-xs;
+  }
+
+  .tox-collection__item-accessory {
+    margin-left: @pad-md;
+    text-align: right;
+  }
+
+  .tox-collection__item-caret {
+    margin-left: @pad-md;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  // Make a space between all elements within a list item
+  .tox-collection--list .tox-collection__item > *:not(:first-child) {
+    margin-right: @pad-sm;
+  }
+
+  // Create a slight padding for lists containing no icons
+  .tox-collection--list .tox-collection__item-label:first-child {
+    margin-right: @pad-xs;
+  }
+
+  .tox-collection__item-icon-rtl {
+    /* stylelint-disable-next-line no-descending-specificity */
+    .tox-collection__item-icon svg {
+      transform: rotateY(180deg);
+    }
+  }
+
+  .tox-collection__item-accessory {
+    margin-right: @pad-md;
+    text-align: left;
+  }
+
+  .tox-collection__item-caret {
+    margin-right: @pad-md;
+    transform: rotateY(180deg);
+  }
+}

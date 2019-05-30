@@ -1,0 +1,97 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Selection
+//
+
+@document-selection-color: #b4d7ff;
+@object-block-selected-color: #b4d7ff;
+@object-block-selected-outline-width: 3px;
+
+.mce-content-body {
+  // Selection outline on certain editable objects
+  img[data-mce-selected],
+  table[data-mce-selected] {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  hr[data-mce-selected] {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+    outline-offset: 1px;
+  }
+
+  // Selection outline on non editable elements
+  *[contentEditable=false] *[contentEditable=true]:focus {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  *[contentEditable=false] *[contentEditable=true]:hover {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  *[contentEditable=false][data-mce-selected] {
+    cursor: not-allowed;
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  &.mce-content-readonly {
+    *[contentEditable=true]:focus,
+    *[contentEditable=true]:hover {
+      outline: none;
+    }
+  }
+
+  // Styles for certain selected inline elements objects, like links.
+  *[data-mce-selected="inline-boundary"] {
+    background-color: @object-block-selected-color;
+  }
+
+  // Styles for a selected inline editable block
+  .mce-edit-focus {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  // Selection of whole table cells
+  td[data-mce-selected],
+  th[data-mce-selected] {
+    background-color: @document-selection-color !important;
+
+    &::selection {
+      //Prevent selection to be visible
+      background: none;
+    }
+
+    * {
+      //Prevent selection to be visible
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+  }
+
+  img::selection {
+    background: none;
+  }
+}
+
+// Table border resizing handles
+.ephox-snooker-resizer-bar {
+  background-color: @object-block-selected-color;
+  opacity: 0;
+}
+
+.ephox-snooker-resizer-cols {
+  cursor: col-resize;
+}
+
+.ephox-snooker-resizer-rows {
+  cursor: row-resize;
+}
+
+.ephox-snooker-resizer-bar.ephox-snooker-resizer-bar-dragging {
+  opacity: 1;
+}

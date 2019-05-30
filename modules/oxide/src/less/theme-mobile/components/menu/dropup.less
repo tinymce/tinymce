@@ -1,0 +1,48 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+/* dropup */
+
+.tinymce-mobile-dropup {
+  background: @dropup-background-color;
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+
+  &.tinymce-mobile-dropup-shrinking {
+    transition: height .3s ease-out;
+  }
+
+  &.tinymce-mobile-dropup-growing {
+    transition: height .3s ease-in;
+  }
+
+  &.tinymce-mobile-dropup-closed {
+    flex-grow: 0;
+  }
+
+  &.tinymce-mobile-dropup-open:not(.tinymce-mobile-dropup-growing) {
+    flex-grow: 1;
+  }
+}
+
+/* TODO min-height for device size and orientation */
+.tinymce-mobile-ios-container .tinymce-mobile-dropup:not(.tinymce-mobile-dropup-closed) {
+  min-height: 200px;
+}
+
+@media @landscape {
+  .tinymce-mobile-dropup:not(.tinymce-mobile-dropup-closed) {
+    min-height: 200px;
+  }
+}
+
+@media @iphone-small-landscape {
+  .tinymce-mobile-ios-container .tinymce-mobile-dropup:not(.tinymce-mobile-dropup-closed) {
+    min-height: 150px;
+  }
+}

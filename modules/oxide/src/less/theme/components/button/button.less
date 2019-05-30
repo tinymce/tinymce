@@ -1,0 +1,118 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Button
+//
+
+@button-background-color: @color-tint;
+@button-background-image: none;
+@button-background-position: none;
+@button-background-repeat: none;
+@button-border-color: @button-background-color;
+@button-border-radius: @control-border-radius;
+@button-border-style: solid;
+@button-border-width: 1px;
+@button-box-shadow: none;
+@button-font-family: @font-stack;
+@button-font-size: @font-size-sm;
+@button-font-weight: @font-weight-bold;
+@button-letter-spacing: 1;
+@button-line-height: @textfield-line-height;
+@button-padding-x: @pad-md;
+@button-padding-y: @pad-xs;
+@button-text-align: center;
+@button-text-color: contrast(@button-background-color, @color-black, @color-white);
+@button-text-decoration: none;
+@button-text-transform: capitalize;
+
+@button-disabled-background-color: @button-background-color;
+@button-disabled-background-image: @button-background-image;
+@button-disabled-border-color: @button-background-color;
+@button-disabled-box-shadow: @button-box-shadow;
+@button-disabled-text-color: fade(@button-text-color, 50%);
+
+@button-focus-background-color: @button-hover-background-color;
+@button-focus-background-image: @button-hover-background-image;
+@button-focus-border-color: @button-hover-border-color;
+@button-focus-box-shadow: @button-hover-box-shadow;
+@button-focus-text-color: @button-hover-text-color;
+
+@button-hover-background-color: darken(@button-background-color, 5%);
+@button-hover-background-image: @button-background-image;
+@button-hover-border-color: @button-hover-background-color;
+@button-hover-box-shadow: @button-box-shadow;
+@button-hover-text-color: @button-text-color;
+
+@button-active-background-color: darken(@button-background-color, 10%);
+@button-active-background-image: @button-background-image;
+@button-active-border-color: @button-active-background-color;
+@button-active-box-shadow: @button-box-shadow;
+@button-active-text-color: @button-text-color;
+
+.tox {
+  .tox-button {
+    background-color: @button-background-color;
+    background-image: @button-background-image;
+    background-position: @button-background-position;
+    background-repeat: @button-background-repeat;
+    border-color: @button-border-color;
+    border-radius: @button-border-radius;
+    border-style: @button-border-style;
+    border-width: @button-border-width;
+    box-shadow: @button-box-shadow;
+    box-sizing: border-box;
+    color: @button-text-color;
+    cursor: pointer;
+    display: inline-block;
+    font-family: @button-font-family;
+    font-size: @button-font-size;
+    font-weight: @button-font-weight;
+    letter-spacing: @button-letter-spacing;
+    line-height: @button-line-height;
+    margin: 0;
+    outline: none;
+    padding: @button-padding-y @button-padding-x;
+    text-align: @button-text-align;
+    text-decoration: @button-text-decoration;
+    text-transform: @button-text-transform;
+    white-space: nowrap;
+
+    &[disabled] {
+      background-color: @button-disabled-background-color;
+      background-image: @button-disabled-background-image;
+      border-color: @button-disabled-border-color;
+      box-shadow: @button-disabled-box-shadow;
+      color: @button-disabled-text-color;
+      cursor: not-allowed;
+    }
+
+    &:focus:not(:disabled) {
+      background-color: @button-focus-background-color;
+      background-image: @button-focus-background-image;
+      border-color: @button-focus-border-color;
+      box-shadow: @button-focus-box-shadow;
+      color: @button-focus-text-color;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: @button-hover-background-color;
+      background-image: @button-hover-background-image;
+      border-color: @button-hover-border-color;
+      box-shadow: @button-hover-box-shadow;
+      color: @button-hover-text-color;
+    }
+
+    &:active:not(:disabled) {
+      background-color: @button-active-background-color;
+      background-image: @button-active-background-image;
+      border-color: @button-active-border-color;
+      box-shadow: @button-active-box-shadow;
+      color: @button-active-text-color;
+    }
+  }
+}

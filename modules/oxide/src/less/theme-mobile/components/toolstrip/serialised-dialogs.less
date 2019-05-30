@@ -1,0 +1,89 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+.tinymce-mobile-serialised-dialog {
+  display: flex;
+  min-height: 1.5em;
+  overflow: hidden;
+  padding-left: 0;
+  padding-right: 0;
+  position: relative;
+  width: 100%;
+
+  .tinymce-mobile-serialised-dialog-chain {
+    display: flex;
+    height: 100%;
+    transition: left cubic-bezier(.4, 0, 1, 1) @quick-animation-time;
+    width: 100%;
+
+    .tinymce-mobile-serialised-dialog-screen {
+      display: flex;
+      flex: 0 0 auto;
+      justify-content: space-between;
+      width: 100%;
+
+      input {
+        font-family: @toolstrip-input-font-family;
+      }
+
+      .tinymce-mobile-input-container {
+        display: flex;
+        flex-grow: 1;
+        position: relative;
+
+        .tinymce-mobile-input-container-x {
+          align-self: center;
+          background: inherit;
+          border: none;
+          border-radius: 50%;
+          color: @toolstrip-input-icons-color;
+          font-size: .6em;
+          font-weight: bold;
+          height: 100%;
+          padding-right: 2px;
+          position: absolute;
+          right: 0;
+        }
+
+        &.tinymce-mobile-input-container-empty .tinymce-mobile-input-container-x {
+          display: none;
+        }
+      }
+
+      .tinymce-mobile-icon-previous,
+      .tinymce-mobile-icon-next {
+        align-items: center;
+        display: flex;
+
+        &::before {
+          align-items: center;
+          display: flex;
+          font-weight: bold;
+          height: 100%;
+          padding-left: .5em;
+          padding-right: .5em;
+        }
+
+        &.tinymce-mobile-toolbar-navigation-disabled::before {
+          visibility: hidden;
+        }
+      }
+    }
+  }
+}
+
+.tinymce-mobile-dot-item {
+  color: @toolstrip-button-selected-color;
+  font-size: 10px;
+  line-height: 10px;
+  margin: 0 2px;
+  padding-top: 3px;
+
+  &.tinymce-mobile-dot-active {
+    color: @toolstrip-button-selected-background-color;
+  }
+}

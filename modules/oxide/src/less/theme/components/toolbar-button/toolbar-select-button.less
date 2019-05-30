@@ -1,0 +1,47 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Toolbar select button
+// When making changes here, please review menubar/menubar.less and menubar/menubar-button.less
+//
+
+@toolbar-button-bespoke-label-max-width: 7em;
+
+.tox {
+  .tox-tbtn--select {
+    margin: @toolbar-button-spacing-y @toolbar-button-spacing-x (@toolbar-button-spacing-y + 1px) 0;
+    padding: 0 4px;
+    width: auto;
+  }
+
+  .tox-tbtn__select-label {
+    cursor: default;
+    font-weight: @toolbar-button-font-weight;
+    margin: 0 4px;
+  }
+
+  .tox-tbtn__select-chevron {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: @toolbar-button-chevron-width;
+  }
+
+  .tox-tbtn__select-chevron svg {
+    fill: @toolbar-button-chevron-color;
+  }
+
+  // Make dynamic text labeled buttons fixed width to prevent them from
+  // jumping around when the content changes.
+  .tox-tbtn--bespoke .tox-tbtn__select-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: @toolbar-button-bespoke-label-max-width;
+  }
+}

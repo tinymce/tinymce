@@ -1,0 +1,79 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Insert table picker
+//
+
+@insert-table-picker-cell-size: @base-value;
+@insert-table-picker-selected-background-color: fade(@color-tint, 50%);
+@insert-table-picker-border-color: darken(@menu-background-color, 20);
+@insert-table-picker-label-color: contrast(@menu-background-color, @text-color-muted, @color-white);
+
+.tox {
+  .tox-insert-table-picker {
+    display: flex;
+    flex-wrap: wrap;
+    width: @insert-table-picker-cell-size * 10 + 9px;
+
+    // Cell styles
+    > div {
+      border-color: @insert-table-picker-border-color;
+      border-style: solid;
+      border-width: 0 1px 1px 0;
+      box-sizing: content-box;
+      height: @insert-table-picker-cell-size;
+      width: @insert-table-picker-cell-size;
+
+      // Option for removing colors on bottom row
+      &:nth-last-child(-n+10) {
+        //
+      }
+    }
+  }
+
+  // Remove menu padding when picker is used in a collection list context
+  .tox-collection--list .tox-collection__group .tox-insert-table-picker {
+    margin: -@collection-item-separator-margin-y 0;
+  }
+
+  // Selected cell
+  .tox-insert-table-picker .tox-insert-table-picker__selected {
+    background-color: @insert-table-picker-selected-background-color;
+    border-color: @insert-table-picker-selected-background-color;
+  }
+
+  // Label for selected cells
+  .tox-insert-table-picker__label {
+    color: @insert-table-picker-label-color;
+    display: block;
+    font-size: @font-size-sm;
+    padding: @pad-xs;
+    text-align: center;
+    width: 100%;
+  }
+}
+
+.tox:not([dir=rtl]) {
+  // Remove border on last cell of every row
+  /* stylelint-disable-next-line no-descending-specificity */
+  .tox-insert-table-picker > div {
+    &:nth-child(10n) {
+      border-right: 0;
+    }
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  /* stylelint-disable-next-line no-descending-specificity */
+  .tox-insert-table-picker > div {
+    &:nth-child(10n+1) {
+      border-right: 0;
+    }
+  }
+}

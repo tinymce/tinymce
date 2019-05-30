@@ -1,0 +1,30 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Spellchecker
+//
+
+// Spell checking marker
+.mce-spellchecker-word {
+  //background-image: url("data:image/svg+xml;charset=utf8,%3Csvg id='squiggle-link' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:ev='http://www.w3.org/2001/xml-events' viewBox='0 0 20 4'%3E%3Cstyle type='text/css'%3E.squiggle{animation:shift .3s linear infinite;}@keyframes shift {from {transform:translateX(0);}to {transform:translateX(-20px);}}%3C/style%3E%3Cpath fill='none' stroke='%23ff0000' stroke-width='2' class='squiggle' d='M0,3.5 c 5,0,5,-3,10,-3 s 5,3,10,3 c 5,0,5,-3,10,-3 s 5,3,10,3'/%3E%3C/svg%3E");
+  background-image: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/spellchecker-word-marker.svg');
+  background-position: 0 calc(~"100% + 1px");
+  background-repeat: repeat-x;
+  background-size: auto 6px;
+  cursor: default;
+  height: 2rem;
+}
+
+// Grammar checking marker
+.mce-spellchecker-grammar {
+  background-image: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/spellchecker-grammar-marker.svg');
+  background-position: 0 calc(~"100% + 1px");
+  background-repeat: repeat-x;
+  background-size: auto 6px;
+  cursor: default;
+}

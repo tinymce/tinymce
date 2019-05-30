@@ -1,0 +1,62 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Menu
+//
+
+@menu-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
+@menu-border-color: @border-color;
+@menu-border-radius: @panel-border-radius;
+@menu-box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
+
+@menu-item-collection-list-padding: 0;
+@menu-item-collection-toolbar-padding: @pad-xs;
+@menu-item-collection-grid-padding: @pad-xs;
+
+.tox {
+  .tox-menu {
+    background-color: @menu-background-color;
+    border: 1px solid @menu-border-color;
+    border-radius: @menu-border-radius;
+    box-shadow: @menu-box-shadow;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    z-index: 1;
+  }
+
+  .tox-menu.tox-collection.tox-collection--list {
+    padding: @menu-item-collection-list-padding;
+  }
+
+  .tox-menu.tox-collection.tox-collection--toolbar {
+    padding: @menu-item-collection-toolbar-padding;
+  }
+
+  .tox-menu.tox-collection.tox-collection--grid {
+    padding: @menu-item-collection-grid-padding;
+  }
+
+  // Reset all margins for block elements when used in menu labels
+  // such as format and styles menu
+  /* stylelint-disable */
+  .tox-menu__label {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    blockquote,
+    code {
+      margin: 0;
+    }
+  }
+  /* stylelint-enable */
+}

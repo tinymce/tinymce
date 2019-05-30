@@ -1,0 +1,42 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Button link
+// Extends button.less
+//
+
+.tox {
+  .tox-button-link {
+    &:extend(a);
+
+    background: 0;
+    border: none;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-block;
+    font-family: @font-stack;
+    font-size: @font-size-md;
+    font-weight: @font-weight-normal;
+    line-height: @line-height-base;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+
+    &:hover {
+      &:extend(a:hover);
+    }
+
+    &:active {
+      &:extend(a:active);
+    }
+  }
+
+  .tox-button-link--sm {
+    font-size: @font-size-sm;
+  }
+}

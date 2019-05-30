@@ -1,0 +1,114 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Statusbar
+//
+
+@statusbar-background-color: @background-color;
+@statusbar-font-size: @font-size-xs;
+@statusbar-font-weight: @font-weight-normal;
+@statusbar-height: 18px;
+@statusbar-padding-x: @pad-sm;
+@statusbar-separator-color: @border-color;
+@statusbar-text-color: contrast(@statusbar-background-color, @text-color-muted, @color-white);
+@statusbar-text-transform: uppercase;
+
+.tox {
+  .tox-statusbar {
+    align-items: center;
+    background-color: @statusbar-background-color;
+    border-top: 1px solid @statusbar-separator-color;
+    color: @statusbar-text-color;
+    display: flex;
+    flex: 0 0 auto;
+    font-size: @statusbar-font-size;
+    font-weight: @statusbar-font-weight;
+    height: @statusbar-height;
+    overflow: hidden;
+    padding: 0 @statusbar-padding-x;
+    position: relative;
+    text-transform: @statusbar-text-transform;
+  }
+
+  .tox-statusbar__text-container {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: flex-end;
+    overflow: hidden;
+  }
+
+  .tox-statusbar__path {
+    display: flex;
+    flex: 1 1 auto;
+    margin-right: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tox-statusbar__path > * {
+    display: inline;
+    white-space: nowrap;
+  }
+
+  .tox-statusbar__wordcount {
+    flex: 0 0 auto;
+    margin-left: 1ch;
+  }
+
+  .tox-statusbar a,
+  .tox-statusbar__path-item,
+  .tox-statusbar__wordcount {
+    color: @statusbar-text-color;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+
+  .tox-statusbar__resize-handle {
+    align-items: flex-end;
+    align-self: stretch;
+    cursor: nwse-resize;
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: flex-end;
+    margin-left: auto;
+    margin-right: -@statusbar-padding-x;
+    padding-left: 1ch;
+
+    svg {
+      display: block;
+      fill: @statusbar-text-color;
+    }
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-statusbar__path > * {
+    margin-right: @pad-xs;
+  }
+
+  .tox-statusbar__branding {
+    margin-left: 1ch;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-statusbar {
+    flex-direction: row-reverse;
+  }
+
+  .tox-statusbar__path > * {
+    margin-left: @pad-xs;
+  }
+}

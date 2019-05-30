@@ -1,0 +1,98 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Form
+//
+
+@textfield-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
+@textfield-border-color: @border-color;
+@textfield-border-radius: @control-border-radius;
+@textfield-border-style: solid;
+@textfield-border-width: 1px;
+@textfield-box-shadow: none;
+@textfield-font-family: @font-stack;
+@textfield-font-size: @font-size-md;
+@textfield-height: 36px;
+@textfield-line-height: 24px;
+@textfield-outline: none;
+@textfield-pad-x: @pad-xs + (@control-border-radius / 4); // Add a border radius modifier for pill shaped controls
+@textfield-pad-y: (@textfield-height - @textfield-line-height - (@textfield-border-width * 2  ) ) / 2;
+@textfield-text-color: @text-color;
+
+@textfield-focus-border-color: @color-tint;
+@textfield-focus-box-shadow: none;
+@textfield-focus-outline: none;
+
+.tox {
+  .tox-textfield {
+    appearance: none;
+    background-color: @textfield-background-color;
+    border-color: @textfield-border-color;
+    border-radius: @textfield-border-radius;
+    border-style: @textfield-border-style;
+    border-width: @textfield-border-width;
+    box-shadow: @textfield-box-shadow;
+    box-sizing: border-box;
+    color: @textfield-text-color;
+    font-family: @textfield-font-family;
+    font-size: @textfield-font-size;
+    line-height: @textfield-line-height;
+    margin: 0;
+    outline: @textfield-outline;
+    padding: @textfield-pad-y @textfield-pad-x;
+    resize: none;
+    width: 100%;
+  }
+
+  .tox-textfield:focus {
+    border-color: @textfield-focus-border-color;
+    box-shadow: @textfield-focus-box-shadow;
+    outline: @textfield-focus-outline;
+  }
+
+  .tox-toolbar-textfield:extend(.tox .tox-textfield) {
+    border-width: 0;
+    margin-bottom: 3px;
+    margin-top: 2px;
+    max-width: 250px;
+  }
+
+  .tox-naked-btn {
+    background-color: transparent;
+    border: 0;
+    border-color: transparent;
+    box-shadow: unset;
+    color: @color-tint;
+    cursor: pointer;
+    display: block;
+    margin: 0;
+    padding: 0;
+
+    svg {
+      display: block;
+      fill: @text-color;
+    }
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-toolbar-textfield {
+    + * {
+      margin-left: @pad-xs;
+    }
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-toolbar-textfield {
+    + * {
+      margin-right: @pad-xs;
+    }
+  }
+}

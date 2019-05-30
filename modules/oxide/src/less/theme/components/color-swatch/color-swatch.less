@@ -1,0 +1,91 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Color swatches
+//
+
+@swatch-size: 30px;
+@swatch-picker-button-icon-height: 24px;
+@swatch-picker-button-icon-width: 24px;
+@swatch-remove-color-stroke-color: #e74c3c;
+@swatch-outline-color: rgba(127, 127, 127, .3);
+
+.tox {
+  .tox-toolbar .tox-swatches,
+  .tox-toolbar__primary .tox-swatches,
+  .tox-toolbar__overflow .tox-swatches {
+    margin: @toolbar-button-spacing-y 0 (@toolbar-button-spacing-y + 1) @toolbar-group-padding-x;
+  }
+
+  // Remove menu border/padding when swatch is used in a collection list context
+  .tox-collection--list .tox-collection__group .tox-swatches-menu {
+    border: 0;
+    margin: -@collection-item-separator-margin-y 0;
+  }
+
+  .tox-swatches__row {
+    display: flex;
+  }
+
+  .tox-swatch {
+    height: @swatch-size;
+    transition: transform .15s, box-shadow .15s;
+    width: @swatch-size;
+
+    &:hover,
+    &:focus {
+      box-shadow: 0 0 0 1px @swatch-outline-color inset;
+      transform: scale(.8);
+    }
+  }
+
+  .tox-swatch--remove {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+
+    svg path {
+      stroke: @swatch-remove-color-stroke-color;
+    }
+  }
+
+  .tox-swatches__picker-btn {
+    align-items: center;
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    height: @swatch-size;
+    justify-content: center;
+    outline: none;
+    padding: 0;
+    width: @swatch-size;
+
+    svg {
+      height: @swatch-picker-button-icon-height;
+      width: @swatch-picker-button-icon-width;
+    }
+
+    &:hover {
+      background: @toolbar-button-hover-background-color;
+    }
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-swatches__picker-btn {
+    margin-left: auto;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-swatches__picker-btn {
+    margin-right: auto;
+  }
+}

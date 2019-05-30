@@ -1,0 +1,48 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Content editable false
+//
+
+.mce-content-body {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  .mce-visual-caret {
+    background-color: black;
+    background-color: currentcolor;
+    position: absolute;
+  }
+
+  .mce-visual-caret-hidden {
+    display: none;
+  }
+
+  *[data-mce-caret] {
+    left: -1000px;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    right: auto;
+    top: 0;
+  }
+
+  .mce-offscreen-selection {
+    left: -9999999999px;
+    max-width: 1000000px;
+    position: absolute;
+  }
+
+  *[contentEditable=false] {
+    cursor: default;
+  }
+
+  *[contentEditable=true] {
+    cursor: text;
+  }
+}

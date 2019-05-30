@@ -1,0 +1,16 @@
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+insert_final_newline = true
+
+# 2 space indentation
+[*]
+indent_style = space
+indent_size = 2
+
+# 4 space indentation
+[**.{html,htm,php}]
+indent_style = space
+indent_size = 4

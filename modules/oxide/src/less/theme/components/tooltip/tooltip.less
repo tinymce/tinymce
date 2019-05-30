@@ -1,0 +1,86 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Tooltip
+//
+
+@tooltip-arrow-size: @base-value / 2;
+@tooltip-background-color: contrast(@background-color, @color-black, lighten(@background-color, 15%));
+@tooltip-border-radius: @panel-border-radius;
+@tooltip-box-shadow: 0 2px 4px fade(@color-black, 30%);
+@tooltip-font-size: @font-size-sm;
+@tooltip-font-weight: @font-weight-normal;
+@tooltip-font-style: normal;
+@tooltip-padding-x: @pad-sm;
+@tooltip-padding-y: @pad-xs;
+@tooltip-text-color: contrast(@tooltip-background-color, @color-black, fade(@color-white, 75%));
+@tooltip-text-transform: normal;
+
+.tox {
+  .tox-tooltip {
+    display: inline-block;
+    padding: @tooltip-arrow-size;
+    position: relative;
+  }
+
+  .tox-tooltip__body {
+    background-color: @tooltip-background-color;
+    border-radius: @tooltip-border-radius;
+    box-shadow: @tooltip-box-shadow;
+    color: @tooltip-text-color;
+    font-size: @tooltip-font-size;
+    font-style: @tooltip-font-style;
+    font-weight: @tooltip-font-weight;
+    padding: @tooltip-padding-y @tooltip-padding-x;
+    text-transform: @tooltip-text-transform;
+  }
+
+  .tox-tooltip__arrow {
+    position: absolute;
+  }
+
+  .tox-tooltip--down .tox-tooltip__arrow {
+    border-left: @tooltip-arrow-size solid transparent;
+    border-right: @tooltip-arrow-size solid transparent;
+    border-top: @tooltip-arrow-size solid @tooltip-background-color;
+    bottom: 0;
+    left: 50%;
+    position: absolute;
+    transform: translateX(-50%);
+  }
+
+  .tox-tooltip--up .tox-tooltip__arrow {
+    border-bottom: @tooltip-arrow-size solid @tooltip-background-color;
+    border-left: @tooltip-arrow-size solid transparent;
+    border-right: @tooltip-arrow-size solid transparent;
+    left: 50%;
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+  }
+
+  .tox-tooltip--right .tox-tooltip__arrow {
+    border-bottom: @tooltip-arrow-size solid transparent;
+    border-left: @tooltip-arrow-size solid @tooltip-background-color;
+    border-top: @tooltip-arrow-size solid transparent;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .tox-tooltip--left .tox-tooltip__arrow {
+    border-bottom: @tooltip-arrow-size solid transparent;
+    border-right: @tooltip-arrow-size solid @tooltip-background-color;
+    border-top: @tooltip-arrow-size solid transparent;
+    left: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}

@@ -1,0 +1,51 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Color
+//
+
+.tox {
+  .tox-color-input {
+    display: flex;
+
+    .tox-textfield {
+      border-radius: 3px 0 0 3px;
+      display: flex;
+    }
+
+    span {
+      border-color: rgba(red(@color-black), green(@color-black), blue(@color-black), .2);
+      border-radius: 0 3px 3px 0;
+      border-style: solid;
+      border-width: 1px 1px 1px 0;
+      box-shadow: none;
+      box-sizing: border-box;
+      cursor: pointer;
+      display: flex;
+      width: 35px;
+
+      &:focus {
+        border-color: @input-button-focus-border-color;
+      }
+    }
+  }
+}
+
+// RTL
+.tox[dir="rtl"] {
+  .tox-color-input {
+    .tox-textfield {
+      border-radius: 0 3px 3px 0;
+    }
+
+    span {
+      border-radius: 3px 0 0 3px;
+      border-width: 1px 0 1px 1px;
+    }
+  }
+}
