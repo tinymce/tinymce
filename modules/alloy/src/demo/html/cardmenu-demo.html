@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Card Menu Page</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link href="../css/alloy-demo.css" rel="Stylesheet">
+
+    <style type="text/css">
+      #ephox-ui {
+        margin-bottom: 20px;
+      }
+
+      [role="menu"] {
+        /*display: inline-block;*/
+        height: 100%;
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+      }
+
+      [role="menu"].transitioning {
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .demo-tiered-menu {
+        overflow: hidden;
+        outline: 4px solid black;
+        width: 100px;
+        position: relative;
+        height: 100px;
+      }
+
+      .menu-items-container {
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .item {
+        cursor: pointer;
+        padding: 10px 5px;
+      }
+
+      .separator {
+        text-align: center;
+        border-bottom: 1px solid black;
+        background: #ccc;
+      }
+
+
+
+      [data-transitioning-destination="before"][data-transitioning-state], [data-transitioning-state="before"] {
+        transform: translate(-100%);
+      }
+
+      [data-transitioning-destination="current"][data-transitioning-state], [data-transitioning-state="current"] {
+        transform: translate(0%);
+      }
+
+      [data-transitioning-destination="after"][data-transitioning-state], [data-transitioning-state="after"] {
+        transform: translate(100%);
+      }
+
+      .background-menu {
+        /*display: inline-block;
+        overflow: hidden;
+        color: transparent;
+        background: #cadbee;*/
+      }
+
+
+    </style>
+  </head>
+
+  <body>
+    <h2>Card Menu Page</h2>
+
+    <div id="ephox-ui"></div>
+    <script type="text/javascript" src="../../../demo.js"></script>
+    <script>demos.CardMenuDemo();</script>
+  </body>
+</html>

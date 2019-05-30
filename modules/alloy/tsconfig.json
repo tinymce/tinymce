@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "es5",
+    "module": "es2015",
+    "importHelpers": true,
+    "lib": ["es2015"],
+    "pretty": true,
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "lib",
+    "baseUrl": ".",
+    "paths": {
+      "ephox/alloy/test/*": ["src/test/ts/module/ephox/alloy/test/*"],
+      "ephox/alloy/demo/*": ["src/demo/ts/ephox/alloy/demo/*"],
+      "ephox/alloy/*": ["src/main/ts/ephox/alloy/*"],
+      "@ephox/alloy": ["src/main/ts/ephox/alloy/api/Main.ts"]
+    },
+    "types": []
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts",
+    "node_modules/@ephox/**/*/api/Main.d.ts"
+  ]
+}
