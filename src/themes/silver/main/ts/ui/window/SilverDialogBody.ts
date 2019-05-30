@@ -5,16 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, Behaviour, Focusing, ModalDialog, Reflecting, Tabstopping, Keying } from '@ephox/alloy';
+import { AlloySpec, Behaviour, Focusing, Keying, ModalDialog, Reflecting, Tabstopping } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Fun, Option } from '@ephox/katamari';
-
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { renderBodyPanel } from '../dialog/BodyPanel';
 import { renderTabPanel } from '../dialog/TabPanel';
-import { bodyChannel } from './DialogChannels';
-import { UiFactoryBackstage } from '../../backstage/Backstage';
 import NavigableObject from '../general/NavigableObject';
+import { bodyChannel } from './DialogChannels';
 
 // TypeScript allows some pretty weird stuff.
 type WindowBodyFoo = {

@@ -5,18 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Types } from '@ephox/bridge';
 import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import PluginUrls from '../data/PluginUrls';
-import { Types } from '@ephox/bridge';
 
 export interface PluginUrlType {
   key: string;
   name: string;
 }
 
-const tab = (editor: Editor) => {
+const tab = (editor: Editor): Types.Dialog.TabApi => {
   const availablePlugins = () => {
     const premiumPlugins = [
       // TODO: Add other premium plugins such as permanent pen when they are included in the website
@@ -102,6 +102,7 @@ const tab = (editor: Editor) => {
     ].join('')
   };
   return {
+    name: 'plugins',
     title: 'Plugins',
     items: [
       htmlPanel

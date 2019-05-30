@@ -140,6 +140,7 @@ const open = (editor: Editor) => {
     tabs: [
       {
         title: 'General',
+        name: 'general',
         items: CellDialogGeneralTab.items(editor)
       },
       Helpers.getAdvancedTab()

@@ -94,6 +94,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
       tabs: [
         {
           title: 'one',
+          name: 'one',
           items: [
             {
               type: 'input',
@@ -103,6 +104,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
         },
         {
           title: 'two',
+          name: 'two',
           items: [
 
           ]
