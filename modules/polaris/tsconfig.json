@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "importHelpers": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "strictNullChecks": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "target": "es5",
+    "module": "es2015",
+    "lib": ["es2015"],
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "lib",
+    "baseUrl": ".",
+    "types": [],
+    "paths": {
+      "ephox/polaris/test/*": ["src/test/ts/module/ephox/polaris/test/*"],
+      "ephox/polaris/demo/*": ["src/demo/ts/ephox/polaris/demo/*"],
+      "ephox/polaris/*": ["src/main/ts/ephox/polaris/*"],
+      "@ephox/polaris": ["src/main/ts/ephox/polaris/api/Main.ts"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts",
+    "node_modules/@ephox/**/*/api/Main.d.ts"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "name": "@ephox/polaris",
+  "description": "This project does data manipulation on arrays and strings.",
+  "version": "3.0.20",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/polaris"
+  },
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "dependencies": {
+    "@ephox/dom-globals": "latest",
+    "@ephox/katamari": "latest",
+    "tslib": "^1.9.3"
+  },
+  "devDependencies": {
+    "@ephox/bedrock": "latest",
+    "@ephox/tslint-rules": "latest",
+    "awesome-typescript-loader": "^5.2.1",
+    "source-map-loader": "^0.2.3",
+    "tslint": "^5.12.1",
+    "typescript": "^3.1.6",
+    "webpack": "^3.10.0"
+  },
+  "scripts": {
+    "prepublishOnly": "tsc",
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/polaris/api/Main.js",
+  "module": "./lib/main/ts/ephox/polaris/api/Main.js",
+  "types": "./lib/main/ts/ephox/polaris/api/Main.d.ts"
+}
