@@ -36,36 +36,24 @@ Install dependencies and prepare for development
 
 `dev` performs compilation steps which `webpack` requires but are usually once-off. It also runs `tsc` to make later commands faster (`tsc -b` enforces incremental compilation).
 
-
-## Version management
-
-It is important that you never hand-edit a `package.json` file, particularly the `dependency` and `version` fields. And we do mean _never_. Doing so may break the automated scripts.
-
-### dev dependencies
-
-All dev dependencies are in the project root, so to add or upgrade a specific dependency:
-`yarn add -D -W <package>`
-
-### normal dependencies
-
-To add a dependency inside a monorepo package:
-`yarn workspace <fullname> add <othername>`
-
-This works whether adding an external dependency or a dependency on another monorepo package.
-
-Note that both names must be the entire `name` of the package, not the folder, for example
-`yarn workspace @tinymce/oxide add @tinymce/oxide-icons-default`
-
-### updating package versions
-
-See the `publishing` section below.
-
-
 ## Building TinyMCE
 
-To build the editor, run `yarn tinymce-grunt` (the equivalent of `cd modules/tinymce && grunt`). This will output to the `modules/tinymce/js` folder.
+If you previously just cloned this repository and ran `grunt`, the equivalent now is `yarn build`. Note that the build output has moved.
 
-Task names can be included, for example `yarn tinymce-grunt bundle` will execute the bundle task. More information is available in the [TinyMCE readme](modules/tinymce/readme.md).
+Old:
+```
+/js
+/tmp/*.zip
+```
+New:
+```
+modules/tinymce/js
+modules/tinymce/tmp/*.zip
+```
+
+To build the editor in development, run `yarn tinymce-grunt` (the equivalent of `cd modules/tinymce && grunt`). This will output to the `modules/tinymce/js` folder.
+
+Task names can be included, for example `yarn tinymce-grunt bundle` will execute the bundle task. More information on TinyMCE grunt tasks is available in the [TinyMCE readme](modules/tinymce/readme.md).
 
 ## Development scripts
 
@@ -106,11 +94,6 @@ An alias to the basic oxide-icons-default build command.
 If you are working in a single module and don't want to deal with the overheads of whole-monorepo compilation, you can run `yarn --focus` from that module's folder to install the latest published versions of monorepo projects in a local `node_modules`. For more information see this yarn blog post:
 https://yarnpkg.com/blog/2018/05/18/focused-workspaces/
 
-
-## CI builds
-
-CI builds rely on the `ci` and `ci-all` package.json scripts, in addition to the above testing scripts, to run type checking and linting before executing the full test suite. A `ci-local` package.json script has also been added for convenience to simulate this process in development and then run tests.
-
 ### Testing scripts
 
 Testing relies on `yarn lerna changed` to determine which modules need testing, and a grunt script then separates them into two groups depending on whether they need GUI browser testing or can be tested with phantomjs.
@@ -130,9 +113,49 @@ yarn phantomjs-test-manual
 Development testing will be adjusted in future so that there's only one manual entry point for ease of development. They are still separate for now because there are two projects that use bedrock route configurations; a route config combination process is required to run them at the same time.
 
 
+## CI builds
+
+CI builds rely on the `ci` and `ci-all` package.json scripts, in addition to the above testing scripts, to run type checking and linting before executing the full test suite. A `ci-local` package.json script has also been added for convenience to simulate this process in development and then run tests.
+
+## Version management
+
+It is important that you never hand-edit a `package.json` file, particularly the `dependency` and `version` fields. And we do mean _never_. Doing so may break the automated scripts.
+
+### dev dependencies
+
+All dev dependencies are in the project root, so to add or upgrade a specific dependency:
+`yarn add -D -W <package>`
+
+### normal dependencies
+
+To add a dependency inside a monorepo package:
+`yarn workspace <fullname> add <othername>`
+
+This works whether adding an external dependency or a dependency on another monorepo package.
+
+Note that both names must be the entire `name` of the package, not the folder, for example
+`yarn workspace @tinymce/oxide add @tinymce/oxide-icons-default`
+
+### updating package versions
+
+See the `publishing` section below.
+
+
 ## Publishing process
 
 We have a CI process set up to publish all changed libraries as patch releases twice a day. This simply describes that process, is is not intended that it be performed manually.
+
+### Side note: major and minor version bumps
+
+In the future these will likely be automated via the lerna-supported [conventional commit](https://conventionalcommits.org) specification, for now this is a manual process.
+
+In theory minor bumps can be done in the package.json by hand but for consistency we recommend using the lerna tooling for both. `yarn lerna version` is the only way to do this without breaking links between packages.
+
+Choose major, minor or patch as appropriate depending on the flow-on effects of this version change. Afterwards, you _must_ run the git commands below to push the version and related tags correctly.
+
+Changes to minor and major versions are such a rare occurence that this manual process will suffice until we switch to conventional commits. Unfortunately manual version changes mean the next automated build will run all repository tests, since nothing has changed, but that's probably a good idea for serious version changes anyway.
+
+### CI publish process
 
 `yarn lerna publish patch`
 
@@ -144,13 +167,3 @@ Lerna is configured to not `git push` in case of failure, so after a successful 
 git push
 git tag | grep -e '^@' | xargs git push origin
 ```
-
-### major and minor version bumps
-
-In the future these will likely be automated via the lerna-supported [conventional commit](https://conventionalcommits.org) specification, for now this is a manual process.
-
-In theory minor bumps can be done in the package.json by hand but for consistency we recommend using the lerna tooling for both. `yarn lerna version` is the only way to do this without breaking links between packages.
-
-Choose major, minor or patch as appropriate depending on the flow-on effects of this version change.
-
-Changes to minor and major versions are such a rare occurence that this manual process will suffice until we switch to conventional commits. Unfortunately manual version changes mean the next automated build will run all repository tests, since nothing has changed, but that's probably a good idea for major/minor version changes anyway.
