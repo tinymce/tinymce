@@ -26,6 +26,8 @@
     "ci": "yarn oxide-icons-ci && run-p tsc tinymce-ci",
     "ci-all": "run-p tslint-ci ci",
     "local-ci": "yarn -s ci-all && grunt phantomjs-auto browser-auto",
+    "test": "yarn -s local-ci",
+    "build": "yarn -s ci && yarn -s tinymce-grunt",
     "prepublishOnly": "yarn oxide-icons-ci",
     "browser-test": "yarn -s grunt browser-auto",
     "browser-test-manual": "yarn -s grunt browser-manual",
