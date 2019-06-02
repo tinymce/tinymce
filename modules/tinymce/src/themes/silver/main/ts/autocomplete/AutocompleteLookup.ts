@@ -52,10 +52,10 @@ const lookup = (editor: Editor, getDatabase: () => AutocompleterDatabase): Optio
   const database = getDatabase();
   const rng = editor.selection.getRng();
 
-  return getTriggerContext(editor.dom, rng, database).map((context) => lookupWithContext(editor, getDatabase, context));
+  return getTriggerContext(editor.dom, rng, database).bind((context) => lookupWithContext(editor, getDatabase, context));
 };
 
-const lookupWithContext = (editor: Editor, getDatabase: () => AutocompleterDatabase, context: AutocompleteContext): AutocompleteLookupInfo => {
+const lookupWithContext = (editor: Editor, getDatabase: () => AutocompleterDatabase, context: AutocompleteContext): Option<AutocompleteLookupInfo> => {
   const database = getDatabase();
   const rng = editor.selection.getRng();
   const startText = rng.startContainer.nodeValue;
@@ -63,6 +63,10 @@ const lookupWithContext = (editor: Editor, getDatabase: () => AutocompleterDatab
   const autocompleters = Arr.filter(database.lookupByChar(context.triggerChar), (autocompleter) => {
     return context.text.length >= autocompleter.minChars && autocompleter.matches.getOrThunk(() => isStartOfWord(editor.dom))(context.range, startText, context.text);
   });
+
+  if (autocompleters.length === 0) {
+    return Option.none();
+  }
 
   const lookupData = Promise.all(Arr.map(autocompleters, (ac) => {
     // TODO: Find a sensible way to do maxResults
@@ -75,10 +79,10 @@ const lookupWithContext = (editor: Editor, getDatabase: () => AutocompleterDatab
     }));
   }));
 
-  return {
+  return Option.some({
     lookupData,
     context
-  };
+  });
 };
 
 export {
