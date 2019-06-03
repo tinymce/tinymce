@@ -4485,6 +4485,11 @@ grunt-contrib-less@2.0.0:
     less "^3.0.4"
     lodash "^4.17.10"
 
+grunt-contrib-symlink@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/grunt-contrib-symlink/-/grunt-contrib-symlink-1.0.0.tgz#c83616c035711a6c0062a2810cf1c77ffc6bed2b"
+  integrity sha1-yDYWwDVxGmwAYqKBDPHHf/xr7Ss=
+
 grunt-contrib-uglify@4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/grunt-contrib-uglify/-/grunt-contrib-uglify-4.0.0.tgz#50aa36568cbf5f9532b35fe8b3dacf99210c909c"

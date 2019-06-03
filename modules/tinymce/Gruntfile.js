@@ -744,6 +744,21 @@ module.exports = function (grunt) {
       }
     },
 
+    symlink: {
+      options: {
+        overwrite: true,
+        force: true
+      },
+      dist: {
+        src: 'dist',
+        dest: '../../dist'
+      },
+      js: {
+        src: 'js',
+        dest: '../../js'
+      }
+    },
+
     clean: {
       dist: ['js'],
       lib: ['lib'],
@@ -817,6 +832,19 @@ module.exports = function (grunt) {
     }
   });
 
+  grunt.registerTask('symlink-dist', 'Links built dist content to the root directory', function () {
+    // Windows doesn't support symlinks, so copy instead of linking
+    if (process.platform === "win32") {
+      if (grunt.file.exists('../../dist')) grunt.file.delete('../../dist', { force: true });
+      if (grunt.file.exists('../../js')) grunt.file.delete('../../js', { force: true });
+      grunt.file.copy('dist', '../../dist');
+      grunt.file.copy('js', '../../js');
+      grunt.log.write('Copied 2 directories');
+    } else {
+      grunt.task.run('symlink');
+    }
+  });
+
   grunt.registerTask('version', 'Creates a version file', function () {
     grunt.file.write('dist/version.txt', BUILD_VERSION);
   });
@@ -842,6 +870,7 @@ module.exports = function (grunt) {
     'clean:release',
     'moxiezip',
     'nugetpack',
+    'symlink-dist',
     'version'
   ]);
 
@@ -852,7 +881,7 @@ module.exports = function (grunt) {
     'copy'
   ]);
 
-  grunt.registerTask('unicode', ['uglify:emoticons-raw'])
+  grunt.registerTask('unicode', ['uglify:emoticons-raw']);
 
   grunt.registerTask('start', ['webpack-dev-server']);
 
