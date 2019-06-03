@@ -6,7 +6,6 @@ import { UnitTest, assert } from '@ephox/bedrock';
 import { Element } from '@ephox/sugar';
 
 UnitTest.test('CellBounds.isWithin Test', function () {
-  // I am very dubious about this test actually working...
   const s = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as any as Element, rowspan, colspan);
   const f = (fakeEle: any, cells: Structs.Detail[], section: 'tbody') => Structs.rowdatadetail(fakeEle as any as Element, cells, section);
 
