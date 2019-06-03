@@ -4,15 +4,6 @@ import Element from '../../api/node/Element';
 import { Situ } from '../../api/selection/Situ';
 import { StructRect } from '../../api/selection/Rect';
 
-export interface RawRect {
-  left: number;
-  top: number;
-  right: number;
-  bottom: number;
-  width: number;
-  height: number;
-}
-
 const selectNodeContents = function (win: Window, element: Element) {
   const rng = win.document.createRange();
   selectNodeContentsUsing(rng, element);
