@@ -1,5 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import Structs from '../api/Structs';
+import * as Structs from '../api/Structs';
 
 const translate = function (cell, row, column) {
   return Structs.address(cell.row() + row, cell.column() + column);

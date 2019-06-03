@@ -1,7 +1,7 @@
 import { Arr, Obj, Struct } from '@ephox/katamari';
 import { Attr, Css, Element, Insert, Remove, Selectors } from '@ephox/sugar';
 import DetailsList from '../model/DetailsList';
-import Warehouse from '../model/Warehouse';
+import { Warehouse } from '../model/Warehouse';
 import LayerSelector from '../util/LayerSelector';
 
 const statsStruct = Struct.immutable('minRow', 'minCol', 'maxRow', 'maxCol');

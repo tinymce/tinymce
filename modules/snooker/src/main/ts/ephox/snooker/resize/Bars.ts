@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { Class, Css, Height, Insert, Location, Remove, SelectorFilter, Width } from '@ephox/sugar';
 import Blocks from '../lookup/Blocks';
 import DetailsList from '../model/DetailsList';
-import Warehouse from '../model/Warehouse';
+import { Warehouse } from '../model/Warehouse';
 import Styles from '../style/Styles';
 import Bar from './Bar';
 

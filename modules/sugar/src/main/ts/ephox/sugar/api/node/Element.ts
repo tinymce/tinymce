@@ -36,7 +36,7 @@ const fromDom = function (node: Node | Window): Element {
   };
 };
 
-const fromPoint = function (docElm: Element, x, y): Option<Element> {
+const fromPoint = function (docElm: Element, x: number, y: number): Option<Element> {
   const doc = docElm.dom() as Document;
   return Option.from(doc.elementFromPoint(x, y)).map(fromDom);
 };

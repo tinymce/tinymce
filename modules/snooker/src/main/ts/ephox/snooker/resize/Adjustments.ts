@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import Deltas from '../calc/Deltas';
 import DetailsList from '../model/DetailsList';
-import Warehouse from '../model/Warehouse';
+import { Warehouse } from '../model/Warehouse';
 import ColumnSizes from './ColumnSizes';
 import Recalculations from './Recalculations';
 import Sizes from './Sizes';

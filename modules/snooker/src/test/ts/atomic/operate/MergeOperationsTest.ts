@@ -1,12 +1,13 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr, Fun } from '@ephox/katamari';
-import Structs from 'ephox/snooker/api/Structs';
+import * as Structs from 'ephox/snooker/api/Structs';
 import MergingOperations from 'ephox/snooker/operate/MergingOperations';
+import { Element } from '@ephox/sugar';
 
 UnitTest.test('MergeOperationsTest', function () {
   const b = Structs.bounds;
   const r = Structs.rowcells;
-  const en = Structs.elementnew;
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
 
   // Test basic merge.
   (function () {

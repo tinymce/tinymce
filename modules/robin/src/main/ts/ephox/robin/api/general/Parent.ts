@@ -1,36 +1,38 @@
-import Breaker from '../../parent/Breaker';
-import Shared from '../../parent/Shared';
+import Breaker, { LeftRight } from '../../parent/Breaker';
+import Shared, { Looker } from '../../parent/Shared';
 import Subset from '../../parent/Subset';
+import { Universe } from '@ephox/boss';
+import { Option } from '@ephox/katamari';
 
-var sharedOne = function (universe, look, elements) {
+const sharedOne = function <E, D>(universe: Universe<E, D>, look: Looker<E, D>, elements: E[]) {
   return Shared.oneAll(universe, look, elements);
 };
 
-var subset = function (universe, start, finish) {
+const subset = function <E, D>(universe: Universe<E, D>, start: E, finish: E) {
   return Subset.subset(universe, start, finish);
 };
 
-var ancestors = function (universe, start, finish, _isRoot) {
+const ancestors = function <E, D>(universe: Universe<E, D>, start: E, finish: E, _isRoot?: (x: E, i: number, xs: ArrayLike<E>) => boolean) {
   return Subset.ancestors(universe, start, finish, _isRoot);
 };
 
-var breakToLeft = function (universe, parent, child) {
+const breakToLeft = function <E, D>(universe: Universe<E, D>, parent: E, child: E) {
   return Breaker.breakToLeft(universe, parent, child);
 };
 
-var breakToRight = function (universe, parent, child) {
+const breakToRight = function <E, D>(universe: Universe<E, D>, parent: E, child: E) {
   return Breaker.breakToRight(universe, parent, child);
 };
 
-var breakPath = function (universe, child, isTop, breaker) {
+const breakPath = function <E, D>(universe: Universe<E, D>, child: E, isTop: (e: E) => boolean, breaker: (universe: Universe<E, D>, parent: E, child: E) => Option<LeftRight<E>>) {
   return Breaker.breakPath(universe, child, isTop, breaker);
 };
 
-export default <any> {
-  sharedOne: sharedOne,
-  subset: subset,
-  ancestors: ancestors,
-  breakToLeft: breakToLeft,
-  breakToRight: breakToRight,
-  breakPath: breakPath
+export default {
+  sharedOne,
+  subset,
+  ancestors,
+  breakToLeft,
+  breakToRight,
+  breakPath
 };

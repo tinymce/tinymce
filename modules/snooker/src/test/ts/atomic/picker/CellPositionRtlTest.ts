@@ -1,4 +1,4 @@
-import Structs from 'ephox/snooker/api/Structs';
+import * as Structs from 'ephox/snooker/api/Structs';
 import CellPosition from 'ephox/snooker/picker/CellPosition';
 import { UnitTest, assert } from '@ephox/bedrock';
 

@@ -1,5 +1,5 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
-import Warehouse from '../model/Warehouse';
+import { Warehouse } from '../model/Warehouse';
 import Util from '../util/Util';
 
 /*

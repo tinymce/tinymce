@@ -1,7 +1,7 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { Css, Height, Width } from '@ephox/sugar';
 import DetailsList from '../model/DetailsList';
-import Warehouse from '../model/Warehouse';
+import { Warehouse } from '../model/Warehouse';
 import BarPositions from '../resize/BarPositions';
 import ColumnSizes from '../resize/ColumnSizes';
 import Redistribution from '../resize/Redistribution';

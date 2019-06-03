@@ -4,13 +4,13 @@ import DetailsList from '../model/DetailsList';
 import RunOperation from '../model/RunOperation';
 import TableMerge from '../model/TableMerge';
 import Transitions from '../model/Transitions';
-import Warehouse from '../model/Warehouse';
+import { Warehouse } from '../model/Warehouse';
 import MergingOperations from '../operate/MergingOperations';
 import ModificationOperations from '../operate/ModificationOperations';
 import TransformOperations from '../operate/TransformOperations';
 import Adjustments from '../resize/Adjustments';
 import Generators from './Generators';
-import Structs from './Structs';
+import * as Structs from './Structs';
 import TableContent from './TableContent';
 import TableLookup from './TableLookup';
 

@@ -2,18 +2,43 @@ import { Range, Window } from '@ephox/dom-globals';
 import { Adt, Fun, Option, Thunk } from '@ephox/katamari';
 import Element from '../../api/node/Element';
 import * as NativeRange from './NativeRange';
+import { Selection } from '../../api/selection/Selection';
 
-const adt = Adt.generate([
+type SelectionDirectionHandler<U> =  (start: Element, soffset: number, finish: Element, foffset: number) => U;
+
+export interface SelectionDirection {
+  fold: <U> (
+    ltr: SelectionDirectionHandler<U>,
+    rtl: SelectionDirectionHandler<U>
+  ) => U;
+  match: <U> (branches: {
+    ltr: SelectionDirectionHandler<U>,
+    rtl: SelectionDirectionHandler<U>
+  }) => U;
+  log: (label: string) => void;
+}
+
+type SelectionDirectionConstructor = (start: Element, soffset: number, finish: Element, foffset: number) => SelectionDirection;
+
+const adt: {
+  ltr: SelectionDirectionConstructor,
+  rtl: SelectionDirectionConstructor
+} = Adt.generate([
   { ltr: [ 'start', 'soffset', 'finish', 'foffset' ] },
   { rtl: [ 'start', 'soffset', 'finish', 'foffset' ] }
 ]);
 
-const fromRange = function (win, type, range: Range) {
+const fromRange = function (win: Window, type: SelectionDirectionConstructor, range: Range) {
   return type(Element.fromDom(range.startContainer), range.startOffset, Element.fromDom(range.endContainer), range.endOffset);
 };
 
-const getRanges = function (win: Window, selection) {
-  return selection.match({
+interface LtrRtlRanges {
+  ltr: () => Range;
+  rtl: () => Option<Range>;
+}
+
+const getRanges = function (win: Window, selection: Selection): LtrRtlRanges {
+  return selection.match<LtrRtlRanges>({
     domRange (rng) {
       return {
         ltr: Fun.constant(rng),
@@ -47,7 +72,7 @@ const getRanges = function (win: Window, selection) {
   });
 };
 
-const doDiagnose = function (win: Window, ranges) {
+const doDiagnose = function (win: Window, ranges: LtrRtlRanges) {
   // If we cannot create a ranged selection from start > finish, it could be RTL
   const rng = ranges.ltr();
   if (rng.collapsed) {
@@ -70,21 +95,21 @@ const doDiagnose = function (win: Window, ranges) {
   }
 };
 
-const diagnose = function (win: Window, selection) {
+const diagnose = function (win: Window, selection: Selection) {
   const ranges = getRanges(win, selection);
   return doDiagnose(win, ranges);
 };
 
-const asLtrRange = function (win: Window, selection) {
+const asLtrRange = function (win: Window, selection: Selection) {
   const diagnosis = diagnose(win, selection);
   return diagnosis.match({
-    ltr (start: Element, soffset: number, finish: Element, foffset: number) {
+    ltr: (start, soffset, finish, foffset): Range => {
       const rng = win.document.createRange();
       rng.setStart(start.dom(), soffset);
       rng.setEnd(finish.dom(), foffset);
       return rng;
     },
-    rtl (start: Element, soffset: number, finish: Element, foffset: number) {
+    rtl: (start, soffset, finish, foffset) => {
       // NOTE: Reversing start and finish
       const rng = win.document.createRange();
       rng.setStart(finish.dom(), foffset);

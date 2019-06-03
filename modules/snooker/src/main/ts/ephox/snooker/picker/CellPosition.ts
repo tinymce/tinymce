@@ -1,4 +1,4 @@
-import Structs from '../api/Structs';
+import * as Structs from '../api/Structs';
 
 /*
  * Determine the address(row, column) of a mouse position on the entire document based

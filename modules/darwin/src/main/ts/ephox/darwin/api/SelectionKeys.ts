@@ -1,16 +1,16 @@
-var isKey = function (key) {
-  return function (keycode) {
+const isKey = function (key: number) {
+  return function (keycode: number) {
     return keycode === key;
   };
 };
 
-var isUp = isKey(38);
-var isDown = isKey(40);
-var isNavigation = function (keycode) {
+const isUp = isKey(38);
+const isDown = isKey(40);
+const isNavigation = function (keycode: number) {
   return keycode >= 37 && keycode <= 40;
 };
 
-export default <any> {
+export default {
   ltr: {
     // We need to move KEYS out of keytar and into something much more low-level.
     isBackward: isKey(37),
@@ -20,7 +20,7 @@ export default <any> {
     isBackward: isKey(39),
     isForward: isKey(37)
   },
-  isUp: isUp,
-  isDown: isDown,
-  isNavigation: isNavigation
+  isUp,
+  isDown,
+  isNavigation
 };

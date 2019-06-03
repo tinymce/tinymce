@@ -1,19 +1,25 @@
 import { Arr } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { OnNode } from '@ephox/sugar';
-import { SelectorFilter } from '@ephox/sugar';
+import { Attr, Class, OnNode, SelectorFilter, Element } from '@ephox/sugar';
+import { Ephemera } from './Ephemera';
 
-var byClass = function (ephemera) {
-  var addSelectionClass = OnNode.addClass(ephemera.selected());
-  var removeSelectionClasses = OnNode.removeClasses([ ephemera.selected(), ephemera.lastSelected(), ephemera.firstSelected() ]);
+export interface SelectionAnnotation {
+  clear: (container: Element) => void;
+  selectRange: (container: Element, cells: Element[], start: Element, finish: Element) => void;
+  selectedSelector: () => string;
+  firstSelectedSelector: () => string;
+  lastSelectedSelector: () => string;
+}
 
-  var clear = function (container) {
-    var sels = SelectorFilter.descendants(container, ephemera.selectedSelector());
+const byClass = function (ephemera: Ephemera): SelectionAnnotation {
+  const addSelectionClass = OnNode.addClass(ephemera.selected());
+  const removeSelectionClasses = OnNode.removeClasses([ ephemera.selected(), ephemera.lastSelected(), ephemera.firstSelected() ]);
+
+  const clear = function (container: Element) {
+    const sels = SelectorFilter.descendants(container, ephemera.selectedSelector());
     Arr.each(sels, removeSelectionClasses);
   };
 
-  var selectRange = function (container, cells, start, finish) {
+  const selectRange = function (container: Element, cells: Element[], start: Element, finish: Element) {
     clear(container);
     Arr.each(cells, addSelectionClass);
     Class.add(start, ephemera.firstSelected());
@@ -21,46 +27,46 @@ var byClass = function (ephemera) {
   };
 
   return {
-    clear: clear,
-    selectRange: selectRange,
+    clear,
+    selectRange,
     selectedSelector: ephemera.selectedSelector,
     firstSelectedSelector: ephemera.firstSelectedSelector,
     lastSelectedSelector: ephemera.lastSelectedSelector
   };
 };
 
-var byAttr = function (ephemera) {
-  var removeSelectionAttributes = function (element) {
+const byAttr = function (ephemera: Ephemera): SelectionAnnotation {
+  const removeSelectionAttributes = function (element: Element) {
     Attr.remove(element, ephemera.selected());
     Attr.remove(element, ephemera.firstSelected());
     Attr.remove(element, ephemera.lastSelected());
   };
 
-  var addSelectionAttribute = function (element) {
+  const addSelectionAttribute = function (element: Element) {
     Attr.set(element, ephemera.selected(), '1');
   };
 
-  var clear = function (container) {
-    var sels = SelectorFilter.descendants(container, ephemera.selectedSelector());
+  const clear = function (container: Element) {
+    const sels = SelectorFilter.descendants(container, ephemera.selectedSelector());
     Arr.each(sels, removeSelectionAttributes);
   };
 
-  var selectRange = function (container, cells, start, finish) {
+  const selectRange = function (container: Element, cells: Element[], start: Element, finish: Element) {
     clear(container);
     Arr.each(cells, addSelectionAttribute);
     Attr.set(start, ephemera.firstSelected(), '1');
     Attr.set(finish, ephemera.lastSelected(), '1');
   };
   return {
-    clear: clear,
-    selectRange: selectRange,
+    clear,
+    selectRange,
     selectedSelector: ephemera.selectedSelector,
     firstSelectedSelector: ephemera.firstSelectedSelector,
     lastSelectedSelector: ephemera.lastSelectedSelector
   };
 };
 
-export default <any> {
-  byClass: byClass,
-  byAttr: byAttr
+export const SelectionAnnotation = {
+  byClass,
+  byAttr
 };

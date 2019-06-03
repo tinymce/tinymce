@@ -1,7 +1,7 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Attr, Element, Node, SelectorFilter, SelectorFind, Selectors, Traverse } from '@ephox/sugar';
 import LayerSelector from '../util/LayerSelector';
-import Structs from './Structs';
+import * as Structs from './Structs';
 
 // lookup inside this table
 const lookup = function (tags: string[], element: Element, _isRoot?): Option<Element> {

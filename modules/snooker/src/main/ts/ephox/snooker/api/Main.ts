@@ -10,7 +10,7 @@ import PickerDirection from './PickerDirection';
 import ResizeDirection from './ResizeDirection';
 import ResizeWire from './ResizeWire';
 import Sizes from './Sizes';
-import Structs from './Structs';
+import * as Structs from './Structs';
 import TableContent from './TableContent';
 import TableDirection from './TableDirection';
 import TableFill from './TableFill';

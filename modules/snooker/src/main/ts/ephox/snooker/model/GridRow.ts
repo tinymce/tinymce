@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import Structs from '../api/Structs';
+import * as Structs from '../api/Structs';
 
 const addCell = function (gridRow, index, cell) {
   const cells = gridRow.cells();
