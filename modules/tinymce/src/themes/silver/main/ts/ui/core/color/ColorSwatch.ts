@@ -148,7 +148,11 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
     onItemAction: (splitButtonApi, value) => {
       applyColour(editor, format, value, (newColour) => {
         lastColor.set(newColour);
-        setIconColor(splitButtonApi, name, newColour);
+
+        editor.fire('TextColorChange', {
+          name,
+          colour: newColour
+        });
       });
     },
     onSetup: (splitButtonApi) => {
@@ -156,7 +160,13 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
         setIconColor(splitButtonApi, name, lastColor.get());
       }
 
-      return () => { };
+      const handler = (e) => {
+        setIconColor(splitButtonApi, e.name, e.colour);
+      };
+
+      editor.on('TextColorChange', handler);
+
+      return () => { editor.off('TextColorChange', handler); };
     }
   });
 };
