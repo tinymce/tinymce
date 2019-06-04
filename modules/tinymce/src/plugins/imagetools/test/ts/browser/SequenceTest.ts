@@ -3,12 +3,11 @@ import { UnitTest } from '@ephox/bedrock';
 import { console } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
-import Plugin from 'tinymce/plugins/imagetools/Plugin';
+import ImagetoolsPlugin from 'tinymce/plugins/imagetools/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 import ImageOps from '../module/test/ImageOps';
 import ImageUtils from '../module/test/ImageUtils';
-
-import 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', (success, failure) => {
 
@@ -19,7 +18,8 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', (success, 
   const srcUrl = '/project/tinymce/src/plugins/imagetools/demo/img/dogleft.jpg';
   // var corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
 
-  Plugin();
+  ImagetoolsPlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);

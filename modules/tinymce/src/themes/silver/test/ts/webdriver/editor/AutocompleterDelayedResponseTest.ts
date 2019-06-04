@@ -1,18 +1,20 @@
-import 'tinymce/themes/silver/Theme';
-
-import { TestHelpers } from '@ephox/alloy';
 import { Logger, Pipeline, Keyboard, Step, Keys, GeneralSteps, RealKeys } from '@ephox/agar';
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { setTimeout } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader, TinyUi, TinyApis } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import { PlatformDetection } from '@ephox/sand';
+
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import { AutocompleterStructure, sAssertAutocompleterStructure, sWaitForAutocompleteToClose } from '../../module/AutocompleterUtils';
 
 UnitTest.asynctest('Editor Autocompleter delay response test', (success, failure) => {
+  SilverTheme();
+
   const platform = PlatformDetection.detect();
 
   // This test is a little too flaky on IE

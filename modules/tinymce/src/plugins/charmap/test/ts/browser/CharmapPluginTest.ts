@@ -1,13 +1,14 @@
 import { Pipeline, Log } from '@ephox/agar';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
-import Plugin from 'tinymce/plugins/charmap/Plugin';
-import 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  Plugin();
+  CharmapPlugin();
+  SilverTheme();
 
   suite.test('TestCase-TBA: Charmap: Replace characters by array', function (editor) {
     editor.settings.charmap = [

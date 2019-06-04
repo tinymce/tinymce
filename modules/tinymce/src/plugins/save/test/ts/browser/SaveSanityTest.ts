@@ -3,11 +3,12 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import SavePlugin from 'tinymce/plugins/save/Plugin';
-import 'tinymce/themes/silver/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.save.SaveSanityTest', (success, failure) => {
 
   SavePlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyUi = TinyUi(editor);

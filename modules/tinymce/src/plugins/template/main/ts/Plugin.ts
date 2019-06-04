@@ -10,10 +10,10 @@ import Commands from './api/Commands';
 import FilterContent from './core/FilterContent';
 import Buttons from './ui/Buttons';
 
-PluginManager.add('template', function (editor) {
-  Buttons.register(editor);
-  Commands.register(editor);
-  FilterContent.setup(editor);
-});
-
-export default function () { }
+export default function () {
+  PluginManager.add('template', function (editor) {
+    Buttons.register(editor);
+    Commands.register(editor);
+    FilterContent.setup(editor);
+  });
+}

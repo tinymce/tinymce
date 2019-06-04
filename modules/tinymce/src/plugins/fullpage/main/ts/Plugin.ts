@@ -11,12 +11,12 @@ import Commands from './api/Commands';
 import FilterContent from './core/FilterContent';
 import Buttons from './ui/Buttons';
 
-PluginManager.add('fullpage', function (editor) {
-  const headState = Cell(''), footState = Cell('');
+export default function () {
+  PluginManager.add('fullpage', function (editor) {
+    const headState = Cell(''), footState = Cell('');
 
-  Commands.register(editor, headState);
-  Buttons.register(editor);
-  FilterContent.setup(editor, headState, footState);
-});
-
-export default function () { }
+    Commands.register(editor, headState);
+    Buttons.register(editor);
+    FilterContent.setup(editor, headState, footState);
+  });
+}

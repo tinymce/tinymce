@@ -1,10 +1,9 @@
-import 'tinymce/themes/silver/Theme';
-
 import { Assertions, Pipeline, Step, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 import { AnchorListOptions } from 'tinymce/plugins/link/ui/sections/AnchorListOptions';
 import { ClassListOptions } from 'tinymce/plugins/link/ui/sections/ClassListOptions';
@@ -16,6 +15,7 @@ import { TestLinkUi } from '../module/TestLinkUi';
 UnitTest.asynctest('browser.tinymce.plugins.link.ListOptionsTest', (success, failure) => {
 
   LinkPlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);

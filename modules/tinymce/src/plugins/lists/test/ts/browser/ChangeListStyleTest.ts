@@ -3,11 +3,12 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
-import 'tinymce/themes/silver/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.lists.ChangeListStyleTest', (success, failure) => {
 
   ListsPlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);

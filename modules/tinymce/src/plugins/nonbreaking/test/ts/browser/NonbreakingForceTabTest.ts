@@ -3,12 +3,12 @@ import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { UnitTest } from '@ephox/bedrock';
 import VK from 'tinymce/core/api/util/VK';
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
-import 'tinymce/themes/silver/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest(
-  'browser.tinymce.plugins.nonbreaking.NonbreakingForceTabTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingForceTabTest', (success, failure) => {
 
     NonbreakingPlugin();
+    SilverTheme();
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       const tinyApis = TinyApis(editor);

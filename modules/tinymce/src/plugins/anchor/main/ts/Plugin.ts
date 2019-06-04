@@ -10,10 +10,10 @@ import Commands from './api/Commands';
 import FilterContent from './core/FilterContent';
 import Buttons from './ui/Buttons';
 
-PluginManager.add('anchor', function (editor) {
-  FilterContent.setup(editor);
-  Commands.register(editor);
-  Buttons.register(editor);
-});
-
-export default function () { }
+export default function () {
+  PluginManager.add('anchor', function (editor) {
+    FilterContent.setup(editor);
+    Commands.register(editor);
+    Buttons.register(editor);
+  });
+}

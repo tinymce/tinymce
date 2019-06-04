@@ -2,12 +2,13 @@ import { Pipeline, Log, Chain, Assertions, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
 import CodePlugin from 'tinymce/plugins/code/Plugin';
-import 'tinymce/themes/silver/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.code.CodeTextareaTest', (success, failure) => {
 
   CodePlugin();
+  SilverTheme();
 
   TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);

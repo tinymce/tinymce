@@ -8,8 +8,8 @@
 import { console } from '@ephox/dom-globals';
 import PluginManager from 'tinymce/core/api/PluginManager';
 
-PluginManager.add('contextmenu', function () {
-  console.warn('Context menu plugin is now built in to the core editor, please remove it from your editor configuration');
-});
-
-export default function () { }
+export default function () {
+  PluginManager.add('contextmenu', function () {
+    console.warn('Context menu plugin is now built in to the core editor, please remove it from your editor configuration');
+  });
+}

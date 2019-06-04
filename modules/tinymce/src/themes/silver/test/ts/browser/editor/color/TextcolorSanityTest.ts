@@ -1,11 +1,14 @@
 import { ApproxStructure, Pipeline, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import Env from 'tinymce/core/api/Env';
-import 'tinymce/themes/silver/Theme';
 import { PlatformDetection } from '@ephox/sand';
 
+import Env from 'tinymce/core/api/Env';
+import SilverTheme from 'tinymce/themes/silver/Theme';
+
 UnitTest.asynctest('TextcolorSanityTest', (success, failure) => {
+  SilverTheme();
+
   const browser = PlatformDetection.detect().browser;
 
   const forecolorStruct = ApproxStructure.build(function (s, str) {

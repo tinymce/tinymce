@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Tinymce from './Tinymce';
+import { TinyMCE, tinymce } from './Tinymce';
 
 declare const module: any;
 declare const window: any;
 
-const exportToModuleLoaders = (tinymce) => {
+const exportToModuleLoaders = (tinymce: TinyMCE) => {
   if (typeof module === 'object') {
     try {
       module.exports = tinymce;
@@ -21,10 +21,10 @@ const exportToModuleLoaders = (tinymce) => {
   }
 };
 
-const exportToWindowGlobal = (tinymce) => {
+const exportToWindowGlobal = (tinymce: TinyMCE) => {
   window.tinymce = tinymce;
   window.tinyMCE = tinymce;
 };
 
-exportToWindowGlobal(Tinymce);
-exportToModuleLoaders(Tinymce);
+exportToWindowGlobal(tinymce);
+exportToModuleLoaders(tinymce);

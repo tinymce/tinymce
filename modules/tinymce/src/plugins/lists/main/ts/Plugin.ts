@@ -11,12 +11,12 @@ import Commands from './api/Commands';
 import Keyboard from './core/Keyboard';
 import Buttons from './ui/Buttons';
 
-PluginManager.add('lists', function (editor) {
-  Keyboard.setup(editor);
-  Buttons.register(editor);
-  Commands.register(editor);
+export default function () {
+  PluginManager.add('lists', function (editor) {
+    Keyboard.setup(editor);
+    Buttons.register(editor);
+    Commands.register(editor);
 
-  return Api.get(editor);
-});
-
-export default function () { }
+    return Api.get(editor);
+  });
+}

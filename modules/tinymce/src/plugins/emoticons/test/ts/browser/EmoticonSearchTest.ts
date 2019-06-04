@@ -1,5 +1,3 @@
-import 'tinymce/themes/silver/Theme';
-
 import { Assertions, Chain, FocusTools, Keyboard, Keys, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
@@ -7,10 +5,12 @@ import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Attr, Body, Element } from '@ephox/sugar';
 
 import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import { cFakeEvent } from '../module/test/Utils';
 
 UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, failure) => {
   EmoticonsPlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);

@@ -1,13 +1,13 @@
 import { Pipeline, RawAssertions, Step, Log, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import Plugin from 'tinymce/plugins/imagetools/Plugin';
-import ImageUtils from '../module/test/ImageUtils';
-import 'tinymce/themes/silver/Theme';
-import { BlobConversions } from '@ephox/imagetools';
-import { Cell, Option } from '@ephox/katamari';
 import { document } from '@ephox/dom-globals';
+import { BlobConversions } from '@ephox/imagetools';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Cell, Option } from '@ephox/katamari';
 import { Body } from '@ephox/sugar';
+import ImagetoolsPlugin from 'tinymce/plugins/imagetools/Plugin';
+import ImageUtils from '../module/test/ImageUtils';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import Promise from 'tinymce/core/api/util/Promise';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest', (success, failure) => {
@@ -15,7 +15,8 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest
   const srcUrl = '/project/tinymce/src/plugins/imagetools/demo/img/dogleft.jpg';
   const fetchState = Cell(Option.none());
 
-  Plugin();
+  ImagetoolsPlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);

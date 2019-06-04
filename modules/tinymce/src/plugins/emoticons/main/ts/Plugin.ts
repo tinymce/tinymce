@@ -19,13 +19,13 @@ import Settings from './api/Settings';
  * @private
  */
 
-PluginManager.add('emoticons', function (editor, pluginUrl) {
-  const databaseUrl = Settings.getEmoticonDatabaseUrl(editor, pluginUrl);
+export default function () {
+  PluginManager.add('emoticons', function (editor, pluginUrl) {
+    const databaseUrl = Settings.getEmoticonDatabaseUrl(editor, pluginUrl);
 
-  const database = initDatabase(editor, databaseUrl);
+    const database = initDatabase(editor, databaseUrl);
 
-  Buttons.register(editor, database);
-  Autocompletion.init(editor, database);
-});
-
-export default function () { }
+    Buttons.register(editor, database);
+    Autocompletion.init(editor, database);
+  });
+}

@@ -13,21 +13,21 @@ import Commands from './api/Commands';
 import Settings from './api/Settings';
 import Buttons from './ui/Buttons';
 import SuggestionsMenu from './ui/SuggestionsMenu';
-import { LastSuggestion } from 'tinymce/plugins/spellchecker/core/Actions';
+import { LastSuggestion } from './core/Actions';
 
-PluginManager.add('spellchecker', function (editor, pluginUrl) {
-  if (DetectProPlugin.hasProPlugin(editor) === false) {
-    const startedState = Cell(false);
-    const currentLanguageState = Cell<string>(Settings.getLanguage(editor));
-    const textMatcherState = Cell(null);
-    const lastSuggestionsState = Cell<LastSuggestion>(null);
+export default function () {
+  PluginManager.add('spellchecker', function (editor, pluginUrl) {
+    if (DetectProPlugin.hasProPlugin(editor) === false) {
+      const startedState = Cell(false);
+      const currentLanguageState = Cell<string>(Settings.getLanguage(editor));
+      const textMatcherState = Cell(null);
+      const lastSuggestionsState = Cell<LastSuggestion>(null);
 
-    Buttons.register(editor, pluginUrl, startedState, textMatcherState, currentLanguageState, lastSuggestionsState);
-    SuggestionsMenu.setup(editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, currentLanguageState);
-    Commands.register(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
+      Buttons.register(editor, pluginUrl, startedState, textMatcherState, currentLanguageState, lastSuggestionsState);
+      SuggestionsMenu.setup(editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, currentLanguageState);
+      Commands.register(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
 
-    return Api.get(editor, startedState, lastSuggestionsState, textMatcherState, currentLanguageState, pluginUrl);
-  }
-});
-
-export default function () { }
+      return Api.get(editor, startedState, lastSuggestionsState, textMatcherState, currentLanguageState, pluginUrl);
+    }
+  });
+}

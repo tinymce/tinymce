@@ -4,7 +4,7 @@ import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
-import 'tinymce/themes/silver/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 import FakePlugin from '../module/test/FakePlugin';
 import NoMetaFakePlugin from '../module/test/NoMetaFakePlugin';
@@ -17,6 +17,7 @@ UnitTest.asynctest('Browser Test: .MetadataTest', (success, failure) => {
   HelpPlugin();
   FakePlugin();
   NoMetaFakePlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     TinyUi(editor);

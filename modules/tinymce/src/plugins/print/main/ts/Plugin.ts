@@ -9,10 +9,10 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 import Commands from './api/Commands';
 import Buttons from './ui/Buttons';
 
-PluginManager.add('print', function (editor) {
-  Commands.register(editor);
-  Buttons.register(editor);
-  editor.addShortcut('Meta+P', '', 'mcePrint');
-});
-
-export default function () { }
+export default function () {
+  PluginManager.add('print', function (editor) {
+    Commands.register(editor);
+    Buttons.register(editor);
+    editor.addShortcut('Meta+P', '', 'mcePrint');
+  });
+}

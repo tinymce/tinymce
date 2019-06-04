@@ -1,14 +1,15 @@
 import { Pipeline, RawAssertions, Step, Chain, UiFinder, Mouse, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyLoader, TinyApis, TinyUi } from '@ephox/mcagar';
+import { Element, Body } from '@ephox/sugar';
 
 import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
-import 'tinymce/themes/silver/Theme';
-import { Element, Body } from '@ephox/sugar';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.spellchecker.AddToDictionaryTest', (success, failure) => {
 
   SpellcheckerPlugin();
+  SilverTheme();
 
   const dict = [];
 

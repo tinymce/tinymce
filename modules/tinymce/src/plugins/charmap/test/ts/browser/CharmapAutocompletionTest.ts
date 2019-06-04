@@ -1,15 +1,15 @@
-import 'tinymce/themes/silver/Theme';
-
 import { Keyboard, Keys, Log, Pipeline, UiFinder, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { navigator } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
-import { navigator } from '@ephox/dom-globals';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.charmap.AutocompletionTest', (success, failure) => {
 
   CharmapPlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);

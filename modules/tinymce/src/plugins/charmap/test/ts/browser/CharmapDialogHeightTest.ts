@@ -1,15 +1,15 @@
-import 'tinymce/themes/silver/Theme';
-
 import { Chain, FocusTools, Guard, Keyboard, Keys, Log, Pipeline, UiFinder, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
+import { Result } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body, Element, Css, Traverse } from '@ephox/sugar';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
-import { Result } from '@ephox/katamari';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.charmap.DialogHeightTest', (success, failure) => {
   CharmapPlugin();
+  SilverTheme();
 
   // Move into shared library
   const cFakeEvent = function (name) {

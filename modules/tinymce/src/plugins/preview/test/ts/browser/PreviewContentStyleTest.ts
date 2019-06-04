@@ -4,11 +4,12 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import PreviewPlugin from 'tinymce/plugins/preview/Plugin';
 import IframeContent from 'tinymce/plugins/preview/core/IframeContent';
-import 'tinymce/themes/silver/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', (success, failure) => {
 
   PreviewPlugin();
+  SilverTheme();
 
   const sAssertIframeContains = (editor, text, expected) => Step.sync(() => {
     const actual = IframeContent.getPreviewHtml(editor);

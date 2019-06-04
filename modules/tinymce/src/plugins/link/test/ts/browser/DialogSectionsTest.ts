@@ -1,17 +1,17 @@
-import 'tinymce/themes/silver/Theme';
-
 import { GeneralSteps, Pipeline, UiFinder, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { console, document } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 import { TestLinkUi } from '../module/TestLinkUi';
 
 UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, failure) => {
 
   LinkPlugin();
+  SilverTheme();
 
   const getStr = (sections: TestSection[]) => {
     const r = { };

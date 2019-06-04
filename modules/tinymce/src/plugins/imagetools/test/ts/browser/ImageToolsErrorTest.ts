@@ -3,8 +3,8 @@ import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import { Html } from '@ephox/sugar';
-import Plugin from 'tinymce/plugins/imagetools/Plugin';
-import 'tinymce/themes/silver/Theme';
+import ImagetoolsPlugin from 'tinymce/plugins/imagetools/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import ImageUtils from '../module/test/ImageUtils';
 
 // TODO: This needs to be looked at again once notifications come back
@@ -16,7 +16,8 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', fun
 
   const corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
 
-  Plugin();
+  ImagetoolsPlugin();
+  SilverTheme();
 
   const sAssertErrorMessage = function (html) {
     return Step.label('Check notification message', Chain.asStep(TinyDom.fromDom(document.body), [

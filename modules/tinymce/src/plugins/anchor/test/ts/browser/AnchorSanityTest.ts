@@ -1,13 +1,14 @@
 import { Pipeline, Step, Waiter, Logger, Log } from '@ephox/agar';
 import { TinyApis, TinyLoader, TinyUi  } from '@ephox/mcagar';
 import AchorPlugin from 'tinymce/plugins/anchor/Plugin';
-import 'tinymce/themes/silver/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest.js', (success, failure) => {
 
   AchorPlugin();
+  SilverTheme();
 
   const sType = function (text) {
     return Logger.t('Add anchor' + text, Step.sync(function () {

@@ -58,7 +58,7 @@ import URI, { URIConstructor } from './util/URI';
 import VK from './util/VK';
 import XHR from './util/XHR';
 
-export interface Tinymce extends EditorManager {
+export interface TinyMCE extends EditorManager {
 
   geom: {
     Rect: Rect;
@@ -283,6 +283,4 @@ const publicApi = {
   isMac: Env.mac
 };
 
-const tinymce: Tinymce = Tools.extend(EditorManager, publicApi);
-
-export default tinymce;
+export const tinymce: TinyMCE = Tools.extend(EditorManager, publicApi);

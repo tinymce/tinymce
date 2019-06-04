@@ -1,16 +1,16 @@
-import 'tinymce/themes/silver/Theme';
-
 import { FocusTools, Keyboard, Keys, Pipeline, Step, UiFinder, Log, Chain, Assertions, ApproxStructure, Waiter, GeneralSteps } from '@ephox/agar';
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 import { Element, Body } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-
-import { PlatformDetection } from '@ephox/sand';
-import { TestHelpers } from '@ephox/alloy';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
+  SilverTheme();
+
   const platform = PlatformDetection.detect();
   const isIE = platform.browser.isIE();
   const skipInIE = <T, U> (step: Step<T, U>) => isIE ? Step.pass : step;

@@ -1,5 +1,3 @@
-import 'tinymce/themes/silver/Theme';
-
 import { Logger, Pipeline, Step, Keys, UiFinder, GeneralSteps, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
@@ -8,9 +6,12 @@ import { TinyLoader, TinyUi, TinyApis, TinyActions } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import { AutocompleterStructure, sAssertAutocompleterStructure, sWaitForAutocompleteToClose } from '../../module/AutocompleterUtils';
 
 UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
+  SilverTheme();
+
   const store = TestHelpers.TestStore();
 
   interface TriggerDetails {

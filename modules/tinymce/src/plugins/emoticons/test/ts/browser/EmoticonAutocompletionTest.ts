@@ -1,14 +1,14 @@
-import 'tinymce/themes/silver/Theme';
-
 import { Keyboard, Keys, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.emoticons.AutocompletionTest', (success, failure) => {
 
   EmoticonsPlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);

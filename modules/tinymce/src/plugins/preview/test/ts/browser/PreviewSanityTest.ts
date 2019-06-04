@@ -1,15 +1,16 @@
 import { Pipeline, Log, Waiter, UiFinder, Keyboard, Keys, GeneralSteps, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi, TinyDom } from '@ephox/mcagar';
+import { Element } from '@ephox/sugar';
 
 import PreviewPlugin from 'tinymce/plugins/preview/Plugin';
-import 'tinymce/themes/silver/Theme';
-import { Element } from '@ephox/sugar';
-import { document } from '@ephox/dom-globals';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewSanityTest', (success, failure) => {
 
   PreviewPlugin();
+  SilverTheme();
 
   const dialogSelector = 'div[role="dialog"]';
   const docBody = Element.fromDom(document.body);

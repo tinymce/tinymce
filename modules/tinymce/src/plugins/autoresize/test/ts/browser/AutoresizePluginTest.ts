@@ -5,13 +5,14 @@ import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import AutoresizePlugin from 'tinymce/plugins/autoresize/Plugin';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
-import 'tinymce/themes/silver/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (success, failure) => {
 
   AutoresizePlugin();
   FullscreenPlugin();
+  SilverTheme();
 
   const sAssertEditorHeightAbove = (editor: Editor, minHeight: number) => {
     return Logger.t(`Assert editor height is above ${minHeight}`, Step.sync(() => {
