@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Cell, Merger } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Actions, { LastSuggestion } from '../core/Actions';
-import { Cell, Merger } from '@ephox/katamari';
-import Editor from 'tinymce/core/api/Editor';
-import { DomTextMatcher } from 'tinymce/plugins/spellchecker/core/DomTextMatcher';
+import { DomTextMatcher } from '../core/DomTextMatcher';
 
 const spellcheckerEvents = 'SpellcheckStart SpellcheckEnd';
 

@@ -7,7 +7,7 @@
 
 import { window, console } from '@ephox/dom-globals';
 import I18n from './api/util/I18n';
-import Editor from 'tinymce/core/api/Editor';
+import Editor from './api/Editor';
 
 const displayNotification = (editor: Editor, message: string) => {
   editor.notificationManager.open({

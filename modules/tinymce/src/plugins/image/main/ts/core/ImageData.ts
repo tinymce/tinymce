@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Utils from 'tinymce/plugins/image/core/Utils';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import { Merger } from '@ephox/katamari';
 import { HTMLElement, Node, document } from '@ephox/dom-globals';
+import { Merger } from '@ephox/katamari';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Utils from './Utils';
 
 const DOM = DOMUtils.DOM;
 
