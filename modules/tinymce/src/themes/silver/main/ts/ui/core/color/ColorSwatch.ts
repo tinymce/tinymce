@@ -161,7 +161,9 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
       }
 
       const handler = (e) => {
-        setIconColor(splitButtonApi, e.name, e.colour);
+        if (e.name === name) {
+          setIconColor(splitButtonApi, e.name, e.colour);
+        }
       };
 
       editor.on('TextColorChange', handler);
