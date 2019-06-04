@@ -85,7 +85,7 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
   ] : [remove];
 };
 
-const applyColour = function (editor: Editor, format, value, onChoice: (v: string) => void) {
+const applyColor = function (editor: Editor, format, value, onChoice: (v: string) => void) {
   if (value === 'custom') {
     const dialog = colorPickerDialog(editor);
     dialog((colorOpt) => {
@@ -140,18 +140,18 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
     columns: getColorCols(editor),
     fetch: getFetch(Settings.getColors(editor), Settings.hasCustomColors(editor)),
     onAction: (splitButtonApi) => {
-      // do something with last colour
+      // do something with last color
       if (lastColor.get() !== null) {
-        applyColour(editor, format, lastColor.get(), () => { });
+        applyColor(editor, format, lastColor.get(), () => { });
       }
     },
     onItemAction: (splitButtonApi, value) => {
-      applyColour(editor, format, value, (newColour) => {
-        lastColor.set(newColour);
+      applyColor(editor, format, value, (newColor) => {
+        lastColor.set(newColor);
 
         editor.fire('TextColorChange', {
           name,
-          colour: newColour
+          color: newColor
         });
       });
     },
@@ -162,7 +162,7 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
 
       const handler = (e) => {
         if (e.name === name) {
-          setIconColor(splitButtonApi, e.name, e.colour);
+          setIconColor(splitButtonApi, e.name, e.color);
         }
       };
 
@@ -182,7 +182,7 @@ const registerTextColorMenuItem = (editor: Editor, name: string, format: string,
         type: 'fancymenuitem',
         fancytype: 'colorswatch',
         onAction: (data) => {
-          applyColour(editor, format, data.value, Fun.noop);
+          applyColor(editor, format, data.value, Fun.noop);
         }
       }
     ]
