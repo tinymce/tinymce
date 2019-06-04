@@ -29,29 +29,25 @@ Clone this repository on your system
 $ git clone https://github.com/tinymce/tinymce.git
 ```
 
-Install dependencies and prepare for development
+### Install dependencies
 
 * `yarn`
+
+### Build TinyMCE
+
+* `yarn build`
+
+This will produce an editor build in `modules/tinymce/js`, with distribution zips in `modules/tinymce/dist/tinymce_[number].zip`.
+
+## Developing TinyMCE
+
 * `yarn dev`
 
-`dev` performs compilation steps which `webpack` requires but are usually once-off. It also runs `tsc` to make later commands faster (`tsc -b` enforces incremental compilation).
+This performs compilation steps which webpack requires but are usually once-off. It also runs `tsc` to make later commands faster (`tsc -b` enforces incremental compilation).
 
-## Building TinyMCE
+### Builds
 
-If you previously just cloned this repository and ran `grunt`, the equivalent now is `yarn build`. Note that the build output has moved.
-
-Old:
-```
-/js
-/tmp/*.zip
-```
-New:
-```
-modules/tinymce/js
-modules/tinymce/tmp/*.zip
-```
-
-To build the editor in development, run `yarn tinymce-grunt` (the equivalent of `cd modules/tinymce && grunt`). This will output to the `modules/tinymce/js` folder.
+To build the editor in development, use `yarn tinymce-grunt`. This will output to the `modules/tinymce/js` folder (`build` is effectively `dev` followed by `tinymce-grunt`).
 
 Task names can be included, for example `yarn tinymce-grunt bundle` will execute the bundle task. More information on TinyMCE grunt tasks is available in the [TinyMCE readme](modules/tinymce/readme.md).
 
@@ -62,49 +58,49 @@ There are many top-level helper scripts for TinyMCE and Oxide (the default skin)
 ### TinyMCE
 
 `yarn start`
-This boots the TinyMCE webpack-dev-server at http://localhost:3000 and also starts a TypeScript watch process. With this running changes to _any_ `.ts` source file (excluding tests) should be reflected in WebPack within a few seconds.
+This boots the TinyMCE webpack dev server at http://localhost:3000 and also starts a TypeScript watch process. With this running changes to _any_ `.ts` source file in the monorepo (excluding tests) should be reflected in WebPack within a few seconds.
 
-If WebPack later adds supports for TypeScript build mode the background TSC watch won't be necessary which will speed up round trip time.
+If WebPack later adds supports for TypeScript build mode the background TypeScript watch process won't be necessary which will speed up round trip time.
 
 `yarn watch`
-This runs `tsc -b -w` for those times when you don't need to iterate in the browser.
+runs `tsc -b -w` for those times when you don't need to iterate in the browser.
 
 `yarn tsc`
-An alias to `tsc -b` just in case you forget
+an alias to `tsc -b` just in case you forget
 
 `yarn tslint`
-This runs `tslint` in _all_ projects, with a rule set that is far more strict than most projects were previously subject to. This is a good source of things to improve when bored.
+runs `tslint` in _all_ projects, with a rule set that is far more strict than most projects were previously subject to. This is a good source of things to improve when bored.
 
 `yarn tinymce-grunt`
-Easy access to the TinyMCE grunt commands from the root folder.
+easy access to the TinyMCE grunt commands from the root folder.
 
 ### Oxide
 
-`yarn oxide-demo`
-This boots gulp running the oxide demo.
+```
+yarn oxide-build
+yarn oxide-icons-build
+```
 
-`yarn oxide-build`
-An alias to the basic oxide build command.
+These commands build the skin and icons but should not normally be required outside of other development scripts.
 
-`yarn oxide-icons-build`
-An alias to the basic oxide-icons-default build command.
+`yarn oxide-watch` will set up a watch and rebuild process which is designed for integration with the external demo/test scripts.
 
 ### Focussed development
 
 If you are working in a single module and don't want to deal with the overheads of whole-monorepo compilation, you can run `yarn --focus` from that module's folder to install the latest published versions of monorepo projects in a local `node_modules`. For more information see this yarn blog post:
 https://yarnpkg.com/blog/2018/05/18/focused-workspaces/
 
-### Testing scripts
+## Testing
 
 Testing relies on `yarn lerna changed` to determine which modules need testing, and a grunt script then separates them into two groups depending on whether they need GUI browser testing or can be tested with phantomjs.
 
-CI scripts:
+### CI test scripts
 ```
 yarn browser-test
 yarn phantomjs-test
 ```
 
-Dev scripts:
+### Dev test scripts
 ```
 yarn browser-test-manual
 yarn phantomjs-test-manual
@@ -119,7 +115,7 @@ CI builds rely on the `ci` and `ci-all` package.json scripts, in addition to the
 
 ## Version management
 
-It is important that you never hand-edit a `package.json` file, particularly the `dependency` and `version` fields. And we do mean _never_. Doing so may break the automated scripts.
+It is important that you never hand-edit a `package.json` file, particularly the `dependency` and `version` fields. And we do mean _never_. Doing so may break the automated scripts. See the `publishing` section below for more information.
 
 ### dev dependencies
 
@@ -133,13 +129,8 @@ To add a dependency inside a monorepo package:
 
 This works whether adding an external dependency or a dependency on another monorepo package.
 
-Note that both names must be the entire `name` of the package, not the folder, for example
+Note that both names must be the entire scoped `name` of the package, not the folder, for example
 `yarn workspace @tinymce/oxide add @tinymce/oxide-icons-default`
-
-### updating package versions
-
-See the `publishing` section below.
-
 
 ## Publishing process
 
@@ -147,11 +138,11 @@ We have a CI process set up to publish all changed libraries as patch releases t
 
 ### Side note: major and minor version bumps
 
-In the future these will likely be automated via the lerna-supported [conventional commit](https://conventionalcommits.org) specification, for now this is a manual process.
+> In the future these will likely be automated via the lerna-supported [conventional commit](https://conventionalcommits.org) specification, for now this is done manually.
 
 In theory minor bumps can be done in the package.json by hand but for consistency we recommend using the lerna tooling for both. `yarn lerna version` is the only way to do this without breaking links between packages.
 
-Choose major, minor or patch as appropriate depending on the flow-on effects of this version change. Afterwards, you _must_ run the git commands below to push the version and related tags correctly.
+For each changed package choose major, minor or patch as appropriate depending on the flow-on effects of this version change. Afterwards, you _must_ run the git commands below to push the version and related tags correctly.
 
 Changes to minor and major versions are such a rare occurence that this manual process will suffice until we switch to conventional commits. Unfortunately manual version changes mean the next automated build will run all repository tests, since nothing has changed, but that's probably a good idea for serious version changes anyway.
 
@@ -161,9 +152,13 @@ Changes to minor and major versions are such a rare occurence that this manual p
 
 This is configured via `lerna.json` to exclude TinyMCE. We will not be using lerna to publish TinyMCE itself as it places far greater importance on the version number than library projects.
 
-Lerna is configured to not `git push` in case of failure, so after a successful publish:
+`yarn lerna publish from-package`
+
+This is run after `publish patch` to catch cases where `lerna version` was run manually for a non-patch bump. It compares the source version to the NPM registry and publishes anything that doesn't match.
+
+Lerna's publish process is configured to not `git push` in case of failure, so after a successful publish this must be done manually:
 
 ```
 git push
-git tag | grep -e '^@' | xargs git push origin
+git push --tags
 ```
