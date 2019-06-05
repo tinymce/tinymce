@@ -10,6 +10,7 @@ import { Menu, Toolbar, Types } from '@ephox/bridge';
 import { Cell, Fun, Option, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Settings from './Settings';
+import Events from '../../../api/Events';
 
 export interface ColorSwatchDialogData {
   colorpicker: string;
@@ -85,7 +86,7 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
   ] : [remove];
 };
 
-const applyColour = function (editor: Editor, format, value, onChoice: (v: string) => void) {
+const applyColor = function (editor: Editor, format, value, onChoice: (v: string) => void) {
   if (value === 'custom') {
     const dialog = colorPickerDialog(editor);
     dialog((colorOpt) => {
@@ -140,15 +141,19 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
     columns: getColorCols(editor),
     fetch: getFetch(Settings.getColors(editor), Settings.hasCustomColors(editor)),
     onAction: (splitButtonApi) => {
-      // do something with last colour
+      // do something with last color
       if (lastColor.get() !== null) {
-        applyColour(editor, format, lastColor.get(), () => { });
+        applyColor(editor, format, lastColor.get(), () => { });
       }
     },
     onItemAction: (splitButtonApi, value) => {
-      applyColour(editor, format, value, (newColour) => {
-        lastColor.set(newColour);
-        setIconColor(splitButtonApi, name, newColour);
+      applyColor(editor, format, value, (newColor) => {
+        lastColor.set(newColor);
+
+        Events.fireTextColorChange(editor, {
+          name,
+          color: newColor
+        });
       });
     },
     onSetup: (splitButtonApi) => {
@@ -156,7 +161,15 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
         setIconColor(splitButtonApi, name, lastColor.get());
       }
 
-      return () => { };
+      const handler = (e) => {
+        if (e.name === name) {
+          setIconColor(splitButtonApi, e.name, e.color);
+        }
+      };
+
+      editor.on('TextColorChange', handler);
+
+      return () => { editor.off('TextColorChange', handler); };
     }
   });
 };
@@ -170,7 +183,7 @@ const registerTextColorMenuItem = (editor: Editor, name: string, format: string,
         type: 'fancymenuitem',
         fancytype: 'colorswatch',
         onAction: (data) => {
-          applyColour(editor, format, data.value, Fun.noop);
+          applyColor(editor, format, data.value, Fun.noop);
         }
       }
     ]
