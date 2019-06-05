@@ -12,8 +12,8 @@ const subset = function <E, D>(universe: Universe<E, D>, start: E, finish: E) {
   return Subset.subset(universe, start, finish);
 };
 
-const ancestors = function <E, D>(universe: Universe<E, D>, start: E, finish: E, _isRoot?: (x: E, i: number, xs: ArrayLike<E>) => boolean) {
-  return Subset.ancestors(universe, start, finish, _isRoot);
+const ancestors = function <E, D>(universe: Universe<E, D>, start: E, finish: E, isRoot?: (x: E) => boolean) {
+  return Subset.ancestors(universe, start, finish, isRoot);
 };
 
 const breakToLeft = function <E, D>(universe: Universe<E, D>, parent: E, child: E) {

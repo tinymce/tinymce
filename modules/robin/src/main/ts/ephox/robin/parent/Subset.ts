@@ -42,9 +42,8 @@ const unsafeSubset = function <E, D>(universe: Universe<E, D>, common: E, ps1: E
 };
 
 // Note: this can be exported if it is required in the future.
-const ancestors = function <E, D>(universe: Universe<E, D>, start: E, end: E, _isRoot?: (x: E, i: number, xs: ArrayLike<E>) => boolean) {
+const ancestors = function <E, D>(universe: Universe<E, D>, start: E, end: E, isRoot: (x: E) => boolean = Fun.never) {
   // Inefficient if no isRoot is supplied.
-  const isRoot = _isRoot !== undefined ? _isRoot : Fun.constant(false);
   // TODO: Andy knows there is a graph-based algorithm to find a common parent, but can't remember it
   //        This also includes something to get the subset after finding the common parent
   const ps1 = [start].concat(universe.up().all(start));
