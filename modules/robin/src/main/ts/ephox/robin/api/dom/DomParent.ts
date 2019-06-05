@@ -16,8 +16,8 @@ const subset = function (start: Element, finish: Element) {
   return Parent.subset(universe, start, finish);
 };
 
-const ancestors = function (start: Element, finish: Element, _isRoot?: (x: Element, i: number, xs: ArrayLike<Element>) => boolean) {
-  return Parent.ancestors(universe, start, finish, _isRoot);
+const ancestors = function (start: Element, finish: Element, isRoot?: (x: Element) => boolean) {
+  return Parent.ancestors(universe, start, finish, isRoot);
 };
 
 const breakToLeft = function (parent: Element, child: Element) {
