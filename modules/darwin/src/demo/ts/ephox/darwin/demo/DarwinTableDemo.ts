@@ -21,7 +21,7 @@ import InputHandlers from 'ephox/darwin/api/InputHandlers';
 import { SelectionAnnotation } from 'ephox/darwin/api/SelectionAnnotation';
 import SelectionKeys from 'ephox/darwin/api/SelectionKeys';
 import Util from 'ephox/darwin/selection/Util';
-import { Response } from 'ephox/darwin/api/Responses';
+import { Response } from 'ephox/darwin/selection/Response';
 
 const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 Attr.set(ephoxUi, 'contenteditable', 'true');

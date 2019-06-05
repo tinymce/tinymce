@@ -1,5 +1,5 @@
 import { Struct, Option } from '@ephox/katamari';
-import { Situs } from '../selection/Situs';
+import { Situs } from './Situs';
 
 export interface Response {
   selection: () => Option<Situs>;

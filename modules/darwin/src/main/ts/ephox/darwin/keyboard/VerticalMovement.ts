@@ -2,7 +2,7 @@ import { Fun, Option } from '@ephox/katamari';
 import { DomGather } from '@ephox/phoenix';
 import { PlatformDetection } from '@ephox/sand';
 import { Awareness, Compare, CursorPosition, PredicateExists, SelectorFilter, SelectorFind, Traverse, Element, SimRange } from '@ephox/sugar';
-import { Response } from '../api/Responses';
+import { Response } from '../selection/Response';
 import Util from '../selection/Util';
 import KeySelection from './KeySelection';
 import TableKeys from './TableKeys';

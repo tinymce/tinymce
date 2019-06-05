@@ -5,7 +5,7 @@ import VerticalMovement from '../keyboard/VerticalMovement';
 import MouseSelection from '../mouse/MouseSelection';
 import { KeyDirection } from '../navigation/KeyDirection';
 import CellSelection from '../selection/CellSelection';
-import { Response } from './Responses';
+import { Response } from '../selection/Response';
 import SelectionKeys from './SelectionKeys';
 import { WindowBridge } from './WindowBridge';
 import { Window, KeyboardEvent } from '@ephox/dom-globals';

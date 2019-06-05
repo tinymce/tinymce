@@ -1,6 +1,6 @@
 import { Option } from '@ephox/katamari';
 import { Awareness, Compare, Element, SelectorFind } from '@ephox/sugar';
-import { Response } from '../api/Responses';
+import { Response } from '../selection/Response';
 import CellSelection from '../selection/CellSelection';
 import Util from '../selection/Util';
 import { SelectionAnnotation } from '../api/SelectionAnnotation';
