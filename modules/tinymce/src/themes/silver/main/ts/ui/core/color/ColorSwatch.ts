@@ -10,6 +10,7 @@ import { Menu, Toolbar, Types } from '@ephox/bridge';
 import { Cell, Fun, Option, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Settings from './Settings';
+import Events from '../../../api/Events';
 
 export interface ColorSwatchDialogData {
   colorpicker: string;
@@ -149,7 +150,7 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
       applyColor(editor, format, value, (newColor) => {
         lastColor.set(newColor);
 
-        editor.fire('TextColorChange', {
+        Events.fireTextColorChange(editor, {
           name,
           color: newColor
         });
