@@ -14,3 +14,4 @@ modules/*/LICENSE.TXT
 
 /dist
 /js
+/tmp
