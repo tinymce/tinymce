@@ -4,11 +4,12 @@ import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import TemplatePlugin from 'tinymce/plugins/template/Plugin';
-import 'tinymce/themes/silver/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.template.DatesTest', (success, failure) => {
 
   TemplatePlugin();
+  SilverTheme();
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);

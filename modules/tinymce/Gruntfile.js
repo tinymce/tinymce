@@ -59,10 +59,7 @@ module.exports = function (grunt) {
         core: {
           options: {
             treeshake: true,
-            name: 'tinymce',
             format: 'iife',
-            banner: '(function () {',
-            footer: '})();',
             onwarn: swag.onwarn,
             plugins: [
               swag.nodeResolve({
@@ -86,10 +83,7 @@ module.exports = function (grunt) {
         return {
           options: {
             treeshake: true,
-            name: name,
             format: 'iife',
-            banner: '(function () {',
-            footer: '})();',
             onwarn: swag.onwarn,
             plugins: [
               swag.nodeResolve({
@@ -107,17 +101,14 @@ module.exports = function (grunt) {
               swag.remapImports()
             ]
           },
-          files:[ { src: `lib/plugins/${name}/main/ts/Plugin.js`, dest: `js/tinymce/plugins/${name}/plugin.js` } ]
+          files:[ { src: `lib/plugins/${name}/main/ts/Main.js`, dest: `js/tinymce/plugins/${name}/plugin.js` } ]
         };
       }),
       gruntUtils.generate(themes, 'theme', (name) => {
         return {
           options: {
             treeshake: true,
-            name: name,
             format: 'iife',
-            banner: '(function () {',
-            footer: '})();',
             onwarn: swag.onwarn,
             plugins: [
               swag.nodeResolve({
@@ -138,7 +129,7 @@ module.exports = function (grunt) {
           },
           files:[
             {
-              src: `lib/themes/${name}/main/ts/Theme.js`,
+              src: `lib/themes/${name}/main/ts/Main.js`,
               dest: `js/tinymce/themes/${name}/theme.js`
             }
           ]

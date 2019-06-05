@@ -8,8 +8,8 @@
 import { console } from '@ephox/dom-globals';
 import PluginManager from 'tinymce/core/api/PluginManager';
 
-PluginManager.add('textcolor', function () {
-  console.warn('Text color plugin is now built in to the core editor, please remove it from your editor configuration');
-});
-
-export default function () { }
+export default function () {
+  PluginManager.add('textcolor', function () {
+    console.warn('Text color plugin is now built in to the core editor, please remove it from your editor configuration');
+  });
+}

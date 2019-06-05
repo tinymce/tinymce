@@ -17,16 +17,16 @@ import Resize from './core/Resize';
  * @private
  */
 
-PluginManager.add('autoresize', function (editor) {
-  // If autoresize is enabled, disable resize if the user hasn't explicitly enabled it
-  if (!editor.settings.hasOwnProperty('resize')) {
-    editor.settings.resize = false;
-  }
-  if (!editor.inline) {
-    const oldSize = Cell(0);
-    Commands.register(editor, oldSize);
-    Resize.setup(editor, oldSize);
-  }
-});
-
-export default function () {}
+export default function () {
+  PluginManager.add('autoresize', function (editor) {
+    // If autoresize is enabled, disable resize if the user hasn't explicitly enabled it
+    if (!editor.settings.hasOwnProperty('resize')) {
+      editor.settings.resize = false;
+    }
+    if (!editor.inline) {
+      const oldSize = Cell(0);
+      Commands.register(editor, oldSize);
+      Resize.setup(editor, oldSize);
+    }
+  });
+}

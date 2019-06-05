@@ -5,17 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HTMLElement } from '@ephox/dom-globals';
+import { Cell } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Actions, { LastSuggestion } from '../core/Actions';
-import Editor from 'tinymce/core/api/Editor';
-import { Cell } from '@ephox/katamari';
-import { DomTextMatcher } from 'tinymce/plugins/spellchecker/core/DomTextMatcher';
-import { HTMLElement } from '@ephox/dom-globals';
+import { DomTextMatcher } from '../core/DomTextMatcher';
 
 const ignoreAll = true;
 
 const getSuggestions = (editor: Editor, pluginUrl: string, lastSuggestionsState, startedState, textMatcherState, currentLanguageState, word, spans) => {
-  const items = [], suggestions = lastSuggestionsState.get().suggestions[word];
+  const items = [];
+  const suggestions = lastSuggestionsState.get().suggestions[word];
 
   Tools.each(suggestions, function (suggestion) {
     items.push({

@@ -57,6 +57,6 @@ function Plugin(editor: Editor) {
   return getApi(editor, clipboardRows);
 }
 
-PluginManager.add('table', Plugin);
-
-export default function () { }
+export default function () {
+  PluginManager.add('table', Plugin);
+}

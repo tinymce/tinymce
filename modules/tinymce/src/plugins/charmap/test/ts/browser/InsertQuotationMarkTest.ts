@@ -1,12 +1,13 @@
 import { Chain, Mouse, Pipeline, Log } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
-import 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.charmap.InsertQuotationMarkTest', (success, failure) => {
 
   CharmapPlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);

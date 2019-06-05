@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Settings from './Settings';
-import Actions, { LastSuggestion, Data } from '../core/Actions';
-import Editor from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
-import { DomTextMatcher } from 'tinymce/plugins/spellchecker/core/DomTextMatcher';
+import Editor from 'tinymce/core/api/Editor';
+import Actions, { LastSuggestion, Data } from '../core/Actions';
+import { DomTextMatcher } from '../core/DomTextMatcher';
+import Settings from './Settings';
 
 const get = function (editor: Editor, startedState: Cell<boolean>, lastSuggestionsState: Cell<LastSuggestion>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, url: string) {
   const getLanguage = function () {

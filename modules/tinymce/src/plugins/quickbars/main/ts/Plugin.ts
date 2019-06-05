@@ -11,11 +11,11 @@ import { default as InsertToolbars } from './insert/Toolbars';
 
 import { default as SelectionToolbars } from './selection/Toolbars';
 
-PluginManager.add('quickbars', function (editor) {
-  InsertButtons.setupButtons(editor);
-  InsertToolbars.addToEditor(editor);
+export default function () {
+  PluginManager.add('quickbars', function (editor) {
+    InsertButtons.setupButtons(editor);
+    InsertToolbars.addToEditor(editor);
 
-  SelectionToolbars.addToEditor(editor);
-});
-
-export default function () { }
+    SelectionToolbars.addToEditor(editor);
+  });
+}

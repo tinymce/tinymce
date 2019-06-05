@@ -1,12 +1,14 @@
 import { Logger, Pipeline, RawAssertions, Step, Log } from '@ephox/agar';
-import { TinyLoader } from '@ephox/mcagar';
-import 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { TinyLoader } from '@ephox/mcagar';
+
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 import Settings from 'tinymce/themes/silver/ui/core/color/Settings';
 
 UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
+  SilverTheme();
 
   const sResetLocalStorage = function () {
     return Logger.t(`Reset local storage`, Step.sync(function () {

@@ -4,12 +4,13 @@ import { document } from '@ephox/dom-globals';
 import { TinyLoader, TinyApis } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import CodePlugin from 'tinymce/plugins/codesample/Plugin';
-import 'tinymce/themes/silver/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import * as TestUtils from '../module/CodeSampleTestUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', (success, failure) => {
 
   CodePlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
 

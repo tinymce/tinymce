@@ -1,11 +1,10 @@
-import 'tinymce/themes/silver/Theme';
-
 import { Log, Pipeline, FocusTools, Chain, Guard } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
-import { document } from '@ephox/dom-globals';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 const cFakeEvent = function (name) {
   return Chain.control(
@@ -21,6 +20,7 @@ const cFakeEvent = function (name) {
 UnitTest.asynctest('browser.tinymce.plugins.charmap.CharmapUserDefinedTest', (success, failure) => {
 
   CharmapPlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);

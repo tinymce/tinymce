@@ -1,14 +1,14 @@
-import 'tinymce/themes/silver/Theme';
-
 import { Assertions, Chain, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.emoticons.DifferentEmojiDatabaseTest', (success, failure) => {
   EmoticonsPlugin();
+  SilverTheme();
 
   const sTestEditorWithSettings = (categories, databaseUrl) => Step.async((onStepSuccess, onStepFailure) => {
     TinyLoader.setup(function (editor, onSuccess, onFailure) {

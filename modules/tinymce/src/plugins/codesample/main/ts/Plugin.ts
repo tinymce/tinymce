@@ -12,16 +12,16 @@ import Buttons from './ui/Buttons';
 import Dialog from './ui/Dialog';
 import Utils from './util/Utils';
 
-PluginManager.add('codesample', function (editor, pluginUrl) {
-  FilterContent.setup(editor);
-  Buttons.register(editor);
-  Commands.register(editor);
+export default function () {
+  PluginManager.add('codesample', function (editor) {
+    FilterContent.setup(editor);
+    Buttons.register(editor);
+    Commands.register(editor);
 
-  editor.on('dblclick', function (ev) {
-    if (Utils.isCodeSample(ev.target)) {
-      Dialog.open(editor);
-    }
+    editor.on('dblclick', function (ev) {
+      if (Utils.isCodeSample(ev.target)) {
+        Dialog.open(editor);
+      }
+    });
   });
-});
-
-export default function () { }
+}

@@ -2,13 +2,14 @@ import { Chain, Keys, Mouse, Pipeline, UiControls, UiFinder, Log } from '@ephox/
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
-import 'tinymce/themes/silver/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('Browser Test: .AnchorInlineTest', (success, failure) => {
 
   AnchorPlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);

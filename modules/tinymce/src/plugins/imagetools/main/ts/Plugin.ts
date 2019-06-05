@@ -12,15 +12,15 @@ import UploadSelectedImage from './core/UploadSelectedImage';
 import Buttons from './ui/Buttons';
 import ContextToolbar from './ui/ContextToolbar';
 
-PluginManager.add('imagetools', function (editor) {
-  const imageUploadTimerState = Cell(0);
-  const lastSelectedImageState = Cell(null);
+export default function () {
+  PluginManager.add('imagetools', function (editor) {
+    const imageUploadTimerState = Cell(0);
+    const lastSelectedImageState = Cell(null);
 
-  Commands.register(editor, imageUploadTimerState);
-  Buttons.register(editor);
-  ContextToolbar.register(editor);
+    Commands.register(editor, imageUploadTimerState);
+    Buttons.register(editor);
+    ContextToolbar.register(editor);
 
-  UploadSelectedImage.setup(editor, imageUploadTimerState, lastSelectedImageState);
-});
-
-export default function () { }
+    UploadSelectedImage.setup(editor, imageUploadTimerState, lastSelectedImageState);
+  });
+}

@@ -7,8 +7,8 @@
 
 import { HTMLElement, Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
-import { defaultData, read, ImageData, create, isFigure, write } from 'tinymce/plugins/image/core/ImageData';
-import Utils from 'tinymce/plugins/image/core/Utils';
+import { defaultData, read, ImageData, create, isFigure, write } from './ImageData';
+import Utils from './Utils';
 
 const normalizeCss = (editor: Editor, cssText: string): string => {
   const css = editor.dom.styles.parse(cssText);

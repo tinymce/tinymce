@@ -11,7 +11,7 @@ import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import Promise from 'tinymce/core/api/util/Promise';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
-import Settings from 'tinymce/plugins/emoticons/api/Settings';
+import Settings from '../api/Settings';
 
 const ALL_CATEGORY = 'All';
 

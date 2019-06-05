@@ -1,10 +1,11 @@
-import 'tinymce/themes/silver/Theme';
-
 import { Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('Editor (Silver) Configuration Close test', (success, failure) => {
+  SilverTheme();
+
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
       const tinyUi = TinyUi(editor);

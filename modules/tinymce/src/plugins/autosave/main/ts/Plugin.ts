@@ -11,7 +11,6 @@ import * as Api from './api/Api';
 import * as BeforeUnload from './core/BeforeUnload';
 import * as Buttons from './ui/Buttons';
 import * as Storage from './core/Storage';
-import Editor from 'tinymce/core/api/Editor';
 import * as Settings from './api/Settings';
 
 /**
@@ -21,19 +20,19 @@ import * as Settings from './api/Settings';
  * @private
  */
 
-PluginManager.add('autosave', function (editor: Editor) {
-  const started = Cell(false);
+export default function () {
+  PluginManager.add('autosave', function (editor) {
+    const started = Cell(false);
 
-  BeforeUnload.setup(editor);
-  Buttons.register(editor, started);
+    BeforeUnload.setup(editor);
+    Buttons.register(editor, started);
 
-  editor.on('init', function () {
-    if (Settings.shouldRestoreWhenEmpty(editor) && editor.dom.isEmpty(editor.getBody())) {
-      Storage.restoreDraft(editor);
-    }
+    editor.on('init', function () {
+      if (Settings.shouldRestoreWhenEmpty(editor) && editor.dom.isEmpty(editor.getBody())) {
+        Storage.restoreDraft(editor);
+      }
+    });
+
+    return Api.get(editor);
   });
-
-  return Api.get(editor);
-});
-
-export default function () { }
+}

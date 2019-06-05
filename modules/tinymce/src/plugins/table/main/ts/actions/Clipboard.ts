@@ -9,12 +9,13 @@ import { Arr, Fun, Option } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
 import { Element, Elements, Node, Replication } from '@ephox/sugar';
 
+import Editor from 'tinymce/core/api/Editor';
+
 import TableTargets from '../queries/TableTargets';
 import Ephemera from '../selection/Ephemera';
+import { Selections } from '../selection/Selections';
 import SelectionTypes from '../selection/SelectionTypes';
-import Editor from 'tinymce/core/api/Editor';
-import { TableActions } from 'tinymce/plugins/table/actions/TableActions';
-import { Selections } from 'tinymce/plugins/table/selection/Selections';
+import { TableActions } from './TableActions';
 
 const extractSelected = function (cells) {
   // Assume for now that we only have one table (also handles the case where we multi select outside a table)

@@ -16,16 +16,16 @@ import * as Dialog from './ui/Dialog';
 export type TabSpecs = Record<string, Types.Dialog.TabApi>;
 export type CustomTabSpecs = Cell<TabSpecs>;
 
-PluginManager.add('help', (editor) => {
-  const customTabs: CustomTabSpecs = Cell({});
-  const api = Api.get(customTabs);
+export default () => {
+  PluginManager.add('help', (editor) => {
+    const customTabs: CustomTabSpecs = Cell({});
+    const api = Api.get(customTabs);
 
-  const dialogOpener: () => void = Dialog.init(editor, customTabs);
-  Buttons.register(editor, dialogOpener);
-  Commands.register(editor, dialogOpener);
-  editor.shortcuts.add('Alt+0', 'Open help dialog', 'mceHelp');
+    const dialogOpener: () => void = Dialog.init(editor, customTabs);
+    Buttons.register(editor, dialogOpener);
+    Commands.register(editor, dialogOpener);
+    editor.shortcuts.add('Alt+0', 'Open help dialog', 'mceHelp');
 
-  return api;
-});
-
-export default () => {};
+    return api;
+  });
+};

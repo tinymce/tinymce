@@ -278,6 +278,6 @@ const renderMobileTheme = function (editor: Editor) {
   };
 };
 
-ThemeManager.add('mobile', renderMobileTheme);
-
-export default function () { }
+export default function () {
+  ThemeManager.add('mobile', renderMobileTheme);
+}
