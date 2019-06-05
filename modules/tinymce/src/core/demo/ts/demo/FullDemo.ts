@@ -107,6 +107,41 @@ export default function () {
     autosave_ask_before_unload: false,
     toolbar: 'undo redo sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
     'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
+
+    // Multiple toolbar array
+    // toolbar: ['undo redo sidebar1 align fontsizeselect insertfile | fontselect formatselect styleselect insertfile | styleselect | bold italic',
+    // 'alignleft aligncenter alignright alignjustify | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
+    // 'bullist numlist outdent indent | link image'],
+
+    // Toolbar<n>
+    // toolbar1: 'undo redo sidebar1 align fontsizeselect insertfile | fontselect formatselect styleselect insertfile | styleselect | bold italic',
+    // toolbar2: 'alignleft aligncenter alignright alignjustify | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
+    // toolbar3: 'bullist numlist outdent indent | link image',
+
+    // Toolbar with group names
+    // toolbar: [
+    //   {
+    //     name: 'history', items: [ 'undo', 'redo' ]
+    //   },
+    //   {
+    //     name: 'styles', items: [ 'styleselect' ]
+    //   },
+    //   {
+    //     name: 'formatting', items: [ 'bold', 'italic']
+    //   },
+    //   {
+    //     name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ]
+    //   },
+    //   {
+    //     name: 'indentation', items: [ 'outdent', 'indent' ]
+    //   },
+    //   {
+    //     name: 'permanent pen', items: [ 'permanentpen' ]
+    //   },
+    //   {
+    //     name: 'comments', items: [ 'addcomment' ]
+    //   }
+    // ],
     toolbar_drawer: 'floating',
     emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js'
   };

@@ -1,3 +1,5 @@
+import { forall } from './Arr';
+
 const typeOf = function(x: any) {
   if (x === null) return 'null';
   const t = typeof x;
@@ -20,3 +22,6 @@ export const isBoolean = <(value: any) => value is boolean>isType('boolean');
 export const isUndefined = <(value: any) => value is undefined>isType('undefined');
 export const isFunction = <(value: any) => value is Function>isType('function');
 export const isNumber = <(value: any) => value is number>isType('number');
+export const isArrayOf = <E>(value: any, func: (x: any) => x is E): value is Array<E> => {
+  return isArray(value) && forall(value, func);
+};

@@ -25,7 +25,7 @@ import { createFontSelect } from '../core/complex/FontSelect';
 import { createFontsizeSelect } from '../core/complex/FontsizeSelect';
 import { createFormatSelect } from '../core/complex/FormatSelect';
 import { createStyleSelect } from '../core/complex/StyleSelect';
-import { RenderUiConfig } from '../../Render';
+import { RenderToolbarConfig, ToolbarGroupSetting } from '../../Render';
 import { ToolbarGroup } from './CommonToolbar';
 
 export const handleError = (error) => {
@@ -34,11 +34,6 @@ export const handleError = (error) => {
 };
 
 export type ToolbarButton = Toolbar.ToolbarButtonApi | Toolbar.ToolbarMenuButtonApi | Toolbar.ToolbarToggleButtonApi | Toolbar.ToolbarSplitButtonApi;
-
-interface ToolbarGroupSetting {
-  name?: string;
-  items: string[];
-}
 
 interface Extras {
   backstage: UiFactoryBackstage;
@@ -169,23 +164,29 @@ const convertStringToolbar = (strToolbar) => {
   });
 };
 
+const isToolbarGroupSettingArray = (toolbar): toolbar is ToolbarGroupSetting[] => Type.isArrayOf(toolbar, (t): t is ToolbarGroupSetting => Obj.has(t, 'name') && Obj.has(t, 'items'));
+
 // Toolbar settings
 // false = disabled
 // undefined or true = default
 // string = enabled with specified buttons and groups
 // string array = enabled with specified buttons and groups
 // object array = enabled with specified buttons, groups and group titles
-const createToolbar = (toolbarConfig: Partial<RenderUiConfig>): ToolbarGroupSetting[] => {
-  if (toolbarConfig.toolbar === false) {
+const createToolbar = (toolbarConfig: RenderToolbarConfig): ToolbarGroupSetting[] => {
+  const toolbar = toolbarConfig.toolbar;
+  const buttons = toolbarConfig.buttons;
+  if (toolbar === false) {
     return [];
-  } else if (toolbarConfig.toolbar === undefined || toolbarConfig.toolbar === true) {
-    return removeUnusedDefaults(toolbarConfig.buttons);
-  } else if (Type.isString(toolbarConfig.toolbar)) {
-    return convertStringToolbar(toolbarConfig.toolbar);
-  } else if (Type.isArray(toolbarConfig.toolbar) && Type.isString(toolbarConfig.toolbar[0])) {
-    return convertStringToolbar(toolbarConfig.toolbar.join(' | '));
+  } else if (toolbar === undefined || toolbar === true) {
+    return removeUnusedDefaults(buttons);
+  } else if (Type.isString(toolbar)) {
+    return convertStringToolbar(toolbar);
+  } else if (isToolbarGroupSettingArray(toolbar)) {
+    return toolbar;
   } else {
-    return toolbarConfig.toolbar;
+    // tslint:disable-next-line:no-console
+    console.error('Toolbar type should be string, string[], boolean or ToolbarGroup[]');
+    return [];
   }
 };
 
@@ -212,7 +213,7 @@ const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem:
   );
 };
 
-const identifyButtons = (editor: Editor, toolbarConfig: Partial<RenderUiConfig>, extras: Extras, prefixes: Option<string[]>): ToolbarGroup[] => {
+const identifyButtons = (editor: Editor, toolbarConfig: RenderToolbarConfig, extras: Extras, prefixes: Option<string[]>): ToolbarGroup[] => {
   const toolbarGroups = createToolbar(toolbarConfig);
   const groups = Arr.map(toolbarGroups, (group) => {
     const items = Arr.bind(group.items, (toolbarItem) => {

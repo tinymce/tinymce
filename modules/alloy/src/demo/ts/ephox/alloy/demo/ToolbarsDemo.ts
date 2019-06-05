@@ -10,10 +10,12 @@ import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 import * as DemoRenders from './forms/DemoRenders';
-import { document, console, window } from '@ephox/dom-globals';
+import { document, console, window, setTimeout } from '@ephox/dom-globals';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import { LazySink } from 'ephox/alloy/api/component/CommonTypes';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';
+import { CustomList } from 'ephox/alloy/api/ui/CustomList';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 // tslint:disable:no-console
 
@@ -197,7 +199,7 @@ export default (): void => {
             onRtl: () => [ Layout.southeast ],
             onLtr: () => [ Layout.southwest ]
           }
-        }
+        };
       },
       parts: {
         'overflow-group': DemoRenders.toolbarGroup({
@@ -240,6 +242,81 @@ export default (): void => {
   const gps3 = Arr.map(groups(), ToolbarGroup.sketch);
   console.log('gps3', gps3);
   SplitFloatingToolbar.setGroups(splitFloatingToolbar, gps3);
+
+  // Multiple toolbars demo
+  const subject4 = HtmlDisplay.section(
+    gui,
+    'This is a toolbar array that contains multiple toolbars within',
+    CustomList.sketch({
+      dom: {
+        tag: 'div',
+        classes: [ 'multiple-toolbar' ]
+      },
+      components: [
+        // Does not get applied when shell is true
+        // CustomList.parts().items({
+        //   dom: {
+        //     tag: 'div',
+        //     classes: [ 'custom-list-wrapper' ]
+        //   }
+        // })
+      ],
+      shell: true,
+      makeItem: () => {
+        return Toolbar.sketch(
+          {
+            dom: {
+              tag: 'div',
+              classes: [ 'single-toolbar' ],
+              styles: {
+                display: 'flex'
+              }
+            },
+            components: [ ]
+          }
+        );
+      },
+      setupItem: (mToolbar: AlloyComponent, tc: AlloyComponent, data: any, index: number) => {
+        Toolbar.setGroups(tc, data);
+      }
+    })
+  );
+
+  CustomList.setItems(subject4, [
+    Arr.map(groups(), ToolbarGroup.sketch),
+    Arr.map(groups(), ToolbarGroup.sketch),
+    Arr.map(groups(), ToolbarGroup.sketch),
+    Arr.map(groups(), ToolbarGroup.sketch),
+    Arr.map(groups(), ToolbarGroup.sketch)
+  ]);
+
+  setTimeout(() => {
+    CustomList.setItems(subject4, [
+      Arr.map(groups(), ToolbarGroup.sketch),
+      Arr.map(groups(), ToolbarGroup.sketch),
+      Arr.map(groups(), ToolbarGroup.sketch)
+    ]);
+
+    setTimeout(() => {
+      CustomList.setItems(subject4, [ ]);
+
+      setTimeout(() => {
+        CustomList.setItems(subject4, [
+          Arr.map(groups(), ToolbarGroup.sketch),
+          Arr.map(groups(), ToolbarGroup.sketch),
+          Arr.map(groups(), ToolbarGroup.sketch),
+        ]);
+
+        setTimeout(() => {
+          CustomList.setItems(subject4, [
+            Arr.map(groups().slice(0, 1), ToolbarGroup.sketch),
+            Arr.map(groups(), ToolbarGroup.sketch),
+            Arr.map(groups(), ToolbarGroup.sketch),
+          ]);
+        }, 2000);
+      }, 2000);
+    }, 2000);
+  }, 2000);
 
   window.addEventListener('resize', () => {
     SplitSlidingToolbar.refresh(splitSlidingToolbar);

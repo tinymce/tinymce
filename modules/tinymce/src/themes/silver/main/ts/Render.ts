@@ -5,14 +5,35 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec } from '@ephox/alloy';
-import { HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
+import {
+  AlloyComponent,
+  AlloySpec,
+  Behaviour,
+  Gui,
+  GuiFactory,
+  Keying,
+  Memento,
+  Positioning,
+  SimpleSpec
+} from '@ephox/alloy';
+import { HTMLElement, HTMLIFrameElement, console } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, getMultipleToolbarsSetting, getToolbarDrawer, isMenubarEnabled, isToolbarEnabled, useFixedContainer } from './api/Settings';
+import {
+  getHeightSetting,
+  getMinHeightSetting,
+  getMinWidthSetting,
+  getMultipleToolbarsSetting,
+  getToolbarDrawer,
+  isMenubarEnabled,
+  isToolbarEnabled,
+  useFixedContainer,
+  isMultipleToolbars,
+  ToolbarDrawer
+} from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -51,13 +72,23 @@ export interface RenderUiComponents {
   outerContainer: AlloyComponent;
 }
 
-export interface RenderUiConfig {
-  menuItems: Record<string, any>;
+type ToolbarConfig = Array<string | ToolbarGroupSetting> | string | boolean;
+
+export interface RenderToolbarConfig {
+  toolbar: ToolbarConfig;
   buttons: Record<string, any>;
+}
+
+export interface RenderUiConfig extends RenderToolbarConfig {
+  menuItems: Record<string, any>;
   menus;
   menubar;
-  toolbar;
   sidebar: Sidebar.SidebarConfig;
+}
+
+export interface ToolbarGroupSetting {
+  name?: string;
+  items: string[];
 }
 
 export interface RenderArgs {
@@ -131,6 +162,8 @@ const setup = (editor: Editor): RenderInfo => {
     }
   });
 
+  const toolbarDrawer = (editor: Editor) => getToolbarDrawer(editor);
+
   const partToolbar: AlloySpec = OuterContainer.parts().toolbar({
     dom: {
       tag: 'div',
@@ -141,9 +174,17 @@ const setup = (editor: Editor): RenderInfo => {
     onEscape() {
       editor.focus();
     },
-    split: getToolbarDrawer(editor),
+    split: toolbarDrawer(editor),
     lazyToolbar,
     lazyMoreButton
+  });
+
+  const partMultipleToolbar: AlloySpec = OuterContainer.parts()['multiple-toolbar']({
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-toolbar-overlord' ]
+    },
+    onEscape: () => { }
   });
 
   const partSocket: AlloySpec = OuterContainer.parts().socket({
@@ -182,13 +223,28 @@ const setup = (editor: Editor): RenderInfo => {
   };
 
   // False should stop the menubar and toolbar rendering altogether
-  const hasToolbar = isToolbarEnabled(editor) || getMultipleToolbarsSetting(editor).isSome();
+  const hasMultipleToolbar = isMultipleToolbars(editor);
+  const hasToolbar = isToolbarEnabled(editor);
   const hasMenubar = isMenubarEnabled(editor);
+  const hasToolbarDrawer = toolbarDrawer(editor) !== ToolbarDrawer.default;
+
+  const getPartToolbar = () => {
+    if (hasMultipleToolbar) {
+      if (hasToolbarDrawer) {
+        console.warn('Toolbar drawer cannot be applied when multiple toolbars are active');
+      }
+      return [ partMultipleToolbar ];
+    } else if (hasToolbar) {
+      return [ partToolbar ];
+    } else {
+      return [ ];
+    }
+  };
 
   // We need the statusbar to be separate to everything else so resizing works properly
   const editorComponents = Arr.flatten<AlloySpec>([
     hasMenubar ? [ partMenubar ] : [ ],
-    hasToolbar ? [ partToolbar ] : [ ],
+    getPartToolbar(),
     // fixed_toolbar_container anchors to the editable area, else add an anchor bar
     useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ],
     // Inline mode does not have a socket/sidebar
@@ -304,14 +360,15 @@ const setup = (editor: Editor): RenderInfo => {
 
     // Apply Bridge types
     const { buttons, menuItems, contextToolbars, sidebars } = editor.ui.registry.getAll();
+    const toolbarOpt: Option<ToolbarConfig> = getMultipleToolbarsSetting(editor);
     const rawUiConfig: RenderUiConfig = {
       menuItems,
-      buttons,
 
       // Apollo, not implemented yet, just patched to work
       menus: !editor.settings.menu ? {} : Obj.map(editor.settings.menu, (menu) => Merger.merge(menu, { items: menu.items })),
       menubar: editor.settings.menubar,
-      toolbar: getMultipleToolbarsSetting(editor).getOr(editor.getParam('toolbar', true)),
+      toolbar: toolbarOpt.getOrThunk(() => editor.getParam('toolbar', true)),
+      buttons,
 
       // Apollo, not implemented yet
       sidebar: sidebars

@@ -16,8 +16,8 @@ import { setupReadonlyModeSwitch } from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
-import { identifyButtons } from '../ui/toolbar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
+import { setToolbar } from './Toolbars';
 
 interface Position {
   top: number;
@@ -113,10 +113,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     Attachment.attachSystem(uiContainer, uiComponents.mothership);
     Attachment.attachSystem(uiContainer, uiComponents.uiMothership);
 
-    OuterContainer.setToolbar(
-      uiComponents.outerContainer,
-      identifyButtons(editor, rawUiConfig, {backstage}, Option.none())
-    );
+    setToolbar(editor, uiComponents, rawUiConfig, backstage);
 
     OuterContainer.setMenubar(
       uiComponents.outerContainer,

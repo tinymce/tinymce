@@ -44,22 +44,34 @@ const isMergeStyleFormats = (editor: Editor): boolean => editor.getParam('style_
 const getRemovedMenuItems = (editor: Editor): string => editor.getParam('removed_menuitems', '');
 const isMenubarEnabled = (editor: Editor): boolean => editor.getParam('menubar', true, 'boolean') !== false;
 
-const isToolbarEnabled = (editor: Editor) => {
-  const toolbarConfig = editor.getParam('toolbar');
-  if (Type.isArray(toolbarConfig)) {
-    return toolbarConfig.length > 0;
-  } else {
-    return editor.getParam('toolbar', true, 'boolean') !== false;
-  }
+const isToolbarEnabled = (editor: Editor): boolean => {
+  const toolbar = editor.getParam('toolbar', true);
+  const isToolbarTrue = toolbar === true;
+  const isToolbarString = Type.isString(toolbar);
+  const isToolbarObjectArray = Type.isArray(toolbar) && toolbar.length > 0;
+  // Toolbar is enabled if its value is true, a string or non-empty object array, but not string array
+  return !isMultipleToolbars(editor) && (isToolbarObjectArray || isToolbarString || isToolbarTrue);
 };
 
 // Convert toolbar<n> into toolbars array
-const getMultipleToolbarsSetting = (editor: Editor) => {
+const getMultipleToolbarsSetting = (editor: Editor): Option<string[]> => {
   const keys = Obj.keys(editor.settings);
   const toolbarKeys = Arr.filter(keys, (key) => /^toolbar([1-9])$/.test(key));
   const toolbars = Arr.map(toolbarKeys, (key) => editor.getParam(key, false, 'string'));
   const toolbarArray = Arr.filter(toolbars, (toolbar) => typeof toolbar === 'string');
   return toolbarArray.length > 0 ? Option.some(toolbarArray) : Option.none();
+};
+
+// Check if multiple toolbars is enabled
+// Mulitple toolbars is enabled if toolbar value is a string array or if toolbar<n> is present
+const isMultipleToolbars = (editor: Editor): boolean => {
+  return getMultipleToolbarsSetting(editor).fold(
+    () => {
+      const toolbar = editor.getParam('toolbar', [], 'string[]');
+      return toolbar.length > 0;
+    },
+    () => true
+  );
 };
 
 export enum ToolbarDrawer {
@@ -99,6 +111,7 @@ export {
   isMergeStyleFormats,
   getRemovedMenuItems,
   isMenubarEnabled,
+  isMultipleToolbars,
   isToolbarEnabled,
   getMultipleToolbarsSetting,
   getUiContainer,
