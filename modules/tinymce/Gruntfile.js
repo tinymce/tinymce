@@ -827,13 +827,17 @@ module.exports = function (grunt) {
     'globals',
     'unicode',
     'less',
-    'copy'
+    // TODO: Make webpack use the oxide CSS directly
+    // as well as making development easier, then we can update 'yarn dev' to run 'oxide-build' in parallel with 'tinymce-grunt dev'
+    // that will save 2-3 seconds on incremental builds
+    'copy:ui-skins',
+    'copy:content-skins'
   ]);
 
   grunt.registerTask('unicode', ['uglify:emoticons-raw'])
 
   grunt.registerTask('start', ['webpack-dev-server']);
 
-  grunt.registerTask('default', ['clean', 'prod']);
+  grunt.registerTask('default', ['clean:dist', 'prod']);
   grunt.registerTask('test', ['bedrock-auto:standard']);
 };

@@ -144,6 +144,7 @@ module.exports = function (grunt) {
     shell: {
       tsc: { command: 'yarn -s tsc' },
       rollup: { command: 'yarn -s tinymce-rollup' },
+      legacy: { command: 'yarn build' },
       yarn: { command: 'yarn' },
       'yarn-dev': { command: 'yarn -s dev' }
     },
@@ -200,7 +201,13 @@ module.exports = function (grunt) {
     grunt.registerTask('list-changed-browser', noBrowser);
   }
 
-  grunt.registerTask('default', []);
+  grunt.registerTask('legacy-warn', () => grunt.log.warn(`
+*******
+Top-level grunt has been replaced by 'yarn build', and the output has moved from project root to modules/tinymce
+*******
+`));
+
+  grunt.registerTask('default', ['legacy-warn', 'shell:legacy']);
 
   require('load-grunt-tasks')(grunt, {
     requireResolution: true,
