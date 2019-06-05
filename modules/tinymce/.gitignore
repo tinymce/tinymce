@@ -1,6 +1,7 @@
 bin
 obj
 tmp
+dist
 .settings
 .idea
 .project
