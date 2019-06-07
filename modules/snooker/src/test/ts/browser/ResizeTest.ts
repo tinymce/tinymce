@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
 import { Body, Element, Insert, Remove } from '@ephox/sugar';
-import ResizeDirection from 'ephox/snooker/api/ResizeDirection';
+import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import Deltas from 'ephox/snooker/calc/Deltas';
 import DetailsList from 'ephox/snooker/model/DetailsList';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';

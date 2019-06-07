@@ -36,7 +36,7 @@ export interface DetailNew extends Detail {
   isNew: () => boolean;
 }
 
-export interface Extended extends Detail {
+export interface DetailExt extends Detail {
   row: () => number;
   column: () => number;
 }
@@ -48,19 +48,13 @@ export interface RowCells {
   section: () => Section;
 }
 
-export interface RowDataDetail {
+export interface RowData<T> {
   element: () => Element;
-  cells: () => Detail[];
+  cells: () => T[];
   section: () => Section;
 }
 
-export interface RowDataExtended extends RowDataDetail {
-  element: () => Element;
-  cells: () => Extended[];
-  section: () => Section;
-}
-
-export interface RowDataNew extends RowDataDetail {
+export interface RowDataNew<T> extends RowData<T> {
   isNew: () => boolean;
 }
 
@@ -81,21 +75,86 @@ export interface Bounds {
   finishCol: () => number;
 }
 
-const dimension: (width: number, height: number) => Dimension = Struct.immutable('width', 'height');
-const dimensions: (width: number[], height: number[]) => Dimensions = Struct.immutable('width', 'height');
-const grid: (rows: number, columns: number) => Grid = Struct.immutable('rows', 'columns');
-const address: (row: number, column: number) => Address = Struct.immutable('row', 'column');
-const coords: (x: number, y: number) => Coords = Struct.immutable('x', 'y');
-const detail: (element: Element, rowspan: number, colspan: number) => Detail = Struct.immutable('element', 'rowspan', 'colspan');
-const detailnew: (element: Element, rowspan: number, colspan: number, isNew: boolean) => DetailNew = Struct.immutable('element', 'rowspan', 'colspan', 'isNew');
-const extended: (element: Element, rowspan: number, colspan: number, row: number, column: number) => Extended = Struct.immutable('element', 'rowspan', 'colspan', 'row', 'column');
-const rowdatadetail: (element: Element, cells: Detail[], section: Section) => RowDataDetail = Struct.immutable('element', 'cells', 'section');
-const rowdataextended: (element: Element, cells: Extended[], section: Section) => RowDataExtended = Struct.immutable('element', 'cells', 'section');
-const elementnew: (element: Element, isNew: boolean) => ElementNew = Struct.immutable('element', 'isNew');
-const rowdatanew: (element: Element, cells: Detail[], section: Section, isNew: boolean) => RowDataNew = Struct.immutable('element', 'cells', 'section', 'isNew');
-const rowcells: (cells: ElementNew[], section: Section) => RowCells = Struct.immutable('cells', 'section');
-const rowdetails: (details: DetailNew[], section: Section) => RowDetails =  Struct.immutable('details', 'section');
-const bounds: (startRow: number, startCol: number, finishRow: number, finishCol: number) => Bounds = Struct.immutable( 'startRow', 'startCol', 'finishRow', 'finishCol');
+const dimension: (
+  width: ReturnType<Dimension['width']>,
+  height: ReturnType<Dimension['height']>
+) => Dimension = Struct.immutable('width', 'height');
+
+const dimensions: (
+  width: ReturnType<Dimensions['width']>,
+  height: ReturnType<Dimensions['height']>
+) => Dimensions = Struct.immutable('width', 'height');
+
+const grid: (
+  rows: ReturnType<Grid['rows']>,
+  columns: ReturnType<Grid['columns']>
+) => Grid = Struct.immutable('rows', 'columns');
+
+const address: (
+  row: ReturnType<Address['row']>,
+  column: ReturnType<Address['column']>
+) => Address = Struct.immutable('row', 'column');
+
+const coords: (
+  x: ReturnType<Coords['x']>,
+  y: ReturnType<Coords['y']>
+) => Coords = Struct.immutable('x', 'y');
+
+const detail: (
+  element: ReturnType<Detail['element']>,
+  rowspan: ReturnType<Detail['rowspan']>,
+  colspan: ReturnType<Detail['colspan']>
+) => Detail = Struct.immutable('element', 'rowspan', 'colspan');
+
+const detailnew: (
+  element: ReturnType<DetailNew['element']>,
+  rowspan: ReturnType<DetailNew['rowspan']>,
+  colspan: ReturnType<DetailNew['colspan']>,
+  isNew: ReturnType<DetailNew['isNew']>
+) => DetailNew = Struct.immutable('element', 'rowspan', 'colspan', 'isNew');
+
+const extended: (
+  element: ReturnType<DetailExt['element']>,
+  rowspan: ReturnType<DetailExt['rowspan']>,
+  colspan: ReturnType<DetailExt['colspan']>,
+  row: ReturnType<DetailExt['row']>,
+  column: ReturnType<DetailExt['column']>
+) => DetailExt = Struct.immutable('element', 'rowspan', 'colspan', 'row', 'column');
+
+const rowdata: <T> (
+  element: ReturnType<RowData<T>['element']>,
+  cells: ReturnType<RowData<T>['cells']>,
+  section: ReturnType<RowData<T>['section']>
+) => RowData<T> = Struct.immutable('element', 'cells', 'section');
+
+const elementnew: (
+  element: ReturnType<ElementNew['element']>,
+  isNew: ReturnType<ElementNew['isNew']>
+) => ElementNew = Struct.immutable('element', 'isNew');
+
+const rowdatanew: <T> (
+  element: ReturnType<RowDataNew<T>['element']>,
+  cells: ReturnType<RowDataNew<T>['cells']>,
+  section: ReturnType<RowDataNew<T>['section']>,
+  isNew: ReturnType<RowDataNew<T>['isNew']>
+) => RowDataNew<T> = Struct.immutable('element', 'cells', 'section', 'isNew');
+
+const rowcells: (
+  cells: ReturnType<RowCells['cells']>,
+  section: ReturnType<RowCells['section']>
+) => RowCells = Struct.immutable('cells', 'section');
+
+const rowdetails: (
+  details: ReturnType<RowDetails['details']>,
+  section: ReturnType<RowDetails['section']>
+) => RowDetails =  Struct.immutable('details', 'section');
+
+const bounds: (
+  startRow: ReturnType<Bounds['startRow']>,
+  startCol: ReturnType<Bounds['startCol']>,
+  finishRow: ReturnType<Bounds['finishRow']>,
+  finishCol: ReturnType<Bounds['finishCol']>
+) => Bounds = Struct.immutable( 'startRow', 'startCol', 'finishRow', 'finishCol');
 
 export {
   dimension,
@@ -106,8 +165,7 @@ export {
   extended,
   detail,
   detailnew,
-  rowdatadetail,
-  rowdataextended,
+  rowdata,
   elementnew,
   rowdatanew,
   rowcells,

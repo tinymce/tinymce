@@ -1,6 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import Deltas from 'ephox/snooker/calc/Deltas';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { TableSize } from 'ephox/snooker/resize/Types';
 
 UnitTest.test('Deltas', function () {
   const min = 10;
@@ -13,7 +14,7 @@ UnitTest.test('Deltas', function () {
       minCellWidth: Fun.constant(10),
       singleColumnWidth
     };
-    const actual = Deltas.determine(input, column, step, tableSize);
+    const actual = Deltas.determine(input, column, step, tableSize as TableSize);
     assert.eq(expected, actual);
   };
 

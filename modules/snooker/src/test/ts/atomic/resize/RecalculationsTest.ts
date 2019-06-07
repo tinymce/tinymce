@@ -35,7 +35,7 @@ UnitTest.test('RecalculationsTest', function () {
   };
 
   const d = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as any as Element, rowspan, colspan);
-  const r = (fakeEle: any, cells: Structs.Detail[], section: 'tbody') => Structs.rowdatadetail(fakeEle as any as Element, cells, section);
+  const r = (fakeEle: any, cells: Structs.Detail[], section: 'tbody') => Structs.rowdata(fakeEle as any as Element, cells, section);
 
   check([assertParts([{ element: 'a', width: 10 }], [{ element: 'a', height: 10 }])], [
     r('r0', [d('a', 1, 1)], 'tbody')

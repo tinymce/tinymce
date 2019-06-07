@@ -2,6 +2,7 @@ import { Arr } from '@ephox/katamari';
 import * as Structs from 'ephox/snooker/api/Structs';
 import Fitment from 'ephox/snooker/model/Fitment';
 import { assert } from '@ephox/bedrock';
+import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 
 const mapToStructGrid = function (grid) {
   return Arr.map(grid, function (row) {
@@ -34,7 +35,7 @@ const measureTest = function (expected, startAddress, gridA, gridB) {
   });
 };
 
-const tailorTest = function (expected, startAddress, gridA, delta, generator) {
+const tailorTest = function (expected, startAddress, gridA, delta, generator: () => SimpleGenerators) {
   // Based on the Fitment.measure
   // Increase gridA by the row/col delta values
   // The result is a new grid that will perfectly fit gridB into gridA
@@ -42,7 +43,7 @@ const tailorTest = function (expected, startAddress, gridA, delta, generator) {
   assertGrids(mapToStructGrid(expected), tailoredGrid);
 };
 
-const tailorIVTest = function (expected, startAddress, gridA, delta, generator) {
+const tailorIVTest = function (expected, startAddress, gridA, delta, generator: () => SimpleGenerators) {
   const tailoredGrid = Fitment.tailor(mapToStructGrid(gridA()), delta, generator());
   const rows = tailoredGrid.length;
   const cols = tailoredGrid[0].cells().length;

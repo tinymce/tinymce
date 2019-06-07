@@ -1,6 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr, Fun } from '@ephox/katamari';
-import Generators from 'ephox/snooker/api/Generators';
+import { Generators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import TransformOperations from 'ephox/snooker/operate/TransformOperations';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';

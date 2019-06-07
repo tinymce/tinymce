@@ -3,7 +3,7 @@ import { Warehouse } from '../model/Warehouse';
 import CellBounds from './CellBounds';
 import { Compare, Element } from '@ephox/sugar';
 
-const getBounds = function (detailA: Structs.Extended, detailB: Structs.Extended) {
+const getBounds = function (detailA: Structs.DetailExt, detailB: Structs.DetailExt) {
   return Structs.bounds(
     Math.min(detailA.row(), detailB.row()),
     Math.min(detailA.column(), detailB.column()),

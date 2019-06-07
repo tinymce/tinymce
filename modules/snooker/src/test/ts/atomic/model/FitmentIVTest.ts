@@ -152,7 +152,7 @@ UnitTest.test('FitmentIVTest', function () {
     const test = Fun.curry(tailorIVTest, {
       rows: expectedRows,
       cols: expectedCols
-    }, start, gridSpecA.grid, delta, generator);
+    }, start, gridSpecA.grid, delta, generator as any);
 
     return {
       params: info,

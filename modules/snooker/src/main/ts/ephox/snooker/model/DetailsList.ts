@@ -25,11 +25,11 @@ const fromTable = function (table: Element) {
       return Structs.detail(cell, rowspan, colspan);
     });
 
-    return Structs.rowdatadetail(element, cells, parentSection);
+    return Structs.rowdata(element, cells, parentSection);
   });
 };
 
-const fromPastedRows = function (rows: Element[], example) {
+const fromPastedRows = function (rows: Element[], example: Structs.RowCells) {
   return Arr.map(rows, function (row) {
     const cells = Arr.map(TableLookup.cells(row), function (cell) {
       const rowspan = Attr.has(cell, 'rowspan') ? parseInt(Attr.get(cell, 'rowspan'), 10) : 1;
@@ -37,7 +37,7 @@ const fromPastedRows = function (rows: Element[], example) {
       return Structs.detail(cell, rowspan, colspan);
     });
 
-    return Structs.rowdatadetail(row, cells, example.section());
+    return Structs.rowdata(row, cells, example.section());
   });
 };
 

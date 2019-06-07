@@ -1,8 +1,15 @@
-import { Focus, Height, Location, Width } from '@ephox/sugar';
+import { Focus, Height, Location, Width, Element } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
-import Sizing from './Sizing';
+import { Sizing, SizingSettings } from './Sizing';
+import { PickerDirection } from '../api/PickerDirection';
 
-export default function (direction, settings) {
+export interface ATableApi {
+  element: () => Element;
+  setSelection: (numRows: number, numCols: number) => Element;
+  setSize: (numRows: number, numCols: number) => void;
+}
+
+export const Redimension = function (direction: PickerDirection, settings: SizingSettings) {
   let active = false;
 
   const on = function () {
@@ -13,20 +20,22 @@ export default function (direction, settings) {
     active = false;
   };
 
-  const getDimensions = function (table) {
+  const getDimensions = function (table: ATableApi) {
     const width = Width.get(table.element());
     const height = Height.get(table.element());
     return Structs.dimension(width, height);
   };
 
-  const getPosition = function (table) {
+  const getPosition = function (table: ATableApi) {
     const position = Location.absolute(table.element());
     return Structs.coords(position.left(), position.top());
   };
 
-  const updateSelection = function (table, grid, changes) {
+  const updateSelection = function (table: ATableApi, grid: Structs.Grid, changes: Sizing) {
     const full = changes.full();
-    if (full.row() !== grid.rows() || full.column() !== grid.columns()) { table.setSize(full.row(), full.column()); }
+    if (full.row() !== grid.rows() || full.column() !== grid.columns()) {
+      table.setSize(full.row(), full.column());
+    }
     const last = table.setSelection(changes.selection().row(), changes.selection().column());
     Focus.focus(last);
   };
@@ -35,7 +44,7 @@ export default function (direction, settings) {
    * Based on the mouse position (x, y), identify whether the picker table needs to be resized
    * and update its selection
    */
-  const mousemove = function (table, grid, x, y) {
+  const mousemove = function (table: ATableApi, grid: Structs.Grid, x: number, y: number) {
     if (active) {
       const dimensions = getDimensions(table);
       const position = getPosition(table);
@@ -46,7 +55,7 @@ export default function (direction, settings) {
     }
   };
 
-  const manual = function (table, selected, xDelta, yDelta) {
+  const manual = function (table: ATableApi, selected: Structs.Grid, xDelta: number, yDelta: number) {
     if (active) {
       const changes = Sizing.grow(selected, xDelta, yDelta, settings);
       updateSelection(table, selected, changes);
@@ -59,4 +68,4 @@ export default function (direction, settings) {
     mousemove,
     manual
   };
-}
+};

@@ -5,7 +5,7 @@ import { UnitTest, assert } from '@ephox/bedrock';
 UnitTest.test('CellPositionRtlTest', function () {
   const check = function (expected, posX, posY, width, height, rows, cols, x, y) {
    const position = Structs.coords(posX, posY);
-   const dimensions = Structs.dimensions(width, height);
+   const dimensions = Structs.dimension(width, height);
    const grid = Structs.grid(rows, cols);
    const mouse = Structs.coords(x, y);
    const actual = CellPosition.findCellRtl(position, dimensions, grid, mouse);

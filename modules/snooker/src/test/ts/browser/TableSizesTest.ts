@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { Body, Css, Element, Html, Insert, InsertAll, Remove, SelectorFilter } from '@ephox/sugar';
-import ResizeDirection from 'ephox/snooker/api/ResizeDirection';
+import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import Sizes from 'ephox/snooker/api/Sizes';
 
 UnitTest.test('Table Sizes Test (fusebox)', function () {

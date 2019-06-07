@@ -83,7 +83,7 @@ UnitTest.test('MergeOperationsTest', function () {
   // Test basic unmerge.
   (function () {
     const check = function (expected, grid, target) {
-      const actual = MergingOperations.unmerge(grid, target, Fun.tripleEquals, Fun.constant('?'));
+      const actual = MergingOperations.unmerge(grid, target, Fun.tripleEquals, Fun.constant('?') as any);
       assert.eq(expected.length, actual.length);
       Arr.each(expected, function (row, i) {
         Arr.each(row, function (cell, j) {

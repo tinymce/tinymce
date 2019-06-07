@@ -1,8 +1,8 @@
 import { window } from '@ephox/dom-globals';
 import { Fun, Obj, Option } from '@ephox/katamari';
 import { Attr, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind } from '@ephox/sugar';
-import ResizeDirection from 'ephox/snooker/api/ResizeDirection';
-import ResizeWire from 'ephox/snooker/api/ResizeWire';
+import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
+import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
 import TableOperations from 'ephox/snooker/api/TableOperations';
 import TableResize from 'ephox/snooker/api/TableResize';
 

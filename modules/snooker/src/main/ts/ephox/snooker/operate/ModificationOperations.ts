@@ -1,11 +1,15 @@
 import { Arr } from '@ephox/katamari';
 import * as Structs from '../api/Structs';
 import GridRow from '../model/GridRow';
+import { Element } from '@ephox/sugar';
+
+type CompElm = (e1: Element, e2: Element) => boolean;
+type Subst = (element: Element, comparator: CompElm) => Element;
 
 // substitution :: (item, comparator) -> item
 // example is the location of the cursor (the row index)
 // index is the insert position (at - or after - example) (the row index)
-const insertRowAt = function (grid, index, example, comparator, substitution) {
+const insertRowAt = function (grid: Structs.RowCells[], index: number, example: number, comparator: CompElm, substitution: Subst) {
   const before = grid.slice(0, index);
   const after = grid.slice(index);
 
@@ -21,7 +25,7 @@ const insertRowAt = function (grid, index, example, comparator, substitution) {
 // substitution :: (item, comparator) -> item
 // example is the location of the cursor (the column index)
 // index is the insert position (at - or after - example) (the column index)
-const insertColumnAt = function (grid, index, example, comparator, substitution) {
+const insertColumnAt = function (grid: Structs.RowCells[], index: number, example: number, comparator: CompElm, substitution: Subst) {
   return Arr.map(grid, function (row) {
     const withinSpan = index > 0 && index < GridRow.cellLength(row) && comparator(GridRow.getCellElement(row, index - 1), GridRow.getCellElement(row, index));
     const sub = withinSpan ? GridRow.getCell(row, index) : Structs.elementnew(substitution(GridRow.getCellElement(row, example), comparator), true);
@@ -34,7 +38,7 @@ const insertColumnAt = function (grid, index, example, comparator, substitution)
 // - a new grid with the cell at coords [exampleRow, exampleCol] split into two cells (the
 //   new cell follows, and is empty), and
 // - the other cells in that column set to span the split cell.
-const splitCellIntoColumns = function (grid, exampleRow, exampleCol, comparator, substitution) {
+const splitCellIntoColumns = function (grid: Structs.RowCells[], exampleRow: number, exampleCol: number, comparator: CompElm, substitution: Subst) {
   const index = exampleCol + 1; // insert after
   return Arr.map(grid, function (row, i) {
     const isTargetCell = (i === exampleRow);
@@ -48,7 +52,7 @@ const splitCellIntoColumns = function (grid, exampleRow, exampleCol, comparator,
 // - a new grid with the cell at coords [exampleRow, exampleCol] split into two cells (the
 //   new cell below, and is empty), and
 // - the other cells in that row set to span the split cell.
-const splitCellIntoRows = function (grid, exampleRow, exampleCol, comparator, substitution) {
+const splitCellIntoRows = function (grid: Structs.RowCells[], exampleRow: number, exampleCol: number, comparator: CompElm, substitution: Subst) {
   const index = exampleRow + 1; // insert after
   const before = grid.slice(0, index);
   const after = grid.slice(index);
@@ -61,7 +65,7 @@ const splitCellIntoRows = function (grid, exampleRow, exampleCol, comparator, su
   return before.concat([ between ]).concat(after);
 };
 
-const deleteColumnsAt = function (grid, start, finish) {
+const deleteColumnsAt = function (grid: Structs.RowCells[], start: number, finish: number) {
   const rows = Arr.map(grid, function (row) {
     const cells = row.cells().slice(0, start).concat(row.cells().slice(finish + 1));
     return Structs.rowcells(cells, row.section());
@@ -72,7 +76,7 @@ const deleteColumnsAt = function (grid, start, finish) {
   });
 };
 
-const deleteRowsAt = function (grid, start, finish) {
+const deleteRowsAt = function (grid: Structs.RowCells[], start: number, finish: number) {
   return grid.slice(0, start).concat(grid.slice(finish + 1));
 };
 

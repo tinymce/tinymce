@@ -7,7 +7,7 @@ import { Element } from '@ephox/sugar';
 
 UnitTest.test('CellBounds.isWithin Test', function () {
   const s = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as any as Element, rowspan, colspan);
-  const f = (fakeEle: any, cells: Structs.Detail[], section: 'tbody') => Structs.rowdatadetail(fakeEle as any as Element, cells, section);
+  const f = (fakeEle: any, cells: Structs.Detail[], section: 'tbody') => Structs.rowdata(fakeEle as any as Element, cells, section);
 
   const testTableA = [
     f('r1', [ s('a', 1, 1), s('b', 1, 1), s('c', 1, 1), s('d', 1, 1), s('e', 1, 1) ], 'tbody'),

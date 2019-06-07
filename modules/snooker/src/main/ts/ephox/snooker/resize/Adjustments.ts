@@ -7,21 +7,26 @@ import Recalculations from './Recalculations';
 import Sizes from './Sizes';
 import TableSize from './TableSize';
 import CellUtils from '../util/CellUtils';
+import { RowData, Detail } from '../api/Structs';
+import { Element } from '@ephox/sugar';
+import { BarPositions, ColInfo, RowInfo } from './BarPositions';
 
-const getWarehouse = function (list) {
+const getWarehouse = function <T extends Detail>(list: RowData<T>[]) {
   return Warehouse.generate(list);
 };
 
-const sumUp = function (newSize) {
-  return Arr.foldr(newSize, function (b, a) { return b + a; }, 0);
+const sumUp = function (newSize: number[]) {
+  return Arr.foldr(newSize, function (b, a) {
+    return b + a;
+  }, 0);
 };
 
-const getTableWarehouse = function (table) {
+const getTableWarehouse = function (table: Element) {
   const list = DetailsList.fromTable(table);
   return getWarehouse(list);
 };
 
-const adjustWidth = function (table, delta, index, direction) {
+const adjustWidth = function (table: Element, delta: number, index: number, direction: BarPositions<ColInfo>) {
   const tableSize = TableSize.getTableSize(table);
   const step = tableSize.getCellDelta(delta);
   const warehouse = getTableWarehouse(table);
@@ -45,7 +50,7 @@ const adjustWidth = function (table, delta, index, direction) {
   }
 };
 
-const adjustHeight = function (table, delta, index, direction) {
+const adjustHeight = function (table: Element, delta: number, index: number, direction: BarPositions<RowInfo>) {
   const warehouse = getTableWarehouse(table);
   const heights = ColumnSizes.getPixelHeights(warehouse, direction);
 
@@ -69,7 +74,7 @@ const adjustHeight = function (table, delta, index, direction) {
 };
 
 // Ensure that the width of table cells match the passed in table information.
-const adjustWidthTo = function (table, list, direction) {
+const adjustWidthTo = function <T extends Detail>(table: Element, list: RowData<T>[], direction: BarPositions<ColInfo>) {
   const tableSize = TableSize.getTableSize(table);
   const warehouse = getWarehouse(list);
   const widths = tableSize.getWidths(warehouse, direction, tableSize);
@@ -80,9 +85,11 @@ const adjustWidthTo = function (table, list, direction) {
     tableSize.setElementWidth(cell.element(), cell.width());
   });
 
-  const total = Arr.foldr(widths, function (b, a) { return a + b; }, 0);
+  // const total = Arr.foldr(widths, function (b, a) { return a + b; }, 0);
   if (newSizes.length > 0) {
-    tableSize.setTableWidth(table, total);
+    // tableSize.setTableWidth(table, total);
+    // WARNING, this may be incorrect, the commented out code above was the original
+    tableSize.setTableWidth(table, widths, tableSize.getCellDelta(0));
   }
 };
 

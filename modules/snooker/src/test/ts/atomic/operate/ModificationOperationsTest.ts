@@ -1,6 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr, Fun } from '@ephox/katamari';
-import Generators from 'ephox/snooker/api/Generators';
+import { Generators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import ModificationOperations from 'ephox/snooker/operate/ModificationOperations';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
@@ -29,7 +29,7 @@ UnitTest.test('ModificationOperationsTest', function () {
   // Test basic insert column
   (function () {
     const check = function (expected, grid, example, index) {
-      const actual = ModificationOperations.insertColumnAt(grid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
+      const actual = ModificationOperations.insertColumnAt(grid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity as any).getOrInit);
       assertGrids(expected, actual);
     };
     const checkBody = function (expected, grid, example, index) {
@@ -122,7 +122,7 @@ UnitTest.test('ModificationOperationsTest', function () {
   // Test basic insert row
   (function () {
     const check = function (expected, grid, example, index) {
-      const actual = ModificationOperations.insertRowAt(grid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
+      const actual = ModificationOperations.insertRowAt(grid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity as any).getOrInit);
       assertGrids(expected, actual);
     };
 
@@ -246,7 +246,7 @@ UnitTest.test('ModificationOperationsTest', function () {
 
   (function () {
     const check = function (expected, grid, exRow, exCol) {
-      const actual = ModificationOperations.splitCellIntoColumns(grid, exRow, exCol, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
+      const actual = ModificationOperations.splitCellIntoColumns(grid, exRow, exCol, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity as any).getOrInit);
       assertGrids(expected, actual);
     };
 
@@ -443,7 +443,7 @@ UnitTest.test('ModificationOperationsTest', function () {
 
   (function () {
     const check = function (expected, grid, exRow, exCol) {
-      const actual = ModificationOperations.splitCellIntoRows(grid, exRow, exCol, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
+      const actual = ModificationOperations.splitCellIntoRows(grid, exRow, exCol, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity as any).getOrInit);
       assertGrids(expected, actual);
     };
 

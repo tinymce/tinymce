@@ -1,9 +1,9 @@
 import { console, document } from '@ephox/dom-globals';
 import { AriaGrid } from '@ephox/echo';
 import { Attr, DomEvent, Element, Focus, Insert, Ready, Remove } from '@ephox/sugar';
-import PickerDirection from 'ephox/snooker/api/PickerDirection';
+import { PickerDirection } from 'ephox/snooker/api/PickerDirection';
 import DemoTranslations from 'ephox/snooker/demo/DemoTranslations';
-import PickerUi from 'ephox/snooker/picker/PickerUi';
+import { PickerUi } from 'ephox/snooker/picker/PickerUi';
 
 /* tslint:disable:no-console */
 

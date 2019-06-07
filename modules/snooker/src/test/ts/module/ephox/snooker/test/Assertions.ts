@@ -1,8 +1,8 @@
 import { assert } from '@ephox/bedrock';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { Attr, Body, Css, Element, Hierarchy, Html, Insert, Remove, SelectorFilter, SelectorFind, Traverse } from '@ephox/sugar';
-import ResizeDirection from 'ephox/snooker/api/ResizeDirection';
-import ResizeWire from 'ephox/snooker/api/ResizeWire';
+import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
+import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
 import TableOperations from 'ephox/snooker/api/TableOperations';
 import Bars from 'ephox/snooker/resize/Bars';
 import Bridge from 'ephox/snooker/test/Bridge';
@@ -142,7 +142,7 @@ const checkMerge = function (label, expected, input, selection, bounds, _directi
   const target = Bridge.targetStub(selection, bounds, table);
   const generators = Bridge.generators;
 
-  TableOperations.mergeCells(wire, table, target, generators, direction);
+  TableOperations.mergeCells(wire, table, target, generators as any, direction);
 
   // Let's get rid of size information.
   const all = [ table ].concat(SelectorFilter.descendants(table, 'td,th'));
@@ -169,7 +169,7 @@ const checkUnmerge = function (expected, input, unmergablePaths, _direction?) {
 
   const unmergable = Option.some(Options.cat(unmergables));
 
-  TableOperations.unmergeCells(wire, table, { unmergable: Fun.constant(unmergable) }, Bridge.generators, direction);
+  TableOperations.unmergeCells(wire, table, { unmergable: Fun.constant(unmergable) }, Bridge.generators as any, direction);
   // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));
 
   // Let's get rid of size information.
