@@ -96,6 +96,20 @@ UnitTest.asynctest(
       LegacyUnit.equal(editor.getContent(), '<p align="justify">text</p>');
     });
 
+    suite.test('TestCase-TBA: LegacyOutput: Remove text color', function (editor) {
+      editor.setContent('<p><font color="red">text</font></p>');
+      LegacyUnit.setSelection(editor, 'font', 0, 'font', 4);
+      editor.execCommand('mceRemoveTextcolor', 'forecolor');
+      LegacyUnit.equal(editor.getContent(), '<p>text</p>');
+    });
+
+    suite.test('TestCase-TBA: LegacyOutput: Remove background color', function (editor) {
+      editor.setContent('<p><font style="background-color: red">text</font></p>');
+      LegacyUnit.setSelection(editor, 'font', 0, 'font', 4);
+      editor.execCommand('mceRemoveTextcolor', 'hilitecolor');
+      LegacyUnit.equal(editor.getContent(), '<p>text</p>');
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, Log.steps('TBA', 'LegacyOutput: Test legacy formatting', suite.toSteps(editor)), onSuccess, onFailure);
     }, {
