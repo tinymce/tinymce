@@ -43,9 +43,10 @@ const overrideFormats = (editor: Editor) => {
     ],
 
     // Change font size and font family to use the deprecated font element
-    fontname: { inline: 'font', attributes: { face: '%value' } },
+    fontname: { inline: 'font', toggle: false, attributes: { face: '%value' } },
     fontsize: {
       inline: 'font',
+      toggle: false,
       attributes: {
         size (vars) {
           return Tools.inArray(fontSizes, vars.value) + 1;
