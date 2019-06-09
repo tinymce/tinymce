@@ -1,4 +1,5 @@
 Version 5.0.8 (TBD)
+    Fixed sidebar background being transparent #TINY-3727
     Added back support for multiple toolbars #TINY-2195
     Fixed the build to remove duplicate iife wrappers #TINY-3689
 Version 5.0.7 (2019-06-05)
