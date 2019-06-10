@@ -15,8 +15,8 @@ UnitTest.test('FitmentTest', function () {
 
   const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
 
-  const check = function (test, expected, startAddress, gridAa, gridBb, generatorr, comparator) {
-    test(expected, startAddress, gridAa, gridBb, generatorr, comparator);
+  const check = function <T extends (...args: A) => void, A extends any[]>(test: T, ...args: A) {
+    test.apply(null, args);
   };
 
   // Simple test data, 4 basic variants of merging:

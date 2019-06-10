@@ -58,17 +58,17 @@ const pixelSize = function (width: number): TableSize {
 };
 
 const chooseSize = function (element: Element, width: string) {
-  if (Sizes.percentageBasedSizeRegex().test(width)) {
-    const percentMatch = Sizes.percentageBasedSizeRegex().exec(width);
+  const percentMatch = Sizes.percentageBasedSizeRegex().exec(width);
+  if (percentMatch !== null) {
     return percentageSize(percentMatch[1], element);
-  } else if (Sizes.pixelBasedSizeRegex().test(width)) {
-    const pixelMatch = Sizes.pixelBasedSizeRegex().exec(width);
+  }
+  const pixelMatch = Sizes.pixelBasedSizeRegex().exec(width);
+  if (pixelMatch !== null) {
     const intWidth = parseInt(pixelMatch[1], 10);
     return pixelSize(intWidth);
-  } else {
-    const fallbackWidth = Width.get(element);
-    return pixelSize(fallbackWidth);
   }
+  const fallbackWidth = Width.get(element);
+  return pixelSize(fallbackWidth);
 };
 
 const getTableSize = function (element: Element) {

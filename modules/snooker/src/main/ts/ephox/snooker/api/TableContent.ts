@@ -25,6 +25,7 @@ const merge = function (cells: Element[]) {
       if (DomStructure.isEmptyTag(rightSibling)) {
         return Node.name(rightSibling) === 'img' ? false : true;
       }
+      return false;
     }).getOr(false);
   };
 

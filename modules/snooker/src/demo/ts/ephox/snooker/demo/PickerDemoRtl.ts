@@ -4,6 +4,7 @@ import { Attr, DomEvent, Element, Focus, Insert, Ready, Remove } from '@ephox/su
 import { PickerDirection } from 'ephox/snooker/api/PickerDirection';
 import DemoTranslations from 'ephox/snooker/demo/DemoTranslations';
 import { PickerUi } from 'ephox/snooker/picker/PickerUi';
+import { Option } from '@ephox/katamari';
 
 /* tslint:disable:no-console */
 
@@ -16,12 +17,10 @@ Ready.execute(function () {
     minRows: 1
   }, AriaGrid.createHelp(10, 10, DemoTranslations));
 
-  const ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
+  const ephoxUi = Element.fromDom(Option.from(document.getElementById('ephox-ui')).getOrDie('Missing "ephox-ui"'));
   Remove.empty(ephoxUi);
   Insert.append(ephoxUi, picker.element());
   Attr.set(ephoxUi, 'dir', 'rtl');
-
-  const val = 3;
 
   picker.setSize(10, 10);
   picker.setHeaders(1, 1);
@@ -36,7 +35,17 @@ Ready.execute(function () {
 
   DomEvent.bind(ephoxUi, 'keydown', function (event) {
     const key = event.raw().which;
-    if (key === 37) { picker.sendLeft(); } else if (key === 39) { picker.sendRight(); } else if (key === 40) { picker.sendDown(); } else if (key === 38) { picker.sendUp(); } else if (key === 32 || key === 13) { picker.sendExecute(); }
+    if (key === 37) {
+      picker.sendLeft();
+    } else if (key === 39) {
+      picker.sendRight();
+    } else if (key === 40) {
+      picker.sendDown();
+    } else if (key === 38) {
+      picker.sendUp();
+    } else if (key === 32 || key === 13) {
+      picker.sendExecute();
+    }
     event.kill();
   });
 

@@ -1,4 +1,4 @@
-import { Arr, Fun, Merger, Option, Options } from '@ephox/katamari';
+import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { Compare, Traverse, Element } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
 import TableLookup from '../api/TableLookup';

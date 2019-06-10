@@ -8,7 +8,7 @@ import { CellSpan } from '../../../main/ts/ephox/snooker/api/Generators';
 UnitTest.test('CloneFormatsTest', function () {
   const doc = Element.fromDom(document);
   const cloneFormats = Option.none();
-  const noCloneFormats = Option.some([]);
+  const noCloneFormats = Option.some([] as string[]);
   const cloneTableFill = TableFill.cellOperations(Fun.noop, doc, cloneFormats);
   const noCloneTableFill = TableFill.cellOperations(Fun.noop, doc, noCloneFormats);
 

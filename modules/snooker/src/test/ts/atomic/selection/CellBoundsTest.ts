@@ -20,13 +20,13 @@ UnitTest.test('CellBounds.isWithin Test', function () {
 
   const bounds1To3 = Structs.bounds(1, 1, 3, 3);
 
-  const checkWithin = function (expected, warehouse, bounds, row, column) {
+  const checkWithin = function (expected: boolean, warehouse: Warehouse, bounds: Structs.Bounds, row: number, column: number) {
     const cell = Warehouse.getAt(warehouse, row, column).getOrDie();
     const actual = CellBounds.isWithin(bounds, cell);
     assert.eq(expected, actual);
   };
 
-  const checkInSelection = function (expected, warehouse, bounds, row, column) {
+  const checkInSelection = function (expected: boolean, warehouse: Warehouse, bounds: Structs.Bounds, row: number, column: number) {
     const cell = Warehouse.getAt(warehouse, row, column).getOrDie();
     const actual = CellBounds.inSelection(bounds, cell);
     assert.eq(expected, actual);

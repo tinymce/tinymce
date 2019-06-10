@@ -42,7 +42,7 @@ UnitTest.test('Events', function () {
       emptyEvent: Event([])
     });
 
-    assert.throws(
+    assert.throwsError(
       function () { events.registry.emptyEvent.bind(undefined); },
       'Event bind error: undefined handler'
     );

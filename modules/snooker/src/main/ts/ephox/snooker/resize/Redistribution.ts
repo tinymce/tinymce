@@ -1,4 +1,4 @@
-import { Adt, Arr, Fun, Strings } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import * as Util from '../util/Util';
 import { Size } from './Size';
 

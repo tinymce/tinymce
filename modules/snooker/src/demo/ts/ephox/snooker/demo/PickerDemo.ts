@@ -4,6 +4,7 @@ import { Attr, DomEvent, Element, Focus, Insert, Ready, Remove } from '@ephox/su
 import { PickerDirection } from 'ephox/snooker/api/PickerDirection';
 import DemoTranslations from 'ephox/snooker/demo/DemoTranslations';
 import { PickerUi } from 'ephox/snooker/picker/PickerUi';
+import { Option } from '@ephox/katamari';
 
 /* tslint:disable:no-console */
 
@@ -16,7 +17,7 @@ Ready.execute(function () {
     minRows: 1
   }, AriaGrid.createHelp(10, 10, DemoTranslations));
 
-  const ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
+  const ephoxUi = Element.fromDom(Option.from(document.getElementById('ephox-ui')).getOrDie('Missing "ephox-ui"'));
   const wrap = Element.fromTag('div');
 
   Remove.empty(ephoxUi);

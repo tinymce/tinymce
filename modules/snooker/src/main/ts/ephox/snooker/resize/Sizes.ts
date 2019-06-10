@@ -78,8 +78,8 @@ const normalizePercentageWidth = function (cellWidth: number, tableSize: TableSi
 };
 
 const choosePercentageSize = function (element: Element, width: string, tableSize: TableSize) {
-  if (percentageBasedSizeRegex.test(width)) {
-    const percentMatch = percentageBasedSizeRegex.exec(width);
+  const percentMatch = percentageBasedSizeRegex.exec(width);
+  if (percentMatch !== null) {
     return parseFloat(percentMatch[1]);
   } else {
     const intWidth = Width.get(element);
@@ -103,16 +103,16 @@ const normalizePixelWidth = function (cellWidth: number, tableSize: TableSize) {
 };
 
 const choosePixelSize = function (element: Element, width: string, tableSize: TableSize) {
-  if (pixelBasedSizeRegex.test(width)) {
-    const pixelMatch = pixelBasedSizeRegex.exec(width);
+  const pixelMatch = pixelBasedSizeRegex.exec(width);
+  if (pixelMatch !== null) {
     return parseInt(pixelMatch[1], 10);
-  } else if (percentageBasedSizeRegex.test(width)) {
-    const percentMatch = percentageBasedSizeRegex.exec(width);
+  }
+  const percentMatch = percentageBasedSizeRegex.exec(width);
+  if (percentMatch !== null) {
     const floatWidth = parseFloat(percentMatch[1]);
     return normalizePixelWidth(floatWidth, tableSize);
-  } else {
-    return Width.get(element);
   }
+  return Width.get(element);
 };
 
 const getPixelWidth = function (cell: Element, tableSize: TableSize) {
@@ -131,8 +131,8 @@ const getHeight = function (cell: Element) {
 const getGenericWidth = function (cell: Element): Option<GenericWidth> {
   const width = getRawWidth(cell);
   return width.bind(function (w) {
-    if (genericSizeRegex.test(w)) {
-      const match = genericSizeRegex.exec(w);
+    const match = genericSizeRegex.exec(w);
+    if (match !== null) {
       return Option.some({
         width: Fun.constant(parseFloat(match[1])),
         unit: Fun.constant(match[3])

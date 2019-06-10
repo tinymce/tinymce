@@ -5,8 +5,8 @@ import { TableSize } from 'ephox/snooker/resize/Types';
 
 UnitTest.test('Deltas', function () {
   const min = 10;
-  const check = function (expected, input, column, step) {
-    const singleColumnWidth = function (width, _delta) {
+  const check = function (expected: number[], input: number[], column: number, step: number) {
+    const singleColumnWidth = function (width: number, _delta: number) {
       const newNext = Math.max(min, width + step);
       return [ newNext - width ];
     };

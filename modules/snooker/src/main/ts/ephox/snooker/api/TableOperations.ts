@@ -213,7 +213,7 @@ const pasteCells = function (grid: Structs.RowCells[], pasteDetails: ExtractPast
   });
 };
 
-const gridifyRows = function (rows: Element[], generators: SimpleGenerators, example: Structs.RowCells) {
+const gridifyRows = function (rows: Element[], generators: Generators, example: Structs.RowCells) {
   const pasteDetails = DetailsList.fromPastedRows(rows, example);
   const wh = Warehouse.generate(pasteDetails);
   return Transitions.toGrid(wh, generators, true);

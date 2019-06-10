@@ -5,7 +5,7 @@ import { UnitTest, assert } from '@ephox/bedrock';
 import { Element } from '@ephox/sugar';
 
 UnitTest.test('WarehouseTest', function () {
-  const check = function (expected, input) {
+  const check = function (expected: Record<string, string>, input: Structs.RowData<Structs.Detail>[]) {
     const actual = Warehouse.generate(input);
     assert.eq(expected, Obj.map(actual.access(), function (x) { return x.element(); }));
   };

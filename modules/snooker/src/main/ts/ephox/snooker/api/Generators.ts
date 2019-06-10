@@ -97,7 +97,7 @@ const modification = function (generators: Generators, toData = elementToData): 
   } ;
 };
 
-const transform = function (scope: string, tag: string) {
+const transform = function (scope: string | null, tag: string) {
   return function (generators: Generators): GeneratorsTransform {
     const position = Cell(Option.none<Element>());
     verifyGenerators(generators);

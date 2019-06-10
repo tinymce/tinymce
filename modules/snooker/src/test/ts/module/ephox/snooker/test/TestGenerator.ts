@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
-import { Generators } from 'ephox/snooker/api/Generators';
+import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 
-export default function (): Generators {
+export default function (): SimpleGenerators {
   let cellCounter = 0;
   let replaceCounter = 0;
 
@@ -22,5 +22,5 @@ export default function (): Generators {
     gap: Fun.constant('*'),
     row: Fun.constant('tr'),
     replace
-  } as unknown as Generators; // fake generator for atomic tests
+  } as unknown as SimpleGenerators; // fake generator for atomic tests
 }

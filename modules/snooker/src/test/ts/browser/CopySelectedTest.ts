@@ -3,18 +3,25 @@ import { Arr } from '@ephox/katamari';
 import { Attr, Class, Element, Html, InsertAll } from '@ephox/sugar';
 import CopySelected from 'ephox/snooker/api/CopySelected';
 
+interface TestData {
+  selected: boolean;
+  html: string;
+  rowspan?: string;
+  colspan?: string;
+}
+
 UnitTest.test('CopySelectedTest', function () {
   // normally this is darwin ephemera, but doesn't actually matter what it is
   const SEL_CLASS = 'copy-selected';
 
   // traverse really needs this built in
-  const traverseChildElements = function (e) {
+  const traverseChildElements = function (e: Element) {
     return Arr.map(e.dom().children, Element.fromDom);
   };
 
   // data objects for input/expected
-  const data = function (selected) {
-    return function (text, rowspan?, colspan?) {
+  const data = function (selected: boolean) {
+    return function (text: string, rowspan?: number, colspan?: number): TestData {
       return {
         selected,
         html: text,
@@ -25,7 +32,7 @@ UnitTest.test('CopySelectedTest', function () {
   };
   const s = data(true);
   const ns = data(false);
-  const gen = function () {
+  const gen = function (): TestData {
     return {
       selected: false,
       html: '<br>'
@@ -33,14 +40,20 @@ UnitTest.test('CopySelectedTest', function () {
   };
 
   // generate a table structure from a nested array
-  const generateInput = function (input) {
+  const generateInput = function (input: TestData[][]) {
     const table = Element.fromTag('table');
     const rows = Arr.map(input, function (row) {
       const cells = Arr.map(row, function (cell) {
         const td = Element.fromTag('td');
-        if (cell.rowspan !== undefined) { Attr.set(td, 'rowspan', cell.rowspan); }
-        if (cell.colspan !== undefined) { Attr.set(td, 'colspan', cell.colspan); }
-        if (cell.selected) { Class.add(td, SEL_CLASS); }
+        if (cell.rowspan !== undefined) {
+          Attr.set(td, 'rowspan', cell.rowspan);
+        }
+        if (cell.colspan !== undefined) {
+          Attr.set(td, 'colspan', cell.colspan);
+        }
+        if (cell.selected) {
+          Class.add(td, SEL_CLASS);
+        }
         Html.set(td, cell.html);
         return td;
       });
@@ -55,14 +68,14 @@ UnitTest.test('CopySelectedTest', function () {
     return table;
   };
 
-  const check = function (label, expected, input) {
+  const check = function (label: string, expected: TestData[][], input: TestData[][]) {
     const table = generateInput(input);
 
     CopySelected.extract(table, '.' + SEL_CLASS);
 
     // Now verify that the table matches the nested array structure of expected
     const htmlForError = ', test "' + label + '". Output HTML:\n' + Html.getOuter(table);
-    const assertWithInfo = function (exp, actual, info) {
+    const assertWithInfo = function <T> (exp: T, actual: T, info: string) {
       assert.eq(exp, actual, 'expected ' + info + ' "' + exp + '", was "' + actual + '"' + htmlForError);
     };
 

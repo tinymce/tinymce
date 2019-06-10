@@ -1,10 +1,13 @@
 import { window } from '@ephox/dom-globals';
 import { Fun, Obj, Option } from '@ephox/katamari';
-import { Attr, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind } from '@ephox/sugar';
+import { Attr, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind, EventArgs } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
 import TableOperations from 'ephox/snooker/api/TableOperations';
 import TableResize from 'ephox/snooker/api/TableResize';
+import { Generators } from 'ephox/snooker/api/Generators';
+import { BarPositions, ColInfo } from 'ephox/snooker/resize/BarPositions';
+import { RunOperationOutput, TargetElement, TargetSelection } from 'ephox/snooker/model/RunOperation';
 
 Ready.execute(function () {
 
@@ -33,48 +36,48 @@ Ready.execute(function () {
     '</table>'
   );
 
-  const subject = Element.fromHtml(
-    '<table contenteditable="true" style="border-collapse: collapse;" border="1"><tbody>' +
-      '<tr>' +
-        '<td style="width: 110px;">1</td>' +
-        '<td colspan="5">.</td>' +
-      '</tr>' +
-      '<tr>' +
-        '<td colspan=2>.</td>' +
-        '<td style="width: 130px;">3</td>' +
-        '<td colspan=2>.</td>' +
-        '<td style="width: 160px;">6</td>' +
-      '</tr>' +
-      '<tr>' +
-        '<td colspan=3>.</td>' +
-        '<td style="width: 140px;">4</td>' +
-        '<td colspan=2>.</td>' +
-      '</tr>' +
-      '<tr>' +
-        '<td colspan=4>.</td>' +
-        '<td colspan=2>.</td>' +
-      '</tr>' +
-      '<tr>' +
-        '<td rowspan=2>x</td>' +
-        '<td style="width: 120px;">2</td>' +
-        '<td colspan=2>.</td>' +
-        '<td style="width: 150px;">5</td>' +
-        '<td>x</td>' +
-      '</tr>' +
-      '<tr>' +
-        '<td style="width: 120px;" rowspan=2>2</td>' +
-        '<td colspan=2>.</td>' +
-        '<td style="width: 150px;">5</td>' +
-        '<td>x</td>' +
-      '</tr>' +
-      '<tr>' +
-        '<td>1</td>' +
-        '<td colspan=2>.</td>' +
-        '<td style="width: 150px;">5</td>' +
-        '<td>x</td>' +
-      '</tr>' +
-    '</tbody></table>'
-  );
+  // const subject = Element.fromHtml(
+  //   '<table contenteditable="true" style="border-collapse: collapse;" border="1"><tbody>' +
+  //     '<tr>' +
+  //       '<td style="width: 110px;">1</td>' +
+  //       '<td colspan="5">.</td>' +
+  //     '</tr>' +
+  //     '<tr>' +
+  //       '<td colspan=2>.</td>' +
+  //       '<td style="width: 130px;">3</td>' +
+  //       '<td colspan=2>.</td>' +
+  //       '<td style="width: 160px;">6</td>' +
+  //     '</tr>' +
+  //     '<tr>' +
+  //       '<td colspan=3>.</td>' +
+  //       '<td style="width: 140px;">4</td>' +
+  //       '<td colspan=2>.</td>' +
+  //     '</tr>' +
+  //     '<tr>' +
+  //       '<td colspan=4>.</td>' +
+  //       '<td colspan=2>.</td>' +
+  //     '</tr>' +
+  //     '<tr>' +
+  //       '<td rowspan=2>x</td>' +
+  //       '<td style="width: 120px;">2</td>' +
+  //       '<td colspan=2>.</td>' +
+  //       '<td style="width: 150px;">5</td>' +
+  //       '<td>x</td>' +
+  //     '</tr>' +
+  //     '<tr>' +
+  //       '<td style="width: 120px;" rowspan=2>2</td>' +
+  //       '<td colspan=2>.</td>' +
+  //       '<td style="width: 150px;">5</td>' +
+  //       '<td>x</td>' +
+  //     '</tr>' +
+  //     '<tr>' +
+  //       '<td>1</td>' +
+  //       '<td colspan=2>.</td>' +
+  //       '<td style="width: 150px;">5</td>' +
+  //       '<td>x</td>' +
+  //     '</tr>' +
+  //   '</tbody></table>'
+  // );
 
 // subject = Element.fromHtml('<table contenteditable="true" style="border-collapse: collapse;"><tbody><tr><td>A</td><td>A2</td></tr><tr><td rowspan=2>B</td><td>C</td></tr><tr><td>d</td></tr></tbody></table>');
 // subject = Element.fromHtml('<table contenteditable="true" style="border-collapse: collapse;"><tbody><tr><td>A</td></tr><tr><td rowspan=2>B</td></tr></tbody></table>');
@@ -147,7 +150,7 @@ Ready.execute(function () {
   Insert.append(eraseColumn, Element.fromText('Erase column'));
   Insert.append(ephoxUi, eraseColumn);
 
-  const makeButton = function (desc) {
+  const makeButton = function (desc: string) {
     const button = Element.fromTag('button');
     Insert.append(button, Element.fromText(desc));
     Insert.append(ephoxUi, button);
@@ -163,14 +166,14 @@ Ready.execute(function () {
     const selection = window.getSelection();
     if (selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
-      const fistElement = range.startContainer.nodeType === 3 ? range.startContainer.parentNode : range.startContainer;
-      return Option.some(Element.fromDom(fistElement));
+      const firstElement = range.startContainer.nodeType === 3 ? range.startContainer.parentNode : range.startContainer;
+      return Option.from(firstElement).map(Element.fromDom);
     } else {
       return Option.none();
     }
   };
 
-  const newCell = function (prev) {
+  const newCell: Generators['cell'] = function (prev) {
     const td = Element.fromTag('td');
     Insert.append(td, Element.fromText('?'));
     if (prev.colspan() === 1) { Css.set(td, 'width', Css.get(prev.element(), 'width')); }
@@ -178,18 +181,18 @@ Ready.execute(function () {
     return td;
   };
 
-  const gap = function () {
+  const gap: Generators['gap'] = function () {
     const td = Element.fromTag('td');
     Insert.append(td, Element.fromText('?'));
     return td;
   };
 
-  const newRow = function (prev) {
+  const newRow: Generators['row'] = function () {
     const tr = Element.fromTag('tr');
     return tr;
   };
 
-  const replace = function (cell, tag, attrs) {
+  const replace: Generators['replace'] = function (cell, tag, attrs) {
     const replica = Replication.copy(cell, tag);
     Obj.each(attrs, function (v, k) {
       if (v !== null) { Attr.set(replica, k, v); }
@@ -197,22 +200,20 @@ Ready.execute(function () {
     return replica;
   };
 
-  const generators = {
+  const generators: Generators = {
     row: newRow,
     cell: newCell,
     replace,
     gap
   };
 
-  const runOperation = function (operation) {
-    return function (event) {
+  const runOperation = function (operation: (wire: ResizeWire, table: Element, target: TargetElement & TargetSelection, generators: Generators, direction: BarPositions<ColInfo>) => Option<RunOperationOutput>) {
+    return function (event: EventArgs) {
       detection().each(function (start) {
         const dir = Direction.getDirection(start);
         const direction = dir === 'rtl' ? ResizeDirection.rtl : ResizeDirection.ltr;
         const target = {
           element: Fun.constant(start),
-          mergable: Option.none,
-          unmergable: Option.none,
           selection: Fun.constant([start])
         };
 
