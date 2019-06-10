@@ -7,7 +7,6 @@
 
 import { HTMLElement, Element, Range, window } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import { Spot, SpotPoint } from '@ephox/phoenix';
 import { Css, Element as SugarElement, Height, Insert, Location, Node, Position, Remove, Scroll, Text, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as OuterPosition from '../frames/OuterPosition';
@@ -24,23 +23,23 @@ type ScrollFunc = (doc: SugarElement, scrollTop: number, marker: MarkerInfo, ali
 
 const excludeFromDescend = (element: SugarElement) => Node.name(element) === 'textarea';
 
-const descend = (element: SugarElement, offset: number): SpotPoint<SugarElement> => {
+const descend = (element: SugarElement, offset: number): { element: SugarElement, offset: number } => {
   const children = Traverse.children(element);
   if (children.length === 0 || excludeFromDescend(element)) {
-    return Spot.point(element, offset);
+    return { element, offset };
   } else if (offset < children.length && !excludeFromDescend(children[offset])) {
-    return Spot.point(children[offset], 0);
+    return { element: children[offset], offset: 0 };
   } else {
     const last = children[children.length - 1];
     if (excludeFromDescend(last)) {
-      return Spot.point(element, offset);
+      return { element, offset };
     } else {
       if (Node.name(last) === 'img') {
-        return Spot.point(last, 1);
+        return { element: last, offset: 1 };
       } else if (Node.isText(last)) {
-        return Spot.point(last, Text.get(last).length);
+        return { element: last, offset: Text.get(last).length };
       } else {
-        return Spot.point(last, Traverse.children(last).length);
+        return { element: last, offset: Traverse.children(last).length };
       }
     }
   }
@@ -57,10 +56,10 @@ const markerInfo = (element: SugarElement, cleanupFun: () => void): MarkerInfo =
   };
 };
 
-const createMarker = (element: SugarElement, offset: number) => {
+const createMarker = (element: SugarElement, offset: number): MarkerInfo => {
   const startPoint = descend(element, offset);
   const span = SugarElement.fromHtml('<span data-mce-bogus="all">' + Zwsp.ZWSP + '</span>');
-  Insert.before(startPoint.element(), span);
+  Insert.before(startPoint.element, span);
 
   return markerInfo(span, () => Remove.remove(span));
 };
