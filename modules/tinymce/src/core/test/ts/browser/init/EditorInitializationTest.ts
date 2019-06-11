@@ -219,6 +219,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
 
   setup();
   Pipeline.async({}, [
+    ...suite.toSteps({}),
     Logger.t('Initialize multiple inline editors and remove them', GeneralSteps.sequence([
       mCreateInlineModeMultipleInstances,
       mAssertEditors,
