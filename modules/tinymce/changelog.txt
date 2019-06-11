@@ -5,6 +5,7 @@ Version 5.0.8 (TBD)
     Fixed bogus autocompleter span appearing in content when the autocompleter menu is shown #TINY-3752
     Fixed toolbar font size select not working with legacyoutput plugin #TINY-2921
     Fixed the legacyoutput plugin incorrectly aligning images #TINY-3660
+    Fixed remove color not working when using the legacyoutput plugin #TINY-3756
 Version 5.0.7 (2019-06-05)
     Added new toolbar button and menu item for inserting tables via dialog #TINY-3636
     Added new API for adding/removing/changing tabs in the Help dialog #TINY-3535

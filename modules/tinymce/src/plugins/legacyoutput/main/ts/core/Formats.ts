@@ -55,8 +55,8 @@ const overrideFormats = (editor: Editor) => {
     },
 
     // Setup font elements for colors as well
-    forecolor: { inline: 'font', attributes: { color: '%value' } },
-    hilitecolor: { inline: 'font', styles: { backgroundColor: '%value' } }
+    forecolor: { inline: 'font', attributes: { color: '%value' }, links: true, remove_similar: true, clear_child_styles: true },
+    hilitecolor: { inline: 'font', styles: { backgroundColor: '%value' }, links: true, remove_similar: true, clear_child_styles: true }
   });
 
   // Check that deprecated elements are allowed if not add them

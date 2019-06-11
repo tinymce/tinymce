@@ -246,7 +246,7 @@ const removeFormat = function (ed, format, vars?, node?, compareNode?) {
         compareNode = 0;
       }
 
-      if (!compareNode || isEq(dom.getAttrib(compareNode, name), value)) {
+      if (format.remove_similar || (!compareNode || isEq(dom.getAttrib(compareNode, name), value))) {
         // Keep internal classes
         if (name === 'class') {
           value = dom.getAttrib(node, name);
