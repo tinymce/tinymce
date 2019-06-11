@@ -1,6 +1,7 @@
 import { Arr } from '@ephox/katamari';
+import { Universe } from '@ephox/boss';
 
-var blockList = [
+const blockList = [
   'body',
   'p',
   'div',
@@ -34,49 +35,49 @@ var blockList = [
   'address'
 ];
 
-var isList = function (universe, item) {
-  var tagName = universe.property().name(item);
+const isList = function <E, D> (universe: Universe<E, D>, item: E) {
+  const tagName = universe.property().name(item);
   return Arr.contains([ 'ol', 'ul' ], tagName);
 };
 
-var isBlock = function (universe, item) {
-  var tagName = universe.property().name(item);
+const isBlock = function <E, D> (universe: Universe<E, D>, item: E) {
+  const tagName = universe.property().name(item);
   return Arr.contains(blockList, tagName);
 };
 
-var isFormatting = function (universe, item) {
-  var tagName = universe.property().name(item);
+const isFormatting = function <E, D> (universe: Universe<E, D>, item: E) {
+  const tagName = universe.property().name(item);
   return Arr.contains([ 'address', 'pre', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ], tagName);
 };
 
-var isHeading = function (universe, item) {
-  var tagName = universe.property().name(item);
+const isHeading = function <E, D> (universe: Universe<E, D>, item: E) {
+  const tagName = universe.property().name(item);
   return Arr.contains([ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ], tagName);
 };
 
-var isContainer = function (universe, item) {
+const isContainer = function <E, D> (universe: Universe<E, D>, item: E) {
   return Arr.contains([ 'div', 'li', 'td', 'th', 'blockquote', 'body', 'caption' ], universe.property().name(item));
 };
 
-var isEmptyTag = function (universe, item) {
+const isEmptyTag = function <E, D> (universe: Universe<E, D>, item: E) {
   return Arr.contains([ 'br', 'img', 'hr', 'input' ], universe.property().name(item));
 };
 
-var isFrame = function (universe, item) {
+const isFrame = function <E, D> (universe: Universe<E, D>, item: E) {
   return universe.property().name(item) === 'iframe';
 };
 
-var isInline = function (universe, item) {
+const isInline = function <E, D> (universe: Universe<E, D>, item: E) {
   return !(isBlock(universe, item) || isEmptyTag(universe, item)) && universe.property().name(item) !== 'li';
 };
 
-export default <any> {
-  isBlock: isBlock,
-  isList: isList,
-  isFormatting: isFormatting,
-  isHeading: isHeading,
-  isContainer: isContainer,
-  isEmptyTag: isEmptyTag,
-  isFrame: isFrame,
-  isInline: isInline
+export default {
+  isBlock,
+  isList,
+  isFormatting,
+  isHeading,
+  isContainer,
+  isEmptyTag,
+  isFrame,
+  isInline
 };

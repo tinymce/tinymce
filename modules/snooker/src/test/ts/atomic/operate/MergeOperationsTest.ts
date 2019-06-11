@@ -1,17 +1,18 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr, Fun } from '@ephox/katamari';
-import Structs from 'ephox/snooker/api/Structs';
+import * as Structs from 'ephox/snooker/api/Structs';
 import MergingOperations from 'ephox/snooker/operate/MergingOperations';
+import { Element } from '@ephox/sugar';
 
 UnitTest.test('MergeOperationsTest', function () {
   const b = Structs.bounds;
   const r = Structs.rowcells;
-  const en = Structs.elementnew;
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
 
   // Test basic merge.
   (function () {
-    const check = function (expected, grid, bounds, lead) {
-      const actual = MergingOperations.merge(grid, bounds, Fun.tripleEquals, Fun.constant(lead));
+    const check = function (expected: Structs.RowCells[], grid: Structs.RowCells[], bounds: Structs.Bounds, lead: string) {
+      const actual = MergingOperations.merge(grid, bounds, Fun.tripleEquals, Fun.constant(lead as unknown as Element));
       assert.eq(expected.length, actual.length);
       Arr.each(expected, function (row, i) {
         Arr.each(row.cells(), function (cell, j) {
@@ -22,7 +23,7 @@ UnitTest.test('MergeOperationsTest', function () {
       });
     };
 
-    check([], [], b(0, 0, 1, 1),  en('a', false));
+    check([], [], b(0, 0, 1, 1),  'a');
     check([r([ en('a', false), en('a', false) ], 'thead')], [r([  en('a', false),  en('b', false) ], 'thead')], b(0, 0, 0, 1), 'a');
     check([r([ en('a', false), en('a', false) ], 'tbody')], [r([  en('a', false),  en('b', false) ], 'tbody')], b(0, 0, 0, 1), 'a');
     check(
@@ -81,11 +82,11 @@ UnitTest.test('MergeOperationsTest', function () {
 
   // Test basic unmerge.
   (function () {
-    const check = function (expected, grid, target) {
-      const actual = MergingOperations.unmerge(grid, target, Fun.tripleEquals, Fun.constant('?'));
+    const check = function (expected: Structs.RowCells[], grid: Structs.RowCells[], target: string) {
+      const actual = MergingOperations.unmerge(grid, target as unknown as Element, Fun.tripleEquals, Fun.constant('?') as any);
       assert.eq(expected.length, actual.length);
       Arr.each(expected, function (row, i) {
-        Arr.each(row, function (cell, j) {
+        Arr.each(row.cells(), function (cell, j) {
           assert.eq(cell.element(), actual[i].cells()[j].element());
           assert.eq(cell.isNew(), actual[i].cells()[j].isNew());
         });

@@ -1,14 +1,14 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
 import { Body, Element, Insert, Remove } from '@ephox/sugar';
-import ResizeDirection from 'ephox/snooker/api/ResizeDirection';
+import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import Deltas from 'ephox/snooker/calc/Deltas';
 import DetailsList from 'ephox/snooker/model/DetailsList';
-import Warehouse from 'ephox/snooker/model/Warehouse';
+import { Warehouse } from 'ephox/snooker/model/Warehouse';
 import TableSize from 'ephox/snooker/resize/TableSize';
 
 UnitTest.test('ResizeTest', function () {
-  const getWarehouse = function (table) {
+  const getWarehouse = function (table: Element) {
     const list = DetailsList.fromTable(table);
     return Warehouse.generate(list);
   };
@@ -60,10 +60,6 @@ UnitTest.test('ResizeTest', function () {
 
     // [25%, -25%] deltas.
     assert.eq([25, -25], deltas);
-
-    const newWidths = Arr.map(deltas, function (dx, i) {
-      return dx + widths[i];
-    });
 
     Remove.remove(table);
   };
@@ -121,10 +117,6 @@ UnitTest.test('ResizeTest', function () {
     // [25%, -25%] deltas.
     assert.eq([25, -25], deltas);
 
-    const newWidths = Arr.map(deltas, function (dx, i) {
-      return dx + widths[i];
-    });
-
     Remove.remove(table);
   };
 
@@ -170,10 +162,6 @@ UnitTest.test('ResizeTest', function () {
     // [25%, -25%] deltas.
     assert.eq([200, -200], deltas);
 
-    const newWidths = Arr.map(deltas, function (dx, i) {
-      return dx + widths[i];
-    });
-
     Remove.remove(table);
   };
 
@@ -218,10 +206,6 @@ UnitTest.test('ResizeTest', function () {
 
     // [25%, -25%] deltas.
     assert.eq([200, -200], deltas);
-
-    const newWidths = Arr.map(deltas, function (dx, i) {
-      return dx + widths[i];
-    });
 
     Remove.remove(table);
   };

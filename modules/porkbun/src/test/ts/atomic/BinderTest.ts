@@ -1,24 +1,24 @@
 import Binder from 'ephox/porkbun/Binder';
-import Event from 'ephox/porkbun/Event';
+import { Event } from 'ephox/porkbun/Event';
 import Events from 'ephox/porkbun/Events';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Binder', function() {
-  var events = Events.create({
-    myEvent: Event([ ]),
-    secondEvent: Event([ ])
+UnitTest.test('Binder', function () {
+  const events = Events.create({
+    myEvent: Event([]),
+    secondEvent: Event([])
   });
 
-  var binder = Binder.create();
+  const binder = Binder.create();
 
-  var called = false;
+  let called = false;
 
-  binder.bind(events.registry.myEvent, function(event) {
+  binder.bind(events.registry.myEvent, function (event) {
     called = true;
   });
 
   assert.throws(function () {
-    binder.bind(events.registry.myEvent, function(event) {
+    binder.bind(events.registry.myEvent, function (event) {
       called = true;
     });
   });
@@ -37,13 +37,13 @@ UnitTest.test('Binder', function() {
     binder.unbind(events.registry.myEvent);
   });
 
-  var count = 0;
+  let count = 0;
 
-  binder.bind(events.registry.myEvent, function(event) {
+  binder.bind(events.registry.myEvent, function (event) {
     count++;
   });
 
-  binder.bind(events.registry.secondEvent, function(event) {
+  binder.bind(events.registry.secondEvent, function (event) {
     count++;
   });
 
@@ -54,4 +54,3 @@ UnitTest.test('Binder', function() {
 
   assert.eq(0, count);
 });
-

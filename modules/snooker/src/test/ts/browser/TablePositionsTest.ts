@@ -1,7 +1,8 @@
 import { assert, UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import { document, HTMLElement } from '@ephox/dom-globals';
 import { Element, Insert, InsertAll, Remove, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import TablePositions from 'ephox/snooker/api/TablePositions';
+import { Option } from '@ephox/katamari';
 
 UnitTest.test('RectangularTest', function () {
   const body = SelectorFind.first('body').getOrDie();
@@ -72,12 +73,12 @@ UnitTest.test('RectangularTest', function () {
 
   InsertAll.append(div, [ table, table2 ] );
 
-  const check = function (tableTarget, from, to, expected) {
-    [].forEach.call(tableTarget.dom().querySelectorAll('td'), function (td) {
+  const check = function (tableTarget: Element, from: string, to: string, expected: boolean) {
+    [].forEach.call(tableTarget.dom().querySelectorAll('td'), function (td: HTMLElement) {
       td.style.background = '';
     });
-    document.querySelector(from).style.background = '#cadbee';
-    document.querySelector(to).style.background = '#5adb33';
+    Option.from(document.querySelector(from) as HTMLElement).getOrDie('Missing element for "from" selector').style.background = '#cadbee';
+    Option.from(document.querySelector(to) as HTMLElement).getOrDie('Missing element for "to" selector').style.background = '#5adb33';
     const start = SelectorFilter.descendants(tableTarget, from)[0];
     const finish = SelectorFilter.descendants(tableTarget, to)[0];
     const c = TablePositions.getBox(tableTarget, start, finish);

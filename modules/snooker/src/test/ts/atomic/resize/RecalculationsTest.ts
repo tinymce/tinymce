@@ -1,15 +1,27 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr, Struct } from '@ephox/katamari';
-import Structs from 'ephox/snooker/api/Structs';
-import Warehouse from 'ephox/snooker/model/Warehouse';
+import * as Structs from 'ephox/snooker/api/Structs';
+import { Warehouse } from 'ephox/snooker/model/Warehouse';
 import Recalculations from 'ephox/snooker/resize/Recalculations';
+import { Element } from '@ephox/sugar';
 
 UnitTest.test('RecalculationsTest', function () {
   const dimensions = Structs.dimensions; // Struct.immutable('width', 'height');
 
-  const assertParts = Struct.immutable('widths', 'heights');
+  interface Parts {
+    widths: () => Array<{
+      element: string;
+      width: number;
+    }>;
+    heights: () => Array<{
+      element: string;
+      height: number;
+    }>;
+  }
 
-  const check = function (expected, input, sizes) {
+  const expectedParts: (widths: {element: string, width: number}[], heights: {element: string, height: number}[]) => Parts = Struct.immutable('widths', 'heights');
+
+  const check = function (expected: Parts[], input: Structs.RowData<Structs.Detail>[], sizes: Structs.Dimensions) {
     const warehouse = Warehouse.generate(input);
     const actualW = Recalculations.recalculateWidth(warehouse, sizes.width());
     const actualH = Recalculations.recalculateHeight(warehouse, sizes.height());
@@ -33,15 +45,15 @@ UnitTest.test('RecalculationsTest', function () {
 
   };
 
-  const d = Structs.detail; //  Struct.immutable('element', 'rowspan', 'colspan');
-  const r = Structs.rowdata;
+  const d = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as any as Element, rowspan, colspan);
+  const r = (fakeEle: any, cells: Structs.Detail[], section: 'tbody') => Structs.rowdata(fakeEle as any as Element, cells, section);
 
-  check([assertParts([{ element: 'a', width: 10 }], [{ element: 'a', height: 10 }])], [
+  check([expectedParts([{ element: 'a', width: 10 }], [{ element: 'a', height: 10 }])], [
     r('r0', [d('a', 1, 1)], 'tbody')
   ], dimensions([10], [10]));
 
   // 2x2 grid
-  check([assertParts(
+  check([expectedParts(
     [{ element: 'a00', width: 20 }, { element: 'a01', width: 20 },
     { element: 'a10', width: 20 }, { element: 'a11', width: 20 }],
     [{ element: 'a00', height: 15 }, { element: 'a01', height: 15 },
@@ -51,7 +63,7 @@ UnitTest.test('RecalculationsTest', function () {
     ], dimensions([20, 20], [15, 9]));
 
   // 2x2 grid merged into a single cell with total dimensions double the width and height
-  check([assertParts(
+  check([expectedParts(
     [{ element: 'a', width: 40 }],
     [{ element: 'a', height: 60 }])], [
       r('r0', [d('a', 2, 2)], 'tbody'),
@@ -59,7 +71,7 @@ UnitTest.test('RecalculationsTest', function () {
     ], dimensions([20, 20, 99999], [30, 30, 999999]));
 
   // 2x3 grid merged into a single cell with total dimensions double the width and height
-  check([assertParts(
+  check([expectedParts(
     [{ element: 'a', width: 40 }, { element: 'b', width: 15 }, { element: 'c', width: 15 }],
     [{ element: 'a', height: 60 }, { element: 'b', height: 30 }, { element: 'c', height: 30 }])],
     [
@@ -67,7 +79,7 @@ UnitTest.test('RecalculationsTest', function () {
       r('r1', [d('c', 1, 1)], 'tbody')
     ], dimensions([20, 20, 15, 99999], [30, 30, 999999]));
 
-  check([assertParts(
+  check([expectedParts(
     [{ element: 'a', width: 30 }, { element: 'b', width: 11 }, { element: 'c', width: 11 }],
     [{ element: 'a', height: 28 }, { element: 'b', height: 15 }, { element: 'c', height: 13 }])],
     [
@@ -76,7 +88,7 @@ UnitTest.test('RecalculationsTest', function () {
     ], dimensions([20, 10, 11], [15, 13]));
 
   check([
-    assertParts([
+    expectedParts([
       { element: 'g', width: 10 }, { element: 'h', width: 10 }, { element: 'i', width: 10 }, { element: 'j', width: 10 }, { element: 'k', width: 30 },
       { element: 'l', width: 10 }, { element: 'm', width: 20 }, { element: 'n', width: 10 }, { element: 'o', width: 10 }, { element: 'p', width: 10 },
       { element: 'q', width: 10 }, { element: 'r', width: 10 }, { element: 's', width: 10 }, { element: 't', width: 10 }, { element: 'u', width: 10 },

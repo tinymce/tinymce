@@ -1,47 +1,53 @@
+import { Id, Struct } from '@ephox/katamari';
+import { Attr, Class, Element, Insert } from '@ephox/sugar';
 import AriaRegister from './AriaRegister';
 import Styles from './Styles';
-import { Id } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
 
-var help = Struct.immutable('help', 'ids');
+export interface AriaGrid {
+  help: () => Element;
+  ids: () => string[][];
+}
 
-var base = function (element, label) {
+export interface AriaGridTranslation {
+  row: (num: number) => string;
+  col: (num: number) => string;
+}
+
+const help: (help: Element, ids: string[][]) => AriaGrid = Struct.immutable('help', 'ids');
+
+const base = function (element: Element, label: string) {
   Attr.setAll(element, {
     'role': 'grid',
     'aria-label': label
   });
 };
 
-var row = function (element) {
+const row = function (element: Element) {
   Attr.set(element, 'role', 'row');
 };
 
 // gridcell with explicit label
-var cell = function (element, label) {
+const cell = function (element: Element, label: string) {
   gridcell(element);
   Attr.set(element, 'aria-label', label);
 };
 
 // gridcell with implicit label
-var gridcell = function (element) {
-  Attr.set(element,'role', 'gridcell');
+const gridcell = function (element: Element) {
+  Attr.set(element, 'role', 'gridcell');
 };
 
-var createHelp = function (rows, cols, translations) {
-  var gridHelp = Element.fromTag('div');
+const createHelp = function (rows: number, cols: number, translations: AriaGridTranslation) {
+  const gridHelp = Element.fromTag('div');
   AriaRegister.presentation(gridHelp);
   Class.add(gridHelp, Styles.resolve('aria-help'));
 
-  var colIds = [];
+  const colIds: string[] = [];
   // TODO: snooker util.repeat instead of mutation
-  for (var colHelp = 0; colHelp < cols; colHelp++) {
+  for (let colHelp = 0; colHelp < cols; colHelp++) {
     // Temporary non-random number until we get it right
-    var colId = Id.generate('ephox-aria');
-    var cellHelp = Element.fromTag('span');
+    const colId = Id.generate('ephox-aria');
+    const cellHelp = Element.fromTag('span');
     AriaRegister.presentation(cellHelp);
     Attr.set(cellHelp, 'id', colId);
     Class.add(cellHelp, Styles.resolve('aria-help'));
@@ -52,11 +58,11 @@ var createHelp = function (rows, cols, translations) {
   }
 
   // TODO: snooker util.repeat instead of mutation
-  var ids = [];
-  for (var rowNum = 0; rowNum < rows; rowNum++) {
+  const ids: string[][] = [];
+  for (let rowNum = 0; rowNum < rows; rowNum++) {
     // Temporary non-random number until we get it right
-    var rowId = Id.generate('ephox-aria');
-    var rowHelp = Element.fromTag('span');
+    const rowId = Id.generate('ephox-aria');
+    const rowHelp = Element.fromTag('span');
     AriaRegister.presentation(rowHelp);
     Attr.set(rowHelp, 'id', rowId);
     Class.add(rowHelp, Styles.resolve('aria-help'));
@@ -65,7 +71,7 @@ var createHelp = function (rows, cols, translations) {
 
     ids[rowNum] = [];
     // TODO: snooker util.repeat instead of mutation
-    for (var colNum = 0; colNum < cols; colNum++) {
+    for (let colNum = 0; colNum < cols; colNum++) {
       ids[rowNum][colNum] = colIds[colNum] + ' ' + rowId;
     }
 
@@ -73,10 +79,10 @@ var createHelp = function (rows, cols, translations) {
   return help(gridHelp, ids);
 };
 
-export default <any> {
-  base: base,
-  row: row,
-  cell: cell,
-  gridcell: gridcell,
-  createHelp: createHelp
+export const AriaGrid = {
+  base,
+  row,
+  cell,
+  gridcell,
+  createHelp
 };

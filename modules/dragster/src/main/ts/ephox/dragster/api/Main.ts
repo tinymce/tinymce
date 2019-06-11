@@ -1,4 +1,4 @@
-import DragApis from './DragApis';
+import * as DragApis from './DragApis';
 import Dragger from './Dragger';
 import MouseDrag from './MouseDrag';
 

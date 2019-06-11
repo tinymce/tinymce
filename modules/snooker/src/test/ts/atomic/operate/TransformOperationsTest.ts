@@ -1,20 +1,21 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr, Fun } from '@ephox/katamari';
-import Generators from 'ephox/snooker/api/Generators';
-import Structs from 'ephox/snooker/api/Structs';
+import { Generators } from 'ephox/snooker/api/Generators';
+import * as Structs from 'ephox/snooker/api/Structs';
 import TransformOperations from 'ephox/snooker/operate/TransformOperations';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
+import { Element } from '@ephox/sugar';
 
 UnitTest.test('TransformOperationsTest', function () {
-  const en = Structs.elementnew;
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as Element, isNew);
 
-  const mapToStructGrid = function (grid) {
+  const mapToStructGrid = function (grid: Structs.ElementNew[][]) {
     return Arr.map(grid, function (row) {
       return Structs.rowcells(row, 'tbody');
     });
   };
 
-  const assertGrids = function (expected, actual) {
+  const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowCells[]) {
     assert.eq(expected.length, actual.length);
     Arr.each(expected, function (row, i) {
       Arr.each(row.cells(), function (cell, j) {
@@ -27,7 +28,7 @@ UnitTest.test('TransformOperationsTest', function () {
 
   // Test basic changing to header (column)
   (function () {
-    const check = function (expected, grid, index) {
+    const check = function (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       const actual = TransformOperations.replaceColumn(structGrid, index, Fun.tripleEquals, Generators.transform('scope', 'tag')(TestGenerator()).replaceOrInit);
@@ -85,7 +86,7 @@ UnitTest.test('TransformOperationsTest', function () {
 
   // Test basic changing to header (row)
   (function () {
-    const check = function (expected, grid, index) {
+    const check = function (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       const actual = TransformOperations.replaceRow(structGrid, index, Fun.tripleEquals, Generators.transform('scope', 'tag')(TestGenerator()).replaceOrInit);

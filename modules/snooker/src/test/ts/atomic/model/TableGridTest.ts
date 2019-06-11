@@ -1,13 +1,14 @@
 import { Fun } from '@ephox/katamari';
-import Structs from 'ephox/snooker/api/Structs';
+import * as Structs from 'ephox/snooker/api/Structs';
 import TableGrid from 'ephox/snooker/model/TableGrid';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { Element } from '@ephox/sugar';
 
 UnitTest.test('TableGrid.subgrid test', function () {
   const r = Structs.rowcells;
-  const en = Structs.elementnew;
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
 
-  const check = function (expected, row, column, grid) {
+  const check = function (expected: { colspan: number, rowspan: number }, row: number, column: number, grid: Structs.RowCells[]) {
     const actual = TableGrid.subgrid(grid, row, column, Fun.tripleEquals);
     assert.eq(expected.rowspan, actual.rowspan());
     assert.eq(expected.colspan, actual.colspan());

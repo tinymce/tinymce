@@ -123,9 +123,9 @@ const cata = <B>(
   return subject.fold<B>(onNone, onRelative, onFixed);
 };
 
-const none = adt.none as () => OriginAdt;
-const relative = adt.relative as (x: number, y: number, width: number, height: number) => OriginAdt;
-const fixed = adt.fixed as (x: number, y: number, width: number, height: number) => OriginAdt;
+const none = adt.none;
+const relative = adt.relative;
+const fixed = adt.fixed;
 
 export {
   none,

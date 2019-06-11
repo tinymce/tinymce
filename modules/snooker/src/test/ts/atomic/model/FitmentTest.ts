@@ -1,9 +1,10 @@
 import { UnitTest } from '@ephox/bedrock';
 import { Fun } from '@ephox/katamari';
-import Structs from 'ephox/snooker/api/Structs';
+import * as Structs from 'ephox/snooker/api/Structs';
 import Fitment from 'ephox/snooker/test/Fitment';
 import TableMerge from 'ephox/snooker/test/TableMerge';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
+import { Element } from '@ephox/sugar';
 
 UnitTest.test('FitmentTest', function () {
   const generator = TestGenerator;
@@ -12,10 +13,10 @@ UnitTest.test('FitmentTest', function () {
   const tailorTest = Fitment.tailorTest;
   const mergeGridsTest = TableMerge.mergeTest;
 
-  const en = Structs.elementnew;
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
 
-  const check = function (test, expected, startAddress, gridAa, gridBb, generatorr, comparator) {
-    test(expected, startAddress, gridAa, gridBb, generatorr, comparator);
+  const check = function <T extends (...args: A) => void, A extends any[]>(test: T, ...args: A) {
+    test.apply(null, args);
   };
 
   // Simple test data, 4 basic variants of merging:

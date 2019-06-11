@@ -94,10 +94,10 @@ const createModes = <C extends BehaviourConfigSpec, D extends BehaviourConfigDet
   );
 };
 
-const revoke = Fun.constant(undefined) as () => undefined;
-const noActive = Fun.constant({ }) as () => {};
-const noApis = Fun.constant({ }) as () => {};
-const noExtra = Fun.constant({ }) as () => {};
+const revoke = Fun.constant(undefined);
+const noActive = Fun.constant({ });
+const noApis = Fun.constant({ });
+const noExtra = Fun.constant({ });
 
 export {
   derive,

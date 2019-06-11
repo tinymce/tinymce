@@ -12,9 +12,9 @@ const charsStr = '\\w' + '\'' + '\\-' + '\\u0100-\\u017F\\u00C0-\\u00FF' + Unico
 const wordbreakStr = '[^' + charsStr + ']';
 const wordcharStr = '[' + charsStr + ']';
 
-const chars = Fun.constant(charsStr) as () => string;
-const wordbreak = Fun.constant(wordbreakStr) as () => string;
-const wordchar = Fun.constant(wordcharStr) as () => string;
+const chars = Fun.constant(charsStr);
+const wordbreak = Fun.constant(wordbreakStr);
+const wordchar = Fun.constant(wordcharStr);
 
 export {
   chars,

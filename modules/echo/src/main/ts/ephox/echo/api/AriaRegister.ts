@@ -1,33 +1,24 @@
-import { Type } from '@ephox/katamari';
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun, Id, Merger, Type } from '@ephox/katamari';
+import { Attr, Class, Element, Insert, InsertAll } from '@ephox/sugar';
 import Styles from './Styles';
-import { Id } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { InsertAll } from '@ephox/sugar';
 
-var helpStyle = Styles.resolve('aria-help');
-var helpVisibleStyle = Styles.resolve('aria-help-visible');
+const helpStyle = Styles.resolve('aria-help');
+const helpVisibleStyle = Styles.resolve('aria-help-visible');
 
-var roleDocument = function (element) {
+const roleDocument = function (element) {
   Attr.set(element, 'role', 'document');
 };
 
-var presentation = function (element) {
+const presentation = function (element: Element) {
 // https://www.w3.org/TR/wai-aria/roles#presentation
   Attr.set(element, 'role', 'presentation');
 };
 
-var region = function (element) {
+const region = function (element) {
   Attr.set(element, 'role', 'region');
 };
 
-var editorCommon = function (container, ariaLabel) {
+const editorCommon = function (container, ariaLabel) {
   // The editor needs to be role application otherwise ainspector will complain about event listeners
   Attr.setAll(container, {
     'role': 'application',
@@ -35,39 +26,41 @@ var editorCommon = function (container, ariaLabel) {
   });
 };
 
-var editor = function (container, editor, arialabel, ariaHelp, showHelpHint) {
+const editor = function (container, editor, arialabel, ariaHelp, showHelpHint = false) {
   editorCommon(container, arialabel);
 
   ariaHelp.each(function (helpText) {
-    var aria = Element.fromTag('span');
+    const aria = Element.fromTag('span');
     presentation(aria);
     Insert.append(aria, Element.fromText(helpText));
-    var labelId = Id.generate('ephox-aria');
+    const labelId = Id.generate('ephox-aria');
     Attr.set(aria, 'id', labelId);
     describedBy(editor, labelId);
     Class.add(aria, helpStyle);
-    if (showHelpHint === true) Class.add(aria, helpVisibleStyle);
+    if (showHelpHint === true) {
+      Class.add(aria, helpVisibleStyle);
+    }
     Insert.append(container, aria);
   });
 
-  var destroy = function () {
+  const destroy = function () {
     Attr.remove(editor, 'aria-describedby');
   };
 
   return {
-    destroy: destroy
+    destroy
   };
 };
 
-var inline = function (container, editor, arialabel, ariaHelp, showHelpHint) {
+const inline = function (container, editor, arialabel, ariaHelp, _showHelpHint = false) {
   editorCommon(container, arialabel);
 
-  var destroyers = [];
+  const destroyers = [];
 
   if (Attr.has(editor, 'id')) {
     owns(container, Attr.get(editor, 'id'));
   } else {
-    var tmpId = Id.generate('ephox-aria-content');
+    const tmpId = Id.generate('ephox-aria-content');
     Attr.set(editor, 'id', tmpId);
     owns(container, tmpId);
 
@@ -78,7 +71,7 @@ var inline = function (container, editor, arialabel, ariaHelp, showHelpHint) {
 
   ariaHelp.each(function (helpText) {
     if (Attr.has(editor, 'aria-label')) {
-      var backup = Attr.get(editor, 'aria-label');
+      const backup = Attr.get(editor, 'aria-label');
       label(editor, helpText);
 
       destroyers.push(function () {
@@ -93,40 +86,40 @@ var inline = function (container, editor, arialabel, ariaHelp, showHelpHint) {
     }
   });
 
-  var destroy = function () {
+  const destroy = function () {
     Arr.each(destroyers, Fun.apply);
   };
 
   return {
-    destroy: destroy
+    destroy
   };
 };
 
 // Set the role 'group'
-var group = function (element) {
+const group = function (element) {
   Attr.set(element, 'role', 'group');
 };
 
 // Sets the role 'group', with a label
-var toolbar = function (element, label) {
+const toolbar = function (element, label) {
   Attr.setAll(element, {
     'role': 'group',
     'aria-label': label
   });
 };
 
-var menu = function (element, label) {
+const menu = function (element, label) {
   Attr.setAll(element, {
     'aria-label': label,
     'role': 'menu'
   });
 };
 
-var buttonRole = function (element) {
+const buttonRole = function (element) {
   Attr.set(element, 'role', 'button');
 };
 
-var textButton = function (element, contentElement) {
+const textButton = function (element, contentElement) {
   // Add 'button' roleto a pastry button, and 'presentation' role
   // to the contentElement that contains the button text.
   buttonRole(element);
@@ -134,20 +127,24 @@ var textButton = function (element, contentElement) {
 };
 
 // Set the role 'button'
-var toolbarButton = function (element, label, hasPopup, isToggle) {
+const toolbarButton = function (element, label, hasPopup, isToggle) {
   Attr.setAll(element, {
     'role': 'button',
     'aria-label': label,
     'aria-haspopup': '' + hasPopup
   });
-  if (isToggle) Attr.set(element, 'aria-pressed', 'false');
-  if (hasPopup) Attr.set(element, 'aria-expanded', 'false');
+  if (isToggle) {
+    Attr.set(element, 'aria-pressed', 'false');
+  }
+  if (hasPopup) {
+    Attr.set(element, 'aria-expanded', 'false');
+  }
 };
 
 // Set the role 'toolbar' and aria-label if provided
-var toolbarGroup = function (element, label) {
+const toolbarGroup = function (element, label?) {
   // TODO: duplicated from 'ephox.polish.alien.Query', consolidate isEmpty();
-  var isEmpty = function (val) {
+  const isEmpty = function (val) {
     // TODO: Move to compass Arr and violin Strings
     return (val === null) || (val === undefined) || (val === '') || (Type.isArray(val) && val.length === 0);
   };
@@ -161,8 +158,8 @@ var toolbarGroup = function (element, label) {
   }
 };
 
-var menuItem = function (element, label, hasPopup) {
-  var labelTxt = label.map(function (txt) {
+const menuItem = function (element, label, hasPopup) {
+  const labelTxt = label.map(function (txt) {
     return { 'aria-label': txt };
   }).getOr({});
 
@@ -172,14 +169,14 @@ var menuItem = function (element, label, hasPopup) {
   }));
 };
 
-var menuItemCheckbox = function (element) {
+const menuItemCheckbox = function (element) {
   Attr.setAll(element, {
     'role': 'menuitemcheckbox',
     'aria-checked': false
   });
 };
 
-var checkbox = function (element, label) {
+const checkbox = function (element, label) {
   Attr.setAll(element, {
     'role': 'checkbox',
     'aria-label': label,
@@ -187,14 +184,14 @@ var checkbox = function (element, label) {
   });
 };
 
-var dialog = function (element, label) {
+const dialog = function (element, label) {
   Attr.setAll(element, {
     'role': 'dialog',
     'aria-label': label
   });
 };
 
-var button = function (element, label) {
+const button = function (element, label) {
   Attr.setAll(element, {
     'aria-label': label,
     'role': 'button'
@@ -202,12 +199,12 @@ var button = function (element, label) {
 };
 
 // return a container object with methods {element, field} containing an html field and label
-var labelledField = function (field, name, labelText) {
-  var container = Element.fromTag('div');
+const labelledField = function (field, name, labelText) {
+  const container = Element.fromTag('div');
   presentation(container);
-  var id = name + Id.generate('');
-  var lId = Id.generate('label');
-  var label = Element.fromHtml('<label>' + labelText + '</label>');
+  const id = name + Id.generate('');
+  const lId = Id.generate('label');
+  const label = Element.fromHtml('<label>' + labelText + '</label>');
   Attr.set(label, 'for', id);
   Attr.set(label, 'id', lId);
   Attr.set(field, 'id', id);
@@ -220,43 +217,43 @@ var labelledField = function (field, name, labelText) {
   };
 };
 
-var multiline = function (element) {
+const multiline = function (element) {
   Attr.set(element, 'aria-multiline', 'true');
 };
 
-var textarea = function (element) {
+const textarea = function (element) {
   Attr.setAll(element, {
     'aria-multiline': 'true',
     'role': 'textbox'
   });
 };
 
-var widget = function (element) {
+const widget = function (element) {
   Attr.set(element, 'role', 'widget');
 };
 
-var listBox = function (element) {
+const listBox = function (element) {
   Attr.set(element, 'role', 'listbox');
 };
 
-var tabList = function (element) {
+const tabList = function (element) {
   Attr.set(element, 'role', 'tablist');
 };
 
-var tabButton = function (element, label) {
+const tabButton = function (element, label) {
   Attr.setAll(element, {
     'aria-label': label,
     'role': 'tab'
   });
 };
 
-var tabPanel = function (element) {
+const tabPanel = function (element) {
   Attr.setAll(element, {
-    'role': 'tabpanel'
+    role: 'tabpanel'
   });
 };
 
-var owns = function (element, id) {
+const owns = function (element, id) {
   // https://www.w3.org/TR/wai-aria/states_and_properties#aria-owns
   // Identifies a functional parent/child relationship between dom elements
   // where the DOM hierarchy cannot be used.
@@ -264,69 +261,69 @@ var owns = function (element, id) {
   Attr.set(element, 'aria-owns', id);
 };
 
-var disown = function (element) {
+const disown = function (element) {
   // An element can have only one explicit owner, so this removes the attribute.
   Attr.remove(element, 'aria-owns');
 };
 
-var controls = function (element, id) {
+const controls = function (element, id) {
   Attr.set(element, 'aria-controls', id);
 };
 
-var linkElements = function (master, slave) {
-  var id = Id.generate('ephox-aria');
+const linkElements = function (master, slave) {
+  const id = Id.generate('ephox-aria');
   Attr.set(slave, 'id', id);
   controls(master, id);
 };
 
-var linkTabToPanel = function (tab, panel) {
+const linkTabToPanel = function (tab, panel) {
   linkElements(tab, panel);
 };
 
-var describedBy = function (element, id) {
+const describedBy = function (element, id) {
   Attr.set(element, 'aria-describedby', id);
 };
 
-var labelledBy = function (element, id) {
+const labelledBy = function (element, id) {
   Attr.set(element, 'aria-labelledby', id);
 };
 
-var live = function (element, id, _priority) {
-  var priority = _priority ? _priority : 'polite';
+const live = function (element, id, _priority) {
+  const priority = _priority ? _priority : 'polite';
   Attr.setAll(element, {
     'aria-live': priority,
     'id': id
   });
 };
 
-var required = function (element) {
+const required = function (element) {
   Attr.set(element, 'aria-required', 'true');
 };
 
 // TODO: Implement form ARIA support
-// var form = function (element, label) {
+// const form = function (element, label) {
 //   throw 'Form ARIA support not implemented yet.';
 // };
 
-var label = function (element, label) {
+const label = function (element, label) {
   Attr.set(element, 'aria-label', label);
 };
 
-var option = function (element) {
+const option = function (element) {
   Attr.set(element, 'role', 'option');
 };
 
 // TODO: Implement link ARIA support
-// var link = function (element) {
+// const link = function (element) {
 //   throw 'Link ARIA support not implemented yet.';
 // };
 
 // TODO: Implement other ARIA support
-// var other = function () {
+// const other = function () {
 //   throw 'Other ARIA support not implemented yet.';
 // };
 
-var hidden = function (element, status) {
+const hidden = function (element: Element, status: boolean) {
   // Note: aria-hidden=true says this element and all of its descendents are not percievable
   // https://www.w3.org/TR/wai-aria/states_and_properties#aria-hidden
   if (status) {
@@ -336,7 +333,7 @@ var hidden = function (element, status) {
   }
 };
 
-var invalid = function (element, status) {
+const invalid = function (element, status) {
   if (status === true) {
     Attr.set(element, 'aria-invalid', 'true');
   } else {
@@ -344,43 +341,43 @@ var invalid = function (element, status) {
   }
 };
 
-export default <any> {
+export default {
   document: roleDocument,
-  presentation: presentation,
-  region: region,
-  controls: controls,
-  owns: owns,
-  disown: disown,
-  editor: editor,
-  inline: inline,
-  group: group,
-  toolbar: toolbar,
-  toolbarGroup: toolbarGroup,
-  toolbarButton: toolbarButton,
-  textButton: textButton,
-  menu: menu,
-  menuItem: menuItem,
-  menuItemCheckbox: menuItemCheckbox,
-  checkbox: checkbox,
-  dialog: dialog,
-  buttonRole: buttonRole,
-  button: button,
-  labelledField: labelledField,
-  multiline: multiline,
-  textarea: textarea,
-  label: label,
-  widget: widget,
-  option: option,
-  listBox: listBox,
-  live: live,
-  tabList: tabList,
-  tabButton: tabButton,
-  tabPanel: tabPanel,
-  linkElements: linkElements,
-  linkTabToPanel: linkTabToPanel,
-  describedBy: describedBy,
-  labelledBy: labelledBy,
-  required: required,
-  hidden: hidden,
-  invalid: invalid
+  presentation,
+  region,
+  controls,
+  owns,
+  disown,
+  editor,
+  inline,
+  group,
+  toolbar,
+  toolbarGroup,
+  toolbarButton,
+  textButton,
+  menu,
+  menuItem,
+  menuItemCheckbox,
+  checkbox,
+  dialog,
+  buttonRole,
+  button,
+  labelledField,
+  multiline,
+  textarea,
+  label,
+  widget,
+  option,
+  listBox,
+  live,
+  tabList,
+  tabButton,
+  tabPanel,
+  linkElements,
+  linkTabToPanel,
+  describedBy,
+  labelledBy,
+  required,
+  hidden,
+  invalid
 };

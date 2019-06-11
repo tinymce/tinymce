@@ -1,13 +1,36 @@
 import { Option } from '@ephox/katamari';
-import { Event, Events } from '@ephox/porkbun';
-import Mutation from './Mutation';
+import { Event, Events, Bindable } from '@ephox/porkbun';
+import { Mutation, DragDistanceEvent } from './Mutation';
+import { Element } from '@ephox/sugar';
 
-export default function () {
+export interface DragEvent extends DragDistanceEvent {
+  target: () => Element;
+}
+
+interface DragDistanceEvents {
+  registry: {
+    drag: Bindable<DragEvent>
+  };
+  trigger: {
+      drag: (xDelta: number, yDelta: number, target: Element) => void;
+  };
+}
+
+export interface BarMutation {
+  assign: (t: Element) => void;
+  get: () => Option<Element>;
+  mutate: (x: number, y: number) => void;
+  events: {
+      drag: Bindable<DragEvent>;
+  };
+}
+
+export const BarMutation = function (): BarMutation {
   const events = Events.create({
     drag: Event(['xDelta', 'yDelta', 'target'])
-  });
+  }) as DragDistanceEvents;
 
-  let target = Option.none();
+  let target = Option.none<Element>();
 
   const delegate = Mutation();
 
@@ -18,7 +41,7 @@ export default function () {
     });
   });
 
-  const assign = function (t) {
+  const assign = function (t: Element) {
     target = Option.some(t);
   };
 
@@ -32,4 +55,4 @@ export default function () {
     mutate: delegate.mutate,
     events: events.registry
   };
-}
+};

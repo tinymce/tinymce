@@ -1,15 +1,18 @@
-import Carets from './Carets';
 import { Option } from '@ephox/katamari';
-import { Node } from '@ephox/sugar';
-import { Awareness } from '@ephox/sugar';
+import { Awareness, Node, Element, RawRect } from '@ephox/sugar';
+import { Carets } from './Carets';
+import { WindowBridge } from '../api/WindowBridge';
 
-var getPartialBox = function (bridge, element, offset) {
-  if (offset >= 0 && offset < Awareness.getEnd(element)) return bridge.getRangedRect(element, offset, element, offset+1);
-  else if (offset > 0) return bridge.getRangedRect(element, offset - 1, element, offset);
-  return Option.none();
+const getPartialBox = function (bridge: WindowBridge, element: Element, offset: number) {
+  if (offset >= 0 && offset < Awareness.getEnd(element)) {
+    return bridge.getRangedRect(element, offset, element, offset + 1);
+  } else if (offset > 0) {
+    return bridge.getRangedRect(element, offset - 1, element, offset);
+  }
+  return Option.none<RawRect>();
 };
 
-var toCaret = function (rect) {
+const toCaret = function (rect: RawRect) {
   return Carets.nu({
     left: rect.left,
     top: rect.top,
@@ -18,24 +21,32 @@ var toCaret = function (rect) {
   });
 };
 
-var getElemBox = function (bridge, element) {
+const getElemBox = function (bridge: WindowBridge, element: Element) {
   return Option.some(bridge.getRect(element));
 };
 
-var getBoxAt = function (bridge, element, offset) {
+const getBoxAt = function (bridge: WindowBridge, element: Element, offset: number) {
   // Note, we might need to consider this offset and descend.
-  if (Node.isElement(element)) return getElemBox(bridge, element).map(toCaret);
-  else if (Node.isText(element)) return getPartialBox(bridge, element, offset).map(toCaret);
-  else return Option.none();
+  if (Node.isElement(element)) {
+    return getElemBox(bridge, element).map(toCaret);
+  } else if (Node.isText(element)) {
+    return getPartialBox(bridge, element, offset).map(toCaret);
+  } else {
+    return Option.none<Carets>();
+  }
 };
 
-var getEntireBox = function (bridge, element) {
-  if (Node.isElement(element)) return getElemBox(bridge, element).map(toCaret);
-  else if (Node.isText(element)) return bridge.getRangedRect(element, 0, element, Awareness.getEnd(element)).map(toCaret);
-  else return Option.none();
+const getEntireBox = function (bridge: WindowBridge, element: Element) {
+  if (Node.isElement(element)) {
+    return getElemBox(bridge, element).map(toCaret);
+  } else if (Node.isText(element)) {
+    return bridge.getRangedRect(element, 0, element, Awareness.getEnd(element)).map(toCaret);
+  } else {
+    return Option.none<Carets>();
+  }
 };
 
-export default <any> {
-  getBoxAt: getBoxAt,
-  getEntireBox: getEntireBox
+export default {
+  getBoxAt,
+  getEntireBox
 };

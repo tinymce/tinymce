@@ -1097,7 +1097,7 @@ class Editor implements EditorObservable {
    *
    * @method uploadImages
    * @param {function} callback Optional callback with images and status for each image.
-   * @return {tinymce.util.Promise} Promise instance.
+   * @return {Promise} Promise instance.
    */
   public uploadImages (callback?: UploadCallback): Promise<BlobInfoImagePair[]> {
     return this.editorUpload.uploadImages(callback);
