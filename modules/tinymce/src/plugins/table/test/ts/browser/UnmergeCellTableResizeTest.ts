@@ -1,4 +1,4 @@
-import { Assertions, Chain, Guard, NamedChain, UiFinder, Log, Keyboard, Keys, TestLogs } from '@ephox/agar';
+import { Assertions, Chain, Guard, NamedChain, UiFinder, Log, Keyboard, Keys, TestLogs, RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor, TinyDom } from '@ephox/mcagar';
 
@@ -276,7 +276,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.UnmergeCellTableResizeTest', (
   const cAssertWidths = Chain.label(
     'Assert widths before and after unmerge are equal',
     Chain.op((input: any) => {
-      Assertions.assertEq('table width should not change', input.widthBefore, input.widthAfter);
+      if (input.widthBefore.isPercent) {
+        // due to rounding errors we can be off by one pixel for percentage tables
+        const actualDiff = Math.abs(input.widthBefore.px - input.widthAfter.px);
+        RawAssertions.assertEq(`table width should be approx (within 1px): ${input.widthBefore.raw}% (${input.widthBefore.px}px) ~= ${input.widthAfter.raw}% (${input.widthAfter.px}px)`, true,  actualDiff <= 1);
+      } else {
+        Assertions.assertEq('table width should not change', input.widthBefore, input.widthAfter);
+      }
     })
   );
 
