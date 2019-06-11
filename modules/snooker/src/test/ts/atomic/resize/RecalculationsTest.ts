@@ -1,8 +1,9 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr, Struct } from '@ephox/katamari';
-import Structs from 'ephox/snooker/api/Structs';
-import Warehouse from 'ephox/snooker/model/Warehouse';
+import * as Structs from 'ephox/snooker/api/Structs';
+import { Warehouse } from 'ephox/snooker/model/Warehouse';
 import Recalculations from 'ephox/snooker/resize/Recalculations';
+import { Element } from '@ephox/sugar';
 
 UnitTest.test('RecalculationsTest', function () {
   const dimensions = Structs.dimensions; // Struct.immutable('width', 'height');
@@ -33,8 +34,8 @@ UnitTest.test('RecalculationsTest', function () {
 
   };
 
-  const d = Structs.detail; //  Struct.immutable('element', 'rowspan', 'colspan');
-  const r = Structs.rowdata;
+  const d = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as any as Element, rowspan, colspan);
+  const r = (fakeEle: any, cells: Structs.Detail[], section: 'tbody') => Structs.rowdatadetail(fakeEle as any as Element, cells, section);
 
   check([assertParts([{ element: 'a', width: 10 }], [{ element: 'a', height: 10 }])], [
     r('r0', [d('a', 1, 1)], 'tbody')

@@ -1,13 +1,14 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr, Fun } from '@ephox/katamari';
 import Generators from 'ephox/snooker/api/Generators';
-import Structs from 'ephox/snooker/api/Structs';
+import * as Structs from 'ephox/snooker/api/Structs';
 import ModificationOperations from 'ephox/snooker/operate/ModificationOperations';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
+import { Element } from '@ephox/sugar';
 
 UnitTest.test('ModificationOperationsTest', function () {
   const r = Structs.rowcells;
-  const en = Structs.elementnew;
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
   const mapToStructGrid = function (grid) {
     return Arr.map(grid, function (row) {
       return Structs.rowcells(row, 'tbody');

@@ -4,7 +4,7 @@ import { Body, Element, Insert, Remove } from '@ephox/sugar';
 import ResizeDirection from 'ephox/snooker/api/ResizeDirection';
 import Deltas from 'ephox/snooker/calc/Deltas';
 import DetailsList from 'ephox/snooker/model/DetailsList';
-import Warehouse from 'ephox/snooker/model/Warehouse';
+import { Warehouse } from 'ephox/snooker/model/Warehouse';
 import TableSize from 'ephox/snooker/resize/TableSize';
 
 UnitTest.test('ResizeTest', function () {

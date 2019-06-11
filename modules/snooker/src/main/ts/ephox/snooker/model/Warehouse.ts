@@ -1,24 +1,31 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
-import Structs from '../api/Structs';
+import * as Structs from '../api/Structs';
+import { Element } from '@ephox/sugar';
 
-const key = function (row, column) {
+export interface Warehouse {
+  grid: () => Structs.Grid;
+  access: () => Record<string, Structs.Extended>;
+  all: () => Structs.RowDataExtended[];
+}
+
+const key = function (row: number, column: number) {
   return row + ',' + column;
 };
 
-const getAt = function (warehouse, row, column) {
+const getAt = function (warehouse: Warehouse, row: number, column: number) {
   const raw = warehouse.access()[key(row, column)];
-  return raw !== undefined ? Option.some(raw) : Option.none();
+  return raw !== undefined ? Option.some(raw) : Option.none<Structs.Extended>();
 };
 
-const findItem = function (warehouse, item, comparator) {
+const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T, b: Element) => boolean) {
   const filtered = filterItems(warehouse, function (detail) {
     return comparator(item, detail.element());
   });
 
-  return filtered.length > 0 ? Option.some(filtered[0]) : Option.none();
+  return filtered.length > 0 ? Option.some(filtered[0]) : Option.none<Structs.Extended>();
 };
 
-const filterItems = function (warehouse, predicate) {
+const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.Extended, i: number, xs: ArrayLike<Structs.Extended>) => boolean) {
   const all = Arr.bind(warehouse.all(), function (r) { return r.cells(); });
   return Arr.filter(all, predicate);
 };
@@ -29,7 +36,7 @@ const filterItems = function (warehouse, predicate) {
  *  2. a data structure which can efficiently identify which cell is in which row,column position
  *  3. a list of all cells in order left-to-right, top-to-bottom
  */
-const generate = function (list) {
+const generate = function (list: Structs.RowDataDetail[]): Warehouse {
   // list is an array of objects, made by cells and elements
   // elements: is the TR
   // cells: is an array of objects representing the cells in the row.
@@ -37,15 +44,15 @@ const generate = function (list) {
   //          colspan (merge cell)
   //          element
   //          rowspan (merge cols)
-  const access: Record<string, ReturnType<typeof Structs.extended>> = {};
-  const cells = [];
+  const access: Record<string, Structs.Extended> = {};
+  const cells: Structs.RowDataExtended[] = [];
 
   const maxRows = list.length;
   let maxColumns = 0;
 
   Arr.each(list, function (details, r) {
-    const currentRow = [];
-    Arr.each(details.cells(), function (detail, c) {
+    const currentRow: Structs.Extended[] = [];
+    Arr.each(details.cells(), function (detail) {
       let start = 0;
 
       // If this spot has been taken by a previous rowspan, skip it.
@@ -69,7 +76,7 @@ const generate = function (list) {
       currentRow.push(current);
     });
 
-    cells.push(Structs.rowdata(details.element(), currentRow, details.section()));
+    cells.push(Structs.rowdataextended(details.element(), currentRow, details.section()));
   });
 
   const grid = Structs.grid(maxRows, maxColumns);
@@ -81,7 +88,7 @@ const generate = function (list) {
   };
 };
 
-const justCells = function (warehouse) {
+const justCells = function (warehouse: Warehouse) {
   const rows = Arr.map(warehouse.all(), function (w) {
     return w.cells();
   });
@@ -89,7 +96,7 @@ const justCells = function (warehouse) {
   return Arr.flatten(rows);
 };
 
-export default {
+export const Warehouse = {
   generate,
   getAt,
   findItem,

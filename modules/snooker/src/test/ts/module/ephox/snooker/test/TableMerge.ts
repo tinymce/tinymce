@@ -1,6 +1,6 @@
 import { assert } from '@ephox/bedrock';
 import { Arr, Fun } from '@ephox/katamari';
-import Structs from 'ephox/snooker/api/Structs';
+import * as Structs from 'ephox/snooker/api/Structs';
 import TableMerge from 'ephox/snooker/model/TableMerge';
 import Fitment from 'ephox/snooker/test/Fitment';
 

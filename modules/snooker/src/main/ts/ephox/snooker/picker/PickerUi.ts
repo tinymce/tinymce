@@ -2,7 +2,7 @@ import { AriaRegister } from '@ephox/echo';
 import { Arr, Fun } from '@ephox/katamari';
 import { Event, Events } from '@ephox/porkbun';
 import { Attr, Class, Classes, DomEvent, Element, Focus, Insert, InsertAll, MouseEvent, Remove } from '@ephox/sugar';
-import Structs from '../api/Structs';
+import * as Structs from '../api/Structs';
 import Styles from '../style/Styles';
 import Util from '../util/Util';
 import PickerLookup from './PickerLookup';

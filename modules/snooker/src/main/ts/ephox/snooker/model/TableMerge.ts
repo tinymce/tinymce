@@ -1,5 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import Structs from '../api/Structs';
+import * as Structs from '../api/Structs';
 import Fitment from './Fitment';
 import GridRow from './GridRow';
 import MergingOperations from '../operate/MergingOperations';

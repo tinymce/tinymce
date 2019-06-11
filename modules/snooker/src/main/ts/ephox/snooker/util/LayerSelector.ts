@@ -1,11 +1,11 @@
 import { Arr, Fun } from '@ephox/katamari';
-import { Selectors, Traverse } from '@ephox/sugar';
+import { Selectors, Traverse, Element } from '@ephox/sugar';
 
-const firstLayer = function (scope, selector) {
+const firstLayer = function (scope: Element, selector: string) {
   return filterFirstLayer(scope, selector, Fun.constant(true));
 };
 
-const filterFirstLayer = function (scope, selector, predicate) {
+const filterFirstLayer = function (scope: Element, selector: string, predicate: (e: Element) => boolean): Element[] {
   return Arr.bind(Traverse.children(scope), function (x) {
     return Selectors.is(x, selector) ?
       predicate(x) ? [ x ] : [ ]

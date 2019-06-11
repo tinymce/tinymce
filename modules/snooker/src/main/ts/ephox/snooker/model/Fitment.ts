@@ -1,5 +1,5 @@
 import { Arr, Fun, Result } from '@ephox/katamari';
-import Structs from '../api/Structs';
+import * as Structs from '../api/Structs';
 import Util from '../util/Util';
 import GridRow from './GridRow';
 

@@ -1,9 +1,9 @@
-import Structs from '../api/Structs';
-import Warehouse from '../model/Warehouse';
+import * as Structs from '../api/Structs';
+import { Warehouse } from '../model/Warehouse';
 import CellBounds from './CellBounds';
-import { Compare } from '@ephox/sugar';
+import { Compare, Element } from '@ephox/sugar';
 
-const getBounds = function (detailA, detailB) {
+const getBounds = function (detailA: Structs.Extended, detailB: Structs.Extended) {
   return Structs.bounds(
     Math.min(detailA.row(), detailB.row()),
     Math.min(detailA.column(), detailB.column()),
@@ -12,7 +12,7 @@ const getBounds = function (detailA, detailB) {
   );
 };
 
-const getAnyBox = function (warehouse, startCell, finishCell) {
+const getAnyBox = function (warehouse: Warehouse, startCell: Element, finishCell: Element) {
   const startCoords = Warehouse.findItem(warehouse, startCell, Compare.eq);
   const finishCoords = Warehouse.findItem(warehouse, finishCell, Compare.eq);
   return startCoords.bind(function (sc) {
@@ -22,8 +22,8 @@ const getAnyBox = function (warehouse, startCell, finishCell) {
   });
 };
 
-const getBox = function (warehouse, startCell, finishCell) {
-  return getAnyBox(warehouse, startCell, finishCell).bind(function (bounds) {
+const getBox = function (warehouse: Warehouse, startCell: Element, finishCell: Element) {
+  return getAnyBox(warehouse, startCell, finishCell).bind(function (bounds: Structs.Bounds) {
     return CellBounds.isRectangular(warehouse, bounds);
   });
 };

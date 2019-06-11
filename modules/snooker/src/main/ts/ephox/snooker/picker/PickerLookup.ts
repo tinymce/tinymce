@@ -1,5 +1,5 @@
 import { Attr, SelectorFilter, SelectorFind } from '@ephox/sugar';
-import Structs from '../api/Structs';
+import * as Structs from '../api/Structs';
 import PickerStyles from './PickerStyles';
 
 const CELL_SELECTOR = '.' + PickerStyles.cell();

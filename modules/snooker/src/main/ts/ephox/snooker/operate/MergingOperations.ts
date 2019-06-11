@@ -1,5 +1,5 @@
 import { Arr, Option } from '@ephox/katamari';
-import Structs from '../api/Structs';
+import * as Structs from '../api/Structs';
 import GridRow from '../model/GridRow';
 
 // substitution: () -> item

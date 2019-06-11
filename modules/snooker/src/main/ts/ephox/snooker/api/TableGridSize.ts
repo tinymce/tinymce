@@ -1,5 +1,5 @@
 import DetailsList from '../model/DetailsList';
-import Warehouse from '../model/Warehouse';
+import { Warehouse } from '../model/Warehouse';
 
 const getGridSize = function (table) {
   const input = DetailsList.fromTable(table);

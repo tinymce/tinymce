@@ -1,7 +1,8 @@
 import { Fun, Option } from '@ephox/katamari';
-import Warehouse from '../model/Warehouse';
+import { Warehouse } from '../model/Warehouse';
+import { Bounds, Extended } from '../api/Structs';
 
-const inSelection = function (bounds, detail) {
+const inSelection = function (bounds: Bounds, detail: Extended) {
   const leftEdge = detail.column();
   const rightEdge = detail.column() + detail.colspan() - 1;
   const topEdge = detail.row();
@@ -14,7 +15,7 @@ const inSelection = function (bounds, detail) {
 };
 
 // Note, something is *within* if it is completely contained within the bounds.
-const isWithin = function (bounds, detail) {
+const isWithin = function (bounds: Bounds, detail: Extended) {
   return (
     detail.column() >= bounds.startCol() &&
     (detail.column() + detail.colspan() - 1) <= bounds.finishCol() &&
@@ -23,7 +24,7 @@ const isWithin = function (bounds, detail) {
   );
 };
 
-const isRectangular = function (warehouse, bounds) {
+const isRectangular = function (warehouse: Warehouse, bounds: Bounds) {
   let isRect = true;
   const detailIsWithin = Fun.curry(isWithin, bounds);
 
@@ -33,7 +34,7 @@ const isRectangular = function (warehouse, bounds) {
     }
   }
 
-  return isRect ? Option.some(bounds) : Option.none();
+  return isRect ? Option.some(bounds) : Option.none<Bounds>();
 };
 
 export default {

@@ -1,5 +1,5 @@
 import { Focus, Height, Location, Width } from '@ephox/sugar';
-import Structs from '../api/Structs';
+import * as Structs from '../api/Structs';
 import Sizing from './Sizing';
 
 export default function (direction, settings) {
@@ -16,7 +16,7 @@ export default function (direction, settings) {
   const getDimensions = function (table) {
     const width = Width.get(table.element());
     const height = Height.get(table.element());
-    return Structs.dimensions(width, height);
+    return Structs.dimension(width, height);
   };
 
   const getPosition = function (table) {

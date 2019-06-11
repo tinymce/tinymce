@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
-import Structs from '../api/Structs';
+import * as Structs from '../api/Structs';
 import TableGrid from './TableGrid';
-import Warehouse from './Warehouse';
+import { Warehouse } from './Warehouse';
 
 const toDetails = function (grid, comparator) {
   const seen = Arr.map(grid, function (row, ri) {

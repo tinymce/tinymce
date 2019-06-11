@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
-import { Attr, Node, Traverse } from '@ephox/sugar';
-import Structs from '../api/Structs';
+import { Attr, Node, Traverse, Element } from '@ephox/sugar';
+import * as Structs from '../api/Structs';
 import TableLookup from '../api/TableLookup';
 
 /*
@@ -8,7 +8,7 @@ import TableLookup from '../api/TableLookup';
    element: row element
    cells: (id, rowspan, colspan) structs
  */
-const fromTable = function (table) {
+const fromTable = function (table: Element) {
   const rows = TableLookup.rows(table);
   return Arr.map(rows, function (row) {
     const element = row;
@@ -25,11 +25,11 @@ const fromTable = function (table) {
       return Structs.detail(cell, rowspan, colspan);
     });
 
-    return Structs.rowdata(element, cells, parentSection);
+    return Structs.rowdatadetail(element, cells, parentSection);
   });
 };
 
-const fromPastedRows = function (rows, example) {
+const fromPastedRows = function (rows: Element[], example) {
   return Arr.map(rows, function (row) {
     const cells = Arr.map(TableLookup.cells(row), function (cell) {
       const rowspan = Attr.has(cell, 'rowspan') ? parseInt(Attr.get(cell, 'rowspan'), 10) : 1;
@@ -37,7 +37,7 @@ const fromPastedRows = function (rows, example) {
       return Structs.detail(cell, rowspan, colspan);
     });
 
-    return Structs.rowdata(row, cells, example.section());
+    return Structs.rowdatadetail(row, cells, example.section());
   });
 };
 

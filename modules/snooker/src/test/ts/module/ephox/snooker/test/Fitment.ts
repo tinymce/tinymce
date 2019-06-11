@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import Structs from 'ephox/snooker/api/Structs';
+import * as Structs from 'ephox/snooker/api/Structs';
 import Fitment from 'ephox/snooker/model/Fitment';
 import { assert } from '@ephox/bedrock';
 

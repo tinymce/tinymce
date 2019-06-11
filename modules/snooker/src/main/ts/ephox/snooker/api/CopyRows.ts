@@ -1,7 +1,7 @@
 import DetailsList from '../model/DetailsList';
 import RunOperation from '../model/RunOperation';
 import Transitions from '../model/Transitions';
-import Warehouse from '../model/Warehouse';
+import { Warehouse } from '../model/Warehouse';
 import Redraw from '../operate/Redraw';
 
 const copyRows = function (table, target, generators) {

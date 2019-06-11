@@ -1,13 +1,13 @@
 import { Arr, Fun, Merger, Option, Options } from '@ephox/katamari';
 import { Compare, Traverse } from '@ephox/sugar';
-import Structs from '../api/Structs';
+import * as Structs from '../api/Structs';
 import TableLookup from '../api/TableLookup';
 import Redraw from '../operate/Redraw';
 import BarPositions from '../resize/BarPositions';
 import Bars from '../resize/Bars';
 import DetailsList from './DetailsList';
 import Transitions from './Transitions';
-import Warehouse from './Warehouse';
+import { Warehouse } from './Warehouse';
 
 const fromWarehouse = function (warehouse, generators) {
   return Transitions.toGrid(warehouse, generators, false);

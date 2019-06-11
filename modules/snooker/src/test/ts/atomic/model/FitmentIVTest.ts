@@ -2,12 +2,15 @@ import { assert, UnitTest } from '@ephox/bedrock';
 import { console } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import Structs from 'ephox/snooker/api/Structs';
+import * as Structs from 'ephox/snooker/api/Structs';
 import Fitment from 'ephox/snooker/test/Fitment';
 import TableMerge from 'ephox/snooker/test/TableMerge';
+import { Element } from '@ephox/sugar';
 
 UnitTest.test('FitmentIVTest', function () {
   const browser = PlatformDetection.detect().browser;
+
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
 
   // Note: cycles 500, min 1, max 200 ~ 22secs (on nodejs, anyway)
   const CYCLES = browser.isIE() || browser.isEdge() || browser.isFirefox() ? 1 : 100;
@@ -43,7 +46,7 @@ UnitTest.test('FitmentIVTest', function () {
     const prefix = _prefix ? _prefix : '';
     return Arr.map(new Array(rows), function (row, r) {
       return Arr.map(new Array(cols), function (cs, c) {
-        return Structs.elementnew(prefix + '-' + r + '-' + c, isNew);
+        return en(prefix + '-' + r + '-' + c, isNew);
       });
     });
   };

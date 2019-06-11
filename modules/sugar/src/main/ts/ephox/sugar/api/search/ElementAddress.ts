@@ -6,8 +6,22 @@ import * as SelectorFilter from './SelectorFilter';
 import * as SelectorFind from './SelectorFind';
 import * as Traverse from './Traverse';
 
-const inAncestor = Struct.immutable('ancestor', 'descendants', 'element', 'index');
-const inParent = Struct.immutable('parent', 'children', 'element', 'index');
+export interface AddressInAncestor {
+  ancestor: () => Element;
+  descendants: () => Element[];
+  element: () => Element;
+  index: () => number;
+}
+
+export interface AddressInParent {
+  parent: () => Element;
+  children: () => Element[];
+  element: () => Element;
+  index: () => number;
+}
+
+const inAncestor: (ancestor: Element, descendants: Element[], element: Element, index: number) => AddressInAncestor = Struct.immutable('ancestor', 'descendants', 'element', 'index');
+const inParent: (parent: Element, children: Element[], element: Element, index: number) => AddressInParent = Struct.immutable('parent', 'children', 'element', 'index');
 
 const childOf = function (element: Element, ancestor: Element) {
   return PredicateFind.closest(element, function (elem) {

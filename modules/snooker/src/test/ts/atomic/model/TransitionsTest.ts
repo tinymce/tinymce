@@ -1,13 +1,14 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr, Fun } from '@ephox/katamari';
-import Structs from 'ephox/snooker/api/Structs';
+import * as Structs from 'ephox/snooker/api/Structs';
 import Transitions from 'ephox/snooker/model/Transitions';
+import { Element } from '@ephox/sugar';
 
 UnitTest.test('TableCounterTest', function () {
-  const d = Structs.detail;
+  const d: any = Structs.detail;
   const r = Structs.rowcells;
   const rd = Structs.rowdetails;
-  const en = Structs.elementnew;
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
 
   const check = function (expected, input) {
     const actual = Transitions.toDetails(input, Fun.tripleEquals);
