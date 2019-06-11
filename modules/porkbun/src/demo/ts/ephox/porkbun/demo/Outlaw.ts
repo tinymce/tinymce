@@ -1,7 +1,7 @@
 import { Event, Bindable } from 'ephox/porkbun/Event';
 import Events from 'ephox/porkbun/Events';
 import { Saloon, ShootEvent, DieEvent, Outlaw } from './Types';
-import { Option, Cell } from '@ephox/katamari';
+import { Singleton } from '@ephox/katamari';
 
 interface OutlawEvents {
   registry: {
@@ -56,15 +56,15 @@ const create = function (name: string): Outlaw {
     die:   Event([])
   }) as OutlawEvents;
 
-  const establishment: Cell<Option<Saloon>> = Cell(Option.none());
+  const establishment = Singleton.value<Saloon>();
   const enter = function (saloon: Saloon) {
     saloon.enter(api);
-    establishment.set(Option.some(saloon));
+    establishment.set(saloon);
   };
 
   const leave = function () {
-    establishment.get().each((e) => e.leave(api));
-    establishment.set(Option.none());
+    establishment.on((e) => e.leave(api));
+    establishment.clear();
   };
 
   const shoot = function (target: Outlaw) {
