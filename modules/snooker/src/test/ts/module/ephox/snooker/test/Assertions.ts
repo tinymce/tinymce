@@ -1,28 +1,23 @@
 import { assert } from '@ephox/bedrock';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { Attr, Body, Css, Element, Hierarchy, Html, Insert, Remove, SelectorFilter, SelectorFind, Traverse } from '@ephox/sugar';
-import ResizeDirection from 'ephox/snooker/api/ResizeDirection';
-import ResizeWire from 'ephox/snooker/api/ResizeWire';
+import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
+import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
 import TableOperations from 'ephox/snooker/api/TableOperations';
 import Bars from 'ephox/snooker/resize/Bars';
 import Bridge from 'ephox/snooker/test/Bridge';
+import { BarPositions, ColInfo } from 'ephox/snooker/resize/BarPositions';
+import { PlatformDetection } from '@ephox/sand';
+import { RunOperationOutput, TargetSelection, TargetElement, TargetPasteRows } from 'ephox/snooker/model/RunOperation';
+import { SimpleGenerators, Generators } from 'ephox/snooker/api/Generators';
 
-const assertInfo = function (expected, actual) {
-  const cleaner = Arr.map(actual, function (row) {
-    const cells = Arr.map(row.cells(), function (c) {
-      return { element: c.element(), rowspan: c.rowspan(), colspan: c.colspan() };
-    });
-  });
+type Op<T> = (wire: ResizeWire, table: Element, target: T, generators: Generators, direction: BarPositions<ColInfo>) => Option<RunOperationOutput>;
 
-  assert.eq(expected, cleaner);
-};
-
-const checkOld = function (expCell, expectedHtml, input, operation, section, row, column, _direction?) {
+const checkOld = function <T>(expCell: { section: number, row: number, column: number }, expectedHtml: string, input: string, operation: Op<TargetElement>, section: number, row: number, column: number, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
   const table = Element.fromHtml(input);
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());
-  const direction = _direction === undefined ? ResizeDirection.ltr : _direction;
-  const result = operation(wire, table, { element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()) }, Bridge.generators, direction, Fun.noop, Fun.noop);
+  const result = operation(wire, table, { element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()) }, Bridge.generators, direction);
 
   const actualPath = Hierarchy.path(table, result.getOrDie().cursor().getOrDie()).getOrDie('could not find path');
   assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
@@ -39,26 +34,22 @@ const checkOld = function (expCell, expectedHtml, input, operation, section, row
   Bars.destroy(wire);
 };
 
-const checkPaste = function (expectedHtml, input, pasteHtml, operation, section, row, column, _direction?) {
+const checkPaste = function (expectedHtml: string, input: string, pasteHtml: string, operation: Op<TargetPasteRows>, section: number, row: number, column: number, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
   const table = Element.fromHtml(input);
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());
-  const direction = _direction === undefined ? ResizeDirection.ltr : _direction;
 
   const pasteTable = Element.fromHtml('<table><tbody>' + pasteHtml + '</tbody></table>');
-  const result = operation(
+  operation(
     wire,
     table,
     {
-      element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()),
       selection: Fun.constant([Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()]),
       clipboard: Fun.constant([SelectorFind.descendant(pasteTable, 'tr').getOrDie()]),
-      generators: Fun.constant(Bridge.generators)
+      generators: Fun.constant(Bridge.generators as SimpleGenerators) // Impossible type! This might work in some restricted circumstances.
     },
     Bridge.generators,
-    direction,
-    Fun.noop,
-    Fun.noop
+    direction
   );
 
   assert.eq(expectedHtml, Html.getOuter(table));
@@ -67,12 +58,11 @@ const checkPaste = function (expectedHtml, input, pasteHtml, operation, section,
   Bars.destroy(wire);
 };
 
-const checkStructure = function (expCell, expected, input, operation, section, row, column, _direction?) {
+const checkStructure = function (expCell: { section: number, row: number, column: number}, expected: string[][], input: string, operation: Op<TargetElement>, section: number, row: number, column: number, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
   const table = Element.fromHtml(input);
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());
-  const direction = _direction === undefined ? ResizeDirection.ltr : _direction;
-  const result = operation(wire, table, { element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()) }, Bridge.generators, direction, Fun.noop, Fun.noop);
+  const result = operation(wire, table, { element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()) }, Bridge.generators, direction);
 
   const actualPath = Hierarchy.path(table, result.getOrDie().cursor().getOrDie()).getOrDie('could not find path');
   assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
@@ -88,18 +78,17 @@ const checkStructure = function (expCell, expected, input, operation, section, r
   Bars.destroy(wire);
 };
 
-const checkDelete = function (optExpCell, optExpectedHtml, input, operation, cells, platform, _direction?) {
+const checkDelete = function (optExpCell: Option<{ section: number, row: number, column: number }>, optExpectedHtml: Option<{ ie: string, normal: string }>, input: string, operation: Op<TargetSelection>, cells: { section: number, row: number, column: number }[], platform: ReturnType<typeof PlatformDetection.detect>, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
   const table = Element.fromHtml(input);
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());
-  const direction = _direction === undefined ? ResizeDirection.ltr : _direction;
   const cellz = Arr.map(cells, function (cell) {
     return Hierarchy.follow(table, [ cell.section, cell.row, cell.column, 0 ]).getOrDie('Could not find cell');
   });
 
   const result = operation(wire, table, {
       selection: Fun.constant(cellz)
-  }, Bridge.generators, direction, Fun.noop, Fun.noop);
+  }, Bridge.generators, direction);
 
   // The operation might delete the whole table
   optExpCell.each(function (expCell) {
@@ -130,7 +119,7 @@ const checkDelete = function (optExpCell, optExpectedHtml, input, operation, cel
   Bars.destroy(wire);
 };
 
-const checkMerge = function (label, expected, input, selection, bounds, _direction?) {
+const checkMerge = function (label: string, expected: string, input: string, selection: {section: number, row: number, column: number}[], bounds: {startRow: number, startCol: number, finishRow: number, finishCol: number}, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
   const table = Element.fromHtml(input);
   const expectedDom = Element.fromHtml(expected);
 
@@ -138,7 +127,6 @@ const checkMerge = function (label, expected, input, selection, bounds, _directi
   Insert.append(Body.body(), table);
 
   const wire = ResizeWire.only(Body.body());
-  const direction = _direction === undefined ? ResizeDirection.ltr : _direction;
   const target = Bridge.targetStub(selection, bounds, table);
   const generators = Bridge.generators;
 
@@ -158,11 +146,10 @@ const checkMerge = function (label, expected, input, selection, bounds, _directi
   Bars.destroy(wire);
 };
 
-const checkUnmerge = function (expected, input, unmergablePaths, _direction?) {
+const checkUnmerge = function (expected: string, input: string, unmergablePaths: { section: number, row: number, column: number }[], direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
   const table = Element.fromHtml(input);
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());
-  const direction = _direction === undefined ? ResizeDirection.ltr : _direction;
   const unmergables = Arr.map(unmergablePaths, function (path) {
     return Hierarchy.follow(table, [ path.section, path.row, path.column ]);
   });
@@ -182,7 +169,6 @@ const checkUnmerge = function (expected, input, unmergablePaths, _direction?) {
 };
 
 export default {
-  assertInfo,
   checkOld,
   checkPaste,
   checkStructure,

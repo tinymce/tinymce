@@ -1,21 +1,29 @@
-import { Arr } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
+import { Arr, Struct } from '@ephox/katamari';
 
+export type EventHandler<T> = (event: T) => void;
 
+export interface Bindable<T> {
+  bind: (handler: EventHandler<T>) => void;
+  unbind: (handler: EventHandler<T>) => void;
+}
 
-export default <any> function (fields) {
-  var struct = Struct.immutable.apply(null, fields);
+export interface Event extends Bindable<any> {
+  trigger: (...values: any[]) => void;
+}
 
-  var handlers = [];
+export const Event = function (fields: string[]): Event {
+  const struct = Struct.immutable.apply(null, fields);
 
-  var bind = function (handler) {
+  let handlers: EventHandler<any>[] = [];
+
+  const bind = function (handler: EventHandler<any>) {
     if (handler === undefined) {
-      throw 'Event bind error: undefined handler';
+      throw new Error('Event bind error: undefined handler');
     }
     handlers.push(handler);
   };
 
-  var unbind = function(handler) {
+  const unbind = function (handler: EventHandler<any>) {
     // This is quite a bit slower than handlers.splice() but we hate mutation.
     // Unbind isn't used very often so it should be ok.
     handlers = Arr.filter(handlers, function (h) {
@@ -23,17 +31,17 @@ export default <any> function (fields) {
     });
   };
 
-  var trigger = function (/* values */) {
+  const trigger = function () {
     // scullion does Array prototype slice, we don't need to as well
-    var event = struct.apply(null, arguments);
+    const event = struct.apply(null, arguments);
     Arr.each(handlers, function (handler) {
       handler(event);
     });
   };
 
   return {
-    bind: bind,
-    unbind: unbind,
-    trigger: trigger
+    bind,
+    unbind,
+    trigger
   };
 };

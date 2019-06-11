@@ -3,26 +3,29 @@ import * as Structs from '../api/Structs';
 import Fitment from './Fitment';
 import GridRow from './GridRow';
 import MergingOperations from '../operate/MergingOperations';
+import { SimpleGenerators } from '../api/Generators';
+import { Element } from '@ephox/sugar';
 
-const isSpanning = function (grid, row, col, comparator) {
+const isSpanning = function (grid: Structs.RowCells[], row: number, col: number, comparator: (a: Element, b: Element) => boolean) {
   const candidate = GridRow.getCell(grid[row], col);
   const matching = Fun.curry(comparator, candidate.element());
   const currentRow = grid[row];
 
   // sanity check, 1x1 has no spans
   return grid.length > 1 && GridRow.cellLength(currentRow) > 1 &&
-  (
-    // search left, if we're not on the left edge
-    (// search down, if we're not on the bottom edge
-    (col > 0 && matching(GridRow.getCellElement(currentRow, col - 1))) ||
-    // search right, if we're not on the right edge
-    (col < currentRow.length - 1 && matching(GridRow.getCellElement(currentRow, col + 1))) ||
-    // search up, if we're not on the top edge
-    (row > 0 && matching(GridRow.getCellElement(grid[row - 1], col))) || row < grid.length - 1 && matching(GridRow.getCellElement(grid[row + 1], col)))
-  );
+    (
+      // search left, if we're not on the left edge
+      // search down, if we're not on the bottom edge
+      (col > 0 && matching(GridRow.getCellElement(currentRow, col - 1))) ||
+      // search right, if we're not on the right edge
+      (col < currentRow.cells().length - 1 && matching(GridRow.getCellElement(currentRow, col + 1))) ||
+      // search up, if we're not on the top edge
+      (row > 0 && matching(GridRow.getCellElement(grid[row - 1], col))) ||
+      (row < grid.length - 1 && matching(GridRow.getCellElement(grid[row + 1], col)))
+    );
 };
 
-const mergeTables = function (startAddress, gridA, gridB, generator, comparator) {
+const mergeTables = function (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: Element, b: Element) => boolean) {
   // Assumes
   //  - gridA is square and gridB is square
   const startRow = startAddress.row();
@@ -46,7 +49,7 @@ const mergeTables = function (startAddress, gridA, gridB, generator, comparator)
   return gridA;
 };
 
-const merge = function (startAddress, gridA, gridB, generator, comparator) {
+const merge = function (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: Element, b: Element) => boolean) {
   const result = Fitment.measure(startAddress, gridA, gridB);
   return result.map(function (delta) {
     const fittedGrid = Fitment.tailor(gridA, delta, generator);
@@ -54,7 +57,7 @@ const merge = function (startAddress, gridA, gridB, generator, comparator) {
   });
 };
 
-const insert = function (index, gridA, gridB, generator, comparator) {
+const insert = function (index: number, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: Element, b: Element) => boolean): Structs.RowCells[] {
   MergingOperations.splitRows(gridA, index, comparator, generator.cell);
 
   const delta = Fitment.measureWidth(gridB, gridA);

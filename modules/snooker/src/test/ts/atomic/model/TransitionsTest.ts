@@ -5,16 +5,16 @@ import Transitions from 'ephox/snooker/model/Transitions';
 import { Element } from '@ephox/sugar';
 
 UnitTest.test('TableCounterTest', function () {
-  const d: any = Structs.detail;
+  const dn = (fakeElement: any, rowspan: number, colspan: number, isNew: boolean) => Structs.detailnew(fakeElement as Element, rowspan, colspan, isNew);
   const r = Structs.rowcells;
   const rd = Structs.rowdetails;
   const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
 
-  const check = function (expected, input) {
+  const check = function (expected: Structs.RowDetails[], input: Structs.RowCells[]) {
     const actual = Transitions.toDetails(input, Fun.tripleEquals);
-    const cleaner = function (obj) {
+    const cleaner = function (obj: Structs.RowDetails[]) {
       return Arr.map(obj, function (row) {
-        return Arr.map(row, function (c) {
+        return Arr.map(row.details(), function (c) {
           return { element: c.element(), rowspan: c.rowspan(), colspan: c.colspan() };
         });
       });
@@ -24,7 +24,7 @@ UnitTest.test('TableCounterTest', function () {
 
   check(
     [
-      rd([ d(en('td1', false), 1, 3), d(en('td2', false), 1, 1), d(en('td3', false), 1, 1) ], 'tbody')
+      rd([ dn('td1', 1, 3, false), dn('td2', 1, 1, false), dn('td3', 1, 1, false) ], 'tbody')
     ],
     [
       r([ en('td1', false), en('td1', false), en('td1', false), en('td2', false), en('td3', false) ], 'tbody')
@@ -33,7 +33,7 @@ UnitTest.test('TableCounterTest', function () {
 
   check(
     [
-      rd([ d(en('td1', false), 1, 3), d(en('td2', false), 1, 1), d(en('td3', false), 1, 1) ], 'thead')
+      rd([ dn('td1', 1, 3, false), dn('td2', 1, 1, false), dn('td3', 1, 1, false) ], 'thead')
     ],
     [
       r([ en('td1', false), en('td1', false), en('td1', false), en('td2', false), en('td3', false) ], 'thead')
@@ -42,7 +42,7 @@ UnitTest.test('TableCounterTest', function () {
 
   check(
     [
-      rd([ d(en('td1', false), 4, 3) ], 'tbody'),
+      rd([ dn('td1', 4, 3, false) ], 'tbody'),
       rd([ ], 'tbody'),
       rd([ ], 'tbody'),
       rd([ ], 'tbody')
@@ -57,7 +57,7 @@ UnitTest.test('TableCounterTest', function () {
 
   check(
     [
-      rd([ d(en('td1', false), 4, 3) ], 'tfoot'),
+      rd([ dn('td1', 4, 3, false) ], 'tfoot'),
       rd([ ], 'tfoot'),
       rd([ ], 'tfoot'),
       rd([ ], 'tfoot')
@@ -72,7 +72,7 @@ UnitTest.test('TableCounterTest', function () {
 
   check(
     [
-      rd([ d(en('td1', false), 2, 3) ], 'tbody'),
+      rd([ dn('td1', 2, 3, false) ], 'tbody'),
       rd([ ], 'tbody')
     ],
     [
@@ -83,9 +83,9 @@ UnitTest.test('TableCounterTest', function () {
 
   check(
     [
-      rd([ d(en('td1', false), 1, 1) ], 'thead'),
-      rd([ d(en('td2', false), 1, 1) ], 'tbody'),
-      rd([ d(en('td3', false), 1, 1) ], 'tfoot')
+      rd([ dn('td1', 1, 1, false) ], 'thead'),
+      rd([ dn('td2', 1, 1, false) ], 'tbody'),
+      rd([ dn('td3', 1, 1, false) ], 'tfoot')
     ],
     [
       r([ en('td1', false) ], 'thead'),
@@ -96,8 +96,8 @@ UnitTest.test('TableCounterTest', function () {
 
   check(
     [
-      rd([ d(en('td1', false), 2, 2), d(en('td3', false), 1, 1) ], 'tbody'),
-      rd([ d(en('td4', false), 1, 1) ], 'tbody')
+      rd([ dn('td1', 2, 2, false), dn('td3', 1, 1, false) ], 'tbody'),
+      rd([ dn('td4', 1, 1, false) ], 'tbody')
     ],
     [
       r([ en('td1', false), en('td1', false), en('td3', false) ], 'tbody'),
@@ -107,10 +107,10 @@ UnitTest.test('TableCounterTest', function () {
 
   check(
     [
-      rd([ d(en('td1', false), 2, 2), d(en('td3', false), 1, 1) ], 'tbody'),
-      rd([ d(en('td4', false), 2, 1) ], 'tbody'),
-      rd([ d(en('td2', false), 1, 2) ], 'tbody'),
-      rd([ d(en('td5', false), 1, 1), d(en('td6', false), 1, 2) ], 'tbody')
+      rd([ dn('td1', 2, 2, false), dn('td3', 1, 1, false) ], 'tbody'),
+      rd([ dn('td4', 2, 1, false) ], 'tbody'),
+      rd([ dn('td2', 1, 2, false) ], 'tbody'),
+      rd([ dn('td5', 1, 1, false), dn('td6', 1, 2, false) ], 'tbody')
     ],
     [
       r([ en('td1', false), en('td1', false), en('td3', false) ], 'tbody'),

@@ -1,10 +1,14 @@
 import { Arr } from '@ephox/katamari';
 import * as Structs from '../api/Structs';
 import GridRow from '../model/GridRow';
+import { Element } from '@ephox/sugar';
+
+type CompElm = (e1: Element, e2: Element) => boolean;
+type Subst = (element: Element, comparator: CompElm) => Element;
 
 // substitution :: (item, comparator) -> item
-const replaceIn = function (grid, targets, comparator, substitution) {
-  const isTarget = function (cell) {
+const replaceIn = function (grid: Structs.RowCells[], targets: Structs.ElementNew[], comparator: CompElm, substitution: Subst) {
+  const isTarget = function (cell: Structs.ElementNew) {
     return Arr.exists(targets, function (target) {
       return comparator(cell.element(), target.element());
     });
@@ -17,16 +21,16 @@ const replaceIn = function (grid, targets, comparator, substitution) {
   });
 };
 
-const notStartRow = function (grid, rowIndex, colIndex, comparator) {
+const notStartRow = function (grid: Structs.RowCells[], rowIndex: number, colIndex: number, comparator: CompElm) {
   return GridRow.getCellElement(grid[rowIndex], colIndex) !== undefined && (rowIndex > 0 && comparator(GridRow.getCellElement(grid[rowIndex - 1], colIndex), GridRow.getCellElement(grid[rowIndex], colIndex)));
 };
 
-const notStartColumn = function (row, index, comparator) {
+const notStartColumn = function (row: Structs.RowCells, index: number, comparator: CompElm) {
   return index > 0 && comparator(GridRow.getCellElement(row, index - 1), GridRow.getCellElement(row, index));
 };
 
 // substitution :: (item, comparator) -> item
-const replaceColumn = function (grid, index, comparator, substitution) {
+const replaceColumn = function (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst) {
   // Make this efficient later.
   const targets = Arr.bind(grid, function (row, i) {
     // check if already added.
@@ -38,7 +42,7 @@ const replaceColumn = function (grid, index, comparator, substitution) {
 };
 
 // substitution :: (item, comparator) -> item
-const replaceRow = function (grid, index, comparator, substitution) {
+const replaceRow = function (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst) {
   const targetRow = grid[index];
   const targets = Arr.bind(targetRow.cells(), function (item, i) {
     // Check that we haven't already added this one.

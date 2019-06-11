@@ -1,36 +1,41 @@
 import InDrag from './InDrag';
 import NoDrag from './NoDrag';
+import { DragMode } from '../api/DragApis';
+import { EventArgs } from '@ephox/sugar';
 
+interface DragState {
+  onEvent: (event: EventArgs, mode: DragMode) => void;
+  reset: () => void;
+}
 
+export default function () {
+  const noDragState = NoDrag();
+  const inDragState = InDrag();
+  let dragState: DragState = noDragState;
 
-export default <any> function () {
-  var noDragState = NoDrag();
-  var inDragState = InDrag();
-  var dragState = noDragState;
-
-  var on = function () {
+  const on = function () {
     dragState.reset();
     dragState = inDragState;
   };
 
-  var off = function () {
+  const off = function () {
     dragState.reset();
     dragState = noDragState;
   };
 
-  var onEvent = function (event, mode) {
+  const onEvent = function (event: EventArgs, mode: DragMode) {
     dragState.onEvent(event, mode);
   };
 
-  var isOn = function () {
+  const isOn = function () {
     return dragState === inDragState;
   };
 
   return {
-    on: on,
-    off: off,
-    isOn: isOn,
-    onEvent: onEvent,
+    on,
+    off,
+    isOn,
+    onEvent,
     events: inDragState.events
   };
-};
+}

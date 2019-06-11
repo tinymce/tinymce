@@ -2,15 +2,17 @@ import { Arr } from '@ephox/katamari';
 import * as Structs from '../api/Structs';
 import TableGrid from './TableGrid';
 import { Warehouse } from './Warehouse';
+import { Generators } from '../api/Generators';
+import { Element } from '@ephox/sugar';
 
-const toDetails = function (grid, comparator) {
+const toDetails = function (grid: Structs.RowCells[], comparator: (a: Element, b: Element) => boolean) {
   const seen = Arr.map(grid, function (row, ri) {
     return Arr.map(row.cells(), function (col, ci) {
       return false;
     });
   });
 
-  const updateSeen = function (ri, ci, rowspan, colspan) {
+  const updateSeen = function (ri: number, ci: number, rowspan: number, colspan: number) {
     for (let r = ri; r < ri + rowspan; r++) {
       for (let c = ci; c < ci + colspan; c++) {
         seen[r][c] = true;
@@ -26,17 +28,17 @@ const toDetails = function (grid, comparator) {
         updateSeen(ri, ci, result.rowspan(), result.colspan());
         return [ Structs.detailnew(cell.element(), result.rowspan(), result.colspan(), cell.isNew()) ];
       } else {
-        return [];
+        return [] as Structs.DetailNew[];
       }
     });
     return Structs.rowdetails(details, row.section());
   });
 };
 
-const toGrid = function (warehouse, generators, isNew) {
-  const grid = [];
+const toGrid = function (warehouse: Warehouse, generators: Generators, isNew: boolean) {
+  const grid: Structs.RowCells[] = [];
   for (let i = 0; i < warehouse.grid().rows(); i++) {
-    const rowCells = [];
+    const rowCells: Structs.ElementNew[] = [];
     for (let j = 0; j < warehouse.grid().columns(); j++) {
       // The element is going to be the element at that position, or a newly generated gap.
       const element = Warehouse.getAt(warehouse, i, j).map(function (item) {

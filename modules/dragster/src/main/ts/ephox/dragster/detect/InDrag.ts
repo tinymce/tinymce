@@ -1,21 +1,33 @@
 import { Option } from '@ephox/katamari';
-import { Event } from '@ephox/porkbun';
-import { Events } from '@ephox/porkbun';
+import { Event, Events, Bindable } from '@ephox/porkbun';
+import { DragMode } from '../api/DragApis';
+import { Position, EventArgs } from '@ephox/sugar';
 
+export interface InDragEvent {
+  info: () => Position;
+}
 
+interface InDragEvents {
+  registry: {
+    move: Bindable<InDragEvent>
+  };
+  trigger: {
+    move: (info: Position) => void;
+  };
+}
 
-export default <any> function () {
+export default function () {
 
-  var previous = Option.none();
+  let previous = Option.none<Position>();
 
-  var reset = function () {
+  const reset = function () {
     previous = Option.none();
   };
 
-  // Return position delta between previous position and nu position, 
+  // Return position delta between previous position and nu position,
   // or None if this is the first. Set the previous position to nu.
-  var update = function (mode, nu) {
-    var result = previous.map(function (old) {
+  const update = function (mode: DragMode, nu: Position) {
+    const result = previous.map(function (old) {
       return mode.compare(old, nu);
     });
 
@@ -23,26 +35,26 @@ export default <any> function () {
     return result;
   };
 
-  var onEvent = function (event, mode) {
-    var dataOption = mode.extract(event);
+  const onEvent = function (event: EventArgs, mode: DragMode) {
+    const dataOption = mode.extract(event);
 
     // Dragster move events require a position delta. The moveevent is only triggered
     // on the second and subsequent dragster move events. The first is dropped.
     dataOption.each(function (data) {
-      var offset = update(mode, data);
+      const offset = update(mode, data);
       offset.each(function (d) {
         events.trigger.move(d);
       });
     });
   };
 
-  var events = Events.create({
+  const events = Events.create({
     move: Event([ 'info' ])
-  });
+  }) as InDragEvents;
 
   return {
-    onEvent: onEvent,
-    reset: reset,
+    onEvent,
+    reset,
     events: events.registry
   };
-};
+}

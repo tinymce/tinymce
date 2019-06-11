@@ -4,8 +4,8 @@ import { Element } from '@ephox/sugar';
 
 export interface Warehouse {
   grid: () => Structs.Grid;
-  access: () => Record<string, Structs.Extended>;
-  all: () => Structs.RowDataExtended[];
+  access: () => Record<string, Structs.DetailExt>;
+  all: () => Structs.RowData<Structs.DetailExt>[];
 }
 
 const key = function (row: number, column: number) {
@@ -14,7 +14,7 @@ const key = function (row: number, column: number) {
 
 const getAt = function (warehouse: Warehouse, row: number, column: number) {
   const raw = warehouse.access()[key(row, column)];
-  return raw !== undefined ? Option.some(raw) : Option.none<Structs.Extended>();
+  return raw !== undefined ? Option.some(raw) : Option.none<Structs.DetailExt>();
 };
 
 const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T, b: Element) => boolean) {
@@ -22,10 +22,10 @@ const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T,
     return comparator(item, detail.element());
   });
 
-  return filtered.length > 0 ? Option.some(filtered[0]) : Option.none<Structs.Extended>();
+  return filtered.length > 0 ? Option.some(filtered[0]) : Option.none<Structs.DetailExt>();
 };
 
-const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.Extended, i: number, xs: ArrayLike<Structs.Extended>) => boolean) {
+const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: number, xs: ArrayLike<Structs.DetailExt>) => boolean) {
   const all = Arr.bind(warehouse.all(), function (r) { return r.cells(); });
   return Arr.filter(all, predicate);
 };
@@ -36,7 +36,7 @@ const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.Exten
  *  2. a data structure which can efficiently identify which cell is in which row,column position
  *  3. a list of all cells in order left-to-right, top-to-bottom
  */
-const generate = function (list: Structs.RowDataDetail[]): Warehouse {
+const generate = function <T extends Structs.Detail>(list: Structs.RowData<T>[]): Warehouse {
   // list is an array of objects, made by cells and elements
   // elements: is the TR
   // cells: is an array of objects representing the cells in the row.
@@ -44,14 +44,14 @@ const generate = function (list: Structs.RowDataDetail[]): Warehouse {
   //          colspan (merge cell)
   //          element
   //          rowspan (merge cols)
-  const access: Record<string, Structs.Extended> = {};
-  const cells: Structs.RowDataExtended[] = [];
+  const access: Record<string, Structs.DetailExt> = {};
+  const cells: Structs.RowData<Structs.DetailExt>[] = [];
 
   const maxRows = list.length;
   let maxColumns = 0;
 
   Arr.each(list, function (details, r) {
-    const currentRow: Structs.Extended[] = [];
+    const currentRow: Structs.DetailExt[] = [];
     Arr.each(details.cells(), function (detail) {
       let start = 0;
 
@@ -76,7 +76,7 @@ const generate = function (list: Structs.RowDataDetail[]): Warehouse {
       currentRow.push(current);
     });
 
-    cells.push(Structs.rowdataextended(details.element(), currentRow, details.section()));
+    cells.push(Structs.rowdata(details.element(), currentRow, details.section()));
   });
 
   const grid = Structs.grid(maxRows, maxColumns);

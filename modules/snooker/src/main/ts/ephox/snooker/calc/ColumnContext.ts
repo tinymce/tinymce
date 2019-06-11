@@ -1,43 +1,43 @@
-const none = function () {
-  return folder(function (n, o, l, m, r) {
-    return n();
-  });
-};
+import { Adt } from '@ephox/katamari';
 
-const only = function (index) {
-  return folder(function (n, o, l, m, r) {
-    return o(index);
-  });
-};
+type NoneHandler<T> = () => T;
+type OnlyHandler<T> = (index: number) => T;
+type LeftHandler<T> = (index: number, next: number) => T;
+type MiddleHandler<T> = (prev: number, index: number, next: number) => T;
+type RightHandler<T> = (prev: number, index: number) => T;
 
-const left = function (index, next) {
-  return folder(function (n, o, l, m, r) {
-    return l(index, next);
-  });
-};
+export interface ColumnContext {
+  fold: <T> (
+    none: NoneHandler<T>,
+    only: OnlyHandler<T>,
+    left: LeftHandler<T>,
+    middle: MiddleHandler<T>,
+    right: RightHandler<T>,
+  ) => T;
+  match: <T> (branches: {
+    none: NoneHandler<T>,
+    only: OnlyHandler<T>,
+    left: LeftHandler<T>,
+    middle: MiddleHandler<T>,
+    right: RightHandler<T>,
+  }) => T;
+  log: (label: string) => void;
+}
 
-const middle = function (prev, index, next) {
-  return folder(function (n, o, l, m, r) {
-    return m(prev, index, next);
-  });
-};
+const adt: {
+  none: NoneHandler<ColumnContext>;
+  only: OnlyHandler<ColumnContext>;
+  left: LeftHandler<ColumnContext>;
+  middle: MiddleHandler<ColumnContext>;
+  right: RightHandler<ColumnContext>;
+} = Adt.generate([
+  { none: [] },
+  { only: [ 'index' ] },
+  { left: [ 'index', 'next' ] },
+  { middle: [ 'prev', 'index', 'next' ] },
+  { right: [ 'prev', 'index' ] },
+]);
 
-const right = function (prev, index) {
-  return folder(function (n, o, l, m, r) {
-    return r(prev, index);
-  });
-};
-
-const folder = function (fold) {
-  return {
-    fold
-  };
-};
-
-export default {
-  none,
-  only,
-  left,
-  middle,
-  right
+export const ColumnContext = {
+  ...adt
 };

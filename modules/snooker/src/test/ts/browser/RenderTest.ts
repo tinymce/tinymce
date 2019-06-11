@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock/lib/api/Main';
+import { UnitTest } from '@ephox/bedrock';
 import * as Render from 'ephox/snooker/operate/Render';
 
 UnitTest.asynctest('RenderTest', (success, failure) => {
