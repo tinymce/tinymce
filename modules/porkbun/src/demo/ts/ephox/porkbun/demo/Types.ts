@@ -1,4 +1,4 @@
-import { Bindable } from '../../../../../main/ts/ephox/porkbun/Event';
+import { Bindable } from 'ephox/porkbun/Event';
 
 export interface ShootEvent {
   target: () => any;
