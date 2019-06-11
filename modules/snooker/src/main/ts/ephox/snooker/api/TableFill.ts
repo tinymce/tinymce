@@ -1,5 +1,6 @@
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Obj, Option } from '@ephox/katamari';
 import { Attr, Compare, Css, CursorPosition, Element, Insert, Node, Replication, SelectorFilter, Traverse } from '@ephox/sugar';
+import { Generators, CellSpan, SimpleGenerators } from './Generators';
 
 // NOTE: This may create a td instead of a th, but it is for irregular table handling.
 const createCell = function () {
@@ -8,27 +9,31 @@ const createCell = function () {
   return td;
 };
 
-const replace = function (cell, tag, attrs) {
+const replace = function (cell: Element, tag: string, attrs: Record<string, string | number | boolean | null>) {
   const replica = Replication.copy(cell, tag);
   // TODO: Snooker passes null to indicate 'remove attribute'
   Obj.each(attrs, function (v, k) {
-    if (v === null) { Attr.remove(replica, k); } else { Attr.set(replica, k, v); }
+    if (v === null) {
+      Attr.remove(replica, k);
+    } else {
+      Attr.set(replica, k, v);
+    }
   });
   return replica;
 };
 
-const pasteReplace = function (cellContent) {
+const pasteReplace = function (cell: Element) {
   // TODO: check for empty content and don't return anything
-  return cellContent;
+  return cell;
 };
 
-const newRow = function (doc) {
+const newRow = function (doc: Element) {
   return function () {
     return Element.fromTag('tr', doc.dom());
   };
 };
 
-const cloneFormats = function (oldCell, newCell, formats) {
+const cloneFormats = function (oldCell: Element, newCell: Element, formats: string[]) {
   const first = CursorPosition.first(oldCell);
   return first.map(function (firstText) {
     const formatSelector = formats.join(',');
@@ -46,8 +51,8 @@ const cloneFormats = function (oldCell, newCell, formats) {
   }).getOr(newCell);
 };
 
-const cellOperations = function (mutate, doc, formatsToClone) {
-  const newCell = function (prev) {
+const cellOperations = function (mutate: (e1: Element, e2: Element) => void, doc: Element, formatsToClone: Option<string[]>): Generators {
+  const newCell = function (prev: CellSpan) {
     const docu = Traverse.owner(prev.element());
     const td = Element.fromTag(Node.name(prev.element()), docu.dom());
 
@@ -61,7 +66,9 @@ const cellOperations = function (mutate, doc, formatsToClone) {
     Css.copy(prev.element(), td);
     Css.remove(td, 'height');
     // dont inherit the width of spanning columns
-    if (prev.colspan() !== 1) { Css.remove(prev.element(), 'width'); }
+    if (prev.colspan() !== 1) {
+      Css.remove(prev.element(), 'width');
+    }
     mutate(prev.element(), td);
     return td;
   };
@@ -74,7 +81,7 @@ const cellOperations = function (mutate, doc, formatsToClone) {
   };
 };
 
-const paste = function (doc) {
+const paste = function (doc: Element): SimpleGenerators {
   return {
     row: newRow(doc),
     cell: createCell,

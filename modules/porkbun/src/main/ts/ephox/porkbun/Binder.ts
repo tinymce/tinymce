@@ -1,12 +1,13 @@
 import { Arr } from '@ephox/katamari';
+import { EventHandler, Bindable } from './Event';
 
-var create = function() {
-  var registrations = [];
-  var handlers = [];
+const create = function () {
+  const registrations: Bindable<any>[] = [];
+  const handlers: EventHandler<any>[] = [];
 
-  var bind = function (registration, handler) {
+  const bind = function (registration: Bindable<any>, handler: EventHandler<any>) {
     if (Arr.contains(registrations, registration)) {
-      throw 'Invalid key, key already exists.';
+      throw new Error('Invalid key, key already exists.');
     } else {
       registrations.push(registration);
       handlers.push(handler);
@@ -14,20 +15,20 @@ var create = function() {
     }
   };
 
-  var unbind = function (registration) {
-    var index = Arr.indexOf(registrations, registration);
+  const unbind = function (registration: Bindable<any>) {
+    const index = Arr.indexOf(registrations, registration);
     index.fold(function () {
-      throw 'Invalid key, does not exist.';
+      throw new Error('Invalid key, does not exist.');
     }, function (ind) {
       registrations.splice(ind, 1);
-      var handler = handlers.splice(ind, 1)[0];
+      const handler = handlers.splice(ind, 1)[0];
       registration.unbind(handler);
     });
   };
 
-  var unbindAll = function () {
+  const unbindAll = function () {
     Arr.each(registrations, function (registration, i) {
-      var handler = handlers[i];
+      const handler = handlers[i];
       registration.unbind(handler);
     });
 
@@ -36,12 +37,12 @@ var create = function() {
   };
 
   return {
-    bind: bind,
-    unbind: unbind,
-    unbindAll: unbindAll
+    bind,
+    unbind,
+    unbindAll
   };
 };
 
-export default <any> {
-  create: create
+export default {
+  create
 };

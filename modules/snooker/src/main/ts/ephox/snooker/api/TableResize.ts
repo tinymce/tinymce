@@ -1,9 +1,32 @@
-import { Event, Events } from '@ephox/porkbun';
+import { Event, Events, Bindable } from '@ephox/porkbun';
 import Adjustments from '../resize/Adjustments';
-import BarManager from '../resize/BarManager';
-import BarPositions from '../resize/BarPositions';
+import { BarManager } from '../resize/BarManager';
+import { BarPositions, ColInfo } from '../resize/BarPositions';
+import { ResizeWire } from './ResizeWire';
+import { Element } from '@ephox/sugar';
 
-export default function (wire, vdirection) {
+export interface BeforeTableResizeEvent {
+  table: () => Element;
+}
+
+export interface AfterTableResizeEvent {
+  table: () => Element;
+}
+
+interface TableResizeEvents {
+  registry: {
+    beforeResize: Bindable<BeforeTableResizeEvent>;
+    afterResize: Bindable<AfterTableResizeEvent>;
+    startDrag: Bindable<{}>;
+  };
+  trigger: {
+    beforeResize: (table: Element) => void;
+    afterResize: (table: Element) => void;
+    startDrag: () => void;
+  };
+}
+
+export default function (wire: ResizeWire, vdirection: BarPositions<ColInfo>) {
   const hdirection = BarPositions.height;
   const manager = BarManager(wire, vdirection, hdirection);
 
@@ -11,11 +34,11 @@ export default function (wire, vdirection) {
     beforeResize: Event(['table']),
     afterResize: Event(['table']),
     startDrag: Event([])
-  });
+  }) as TableResizeEvents;
 
   manager.events.adjustHeight.bind(function (event) {
     events.trigger.beforeResize(event.table());
-    const delta = hdirection.delta(event.delta());
+    const delta = hdirection.delta(event.delta(), event.table());
     Adjustments.adjustHeight(event.table(), delta, event.row(), hdirection);
     events.trigger.afterResize(event.table());
   });

@@ -1,22 +1,49 @@
 import { Dragger } from '@ephox/dragster';
 import { Fun, Option } from '@ephox/katamari';
-import { Event, Events } from '@ephox/porkbun';
+import { Event, Events, Bindable } from '@ephox/porkbun';
 import { Attr, Body, Class, Compare, Css, DomEvent, Element, SelectorFind } from '@ephox/sugar';
 import Styles from '../style/Styles';
 import CellUtils from '../util/CellUtils';
-import BarMutation from './BarMutation';
+import { BarMutation } from './BarMutation';
 import Bars from './Bars';
 import { isContentEditableTrue, findClosestContentEditable } from '../alien/ContentEditable';
+import { ResizeWire } from '../api/ResizeWire';
+import { BarPositions, RowInfo, ColInfo } from './BarPositions';
+
+export interface DragAdjustHeightEvent {
+  table: () => Element;
+  delta: () => number;
+  row: () => number;
+}
+
+export interface DragAdjustWidthEvent {
+  table: () => Element;
+  delta: () => number;
+  column: () => number;
+}
+
+export interface DragAdjustEvents {
+  registry: {
+    adjustHeight: Bindable<DragAdjustHeightEvent>;
+    adjustWidth: Bindable<DragAdjustWidthEvent>;
+    startAdjust: Bindable<{}>;
+  };
+  trigger: {
+      adjustHeight: (table: Element, delta: number, row: number) => void;
+      adjustWidth: (table: Element, delta: number, column: number) => void;
+      startAdjust: () => void;
+  };
+}
 
 const resizeBarDragging = Styles.resolve('resizer-bar-dragging');
 
-export default function (wire, direction, hdirection) {
+export const BarManager = function (wire: ResizeWire, direction: BarPositions<ColInfo>, hdirection: BarPositions<RowInfo>) {
   const mutation = BarMutation();
   const resizing = Dragger.transform(mutation, {});
 
-  let hoverTable = Option.none();
+  let hoverTable = Option.none<Element>();
 
-  const getResizer = function (element, type) {
+  const getResizer = function (element: Element, type: string) {
     return Option.from(Attr.get(element, type));
   };
 
@@ -33,7 +60,7 @@ export default function (wire, direction, hdirection) {
     });
   });
 
-  const getDelta = function (target, dir) {
+  const getDelta = function (target: Element, dir: string) {
     const newX = CellUtils.getInt(target, dir);
     const oldX = parseInt(Attr.get(target, 'data-initial-' + dir), 10);
     return newX - oldX;
@@ -61,7 +88,7 @@ export default function (wire, direction, hdirection) {
 
   });
 
-  const handler = function (target, dir) {
+  const handler = function (target: Element, dir: string) {
     events.trigger.startAdjust();
     mutation.assign(target);
     Attr.set(target, 'data-initial-' + dir, parseInt(Css.get(target, dir), 10));
@@ -72,12 +99,18 @@ export default function (wire, direction, hdirection) {
 
   /* mousedown on resize bar: start dragging when the bar is clicked, storing the initial position. */
   const mousedown = DomEvent.bind(wire.parent(), 'mousedown', function (event) {
-    if (Bars.isRowBar(event.target())) { handler(event.target(), 'top'); }
+    if (Bars.isRowBar(event.target())) {
+      handler(event.target(), 'top');
+    }
 
-    if (Bars.isColBar(event.target())) { handler(event.target(), 'left'); }
+    if (Bars.isColBar(event.target())) {
+      handler(event.target(), 'left');
+    }
   });
 
-  const isRoot = function (e: Element) { return Compare.eq(e, wire.view()); };
+  const isRoot = function (e: Element) {
+    return Compare.eq(e, wire.view());
+  };
 
   const findClosestEditableTable = (target: Element): Option<Element> => {
     return SelectorFind.closest(target, 'table', isRoot).filter((table) => {
@@ -112,7 +145,7 @@ export default function (wire, direction, hdirection) {
     Bars.destroy(wire);
   };
 
-  const refresh = function (tbl) {
+  const refresh = function (tbl: Element) {
     Bars.refresh(wire, tbl, hdirection, direction);
   };
 
@@ -120,7 +153,7 @@ export default function (wire, direction, hdirection) {
     adjustHeight: Event(['table', 'delta', 'row']),
     adjustWidth: Event(['table', 'delta', 'column']),
     startAdjust: Event([])
-  });
+  }) as DragAdjustEvents;
 
   return {
     destroy,
@@ -131,4 +164,4 @@ export default function (wire, direction, hdirection) {
     showBars: Fun.curry(Bars.show, wire),
     events: events.registry
   };
-}
+};

@@ -1,12 +1,12 @@
 import Binder from 'ephox/porkbun/Binder';
 import Events from 'ephox/porkbun/Events';
-import Event from 'ephox/porkbun/Event';
+import { Event } from 'ephox/porkbun/Event';
 import { Struct } from '@ephox/katamari';
 
 declare const $: any;
 
-var create = function () {
-  var saloon = $('<div />');
+const create = function () {
+  const saloon = $('<div />');
   saloon.css({
     border: '3px solid brown',
     backgroundImage: 'url(images/saloon.jpg)',
@@ -15,31 +15,31 @@ var create = function () {
     float: 'left'
   });
 
-  var getElement = function () {
+  const getElement = function () {
     return saloon;
   };
 
-  var events = Events.create({
-    shooting: Event(["shooter", "target"])
+  const events = Events.create({
+    shooting: Event(['shooter', 'target'])
   });
 
-  var binder = Binder.create();
+  const binder = Binder.create();
 
-  var seat = function (patron) {
-    var chair = $('<div />');
+  const seat = function (patron) {
+    const chair = $('<div />');
     chair.css({ border: '1px dashed green', float: 'right', clear: 'both' });
     chair.append(patron.getElement());
     saloon.append(chair);
   };
 
-  var unseat = function (patron) {
-    var element = patron.getElement();
-    var chair = element.parent();
+  const unseat = function (patron) {
+    const element = patron.getElement();
+    const chair = element.parent();
     element.detach();
     chair.remove();
   };
 
-  var enter = function (patron) {
+  const enter = function (patron) {
     seat(patron);
 
     binder.bind(patron.events.shoot, function (event) {
@@ -51,24 +51,24 @@ var create = function () {
     });
   };
 
-  var leave = function (patron) {
+  const leave = function (patron) {
     unseat(patron);
     stopListening(patron);
   };
 
-  var stopListening = function (outlaw) {
+  const stopListening = function (outlaw) {
     binder.unbind(outlaw.events.shoot);
     binder.unbind(outlaw.events.die);
   };
 
   return {
-    getElement: getElement,
+    getElement,
     events: events.registry,
-    enter: enter,
-    leave: leave
+    enter,
+    leave
   };
 };
 
-export default <any> {
-  create: create
+export default {
+  create
 };

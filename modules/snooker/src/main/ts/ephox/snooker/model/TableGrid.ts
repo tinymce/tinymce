@@ -1,18 +1,22 @@
 import { Arr, Fun } from '@ephox/katamari';
 import GridRow from './GridRow';
+import { RowCells, ElementNew } from '../api/Structs';
+import { Element } from '@ephox/sugar';
 
-const getColumn = function (grid, index) {
+const getColumn = function (grid: RowCells[], index: number) {
   return Arr.map(grid, function (row) {
     return GridRow.getCell(row, index);
   });
 };
 
-const getRow = function (grid, index) {
+const getRow = function (grid: RowCells[], index: number) {
   return grid[index];
 };
 
-const findDiff = function (xs, comp) {
-  if (xs.length === 0) { return 0; }
+const findDiff = function (xs: ElementNew[], comp: (a: Element, b: Element) => boolean) {
+  if (xs.length === 0) {
+    return 0;
+  }
   const first = xs[0];
   const index = Arr.findIndex(xs, function (x) {
     return !comp(first.element(), x.element());
@@ -33,7 +37,7 @@ const findDiff = function (xs, comp) {
  *   colspan: column span of the cell at (row, column)
  *   rowspan: row span of the cell at (row, column)
  */
-const subgrid = function (grid, row, column, comparator) {
+const subgrid = function (grid: RowCells[], row: number, column: number, comparator: (a: Element, b: Element) => boolean) {
   const restOfRow = getRow(grid, row).cells().slice(column);
   const endColIndex = findDiff(restOfRow, comparator);
 

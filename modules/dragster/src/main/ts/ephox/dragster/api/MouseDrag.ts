@@ -1,34 +1,31 @@
-import DragApis from './DragApis';
-import Blocker from '../detect/Blocker';
 import { Option } from '@ephox/katamari';
-import { Position } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
+import { DomEvent, Insert, Position, Remove, Element, EventArgs } from '@ephox/sugar';
+import { Blocker, BlockerOptions } from '../detect/Blocker';
+import { DragApi, DragSink, DragMode, DragMutation } from './DragApis';
 
-var compare = function (old, nu) {
+const compare = function (old: Position, nu: Position) {
   return Position(nu.left() - old.left(), nu.top() - old.top());
 };
 
-var extract = function (event) {
+const extract = function (event: EventArgs) {
   return Option.some(Position(event.x(), event.y()));
 };
 
-var mutate = function (mutation, info) {
+const mutate = function (mutation: DragMutation, info: Position) {
   mutation.mutate(info.left(), info.top());
 };
 
-var sink = function (dragApi, settings) {
-  var blocker = Blocker(settings);
+const sink = function (dragApi: DragApi, settings: Partial<BlockerOptions>) {
+  const blocker = Blocker(settings);
 
   // Included for safety. If the blocker has stayed on the screen, get rid of it on a click.
-  var mdown = DomEvent.bind(blocker.element(), 'mousedown', dragApi.forceDrop);
+  const mdown = DomEvent.bind(blocker.element(), 'mousedown', dragApi.forceDrop);
 
-  var mup = DomEvent.bind(blocker.element(), 'mouseup', dragApi.drop);
-  var mmove = DomEvent.bind(blocker.element(), 'mousemove', dragApi.move);
-  var mout = DomEvent.bind(blocker.element(), 'mouseout', dragApi.delayDrop);
+  const mup = DomEvent.bind(blocker.element(), 'mouseup', dragApi.drop);
+  const mmove = DomEvent.bind(blocker.element(), 'mousemove', dragApi.move);
+  const mout = DomEvent.bind(blocker.element(), 'mouseout', dragApi.delayDrop);
 
-  var destroy = function () {
+  const destroy = function () {
     blocker.destroy();
     mup.unbind();
     mmove.unbind();
@@ -36,25 +33,25 @@ var sink = function (dragApi, settings) {
     mdown.unbind();
   };
 
-  var start = function (parent) {
+  const start = function (parent: Element) {
     Insert.append(parent, blocker.element());
   };
 
-  var stop = function () {
+  const stop = function () {
     Remove.remove(blocker.element());
   };
 
-  return DragApis.sink({
+  return DragSink({
     element: blocker.element,
-    start: start,
-    stop: stop,
-    destroy: destroy
+    start,
+    stop,
+    destroy
   });
 };
 
-export default <any> DragApis.mode({
-  compare: compare,
-  extract: extract,
-  sink: sink,
-  mutate: mutate
+export default DragMode({
+  compare,
+  extract,
+  sink,
+  mutate
 });

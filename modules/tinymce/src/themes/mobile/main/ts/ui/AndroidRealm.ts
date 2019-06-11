@@ -14,7 +14,6 @@ import ScrollingToolbar from '../toolbar/ScrollingToolbar';
 import CommonRealm from './CommonRealm';
 import * as Dropup from './Dropup';
 import OuterContainer from './OuterContainer';
-import { SugarElement } from 'tinymce/themes/mobile/alien/TypeDefinitions';
 import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
 import { MobileWebApp } from 'tinymce/themes/mobile/api/IosWebapp';
 
@@ -75,7 +74,7 @@ export default function (scrollIntoView: () => void) {
 
   return {
     system: Fun.constant(alloy),
-    element: alloy.element as () => SugarElement,
+    element: alloy.element,
     init,
     exit,
     setToolbarGroups,

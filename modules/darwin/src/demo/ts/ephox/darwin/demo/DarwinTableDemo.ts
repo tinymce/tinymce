@@ -1,6 +1,5 @@
 import { document, window } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import {
   Attr,
   Body,
@@ -15,43 +14,43 @@ import {
   SelectorFind,
   Traverse,
   WindowSelection,
+  EventArgs,
 } from '@ephox/sugar';
-import Ephemera from 'ephox/darwin/api/Ephemera';
+import { Ephemera } from 'ephox/darwin/api/Ephemera';
 import InputHandlers from 'ephox/darwin/api/InputHandlers';
-import SelectionAnnotation from 'ephox/darwin/api/SelectionAnnotation';
+import { SelectionAnnotation } from 'ephox/darwin/api/SelectionAnnotation';
 import SelectionKeys from 'ephox/darwin/api/SelectionKeys';
 import Util from 'ephox/darwin/selection/Util';
+import { Response } from 'ephox/darwin/selection/Response';
 
-var detection = PlatformDetection.detect();
-
-var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
+const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 Attr.set(ephoxUi, 'contenteditable', 'true');
 
-var style = Element.fromHtml(
+const style = Element.fromHtml(
   '<style>' +
-    'table { border-collapse: separate; border-spacing: 30px; }\n' +
-    'td { text-align: left; border: 1px solid #aaa; font-size: 20px; }\n' +
-    'td.ephox-darwin-selected { background: #cadbee; }\n' +
-    '#coords { position: fixed; right: 0px; bottom: 0px; background: #ddd }' +
+  'table { border-collapse: separate; border-spacing: 30px; }\n' +
+  'td { text-align: left; border: 1px solid #aaa; font-size: 20px; }\n' +
+  'td.ephox-darwin-selected { background: #cadbee; }\n' +
+  '#coords { position: fixed; right: 0px; bottom: 0px; background: #ddd }' +
   '</style>'
 );
 
-var table = Element.fromHtml(
+const table = Element.fromHtml(
   '<table style="width: 400px;">' +
-    '<tbody>' +
-      '<tr style="height: 20px;"><td>A</td><td rowspan="2" colspan="2">B</td><td>C</td></tr>' +
-      '<tr style="height: 20px;"><td>D</td><td colspan="1" rowspan="2">E</td>' +
-      '<tr style="height: 20px;"><td colspan="3" rowspan="3">F</td></tr>' +
-      '<tr style="height: 20px;"><td>G</td></tr>' +
-      '<tr style="height: 20px;"><td>H</td></tr>' +
-      '<tr style="height: 20px;"><td rowspan="2" colspan="1">I</td><td>J</td><td colspan="2">K</td></tr>' +
-      '<tr style="height: 20px;"><td colspan="2">L</td><td>M</td></tr>' +
-    '</tbody>' +
+  '<tbody>' +
+  '<tr style="height: 20px;"><td>A</td><td rowspan="2" colspan="2">B</td><td>C</td></tr>' +
+  '<tr style="height: 20px;"><td>D</td><td colspan="1" rowspan="2">E</td>' +
+  '<tr style="height: 20px;"><td colspan="3" rowspan="3">F</td></tr>' +
+  '<tr style="height: 20px;"><td>G</td></tr>' +
+  '<tr style="height: 20px;"><td>H</td></tr>' +
+  '<tr style="height: 20px;"><td rowspan="2" colspan="1">I</td><td>J</td><td colspan="2">K</td></tr>' +
+  '<tr style="height: 20px;"><td colspan="2">L</td><td>M</td></tr>' +
+  '</tbody>' +
   '</table>'
 );
 
 /* Uncomment for normal table with no colspans.
-// var table = Element.fromHtml(
+// const table = Element.fromHtml(
 //   '<table>' +
 //     '<tbody>' +
 //       '<tr>' +
@@ -86,37 +85,37 @@ var table = Element.fromHtml(
 Insert.append(ephoxUi, table);
 Insert.append(Element.fromDom(document.head), style);
 
-var rtlTable = Replication.deep(table);
+const rtlTable = Replication.deep(table);
 Attr.set(rtlTable, 'dir', 'rtl');
 Insert.append(ephoxUi, rtlTable);
 
-var cloneDiv = Element.fromTag('div');
+const cloneDiv = Element.fromTag('div');
 Attr.set(cloneDiv, 'contenteditable', 'true');
-var clone = Replication.deep(table);
+const clone = Replication.deep(table);
 Insert.append(cloneDiv, clone);
 Insert.append(Body.body(), cloneDiv);
 
 Insert.append(Body.body(), Element.fromHtml('<span id="coords">(0, 0)</span>'));
 DomEvent.bind(Body.body(), 'mousemove', function (event) {
-  document.querySelector('#coords').innerHTML = '(' + event.raw().clientX + ', ' + event.raw().clientY + ')';
+  Option.from(document.querySelector('#coords')).getOrDie('Could not find ID "coords"').innerHTML = '(' + event.raw().clientX + ', ' + event.raw().clientY + ')';
 });
 
-//Compare.eq(Body.body(), )
-
-var annotations = SelectionAnnotation.byClass(Ephemera);
-var mouseHandlers = InputHandlers.mouse(window, ephoxUi, Fun.curry(Compare.eq, table), annotations);
-var keyHandlers = InputHandlers.keyboard(window, ephoxUi, Fun.curry(Compare.eq, table), annotations);
+const annotations = SelectionAnnotation.byClass(Ephemera);
+const mouseHandlers = InputHandlers.mouse(window, ephoxUi, Fun.curry(Compare.eq, table), annotations);
+const keyHandlers = InputHandlers.keyboard(window, ephoxUi, Fun.curry(Compare.eq, table), annotations);
 
 DomEvent.bind(ephoxUi, 'mousedown', mouseHandlers.mousedown);
 DomEvent.bind(ephoxUi, 'mouseover', mouseHandlers.mouseover);
 DomEvent.bind(ephoxUi, 'mouseup', mouseHandlers.mouseup);
 
-var handleResponse = function (event, response) {
-  if (response.kill()) event.kill();
+const handleResponse = function (event: EventArgs, response: Response) {
+  if (response.kill()) {
+    event.kill();
+  }
   response.selection().each(function (ns) {
     // ns is {start(): Situ, finish(): Situ}
-    var relative = Selection.relative(ns.start(), ns.finish());
-    var range = Util.convertToRange(window, relative);
+    const relative = Selection.relative(ns.start(), ns.finish());
+    const range = Util.convertToRange(window, relative);
     WindowSelection.setExact(window, range.start(), range.soffset(), range.finish(), range.foffset());
     // WindowSelection.setExact(window, ns.start(), ns.soffset(), ns.finish(), ns.foffset());
   });
@@ -136,8 +135,8 @@ DomEvent.bind(ephoxUi, 'keyup', function (event) {
 DomEvent.bind(ephoxUi, 'keydown', function (event) {
   // This might get expensive.
   WindowSelection.getExact(window).each(function (sel) {
-    var target = Node.isText(sel.start()) ? Traverse.parent(sel.start()) : Option.some(sel.start());
-    var direction = target.map(Direction.getDirection).getOr('ltr');
+    const target = Node.isText(sel.start()) ? Traverse.parent(sel.start()) : Option.some(sel.start());
+    const direction = target.map(Direction.getDirection).getOr('ltr');
     keyHandlers.keydown(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset(), direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl).each(function (response) {
       handleResponse(event, response);
     });

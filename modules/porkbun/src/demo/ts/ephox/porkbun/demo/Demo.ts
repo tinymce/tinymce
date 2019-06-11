@@ -4,20 +4,20 @@ import Sheriff from 'ephox/porkbun/demo/Sheriff';
 
 declare const $: any;
 
-var saloon = Saloon.create();
+const saloon = Saloon.create();
 
-var sheriff = Sheriff.create();
+const sheriff = Sheriff.create();
 
 sheriff.watch(saloon);
 
-var fred = Outlaw.create("Fred");
-var barney = Outlaw.create("Barney");
+const fred = Outlaw.create('Fred');
+const barney = Outlaw.create('Barney');
 
-fred.addAction("Shoot Barney", function () {
+fred.addAction('Shoot Barney', function () {
   fred.shoot(barney);
 });
 
-barney.addAction("Shoot Fred", function () {
+barney.addAction('Shoot Fred', function () {
   barney.shoot(fred);
 });
 

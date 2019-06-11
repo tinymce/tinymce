@@ -342,7 +342,7 @@ const EditorManager: EditorManager = {
    *
    * @method init
    * @param {Object} settings Settings object to be passed to each editor instance.
-   * @return {tinymce.util.Promise} Promise that gets resolved with an array of editors when all editor instances are initialized.
+   * @return {Promise} Promise that gets resolved with an array of editors when all editor instances are initialized.
    * @example
    * // Initializes a editor using the longer method
    * tinymce.EditorManager.init({

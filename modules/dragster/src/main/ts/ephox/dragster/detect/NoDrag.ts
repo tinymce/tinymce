@@ -1,12 +1,8 @@
 import { Fun } from '@ephox/katamari';
 
-
-
-export default <any> function (anchor) {
-  var onEvent = function (event, mode) { };
-
+export default function () {
   return {
-    onEvent: onEvent,
+    onEvent: Fun.noop,
     reset: Fun.noop
   };
-};
+}

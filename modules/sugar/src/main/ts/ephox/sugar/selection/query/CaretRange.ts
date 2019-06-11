@@ -1,7 +1,7 @@
 import { Option } from '@ephox/katamari';
 import Element from '../../api/node/Element';
 import * as Traverse from '../../api/search/Traverse';
-import * as Selection from '../../api/selection/Selection';
+import { SimRange } from '../../api/selection/SimRange';
 import * as ContainerPoint from './ContainerPoint';
 import * as EdgePoint from './EdgePoint';
 import { Window, Document, Range } from '@ephox/dom-globals';
@@ -56,7 +56,7 @@ const availableSearch = document.caretPositionFromPoint ? caretPositionFromPoint
 const fromPoint = function (win: Window, x: number, y: number) {
   const doc = Element.fromDom(win.document);
   return availableSearch(doc, x, y).map(function (rng) {
-    return Selection.range(
+    return SimRange.create(
       Element.fromDom(rng.startContainer),
       rng.startOffset,
       Element.fromDom(rng.endContainer),

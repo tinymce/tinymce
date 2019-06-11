@@ -96,6 +96,13 @@ UnitTest.asynctest(
       LegacyUnit.equal(editor.getContent(), '<p align="justify">text</p>');
     });
 
+    suite.test('TestCase-TBA: LegacyOutput: Justifycenter image', function (editor) {
+      editor.setContent('<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAF0lEQVR42mP8/5/hPwMJgHFUw6gG7AAAXVgj6XowjMAAAAAASUVORK5CYII=" /></p>');
+      LegacyUnit.setSelection(editor, 'p', 0);
+      editor.execCommand('justifycenter');
+      LegacyUnit.equal(editor.getContent(), '<p align="center"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAF0lEQVR42mP8/5/hPwMJgHFUw6gG7AAAXVgj6XowjMAAAAAASUVORK5CYII=" /></p>');
+    });
+
     suite.test('TestCase-TBA: LegacyOutput: Remove text color', function (editor) {
       editor.setContent('<p><font color="red">text</font></p>');
       LegacyUnit.setSelection(editor, 'font', 0, 'font', 4);

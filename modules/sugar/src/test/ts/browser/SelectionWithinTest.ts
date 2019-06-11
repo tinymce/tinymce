@@ -7,7 +7,7 @@ import * as Body from 'ephox/sugar/api/node/Body';
 import Element from 'ephox/sugar/api/node/Element';
 import * as Node from 'ephox/sugar/api/node/Node';
 import * as Html from 'ephox/sugar/api/properties/Html';
-import * as Selection from 'ephox/sugar/api/selection/Selection';
+import { Selection } from 'ephox/sugar/api/selection/Selection';
 import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
 
 UnitTest.test('Browser Test: SelectionTest', function () {

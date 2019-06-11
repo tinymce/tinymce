@@ -1,19 +1,19 @@
 import { Fun } from '@ephox/katamari';
-import { Attr, Css } from '@ephox/sugar';
+import { Attr, Css, Element } from '@ephox/sugar';
 
-const getSpan = function (cell, type) {
+const getSpan = function (cell: Element, type: 'colspan' | 'rowspan') {
   return Attr.has(cell, type) && parseInt(Attr.get(cell, type), 10) > 1;
 };
 
-const hasColspan = function (cell) {
+const hasColspan = function (cell: Element) {
   return getSpan(cell, 'colspan');
 };
 
-const hasRowspan = function (cell) {
+const hasRowspan = function (cell: Element) {
   return getSpan(cell, 'rowspan');
 };
 
-const getInt = function (element, property) {
+const getInt = function (element: Element, property: string) {
   return parseInt(Css.get(element, property), 10);
 };
 
