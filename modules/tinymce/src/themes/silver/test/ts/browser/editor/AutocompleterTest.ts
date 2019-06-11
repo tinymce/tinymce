@@ -284,6 +284,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             ]
           ]
         }),
+        tinyApis.sAssertContent('<p>test=t</p>'),
         // Check the options shrink to 1 item
         sSetContentAndTrigger({
           triggerChar: '=',
@@ -297,12 +298,14 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             ]
           ]
         }), 100, 1000),
+        tinyApis.sAssertContent('<p>test=tw</p>'),
         // Check the autocompleter is hidden/closed when no items match
         sSetContentAndTrigger({
           triggerChar: '=',
           initialContent: 'test=twe'
         }, 'e'.charCodeAt(0)),
         sWaitForAutocompleteToClose,
+        tinyApis.sAssertContent('<p>test=twe</p>'),
         // Check the autocompleter is shown again when deleting a char
         sSetContentAndTrigger({
           triggerChar: '=',

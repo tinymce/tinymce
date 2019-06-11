@@ -1,19 +1,22 @@
-import Styles from '../style/Styles';
 import { Merger } from '@ephox/katamari';
-import { Remove } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
+import { Attr, Class, Css, Element, Remove } from '@ephox/sugar';
+import Styles from '../style/Styles';
 
+export interface BlockerOptions {
+  layerClass: string;
+}
 
+export interface Blocker {
+  element: () => Element;
+  destroy: () => void;
+}
 
-export default <any> function (options) {
-  var settings = Merger.merge({
-    'layerClass': Styles.resolve('blocker')
+export const Blocker = function (options: Partial<BlockerOptions>): Blocker {
+  const settings: BlockerOptions = Merger.merge({
+    layerClass: Styles.resolve('blocker')
   }, options);
 
-  var div = Element.fromTag('div');
+  const div = Element.fromTag('div');
   Attr.set(div, 'role', 'presentation');
   Css.setAll(div, {
     position: 'fixed',
@@ -26,16 +29,16 @@ export default <any> function (options) {
   Class.add(div, Styles.resolve('blocker'));
   Class.add(div, settings.layerClass);
 
-  var element = function () {
+  const element = function () {
     return div;
   };
 
-  var destroy = function () {
+  const destroy = function () {
     Remove.remove(div);
   };
 
   return {
-    element: element,
-    destroy: destroy
+    element,
+    destroy
   };
 };

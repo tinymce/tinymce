@@ -1,12 +1,21 @@
 import { Arr, Obj, Struct } from '@ephox/katamari';
 import { Attr, Css, Element, Insert, Remove, Selectors } from '@ephox/sugar';
 import DetailsList from '../model/DetailsList';
-import Warehouse from '../model/Warehouse';
+import { Warehouse } from '../model/Warehouse';
 import LayerSelector from '../util/LayerSelector';
+import { DetailExt, RowData } from './Structs';
+import { HTMLElement } from '@ephox/dom-globals';
 
-const statsStruct = Struct.immutable('minRow', 'minCol', 'maxRow', 'maxCol');
+interface StatsStruct {
+  minRow: () => number;
+  minCol: () => number;
+  maxRow: () => number;
+  maxCol: () => number;
+}
 
-const findSelectedStats = function (house, isSelected) {
+const statsStruct: (minRow: number, minCol: number, maxRow: number, maxCol: number) => StatsStruct = Struct.immutable('minRow', 'minCol', 'maxRow', 'maxCol');
+
+const findSelectedStats = function (house: Warehouse, isSelected: (detail: DetailExt) => boolean) {
   const totalColumns = house.grid().columns();
   const totalRows = house.grid().rows();
 
@@ -21,15 +30,23 @@ const findSelectedStats = function (house, isSelected) {
       const endRow = startRow + detail.rowspan() - 1;
       const startCol = detail.column();
       const endCol = startCol + detail.colspan() - 1;
-      if (startRow < minRow) { minRow = startRow; } else if (endRow > maxRow) { maxRow = endRow; }
+      if (startRow < minRow) {
+        minRow = startRow;
+      } else if (endRow > maxRow) {
+        maxRow = endRow;
+      }
 
-      if (startCol < minCol) { minCol = startCol; } else if (endCol > maxCol) { maxCol = endCol; }
+      if (startCol < minCol) {
+        minCol = startCol;
+      } else if (endCol > maxCol) {
+        maxCol = endCol;
+      }
     }
   });
   return statsStruct(minRow, minCol, maxRow, maxCol);
 };
 
-const makeCell = function (list, seenSelected, rowIndex) {
+const makeCell = function <T>(list: RowData<T>[], seenSelected: boolean, rowIndex: number) {
   // no need to check bounds, as anything outside this index is removed in the nested for loop
   const row = list[rowIndex].element();
   const td = Element.fromTag('td');
@@ -38,7 +55,7 @@ const makeCell = function (list, seenSelected, rowIndex) {
   f(row, td);
 };
 
-const fillInGaps = function (list, house, stats, isSelected) {
+const fillInGaps = function <T>(list: RowData<T>[], house: Warehouse, stats: StatsStruct, isSelected: (detail: DetailExt) => boolean) {
   const totalColumns = house.grid().columns();
   const totalRows = house.grid().rows();
   // unselected cells have been deleted, now fill in the gaps in the model
@@ -48,17 +65,21 @@ const fillInGaps = function (list, house, stats, isSelected) {
       if (!(i < stats.minRow() || i > stats.maxRow() || j < stats.minCol() || j > stats.maxCol())) {
         // if there is a hole in the table itself, or it's an unselected position, we need a cell
         const needCell = Warehouse.getAt(house, i, j).filter(isSelected).isNone();
-        if (needCell) { makeCell(list, seenSelected, i); } else { seenSelected = true; }
+        if (needCell) {
+          makeCell(list, seenSelected, i);
+        } else {
+          seenSelected = true;
+        }
       }
     }
   }
 };
 
-const clean = function (table, stats) {
+const clean = function (table: Element, stats: StatsStruct) {
   // can't use :empty selector as that will not include TRs made up of whitespace
   const emptyRows = Arr.filter(LayerSelector.firstLayer(table, 'tr'), function (row) {
     // there is no sugar method for this, and Traverse.children() does too much processing
-    return row.dom().childElementCount === 0;
+    return (row.dom() as HTMLElement).childElementCount === 0;
   });
   Arr.each(emptyRows, Remove.remove);
 
@@ -76,8 +97,8 @@ const clean = function (table, stats) {
   Css.remove(table, 'height');
 };
 
-const extract = function (table, selectedSelector) {
-  const isSelected = function (detail) {
+const extract = function (table: Element, selectedSelector: string) {
+  const isSelected = function (detail: DetailExt) {
     return Selectors.is(detail.element(), selectedSelector);
   };
 

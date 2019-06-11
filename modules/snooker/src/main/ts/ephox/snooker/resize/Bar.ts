@@ -1,6 +1,6 @@
 import { Attr, Css, Element } from '@ephox/sugar';
 
-const col = function (column, x, y, w, h) {
+const col = function (column: number, x: number, y: number, w: number, h: number) {
   const blocker = Element.fromTag('div');
   Css.setAll(blocker, {
     position: 'absolute',
@@ -14,7 +14,7 @@ const col = function (column, x, y, w, h) {
   return blocker;
 };
 
-const row = function (r, x, y, w, h) {
+const row = function (r: number, x: number, y: number, w: number, h: number) {
   const blocker = Element.fromTag('div');
   Css.setAll(blocker, {
     position: 'absolute',

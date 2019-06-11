@@ -573,7 +573,7 @@ UnitTest.test('EraseOperationsTest', function () {
     ie: deleteExpectedContent22
   };
   Assertions.checkDelete(Option.some({ section: 0, row: 0, column: 0 }),
-    Option.some(deleteExpected21),
+    Option.some(deleteExpected22),
 
     '<table><thead>' +
       '<tr><th>A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +

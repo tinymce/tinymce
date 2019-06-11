@@ -6,7 +6,7 @@
  */
 
 import { AlloyTriggers, AlloyComponent } from '@ephox/alloy';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Obj, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { createMenuItems, createSelectButton } from './BespokeSelect';
@@ -14,12 +14,23 @@ import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 
 const defaultFontsizeFormats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
 
+// See https://websemantics.uk/articles/font-size-conversion/ for conversions
+const legacyFontSizes = {
+  '8pt': '1',
+  '10pt': '2',
+  '12pt': '3',
+  '14pt': '4',
+  '18pt': '5',
+  '24pt': '6',
+  '36pt': '7'
+};
+
 const round = (number: number, precision: number) => {
   const factor = Math.pow(10, precision);
   return Math.round(number * factor) / factor;
 };
 
-const toPt = (fontSize: string, precision?: number) => {
+const toPt = (fontSize: string, precision?: number): string => {
   if (/[0-9.]+px$/.test(fontSize)) {
     // Round to the nearest 0.5
     return round(parseInt(fontSize, 10) * 72 / 96, precision || 0) + 'pt';
@@ -27,7 +38,11 @@ const toPt = (fontSize: string, precision?: number) => {
   return fontSize;
 };
 
-const getSpec = (editor) => {
+const toLegacy = (fontSize: string): string => {
+  return Obj.get(legacyFontSizes as Record<string, string>, fontSize).getOr('');
+};
+
+const getSpec = (editor: Editor) => {
   const getMatchingValue = () => {
     let matchOpt = Option.none();
     const items = dataset.data;
@@ -37,7 +52,8 @@ const getSpec = (editor) => {
       // checking for three digits after decimal point, should be precise enough
       for (let precision = 3; matchOpt.isNone() && precision >= 0; precision--) {
         const pt = toPt(px, precision);
-        matchOpt = Arr.find(items, (item) => item.format === px || item.format === pt);
+        const legacy = toLegacy(pt);
+        matchOpt = Arr.find(items, (item) => item.format === px || item.format === pt || item.format === legacy);
       }
     }
 

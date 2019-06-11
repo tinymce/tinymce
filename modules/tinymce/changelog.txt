@@ -1,6 +1,9 @@
 Version 5.0.8 (TBD)
+    Fixed sidebar background being transparent #TINY-3727
     Added back support for multiple toolbars #TINY-2195
     Fixed the build to remove duplicate iife wrappers #TINY-3689
+    Fixed bogus autocompleter span appearing in content when the autocompleter menu is shown #TINY-3752
+    Fixed toolbar font size select not working with legacyoutput plugin #TINY-2921
     Fixed the legacyoutput plugin incorrectly aligning images #TINY-3660
 Version 5.0.7 (2019-06-05)
     Added new toolbar button and menu item for inserting tables via dialog #TINY-3636

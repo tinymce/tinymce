@@ -1,13 +1,17 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { console } from '@ephox/dom-globals';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import Structs from 'ephox/snooker/api/Structs';
+import * as Structs from 'ephox/snooker/api/Structs';
 import Fitment from 'ephox/snooker/test/Fitment';
 import TableMerge from 'ephox/snooker/test/TableMerge';
+import { Element } from '@ephox/sugar';
+import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 
 UnitTest.test('FitmentIVTest', function () {
   const browser = PlatformDetection.detect().browser;
+
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
 
   // Note: cycles 500, min 1, max 200 ~ 22secs (on nodejs, anyway)
   const CYCLES = browser.isIE() || browser.isEdge() || browser.isFirefox() ? 1 : 100;
@@ -18,7 +22,7 @@ UnitTest.test('FitmentIVTest', function () {
   const tailorIVTest = Fitment.tailorIVTest;
   const mergeIVTest = TableMerge.mergeIVTest;
 
-  const generator = function () {
+  const generator = function (): SimpleGenerators {
     let counter = 0;
 
     const cell = function () {
@@ -27,7 +31,7 @@ UnitTest.test('FitmentIVTest', function () {
       return r;
     };
 
-    const replace = function (name) {
+    const replace = function (name: string) {
       return name;
     };
 
@@ -36,23 +40,22 @@ UnitTest.test('FitmentIVTest', function () {
       gap: Fun.constant('*'),
       row: Fun.constant('tr'),
       replace
-    };
+    } as any;
   };
 
-  const grid = function (isNew, rows, cols, _prefix) {
-    const prefix = _prefix ? _prefix : '';
-    return Arr.map(new Array(rows), function (row, r) {
-      return Arr.map(new Array(cols), function (cs, c) {
-        return Structs.elementnew(prefix + '-' + r + '-' + c, isNew);
+  const grid = function (isNew: boolean, rows: number, cols: number, prefix: string = '') {
+    return Arr.map(new Array(rows), function (_row, r) {
+      return Arr.map(new Array(cols), function (_cs, c) {
+        return en(prefix + '-' + r + '-' + c, isNew);
       });
     });
   };
 
-  const rand = function (min, max) {
+  const rand = function (min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
-  const inVariantRunner = function (label, mvTest, times) {
+  const inVariantRunner = function <T extends { test: () => void }>(label: string, mvTest: () => T, times: number) {
     for (let i = 1; i <= times; i++) {
       const testSpec = mvTest();
       // console.log('testing:', label, i + ' / ' + times, ' params: ' + JSON.stringify(testSpec.params));
@@ -60,17 +63,17 @@ UnitTest.test('FitmentIVTest', function () {
     }
   };
 
-  const gridGen = function (isNew, _prefix?) {
+  const gridGen = function (isNew: boolean, prefix?: string) {
     const cols = rand(GRID_MIN, GRID_MAX);
     const rows = rand(GRID_MIN, GRID_MAX);
     return {
       rows: Fun.constant(rows),
       cols: Fun.constant(cols),
-      grid: Fun.constant(grid(isNew, rows, cols, _prefix))
+      grid: Fun.constant(grid(isNew, rows, cols, prefix))
     };
   };
 
-  const startGen = function (gridSpec) {
+  const startGen = function (gridSpec: ReturnType<typeof gridGen>) {
     // because arrays start from 0 we -1
     const row = rand(0, gridSpec.rows() - 1);
     const col = rand(0, gridSpec.cols() - 1);
@@ -176,7 +179,7 @@ UnitTest.test('FitmentIVTest', function () {
       }
     };
 
-    const queryliser2000 = function (result, s, specA, specB) {
+    const queryliser2000 = function (result: Result<Structs.RowCells[], string>, s: Structs.Address, specA: { rows: () => number, cols: () => number, grid: () => Structs.ElementNew[][] }, specB: { rows: () => number, cols: () => number, grid: () => Structs.ElementNew[][] }) {
       // expect to see some cell from specB at some address on specA
       const offsetRow = s.row();
       const offsetCol = s.column();
@@ -184,17 +187,24 @@ UnitTest.test('FitmentIVTest', function () {
       const gridA = specA.grid();
       const gridB = specB.grid();
 
-      Arr.each(result, function (row, ri) {
-        Arr.each(row, function (cell, ci) {
+      Arr.each(result.getOrDie(), function (row, ri) {
+        Arr.each(row.cells(), function (cell, ci) {
           const expected = (function () {
             // Assumption: both gridA and gridB are rectangular.
-            if (ri >= offsetRow && ri <= offsetRow + gridB.length - 1 && ci >= offsetCol && ci <= offsetCol + gridB[0].length - 1) { return gridB[ri - offsetRow][ci - offsetCol]; } else if (ri >= 0 && ri < gridA.length && ci >= 0 && ci < gridA[0].length) { return gridA[ri][ci]; } else { return '?'; }
+            if (ri >= offsetRow && ri <= offsetRow + gridB.length - 1 && ci >= offsetCol && ci <= offsetCol + gridB[0].length - 1) {
+              return gridB[ri - offsetRow][ci - offsetCol];
+            } else if (ri >= 0 && ri < gridA.length && ci >= 0 && ci < gridA[0].length) {
+              return gridA[ri][ci];
+            } else {
+              return '?';
+            }
           })();
 
           if (expected === '?') {
-            assert.eq(true, '?_' === cell.substring(0, 2));
+            assert.eq(true, '?_' === (cell.element() as unknown as string).substring(0, 2));
           } else {
-            assert.eq(expected, cell);
+            assert.eq(expected.isNew(), cell.isNew());
+            assert.eq(expected.element(), cell.element());
           }
         });
       });

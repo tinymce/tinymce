@@ -1,41 +1,44 @@
 import { DomUniverse } from '@ephox/boss';
+import { Option } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 import Parent from '../general/Parent';
+import { LeftRight, BrokenPath } from '../../parent/Breaker';
 
-var universe = DomUniverse();
+const universe = DomUniverse();
 
-var sharedOne = function (look, elements) {
+const sharedOne = function (look: (e: Element) => Option<Element>, elements: Element[]) {
   return Parent.sharedOne(universe, function (universe, element) {
     return look(element);
   }, elements);
 };
 
-var subset = function (start, finish) {
+const subset = function (start: Element, finish: Element) {
   return Parent.subset(universe, start, finish);
 };
 
-var ancestors = function (start, finish, _isRoot) {
-  return Parent.ancestors(universe, start, finish, _isRoot);
+const ancestors = function (start: Element, finish: Element, isRoot?: (x: Element) => boolean) {
+  return Parent.ancestors(universe, start, finish, isRoot);
 };
 
-var breakToLeft = function (parent, child) {
+const breakToLeft = function (parent: Element, child: Element) {
   return Parent.breakToLeft(universe, parent, child);
 };
 
-var breakToRight = function (parent, child) {
+const breakToRight = function (parent: Element, child: Element) {
   return Parent.breakToRight(universe, parent, child);
 };
 
-var breakPath = function (child, isTop, breaker) {
+const breakPath = function (child: Element, isTop: (e: Element) => boolean, breaker: (parent: Element, child: Element) => Option<LeftRight<Element>>): BrokenPath<Element> {
   return Parent.breakPath(universe, child, isTop, function (u, p, c) {
     return breaker(p, c);
   });
 };
 
-export default <any> {
-  sharedOne: sharedOne,
-  subset: subset,
-  ancestors: ancestors,
-  breakToLeft: breakToLeft,
-  breakToRight: breakToRight,
-  breakPath: breakPath
+export default {
+  sharedOne,
+  subset,
+  ancestors,
+  breakToLeft,
+  breakToRight,
+  breakPath
 };

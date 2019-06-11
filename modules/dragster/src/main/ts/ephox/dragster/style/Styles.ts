@@ -1,7 +1,7 @@
 import { Namespace } from '@ephox/katamari';
 
-var styles = Namespace.css('ephox-dragster');
+const styles = Namespace.css('ephox-dragster');
 
-export default <any> {
+export default {
   resolve: styles.resolve
 };

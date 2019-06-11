@@ -1,8 +1,22 @@
 import { Struct } from '@ephox/katamari';
 
-var nu = Struct.immutableBag([ 'left', 'top', 'right', 'bottom' ], []);
+export interface Carets {
+  left: () => number;
+  top: () => number;
+  right: () => number;
+  bottom: () => number;
+}
 
-var moveDown = function (caret, amount) {
+interface CaretsIn {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
+}
+
+const nu: (data: CaretsIn) => Carets = Struct.immutableBag(['left', 'top', 'right', 'bottom'], []);
+
+const moveDown = function (caret: Carets, amount: number) {
   return nu({
     left: caret.left(),
     top: caret.top() + amount,
@@ -11,7 +25,7 @@ var moveDown = function (caret, amount) {
   });
 };
 
-var moveUp = function (caret, amount) {
+const moveUp = function (caret: Carets, amount: number) {
   return nu({
     left: caret.left(),
     top: caret.top() - amount,
@@ -20,27 +34,27 @@ var moveUp = function (caret, amount) {
   });
 };
 
-var moveBottomTo = function (caret, bottom) {
-  var height = caret.bottom() - caret.top();
+const moveBottomTo = function (caret: Carets, bottom: number) {
+  const height = caret.bottom() - caret.top();
   return nu({
     left: caret.left(),
     top: bottom - height,
     right: caret.right(),
-    bottom: bottom
+    bottom
   });
 };
 
-var moveTopTo = function (caret, top) {
-  var height = caret.bottom() - caret.top();
+const moveTopTo = function (caret: Carets, top: number) {
+  const height = caret.bottom() - caret.top();
   return nu({
     left: caret.left(),
-    top: top,
+    top,
     right: caret.right(),
     bottom: top + height
   });
 };
 
-var translate = function (caret, xDelta, yDelta) {
+const translate = function (caret: Carets, xDelta: number, yDelta: number) {
   return nu({
     left: caret.left() + xDelta,
     top: caret.top() + yDelta,
@@ -49,26 +63,26 @@ var translate = function (caret, xDelta, yDelta) {
   });
 };
 
-var getTop = function (caret) {
+const getTop = function (caret: Carets) {
   return caret.top();
 };
 
-var getBottom = function (caret) {
+const getBottom = function (caret: Carets) {
   return caret.bottom();
 };
 
-var toString = function (caret) {
+const toString = function (caret: Carets) {
   return '(' + caret.left() + ', ' + caret.top() + ') -> (' + caret.right() + ', ' + caret.bottom() + ')';
 };
 
-export default <any> {
-  nu: nu,
-  moveUp: moveUp,
-  moveDown: moveDown,
-  moveBottomTo: moveBottomTo,
-  moveTopTo: moveTopTo,
-  getTop: getTop,
-  getBottom: getBottom,
-  translate: translate,
-  toString: toString
+export const Carets = {
+  nu,
+  moveUp,
+  moveDown,
+  moveBottomTo,
+  moveTopTo,
+  getTop,
+  getBottom,
+  translate,
+  toString
 };

@@ -2,31 +2,34 @@ import { Arr } from '@ephox/katamari';
 import { DomStructure } from '@ephox/robin';
 import { Compare, CursorPosition, Element, InsertAll, Node, PredicateFind, Remove, Text, Traverse } from '@ephox/sugar';
 
-const merge = function (cells) {
-  const isBr = function (el) {
+const merge = function (cells: Element[]) {
+  const isBr = function (el: Element) {
     return Node.name(el) === 'br';
   };
 
-  const advancedBr = function (children) {
+  const advancedBr = function (children: Element[]) {
     return Arr.forall(children, function (c) {
       return isBr(c) || (Node.isText(c) && Text.get(c).trim().length === 0);
     });
   };
 
-  const isListItem = function (el) {
+  const isListItem = function (el: Element) {
     return Node.name(el) === 'li' || PredicateFind.ancestor(el, DomStructure.isList).isSome();
   };
 
-  const siblingIsBlock = function (el) {
+  const siblingIsBlock = function (el: Element) {
     return Traverse.nextSibling(el).map(function (rightSibling) {
-      if (DomStructure.isBlock(rightSibling)) { return true; }
+      if (DomStructure.isBlock(rightSibling)) {
+        return true;
+      }
       if (DomStructure.isEmptyTag(rightSibling)) {
         return Node.name(rightSibling) === 'img' ? false : true;
       }
+      return false;
     }).getOr(false);
   };
 
-  const markCell = function (cell) {
+  const markCell = function (cell: Element) {
     return CursorPosition.last(cell).bind(function (rightEdge) {
       const rightSiblingIsBlock = siblingIsBlock(rightEdge);
       return Traverse.parent(rightEdge).map(function (parent) {

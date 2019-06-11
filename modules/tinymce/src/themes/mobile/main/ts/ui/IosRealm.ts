@@ -90,7 +90,7 @@ export default function (scrollIntoView: () => void) {
 
   return {
     system: Fun.constant(alloy),
-    element: alloy.element as () => SugarElement,
+    element: alloy.element,
     init,
     exit,
     setToolbarGroups,

@@ -1,6 +1,7 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
-import Warehouse from '../model/Warehouse';
-import Util from '../util/Util';
+import { Warehouse } from '../model/Warehouse';
+import * as Util from '../util/Util';
+import { DetailExt } from '../api/Structs';
 
 /*
  * Identify for each column, a cell that has colspan 1. Note, this
@@ -8,7 +9,7 @@ import Util from '../util/Util';
  * sizes that are only available through the difference of two
  * spanning columns.
  */
-const columns = function (warehouse) {
+const columns = function (warehouse: Warehouse) {
   const grid = warehouse.grid();
   const cols = Util.range(0, grid.columns());
   const rowsArr = Util.range(0, grid.rows());
@@ -18,11 +19,11 @@ const columns = function (warehouse) {
       return Arr.bind(rowsArr, function (r) {
         return Warehouse.getAt(warehouse, r, col).filter(function (detail) {
           return detail.column() === col;
-        }).fold(Fun.constant([]), function (detail) { return [ detail ]; });
+        }).fold(Fun.constant([] as DetailExt[]), function (detail) { return [ detail ]; });
       });
     };
 
-    const isSingle = function (detail) {
+    const isSingle = function (detail: DetailExt) {
       return detail.colspan() === 1;
     };
 
@@ -34,7 +35,7 @@ const columns = function (warehouse) {
   });
 };
 
-const decide = function (getBlock, isSingle, getFallback) {
+const decide = function (getBlock: () => DetailExt[], isSingle: (detail: DetailExt) => boolean, getFallback: () => Option<DetailExt>) {
   const inBlock = getBlock();
   const singleInBlock = Arr.find(inBlock, isSingle);
 
@@ -45,7 +46,7 @@ const decide = function (getBlock, isSingle, getFallback) {
   return detailOption.map(function (detail) { return detail.element(); });
 };
 
-const rows = function (warehouse) {
+const rows = function (warehouse: Warehouse) {
   const grid = warehouse.grid();
   const rowsArr = Util.range(0, grid.rows());
   const cols = Util.range(0, grid.columns());
@@ -56,11 +57,11 @@ const rows = function (warehouse) {
       return Arr.bind(cols, function (c) {
         return Warehouse.getAt(warehouse, row, c).filter(function (detail) {
           return detail.row() === row;
-        }).fold(Fun.constant([]), function (detail) { return [ detail ]; });
+        }).fold(Fun.constant([] as DetailExt[]), function (detail) { return [ detail ]; });
       });
     };
 
-    const isSingle = function (detail) {
+    const isSingle = function (detail: DetailExt) {
       return detail.rowspan() === 1;
     };
 

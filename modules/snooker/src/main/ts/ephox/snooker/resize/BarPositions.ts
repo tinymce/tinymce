@@ -1,39 +1,55 @@
-import { Arr, Fun, Struct } from '@ephox/katamari';
-import { Height, Location, Width } from '@ephox/sugar';
+import { Arr, Fun, Struct, Option } from '@ephox/katamari';
+import { Height, Location, Width, Element } from '@ephox/sugar';
 
-const rowInfo = Struct.immutable('row', 'y');
-const colInfo = Struct.immutable('col', 'x');
+export interface RowInfo {
+  row: () => number;
+  y: () => number;
+}
 
-const rtlEdge = function (cell) {
+export interface ColInfo {
+  col: () => number;
+  x: () => number;
+}
+
+export interface BarPositions<T> {
+  delta: (delta: number, table: Element) => number;
+  edge: (e: Element) => number;
+  positions: (array: Option<Element>[], table: Element) => Option<T>[];
+}
+
+const rowInfo: (row: number, y: number) => RowInfo = Struct.immutable('row', 'y');
+const colInfo: (col: number, x: number) => ColInfo = Struct.immutable('col', 'x');
+
+const rtlEdge = function (cell: Element) {
   const pos = Location.absolute(cell);
   return pos.left() + Width.getOuter(cell);
 };
 
-const ltrEdge = function (cell) {
+const ltrEdge = function (cell: Element) {
   return Location.absolute(cell).left();
 };
 
-const getLeftEdge = function (index, cell) {
+const getLeftEdge = function (index: number, cell: Element) {
   return colInfo(index, ltrEdge(cell));
 };
 
-const getRightEdge = function (index, cell) {
+const getRightEdge = function (index: number, cell: Element) {
   return colInfo(index, rtlEdge(cell));
 };
 
-const getTop = function (cell) {
+const getTop = function (cell: Element) {
   return Location.absolute(cell).top();
 };
 
-const getTopEdge = function (index, cell) {
+const getTopEdge = function (index: number, cell: Element) {
   return rowInfo(index, getTop(cell));
 };
 
-const getBottomEdge = function (index, cell) {
+const getBottomEdge = function (index: number, cell: Element) {
   return rowInfo(index, getTop(cell) + Height.getOuter(cell));
 };
 
-const findPositions = function (getInnerEdge, getOuterEdge, array) {
+const findPositions = function <T> (getInnerEdge: (idx: number, ele: Element) => T, getOuterEdge: (idx: number, ele: Element) => T, array: Option<Element>[]) {
   if (array.length === 0 ) { return []; }
   const lines = Arr.map(array.slice(1), function (cellOption, index) {
     return cellOption.map(function (cell) {
@@ -48,29 +64,29 @@ const findPositions = function (getInnerEdge, getOuterEdge, array) {
   return lines.concat([ lastLine ]);
 };
 
-const negate = function (step, _table) {
+const negate = function (step: number) {
   return -step;
 };
 
-const height = {
+const height: BarPositions<RowInfo> = {
   delta: Fun.identity,
-  positions: Fun.curry(findPositions, getTopEdge, getBottomEdge),
+  positions: (optElements: Option<Element>[]) => findPositions(getTopEdge, getBottomEdge, optElements),
   edge: getTop
 };
 
-const ltr = {
+const ltr: BarPositions<ColInfo> = {
   delta: Fun.identity,
   edge: ltrEdge,
-  positions: Fun.curry(findPositions, getLeftEdge, getRightEdge)
+  positions: (optElements: Option<Element>[]) => findPositions(getLeftEdge, getRightEdge, optElements),
 };
 
-const rtl = {
+const rtl: BarPositions<ColInfo> = {
   delta: negate,
   edge: rtlEdge,
-  positions: Fun.curry(findPositions, getRightEdge, getLeftEdge)
+  positions: (optElements: Option<Element>[]) => findPositions(getRightEdge, getLeftEdge, optElements),
 };
 
-export default {
+export const BarPositions = {
   height,
   rtl,
   ltr

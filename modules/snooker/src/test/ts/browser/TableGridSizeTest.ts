@@ -3,7 +3,7 @@ import { Element, Remove } from '@ephox/sugar';
 import TableGridSize from 'ephox/snooker/api/TableGridSize';
 
 UnitTest.test('Table grid size test', function () {
-  const testGridSize = function (html, expectedColumnCount, expectedRowCount) {
+  const testGridSize = function (html: string, expectedColumnCount: number, expectedRowCount: number) {
     const tbl = Element.fromHtml(html);
     const size = TableGridSize.getGridSize(tbl);
 

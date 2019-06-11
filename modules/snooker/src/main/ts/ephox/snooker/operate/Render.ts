@@ -1,12 +1,12 @@
 import { Attr, Css, Element, Insert, InsertAll } from '@ephox/sugar';
 
 export interface RenderOptions {
-  styles: { [key: string]: string };
-  attributes: { [key: string]: string };
+  styles: Record<string, string>;
+  attributes: Record<string, string>;
   percentages: boolean;
 }
 
-const DefaultRenderOptions = {
+const DefaultRenderOptions: RenderOptions = {
   styles: {
     'border-collapse': 'collapse',
     'width': '100%'

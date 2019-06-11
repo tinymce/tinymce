@@ -1,6 +1,8 @@
-import BarPositions from '../resize/BarPositions';
+import { BarPositions, ColInfo } from '../resize/BarPositions';
 
-export default {
+export type ResizeDirection = BarPositions<ColInfo>;
+
+export const ResizeDirection = {
   ltr: BarPositions.ltr,
   rtl: BarPositions.rtl
 };

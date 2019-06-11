@@ -1,54 +1,73 @@
 import { Fun } from '@ephox/katamari';
-import { Event } from '@ephox/porkbun';
-import { Events } from '@ephox/porkbun';
-import { Height } from '@ephox/sugar';
-import { Width } from '@ephox/sugar';
+import { Event, Events, Bindable } from '@ephox/porkbun';
+import { Height, Width, Element } from '@ephox/sugar';
 
-var grower = function (f) {
-  return function (element) {
-    var events = Events.create({
-      'grow': Event(['x', 'y'])
-    });
+export interface GrowEvent {
+  x: () => number;
+  y: () => number;
+}
 
-    var mutate =  function (x, y) {
-      var output = f(x, y);
-      var width = Width.get(element);
-      var height = Height.get(element);
-      Width.set(element, width + output.x());
-      Height.set(element, height + output.y());
-      events.trigger.grow(output.x(), output.y());
+interface GrowEvents {
+  registry: {
+    grow: Bindable<GrowEvent>;
+  };
+  trigger: {
+      grow: (x: number, y: number) => void;
+  };
+}
+
+interface Growth {
+  x: () => number;
+  y: () => number;
+}
+
+type GrowthFn = (x: number, y: number) => Growth;
+
+const grower = function (f: GrowthFn) {
+  return function (element: Element) {
+    const events = Events.create({
+      grow: Event(['x', 'y'])
+    }) as GrowEvents;
+
+    const mutate =  function (x: number, y: number) {
+      const growth = f(x, y);
+      const width = Width.get(element);
+      const height = Height.get(element);
+      Width.set(element, width + growth.x());
+      Height.set(element, height + growth.y());
+      events.trigger.grow(growth.x(), growth.y());
     };
 
     return {
-      mutate: mutate,
+      mutate,
       events: events.registry
     };
   };
 };
 
-var both = grower(function (x, y) {
+const both = grower(function (x, y): Growth {
   return {
     x: Fun.constant(x),
     y: Fun.constant(y)
   };
 });
 
-var horizontal = grower(function (x, y) {
+const horizontal = grower(function (x, y): Growth  {
   return {
     x: Fun.constant(x),
     y: Fun.constant(0)
   };
 });
 
-var vertical = grower(function (x, y) {
+const vertical = grower(function (x, y): Growth  {
   return {
     x: Fun.constant(0),
     y: Fun.constant(y)
   };
 });
 
-export default <any> {
-  both: both,
-  horizontal: horizontal,
-  vertical: vertical
+export {
+  both,
+  horizontal,
+  vertical
 };

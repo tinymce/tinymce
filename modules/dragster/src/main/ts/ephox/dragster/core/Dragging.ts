@@ -1,20 +1,32 @@
-import DragApis from '../api/DragApis';
-import Movement from '../detect/Movement';
 import { Throttler } from '@ephox/katamari';
-import { Event } from '@ephox/porkbun';
-import { Events } from '@ephox/porkbun';
+import { Event, Events, Bindable } from '@ephox/porkbun';
+import { DragMode, DragApi, DragMutation } from '../api/DragApis';
+import Movement from '../detect/Movement';
+import { BlockerOptions } from '../detect/Blocker';
+import { Element, EventArgs } from '@ephox/sugar';
 
-var setup = function (mutation, mode, settings) {
-  var active = false;
+interface DragActionEvents {
+  registry: {
+    start: Bindable<{}>,
+    stop: Bindable<{}>
+  };
+  trigger: {
+    start: () => void;
+    stop: () => void;
+  };
+}
 
-  var events = Events.create({
+const setup = function (mutation: DragMutation, mode: DragMode, settings: Partial<BlockerOptions>) {
+  let active = false;
+
+  const events = Events.create({
     start: Event([]),
     stop: Event([])
-  });
+  }) as DragActionEvents;
 
-  var movement = Movement();
+  const movement = Movement();
 
-  var drop = function () {
+  const drop = function () {
     sink.stop();
     if (movement.isOn()) {
       movement.off();
@@ -22,19 +34,15 @@ var setup = function (mutation, mode, settings) {
     }
   };
 
-  var throttledDrop = Throttler.last(drop, 200);
+  const throttledDrop = Throttler.last(drop, 200);
 
-  var go = function (parent) {
+  const go = function (parent: Element) {
     sink.start(parent);
     movement.on();
     events.trigger.start();
   };
 
-  var mouseup = function (event, ui) {
-    drop();
-  };
-
-  var mousemove = function (event, ui) {
+  const mousemove = function (event: EventArgs) {
     throttledDrop.cancel();
     movement.onEvent(event, mode);
   };
@@ -43,25 +51,24 @@ var setup = function (mutation, mode, settings) {
     mode.mutate(mutation, event.info());
   });
 
-  var on = function () {
+  const on = function () {
     active = true;
   };
 
-  var off = function () {
+  const off = function () {
     active = false;
     // acivate some events here?
   };
 
-  var runIfActive = function (f) {
-    return function () {
-      var args = Array.prototype.slice.call(arguments, 0);
+  const runIfActive = function <F extends (...args: any[]) => any> (f: F) {
+    return function (...args: Parameters<F>) {
       if (active) {
-        return f.apply(null, args);
+        f.apply(null, args);
       }
     };
   };
 
-  var sink = mode.sink(DragApis.api({
+  const sink = mode.sink(DragApi({
     // ASSUMPTION: runIfActive is not needed for mousedown. This is pretty much a safety measure for
     // inconsistent situations so that we don't block input.
     forceDrop: drop,
@@ -70,20 +77,20 @@ var setup = function (mutation, mode, settings) {
     delayDrop: runIfActive(throttledDrop.throttle)
   }), settings);
 
-  var destroy = function () {
+  const destroy = function () {
     sink.destroy();
   };
 
   return {
     element: sink.element,
-    go: go,
-    on: on,
-    off: off,
-    destroy: destroy,
+    go,
+    on,
+    off,
+    destroy,
     events: events.registry
   };
 };
 
-export default <any> {
-  setup: setup
+export default {
+  setup
 };
