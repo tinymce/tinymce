@@ -1,11 +1,20 @@
 import Binder from 'ephox/porkbun/Binder';
 import Events from 'ephox/porkbun/Events';
-import { Event } from 'ephox/porkbun/Event';
-import { Struct } from '@ephox/katamari';
+import { Event, Bindable } from 'ephox/porkbun/Event';
+import { Outlaw, ShootingEvent, Saloon } from './Types';
+
+interface SaloonEvents {
+  registry: {
+    shooting: Bindable<ShootingEvent>;
+  };
+  trigger: {
+      shooting: (shooter: Outlaw, target: Outlaw) => void;
+  };
+}
 
 declare const $: any;
 
-const create = function () {
+const create = function (): Saloon {
   const saloon = $('<div />');
   saloon.css({
     border: '3px solid brown',
@@ -21,25 +30,25 @@ const create = function () {
 
   const events = Events.create({
     shooting: Event(['shooter', 'target'])
-  });
+  }) as SaloonEvents;
 
   const binder = Binder.create();
 
-  const seat = function (patron) {
+  const seat = function (patron: Outlaw) {
     const chair = $('<div />');
     chair.css({ border: '1px dashed green', float: 'right', clear: 'both' });
     chair.append(patron.getElement());
     saloon.append(chair);
   };
 
-  const unseat = function (patron) {
+  const unseat = function (patron: Outlaw) {
     const element = patron.getElement();
     const chair = element.parent();
     element.detach();
     chair.remove();
   };
 
-  const enter = function (patron) {
+  const enter = function (patron: Outlaw) {
     seat(patron);
 
     binder.bind(patron.events.shoot, function (event) {
@@ -51,12 +60,12 @@ const create = function () {
     });
   };
 
-  const leave = function (patron) {
+  const leave = function (patron: Outlaw) {
     unseat(patron);
     stopListening(patron);
   };
 
-  const stopListening = function (outlaw) {
+  const stopListening = function (outlaw: Outlaw) {
     binder.unbind(outlaw.events.shoot);
     binder.unbind(outlaw.events.die);
   };

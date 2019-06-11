@@ -1,18 +1,31 @@
-import { Event } from 'ephox/porkbun/Event';
+import { Event, Bindable } from 'ephox/porkbun/Event';
 import Events from 'ephox/porkbun/Events';
 import SourceEvent from 'ephox/porkbun/SourceEvent';
 import { UnitTest, assert } from '@ephox/bedrock';
+
+interface MyEvent {
+  name: () => string;
+}
+
+interface TestEvents {
+  registry: {
+    myEvent: Bindable<MyEvent>;
+  };
+  trigger: {
+    myEvent: (name: string) => void;
+  };
+}
 
 UnitTest.test('Events', function () {
   (function () {
     const events = Events.create({
       myEvent: Event(['name'])
-    });
+    }) as TestEvents;
 
     let called = false;
-    let calledEvent: any = {};
+    let calledEvent: MyEvent | Record<string, () => any> = {};
 
-    const handler = function (event) {
+    const handler = function (event: MyEvent) {
       calledEvent = event;
       called = true;
     };
@@ -43,7 +56,7 @@ UnitTest.test('Events', function () {
     });
 
     assert.throwsError(
-      function () { events.registry.emptyEvent.bind(undefined); },
+      function () { events.registry.emptyEvent.bind(undefined as any); },
       'Event bind error: undefined handler'
     );
   })();
@@ -68,9 +81,7 @@ UnitTest.test('Events', function () {
       'Cannot trigger a source event.'
     );
 
-    let called = false;
     eb.registry.quack.bind(function (evt) {
-      called = true;
       assert.eq('ay', evt.a());
       assert.eq('bee', evt.b());
       assert.eq('sea', evt.c());
@@ -88,9 +99,7 @@ UnitTest.test('Events', function () {
       quack: SourceEvent(['a', 'b', 'c'], ea.registry.chook)
     });
 
-    let called = false;
     eb.registry.quack.bind(function (evt) {
-      called = true;
       assert.eq('ay', evt.a());
       assert.eq('bee', evt.b());
       assert.eq('sea', evt.c());
