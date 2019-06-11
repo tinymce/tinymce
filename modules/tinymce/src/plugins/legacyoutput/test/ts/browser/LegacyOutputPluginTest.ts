@@ -96,6 +96,13 @@ UnitTest.asynctest(
       LegacyUnit.equal(editor.getContent(), '<p align="justify">text</p>');
     });
 
+    suite.test('TestCase-TBA: LegacyOutput: Justifycenter image', function (editor) {
+      editor.setContent('<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAF0lEQVR42mP8/5/hPwMJgHFUw6gG7AAAXVgj6XowjMAAAAAASUVORK5CYII=" /></p>');
+      LegacyUnit.setSelection(editor, 'p', 0);
+      editor.execCommand('justifycenter');
+      LegacyUnit.equal(editor.getContent(), '<p align="center"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAF0lEQVR42mP8/5/hPwMJgHFUw6gG7AAAXVgj6XowjMAAAAAASUVORK5CYII=" /></p>');
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, Log.steps('TBA', 'LegacyOutput: Test legacy formatting', suite.toSteps(editor)), onSuccess, onFailure);
     }, {
