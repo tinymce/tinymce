@@ -32,7 +32,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
       children: [
         s.element('span', {
           attrs: {
-            'data-mce-type': str.is('autocompleter'),
+            'data-mce-autocompleter': str.is('1'),
             'data-mce-bogus': str.is('1')
           },
           children: [ s.text(str.is(content), true) ]
