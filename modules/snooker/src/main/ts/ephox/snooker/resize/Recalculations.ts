@@ -22,7 +22,7 @@ const recalculateWidth = function (warehouse: Warehouse, widths: number[]) {
     const width = total(cell.column(), cell.column() + cell.colspan(), widths);
     return {
       element: cell.element,
-      width: Fun.constant(width) as () => number,
+      width: Fun.constant(width),
       colspan: cell.colspan
     };
   });
@@ -34,7 +34,7 @@ const recalculateHeight = function (warehouse: Warehouse, heights: number[]) {
     const height = total(cell.row(), cell.row() + cell.rowspan(), heights);
     return {
       element: cell.element,
-      height: Fun.constant(height) as () => number,
+      height: Fun.constant(height),
       rowspan: cell.rowspan
     };
   });
@@ -44,7 +44,7 @@ const matchRowHeight = function (warehouse: Warehouse, heights: number[]) {
   return Arr.map(warehouse.all(), function (row, i) {
     return {
       element: row.element,
-      height: Fun.constant(heights[i]) as () => number
+      height: Fun.constant(heights[i])
     };
   });
 };

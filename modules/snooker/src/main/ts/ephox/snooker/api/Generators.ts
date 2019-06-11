@@ -53,9 +53,9 @@ const elementToData = function (element: Element): CellSpan {
   const colspan = Attr.has(element, 'colspan') ? parseInt(Attr.get(element, 'colspan'), 10) : 1;
   const rowspan = Attr.has(element, 'rowspan') ? parseInt(Attr.get(element, 'rowspan'), 10) : 1;
   return {
-    element: Fun.constant(element) as () => Element,
-    colspan: Fun.constant(colspan) as () => number,
-    rowspan: Fun.constant(rowspan) as () => number
+    element: Fun.constant(element),
+    colspan: Fun.constant(colspan),
+    rowspan: Fun.constant(rowspan)
   };
 };
 

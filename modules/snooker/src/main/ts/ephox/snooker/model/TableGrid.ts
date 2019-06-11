@@ -45,8 +45,8 @@ const subgrid = function (grid: RowCells[], row: number, column: number, compara
   const endRowIndex = findDiff(restOfColumn, comparator);
 
   return {
-    colspan: Fun.constant(endColIndex) as () => number,
-    rowspan: Fun.constant(endRowIndex) as () => number
+    colspan: Fun.constant(endColIndex),
+    rowspan: Fun.constant(endRowIndex)
   };
 };
 

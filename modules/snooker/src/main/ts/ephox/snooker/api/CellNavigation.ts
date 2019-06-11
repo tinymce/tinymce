@@ -16,8 +16,8 @@ const detect = function (current: Element, isRoot?: (e: Element) => boolean) {
 
     return index.map(function (ind) {
       return {
-        index: Fun.constant(ind) as () => number,
-        all: Fun.constant(all) as () => Element[]
+        index: Fun.constant(ind),
+        all: Fun.constant(all)
       };
     });
   });

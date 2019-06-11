@@ -20,7 +20,7 @@ const getInt = function (element: Element, property: string) {
 export default {
   hasColspan,
   hasRowspan,
-  minWidth: Fun.constant(10) as () => number,
-  minHeight: Fun.constant(10) as () => number,
+  minWidth: Fun.constant(10),
+  minHeight: Fun.constant(10),
   getInt
 };

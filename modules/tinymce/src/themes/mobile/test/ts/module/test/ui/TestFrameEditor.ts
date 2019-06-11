@@ -1,5 +1,5 @@
 import { Cursors, Waiter, Step, Assertions } from '@ephox/agar';
-import { GuiFactory, AlloyComponent } from '@ephox/alloy';
+import { GuiFactory } from '@ephox/alloy';
 import { Fun, Option } from '@ephox/katamari';
 import { Attr, Element, Focus, WindowSelection } from '@ephox/sugar';
 
@@ -79,7 +79,7 @@ export default function () {
   );
 
   return {
-    component: Fun.constant(component) as () => AlloyComponent,
+    component: Fun.constant(component),
     config: Fun.constant(config),
     editor: Fun.constant(editor),
     adder: delegate.adder,

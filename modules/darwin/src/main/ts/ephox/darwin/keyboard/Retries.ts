@@ -181,5 +181,5 @@ export const Retries = {
   tryDown: Fun.curry(retry, downMovement),
   ieTryUp,
   ieTryDown,
-  getJumpSize: Fun.constant(JUMP_SIZE) as () => number
+  getJumpSize: Fun.constant(JUMP_SIZE)
 };

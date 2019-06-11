@@ -148,8 +148,8 @@ const setGenericWidth = function (cell: Element, amount: number, unit: string) {
 };
 
 export default {
-  percentageBasedSizeRegex: Fun.constant(percentageBasedSizeRegex) as () => RegExp,
-  pixelBasedSizeRegex: Fun.constant(pixelBasedSizeRegex) as () => RegExp,
+  percentageBasedSizeRegex: Fun.constant(percentageBasedSizeRegex),
+  pixelBasedSizeRegex: Fun.constant(pixelBasedSizeRegex),
   setPixelWidth,
   setPercentageWidth,
   setHeight,

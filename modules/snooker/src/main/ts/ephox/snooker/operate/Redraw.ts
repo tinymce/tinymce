@@ -78,8 +78,8 @@ const render = function <T extends DetailNew>(table: Element, grid: RowDataNew<T
   renderOrRemoveSection(footSection, 'tfoot');
 
   return {
-    newRows: Fun.constant(newRows) as () => Element[],
-    newCells: Fun.constant(newCells) as () => Element[]
+    newRows: Fun.constant(newRows),
+    newCells: Fun.constant(newCells)
   };
 };
 
