@@ -16,6 +16,7 @@ Version 5.0.8 (TBD)
     Fixed the link plugin missing the default "None" option for link list #TINY-3738
     Fixed small dot visible with menubar and toolbar disabled in inline mode #TINY-3623
     Fixed so space key properly inserts a nbsp before/after block elements. #TINY-3745
+    Added new base_url and suffix editor init options #TINY-3681
 Version 5.0.7 (2019-06-05)
     Added new toolbar button and menu item for inserting tables via dialog #TINY-3636
     Added new API for adding/removing/changing tabs in the Help dialog #TINY-3535

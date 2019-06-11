@@ -281,12 +281,21 @@ class Editor implements EditorObservable {
   constructor (id: string, settings: RawEditorSettings, editorManager: EditorManager) {
     this.editorManager = editorManager;
     this.documentBaseUrl = editorManager.documentBaseURL;
-    this.baseUri = editorManager.baseURI;
 
     // Patch in the EditorObservable functions
     extend(this, EditorObservable);
 
     this.settings = getEditorSettings(this, id, this.documentBaseUrl, editorManager.defaultSettings, settings);
+
+    if (this.settings.suffix) {
+      editorManager.suffix = this.settings.suffix;
+    }
+    this.suffix = editorManager.suffix;
+
+    if (this.settings.base_url) {
+      editorManager._setBaseUrl(this.settings.base_url);
+    }
+    this.baseUri = editorManager.baseURI;
 
     AddOnManager.languageLoad = this.settings.language_load;
     AddOnManager.baseURL = editorManager.baseURL;
@@ -300,7 +309,6 @@ class Editor implements EditorObservable {
     });
     this.baseURI = this.baseUri;
     this.inline = this.settings.inline;
-    this.suffix = editorManager.suffix;
 
     this.shortcuts = new Shortcuts(this);
     this.editorCommands = new EditorCommands(this);

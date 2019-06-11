@@ -131,6 +131,33 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     });
   });
 
+  suite.asyncTest('Test base_url and suffix options', function (_, done) {
+    const oldBaseURL = EditorManager.baseURL;
+    const oldSuffix = EditorManager.suffix;
+
+    EditorManager.init({
+      base_url: '/fake/url',
+      suffix: '.min',
+      selector: '#elm-1',
+      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
+      content_css: '/project/tinymce/js/tinymce/skins/content/default',
+      init_instance_callback (ed) {
+
+        Assertions.assertEq('Should have set suffix on EditorManager', '.min', EditorManager.suffix);
+        Assertions.assertEq('Should have set suffix on editor', '.min', ed.suffix);
+
+        Assertions.assertEq('Should have set baseURL on EditorManager', EditorManager.documentBaseURL + 'fake/url', EditorManager.baseURL);
+
+        Assertions.assertEq('Should have set baseURI on EditorManager', EditorManager.documentBaseURL + 'fake/url', EditorManager.baseURI.source);
+        Assertions.assertEq('Should have set baseURI on editor', EditorManager.documentBaseURL + 'fake/url', ed.baseURI.source);
+
+        EditorManager._setBaseUrl(oldBaseURL);
+        EditorManager.suffix = oldSuffix;
+        teardown(done);
+      }
+    });
+  });
+
   const getSkinCssFilenames = function () {
     return Arr.bind(SelectorFilter.descendants(Element.fromDom(document), 'link'), function (link) {
       const href = Attr.get(link, 'href');
