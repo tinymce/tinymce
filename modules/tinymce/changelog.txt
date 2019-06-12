@@ -1,6 +1,7 @@
 Version 5.0.8 (TBD)
-    Fixed sidebar background being transparent #TINY-3727
     Added back support for multiple toolbars #TINY-2195
+    Fixed a selection edge case when setting selection #TINY-3766
+    Fixed sidebar background being transparent #TINY-3727
     Fixed the build to remove duplicate iife wrappers #TINY-3689
     Fixed bogus autocompleter span appearing in content when the autocompleter menu is shown #TINY-3752
     Fixed toolbar font size select not working with legacyoutput plugin #TINY-2921
