@@ -20,8 +20,9 @@ const getPreviewHtml = function (editor: Editor) {
     headHtml += '<style type="text/css">' + contentStyle + '</style>';
   }
 
+  const cors = Settings.shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
   Tools.each(editor.contentCSS, function (url) {
-    headHtml += '<link type="text/css" rel="stylesheet" href="' + encode(editor.documentBaseURI.toAbsolute(url)) + '">';
+    headHtml += '<link type="text/css" rel="stylesheet" href="' + encode(editor.documentBaseURI.toAbsolute(url)) + '"' + cors + '>';
   });
 
   let bodyId = editor.settings.body_id || 'tinymce';

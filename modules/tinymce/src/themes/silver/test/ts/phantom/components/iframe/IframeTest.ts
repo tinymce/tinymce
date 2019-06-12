@@ -52,7 +52,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
     );
   };
 
-  const sAssertSandboxedIframeContent = (frame) => {
+  const sAssertSandboxedIframeContent = (frame: AlloyComponent, content: string) => {
     // Can't check content inside the iframe due to permission issues.
     // So instead, check that there is a source tag now.
     return Assertions.sAssertStructure(
@@ -61,7 +61,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
           return s.element('iframe', {
             classes: [ ],
             attrs: {
-              src: str.startsWith('data:text/html')
+              srcdoc: str.contains(content)
             }
           });
         }),
@@ -69,7 +69,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
       );
   };
 
-  const sAssertStandardIframeContent = (frame) => {
+  const sAssertStandardIframeContent = (frame: AlloyComponent) => {
     // TODO: See if we can match the contents inside the iframe body. That may not be possible though,
     //       as attempting to use sAssertStructure is throwing permission errors from tests
     return Assertions.sAssertStructure(
@@ -104,10 +104,11 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
       );
 
       // TODO: Make a webdriver test re: keyboard navigation.
+      const content = '<p><span class="me">Me</span></p>';
       return [
         sAssertInitialIframeStructure(component),
-        RepresentingSteps.sSetValue('Setting to a paragraph', frame, '<p><span class="me">Me</span></p>'),
-        platformNeedsSandboxing ? sAssertSandboxedIframeContent(frame) : sAssertStandardIframeContent(frame)
+        RepresentingSteps.sSetValue('Setting to a paragraph', frame, content),
+        platformNeedsSandboxing ? sAssertSandboxedIframeContent(frame, content) : sAssertStandardIframeContent(frame)
       ];
     },
     success,

@@ -1,11 +1,11 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { document, Element, HTMLIFrameElement, HTMLLinkElement, window } from '@ephox/dom-globals';
 import { LegacyUnit } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Schema from 'tinymce/core/api/html/Schema';
-import HtmlUtils from '../../module/test/HtmlUtils';
 import Tools from 'tinymce/core/api/util/Tools';
-import { UnitTest } from '@ephox/bedrock';
-import { document, Element, HTMLLinkElement, window } from '@ephox/dom-globals';
+import HtmlUtils from '../../module/test/HtmlUtils';
 
 UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, failure) {
   const DOM = DOMUtils(document, { keep_values : true, schema : Schema() });
@@ -482,10 +482,36 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     DOM.loadCSS('tinymce/dom/test.css?a=1,tinymce/dom/test.css?a=2,tinymce/dom/test.css?a=3');
 
     Tools.each(document.getElementsByTagName('link'), function (n: HTMLLinkElement) {
-      if (n.href.indexOf('test.css?a=') !== -1) {
+      if (n.href.indexOf('test.css?a=') !== -1 && !n.crossOrigin) {
         c++;
       }
     });
+
+    LegacyUnit.equal(c, 3);
+  });
+
+  suite.test('loadCSS contentCssCors enabled', function () {
+    let c = 0;
+
+    // Create an iframe to load in, so that we are using a different document. Otherwise DOMUtils will fallback to using the default.
+    const iframe = DOM.create('iframe', { src: 'javascript=\'\'' }) as HTMLIFrameElement;
+    DOM.add(document.body, iframe);
+
+    const iframeDoc = iframe.contentWindow.document;
+    iframeDoc.open();
+    iframeDoc.write('<html><body></body></html>');
+    iframeDoc.close();
+
+    const CustomDOM = DOMUtils(iframeDoc, { keep_values : true, schema : Schema(), contentCssCors: true });
+    CustomDOM.loadCSS('tinymce/dom/test_cors.css?a=1,tinymce/dom/test_cors.css?a=2,tinymce/dom/test_cors.css?a=3');
+
+    Tools.each(iframeDoc.getElementsByTagName('link'), function (n: HTMLLinkElement) {
+      if (n.href.indexOf('test_cors.css?a=') !== -1 && n.crossOrigin === 'anonymous') {
+        c++;
+      }
+    });
+
+    DOM.remove(iframe);
 
     LegacyUnit.equal(c, 3);
   });
