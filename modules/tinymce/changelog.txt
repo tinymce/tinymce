@@ -1,4 +1,5 @@
 Version 5.0.8 (TBD)
+    Added support for .m4a files to the media plugin #TINY-3750
     Added back support for multiple toolbars #TINY-2195
     Fixed a selection edge case when setting selection #TINY-3766
     Fixed sidebar background being transparent #TINY-3727
