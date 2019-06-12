@@ -2,20 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Tinymce iframe Demo Page</title>
-  <script>
-    function toggle() {
-      var tinyBody = tinymce.activeEditor.getBody();
-      var readBody = document.getElementById("readOnly_ifr").contentDocument.body;
-      var tinyIFrame = document.getElementById("mytextarea_ifr");
-
-      // $('[aria-label="Print"]').removeClass("mce-disabled");
-      // $('[aria-label="Print"]').removeAttr("aria-disabled");
-      tinyIFrame.style.display = "none";
-
-      readBody.innerHTML = tinyBody.innerHTML;
-    }
-    </script>
+  <title>TinyMCE iframe Demo Page</title>
 </head>
 
 <body>
@@ -24,10 +11,6 @@
     <div id="ephox-ui">
       <textarea id="mytextarea">Hello world</textarea>
     </div>
-    <p>TINY-3762 - Set <code>display: none;</code> on the editor, and wrong iframe is printed.</p>
-    <iframe id="readOnly_ifr" frameborder="0" allowtransparency="true" title="Read Only iFrame">
-    </iframe>
-    <button type="button" onclick="toggle()">Turn on Read Only</button>
     <script src="../../../../js/tinymce/tinymce.js"></script>
     <script src="../../../../scratch/demos/core/demo.js"></script>
     <script>demos.IframeDemo();</script>
