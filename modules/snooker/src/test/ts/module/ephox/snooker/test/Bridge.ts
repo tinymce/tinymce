@@ -1,28 +1,26 @@
 import { Arr, Fun, Obj, Option, Options } from '@ephox/katamari';
 import { Attr, Css, Element, Hierarchy, Insert, Node, Replication } from '@ephox/sugar';
+import { Generators } from 'ephox/snooker/api/Generators';
+import { Structs } from '../../../../../../main/ts/ephox/snooker/api/Main';
+import { TargetMergable } from '../../../../../../main/ts/ephox/snooker/model/RunOperation';
 
 // Mock/Stub out helper functions
 
-const targetStub = function (selection, bounds, table) {
+const targetStub = function (selection: { section: number, row: number, column: number}[], bounds: { startRow: number, startCol: number, finishRow: number, finishCol: number}, table: Element): TargetMergable {
   const cells = Options.cat(Arr.map(selection, function (path) {
     return Hierarchy.follow(table, [ path.section, path.row, path.column ]);
   }));
 
   return {
-    mergable: Fun.constant(Option.from({
+    mergable: Fun.constant(Option.some({
       cells: Fun.constant(cells),
-      bounds: Fun.constant({
-        startRow: Fun.constant(bounds.startRow),
-        startCol: Fun.constant(bounds.startCol),
-        finishRow: Fun.constant(bounds.finishRow),
-        finishCol: Fun.constant(bounds.finishCol)
-      })
+      bounds: Fun.constant(Structs.bounds(bounds.startRow, bounds.startCol, bounds.finishRow, bounds.finishCol))
     }))
   };
 };
 
-const generators = {
-  row (e) {
+const generators: Generators = {
+  row () {
     return Element.fromTag('tr');
   },
   cell (prev) {
@@ -38,7 +36,11 @@ const generators = {
     const replica = Replication.copy(cell, tag);
     // TODO: Snooker passes null to indicate 'remove attribute'
     Obj.each(attrs, function (v, k) {
-      if (v === null) { Attr.remove(replica, k); } else { Attr.set(replica, k, v); }
+      if (v === null) {
+        Attr.remove(replica, k);
+      } else {
+        Attr.set(replica, k, v);
+      }
     });
     return replica;
   },

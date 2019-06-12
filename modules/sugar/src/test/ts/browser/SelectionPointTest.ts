@@ -8,7 +8,7 @@ import Element from 'ephox/sugar/api/node/Element';
 import * as Node from 'ephox/sugar/api/node/Node';
 import * as Selectors from 'ephox/sugar/api/search/Selectors';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
-import * as Selection from 'ephox/sugar/api/selection/Selection';
+import { Selection } from 'ephox/sugar/api/selection/Selection';
 import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
 import { UnitTest, assert } from '@ephox/bedrock';
 import { setTimeout } from '@ephox/dom-globals';

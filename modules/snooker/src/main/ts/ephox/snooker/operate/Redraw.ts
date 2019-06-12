@@ -1,15 +1,20 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { Attr, Element, Insert, InsertAll, Remove, Replication, SelectorFind, Traverse } from '@ephox/sugar';
+import { RowDataNew, DetailNew, Detail } from '../api/Structs';
 
-const setIfNot = function (element, property, value, ignore) {
-  if (value === ignore) { Attr.remove(element, property); } else { Attr.set(element, property, value); }
+const setIfNot = function (element: Element, property: string, value: number, ignore: number) {
+  if (value === ignore) {
+    Attr.remove(element, property);
+  } else {
+    Attr.set(element, property, value);
+  }
 };
 
-const render = function (table, grid) {
-  const newRows = [];
-  const newCells = [];
+const render = function <T extends DetailNew>(table: Element, grid: RowDataNew<T>[]) {
+  const newRows: Element[] = [];
+  const newCells: Element[] = [];
 
-  const renderSection = function (gridSection, sectionName) {
+  const renderSection = function (gridSection: RowDataNew<T>[], sectionName: 'thead' | 'tbody' | 'tfoot') {
     const section = SelectorFind.child(table, sectionName).getOrThunk(function () {
       const tb = Element.fromTag(sectionName, Traverse.owner(table).dom());
       Insert.append(table, tb);
@@ -38,11 +43,11 @@ const render = function (table, grid) {
     InsertAll.append(section, rows);
   };
 
-  const removeSection = function (sectionName) {
+  const removeSection = function (sectionName: 'thead' | 'tbody' | 'tfoot') {
     SelectorFind.child(table, sectionName).each(Remove.remove);
   };
 
-  const renderOrRemoveSection = function (gridSection, sectionName) {
+  const renderOrRemoveSection = function (gridSection: RowDataNew<T>[], sectionName: 'thead' | 'tbody' | 'tfoot') {
     if (gridSection.length > 0) {
       renderSection(gridSection, sectionName);
     } else {
@@ -50,9 +55,9 @@ const render = function (table, grid) {
     }
   };
 
-  const headSection = [];
-  const bodySection = [];
-  const footSection = [];
+  const headSection: RowDataNew<T>[] = [];
+  const bodySection: RowDataNew<T>[] = [];
+  const footSection: RowDataNew<T>[] = [];
 
   Arr.each(grid, function (row) {
     switch (row.section()) {
@@ -78,7 +83,7 @@ const render = function (table, grid) {
   };
 };
 
-const copy = function (grid) {
+const copy = function <T extends Detail> (grid: RowDataNew<T>[]) {
   const rows = Arr.map(grid, function (row) {
     // Shallow copy the row element
     const tr = Replication.shallow(row.element());

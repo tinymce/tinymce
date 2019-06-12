@@ -1,12 +1,13 @@
 import { Arr } from '@ephox/katamari';
-import Structs from 'ephox/snooker/api/Structs';
-import Warehouse from 'ephox/snooker/model/Warehouse';
+import * as Structs from 'ephox/snooker/api/Structs';
+import { Warehouse } from 'ephox/snooker/model/Warehouse';
 import CellBounds from 'ephox/snooker/selection/CellBounds';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { Element } from '@ephox/sugar';
 
 UnitTest.test('CellBounds.isWithin Test', function () {
-  const s = Structs.detail;  // 'element', 'rowspan', 'colspan'
-  const f = Structs.rowdata;
+  const s = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as any as Element, rowspan, colspan);
+  const f = (fakeEle: any, cells: Structs.Detail[], section: 'tbody') => Structs.rowdata(fakeEle as any as Element, cells, section);
 
   const testTableA = [
     f('r1', [ s('a', 1, 1), s('b', 1, 1), s('c', 1, 1), s('d', 1, 1), s('e', 1, 1) ], 'tbody'),
@@ -19,13 +20,13 @@ UnitTest.test('CellBounds.isWithin Test', function () {
 
   const bounds1To3 = Structs.bounds(1, 1, 3, 3);
 
-  const checkWithin = function (expected, warehouse, bounds, row, column) {
+  const checkWithin = function (expected: boolean, warehouse: Warehouse, bounds: Structs.Bounds, row: number, column: number) {
     const cell = Warehouse.getAt(warehouse, row, column).getOrDie();
     const actual = CellBounds.isWithin(bounds, cell);
     assert.eq(expected, actual);
   };
 
-  const checkInSelection = function (expected, warehouse, bounds, row, column) {
+  const checkInSelection = function (expected: boolean, warehouse: Warehouse, bounds: Structs.Bounds, row: number, column: number) {
     const cell = Warehouse.getAt(warehouse, row, column).getOrDie();
     const actual = CellBounds.inSelection(bounds, cell);
     assert.eq(expected, actual);

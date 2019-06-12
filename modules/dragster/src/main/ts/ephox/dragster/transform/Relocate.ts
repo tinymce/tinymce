@@ -1,11 +1,23 @@
-import { Event } from '@ephox/porkbun';
-import { Events } from '@ephox/porkbun';
-import { Css } from '@ephox/sugar';
-import { Location } from '@ephox/sugar';
+import { Event, Events, Bindable } from '@ephox/porkbun';
+import { Css, Location, Element } from '@ephox/sugar';
 
-var both = function (element) {
-  var mutate = function (x, y) {
-    var location = Location.absolute(element);
+export interface RelocateEvent {
+  x: () => number;
+  y: () => number;
+}
+
+interface RelocateEvents {
+  registry: {
+    relocate: Bindable<RelocateEvent>;
+  };
+  trigger: {
+    relocate: (x: number, y: number) => void;
+  };
+}
+
+const both = function (element: Element) {
+  const mutate = function (x: number, y: number) {
+    const location = Location.absolute(element);
     Css.setAll(element, {
       left: (location.left() + x) + 'px',
       top: (location.top() + y) + 'px'
@@ -13,16 +25,16 @@ var both = function (element) {
     events.trigger.relocate(x, y);
   };
 
-  var events = Events.create({
-    'relocate': Event(['x', 'y'])
-  });
+  const events = Events.create({
+    relocate: Event(['x', 'y'])
+  }) as RelocateEvents;
 
   return {
-    mutate: mutate,
+    mutate,
     events: events.registry
   };
 };
 
-export default <any> {
-  both: both
+export {
+  both
 };

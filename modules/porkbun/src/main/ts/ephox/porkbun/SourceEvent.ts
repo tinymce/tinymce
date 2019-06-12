@@ -1,22 +1,19 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import Event from './Event';
+import { Arr, Fun } from '@ephox/katamari';
+import { Event, EventHandler, Bindable } from './Event';
 
+export default function (fields: string[], source: Bindable<any>): Event {
+  const mine = Event(fields);
+  let numHandlers = 0;
 
-
-export default <any> function (fields, source) {
-  var mine = Event(fields);
-  var numHandlers = 0;
-
-  var triggerer = function(evt) {
-    // yay! Let's unbox this event, convert it to a varargs, so it can be re-boxed!
-    var args = Arr.map(fields, function (field) {
+  const triggerer = function (evt: Record<string, () => any>) {
+    // yay! Let's unbox this event, convert it to a constargs, so it can be re-boxed!
+    const args = Arr.map(fields, function (field) {
       return evt[field]();
     });
     mine.trigger.apply(null, args);
   };
 
-  var bind = function (handler) {
+  const bind = function (handler: EventHandler<any>) {
     mine.bind(handler);
     numHandlers++;
     if (numHandlers === 1) {
@@ -24,7 +21,7 @@ export default <any> function (fields, source) {
     }
   };
 
-  var unbind = function (handler) {
+  const unbind = function (handler: EventHandler<any>) {
     mine.unbind(handler);
     numHandlers--;
     if (numHandlers === 0) {
@@ -33,8 +30,8 @@ export default <any> function (fields, source) {
   };
 
   return {
-    bind: bind,
-    unbind: unbind,
-    trigger: Fun.die("Cannot trigger a source event.")
+    bind,
+    unbind,
+    trigger: Fun.die('Cannot trigger a source event.')
   };
-};
+}

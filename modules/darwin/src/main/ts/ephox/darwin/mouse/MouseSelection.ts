@@ -1,31 +1,32 @@
-import CellSelection from '../selection/CellSelection';
 import { Option } from '@ephox/katamari';
-import { Compare } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
+import { Compare, SelectorFind, Element, EventArgs } from '@ephox/sugar';
+import CellSelection from '../selection/CellSelection';
+import { WindowBridge } from '../api/WindowBridge';
+import { SelectionAnnotation } from '../api/SelectionAnnotation';
 
-var findCell = function (target, isRoot) {
+const findCell = function (target: Element, isRoot: (e: Element) => boolean) {
   return SelectorFind.closest(target, 'td,th', isRoot);
 };
 
-export default <any> function (bridge, container, isRoot, annotations) {
-  var cursor = Option.none();
-  var clearState = function () {
+export default function (bridge: WindowBridge, container: Element, isRoot: (e: Element) => boolean, annotations: SelectionAnnotation) {
+  let cursor: Option<Element> = Option.none();
+  const clearState = function () {
     cursor = Option.none();
   };
 
   /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
-  var mousedown = function (event) {
+  const mousedown = function (event: EventArgs) {
     annotations.clear(container);
     cursor = findCell(event.target(), isRoot);
   };
 
   /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
-  var mouseover = function (event) {
+  const mouseover = function (event: EventArgs) {
     cursor.each(function (start) {
       annotations.clear(container);
       findCell(event.target(), isRoot).each(function (finish) {
         CellSelection.identify(start, finish, isRoot).each(function (cellSel) {
-          var boxes = cellSel.boxes().getOr([]);
+          const boxes = cellSel.boxes().getOr([]);
           // Wait until we have more than one, otherwise you can't do text selection inside a cell.
           // Alternatively, if the one cell selection starts in one cell and ends in a different cell,
           // we can assume that the user is trying to make a one cell selection in two different tables which should be possible.
@@ -41,13 +42,13 @@ export default <any> function (bridge, container, isRoot, annotations) {
   };
 
   /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
-  var mouseup = function () {
+  const mouseup = function (_event?: EventArgs) {
     cursor.each(clearState);
   };
 
   return {
-    mousedown: mousedown,
-    mouseover: mouseover,
-    mouseup: mouseup
+    mousedown,
+    mouseover,
+    mouseup
   };
-};
+}

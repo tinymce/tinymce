@@ -1,67 +1,60 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { TablePositions } from '@ephox/snooker';
-import { Compare } from '@ephox/sugar';
-import { SelectorFilter } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
-import { Selectors } from '@ephox/sugar';
+import { Compare, SelectorFilter, SelectorFind, Selectors, Element } from '@ephox/sugar';
+import { Identified, IdentifiedExt } from './Identified';
 
-var lookupTable = function (container, isRoot) {
+const lookupTable = function (container: Element) {
   return SelectorFind.ancestor(container, 'table');
 };
 
-var identified = Struct.immutableBag(['boxes', 'start', 'finish'], []);
-
-var identify:any = function (start, finish, isRoot) {
-  var getIsRoot = function (rootTable) {
-    return function (element) {
-      return isRoot(element) || Compare.eq(element, rootTable);
+const identify = function (start: Element, finish: Element, isRoot?: (element: Element) => boolean): Option<Identified> {
+  const getIsRoot = function (rootTable: Element) {
+    return function (element: Element) {
+      return (isRoot !== undefined && isRoot(element)) || Compare.eq(element, rootTable);
     };
   };
 
   // Optimisation: If the cells are equal, it's a single cell array
   if (Compare.eq(start, finish)) {
-    return Option.some(identified({
-      boxes: Option.some([ start ]),
-      start: start,
-      finish: finish
+    return Option.some(Identified.create({
+      boxes: Option.some([start]),
+      start,
+      finish
     }));
   } else {
-    return lookupTable(start, isRoot).bind(function (startTable) {
-      return lookupTable(finish, isRoot).bind(function (finishTable) {
+    return lookupTable(start).bind(function (startTable) {
+      return lookupTable(finish).bind(function (finishTable) {
         if (Compare.eq(startTable, finishTable)) { // Selecting from within the same table.
-          return Option.some(identified({
+          return Option.some(Identified.create({
             boxes: TablePositions.intercepts(startTable, start, finish),
-            start: start,
-            finish: finish
+            start,
+            finish
           }));
         } else if (Compare.contains(startTable, finishTable)) { // Selecting from the parent table to the nested table.
-          var ancestorCells = SelectorFilter.ancestors(finish, 'td,th', getIsRoot(startTable));
-          var finishCell = ancestorCells.length > 0 ? ancestorCells[ancestorCells.length - 1] : finish;
-          return Option.some(identified({
+          const ancestorCells = SelectorFilter.ancestors(finish, 'td,th', getIsRoot(startTable));
+          const finishCell = ancestorCells.length > 0 ? ancestorCells[ancestorCells.length - 1] : finish;
+          return Option.some(Identified.create({
             boxes: TablePositions.nestedIntercepts(startTable, start, startTable, finish, finishTable),
-            start: start,
+            start,
             finish: finishCell
           }));
         } else if (Compare.contains(finishTable, startTable)) { // Selecting from the nested table to the parent table.
-          var ancestorCells = SelectorFilter.ancestors(start, 'td,th', getIsRoot(finishTable));
-          var startCell = ancestorCells.length > 0 ? ancestorCells[ancestorCells.length - 1] : start;
-          return Option.some(identified({
+          const ancestorCells = SelectorFilter.ancestors(start, 'td,th', getIsRoot(finishTable));
+          const startCell = ancestorCells.length > 0 ? ancestorCells[ancestorCells.length - 1] : start;
+          return Option.some(Identified.create({
             boxes: TablePositions.nestedIntercepts(finishTable, start, startTable, finish, finishTable),
-            start: start,
+            start,
             finish: startCell
           }));
         } else { // Selecting from a nested table to a different nested table.
           return DomParent.ancestors(start, finish).shared().bind(function (lca) {
             return SelectorFind.closest(lca, 'table', isRoot).bind(function (lcaTable) {
-              var finishAncestorCells = SelectorFilter.ancestors(finish, 'td,th', getIsRoot(lcaTable));
-              var finishCell = finishAncestorCells.length > 0 ? finishAncestorCells[finishAncestorCells.length - 1] : finish;
-              var startAncestorCells = SelectorFilter.ancestors(start, 'td,th', getIsRoot(lcaTable));
-              var startCell = startAncestorCells.length > 0 ? startAncestorCells[startAncestorCells.length - 1] : start;
-              return Option.some(identified({
+              const finishAncestorCells = SelectorFilter.ancestors(finish, 'td,th', getIsRoot(lcaTable));
+              const finishCell = finishAncestorCells.length > 0 ? finishAncestorCells[finishAncestorCells.length - 1] : finish;
+              const startAncestorCells = SelectorFilter.ancestors(start, 'td,th', getIsRoot(lcaTable));
+              const startCell = startAncestorCells.length > 0 ? startAncestorCells[startAncestorCells.length - 1] : start;
+              return Option.some(Identified.create({
                 boxes: TablePositions.nestedIntercepts(lcaTable, start, startTable, finish, finishTable),
                 start: startCell,
                 finish: finishCell
@@ -74,21 +67,21 @@ var identify:any = function (start, finish, isRoot) {
   }
 };
 
-var retrieve = function (container, selector) {
-  var sels = SelectorFilter.descendants(container, selector);
-  return sels.length > 0 ? Option.some(sels) : Option.none();
+const retrieve = function (container: Element, selector: string) {
+  const sels = SelectorFilter.descendants(container, selector);
+  return sels.length > 0 ? Option.some(sels) : Option.none<Element[]>();
 };
 
-var getLast = function (boxes, lastSelectedSelector) {
+const getLast = function (boxes: Element[], lastSelectedSelector: string) {
   return Arr.find(boxes, function (box) {
     return Selectors.is(box, lastSelectedSelector);
   });
 };
 
-var getEdges = function (container, firstSelectedSelector, lastSelectedSelector) {
+const getEdges = function (container: Element, firstSelectedSelector: string, lastSelectedSelector: string) {
   return SelectorFind.descendant(container, firstSelectedSelector).bind(function (first) {
     return SelectorFind.descendant(container, lastSelectedSelector).bind(function (last) {
-      return DomParent.sharedOne(lookupTable, [ first, last ]).map(function (tbl) {
+      return DomParent.sharedOne(lookupTable, [first, last]).map(function (tbl) {
         return {
           first: Fun.constant(first),
           last: Fun.constant(last),
@@ -99,23 +92,23 @@ var getEdges = function (container, firstSelectedSelector, lastSelectedSelector)
   });
 };
 
-var expandTo = function (finish, firstSelectedSelector) {
+const expandTo = function (finish: Element, firstSelectedSelector: string) {
   return SelectorFind.ancestor(finish, 'table').bind(function (table) {
     return SelectorFind.descendant(table, firstSelectedSelector).bind(function (start) {
       return identify(start, finish).bind(function (identified) {
-        return identified.boxes().map(function (boxes) {
+        return identified.boxes().map<IdentifiedExt>(function (boxes) {
           return {
             boxes: Fun.constant(boxes),
             start: Fun.constant(identified.start()),
             finish: Fun.constant(identified.finish())
-          }
+          };
         });
       });
     });
   });
 };
 
-var shiftSelection = function (boxes, deltaRow, deltaColumn, firstSelectedSelector, lastSelectedSelector) {
+const shiftSelection = function (boxes: Element[], deltaRow: number, deltaColumn: number, firstSelectedSelector: string, lastSelectedSelector: string) {
   return getLast(boxes, lastSelectedSelector).bind(function (last) {
     return TablePositions.moveBy(last, deltaRow, deltaColumn).bind(function (finish) {
       return expandTo(finish, firstSelectedSelector);
@@ -123,9 +116,9 @@ var shiftSelection = function (boxes, deltaRow, deltaColumn, firstSelectedSelect
   });
 };
 
-export default <any> {
-  identify: identify,
-  retrieve: retrieve,
-  shiftSelection: shiftSelection,
-  getEdges: getEdges
+export default {
+  identify,
+  retrieve,
+  shiftSelection,
+  getEdges
 };

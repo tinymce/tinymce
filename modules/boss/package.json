@@ -1,7 +1,7 @@
 {
   "name": "@ephox/boss",
   "description": "Generic wrapper to document models - DomUniverse vs TestUniverse",
-  "version": "3.0.20",
+  "version": "3.0.21",
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/boss"
@@ -19,8 +19,8 @@
   ],
   "dependencies": {
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^2.4.20",
-    "@ephox/sugar": "^4.6.20",
+    "@ephox/katamari": "^2.4.21",
+    "@ephox/sugar": "^4.6.21",
     "tslib": "^1.9.3"
   },
   "scripts": {

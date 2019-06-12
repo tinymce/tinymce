@@ -1,15 +1,16 @@
 import { Fun } from '@ephox/katamari';
-import Structs from 'ephox/snooker/api/Structs';
+import * as Structs from 'ephox/snooker/api/Structs';
 import TableMerge from 'ephox/snooker/test/TableMerge';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
 import { UnitTest } from '@ephox/bedrock';
+import { Element } from '@ephox/sugar';
 
 UnitTest.test('TableMergeTest', function () {
   const generator = TestGenerator;
   const start = Structs.address;
   const suite = TableMerge.suite;
 
-  const en = Structs.elementnew;
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
 
   // Advanced Spans
   const gridAdvancedOne = function () {

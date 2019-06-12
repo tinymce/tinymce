@@ -1,9 +1,9 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Fun, Option } from '@ephox/katamari';
-import Util from 'ephox/snooker/util/Util';
+import * as Util from 'ephox/snooker/util/Util';
 
 UnitTest.test('UtilTest', function () {
-  const eq = function (a, b) {
+  const eq = function (a: number, b: number) {
     return a === b;
   };
 

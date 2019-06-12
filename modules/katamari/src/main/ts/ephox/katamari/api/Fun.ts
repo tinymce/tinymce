@@ -10,7 +10,7 @@ const compose = function <T extends any[], U, V> (fa: (v: U) => V, fb: (...x: T)
   };
 };
 
-const constant = function <T>(value?: T): (...args: any[]) => T {
+const constant = function <T>(value: T): () => T {
   return function () {
     return value;
   };
@@ -62,8 +62,8 @@ const call = function(f: () => any) {
   f();
 };
 
-const never = constant<false>(false);
-const always = constant<true>(true);
+const never = constant<false>(false) as (...args) => false;
+const always = constant<true>(true) as (...args) => true;
 
 export {
   noop,

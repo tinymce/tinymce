@@ -4,7 +4,7 @@ import { Body, Compare, Element, Insert, Remove, SelectorFilter, SelectorFind } 
 import TableLookup from 'ephox/snooker/api/TableLookup';
 
 UnitTest.test('TableLookupTest', function () {
-  const testerFound = function (html, triggerSelector, resultSelector, label) {
+  const testerFound = function (html: string, triggerSelector: string, resultSelector: string, label: string) {
     const element = Element.fromHtml(html);
     Insert.append(Body.body(), element);
 
@@ -20,7 +20,7 @@ UnitTest.test('TableLookupTest', function () {
     });
   };
 
-  const testerShouldNotFind = function (html, selector, label) {
+  const testerShouldNotFind = function (html: string, selector: string, label: string) {
     const element = Element.fromHtml(html);
     Insert.append(Body.body(), element);
 
@@ -72,7 +72,7 @@ UnitTest.test('TableLookupTest', function () {
     testerShouldNotFind(htmlB, triggerSelector, 'testOuterTableMergedCaptionClick');
   };
 
-  const testCellShouldAlwaysReturnTheSameCell = function (html, label) {
+  const testCellShouldAlwaysReturnTheSameCell = function (html: string, label: string) {
 
     const element = Element.fromHtml(html);
     Insert.append(Body.body(), element);
@@ -89,7 +89,7 @@ UnitTest.test('TableLookupTest', function () {
     }
   };
 
-  const testRowShouldNotReturn = function (html, label) {
+  const testRowShouldNotReturn = function (html: string, label: string) {
 
     const element = Element.fromHtml(html);
     Insert.append(Body.body(), element);

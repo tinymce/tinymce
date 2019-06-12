@@ -7,50 +7,50 @@ import RuntimeSize from 'ephox/snooker/resize/RuntimeSize';
 UnitTest.test('Runtime Size Test', function () {
   const platform = PlatformDetection.detect();
 
-  const random = function (min, max) {
+  const random = function (min: number, max: number) {
     return Math.round(Math.random() * (max - min) + min);
   };
 
-  const getOuterWidth = function (elm) {
+  const getOuterWidth = function (elm: Element) {
     return Math.round(elm.dom().getBoundingClientRect().width);
   };
 
-  const getOuterHeight = function (elm) {
+  const getOuterHeight = function (elm: Element) {
     return Math.round(elm.dom().getBoundingClientRect().height);
   };
 
-  const measureCells = function (getSize, table) {
+  const measureCells = function (getSize: (e: Element) => number, table: Element) {
     return Arr.map(SelectorFilter.descendants(table, 'td'), getSize);
   };
 
-  const measureTable = function (table, getSize) {
+  const measureTable = function (table: Element, getSize: (e: Element) => number) {
     return {
       total: getSize(table),
       cells: measureCells(getSize, table)
     };
   };
 
-  const setWidth = function (table, value) {
+  const setWidth = function (table: Element, value: string) {
     Css.set(table, 'width', value);
   };
 
-  const setHeight = function (table, value) {
+  const setHeight = function (table: Element, value: string) {
     Css.set(table, 'height', value);
   };
 
-  const resizeTableBy = function (table, setSize, tableInfo, delta) {
+  const resizeTableBy = function (table: Element, setSize: (e: Element, v: string) => void, tableInfo: { total: number, cells: number[] }, delta: number) {
     setSize(table, '');
     Arr.map(SelectorFilter.descendants(table, 'td'), function (cell, i) {
       setSize(cell, (tableInfo.cells[i] + delta) + 'px');
     });
   };
 
-  const fuzzyAssertEq = function (a, b, msg) {
+  const fuzzyAssertEq = function (a: number, b: number, msg: string) {
     // Sometimes the widths of the cells are 1 px off due to rounding but the total table width is never off
     assert.eq(true, Math.abs(a - b) <= 1, msg);
   };
 
-  const assertSize = function (s1, table, getOuterSize, message) {
+  const assertSize = function (s1: { total: number, cells: number[] }, table: Element, getOuterSize: (e: Element) => number, message: string) {
     const s2 = measureTable(table, getOuterSize);
     const html = Html.getOuter(table);
     const cellAssertEq = platform.browser.isIE() || platform.browser.isEdge() ? fuzzyAssertEq : assert.eq;
@@ -63,17 +63,17 @@ UnitTest.test('Runtime Size Test', function () {
     });
   };
 
-  const randomValue = function (values) {
+  const randomValue = function <T> (values: T[]) {
     const idx = random(0, values.length - 1);
     return values[idx];
   };
 
-  const randomSize = function (min, max) {
+  const randomSize = function (min: number, max: number) {
     const n = random(min, max);
     return n > 0 ? n + 'px' : '0';
   };
 
-  const randomBorder = function (min, max, color) {
+  const randomBorder = function (min: number, max: number, color: string) {
     const n = random(min, max);
     return n > 0 ? n + 'px solid ' + color : '0';
   };
@@ -183,7 +183,7 @@ UnitTest.test('Runtime Size Test', function () {
     return table;
   };
 
-  const resizeModel = function (size, delta) {
+  const resizeModel = function (size: { total: number, cells: number[] }, delta: number) {
     const deltaTotal = delta * size.cells.length;
     const cells = Arr.map(size.cells, function (cz) {
       return cz + delta;
@@ -195,8 +195,8 @@ UnitTest.test('Runtime Size Test', function () {
     };
   };
 
-  const testTableSize = function (createTable, getOuterSize, getSize, setSize) {
-    return function (n) {
+  const testTableSize = function (createTable: () => Element, getOuterSize: (e: Element) => number, getSize: (e: Element) => number, setSize: (e: Element, v: string) => void) {
+    return function (n: any) {
       const table = createTable();
       const beforeSize = measureTable(table, getOuterSize);
 
@@ -210,7 +210,7 @@ UnitTest.test('Runtime Size Test', function () {
     };
   };
 
-  const generateTest = function (generator, n) {
+  const generateTest = function (generator: (n: number) => void, n: number) {
     Arr.each(Arr.range(n, Fun.identity), generator);
   };
 

@@ -1,24 +1,25 @@
 import { Obj } from '@ephox/katamari';
+import { Event, Bindable } from './Event';
 
 /** :: {name : Event} -> Events */
-var create = function (typeDefs) {
-  var registry = Obj.map(typeDefs, function (event) {
+const create = function (typeDefs: Record<string, Event>) {
+  const registry: Record<string, Bindable<any>> = Obj.map(typeDefs, function (event) {
     return {
       bind: event.bind,
       unbind: event.unbind
     };
   });
 
-  var trigger = Obj.map(typeDefs, function (event) {
+  const trigger = Obj.map(typeDefs, function (event) {
     return event.trigger;
   });
 
   return {
-    registry: registry,
-    trigger: trigger
+    registry,
+    trigger
   };
 };
 
-export default <any> {
-  create: create
+export default {
+  create
 };
