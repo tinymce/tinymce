@@ -8,6 +8,7 @@ import InlineDemo from './InlineDemo';
 import SourceDumpDemo from './SourceDumpDemo';
 import TinyMceDemo from './TinyMceDemo';
 import UiContainerDemo from './UiContainerDemo';
+import IframeDemo from './IframeDemo';
 
 declare const window: any;
 
@@ -15,6 +16,7 @@ window.demos = {
   CommandsDemo,
   ContentEditableFalseDemo,
   CustomThemeDemo,
+  IframeDemo,
   InlineDemo,
   FixedToolbarContainerDemo,
   FullDemo,
