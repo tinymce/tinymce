@@ -9,7 +9,8 @@
 // Sidebar
 //
 
-@sidebar-background-color: @background-color;
+@sidebar-background-color: @color-white;
+@sidebar-separator-color: @border-color;
 
 .tox {
   .tox-sidebar-wrap {
@@ -25,6 +26,7 @@
 
   .tox-sidebar {
     background-color: @sidebar-background-color;
+    border-top: 1px solid @sidebar-separator-color;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
