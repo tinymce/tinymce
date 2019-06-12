@@ -27,6 +27,8 @@ export type ObjectResizedEvent = { target: HTMLElement, width: number, height: n
 
 export type ObjectSelectedEvent = { target: Node, targetClone?: Node };
 
+export type ScrollIntoViewEvent = { elm: HTMLElement, scrollToTop: boolean };
+
 export type SetSelectionRangeEvent = { range: Range, forward: boolean };
 
 export type ShowCaretEvent = { target: Node, direction: number, before: boolean };
@@ -50,7 +52,7 @@ export interface EditorEventMap extends NativeEventMap {
   'detach': { };
   'remove': { };
   'init': { };
-  'ScrollIntoView': UIEvent;
+  'ScrollIntoView': ScrollIntoViewEvent;
   'ObjectResized': ObjectResizedEvent;
   'ObjectResizeStart': ObjectResizedEvent;
   'SwitchMode': SwitchModeEvent;
