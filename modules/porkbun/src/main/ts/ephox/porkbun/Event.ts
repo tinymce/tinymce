@@ -31,9 +31,8 @@ export const Event = function (fields: string[]): Event {
     });
   };
 
-  const trigger = function () {
-    // scullion does Array prototype slice, we don't need to as well
-    const event = struct.apply(null, arguments);
+  const trigger = function (...args: any[]) {
+    const event = struct.apply(null, args);
     Arr.each(handlers, function (handler) {
       handler(event);
     });

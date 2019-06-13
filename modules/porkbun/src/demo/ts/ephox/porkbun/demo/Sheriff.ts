@@ -1,6 +1,8 @@
+import { Saloon, ShootingEvent, Sherif } from './Types';
+
 declare const $: any;
 
-const create = function () {
+const create = function (): Sherif {
   const container = $('<div />');
   container.css({
     float: 'left',
@@ -27,11 +29,11 @@ const create = function () {
     return container;
   };
 
-  const watch = function (establishment) {
+  const watch = function (establishment: Saloon) {
     establishment.events.shooting.bind(shooting);
   };
 
-  const shooting = function (event) {
+  const shooting = function (event: ShootingEvent) {
     chaseButton.attr('disabled', false);
     chaseButton.bind('click', function () {
       chaseButton.detach();
