@@ -2,6 +2,7 @@ import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { document, Element, HTMLIFrameElement, HTMLLinkElement, window } from '@ephox/dom-globals';
 import { LegacyUnit } from '@ephox/mcagar';
+import Env from 'tinymce/core/api/Env';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -492,6 +493,11 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
 
   suite.test('loadCSS contentCssCors enabled', function () {
     let c = 0;
+
+    // The crossorigin attribute isn't supported in IE11
+    if (Env.ie < 12) {
+      return;
+    }
 
     // Create an iframe to load in, so that we are using a different document. Otherwise DOMUtils will fallback to using the default.
     const iframe = DOM.create('iframe', { src: 'javascript=\'\'' }) as HTMLIFrameElement;
