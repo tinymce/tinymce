@@ -12,6 +12,7 @@ Version 5.0.8 (TBD)
     Fixed scrollIntoView not working when the parent window was out of view #TINY-3663
     Fixed the print plugin printing from the wrong window in IE11 #TINY-3762
     Fixed content CSS loaded over CORS not loading in the preview plugin with content_css_cors enabled #TINY-3769
+    Fixed small dot visible with menubar and toolbar disabled in inline mode #TINY-3623
 Version 5.0.7 (2019-06-05)
     Added new toolbar button and menu item for inserting tables via dialog #TINY-3636
     Added new API for adding/removing/changing tabs in the Help dialog #TINY-3535
