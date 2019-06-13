@@ -18,6 +18,7 @@ import {
 } from '@ephox/alloy';
 import { HTMLElement, HTMLIFrameElement, console } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -39,13 +40,13 @@ import ContextToolbar from './ContextToolbar';
 import Events from './Events';
 import Iframe from './modes/Iframe';
 import Inline from './modes/Inline';
+import FormatControls from './ui/core/FormatControls';
 import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterContainer';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import * as Sidebar from './ui/sidebar/Sidebar';
 import * as Throbber from './ui/throbber/Throbber';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
-import { PlatformDetection } from '@ephox/sand';
 
 export interface RenderInfo {
   mothership: Gui.GuiSystem;
@@ -354,6 +355,7 @@ const setup = (editor: Editor): RenderInfo => {
   };
 
   const renderUI = function (): ModeRenderInfo {
+    FormatControls.setup(editor, backstage);
     SilverContextMenu.setup(editor, lazySink, backstage);
     Sidebar.setup(editor);
     Throbber.setup(editor, lazyThrobber, backstage.shared);
