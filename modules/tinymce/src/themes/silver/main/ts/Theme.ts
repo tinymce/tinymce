@@ -11,14 +11,11 @@ import ThemeManager, { Theme } from 'tinymce/core/api/ThemeManager';
 import NotificationManagerImpl from './alien/NotificationManagerImpl';
 import { Autocompleter } from './Autocompleter';
 import Render, { RenderInfo } from './Render';
-import FormatControls from './ui/core/FormatControls';
 import WindowManager from './ui/dialog/WindowManager';
 
 export default function () {
   ThemeManager.add('silver', (editor): Theme => {
     const { mothership, uiMothership, backstage, renderUI, getUi }: RenderInfo = Render.setup(editor);
-
-    FormatControls.setup(editor, backstage);
 
     Debugging.registerInspector(Id.generate('silver-demo'), mothership);
     Debugging.registerInspector(Id.generate('silver-ui-demo'), uiMothership);
