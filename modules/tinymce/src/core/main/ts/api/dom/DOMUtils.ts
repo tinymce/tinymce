@@ -853,7 +853,12 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       }
 
       files[url] = true;
-      link = create('link', { rel: 'stylesheet', href: url });
+      link = create('link', {
+        rel: 'stylesheet',
+        type: 'text/css',
+        href: url,
+        ...settings.contentCssCors ? { crossOrigin: 'anonymous' } : { }
+      });
 
       head.appendChild(link);
     });
