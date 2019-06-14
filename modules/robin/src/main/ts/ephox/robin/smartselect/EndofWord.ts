@@ -29,8 +29,6 @@ const all = function <E> (cluster: WordDecisionItem<E>[]) {
   return Option.some(WordRange(first.item(), first.start(), last.item(), last.finish()));
 };
 
-// The optimise parameter is passed through from the API, but it is no longer required.
-// Remove optimise as a code quality task: TBIO-4356
 const scan = function <E, D> (universe: Universe<E, D>, item: E, offset: number) {
   const text = universe.property().getText(item);
   const preLength = Arr.filter(text.substring(0, offset), function (s) {
