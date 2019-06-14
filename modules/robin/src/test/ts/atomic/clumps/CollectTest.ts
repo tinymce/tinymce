@@ -1,12 +1,10 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
-import { TextGene } from '@ephox/boss';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import Clumps from 'ephox/robin/clumps/Clumps';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ClumpsTest', function() {
-  var doc = TestUniverse(Gene('root', 'root', [
+UnitTest.test('ClumpsTest', function () {
+  const doc = TestUniverse(Gene('root', 'root', [
     Gene('p1', 'p', [
       Gene('aa', 'span', [
         TextGene('aaa', 'aaa'),
@@ -16,18 +14,24 @@ UnitTest.test('ClumpsTest', function() {
     ])
   ]));
 
-
-  var isRoot = function (item) {
+  const isRoot = function (item: Gene) {
     return item.name === 'root';
   };
 
-  //var collect = function (universe, isRoot, start, soffset, finish, foffset)
-  var check = function (expected, startId, soffset, finishId, foffset) {
-    var start = doc.find(doc.get(), startId).getOrDie();
-    var finish = doc.find(doc.get(), finishId).getOrDie();
-    var rawActual = Clumps.collect(doc, isRoot, start, soffset, finish, foffset);
-    
-    var actual = Arr.map(rawActual, function (a) {
+  interface RawRange {
+    start: string;
+    soffset: number;
+    finish: string;
+    foffset: number;
+  }
+
+  // const collect = function <E, D> (universe: Universe<E, D>, isRoot, start, soffset, finish, foffset)
+  const check = function (expected: RawRange[], startId: string, soffset: number, finishId: string, foffset: number) {
+    const start = doc.find(doc.get(), startId).getOrDie();
+    const finish = doc.find(doc.get(), finishId).getOrDie();
+    const rawActual = Clumps.collect(doc, isRoot, start, soffset, finish, foffset);
+
+    const actual = Arr.map(rawActual, function (a): RawRange {
       return { start: a.start().id, soffset: a.soffset(), finish: a.finish().id, foffset: a.foffset() };
     });
 
@@ -38,4 +42,3 @@ UnitTest.test('ClumpsTest', function() {
     { start: 'aaa', soffset: 0, finish: 'aac', foffset: 'aac'.length }
   ], 'p1', 0, 'p1', 1);
 });
-

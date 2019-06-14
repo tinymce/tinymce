@@ -1,5 +1,5 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
 import { Universe } from '@ephox/boss';
+import { Arr, Fun, Option } from '@ephox/katamari';
 
 export type Looker<E, D> = (universe: Universe<E, D>, elem: E) => Option<E>;
 
@@ -32,6 +32,4 @@ const commonElement = function <E, D>(universe: Universe<E, D>, start: Option<E>
   });
 };
 
-export default {
-  oneAll
-};
+export { oneAll };

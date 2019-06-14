@@ -1,22 +1,24 @@
 import { DomUniverse } from '@ephox/boss';
+import { Element } from '@ephox/sugar';
 import TextZones from '../general/TextZones';
+import { ZoneViewports } from '../general/ZoneViewports';
 
-var universe = DomUniverse();
+const universe = DomUniverse();
 
-var single = function (element, envLang, viewport) {
+const single = function (element: Element, envLang: string, viewport: ZoneViewports<Element>) {
   return TextZones.single(universe, element, envLang, viewport);
 };
 
-var range = function (start, soffset, finish, foffset, envLang, viewport) {
+const range = function (start: Element, soffset: number, finish: Element, foffset: number, envLang: string, viewport: ZoneViewports<Element>) {
   return TextZones.range(universe, start, soffset, finish, foffset, envLang, viewport);
 };
 
-var empty = function () {
-  return TextZones.empty();
+const empty = function () {
+  return TextZones.empty<Element>();
 };
 
-export default <any> {
-  single: single,
-  range: range,
-  empty: empty
+export default {
+  single,
+  range,
+  empty
 };

@@ -1,38 +1,35 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
-import { TextGene } from '@ephox/boss';
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, TestUniverse, TextGene } from '@ephox/boss';
+import { Arr, Option } from '@ephox/katamari';
 import Subset from 'ephox/robin/parent/Subset';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('SubsetTest', function() {
-  var universe = TestUniverse(Gene('root', 'root', [
+UnitTest.test('SubsetTest', function () {
+  const universe = TestUniverse(Gene('root', 'root', [
     Gene('one-nine', 'ol', [
       Gene('one', 'li', [
         TextGene('1-text', 'One')
       ]),
-      Gene('two', 'li', [ TextGene('2-text', 'Two') ]),
+      Gene('two', 'li', [TextGene('2-text', 'Two')]),
       Gene('three-five', 'ol', [
-        Gene('three', 'li', [ TextGene('3-text', 'three') ]),
-        Gene('four', 'li', [ TextGene('4-text', 'four') ]),
-        Gene('five', 'li', [ TextGene('5-text', 'five') ])
+        Gene('three', 'li', [TextGene('3-text', 'three')]),
+        Gene('four', 'li', [TextGene('4-text', 'four')]),
+        Gene('five', 'li', [TextGene('5-text', 'five')])
       ]),
-      Gene('six', 'li', [ TextGene('6-text', 'six') ]),
+      Gene('six', 'li', [TextGene('6-text', 'six')]),
       Gene('seven-nine', 'ol', [
         Gene('seven-eight', 'ol', [
-          Gene('seven', 'li', [ TextGene('7-text', 'seven') ]),
-          Gene('eight', 'li', [ TextGene('8-text', 'eight') ])
+          Gene('seven', 'li', [TextGene('7-text', 'seven')]),
+          Gene('eight', 'li', [TextGene('8-text', 'eight')])
         ])
       ])
     ])
   ]));
 
-  var check = function (expected, startId, finishId) {
-    var start = universe.find(universe.get(), startId).getOrDie();
-    var finish = universe.find(universe.get(), finishId).getOrDie();
+  const check = function (expected: Option<string[]>, startId: string, finishId: string) {
+    const start = universe.find(universe.get(), startId).getOrDie();
+    const finish = universe.find(universe.get(), finishId).getOrDie();
 
-    var subset = Subset.subset(universe, start, finish);
+    const subset = Subset.subset(universe, start, finish);
     expected.fold(function () {
       assert.eq(true, subset.isNone());
     }, function (exp) {
@@ -50,4 +47,3 @@ UnitTest.test('SubsetTest', function() {
   check(Option.some(['two', 'three-five']), 'two', 'four');
   check(Option.some(['two', 'three-five', 'six', 'seven-nine']), 'two', 'eight');
 });
-

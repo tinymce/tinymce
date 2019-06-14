@@ -10,7 +10,7 @@ export default function () {
     Css.set(r, 'border', '1px solid gray');
     Css.set(r, 'z-index', '1000');
 
-    const set = function (x, y) {
+    const set = function (x: number, y: number) {
       Css.set(r, 'left', (x - 4) + 'px');
       Css.set(r, 'top', (y - 4) + 'px');
     };
@@ -36,7 +36,7 @@ export default function () {
   const southeast = box();
   Css.set(southeast.element(), 'cursor', 'se-resize');
 
-  const update = function (target) {
+  const update = function (target: Element) {
     const loc = Location.viewport(target);
     const w = Width.get(target);
     const h = Height.get(target);

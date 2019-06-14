@@ -1,12 +1,13 @@
 import { DomUniverse } from '@ephox/boss';
-import Textdata from '../general/Textdata';
+import { Element } from '@ephox/sugar';
+import { Textdata } from '../general/Textdata';
 
-var universe = DomUniverse();
+const universe = DomUniverse();
 
-var from = function (elements, current, offset) {
+const from = function (elements: Element[], current: Element, offset: number) {
   return Textdata.from(universe, elements, current, offset);
 };
 
-export default <any> {
-  from: from
+export default {
+  from
 };

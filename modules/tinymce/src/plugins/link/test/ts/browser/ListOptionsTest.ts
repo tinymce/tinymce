@@ -84,6 +84,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ListOptionsTest', (success, fai
               Assertions.assertEq(
                 'Checking link_list',
                 [
+                  { text: 'None', value: '' },
                   // TODO TINY-2236 re-enable this (support will need to be added to bridge)
                   /*
                   {

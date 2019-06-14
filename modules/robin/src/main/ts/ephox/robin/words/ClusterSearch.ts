@@ -1,7 +1,8 @@
+import { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
-import { Gather } from '@ephox/phoenix';
-import WordDecision from './WordDecision';
-import WordWalking from './WordWalking';
+import { Gather, Transition } from '@ephox/phoenix';
+import { WordDecision, WordDecisionItem } from './WordDecision';
+import { WordWalking } from './WordWalking';
 
 /*
  * Identification of words:
@@ -17,11 +18,11 @@ import WordWalking from './WordWalking';
  * These rules are encoded in WordDecision.decide
  * Returns: [WordDecision.make Struct] of all the words recursively from item in direction.
  */
-var doWords = function (universe, item, mode, direction, isCustomBoundary) {
-  var destination = Gather.walk(universe, item, mode, direction);
-  var result = destination.map(function (dest) {
-    var decision = WordDecision.decide(universe, dest.item(), direction.slicer, isCustomBoundary);
-    var recursive = decision.abort() ? [] : doWords(universe, dest.item(), dest.mode(), direction, isCustomBoundary);
+const doWords = function <E, D> (universe: Universe<E, D>, item: E, mode: Transition, direction: WordWalking, isCustomBoundary: (universe: Universe<E, D>, item: E) => boolean): WordDecisionItem<E>[] {
+  const destination = Gather.walk(universe, item, mode, direction);
+  const result = destination.map(function (dest) {
+    const decision = WordDecision.decide(universe, dest.item(), direction.slicer, isCustomBoundary);
+    const recursive: WordDecisionItem<E>[] = decision.abort() ? [] : doWords(universe, dest.item(), dest.mode(), direction, isCustomBoundary);
     return decision.items().concat(recursive);
   }).getOr([]);
 
@@ -30,29 +31,31 @@ var doWords = function (universe, item, mode, direction, isCustomBoundary) {
   });
 };
 
-var creepLeft = function (universe, item, isCustomBoundary) {
+const creepLeft = function <E, D> (universe: Universe<E, D>, item: E, isCustomBoundary: (universe: Universe<E, D>, item: E) => boolean) {
   return doWords(universe, item, Gather.sidestep, WordWalking.left, isCustomBoundary);
 };
 
-var creepRight = function (universe, item, isCustomBoundary) {
+const creepRight = function <E, D> (universe: Universe<E, D>, item: E, isCustomBoundary: (universe: Universe<E, D>, item: E) => boolean) {
   return doWords(universe, item, Gather.sidestep, WordWalking.right, isCustomBoundary);
 };
 
-var isEmpty = function (universe, item) {
+const isEmpty = function <E, D> (universe: Universe<E, D>, item: E) {
   // Empty if there are no text nodes in self or any descendants.
   return universe.property().isText(item) ? false : universe.down().predicate(item, universe.property().isText).length === 0;
 };
 
-var flatten = function (universe, item) {
+const flatten = function <E, D> (universe: Universe<E, D>, item: E) {
   return universe.property().isText(item) ? [ WordDecision.detail(universe, item) ] : Arr.map(
     universe.down().predicate(item, universe.property().isText),
-    function (e) { return WordDecision.detail(universe, e); }
+    function (e) {
+      return WordDecision.detail(universe, e);
+    }
   );
 };
 
-export default <any> {
-  creepLeft: creepLeft,
-  creepRight: creepRight,
-  flatten: flatten,
-  isEmpty: isEmpty
+export default {
+  creepLeft,
+  creepRight,
+  flatten,
+  isEmpty
 };

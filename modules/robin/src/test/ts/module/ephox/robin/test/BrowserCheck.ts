@@ -1,28 +1,24 @@
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Element, Insert, Remove, SelectorFind, Traverse } from '@ephox/sugar';
 
-var getNode = function (container) {
+const getNode = function (container: Element) {
   return SelectorFind.descendant(container, '.me').fold(function () {
     return SelectorFind.descendant(container, '.child').bind(Traverse.firstChild);
   }, function (v) {
     return Option.some(v);
-  }).getOrDie();
+  }).getOrDie('Could not find the descendant ".me" or the first child of the descendant ".child"');
 };
 
-var run = function (input, f) {
-  var body = SelectorFind.first('body').getOrDie();
-  var container = Element.fromTag('div');
+const run = function (input: string, f: (e: Element) => void) {
+  const body = SelectorFind.first('body').getOrDie();
+  const container = Element.fromTag('div');
   Insert.append(body, container);
   container.dom().innerHTML = input;
-  var node = getNode(container);
+  const node = getNode(container);
   f(node);
   Remove.remove(container);
 };
 
-export default <any> {
-  run: run
+export default {
+  run
 };

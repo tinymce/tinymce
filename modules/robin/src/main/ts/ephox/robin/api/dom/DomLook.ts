@@ -1,23 +1,23 @@
 import { DomUniverse } from '@ephox/boss';
-import { Fun } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 import Look from '../general/Look';
 
-var universe = DomUniverse();
+const universe = DomUniverse();
 
-var selector = function (sel) {
-  return Fun.curry(Look.selector(universe, sel), universe);
+const selector = function (sel: string) {
+  return (item: Element) => Look.selector(universe, sel)(universe, item);
 };
 
-var predicate = function (pred) {
-  return Fun.curry(Look.predicate(universe, pred), universe);
+const predicate = function (pred: (e: Element) => boolean) {
+  return (item: Element) => Look.predicate(universe, pred)(universe, item);
 };
 
-var exact = function (element) {
-  return Fun.curry(Look.exact(universe, element), universe);
+const exact = function (element: Element) {
+  return (item: Element) => Look.exact(universe, element)(universe, item);
 };
 
-export default <any> {
-  selector: selector,
-  predicate: predicate,
-  exact: exact
+export default {
+  selector,
+  predicate,
+  exact
 };

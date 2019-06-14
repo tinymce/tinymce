@@ -4,7 +4,7 @@ import { Body, Compare, Element, Hierarchy, Insert, InsertAll, Remove } from '@e
 import DomSmartSelect from 'ephox/robin/api/dom/DomSmartSelect';
 
 UnitTest.test('SmartSelectTest', function () {
-  var editor = Element.fromTag('div');
+  const editor = Element.fromTag('div');
 
   /*
    * We_
@@ -24,19 +24,19 @@ UnitTest.test('SmartSelectTest', function () {
    *  "yes"
    * </p>
    */
-  var populate = function () {
-    var we = Element.fromText('We ');
-    var p1 = Element.fromTag('p');
-    var are = Element.fromText('are ');
-    var s1 = Element.fromTag('span');
-    var g = Element.fromText('g');
-    var oi = Element.fromText('oi');
-    var b1 = Element.fromTag('b');
-    var ng = Element.fromText('ng');
-    var p2 = Element.fromTag('p');
-    var toSay = Element.fromText('to say');
-    var space = Element.fromText(' ');
-    var yes = Element.fromText('"yes"');
+  const populate = function () {
+    const we = Element.fromText('We ');
+    const p1 = Element.fromTag('p');
+    const are = Element.fromText('are ');
+    const s1 = Element.fromTag('span');
+    const g = Element.fromText('g');
+    const oi = Element.fromText('oi');
+    const b1 = Element.fromTag('b');
+    const ng = Element.fromText('ng');
+    const p2 = Element.fromTag('p');
+    const toSay = Element.fromText('to say');
+    const space = Element.fromText(' ');
+    const yes = Element.fromText('"yes"');
 
     InsertAll.append(p1, [are, s1, oi, b1]);
     InsertAll.append(p2, [toSay, space, yes]);
@@ -46,31 +46,42 @@ UnitTest.test('SmartSelectTest', function () {
     Insert.append(Body.body(), editor);
   };
 
-  var cleanup = function () {
+  const cleanup = function () {
     Remove.remove(editor);
   };
 
-  var check = function (expected, path, offset) {
-    var start = Hierarchy.follow(editor, path).getOrDie('Looking for start of smart select');
-    var actual = DomSmartSelect.word(start, offset);
+  interface ExpectedPos {
+    element: number[];
+    offset: number;
+  }
+
+  interface Expected {
+    word: string;
+    start: ExpectedPos;
+    finish: ExpectedPos;
+  }
+
+  const check = function (expected: Expected, path: number[], offset: number) {
+    const start = Hierarchy.follow(editor, path).getOrDie('Looking for start of smart select');
+    const actual = DomSmartSelect.word(start, offset);
     actual.fold(function () {
-      throw 'Expected to select word: ' + expected.word;
+      throw new Error('Expected to select word: ' + expected.word);
     }, function (act) {
-      var expStart = Hierarchy.follow(editor, expected.start.element).getOrDie('Could not find expected start');
-      var expFinish = Hierarchy.follow(editor, expected.finish.element).getOrDie('Could not find expected finish');
+      const expStart = Hierarchy.follow(editor, expected.start.element).getOrDie('Could not find expected start');
+      const expFinish = Hierarchy.follow(editor, expected.finish.element).getOrDie('Could not find expected finish');
       assert.eq(true, Compare.eq(expStart, act.startContainer()));
       assert.eq(expected.start.offset, act.startOffset());
       assert.eq(true, Compare.eq(expFinish, act.endContainer()));
       assert.eq(expected.finish.offset, act.endOffset());
 
-      var range = document.createRange();
+      const range = document.createRange();
       range.setStart(act.startContainer().dom(), act.startOffset());
       range.setEnd(act.endContainer().dom(), act.endOffset());
       assert.eq(expected.word, range.toString());
     });
-  }
+  };
 
-  var words = {
+  const words = {
     we: {
       start: { element: [0], offset: 0 },
       finish: { element: [0], offset: 'We'.length },
@@ -101,7 +112,7 @@ UnitTest.test('SmartSelectTest', function () {
       finish: { element: [2, 2], offset: '"yes'.length },
       word: 'yes'
     }
-  }
+  };
 
   populate();
 
@@ -111,8 +122,7 @@ UnitTest.test('SmartSelectTest', function () {
   check(words.going, [1, 1, 0], 1);
   check(words.to, [2, 0], 1);
   check(words.say, [2, 0], 'to s'.length);
-  check(words.yes, [2, 2], '"y'.length)
+  check(words.yes, [2, 2], '"y'.length);
 
   cleanup();
 });
-

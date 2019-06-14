@@ -5,12 +5,12 @@ import { DragMode, DragSink, DragApi } from 'ephox/dragster/api/DragApis';
 import Dragging from 'ephox/dragster/core/Dragging';
 
 UnitTest.test('DraggerTest', function () {
-  let api: DragApi = null;
+  let optApi: Option<DragApi> = Option.none();
 
   const argumentToStart: any = 'start';
   const argumentToMutate: any = 'mutate';
 
-  const mutations = [ ];
+  const mutations: number[] = [ ];
 
   const mode = DragMode({
     compare: (old: any, nu: any) => {
@@ -21,10 +21,10 @@ UnitTest.test('DraggerTest', function () {
     },
     mutate: (mutation, data) => {
       assert.eq(argumentToMutate, mutation);
-      mutations.push(data);
+      mutations.push(data as any as number);
     },
     sink: (dragApi, settings) => {
-      api = dragApi;
+      optApi = Option.some(dragApi);
       return DragSink({
         element: () => 'element' as unknown as Element, // fake element
         start: (v) => {
@@ -38,6 +38,7 @@ UnitTest.test('DraggerTest', function () {
 
   const dragging = Dragging.setup(argumentToMutate, mode, {});
 
+  const api = optApi.getOrDie('API not loaded');
   // While dragging is not on, nothing should be collected
   dragging.go(argumentToStart);
   assert.eq([ ], mutations);

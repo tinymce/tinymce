@@ -1,5 +1,5 @@
-import { Arr } from '@ephox/katamari';
 import { Universe } from '@ephox/boss';
+import { Arr } from '@ephox/katamari';
 
 const blockList = [
   'body',

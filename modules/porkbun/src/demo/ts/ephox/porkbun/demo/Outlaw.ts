@@ -1,9 +1,22 @@
-import { Event } from 'ephox/porkbun/Event';
+import { Event, Bindable } from 'ephox/porkbun/Event';
 import Events from 'ephox/porkbun/Events';
+import { Saloon, ShootEvent, DieEvent, Outlaw } from './Types';
+import { Singleton } from '@ephox/katamari';
+
+interface OutlawEvents {
+  registry: {
+    shoot: Bindable<ShootEvent>;
+    die: Bindable<DieEvent>;
+  };
+  trigger: {
+    shoot: (target: Outlaw) => void;
+    die: () => void;
+  };
+}
 
 declare const $: any;
 
-const create = function (name: string) {
+const create = function (name: string): Outlaw {
   const container = $('<div />');
   container.css({  width: '1px dashed gray' });
 
@@ -28,7 +41,7 @@ const create = function (name: string) {
     return container;
   };
 
-  const addAction = function (text, action) {
+  const addAction = function (text: string, action: () => void) {
     const button = $('<button />');
     button.text(text);
     button.bind('click', function () {
@@ -41,20 +54,20 @@ const create = function (name: string) {
   const events = Events.create({
     shoot: Event(['target']),
     die:   Event([])
-  });
+  }) as OutlawEvents;
 
-  let establishment;
-  const enter = function (saloon) {
+  const establishment = Singleton.value<Saloon>();
+  const enter = function (saloon: Saloon) {
     saloon.enter(api);
-    establishment = saloon;
+    establishment.set(saloon);
   };
 
   const leave = function () {
-    establishment.leave(api);
-    establishment = undefined;
+    establishment.on((e) => e.leave(api));
+    establishment.clear();
   };
 
-  const shoot = function (target) {
+  const shoot = function (target: Outlaw) {
     target.die();
     events.trigger.shoot(target);
   };

@@ -1,6 +1,6 @@
 import { DomUniverse } from '@ephox/boss';
-import Structure from '../general/Structure';
 import { Element } from '@ephox/sugar';
+import Structure from '../general/Structure';
 
 const universe = DomUniverse();
 

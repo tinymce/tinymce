@@ -1,23 +1,23 @@
-import { UnitTest, assert } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
-import DomTextdata from 'ephox/robin/api/dom/DomTextdata';
 import { Element } from '@ephox/sugar';
+import DomTextdata from 'ephox/robin/api/dom/DomTextdata';
 
-UnitTest.test('DomTextdataTest', function() {
-  var a = Element.fromText('alpha');
-  var b = Element.fromText(' beta');
-  var c = Element.fromText('');
-  var d = Element.fromText(' ');
-  var e = Element.fromText('epsilon');
-  var f = Element.fromText('foo');
+UnitTest.test('DomTextdataTest', function () {
+  const a = Element.fromText('alpha');
+  const b = Element.fromText(' beta');
+  const c = Element.fromText('');
+  const d = Element.fromText(' ');
+  const e = Element.fromText('epsilon');
+  const f = Element.fromText('foo');
 
-  var check = function (expected, elements, current, offset) {
-    var actual = DomTextdata.from(elements, current, offset);
+  const check = function (expected: { text: string, cursor: Option<number> }, elements: Element[], current: Element, offset: number) {
+    const actual = DomTextdata.from(elements, current, offset);
     assert.eq(expected.text, actual.text());
     expected.cursor.fold(function () {
       assert.eq(true, actual.cursor().isNone(), 'Actual cursor should be none for: ' + actual.text());
     }, function (exp) {
-      assert.eq(exp, actual.cursor().getOrDie());
+      assert.eq(exp, actual.cursor().getOrDie('Expected an actual cursor at ' + exp));
     });
   };
 
@@ -31,4 +31,3 @@ UnitTest.test('DomTextdataTest', function() {
     cursor: Option.some(13)
   }, [a, b, c, d, e, f], e, 2);
 });
-

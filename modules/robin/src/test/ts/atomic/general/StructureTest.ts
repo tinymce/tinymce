@@ -1,10 +1,9 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, TestUniverse } from '@ephox/boss';
 import Structure from 'ephox/robin/api/general/Structure';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('StructureTest', function() {
-  var doc = TestUniverse(Gene('root', 'root', [
+UnitTest.test('StructureTest', function () {
+  const doc = TestUniverse(Gene('root', 'root', [
     Gene('d1', 'div', []),
     Gene('ol1', 'ol', []),
     Gene('li1', 'li', []),
@@ -16,9 +15,9 @@ UnitTest.test('StructureTest', function() {
     Gene('strong1', 'strong', [])
   ]));
 
-  var check = function (expected, id) {
-    var item = doc.find(doc.get(), id).getOrDie();
-    var actual = Structure.isInline(doc, item);
+  const check = function (expected: boolean, id: string) {
+    const item = doc.find(doc.get(), id).getOrDie();
+    const actual = Structure.isInline(doc, item);
     assert.eq(expected, actual);
   };
 
@@ -32,4 +31,3 @@ UnitTest.test('StructureTest', function() {
   check(true, 'span1');
   check(true, 'strong1');
 });
-

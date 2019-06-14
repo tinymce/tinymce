@@ -3,7 +3,8 @@ import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader, TinyUi, UiChains} from '@ephox/mcagar';
 
-import Plugin from 'tinymce/plugins/imagetools/Plugin';
+import ImagePlugin from 'tinymce/plugins/image/Plugin';
+import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 import { Element } from '@ephox/sugar';
 import ImageUtils from '../module/test/ImageUtils';
@@ -11,7 +12,8 @@ import ImageOps from '../module/test/ImageOps';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (success, failure) => {
   Theme();
-  Plugin();
+  ImagePlugin();
+  ImageToolsPlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
