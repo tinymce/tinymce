@@ -4,23 +4,23 @@ import { Universe } from '@ephox/boss';
 import { ZoneDetails } from './LanguageZones';
 import { WordScope } from '../data/WordScope';
 
-interface ZonesInput<E> {
+interface ZoneInput<E> {
   lang: string;
   words: WordScope[];
   elements: E[];
 }
 
-export interface ZonesBag<E> {
+export interface Zone<E> {
   elements: () => E[];
   lang: () => string;
   words: () => WordScope[];
 }
 
 export interface Zones<E> {
-  zones: () => ZonesBag<E>[];
+  zones: () => Zone<E>[];
 }
 
-const nu: <E> (input: ZonesInput<E>) => ZonesBag<E> = Struct.immutableBag([ 'elements', 'lang', 'words' ], [ ]);
+const nu: <E> (input: ZoneInput<E>) => Zone<E> = Struct.immutableBag([ 'elements', 'lang', 'words' ], [ ]);
 
 const fromWalking = function <E, D> (universe: Universe<E, D>, groups: ZoneDetails<E>[]): Zones<E> {
   const zones = Arr.map(groups, function (group: ZoneDetails<E>) {

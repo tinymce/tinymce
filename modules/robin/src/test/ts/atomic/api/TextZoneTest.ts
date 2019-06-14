@@ -7,7 +7,7 @@ import TextZone from 'ephox/robin/api/general/TextZone';
 import Arbitraries, { ArbRangeIds, ArbIds } from 'ephox/robin/test/Arbitraries';
 import PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
 import ZoneObjects, { RawZone } from 'ephox/robin/test/ZoneObjects';
-import { ZonesBag } from '../../../../main/ts/ephox/robin/zone/Zones';
+import { Zone } from '../../../../main/ts/ephox/robin/zone/Zones';
 
 UnitTest.test('TextZoneTest', function () {
   const doc1 = TestUniverse(Gene('root', 'root', [
@@ -50,7 +50,7 @@ UnitTest.test('TextZoneTest', function () {
     ], {}, { lang: 'fr' })
   ]));
 
-  const checkZone = function (label: string, expected: Option<RawZone>, actual: Option<ZonesBag<Gene>>) {
+  const checkZone = function (label: string, expected: Option<RawZone>, actual: Option<Zone<Gene>>) {
     expected.fold(function () {
       actual.fold(function () {
         // Good

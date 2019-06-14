@@ -2,7 +2,7 @@ import { Logger, RawAssertions } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
 import { TestUniverse, Gene } from '@ephox/boss';
-import { ZonesBag } from '../../../../../../main/ts/ephox/robin/zone/Zones';
+import { Zone } from '../../../../../../main/ts/ephox/robin/zone/Zones';
 
 export interface RawZone {
   lang: string;
@@ -10,7 +10,7 @@ export interface RawZone {
   words: string[];
 }
 
-const rawOne = function (universe: TestUniverse, zone: ZonesBag<Gene>): RawZone {
+const rawOne = function (universe: TestUniverse, zone: Zone<Gene>): RawZone {
   return {
     lang: zone.lang(),
     elements: Arr.map(zone.elements(), function (elem) {
@@ -22,18 +22,18 @@ const rawOne = function (universe: TestUniverse, zone: ZonesBag<Gene>): RawZone 
   };
 };
 
-const raw = function <E, D> (universe: TestUniverse, zones: ZonesBag<Gene>[]) {
+const raw = function <E, D> (universe: TestUniverse, zones: Zone<Gene>[]) {
   return Arr.map(zones, function (zone) {
     return rawOne(universe, zone);
   });
 };
 
-const assertZones = function (label: string, universe: TestUniverse, expected: RawZone[], zones: ZonesBag<Gene>[]) {
+const assertZones = function (label: string, universe: TestUniverse, expected: RawZone[], zones: Zone<Gene>[]) {
   const rawActual = raw(universe, zones);
   RawAssertions.assertEq(label + '\nChecking zones: ', expected, rawActual);
 };
 
-const assertProps = function (label: string, universe: TestUniverse, zones: ZonesBag<Gene>[]) {
+const assertProps = function (label: string, universe: TestUniverse, zones: Zone<Gene>[]) {
   Arr.each(zones, function (zone) {
     const elements = zone.elements();
     if (elements.length === 0) {
