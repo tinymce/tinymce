@@ -1,6 +1,6 @@
 import { DomUniverse } from '@ephox/boss';
-import SmartSelect from '../general/SmartSelect';
 import { Element } from '@ephox/sugar';
+import SmartSelect from '../general/SmartSelect';
 
 const universe = DomUniverse();
 

@@ -1,6 +1,6 @@
+import { Universe } from '@ephox/boss';
 import WordUtil from '../../util/WordUtil';
 import Identify from '../../words/Identify';
-import { Universe } from '@ephox/boss';
 
 const identify = function (allText: string) {
   return Identify.words(allText);

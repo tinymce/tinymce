@@ -1,12 +1,12 @@
+import { Universe } from '@ephox/boss';
 import { Fun, Option } from '@ephox/katamari';
 import Parent from '../api/general/Parent';
+import { ZoneViewports } from '../api/general/ZoneViewports';
 import Clustering from '../words/Clustering';
 import { WordDecision, WordDecisionItem } from '../words/WordDecision';
 import { LanguageZones, ZoneDetails } from './LanguageZones';
 import { Zones } from './Zones';
 import ZoneWalker from './ZoneWalker';
-import { Universe } from '@ephox/boss';
-import { ZoneViewports } from '../api/general/ZoneViewports';
 
 const rangeOn = function <E, D> (universe: Universe<E, D>, first: E, last: E, envLang: string, transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>, viewport: ZoneViewports<E>) {
   const ancestor = universe.eq(first, last) ? Option.some(first) : universe.property().parent(first);

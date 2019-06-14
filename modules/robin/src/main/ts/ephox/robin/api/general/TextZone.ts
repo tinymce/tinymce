@@ -1,6 +1,6 @@
+import { Universe } from '@ephox/boss';
 import { Descent } from '@ephox/phoenix';
 import TextZone from '../../zone/TextZone';
-import { Universe } from '@ephox/boss';
 
 /*
  * TextZone returns an Optional zone if that zone is the right language (onlyLang)

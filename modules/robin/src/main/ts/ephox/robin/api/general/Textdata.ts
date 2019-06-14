@@ -1,7 +1,7 @@
+import { Universe } from '@ephox/boss';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Spot, SpotRange } from '@ephox/phoenix';
 import { PositionArray } from '@ephox/polaris';
-import { Universe } from '@ephox/boss';
 
 interface TextdataGet<E> {
   list: () => SpotRange<E>[];

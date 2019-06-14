@@ -1,7 +1,7 @@
+import { Universe } from '@ephox/boss';
 import { Arr, Fun, Option, Unicode } from '@ephox/katamari';
 import { WordRange } from '../data/WordRange';
 import Clustering from '../words/Clustering';
-import { Universe } from '@ephox/boss';
 import { WordDecisionItem } from '../words/WordDecision';
 
 const toEnd = function <E> (cluster: WordDecisionItem<E>[], start: E, soffset: number) {

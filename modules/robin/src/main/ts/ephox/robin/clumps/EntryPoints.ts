@@ -1,6 +1,6 @@
+import { Universe } from '@ephox/boss';
 import { Adt } from '@ephox/katamari';
 import { Gather, Split } from '@ephox/phoenix';
-import { Universe } from '@ephox/boss';
 
 interface EntryPoint<E> {
   fold: <T> (

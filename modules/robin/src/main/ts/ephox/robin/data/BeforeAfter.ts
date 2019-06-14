@@ -1,4 +1,4 @@
-import { Struct, Option } from '@ephox/katamari';
+import { Option, Struct } from '@ephox/katamari';
 
 export interface BeforeAfter {
   before: () => Option<number>;

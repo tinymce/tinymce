@@ -1,7 +1,7 @@
+import { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { Gather, Transition } from '@ephox/phoenix';
 import { Walks } from '../../leftblock/Walks';
-import { Universe } from '@ephox/boss';
 
 const walkers = Gather.walkers();
 

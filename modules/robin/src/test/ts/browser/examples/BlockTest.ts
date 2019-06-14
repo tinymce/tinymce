@@ -1,10 +1,10 @@
 import { assert, UnitTest } from '@ephox/bedrock';
-import { Node, Traverse, Element } from '@ephox/sugar';
+import { Option } from '@ephox/katamari';
+import { Element, Node, Traverse } from '@ephox/sugar';
 import DomLook from 'ephox/robin/api/dom/DomLook';
 import DomParent from 'ephox/robin/api/dom/DomParent';
 import DomStructure from 'ephox/robin/api/dom/DomStructure';
 import BrowserCheck from 'ephox/robin/test/BrowserCheck';
-import { Option } from '@ephox/katamari';
 
 UnitTest.test('BlockTest', function () {
   const check = function (expected: string, input: string, look: (e: Element) => Option<Element>) {

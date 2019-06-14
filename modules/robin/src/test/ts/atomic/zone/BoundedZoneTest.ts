@@ -3,7 +3,7 @@ import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { ZoneViewports } from 'ephox/robin/api/general/ZoneViewports';
 import { ArbRangeIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';
 import PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
-import { RawZone, assertZones, assertProps } from 'ephox/robin/test/ZoneObjects';
+import { assertProps, assertZones, RawZone } from 'ephox/robin/test/ZoneObjects';
 import TextZones from 'ephox/robin/zone/TextZones';
 
 UnitTest.test('BoundedZoneTest', function () {

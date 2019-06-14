@@ -1,8 +1,8 @@
+import { Universe } from '@ephox/boss';
 import { Contracts, Fun, Option } from '@ephox/katamari';
 import { Gather, Spot, SpotPoint } from '@ephox/phoenix';
-import { TextSearch as TextSearchBase, CharPos } from '../../textdata/TextSearch';
-import { TextSeeker, TextSeekerPhaseProcessor, TextSeekerPhase, TextSeekerPhaseConstructor, TextSeekerOutcome } from '../../textdata/TextSeeker';
-import { Universe } from '@ephox/boss';
+import { CharPos, TextSearch as TextSearchBase } from '../../textdata/TextSearch';
+import { TextSeeker, TextSeekerOutcome, TextSeekerPhase, TextSeekerPhaseConstructor, TextSeekerPhaseProcessor } from '../../textdata/TextSeeker';
 
 export interface TextSearchSeeker {
   regex: () => RegExp;

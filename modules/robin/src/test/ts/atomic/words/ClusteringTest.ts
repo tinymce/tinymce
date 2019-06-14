@@ -5,8 +5,8 @@ import { Arr, Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 import { ArbTextIds, arbTextIds } from 'ephox/robin/test/Arbitraries';
 import Clustering from 'ephox/robin/words/Clustering';
-import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
 import { WordDecisionItem } from 'ephox/robin/words/WordDecision';
+import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
 
 UnitTest.test('ClusteringTest', function () {
   const checkWords = function (universe: TestUniverse, words: WordDecisionItem<Gene>[]) {

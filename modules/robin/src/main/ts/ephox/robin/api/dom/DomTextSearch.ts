@@ -1,9 +1,9 @@
 import { DomUniverse } from '@ephox/boss';
-import { TextSearch, TextSearchSeeker } from '../general/TextSearch';
+import { Document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { TextSeekerPhaseProcessor } from '../../textdata/TextSeeker';
-import { Document } from '@ephox/dom-globals';
+import { TextSearch, TextSearchSeeker } from '../general/TextSearch';
 
 const universe = DomUniverse();
 

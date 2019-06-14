@@ -1,8 +1,8 @@
+import { Universe } from '@ephox/boss';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import Parent from '../api/general/Parent';
-import { LeftRight, breakToLeft, breakToRight } from '../parent/Breaker';
+import { breakToLeft, breakToRight, LeftRight } from '../parent/Breaker';
 import Subset from '../parent/Subset';
-import { Universe } from '@ephox/boss';
 
 // Find the subsection of DIRECT children of parent from [first, last])
 const slice = function <E, D> (universe: Universe<E, D>, parent: E, first: Option<E>, last: Option<E>) {

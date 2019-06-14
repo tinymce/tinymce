@@ -1,5 +1,5 @@
-import { Fun, Option } from '@ephox/katamari';
 import { Universe } from '@ephox/boss';
+import { Fun, Option } from '@ephox/katamari';
 import { WordDecisionItem } from '../words/WordDecision';
 
 export interface ZoneDetails<E> {

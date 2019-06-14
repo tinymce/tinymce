@@ -1,6 +1,6 @@
 import { DomUniverse } from '@ephox/boss';
-import Clumps from '../general/Clumps';
 import { Element } from '@ephox/sugar';
+import Clumps from '../general/Clumps';
 
 const universe = DomUniverse();
 

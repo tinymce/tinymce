@@ -4,9 +4,9 @@ import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Fun, Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 import TextZone from 'ephox/robin/api/general/TextZone';
-import { ArbRangeIds, ArbIds, arbIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';
+import { ArbIds, arbIds, ArbRangeIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';
 import PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
-import { RawZone, rawOne, assertProps } from 'ephox/robin/test/ZoneObjects';
+import { assertProps, rawOne, RawZone } from 'ephox/robin/test/ZoneObjects';
 import { Zone } from 'ephox/robin/zone/Zones';
 
 UnitTest.test('TextZoneTest', function () {

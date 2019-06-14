@@ -1,6 +1,6 @@
+import { Universe } from '@ephox/boss';
 import { Fun } from '@ephox/katamari';
 import Look from '../../look/Look';
-import { Universe } from '@ephox/boss';
 
 const selector = function <E, D> (_universe: Universe<E, D>, sel: string) {
   return Look.selector(sel);

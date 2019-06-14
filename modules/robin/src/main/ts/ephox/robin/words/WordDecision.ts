@@ -1,5 +1,5 @@
-import { Struct, Option } from '@ephox/katamari';
 import { Universe } from '@ephox/boss';
+import { Option, Struct } from '@ephox/katamari';
 
 export interface WordDecisionItem<E> {
   item: () => E;

@@ -1,6 +1,6 @@
-import { Gather, Direction } from '@ephox/phoenix';
-import WordUtil from '../util/WordUtil';
 import { Option } from '@ephox/katamari';
+import { Direction, Gather } from '@ephox/phoenix';
+import WordUtil from '../util/WordUtil';
 
 export interface WordWalking extends Direction {
   slicer: (text: string) => Option<[number, number]>;

@@ -1,8 +1,8 @@
+import { Universe } from '@ephox/boss';
 import { Arr, Fun } from '@ephox/katamari';
 import { LanguageZones } from '../zone/LanguageZones';
 import ClusterSearch from './ClusterSearch';
 import { WordDecision } from './WordDecision';
-import { Universe } from '@ephox/boss';
 
 // This identifies the inline edges to the left and right, ignoring any language
 // boundaries

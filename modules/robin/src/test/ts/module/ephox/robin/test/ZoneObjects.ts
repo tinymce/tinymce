@@ -1,7 +1,7 @@
 import { Logger, RawAssertions } from '@ephox/agar';
+import { Gene, TestUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
-import { TestUniverse, Gene } from '@ephox/boss';
 import { Zone } from 'ephox/robin/zone/Zones';
 
 export interface RawZone {
@@ -72,9 +72,4 @@ const assertProps = function (label: string, universe: TestUniverse, zones: Zone
   });
 };
 
-export {
-  raw,
-  rawOne,
-  assertZones,
-  assertProps
-};
+export { raw, rawOne, assertZones, assertProps };

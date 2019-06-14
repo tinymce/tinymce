@@ -1,9 +1,9 @@
+import { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { Split } from '@ephox/phoenix';
 import Clumps from '../../clumps/Clumps';
 import EntryPoints from '../../clumps/EntryPoints';
 import Fractures from '../../clumps/Fractures';
-import { Universe } from '@ephox/boss';
 
 /*
  * clumping fracture: *fractures* method.

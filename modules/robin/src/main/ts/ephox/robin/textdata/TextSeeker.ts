@@ -1,7 +1,7 @@
-import { Adt, Option } from '@ephox/katamari';
-import { Descent, Gather, Seeker, Spot, Transition, Direction, SpotPoint } from '@ephox/phoenix';
-import Structure from '../api/general/Structure';
 import { Universe } from '@ephox/boss';
+import { Adt, Option } from '@ephox/katamari';
+import { Descent, Direction, Gather, Seeker, Spot, SpotPoint, Transition } from '@ephox/phoenix';
+import Structure from '../api/general/Structure';
 
 export interface TextSeekerPhase<E> {
   fold: <T> (

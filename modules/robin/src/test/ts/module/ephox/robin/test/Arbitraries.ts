@@ -1,6 +1,6 @@
+import { Gene, TestUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
-import { TestUniverse, Gene } from '@ephox/boss';
 
 const getIds = function (item: Gene, predicate: (g: Gene) => boolean): string[] {
   const rest = Arr.bind(item.children || [], function (id) { return getIds(id, predicate); });
@@ -73,8 +73,4 @@ const arbRangeIds = function (universe: TestUniverse, predicate: (g: Gene) => bo
   });
 };
 
-export {
-  arbTextIds,
-  arbRangeIds,
-  arbIds
-};
+export { arbTextIds, arbRangeIds, arbIds };

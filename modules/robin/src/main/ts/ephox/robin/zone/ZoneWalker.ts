@@ -1,11 +1,11 @@
+import { Universe } from '@ephox/boss';
 import { Adt, Option } from '@ephox/katamari';
 import { Gather, Transition } from '@ephox/phoenix';
 import { ZonePosition } from '../api/general/ZonePosition';
-import { Trampoline, TrampolineFn } from '../util/Trampoline';
-import { LanguageZones } from './LanguageZones';
-import { Universe } from '@ephox/boss';
 import { ZoneViewports } from '../api/general/ZoneViewports';
+import { Trampoline, TrampolineFn } from '../util/Trampoline';
 import { WordDecisionItem } from '../words/WordDecision';
+import { LanguageZones } from './LanguageZones';
 
 interface ZoneWalkerState<E> {
   fold: <T> (

@@ -1,8 +1,8 @@
+import { Universe } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
+import { WordRange } from '../data/WordRange';
 import CurrentWord from '../util/CurrentWord';
 import EndofWord from './EndofWord';
-import { Universe } from '@ephox/boss';
-import { WordRange } from '../data/WordRange';
 
 /*  Given an initial position (item, offset), identify the optional selection range which represents the
  *  word that (item, offset) is on. The start of the word and the end of the word is NOT considered

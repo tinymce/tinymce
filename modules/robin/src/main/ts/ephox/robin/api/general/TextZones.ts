@@ -1,8 +1,8 @@
+import { Universe } from '@ephox/boss';
 import { Descent } from '@ephox/phoenix';
 import TextZones from '../../zone/TextZones';
-import { Universe } from '@ephox/boss';
-import { ZoneViewports } from './ZoneViewports';
 import { Zones } from '../../zone/Zones';
+import { ZoneViewports } from './ZoneViewports';
 
 /*
  * TextZones return an array of zones based on an area being scanned. It will use the viewport
