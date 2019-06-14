@@ -1,10 +1,14 @@
 import { Fun } from '@ephox/katamari';
-import ZonePosition from './ZonePosition';
+import { ZonePosition } from './ZonePosition';
 
-var anything = {
+export interface ZoneViewports<E> {
+  assess: (item: E) => ZonePosition<E>;
+}
+
+const anything: ZoneViewports<any> = {
   assess: ZonePosition.inView
 };
 
-export default <any> {
-  anything: Fun.constant(anything)
+export const ZoneViewports = {
+  anything: Fun.constant(anything) as <E> () => ZoneViewports<E>
 };

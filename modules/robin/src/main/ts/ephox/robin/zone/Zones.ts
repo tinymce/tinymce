@@ -1,29 +1,46 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
+import { Universe } from '@ephox/boss';
+import { Arr, Fun, Struct } from '@ephox/katamari';
+import { WordScope } from '../data/WordScope';
 import Identify from '../words/Identify';
+import { ZoneDetails } from './LanguageZones';
 
-var nu = Struct.immutableBag([ 'elements', 'lang', 'words' ], [ ]);
+interface ZoneInput<E> {
+  lang: string;
+  words: WordScope[];
+  elements: E[];
+}
 
-var fromWalking = function (universe, groups) {
-  var zones = Arr.map(groups, function (group) {
-    var details = group.details();
-    var lang = group.lang();
+export interface Zone<E> {
+  elements: () => E[];
+  lang: () => string;
+  words: () => WordScope[];
+}
 
-    var line = Arr.map(details, function (x) {
+export interface Zones<E> {
+  zones: () => Zone<E>[];
+}
+
+const nu: <E> (input: ZoneInput<E>) => Zone<E> = Struct.immutableBag([ 'elements', 'lang', 'words' ], [ ]);
+
+const fromWalking = function <E, D> (universe: Universe<E, D>, groups: ZoneDetails<E>[]): Zones<E> {
+  const zones = Arr.map(groups, function (group: ZoneDetails<E>) {
+    const details = group.details();
+    const lang = group.lang();
+
+    const line = Arr.map(details, function (x) {
       return x.text();
     }).join('');
 
-    var elements = Arr.map(details, function (x) {
+    const elements = Arr.map(details, function (x) {
       return x.item();
     });
 
-    var words = Identify.words(line);
+    const words = Identify.words(line);
 
     return nu({
-      lang: lang,
-      words: words,
-      elements: elements
+      lang,
+      words,
+      elements
     });
   });
 
@@ -32,6 +49,6 @@ var fromWalking = function (universe, groups) {
   };
 };
 
-export default <any> {
-  fromWalking: fromWalking
+export const Zones = {
+  fromWalking
 };

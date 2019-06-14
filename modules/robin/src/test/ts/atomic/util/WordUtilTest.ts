@@ -1,35 +1,30 @@
-import { Unicode } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Option, Unicode } from '@ephox/katamari';
 import WordUtil from 'ephox/robin/util/WordUtil';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Word Util', function() {
-  var checkNone = function (text, word) {
-    var actual = word(text);
+UnitTest.test('Word Util', function () {
+  const checkNone = function (text: string, word: (w: string) => Option<string>) {
+    const actual = word(text);
     assert.eq(true, actual.isNone());
   };
 
-  var check = function (expected, text, word) {
-    var actual = word(text);
+  const check = function (expected: string, text: string, word: (w: string) => Option<string>) {
+    const actual = word(text);
     actual.fold(function () {
-      actual.equals(expected) ? true : assert.fail('Expected: ' + expected + ' but received nothing.');
+      assert.fail('Expected: ' + expected + ' but received nothing.');
     }, function (v) {
       assert.eq(expected, v);
     });
   };
 
-  var checkBreak = function (expected, text) {
-    var actual = WordUtil.hasBreak(text);
+  const checkBreak = function (expected: boolean, text: string) {
+    const actual = WordUtil.hasBreak(text);
     assert.eq(expected, actual);
   };
 
-  var checkBreakPosition = function (expected, text, direction) {
-    var actual = direction(text);
-    actual.fold(function () {
-      actual.equals(expected) ? true : assert.fail('Expected: ' + expected + ' and got none.');
-    }, function (i) {
-      assert.eq(expected, i);
-    });
+  const checkBreakPosition = function (expected: number | null, text: string, direction: (w: string) => Option<number>) {
+    const actual = direction(text);
+    assert.eq(expected, actual.getOrNull());
   };
 
   checkNone('ballast', WordUtil.firstWord);
@@ -50,8 +45,8 @@ UnitTest.test('Word Util', function() {
   checkBreak(false, '');
   checkBreak(false, 'applesandoranges');
 
-  checkBreakPosition(Option.none(), '', WordUtil.leftBreak);
-  checkBreakPosition(Option.none(), 'word', WordUtil.leftBreak);
+  checkBreakPosition(null, '', WordUtil.leftBreak);
+  checkBreakPosition(null, 'word', WordUtil.leftBreak);
   checkBreakPosition(0, ' ', WordUtil.leftBreak);
   checkBreakPosition(0, ' word', WordUtil.leftBreak);
   checkBreakPosition(4, 'word ', WordUtil.leftBreak);
@@ -60,4 +55,3 @@ UnitTest.test('Word Util', function() {
   checkBreakPosition(0, ' ' + Unicode.zeroWidth() + '' + Unicode.zeroWidth() + 'word', WordUtil.leftBreak);
   checkBreakPosition(0, ' ' + Unicode.zeroWidth() + 'wo' + Unicode.zeroWidth() + 'rd', WordUtil.leftBreak);
 });
-

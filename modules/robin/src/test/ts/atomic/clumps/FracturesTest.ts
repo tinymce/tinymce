@@ -1,11 +1,9 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
-import { TextGene } from '@ephox/boss';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import Fractures from 'ephox/robin/clumps/Fractures';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('FracturesTest', function() {
-  var regen = function () {
+UnitTest.test('FracturesTest', function () {
+  const regen = function () {
     return TestUniverse(Gene('root', 'root', [
       Gene('a', 'span', [
         Gene('aa', 'span', [
@@ -38,17 +36,16 @@ UnitTest.test('FracturesTest', function() {
     ]));
   };
 
-  var isRoot = function (item) {
+  const isRoot = function (item: Gene) {
     return item.name === 'root';
   };
 
-  var check = function (expected, startId, finishId, _doc?) {
-    var doc = _doc !== undefined ? _doc : regen();
-    var start = doc.find(doc.get(), startId).getOrDie();
-    var finish = doc.find(doc.get(), finishId).getOrDie();
-    var actual = Fractures.fracture(doc, isRoot, start, finish);
+  const check = function (expected: string, startId: string, finishId: string, doc: TestUniverse = regen()) {
+    const start = doc.find(doc.get(), startId).getOrDie();
+    const finish = doc.find(doc.get(), finishId).getOrDie();
+    const actual = Fractures.fracture(doc, isRoot, start, finish);
     actual.each(function (act) {
-      var wrapper = doc.create().nu('bold');
+      const wrapper = doc.create().nu('bold');
       if (act.length > 0) {
         doc.insert().before(act[0], wrapper);
         doc.insert().appendAll(wrapper, act);
@@ -61,27 +58,27 @@ UnitTest.test('FracturesTest', function() {
 
   check(
     'root(' +
-      'span(' +
-        'span,' +
-        'bold(' +
-          'span(' +
-            '"aaa",' +
-            '"aab",' +
-            '"aac"' +
-          '),' +
-          '"ab",' +
-          'span(' +
-            '"aca",' +
-            'span(' +
-              '"acba",' +
-              'span(' +
-                '"acbba"' +
-              ')' +
-            ')' + 
-          ')' +
-        '),' +
-        'span(span(span))' +
-      ')' + 
+    'span(' +
+    'span,' +
+    'bold(' +
+    'span(' +
+    '"aaa",' +
+    '"aab",' +
+    '"aac"' +
+    '),' +
+    '"ab",' +
+    'span(' +
+    '"aca",' +
+    'span(' +
+    '"acba",' +
+    'span(' +
+    '"acbba"' +
+    ')' +
+    ')' +
+    ')' +
+    '),' +
+    'span(span(span))' +
+    ')' +
     ')', 'aaa', 'acbba', TestUniverse(Gene('root', 'root', [
       Gene('a', 'span', [
         Gene('aa', 'span', [
@@ -114,7 +111,7 @@ UnitTest.test('FracturesTest', function() {
   //   ])
   // ])));
 
-  /* 
+  /*
   Basic
   'root(' +
     'span(' +
@@ -132,7 +129,7 @@ UnitTest.test('FracturesTest', function() {
             '"acbba"' +
           ')' +
         ')' +
-      ')' + 
+      ')' +
     '),' +
     '"b",' +
     'span(' +
@@ -172,7 +169,7 @@ UnitTest.test('FracturesTest', function() {
   //             '"acbba"' +
   //           ')' +
   //         ')' +
-  //       ')' + 
+  //       ')' +
   //     '),' +
   //     '"b",' +
   //     'span(' +
@@ -190,39 +187,38 @@ UnitTest.test('FracturesTest', function() {
 
   check(
     'root(' +
-      'span(' +
-        'span,' +
-        'bold(' +
-          'span(' +
-            '"aaa",' +
-            '"aab",' +
-            '"aac"' +
-          '),' +
-          '"ab",' +
-          'span(' +
-            '"aca",' +
-            'span(' +
-              '"acba",' +
-              'span(' +
-                '"acbba"' +
-              ')' +
-            ')' + 
-          ')' +
-        '),' +
-        'span(span(span))' +
-      '),' +
-      '"b",' +
-      'span(' +
-        '"ca",' +
-        'span(' +
-          'span(' +
-            '"cbaa",' +
-            '"cbab"' +
-          '),' +
-          '"cbb"' +
-        ')' +
-      ')' +
+    'span(' +
+    'span,' +
+    'bold(' +
+    'span(' +
+    '"aaa",' +
+    '"aab",' +
+    '"aac"' +
+    '),' +
+    '"ab",' +
+    'span(' +
+    '"aca",' +
+    'span(' +
+    '"acba",' +
+    'span(' +
+    '"acbba"' +
+    ')' +
+    ')' +
+    ')' +
+    '),' +
+    'span(span(span))' +
+    '),' +
+    '"b",' +
+    'span(' +
+    '"ca",' +
+    'span(' +
+    'span(' +
+    '"cbaa",' +
+    '"cbab"' +
+    '),' +
+    '"cbb"' +
+    ')' +
+    ')' +
     ')',
     'aaa', 'acbba');
 });
-

@@ -1,11 +1,10 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, TestUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import Simplify from 'ephox/robin/pathway/Simplify';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('SimplifyTest', function() {
-  var doc = TestUniverse(Gene('root', 'root', [
+UnitTest.test('SimplifyTest', function () {
+  const doc = TestUniverse(Gene('root', 'root', [
     Gene('a', '.', [
       Gene('aa', '.', [
         Gene('aaa', '.'),
@@ -36,19 +35,18 @@ UnitTest.test('SimplifyTest', function() {
     ])
   ]));
 
-  var check = function (expected, raw) {
-    var path = Arr.map(raw, function (r) {
+  const check = function (expected: string[], raw: string[]) {
+    const path = Arr.map(raw, function (r) {
       return doc.find(doc.get(), r).getOrDie('Could not find: ' + r);
     });
 
-    var actual = Simplify.simplify(doc, path);
+    const actual = Simplify.simplify(doc, path);
     assert.eq(expected, Arr.map(actual, function (s) { return s.id; }));
   };
 
   check([], []);
-  check([ 'a' ], [ 'a' ]);
-  check([ 'a' ], [ 'a', 'aa', 'ab' ]);
-  check([ 'a' ], [ 'a', 'aa', 'ab', 'acbba' ]);
-  check([ 'a', 'b' ], [ 'a', 'aa', 'ab', 'b' ]);
+  check(['a'], ['a']);
+  check(['a'], ['a', 'aa', 'ab']);
+  check(['a'], ['a', 'aa', 'ab', 'acbba']);
+  check(['a', 'b'], ['a', 'aa', 'ab', 'b']);
 });
-

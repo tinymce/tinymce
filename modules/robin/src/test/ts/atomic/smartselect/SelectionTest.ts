@@ -1,12 +1,10 @@
 import { RawAssertions } from '@ephox/agar';
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
-import { TextGene } from '@ephox/boss';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import Selection from 'ephox/robin/smartselect/Selection';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('SelectionTest', function() {
-  var doc1 = TestUniverse(Gene('root', 'root', [
+UnitTest.test('SelectionTest', function () {
+  const doc1 = TestUniverse(Gene('root', 'root', [
     Gene('p1', 'p', [
       TextGene('a', 'There i'),
       TextGene('b', 's something'),
@@ -26,7 +24,7 @@ UnitTest.test('SelectionTest', function() {
     ])
   ]));
 
-  var doc2 = TestUniverse(Gene('root', 'root', [
+  const doc2 = TestUniverse(Gene('root', 'root', [
     TextGene('a', 'This is '),
     Gene('b', 'span', [
       TextGene('c', 'som')
@@ -40,24 +38,31 @@ UnitTest.test('SelectionTest', function() {
     TextGene('i', '\uFEFF')
   ]));
 
-  var doc3 =  TestUniverse(Gene('root', 'root', [
+  const doc3 = TestUniverse(Gene('root', 'root', [
     TextGene('a', ' \uFEFF'),
     TextGene('b', '\uFEFF\uFEFF'),
     TextGene('c', '\uFEFF ')
   ]));
 
-  var check = function (expected, doc, id, offset) {
-    var item = doc.find(doc.get(), id).getOrDie('Could not find item: ' + id);
-    var actual = Selection.word(doc, item, offset).getOrDie('Selection for: (' + id + ', ' + offset + ') yielded nothing');
+  interface Expected {
+    startContainer: string;
+    startOffset: number;
+    endContainer: string;
+    endOffset: number;
+  }
+
+  const check = function (expected: Expected, doc: TestUniverse, id: string, offset: number) {
+    const item = doc.find(doc.get(), id).getOrDie('Could not find item: ' + id);
+    const actual = Selection.word(doc, item, offset).getOrDie('Selection for: (' + id + ', ' + offset + ') yielded nothing');
     RawAssertions.assertEq('Selection for: (' + id + ', ' + offset + ') => startContainer', expected.startContainer, actual.startContainer().id);
     RawAssertions.assertEq('Selection for: (' + id + ', ' + offset + ') => startOffset', expected.startOffset, actual.startOffset());
     RawAssertions.assertEq('Selection for: (' + id + ', ' + offset + ') => endContainer', expected.endContainer, actual.endContainer().id);
     RawAssertions.assertEq('Selection for: (' + id + ', ' + offset + ') => endOffset', expected.endOffset, actual.endOffset());
   };
 
-  var checkNone = function (doc, id, offset) {
-    var item = doc.find(doc.get(), id).getOrDie();
-    var actual = Selection.word(doc, item, offset);
+  const checkNone = function (doc: TestUniverse, id: string, offset: number) {
+    const item = doc.find(doc.get(), id).getOrDie();
+    const actual = Selection.word(doc, item, offset);
     assert.eq(true, actual.isNone());
   };
 
@@ -118,7 +123,7 @@ UnitTest.test('SelectionTest', function() {
   checkNone(doc3, 'b', '\uFEFF'.length);
   checkNone(doc3, 'b', '\uFEFF\uFEFF'.length);
 
-  var doc4 = TestUniverse(Gene('root', 'root', [
+  const doc4 = TestUniverse(Gene('root', 'root', [
     Gene('s1-fr', 'span', [
       TextGene('t1-fr', 'da'),
       TextGene('t2-fr', 'aa bo'),
@@ -231,4 +236,3 @@ UnitTest.test('SelectionTest', function() {
     endOffset: ' der'.length
   }, doc4, 't11-de', ' d'.length);
 });
-

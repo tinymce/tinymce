@@ -49,7 +49,7 @@ export type Successor = {
   current: Transition,
   next: Transition,
   fallback: Option<Transition>
-}
+};
 
 export interface Wrapter<E> {
   element: () => E;
@@ -59,5 +59,5 @@ export interface Wrapter<E> {
 export interface SpanWrapRange<E> {
   range(): SpotPoints<E>;
   temporary(): boolean;
-  wrappers(): E[]
+  wrappers(): E[];
 }

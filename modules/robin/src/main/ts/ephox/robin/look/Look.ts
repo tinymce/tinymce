@@ -1,3 +1,4 @@
+import { Universe } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
 
 /**
@@ -6,11 +7,11 @@ import { Option } from '@ephox/katamari';
  *
  * f: item -> boolean
  */
-var predicate = function (f) {
-  return function (universe, item) {
+const predicate = function <E> (f: (e: E) => boolean) {
+  return function <D> (universe: Universe<E, D>, item: E) {
     return f(item) ?
-        Option.some(item) :
-        universe.up().predicate(item, f);
+      Option.some(item) :
+      universe.up().predicate(item, f);
   };
 };
 
@@ -20,15 +21,15 @@ var predicate = function (f) {
  *
  * sel: selector
  */
-var selector = function (sel) {
-  return function (universe, item) {
+const selector = function (sel: string) {
+  return function <E, D> (universe: Universe<E, D>, item: E) {
     return universe.is(item, sel) ?
-        Option.some(item) :
-        universe.up().selector(item, sel);
+      Option.some(item) :
+      universe.up().selector(item, sel);
   };
 };
 
-export default <any> {
-  predicate: predicate,
-  selector: selector
+export default {
+  predicate,
+  selector
 };

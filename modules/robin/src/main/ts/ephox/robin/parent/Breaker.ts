@@ -1,5 +1,5 @@
-import { Arr, Fun, Option, Struct } from '@ephox/katamari';
 import { Universe } from '@ephox/boss';
+import { Arr, Fun, Option, Struct } from '@ephox/katamari';
 
 interface Bisect<E> {
   before: () => E[];
@@ -94,8 +94,4 @@ const breakPath = function <E, D>(universe: Universe<E, D>, item: E, isTop: (e: 
   return next(item, Option.none(), []);
 };
 
-export default {
-  breakToLeft,
-  breakToRight,
-  breakPath
-};
+export { breakToLeft, breakToRight, breakPath };

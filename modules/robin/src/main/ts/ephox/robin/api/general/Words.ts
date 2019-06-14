@@ -1,15 +1,16 @@
+import { Universe } from '@ephox/boss';
 import WordUtil from '../../util/WordUtil';
 import Identify from '../../words/Identify';
 
-var identify = function (allText) {
+const identify = function (allText: string) {
   return Identify.words(allText);
 };
 
-var isWord = function (_universe, text) {
+const isWord = function (_universe: Universe<any, any>, text: string) {
   return !WordUtil.hasBreak(text);
 };
 
-export default <any> {
-  identify: identify,
-  isWord: isWord
+export default {
+  identify,
+  isWord
 };
