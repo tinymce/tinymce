@@ -1,11 +1,12 @@
 import Selection from '../../smartselect/Selection';
 import { Universe } from '@ephox/boss';
+import { Option } from '@ephox/katamari';
+import { WordRange } from '../../data/WordRange';
 
 // The optimise parameter is no longer required in this API.
 // Remove optimise as a code quality task: TBIO-4356
-const word = function <E, D> (universe: Universe<E, D>, item: E, offset: number, optimise?: any) {
-  return Selection.word(universe, item, offset);
-};
+type WordFn = <E, D>(universe: Universe<E, D>, item: E, offset: number, optimise?: any) => Option<WordRange<E>>;
+const word: WordFn = Selection.word;
 
 export default {
   word

@@ -29,8 +29,6 @@ const cata = function <E, T> (subject: ZonePosition<E>, onAbove: (item: E) => T,
 };
 
 export const ZonePosition = {
-  aboveView: adt.aboveView,
-  inView: adt.inView,
-  belowView: adt.belowView,
+  ...adt,
   cata
 };

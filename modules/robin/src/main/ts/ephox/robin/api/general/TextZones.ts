@@ -2,6 +2,7 @@ import { Descent } from '@ephox/phoenix';
 import TextZones from '../../zone/TextZones';
 import { Universe } from '@ephox/boss';
 import { ZoneViewports } from './ZoneViewports';
+import { Zones } from '../../zone/Zones';
 
 /*
  * TextZones return an array of zones based on an area being scanned. It will use the viewport
@@ -29,9 +30,8 @@ const range = function <E, D> (universe: Universe<E, D>, start: E, soffset: numb
   return TextZones.fromRange(universe, startPt.element(), finishPt.element(), envLang, viewport);
 };
 
-const empty = function <E> () {
-  return TextZones.empty<E>();
-};
+type EmptyFn = <E>() => Zones<E>;
+const empty: EmptyFn = TextZones.empty;
 
 export default {
   single,

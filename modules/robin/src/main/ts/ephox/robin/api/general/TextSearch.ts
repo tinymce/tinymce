@@ -1,7 +1,7 @@
 import { Contracts, Fun, Option } from '@ephox/katamari';
 import { Gather, Spot, SpotPoint } from '@ephox/phoenix';
-import { TextSearch as TextSearchBase } from '../../textdata/TextSearch';
-import { TextSeeker, TextSeekerPhaseProcessor, TextSeekerPhase, TextSeekerPhaseConstructor } from '../../textdata/TextSeeker';
+import { TextSearch as TextSearchBase, CharPos } from '../../textdata/TextSearch';
+import { TextSeeker, TextSeekerPhaseProcessor, TextSeekerPhase, TextSeekerPhaseConstructor, TextSeekerOutcome } from '../../textdata/TextSeeker';
 import { Universe } from '@ephox/boss';
 
 export interface TextSearchSeeker {
@@ -11,31 +11,27 @@ export interface TextSearchSeeker {
 
 const seekerSig = Contracts.exactly(['regex', 'attempt']);
 
-const previousChar = function (text: string, offset: Option<number>) {
-  return TextSearchBase.previous(text, offset);
-};
+type PreviousCharFn = (text: string, offset: Option<number>) => Option<CharPos>;
+const previousChar: PreviousCharFn = TextSearchBase.previous;
 
-const nextChar = function (text: string, offset: Option<number>) {
-  return TextSearchBase.next(text, offset);
-};
+type NextCharFn = (text: string, offset: Option<number>) => Option<CharPos>;
+const nextChar: NextCharFn = TextSearchBase.next;
 
 // Returns: a TextSeeker outcome ADT of 'aborted', 'success', or 'edge'.
 // 'success' returns a point {element, offset} to the left of (item, offset)
 // successfully found using a process function.
 // 'edge' returns the text element where the process stopped due to being adjacent to a
 // block boundary.
-const repeatLeft = function <E, D> (universe: Universe<E, D>, item: E, offset: number, process: TextSeekerPhaseProcessor<E, D>) {
-  return TextSeeker.repeatLeft(universe, item, offset, process);
-};
+type RepeatLeftFn = <E, D>(universe: Universe<E, D>, item: E, offset: number, process: TextSeekerPhaseProcessor<E, D>) => TextSeekerOutcome<E>;
+const repeatLeft: RepeatLeftFn = TextSeeker.repeatLeft;
 
 // Returns: a TextSeeker outcome ADT of 'aborted', 'success', or 'edge'.
 // 'success' returns a point {element, offset} to the right of (item, offset)
 // successfully found using a process function.
 // 'edge' returns the text element where the process stopped due to being adjacent to a
 // block boundary.
-const repeatRight = function <E, D> (universe: Universe<E, D>, item: E, offset: number, process: TextSeekerPhaseProcessor<E, D>) {
-  return TextSeeker.repeatRight(universe, item, offset, process);
-};
+type RepeatRightFn = <E, D>(universe: Universe<E, D>, item: E, offset: number, process: TextSeekerPhaseProcessor<E, D>) => TextSeekerOutcome<E>;
+const repeatRight: RepeatRightFn = TextSeeker.repeatRight;
 
 // Returns: a TextSeeker outcome ADT of 'aborted', 'success', or 'edge'.
 // 'success' returns a point {element, offset} to the left of (item, offset)
