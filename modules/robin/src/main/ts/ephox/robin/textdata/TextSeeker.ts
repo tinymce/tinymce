@@ -7,12 +7,12 @@ export interface TextSeekerPhase<E> {
   fold: <T> (
     abort: () => T,
     kontinue: () => T,
-    finish: (info: E) => T
+    finish: (info: SpotPoint<E>) => T
   ) => T;
   match: <T> (branches: {
     abort: () => T,
     kontinue: () => T,
-    finish: (info: E) => T
+    finish: (info: SpotPoint<E>) => T
   }) => T;
   log: (label: string) => void;
 }
@@ -49,7 +49,7 @@ export type TextSeekerPhaseConstructor = typeof phase;
 const outcome: {
   aborted: <E> () => TextSeekerOutcome<E>;
   edge: <E> (element: E) => TextSeekerOutcome<E>;
-  success: <E> (info: E) => TextSeekerOutcome<E>;
+  success: <E> (info: SpotPoint<E>) => TextSeekerOutcome<E>;
 } = Adt.generate([
   { aborted: [] },
   { edge: [ 'element' ] },
@@ -82,9 +82,13 @@ const repeat = function <E, D> (universe: Universe<E, D>, item: E, mode: Transit
     return recurse(recent);
   } else {
     const text = universe.property().getText(item);
-    return process(universe, phase, item, text, offsetOption).fold(terminate, function () {
-      return recurse(Option.some(item));
-    }, outcome.success);
+    return process(universe, phase, item, text, offsetOption).fold(
+      terminate,
+      function () {
+        return recurse(Option.some(item));
+      },
+      outcome.success
+    );
   }
 };
 
