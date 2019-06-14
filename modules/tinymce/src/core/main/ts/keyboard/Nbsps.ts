@@ -15,27 +15,14 @@ import Parents from '../dom/Parents';
 import * as ElementType from '../dom/ElementType';
 import { getElementFromPosition } from '../caret/CaretUtils';
 import CaretFinder from '../caret/CaretFinder';
-import { isAtStartOfBlock, isAtEndOfBlock } from '../caret/BlockBoundary';
+import { isAtStartOfBlock, isAtEndOfBlock, isAfterBlock, isBeforeBlock } from '../caret/BlockBoundary';
 import { isNbsp, isContent } from '../text/CharType';
 import { isAfterBr, isBeforeBr } from '../caret/CaretBr';
-import { isAfterSpace, isBeforeSpace, isAfterBlock, isBeforeBlock } from '../caret/CaretPositionPredicates';
+import { isAfterSpace, isBeforeSpace } from '../caret/CaretPositionPredicates';
 
 const nbsp = '\u00a0';
 
 const isInMiddleOfText = (pos: CaretPosition) => CaretPosition.isTextPosition(pos) && !pos.isAtStart() && !pos.isAtEnd();
-
-const textPositionToIndexPosition = (pos: CaretPosition): CaretPosition => {
-  const container = pos.container();
-  const offset = pos.offset();
-
-  if (NodeType.isText(container) && offset === 0) {
-    return CaretPosition.before(container);
-  } else if (NodeType.isText(container) && offset === container.data.length) {
-    return CaretPosition.after(container);
-  } else {
-    return pos;
-  }
-};
 
 const getClosestBlock = (root: Element, pos: CaretPosition): Element => {
   const parentBlocks = Arr.filter(Parents.parentsAndSelf(Element.fromDom(pos.container()), root), ElementType.isBlock);
@@ -92,7 +79,7 @@ const needsToBeNbspLeft = (root: Element, pos: CaretPosition) => {
   if (isInPre(pos)) {
     return false;
   } else {
-    return isAtStartOfBlock(root, pos) || isAfterBlock(textPositionToIndexPosition(pos)) || isAfterBr(root, pos) || hasSpaceBefore(root, pos);
+    return isAtStartOfBlock(root, pos) || isBeforeBlock(root, pos) || isAfterBr(root, pos) || hasSpaceBefore(root, pos);
   }
 };
 
@@ -112,7 +99,7 @@ const needsToBeNbspRight = (root: Element, pos: CaretPosition) => {
   if (isInPre(afterPos)) {
     return false;
   } else {
-    return isAtEndOfBlock(root, afterPos) || isBeforeBlock(textPositionToIndexPosition(afterPos)) || isBeforeBr(root, afterPos) || hasSpaceAfter(root, afterPos);
+    return isAtEndOfBlock(root, afterPos) || isAfterBlock(root, afterPos) || isBeforeBr(root, afterPos) || hasSpaceAfter(root, afterPos);
   }
 };
 

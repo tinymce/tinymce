@@ -313,6 +313,22 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, fai
             sFireInsert(editor),
             tinyApis.sAssertSelection([0, 1], 2, [0, 1], 2),
             tinyApis.sAssertContent('<div><p>b</p>&nbsp;a</div>')
+          ])),
+          Logger.t('Do not trim nbsp in an inline before a block element', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<div><em>a&nbsp;</em><p>b</p></div>'),
+            tinyApis.sSetCursor([0, 0, 0], 2),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 0, 0], 2, [0, 0, 0], 2),
+            tinyApis.sAssertContent('<div><em>a&nbsp;</em><p>b</p></div>')
+          ])),
+          Logger.t('Do not trim nbsp in an inline after a block element', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<div><p>b</p><em>&nbsp;a</em></div>'),
+            tinyApis.sSetCursor([0, 1, 0], 2),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 1, 0], 2, [0, 1, 0], 2),
+            tinyApis.sAssertContent('<div><p>b</p><em>&nbsp;a</em></div>')
           ]))
         ]))
       ]))

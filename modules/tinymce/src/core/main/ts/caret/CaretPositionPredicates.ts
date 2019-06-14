@@ -12,7 +12,6 @@ import CaretPosition from './CaretPosition';
 import { isWhiteSpace } from '../text/CharType';
 import { getChildNodeAtRelativeOffset } from './CaretUtils';
 import { Element, Css } from '@ephox/sugar';
-import { isBlock } from '../dom/ElementType';
 
 const isChar = (forward: boolean, predicate: (chr: string) => boolean, pos: CaretPosition) => {
   return Option.from(pos.container()).filter(NodeType.isText).exists((text: Text) => {
@@ -41,8 +40,6 @@ const isCefNode = (node: Node) => NodeType.isContentEditableFalse(node) && !Node
 
 const isBeforeImageBlock = matchesElementPosition(true, isImageBlock);
 const isAfterImageBlock = matchesElementPosition(false, isImageBlock);
-const isBeforeBlock = matchesElementPosition(true, Fun.compose(isBlock, Element.fromDom));
-const isAfterBlock = matchesElementPosition(false, Fun.compose(isBlock, Element.fromDom));
 const isBeforeTable = matchesElementPosition(true, NodeType.isTable);
 const isAfterTable = matchesElementPosition(false, NodeType.isTable);
 const isBeforeContentEditableFalse = matchesElementPosition(true, isCefNode);
@@ -51,8 +48,6 @@ const isAfterContentEditableFalse = matchesElementPosition(false, isCefNode);
 export {
   isBeforeSpace,
   isAfterSpace,
-  isBeforeBlock,
-  isAfterBlock,
   isEmptyText,
   isBeforeContentEditableFalse,
   isAfterContentEditableFalse,
