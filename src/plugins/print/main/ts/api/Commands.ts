@@ -5,9 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Env from 'tinymce/core/api/Env';
+
 const register = function (editor) {
   editor.addCommand('mcePrint', function () {
-    editor.getWin().print();
+    // TINY-3762 IE will print the current window instead of the iframe window
+    // however using execCommand appears to make it print from the correct window
+    if (Env.ie <= 11) {
+      editor.getDoc().execCommand('print', false, null);
+    } else {
+      editor.getWin().print();
+    }
   });
 };
 
