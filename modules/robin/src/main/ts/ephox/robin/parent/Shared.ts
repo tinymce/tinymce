@@ -32,6 +32,6 @@ const commonElement = function <E, D>(universe: Universe<E, D>, start: Option<E>
   });
 };
 
-export default {
+export {
   oneAll
 };

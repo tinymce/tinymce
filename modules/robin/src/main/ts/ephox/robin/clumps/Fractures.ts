@@ -1,6 +1,6 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
 import Parent from '../api/general/Parent';
-import Breaker, { LeftRight } from '../parent/Breaker';
+import { LeftRight, breakToLeft, breakToRight } from '../parent/Breaker';
 import Subset from '../parent/Subset';
 import { Universe } from '@ephox/boss';
 
@@ -35,7 +35,7 @@ const breakLeft = function <E, D> (universe: Universe<E, D>, element: E, common:
   if (universe.eq(common, element)) {
     return Option.none<E>();
   } else {
-    const breakage = breakPath(universe, element, common, Breaker.breakToLeft);
+    const breakage = breakPath(universe, element, common, breakToLeft);
     // Move the first element into the second section of the split because we want to include element in the section.
     if (breakage.splits().length > 0) {
       universe.insert().prepend(breakage.splits()[0].second(), element);
@@ -49,7 +49,7 @@ const breakRight = function <E, D> (universe: Universe<E, D>, element: E, common
   if (universe.eq(common, element)) {
     return Option.none<E>();
   } else {
-    const breakage = breakPath(universe, element, common, Breaker.breakToRight);
+    const breakage = breakPath(universe, element, common, breakToRight);
     return Option.some(breakage.first());
   }
 };

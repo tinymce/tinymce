@@ -3,10 +3,10 @@ import { UnitTest } from '@ephox/bedrock';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr, Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
-import Arbitraries, { ArbTextIds } from 'ephox/robin/test/Arbitraries';
+import { ArbTextIds, arbTextIds } from 'ephox/robin/test/Arbitraries';
 import Clustering from 'ephox/robin/words/Clustering';
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
-import { WordDecisionItem } from '../../../../main/ts/ephox/robin/words/WordDecision';
+import { WordDecisionItem } from 'ephox/robin/words/WordDecision';
 
 UnitTest.test('ClusteringTest', function () {
   const checkWords = function (universe: TestUniverse, words: WordDecisionItem<Gene>[]) {
@@ -230,7 +230,7 @@ UnitTest.test('ClusteringTest', function () {
       function () {
         Jsc.property(
           label + ': Checking that text nodes have consistent zones',
-          Arbitraries.arbTextIds(universe),
+          arbTextIds(universe),
           function (idInfo: ArbTextIds) {
             const startId = idInfo.startId;
             const textIds = idInfo.textIds;

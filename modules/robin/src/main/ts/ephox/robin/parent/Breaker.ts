@@ -94,7 +94,7 @@ const breakPath = function <E, D>(universe: Universe<E, D>, item: E, isTop: (e: 
   return next(item, Option.none(), []);
 };
 
-export default {
+export {
   breakToLeft,
   breakToRight,
   breakPath

@@ -4,10 +4,10 @@ import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Fun, Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 import TextZone from 'ephox/robin/api/general/TextZone';
-import Arbitraries, { ArbRangeIds, ArbIds } from 'ephox/robin/test/Arbitraries';
+import { ArbRangeIds, ArbIds, arbIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';
 import PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
-import ZoneObjects, { RawZone } from 'ephox/robin/test/ZoneObjects';
-import { Zone } from '../../../../main/ts/ephox/robin/zone/Zones';
+import { RawZone, rawOne, assertProps } from 'ephox/robin/test/ZoneObjects';
+import { Zone } from 'ephox/robin/zone/Zones';
 
 UnitTest.test('TextZoneTest', function () {
   const doc1 = TestUniverse(Gene('root', 'root', [
@@ -56,14 +56,14 @@ UnitTest.test('TextZoneTest', function () {
         // Good
       }, function (act) {
         assert.fail(label + '\nShould not have created zone: ' + JSON.stringify(
-          JSON.stringify(ZoneObjects.rawOne(doc1, act))
+          JSON.stringify(rawOne(doc1, act))
         ));
       });
     }, function (exp) {
       actual.fold(function () {
         assert.fail(label + '\nDid not find a zone. Expected to find: ' + JSON.stringify(exp, null, 2));
       }, function (act) {
-        RawAssertions.assertEq(label + '\nTesting zone: ', exp, ZoneObjects.rawOne(doc1, act));
+        RawAssertions.assertEq(label + '\nTesting zone: ', exp, rawOne(doc1, act));
       });
     });
   };
@@ -143,7 +143,7 @@ UnitTest.test('TextZoneTest', function () {
     const item = doc1.find(doc1.get(), info.startId).getOrDie();
     const actual = TextZone.single(doc1, item, 'en', 'en');
     return actual.forall(function (zone) {
-      ZoneObjects.assertProps('Testing zone for single(' + info.startId + ')', doc1, [zone]);
+      assertProps('Testing zone for single(' + info.startId + ')', doc1, [zone]);
       return true;
     });
   };
@@ -153,7 +153,7 @@ UnitTest.test('TextZoneTest', function () {
     const item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
     const actual = TextZone.range(doc1, item1, 0, item2, 0, 'en', 'en');
     return actual.forall(function (zone) {
-      ZoneObjects.assertProps('Testing zone for range(' + info.startId + '->' + info.finishId + ')', doc1, [zone]);
+      assertProps('Testing zone for range(' + info.startId + '->' + info.finishId + ')', doc1, [zone]);
       return true;
     });
   };
@@ -161,7 +161,7 @@ UnitTest.test('TextZoneTest', function () {
   PropertyAssertions.check(
     'Check text single',
     [
-      Arbitraries.arbIds(doc1, doc1.property().isText)
+      arbIds(doc1, doc1.property().isText)
     ],
     checkSingleProp
   );
@@ -169,13 +169,13 @@ UnitTest.test('TextZoneTest', function () {
   PropertyAssertions.check(
     'Check text range',
     [
-      Arbitraries.arbRangeIds(doc1, doc1.property().isText)
+      arbRangeIds(doc1, doc1.property().isText)
     ],
     checkRangeProp
   );
 
   PropertyAssertions.check('Check that empty tags produce no zone', [
-    Arbitraries.arbIds(doc1, doc1.property().isEmptyTag)
+    arbIds(doc1, doc1.property().isEmptyTag)
   ], function (info: ArbIds) {
     const item = doc1.find(doc1.get(), info.startId).getOrDie();
     // Consider other offsets
@@ -186,7 +186,7 @@ UnitTest.test('TextZoneTest', function () {
   PropertyAssertions.check(
     'Check empty range',
     [
-      Arbitraries.arbRangeIds(doc1, doc1.property().isEmptyTag)
+      arbRangeIds(doc1, doc1.property().isEmptyTag)
     ],
     checkRangeProp
   );
@@ -194,7 +194,7 @@ UnitTest.test('TextZoneTest', function () {
   PropertyAssertions.check(
     'Check boundary single',
     [
-      Arbitraries.arbIds(doc1, doc1.property().isBoundary)
+      arbIds(doc1, doc1.property().isBoundary)
     ],
     checkSingleProp
   );
@@ -202,7 +202,7 @@ UnitTest.test('TextZoneTest', function () {
   PropertyAssertions.check(
     'Check boundary range',
     [
-      Arbitraries.arbRangeIds(doc1, doc1.property().isBoundary)
+      arbRangeIds(doc1, doc1.property().isBoundary)
     ],
     checkRangeProp
   );
@@ -210,7 +210,7 @@ UnitTest.test('TextZoneTest', function () {
   PropertyAssertions.check(
     'Check inline tag single',
     [
-      Arbitraries.arbRangeIds(doc1, function (item: Gene) {
+      arbRangeIds(doc1, function (item: Gene) {
         return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
       })
     ],
@@ -220,7 +220,7 @@ UnitTest.test('TextZoneTest', function () {
   PropertyAssertions.check(
     'Check inline tag range',
     [
-      Arbitraries.arbRangeIds(doc1, function (item: Gene) {
+      arbRangeIds(doc1, function (item: Gene) {
         return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
       })
     ],
@@ -230,7 +230,7 @@ UnitTest.test('TextZoneTest', function () {
   PropertyAssertions.check(
     'Check any tag range',
     [
-      Arbitraries.arbRangeIds(doc1, Fun.constant(true))
+      arbRangeIds(doc1, Fun.constant(true))
     ],
     checkRangeProp
   );

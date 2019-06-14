@@ -73,7 +73,7 @@ const arbRangeIds = function (universe: TestUniverse, predicate: (g: Gene) => bo
   });
 };
 
-export default {
+export {
   arbTextIds,
   arbRangeIds,
   arbIds

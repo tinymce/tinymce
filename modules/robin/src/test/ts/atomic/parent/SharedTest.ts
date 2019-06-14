@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Gene, TestUniverse, Universe } from '@ephox/boss';
 import { Arr, Option } from '@ephox/katamari';
-import Shared from 'ephox/robin/parent/Shared';
+import { oneAll } from 'ephox/robin/parent/Shared';
 
 UnitTest.test('SharedTest', function () {
   const data = TestUniverse(Gene('root', 'root', [
@@ -46,14 +46,14 @@ UnitTest.test('SharedTest', function () {
 
   const checkNone = function (target: string, ids: string[]) {
     checker(target, ids, function (look, items) {
-      const actual = Shared.oneAll(data, look, items);
+      const actual = oneAll(data, look, items);
       assert.eq(true, actual.isNone());
     });
   };
 
   const check = function (expected: string, target: string, ids: string[]) {
     checker(target, ids, function (look, items) {
-      const actual = Shared.oneAll(data, look, items).getOrDie();
+      const actual = oneAll(data, look, items).getOrDie();
       assert.eq(expected, actual.id);
     });
   };

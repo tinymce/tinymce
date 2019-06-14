@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Gene, Logger, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
-import Breaker from 'ephox/robin/parent/Breaker';
+import { breakToRight, breakPath } from 'ephox/robin/parent/Breaker';
 
 UnitTest.test('BreakerTest', function () {
   const generator = function () {
@@ -27,7 +27,7 @@ UnitTest.test('BreakerTest', function () {
   };
 
   const doc1 = generator();
-  Breaker.breakToRight(doc1, doc1.find(doc1.get(), 'ol1').getOrDie(), doc1.find(doc1.get(), 'li3').getOrDie());
+  breakToRight(doc1, doc1.find(doc1.get(), 'ol1').getOrDie(), doc1.find(doc1.get(), 'li3').getOrDie());
   assert.eq(
     'root(' +
     'd1(' +
@@ -42,9 +42,9 @@ UnitTest.test('BreakerTest', function () {
     ')', Logger.basic(doc1.get()));
 
   const doc2 = generator();
-  const result = Breaker.breakPath(doc2, doc2.find(doc2.get(), 'li2_text').getOrDie(), function (item) {
+  const result = breakPath(doc2, doc2.find(doc2.get(), 'li2_text').getOrDie(), function (item) {
     return item.name === 'ol';
-  }, Breaker.breakToRight);
+  }, breakToRight);
 
   assert.eq('ol1', result.first().id);
   assert.eq('clone**<ol1>', result.second().getOrDie().id);
