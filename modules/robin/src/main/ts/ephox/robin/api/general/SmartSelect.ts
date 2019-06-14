@@ -1,9 +1,10 @@
 import Selection from '../../smartselect/Selection';
+import { Universe } from '@ephox/boss';
 
-var word = function (universe, item, offset, optimise) {
-  return Selection.word(universe, item, offset, optimise);
+const word = function <E, D> (universe: Universe<E, D>, item: E, offset: number, optimise?: any) {
+  return Selection.word(universe, item, offset);
 };
 
-export default <any> {
-  word: word
+export default {
+  word
 };

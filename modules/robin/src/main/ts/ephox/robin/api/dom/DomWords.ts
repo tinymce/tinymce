@@ -1,17 +1,17 @@
 import { DomUniverse } from '@ephox/boss';
 import Words from '../general/Words';
 
-var universe = DomUniverse();
+const universe = DomUniverse();
 
-var identify = function (allText) {
+const identify = function (allText: string) {
   return Words.identify(allText);
 };
 
-var isWord = function (text) {
+const isWord = function (text: string) {
   return Words.isWord(universe, text);
 };
 
-export default <any> {
-  identify: identify,
-  isWord: isWord
+export default {
+  identify,
+  isWord
 };

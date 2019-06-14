@@ -7,7 +7,7 @@ import { LeftRight, BrokenPath } from '../../parent/Breaker';
 const universe = DomUniverse();
 
 const sharedOne = function (look: (e: Element) => Option<Element>, elements: Element[]) {
-  return Parent.sharedOne(universe, function (universe, element) {
+  return Parent.sharedOne(universe, function (_universe, element) {
     return look(element);
   }, elements);
 };

@@ -1,42 +1,46 @@
 import { DomUniverse } from '@ephox/boss';
-import TextSearch from '../general/TextSearch';
+import { TextSearch, TextSearchSeeker } from '../general/TextSearch';
+import { Option } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+import { TextSeekerPhaseProcessor } from '../../textdata/TextSeeker';
+import { Document } from '@ephox/dom-globals';
 
-var universe = DomUniverse();
+const universe = DomUniverse();
 
-var previousChar = function (text, offset) {
+const previousChar = function (text: string, offset: Option<number>) {
   return TextSearch.previousChar(text, offset);
 };
 
-var nextChar = function (text, offset) {
+const nextChar = function (text: string, offset: Option<number>) {
   return TextSearch.nextChar(text, offset);
 };
 
-var repeatLeft = function (item, offset, process) {
+const repeatLeft = function (item: Element, offset: number, process: TextSeekerPhaseProcessor<Element, Document>) {
   return TextSearch.repeatLeft(universe, item, offset, process);
 };
 
-var repeatRight = function (item, offset, process) {
+const repeatRight = function (item: Element, offset: number, process: TextSeekerPhaseProcessor<Element, Document>) {
   return TextSearch.repeatRight(universe, item, offset, process);
 };
 
-var expandLeft = function (item, offset, rawSeeker) {
+const expandLeft = function (item: Element, offset: number, rawSeeker: TextSearchSeeker) {
   return TextSearch.expandLeft(universe, item, offset, rawSeeker);
 };
 
-var expandRight = function (item, offset, rawSeeker) {
+const expandRight = function (item: Element, offset: number, rawSeeker: TextSearchSeeker) {
   return TextSearch.expandRight(universe, item, offset, rawSeeker);
 };
 
-var scanRight = function (item, offset) {
+const scanRight = function (item: Element, offset: number) {
   return TextSearch.scanRight(universe, item, offset);
 };
 
-export default <any> {
-  previousChar: previousChar,
-  nextChar: nextChar,
-  repeatLeft: repeatLeft,
-  repeatRight: repeatRight,
-  expandLeft: expandLeft,
-  expandRight: expandRight,
-  scanRight: scanRight
+export default {
+  previousChar,
+  nextChar,
+  repeatLeft,
+  repeatRight,
+  expandLeft,
+  expandRight,
+  scanRight
 };

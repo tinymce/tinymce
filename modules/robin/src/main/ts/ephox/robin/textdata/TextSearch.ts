@@ -1,46 +1,52 @@
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
-import { Unicode } from '@ephox/katamari';
+import { Arr, Option, Struct, Unicode } from '@ephox/katamari';
 
-var charpos = Struct.immutable('ch', 'offset');
+export interface CharPos {
+  ch: () => string;
+  offset: () => number;
+}
 
-var locate = function (text, offset) {
+const charpos: (ch: string, offset: number) => CharPos = Struct.immutable('ch', 'offset');
+
+const locate = function (text: string, offset: number) {
   return charpos(text.charAt(offset), offset);
 };
 
-var previous = function (text, offsetOption) {
-  var max = offsetOption.getOr(text.length);
-  for (var i = max - 1; i >= 0; i--) {
-    if (text.charAt(i) !== Unicode.zeroWidth()) return Option.some(locate(text, i));
+const previous = function (text: string, offsetOption: Option<number>) {
+  const max = offsetOption.getOr(text.length);
+  for (let i = max - 1; i >= 0; i--) {
+    if (text.charAt(i) !== Unicode.zeroWidth()) {
+      return Option.some(locate(text, i));
+    }
   }
-  return Option.none();
+  return Option.none<CharPos>();
 };
 
-var next = function (text, offsetOption) {
-  var min = offsetOption.getOr(0);
-  for (var i = min + 1; i < text.length; i++) {
-    if (text.charAt(i) !== Unicode.zeroWidth()) return Option.some(locate(text, i));
+const next = function (text: string, offsetOption: Option<number>) {
+  const min = offsetOption.getOr(0);
+  for (let i = min + 1; i < text.length; i++) {
+    if (text.charAt(i) !== Unicode.zeroWidth()) {
+      return Option.some(locate(text, i));
+    }
   }
-  return Option.none();
+  return Option.none<CharPos>();
 };
 
-var rfind = function (str, regex) {
+const rfind = function (str: string, regex: RegExp) {
   regex.lastIndex = -1;
-  var reversed = Arr.reverse(str).join('');
-  var match = reversed.match(regex);
-  return match !== undefined && match !== null && match.index >= 0 ? Option.some((reversed.length - 1) - match.index) : Option.none();
+  const reversed = Arr.reverse(str).join('');
+  const match = reversed.match(regex);
+  return match !== undefined && match !== null && match.index !== undefined && match.index >= 0 ? Option.some((reversed.length - 1) - match.index) : Option.none<number>();
 };
 
-var lfind = function (str, regex) {
+const lfind = function (str: string, regex: RegExp) {
   regex.lastIndex = -1;
-  var match = str.match(regex);
-  return match !== undefined && match !== null && match.index >= 0 ? Option.some(match.index) : Option.none();
+  const match = str.match(regex);
+  return match !== undefined && match !== null && match.index !== undefined && match.index >= 0 ? Option.some(match.index) : Option.none<number>();
 };
 
-export default <any> {
-  previous: previous,
-  next: next,
-  rfind: rfind,
-  lfind: lfind
+export const TextSearch = {
+  previous,
+  next,
+  rfind,
+  lfind
 };

@@ -1,20 +1,28 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Spot } from '@ephox/phoenix';
+import { Arr, Fun, Option } from '@ephox/katamari';
+import { Spot, SpotRange } from '@ephox/phoenix';
 import { PositionArray } from '@ephox/polaris';
+import { Universe } from '@ephox/boss';
+
+interface TextdataGet<E> {
+  list: () => SpotRange<E>[];
+  text: () => string;
+}
+
+export interface Textdata<E> extends TextdataGet<E> {
+  cursor: () => Option<number>;
+}
 
 /**
  * Create a PositionArray of textnodes and returns the array along with the concatenated text.
  */
-var get = function (universe, elements) {
-  var list =  PositionArray.generate(elements, function (x, start) {
+const get = function <E, D> (universe: Universe<E, D>, elements: E[]) {
+  const list =  PositionArray.generate(elements, function (x, start) {
     return universe.property().isText(x) ?
       Option.some(Spot.range(x, start, start + universe.property().getText(x).length)) :
-      Option.none();
+      Option.none<SpotRange<E>>();
   });
 
-  var allText = Arr.foldr(list, function (b, a) {
+  const allText = Arr.foldr(list, function (b, a) {
     return universe.property().getText(a.element()) + b;
   }, '');
 
@@ -24,8 +32,8 @@ var get = function (universe, elements) {
   };
 };
 
-var cursor = function (universe, data, current, offset) {
-  var position = PositionArray.find(data.list(), function (item) {
+const cursor = function <E, D> (universe: Universe<E, D>, data: TextdataGet<E>, current: E, offset: number): Textdata<E> {
+  const position = PositionArray.find(data.list(), function (item) {
     return universe.eq(item.element(), current);
   }).map(function (element) {
     return element.start() + offset;
@@ -44,11 +52,11 @@ var cursor = function (universe, data, current, offset) {
  * - the text found, as a string
  * - the cursor position of 'offset' in the text
  */
-var from = function (universe, elements, current, offset) {
-  var data = get(universe, elements);
+const from = function <E, D> (universe: Universe<E, D>, elements: E[], current: E, offset: number) {
+  const data = get(universe, elements);
   return cursor(universe, data, current, offset);
 };
 
-export default <any> {
-  from: from
+export const Textdata = {
+  from
 };

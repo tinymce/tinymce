@@ -1,37 +1,73 @@
-import { Adt } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Spot } from '@ephox/phoenix';
-import { Descent } from '@ephox/phoenix';
-import { Gather } from '@ephox/phoenix';
-import { Seeker } from '@ephox/phoenix';
+import { Adt, Option } from '@ephox/katamari';
+import { Descent, Gather, Seeker, Spot, Transition, Direction, SpotPoint } from '@ephox/phoenix';
 import Structure from '../api/general/Structure';
+import { Universe } from '@ephox/boss';
 
-var walkLeft = Gather.walkers().left();
-var walkRight = Gather.walkers().right();
+export interface TextSeekerPhase<E> {
+  fold: <T> (
+    abort: () => T,
+    kontinue: () => T,
+    finish: (info: E) => T
+  ) => T;
+  match: <T> (branches: {
+    abort: () => T,
+    kontinue: () => T,
+    finish: (info: E) => T
+  }) => T;
+  log: (label: string) => void;
+}
 
-var phase = Adt.generate([
+export interface TextSeekerOutcome<E> {
+  fold: <T> (
+    aborted: () => T,
+    edge: (element: E) => T,
+    success: (info: SpotPoint<E>) => T
+  ) => T;
+  match: <T> (branches: {
+    aborted: () => T,
+    edge: (element: E) => T,
+    success: (info: SpotPoint<E>) => T
+  }) => T;
+  log: (label: string) => void;
+}
+
+const walkLeft = Gather.walkers().left();
+const walkRight = Gather.walkers().right();
+
+const phase: {
+  abort: <E> () => TextSeekerPhase<E>;
+  kontinue: <E> () => TextSeekerPhase<E>;
+  finish: <E> (info: SpotPoint<E>) => TextSeekerPhase<E>;
+} = Adt.generate([
   { abort: [  ] },
   { kontinue: [ ] },
   { finish: [ 'info' ] }
 ]);
 
-var outcome = Adt.generate([
+export type TextSeekerPhaseConstructor = typeof phase;
+
+const outcome: {
+  aborted: <E> () => TextSeekerOutcome<E>;
+  edge: <E> (element: E) => TextSeekerOutcome<E>;
+  success: <E> (info: E) => TextSeekerOutcome<E>;
+} = Adt.generate([
   { aborted: [] },
   { edge: [ 'element' ] },
   { success: [ 'info' ] }
 ]);
 
-var isBoundary = function (universe, item) {
+const isBoundary = function <E, D> (universe: Universe<E, D>, item: E) {
   return Structure.isEmptyTag(universe, item) || universe.property().isBoundary(item);
 };
 
-var repeat = function (universe, item, mode, offsetOption, process, walking, recent) {
-  var terminate = function () {
-    return recent.fold(outcome.aborted, outcome.edge);
+export type TextSeekerPhaseProcessor<E, D> = (universe: Universe<E, D>, phase: TextSeekerPhaseConstructor, item: E, text: string, offsetOption: Option<number>) => TextSeekerPhase<E>;
+
+const repeat = function <E, D> (universe: Universe<E, D>, item: E, mode: Transition, offsetOption: Option<number>, process: TextSeekerPhaseProcessor<E, D>, walking: Direction, recent: Option<E>): TextSeekerOutcome<E> {
+  const terminate = function () {
+    return recent.fold<TextSeekerOutcome<E>>(outcome.aborted, outcome.edge);
   };
 
-  var recurse = function (newRecent) {
+  const recurse = function (newRecent: Option<E>) {
     return Gather.walk(universe, item, mode, walking).fold(
       terminate,
       function (prev) {
@@ -40,54 +76,58 @@ var repeat = function (universe, item, mode, offsetOption, process, walking, rec
     );
   };
 
-  if (isBoundary(universe, item)) return terminate();
-  else if (! universe.property().isText(item)) return recurse(recent);
-  else {
-    var text = universe.property().getText(item);
+  if (isBoundary(universe, item)) {
+    return terminate();
+  } else if (! universe.property().isText(item)) {
+    return recurse(recent);
+  } else {
+    const text = universe.property().getText(item);
     return process(universe, phase, item, text, offsetOption).fold(terminate, function () {
       return recurse(Option.some(item));
     }, outcome.success);
   }
 };
 
-var descendToLeft = function (universe, item, offset, isRoot) {
-  var descended = Descent.toLeaf(universe, item, offset);
-  if (universe.property().isText(item)) return Option.none();
-  else {
+const descendToLeft = function <E, D> (universe: Universe<E, D>, item: E, offset: number, isRoot: (e: E) => boolean) {
+  const descended = Descent.toLeaf(universe, item, offset);
+  if (universe.property().isText(item)) {
+    return Option.none<SpotPoint<E>>();
+  } else {
     return Seeker.left(universe, descended.element(), universe.property().isText, isRoot).map(function (t) {
       return Spot.point(t, universe.property().getText(t).length);
     });
   }
 };
 
-var descendToRight = function (universe, item, offset, isRoot) {
-  var descended = Descent.toLeaf(universe, item, offset);
-  if (universe.property().isText(item)) return Option.none();
-  else {
+const descendToRight = function <E, D> (universe: Universe<E, D>, item: E, offset: number, isRoot: (e: E) => boolean) {
+  const descended = Descent.toLeaf(universe, item, offset);
+  if (universe.property().isText(item)) {
+    return Option.none<SpotPoint<E>>();
+  } else {
     return Seeker.right(universe, descended.element(), universe.property().isText, isRoot).map(function (t) {
       return Spot.point(t, 0);
     });
   }
 };
 
-var findTextNeighbour = function (universe, item, offset) {
-  var stopAt = Fun.curry(isBoundary, universe);
+const findTextNeighbour = function <E, D> (universe: Universe<E, D>, item: E, offset: number) {
+  const stopAt = (item: E) => isBoundary(universe, item);
   return descendToLeft(universe, item, offset, stopAt).orThunk(function () {
     return descendToRight(universe, item, offset, stopAt);
   }).getOr(Spot.point(item, offset));
 };
 
-var repeatLeft = function (universe, item, offset, process) {
-  var initial = findTextNeighbour(universe, item, offset);
+const repeatLeft = function <E, D> (universe: Universe<E, D>, item: E, offset: number, process: TextSeekerPhaseProcessor<E, D>) {
+  const initial = findTextNeighbour(universe, item, offset);
   return repeat(universe, initial.element(), Gather.sidestep, Option.some(initial.offset()), process, walkLeft, Option.none());
 };
 
-var repeatRight = function (universe, item, offset, process) {
-  var initial = findTextNeighbour(universe, item, offset);
+const repeatRight = function <E, D> (universe: Universe<E, D>, item: E, offset: number, process: TextSeekerPhaseProcessor<E, D>) {
+  const initial = findTextNeighbour(universe, item, offset);
   return repeat(universe, initial.element(), Gather.sidestep, Option.some(initial.offset()), process, walkRight, Option.none());
 };
 
-export default <any> {
-  repeatLeft: repeatLeft,
-  repeatRight: repeatRight
+export const TextSeeker = {
+  repeatLeft,
+  repeatRight
 };

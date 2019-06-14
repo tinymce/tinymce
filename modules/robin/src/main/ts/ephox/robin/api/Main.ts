@@ -17,13 +17,13 @@ import Parent from './general/Parent';
 import Pathway from './general/Pathway';
 import SmartSelect from './general/SmartSelect';
 import Structure from './general/Structure';
-import Textdata from './general/Textdata';
-import TextSearch from './general/TextSearch';
+import { Textdata } from './general/Textdata';
+import { TextSearch } from './general/TextSearch';
 import TextZone from './general/TextZone';
 import TextZones from './general/TextZones';
 import Words from './general/Words';
-import ZonePosition from './general/ZonePosition';
-import ZoneViewports from './general/ZoneViewports';
+import { ZonePosition } from './general/ZonePosition';
+import { ZoneViewports } from './general/ZoneViewports';
 
 export {
   DomClumps,

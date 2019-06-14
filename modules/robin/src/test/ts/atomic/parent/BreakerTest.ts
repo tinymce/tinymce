@@ -1,13 +1,10 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
-import { TextGene } from '@ephox/boss';
-import { Logger } from '@ephox/boss';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Gene, Logger, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import Breaker from 'ephox/robin/parent/Breaker';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('BreakerTest', function() {
-  var generator = function () {
+UnitTest.test('BreakerTest', function () {
+  const generator = function () {
     return TestUniverse(Gene('root', 'root', [
       Gene('d1', 'div', [
         TextGene('d1_t1', 'List: '),
@@ -29,31 +26,29 @@ UnitTest.test('BreakerTest', function() {
     ]));
   };
 
-  var doc1 = generator();
+  const doc1 = generator();
   Breaker.breakToRight(doc1, doc1.find(doc1.get(), 'ol1').getOrDie(), doc1.find(doc1.get(), 'li3').getOrDie());
   assert.eq(
     'root(' +
-      'd1(' +
-        'd1_t1,' +
-        'ol1(' +
-          'li1(li1_text),li2(li2_text),li3(li3_text)' +
-        '),' +
-        'clone**<ol1>(' +
-          'li4(li4_text)' +
-        ')' +
-      ')' +
+    'd1(' +
+    'd1_t1,' +
+    'ol1(' +
+    'li1(li1_text),li2(li2_text),li3(li3_text)' +
+    '),' +
+    'clone**<ol1>(' +
+    'li4(li4_text)' +
+    ')' +
+    ')' +
     ')', Logger.basic(doc1.get()));
 
-
-  var doc2 = generator();
-  var result = Breaker.breakPath(doc2, doc2.find(doc2.get(), 'li2_text').getOrDie(), function (item) {
+  const doc2 = generator();
+  const result = Breaker.breakPath(doc2, doc2.find(doc2.get(), 'li2_text').getOrDie(), function (item) {
     return item.name === 'ol';
   }, Breaker.breakToRight);
 
   assert.eq('ol1', result.first().id);
   assert.eq('clone**<ol1>', result.second().getOrDie().id);
-  assert.eq([ 'li2->clone**<li2>', 'ol1->clone**<ol1>' ], Arr.map(result.splits(), function (spl) {
+  assert.eq(['li2->clone**<li2>', 'ol1->clone**<ol1>'], Arr.map(result.splits(), function (spl) {
     return spl.first().id + '->' + spl.second().id;
   }));
 });
-

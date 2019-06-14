@@ -1,25 +1,30 @@
-import { Gather } from '@ephox/phoenix';
+import { Gather, Direction } from '@ephox/phoenix';
 import WordUtil from '../util/WordUtil';
+import { Option } from '@ephox/katamari';
 
-var walkers = Gather.walkers();
+export interface WordWalking extends Direction {
+  slicer: (text: string) => Option<[number, number]>;
+}
 
-var left = walkers.left();
-var right = walkers.right();
+const walkers = Gather.walkers();
 
-var breakToLeft = function (text) {
+const left = walkers.left();
+const right = walkers.right();
+
+const breakToLeft = function (text: string) {
   return WordUtil.leftBreak(text).map(function (index) {
-    return [ index + 1, text.length ];
+    return [ index + 1, text.length ] as [number, number];
   });
 };
 
-var breakToRight = function (text) {
+const breakToRight = function (text: string) {
   // Will need to generalise the word breaks.
   return WordUtil.rightBreak(text).map(function (index) {
-    return [ 0, index ];
+    return [ 0, index ] as [number, number];
   });
 };
 
-export default <any> {
+export const WordWalking = {
   left: {
     sibling: left.sibling,
     first: left.first,

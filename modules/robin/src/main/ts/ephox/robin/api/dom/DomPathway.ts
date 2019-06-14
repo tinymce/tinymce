@@ -1,17 +1,13 @@
 import { DomUniverse } from '@ephox/boss';
 import Pathway from '../general/Pathway';
+import { Element } from '@ephox/sugar';
 
-var universe = DomUniverse();
+const universe = DomUniverse();
 
-var simplify = function (elements) {
+const simplify = function (elements: Element[]) {
   return Pathway.simplify(universe, elements);
 };
 
-var transform = function () {
-  return Pathway.transform(universe);
-};
-
-export default <any> {
-  simplify: simplify,
-  transform: transform
+export default {
+  simplify
 };

@@ -1,58 +1,58 @@
 import { Option } from '@ephox/katamari';
 import { Descent } from '@ephox/phoenix';
-import ZoneViewports from '../api/general/ZoneViewports';
+import { ZoneViewports } from '../api/general/ZoneViewports';
 import Clustering from '../words/Clustering';
-import WordDecision from '../words/WordDecision';
-import LanguageZones from './LanguageZones';
+import { WordDecision, WordDecisionItem } from '../words/WordDecision';
+import { LanguageZones } from './LanguageZones';
 import TextZones from './TextZones';
-
-var viewport = ZoneViewports.anything();
+import { Universe } from '@ephox/boss';
+import { ZonesBag } from './Zones';
 
 // a Text Zone enforces a language, and returns Option.some only if a single zone was identified
 // with that language.
-var filterZone = function (zone, onlyLang) {
-  return zone.lang() === onlyLang ? Option.some(zone) : Option.none();
+const filterZone = function <E> (zone: ZonesBag<E>, onlyLang: string) {
+  return zone.lang() === onlyLang ? Option.some(zone) : Option.none<ZonesBag<E>>();
 };
 
-var fromBoundedWith = function (universe, left, right, envLang, onlyLang, transform) {
-  var output = TextZones.fromBoundedWith(universe, left, right, envLang, transform, viewport);
-  var zones = output.zones();
-  return zones.length === 1 ? filterZone(zones[0], onlyLang) : Option.none();
+const fromBoundedWith = function <E, D> (universe: Universe<E, D>, left: E, right: E, envLang: string, onlyLang: string, transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>) {
+  const output = TextZones.fromBoundedWith(universe, left, right, envLang, transform, ZoneViewports.anything());
+  const zones = output.zones();
+  return zones.length === 1 ? filterZone(zones[0], onlyLang) : Option.none<ZonesBag<E>>();
 };
 
-var fromBounded = function (universe, left, right, envLang, onlyLang) {
+const fromBounded = function <E, D> (universe: Universe<E, D>, left: E, right: E, envLang: string, onlyLang: string) {
   return fromBoundedWith(universe, left, right, envLang, onlyLang, WordDecision.detail);
 };
 
-var fromRange = function (universe, start, finish, envLang, onlyLang) {
-  var isLanguageBoundary = LanguageZones.strictBounder(envLang, onlyLang);
-  var edges = Clustering.getEdges(universe, start, finish, isLanguageBoundary);
-  var transform = TextZones.transformEdges(edges.left(), edges.right());
+const fromRange = function <E, D> (universe: Universe<E, D>, start: E, finish: E, envLang: string, onlyLang: string) {
+  const isLanguageBoundary = LanguageZones.strictBounder(envLang, onlyLang);
+  const edges = Clustering.getEdges(universe, start, finish, isLanguageBoundary);
+  const transform = TextZones.transformEdges(edges.left(), edges.right());
   return fromBoundedWith(universe, edges.left().item(), edges.right().item(), envLang, onlyLang, transform);
 };
 
-var fromInline = function (universe, element, envLang, onlyLang) {
-  var isLanguageBoundary = LanguageZones.strictBounder(envLang, onlyLang);
-  var edges = Clustering.getEdges(universe, element, element, isLanguageBoundary);
-  var transform = TextZones.transformEdges(edges.left(), edges.right());
+const fromInline = function <E, D> (universe: Universe<E, D>, element: E, envLang: string, onlyLang: string) {
+  const isLanguageBoundary = LanguageZones.strictBounder(envLang, onlyLang);
+  const edges = Clustering.getEdges(universe, element, element, isLanguageBoundary);
+  const transform = TextZones.transformEdges(edges.left(), edges.right());
   return edges.isEmpty() ? scour(universe, element, envLang, onlyLang) :
     fromBoundedWith(universe, edges.left().item(), edges.right().item(), envLang, onlyLang, transform);
 };
 
-var scour = function (universe, element, envLang, onlyLang) {
-  var lastOffset = universe.property().isText(element) ? universe.property().getText(element) : universe.property().children(element).length;
-  var left = Descent.toLeaf(universe, element, 0);
-  var right = Descent.toLeaf(universe, element, lastOffset);
+const scour = function <E, D> (universe: Universe<E, D>, element: E, envLang: string, onlyLang: string) {
+  const lastOffset = universe.property().isText(element) ? universe.property().getText(element).length : universe.property().children(element).length;
+  const left = Descent.toLeaf(universe, element, 0);
+  const right = Descent.toLeaf(universe, element, lastOffset);
   return fromBounded(universe, left.element(), right.element(), envLang, onlyLang);
 };
 
-var empty = function () {
-  return Option.none();
+const empty = function <E> () {
+  return Option.none<ZonesBag<E>>();
 };
 
-export default <any> {
-  fromRange: fromRange,
-  fromBounded: fromBounded,
-  fromInline: fromInline,
-  empty: empty
+export default {
+  fromRange,
+  fromBounded,
+  fromInline,
+  empty
 };

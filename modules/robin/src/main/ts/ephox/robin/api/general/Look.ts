@@ -1,22 +1,23 @@
 import { Fun } from '@ephox/katamari';
 import Look from '../../look/Look';
+import { Universe } from '@ephox/boss';
 
-var selector = function (universe, sel) {
+const selector = function <E, D> (_universe: Universe<E, D>, sel: string) {
   return Look.selector(sel);
 };
 
-var predicate = function (universe, pred) {
+const predicate = function <E, D> (_universe: Universe<E, D>, pred: (e: E) => boolean) {
   return Look.predicate(pred);
 };
 
-var exact = function (universe, item) {
-  var itemMatch = Fun.curry(universe.eq, item);
+const exact = function <E, D> (universe: Universe<E, D>, item: E) {
+  const itemMatch = Fun.curry(universe.eq, item);
 
   return Look.predicate(itemMatch);
 };
 
-export default <any> {
-  selector: selector,
-  predicate: predicate,
-  exact: exact
+export default {
+  selector,
+  predicate,
+  exact
 };

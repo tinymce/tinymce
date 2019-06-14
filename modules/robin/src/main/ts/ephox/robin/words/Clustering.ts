@@ -1,21 +1,21 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
+import { LanguageZones } from '../zone/LanguageZones';
 import ClusterSearch from './ClusterSearch';
-import WordDecision from './WordDecision';
-import LanguageZones from '../zone/LanguageZones';
+import { WordDecision } from './WordDecision';
+import { Universe } from '@ephox/boss';
 
 // This identifies the inline edges to the left and right, ignoring any language
 // boundaries
-var byBoundary = function (universe, item) {
-  var isCustomBoundary = Fun.constant(false);
+const byBoundary = function <E, D> (universe: Universe<E, D>, item: E) {
+  const isCustomBoundary = Fun.constant(false);
 
-  var edges = getEdges(universe, item, item, isCustomBoundary);
- 
-  var isMiddleEmpty = function () {
+  const edges = getEdges(universe, item, item, isCustomBoundary);
+
+  const isMiddleEmpty = function () {
     return ClusterSearch.isEmpty(universe, item);
   };
 
-  var isEmpty = edges.isEmpty() && isMiddleEmpty();
+  const isEmpty = edges.isEmpty() && isMiddleEmpty();
 
   return {
     left: edges.left,
@@ -26,34 +26,34 @@ var byBoundary = function (universe, item) {
 
 // This identifies the edges to the left and right, using a custom boundaryFunction
 // to use in addition to normal boundaries. Often, it's language
-var getEdges = function (universe, start, finish, isCustomBoundary) {
-  var toLeft = ClusterSearch.creepLeft(universe, start, isCustomBoundary);
-  var toRight = ClusterSearch.creepRight(universe, finish, isCustomBoundary);
+const getEdges = function <E, D> (universe: Universe<E, D>, start: E, finish: E, isCustomBoundary: (universe: Universe<E, D>, item: E) => boolean) {
+  const toLeft = ClusterSearch.creepLeft(universe, start, isCustomBoundary);
+  const toRight = ClusterSearch.creepRight(universe, finish, isCustomBoundary);
 
-  var leftEdge = toLeft.length > 0 ? toLeft[toLeft.length - 1] : WordDecision.fromItem(universe, start);
-  var rightEdge = toRight.length > 0 ? toRight[toRight.length - 1] : WordDecision.fromItem(universe, finish);
+  const leftEdge = toLeft.length > 0 ? toLeft[toLeft.length - 1] : WordDecision.fromItem(universe, start);
+  const rightEdge = toRight.length > 0 ? toRight[toRight.length - 1] : WordDecision.fromItem(universe, finish);
 
-  var isEmpty = toLeft.length === 0 && toRight.length === 0;
+  const isEmpty = toLeft.length === 0 && toRight.length === 0;
 
   return {
     left: Fun.constant(leftEdge),
     right: Fun.constant(rightEdge),
-    isEmpty: Fun.constant(isEmpty)     
+    isEmpty: Fun.constant(isEmpty)
   };
 };
 
-// Return a grouping of: left, middle, right, lang, and all. It will use 
-// language boundaries in addition to the normal block boundaries. Use this 
+// Return a grouping of: left, middle, right, lang, and all. It will use
+// language boundaries in addition to the normal block boundaries. Use this
 // to create a cluster of the same language.
-var byLanguage = function (universe, item) {
-  var optLang = LanguageZones.calculate(universe, item);
-  var isLanguageBoundary = LanguageZones.softBounder(optLang);
+const byLanguage = function <E, D> (universe: Universe<E, D>, item: E) {
+  const optLang = LanguageZones.calculate(universe, item);
+  const isLanguageBoundary = LanguageZones.softBounder(optLang);
 
-  var toLeft = ClusterSearch.creepLeft(universe, item, isLanguageBoundary);
-  var toRight = ClusterSearch.creepRight(universe, item, isLanguageBoundary);
-  var middle =  universe.property().isText(item) ? [ WordDecision.detail(universe, item) ] : [ ];
+  const toLeft = ClusterSearch.creepLeft(universe, item, isLanguageBoundary);
+  const toRight = ClusterSearch.creepRight(universe, item, isLanguageBoundary);
+  const middle =  universe.property().isText(item) ? [ WordDecision.detail(universe, item) ] : [ ];
 
-  var all = Arr.reverse(toLeft).concat(middle).concat(toRight);
+  const all = Arr.reverse(toLeft).concat(middle).concat(toRight);
 
   return {
     all: Fun.constant(all),
@@ -64,8 +64,8 @@ var byLanguage = function (universe, item) {
   };
 };
 
-export default <any> {
-  byBoundary: byBoundary,
-  getEdges: getEdges,
-  byLanguage: byLanguage
+export default {
+  byBoundary,
+  getEdges,
+  byLanguage
 };

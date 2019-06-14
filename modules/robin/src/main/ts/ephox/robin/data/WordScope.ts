@@ -1,5 +1,9 @@
-import { Struct } from '@ephox/katamari';
+import { Struct, Option } from '@ephox/katamari';
 
+export interface WordScope {
+  word: () => string;
+  left: () => Option<string>;
+  right: () => Option<string>;
+}
 
-
-export default <any> Struct.immutable('word', 'left', 'right');
+export const WordScope: (word: string, left: Option<string>, right: Option<string>) => WordScope = Struct.immutable('word', 'left', 'right');

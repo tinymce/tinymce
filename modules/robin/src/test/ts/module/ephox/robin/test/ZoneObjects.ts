@@ -1,37 +1,49 @@
-import { Logger } from '@ephox/agar';
-import { RawAssertions } from '@ephox/agar';
+import { Logger, RawAssertions } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
-import LanguageZones from 'ephox/robin/zone/LanguageZones';
-import { JSON as Json } from '@ephox/sand';
+import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
+import { TestUniverse, Gene } from '@ephox/boss';
+import { ZonesBag } from '../../../../../../main/ts/ephox/robin/zone/Zones';
 
-var rawOne = function (universe, zone) {
+export interface RawZone {
+  lang: string;
+  elements: string[];
+  words: string[];
+}
+
+const rawOne = function (universe: TestUniverse, zone: ZonesBag<Gene>): RawZone {
   return {
     lang: zone.lang(),
-    elements: Arr.map(zone.elements(), function (elem) { return elem.id; }),
-    words: Arr.map(zone.words(), function (w) { return w.word(); })
+    elements: Arr.map(zone.elements(), function (elem) {
+      return elem.id;
+    }),
+    words: Arr.map(zone.words(), function (w) {
+      return w.word();
+    })
   };
 };
 
-var raw = function (universe, zones) {
+const raw = function <E, D> (universe: TestUniverse, zones: ZonesBag<Gene>[]) {
   return Arr.map(zones, function (zone) {
     return rawOne(universe, zone);
   });
 };
 
-var assertZones = function (label, universe, expected, zones) {
-  var rawActual = raw(universe, zones);
+const assertZones = function (label: string, universe: TestUniverse, expected: RawZone[], zones: ZonesBag<Gene>[]) {
+  const rawActual = raw(universe, zones);
   RawAssertions.assertEq(label + '\nChecking zones: ', expected, rawActual);
 };
 
-var assertProps = function (label, universe, zones) {
+const assertProps = function (label: string, universe: TestUniverse, zones: ZonesBag<Gene>[]) {
   Arr.each(zones, function (zone) {
-    var elements = zone.elements();
-    if (elements.length === 0) return;
+    const elements = zone.elements();
+    if (elements.length === 0) {
+      return;
+    }
 
-    var first = elements[0];
+    const first = elements[0];
 
     Logger.sync(
-      '\nProperty test for zone: ' + Json.stringify(rawOne(universe, zone), null, 2),
+      '\nProperty test for zone: ' + JSON.stringify(rawOne(universe, zone), null, 2),
       function () {
         // Check languages all match the zone language
         Arr.each(elements, function (x, i) {
@@ -47,7 +59,7 @@ var assertProps = function (label, universe, zones) {
         });
 
         // Check block tags match across zones
-        var blockParent = universe.up().predicate(first, universe.property().isBoundary).getOrDie('No block parent tag found');
+        const blockParent = universe.up().predicate(first, universe.property().isBoundary).getOrDie('No block parent tag found');
         Arr.each(elements, function (x, i) {
           RawAssertions.assertEq(
             'All block ancestor tags should be the same as the original',
@@ -60,9 +72,9 @@ var assertProps = function (label, universe, zones) {
   });
 };
 
-export default <any> {
-  raw: raw,
-  rawOne: rawOne,
-  assertZones: assertZones,
-  assertProps: assertProps
+export default {
+  raw,
+  rawOne,
+  assertZones,
+  assertProps
 };

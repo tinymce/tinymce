@@ -1,12 +1,13 @@
 import { DomUniverse } from '@ephox/boss';
 import SmartSelect from '../general/SmartSelect';
+import { Element } from '@ephox/sugar';
 
-var universe = DomUniverse();
+const universe = DomUniverse();
 
-var word = function (element, offset, optimise) {
-  return SmartSelect.word(universe, element, offset, optimise);
+const word = function (element: Element, offset: number, optimise?: any) {
+  return SmartSelect.word(universe, element, offset);
 };
 
-export default <any> {
-  word: word
+export default {
+  word
 };

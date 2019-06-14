@@ -1,18 +1,36 @@
 import { Adt } from '@ephox/katamari';
 
-var adt = Adt.generate([
+export interface ZonePosition<E> {
+  fold: <T> (
+    aboveView: (item: E) => T,
+    inView: (item: E) => T,
+    belowView: (item: E) => T
+  ) => T;
+  match: <T> (branches: {
+    aboveView: (item: E) => T,
+    inView: (item: E) => T,
+    belowView: (item: E) => T
+  }) => T;
+  log: (label: string) => void;
+}
+
+const adt: {
+  aboveView: <E> (item: E) => ZonePosition<E>;
+  inView: <E> (item: E) => ZonePosition<E>;
+  belowView: <E> (item: E) => ZonePosition<E>;
+} = Adt.generate([
   { aboveView: [ 'item' ] },
   { inView: [ 'item' ] },
   { belowView: [ 'item' ] }
 ]);
 
-var cata = function (subject, onAbove, onIn, onBelow) {
+const cata = function <E, T> (subject: ZonePosition<E>, onAbove: (item: E) => T, onIn: (item: E) => T, onBelow: (item: E) => T) {
   return subject.fold(onAbove, onIn, onBelow);
 };
 
-export default <any> {
+export const ZonePosition = {
   aboveView: adt.aboveView,
   inView: adt.inView,
   belowView: adt.belowView,
-  cata: cata
+  cata
 };

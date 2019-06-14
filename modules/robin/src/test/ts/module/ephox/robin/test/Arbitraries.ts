@@ -1,63 +1,80 @@
 import { Arr } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
+import { TestUniverse, Gene } from '@ephox/boss';
 
-var getIds = function (item, predicate) {
-  var rest = Arr.bind(item.children || [ ], function (id) { return getIds(id, predicate); });
-  var self = predicate(item) && item.id !== 'root' ? [ item.id ] : [ ];
+const getIds = function (item: Gene, predicate: (g: Gene) => boolean): string[] {
+  const rest = Arr.bind(item.children || [], function (id) { return getIds(id, predicate); });
+  const self = predicate(item) && item.id !== 'root' ? [item.id] : [];
   return self.concat(rest);
 };
 
-var textIds = function (universe) {
+const textIds = function (universe: TestUniverse) {
   return getIds(universe.get(), universe.property().isText);
 };
 
-var arbTextIds = function (universe) {
-  var ids = textIds(universe);
-  return Jsc.elements(textIds(universe)).smap(function (id) {
+export interface ArbTextIds {
+  startId: string;
+  textIds: string[];
+}
+
+const arbTextIds = function (universe: TestUniverse) {
+  const ids = textIds(universe);
+  return Jsc.elements(textIds(universe)).smap(function (id: string): ArbTextIds {
     return {
       startId: id,
       textIds: ids
     };
-  }, function (obj) {
+  }, function (obj: ArbTextIds) {
     return obj.startId;
   });
 };
 
-var arbIds = function (universe, predicate) {
-  var ids = getIds(universe.get(), predicate);
+export interface ArbIds {
+  startId: string;
+  ids: string[];
+}
 
-  return Jsc.elements(ids).smap(function (id) {
+const arbIds = function (universe: TestUniverse, predicate: (g: Gene) => boolean) {
+  const ids = getIds(universe.get(), predicate);
+
+  return Jsc.elements(ids).smap(function (id: string): ArbIds {
     return {
       startId: id,
-      ids: ids
+      ids
     };
-  }, function (obj) {
+  }, function (obj: ArbIds) {
     return obj.startId;
-  }, function (obj) {
+  }, function (obj: ArbIds) {
     return '[id :: ' + obj.startId + ']';
   });
 };
 
-var arbRangeIds = function (universe, predicate) {
-  var ids = getIds(universe.get(), predicate);
+export interface ArbRangeIds {
+  startId: string;
+  finishId: string;
+  ids: string[];
+}
 
-  var generator = Jsc.integer(0, ids.length - 1).generator.flatMap(function (startIndex) {
-    return Jsc.integer(startIndex, ids.length - 1).generator.map(function (finishIndex) {
+const arbRangeIds = function (universe: TestUniverse, predicate: (g: Gene) => boolean) {
+  const ids = getIds(universe.get(), predicate);
+
+  const generator = Jsc.integer(0, ids.length - 1).generator.flatMap(function (startIndex: number) {
+    return Jsc.integer(startIndex, ids.length - 1).generator.map(function (finishIndex: number): ArbRangeIds {
       return {
         startId: ids[startIndex],
         finishId: ids[finishIndex],
-        ids: ids
+        ids
       };
     });
   });
 
   return Jsc.bless({
-    generator: generator
+    generator
   });
 };
 
-export default <any> {
-  arbTextIds: arbTextIds,
-  arbRangeIds: arbRangeIds,
-  arbIds: arbIds
+export default {
+  arbTextIds,
+  arbRangeIds,
+  arbIds
 };

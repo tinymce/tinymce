@@ -1,60 +1,87 @@
-import { Adt } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Gather } from '@ephox/phoenix';
-import ZonePosition from '../api/general/ZonePosition';
-import Trampoline from '../util/Trampoline';
-import LanguageZones from './LanguageZones';
+import { Adt, Option } from '@ephox/katamari';
+import { Gather, Transition } from '@ephox/phoenix';
+import { ZonePosition } from '../api/general/ZonePosition';
+import { Trampoline, TrampolineFn } from '../util/Trampoline';
+import { LanguageZones } from './LanguageZones';
+import { Universe } from '@ephox/boss';
+import { ZoneViewports } from '../api/general/ZoneViewports';
+import { WordDecisionItem } from '../words/WordDecision';
 
-var adt = Adt.generate([
+interface ZoneWalkerState<E> {
+  fold: <T> (
+    inline: (item: E, mode: Transition, lang: Option<string>) => T,
+    text: (item: E, mode: Transition) => T,
+    empty: (item: E, mode: Transition) => T,
+    boundary: (item: E, mode: Transition, lang: Option<string>) => T,
+    concluded: (item: E, mode: Transition) => T
+  ) => T;
+  match: <T> (branches: {
+    inline: (item: E, mode: Transition, lang: Option<string>) => T,
+    text: (item: E, mode: Transition) => T,
+    empty: (item: E, mode: Transition) => T,
+    boundary: (item: E, mode: Transition, lang: Option<string>) => T,
+    concluded: (item: E, mode: Transition) => T
+  }) => T;
+  log: (label: string) => void;
+}
+
+const adt: {
+  inline: <E> (item: E, mode: Transition, lang: Option<string>) => ZoneWalkerState<E>;
+  text: <E> (item: E, mode: Transition) => ZoneWalkerState<E>;
+  empty: <E> (item: E, mode: Transition) => ZoneWalkerState<E>;
+  boundary: <E> (item: E, mode: Transition, lang: Option<string>) => ZoneWalkerState<E>;
+  concluded: <E> (item: E, mode: Transition) => ZoneWalkerState<E>;
+} = Adt.generate([
   // an inline element, so use the lang to identify if a new zone is needed
-  { inline: [ 'item', 'mode', 'lang' ] },
-  { text: [ 'item', 'mode' ] },
+  { inline: ['item', 'mode', 'lang'] },
+  { text: ['item', 'mode'] },
   // things like <img>, <br>
-  { empty: [ 'item', 'mode' ] },
+  { empty: ['item', 'mode'] },
   // things like boundary tags
-  { boundary: [ 'item', 'mode', 'lang' ] },
+  { boundary: ['item', 'mode', 'lang'] },
   // hit the starting tag
-  { concluded: [ 'item', 'mode' ]}
+  { concluded: ['item', 'mode'] }
 ]);
 
-
-var _rules = undefined;
-
-var analyse = function (universe, item, mode, stopOn) {
+const analyse = function <E, D> (universe: Universe<E, D>, item: E, mode: Transition, stopOn: (item: E, mode: Transition) => boolean) {
   // Find if the current item has a lang property on it.
-  var currentLang = universe.property().isElement(item) ? Option.from(universe.attrs().get(item, 'lang')) : Option.none();
+  const currentLang = universe.property().isElement(item) ? Option.from(universe.attrs().get(item, 'lang')) : Option.none<string>();
 
-  if (universe.property().isText(item)) return adt.text(item, mode);
-  else if (stopOn(item, mode)) return adt.concluded(item, mode);
-  else if (universe.property().isBoundary(item)) return adt.boundary(item, mode, currentLang);
-
-  else if (universe.property().isEmptyTag(item)) return adt.empty(item, mode);
-
-  else return adt.inline(item, mode, currentLang);
+  if (universe.property().isText(item)) {
+    return adt.text(item, mode);
+  } else if (stopOn(item, mode)) {
+    return adt.concluded(item, mode);
+  } else if (universe.property().isBoundary(item)) {
+    return adt.boundary(item, mode, currentLang);
+  } else if (universe.property().isEmptyTag(item)) {
+    return adt.empty(item, mode);
+  } else {
+    return adt.inline(item, mode, currentLang);
+  }
 };
 
-var takeStep = function (universe, item, mode, stopOn) {
-  return Gather.walk(universe, item, mode, Gather.walkers().right(), _rules).fold(function () {
+const takeStep = function <E, D> (universe: Universe<E, D>, item: E, mode: Transition, stopOn: (item: E, mode: Transition) => boolean) {
+  return Gather.walk(universe, item, mode, Gather.walkers().right()).fold(function () {
     return adt.concluded(item, mode);
   }, function (n) {
     return analyse(universe, n.item(), n.mode(), stopOn);
   });
 };
 
-var process = function (universe, outcome, stopOn, stack, transform, viewport) {
+const process = function <E, D> (universe: Universe<E, D>, outcome: ZoneWalkerState<E>, stopOn: (item: E, mode: Transition) => boolean, stack: LanguageZones<E>, transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>, viewport: ZoneViewports<E>): TrampolineFn {
   return function () {
     return outcome.fold(
       function (aItem, aMode, aLang) {
         // inline(aItem, aMode, aLang)
-        var opening = aMode === Gather.advance;
+        const opening = aMode === Gather.advance;
         (opening ? stack.openInline : stack.closeInline)(aLang, aItem);
         return doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
 
       }, function (aItem, aMode) {
-        var detail = transform(universe, aItem);
+        const detail = transform(universe, aItem);
         // text (aItem, aMode)
         stack.addDetail(detail);
-        return (! stopOn(aItem, aMode)) ? doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport) : Trampoline.stop();
+        return (!stopOn(aItem, aMode)) ? doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport) : Trampoline.stop();
       }, function (aItem, aMode) {
         // empty (aItem, aMode)
         stack.addEmpty(aItem);
@@ -62,16 +89,19 @@ var process = function (universe, outcome, stopOn, stack, transform, viewport) {
 
       }, function (aItem, aMode, aLang) {
         // Use boundary positions to assess whether we have moved out of the viewport.
-        var position = viewport.assess(aItem);
+        const position = viewport.assess(aItem);
         return ZonePosition.cata(position,
           function (aboveBlock) {
             // We are before the viewport, so skip
             // Only sidestep if we hadn't already tried it. Otherwise, we'll loop forever.
-            if (aMode !== Gather.backtrack) return doWalk(universe, aItem, Gather.sidestep, stopOn, stack, transform, viewport);
-            else return Trampoline.stop();
+            if (aMode !== Gather.backtrack) {
+              return doWalk(universe, aItem, Gather.sidestep, stopOn, stack, transform, viewport);
+            } else {
+              return Trampoline.stop();
+            }
           }, function (inBlock) {
             // We are in the viewport, so process normally
-            var opening = aMode === Gather.advance;
+            const opening = aMode === Gather.advance;
             (opening ? stack.openBoundary : stack.closeBoundary)(aLang, aItem);
             return doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
           }, function (belowBlock) {
@@ -90,28 +120,26 @@ var process = function (universe, outcome, stopOn, stack, transform, viewport) {
 // I'm going to trampoline this: (http://stackoverflow.com/questions/25228871/how-to-understand-trampoline-in-javascript)
 // The reason is because we often hit stack problems with this code, so this is an attempt to resolve them.
 // The key thing is that you need to keep returning a function.
-var doWalk = function (universe, current, mode, stopOn, stack, transform, viewport) {
-  var outcome = takeStep(universe, current, mode, stopOn);
+const doWalk = function <E, D> (universe: Universe<E, D>, current: E, mode: Transition, stopOn: (item: E, mode: Transition) => boolean, stack: LanguageZones<E>, transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>, viewport: ZoneViewports<E>) {
+  const outcome = takeStep(universe, current, mode, stopOn);
   return process(universe, outcome, stopOn, stack, transform, viewport);
 };
 
-var walk = function (universe, start, finish, defaultLang, transform, viewport) {
-  var stopOn = function (sItem, sMode) {
+const walk = function <E, D> (universe: Universe<E, D>, start: E, finish: E, defaultLang: string, transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>, viewport: ZoneViewports<E>) {
+  const stopOn = function (sItem: E, sMode: Transition) {
     return universe.eq(sItem, finish) && (sMode !== Gather.advance || universe.property().isText(sItem) || universe.property().children(sItem).length === 0);
   };
 
   // INVESTIGATE: Make the language zone stack immutable *and* performant
-  var stack = LanguageZones.nu(defaultLang);
-  var mode = Gather.advance;
-  var initial = analyse(universe, start, mode, stopOn);
+  const stack = LanguageZones.nu<E>(defaultLang);
+  const mode = Gather.advance;
+  const initial = analyse(universe, start, mode, stopOn);
 
-  Trampoline.run(function () {
-    return process(universe, initial, stopOn, stack, transform, viewport);
-  });
+  Trampoline.run(process(universe, initial, stopOn, stack, transform, viewport));
 
   return stack.done();
 };
 
-export default <any> {
-  walk: walk
+export default {
+  walk
 };
