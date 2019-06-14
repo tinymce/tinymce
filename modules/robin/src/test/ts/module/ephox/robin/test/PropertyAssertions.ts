@@ -16,11 +16,11 @@ const formatErr = function (label: string, err: any) { // TODO narrow type
     JSON.stringify({ rngState: err.rngState, shrinks: err.shrinks, tests: err.tests }, null, 2)) : err;
 };
 
-const checkWith = function (label: string, arbitraries: any[], f: Function, options: Record<string, any> = {}) { // TODO narrow types
+const checkWith = function <T extends any[]> (label: string, arbitraries: T, f: Function, options: Record<string, any> = {}) { // TODO narrow types
   // NOTE: Due to a current implementation detail of Jsc's wrapper, these will not have labels in the console
   // However, use this one if you want to supply options (like seed, number of tests etc.)
   Logger.sync(label, function () {
-    const property = Jsc.forall.apply(Jsc, arbitraries.concat([f]));
+    const property = Jsc.forall.apply(Jsc, [...arbitraries, f]);
     try {
       const output = Jsc.check(property, options);
       if (output !== true) {
@@ -33,8 +33,8 @@ const checkWith = function (label: string, arbitraries: any[], f: Function, opti
   });
 };
 
-const check = function (label: string, arbitraries: any[], f: Function) { // TODO narrow types
-  Jsc.property.apply(Jsc, ([label] as any[]).concat(arbitraries).concat([f]));
+const check = function <T extends any[]> (label: string, arbitraries: T, f: Function) { // TODO narrow types
+  Jsc.property.apply(Jsc, [label, ...arbitraries, f]);
 };
 
 export default {
