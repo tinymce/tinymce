@@ -24,7 +24,7 @@ const getLinks = (editor): Future<Option<ListItem[]>> => {
   const extractor = (item) => editor.convertURL(item.value || item.url, 'href');
 
   const linkList = Settings.getLinkList(editor.settings);
-  return Future.nu((callback) => {
+  return Future.nu<Option<ListItem[]>>((callback) => {
     // TODO - better handling of failure
     if (typeof linkList === 'string') {
       XHR.send({
@@ -37,7 +37,15 @@ const getLinks = (editor): Future<Option<ListItem[]>> => {
     } else {
       callback(Option.from(linkList));
     }
-  }).map((opt) => opt.bind(ListOptions.sanitizeWith(extractor)));
+  }).map((optItems) => {
+    return optItems.bind(ListOptions.sanitizeWith(extractor)).map((items) => {
+      if (items.length > 0) {
+        return [{ text: 'None', value: '' }].concat(items);
+      } else {
+        return items;
+      }
+    });
+  });
 };
 
 export const LinkListOptions = {
