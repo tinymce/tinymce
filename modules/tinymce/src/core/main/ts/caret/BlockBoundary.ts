@@ -23,7 +23,7 @@ const getClosestBlock = (root: Element, pos: CaretPosition) => {
   return Arr.find(Parents.parentsAndSelf(Element.fromDom(pos.container()), root), ElementType.isBlock);
 };
 
-const isAtBlockBoundary2 = (forward: boolean, root: Element, pos: CaretPosition) => {
+const isAtBeforeAfterBlockBoundary = (forward: boolean, root: Element, pos: CaretPosition) => {
   return navigateIgnoreEmptyTextNodes(forward, root.dom(), pos).forall((newPos) => {
     return getClosestBlock(root, pos).fold(
       () => {
@@ -51,8 +51,8 @@ const isAtBlockBoundary = (forward: boolean, root: Element, pos: CaretPosition) 
 
 const isAtStartOfBlock = Fun.curry(isAtBlockBoundary, false);
 const isAtEndOfBlock = Fun.curry(isAtBlockBoundary, true);
-const isBeforeBlock = Fun.curry(isAtBlockBoundary2, false);
-const isAfterBlock = Fun.curry(isAtBlockBoundary2, true);
+const isBeforeBlock = Fun.curry(isAtBeforeAfterBlockBoundary, false);
+const isAfterBlock = Fun.curry(isAtBeforeAfterBlockBoundary, true);
 
 export {
   isAtStartOfBlock,
