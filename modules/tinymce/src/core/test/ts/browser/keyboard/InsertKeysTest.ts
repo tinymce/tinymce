@@ -295,6 +295,25 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, fai
             tinyApis.sAssertSelection([0, 0], 2, [0, 0], 2),
             tinyApis.sAssertContent('<pre style="white-space: pre-line;">a b</pre>')
           ]))
+        ])),
+
+        Logger.t('Nbsp before/after block', GeneralSteps.sequence([
+          Logger.t('Do not trim nbsp before a block element', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<div>a&nbsp;<p>b</p></div>'),
+            tinyApis.sSetCursor([0, 0], 2),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 0], 2, [0, 0], 2),
+            tinyApis.sAssertContent('<div>a&nbsp;<p>b</p></div>')
+          ])),
+          Logger.t('Do not trim nbsp after a block element', GeneralSteps.sequence([
+            tinyApis.sFocus,
+            tinyApis.sSetContent('<div><p>b</p>&nbsp;a</div>'),
+            tinyApis.sSetCursor([0, 1], 2),
+            sFireInsert(editor),
+            tinyApis.sAssertSelection([0, 1], 2, [0, 1], 2),
+            tinyApis.sAssertContent('<div><p>b</p>&nbsp;a</div>')
+          ]))
         ]))
       ]))
     ], onSuccess, onFailure);
