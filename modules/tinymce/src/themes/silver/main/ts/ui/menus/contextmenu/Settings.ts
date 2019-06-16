@@ -21,11 +21,16 @@ const getMenuItems = (editor: Editor, name: string, defaultItems: string) => {
   });
 };
 
+const isContextMenuDisabled = (editor: Editor): boolean => {
+  return editor.getParam('contextmenu') === false;
+};
+
 const getContextMenu = function (editor: Editor): string[] {
   return getMenuItems(editor, 'contextmenu', 'link linkchecker image imagetools table spellchecker configurepermanentpen');
 };
 
 export default {
   shouldNeverUseNative,
-  getContextMenu
+  getContextMenu,
+  isContextMenuDisabled
 };
