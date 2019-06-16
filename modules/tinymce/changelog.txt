@@ -1,4 +1,5 @@
 Version 5.0.8 (TBD)
+    Fixed incorrect padding for select boxes with visible values #TINY-3780
     Added support for .m4a files to the media plugin #TINY-3750
     Added back support for multiple toolbars #TINY-2195
     Fixed a selection edge case when setting selection #TINY-3766
