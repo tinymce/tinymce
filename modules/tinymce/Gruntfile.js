@@ -293,7 +293,7 @@ module.exports = function (grunt) {
             dest: 'js/tinymce/langs/readme.md'
           },
           {
-            src: 'LICENSE.TXT',
+            src: '../../LICENSE.TXT',
             dest: 'js/tinymce/license.txt'
           }
         ]
