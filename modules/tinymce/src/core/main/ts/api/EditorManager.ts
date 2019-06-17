@@ -145,6 +145,7 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
   setup (): void;
   translate (text: string): string;
   triggerSave (): void;
+  _setBaseUrl (baseUrl: string): void;
 }
 
 const EditorManager: EditorManager = {
@@ -320,8 +321,7 @@ const EditorManager: EditorManager = {
 
     baseUrl = defaultSettings.base_url;
     if (baseUrl) {
-      this.baseURL = new URI(this.documentBaseURL).toAbsolute(baseUrl.replace(/\/+$/, ''));
-      this.baseURI = new URI(this.baseURL);
+      this._setBaseUrl(baseUrl);
     }
 
     suffix = defaultSettings.suffix;
@@ -827,6 +827,11 @@ const EditorManager: EditorManager = {
     }
 
     this.activeEditor = editor;
+  },
+
+  _setBaseUrl (baseUrl: string) {
+    this.baseURL = new URI(this.documentBaseURL).toAbsolute(baseUrl.replace(/\/+$/, ''));
+    this.baseURI = new URI(this.baseURL);
   }
 };
 

@@ -53,6 +53,6 @@ export {
   isAfterContentEditableFalse,
   isBeforeTable,
   isAfterTable,
-  isBeforeImageBlock as isBeforePageBreak,
-  isAfterImageBlock as isAfterPageBreak
+  isBeforeImageBlock,
+  isAfterImageBlock
 };

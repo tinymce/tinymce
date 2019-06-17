@@ -148,6 +148,7 @@ export interface RawEditorSettings {
   style_formats_autohide?: boolean;
   style_formats_merge?: boolean;
   submit_patch?: boolean;
+  suffix?: string;
   target?: Element;
   theme?: string | ThemeInitFunc;
   theme_url?: string;
@@ -198,7 +199,6 @@ export interface RawEditorSettings {
   forced_plugins?: string | string[];
   plugin_base_urls?: Record<string, string>;
   service_message?: string;
-  suffix?: string;
 
   // Special always forced on setting
   // TODO: Get rid of this one
