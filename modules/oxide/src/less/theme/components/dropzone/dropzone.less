@@ -1,0 +1,39 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Dropzone
+//
+
+@dropzone-border: 2px dashed @border-color;
+
+.tox {
+  .tox-dropzone-container {
+    display: flex;
+    flex: 1;
+    -ms-flex-preferred-size: auto;
+  }
+
+  .tox-dropzone {
+    // moving justify-content to unknown.less
+    align-items: center;
+    background: #fff;
+    border: @dropzone-border;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+    min-height: 100px;
+    padding: 10px;
+  }
+
+  .tox-dropzone p {
+    color: @text-color-muted;
+    margin: 0 0 @pad-md 0;
+  }
+}

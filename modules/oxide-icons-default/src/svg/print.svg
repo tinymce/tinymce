@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-print</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M18,8 L6,8 C4.34,8 3,9.34 3,11 L3,17 L5,17 L5,20 L19,20 L19,17 L21,17 L21,11 C21,9.34 19.66,8 18,8 Z M17,18 L7,18 L7,14 L17,14 L17,18 Z M17.5,13 C16.675,13 16,12.325 16,11.5 C16,10.675 16.675,10 17.5,10 C18.325,10 19,10.675 19,11.5 C19,12.325 18.325,13 17.5,13 Z M18,5 L6,5 L6,7 L18,7 L18,5 Z" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

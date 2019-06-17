@@ -1,0 +1,40 @@
+{
+  "name": "@ephox/imagetools",
+  "version": "3.1.3",
+  "description": "Image tools for tinymce and textbox.io",
+  "keywords": [
+    "image",
+    "editor",
+    "ephox"
+  ],
+  "dependencies": {
+    "@ephox/dom-globals": "^1.1.2"
+  },
+  "scripts": {
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts",
+    "prepublishOnly": "tsc -b",
+    "lint": "tslint --project ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/imagetools-js"
+  },
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "tslint.json",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/imagetools/api/Main.js",
+  "module": "./lib/main/ts/ephox/imagetools/api/Main.js",
+  "types": "./lib/main/ts/ephox/imagetools/api/Main.d.ts"
+}

@@ -1,0 +1,35 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Editor area
+//
+
+@edit-area-iframe-background-color: @color-white;
+@edit-area-separator-color: @border-color;
+
+.tox {
+  .tox-edit-area {
+    border-top: 1px solid @edit-area-separator-color;
+    display: flex;
+    flex: 1;
+    -ms-flex-preferred-size: auto;
+    overflow: hidden;
+    position: relative; // Required for the iframe to resize in IE and Edge
+  }
+
+  .tox-edit-area__iframe {
+    background-color: @edit-area-iframe-background-color;
+    border: 0;
+    box-sizing: border-box;
+    flex: 1;
+    -ms-flex-preferred-size: auto;
+    height: 100%;
+    position: absolute; // Required for the iframe to resize in IE and Edge
+    width: 100%;
+  }
+}

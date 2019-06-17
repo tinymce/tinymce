@@ -1,0 +1,27 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "ephox/darwin/test/*": ["src/test/ts/module/ephox/darwin/test/*"],
+      "ephox/darwin/demo/*": ["src/demo/ts/ephox/darwin/demo/*"],
+      "ephox/darwin/*": ["src/main/ts/ephox/darwin/*"],
+      "@ephox/darwin": ["src/main/ts/ephox/darwin/api/Main.ts"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts",
+  ],
+  "references": [
+    { "path": "../katamari" },
+    { "path": "../phoenix" },
+    { "path": "../robin" },
+    { "path": "../sand" },
+    { "path": "../snooker" },
+    { "path": "../sand" },
+  ]
+}

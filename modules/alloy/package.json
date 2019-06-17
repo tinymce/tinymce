@@ -1,0 +1,41 @@
+{
+  "name": "@ephox/alloy",
+  "version": "4.13.2",
+  "description": "Ui Framework",
+  "dependencies": {
+    "@ephox/agar": "^4.13.10",
+    "@ephox/boulder": "^3.3.16",
+    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/katamari": "^2.4.21",
+    "@ephox/sand": "^2.0.17",
+    "@ephox/sugar": "^4.6.21"
+  },
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "scripts": {
+    "test": "bedrock-auto -b phantomjs --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/jsdom src/test/ts/webdriver",
+    "test-manual": "bedrock --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/jsdom src/test/ts/webdriver",
+    "prepublishOnly": "tsc -b"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/alloy"
+  },
+  "keywords": [
+    "ui"
+  ],
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/alloy/api/Main.js",
+  "module": "./lib/main/ts/ephox/alloy/api/Main.js",
+  "types": "./lib/main/ts/ephox/alloy/api/Main.d.ts"
+}

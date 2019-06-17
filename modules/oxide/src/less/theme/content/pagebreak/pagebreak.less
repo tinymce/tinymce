@@ -1,0 +1,26 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Page break
+//
+
+.mce-pagebreak {
+  border: 1px dashed #aaa;
+  cursor: default;
+  display: block;
+  height: 5px;
+  margin-top: 15px;
+  page-break-before: always;
+  width: 100%;
+}
+
+@media print {
+  .mce-pagebreak {
+    border: 0;
+  }
+}

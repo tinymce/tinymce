@@ -1,0 +1,46 @@
+{
+  "name": "@ephox/agar",
+  "version": "4.13.10",
+  "description": "Testing infrastructure",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/agar"
+  },
+  "scripts": {
+    "prepublishOnly": "tsc -b",
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock --testdirs src/test/ts/browser src/test/ts/atomic"
+  },
+  "keywords": [
+    "testing",
+    "step",
+    "chain",
+    "assert",
+    "browser",
+    "test"
+  ],
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/jax": "^4.1.9",
+    "@ephox/sand": "^2.0.17",
+    "@ephox/sugar": "^4.6.21",
+    "@ephox/wrap-jsverify": "^2.0.1",
+    "@ephox/wrap-sizzle": "^4.0.0"
+  },
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "main": "./lib/main/ts/ephox/agar/api/Main.js",
+  "module": "./lib/main/ts/ephox/agar/api/Main.js",
+  "types": "./lib/main/ts/ephox/agar/api/Main.d.ts"
+}

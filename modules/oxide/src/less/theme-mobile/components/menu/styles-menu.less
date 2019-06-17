@@ -1,0 +1,87 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+/* styles menu */
+.tinymce-mobile-styles-menu {
+  font-family: sans-serif;
+  outline: 4px solid black;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+
+  [role="menu"] {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+  }
+
+  [role="menu"].transitioning {
+    transition: transform .5s ease-in-out;
+  }
+
+  & .tinymce-mobile-styles-item {
+    border-bottom: 1px solid #ddd;
+    color: @toolstrip-foreground-color;
+    cursor: pointer;
+    display: flex;
+    padding: 1em 1em;
+    position: relative;
+  }
+
+  & .tinymce-mobile-styles-collapser .tinymce-mobile-styles-collapse-icon::before {
+    color: @toolstrip-foreground-color;
+    content: "\e314";
+    font-family: 'tinymce-mobile', sans-serif;
+  }
+
+  & .tinymce-mobile-styles-item.tinymce-mobile-styles-item-is-menu::after {
+    color: @toolstrip-foreground-color;
+    content: "\e315";
+    font-family: 'tinymce-mobile', sans-serif;
+    padding-left: 1em;
+    padding-right: 1em;
+    position: absolute;
+    right: 0;
+  }
+
+  & .tinymce-mobile-styles-item.tinymce-mobile-format-matches::after {
+    font-family: 'tinymce-mobile', sans-serif;
+    padding-left: 1em;
+    padding-right: 1em;
+    position: absolute;
+    right: 0;
+  }
+
+  .tinymce-mobile-styles-separator,
+  & .tinymce-mobile-styles-collapser {
+    align-items: center;
+    background: @toolstrip-background-color;
+    border-top: rgb(69, 90, 100);
+    color: @toolstrip-foreground-color;
+    display: flex;
+    min-height: 2.5em;
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+
+  [data-transitioning-destination="before"][data-transitioning-state],
+  [data-transitioning-state="before"] {
+    transform: translate(-100%);
+  }
+
+  [data-transitioning-destination="current"][data-transitioning-state],
+  [data-transitioning-state="current"] {
+    transform: translate(0%);
+  }
+
+  [data-transitioning-destination="after"][data-transitioning-state],
+  [data-transitioning-state="after"] {
+    transform: translate(100%);
+  }
+}

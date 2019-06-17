@@ -1,0 +1,42 @@
+{
+  "name": "@ephox/jax",
+  "version": "4.1.9",
+  "description": "AJAX library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/jax"
+  },
+  "scripts": {
+    "prepublishOnly": "yarn run lint && yarn run build",
+    "lint": "tslint src/**/*.ts",
+    "build": "tsc -b",
+    "test": "bedrock-auto -b phantomjs --customRoutes src/test/json/routes.json -d src/test/ts/",
+    "test-manual": "bedrock --customRoutes src/test/json/routes.json -d src/test/ts/",
+    "start": "webpack-dev-server --open-page './src/demo/html'",
+    "build:demo": "webpack"
+  },
+  "keywords": [
+    "ajax"
+  ],
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/katamari": "^2.4.21",
+    "tslib": "^1.9.3"
+  },
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "main": "./lib/main/ts/ephox/jax/api/Main.js",
+  "module": "./lib/main/ts/ephox/jax/api/Main.js",
+  "types": "./lib/main/ts/ephox/jax/api/Main.d.ts"
+}

@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "tinymce": ["src/core/dist/tinymce"],
+      "tinymce/core/*": ["lib/globals/tinymce/core/*"],
+      "tinymce/themes/mobile/*": ["src/themes/mobile/main/ts/*"],
+      "tinymce/themes/silver/*": ["src/themes/silver/main/ts/*"]
+    }
+  }
+}

@@ -1,0 +1,240 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Tiny Comments
+//
+
+@comment-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
+@comment-border-radius: @panel-border-radius;
+@comment-border: 1px solid @border-color;
+@comment-box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
+//TODO: Same as menu. Make a common helper variable?
+@comment-font-size: @font-size-sm;
+@comment-font-style: normal;
+@comment-font-weight: @font-weight-normal;
+@comment-line-height: @line-height-base;
+@comment-padding: @pad-sm @pad-sm @pad-md @pad-sm;
+@comment-text-color: @text-color;
+@comment-text-transform: initial;
+@comment-text-color-muted: @text-color-muted;
+
+.tox {
+  .tox-comment-thread {
+    background: @comment-background-color;
+    position: relative;
+
+    > *:not(:first-child) {
+      margin-top: @pad-sm;
+    }
+  }
+
+  .tox-comment {
+    background: @comment-background-color;
+    border: @comment-border;
+    border-radius: @comment-border-radius;
+    box-shadow: @comment-box-shadow;
+    padding: @comment-padding;
+    position: relative;
+  }
+
+  .tox-comment__header {
+    align-items: center;
+    color: @comment-text-color;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .tox-comment__date {
+    color: @user-name-text-color;
+    font-size: @font-size-xs;
+  }
+
+  .tox-comment__body {
+    color: @comment-text-color;
+    font-size: @comment-font-size;
+    font-style: @comment-font-style;
+    font-weight: @comment-font-weight;
+    line-height: @comment-line-height;
+    margin-top: @pad-sm;
+    position: relative;
+    text-transform: @comment-text-transform;
+
+    textarea {
+      resize: none;
+      white-space: normal;
+      width: 100%;
+    }
+  }
+
+  .tox-comment__expander {
+    padding-top: @pad-sm;
+
+    p {
+      color: @comment-text-color-muted;
+      font-size: @font-size-sm;
+      font-style: normal;
+    }
+  }
+
+  .tox-comment__body p {
+    margin: 0;
+  }
+
+  .tox-comment__buttonspacing {
+    padding-top: @pad-md;
+    text-align: center;
+  }
+
+  .tox-comment-thread__overlay::after {
+    background: @comment-background-color;
+    bottom: 0;
+    content: "";
+    display: flex;
+    left: 0;
+    opacity: .9;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 5;
+  }
+
+  .tox-comment__reply {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin-top: @pad-sm;
+
+    > *:first-child {
+      margin-bottom: @pad-sm;
+      width: 100%;
+    }
+  }
+
+  .tox-comment__edit {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin-top: @pad-md;
+  }
+
+  .tox-comment__gradient::after {
+    background: linear-gradient(fade(@comment-background-color, 0), @comment-background-color);
+    bottom: 0;
+    content: "";
+    display: block;
+    height: 5em;
+    margin-top: -40px;
+    position: absolute;
+    width: 100%;
+  }
+
+  .tox-comment__overlay {
+    background: @comment-background-color;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    left: 0;
+    opacity: .9;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+    z-index: 5;
+  }
+
+  .tox-comment__loading-text {
+    align-items: center;
+    color: @comment-text-color;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    > div {
+      padding-bottom: @pad-md;
+    }
+  }
+
+  .tox-comment__overlaytext {
+    bottom: 0;
+    flex-direction: column;
+    font-size: @font-size-sm;
+    left: 0;
+    padding: 1em;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 10;
+
+    p {
+      background-color: @comment-background-color;
+      box-shadow: 0 0 8px 8px @comment-background-color;
+      color: @comment-text-color;
+      text-align: center;
+    }
+
+    div:nth-of-type(2) {
+      font-size: .8em;
+    }
+  }
+
+  .tox-comment__busy-spinner {
+    align-items: center;
+    background-color: @comment-background-color;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: @z-index-dialogs + 3;
+  }
+
+  .tox-comment__scroll {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 1;
+    overflow: auto;
+  }
+
+  .tox-conversations {
+    margin: @pad-sm;
+  }
+}
+//end tox
+
+.tox:not([dir=rtl]) {
+  .tox-comment__edit {
+    margin-left: @pad-sm;
+  }
+
+  .tox-comment__buttonspacing,
+  .tox-comment__edit,
+  .tox-comment__reply {
+    > *:last-child {
+      margin-left: @pad-sm;
+    }
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-comment__edit {
+    margin-right: @pad-sm;
+  }
+
+  .tox-comment__buttonspacing,
+  .tox-comment__edit,
+  .tox-comment__reply {
+    > *:last-child {
+      margin-right: @pad-sm;
+    }
+  }
+}

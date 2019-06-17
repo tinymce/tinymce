@@ -1,0 +1,157 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Pop (The "Quickbars" container)
+//
+
+@pop-background-color: @background-color;
+@pop-border-radius: @panel-border-radius;
+@pop-border-color: @border-color;
+@pop-box-shadow: 0 1px 3px rgba(0, 0, 0, .15);
+
+.tox {
+  .tox-pop {
+    display: inline-block;
+    position: relative;
+  }
+
+  .tox-pop--resizing {
+    transition: width .1s ease;
+
+    .tox-toolbar {
+      // When the toolbar is resizing, it won't fit into its container. Therefore, turn off wrapping
+      flex-wrap: nowrap;
+    }
+  }
+
+  // Some of these styles are used in floating more drawer.
+  // Pay attention to toolbar/toolbar.less when updating CSS
+  .tox-pop__dialog {
+    background-color: @pop-background-color;
+    border: 1px solid @pop-border-color;
+    border-radius: @pop-border-radius;
+    box-shadow: @pop-box-shadow;
+    min-width: 0;
+    overflow: hidden;
+
+    > *:not(.tox-toolbar) {
+      margin: @pad-xs @pad-xs @pad-xs @pad-sm;
+    }
+
+    .tox-toolbar {
+      background-color: transparent;
+    }
+  }
+
+  //
+  // Arrows
+  //
+
+  // Common styles
+  .tox-pop::before,
+  .tox-pop::after {
+    border-style: solid;
+    content: '';
+    display: block;
+    height: 0;
+    position: absolute;
+    width: 0;
+  }
+
+  // Default (bottom) pointing arrow
+  .tox-pop.tox-pop--bottom::before,
+  .tox-pop.tox-pop--bottom::after {
+    left: 50%;
+    top: 100%;
+  }
+
+  .tox-pop.tox-pop--bottom::after {
+    border-color: @pop-background-color transparent transparent transparent;
+    border-width: 8px;
+    margin-left: -8px;
+    margin-top: -1px;
+  }
+
+  .tox-pop.tox-pop--bottom::before {
+    border-color: @pop-border-color transparent transparent transparent;
+    border-width: 9px;
+    margin-left: -9px;
+  }
+
+  // Top pointing arrow
+  .tox-pop.tox-pop--top::before,
+  .tox-pop.tox-pop--top::after {
+    left: 50%;
+    top: 0;
+    transform: translateY(-100%);
+  }
+
+  .tox-pop.tox-pop--top::after {
+    border-color: transparent transparent @pop-background-color transparent;
+    border-width: 8px;
+    margin-left: -8px;
+    margin-top: 1px;
+  }
+
+  .tox-pop.tox-pop--top::before {
+    border-color: transparent transparent @pop-border-color transparent;
+    border-width: 9px;
+    margin-left: -9px;
+  }
+
+  // Left pointing arrow
+  .tox-pop.tox-pop--left::before,
+  .tox-pop.tox-pop--left::after {
+    left: 0;
+    top: calc(~'50% - 1px');
+    transform: translateY(-50%);
+  }
+
+  .tox-pop.tox-pop--left::after {
+    border-color: transparent @pop-background-color transparent transparent;
+    border-width: 8px;
+    margin-left: -15px;
+  }
+
+  .tox-pop.tox-pop--left::before {
+    border-color: transparent @pop-border-color transparent transparent;
+    border-width: 10px;
+    margin-left: -19px;
+  }
+
+  // Right pointing arrow
+  .tox-pop.tox-pop--right::before,
+  .tox-pop.tox-pop--right::after {
+    left: 100%;
+    top: calc(~'50% + 1px');
+    transform: translateY(-50%);
+  }
+
+  .tox-pop.tox-pop--right::after {
+    border-color: transparent transparent transparent @pop-background-color;
+    border-width: 8px;
+    margin-left: -1px;
+  }
+
+  .tox-pop.tox-pop--right::before {
+    border-color: transparent transparent transparent @pop-border-color;
+    border-width: 10px;
+    margin-left: -1px;
+  }
+
+  // Top/Bottom arrow alignment arrows. Centered is default and requires no class
+  .tox-pop.tox-pop--align-left::before,
+  .tox-pop.tox-pop--align-left::after {
+    left: 20px;
+  }
+
+  .tox-pop.tox-pop--align-right::before,
+  .tox-pop.tox-pop--align-right::after {
+    left: calc(~'100% - 20px');
+  }
+}

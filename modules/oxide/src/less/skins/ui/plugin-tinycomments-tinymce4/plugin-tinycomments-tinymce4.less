@@ -1,0 +1,89 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
+@import 'src/less/theme/globals/reset';
+@import 'src/less/theme/globals/global-variables';
+@import 'src/less/theme/globals/global';
+@import 'src/less/theme/components/dialog/dialog';
+@import 'src/less/theme/components/collection/collection';
+@import 'src/less/theme/components/comments/comment';
+@import 'src/less/theme/components/comments/user';
+@import 'src/less/theme/components/form/label';
+@import 'src/less/theme/components/form/layout';
+@import 'src/less/theme/components/form/textfield';
+@import 'src/less/theme/components/form/textarea';
+@import 'src/less/theme/components/menu/menu';
+@import 'src/less/theme/components/pop/pop';
+@import 'src/less/theme/components/toolbar/toolbar';
+@import 'src/less/theme/components/toolbar-button/toolbar-button';
+@import 'src/less/theme/components/toolbar/toolbar-group';
+@import 'src/less/theme/components/sidebar/sidebar';
+@import 'src/less/theme/components/button/button';
+@import 'src/less/theme/components/button/button-secondary';
+@import 'src/less/theme/components/button/button-icon';
+@import 'src/less/theme/components/button/button-naked';
+@import 'src/less/theme/components/spinner/spinner';
+
+// ADD TinyMCE 4 specific variable overrides here
+
+//Overall
+@font-stack: "Helvetica Neue",Helvetica,Arial,sans-serif;
+
+//Comments
+@comment-border-radius: 0;
+
+//Button Primary
+@button-background-color: #1976d2;
+@button-border-radius: 0;
+@button-font-weight: normal;
+@button-font-size: @font-size-sm;
+@button-padding-x: 6px;
+@button-padding-y: 4px;
+@button-line-height: 20px;
+@button-secondary-background-color: #fff;
+@button-secondary-border-color: rgb(186, 186, 186);
+
+//Button Primary Hover and Focus
+@button-hover-background-color: darken(@button-background-color, 5%);
+//@button-hover-background-image: @button-background-image;
+@button-hover-border-color: @button-hover-background-color;
+@button-hover-box-shadow: @button-box-shadow;
+@button-hover-text-color: @button-text-color;
+//@button-focus-background-color: @button-hover-background-color;
+@button-focus-border-color: @button-hover-border-color;
+//@button-focus-box-shadow: @button-hover-box-shadow;
+@button-focus-text-color: @button-hover-text-color;
+
+//Button Secondary
+@button-secondary-text-color: #595959;
+
+//Button Secondary Hover and Focus
+@button-secondary-hover-background-color: @button-secondary-background-color;
+@button-secondary-hover-border-color: @button-secondary-border-color;
+@button-secondary-focus-border-color: #1976d2;
+
+//Textfield
+@textfield-border-color: #c5c5c5;
+@textfield-border-radius: 0;
+
+//Menus
+@menu-border-radius: 0;
+
+//Menu items (kebab menu)
+@collection-item-active-background-color: #ededee;
+@collection-item-label-text-color: #595959;
+
+// TinyMCE 4 reset styles add width and height auto, which causes the svg height/width to be ignored in IE11
+@comment-icon-height: 24px;
+@comment-icon-width: 24px;
+
+.tox {
+  .tox-comment svg {
+    max-height: @comment-icon-height;
+    max-width: @comment-icon-width;
+  }
+}

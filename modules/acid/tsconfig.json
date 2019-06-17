@@ -1,0 +1,26 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "ephox/acid/test/*": ["src/test/ts/module/ephox/acid/test/*"],
+      "ephox/acid/demo/*": ["src/demo/ts/ephox/acid/demo/*"],
+      "ephox/acid/*": ["src/main/ts/ephox/acid/*"],
+      "@ephox/acid": ["src/main/ts/ephox/acid/api/Main.ts"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/demo/i18n",
+    "src/main/ts",
+    "src/test/ts"
+  ],
+  "references": [
+    { "path": "../alloy" },
+    { "path": "../boulder" },
+    { "path": "../katamari" },
+    { "path": "../sugar" },
+  ]
+}

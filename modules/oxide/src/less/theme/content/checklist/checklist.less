@@ -1,0 +1,41 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Checklist
+//
+
+.tox-checklist {
+  > li:not(.tox-checklist--hidden) {
+    list-style: none;
+    margin: .25em 0;
+
+    &::before {
+      background-image: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/checklist-unchecked.svg');
+      background-size: 100%;
+      content: '';
+      cursor: pointer;
+      height: 1em;
+      margin-left: -1.5em;
+      margin-top: .125em;
+      position: absolute;
+      width: 1em;
+    }
+  }
+
+  li:not(.tox-checklist--hidden).tox-checklist--checked::before {
+    background-image: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/checklist-checked.svg');
+  }
+}
+
+// RTL
+[dir=rtl] {
+  .tox-checklist > li:not(.tox-checklist--hidden)::before {
+    margin-left: 0;
+    margin-right: -1.5em;
+  }
+}

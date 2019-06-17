@@ -1,0 +1,42 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Toolbar group
+//
+
+@toolbar-group-padding-x: 4px;
+@toolbar-group-spacing-y: 0;
+@toolbar-group-separator-color: @border-color;
+
+.tox {
+  .tox-toolbar__group {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    margin: @toolbar-group-spacing-y 0;
+    padding: 0 @toolbar-group-padding-x;
+  }
+
+  // Align toolbar group to the right
+  .tox-toolbar__group--pull-right {
+    margin-left: auto;
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-toolbar__group:not(:last-of-type) {
+    border-right: 1px solid @toolbar-group-separator-color;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-toolbar__group:not(:last-of-type) {
+    border-left: 1px solid @toolbar-group-separator-color;
+  }
+}

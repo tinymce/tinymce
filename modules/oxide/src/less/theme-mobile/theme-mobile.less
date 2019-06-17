@@ -1,0 +1,115 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+@import "globals/reset";
+@import "globals/variables";
+@import "globals/mobile-icons";
+@import "globals/mask";
+@import "globals/android";
+@import "components/toolstrip/toolstrip";
+@import "components/menu/dropup";
+@import "components/menu/styles-menu";
+
+@font-face {
+  font-family: 'tinymce-mobile';
+  font-style: normal;
+  font-weight: normal;
+  src: url('fonts/tinymce-mobile.woff?8x92w3') format('woff');
+}
+
+@media (min-device-width: 700px) {
+  .tinymce-mobile-outer-container,
+  .tinymce-mobile-outer-container input {
+    font-size: 25px;
+  }
+}
+
+@media (max-device-width: 700px) {
+  .tinymce-mobile-outer-container,
+  .tinymce-mobile-outer-container input {
+    font-size: 18px;
+  }
+}
+
+.tinymce-mobile-icon {
+  font-family: 'tinymce-mobile', sans-serif;
+}
+
+.mixin-flex-and-centre {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.mixin-flex-bar {
+  align-items: center;
+  display: flex;
+  height: 100%;
+}
+
+.tinymce-mobile-outer-container {
+  .tinymce-mobile-editor-socket iframe {
+    background-color: #fff;
+    width: 100%;
+  }
+}
+
+.tinymce-mobile-editor-socket {
+  .tinymce-mobile-mask-edit-icon {
+    /* Note, on the iPod touch in landscape, this isn't visible when the navbar appears */
+    background-color: @mask-button-background-color;
+    border-radius: 50%;
+    bottom: 1em;
+    color: @mask-button-foreground-color;
+    font-size: @mask-button-font-size-large;
+    height: @mask-button-size;
+    position: fixed;
+    right: 2em;
+    width: @mask-button-size;
+
+    .mixin-flex-and-centre;
+
+    @media @tablets {
+      font-size: @mask-button-font-size-small;
+    }
+  }
+}
+
+.tinymce-mobile-outer-container:not(.tinymce-mobile-fullscreen-maximized) {
+  .tinymce-mobile-editor-socket {
+    height: 300px;
+    overflow: hidden;
+
+    iframe {
+      height: 100%;
+    }
+  }
+
+  .tinymce-mobile-toolstrip {
+    display: none;
+  }
+}
+
+/*
+  Note, that if you don't include this (::-webkit-file-upload-button), the toolbar width gets
+  increased and the whole body becomes scrollable. It's important!
+ */
+input[type="file"]::-webkit-file-upload-button {
+  display: none;
+}
+
+// Media query for iphone only as the edit button cannot be placed correctly
+
+@media @iphone-small-landscape {
+  .tinymce-mobile-ios-container {
+    .tinymce-mobile-editor-socket {
+      .tinymce-mobile-mask-edit-icon {
+        bottom: 50%;
+      }
+    }
+  }
+}

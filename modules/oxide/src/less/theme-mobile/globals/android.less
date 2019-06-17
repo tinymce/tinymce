@@ -1,0 +1,47 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+.tinymce-mobile-android-container {
+  &.tinymce-mobile-android-maximized {
+    // Android WebView only
+    // The min-height: 100vh is required for webview which we aren't supporting yet.
+    // It breaks normal mode by making the container larger than the window height
+    // min-height: 100vh;
+    background: @android-background-color;
+    border: none;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+  }
+
+  &:not(.tinymce-mobile-android-maximized) {
+    position: relative;
+  }
+
+  .tinymce-mobile-editor-socket {
+    display: flex;
+    flex-grow: 1;
+
+    iframe {
+      display: flex !important;
+      flex-grow: 1;
+      height: auto !important;
+    }
+  }
+}
+
+.tinymce-mobile-android-scroll-reload {
+  overflow: hidden;
+}
+
+:not(.tinymce-mobile-readonly-mode) > .tinymce-mobile-android-selection-context-toolbar {
+  margin-top: 23px;
+}

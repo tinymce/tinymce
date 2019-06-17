@@ -1,0 +1,32 @@
+import { ApproxStructure, Assertions } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { XXX } from 'ephox/alloy/api/behaviour/XXX';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+
+UnitTest.asynctest('XXX Behaviour', (success, failure) => {
+  GuiSetup.setup((store, doc, body) => {
+    return GuiFactory.build(
+      Container.sketch({
+        containerBehaviours: Behaviour.derive([
+          XXX.config({
+
+          })
+        ])
+      })
+    );
+
+  }, (doc, body, gui, component, store) => {
+    return [
+      Assertions.sAssertStructure(
+        'Check initial XXX values',
+        ApproxStructure.build((s, str, arr) => {
+          return s.anything();
+        }),
+        component.element()
+      )
+    ];
+  }, () => { success(); }, failure);
+});

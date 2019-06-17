@@ -1,0 +1,192 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Toolbar button
+// When making changes here, please review menubar/menubar.less and menubar/menubar-button.less
+//
+
+@toolbar-button-background-color: none;
+@toolbar-button-border-radius: 3px;
+@toolbar-button-border: 0;
+@toolbar-button-box-shadow: none;
+@toolbar-button-chevron-color: @text-color-muted;
+@toolbar-button-chevron-width: @base-value;
+@toolbar-button-font-size: @font-size-sm;
+@toolbar-button-font-style: normal;
+@toolbar-button-font-weight: @font-weight-normal;
+@toolbar-button-height: 34px;
+@toolbar-button-icon-color: contrast(@background-color, @color-white, @color-black);
+@toolbar-button-spacing-x: 0;
+@toolbar-button-spacing-y: 2px;
+@toolbar-button-text-color: contrast(@background-color, @color-white, @color-black);
+@toolbar-button-text-transform: normal;
+@toolbar-button-width: 34px;
+
+@toolbar-button-hover-background-color: multiply(white, contrast(@background-color, fade(@color-black, 15), fade(@color-black, 85)));
+@toolbar-button-hover-border: @toolbar-button-border;
+@toolbar-button-hover-box-shadow: @toolbar-button-box-shadow;
+@toolbar-button-hover-icon-color: @toolbar-button-icon-color;
+@toolbar-button-hover-text-color: @toolbar-button-text-color;
+
+@toolbar-button-focus-background-color: @toolbar-button-hover-background-color;
+@toolbar-button-focus-border: @toolbar-button-hover-border;
+@toolbar-button-focus-box-shadow: @toolbar-button-hover-box-shadow;
+@toolbar-button-focus-icon-color: @toolbar-button-hover-icon-color;
+@toolbar-button-focus-text-color: @toolbar-button-hover-text-color;
+
+@toolbar-button-active-background-color: @toolbar-button-enabled-background-color;
+@toolbar-button-active-box-shadow: @toolbar-button-box-shadow; // set to `0 1px 1px 0 rgba(0, 0, 0, .1) inset` for a small push in effect
+@toolbar-button-active-icon-color: @toolbar-button-enabled-icon-color;
+@toolbar-button-active-text-color: @toolbar-button-enabled-text-color;
+@toolbar-button-active-transform: none; // Set to `translateY(1px)` for a small push down effect
+
+@toolbar-button-enabled-background-color:  multiply(white, contrast(@background-color, fade(@color-black, 25), fade(@color-black, 65)));
+@toolbar-button-enabled-box-shadow: @toolbar-button-box-shadow;
+@toolbar-button-enabled-icon-color: @toolbar-button-hover-icon-color;
+@toolbar-button-enabled-text-color: @toolbar-button-hover-text-color;
+@toolbar-button-enabled-transform: none;
+
+@toolbar-button-disabled-background-color:  @toolbar-button-background-color;
+@toolbar-button-disabled-box-shadow: @toolbar-button-box-shadow;
+@toolbar-button-disabled-icon-color: fade(@toolbar-button-icon-color, 50%);
+@toolbar-button-disabled-text-color: fade(@toolbar-button-text-color, 50%);
+
+.tox {
+  .tox-tbtn {
+    align-items: center;
+    background: @toolbar-button-background-color;
+    border: @toolbar-button-border;
+    border-radius: @toolbar-button-border-radius;
+    box-shadow: @toolbar-button-box-shadow;
+    color: @toolbar-button-text-color;
+    display: flex;
+    flex: 0 0 auto;
+    font-size: @toolbar-button-font-size;
+    font-style: @toolbar-button-font-style;
+    font-weight: @toolbar-button-font-weight;
+    height: @toolbar-button-height;
+    justify-content: center;
+    margin: @toolbar-button-spacing-y @toolbar-button-spacing-x (@toolbar-button-spacing-y + 1px) 0;
+    outline: none;
+    overflow: hidden;
+    padding: 0;
+    text-transform: @toolbar-button-text-transform;
+    width: @toolbar-button-width;
+
+    svg {
+      display: block;
+      fill: @toolbar-button-icon-color;
+    }
+  }
+
+  // This class doesn't seem to be used anywhere.
+  // The ruleset can probably be removed.
+  .tox-tbtn.tox-tbtn-more {
+    padding-left: 5px;
+    padding-right: 5px;
+    width: inherit;
+  }
+
+  // An toggle on/off button's on state.
+  .tox-tbtn--enabled {
+    background: @toolbar-button-enabled-background-color;
+    box-shadow: @toolbar-button-enabled-box-shadow;
+    color: @toolbar-button-enabled-text-color;
+
+    > * {
+      transform: @toolbar-button-enabled-transform;
+    }
+
+    svg {
+      fill: @toolbar-button-enabled-icon-color;
+    }
+  }
+
+  .tox-tbtn:hover {
+    background: @toolbar-button-hover-background-color;
+    box-shadow: @toolbar-button-hover-box-shadow;
+    color: @toolbar-button-hover-text-color;
+
+    svg {
+      fill: @toolbar-button-hover-icon-color;
+    }
+  }
+
+  .tox-tbtn:focus {
+    background: @toolbar-button-focus-background-color;
+    box-shadow: @toolbar-button-focus-box-shadow;
+    color: @toolbar-button-focus-text-color;
+
+    svg {
+      fill: @toolbar-button-focus-icon-color;
+    }
+  }
+
+  .tox-tbtn:active {
+    background: @toolbar-button-active-background-color;
+    box-shadow: @toolbar-button-active-box-shadow;
+    color: @toolbar-button-active-text-color;
+
+    svg {
+      fill: @toolbar-button-active-icon-color;
+    }
+  }
+
+  .tox-tbtn--disabled,
+  .tox-tbtn--disabled:hover,
+  .tox-tbtn:disabled,
+  .tox-tbtn:disabled:hover {
+    background: @toolbar-button-disabled-background-color;
+    box-shadow: @toolbar-button-disabled-box-shadow;
+    color: @toolbar-button-disabled-text-color;
+    cursor: not-allowed;
+
+    // Disable stylelint below because we're mixing the :disabled modifier with the "--disabled" class
+    // since they need to be kept the same/use the same rules
+    svg { /* stylelint-disable-line no-descending-specificity */
+      fill: @toolbar-button-disabled-icon-color;
+    }
+  }
+
+  .tox-tbtn:active > * {
+    transform: @toolbar-button-active-transform;
+  }
+
+  .tox-tbtn--md {
+    height: @toolbar-button-height * 1.5;
+    width: @toolbar-button-width * 1.5;
+  }
+
+  .tox-tbtn--lg {
+    flex-direction: column;
+    height: @toolbar-button-height * 2;
+    width: @toolbar-button-width * 2;
+  }
+
+  .tox-tbtn--return {
+    align-self: stretch;
+    height: unset;
+    width: 16px;
+  }
+
+  // For buttons with text label before or after icon
+  .tox-tbtn--labeled {
+    padding: 0 4px;
+    width: unset;
+  }
+
+  // Vertical label
+  .tox-tbtn__vlabel {
+    display: block;
+    font-size: 10px;
+    font-weight: @font-weight-normal;
+    letter-spacing: -.025em;
+    margin-bottom: @pad-xs;
+    white-space: nowrap;
+  }
+}

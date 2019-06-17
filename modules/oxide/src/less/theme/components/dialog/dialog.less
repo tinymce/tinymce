@@ -1,0 +1,394 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Dialog
+//
+
+@dialog-backdrop-background-color: fade(@background-color, 75);
+@dialog-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
+@dialog-busy-backdrop-background-color: @dialog-backdrop-background-color;
+
+@dialog-border-color: @border-color;
+@dialog-border-radius: @panel-border-radius;
+@dialog-border-width: 1px;
+@dialog-box-shadow: 0 16px 16px -10px fade(@color-black, 15%), 0 0 40px 1px fade(@color-black, 15%);
+
+@dialog-header-background-color: @dialog-background-color;
+@dialog-header-padding: @pad-sm @pad-md 0 @pad-md;
+@dialog-header-separator-border: none;
+
+@dialog-footer-background-color: @dialog-background-color;
+@dialog-footer-padding: @pad-sm @pad-md;
+@dialog-footer-separator-border: 1px solid @dialog-border-color;
+
+@dialog-body-padding: 0 @pad-md;
+
+@dialog-title-font-family: @font-stack;
+@dialog-title-font-size: @font-size-lg;
+@dialog-title-font-style: normal;
+@dialog-title-font-weight: @font-weight-normal;
+@dialog-title-line-height: @line-height-base;
+@dialog-title-text-color: @text-color;
+@dialog-title-text-transform: normal;
+
+@dialog-body-font-size: @font-size-md;
+@dialog-body-font-style: normal;
+@dialog-body-font-weight: @font-weight-normal;
+@dialog-body-line-height: @line-height-base;
+@dialog-body-text-align: left;
+@dialog-body-text-color: @text-color;
+@dialog-body-text-transform: normal;
+
+@dialog-table-border-color: @border-color;
+
+.tox {
+  .tox-dialog-wrap {
+    align-items: center;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: @z-index-dialogs;
+  }
+
+  .tox-dialog-wrap__backdrop {
+    background-color: @dialog-backdrop-background-color;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: @z-index-dialogs + 1;
+  }
+
+  .tox-dialog {
+    background-color: @dialog-background-color;
+    border-color: @dialog-border-color;
+    border-radius: @dialog-border-radius;
+    border-style: solid;
+    border-width: @dialog-border-width;
+    box-shadow: @dialog-box-shadow;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    max-width: 480px;
+    overflow: hidden;
+    position: relative;
+    width: 95vw;
+    z-index: @z-index-dialogs + 2;
+
+    @media @breakpoint-sm {
+      align-self: flex-start;
+      margin: @pad-sm auto;
+      width: calc(100vw - @pad-md);
+    }
+  }
+
+  .tox-dialog__header {
+    align-items: center;
+    background-color: @dialog-header-background-color;
+    border-bottom: @dialog-header-separator-border;
+    color: @dialog-title-text-color;
+    display: flex;
+    font-size: @font-size-base;
+    justify-content: space-between;
+    margin-bottom: @pad-md;
+    padding: @dialog-header-padding;
+    position: relative;
+  }
+
+  .tox-dialog__header .tox-button {
+    z-index: 1;
+  }
+
+  .tox-dialog__draghandle {
+    cursor: grab;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  .tox-dialog__draghandle:active {
+    cursor: grabbing;
+  }
+
+  .tox-dialog__dismiss {
+    margin-left: auto;
+  }
+
+  .tox-dialog__title {
+    font-family: @dialog-title-font-family;
+    font-size: @dialog-title-font-size;
+    font-style: @dialog-title-font-style;
+    font-weight: @dialog-title-font-weight;
+    line-height: @dialog-title-line-height;
+    margin: 0;
+    text-transform: @dialog-title-text-transform;
+  }
+
+  .tox-dialog__body {
+    color: @dialog-body-text-color;
+    display: flex;
+    flex: 1;
+    -ms-flex-preferred-size: auto;
+    font-size: @dialog-body-font-size;
+    font-style: @dialog-body-font-style;
+    font-weight: @dialog-body-font-weight;
+    line-height: @dialog-body-line-height;
+    min-width: 0;
+    padding: @dialog-body-padding;
+    text-align: @dialog-body-text-align;
+    text-transform: @dialog-body-text-transform;
+
+    @media @breakpoint-sm {
+      flex-direction: column;
+    }
+  }
+
+  .tox-dialog__body-nav {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+
+    @media @breakpoint-sm {
+      flex-direction: row;
+      margin-bottom: @pad-sm;
+      -webkit-overflow-scrolling: touch;
+      overflow-x: auto;
+    }
+  }
+
+  .tox-dialog__body-nav-item {
+    border-bottom: 2px solid transparent;
+    color: @text-color-muted;
+    display: inline-block;
+    font-size: @font-size-sm;
+    line-height: @line-height-base;
+    margin-bottom: @pad-sm;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .tox-dialog__body-nav-item--active {
+    border-bottom: 2px solid @color-tint;
+    color: @color-tint;
+  }
+
+  .tox-dialog__body-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    -ms-flex-preferred-size: auto;
+    max-height: 650px; // TODO (verify max-height for dialogs)
+    overflow: auto; //overflow controls all scrolling in the dialogs
+    -webkit-overflow-scrolling: touch;
+
+    > * {
+      margin-bottom: 0;
+      margin-top: @pad-md;
+    }
+
+    > *:first-child {
+      margin-top: 0;
+    }
+
+    > *:last-child {
+      margin-bottom: 0;
+    }
+
+    > *:only-child {
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+  }
+
+  .tox-dialog--width-lg {
+    height: 650px; // The height property is required to flex the textarea within large dialogs to fit to parent
+    max-width: 1200px;
+  }
+
+  .tox-dialog--width-md {
+    // TODO (verify width for size medium)
+    max-width: 800px;
+
+    .tox-dialog__body-content {
+      overflow: auto;
+    }
+  }
+
+  // Centers content within a dialog body
+  .tox-dialog__body-content--centered {
+    text-align: center;
+  }
+
+  // Add more whitespace around body content
+  .tox-dialog__body-content--spacious {
+    margin-bottom: @pad-md;
+  }
+
+  .tox-dialog__footer {
+    align-items: center;
+    background-color: @dialog-footer-background-color;
+    border-top: @dialog-footer-separator-border;
+    display: flex;
+    justify-content: space-between;
+    margin-top: @pad-md;
+    padding: @dialog-footer-padding;
+  }
+
+  // Make a dialog disabled for user input
+  .tox-dialog__busy-spinner {
+    align-items: center;
+    background-color: @dialog-busy-backdrop-background-color;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: @z-index-dialogs + 3;
+  }
+
+  // the blocking div for dialogs
+  .tox-dialog-blocker-wrap {
+    //
+  }
+
+  .tox-dialog__table {
+    border-collapse: collapse;
+    width: 100%;
+
+    thead {
+      th {
+        font-weight: @font-weight-bold;
+        padding-bottom: @pad-sm;
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid @dialog-table-border-color;
+      }
+
+      tr:last-child {
+        border-bottom: none;
+      }
+    }
+
+    td {
+      padding-bottom: @pad-sm;
+      padding-top: @pad-sm;
+    }
+  }
+
+  // Make popups in a dialog appear over other dialog (urlinput, colorinput etc)
+  .tox-dialog__popups {
+    position: absolute;
+    width: 100%;
+    z-index: @z-index-dialogs;
+  }
+
+  // Make iframe/url dialogs stretch contents to fit the height and width of parent container
+  .tox-dialog__body-iframe {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    -ms-flex-preferred-size: auto;
+
+    .tox-navobj {
+      display: flex;
+      flex: 1;
+      -ms-flex-preferred-size: auto;
+    }
+
+    // the nav object spec is surrounded by tab stop objects, so apply flex to the middle element
+    .tox-navobj :nth-child(2) {
+      flex: 1;
+      -ms-flex-preferred-size: auto;
+      // IE 11
+      height: 100%;
+    }
+  }
+}
+
+// Added to the body to disable scrolling when dialogs are open
+body.tox-dialog__disable-scroll {
+  overflow: hidden;
+}
+
+.tox.tox-platform-ie {
+  /* IE11 CSS styles go here */
+  .tox-dialog-wrap {
+    position: -ms-device-fixed;
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-dialog__body-nav {
+    margin-right: @pad-xl;
+
+    @media @breakpoint-sm {
+      margin-right: 0;
+    }
+  }
+
+  .tox-dialog__body-nav-item {
+    @media @breakpoint-sm { /* stylelint-disable-line */
+      &:not(:first-child) {
+        margin-left: @pad-sm;
+      }
+    }
+  }
+
+  .tox-dialog__footer {
+    .tox-dialog__footer-start,
+    .tox-dialog__footer-end {
+      > * {
+        margin-left: @pad-sm;
+      }
+    }
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-dialog__body {
+    text-align: right;
+  }
+
+  .tox-dialog__body-nav {
+    margin-left: @pad-xl;
+
+    @media @breakpoint-sm {
+      margin-left: 0;
+    }
+  }
+
+  .tox-dialog__body-nav-item {
+    @media @breakpoint-sm { /* stylelint-disable-line */
+      &:not(:first-child) {
+        margin-right: @pad-sm;
+      }
+    }
+  }
+
+  .tox-dialog__footer {
+    .tox-dialog__footer-start,
+    .tox-dialog__footer-end {
+      > * {
+        margin-right: @pad-sm;
+      }
+    }
+  }
+}

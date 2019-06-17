@@ -1,0 +1,36 @@
+{
+  "name": "@ephox/phoenix",
+  "description": "DOM node text gathering library, rose from the ashes of some other projects we can't remember the names of now (edit: seek, sherlock, gift)",
+  "version": "5.0.24",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/phoenix"
+  },
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "dependencies": {
+    "@ephox/boss": "^3.0.22",
+    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/katamari": "^2.4.21",
+    "@ephox/polaris": "^3.0.25",
+    "tslib": "^1.9.3"
+  },
+  "scripts": {
+    "test-manual": "bedrock -d src/test",
+    "prepublishOnly": "tsc -b"
+  },
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/phoenix/api/Main.js",
+  "module": "./lib/main/ts/ephox/phoenix/api/Main.js",
+  "types": "./lib/main/ts/ephox/phoenix/api/Main.d.ts"
+}

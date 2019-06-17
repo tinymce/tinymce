@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "ephox/phoenix/test/*": ["src/test/ts/module/ephox/phoenix/test/*"],
+      "ephox/phoenix/demo/*": ["src/demo/ts/ephox/phoenix/demo/*"],
+      "ephox/phoenix/*": ["src/main/ts/ephox/phoenix/*"],
+      "@ephox/phoenix": ["src/main/ts/ephox/phoenix/api/Main.ts"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts",
+  ],
+  "references": [
+    { "path": "../boss" },
+    { "path": "../katamari" },
+    { "path": "../polaris" },
+  ]
+}

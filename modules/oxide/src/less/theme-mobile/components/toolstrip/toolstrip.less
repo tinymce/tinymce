@@ -1,0 +1,31 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+.tinymce-mobile-toolstrip {
+  background: @toolstrip-background-color;
+  display: flex;
+  flex: 0 0 auto;
+  z-index: @tinymce-mobile-mask-menu-zindex;
+
+  .tinymce-mobile-toolbar {
+    align-items: center;
+    background-color: @toolstrip-background-color;
+    border-bottom: 1px solid @toolstrip-border-color;
+    display: flex;
+    flex: 1;
+    height: 2.5em;
+    width: 100%; /* Make it no larger than the toolstrip, so that it needs to scroll */
+
+    &:not(.tinymce-mobile-context-toolbar) {
+      @import "main-toolbar";
+    }
+
+    &.tinymce-mobile-context-toolbar {
+      @import "context-toolbar";
+    }
+  }
+}

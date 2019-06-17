@@ -1,0 +1,11 @@
+{
+  "undef": true,
+  "unused": "vars",
+  "predef": [ "define" ],
+  "es3": true,
+  "quotmark": "single",
+  "globals"   : {
+    "assert"    : false,
+    "test"      : false
+  }
+}

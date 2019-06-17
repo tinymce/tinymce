@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-list-bull-default</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle fill="#000000" cx="11" cy="14" r="3"></circle>
+        <circle fill="#000000" cx="11" cy="24" r="3"></circle>
+        <circle fill="#000000" cx="11" cy="34" r="3"></circle>
+        <rect fill="#000000" opacity="0.2" x="18" y="12" width="22" height="4"></rect>
+        <rect fill="#000000" opacity="0.2" x="18" y="22" width="22" height="4"></rect>
+        <rect fill="#000000" opacity="0.2" x="18" y="32" width="22" height="4"></rect>
+    </g>
+</svg>

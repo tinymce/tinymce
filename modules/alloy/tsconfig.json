@@ -1,0 +1,28 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "noUnusedLocals": false,
+    "strict": false,
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "ephox/alloy/test/*": ["src/test/ts/module/ephox/alloy/test/*"],
+      "ephox/alloy/demo/*": ["src/demo/ts/ephox/alloy/demo/*"],
+      "ephox/alloy/*": ["src/main/ts/ephox/alloy/*"],
+      "@ephox/alloy": ["src/main/ts/ephox/alloy/api/Main.ts"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts"
+  ],
+  "references": [
+    { "path": "../agar" },
+    { "path": "../boulder" },
+    { "path": "../katamari" },
+    { "path": "../sand" },
+    { "path": "../sugar" },
+  ]
+}

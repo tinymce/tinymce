@@ -1,0 +1,47 @@
+import { createTableCellDialog } from './dialogs/TableCellDialog';
+import { createAnchorDialog } from './dialogs/AnchorDialog';
+import { createCharmapDialog } from './dialogs/CharmapDialog';
+import { createCodeDialog } from './dialogs/CodeDialog';
+import { createCodeSampleDialog } from './dialogs/CodeSampleDialog';
+import { createColorPickerDialog } from './dialogs/ColorPickerDialog';
+import { createDocumentPropsDialog } from './dialogs/DocumentPropsDialog';
+import { createFindReplaceDialog } from './dialogs/FindReplaceDialog';
+import { createImageDialog } from './dialogs/ImageDialog';
+import { createLinkDialog } from './dialogs/LinkDialog';
+import { createMediaDialog } from './dialogs/MediaDialogDemo';
+import { createPreviewDialog } from './dialogs/PreviewDialog';
+import { createTableDialog } from './dialogs/TableDialog';
+import { createTableRowDialog } from './dialogs/TableRowDialog';
+import { createTemplateDialog } from './dialogs/TemplateDialog';
+import { registerDemoButtons } from './buttons/ButtonDemo';
+import { registerDemoMenuItems } from './menus/MenuItemDemo';
+import { console } from '@ephox/dom-globals';
+import { getDemoRegistry } from './buttons/DemoRegistry';
+import { registerDemoContextMenus } from './menus/ContextMenuDemo';
+import { createWordcountDialog } from './dialogs/WordcountDialog';
+import { createAlertBannerDialog } from './dialogs/AlertBannerDialog';
+
+createAlertBannerDialog();
+createAnchorDialog();
+createCharmapDialog();
+createCodeDialog();
+createCodeSampleDialog();
+createColorPickerDialog();
+createDocumentPropsDialog();
+createFindReplaceDialog();
+createImageDialog();
+createLinkDialog();
+createMediaDialog();
+createPreviewDialog();
+createPreviewDialog();
+createTableCellDialog();
+createTableDialog();
+createTableRowDialog();
+createTemplateDialog();
+registerDemoButtons();
+registerDemoMenuItems();
+registerDemoContextMenus();
+createWordcountDialog();
+
+// tslint:disable-next-line:no-console
+console.log(getDemoRegistry().getAll());

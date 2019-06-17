@@ -1,838 +1,217 @@
-/*eslint-env node */
-
-let zipUtils = require('./tools/modules/zip-helper');
-let gruntUtils = require('./tools/modules/grunt-utils');
-let gruntWebPack = require('./tools/modules/grunt-webpack');
-let swag = require('@ephox/swag');
-let path = require('path');
-
-let plugins = [
-  'advlist', 'anchor', 'autolink', 'autoresize', 'autosave', 'bbcode', 'charmap', 'code', 'codesample',
-  'colorpicker', 'contextmenu', 'directionality', 'emoticons', 'help', 'fullpage',
-  'fullscreen', 'hr', 'image', 'imagetools', 'importcss', 'insertdatetime', 'legacyoutput', 'link',
-  'lists', 'media', 'nonbreaking', 'noneditable', 'pagebreak', 'paste', 'preview', 'print', 'save',
-  'searchreplace', 'spellchecker', 'tabfocus', 'table', 'template', 'textcolor', 'textpattern', 'toc',
-  'visualblocks', 'visualchars', 'wordcount', 'quickbars',
+const runsInPhantom = [
+  '@ephox/acid',
+  '@ephox/alloy',
+  '@ephox/boss',
+  '@ephox/boulder',
+  '@ephox/dragster',
+  '@ephox/echo',
+  '@ephox/imagetools',
+  '@ephox/jax',
+  '@ephox/katamari',
+  '@ephox/mcagar',
+  '@ephox/polaris',
+  '@ephox/porkbun',
+  '@ephox/robin',
+  '@ephox/snooker',
 ];
 
-let themes = [
-  'mobile',
-  // 'modern', 'mobile', 'inlite', 'silver'
-  'silver'
+const needsTinyMCE = ['@ephox/mcagar'];
+
+const runsInBrowser = [
+  '@ephox/agar',
+  '@ephox/bridge',
+  '@ephox/darwin',
+  '@ephox/phoenix',
+  '@ephox/sand',
+  '@ephox/sugar',
+  'tinymce',
 ];
 
-let oxideUiSkinMap = {
-  'dark': 'oxide-dark',
-  'default': 'oxide'
+if (!Array.prototype.flatMap) {
+  // simple polyfill for node versions < 11
+  // not at all to ES2019 spec, but if you're relying on that you should use node 11 /shrug
+  const concat = (x, y) => x.concat(y);
+
+  const flatMap = (f, xs) => xs.map(f).reduce(concat, []);
+
+  Array.prototype.flatMap = function (f) {
+    return flatMap(f, this);
+  };
+}
+
+const filterChanges = (changes, tests) => {
+  return changes.filter((change => tests.indexOf(change.name) > -1));
+};
+
+/* structure of lerna output
+{
+  name: string,
+  version: string,
+  private: boolean,
+  location: string
+}
+*/
+
+const testFolders = (tests, auto) => tests.flatMap(({location}) => [
+  `${location}/**/test/**/atomic/**/*Test.ts`,
+  `${location}/**/test/**/browser/**/*Test.ts`,
+  `${location}/**/test/**/phantom/**/*Test.ts`,
+].concat(auto ? `${location}/**/test/**/webdriver/**/*Test.ts` : []));
+
+const bedrockDefaults = {
+  config: 'tsconfig.json',
+  overallTimeout: 180000,
+  singleTimeout: 60000,
+};
+
+const bedrockPhantom = (tests) => {
+  if (tests.length === 0) {
+    return {};
+  } else {
+    return {
+      phantomjs: {
+        ...bedrockDefaults,
+        name: 'phantom-tests',
+        browser: 'phantomjs',
+        testfiles: testFolders(tests, true),
+        customRoutes: 'modules/jax/src/test/json/routes.json',
+      }
+    }
+  }
+};
+
+const bedrockBrowser = (tests, browserName, osName, auto) => {
+  if (tests.length === 0) {
+    return {};
+  } else {
+    return {
+      browser: {
+        ...bedrockDefaults,
+        overallTimeout: 900000,
+        name: `${browserName}-${osName}`,
+        browser: browserName,
+        testfiles: testFolders(tests, auto),
+        customRoutes: 'modules/tinymce/src/core/test/json/routes.json',
+
+        // we have a few tests that don't play nicely when combined together in the monorepo
+        retries: 3
+      }
+    }
+  }
+};
+
+const fetchLernaProjects = (log, runAllTests) => {
+  // This has to be sync because grunt can't do async config
+  var exec = require('child_process').execSync;
+
+  // if JSON parse fails, well, grunt will just fail /shrug
+  const parseLernaList = (cmd) => {
+    try {
+      return JSON.parse(exec(`yarn -s lerna ${cmd} -a --no-ignore-changes --json --loglevel warn 2>&1`));
+    } catch (e) {
+      // If no changes are found, then lerna returns an exit code of 1, so deal with that gracefully
+      if (e.status === 1) {
+        return [];
+      } else {
+        throw e;
+      }
+    }
+  };
+
+  const changes = runAllTests ? [] : parseLernaList('changed');
+
+  if (changes.length === 0) {
+    log.writeln('No changes found, testing all projects');
+    // If there are no changes, use "lerna list" instead of "lerna changed" to test everything
+    return parseLernaList('list');
+  } else {
+    return changes;
+  }
+
 };
 
 module.exports = function (grunt) {
-  var packageData = grunt.file.readJSON('package.json');
-  var changelogLine = grunt.file.read('changelog.txt').toString().split('\n')[0];
-  var BUILD_VERSION = packageData.version + (process.env.BUILD_NUMBER ? '-' + process.env.BUILD_NUMBER : '');
-  packageData.date = /^Version [^\(]+\(([^\)]+)\)/.exec(changelogLine)[1];
+  const runAllTests = grunt.option('ignore-lerna-changed') || false;
+  const changes = fetchLernaProjects(grunt.log, runAllTests);
 
-  grunt.initConfig({
-    pkg: packageData,
+  const phantomTests = filterChanges(changes, runsInPhantom);
+  const browserTests = filterChanges(changes, runsInBrowser);
 
+  const activeBrowser = grunt.option('bedrock-browser') || 'chrome-headless';
+  const activeOs = grunt.option('bedrock-os') || 'tests';
+  const bedrockPhantomConfig = bedrockPhantom(phantomTests);
+  const gruntConfig = {
     shell: {
-      tsc: { command: 'npx tsc' }
+      tsc: { command: 'yarn -s tsc' },
+      rollup: { command: 'yarn -s tinymce-rollup' },
+      legacy: { command: 'yarn build' },
+      yarn: { command: 'yarn' },
+      'yarn-dev': { command: 'yarn -s dev' }
     },
-
-    tslint: {
-      options: {
-        configuration: 'tslint.json'
-      },
-      files: { src: [ 'src/**/*.ts' ] }
-    },
-
-    globals: {
-      options: {
-        configFile: 'src/core/main/json/globals.json',
-        outputDir: 'lib/globals',
-        templateFile: 'src/core/main/js/GlobalsTemplate.js'
-      }
-    },
-
-    rollup: Object.assign(
-      {
-        core: {
-          options: {
-            treeshake: true,
-            name: 'tinymce',
-            format: 'iife',
-            banner: '(function () {',
-            footer: '})();',
-            onwarn: swag.onwarn,
-            plugins: [
-              swag.nodeResolve({
-                basedir: __dirname,
-                prefixes: {
-                  'tinymce/core': 'lib/core/main/ts'
-                }
-              }),
-              swag.remapImports()
-            ]
-          },
-          files:[
-            {
-              src: 'lib/core/main/ts/api/Main.js',
-              dest: 'js/tinymce/tinymce.js'
-            }
-          ]
-        }
-      },
-      gruntUtils.generate(plugins, 'plugin', (name) => {
-        return {
-          options: {
-            treeshake: true,
-            name: name,
-            format: 'iife',
-            banner: '(function () {',
-            footer: '})();',
-            onwarn: swag.onwarn,
-            plugins: [
-              swag.nodeResolve({
-                basedir: __dirname,
-                prefixes: gruntUtils.prefixes({
-                  'tinymce/core': 'lib/globals/tinymce/core'
-                }, [
-                  [`tinymce/plugins/${name}`, `lib/plugins/${name}/main/ts`]
-                ]),
-                mappers: [
-                  swag.mappers.replaceDir('./lib/core/main/ts/api', './lib/globals/tinymce/core/api'),
-                  swag.mappers.invalidDir('./lib/core/main/ts')
-                ]
-              }),
-              swag.remapImports()
-            ]
-          },
-          files:[ { src: `lib/plugins/${name}/main/ts/Plugin.js`, dest: `js/tinymce/plugins/${name}/plugin.js` } ]
-        };
-      }),
-      gruntUtils.generate(themes, 'theme', (name) => {
-        return {
-          options: {
-            treeshake: true,
-            name: name,
-            format: 'iife',
-            banner: '(function () {',
-            footer: '})();',
-            onwarn: swag.onwarn,
-            plugins: [
-              swag.nodeResolve({
-                basedir: __dirname,
-                prefixes: gruntUtils.prefixes({
-                  'tinymce/core': 'lib/globals/tinymce/core',
-                  'tinymce/ui': 'lib/ui/main/ts'
-                }, [
-                  [`tinymce/themes/${name}`, `lib/themes/${name}/main/ts`]
-                ]),
-                mappers: [
-                  swag.mappers.replaceDir('./lib/core/main/ts/api', './lib/globals/tinymce/core/api'),
-                  swag.mappers.invalidDir('./lib/core/main/ts')
-                ]
-              }),
-              swag.remapImports()
-            ]
-          },
-          files:[
-            {
-              src: `lib/themes/${name}/main/ts/Theme.js`,
-              dest: `js/tinymce/themes/${name}/theme.js`
-            }
-          ]
-        };
-      })
-    ),
-
-    uglify: Object.assign(
-      {
-        options: {
-          output: {
-            comments: 'all',
-            ascii_only: true
-          },
-          ie8: true
-        },
-        core: {
-          files: [
-            { src: 'js/tinymce/tinymce.js', dest: 'js/tinymce/tinymce.min.js' },
-            { src: 'src/core/main/js/JqueryIntegration.js', dest: 'js/tinymce/jquery.tinymce.min.js' }
-          ]
-        },
-        // very similar to the emoticons plugin, except mangle is off
-        'emoticons-raw': {
-          options: {
-            mangle: false,
-            compress: false,
-            beautify: {
-              indent_level: 2
-            }
-          },
-          files: [
-            { src: 'src/plugins/emoticons/main/js/emojis.js', dest: 'js/tinymce/plugins/emoticons/js/emojis.js' }
-          ]
-        }
-      },
-      gruntUtils.generate(plugins, 'plugin', (name) => {
-        var pluginExtras = {
-          emoticons: [ { src: 'src/plugins/emoticons/main/js/emojis.js', dest: 'js/tinymce/plugins/emoticons/js/emojis.min.js' } ]
-        };
-        return {
-          files: [
-            { src: `js/tinymce/plugins/${name}/plugin.js`, dest: `js/tinymce/plugins/${name}/plugin.min.js` }
-          ].concat(pluginExtras.hasOwnProperty(name) ? pluginExtras[name] : [])
-        };
-      }),
-      gruntUtils.generate(themes, 'theme', (name) => {
-        return {
-          files: [ { src: `js/tinymce/themes/${name}/theme.js`, dest: `js/tinymce/themes/${name}/theme.min.js` } ]
-        };
-      })
-    ),
-
-    webpack: Object.assign(
-      {core: () => gruntWebPack.create('src/core/demo/ts/demo/Demos.ts', 'tsconfig.json', 'scratch/demos/core', 'demo.js')},
-      {plugins: () => gruntWebPack.allPluginDemos(plugins)},
-      {themes: () => {
-        gruntWebPack.allThemeDemos(themes);
-        gruntWebPack.allComponentDemos(themes);
-      }},
-      gruntUtils.generate(plugins, 'plugin', (name) => () => gruntWebPack.createPlugin(name) ),
-      gruntUtils.generate(themes, 'theme', (name) => () => gruntWebPack.createTheme(name) )
-    ),
-
-    'webpack-dev-server': {
-      options: {
-        webpack: gruntWebPack.all(plugins, themes),
-        publicPath: '/',
-        inline: false,
-        port: grunt.option('webpack-port') !== undefined ? grunt.option('webpack-port') : 3000,
-        host: '0.0.0.0',
-        disableHostCheck: true,
-        before: app => gruntWebPack.generateDemoIndex(grunt, app, plugins, themes)
-      },
-      start: { }
-    },
-
-    less: {
-      mobile: {
-        options: {
-          plugins : [ new (require('less-plugin-autoprefix'))({ browsers : [ 'last 2 versions', /* for phantom */'safari >= 4' ] }) ],
-            compress: true,
-            yuicompress: true,
-            sourceMap: true,
-            sourceMapRootpath: '.',
-            optimization: 2
-        },
-        files: {
-          'js/tinymce/skins/ui/oxide/skin.mobile.min.css': 'src/skins/oxide/main/less/mobile/app/mobile-less.less'
-        }
-      },
-      'content-mobile': {
-        options: {
-          cleancss: true,
-            strictImports: true,
-            compress: true
-        },
-        files: {
-          'js/tinymce/skins/ui/oxide/content.mobile.min.css': 'src/skins/oxide/main/less/mobile/content.less'
-        }
-      }
-    },
-
-    concat: Object.assign({
-        options: {
-          process: function(content) {
-            return content.
-              replace(/@@version@@/g, packageData.version).
-              replace(/@@releaseDate@@/g, packageData.date);
-          }
-        },
-        core: {
-          src: [
-            'src/core/text/license-header.js',
-            'js/tinymce/tinymce.js'
-          ],
-          dest: 'js/tinymce/tinymce.js'
-        }
-      },
-      gruntUtils.generate(plugins, 'plugin', function (name) {
-        return {
-          src: [
-            'src/core/text/license-header.js',
-            `js/tinymce/plugins/${name}/plugin.js`
-          ],
-          dest: `js/tinymce/plugins/${name}/plugin.js`
-        };
-      }),
-      gruntUtils.generate(themes, 'theme', function (name) {
-        return {
-          src: [
-            'src/core/text/license-header.js',
-            `js/tinymce/themes/${name}/theme.js`
-          ],
-          dest: `js/tinymce/themes/${name}/theme.js`
-        };
-      })
-    ),
-
-    copy: {
-      core: {
-        options: {
-          process: function (content) {
-            return content.
-              replace('@@majorVersion@@', packageData.version.split('.')[0]).
-              replace('@@minorVersion@@', packageData.version.split('.').slice(1).join('.')).
-              replace('@@releaseDate@@', packageData.date);
-          }
-        },
-        files: [
-          {
-            src: 'js/tinymce/tinymce.js',
-            dest: 'js/tinymce/tinymce.js'
-          },
-          {
-            src: 'js/tinymce/tinymce.min.js',
-            dest: 'js/tinymce/tinymce.min.js'
-          },
-          {
-            src: 'src/core/main/text/readme_lang.md',
-            dest: 'js/tinymce/langs/readme.md'
-          },
-          {
-            src: 'LICENSE.TXT',
-            dest: 'js/tinymce/license.txt'
-          }
-        ]
-      },
-      'ui-skins': {
-        files: [
-          {
-            expand: true,
-            flatten: true,
-            cwd: 'src/themes/mobile/main/fonts',
-            src: [
-              '**',
-              '!*.json',
-              '!*.md'
-            ],
-            dest: 'js/tinymce/skins/ui/oxide/fonts'
-          }
-        ].concat(gruntUtils.flatMap(oxideUiSkinMap, function (name, mappedName) {
-          return [
-            {
-              expand: true,
-              flatten: true,
-              cwd: 'node_modules/@tinymce/oxide/build/skins/ui/' + name,
-              src: '**',
-              dest: 'js/tinymce/skins/ui/' + mappedName
-            }
-          ];
-        }))
-      },
-      'content-skins': {
-        files: [
-          {
-            expand: true,
-            cwd: 'node_modules/@tinymce/oxide/build/skins/content',
-            src: '**',
-            dest: 'js/tinymce/skins/content'
-          },
-        ]
-      },
-      'visualblocks-plugin': {
-        files: [
-          { src: 'src/plugins/visualblocks/main/css/visualblocks.css', dest: 'js/tinymce/plugins/visualblocks/css/visualblocks.css' }
-        ]
-      }
-    },
-
-    moxiezip: {
-      production: {
-        options: {
-          baseDir: 'tinymce',
-          excludes: [
-            'js/**/plugin.js',
-            'js/**/theme.js',
-            'js/**/*.map',
-            'js/tinymce/tinymce.full.min.js',
-            'js/tinymce/plugins/moxiemanager',
-            'js/tinymce/plugins/visualblocks/img',
-            'js/tinymce/skins/*/fonts/*.json',
-            'js/tinymce/skins/*/fonts/readme.md',
-            'readme.md'
-          ],
-          to: 'tmp/tinymce_<%= pkg.version %>.zip',
-          dataFilter: (args) => {
-            if (args.filePath.endsWith('.min.css')) {
-              var sourcemap = args.data.lastIndexOf('/*# sourceMappingURL=');
-              if (sourcemap > -1) {
-                args.data = args.data.slice(0, sourcemap);
-              }
-            }
-          }
-        },
-        src: [
-          'js/tinymce/langs',
-          'js/tinymce/plugins',
-          'js/tinymce/skins/**/*.min.css',
-          'js/tinymce/skins/**/*.woff',
-          'js/tinymce/themes',
-          'js/tinymce/tinymce.min.js',
-          'js/tinymce/jquery.tinymce.min.js',
-          'js/tinymce/license.txt',
-          'changelog.txt',
-          'LICENSE.TXT',
-          'readme.md'
-        ]
-      },
-
-      development: {
-        options: {
-          baseDir: 'tinymce',
-          excludes: [
-            'src/**/dist',
-            'src/**/scratch',
-            'src/**/lib',
-            'src/**/dependency',
-            'js/tinymce/tinymce.full.min.js',
-            'js/tests/.jshintrc'
-          ],
-          to: 'tmp/tinymce_<%= pkg.version %>_dev.zip'
-        },
-        src: [
-          'config',
-          'src',
-          'js',
-          'tests',
-          'tools',
-          'changelog.txt',
-          'LICENSE.TXT',
-          'Gruntfile.js',
-          'readme.md',
-          'package.json',
-          'package-lock.json',
-          'yarn.lock',
-          '.eslintrc',
-          '.jscsrc',
-          '.jshintrc'
-        ]
-      },
-      cdn: {
-        options: {
-          onBeforeSave: function (zip) {
-            zip.addData('dist/version.txt', packageData.version);
-          },
-          pathFilter: function (zipFilePath) {
-            return zipFilePath.replace('js/tinymce/', 'dist/');
-          },
-          onBeforeConcat: function (destPath, chunks) {
-            // Strip the license from each file and prepend the license, so it only appears once
-            var license = grunt.file.read('src/core/text/license-header.js').replace(/@@version@@/g, packageData.version).replace(/@@releaseDate@@/g, packageData.date);
-            return [license].concat(chunks.map(function (chunk) {
-              return chunk.replace(license, '').trim();
-            }));
-          },
-          excludes: [
-            'js/**/config',
-            'js/**/scratch',
-            'js/**/classes',
-            'js/**/lib',
-            'js/**/dependency',
-            'js/**/src',
-            'js/**/*.less',
-            'js/**/*.dev.js',
-            'js/**/*.dev.svg',
-            'js/**/*.map',
-            'js/tinymce/tinymce.full.min.js',
-            'js/tinymce/plugins/moxiemanager',
-            'js/tinymce/plugins/visualblocks/img',
-            'js/tinymce/skins/*/fonts/*.json',
-            'js/tinymce/skins/*/fonts/*.dev.svg',
-            'js/tinymce/skins/*/fonts/readme.md',
-            'readme.md',
-            'js/tests/.jshintrc'
-          ],
-          concat: [
-            {
-              src: [
-                'js/tinymce/tinymce.min.js',
-                'js/tinymce/themes/*/theme.min.js',
-                'js/tinymce/plugins/*/plugin.min.js',
-                '!js/tinymce/plugins/example/plugin.min.js',
-                '!js/tinymce/plugins/example_dependency/plugin.min.js'
-              ],
-
-              dest: [
-                'js/tinymce/tinymce.min.js'
-              ]
-            },
-          ],
-          to: 'tmp/tinymce_<%= pkg.version %>_cdn.zip'
-        },
-        src: [
-          'js/tinymce/jquery.tinymce.min.js',
-          'js/tinymce/tinymce.js',
-          'js/tinymce/langs',
-          'js/tinymce/plugins',
-          'js/tinymce/skins',
-          'js/tinymce/themes',
-          'js/tinymce/license.txt'
-        ]
-      },
-
-      component: {
-        options: {
-          excludes: [
-            'js/**/config',
-            'js/**/scratch',
-            'js/**/classes',
-            'js/**/lib',
-            'js/**/dependency',
-            'js/**/src',
-            'js/**/*.less',
-            'js/**/*.dev.svg',
-            'js/**/*.dev.js',
-            'js/**/*.map',
-            'js/tinymce/tinymce.full.min.js',
-            'js/tinymce/plugins/moxiemanager',
-            'js/tinymce/plugins/example',
-            'js/tinymce/plugins/example_dependency',
-            'js/tinymce/plugins/visualblocks/img',
-            'js/tinymce/skins/*/fonts/*.json',
-            'js/tinymce/skins/*/fonts/readme.md'
-          ],
-          pathFilter: function (zipFilePath) {
-            if (zipFilePath.indexOf('js/tinymce/') === 0) {
-              return zipFilePath.substr('js/tinymce/'.length);
-            }
-
-            return zipFilePath;
-          },
-          onBeforeSave: function (zip) {
-            function jsonToBuffer(json) {
-              return new Buffer(JSON.stringify(json, null, '\t'));
-            }
-
-            zip.addData('bower.json', jsonToBuffer({
-              'name': 'tinymce',
-              'description': 'Web based JavaScript HTML WYSIWYG editor control.',
-              'license': 'LGPL-2.1',
-              'keywords': ['editor', 'wysiwyg', 'tinymce', 'richtext', 'javascript', 'html'],
-              'homepage': 'http://www.tinymce.com',
-              'ignore': ['readme.md', 'composer.json', 'package.json', '.npmignore', 'changelog.txt']
-            }));
-
-            zip.addData('package.json', jsonToBuffer({
-              'name': 'tinymce',
-              'version': packageData.version,
-              'repository': {
-                'type': 'git',
-                'url': 'https://github.com/tinymce/tinymce-dist.git'
-              },
-              'description': 'Web based JavaScript HTML WYSIWYG editor control.',
-              'author': 'Ephox Corporation',
-              'main': 'tinymce.js',
-              'license': 'LGPL-2.1',
-              'keywords': ['editor', 'wysiwyg', 'tinymce', 'richtext', 'javascript', 'html'],
-              'bugs': { 'url': 'https://github.com/tinymce/tinymce/issues' }
-            }));
-
-            zip.addData('composer.json', jsonToBuffer({
-              'name': 'tinymce/tinymce',
-              'version': packageData.version,
-              'description': 'Web based JavaScript HTML WYSIWYG editor control.',
-              'license': ['LGPL-2.1-only'],
-              'keywords': ['editor', 'wysiwyg', 'tinymce', 'richtext', 'javascript', 'html'],
-              'homepage': 'http://www.tinymce.com',
-              'type': 'component',
-              'extra': {
-                'component': {
-                  'scripts': [
-                    'tinymce.js',
-                    'plugins/*/plugin.js',
-                    'themes/*/theme.js'
-                  ],
-                  'files': [
-                    'tinymce.min.js',
-                    'plugins/*/plugin.min.js',
-                    'themes/*/theme.min.js',
-                    'skins/**'
-                  ]
-                }
-              },
-              'archive': {
-                'exclude': ['readme.md', 'bower.js', 'package.json', '.npmignore', 'changelog.txt']
-              }
-            }));
-
-            zip.addFile(
-              'jquery.tinymce.js',
-              'js/tinymce/jquery.tinymce.min.js'
-            );
-
-            var getDirs = zipUtils.getDirectories(grunt, this.excludes);
-
-            zipUtils.addIndexFiles(
-              zip,
-              getDirs('js/tinymce/plugins'),
-              zipUtils.generateIndex('plugins', 'plugin')
-            );
-            zipUtils.addIndexFiles(
-              zip,
-              getDirs('js/tinymce/themes'),
-              zipUtils.generateIndex('themes', 'theme')
-            );
-          },
-          to: 'tmp/tinymce_<%= pkg.version %>_component.zip'
-        },
-        src: [
-          'js/tinymce/skins',
-          'js/tinymce/plugins',
-          'js/tinymce/themes',
-          'js/tinymce/tinymce.js',
-          'js/tinymce/tinymce.min.js',
-          'js/tinymce/jquery.tinymce.min.js',
-          'js/tinymce/license.txt',
-          'changelog.txt',
-          'readme.md'
-        ]
-      }
-    },
-
-    nugetpack: {
-      main: {
-        options: {
-          id: 'TinyMCE',
-          version: packageData.version,
-          authors: 'Ephox Corp',
-          owners: 'Ephox Corp',
-          description: 'The best WYSIWYG editor! TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor ' +
-          'control released as Open Source under LGPL by Ephox Corp. TinyMCE has the ability to convert HTML ' +
-          'TEXTAREA fields or other HTML elements to editor instances. TinyMCE is very easy to integrate ' +
-          'into other Content Management Systems.',
-          releaseNotes: 'Release notes for my package.',
-          summary: 'TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor ' +
-          'control released as Open Source under LGPL by Ephox Corp.',
-          projectUrl: 'http://www.tinymce.com/',
-          iconUrl: 'http://www.tinymce.com/favicon.ico',
-          licenseUrl: 'http://www.tinymce.com/license',
-          requireLicenseAcceptance: true,
-          tags: 'Editor TinyMCE HTML HTMLEditor',
-          excludes: [
-            'js/**/config',
-            'js/**/scratch',
-            'js/**/classes',
-            'js/**/lib',
-            'js/**/dependency',
-            'js/**/src',
-            'js/**/*.less',
-            'js/**/*.dev.svg',
-            'js/**/*.dev.js',
-            'js/**/*.map',
-            'js/tinymce/tinymce.full.min.js'
-          ],
-          outputDir: 'tmp'
-        },
-        files: [
-          { src: 'js/tinymce/langs', dest: '/content/scripts/tinymce/langs' },
-          { src: 'js/tinymce/plugins', dest: '/content/scripts/tinymce/plugins' },
-          { src: 'js/tinymce/themes', dest: '/content/scripts/tinymce/themes' },
-          { src: 'js/tinymce/skins', dest: '/content/scripts/tinymce/skins' },
-          { src: 'js/tinymce/tinymce.js', dest: '/content/scripts/tinymce/tinymce.js' },
-          { src: 'js/tinymce/tinymce.min.js', dest: '/content/scripts/tinymce/tinymce.min.js' },
-          { src: 'js/tinymce/jquery.tinymce.min.js', dest: '/content/scripts/tinymce/jquery.tinymce.min.js' },
-          { src: 'js/tinymce/license.txt', dest: '/content/scripts/tinymce/license.txt' }
-        ]
-      },
-
-      jquery: {
-        options: {
-          id: 'TinyMCE.jQuery',
-          title: 'TinyMCE.jQuery [Deprecated]',
-          version: packageData.version,
-          authors: 'Ephox Corp',
-          owners: 'Ephox Corp',
-          description: 'This package has been deprecated use https://www.nuget.org/packages/TinyMCE/',
-          releaseNotes: 'This package has been deprecated use https://www.nuget.org/packages/TinyMCE/',
-          summary: 'This package has been deprecated use https://www.nuget.org/packages/TinyMCE/',
-          projectUrl: 'http://www.tinymce.com/',
-          iconUrl: 'http://www.tinymce.com/favicon.ico',
-          licenseUrl: 'http://www.tinymce.com/license',
-          requireLicenseAcceptance: true,
-          tags: 'Editor TinyMCE HTML HTMLEditor',
-          excludes: [
-            'js/**/config',
-            'js/**/scratch',
-            'js/**/classes',
-            'js/**/lib',
-            'js/**/dependency',
-            'js/**/src',
-            'js/**/*.less',
-            'js/**/*.dev.svg',
-            'js/**/*.dev.js',
-            'js/**/*.map',
-            'js/tinymce/tinymce.full.min.js'
-          ],
-          outputDir: 'tmp'
-        },
-
-        files: [
-          { src: 'js/tinymce/langs', dest: '/content/scripts/tinymce/langs' },
-          { src: 'js/tinymce/plugins', dest: '/content/scripts/tinymce/plugins' },
-          { src: 'js/tinymce/themes', dest: '/content/scripts/tinymce/themes' },
-          { src: 'js/tinymce/skins', dest: '/content/scripts/tinymce/skins' },
-          { src: 'js/tinymce/tinymce.js', dest: '/content/scripts/tinymce/tinymce.js' },
-          { src: 'js/tinymce/tinymce.min.js', dest: '/content/scripts/tinymce/tinymce.min.js' },
-          { src: 'js/tinymce/jquery.tinymce.min.js', dest: '/content/scripts/tinymce/jquery.tinymce.min.js' },
-          { src: 'js/tinymce/license.txt', dest: '/content/scripts/tinymce/license.txt' }
-        ]
-      }
-    },
-
-    bundle: {
-      minified: {
-        options: {
-          themesDir: 'js/tinymce/themes',
-          pluginsDir: 'js/tinymce/plugins',
-          pluginFileName: 'plugin.min.js',
-          themeFileName: 'theme.min.js',
-          outputPath: 'js/tinymce/tinymce.full.min.js'
-        },
-
-        src: [
-          'js/tinymce/tinymce.min.js'
-        ]
-      },
-
-      source: {
-        options: {
-          themesDir: 'js/tinymce/themes',
-          pluginsDir: 'js/tinymce/plugins',
-          pluginFileName: 'plugin.js',
-          themeFileName: 'theme.js',
-          outputPath: 'js/tinymce/tinymce.full.js'
-        },
-
-        src: [
-          'js/tinymce/tinymce.js'
-        ]
-      }
-    },
-
-    clean: {
-      dist: ['js'],
-      lib: ['lib'],
-      scratch: ['scratch'],
-      release: ['tmp']
-    },
-
-    'bedrock-manual': {
-      core: {
-        config: 'tsconfig.json',
-        projectdir: '.',
-        stopOnFailure: true,
-        testfiles: [
-          'src/**/test/ts/atomic/**/*Test.ts',
-          'src/**/test/ts/browser/**/*Test.ts',
-          'src/**/test/ts/phantom/**/*Test.ts'
-        ],
-        customRoutes: 'src/core/test/json/routes.json'
-      },
-      atomic: {
-        config: 'tsconfig.json',
-        projectdir: '.',
-        stopOnFailure: true,
-        testfiles: [
-          'src/**/test/ts/atomic/**/*Test.ts',
-        ],
-        customRoutes: 'src/core/test/json/routes.json'
-      },
-      silver: {
-        config: 'tsconfig.json',
-        testfiles: ['src/themes/silver/test/ts/phantom/**/*Test.ts', 'src/themes/silver/test/ts/browser/**/*Test.ts'],
-        stopOnFailure: true,
-        overallTimeout: 600000,
-        singleTimeout: 300000,
-        customRoutes: 'src/core/test/json/routes.json',
-        name: 'silver-tests'
-      }
-    },
-
     'bedrock-auto': {
-      standard: {
-        browser: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'chrome-headless',
-        config: 'tsconfig.json',
-        testfiles: ['src/**/test/ts/**/*Test.ts'],
-        overallTimeout: 900000,
-        singleTimeout: 30000,
-        retries: 3,
-        customRoutes: 'src/core/test/json/routes.json',
-        name: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'chrome-headless'
-      },
-      silver: {
-        browser: 'phantomjs',
-        config: 'tsconfig.json',
-        testfiles: ['src/themes/silver/test/ts/phantom/**/*Test.ts', 'src/themes/silver/test/ts/browser/**/*Test.ts', 'src/themes/silver/test/ts/webdriver/*/*Test.ts'],
-        stopOnFailure: true,
-        overallTimeout: 600000,
-        singleTimeout: 300000,
-        customRoutes: 'src/core/test/json/routes.json',
-        name: 'silver-tests'
-      }
+      ...bedrockPhantomConfig,
+      ...bedrockBrowser(browserTests, activeBrowser, activeOs, true)
     },
-
-    watch: {
-      skins: {
-        files: ['src/skins/oxide/main/less/**/*'],
-        tasks: ['less', 'copy:skins'],
-        options: {
-          spawn: false
-        }
-      },
+    'bedrock-manual': {
+      ...bedrockPhantomConfig,
+      ...bedrockBrowser(browserTests, activeBrowser, activeOs, false)
     }
-  });
+  };
 
-  grunt.registerTask('version', 'Creates a version file', function () {
-    grunt.file.write('tmp/version.txt', BUILD_VERSION);
-  });
+  // console.log(JSON.stringify(gruntConfig, null, 2))
+
+  grunt.initConfig(gruntConfig);
+
+  //dupe de dupe dupe
+  if (phantomTests.length > 0) {
+    grunt.registerTask('list-changed-phantom', () => {
+      const changeList = JSON.stringify(phantomTests.reduce((acc, change) => acc.concat(change.name), []), null, 2);
+      grunt.log.writeln('Changed projects for phantomjs testing:', changeList);
+    });
+    if (phantomTests.find(({name}) => needsTinyMCE.indexOf(name) > -1)) {
+      // only run rollup if required, since it's quite slow
+      grunt.registerTask('phantomjs-auto', ['shell:rollup', 'list-changed-phantom', 'shell:tsc', 'bedrock-auto:phantomjs']);
+    } else {
+      grunt.registerTask('phantomjs-auto', ['list-changed-phantom', 'shell:tsc', 'bedrock-auto:phantomjs']);
+    }
+    grunt.registerTask('phantomjs-manual', ['shell:tsc', 'bedrock-manual:phantomjs']);
+  } else {
+    const noPhantom = () => {
+      grunt.log.writeln('no changed modules need phantomjs testing');
+    };
+    grunt.registerTask('phantomjs-auto', noPhantom);
+    grunt.registerTask('phantomjs-manual', noPhantom);
+    grunt.registerTask('list-changed-phantom', noPhantom);
+  }
+
+  //dupe de dupe dupe
+  if (browserTests.length > 0) {
+    grunt.registerTask('list-changed-browser', () => {
+      const changeList = JSON.stringify(browserTests.reduce((acc, change) => acc.concat(change.name), []), null, 2);
+      grunt.log.writeln('Changed projects for browser testing:', changeList);
+    });
+    grunt.registerTask('browser-auto', ['list-changed-browser', 'shell:tsc', 'bedrock-auto:browser']);
+    grunt.registerTask('browser-manual', ['list-changed-browser', 'shell:tsc', 'bedrock-manual:browser']);
+  } else {
+    const noBrowser = () => {
+      grunt.log.writeln('no changed modules need browser testing');
+    };
+    grunt.registerTask('browser-auto', noBrowser);
+    grunt.registerTask('browser-manual', noBrowser);
+    grunt.registerTask('list-changed-browser', noBrowser);
+  }
+
+  grunt.registerTask('legacy-warn', () => grunt.log.warn(`
+*******
+Top-level grunt has been replaced by 'yarn build', and the output has moved from project root to modules/tinymce
+*******
+`));
+
+  grunt.registerTask('default', ['legacy-warn', 'shell:legacy']);
 
   require('load-grunt-tasks')(grunt, {
     requireResolution: true,
-    pattern: ['grunt-*', '@ephox/bedrock', '@ephox/swag', 'rollup']
+    config: 'package.json',
+    pattern: ['@ephox/bedrock', 'grunt-shell']
   });
-  grunt.loadTasks('tools/tasks');
-
-  grunt.registerTask('prod', [
-    // 'validateVersion',
-    'shell:tsc',
-    'tslint',
-    'globals',
-    'rollup',
-    'unicode',
-    'concat',
-    'uglify',
-    'less',
-    'copy',
-    'clean:release',
-    'moxiezip',
-    'nugetpack',
-    'version'
-  ]);
-
-  grunt.registerTask('dev', [
-    'globals',
-    'unicode',
-    'less',
-    'copy'
-  ]);
-
-  grunt.registerTask('unicode', ['uglify:emoticons-raw'])
-
-  grunt.registerTask('start', ['webpack-dev-server']);
-
-  grunt.registerTask('default', ['clean', 'prod']);
-  grunt.registerTask('test', ['bedrock-auto:phantomjs']);
 };

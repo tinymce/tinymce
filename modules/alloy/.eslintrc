@@ -1,0 +1,92 @@
+{
+  "env": {
+    "browser": false,
+    "amd": true
+  },
+
+  "globals": {
+    "escape": true,
+    "unescape": true,
+    "Uint8Array": true,
+    "asynctest": true,
+    "test": true,
+    "document": true,
+    "window": true,
+    "setTimeout": true,
+    "clearTimeout": true,
+    "navigator": true,
+    "FormData": true,
+    "Blob": true,
+    "URL": true,
+    "clearInterval": true,
+    "setInterval": true,
+    "XMLHttpRequest": true,
+    "matchMedia": true,
+    "atob": true,
+    "FileReader": true,
+    "localStorage": true,
+    "console": true,
+    "Image": true
+  },
+
+  "rules": {
+    "camelcase": [2, {"properties": "never"}],
+    "strict": 0,
+    "eqeqeq": 0,
+    "no-underscore-dangle": 0,
+    "consistent-return": 0,
+    "no-shadow": 0,
+    "no-use-before-define": 0,
+    // Need to switch back to error
+    "brace-style": ["warn", "1tbs"],
+    "guard-for-in": 0,
+    "no-floating-decimal": 2,
+    "no-nested-ternary": 2,
+    "radix": 2,
+    "wrap-iife": [2, "inside"],
+    "consistent-this": [2, "self"],
+    "no-bitwise": 2,
+    "max-depth": [1, 8],
+    "max-statements": [2, 150],
+    "max-len": [1, 160, 4],
+    "eol-last": 0,
+    "quotes": 0,
+    "no-trailing-spaces": 2,
+    "comma-spacing": [2, {"before": false, "after": true}],
+    "comma-dangle": ["error", "never"],
+    "space-in-parens": [2, "never"],
+    "space-infix-ops": [2, {"int32Hint": false}],
+    "space-before-function-paren": ["error", {
+      "anonymous": "always",
+      "named": "never",
+      "asyncArrow": "ignore"
+    }],
+    // Need to swith back to error
+    "object-curly-spacing": ["warn", "always"],
+    "no-mixed-spaces-and-tabs": "error",
+    "keyword-spacing": 2,
+    "space-unary-ops": [1, { "words": true, "nonwords": false }],
+    "space-before-blocks": [2, "always"],
+    "no-multiple-empty-lines": [1, {"max": 2}],
+    // Need to decide what to do
+    "operator-linebreak": ["warn", "after"],
+    "semi": [2, "always"],
+    "indent": ["error", 2, {"SwitchCase": 1}],
+    // Need to switch back to error
+    "curly": ["warn", "all"],
+    "dot-notation": [2, {"allowKeywords": false}],
+    "no-else-return": 0,
+    "no-eval": 2,
+    "no-implied-eval": 2,
+    "no-loop-func": 2,
+    "no-multi-str": 2,
+    "no-multi-spaces": 2,
+    "no-sequences": 2,
+    "no-new": 2,
+    "no-caller": 2,
+    // Need to swith back to error
+    "no-unused-vars": ["warn", { "args": "none" }]
+  },
+
+  "extends": "eslint:recommended"
+}

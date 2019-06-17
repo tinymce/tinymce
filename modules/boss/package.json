@@ -1,0 +1,36 @@
+{
+  "name": "@ephox/boss",
+  "description": "Generic wrapper to document models - DomUniverse vs TestUniverse",
+  "version": "3.0.22",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/boss"
+  },
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "dependencies": {
+    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/katamari": "^2.4.21",
+    "@ephox/sugar": "^4.6.21",
+    "tslib": "^1.9.3"
+  },
+  "scripts": {
+    "prepublishOnly": "tsc -b",
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts"
+  },
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/boss/api/Main.js",
+  "module": "./lib/main/ts/ephox/boss/api/Main.js",
+  "types": "./lib/main/ts/ephox/boss/api/Main.d.ts"
+}

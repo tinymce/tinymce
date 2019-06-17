@@ -1,0 +1,37 @@
+{
+  "name": "@ephox/sand",
+  "version": "2.0.17",
+  "description": "Platform detection library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/sand"
+  },
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "scripts": {
+    "prepublishOnly": "tsc -b",
+    "test": "bedrock-auto -b chrome-headless -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts"
+  },
+  "keywords": [
+    "platform"
+  ],
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/katamari": "^2.4.21"
+  },
+  "main": "./lib/main/ts/ephox/sand/api/Main.js",
+  "module": "./lib/main/ts/ephox/sand/api/Main.js",
+  "types": "./lib/main/ts/ephox/sand/api/Main.d.ts"
+}

@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "ephox/dragster/test/*": ["src/test/ts/module/ephox/dragster/test/*"],
+      "ephox/dragster/demo/*": ["src/demo/ts/ephox/dragster/demo/*"],
+      "ephox/dragster/*": ["src/main/ts/ephox/dragster/*"],
+      "@ephox/dragster": ["src/main/ts/ephox/dragster/api/Main.ts"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts",
+  ],
+  "references": [
+    { "path": "../katamari" },
+    { "path": "../porkbun" },
+    { "path": "../sugar" },
+  ]
+}

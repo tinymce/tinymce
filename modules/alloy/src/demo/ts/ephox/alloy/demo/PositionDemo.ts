@@ -1,0 +1,191 @@
+import { Class, Css, DomEvent, Element } from '@ephox/sugar';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
+import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
+import * as Attachment from 'ephox/alloy/api/system/Attachment';
+import * as Gui from 'ephox/alloy/api/system/Gui';
+import { Button } from 'ephox/alloy/api/ui/Button';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import * as DemoContent from 'ephox/alloy/demo/DemoContent';
+import * as DemoSink from 'ephox/alloy/demo/DemoSink';
+import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import * as Frames from './frames/Frames';
+import { document } from '@ephox/dom-globals';
+
+export default (): void => {
+  const gui = Gui.create();
+  const body = Element.fromDom(document.body);
+  Css.set(gui.element(), 'direction', 'rtl');
+  Class.add(gui.element(), 'gui-root-demo-container');
+  Attachment.attachSystem(body, gui);
+
+  const sink = DemoSink.make();
+
+  gui.add(sink);
+
+  const popup = GuiFactory.build(
+    Container.sketch({
+      components: [
+        Container.sketch({
+          dom: {
+            styles: {
+              padding: '10px',
+              background: 'white',
+              border: '2px solid black'
+            }
+          },
+          components: [
+            GuiFactory.text('This is a popup')
+          ]
+        })
+      ]
+    })
+  );
+
+  const section1 = HtmlDisplay.section(
+    gui,
+    'Position anchoring to button',
+    Button.sketch({
+      dom: {
+        tag: 'button',
+        innerHtml: 'Toggle Popup'
+      },
+      eventOrder: {
+        'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
+      },
+      action (comp) {
+        if (Toggling.isOn(comp)) {
+          Attachment.attach(sink, popup);
+          Positioning.position(sink, {
+            anchor: 'hotspot',
+            hotspot: comp
+          }, popup);
+        } else {
+          Attachment.detach(popup);
+        }
+      },
+
+      buttonBehaviours: Behaviour.derive([
+        Toggling.config({
+          toggleClass: 'demo-selected',
+          aria: {
+            mode: 'pressed'
+          }
+        })
+      ])
+    })
+  );
+
+  const section2 = HtmlDisplay.section(
+    gui,
+    'Position anchoring to menu',
+    Container.sketch({
+      dom: {
+        tag: 'ol',
+        styles: {
+          'list-style-type': 'none'
+        }
+      },
+      components: [
+        Container.sketch({
+          dom: {
+            tag: 'li',
+            innerHtml: 'Hover over me',
+            styles: {
+              border: '1px solid gray',
+              width: '100px'
+            }
+          },
+          events: AlloyEvents.derive([
+            AlloyEvents.run(NativeEvents.mouseover(), (item) => {
+              Attachment.attach(sink, popup);
+              Positioning.position(sink, {
+                anchor: 'submenu',
+                item
+              }, popup);
+            })
+          ])
+        })
+      ]
+    })
+  );
+
+  const section3 = HtmlDisplay.section(
+    gui,
+    'Position anchoring to text selection',
+    Container.sketch({
+      dom: {
+        tag: 'div'
+      },
+      components: [
+        Container.sketch({
+          dom: {
+            attributes: {
+              contenteditable: 'true'
+            },
+            styles: {
+              'border': '1px solid green',
+              'width': '300px',
+              'height': '200px',
+              'overflow-y': 'scroll',
+              'display': 'inline-block'
+            },
+            innerHtml: DemoContent.generate(20)
+          },
+          uid: 'text-editor'
+        }),
+        Button.sketch({
+          dom: {
+            tag: 'button',
+            innerHtml: 'Show popup at cursor'
+          },
+          action (button) {
+            Attachment.attach(sink, popup);
+            Positioning.position(sink, {
+              anchor: 'selection',
+              root: button.getSystem().getByUid('text-editor').getOrDie().element()
+            }, popup);
+          }
+        })
+      ]
+    })
+  );
+
+  // Maybe make a component.
+  const frame = Element.fromTag('iframe');
+  const onLoad = DomEvent.bind(frame, 'load', () => {
+    onLoad.unbind();
+
+    const html = '<!doctype html><html><body contenteditable="true">' + DemoContent.generate(20) + '</body></html>';
+    Frames.write(frame, html);
+  });
+
+  const section4 = HtmlDisplay.section(
+    gui,
+    'Position anchoring to text selection [iframe]',
+    Container.sketch({
+      components: [
+        GuiFactory.external({
+          element: frame,
+          uid: 'frame-editor'
+        }),
+        Button.sketch({
+          dom: {
+            tag: 'button',
+            innerHtml: 'Show popup at cursor'
+          },
+          action (button) {
+            Attachment.attach(sink, popup);
+            Positioning.position(sink, {
+              anchor: 'selection',
+              root: Element.fromDom(frame.dom().contentWindow.document.body)
+            }, popup);
+          }
+        })
+      ]
+    })
+  );
+};

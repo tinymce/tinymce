@@ -1,0 +1,73 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Resize handle
+//
+
+@resize-handle-color: #4099ff;
+@resize-handle-size: 10px;
+
+.mce-content-body {
+  div.mce-resizehandle {
+    @offset: -@resize-handle-size / 3;
+
+    background-color: @resize-handle-color;
+    border-color: @resize-handle-color;
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
+    height: @resize-handle-size;
+    position: absolute;
+    width: @resize-handle-size;
+    z-index: 10000;
+
+    &:hover {
+      background-color: @resize-handle-color;
+    }
+
+    &:nth-of-type(1) {
+      cursor: nwse-resize;
+    }
+
+    &:nth-of-type(2) {
+      cursor: nesw-resize;
+    }
+
+    &:nth-of-type(3) {
+      cursor: nwse-resize;
+    }
+
+    &:nth-of-type(4) {
+      cursor: nesw-resize;
+    }
+  }
+
+  .mce-clonedresizable {
+    opacity: .5;
+    outline: 1px dashed black;
+    position: absolute;
+    z-index: 10000;
+  }
+
+  .mce-resize-helper {
+    background: #555;
+    background: rgba(0, 0, 0, .75);
+    border: 1px;
+    border-radius: 3px;
+    color: white;
+    display: none;
+    font-family: sans-serif;
+    font-size: 12px;
+    line-height: 14px;
+    margin: 5px 10px;
+    padding: 5px;
+    position: absolute;
+    white-space: nowrap;
+    z-index: 10001;
+  }
+}

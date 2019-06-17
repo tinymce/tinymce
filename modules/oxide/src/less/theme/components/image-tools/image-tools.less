@@ -1,0 +1,133 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Image tools
+//
+
+.tox {
+  .tox-image-tools {
+    width: 100%;
+  }
+
+  .tox-image-tools__toolbar {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+
+  .tox-image-tools__image {
+    background-color: #666;
+    height: 380px;
+    overflow: auto;
+    position: relative;
+    width: 100%;
+  }
+
+  // Apply spacing between toolbars and image
+  .tox-image-tools__image,
+  .tox-image-tools__image + .tox-image-tools__toolbar {
+    margin-top: @pad-sm;
+  }
+
+  .tox-image-tools__image-bg {
+    background: url(data:image/gif;base64,R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==);
+  }
+
+  .tox-image-tools__toolbar > .tox-spacer {
+    flex: 1;
+    -ms-flex-preferred-size: auto;
+  }
+
+  .tox-croprect-block {
+    background: black;
+    filter: alpha(opacity=50);
+    opacity: .5;
+    position: absolute;
+    zoom: 1;
+  }
+
+  .tox-croprect-handle {
+    border: 2px solid white;
+    height: 20px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 20px;
+  }
+
+  .tox-croprect-handle-move {
+    border: 0;
+    cursor: move;
+    position: absolute;
+  }
+
+  .tox-croprect-handle-nw {
+    border-width: 2px 0 0 2px;
+    cursor: nw-resize;
+    left: 100px;
+    margin: -2px 0 0 -2px;
+    top: 100px;
+  }
+
+  .tox-croprect-handle-ne {
+    border-width: 2px 2px 0 0;
+    cursor: ne-resize;
+    left: 200px;
+    margin: -2px 0 0 -20px;
+    top: 100px;
+  }
+
+  .tox-croprect-handle-sw {
+    border-width: 0 0 2px 2px;
+    cursor: sw-resize;
+    left: 100px;
+    margin: -20px 2px 0 -2px;
+    top: 200px;
+  }
+
+  .tox-croprect-handle-se {
+    border-width: 0 2px 2px 0;
+    cursor: se-resize;
+    left: 200px;
+    margin: -20px 0 0 -20px;
+    top: 200px;
+  }
+}
+
+.tox:not([dir=rtl]) {
+  // Spacing between multiple sliders
+  .tox-image-tools__toolbar > .tox-slider:not(:first-of-type) {
+    margin-left: @pad-sm;
+  }
+
+  // Spacing between button and slider
+  .tox-image-tools__toolbar > .tox-button + .tox-slider {
+    margin-left: @pad-xl;
+  }
+
+  .tox-image-tools__toolbar > .tox-slider + .tox-button {
+    margin-left: @pad-xl;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  // Spacing between multiple sliders
+  .tox-image-tools__toolbar > .tox-slider:not(:first-of-type) {
+    margin-right: @pad-sm;
+  }
+
+  // Spacing between button and slider
+  .tox-image-tools__toolbar > .tox-button + .tox-slider {
+    margin-right: @pad-xl;
+  }
+
+  .tox-image-tools__toolbar > .tox-slider + .tox-button {
+    margin-right: @pad-xl;
+  }
+}

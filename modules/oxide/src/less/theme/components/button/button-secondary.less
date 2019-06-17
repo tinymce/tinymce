@@ -1,0 +1,100 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Secondary button
+// Extends button.less
+//
+
+@button-secondary-background-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 15%));
+@button-secondary-background-image: none;
+@button-secondary-background-position: @button-background-position;
+@button-secondary-background-repeat: @button-background-repeat;
+@button-secondary-border-color: @button-secondary-background-color;
+@button-secondary-border-radius: @button-border-radius;
+@button-secondary-border-style: @button-border-style;
+@button-secondary-border-width: @button-border-width;
+@button-secondary-box-shadow: @button-box-shadow;
+@button-secondary-outline: none;
+@button-secondary-text-color: contrast(@button-secondary-background-color, @color-black, @color-white);
+@button-secondary-text-decoration: @button-text-decoration;
+@button-secondary-text-transform: @button-text-transform;
+
+@button-secondary-disabled-background-color: @button-secondary-background-color;
+@button-secondary-disabled-background-image: @button-secondary-background-image;
+@button-secondary-disabled-border-color: @button-secondary-background-color;
+@button-secondary-disabled-box-shadow: @button-secondary-box-shadow;
+@button-secondary-disabled-text-color: fade(@button-secondary-text-color, 50%);
+
+@button-secondary-focus-background-color: @button-secondary-hover-background-color;
+@button-secondary-focus-background-image: @button-secondary-hover-background-image;
+@button-secondary-focus-border-color: @button-secondary-hover-border-color;
+@button-secondary-focus-box-shadow: @button-secondary-hover-box-shadow;
+@button-secondary-focus-text-color: @button-secondary-hover-text-color;
+
+@button-secondary-hover-background-color: darken(@button-secondary-background-color, 5%);
+@button-secondary-hover-background-image: @button-secondary-background-image;
+@button-secondary-hover-border-color: @button-secondary-hover-background-color;
+@button-secondary-hover-box-shadow: @button-secondary-box-shadow;
+@button-secondary-hover-text-color: @button-secondary-text-color;
+
+@button-secondary-active-background-color: darken(@button-secondary-background-color, 10%);
+@button-secondary-active-background-image: @button-secondary-background-image;
+@button-secondary-active-border-color: @button-secondary-active-background-color;
+@button-secondary-active-box-shadow: @button-secondary-box-shadow;
+@button-secondary-active-text-color: @button-secondary-text-color;
+
+.tox {
+  .tox-button--secondary {
+    background-color: @button-secondary-background-color;
+    background-image: @button-secondary-background-image;
+    background-position: @button-secondary-background-position;
+    background-repeat: @button-secondary-background-repeat;
+    border-color: @button-secondary-border-color;
+    border-radius: @button-secondary-border-radius;
+    border-style: @button-secondary-border-style;
+    border-width: @button-secondary-border-width;
+    box-shadow: @button-secondary-box-shadow;
+    color: @button-secondary-text-color;
+    outline: @button-secondary-outline;
+    padding: @button-padding-y @button-padding-x;
+    text-decoration: @button-secondary-text-decoration;
+    text-transform: @button-secondary-text-transform;
+
+    &[disabled] {
+      background-color: @button-secondary-disabled-background-color;
+      background-image: @button-secondary-disabled-background-image;
+      border-color: @button-secondary-disabled-border-color;
+      box-shadow: @button-secondary-disabled-box-shadow;
+      color: @button-secondary-disabled-text-color;
+    }
+
+    &:focus:not(:disabled) {
+      background-color: @button-secondary-focus-background-color;
+      background-image: @button-secondary-focus-background-image;
+      border-color: @button-secondary-focus-border-color;
+      box-shadow: @button-secondary-focus-box-shadow;
+      color: @button-secondary-focus-text-color;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: @button-secondary-hover-background-color;
+      background-image: @button-secondary-hover-background-image;
+      border-color: @button-secondary-hover-border-color;
+      box-shadow: @button-secondary-hover-box-shadow;
+      color: @button-secondary-hover-text-color;
+    }
+
+    &:active:not(:disabled) {
+      background-color: @button-secondary-active-background-color;
+      background-image: @button-secondary-active-background-image;
+      border-color: @button-secondary-active-border-color;
+      box-shadow: @button-secondary-active-box-shadow;
+      color: @button-secondary-active-text-color;
+    }
+  }
+}

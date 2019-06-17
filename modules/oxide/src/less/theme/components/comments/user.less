@@ -1,0 +1,57 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// User
+//
+
+@user-name-font-weight: @font-weight-bold;
+@user-name-font-style: normal;
+@user-name-font-size: @font-size-xs;
+@user-name-text-transform: uppercase;
+@user-name-text-color: @text-color-muted;
+@user-avatar-color: @text-color-muted;
+
+.tox {
+  .tox-user {
+    align-items: center;
+    display: flex;
+  }
+
+  .tox-user__avatar svg {
+    fill: @user-avatar-color;
+  }
+
+  .tox-user__name {
+    color: @user-name-text-color;
+    font-size: @user-name-font-size;
+    font-style: @user-name-font-style;
+    font-weight: @user-name-font-weight;
+    text-transform: @user-name-text-transform;
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-user__avatar svg {
+    margin-right: @pad-sm;
+  }
+
+  .tox-user__avatar + .tox-user__name {
+    margin-left: @pad-sm;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-user__avatar svg {
+    margin-left: @pad-sm;
+  }
+
+  .tox-user__avatar + .tox-user__name {
+    margin-right: @pad-sm;
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "noUnusedLocals": false,
+    "strict": false,
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "ephox/echo/test/*": ["src/test/ts/module/ephox/echo/test/*"],
+      "ephox/echo/demo/*": ["src/demo/ts/ephox/echo/demo/*"],
+      "ephox/echo/*": ["src/main/ts/ephox/echo/*"],
+      "@ephox/echo": ["src/main/ts/ephox/echo/api/Main.ts"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts",
+  ],
+  "references": [
+    { "path": "../agar" },
+    { "path": "../katamari" },
+    { "path": "../sand" },
+    { "path": "../sugar" },
+  ]
+}

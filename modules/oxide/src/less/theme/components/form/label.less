@@ -1,0 +1,42 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Label
+//
+
+@input-label-font-size: @font-size-sm;
+@input-label-font-style: normal;
+@input-label-font-weight: @font-weight-normal;
+@input-label-line-height: @line-height-base;
+@input-label-text-color: @text-color-muted;
+@input-label-text-transform: normal;
+
+.tox {
+  .tox-label {
+    color: @input-label-text-color;
+    display: block;
+    font-size: @input-label-font-size;
+    font-style: @input-label-font-style;
+    font-weight: @input-label-font-weight;
+    line-height: @input-label-line-height;
+    padding: 0 @pad-sm 0 0;
+    text-transform: @input-label-text-transform;
+    white-space: nowrap;
+  }
+
+  .tox-toolbar-label:extend(.tox .tox-label) {
+    padding: 0 @pad-sm;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-label {
+    padding: 0 0 0 @pad-sm;
+  }
+}

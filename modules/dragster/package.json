@@ -1,0 +1,36 @@
+{
+  "name": "@ephox/dragster",
+  "description": "This project handles dragging.",
+  "version": "4.0.14",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/dragster"
+  },
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "dependencies": {
+    "@ephox/dom-globals": "^1.1.2",
+    "@ephox/katamari": "^2.4.21",
+    "@ephox/porkbun": "^4.0.12",
+    "@ephox/sugar": "^4.6.21"
+  },
+  "scripts": {
+    "test": "bedrock-auto -b phantomjs -d src/test",
+    "test-manual": "bedrock -d src/test",
+    "prepublishOnly": "tsc -b"
+  },
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/dragster/api/Main.js",
+  "module": "./lib/main/ts/ephox/dragster/api/Main.js",
+  "types": "./lib/main/ts/ephox/dragster/api/Main.d.ts"
+}

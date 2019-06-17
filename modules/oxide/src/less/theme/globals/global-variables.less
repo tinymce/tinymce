@@ -1,0 +1,63 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Global variables
+//
+// Don't change variables here, instead copy the variables
+// you want to override to theme-oxide.less
+//
+
+// Config
+@prefix: tox;
+
+// Root variables
+// Begin customization by changing these variables as most other variables are derivatives of these.
+@background-color: #fff;
+@base-value: 16px;
+@color-black: #222f3e;
+@color-tint: #207ab7;
+@color-white: #fff;
+@color-error: #c00;
+@font-stack: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+
+// Colors
+@border-color: darken(@background-color, 20);
+@text-color: contrast(@background-color, @color-black, @color-white);
+@text-color-muted: contrast(@background-color, fade(@color-black, 70%), fade(@color-white, 50%));
+
+// Some useful generic variables
+@panel-border-radius: 3px; // Dialogs, menues etc.
+@control-border-radius: 3px; // Buttons, input fields etc.
+
+// Font
+@line-height-base: 1.3;
+@font-weight-normal: normal;
+@font-weight-bold: bold;
+@font-size-base: @base-value;
+@font-size-xs: 12px; // Absolute value to not make it too small
+@font-size-sm: @font-size-base * .875;
+@font-size-md: @font-size-base;
+@font-size-lg: @font-size-base * 1.25;
+
+// Spacings
+@pad-xs: @base-value / 4;
+@pad-sm: @base-value / 2;
+@pad-md: @base-value;
+@pad-lg: @base-value * 1.5;
+@pad-xl: @base-value * 2;
+
+// z-index stack (reserved range 1000-10000)
+@z-index-throbber: 1400;
+@z-index-sink: 1300;
+@z-index-fullscreen: 1200;
+@z-index-dialogs: 1100;
+@z-index-loading: 1000;
+
+// Responsive breakpoints
+@breakpoint-md: ~"only screen and (min-width:1000px)";
+@breakpoint-sm: ~"only screen and (max-width:767px)";

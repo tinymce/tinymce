@@ -1,0 +1,24 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Icon button
+// Extends button.less
+//
+
+.tox {
+  .tox-button--icon,
+  .tox-button.tox-button--icon,
+  .tox-button.tox-button--secondary.tox-button--icon {
+    padding: @button-padding-y; // Use padding-y as horizontal padding to make icon button square-ish
+
+    .tox-icon svg {
+      display: block;
+      fill: currentColor;
+    }
+  }
+}

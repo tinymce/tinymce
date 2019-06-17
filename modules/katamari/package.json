@@ -1,0 +1,34 @@
+{
+  "name": "@ephox/katamari",
+  "version": "2.4.21",
+  "description": "Basic data type library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/katamari"
+  },
+  "scripts": {
+    "prepublishOnly": "tsc -b",
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts"
+  },
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@ephox/dom-globals": "^1.1.2",
+    "tslib": "^1.9.3"
+  },
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "main": "./lib/main/ts/ephox/katamari/api/Main.js",
+  "module": "./lib/main/ts/ephox/katamari/api/Main.js",
+  "types": "./lib/main/ts/ephox/katamari/api/Main.d.ts"
+}

@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "strict": false,
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": "."
+  },
+  "include": [
+    "src/main/ts",
+    "src/demo/ts",
+    "src/test/ts"
+  ],
+  "references": [
+    { "path": "../boulder" },
+    { "path": "../katamari" },
+  ]
+}

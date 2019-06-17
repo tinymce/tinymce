@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Dialog Page</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link href="../css/alloy-demo.css" rel="Stylesheet">
+
+    <style type="text/css">
+      #ephox-ui {
+        margin-bottom: 20px;
+      }
+
+      .mce-container {
+        background: white;
+        border: 1px solid black;
+        width: 400px;
+      }
+
+      .mce-window-head {
+        display: flex;
+        background: black;
+        color: white;
+        padding: 10px;
+      }
+
+      .mce-window-head .mce-dragh {
+        flex-grow: 1;
+      }
+
+      .mce-close {
+        cursor: pointer;
+      }
+
+      .mce-window-body {
+        margin: 10px;
+        border: 1px solid #ccc;
+      }
+
+      .mce-window-head .mce-close:before {
+        content: "x";
+      }
+
+      .mce-foot {
+        background: #ccc;
+        height: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>Dialog Page</h2>
+
+    <div id="ephox-ui"></div>
+    <script type="text/javascript" src="../../../demo.js"></script>
+    <script>demos.DialogDemo();</script>
+  </body>
+</html>

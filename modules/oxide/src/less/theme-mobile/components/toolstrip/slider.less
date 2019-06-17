@@ -1,0 +1,110 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+.tinymce-mobile-icon-large-font::before,
+.tinymce-mobile-icon-large-heading::before {
+  margin-left: .5em;
+  margin-right: .9em;
+}
+
+.tinymce-mobile-icon-small-font::before,
+.tinymce-mobile-icon-small-heading::before {
+  margin-left: .9em;
+  margin-right: .5em;
+}
+
+.tinymce-mobile-slider {
+  display: flex;
+  flex: 1;
+  margin-left: 0;
+  margin-right: 0;
+  padding: .28em 0;
+  position: relative;
+
+  .tinymce-mobile-slider-size-container {
+    align-items: center;
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+
+    .tinymce-mobile-slider-size-line {
+      background: @toolstrip-slider-background-color;
+      display: flex;
+      flex: 1;
+      height: .2em;
+      margin-bottom: .3em;
+      margin-top: .3em;
+    }
+  }
+
+  &.tinymce-mobile-hue-slider-container {
+    padding-left: 2em;
+    padding-right: 2em;
+
+    .tinymce-mobile-slider-gradient-container {
+      align-items: center;
+      display: flex;
+      flex-grow: 1;
+      height: 100%;
+
+      .tinymce-mobile-slider-gradient {
+        background: linear-gradient(to right, hsl(0, 100%, 50%) 0%, hsl(60, 100%, 50%) 17%, hsl(120, 100%, 50%) 33%, hsl(180, 100%, 50%) 50%, hsl(240, 100%, 50%) 67%, hsl(300, 100%, 50%) 83%, hsl(360, 100%, 50%) 100%);
+        display: flex;
+        flex: 1;
+        height: .2em;
+        margin-bottom: .3em;
+        margin-top: .3em;
+      }
+    }
+
+    .tinymce-mobile-hue-slider-black {
+      /* Not part of theming */
+      background: black;
+      height: .2em;
+      margin-bottom: .3em;
+      margin-top: .3em;
+      width: 1.2em;
+    }
+
+    .tinymce-mobile-hue-slider-white {
+      /* Not part of theming */
+      background: white;
+      height: .2em;
+      margin-bottom: .3em;
+      margin-top: .3em;
+      width: 1.2em;
+    }
+  }
+
+  .tinymce-mobile-slider-thumb {
+    /* vertically centering trick (margin: auto, top: 0, bottom: 0). On iOS and Safari, if you leave
+     * out these values, then it shows the thumb at the top of the spectrum. This is probably because it is
+     * absolutely positioned with only a left value, and not a top. Note, on Chrome it seems to be fine without
+     * this approach.
+    */
+    align-items: center;
+    background-clip: padding-box;
+    background-color: @toolstrip-foreground-color;
+    border: .5em solid rgba(136, 136, 136, 0);
+    border-radius: 3em;
+    bottom: 0;
+    color: @toolstrip-background-color;
+    display: flex;
+    height: .5em;
+    justify-content: center;
+    left: -10px;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    transition: border 120ms cubic-bezier(.39, .58, .57, 1);
+    width: .5em;
+
+    &.tinymce-mobile-thumb-active {
+      border: .5em solid rgba(136, 136, 136, .39);
+    }
+  }
+}

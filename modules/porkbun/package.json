@@ -1,0 +1,33 @@
+{
+  "name": "@ephox/porkbun",
+  "description": "Event framework for JavaScript",
+  "version": "4.0.12",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/porkbun"
+  },
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "dependencies": {
+    "@ephox/katamari": "^2.4.21"
+  },
+  "scripts": {
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts",
+    "prepublishOnly": "tsc -b"
+  },
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/porkbun/api/Main.js",
+  "module": "./lib/main/ts/ephox/porkbun/api/Main.js",
+  "types": "./lib/main/ts/ephox/porkbun/api/Main.d.ts"
+}

@@ -1,0 +1,60 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Sidebar
+//
+
+@sidebar-background-color: @background-color;
+@sidebar-separator-color: @border-color;
+
+.tox {
+  .tox-sidebar-wrap {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    // TC-310: Without the min-height setting, browsers like Firefox default to
+    // min-height: auto, and the sidebar-wrap will grow in height as soon
+    // as the sidebar contents does. This happens even if the sidebar contents has
+    // overflow: auto.
+    min-height: 0;
+  }
+
+  .tox-sidebar {
+    background-color: @sidebar-background-color;
+    border-top: 1px solid @sidebar-separator-color;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .tox-sidebar__slider {
+    display: flex;
+    overflow: hidden;
+  }
+
+  .tox-sidebar__pane-container {
+    display: flex;
+  }
+
+  .tox-sidebar__pane {
+    display: flex;
+  }
+
+  .tox-sidebar--sliding-closed {
+    opacity: 0;
+  }
+
+  .tox-sidebar--sliding-open {
+    opacity: 1;
+  }
+
+  .tox-sidebar--sliding-growing,
+  .tox-sidebar--sliding-shrinking {
+    transition: width .5s ease, opacity .5s ease;
+  }
+}
