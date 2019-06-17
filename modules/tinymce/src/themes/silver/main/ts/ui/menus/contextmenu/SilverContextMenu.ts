@@ -127,14 +127,19 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
 
   editor.on('init', () => {
     editor.on('contextmenu', (e) => {
-      if (isNativeOverrideKeyEvent(editor, e)) {
+      // Prevent the default if we should never use native
+      if (Settings.shouldNeverUseNative(editor)) {
+        e.preventDefault();
+      }
+
+      if (isNativeOverrideKeyEvent(editor, e) || Settings.isContextMenuDisabled(editor)) {
         return;
       }
 
       // Different browsers trigger the context menu from keyboards differently, so need to check both the button and target here
       // Chrome: button = 0 & target = the selection range node
       // Firefox: button = 0 & target = body
-      // IE: button = 2 & target = body
+      // IE/Edge: button = 2 & target = body
       // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
       const isTriggeredByKeyboardEvent = e.button !== 2 || e.target === editor.getBody();
       const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);

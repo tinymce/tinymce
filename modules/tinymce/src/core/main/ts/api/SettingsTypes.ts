@@ -54,7 +54,7 @@ export interface RawEditorSettings {
   content_css_cors?: boolean;
   content_security_policy?: string;
   content_style?: string;
-  contextmenu?: string;
+  contextmenu?: string | false;
   contextmenu_never_use_native?: boolean;
   convert_fonts_to_spans?: boolean;
   convert_urls?: boolean;
