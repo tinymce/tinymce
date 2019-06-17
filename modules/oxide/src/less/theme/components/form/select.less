@@ -15,13 +15,13 @@
     position: relative;
   }
 
+  .tox-selectfield select {
+    &:extend(.tox .tox-textfield);
+  }
+
   // Hide OS rendered chevrons
   .tox-selectfield select::-ms-expand {
     display: none;
-  }
-
-  .tox-selectfield select {
-    &:extend(.tox .tox-textfield);
   }
 
   .tox-selectfield select:focus {
