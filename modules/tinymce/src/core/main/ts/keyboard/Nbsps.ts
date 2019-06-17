@@ -15,7 +15,7 @@ import Parents from '../dom/Parents';
 import * as ElementType from '../dom/ElementType';
 import { getElementFromPosition } from '../caret/CaretUtils';
 import CaretFinder from '../caret/CaretFinder';
-import { isAtStartOfBlock, isAtEndOfBlock } from '../caret/BlockBoundary';
+import { isAtStartOfBlock, isAtEndOfBlock, isAfterBlock, isBeforeBlock } from '../caret/BlockBoundary';
 import { isNbsp, isContent } from '../text/CharType';
 import { isAfterBr, isBeforeBr } from '../caret/CaretBr';
 import { isAfterSpace, isBeforeSpace } from '../caret/CaretPositionPredicates';
@@ -79,7 +79,7 @@ const needsToBeNbspLeft = (root: Element, pos: CaretPosition) => {
   if (isInPre(pos)) {
     return false;
   } else {
-    return isAtStartOfBlock(root, pos) || isAfterBr(root, pos) || hasSpaceBefore(root, pos);
+    return isAtStartOfBlock(root, pos) || isBeforeBlock(root, pos) || isAfterBr(root, pos) || hasSpaceBefore(root, pos);
   }
 };
 
@@ -99,7 +99,7 @@ const needsToBeNbspRight = (root: Element, pos: CaretPosition) => {
   if (isInPre(afterPos)) {
     return false;
   } else {
-    return isAtEndOfBlock(root, afterPos) || isBeforeBr(root, afterPos) || hasSpaceAfter(root, afterPos);
+    return isAtEndOfBlock(root, afterPos) || isAfterBlock(root, afterPos) || isBeforeBr(root, afterPos) || hasSpaceAfter(root, afterPos);
   }
 };
 
