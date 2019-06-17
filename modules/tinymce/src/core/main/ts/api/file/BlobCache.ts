@@ -11,7 +11,7 @@ import { Blob } from '@ephox/dom-globals';
 import { Type, Fun, Arr } from '@ephox/katamari';
 
 export interface BlobCache {
-  create: (o: string | BlobInfoData, blob?: Blob, base64?: string, filename?: string) => BlobInfo;
+  create: (o: string | BlobInfoData, blob?: Blob, base64?: string, filename?: string, path?: string) => BlobInfo;
   add: (blobInfo: BlobInfo) => void;
   get: (id: string) => BlobInfo;
   getByUri: (blobUri: string) => BlobInfo;
@@ -27,6 +27,7 @@ export interface BlobInfoData {
   base64: string;
   blobUri?: string;
   uri?: string;
+  path?: string;
 }
 
 export interface BlobInfo {
@@ -37,23 +38,13 @@ export interface BlobInfo {
   base64: () => string;
   blobUri: () => string;
   uri: () => string;
+  path: () => string;
 }
 
 export const BlobCache = function (): BlobCache {
   let cache: BlobInfo[] = [];
 
-  const mimeToExt = function (mime) {
-    const mimes = {
-      'image/jpeg': 'jpg',
-      'image/jpg': 'jpg',
-      'image/gif': 'gif',
-      'image/png': 'png'
-    };
-
-    return mimes[mime.toLowerCase()] || 'dat';
-  };
-
-  const create = function (o: BlobInfoData | string, blob?: Blob, base64?: string, filename?: string): BlobInfo {
+  const create = function (o: BlobInfoData | string, blob?: Blob, base64?: string, filename?: string, path?: string): BlobInfo {
     if (Type.isString(o)) {
       const id = o as string;
 
@@ -61,7 +52,8 @@ export const BlobCache = function (): BlobCache {
         id,
         name: filename,
         blob,
-        base64
+        base64,
+        path: filename
       });
     } else if (Type.isObject(o)) {
       return toBlobInfo(o);
@@ -83,11 +75,12 @@ export const BlobCache = function (): BlobCache {
     return {
       id: Fun.constant(id),
       name: Fun.constant(name),
-      filename: Fun.constant(name + '.' + mimeToExt(o.blob.type)),
+      filename: Fun.constant(name.substring(name.lastIndexOf('/') + 1)),
       blob: Fun.constant(o.blob),
       base64: Fun.constant(o.base64),
       blobUri: Fun.constant(o.blobUri || URL.createObjectURL(o.blob)),
-      uri: Fun.constant(o.uri)
+      uri: Fun.constant(o.uri),
+      path: Fun.constant(o.path.substring(0, o.path.lastIndexOf('/') + 1))
     };
   };
 
