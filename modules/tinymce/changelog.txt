@@ -17,6 +17,8 @@ Version 5.0.8 (TBD)
     Fixed small dot visible with menubar and toolbar disabled in inline mode #TINY-3623
     Fixed so space key properly inserts a nbsp before/after block elements. #TINY-3745
     Added new base_url and suffix editor init options #TINY-3681
+    Fixed native context menu not showing with images in IE11 #TINY-3392
+    Fixed inconsistent browser context menu image selection #TINY-3791
 Version 5.0.7 (2019-06-05)
     Added new toolbar button and menu item for inserting tables via dialog #TINY-3636
     Added new API for adding/removing/changing tabs in the Help dialog #TINY-3535
