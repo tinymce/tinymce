@@ -267,9 +267,13 @@ const setup = (editor: Editor): RenderInfo => {
     [ partThrobber ]
   ]);
 
+  // Hide the outer container if using inline mode and there's no menubar or toolbar
+  const isHidden = isInline && !hasMenubar && !hasToolbar && !hasMultipleToolbar;
+
   const attributes = {
     role: 'application',
-    ...I18n.isRtl() ? { dir: 'rtl' } : {}
+    ...I18n.isRtl() ? { dir: 'rtl' } : {},
+    ...isHidden ? { 'aria-hidden': 'true' } : {}
   };
 
   const outerContainer = GuiFactory.build(
@@ -279,7 +283,9 @@ const setup = (editor: Editor): RenderInfo => {
         classes: ['tox', 'tox-tinymce'].concat(isInline ? ['tox-tinymce-inline'] : []).concat(platformClasses),
         styles: {
           // This is overridden by the skin, it helps avoid FOUC
-          visibility: 'hidden'
+          visibility: 'hidden',
+          // Hide the container if needed, but don't use "display: none" so that it still has a position
+          ...isHidden ? { opacity: '0', border: '0' } : {},
         },
         attributes
       },
