@@ -19,7 +19,7 @@ var exportLessVariablesToJson = new variablesOutput({ filename: 'build/skin-tool
 gulp.task('lint', function() {
   return gulp.src('./src/less/**/*.less')
     .pipe(gulpStylelint({
-      failAfterError: false,
+      failAfterError: true,
       reporters: [
         {formatter: 'string', console: true}
       ]
