@@ -1,7 +1,11 @@
-Version 5.0.8 (TBD)
-    Added support for .m4a files to the media plugin #TINY-3750
+Version 5.0.9 (TBD)
+
+Version 5.0.8 (2019-06-18)
     Added back support for multiple toolbars #TINY-2195
-    Fixed a selection edge case when setting selection #TINY-3766
+    Added support for .m4a files to the media plugin #TINY-3750
+    Added new base_url and suffix editor init options #TINY-3681
+    Fixed incorrect padding for select boxes with visible values #TINY-3780
+    Fixed selection incorrectly changing when programmatically setting selection on contenteditable false elements #TINY-3766
     Fixed sidebar background being transparent #TINY-3727
     Fixed the build to remove duplicate iife wrappers #TINY-3689
     Fixed bogus autocompleter span appearing in content when the autocompleter menu is shown #TINY-3752
@@ -13,6 +17,10 @@ Version 5.0.8 (TBD)
     Fixed the print plugin printing from the wrong window in IE11 #TINY-3762
     Fixed content CSS loaded over CORS not loading in the preview plugin with content_css_cors enabled #TINY-3769
     Fixed the link plugin missing the default "None" option for link list #TINY-3738
+    Fixed small dot visible with menubar and toolbar disabled in inline mode #TINY-3623
+    Fixed space key properly inserts a nbsp before/after block elements #TINY-3745
+    Fixed native context menu not showing with images in IE11 #TINY-3392
+    Fixed inconsistent browser context menu image selection #TINY-3789
 Version 5.0.7 (2019-06-05)
     Added new toolbar button and menu item for inserting tables via dialog #TINY-3636
     Added new API for adding/removing/changing tabs in the Help dialog #TINY-3535

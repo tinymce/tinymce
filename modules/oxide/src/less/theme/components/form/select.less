@@ -15,6 +15,10 @@
     position: relative;
   }
 
+  .tox-selectfield select {
+    &:extend(.tox .tox-textfield);
+  }
+
   // Hide OS rendered chevrons
   .tox-selectfield select::-ms-expand {
     display: none;
@@ -33,22 +37,30 @@
 }
 
 .tox:not([dir=rtl]) {
-  .tox-selectfield select:extend(.tox .tox-textfield) {
-    padding-right: @pad-lg;
-  }
+  // Don't add the padding to select boxes with visible values that, do not have the down-arrow icon
+  .tox-selectfield {
+    select[size="0"],
+    select[size="1"] {
+      padding-right: @pad-lg;
+    }
 
-  .tox-selectfield svg {
-    right: @pad-sm;
+    svg {
+      right: @pad-sm;
+    }
   }
 }
 
 // RTL
 .tox[dir=rtl] {
-  .tox-selectfield select:extend(.tox .tox-textfield) {
-    padding-left: @pad-lg;
-  }
+  // Don't add the padding to select boxes with visible values that, do not have the down-arrow icon
+  .tox-selectfield {
+    select[size="0"],
+    select[size="1"] {
+      padding-left: @pad-lg;
+    }
 
-  .tox-selectfield svg {
-    left: @pad-sm;
+    svg {
+      left: @pad-sm;
+    }
   }
 }
