@@ -816,7 +816,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-tslint');
 
   grunt.registerTask('prod', [
-    'validateVersion',
     'shell:tsc',
     'tslint',
     'globals',
