@@ -6,6 +6,8 @@ Version 4.9.5 (TBA)
     Fixed native context menu not showing with images in IE11 #TINY-3392
     Fixed selection incorrectly changing when programmatically setting selection on contenteditable false elements #TINY-3766
     Fixed image browse button not working on touch devices #TINY-3751
+    Fixed so that nbsp entities isn't trimmed in white-space: pre-line elements. #TINY-3642
+    Fixed space key properly inserts a nbsp before/after block elements #TINY-3745
 Version 4.9.4 (2019-03-20)
     Fixed an issue where **Home/End** keys wouldn't move the caret correctly before or after `contenteditable=false` inline elements #TINY-2995
     Fixed an issue where content may have been lost when using permanent bookmarks #TINY-3400
