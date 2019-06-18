@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Text, Comment, Document, Element, Node, HTMLElement, DocumentFragment } from '@ephox/dom-globals';
+import { Text, Comment, Document, Element, Node, HTMLElement, DocumentFragment, HTMLTextAreaElement, HTMLInputElement } from '@ephox/dom-globals';
 
 const isNodeType = function (type) {
   return function (node: Node) {
@@ -97,6 +97,10 @@ const hasContentEditableState = function (value: string) {
   };
 };
 
+const isTextareaOrInput = (elm: HTMLElement): elm is HTMLTextAreaElement | HTMLInputElement => {
+  return /TEXTAREA|INPUT/i.test(elm.nodeName);
+};
+
 const isText = isNodeType(3) as (node: Node) => node is Text;
 const isComment = isNodeType(8) as (node: Node) => node is Comment;
 const isDocument = isNodeType(9) as (node: Node) => node is Document;
@@ -122,5 +126,6 @@ export default {
   matchStyleValues,
   isBogus,
   isBogusAll,
-  isTable
+  isTable,
+  isTextareaOrInput
 };
