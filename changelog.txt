@@ -1,3 +1,8 @@
+Version 4.9.5 (TBA)
+    Fixed the print plugin printing from the wrong window in IE11 #TINY-3762
+    Fixed an exception being thrown when a file or number input has focus during initialization. Patch contributed by t00 #GH-2194
+    Changed annotations navigation to work the same as inline boundaries #TINY-3396
+    Fixed positioning of the styleselect menu in iOS while using the mobile theme #TINY-3505
 Version 4.9.4 (2019-03-20)
     Fixed an issue where **Home/End** keys wouldn't move the caret correctly before or after `contenteditable=false` inline elements #TINY-2995
     Fixed an issue where content may have been lost when using permanent bookmarks #TINY-3400
