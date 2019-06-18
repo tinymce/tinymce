@@ -1,5 +1,5 @@
 import { ImageResult } from '../util/ImageResult';
-import { Element } from '@ephox/dom-globals';
+import { Element } from '@ephox/sugar';
 
 export interface BlobImageAsset {
   id: () => string;
