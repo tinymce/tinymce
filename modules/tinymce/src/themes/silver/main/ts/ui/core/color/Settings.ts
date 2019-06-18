@@ -13,23 +13,29 @@ import { Arr } from '@ephox/katamari';
 const choiceItem: 'choiceitem' = 'choiceitem';
 
 const defaultColors = [
-  { type: choiceItem, text: 'Dark Turquoise', value: '#16A085' },
-  { type: choiceItem, text: 'Green', value: '#2FCC71' },
-  { type: choiceItem, text: 'Dark Blue', value: '#2980B9' },
-  { type: choiceItem, text: 'Purple', value: '#9B59B6' },
-  { type: choiceItem, text: 'Navy Blue', value: '#34495E' },
-
-  { type: choiceItem, text: 'Yellow', value: '#F1C40F' },
-  { type: choiceItem, text: 'Orange', value: '#E67E22' },
-  { type: choiceItem, text: 'Red', value: '#E74C3C' },
-  { type: choiceItem, text: 'Medium Gray', value: '#BDC3C7' },
-  { type: choiceItem, text: 'Dark Gray', value: '#7F8C8D' },
-
-  { type: choiceItem, text: 'Light Red', value: '#F8CAC6' },
+  { type: choiceItem, text: 'Light Green', value: '#BFEDD2' },
   { type: choiceItem, text: 'Light Yellow', value: '#FBEEB8' },
-  { type: choiceItem, text: 'Light Green', value: '#C0EFD4' },
+  { type: choiceItem, text: 'Light Red', value: '#F8CAC6' },
+  { type: choiceItem, text: 'Light Purple', value: '#ECCAFA' },
   { type: choiceItem, text: 'Light Blue', value: '#C2E0F4' },
-  { type: choiceItem, text: 'Light Purple', value: '#E6D5ED' },
+
+  { type: choiceItem, text: 'Green', value: '#2DC26B' },
+  { type: choiceItem, text: 'Yellow', value: '#F1C40F' },
+  { type: choiceItem, text: 'Red', value: '#E03E2D' },
+  { type: choiceItem, text: 'Purple', value: '#B96AD9' },
+  { type: choiceItem, text: 'Blue', value: '#3598DB' },
+
+  { type: choiceItem, text: 'Dark Turquoise', value: '#169179' },
+  { type: choiceItem, text: 'Orange', value: '#E67E23' },
+  { type: choiceItem, text: 'Dark Red', value: '#BA372A' },
+  { type: choiceItem, text: 'Dark Purple', value: '#843FA1' },
+  { type: choiceItem, text: 'Dark Blue', value: '#236FA1' },
+
+  { type: choiceItem, text: 'Light Gray', value: '#ECF0F1' },
+  { type: choiceItem, text: 'Medium Gray', value: '#CED4D9' },
+  { type: choiceItem, text: 'Gray', value: '#95A5A6' },
+  { type: choiceItem, text: 'Dark Gray', value: '#7E8C8D' },
+  { type: choiceItem, text: 'Navy Blue', value: '#34495E' },
 
   { type: choiceItem, text: 'Black', value: '#000000' },
   { type: choiceItem, text: 'White', value: '#ffffff' }
