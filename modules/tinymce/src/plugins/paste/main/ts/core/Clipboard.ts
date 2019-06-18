@@ -161,6 +161,13 @@ const pasteImage = (editor: Editor, imageItem) => {
       blobInfo = existingBlobInfo;
     }
 
+    // Config max size for images uploaded/pasted/dragged-in
+    if (editor.settings.paste_image_maxsize && blobInfo.blob().size > editor.settings.paste_image_maxsize * 1024 * 1024) {
+      // code...
+      editor.windowManager.alert('Image size exceeds maxImageFileSize.');
+      return false;
+    }
+
     pasteHtml(editor, '<img src="' + blobInfo.blobUri() + '">', false);
   } else {
     pasteHtml(editor, '<img src="' + imageItem.uri + '">', false);
