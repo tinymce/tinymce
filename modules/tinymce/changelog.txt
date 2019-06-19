@@ -1,4 +1,5 @@
 Version 5.0.9 (TBD)
+    Fixed an issue in the Oxide skin where dialog content like outlines and shadows were clipped because of overflow hidden TINY-3566
 
 Version 5.0.8 (2019-06-18)
     Added back support for multiple toolbars #TINY-2195
