@@ -131,7 +131,6 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     const target = evt.target;
 
     if (isEventOnImageOutsideRange(evt, editor.selection.getRng()) && !evt.isDefaultPrevented()) {
-      evt.preventDefault();
       editor.selection.select(target);
     }
   };
