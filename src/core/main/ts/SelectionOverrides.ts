@@ -417,7 +417,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
       return null;
     }
 
-    if (endOffset === startOffset + 1) {
+    if (endOffset === startOffset + 1 && startContainer === range.endContainer) {
       node = startContainer.childNodes[startOffset];
     }
 
