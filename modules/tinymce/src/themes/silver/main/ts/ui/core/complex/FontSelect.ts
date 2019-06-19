@@ -35,14 +35,19 @@ const defaultFontsFormats = 'Andale Mono=andale mono,monospace;' +
 // Note: Don't include 'BlinkMacSystemFont', as Chrome on Mac converts it to different names
 const systemStackFonts = [ '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'sans-serif' ];
 
+// Split the fonts into an array and strip away any start/end quotes
+const splitFonts = (fontFamily: string): string[] => {
+  const fonts = fontFamily.split(/\s*,\s*/);
+  return Arr.map(fonts, (font) => font.replace(/^['"]+|['"]+$/g, ''));
+};
+
 const isSystemFontStack = (fontFamily: string): boolean => {
   // The system font stack will be similar to the following. (Note: each has minor variants)
   // Oxide: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   // Bootstrap: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   // Wordpress: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   const matchesSystemStack = (): boolean => {
-    // Split the fonts into an array and strip away any quotes
-    const fonts = fontFamily.toLowerCase().split(/['"]?\s*,\s*['"]?/);
+    const fonts = splitFonts(fontFamily.toLowerCase());
     return Arr.forall(systemStackFonts, (font) => fonts.indexOf(font.toLowerCase()) > -1);
   };
 
@@ -52,7 +57,7 @@ const isSystemFontStack = (fontFamily: string): boolean => {
 const getSpec = (editor) => {
   const getMatchingValue = (): Option<{ title: string, format: string }> => {
     const getFirstFont = (fontFamily) => {
-      return fontFamily ? fontFamily.split(',')[0] : '';
+      return fontFamily ? splitFonts(fontFamily)[0] : '';
     };
 
     const fontFamily = editor.queryCommandValue('FontName');
