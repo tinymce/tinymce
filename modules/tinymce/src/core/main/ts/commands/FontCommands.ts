@@ -6,7 +6,7 @@
  */
 
 import { Range, Node } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import { Arr, Option, Strings } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import Settings from '../api/Settings';
 import FontInfo from '../fmt/FontInfo';
@@ -53,8 +53,21 @@ const fromFontSizeNumber = (editor: Editor, value: string): string => {
   }
 };
 
+const normalizeFontNames = (font: string) => {
+  const fonts = font.split(/'\s*,\s*'/);
+  return Arr.map(fonts, (font) => {
+    if (font.indexOf(' ') !== -1 && !Strings.startsWith(font, '"')) {
+      // TINY-3801: The font has spaces, so need to wrap with quotes as the browser sometimes automatically handles this, but not always
+      return `"${font}"`;
+    } else {
+      return font;
+    }
+  }).join(',');
+};
+
 export const fontNameAction = (editor: Editor, value: string) => {
-  editor.formatter.toggle('fontname', { value: fromFontSizeNumber(editor, value) });
+  const font = fromFontSizeNumber(editor, value);
+  editor.formatter.toggle('fontname', { value: normalizeFontNames(font) });
   editor.nodeChanged();
 };
 
