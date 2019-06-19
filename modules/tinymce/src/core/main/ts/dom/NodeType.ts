@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Text, Comment, Document, Element, Node, HTMLElement, DocumentFragment, HTMLTextAreaElement, HTMLInputElement } from '@ephox/dom-globals';
+import { Text, Comment, Document, Element, Node, HTMLElement, DocumentFragment, HTMLTextAreaElement, HTMLInputElement, HTMLBRElement } from '@ephox/dom-globals';
 
 const isNodeType = function (type) {
   return function (node: Node) {
@@ -19,10 +19,10 @@ const isRestrictedNode = (node: Node): boolean => !!node && !Object.getPrototype
 
 const isElement = isNodeType(1) as (node: Node) => node is HTMLElement;
 
-const matchNodeNames = function (names: string) {
+const matchNodeNames = <T extends Node>(names: string) => {
   const items = names.toLowerCase().split(' ');
 
-  return function (node: Node) {
+  return (node: Node): node is T => {
     let i, name;
 
     if (node && node.nodeType) {
@@ -97,15 +97,13 @@ const hasContentEditableState = function (value: string) {
   };
 };
 
-const isTextareaOrInput = (elm: HTMLElement): elm is HTMLTextAreaElement | HTMLInputElement => {
-  return /TEXTAREA|INPUT/i.test(elm.nodeName);
-};
+const isTextareaOrInput = matchNodeNames<HTMLTextAreaElement | HTMLInputElement>('textarea input');
 
 const isText = isNodeType(3) as (node: Node) => node is Text;
 const isComment = isNodeType(8) as (node: Node) => node is Comment;
 const isDocument = isNodeType(9) as (node: Node) => node is Document;
 const isDocumentFragment = isNodeType(11) as (node: Node) => node is DocumentFragment;
-const isBr = matchNodeNames('br') as (node: Node) => node is Element;
+const isBr = matchNodeNames<HTMLBRElement>('br');
 const isContentEditableTrue = hasContentEditableState('true') as (node: Node) => node is HTMLElement;
 const isContentEditableFalse = hasContentEditableState('false') as (node: Node) => node is HTMLElement;
 
