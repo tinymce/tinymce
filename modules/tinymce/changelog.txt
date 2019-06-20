@@ -1,4 +1,5 @@
 Version 5.0.9 (TBD)
+    Changed default palette for fore/back color to include some lighter colors suitable for highlights #TINY-2865
     Fixed the editor not reporting that it can't load in quirks mode #TINY-3391
 Version 5.0.8 (2019-06-18)
     Added back support for multiple toolbars #TINY-2195
