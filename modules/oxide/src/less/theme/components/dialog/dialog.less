@@ -26,7 +26,7 @@
 @dialog-footer-padding: @pad-sm @pad-md;
 @dialog-footer-separator-border: 1px solid @dialog-border-color;
 
-@dialog-body-padding: 0 @pad-md;
+@dialog-body-padding: @pad-md @pad-md;
 
 @dialog-title-font-family: @font-stack;
 @dialog-title-font-size: @font-size-lg;
@@ -100,7 +100,6 @@
     display: flex;
     font-size: @font-size-base;
     justify-content: space-between;
-    margin-bottom: @pad-md;
     padding: @dialog-header-padding;
     position: relative;
   }
@@ -146,7 +145,6 @@
     font-weight: @dialog-body-font-weight;
     line-height: @dialog-body-line-height;
     min-width: 0;
-    padding: @dialog-body-padding;
     text-align: @dialog-body-text-align;
     text-transform: @dialog-body-text-transform;
 
@@ -159,12 +157,13 @@
     align-items: flex-start;
     display: flex;
     flex-direction: column;
+    padding: @dialog-body-padding;
 
     @media @breakpoint-sm {
       flex-direction: row;
-      margin-bottom: @pad-sm;
       -webkit-overflow-scrolling: touch;
       overflow-x: auto;
+      padding-bottom: 0;
     }
   }
 
@@ -185,6 +184,7 @@
   }
 
   .tox-dialog__body-content {
+    box-sizing: border-box;
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -192,6 +192,7 @@
     max-height: 650px; // TODO (verify max-height for dialogs)
     overflow: auto; //overflow controls all scrolling in the dialogs
     -webkit-overflow-scrolling: touch;
+    padding: @dialog-body-padding;
 
     > * {
       margin-bottom: 0;
@@ -231,18 +232,12 @@
     text-align: center;
   }
 
-  // Add more whitespace around body content
-  .tox-dialog__body-content--spacious {
-    margin-bottom: @pad-md;
-  }
-
   .tox-dialog__footer {
     align-items: center;
     background-color: @dialog-footer-background-color;
     border-top: @dialog-footer-separator-border;
     display: flex;
     justify-content: space-between;
-    margin-top: @pad-md;
     padding: @dialog-footer-padding;
   }
 
@@ -336,7 +331,6 @@ body.tox-dialog__disable-scroll {
 
 .tox:not([dir=rtl]) {
   .tox-dialog__body-nav {
-    margin-right: @pad-xl;
 
     @media @breakpoint-sm {
       margin-right: 0;
@@ -368,7 +362,6 @@ body.tox-dialog__disable-scroll {
   }
 
   .tox-dialog__body-nav {
-    margin-left: @pad-xl;
 
     @media @breakpoint-sm {
       margin-left: 0;

@@ -1,4 +1,5 @@
 Version 5.0.9 (TBD)
+    Fixed an issue in the Oxide skin where dialog content like outlines and shadows were clipped because of overflow hidden TINY-3566
     Changed default palette for fore/back color to include some lighter colors suitable for highlights #TINY-2865
     Fixed the editor to cancel loading in quirks mode where the UI is not supported #TINY-3391
     Fixed applying fonts not working when the name contained spaces and numbers #TINY-3801
