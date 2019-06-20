@@ -24,7 +24,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import { trimOrPadLeftRight, trimNbspAfterDeleteAndPadValue, isAfterNbsp } from './NbspTrim';
 import ParserNode from '../api/html/Node';
 
-const isTableCell = NodeType.matchNodeNames('td th');
+const isTableCell = NodeType.matchNodeNames(['td', 'th']);
 
 const selectionSetContent = (editor: Editor, content: string) => {
   const rng = editor.selection.getRng();

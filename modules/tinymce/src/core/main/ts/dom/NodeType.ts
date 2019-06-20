@@ -6,6 +6,7 @@
  */
 
 import { Text, Comment, Document, Element, Node, HTMLElement, DocumentFragment, HTMLTextAreaElement, HTMLInputElement, HTMLBRElement } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
 
 const isNodeType = function (type) {
   return function (node: Node) {
@@ -19,20 +20,13 @@ const isRestrictedNode = (node: Node): boolean => !!node && !Object.getPrototype
 
 const isElement = isNodeType(1) as (node: Node) => node is HTMLElement;
 
-const matchNodeNames = <T extends Node>(names: string) => {
-  const items = names.toLowerCase().split(' ');
+const matchNodeNames = <T extends Node>(names: string[]) => {
+  const lowercasedNames = names.map((s) => s.toLowerCase());
 
   return (node: Node): node is T => {
-    let i, name;
-
-    if (node && node.nodeType) {
-      name = node.nodeName.toLowerCase();
-
-      for (i = 0; i < items.length; i++) {
-        if (name === items[i]) {
-          return true;
-        }
-      }
+    if (node && node.nodeName) {
+      const nodeName = node.nodeName.toLowerCase();
+      return Arr.contains(lowercasedNames, nodeName);
     }
 
     return false;
@@ -97,13 +91,13 @@ const hasContentEditableState = function (value: string) {
   };
 };
 
-const isTextareaOrInput = matchNodeNames<HTMLTextAreaElement | HTMLInputElement>('textarea input');
+const isTextareaOrInput = matchNodeNames<HTMLTextAreaElement | HTMLInputElement>(['textarea', 'input']);
 
 const isText = isNodeType(3) as (node: Node) => node is Text;
 const isComment = isNodeType(8) as (node: Node) => node is Comment;
 const isDocument = isNodeType(9) as (node: Node) => node is Document;
 const isDocumentFragment = isNodeType(11) as (node: Node) => node is DocumentFragment;
-const isBr = matchNodeNames<HTMLBRElement>('br');
+const isBr = matchNodeNames<HTMLBRElement>(['br']);
 const isContentEditableTrue = hasContentEditableState('true') as (node: Node) => node is HTMLElement;
 const isContentEditableFalse = hasContentEditableState('false') as (node: Node) => node is HTMLElement;
 
