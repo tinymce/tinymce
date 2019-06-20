@@ -14,17 +14,17 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { setMode } from '../alien/DialogTabHeight';
 import { formTabChangeEvent } from '../general/FormEvents';
 import NavigableObject from '../general/NavigableObject';
+import { Types } from '@ephox/bridge';
+import { Omit } from '../Omit';
 
 const SendDataToSectionChannel = 'send-data-to-section';
 const SendDataToViewChannel = 'send-data-to-view';
 
-export interface InternalTabApi<I> {
-  tabs: Array<{ name: string, title: string, items: I[]}>;
-}
-
 export type TabData = Record<string, any>;
 
-export const renderTabPanel = <I>(spec: InternalTabApi<I>, backstage: UiFactoryBackstage): SketchSpec => {
+type TabPanelSpec = Omit<Types.Dialog.TabPanel, 'type'>;
+
+export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage): SketchSpec => {
   const storedValue = Cell<TabData>({ });
 
   const updateDataWithForm = (form: AlloyComponent): void => {

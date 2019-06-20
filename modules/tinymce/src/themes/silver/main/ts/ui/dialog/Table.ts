@@ -9,8 +9,11 @@ import { Types } from '@ephox/bridge';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { SimpleSpec, Behaviour, Tabstopping, Focusing } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
+import { Omit } from '../Omit';
 
-export const renderTable = (spec: Types.Table.Table, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
+type TableSpec = Omit<Types.Table.Table, 'type'>;
+
+export const renderTable = (spec: TableSpec, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const renderTh = (text: string) => ({
     dom: {
       tag: 'th',

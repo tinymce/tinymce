@@ -17,7 +17,8 @@ const createButton = (innerHtml: string, icon: string, disabled: boolean, action
     name: innerHtml,
     icon: Option.some(icon),
     disabled,
-    tooltip: Option.some(innerHtml)
+    tooltip: Option.some(innerHtml),
+    primary: false
   }, action, providersBackstage);
 };
 

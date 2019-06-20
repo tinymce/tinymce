@@ -11,7 +11,6 @@ UnitTest.asynctest('ColorPicker component Test', (success, failure) => {
     (store, doc, body) => {
       return GuiFactory.build(
         renderColorPicker({
-          type: 'colorpicker',
           label: Option.some('ColorPicker label'),
           name: 'col1'
         })

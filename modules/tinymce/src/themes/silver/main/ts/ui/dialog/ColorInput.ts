@@ -34,6 +34,7 @@ import { renderLabel } from '../alien/FieldLabeller';
 import ColorSwatch from '../core/color/ColorSwatch';
 import Settings from '../core/color/Settings';
 import { renderPanelButton } from '../general/PanelButton';
+import { Omit } from '../Omit';
 
 const colorInputChangeEvent = Id.generate('color-input-change');
 const colorSwatchChangeEvent = Id.generate('color-swatch-change');
@@ -51,7 +52,9 @@ interface ColorPickerCancelEvent extends CustomEvent {
   value: () => string;
 }
 
-export const renderColorInput = (spec: Types.ColorInput.ColorInput, sharedBackstage: UiFactoryBackstageShared, colorInputBackstage: UiFactoryBackstageForColorInput): SimpleSpec => {
+type ColorInputSpec = Omit<Types.ColorInput.ColorInput, 'type'>;
+
+export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactoryBackstageShared, colorInputBackstage: UiFactoryBackstageForColorInput): SimpleSpec => {
   const pField = FormField.parts().field({
     factory: Input,
     inputClasses: ['tox-textfield'],

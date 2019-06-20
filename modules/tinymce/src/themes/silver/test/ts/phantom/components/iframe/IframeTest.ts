@@ -90,7 +90,6 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
     (store, doc, body) => {
       return GuiFactory.build(
         renderIFrame({
-          type: 'iframe',
           name: 'frame-a',
           label: Option.some('iframe label'),
           sandboxed: true

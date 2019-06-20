@@ -12,8 +12,11 @@ import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { Types } from '@ephox/bridge';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import { Omit } from '../Omit';
 
-export const renderLabel = (spec: Types.Label.Label, backstageShared: UiFactoryBackstageShared): SimpleSpec => {
+type LabelSpec = Omit<Types.Label.Label, 'type'>;
+
+export const renderLabel = (spec: LabelSpec, backstageShared: UiFactoryBackstageShared): SimpleSpec => {
   const label = {
     dom: {
       tag: 'label',

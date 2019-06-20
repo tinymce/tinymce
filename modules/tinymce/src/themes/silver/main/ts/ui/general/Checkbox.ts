@@ -28,13 +28,12 @@ import { ComposingConfigs } from '../alien/ComposingConfigs';
 import * as Icons from '../icons/Icons';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formChangeEvent } from '../general/FormEvents';
+import { Types } from '@ephox/bridge';
+import { Omit } from '../Omit';
 
-export interface CheckboxFoo {
-  label: string;
-  name: string;
-}
+type CheckboxSpec = Omit<Types.Checkbox.Checkbox, 'type'>;
 
-export const renderCheckbox = (spec: CheckboxFoo, providerBackstage: UiFactoryBackstageProviders): SimpleSpec => {
+export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const repBehaviour = Representing.config({
     store: {
       mode: 'manual',

@@ -5,7 +5,7 @@ import { FormComponent, FormComponentApi, formComponentFields } from './FormComp
 
 export interface UrlInputApi extends FormComponentApi {
   type: 'urlinput';
-  filetype: 'image' | 'media' | 'file';
+  filetype?: 'image' | 'media' | 'file';
 }
 
 export interface UrlInput extends FormComponent {

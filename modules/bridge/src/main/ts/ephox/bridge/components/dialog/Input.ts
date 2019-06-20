@@ -9,7 +9,7 @@ export interface InputApi extends FormComponentApi {
 
 export interface Input extends FormComponent {
   type: 'input';
-  placeholder?: Option<string>;
+  placeholder: Option<string>;
 }
 
 export const inputFields = formComponentFields.concat([

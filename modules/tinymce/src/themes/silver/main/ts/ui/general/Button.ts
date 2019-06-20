@@ -25,20 +25,14 @@ import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { renderIconFromPack } from '../button/ButtonSlices';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
+import { Types } from '@ephox/bridge';
+import { Omit } from '../Omit';
 
-export interface ButtonFoo {
-  name: string;
-  text: string;
-  disabled?: boolean;
-  primary: boolean;
-  icon?: Option<string>;
-}
+type ButtonSpec = Omit<Types.Button.Button, 'type'>;
 
-export interface IconButtonFoo {
-  name: string;
-  icon: Option<string>;
+type FooterButtonSpec = Omit<Types.DialogButton, 'type'>;
+export interface IconButtonWrapper extends Omit<ButtonSpec, 'text'> {
   tooltip: Option<string>;
-  disabled?: boolean;
 }
 
 const renderCommonSpec = (spec, actionOpt, extraBehaviours = [], dom, components) => {
@@ -74,7 +68,7 @@ const renderCommon = (spec, action, extraBehaviours = [], dom, components): Sket
   return AlloyButton.sketch(specFinal);
 };
 
-export const renderIconButtonSpec = (spec: IconButtonFoo, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []) => {
+export const renderIconButtonSpec = (spec: IconButtonWrapper, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []) => {
   const tooltipAttributes = spec.tooltip.map<{}>((tooltip) => ({
     'aria-label': providersBackstage.translate(tooltip),
     'title': providersBackstage.translate(tooltip)
@@ -91,14 +85,14 @@ export const renderIconButtonSpec = (spec: IconButtonFoo, action, providersBacks
   return renderCommonSpec(spec, action, extraBehaviours, dom, components);
 };
 
-export const renderIconButton = (spec: IconButtonFoo, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []): SketchSpec => {
+export const renderIconButton = (spec: IconButtonWrapper, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []): SketchSpec => {
   const iconButtonSpec = renderIconButtonSpec(spec, Option.some(action), providersBackstage, extraBehaviours);
   return AlloyButton.sketch(iconButtonSpec);
 };
 
 // Maybe the list of extraBehaviours is better than doing a Merger.deepMerge that
 // we do elsewhere? Not sure.
-export const renderButton = (spec: ButtonFoo, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []): SketchSpec => {
+export const renderButton = (spec: ButtonSpec, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []): SketchSpec => {
   const translatedText = providersBackstage.translate(spec.text);
 
   const icon = spec.icon ? spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)) : Option.none();
@@ -141,12 +135,12 @@ const getAction = (name: string, buttonType) => {
   };
 };
 
-export const renderFooterButton = (spec: ButtonFoo, buttonType: string, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const action = getAction(spec.name, buttonType);
   return renderButton(spec, action, providersBackstage, [ ]);
 };
 
-export const renderDialogButton = (spec: ButtonFoo, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+export const renderDialogButton = (spec: ButtonSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const action = getAction(spec.name, 'custom');
   return renderButton(spec, action, providersBackstage, [
     RepresentingConfigs.memory(''),

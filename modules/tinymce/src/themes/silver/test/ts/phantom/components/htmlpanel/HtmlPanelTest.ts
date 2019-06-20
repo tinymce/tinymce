@@ -9,7 +9,6 @@ UnitTest.asynctest('HtmlPanel component Test', (success, failure) => {
     (store, doc, body) => {
       return GuiFactory.build(
         renderHtmlPanel({
-          type: 'htmlpanel',
           html: '<br /><br /><hr />',
           presets: 'presentation'
         })
@@ -44,7 +43,6 @@ UnitTest.asynctest('HtmlPanel component Test', (success, failure) => {
     (store, doc, body) => {
       return GuiFactory.build(
         renderHtmlPanel({
-          type: 'htmlpanel',
           html: '<br /><hr />',
           presets: 'document'
         })

@@ -25,8 +25,11 @@ import { renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 import * as Icons from 'tinymce/themes/silver/ui/icons/Icons';
 
 import { formChangeEvent } from '../general/FormEvents';
+import { Omit } from '../Omit';
 
-export const renderSelectBox = (spec: Types.SelectBox.SelectBox, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+type SelectBoxSpec = Omit<Types.SelectBox.SelectBox, 'type'>;
+
+export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const translatedOptions = Arr.map(spec.items, (item) => {
     return {
       text: providersBackstage.translate(item.text),
