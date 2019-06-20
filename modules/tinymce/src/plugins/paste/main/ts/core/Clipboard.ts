@@ -5,8 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { DataTransfer, ClipboardEvent, HTMLImageElement, Range, Image, Event, DragEvent, navigator, KeyboardEvent, File } from '@ephox/dom-globals';
+import { Cell, Futures, Future, Arr, Singleton } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Tools from 'tinymce/core/api/util/Tools';
 import VK from 'tinymce/core/api/util/VK';
 import Events from '../api/Events';
@@ -15,11 +19,8 @@ import Newlines from './Newlines';
 import { PasteBin } from './PasteBin';
 import ProcessFilters from './ProcessFilters';
 import SmartPaste from './SmartPaste';
+import * as Whitespace from './Whitespace';
 import Utils from './Utils';
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import { Cell, Futures, Future, Arr, Singleton } from '@ephox/katamari';
-import { DataTransfer, ClipboardEvent, HTMLImageElement, Range, Image, Event, DragEvent, navigator, KeyboardEvent, File } from '@ephox/dom-globals';
 
 declare let window: any;
 
@@ -46,11 +47,12 @@ const pasteHtml = (editor: Editor, html: string, internalFlag: boolean) => {
  *
  * @param {String} text Text to paste as the current selection location.
  */
-const pasteText = (editor, text: string) => {
-  text = editor.dom.encode(text).replace(/\r\n/g, '\n');
-  text = Newlines.convert(text, editor.settings.forced_root_block, editor.settings.forced_root_block_attrs);
+const pasteText = (editor: Editor, text: string) => {
+  const encodedText = editor.dom.encode(text).replace(/\r\n/g, '\n');
+  const normalizedText = Whitespace.normalizeWhitespace(encodedText);
+  const html = Newlines.convert(normalizedText, editor.settings.forced_root_block, editor.settings.forced_root_block_attrs);
 
-  pasteHtml(editor, text, false);
+  pasteHtml(editor, html, false);
 };
 
 export interface ClipboardContents {

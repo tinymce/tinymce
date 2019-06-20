@@ -10,7 +10,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import Strings from '../module/test/Strings';
 
-UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, failure) => {
+UnitTest.asynctest('tinymce.plugins.paste.browser.PasteTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
   Plugin();
@@ -536,7 +536,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertClipboardContent', false, { text: ' a ' });
 
-    LegacyUnit.equal(editor.getContent(), '<p>t a xt</p>');
+    LegacyUnit.equal(editor.getContent(), '<p>t&nbsp;a&nbsp;xt</p>');
   });
 
   suite.test('TestCase-TBA: Paste: paste plain text with linefeeds', function (editor) {
@@ -547,7 +547,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertClipboardContent', false, { text: 'a\nb\nc ' });
 
-    LegacyUnit.equal(editor.getContent(), '<p>ta<br />b<br />c xt</p>');
+    LegacyUnit.equal(editor.getContent(), '<p>ta<br />b<br />c&nbsp;xt</p>');
   });
 
   suite.test('TestCase-TBA: Paste: paste plain text with double linefeeds', function (editor) {
