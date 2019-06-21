@@ -23,6 +23,7 @@
     "silver-test-manual": "grunt bedrock-manual:silver"
   },
   "dependencies": {
+    "annyang": "^2.6.1",
     "tslib": "^1.9.3"
   }
 }

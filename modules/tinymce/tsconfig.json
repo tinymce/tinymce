@@ -46,6 +46,7 @@
       "tinymce/plugins/quickbars/*": ["src/plugins/quickbars/main/ts/*"],
       "tinymce/plugins/save/*": ["src/plugins/save/main/ts/*"],
       "tinymce/plugins/searchreplace/*": ["src/plugins/searchreplace/main/ts/*"],
+      "tinymce/plugins/speech/*": ["src/plugins/speech/main/ts/*"],
       "tinymce/plugins/spellchecker/*": ["src/plugins/spellchecker/main/ts/*"],
       "tinymce/plugins/tabfocus/*": ["src/plugins/tabfocus/main/ts/*"],
       "tinymce/plugins/table/*": ["src/plugins/table/main/ts/*"],

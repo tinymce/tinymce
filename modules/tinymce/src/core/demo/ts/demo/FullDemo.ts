@@ -100,12 +100,12 @@ export default function () {
       'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
       'searchreplace wordcount visualblocks visualchars code fullscreen fullpage insertdatetime media nonbreaking',
       'save table directionality emoticons template paste textcolor importcss colorpicker textpattern',
-      'codesample help noneditable print'
+      'codesample help noneditable print speech'
     ],
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+    toolbar: 'listen | undo redo | sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
     'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
 
     // Multiple toolbar array

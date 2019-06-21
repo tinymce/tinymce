@@ -11,8 +11,8 @@ let plugins = [
   'colorpicker', 'contextmenu', 'directionality', 'emoticons', 'help', 'fullpage',
   'fullscreen', 'hr', 'image', 'imagetools', 'importcss', 'insertdatetime', 'legacyoutput', 'link',
   'lists', 'media', 'nonbreaking', 'noneditable', 'pagebreak', 'paste', 'preview', 'print', 'save',
-  'searchreplace', 'spellchecker', 'tabfocus', 'table', 'template', 'textcolor', 'textpattern', 'toc',
-  'visualblocks', 'visualchars', 'wordcount', 'quickbars',
+  'searchreplace', 'speech', 'spellchecker', 'tabfocus', 'table', 'template', 'textcolor', 'textpattern',
+  'toc', 'visualblocks', 'visualchars', 'wordcount', 'quickbars',
 ];
 
 let themes = [
