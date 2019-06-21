@@ -11,6 +11,6 @@
 `Events`: A module that allows multiple handlers to be bound, unbound and triggered for multiple events.
 `SourceEvent`: An event sourced from another event.
 # Tests
-`porkbun` uses `bolt` to run atomic tests.
+`porkbun` uses [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) to run atomic tests.
 ## Running Tests
 `$ yarn test`

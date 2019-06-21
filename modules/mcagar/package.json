@@ -4,7 +4,7 @@
   "description": "Tinymce agar wrapper",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/mcagar"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "files": [
     "lib/main",

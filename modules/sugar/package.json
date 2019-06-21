@@ -4,7 +4,7 @@
   "description": "Basic DOM manipulation",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/sugar"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "scripts": {
     "prepublishOnly": "tsc -b",

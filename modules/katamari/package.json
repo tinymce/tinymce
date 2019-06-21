@@ -4,7 +4,7 @@
   "description": "Basic data type library",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/katamari"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "scripts": {
     "prepublishOnly": "tsc -b",

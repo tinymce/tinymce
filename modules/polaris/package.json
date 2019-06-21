@@ -4,7 +4,7 @@
   "version": "3.0.25",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/polaris"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "files": [
     "lib/main",
