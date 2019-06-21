@@ -11,7 +11,7 @@
     "oxide-icons-build": "yarn -s --cwd modules/oxide-icons-default build",
     "oxide-icons-ci": "yarn --cwd modules/oxide-icons-default ci",
     "oxide-build": "yarn -s --cwd modules/oxide build",
-    "oxide-watch": "yarn -s --cwd modules/oxide start",
+    "oxide-start": "yarn -s --cwd modules/oxide start",
     "oxide-ci": "yarn --cwd modules/oxide ci",
     "tsc": "tsc -b",
     "watch": "tsc -b -w",
