@@ -933,6 +933,59 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteTest', (success, failur
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
+  suite.test('TestCase-TBA: Lists: Backspace at beginning of LI in UL inside UL and then undo', function (editor) {
+    editor.resetContent((
+      '<ul>' +
+        '<li>item 1</li>' +
+        '<li>item 2' +
+          '<ul>' +
+            '<li>item 2.1' +
+              '<ul>' +
+                '<li>item 2.2</li>' +
+              '</ul>' +
+            '</li>' +
+          '</ul>' +
+        '</li>' +
+        '<li>item 3</li>' +
+      '</ul>'
+    ));
+
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'li li:nth-child(1)', 0);
+    editor.plugins.lists.backspaceDelete();
+
+    LegacyUnit.equal(editor.getContent(),
+      '<ul>' +
+        '<li>item 1</li>' +
+        '<li>item 2item 2.1' +
+          '<ul>' +
+            '<li>item 2.2</li>' +
+          '</ul>' +
+        '</li>' +
+        '<li>item 3</li>' +
+      '</ul>'
+    );
+
+    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+
+    editor.undoManager.undo();
+    LegacyUnit.equal(editor.getContent(),
+      '<ul>' +
+        '<li>item 1</li>' +
+        '<li>item 2' +
+          '<ul>' +
+            '<li>item 2.1' +
+              '<ul>' +
+                '<li>item 2.2</li>' +
+              '</ul>' +
+            '</li>' +
+          '</ul>' +
+        '</li>' +
+        '<li>item 3</li>' +
+      '</ul>'
+    );
+  });
+
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Lists: Backspace delete tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {

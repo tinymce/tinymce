@@ -5,6 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element, HTMLLIElement, Node, Range as DomRange } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
+import { Element as SugarElement, Compare } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import VK from 'tinymce/core/api/util/VK';
@@ -15,14 +20,12 @@ import NormalizeLists from './NormalizeLists';
 import Range from './Range';
 import Selection from './Selection';
 import { flattenListSelection } from '../actions/Indendation';
-import { Arr } from '@ephox/katamari';
-import { Element, Compare } from '@ephox/sugar';
 
-const findNextCaretContainer = function (editor, rng, isForward, root) {
+const findNextCaretContainer = function (editor: Editor, rng: DomRange, isForward: Boolean, root: Node): Node {
   let node = rng.startContainer;
   const offset = rng.startOffset;
 
-  if (node.nodeType === 3 && (isForward ? offset < node.data.length : offset > 0)) {
+  if (NodeType.isTextNode(node) && (isForward ? offset < node.data.length : offset > 0)) {
     return node;
   }
 
@@ -49,24 +52,24 @@ const findNextCaretContainer = function (editor, rng, isForward, root) {
       return node;
     }
 
-    if (node.nodeType === 3 && node.data.length > 0) {
+    if (NodeType.isTextNode(node) && node.data.length > 0) {
       return node;
     }
   }
 };
 
-const hasOnlyOneBlockChild = function (dom, elm) {
+const hasOnlyOneBlockChild = function (dom: DOMUtils, elm: Element): boolean {
   const childNodes = elm.childNodes;
   return childNodes.length === 1 && !NodeType.isListNode(childNodes[0]) && dom.isBlock(childNodes[0]);
 };
 
-const unwrapSingleBlockChild = function (dom, elm) {
+const unwrapSingleBlockChild = function (dom: DOMUtils, elm: Element) {
   if (hasOnlyOneBlockChild(dom, elm)) {
     dom.remove(elm.firstChild, true);
   }
 };
 
-const moveChildren = function (dom, fromElm, toElm) {
+const moveChildren = function (dom: DOMUtils, fromElm: Element, toElm: Element) {
   let node, targetElm;
 
   targetElm = hasOnlyOneBlockChild(dom, toElm) ? toElm.firstChild : toElm;
@@ -79,7 +82,7 @@ const moveChildren = function (dom, fromElm, toElm) {
   }
 };
 
-const mergeLiElements = function (dom, fromElm, toElm) {
+const mergeLiElements = function (dom: DOMUtils, fromElm: Element, toElm: Element) {
   let node, listNode;
   const ul = fromElm.parentNode;
 
@@ -112,7 +115,7 @@ const mergeLiElements = function (dom, fromElm, toElm) {
     toElm.appendChild(listNode);
   }
 
-  const contains = Compare.contains(Element.fromDom(toElm), Element.fromDom(fromElm));
+  const contains = Compare.contains(SugarElement.fromDom(toElm), SugarElement.fromDom(fromElm));
 
   const nestedLists = contains ? dom.getParents(fromElm, NodeType.isListNode, toElm) : [];
 
@@ -125,13 +128,13 @@ const mergeLiElements = function (dom, fromElm, toElm) {
   });
 };
 
-const mergeIntoEmptyLi = function (editor, fromLi, toLi) {
+const mergeIntoEmptyLi = function (editor: Editor, fromLi: HTMLLIElement, toLi: HTMLLIElement) {
   editor.dom.$(toLi).empty();
   mergeLiElements(editor.dom, fromLi, toLi);
   editor.selection.setCursorLocation(toLi);
 };
 
-const mergeForward = function (editor, rng, fromLi, toLi) {
+const mergeForward = function (editor: Editor, rng: DomRange, fromLi: HTMLLIElement, toLi: HTMLLIElement) {
   const dom = editor.dom;
 
   if (dom.isEmpty(toLi)) {
@@ -143,40 +146,44 @@ const mergeForward = function (editor, rng, fromLi, toLi) {
   }
 };
 
-const mergeBackward = function (editor, rng, fromLi, toLi) {
+const mergeBackward = function (editor: Editor, rng: DomRange, fromLi: HTMLLIElement, toLi: HTMLLIElement) {
   const bookmark = Bookmark.createBookmark(rng);
   mergeLiElements(editor.dom, fromLi, toLi);
   const resolvedBookmark = Bookmark.resolveBookmark(bookmark);
   editor.selection.setRng(resolvedBookmark);
 };
 
-const backspaceDeleteFromListToListCaret = function (editor, isForward) {
+const backspaceDeleteFromListToListCaret = function (editor: Editor, isForward: boolean) {
   const dom = editor.dom, selection = editor.selection;
   const selectionStartElm = selection.getStart();
   const root = Selection.getClosestListRootElm(editor, selectionStartElm);
-  const li = dom.getParent(selection.getStart(), 'LI', root);
-  let ul, rng, otherLi;
+  const li = dom.getParent(selection.getStart(), 'LI', root) as HTMLLIElement;
 
   if (li) {
-    ul = li.parentNode;
+    const ul = li.parentNode;
     if (ul === editor.getBody() && NodeType.isEmpty(dom, ul)) {
       return true;
     }
 
-    rng = Range.normalizeRange(selection.getRng(true));
-    otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward, root), 'LI', root);
+    const rng = Range.normalizeRange(selection.getRng());
+    const otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward, root), 'LI', root) as HTMLLIElement;
 
     if (otherLi && otherLi !== li) {
-      if (isForward) {
-        mergeForward(editor, rng, otherLi, li);
-      } else {
-        mergeBackward(editor, rng, li, otherLi);
-      }
+      editor.undoManager.transact(() => {
+        if (isForward) {
+          mergeForward(editor, rng, otherLi, li);
+        } else {
+          mergeBackward(editor, rng, li, otherLi);
+        }
+      });
 
       return true;
     } else if (!otherLi) {
       if (!isForward && rng.startOffset === 0 && rng.endOffset === 0) {
-        flattenListSelection(editor);
+        editor.undoManager.transact(() => {
+          flattenListSelection(editor);
+        });
+
         return true;
       }
     }
@@ -185,7 +192,7 @@ const backspaceDeleteFromListToListCaret = function (editor, isForward) {
   return false;
 };
 
-const removeBlock = function (dom, block, root) {
+const removeBlock = function (dom: DOMUtils, block: Element, root: Node) {
   const parentBlock = dom.getParent(block.parentNode, dom.isBlock, root);
 
   dom.remove(block);
@@ -194,14 +201,14 @@ const removeBlock = function (dom, block, root) {
   }
 };
 
-const backspaceDeleteIntoListCaret = function (editor, isForward) {
+const backspaceDeleteIntoListCaret = function (editor: Editor, isForward: boolean) {
   const dom = editor.dom;
   const selectionStartElm = editor.selection.getStart();
   const root = Selection.getClosestListRootElm(editor, selectionStartElm);
   const block = dom.getParent(selectionStartElm, dom.isBlock, root);
 
   if (block && dom.isEmpty(block)) {
-    const rng = Range.normalizeRange(editor.selection.getRng(true));
+    const rng = Range.normalizeRange(editor.selection.getRng());
     const otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward, root), 'LI', root);
 
     if (otherLi) {
@@ -219,11 +226,11 @@ const backspaceDeleteIntoListCaret = function (editor, isForward) {
   return false;
 };
 
-const backspaceDeleteCaret = function (editor, isForward) {
+const backspaceDeleteCaret = function (editor: Editor, isForward: boolean): boolean {
   return backspaceDeleteFromListToListCaret(editor, isForward) || backspaceDeleteIntoListCaret(editor, isForward);
 };
 
-const backspaceDeleteRange = function (editor) {
+const backspaceDeleteRange = function (editor: Editor): boolean {
   const selectionStartElm = editor.selection.getStart();
   const root = Selection.getClosestListRootElm(editor, selectionStartElm);
   const startListParent = editor.dom.getParent(selectionStartElm, 'LI,DT,DD', root);
@@ -240,11 +247,11 @@ const backspaceDeleteRange = function (editor) {
   return false;
 };
 
-const backspaceDelete = function (editor, isForward) {
+const backspaceDelete = function (editor: Editor, isForward: boolean): boolean {
   return editor.selection.isCollapsed() ? backspaceDeleteCaret(editor, isForward) : backspaceDeleteRange(editor);
 };
 
-const setup = function (editor) {
+const setup = function (editor: Editor) {
   editor.on('keydown', function (e) {
     if (e.keyCode === VK.BACKSPACE) {
       if (backspaceDelete(editor, false)) {
