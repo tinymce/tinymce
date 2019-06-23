@@ -4,7 +4,7 @@
   "description": "Ui API for TinyMCE 5",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/bridge"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "scripts": {
     "test": "echo \"No tests here\"",

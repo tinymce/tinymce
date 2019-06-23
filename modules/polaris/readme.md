@@ -15,6 +15,6 @@
 `Strings`: Provides utility functions for dealing with strings.
 `Words`: Provides functionality parsing text to words.
 # Tests
-`polaris` uses `bolt` to run atomic tests.
+`polaris` uses [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) to run atomic tests.
 ## Running Tests
 `$ yarn test`

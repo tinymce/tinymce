@@ -4,7 +4,7 @@
   "description": "Platform detection library",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/sand"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "files": [
     "lib/main",

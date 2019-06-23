@@ -10,7 +10,6 @@
 /.vscode
 /gen
 /dependency
-/config/bolt/bootstrap*.js
 /inconsistent.dependencies
 /*.log
 jenkins-plumbing
