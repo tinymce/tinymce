@@ -207,32 +207,6 @@ module.exports = function (grunt) {
       start: { }
     },
 
-    less: {
-      mobile: {
-        options: {
-          plugins : [ new (require('less-plugin-autoprefix'))({ browsers : [ 'last 2 versions', /* for phantom */'safari >= 4' ] }) ],
-            compress: true,
-            yuicompress: true,
-            sourceMap: true,
-            sourceMapRootpath: '.',
-            optimization: 2
-        },
-        files: {
-          'js/tinymce/skins/ui/oxide/skin.mobile.min.css': 'src/skins/oxide/main/less/mobile/app/mobile-less.less'
-        }
-      },
-      'content-mobile': {
-        options: {
-          cleancss: true,
-            strictImports: true,
-            compress: true
-        },
-        files: {
-          'js/tinymce/skins/ui/oxide/content.mobile.min.css': 'src/skins/oxide/main/less/mobile/content.less'
-        }
-      }
-    },
-
     concat: Object.assign({
         options: {
           process: function(content) {
@@ -447,9 +421,6 @@ module.exports = function (grunt) {
             'js/tinymce/tinymce.full.min.js',
             'js/tinymce/plugins/moxiemanager',
             'js/tinymce/plugins/visualblocks/img',
-            'js/tinymce/skins/*/fonts/*.json',
-            'js/tinymce/skins/*/fonts/*.dev.svg',
-            'js/tinymce/skins/*/fonts/readme.md',
             'readme.md',
             'js/tests/.jshintrc'
           ],
@@ -498,9 +469,7 @@ module.exports = function (grunt) {
             'js/tinymce/plugins/moxiemanager',
             'js/tinymce/plugins/example',
             'js/tinymce/plugins/example_dependency',
-            'js/tinymce/plugins/visualblocks/img',
-            'js/tinymce/skins/*/fonts/*.json',
-            'js/tinymce/skins/*/fonts/readme.md'
+            'js/tinymce/plugins/visualblocks/img'
           ],
           pathFilter: function (zipFilePath) {
             if (zipFilePath.indexOf('js/tinymce/') === 0) {
@@ -795,16 +764,6 @@ module.exports = function (grunt) {
         customRoutes: 'src/core/test/json/routes.json',
         name: 'silver-tests'
       }
-    },
-
-    watch: {
-      skins: {
-        files: ['src/skins/oxide/main/less/**/*'],
-        tasks: ['less', 'copy:skins'],
-        options: {
-          spawn: false
-        }
-      },
     }
   });
 
@@ -841,7 +800,6 @@ module.exports = function (grunt) {
     'unicode',
     'concat',
     'uglify',
-    'less',
     'copy',
     'clean:release',
     'moxiezip',
@@ -853,7 +811,6 @@ module.exports = function (grunt) {
   grunt.registerTask('dev', [
     'globals',
     'unicode',
-    'less',
     // TODO: Make webpack use the oxide CSS directly
     // as well as making development easier, then we can update 'yarn dev' to run 'oxide-build' in parallel with 'tinymce-grunt dev'
     // that will save 2-3 seconds on incremental builds
