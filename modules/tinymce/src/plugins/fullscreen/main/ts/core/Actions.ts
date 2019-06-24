@@ -56,7 +56,7 @@ const viewportUpdate = !isSafari || visualViewport === undefined ? { bind: Fun.n
         height: visualViewport.height + 'px',
         width: visualViewport.width + 'px'
       }));
-    })
+    });
   };
 
   const bind = (element) => {
