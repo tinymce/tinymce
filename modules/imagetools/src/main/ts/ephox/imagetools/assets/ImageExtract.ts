@@ -28,13 +28,13 @@ const singleWithUrl = (img: Blob, objurl: string) => {
 /**
  * Converts a list of files into a list of ImageAssets. This is
  * asynchronous. The assets are passed to the callback
- * @param img the list of files
+ * @param imgs the list of files
  * @param callback the callback function for the {BlobImageAsset[]}
  */
 
-const multiple = (img: Blob[]): Future<ImageAssetAdt[]> => {
+const multiple = (imgs: Blob[]): Future<ImageAssetAdt[]> => {
   // edge case: where a drop of a non-file takes place
-  return img.length === 0 ? Future.pure([]) :  Futures.mapM(img, single);
+  return Futures.mapM(imgs, single);
 };
 
 export { multiple, single, singleWithUrl };
