@@ -5,22 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const trimPx = function (value) {
+import { HTMLElement } from '@ephox/dom-globals';
+
+const trimPx = function (value: string) {
   return value.replace(/px$/, '');
 };
 
-const addPx = function (value) {
+const addPx = function (value: string) {
   return /^[0-9.]+$/.test(value) ? (value + 'px') : value;
 };
 
-const getSize = function (name) {
-  return function (elm): string {
+const getSize = function (name: string) {
+  return function (elm: HTMLElement): string {
     return elm ? trimPx(elm.style[name]) : '';
   };
 };
 
-const setSize = function (name) {
-  return function (elm, value) {
+const setSize = function (name: string) {
+  return function (elm: HTMLElement, value: string) {
     if (elm) {
       elm.style[name] = addPx(value);
     }

@@ -1,4 +1,4 @@
-import HtmlToData from 'tinymce/plugins/media/core/HtmlToData';
+import * as HtmlToData from 'tinymce/plugins/media/core/HtmlToData';
 import { RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 
