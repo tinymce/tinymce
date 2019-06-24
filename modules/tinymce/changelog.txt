@@ -7,6 +7,7 @@ Version 5.0.9 (TBD)
     Fixed so that initial content is retained when initializing on list items #TINY-3796
     Fixed inefficient font name and font size current value lookup during rendering #TINY-3813
     Fixed mobile font copied into the wrong folder for the oxide-dark skin #TINY-3816
+    Fixed an issue where resizing the width of tables would produce inaccurate results #TINY-3827
 Version 5.0.8 (2019-06-18)
     Added back support for multiple toolbars #TINY-2195
     Added support for .m4a files to the media plugin #TINY-3750
