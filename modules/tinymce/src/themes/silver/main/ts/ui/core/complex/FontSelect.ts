@@ -54,8 +54,8 @@ const isSystemFontStack = (fontFamily: string): boolean => {
   return fontFamily.indexOf('-apple-system') === 0 && matchesSystemStack();
 };
 
-const getSpec = (editor) => {
-  const getMatchingValue = (): Option<{ title: string, format: string }> => {
+const getSpec = (editor: Editor) => {
+  const getMatchingValue = () => {
     const getFirstFont = (fontFamily) => {
       return fontFamily ? splitFonts(fontFamily)[0] : '';
     };
@@ -64,7 +64,7 @@ const getSpec = (editor) => {
     const items = dataset.data;
     const font = fontFamily ? fontFamily.toLowerCase() : '';
 
-    return Arr.find(items, (item) => {
+    const matchOpt = Arr.find(items, (item) => {
       const format = item.format;
       return (format.toLowerCase() === font) || (getFirstFont(format).toLowerCase() === getFirstFont(font).toLowerCase());
     }).orThunk(() => {
@@ -77,12 +77,19 @@ const getSpec = (editor) => {
         return Option.none();
       }
     });
+
+    return { matchOpt, font: fontFamily };
   };
 
   const isSelectedFor = (item) => {
-    return () => {
-      return getMatchingValue().exists((match) => match.format === item);
+    return (valueOpt: Option<{ format: string; title: string }>) => {
+      return valueOpt.exists((value) => value.format === item);
     };
+  };
+
+  const getCurrentValue = () => {
+    const { matchOpt } = getMatchingValue();
+    return matchOpt;
   };
 
   const getPreviewFor = (item) => () => {
@@ -100,9 +107,8 @@ const getSpec = (editor) => {
   };
 
   const updateSelectMenuText = (comp: AlloyComponent) => {
-    const fontFamily = editor.queryCommandValue('FontName');
-    const match = getMatchingValue();
-    const text = match.fold(() => fontFamily, (item) => item.title);
+    const { matchOpt, font } = getMatchingValue();
+    const text = matchOpt.fold(() => font, (item) => item.title);
     AlloyTriggers.emitWith(comp, updateMenuText, {
       text
     });
@@ -118,6 +124,7 @@ const getSpec = (editor) => {
     tooltip: 'Fonts',
     icon: Option.none(),
     isSelectedFor,
+    getCurrentValue,
     getPreviewFor,
     onAction,
     setInitialValue,
