@@ -299,29 +299,16 @@ module.exports = function (grunt) {
         ]
       },
       'ui-skins': {
-        files: [
-          {
-            expand: true,
-            flatten: true,
-            cwd: 'src/themes/mobile/main/fonts',
-            src: [
-              '**',
-              '!*.json',
-              '!*.md'
-            ],
-            dest: 'js/tinymce/skins/ui/oxide/fonts'
-          }
-        ].concat(gruntUtils.flatMap(oxideUiSkinMap, function (name, mappedName) {
+        files: gruntUtils.flatMap(oxideUiSkinMap, function (name, mappedName) {
           return [
             {
               expand: true,
-              flatten: true,
               cwd: '../oxide/build/skins/ui/' + name,
               src: '**',
               dest: 'js/tinymce/skins/ui/' + mappedName
             }
           ];
-        }))
+        })
       },
       'content-skins': {
         files: [
@@ -351,8 +338,6 @@ module.exports = function (grunt) {
             'js/tinymce/tinymce.full.min.js',
             'js/tinymce/plugins/moxiemanager',
             'js/tinymce/plugins/visualblocks/img',
-            'js/tinymce/skins/*/fonts/*.json',
-            'js/tinymce/skins/*/fonts/readme.md',
             'readme.md'
           ],
           to: 'dist/tinymce_<%= pkg.version %>.zip',
