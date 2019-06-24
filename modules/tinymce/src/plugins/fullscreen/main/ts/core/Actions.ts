@@ -49,12 +49,14 @@ const viewportUpdate = !isSafari || visualViewport === undefined ? { bind: Fun.n
   const editorContainer = Singleton.value<Element>();
 
   const update = () => {
-    editorContainer.on((container) => Css.setAll(container, {
-      top: visualViewport.offsetTop + 'px',
-      left: visualViewport.offsetLeft + 'px',
-      height: visualViewport.height + 'px',
-      width: visualViewport.width + 'px'
-    }));
+    window.requestAnimationFrame(() => {
+      editorContainer.on((container) => Css.setAll(container, {
+        top: visualViewport.offsetTop + 'px',
+        left: visualViewport.offsetLeft + 'px',
+        height: visualViewport.height + 'px',
+        width: visualViewport.width + 'px'
+      }));
+    })
   };
 
   const bind = (element) => {
@@ -107,6 +109,7 @@ const toggleFullscreen = function (editor, fullscreenState) {
     DOM.addClass(editorContainer, 'tox-fullscreen');
 
     viewportUpdate.bind(Element.fromDom(editorContainer));
+    editor.on('remove', viewportUpdate.unbind);
     fullscreenState.set(newFullScreenInfo);
     Events.fireFullscreenStateChanged(editor, true);
   } else {
@@ -129,6 +132,7 @@ const toggleFullscreen = function (editor, fullscreenState) {
     fullscreenState.set(null);
     Events.fireFullscreenStateChanged(editor, false);
     viewportUpdate.unbind();
+    editor.off('remove', viewportUpdate.unbind);
   }
 };
 
