@@ -50,6 +50,9 @@
     "modules/tinymce/dist": true,
     "modules/*/lib": true,
     "js": true,
-    "dist": true
+    "dist": true,
+
+    // Search can just exclude node_modules completely
+    "node_modules": true
   }
 }
