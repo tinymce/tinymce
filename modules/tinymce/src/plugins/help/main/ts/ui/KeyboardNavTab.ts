@@ -6,18 +6,16 @@
  */
 
 import { Types } from '@ephox/bridge';
-import ConvertShortcut from '../alien/ConvertShortcut';
 
-const description = `<div id="help-dialog__nav-tab">
-<h1>Editor UI keyboard navigation</h1>
+const description = `<h1>Editor UI keyboard navigation</h1>
 
 <h2>Activating keyboard navigation</h2>
 
 <p>The sections of the outer UI of the editor - the menubar, toolbar, sidebar and footer - are all keyboard navigable. As such, there are multiple ways to activate keyboard navigation:</p>
 <ul>
-  <li>Focus the menubar: ${ConvertShortcut.convertText('Alt + F9')}</li>
-  <li>Focus the toolbar: ${ConvertShortcut.convertText('Alt + F10')}</li>
-  <li>Focus the footer: ${ConvertShortcut.convertText('Alt + F11')}</li>
+  <li>Focus the menubar: Alt + F9 (Windows) or &#x2325;F9 (MacOS)</li>
+  <li>Focus the toolbar: Alt + F10 (Windows) or &#x2325;F10 (MacOS)</li>
+  <li>Focus the footer: Alt + F11 (Windows) or &#x2325;F11 (MacOS)</li>
 </ul>
 
 <p>Focusing the menubar or toolbar will start keyboard navigation at the first item in the menubar or toolbar, which will be highlighted with a gray background. Focusing the footer will start keyboard navigation at the first item in the element path, which will be highlighted with an underline. </p><br />
@@ -59,7 +57,7 @@ const description = `<div id="help-dialog__nav-tab">
 
 <h1>Context toolbars and menus</h1>
 
-<p>To focus an open context toolbar such as the table context toolbar, press ${ConvertShortcut.convertText('Ctrl + F9')}.</p><br />
+<p>To focus an open context toolbar such as the table context toolbar, press Ctrl + F9 (Windows) or &#x2303;F9 (MacOS).</p><br />
 
 <p>Context toolbar navigation is the same as toolbar navigation, and context menu navigation is the same as standard menu navigation.</p><br />
 
@@ -69,8 +67,7 @@ const description = `<div id="help-dialog__nav-tab">
 
 <p>When a non-tabbed dialog is opened, the first interactive component in the dialog will be focused. Users can navigate between interactive components by pressing tab. This includes any footer buttons. Navigation will cycle back to the first dialog component if tab is pressed while focusing the last component in the dialog. Pressing shift + tab will navigate backwards.</p><br />
 
-<p>When a tabbed dialog is opened, the first button in the tab menu is focused. Pressing tab will navigate to the first interactive component in that tab, and will cycle through the tab’s components, the footer buttons, then back to the tab button. To switch to another tab, focus the tab button for the current tab, then use the arrow keys to cycle through the tab buttons.</p>
-</div>`;
+<p>When a tabbed dialog is opened, the first button in the tab menu is focused. Pressing tab will navigate to the first interactive component in that tab, and will cycle through the tab’s components, the footer buttons, then back to the tab button. To switch to another tab, focus the tab button for the current tab, then use the arrow keys to cycle through the tab buttons.</p>`;
 
 const tab = (): Types.Dialog.TabApi => {
   const body: Types.Dialog.BodyComponentApi = {
