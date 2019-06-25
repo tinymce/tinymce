@@ -14,6 +14,11 @@
 @object-block-selected-outline-width: 3px;
 
 .mce-content-body {
+  // Define general selection color inside document
+  *::selection {
+    background: @document-selection-color;
+  }
+
   // Selection outline on certain editable objects
   img[data-mce-selected],
   table[data-mce-selected] {
