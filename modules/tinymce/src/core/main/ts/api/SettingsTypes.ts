@@ -54,7 +54,7 @@ export interface RawEditorSettings {
   content_css_cors?: boolean;
   content_security_policy?: string;
   content_style?: string;
-  contextmenu?: string;
+  contextmenu?: string | false;
   contextmenu_never_use_native?: boolean;
   convert_fonts_to_spans?: boolean;
   convert_urls?: boolean;
@@ -148,6 +148,7 @@ export interface RawEditorSettings {
   style_formats_autohide?: boolean;
   style_formats_merge?: boolean;
   submit_patch?: boolean;
+  suffix?: string;
   target?: Element;
   theme?: string | ThemeInitFunc;
   theme_url?: string;
@@ -198,7 +199,6 @@ export interface RawEditorSettings {
   forced_plugins?: string | string[];
   plugin_base_urls?: Record<string, string>;
   service_message?: string;
-  suffix?: string;
 
   // Special always forced on setting
   // TODO: Get rid of this one

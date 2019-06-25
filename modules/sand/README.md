@@ -1,6 +1,6 @@
 # Description
 
-`sand` is a library for handling platform detection and standardising native browser functions. It does not bundle any commands. It is only a collection of `bolt` ([github](https://github.com/ephox/bolt), [npm](https://www.npmjs.com/package/@ephox/bolt)) modules.
+`sand` is a library for handling platform detection and standardising native browser functions. It does not bundle any commands. It is only a collection of modules.
 
 
 # Installation
@@ -86,9 +86,9 @@ var isPh = platform.device.isPhone();
 ~~~
 
 
-## Global Wrappers 
+## Global Wrappers
 
-These wrappers allow dependencies on globals that only exist on newer browsers, where normal bolt imports fail if the target is not found. They don't provide any safety in accessing the globals; it is assumed the supporting code knows whether the current browser supports the global. They are simply a way to defer referencing it.
+These wrappers allow dependencies on globals that only exist on newer browsers, where normal references to them would cause the script to fail to load. They don't provide any safety in accessing the globals; it is assumed the supporting code knows whether the current browser supports the global. They are simply a way to defer referencing it.
 
 
 ### Blob

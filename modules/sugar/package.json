@@ -1,10 +1,10 @@
 {
   "name": "@ephox/sugar",
-  "version": "4.6.21",
+  "version": "4.6.22",
   "description": "Basic DOM manipulation",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/sugar"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "scripts": {
     "prepublishOnly": "tsc -b",
@@ -22,8 +22,8 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^2.4.21",
-    "@ephox/sand": "^2.0.17"
+    "@ephox/katamari": "^2.4.22",
+    "@ephox/sand": "^2.0.18"
   },
   "files": [
     "lib/main",

@@ -45,6 +45,7 @@ import { BlobInfoImagePair } from '../file/ImageScanner';
 import Node from './html/Node';
 import { Theme } from './ThemeManager';
 import { Plugin } from './PluginManager';
+import NodeType from '../dom/NodeType';
 
 /**
  * This class contains the core logic for a TinyMCE editor.
@@ -281,12 +282,21 @@ class Editor implements EditorObservable {
   constructor (id: string, settings: RawEditorSettings, editorManager: EditorManager) {
     this.editorManager = editorManager;
     this.documentBaseUrl = editorManager.documentBaseURL;
-    this.baseUri = editorManager.baseURI;
 
     // Patch in the EditorObservable functions
     extend(this, EditorObservable);
 
     this.settings = getEditorSettings(this, id, this.documentBaseUrl, editorManager.defaultSettings, settings);
+
+    if (this.settings.suffix) {
+      editorManager.suffix = this.settings.suffix;
+    }
+    this.suffix = editorManager.suffix;
+
+    if (this.settings.base_url) {
+      editorManager._setBaseUrl(this.settings.base_url);
+    }
+    this.baseUri = editorManager.baseURI;
 
     AddOnManager.languageLoad = this.settings.language_load;
     AddOnManager.baseURL = editorManager.baseURL;
@@ -300,7 +310,6 @@ class Editor implements EditorObservable {
     });
     this.baseURI = this.baseUri;
     this.inline = this.settings.inline;
-    this.suffix = editorManager.suffix;
 
     this.shortcuts = new Shortcuts(this);
     this.editorCommands = new EditorCommands(this);
@@ -662,8 +671,8 @@ class Editor implements EditorObservable {
   }
 
   /**
-   * Loads contents from the textarea or div element that got converted into an editor instance.
-   * This method will move the contents from that textarea or div into the editor by using setContent
+   * Loads contents from the textarea, input or other element that got converted into an editor instance.
+   * This method will move the contents from that textarea, input or other element into the editor by using setContent
    * so all events etc that method has will get dispatched as well.
    *
    * @method load
@@ -682,9 +691,9 @@ class Editor implements EditorObservable {
       args = args || {};
       args.load = true;
 
-      const value = (elm as any).value;
+      const value = NodeType.isTextareaOrInput(elm) ? elm.value : elm.innerHTML;
 
-      html = self.setContent(value !== undefined ? value : elm.innerHTML, args);
+      html = self.setContent(value, args);
       args.element = elm;
 
       if (!args.no_events) {
@@ -731,7 +740,7 @@ class Editor implements EditorObservable {
 
     html = args.content;
 
-    if (!/TEXTAREA|INPUT/i.test(elm.nodeName)) {
+    if (!NodeType.isTextareaOrInput(elm)) {
       if (args.is_removing || !self.inline) {
         elm.innerHTML = html;
       }

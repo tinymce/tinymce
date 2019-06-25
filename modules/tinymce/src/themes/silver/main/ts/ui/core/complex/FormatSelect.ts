@@ -7,7 +7,7 @@
 
 import { AlloyTriggers, AlloyComponent } from '@ephox/alloy';
 import { Element } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { onActionToggleFormat } from './utils/Utils';
@@ -68,6 +68,7 @@ const getSpec = (editor): SelectSpec & { dataset } => {
     tooltip: 'Blocks',
     icon: Option.none(),
     isSelectedFor,
+    getCurrentValue: Fun.constant(Option.none()),
     getPreviewFor,
     onAction: onActionToggleFormat(editor),
     setInitialValue,

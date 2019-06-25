@@ -145,7 +145,10 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
   setup (): void;
   translate (text: string): string;
   triggerSave (): void;
+  _setBaseUrl (baseUrl: string): void;
 }
+
+const isQuirksMode = document.compatMode !== 'CSS1Compat';
 
 const EditorManager: EditorManager = {
   ...Observable,
@@ -320,8 +323,7 @@ const EditorManager: EditorManager = {
 
     baseUrl = defaultSettings.base_url;
     if (baseUrl) {
-      this.baseURL = new URI(this.documentBaseURL).toAbsolute(baseUrl.replace(/\/+$/, ''));
-      this.baseURI = new URI(this.baseURL);
+      this._setBaseUrl(baseUrl);
     }
 
     suffix = defaultSettings.suffix;
@@ -411,6 +413,12 @@ const EditorManager: EditorManager = {
         ErrorReporter.initError(
           'TinyMCE does not support the browser you are using. For a list of supported' +
           ' browsers please see: https://www.tinymce.com/docs/get-started/system-requirements/'
+        );
+        return [];
+      } else if (isQuirksMode) {
+        ErrorReporter.initError(
+          'Failed to initialize the editor as the document is not in standards mode. ' +
+          'TinyMCE requires standards mode.'
         );
         return [];
       }
@@ -827,6 +835,11 @@ const EditorManager: EditorManager = {
     }
 
     this.activeEditor = editor;
+  },
+
+  _setBaseUrl (baseUrl: string) {
+    this.baseURL = new URI(this.documentBaseURL).toAbsolute(baseUrl.replace(/\/+$/, ''));
+    this.baseURI = new URI(this.baseURL);
   }
 };
 

@@ -87,7 +87,6 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     const target = evt.target;
 
     if (isEventOnImageOutsideRange(evt, editor.selection.getRng()) && !evt.isDefaultPrevented()) {
-      evt.preventDefault();
       editor.selection.select(target);
     }
   };
@@ -494,7 +493,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     });
 
     editor.on('hide blur', hideResizeRect);
-    editor.on('contextmenu', contextMenuSelectImage);
+    editor.on('contextmenu', contextMenuSelectImage, true);
 
     // Hide rect on focusout since it would float on top of windows otherwise
     // editor.on('focusout', hideResizeRect);
