@@ -33,6 +33,7 @@ import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
 import { renderCollection } from 'tinymce/themes/silver/ui/dialog/Collection';
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 import { setupDemo } from './DemoHelpers';
+import Promise from 'tinymce/core/api/util/Promise';
 
 // tslint:disable:no-console
 

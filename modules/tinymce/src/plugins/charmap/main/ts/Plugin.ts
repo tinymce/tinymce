@@ -13,14 +13,14 @@ import * as Autocompletion from './ui/Autocompletion';
 import Buttons from './ui/Buttons';
 import CharMap from './core/CharMap';
 
-PluginManager.add('charmap', function (editor) {
-  const charMap = CharMap.getCharMap(editor);
-  Commands.register(editor, charMap);
-  Buttons.register(editor);
+export default function () {
+  PluginManager.add('charmap', function (editor) {
+    const charMap = CharMap.getCharMap(editor);
+    Commands.register(editor, charMap);
+    Buttons.register(editor);
 
-  Autocompletion.init(editor, charMap[0]);
+    Autocompletion.init(editor, charMap[0]);
 
-  return Api.get(editor);
-});
-
-export default function () { }
+    return Api.get(editor);
+  });
+}

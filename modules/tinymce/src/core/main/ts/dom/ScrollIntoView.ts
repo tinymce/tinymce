@@ -5,112 +5,177 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Element, Range } from '@ephox/dom-globals';
-import { Arr } from '@ephox/katamari';
-import NodeType from './NodeType';
+import { HTMLElement, Element, Range, window } from '@ephox/dom-globals';
+import { Fun } from '@ephox/katamari';
+import { Css, Element as SugarElement, Height, Insert, Location, Node, Position, Remove, Scroll, Text, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import { getOverflow } from '../geom/ClientRect';
-import { CaretPosition } from '../caret/CaretPosition';
+import * as OuterPosition from '../frames/OuterPosition';
+import Zwsp from '../text/Zwsp';
 
-const getPos = function (elm: HTMLElement) {
-  let x = 0, y = 0;
+interface MarkerInfo {
+  element: SugarElement;
+  bottom: number;
+  pos: Position;
+  cleanup: () => void;
+}
 
-  let offsetParent = elm;
-  while (offsetParent && offsetParent.nodeType) {
-    x += offsetParent.offsetLeft || 0;
-    y += offsetParent.offsetTop || 0;
-    offsetParent = offsetParent.offsetParent as HTMLElement;
+type ScrollFunc = (doc: SugarElement, scrollTop: number, marker: MarkerInfo, alignToTop?: boolean) => void;
+
+const excludeFromDescend = (element: SugarElement) => Node.name(element) === 'textarea';
+
+const descend = (element: SugarElement, offset: number): { element: SugarElement, offset: number } => {
+  const children = Traverse.children(element);
+  if (children.length === 0 || excludeFromDescend(element)) {
+    return { element, offset };
+  } else if (offset < children.length && !excludeFromDescend(children[offset])) {
+    return { element: children[offset], offset: 0 };
+  } else {
+    const last = children[children.length - 1];
+    if (excludeFromDescend(last)) {
+      return { element, offset };
+    } else {
+      if (Node.name(last) === 'img') {
+        return { element: last, offset: 1 };
+      } else if (Node.isText(last)) {
+        return { element: last, offset: Text.get(last).length };
+      } else {
+        return { element: last, offset: Traverse.children(last).length };
+      }
+    }
   }
-
-  return { x, y };
 };
 
-const fireScrollIntoViewEvent = function (editor: Editor, elm: Element, alignToTop: boolean) {
-  const scrollEvent: any = { elm, alignToTop };
-  editor.fire('ScrollIntoView', scrollEvent);
+const markerInfo = (element: SugarElement, cleanupFun: () => void): MarkerInfo => {
+  const pos = Location.absolute(element);
+  const height = Height.get(element);
+  return {
+    element,
+    bottom: pos.top() + height,
+    pos,
+    cleanup: cleanupFun
+  };
+};
+
+const createMarker = (element: SugarElement, offset: number): MarkerInfo => {
+  const startPoint = descend(element, offset);
+  const span = SugarElement.fromHtml('<span data-mce-bogus="all">' + Zwsp.ZWSP + '</span>');
+  Insert.before(startPoint.element, span);
+
+  return markerInfo(span, () => Remove.remove(span));
+};
+
+const elementMarker = (element: HTMLElement): MarkerInfo => {
+  return markerInfo(SugarElement.fromDom(element), Fun.noop);
+};
+
+const withMarker = (editor: Editor, f: ScrollFunc, rng: Range, alignToTop?: boolean) => {
+  preserveWith(editor, (_s, _e) => applyWithMarker(editor, f, rng, alignToTop), rng);
+};
+
+const applyWithMarker = function (editor: Editor, f: ScrollFunc, rng: Range, alignToTop?: boolean) {
+  const body = SugarElement.fromDom(editor.getBody());
+  const doc = SugarElement.fromDom(editor.getDoc());
+
+  Css.reflow(body);
+  const scrollTop = Scroll.get(doc).top();
+  const marker = createMarker(SugarElement.fromDom(rng.startContainer), rng.startOffset);
+  f(doc, scrollTop, marker, alignToTop);
+  marker.cleanup();
+};
+
+const withElement = (editor: Editor, element: MarkerInfo, f: ScrollFunc, alignToTop?: boolean) => {
+  const doc = SugarElement.fromDom(editor.getDoc());
+  const scrollTop = Scroll.get(doc).top();
+  f(doc, scrollTop, element, alignToTop);
+};
+
+const preserveWith = (editor: Editor, f: (startElement: SugarElement, endElement: SugarElement) => void, rng: Range) => {
+  const startElement = rng.startContainer;
+  const startOffset = rng.startOffset;
+
+  const endElement = rng.endContainer;
+  const endOffset = rng.endOffset;
+
+  f(SugarElement.fromDom(startElement), SugarElement.fromDom(endElement));
+
+  const newRng = editor.dom.createRng();
+  newRng.setStart(startElement, startOffset);
+  newRng.setEnd(endElement, endOffset);
+  editor.selection.setRng(rng);
+};
+
+const fireScrollIntoViewEvent = (editor: Editor, elm: Element, alignToTop: boolean): boolean => {
+  const scrollEvent = editor.fire('ScrollIntoView', { elm, alignToTop });
   return scrollEvent.isDefaultPrevented();
 };
 
-const scrollElementIntoView = function (editor: Editor, elm: HTMLElement, alignToTop: boolean) {
-  let y, viewPort;
-  const dom = editor.dom;
-  const root = dom.getRoot();
-  let viewPortY, viewPortH, offsetY = 0;
+const scrollTo = (marker: MarkerInfo, viewHeight: number, alignToTop: boolean, doc?: SugarElement) => {
+  const pos = marker.pos;
+  if (alignToTop) {
+    Scroll.to(pos.left(), pos.top(), doc);
+  } else {
+    // The position we want to scroll to is the...
+    // (absolute position of the marker, minus the view height) plus (the height of the marker)
+    const y = (pos.top() - viewHeight) + (marker.bottom - pos.top());
+    Scroll.to(pos.left(), y, doc);
+  }
+};
 
-  if (fireScrollIntoViewEvent(editor, elm, alignToTop)) {
+const intoWindowIfNeeded = (doc: SugarElement, scrollTop: number, viewHeight: number, marker: MarkerInfo, alignToTop?: boolean) => {
+  // above the screen, scroll to top by default
+  if (marker.pos.top() < scrollTop) {
+    scrollTo(marker, viewHeight, alignToTop !== false, doc);
+  // below the screen, scroll to bottom by default
+  } else if (marker.bottom > viewHeight + scrollTop) {
+    scrollTo(marker, viewHeight, alignToTop === true, doc);
+  }
+};
+
+const intoWindow = (doc: SugarElement, scrollTop: number, marker: MarkerInfo, alignToTop?: boolean) => {
+  const viewHeight = doc.dom().defaultView.innerHeight;
+  intoWindowIfNeeded(doc, scrollTop, viewHeight, marker, alignToTop);
+};
+
+const intoFrame = (editor: Editor, doc: SugarElement, scrollTop: number, marker: MarkerInfo, alignToTop?: boolean) => {
+  const frameViewHeight = doc.dom().defaultView.innerHeight; // height of iframe container
+
+  // If the position is outside the iframe viewport, scroll to it
+  intoWindowIfNeeded(doc, scrollTop, frameViewHeight, marker, alignToTop);
+
+  // If the new position is outside the window viewport, scroll to it
+  const op = OuterPosition.find(marker.element);
+  const viewTop = Scroll.get().top(); // abs top of screen
+  const viewBot = window.innerHeight + viewTop; // abs bottom of screen
+  if (op.top() < viewTop) {
+    Scroll.intoView(marker.element, alignToTop !== false);
+  } else if (op.top() > viewBot) {
+    Scroll.intoView(marker.element, alignToTop === true);
+  }
+};
+
+const rangeIntoWindow = (editor: Editor, rng: Range, alignToTop?: boolean) => withMarker(editor, Fun.curry(intoWindow), rng, alignToTop);
+const elementIntoWindow = (editor: Editor, element: HTMLElement, alignToTop?: boolean) => withElement(editor, elementMarker(element), Fun.curry(intoWindow), alignToTop);
+
+const rangeIntoFrame = (editor: Editor, rng: Range, alignToTop?: boolean) => withMarker(editor, Fun.curry(intoFrame, editor), rng, alignToTop);
+const elementIntoFrame = (editor: Editor, element: HTMLElement, alignToTop?: boolean) => withElement(editor, elementMarker(element), Fun.curry(intoFrame, editor), alignToTop);
+
+const elementIntoView = (editor: Editor, element: HTMLElement, alignToTop?: boolean) => {
+  if (fireScrollIntoViewEvent(editor, element, alignToTop)) {
     return;
   }
 
-  if (!NodeType.isElement(elm)) {
-    return;
-  }
-
-  if (alignToTop === false) {
-    offsetY = elm.offsetHeight;
-  }
-
-  if (root.nodeName !== 'BODY') {
-    const scrollContainer = editor.selection.getScrollContainer();
-    if (scrollContainer) {
-      y = getPos(elm).y - getPos(scrollContainer).y + offsetY;
-      viewPortH = scrollContainer.clientHeight;
-      viewPortY = scrollContainer.scrollTop;
-      if (y < viewPortY || y + 25 > viewPortY + viewPortH) {
-        scrollContainer.scrollTop = y < viewPortY ? y : y - viewPortH + 25;
-      }
-
-      return;
-    }
-  }
-
-  viewPort = dom.getViewPort(editor.getWin());
-  y = dom.getPos(elm).y + offsetY;
-  viewPortY = viewPort.y;
-  viewPortH = viewPort.h;
-  if (y < viewPort.y || y + 25 > viewPortY + viewPortH) {
-    editor.getWin().scrollTo(0, y < viewPortY ? y : y - viewPortH + 25);
-  }
+  const scroller = editor.inline ? elementIntoWindow : elementIntoFrame;
+  scroller(editor, element, alignToTop);
 };
 
-const getViewPortRect = (editor: Editor) => {
-  if (editor.inline) {
-    return editor.getBody().getBoundingClientRect();
-  } else {
-    const win = editor.getWin();
-
-    return {
-      left: 0,
-      right: win.innerWidth,
-      top: 0,
-      bottom: win.innerHeight,
-      width: win.innerWidth,
-      height: win.innerHeight
-    };
-  }
-};
-
-const scrollBy = (editor: Editor, dx: number, dy: number) => {
-  if (editor.inline) {
-    editor.getBody().scrollLeft += dx;
-    editor.getBody().scrollTop += dy;
-  } else {
-    editor.getWin().scrollBy(dx, dy);
-  }
-};
-
-const scrollRangeIntoView = (editor: Editor, rng: Range) => {
-  Arr.head(CaretPosition.fromRangeStart(rng).getClientRects()).each((rngRect) => {
-    const bodyRect = getViewPortRect(editor);
-    const overflow = getOverflow(bodyRect, rngRect);
-    const margin = 4;
-    const dx = overflow.x > 0 ? overflow.x + margin : overflow.x - margin;
-    const dy = overflow.y > 0 ? overflow.y + margin : overflow.y - margin;
-
-    scrollBy(editor, overflow.x !== 0 ? dx : 0, overflow.y !== 0 ? dy : 0);
-  });
+// This method is made to deal with the user pressing enter, it is not useful
+// if we want for example scroll in content after a paste event.
+const rangeIntoView = (editor: Editor, rng: Range, alignToTop?: boolean) => {
+  const scroller = editor.inline ? rangeIntoWindow : rangeIntoFrame;
+  scroller(editor, rng, alignToTop);
 };
 
 export default {
-  scrollElementIntoView,
-  scrollRangeIntoView
+  scrollElementIntoView: elementIntoView,
+  scrollRangeIntoView: rangeIntoView
 };

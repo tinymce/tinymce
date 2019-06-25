@@ -3,11 +3,12 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyLoader, TinyApis, TinyUi } from '@ephox/mcagar';
 
 import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
-import 'tinymce/themes/silver/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerSpanClassTest', (success, failure) => {
 
   SpellcheckerPlugin();
+  SilverTheme();
 
   const dict = [];
 

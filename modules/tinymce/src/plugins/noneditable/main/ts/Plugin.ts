@@ -8,8 +8,8 @@
 import PluginManager from 'tinymce/core/api/PluginManager';
 import FilterContent from './core/FilterContent';
 
-PluginManager.add('noneditable', function (editor) {
-  FilterContent.setup(editor);
-});
-
-export default function () { }
+export default function () {
+  PluginManager.add('noneditable', function (editor) {
+    FilterContent.setup(editor);
+  });
+}

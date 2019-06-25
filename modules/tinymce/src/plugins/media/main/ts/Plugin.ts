@@ -13,13 +13,13 @@ import ResolveName from './core/ResolveName';
 import Selection from './core/Selection';
 import Buttons from './ui/Buttons';
 
-PluginManager.add('media', function (editor) {
-  Commands.register(editor);
-  Buttons.register(editor);
-  ResolveName.setup(editor);
-  FilterContent.setup(editor);
-  Selection.setup(editor);
-  return Api.get(editor);
-});
-
-export default function () { }
+export default function () {
+  PluginManager.add('media', function (editor) {
+    Commands.register(editor);
+    Buttons.register(editor);
+    ResolveName.setup(editor);
+    FilterContent.setup(editor);
+    Selection.setup(editor);
+    return Api.get(editor);
+  });
+}

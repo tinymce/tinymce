@@ -127,6 +127,7 @@ import { FocusInsideModes } from '../keying/KeyingModeTypes';
 import * as SlotContainerTypes from '../ui/types/SlotContainerTypes';
 import * as SliderTypes from '../ui/types/SliderTypes';
 import * as FormTypes from '../ui/types/FormTypes';
+import { CustomList } from './ui/CustomList';
 
 type AlloyComponent = ComponentApi.AlloyComponent;
 type MementoRecord = Memento.MementoRecord;
@@ -190,6 +191,7 @@ export {
   ItemTypes,
   Button,
   Container,
+  CustomList,
   DataField,
   Dropdown,
   ExpandableForm,

@@ -59,10 +59,7 @@ module.exports = function (grunt) {
         core: {
           options: {
             treeshake: true,
-            name: 'tinymce',
             format: 'iife',
-            banner: '(function () {',
-            footer: '})();',
             onwarn: swag.onwarn,
             plugins: [
               swag.nodeResolve({
@@ -86,10 +83,7 @@ module.exports = function (grunt) {
         return {
           options: {
             treeshake: true,
-            name: name,
             format: 'iife',
-            banner: '(function () {',
-            footer: '})();',
             onwarn: swag.onwarn,
             plugins: [
               swag.nodeResolve({
@@ -107,17 +101,14 @@ module.exports = function (grunt) {
               swag.remapImports()
             ]
           },
-          files:[ { src: `lib/plugins/${name}/main/ts/Plugin.js`, dest: `js/tinymce/plugins/${name}/plugin.js` } ]
+          files:[ { src: `lib/plugins/${name}/main/ts/Main.js`, dest: `js/tinymce/plugins/${name}/plugin.js` } ]
         };
       }),
       gruntUtils.generate(themes, 'theme', (name) => {
         return {
           options: {
             treeshake: true,
-            name: name,
             format: 'iife',
-            banner: '(function () {',
-            footer: '})();',
             onwarn: swag.onwarn,
             plugins: [
               swag.nodeResolve({
@@ -138,7 +129,7 @@ module.exports = function (grunt) {
           },
           files:[
             {
-              src: `lib/themes/${name}/main/ts/Theme.js`,
+              src: `lib/themes/${name}/main/ts/Main.js`,
               dest: `js/tinymce/themes/${name}/theme.js`
             }
           ]
@@ -364,7 +355,7 @@ module.exports = function (grunt) {
             'js/tinymce/skins/*/fonts/readme.md',
             'readme.md'
           ],
-          to: 'tmp/tinymce_<%= pkg.version %>.zip',
+          to: 'dist/tinymce_<%= pkg.version %>.zip',
           dataFilter: (args) => {
             if (args.filePath.endsWith('.min.css')) {
               var sourcemap = args.data.lastIndexOf('/*# sourceMappingURL=');
@@ -393,33 +384,55 @@ module.exports = function (grunt) {
         options: {
           baseDir: 'tinymce',
           excludes: [
-            'src/**/dist',
-            'src/**/scratch',
-            'src/**/lib',
-            'src/**/dependency',
-            'js/tinymce/tinymce.full.min.js',
-            'js/tests/.jshintrc'
+            '../../modules/*/dist',
+            '../../modules/*/build',
+            '../../modules/*/scratch',
+            '../../modules/*/lib',
+            '../../modules/*/tmp',
+            '../../modules/tinymce/js/tinymce/tinymce.full.min.js',
+            '../../scratch',
+            '../../node_modules'
           ],
-          to: 'tmp/tinymce_<%= pkg.version %>_dev.zip'
+          to: 'dist/tinymce_<%= pkg.version %>_dev.zip'
         },
-        src: [
-          'config',
-          'src',
-          'js',
-          'tests',
-          'tools',
-          'changelog.txt',
-          'LICENSE.TXT',
-          'Gruntfile.js',
-          'readme.md',
-          'package.json',
-          'package-lock.json',
-          'yarn.lock',
-          '.eslintrc',
-          '.jscsrc',
-          '.jshintrc'
+        files: [
+          {
+            expand: true,
+            cwd: '../../',
+            src: [
+              'modules/*/src',
+              'modules/*/changelog.txt',
+              'modules/*/Gruntfile.js',
+              'modules/*/gulpfile.js',
+              'modules/*/readme.md',
+              'modules/*/README.md',
+              'modules/*/package.json',
+              'modules/*/tsconfig*.json',
+              'modules/*/tslint*.json',
+              'modules/*/webpack.config.js',
+              'modules/*/.stylelintignore',
+              'modules/*/.stylelintrc',
+              'modules/tinymce/tools',
+              '.yarnrc',
+              'LICENSE.TXT',
+              'readme.md',
+              'lerna.json',
+              'package.json',
+              'tsconfig*.json',
+              'tslint*.json',
+              'yarn.lock'
+            ]
+          },
+          {
+            expand: true,
+            cwd: '../../',
+            src: 'modules/tinymce/js',
+            dest: '/',
+            flatten: true
+          }
         ]
       },
+
       cdn: {
         options: {
           onBeforeSave: function (zip) {
@@ -470,7 +483,7 @@ module.exports = function (grunt) {
               ]
             },
           ],
-          to: 'tmp/tinymce_<%= pkg.version %>_cdn.zip'
+          to: 'dist/tinymce_<%= pkg.version %>_cdn.zip'
         },
         src: [
           'js/tinymce/jquery.tinymce.min.js',
@@ -586,7 +599,7 @@ module.exports = function (grunt) {
               zipUtils.generateIndex('themes', 'theme')
             );
           },
-          to: 'tmp/tinymce_<%= pkg.version %>_component.zip'
+          to: 'dist/tinymce_<%= pkg.version %>_component.zip'
         },
         src: [
           'js/tinymce/skins',
@@ -634,7 +647,7 @@ module.exports = function (grunt) {
             'js/**/*.map',
             'js/tinymce/tinymce.full.min.js'
           ],
-          outputDir: 'tmp'
+          outputDir: 'dist'
         },
         files: [
           { src: 'js/tinymce/langs', dest: '/content/scripts/tinymce/langs' },
@@ -676,7 +689,7 @@ module.exports = function (grunt) {
             'js/**/*.map',
             'js/tinymce/tinymce.full.min.js'
           ],
-          outputDir: 'tmp'
+          outputDir: 'dist'
         },
 
         files: [
@@ -722,11 +735,26 @@ module.exports = function (grunt) {
       }
     },
 
+    symlink: {
+      options: {
+        overwrite: true,
+        force: true
+      },
+      dist: {
+        src: 'dist',
+        dest: '../../dist'
+      },
+      js: {
+        src: 'js',
+        dest: '../../js'
+      }
+    },
+
     clean: {
       dist: ['js'],
       lib: ['lib'],
       scratch: ['scratch'],
-      release: ['tmp']
+      release: ['dist']
     },
 
     'bedrock-manual': {
@@ -795,8 +823,21 @@ module.exports = function (grunt) {
     }
   });
 
+  grunt.registerTask('symlink-dist', 'Links built dist content to the root directory', function () {
+    // Windows doesn't support symlinks, so copy instead of linking
+    if (process.platform === "win32") {
+      if (grunt.file.exists('../../dist')) grunt.file.delete('../../dist', { force: true });
+      if (grunt.file.exists('../../js')) grunt.file.delete('../../js', { force: true });
+      grunt.file.copy('dist', '../../dist');
+      grunt.file.copy('js', '../../js');
+      grunt.log.write('Copied 2 directories');
+    } else {
+      grunt.task.run('symlink');
+    }
+  });
+
   grunt.registerTask('version', 'Creates a version file', function () {
-    grunt.file.write('tmp/version.txt', BUILD_VERSION);
+    grunt.file.write('dist/version.txt', BUILD_VERSION);
   });
 
   require('load-grunt-tasks')(grunt, {
@@ -820,6 +861,7 @@ module.exports = function (grunt) {
     'clean:release',
     'moxiezip',
     'nugetpack',
+    'symlink-dist',
     'version'
   ]);
 
@@ -827,13 +869,17 @@ module.exports = function (grunt) {
     'globals',
     'unicode',
     'less',
-    'copy'
+    // TODO: Make webpack use the oxide CSS directly
+    // as well as making development easier, then we can update 'yarn dev' to run 'oxide-build' in parallel with 'tinymce-grunt dev'
+    // that will save 2-3 seconds on incremental builds
+    'copy:ui-skins',
+    'copy:content-skins'
   ]);
 
-  grunt.registerTask('unicode', ['uglify:emoticons-raw'])
+  grunt.registerTask('unicode', ['uglify:emoticons-raw']);
 
   grunt.registerTask('start', ['webpack-dev-server']);
 
-  grunt.registerTask('default', ['clean', 'prod']);
+  grunt.registerTask('default', ['clean:dist', 'prod']);
   grunt.registerTask('test', ['bedrock-auto:standard']);
 };

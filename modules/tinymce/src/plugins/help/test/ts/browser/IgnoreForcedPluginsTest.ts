@@ -5,7 +5,7 @@ import { Element } from '@ephox/sugar';
 
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import 'tinymce/themes/silver/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import PluginAssert from '../module/PluginAssert';
 
 import Selectors from '../module/Selectors';
@@ -13,6 +13,7 @@ import Selectors from '../module/Selectors';
 UnitTest.asynctest('browser.plugin.IgnoreForcedPluginsTest', (success, failure) => {
   HelpPlugin();
   LinkPlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     TinyUi(editor);

@@ -183,10 +183,10 @@
     rollup "^1.1.2"
     webpack-sources "^1.3.0"
 
-"@ephox/tslint-rules@^1.0.9":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@ephox/tslint-rules/-/tslint-rules-1.0.9.tgz#e13cf1720073f7f5f8b5ce1c613f8e27ddfdb361"
-  integrity sha512-jQgOcxKfRlCQVFp1u+VueRTX7jT/uHLMvOiG1R7f+mfp+ORHClc3KMYUNXGK12ChkErww1M721EHS5fsVBBziA==
+"@ephox/tslint-rules@^1.0.11":
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/@ephox/tslint-rules/-/tslint-rules-1.0.11.tgz#58ce16cd9e9bc11b037f09f46406a1c61d041dae"
+  integrity sha512-L4V+Ihm/4AdPDE32Jue+L7Z+Lr17LFw3utUJ2l8WjHQw5eN0lAAn19pJYT7jRikyBOUWMgE1YEt8oT0E0VdSWg==
   dependencies:
     "@types/node" "^11.9.4"
 
@@ -4484,6 +4484,11 @@ grunt-contrib-less@2.0.0:
     chalk "^1.0.0"
     less "^3.0.4"
     lodash "^4.17.10"
+
+grunt-contrib-symlink@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/grunt-contrib-symlink/-/grunt-contrib-symlink-1.0.0.tgz#c83616c035711a6c0062a2810cf1c77ffc6bed2b"
+  integrity sha1-yDYWwDVxGmwAYqKBDPHHf/xr7Ss=
 
 grunt-contrib-uglify@4.0.0:
   version "4.0.0"

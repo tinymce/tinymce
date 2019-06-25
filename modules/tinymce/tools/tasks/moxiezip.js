@@ -80,7 +80,7 @@ module.exports = function (grunt) {
 
     this.files.forEach(function (filePair) {
       filePair.src.forEach(function (src) {
-        process(src);
+        process(src, filePair.dest);
       });
     });
 

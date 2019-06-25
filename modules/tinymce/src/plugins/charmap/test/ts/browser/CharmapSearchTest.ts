@@ -1,15 +1,15 @@
-import 'tinymce/themes/silver/Theme';
-
 import { Assertions, Chain, FocusTools, Guard, Keyboard, Keys, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Attr, Body, Element } from '@ephox/sugar';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.charmap.SearchTest', (success, failure) => {
   // TODO: Replicate this test with only one category of characters.
   CharmapPlugin();
+  SilverTheme();
 
   // Move into shared library
   const cFakeEvent = function (name) {

@@ -21,9 +21,14 @@ const fireResizeContent = (editor) => {
   return editor.fire('ResizeContent');
 };
 
+const fireTextColorChange = (editor, data) => {
+  editor.fire('TextColorChange', data);
+};
+
 export default {
   fireSkinLoaded,
   fireResizeEditor,
   fireBeforeRenderUI,
-  fireResizeContent
+  fireResizeContent,
+  fireTextColorChange
 };

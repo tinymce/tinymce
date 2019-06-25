@@ -1,17 +1,17 @@
 import { Pipeline, Log } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 import { LegacyUnit } from '@ephox/mcagar';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Plugin from 'tinymce/plugins/lists/Plugin';
-import 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
-// FIX: Reinstate when inline mode is implemented (AP-194)
 UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteInlineTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
   Plugin();
+  SilverTheme();
 
   suite.test('TestCase-TBA: Lists: Backspace at beginning of LI on body UL', function (editor) {
     editor.focus();

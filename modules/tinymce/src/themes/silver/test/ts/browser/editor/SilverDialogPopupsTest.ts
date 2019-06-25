@@ -1,16 +1,16 @@
-import 'tinymce/themes/silver/Theme';
-
 import { FocusTools, Keyboard, Keys, Pipeline, UiFinder, Log, Chain, Mouse, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { document, ClientRect } from '@ephox/dom-globals';
+import { Result } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 import { Element, Body, SelectorExists } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-
-import { Result } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('Editor Dialog Popups Test', (success, failure) => {
+  SilverTheme();
+
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);

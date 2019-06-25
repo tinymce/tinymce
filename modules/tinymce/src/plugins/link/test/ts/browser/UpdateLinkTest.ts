@@ -1,16 +1,16 @@
-import 'tinymce/themes/silver/Theme';
-
 import { Pipeline, Log, FocusTools, Keyboard, Keys, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyDom } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 import { TestLinkUi } from '../module/TestLinkUi';
 
 UnitTest.asynctest('browser.tinymce.plugins.link.UpdateLinkTest', (success, failure) => {
 
   LinkPlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);

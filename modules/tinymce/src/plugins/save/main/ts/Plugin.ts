@@ -9,9 +9,9 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 import Commands from './api/Commands';
 import Buttons from './ui/Buttons';
 
-PluginManager.add('save', function (editor) {
-  Buttons.register(editor);
-  Commands.register(editor);
-});
-
-export default function () { }
+export default function () {
+  PluginManager.add('save', function (editor) {
+    Buttons.register(editor);
+    Commands.register(editor);
+  });
+}

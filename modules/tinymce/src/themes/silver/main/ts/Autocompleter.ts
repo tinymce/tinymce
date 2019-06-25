@@ -148,7 +148,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
 
   const doLookup = (): Option<AutocompleteLookupInfo> => {
     return activeAutocompleter.get().map((ac) => {
-      return getContext(editor.dom, editor.selection.getRng(), ac.triggerChar).map((newContext) => lookupWithContext(editor, getAutocompleters, newContext));
+      return getContext(editor.dom, editor.selection.getRng(), ac.triggerChar).bind((newContext) => lookupWithContext(editor, getAutocompleters, newContext));
     }).getOrThunk(() => lookup(editor, getAutocompleters));
   };
 

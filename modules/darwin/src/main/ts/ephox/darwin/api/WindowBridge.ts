@@ -1,93 +1,100 @@
+import { Element as DomElement, Window, ClientRect, DOMRect } from '@ephox/dom-globals';
+import { Fun, Obj, Option } from '@ephox/katamari';
+import { Element, RawRect, Scroll, Selection, SimRange, Situ, WindowSelection } from '@ephox/sugar';
+import { Situs } from '../selection/Situs';
 import Util from '../selection/Util';
-import { Fun } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { Selection } from '@ephox/sugar';
-import { Situ } from '@ephox/sugar';
-import { WindowSelection } from '@ephox/sugar';
-import { Scroll } from '@ephox/sugar';
 
+export interface WindowBridge {
+  elementFromPoint: (x: number, y: number) => Option<Element>;
+  getRect: (element: Element) => ClientRect | DOMRect;
+  getRangedRect: (start: Element, soffset: number, finish: Element, foffset: number) => Option<RawRect>;
+  getSelection: () => Option<SimRange>;
+  fromSitus: (situs: Situs) => SimRange;
+  situsFromPoint: (x: number, y: number) => Option<Situs>;
+  clearSelection: () => void;
+  setSelection: (sel: SimRange) => void;
+  setRelativeSelection: (start: Situ, finish: Situ) => void;
+  selectContents: (element: Element) => void;
+  getInnerHeight: () => number;
+  getScrollY: () => number;
+  scrollBy: (x: number, y: number) => void;
+}
 
-
-export default <any> function (win) {
-  var elementFromPoint = function (x, y) {
+export const WindowBridge = function (win: Window): WindowBridge {
+  const elementFromPoint = function (x: number, y: number) {
     return Element.fromPoint(Element.fromDom(win.document), x, y);
   };
 
-  var getRect = function (element) {
-    return element.dom().getBoundingClientRect();
+  const getRect = function (element: Element) {
+    return (element.dom() as DomElement).getBoundingClientRect();
   };
 
-  var getRangedRect = function (start, soffset, finish, foffset) {
-    var sel = Selection.exact(start, soffset, finish, foffset);
+  const getRangedRect = function (start: Element, soffset: number, finish: Element, foffset: number): Option<RawRect> {
+    const sel = Selection.exact(start, soffset, finish, foffset);
     return WindowSelection.getFirstRect(win, sel).map(function (structRect) {
       return Obj.map(structRect, Fun.apply);
     });
   };
 
-  var getSelection = function () {
+  const getSelection = function () {
     return WindowSelection.get(win).map(function (exactAdt) {
       return Util.convertToRange(win, exactAdt);
     });
   };
 
-  var fromSitus = function (situs) {
-    var relative = Selection.relative(situs.start(), situs.finish());
+  const fromSitus = function (situs: Situs) {
+    const relative = Selection.relative(situs.start(), situs.finish());
     return Util.convertToRange(win, relative);
   };
 
-  var situsFromPoint = function (x, y) {
+  const situsFromPoint = function (x: number, y: number) {
     return WindowSelection.getAtPoint(win, x, y).map(function (exact) {
-      return {
-        start: Fun.constant(Situ.on(exact.start(), exact.soffset())),
-        finish: Fun.constant(Situ.on(exact.finish(), exact.foffset()))
-      };
+      return Situs.create(exact.start(), exact.soffset(), exact.finish(), exact.foffset());
     });
   };
 
-  var clearSelection = function () {
+  const clearSelection = function () {
     WindowSelection.clear(win);
   };
 
-  var selectContents = function (element) {
+  const selectContents = function (element: Element) {
     WindowSelection.setToElement(win, element);
   };
 
-  var setSelection = function (sel) {
+  const setSelection = function (sel: SimRange) {
     WindowSelection.setExact(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset());
   };
 
-  var setRelativeSelection = function (start, finish) {
+  const setRelativeSelection = function (start: Situ, finish: Situ) {
     WindowSelection.setRelative(win, start, finish);
   };
 
-  var getInnerHeight = function () {
+  const getInnerHeight = function () {
     return win.innerHeight;
   };
 
-  var getScrollY = function () {
-    var pos = Scroll.get(Element.fromDom(win.document));
+  const getScrollY = function () {
+    const pos = Scroll.get(Element.fromDom(win.document));
     return pos.top();
   };
 
-  var scrollBy = function (x, y) {
+  const scrollBy = function (x: number, y: number) {
     Scroll.by(x, y, Element.fromDom(win.document));
   };
 
   return {
-    elementFromPoint: elementFromPoint,
-    getRect: getRect,
-    getRangedRect: getRangedRect,
-    getSelection: getSelection,
-    fromSitus: fromSitus,
-    situsFromPoint: situsFromPoint,
-    clearSelection: clearSelection,
-    setSelection: setSelection,
-    setRelativeSelection: setRelativeSelection,
-    selectContents: selectContents,
-    getInnerHeight: getInnerHeight,
-    getScrollY: getScrollY,
-    scrollBy: scrollBy
+    elementFromPoint,
+    getRect,
+    getRangedRect,
+    getSelection,
+    fromSitus,
+    situsFromPoint,
+    clearSelection,
+    setSelection,
+    setRelativeSelection,
+    selectContents,
+    getInnerHeight,
+    getScrollY,
+    scrollBy
   };
 };

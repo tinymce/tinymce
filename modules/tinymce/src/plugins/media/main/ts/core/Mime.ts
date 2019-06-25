@@ -8,6 +8,7 @@
 const guess = function (url: string) {
   const mimes = {
     mp3: 'audio/mpeg',
+    m4a: 'audio/x-m4a',
     wav: 'audio/wav',
     mp4: 'video/mp4',
     webm: 'video/webm',

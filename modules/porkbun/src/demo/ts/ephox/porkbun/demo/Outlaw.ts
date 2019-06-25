@@ -1,23 +1,35 @@
-import Event from 'ephox/porkbun/Event';
+import { Event, Bindable } from 'ephox/porkbun/Event';
 import Events from 'ephox/porkbun/Events';
-import { Struct } from '@ephox/katamari';
+import { Saloon, ShootEvent, DieEvent, Outlaw } from './Types';
+import { Singleton } from '@ephox/katamari';
+
+interface OutlawEvents {
+  registry: {
+    shoot: Bindable<ShootEvent>;
+    die: Bindable<DieEvent>;
+  };
+  trigger: {
+    shoot: (target: Outlaw) => void;
+    die: () => void;
+  };
+}
 
 declare const $: any;
 
-var create = function (name) {
-  var container = $('<div />');
+const create = function (name: string): Outlaw {
+  const container = $('<div />');
   container.css({  width: '1px dashed gray' });
 
-  var character = $('<div />');
+  const character = $('<div />');
   character.css({ width: '200px', float: 'left' });
 
-  var img = $('<img src="images/outlaw.jpg" />');
+  const img = $('<img src="images/outlaw.jpg" />');
   img.height('200px');
 
-  var actions = $('<div />');
+  const actions = $('<div />');
   actions.css({ float: 'right' });
 
-  var caption = $('<p>');
+  const caption = $('<p>');
   caption.text(name);
   caption.css({ textAlign: 'center', fontWeight: 'bold' });
 
@@ -25,12 +37,12 @@ var create = function (name) {
   character.append(img, caption);
   container.append(character);
 
-  var getElement = function () {
+  const getElement = function () {
     return container;
   };
 
-  var addAction = function (text, action) {
-    var button = $('<button />');
+  const addAction = function (text: string, action: () => void) {
+    const button = $('<button />');
     button.text(text);
     button.bind('click', function () {
       action();
@@ -39,51 +51,51 @@ var create = function (name) {
     actions.append(button);
   };
 
-  var events = Events.create({
+  const events = Events.create({
     shoot: Event(['target']),
     die:   Event([])
-  });
+  }) as OutlawEvents;
 
-  var establishment;
-  var enter = function (saloon) {
+  const establishment = Singleton.value<Saloon>();
+  const enter = function (saloon: Saloon) {
     saloon.enter(api);
-    establishment = saloon;
+    establishment.set(saloon);
   };
 
-  var leave = function () {
-    establishment.leave(api);
-    establishment = undefined;
+  const leave = function () {
+    establishment.on((e) => e.leave(api));
+    establishment.clear();
   };
 
-  var shoot = function (target) {
+  const shoot = function (target: Outlaw) {
     target.die();
     events.trigger.shoot(target);
   };
 
-  var die = function () {
+  const die = function () {
     img.attr('src', 'images/gravestone.jpg');
     actions.remove();
     events.trigger.die();
   };
 
-  var chase = function () {
+  const chase = function () {
     leave();
   };
 
-  var api = {
-    getElement: getElement,
-    addAction: addAction,
+  const api = {
+    getElement,
+    addAction,
     events: events.registry,
-    enter: enter,
-    leave: leave,
-    shoot: shoot,
-    die: die,
-    chase: chase
+    enter,
+    leave,
+    shoot,
+    die,
+    chase
   };
 
   return api;
 };
 
-export default <any> {
-  create: create
+export default {
+  create
 };

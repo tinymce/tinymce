@@ -6,7 +6,7 @@
  */
 
 import { Attachment } from '@ephox/alloy';
-import { Cell, Option } from '@ephox/katamari';
+import { Cell } from '@ephox/katamari';
 import { Body, DomEvent, Element, Position } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -17,8 +17,8 @@ import { setupReadonlyModeSwitch } from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
-import { identifyButtons } from '../ui/toolbar/Integration';
 import { iframe as loadIframeSkin } from './../ui/skin/Loader';
+import { setToolbar } from './Toolbars';
 
 const DOM = DOMUtils.DOM;
 
@@ -65,10 +65,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   Attachment.attachSystem(Body.body(), uiComponents.uiMothership);
 
   editor.on('init', () => {
-    OuterContainer.setToolbar(
-      uiComponents.outerContainer,
-      identifyButtons(editor, rawUiConfig, {backstage}, Option.none())
-    );
+    setToolbar(editor, uiComponents, rawUiConfig, backstage);
     lastToolbarWidth.set(editor.getWin().innerWidth);
 
     OuterContainer.setMenubar(

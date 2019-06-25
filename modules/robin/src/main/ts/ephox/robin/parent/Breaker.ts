@@ -1,13 +1,34 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
+import { Universe } from '@ephox/boss';
+import { Arr, Fun, Option, Struct } from '@ephox/katamari';
 
-var leftRight = Struct.immutable('left', 'right');
+interface Bisect<E> {
+  before: () => E[];
+  after: () => E[];
+}
 
-var bisect = function (universe, parent, child) {
-  var children = universe.property().children(parent);
-  var index = Arr.findIndex(children, Fun.curry(universe.eq, child));
+export interface LeftRight<E> {
+  left: () => E;
+  right: () => E;
+}
+
+export interface BrokenPathSplits<E> {
+  first: () => E;
+  second: () => E;
+}
+
+export interface BrokenPath<E> {
+  first: () => E;
+  second: () => Option<E>;
+  splits: () => BrokenPathSplits<E>[];
+}
+
+const leftRight: <E> (left: E, right: E) => LeftRight<E> = Struct.immutable('left', 'right');
+
+const brokenPath: <E> (first: E, second: Option<E>, splits: BrokenPathSplits<E>[]) => BrokenPath<E> = Struct.immutable('first', 'second', 'splits');
+
+const bisect = function <E, D>(universe: Universe<E, D>, parent: E, child: E): Option<Bisect<E>> {
+  const children = universe.property().children(parent);
+  const index = Arr.findIndex(children, Fun.curry(universe.eq, child));
   return index.map(function (ind) {
     return {
       before: Fun.constant(children.slice(0, ind)),
@@ -20,9 +41,9 @@ var bisect = function (universe, parent, child) {
  * Clone parent to the RIGHT and move everything after child in the parent element into
  * a clone of the parent (placed after parent).
  */
-var breakToRight = function (universe, parent, child) {
+const breakToRight = function <E, D>(universe: Universe<E, D>, parent: E, child: E) {
   return bisect(universe, parent, child).map(function (parts) {
-    var second = universe.create().clone(parent);
+    const second = universe.create().clone(parent);
     universe.insert().appendAll(second, parts.after());
     universe.insert().after(parent, second);
     return leftRight(parent, second);
@@ -33,10 +54,10 @@ var breakToRight = function (universe, parent, child) {
  * Clone parent to the LEFT and move everything before and including child into
  * the a clone of the parent (placed before parent)
  */
-var breakToLeft = function (universe, parent, child) {
+const breakToLeft = function <E, D>(universe: Universe<E, D>, parent: E, child: E) {
   return bisect(universe, parent, child).map(function (parts) {
-    var prior = universe.create().clone(parent);
-    universe.insert().appendAll(prior, parts.before().concat([ child ]));
+    const prior = universe.create().clone(parent);
+    universe.insert().appendAll(prior, parts.before().concat([child]));
     universe.insert().appendAll(parent, parts.after());
     universe.insert().before(parent, prior);
     return leftRight(prior, parent);
@@ -50,31 +71,27 @@ var breakToLeft = function (universe, parent, child) {
  *   second: the optional element representing second part of the top-level split if the breaking completed successfully to the top
  *   splits: a list of (Element, Element) pairs that represent the splits that have occurred on the way to the top.
  */
-var breakPath = function (universe, item, isTop, breaker) {
-  var result = Struct.immutable('first', 'second', 'splits');
+const breakPath = function <E, D>(universe: Universe<E, D>, item: E, isTop: (e: E) => boolean, breaker: (universe: Universe<E, D>, parent: E, child: E) => Option<LeftRight<E>>) {
 
-  var next = function (child, group, splits) {
-    var fallback = result(child, Option.none(), splits);
+  const next = function (child: E, group: Option<E>, splits: BrokenPathSplits<E>[]): BrokenPath<E> {
+    const fallback = brokenPath(child, Option.none(), splits);
     // Found the top, so stop.
-    if (isTop(child)) return result(child, group, splits);
-    else {
+    if (isTop(child)) {
+      return brokenPath(child, group, splits);
+    } else {
       // Split the child at parent, and keep going
-      return universe.property().parent(child).bind(function (parent) {
+      return universe.property().parent(child).bind(function (parent: E) {
         return breaker(universe, parent, child).map(function (breakage) {
-          var extra = [{ first: breakage.left, second: breakage.right }];
+          const extra = [{ first: breakage.left, second: breakage.right }];
           // Our isTop is based on the left-side parent, so keep it regardless of split.
-          var nextChild = isTop(parent) ? parent : breakage.left();
+          const nextChild = isTop(parent) ? parent : breakage.left();
           return next(nextChild, Option.some(breakage.right()), splits.concat(extra));
-        }).getOr(fallback);
-      });
+        });
+      }).getOr(fallback);
     }
   };
 
   return next(item, Option.none(), []);
 };
 
-export default <any> {
-  breakToLeft: breakToLeft,
-  breakToRight: breakToRight,
-  breakPath: breakPath
-};
+export { breakToLeft, breakToRight, breakPath };

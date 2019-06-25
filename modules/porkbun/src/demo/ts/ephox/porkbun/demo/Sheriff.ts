@@ -1,39 +1,39 @@
-import { Struct } from '@ephox/katamari';
+import { Saloon, ShootingEvent, Sherif } from './Types';
 
 declare const $: any;
 
-var create = function () {
-  var container = $('<div />');
+const create = function (): Sherif {
+  const container = $('<div />');
   container.css({
     float: 'left',
-    width: "200px",
+    width: '200px',
     textAlign: 'center'
   });
 
-  var img = $('<img src="images/chuck-norris.jpg" />');
+  const img = $('<img src="images/chuck-norris.jpg" />');
   img.height('200px');
 
-  var caption = $('<p>Sheriff</p>');
+  const caption = $('<p>Sheriff</p>');
   caption.css({ textAlign: 'center', fontWeight: 'bold' });
 
-  var chaseButton = $('<button disabled="true">Give chase</button>');
+  const chaseButton = $('<button disabled="true">Give chase</button>');
 
-  var actions = $('<div />');
+  const actions = $('<div />');
   actions.css({ float: 'right' });
 
   actions.append(chaseButton);
   caption.append(actions);
   container.append(img, caption);
 
-  var getElement = function () {
+  const getElement = function () {
     return container;
   };
 
-  var watch = function (establishment) {
+  const watch = function (establishment: Saloon) {
     establishment.events.shooting.bind(shooting);
   };
 
-  var shooting = function (event) {
+  const shooting = function (event: ShootingEvent) {
     chaseButton.attr('disabled', false);
     chaseButton.bind('click', function () {
       chaseButton.detach();
@@ -42,11 +42,11 @@ var create = function () {
   };
 
   return {
-    getElement: getElement,
-    watch: watch
+    getElement,
+    watch
   };
 };
 
-export default <any> {
-  create: create
+export default {
+  create
 };

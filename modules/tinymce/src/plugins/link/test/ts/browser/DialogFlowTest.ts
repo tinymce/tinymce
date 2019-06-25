@@ -1,5 +1,3 @@
-import 'tinymce/themes/silver/Theme';
-
 import {
   ApproxStructure,
   Assertions,
@@ -22,12 +20,14 @@ import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import { Attr } from '@ephox/sugar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 import { TestLinkUi } from '../module/TestLinkUi';
 
 UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, failure) => {
 
   LinkPlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);

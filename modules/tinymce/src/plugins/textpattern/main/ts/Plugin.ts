@@ -11,12 +11,12 @@ import Api from './api/Api';
 import * as Settings from './api/Settings';
 import Keyboard from './keyboard/Keyboard';
 
-PluginManager.add('textpattern', (editor) => {
-  const patternsState = Cell(Settings.getPatternSet(editor.settings));
+export default function () {
+  PluginManager.add('textpattern', (editor) => {
+    const patternsState = Cell(Settings.getPatternSet(editor.settings));
 
-  Keyboard.setup(editor, patternsState);
+    Keyboard.setup(editor, patternsState);
 
-  return Api.get(patternsState);
-});
-
-export default function () { }
+    return Api.get(patternsState);
+  });
+}

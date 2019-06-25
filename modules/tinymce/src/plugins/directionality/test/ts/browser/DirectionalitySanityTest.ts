@@ -3,12 +3,13 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import DirectionalityPlugin from 'tinymce/plugins/directionality/Plugin';
-import 'tinymce/themes/silver/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.directionality.DirectionalitySanityTest', (success, failure) => {
 
     DirectionalityPlugin();
+    SilverTheme();
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       const tinyUi = TinyUi(editor);

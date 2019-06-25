@@ -16,24 +16,23 @@ import DragDrop from './core/DragDrop';
 import PrePostProcess from './core/PrePostProcess';
 import Quirks from './core/Quirks';
 import Buttons from './ui/Buttons';
-import Editor from 'tinymce/core/api/Editor';
-import Settings from 'tinymce/plugins/paste/api/Settings';
+import Settings from './api/Settings';
 
-PluginManager.add('paste', function (editor: Editor) {
-  if (DetectProPlugin.hasProPlugin(editor) === false) {
-    const draggingInternallyState = Cell(false);
-    const pasteFormat = Cell(Settings.isPasteAsTextEnabled(editor) ? 'text' : 'html');
-    const clipboard = Clipboard(editor, pasteFormat);
-    const quirks = Quirks.setup(editor);
+export default function () {
+  PluginManager.add('paste', function (editor) {
+    if (DetectProPlugin.hasProPlugin(editor) === false) {
+      const draggingInternallyState = Cell(false);
+      const pasteFormat = Cell(Settings.isPasteAsTextEnabled(editor) ? 'text' : 'html');
+      const clipboard = Clipboard(editor, pasteFormat);
+      const quirks = Quirks.setup(editor);
 
-    Buttons.register(editor, clipboard);
-    Commands.register(editor, clipboard);
-    PrePostProcess.setup(editor);
-    CutCopy.register(editor);
-    DragDrop.setup(editor, clipboard, draggingInternallyState);
+      Buttons.register(editor, clipboard);
+      Commands.register(editor, clipboard);
+      PrePostProcess.setup(editor);
+      CutCopy.register(editor);
+      DragDrop.setup(editor, clipboard, draggingInternallyState);
 
-    return Api.get(clipboard, quirks);
-  }
-});
-
-export default function () { }
+      return Api.get(clipboard, quirks);
+    }
+  });
+}

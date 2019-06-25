@@ -1,10 +1,8 @@
-const noop = function (...args: any[]) { };
+const noop: (...args: any[]) => void
+= () => { };
 
-const noarg = function <T> (f: () => T) {
-  return function (...args: any[]) {
-    return f();
-  };
-};
+const noarg: <T>(f: () => T) => (...args: any[]) => void
+= (f) => () => f();
 
 const compose = function <T extends any[], U, V> (fa: (v: U) => V, fb: (...x: T) => U): (...x: T) => V {
   return function (...args: T) {
@@ -12,7 +10,7 @@ const compose = function <T extends any[], U, V> (fa: (v: U) => V, fb: (...x: T)
   };
 };
 
-const constant = function <T>(value?: T): (...args: any[]) => T {
+const constant = function <T>(value: T): () => T {
   return function () {
     return value;
   };
@@ -64,8 +62,8 @@ const call = function(f: () => any) {
   f();
 };
 
-const never = constant<false>(false);
-const always = constant<true>(true);
+const never = constant<false>(false) as (...args) => false;
+const always = constant<true>(true) as (...args) => true;
 
 export {
   noop,

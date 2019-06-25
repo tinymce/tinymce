@@ -11,30 +11,27 @@ import ThemeManager, { Theme } from 'tinymce/core/api/ThemeManager';
 import NotificationManagerImpl from './alien/NotificationManagerImpl';
 import { Autocompleter } from './Autocompleter';
 import Render, { RenderInfo } from './Render';
-import FormatControls from './ui/core/FormatControls';
 import WindowManager from './ui/dialog/WindowManager';
 
-ThemeManager.add('silver', (editor): Theme => {
-  const { mothership, uiMothership, backstage, renderUI, getUi }: RenderInfo = Render.setup(editor);
+export default function () {
+  ThemeManager.add('silver', (editor): Theme => {
+    const { mothership, uiMothership, backstage, renderUI, getUi }: RenderInfo = Render.setup(editor);
 
-  FormatControls.setup(editor, backstage);
+    Debugging.registerInspector(Id.generate('silver-demo'), mothership);
+    Debugging.registerInspector(Id.generate('silver-ui-demo'), uiMothership);
 
-  Debugging.registerInspector(Id.generate('silver-demo'), mothership);
-  Debugging.registerInspector(Id.generate('silver-ui-demo'), uiMothership);
+    Autocompleter.register(editor, backstage.shared);
 
-  Autocompleter.register(editor, backstage.shared);
+    const windowMgr = WindowManager.setup({ editor, backstage });
 
-  const windowMgr = WindowManager.setup({ editor, backstage });
-
-  return {
-    renderUI,
-    getWindowManagerImpl: Fun.constant(windowMgr),
-    getNotificationManagerImpl: () => {
-      return NotificationManagerImpl(editor, {backstage}, uiMothership);
-    },
-    // TODO: move to editor.ui namespace
-    ui: getUi()
-  };
-});
-
-export default function () { }
+    return {
+      renderUI,
+      getWindowManagerImpl: Fun.constant(windowMgr),
+      getNotificationManagerImpl: () => {
+        return NotificationManagerImpl(editor, {backstage}, uiMothership);
+      },
+      // TODO: move to editor.ui namespace
+      ui: getUi()
+    };
+  });
+}

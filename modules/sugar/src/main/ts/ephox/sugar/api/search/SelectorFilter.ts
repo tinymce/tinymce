@@ -12,7 +12,7 @@ const all = function (selector: string) {
 // Traverse should also do this (but probably not by default).
 //
 
-const ancestors = function (scope: Element, selector: string, isRoot?) {
+const ancestors = function (scope: Element, selector: string, isRoot?: (e: Element) => boolean) {
   // It may surprise you to learn this is exactly what JQuery does
   // TODO: Avoid all this wrapping and unwrapping
   return PredicateFilter.ancestors(scope, function (e) {

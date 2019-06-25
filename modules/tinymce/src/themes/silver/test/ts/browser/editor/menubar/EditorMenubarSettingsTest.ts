@@ -1,14 +1,14 @@
 import { Log, Pipeline, UiFinder, NamedChain, Assertions, ApproxStructure } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Editor as McagarEditor } from '@ephox/mcagar';
-
-import 'tinymce/themes/silver/Theme';
-import { Body } from '@ephox/sugar';
 import { Result, Arr, Id } from '@ephox/katamari';
+import { Editor as McagarEditor } from '@ephox/mcagar';
+import { Body } from '@ephox/sugar';
+
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import { cExtractOnlyOne, cCountNumber } from '../../../module/UiChainUtils';
 
 UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
-  // Theme();
+  SilverTheme();
 
   const cCreateEditorWithMenubar = (menubar) => McagarEditor.cFromSettings({
     menubar,

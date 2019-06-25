@@ -1,17 +1,18 @@
 import { DomUniverse } from '@ephox/boss';
+import { Element } from '@ephox/sugar';
 import TextZone from '../general/TextZone';
 
-var universe = DomUniverse();
+const universe = DomUniverse();
 
-var single = function (element, envLang, onlyLang) {
+const single = function (element: Element, envLang: string, onlyLang: string) {
   return TextZone.single(universe, element, envLang, onlyLang);
 };
 
-var range = function (start, soffset, finish, foffset, envLang, onlyLang) {
+const range = function (start: Element, soffset: number, finish: Element, foffset: number, envLang: string, onlyLang: string) {
   return TextZone.range(universe, start, soffset, finish, foffset, envLang, onlyLang);
 };
 
-export default <any> {
-  single: single,
-  range: range
+export default {
+  single,
+  range
 };

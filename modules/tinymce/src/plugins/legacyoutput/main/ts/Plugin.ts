@@ -15,8 +15,8 @@ import Formats from './core/Formats';
  * @private
  */
 
-PluginManager.add('legacyoutput', (editor) => {
-  Formats.setup(editor);
-});
-
-export default function () { }
+export default function () {
+  PluginManager.add('legacyoutput', (editor) => {
+    Formats.setup(editor);
+  });
+}

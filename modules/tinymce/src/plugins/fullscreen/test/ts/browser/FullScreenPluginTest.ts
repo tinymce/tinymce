@@ -1,13 +1,13 @@
 import { UiFinder, Assertions, Chain, Guard, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { TinyLoader } from '@ephox/mcagar';
-
-import Plugin from 'tinymce/plugins/fullscreen/Plugin';
-import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import 'tinymce/themes/silver/Theme';
-import { Element, Body, Attr, SelectorFind, Html } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
+import { TinyLoader } from '@ephox/mcagar';
+import { Element, Body, Attr, SelectorFind, Html } from '@ephox/sugar';
+
+import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
+import LinkPlugin from 'tinymce/plugins/link/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 export const cWaitForDialog = (ariaLabel) =>
   Chain.control(
@@ -29,7 +29,8 @@ export const cWaitForDialog = (ariaLabel) =>
 UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', (success, failure) => {
 
   LinkPlugin();
-  Plugin();
+  FullscreenPlugin();
+  SilverTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const lastEventArgs = Cell(null);

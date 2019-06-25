@@ -3,12 +3,12 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import InsertDatetimePlugin from 'tinymce/plugins/insertdatetime/Plugin';
-import 'tinymce/themes/silver/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest(
-  'browser.tinymce.plugins.insertdatetime.InsertDatetimeSanityTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.insertdatetime.InsertDatetimeSanityTest', (success, failure) => {
 
     InsertDatetimePlugin();
+    SilverTheme();
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       const tinyUi = TinyUi(editor);

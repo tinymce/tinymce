@@ -1,9 +1,8 @@
 import { Arr } from '@ephox/katamari';
 import Element from '../../api/node/Element';
 import * as Node from '../../api/node/Node';
-import * as Selection from '../../api/selection/Selection';
-import Situ from '../../api/selection/Situ';
-import { Range } from '@ephox/dom-globals';
+import { Selection } from '../../api/selection/Selection';
+import { Situ } from '../../api/selection/Situ';
 
 const beforeSpecial = function (element: Element, offset: number) {
   // From memory, we don't want to use <br> directly on Firefox because it locks the keyboard input.
@@ -11,10 +10,16 @@ const beforeSpecial = function (element: Element, offset: number) {
   // If the offset is 0, use before. If the offset is 1, use after.
   // TBIO-3889: Firefox Situ.on <input> results in a child of the <input>; Situ.before <input> results in platform inconsistencies
   const name = Node.name(element);
-  if ('input' === name) { return Situ.after(element); } else if (!Arr.contains([ 'br', 'img' ], name)) { return Situ.on(element, offset); } else { return offset === 0 ? Situ.before(element) : Situ.after(element); }
+  if ('input' === name) {
+    return Situ.after(element);
+  } else if (!Arr.contains(['br', 'img'], name)) {
+    return Situ.on(element, offset);
+  } else {
+    return offset === 0 ? Situ.before(element) : Situ.after(element);
+  }
 };
 
-const preprocessRelative = function (startSitu, finishSitu) {
+const preprocessRelative = function (startSitu: Situ, finishSitu: Situ) {
   const start = startSitu.fold(Situ.before, beforeSpecial, Situ.after);
   const finish = finishSitu.fold(Situ.before, beforeSpecial, Situ.after);
   return Selection.relative(start, finish);
@@ -26,9 +31,9 @@ const preprocessExact = function (start: Element, soffset: number, finish: Eleme
   return Selection.relative(startSitu, finishSitu);
 };
 
-const preprocess = function (selection) {
+const preprocess = function (selection: Selection) {
   return selection.match({
-    domRange (rng: Range) {
+    domRange(rng) {
       const start = Element.fromDom(rng.startContainer);
       const finish = Element.fromDom(rng.endContainer);
       return preprocessExact(start, rng.startOffset, finish, rng.endOffset);

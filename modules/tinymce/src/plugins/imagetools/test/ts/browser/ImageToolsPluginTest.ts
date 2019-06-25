@@ -3,18 +3,18 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import URI from 'tinymce/core/api/util/URI';
-import Plugin from 'tinymce/plugins/imagetools/Plugin';
+import ImagetoolsPlugin from 'tinymce/plugins/imagetools/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 import ImageUtils from '../module/test/ImageUtils';
-
-import 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (success, failure) => {
   const uploadHandlerState = ImageUtils.createStateContainer();
 
   const srcUrl = '/project/tinymce/src/plugins/imagetools/demo/img/dogleft.jpg';
 
-  Plugin();
+  ImagetoolsPlugin();
+  SilverTheme();
 
   const sAssertUploadFilename = function (expected) {
     return Logger.t('Assert uploaded filename', Step.sync(function () {

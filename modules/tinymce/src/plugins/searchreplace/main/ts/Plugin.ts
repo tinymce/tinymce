@@ -11,13 +11,13 @@ import Api from './api/Api';
 import Commands from './api/Commands';
 import Buttons from './ui/Buttons';
 
-PluginManager.add('searchreplace', function (editor) {
-  const currentIndexState = Cell(-1);
+export default function () {
+  PluginManager.add('searchreplace', function (editor) {
+    const currentIndexState = Cell(-1);
 
-  Commands.register(editor, currentIndexState);
-  Buttons.register(editor, currentIndexState);
+    Commands.register(editor, currentIndexState);
+    Buttons.register(editor, currentIndexState);
 
-  return Api.get(editor, currentIndexState);
-});
-
-export default function () { }
+    return Api.get(editor, currentIndexState);
+  });
+}

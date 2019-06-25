@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.13.0] - 2019-06-06
+
+### Added
+- Added new Custom List ui component.
+
 # [4.12.1] - 2019-05-17
 
 ### Added

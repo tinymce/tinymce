@@ -1,8 +1,6 @@
 {
   "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
-    "noUnusedLocals": false,
-    "strict": false,
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
@@ -24,7 +22,6 @@
     { "path": "../katamari" },
     { "path": "../phoenix" },
     { "path": "../polaris" },
-    { "path": "../sand" },
     { "path": "../sugar" },
   ]
 }

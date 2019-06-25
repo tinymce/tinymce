@@ -45,7 +45,9 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
         doc.close();
 
       } else {
-        Attr.set(frameComponent.element(), 'src', 'data:text/html;charset=utf-8,' + encodeURIComponent(html));
+        // TINY-3769: We need to use srcdoc here, instead of src with a data URI, otherwise browsers won't retain the Origin.
+        // See https://bugs.chromium.org/p/chromium/issues/detail?id=58999#c11
+        Attr.set(frameComponent.element(), 'srcdoc', html);
       }
       cachedValue.set(html);
     }

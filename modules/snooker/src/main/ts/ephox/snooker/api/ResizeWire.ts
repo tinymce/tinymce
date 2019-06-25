@@ -8,7 +8,13 @@ import { Element, Location, Position } from '@ephox/sugar';
 //       resize bars ('parent') and so will listen to events from both (eg, iframe mode)
 // origin: the offset for the point to display the bars in the appropriate position
 
-const only = function (element) {
+export interface ResizeWire {
+  parent: () => Element;
+  view: () => Element;
+  origin: () => Position;
+}
+
+const only = function (element: Element): ResizeWire {
   // If element is a 'document', use the document element ('HTML' tag) for appending.
   const parent = Option.from(element.dom().documentElement).map(Element.fromDom).getOr(element);
   return {
@@ -18,7 +24,7 @@ const only = function (element) {
   };
 };
 
-const detached = function (editable, chrome) {
+const detached = function (editable: Element, chrome: Element): ResizeWire {
   const origin = Fun.curry(Location.absolute, chrome);
   return {
     parent: Fun.constant(chrome),
@@ -27,7 +33,7 @@ const detached = function (editable, chrome) {
   };
 };
 
-const body = function (editable, chrome) {
+const body = function (editable: Element, chrome: Element): ResizeWire {
   return {
     parent: Fun.constant(chrome),
     view: Fun.constant(editable),
@@ -35,7 +41,7 @@ const body = function (editable, chrome) {
   };
 };
 
-export default {
+export const ResizeWire = {
   only,
   detached,
   body

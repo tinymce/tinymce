@@ -1,18 +1,37 @@
-import { AriaRegister } from '@ephox/echo';
+import { AriaRegister, AriaGrid } from '@ephox/echo';
 import { Arr, Fun } from '@ephox/katamari';
-import { Event, Events } from '@ephox/porkbun';
+import { Event, Events, Bindable } from '@ephox/porkbun';
 import { Attr, Class, Classes, DomEvent, Element, Focus, Insert, InsertAll, MouseEvent, Remove } from '@ephox/sugar';
-import Structs from '../api/Structs';
+import * as Structs from '../api/Structs';
 import Styles from '../style/Styles';
-import Util from '../util/Util';
+import * as Util from '../util/Util';
 import PickerLookup from './PickerLookup';
 import PickerStyles from './PickerStyles';
-import Redimension from './Redimension';
+import { Redimension, ATableApi } from './Redimension';
+import { SizingSettings } from './Sizing';
+import { MouseEvent as DomMouseEvent } from '@ephox/dom-globals';
+import { PickerDirection } from '../api/PickerDirection';
 
-export default function (direction, settings, helpReference) {
+export interface PickerSelectEvent {
+  rows: () => number;
+  cols: () => number;
+  rowHeaders: () => number;
+  columnHeaders: () => number;
+}
+
+interface PickerEvents {
+  registry: {
+    select: Bindable<PickerSelectEvent>
+  };
+  trigger: {
+    select: (rows: number, cols: number, rowHeaders: number, columnHeaders: number) => void;
+  };
+}
+
+export const PickerUi = function (direction: PickerDirection, settings: SizingSettings, helpReference: AriaGrid) {
   const events = Events.create({
     select: Event(['rows', 'cols', 'rowHeaders', 'columnHeaders'])
-  });
+  }) as PickerEvents;
 
   const table = Element.fromTag('table');
   AriaRegister.presentation(table);
@@ -34,7 +53,7 @@ export default function (direction, settings, helpReference) {
     Remove.remove(table);
   };
 
-  const setSize = function (numRows, numCols) {
+  const setSize = function (numRows: number, numCols: number) {
     size = { width: numCols, height: numRows };
     recreate();
   };
@@ -73,17 +92,17 @@ export default function (direction, settings, helpReference) {
     return setSelection(selected.rows(), selected.columns());
   };
 
-  const setHeaders = function (headerRows, headerCols) {
+  const setHeaders = function (headerRows: number, headerCols: number) {
     Attr.set(table, 'data-picker-header-row', headerRows);
     Attr.set(table, 'data-picker-header-col', headerCols);
   };
 
-  const inHeader = function (row, column) {
+  const inHeader = function (row: number, column: number) {
     const headers = PickerLookup.grid(table, 'data-picker-header-row', 'data-picker-header-col');
     return row < headers.rows() || column < headers.columns();
   };
 
-  const setSelection = function (numRows, numCols) {
+  const setSelection = function (numRows: number, numCols: number) {
     const allCells = PickerLookup.cells(table);
     Arr.each(allCells, function (cell) {
       Class.remove(cell, Styles.resolve('picker-selected'));
@@ -112,7 +131,7 @@ export default function (direction, settings, helpReference) {
     return Structs.grid(rows, cols);
   };
 
-  const sizeApi = {
+  const sizeApi: ATableApi = {
     element: Fun.constant(table),
     setSelection,
     setSize
@@ -123,14 +142,14 @@ export default function (direction, settings, helpReference) {
     redimension.mousemove(sizeApi, Structs.grid(size.height, size.width), event.raw().pageX, event.raw().pageY);
   });
 
-  const resize = function (xDelta, yDelta) {
+  const resize = function (xDelta: number, yDelta: number) {
     redimension.manual(sizeApi, getSelection(), xDelta, yDelta);
   };
 
   // Firefox fires mouse events when you press space on a button, so make sure we have a real click
   const clicker = MouseEvent.realClick.bind(table, function (event) {
     execute();
-    event.raw().preventDefault();
+    (event.raw() as DomMouseEvent).preventDefault();
   });
 
   const execute = function () {
@@ -163,4 +182,4 @@ export default function (direction, settings, helpReference) {
     sendDown: Fun.curry(resize, 0, +1),
     sendExecute: execute
   };
-}
+};

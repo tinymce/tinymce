@@ -1,12 +1,15 @@
 import { DomUniverse } from '@ephox/boss';
+import { Element } from '@ephox/sugar';
 import SmartSelect from '../general/SmartSelect';
 
-var universe = DomUniverse();
+const universe = DomUniverse();
 
-var word = function (element, offset, optimise) {
-  return SmartSelect.word(universe, element, offset, optimise);
+// The optimise parameter is no longer required in this API.
+// Remove optimise as a code quality task: TBIO-4356
+const word = function (element: Element, offset: number, optimise?: any) {
+  return SmartSelect.word(universe, element, offset);
 };
 
-export default <any> {
-  word: word
+export default {
+  word
 };

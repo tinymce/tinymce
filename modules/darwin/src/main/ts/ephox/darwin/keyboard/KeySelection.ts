@@ -1,13 +1,13 @@
-import Responses from '../api/Responses';
+import { Option } from '@ephox/katamari';
+import { Awareness, Compare, Element, SelectorFind } from '@ephox/sugar';
+import { Response } from '../selection/Response';
 import CellSelection from '../selection/CellSelection';
 import Util from '../selection/Util';
-import { Option } from '@ephox/katamari';
-import { Compare } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
-import { Awareness } from '@ephox/sugar';
+import { SelectionAnnotation } from '../api/SelectionAnnotation';
+import { IdentifiedExt } from '../selection/Identified';
 
 // Based on a start and finish, select the appropriate box of cells
-var sync = function (container, isRoot, start, soffset, finish, foffset, selectRange) {
+const sync = function (container: Element, isRoot: (element: Element) => boolean, start: Element, soffset: number, finish: Element, foffset: number, selectRange: (container: Element, boxes: Element[], start: Element, finish: Element) => void) {
   if (!(Compare.eq(start, finish) && soffset === foffset)) {
     return SelectorFind.closest(start, 'td,th', isRoot).bind(function (s) {
       return SelectorFind.closest(finish, 'td,th', isRoot).bind(function (f) {
@@ -15,32 +15,32 @@ var sync = function (container, isRoot, start, soffset, finish, foffset, selectR
       });
     });
   } else {
-    return Option.none();
+    return Option.none<Response>();
   }
 };
 
 // If the cells are different, and there is a rectangle to connect them, select the cells.
-var detect = function (container, isRoot, start, finish, selectRange) {
-  if (! Compare.eq(start, finish)) {
+const detect = function (container: Element, isRoot: (element: Element) => boolean, start: Element, finish: Element, selectRange: (container: Element, boxes: Element[], start: Element, finish: Element) => void) {
+  if (!Compare.eq(start, finish)) {
     return CellSelection.identify(start, finish, isRoot).bind(function (cellSel) {
-      var boxes = cellSel.boxes().getOr([]);
+      const boxes = cellSel.boxes().getOr([]);
       if (boxes.length > 0) {
         selectRange(container, boxes, cellSel.start(), cellSel.finish());
-        return Option.some(Responses.response(
+        return Option.some(Response.create(
           Option.some(Util.makeSitus(start, 0, start, Awareness.getEnd(start))),
           true
         ));
       } else {
-        return Option.none();
+        return Option.none<Response>();
       }
     });
   } else {
-    return Option.none();
+    return Option.none<Response>();
   }
 };
 
-var update = function (rows, columns, container, selected, annotations) {
-  var updateSelection = function (newSels) {
+const update = function (rows: number, columns: number, container: Element, selected: Element[], annotations: SelectionAnnotation) {
+  const updateSelection = function (newSels: IdentifiedExt) {
     annotations.clear(container);
     annotations.selectRange(container, newSels.boxes(), newSels.start(), newSels.finish());
     return newSels.boxes();
@@ -49,8 +49,8 @@ var update = function (rows, columns, container, selected, annotations) {
   return CellSelection.shiftSelection(selected, rows, columns, annotations.firstSelectedSelector(), annotations.lastSelectedSelector()).map(updateSelection);
 };
 
-export default <any> {
-  sync: sync,
-  detect: detect,
-  update: update
+export default {
+  sync,
+  detect,
+  update
 };

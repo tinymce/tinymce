@@ -1,14 +1,15 @@
 import { Pipeline, Step, FocusTools, Mouse, Waiter, UiFinder, Assertions, Log, Logger, GeneralSteps } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { TinyLoader } from '@ephox/mcagar';
-
-import 'tinymce/themes/silver/Theme';
-
-import { Element, SelectorFilter } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
+import { TinyLoader } from '@ephox/mcagar';
+import { Element, SelectorFilter } from '@ephox/sugar';
+
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 
 UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
+  SilverTheme();
+
   // mutation is yummy
   let currentColor = '';
 

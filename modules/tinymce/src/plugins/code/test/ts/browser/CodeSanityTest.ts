@@ -4,12 +4,13 @@ import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import CodePlugin from 'tinymce/plugins/code/Plugin';
-import 'tinymce/themes/silver/Theme';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, failure) => {
 
   CodePlugin();
+  SilverTheme();
 
   const dialogSelector = 'div.tox-dialog';
   const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Source code"]';

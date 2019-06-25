@@ -26,7 +26,7 @@ UnitTest.test('Function tests', function() {
     assert.eq([1, 2, 4], Fun.identity([1, 2, 4]));
     assert.eq({a: 'a', b: 'b'}, Fun.identity({a: 'a', b: 'b'}));
 
-    assert.eq(undefined, Fun.constant()());
+    assert.eq(undefined, Fun.constant(undefined)());
     assert.eq(10, Fun.constant(10)());
     assert.eq({a: 'a'}, Fun.constant({a: 'a'})());
 

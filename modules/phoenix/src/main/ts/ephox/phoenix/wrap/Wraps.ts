@@ -8,7 +8,7 @@ export const Wraps = function <E, D>(universe: Universe<E, D>, item: E): Wrapter
   };
 
   return {
-    element: Fun.constant(item) as () => E,
+    element: Fun.constant(item),
     wrap
   };
 };

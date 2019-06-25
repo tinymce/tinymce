@@ -1,6 +1,6 @@
 import { Option } from '@ephox/katamari';
 
-export interface Universe<E,D> {
+export interface Universe<E, D> {
   up: () => {
     selector: (scope: E, selector: string, isRoot?: (e: E) => boolean) => Option<E>;
     closest: (scope: E, selector: string, isRoot?: (e: E) => boolean) => Option<E>;

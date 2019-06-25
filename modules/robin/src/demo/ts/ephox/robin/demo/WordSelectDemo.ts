@@ -3,27 +3,29 @@ import { Fun } from '@ephox/katamari';
 import { DomEvent, Element, Insert, SelectorFind } from '@ephox/sugar';
 import DomSmartSelect from 'ephox/robin/api/dom/DomSmartSelect';
 
-var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
+const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
-var editor = Element.fromHtml('<div contenteditable="true" style="width: 500px; height: 300px; border: 1px solid black;">' +
+const editor = Element.fromHtml('<div contenteditable="true" style="width: 500px; height: 300px; border: 1px solid black;">' +
   'This is <span style="color: red;">som</span>eth<b>ing that you should</b> see.<img src="http://www.google.com/google.jpg">The<br>dog</div>');
 
 Insert.append(ephoxUi, editor);
 
-var select = function (s, so, f, fo) {
-  var selection = window.getSelection();
+const select = function (s: Element, so: number, f: Element, fo: number) {
+  const selection = window.getSelection();
   selection.removeAllRanges();
-  var range = document.createRange();
+  const range = document.createRange();
   range.setStart(s.dom(), so);
   range.setEnd(f.dom(), fo);
+  // tslint:disable-next-line:no-console
   console.log('setting range: ', s.dom(), so, f.dom(), fo);
   selection.addRange(range);
 };
 
-var getSelection = function () {
-  var selection = window.getSelection();
+const getSelection = function () {
+  const selection = window.getSelection();
   if (selection.rangeCount > 0) {
-    var range = selection.getRangeAt(0);
+    const range = selection.getRangeAt(0);
+    // tslint:disable-next-line:no-console
     console.log('range: ', range);
     return {
       startContainer: Fun.constant(Element.fromDom(range.startContainer)),
@@ -38,9 +40,9 @@ var getSelection = function () {
 };
 
 DomEvent.bind(editor, 'click', function (event) {
-  var current = getSelection();
+  const current = getSelection();
   if (current !== null && current.collapsed()) {
-    var wordRange = DomSmartSelect.word(current.startContainer(), current.startOffset(), Fun.constant(false));
+    const wordRange = DomSmartSelect.word(current.startContainer(), current.startOffset(), Fun.constant(false));
     wordRange.each(function (wr) {
       select(wr.startContainer(), wr.startOffset(), wr.endContainer(), wr.endOffset());
     });

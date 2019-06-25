@@ -72,6 +72,15 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
         sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Times')
       ])),
 
+      Logger.t('Font family and font size on paragraph with legacy font elements', GeneralSteps.sequence([
+        tinyApis.sSetRawContent('<p><font face="Times" size="1">a</font></p>'),
+        tinyApis.sFocus,
+        tinyApis.sSetCursor([0, 0, 0], 0),
+        tinyApis.sNodeChanged,
+        sAssertSelectBoxDisplayValue(editor, 'Font sizes', '8pt'),
+        sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Times')
+      ])),
+
       Logger.t('System font stack variants on a paragraph show "System Font" as the font name', GeneralSteps.sequence([
         tinyApis.sSetContent(Arr.foldl(systemFontStackVariants, (acc, font) => {
           return acc + '<p style="font-family: ' + font.replace(/"/g, '\'') + '"></p>';
@@ -94,6 +103,6 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
       '.mce-content-body p { font-family: Arial; font-size: 12px; }',
       '.mce-content-body h1 { font-family: Arial; font-size: 32px; }'
     ].join(''),
-    fontsize_formats: '12pt 12.75pt 13pt 24pt 32pt'
+    fontsize_formats: '8pt=1 12pt 12.75pt 13pt 24pt 32pt'
   }, success, failure);
 });

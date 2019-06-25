@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { Body, Css, Element, Html, Insert, InsertAll, Remove, SelectorFilter } from '@ephox/sugar';
-import ResizeDirection from 'ephox/snooker/api/ResizeDirection';
+import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import Sizes from 'ephox/snooker/api/Sizes';
 
 UnitTest.test('Table Sizes Test (fusebox)', function () {
@@ -29,7 +29,7 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
   const style = Element.fromHtml('<style>table { border-collapse: collapse; } td { border: 1px solid #333; }</style>');
   Insert.append(Element.fromDom(document.head), style);
 
-  const generateW = function (info, totalWidth) {
+  const generateW = function (info: string[][], totalWidth: string) {
     const table = Element.fromTag('table');
     Css.set(table, 'width', totalWidth);
     const tbody = Element.fromTag('tbody');
@@ -49,7 +49,7 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
     return table;
   };
 
-  const generateH = function (info, totalHeight) {
+  const generateH = function (info: string[][], totalHeight: string) {
     const table = Element.fromTag('table');
     Css.set(table, 'height', totalHeight);
     const tbody = Element.fromTag('tbody');
@@ -69,7 +69,7 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
     return table;
   };
 
-  const readWidth = function (element) {
+  const readWidth = function (element: Element) {
     const rows = SelectorFilter.descendants(element, 'tr');
     return Arr.map(rows, function (row) {
       const cells = SelectorFilter.descendants(row, 'td,th');
@@ -79,7 +79,7 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
     });
   };
 
-  const readHeight = function (element) {
+  const readHeight = function (element: Element) {
     const rows = SelectorFilter.descendants(element, 'tr');
     return Arr.map(rows, function (row) {
       const cells = SelectorFilter.descendants(row, 'td,th');
@@ -102,26 +102,26 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
 
   assert.eq([[ '1px', '2px' ], [ '1px', '2px' ]], readWidth(generateW([[ '1px', '2px' ], [ '1px', '2px' ]], '3px')));
 
-  const checkWidth = function (expected, table, newWidth) {
+  const checkWidth = function (expected: string[][], table: Element, newWidth: string) {
     Insert.append(Body.body(), table);
     Sizes.redistribute(table, Option.some(newWidth), Option.none(), ResizeDirection.ltr);
     assert.eq(expected, readWidth(table));
     Remove.remove(table);
   };
 
-  const checkBasicWidth = function (expected, input, initialWidth, newWidth) {
+  const checkBasicWidth = function (expected: string[][], input: string[][], initialWidth: string, newWidth: string) {
     const table = generateW(input, initialWidth);
     checkWidth(expected, table, newWidth);
   };
 
-  const checkHeight = function (expected, table, newHeight) {
+  const checkHeight = function (expected: string[][], table: Element, newHeight: string) {
     Insert.append(Body.body(), table);
     Sizes.redistribute(table, Option.none(), Option.some(newHeight), ResizeDirection.ltr);
     assert.eq(expected, readHeight(table));
     Remove.remove(table);
   };
 
-  const checkBasicHeight = function (expected, input, initialHeight, newHeight) {
+  const checkBasicHeight = function (expected: string[][], input: string[][], initialHeight: string, newHeight: string) {
     const table = generateH(input, initialHeight);
     checkHeight(expected, table, newHeight);
   };

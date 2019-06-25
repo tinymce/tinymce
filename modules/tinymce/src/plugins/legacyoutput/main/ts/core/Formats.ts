@@ -10,7 +10,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 
 const overrideFormats = (editor: Editor) => {
-  const alignElements = 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img',
+  const alignElements = 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table',
     fontSizes = Tools.explode(Settings.getFontSizeStyleValues(editor)),
     schema = editor.schema;
 
@@ -43,9 +43,10 @@ const overrideFormats = (editor: Editor) => {
     ],
 
     // Change font size and font family to use the deprecated font element
-    fontname: { inline: 'font', attributes: { face: '%value' } },
+    fontname: { inline: 'font', toggle: false, attributes: { face: '%value' } },
     fontsize: {
       inline: 'font',
+      toggle: false,
       attributes: {
         size (vars) {
           return Tools.inArray(fontSizes, vars.value) + 1;
@@ -54,8 +55,8 @@ const overrideFormats = (editor: Editor) => {
     },
 
     // Setup font elements for colors as well
-    forecolor: { inline: 'font', attributes: { color: '%value' } },
-    hilitecolor: { inline: 'font', styles: { backgroundColor: '%value' } }
+    forecolor: { inline: 'font', attributes: { color: '%value' }, links: true, remove_similar: true, clear_child_styles: true },
+    hilitecolor: { inline: 'font', styles: { backgroundColor: '%value' }, links: true, remove_similar: true, clear_child_styles: true }
   });
 
   // Check that deprecated elements are allowed if not add them

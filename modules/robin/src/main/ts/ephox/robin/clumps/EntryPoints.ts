@@ -1,40 +1,67 @@
+import { Universe } from '@ephox/boss';
 import { Adt } from '@ephox/katamari';
-import { Gather } from '@ephox/phoenix';
-import { Split } from '@ephox/phoenix';
+import { Gather, Split } from '@ephox/phoenix';
 
-var adt = Adt.generate([
+interface EntryPoint<E> {
+  fold: <T> (
+    leftEdge: (element: E) => T,
+    between: (before: E, after: E) => T,
+    rightEdge: (element: E) => T
+  ) => T;
+  match: <T> (branches: {
+    leftEdge: (element: E) => T,
+    between: (before: E, after: E) => T,
+    rightEdge: (element: E) => T
+  }) => T;
+  log: (label: string) => void;
+}
+
+const adt: {
+  leftEdge: <E> (element: E) => EntryPoint<E>,
+  between: <E> (before: E, after: E) => EntryPoint<E>,
+  rightEdge: <E> (element: E) => EntryPoint<E>
+} = Adt.generate([
   { leftEdge: [ 'element' ] },
   { between: [ 'before', 'after' ] },
   { rightEdge: [ 'element' ] }
 ]);
 
-var onText = function (universe, element, offset) {
-  var raw = Split.split(universe, element, offset);
-  var positions = Split.position(universe, raw);
+const onText = function <E, D> (universe: Universe<E, D>, element: E, offset: number) {
+  const raw = Split.split(universe, element, offset);
+  const positions = Split.position(universe, raw);
   // Note, these cannot be curried because then more arguments are supplied than the adt expects.
-  var l = function () { return adt.leftEdge(element); };
-  var r = function () { return adt.rightEdge(element); };
+  const l = function () { return adt.leftEdge(element); };
+  const r = function () { return adt.rightEdge(element); };
   // None, Start, Middle, End
   return positions.fold(r, l, adt.between, r);
 };
 
-var onElement = function (universe, element, offset) {
-  var children = universe.property().children(element);
-  if (offset === 0) return adt.leftEdge(element);
-  else if (offset === children.length) return adt.rightEdge(element);
-  else if (offset > 0 && offset < children.length) return adt.between(children[offset - 1], children[offset]);
-  // NOTE: This should not happen.
-  else return adt.rightEdge(element);
+const onElement = function <E, D> (universe: Universe<E, D>, element: E, offset: number) {
+  const children = universe.property().children(element);
+  if (offset === 0) {
+    return adt.leftEdge(element);
+  } else if (offset === children.length) {
+    return adt.rightEdge(element);
+  } else if (offset > 0 && offset < children.length) {
+    return adt.between(children[offset - 1], children[offset]);
+  } else {
+    // NOTE: This should not happen.
+    return adt.rightEdge(element);
+  }
 };
 
-var analyse = function (universe, element, offset, fallback) {
-  if (universe.property().isText(element)) return onText(universe, element, offset);
-  else if (universe.property().isEmptyTag(element)) return fallback(element);
-  else return onElement(universe, element, offset);
+const analyse = function <E, D> (universe: Universe<E, D>, element: E, offset: number, fallback: (element: E) => EntryPoint<E>) {
+  if (universe.property().isText(element)) {
+    return onText(universe, element, offset);
+  } else if (universe.property().isEmptyTag(element)) {
+    return fallback(element);
+  } else {
+    return onElement(universe, element, offset);
+  }
 };
 
 // When breaking to the left, we will want to include the 'right' section of the split.
-var toLeft = function (universe, isRoot, element, offset) {
+const toLeft = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, element: E, offset: number) {
   return analyse(universe, element, offset, adt.leftEdge).fold(function (e) {
     // We are at the left edge of the element, so take the whole element
     return e;
@@ -49,7 +76,7 @@ var toLeft = function (universe, isRoot, element, offset) {
 };
 
 // When breaking to the right, we will want to include the 'left' section of the split.
-var toRight = function (universe, isRoot, element, offset) {
+const toRight = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, element: E, offset: number) {
   return analyse(universe, element, offset, adt.rightEdge).fold(function (e) {
     // We are at the left edge of the finishing element, so gather the previous element.
     return Gather.before(universe, e, isRoot).getOr(e);
@@ -62,7 +89,7 @@ var toRight = function (universe, isRoot, element, offset) {
   });
 };
 
-export default <any> {
-  toLeft: toLeft,
-  toRight: toRight
+export default {
+  toLeft,
+  toRight
 };
