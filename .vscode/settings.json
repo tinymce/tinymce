@@ -47,6 +47,9 @@
     "modules/oxide/build": true,
     "modules/oxide-icons-default/dist": true,
     "modules/tinymce/js": true,
+    "modules/tinymce/dist": true,
     "modules/*/lib": true,
+    "js": true,
+    "dist": true
   }
 }
