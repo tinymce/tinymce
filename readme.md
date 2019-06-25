@@ -83,7 +83,7 @@ yarn oxide-icons-build
 
 These commands build the skin and icons but should not normally be required outside of other development scripts.
 
-`yarn oxide-watch` will set up a watch and rebuild process which is designed for integration with the external demo/test scripts.
+`yarn oxide-start` will set up a watch and rebuild process for creating custom skins.
 
 ### Focussed development
 
