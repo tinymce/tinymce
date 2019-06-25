@@ -1,6 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
-import { Body, Element, Insert, Remove } from '@ephox/sugar';
+import { Body, Element, Insert, Remove, Css } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import Deltas from 'ephox/snooker/calc/Deltas';
 import DetailsList from 'ephox/snooker/model/DetailsList';
@@ -61,6 +61,10 @@ UnitTest.test('ResizeTest', function () {
     // [25%, -25%] deltas.
     assert.eq([25, -25], deltas);
 
+    // Set new width
+    tableSize.setTableWidth(table, [], step);
+    assert.eq(Css.getRaw(table, 'width').getOrDie(), '125%');
+
     Remove.remove(table);
   };
 
@@ -116,6 +120,10 @@ UnitTest.test('ResizeTest', function () {
 
     // [25%, -25%] deltas.
     assert.eq([25, -25], deltas);
+
+    // Set new width
+    tableSize.setTableWidth(table, [], step);
+    assert.eq(Css.getRaw(table, 'width').getOrDie(), '125%');
 
     Remove.remove(table);
   };
