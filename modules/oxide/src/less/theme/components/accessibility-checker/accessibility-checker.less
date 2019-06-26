@@ -1,0 +1,65 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Accessibility checker
+//
+
+@accessibility-issue-warn-text-color: #CC8500;
+@accessibility-issue-error-text-color: @color-error;
+
+.tox {
+  .accessibility-issue-heading {
+    align-items: center;
+    display: flex;
+
+    .tox-icon svg {
+      display: block;
+    }
+
+    > *:last-child {
+      color: @text-color-muted;
+    }
+  }
+
+  .accessibility-issue-heading--warn {
+    color: @accessibility-issue-warn-text-color;
+
+    .tox-icon svg {
+      fill: @accessibility-issue-warn-text-color;
+    }
+  }
+
+  .accessibility-issue-heading--error {
+    color: @accessibility-issue-error-text-color;
+
+    .tox-icon svg {
+      fill: @accessibility-issue-error-text-color;
+    }
+  }
+
+  .tox-dialog__body-content .accessibility-issue-heading h1 {
+    margin-top: 0;
+    // Inherits other styles from dialog body content heading
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .accessibility-issue-heading {
+    > *:last-child {
+      margin-left: auto;
+    }
+  }
+}
+
+.tox[dir=rtl] {
+  .accessibility-issue-heading {
+    > *:last-child {
+      margin-right: auto;
+    }
+  }
+}
