@@ -1,17 +1,18 @@
 var gulp = require('gulp');
+var connect = require('gulp-connect');
 var clean = require('gulp-clean');
 var less = require('gulp-less');
 var lessAutoprefix = require('less-plugin-autoprefix');
 var gulpStylelint = require('gulp-stylelint');
-var variablesOutput = require('less-plugin-variables-output');
 var header = require('gulp-header');
 var cleanCSS = require('gulp-clean-css');
 var sourcemaps = require('gulp-sourcemaps');
 var rename = require('gulp-rename');
+var cp = require('child_process');
 const fs = require('fs');
+const path = require('path');
 
 var autoprefix = new lessAutoprefix({ browsers: ['IE 11', 'last 2 Safari versions', 'iOS 9.0', 'last 2 Chrome versions', 'Firefox ESR'] });
-var exportLessVariablesToJson = new variablesOutput({ filename: 'build/skin-tool/less-variables.json' });
 
 //
 // Lint less files using stylelint
@@ -27,13 +28,33 @@ gulp.task('lint', function() {
 });
 
 //
+// Build HTML demos
+//
+gulp.task('buildDemos', function() {
+  return gulp.src(['./src/demo/**/*'])
+    .pipe(gulp.dest('./build'));
+});
+
+// Generate list of available skins and content css:es to populate select field in index.html
+const getDirs = (p) => fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isDirectory());
+gulp.task('buildSkinSwitcher', (done) => {
+  const uiSkins = getDirs(`./build/skins/ui`);
+  const contentSkins = getDirs(`./build/skins/content`);
+  const data = `uiSkins = ${JSON.stringify(uiSkins)}, contentSkins = ${JSON.stringify(contentSkins)}`;
+  const html = fs.readFileSync('./build/index.html', 'utf8');
+  fs.writeFileSync('./build/index.html', html.replace('/** ADD_DATA */', data));
+
+  done();
+});
+
+//
 // Build CSS
 //
 gulp.task('less', function() {
   return gulp.src('./src/less/skins/**/*.less')
     .pipe(less({
       relativeUrls: true,
-      plugins: [autoprefix, exportLessVariablesToJson]
+      plugins: [autoprefix]
     }))
     .pipe(gulp.dest('./build/skins/'))
 });
@@ -41,14 +62,15 @@ gulp.task('less', function() {
 //
 // Minify CSS
 //
-gulp.task('minify-css', function() {
+gulp.task('minifyCss', function() {
   return gulp.src(['./build/skins/**/*.css', '!**/*.min.css'])
     .pipe(sourcemaps.init())
     .pipe(cleanCSS({ rebase: false }))
     .pipe(header(fs.readFileSync('src/text/license-header.css', 'utf8')))
     .pipe(rename({ extname: '.min.css' }))
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('./build/skins'));
+    .pipe(gulp.dest('./build/skins'))
+    .pipe(connect.reload());
 });
 
 //
@@ -63,10 +85,16 @@ gulp.task('copyFonts', function() {
 });
 
 //
-// watch and rebuild CSS for oxide demos (TODO move to oxide-test-data)
+// watch and rebuild CSS for Oxide demos
 //
-gulp.task('monitor', function () {
-  gulp.watch('./src/**/*.less', gulp.series('css'));
+gulp.task('monitor', function (done) {
+  connect.server({
+    root: './build',
+    port: 3000,
+    livereload: true
+  }, function () { this.server.on('close', done) });
+
+  gulp.watch('./src/**/*').on('change', gulp.series('css'));
 });
 
 //
@@ -83,8 +111,9 @@ gulp.task('clean', function () {
 //
 // Build project and watch LESS file changes
 //
-gulp.task('css', gulp.series('lint', 'less', 'minify-css'))
+gulp.task('css', gulp.series('lint', 'less', 'minifyCss'))
 gulp.task('build', gulp.series('clean', 'css', 'copyFonts'));
 gulp.task('default', gulp.series('build'));
 
-gulp.task('watch', gulp.series('build', 'monitor'));
+gulp.task('demo-build', gulp.series('css', 'less', 'minifyCss', 'buildDemos', 'buildSkinSwitcher'))
+gulp.task('watch', gulp.series('build', 'buildDemos', 'buildSkinSwitcher', 'monitor'));

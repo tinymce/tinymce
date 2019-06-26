@@ -1,7 +1,7 @@
 {
   "name": "@ephox/snooker",
   "description": "This project implements the table model.",
-  "version": "4.0.37",
+  "version": "4.0.39",
   "files": [
     "lib/main",
     "lib/demo",
@@ -15,16 +15,16 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/snooker"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "dependencies": {
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/dragster": "^4.0.14",
-    "@ephox/echo": "^3.0.20",
-    "@ephox/katamari": "^2.4.21",
-    "@ephox/porkbun": "^4.0.12",
-    "@ephox/robin": "^7.0.18",
-    "@ephox/sugar": "^4.6.21"
+    "@ephox/dragster": "^4.0.15",
+    "@ephox/echo": "^3.0.21",
+    "@ephox/katamari": "^2.4.22",
+    "@ephox/porkbun": "^4.0.13",
+    "@ephox/robin": "^7.0.19",
+    "@ephox/sugar": "^4.6.22"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",

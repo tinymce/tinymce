@@ -29,7 +29,7 @@ export interface FormatItem {
   icon?: string;
   getStyleItems: () => FormatItem[];
   format: string;
-  isSelected: () => boolean;
+  isSelected: (value: Option<any>) => boolean;
   getStylePreview: () => Option<PreviewSpec>;
 }
 
@@ -38,6 +38,8 @@ export interface SelectSpec {
   icon: Option<string>;
   // This is used for determining if an item gets a tick in the menu
   isSelectedFor: FormatRegister.IsSelectedForType;
+  // This is used to get the current selection value when a menu is opened
+  getCurrentValue: () => Option<any>;
   // This is used for rendering individual items with styles
   getPreviewFor: FormatRegister.GetPreviewForType;
   // This is used for clicking on the item
@@ -65,8 +67,8 @@ interface BespokeSelectApi {
 
 const enum IrrelevantStyleItemResponse { Hide, Disable }
 
-const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec) => {
-  const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean): Option<Menu.NestedMenuItemContents> => {
+const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
+  const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean, value: Option<any>): Option<Menu.NestedMenuItemContents> => {
     const translatedText = backstage.shared.providers.translate(rawItem.title);
     if (rawItem.type === 'separator') {
       return Option.some<Menu.SeparatorMenuItemApi>({
@@ -74,7 +76,7 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
         text: translatedText
       });
     } else if (rawItem.type === 'submenu') {
-      const items = Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response));
+      const items = Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response, value));
       if (response === IrrelevantStyleItemResponse.Hide && items.length <= 0) {
         return Option.none();
       } else {
@@ -82,7 +84,7 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
           type: 'nestedmenuitem',
           text: translatedText,
           disabled: items.length <= 0,
-          getSubmenuItems: () => Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response))
+          getSubmenuItems: () => Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response, value))
         });
       }
     } else {
@@ -92,7 +94,7 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
         // If this type ever changes, we'll need to change that too
         type: 'togglemenuitem',
         text: translatedText,
-        active: rawItem.isSelected(),
+        active: rawItem.isSelected(value),
         disabled,
         onAction: spec.onAction(rawItem),
         ...rawItem.getStylePreview().fold(() => ({}), (preview) => ({ meta: { style: preview } as any }))
@@ -100,20 +102,21 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
     }
   };
 
-  const validate = (item: FormatItem, response: IrrelevantStyleItemResponse): Menu.NestedMenuItemContents[] => {
+  const validate = (item: FormatItem, response: IrrelevantStyleItemResponse, value: Option<any>): Menu.NestedMenuItemContents[] => {
     const invalid = item.type === 'formatter' && spec.isInvalid(item);
 
     // If we are making them disappear based on some setting
     if (response === IrrelevantStyleItemResponse.Hide) {
-      return invalid ? [ ] : generateItem(item, response, false).toArray();
+      return invalid ? [ ] : generateItem(item, response, false, value).toArray();
     } else {
-      return generateItem(item, response, invalid).toArray();
+      return generateItem(item, response, invalid, value).toArray();
     }
   };
 
   const validateItems = (preItems) => {
+    const value = spec.getCurrentValue();
     const response = spec.shouldHide ? IrrelevantStyleItemResponse.Hide : IrrelevantStyleItemResponse.Disable;
-    return Arr.bind(preItems, (item) => validate(item, response));
+    return Arr.bind(preItems, (item) => validate(item, response, value));
   };
 
   const getFetch = (backstage, getStyleItems) => (callback) => {

@@ -35,31 +35,36 @@ const defaultFontsFormats = 'Andale Mono=andale mono,monospace;' +
 // Note: Don't include 'BlinkMacSystemFont', as Chrome on Mac converts it to different names
 const systemStackFonts = [ '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'sans-serif' ];
 
+// Split the fonts into an array and strip away any start/end quotes
+const splitFonts = (fontFamily: string): string[] => {
+  const fonts = fontFamily.split(/\s*,\s*/);
+  return Arr.map(fonts, (font) => font.replace(/^['"]+|['"]+$/g, ''));
+};
+
 const isSystemFontStack = (fontFamily: string): boolean => {
   // The system font stack will be similar to the following. (Note: each has minor variants)
   // Oxide: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   // Bootstrap: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   // Wordpress: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   const matchesSystemStack = (): boolean => {
-    // Split the fonts into an array and strip away any quotes
-    const fonts = fontFamily.toLowerCase().split(/['"]?\s*,\s*['"]?/);
+    const fonts = splitFonts(fontFamily.toLowerCase());
     return Arr.forall(systemStackFonts, (font) => fonts.indexOf(font.toLowerCase()) > -1);
   };
 
   return fontFamily.indexOf('-apple-system') === 0 && matchesSystemStack();
 };
 
-const getSpec = (editor) => {
-  const getMatchingValue = (): Option<{ title: string, format: string }> => {
+const getSpec = (editor: Editor) => {
+  const getMatchingValue = () => {
     const getFirstFont = (fontFamily) => {
-      return fontFamily ? fontFamily.split(',')[0] : '';
+      return fontFamily ? splitFonts(fontFamily)[0] : '';
     };
 
     const fontFamily = editor.queryCommandValue('FontName');
     const items = dataset.data;
     const font = fontFamily ? fontFamily.toLowerCase() : '';
 
-    return Arr.find(items, (item) => {
+    const matchOpt = Arr.find(items, (item) => {
       const format = item.format;
       return (format.toLowerCase() === font) || (getFirstFont(format).toLowerCase() === getFirstFont(font).toLowerCase());
     }).orThunk(() => {
@@ -72,12 +77,19 @@ const getSpec = (editor) => {
         return Option.none();
       }
     });
+
+    return { matchOpt, font: fontFamily };
   };
 
   const isSelectedFor = (item) => {
-    return () => {
-      return getMatchingValue().exists((match) => match.format === item);
+    return (valueOpt: Option<{ format: string; title: string }>) => {
+      return valueOpt.exists((value) => value.format === item);
     };
+  };
+
+  const getCurrentValue = () => {
+    const { matchOpt } = getMatchingValue();
+    return matchOpt;
   };
 
   const getPreviewFor = (item) => () => {
@@ -95,9 +107,8 @@ const getSpec = (editor) => {
   };
 
   const updateSelectMenuText = (comp: AlloyComponent) => {
-    const fontFamily = editor.queryCommandValue('FontName');
-    const match = getMatchingValue();
-    const text = match.fold(() => fontFamily, (item) => item.title);
+    const { matchOpt, font } = getMatchingValue();
+    const text = matchOpt.fold(() => font, (item) => item.title);
     AlloyTriggers.emitWith(comp, updateMenuText, {
       text
     });
@@ -113,6 +124,7 @@ const getSpec = (editor) => {
     tooltip: 'Fonts',
     icon: Option.none(),
     isSelectedFor,
+    getCurrentValue,
     getPreviewFor,
     onAction,
     setInitialValue,

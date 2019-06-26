@@ -8,6 +8,6 @@
 # Usage
 `Dragger`: Used to transform an external mutator into a dragster drag handler.
 # Tests
-`dragster` uses `bolt` to run atomic tests.
+`dragster` uses [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) to run atomic tests.
 ## Running Tests
 `$ yarn test`

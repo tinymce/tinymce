@@ -4,7 +4,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinymce/tinymce.git"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "description": "TinyMCE rich text editor",
   "author": "Tiny Technologies",

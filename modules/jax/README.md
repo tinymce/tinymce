@@ -1,6 +1,6 @@
 # Description
 
-`jax` is a library for handling AJAX requests and responses. It does not bundle any commands. It is only a collection of `bolt` ([github](https://github.com/ephox/bolt), [npm](https://www.npmjs.com/package/@ephox/bolt)) modules.
+`jax` is a library for handling AJAX requests and responses. It does not bundle any commands. It is only a collection of modules.
 
 
 # Installation
