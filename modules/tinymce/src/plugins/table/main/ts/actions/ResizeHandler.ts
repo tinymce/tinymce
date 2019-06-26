@@ -12,10 +12,11 @@ import { Element as SugarElement } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';
 import Direction from '../queries/Direction';
 import TableWire from './TableWire';
-import { hasTableResizeBars, hasObjectResizing } from '../api/Settings';
+import { hasTableResizeBars, hasObjectResizing, isPixelsForced } from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 import * as Util from '../alien/Util';
+import { enforceUnits } from './EnforceUnit';
 
 export interface ResizeHandler {
   lazyResize: () => Option<any>;
@@ -90,10 +91,21 @@ export const ResizeHandler = function (editor: Editor): ResizeHandler {
     }
   });
 
+  const shouldEnforceUnits = (table: HTMLTableElement) => {
+    const width = getRawWidth(table);
+    return !width || percentageBasedSizeRegex.test(width) === isPixelsForced(editor);
+  };
+
   // If we're updating the table width via the old mechanic, we need to update the constituent cells' widths/heights too.
   editor.on('ObjectResizeStart', function (e) {
     const targetElm = e.target;
     if (isTable(targetElm)) {
+
+      // Current units are different from enforced ones
+      if (shouldEnforceUnits(targetElm)) {
+        enforceUnits(SugarElement.fromDom(targetElm), isPixelsForced(editor));
+      }
+
       startW = e.width;
       startRawW = getRawWidth(targetElm);
     }

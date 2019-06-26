@@ -1,11 +1,12 @@
-import { Assertions, Chain, Mouse, NamedChain, TestLogs } from '@ephox/agar';
+import { Assertions, Chain, Logger, Mouse, NamedChain, Pipeline, TestLogs } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Editor, ApiChains } from '@ephox/mcagar';
-
+import { Cell } from '@ephox/katamari';
+import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
+import { Element } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { Cell } from '@ephox/katamari';
 import TableTestUtils from '../module/test/TableTestUtils';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, failure) => {
   const lastObjectResizeStartEvent = Cell<any>(null);
@@ -57,23 +58,25 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
     lastObjectResizedEvent.set(null);
   });
 
-  const cTableInsertResizeMeasure = NamedChain.asChain([
+  const cInsertResizeMeasure = (cInsert: Chain<Editor, Element>) => NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
     NamedChain.write('events', cBindResizeEvents),
-    NamedChain.direct('editor', TableTestUtils.cInsertTable(5, 2), 'element'),
+    NamedChain.direct('editor', cInsert, 'element'),
     NamedChain.write('widthBefore', TableTestUtils.cGetWidth),
     NamedChain.read('element', Mouse.cTrueClick),
-    NamedChain.read('editor', TableTestUtils.cDragHandle('se', -100, 0)),
+    NamedChain.read('editor', TableTestUtils.cDragHandle('se', -100, -20)),
     NamedChain.write('widthAfter', TableTestUtils.cGetWidth),
     NamedChain.write('events', cUnbindResizeEvents),
     NamedChain.merge(['widthBefore', 'widthAfter'], 'widths'),
     NamedChain.output('widths')
   ]);
 
-  const cAssertWidthsShouldBe = (unit: string) => Chain.op((input: any) => {
-    const expectingPercent = (unit === '%');
-    Assertions.assertEq(`table width before resizing is in ${unit}`, expectingPercent, input.widthBefore.isPercent);
-    Assertions.assertEq(`table width after resizing is in ${unit}`, expectingPercent, input.widthAfter.isPercent);
+  const cAssertUnitBeforeResize = (unit: string) => Chain.op((widths: any) => {
+    Assertions.assertEq(`table width before resizing is in ${unit}`, unit === '%', widths.widthBefore.isPercent);
+  });
+
+  const cAssertUnitAfterResize = (unit: string) => Chain.op((widths: any) => {
+    Assertions.assertEq(`table width after resizing is in ${unit}`, unit === '%', widths.widthAfter.isPercent);
   });
 
   const cAssertEventData = (state, expectedEventName) => Chain.op((_) => {
@@ -83,38 +86,83 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
     Assertions.assertEq('Should have height', 'number', typeof state.get().height);
   });
 
-  NamedChain.pipeline([
-    NamedChain.write('editor', Editor.cFromSettings({
-      plugins: 'table',
-      width: 400,
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce',
-    })),
+  Pipeline.async({}, [
+    Logger.t('Test default config of [table_responsive_width=true], new tables should default to % and resize should force %', Chain.asStep({}, [
+      NamedChain.write('editor', McEditor.cFromSettings({
+        plugins: 'table',
+        width: 400,
+        theme: 'silver',
+        base_url: '/project/tinymce/js/tinymce'
+      })),
 
-    // when table is resized by one of the handlers it should retain the dimension units after the resize, be it px or %
-    cClearResizeEventData,
-    NamedChain.direct('editor', cTableInsertResizeMeasure, 'widths'),
-    NamedChain.read('widths', cAssertWidths),
-    cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
-    cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+      cClearResizeEventData,
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cInsertTable(5, 2)), 'widths'),
+      NamedChain.read('widths', cAssertWidths),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
 
-    // using configuration option [table_responsive_width=true] we are able to control the default units of the table
-    cClearResizeEventData,
-    NamedChain.read('editor', ApiChains.cSetContent('')),
-    NamedChain.direct('editor', cTableInsertResizeMeasure, 'widths'),
-    NamedChain.read('widths', cAssertWidthsShouldBe('%')),
-    cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
-    cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+      cClearResizeEventData,
+      NamedChain.read('editor', ApiChains.cSetContent('')),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cInsertTable(5, 2)), 'widths'),
+      NamedChain.read('widths', cAssertUnitBeforeResize('%')),
+      NamedChain.read('widths', cAssertUnitAfterResize('%')),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
 
-    cClearResizeEventData,
-    NamedChain.read('editor', ApiChains.cSetContent('')),
-    NamedChain.read('editor', ApiChains.cSetSetting('table_responsive_width', false)),
-    NamedChain.direct('editor', cTableInsertResizeMeasure, 'widths'),
-    NamedChain.read('widths', cAssertWidthsShouldBe('px')),
-    cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
-    cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+      // Force % on unset tables with [table_responsive_width=true]
+      cClearResizeEventData,
+      NamedChain.read('editor', ApiChains.cSetContent('')),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cInsertRaw('<table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>')), 'widths'),
+      NamedChain.read('widths', cAssertUnitAfterResize('%')),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
 
-    NamedChain.read('editor', Editor.cRemove)
+      // Force % on tables with that are initially set to px with [table_responsive_width=true]
+      cClearResizeEventData,
+      NamedChain.read('editor', ApiChains.cSetContent('')),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cInsertRaw('<table style="width: 200px;"><tbody><tr><td></td><td></td></tr></tbody></table>')), 'widths'),
+      NamedChain.read('widths', cAssertUnitAfterResize('%')),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+
+      NamedChain.read('editor', McEditor.cRemove)
+    ])),
+
+    Logger.t('Test [table_responsive_width=false], new tables should default to px and resize should force px', Chain.asStep({}, [
+      NamedChain.write('editor', McEditor.cFromSettings({
+        plugins: 'table',
+        width: 400,
+        theme: 'silver',
+        base_url: '/project/tinymce/js/tinymce',
+        table_responsive_width: false
+      })),
+
+      cClearResizeEventData,
+      NamedChain.read('editor', ApiChains.cSetContent('')),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cInsertTable(5, 2)), 'widths'),
+      NamedChain.read('widths', cAssertUnitBeforeResize('px')),
+      NamedChain.read('widths', cAssertUnitAfterResize('px')),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+
+      // Force px on unset tables with [table_responsive_width=false]
+      cClearResizeEventData,
+      NamedChain.read('editor', ApiChains.cSetContent('')),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cInsertRaw('<table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>')), 'widths'),
+      NamedChain.read('widths', cAssertUnitAfterResize('px')),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+
+      // Force px on tables with that are initially set to % with [table_responsive_width=false]
+      cClearResizeEventData,
+      NamedChain.read('editor', ApiChains.cSetContent('')),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cInsertRaw('<table style="width: 100%;"><tbody><tr><td style="width: 50%;"></td><td style="width: 50%;"></td></tr></tbody></table>')), 'widths'),
+      NamedChain.read('widths', cAssertUnitAfterResize('px')),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+
+      NamedChain.read('editor', McEditor.cRemove)
+    ])),
   ], function () {
     success();
   }, failure, TestLogs.init());
