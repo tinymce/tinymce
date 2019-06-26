@@ -11,7 +11,7 @@ const register = function (editor) {
   editor.addCommand('mcePrint', function () {
     // TINY-3762 IE will print the current window instead of the iframe window
     // however using execCommand appears to make it print from the correct window
-    if (Env.ie <= 11) {
+    if (Env.ie && Env.ie <= 11) {
       editor.getDoc().execCommand('print', false, null);
     } else {
       editor.getWin().print();
