@@ -51,6 +51,9 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
                       children: [
                         s.element('div', {
                           classes: [ arr.has('tox-dialog__header') ],
+                          styles: {
+                            display: str.is('none')
+                          },
                           children: [
                             s.element('div', {
                               classes: [ arr.has('tox-dialog__title') ],

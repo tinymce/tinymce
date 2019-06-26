@@ -44,6 +44,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
       Dialogs.renderDialog({
         lazySink: () => sharedBackstage.getSink(),
         partSpecs: {
+          header: Option.some(Dialogs.pHiddenHeader),
           title: Dialogs.pUntitled(),
           close: Dialogs.pClose(() => {
             closeDialog(false);

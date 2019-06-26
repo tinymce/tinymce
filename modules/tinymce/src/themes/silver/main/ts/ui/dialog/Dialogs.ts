@@ -17,10 +17,25 @@ import {
   Tabstopping,
   AlloyComponent,
 } from '@ephox/alloy';
-import { Option, Result } from '@ephox/katamari';
+import { Merger, Option, Result } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { FormCancelEvent, formCancelEvent, FormSubmitEvent, formSubmitEvent } from '../general/FormEvents';
+
+const pHiddenHeader: AlloySpec = {
+  dom: {
+    tag: 'div',
+    styles: { display: 'none' },
+    classes: [ 'tox-dialog__header' ]
+  }
+};
+
+const pHeader: AlloySpec = {
+  dom: {
+    tag: 'div',
+    classes: [ 'tox-dialog__header' ]
+  }
+};
 
 const pClose = (onClose, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts().close(
   // Need to find a way to make it clear in the docs whether parts can be sketches
@@ -101,6 +116,7 @@ const pFooterGroup = (startButtons: AlloySpec[], endButtons: AlloySpec[]) => {
 export interface DialogFoo {
   lazySink: () => Result<AlloyComponent, any>;
   partSpecs: {
+    header: Option<AlloySpec>,
     title: AlloySpec,
     close: AlloySpec,
     body: AlloySpec,
@@ -125,16 +141,12 @@ const renderDialog = (spec: DialogFoo) => {
         classes: [ 'tox-dialog' ].concat(spec.extraClasses)
       },
       components: [
-        {
-          dom: {
-            tag: 'div',
-            classes: [ 'tox-dialog__header' ]
-          },
+        Merger.deepMerge(spec.partSpecs.header.getOr(pHeader), {
           components: [
             spec.partSpecs.title,
             spec.partSpecs.close
           ]
-        },
+        }),
         spec.partSpecs.body,
         spec.partSpecs.footer
       ],
@@ -166,4 +178,4 @@ const renderDialog = (spec: DialogFoo) => {
   );
 };
 
-export { pClose, pUntitled, pBodyMessage, pFooter, pFooterGroup, renderDialog };
+export { pHeader, pHiddenHeader, pClose, pUntitled, pBodyMessage, pFooter, pFooterGroup, renderDialog };
