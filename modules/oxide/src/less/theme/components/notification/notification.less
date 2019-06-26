@@ -28,6 +28,11 @@
     opacity: 0;
     padding: 5px;
     transition: transform 100ms ease-in, opacity 150ms ease-in;
+
+    a {
+      color: @color-tint;
+      text-decoration: underline;
+    }
   }
 
   .tox-notification--in {
@@ -37,11 +42,19 @@
   .tox-notification--success {
     background-color: #dff0d8;
     border-color: #d6e9c6;
+
+    a {
+      color: darken(#d6e9c6, 55%);
+    }
   }
 
   .tox-notification--error {
     background-color: #f2dede;
     border-color: #ebccd1;
+
+    a {
+      color: darken(#ebccd1, 50%);
+    }
   }
 
   .tox-notification--warn {
