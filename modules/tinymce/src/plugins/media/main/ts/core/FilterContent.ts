@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import Node from 'tinymce/core/api/html/Node';
 import Tools from 'tinymce/core/api/util/Tools';
 import Nodes from './Nodes';
@@ -12,7 +13,7 @@ import Sanitize from './Sanitize';
 
 declare let unescape: any;
 
-const setup = function (editor) {
+const setup = function (editor: Editor) {
   editor.on('preInit', function () {
     // Make sure that any messy HTML is retained inside these
     const specialElements = editor.schema.getSpecialElements();
@@ -111,7 +112,7 @@ const setup = function (editor) {
     editor.$('span.mce-preview-object').each(function (index, elm) {
       const $elm = editor.$(elm);
 
-      if ($elm.find('span.mce-shim', elm).length === 0) {
+      if ($elm.find('span.mce-shim').length === 0) {
         $elm.append('<span class="mce-shim"></span>');
       }
     });

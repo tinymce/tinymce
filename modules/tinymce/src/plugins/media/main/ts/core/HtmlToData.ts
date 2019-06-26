@@ -5,24 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HTMLElement, Node } from '@ephox/dom-globals';
 import Tools from 'tinymce/core/api/util/Tools';
 import SaxParser from 'tinymce/core/api/html/SaxParser';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import VideoScript from './VideoScript';
 import Size from './Size';
+import { MediaData } from './Types';
+import { VideoScript, getVideoScriptMatch } from './VideoScript';
 
 const DOM = DOMUtils.DOM;
 
-const getEphoxEmbedIri = function (elm) {
+const getEphoxEmbedIri = function (elm: Node): string {
   return DOM.getAttrib(elm, 'data-ephox-embed-iri');
 };
 
-const isEphoxEmbed = function (html) {
+const isEphoxEmbed = function (html: string): boolean {
   const fragment = DOM.createFragment(html);
   return getEphoxEmbedIri(fragment.firstChild) !== '';
 };
 
-const htmlToDataSax = function (prefixes, html) {
+const htmlToDataSax = function (prefixes: VideoScript[], html: string): MediaData {
   let data: any = {};
 
   SaxParser({
@@ -42,7 +44,7 @@ const htmlToDataSax = function (prefixes, html) {
       }
 
       if (name === 'script') {
-        const videoScript = VideoScript.getVideoScriptMatch(prefixes, attrs.map.src);
+        const videoScript = getVideoScriptMatch(prefixes, attrs.map.src);
         if (!videoScript) {
           return;
         }
@@ -50,8 +52,8 @@ const htmlToDataSax = function (prefixes, html) {
         data = {
           type: 'script',
           source1: attrs.map.src,
-          width: videoScript.width,
-          height: videoScript.height
+          width: String(videoScript.width),
+          height: String(videoScript.height)
         };
       }
 
@@ -76,9 +78,9 @@ const htmlToDataSax = function (prefixes, html) {
   return data;
 };
 
-const ephoxEmbedHtmlToData = function (html: string) {
+const ephoxEmbedHtmlToData = function (html: string): MediaData {
   const fragment = DOM.createFragment(html);
-  const div = fragment.firstChild;
+  const div = fragment.firstChild as HTMLElement;
 
   return {
     type: 'ephox-embed-iri',
@@ -90,10 +92,10 @@ const ephoxEmbedHtmlToData = function (html: string) {
   };
 };
 
-const htmlToData = function (prefixes, html) {
+const htmlToData = function (prefixes: VideoScript[], html: string): MediaData {
   return isEphoxEmbed(html) ? ephoxEmbedHtmlToData(html) : htmlToDataSax(prefixes, html);
 };
 
-export default {
+export {
   htmlToData
 };
