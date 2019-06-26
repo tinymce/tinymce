@@ -54,11 +54,19 @@ const pUntitled = () => ModalDialog.parts().title({
 const pBodyMessage = (message: string, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts().body({
   dom: {
     tag: 'div',
-    classes: [ 'tox-dialog__body', 'todo-tox-fit' ]
+    classes: [ 'tox-dialog__body' ]
   },
   components: [
     {
-      dom: DomFactory.fromHtml(`<p>${providersBackstage.translate(message)}</p>`)
+      dom: {
+        tag: 'div',
+        classes: ['tox-dialog__body-content']
+      },
+      components: [
+        {
+          dom: DomFactory.fromHtml(`<p>${providersBackstage.translate(message)}</p>`)
+        }
+      ]
     }
   ]
 });
