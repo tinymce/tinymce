@@ -22,7 +22,7 @@ import { Merger, Option, Result } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { FormCancelEvent, formCancelEvent, FormSubmitEvent, formSubmitEvent } from '../general/FormEvents';
 
-const pHiddenHeader: AlloySpec = {
+const hiddenHeader: AlloySpec = {
   dom: {
     tag: 'div',
     styles: { display: 'none' },
@@ -30,7 +30,7 @@ const pHiddenHeader: AlloySpec = {
   }
 };
 
-const pHeader: AlloySpec = {
+const defaultHeader: AlloySpec = {
   dom: {
     tag: 'div',
     classes: [ 'tox-dialog__header' ]
@@ -115,8 +115,8 @@ const pFooterGroup = (startButtons: AlloySpec[], endButtons: AlloySpec[]) => {
 
 export interface DialogFoo {
   lazySink: () => Result<AlloyComponent, any>;
+  headerOverride: Option<AlloySpec>,
   partSpecs: {
-    header: Option<AlloySpec>,
     title: AlloySpec,
     close: AlloySpec,
     body: AlloySpec,
@@ -141,7 +141,7 @@ const renderDialog = (spec: DialogFoo) => {
         classes: [ 'tox-dialog' ].concat(spec.extraClasses)
       },
       components: [
-        Merger.deepMerge(spec.partSpecs.header.getOr(pHeader), {
+        Merger.deepMerge(spec.headerOverride.getOr(defaultHeader), {
           components: [
             spec.partSpecs.title,
             spec.partSpecs.close
@@ -178,4 +178,4 @@ const renderDialog = (spec: DialogFoo) => {
   );
 };
 
-export { pHeader, pHiddenHeader, pClose, pUntitled, pBodyMessage, pFooter, pFooterGroup, renderDialog };
+export { defaultHeader, hiddenHeader, pClose, pUntitled, pBodyMessage, pFooter, pFooterGroup, renderDialog };
