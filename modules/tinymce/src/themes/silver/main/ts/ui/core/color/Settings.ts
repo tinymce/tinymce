@@ -53,7 +53,9 @@ const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
   const ctx = canvas.getContext('2d');
 
   const byteAsHex = (colorByte: number, alphaByte: number) => {
-    const colorByteWithWhiteBg = (colorByte * (alphaByte / 255)) + (255 - alphaByte);
+    const bg = 255;
+    const alpha = (alphaByte / 255);
+    const colorByteWithWhiteBg = Math.round((colorByte * alpha) + (bg * (1 - alpha)));
     return ('0' + colorByteWithWhiteBg.toString(16)).slice(-2).toUpperCase();
   };
 

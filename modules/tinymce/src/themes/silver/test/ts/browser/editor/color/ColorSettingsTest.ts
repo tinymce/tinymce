@@ -43,7 +43,7 @@ UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
     '#3498db', 'Black',
     'rgb(155, 89, 182)', 'Black',
     'PeachPuff', 'Some horrible pink/orange color',
-    'Pale tomato', 'rgba(255, 99, 71, 0.5)'
+    'rgba(255, 99, 71, 0.5)', 'Pale tomato'
   ];
 
   const mappedColors = [
