@@ -9,6 +9,7 @@ import { Menu } from '@ephox/bridge';
 import Editor from 'tinymce/core/api/Editor';
 import ColorCache from './ColorCache';
 import { Arr } from '@ephox/katamari';
+import { document } from '@ephox/dom-globals';
 
 const choiceItem: 'choiceitem' = 'choiceitem';
 
@@ -44,13 +45,36 @@ const defaultColors = [
 const colorCache = ColorCache(10);
 
 const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
-  let i;
   const colors = [];
 
-  for (i = 0; i < colorMap.length; i += 2) {
+  const canvas = document.createElement('canvas');
+  canvas.height = 1;
+  canvas.width = 1;
+  const ctx = canvas.getContext('2d');
+
+  const byteAsHex = (colorByte: number, alphaByte: number) => {
+    const colorByteWithWhiteBg = (colorByte * (alphaByte / 255)) + (255 - alphaByte);
+    return ('0' + colorByteWithWhiteBg.toString(16)).slice(-2).toUpperCase();
+  };
+
+  const asHexColor = (color: string) => {
+    // backwards compatibility
+    if (/^[0-9A-Fa-f]{6}$/.test(color)) {
+      return '#' + color.toUpperCase();
+    }
+    // all valid colors after this point
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, 1, 1);
+    const rgba = ctx.getImageData(0, 0, 1, 1).data;
+    const r = rgba[0], g = rgba[1], b = rgba[2], a = rgba[3];
+    return '#' + byteAsHex(r, a) + byteAsHex(g, a) + byteAsHex(b, a);
+  };
+
+  for (let i = 0; i < colorMap.length; i += 2) {
     colors.push({
       text: colorMap[i + 1],
-      value: '#' + colorMap[i],
+      value: asHexColor(colorMap[i]),
       type: 'choiceitem'
     });
   }
