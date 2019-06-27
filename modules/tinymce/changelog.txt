@@ -1,4 +1,5 @@
 Version 5.0.10 (TBD)
+    Added support for all HTML color formats in `color_map` setting #TINY-3837
     Fixed an issue in the Oxide skin where dialog content like outlines and shadows were clipped because of overflow hidden TINY-3566
     Changed default palette for fore/back color to include some lighter colors suitable for highlights #TINY-2865
     Changed the search and replace plugin to cycle through results #TINY-3800
