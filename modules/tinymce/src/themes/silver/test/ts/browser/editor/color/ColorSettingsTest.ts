@@ -39,30 +39,30 @@ UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
 
   const colorSettings = [
     '1abc9c', 'Black',
-    '2ecc71', 'Black',
-    '3498db', 'Black',
-    '9b59b6', 'Black',
+    'hsl(145, 63.2%, 49.0%)', 'Black',
+    '#3498db', 'Black',
+    'rgb(155, 89, 182)', 'Black',
   ];
 
   const mappedColors = [
     {
       text: 'Black',
-      value: '#1abc9c',
+      value: '#1ABC9C',
       type: 'choiceitem'
     },
     {
       text: 'Black',
-      value: '#2ecc71',
+      value: '#2ECC70',
       type: 'choiceitem'
     },
     {
       text: 'Black',
-      value: '#3498db',
+      value: '#3498DB',
       type: 'choiceitem'
     },
     {
       text: 'Black',
-      value: '#9b59b6',
+      value: '#9B59B6',
       type: 'choiceitem'
     }
   ];
