@@ -115,7 +115,7 @@ const pFooterGroup = (startButtons: AlloySpec[], endButtons: AlloySpec[]) => {
 
 export interface DialogFoo {
   lazySink: () => Result<AlloyComponent, any>;
-  headerOverride: Option<AlloySpec>,
+  headerOverride: Option<AlloySpec>;
   partSpecs: {
     title: AlloySpec,
     close: AlloySpec,
