@@ -10,14 +10,21 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 import Api from './api/Api';
 import Commands from './api/Commands';
 import Buttons from './ui/Buttons';
+import { SearchState } from './core/Actions';
 
 export default function () {
   PluginManager.add('searchreplace', function (editor) {
-    const currentIndexState = Cell(-1);
+    const currentSearchState = Cell<SearchState>({
+      index: -1,
+      count: 0,
+      text: '',
+      matchCase: false,
+      wholeWord: false
+    });
 
-    Commands.register(editor, currentIndexState);
-    Buttons.register(editor, currentIndexState);
+    Commands.register(editor, currentSearchState);
+    Buttons.register(editor, currentSearchState);
 
-    return Api.get(editor, currentIndexState);
+    return Api.get(editor, currentSearchState);
   });
 }

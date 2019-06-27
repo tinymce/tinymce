@@ -5,36 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
-import HtmlToData from './HtmlToData';
+import * as HtmlToData from './HtmlToData';
 import Mime from './Mime';
+import { MediaData } from './Types';
 import UpdateHtml from './UpdateHtml';
 import * as UrlPatterns from './UrlPatterns';
-import VideoScript from './VideoScript';
-import Editor from 'tinymce/core/api/Editor';
+import * as VideoScript from './VideoScript';
 
-export interface MediaDialogData {
-  allowFullscreen: boolean;
-  source1: string;
-  source1mime: string;
-  width: number;
-  height: number;
-  embed: string;
-  poster: string;
-  source2: string;
-  source2mime: string;
-  type: 'iframe' | 'script';
-}
+export type DataToHtmlCallback = (data: MediaData) => string;
 
-export type DataToHtmlCallback = (data: MediaDialogData) => string;
-
-const getIframeHtml = function (data: MediaDialogData) {
+const getIframeHtml = function (data: MediaData) {
   const allowFullscreen = data.allowFullscreen ? ' allowFullscreen="1"' : '';
   return '<iframe src="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '"' + allowFullscreen + '></iframe>';
 };
 
-const getFlashHtml = function (data: MediaDialogData) {
+const getFlashHtml = function (data: MediaData) {
   let html = '<object data="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '" type="application/x-shockwave-flash">';
 
   if (data.poster) {
@@ -46,7 +34,7 @@ const getFlashHtml = function (data: MediaDialogData) {
   return html;
 };
 
-const getAudioHtml = function (data: MediaDialogData, audioTemplateCallback: DataToHtmlCallback) {
+const getAudioHtml = function (data: MediaData, audioTemplateCallback: DataToHtmlCallback) {
   if (audioTemplateCallback) {
     return audioTemplateCallback(data);
   } else {
@@ -62,7 +50,7 @@ const getAudioHtml = function (data: MediaDialogData, audioTemplateCallback: Dat
   }
 };
 
-const getVideoHtml = function (data: MediaDialogData, videoTemplateCallback: DataToHtmlCallback) {
+const getVideoHtml = function (data: MediaData, videoTemplateCallback: DataToHtmlCallback) {
   if (videoTemplateCallback) {
     return videoTemplateCallback(data);
   } else {
@@ -79,12 +67,12 @@ const getVideoHtml = function (data: MediaDialogData, videoTemplateCallback: Dat
   }
 };
 
-const getScriptHtml = function (data: MediaDialogData) {
+const getScriptHtml = function (data: MediaData) {
   return '<script src="' + data.source1 + '"></script>';
 };
 
-const dataToHtml = function (editor: Editor, dataIn: MediaDialogData) {
-  const data: MediaDialogData = Tools.extend({}, dataIn);
+const dataToHtml = function (editor: Editor, dataIn: MediaData) {
+  const data: MediaData = Tools.extend({}, dataIn);
 
   if (!data.source1) {
     Tools.extend(data, HtmlToData.htmlToData(Settings.getScripts(editor), data.embed));
@@ -113,8 +101,8 @@ const dataToHtml = function (editor: Editor, dataIn: MediaDialogData) {
     data.source1 = pattern.url;
     data.type = pattern.type;
     data.allowFullscreen = pattern.allowFullscreen;
-    data.width = data.width || pattern.w;
-    data.height = data.height || pattern.h;
+    data.width = data.width || String(pattern.w);
+    data.height = data.height || String(pattern.h);
   }
 
   if (data.embed) {
@@ -123,15 +111,15 @@ const dataToHtml = function (editor: Editor, dataIn: MediaDialogData) {
     const videoScript = VideoScript.getVideoScriptMatch(Settings.getScripts(editor), data.source1);
     if (videoScript) {
       data.type = 'script';
-      data.width = videoScript.width;
-      data.height = videoScript.height;
+      data.width = String(videoScript.width);
+      data.height = String(videoScript.height);
     }
 
     const audioTemplateCallback = Settings.getAudioTemplateCallback(editor);
     const videoTemplateCallback = Settings.getVideoTemplateCallback(editor);
 
-    data.width = data.width || 300;
-    data.height = data.height || 150;
+    data.width = data.width || '300';
+    data.height = data.height || '150';
 
     Tools.each(data, function (value, key) {
       data[key] = editor.dom.encode('' + value);
@@ -151,6 +139,6 @@ const dataToHtml = function (editor: Editor, dataIn: MediaDialogData) {
   }
 };
 
-export default {
+export {
   dataToHtml
 };
