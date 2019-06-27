@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Debugging } from '@ephox/alloy';
-import { Fun, Id } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 import ThemeManager, { Theme } from 'tinymce/core/api/ThemeManager';
 import NotificationManagerImpl from './alien/NotificationManagerImpl';
 import { Autocompleter } from './Autocompleter';
@@ -15,10 +14,7 @@ import WindowManager from './ui/dialog/WindowManager';
 
 export default function () {
   ThemeManager.add('silver', (editor): Theme => {
-    const { mothership, uiMothership, backstage, renderUI, getUi }: RenderInfo = Render.setup(editor);
-
-    Debugging.registerInspector(Id.generate('silver-demo'), mothership);
-    Debugging.registerInspector(Id.generate('silver-ui-demo'), uiMothership);
+    const { uiMothership, backstage, renderUI, getUi }: RenderInfo = Render.setup(editor);
 
     Autocompleter.register(editor, backstage.shared);
 
