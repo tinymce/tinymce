@@ -42,6 +42,8 @@ UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
     'hsl(145, 63.2%, 49.0%)', 'Black',
     '#3498db', 'Black',
     'rgb(155, 89, 182)', 'Black',
+    'PeachPuff', 'Some horrible pink/orange color',
+    'Pale tomato', 'rgba(255, 99, 71, 0.5)'
   ];
 
   const mappedColors = [
@@ -63,6 +65,16 @@ UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
     {
       text: 'Black',
       value: '#9B59B6',
+      type: 'choiceitem'
+    },
+    {
+      text: 'Some horrible pink/orange color',
+      value: '#FFDAB9',
+      type: 'choiceitem'
+    },
+    {
+      text: 'Pale tomato',
+      value: '#FFB0A2',
       type: 'choiceitem'
     }
   ];
