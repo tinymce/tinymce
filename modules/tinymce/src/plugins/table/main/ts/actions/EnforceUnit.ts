@@ -8,12 +8,15 @@
 import { Arr } from '@ephox/katamari';
 import { Css, Element, SelectorFilter, Traverse } from '@ephox/sugar';
 import { getPixelWidth } from '../alien/Util';
+import { HTMLTableElement } from '@ephox/dom-globals';
 
 const calculatePercentageWidth = (element: Element, parent: Element): string => {
   return getPixelWidth(element.dom()) / getPixelWidth(parent.dom()) * 100 + '%';
 };
 
-const enforcePercentage = (table: Element) => {
+const enforcePercentage = (rawTable: HTMLTableElement) => {
+  const table = Element.fromDom(rawTable);
+
   Traverse.parent(table).map((parent) => calculatePercentageWidth(table, parent)).each((tablePercentage) => {
     Css.set(table, 'width', tablePercentage);
 
@@ -25,16 +28,11 @@ const enforcePercentage = (table: Element) => {
   });
 };
 
-const enforcePixels = (table: Element) => {
-  Css.set(table, 'width', getPixelWidth(table.dom()).toString() + 'px');
+const enforcePixels = (table: HTMLTableElement) => {
+  Css.set(Element.fromDom(table), 'width', getPixelWidth(table).toString() + 'px');
 };
 
-const enforceUnits = (table: Element, pixelsForced: boolean) => {
-  if (pixelsForced) {
-    enforcePixels(table);
-  } else {
-    enforcePercentage(table);
-  }
+export {
+  enforcePercentage,
+  enforcePixels
 };
-
-export { enforceUnits };

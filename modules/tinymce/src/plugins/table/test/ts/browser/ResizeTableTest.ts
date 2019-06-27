@@ -87,12 +87,38 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
   });
 
   Pipeline.async({}, [
-    Logger.t('Test default config of [table_responsive_width=true], new tables should default to % and resize should force %', Chain.asStep({}, [
+    Logger.t('Test default config of [table_responsive_width=unset], resize should detect current unit', Chain.asStep({}, [
       NamedChain.write('editor', McEditor.cFromSettings({
         plugins: 'table',
         width: 400,
         theme: 'silver',
         base_url: '/project/tinymce/js/tinymce'
+      })),
+
+      cClearResizeEventData,
+      NamedChain.read('editor', ApiChains.cSetContent('')),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cInsertRaw('<table style="width: 100%;"><tbody><tr><td style="width: 50%;"></td><td style="width: 50%;"></td></tr></tbody></table>')), 'widths'),
+      NamedChain.read('widths', cAssertUnitAfterResize('%')),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+
+      cClearResizeEventData,
+      NamedChain.read('editor', ApiChains.cSetContent('')),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cInsertRaw('<table style="width: 200px;"><tbody><tr><td></td><td></td></tr></tbody></table>')), 'widths'),
+      NamedChain.read('widths', cAssertUnitAfterResize('px')),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+
+      NamedChain.read('editor', McEditor.cRemove)
+    ])),
+
+    Logger.t('Test default config of [table_responsive_width=true], new tables should default to % and resize should force %', Chain.asStep({}, [
+      NamedChain.write('editor', McEditor.cFromSettings({
+        plugins: 'table',
+        width: 400,
+        theme: 'silver',
+        base_url: '/project/tinymce/js/tinymce',
+        table_responsive_width: true
       })),
 
       cClearResizeEventData,
