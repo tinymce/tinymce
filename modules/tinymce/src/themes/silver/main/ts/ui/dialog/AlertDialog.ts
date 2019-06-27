@@ -32,6 +32,7 @@ export const setup = (extras) => {
     const alertDialog = GuiFactory.build(
       Dialogs.renderDialog({
         lazySink: () => sharedBackstage.getSink(),
+        headerOverride: Option.some(Dialogs.hiddenHeader),
         partSpecs: {
           title: Dialogs.pUntitled(),
           close: Dialogs.pClose(() => {

@@ -43,6 +43,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
     const confirmDialog = GuiFactory.build(
       Dialogs.renderDialog({
         lazySink: () => sharedBackstage.getSink(),
+        headerOverride: Option.some(Dialogs.hiddenHeader),
         partSpecs: {
           title: Dialogs.pUntitled(),
           close: Dialogs.pClose(() => {
