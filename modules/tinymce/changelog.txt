@@ -1,6 +1,8 @@
 Version 5.0.10 (TBD)
     Fixed an issue in the Oxide skin where dialog content like outlines and shadows were clipped because of overflow hidden TINY-3566
     Changed default palette for fore/back color to include some lighter colors suitable for highlights #TINY-2865
+    Changed the search and replace plugin to cycle through results #TINY-3800
+    Fixed the search and replace plugin not resetting state when changing the search query #TINY-3800
     Fixed backspace in lists not creating an undo level #TINY-3814
     Fixed the editor to cancel loading in quirks mode where the UI is not supported #TINY-3391
     Fixed applying fonts not working when the name contained spaces and numbers #TINY-3801
