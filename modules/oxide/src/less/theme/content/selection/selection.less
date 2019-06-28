@@ -9,14 +9,14 @@
 // Selection
 //
 
-@document-selection-color: #b4d7ff;
+@document-selection-color: initial;
 @object-block-selected-color: #b4d7ff;
 @object-block-selected-outline-width: 3px;
 
 .mce-content-body {
   // Define general selection color inside document
   *::selection {
-    background: @document-selection-color;
+    // Should be set in content/content.css. Selection does not work on Windows using high contrast mode with Firefox.
   }
 
   // Selection outline on certain editable objects
