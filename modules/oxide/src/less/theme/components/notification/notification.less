@@ -22,12 +22,18 @@
     border-style: solid;
     border-width: 1px;
     box-sizing: border-box;
+    color: #222f3e;
     display: grid;
     grid-template-columns: minmax(40px, 1fr) auto minmax(40px, 1fr);
     margin-top: 5px;
     opacity: 0;
     padding: 5px;
     transition: transform 100ms ease-in, opacity 150ms ease-in;
+
+    a {
+      color: @color-tint;
+      text-decoration: underline;
+    }
   }
 
   .tox-notification--in {
@@ -37,11 +43,19 @@
   .tox-notification--success {
     background-color: #dff0d8;
     border-color: #d6e9c6;
+
+    a {
+      color: darken(#d6e9c6, 55%);
+    }
   }
 
   .tox-notification--error {
     background-color: #f2dede;
     border-color: #ebccd1;
+
+    a {
+      color: darken(#ebccd1, 50%);
+    }
   }
 
   .tox-notification--warn {
