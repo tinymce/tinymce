@@ -10,6 +10,7 @@ export interface PositioningBehaviour extends Behaviour.AlloyBehaviour<Positioni
   config: (config: PositioningConfigSpec) => Behaviour.NamedConfiguredBehaviour<PositioningConfigSpec, PositioningConfig>;
   position: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent) => void;
   positionWithin: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Option<Element>) => void;
+  positionWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent, bounds: Option<Bounds>) => void;
   getMode: (component: AlloyComponent) => string;
 }
 

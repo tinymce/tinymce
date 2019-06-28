@@ -19,6 +19,14 @@ export interface Bubble {
   north: () => BubbleInstance;
   east: () => BubbleInstance;
   west: () => BubbleInstance;
+  innerSoutheast: () => BubbleInstance;
+  innerSouthwest: () => BubbleInstance;
+  innerNorthwest: () => BubbleInstance;
+  innerNortheast: () => BubbleInstance;
+  innerSouth: () => BubbleInstance;
+  innerNorth: () => BubbleInstance;
+  innerEast: () => BubbleInstance;
+  innerWest: () => BubbleInstance;
 }
 
 export interface BubbleAlignments {
@@ -76,7 +84,15 @@ const nu = (width, yoffset, classes: BubbleAlignments): Bubble => {
     northwest: () => make(width, -yoffset, [ 'bottom', 'alignRight' ]),
     north: () => make(-width / 2, -yoffset, [ 'bottom', 'alignCentre' ]),
     east: () => make(width, -yoffset / 2, [ 'valignCentre', 'left' ]),
-    west: () => make(-width, -yoffset / 2, [ 'valignCentre', 'right' ])
+    west: () => make(-width, -yoffset / 2, [ 'valignCentre', 'right' ]),
+    innerNorthwest: () => make(-width, yoffset, [ 'top', 'alignRight' ]),
+    innerNortheast: () => make(width, yoffset, [ 'top', 'alignLeft' ]),
+    innerNorth: () => make(-width / 2, yoffset, [ 'top', 'alignCentre' ]),
+    innerSouthwest: () => make(-width, -yoffset, [ 'bottom', 'alignRight' ]),
+    innerSoutheast: () => make(width, -yoffset, [ 'bottom', 'alignLeft' ]),
+    innerSouth: () => make(-width / 2, -yoffset, [ 'bottom', 'alignCentre' ]),
+    innerWest: () => make(width, -yoffset / 2, [ 'valignCentre', 'right' ]),
+    innerEast: () => make(-width, -yoffset / 2, [ 'valignCentre', 'left' ])
   };
 };
 
