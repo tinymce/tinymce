@@ -19,9 +19,11 @@ import VK from '../api/util/VK';
 import Editor from '../api/Editor';
 import PageBreakDelete from '../delete/ImageBlockDelete';
 import { EditorEvent } from '../api/util/EventDispatcher';
+import Deindent from '../delete/Deindent';
 
 const executeKeydownOverride = function (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) {
   MatchKeys.execute([
+    { keyCode: VK.BACKSPACE, action: MatchKeys.action(Deindent.backspaceDelete, editor, false) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, true) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefBoundaryDelete.backspaceDelete, editor, false) },
