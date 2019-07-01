@@ -71,7 +71,7 @@ const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, matchText
   const structure = renderItemStructure({
     presets,
     textContent: Option.none(),
-    htmlContent: useText ? spec.text.map((text) => replaceText(text, matchText)) : Option.none(),
+    htmlContent: spec.html || useText ? spec.text.map((text) => replaceText(text, matchText)) : Option.none(),
     ariaLabel: spec.text,
     iconContent: spec.icon,
     shortcutContent: Option.none(),

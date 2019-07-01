@@ -7,6 +7,7 @@ import { ColumnTypes } from '../toolbar/ToolbarSplitButton';
 export interface AutocompleterItemApi {
   value: string;
   text?: string;
+  html?: string;
   icon?: string;
   meta?: Record<string, any>;
 }
@@ -14,6 +15,7 @@ export interface AutocompleterItemApi {
 export interface AutocompleterItem {
   type: 'autocompleteitem';
   value: string;
+  html: Option<string>;
   text: Option<string>;
   icon: Option<string>;
   active: boolean;
@@ -55,6 +57,7 @@ const autocompleterItemSchema = ValueSchema.objOf([
   FieldSchema.defaulted('meta', {}),
   FieldSchema.strictString('value'),
   FieldSchema.optionString('text'),
+  FieldSchema.optionString('html'),
   FieldSchema.optionString('icon')
 ]);
 
