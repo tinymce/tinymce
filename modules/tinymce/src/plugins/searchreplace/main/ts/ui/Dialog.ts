@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr, Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { Arr } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import Actions from '../core/Actions';
+import * as Actions from '../core/Actions';
 import { Types } from '@ephox/bridge';
 import I18n from 'tinymce/core/api/util/I18n';
 
@@ -20,16 +20,15 @@ export interface DialogData {
   wholewords: boolean;
 }
 
-const open = function (editor: Editor, currentIndexState) {
-  let last: any = {}, selectedText: string;
+const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchState>) {
   editor.undoManager.add();
 
-  selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
+  const selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
 
   function updateButtonStates(api: Types.Dialog.DialogInstanceApi<DialogData>) {
-    const updateNext = Actions.hasNext(editor, currentIndexState) ? api.enable : api.disable;
+    const updateNext = Actions.hasNext(editor, currentSearchState) ? api.enable : api.disable;
     updateNext('next');
-    const updatePrev = Actions.hasPrev(editor, currentIndexState) ? api.enable : api.disable;
+    const updatePrev = Actions.hasPrev(editor, currentSearchState) ? api.enable : api.disable;
     updatePrev('prev');
   }
 
@@ -45,38 +44,37 @@ const open = function (editor: Editor, currentIndexState) {
     });
   }
 
-  const doSubmit = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
+  const reset = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
+    // Clean up the markers if required
+    Actions.done(editor, currentSearchState, false);
+
+    // Disable the buttons
+    disableAll(api, true);
+    updateButtonStates(api);
+  };
+
+  const doFind = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
     const data = api.getData();
+    const last = currentSearchState.get();
 
     if (!data.findtext.length) {
-      Actions.done(editor, currentIndexState, false);
-      disableAll(api, true);
-      updateButtonStates(api);
+      reset(api);
       return;
     }
 
-    if (last.text === data.findtext && last.caseState === data.matchcase && last.wholeWord === data.wholewords) {
-      if (!Actions.hasNext(editor, currentIndexState)) {
-          notFoundAlert(api);
-          return;
+    // Same search text, so treat the find as a next click instead
+    if (last.text === data.findtext && last.matchCase === data.matchcase && last.wholeWord === data.wholewords) {
+      Actions.next(editor, currentSearchState);
+    } else {
+      // Find new matches
+      const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords);
+      if (count <= 0) {
+        notFoundAlert(api);
       }
-      Actions.next(editor, currentIndexState);
-      updateButtonStates(api);
-      return;
-    }
-    const count = Actions.find(editor, currentIndexState, data.findtext, data.matchcase, data.wholewords);
-    if (!count) {
-      notFoundAlert(api);
+      disableAll(api, count === 0);
     }
 
-    disableAll(api, count === 0);
     updateButtonStates(api);
-
-    last = {
-      text: data.findtext,
-      caseState: data.matchcase,
-      wholeWord: data.wholewords
-    };
   };
 
   const initialData: DialogData = {
@@ -161,40 +159,44 @@ const open = function (editor: Editor, currentIndexState) {
       }
     ],
     initialData,
+    onChange: (api, details) => {
+      if (details.name === 'findtext' && currentSearchState.get().count > 0) {
+        reset(api);
+      }
+    },
     onAction: (api, details) => {
       const data = api.getData();
       switch (details.name) {
         case 'find':
-          doSubmit(api);
+          doFind(api);
           break;
         case 'replace':
-          if (!Actions.replace(editor, currentIndexState, data.replacetext)) {
-            disableAll(api, true);
-            currentIndexState.set(-1);
-            last = {};
+          if (!Actions.replace(editor, currentSearchState, data.replacetext)) {
+            reset(api);
+          } else {
+            updateButtonStates(api);
           }
           break;
         case 'replaceall':
-          Actions.replace(editor, currentIndexState, data.replacetext, true, true);
-          disableAll(api, true);
-          last = {};
+          Actions.replace(editor, currentSearchState, data.replacetext, true, true);
+          reset(api);
           break;
         case 'prev':
-          Actions.prev(editor, currentIndexState);
+          Actions.prev(editor, currentSearchState);
           updateButtonStates(api);
           break;
         case 'next':
-          Actions.next(editor, currentIndexState);
+          Actions.next(editor, currentSearchState);
           updateButtonStates(api);
           break;
         default:
           break;
       }
     },
-    onSubmit: doSubmit,
+    onSubmit: doFind,
     onClose: () => {
       editor.focus();
-      Actions.done(editor, currentIndexState);
+      Actions.done(editor, currentSearchState);
       editor.undoManager.add();
     }
   });

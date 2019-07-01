@@ -44,6 +44,13 @@
 @dialog-body-text-color: @text-color;
 @dialog-body-text-transform: normal;
 
+@dialog-body-link-color: @color-tint;
+@dialog-body-link-text-decoration: none;
+@dialog-body-link-hover-color: darken(@color-tint, 10%);
+@dialog-body-link-hover-text-decoration: none;
+@dialog-body-link-active-color: darken(@color-tint, 10%);
+@dialog-body-link-active-text-decoration: none;
+
 @dialog-table-border-color: @border-color;
 
 .tox {
@@ -210,6 +217,43 @@
     > *:only-child {
       margin-bottom: 0;
       margin-top: 0;
+    }
+
+    h1 {
+      font-size: @font-size-lg;
+      font-weight: bold;
+      margin-top: 2rem;
+    }
+
+    h2 {
+      font-size: @font-size-md;
+      font-weight: bold;
+      margin-top: 2rem;
+    }
+
+    a {
+      color: @dialog-body-link-color;
+      cursor: pointer;
+      text-decoration: @dialog-body-link-text-decoration;
+
+      &:hover,
+      &:focus {
+        color: @dialog-body-link-hover-color;
+        text-decoration: @dialog-body-link-hover-text-decoration;
+      }
+
+      &:active {
+        color: @dialog-body-link-active-color;
+        text-decoration: @dialog-body-link-active-text-decoration;
+      }
+    }
+
+    ul {
+      display: block;
+      list-style-type: disc;
+      margin-inline-end: 0;
+      margin-inline-start: 0;
+      padding-inline-start: 2.5rem;
     }
   }
 

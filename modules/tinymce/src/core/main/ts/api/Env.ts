@@ -51,7 +51,7 @@ const contentEditable = !iDevice || fileApi || parseInt(userAgent.match(/AppleWe
 interface Env {
   opera: boolean;
   webkit: boolean;
-  ie: number;
+  ie: boolean | number;
   gecko: boolean;
   mac: boolean;
   iOS: boolean;

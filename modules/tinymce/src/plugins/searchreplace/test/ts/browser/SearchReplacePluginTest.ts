@@ -91,7 +91,7 @@ UnitTest.asynctest(
       editor.setContent('a a');
       LegacyUnit.equal(2, editor.plugins.searchreplace.find('a'));
       editor.plugins.searchreplace.next();
-      LegacyUnit.equal(editor.plugins.searchreplace.replace('x'), false);
+      LegacyUnit.equal(editor.plugins.searchreplace.replace('x'), true);
       LegacyUnit.equal('<p>a x</p>', editor.getContent());
     });
 

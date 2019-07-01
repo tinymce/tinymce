@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 
-import DataToHtml from 'tinymce/plugins/media/core/DataToHtml';
+import * as DataToHtml from 'tinymce/plugins/media/core/DataToHtml';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 

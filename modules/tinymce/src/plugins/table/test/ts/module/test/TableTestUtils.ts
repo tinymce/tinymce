@@ -2,7 +2,8 @@ import { ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Guard, Logge
 import { document } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
 import { TinyDom } from '@ephox/mcagar';
-import { Body, Element, SelectorFind, Value } from '@ephox/sugar';
+import { Body, Element, SelectorFind, Value, Attr, Html } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 const sAssertTableStructure = (editor, structure) => Logger.t('Assert table structure ' + structure, Step.sync(() => {
   const table = SelectorFind.descendant(Element.fromDom(editor.getBody()), 'table').getOrDie('Should exist a table');
@@ -111,9 +112,22 @@ const cGetBody = Chain.control(
   Guard.addLogging('Get body')
 );
 
-const cInsertTable = function (cols, rows) {
-  return Chain.mapper(function (editor: any) {
+const cInsertTable = (cols: number, rows: number) => {
+  return Chain.mapper((editor: Editor) => {
     return TinyDom.fromDom(editor.plugins.table.insertTable(cols, rows));
+  });
+};
+
+const cInsertRaw = (html: string) => {
+  return Chain.mapper((editor: Editor) => {
+    const element = Element.fromHtml(html);
+    Attr.set(element, 'data-mce-id', '__mce');
+    editor.insertContent(Html.getOuter(element));
+
+    return SelectorFind.descendant(Element.fromDom(editor.getBody()), '[data-mce-id="__mce"]').map((el) => {
+      Attr.remove(el, 'data-mce-id');
+      return el;
+    }).getOrDie();
   });
 };
 
@@ -309,6 +323,7 @@ export default {
   cWaitForDialog,
   cGetBody,
   cInsertTable,
+  cInsertRaw,
   cMergeCells,
   cSplitCells,
   cDragHandle,

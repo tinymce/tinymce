@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-/*jshint smarttabs:true, undef:true, unused:true, latedef:true, curly:true, bitwise:true */
+import { HTMLElement, Node } from '@ephox/dom-globals';
+import Schema from 'tinymce/core/api/html/Schema';
 
-/*eslint no-labels:0, no-constant-condition: 0 */
-
-function isContentEditableFalse(node) {
+function isContentEditableFalse(node: HTMLElement) {
   return node && node.nodeType === 1 && node.contentEditable === 'false';
 }
 
@@ -17,7 +16,7 @@ function isContentEditableFalse(node) {
 // released under UNLICENSE that is compatible with LGPL
 // TODO: Handle contentEditable edgecase:
 // <p>text<span contentEditable="false">text<span contentEditable="true">text</span>text</span>text</p>
-function findAndReplaceDOMText(regex, node, replacementNode, captureGroup, schema) {
+function findAndReplaceDOMText(regex: RegExp, node: Node, replacementNode: Node, captureGroup: number | false, schema: Schema) {
   let m;
   const matches = [];
   let text, count = 0, doc;
@@ -28,7 +27,7 @@ function findAndReplaceDOMText(regex, node, replacementNode, captureGroup, schem
   hiddenTextElementsMap = schema.getWhiteSpaceElements(); // TEXTAREA, PRE, STYLE, SCRIPT
   shortEndedElementsMap = schema.getShortEndedElements(); // BR, IMG, INPUT
 
-  function getMatchIndexes(m, captureGroup) {
+  function getMatchIndexes(m: RegExpMatchArray, captureGroup: number | false) {
     captureGroup = captureGroup || 0;
 
     if (!m[0]) {

@@ -12,10 +12,11 @@ import { Element as SugarElement } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';
 import Direction from '../queries/Direction';
 import TableWire from './TableWire';
-import { hasTableResizeBars, hasObjectResizing } from '../api/Settings';
+import { hasTableResizeBars, hasObjectResizing, isPixelsForced, isPercentagesForced } from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 import * as Util from '../alien/Util';
+import { enforcePixels, enforcePercentage } from './EnforceUnit';
 
 export interface ResizeHandler {
   lazyResize: () => Option<any>;
@@ -28,14 +29,16 @@ export const ResizeHandler = function (editor: Editor): ResizeHandler {
   let resize = Option.none();
   let wire = Option.none();
   const percentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
-  let startW, startRawW;
+  let startW: number;
+  let startRawW: string;
 
   const isTable = function (elm: Node): elm is HTMLTableElement {
     return elm.nodeName === 'TABLE';
   };
 
   const getRawWidth = function (elm: Element) {
-    return editor.dom.getStyle(elm, 'width') || editor.dom.getAttrib(elm, 'width');
+    const raw = editor.dom.getStyle(elm, 'width') || editor.dom.getAttrib(elm, 'width');
+    return Option.from(raw).filter((s) => s.length > 0);
   };
 
   const lazyResize = function () {
@@ -94,8 +97,17 @@ export const ResizeHandler = function (editor: Editor): ResizeHandler {
   editor.on('ObjectResizeStart', function (e) {
     const targetElm = e.target;
     if (isTable(targetElm)) {
+
+      const tableHasPercentage = getRawWidth(targetElm).map((w) => percentageBasedSizeRegex.test(w)).getOr(false);
+
+      if (tableHasPercentage && isPixelsForced(editor)) {
+        enforcePixels(targetElm);
+      } else if (!tableHasPercentage && isPercentagesForced(editor)) {
+        enforcePercentage(targetElm);
+      }
+
       startW = e.width;
-      startRawW = getRawWidth(targetElm);
+      startRawW = getRawWidth(targetElm).getOr('');
     }
   });
 
