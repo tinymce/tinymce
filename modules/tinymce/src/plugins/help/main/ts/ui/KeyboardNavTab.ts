@@ -7,6 +7,8 @@
 
 import { Types } from '@ephox/bridge';
 
+// TODO: When we translate this, we should pull the HTML out into a HTML file, the way TBIO does it.
+// That requires webpack and rollup changes though, so inlining it for now.
 const description = `<h1>Editor UI keyboard navigation</h1>
 
 <h2>Activating keyboard navigation</h2>
