@@ -243,7 +243,7 @@ const isKeyboardPasteEvent = (e: KeyboardEvent) => {
 };
 
 const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: Cell<string>) => {
-  let keyboardPasteEvent = Singleton.value();
+  const keyboardPasteEvent = Singleton.value();
   let keyboardPastePlainTextState;
 
   editor.on('keydown', function (e) {
