@@ -122,7 +122,7 @@ class URI {
     if (!/^[\w\-]*:?\/\//.test(url)) {
       const baseUrl = this.settings.base_uri ? this.settings.base_uri.path : new URI(document.location.href).directory;
       // tslint:disable-next-line:triple-equals
-      if (this.settings.base_uri.protocol == '') {
+      if (this.settings.base_uri && this.settings.base_uri.protocol == '') {
         url = '//mce_host' + self.toAbsPath(baseUrl, url);
       } else {
         const match = /([^#?]*)([#?]?.*)/.exec(url);
