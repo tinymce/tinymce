@@ -17,7 +17,7 @@ import ProcessFilters from './ProcessFilters';
 import SmartPaste from './SmartPaste';
 import Utils from './Utils';
 import { Editor } from 'tinymce/core/api/Editor';
-import { Cell, Futures, Future, Arr } from '@ephox/katamari';
+import { Cell, Futures, Future, Arr, Singleton } from '@ephox/katamari';
 import { DataTransfer, ClipboardEvent, HTMLImageElement, Range, Image, Event, DragEvent, navigator, KeyboardEvent, File } from '@ephox/dom-globals';
 
 declare let window: any;
@@ -243,7 +243,7 @@ const isKeyboardPasteEvent = (e: KeyboardEvent) => {
 };
 
 const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: Cell<string>) => {
-  let keyboardPasteTimeStamp = 0;
+  let keyboardPasteEvent = Singleton.value();
   let keyboardPastePlainTextState;
 
   editor.on('keydown', function (e) {
@@ -267,7 +267,12 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
       // Prevent undoManager keydown handler from making an undo level with the pastebin in it
       e.stopImmediatePropagation();
 
-      keyboardPasteTimeStamp = new Date().getTime();
+      // track that this is a keyboard paste event but remove it once the paste event
+      // has had enough time to be added to the stack first
+      keyboardPasteEvent.set(e);
+      window.setTimeout(() => {
+        keyboardPasteEvent.clear();
+      }, 100);
 
       // IE doesn't support Ctrl+Shift+V and it doesn't even produce a paste event
       // so lets fake a paste event and let IE use the execCommand/dataTransfer methods
@@ -351,12 +356,9 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
   };
 
   editor.on('paste', function (e) {
-    // Getting content from the Clipboard can take some time
-    const clipboardTimer = new Date().getTime();
+    const isKeyBoardPaste = keyboardPasteEvent.isSet();
     const clipboardContent = getClipboardContent(editor, e);
-    const clipboardDelay = new Date().getTime() - clipboardTimer;
 
-    const isKeyBoardPaste = (new Date().getTime() - keyboardPasteTimeStamp - clipboardDelay) < 1000;
     const plainTextMode = pasteFormat.get() === 'text' || keyboardPastePlainTextState;
     let internal = hasContentType(clipboardContent, InternalHtml.internalHtmlMime());
 
