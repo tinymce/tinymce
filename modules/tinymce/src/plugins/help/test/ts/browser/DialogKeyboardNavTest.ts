@@ -47,6 +47,15 @@ UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (succes
         sPressDownArrowKey
       ]),
 
+      Log.stepsAsStep('TBA', 'Help: test the tab key navigation cycles through all focusable fields in Keyboard Nav tab', [
+        sAssertFocusOnItem('Keyboard Nav Tab', '.tox-dialog__body-nav-item:contains("Keyboard Navigation")'),
+        sPressTabKey,
+        sAssertFocusOnItem('Close Button', '.tox-button:contains("Close")'),
+        sPressTabKey,
+        sAssertFocusOnItem('Keyboard Nav Tab', '.tox-dialog__body-nav-item:contains("Keyboard Navigation")'),
+        sPressDownArrowKey
+      ]),
+
       Log.stepsAsStep('TBA', 'Help: test the tab key navigation cycles through all focusable fields in Plugins tab', [
         sAssertFocusOnItem('Plugins Tab', '.tox-dialog__body-nav-item:contains("Plugins")'),
         sPressTabKey,
