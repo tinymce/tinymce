@@ -34,8 +34,11 @@ import { formActionEvent, formResizeEvent } from '../general/FormEvents';
 import { deriveCollectionMovement } from '../menus/menu/MenuMovement';
 import * as ItemClasses from '../menus/item/ItemClasses';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { Omit } from '../Omit';
 
-export const renderCollection = (spec: Types.Collection.Collection, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+type CollectionSpec = Omit<Types.Collection.Collection, 'type'>;
+
+export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   // DUPE with TextField.
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 

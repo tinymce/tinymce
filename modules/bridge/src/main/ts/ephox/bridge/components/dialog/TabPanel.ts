@@ -3,7 +3,7 @@ import { Id, Result } from '@ephox/katamari';
 import { BodyComponent, BodyComponentApi } from './BodyComponent';
 import { itemSchema } from './ItemSchema';
 
-export interface ExternalTab {
+export interface TabApi {
   name?: string;
   title: string;
   items: BodyComponentApi[];
@@ -11,18 +11,18 @@ export interface ExternalTab {
 
 export interface TabPanelApi {
   type: 'tabpanel';
-  tabs: ExternalTab[];
+  tabs: TabApi[];
 }
 
-export interface InternalTab {
+export interface Tab {
   name: string;
   title: string;
   items: BodyComponent[];
 }
 
-export interface InternalTabPanel {
+export interface TabPanel {
   type: 'tabpanel';
-  tabs: InternalTab[];
+  tabs: Tab[];
 }
 
 export const tabFields = [
@@ -45,6 +45,6 @@ export const tabPanelFields = [
 
 export const tabPanelSchema = ValueSchema.objOf(tabPanelFields);
 
-export const createTabPanel = (spec: TabPanelApi): Result<InternalTabPanel, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<InternalTabPanel>('tabpanel', tabPanelSchema, spec);
+export const createTabPanel = (spec: TabPanelApi): Result<TabPanel, ValueSchema.SchemaError<any>> => {
+  return ValueSchema.asRaw<TabPanel>('tabpanel', tabPanelSchema, spec);
 };

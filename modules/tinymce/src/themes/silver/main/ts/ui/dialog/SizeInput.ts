@@ -28,12 +28,15 @@ import { formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Icons from '../icons/Icons';
 import { formatSize, makeRatioConverter, noSizeConversion, parseSize, SizeConversion } from '../sizeinput/SizeInputModel';
+import { Omit } from '../Omit';
 
 interface RatioEvent extends CustomEvent {
   isField1: () => boolean;
 }
 
-export const renderSizeInput = (spec: Types.SizeInput.SizeInput, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+type SizeInputSpec = Omit<Types.SizeInput.SizeInput, 'type'>;
+
+export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   let converter: SizeConversion = noSizeConversion;
 
   const ratioEvent = Id.generate('ratio-event');

@@ -25,7 +25,6 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
           },
           components: [
             renderColorInput({
-              type: 'colorinput',
               name: 'alpha',
               label: Option.some('test-color-input'),
             }, helpers.shared, {

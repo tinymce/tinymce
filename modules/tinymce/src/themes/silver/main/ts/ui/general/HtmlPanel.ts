@@ -7,15 +7,11 @@
 
 import { Container as AlloyContainer, SketchSpec, Behaviour, Tabstopping, Focusing } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
+import { Omit } from '../Omit';
 
-// TODO: Refer directly to the bridge interface type (HtmlPanel.HtmlPanel) #TINY-3349
-export interface HtmlPanelFoo {
-  type: 'htmlpanel';
-  html: string;
-  presets: Types.HtmlPanelPresetTypes;
-}
+type HtmlPanelSpec = Omit<Types.HtmlPanel.HtmlPanel, 'type'>;
 
-export const renderHtmlPanel = (spec: HtmlPanelFoo): SketchSpec => {
+export const renderHtmlPanel = (spec: HtmlPanelSpec): SketchSpec => {
   if (spec.presets === 'presentation') {
     return AlloyContainer.sketch({
       dom: {

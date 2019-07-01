@@ -9,8 +9,11 @@ import { SimpleSpec } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import { Omit } from '../Omit';
 
-export const renderBar = <I>(spec: Types.Grid.Grid, backstage: UiFactoryBackstageShared): SimpleSpec => {
+type BarSpec = Omit<Types.Bar.Bar, 'type'>;
+
+export const renderBar = (spec: BarSpec, backstage: UiFactoryBackstageShared): SimpleSpec => {
   return {
     dom: {
       tag: 'div',

@@ -25,6 +25,8 @@ export const setup = (extras) => {
         name: 'close-alert',
         text: 'OK',
         primary: true,
+        align: 'end',
+        disabled: false,
         icon: Option.none()
       }, 'cancel', sharedBackstage.providers)
     );
