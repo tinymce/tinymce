@@ -12,6 +12,9 @@
 @checkbox-unselected-color: contrast(@background-color, fade(@color-black, 30%), fade(@color-white, 20%));
 @checkbox-selected-color: @color-tint;
 @checkbox-indeterminate-color: @checkbox-selected-color;
+
+@checkbox-disabled-text-color: fade(@text-color, 50%);
+
 @checkbox-focus-box-shadow: inset 0 0 0 1px @button-background-color;
 @checkbox-focus-border-radius: @control-border-radius;
 
@@ -64,6 +67,25 @@
 
   .tox-checkbox__icon {
     //
+  }
+
+  .tox-checkbox--disabled {
+    color: @checkbox-disabled-text-color;
+    cursor: not-allowed;
+  }
+
+  .tox-checkbox--disabled .tox-checkbox__icons {
+    .tox-checkbox-icon__checked svg {
+      fill: @checkbox-disabled-text-color;
+    }
+
+    .tox-checkbox-icon__unchecked svg {
+      fill: @checkbox-disabled-text-color;
+    }
+
+    .tox-checkbox-icon__indeterminate svg {
+      fill: @checkbox-disabled-text-color;
+    }
   }
 
   input.tox-checkbox__input:checked + .tox-checkbox__icons {

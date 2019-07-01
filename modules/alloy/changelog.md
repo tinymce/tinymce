@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.14.0] - 2019-07-10
+
+### Added
+- Added `onDisabled` and `onEnabled` callbacks to the disabling behaviour.
+
+### Fixed
+- Fixed disabling `select` elements not using the `disabled` attribute.
+
 # [4.13.0] - 2019-06-06
 
 ### Added
