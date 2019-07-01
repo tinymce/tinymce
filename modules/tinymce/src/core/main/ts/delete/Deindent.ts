@@ -10,7 +10,7 @@ import * as BlockBoundary from '../caret/BlockBoundary';
 import CaretPosition from '../caret/CaretPosition';
 import { Element } from '@ephox/sugar';
 
-const backspaceDelete = function (editor: Editor, caret, forward?: boolean) {
+const backspaceDelete = function (editor: Editor, _caret, _forward?: boolean) {
   if (editor.selection.isCollapsed() && IndentOutdent.canOutdent(editor)) {
     const dom = editor.dom;
     const rng = editor.selection.getRng();
