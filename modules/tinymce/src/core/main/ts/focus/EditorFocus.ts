@@ -7,15 +7,15 @@
 
 import { Node, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Compare, Focus, Element } from '@ephox/sugar';
+import { Compare, Element, Focus, SelectorExists } from '@ephox/sugar';
+import Selection from '../api/dom/Selection';
+import Editor from '../api/Editor';
 import Env from '../api/Env';
 import CaretFinder from '../caret/CaretFinder';
+import { CaretPosition } from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
 import * as RangeNodes from '../selection/RangeNodes';
 import SelectionBookmark from '../selection/SelectionBookmark';
-import Selection from '../api/dom/Selection';
-import { CaretPosition } from '../caret/CaretPosition';
-import Editor from '../api/Editor';
 
 const getContentEditableHost = (editor: Editor, node: Node) => {
   return editor.dom.getParent(node, function (node) {
@@ -75,7 +75,17 @@ const hasInlineFocus = (editor: Editor): boolean => {
   return rawBody && hasElementFocus(Element.fromDom(rawBody));
 };
 
+const hasUiFocus = (editor: Editor): boolean => {
+  // editor container is the obvious one (Toolbar, Status bar, Sidebar)
+  return hasElementFocus(Element.fromDom(editor.getContainer())) ||
+    // Dialogs and menus are in an auxiliary element (silver theme specific)
+    // This can't use Focus.search() because only the theme has this element reference
+    Focus.active().filter((elem) => SelectorExists.closest(elem, '.tox-tinymce-aux')).isSome();
+};
+
 const hasFocus = (editor: Editor): boolean => editor.inline ? hasInlineFocus(editor) : hasIframeFocus(editor);
+
+const hasEditorOrUiFocus = (editor: Editor): boolean => hasFocus(editor) || hasUiFocus(editor);
 
 const focusEditor = (editor: Editor) => {
   const selection: Selection = editor.selection;
@@ -132,5 +142,6 @@ const focus = (editor: Editor, skipFocus: boolean) => {
 
 export default {
   focus,
-  hasFocus
+  hasFocus,
+  hasEditorOrUiFocus
 };
