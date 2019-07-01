@@ -63,8 +63,8 @@ const toBlockElements = function (text: string, rootTag: string, rootAttrs: Root
   return paragraphs.length === 1 ? paragraphs[0] : Tools.map(paragraphs, stitch).join('');
 };
 
-const convert = function (text: string, rootTag: string, rootAttrs: RootAttrs) {
-  return rootTag ? toBlockElements(text, rootTag, rootAttrs) : toBRs(text);
+const convert = function (text: string, rootTag: string | boolean, rootAttrs: RootAttrs) {
+  return rootTag ? toBlockElements(text, rootTag === true ? 'p' : rootTag, rootAttrs) : toBRs(text);
 };
 
 export default {
