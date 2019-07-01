@@ -1,10 +1,10 @@
 {
   "name": "@ephox/jax",
-  "version": "4.1.9",
+  "version": "4.1.11",
   "description": "AJAX library",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/jax"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "scripts": {
     "prepublishOnly": "yarn run lint && yarn run build",
@@ -22,7 +22,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^2.4.21",
+    "@ephox/katamari": "^2.4.23",
     "tslib": "^1.9.3"
   },
   "files": [

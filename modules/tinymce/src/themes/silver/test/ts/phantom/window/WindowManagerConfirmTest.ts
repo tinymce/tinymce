@@ -51,6 +51,9 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
                       children: [
                         s.element('div', {
                           classes: [ arr.has('tox-dialog__header') ],
+                          styles: {
+                            display: str.is('none')
+                          },
                           children: [
                             s.element('div', {
                               classes: [ arr.has('tox-dialog__title') ],
@@ -75,9 +78,14 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
                           ]
                         }),
                         s.element('div', {
-                          classes: [ arr.has('tox-dialog__body') ],
+                          classes: [ arr.has('tox-dialog__body')],
                           children: [
-                            s.element('p', {})
+                            s.element('div', {
+                              classes: [ arr.has('tox-dialog__body-content')],
+                              children: [
+                                s.element('p', {})
+                              ]
+                            })
                           ]
                         }),
                         s.element('div', {
@@ -156,8 +164,13 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
             return s.element('div', {
               classes: [ arr.has('tox-dialog__body')],
               children: [
-                s.element('p', {
-                  html: str.is(label)
+                s.element('div', {
+                  classes: [ arr.has('tox-dialog__body-content')],
+                  children: [
+                    s.element('p', {
+                      html: str.is(label)
+                    })
+                  ]
                 })
               ]
             });

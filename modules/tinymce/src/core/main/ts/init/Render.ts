@@ -24,6 +24,7 @@ import I18n from '../api/util/I18n';
 import { UrlObject } from '../api/AddOnManager';
 import { RawEditorSettings } from '../api/SettingsTypes';
 import IconManager from '../api/IconManager';
+import NodeType from '../dom/NodeType';
 
 const DOM = DOMUtils.DOM;
 
@@ -211,7 +212,7 @@ const render = function (editor: Editor) {
     editor.formElement = form;
 
     // Add hidden input for non input elements inside form elements
-    if (settings.hidden_input && !/TEXTAREA|INPUT/i.test(editor.getElement().nodeName)) {
+    if (settings.hidden_input && !NodeType.isTextareaOrInput(editor.getElement())) {
       DOM.insertAfter(DOM.create('input', { type: 'hidden', name: id }), id);
       editor.hasHiddenInput = true;
     }

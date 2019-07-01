@@ -5,13 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
 import Settings from '../api/Settings';
-import DataToHtml, { MediaDialogData, DataToHtmlCallback } from './DataToHtml';
-import Editor from 'tinymce/core/api/Editor';
+import * as DataToHtml from './DataToHtml';
+import { MediaData } from './Types';
 
 const cache = {};
-const embedPromise = function (data: MediaDialogData, dataToHtml: DataToHtmlCallback, handler) {
+const embedPromise = function (data: MediaData, dataToHtml: DataToHtml.DataToHtmlCallback, handler) {
   return new Promise<{url: string, html: string}>(function (res, rej) {
     const wrappedResolve = function (response) {
       if (response.html) {
@@ -30,25 +31,25 @@ const embedPromise = function (data: MediaDialogData, dataToHtml: DataToHtmlCall
   });
 };
 
-const defaultPromise = function (data: MediaDialogData, dataToHtml: DataToHtmlCallback) {
+const defaultPromise = function (data: MediaData, dataToHtml: DataToHtml.DataToHtmlCallback) {
   return new Promise<{url: string, html: string}>(function (res) {
     res({ html: dataToHtml(data), url: data.source1 });
   });
 };
 
 const loadedData = function (editor: Editor) {
-  return function (data: MediaDialogData) {
+  return function (data: MediaData) {
     return DataToHtml.dataToHtml(editor, data);
   };
 };
 
-const getEmbedHtml = function (editor: Editor, data: MediaDialogData) {
+const getEmbedHtml = function (editor: Editor, data: MediaData) {
   const embedHandler = Settings.getUrlResolver(editor);
 
   return embedHandler ? embedPromise(data, loadedData(editor), embedHandler) : defaultPromise(data, loadedData(editor));
 };
 
-const isCached = function (url) {
+const isCached = function (url: string) {
   return cache.hasOwnProperty(url);
 };
 

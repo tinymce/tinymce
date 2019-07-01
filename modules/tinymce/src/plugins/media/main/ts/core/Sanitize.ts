@@ -5,12 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import SaxParser from 'tinymce/core/api/html/SaxParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import Writer from 'tinymce/core/api/html/Writer';
 import Settings from '../api/Settings';
 
-const sanitize = function (editor, html) {
+const sanitize = function (editor: Editor, html: string) {
   if (Settings.shouldFilterHtml(editor) === false) {
     return html;
   }
