@@ -55,8 +55,8 @@ const register = (editor) => {
     const match = tableRegex.exec(phrase);
     const rows = match[1];
     const cols = match[2];
-    const intRows = parseInt(rows) || conversionTable[rows];
-    const intCols = parseInt(cols) || conversionTable[cols];
+    const intRows = parseInt(rows, 10) || conversionTable[rows];
+    const intCols = parseInt(cols, 10) || conversionTable[cols];
     editor.plugins.table.insertTable(intCols, intRows);
   };
 
