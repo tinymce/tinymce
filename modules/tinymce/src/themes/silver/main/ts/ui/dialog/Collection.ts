@@ -35,6 +35,7 @@ import { deriveCollectionMovement } from '../menus/menu/MenuMovement';
 import * as ItemClasses from '../menus/item/ItemClasses';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { Omit } from '../Omit';
+import I18n from 'tinymce/core/api/util/I18n';
 
 type CollectionSpec = Omit<Types.Collection.Collection, 'type'>;
 
@@ -71,9 +72,9 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
       // Title attribute is added here to provide tooltips which might be helpful to sighted users.
       // Using aria-label here overrides the Apple description of emojis and special characters in Mac/ MS description in Windows.
       // But if only the title attribute is used instead, the names are read out twice. i.e., the description followed by the item.text.
-      const ariaLabel = item.text.replace(/\_| \- |\-/g, (match) => {
+      const ariaLabel = I18n.translate(item.text.replace(/\_| \- |\-/g, (match) => {
         return mapItemName[match];
-      });
+      }));
       return `<div class="tox-collection__item" tabindex="-1" data-collection-item-value="${escapeAttribute(item.value)}" title="${ariaLabel}" aria-label="${ariaLabel}">${iconContent}${textContent}</div>`;
     });
 
