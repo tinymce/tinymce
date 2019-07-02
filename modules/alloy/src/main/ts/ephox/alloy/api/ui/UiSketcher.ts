@@ -1,16 +1,15 @@
-import { Objects } from '@ephox/boulder';
-import { Merger, Adt } from '@ephox/katamari';
-import {
-  CompositeSketchDetail,
-  CompositeSketchSpec,
-  SingleSketchDetail,
-  SingleSketchSpec,
-} from '../../api/ui/Sketcher';
+import { Adt } from '@ephox/katamari';
 
 import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as Tagger from '../../registry/Tagger';
 import * as SpecSchema from '../../spec/SpecSchema';
+import {
+  CompositeSketchDetail,
+  CompositeSketchSpec,
+  SingleSketchDetail,
+  SingleSketchSpec,
+} from './Sketcher';
 
 export type SingleSketchFactory<D extends SingleSketchDetail, S extends SingleSketchSpec> = (detail: D, specWithUid: S) => SketchSpec;
 export type CompositeSketchFactory<D extends CompositeSketchDetail, S extends CompositeSketchSpec> = (detail: D, components: AlloySpec[], spec: S, externals: any) => SketchSpec;
@@ -38,7 +37,7 @@ const composite = function <D extends CompositeSketchDetail, S extends Composite
   // Work out the components by substituting internals
   const components = AlloyParts.components(owner, detail, subs.internals());
 
-  return factory(detail, components, specWithUid, subs.externals())
+  return factory(detail, components, specWithUid, subs.externals());
 };
 
 const supplyUid = function <S>(spec: any): S {

@@ -1,7 +1,7 @@
 import * as MenuSchema from '../../ui/schema/MenuSchema';
 import { make as makeMenuSpec } from '../../ui/single/MenuSpec';
-import * as Sketcher from './Sketcher';
 import { MenuSketcher } from '../../ui/types/MenuTypes';
+import * as Sketcher from './Sketcher';
 
 const Menu = Sketcher.composite({
   name: 'Menu',

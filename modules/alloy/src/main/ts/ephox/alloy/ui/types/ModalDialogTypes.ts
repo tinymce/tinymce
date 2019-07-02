@@ -1,13 +1,13 @@
-import { Option, Result } from '@ephox/katamari';
-
+import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
-import { LazySink } from '../../api/component/CommonTypes';
+import { LazySink } from '@ephox/alloy';
 
 export interface ModalDialogDetail extends CompositeSketchDetail {
   uid: string;

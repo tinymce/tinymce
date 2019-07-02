@@ -1,17 +1,17 @@
-import { Future, Option, Result } from '@ephox/katamari';
-import { ItemSpec, ItemDataTuple } from '../../ui/types/ItemTypes';
-import { TabviewSpec } from '../../ui/types/TabviewTypes';
-import { PartialMenuSpec } from '../../ui/types/TieredMenuTypes';
+import { Future, Option } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import { LazySink } from '../../api/component/CommonTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { AnchorSpec } from '../../positioning/mode/Anchoring';
-import { CommonDropdownDetail } from '../../ui/types/DropdownTypes';
 import { TransitionProperties } from '../../behaviour/transitioning/TransitioningTypes';
-import { LazySink } from '../../api/component/CommonTypes';
+import { AnchorSpec } from '../../positioning/mode/Anchoring';
+import { CommonDropdownDetail } from './DropdownTypes';
+import { ItemSpec, ItemDataTuple } from './ItemTypes';
+import { TabviewSpec } from './TabviewTypes';
+import { PartialMenuSpec } from './TieredMenuTypes';
 
 export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, CompositeSketchDetail {
   uid: string;

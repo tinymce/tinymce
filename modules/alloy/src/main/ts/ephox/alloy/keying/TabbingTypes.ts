@@ -3,17 +3,14 @@ import { Arr, Fun, Option } from '@ephox/katamari';
 import { Compare, Height, SelectorFilter, SelectorFind, Element } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
+import { AlloyComponent } from '../api/component/ComponentApi';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
+import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as ArrNavigation from '../navigation/ArrNavigation';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
+import { TabbingConfig, KeyRuleHandler } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
-
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { SugarEvent } from '../alien/TypeDefinitions';
-import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
-import { AlloyEventHandler } from '../api/events/AlloyEvents';
-import { TabbingConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
 
 const create = (cyclicField: FieldProcessorAdt) => {
   const schema: FieldProcessorAdt[] = [

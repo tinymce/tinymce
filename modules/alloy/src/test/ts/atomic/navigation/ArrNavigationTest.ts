@@ -1,7 +1,8 @@
-import * as ArrNavigation from 'ephox/alloy/navigation/ArrNavigation';
+import { UnitTest } from '@ephox/bedrock';
 import { Fun } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest } from '@ephox/bedrock';
+
+import * as ArrNavigation from 'ephox/alloy/navigation/ArrNavigation';
 
 UnitTest.test('ArrNavigationTest', () => {
   const genUniqueArray = (min, max) => {

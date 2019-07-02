@@ -13,6 +13,8 @@ import {
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Result } from '@ephox/katamari';
+import { SelectorFind } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
@@ -24,7 +26,6 @@ import * as Memento from 'ephox/alloy/api/component/Memento';
 import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { SelectorFind } from '@ephox/sugar';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 
 UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {

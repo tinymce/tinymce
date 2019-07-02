@@ -9,9 +9,9 @@ import { Toggling } from '../../api/behaviour/Toggling';
 import { Toolbar } from '../../api/ui/Toolbar';
 import * as SplitToolbarBase from '../common/SplitToolbarBase';
 import * as Fields from '../../data/Fields';
+import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
 import { SplitSlidingToolbarDetail } from '../types/SplitSlidingToolbarTypes';
-import * as AlloyParts from '../../parts/AlloyParts';
 import * as ToolbarSchema from './ToolbarSchema';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([

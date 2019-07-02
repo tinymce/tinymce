@@ -2,6 +2,7 @@ import { ApproxStructure, Assertions, Mouse, Pipeline, Step, Logger } from '@eph
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
 import { Body, Element, Html, Insert, Node, Remove, Traverse } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
@@ -10,7 +11,7 @@ import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
-import { document, console } from '@ephox/dom-globals';
+import { document } from '@ephox/dom-globals';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {

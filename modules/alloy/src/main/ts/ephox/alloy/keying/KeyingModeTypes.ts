@@ -11,9 +11,8 @@ export type KeyHandlerApi<C, S> = (comp: AlloyComponent, se: NativeSimulatedEven
 
 export type KeyRuleHandler<C, S> = (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state?: S) => Option<boolean>;
 
-
 export enum FocusInsideModes {
-  OnFocusMode ='onFocus',
+  OnFocusMode = 'onFocus',
   OnEnterOrSpaceMode = 'onEnterOrSpace',
   OnApiMode = 'onApi'
 }

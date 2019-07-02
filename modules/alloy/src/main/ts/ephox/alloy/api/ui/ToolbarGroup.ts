@@ -1,19 +1,17 @@
-import * as Behaviour from '../behaviour/Behaviour';
+import * as ToolbarGroupSchema from '../../ui/schema/ToolbarGroupSchema';
+import { ToolbarGroupDetail, ToolbarGroupSpec, ToolbarGroupSketcher } from '../../ui/types/ToolbarGroupTypes';
 import { Keying } from '../behaviour/Keying';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
-import * as ToolbarGroupSchema from '../../ui/schema/ToolbarGroupSchema';
-import { Merger } from '@ephox/katamari';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { ToolbarGroupDetail, ToolbarGroupSpec, ToolbarGroupSketcher } from '../../ui/types/ToolbarGroupTypes';
+import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<ToolbarGroupDetail, ToolbarGroupSpec> = (detail, components, spec, _externals) => {
   return {
-    'uid': detail.uid,
-    'dom': detail.dom,
-    'components': components,
+    uid: detail.uid,
+    dom: detail.dom,
+    components,
 
-    'behaviours': SketchBehaviours.augment(
+    behaviours: SketchBehaviours.augment(
       detail.tgroupBehaviours,
       [
         Keying.config({

@@ -1,6 +1,7 @@
 import { Step, Waiter, Assertions, ApproxStructure } from '@ephox/agar';
-import { Fun, Merger } from '@ephox/katamari';
-import { Attr, SelectorFind } from '@ephox/sugar';
+import { Merger } from '@ephox/katamari';
+import { SelectorFind } from '@ephox/sugar';
+
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';

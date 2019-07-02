@@ -1,8 +1,7 @@
-import { Class, Element } from '@ephox/sugar';
-import { Option } from '@ephox/katamari';
+import { Class } from '@ephox/sugar';
+
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { TogglingConfig, TogglingState } from '../../behaviour/toggling/TogglingTypes';
-import { Stateless } from '../../behaviour/common/BehaviourState';
+import { TogglingConfig, TogglingState } from './TogglingTypes';
 
 const updateAriaState = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => {
   const ariaInfo = toggleConfig.aria;
@@ -20,7 +19,7 @@ const updateClass = (component: AlloyComponent, toggleConfig: TogglingConfig, to
 };
 
 const toggle = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => {
-  set(component, toggleConfig, toggleState, !toggleState.get())
+  set(component, toggleConfig, toggleState, !toggleState.get());
 };
 
 const on = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => {

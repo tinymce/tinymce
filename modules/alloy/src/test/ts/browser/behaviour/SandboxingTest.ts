@@ -2,6 +2,7 @@ import { Assertions, Chain, GeneralSteps, Logger, Step, UiFinder } from '@ephox/
 import { UnitTest } from '@ephox/bedrock';
 import { Fun } from '@ephox/katamari';
 import { Node } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Sandboxing } from 'ephox/alloy/api/behaviour/Sandboxing';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';

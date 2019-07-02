@@ -2,6 +2,7 @@ import { Logger, RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { FieldSchema, Objects } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
+
 import * as AlloyParts from 'ephox/alloy/parts/AlloyParts';
 import * as PartType from 'ephox/alloy/parts/PartType';
 

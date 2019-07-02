@@ -1,4 +1,4 @@
-import { AlloyComponent } from "./ComponentApi";
-import { Result } from "@ephox/katamari";
+import { Result } from '@ephox/katamari';
+import { AlloyComponent } from './ComponentApi';
 
-export type LazySink = (comp: AlloyComponent) => Result<AlloyComponent, any>
+export type LazySink = (comp: AlloyComponent) => Result<AlloyComponent, any>;

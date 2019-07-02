@@ -1,19 +1,19 @@
 import { Arr, Option } from '@ephox/katamari';
 import { Attr } from '@ephox/sugar';
 
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as TabSectionSchema from '../../ui/schema/TabSectionSchema';
+import { TabSectionSketcher, TabSectionDetail, TabSectionSpec } from '../../ui/types/TabSectionTypes';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Replacing } from '../behaviour/Replacing';
 import { Representing } from '../behaviour/Representing';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
-import { TabSectionSketcher, TabSectionDetail, TabSectionSpec } from '../../ui/types/TabSectionTypes';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import { AlloyComponent } from '../component/ComponentApi';
+import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detail, components, spec, externals) => {
   const changeTab = (button) => {

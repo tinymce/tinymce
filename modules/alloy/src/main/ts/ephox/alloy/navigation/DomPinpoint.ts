@@ -1,4 +1,4 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { Compare, SelectorFilter, Visibility } from '@ephox/sugar';
 
 import * as ArrPinpoint from './ArrPinpoint';

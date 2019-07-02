@@ -1,15 +1,14 @@
 import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Id, Merger } from '@ephox/katamari';
+import { Id } from '@ephox/katamari';
 
 import { events } from '../../ui/common/ButtonBase';
-import * as Behaviour from '../behaviour/Behaviour';
+import { TabButtonSketcher, TabButtonDetail, TabButtonSpec } from '../../ui/types/TabButtonTypes';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
-import { TabButtonSketcher, TabButtonDetail, TabButtonSpec } from '../../ui/types/TabButtonTypes';
-import { SingleSketchFactory } from '../../api/ui/UiSketcher';
+import { SingleSketchFactory } from './UiSketcher';
 
 const factory: SingleSketchFactory<TabButtonDetail, TabButtonSpec> = (detail, spec) => {
 

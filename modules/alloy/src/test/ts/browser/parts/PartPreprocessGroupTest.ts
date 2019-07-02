@@ -1,7 +1,7 @@
-import { Logger, RawAssertions, Assertions } from '@ephox/agar';
+import { Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { FieldSchema, Objects } from '@ephox/boulder';
-import { Obj, Arr } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
+
 import * as AlloyParts from 'ephox/alloy/parts/AlloyParts';
 import * as PartType from 'ephox/alloy/parts/PartType';
 import * as PartSubstitutes from 'ephox/alloy/parts/PartSubstitutes';
@@ -61,11 +61,9 @@ UnitTest.test('Browser Test: parts.PartProcessGroupTest', () => {
         components: [ 'groupB4' ]
       }
     ]
-  } as any
-
+  } as any;
 
   const subs = PartSubstitutes.subs('owner', detail, [ groupWithPreprocess, group ]);
-
 
   // Work out the components by substituting internals
   const components: any = AlloyParts.components('owner', detail, subs.internals());
@@ -102,5 +100,5 @@ UnitTest.test('Browser Test: parts.PartProcessGroupTest', () => {
       }
     ],
     components
-  )
+  );
 });

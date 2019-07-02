@@ -13,6 +13,7 @@ import {
 import { UnitTest } from '@ephox/bedrock';
 import { Result } from '@ephox/katamari';
 import { Attr, Class, Compare } from '@ephox/sugar';
+
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';

@@ -1,4 +1,4 @@
-import { ValueSchema, Processor } from '@ephox/boulder';
+import { ValueSchema } from '@ephox/boulder';
 
 import HotspotAnchor from './HotspotAnchor';
 import MakeshiftAnchor from './MakeshiftAnchor';

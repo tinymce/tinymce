@@ -1,12 +1,12 @@
+import { Option } from '@ephox/katamari';
 import { Css, Location, Scroll, Traverse, Element } from '@ephox/sugar';
 
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
+import { SugarPosition } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as DragCoord from '../../api/data/DragCoord';
 import * as Snappables from '../snap/Snappables';
-import { SugarPosition } from '../../alien/TypeDefinitions';
-import { Option } from '@ephox/katamari';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { DraggingConfig, SnapsConfig } from '../../dragging/common/DraggingTypes';
+import { DraggingConfig, SnapsConfig } from './DraggingTypes';
 
 const getCurrentCoord = (target: Element): DragCoord.CoordAdt => {
   return Css.getRaw(target, 'left').bind((left) => {
@@ -46,7 +46,6 @@ const dragBy = (component: AlloyComponent, dragConfig: DraggingConfig, delta: Su
   if (dragConfig.repositionTarget) {
     const doc = Traverse.owner(component.element());
     const scroll = Scroll.get(doc);
-
 
     const origin = OffsetOrigin.getOrigin(target, scroll);
 

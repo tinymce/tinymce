@@ -1,10 +1,10 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
+import { window } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Scroll } from '@ephox/sugar';
 
 import * as Fields from '../../data/Fields';
 import { Bounds } from '../../alien/Boxes';
-import { window } from '@ephox/dom-globals';
 
 const defaultLazyViewport = (): Bounds => {
   const scroll = Scroll.get();

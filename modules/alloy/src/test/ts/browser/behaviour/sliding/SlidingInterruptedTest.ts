@@ -1,6 +1,7 @@
 import { Assertions, Step, Log, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Class, Width } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Sliding } from 'ephox/alloy/api/behaviour/Sliding';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';

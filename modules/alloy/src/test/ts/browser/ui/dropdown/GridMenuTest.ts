@@ -2,6 +2,7 @@ import { ApproxStructure, Assertions, Chain, Keyboard, Keys, NamedChain, UiFinde
 import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';

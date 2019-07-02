@@ -1,6 +1,7 @@
 import { Focus } from '@ephox/sugar';
-import { FocusingConfig } from '../../behaviour/focusing/FocusingTypes';
+
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { FocusingConfig } from './FocusingTypes';
 
 const focus = (component: AlloyComponent, focusConfig: FocusingConfig): void => {
   if (! focusConfig.ignore) {

@@ -1,12 +1,12 @@
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
+import { Bounds } from '../../alien/Boxes';
 import { SugarRange } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { OriginAdt } from '../../behaviour/positioning/PositionApis';
-import { Bubble } from '../../positioning/layout/Bubble';
-import { AnchorBox, AnchorLayout } from '../../positioning/layout/LayoutTypes';
-import { Bounds } from '../../alien/Boxes';
+import { Bubble } from '../layout/Bubble';
+import { AnchorBox, AnchorLayout } from '../layout/LayoutTypes';
 
 // doPlace(component, origin, anchoring, posConfig, placee);
 export type AnchorPlacement =

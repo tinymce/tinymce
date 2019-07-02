@@ -2,6 +2,7 @@ import { Logger, RawAssertions } from '@ephox/agar';
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr, Struct } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
+
 import * as PrioritySort from 'ephox/alloy/alien/PrioritySort';
 
 UnitTest.test('PrioritySortTest', () => {

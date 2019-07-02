@@ -1,7 +1,8 @@
+import { Option } from '@ephox/katamari';
+
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
-import { Option } from '@ephox/katamari';
 
 export interface ReplacingBehaviour extends Behaviour.AlloyBehaviour<ReplacingConfigSpec, ReplacingConfig> {
   config: (config: ReplacingConfigSpec) => Behaviour.NamedConfiguredBehaviour<ReplacingConfigSpec, ReplacingConfig>;

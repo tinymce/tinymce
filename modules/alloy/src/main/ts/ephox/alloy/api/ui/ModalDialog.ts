@@ -4,7 +4,7 @@ import { Attr, Traverse } from '@ephox/sugar';
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import * as AriaDescribe from '../../aria/AriaDescribe';
 import AriaLabel from '../../aria/AriaLabel';
 import { CustomEvent } from '../../events/SimulatedEvent';
 import * as AlloyParts from '../../parts/AlloyParts';
@@ -18,7 +18,7 @@ import * as GuiFactory from '../component/GuiFactory';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Attachment from '../system/Attachment';
 import * as Sketcher from './Sketcher';
-import * as AriaDescribe from '../../aria/AriaDescribe';
+import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (detail, components, spec, externals) => {
 

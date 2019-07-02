@@ -1,18 +1,17 @@
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
-
-import * as ModelCommon from './ModelCommon';
-import * as SliderModel from './SliderModel';
-import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import { SliderDetail, SliderValueXY, SliderModelDetailParts } from '../../ui/types/SliderTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Fun, Option } from '@ephox/katamari';
 import { Css, Width, Height } from '@ephox/sugar';
 
-import * as HorizontalModel from './HorizontalModel';
-import * as VerticalModel from './VerticalModel';
-import { maxX, maxY, minX, minY, currentValue, step } from './SliderValues';
-import * as EdgeActions from './EdgeActions';
 import { SugarPosition } from '../../alien/TypeDefinitions';
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { SliderDetail, SliderValueXY, SliderModelDetailParts } from '../types/SliderTypes';
+import * as EdgeActions from './EdgeActions';
+import * as HorizontalModel from './HorizontalModel';
+import * as ModelCommon from './ModelCommon';
+import * as SliderModel from './SliderModel';
+import { maxX, maxY, minX, minY, currentValue, step } from './SliderValues';
+import * as VerticalModel from './VerticalModel';
 
 // fire slider change event with xy value
 const fireSliderChange = (spectrum: AlloyComponent, value: SliderValueXY): void => {

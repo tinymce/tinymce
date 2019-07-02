@@ -1,4 +1,4 @@
-import { Arr, Struct, Option } from '@ephox/katamari';
+import { Arr, Struct } from '@ephox/katamari';
 
 const indexInfo = Struct.immutableBag([ 'index', 'candidates' ], [ ]);
 

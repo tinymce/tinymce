@@ -5,7 +5,7 @@ import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 import { ItemSpec, NormalItemSpec, SeparatorItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
-import { PartialMenuSpec } from '../../../../../../main/ts/ephox/alloy/ui/types/TieredMenuTypes';
+import { PartialMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
 
 const demoItem = ValueSchema.objOf([
   FieldSchema.strictObjOf('data', [
@@ -57,9 +57,13 @@ const choice = (choiceSpec) => {
 
 const demoSeparatorRender = (spec): SeparatorItemSpec => {
   const html = (() => {
-    if (spec.text) { return spec.text; }
-    else if (spec.data && spec.data.meta && spec.data.meta.text) { return spec.data.meta.text; }
-    else return 'Missing.Text.For.Separator';
+    if (spec.text) {
+      return spec.text;
+    } else if (spec.data && spec.data.meta && spec.data.meta.text) {
+      return spec.data.meta.text;
+    } else {
+      return 'Missing.Text.For.Separator';
+    }
   })();
 
   return {
@@ -84,9 +88,13 @@ const item = (itemSpec): ItemSpec => {
   }
   const spec = ValueSchema.asRawOrDie('DemoRenders.item', demoItem, itemSpec);
   const html = (() => {
-    if (spec.data && spec.data.meta && spec.data.meta.html) { return spec.data.meta.html }
-    else if (spec && spec.data.meta && spec.data.meta.text) { return spec.data.meta.text }
-    else return 'No.Text.For.Item';
+    if (spec.data && spec.data.meta && spec.data.meta.html) {
+      return spec.data.meta.html;
+    } else if (spec && spec.data.meta && spec.data.meta.text) {
+      return spec.data.meta.text;
+    } else {
+      return 'No.Text.For.Item';
+    }
   })();
 
   return {
@@ -101,8 +109,11 @@ const item = (itemSpec): ItemSpec => {
 const gridItem = (itemSpec) => {
   const spec = ValueSchema.asRawOrDie('DemoRenders.gridItem', demoItem, itemSpec);
   const html = (() => {
-    if (spec.data && spec.data.meta && spec.data.meta.text) { return spec.data.meta.text; }
-    else return 'No.Text.For.Grid.Item';
+    if (spec.data && spec.data.meta && spec.data.meta.text) {
+      return spec.data.meta.text;
+    } else {
+      return 'No.Text.For.Grid.Item';
+    }
   })();
 
   return {

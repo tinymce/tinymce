@@ -1,3 +1,4 @@
+import { document } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Class, Css, DomEvent, Element, Insert } from '@ephox/sugar';
@@ -10,9 +11,8 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { document } from '@ephox/dom-globals';
 import { SliderValueX, SliderValueY } from 'ephox/alloy/ui/types/SliderTypes';
-import { GeneratedParts, ConfiguredPart } from '../../../../../main/ts/ephox/alloy/parts/AlloyParts';
+import { ConfiguredPart } from 'ephox/alloy/parts/AlloyParts';
 
 export default (): void => {
   const gui = Gui.create();
@@ -63,7 +63,7 @@ export default (): void => {
     })
   );
 
-  const slider2 = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'This is a basic slider with two snapping regions [35] and [75]. The minimum value is 0',
     Slider.sketch({
@@ -127,7 +127,7 @@ export default (): void => {
     Css.set(thumb.element(), 'background', color);
   };
 
-  const hueSlider = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'This is a basic color slider with a sliding thumb and edges',
     Slider.sketch({

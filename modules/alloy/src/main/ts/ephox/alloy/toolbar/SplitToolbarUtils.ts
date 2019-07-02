@@ -6,11 +6,11 @@ import { Focusing } from '../api/behaviour/Focusing';
 import { Replacing } from '../api/behaviour/Replacing';
 import { Toggling } from '../api/behaviour/Toggling';
 import { AlloyComponent } from '../api/component/ComponentApi';
+import * as GuiFactory from '../api/component/GuiFactory';
 import { Toolbar } from '../api/ui/Toolbar';
 import { SplitToolbarBaseDetail } from '../ui/types/SplitToolbarBaseTypes';
 import * as AlloyParts from '../parts/AlloyParts';
 import * as Overflows from './Overflows';
-import * as GuiFactory from '../api/component/GuiFactory';
 
 const setStoredGroups = (toolbar: AlloyComponent, storedGroups: AlloyComponent[]) => {
   const bGroups = Arr.map(storedGroups, (g) => GuiFactory.premade(g));
@@ -81,4 +81,4 @@ const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, overfl
 export {
   refresh,
   setStoredGroups
-}
+};

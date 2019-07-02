@@ -1,6 +1,6 @@
-import { ReflectingState } from "./ReflectingTypes";
-import { Cell, Option } from "@ephox/katamari";
+import { Cell, Option } from '@ephox/katamari';
 
+import { ReflectingState } from './ReflectingTypes';
 
 const init = <S>(spec): ReflectingState<S> => {
   const cell = Cell(Option.none());
@@ -10,7 +10,7 @@ const init = <S>(spec): ReflectingState<S> => {
   const get = () => cell.get();
 
   const readState = () => {
-    return cell.get().getOr('none')
+    return cell.get().getOr('none');
   };
 
   return {
@@ -18,9 +18,9 @@ const init = <S>(spec): ReflectingState<S> => {
     get,
     set,
     clear
-  }
+  };
 };
 
 export {
   init
-}
+};

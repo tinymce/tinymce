@@ -1,16 +1,17 @@
 import { ValueSchema } from '@ephox/boulder';
+import { window } from '@ephox/dom-globals';
+import { Option, Adt } from '@ephox/katamari';
 import { Css, Location, Element } from '@ephox/sugar';
+
+import { Bounds, box } from '../../alien/Boxes';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { Stateless } from '../../behaviour/common/BehaviourState';
+import { Anchoring, AnchorSpec, AnchorDetail } from '../../positioning/mode/Anchoring';
+import AnchorSchema from '../../positioning/mode/AnchorSchema';
 import * as Anchor from '../../positioning/layout/Anchor';
 import * as Origins from '../../positioning/layout/Origins';
 import * as SimpleLayout from '../../positioning/layout/SimpleLayout';
-import AnchorSchema from '../../positioning/mode/AnchorSchema';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
-import { Stateless } from '../../behaviour/common/BehaviourState';
-import { Anchoring, AnchorSpec, AnchorDetail } from '../../positioning/mode/Anchoring';
-import { window } from '@ephox/dom-globals';
-import { Bounds, box } from '../../alien/Boxes';
-import { Option, Adt } from '@ephox/katamari';
+import { PositioningConfig } from './PositioningTypes';
 
 export interface OriginAdt extends Adt { }
 

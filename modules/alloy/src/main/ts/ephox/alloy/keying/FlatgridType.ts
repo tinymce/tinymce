@@ -1,23 +1,23 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 import { SelectorFind, Element } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
+import { AlloyComponent } from '../api/component/ComponentApi';
 import * as KeyingState from '../behaviour/keyboard/KeyingState';
 import * as Fields from '../data/Fields';
+import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as DomMovement from '../navigation/DomMovement';
 import * as DomPinpoint from '../navigation/DomPinpoint';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as WrapArrNavigation from '../navigation/WrapArrNavigation';
+import { FlatgridConfig, FlatgridState, KeyRuleHandler } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
-import { FlatgridConfig, FlatgridState, KeyRuleHandler } from '../keying/KeyingModeTypes';
-
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 
 // NB: Tsc requires AlloyEventHandler to be imported here.
+// @ts-ignore
 import { AlloyEventHandler } from '../api/events/AlloyEvents';
 
 const schema = [
@@ -88,6 +88,6 @@ const getKeydownRules: () => Array<KeyRules.KeyRule<FlatgridConfig, FlatgridStat
 
 const getKeyupRules: () => Array<KeyRules.KeyRule<FlatgridConfig, FlatgridState>> = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
-])
+]);
 
 export default KeyingType.typical(schema, KeyingState.flatgrid, getKeydownRules, getKeyupRules, () => Option.some(focusIn));

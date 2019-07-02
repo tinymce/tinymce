@@ -1,5 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Merger, Option } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 
 import { isSketchSpec } from '../../api/ui/Sketcher';

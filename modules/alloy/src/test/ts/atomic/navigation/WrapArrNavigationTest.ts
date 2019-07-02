@@ -1,6 +1,7 @@
-import * as WrapArrNavigation from 'ephox/alloy/navigation/WrapArrNavigation';
-import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest } from '@ephox/bedrock';
+import Jsc from '@ephox/wrap-jsverify';
+
+import * as WrapArrNavigation from 'ephox/alloy/navigation/WrapArrNavigation';
 
 UnitTest.test('WrapArrNavigationTest', () => {
   const genRegularGrid = Jsc.integer(2, 20).generator.flatMap((numRows) => {

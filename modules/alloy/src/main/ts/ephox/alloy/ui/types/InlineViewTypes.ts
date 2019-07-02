@@ -1,14 +1,14 @@
-import { Option, Result } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import { LazySink } from '../../api/component/CommonTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import { TieredData, TieredMenuSpec } from './TieredMenuTypes';
-import { Element } from '@ephox/sugar';
-import { LazySink } from '../../api/component/CommonTypes';
 
 export interface InlineViewDetail extends SingleSketchDetail {
   uid: string;

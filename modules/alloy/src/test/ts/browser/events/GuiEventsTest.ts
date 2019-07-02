@@ -9,12 +9,12 @@ import {
   Mouse,
   Pipeline,
   Step,
-  UiFinder,
-  Waiter,
+  UiFinder
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { document, window } from '@ephox/dom-globals';
-import { Attr, Css, DomEvent, Element, Insert, Node, Remove, Text } from '@ephox/sugar';
+import { document } from '@ephox/dom-globals';
+import { Attr, DomEvent, Element, Insert, Node, Remove, Text } from '@ephox/sugar';
+
 import * as GuiEvents from 'ephox/alloy/events/GuiEvents';
 import TestStore from 'ephox/alloy/api/testhelpers/TestStore';
 import { Cleaner } from '../../module/ephox/alloy/test/Cleaner';

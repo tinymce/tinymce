@@ -1,5 +1,7 @@
+import { Chain, UiFinder, Step, Logger, GeneralSteps, Assertions, FocusTools } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
+
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -10,8 +12,6 @@ import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as FocusManagers from 'ephox/alloy/api/focus/FocusManagers';
 import { Attr } from '@ephox/sugar';
-import { Chain, UiFinder, Step, Logger, GeneralSteps, Assertions, FocusTools } from '@ephox/agar';
-import * as ChainUtils from '../../../module/ephox/alloy/test/ChainUtils';
 
 UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success, failure) => {
   GuiSetup.setup(
@@ -66,7 +66,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
           Chain.op((elem) => {
             focusManager.set(component, elem);
           })
-        ])
+        ]);
       };
 
       return [
@@ -85,7 +85,6 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
               '.selected-candidate': 1
             }, component.element()),
             store.sClear,
-
 
             sFireFocusOn(highlightManager, '[data-index="2"]'),
             store.sAssertEq('Checking highlights transitioned from 1 to 2', [ '1->2' ]),

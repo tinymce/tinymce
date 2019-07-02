@@ -1,10 +1,10 @@
+import { TouchEvent } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 
 import { SugarPosition, SugarEvent } from '../../alien/TypeDefinitions';
-import { TouchEvent } from '@ephox/dom-globals';
 
-const getDataFrom = (touches): Option<SugarPosition> => {
+const getDataFrom = (touches): Option<Position> => {
   const touch = touches[0];
   return Option.some(Position(touch.clientX, touch.clientY));
 };

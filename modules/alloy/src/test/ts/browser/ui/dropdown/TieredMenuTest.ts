@@ -1,16 +1,13 @@
-
-import { ApproxStructure, Assertions, Chain, Keyboard, Keys, Mouse, Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Objects } from '@ephox/boulder';
 import { Arr, Obj } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
@@ -77,25 +74,25 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
     );
   }, (doc, body, gui, component, store) => {
     // TODO: Flesh out test.
-    const cAssertStructure = (label, expected) => {
-      return Chain.op((element: Element) => {
-        Assertions.assertStructure(label, expected, element);
-      });
-    };
-
-    const cTriggerFocusItem = Chain.op((target: Element) => {
-      AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
-    });
-
-    const cAssertStore = (label, expected) => {
-      return Chain.op(() => {
-        store.assertEq(label, expected);
-      });
-    };
-
-    const cClearStore = Chain.op(() => {
-      store.clear();
-    });
+    // const cAssertStructure = (label, expected) => {
+    //   return Chain.op((element: Element) => {
+    //     Assertions.assertStructure(label, expected, element);
+    //   });
+    // };
+    //
+    // const cTriggerFocusItem = Chain.op((target: Element) => {
+    //   AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
+    // });
+    //
+    // const cAssertStore = (label, expected) => {
+    //   return Chain.op(() => {
+    //     store.assertEq(label, expected);
+    //   });
+    // };
+    //
+    // const cClearStore = Chain.op(() => {
+    //   store.clear();
+    // });
 
     const structureMenu = (selected, itemSelections, hasPopups, isExpandeds) => (s, str, arr) => {
       return s.element('ol', {

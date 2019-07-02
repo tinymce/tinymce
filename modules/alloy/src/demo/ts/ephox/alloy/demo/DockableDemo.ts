@@ -25,7 +25,7 @@ export default (): void => {
     gui.broadcastEvent(SystemEvents.windowScroll(), evt);
   });
 
-  const dockable = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'The blue panel will always stay on screen as long as the red rectangle is on screen',
     Container.sketch({

@@ -1,9 +1,9 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import { FocusingConfig } from '../../behaviour/focusing/FocusingTypes';
 import * as DomModification from '../../dom/DomModification';
 import * as FocusApis from './FocusApis';
+import { FocusingConfig } from './FocusingTypes';
 
 // TODO: DomModification types
 const exhibit = (base: { }, focusConfig: FocusingConfig): any => {

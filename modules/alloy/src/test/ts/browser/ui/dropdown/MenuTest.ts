@@ -1,6 +1,8 @@
 import { ApproxStructure, Assertions, Chain, NamedChain, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -11,7 +13,6 @@ import { Menu } from 'ephox/alloy/api/ui/Menu';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { Element } from '@ephox/sugar';
 
 UnitTest.asynctest('MenuTest', (success, failure) => {
 

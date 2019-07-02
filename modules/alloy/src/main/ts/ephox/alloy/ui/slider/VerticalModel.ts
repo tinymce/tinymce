@@ -1,16 +1,15 @@
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
-
-import * as ModelCommon from './ModelCommon';
-import * as SliderModel from './SliderModel';
-import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import { SliderDetail, SliderValueY } from '../../ui/types/SliderTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option, Fun } from '@ephox/katamari';
 import { Css, Height } from '@ephox/sugar';
 
-import { minY, maxY, currentValue, step, snap, snapStart, yRange, rounded, hasTEdge, hasBEdge } from './SliderValues';
-import { getMinYBounds, getMaxYBounds, getYScreenRange, getYCenterOffSetOf } from './SliderOffsets';
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { SliderDetail, SliderValueY } from '../types/SliderTypes';
 import * as EdgeActions from './EdgeActions';
+import * as ModelCommon from './ModelCommon';
+import * as SliderModel from './SliderModel';
+import { getMinYBounds, getMaxYBounds, getYScreenRange, getYCenterOffSetOf } from './SliderOffsets';
+import { minY, maxY, currentValue, step, snap, snapStart, yRange, rounded, hasTEdge, hasBEdge } from './SliderValues';
 
 // fire slider change event with y value
 const fireSliderChange = (spectrum: AlloyComponent, value: SliderValueY): void => {

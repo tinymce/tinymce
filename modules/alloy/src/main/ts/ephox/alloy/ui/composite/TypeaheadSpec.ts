@@ -3,6 +3,7 @@ import { Arr, Fun, Obj, Option, Merger } from '@ephox/katamari';
 import { Focus, Value } from '@ephox/sugar';
 
 import { SugarEvent } from '../../alien/TypeDefinitions';
+import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import { Composing } from '../../api/behaviour/Composing';
 import { Coupling } from '../../api/behaviour/Coupling';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -27,7 +28,6 @@ import { TieredData } from '../../ui/types/TieredMenuTypes';
 import { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
 import * as TypeaheadEvents from './TypeaheadEvents';
-import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 
 interface ItemExecuteEvent extends CustomEvent {
   item: () => AlloyComponent;

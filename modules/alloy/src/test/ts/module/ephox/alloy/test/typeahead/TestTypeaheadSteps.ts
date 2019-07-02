@@ -1,6 +1,7 @@
 import { Assertions, Chain, FocusTools, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
 import { HTMLInputElement } from '@ephox/dom-globals';
 import { Value } from '@ephox/sugar';
+
 import { SugarDocument } from 'ephox/alloy/alien/TypeDefinitions';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';

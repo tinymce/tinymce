@@ -1,10 +1,8 @@
-import * as Behaviour from '../behaviour/Behaviour';
+import { TabviewSketcher, TabviewDetail, TabviewSpec } from '../../ui/types/TabviewTypes';
 import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
-import { Merger } from '@ephox/katamari';
-import { TabviewSketcher, TabviewDetail, TabviewSpec } from '../../ui/types/TabviewTypes';
-import { SingleSketchFactory } from '../../api/ui/UiSketcher';
+import { SingleSketchFactory } from './UiSketcher';
 
 const factory: SingleSketchFactory<TabviewDetail, TabviewSpec> = (detail, spec) => {
   return {

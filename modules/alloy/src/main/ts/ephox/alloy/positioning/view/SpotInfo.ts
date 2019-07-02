@@ -1,5 +1,5 @@
 import { Struct } from '@ephox/katamari';
-import { BubbleInstance, Bubble } from '../layout/Bubble';
+import { BubbleInstance } from '../layout/Bubble';
 
 export interface SpotInfo {
   x: () => number;

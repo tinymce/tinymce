@@ -1,6 +1,7 @@
 import { Assertions, GeneralSteps, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Option, Result } from '@ephox/katamari';
+
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -138,7 +139,6 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
 
       sCheckOpen('Broadcasting dismiss on button should not close inline toolbar'),
       store.sAssertEq('Broadcasting on button should not fire dismiss event', [ ]),
-
 
       TestBroadcasts.sDismiss(
         'related element: should not close',

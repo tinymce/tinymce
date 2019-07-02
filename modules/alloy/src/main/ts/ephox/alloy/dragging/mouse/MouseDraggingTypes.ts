@@ -1,7 +1,6 @@
-import { DraggingConfig, CommonDraggingConfigSpec } from '../../dragging/common/DraggingTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Element } from '@ephox/sugar';
 import { SugarEvent } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { DraggingConfig, CommonDraggingConfigSpec } from '../common/DraggingTypes';
 
 export interface MouseDraggingConfig extends DraggingConfig {
   blockerClass: string;

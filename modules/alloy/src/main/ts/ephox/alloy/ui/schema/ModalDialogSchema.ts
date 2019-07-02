@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { Fun, Merger } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 import { SelectorFind } from '@ephox/sugar';
 
@@ -9,7 +9,7 @@ import { Keying } from '../../api/behaviour/Keying';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
-import { ModalDialogDetail } from '../../ui/types/ModalDialogTypes';
+import { ModalDialogDetail } from '../types/ModalDialogTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('lazySink'),

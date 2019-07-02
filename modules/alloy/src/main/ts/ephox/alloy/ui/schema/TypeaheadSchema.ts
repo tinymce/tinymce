@@ -14,10 +14,10 @@ import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as Fields from '../../data/Fields';
 import * as SketcherFields from '../../data/SketcherFields';
 import * as PartType from '../../parts/PartType';
-import { attemptSelectOver, setValueFromItem } from '../../ui/typeahead/TypeaheadModel';
-import { TypeaheadDetail } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
 import * as TypeaheadEvents from '../composite/TypeaheadEvents';
+import { attemptSelectOver, setValueFromItem } from '../typeahead/TypeaheadModel';
+import { TypeaheadDetail } from '../types/TypeaheadTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('lazySink'),

@@ -1,5 +1,5 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 
 import * as Fields from '../../data/Fields';
 import * as Bubble from '../layout/Bubble';
@@ -16,10 +16,10 @@ const placement = (component, anchorInfo: HotspotAnchor, origin) => {
 
   return Option.some(
     NuAnchor({
-      anchorBox: anchorBox,
+      anchorBox,
       bubble: anchorInfo.bubble.getOr(Bubble.fallback()),
       overrides: anchorInfo.overrides,
-      layouts: layouts,
+      layouts,
       placer: Option.none()
     })
   );

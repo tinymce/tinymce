@@ -1,5 +1,6 @@
 import { Option } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
+
 import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
 
 const getData = (event: SugarEvent): Option<SugarPosition> => {

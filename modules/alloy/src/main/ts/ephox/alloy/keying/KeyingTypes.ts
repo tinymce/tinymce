@@ -1,12 +1,13 @@
+import { Option } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+
 import * as EditableFields from '../alien/EditableFields';
 import * as Keys from '../alien/Keys';
+import { AlloyComponent } from '../api/component/ComponentApi';
 import * as AlloyTriggers from '../api/events/AlloyTriggers';
 import * as SystemEvents from '../api/events/SystemEvents';
+import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as KeyMatch from '../navigation/KeyMatch';
-import { Option } from '@ephox/katamari';
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { NativeSimulatedEvent, SimulatedEvent } from '../events/SimulatedEvent';
-import { Element } from '@ephox/sugar';
 import { KeyRuleHandler, GeneralKeyingConfig } from './KeyingModeTypes';
 
 const doDefaultExecute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, focused: Element): Option<boolean> => {

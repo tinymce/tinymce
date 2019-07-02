@@ -1,3 +1,4 @@
+import { document, console } from '@ephox/dom-globals';
 import { Arr, Future, Obj, Result, Option } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -17,7 +18,6 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 
 import * as DemoRenders from './forms/DemoRenders';
-import { document, console } from '@ephox/dom-globals';
 
 // tslint:disable:no-console
 
@@ -115,7 +115,7 @@ export default (): void => {
     })
   );
 
-  const x = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'This dropdown button shows a widget',
     Dropdown.sketch({
@@ -164,7 +164,7 @@ export default (): void => {
     }
   );
 
-  const y = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'This dropdown button shows a widget with a different hotspot',
     Container.sketch({
@@ -238,7 +238,7 @@ export default (): void => {
                 text: t
               }
             }
-          }
+          };
         };
 
         const data = Arr.map([
@@ -297,11 +297,11 @@ export default (): void => {
             data: {
               value: v,
               meta: {
-                text: t,
+                'text': t,
                 'item-class': c
               }
             }
-          }
+          };
         };
 
         const data = Arr.map([
@@ -361,11 +361,11 @@ export default (): void => {
             data: {
               value: v,
               meta: {
-                text: t,
+                'text': t,
                 'item-class': c
               }
             }
-          }
+          };
         };
 
         const future = Future.pure({

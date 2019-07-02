@@ -1,5 +1,7 @@
-import { ApproxStructure, Assertions, Logger, RawAssertions, Step, UiFinder, Chain } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Option, Arr } from '@ephox/katamari';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Reflecting } from 'ephox/alloy/api/behaviour/Reflecting';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -7,7 +9,6 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
-import { Option, Arr } from '@ephox/katamari';
 
 UnitTest.asynctest('ReflectingTest', (success, failure) => {
 

@@ -1,12 +1,13 @@
 import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, Truncate, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Result } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 import { Attr, Compare, Element, Html, Insert, SelectorFilter } from '@ephox/sugar';
+
 import * as DescribedHandler from 'ephox/alloy/events/DescribedHandler';
 import EventRegistry from 'ephox/alloy/events/EventRegistry';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('EventRegistryTest', (success, failure) => {
   const body = Element.fromDom(document.body);

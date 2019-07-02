@@ -1,5 +1,6 @@
 import { Direction, Element } from '@ephox/sugar';
 import { Option } from '@ephox/katamari';
+
 import { GeneralKeyingConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
 
 export type ElementMover <C, S> = (elem: Element, focused: Element, config: C, state?: S) => Option<Element>;

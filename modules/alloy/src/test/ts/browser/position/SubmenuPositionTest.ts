@@ -1,5 +1,6 @@
 import { Chain, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';

@@ -2,16 +2,16 @@ import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Arr, Fun, Options, Option } from '@ephox/katamari';
 import { DomEvent, Insert, Element } from '@ephox/sugar';
 
-import * as SimulatedEvent from '../../events/SimulatedEvent';
-import ForeignCache from '../../foreign/ForeignCache';
-import * as Tagger from '../../registry/Tagger';
-import * as GuiFactory from '../component/GuiFactory';
-import * as Gui from './Gui';
 import { SugarEvent } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { UncurriedHandler } from '../../events/EventRegistry';
+import * as SimulatedEvent from '../../events/SimulatedEvent';
+import ForeignCache from '../../foreign/ForeignCache';
+import * as Tagger from '../../registry/Tagger';
 import { AlloyBehaviourRecord } from '../behaviour/Behaviour';
+import * as GuiFactory from '../component/GuiFactory';
 import { AlloyEventRecord } from '../events/AlloyEvents';
+import * as Gui from './Gui';
 
 export interface ForeignGuiSpec {
   root: Element;
@@ -33,7 +33,7 @@ export interface Dispatcher {
 export interface ForeignGuiDetail {
   root: Element;
   dispatchers: Dispatcher[];
-  insertion: (root: Element, system: Gui.GuiSystem) => void
+  insertion: (root: Element, system: Gui.GuiSystem) => void;
 }
 
 const schema = ValueSchema.objOfOnly([
@@ -99,7 +99,7 @@ const findDispatcher = (dispatchers: Dispatcher[], target: Element): Option<Disp
     return dispatcher.getTarget(target).map((newTarget) => {
       return {
         target: newTarget,
-        dispatcher: dispatcher
+        dispatcher
       };
     });
   });

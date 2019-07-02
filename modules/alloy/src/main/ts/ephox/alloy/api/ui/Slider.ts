@@ -1,10 +1,8 @@
-import { AlloyComponent } from '../../api/component/ComponentApi';
-
 import SliderParts from '../../ui/slider/SliderParts';
 import { SliderSchema } from '../../ui/slider/SliderSchema';
 import * as SliderUi from '../../ui/slider/SliderUi';
-import * as Sketcher from './Sketcher';
 import { SliderSketcher } from '../../ui/types/SliderTypes';
+import * as Sketcher from './Sketcher';
 
 const Slider = Sketcher.composite({
   name: 'Slider',

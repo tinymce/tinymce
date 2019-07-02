@@ -1,3 +1,4 @@
+import { document, console } from '@ephox/dom-globals';
 import { Arr, Future, Result, Option } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -10,7 +11,6 @@ import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 import * as DemoRenders from './forms/DemoRenders';
-import { document, console } from '@ephox/dom-globals';
 
 // tslint:disable:no-console
 
@@ -24,7 +24,7 @@ export default (): void => {
 
   const sink = DemoSink.make();
 
-  const button1 = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'Run this in touch device mode. It is a button that if you press and hold on it, it opens a circular menu below.',
     {

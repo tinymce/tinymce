@@ -1,10 +1,10 @@
+import { Objects } from '@ephox/boulder';
+import { console } from '@ephox/dom-globals';
 import * as Behaviour from './Behaviour';
 import * as KeyboardBranches from '../../behaviour/keyboard/KeyboardBranches';
 import * as KeyingState from '../../behaviour/keyboard/KeyingState';
-import { Objects } from '@ephox/boulder';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AcylicConfigSpec, CyclicConfigSpec, FlowConfigSpec, FlatgridConfigSpec, MatrixConfigSpec, ExecutingConfigSpec, MenuConfigSpec, SpecialConfigSpec, GeneralKeyingConfig } from '../../keying/KeyingModeTypes';
-import { console } from '@ephox/dom-globals';
 
 export interface KeyingBehaviour<D extends GeneralKeyingConfig> extends Behaviour.AlloyBehaviour<KeyingConfigSpec, D> {
   config: (config: KeyingConfigSpec) => Behaviour.NamedConfiguredBehaviour<KeyingConfigSpec, D>;

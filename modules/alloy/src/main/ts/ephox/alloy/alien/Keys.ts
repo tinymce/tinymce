@@ -1,5 +1,3 @@
-import { Fun } from '@ephox/katamari';
-
 const BACKSPACE: () => number[] = () => [8];
 const TAB: () => number[] = () => [9];
 const ENTER: () => number[] = () => [13];

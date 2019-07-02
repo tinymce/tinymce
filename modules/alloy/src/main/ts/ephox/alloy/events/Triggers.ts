@@ -2,9 +2,9 @@ import { Adt, Arr, Option, Cell } from '@ephox/katamari';
 import { Traverse, Element } from '@ephox/sugar';
 
 import * as DescribedHandler from './DescribedHandler';
-import * as EventSource from './EventSource';
-import { SimulatedEvent, EventFormat, fromSource, fromExternal } from './SimulatedEvent';
 import { ElementAndHandler, UidAndHandler } from './EventRegistry';
+import * as EventSource from './EventSource';
+import { EventFormat, fromSource, fromExternal } from './SimulatedEvent';
 
 type LookupEvent = (eventName: string, target: Element) => Option<ElementAndHandler>;
 

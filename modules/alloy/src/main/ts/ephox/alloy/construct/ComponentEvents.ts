@@ -1,5 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Fun, Merger, Obj, Result } from '@ephox/katamari';
+import { Arr, Fun, Obj, Result } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 
 import * as ObjIndex from '../alien/ObjIndex';

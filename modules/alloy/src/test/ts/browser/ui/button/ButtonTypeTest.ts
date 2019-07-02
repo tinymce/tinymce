@@ -1,6 +1,7 @@
 import { Assertions, Logger, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Attr } from '@ephox/sugar';
+
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import { Button } from 'ephox/alloy/api/ui/Button';

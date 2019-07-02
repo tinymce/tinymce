@@ -82,7 +82,7 @@ const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyCo
 
   gui.add(all);
 
-  const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', (evt) => {
+  DomEvent.bind(Element.fromDom(document), 'mousedown', (evt) => {
     if (evt.raw().button === 0) {
       gui.broadcastOn([ Channels.dismissPopups() ], {
         target: evt.target()

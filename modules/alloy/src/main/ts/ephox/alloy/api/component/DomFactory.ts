@@ -1,7 +1,5 @@
-import { Objects } from '@ephox/boulder';
-import { Arr, Merger } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { Element, Html, Node, Traverse } from '@ephox/sugar';
-import { AlloyEventKeyAndHandler } from '../../api/events/AlloyEvents';
 import { RawDomSchema, AlloySpec } from '../../api/component/SpecTypes';
 
 const getAttrs = (elem) => {
@@ -49,7 +47,7 @@ const dom = (tag: string, classes: string[], attributes = { }, styles = { }) => 
     classes,
     attributes,
     styles
-  }
+  };
 };
 
 const simple = (tag: string, classes: string[], components: AlloySpec[]) => {
@@ -60,7 +58,7 @@ const simple = (tag: string, classes: string[], components: AlloySpec[]) => {
     },
     components
   };
-}
+};
 
 export {
   getAttrs,

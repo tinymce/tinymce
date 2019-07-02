@@ -6,8 +6,11 @@ import { Composing } from '../api/behaviour/Composing';
 import { Coupling } from '../api/behaviour/Coupling';
 import { Focusing } from '../api/behaviour/Focusing';
 import { Positioning } from '../api/behaviour/Positioning';
+import { Representing } from '../api/behaviour/Representing';
 import { Sandboxing } from '../api/behaviour/Sandboxing';
 import { AlloyComponent } from '../api/component/ComponentApi';
+import { LazySink } from '../api/component/CommonTypes';
+import { SketchBehaviours } from '../api/component/SketchBehaviours';
 import { TieredData, tieredMenu as TieredMenu } from '../api/ui/TieredMenu';
 import * as AriaOwner from '../aria/AriaOwner';
 import * as InternalSink from '../parts/InternalSink';
@@ -15,9 +18,6 @@ import { HotspotAnchorSpec } from '../positioning/mode/Anchoring';
 import * as Tagger from '../registry/Tagger';
 import * as Dismissal from '../sandbox/Dismissal';
 import { CommonDropdownDetail } from '../ui/types/DropdownTypes';
-import { SketchBehaviours } from '../api/component/SketchBehaviours';
-import { Representing } from '../api/behaviour/Representing';
-import { LazySink } from '../api/component/CommonTypes';
 
 export enum HighlightOnOpen { HighlightFirst, HighlightNone }
 

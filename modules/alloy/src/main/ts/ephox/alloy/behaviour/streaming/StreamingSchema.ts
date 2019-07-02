@@ -1,8 +1,8 @@
-import { FieldSchema, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Throttler } from '@ephox/katamari';
-import * as StreamingState from './StreamingState';
 
 import * as Fields from '../../data/Fields';
+import * as StreamingState from './StreamingState';
 import { StreamingConfig, StreamingState as StreamingStateType, ThrottleStreamingConfig } from './StreamingTypes';
 
 const setup = (streamInfo: StreamingConfig, streamState: StreamingStateType) => {

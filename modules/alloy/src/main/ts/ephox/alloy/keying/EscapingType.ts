@@ -3,9 +3,9 @@ import { Fun, Option } from '@ephox/katamari';
 import * as Keys from '../alien/Keys';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import * as Fields from '../data/Fields';
-import { EscapingConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
+import { EscapingConfig, KeyRuleHandler } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 
 // NB: Tsc requires AlloyEventHandler and AlloyComponent to be imported here.

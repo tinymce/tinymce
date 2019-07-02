@@ -1,6 +1,7 @@
 import { FocusTools, Keyboard, Keys, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Objects } from '@ephox/boulder';
+import { Option } from '@ephox/katamari';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
@@ -9,8 +10,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { FocusInsideModes } from '../../../../../main/ts/ephox/alloy/keying/KeyingModeTypes';
-import { Option } from '@ephox/katamari';
+import { FocusInsideModes } from 'ephox/alloy/keying/KeyingModeTypes';
 
 UnitTest.asynctest('Widget Keying Test', (success, failure) => {
 

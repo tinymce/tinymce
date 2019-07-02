@@ -1,6 +1,6 @@
 import { Cell, Fun } from '@ephox/katamari';
 
-import { BehaviourState, nuState } from '../common/BehaviourState';
+import { nuState } from '../common/BehaviourState';
 
 const init = (spec) => {
   const state = Cell(spec.expanded);

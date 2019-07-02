@@ -38,7 +38,7 @@ const generate = (menus: MenuToItems, expansions: TriggerItemToMenu): ItemToMenu
   const byItem: TriggerItemToMenu = expansions;
   const byMenu: MenuToTriggerItem = transpose(expansions);
 
-  // For each menu, calcualte the backlog of submenus to get to it.
+  // For each menu, calculate the backlog of submenus to get to it.
   const menuPaths = Obj.map(byMenu, (_triggerItem: string, submenu: string) => {
     return [ submenu ].concat(trace(items, byItem, byMenu, submenu));
   });

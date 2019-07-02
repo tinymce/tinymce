@@ -1,3 +1,4 @@
+import { document, console } from '@ephox/dom-globals';
 import { Class, Element } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Sliding } from 'ephox/alloy/api/behaviour/Sliding';
@@ -6,7 +7,6 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { document, console } from '@ephox/dom-globals';
 
 // tslint:disable:no-console
 

@@ -1,6 +1,6 @@
 import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
-import { ToolbarGroupSpec } from '../types/ToolbarGroupTypes';
 import { SplitToolbarBaseDetail, SplitToolbarBaseSpec, SplitToolbarBaseSketcher } from './SplitToolbarBaseTypes';
+import { ToolbarGroupSpec } from './ToolbarGroupTypes';
 
 export interface SplitSlidingToolbarDetail extends SplitToolbarBaseDetail {
   markers: {

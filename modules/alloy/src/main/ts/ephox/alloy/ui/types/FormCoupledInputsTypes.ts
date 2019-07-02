@@ -1,9 +1,10 @@
+import { Option } from '@ephox/katamari';
+
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { Option } from '@ephox/katamari';
 
 export interface FormCoupledInputsDetail extends CompositeSketchDetail {
   uid: string;

@@ -1,10 +1,7 @@
-import { Objects } from '@ephox/boulder';
-import { Fun, Obj, Option, Cell } from '@ephox/katamari';
-import { JSON } from '@ephox/sand';
-import { TooltippingConfigSpec, TooltippingConfig } from './TooltippingTypes';
-import { BehaviourState, nuState, BehaviourStateInitialiser } from '../common/BehaviourState';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { setTimeout, clearTimeout } from '@ephox/dom-globals';
+import { Fun, Option, Cell } from '@ephox/katamari';
+
+import { nuState } from '../common/BehaviourState';
 
 const init = () => {
   const timer = Cell(Option.none());

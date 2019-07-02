@@ -1,5 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Adt, Arr, Fun, Merger, Obj } from '@ephox/katamari';
+import { Adt, Arr, Fun, Obj } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 
 const _placeholder = 'placeholder';

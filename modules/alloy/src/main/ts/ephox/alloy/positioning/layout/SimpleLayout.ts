@@ -1,10 +1,11 @@
 import { Option, Struct } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+
 import { Bounds } from '../../alien/Boxes';
-import { Anchor } from '../../positioning/layout/Anchor';
-import { Bubble } from '../../positioning/layout/Bubble';
-import { AnchorOverrides, MaxHeightFunction } from '../../positioning/mode/Anchoring';
+import { AnchorOverrides, MaxHeightFunction } from '../mode/Anchoring';
 import * as Callouts from '../view/Callouts';
+import { Anchor } from './Anchor';
+import { Bubble } from './Bubble';
 import * as LayoutTypes from './LayoutTypes';
 import * as MaxHeight from './MaxHeight';
 import * as Origins from './Origins';

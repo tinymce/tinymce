@@ -1,13 +1,12 @@
-import { RepositionDecision } from '../../positioning/view/Reposition';
 import { Fun, Option } from '@ephox/katamari';
 import { Classes, Css, Height, Width, Element } from '@ephox/sugar';
 
+import { Bubble } from '../layout/Bubble';
+import { AnchorElement, AnchorBox } from '../layout/LayoutTypes';
 import * as Origins from '../layout/Origins';
-import * as Anchors from './Anchors';
+import { ReparteeOptions } from '../layout/SimpleLayout';
 import * as Bounder from './Bounder';
-import { AnchorElement, AnchorBox } from '../../positioning/layout/LayoutTypes';
-import { Bubble } from '../../positioning/layout/Bubble';
-import { ReparteeOptions } from '../../positioning/layout/SimpleLayout';
+import { RepositionDecision } from './Reposition';
 
 /*
  * This is the old repartee API. It is retained in a similar structure to the original form,

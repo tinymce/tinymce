@@ -1,6 +1,6 @@
 import { Option } from '@ephox/katamari';
 
-import { SliderDetail } from '../../ui/types/SliderTypes';
+import { SliderDetail } from '../types/SliderTypes';
 
 const t = 'top',
       r = 'right',

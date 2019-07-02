@@ -2,10 +2,10 @@ import { Option } from '@ephox/katamari';
 import { Attr, Class, Css, Height, Location, Width, Element } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
+import { SugarPosition } from '../../alien/TypeDefinitions';
 import * as DragCoord from '../../api/data/DragCoord';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { DockingContext, DockingConfig } from '../../behaviour/docking/DockingTypes';
-import { SugarPosition } from '../../alien/TypeDefinitions';
+import { DockingContext, DockingConfig } from './DockingTypes';
 
 const appear = (component: AlloyComponent, contextualInfo: DockingContext): void => {
   Class.add(component.element(), contextualInfo.transitionClass);

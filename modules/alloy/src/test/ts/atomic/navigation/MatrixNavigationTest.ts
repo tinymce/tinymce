@@ -1,6 +1,7 @@
-import * as MatrixNavigation from 'ephox/alloy/navigation/MatrixNavigation';
-import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest } from '@ephox/bedrock';
+import Jsc from '@ephox/wrap-jsverify';
+
+import * as MatrixNavigation from 'ephox/alloy/navigation/MatrixNavigation';
 
 UnitTest.test('MatrixNavigationTest', () => {
   const genRegularMatrix = Jsc.integer(2, 3).generator.flatMap((numRows) => {

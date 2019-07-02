@@ -1,3 +1,4 @@
+import { document, setTimeout, prompt } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -6,7 +7,6 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Tabbar } from 'ephox/alloy/api/ui/Tabbar';
 import { TabSection } from 'ephox/alloy/api/ui/TabSection';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { document, console, setTimeout, prompt } from '@ephox/dom-globals';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 
 export default (): void => {

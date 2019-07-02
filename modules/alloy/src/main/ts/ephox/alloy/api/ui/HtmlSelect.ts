@@ -1,15 +1,14 @@
 import { FieldSchema, Objects } from '@ephox/boulder';
-import { Arr, Merger } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
-import * as Behaviour from '../behaviour/Behaviour';
+import { SketchSpec } from '../../api/component/SpecTypes';
+import { HtmlSelectSketcher, HtmlSelectDetail, HtmlSelectSpec } from '../../ui/types/HtmlSelectTypes';
 import { Focusing } from '../behaviour/Focusing';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
-import { SketchSpec } from '../../api/component/SpecTypes';
-import { HtmlSelectSketcher, HtmlSelectDetail, HtmlSelectSpec } from '../../ui/types/HtmlSelectTypes';
-import { SingleSketchFactory } from '../../api/ui/UiSketcher';
+import { SingleSketchFactory } from './UiSketcher';
 
 const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, spec): SketchSpec => {
   const options = Arr.map(detail.options, (option) => {

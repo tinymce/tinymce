@@ -1,12 +1,12 @@
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as AlloyParts from '../../parts/AlloyParts';
-import * as SplitToolbarBase from '../../ui/common/SplitToolbarBase';
 import * as SplitToolbarUtils from '../../toolbar/SplitToolbarUtils';
+import * as SplitToolbarBase from '../../ui/common/SplitToolbarBase';
 import * as SplitSlidingToolbarSchema from '../../ui/schema/SplitSlidingToolbarSchema';
 import { SplitSlidingToolbarDetail, SplitSlidingToolbarSketcher, SplitSlidingToolbarSpec } from '../../ui/types/SplitSlidingToolbarTypes';
 import { Sliding } from '../behaviour/Sliding';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as Sketcher from './Sketcher';
+import { CompositeSketchFactory } from './UiSketcher';
 
 const toggleToolbar = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) => {
   AlloyParts.getPart(toolbar, detail, 'overflow').each((overf) => {

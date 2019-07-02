@@ -22,7 +22,7 @@ export interface SpecExtras<T extends SplitToolbarBaseDetail> {
   getOverflow: (toolbar: AlloyComponent) => Option<AlloyComponent>;
   coupling: {
     [key: string]: (comp: AlloyComponent) => AlloySpec
-  }
+  };
 }
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
@@ -56,7 +56,7 @@ const spec = <T extends SplitToolbarBaseDetail, U extends SplitToolbarBaseSpec>(
   return {
     uid: detail.uid,
     dom: detail.dom,
-    components: components,
+    components,
     behaviours: SketchBehaviours.augment(
       detail.splitToolbarBehaviours,
       [

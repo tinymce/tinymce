@@ -41,7 +41,7 @@ export default (): void => {
     topAttr: 'data-drag-top'
   };
 
-  const button1 = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'This button is a <code>button</code> that can be dragged',
     Container.sketch({

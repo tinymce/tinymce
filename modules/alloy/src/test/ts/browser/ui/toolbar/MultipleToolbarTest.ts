@@ -1,10 +1,11 @@
 import { UnitTest, ApproxStructure, Assertions, Step } from '@ephox/agar';
+import { Arr } from '@ephox/katamari';
+
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { CustomList } from 'ephox/alloy/api/ui/CustomList';
 import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { Arr } from '@ephox/katamari';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 
 UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {

@@ -2,6 +2,7 @@ import { DataTransfer, setTimeout } from '@ephox/dom-globals';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attr, Css, DomEvent, Element, Insert, Remove, Replication } from '@ephox/sugar';
+
 import * as DataTransfers from './DataTransfers';
 
 const platform = PlatformDetection.detect();
@@ -51,8 +52,8 @@ const blockDefaultGhost = (target: Element) => {
 
   Insert.before(target, targetClone);
   Css.setAll(target, {
-    'position': 'fixed',
-    'visibility': 'hidden'
+    position: 'fixed',
+    visibility: 'hidden'
   });
 
   setTimeout(() => {
@@ -98,7 +99,7 @@ const setDragImageFromCloneEdgeFallback = (image: DragnDropImageClone, parent: E
     Css.setAll(ghost, {
       left: `${x}px`,
       top: `${y}px`
-    })
+    });
   });
 
   const dragEnd = DomEvent.bind(target, 'dragend', (_) => {
