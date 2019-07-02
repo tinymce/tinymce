@@ -1,0 +1,163 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+//
+// Accessibility checker
+
+@accessibility-issue-info-heading-text-color: contrast(@dialog-background-color, @color-white, @color-tint);
+@accessibility-issue-info-body-text-color: contrast(@dialog-background-color, @color-white, @text-color);
+@accessibility-issue-info-background-color: contrast(@dialog-background-color, fade(@color-tint, 10%), fade(@color-tint, 50%));
+@accessibility-issue-info-border-color: contrast(@dialog-background-color, fade(@color-tint, 40%), @color-tint);
+
+@accessibility-issue-warn-heading-text-color: contrast(@dialog-background-color, @color-white, #cc8500);
+@accessibility-issue-warn-body-text-color: contrast(@dialog-background-color, @color-white, @text-color);
+@accessibility-issue-warn-background-color: contrast(@dialog-background-color, fade(orange, 10%), fade(orange, 50%));
+@accessibility-issue-warn-border-color: contrast(@dialog-background-color, fade(orange, 50%), fade(orange, 80%));
+
+@accessibility-issue-error-heading-text-color: contrast(@dialog-background-color, @color-white, @color-error);
+@accessibility-issue-error-body-text-color: contrast(@dialog-background-color, @color-white, @text-color);
+@accessibility-issue-error-background-color: contrast(@dialog-background-color, fade(@color-error, 10%), fade(@color-error, 50%));
+@accessibility-issue-error-border-color: contrast(@dialog-background-color, fade(@color-error, 40%), fade(@color-error, 80%));
+
+.tox {
+  .accessibility-issue {
+    //
+  }
+
+  .accessibility-issue__header {
+    align-items: center;
+    display: flex;
+    margin-bottom: @pad-xs;
+  }
+
+  .accessibility-issue__description {
+    align-items: stretch;
+    border: 1px solid @border-color;
+    border-radius: @panel-border-radius;
+    display: flex;
+    justify-content: space-between;
+
+    > div {
+      padding-bottom: @pad-xs;
+
+      > div {
+        align-items: center;
+        display: flex;
+        margin-bottom: @pad-xs;
+      }
+    }
+
+    > *:last-child:not(:only-child) {
+      border-color: @border-color;
+      border-style: solid;
+    }
+  }
+
+  // Info state
+  .accessibility-issue--info {
+    .accessibility-issue__description {
+      background-color: @accessibility-issue-info-background-color;
+      border-color: @accessibility-issue-info-border-color;
+      color: @accessibility-issue-info-body-text-color;
+
+      > *:last-child {
+        border-color: @accessibility-issue-info-border-color;
+      }
+    }
+
+    h2 {
+      color: @accessibility-issue-info-heading-text-color;
+    }
+
+    .tox-icon svg {
+      fill: @accessibility-issue-info-heading-text-color;
+    }
+  }
+
+  // Warn state
+  .accessibility-issue--warn {
+    .accessibility-issue__description {
+      background-color: @accessibility-issue-warn-background-color;
+      border-color: @accessibility-issue-warn-border-color;
+      color: @accessibility-issue-warn-body-text-color;
+
+      > *:last-child {
+        border-color: @accessibility-issue-warn-border-color;
+      }
+    }
+
+    h2 {
+      color: @accessibility-issue-warn-heading-text-color;
+    }
+
+    .tox-icon svg {
+      fill: @accessibility-issue-warn-heading-text-color;
+    }
+  }
+
+  // Error state
+  .accessibility-issue--error {
+    .accessibility-issue__description {
+      background-color: @accessibility-issue-error-background-color;
+      border-color: @accessibility-issue-error-border-color;
+      color: @accessibility-issue-error-body-text-color;
+
+      > *:last-child {
+        border-color: @accessibility-issue-error-border-color;
+      }
+    }
+
+    h2 {
+      color: @accessibility-issue-error-heading-text-color;
+    }
+
+    .tox-icon svg {
+      fill: @accessibility-issue-error-heading-text-color;
+    }
+  }
+
+  .tox-dialog__body-content .accessibility-issue__header h1,
+  .tox-dialog__body-content .accessibility-issue__description h2 {
+    margin-top: 0;
+    // Inherits other styles from dialog body content heading
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .accessibility-issue__header {
+    > *:nth-last-child(2) {
+      margin-left: auto;
+    }
+  }
+
+  .accessibility-issue__description {
+    padding: @pad-xs @pad-xs @pad-xs @pad-sm;
+
+    > *:last-child {
+      border-left-width: 1px;
+      padding-left: @pad-xs;
+    }
+  }
+}
+
+.tox[dir=rtl] {
+  .accessibility-issue__header {
+    > *:nth-last-child(2) {
+      margin-right: auto;
+    }
+  }
+
+  .accessibility-issue__description {
+    padding: @pad-xs @pad-sm @pad-xs @pad-xs;
+
+    > *:last-child {
+      border-right-width: 1px;
+      padding-right: @pad-xs;
+    }
+  }
+}

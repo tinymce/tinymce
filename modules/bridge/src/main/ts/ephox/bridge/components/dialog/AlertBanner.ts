@@ -6,9 +6,11 @@ export interface AlertBannerApi {
   level: 'info' | 'warn' | 'error' | 'success';
   text: string;
   icon: string;
+  url?: string;
 }
 
 export interface AlertBanner {
+  type: 'alertbanner';
   level: 'info' | 'warn' | 'error' | 'success';
   text: string;
   icon: string;

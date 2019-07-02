@@ -16,7 +16,7 @@ The API exposed by boulder will be constantly changing, but it should always be 
 
 ## Running Tests
 
-`boulder` uses [`bolt`](https://www.npmjs.com/package/@ephox/bolt) to run tests. The tests are run through the `test` script in the project. Specifically,
+`boulder` uses [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) to run tests. The tests are run through the `test` script in the project. Specifically,
 
 `$ yarn test`
 

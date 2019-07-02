@@ -1,10 +1,10 @@
 {
   "name": "@ephox/sand",
-  "version": "2.0.17",
+  "version": "2.0.19",
   "description": "Platform detection library",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/sand"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "files": [
     "lib/main",
@@ -29,7 +29,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^2.4.21"
+    "@ephox/katamari": "^2.4.23"
   },
   "main": "./lib/main/ts/ephox/sand/api/Main.js",
   "module": "./lib/main/ts/ephox/sand/api/Main.js",

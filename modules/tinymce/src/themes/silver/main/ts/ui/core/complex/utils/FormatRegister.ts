@@ -10,7 +10,7 @@ import { Objects } from '@ephox/boulder';
 import { FormatItem, PreviewSpec } from '../BespokeSelect';
 import Editor from 'tinymce/core/api/Editor';
 
-export type IsSelectedForType = (format: string) => () => boolean;
+export type IsSelectedForType = (format: string) => (currentValue: Option<any>) => boolean;
 export type GetPreviewForType = (format: string) => () => Option<PreviewSpec>;
 
 const processBasic = (item: { format: string }, isSelectedFor, getPreviewFor): FormatItem => {

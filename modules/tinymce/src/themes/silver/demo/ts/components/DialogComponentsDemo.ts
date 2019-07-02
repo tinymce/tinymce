@@ -64,7 +64,6 @@ export default () => {
   }, backstage);
 
   const iframeSpec = renderIFrame({
-    type: 'iframe',
     name: 'iframe',
     label: Option.some('Iframe'),
     sandboxed: true
@@ -73,19 +72,13 @@ export default () => {
   const inputSpec = renderInput({
     name: 'input',
     label: Option.some('Beta'),
-    placeholder: Option.none(),
-    validation: Option.some({
-      validator: (s) => s === 'bad' ? 'Bad' : true
-    })
+    placeholder: Option.none()
   }, sharedBackstage.providers);
 
   const textareaSpec = renderTextarea({
     name: 'textarea',
     label: Option.some('Gamma'),
-    placeholder: Option.none(),
-    validation: Option.some({
-      validator: (s) => s === 'so bad' ? 'So bad' : true
-    })
+    placeholder: Option.none()
   }, sharedBackstage.providers);
 
   const makeItem = (text: string): Menu.MenuItemApi => {
@@ -99,7 +92,6 @@ export default () => {
 
   const labelSpec = renderLabel({
     label: 'A label wraps components in a group',
-    type: 'label',
     items: [
       renderCheckbox({
         label: 'check box item 1',
@@ -112,24 +104,23 @@ export default () => {
       renderInput({
         label: Option.some('Sample input'),
         placeholder: Option.none(),
-        name: 'exampleinputfieldname',
-        validation: Option.none()
+        name: 'exampleinputfieldname'
       }, sharedBackstage.providers) as any
     ]
   }, sharedBackstage);
 
   const labelGridSpec = renderLabel({
     label: 'A label wraps a grid compontent',
-    type: 'label',
     items: [
       renderGrid({
-        type: 'grid',
         columns: 2,
         items: [
           renderButton({
             name: 'gridspecbutton',
             text: 'Click Me!',
-            primary: false
+            primary: false,
+            disabled: false,
+            icon: Option.none()
           }, () => {
             console.log('clicked on the button in the grid wrapped by a label');
           }, sharedBackstage.providers) as any,
@@ -144,8 +135,7 @@ export default () => {
           renderInput({
             label: Option.some('Sample input'),
             placeholder: Option.none(),
-            name: 'exampleinputfieldname',
-            validation: Option.none()
+            name: 'exampleinputfieldname'
           }, sharedBackstage.providers) as any
         ]
       }, sharedBackstage) as any
@@ -164,14 +154,15 @@ export default () => {
   }, sharedBackstage.providers);
 
   const gridSpec = renderGrid({
-    type: 'grid',
     columns: 5,
     items: [
       AlloyInput.sketch({ inputAttributes: { placeholder: 'Text goes here...' } }) as any,
       renderButton({
         name: 'gridspecbutton',
         text: 'Click Me!',
-        primary: false
+        primary: false,
+        disabled: false,
+        icon: Option.none()
       }, () => {
         console.log('clicked on the button in the grid');
       }, sharedBackstage.providers) as any
@@ -181,7 +172,9 @@ export default () => {
   const buttonSpec = renderButton({
     name: 'button1',
     text: 'Text',
-    primary: false
+    primary: false,
+    disabled: false,
+    icon: Option.none()
   }, () => {
     console.log('clicked on the button');
   }, sharedBackstage.providers);
@@ -218,25 +211,21 @@ export default () => {
   })();
 
   const colorInputSpec = renderColorInput({
-    type: 'colorinput',
     name: 'colorinput-demo',
     label: Option.some('Color input label')
   }, sharedBackstage, backstage.colorinput);
 
   const colorPickerSpec = renderColorPicker({
-    type: 'colorpicker',
     name: 'colorpicker-demo',
     label: Option.some('Color picker label')
   });
 
   const dropzoneSpec = renderDropZone({
-    type: 'dropzone',
     name: 'dropzone-demo',
     label: Option.some('Dropzone label')
   }, sharedBackstage.providers);
 
   const selectBoxSpec = renderSelectBox({
-    type: 'selectbox',
     name: 'selectbox-demo',
     size: 1,
     label: Option.some('Select one from'),
@@ -247,7 +236,6 @@ export default () => {
   }, sharedBackstage.providers);
 
   const selectBoxSizeSpec = renderSelectBox({
-    type: 'selectbox',
     name: 'selectbox-demo',
     size: 6,
     label: Option.some('Select one from'),
@@ -263,13 +251,11 @@ export default () => {
 
   const sizeInputSpec = renderSizeInput({
     constrain: true,
-    type: 'sizeinput',
     name: 'sizeinput-demo',
     label: Option.some('kustom fixed ratio'),
   }, sharedBackstage.providers);
 
   const urlInputSpec = renderUrlInput({
-    type: 'urlinput',
     name: 'blah',
     label: Option.some('Url'),
     filetype: 'image' // 'image' || 'media'
@@ -317,7 +303,8 @@ export default () => {
     text: 'The alert banner message',
     level: 'warn',
     icon: 'close',
-    actionLabel: 'Click here For somthing'
+    iconTooltip: 'Click here For somthing',
+    url: ''
   }, sharedBackstage.providers);
 
   const display = (label: string, spec: SimpleSpec) => {
@@ -336,7 +323,6 @@ export default () => {
 
   const memCollection = Memento.record(
     renderCollection({
-      type: 'collection',
       columns: 1,
       name: 'collection',
       label: Option.some('Collection: '),

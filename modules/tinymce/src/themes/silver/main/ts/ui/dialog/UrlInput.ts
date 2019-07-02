@@ -47,6 +47,9 @@ import {
   joinMenuLists,
 } from '../urlinput/Completions';
 import ItemResponse from '../menus/item/ItemResponse';
+import { Omit } from '../Omit';
+
+type UrlInputSpec = Omit<Types.UrlInput.UrlInput, 'type'>;
 
 const getItems = (fileType: 'image' | 'media' | 'file', input: AlloyComponent, urlBackstage: UiFactoryBackstageForUrlInput) => {
   const urlInputValue = Representing.getValue(input);
@@ -92,7 +95,7 @@ const renderInputButton = (label: Option<string>, eventName: string, className: 
 
 const errorId = Id.generate('aria-invalid');
 
-export const renderUrlInput = (spec: Types.UrlInput.UrlInput, backstage: UiFactoryBackstage, urlBackstage: UiFactoryBackstageForUrlInput): SketchSpec => {
+export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage, urlBackstage: UiFactoryBackstageForUrlInput): SketchSpec => {
   const providersBackstage = backstage.shared.providers;
 
   const updateHistory = (component: AlloyComponent): void => {

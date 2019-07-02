@@ -29,8 +29,12 @@ import * as ImagePanel from './ImagePanel';
 import * as ImageToolsEvents from './ImageToolsEvents';
 import * as SideBar from './SideBar';
 import * as ImageToolsState from './state/ImageToolsState';
+import { Types } from '@ephox/bridge';
+import { Omit } from '../../Omit';
 
-export const renderImageTools = (detail, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
+type ImageToolsSpec = Omit<Types.ImageTools.ImageTools, 'type'>;
+
+export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const state = ImageToolsState.makeState(detail.currentState);
 
   const zoom = (anyInSystem: AlloyComponent, simulatedEvent: SimulatedEvent<CustomEvent>): void => {

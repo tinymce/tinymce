@@ -4,6 +4,7 @@ import { Id, Result, Option } from '@ephox/katamari';
 export interface ButtonApi {
   type: 'button';
   text: string;
+  disabled?: boolean;
   primary?: boolean;
   name?: string;
   icon?: string;
@@ -12,6 +13,7 @@ export interface ButtonApi {
 export interface Button {
   type: 'button';
   text: string;
+  disabled: boolean;
   primary: boolean;
   name: string;
   icon: Option<string>;
@@ -20,6 +22,7 @@ export interface Button {
 export const buttonFields = [
   FieldSchema.strictString('type'),
   FieldSchema.strictString('text'),
+  FieldSchema.defaultedBoolean('disabled', false),
   FieldSchema.defaultedBoolean('primary', false),
   FieldSchema.field(
     'name',

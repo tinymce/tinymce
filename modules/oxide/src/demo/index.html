@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Oxide Skin development demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cloud.tinymce.com/5-testing/tinymce.min.js?apiKey=qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc"></script>
+    <style>
+        body {
+            margin: 2rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div style="display: flex; align-items: center; font-size: 14px; margin-bottom: 1rem;">
+        <small><strong>UI skin </strong></small>
+        <select name="skin" id="ui"></select>
+        <small style="margin-left: 1rem;"><strong>Content CSS </strong></small>
+        <select name="contentcss" id="content"></select>
+    </div>
+    <textarea>
+      <h1>The Incomparable Yosemite</h1>
+      <p>The most famous and accessible of these ca&ntilde;on valleys,&nbsp;and also the one that presents their most striking and sublime features on the grandest scale, is the <a title="Link to Wikipedia about Yosemite national park" href="https://en.wikipedia.org/wiki/Yosemite_National_Park">Yosemite</a>, situated in the basin of the <span style="color: #9b59b6;">Merced River at an elevation of 4000 feet above the level of the sea</span>. It is about&nbsp;<span style="background-color: #fffcc7;">seven miles long, half a mile to a mile wide, and nearly a mile deep</span> in the&nbsp;solid granite flank&nbsp;of the range.&nbsp;</p>
+      <blockquote>
+      <p>Down through the middle of the Valley flows the crystal Merced, <span style="text-decoration: line-through;">River of Mercy</span>, peacefully quiet, reflecting lilies and trees and the onlooking rocks;</p>
+      </blockquote>
+      <p>The walls are made up of rocks, mountains in size, partly separated from each other by side ca&ntilde;ons, and they are so sheer in front, and so compactly and harmoniously arranged on a level floor, that the Valley, comprehensively seen, <strong>looks like an immense hall or temple lighted from above</strong>.</p>
+      <p>Awful in stern, immovable majesty, how softly these rocks are adorned, and how fine and reassuring the company they keep: their feet among beautiful groves and meadows, their brows in the sky, a thousand flowers leaning confidingly against their feet, bathed in floods of water, floods of light, while the snow and waterfalls, the winds and avalanches and clouds shine and sing and wreathe about them as the years go by, and myriads of small winged creatures</p>
+      <ul>
+      <li>birds</li>
+      <li>bees</li>
+      <li>butterflies</li>
+      </ul>
+      <p>give glad animation and help to make all the air into music. Down through the middle of the Valley flows the crystal Merced, River of Mercy, peacefully quiet, reflecting lilies and trees and the onlooking rocks</p>
+    </textarea>
+
+    <script>
+        const skin = localStorage.getItem('skin') || 'default';
+        const contentcss = localStorage.getItem('contentcss') || 'default';
+
+        tinymce.init({
+            selector:'textarea',
+            plugins: 'advlist anchor autolink charmap code codesample directionality fullpage fullscreen help hr image imagetools insertdatetime link lists media nonbreaking pagebreak preview print searchreplace table template textpattern toc visualblocks visualchars wordcount',
+            toolbar: 'undo redo | formatselect | bold italic strikethrough forecolor backcolor blockquote | link image media | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat fullscreen',
+            toolbar_drawer: 'floating',
+            height: 600,
+            skin_url: '/skins/ui/' +  skin,
+            content_css: '/skins/content/' + contentcss + '/content.css'
+        });
+
+        function addOptionTo (select) {
+            return function (_skin) {
+                const option = document.createElement('option');
+                const text = document.createTextNode(_skin);
+                option.value = _skin;
+                option.appendChild(text);
+                select.appendChild(option);
+            }
+        }
+
+        function selectOption (select, optionValueToSelect) {
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].value === optionValueToSelect) {
+                    select.selectedIndex = select.options[i].index;
+                    break;
+                }
+            }
+        }
+
+        let contentSkins = [], uiSkins = [];
+        /** ADD_DATA */
+        const uiSelect = document.querySelector('select#ui');
+        const contentSelect = document.querySelector('select#content');
+
+        uiSkins.forEach(addOptionTo(uiSelect));
+        contentSkins.forEach(addOptionTo(contentSelect));
+
+        selectOption(uiSelect, skin);
+        selectOption(contentSelect, contentcss);
+
+        uiSelect.addEventListener('change', function (e) {
+            localStorage.setItem('skin', e.target.value);
+            location.reload();
+        });
+
+        contentSelect.addEventListener('change', function (e) {
+            localStorage.setItem('contentcss', e.target.value);
+            location.reload();
+        });
+    </script>
+</body>
+</html>

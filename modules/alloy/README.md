@@ -17,7 +17,7 @@ A webserver to run demos, npm, webpack is required to run and develop alloy
 
 ## Running Tests
 
-`alloy` uses [`bolt`](https://www.npmjs.com/package/@ephox/bolt) and [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) to run its tests. If you are running the browser tests, you may need to ensure that you have valid webdrivers on your path. You can install many of the webdrivers through npm.
+`alloy` uses [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) to run its tests. If you are running the browser tests, you may need to ensure that you have valid webdrivers on your path. You can install many of the webdrivers through npm.
 
 There are four kinds of tests that alloy runs:
 

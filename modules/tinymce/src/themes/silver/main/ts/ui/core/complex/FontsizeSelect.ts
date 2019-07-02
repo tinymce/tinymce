@@ -6,7 +6,7 @@
  */
 
 import { AlloyTriggers, AlloyComponent } from '@ephox/alloy';
-import { Arr, Obj, Option } from '@ephox/katamari';
+import { Arr, Obj, Option, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { createMenuItems, createSelectButton } from './BespokeSelect';
@@ -60,16 +60,18 @@ const getSpec = (editor: Editor) => {
     return { matchOpt, px };
   };
 
-  const isSelectedFor = (item) => {
-    return () => {
-      const { matchOpt } = getMatchingValue();
-      return matchOpt.exists((match) => match.format === item);
+  const isSelectedFor = (item: string) => {
+    return (valueOpt: Option<{ format: string; title: string }>) => {
+      return valueOpt.exists((value) => value.format === item);
     };
   };
 
-  const getPreviewFor = () => () => {
-    return Option.none();
+  const getCurrentValue = () => {
+    const { matchOpt } = getMatchingValue();
+    return matchOpt;
   };
+
+  const getPreviewFor = () => Fun.constant(Option.none());
 
   const onAction = (rawItem) => () => {
     editor.undoManager.transact(() => {
@@ -98,6 +100,7 @@ const getSpec = (editor: Editor) => {
     icon: Option.none(),
     isSelectedFor,
     getPreviewFor,
+    getCurrentValue,
     onAction,
     setInitialValue,
     nodeChangeHandler,

@@ -26,8 +26,10 @@ import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';
+import { Types } from '@ephox/bridge';
+import { Omit } from '../Omit';
 
-const renderTextField = function (spec: TextFieldFoo, providersBackstage: UiFactoryBackstageProviders) {
+const renderTextField = function (spec: TextField, providersBackstage: UiFactoryBackstageProviders) {
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   const baseInputBehaviours = [
@@ -92,15 +94,11 @@ const renderTextField = function (spec: TextFieldFoo, providersBackstage: UiFact
 
 export type Validator = (v: string) => true | string;
 
-export interface TextFieldFoo extends BaseTextFieldFoo {
+export interface TextField {
   multiline: boolean;
   name: string;
   classname: string;
   flex: boolean;
-}
-
-export interface BaseTextFieldFoo {
-  name: string;
   label: Option<string>;
   placeholder: Option<string>;
   validation: Option<{
@@ -109,17 +107,11 @@ export interface BaseTextFieldFoo {
   }>;
 }
 
-// tslint:disable-next-line:no-empty-interface
-export interface InputFoo extends BaseTextFieldFoo {
-  name: string;
-}
+type InputSpec = Omit<Types.Input.Input, 'type'>;
 
-// tslint:disable-next-line:no-empty-interface
-export interface TextareaFoo extends BaseTextFieldFoo {
-  name: string;
-}
+type TextAreaSpec = Omit<Types.TextArea.TextArea, 'type'>;
 
-const renderInput = (spec: InputFoo, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   return renderTextField({
     name: spec.name,
     multiline: false,
@@ -131,7 +123,7 @@ const renderInput = (spec: InputFoo, providersBackstage: UiFactoryBackstageProvi
   }, providersBackstage);
 };
 
-const renderTextarea = (spec: TextareaFoo, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   return renderTextField({
     name: spec.name,
     multiline: true,

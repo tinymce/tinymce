@@ -1,9 +1,26 @@
-Version 5.0.9 (TBD)
+Version 5.0.10 (TBD)
+    Fixed inconsistent types causing properties unable to be used in dialog components #TINY-3778
+    Added support for all HTML color formats in `color_map` setting #TINY-3837
     Fixed an issue in the Oxide skin where dialog content like outlines and shadows were clipped because of overflow hidden TINY-3566
+    Changed backspace key handling to outdent content in appropriate circumstances #TINY-3685
     Changed default palette for fore/back color to include some lighter colors suitable for highlights #TINY-2865
+    Changed the search and replace plugin to cycle through results #TINY-3800
+    Fixed the search and replace plugin not resetting state when changing the search query #TINY-3800
+    Fixed backspace in lists not creating an undo level #TINY-3814
     Fixed the editor to cancel loading in quirks mode where the UI is not supported #TINY-3391
     Fixed applying fonts not working when the name contained spaces and numbers #TINY-3801
     Fixed so that initial content is retained when initializing on list items #TINY-3796
+    Fixed inefficient font name and font size current value lookup during rendering #TINY-3813
+    Fixed mobile font copied into the wrong folder for the oxide-dark skin #TINY-3816
+    Fixed an issue where resizing the width of tables would produce inaccurate results #TINY-3827
+    Fixed a memory leak in the Silver theme #TINY-3797
+    Fixed alert and confirm dialogs using incorrect markup causing inconsistent padding #TINY-3835
+    Fixed an issue in the Table plugin with table_responsive_width not enforcing units when resizing #TINY-3790
+    Fixed leading, trailing and sequential spaces being lost when pasting plain text #TINY-3726
+    Fixed exception being thrown when creating relative URIs #TINY-3851
+    Fixed focus is no longer set to the editor content during mode changes unless the editor already had focus #TINY-3852
+Version 5.0.9 (2019-06-26)
+    Fixed print plugin not working in Firefox #TINY-3834
 Version 5.0.8 (2019-06-18)
     Added back support for multiple toolbars #TINY-2195
     Added support for .m4a files to the media plugin #TINY-3750

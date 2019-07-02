@@ -20,8 +20,9 @@ const percentageSize = function (width: string, element: Element): TableSize {
     return CellUtils.minWidth() / pixelWidth * 100;
   };
   const setTableWidth = function (table: Element, _newWidths: number[], delta: number) {
-    const total = floatWidth + delta;
-    Sizes.setPercentageWidth(table, total);
+    const ratio = delta / 100;
+    const change = ratio * floatWidth;
+    Sizes.setPercentageWidth(table, floatWidth + change);
   };
   return {
     width: Fun.constant(floatWidth),

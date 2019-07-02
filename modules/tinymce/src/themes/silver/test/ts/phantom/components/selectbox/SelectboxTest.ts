@@ -21,7 +21,6 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
     (store, doc, body) => {
       return GuiFactory.build(
         renderSelectBox({
-          type: 'selectbox',
           name: 'selector',
           size: 1,
           label: Option.some('selector'),
