@@ -11,7 +11,7 @@ const locateVisible = (container, current, selector) => {
 const locateIn = (container, current, selector, filter) => {
   const predicate = Fun.curry(Compare.eq, current);
   const candidates = SelectorFilter.descendants(container, selector);
-  const visible = Arr.filter(candidates, Visibility.isVisible);
+  const visible = Arr.filter(candidates, filter);
   return ArrPinpoint.locate(visible, predicate);
 };
 
