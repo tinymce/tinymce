@@ -1,6 +1,7 @@
 import { document, setTimeout, prompt } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
+
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';

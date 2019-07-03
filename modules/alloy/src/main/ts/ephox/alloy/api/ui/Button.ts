@@ -9,6 +9,7 @@ import { Keying } from '../behaviour/Keying';
 import { SketchBehaviours } from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
+
 const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchSpec => {
   const events = ButtonBase.events(detail.action);
 

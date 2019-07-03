@@ -1,6 +1,7 @@
 import { document, console, window, setTimeout } from '@ephox/dom-globals';
 import { Arr, Result } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
+
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';

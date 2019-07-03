@@ -1,6 +1,7 @@
 import { document, console } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+
 import { AllowBubbling } from 'ephox/alloy/api/behaviour/AllowBubbling';
 import { Behaviour, AlloySpec, AlloyEvents, AddEventsBehaviour } from 'ephox/alloy/api/Main';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';

@@ -1,6 +1,8 @@
+import { document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Class, Css, Element, Position } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
 import { Unselecting } from 'ephox/alloy/api/behaviour/Unselecting';
@@ -9,7 +11,6 @@ import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import { document } from '@ephox/dom-globals';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 export default (): void => {

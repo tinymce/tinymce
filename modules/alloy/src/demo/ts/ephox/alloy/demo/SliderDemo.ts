@@ -1,6 +1,7 @@
 import { document } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+
 import { Class, Css, DomEvent, Element, Insert } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';

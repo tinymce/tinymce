@@ -1,4 +1,6 @@
+import { document, setTimeout } from '@ephox/dom-globals';
 import { Class, Element } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -7,7 +9,6 @@ import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { document, setTimeout } from '@ephox/dom-globals';
 
 export default (): void => {
   const gui = Gui.create();

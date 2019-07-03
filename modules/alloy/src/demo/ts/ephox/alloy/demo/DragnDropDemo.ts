@@ -1,6 +1,7 @@
 import { console, document } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Class, Css, Element, Replication } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { DragnDrop } from 'ephox/alloy/api/behaviour/DragnDrop';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';

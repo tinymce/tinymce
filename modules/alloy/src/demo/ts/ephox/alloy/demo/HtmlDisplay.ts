@@ -1,6 +1,7 @@
 import { document, MutationObserver } from '@ephox/dom-globals';
 import { Id, Thunk } from '@ephox/katamari';
 import { DomEvent, Element, Html, TextContent } from '@ephox/sugar';
+
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';

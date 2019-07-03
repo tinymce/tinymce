@@ -1,6 +1,7 @@
 import { document } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 import { Class, Css, Element, Traverse } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
 import { Unselecting } from 'ephox/alloy/api/behaviour/Unselecting';

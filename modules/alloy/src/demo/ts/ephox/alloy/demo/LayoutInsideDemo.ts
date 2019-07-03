@@ -1,6 +1,7 @@
 import { document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
+
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';

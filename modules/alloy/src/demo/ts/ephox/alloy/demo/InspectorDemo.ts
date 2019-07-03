@@ -1,5 +1,6 @@
 import { console } from '@ephox/dom-globals';
 import { Body } from '@ephox/sugar';
+
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';

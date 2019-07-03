@@ -1,6 +1,7 @@
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Class, Element, Value } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';

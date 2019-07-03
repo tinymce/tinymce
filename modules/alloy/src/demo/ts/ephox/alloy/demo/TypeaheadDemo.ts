@@ -1,6 +1,7 @@
 import { document, console } from '@ephox/dom-globals';
 import { Arr, Future, Option, Result, Strings } from '@ephox/katamari';
 import { Class, Element, Value } from '@ephox/sugar';
+
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
