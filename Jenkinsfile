@@ -29,18 +29,16 @@ properties([
 ])
 
 node("primary") {
+  def extExec, extExecHandle, extYarnInstall, grunt
   stage ("Checkout SCM") {
     checkout scm
-    sh "mkdir -p jenkins-plumbing"
-    dir ("jenkins-plumbing") {
-      git([branch: "master", url:"ssh://git@stash:7999/van/jenkins-plumbing.git", credentialsId: "8aa93893-84cc-45fc-a029-a42f21197bb3"])
+    fileLoader.withGit("ssh://git@stash:7999/van/jenkins-plumbing.git", "master", "8aa93893-84cc-45fc-a029-a42f21197bb3", '') {
+      extExec = fileLoader.load("exec")
+      extExecHandle = fileLoader.load("execHandle")
+      extYarnInstall = fileLoader.load("npm-install")
+      grunt = fileLoader.load("grunt")
     }
   }
-
-  def extExec = load("jenkins-plumbing/exec.groovy")
-  def extExecHandle = load("jenkins-plumbing/execHandle.groovy")
-  def extYarnInstall = load("jenkins-plumbing/npm-install.groovy")
-  def grunt = load("jenkins-plumbing/grunt.groovy")
 
   def browserPermutations = [
     [ name: "win10Chrome", os: "windows-10", browser: "chrome" ],
