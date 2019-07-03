@@ -35,6 +35,7 @@ import { deriveCollectionMovement } from '../menus/menu/MenuMovement';
 import * as ItemClasses from '../menus/item/ItemClasses';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { Omit } from '../Omit';
+import I18n from 'tinymce/core/api/util/I18n';
 
 type CollectionSpec = Omit<Types.Collection.Collection, 'type'>;
 
@@ -55,7 +56,8 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
 
   const setContents = (comp, items) => {
     const htmlLines = Arr.map(items, (item) => {
-      const textContent = spec.columns === 1 ? `<div class="tox-collection__item-label">${item.text}</div>` : '';
+      const itemText = I18n.translate(item.text);
+      const textContent = spec.columns === 1 ? `<div class="tox-collection__item-label">${itemText}</div>` : '';
 
       const iconContent = `<div class="tox-collection__item-icon">${item.icon}</div>`;
 
@@ -71,7 +73,7 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
       // Title attribute is added here to provide tooltips which might be helpful to sighted users.
       // Using aria-label here overrides the Apple description of emojis and special characters in Mac/ MS description in Windows.
       // But if only the title attribute is used instead, the names are read out twice. i.e., the description followed by the item.text.
-      const ariaLabel = item.text.replace(/\_| \- |\-/g, (match) => {
+      const ariaLabel = itemText.replace(/\_| \- |\-/g, (match) => {
         return mapItemName[match];
       });
       return `<div class="tox-collection__item" tabindex="-1" data-collection-item-value="${escapeAttribute(item.value)}" title="${ariaLabel}" aria-label="${ariaLabel}">${iconContent}${textContent}</div>`;
