@@ -25,9 +25,7 @@ def runTests(extExecHandle, name, browser, os=null) {
 
 properties([
   disableConcurrentBuilds(),
-  pipelineTriggers([
-    pollSCM("")
-  ])
+  pipelineTriggers([])
 ])
 
 node("primary") {
@@ -82,29 +80,42 @@ node("primary") {
     }
   }
 
-  // PhantomJS tests
+  // PhantomJS is a browser, but runs on the same node as the pipeline
   processes["phantomjs"] = {
     stage ("PhantomJS") {
       // we are re-using the state prepared by `ci-all` below
+      // if we ever change these tests to run on a different node, rollup is required in addition to the normal CI command
       echo "Platform: PhantomJS tests on node: $NODE_NAME"
       runTests(extExecHandle, "PhantomJS", "phantomjs")
     }
   }
 
-  // Install tools
-  stage ("Install tools") {
-    cleanAndInstall()
-  }
+  // No actual code runs between SCM checkout and here, just function definition
+  notifyBitbucket()
+  try {
+    // Install tools
+    stage ("Install tools") {
+      cleanAndInstall()
+    }
 
-  stage ("Type check") {
-    // TODO switch ci-all to using whole-repo tslint once all modules pass tslint checks
-    extExec "yarn ci-all"
-  }
+    stage ("Type check") {
+      // TODO switch ci-all to using whole-repo tslint once all modules pass tslint checks
+      extExec "yarn ci-all"
+    }
 
-  grunt "list-changed-phantom list-changed-browser"
 
-  stage ("Run Tests") {
-    // Run all the tests in parallel
-    parallel processes
+    stage ("Run Tests") {
+      grunt "list-changed-phantom list-changed-browser"
+      // Run all the tests in parallel
+      parallel processes
+    }
+
+    // bitbucket plugin requires the result to explicitly be success
+    if (currentBuild.resultIsBetterOrEqualTo("SUCCESS")) {
+      currentBuild.result = "SUCCESS"
+    }
+  } catch (err) {
+    currentBuild.result = "FAILED"
   }
+  notifyBitbucket()
 }
