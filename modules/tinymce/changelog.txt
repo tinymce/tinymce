@@ -1,4 +1,5 @@
 Version 5.0.12 (TBD)
+    Fixed removing shortcuts not working for function keys #TINY-3871
     Fixed non-descriptive UI component type names #TINY-3349
 Version 5.0.11 (2019-07-04)
     Fixed packaging errors caused by a rollup treeshaking bug (https://github.com/rollup/rollup/issues/2970) #TINY-3866
