@@ -4,12 +4,12 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
-
 import { Arr, Fun, Obj, Option, Strings, Struct, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import Tools from './api/util/Tools';
+
 import Editor from './api/Editor';
 import { EditorSettings, RawEditorSettings } from './api/SettingsTypes';
+import Tools from './api/util/Tools';
 
 export interface ParamTypeMap {
   'hash': Record<string, string>;
@@ -53,8 +53,9 @@ const getSection = function (sectionResult, name, defaults) {
   return Tools.extend({}, defaults, sectionSettings);
 };
 
-const hasSection = function (sectionResult, name) {
-  return sectionResult.sections().hasOwnProperty(name);
+const isReducedTheme = function (sectionResult, name, theme) {
+  const section = sectionResult.sections();
+  return section.hasOwnProperty(name) && section[name].theme === theme;
 };
 
 const getDefaultSettings = function (id, documentBaseUrl, editor: Editor): RawEditorSettings {
@@ -107,9 +108,8 @@ const combinePlugins = function (forcedPlugins, plugins) {
 const processPlugins = function (isTouchDevice: boolean, sectionResult, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings {
   const forcedPlugins = normalizePlugins(defaultOverrideSettings.forced_plugins);
   const plugins = normalizePlugins(settings.plugins);
-  const platformPlugins = isTouchDevice && hasSection(sectionResult, 'mobile') ? filterMobilePlugins(plugins) : plugins;
+  const platformPlugins = isTouchDevice && isReducedTheme(sectionResult, 'mobile', 'mobile') ? filterMobilePlugins(plugins) : plugins;
   const combinedPlugins = combinePlugins(forcedPlugins, platformPlugins);
-
   return Tools.extend(settings, {
     plugins: combinedPlugins.join(' ')
   });
@@ -200,8 +200,4 @@ const getParam = (editor: Editor, name: string, defaultVal?: any, type?: string)
   }
 };
 
-export {
-  getEditorSettings,
-  getParam,
-  combineSettings
-};
+export { getEditorSettings, getParam, combineSettings };
