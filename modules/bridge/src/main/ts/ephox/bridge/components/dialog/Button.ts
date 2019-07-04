@@ -8,6 +8,7 @@ export interface ButtonApi {
   primary?: boolean;
   name?: string;
   icon?: string;
+  naked?: boolean;
 }
 
 export interface Button {
@@ -17,6 +18,7 @@ export interface Button {
   primary: boolean;
   name: string;
   icon: Option<string>;
+  naked: boolean;
 }
 
 export const buttonFields = [
@@ -32,7 +34,8 @@ export const buttonFields = [
     }),
     ValueSchema.string
   ),
-  FieldSchema.optionString('icon')
+  FieldSchema.optionString('icon'),
+  FieldSchema.defaultedBoolean('naked', false),
 ];
 
 export const buttonSchema = ValueSchema.objOf(buttonFields);

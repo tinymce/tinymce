@@ -27,17 +27,13 @@ const renderBody = (foo: WindowBodyFoo, id: Option<string>, backstage: UiFactory
     switch (incoming.body.type) {
       case 'tabpanel': {
         return [
-          renderTabPanel({
-            tabs: incoming.body.tabs
-          }, backstage)
+          renderTabPanel(incoming.body, backstage)
         ];
       }
 
       default: {
         return [
-          renderBodyPanel({
-            items: incoming.body.items
-          }, backstage)
+          renderBodyPanel(incoming.body, backstage)
         ];
       }
     }

@@ -103,8 +103,9 @@ export const renderButton = (spec: ButtonSpec, action, providersBackstage: UiFac
   };
 
   const classes = [
-    ...spec.primary ? ['tox-button'] : ['tox-button', 'tox-button--secondary'],
-    ...icon.isSome() ? ['tox-button--icon'] : []
+    ...!spec.primary && !spec.naked ? ['tox-button', 'tox-button--secondary'] : ['tox-button'],
+    ...icon.isSome() ? ['tox-button--icon'] : [],
+    ...spec.naked ? ['tox-button--naked'] : []
   ];
 
   const dom = {

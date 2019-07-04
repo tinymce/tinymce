@@ -36,7 +36,8 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
       text,
       disabled,
       primary,
-      icon: Option.none()
+      icon: Option.none(),
+      naked: false
     }, action, providersBackstage));
   };
 
@@ -46,7 +47,8 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
       icon: Option.some(icon),
       tooltip: Option.some(tooltip),
       disabled,
-      primary: false
+      primary: false,
+      naked: false
     }, action, providersBackstage));
   };
 

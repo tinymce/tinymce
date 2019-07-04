@@ -116,7 +116,8 @@ const renderMoreToolbarCommon = (toolbarSpec: ToolbarSpec, getOverflow: (comp: A
         icon: Option.some('more-drawer'),
         disabled: false,
         tooltip: Option.some('More...'),
-        primary: false
+        primary: false,
+        naked: false
       }, Option.none(), toolbarSpec.backstage.shared.providers)
     },
     splitToolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName, getOverflow)

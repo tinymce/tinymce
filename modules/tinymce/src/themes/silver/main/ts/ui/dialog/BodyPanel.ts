@@ -18,6 +18,7 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 
 export interface BodyPanelFoo<I> {
   items: I[];
+  classes: string[];
 }
 
 const renderBodyPanel = <I>(spec: BodyPanelFoo<I>, backstage: UiFactoryBackstage): SimpleSpec => {
@@ -26,7 +27,7 @@ const renderBodyPanel = <I>(spec: BodyPanelFoo<I>, backstage: UiFactoryBackstage
       return {
         dom: {
           tag: 'div',
-          classes: [ 'tox-form' ]
+          classes: [ 'tox-form' ].concat(spec.classes)
         },
         // All of the items passed through the form need to be put through the interpreter
         // with their form part preserved.

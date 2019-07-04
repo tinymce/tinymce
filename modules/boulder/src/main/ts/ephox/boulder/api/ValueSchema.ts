@@ -1,6 +1,6 @@
 import { Fun, Result, Type } from '@ephox/katamari';
 
-import { arrOf, ValueProcessorAdt, func, Processor, thunk, value, ValueValidator, setOf as doSetOf, objOf, objOfOnly, arrOfObj as _arrOfObj } from '../core/ValueProcessor';
+import { arrOf, ValueProcessorAdt, func, Processor, thunk, value, valueThunk, ValueValidator, setOf as doSetOf, objOf, objOfOnly, arrOfObj as _arrOfObj } from '../core/ValueProcessor';
 import { formatErrors, formatObj} from '../format/PrettyPrinter';
 import { choose as _choose } from '../core/ChoiceProcessor';
 import { FieldProcessorAdt } from './DslType';
@@ -19,6 +19,8 @@ const arrOfObj = function (objFields: ValueProcessorAdt[]): Processor {
 const arrOfVal = function (): Processor {
   return arrOf(_anyValue);
 };
+
+const valueThunkOf = valueThunk;
 
 const valueOf = function (validator: (a) => Result<any, any>): Processor {
   return value((v) => {
@@ -112,6 +114,7 @@ export {
   arrOfVal,
 
   valueOf,
+  valueThunkOf,
   setOf,
 
   objOf,

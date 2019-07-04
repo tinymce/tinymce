@@ -17,7 +17,7 @@ export const renderBar = (spec: BarSpec, backstage: UiFactoryBackstageShared): S
   return {
     dom: {
       tag: 'div',
-      classes: ['tox-bar']
+      classes: ['tox-bar'].concat(spec.classes)
     },
     components: Arr.map(spec.items, backstage.interpreter)
   };
