@@ -30,6 +30,13 @@ properties([
 
 node("primary") {
   def extExec, extExecHandle, extYarnInstall, grunt
+
+  def gitMerge = {
+    if (BRANCH_NAME != "master") {
+      extExec("git merge --no-commit --no-ff origin/master")
+    }
+  }
+
   stage ("Checkout SCM") {
     checkout scm
     fileLoader.withGit("ssh://git@stash:7999/van/jenkins-plumbing.git", "master", "8aa93893-84cc-45fc-a029-a42f21197bb3", '') {
@@ -38,6 +45,8 @@ node("primary") {
       extYarnInstall = fileLoader.load("npm-install")
       grunt = fileLoader.load("grunt")
     }
+    // cancel build if master doesn't merge cleanly, otherwise tests wil fail
+    gitMerge()
   }
 
   def browserPermutations = [
@@ -67,6 +76,9 @@ node("primary") {
         node("bedrock-" + permutation.os) {
           echo "Slave checkout on node $NODE_NAME"
           checkout scm
+
+          echo "Merging master into this branch to run tests"
+          gitMerge()
 
           cleanAndInstall()
           extExec "yarn ci"
@@ -100,7 +112,6 @@ node("primary") {
       // TODO switch ci-all to using whole-repo tslint once all modules pass tslint checks
       extExec "yarn ci-all"
     }
-
 
     stage ("Run Tests") {
       grunt "list-changed-phantom list-changed-browser"
