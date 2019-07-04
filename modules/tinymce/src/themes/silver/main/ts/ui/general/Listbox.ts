@@ -12,7 +12,7 @@ import { renderFormField, renderLabel } from 'tinymce/themes/silver/ui/alien/Fie
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
 // I think this was from before bridge. I don't think it is used.
-export const renderListbox = (spec: ListboxWrapper, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+export const renderListbox = (spec: ListboxSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const pLabel = renderLabel(spec.label, providersBackstage);
 
   const pField = AlloyFormField.parts().field({
@@ -31,7 +31,7 @@ export const renderListbox = (spec: ListboxWrapper, providersBackstage: UiFactor
   return renderFormField(Option.some(pLabel), pField);
 };
 
-export interface ListboxWrapper {
+export interface ListboxSpec {
   name: string;
   label: string; // Probably make option like the rest.
   values: Array<{value: string, text: string}>;

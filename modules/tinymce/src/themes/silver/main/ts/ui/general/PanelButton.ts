@@ -27,7 +27,7 @@ import { createPartialChoiceMenu } from '../menus/menu/MenuChoice';
 import { deriveMenuMovement } from '../menus/menu/MenuMovement';
 import ItemResponse from '../menus/item/ItemResponse';
 
-export interface SwatchPanelButtonWrapper {
+export interface SwatchPanelButtonSpec {
   dom: RawDomSchema;
   components: AlloySpec[];
   fetch: (callback: Function) => void;
@@ -41,7 +41,7 @@ export interface SwatchPanelButtonWrapper {
   }>;
 }
 
-export const renderPanelButton = (spec: SwatchPanelButtonWrapper, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
+export const renderPanelButton = (spec: SwatchPanelButtonSpec, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
   return AlloyDropdown.sketch({
     dom: spec.dom,
     components: spec.components,
