@@ -1,9 +1,10 @@
 import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Id, Option, Result } from '@ephox/katamari';
+import { Fun, Id, Result, Option } from '@ephox/katamari';
 import { BodyComponentApi } from './BodyComponent';
-import { InternalPanel, PanelApi, panelFields } from './Panel';
-import { ExternalTab, InternalTabPanel, TabPanelApi, tabPanelFields } from './TabPanel';
+import { Panel, PanelApi, panelFields } from './Panel';
+import { TabApi, Tab, TabPanel, TabPanelApi, tabPanelFields } from './TabPanel';
 
+// Note: This interface doesn't extend from a common button interface as this is only a configuration that specifies a button, but it's not by itself a button.
 export interface DialogButtonApi {
   type: 'submit' | 'cancel' | 'custom';
   name?: string;
@@ -14,9 +15,15 @@ export interface DialogButtonApi {
   icon?: string;
 }
 
+// For consistency with api/Types.ts this should perhaps be in a namespace (e.g. Types.Dialog.Panels.*)
+// but there are many many references to it already / shrug
 export type PanelApi = PanelApi;
+export type Panel = Panel;
 export type TabPanelApi = TabPanelApi;
-export type TabApi = ExternalTab;
+export type TabPanel = TabPanel;
+export type TabApi = TabApi;
+export type Tab = Tab;
+
 export type BodyComponentApi = BodyComponentApi;
 
 export type DialogDataItem = any;
@@ -96,7 +103,7 @@ export interface DialogButton {
 export interface Dialog<T> {
   title: string;
   size: DialogSize;
-  body: InternalTabPanel | InternalPanel;
+  body: TabPanel | Panel;
   buttons: DialogButton[];
   initialData: T;
   onAction: DialogActionHandler<T>;

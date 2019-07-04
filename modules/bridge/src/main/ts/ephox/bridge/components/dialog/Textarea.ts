@@ -1,18 +1,18 @@
 import { ValueSchema, FieldSchema } from '@ephox/boulder';
 import { Option, Result } from '@ephox/katamari';
-import { FormComponent, FormComponentApi, formComponentFields } from './FormComponent';
+import { FormComponentWithLabel, FormComponentWithLabelApi, formComponentWithLabelFields } from './FormComponent';
 
-export interface TextAreaApi extends FormComponentApi {
+export interface TextAreaApi extends FormComponentWithLabelApi {
   type: 'textarea';
   placeholder?: string;
 }
 
-export interface TextArea extends FormComponent {
+export interface TextArea extends FormComponentWithLabel {
   type: 'textarea';
   placeholder?: Option<string>;
 }
 
-export const textAreaFields = formComponentFields.concat([
+export const textAreaFields = formComponentWithLabelFields.concat([
   FieldSchema.optionString('placeholder')
 ]);
 

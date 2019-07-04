@@ -13,7 +13,7 @@ import { Element, Remove } from '@ephox/sugar';
 const isCollapsibleWhitespace = (c: string): boolean => ' \f\n\r\t\v'.indexOf(c) !== -1;
 
 const normalizeContent = (content: string, isStartOfContent: boolean, isEndOfContent: boolean): string => {
-  const result = Arr.foldl(content.split(''), (acc, c) => {
+  const result = Arr.foldl(content, (acc, c) => {
     // Are we dealing with a char other than some collapsible whitespace or nbsp? if so then just use it as is
     if (isCollapsibleWhitespace(c) || c === '\u00a0') {
       if (acc.previousCharIsSpace || (acc.str === '' && isStartOfContent) || (acc.str.length === content.length - 1 && isEndOfContent)) {

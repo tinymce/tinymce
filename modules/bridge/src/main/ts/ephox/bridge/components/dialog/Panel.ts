@@ -8,7 +8,7 @@ export interface PanelApi {
   items: BodyComponentApi[];
 }
 
-export interface InternalPanel {
+export interface Panel {
   type: 'panel';
   items: BodyComponent[];
 }
@@ -20,6 +20,6 @@ export const panelFields = [
 
 export const panelSchema = ValueSchema.objOf(panelFields);
 
-export const createPanel = (spec: PanelApi): Result<InternalPanel, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<InternalPanel>('panel', panelSchema, spec);
+export const createPanel = (spec: PanelApi): Result<Panel, ValueSchema.SchemaError<any>> => {
+  return ValueSchema.asRaw<Panel>('panel', panelSchema, spec);
 };

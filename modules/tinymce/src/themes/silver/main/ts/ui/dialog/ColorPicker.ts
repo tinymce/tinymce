@@ -13,6 +13,7 @@ import { Option } from '@ephox/katamari';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { formActionEvent } from '../general/FormEvents';
+import { Omit } from '../Omit';
 
 // import I18n from 'tinymce/core/api/util/I18n';
 
@@ -48,7 +49,9 @@ const translate = function (key) {
   return getEnglishText(key);
 };
 
-export const renderColorPicker = (spec: Types.ColorPicker.ColorPicker): SimpleSpec => {
+type ColorPickerSpec = Omit<Types.ColorPicker.ColorPicker, 'type'>;
+
+export const renderColorPicker = (spec: ColorPickerSpec): SimpleSpec => {
   const getClass = (key: string) => 'tox-' + key;
 
   const colourPickerFactory = ColourPicker.makeFactory(translate, getClass);

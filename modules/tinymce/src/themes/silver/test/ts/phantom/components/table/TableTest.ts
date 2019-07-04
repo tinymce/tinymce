@@ -10,7 +10,6 @@ UnitTest.asynctest('Table component Test', (success, failure) => {
     (store, doc, body) => {
       return GuiFactory.build(
         renderTable({
-          type: 'table',
           header: [ 'one', 'two', 'three'],
           cells: [
             [ 'a', 'b', 'c'],

@@ -15,6 +15,7 @@ import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import NavigableObject from '../general/NavigableObject';
 import { renderLabel, renderFormFieldWith } from '../alien/FieldLabeller';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { Omit } from '../Omit';
 
 const platformNeedsSandboxing = !(PlatformDetection.detect().browser.isIE() || PlatformDetection.detect().browser.isEdge());
 
@@ -22,6 +23,8 @@ interface IFrameSourcing {
   getValue: (frame: AlloyComponent) => string;
   setValue: (frame: AlloyComponent, value: string) => void;
 }
+
+type IframeSpec = Omit<Types.Iframe.Iframe, 'type'>;
 
 const getDynamicSource = (isSandbox): IFrameSourcing => {
   const cachedValue = Cell('');
@@ -54,7 +57,7 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
   };
 };
 
-const renderIFrame = (spec: Types.Iframe.Iframe, providersBackstage: UiFactoryBackstageProviders) => {
+const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstageProviders) => {
   const isSandbox = platformNeedsSandboxing && spec.sandboxed;
 
   const attributes = {

@@ -16,7 +16,6 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
     (store, doc, body) => {
       return GuiFactory.build(
         renderLabel({
-          type: 'label',
           label: 'Group of Options',
           items: [
             {

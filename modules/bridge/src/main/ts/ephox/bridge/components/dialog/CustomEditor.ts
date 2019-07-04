@@ -22,7 +22,6 @@ export interface CustomEditor extends FormComponent {
 }
 
 export const customEditorFields = formComponentFields.concat([
-  FieldSchema.strictString('type'),
   FieldSchema.defaultedString('tag', 'textarea'),
   FieldSchema.strictFunction('init')
 ]);

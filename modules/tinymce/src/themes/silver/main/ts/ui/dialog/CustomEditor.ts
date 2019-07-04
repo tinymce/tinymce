@@ -6,21 +6,15 @@
  */
 
 import { AddEventsBehaviour, AlloyEvents, Behaviour, Memento, Representing, SimpleSpec } from '@ephox/alloy';
-import { Element } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
+import { Omit } from '../Omit';
+import { Types } from '@ephox/bridge';
 
-export interface CustomEditorFoo {
-  tag: string;
-  init: (e: Element) => Promise<{
-    setValue(value: string): void,
-    getValue(): string,
-    destroy(): void
-  }>;
-}
+type CustomEditorSpec = Omit<Types.CustomEditor.CustomEditor, 'type'>;
 
-export const renderCustomEditor = (spec: CustomEditorFoo): SimpleSpec => {
+export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
   const editorApi = Cell(Option.none());
 
   const memReplaced = Memento.record({
