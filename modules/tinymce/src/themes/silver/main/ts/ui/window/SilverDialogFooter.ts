@@ -30,7 +30,7 @@ export interface DialogMemButton {
   memento: MementoRecord;
 }
 
-export interface WindowFooterFoo {
+export interface WindowFooterSpec {
   buttons: Types.Dialog.DialogButton[];
 }
 
@@ -64,8 +64,8 @@ const renderComponents = (_data, state) => {
   return [ startButtons, endButtons ];
 };
 
-const renderFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBackstageProviders) => {
-  const updateState = (_comp, data: WindowFooterFoo) => {
+const renderFooter = (initSpec: WindowFooterSpec, providersBackstage: UiFactoryBackstageProviders) => {
+  const updateState = (_comp, data: WindowFooterSpec) => {
     const footerButtons: DialogMemButton[] = Arr.map(data.buttons, (button) => {
       const memButton = Memento.record(makeButton(button, providersBackstage));
       return {
@@ -92,7 +92,7 @@ const renderFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBac
     behaviours: Behaviour.derive([
       Reflecting.config({
         channel: footerChannel,
-        initialData: initFoo,
+        initialData: initSpec,
         updateState,
         renderComponents
       })
@@ -100,13 +100,13 @@ const renderFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBac
   };
 };
 
-const renderInlineFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBackstageProviders) => {
-  return renderFooter(initFoo, providersBackstage);
+const renderInlineFooter = (initSpec: WindowFooterSpec, providersBackstage: UiFactoryBackstageProviders) => {
+  return renderFooter(initSpec, providersBackstage);
 };
 
-const renderModalFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBackstageProviders) => {
+const renderModalFooter = (initSpec: WindowFooterSpec, providersBackstage: UiFactoryBackstageProviders) => {
   return ModalDialog.parts().footer(
-    renderFooter(initFoo, providersBackstage)
+    renderFooter(initSpec, providersBackstage)
   );
 };
 

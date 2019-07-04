@@ -1,5 +1,5 @@
 Version 5.0.12 (TBD)
-
+    Fixed non-descriptive UI component type names #TINY-3349
 Version 5.0.11 (2019-07-04)
     Fixed packaging errors caused by a rollup treeshaking bug (https://github.com/rollup/rollup/issues/2970) #TINY-3866
     Fixed the customeditor component not able to get data from the dialog api #TINY-3866

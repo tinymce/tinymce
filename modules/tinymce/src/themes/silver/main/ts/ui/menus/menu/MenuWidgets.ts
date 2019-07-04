@@ -10,12 +10,12 @@ import { Id, Option } from '@ephox/katamari';
 
 import { dom as menuDom } from './MenuParts';
 
-export interface WidgetMenuFoo {
+export interface WidgetMenuWrapper {
   value: string;
   widget: AlloySpec;
 }
 
-export const renderWidgetMenu = (spec: WidgetMenuFoo): Partial<MenuTypes.MenuSpec> => {
+export const renderWidgetMenu = (spec: WidgetMenuWrapper): Partial<MenuTypes.MenuSpec> => {
   const memWidget = Memento.record(spec.widget as SimpleOrSketchSpec);
   return {
     value: spec.value,

@@ -6,14 +6,14 @@
  */
 
 import { Behaviour, Button as AlloyButton, Container as AlloyContainer, SketchSpec } from '@ephox/alloy';
-import { AutocompleteGoo, renderAutocomplete } from 'tinymce/themes/silver/ui/dialog/Autocomplete';
+import { AutocompleteSpec, renderAutocomplete } from 'tinymce/themes/silver/ui/dialog/Autocomplete';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import * as Icons from '../icons/Icons';
 
-export interface TypeaheadInput extends AutocompleteGoo {
+export interface TypeaheadInput extends AutocompleteSpec {
   icon: string;
 }
 
