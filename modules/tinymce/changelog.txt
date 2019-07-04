@@ -1,4 +1,6 @@
 Version 5.0.11 (TBD)
+    Fixed packaging errors caused by a rollup treeshaking bug (https://github.com/rollup/rollup/issues/2970) #TINY-3866
+    Fixed the customeditor component not able to get data from the dialog api #TINY-3866
     Fixed collection component tooltips not being translated #TINY-3855
 Version 5.0.10 (2019-07-02)
     Added support for all HTML color formats in `color_map` setting #TINY-3837

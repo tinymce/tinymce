@@ -1,18 +1,18 @@
 import { ValueSchema, FieldSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { FormComponent, FormComponentApi, formComponentFields } from './FormComponent';
+import { FormComponentWithLabel, FormComponentWithLabelApi, formComponentWithLabelFields } from './FormComponent';
 
-export interface IframeApi extends FormComponentApi {
+export interface IframeApi extends FormComponentWithLabelApi {
   type: 'iframe';
   sandboxed?: boolean;
 }
 
-export interface Iframe extends FormComponent {
+export interface Iframe extends FormComponentWithLabel {
   type: 'iframe';
   sandboxed: boolean;
 }
 
-export const iframeFields = formComponentFields.concat([
+export const iframeFields = formComponentWithLabelFields.concat([
   FieldSchema.defaultedBoolean('sandboxed', true)
 ]);
 

@@ -281,23 +281,24 @@ export default () => {
   }, backstage);
 
   const customEditorSpec = renderCustomEditor({
-      tag: 'textarea',
-      init: (el) => new Promise((resolve) => {
-        const oldEl = el;
-        const newEl = el.ownerDocument.createElement('span');
-        newEl.innerText = 'this is a custom editor';
-        el.parentElement.replaceChild(newEl, oldEl);
+    name: 'customeditor',
+    tag: 'textarea',
+    init: (el) => new Promise((resolve) => {
+      const oldEl = el;
+      const newEl = el.ownerDocument.createElement('span');
+      newEl.innerText = 'this is a custom editor';
+      el.parentElement.replaceChild(newEl, oldEl);
 
-        const api = {
-          getValue: () => newEl.innerText,
-          setValue: (value) => {
-            newEl.innerText = value;
-          },
-          destroy: () => { newEl.parentElement.replaceChild(oldEl, newEl); }        };
+      const api = {
+        getValue: () => newEl.innerText,
+        setValue: (value) => {
+          newEl.innerText = value;
+        },
+        destroy: () => { newEl.parentElement.replaceChild(oldEl, newEl); }        };
 
-        resolve(api);
-      }),
-    });
+      resolve(api);
+    }),
+  });
 
   const alertBannerSpec = renderAlertBanner({
     text: 'The alert banner message',
