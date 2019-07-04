@@ -33,6 +33,7 @@ node("primary") {
 
   def gitMerge = {
     if (BRANCH_NAME != "master") {
+      echo "Merging master into this branch to run tests"
       extExec("git merge --no-commit --no-ff origin/master")
     }
   }
@@ -77,7 +78,6 @@ node("primary") {
           echo "Slave checkout on node $NODE_NAME"
           checkout scm
 
-          echo "Merging master into this branch to run tests"
           gitMerge()
 
           cleanAndInstall()
@@ -103,9 +103,11 @@ node("primary") {
   // No actual code runs between SCM checkout and here, just function definition
   notifyBitbucket()
   try {
-    // Install tools
-    stage ("Install tools") {
-      cleanAndInstall()
+    // our linux nodes have multiple executors, sometimes yarn creates conflicts
+    lock("Don't run yarn simultaneously") {
+      stage ("Install tools") {
+        cleanAndInstall()
+      }
     }
 
     stage ("Type check") {
