@@ -1,6 +1,7 @@
 import { ValueSchema, FieldSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 import { Element } from '@ephox/dom-globals';
+import { FormComponent, FormComponentApi, formComponentFields } from './FormComponent';
 
 export interface CustomEditorInit {
   setValue: (value: string) => void;
@@ -8,24 +9,23 @@ export interface CustomEditorInit {
   destroy: () =>  void;
 }
 
-export interface CustomEditorApi {
+export interface CustomEditorApi extends FormComponentApi {
   type: 'customeditor';
   tag?: string;
   init: (e: Element) => Promise<CustomEditorInit>;
 }
 
-export interface CustomEditor {
-  // The custom editor component is currently being used in the Advanced Source Code dialog
+export interface CustomEditor extends FormComponent {
   type: 'customeditor';
   tag: string;
   init: (e: Element) => Promise<CustomEditorInit>;
 }
 
-export const customEditorFields = [
+export const customEditorFields = formComponentFields.concat([
   FieldSchema.strictString('type'),
   FieldSchema.defaultedString('tag', 'textarea'),
   FieldSchema.strictFunction('init')
-];
+]);
 
 export const customEditorSchema = ValueSchema.objOf(customEditorFields);
 

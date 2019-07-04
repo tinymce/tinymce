@@ -1,19 +1,19 @@
 import { ValueSchema, FieldSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
-import { FormComponent, FormComponentApi, formComponentFields } from './FormComponent';
+import { FormComponentWithLabel, FormComponentWithLabelApi, formComponentWithLabelFields } from './FormComponent';
 
-export interface UrlInputApi extends FormComponentApi {
+export interface UrlInputApi extends FormComponentWithLabelApi {
   type: 'urlinput';
   filetype?: 'image' | 'media' | 'file';
 }
 
-export interface UrlInput extends FormComponent {
+export interface UrlInput extends FormComponentWithLabel {
   type: 'urlinput';
   filetype: 'image' | 'media' | 'file';
 }
 
-export const urlInputFields = formComponentFields.concat([
+export const urlInputFields = formComponentWithLabelFields.concat([
   FieldSchema.defaultedStringEnum('filetype', 'file', ['image', 'media', 'file'])
 ]);
 
