@@ -5,12 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { KeyboardEvent } from '@ephox/dom-globals';
+import { KeyboardEvent, console } from '@ephox/dom-globals';
 import InsertNewLine from '../newline/InsertNewLine';
 import VK from '../api/util/VK';
 import Editor from '../api/Editor';
 import UndoManager from '../api/UndoManager';
 import { EditorEvent } from '../api/util/EventDispatcher';
+import { PlatformDetection } from '@ephox/sand';
+
+const browser = PlatformDetection.detect().browser;
 
 const endTypingLevel = function (undoManager: UndoManager) {
   if (undoManager.typing) {
@@ -36,12 +39,23 @@ const handleEnterKeyEvent = function (editor: Editor, event: EditorEvent<Keyboar
   });
 };
 
-const setup = function (editor: Editor) {
-  editor.on('keydown', function (event: EditorEvent<KeyboardEvent>) {
+const handleEnter = function (editor: Editor) {
+  return function (event: EditorEvent<KeyboardEvent>) {
     if (event.keyCode === VK.ENTER) {
       handleEnterKeyEvent(editor, event);
     }
-  });
+  };
+};
+
+const setup = function (editor: Editor) {
+  if (browser.isSafari()) {
+    editor.getBody().addEventListener('beforeinput', handleEnter(editor));
+    editor.on('remove', function () {
+      editor.getBody().removeEventListener('beforeinput', handleEnter(editor));
+    });
+  } else {
+    editor.on('keydown', handleEnter(editor));
+  }
 };
 
 export default {
