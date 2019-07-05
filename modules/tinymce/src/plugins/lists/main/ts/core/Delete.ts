@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLLIElement, Node, Range as DomRange } from '@ephox/dom-globals';
+import { Element, HTMLLIElement, Node, Range as DomRange, console } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Compare, Element as SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -13,10 +13,11 @@ import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
-import { flattenListSelection, outdentListSelection } from '../actions/Indendation';
+import { flattenListSelection } from '../actions/Indendation';
 import ToggleList from '../actions/ToggleList';
 import { Entry } from '../listModel/Entry';
-import { getItemSelection } from '../listModel/ListsIndendation';
+import { Indentation } from '../listModel/Indentation';
+import { getItemSelection, listsIndentationByEntrySets } from '../listModel/ListsIndendation';
 import { EntrySet, parseLists } from '../listModel/ParseLists';
 import Bookmark from './Bookmark';
 import NodeType from './NodeType';
@@ -159,12 +160,18 @@ const mergeBackward = function (editor: Editor, rng: DomRange, fromLi: HTMLLIEle
 // If curr depth > last depth - return true for outdent
 // If curr depth =< last depth - return false for merge
 // If curr not found - fall back to return false for merge
-const outdentOrMerge = (editor: Editor): boolean => {
-  const parentList = Selection.getSelectedListRoots(editor);
-  const lists = Arr.map(parentList, SugarElement.fromDom);
-  const entrySets = parseLists(lists, getItemSelection(editor));
+const outdentOrMerge = (entrySets: EntrySet[]): boolean => {
+  // entrySets should only ever have one entry for a collapsed selection - which we check below,
+  // so we know that's true for this case.
   const entries = entrySets[0].entries;
   return Arr.findIndex(entries, (entry: Entry) => entry.isSelected === true).fold(() => false, (currIdx: number) => entries[currIdx].depth > entries[currIdx - 1].depth);
+};
+
+const outdent = (editor: Editor, entrySets: EntrySet[], bookmark: any) => {
+  listsIndentationByEntrySets(editor, entrySets, Indentation.Outdent);
+  editor.selection.moveToBookmark(bookmark);
+  editor.selection.setRng(Range.normalizeRange(editor.selection.getRng()));
+  editor.nodeChanged();
 };
 
 const backspaceDeleteFromListToListCaret = function (editor: Editor, isForward: boolean) {
@@ -187,8 +194,14 @@ const backspaceDeleteFromListToListCaret = function (editor: Editor, isForward: 
         if (isForward) {
           mergeForward(editor, rng, otherLi, li);
         } else {
-          if (outdentOrMerge(editor)) {
-            outdentListSelection(editor);
+          const bookmark = editor.selection.getBookmark();
+          const lists = Arr.map(Selection.getSelectedListRoots(editor), SugarElement.fromDom);
+          // PARSELISTS MUTATES THE SELECTION
+          // Have to grab the bookmark before this or the cursor is placed incorrectly after outdent
+          const entrySets = parseLists(lists, getItemSelection(editor));
+
+          if (outdentOrMerge(entrySets)) {
+            outdent(editor, entrySets, bookmark);
           } else {
             mergeBackward(editor, rng, li, otherLi);
           }
