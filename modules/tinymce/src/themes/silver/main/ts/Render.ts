@@ -191,7 +191,11 @@ const setup = (editor: Editor): RenderInfo => {
   const partSocket: AlloySpec = OuterContainer.parts().socket({
     dom: {
       tag: 'div',
-      classes: [ 'tox-edit-area' ]
+      classes: [ 'tox-edit-area' ],
+      styles: {
+        'overflow': 'scroll',
+        '-webkit-overflow-scrolling': 'touch'
+      }
     }
   });
 
@@ -365,6 +369,7 @@ const setup = (editor: Editor): RenderInfo => {
     SilverContextMenu.setup(editor, lazySink, backstage);
     Sidebar.setup(editor);
     Throbber.setup(editor, lazyThrobber, backstage.shared);
+    // TODO apply mobile here in the theme.
 
     // Apply Bridge types
     const { buttons, menuItems, contextToolbars, sidebars } = editor.ui.registry.getAll();

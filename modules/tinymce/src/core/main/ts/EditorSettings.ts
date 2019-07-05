@@ -53,9 +53,22 @@ const getSection = function (sectionResult, name, defaults) {
   return Tools.extend({}, defaults, sectionSettings);
 };
 
+const hasSection = function (sectionResult, name) {
+  return sectionResult.sections().hasOwnProperty(name);
+};
+
 const isReducedTheme = function (sectionResult, name, theme) {
   const section = sectionResult.sections();
-  return section.hasOwnProperty(name) && section[name].theme === theme;
+  return hasSection(sectionResult, name) && section[name].theme === theme;
+};
+
+const getSectionConfig = function (sectionResult, name) {
+  if (hasSection(sectionResult, name)) {
+    const section = sectionResult.sections();
+    return section[name];
+  } else {
+    return {};
+  }
 };
 
 const getDefaultSettings = function (id, documentBaseUrl, editor: Editor): RawEditorSettings {
@@ -93,7 +106,6 @@ const getDefaultSettings = function (id, documentBaseUrl, editor: Editor): RawEd
 
 const getExternalPlugins = function (overrideSettings: RawEditorSettings, settings: RawEditorSettings) {
   const userDefinedExternalPlugins = settings.external_plugins ? settings.external_plugins : { };
-
   if (overrideSettings && overrideSettings.external_plugins) {
     return Tools.extend({}, overrideSettings.external_plugins, userDefinedExternalPlugins);
   } else {
@@ -108,8 +120,13 @@ const combinePlugins = function (forcedPlugins, plugins) {
 const processPlugins = function (isTouchDevice: boolean, sectionResult, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings {
   const forcedPlugins = normalizePlugins(defaultOverrideSettings.forced_plugins);
   const plugins = normalizePlugins(settings.plugins);
-  const platformPlugins = isTouchDevice && isReducedTheme(sectionResult, 'mobile', 'mobile') ? filterMobilePlugins(plugins) : plugins;
+
+  const mobileConfig = getSectionConfig(sectionResult, 'mobile');
+  const mobilePlugins = mobileConfig.plugins ? normalizePlugins(mobileConfig.plugins) : plugins;
+
+  const platformPlugins = isReducedTheme(sectionResult, 'mobile', 'mobile') ? filterMobilePlugins(plugins) : mobilePlugins;
   const combinedPlugins = combinePlugins(forcedPlugins, platformPlugins);
+
   return Tools.extend(settings, {
     plugins: combinedPlugins.join(' ')
   });

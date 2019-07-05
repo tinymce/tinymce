@@ -88,16 +88,23 @@ export default function () {
     image_caption: true,
     theme: 'silver',
     mobile: {
-      theme: 'silver'
+      theme: 'silver',
+      plugins: [
+        'advlist autolink lists link image charmap print preview anchor',
+        'searchreplace visualblocks code fullscreen',
+        'insertdatetime media table contextmenu paste'
+      ],
+      toolbar: 'bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image insertfile undo redo | styleselect'
     },
     setup (ed) {
       makeSidebar(ed, 'sidebar1', 'green', 200);
     },
     plugins: [
-      'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
-      'searchreplace wordcount visualblocks visualchars code fullscreen fullpage insertdatetime media nonbreaking',
-      'save table directionality emoticons template paste textcolor importcss colorpicker textpattern',
-      'codesample help noneditable print'
+      'help'
+      // 'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
+      // 'searchreplace wordcount visualblocks visualchars code fullscreen fullpage insertdatetime media nonbreaking',
+      // 'save table directionality emoticons template paste textcolor importcss colorpicker textpattern',
+      // 'codesample help noneditable print'
     ],
     // rtl_ui: true,
     add_unload_trigger: false,
@@ -111,9 +118,9 @@ export default function () {
     // 'bullist numlist outdent indent | link image'],
 
     // Toolbar<n>
-    toolbar1: 'undo redo sidebar1 align fontsizeselect insertfile | fontselect formatselect styleselect insertfile | styleselect | bold italic',
-    toolbar2: 'alignleft aligncenter alignright alignjustify | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
-    toolbar3: 'bullist numlist outdent indent | link image',
+    // toolbar1: 'undo redo sidebar1 align fontsizeselect insertfile | fontselect formatselect styleselect insertfile | styleselect | bold italic',
+    // toolbar2: 'alignleft aligncenter alignright alignjustify | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
+    // toolbar3: 'bullist numlist outdent indent | link image',
 
     // Toolbar with group names
     // toolbar: [

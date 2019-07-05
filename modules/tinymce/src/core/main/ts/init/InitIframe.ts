@@ -4,16 +4,16 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
+import { document, window } from '@ephox/dom-globals';
+import { Attr, Class, Element } from '@ephox/sugar';
 
-import { document, window, console } from '@ephox/dom-globals';
-import { Element, Attr, Class, Css } from '@ephox/sugar';
+import DOMUtils from '../api/dom/DOMUtils';
+import Editor from '../api/Editor';
 import Env from '../api/Env';
 import Settings from '../api/Settings';
-import DOMUtils from '../api/dom/DOMUtils';
-import InitContentBody from './InitContentBody';
-import Uuid from '../util/Uuid';
 import { TranslatedString } from '../api/util/I18n';
-import Editor from '../api/Editor';
+import Uuid from '../util/Uuid';
+import InitContentBody from './InitContentBody';
 
 const DOM = DOMUtils.DOM;
 
@@ -101,11 +101,6 @@ const createIframe = function (editor: Editor, o) {
   editor.contentAreaContainer = o.iframeContainer;
   editor.iframeElement = ifr;
   editor.iframeHTML = getIframeHtml(editor);
-
-  const socket = Element.fromDom(o.iframeContainer);
-  Css.set(socket, 'overflow', 'scroll');
-  Css.set(socket, '-webkit-overflow-scrolling', 'touch');
-
   DOM.add(o.iframeContainer, ifr);
 
   return isDomainRelaxed;
