@@ -15,17 +15,14 @@ import * as NestedMenus from '../menus/menu/NestedMenus';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import ItemResponse from '../menus/item/ItemResponse';
 
-// tslint:disable:no-console
-
-// TODO: Compare with bridge.
-export interface AutocompleteGoo {
+export interface AutocompleteSpec {
   name: string;
   label: Option<string>;
   initialValue: string;
   getItems: (v: string) => Menu.MenuItemApi[];
 }
 
-export const renderAutocomplete = (spec: AutocompleteGoo, backstage: UiFactoryBackstage): SketchSpec => {
+export const renderAutocomplete = (spec: AutocompleteSpec, backstage: UiFactoryBackstage): SketchSpec => {
   const pLabel = renderLabel(spec.label.getOr('?'), backstage.shared.providers);
 
   const pField = AlloyFormField.parts().field({

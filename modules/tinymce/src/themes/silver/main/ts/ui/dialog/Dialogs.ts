@@ -113,7 +113,7 @@ const pFooterGroup = (startButtons: AlloySpec[], endButtons: AlloySpec[]) => {
   ];
 };
 
-export interface DialogFoo {
+export interface DialogSpec {
   lazySink: () => Result<AlloyComponent, any>;
   headerOverride: Option<AlloySpec>;
   partSpecs: {
@@ -127,7 +127,7 @@ export interface DialogFoo {
   extraClasses: string[];
 }
 
-const renderDialog = (spec: DialogFoo) => {
+const renderDialog = (spec: DialogSpec) => {
   return ModalDialog.sketch(
     {
       lazySink: spec.lazySink,

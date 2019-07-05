@@ -119,7 +119,7 @@ class Shortcuts {
       };
     }
 
-    each(explode(Tools.trim(pattern.toLowerCase())), function (pattern) {
+    each(explode(Tools.trim(pattern)), function (pattern) {
       const shortcut = self.createShortcut(pattern, desc, cmdFunc, scope);
       self.shortcuts[shortcut.id] = shortcut;
     });
@@ -150,7 +150,7 @@ class Shortcuts {
     const shortcut: any = {};
 
     // Parse modifiers and keys ctrl+alt+b for example
-    each(explode(pattern, '+'), function (value) {
+    each(explode(pattern.toLowerCase(), '+'), function (value) {
       if (value in modifierNames) {
         shortcut[value] = true;
       } else {
