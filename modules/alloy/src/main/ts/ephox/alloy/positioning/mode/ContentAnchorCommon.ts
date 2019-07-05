@@ -1,13 +1,14 @@
-import { nu as NuAnchor, SelectionAnchor, NodeAnchor } from './Anchoring';
-import { Option, Fun } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
+import { Element, Position } from '@ephox/sugar';
+
 import * as Boxes from '../../alien/Boxes';
-import * as Bubble from '../layout/Bubble';
 import * as CssPosition from '../../alien/CssPosition';
+import * as Bubble from '../layout/Bubble';
 import * as Layout from '../layout/Layout';
 import * as LayoutTypes from '../layout/LayoutTypes';
 import * as Origins from '../layout/Origins';
+import { nu as NuAnchor, SelectionAnchor, NodeAnchor } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
-import { Element, Position } from '@ephox/sugar';
 
 const capRect = (left: number, top: number, width: number, height: number): Option<Boxes.BoxByPoint> => {
   let newLeft = left, newTop = top, newWidth = width, newHeight = height;

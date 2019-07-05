@@ -1,6 +1,6 @@
 import { Cell, Fun, Option } from '@ephox/katamari';
 
-import { BehaviourState, nuState } from '../common/BehaviourState';
+import { nuState } from '../common/BehaviourState';
 
 const init = () => {
   const contents = Cell(Option.none());

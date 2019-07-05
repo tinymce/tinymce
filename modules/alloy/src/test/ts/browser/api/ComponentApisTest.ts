@@ -1,5 +1,6 @@
 import { Step, GeneralSteps, Logger, Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 

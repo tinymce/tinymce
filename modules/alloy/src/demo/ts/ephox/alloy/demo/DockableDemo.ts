@@ -1,5 +1,7 @@
+import { document, window } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Class, Css, Element, DomEvent } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Docking } from 'ephox/alloy/api/behaviour/Docking';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
@@ -7,7 +9,6 @@ import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { document, window } from '@ephox/dom-globals';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 
 export default (): void => {
@@ -25,7 +26,7 @@ export default (): void => {
     gui.broadcastEvent(SystemEvents.windowScroll(), evt);
   });
 
-  const dockable = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'The blue panel will always stay on screen as long as the red rectangle is on screen',
     Container.sketch({

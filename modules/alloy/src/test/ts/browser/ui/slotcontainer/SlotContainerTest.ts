@@ -1,6 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Result } from '@ephox/katamari';
+
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Input } from 'ephox/alloy/api/ui/Input';

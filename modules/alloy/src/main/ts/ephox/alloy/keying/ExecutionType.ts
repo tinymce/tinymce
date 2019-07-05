@@ -6,9 +6,9 @@ import * as Keys from '../alien/Keys';
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import { NativeSimulatedEvent } from '../events/SimulatedEvent';
-import { ExecutingConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
+import { ExecutingConfig, KeyRuleHandler } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 
@@ -40,7 +40,7 @@ const getKeydownRules = (component: AlloyComponent, simulatedEvent: NativeSimula
 const getKeyupRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig, executeState: Stateless): Array<KeyRules.KeyRule<ExecutingConfig, Stateless>> => {
   return executeConfig.useSpace && !EditableFields.inside(component.element()) ? [
     KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
-  ] : [ ]
+  ] : [ ];
 };
 
 export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Option.none());

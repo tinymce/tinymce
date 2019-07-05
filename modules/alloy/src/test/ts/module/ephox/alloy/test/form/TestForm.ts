@@ -1,5 +1,6 @@
 import { Assertions, Step } from '@ephox/agar';
 import { Obj } from '@ephox/katamari';
+
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 
 const helper = (component) => {

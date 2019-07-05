@@ -1,6 +1,8 @@
 import { ApproxStructure, Assertions, Chain, UiControls, UiFinder, Mouse } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { PlatformDetection } from '@ephox/sand';
+import { Result } from '@ephox/katamari';
+import { Class } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
@@ -12,8 +14,6 @@ import { Input } from 'ephox/alloy/api/ui/Input';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import { Class } from '@ephox/sugar';
-import { Result } from '@ephox/katamari';
 
 interface MakeConfig {
   className: string;
@@ -24,8 +24,6 @@ interface MakeConfig {
 }
 
 UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
-
-  const platform = PlatformDetection.detect();
 
   const labelSpec = {
     dom: {

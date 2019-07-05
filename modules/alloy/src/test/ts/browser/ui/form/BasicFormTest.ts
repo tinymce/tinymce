@@ -1,6 +1,7 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Value } from '@ephox/sugar';
+
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Form } from 'ephox/alloy/api/ui/Form';
 import { FormField } from 'ephox/alloy/api/ui/FormField';

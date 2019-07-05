@@ -1,4 +1,4 @@
-import { Arr, Merger, Obj } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import { Attr, Css } from '@ephox/sugar';
 
 import { SketchSpec } from '../../api/component/SpecTypes';
@@ -118,11 +118,11 @@ const make = (detail: SlotContainerDetail, components, spec) => {
   };
 
   return {
-    'uid': detail.uid,
-    'dom': detail.dom,
-    'components': components,
-    'behaviours': SketchBehaviours.get(detail.slotBehaviours),
-    'apis': apis
+    uid: detail.uid,
+    dom: detail.dom,
+    components,
+    behaviours: SketchBehaviours.get(detail.slotBehaviours),
+    apis
   };
 };
 

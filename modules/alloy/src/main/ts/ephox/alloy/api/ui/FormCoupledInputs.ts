@@ -1,15 +1,14 @@
-import * as Behaviour from '../behaviour/Behaviour';
-import { Composing } from '../behaviour/Composing';
-import { Representing } from '../behaviour/Representing';
-import * as Sketcher from './Sketcher';
+import { Objects } from '@ephox/boulder';
+import { Option } from '@ephox/katamari';
+import { SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as FormCoupledInputsSchema from '../../ui/schema/FormCoupledInputsSchema';
-import { Objects } from '@ephox/boulder';
-import { Option, Merger } from '@ephox/katamari';
-import { SketchSpec } from '../../api/component/SpecTypes';
 import { FormCoupledInputsSketcher, FormCoupledInputsDetail, FormCoupledInputsSpec } from '../../ui/types/FormCoupledInputsTypes';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { Composing } from '../behaviour/Composing';
+import { Representing } from '../behaviour/Representing';
 import { SketchBehaviours } from '../component/SketchBehaviours';
+import * as Sketcher from './Sketcher';
+import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputsSpec> = (detail, components, spec, externals): SketchSpec => {
   return {

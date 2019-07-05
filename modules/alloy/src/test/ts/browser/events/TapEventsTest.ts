@@ -1,7 +1,8 @@
 import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as TapEvent from 'ephox/alloy/events/TapEvent';
@@ -20,8 +21,6 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
   });
 
   const alpha = Element.fromText('alpha');
-  const beta = Element.fromText('beta');
-  const gamma = Element.fromText('gamma');
 
   const touches = (x, y, target) => {
     return {

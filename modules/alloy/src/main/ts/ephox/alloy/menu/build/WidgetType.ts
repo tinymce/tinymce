@@ -1,5 +1,5 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
-import { Merger, Option } from '@ephox/katamari';
+import { FieldSchema } from '@ephox/boulder';
+import { Option } from '@ephox/katamari';
 
 import * as EditableFields from '../../alien/EditableFields';
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -13,7 +13,7 @@ import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ItemEvents from '../util/ItemEvents';
 import * as WidgetParts from './WidgetParts';
-import { SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { WidgetItemDetail } from '../../ui/types/ItemTypes';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';

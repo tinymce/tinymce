@@ -2,7 +2,6 @@ import { Fun, Id, Option, Merger } from '@ephox/katamari';
 import { Attr } from '@ephox/sugar';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ButtonBase from '../../ui/common/ButtonBase';
@@ -17,6 +16,7 @@ import { Toggling } from '../behaviour/Toggling';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as Sketcher from './Sketcher';
+import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = (detail, components, spec, externals) => {
 

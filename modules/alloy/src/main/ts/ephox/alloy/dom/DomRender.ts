@@ -12,14 +12,15 @@ const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<Element>)
   definition.innerHtml.each((html) => Html.set(subject, html));
 
   // Children are already elements.
-  const children = definition.domChildren
+  const children = definition.domChildren;
   InsertAll.append(subject, children);
 
   definition.value.each((value) => {
     Value.set(subject, value);
   });
 
-  if (! definition.uid) {
+  if (!definition.uid) {
+    // tslint:disable-next-line:no-debugger
     debugger;
   }
   Tagger.writeOnly(subject, definition.uid);

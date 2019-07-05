@@ -1,11 +1,10 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Merger } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 
 import { Composing } from '../../api/behaviour/Composing';
 import { Highlighting } from '../../api/behaviour/Highlighting';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { field as SketchBehaviourField } from '../../api/component/SketchBehaviours';
 import * as FocusManagers from '../../api/focus/FocusManagers';
 import * as Fields from '../../data/Fields';
@@ -15,8 +14,8 @@ import SeparatorType from '../../menu/build/SeparatorType';
 import WidgetType from '../../menu/build/WidgetType';
 import * as PartType from '../../parts/PartType';
 import * as Tagger from '../../registry/Tagger';
-import { ItemSpec } from '../../ui/types/ItemTypes';
-import { MenuDetail, MenuGridMovement, MenuMatrixMovement, MenuNormalMovement } from '../../ui/types/MenuTypes';
+import { ItemSpec } from '../types/ItemTypes';
+import { MenuDetail, MenuGridMovement, MenuMatrixMovement, MenuNormalMovement } from '../types/MenuTypes';
 
 const itemSchema = ValueSchema.choose(
   'type',
@@ -74,7 +73,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
       return u.hasOwnProperty('uid') ? u : {
         ...u,
         uid: Tagger.generate('item')
-      }
+      };
     },
     overrides (detail: MenuDetail, u) {
       return {

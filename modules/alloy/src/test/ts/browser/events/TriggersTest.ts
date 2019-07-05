@@ -1,11 +1,12 @@
 import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Objects } from '@ephox/boulder';
+import { document } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { Attr, Element, Html, Insert, SelectorFind } from '@ephox/sugar';
+
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
 import * as Triggers from 'ephox/alloy/events/Triggers';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('TriggersTest', (success, failure) => {
   let log = [ ];
@@ -66,7 +67,7 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
   const lookup = (eventType, target) => {
     const targetId = Attr.get(target, 'data-event-id');
 
-    return Objects.readOptFrom<Record<string, (e) => void>>(domEvents, eventType).bind(Objects.readOpt<(e) => void>(targetId)).map((h: Function) => {
+    return Objects.readOptFrom(domEvents, eventType).bind(Objects.readOpt<(e) => void>(targetId)).map((h: Function) => {
       return {
         descHandler: Fun.constant({
           cHandler: h,

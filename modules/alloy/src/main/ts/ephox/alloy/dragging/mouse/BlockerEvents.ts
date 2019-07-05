@@ -1,9 +1,7 @@
+import { SugarEvent } from '../../alien/TypeDefinitions';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import { DragApi } from '../../dragging/mouse/MouseDraggingTypes';
-
-import { EventFormat } from '../../events/SimulatedEvent';
-import { SugarEvent } from '../../alien/TypeDefinitions';
+import { DragApi } from './MouseDraggingTypes';
 
 const init = (dragApi: DragApi): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([

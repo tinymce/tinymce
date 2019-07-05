@@ -1,6 +1,7 @@
 import { Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Fun, Obj, Struct } from '@ephox/katamari';
+
 import * as ComponentEvents from 'ephox/alloy/construct/ComponentEvents';
 import * as EventHandler from 'ephox/alloy/construct/EventHandler';
 import * as ResultAssertions from 'ephox/alloy/test/ResultAssertions';

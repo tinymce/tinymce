@@ -1,18 +1,17 @@
-import { Option } from '@ephox/katamari';
+import { document } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
-import { Class, Css, Element, Position, Traverse } from '@ephox/sugar';
+import { Class, Css, Element, Traverse } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
 import { Unselecting } from 'ephox/alloy/api/behaviour/Unselecting';
-import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import { document } from '@ephox/dom-globals';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SugarPosition } from '../../../../../main/ts/ephox/alloy/alien/TypeDefinitions';
+import { SugarPosition } from 'ephox/alloy/alien/TypeDefinitions';
 
 export default (): void => {
   const gui = Gui.create();
@@ -29,11 +28,11 @@ export default (): void => {
         const parsedHeight = parseInt(h, 10);
         const newHeight = parsedHeight + delta.top();
         Css.set(box, 'height', newHeight + 'px');
-      })
-    })
+      });
+    });
   };
 
-  const resizer = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'Drag the X to resize the box',
     Container.sketch({

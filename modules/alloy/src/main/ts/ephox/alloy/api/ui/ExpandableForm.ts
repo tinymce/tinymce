@@ -1,17 +1,13 @@
-import { Merger, Option } from '@ephox/katamari';
-
+import { SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ExpandableFormSchema from '../../ui/schema/ExpandableFormSchema';
-import * as Behaviour from '../behaviour/Behaviour';
+import { ExpandableFormSketcher, ExpandableFormDetail, ExpandableFormSpec } from '../../ui/types/ExpandableFormTypes';
 import { Representing } from '../behaviour/Representing';
 import { Sliding } from '../behaviour/Sliding';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { Form } from './Form';
 import * as Sketcher from './Sketcher';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SketchSpec } from '../../api/component/SpecTypes';
-import { ExpandableFormSketcher, ExpandableFormDetail, ExpandableFormSpec } from '../../ui/types/ExpandableFormTypes';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { CompositeSketchFactory } from './UiSketcher';
 
 const runOnExtra = (detail, operation) => {
   return (anyComp) => {

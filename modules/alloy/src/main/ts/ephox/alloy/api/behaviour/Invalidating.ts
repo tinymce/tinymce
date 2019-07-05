@@ -1,9 +1,9 @@
+import { Future } from '@ephox/katamari';
 import * as Behaviour from './Behaviour';
 import { Representing } from './Representing';
 import * as ActiveInvalidate from '../../behaviour/invalidating/ActiveInvalidate';
 import * as InvalidateApis from '../../behaviour/invalidating/InvalidateApis';
 import InvalidateSchema from '../../behaviour/invalidating/InvalidateSchema';
-import { Future } from '@ephox/katamari';
 import { InvalidatingBehaviour } from '../../behaviour/invalidating/InvalidateTypes';
 
 const Invalidating = Behaviour.create({

@@ -1,9 +1,9 @@
 import * as NativeEvents from './NativeEvents';
 import { Fun, Option } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 import { PlatformDetection } from '@ephox/sand';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { CustomEvent } from '../../events/SimulatedEvent';
-import { Element } from '@ephox/sugar';
 
 const alloy = { tap: Fun.constant('alloy.tap') };
 

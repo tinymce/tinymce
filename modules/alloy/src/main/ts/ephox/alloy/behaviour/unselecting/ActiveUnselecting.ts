@@ -3,8 +3,7 @@ import { Fun } from '@ephox/katamari';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as DomModification from '../../dom/DomModification';
-import { UnselectingConfig } from '../../behaviour/unselecting/UnselectingTypes';
-import { EventFormat } from '../../events/SimulatedEvent';
+import { UnselectingConfig } from './UnselectingTypes';
 
 const exhibit = (base: { }, unselectConfig: UnselectingConfig): { } => {
   return DomModification.nu({

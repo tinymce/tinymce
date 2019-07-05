@@ -1,15 +1,14 @@
-import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
+import { Arr, Obj, Option, Result } from '@ephox/katamari';
 
+import { SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
-import * as Behaviour from '../behaviour/Behaviour';
+import { FormSpecBuilder, FormDetail, FormSketcher } from '../../ui/types/FormTypes';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
-import { SketchSpec } from '../../api/component/SpecTypes';
-import { FormSpecBuilder, FormDetail, FormSketcher } from '../../ui/types/FormTypes';
 
 const owner = 'form';
 
@@ -52,12 +51,12 @@ const toResult = <T, E>(o: Option<T>, e: E) => o.fold(() => Result.error(e), Res
 
 const make = (detail: FormDetail, components, spec) => {
   return {
-    'uid': detail.uid,
-    'dom': detail.dom,
-    'components': components,
+    uid: detail.uid,
+    dom: detail.dom,
+    components,
 
     // Form has an assumption that every field must have composing, and that the composed element has representing.
-    'behaviours': SketchBehaviours.augment(
+    behaviours: SketchBehaviours.augment(
       detail.formBehaviours,
       [
         Representing.config({
@@ -86,13 +85,13 @@ const make = (detail: FormDetail, components, spec) => {
       ]
     ),
 
-    'apis': {
+    apis: {
       getField (form, key) {
         // Returns an Option (not a result);
         return AlloyParts.getPart(form, detail, key).bind(Composing.getCurrent);
       }
     }
-  }
+  };
 };
 
 const Form = {

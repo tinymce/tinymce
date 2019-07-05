@@ -1,5 +1,5 @@
 import * as DomModification from '../../dom/DomModification';
-import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
+import { PositioningConfig } from './PositioningTypes';
 
 const exhibit = (base: { }, posConfig: PositioningConfig/*, posState */): { } => {
   return DomModification.nu({

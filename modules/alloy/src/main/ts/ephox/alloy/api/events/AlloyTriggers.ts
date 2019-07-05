@@ -1,4 +1,4 @@
-import { Fun, Merger, Obj } from '@ephox/katamari';
+import { Fun, Obj } from '@ephox/katamari';
 
 import * as SystemEvents from './SystemEvents';
 import { AlloyComponent } from '../../api/component/ComponentApi';

@@ -1,12 +1,13 @@
-import { CoordAdt } from '../../api/data/DragCoord';
-import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+
+import { Bounds } from '../../alien/Boxes';
 import { SugarPosition, SugarEvent } from '../../alien/TypeDefinitions';
+import * as Behaviour from '../../api/behaviour/Behaviour';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { CoordAdt } from '../../api/data/DragCoord';
 import { MouseDraggingConfigSpec } from '../mouse/MouseDraggingTypes';
 import { TouchDraggingConfigSpec } from '../touch/TouchDraggingTypes';
-import { Bounds } from '../../alien/Boxes';
 
 export interface DraggingBehaviour extends Behaviour.AlloyBehaviour<DraggingConfigSpec, DraggingConfig> {
   config: (config: DraggingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DraggingConfigSpec, DraggingConfig>;

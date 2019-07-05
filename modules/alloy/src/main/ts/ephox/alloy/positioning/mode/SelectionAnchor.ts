@@ -1,19 +1,16 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Option, Struct, Unicode } from '@ephox/katamari';
-import { Element, Insert, Node, Position, Remove, Selection, Traverse, WindowSelection, Compare } from '@ephox/sugar';
-
 import { Window } from '@ephox/dom-globals';
+import { Option, Struct, Unicode } from '@ephox/katamari';
+import { Element, Insert, Node, Remove, Selection, Traverse, WindowSelection } from '@ephox/sugar';
 
-import * as Boxes from '../../alien/Boxes';
-import * as CssPosition from '../../alien/CssPosition';
 import * as Descend from '../../alien/Descend';
+import { SugarRange } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
 import * as Origins from '../layout/Origins';
 import { SelectionAnchor, Anchoring } from './Anchoring';
-import * as ContainerOffsets from './ContainerOffsets';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SugarRange } from '../../alien/TypeDefinitions';
 import * as AnchorLayouts from './AnchorLayouts';
+import * as ContainerOffsets from './ContainerOffsets';
 import ContentAnchorCommon from './ContentAnchorCommon';
 
 const point: (element: Element, offset: number) => {element: () => Element; offset: () => number; } = Struct.immutable('element', 'offset');

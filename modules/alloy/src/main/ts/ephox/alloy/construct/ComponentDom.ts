@@ -1,6 +1,4 @@
-import { Objects } from '@ephox/boulder';
-import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
+import { Arr, Option } from '@ephox/katamari';
 
 import * as ObjIndex from '../alien/ObjIndex';
 import { AlloyBehaviour } from '../api/behaviour/Behaviour';
@@ -9,7 +7,6 @@ import { BehaviourState } from '../behaviour/common/BehaviourState';
 import { DomDefinitionDetail } from '../dom/DomDefinition';
 import { DomModification, nu as NuModification } from '../dom/DomModification';
 
-type Mergers<K extends keyof DomModification> = Record<K, (a: DomModification[K], b: DomModification[K]) => DomModification[K]>;
 // Based on all the behaviour exhibits, and the original dom modification, identify
 // the overall combined dom modification that needs to occur
 const combine = (
@@ -24,7 +21,6 @@ const combine = (
   type ModificationName = keyof DomModification;
   type ModificationEffect = any;
 
-
   // Clone the object so we can change it.
   const modsByBehaviour: Record<BehaviourName, DomModification> = { ...baseMod };
   Arr.each(behaviours, (behaviour: AlloyBehaviour<any, any>) => {
@@ -34,7 +30,7 @@ const combine = (
   const nameAndMod = (name: BehaviourName, modification: ModificationEffect) => {
     return {
       name,
-      modification: modification
+      modification
     };
   };
 
@@ -44,11 +40,9 @@ const combine = (
     Array<{ name: BehaviourName, modification: ModificationEffect }>
   >;
 
-
-  const combineObjects = (objects: Record<any, any>[]) => Arr.foldr(objects, (b, a: { modification: Record<string, string> }) => {
-    return { ...a.modification, ... b}
+  const combineObjects = (objects: Array<Record<any, any>>) => Arr.foldr(objects, (b, a: { modification: Record<string, string> }) => {
+    return { ...a.modification, ...b };
   }, { });
-
 
   const combinedClasses: string[] = Arr.foldr(byAspect.classes, (b, a: { modification: string[] }) => {
     return a.modification.concat(b);

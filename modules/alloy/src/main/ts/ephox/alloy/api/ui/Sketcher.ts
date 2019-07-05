@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Merger, Obj } from '@ephox/katamari';
+import { Fun, Obj } from '@ephox/katamari';
 
 import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';

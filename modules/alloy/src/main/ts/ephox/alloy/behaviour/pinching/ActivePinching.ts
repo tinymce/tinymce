@@ -1,13 +1,11 @@
 import { Fun, Option } from '@ephox/katamari';
 import { TouchEvent } from '@ephox/dom-globals';
 
+import { SugarEvent } from '../../alien/TypeDefinitions';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import { PinchingConfig, PinchingState, PinchDragData } from '../../behaviour/pinching/PinchingTypes';
-import { Stateless } from '../../behaviour/common/BehaviourState';
-import { DraggingState, DragModeDeltas } from '../../dragging/common/DraggingTypes';
-import { SugarEvent } from '../../alien/TypeDefinitions';
-import { SimulatedEvent, EventFormat } from '../../events/SimulatedEvent';
+import { DragModeDeltas } from '../../dragging/common/DraggingTypes';
 
 const mode: DragModeDeltas<PinchDragData> = {
   getData (e: SugarEvent)  {

@@ -1,4 +1,6 @@
+import { document } from '@ephox/dom-globals';
 import { Class, Css, DomEvent, Element } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
@@ -13,7 +15,6 @@ import * as DemoContent from 'ephox/alloy/demo/DemoContent';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as Frames from './frames/Frames';
-import { document } from '@ephox/dom-globals';
 
 export default (): void => {
   const gui = Gui.create();
@@ -45,7 +46,7 @@ export default (): void => {
     })
   );
 
-  const section1 = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'Position anchoring to button',
     Button.sketch({
@@ -79,7 +80,7 @@ export default (): void => {
     })
   );
 
-  const section2 = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'Position anchoring to menu',
     Container.sketch({
@@ -113,7 +114,7 @@ export default (): void => {
     })
   );
 
-  const section3 = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'Position anchoring to text selection',
     Container.sketch({
@@ -163,7 +164,7 @@ export default (): void => {
     Frames.write(frame, html);
   });
 
-  const section4 = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'Position anchoring to text selection [iframe]',
     Container.sketch({

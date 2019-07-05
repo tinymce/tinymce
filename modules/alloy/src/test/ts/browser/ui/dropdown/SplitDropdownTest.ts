@@ -2,6 +2,7 @@ import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinde
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Future, Result, Option } from '@ephox/katamari';
 import { Attr } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -85,7 +86,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
         lazySink: (c: AlloyComponent) => {
           TestDropdownMenu.assertLazySinkArgs('span', 'test-split-dropdown', c);
           // Only gets here is the above assertion passes.
-          return Result.value(sink.get(c))
+          return Result.value(sink.get(c));
         },
 
         parts: {
@@ -130,7 +131,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
         ApproxStructure.build((s, str, arr) => {
           return s.element('span', {
             attrs: {
-              role: str.is('button'),
+              'role': str.is('button'),
               'aria-expanded': str.is('false'),
               'aria-haspopup': str.is('true')
             },
@@ -173,7 +174,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
         ApproxStructure.build((s, str, arr) => {
           return s.element('span', {
             attrs: {
-              role: str.is('button'),
+              'role': str.is('button'),
               'aria-expanded': str.is('true'),
               'aria-haspopup': str.is('true')
             },

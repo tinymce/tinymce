@@ -1,8 +1,9 @@
 import { Option } from '@ephox/katamari';
 import { Attr, Position } from '@ephox/sugar';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+
 import { SugarPosition } from '../../alien/TypeDefinitions';
-import { SnapsConfig } from '../../dragging/common/DraggingTypes';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SnapsConfig } from '../common/DraggingTypes';
 
 // NOTE: Moved from ego with some parameterisation
 const get = (component: AlloyComponent, snapsInfo: SnapsConfig): Option<SugarPosition> => {

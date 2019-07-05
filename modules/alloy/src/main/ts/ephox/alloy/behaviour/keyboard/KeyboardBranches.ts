@@ -7,8 +7,6 @@ import MatrixType from '../../keying/MatrixType';
 import MenuType from '../../keying/MenuType';
 import SpecialType from '../../keying/SpecialType';
 
-import { FieldProcessorAdt } from '@ephox/boulder';
-
 const acyclic = AcyclicType.schema();
 const cyclic = CyclicType.schema();
 const flow = FlowType.schema();

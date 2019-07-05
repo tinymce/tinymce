@@ -1,6 +1,7 @@
 import { console, document } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Class, Css, Element, Replication } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { DragnDrop } from 'ephox/alloy/api/behaviour/DragnDrop';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
@@ -24,10 +25,10 @@ export default (): void => {
         tag: 'div',
         innerHtml: `Drop zone that accepts <b>${dropEffect}</b> also accepts files`,
         styles: {
-          margin: '10px 10px 20px 10px',
-          padding: '20px',
-          height: '40px',
-          border: '3px dashed black',
+          'margin': '10px 10px 20px 10px',
+          'padding': '20px',
+          'height': '40px',
+          'border': '3px dashed black',
           'text-align': 'center'
         }
       },
@@ -37,6 +38,7 @@ export default (): void => {
           type: 'text/plain',
           dropEffect,
           onDrop (component, dropEvent) {
+            // tslint:disable-next-line:no-console
             console.log(`onDrop`, {
               data: dropEvent.data,
               files: dropEvent.files
@@ -107,7 +109,7 @@ export default (): void => {
           }
         })
       ])
-    })
+    });
   };
 
   HtmlDisplay.section(

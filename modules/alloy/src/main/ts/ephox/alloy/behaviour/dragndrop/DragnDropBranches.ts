@@ -1,4 +1,5 @@
 import { FieldProcessorAdt } from '@ephox/boulder';
+
 import DragStarting from '../../dragging/dragndrop/DragStarting';
 import Dropping from '../../dragging/dragndrop/Dropping';
 

@@ -1,11 +1,11 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Cell, Fun, Option } from '@ephox/katamari';
+import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import { Keying } from '../../api/behaviour/Keying';
-import * as Fields from '../../data/Fields';
 import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import * as Fields from '../../data/Fields';
 
 import * as HorizontalModel from './HorizontalModel';
 import * as VerticalModel from './VerticalModel';

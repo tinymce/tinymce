@@ -1,13 +1,13 @@
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
-
-import * as ModelCommon from './ModelCommon';
-import * as SliderModel from './SliderModel';
-import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import { SliderDetail, SliderValueX } from '../../ui/types/SliderTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option, Fun } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
+
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { SliderDetail, SliderValueX } from '../types/SliderTypes';
 import * as EdgeActions from './EdgeActions';
+import * as ModelCommon from './ModelCommon';
+import * as SliderModel from './SliderModel';
 
 import { minX, maxX, currentValue, step, snap, snapStart, xRange, rounded, hasLEdge, hasREdge } from './SliderValues';
 import { getMinXBounds, getMaxXBounds, getXScreenRange, getXCenterOffSetOf } from './SliderOffsets';

@@ -1,6 +1,7 @@
 import { FocusTools, GeneralSteps, Keyboard, Keys, Log, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Body, Element, Focus, SelectorFind } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
@@ -9,7 +10,6 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import { FocusInsideModes } from 'ephox/alloy/keying/KeyingModeTypes';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-
 
 UnitTest.asynctest('Focus Modes Test', (success, failure) => {
 
@@ -42,9 +42,8 @@ UnitTest.asynctest('Focus Modes Test', (success, failure) => {
 
           Focusing.config({ })
         ])
-      }
-    }
-
+      };
+    };
 
     return GuiFactory.build(
       {
@@ -66,20 +65,20 @@ UnitTest.asynctest('Focus Modes Test', (success, failure) => {
     );
 
   }, (doc, body, gui, component, store) => {
-    const onApiComp = SelectorFind.descendant(component.element() ,'.onApi').bind((elem) => {
+    const onApiComp = SelectorFind.descendant(component.element(), '.onApi').bind((elem) => {
       return component.getSystem().getByDom(elem).toOption();
     }).getOrDie('Could not find "onApi" div');
 
-    const onEnterOrSpaceComp = SelectorFind.descendant(component.element() ,'.onKeyboard').bind((elem) => {
+    const onEnterOrSpaceComp = SelectorFind.descendant(component.element(), '.onKeyboard').bind((elem) => {
       return component.getSystem().getByDom(elem).toOption();
     }).getOrDie('Could not find "onKeyboard" div');
 
-    const onFocusComp = SelectorFind.descendant(component.element() ,'.onFocus').bind((elem) => {
+    const onFocusComp = SelectorFind.descendant(component.element(), '.onFocus').bind((elem) => {
       return component.getSystem().getByDom(elem).toOption();
     }).getOrDie('Could not find "onFocus" div');
 
     const sResetFocus = Step.sync(() => {
-      Focus.focus(Body.body())
+      Focus.focus(Body.body());
     });
 
     const sFocusIn = (comp: AlloyComponent) => Step.sync(() => {

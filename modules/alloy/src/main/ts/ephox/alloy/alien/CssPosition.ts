@@ -1,4 +1,4 @@
-import { Adt, Arr, Fun } from '@ephox/katamari';
+import { Adt, Arr } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 import { SugarPosition } from './TypeDefinitions';
 

@@ -1,16 +1,13 @@
-import { Merger, Option } from '@ephox/katamari';
-import { AlloySpec } from '../../api/component/SpecTypes';
+import { console } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ToolbarSchema from '../../ui/schema/ToolbarSchema';
-import * as Behaviour from '../behaviour/Behaviour';
+import { ToolbarSketcher, ToolbarDetail, ToolbarSpec } from '../../ui/types/ToolbarTypes';
 import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import { composite, CompositeSketch } from './Sketcher';
-import { console } from '@ephox/dom-globals';
-import { ToolbarSketcher, ToolbarDetail, ToolbarSpec } from '../../ui/types/ToolbarTypes';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { composite } from './Sketcher';
+import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = (detail, components, spec, _externals) => {
   const setGroups = (toolbar, groups) => {

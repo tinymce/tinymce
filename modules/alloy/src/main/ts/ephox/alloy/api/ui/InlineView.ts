@@ -1,12 +1,11 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Fun, Option, Result } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import * as ComponentStructure from '../../alien/ComponentStructure';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as SystemEvents from '../../api/events/SystemEvents';
-import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 import * as Fields from '../../data/Fields';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import * as Dismissal from '../../sandbox/Dismissal';
@@ -14,10 +13,11 @@ import { InlineMenuSpec, InlineViewDetail, InlineViewSketcher, InlineViewSpec } 
 import { Positioning } from '../behaviour/Positioning';
 import { Receiving } from '../behaviour/Receiving';
 import { Sandboxing } from '../behaviour/Sandboxing';
+import { LazySink } from '../component/CommonTypes';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { tieredMenu } from './TieredMenu';
-import { LazySink } from '../component/CommonTypes';
+import { SingleSketchFactory } from './UiSketcher';
 
 const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
   const lazySink: () => ReturnType<LazySink> = () => detail.lazySink(menuSandbox);

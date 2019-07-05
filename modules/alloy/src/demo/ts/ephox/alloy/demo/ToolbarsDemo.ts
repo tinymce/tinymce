@@ -1,5 +1,7 @@
+import { document, console, window, setTimeout } from '@ephox/dom-globals';
 import { Arr, Result } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
+
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
@@ -8,14 +10,13 @@ import { SplitSlidingToolbar } from 'ephox/alloy/api/ui/SplitSlidingToolbar';
 import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-
-import * as DemoRenders from './forms/DemoRenders';
-import { document, console, window, setTimeout } from '@ephox/dom-globals';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import { LazySink } from 'ephox/alloy/api/component/CommonTypes';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';
 import { CustomList } from 'ephox/alloy/api/ui/CustomList';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+
+import * as DemoRenders from './forms/DemoRenders';
 
 // tslint:disable:no-console
 

@@ -1,21 +1,19 @@
-import { Arr, Fun, Merger, Option } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
-import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
 import { Receiving } from '../../api/behaviour/Receiving';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import { AlloySpec } from '../../api/component/SpecTypes';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import * as AlloyParts from '../../parts/AlloyParts';
-import * as ModelCommon from './ModelCommon';
-
-import { CustomEvent } from '../../events/SimulatedEvent';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { SliderDetail, SliderSpec, SliderValue } from '../../ui/types/SliderTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec } from '../../api/component/SpecTypes';
+import { CustomEvent } from '../../events/SimulatedEvent';
+import * as AlloyParts from '../../parts/AlloyParts';
+import { SliderDetail, SliderSpec, SliderValue } from '../types/SliderTypes';
+import * as ModelCommon from './ModelCommon';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 

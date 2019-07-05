@@ -1,5 +1,3 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Arr, Merger, Obj, Option } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 
 import { DomDefinitionDetail } from './DomDefinition';
@@ -15,12 +13,11 @@ export interface DomModificationSpec extends Partial<DomModification> {
 }
 
 // Maybe we'll need to allow add/remove
-const nu = (s:DomModificationSpec): DomModification => ({
+const nu = (s: DomModificationSpec): DomModification => ({
   classes: s.classes !== undefined ? s.classes : [ ],
   attributes: s.attributes !== undefined ? s.attributes : { },
   styles: s.styles !== undefined ? s.styles : { }
 });
-
 
 const modToStr = (mod: DomModification): string => {
   const raw = modToRaw(mod);

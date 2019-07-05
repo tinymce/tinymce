@@ -1,10 +1,11 @@
 import { Objects } from '@ephox/boulder';
 import { Fun, Obj } from '@ephox/katamari';
 import { JSON } from '@ephox/sand';
-import { CouplingConfigSpec, CouplingConfig } from './CouplingTypes';
-import { BehaviourState, nuState, BehaviourStateInitialiser } from '../common/BehaviourState';
+
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
+import { nuState } from '../common/BehaviourState';
+import { CouplingConfigSpec, CouplingConfig } from './CouplingTypes';
 
 const init = (spec: CouplingConfigSpec) => {
   const coupled = { };

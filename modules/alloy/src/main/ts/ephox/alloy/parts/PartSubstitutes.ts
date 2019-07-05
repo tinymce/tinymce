@@ -1,13 +1,11 @@
-import { Objects } from '@ephox/boulder';
 import { Arr, Fun, Merger } from '@ephox/katamari';
 
 import * as UiSubstitutes from '../spec/UiSubstitutes';
-import * as PartType from './PartType';
 import { Substitutions } from './AlloyParts';
+import * as PartType from './PartType';
 
 const combine: any = (detail, data: PartType.PartSpec<any>, partSpec, partValidated) => {
   // Extremely confusing names and types :(
-  const spec = partSpec;
   return Merger.deepMerge(
     data.defaults(detail, partSpec, partValidated),
     partSpec,

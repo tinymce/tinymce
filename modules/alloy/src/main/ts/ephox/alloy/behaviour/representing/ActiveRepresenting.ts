@@ -1,8 +1,7 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as Behaviour from '../common/Behaviour';
 import * as RepresentApis from './RepresentApis';
-import { RepresentingConfig, RepresentingState } from '../../behaviour/representing/RepresentingTypes';
-import { EventFormat } from '../../events/SimulatedEvent';
+import { RepresentingConfig, RepresentingState } from './RepresentingTypes';
 
 const events = (repConfig: RepresentingConfig, repState: RepresentingState): AlloyEvents.AlloyEventRecord => {
   const es = repConfig.resetOnDom ? [

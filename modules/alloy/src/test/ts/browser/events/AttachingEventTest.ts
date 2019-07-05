@@ -1,6 +1,7 @@
 import { Pipeline, RawAssertions, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Attr, Body, Traverse } from '@ephox/sugar';
+
 import * as EventRoot from 'ephox/alloy/alien/EventRoot';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';

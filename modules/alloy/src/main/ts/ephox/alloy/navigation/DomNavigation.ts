@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 
 import * as Cycles from '../alien/Cycles';
 import * as DomPinpoint from './DomPinpoint';

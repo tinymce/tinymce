@@ -1,11 +1,11 @@
 import { Chain, Guard, NamedChain } from '@ephox/agar';
 import { Result, Option } from '@ephox/katamari';
 import { Css, Scroll, Traverse } from '@ephox/sugar';
+
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
-import { box } from 'ephox/alloy/alien/Boxes';
 
 const cAddPopupToSinkCommon = (data, sink, positioner) => {
   Attachment.attach(sink, data.popup);

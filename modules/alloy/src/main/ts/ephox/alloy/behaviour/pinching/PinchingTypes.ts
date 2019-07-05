@@ -1,6 +1,6 @@
+import { Element } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
-import { Element } from '@ephox/sugar';
 import { DraggingState } from '../../dragging/common/DraggingTypes';
 
 export interface PinchDragData {

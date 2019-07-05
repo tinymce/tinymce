@@ -2,6 +2,7 @@ import { FocusTools, Logger, UiControls, GeneralSteps, Step, UiFinder, Keyboard,
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Future, Result, Strings, Option } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -11,7 +12,6 @@ import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
-import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 
@@ -83,8 +83,6 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
   }, (doc, body, gui, component, store) => {
 
     const typeahead = gui.getByUid('test-type').getOrDie();
-
-    const steps = TestTypeaheadSteps(doc, gui, typeahead);
 
     const testWithChooser = (label: string, sChooser: Step<any, any>): Step<any, any> => {
       return Logger.t(

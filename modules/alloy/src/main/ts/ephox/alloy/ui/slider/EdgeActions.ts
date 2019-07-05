@@ -1,7 +1,8 @@
 import { Fun } from '@ephox/katamari';
+
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import { SliderValue, SliderDetail } from '../../ui/types/SliderTypes';
+import { SliderValue, SliderDetail } from '../types/SliderTypes';
 
 import * as ModelCommon from './ModelCommon';
 import { min1X, max1X, min1Y, max1Y, halfX, halfY } from './SliderValues';

@@ -11,7 +11,7 @@ const Reflecting = Behaviour.create({
   active: ActiveReflecting,
   apis: ReflectingApis,
   state: ReflectingState
-}) as ReflectingBehaviour<any,any>;
+}) as ReflectingBehaviour<any, any>;
 
 export {
   Reflecting

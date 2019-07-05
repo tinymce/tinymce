@@ -1,16 +1,16 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
+import { SugarPosition, SugarEvent } from '../../alien/TypeDefinitions';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as Fields from '../../data/Fields';
 import * as DragMovement from '../common/DragMovement';
+import { DraggingState } from '../common/DraggingTypes';
 import SnapSchema from '../common/SnapSchema';
 import * as Snappables from '../snap/Snappables';
 import * as TouchData from './TouchData';
-import { TouchDraggingConfigSpec, TouchDraggingConfig } from '../../dragging/touch/TouchDraggingTypes';
-import { DraggingState } from '../../dragging/common/DraggingTypes';
-import { SugarPosition, SugarEvent } from '../../alien/TypeDefinitions';
+import { TouchDraggingConfig } from './TouchDraggingTypes';
 
 const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.AlloyEventRecord => {
 

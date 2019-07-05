@@ -1,5 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Fun, Id, Option } from '@ephox/katamari';
+import { Id, Option } from '@ephox/katamari';
 
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import { AlloyComponent } from '../../api/component/ComponentApi';

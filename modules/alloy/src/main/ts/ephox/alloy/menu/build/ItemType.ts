@@ -1,22 +1,20 @@
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
-import { Merger } from '@ephox/katamari';
 
-import * as Behaviour from '../../api/behaviour/Behaviour';
+import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
 import { Toggling } from '../../api/behaviour/Toggling';
+import { SketchBehaviours } from '../../api/component/SketchBehaviours';
+import { AlloySpec } from '../../api/component/SpecTypes';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
-import * as Fields from '../../data/Fields';
-import * as ItemEvents from '../util/ItemEvents';
-import { AlloySpec } from '../../api/component/SpecTypes';
-import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
-import { NormalItemDetail } from '../../ui/types/ItemTypes';
-import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { TogglingConfigSpec } from '../../behaviour/toggling/TogglingTypes';
+import * as Fields from '../../data/Fields';
+import { NormalItemDetail } from '../../ui/types/ItemTypes';
+import * as ItemEvents from '../util/ItemEvents';
 
 const builder = (detail: NormalItemDetail): AlloySpec => {
   return {

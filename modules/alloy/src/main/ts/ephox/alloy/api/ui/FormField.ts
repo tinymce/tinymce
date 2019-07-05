@@ -1,18 +1,17 @@
-import { Id, Merger } from '@ephox/katamari';
+import { Id } from '@ephox/katamari';
 import { Attr } from '@ephox/sugar';
 
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as FormFieldSchema from '../../ui/schema/FormFieldSchema';
-import * as Behaviour from '../behaviour/Behaviour';
+import { FormFieldDetail, FormFieldSketcher, FormFieldSpec } from '../../ui/types/FormFieldTypes';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as Sketcher from './Sketcher';
-import { SketchSpec } from '../../api/component/SpecTypes';
-import { FormFieldDetail, FormFieldSketcher, FormFieldSpec } from '../../ui/types/FormFieldTypes';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail, components, spec, externals): SketchSpec => {
   const behaviours = SketchBehaviours.augment(

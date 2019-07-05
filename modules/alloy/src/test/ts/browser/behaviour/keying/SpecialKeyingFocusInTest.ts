@@ -1,12 +1,12 @@
-import { FocusTools, GeneralSteps, Keyboard, Keys, Step, Assertions, Log } from '@ephox/agar';
+import { FocusTools, GeneralSteps, Log, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { SelectorFind, Body, Focus } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { SelectorFind, Body, Focus } from '@ephox/sugar';
 
 UnitTest.asynctest('SpecialKeyingFocusInTest', (success, failure) => {
 
@@ -51,11 +51,11 @@ UnitTest.asynctest('SpecialKeyingFocusInTest', (success, failure) => {
     );
 
   }, (doc, body, gui, component, store) => {
-    const oneComp = SelectorFind.descendant(component.element() ,'.one').bind((elem) => {
+    const oneComp = SelectorFind.descendant(component.element(), '.one').bind((elem) => {
       return component.getSystem().getByDom(elem).toOption();
     }).getOrDie('Could not find "one" div');
 
-    const twoComp = SelectorFind.descendant(component.element() ,'.two').bind((elem) => {
+    const twoComp = SelectorFind.descendant(component.element(), '.two').bind((elem) => {
       return component.getSystem().getByDom(elem).toOption();
     }).getOrDie('Could not find "two" div');
 

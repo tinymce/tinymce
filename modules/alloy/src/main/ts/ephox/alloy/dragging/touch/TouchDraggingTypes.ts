@@ -1,4 +1,4 @@
-import { CommonDraggingConfigSpec, DraggingConfig } from '../../dragging/common/DraggingTypes';
+import { CommonDraggingConfigSpec, DraggingConfig } from '../common/DraggingTypes';
 
 export interface TouchDraggingConfigSpec extends CommonDraggingConfigSpec {
   mode: 'touch';

@@ -1,9 +1,9 @@
-import { Cell, Arr, Merger, Option } from '@ephox/katamari';
-
-import { BehaviourState, nuState } from '../common/BehaviourState';
 import { Objects } from '@ephox/boulder';
+import { Cell, Arr, Option } from '@ephox/katamari';
+
 import { ItemDataTuple } from '../../ui/types/ItemTypes';
-import { RepresentingState } from '../../behaviour/representing/RepresentingTypes';
+import { nuState } from '../common/BehaviourState';
+import { RepresentingState } from './RepresentingTypes';
 
 const memory = (): RepresentingState => {
   const data = Cell(null);
@@ -93,7 +93,7 @@ const dataset = (): DatasetRepresentingState => {
     dataByText.set({
       ...currentDataByText,
       ...newDataByText
-    })
+    });
   };
 
   return nuState({

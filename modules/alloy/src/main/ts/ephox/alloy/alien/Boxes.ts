@@ -1,7 +1,7 @@
 import { Fun, Struct } from '@ephox/katamari';
 import { Height, Location, Width, Element } from '@ephox/sugar';
 
-import { CssPositionAdt } from '../alien/CssPosition';
+import { CssPositionAdt } from './CssPosition';
 
 const pointed = Struct.immutable('point', 'width', 'height') as (point: CssPositionAdt, width: number, height: number) => BoxByPoint;
 const rect = Struct.immutable('x', 'y', 'width', 'height');

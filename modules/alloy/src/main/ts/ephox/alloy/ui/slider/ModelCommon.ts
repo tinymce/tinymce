@@ -1,9 +1,10 @@
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { TouchEvent, MouseEvent, Touch } from '@ephox/dom-globals';
-import { SugarPosition } from '../../alien/TypeDefinitions';
 import { Option, Fun } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 import { PlatformDetection } from '@ephox/sand';
+
+import { SugarPosition } from '../../alien/TypeDefinitions';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 

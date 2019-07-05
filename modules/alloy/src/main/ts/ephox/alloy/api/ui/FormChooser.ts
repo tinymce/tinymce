@@ -1,8 +1,9 @@
-import { Arr, Merger, Option } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { Attr, SelectorFilter } from '@ephox/sugar';
 
+import { SketchSpec, AlloySpec } from '../../api/component/SpecTypes';
 import * as FormChooserSchema from '../../ui/schema/FormChooserSchema';
-import * as Behaviour from '../behaviour/Behaviour';
+import { FormChooserSketcher, FormChooserDetail, FormChooserSpec } from '../../ui/types/FormChooserTypes';
 import { Composing } from '../behaviour/Composing';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
@@ -11,9 +12,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
-import { SketchSpec, AlloySpec } from '../../api/component/SpecTypes';
-import { FormChooserSketcher, FormChooserDetail, FormChooserSpec } from '../../ui/types/FormChooserTypes';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (detail, components: AlloySpec[], spec, externals): SketchSpec => {
   const findByValue = (chooser, value) => {

@@ -3,10 +3,10 @@ import { Class, SelectorFilter, SelectorFind, Element } from '@ephox/sugar';
 
 import * as Cycles from '../../alien/Cycles';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
+import * as SystemEvents from '../../api/events/SystemEvents';
 import { HighlightingConfig } from '../../behaviour/highlighting/HighlightingTypes';
 import { Stateless } from '../../behaviour/common/BehaviourState';
-import * as SystemEvents from '../../api/events/SystemEvents';
-import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 
 // THIS IS NOT API YET
 const dehighlightAllExcept = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, skip: AlloyComponent[]): void => {

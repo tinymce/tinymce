@@ -4,7 +4,10 @@ import { Fun } from '@ephox/katamari';
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Composing } from '../../api/behaviour/Composing';
+import { Representing } from '../../api/behaviour/Representing';
 import { Toggling } from '../../api/behaviour/Toggling';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import { Button } from '../../api/ui/Button';
@@ -12,10 +15,7 @@ import { FormField } from '../../api/ui/FormField';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
-import { FormCoupledInputsDetail } from '../../ui/types/FormCoupledInputsTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Representing } from '../../api/behaviour/Representing';
-import { SketchBehaviours } from '../../api/component/SketchBehaviours';
+import { FormCoupledInputsDetail } from '../types/FormCoupledInputsTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('field1Name', 'field1'),

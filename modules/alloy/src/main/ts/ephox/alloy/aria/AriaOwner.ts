@@ -1,5 +1,5 @@
 import { Fun, Id, Option } from '@ephox/katamari';
-import { Attr, Node, PredicateFind, SelectorFind, Traverse, Element } from '@ephox/sugar';
+import { Attr, Element, Node, PredicateFind, SelectorFind, Traverse } from '@ephox/sugar';
 
 import { SugarDocument } from '../alien/TypeDefinitions';
 

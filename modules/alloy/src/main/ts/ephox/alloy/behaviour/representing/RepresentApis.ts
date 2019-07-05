@@ -1,5 +1,5 @@
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { RepresentingConfig, RepresentingState } from '../../behaviour/representing/RepresentingTypes';
+import { RepresentingConfig, RepresentingState } from './RepresentingTypes';
 
 const onLoad = (component: AlloyComponent, repConfig: RepresentingConfig, repState) => {
   repConfig.store.manager.onLoad(component, repConfig, repState);
