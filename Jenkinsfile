@@ -78,6 +78,10 @@ node("primary") {
           echo "Slave checkout on node $NODE_NAME"
           checkout scm
 
+          // windows tends to not have username or email set
+          extExec("git config user.email \"local@build.node\"")
+          extExec("git config user.name \"irrelevant\"")
+
           gitMerge()
 
           cleanAndInstall()
