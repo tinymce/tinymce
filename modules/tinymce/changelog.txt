@@ -1,5 +1,5 @@
 Version 5.0.12 (TBD)
-
+    Added help dialog tab explaining keyboard navigation of the editor #TINY-3603
 Version 5.0.11 (2019-07-04)
     Fixed packaging errors caused by a rollup treeshaking bug (https://github.com/rollup/rollup/issues/2970) #TINY-3866
     Fixed the customeditor component not able to get data from the dialog api #TINY-3866
@@ -18,7 +18,6 @@ Version 5.0.10 (2019-07-02)
     Fixed so that initial content is retained when initializing on list items #TINY-3796
     Fixed inefficient font name and font size current value lookup during rendering #TINY-3813
     Fixed mobile font copied into the wrong folder for the oxide-dark skin #TINY-3816
-    Added help dialog tab explaining keyboard navigation of the editor #TINY-3603
     Fixed an issue where resizing the width of tables would produce inaccurate results #TINY-3827
     Fixed a memory leak in the Silver theme #TINY-3797
     Fixed alert and confirm dialogs using incorrect markup causing inconsistent padding #TINY-3835
