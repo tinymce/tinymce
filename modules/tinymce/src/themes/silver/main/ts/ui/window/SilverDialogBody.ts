@@ -16,14 +16,14 @@ import NavigableObject from '../general/NavigableObject';
 import { bodyChannel } from './DialogChannels';
 
 // TypeScript allows some pretty weird stuff.
-type WindowBodyFoo = {
+type WindowBodySpec = {
   body: Types.Dialog.Dialog<unknown>['body']
 };
 
 // ariaAttrs is being passed through to silver inline dialog
 // from the WindowManager as a property of 'params'
-const renderBody = (foo: WindowBodyFoo, id: Option<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean): AlloySpec => {
-  const renderComponents = (incoming: WindowBodyFoo) => {
+const renderBody = (spec: WindowBodySpec, id: Option<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean): AlloySpec => {
+  const renderComponents = (incoming: WindowBodySpec) => {
     switch (incoming.body.type) {
       case 'tabpanel': {
         return [
@@ -39,7 +39,7 @@ const renderBody = (foo: WindowBodyFoo, id: Option<string>, backstage: UiFactory
     }
   };
 
-  const updateState = (_comp, incoming: WindowBodyFoo) => {
+  const updateState = (_comp, incoming: WindowBodySpec) => {
     return Option.some({
       isTabPanel: () => incoming.body.type === 'tabpanel'
     });
@@ -65,18 +65,18 @@ const renderBody = (foo: WindowBodyFoo, id: Option<string>, backstage: UiFactory
         channel: bodyChannel,
         updateState,
         renderComponents,
-        initialData: foo
+        initialData: spec
       })
     ])
   };
 };
 
-const renderInlineBody = (foo: WindowBodyFoo, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean) => {
-  return renderBody(foo, Option.some(contentId), backstage, ariaAttrs);
+const renderInlineBody = (spec: WindowBodySpec, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean) => {
+  return renderBody(spec, Option.some(contentId), backstage, ariaAttrs);
 };
 
-const renderModalBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage) => {
-  const bodySpec = renderBody(foo, Option.none(), backstage, false);
+const renderModalBody = (spec: WindowBodySpec, backstage: UiFactoryBackstage) => {
+  const bodySpec = renderBody(spec, Option.none(), backstage, false);
   return ModalDialog.parts().body(
     bodySpec
   );

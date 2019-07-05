@@ -42,7 +42,7 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
       toolbar: 'help',
       theme: 'silver',
       base_url: '/project/tinymce/js/tinymce'
-    }, ['Handy Shortcuts', 'Plugins', 'Version'])),
+    }, ['Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Version'])),
 
     Logger.t('Test help_tabs with pre-registered and new tabs', makeStep({
       plugins: 'help',
@@ -88,7 +88,7 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
           });
         });
       }
-    }, ['Handy Shortcuts', 'Plugins', 'Extra1', 'Version'])),
+    }, ['Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Extra1', 'Version'])),
 
     Logger.t('Test help_tabs and addTab()', makeStep({
       plugins: 'help',

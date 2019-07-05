@@ -15,13 +15,12 @@ import * as FormValues from '../general/FormValues';
 import NavigableObject from '../general/NavigableObject';
 import { interpretInForm } from '../general/UiFactory';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { Omit } from '../Omit';
+import { Types } from '@ephox/bridge';
 
-export interface BodyPanelFoo<I> {
-  items: I[];
-  classes: string[];
-}
+export type BodyPanelSpec = Omit<Types.Dialog.Panel, 'type'>;
 
-const renderBodyPanel = <I>(spec: BodyPanelFoo<I>, backstage: UiFactoryBackstage): SimpleSpec => {
+const renderBodyPanel = (spec: BodyPanelSpec, backstage: UiFactoryBackstage): SimpleSpec => {
   const memForm = Memento.record(
     AlloyForm.sketch((parts) => {
       return {

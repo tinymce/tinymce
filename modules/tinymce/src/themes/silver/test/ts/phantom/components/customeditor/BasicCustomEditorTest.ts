@@ -18,6 +18,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
     (store, doc, body) => {
       return GuiFactory.build(
         renderCustomEditor({
+          name: 'customeditor',
           tag: 'textarea',
           init: (e) => new Promise((resolve) => {
             const intervalId = Delay.setInterval(() => {
