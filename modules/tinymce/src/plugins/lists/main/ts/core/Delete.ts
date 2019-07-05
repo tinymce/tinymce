@@ -7,19 +7,22 @@
 
 import { Element, HTMLLIElement, Node, Range as DomRange } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Element as SugarElement, Compare } from '@ephox/sugar';
-import Editor from 'tinymce/core/api/Editor';
+import { Compare, Element as SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
+import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
+import { flattenListSelection, outdentListSelection } from '../actions/Indendation';
 import ToggleList from '../actions/ToggleList';
+import { Entry } from '../listModel/Entry';
+import { getItemSelection } from '../listModel/ListsIndendation';
+import { EntrySet, parseLists } from '../listModel/ParseLists';
 import Bookmark from './Bookmark';
 import NodeType from './NodeType';
 import NormalizeLists from './NormalizeLists';
 import Range from './Range';
 import Selection from './Selection';
-import { flattenListSelection } from '../actions/Indendation';
 
 const findNextCaretContainer = function (editor: Editor, rng: DomRange, isForward: Boolean, root: Node): Node {
   let node = rng.startContainer;
@@ -153,6 +156,17 @@ const mergeBackward = function (editor: Editor, rng: DomRange, fromLi: HTMLLIEle
   editor.selection.setRng(resolvedBookmark);
 };
 
+// If curr depth > last depth - return true for outdent
+// If curr depth =< last depth - return false for merge
+// If curr not found - fall back to return false for merge
+const outdentOrMerge = (editor: Editor): boolean => {
+  const parentList = Selection.getSelectedListRoots(editor);
+  const lists = Arr.map(parentList, SugarElement.fromDom);
+  const entrySets = parseLists(lists, getItemSelection(editor));
+  const entries = entrySets[0].entries;
+  return Arr.findIndex(entries, (entry: Entry) => entry.isSelected === true).fold(() => false, (currIdx: number) => entries[currIdx].depth > entries[currIdx - 1].depth);
+};
+
 const backspaceDeleteFromListToListCaret = function (editor: Editor, isForward: boolean) {
   const dom = editor.dom, selection = editor.selection;
   const selectionStartElm = selection.getStart();
@@ -173,7 +187,11 @@ const backspaceDeleteFromListToListCaret = function (editor: Editor, isForward: 
         if (isForward) {
           mergeForward(editor, rng, otherLi, li);
         } else {
-          mergeBackward(editor, rng, li, otherLi);
+          if (outdentOrMerge(editor)) {
+            outdentListSelection(editor);
+          } else {
+            mergeBackward(editor, rng, li, otherLi);
+          }
         }
       });
 

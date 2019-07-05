@@ -65,4 +65,4 @@ const listsIndentation = (editor: Editor, lists: Element[], indentation: Indenta
   });
 };
 
-export { listsIndentation };
+export { getItemSelection, listsIndentation };
