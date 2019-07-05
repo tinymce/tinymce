@@ -5,7 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Merger } from '@ephox/katamari';
+import { Toolbar } from '@ephox/bridge';
+import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
@@ -45,32 +46,34 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
     Actions.spellcheck(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
   };
 
-  const buttonArgs = {
-    tooltip: 'Spellcheck',
-    onAction: startSpellchecking,
-    icon: 'spell-check',
-    onSetup : (buttonApi) => {
-      const setButtonState = () => {
-        buttonApi.setActive(startedState.get());
-      };
-      editor.on(spellcheckerEvents, setButtonState);
-      return () => {
-        editor.off(spellcheckerEvents, setButtonState);
-      };
-    },
+  const getButtonArgs = (): Toolbar.ToolbarToggleButtonApi => {
+    return {
+      tooltip: 'Spellcheck',
+      onAction: startSpellchecking,
+      icon: 'spell-check',
+      onSetup: (buttonApi) => {
+        const setButtonState = () => {
+          buttonApi.setActive(startedState.get());
+        };
+        editor.on(spellcheckerEvents, setButtonState);
+        return () => {
+          editor.off(spellcheckerEvents, setButtonState);
+        };
+      },
+    };
   };
 
-  const getSplitButtonArgs = () => {
+  const getSplitButtonArgs = (): Toolbar.ToolbarSplitButtonApi => {
     return {
+      ...getButtonArgs(),
       type : 'splitbutton',
-      menu : languageMenuItems,
       select : (value) => {
         return value === currentLanguageState.get();
       },
       fetch : (callback) => {
         const items = Tools.map(languageMenuItems, (languageItem) => {
           return {
-            type: 'choiceitem',
+            type: 'choiceitem' as 'choiceitem',
             value: languageItem.data,
             text: languageItem.text
           };
@@ -83,7 +86,11 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
     };
   };
 
-  editor.ui.registry.addButton('spellchecker', Merger.merge(buttonArgs, languageMenuItems.length > 1 ? getSplitButtonArgs() : {type: 'togglebutton'}));
+  if (languageMenuItems.length > 1) {
+    editor.ui.registry.addSplitButton('spellchecker', getSplitButtonArgs());
+  } else {
+    editor.ui.registry.addToggleButton('spellchecker', getButtonArgs());
+  }
 
   editor.ui.registry.addToggleMenuItem('spellchecker', {
     text: 'Spellcheck',

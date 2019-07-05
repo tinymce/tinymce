@@ -1,4 +1,3 @@
-import { Merger } from '@ephox/katamari';
 import { ToolbarToggleButtonApi } from '../components/toolbar/ToolbarToggleButton';
 import { ToolbarSplitButtonApi } from '../components/toolbar/ToolbarSplitButton';
 import { ToolbarButtonApi } from '../components/toolbar/ToolbarButton';
@@ -48,7 +47,7 @@ export const create = (): Registry => {
   const contextMenus: Record<string, ContextMenuApi> = {};
   const contextToolbars: Record<string, ContextToolbarApi | ContextFormApi> = {};
   const sidebars: Record<string, SidebarApi> = {};
-  const add = (collection, type: string) => (name: string, spec: any): void => collection[name.toLowerCase()] = Merger.merge({ type }, spec);
+  const add = (collection, type: string) => (name: string, spec: any): void => collection[name.toLowerCase()] = { ...spec, type };
   const addIcon = (name: string, svgData: string) => icons[name.toLowerCase()] = svgData;
 
   return {
