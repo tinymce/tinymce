@@ -25,7 +25,8 @@ def runTests(extExecHandle, name, browser, os=null) {
 
 properties([
   disableConcurrentBuilds(),
-  pipelineTriggers([])
+  pipelineTriggers([]),
+  buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '1', daysToKeepStr: '', numToKeepStr: ''))
 ])
 
 node("primary") {
@@ -123,6 +124,13 @@ node("primary") {
       grunt "list-changed-phantom list-changed-browser"
       // Run all the tests in parallel
       parallel processes
+    }
+
+    if (BRANCH_NAME != "master") {
+      stage ("Archive Build") {
+        extExec("yarn tinymce-grunt prod")
+        archiveArtifacts artifacts: 'js/**, dist/**', onlyIfSuccessful: true
+      }
     }
 
     // bitbucket plugin requires the result to explicitly be success
