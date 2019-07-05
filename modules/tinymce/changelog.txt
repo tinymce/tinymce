@@ -1,5 +1,5 @@
 Version 5.0.12 (TBD)
-    Added ability to utilize UI panels recursively #TINY-3305
+    Added ability to utilize UI dialog panels inside other panels #TINY-3305
     Added help dialog tab explaining keyboard navigation of the editor #TINY-3603
     Fixed removing shortcuts not working for function keys #TINY-3871
     Fixed non-descriptive UI component type names #TINY-3349

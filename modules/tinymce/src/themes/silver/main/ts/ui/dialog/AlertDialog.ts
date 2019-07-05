@@ -27,8 +27,7 @@ export const setup = (extras) => {
         primary: true,
         align: 'end',
         disabled: false,
-        icon: Option.none(),
-        naked: false
+        icon: Option.none()
       }, 'cancel', sharedBackstage.providers)
     );
 

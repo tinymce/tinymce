@@ -121,7 +121,7 @@ export default () => {
             primary: false,
             disabled: false,
             icon: Option.none(),
-            naked: false
+            borderless: false
           }, () => {
             console.log('clicked on the button in the grid wrapped by a label');
           }, sharedBackstage.providers) as any,
@@ -164,7 +164,7 @@ export default () => {
         primary: false,
         disabled: false,
         icon: Option.none(),
-        naked: false
+        borderless: false
       }, () => {
         console.log('clicked on the button in the grid');
       }, sharedBackstage.providers) as any
@@ -177,7 +177,7 @@ export default () => {
     primary: false,
     disabled: false,
     icon: Option.none(),
-    naked: false
+    borderless: false
   }, () => {
     console.log('clicked on the button');
   }, sharedBackstage.providers);

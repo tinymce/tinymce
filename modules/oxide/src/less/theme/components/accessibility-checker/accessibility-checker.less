@@ -24,6 +24,11 @@
 @accessibility-issue-error-background-color: contrast(@dialog-background-color, fade(@color-error, 10%), fade(@color-error, 50%));
 @accessibility-issue-error-border-color: contrast(@dialog-background-color, fade(@color-error, 40%), fade(@color-error, 80%));
 
+@accessibility-issue-success-heading-text-color: contrast(@dialog-background-color, @color-white, @color-success);
+@accessibility-issue-success-body-text-color: contrast(@dialog-background-color, @color-white, @text-color);
+@accessibility-issue-success-background-color: contrast(@dialog-background-color, fade(@color-success, 10%), fade(@color-success, 50%));
+@accessibility-issue-success-border-color: contrast(@dialog-background-color, fade(@color-success, 40%), fade(@color-success, 80%));
+
 .tox {
   .accessibility-issue {
     //
@@ -81,6 +86,10 @@
     .tox-icon svg {
       fill: @accessibility-issue-info-heading-text-color;
     }
+
+    a .tox-icon {
+      color: @accessibility-issue-info-heading-text-color;
+    }
   }
 
   // Warn state
@@ -101,6 +110,10 @@
 
     .tox-icon svg {
       fill: @accessibility-issue-warn-heading-text-color;
+    }
+
+    a .tox-icon {
+      color: @accessibility-issue-warn-heading-text-color;
     }
   }
 
@@ -123,10 +136,39 @@
     .tox-icon svg {
       fill: @accessibility-issue-error-heading-text-color;
     }
+
+    a .tox-icon {
+      color: @accessibility-issue-error-heading-text-color;
+    }
+  }
+
+  // Success state
+  .accessibility-issue--success {
+    .accessibility-issue__description {
+      background-color: @accessibility-issue-success-background-color;
+      border-color: @accessibility-issue-success-border-color;
+      color: @accessibility-issue-success-body-text-color;
+
+      > *:last-child {
+        border-color: @accessibility-issue-success-border-color;
+      }
+    }
+
+    h2 {
+      color: @accessibility-issue-success-heading-text-color;
+    }
+
+    .tox-icon svg {
+      fill: @accessibility-issue-success-heading-text-color;
+    }
+
+    a .tox-icon {
+      color: @accessibility-issue-success-heading-text-color;
+    }
   }
 
   .tox-dialog__body-content .accessibility-issue__header h1,
-  .tox-dialog__body-content .accessibility-issue__description h2 {
+  .tox-dialog__body-content .tox-form__group .accessibility-issue__description h2 {
     margin-top: 0;
     // Inherits other styles from dialog body content heading
   }

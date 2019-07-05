@@ -31,8 +31,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
         primary: true,
         align: 'end',
         disabled: false,
-        icon: Option.none(),
-        naked: false
+        icon: Option.none()
       }, 'submit', sharedBackstage.providers)
     );
 
@@ -42,8 +41,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
       primary: true,
       align: 'end',
       disabled: false,
-      icon: Option.none(),
-      naked: false
+      icon: Option.none()
     }, 'cancel', sharedBackstage.providers);
 
     const confirmDialog = GuiFactory.build(

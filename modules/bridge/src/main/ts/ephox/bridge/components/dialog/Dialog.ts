@@ -98,7 +98,6 @@ export interface DialogButton {
   primary: boolean;
   disabled: boolean;
   icon: Option<string>;
-  naked: boolean;
 }
 
 export interface Dialog<T> {
