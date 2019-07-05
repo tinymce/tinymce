@@ -120,7 +120,8 @@ export default () => {
             text: 'Click Me!',
             primary: false,
             disabled: false,
-            icon: Option.none()
+            icon: Option.none(),
+            borderless: false
           }, () => {
             console.log('clicked on the button in the grid wrapped by a label');
           }, sharedBackstage.providers) as any,
@@ -162,7 +163,8 @@ export default () => {
         text: 'Click Me!',
         primary: false,
         disabled: false,
-        icon: Option.none()
+        icon: Option.none(),
+        borderless: false
       }, () => {
         console.log('clicked on the button in the grid');
       }, sharedBackstage.providers) as any
@@ -174,7 +176,8 @@ export default () => {
     text: 'Text',
     primary: false,
     disabled: false,
-    icon: Option.none()
+    icon: Option.none(),
+    borderless: false
   }, () => {
     console.log('clicked on the button');
   }, sharedBackstage.providers);
@@ -185,7 +188,8 @@ export default () => {
         items: [
           { type: 'checkbox', name: 'checked', label: 'Checked' },
           { type: 'checkbox', name: 'unchecked', label: 'Unchecked' }
-        ]
+        ],
+        classes: []
       }, {
         shared: sharedBackstage
       })

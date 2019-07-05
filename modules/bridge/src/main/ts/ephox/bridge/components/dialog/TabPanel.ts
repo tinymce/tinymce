@@ -1,7 +1,7 @@
 import { FieldSchema, ValueSchema, FieldPresence } from '@ephox/boulder';
 import { Id, Result } from '@ephox/katamari';
 import { BodyComponent, BodyComponentApi } from './BodyComponent';
-import { itemSchema } from './ItemSchema';
+import { itemSchema } from './Panel';
 
 export interface TabApi {
   name?: string;
