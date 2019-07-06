@@ -1,7 +1,7 @@
-import { Arr, Result } from "@ephox/katamari";
+import { Arr, Result } from '@ephox/katamari';
 
 // An experiment to make a more efficient boulder.
-export type SimpleResult<E,A> = SimpleError<E> | SimpleValue<A>
+export type SimpleResult<E, A> = SimpleError<E> | SimpleValue<A>;
 
 export enum SimpleResultType { Error, Value }
 
@@ -19,7 +19,7 @@ const fold = <B, E, A>(res: SimpleResult<E, A>, onError: (err: E) => B, onValue:
   return res.stype === SimpleResultType.Error ? onError(res.serror) : onValue(res.svalue);
 };
 
-const partition = <E, A>(results: SimpleResult<E[], any>[]): { values: any[], errors: E[][] } => {
+const partition = <E, A>(results: Array<SimpleResult<E[], any>>): { values: any[], errors: E[][] } => {
   const values = [ ];
   const errors = [ ];
   Arr.each(results, (obj) => {
@@ -34,28 +34,24 @@ const partition = <E, A>(results: SimpleResult<E[], any>[]): { values: any[], er
 
 const mapError = <F, E, A>(res: SimpleResult<E, A>, f: (e: E) => F): SimpleResult<F, A> => {
   if (res.stype === SimpleResultType.Error) {
-    return { stype: SimpleResultType.Error, serror: f(res.serror) }
-  }
-  else {
-    return res;
-  }
-}
-
-const map = <B, E, A>(res: SimpleResult<E, A>, f: (a: A) => B): SimpleResult<E, B> => {
-  if (res.stype === SimpleResultType.Value) {
-    return { stype: SimpleResultType.Value, svalue: f(res.svalue) }
-  }
-  else {
+    return { stype: SimpleResultType.Error, serror: f(res.serror) };
+  } else {
     return res;
   }
 };
 
+const map = <B, E, A>(res: SimpleResult<E, A>, f: (a: A) => B): SimpleResult<E, B> => {
+  if (res.stype === SimpleResultType.Value) {
+    return { stype: SimpleResultType.Value, svalue: f(res.svalue) };
+  } else {
+    return res;
+  }
+};
 
 const bind = <B, E, A>(res: SimpleResult<E, A>, f: (a: A) => SimpleResult<E, B>): SimpleResult<E, B> => {
   if (res.stype === SimpleResultType.Value) {
     return f(res.svalue);
-  }
-  else {
+  } else {
     return res;
   }
 };
@@ -63,8 +59,7 @@ const bind = <B, E, A>(res: SimpleResult<E, A>, f: (a: A) => SimpleResult<E, B>)
 const bindError = <F, E, A>(res: SimpleResult<E, A>, f: (e: E) => SimpleResult<F, A>): SimpleResult<F, A> => {
   if (res.stype === SimpleResultType.Error) {
     return f(res.serror);
-  }
-  else {
+  } else {
     return res;
   }
 };
@@ -83,7 +78,7 @@ const toResult = <E, A>(res: SimpleResult<E, A>): Result<A, E> => {
 
 const fromResult = <E, A>(res: Result<A, E>): SimpleResult<E, A> => {
   return res.fold<SimpleResult<E, A>>(serror, svalue);
-}
+};
 
 export const SimpleResult = {
   fromResult,
@@ -96,4 +91,4 @@ export const SimpleResult = {
   map,
   mapError,
   fold
-}
+};
