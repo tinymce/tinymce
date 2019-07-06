@@ -66,8 +66,8 @@ UnitTest.test('SearcherTest', function () {
     assert.eq(expected, processed);
   };
 
-  //An example of some <test> data. The <word> being looked <for> will be <w_or_d> and <for>.|There will be some <tes_t>
-  //paragraphs. This one ends with a partial fo|r and more.
+  // An example of some <test> data. The <word> being looked <for> will be <w_or_d> and <for>.|There will be some <tes_t>
+  // paragraphs. This one ends with a partial fo|r and more.
 
   checkWords([
     { items: ['test'], word: 'test', exact: 'test' },
@@ -78,4 +78,3 @@ UnitTest.test('SearcherTest', function () {
     { items: ['tes', 't'], word: 'test', exact: 'test' }
   ], ['p1', 'p2', 'p3'], ['for', 'test', 'word'], data());
 });
-

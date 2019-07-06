@@ -13,10 +13,7 @@ UnitTest.test('api.Split.(split,splitByPair)', function () {
     );
 
     const item = Finder.get(universe, 'generate_text');
-    return {
-      universe: universe,
-      item: item
-    };
+    return { universe, item };
   };
 
   const isEq = function (opt1: Option<string>, opt2: Option<Gene>) {
@@ -62,4 +59,3 @@ UnitTest.test('api.Split.(split,splitByPair)', function () {
 
   checkPair('root(text("app"),text("les"))', 'les', 'apples', 6, 3);
 });
-

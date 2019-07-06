@@ -16,7 +16,7 @@ const nextlist = function <E>(rest: Data<E>, parent: E, item: E): Data<E> {
   return {
     groups: rest.current.length > 0 && rest.parent !== null ? rest.groups.concat({ parent: rest.parent, children: rest.current }) : rest.groups,
     current: [item],
-    parent: parent
+    parent
   };
 };
 
@@ -25,7 +25,7 @@ const accumulate = function <E>(rest: Data<E>, parent: E, item: E): Data<E> {
   return {
     groups: rest.groups,
     current: rest.current.concat([item]),
-    parent: parent
+    parent
   };
 };
 

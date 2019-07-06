@@ -14,7 +14,7 @@ UnitTest.test('DomSplitTest', function () {
   const check = function (expected: string[], element: Element) {
     const parent = Traverse.parent(element);
     parent.fold(function () {
-      throw 'Element must have parent for test to work';
+      throw new Error('Element must have parent for test to work');
     }, function (v) {
       const children = Traverse.children(v);
       const text = Arr.map(children, Text.get);

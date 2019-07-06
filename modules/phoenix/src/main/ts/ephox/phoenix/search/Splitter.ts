@@ -14,7 +14,9 @@ const subdivide = function <E, D>(universe: Universe<E, D>, item: E, positions: 
     return section.length > 0;
   });
 
-  if (pieces.length <= 1) return [Spot.range(item, 0, text.length)];
+  if (pieces.length <= 1) {
+    return [Spot.range(item, 0, text.length)];
+  }
   universe.property().setText(item, pieces[0]);
 
   const others = PositionArray.generate(pieces.slice(1), function (a, start) {

@@ -18,7 +18,9 @@ const wrapWith = function <E, D>(universe: Universe<E, D>, base: E, baseOffset: 
  * Wrap non-empty text nodes using the nu() wrapper
  */
 const wrapper = function <E, D>(universe: Universe<E, D>, wrapped: E[], nu: () => Wrapter<E>): E[] {
-  if (wrapped.length === 0) return wrapped;
+  if (wrapped.length === 0) {
+    return wrapped;
+  }
 
   const filtered = Arr.filter(wrapped, function (x) {
     return universe.property().isText(x) && universe.property().getText(x).length > 0;

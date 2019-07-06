@@ -3,7 +3,7 @@ import { Arr, Option } from '@ephox/katamari';
 import { Attr, Class, Css, DomEvent, Element, Insert, InsertAll, Value } from '@ephox/sugar';
 import * as DomSearch from 'ephox/phoenix/api/dom/DomSearch';
 import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
-import { SearchResult } from '../../../../../main/ts/ephox/phoenix/api/Main';
+import { SearchResult } from 'ephox/phoenix/api/data/Types';
 
 const container = Element.fromTag('div');
 

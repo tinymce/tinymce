@@ -51,4 +51,3 @@ UnitTest.test('InsertAtTest', function () {
   // Invalid child of parent.
   check('root(a(aa(text("aaa"),text("aab"),text("aac")),ab(text("aba"),text("abb"))))', 'aa', 6, TextGene('INJECTED', 'INJECTED'));
 });
-
