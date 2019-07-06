@@ -3,12 +3,13 @@ import * as Type from 'ephox/katamari/api/Type';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Type', function() {
+UnitTest.test('Type', function () {
   const check = function (expected, method, input) {
     const actual = Type[method](input);
-    assert.eq(expected, actual, "I'm a failure.");
+    assert.eq(expected, actual, 'I\'m a failure.');
   };
 
+  // tslint:disable-next-line:no-construct
   const objectString = new String('ball');
   const noop = function () { };
 
@@ -21,7 +22,7 @@ UnitTest.test('Type', function() {
   check(false, 'isNull', objectString);
   check(false, 'isNull', []);
   check(false, 'isNull', noop);
-  check(false, 'isNull', [1,3,4,5]);
+  check(false, 'isNull', [1, 3, 4, 5]);
   check(false, 'isNull', 1);
 
   check(false, 'isUndefined', null);
@@ -33,7 +34,7 @@ UnitTest.test('Type', function() {
   check(false, 'isUndefined', objectString);
   check(false, 'isUndefined', []);
   check(false, 'isUndefined', noop);
-  check(false, 'isUndefined', [1,3,4,5]);
+  check(false, 'isUndefined', [1, 3, 4, 5]);
   check(false, 'isUndefined', 1);
 
   check(false, 'isBoolean', null);
@@ -45,7 +46,7 @@ UnitTest.test('Type', function() {
   check(false, 'isBoolean', objectString);
   check(false, 'isBoolean', []);
   check(false, 'isBoolean', noop);
-  check(false, 'isBoolean', [1,3,4,5]);
+  check(false, 'isBoolean', [1, 3, 4, 5]);
   check(false, 'isBoolean', 1);
 
   check(false, 'isString', null);
@@ -57,7 +58,7 @@ UnitTest.test('Type', function() {
   check(true, 'isString', objectString);
   check(false, 'isString', []);
   check(false, 'isString', noop);
-  check(false, 'isString', [1,3,4,5]);
+  check(false, 'isString', [1, 3, 4, 5]);
   check(false, 'isString', 1);
 
   check(false, 'isObject', null);
@@ -69,7 +70,7 @@ UnitTest.test('Type', function() {
   check(false, 'isObject', objectString);
   check(false, 'isObject', []);
   check(false, 'isObject', noop);
-  check(false, 'isObject', [1,3,4,5]);
+  check(false, 'isObject', [1, 3, 4, 5]);
   check(false, 'isObject', 1);
 
   check(false, 'isArray', null);
@@ -81,7 +82,7 @@ UnitTest.test('Type', function() {
   check(false, 'isArray', objectString);
   check(true, 'isArray', []);
   check(false, 'isArray', noop);
-  check(true, 'isArray', [1,3,4,5]);
+  check(true, 'isArray', [1, 3, 4, 5]);
   check(false, 'isArray', 1);
 
   check(false, 'isFunction', null);
@@ -93,7 +94,7 @@ UnitTest.test('Type', function() {
   check(false, 'isFunction', objectString);
   check(false, 'isFunction', []);
   check(true, 'isFunction', noop);
-  check(false, 'isFunction', [1,3,4,5]);
+  check(false, 'isFunction', [1, 3, 4, 5]);
   check(false, 'isFunction', 1);
 
   check(false, 'isNumber', null);
@@ -105,7 +106,7 @@ UnitTest.test('Type', function() {
   check(false, 'isNumber', objectString);
   check(false, 'isNumber', []);
   check(false, 'isNumber', noop);
-  check(false, 'isNumber', [1,3,4,5]);
+  check(false, 'isNumber', [1, 3, 4, 5]);
   check(true, 'isNumber', 1);
 
   Jsc.property('Check Type.is* :: only one should match for every value', Jsc.json, function (json) {
@@ -127,4 +128,3 @@ UnitTest.test('Type', function() {
     return matches.length === 1;
   });
 });
-

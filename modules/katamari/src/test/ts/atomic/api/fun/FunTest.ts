@@ -2,7 +2,7 @@ import * as Fun from 'ephox/katamari/api/Fun';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Function tests', function() {
+UnitTest.test('Function tests', function () {
   const testSanity = function () {
     const add2 = function (n) {
       return n + 2;
@@ -121,4 +121,3 @@ UnitTest.test('Function tests', function() {
   testSanity();
   testSpecs();
 });
-

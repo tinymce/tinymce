@@ -1,3 +1,4 @@
+/* tslint:disable:no-unimported-promise */
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Future } from 'ephox/katamari/api/Future';
@@ -12,7 +13,7 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
 
   const testPure = function () {
     return new Promise(function (resolve, reject) {
-      Future.pure('hello').get(function(a) {
+      Future.pure('hello').get(function (a) {
         assert.eq('hello', a);
         resolve(true);
       });
@@ -21,9 +22,9 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
 
   const testGet = function () {
     return new Promise(function (resolve, reject) {
-      Future.nu(function(callback) {
+      Future.nu(function (callback) {
         setTimeout(Fun.curry(callback, 'blah'), 10);
-      }).get(function(a) {
+      }).get(function (a) {
         assert.eq('blah', a);
         resolve(true);
       });
@@ -32,15 +33,15 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
 
   const testMap = function () {
     return new Promise(function (resolve, reject) {
-      const fut = Future.nu(function(callback) {
+      const fut = Future.nu(function (callback) {
         setTimeout(Fun.curry(callback, 'blah'), 10);
       });
 
-      const f = function(x) {
+      const f = function (x) {
         return x + 'hello';
       };
 
-      fut.map(f).get(function(a) {
+      fut.map(f).get(function (a) {
         assert.eq('blahhello', a);
         resolve(true);
       });
@@ -49,17 +50,17 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
 
   const testBind = function () {
     return new Promise(function (resolve, reject) {
-      const fut = Future.nu(function(callback) {
+      const fut = Future.nu(function (callback) {
         setTimeout(Fun.curry(callback, 'blah'), 10);
       });
 
-      const f = function(x) {
-        return Future.nu(function(callback) {
+      const f = function (x) {
+        return Future.nu(function (callback) {
           callback(x + 'hello');
         });
       };
 
-      fut.bind(f).get(function(a) {
+      fut.bind(f).get(function (a) {
         assert.eq('blahhello', a);
         resolve(true);
       });
@@ -70,16 +71,16 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
     return new Promise(function (resolve, reject) {
       let called = false;
 
-      const fut = Future.nu(function(callback) {
+      const fut = Future.nu(function (callback) {
         called = true;
         setTimeout(Fun.curry(callback, 'blah'), 10);
       });
 
-      const f = Future.nu(function(callback) {
+      const f = Future.nu(function (callback) {
         callback('hello');
       });
 
-      fut.anonBind(f).get(function(a) {
+      fut.anonBind(f).get(function (a) {
         assert.eq('hello', a);
         assert.eq(true, called);
         resolve(true);
@@ -89,18 +90,17 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
 
   const testParallel = function () {
     return new Promise(function (resolve, reject) {
-      const f = Future.nu(function(callback) {
+      const f = Future.nu(function (callback) {
         setTimeout(Fun.curry(callback, 'apple'), 10);
       });
-      const g = Future.nu(function(callback) {
+      const g = Future.nu(function (callback) {
         setTimeout(Fun.curry(callback, 'banana'), 5);
       });
-      const h = Future.nu(function(callback) {
+      const h = Future.nu(function (callback) {
         callback('carrot');
       });
 
-
-      Futures.par([f, g, h]).get(function(r){
+      Futures.par([f, g, h]).get(function (r) {
         assert.eq(r[0], 'apple');
         assert.eq(r[1], 'banana');
         assert.eq(r[2], 'carrot');
@@ -111,13 +111,13 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
 
   const testMapM = function () {
     return new Promise(function (resolve, reject) {
-      const fn = function(a) {
-        return Future.nu(function(cb) {
+      const fn = function (a) {
+        return Future.nu(function (cb) {
           setTimeout(Fun.curry(cb, a + ' bizarro'), 10);
         });
       };
 
-      Futures.mapM(['q', 'r', 's'], fn).get(function(r){
+      Futures.mapM(['q', 'r', 's'], fn).get(function (r) {
         assert.eq(['q bizarro', 'r bizarro', 's bizarro'], r);
         resolve(true);
       });
@@ -127,19 +127,19 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
 
   const testCompose = function () {
     return new Promise(function (resolve, reject) {
-      const f = function(a) {
-        return Future.nu(function(cb) {
+      const f = function (a) {
+        return Future.nu(function (cb) {
           setTimeout(Fun.curry(cb, a + ' f'), 10);
         });
       };
 
-      const g = function(a) {
-        return Future.nu(function(cb) {
+      const g = function (a) {
+        return Future.nu(function (cb) {
           setTimeout(Fun.curry(cb, a + ' g'), 10);
         });
       };
 
-      Futures.compose(f, g)('a').get(function(r) {
+      Futures.compose(f, g)('a').get(function (r) {
         assert.eq('a g f', r);
         resolve(true);
       });
@@ -147,19 +147,19 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
   };
 
   const testCache = function () {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       let callCount = 0;
-      const future = Future.nu(function(cb) {
+      const future = Future.nu(function (cb) {
         callCount++;
         setTimeout(Fun.curry(cb, callCount), 10);
       });
       const cachedFuture = future.toCached();
 
       assert.eq(0, callCount);
-      cachedFuture.get(function(r) {
+      cachedFuture.get(function (r) {
         assert.eq(1, r);
         assert.eq(1, callCount);
-        cachedFuture.get(function(r2) {
+        cachedFuture.get(function (r2) {
           assert.eq(1, r2);
           assert.eq(1, callCount);
           resolve(true);
@@ -177,7 +177,7 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
       });
 
       return {
-        future: future,
+        future,
         contents: json
       };
     });
@@ -202,7 +202,7 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
       {
         label: 'Future.pure resolves with data',
         arbs: [ Jsc.json ],
-        f: function (json) {
+        f (json) {
           return AsyncProps.checkFuture(Future.pure(json), function (data) {
             return Jsc.eq(json, data) ? Result.value(true) : Result.error('Payload is not the same');
           });
@@ -212,7 +212,7 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
       {
         label: 'Future.pure map f resolves with f data',
         arbs: [ Jsc.json, Jsc.fun(Jsc.json) ],
-        f: function (json, f) {
+        f (json, f) {
           return AsyncProps.checkFuture(Future.pure(json).map(f), function (data) {
             return Jsc.eq(f(json), data) ? Result.value(true) : Result.error('f(json) !== data');
           });
@@ -222,11 +222,11 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
       {
         label: 'future.bind(binder) equiv future.get(bind)',
         arbs: [ arbFutureSchema, Jsc.fun(arbFuture) ],
-        f: function (arbF, binder) {
+        f (arbF, binder) {
           return AsyncProps.futureToPromise(arbF.future.bind(binder)).then(function (data) {
             return new Promise(function (resolve, reject) {
               binder(arbF.contents).toLazy().get(function (bInitial) {
-                return Jsc.eq(data, bInitial) ? resolve(true): reject('Data did not match');
+                return Jsc.eq(data, bInitial) ? resolve(true) : reject('Data did not match');
               });
             });
           });
@@ -236,12 +236,12 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
       {
         label: 'futures.par([future]).get() === [future.val]',
         arbs: [ Jsc.array(arbFutureSchema) ],
-        f: function (futures) {
+        f (futures) {
           const rawFutures = Arr.map(futures, function (ft) { return ft.future; });
           const expected = Arr.map(futures, function (ft) { return ft.contents; });
           return AsyncProps.checkFuture(Futures.par(rawFutures), function (list) {
             return Jsc.eq(expected, list) ? Result.value(true) : Result.error(
-              'Expected: ' + expected.join(',') +', actual: ' + list.join(',')
+              'Expected: ' + expected.join(',') + ', actual: ' + list.join(',')
             );
           });
         }
@@ -250,7 +250,7 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
       {
         label: 'futures.mapM([json], json -> future).get(length) === [json].length',
         arbs: [ Jsc.array(arbFuture), Jsc.fun(arbFuture) ],
-        f: function (inputs, g) {
+        f (inputs, g) {
           const fResult = Futures.mapM(inputs, g);
           return AsyncProps.checkFuture(fResult, function (list) {
             return Jsc.eq(inputs.length, list.length) ? Result.value(true) : Result.error('input length was not the same as output length');
@@ -266,4 +266,3 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
     success();
   }, failure);
 });
-

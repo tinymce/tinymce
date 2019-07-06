@@ -5,9 +5,9 @@ import * as Zip from 'ephox/katamari/api/Zip';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Zip', function() {
-  const check1 = function(expectedZipToObject, expectedZipToTuples, keys, values) {
-    const sort = function(a, ord) {
+UnitTest.test('Zip', function () {
+  const check1 = function (expectedZipToObject, expectedZipToTuples, keys, values) {
+    const sort = function (a, ord) {
       const c = a.slice();
       c.sort(ord);
       return c;
@@ -17,8 +17,8 @@ UnitTest.test('Zip', function() {
     const lt = -1;
     const gt = 1;
 
-    const sortTuples = function(a) {  
-      return sort(a, function(a, b) {
+    const sortTuples = function (a) {
+      return sort(a, function (a, b) {
         return (
           a.k === b.k ? a.v === b.v ? eq
                                     : a.v > b.v ? gt
@@ -36,44 +36,44 @@ UnitTest.test('Zip', function() {
   check1(
     {q: 'a', r: 'x'},
     [{k: 'q', v: 'a'}, {k: 'r', v: 'x'}],
-    ['q', 'r'], 
+    ['q', 'r'],
     ['a', 'x']
   );
 
   check1(
     {},
     [],
-    [], 
+    [],
     []
   );
   check1(
     {},
-    [], 
+    [],
     [],
     ['x']
   );
   check1(
     {},
     [],
-    [], 
+    [],
     ['x', 'y']
   );
   check1(
     {q: undefined},
     [{k: 'q', v: undefined}],
-    ['q'], 
+    ['q'],
     []
   );
   check1(
     {q: undefined, r: undefined},
     [{k: 'q', v: undefined}, {k: 'r', v: undefined}],
-    ['q', 'r'], 
+    ['q', 'r'],
     []
   );
   check1(
     {q: 'a', r: undefined},
     [{k: 'q', v: 'a'}, {k: 'r', v: undefined}],
-    ['q', 'r'], 
+    ['q', 'r'],
     ['a']
   );
 
@@ -90,7 +90,9 @@ UnitTest.test('Zip', function() {
       const output = Zip.zipToObject(keys, values);
 
       const oKeys = Obj.keys(output);
-      if (oKeys.length !== values.length) return 'Output keys did not match';
+      if (oKeys.length !== values.length) {
+        return 'Output keys did not match';
+      }
       return Arr.forall(oKeys, function (oKey) {
         const index = parseInt(oKey, 10);
         const expected = values[index];
@@ -106,11 +108,12 @@ UnitTest.test('Zip', function() {
     function (keys, values) {
       const output = Zip.zipToTuples(keys, values);
 
-      if (output.length !== keys.length) return 'Output keys did not match';
+      if (output.length !== keys.length) {
+        return 'Output keys did not match';
+      }
       return Arr.forall(output, function (x, i) {
         return x.k === keys[i] && x.v === values[i];
       });
     }
   );
 });
-

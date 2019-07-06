@@ -3,8 +3,8 @@ import * as Fun from 'ephox/katamari/api/Fun';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Partition Test', function() {
-  (function() {
+UnitTest.test('Partition Test', function () {
+  (function () {
 
     const check = function (input: any[], expected) {
       const f = function (n) { return n.indexOf('yes') > -1; };
@@ -12,9 +12,9 @@ UnitTest.test('Partition Test', function() {
       assert.eq(expected, Arr.partition(Object.freeze(input.slice()), f));
     };
 
-    check([], {pass: [], fail:[]});
-    check(['yes'], {pass: ['yes'], fail:[]});
-    check(['no'], {pass: [], fail:['no']});
+    check([], {pass: [], fail: []});
+    check(['yes'], {pass: ['yes'], fail: []});
+    check(['no'], {pass: [], fail: ['no']});
     check(
       ['yes', 'no', 'no', 'yes'],
       {
@@ -46,7 +46,7 @@ UnitTest.test('Partition Test', function() {
         return Jsc.eq(0, output.fail.length) && Jsc.eq(arr, output.pass);
       }
     );
- 
+
     Jsc.property(
       'Check that everything in fail fails predicate and everything in pass passes predicate',
       Jsc.array(Jsc.json),
@@ -63,4 +63,3 @@ UnitTest.test('Partition Test', function() {
     );
   })();
 });
-

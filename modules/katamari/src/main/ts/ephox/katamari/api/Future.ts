@@ -8,10 +8,10 @@ export interface Future<T> {
   toLazy: () => LazyValue<T>;
   toCached: () => Future<T>;
   get: (callback: (v: T) => void) => void;
-};
+}
 
-const nu = function <T = any> (baseFn: (completer: (value?: T) => void) => void) : Future<T> {
-  const get = function(callback: (value: T) => void) {
+const nu = function <T = any> (baseFn: (completer: (value?: T) => void) => void): Future<T> {
+  const get = function (callback: (value: T) => void) {
     baseFn(Bounce.bounce(callback));
   };
 
@@ -49,7 +49,7 @@ const nu = function <T = any> (baseFn: (completer: (value?: T) => void) => void)
     return LazyValue.nu(get);
   };
 
-  const toCached = function() {
+  const toCached = function () {
     let cache: LazyValue<T> | null = null;
     return nu(function (callback: (value: T) => void) {
       if (cache === null) {
@@ -60,12 +60,12 @@ const nu = function <T = any> (baseFn: (completer: (value?: T) => void) => void)
   };
 
   return {
-    map: map,
-    bind: bind,
-    anonBind: anonBind,
-    toLazy: toLazy,
-    toCached: toCached,
-    get: get
+    map,
+    bind,
+    anonBind,
+    toLazy,
+    toCached,
+    get
   };
 
 };
@@ -78,6 +78,6 @@ const pure = function <T> (a: T) {
 };
 
 export const Future = {
-  nu: nu,
-  pure: pure
+  nu,
+  pure
 };

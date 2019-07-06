@@ -4,7 +4,7 @@ import * as Struct from 'ephox/katamari/api/Struct';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Struct.immutable', function() {
+UnitTest.test('Struct.immutable', function () {
   const Thing = Struct.immutable('fred', 'barney');
   const thing = Thing('hello', 1);
   assert.eq('hello', thing.fred());
@@ -31,7 +31,7 @@ UnitTest.test('Struct.immutable', function() {
       const evaluated = Obj.mapToArray(output, function (v, k) {
         return v();
       });
-      
+
       return Jsc.eq(evaluated, values);
     }
   );
@@ -89,4 +89,3 @@ UnitTest.test('Struct.immutable', function() {
     }
   );
 });
-

@@ -18,14 +18,14 @@ export interface Result<T, E> {
   getOr: (defaultValue: T) => T;
   getOrThunk: (maker: () => T) => T;
   getOrDie: () => T;
-};
+}
 
-/* The type signatures for Result 
+/* The type signatures for Result
  * is :: this Result a -> a -> Bool
  * or :: this Result a -> Result a -> Result a
  * orThunk :: this Result a -> (_ -> Result a) -> Result a
  * map :: this Result a -> (a -> b) -> Result b
- * each :: this Result a -> (a -> _) -> _ 
+ * each :: this Result a -> (a -> _) -> _
  * bind :: this Result a -> (a -> Result b) -> Result b
  * fold :: this Result a -> (_ -> b, a -> b) -> b
  * exists :: this Result a -> (a -> Bool) -> Bool
@@ -84,26 +84,26 @@ const value = function <T, E = any>(o: T): Result<T, E> {
   };
 
   return {
-    is: is,
+    is,
     isValue: Fun.always,
     isError: Fun.never,
     getOr: Fun.constant(o),
     getOrThunk: Fun.constant(o),
     getOrDie: Fun.constant(o),
-    or: or,
-    orThunk: orThunk,
-    fold: fold,
-    map: map,
+    or,
+    orThunk,
+    fold,
+    map,
     mapError,
-    each: each,
-    bind: bind,
-    exists: exists,
-    forall: forall,
-    toOption: toOption
+    each,
+    bind,
+    exists,
+    forall,
+    toOption
   };
 };
 
-const error = function <T=any, E=any>(message: E): Result<T, E> {
+const error = function <T = any, E = any>(message: E): Result<T, E> {
   const getOrThunk = function (f: () => T) {
     return f();
   };
@@ -141,15 +141,15 @@ const error = function <T=any, E=any>(message: E): Result<T, E> {
     isValue: Fun.never,
     isError: Fun.always,
     getOr: Fun.identity,
-    getOrThunk: getOrThunk,
-    getOrDie: getOrDie,
-    or: or,
-    orThunk: orThunk,
-    fold: fold,
-    map: map,
-    mapError: mapError,
+    getOrThunk,
+    getOrDie,
+    or,
+    orThunk,
+    fold,
+    map,
+    mapError,
     each: Fun.noop,
-    bind: bind,
+    bind,
     exists: Fun.never,
     forall: Fun.always,
     toOption: Option.none

@@ -1,7 +1,7 @@
 import * as Obj from 'ephox/katamari/api/Obj';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('HasTest', function() {
+UnitTest.test('HasTest', function () {
   const withoutObjProto = Object.create(null);
   withoutObjProto.a = 1;
 

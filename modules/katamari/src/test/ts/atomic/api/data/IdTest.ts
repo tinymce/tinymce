@@ -2,7 +2,7 @@ import * as Id from 'ephox/katamari/api/Id';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('IdTest', function() {
+UnitTest.test('IdTest', function () {
   const one = Id.generate('test');
   const two = Id.generate('test');
   assert.eq(0, one.indexOf('test'));
@@ -19,4 +19,3 @@ UnitTest.test('IdTest', function() {
     return !Jsc.eq(id1, id2) ? true : 'Ids should not be the same: ' + id1;
   });
 });
-

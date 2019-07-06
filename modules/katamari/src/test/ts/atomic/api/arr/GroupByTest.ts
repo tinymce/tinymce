@@ -2,8 +2,8 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Group By Test', function() {
-  (function() {
+UnitTest.test('Group By Test', function () {
+  (function () {
 
     const check = function (input: any[], expected) {
       const f = function (b) { return b; };
@@ -58,14 +58,18 @@ UnitTest.test('Group By Test', function() {
           return g.length === 0;
         });
 
-        if (hasEmptyGroups) return 'Should not have empty groups';
+        if (hasEmptyGroups) {
+          return 'Should not have empty groups';
+        }
         // No consecutive groups should have the same result of g.
         const values = Arr.map(groups, function (group) {
           const first = f(group[0]);
           const mapped = Arr.map(group, function (g) { return f(g); });
 
           const isSame = Arr.forall(mapped, function (m) { return m === first; });
-          if (!isSame) throw 'Not everything in a group has the same g(..) value';
+          if (!isSame) {
+            throw new Error('Not everything in a group has the same g(..) value');
+          }
           return first;
         });
 
@@ -73,7 +77,9 @@ UnitTest.test('Group By Test', function() {
           return i > 0 ? values[i - 1] === values[i] : false;
         });
 
-        if (hasSameGroup) return 'A group is next to another group with the same g(..) value';
+        if (hasSameGroup) {
+          return 'A group is next to another group with the same g(..) value';
+        }
         return true;
       }
     );
@@ -93,4 +99,3 @@ UnitTest.test('Group By Test', function() {
     );
   })();
 });
-

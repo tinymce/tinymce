@@ -99,7 +99,7 @@ export const partition = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): {
     const arr = pred(x, i, xs) ? pass : fail;
     arr.push(x);
   }
-  return { pass: pass, fail: fail };
+  return { pass, fail };
 };
 
 export const filter = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[] => {
@@ -203,7 +203,9 @@ export const flatten = <T = any>(xs: ArrayLike<ArrayLike<T> | T[]>): T[] => {
   const r = [];
   for (let i = 0, len = xs.length; i < len; ++i) {
     // Ensure that each value is an array itself
-    if (!Array.prototype.isPrototypeOf(xs[i])) throw new Error('Arr.flatten item ' + i + ' was not an array, input: ' + xs);
+    if (!Array.prototype.isPrototypeOf(xs[i])) {
+      throw new Error('Arr.flatten item ' + i + ' was not an array, input: ' + xs);
+    }
     push.apply(r, xs[i]);
   }
   return r;
@@ -259,4 +261,4 @@ export const head = <T = any>(xs: ArrayLike<T>): Option<T> => xs.length === 0 ? 
 
 export const last = <T = any>(xs: ArrayLike<T>): Option<T> => xs.length === 0 ? Option.none() : Option.some(xs[xs.length - 1]);
 
-export const from: <T = any>(x: ArrayLike<T>) => T[] = Type.isFunction(Array.from) ? Array.from : (x) => slice.call(x)
+export const from: <T = any>(x: ArrayLike<T>) => T[] = Type.isFunction(Array.from) ? Array.from : (x) => slice.call(x);
