@@ -5,7 +5,7 @@ import Detach from 'ephox/boss/mutant/Detach';
 import Logger from 'ephox/boss/mutant/Logger';
 import Tracks from 'ephox/boss/mutant/Tracks';
 
-UnitTest.test('DetachTest', function() {
+UnitTest.test('DetachTest', function () {
 
   const check = function (expectedRemain: string, expectedDetach: Option<string>, input: Gene, id: string) {
     const family = Tracks.track(input, Option.none());
@@ -18,7 +18,7 @@ UnitTest.test('DetachTest', function() {
         assert.fail('Expected detached node to be ' + expected + ' but no node found.');
       }, (actual) => {
         assert.eq(expected, actual);
-      })
+      });
     });
   };
 
@@ -55,7 +55,7 @@ UnitTest.test('DetachTest', function() {
       ])
     ]), 'D');
 
-  check('A(B,C(D(E),F))', Option.none(), 
+  check('A(B,C(D(E),F))', Option.none(),
     Gene('A', '.', [
       Gene('B', '.'),
       Gene('C', '.', [
@@ -77,4 +77,3 @@ UnitTest.test('DetachTest', function() {
       ])
     ]), 'F');
 });
-

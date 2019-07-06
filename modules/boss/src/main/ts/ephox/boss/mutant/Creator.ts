@@ -24,7 +24,7 @@ const clone = function (item: Gene): Gene {
     ...item,
     children: [],
     id: 'clone**<' + item.id + '>'
-  }
+  };
 };
 
 const text = function (value: string): Gene {

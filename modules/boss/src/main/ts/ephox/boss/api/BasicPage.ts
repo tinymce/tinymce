@@ -85,4 +85,4 @@ export default function () {
     t900,
     t1000
   };
-};
+}

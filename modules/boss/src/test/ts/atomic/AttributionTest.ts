@@ -19,4 +19,3 @@ UnitTest.test('AttributionTest', function () {
     border: '10'
   }, b.attrs);
 });
-
