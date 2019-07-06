@@ -23,6 +23,7 @@ tinymce.init({
     callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text', caption: true });
   },
   images_upload_handler: (blobInfo, success, failure, progress) => {
+    // tslint:disable-next-line:no-console
     console.log(blobInfo);
     Delay.setTimeout(function () {
       success('https://www.google.com/logos/google.jpg');

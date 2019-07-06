@@ -181,6 +181,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
   const mAssertEditors = Step.label('mAssertEditors', Step.stateful(function (editors: any[], next, die) {
     Assertions.assertHtml('Editor contents should be the first div content', '<p>a</p>', editors[0].getContent());
     Assertions.assertHtml('Editor contents should be the second div content', '<p>b</p>', editors[1].getContent());
+    // tslint:disable-next-line:no-console
     console.log('Editor container 0:', editors[0].editorContainer);
     const containerApproxStructure = ApproxStructure.build((s, str, arr) => {
       return s.element('div', {
