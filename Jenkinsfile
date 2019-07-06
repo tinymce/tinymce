@@ -97,7 +97,6 @@ node("primary") {
   }
 
   stage ("Type check") {
-    // TODO switch ci-all to using whole-repo tslint once all modules pass tslint checks
     extExec "yarn ci-all"
   }
 
