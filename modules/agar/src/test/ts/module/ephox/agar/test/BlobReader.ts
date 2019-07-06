@@ -1,5 +1,5 @@
-import { Blob, FileReader } from "@ephox/dom-globals";
-import { FutureResult, Result } from "@ephox/katamari";
+import { Blob, FileReader } from '@ephox/dom-globals';
+import { FutureResult, Result } from '@ephox/katamari';
 
 const readBlobAsText = (blob: Blob): FutureResult<string, string> => {
   return FutureResult.nu((resolve) => {

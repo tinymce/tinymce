@@ -2,9 +2,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 
-UnitTest.asynctest('ChainPipelineTest', function() {
-  const success = arguments[arguments.length-2];
-  const failure = arguments[arguments.length-1];
+UnitTest.asynctest('ChainPipelineTest', function (success, failure) {
 
   const cAcc = function (ch) {
     return Chain.async(function (input, next, die) {
@@ -25,4 +23,3 @@ UnitTest.asynctest('ChainPipelineTest', function() {
       }
   }, failure);
 });
-

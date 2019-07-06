@@ -28,13 +28,13 @@ UnitTest.test('AssertionsTest', function () {
 
   try {
     const v1 = {
-      'style': 'display: block; float: left;',
-      'class': 'class1 class2'
+      style: 'display: block; float: left;',
+      class: 'class1 class2'
     };
 
     const v2 = {
-      'style': 'float: left; display: block;',
-      'class': 'class2 class1'
+      style: 'float: left; display: block;',
+      class: 'class2 class1'
     };
 
     const html = '<div id="container" style="{{style}}"><p class="{{class}}">some text</p></div>';
@@ -44,4 +44,3 @@ UnitTest.test('AssertionsTest', function () {
     assert.fail('Unexpected error: ' + err.message);
   }
 });
-

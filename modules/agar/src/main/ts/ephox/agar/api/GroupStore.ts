@@ -14,7 +14,7 @@ export const GroupStore = function <T = any> () {
   };
 
   return {
-    record: record,
-    get: get
+    record,
+    get
   };
 };

@@ -1,19 +1,23 @@
+/* tslint:disable:no-unimported-promise */
 import { console, setTimeout } from '@ephox/dom-globals';
 import { Arr, Type } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 
-import { TestLogs } from '../api/TestLogs';
 import { DieFn, NextFn } from '../pipe/Pipe';
-import { Step } from './Main';
-
+import { Step } from './Step';
+import { TestLogs } from './TestLogs';
 
 const assertSteps = function (steps: Step<any, any>[]) {
   Arr.each(steps, function (s: Step<any, any>, i: number) {
     let msg: string;
-    if (s === undefined) msg = 'step ' + i + ' was undefined. All steps: ' + Json.stringify(steps) + '\n';
-    else if (Type.isArray(s)) msg = 'step ' + i + ' was an array';
+    if (s === undefined) {
+      msg = 'step ' + i + ' was undefined. All steps: ' + Json.stringify(steps) + '\n';
+    } else if (Type.isArray(s)) {
+      msg = 'step ' + i + ' was an array';
+    }
 
     if (msg !== undefined) {
+      // tslint:disable-next-line:no-console
       console.trace(msg, steps);
       throw new Error(msg);
     }
@@ -21,7 +25,7 @@ const assertSteps = function (steps: Step<any, any>[]) {
 };
 
 const callAsync = function (f) {
-  typeof Promise !== "undefined" ? Promise.resolve().then(f) : setTimeout(f, 0);
+  typeof Promise !== 'undefined' ? Promise.resolve().then(f) : setTimeout(f, 0);
 };
 
 const async = function (initial: any, steps: Step<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs?: TestLogs) {
@@ -31,7 +35,9 @@ const async = function (initial: any, steps: Step<any, any>[], onSuccess: NextFn
     if (index < steps.length) {
       const asyncOperation = steps[index];
       // FIX: Make this test elsewhere without creating a circular dependency on Chain
-      if ('runChain' in asyncOperation) return onFailure('You cannot create a pipeline out of chains. Use Chain.asStep to turns chains into steps', logs);
+      if ('runChain' in asyncOperation) {
+        return onFailure('You cannot create a pipeline out of chains. Use Chain.asStep to turns chains into steps', logs);
+      }
       try {
         const nextStep = function (result, newLogs) {
           chain(result, newLogs, index + 1);

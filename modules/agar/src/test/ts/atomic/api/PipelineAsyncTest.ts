@@ -4,9 +4,7 @@ import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 import { Step } from 'ephox/agar/api/Step';
 
-UnitTest.asynctest('PipelineSuite Test', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('PipelineSuite Test', function (success, failure) {
 
   const mutator = function (property, value) {
     return Step.stateful(function (state, next, die) {
@@ -31,4 +29,3 @@ UnitTest.asynctest('PipelineSuite Test', function () {
 
   }, failure);
 });
-

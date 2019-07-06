@@ -106,4 +106,3 @@ UnitTest.asynctest('UiFinderTest', function () {
     ])
   ], function () { teardown(); success(); }, failure);
 });
-
