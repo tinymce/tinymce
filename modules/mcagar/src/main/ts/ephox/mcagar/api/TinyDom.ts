@@ -1,13 +1,13 @@
 import { Struct } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
-var range = Struct.immutableBag([ 'start', 'soffset', 'finish', 'foffset' ], [ ]);
+const range = Struct.immutableBag([ 'start', 'soffset', 'finish', 'foffset' ], [ ]);
 
-var fromDom = function (elm) {
+const fromDom = function (elm) {
   return Element.fromDom(elm);
 };
 
-var fromRange = function (rng) {
+const fromRange = function (rng) {
   return range({
     start: rng.startContainer,
     soffset: rng.startOffset,
@@ -17,6 +17,6 @@ var fromRange = function (rng) {
 };
 
 export default {
-  fromDom: fromDom,
-  fromRange: fromRange
+  fromDom,
+  fromRange
 };

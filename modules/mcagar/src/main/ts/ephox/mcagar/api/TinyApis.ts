@@ -1,63 +1,55 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Cursors } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import TinySelections from '../selection/TinySelections';
-import { Hierarchy } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
+import { Assertions, Chain, Cursors, FocusTools, Step, UiFinder, Waiter } from '@ephox/agar';
+import { Element, Hierarchy, Html } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
+import TinySelections from '../selection/TinySelections';
 
 export interface Presence {
-  [selector:string]: number;
+  [selector: string]: number;
 }
 
 export default function (editor) {
-  var setContent = function (html: string) {
+  const setContent = function (html: string) {
     editor.setContent(html);
   };
 
-  var sSetContent = function (html: string) {
+  const sSetContent = function (html: string) {
     return Step.sync(function () {
       setContent(html);
     });
   };
 
-  var sSetRawContent = function (html: string) {
+  const sSetRawContent = function (html: string) {
     return Step.sync(function () {
       editor.getBody().innerHTML = html;
     });
   };
 
-  var lazyBody = function () {
+  const lazyBody = function () {
     return Element.fromDom(editor.getBody());
   };
 
-  var cNodeChanged = Chain.op(function () {
+  const cNodeChanged = Chain.op(function () {
     editor.nodeChanged();
   });
 
-  var cSetDomSelection = Chain.op(function (range) {
+  const cSetDomSelection = Chain.op(function (range) {
     editor.selection.setRng(range);
   });
 
-  var cSelectElement = Chain.op(function (target: Element) {
+  const cSelectElement = Chain.op(function (target: Element) {
     editor.selection.select(target.dom());
   });
 
-  var sSetSelectionFrom = function (spec) {
-    var path = Cursors.pathFrom(spec);
+  const sSetSelectionFrom = function (spec) {
+    const path = Cursors.pathFrom(spec);
     return sSetSelection(path.startPath(), path.soffset(), path.finishPath(), path.foffset());
   };
 
-  var sSetCursor = function (elementPath: number[], offset: number) {
+  const sSetCursor = function (elementPath: number[], offset: number) {
     return sSetSelection(elementPath, offset, elementPath, offset);
   };
 
-  var sSetSelection = function (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
+  const sSetSelection = function (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
     return Chain.asStep(lazyBody(), [
       TinySelections.cCreateDomSelection(startPath, soffset, finishPath, foffset),
       cSetDomSelection,
@@ -65,19 +57,19 @@ export default function (editor) {
     ]);
   };
 
-  var sSetSetting = function (key: string, value) {
+  const sSetSetting = function (key: string, value) {
     return Step.sync(function () {
       editor.settings[key] = value;
     });
   };
 
-  var sDeleteSetting = function (key: string) {
+  const sDeleteSetting = function (key: string) {
     return Step.sync(function () {
       delete editor.settings[key];
     });
   };
 
-  var sSelect = function (selector: string, path: number[]) {
+  const sSelect = function (selector: string, path: number[]) {
     return Chain.asStep(lazyBody(), [
       UiFinder.cFindIn(selector),
       Cursors.cFollow(path),
@@ -85,25 +77,25 @@ export default function (editor) {
     ]);
   };
 
-  var cGetContent = Chain.mapper(function (input) {
+  const cGetContent = Chain.mapper(function (input) {
     // Technically not mapping value.
     return editor.getContent();
   });
 
-  var sExecCommand = function (command: string, value?) {
+  const sExecCommand = function (command: string, value?) {
     return Step.sync(function () {
       editor.execCommand(command, false, value);
     });
   };
 
-  var sAssertContent = function (expected: string) {
+  const sAssertContent = function (expected: string) {
     return Chain.asStep({}, [
       cGetContent,
       Assertions.cAssertHtml('Checking TinyMCE content', expected)
     ]);
   };
 
-  var sAssertContentPresence = function (expected: Presence) {
+  const sAssertContentPresence = function (expected: Presence) {
     return Assertions.sAssertPresence(
       'Asserting the presence of selectors inside tiny content. Complete list: ' + JSON.stringify(expected) + '\n',
       expected,
@@ -111,7 +103,7 @@ export default function (editor) {
     );
   };
 
-  var sAssertContentStructure = function (expected) {
+  const sAssertContentStructure = function (expected) {
     return Assertions.sAssertStructure(
       'Asserting the structure of tiny content.',
       expected,
@@ -119,38 +111,38 @@ export default function (editor) {
     );
   };
 
-  // var sAssertSelectionFrom = function (expected) {
+  // const sAssertSelectionFrom = function (expected) {
     // TODO
   // };
 
-  var assertPath = function (label: string, root, expPath: number[], expOffset: number, actElement, actOffset: number) {
-    var expected = Cursors.calculateOne(root, expPath);
-    var message = function () {
-      var actual = Element.fromDom(actElement);
-      var actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
+  const assertPath = function (label: string, root, expPath: number[], expOffset: number, actElement, actOffset: number) {
+    const expected = Cursors.calculateOne(root, expPath);
+    const message = function () {
+      const actual = Element.fromDom(actElement);
+      const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
       return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
     };
     Assertions.assertEq('Assert incorrect for ' + label + '.\n' + message(), true, expected.dom() === actElement);
     Assertions.assertEq('Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
   };
 
-  var sAssertSelection = function (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
+  const sAssertSelection = function (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
     return Step.sync(function () {
-      var actual = editor.selection.getRng();
+      const actual = editor.selection.getRng();
       assertPath('start', lazyBody(), startPath, soffset, actual.startContainer, actual.startOffset);
       assertPath('finish', lazyBody(), finishPath, foffset, actual.endContainer, actual.endOffset);
     });
   };
 
-  var sFocus = Step.sync(function () {
+  const sFocus = Step.sync(function () {
     editor.focus();
   });
 
-  var sNodeChanged = Step.sync(function () {
+  const sNodeChanged = Step.sync(function () {
     editor.nodeChanged();
   });
 
-  var sTryAssertFocus = Waiter.sTryUntil(
+  const sTryAssertFocus = Waiter.sTryUntil(
     'Waiting for focus on tinymce editor',
     FocusTools.sIsOnSelector(
       'iframe focus',
@@ -162,25 +154,25 @@ export default function (editor) {
   );
 
   return {
-    sSetContent: sSetContent,
-    cGetContent: cGetContent,
-    sSetRawContent: sSetRawContent,
-    cNodeChanged: cNodeChanged,
+    sSetContent,
+    cGetContent,
+    sSetRawContent,
+    cNodeChanged,
 
-    sAssertContent: sAssertContent,
-    sAssertContentPresence: sAssertContentPresence,
-    sAssertContentStructure: sAssertContentStructure,
-    sSetSelectionFrom: sSetSelectionFrom,
-    sSetSelection: sSetSelection,
-    sSetSetting: sSetSetting,
-    sDeleteSetting: sDeleteSetting,
-    sSetCursor: sSetCursor,
-    sSelect: sSelect,
-    sExecCommand: sExecCommand,
+    sAssertContent,
+    sAssertContentPresence,
+    sAssertContentStructure,
+    sSetSelectionFrom,
+    sSetSelection,
+    sSetSetting,
+    sDeleteSetting,
+    sSetCursor,
+    sSelect,
+    sExecCommand,
     // sAssertSelectionFrom: sAssertSelectionFrom,
-    sAssertSelection: sAssertSelection,
-    sTryAssertFocus: sTryAssertFocus,
-    sFocus: sFocus,
-    sNodeChanged: sNodeChanged
+    sAssertSelection,
+    sTryAssertFocus,
+    sFocus,
+    sNodeChanged
   };
-};
+}
