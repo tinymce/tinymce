@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLLIElement, Node, Range as DomRange, console } from '@ephox/dom-globals';
+import { Element, HTMLLIElement, Node, Range as DomRange } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Compare, Element as SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -203,6 +203,7 @@ const backspaceDeleteFromListToListCaret = function (editor: Editor, isForward: 
           if (outdentOrMerge(entrySets)) {
             outdent(editor, entrySets, bookmark);
           } else {
+            editor.selection.moveToBookmark(bookmark); // remove bookmark, mergeBackward deals with cursor position itself
             mergeBackward(editor, rng, li, otherLi);
           }
         }

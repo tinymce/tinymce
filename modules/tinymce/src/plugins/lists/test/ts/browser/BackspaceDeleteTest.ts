@@ -132,7 +132,8 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteTest', (success, failur
 
     LegacyUnit.equal(editor.getContent(),
       '<ul>' +
-      '<li>ab' +
+      '<li>a</li>' +
+      '<li>b' +
       '<ul>' +
       '<li>c</li>' +
       '</ul>' +
@@ -231,35 +232,6 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteTest', (success, failur
       '<ul>' +
       '<li>ab</li>' +
       '<li>c</li>' +
-      '</ul>'
-    );
-
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
-  });
-
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of start LI in UL inside UL', function (editor) {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' +
-      '<li>a' +
-      '<ul>' +
-      '<li>b</li>' +
-      '<li>c</li>' +
-      '</ul>' +
-      '</li>' +
-      '</ul>'
-    );
-
-    editor.focus();
-    LegacyUnit.setSelection(editor, 'li li', 0);
-    editor.plugins.lists.backspaceDelete();
-
-    LegacyUnit.equal(editor.getContent(),
-      '<ul>' +
-      '<li>ab' +
-      '<ul>' +
-      '<li>c</li>' +
-      '</ul>' +
-      '</li>' +
       '</ul>'
     );
 
