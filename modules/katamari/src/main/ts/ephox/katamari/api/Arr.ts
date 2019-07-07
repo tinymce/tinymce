@@ -203,7 +203,7 @@ export const flatten = <T = any>(xs: ArrayLike<ArrayLike<T> | T[]>): T[] => {
   const r = [];
   for (let i = 0, len = xs.length; i < len; ++i) {
     // Ensure that each value is an array itself
-    if (!Array.prototype.isPrototypeOf(xs[i])) {
+    if (!Type.isArray(xs[i])) {
       throw new Error('Arr.flatten item ' + i + ' was not an array, input: ' + xs);
     }
     push.apply(r, xs[i]);
