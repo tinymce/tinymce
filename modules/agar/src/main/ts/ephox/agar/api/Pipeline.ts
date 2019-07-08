@@ -1,4 +1,3 @@
-/* tslint:disable:no-unimported-promise */
 import { console, setTimeout } from '@ephox/dom-globals';
 import { Arr, Type } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
@@ -25,6 +24,7 @@ const assertSteps = function (steps: Step<any, any>[]) {
 };
 
 const callAsync = function (f) {
+  // tslint:disable-next-line:no-unimported-promise
   typeof Promise !== 'undefined' ? Promise.resolve().then(f) : setTimeout(f, 0);
 };
 
