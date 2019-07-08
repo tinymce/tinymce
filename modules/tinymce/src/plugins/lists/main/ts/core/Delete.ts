@@ -169,8 +169,7 @@ const mergeBackward = function (editor: Editor, rng: DomRange, fromLi: HTMLLIEle
 // If curr depth =< last depth - return false for merge
 // If curr not found - fall back to return false for merge
 const outdentOrMerge = (entrySets: EntrySet[]): boolean => {
-  // entrySets should only ever have one entry for a collapsed selection - which we check below,
-  // so we know that's true for this case.
+  // entrySets should only have one entry for a collapsed selection - which we check below, so we know that's true here
   const entries = entrySets[0].entries;
   return Arr.findIndex(entries, (entry: Entry) => entry.isSelected === true).fold(() => false, (currIdx: number) => entries[currIdx].depth > entries[currIdx - 1].depth);
 };
@@ -204,8 +203,8 @@ const backspaceDeleteFromListToListCaret = function (editor: Editor, isForward: 
         } else {
           const bookmark = editor.selection.getBookmark();
           const lists = Arr.map(Selection.getSelectedListRoots(editor), SugarElement.fromDom);
-          // PARSELISTS MUTATES THE SELECTION
-          // Have to grab the bookmark before this or the cursor is placed incorrectly after outdent
+          // ENTRYSETS MUST CONTAIN THE BOOKMARK SPAN
+          // Have to grab the bookmark before running parseLists or the cursor is placed incorrectly after outdent
           const entrySets = parseLists(lists, getItemSelection(editor));
 
           if (outdentOrMerge(entrySets)) {
