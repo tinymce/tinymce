@@ -57,18 +57,13 @@ const hasSection = function (sectionResult, name) {
   return sectionResult.sections().hasOwnProperty(name);
 };
 
-const isReducedTheme = function (sectionResult, name, theme) {
+const isSectionTheme = function (sectionResult, name, theme) {
   const section = sectionResult.sections();
   return hasSection(sectionResult, name) && section[name].theme === theme;
 };
 
 const getSectionConfig = function (sectionResult, name) {
-  if (hasSection(sectionResult, name)) {
-    const section = sectionResult.sections();
-    return section[name];
-  } else {
-    return {};
-  }
+  return hasSection(sectionResult, name) ? sectionResult.sections()[name] : {};
 };
 
 const getDefaultSettings = function (id, documentBaseUrl, editor: Editor): RawEditorSettings {
@@ -124,7 +119,7 @@ const processPlugins = function (isTouchDevice: boolean, sectionResult, defaultO
   const mobileConfig = getSectionConfig(sectionResult, 'mobile');
   const mobilePlugins = mobileConfig.plugins ? normalizePlugins(mobileConfig.plugins) : plugins;
 
-  const platformPlugins = isReducedTheme(sectionResult, 'mobile', 'mobile') ? filterMobilePlugins(plugins) : mobilePlugins;
+  const platformPlugins = isSectionTheme(sectionResult, 'mobile', 'mobile') ? filterMobilePlugins(plugins) : mobilePlugins;
   const combinedPlugins = combinePlugins(forcedPlugins, platformPlugins);
 
   return Tools.extend(settings, {

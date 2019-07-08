@@ -103,8 +103,9 @@ export const renderButton = (spec: ButtonSpec, action, providersBackstage: UiFac
   };
 
   const classes = [
-    ...spec.primary ? ['tox-button'] : ['tox-button', 'tox-button--secondary'],
-    ...icon.isSome() ? ['tox-button--icon'] : []
+    ...!spec.primary && !spec.borderless ? ['tox-button', 'tox-button--secondary'] : ['tox-button'],
+    ...icon.isSome() ? ['tox-button--icon'] : [],
+    ...spec.borderless ? ['tox-button--naked'] : []
   ];
 
   const dom = {
@@ -137,7 +138,11 @@ const getAction = (name: string, buttonType) => {
 
 export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const action = getAction(spec.name, buttonType);
-  return renderButton(spec, action, providersBackstage, [ ]);
+  const buttonSpec = {
+    ...spec,
+    borderless: false
+  };
+  return renderButton(buttonSpec, action, providersBackstage, [ ]);
 };
 
 export const renderDialogButton = (spec: ButtonSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {

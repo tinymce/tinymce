@@ -17,6 +17,7 @@ import { Table, TableApi } from './Table';
 import { TextArea, TextAreaApi } from './Textarea';
 import { UrlInput, UrlInputApi } from './UrlInput';
 import { HtmlPanel, HtmlPanelApi } from './HtmlPanel';
+import { Panel, PanelApi } from './Panel';
 
 export type BodyComponentApi
   = BarApi
@@ -37,7 +38,8 @@ export type BodyComponentApi
   | AlertBannerApi
   | CollectionApi
   | LabelApi
-  | TableApi;
+  | TableApi
+  | PanelApi;
 
 export type BodyComponent
   = Bar
@@ -58,4 +60,5 @@ export type BodyComponent
   | AlertBanner
   | Collection
   | Label
-  | Table;
+  | Table
+  | Panel;

@@ -26,7 +26,7 @@ const renderBodyPanel = (spec: BodyPanelSpec, backstage: UiFactoryBackstage): Si
       return {
         dom: {
           tag: 'div',
-          classes: [ 'tox-form' ]
+          classes: [ 'tox-form' ].concat(spec.classes)
         },
         // All of the items passed through the form need to be put through the interpreter
         // with their form part preserved.

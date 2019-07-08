@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { KeyboardEvent, console } from '@ephox/dom-globals';
+import { KeyboardEvent } from '@ephox/dom-globals';
 import InsertNewLine from '../newline/InsertNewLine';
 import VK from '../api/util/VK';
 import Editor from '../api/Editor';
@@ -14,6 +14,7 @@ import { EditorEvent } from '../api/util/EventDispatcher';
 import { PlatformDetection } from '@ephox/sand';
 
 const browser = PlatformDetection.detect().browser;
+const isSafari = browser.isSafari();
 
 const endTypingLevel = function (undoManager: UndoManager) {
   if (undoManager.typing) {
@@ -23,12 +24,6 @@ const endTypingLevel = function (undoManager: UndoManager) {
 };
 
 const handleEnterKeyEvent = function (editor: Editor, event: EditorEvent<KeyboardEvent>) {
-  if (event.isDefaultPrevented()) {
-    return;
-  }
-
-  event.preventDefault();
-
   endTypingLevel(editor.undoManager);
   editor.undoManager.transact(function () {
     if (editor.selection.isCollapsed() === false) {
@@ -42,19 +37,28 @@ const handleEnterKeyEvent = function (editor: Editor, event: EditorEvent<Keyboar
 const handleEnter = function (editor: Editor) {
   return function (event: EditorEvent<KeyboardEvent>) {
     if (event.keyCode === VK.ENTER) {
+
+      if (event.isDefaultPrevented()) {
+        return;
+      }
+
+      if (!isSafari) {
+        event.preventDefault();
+      }
       handleEnterKeyEvent(editor, event);
     }
   };
 };
 
 const setup = function (editor: Editor) {
-  if (browser.isSafari()) {
-    editor.getBody().addEventListener('beforeinput', handleEnter(editor));
+  const handle = handleEnter(editor);
+  if (isSafari === true) {
+    editor.getBody().addEventListener('beforeinput', handle);
     editor.on('remove', function () {
-      editor.getBody().removeEventListener('beforeinput', handleEnter(editor));
+      editor.getBody().removeEventListener('beforeinput', handle);
     });
   } else {
-    editor.on('keydown', handleEnter(editor));
+    editor.on('keydown', handle);
   }
 };
 
