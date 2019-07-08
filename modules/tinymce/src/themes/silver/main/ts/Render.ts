@@ -191,11 +191,7 @@ const setup = (editor: Editor): RenderInfo => {
   const partSocket: AlloySpec = OuterContainer.parts().socket({
     dom: {
       tag: 'div',
-      classes: [ 'tox-edit-area' ],
-      styles: {
-        'overflow': 'scroll',
-        '-webkit-overflow-scrolling': 'touch'
-      }
+      classes: [ 'tox-edit-area' ]
     }
   });
 
@@ -391,7 +387,6 @@ const setup = (editor: Editor): RenderInfo => {
 
     const elm = editor.getElement();
     const height = setEditorSize(elm);
-
     const uiComponents: RenderUiComponents = { mothership, uiMothership, outerContainer };
     const args: RenderArgs = { targetNode: elm, height };
     return mode.render(editor, uiComponents, rawUiConfig, backstage, args);
