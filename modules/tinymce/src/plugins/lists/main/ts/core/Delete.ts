@@ -7,7 +7,7 @@
 
 import { Element, HTMLLIElement, Node, Range as DomRange } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Compare, Element as SugarElement } from '@ephox/sugar';
+import { Compare, Element as SugarElement, Remove, SelectorFind, PredicateFind } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
@@ -155,6 +155,14 @@ const mergeBackward = function (editor: Editor, rng: DomRange, fromLi: HTMLLIEle
   mergeLiElements(editor.dom, fromLi, toLi);
   const resolvedBookmark = Bookmark.resolveBookmark(bookmark);
   editor.selection.setRng(resolvedBookmark);
+
+  // Adding a bookmark earlier in backspaceDeleteFromListToListCaret may have left behind a bogus br
+  PredicateFind.descendant(SugarElement.fromDom(toLi), (e) => NodeType.isBogusBr(editor.dom, e.dom()))
+    .each((bookmarkBogus) => {
+      if (toLi.childNodes.length > 1) {
+        Remove.remove(bookmarkBogus);
+      }
+    });
 };
 
 // If curr depth > last depth - return true for outdent

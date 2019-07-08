@@ -1,7 +1,6 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
-
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver//Theme';
 
@@ -382,7 +381,7 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteTest', (success, failur
     LegacyUnit.setSelection(editor, 'ul ul ul li', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(editor.getContent(), '<ul><li>1<ul><li>2</li></ul></li><li>3</li></ul>');
+    LegacyUnit.equal(editor.getContent(), '<ul><li>1<ul><li></li><li>2</li></ul></li><li>3</li></ul>');
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
@@ -871,7 +870,11 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteTest', (success, failur
     LegacyUnit.equal(
       editor.getContent(),
       '<ol>' +
-        '<li>ab</li>' +
+        '<li>a' +
+          '<ol>' +
+            '<li>b</li>' +
+          '</ol>' +
+        '</li>' +
       '</ol>'
     );
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
@@ -927,15 +930,20 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteTest', (success, failur
     editor.plugins.lists.backspaceDelete();
 
     LegacyUnit.equal(editor.getContent(),
+    '<ul>' +
+    '<li>item 1</li>' +
+    '<li>item 2</li>' +
+    '<li>item 2.1' +
       '<ul>' +
-        '<li>item 1</li>' +
-        '<li>item 2item 2.1' +
+        '<li style="list-style-type: none;">' +
           '<ul>' +
             '<li>item 2.2</li>' +
           '</ul>' +
         '</li>' +
-        '<li>item 3</li>' +
-      '</ul>'
+      '</ul>' +
+    '</li>' +
+    '<li>item 3</li>' +
+  '</ul>'
     );
 
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
