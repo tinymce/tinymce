@@ -1,20 +1,17 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { console } from '@ephox/dom-globals';
 import { Arr, Fun, Result } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
+import { Element } from '@ephox/sugar';
+import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import Fitment from 'ephox/snooker/test/Fitment';
 import TableMerge from 'ephox/snooker/test/TableMerge';
-import { Element } from '@ephox/sugar';
-import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 
 UnitTest.test('FitmentIVTest', function () {
-  const browser = PlatformDetection.detect().browser;
-
   const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
 
-  // Note: cycles 500, min 1, max 200 ~ 22secs (on nodejs, anyway)
-  const CYCLES = browser.isIE() || browser.isEdge() || browser.isFirefox() ? 1 : 100;
+  // Spend 5 seconds running as many iterations as we can (there are three cycles, so 15s total)
+  const CYCLE_TIME = 5000;
   const GRID_MIN = 1;   // 1x1 grid is the min
   const GRID_MAX = 200;
 
@@ -55,12 +52,16 @@ UnitTest.test('FitmentIVTest', function () {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
-  const inVariantRunner = function <T extends { test: () => void }>(label: string, mvTest: () => T, times: number) {
-    for (let i = 1; i <= times; i++) {
+  const inVariantRunner = function <T extends { test: () => void }>(label: string, mvTest: () => T, timelimit: number): number {
+    let times = 0;
+    const startTime = Date.now();
+    while (Date.now() - startTime < timelimit) {
       const testSpec = mvTest();
       // console.log('testing:', label, i + ' / ' + times, ' params: ' + JSON.stringify(testSpec.params));
       testSpec.test();
+      times++;
     }
+    return times;
   };
 
   const gridGen = function (isNew: boolean, prefix?: string) {
@@ -219,11 +220,11 @@ UnitTest.test('FitmentIVTest', function () {
   };
 
   /* tslint:disable:no-console */
-  console.log('running ' + CYCLES + ' measure tests...');
-  inVariantRunner('measure', measureIVTest, CYCLES);
-  console.log('running ' + CYCLES + ' tailor tests...');
-  inVariantRunner('tailor', tailorTestIVTest, CYCLES);
-  console.log('running ' + CYCLES + ' merge tests...');
-  inVariantRunner('merge', mergeGridsIVTest, CYCLES);
+  const measureCycles = inVariantRunner('measure', measureIVTest, CYCLE_TIME);
+  console.log(`ran ${measureCycles} measure tests...`);
+  const tailorCycles = inVariantRunner('tailor', tailorTestIVTest, CYCLE_TIME);
+  console.log('ran ' + tailorCycles + ' tailor tests...');
+  const mergeCycles = inVariantRunner('merge', mergeGridsIVTest, CYCLE_TIME);
+  console.log('ran ' + mergeCycles + ' merge tests...');
   console.log('FitmentIVTest done.');
 });
