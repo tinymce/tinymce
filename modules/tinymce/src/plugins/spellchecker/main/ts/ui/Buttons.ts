@@ -5,7 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Merger } from '@ephox/katamari';
+import { Menu, Toolbar } from '@ephox/bridge';
+import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
@@ -45,11 +46,11 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
     Actions.spellcheck(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
   };
 
-  const buttonArgs = {
+  const buttonArgs: Toolbar.ToolbarToggleButtonApi = {
     tooltip: 'Spellcheck',
     onAction: startSpellchecking,
     icon: 'spell-check',
-    onSetup : (buttonApi) => {
+    onSetup: (buttonApi) => {
       const setButtonState = () => {
         buttonApi.setActive(startedState.get());
       };
@@ -57,33 +58,35 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
       return () => {
         editor.off(spellcheckerEvents, setButtonState);
       };
+    }
+  };
+
+  const splitButtonArgs: Toolbar.ToolbarSplitButtonApi = {
+    ...buttonArgs,
+    type : 'splitbutton',
+    select : (value) => {
+      return value === currentLanguageState.get();
     },
+    fetch : (callback) => {
+      const items = Tools.map(languageMenuItems, (languageItem): Menu.ChoiceMenuItemApi => {
+        return {
+          type: 'choiceitem',
+          value: languageItem.data,
+          text: languageItem.text
+        };
+      });
+      callback(items);
+    },
+    onItemAction: (splitButtonApi, value) => {
+      currentLanguageState.set(value);
+    }
   };
 
-  const getSplitButtonArgs = () => {
-    return {
-      type : 'splitbutton',
-      menu : languageMenuItems,
-      select : (value) => {
-        return value === currentLanguageState.get();
-      },
-      fetch : (callback) => {
-        const items = Tools.map(languageMenuItems, (languageItem) => {
-          return {
-            type: 'choiceitem',
-            value: languageItem.data,
-            text: languageItem.text
-          };
-        });
-        callback(items);
-      },
-      onItemAction: (splitButtonApi, value) => {
-        currentLanguageState.set(value);
-      }
-    };
-  };
-
-  editor.ui.registry.addButton('spellchecker', Merger.merge(buttonArgs, languageMenuItems.length > 1 ? getSplitButtonArgs() : {type: 'togglebutton'}));
+  if (languageMenuItems.length > 1) {
+    editor.ui.registry.addSplitButton('spellchecker', splitButtonArgs);
+  } else {
+    editor.ui.registry.addToggleButton('spellchecker', buttonArgs);
+  }
 
   editor.ui.registry.addToggleMenuItem('spellchecker', {
     text: 'Spellcheck',
