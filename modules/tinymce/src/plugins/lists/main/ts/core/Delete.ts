@@ -7,7 +7,7 @@
 
 import { Element, HTMLLIElement, Node, Range as DomRange } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Compare, Element as SugarElement, Remove, SelectorFind, PredicateFind } from '@ephox/sugar';
+import { Compare, Element as SugarElement, PredicateFind, Remove } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
