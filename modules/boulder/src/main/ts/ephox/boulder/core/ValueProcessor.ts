@@ -141,6 +141,26 @@ const cExtract = function (path, obj, fields, strength) {
   return ResultCombine.consolidateObj(results, {});
 };
 
+const valueThunk = (getDelegate: () => Processor): Processor => {
+  const extract = function (path, strength, val) {
+    return getDelegate().extract(path, strength, val);
+  };
+
+  const toString = function () {
+    return getDelegate().toString();
+  };
+
+  const toDsl = function () {
+    return getDelegate().toDsl();
+  };
+
+  return {
+    extract,
+    toString,
+    toDsl
+  };
+};
+
 const value = function (validator: ValueValidator): Processor {
   const extract = function (path, strength, val) {
     return SimpleResult.bindError(
@@ -346,6 +366,7 @@ const field = adt.field;
 export {
   anyValue,
   value,
+  valueThunk,
 
   objOf,
   objOfOnly,
