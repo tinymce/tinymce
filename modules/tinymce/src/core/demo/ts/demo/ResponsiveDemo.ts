@@ -1,4 +1,3 @@
-import { console } from '@ephox/dom-globals';
 import { Element } from '@ephox/sugar';
 
 declare let tinymce: any;
@@ -10,7 +9,6 @@ export default function () {
       icon: 'comment',
       tooltip: 'Tooltip for ' + name,
       onSetup: (api) => {
-        console.log('onSetup ' + name);
         const box = Element.fromHtml('<div style="width: ' + width + 'px; background: ' + background + ';"></div>');
         api.element().appendChild(box.dom());
         return () => {
@@ -18,10 +16,10 @@ export default function () {
         };
       },
       onShow: (api) => {
-        console.log('onShow ' + name);
+
       },
       onHide: (api) => {
-        console.log('onHide ' + name);
+
       },
     });
   };

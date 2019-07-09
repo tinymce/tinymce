@@ -51,15 +51,8 @@ const handleEnter = function (editor: Editor) {
 };
 
 const setup = function (editor: Editor) {
-  const handle = handleEnter(editor);
-  if (isSafari === true) {
-    editor.getBody().addEventListener('beforeinput', handle);
-    editor.on('remove', function () {
-      editor.getBody().removeEventListener('beforeinput', handle);
-    });
-  } else {
-    editor.on('keydown', handle);
-  }
+  const eventType = isSafari === true ? 'beforeinput' : 'keydown';
+  editor.on(eventType, handleEnter(editor));
 };
 
 export default {
