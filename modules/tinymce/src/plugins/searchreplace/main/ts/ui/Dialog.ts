@@ -83,21 +83,44 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     matchcase: false,
     wholewords: false
   };
-  editor.windowManager.open<DialogData>({
+
+  const spec = {
     title: 'Find and Replace',
-    size: 'normal',
+    // size: 'normal',
     body: {
       type: 'panel',
       items: [
         {
-          type: 'input',
-          name: 'findtext',
-          label: 'Find'
+          type: 'panel',
+          classes: ['tox-form__controls-h-stack'],
+          items: [
+            {
+              type: 'input',
+              name: 'findtext',
+              placeholder: 'Find'
+            },
+            {
+              type: 'button',
+              name: 'prev',
+              text: 'Previous',
+              align: 'end',
+              icon: 'action-prev',
+              disabled: true,
+            },
+            {
+              type: 'button',
+              name: 'next',
+              text: 'Next',
+              align: 'end',
+              icon: 'action-next',
+              disabled: true,
+            }
+          ]
         },
         {
           type: 'input',
           name: 'replacetext',
-          label: 'Replace with'
+          placeholder: 'Replace with'
         },
         {
           type: 'grid',
@@ -122,39 +145,18 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
         type: 'custom',
         name: 'find',
         text: 'Find',
-        align: 'start',
         primary: true
       },
       {
         type: 'custom',
         name: 'replace',
         text: 'Replace',
-        align: 'start',
         disabled: true,
       },
       {
         type: 'custom',
         name: 'replaceall',
         text: 'Replace All',
-        align: 'start',
-        disabled: true,
-      },
-      {
-        type: 'custom',
-        name: 'prev',
-        text: 'Previous',
-        align: 'end',
-        // TODO TINY-3598: Use css to transform the icons when dir=rtl instead of swapping them
-        icon: I18n.isRtl() ? 'arrow-right' : 'arrow-left',
-        disabled: true,
-      },
-      {
-        type: 'custom',
-        name: 'next',
-        text: 'Next',
-        align: 'end',
-        // TODO TINY-3598: Use css to transform the icons when dir=rtl instead of swapping them
-        icon: I18n.isRtl() ? 'arrow-left' : 'arrow-right',
         disabled: true,
       }
     ],
@@ -199,7 +201,9 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
       Actions.done(editor, currentSearchState);
       editor.undoManager.add();
     }
-  });
+  } as any; // TODO: fix the types
+
+  editor.windowManager.open(spec, {inline: 'toolbar'});
 };
 
 export default {
