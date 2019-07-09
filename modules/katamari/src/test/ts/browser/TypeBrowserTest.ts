@@ -1,6 +1,6 @@
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
-import { Type } from '../../../main/ts/ephox/katamari/api/Main';
+import { Type } from 'ephox/katamari/api/Main';
 
 UnitTest.asynctest('Type cross window test', (success, failure) => {
 

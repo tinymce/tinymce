@@ -25,7 +25,7 @@ export interface Option<T> {
   equals_: <T2> (opt: Option<T2>, equality: (a: T, b: T2) => boolean) => boolean;
   toArray: () => T[];
   toString: () => string;
-};
+}
 
 const never: () => false = Fun.never;
 const always: () => true = Fun.always;
@@ -98,17 +98,17 @@ const NONE: Option<any> = (function () {
   const call = function (thunk) { return thunk(); };
   const id = function (n) { return n; };
   const noop = function () { };
-  const nul = function() { return null; };
-  const undef = function() { return undefined; };
+  const nul = function () { return null; };
+  const undef = function () { return undefined; };
 
   const me: Option<any> = {
-    fold: function (n, s) { return n(); },
+    fold (n, s) { return n(); },
     is: never,
     isSome: never,
     isNone: always,
     getOr: id,
     getOrThunk: call,
-    getOrDie: function (msg) {
+    getOrDie (msg) {
       throw new Error(msg || 'error: getOrDie called on none.');
     },
     getOrNull: nul,
@@ -125,13 +125,14 @@ const NONE: Option<any> = (function () {
     filter: none,
     equals: eq,
     equals_: eq,
-    toArray: function () { return []; },
+    toArray () { return []; },
     toString: Fun.constant('none()')
   };
-  if (Object.freeze) Object.freeze(me);
+  if (Object.freeze) {
+    Object.freeze(me);
+  }
   return me;
 })();
-
 
 /** some :: a -> Option a */
 const some = function <T> (a: T): Option<T> {
@@ -153,8 +154,8 @@ const some = function <T> (a: T): Option<T> {
   };
 
   const me: Option<T> = {
-    fold: function <T2> (n: () => T2, s: (v: T) => T2) { return s(a); },
-    is: function (v: T) { return a === v; },
+    fold<T2> (n: () => T2, s: (v: T) => T2) { return s(a); },
+    is (v: T) { return a === v; },
     isSome: always,
     isNone: never,
     getOr: constant_a,
@@ -164,35 +165,35 @@ const some = function <T> (a: T): Option<T> {
     getOrUndefined: constant_a,
     or: self,
     orThunk: self,
-    map: map,
-    ap: function <T2> (optfab: Option<(a: T) => T2>) {
-      return optfab.fold(<() => Option<T2>>none, function(fab) {
+    map,
+    ap<T2> (optfab: Option<(a: T) => T2>) {
+      return optfab.fold(<() => Option<T2>> none, function (fab) {
         return some(fab(a));
       });
     },
-    each: function (f: (value: T) => void) {
+    each (f: (value: T) => void) {
       f(a);
     },
-    bind: bind,
-    flatten: <any>constant_a,
+    bind,
+    flatten: <any> constant_a,
     exists: bind,
     forall: bind,
-    filter: function (f: (value: T) => boolean) {
-      return f(a) ? me : <Option<T>>NONE;
+    filter (f: (value: T) => boolean) {
+      return f(a) ? me : <Option<T>> NONE;
     },
-    equals: function (o: Option<T>) {
+    equals (o: Option<T>) {
       return o.is(a);
     },
-    equals_: function <T2> (o: Option<T2>, elementEq: (a: T, b: T2) => boolean) {
+    equals_<T2> (o: Option<T2>, elementEq: (a: T, b: T2) => boolean) {
       return o.fold(
         never,
         function (b) { return elementEq(a, b); }
       );
     },
-    toArray: function () {
+    toArray () {
       return [a];
     },
-    toString: function () {
+    toString () {
       return 'some(' + a + ')';
     }
   };
@@ -205,7 +206,7 @@ const from = function <T> (value: T | undefined | null): Option<NonNullable<T>> 
 };
 
 export const Option = {
-  some: some,
-  none: none,
-  from: from
+  some,
+  none,
+  from
 };

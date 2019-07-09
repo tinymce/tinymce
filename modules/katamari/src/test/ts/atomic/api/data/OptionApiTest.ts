@@ -1,7 +1,7 @@
 import { Option } from 'ephox/katamari/api/Option';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('OptionApiTest', function() {
+UnitTest.test('OptionApiTest', function () {
   const expectedApi = [
     'fold',
     'is',
@@ -51,4 +51,3 @@ UnitTest.test('OptionApiTest', function() {
   checkApi(Option.none());
   checkApi(Option.some('test'));
 });
-

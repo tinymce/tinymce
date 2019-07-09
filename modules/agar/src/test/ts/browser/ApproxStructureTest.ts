@@ -21,9 +21,9 @@ UnitTest.asynctest('ApproxStructureTest', function (success, failure) {
   check(ApproxStructure.build(function (s, str, arr) {
     return s.element('div', {
       attrs: {
-        selected: str.is('double'),
-        car: str.none('no car attribute'),
-        "data-key": str.contains('test')
+        'selected': str.is('double'),
+        'car': str.none('no car attribute'),
+        'data-key': str.contains('test')
       },
       classes: [
         arr.has('test1'),
@@ -61,7 +61,7 @@ UnitTest.asynctest('ApproxStructureTest', function (success, failure) {
 
   check(ApproxStructure.fromHtml(html), html);
 
-  check(ApproxStructure.build(function(s, str, arr) {
+  check(ApproxStructure.build(function (s, str, arr) {
     return s.element('div', {
       children: [
         s.element('div', {
@@ -74,7 +74,7 @@ UnitTest.asynctest('ApproxStructureTest', function (success, failure) {
     });
   }), html);
 
-  const struct1 = ApproxStructure.build(function(s, str, arr) {
+  const struct1 = ApproxStructure.build(function (s, str, arr) {
     return s.either([
       s.element('span', {
         classes: [
@@ -94,7 +94,7 @@ UnitTest.asynctest('ApproxStructureTest', function (success, failure) {
   check(struct1, '<span class="hello"></span>');
   check(struct1, '<div class="fizzbuzz"></span>');
 
-  const struct2 = ApproxStructure.build(function(s, str, arr) {
+  const struct2 = ApproxStructure.build(function (s, str, arr) {
     return s.element('div', {
       children: [
         s.oneOrMore(s.element('span', {
@@ -109,7 +109,7 @@ UnitTest.asynctest('ApproxStructureTest', function (success, failure) {
           ]
         }))
       ]
-    })
+    });
   });
 
   check(struct2, '<div><span class="hello"></span><div></div></div>');
@@ -123,23 +123,22 @@ UnitTest.asynctest('ApproxStructureTest', function (success, failure) {
     Element.fromText('world')
   ]);
 
-  Assertions.assertStructure('Test', ApproxStructure.build(function(s, str, arr) {
+  Assertions.assertStructure('Test', ApproxStructure.build(function (s, str, arr) {
     return s.element('div', {
       children: [
         s.text(str.is('hello world'), true)
       ]
-    })
+    });
   }), container);
 
-  Assertions.assertStructure('Test', ApproxStructure.build(function(s, str, arr) {
+  Assertions.assertStructure('Test', ApproxStructure.build(function (s, str, arr) {
     return s.element('div', {
       children: [
         s.text(str.is('hello'), false),
         s.text(str.is(' world'), true)
       ]
-    })
+    });
   }), container);
 
   success();
 });
-

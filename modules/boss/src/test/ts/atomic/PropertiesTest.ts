@@ -4,7 +4,7 @@ import { TextGene } from 'ephox/boss/api/TextGene';
 import Properties from 'ephox/boss/mutant/Properties';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('PropertiesTest', function() {
+UnitTest.test('PropertiesTest', function () {
   const g = Gene('root', 'root', []);
   const t = TextGene('-gene-', 'post-image text');
   const c = CommentGene('-comment-', 'comment');
@@ -25,4 +25,3 @@ UnitTest.test('PropertiesTest', function() {
   check(false, t, Properties.isComment);
   check(true,  c, Properties.isComment);
 });
-

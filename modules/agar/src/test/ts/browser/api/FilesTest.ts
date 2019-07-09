@@ -29,7 +29,7 @@ UnitTest.asynctest('FilesTest', (success, failure) => {
               die(e);
             }
           }
-        )
+        );
       });
     }))
   ], () => success(), failure);

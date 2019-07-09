@@ -1,6 +1,6 @@
-import { Fun, Id, Option } from "@ephox/katamari";
-import { File, DataTransferItem, DataTransfer } from "@ephox/dom-globals";
-import { isInProtectedMode } from "./Mode";
+import { Fun, Id, Option } from '@ephox/katamari';
+import { File, DataTransferItem, DataTransfer } from '@ephox/dom-globals';
+import { isInProtectedMode } from './Mode';
 
 const dataId = Id.generate('data');
 

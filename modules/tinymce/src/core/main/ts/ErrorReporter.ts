@@ -31,6 +31,7 @@ const uploadError = (editor: Editor, message: string) => {
 };
 
 const logError = (msg: string) => {
+  // tslint:disable-next-line:no-console
   console.error(msg);
 };
 

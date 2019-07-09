@@ -4,7 +4,7 @@ import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ArrEqualTest', function() {
+UnitTest.test('ArrEqualTest', function () {
   const checkHelper = function (expected, a1, a2) {
     const actual = Arr.equal(a1, a2);
     assert.eq(expected, actual);
@@ -82,4 +82,3 @@ UnitTest.test('ArrEqualTest', function() {
     }
   );
 });
-

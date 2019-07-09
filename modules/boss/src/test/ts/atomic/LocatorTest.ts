@@ -5,7 +5,7 @@ import Creator from 'ephox/boss/mutant/Creator';
 import Locator from 'ephox/boss/mutant/Locator';
 import Tracks from 'ephox/boss/mutant/Tracks';
 
-UnitTest.test('LocatorTest', function() {
+UnitTest.test('LocatorTest', function () {
   const family = Tracks.track(
     Gene('A', '.', [
       Gene('B', '.'),
@@ -24,4 +24,3 @@ UnitTest.test('LocatorTest', function() {
   assert.eq(false, Locator.byItem(family, Locator.byId(family, '?_cattle').getOrDie()).isNone());
   assert.eq(true, Locator.byId(family, 'Z').isNone());
 });
-

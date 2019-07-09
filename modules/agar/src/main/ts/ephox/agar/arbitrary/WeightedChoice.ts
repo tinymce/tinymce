@@ -26,7 +26,7 @@ const choose = function <T extends WeightedItem>(candidates: T[]) {
       total: newTotal,
       list: rest.list.concat([merged])
     };
-  }, { list: <(T & AccWeightItem)[]>[], total: 0 });
+  }, { list: <(T & AccWeightItem)[]> [], total: 0 });
 
   return weighted(result.list, result.total);
 };
@@ -48,5 +48,5 @@ const generator = function <T extends WeightedItem>(candidates: T[]) {
 };
 
 export const WeightedChoice = {
-  generator: generator
+  generator
 };

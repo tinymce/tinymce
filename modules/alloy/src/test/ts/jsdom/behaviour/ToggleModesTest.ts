@@ -1,3 +1,4 @@
+/* tslint:disable:no-unimported-promise */
 /* global domtest */
 
 import { UnitTest } from '@ephox/bedrock';

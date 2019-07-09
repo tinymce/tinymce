@@ -2,7 +2,7 @@ import * as Strings from 'ephox/katamari/api/Strings';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('trim', function() {
+UnitTest.test('trim', function () {
   function check(expectedL, expectedR, expected, input) {
     assert.eq(expected, Strings.trim(input));
     assert.eq(expectedL, Strings.lTrim(input));
@@ -75,4 +75,3 @@ UnitTest.test('trim', function() {
     }
   );
 });
-

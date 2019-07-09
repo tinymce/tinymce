@@ -6,7 +6,9 @@ import * as BagUtils from '../util/BagUtils';
 
 export const MixedBag = function <T = {[key: string]: () => any}> (required: string[], optional: string[]): (obj: {}) => T {
   const everything = required.concat(optional);
-  if (everything.length === 0) throw new Error('You must specify at least one required or optional field.');
+  if (everything.length === 0) {
+    throw new Error('You must specify at least one required or optional field.');
+  }
 
   BagUtils.validateStrArr('required', required);
   BagUtils.validateStrArr('optional', optional);
@@ -21,13 +23,17 @@ export const MixedBag = function <T = {[key: string]: () => any}> (required: str
       return Arr.contains(keys, req);
     });
 
-    if (! allReqd) BagUtils.reqMessage(required, keys);
+    if (! allReqd) {
+      BagUtils.reqMessage(required, keys);
+    }
 
     const unsupported = Arr.filter(keys, function (key) {
       return !Arr.contains(everything, key);
     });
 
-    if (unsupported.length > 0) BagUtils.unsuppMessage(unsupported);
+    if (unsupported.length > 0) {
+      BagUtils.unsuppMessage(unsupported);
+    }
 
     const r: {[key: string]: () => any} = {};
     Arr.each(required, function (req) {
@@ -35,9 +41,9 @@ export const MixedBag = function <T = {[key: string]: () => any}> (required: str
     });
 
     Arr.each(optional, function (opt) {
-      r[opt] = Fun.constant(Object.prototype.hasOwnProperty.call(obj, opt) ? Option.some(obj[opt]): Option.none());
+      r[opt] = Fun.constant(Object.prototype.hasOwnProperty.call(obj, opt) ? Option.some(obj[opt]) : Option.none());
     });
 
-    return <any>r;
+    return <any> r;
   };
 };

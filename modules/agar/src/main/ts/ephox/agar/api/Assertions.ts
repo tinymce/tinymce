@@ -19,9 +19,9 @@ const toStep = function <U extends any[]> (method: (...args: U) => void) {
   };
 };
 
-const toChain = function <B,C> (method: (label: string, expected: B, actual: C) => void) {
+const toChain = function <B, C> (method: (label: string, expected: B, actual: C) => void) {
   return function (label: string, expected: B) {
-    return Chain.op<C>(function(actual: C) {
+    return Chain.op<C>(function (actual: C) {
       method.call(undefined, label, expected, actual);
     });
   };
@@ -32,11 +32,11 @@ const textError = function (label: string, expected: string, actual: string) {
   const err = new Error(label);
   return ({
     diff: {
-      expected: expected,
-      actual: actual,
+      expected,
+      actual,
       comparison: Differ.htmlDiff(expected, actual)
     },
-    label: label,
+    label,
     stack: err.stack,
     name: 'HtmlAssertion',
     message: err.message
@@ -44,7 +44,9 @@ const textError = function (label: string, expected: string, actual: string) {
 };
 
 const assertHtml = function (label: string, expected: string, actual: string) {
-  if (expected !== actual) throw textError(label, expected, actual);
+  if (expected !== actual) {
+    throw textError(label, expected, actual);
+  }
 };
 
 const assertStructure = function (label: string, expected: StructAssert, container: Element) {
@@ -85,7 +87,7 @@ const sAssertHtml = toStep(assertHtml);
 const sAssertPresence = toStep(assertPresence);
 const sAssertStructure = toStep(assertStructure);
 
-const cAssertEq: <T> (label: string, expected: T) => Chain<T,T> = toChain(assertEq);
+const cAssertEq: <T> (label: string, expected: T) => Chain<T, T> = toChain(assertEq);
 const cAssertDomEq = toChain(assertDomEq);
 const cAssertHtml = toChain(assertHtml);
 const cAssertPresence = toChain(assertPresence);

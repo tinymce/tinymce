@@ -4,8 +4,6 @@ import { Attr, Compare, Css, Element, Insert, InsertAll, Node, PredicateFilter, 
 import TagBoundaries from '../common/TagBoundaries';
 import { Universe } from './Universe';
 
-
-
 export default function (): Universe<Element, Document> {
   const clone = function (element: Element) {
     return Element.fromDom((element.dom() as DomNode).cloneNode(false));
@@ -13,16 +11,22 @@ export default function (): Universe<Element, Document> {
 
   const document = function (element: Element) {
     return (element.dom() as DomNode).ownerDocument;
-  }
+  };
 
   const isBoundary = function (element: Element) {
-    if (!Node.isElement(element)) return false;
-    if (Node.name(element) === 'body') return true;
+    if (!Node.isElement(element)) {
+      return false;
+    }
+    if (Node.name(element) === 'body') {
+      return true;
+    }
     return Arr.contains(TagBoundaries, Node.name(element));
   };
 
   const isEmptyTag = function (element: Element) {
-    if (!Node.isElement(element)) return false;
+    if (!Node.isElement(element)) {
+      return false;
+    }
     return Arr.contains(['br', 'img', 'hr', 'input'], Node.name(element));
   };
 
@@ -73,11 +77,11 @@ export default function (): Universe<Element, Document> {
     }),
     create: Fun.constant({
       nu: Element.fromTag,
-      clone: clone,
+      clone,
       text: Element.fromText
     }),
     query: Fun.constant({
-      comparePosition: comparePosition,
+      comparePosition,
       prevSibling: Traverse.prevSibling,
       nextSibling: Traverse.nextSibling
     }),
@@ -85,16 +89,16 @@ export default function (): Universe<Element, Document> {
       children: Traverse.children,
       name: Node.name,
       parent: Traverse.parent,
-      document: document,
+      document,
       isText: Node.isText,
       isComment: Node.isComment,
       isElement: Node.isElement,
       getText: Text.get,
       setText: Text.set,
-      isBoundary: isBoundary,
-      isEmptyTag: isEmptyTag
+      isBoundary,
+      isEmptyTag
     }),
     eq: Compare.eq,
     is: Compare.is
   };
-};
+}

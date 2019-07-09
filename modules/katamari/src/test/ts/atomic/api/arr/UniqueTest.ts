@@ -3,10 +3,10 @@ import * as Unique from 'ephox/katamari/api/Unique';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Unique', function() {
+UnitTest.test('Unique', function () {
   const expected = ['three', 'two', 'one'];
 
-  const check = function(input) {
+  const check = function (input) {
     assert.eq(expected, Unique.stringArray(input));
   };
 
@@ -39,4 +39,3 @@ UnitTest.test('Unique', function() {
     }
   );
 });
-

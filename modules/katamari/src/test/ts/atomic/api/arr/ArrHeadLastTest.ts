@@ -2,8 +2,8 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('ArrHeadLastTest', function() {
-  Jsc.property('Head and tail on arrays', '[json]', function(xs) {
+UnitTest.test('ArrHeadLastTest', function () {
+  Jsc.property('Head and tail on arrays', '[json]', function (xs) {
     const head = Arr.head(xs);
     const last = Arr.last(xs);
 
@@ -16,4 +16,3 @@ UnitTest.test('ArrHeadLastTest', function() {
     }
   });
 });
-

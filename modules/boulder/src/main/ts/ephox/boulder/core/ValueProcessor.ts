@@ -1,4 +1,4 @@
-import { Adt, Arr, Fun, Merger, Obj, Option, Result, Thunk, Type } from '@ephox/katamari';
+import { Adt, Arr, Fun, Merger, Obj, Option, Thunk, Type } from '@ephox/katamari';
 
 import * as FieldPresence from '../api/FieldPresence';
 import * as Objects from '../api/Objects';
@@ -113,7 +113,7 @@ const cExtractOne = function (path, obj, field, strength) {
           return SimpleResult.bind(
             optionDefaultedAccess(obj, key, fallbackThunk),
             bundleAsOption
-          )
+          );
         }, function (baseThunk) {
           const base = baseThunk(obj);
           const result = SimpleResult.map(
@@ -121,7 +121,7 @@ const cExtractOne = function (path, obj, field, strength) {
             (v) => {
               return Merger.deepMerge(base, v);
             }
-          )
+          );
           return SimpleResult.bind(result, bundle);
         });
       })();

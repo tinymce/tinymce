@@ -46,4 +46,3 @@ UnitTest.test('api.Extract.find', function () {
   check(Option.some({ id: '1.1.2', offset: 2 }), 'root', 3);
   check(Option.some({ id: '1.2.4.1', offset: 3 }), '1.2', 'This is textinside a spanMore textIns'.length);
 });
-

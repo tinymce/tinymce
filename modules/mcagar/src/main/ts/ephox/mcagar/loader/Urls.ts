@@ -1,4 +1,4 @@
-import { document } from "@ephox/dom-globals";
+import { document } from '@ephox/dom-globals';
 
 export const setTinymceBaseUrl = (tinymce, baseUrl: string) => {
   const prefix = document.location.protocol + '//' + document.location.host;

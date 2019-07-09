@@ -19,7 +19,7 @@ const getEnd = function (target: Element) {
 const gChooseIn = function (target: Element) {
   const offsets = getEnd(target);
   return Jsc.integer(0, offsets).generator.map(function (offset: number) {
-    return { element: target, offset: offset };
+    return { element: target, offset };
   });
 };
 
@@ -44,5 +44,5 @@ const selection = function (root: Element, rawExclusions: SelectionExclusions) {
 };
 
 export default {
-  selection: selection
+  selection
 };

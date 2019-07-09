@@ -1,12 +1,11 @@
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Obj from 'ephox/katamari/api/Obj';
-import * as Type from 'ephox/katamari/api/Type';
 import * as Unique from 'ephox/katamari/api/Unique';
 import { MixedBag } from 'ephox/katamari/data/MixedBag';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('MixedBagTest', function() {
+UnitTest.test('MixedBagTest', function () {
   const bagger = MixedBag([ 'alpha', 'beta', 'gamma' ], [ 'oDelta', 'oEpsilon' ]);
   (function () {
     const t1 = bagger({
@@ -66,7 +65,7 @@ UnitTest.test('MixedBagTest', function() {
       assert.fail('Expected failure.');
     } catch (err) {
       assert.eq(expected, err.message);
-    }      
+    }
   })();
 
   (function () {
@@ -133,7 +132,7 @@ UnitTest.test('MixedBagTest', function() {
   (function () {
     const expected = 'The value 10 in the required fields was not a string.';
     try {
-      const bg = MixedBag(<any>[ 10 ], [  ]);
+      const bg = MixedBag(<any> [ 10 ], [  ]);
 
       assert.fail('Expected failure: ' + expected);
     } catch (err) {
@@ -144,7 +143,7 @@ UnitTest.test('MixedBagTest', function() {
   (function () {
     const expected = 'The value 5 in the optional fields was not a string.';
     try {
-      const bg = MixedBag([ ], <any>[ 5 ]);
+      const bg = MixedBag([ ], <any> [ 5 ]);
 
       assert.fail('Expected failure: ' + expected);
     } catch (err) {
@@ -155,7 +154,7 @@ UnitTest.test('MixedBagTest', function() {
   (function () {
     const expected = 'The required fields must be an array. Was: apple.';
     try {
-      const bg = MixedBag(<any>'apple', <any>[ 5 ]);
+      const bg = MixedBag(<any> 'apple', <any> [ 5 ]);
 
       assert.fail('Expected failure: ' + expected);
     } catch (err) {
@@ -166,7 +165,7 @@ UnitTest.test('MixedBagTest', function() {
   (function () {
     const expected = 'The optional fields must be an array. Was: beetroot.';
     try {
-      const bg = MixedBag([], <any>'beetroot');
+      const bg = MixedBag([], <any> 'beetroot');
 
       assert.fail('Expected failure: ' + expected);
     } catch (err) {
@@ -191,7 +190,7 @@ UnitTest.test('MixedBagTest', function() {
       return Jsc.nestring.generator.map(function (backup) {
         const required = rawRequired.length === 0 && extra.length === 0 ? [ backup ] : Unique.stringArray(rawRequired);
         return {
-          required: required,
+          required,
           extra: Arr.filter(extra, function (e) {
             return !Arr.contains(required, e);
           })
@@ -222,7 +221,7 @@ UnitTest.test('MixedBagTest', function() {
       const keys = Obj.keys(output);
       return Arr.forall(keys, function (k) {
         return (
-          (Arr.contains(inputs.required, k) && output[k]() === r[k]) || 
+          (Arr.contains(inputs.required, k) && output[k]() === r[k]) ||
           (Arr.contains(inputs.extra, k) && (
             (r.hasOwnProperty(k) && output[k]().isSome()) ||
             (!r.hasOwnProperty(k) && output[k]().isNone())
@@ -239,4 +238,3 @@ UnitTest.test('MixedBagTest', function() {
     }
   });
 });
-

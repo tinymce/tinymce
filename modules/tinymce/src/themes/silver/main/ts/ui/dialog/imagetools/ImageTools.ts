@@ -103,6 +103,7 @@ export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiF
           return oImg;
         });
       }).catch((err) => {
+      // tslint:disable-next-line:no-console
         console.log(err); // TODO: Notify the user?
         unblock(anyInSystem);
         return err;

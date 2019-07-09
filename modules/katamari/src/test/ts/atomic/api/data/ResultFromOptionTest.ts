@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock';
 import { Option } from 'ephox/katamari/api/Option';
 import { Result } from 'ephox/katamari/api/Result';
 
-UnitTest.test('Result.fromOption tests', function() {
+UnitTest.test('Result.fromOption tests', function () {
   const extractError = <T, E>(result: Result<T, E>): Option<E> => {
     return result.fold(
       Option.some,
@@ -20,4 +20,3 @@ UnitTest.test('Result.fromOption tests', function() {
 
   testSanity();
 });
-

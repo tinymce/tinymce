@@ -1,44 +1,38 @@
 import AriaRegister from './AriaRegister';
-import { Id } from '@ephox/katamari';
+import { Fun, Id } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Fun } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Attr, Css, Element, Insert, Remove, Traverse } from '@ephox/sugar';
 import { setTimeout } from '@ephox/dom-globals';
 
-var isFirefox = PlatformDetection.detect().browser.isFirefox();
+const isFirefox = PlatformDetection.detect().browser.isFirefox();
 
-var offscreen = {
+const offscreen = {
   position: 'absolute',
   left: '-9999px'
 };
 
-var tokenSelector = function () {
+const tokenSelector = function () {
   return 'span[id^="ephox-echo-voice"]';
 };
 
-var create = function (doc, text) {
-  var span = Element.fromTag('span', doc.dom());
+const create = function (doc, text) {
+  const span = Element.fromTag('span', doc.dom());
   AriaRegister.presentation(span);
   // This stops it saying other things (possibly blank) between transitions.
-  var contents = Element.fromText(text, doc.dom());
+  const contents = Element.fromText(text, doc.dom());
   Insert.append(span, contents);
   return span;
 };
 
-var linkToDescription = function (item, token) {
-  var id = Id.generate('ephox-echo-voice');
+const linkToDescription = function (item, token) {
+  const id = Id.generate('ephox-echo-voice');
   Attr.set(token, 'id', id);
   Attr.set(item, 'aria-describedby', id);
 };
 
-var describe = function (item, description) {
-  var doc = Traverse.owner(item);
-  var token = create(doc, description);
+const describe = function (item, description) {
+  const doc = Traverse.owner(item);
+  const token = create(doc, description);
 
   // We may not be able to get rid of them, so we'll make them display: none;
   Css.set(token, 'display', 'none');
@@ -50,12 +44,14 @@ var describe = function (item, description) {
   return token;
 };
 
-var base = function (getAttrs, parent, text) {
-  var doc = Traverse.owner(parent);
+const base = function (getAttrs, parent, text) {
+  const doc = Traverse.owner(parent);
 
   // firefox needs aria-describedby to speak a role=alert token, which causes IE11 to read twice
-  var token = create(doc, text);
-  if (isFirefox) linkToDescription(parent, token);
+  const token = create(doc, text);
+  if (isFirefox) {
+    linkToDescription(parent, token);
+  }
 
   // Make it speak as soon as it is in the DOM (politely)
   Attr.setAll(token, getAttrs(text));
@@ -71,7 +67,7 @@ var base = function (getAttrs, parent, text) {
   }, 1000);
 };
 
-var speak = Fun.curry(base, function (text) {
+const speak = Fun.curry(base, function (text) {
   return {
     // Make it speak as soon as it is in the DOM (politely)
     'aria-live': 'polite',
@@ -80,7 +76,7 @@ var speak = Fun.curry(base, function (text) {
   };
 });
 
-var shout = Fun.curry(base, Fun.constant({
+const shout = Fun.curry(base, Fun.constant({
   // Don't put aria-label in alerts. It will read it twice on JAWS+Firefox.
   'aria-live': 'assertive',
   'aria-atomic': 'true',
@@ -88,8 +84,8 @@ var shout = Fun.curry(base, Fun.constant({
 }));
 
 export default <any> {
-  describe: describe,
-  speak: speak,
-  shout: shout,
-  tokenSelector: tokenSelector
+  describe,
+  speak,
+  shout,
+  tokenSelector
 };

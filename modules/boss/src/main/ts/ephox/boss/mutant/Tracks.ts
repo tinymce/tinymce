@@ -1,5 +1,4 @@
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
 
 const track = function (current: Gene, parent: Option<Gene>) {

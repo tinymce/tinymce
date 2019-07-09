@@ -49,7 +49,7 @@ const structure = function (rawDepth, detail, construct) {
 };
 
 export default {
-  none: none,
-  composite: composite,
-  structure: structure
+  none,
+  composite,
+  structure
 };

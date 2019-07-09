@@ -107,6 +107,7 @@ class ScriptLoader {
         failure();
       } else {
         // Report the error so it's easier for people to spot loading errors
+        // tslint:disable-next-line:no-console
         if (typeof console !== 'undefined' && console.log) {
           // tslint:disable-next-line:no-console
           console.log('Failed to load script: ' + url);

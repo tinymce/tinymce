@@ -95,7 +95,7 @@ UnitTest.test('Arbitraries Test', function () {
     }
   }), function (leaf) {
     const hasDataCustom = Attr.get(leaf, 'data-custom') === 'hi';
-    const hasContentEditable = Attr.get(leaf, 'contenteditable') == 'true';
+    const hasContentEditable = Attr.get(leaf, 'contenteditable') === 'true';
     const hasColor = Css.getRaw(leaf, 'color').isSome();
     const hasVisibility = Css.getRaw(leaf, 'visibility').isSome();
     return (
@@ -116,8 +116,8 @@ UnitTest.test('Arbitraries Test', function () {
         'contenteditable': 'false'
       }),
       styles: Generators.enforce({
-        'color': 'blue',
-        'visibility': 'hidden'
+        color: 'blue',
+        visibility: 'hidden'
       }),
       components: {}
     }
@@ -128,7 +128,6 @@ UnitTest.test('Arbitraries Test', function () {
     Assertions.assertEq('should have visibility: hidden', 'hidden', Css.getRaw(leaf, 'visibility').getOrDie('Must have visibility'));
     return true;
   });
-
 
   checkProperty('Comment nodes should have node type 8', Arbitraries.content('comment'), function (comment) {
     Assertions.assertEq('Node type of "comment"', 8, Node.type(comment));
@@ -199,7 +198,7 @@ UnitTest.test('Arbitraries Test', function () {
   });
 
   checkProperty('Table elements', Arbitraries.content('table', {
-    'table': {
+    table: {
       components: {
         thead: { chance: 1.0 },
         tfoot: { chance: 1.0 },
@@ -233,7 +232,7 @@ UnitTest.test('Arbitraries Test', function () {
     return true;
   });
 
-  /* 
+  /*
   This is not a test ... just example code
   Pipeline.async({}, [
     PropertySteps.sAsyncProperty('Let\'s see a visible selection', [
@@ -262,4 +261,3 @@ UnitTest.test('Arbitraries Test', function () {
   ], function () { success(); }, failure);
   */
 });
-

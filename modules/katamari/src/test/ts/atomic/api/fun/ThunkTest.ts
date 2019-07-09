@@ -2,7 +2,7 @@ import * as Thunk from 'ephox/katamari/api/Thunk';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ThunkTest', function() {
+UnitTest.test('ThunkTest', function () {
   const testSanity = function () {
     let args = null;
     const f = Thunk.cached(function () {
@@ -23,7 +23,7 @@ UnitTest.test('ThunkTest', function() {
       const thunk = Thunk.cached(function (x) {
         counter++;
         return {
-          counter: counter,
+          counter,
           output: f(x)
         };
       });
@@ -36,4 +36,3 @@ UnitTest.test('ThunkTest', function() {
   testSanity();
   testSpecs();
 });
-

@@ -25,8 +25,8 @@ export const adaptable = function (fn: Function, rate: number) {
   };
 
   return {
-    cancel: cancel,
-    throttle: throttle
+    cancel,
+    throttle
   };
 };
 
@@ -50,8 +50,8 @@ export const first = function (fn: Function, rate: number) {
   };
 
   return {
-    cancel: cancel,
-    throttle: throttle
+    cancel,
+    throttle
   };
 };
 
@@ -67,7 +67,9 @@ export const last = function (fn: Function, rate: number) {
     }
   };
   const throttle = function (...args) {
-    if (timer !== null) clearTimeout(timer);
+    if (timer !== null) {
+      clearTimeout(timer);
+    }
     timer = setTimeout(function () {
       fn.apply(null, args);
       timer = null;
@@ -75,7 +77,7 @@ export const last = function (fn: Function, rate: number) {
   };
 
   return {
-    cancel: cancel,
-    throttle: throttle
+    cancel,
+    throttle
   };
 };

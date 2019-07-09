@@ -2,7 +2,7 @@ import * as Strings from 'ephox/katamari/api/Strings';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('capitalize', function() {
+UnitTest.test('capitalize', function () {
   function check(expected, input) {
     const actual = Strings.capitalize(input);
     assert.eq(expected, actual);
@@ -25,4 +25,3 @@ UnitTest.test('capitalize', function() {
     }
   );
 });
-

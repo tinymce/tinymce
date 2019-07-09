@@ -2,7 +2,7 @@ import * as Strings from 'ephox/katamari/api/Strings';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ensureTrailing', function() {
+UnitTest.test('ensureTrailing', function () {
   function check(expected, str, suffix) {
     const actual = Strings.ensureTrailing(str, suffix);
     assert.eq(expected, actual);
@@ -30,4 +30,3 @@ UnitTest.test('ensureTrailing', function() {
     }
   );
 });
-

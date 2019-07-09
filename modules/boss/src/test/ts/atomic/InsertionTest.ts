@@ -4,7 +4,7 @@ import Insertion from 'ephox/boss/mutant/Insertion';
 import Locator from 'ephox/boss/mutant/Locator';
 import Logger from 'ephox/boss/mutant/Logger';
 import Tracks from 'ephox/boss/mutant/Tracks';
-import { Gene } from '../../../main/ts/ephox/boss/api/Gene';
+import { Gene } from 'ephox/boss/api/Gene';
 
 UnitTest.test('InsertionTest', function () {
   const data = function (): Gene {
@@ -65,4 +65,3 @@ UnitTest.test('InsertionTest', function () {
 
   checkAfterAll('A(B,C(D,E,F))', data(), 'D', ['E', 'F']);
 });
-

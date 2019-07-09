@@ -22,6 +22,7 @@ const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: 
   try {
     newMode.activate();
   } catch (e) {
+    // tslint:disable-next-line:no-console
     console.error(`problem while activating editor mode ${mode}:`, e);
     return;
   }
@@ -61,8 +62,8 @@ const registerMode = (availableModes: Record<string, ModeApi>, mode: string, api
         try {
           api.deactivate();
         } catch (e) {
-          console.error(`problem while deactivating editor mode ${mode}:`);
-          console.error(e);
+          // tslint:disable-next-line:no-console
+          console.error(`problem while deactivating editor mode ${mode}:`, e);
         }
       }
     }

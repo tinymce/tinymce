@@ -1,33 +1,33 @@
 import * as SeleniumAction from '../server/SeleniumAction';
-import { Step, Chain } from './Main';
+import { Chain } from './Chain';
+import { Step } from './Step';
 import { Id, Fun } from '@ephox/katamari';
 import { Attr, Element } from '@ephox/sugar';
 
 const BedrockIdAttribute = 'data-bedrockid';
 
-const sActionOn = function <T>(selector: string, type: string): Step<T,T> {
+const sActionOn = function <T>(selector: string, type: string): Step<T, T> {
   return SeleniumAction.sPerform<T>('/mouse', {
-    selector: selector,
-    type: type
+    selector,
+    type
   });
 };
 
-const sMoveToOn = function <T>(selector: string): Step<T,T> {
+const sMoveToOn = function <T>(selector: string): Step<T, T> {
   return sActionOn<T>(selector, 'move');
 };
 
-const sDownOn = function <T>(selector: string): Step<T,T> {
+const sDownOn = function <T>(selector: string): Step<T, T> {
   return sActionOn<T>(selector, 'down');
 };
 
-const sUpOn = function <T>(selector: string): Step<T,T> {
+const sUpOn = function <T>(selector: string): Step<T, T> {
   return sActionOn<T>(selector, 'up');
 };
 
-const sClickOn = function <T>(selector: string): Step<T,T> {
+const sClickOn = function <T>(selector: string): Step<T, T> {
   return sActionOn<T>(selector, 'click');
 };
-
 
 const cAction = (action) =>
   Chain.fromChains([
@@ -36,7 +36,7 @@ const cAction = (action) =>
       type: action
     })),
     SeleniumAction.cPerform('/mouse')
-  ])
+  ]);
 
 const cClick = () =>
   Chain.fromParent(Chain.mapper(Fun.identity), [
