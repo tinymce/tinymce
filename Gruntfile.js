@@ -15,8 +15,6 @@ const runsInPhantom = [
   '@ephox/snooker',
 ];
 
-const needsTinyMCE = ['@ephox/mcagar'];
-
 const runsInBrowser = [
   '@ephox/agar',
   '@ephox/bridge',
@@ -143,7 +141,6 @@ module.exports = function (grunt) {
   const gruntConfig = {
     shell: {
       tsc: { command: 'yarn -s tsc' },
-      rollup: { command: 'yarn -s tinymce-rollup' },
       legacy: { command: 'yarn build' },
       yarn: { command: 'yarn' },
       'yarn-dev': { command: 'yarn -s dev' }
@@ -162,19 +159,14 @@ module.exports = function (grunt) {
 
   grunt.initConfig(gruntConfig);
 
-  //dupe de dupe dupe
+  //TODO: remove duplication
   if (phantomTests.length > 0) {
     grunt.registerTask('list-changed-phantom', () => {
       const changeList = JSON.stringify(phantomTests.reduce((acc, change) => acc.concat(change.name), []), null, 2);
       grunt.log.writeln('Changed projects for phantomjs testing:', changeList);
     });
-    if (phantomTests.find(({name}) => needsTinyMCE.indexOf(name) > -1)) {
-      // only run rollup if required, since it's quite slow
-      grunt.registerTask('phantomjs-auto', ['shell:rollup', 'list-changed-phantom', 'shell:tsc', 'bedrock-auto:phantomjs']);
-    } else {
-      grunt.registerTask('phantomjs-auto', ['list-changed-phantom', 'shell:tsc', 'bedrock-auto:phantomjs']);
-    }
-    grunt.registerTask('phantomjs-manual', ['shell:tsc', 'bedrock-manual:phantomjs']);
+    grunt.registerTask('phantomjs-auto', ['list-changed-phantom', 'shell:tsc', 'bedrock-auto:phantomjs']);
+    grunt.registerTask('phantomjs-manual', ['list-changed-phantom', 'shell:tsc', 'bedrock-manual:phantomjs']);
   } else {
     const noPhantom = () => {
       grunt.log.writeln('no changed modules need phantomjs testing');
@@ -184,7 +176,7 @@ module.exports = function (grunt) {
     grunt.registerTask('list-changed-phantom', noPhantom);
   }
 
-  //dupe de dupe dupe
+  //TODO: remove duplication
   if (browserTests.length > 0) {
     grunt.registerTask('list-changed-browser', () => {
       const changeList = JSON.stringify(browserTests.reduce((acc, change) => acc.concat(change.name), []), null, 2);
