@@ -1,3 +1,6 @@
+import Editor from 'tinymce/core/api/Editor';
+import DOMUtils from '../../../../../core/main/ts/api/dom/DOMUtils';
+
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
@@ -5,7 +8,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const stringRepeat = function (string, repeats) {
+const stringRepeat = (string, repeats) => {
   let str = '';
 
   for (let index = 0; index < repeats; index++) {
@@ -15,17 +18,28 @@ const stringRepeat = function (string, repeats) {
   return str;
 };
 
-const isVisualCharsEnabled = function (editor) {
+const isVisualCharsEnabled = (editor: Editor) => {
   return editor.plugins.visualchars ? editor.plugins.visualchars.isEnabled() : false;
 };
 
-const insertNbsp = function (editor, times) {
+const insertNbsp = (editor: Editor, times: number) => {
   const nbsp = isVisualCharsEnabled(editor) ? '<span class="mce-nbsp">&nbsp;</span>' : '&nbsp;';
 
   editor.insertContent(stringRepeat(nbsp, times));
-  editor.dom.setAttrib(editor.dom.select('span.mce-nbsp'), 'data-mce-bogus', '1');
+  editor.dom.setAttrib(editor.dom.select('span.mce-nbsp')[0], 'data-mce-bogus', '1');
+
+  // testing purposes
+  insertNbspWrap(editor);
+};
+
+const insertNbspWrap = (editor: Editor) => {
+  // const dom: DOMUtils = editor.dom;
+  const selectedElm = editor.selection.getNode();
+  // @ts-ignore
+  console.log(selectedElm, editor.selection.getRng());
 };
 
 export default {
-  insertNbsp
+  insertNbsp,
+  insertNbspWrap
 };
