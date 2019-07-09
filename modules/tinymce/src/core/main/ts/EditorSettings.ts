@@ -114,12 +114,19 @@ const combinePlugins = function (forcedPlugins, plugins) {
 
 const processPlugins = function (isTouchDevice: boolean, sectionResult, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings {
   const forcedPlugins = normalizePlugins(defaultOverrideSettings.forced_plugins);
-  const plugins = normalizePlugins(settings.plugins);
+  const desktopPlugins = normalizePlugins(settings.plugins);
 
   const mobileConfig = getSectionConfig(sectionResult, 'mobile');
-  const mobilePlugins = mobileConfig.plugins ? normalizePlugins(mobileConfig.plugins) : plugins;
+  const mobilePlugins = mobileConfig.plugins ? normalizePlugins(mobileConfig.plugins) : desktopPlugins;
 
-  const platformPlugins = isSectionTheme(sectionResult, 'mobile', 'mobile') ? filterMobilePlugins(plugins) : mobilePlugins;
+  const platformPlugins =
+    // is a mobile device with silver
+    isTouchDevice && isSectionTheme(sectionResult, 'mobile', 'silver') ? mobilePlugins :
+    // is a mobile device with any mobile settings
+    isTouchDevice && hasSection(sectionResult, 'mobile') ? filterMobilePlugins(mobilePlugins) :
+    // is desktop
+    desktopPlugins;
+
   const combinedPlugins = combinePlugins(forcedPlugins, platformPlugins);
 
   return Tools.extend(settings, {
@@ -134,6 +141,7 @@ const isOnMobile = function (isTouchDevice, sectionResult) {
 
 const combineSettings = (isTouchDevice: boolean, defaultSettings: RawEditorSettings, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings => {
   const sectionResult = extractSections(['mobile'], settings);
+
   const extendedSettings = Tools.extend(
     // Default settings
     defaultSettings,
