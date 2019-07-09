@@ -9,12 +9,12 @@ export interface FutureResult<A, E> extends Future<Result<A, E>> {
   mapResult: <B>(f: (value: A) => B) => FutureResult<B, E>;
   mapError: <B>(f: (error: E) => B) => FutureResult<A, B>;
   foldResult: <X>(whenError: (error: E) => X, whenValue: (value: A) => X) => Future<X>;
-  withTimeout: <E2>(timeout: number, errorThunk: () => E2) => FutureResult<A, E | E2>
+  withTimeout: <E2>(timeout: number, errorThunk: () => E2) => FutureResult<A, E | E2>;
 }
 
-const wrap = function <A=any, E=any>(delegate: Future<Result<A, E>>): FutureResult<A, E> {
+const wrap = function <A = any, E = any>(delegate: Future<Result<A, E>>): FutureResult<A, E> {
 
-  const toCached = function() {
+  const toCached = function () {
     return wrap(delegate.toCached());
   };
 
@@ -22,7 +22,7 @@ const wrap = function <A=any, E=any>(delegate: Future<Result<A, E>>): FutureResu
     return wrap(
       delegate.bind(
         (resA) => resA.fold(
-          (err: E) => <Future<Result<B, E>>>(Future.pure(Result.error(err))),
+          (err: E) => <Future<Result<B, E>>> (Future.pure(Result.error(err))),
           (a: A) => f(a)
         )
       )
@@ -74,15 +74,15 @@ const wrap = function <A=any, E=any>(delegate: Future<Result<A, E>>): FutureResu
   };
 };
 
-const nu = function <A=any, E=any>(worker: (completer: (result: Result<A, E>) => void) => void) {
+const nu = function <A = any, E = any>(worker: (completer: (result: Result<A, E>) => void) => void) {
   return wrap(Future.nu(worker));
-}
+};
 
-const value = function <A, E=any>(value: A) {
+const value = function <A, E = any>(value: A) {
   return wrap(Future.pure(Result.value(value)));
 };
 
-const error = function <A=any, E=any>(error: E) {
+const error = function <A = any, E = any>(error: E) {
   return wrap(Future.pure(Result.error(error)));
 };
 
@@ -90,11 +90,11 @@ const fromResult = function <A, E>(result: Result<A, E>) {
   return wrap(Future.pure(result));
 };
 
-const fromFuture = function <A, E=any>(future: Future<A>) {
+const fromFuture = function <A, E = any>(future: Future<A>) {
   return wrap(future.map(Result.value));
 };
 
-const fromPromise = function <T, E=any>(promise: Promise<T>) {
+const fromPromise = function <T, E = any>(promise: Promise<T>) {
   return nu(function (completer: (result: Result<T, E>) => void) {
     promise.then(function (value) {
       completer(Result.value(value));

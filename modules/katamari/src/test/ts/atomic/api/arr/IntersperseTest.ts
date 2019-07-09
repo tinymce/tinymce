@@ -3,7 +3,7 @@ import * as Jam from 'ephox/katamari/api/Jam';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Intersperse', function() {
+UnitTest.test('Intersperse', function () {
   const check = function (expected, input, delimiter) {
     const actual = Jam.intersperse(input, delimiter);
     assert.eq(expected, actual);
@@ -20,7 +20,7 @@ UnitTest.test('Intersperse', function() {
 
   check([], [], 2);
   check([1], [1], 2);
-  check([1,2,1,2,1], [1,1,1], 2);
+  check([1, 2, 1, 2, 1], [1, 1, 1], 2);
   check(['a', 3, 'a', 3, 'a'], ['a', 'a', 'a'], 3);
   check([[1], [4], [1]], [[1], [1]], [4]);
   checkErr('Cannot intersperse undefined', undefined, 2);
@@ -62,4 +62,3 @@ UnitTest.test('Intersperse', function() {
     }
   );
 });
-

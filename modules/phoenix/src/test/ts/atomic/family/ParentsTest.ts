@@ -47,4 +47,3 @@ UnitTest.test('ParentsTest', function () {
   check('b', 'b', 'b');
   check('ab', 'aba', 'abb');
 });
-

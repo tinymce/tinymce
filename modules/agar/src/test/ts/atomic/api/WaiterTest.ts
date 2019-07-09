@@ -5,9 +5,7 @@ import { Step } from 'ephox/agar/api/Step';
 import * as Waiter from 'ephox/agar/api/Waiter';
 import StepAssertions from 'ephox/agar/test/StepAssertions';
 
-UnitTest.asynctest('WaiterTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('WaiterTest', function (success, failure) {
 
   const makeTryUntilStep = function (label, interval, amount) {
     let counter = 0;
@@ -15,8 +13,11 @@ UnitTest.asynctest('WaiterTest', function () {
       label + ': TryUntil counter',
       Step.stateful(function (_value, next, die) {
         counter++;
-        if (counter === 5) return next(counter);
-        else die('did not reach number');
+        if (counter === 5) {
+          return next(counter);
+        } else {
+          die('did not reach number');
+        }
       }),
       interval,
       amount
@@ -29,8 +30,11 @@ UnitTest.asynctest('WaiterTest', function () {
       label + ': TryUntilNot counter',
       Step.stateful(function (_value, next, die) {
         counter++;
-        if (counter < 10) return next('Not yet');
-        else die(counter);
+        if (counter < 10) {
+          return next('Not yet');
+        } else {
+          die(counter);
+        }
       }),
       interval,
       amount
@@ -74,7 +78,5 @@ UnitTest.asynctest('WaiterTest', function () {
       makeDelayStep('not enough time', 300, 2000)
     )
 
-
   ], function () { success(); }, failure);
 });
-

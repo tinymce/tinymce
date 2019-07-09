@@ -3,7 +3,7 @@ import * as Fun from 'ephox/katamari/api/Fun';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('FindIndexTest', function() {
+UnitTest.test('FindIndexTest', function () {
   const checkNoneHelper = function (input, pred) {
     const actual = Arr.findIndex(input, pred);
     assert.eq(true, actual.isNone());
@@ -27,9 +27,9 @@ UnitTest.test('FindIndexTest', function() {
   checkNone([], function (x) { return x > 0; });
   checkNone([-1], function (x) { return x > 0; });
   check(0, [1], function (x) { return x > 0; });
-  check(3, [4, 2, 10, 41, 3], function (x) { return x == 41; });
+  check(3, [4, 2, 10, 41, 3], function (x) { return x === 41; });
   check(5, [4, 2, 10, 41, 3, 100], function (x) { return x > 80; });
-  checkNone([4, 2, 10, 412, 3], function (x) { return x == 41; });
+  checkNone([4, 2, 10, 412, 3], function (x) { return x === 41; });
 
   Jsc.property(
     'the index found by findIndex always passes predicate',
@@ -59,9 +59,11 @@ UnitTest.test('FindIndexTest', function() {
     Jsc.array(Jsc.json),
     function (arr) {
       const index = Arr.findIndex(arr, Fun.constant(true));
-      if (arr.length === 0) return Jsc.eq(true, index.isNone());
-      else return Jsc.eq(0, index.getOrDie('should have found index'));
+      if (arr.length === 0) {
+        return Jsc.eq(true, index.isNone());
+      } else {
+        return Jsc.eq(0, index.getOrDie('should have found index'));
+      }
     }
   );
 });
-

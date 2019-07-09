@@ -35,6 +35,7 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
 
   // Agar v. ??? supports logging
   const onFailure = (err: Error | string, logs) => {
+    // tslint:disable-next-line:no-console
     console.log('Tiny Loader error: ', err);
     // Do no teardown so that the failed test still shows the editor. Important for selection
     failure(err, logs);
@@ -43,8 +44,9 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
   const settingsSetup = settings.setup !== undefined ? settings.setup : Fun.noop;
 
   const tinymce = Global.tinymce;
-  if (!tinymce) failure('Failed to get global tinymce instance');
-  else {
+  if (!tinymce) {
+    failure('Failed to get global tinymce instance');
+  } else {
     if (settings.base_url) {
       setTinymceBaseUrl(tinymce, settings.base_url);
     } else if (!Type.isString(tinymce.baseURL) || !Strings.contains(tinymce.baseURL, '/project/')) {
@@ -53,12 +55,12 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
 
     tinymce.init(Merger.merge(settings, {
       selector: '#' + randomId,
-      setup: function(editor) {
+      setup (editor) {
         // Execute the setup called by the test.
         settingsSetup(editor);
 
         editor.on('SkinLoaded', function () {
-          setTimeout(function() {
+          setTimeout(function () {
             callback(editor, onSuccess, onFailure);
           }, 0);
         });

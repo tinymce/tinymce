@@ -1,7 +1,6 @@
 import Properties from './Properties';
 import Up from './Up';
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
 
 const extract = function (item: Gene): string[] {
@@ -19,8 +18,11 @@ const comparePosition = function (item: Gene, other: Gene) {
   const otherIndex = Arr.findIndex(all, function (x) { return other.id === x; });
   return itemIndex.bind(function (iIndex) {
     return otherIndex.map(function (oIndex): number {
-      if (iIndex < oIndex) return 4;
-      else return 2;
+      if (iIndex < oIndex) {
+        return 4;
+      } else {
+        return 2;
+      }
     });
   }).getOr(0);
 };

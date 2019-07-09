@@ -8,7 +8,7 @@ UnitTest.asynctest('ActionTest', (success, failure) =>  {
 
   const sResetCount = Step.sync(() => count = 0);
 
-  const assertEq:any = function () {
+  const assertEq: any = function () {
     count++;
     Assertions.assertEq.apply(this, arguments);
   };

@@ -3,7 +3,7 @@ import * as Fun from 'ephox/katamari/api/Fun';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ForallTest', function() {
+UnitTest.test('ForallTest', function () {
   const isone = function (i) {
     return i === 1;
   };
@@ -62,4 +62,3 @@ UnitTest.test('ForallTest', function() {
     }
   );
 });
-

@@ -1,4 +1,4 @@
-import { PlatformDetection } from "../core/PlatformDetection";
+import { PlatformDetection } from '../core/PlatformDetection';
 
 const isEdge = function (platform: PlatformDetection) {
   return platform.browser.isEdge();
@@ -29,11 +29,11 @@ const isOpera = function (platform: PlatformDetection) {
 };
 
 export default {
-  isEdge: isEdge,
-  isChrome: isChrome,
-  isFirefox: isFirefox,
-  isOpera: isOpera,
-  isIE11: isIE11,
-  isIE: isIE,
-  isSafari: isSafari
+  isEdge,
+  isChrome,
+  isFirefox,
+  isOpera,
+  isIE11,
+  isIE,
+  isSafari
 };

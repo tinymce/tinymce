@@ -37,7 +37,7 @@ const liftN = function <B> (arr: Option<any>[], f: (...args: any[]) => B) {
       return Option.none<B>();
     }
   }
-  return Option.some(<B>f.apply(null, r));
+  return Option.some(<B> f.apply(null, r));
 };
 
 function lift<A, B, C>(a: Option<A>, b: Option<B>, f: (a: A, b: B) => C): Option<C>;
@@ -47,7 +47,7 @@ function lift<A, B, C, D, E, F>(a: Option<A>, b: Option<B>, c: Option<C>, d: Opt
 function lift(...args) {
   const f = args.pop();
   return liftN(args, f);
-};
+}
 
 export {
   cat,

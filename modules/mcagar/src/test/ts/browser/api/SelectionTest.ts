@@ -1,5 +1,4 @@
-import { Pipeline } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
+import { Chain, Pipeline } from '@ephox/agar';
 import ApiChains from 'ephox/mcagar/api/ApiChains';
 import Editor from 'ephox/mcagar/api/Editor';
 import { UnitTest } from '@ephox/bedrock';
@@ -44,4 +43,3 @@ UnitTest.asynctest('SelectionTest', (success, failure) => {
     success();
   }, failure);
 });
-

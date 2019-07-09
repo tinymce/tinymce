@@ -25,9 +25,9 @@ const detect = function (userAgent: string): PlatformDetection {
   const deviceType = DeviceType(os, browser, userAgent);
 
   return {
-    browser: browser,
-    os: os,
-    deviceType: deviceType
+    browser,
+    os,
+    deviceType
   };
 };
 

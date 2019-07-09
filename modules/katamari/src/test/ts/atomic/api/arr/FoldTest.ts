@@ -2,7 +2,7 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('FoldTest', function() {
+UnitTest.test('FoldTest', function () {
   const checkl = function (expected, input: any[], f, acc) {
     assert.eq(expected, Arr.foldl(input, f, acc));
     assert.eq(expected, Arr.foldl(Object.freeze(input.slice()), f, acc));
@@ -71,4 +71,3 @@ UnitTest.test('FoldTest', function() {
     }
   );
 });
-

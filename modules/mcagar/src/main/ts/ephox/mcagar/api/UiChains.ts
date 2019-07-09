@@ -3,31 +3,31 @@ import { Fun } from '@ephox/katamari';
 import { Element, Visibility, Body } from '@ephox/sugar';
 import { getThemeSelectors } from './ThemeSelectors';
 
-var cToolstripRoot = Chain.mapper(function (editor: any) {
+const cToolstripRoot = Chain.mapper(function (editor: any) {
   return Element.fromDom(editor.getContainer());
 });
 
-var cEditorRoot = Chain.mapper(function (editor: any) {
+const cEditorRoot = Chain.mapper(function (editor: any) {
   return Element.fromDom(editor.getBody());
 });
 
-var cDialogRoot = Chain.injectThunked(Body.body);
+const cDialogRoot = Chain.injectThunked(Body.body);
 
-var cGetToolbarRoot = Chain.fromChains([
+const cGetToolbarRoot = Chain.fromChains([
   cToolstripRoot,
   Chain.binder((container: Element) => {
     return UiFinder.findIn(container, getThemeSelectors().toolBarSelector);
   })
 ]);
 
-var cGetMenuRoot = Chain.fromChains([
+const cGetMenuRoot = Chain.fromChains([
   cToolstripRoot,
   Chain.binder((container: Element) => {
     return UiFinder.findIn(container, getThemeSelectors().menuBarSelector);
   })
 ]);
 
-var cClickOnWithin = function (label: string, selector: string, cContext) {
+const cClickOnWithin = function (label: string, selector: string, cContext) {
     return NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), cContext, 'context'),
       NamedChain.direct('context', UiFinder.cFindIn(selector), 'ui'),
@@ -36,19 +36,19 @@ var cClickOnWithin = function (label: string, selector: string, cContext) {
     ]);
   };
 
-var cClickOnUi = function (label: string, selector: string) {
+const cClickOnUi = function (label: string, selector: string) {
   return cClickOnWithin(label, selector, cDialogRoot);
 };
 
-var cClickOnToolbar = function (label: string, selector: string) {
+const cClickOnToolbar = function (label: string, selector: string) {
   return cClickOnWithin(label, selector, cGetToolbarRoot);
 };
 
-var cClickOnMenu = function (label: string, selector: string) {
+const cClickOnMenu = function (label: string, selector: string) {
   return cClickOnWithin(label, selector, cGetMenuRoot);
 };
 
-var cWaitForState = function (hasState) {
+const cWaitForState = function (hasState) {
   return function (label: string, selector: string) {
     return NamedChain.asChain([
       NamedChain.write('element', Chain.fromChains([
@@ -60,22 +60,22 @@ var cWaitForState = function (hasState) {
   };
 };
 
-var cWaitForVisible = function (label: string, selector: string) {
+const cWaitForVisible = function (label: string, selector: string) {
   return Chain.fromChains([
     cDialogRoot,
     UiFinder.cWaitForState(label, selector, Visibility.isVisible)
   ]);
 };
 
-var cWaitForPopup = function (label: string, selector: string) {
+const cWaitForPopup = function (label: string, selector: string) {
   return cWaitForState(Visibility.isVisible)(label, selector);
 };
 
-var cWaitForUi = function (label: string, selector: string) {
+const cWaitForUi = function (label: string, selector: string) {
   return cWaitForState(Fun.constant(true))(label, selector);
 };
 
-var cTriggerContextMenu = function (label: string, target, menu) {
+const cTriggerContextMenu = function (label: string, target, menu) {
   return Chain.fromChains([
     cEditorRoot,
     UiFinder.cFindIn(target),
@@ -86,8 +86,8 @@ var cTriggerContextMenu = function (label: string, target, menu) {
   ]);
 };
 
-var cClickPopupButton = function (btnType: string, selector?: string) {
-  var popupSelector = selector ? selector : '[role="dialog"]';
+const cClickPopupButton = function (btnType: string, selector?: string) {
+  const popupSelector = selector ? selector : '[role="dialog"]';
 
   return NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), cWaitForVisible('waiting for: ' + popupSelector, popupSelector), 'popup'),
@@ -97,28 +97,28 @@ var cClickPopupButton = function (btnType: string, selector?: string) {
   ]);
 };
 
-var cCloseDialog = (selector: string) => {
+const cCloseDialog = (selector: string) => {
   return cClickPopupButton('dialogCloseSelector', selector);
 };
 
-var cSubmitDialog = (selector?: string) => {
+const cSubmitDialog = (selector?: string) => {
   return cClickPopupButton('dialogSubmitSelector', selector);
 };
 
 export default {
-  cClickOnToolbar: cClickOnToolbar,
-  cClickOnMenu: cClickOnMenu,
-  cClickOnUi: cClickOnUi,
+  cClickOnToolbar,
+  cClickOnMenu,
+  cClickOnUi,
 
   // Popups need to be visible.
-  cWaitForPopup: cWaitForPopup,
+  cWaitForPopup,
   // UI does not need to be visible
-  cWaitForUi: cWaitForUi,
+  cWaitForUi,
   // General state predicate
-  cWaitForState: cWaitForState,
+  cWaitForState,
 
-  cCloseDialog: cCloseDialog,
-  cSubmitDialog: cSubmitDialog,
+  cCloseDialog,
+  cSubmitDialog,
 
-  cTriggerContextMenu: cTriggerContextMenu
+  cTriggerContextMenu
 };

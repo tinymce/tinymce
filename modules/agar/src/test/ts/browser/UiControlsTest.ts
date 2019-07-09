@@ -36,4 +36,3 @@ UnitTest.asynctest('UiControlsTest', function () {
 
   ], function () { success(); }, failure);
 });
-

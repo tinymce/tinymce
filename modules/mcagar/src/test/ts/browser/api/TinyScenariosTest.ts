@@ -1,4 +1,4 @@
-import { Arbitraries, Assertions, GeneralSteps, Pipeline, Step } from '@ephox/agar';
+import { Arbitraries, Assertions, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { console, navigator } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';

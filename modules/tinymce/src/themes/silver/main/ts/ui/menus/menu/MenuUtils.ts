@@ -14,6 +14,7 @@ export const menuHasIcons = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasIcon)
 export const handleError = (error: ValueSchema.SchemaError<any>) => {
   // tslint:disable-next-line:no-console
   console.error(ValueSchema.formatError(error));
+  // tslint:disable-next-line:no-console
   console.log(error);
   return Option.none();
 };

@@ -54,8 +54,8 @@ UnitTest.test('MatchSplitterTest', function () {
     };
   };
 
-  /* 
-    This is obviously not an easy thing to test, so there are key attributes that this test is 
+  /*
+    This is obviously not an easy thing to test, so there are key attributes that this test is
     targeting. Firstly, that the text nodes are broken up as specified by the match positions.
     Secondly, that the matches created for each equivalent match have passed through the information
     correctly. The output format is transformed significantly so this isn't testing the output value
@@ -68,4 +68,3 @@ UnitTest.test('MatchSplitterTest', function () {
     { text: ['L', 'MNO'], exact: 'LMNO', word: 'w4' }
   ], ['1', '2', '3', '4', '5'], [match(2, 4, 'w1'), match(5, 7, 'w2'), match(8, 11, 'w3'), match(11, 15, 'w4')], data());
 });
-

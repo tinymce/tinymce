@@ -2,12 +2,12 @@ import * as Resolve from 'ephox/katamari/api/Resolve';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ObjResolverTest', function() {
+UnitTest.test('ObjResolverTest', function () {
   const testNamespace = function () {
     const survivor = 'i want to survive this namespacing';
     const token = 'i should be set as the [token] attribute on the namespace';
 
-    const data:any = {
+    const data: any = {
       foo: {
         barney: survivor
       },
@@ -97,4 +97,3 @@ UnitTest.test('ObjResolverTest', function() {
   testResolve();
   testSpecs();
 });
-

@@ -35,6 +35,7 @@ const getAllHistory = function (): Record<string, string[]> {
     history = JSON.parse(unparsedHistory);
   } catch (e) {
     if (e instanceof SyntaxError) {
+      // tslint:disable-next-line:no-console
       console.log('Local storage ' + STORAGE_KEY + ' was not valid JSON', e);
       return {};
     }
@@ -42,6 +43,7 @@ const getAllHistory = function (): Record<string, string[]> {
   }
   // validate the parsed value
   if (!isRecordOfUrlArray(history)) {
+    // tslint:disable-next-line:no-console
     console.log('Local storage ' + STORAGE_KEY + ' was not valid format', history);
     return {};
   }

@@ -95,4 +95,3 @@ UnitTest.asynctest('ClipboardTest', (success, failure) => {
     success();
   }, failure);
 });
-

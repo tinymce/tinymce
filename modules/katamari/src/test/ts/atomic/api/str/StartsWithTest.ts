@@ -2,7 +2,7 @@ import * as Strings from 'ephox/katamari/api/Strings';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('startsWith', function() {
+UnitTest.test('startsWith', function () {
   function check(expected, str, prefix) {
       const actual = Strings.startsWith(str, prefix);
       assert.eq(expected, actual);
@@ -27,4 +27,3 @@ UnitTest.test('startsWith', function() {
     }
   );
 });
-

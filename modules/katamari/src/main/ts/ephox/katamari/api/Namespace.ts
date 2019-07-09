@@ -8,6 +8,6 @@ export const css = function (namespace: string) {
   };
 
   return {
-    resolve: resolve
+    resolve
   };
 };

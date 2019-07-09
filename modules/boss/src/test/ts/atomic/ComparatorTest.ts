@@ -28,4 +28,3 @@ UnitTest.test('ComparatorTest', function () {
   assert.eq(false, Comparator.is(c, '[]'));
   assert.eq(false, Comparator.is(c, '[bob]'));
 });
-

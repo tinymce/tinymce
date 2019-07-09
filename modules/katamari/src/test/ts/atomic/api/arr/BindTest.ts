@@ -3,7 +3,7 @@ import * as Fun from 'ephox/katamari/api/Fun';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('BindTest', function() {
+UnitTest.test('BindTest', function () {
   const len = function (x) {
     return [x.length];
   };
@@ -58,4 +58,3 @@ UnitTest.test('BindTest', function() {
     }
   );
 });
-

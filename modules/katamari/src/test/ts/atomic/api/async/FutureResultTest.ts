@@ -1,3 +1,4 @@
+/* tslint:disable:no-unimported-promise */
 import { Future } from 'ephox/katamari/api/Future';
 import { FutureResult } from 'ephox/katamari/api/FutureResult';
 import { Result } from 'ephox/katamari/api/Result';
@@ -116,7 +117,7 @@ UnitTest.asynctest('FutureResultsTest', (success, failure) => {
           (_) => assert.fail('Should never be invoked')
         );
 
-        resolve(true)
+        resolve(true);
       });
     });
   };
@@ -174,7 +175,7 @@ UnitTest.asynctest('FutureResultsTest', (success, failure) => {
       {
         label: 'FutureResult.value resolves with data',
         arbs: [ Jsc.json ],
-        f: function (json) {
+        f (json) {
           return AsyncProps.checkFuture(FutureResult.value(json), function (data) {
             return data.fold(function (err) {
               return Result.error('Unexpected error in test: ' + err);
@@ -188,7 +189,7 @@ UnitTest.asynctest('FutureResultsTest', (success, failure) => {
       {
         label: 'FutureResult.value mapResult f resolves with f data',
         arbs: [ Jsc.json, Jsc.fun(Jsc.json) ],
-        f: function (json, f) {
+        f (json, f) {
           const futureResult = FutureResult.value(json);
           return AsyncProps.checkFuture(futureResult.mapResult(f), function (data) {
             return data.fold(function (err) {
@@ -203,7 +204,7 @@ UnitTest.asynctest('FutureResultsTest', (success, failure) => {
       {
         label: 'futureResult.bind(binder) equiv futureResult.get(bind)',
         arbs: [ ArbDataTypes.futureResultSchema, Jsc.fun(ArbDataTypes.futureResult) ],
-        f: function (arbF, binder) {
+        f (arbF, binder) {
           return AsyncProps.futureToPromise(arbF.futureResult.bindFuture(binder)).then(function (data) {
             return new Promise(function (resolve, reject) {
 
@@ -212,21 +213,21 @@ UnitTest.asynctest('FutureResultsTest', (success, failure) => {
                 // input was error
                 // bind result was error
                 // so check that the error strings are the same (i.e. binder didn't run)
-                bothErrors: function (errInit, errBind) {
+                bothErrors (errInit, errBind) {
                   return Jsc.eq(errInit, errBind) ? resolve(true) : reject('Both were errors, but the errors did not match');
                 },
 
                 // input was error
                 // bind result was value
                 // something is wrong.
-                firstError: function (errInit, valBind) {
+                firstError (errInit, valBind) {
                   reject('Initially, you had an error, but after bind you received a value');
                 },
 
                 // input was value
                 // bind result was error
                 // something is right if binder(value) === error
-                secondError: function (valInit, errBind) {
+                secondError (valInit, errBind) {
                   // check that bind did not do that.
                   binder(valInit).toLazy().get(function (resF) {
                     resF.fold(function (errF) {
@@ -238,7 +239,7 @@ UnitTest.asynctest('FutureResultsTest', (success, failure) => {
                     });
                   });
                 },
-                bothValues: function (valInit, valBind) {
+                bothValues (valInit, valBind) {
                   // input was value
                   // bind result was value
                   // something is right if binder(value) === value
@@ -264,7 +265,7 @@ UnitTest.asynctest('FutureResultsTest', (success, failure) => {
       {
         label: 'futureResult.bindResult equiv binding original value',
         arbs: [ ArbDataTypes.futureResultSchema, Jsc.fun(ArbDataTypes.result) ],
-        f: function (arbF, resultBinder) {
+        f (arbF, resultBinder) {
           return AsyncProps.futureToPromise(arbF.futureResult.bindResult(resultBinder)).then(function (data) {
             return new Promise(function (resolve, reject) {
               const comparison = Results.compare(arbF.contents, data);
@@ -272,21 +273,21 @@ UnitTest.asynctest('FutureResultsTest', (success, failure) => {
                 // input was error
                 // bind result was error
                 // so check that the error strings are the same (i.e. binder didn't run)
-                bothErrors: function (errInit, errBind) {
+                bothErrors (errInit, errBind) {
                   return Jsc.eq(errInit, errBind) ? resolve(true) : reject('Both were errors, but the errors did not match');
                 },
 
                 // input was error
                 // bind result was value
                 // something is wrong.
-                firstError: function (errInit, valBind) {
+                firstError (errInit, valBind) {
                   reject('Initially, you had an error, but after bind you received a value');
                 },
 
                 // input was value
                 // bind result was error
                 // something is right if binder(value) === error
-                secondError: function (valInit, errBind) {
+                secondError (valInit, errBind) {
                   // check that bind did not do that.
                   resultBinder(valInit).fold(function (errF) {
                     // binding original value resulted in error, so check error
@@ -296,7 +297,7 @@ UnitTest.asynctest('FutureResultsTest', (success, failure) => {
                     reject('After binding the value, bindFuture should be a value, but it is an error');
                   });
                 },
-                bothValues: function (valInit, valBind) {
+                bothValues (valInit, valBind) {
                   // input was value
                   // bind result was value
                   // something is right if binder(value) === value
@@ -321,7 +322,7 @@ UnitTest.asynctest('FutureResultsTest', (success, failure) => {
       {
         label: 'futureResult.mapResult equiv mapping original result',
         arbs: [ ArbDataTypes.futureResultSchema, Jsc.fun(Jsc.json) ],
-        f: function (arbF, resultMapper) {
+        f (arbF, resultMapper) {
           return AsyncProps.futureToPromise(arbF.futureResult.mapResult(resultMapper)).then(function (data) {
             return new Promise(function (resolve, reject) {
               const comparison = Results.compare(arbF.contents, data);
@@ -329,24 +330,24 @@ UnitTest.asynctest('FutureResultsTest', (success, failure) => {
                 // input was error
                 // bind result was error
                 // so check that the error strings are the same (i.e. binder didn't run)
-                bothErrors: function (errInit, errBind) {
+                bothErrors (errInit, errBind) {
                   return Jsc.eq(errInit, errBind) ? resolve(true) : reject('Both were errors, but the errors did not match');
                 },
 
                 // input was error
                 // bind result was value
                 // something is wrong.
-                firstError: function (errInit, valBind) {
+                firstError (errInit, valBind) {
                   reject('Initially, you had an error, but after bind you received a value');
                 },
 
                 // input was value
                 // bind result was error
                 // something is wrong because you can't map to an error
-                secondError: function (valInit, errBind) {
+                secondError (valInit, errBind) {
                   reject('Initially you had a value, so you cannot map to an error');
                 },
-                bothValues: function (valInit, valBind) {
+                bothValues (valInit, valBind) {
                   // input was value
                   // bind result was value
                   // something is right if mapper(value) === value
@@ -380,4 +381,3 @@ UnitTest.asynctest('FutureResultsTest', (success, failure) => {
       success();
     }, failure);
 });
-

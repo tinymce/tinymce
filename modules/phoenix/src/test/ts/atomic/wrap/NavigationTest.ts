@@ -3,7 +3,7 @@ import { CommentGene, Gene, TestUniverse, TextGene } from '@ephox/boss';
 import * as Finder from 'ephox/phoenix/test/Finder';
 import * as Navigation from 'ephox/phoenix/wrap/Navigation';
 
-UnitTest.test('NavigationTest', function() {
+UnitTest.test('NavigationTest', function () {
   let doc = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'div', [
@@ -164,4 +164,3 @@ UnitTest.test('NavigationTest', function() {
   checkFreeFallRtl({ element: '4-1.1', offset: 9 }, doc, '4-1.1');
   checkFreeFallRtl({ element: '4-1.1', offset: 9 }, doc, '4-c2');
 });
-

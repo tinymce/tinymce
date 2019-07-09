@@ -15,7 +15,7 @@ const descendant = function (sugarElement: Element, selector: string): Option<El
 
 const toArrayEl = function (elements: (Node | Window)[]): Element[] {
   return Arr.map(elements, Element.fromDom);
-}
+};
 
 /* Petrie makes extensive use of :visible, :has() and :contains() which are sizzle extensions */
 const descendants = function (sugarElement: Element, selector: string): Element[] {

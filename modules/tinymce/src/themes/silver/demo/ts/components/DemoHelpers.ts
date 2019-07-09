@@ -42,6 +42,7 @@ const setupDemo = () => {
     targets: [
       { type: 'anchor', title: 'Google', url: 'http://www.google.com.au', level: 0, attach: Fun.noop},
       { type: 'header', title: 'Header', url: '#header', level: 1, attach: () => {
+          // tslint:disable-next-line:no-console
         console.log('This is where the ID would be attached to the header so it can be linked');
       }}
     ],

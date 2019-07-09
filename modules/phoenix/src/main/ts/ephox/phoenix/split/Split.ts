@@ -17,9 +17,15 @@ const tokens = function <E, D>(universe: Universe<E, D>, item: E, ps: number[]) 
  *   item is not text:  (none, some(item))
  */
 const split = function <E, D>(universe: Universe<E, D>, item: E, position: number): TextSplit<E> {
-  if (!universe.property().isText(item)) return TextSplit(Option.none(), Option.some(item));
-  if (position <= 0) return TextSplit(Option.none(), Option.some(item));
-  if (position >= universe.property().getText(item).length) return TextSplit(Option.some(item), Option.none());
+  if (!universe.property().isText(item)) {
+    return TextSplit(Option.none(), Option.some(item));
+  }
+  if (position <= 0) {
+    return TextSplit(Option.none(), Option.some(item));
+  }
+  if (position >= universe.property().getText(item).length) {
+    return TextSplit(Option.some(item), Option.none());
+  }
 
   const parts = tokens(universe, item, [position]);
   universe.property().setText(item, parts[0]);
@@ -34,11 +40,17 @@ const split = function <E, D>(universe: Universe<E, D>, item: E, position: numbe
  * If no split is required, return the item.
  */
 const splitByPair = function <E, D>(universe: Universe<E, D>, item: E, start: number, end: number): E {
-  if (!universe.property().isText(item) || start === end) return item;
-  if (start > end) return splitByPair(universe, item, end, start);
+  if (!universe.property().isText(item) || start === end) {
+    return item;
+  }
+  if (start > end) {
+    return splitByPair(universe, item, end, start);
+  }
 
   const len = universe.property().getText(item).length;
-  if (start === 0 && end === len) return item;
+  if (start === 0 && end === len) {
+    return item;
+  }
 
   const parts = tokens(universe, item, [start, end]);
 

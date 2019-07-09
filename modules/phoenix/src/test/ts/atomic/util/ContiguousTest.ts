@@ -50,4 +50,3 @@ UnitTest.test('Contiguous Text Nodes Test', function () {
     { parent: '3', children: ['1.6'] }
   ], ['1.1', '1.2', '1.3', '1.4', '1.5', '1.6']);
 });
-

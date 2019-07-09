@@ -53,7 +53,7 @@ UnitTest.test('WrapperTest', function () {
     beginId: string;
     beginOffset: number;
     endId: string;
-    endOffset: number
+    endOffset: number;
   }
 
   const check = function (overall: string, expResult: ExpResult, startId: string, startOffset: number, endId: string, endOffset: number) {
@@ -99,4 +99,3 @@ UnitTest.test('WrapperTest', function () {
     'b("yes")' +
     ')', { beginId: 'wrap_0', beginOffset: 0, endId: 'wrap_6', endOffset: 1 }, 'aa', 1, 'aca', 4);
 });
-

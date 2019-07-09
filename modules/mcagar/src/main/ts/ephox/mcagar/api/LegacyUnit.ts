@@ -1,9 +1,7 @@
-import { Step } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
+import { Assertions, Logger, Step } from '@ephox/agar';
 import TinyDom from './TinyDom';
 
-var test = function (message: string, fn: Function) {
+const test = function (message: string, fn: Function) {
   return function (editor) {
     return Logger.t(
       message,
@@ -14,7 +12,7 @@ var test = function (message: string, fn: Function) {
   };
 };
 
-var asyncTest = function (message: string, fn: Function) {
+const asyncTest = function (message: string, fn: Function) {
   return function (editor) {
     return Logger.t(
       message,
@@ -25,19 +23,19 @@ var asyncTest = function (message: string, fn: Function) {
   };
 };
 
-var createSuite = function () {
-  var tests = [];
+const createSuite = function () {
+  const tests = [];
 
   return {
-    test: function (message: string, fn: Function) {
+    test (message: string, fn: Function) {
       tests.push(test(message, fn));
     },
 
-    asyncTest: function (message: string, fn: Function) {
+    asyncTest (message: string, fn: Function) {
       tests.push(asyncTest(message, fn));
     },
 
-    toSteps: function (editor) {
+    toSteps (editor) {
       return tests.map(function (test) {
         return test(editor);
       });
@@ -45,14 +43,14 @@ var createSuite = function () {
   };
 };
 
-var execCommand = function execCommand(editor, cmd: string, ui?, value?) {
+const execCommand = function execCommand(editor, cmd: string, ui?, value?) {
   if (editor.editorCommands.hasCustomCommand(cmd)) {
     editor.execCommand(cmd, ui, value);
   }
 };
 
-var findContainer = function (editor, selector: string) {
-  var container;
+const findContainer = function (editor, selector: string) {
+  let container;
 
   if (typeof selector === 'string') {
     container = editor.dom.select(selector)[0];
@@ -67,12 +65,12 @@ var findContainer = function (editor, selector: string) {
   return container;
 };
 
-var setSelection = function (editor, startSelector: string, startOffset: number, endSelector?: string, endOffset?: number) {
-  var startContainer = findContainer(editor, startSelector);
-  var endContainer = findContainer(editor, endSelector ? endSelector : startSelector);
-  var rng = editor.dom.createRng();
+const setSelection = function (editor, startSelector: string, startOffset: number, endSelector?: string, endOffset?: number) {
+  const startContainer = findContainer(editor, startSelector);
+  const endContainer = findContainer(editor, endSelector ? endSelector : startSelector);
+  const rng = editor.dom.createRng();
 
-  var setRange = function (container, offset, start) {
+  const setRange = function (container, offset, start) {
     offset = offset ? offset : 0;
 
     if (offset === 'after') {
@@ -100,30 +98,30 @@ var setSelection = function (editor, startSelector: string, startOffset: number,
   editor.selection.setRng(rng);
 };
 
-var trimBrs = function (html: string) {
+const trimBrs = function (html: string) {
   return html.toLowerCase().replace(/<br[^>]*>|[\r\n]+/gi, '');
 };
 
-var equalDom = function (actual, expected, message?: string) {
-  Assertions.assertDomEq(typeof message !== "undefined" ? message : 'Nodes are not equal', TinyDom.fromDom(expected), TinyDom.fromDom(actual));
+const equalDom = function (actual, expected, message?: string) {
+  Assertions.assertDomEq(typeof message !== 'undefined' ? message : 'Nodes are not equal', TinyDom.fromDom(expected), TinyDom.fromDom(actual));
 };
 
-var equal = function (actual, expected, message?: string) {
-  Assertions.assertEq(typeof message !== "undefined" ? message : 'No message specified', expected, actual);
+const equal = function (actual, expected, message?: string) {
+  Assertions.assertEq(typeof message !== 'undefined' ? message : 'No message specified', expected, actual);
 };
 
 export default {
-  test: test,
-  asyncTest: asyncTest,
-  createSuite: createSuite,
+  test,
+  asyncTest,
+  createSuite,
 
-  execCommand: execCommand,
-  setSelection: setSelection,
+  execCommand,
+  setSelection,
 
-  trimBrs: trimBrs,
+  trimBrs,
 
-  equal: equal,
-  equalDom: equalDom,
+  equal,
+  equalDom,
   strictEqual: equal,
   deepEqual: equal
 };

@@ -33,7 +33,7 @@ const chainsAsChain = (testId: string, description: string, cs: Chain<any, any>[
   return Chain.fromChains(chains(testId, description, cs));
 };
 
-const chainsAsStep = (testId: string, description: string, cs: Chain<any,any>[]): Step<any,any> => {
+const chainsAsStep = (testId: string, description: string, cs: Chain<any, any>[]): Step<any, any> => {
   return Chain.asStep({}, chains(testId, description, cs));
 };
 

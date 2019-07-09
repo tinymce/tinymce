@@ -1,5 +1,4 @@
 import { formatObj } from '../format/PrettyPrinter';
-import { Result } from '@ephox/katamari';
 import { SimpleResult } from '../alien/SimpleResult';
 
 const nu = function (path, getErrorInfo) {

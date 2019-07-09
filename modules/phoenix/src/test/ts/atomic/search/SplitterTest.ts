@@ -47,4 +47,3 @@ UnitTest.test('SplitterTest', function () {
     TextGene('a', '_abcdefghijklmnopqrstuvwxyz')
   ]));
 });
-

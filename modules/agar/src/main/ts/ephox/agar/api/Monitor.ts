@@ -15,8 +15,8 @@ export const Monitor = function <T>(initial: number, f: (...args) => T) {
   };
 
   return {
-    run: run,
-    get: get,
-    clear: clear
+    run,
+    get,
+    clear
   };
 };

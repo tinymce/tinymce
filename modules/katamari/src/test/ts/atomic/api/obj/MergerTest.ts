@@ -4,7 +4,7 @@ import * as Obj from 'ephox/katamari/api/Obj';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Merger', function() {
+UnitTest.test('Merger', function () {
   assert.eq({}, Merger.merge({}, {}));
   assert.eq({a: 'A'}, Merger.merge({a: 'A'}, {}));
   assert.eq({a: 'A'}, Merger.merge({a: 'A'}, {}, {}));
@@ -124,4 +124,3 @@ UnitTest.test('Merger', function() {
     });
   });
 });
-

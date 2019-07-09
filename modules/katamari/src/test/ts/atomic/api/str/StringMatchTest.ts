@@ -2,7 +2,7 @@ import { StringMatch } from 'ephox/katamari/api/StringMatch';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('StringMatchTest', function() {
+UnitTest.test('StringMatchTest', function () {
   const check = function (testcase) {
     assert.eq(testcase.expected, StringMatch.matches(testcase.match, testcase.input));
     assert.eq(!testcase.expected, StringMatch.matches(
@@ -187,7 +187,6 @@ UnitTest.test('StringMatchTest', function() {
     }
   );
 
-
   Jsc.property(
     'StringMatch.matches(StringMatch.all(s1), *) === true',
     Jsc.string,
@@ -200,4 +199,3 @@ UnitTest.test('StringMatchTest', function() {
     }
   );
 });
-

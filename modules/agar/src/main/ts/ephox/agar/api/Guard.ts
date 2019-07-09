@@ -18,7 +18,7 @@ const tryUntilNot = function <T, U>(label: string, interval: number, amount: num
         const elapsed = Date.now() - startTime;
         if (elapsed >= amount) {
           die(
-            new Error('Waited for ' + amount + 'ms for something to be unsuccessful. ' + label), 
+            new Error('Waited for ' + amount + 'ms for something to be unsuccessful. ' + label),
             addLogEntry(newLogs, 'WaitErr: ' + label + ' = Failed (after ' + amount + 'ms)')
           );
         } else {
@@ -27,11 +27,14 @@ const tryUntilNot = function <T, U>(label: string, interval: number, amount: num
           }, interval);
         }
       }, function (err, newLogs) {
-        // Note, this one is fairly experimental. 
+        // Note, this one is fairly experimental.
         // Because errors cause die as well, this is not always the best option.
         // What we do is check to see if it is an error prototype.
-        if (Error.prototype.isPrototypeOf(err)) die(err, newLogs);
-        else next(value, addLogEntry(newLogs, 'WaitErr: ' + label + ' = SUCCESS!'));
+        if (Error.prototype.isPrototypeOf(err)) {
+          die(err, newLogs);
+        } else {
+          next(value, addLogEntry(newLogs, 'WaitErr: ' + label + ' = SUCCESS!'));
+        }
       }, logs);
     };
     repeat(Date.now());
@@ -42,7 +45,7 @@ const tryUntil = function <T, U>(label: string, interval: number, amount: number
   return nu<T, U, U>(function (f: RunFn<T, U>, value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) {
     const repeat = function (startTime: number) {
       f(value, (v, newLogs) => {
-        next(v, addLogEntry(newLogs, 'Wait: ' + label + ' = SUCCESS!'))
+        next(v, addLogEntry(newLogs, 'Wait: ' + label + ' = SUCCESS!'));
       }, function (err, newLogs) {
         const elapsed = Date.now() - startTime;
         if (elapsed >= amount) {
