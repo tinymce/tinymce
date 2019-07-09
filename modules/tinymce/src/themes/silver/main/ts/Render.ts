@@ -365,7 +365,6 @@ const setup = (editor: Editor): RenderInfo => {
     SilverContextMenu.setup(editor, lazySink, backstage);
     Sidebar.setup(editor);
     Throbber.setup(editor, lazyThrobber, backstage.shared);
-    // TODO apply mobile here in the theme.
 
     // Apply Bridge types
     const { buttons, menuItems, contextToolbars, sidebars } = editor.ui.registry.getAll();
@@ -387,6 +386,7 @@ const setup = (editor: Editor): RenderInfo => {
 
     const elm = editor.getElement();
     const height = setEditorSize(elm);
+
     const uiComponents: RenderUiComponents = { mothership, uiMothership, outerContainer };
     const args: RenderArgs = { targetNode: elm, height };
     return mode.render(editor, uiComponents, rawUiConfig, backstage, args);
