@@ -5,21 +5,25 @@ import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
 import StepAssertions from 'ephox/agar/test/StepAssertions';
 
-UnitTest.asynctest('ChainTest', function() {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('ChainTest', function (success, failure) {
 
   const cIsEqual = function (expected) {
     return Chain.async(function (actual, next, die) {
-      if (expected === actual) next(actual);
-      else die('Cat is not a dog');
+      if (expected === actual) {
+        next(actual);
+      } else {
+        die('Cat is not a dog');
+      }
     });
   };
 
   const cIsEqualAndChange = function (expected, newValue) {
     return Chain.async(function (actual, next, die) {
-      if (expected === actual) next(newValue);
-      else die('Cat is not a dog');
+      if (expected === actual) {
+        next(newValue);
+      } else {
+        die('Cat is not a dog');
+      }
     });
   };
 
@@ -33,7 +37,7 @@ UnitTest.asynctest('ChainTest', function() {
     [
       Chain.asStep({}, [
         Chain.on(function (cInput, cNext, cDie, cLogs) {
-          cNext(<any>'dog', cLogs);
+          cNext(<any> 'dog', cLogs);
         })
       ])
     ]
@@ -136,7 +140,7 @@ UnitTest.asynctest('ChainTest', function() {
       Step.raw(function (_, next, die, logs) {
         Chain.on(function (input: any, n, d, clogs) {
           n(input, clogs);
-        }).runChain(<any>'raw.input', next, die, logs);
+        }).runChain(<any> 'raw.input', next, die, logs);
       })
     ]
   );
@@ -161,7 +165,7 @@ UnitTest.asynctest('ChainTest', function() {
     Chain.fromChains([
       Chain.inject('async chains!'),
       Chain.async((value, next, _die) => {
-        next(value)
+        next(value);
       })
     ])
   );
@@ -284,4 +288,3 @@ UnitTest.asynctest('ChainTest', function() {
     success();
   }, failure);
 });
-

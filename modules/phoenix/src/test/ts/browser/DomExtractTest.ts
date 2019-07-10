@@ -11,7 +11,6 @@ UnitTest.test('DomExtractTest', function () {
 
   const optimise = Fun.constant(false);
 
-
   (function () {
     // Test extractTo
     const check = function (eNode: Element, eOffset: number, cNode: Element, cOffset: number, predicate: (e: Element) => boolean) {
@@ -24,7 +23,6 @@ UnitTest.test('DomExtractTest', function () {
       return Compare.eq(element, page.div1);
     });
   })();
-
 
   (function () {
     // Test find.

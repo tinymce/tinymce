@@ -8,14 +8,14 @@ export interface CursorRange {
   soffset: () => number;
   finish: () => Element;
   foffset: () => number;
-};
+}
 
 export interface CursorPath {
   startPath: () => number[];
   soffset: () => number;
   finishPath: () => number[];
   foffset: () => number;
-};
+}
 
 type RangeConstructor = (obj: { start: Element; soffset: number; finish: Element; foffset: number; }) => CursorRange;
 
@@ -56,7 +56,7 @@ const pathFromRange = function (spec: RangeSpec) {
 
 const isCursorSpec = function (spec: CursorSpec | RangeSpec): spec is CursorSpec {
   return !('start' in spec) && 'element' in spec;
-}
+};
 
 const pathFrom = function (spec: CursorSpec | RangeSpec) {
   return isCursorSpec(spec) ? pathFromCollapsed(spec) : pathFromRange(spec);
@@ -74,9 +74,9 @@ const followPath = function (container: Element, calcPath: CursorPath) {
   return follow(container, calcPath.startPath()).bind(function (start) {
     return follow(container, calcPath.finishPath()).map(function (finish) {
       return range({
-        start: start,
+        start,
         soffset: calcPath.soffset(),
-        finish: finish,
+        finish,
         foffset: calcPath.foffset()
       });
     });

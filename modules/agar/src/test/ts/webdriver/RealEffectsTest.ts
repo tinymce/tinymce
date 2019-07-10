@@ -115,4 +115,3 @@ UnitTest.asynctest('Real Effects Test', function (success, failure) {
     success();
   }, failure);
 });
-

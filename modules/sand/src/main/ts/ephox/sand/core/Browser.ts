@@ -38,8 +38,8 @@ const nu = function (info: UaString): Browser {
   const version = info.version;
 
   return {
-    current: current,
-    version: version,
+    current,
+    version,
 
     isEdge: isBrowser(edge, current),
     isChrome: isBrowser(chrome, current),
@@ -52,8 +52,8 @@ const nu = function (info: UaString): Browser {
 };
 
 export const Browser = {
-  unknown: unknown,
-  nu: nu,
+  unknown,
+  nu,
   edge: Fun.constant(edge),
   chrome: Fun.constant(chrome),
   ie: Fun.constant(ie),

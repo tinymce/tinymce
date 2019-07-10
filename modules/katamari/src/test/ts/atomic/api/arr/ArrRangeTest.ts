@@ -3,7 +3,7 @@ import * as Fun from 'ephox/katamari/api/Fun';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ArrRangeTest', function() {
+UnitTest.test('ArrRangeTest', function () {
   const check = function (expected, input, f) {
     const actual = Arr.range(input, f);
     assert.eq(expected, actual);
@@ -11,7 +11,7 @@ UnitTest.test('ArrRangeTest', function() {
 
   check([ ], 0, Fun.constant(10));
   check([ 10 ], 1, Fun.constant(10));
-  check([ 10, 20, 30 ], 3, function (x) { return 10 * (x+1); });
+  check([ 10, 20, 30 ], 3, function (x) { return 10 * (x + 1); });
 
   Jsc.property(
     'Range(num, Fun.identity) should Arr.forall(x === index) && length === num',
@@ -36,4 +36,3 @@ UnitTest.test('ArrRangeTest', function() {
     }
   );
 });
-

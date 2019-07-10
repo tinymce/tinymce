@@ -21,10 +21,13 @@ const flattenTag = function (tag) {
 };
 
 const conform = function (detail) {
-  if (detail.tags !== undefined) return detail;
-  else return Merger.deepMerge(detail, {
-    tags: flattenTag(detail.tag)
-  });
+  if (detail.tags !== undefined) {
+    return detail;
+  } else {
+    return Merger.deepMerge(detail, {
+      tags: flattenTag(detail.tag)
+    });
+  }
 };
 
 const addDecorations = function (detail, element) {
@@ -64,9 +67,9 @@ export default function (construct) {
     });
 
     return Jsc.bless({
-      generator: generator,
+      generator,
       shrink: Jsc.shrink.noop,
-      show: show
+      show
     });
   };
 
@@ -76,7 +79,6 @@ export default function (construct) {
       return combine(detail, childGenerator);
     };
   };
-
 
   const leaf = function (detail) {
     return function (_) {
@@ -98,9 +100,9 @@ export default function (construct) {
   };
 
   return {
-    arbitrary: arbitrary,
-    leaf: leaf,
-    structure: structure,
-    composite: composite
+    arbitrary,
+    leaf,
+    structure,
+    composite
   };
-};
+}

@@ -62,6 +62,7 @@ const renderBodyPanel = (spec: BodyPanelSpec, backstage: UiFactoryBackstage): Si
       RepresentingConfigs.memento(memForm, {
         postprocess: (formValue) => FormValues.toValidValues(formValue).fold(
           (err) => {
+            // tslint:disable-next-line:no-console
             console.error(err);
             return { };
           },

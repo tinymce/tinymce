@@ -130,6 +130,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
               title: 'Advanced',
               filter: /.adv/,
               selector_converter: (selector, group) => {
+                // tslint:disable-next-line:no-console
                 console.log('selector', selector, 'group', group);
                 return {
                   title: selector + '.AdvGroup',

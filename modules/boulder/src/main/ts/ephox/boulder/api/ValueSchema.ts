@@ -3,7 +3,6 @@ import { Fun, Result, Type } from '@ephox/katamari';
 import { arrOf, ValueProcessorAdt, func, Processor, thunk, value, valueThunk, ValueValidator, setOf as doSetOf, objOf, objOfOnly, arrOfObj as _arrOfObj } from '../core/ValueProcessor';
 import { formatErrors, formatObj} from '../format/PrettyPrinter';
 import { choose as _choose } from '../core/ChoiceProcessor';
-import { FieldProcessorAdt } from './DslType';
 import { SimpleResult } from '../alien/SimpleResult';
 export interface SchemaError <T> {
   input: T;
@@ -40,13 +39,13 @@ const extract = function (label: string, prop: Processor, strength, obj: any): S
   });
 };
 
-const asStruct = function <T, U=any>(label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> {
+const asStruct = function <T, U = any>(label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> {
   return SimpleResult.toResult(
     extract(label, prop, Fun.constant, obj)
   );
 };
 
-const asRaw = function <T, U=any>(label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> {
+const asRaw = function <T, U = any>(label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> {
   return SimpleResult.toResult(
     extract(label, prop, Fun.identity, obj)
   );
@@ -98,7 +97,7 @@ const anyValue = Fun.constant(_anyValue);
 
 const typedValue = (validator: (a: any) => boolean, expectedType: string) => value((a) => {
   const actualType = typeof a;
-  return validator(a) ? SimpleResult.svalue(a) : SimpleResult.serror(`Expected type: ${expectedType} but got: ${actualType}`)
+  return validator(a) ? SimpleResult.svalue(a) : SimpleResult.serror(`Expected type: ${expectedType} but got: ${actualType}`);
 });
 
 const number = typedValue(Type.isNumber, 'number');

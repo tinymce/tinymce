@@ -1,4 +1,5 @@
 const debug = function () {
+  // tslint:disable-next-line:no-debugger
   debugger;
 };
 

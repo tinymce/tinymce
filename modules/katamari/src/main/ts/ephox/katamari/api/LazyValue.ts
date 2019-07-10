@@ -22,8 +22,11 @@ const nu = function <T> (baseFn: (completer: (value: T) => void) => void): LazyV
   };
 
   const get = function (nCallback: (value: T) => void) {
-    if (isReady()) call(nCallback);
-    else callbacks.push(nCallback);
+    if (isReady()) {
+      call(nCallback);
+    } else {
+      callbacks.push(nCallback);
+    }
   };
 
   const set = function (x: T) {
@@ -40,9 +43,9 @@ const nu = function <T> (baseFn: (completer: (value: T) => void) => void): LazyV
     Arr.each(cbs, call);
   };
 
-  const call = function(cb: (value: T) => void) {
-    data.each(function(x) {
-      setTimeout(function() {
+  const call = function (cb: (value: T) => void) {
+    data.each(function (x) {
+      setTimeout(function () {
         cb(x);
       }, 0);
     });
@@ -52,9 +55,9 @@ const nu = function <T> (baseFn: (completer: (value: T) => void) => void): LazyV
   baseFn(set);
 
   return {
-    get: get,
-    map: map,
-    isReady: isReady
+    get,
+    map,
+    isReady
   };
 };
 
@@ -65,6 +68,6 @@ const pure = function <T> (a: T) {
 };
 
 export const LazyValue = {
-  nu: nu,
-  pure: pure
+  nu,
+  pure
 };

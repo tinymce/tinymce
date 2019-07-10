@@ -1,8 +1,8 @@
 import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
 
-import { RawAssertions } from '../../../../main/ts/ephox/agar/api/Main';
-import { addLogEntry, popLogLevel, pushLogLevel, TestLogs, TestLogEntryState, addStackTrace } from '../../../../main/ts/ephox/agar/api/TestLogs';
+import * as RawAssertions from 'ephox/agar/api/RawAssertions';
+import { addLogEntry, popLogLevel, pushLogLevel, TestLogs, TestLogEntryState, addStackTrace } from 'ephox/agar/api/TestLogs';
 
 UnitTest.test('TestLogsTest', () => {
 

@@ -2,7 +2,7 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ContainsTest', function() {
+UnitTest.test('ContainsTest', function () {
   const check = function (expected, input: any[], value) {
     assert.eq(expected, Arr.contains(input, value));
     assert.eq(expected, Arr.contains(Object.freeze(input.slice()), value));
@@ -18,10 +18,7 @@ UnitTest.test('ContainsTest', function() {
 
   const genArrayWithSplit = Jsc.nearray(Jsc.json).generator.flatMap(function (arr) {
     return Jsc.integer(0, arr.length).generator.map(function (slicePt) {
-      return {
-        arr: arr,
-        slicePt: slicePt
-      };
+      return { arr, slicePt };
     });
   });
 
@@ -59,4 +56,3 @@ UnitTest.test('ContainsTest', function() {
     }
   );
 });
-

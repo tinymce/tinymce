@@ -32,7 +32,7 @@
   "types": "./lib/main/ts/ephox/acid/api/Main.d.ts",
   "scripts": {
     "prepublishOnly": "tsc -b",
-    "lint": "tslint --project tsconfig.json --config tslint.json",
+    "lint": "tslint --config ../../tslint.json --project tsconfig.json",
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts"
   }

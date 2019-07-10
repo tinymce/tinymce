@@ -100,6 +100,7 @@ const initDatabase = (editor: Editor, databaseUrl: string): EmojiDatabase => {
     ScriptLoader.ScriptLoader.loadScript(databaseUrl, () => {
       extractGlobal(databaseUrl).fold(
         (err) => {
+          // tslint:disable-next-line:no-console
           console.log(err);
           categories.set(Option.some({ }));
           all.set(Option.some([ ]));
@@ -144,6 +145,7 @@ const initDatabase = (editor: Editor, databaseUrl: string): EmojiDatabase => {
           } else {
             numRetries--;
             if (numRetries < 0) {
+              // tslint:disable-next-line:no-console
               console.log('Could not load emojis from url: ' + databaseUrl);
               Delay.clearInterval(interval);
               reject(false);

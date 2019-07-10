@@ -1,4 +1,4 @@
-import { Obj, Result } from '@ephox/katamari';
+import { Obj } from '@ephox/katamari';
 
 import * as Objects from '../api/Objects';
 import { typeAdt, FieldProcessorAdt } from '../format/TypeTokens';

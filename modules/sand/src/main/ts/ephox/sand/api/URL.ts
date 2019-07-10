@@ -22,6 +22,6 @@ const revokeObjectURL = function (u: string) {
 };
 
 export default {
-  createObjectURL: createObjectURL,
-  revokeObjectURL: revokeObjectURL
+  createObjectURL,
+  revokeObjectURL
 };

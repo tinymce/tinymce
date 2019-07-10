@@ -131,6 +131,7 @@ const getAction = (name: string, buttonType) => {
     } else if (buttonType === 'cancel') {
       AlloyTriggers.emit(comp, formCancelEvent);
     } else {
+      // tslint:disable-next-line:no-console
       console.error('Unknown button type: ', buttonType);
     }
   };

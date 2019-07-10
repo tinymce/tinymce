@@ -4,7 +4,7 @@ import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('OptionNoneTest', function() {
+UnitTest.test('OptionNoneTest', function () {
   const testSanity = function () {
     const s = Option.none();
     assert.eq(false, s.isSome());
@@ -16,7 +16,6 @@ UnitTest.test('OptionNoneTest', function() {
     assert.eq(6, s.orThunk(function () {
       return Option.some(6);
     }).getOrDie());
-
 
     assert.eq(true, s.map(function (v) {
       return v * 2;
@@ -43,7 +42,7 @@ UnitTest.test('OptionNoneTest', function() {
     assert.eq(true, Option.none().or(Option.some(7)).equals(Option.some(7)));
     assert.eq(true, Option.none().or(Option.none()).equals(Option.none()));
 
-    const assertOptionEq = function(expected, actual) {
+    const assertOptionEq = function (expected, actual) {
       const same = expected.isNone() ? actual.isNone() : (actual.isSome() && expected.getOrDie() === actual.getOrDie());
       if (!same) {
         // assumes toString() works
@@ -51,11 +50,11 @@ UnitTest.test('OptionNoneTest', function() {
       }
     };
 
-    assertOptionEq(Option.none(), Option.some(5).filter(function(x) { return x === 8; }));
+    assertOptionEq(Option.none(), Option.some(5).filter(function (x) { return x === 8; }));
     assertOptionEq(Option.none(), Option.some(5).filter(Fun.constant(false)));
     assertOptionEq(Option.none(), Option.none().filter(Fun.die('boom')));
 
-    assert.eq('zz', Option.none().fold(function() { return 'zz'; }, Fun.die('boom')));
+    assert.eq('zz', Option.none().fold(function () { return 'zz'; }, Fun.die('boom')));
     assert.eq([], Option.none().fold(function () { return Array.prototype.slice.call(arguments); }, Fun.die('boom')));
     assert.eq('b', Option.none().fold(Fun.constant('b'), Fun.die('boom')));
   };
@@ -77,7 +76,7 @@ UnitTest.test('OptionNoneTest', function() {
 
     Jsc.property('Checking none.isSome === false', arbOptionNone, function (opt) {
       return Jsc.eq(false, opt.isSome());
-    });      
+    });
 
     Jsc.property('Checking none.isNone === true', arbOptionNone, function (opt) {
       return Jsc.eq(true, opt.isNone());
@@ -104,14 +103,14 @@ UnitTest.test('OptionNoneTest', function() {
     Jsc.property('Checking none.or(oSomeValue) === oSomeValue', arbOptionNone, 'json', function (opt, json) {
       const output = opt.or(Option.some(json));
       return Jsc.eq(true, output.is(json));
-    });      
+    });
 
     Jsc.property('Checking none.orThunk(_ -> v) === v', arbOptionNone, 'json', function (opt, json) {
       const output = opt.orThunk(function () {
         return Option.some(json);
       });
       return Jsc.eq(true, output.is(json));
-    });     
+    });
 
     Jsc.property('Checking none.map(f) === none', arbOptionNone, 'string -> json', function (opt, f) {
       const actual = opt.map(f);
@@ -175,4 +174,3 @@ UnitTest.test('OptionNoneTest', function() {
   testSanity();
   testSpecs();
 });
-

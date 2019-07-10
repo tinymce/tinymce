@@ -2,7 +2,7 @@ import { Cell } from 'ephox/katamari/api/Cell';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Cell', function() {
+UnitTest.test('Cell', function () {
   const single = Cell('hello world');
   assert.eq('hello world', single.get());
   single.set('again');
@@ -23,4 +23,3 @@ UnitTest.test('Cell', function() {
     return Jsc.eq(a, first) && Jsc.eq(b, second) && Jsc.eq(c, third);
   });
 });
-

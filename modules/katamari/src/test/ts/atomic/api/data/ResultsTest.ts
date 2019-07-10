@@ -5,7 +5,7 @@ import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ResultsTest', function() {
+UnitTest.test('ResultsTest', function () {
   const testPartition = function () {
     const actual = Results.partition([
       Result.value('a'),
@@ -35,8 +35,11 @@ UnitTest.test('ResultsTest', function() {
     Jsc.array(arbResultError),
     function (resErrors) {
       const actual = Results.partition(resErrors);
-      if (! Jsc.eq(0, actual.values.length)) return 'Values length should be 0';
-      else if (! Jsc.eq(resErrors.length, actual.errors.length)) return 'Errors length should be ' + resErrors.length;
+      if (!Jsc.eq(0, actual.values.length)) {
+        return 'Values length should be 0';
+      } else if (!Jsc.eq(resErrors.length, actual.errors.length)) {
+        return 'Errors length should be ' + resErrors.length;
+      }
       return true;
     }
   );
@@ -46,8 +49,11 @@ UnitTest.test('ResultsTest', function() {
     Jsc.array(arbResultValue),
     function (resValues) {
       const actual = Results.partition(resValues);
-      if (! Jsc.eq(0, actual.errors.length)) return 'Errors length should be 0';
-      else if (! Jsc.eq(resValues.length, actual.values.length)) return 'Values length should be ' + resValues.length;
+      if (!Jsc.eq(0, actual.errors.length)) {
+        return 'Errors length should be 0';
+      } else if (!Jsc.eq(resValues.length, actual.values.length)) {
+        return 'Values length should be ' + resValues.length;
+      }
       return true;
     }
   );
@@ -121,4 +127,3 @@ UnitTest.test('ResultsTest', function() {
     }
   );
 });
-

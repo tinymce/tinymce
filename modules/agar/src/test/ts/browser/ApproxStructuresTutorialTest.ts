@@ -54,4 +54,3 @@ UnitTest.test('Approx Structures Tutorial Test', function () {
 
   check(structure, html);
 });
-

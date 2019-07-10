@@ -1,3 +1,4 @@
+/* tslint:disable:no-console */
 import { console, setTimeout } from '@ephox/dom-globals';
 
 declare let tinymce: any;

@@ -26,8 +26,7 @@ const cSetFocused = Chain.mapper(function (element: Element) {
 
 const cGetOwnerDoc = Chain.mapper(Traverse.owner);
 
-
-const sIsOn = function <T>(label: string, element: Element): Step<T,T> {
+const sIsOn = function <T>(label: string, element: Element): Step<T, T> {
   return Chain.asStep<T, Element>(element, [
     cGetOwnerDoc,
     cGetFocused,

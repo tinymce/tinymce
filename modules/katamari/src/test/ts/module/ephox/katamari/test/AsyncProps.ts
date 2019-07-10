@@ -1,3 +1,4 @@
+/* tslint:disable:no-unimported-promise */
 import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
 

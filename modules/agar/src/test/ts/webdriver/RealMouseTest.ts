@@ -21,7 +21,6 @@ UnitTest.asynctest('RealMouseTest', function (success, failure) {
     return success();
   }
 
-
   const style = document.createElement('style');
   style.innerHTML = 'button[data-test]:hover { background-color: blue; color: white; } button.other { background-color: blue; color: white; } button';
   document.head.appendChild(style);
@@ -65,7 +64,9 @@ UnitTest.asynctest('RealMouseTest', function (success, failure) {
       Chain.control(
         Chain.op(function (button) {
           // Geckodriver does not have support for API actions yet.
-          if (!detection.browser.isFirefox()) RawAssertions.assertEq('After hovering', Css.get(other, 'background-color'), Css.get(button, 'background-color'));
+          if (!detection.browser.isFirefox()) {
+            RawAssertions.assertEq('After hovering', Css.get(other, 'background-color'), Css.get(button, 'background-color'));
+          }
         }),
         Guard.tryUntil('Waiting for button to turn blue', 100, 2000)
       ),
@@ -85,4 +86,3 @@ UnitTest.asynctest('RealMouseTest', function (success, failure) {
     success();
   }, failure);
 });
-

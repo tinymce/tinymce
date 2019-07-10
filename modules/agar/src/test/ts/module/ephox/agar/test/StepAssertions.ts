@@ -1,4 +1,3 @@
-import { assert } from '@ephox/bedrock';
 import { Arr, Fun, Result } from '@ephox/katamari';
 import { Chain } from 'ephox/agar/api/Chain';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
@@ -8,7 +7,7 @@ import { Step } from 'ephox/agar/api/Step';
 const preserved = '..preserved..';
 
 // We expect it to fail, and we are checking that the error is the right one
-const assertError = (label: string, expectedError: any, actualError: any): Result<any,any> => {
+const assertError = (label: string, expectedError: any, actualError: any): Result<any, any> => {
   const errMessage = actualError.message !== undefined ? actualError.message : actualError;
   try {
     RawAssertions.assertEq(
@@ -29,7 +28,7 @@ const failOnSuccess = (label: string, expectedError: any, unexpectedSuccess: any
 };
 
 // We expect it to pass, so we are checking that the passing value is the right one
-const assertSuccess = (label: string, expected: any, actual: any): Result<any,any> => {
+const assertSuccess = (label: string, expected: any, actual: any): Result<any, any> => {
   try {
     RawAssertions.assertEq(label + ': checking successful value', expected, actual);
     return Result.value(actual);
@@ -79,7 +78,7 @@ const testStepsPass = function (expected, steps: Array<Step<any, any>>) {
       assertSuccess('Checking final step value', expected, v).fold(
         (err) => die(err, newLogs),
         (_) => {
-          next(_, newLogs)
+          next(_, newLogs);
         }
       );
     }, function (err, newLogs) {
@@ -117,7 +116,7 @@ const testStepFail = function (expected, step: Step<any, any>) {
 };
 
 const testChain = function (expected, chain: Chain<any, any>) {
-  return Step.raw(function (value,next, die, initLogs) {
+  return Step.raw(function (value, next, die, initLogs) {
     chain.runChain(Chain.wrap({}), function (actual, newLogs) {
       assertSuccess('testChain', expected, actual.chain).fold(
         (err) => die(err, newLogs),
@@ -135,7 +134,7 @@ const testChainFail = function (expected, initial, chain: Chain<any, any>) {
     chain.runChain(
       Chain.wrap(initial),
       function (actual, newLogs) {
-        const msg = failOnSuccess('testChainFail', expected, actual.chain)
+        const msg = failOnSuccess('testChainFail', expected, actual.chain);
         die(msg, newLogs);
       },
       (err, newLogs) => {
@@ -145,7 +144,7 @@ const testChainFail = function (expected, initial, chain: Chain<any, any>) {
         );
       },
       initLogs
-    )
+    );
   });
 };
 

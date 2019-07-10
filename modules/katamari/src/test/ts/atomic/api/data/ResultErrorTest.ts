@@ -4,7 +4,7 @@ import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Result.error tests', function() {
+UnitTest.test('Result.error tests', function () {
   const testSanity = function () {
     const s = Result.error('error');
     assert.eq(false, s.is('error'));
@@ -42,7 +42,7 @@ UnitTest.test('Result.error tests', function() {
 
     assert.eq(false, s.exists(Fun.always));
     assert.eq(true, s.forall(Fun.never));
-    
+
     assert.eq(true, Result.error(4).toOption().isNone());
   };
 
@@ -63,11 +63,11 @@ UnitTest.test('Result.error tests', function() {
 
     Jsc.property('Checking error.isValue === false', arbResultError, function (res) {
       return Jsc.eq(false, res.isValue());
-    });      
+    });
 
     Jsc.property('Checking error.isError === true', arbResultError, function (res) {
       return Jsc.eq(true, res.isError());
-    });      
+    });
 
     Jsc.property('Checking error.getOr(v) === v', arbResultError, 'json', function (res, json) {
       return Jsc.eq(json, res.getOr(json));
@@ -102,7 +102,7 @@ UnitTest.test('Result.error tests', function() {
     Jsc.property('Checking error.map(f) === error', arbResultError, 'string -> json', function (res, f) {
       const actual = res.map(f);
       return Jsc.eq(true, actual.fold(function (e) {
-        return e == res.fold(Fun.identity, Fun.die('should not get here!'));
+        return e === res.fold(Fun.identity, Fun.die('should not get here!'));
       }), Fun.constant(false));
     });
 
@@ -143,8 +143,6 @@ UnitTest.test('Result.error tests', function() {
     });
   };
 
-
   testSanity();
   testSpecs();
 });
-

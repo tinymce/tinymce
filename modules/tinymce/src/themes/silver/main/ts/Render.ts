@@ -232,6 +232,7 @@ const setup = (editor: Editor): RenderInfo => {
   const getPartToolbar = () => {
     if (hasMultipleToolbar) {
       if (hasToolbarDrawer) {
+        // tslint:disable-next-line:no-console
         console.warn('Toolbar drawer cannot be applied when multiple toolbars are active');
       }
       return [ partMultipleToolbar ];
