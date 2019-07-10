@@ -15,7 +15,8 @@ UnitTest.asynctest('Textarea component Test', (success, failure) => {
         renderTextarea({
           name: 'textarea',
           label: Option.some('LabelA'),
-          placeholder: Option.none()
+          placeholder: Option.none(),
+          maximized: false
         }, TestProviders)
       );
     },

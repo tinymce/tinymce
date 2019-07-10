@@ -13,24 +13,35 @@ import {
   Button as AlloyButton,
   SketchSpec,
   Tabstopping,
+  AlloyComponent,
+  Disabling,
 } from '@ephox/alloy';
 import { console } from '@ephox/dom-globals';
 import { Merger, Option } from '@ephox/katamari';
 import { formActionEvent, formCancelEvent, formSubmitEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { UiFactoryBackstageProviders, UiFactoryBackstage } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { renderIconFromPack } from '../button/ButtonSlices';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
-import { Types } from '@ephox/bridge';
+import { Types, Toolbar } from '@ephox/bridge';
 import { Omit } from '../Omit';
+import { renderCommonDropdown } from '../dropdown/CommonDropdown';
+import * as NestedMenus from '../menus/menu/NestedMenus';
+import { Class, Attr } from '@ephox/sugar';
+import ItemResponse from '../menus/item/ItemResponse';
 
 type ButtonSpec = Omit<Types.Button.Button, 'type'>;
+type SuccessCallback = (menu: string | any) => void;
+interface FooterButtonSpec extends Omit<Types.DialogButton, 'type'> {
+  tooltip: Option<string>;
+  fetch?: (success: SuccessCallback) => void;
+  onSetup?: (api: any) => (api: any) => void;
+}
 
-type FooterButtonSpec = Omit<Types.DialogButton, 'type'>;
 export interface IconButtonWrapper extends Omit<ButtonSpec, 'text'> {
   tooltip: Option<string>;
 }
@@ -137,13 +148,13 @@ const getAction = (name: string, buttonType) => {
   };
 };
 
-export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, backstage: UiFactoryBackstage): SketchSpec => {
   const action = getAction(spec.name, buttonType);
   const buttonSpec = {
     ...spec,
     borderless: false
   };
-  return renderButton(buttonSpec, action, providersBackstage, [ ]);
+  return buttonType === 'menu' ? renderMenuButton(spec, ToolbarButtonClasses.Button, backstage, Option.none()) : renderButton(buttonSpec, action, backstage.shared.providers, [ ]);
 };
 
 export const renderDialogButton = (spec: ButtonSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
@@ -152,4 +163,49 @@ export const renderDialogButton = (spec: ButtonSpec, providersBackstage: UiFacto
     RepresentingConfigs.memory(''),
     ComposingConfigs.self()
   ]);
+};
+
+const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonInstanceApi => {
+  return {
+    isDisabled: () => Disabling.isDisabled(component),
+    setDisabled: (state: boolean) => Disabling.set(component, state),
+    setActive: (state: boolean) => {
+      // Note: We can't use the toggling behaviour here, as the dropdown for the menu also relies on it.
+      // As such, we'll need to do this manually
+      const elm = component.element();
+      if (state) {
+        Class.add(elm, ToolbarButtonClasses.Ticked);
+        Attr.set(elm, 'aria-pressed', true);
+      } else {
+        Class.remove(elm, ToolbarButtonClasses.Ticked);
+        Attr.remove(elm, 'aria-pressed');
+      }
+    },
+    isActive: () => Class.has(component.element(), ToolbarButtonClasses.Ticked)
+  };
+};
+
+const renderMenuButton = (spec: FooterButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Option<string>): SketchSpec => {
+  return renderCommonDropdown({
+      text: Option.from(spec.text),
+      icon: spec.icon,
+      tooltip: spec.tooltip,
+      // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
+      role,
+      fetch: (callback) => {
+        spec.fetch((items) => {
+          callback(
+            NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage)
+          );
+        });
+      },
+      onSetup: spec.onSetup,
+      getApi: getMenuButtonApi,
+      columns: 1,
+      presets: 'normal',
+      classes: [],
+      dropdownBehaviours: []
+    },
+    prefix,
+    backstage.shared);
 };

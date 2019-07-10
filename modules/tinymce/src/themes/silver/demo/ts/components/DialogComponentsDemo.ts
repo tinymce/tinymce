@@ -72,13 +72,15 @@ export default () => {
   const inputSpec = renderInput({
     name: 'input',
     label: Option.some('Beta'),
-    placeholder: Option.none()
+    placeholder: Option.none(),
+    maximized: false
   }, sharedBackstage.providers);
 
   const textareaSpec = renderTextarea({
     name: 'textarea',
     label: Option.some('Gamma'),
-    placeholder: Option.none()
+    placeholder: Option.none(),
+    maximized: false
   }, sharedBackstage.providers);
 
   const makeItem = (text: string): Menu.MenuItemApi => {
@@ -104,7 +106,8 @@ export default () => {
       renderInput({
         label: Option.some('Sample input'),
         placeholder: Option.none(),
-        name: 'exampleinputfieldname'
+        name: 'exampleinputfieldname',
+        maximized: false
       }, sharedBackstage.providers) as any
     ]
   }, sharedBackstage);
@@ -136,7 +139,8 @@ export default () => {
           renderInput({
             label: Option.some('Sample input'),
             placeholder: Option.none(),
-            name: 'exampleinputfieldname'
+            name: 'exampleinputfieldname',
+            maximized: false
           }, sharedBackstage.providers) as any
         ]
       }, sharedBackstage) as any

@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell } from '@ephox/katamari';
+import { Arr, Cell, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Actions from '../core/Actions';
 import { Types } from '@ephox/bridge';
-import I18n from 'tinymce/core/api/util/I18n';
 
 export interface DialogData {
   findtext: string;
@@ -19,6 +18,9 @@ export interface DialogData {
   matchcase: boolean;
   wholewords: boolean;
 }
+
+const matchcase = Cell(false);
+const wholewords = Cell(false);
 
 const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchState>) {
   editor.undoManager.add();
@@ -63,11 +65,11 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     }
 
     // Same search text, so treat the find as a next click instead
-    if (last.text === data.findtext && last.matchCase === data.matchcase && last.wholeWord === data.wholewords) {
+    if (last.text === data.findtext && last.matchCase === matchcase.get() && last.wholeWord === wholewords.get()) {
       Actions.next(editor, currentSearchState);
     } else {
       // Find new matches
-      const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords);
+      const count = Actions.find(editor, currentSearchState, data.findtext, matchcase.get(), wholewords.get());
       if (count <= 0) {
         notFoundAlert(api);
       }
@@ -97,7 +99,8 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
             {
               type: 'input',
               name: 'findtext',
-              placeholder: 'Find'
+              placeholder: 'Find',
+              maximized: true
             },
             {
               type: 'button',
@@ -106,6 +109,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
               align: 'end',
               icon: 'action-prev',
               disabled: true,
+              borderless: true
             },
             {
               type: 'button',
@@ -114,6 +118,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
               align: 'end',
               icon: 'action-next',
               disabled: true,
+              borderless: true
             }
           ]
         },
@@ -122,25 +127,54 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
           name: 'replacetext',
           placeholder: 'Replace with'
         },
-        {
-          type: 'grid',
-          columns: 2,
-          items: [
-            {
-              type: 'checkbox',
-              name: 'matchcase',
-              label: 'Match case'
-            },
-            {
-              type: 'checkbox',
-              name: 'wholewords',
-              label: 'Find whole words only'
-            }
-          ]
-        }
+        // {
+        //   type: 'grid',
+        //   columns: 2,
+        //   items: [
+        //     {
+        //       type: 'checkbox',
+        //       name: 'matchcase',
+        //       label: 'Match case'
+        //     },
+        //     {
+        //       type: 'checkbox',
+        //       name: 'wholewords',
+        //       label: 'Find whole words only'
+        //     }
+        //   ]
+        // }
       ]
     },
     buttons: [
+      {
+        type: 'menu',
+        name: 'options',
+        icon: 'settings',
+        text: '',
+        stuff: 'lol',
+        tooltip: Option.none(),
+        align: 'start',
+        fetch: (done) => {
+          done([
+            {
+              type: 'togglemenuitem',
+              text: 'Match case',
+              onAction: (api) => {
+                matchcase.set(!matchcase.get());
+              },
+              active: matchcase.get()
+            },
+            {
+              type: 'togglemenuitem',
+              text: 'Find whole words only',
+              onAction: (api) => {
+                wholewords.set(!wholewords.get());
+              },
+              active: wholewords.get()
+            }
+          ]);
+        }
+      },
       {
         type: 'custom',
         name: 'find',

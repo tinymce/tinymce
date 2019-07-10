@@ -88,8 +88,9 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
   });
 
   const extraClasses = spec.flex ? ['tox-form__group--stretched'] : [];
+  const extraClasses2 = extraClasses.concat(spec.maximized ? ['tox-form-group--maximize'] : []);
 
-  return renderFormFieldWith(pLabel, pField, extraClasses);
+  return renderFormFieldWith(pLabel, pField, extraClasses2);
 };
 
 export type Validator = (v: string) => true | string;
@@ -105,6 +106,7 @@ export interface TextField {
     validator: Validator;
     validateOnLoad?: boolean
   }>;
+  maximized: boolean;
 }
 
 type InputSpec = Omit<Types.Input.Input, 'type'>;
@@ -119,7 +121,8 @@ const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProv
     placeholder: spec.placeholder,
     flex: false,
     classname: 'tox-textfield',
-    validation: Option.none()
+    validation: Option.none(),
+    maximized: spec.maximized
   }, providersBackstage);
 };
 
@@ -132,6 +135,7 @@ const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBacksta
     flex: true,
     classname: 'tox-textarea',
     validation: Option.none(),
+    maximized: spec.maximized
   }, providersBackstage);
 };
 

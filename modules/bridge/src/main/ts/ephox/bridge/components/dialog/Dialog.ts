@@ -6,7 +6,7 @@ import { TabApi, Tab, TabPanel, TabPanelApi, tabPanelFields } from './TabPanel';
 
 // Note: This interface doesn't extend from a common button interface as this is only a configuration that specifies a button, but it's not by itself a button.
 export interface DialogButtonApi {
-  type: 'submit' | 'cancel' | 'custom';
+  type: 'submit' | 'cancel' | 'custom' | 'menu';
   name?: string;
   text: string;
   align?: 'start' | 'end';
@@ -91,7 +91,7 @@ export interface DialogApi<T extends DialogData> {
 }
 
 export interface DialogButton {
-  type: 'submit' | 'cancel' | 'custom';
+  type: 'submit' | 'cancel' | 'custom' | 'menu';
   name: string;
   text: string;
   align: 'start' | 'end';
@@ -127,11 +127,14 @@ export const dialogButtonFields = [
   FieldSchema.optionString('icon'),
   FieldSchema.defaultedStringEnum('align', 'end', ['start', 'end']),
   FieldSchema.defaultedBoolean('primary', false),
-  FieldSchema.defaultedBoolean('disabled', false)
+  FieldSchema.defaultedBoolean('disabled', false),
+  FieldSchema.defaulted('tooltip', Option.none()),
+  FieldSchema.defaulted('onSetup', Fun.noop),
+  FieldSchema.defaulted('fetch', Fun.noop)
 ];
 
 export const dialogButtonSchema = ValueSchema.objOf([
-  FieldSchema.strictStringEnum('type', ['submit', 'cancel', 'custom']),
+  FieldSchema.strictStringEnum('type', ['submit', 'cancel', 'custom', 'menu']),
   ...dialogButtonFields
 ]);
 
