@@ -5,7 +5,6 @@ import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 import VisualChars from 'tinymce/plugins/visualchars/Plugin';
 import theme from 'tinymce/themes/silver/Theme';
 
-
 UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTest', (success, failure) => {
 
   theme();

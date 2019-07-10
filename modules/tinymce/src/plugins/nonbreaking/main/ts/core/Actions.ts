@@ -1,5 +1,5 @@
 import Editor from 'tinymce/core/api/Editor';
-import DOMUtils from '../../../../../core/main/ts/api/dom/DOMUtils';
+import { Arr } from '@ephox/katamari';
 
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
@@ -26,20 +26,11 @@ const insertNbsp = (editor: Editor, times: number) => {
   const nbsp = isVisualCharsEnabled(editor) ? '<span class="mce-nbsp">&nbsp;</span>' : '&nbsp;';
 
   editor.insertContent(stringRepeat(nbsp, times));
-  editor.dom.setAttrib(editor.dom.select('span.mce-nbsp')[0], 'data-mce-bogus', '1');
-
-  // testing purposes
-  insertNbspWrap(editor);
-};
-
-const insertNbspWrap = (editor: Editor) => {
-  // const dom: DOMUtils = editor.dom;
-  const selectedElm = editor.selection.getNode();
-  // @ts-ignore
-  console.log(selectedElm, editor.selection.getRng());
+  Arr.each(editor.dom.select('span.mce-nbsp'), (span) => {
+    editor.dom.setAttrib(span, 'data-mce-bogus', '1');
+  });
 };
 
 export default {
-  insertNbsp,
-  insertNbspWrap
+  insertNbsp
 };

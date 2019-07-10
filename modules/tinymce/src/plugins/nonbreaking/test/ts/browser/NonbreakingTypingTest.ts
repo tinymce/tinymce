@@ -4,7 +4,7 @@ import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 import theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingSanityTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingTypingTest', (success, failure) => {
   // Note: Uses RealKeys, so needs a browser. Headless won't work.
 
   theme();
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingSanityTest', 
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'NonBreaking: Click on the nbsp button then type some text, and assert content is correct', [
+      Log.stepsAsStep('TBA', '1. NonBreaking: Click on the nbsp button then type some text, and assert content is correct', [
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
         RealKeys.sSendKeysOn(
           'iframe => body => p',
@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingSanityTest', 
 
       tinyApis.sSetContent(''),
 
-      Log.stepsAsStep('TBA', 'NonBreaking: Add text to editor, click on the nbsp button, and assert content is correct', [
+      Log.stepsAsStep('TBA', '2. NonBreaking: Add text to editor, click on the nbsp button, and assert content is correct', [
         tinyApis.sSetContent('test'),
         tinyApis.sSetCursor([0, 0], 4),
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
@@ -57,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingSanityTest', 
 
       tinyApis.sSetContent(''),
 
-      Log.stepsAsStep('TBA', 'NonBreaking: Add content to editor, click on the nbsp button then type some text, and assert content is correct', [
+      Log.stepsAsStep('TBA', '3. NonBreaking: Add content to editor, click on the nbsp button then type some text, and assert content is correct', [
         tinyApis.sSetContent('test'),
         tinyApis.sSetCursor([0, 0], 4),
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
@@ -82,7 +82,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingSanityTest', 
 
       tinyApis.sSetContent(''),
 
-      Log.stepsAsStep('TBA', 'NonBreaking: Click on the nbsp button then type a space, and assert content is correct', [
+      Log.stepsAsStep('TBA', '4. NonBreaking: Click on the nbsp button then type a space, and assert content is correct', [
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
         RealKeys.sSendKeysOn(
           'iframe => body => p',
@@ -103,7 +103,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingSanityTest', 
         }))
       ]),
 
-      Log.stepsAsStep('TBA', 'NonBreaking: Add text to editor, click on the nbsp button and add content plus a space, and assert content is correct', [
+      Log.stepsAsStep('TBA', '5. NonBreaking: Add text to editor, click on the nbsp button and add content plus a space, and assert content is correct', [
         tinyApis.sSetContent('test'),
         tinyApis.sSetCursor([0, 0], 4),
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
