@@ -16,8 +16,8 @@ import { renderModalFooter } from './SilverDialogFooter';
 import { getDialogApi } from './SilverDialogInstanceApi';
 import { getEventExtras, getHeader, renderModalDialog, WindowExtra } from './SilverDialogCommon';
 
-const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowExtra<T>, backstage: UiFactoryBackstage) => {
-  const header = getHeader(dialogInit.internalDialog.title, backstage);
+const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowExtra<T>, backstage: UiFactoryBackstage, draggable: boolean = true) => {
+  const header = getHeader(dialogInit.internalDialog.title, backstage, draggable);
 
   const body = renderModalBody({
     body: dialogInit.internalDialog.body

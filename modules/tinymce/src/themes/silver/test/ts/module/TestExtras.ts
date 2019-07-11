@@ -28,7 +28,8 @@ export default () => {
   const mockEditor = {
     setContent: (content) => {},
     insertContent: (content: string, args?: any) => {},
-    execCommand: (cmd: string, ui?: boolean, value?: any) => {}
+    execCommand: (cmd: string, ui?: boolean, value?: any) => {},
+    getParam: (name: string, defaultVal?: any, type?: string) => name || defaultVal
   } as Editor;
 
   const extras = {

@@ -28,6 +28,7 @@ import { renderInlineDialog } from '../window/SilverInlineDialog';
 import * as AlertDialog from './AlertDialog';
 import * as ConfirmDialog from './ConfirmDialog';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+import * as Settings from '../../api/Settings';
 
 export interface WindowManagerSetup {
   backstage: UiFactoryBackstage;
@@ -67,7 +68,8 @@ const setup = (extras: WindowManagerSetup) => {
           }
         },
         extras.editor,
-        extras.backstage
+        extras.backstage,
+        Settings.isDraggableModal(extras.editor)
       );
 
       ModalDialog.show(dialog.dialog);
@@ -97,7 +99,8 @@ const setup = (extras: WindowManagerSetup) => {
             closeWindow(dialog.instanceApi);
           }
         },
-        extras.backstage
+        extras.backstage,
+        Settings.isDraggableModal(extras.editor)
       );
 
       ModalDialog.show(dialog.dialog);

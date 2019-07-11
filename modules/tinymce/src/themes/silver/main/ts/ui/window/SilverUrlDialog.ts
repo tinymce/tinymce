@@ -57,8 +57,8 @@ const handleMessage = (editor: Editor, api: Types.UrlDialog.UrlDialogInstanceApi
   }
 };
 
-const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: WindowExtra<any>, editor: Editor, backstage: UiFactoryBackstage) => {
-  const header = getHeader(internalDialog.title, backstage);
+const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: WindowExtra<any>, editor: Editor, backstage: UiFactoryBackstage, draggable: boolean = true) => {
+  const header = getHeader(internalDialog.title, backstage, draggable);
   const body = renderIframeBody(internalDialog);
   const footer = internalDialog.buttons.bind((buttons) => {
     // Don't render a footer if no buttons are specified

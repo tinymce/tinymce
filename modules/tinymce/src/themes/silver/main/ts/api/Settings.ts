@@ -98,6 +98,8 @@ const getUiContainer = (editor): Element => {
   return fixedContainer.getOr(Body.body());
 };
 
+const isDraggableModal = (editor: Editor): boolean => editor.getParam('draggable_modal', true, 'boolean');
+
 export {
   getSkinUrl,
   isReadOnly,
@@ -116,5 +118,6 @@ export {
   getMultipleToolbarsSetting,
   getUiContainer,
   useFixedContainer,
-  getToolbarDrawer
+  getToolbarDrawer,
+  isDraggableModal
 };
