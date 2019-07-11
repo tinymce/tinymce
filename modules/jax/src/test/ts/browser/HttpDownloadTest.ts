@@ -10,7 +10,7 @@ UnitTest.asynctest('HttpDownloadTest', (success, failure) => {
 
   Http.download(
     {
-      url: '/custom/blob',
+      url: '/custom/jax/blob',
       headers: {
         'x-custom-header': 'custom'
       },

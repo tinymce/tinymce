@@ -28,7 +28,8 @@
     "browser-test": "yarn -s grunt browser-auto",
     "browser-test-manual": "yarn -s grunt browser-manual",
     "phantomjs-test": "yarn -s grunt phantomjs-auto",
-    "phantomjs-test-manual": "yarn -s grunt phantomjs-manual"
+    "phantomjs-test-manual": "yarn -s grunt phantomjs-manual",
+    "bedrock": "bedrock --customRoutes modules/tinymce/src/core/test/json/routes.json"
   },
   "devDependencies": {
     "@ephox/bedrock": "^4.2.11",
