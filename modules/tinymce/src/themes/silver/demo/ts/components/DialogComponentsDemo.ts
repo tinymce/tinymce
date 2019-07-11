@@ -72,13 +72,15 @@ export default () => {
   const inputSpec = renderInput({
     name: 'input',
     label: Option.some('Beta'),
-    placeholder: Option.none()
+    placeholder: Option.none(),
+    disabled: false
   }, sharedBackstage.providers);
 
   const textareaSpec = renderTextarea({
     name: 'textarea',
     label: Option.some('Gamma'),
-    placeholder: Option.none()
+    placeholder: Option.none(),
+    disabled: false
   }, sharedBackstage.providers);
 
   const makeItem = (text: string): Menu.MenuItemApi => {
@@ -95,16 +97,19 @@ export default () => {
     items: [
       renderCheckbox({
         label: 'check box item 1',
-        name: 'one'
+        name: 'one',
+        disabled: false
       }, sharedBackstage.providers) as any,
       renderCheckbox({
         label: 'check box item 2',
-        name: 'two'
+        name: 'two',
+        disabled: false
       }, sharedBackstage.providers) as any,
       renderInput({
         label: Option.some('Sample input'),
         placeholder: Option.none(),
-        name: 'exampleinputfieldname'
+        name: 'exampleinputfieldname',
+        disabled: false
       }, sharedBackstage.providers) as any
     ]
   }, sharedBackstage);
@@ -127,16 +132,19 @@ export default () => {
           }, sharedBackstage.providers) as any,
           renderCheckbox({
             label: 'check box item 1',
-            name: 'one'
+            name: 'one',
+            disabled: false
           }, sharedBackstage.providers) as any,
           renderCheckbox({
             label: 'check box item 2',
-            name: 'two'
+            name: 'two',
+            disabled: false
           }, sharedBackstage.providers) as any,
           renderInput({
             label: Option.some('Sample input'),
             placeholder: Option.none(),
-            name: 'exampleinputfieldname'
+            name: 'exampleinputfieldname',
+            disabled: false
           }, sharedBackstage.providers) as any
         ]
       }, sharedBackstage) as any
@@ -186,8 +194,8 @@ export default () => {
     const memBodyPanel = Memento.record(
       renderBodyPanel({
         items: [
-          { type: 'checkbox', name: 'checked', label: 'Checked' },
-          { type: 'checkbox', name: 'unchecked', label: 'Unchecked' }
+          { type: 'checkbox', name: 'checked', label: 'Checked', disabled: false },
+          { type: 'checkbox', name: 'unchecked', label: 'Unchecked', disabled: false }
         ],
         classes: []
       }, {
@@ -233,6 +241,7 @@ export default () => {
     name: 'selectbox-demo',
     size: 1,
     label: Option.some('Select one from'),
+    disabled: false,
     items: [
       { value: 'one', text: 'One' },
       { value: 'two', text: 'Two' }
@@ -243,6 +252,7 @@ export default () => {
     name: 'selectbox-demo',
     size: 6,
     label: Option.some('Select one from'),
+    disabled: false,
     items: [
       { value: 'one', text: 'One' },
       { value: 'two', text: 'Two' },
@@ -257,12 +267,14 @@ export default () => {
     constrain: true,
     name: 'sizeinput-demo',
     label: Option.some('kustom fixed ratio'),
+    disabled: false
   }, sharedBackstage.providers);
 
   const urlInputSpec = renderUrlInput({
     name: 'blah',
     label: Option.some('Url'),
-    filetype: 'image' // 'image' || 'media'
+    filetype: 'image', // 'image' || 'media'
+    disabled: false
   }, backstage, backstage.urlinput);
 
   const linkInputSpec = renderTypeahead({

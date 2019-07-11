@@ -7,28 +7,29 @@
 
 import {
   AddEventsBehaviour,
+  AlloyComponent,
   AlloyEvents,
   AlloyTriggers,
   Behaviour,
+  Disabling,
   Focusing,
   FormField as AlloyFormField,
+  Keying,
   Memento,
   NativeEvents,
   Representing,
   SimpleSpec,
   Tabstopping,
-  Unselecting,
-  Keying,
-  AlloyComponent,
+  Unselecting
 } from '@ephox/alloy';
+import { Types } from '@ephox/bridge';
 import { HTMLInputElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import * as Icons from '../icons/Icons';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { formChangeEvent } from '../general/FormEvents';
-import { Types } from '@ephox/bridge';
+import { formChangeEvent } from './FormEvents';
 import { Omit } from '../Omit';
 
 type CheckboxSpec = Omit<Types.Checkbox.Checkbox, 'type'>;
@@ -65,6 +66,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
 
     behaviours: Behaviour.derive([
       ComposingConfigs.self(),
+      Disabling.config({ disabled: spec.disabled }),
       Tabstopping.config({}),
       Focusing.config({ }),
       repBehaviour,
@@ -126,6 +128,18 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
       pField,
       memIcons.asSpec(),
       pLabel
-    ]
+    ],
+    fieldBehaviours: Behaviour.derive([
+      Disabling.config({
+        disabled: spec.disabled,
+        disableClass: 'tox-checkbox--disabled',
+        onDisabled: (comp) => {
+          AlloyFormField.getField(comp).each(Disabling.disable);
+        },
+        onEnabled: (comp) => {
+          AlloyFormField.getField(comp).each(Disabling.enable);
+        }
+      })
+    ])
   });
 };

@@ -6,15 +6,18 @@ import { FormComponentWithLabel, FormComponentWithLabelApi, formComponentWithLab
 export interface UrlInputApi extends FormComponentWithLabelApi {
   type: 'urlinput';
   filetype?: 'image' | 'media' | 'file';
+  disabled?: boolean;
 }
 
 export interface UrlInput extends FormComponentWithLabel {
   type: 'urlinput';
   filetype: 'image' | 'media' | 'file';
+  disabled: boolean;
 }
 
 export const urlInputFields = formComponentWithLabelFields.concat([
-  FieldSchema.defaultedStringEnum('filetype', 'file', ['image', 'media', 'file'])
+  FieldSchema.defaultedStringEnum('filetype', 'file', ['image', 'media', 'file']),
+  FieldSchema.defaulted('disabled', false)
 ]);
 
 export const urlInputSchema = ValueSchema.objOf(urlInputFields);
