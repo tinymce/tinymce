@@ -5,15 +5,18 @@ import { FormComponentWithLabel, FormComponentWithLabelApi, formComponentWithLab
 export interface SizeInputApi extends FormComponentWithLabelApi {
   type: 'sizeinput';
   constrain?: boolean;
+  disabled?: boolean;
 }
 
 export interface SizeInput extends FormComponentWithLabel {
   type: 'sizeinput';
   constrain: boolean;
+  disabled: boolean;
 }
 
 export const sizeInputFields = formComponentWithLabelFields.concat([
-  FieldSchema.defaultedBoolean('constrain', true)
+  FieldSchema.defaultedBoolean('constrain', true),
+  FieldSchema.defaultedBoolean('disabled', false)
 ]);
 
 export const sizeInputSchema = ValueSchema.objOf(sizeInputFields);

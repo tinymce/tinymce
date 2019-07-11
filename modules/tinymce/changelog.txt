@@ -3,7 +3,10 @@ Version 5.0.12 (TBD)
     Added help dialog tab explaining keyboard navigation of the editor #TINY-3603
     Fixed removing shortcuts not working for function keys #TINY-3871
     Fixed non-descriptive UI component type names #TINY-3349
-    Fixed UI registry components rendering as the wrong type when manually specifying a different type #TINY-385
+    Fixed UI registry components rendering as the wrong type when manually specifying a different type #TINY-3385
+    Fixed an issue where dialog checkbox, input, selectbox, textarea and urlinput components couldn't be disabled #TINY-3708
+    Fixed the context toolbar not using viable screen space in inline/distraction free mode #TINY-3717
+    Fixed the context toolbar overlapping the toolbar in various conditions #TINY-3205
     Fixed IE11 edge case where items were being inserted into the wrong location #TINY-3884
 Version 5.0.11 (2019-07-04)
     Fixed packaging errors caused by a rollup treeshaking bug (https://github.com/rollup/rollup/issues/2970) #TINY-3866

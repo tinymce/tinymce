@@ -24,6 +24,9 @@
 @textfield-pad-y: (@textfield-height - @textfield-line-height - (@textfield-border-width * 2  ) ) / 2;
 @textfield-text-color: @text-color;
 
+@textfield-disabled-background-color: darken(@textfield-background-color, 5%);
+@textfield-disabled-text-color: fade(@textfield-text-color, 85%);
+
 @textfield-focus-border-color: @color-tint;
 @textfield-focus-box-shadow: none;
 @textfield-focus-outline: none;
@@ -47,6 +50,12 @@
     padding: @textfield-pad-y @textfield-pad-x;
     resize: none;
     width: 100%;
+  }
+
+  .tox-textfield[disabled] {
+    background-color: @textfield-disabled-background-color;
+    color: @textfield-disabled-text-color;
+    cursor: not-allowed;
   }
 
   .tox-textfield:focus {
