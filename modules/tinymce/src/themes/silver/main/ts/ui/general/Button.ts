@@ -37,7 +37,7 @@ import ItemResponse from '../menus/item/ItemResponse';
 type ButtonSpec = Omit<Types.Button.Button, 'type'>;
 type SuccessCallback = (menu: string | any) => void;
 interface FooterButtonSpec extends Omit<Types.DialogButton, 'type'> {
-  tooltip: Option<string>;
+  tooltip?: Option<string>;
   fetch?: (success: SuccessCallback) => void;
   onSetup?: (api: any) => (api: any) => void;
 }
