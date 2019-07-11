@@ -41,7 +41,7 @@ TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Chain.asStep({}, [
         Chain.fromParent(tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'), [
           Chain.fromChains([
-            UiFinder.cFindIn('label:contains("Find") + input'),
+            UiFinder.cFindIn('input.tox-textfield[placeholder="Find"]'),
             UiControls.cSetValue('fish')
           ]),
           cClickButton('Find'),
@@ -63,7 +63,7 @@ TinyLoader.setup(function (editor, onSuccess, onFailure) {
 
           // replace all but one value and assert next/previous are disabled
           Chain.fromChains([
-            UiFinder.cFindIn('label:contains("Replace with") + input'),
+            UiFinder.cFindIn('input.tox-textfield[placeholder="Replace with"]'),
             UiControls.cSetValue('squid')
           ]),
           cClickButton('Replace'),
