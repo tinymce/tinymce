@@ -6,13 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-# [4.14.0] - 2019-07-10
+# [4.14.0] - 2019-07-11
 
 ### Added
 - Added `onDisabled` and `onEnabled` callbacks to the disabling behaviour.
+- Added new `positionWithinBounds` positioning API to allow positioning with a custom bounding box.
+- Exposed `Boxes` module and `Bounds` type in api main entry point.
 
 ### Fixed
 - Fixed disabling `select` elements not using the `disabled` attribute.
+- Fixed `LayoutInside` bubbling inverting where the bubble should be placed.
 
 # [4.13.0] - 2019-06-06
 

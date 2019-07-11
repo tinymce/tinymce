@@ -3,6 +3,7 @@ import { Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import * as ComponentStructure from '../../alien/ComponentStructure';
+import { Bounds } from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as SystemEvents from '../../api/events/SystemEvents';
@@ -77,6 +78,11 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
     Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.positionWithin(sink, anchor, sandbox, boxElement));
     detail.onShow(sandbox);
   };
+  const showWithinBounds = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, bounds: Option<Bounds>) => {
+    const sink = detail.lazySink(sandbox).getOrDie();
+    Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.positionWithinBounds(sink, anchor, sandbox, bounds));
+    detail.onShow(sandbox);
+  };
   // TODO AP-191 write a test for showMenuAt
   const showMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
     const menu = makeMenu(detail, sandbox, anchor, menuSpec);
@@ -96,6 +102,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
     setContent,
     showAt,
     showWithin,
+    showWithinBounds,
     showMenuAt,
     hide,
     getContent,
@@ -153,6 +160,9 @@ const InlineView = Sketcher.single({
     },
     showWithin (apis, component, anchor, thing, boxElement) {
       apis.showWithin(component, anchor, thing, boxElement);
+    },
+    showWithinBounds (apis, component, anchor, thing, bounds) {
+      apis.showWithinBounds(component, anchor, thing, bounds);
     },
     showMenuAt(apis, component, anchor, menuSpec) {
       apis.showMenuAt(component, anchor, menuSpec);

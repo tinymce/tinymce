@@ -5,6 +5,9 @@ Version 5.0.12 (TBD)
     Fixed non-descriptive UI component type names #TINY-3349
     Fixed UI registry components rendering as the wrong type when manually specifying a different type #TINY-385
     Fixed an issue where dialog checkbox, input, selectbox, textarea and urlinput components couldn't be disabled #TINY-3708
+    Fixed UI registry components rendering as the wrong type when manually specifying a different type #TINY-3385
+    Fixed the context toolbar not using viable screen space in inline/distraction free mode #TINY-3717
+    Fixed the context toolbar overlapping the toolbar in various conditions #TINY-3205
 Version 5.0.11 (2019-07-04)
     Fixed packaging errors caused by a rollup treeshaking bug (https://github.com/rollup/rollup/issues/2970) #TINY-3866
     Fixed the customeditor component not able to get data from the dialog api #TINY-3866
