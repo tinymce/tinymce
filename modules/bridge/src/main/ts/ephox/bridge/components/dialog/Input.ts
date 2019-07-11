@@ -5,15 +5,18 @@ import { FormComponentWithLabelApi, FormComponentWithLabel, formComponentWithLab
 export interface InputApi extends FormComponentWithLabelApi {
   type: 'input';
   placeholder?: string;
+  disabled?: boolean;
 }
 
 export interface Input extends FormComponentWithLabel {
   type: 'input';
   placeholder: Option<string>;
+  disabled: boolean;
 }
 
 export const inputFields = formComponentWithLabelFields.concat([
-  FieldSchema.optionString('placeholder')
+  FieldSchema.optionString('placeholder'),
+  FieldSchema.defaultedBoolean('disabled', false)
 ]);
 
 export const inputSchema = ValueSchema.objOf(inputFields);

@@ -15,14 +15,19 @@ const insertAtElement = function <E, D>(universe: Universe<E, D>, parent: E, off
   const children = universe.property().children(parent);
   const isEmptyTag = universe.property().isEmptyTag(parent);
 
-  if (isEmptyTag) return InjectPosition.before(parent);
-  else if (offset === children.length) return InjectPosition.last(parent);
-  else if (offset < children.length) return InjectPosition.rest(children[offset]);
-  else return InjectPosition.invalid(parent, offset);
+  if (isEmptyTag) {
+    return InjectPosition.before(parent);
+  } else if (offset === children.length) {
+    return InjectPosition.last(parent);
+  } else if (offset < children.length) {
+    return InjectPosition.rest(children[offset]);
+  } else {
+    return InjectPosition.invalid(parent, offset);
+  }
 };
 
 /*
- * The injection rules: 
+ * The injection rules:
  *
  * If a text node:
  *   - split it at the offset if not at edge.

@@ -18,7 +18,9 @@ const order = function <E>(items: E[], a: number, delta1: number, b: number, del
  * Deltas are a broken concept. They control whether the item passed is included in the result.
  */
 const range = function <E, D>(universe: Universe<E, D>, item1: E, delta1: number, item2: E, delta2: number): E[] {
-  if (universe.eq(item1, item2)) return [item1];
+  if (universe.eq(item1, item2)) {
+    return [item1];
+  }
 
   return Parents.common(universe, item1, item2).fold<E[]>(function () {
     return []; // no common parent, therefore no intervening path. How does this clash with Path in robin?

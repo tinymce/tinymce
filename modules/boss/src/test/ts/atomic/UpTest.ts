@@ -58,4 +58,3 @@ UnitTest.test('UpTest', function () {
 
   assert.eq('A', Up.top(d).id);
 });
-

@@ -61,10 +61,10 @@ const keyevent = function (type: string, doc: Element, value: number, modifiers:
 
     if (oEvent.initKeyboardEvent) {
       // Note: typescript thinks the arguments are wrong so we should probably test it
-      (<any>oEvent).initKeyboardEvent(type, canBubble, cancellable, domDoc.defaultView, ctrlKey, altKey, shiftKey, metaKey, value, value);
+      (<any> oEvent).initKeyboardEvent(type, canBubble, cancellable, domDoc.defaultView, ctrlKey, altKey, shiftKey, metaKey, value, value);
     } else {
       // this is unknown to typescript
-      (<any>oEvent).initKeyEvent(type, canBubble, cancellable, domDoc.defaultView, ctrlKey, altKey, shiftKey, metaKey, value, type === 'keypress' && platform.browser.isFirefox() ? value : 0);
+      (<any> oEvent).initKeyEvent(type, canBubble, cancellable, domDoc.defaultView, ctrlKey, altKey, shiftKey, metaKey, value, type === 'keypress' && platform.browser.isFirefox() ? value : 0);
     }
 
     dispatcher.dom().dispatchEvent(oEvent);
@@ -72,17 +72,17 @@ const keyevent = function (type: string, doc: Element, value: number, modifiers:
 };
 
 const safari = function (type: string, doc: Element, value: number, modifiers: KeyModifiers, dispatcher: Element) {
-  const oEvent = (<Document>doc.dom()).createEvent('Events');
+  const oEvent = (<Document> doc.dom()).createEvent('Events');
   oEvent.initEvent(type, true, true);
 
-  (<any>oEvent).which = value;
-  (<any>oEvent).keyCode = value;
-  (<any>oEvent).shiftKey = modifiers.shiftKey === true;
-  (<any>oEvent).ctrlKey = modifiers.ctrlKey === true;
-  (<any>oEvent).metaKey = modifiers.metaKey === true;
-  (<any>oEvent).altKey = modifiers.altKey === true;
+  (<any> oEvent).which = value;
+  (<any> oEvent).keyCode = value;
+  (<any> oEvent).shiftKey = modifiers.shiftKey === true;
+  (<any> oEvent).ctrlKey = modifiers.ctrlKey === true;
+  (<any> oEvent).metaKey = modifiers.metaKey === true;
+  (<any> oEvent).altKey = modifiers.altKey === true;
 
-  (<HTMLElement>dispatcher.dom()).dispatchEvent(oEvent);
+  (<HTMLElement> dispatcher.dom()).dispatchEvent(oEvent);
 };
 
 export {

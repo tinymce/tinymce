@@ -1,4 +1,4 @@
-import { sRunOnPatchedFileInput, cRunOnPatchedFileInput } from "../file/PatchInputFiles";
+import { sRunOnPatchedFileInput, cRunOnPatchedFileInput } from '../file/PatchInputFiles';
 
 export {
   sRunOnPatchedFileInput,

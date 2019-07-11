@@ -54,4 +54,3 @@ UnitTest.test('RangeTest', function () {
   check(['abcb', 'abcc'], 'abc', 'abcda', 0, 0);
   check(['aaa', 'aabab', 'aba', 'abb', 'abcb', 'abcc', 'abcda'], 'aa', 'ac', 0, 1);
 });
-

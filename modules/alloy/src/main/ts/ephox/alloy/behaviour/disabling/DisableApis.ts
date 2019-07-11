@@ -8,7 +8,8 @@ import { DisableConfig } from './DisableTypes';
 const nativeDisabled = [
   'input',
   'button',
-  'textarea'
+  'textarea',
+  'select'
 ];
 
 const onLoad = (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless): void => {
@@ -49,6 +50,7 @@ const disable = (component: AlloyComponent, disableConfig: DisableConfig, disabl
   });
   const f = hasNative(component) ? nativeDisable : ariaDisable;
   f(component);
+  disableConfig.onDisabled(component);
 };
 
 const enable = (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless): void => {
@@ -57,6 +59,7 @@ const enable = (component: AlloyComponent, disableConfig: DisableConfig, disable
   });
   const f = hasNative(component) ? nativeEnable : ariaEnable;
   f(component);
+  disableConfig.onEnabled(component);
 };
 
 const isDisabled = (component: AlloyComponent): boolean => {

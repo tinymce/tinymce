@@ -2,7 +2,6 @@ import { Step } from '../api/Step';
 import { Chain } from '../api/Chain';
 import { Http, DataType } from '@ephox/jax';
 
-
 const postInfo = (path: string, info: any, die: (err: any) => void, next: (v: {}) => void) => {
   Http.post({
     url: path,

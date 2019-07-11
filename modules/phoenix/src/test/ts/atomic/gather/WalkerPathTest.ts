@@ -65,4 +65,3 @@ UnitTest.test('WalkerPathTest', function () {
     '3.1', '3.2', '3.2.1', '3.2.1.1', '3.2.1.2', '3.2.1', '3.2.2', '3.2', '3.3', '3', 'root'
   ], '1.2', Walkers.right());
 });
-

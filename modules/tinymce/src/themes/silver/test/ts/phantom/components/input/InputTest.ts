@@ -6,6 +6,7 @@ import { Option } from '@ephox/katamari';
 import { renderInput } from 'tinymce/themes/silver/ui/dialog/TextField';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 import TestProviders from '../../../module/TestProviders';
+import { DisablingSteps } from '../../../module/DisablingSteps';
 
 UnitTest.asynctest('Input component Test', (success, failure) => {
 
@@ -15,7 +16,8 @@ UnitTest.asynctest('Input component Test', (success, failure) => {
         renderInput({
           name: 'input',
           label: Option.some('LabelA'),
-          placeholder: Option.none()
+          placeholder: Option.none(),
+          disabled: false
         }, TestProviders)
       );
     },
@@ -45,7 +47,12 @@ UnitTest.asynctest('Input component Test', (success, failure) => {
         ),
 
         RepresentingSteps.sSetValue('Setting to new value', component, 'New-Value'),
-        RepresentingSteps.sAssertComposedValue('After setting value on form field', 'New-Value', component)
+        RepresentingSteps.sAssertComposedValue('After setting value on form field', 'New-Value', component),
+
+        // Disabling state
+        DisablingSteps.sAssertDisabled('Initial disabled state', false, component),
+        DisablingSteps.sSetDisabled('set disabled', component, true),
+        DisablingSteps.sAssertDisabled('enabled > disabled', true, component)
       ];
     },
     success,

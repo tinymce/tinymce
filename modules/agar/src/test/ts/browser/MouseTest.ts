@@ -151,4 +151,3 @@ UnitTest.asynctest('MouseTest', function () {
     failure(err);
   });
 });
-

@@ -1,26 +1,25 @@
-import { Pipeline, GeneralSteps } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { Pipeline, Step } from '@ephox/agar';
 import TinyApis from 'ephox/mcagar/api/TinyApis';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import TinyUi from 'ephox/mcagar/api/TinyUi';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('McagarTutorialTest', (success, failure) => {
-  var handler = (ed) => () => {
-    var content = ed.getContent();
+  const handler = (ed) => () => {
+    const content = ed.getContent();
     ed.focus();
     if (content === '<p>tutorial content</p>') {
       ed.setContent('<p>alternate content</p>');
-      var paragraph = ed.getBody().childNodes[0];
+      const paragraph = ed.getBody().childNodes[0];
       ed.selection.setCursorLocation(paragraph, 1);
     } else {
       ed.setContent('<p>tutorial content</p>');
-      var target = ed.getBody().childNodes[0];
+      const target = ed.getBody().childNodes[0];
       ed.selection.select(target);
     }
   };
 
-  var silverSetup = (ed) => {
+  const silverSetup = (ed) => {
     ed.ui.registry.addButton('tutorial-button', {
       text: 'tutorial',
       onAction: handler(ed)
@@ -29,9 +28,8 @@ UnitTest.asynctest('McagarTutorialTest', (success, failure) => {
 
   TinyLoader.setup((editor, loadSuccess, loadFailure) => {
 
-    var ui = TinyUi(editor);
-    var apis = TinyApis(editor);
-
+    const ui = TinyUi(editor);
+    const apis = TinyApis(editor);
 
     Pipeline.async({}, [
       ui.sClickOnToolbar('Clicking on button', 'button:contains("tutorial")'),
@@ -55,4 +53,3 @@ UnitTest.asynctest('McagarTutorialTest', (success, failure) => {
       base_url: '/project/tinymce/js/tinymce',
     }, success, failure);
 });
-

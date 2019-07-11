@@ -1,6 +1,5 @@
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
-import { Arr } from '@ephox/katamari';
 import { Element, Value } from '@ephox/sugar';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';
@@ -11,12 +10,7 @@ import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 import { Step } from 'ephox/agar/api/Step';
 import DomContainers from 'ephox/agar/test/DomContainers';
 
-import { Logger } from '../../../main/ts/ephox/agar/api/Main';
-import { TestLogEntry } from '../../../main/ts/ephox/agar/api/TestLogs';
-
-UnitTest.asynctest('FocusToolsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('FocusToolsTest', function (success, failure) {
 
   const doc = Element.fromDom(document);
   const docNode = Element.fromDom(document.documentElement);
@@ -117,4 +111,3 @@ UnitTest.asynctest('FocusToolsTest', function () {
     success();
   }, failure);
 });
-

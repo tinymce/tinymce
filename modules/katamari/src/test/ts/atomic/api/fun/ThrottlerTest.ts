@@ -81,4 +81,3 @@ UnitTest.asynctest('ThrottlerTest', (success, failure) => {
     success();
   });
 });
-

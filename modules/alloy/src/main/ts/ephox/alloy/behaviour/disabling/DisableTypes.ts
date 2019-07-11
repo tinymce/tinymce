@@ -15,9 +15,13 @@ export interface DisableBehaviour extends Behaviour.AlloyBehaviour<DisableConfig
 export interface DisableConfig extends Behaviour.BehaviourConfigDetail {
   disabled: boolean;
   disableClass: Option<string>;
+  onEnabled: (comp: AlloyComponent) => void;
+  onDisabled: (comp: AlloyComponent) => void;
 }
 
 export interface DisableConfigSpec extends Behaviour.BehaviourConfigSpec {
   disabled?: boolean;
   disableClass?: string;
+  onEnabled?: (comp: AlloyComponent) => void;
+  onDisabled?: (comp: AlloyComponent) => void;
 }

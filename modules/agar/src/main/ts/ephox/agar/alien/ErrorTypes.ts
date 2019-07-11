@@ -1,8 +1,9 @@
 import { Merger, Type } from '@ephox/katamari';
 
 const enrichWith = function (label: string, err: any) {
-  if (Type.isString(err)) return label + '\n' + err;
-  else if (err.name === 'HtmlAssertion') {
+  if (Type.isString(err)) {
+    return label + '\n' + err;
+  } else if (err.name === 'HtmlAssertion') {
     return Merger.deepMerge(err, {
       message: label + '\n' + err.message
     });
@@ -11,8 +12,9 @@ const enrichWith = function (label: string, err: any) {
     newError.stack = err.stack;
     newError.message = label + '\n' + newError.message;
     return newError;
+  } else {
+    return err;
   }
-  else return err;
 };
 
 export {

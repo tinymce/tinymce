@@ -2,7 +2,7 @@ import { Element, Value } from '@ephox/sugar';
 
 import { Chain } from './Chain';
 import * as UiFinder from './UiFinder';
-import { Step } from './Main';
+import { Step } from './Step';
 
 const cSetValue = function (newValue: string) {
   return Chain.op(function (element: Element) {

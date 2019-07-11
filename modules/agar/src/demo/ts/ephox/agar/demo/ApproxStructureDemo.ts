@@ -2,29 +2,23 @@ import * as ApproxStructure from 'ephox/agar/api/ApproxStructure';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import DemoContainer from 'ephox/agar/demo/DemoContainer';
-import { Class } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
-import { InsertAll } from '@ephox/sugar';
-
-
+import { Class, Element, Html, InsertAll } from '@ephox/sugar';
 
 export default <any> function () {
   DemoContainer.init(
     'Approx Structure',
     function (success, failure) {
 
-      var div = Element.fromTag('div');
+      const div = Element.fromTag('div');
 
-      var p = Element.fromTag('p');
+      const p = Element.fromTag('p');
 
-      var span = Element.fromTag('span');
+      const span = Element.fromTag('span');
 
       InsertAll.append(div, [ p ]);
       InsertAll.append(p, [ span ]);
 
       Class.add(span, 'dog');
-
 
       Pipeline.async({}, [
         Assertions.sAssertStructure(

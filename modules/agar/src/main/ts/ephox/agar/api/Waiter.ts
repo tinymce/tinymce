@@ -1,4 +1,3 @@
-import { DieFn, NextFn } from '../pipe/Pipe';
 import * as Guard from './Guard';
 import { Step } from './Step';
 

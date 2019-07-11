@@ -16,4 +16,3 @@ UnitTest.test('LoggerTest', function () {
     );
   }
 });
-

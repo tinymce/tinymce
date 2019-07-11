@@ -28,6 +28,6 @@ const gEnforce = function (decorations) {
 };
 
 export default {
-  gOne: gOne,
-  gEnforce: gEnforce
+  gOne,
+  gEnforce
 };

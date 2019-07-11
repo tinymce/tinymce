@@ -1,11 +1,11 @@
-import { File, DataTransfer } from "@ephox/dom-globals";
-import { Chain } from "./Main";
-import { cFindIn } from "./UiFinder";
-import { Body, Element } from "@ephox/sugar";
-import { getWindowFromElement } from "../dragndrop/DndEvents";
-import { createDataTransfer } from "../datatransfer/DataTransfer";
-import { Arr, Obj } from "@ephox/katamari";
-import { createPasteEvent, createCopyEvent, createCutEvent } from "../clipboard/ClipboardEvents";
+import { File, DataTransfer } from '@ephox/dom-globals';
+import { Chain } from './Chain';
+import { cFindIn } from './UiFinder';
+import { Body, Element } from '@ephox/sugar';
+import { getWindowFromElement } from '../dragndrop/DndEvents';
+import { createDataTransfer } from '../datatransfer/DataTransfer';
+import { Arr, Obj } from '@ephox/katamari';
+import { createPasteEvent, createCopyEvent, createCutEvent } from '../clipboard/ClipboardEvents';
 
 const cPasteDataTransfer = (mutator: (dataTransfer: DataTransfer) => void) => Chain.op<Element>((target) => {
   const win = getWindowFromElement(target);

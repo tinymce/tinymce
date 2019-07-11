@@ -1,10 +1,4 @@
-import { Element } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { InsertAll } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
-
-
+import { Element, Insert, InsertAll, Remove, SelectorFind } from '@ephox/sugar';
 
 export const Page = function () {
 
@@ -58,29 +52,29 @@ export const Page = function () {
   };
 
   return {
-    container: container,
-    div1: div1,
-    p1: p1,
-    p2: p2,
-    s1: s1,
-    s2: s2,
-    s3: s3,
-    p3: p3,
-    div2: div2,
-    p4: p4,
-    s4: s4,
-    t1: t1,
-    t2: t2,
-    t3: t3,
-    t4: t4,
-    t5: t5,
-    t6: t6,
-    t7: t7,
-    t8: t8,
-    t9: t9,
-    t10: t10,
+    container,
+    div1,
+    p1,
+    p2,
+    s1,
+    s2,
+    s3,
+    p3,
+    div2,
+    p4,
+    s4,
+    t1,
+    t2,
+    t3,
+    t4,
+    t5,
+    t6,
+    t7,
+    t8,
+    t9,
+    t10,
 
-    connect: connect,
-    disconnect: disconnect
+    connect,
+    disconnect
   };
 };

@@ -30,8 +30,9 @@ const targets: {
 
 const derive = function (element: Element, selector: string) {
   // Not sure if error is what I want here.
-  if (selector === undefined) throw new Error('No selector passed through');
-  else if (selector.indexOf('root:') === 0) {
+  if (selector === undefined) {
+    throw new Error('No selector passed through');
+  } else if (selector.indexOf('root:') === 0) {
     return targets.self(element, selector.substring('root:'.length));
   } else if (selector.indexOf('root>') === 0) {
     return targets.children(element, selector.substring('root>'.length));

@@ -8,7 +8,7 @@ export const par = function <T> (futures: Future<T>[]) {
 };
 
 /** mapM :: [a] -> (a -> Future b) -> Future [b] */
-export const mapM = function <A,B> (array: A[], fn: (value: A) => Future<B>) {
+export const mapM = function <A, B> (array: A[], fn: (value: A) => Future<B>) {
   const futures: Future<B>[] = Arr.map(array, fn);
   return par(futures);
 };
@@ -19,7 +19,7 @@ export const mapM = function <A,B> (array: A[], fn: (value: A) => Future<B>) {
  *
  *  compose :: ((b -> Future c), (a -> Future b)) -> a -> Future c
  */
-export const compose = function <A,B,C> (f: (b: B) => Future<C>, g: (a: A) => Future<B>) {
+export const compose = function <A, B, C> (f: (b: B) => Future<C>, g: (a: A) => Future<B>) {
   return function (a: A) {
     return g(a).bind(f);
   };

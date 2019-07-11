@@ -9,7 +9,7 @@ import { Wraps } from './Wraps';
 interface SpanWrapPoint<E> {
   cursor(): SpotPoint<E>;
   temporary(): boolean;
-  wrappers(): E[]
+  wrappers(): E[];
 }
 
 const point = function <E, D>(universe: Universe<E, D>, start: E, soffset: number, _finish: E, _foffset: number, exclusions: (e: E) => boolean): Option<SpanWrapRange<E>> {
@@ -26,7 +26,6 @@ const point = function <E, D>(universe: Universe<E, D>, start: E, soffset: numbe
     wrappers: scanned.wrappers
   });
 };
-
 
 const temporary = function <E, D>(universe: Universe<E, D>, start: E, soffset: number): SpanWrapPoint<E> {
   const doc: D = universe.property().document(start);
@@ -46,7 +45,6 @@ const temporary = function <E, D>(universe: Universe<E, D>, start: E, soffset: n
     temporary: Fun.constant(true)
   };
 };
-
 
 /*
  * The point approach needs to reuse a temporary span (if we already have one) or create one if we don't.

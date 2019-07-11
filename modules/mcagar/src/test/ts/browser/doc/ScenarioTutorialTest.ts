@@ -1,8 +1,4 @@
-import { Arbitraries, GeneralSteps } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
+import { Arbitraries, Assertions, Pipeline, Step, UiFinder } from '@ephox/agar';
 import TinyApis from 'ephox/mcagar/api/TinyApis';
 import TinyDom from 'ephox/mcagar/api/TinyDom';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
@@ -11,21 +7,20 @@ import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Tutorial: Property Testing with TinyMCE', (success, failure) => {
 
-  var sAssertion = (editor, body) => Step.sync(function () {
-    var strongs = UiFinder.findAllIn(body, 'strong');
+  const sAssertion = (editor, body) => Step.sync(function () {
+    const strongs = UiFinder.findAllIn(body, 'strong');
     Assertions.assertEq('There should be no strong tags', 0, strongs.length);
-    var editorContent1 = editor.getContent();
+    const editorContent1 = editor.getContent();
 
     editor.setContent(editorContent1);
-    var editorContent2 = editor.getContent();
+    const editorContent2 = editor.getContent();
     Assertions.assertEq('The content should be the same', editorContent1, editorContent2);
   });
 
-
   TinyLoader.setup((editor, loadSuccess, loadFailure) => {
-    var apis = TinyApis(editor);
-    var scenarios = TinyScenarios(editor);
-    var body = TinyDom.fromDom(editor.getBody());
+    const apis = TinyApis(editor);
+    const scenarios = TinyScenarios(editor);
+    const body = TinyDom.fromDom(editor.getBody());
 
     Pipeline.async({}, [
       apis.sFocus,
@@ -46,4 +41,3 @@ UnitTest.asynctest('Tutorial: Property Testing with TinyMCE', (success, failure)
 
   }, {}, success, failure);
 });
-

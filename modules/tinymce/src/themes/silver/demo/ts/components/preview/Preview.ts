@@ -33,9 +33,11 @@ export default () => {
         preview: 'Some content '
       },
       onSubmit: (api) => {
+        // tslint:disable-next-line:no-console
         console.log('Preview Demo onSubmit');
       },
       onClose: () => {
+        // tslint:disable-next-line:no-console
         console.log('Preview Demo Close');
       }
     }, {}, Fun.noop);

@@ -3,9 +3,9 @@ import * as Obj from 'ephox/katamari/api/Obj';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('KeyValuesTest', function() {
-  const check = function(expKeys, expValues, input) {
-    const c = function(expected, v) {
+UnitTest.test('KeyValuesTest', function () {
+  const check = function (expKeys, expValues, input) {
+    const c = function (expected, v) {
       v.sort();
       assert.eq(expected, v);
     };
@@ -29,4 +29,3 @@ UnitTest.test('KeyValuesTest', function() {
     }
   );
 });
-

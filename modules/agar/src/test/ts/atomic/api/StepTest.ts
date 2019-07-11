@@ -3,9 +3,7 @@ import * as Logger from 'ephox/agar/api/Logger';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
 
-UnitTest.asynctest('StepTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('StepTest', function (success, failure) {
 
   return Pipeline.async({}, [
     Logger.t(
@@ -37,4 +35,3 @@ UnitTest.asynctest('StepTest', function () {
     success();
   });
 });
-

@@ -1,13 +1,11 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
-import { TextGene } from '@ephox/boss';
+import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import * as Extract from 'ephox/phoenix/api/general/Extract';
 import * as Finder from 'ephox/phoenix/test/Finder';
 import * as TestRenders from 'ephox/phoenix/test/TestRenders';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('api.Extract.(from,all,extract,extractTo)', function() {
+UnitTest.test('api.Extract.(from,all,extract,extractTo)', function () {
   const doc = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'div', [
@@ -97,4 +95,3 @@ UnitTest.test('api.Extract.(from,all,extract,extractTo)', function() {
     return item.name === 'p';
   });
 });
-

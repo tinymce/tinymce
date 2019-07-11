@@ -37,7 +37,6 @@ const run = function <E, D>(universe: Universe<E, D>, elements: E[], patterns: N
   return result;
 };
 
-
 /**
  * Runs a search for one or more words
  */
@@ -48,7 +47,6 @@ const safeWords = function <E, D>(universe: Universe<E, D>, elements: E[], words
   });
   return run(universe, elements, patterns, optimise);
 };
-
 
 /**
  * Runs a search for a single token

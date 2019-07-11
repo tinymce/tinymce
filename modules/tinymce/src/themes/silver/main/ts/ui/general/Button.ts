@@ -92,7 +92,7 @@ export const renderIconButton = (spec: IconButtonWrapper, action, providersBacks
 
 // Maybe the list of extraBehaviours is better than doing a Merger.deepMerge that
 // we do elsewhere? Not sure.
-export const renderButton = (spec: ButtonSpec, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []): SketchSpec => {
+export const renderButton = (spec: ButtonSpec, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = [], extraClasses = []): SketchSpec => {
   const translatedText = providersBackstage.translate(spec.text);
 
   const icon = spec.icon ? spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)) : Option.none();
@@ -105,7 +105,8 @@ export const renderButton = (spec: ButtonSpec, action, providersBackstage: UiFac
   const classes = [
     ...!spec.primary && !spec.borderless ? ['tox-button', 'tox-button--secondary'] : ['tox-button'],
     ...icon.isSome() ? ['tox-button--icon'] : [],
-    ...spec.borderless ? ['tox-button--naked'] : []
+    ...spec.borderless ? ['tox-button--naked'] : [],
+    ...extraClasses
   ];
 
   const dom = {
@@ -131,6 +132,7 @@ const getAction = (name: string, buttonType) => {
     } else if (buttonType === 'cancel') {
       AlloyTriggers.emit(comp, formCancelEvent);
     } else {
+      // tslint:disable-next-line:no-console
       console.error('Unknown button type: ', buttonType);
     }
   };

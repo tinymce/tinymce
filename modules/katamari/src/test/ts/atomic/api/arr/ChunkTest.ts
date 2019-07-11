@@ -2,7 +2,7 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ChunkTest', function() {
+UnitTest.test('ChunkTest', function () {
   const check = function (expected, initial: any[], size: number) {
     assert.eq(expected, Arr.chunk(initial, size));
     assert.eq(expected, Arr.chunk(Object.freeze(initial.slice()), size));
@@ -30,9 +30,10 @@ UnitTest.test('ChunkTest', function() {
 
       const numChunks = chunks.length;
       const firstParts = chunks.slice(0, numChunks - 1);
-      if (! Arr.forall(firstParts, hasRightSize)) return 'Incorrect chunk size';
+      if (! Arr.forall(firstParts, hasRightSize)) {
+        return 'Incorrect chunk size';
+      }
       return arr.length === 0 ? Jsc.eq([ ], chunks) : chunks[chunks.length - 1].length <= chunkSize;
     }
   );
 });
-

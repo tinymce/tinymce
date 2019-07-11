@@ -2,7 +2,7 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ArrEachTest', function() {
+UnitTest.test('ArrEachTest', function () {
   const checkLHelper = function (expected, input) {
     const values = [];
     Arr.each(input, function (x, i) {
@@ -11,7 +11,7 @@ UnitTest.test('ArrEachTest', function() {
     assert.eq(expected, values);
   };
 
-  const checkL = function(expected, input: any[]) {
+  const checkL = function (expected, input: any[]) {
     checkLHelper(expected, input);
     checkLHelper(expected, Object.freeze(input.slice()));
   };
@@ -24,7 +24,7 @@ UnitTest.test('ArrEachTest', function() {
     assert.eq(expected, values);
   };
 
-  const checkR = function(expected, input: any[]) {
+  const checkR = function (expected, input: any[]) {
     checkRHelper(expected, input);
     checkRHelper(expected, Object.freeze(input.slice()));
   };
@@ -59,4 +59,3 @@ UnitTest.test('ArrEachTest', function() {
     }
   );
 });
-

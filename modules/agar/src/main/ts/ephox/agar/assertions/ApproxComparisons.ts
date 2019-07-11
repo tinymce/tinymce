@@ -30,7 +30,7 @@ const is = function (target: string) {
 
   return {
     show: Fun.constant('is("' + target + '")'),
-    strAssert: strAssert,
+    strAssert,
     arrAssert: dieWith('"is" is not an array assertion. Perhaps you wanted "has"?')
   };
 };
@@ -47,7 +47,7 @@ const startsWith = function (target: string) {
 
   return {
     show: Fun.constant('startsWith("' + target + '")'),
-    strAssert: strAssert,
+    strAssert,
     arrAssert: dieWith('"startsWith" is not an array assertion. Perhaps you wanted "hasPrefix"?')
   };
 };
@@ -64,12 +64,12 @@ const contains = function (target: string) {
 
   return {
     show: Fun.constant('contains("' + target + '")'),
-    strAssert: strAssert,
+    strAssert,
     arrAssert: dieWith('"contains" is not an array assertion. Perhaps you wanted "has"?')
   };
 };
 
-const none = function (message: string = "[[missing value]]") {
+const none = function (message: string = '[[missing value]]') {
   const compare = function (actual: string) {
     return actual === missingValuePlaceholder;
   };
@@ -81,7 +81,7 @@ const none = function (message: string = "[[missing value]]") {
 
   return {
     show: Fun.constant('none("' + message + '")'),
-    strAssert: strAssert,
+    strAssert,
     arrAssert: dieWith('"none" is not an array assertion. Perhaps you wanted "not"?')
   };
 };
@@ -99,7 +99,7 @@ const has = function <T>(target: T) {
   return {
     show: Fun.constant('has("' + target + '")'),
     strAssert: dieWith('"has" is not a string assertion. Perhaps you wanted "is"?'),
-    arrAssert: arrAssert
+    arrAssert
   };
 };
 
@@ -116,7 +116,7 @@ const hasPrefix = function (prefix: string) {
   return {
     show: Fun.constant('hasPrefix("' + prefix + '")'),
     strAssert: dieWith('"hasPrefix" is not a string assertion. Perhaps you wanted "startsWith"?'),
-    arrAssert: arrAssert
+    arrAssert
   };
 };
 
@@ -134,7 +134,7 @@ const not = function <T>(target: T) {
   return {
     show: Fun.constant('not("' + target + '")'),
     strAssert: dieWith('"not" is not a string assertion. Perhaps you wanted "none"?'),
-    arrAssert: arrAssert
+    arrAssert
   };
 };
 

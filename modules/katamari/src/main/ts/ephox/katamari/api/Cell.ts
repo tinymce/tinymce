@@ -20,8 +20,8 @@ export const Cell = <T>(initial: T): Cell<T> => {
   };
 
   return {
-    get: get,
-    set: set,
-    clone: clone
+    get,
+    set,
+    clone
   };
 };

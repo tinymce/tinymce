@@ -123,6 +123,7 @@ const types = {
 const extractFrom = (spec: ToolbarButton, extras: Extras): Option<AlloySpec> => {
   return Obj.get(types, spec.type).fold(
     () => {
+      // tslint:disable-next-line:no-console
       console.error('skipping button defined by', spec);
       return Option.none();
     },

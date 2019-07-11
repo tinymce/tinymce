@@ -16,7 +16,7 @@ const parent = function (item: Gene): Option<Gene> {
 
 const document = function (item: Gene) {
   return undefined; // currently the test universe does not have documents
-}
+};
 
 const isText = function (item: Gene) {
   return item.name === 'TEXT_GENE';
@@ -31,7 +31,7 @@ const isElement = function (item: Gene) {
 };
 
 const getText = function (item: Gene) {
-  return Option.from(item.text).getOrDie('Text not available on this node')
+  return Option.from(item.text).getOrDie('Text not available on this node');
 };
 
 const setText = function (item: Gene, value: string | undefined) {
@@ -47,15 +47,15 @@ const isBoundary = function (item: Gene) {
 };
 
 export default {
-  children: children,
-  name: name,
-  parent: parent,
-  document: document,
-  isText: isText,
-  isComment: isComment,
-  isElement: isElement,
-  getText: getText,
-  setText: setText,
-  isEmptyTag: isEmptyTag,
-  isBoundary: isBoundary
+  children,
+  name,
+  parent,
+  document,
+  isText,
+  isComment,
+  isElement,
+  getText,
+  setText,
+  isEmptyTag,
+  isBoundary
 };

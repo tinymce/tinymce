@@ -2,7 +2,7 @@ import * as Strings from 'ephox/katamari/api/Strings';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('endsWith', function() {
+UnitTest.test('endsWith', function () {
   function check(expected, str, suffix) {
     const actual = Strings.endsWith(str, suffix);
     assert.eq(expected, actual);
@@ -27,4 +27,3 @@ UnitTest.test('endsWith', function() {
     }
   );
 });
-

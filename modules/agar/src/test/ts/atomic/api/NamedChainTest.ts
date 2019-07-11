@@ -8,14 +8,15 @@ import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 import StepAssertions from 'ephox/agar/test/StepAssertions';
 
-UnitTest.asynctest('NamedChainTest', function() {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('NamedChainTest', function (success, failure) {
 
   const cIsEqual = function (expected) {
     return Chain.async((actual, next, die) => {
-      if (expected === actual) next(actual);
-      else die('Unexpected input. Expected: ' + expected + ', Actual: ' + actual);
+      if (expected === actual) {
+        next(actual);
+      } else {
+        die('Unexpected input. Expected: ' + expected + ', Actual: ' + actual);
+      }
     });
   };
 
@@ -61,13 +62,13 @@ UnitTest.asynctest('NamedChainTest', function() {
           NamedChain.bundle(function (input) {
             RawAssertions.assertEq('Checking bundled chain output', Merger.merge(
               {
-                x: 5 * 2,
-                y: 8,
+                'x': 5 * 2,
+                'y': 8,
                 '10y': 80,
-                z: 10,
-                description: 'Q1. What are the answers',
-                shouting: 'Q1. What are the answers!',
-                xyz: {
+                'z': 10,
+                'description': 'Q1. What are the answers',
+                'shouting': 'Q1. What are the answers!',
+                'xyz': {
                   x: 10,
                   y: 8,
                   z: 10
@@ -145,4 +146,3 @@ UnitTest.asynctest('NamedChainTest', function() {
     success();
   }, failure);
 });
-
