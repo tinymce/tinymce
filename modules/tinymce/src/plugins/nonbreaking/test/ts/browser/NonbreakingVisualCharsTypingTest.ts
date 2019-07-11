@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
-      Log.stepsAsStep('TBA', '1. NonBreaking: Click on the nbsp button then type some text, and assert content is correct', [
+      Log.stepsAsStep('TINY-3647', '1. NonBreaking: Click on the nbsp button then type some text, and assert content is correct', [
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
         RealKeys.sSendKeysOn(
           'iframe => body => p',
@@ -30,41 +30,11 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
                 children: [
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp') ],
-                    attrs: {
-                      'data-mce-bogus': str.is('1')
-                    },
-                    children: [
-                      s.text(str.is('\u00a0test'))
-                    ]
-                  })
-                ]
-              })
-            ]
-          });
-        }))
-      ]),
-
-      tinyApis.sSetContent(''), // reset content
-
-      Log.stepsAsStep('TBA', '2. NonBreaking: Add text to editor, click on the nbsp button, and assert content is correct', [
-        tinyApis.sSetContent('test'),
-        tinyApis.sSetCursor([0, 0], 4),
-        tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
-          return s.element('body', {
-            children: [
-              s.element('p', {
-                children: [
-                  s.text(str.is('test')),
-                  s.element('span', {
-                    classes: [ arr.has('mce-nbsp') ],
-                    attrs: {
-                      'data-mce-bogus': str.is('1')
-                    },
                     children: [
                       s.text(str.is('\u00a0'))
                     ]
-                  })
+                  }),
+                  s.text(str.is('\uFEFF' + 'test'))
                 ]
               })
             ]
@@ -74,7 +44,33 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
 
       tinyApis.sSetContent(''), // reset content
 
-      Log.stepsAsStep('TBA', '3. NonBreaking: Add content to editor, click on the nbsp button then type some text, and assert content is correct', [
+      Log.stepsAsStep('TINY-3647', '2. NonBreaking: Add text to editor, click on the nbsp button, and assert content is correct', [
+        tinyApis.sSetContent('test'),
+        tinyApis.sSetCursor([0, 0], 4),
+        tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
+          return s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text(str.is('test')),
+                  s.element('span', {
+                    classes: [ arr.has('mce-nbsp') ],
+                    children: [
+                      s.text(str.is('\u00a0'))
+                    ]
+                  }),
+                  s.text(str.is('\uFEFF'))
+                ]
+              })
+            ]
+          });
+        }))
+      ]),
+
+      tinyApis.sSetContent(''), // reset content
+
+      Log.stepsAsStep('TINY-3647', '3. NonBreaking: Add content to editor, click on the nbsp button then type some text, and assert content is correct', [
         tinyApis.sSetContent('test'),
         tinyApis.sSetCursor([0, 0], 4),
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
@@ -92,13 +88,11 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
                   s.text(str.is('test')),
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp') ],
-                    attrs: {
-                      'data-mce-bogus': str.is('1')
-                    },
                     children: [
-                      s.text(str.is(' test'))
+                      s.text(str.is('\u00a0'))
                     ]
-                  })
+                  }),
+                  s.text(str.is('\uFEFF' + 'test'))
                 ]
               })
             ]
@@ -108,7 +102,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
 
       tinyApis.sSetContent(''), // reset content
 
-      Log.stepsAsStep('TBA', '4. NonBreaking: Click on the nbsp button then type a space, and assert content is correct', [
+      Log.stepsAsStep('TINY-3647', '4. NonBreaking: Click on the nbsp button then type a space, and assert content is correct', [
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
         RealKeys.sSendKeysOn(
           'iframe => body => p',
@@ -123,13 +117,11 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
                 children: [
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp') ],
-                    attrs: {
-                      'data-mce-bogus': str.is('1')
-                    },
                     children: [
-                      s.text(str.is('\u00a0\u00a0'))
+                      s.text(str.is('\u00a0'))
                     ]
-                  })
+                  }),
+                  s.text(str.is('\uFEFF' + '\u00a0'))
                 ]
               })
             ]
@@ -139,7 +131,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
 
       tinyApis.sSetContent(''), // reset content
 
-      Log.stepsAsStep('TBA', '5. NonBreaking: Add text to editor, click on the nbsp button and add content plus a space, and assert content is correct', [
+      Log.stepsAsStep('TINY-3647', '5. NonBreaking: Add text to editor, click on the nbsp button and add content plus a space, and assert content is correct', [
         tinyApis.sSetContent('test'),
         tinyApis.sSetCursor([0, 0], 4),
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
@@ -151,13 +143,11 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
                   s.text(str.is('test')),
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp') ],
-                    attrs: {
-                      'data-mce-bogus': str.is('1')
-                    },
                     children: [
                       s.text(str.is('\u00a0'))
                     ]
-                  })
+                  }),
+                  s.text(str.is('\uFEFF'))
                 ]
               })
             ]
@@ -177,18 +167,90 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
                   s.text(str.is('test')),
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp') ],
-                    attrs: {
-                      'data-mce-bogus': str.is('1')
-                    },
                     children: [
-                      s.text(str.is(' test\u00a0'))
+                      s.text(str.is('\u00a0'))
                     ]
-                  })
+                  }),
+                  s.text(str.is('\uFEFF' + 'test\u00a0'))
                 ]
               })
             ]
           });
-        }))
+        })),
+      ]),
+
+      tinyApis.sSetContent(''), // reset content
+
+      Log.stepsAsStep('TINY-3647', '6. NonBreaking: Add text to editor, click on the nbsp button and add content plus a space, repeat, and assert content is correct', [
+        tinyApis.sSetContent('test'),
+        tinyApis.sSetCursor([0, 0], 4),
+        tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
+          return s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text(str.is('test')),
+                  s.element('span', {
+                    classes: [ arr.has('mce-nbsp') ],
+                    children: [
+                      s.text(str.is('\u00a0'))
+                    ]
+                  }),
+                  s.text(str.is('\uFEFF'))
+                ]
+              })
+            ]
+          });
+        })),
+        RealKeys.sSendKeysOn(
+          'iframe => body => p',
+          [
+            RealKeys.text('test ')
+          ]
+        ),
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
+          return s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text(str.is('test')),
+                  s.element('span', {
+                    classes: [ arr.has('mce-nbsp') ],
+                    children: [
+                      s.text(str.is('\u00a0'))
+                    ]
+                  }),
+                  s.text(str.is('\uFEFF' + 'test\u00a0'))
+                ]
+              })
+            ]
+          });
+        })),
+        RealKeys.sSendKeysOn(
+          'iframe => body => p',
+          [
+            RealKeys.text('test ')
+          ]
+        ),
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
+          return s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text(str.is('test')),
+                  s.element('span', {
+                    classes: [ arr.has('mce-nbsp') ],
+                    children: [
+                      s.text(str.is('\u00a0'))
+                    ]
+                  }),
+                  s.text(str.is('\uFEFF' + 'test test\u00a0'))
+                ]
+              })
+            ]
+          });
+        })),
       ]),
 
     ], onSuccess, onFailure);

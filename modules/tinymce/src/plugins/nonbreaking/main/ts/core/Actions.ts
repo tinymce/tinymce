@@ -1,5 +1,5 @@
 import Editor from 'tinymce/core/api/Editor';
-import { Arr } from '@ephox/katamari';
+import Settings from '../api/Settings';
 
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
@@ -23,12 +23,13 @@ const isVisualCharsEnabled = (editor: Editor) => {
 };
 
 const insertNbsp = (editor: Editor, times: number) => {
-  const nbsp = isVisualCharsEnabled(editor) ? '<span class="mce-nbsp">&nbsp;</span>' : '&nbsp;';
+  const classes = () => !isVisualCharsEnabled(editor) ? `mce-nbsp-wrap` : `mce-nbsp-wrap mce-nbsp`;
+  const nbspSpan = () => `<span class="${classes()}" contenteditable="false">${stringRepeat('&nbsp;', times)}</span>`;
 
-  editor.insertContent(stringRepeat(nbsp, times));
-  Arr.each(editor.dom.select('span.mce-nbsp'), (span) => {
-    editor.dom.setAttrib(span, 'data-mce-bogus', '1');
-  });
+  const wrap = Settings.wrapNbsps(editor);
+  const html = wrap || editor.plugins.visualchars ? nbspSpan() : stringRepeat('&nbsp;', times);
+
+  editor.undoManager.transact(() => editor.insertContent(html));
 };
 
 export default {

@@ -5,36 +5,49 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr } from '@ephox/katamari';
+import { Class, Element as SugarElement, Node as SugarNode } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 import Data from './Data';
 import Nodes from './Nodes';
-import { Arr } from '@ephox/katamari';
-import { Element, Node } from '@ephox/sugar';
+import { Element, Node } from '@ephox/dom-globals';
 
-const show = function (editor, rootElm) {
-  let node, div;
-  const nodeList = Nodes.filterDescendants(Element.fromDom(rootElm), Nodes.isMatch);
+const isWrappedNbsp = (node) => node.nodeName.toLowerCase() === 'span' && node.classList.contains('mce-nbsp-wrap');
 
-  Arr.each(nodeList, function (n) {
-    const withSpans = Nodes.replaceWithSpans(Node.value(n));
+const show = (editor: Editor, rootElm: Node) => {
+  const nodeList = Nodes.filterDescendants(SugarElement.fromDom(rootElm), Nodes.isMatch);
 
-    div = editor.dom.create('div', null, withSpans);
-    while ((node = div.lastChild)) {
-      editor.dom.insertAfter(node, n.dom());
+  Arr.each(nodeList, (n) => {
+    const parent = n.dom().parentNode;
+    if (isWrappedNbsp(parent)) {
+      Class.add(SugarElement.fromDom(parent), Data.nbsp.classes);
+    } else {
+      const withSpans = Nodes.replaceWithSpans(SugarNode.value(n));
+
+      const div = editor.dom.create('div', null, withSpans);
+      let node: any; // TODO: type??
+      while ((node = div.lastChild)) {
+        editor.dom.insertAfter(node, n.dom());
+      }
+
+      editor.dom.remove(n.dom());
     }
-
-    editor.dom.remove(n.dom());
   });
 };
 
-const hide = function (editor, body) {
-  const nodeList = editor.dom.select(Data.selector, body);
+const hide = (editor: Editor, rootElm: Node) => {
+  const nodeList = editor.dom.select(Data.selector, rootElm as Element);
 
-  Arr.each(nodeList, function (node) {
-    editor.dom.remove(node, 1);
+  Arr.each(nodeList, (node) => {
+    if (isWrappedNbsp(node)) {
+      Class.remove(SugarElement.fromDom(node), Data.nbsp.classes);
+    } else {
+      editor.dom.remove(node, true);
+    }
   });
 };
 
-const toggle = function (editor) {
+const toggle = (editor: Editor) => {
   const body = editor.getBody();
   const bookmark = editor.selection.getBookmark();
   let parentNode = Nodes.findParentElm(editor.selection.getNode(), body);

@@ -15,6 +15,11 @@ const getKeyboardSpaces = function (editor) {
   }
 };
 
+const wrapNbsps = function (editor) {
+  return editor.getParam('nonbreaking_wrap', false, 'boolean');
+};
+
 export default {
-  getKeyboardSpaces
+  getKeyboardSpaces,
+  wrapNbsps
 };

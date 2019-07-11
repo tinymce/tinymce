@@ -18,12 +18,18 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTe
     Pipeline.async({}, [
       Log.stepsAsStep('TINY-3647', 'NonBreaking+VisualChars: Click on the nbsp button and assert nonbreaking space is inserted', [
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str, arr) {
           return s.element('body', {
             children: [
               s.element('p', {
                 children: [
-                  s.text(str.is('\u00a0'))
+                  s.element('span', {
+                    classes: [ arr.has('mce-nbsp-wrap') ],
+                    children: [
+                      s.text(str.is('\u00a0'))
+                    ]
+                  }),
+                  s.text(str.is('\uFEFF'))
                 ]
               })
             ]
@@ -42,14 +48,12 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTe
               s.element('p', {
                 children: [
                   s.element('span', {
-                    classes: [ arr.has('mce-nbsp') ],
-                    attrs: {
-                      'data-mce-bogus': str.is('1')
-                    },
+                    classes: [ arr.has('mce-nbsp'), arr.has('mce-nbsp-wrap') ],
                     children: [
                       s.text(str.is('\u00a0'))
                     ]
-                  })
+                  }),
+                  s.text(str.is('\uFEFF'))
                 ]
               })
             ]
