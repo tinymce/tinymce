@@ -55,7 +55,7 @@ const cFindWithState = function (selector: string, predicate: (element: Element)
 const cWaitForState = function (message: string, selector: string, predicate: (element: Element) => boolean): Chain<Element, Element> {
   return Chain.control(
     cFindWithState(selector, predicate),
-    Guard.tryUntil(message, 10, 10000)
+    Guard.tryUntil(message, 5, 10000)
   );
 };
 
