@@ -19,10 +19,10 @@ export interface DialogData {
   wholewords: boolean;
 }
 
-const matchcase = Cell(false);
-const wholewords = Cell(false);
-
 const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchState>) {
+  const matchcase = Cell(false);
+  const wholewords = Cell(false);
+
   editor.undoManager.add();
 
   const selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
