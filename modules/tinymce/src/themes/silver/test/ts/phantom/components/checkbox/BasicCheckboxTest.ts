@@ -5,6 +5,7 @@ import { HTMLInputElement } from '@ephox/dom-globals';
 
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 import I18n from 'tinymce/core/api/util/I18n';
+import { DisablingSteps } from '../../../module/DisablingSteps';
 
 UnitTest.asynctest('Checkbox component Test', (success, failure) => {
   const providers = {
@@ -21,7 +22,8 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
       return GuiFactory.build(
         renderCheckbox({
           label: 'TestCheckbox',
-          name: 'test-check-box'
+          name: 'test-check-box',
+          disabled: false
         }, providers)
       );
     },
@@ -92,12 +94,19 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
 
         // Representing state updates
         sAssertCheckboxState('Initial checkbox state', false),
+        DisablingSteps.sAssertDisabled('Initial disabled state', false, component),
         sSetCheckboxState(true),
         sAssertCheckboxState('initial > checked', true),
         sSetCheckboxState(false),
         sAssertCheckboxState('checked > unchecked', false),
         sSetCheckboxState(true),
         sAssertCheckboxState('unchecked > checked', true),
+
+        // Disabling state
+        DisablingSteps.sSetDisabled('set disabled', component, true),
+        DisablingSteps.sAssertDisabled('enabled > disabled', true, component),
+        DisablingSteps.sSetDisabled('set enabled', component, false),
+        DisablingSteps.sAssertDisabled('disabled > enabled', false, component),
 
         // Keyboard events
         sPressKeyOnCheckbox(Keys.space(), { }),

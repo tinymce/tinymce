@@ -11,12 +11,13 @@ import {
   AlloySpec,
   AlloyTriggers,
   Behaviour,
+  Disabling,
   FormField as AlloyFormField,
   HtmlSelect as AlloyHtmlSelect,
   NativeEvents,
   SimpleSpec,
   SketchSpec,
-  Tabstopping,
+  Tabstopping
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Arr, Option } from '@ephox/katamari';
@@ -49,6 +50,7 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
     options: translatedOptions,
     factory: AlloyHtmlSelect,
     selectBehaviours: Behaviour.derive([
+      Disabling.config({ disabled: spec.disabled }),
       Tabstopping.config({ }),
       AddEventsBehaviour.config('selectbox-change', [
         AlloyEvents.run(NativeEvents.change(), (component, _) => {
@@ -80,6 +82,17 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
       tag: 'div',
       classes: ['tox-form__group']
     },
-    components: Arr.flatten<AlloySpec>([pLabel.toArray(), [selectWrap]])
+    components: Arr.flatten<AlloySpec>([pLabel.toArray(), [selectWrap]]),
+    fieldBehaviours: Behaviour.derive([
+      Disabling.config({
+        disabled: spec.disabled,
+        onDisabled: (comp) => {
+          AlloyFormField.getField(comp).each(Disabling.disable);
+        },
+        onEnabled: (comp) => {
+          AlloyFormField.getField(comp).each(Disabling.enable);
+        }
+      })
+    ])
   });
 };

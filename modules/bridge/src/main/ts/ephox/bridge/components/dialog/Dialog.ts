@@ -9,7 +9,7 @@ import { BaseToolbarButtonInstanceApi } from '../toolbar/ToolbarButton';
 export type ToolbarMenuButtonItemTypes = NestedMenuItemContents;
 export type SuccessCallback = (menu: string | ToolbarMenuButtonItemTypes[]) => void;
 
-export interface DialogMenuButtonInstanceApi {
+export interface DialogMenuButtonInstanceApi extends BaseToolbarButtonInstanceApi {
   isDisabled: () => boolean;
   setDisabled: (state: boolean) => void;
   isActive: () => boolean;
@@ -17,8 +17,18 @@ export interface DialogMenuButtonInstanceApi {
 }
 
 // Note: This interface doesn't extend from a common button interface as this is only a configuration that specifies a button, but it's not by itself a button.
-export interface DialogButtonApi<I extends BaseToolbarButtonInstanceApi> {
-  type: 'submit' | 'cancel' | 'custom' | 'menu';
+export interface DialogNormalButtonApi {
+  type: 'submit' | 'cancel' | 'custom';
+  name?: string;
+  text: string;
+  align?: 'start' | 'end';
+  primary?: boolean;
+  disabled?: boolean;
+  icon?: string;
+}
+
+export interface DialogMenuButtonApi {
+  type: 'menu';
   name?: string;
   text: string;
   align?: 'start' | 'end';
@@ -27,8 +37,10 @@ export interface DialogButtonApi<I extends BaseToolbarButtonInstanceApi> {
   icon?: string;
   tooltip?: string;
   fetch?: (success: SuccessCallback) => void;
-  onSetup?: (api: I) => (api: I) => void;
+  onSetup?: (api: DialogMenuButtonInstanceApi) => (api: DialogMenuButtonInstanceApi) => void;
 }
+
+export type DialogButtonApi = DialogNormalButtonApi | DialogMenuButtonApi;
 
 // For consistency with api/Types.ts this should perhaps be in a namespace (e.g. Types.Dialog.Panels.*)
 // but there are many many references to it already / shrug
@@ -83,7 +95,7 @@ export interface DialogApi<T extends DialogData> {
   title: string;
   size?: DialogSize;
   body: TabPanelApi | PanelApi;
-  buttons: DialogButtonApi<DialogMenuButtonInstanceApi>[];
+  buttons: DialogButtonApi[];
   initialData?: T;
 
   // Gets fired when a component within the dialog has an action used by some components
@@ -105,8 +117,18 @@ export interface DialogApi<T extends DialogData> {
   onTabChange?: DialogTabChangeHandler<T>;
 }
 
-export interface DialogButton<I extends BaseToolbarButtonInstanceApi> {
-  type: 'submit' | 'cancel' | 'custom' | 'menu';
+export interface DialogNormalButton {
+  type: 'submit' | 'cancel' | 'custom';
+  name: string;
+  text: string;
+  align: 'start' | 'end';
+  primary: boolean;
+  disabled: boolean;
+  icon: Option<string>;
+}
+
+export interface DialogMenuButton {
+  type: 'menu';
   name: string;
   text: string;
   align: 'start' | 'end';
@@ -115,14 +137,16 @@ export interface DialogButton<I extends BaseToolbarButtonInstanceApi> {
   icon: Option<string>;
   tooltip: Option<string>;
   fetch: (success: SuccessCallback) => void;
-  onSetup: (api: I) => (api: I) => void;
+  onSetup: (api: BaseToolbarButtonInstanceApi) => (api: BaseToolbarButtonInstanceApi) => void;
 }
+
+export type DialogButton = DialogNormalButton | DialogMenuButton;
 
 export interface Dialog<T> {
   title: string;
   size: DialogSize;
   body: TabPanel | Panel;
-  buttons: DialogButton<DialogMenuButtonInstanceApi>[];
+  buttons: DialogButton[];
   initialData: T;
   onAction: DialogActionHandler<T>;
   onChange: DialogChangeHandler<T>;

@@ -1,6 +1,6 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Option, Result } from '@ephox/katamari';
-import { DialogButton, DialogButtonApi, dialogButtonFields, DialogMenuButtonInstanceApi } from './Dialog';
+import { DialogNormalButton, DialogNormalButtonApi, dialogButtonFields } from './Dialog';
 
 export interface UrlDialogInstanceApi {
   block: (msg: string) => void;
@@ -26,12 +26,12 @@ export type UrlDialogCancelHandler = (api: UrlDialogInstanceApi) => void;
 export type UrlDialogMessageHandler = (api: UrlDialogInstanceApi, message: UrlDialogMessage) => void;
 
 // Allow the same button structure as dialogs, but remove the ability to have submit buttons
-export interface UrlDialogButtonApi extends DialogButtonApi<DialogMenuButtonInstanceApi> {
+export interface UrlDialogButtonApi extends DialogNormalButtonApi {
   type: 'cancel' | 'custom';
 }
 
 // Allow the same button structure as dialogs, but remove the ability to have submit buttons
-export interface UrlDialogButton extends DialogButton<DialogMenuButtonInstanceApi> {
+export interface UrlDialogButton extends DialogNormalButton {
   type: 'cancel' | 'custom';
 }
 

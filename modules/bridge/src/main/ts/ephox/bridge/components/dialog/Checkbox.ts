@@ -5,18 +5,21 @@ export interface CheckboxApi {
   name: string;
   type: 'checkbox';
   label: string;
+  disabled?: boolean;
 }
 
 export interface Checkbox {
   name: string;
   type: 'checkbox';
   label: string;
+  disabled: boolean;
 }
 
 export const checkboxFields = [
   FieldSchema.strictString('type'),
   FieldSchema.strictString('name'),
-  FieldSchema.strictString('label')
+  FieldSchema.strictString('label'),
+  FieldSchema.defaultedBoolean('disabled', false)
 ];
 
 export const checkboxSchema = ValueSchema.objOf(checkboxFields);
