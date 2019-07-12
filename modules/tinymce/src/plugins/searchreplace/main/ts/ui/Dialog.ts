@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Option } from '@ephox/katamari';
+import { Arr, Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
@@ -86,9 +86,9 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     wholewords: false
   };
 
-  const spec = {
+  const spec: Types.Dialog.DialogApi<DialogData> = {
     title: 'Find and Replace',
-    // size: 'normal',
+    size: 'normal',
     body: {
       type: 'panel',
       items: [
@@ -106,7 +106,6 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
               type: 'button',
               name: 'prev',
               text: 'Previous',
-              align: 'end',
               icon: 'action-prev',
               disabled: true,
               borderless: true
@@ -115,7 +114,6 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
               type: 'button',
               name: 'next',
               text: 'Next',
-              align: 'end',
               icon: 'action-next',
               disabled: true,
               borderless: true
@@ -127,32 +125,14 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
           name: 'replacetext',
           placeholder: 'Replace with'
         },
-        // {
-        //   type: 'grid',
-        //   columns: 2,
-        //   items: [
-        //     {
-        //       type: 'checkbox',
-        //       name: 'matchcase',
-        //       label: 'Match case'
-        //     },
-        //     {
-        //       type: 'checkbox',
-        //       name: 'wholewords',
-        //       label: 'Find whole words only'
-        //     }
-        //   ]
-        // }
       ]
     },
     buttons: [
       {
         type: 'menu',
         name: 'options',
-        icon: 'settings',
+        icon: 'preferences',
         text: '',
-        stuff: 'lol',
-        tooltip: Option.none(),
         align: 'start',
         fetch: (done) => {
           done([
@@ -235,7 +215,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
       Actions.done(editor, currentSearchState);
       editor.undoManager.add();
     }
-  } as any; // TODO: fix the types
+  };
 
   editor.windowManager.open(spec, {inline: 'toolbar'});
 };

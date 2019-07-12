@@ -3,9 +3,21 @@ import { Fun, Id, Result, Option } from '@ephox/katamari';
 import { BodyComponentApi } from './BodyComponent';
 import { Panel, PanelApi, panelFields } from './Panel';
 import { TabApi, Tab, TabPanel, TabPanelApi, tabPanelFields } from './TabPanel';
+import { NestedMenuItemContents } from '../../api/Menu';
+import { BaseToolbarButtonInstanceApi } from '../toolbar/ToolbarButton';
+
+export type ToolbarMenuButtonItemTypes = NestedMenuItemContents;
+export type SuccessCallback = (menu: string | ToolbarMenuButtonItemTypes[]) => void;
+
+export interface DialogMenuButtonInstanceApi {
+  isDisabled: () => boolean;
+  setDisabled: (state: boolean) => void;
+  isActive: () => boolean;
+  setActive: (state: boolean) => void;
+}
 
 // Note: This interface doesn't extend from a common button interface as this is only a configuration that specifies a button, but it's not by itself a button.
-export interface DialogButtonApi {
+export interface DialogButtonApi<I extends BaseToolbarButtonInstanceApi> {
   type: 'submit' | 'cancel' | 'custom' | 'menu';
   name?: string;
   text: string;
@@ -13,6 +25,9 @@ export interface DialogButtonApi {
   primary?: boolean;
   disabled?: boolean;
   icon?: string;
+  tooltip?: string;
+  fetch?: (success: SuccessCallback) => void;
+  onSetup?: (api: I) => (api: I) => void;
 }
 
 // For consistency with api/Types.ts this should perhaps be in a namespace (e.g. Types.Dialog.Panels.*)
@@ -68,7 +83,7 @@ export interface DialogApi<T extends DialogData> {
   title: string;
   size?: DialogSize;
   body: TabPanelApi | PanelApi;
-  buttons: DialogButtonApi[];
+  buttons: DialogButtonApi<DialogMenuButtonInstanceApi>[];
   initialData?: T;
 
   // Gets fired when a component within the dialog has an action used by some components
@@ -90,7 +105,7 @@ export interface DialogApi<T extends DialogData> {
   onTabChange?: DialogTabChangeHandler<T>;
 }
 
-export interface DialogButton {
+export interface DialogButton<I extends BaseToolbarButtonInstanceApi> {
   type: 'submit' | 'cancel' | 'custom' | 'menu';
   name: string;
   text: string;
@@ -98,13 +113,16 @@ export interface DialogButton {
   primary: boolean;
   disabled: boolean;
   icon: Option<string>;
+  tooltip: Option<string>;
+  fetch: (success: SuccessCallback) => void;
+  onSetup: (api: I) => (api: I) => void;
 }
 
 export interface Dialog<T> {
   title: string;
   size: DialogSize;
   body: TabPanel | Panel;
-  buttons: DialogButton[];
+  buttons: DialogButton<DialogMenuButtonInstanceApi>[];
   initialData: T;
   onAction: DialogActionHandler<T>;
   onChange: DialogChangeHandler<T>;
@@ -128,9 +146,9 @@ export const dialogButtonFields = [
   FieldSchema.defaultedStringEnum('align', 'end', ['start', 'end']),
   FieldSchema.defaultedBoolean('primary', false),
   FieldSchema.defaultedBoolean('disabled', false),
-  FieldSchema.defaulted('tooltip', Option.none()),
-  FieldSchema.defaulted('onSetup', Fun.noop),
-  FieldSchema.defaulted('fetch', Fun.noop)
+  FieldSchema.optionString('tooltip'),
+  FieldSchema.defaultedFunction('fetch', Fun.noop),
+  FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
 ];
 
 export const dialogButtonSchema = ValueSchema.objOf([
