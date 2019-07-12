@@ -44,19 +44,19 @@ UnitTest.asynctest('Example for Tutorial', function () {
 
     setTimeout(function () {
       Insert.append(Element.fromDom(document.body), editor);
-    }, 1000);
+    }, 5);
 
     const onClick = DomEvent.bind(showButton, 'click', function () {
       setTimeout(function () {
         Insert.append(editor, dialog);
-      }, 1000);
+      }, 5);
       onClick.unbind();
     });
 
     const onCancel = DomEvent.bind(cancelButton, 'click', function () {
       setTimeout(function () {
         Remove.remove(dialog);
-      }, 1000);
+      }, 5);
       onCancel.unbind();
     });
 
@@ -79,7 +79,7 @@ UnitTest.asynctest('Example for Tutorial', function () {
       Chain.inject(body),
       Chain.control(
         UiFinder.cFindIn('.dialog'),
-        Guard.tryUntilNot('Keep going until .dialog is not in the DOM', 100, 2000)
+        Guard.tryUntilNot('Keep going until .dialog is not in the DOM', 10, 2000)
       )
     ])
   ], function () {
