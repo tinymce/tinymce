@@ -4,16 +4,18 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
-
 import { KeyboardEvent } from '@ephox/dom-globals';
-import InsertNewLine from '../newline/InsertNewLine';
-import VK from '../api/util/VK';
+import { PlatformDetection } from '@ephox/sand';
+
 import Editor from '../api/Editor';
 import UndoManager from '../api/UndoManager';
 import { EditorEvent } from '../api/util/EventDispatcher';
-import { PlatformDetection } from '@ephox/sand';
+import VK from '../api/util/VK';
+import InsertNewLine from '../newline/InsertNewLine';
 
-const browser = PlatformDetection.detect().browser;
+const platform = PlatformDetection.detect();
+const browser = platform.browser;
+const isTouch = platform.deviceType.isTouch();
 const isSafari = browser.isSafari();
 
 const endTypingLevel = function (undoManager: UndoManager) {
@@ -24,6 +26,13 @@ const endTypingLevel = function (undoManager: UndoManager) {
 };
 
 const handleEnterKeyEvent = function (editor: Editor, event: EditorEvent<KeyboardEvent>) {
+
+  if (event.isDefaultPrevented() || isSafari && isTouch) {
+    return;
+  }
+
+  event.preventDefault();
+
   endTypingLevel(editor.undoManager);
   editor.undoManager.transact(function () {
     if (editor.selection.isCollapsed() === false) {
@@ -34,29 +43,12 @@ const handleEnterKeyEvent = function (editor: Editor, event: EditorEvent<Keyboar
   });
 };
 
-const handleEnter = function (editor: Editor) {
-  return function (event: EditorEvent<KeyboardEvent>) {
+const setup = function (editor: Editor) {
+  editor.on('keydown', function (event: EditorEvent<KeyboardEvent>) {
     if (event.keyCode === VK.ENTER) {
-      if (event.isDefaultPrevented()) {
-        return;
-      }
-      event.preventDefault();
       handleEnterKeyEvent(editor, event);
     }
-  };
-};
-
-const setup = function (editor: Editor) {
-  if (isSafari === true ) {
-    editor.on('beforeinput', (event) => {
-      if (event.inputType === 'insertParagraph') {
-        event.preventDefault();
-        handleEnterKeyEvent(editor, event);
-      }
-    });
-  } else {
-    editor.on('keydown', handleEnter(editor));
-  }
+  });
 };
 
 export default {
