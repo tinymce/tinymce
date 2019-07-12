@@ -4,16 +4,14 @@ import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 import theme from 'tinymce/themes/silver/Theme';
 import Env from 'tinymce/core/api/Env';
-import VisualCharsPlugin from 'tinymce/plugins/visualchars/Plugin';
 
-UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', (success, failure) => {
   // Note: Uses RealKeys, so needs a browser. Headless won't work.
 
   theme();
   NonbreakingPlugin();
-  VisualCharsPlugin();
 
-  const isIE = Env.ie && Env.ie <= 11;
+  const isGeckoOrIE = Env.gecko || (Env.ie && Env.ie <= 11);
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
@@ -34,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
               s.element('p', {
                 children: [
                   s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
+                    classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
                       s.text(str.is('\u00a0'))
                     ]
@@ -60,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
                 children: [
                   s.text(str.is('test')),
                   s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
+                    classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
                       s.text(str.is('\u00a0'))
                     ]
@@ -92,12 +90,12 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
                 children: [
                   s.text(str.is('test')),
                   s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
+                    classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
                       s.text(str.is('\u00a0'))
                     ]
                   }),
-                  s.text(str.is(isIE ? 'test' : '\uFEFF' + 'test'))
+                  s.text(str.is('\uFEFF' + 'test'))
                 ]
               })
             ]
@@ -121,12 +119,12 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
               s.element('p', {
                 children: [
                   s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
+                    classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
                       s.text(str.is('\u00a0'))
                     ]
                   }),
-                  s.text(str.is(Env.gecko ? '\uFEFF' + ' ' : (isIE ? ' ' : '\uFEFF' + '\u00a0')))
+                  s.text(str.is(isGeckoOrIE ? '\uFEFF' + ' ' : '\uFEFF' + '\u00a0'))
                 ].concat(Env.gecko ? [ s.element('br', {})] : [])
               })
             ]
@@ -147,7 +145,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
                 children: [
                   s.text(str.is('test')),
                   s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
+                    classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
                       s.text(str.is('\u00a0'))
                     ]
@@ -171,12 +169,12 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
                 children: [
                   s.text(str.is('test')),
                   s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
+                    classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
                       s.text(str.is('\u00a0'))
                     ]
                   }),
-                  s.text(str.is(Env.gecko ? '\uFEFF' + 'test ' : (isIE ? 'test ' : '\uFEFF' + 'test\u00a0')))
+                  s.text(str.is(isGeckoOrIE ? '\uFEFF' + 'test ' : '\uFEFF' + 'test\u00a0'))
                 ].concat(Env.gecko ? [ s.element('br', {})] : [])
               })
             ]
@@ -197,7 +195,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
                 children: [
                   s.text(str.is('test')),
                   s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
+                    classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
                       s.text(str.is('\u00a0'))
                     ]
@@ -221,12 +219,12 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
                 children: [
                   s.text(str.is('test')),
                   s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
+                    classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
                       s.text(str.is('\u00a0'))
                     ]
                   }),
-                  s.text(str.is(Env.gecko ? '\uFEFF' + 'test ' : (isIE ? 'test ' : '\uFEFF' + 'test\u00a0')))
+                  s.text(str.is(isGeckoOrIE ? '\uFEFF' + 'test ' : '\uFEFF' + 'test\u00a0'))
                 ].concat(Env.gecko ? [ s.element('br', {})] : [])
               })
             ]
@@ -245,12 +243,12 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
                 children: [
                   s.text(str.is('test')),
                   s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
+                    classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
                       s.text(str.is('\u00a0'))
                     ]
                   }),
-                  s.text(str.is(Env.gecko ? '\uFEFF' + 'test test ' : (isIE ? 'test test ' : '\uFEFF' + 'test test\u00a0')))
+                  s.text(str.is(isGeckoOrIE ? '\uFEFF' + 'test test ' : '\uFEFF' + 'test test\u00a0'))
                 ].concat(Env.gecko ? [ s.element('br', {})] : [])
               })
             ]
@@ -260,9 +258,9 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTy
 
     ], onSuccess, onFailure);
   }, {
-    plugins: 'nonbreaking visualchars',
-    toolbar: 'nonbreaking visualchars',
-    visualchars_default_state: true,
+    plugins: 'nonbreaking',
+    toolbar: 'nonbreaking',
+    nonbreaking_wrap: true,
     base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

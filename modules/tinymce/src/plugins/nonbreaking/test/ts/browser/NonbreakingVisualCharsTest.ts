@@ -2,14 +2,14 @@ import { ApproxStructure, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
-import VisualChars from 'tinymce/plugins/visualchars/Plugin';
+import VisualCharsPlugin from 'tinymce/plugins/visualchars/Plugin';
 import theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTest', (success, failure) => {
 
   theme();
   NonbreakingPlugin();
-  VisualChars();
+  VisualCharsPlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyUi = TinyUi(editor);
@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTe
               s.element('p', {
                 children: [
                   s.element('span', {
-                    classes: [ arr.has('mce-nbsp'), arr.has('mce-nbsp-wrap') ],
+                    classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
                     children: [
                       s.text(str.is('\u00a0'))
                     ]

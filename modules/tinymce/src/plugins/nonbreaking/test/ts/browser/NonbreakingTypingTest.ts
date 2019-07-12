@@ -3,12 +3,15 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 import theme from 'tinymce/themes/silver/Theme';
+import Env from 'tinymce/core/api/Env';
 
 UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingTypingTest', (success, failure) => {
   // Note: Uses RealKeys, so needs a browser. Headless won't work.
 
   theme();
   NonbreakingPlugin();
+
+  const isGeckoOrIE = Env.gecko || (Env.ie && Env.ie <= 11);
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyUi = TinyUi(editor);
@@ -95,8 +98,8 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingTypingTest', 
             children: [
               s.element('p', {
                 children: [
-                  s.text(str.is('\u00a0\u00a0'))
-                ]
+                  s.text(str.is(isGeckoOrIE ? '\u00a0 ' : '\u00a0\u00a0'))
+                ].concat(Env.gecko ? [ s.element('br', {})] : [])
               })
             ]
           });
@@ -118,8 +121,8 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingTypingTest', 
             children: [
               s.element('p', {
                 children: [
-                  s.text(str.is('test test\u00a0'))
-                ]
+                  s.text(str.is(isGeckoOrIE ? 'test test ' : 'test test\u00a0'))
+                ].concat(Env.gecko ? [ s.element('br', {})] : [])
               })
             ]
           });
@@ -130,6 +133,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingTypingTest', 
   }, {
     plugins: 'nonbreaking',
     toolbar: 'nonbreaking',
+    nonbreaking_wrap: false,
     base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });
