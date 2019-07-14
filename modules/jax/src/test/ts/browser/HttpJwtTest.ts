@@ -59,14 +59,14 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
   const responses = [
     expectError('GET on invalid url', HttpJwt.get(
       {
-        url: '/custom/sample/token/invalid',
+        url: '/custom/jax/sample/token/invalid',
         responseType: DataType.JSON,
       },
       fakeFactory(invalidCalls)
     ), [ 'cached', 'fresh'], invalidCalls),
     expectValue('GET on valid url', {}, HttpJwt.get(
       {
-        url: '/custom/sample/token/valid',
+        url: '/custom/jax/sample/token/valid',
         responseType: DataType.JSON,
       },
       fakeFactory(validCalls)
