@@ -4,6 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
+
 import { document, window } from '@ephox/dom-globals';
 import { Attr, Class, Element } from '@ephox/sugar';
 
