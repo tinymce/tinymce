@@ -20,9 +20,6 @@ export interface DialogData {
 }
 
 const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchState>) {
-  const matchcase = Cell(false);
-  const wholewords = Cell(false);
-
   editor.undoManager.add();
 
   const selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
@@ -65,11 +62,11 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     }
 
     // Same search text, so treat the find as a next click instead
-    if (last.text === data.findtext && last.matchCase === matchcase.get() && last.wholeWord === wholewords.get()) {
+    if (last.text === data.findtext && last.matchCase === data.matchcase && last.wholeWord === data.wholewords) {
       Actions.next(editor, currentSearchState);
     } else {
       // Find new matches
-      const count = Actions.find(editor, currentSearchState, data.findtext, matchcase.get(), wholewords.get());
+      const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords);
       if (count <= 0) {
         notFoundAlert(api);
       }
@@ -82,8 +79,8 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
   const initialData: DialogData = {
     findtext: selectedText,
     replacetext: '',
-    matchcase: false,
-    wholewords: false
+    matchcase: currentSearchState.get().matchCase,
+    wholewords: currentSearchState.get().wholeWord
   };
 
   const spec: Types.Dialog.DialogApi<DialogData> = {
@@ -93,8 +90,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
       type: 'panel',
       items: [
         {
-          type: 'panel',
-          classes: ['tox-form__controls-h-stack'],
+          type: 'bar',
           items: [
             {
               type: 'input',
@@ -132,7 +128,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
         type: 'menu',
         name: 'options',
         icon: 'preferences',
-        text: '',
+        tooltip: 'Preferences',
         align: 'start',
         fetch: (done) => {
           done([
@@ -140,17 +136,17 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
               type: 'togglemenuitem',
               text: 'Match case',
               onAction: (api) => {
-                matchcase.set(!matchcase.get());
+                currentSearchState.get().matchCase = !currentSearchState.get().matchCase;
               },
-              active: matchcase.get()
+              active: currentSearchState.get().matchCase
             },
             {
               type: 'togglemenuitem',
               text: 'Find whole words only',
               onAction: (api) => {
-                wholewords.set(!wholewords.get());
+                currentSearchState.get().wholeWord = !currentSearchState.get().wholeWord;
               },
-              active: wholewords.get()
+              active: currentSearchState.get().wholeWord
             }
           ]);
         }
