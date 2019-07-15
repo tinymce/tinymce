@@ -64,7 +64,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ProcessFiltersTest', (success,
     };
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, [
       Chain.asStep(editor, Log.chains('TBA', 'Paste: Paste pre process only', [
         cProcessPre('a', true, preProcessHandler),

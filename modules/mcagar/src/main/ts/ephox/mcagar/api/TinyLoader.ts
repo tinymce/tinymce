@@ -25,6 +25,16 @@ const removeTinymceElements = () => {
   Arr.each(elements, Remove.remove);
 };
 
+
+const setupLight = (callback: SetupCallback, settings: Record<string, any>, success: SuccessCallback, failure: FailureCallback) => {
+  const nuSettings = Merger.merge({
+    toolbar: '',
+    menubar: false,
+    statusbar: false
+  }, settings);
+  setup(callback, nuSettings, success, failure);
+};
+
 const setup = (callback: SetupCallback, settings: Record<string, any>, success: SuccessCallback, failure: FailureCallback) => {
   const target = createTarget(settings.inline);
   const randomId = Id.generate('tiny-loader');
@@ -83,5 +93,6 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
 };
 
 export default {
-  setup
+  setup,
+  setupLight
 };

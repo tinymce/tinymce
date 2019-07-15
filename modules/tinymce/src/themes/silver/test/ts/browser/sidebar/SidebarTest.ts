@@ -15,7 +15,7 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.sidebar.SidebarTest', fun
   const store = TestHelpers.TestStore();
   Theme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyUi = TinyUi(editor);
 
     const sClickAndAssertEvents = function (tooltip, expected: EventLog[]) {

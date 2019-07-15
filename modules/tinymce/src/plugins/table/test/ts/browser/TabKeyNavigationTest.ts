@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TabKeyNavigationTest', (succes
     );
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Table: Navigate the table using tab key', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'table',

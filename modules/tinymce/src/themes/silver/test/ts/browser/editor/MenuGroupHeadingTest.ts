@@ -6,7 +6,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('Menu group heading test', (success, failure) => {
   Theme();
 
-  TinyLoader.setup(
+  TinyLoader.setupLight(
     (editor, onSuccess, onFailure) => {
       const tinyUi = TinyUi(editor);
       const container = Element.fromDom(editor.getContainer());

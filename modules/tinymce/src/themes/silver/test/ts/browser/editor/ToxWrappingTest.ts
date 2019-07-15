@@ -10,7 +10,7 @@ import { Result } from '@ephox/katamari';
 UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
   Theme();
 
-  TinyLoader.setup(
+  TinyLoader.setupLight(
     (editor: Editor, onSuccess, onFailure) => {
       const replacedElem = Element.fromDom(editor.getElement());
 

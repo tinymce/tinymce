@@ -179,7 +179,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
     );
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'TableOfContents: Api insert, update and test table of contents', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'toc',

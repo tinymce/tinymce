@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.core.init.ContentStylePositionTest', functio
 
   const contentStyle = '.class {color: blue;}';
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
 
     Pipeline.async({}, [
       Step.sync(function () {

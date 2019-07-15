@@ -16,7 +16,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
   const skipInIE = <T, U> (step: Step<T, U>) => isIE ? Step.pass : step;
   const store = TestHelpers.TestStore();
 
-  TinyLoader.setup(
+  TinyLoader.setupLight(
     (editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
       const doc = Element.fromDom(document);

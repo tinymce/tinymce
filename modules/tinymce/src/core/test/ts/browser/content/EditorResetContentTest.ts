@@ -7,7 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 UnitTest.asynctest('browser.tinymce.core.content.EditorResetContentTest', (success, failure) => {
   Theme();
 
-  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     const sResetContent = (content?: string) => {

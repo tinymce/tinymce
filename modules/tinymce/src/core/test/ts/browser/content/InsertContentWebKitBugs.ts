@@ -6,7 +6,7 @@ import { UnitTest } from '@ephox/bedrock';
 UnitTest.asynctest('browser.tinymce.core.content.InsertContentTest', (success, failure) => {
   Theme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

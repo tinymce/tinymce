@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function () {
     });
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const inlineFormat = [{ inline: 'b' }];
     const blockFormat = [{ block: 'div' }];

@@ -693,7 +693,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     LegacyUnit.equal(editor.getContent(), '<details><summary>a<br />b</summary></details>');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

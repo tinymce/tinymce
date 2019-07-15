@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.MediaPluginSanityTest', functi
   Plugin();
   Theme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const ui = TinyUi(editor);
     const apis = TinyApis(editor);
 

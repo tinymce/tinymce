@@ -117,8 +117,8 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     delete editor.settings.default_link_target;
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    const steps = Env.ie && Env.ie <= 11 ? [] : suite.toSteps(editor);
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+    const steps = Env.ie ? [] : suite.toSteps(editor);
     Pipeline.async({}, Log.steps('TBA', 'AutoLink: Test autolink url inputs', steps), onSuccess, onFailure);
   }, {
     plugins: 'autolink',

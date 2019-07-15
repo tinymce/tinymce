@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeInsertNode', (success, f
     return Fragment.fromElements(Elements.fromHtml(html, scope), scope).dom();
   };
 
-  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const doc = editor.getDoc();
 

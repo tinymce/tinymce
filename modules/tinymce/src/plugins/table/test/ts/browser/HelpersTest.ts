@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
   Plugin();
   SilverTheme();
 
-  TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

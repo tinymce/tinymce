@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, fail
   const dialogSelector = 'div.tox-dialog';
   const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Source code"]';
 
-  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     const docBody = Element.fromDom(document.body);

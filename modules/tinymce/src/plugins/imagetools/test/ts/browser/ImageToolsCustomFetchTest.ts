@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest
   ImagetoolsPlugin();
   SilverTheme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

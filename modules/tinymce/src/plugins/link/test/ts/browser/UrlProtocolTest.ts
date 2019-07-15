@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.UrlProtocolTest', (success, fai
   LinkPlugin();
   SilverTheme();
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const doc = TinyDom.fromDom(document);
 

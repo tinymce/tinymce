@@ -319,7 +319,7 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function () {
     LegacyUnit.equal(editor.selection.getStart(true).nodeName, 'P');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const steps = Env.webkit ? suite.toSteps(editor) : [];
     Pipeline.async({}, steps, onSuccess, onFailure);
   }, {
