@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', function (success, 
     editor.off('CloseWindow OpenWindow');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
