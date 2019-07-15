@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
     ]);
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
