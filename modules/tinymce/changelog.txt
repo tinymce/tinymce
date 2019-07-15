@@ -1,6 +1,7 @@
 Version 5.0.12 (TBD)
     Added ability to utilize UI dialog panels inside other panels #TINY-3305
     Added help dialog tab explaining keyboard navigation of the editor #TINY-3603
+    Changed the search and replace dialog to render as an inline dialog and updated the design #TINY-3054
     Fixed removing shortcuts not working for function keys #TINY-3871
     Fixed non-descriptive UI component type names #TINY-3349
     Fixed UI registry components rendering as the wrong type when manually specifying a different type #TINY-385
