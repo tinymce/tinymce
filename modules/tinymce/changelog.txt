@@ -1,5 +1,6 @@
 Version 5.0.12 (TBD)
     Fixed issue where autolink spacebar event was not being fired on Edge #TINY-3891
+    Fixed table selection missing the background color #TINY-3892
     Added ability to utilize UI dialog panels inside other panels #TINY-3305
     Added help dialog tab explaining keyboard navigation of the editor #TINY-3603
     Fixed removing shortcuts not working for function keys #TINY-3871
