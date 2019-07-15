@@ -28,7 +28,7 @@ export const setup = (extras) => {
         align: 'end',
         disabled: false,
         icon: Option.none()
-      }, 'cancel', sharedBackstage.providers)
+      }, 'cancel', extras.backstage)
     );
 
     const alertDialog = GuiFactory.build(

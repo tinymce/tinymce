@@ -90,6 +90,7 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
   });
 
   const extraClasses = spec.flex ? ['tox-form__group--stretched'] : [];
+  const extraClasses2 = extraClasses.concat(spec.maximized ? ['tox-form-group--maximize'] : []);
 
   const extraBehaviours = [
     Disabling.config({
@@ -103,7 +104,7 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
     })
   ];
 
-  return renderFormFieldWith(pLabel, pField, extraClasses, extraBehaviours);
+  return renderFormFieldWith(pLabel, pField, extraClasses2, extraBehaviours);
 };
 
 export type Validator = (v: string) => true | string;
@@ -120,6 +121,7 @@ export interface TextField {
     validator: Validator;
     validateOnLoad?: boolean
   }>;
+  maximized: boolean;
 }
 
 type InputSpec = Omit<Types.Input.Input, 'type'>;
@@ -135,7 +137,8 @@ const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProv
     flex: false,
     disabled: spec.disabled,
     classname: 'tox-textfield',
-    validation: Option.none()
+    validation: Option.none(),
+    maximized: spec.maximized
   }, providersBackstage);
 };
 
@@ -149,6 +152,7 @@ const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBacksta
     disabled: spec.disabled,
     classname: 'tox-textarea',
     validation: Option.none(),
+    maximized: spec.maximized
   }, providersBackstage);
 };
 

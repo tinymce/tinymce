@@ -19,14 +19,14 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTes
       Log.stepsAsStep('TBA', 'SearchReplace: Test no content selected', [
         tinyApis.sSetContent('<p>fish fish fish</p>'),
         Utils.sOpenDialog(tinyUi),
-        Utils.sAssertFieldValue(tinyUi, 'label:contains("Find") + input.tox-textfield', ''),
+        Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', ''),
         Utils.sCloseDialog(tinyUi)
       ]),
       Log.stepsAsStep('TBA', 'SearchReplace: Test some content selected', [
         tinyApis.sSetContent('<p>fish fish fish</p>'),
         tinyApis.sSetSelection([0, 0], 5, [0, 0], 9),
         Utils.sOpenDialog(tinyUi),
-        Utils.sAssertFieldValue(tinyUi, 'label:contains("Find") + input.tox-textfield', 'fish'),
+        Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', 'fish'),
         Utils.sCloseDialog(tinyUi)
       ])
     ], onSuccess, onFailure);

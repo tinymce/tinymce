@@ -25,7 +25,7 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowE
 
   const footer = renderModalFooter({
     buttons: dialogInit.internalDialog.buttons
-  }, backstage.shared.providers);
+  }, backstage);
 
   const dialogEvents = SilverDialogEvents.initDialog(() => instanceApi, getEventExtras(() => dialog, extra));
 

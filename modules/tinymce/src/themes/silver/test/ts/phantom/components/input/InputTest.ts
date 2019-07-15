@@ -17,6 +17,7 @@ UnitTest.asynctest('Input component Test', (success, failure) => {
           name: 'input',
           label: Option.some('LabelA'),
           placeholder: Option.none(),
+          maximized: false,
           disabled: false
         }, TestProviders)
       );
