@@ -144,7 +144,6 @@ export default function () {
     //   }
     // ],
     toolbar_drawer: 'floating',
-    draggable_modal: false,
     emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js'
   };
 

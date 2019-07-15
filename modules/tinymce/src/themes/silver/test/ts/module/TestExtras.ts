@@ -3,6 +3,7 @@ import { Body, Class } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
 import TestBackstage from './TestBackstage';
 import Editor from 'tinymce/core/api/Editor';
+import { Obj } from '@ephox/katamari';
 
 export default () => {
 
@@ -25,11 +26,13 @@ export default () => {
 
   const backstage = TestBackstage(sink);
 
+  const mockSettings: Record<string, any> = {};
+
   const mockEditor = {
     setContent: (content) => {},
     insertContent: (content: string, args?: any) => {},
     execCommand: (cmd: string, ui?: boolean, value?: any) => {},
-    getParam: (name: string, defaultVal?: any, type?: string) => name || defaultVal
+    getParam: (name: string, defaultVal?: any, type?: string) => Obj.get(mockSettings, name).getOr(defaultVal)
   } as Editor;
 
   const extras = {
