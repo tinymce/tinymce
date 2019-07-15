@@ -6,7 +6,8 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent,
+  AddEventsBehaviour,
+  AlloyComponent,
   AlloyEvents,
   AlloyTriggers,
   Behaviour,
