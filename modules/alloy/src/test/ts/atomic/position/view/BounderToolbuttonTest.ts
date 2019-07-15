@@ -92,7 +92,15 @@ UnitTest.test('BounderToolbuttonTest', () => {
       south,
       north,
       east,
-      west
+      west,
+      innerSouthwest: northeast,
+      innerSoutheast: northwest,
+      innerSouth: north,
+      innerNorthwest: southeast,
+      innerNortheast: southwest,
+      innerNorth: south,
+      innerWest: east,
+      innerEast: west
     };
   };
 

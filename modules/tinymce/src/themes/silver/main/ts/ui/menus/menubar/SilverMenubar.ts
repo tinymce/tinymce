@@ -28,8 +28,8 @@ import { Compare, SelectorFind } from '@ephox/sugar';
 import { TranslatedString } from 'tinymce/core/api/util/I18n';
 
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import { renderMenuButton } from '../../button/MenuButton';
 import { MenuButtonClasses } from '../../toolbar/button/ButtonClasses';
-import { renderMenuButton } from '../../toolbar/button/ToolbarButtons';
 import { SingleMenuItemApi } from '../menu/SingleMenuTypes';
 
 export interface SilverMenubarSpec extends Sketcher.SingleSketchSpec {

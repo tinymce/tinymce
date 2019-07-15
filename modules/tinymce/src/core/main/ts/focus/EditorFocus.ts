@@ -95,6 +95,13 @@ const focusEditor = (editor: Editor) => {
 
   editor.quirks.refreshContentEditable();
 
+  if (editor.bookmark !== undefined && hasFocus(editor) === false) {
+    SelectionBookmark.getRng(editor).each(function (bookmarkRng) {
+      editor.selection.setRng(bookmarkRng);
+      rng = bookmarkRng;
+    });
+  }
+
   // Move focus to contentEditable=true child if needed
   const contentEditableHost = getContentEditableHost(editor, selection.getNode());
   if (editor.$.contains(body, contentEditableHost)) {
@@ -102,13 +109,6 @@ const focusEditor = (editor: Editor) => {
     normalizeSelection(editor, rng);
     activateEditor(editor);
     return;
-  }
-
-  if (editor.bookmark !== undefined && hasFocus(editor) === false) {
-    SelectionBookmark.getRng(editor).each(function (bookmarkRng) {
-      editor.selection.setRng(bookmarkRng);
-      rng = bookmarkRng;
-    });
   }
 
   // Focus the window iframe

@@ -11,6 +11,7 @@ export interface SelectBoxApi extends FormComponentWithLabelApi {
   type: 'selectbox';
   items: ExternalSelectBoxItem[];
   size?: number;
+  disabled?: boolean;
 }
 
 interface InternalSelectBoxItem extends ExternalSelectBoxItem {
@@ -22,6 +23,7 @@ export interface SelectBox extends FormComponentWithLabel {
   type: 'selectbox';
   items: InternalSelectBoxItem[];
   size: number;
+  disabled: boolean;
 }
 
 export const selectBoxFields: FieldProcessorAdt[] = formComponentWithLabelFields.concat([
@@ -29,7 +31,8 @@ export const selectBoxFields: FieldProcessorAdt[] = formComponentWithLabelFields
     FieldSchema.strictString('text'),
     FieldSchema.strictString('value')
   ]),
-  FieldSchema.defaultedNumber('size', 1)
+  FieldSchema.defaultedNumber('size', 1),
+  FieldSchema.defaultedBoolean('disabled', false)
 ]);
 
 export const selectBoxSchema = ValueSchema.objOf(selectBoxFields);

@@ -65,7 +65,7 @@ const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: Windo
     if (buttons.length === 0) {
       return Option.none();
     } else {
-      return Option.some(renderModalFooter({ buttons }, backstage.shared.providers));
+      return Option.some(renderModalFooter({ buttons }, backstage));
     }
   });
 

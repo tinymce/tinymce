@@ -28,7 +28,8 @@
     "browser-test": "yarn -s grunt browser-auto",
     "browser-test-manual": "yarn -s grunt browser-manual",
     "phantomjs-test": "yarn -s grunt phantomjs-auto",
-    "phantomjs-test-manual": "yarn -s grunt phantomjs-manual"
+    "phantomjs-test-manual": "yarn -s grunt phantomjs-manual",
+    "bedrock": "bedrock --customRoutes modules/tinymce/src/core/test/json/routes.json"
   },
   "devDependencies": {
     "@ephox/bedrock": "^4.2.11",
@@ -69,11 +70,10 @@
     "stylelint": "^9.10.1",
     "stylelint-config-standard": "^18.2.0",
     "stylelint-order": "^2.1.0",
-    "ts-lint": "^4.5.1",
     "ts-loader": "^5.3.0",
     "tsconfig-paths-webpack-plugin": "^3.2.0",
     "tslib": "^1.9.3",
-    "tslint": "^5.9.1",
+    "tslint": "^5.18.0",
     "typescript": "~3.3",
     "webpack": "^4.8.3",
     "webpack-cli": "^3.1.2",

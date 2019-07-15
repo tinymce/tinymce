@@ -9,10 +9,19 @@
 // Select
 //
 
+@selectbox-disabled-background-color: darken(@background-color, 5%);
+@selectbox-disabled-text-color: fade(@text-color, 85%);
+
 .tox {
   .tox-selectfield {
     cursor: pointer;
     position: relative;
+  }
+
+  .tox-selectfield select[disabled] {
+    background-color: @selectbox-disabled-background-color;
+    color: @selectbox-disabled-text-color;
+    cursor: not-allowed;
   }
 
   .tox-selectfield select {

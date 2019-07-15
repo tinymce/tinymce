@@ -14,7 +14,8 @@ UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
         renderSizeInput({
           name: 'dimensions',
           label: Option.some('size'),
-          constrain: true
+          constrain: true,
+          disabled: false
         }, TestProviders)
       );
     },

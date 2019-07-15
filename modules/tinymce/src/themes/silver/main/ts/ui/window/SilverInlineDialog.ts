@@ -63,7 +63,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
   const memFooter = Memento.record(
     renderInlineFooter({
       buttons: dialogInit.internalDialog.buttons
-    }, backstage.shared.providers)
+    }, backstage)
   );
 
   const dialogEvents = SilverDialogEvents.initDialog(

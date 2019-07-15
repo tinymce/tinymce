@@ -29,6 +29,7 @@ import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Icons from '../icons/Icons';
 import { formatSize, makeRatioConverter, noSizeConversion, parseSize, SizeConversion } from '../sizeinput/SizeInputModel';
 import { Omit } from '../Omit';
+import { DisablingConfigs } from '../alien/DisablingConfigs';
 
 interface RatioEvent extends CustomEvent {
   isField1: () => boolean;
@@ -66,6 +67,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
       }
     ],
     buttonBehaviours: Behaviour.derive([
+      DisablingConfigs.button(spec.disabled),
       Tabstopping.config({})
     ])
   });
@@ -84,6 +86,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     factory: AlloyInput,
     inputClasses: ['tox-textfield'],
     inputBehaviours: Behaviour.derive([
+      Disabling.config({ disabled: spec.disabled }),
       Tabstopping.config({}),
       AddEventsBehaviour.config('size-input-events', [
         AlloyEvents.run(NativeEvents.focusin(), function (component, simulatedEvent) {
@@ -152,7 +155,19 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
       });
     },
     coupledFieldBehaviours: Behaviour.derive([
-      Disabling.config({ }),
+      Disabling.config({
+        disabled: spec.disabled,
+        onDisabled: (comp) => {
+          AlloyFormCoupledInputs.getField1(comp).bind(AlloyFormField.getField).each(Disabling.disable);
+          AlloyFormCoupledInputs.getField2(comp).bind(AlloyFormField.getField).each(Disabling.disable);
+          AlloyFormCoupledInputs.getLock(comp).each(Disabling.disable);
+        },
+        onEnabled: (comp) => {
+          AlloyFormCoupledInputs.getField1(comp).bind(AlloyFormField.getField).each(Disabling.enable);
+          AlloyFormCoupledInputs.getField2(comp).bind(AlloyFormField.getField).each(Disabling.enable);
+          AlloyFormCoupledInputs.getLock(comp).each(Disabling.enable);
+        }
+      }),
       AddEventsBehaviour.config('size-input-events2', [
         AlloyEvents.run<RatioEvent>(ratioEvent, function (component, simulatedEvent) {
           const isField1 = simulatedEvent.event().isField1();

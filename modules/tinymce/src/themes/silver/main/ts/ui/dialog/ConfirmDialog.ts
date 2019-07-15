@@ -32,7 +32,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
         align: 'end',
         disabled: false,
         icon: Option.none()
-      }, 'submit', sharedBackstage.providers)
+      }, 'submit', extras.backstage)
     );
 
     const footerNo = renderFooterButton({
@@ -42,7 +42,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
       align: 'end',
       disabled: false,
       icon: Option.none()
-    }, 'cancel', sharedBackstage.providers);
+    }, 'cancel', extras.backstage);
 
     const confirmDialog = GuiFactory.build(
       Dialogs.renderDialog({

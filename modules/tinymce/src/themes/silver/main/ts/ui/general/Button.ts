@@ -7,35 +7,39 @@
 
 import {
   AddEventsBehaviour,
+  AlloyComponent,
   AlloyEvents,
   AlloyTriggers,
   Behaviour,
   Button as AlloyButton,
+  FormField as AlloyFormField,
   SketchSpec,
-  Tabstopping,
+  Tabstopping
 } from '@ephox/alloy';
 import { console } from '@ephox/dom-globals';
 import { Merger, Option } from '@ephox/katamari';
 import { formActionEvent, formCancelEvent, formSubmitEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { UiFactoryBackstageProviders, UiFactoryBackstage } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { renderIconFromPack } from '../button/ButtonSlices';
+import { renderMenuButton } from '../button/MenuButton';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 import { Types } from '@ephox/bridge';
 import { Omit } from '../Omit';
+import { renderFormField } from '../alien/FieldLabeller';
 
 type ButtonSpec = Omit<Types.Button.Button, 'type'>;
+type FooterButtonSpec = Omit<Types.Dialog.DialogNormalButton, 'type'> | Omit<Types.Dialog.DialogMenuButton, 'type'>;
 
-type FooterButtonSpec = Omit<Types.DialogButton, 'type'>;
 export interface IconButtonWrapper extends Omit<ButtonSpec, 'text'> {
   tooltip: Option<string>;
 }
 
-const renderCommonSpec = (spec, actionOpt, extraBehaviours = [], dom, components) => {
+const renderCommonSpec = (spec, actionOpt: Option<(comp: AlloyComponent) => void>, extraBehaviours = [], dom, components) => {
   const action = actionOpt.fold(() => {
     return {};
   }, (action) => {
@@ -63,12 +67,7 @@ const renderCommonSpec = (spec, actionOpt, extraBehaviours = [], dom, components
   return Merger.deepMerge(domFinal, { components });
 };
 
-const renderCommon = (spec, action, extraBehaviours = [], dom, components): SketchSpec => {
-  const specFinal = renderCommonSpec(spec, Option.some(action), extraBehaviours, dom, components);
-  return AlloyButton.sketch(specFinal);
-};
-
-export const renderIconButtonSpec = (spec: IconButtonWrapper, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []) => {
+export const renderIconButtonSpec = (spec: IconButtonWrapper, action: Option<(comp: AlloyComponent) => void>, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []) => {
   const tooltipAttributes = spec.tooltip.map<{}>((tooltip) => ({
     'aria-label': providersBackstage.translate(tooltip),
     'title': providersBackstage.translate(tooltip)
@@ -85,14 +84,14 @@ export const renderIconButtonSpec = (spec: IconButtonWrapper, action, providersB
   return renderCommonSpec(spec, action, extraBehaviours, dom, components);
 };
 
-export const renderIconButton = (spec: IconButtonWrapper, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []): SketchSpec => {
+export const renderIconButton = (spec: IconButtonWrapper, action: (comp: AlloyComponent) => void, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []): SketchSpec => {
   const iconButtonSpec = renderIconButtonSpec(spec, Option.some(action), providersBackstage, extraBehaviours);
   return AlloyButton.sketch(iconButtonSpec);
 };
 
 // Maybe the list of extraBehaviours is better than doing a Merger.deepMerge that
 // we do elsewhere? Not sure.
-export const renderButton = (spec: ButtonSpec, action, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []): SketchSpec => {
+export const renderButtonSpec = (spec: ButtonSpec, action: Option<(comp: AlloyComponent) => void>, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = [], extraClasses = []) => {
   const translatedText = providersBackstage.translate(spec.text);
 
   const icon = spec.icon ? spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)) : Option.none();
@@ -105,7 +104,8 @@ export const renderButton = (spec: ButtonSpec, action, providersBackstage: UiFac
   const classes = [
     ...!spec.primary && !spec.borderless ? ['tox-button', 'tox-button--secondary'] : ['tox-button'],
     ...icon.isSome() ? ['tox-button--icon'] : [],
-    ...spec.borderless ? ['tox-button--naked'] : []
+    ...spec.borderless ? ['tox-button--naked'] : [],
+    ...extraClasses
   ];
 
   const dom = {
@@ -116,11 +116,16 @@ export const renderButton = (spec: ButtonSpec, action, providersBackstage: UiFac
       title: translatedText // TODO: tooltips AP-213
     }
   };
-  return renderCommon(spec, action, extraBehaviours, dom, components);
+  return renderCommonSpec(spec, action, extraBehaviours, dom, components);
 };
 
-const getAction = (name: string, buttonType) => {
-  return (comp) => {
+export const renderButton = (spec: ButtonSpec, action: (comp: AlloyComponent) => void, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = [], extraClasses = []): SketchSpec => {
+  const buttonSpec = renderButtonSpec(spec, Option.some(action), providersBackstage, extraBehaviours, extraClasses);
+  return AlloyButton.sketch(buttonSpec);
+};
+
+const getAction = (name: string, buttonType: string) => {
+  return (comp: AlloyComponent) => {
     if (buttonType === 'custom') {
       AlloyTriggers.emitWith(comp, formActionEvent, {
         name,
@@ -137,19 +142,37 @@ const getAction = (name: string, buttonType) => {
   };
 };
 
-export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
-  const action = getAction(spec.name, buttonType);
-  const buttonSpec = {
-    ...spec,
-    borderless: false
-  };
-  return renderButton(buttonSpec, action, providersBackstage, [ ]);
+const isMenuFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Types.Dialog.DialogMenuButton => {
+  return buttonType === 'menu';
+};
+
+const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Types.Dialog.DialogNormalButton => {
+  return buttonType === 'custom' || buttonType === 'cancel' || buttonType === 'submit';
+};
+
+export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, backstage: UiFactoryBackstage): SketchSpec => {
+  if (isMenuFooterButtonSpec(spec, buttonType)) {
+    return renderMenuButton(spec, ToolbarButtonClasses.Button, backstage, Option.none());
+  } else if (isNormalFooterButtonSpec(spec, buttonType)) {
+    const action = getAction(spec.name, buttonType);
+    const buttonSpec = {
+      ...spec,
+      borderless: false
+    };
+    return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);
+  } else {
+    // tslint:disable-next-line:no-console
+    console.error('Unknown footer button type: ', buttonType);
+  }
 };
 
 export const renderDialogButton = (spec: ButtonSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const action = getAction(spec.name, 'custom');
-  return renderButton(spec, action, providersBackstage, [
-    RepresentingConfigs.memory(''),
-    ComposingConfigs.self()
-  ]);
+  return renderFormField(Option.none(), AlloyFormField.parts().field({
+    factory: AlloyButton,
+    ...renderButtonSpec(spec, Option.some(action), providersBackstage, [
+      RepresentingConfigs.memory(''),
+      ComposingConfigs.self()
+    ])
+  }));
 };
