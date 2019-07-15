@@ -140,7 +140,7 @@ export interface Dialog<T> {
   onTabChange: DialogTabChangeHandler<T>;
 }
 
-export const baseButtonFields = [
+const baseButtonFields = [
   FieldSchema.field(
     'name',
     'name',
