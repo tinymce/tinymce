@@ -38,7 +38,7 @@ export default {
   regExp: charMapToRegExp(charMap),
   regExpGlobal: charMapToRegExp(charMap, true),
   selector: charMapToSelector(charMap),
-  nbsp: { selector: 'span.mce-nbsp-wrap', classes: 'mce-nbsp' },
+  nbspClass: 'mce-nbsp',
   charMapToRegExp,
   charMapToSelector
 };

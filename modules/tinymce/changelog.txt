@@ -1,4 +1,6 @@
 Version 5.0.12 (TBD)
+    Added nonbreaking_wrap setting to nonbreaking plugin to wrap user-inserted NBSPs in spans #TINY-3647
+    Changed nonbreaking plugin to always wrap user-inserted NBSPs in spans when visualchars is configured #TINY-3647
     Fixed issue where autolink spacebar event was not being fired on Edge #TINY-3891
     Fixed table selection missing the background color #TINY-3892
     Added ability to utilize UI dialog panels inside other panels #TINY-3305

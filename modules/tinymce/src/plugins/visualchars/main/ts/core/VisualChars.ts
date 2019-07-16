@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element, Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Class, Element as SugarElement, Node as SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Data from './Data';
 import Nodes from './Nodes';
-import { Element, Node } from '@ephox/dom-globals';
 
 const isWrappedNbsp = (node) => node.nodeName.toLowerCase() === 'span' && node.classList.contains('mce-nbsp-wrap');
 
@@ -20,7 +20,7 @@ const show = (editor: Editor, rootElm: Node) => {
   Arr.each(nodeList, (n) => {
     const parent = n.dom().parentNode;
     if (isWrappedNbsp(parent)) {
-      Class.add(SugarElement.fromDom(parent), Data.nbsp.classes);
+      Class.add(SugarElement.fromDom(parent), Data.nbspClass);
     } else {
       const withSpans = Nodes.replaceWithSpans(SugarNode.value(n));
 
@@ -40,7 +40,7 @@ const hide = (editor: Editor, rootElm: Node) => {
 
   Arr.each(nodeList, (node) => {
     if (isWrappedNbsp(node)) {
-      Class.remove(SugarElement.fromDom(node), Data.nbsp.classes);
+      Class.remove(SugarElement.fromDom(node), Data.nbspClass);
     } else {
       editor.dom.remove(node, true);
     }

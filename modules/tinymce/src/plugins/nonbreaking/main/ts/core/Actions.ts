@@ -26,8 +26,8 @@ const insertNbsp = (editor: Editor, times: number) => {
   const classes = () => isVisualCharsEnabled(editor) ? `mce-nbsp-wrap mce-nbsp` : `mce-nbsp-wrap`;
   const nbspSpan = () => `<span class="${classes()}" contenteditable="false">${stringRepeat('&nbsp;', times)}</span>`;
 
-  const wrap = Settings.wrapNbsps(editor);
-  const html = wrap || editor.plugins.visualchars ? nbspSpan() : stringRepeat('&nbsp;', times);
+  const shouldWrap = Settings.wrapNbsps(editor);
+  const html = shouldWrap || editor.plugins.visualchars ? nbspSpan() : stringRepeat('&nbsp;', times);
 
   editor.undoManager.transact(() => editor.insertContent(html));
 };
