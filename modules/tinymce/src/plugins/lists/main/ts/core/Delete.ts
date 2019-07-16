@@ -7,7 +7,7 @@
 
 import { Element, HTMLLIElement, Node, Range as DomRange } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Compare, Element as SugarElement, Remove, SelectorFind } from '@ephox/sugar';
+import { Compare, Element as SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
@@ -156,12 +156,6 @@ const mergeBackward = function (editor: Editor, rng: DomRange, fromLi: HTMLLIEle
   const resolvedBookmark = Bookmark.resolveBookmark(bookmark);
   editor.selection.setRng(resolvedBookmark);
 
-  // Adding a bookmark earlier in backspaceDeleteFromListToListCaret may have left behind a bogus br
-  SelectorFind.descendant(SugarElement.fromDom(toLi), 'br[data-mce-bogus="1"]').each((bookmarkBogus) => {
-    if (toLi.childNodes.length > 1) {
-      Remove.remove(bookmarkBogus);
-    }
-  });
 };
 
 // If curr depth > last depth - return true for outdent
@@ -170,7 +164,10 @@ const mergeBackward = function (editor: Editor, rng: DomRange, fromLi: HTMLLIEle
 const outdentOrMerge = (entrySets: EntrySet[]): boolean => {
   // entrySets should only have one entry for a collapsed selection - which we check below, so we know that's true here
   const entries = entrySets[0].entries;
-  return Arr.findIndex(entries, (entry: Entry) => entry.isSelected === true).fold(() => false, (currIdx: number) => entries[currIdx].depth > entries[currIdx - 1].depth);
+  return Arr.findIndex(entries, (entry: Entry) => entry.isSelected === true).fold(
+    () => false,
+    (currIdx: number) => currIdx > 0 && entries[currIdx].depth > entries[currIdx - 1].depth
+  );
 };
 
 const outdent = (editor: Editor, entrySets: EntrySet[], bookmark: any) => {
