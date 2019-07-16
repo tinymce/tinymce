@@ -121,10 +121,10 @@ const processPlugins = function (isTouchDevice: boolean, sectionResult, defaultO
   const mobilePlugins = mobileConfig.plugins ? normalizePlugins(mobileConfig.plugins) : desktopPlugins;
 
   const platformPlugins =
-    // is a mobile device with silver
-    isTouchDevice && isSectionTheme(sectionResult, 'mobile', 'silver') ? mobilePlugins :
+    // is a mobile device with mobile theme
+    isTouchDevice && isSectionTheme(sectionResult, 'mobile', 'mobile') ? filterMobilePlugins(mobilePlugins) :
     // is a mobile device with any mobile settings
-    isTouchDevice && hasSection(sectionResult, 'mobile') ? filterMobilePlugins(mobilePlugins) :
+    isTouchDevice && hasSection(sectionResult, 'mobile') ? mobilePlugins :
     // is desktop
     desktopPlugins;
 
