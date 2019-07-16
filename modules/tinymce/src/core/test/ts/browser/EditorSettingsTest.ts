@@ -229,7 +229,15 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Logger.t('Merged settings forced_plugins in default override settings with user mobile settings (mobile)', Step.sync(function () {
           Assertions.assertEq(
             'Should have forced_plugins merged with mobile plugins but only whitelisted user plugins',
-            { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a lists', ...(isiPhone ? { theme: 'mobile' } : { } )  },
+            { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a lists', theme: 'mobile' },
+            EditorSettings.combineSettings(true, {}, { forced_plugins: ['a'] }, { plugins: ['b'], mobile: { plugins: ['lists custom'], theme: 'mobile' } })
+          );
+        })),
+
+        Logger.t('Merged settings forced_plugins in default override settings with user mobile settings (mobile)', Step.sync(function () {
+          Assertions.assertEq(
+            'Should not merge forced_plugins with mobile plugins when theme is not mobile',
+            { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a lists custom', ...(isiPhone ? { theme: 'mobile' } : { } )  },
             EditorSettings.combineSettings(true, {}, { forced_plugins: ['a'] }, { plugins: ['b'], mobile: { plugins: ['lists custom'] } })
           );
         })),
@@ -245,7 +253,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Logger.t('Merged settings when mobile.plugins is undefined, on a mobile device', Step.sync(function () {
           Assertions.assertEq(
             'Should fallback to filtered white listed. settings.plugins ',
-            { validate: true, external_plugins: {}, plugins: 'lists autolink' },
+            { validate: true, external_plugins: {}, plugins: 'lists b autolink' },
             EditorSettings.combineSettings(true, {}, {}, { plugins: [ 'lists', 'b', 'autolink' ], mobile: { } })
           );
         })),
@@ -260,8 +268,8 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
 
         Logger.t('Merged settings with defined mobile.plugins', Step.sync(function () {
           Assertions.assertEq(
-            'Should only allow white list plugins',
-            { validate: true, external_plugins: {}, plugins: 'lists autolink' },
+            'Should allow all plugins',
+            { validate: true, external_plugins: {}, plugins: 'lists autolink foo bar' },
             EditorSettings.combineSettings(true, {}, {}, { mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ]} })
           );
         })),
