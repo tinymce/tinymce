@@ -25,7 +25,7 @@ const show = (editor: Editor, rootElm: Node) => {
       const withSpans = Nodes.replaceWithSpans(SugarNode.value(n));
 
       const div = editor.dom.create('div', null, withSpans);
-      let node: any; // TODO: type??
+      let node: any;
       while ((node = div.lastChild)) {
         editor.dom.insertAfter(node, n.dom());
       }

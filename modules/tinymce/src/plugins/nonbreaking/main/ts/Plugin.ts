@@ -9,7 +9,6 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 import Commands from './api/Commands';
 import Keyboard from './core/Keyboard';
 import Buttons from './ui/Buttons';
-import Editor from '../../../../core/main/ts/api/Editor';
 
 /**
  * This class contains all core logic for the nonbreaking plugin.
@@ -19,7 +18,7 @@ import Editor from '../../../../core/main/ts/api/Editor';
  */
 
 export default function () {
-  PluginManager.add('nonbreaking', function (editor: Editor) {
+  PluginManager.add('nonbreaking', function (editor) {
     Commands.register(editor);
     Buttons.register(editor);
     Keyboard.setup(editor);
