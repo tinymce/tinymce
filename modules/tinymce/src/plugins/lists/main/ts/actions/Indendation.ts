@@ -9,7 +9,7 @@ import { Arr } from '@ephox/katamari';
 import { Element} from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Indentation } from '../listModel/Indentation';
-import { listsIndentationByElements } from '../listModel/ListsIndendation';
+import { listIndentation } from '../listModel/ListsIndendation';
 import { dlIndentation } from '../core/DlIndentation';
 import Range from '../core/Range';
 import Selection from '../core/Selection';
@@ -22,7 +22,7 @@ const selectionIndentation = (editor: Editor, indentation: Indentation): boolean
   if (lists.length || dlItems.length) {
     const bookmark = editor.selection.getBookmark();
 
-    listsIndentationByElements(editor, lists, indentation);
+    listIndentation(editor, lists, indentation);
     dlIndentation(editor, indentation, dlItems);
 
     editor.selection.moveToBookmark(bookmark);

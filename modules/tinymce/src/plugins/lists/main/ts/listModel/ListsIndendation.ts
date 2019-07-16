@@ -51,7 +51,8 @@ const getItemSelection = (editor: Editor): Option<ItemSelection> => {
   ], (start, end) => ({ start, end }));
 };
 
-const listsIndentationByEntrySets = (editor: Editor, entrySets: EntrySet[], indentation: Indentation) => {
+const listIndentation = (editor: Editor, lists: Element[], indentation: Indentation) => {
+  const entrySets: EntrySet[] = parseLists(lists, getItemSelection(editor));
   Arr.each(entrySets, (entrySet) => {
     indentSelectedEntries(entrySet.entries, indentation);
     const composedLists = composeEntries(editor, entrySet.entries);
@@ -63,9 +64,4 @@ const listsIndentationByEntrySets = (editor: Editor, entrySets: EntrySet[], inde
   });
 };
 
-const listsIndentationByElements = (editor: Editor, lists: Element[], indentation: Indentation) => {
-  const entrySets: EntrySet[] = parseLists(lists, getItemSelection(editor));
-  listsIndentationByEntrySets(editor, entrySets, indentation);
-};
-
-export { getItemSelection, listsIndentationByElements, listsIndentationByEntrySets };
+export { getItemSelection, listIndentation };
