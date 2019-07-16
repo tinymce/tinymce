@@ -22,6 +22,17 @@ const isEditorUIElement = function (elm: Element) {
   return FocusManager.isEditorUIElement(elm);
 };
 
+const isEditorContentAreaElement = function (elm: Element) {
+  const classList = elm.classList;
+  if (classList !== undefined) {
+    // tox-edit-area__iframe === iframe container element
+    // mce-content-body === inline body element
+    return classList.contains('tox-edit-area') || classList.contains('tox-edit-area__iframe') || classList.contains('mce-content-body');
+  } else {
+    return false;
+  }
+};
+
 const isUIElement = function (editor: Editor, elm: Element) {
   const customSelector = editor ? editor.settings.custom_ui_selector : '';
   const parent = DOM.getParent(elm, function (elm) {
@@ -118,5 +129,6 @@ const setup = function (editorManager: EditorManager) {
 export default {
   setup,
   isEditorUIElement,
+  isEditorContentAreaElement,
   isUIElement
 };
