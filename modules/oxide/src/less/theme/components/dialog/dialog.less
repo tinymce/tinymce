@@ -63,7 +63,7 @@
     position: fixed;
     right: 0;
     top: 0;
-    z-index: @z-index-dialogs;
+    z-index: @z-index-dialog-wrap;
   }
 
   .tox-dialog-wrap__backdrop {
@@ -73,7 +73,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    z-index: @z-index-dialogs + 1;
+    z-index: @z-index-dialog-wrap-backdrop;
   }
 
   .tox-dialog {
@@ -90,7 +90,7 @@
     overflow: hidden;
     position: relative;
     width: 95vw;
-    z-index: @z-index-dialogs + 2;
+    z-index: @z-index-dialog;
 
     @media @breakpoint-sm {
       body:not(.tox-force-desktop) & {
@@ -333,7 +333,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    z-index: @z-index-dialogs + 3;
+    z-index: @z-index-dialog-busy-spinner;
   }
 
   // the blocking div for dialogs
@@ -372,7 +372,7 @@
   .tox-dialog__popups {
     position: absolute;
     width: 100%;
-    z-index: @z-index-dialogs;
+    z-index: @z-index-dialog-wrap;
   }
 
   // Make iframe/url dialogs stretch contents to fit the height and width of parent container

@@ -5,15 +5,21 @@ import { FormComponentWithLabel, FormComponentWithLabelApi, formComponentWithLab
 export interface TextAreaApi extends FormComponentWithLabelApi {
   type: 'textarea';
   placeholder?: string;
+  maximized?: boolean;
+  disabled?: boolean;
 }
 
 export interface TextArea extends FormComponentWithLabel {
   type: 'textarea';
-  placeholder?: Option<string>;
+  maximized: boolean;
+  placeholder: Option<string>;
+  disabled: boolean;
 }
 
 export const textAreaFields = formComponentWithLabelFields.concat([
-  FieldSchema.optionString('placeholder')
+  FieldSchema.optionString('placeholder'),
+  FieldSchema.defaultedBoolean('maximized', false),
+  FieldSchema.defaultedBoolean('disabled', false)
 ]);
 
 export const textAreaSchema = ValueSchema.objOf(textAreaFields);

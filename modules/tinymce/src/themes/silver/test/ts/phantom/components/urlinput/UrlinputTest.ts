@@ -10,6 +10,7 @@ import { LinkTargetType } from 'tinymce/themes/silver/ui/core/LinkTargets';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
 
 import TestExtras from '../../../module/TestExtras';
+import { DisablingSteps } from '../../../module/DisablingSteps';
 
 UnitTest.asynctest('UrlInput component Test', (success, failure) => {
   const helpers = TestExtras();
@@ -18,46 +19,40 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
   TestHelpers.GuiSetup.setup(
     (store, doc, body) => {
       return GuiFactory.build(
-        {
-          dom: {
-            tag: 'div'
-          },
-          components: [
-            renderUrlInput({
-              label: Option.some('UrlInput label'),
-              name: 'col1',
-              filetype: 'file'
-            }, helpers.backstage, {
-              getHistory: (fileType) => [],
-              addToHistory: (url, filetype) => store.adder('addToHistory')(),
-              getLinkInformation: () => Option.some({
-                targets: [
-                  {
-                    type: 'header' as LinkTargetType,
-                    title: 'Header1',
-                    url: '#header',
-                    level: 0,
-                    attach: store.adder('header1.attach')
-                  },
-                  {
-                    type: 'header' as LinkTargetType,
-                    title: 'Header2',
-                    url: '#h_2abefd32',
-                    level: 0,
-                    attach: store.adder('header2.attach')
-                  }
-                ],
-                anchorTop: '#anchor-top',
-                anchorBottom: undefined
-              }),
-              getValidationHandler: () => Option.none(),
-              getUrlPicker: (filetype) => Option.some((entry: UrlData) => {
-                store.adder('urlpicker')();
-                return Future.pure({ value: 'http://tiny.cloud', meta: { before: entry.value } });
-              })
-            })
-          ]
-        }
+        renderUrlInput({
+          label: Option.some('UrlInput label'),
+          name: 'col1',
+          filetype: 'file',
+          disabled: false
+        }, helpers.backstage, {
+          getHistory: (fileType) => [],
+          addToHistory: (url, filetype) => store.adder('addToHistory')(),
+          getLinkInformation: () => Option.some({
+            targets: [
+              {
+                type: 'header' as LinkTargetType,
+                title: 'Header1',
+                url: '#header',
+                level: 0,
+                attach: store.adder('header1.attach')
+              },
+              {
+                type: 'header' as LinkTargetType,
+                title: 'Header2',
+                url: '#h_2abefd32',
+                level: 0,
+                attach: store.adder('header2.attach')
+              }
+            ],
+            anchorTop: '#anchor-top',
+            anchorBottom: undefined
+          }),
+          getValidationHandler: () => Option.none(),
+          getUrlPicker: (filetype) => Option.some((entry: UrlData) => {
+            store.adder('urlpicker')();
+            return Future.pure({ value: 'http://tiny.cloud', meta: { before: entry.value } });
+          })
+        })
       );
     },
     (doc, body, gui, component, store) => {
@@ -73,6 +68,13 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           '.tox-menu { background: white; }',
           '.tox-collection__item--active { background: #cadbee }'
         ]),
+
+        // Disabling state
+        DisablingSteps.sAssertDisabled('Initial disabled state', false, component),
+        DisablingSteps.sSetDisabled('set disabled', component, true),
+        DisablingSteps.sAssertDisabled('enabled > disabled', true, component),
+        DisablingSteps.sSetDisabled('set enabled', component, false),
+        DisablingSteps.sAssertDisabled('disabled > enabled', false, component),
 
         Step.sync(() => {
           Focusing.focus(input);

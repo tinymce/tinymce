@@ -1,43 +1,26 @@
-import { ValueSchema, FieldSchema, Processor } from '@ephox/boulder';
-import { Result, Option, Fun } from '@ephox/katamari';
-import { NestedMenuItemContents } from '../../api/Menu';
+import { ValueSchema, FieldSchema } from '@ephox/boulder';
+import { Result } from '@ephox/katamari';
+import { BaseMenuButton, BaseMenuButtonApi, baseMenuButtonFields, BaseMenuButtonInstanceApi, MenuButtonItemTypes } from '../../core/MenuButton';
 
-export type ToolbarMenuButtonItemTypes = NestedMenuItemContents;
+export type ToolbarMenuButtonItemTypes = MenuButtonItemTypes;
 export type SuccessCallback = (menu: string | ToolbarMenuButtonItemTypes[]) => void;
 
-export interface ToolbarMenuButtonApi {
+export interface ToolbarMenuButtonApi extends BaseMenuButtonApi {
   type?: 'menubutton';
-  tooltip?: string;
-  icon?: string;
-  text?: string;
-  fetch: (success: SuccessCallback) => void;
   onSetup?: (api: ToolbarMenuButtonInstanceApi) => (api: ToolbarMenuButtonInstanceApi) => void;
 }
 
-export interface ToolbarMenuButton {
+export interface ToolbarMenuButton extends BaseMenuButton {
   type: 'menubutton';
-  tooltip: Option<string>;
-  icon: Option<string>;
-  text: Option<string>;
-  fetch: (success: SuccessCallback) => void;
   onSetup: (api: ToolbarMenuButtonInstanceApi) => (api: ToolbarMenuButtonInstanceApi) => void;
 }
 
-export interface ToolbarMenuButtonInstanceApi {
-  isDisabled: () => boolean;
-  setDisabled: (state: boolean) => void;
-  isActive: () => boolean;
-  setActive: (state: boolean) => void;
-}
+export interface ToolbarMenuButtonInstanceApi extends BaseMenuButtonInstanceApi { }
 
 export const MenuButtonSchema = ValueSchema.objOf([
   FieldSchema.strictString('type'),
-  FieldSchema.optionString('tooltip'),
-  FieldSchema.optionString('icon'),
-  FieldSchema.optionString('text'),
-  FieldSchema.strictFunction('fetch'),
-  FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
-]) as Processor;
+  ...baseMenuButtonFields
+]);
 
 export const isMenuButtonButton = (spec: any): spec is ToolbarMenuButton => spec.type === 'menubutton';
 

@@ -11,7 +11,6 @@ import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Actions from '../core/Actions';
 import { Types } from '@ephox/bridge';
-import I18n from 'tinymce/core/api/util/I18n';
 
 export interface DialogData {
   findtext: string;
@@ -80,81 +79,94 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
   const initialData: DialogData = {
     findtext: selectedText,
     replacetext: '',
-    matchcase: false,
-    wholewords: false
+    matchcase: currentSearchState.get().matchCase,
+    wholewords: currentSearchState.get().wholeWord
   };
-  editor.windowManager.open<DialogData>({
+
+  const spec: Types.Dialog.DialogApi<DialogData> = {
     title: 'Find and Replace',
     size: 'normal',
     body: {
       type: 'panel',
       items: [
         {
-          type: 'input',
-          name: 'findtext',
-          label: 'Find'
+          type: 'bar',
+          items: [
+            {
+              type: 'input',
+              name: 'findtext',
+              placeholder: 'Find',
+              maximized: true
+            },
+            {
+              type: 'button',
+              name: 'prev',
+              text: 'Previous',
+              icon: 'action-prev',
+              disabled: true,
+              borderless: true
+            },
+            {
+              type: 'button',
+              name: 'next',
+              text: 'Next',
+              icon: 'action-next',
+              disabled: true,
+              borderless: true
+            }
+          ]
         },
         {
           type: 'input',
           name: 'replacetext',
-          label: 'Replace with'
+          placeholder: 'Replace with'
         },
-        {
-          type: 'grid',
-          columns: 2,
-          items: [
-            {
-              type: 'checkbox',
-              name: 'matchcase',
-              label: 'Match case'
-            },
-            {
-              type: 'checkbox',
-              name: 'wholewords',
-              label: 'Find whole words only'
-            }
-          ]
-        }
       ]
     },
     buttons: [
       {
+        type: 'menu',
+        name: 'options',
+        icon: 'preferences',
+        tooltip: 'Preferences',
+        align: 'start',
+        fetch: (done) => {
+          done([
+            {
+              type: 'togglemenuitem',
+              text: 'Match case',
+              onAction: (api) => {
+                currentSearchState.get().matchCase = !currentSearchState.get().matchCase;
+              },
+              active: currentSearchState.get().matchCase
+            },
+            {
+              type: 'togglemenuitem',
+              text: 'Find whole words only',
+              onAction: (api) => {
+                currentSearchState.get().wholeWord = !currentSearchState.get().wholeWord;
+              },
+              active: currentSearchState.get().wholeWord
+            }
+          ]);
+        }
+      },
+      {
         type: 'custom',
         name: 'find',
         text: 'Find',
-        align: 'start',
         primary: true
       },
       {
         type: 'custom',
         name: 'replace',
         text: 'Replace',
-        align: 'start',
         disabled: true,
       },
       {
         type: 'custom',
         name: 'replaceall',
         text: 'Replace All',
-        align: 'start',
-        disabled: true,
-      },
-      {
-        type: 'custom',
-        name: 'prev',
-        text: 'Previous',
-        align: 'end',
-        // TODO TINY-3598: Use css to transform the icons when dir=rtl instead of swapping them
-        icon: I18n.isRtl() ? 'arrow-right' : 'arrow-left',
-        disabled: true,
-      },
-      {
-        type: 'custom',
-        name: 'next',
-        text: 'Next',
-        align: 'end',
-        // TODO TINY-3598: Use css to transform the icons when dir=rtl instead of swapping them
-        icon: I18n.isRtl() ? 'arrow-left' : 'arrow-right',
         disabled: true,
       }
     ],
@@ -199,7 +211,9 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
       Actions.done(editor, currentSearchState);
       editor.undoManager.add();
     }
-  });
+  };
+
+  editor.windowManager.open(spec, {inline: 'toolbar'});
 };
 
 export default {
