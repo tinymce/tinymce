@@ -90,4 +90,3 @@ UnitTest.test('Seeker Test', function () {
   checkAfter(some('d'), 'cca');
   checkAfter(Option.none(), 'd');
 });
-

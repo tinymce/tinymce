@@ -23,9 +23,9 @@ const revocable = function <T> (doRevoke: (data: T) => void) {
   };
 
   return {
-    clear: clear,
-    isSet: isSet,
-    set: set
+    clear,
+    isSet,
+    set
   };
 };
 
@@ -69,10 +69,10 @@ export const api = function <T extends { destroy: () => void; }> () {
   };
 
   return {
-    clear: clear,
-    isSet: isSet,
-    set: set,
-    run: run
+    clear,
+    isSet,
+    set,
+    run
   };
 };
 
@@ -96,9 +96,9 @@ export const value = function <T> () {
   };
 
   return {
-    clear: clear,
-    set: set,
-    isSet: isSet,
-    on: on
+    clear,
+    set,
+    isSet,
+    on
   };
 };

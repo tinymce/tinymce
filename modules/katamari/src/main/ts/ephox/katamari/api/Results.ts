@@ -21,7 +21,7 @@ export const partition = function <T, E>(results: Result<T, E>[]) {
     );
   });
 
-  return { errors: errors, values: values };
+  return { errors, values };
 };
 
 /** compare :: (Result a, Result b) -> Comparison a b */

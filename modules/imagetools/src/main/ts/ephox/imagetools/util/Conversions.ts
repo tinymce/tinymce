@@ -5,21 +5,6 @@ import * as Canvas from './Canvas';
 import * as ImageSize from './ImageSize';
 import { Promise } from './Promise';
 
-function loadImage(image: HTMLImageElement): Promise<HTMLImageElement> {
-  return new Promise(function (resolve) {
-    function loaded() {
-      image.removeEventListener('load', loaded);
-      resolve(image);
-    }
-
-    if (image.complete) {
-      resolve(image);
-    } else {
-      image.addEventListener('load', loaded);
-    }
-  });
-}
-
 function imageToBlob(image: HTMLImageElement): Promise<Blob> {
   const src = image.src;
 

@@ -10,6 +10,7 @@
 //
 
 @document-selection-color: initial;
+@table-selection-color: #b4d7ff;
 @object-block-selected-color: #b4d7ff;
 @object-block-selected-outline-width: 3px;
 
@@ -64,7 +65,7 @@
   // Selection of whole table cells
   td[data-mce-selected],
   th[data-mce-selected] {
-    background-color: @document-selection-color !important;
+    background-color: @table-selection-color !important;
 
     &::selection {
       //Prevent selection to be visible

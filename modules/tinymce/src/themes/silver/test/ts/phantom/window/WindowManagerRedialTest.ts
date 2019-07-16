@@ -128,6 +128,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
     onClose: store.adder('onCloseC'),
     onAction: (dialogApi, actionData) => {
       if (actionData.name === 'tab.switch.two') {
+        // tslint:disable-next-line:no-console
         console.log('going to tab');
         dialogApi.showTab('two');
       }

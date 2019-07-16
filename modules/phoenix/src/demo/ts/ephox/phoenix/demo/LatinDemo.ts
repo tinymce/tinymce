@@ -24,7 +24,9 @@ const allWords = (function () {
   const duplicates = Text.get(text).split(/\W/);
   const set: Record<string, string> = {};
   Arr.each(duplicates, function (x) {
-    if (x.length) set[x] = x;
+    if (x.length) {
+      set[x] = x;
+    }
   });
 
   return Obj.keys(set);

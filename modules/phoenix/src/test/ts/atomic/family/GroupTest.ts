@@ -49,4 +49,3 @@ UnitTest.test('GroupTest', function () {
     ['text("post-image text")']
   ], ['1.1']);
 });
-

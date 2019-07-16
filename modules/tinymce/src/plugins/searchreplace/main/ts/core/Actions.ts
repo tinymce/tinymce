@@ -247,11 +247,10 @@ const done = function (editor: Editor, currentSearchState: Cell<SearchState>, ke
 
   // Reset the search state
   currentSearchState.set({
+    ...searchState,
     index: -1,
     count: 0,
-    text: '',
-    matchCase: false,
-    wholeWord: false
+    text: ''
   });
 };
 

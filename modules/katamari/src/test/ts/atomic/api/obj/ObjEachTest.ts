@@ -2,7 +2,7 @@ import * as Obj from 'ephox/katamari/api/Obj';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ObjEachTest', function() {
+UnitTest.test('ObjEachTest', function () {
   const check = function (expected, input) {
     const values = [];
     Obj.each(input, function (x, i) {
@@ -27,4 +27,3 @@ UnitTest.test('ObjEachTest', function() {
     }
   );
 });
-

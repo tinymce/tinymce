@@ -36,7 +36,9 @@ const sync = function <T>(label: string, f: () => T): T {
 };
 
 const ts = function <T, U>(label: string, fs: Step<T, U>[]) {
-  if (fs.length === 0) return fs;
+  if (fs.length === 0) {
+    return fs;
+  }
   return Arr.map(fs, function (f: Step<T, U>, i: number) {
     return t(label + '(' + i + ')', f);
   });
@@ -44,6 +46,7 @@ const ts = function <T, U>(label: string, fs: Step<T, U>[]) {
 
 const spec = function (msg) {
   // TMP, WIP
+  // tslint:disable-next-line:no-console
   console.log(msg);
 };
 

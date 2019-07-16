@@ -4,7 +4,7 @@ import * as Obj from 'ephox/katamari/api/Obj';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ObjFindTest', function() {
+UnitTest.test('ObjFindTest', function () {
   const checkNone = function (input, pred) {
     const actual = Obj.find(input, pred);
     return actual.isNone();
@@ -16,12 +16,12 @@ UnitTest.test('ObjFindTest', function() {
   };
 
   checkNone({}, function (v, k) { return v > 0; });
-  checkObj(3, { 'test': 3 }, function (v, k) { return k === 'test'; });
-  checkNone({ 'test': 0 }, function (v, k) { return v > 0; });
-  checkObj(4, { 'blah': 4, 'test': 3 }, function (v, k) { return v > 0; });
-  checkNone({ 'blah': 4, 'test': 3 }, function (v, k) { return v === 12; });
+  checkObj(3, { test: 3 }, function (v, k) { return k === 'test'; });
+  checkNone({ test: 0 }, function (v, k) { return v > 0; });
+  checkObj(4, { blah: 4, test: 3 }, function (v, k) { return v > 0; });
+  checkNone({ blah: 4, test: 3 }, function (v, k) { return v === 12; });
 
-  const obj = { 'blah': 4, 'test': 3 };
+  const obj = { blah: 4, test: 3 };
   checkObj(4, obj, function (v, k, o) { return o === obj; });
 
   Jsc.property(
@@ -73,4 +73,3 @@ UnitTest.test('ObjFindTest', function() {
     }
   );
 });
-

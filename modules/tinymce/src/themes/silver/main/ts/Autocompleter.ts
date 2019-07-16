@@ -89,6 +89,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
         (itemValue, itemMeta) => {
           const nr = editor.selection.getRng();
           getContext(editor.dom, nr, triggerChar).fold(
+            // tslint:disable-next-line:no-console
             () => console.error('Lost context. Cursor probably moved'),
             ({ range }) => {
               const autocompleterApi: InlineContent.AutocompleterInstanceApi = {

@@ -6,15 +6,15 @@ import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('OptionsTest', function() {
-  const person = function(name, age, address) {
-    return {name:name, age:age, address:address};
+UnitTest.test('OptionsTest', function () {
+  const person = function (name, age, address) {
+    return { name, age, address };
   };
 
-  assert.eq({name:'bob', age:25, address:'the moon'}, Options.liftN([Option.some('bob'), Option.some(25), Option.some('the moon')], person).getOrDie());
+  assert.eq({name: 'bob', age: 25, address: 'the moon'}, Options.liftN([Option.some('bob'), Option.some(25), Option.some('the moon')], person).getOrDie());
 
-  assert.eq(true, Options.liftN([Option.some('bob'), Option.none(), Option.some('the moon')], function() { throw 'barf'; }).isNone());
-  assert.eq(true, Options.liftN([Option.none(), Option.none(), Option.some('the moon')], function() { throw 'barf'; }).isNone());
+  assert.eq(true, Options.liftN([Option.some('bob'), Option.none(), Option.some('the moon')], function () { throw new Error('barf'); }).isNone());
+  assert.eq(true, Options.liftN([Option.none(), Option.none(), Option.some('the moon')], function () { throw new Error('barf'); }).isNone());
 
   const arr1 = [Option.some(1), Option.none(), Option.some(2), Option.some(3), Option.none(), Option.none(), Option.none(), Option.none(), Option.some(4)];
   assert.eq([1, 2, 3, 4], Options.cat(arr1));
@@ -116,7 +116,6 @@ UnitTest.test('OptionsTest', function() {
     }
   );
 
-
   Jsc.property(
     'Options.liftN of an array of somes returns a some',
     Jsc.nearray(ArbDataTypes.optionSome),
@@ -160,4 +159,3 @@ UnitTest.test('OptionsTest', function() {
     }
   );
 });
-

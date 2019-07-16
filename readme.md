@@ -108,6 +108,11 @@ yarn phantomjs-test-manual
 
 Development testing will be adjusted in future so that there's only one manual entry point for ease of development. They are still separate for now because there are two projects that use bedrock route configurations; a route config combination process is required to run them at the same time.
 
+### Running a subset of tests
+
+To run a single test: `yarn bedrock -f file`
+
+To run a whole folder of tests: `yarn bedrock -d folder`
 
 ## CI builds
 

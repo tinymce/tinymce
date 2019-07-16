@@ -1,5 +1,4 @@
 import { BinaryReader } from './BinaryReader';
-import { Matrix } from 'ephox/imagetools/transformations/ColorMatrix';
 
 // See https://www.exif.org/Exif2-2.PDF for types
 export interface TiffTags {

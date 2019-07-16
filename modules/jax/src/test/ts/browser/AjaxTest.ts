@@ -63,7 +63,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
   const responses = [
     expectError('GET Query parameters incorrect', Http.get(
       {
-        url: '/custom/sample/get/1?word=beta',
+        url: '/custom/jax/sample/get/1?word=beta',
         responseType: DataType.JSON,
       }
     )),
@@ -72,7 +72,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
       results: { good: [ 'alpha' ] }
     }, Http.get(
       {
-        url: '/custom/sample/get/1?word=alpha',
+        url: '/custom/jax/sample/get/1?word=alpha',
         responseType: DataType.JSON,
       }
     )),
@@ -81,7 +81,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
       good: [ 'alpha', 'beta' ]
     }, Http.get(
       {
-        url: '/custom/sample/get/1',
+        url: '/custom/jax/sample/get/1',
         query: { alpha: '1', beta: '2' },
         responseType: DataType.JSON
       }
@@ -91,7 +91,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
       good: [ 'alpha', 'beta' ]
     }, Http.get(
       {
-        url: '/custom/sample/get/1?alpha=1',
+        url: '/custom/jax/sample/get/1?alpha=1',
         query: { beta: '2' },
         responseType: DataType.JSON
       }
@@ -101,7 +101,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
       good: [ 'alpha', 'beta', 'gamma' ]
     }, Http.get(
       {
-        url: '/custom/sample/get/2?alpha=1&beta=2',
+        url: '/custom/jax/sample/get/2?alpha=1&beta=2',
         query: { gamma: '3' },
         responseType: DataType.JSON
       }
@@ -109,7 +109,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
 
     expectError('GET Query parameters incorrect because of custom header value', Http.get(
       {
-        url: '/custom/sample/get/1?word=beta',
+        url: '/custom/jax/sample/get/1?word=beta',
         responseType: DataType.JSON,
         headers: {
           'X-custom-header': 'X-custom-header-value-wrong'
@@ -123,7 +123,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
       }
      }, Http.get(
        {
-         url: '/custom/sample/get/1?word=beta',
+         url: '/custom/jax/sample/get/1?word=beta',
          responseType: DataType.JSON,
          headers: {
             'X-custom-header': 'X-custom-header-value'
@@ -133,7 +133,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
 
     expectError('POST with wrong data: ', Http.post(
       {
-        url: '/custom/sample/post/1',
+        url: '/custom/jax/sample/post/1',
         body: {
           type: DataType.JSON,
           data: {
@@ -148,7 +148,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
       'post-output': [ 'Australia', 'US' ]
     }, Http.post(
       {
-        url: '/custom/sample/post/1',
+        url: '/custom/jax/sample/post/1',
         body: {
           type: DataType.JSON,
           data: {
@@ -161,7 +161,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
 
     expectError('PUT with wrong data: ', Http.put(
       {
-        url: '/custom/sample/put/1',
+        url: '/custom/jax/sample/put/1',
         body: {
           type: DataType.JSON,
           data: {
@@ -176,7 +176,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
       'put-output': [ 'Australia', 'US' ]
     }, Http.put(
       {
-        url: '/custom/sample/put/1',
+        url: '/custom/jax/sample/put/1',
         body: {
           type: DataType.JSON,
           data: {
@@ -189,7 +189,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
 
     expectError('DELETE Query parameters incorrect', Http.del(
       {
-        url: 'custom/sample/del/1?word=beta',
+        url: 'custom/jax/sample/del/1?word=beta',
         responseType: DataType.JSON
       }
     )),
@@ -198,14 +198,14 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
       results: { 'del-good': [ 'alpha' ] }
     }, Http.del(
       {
-        url: 'custom/sample/del/1?word=alpha',
+        url: 'custom/jax/sample/del/1?word=alpha',
         responseType: DataType.JSON
       }
     )),
 
     expectError('DELETE Query parameters incorrect because of custom header value', Http.del(
       {
-        url: '/custom/sample/del/1?word=beta',
+        url: '/custom/jax/sample/del/1?word=beta',
         responseType: DataType.JSON,
         headers: {
           'X-custom-header': 'X-del-custom-header-value-wrong'
@@ -219,7 +219,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
       }
      }, Http.del(
       {
-        url: '/custom/sample/del/1?word=beta',
+        url: '/custom/jax/sample/del/1?word=beta',
         responseType: DataType.JSON,
         headers: {
           'X-custom-header': 'X-del-custom-header-value'
@@ -229,7 +229,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
 
     expectBlobJson('Download with correct blob data', { results: { data: '123' } }, Http.download(
       {
-        url: '/custom/blob',
+        url: '/custom/jax/blob',
         headers: {
           'x-custom-header': 'custom'
         }

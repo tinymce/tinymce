@@ -8,11 +8,9 @@ import { Keys } from 'ephox/agar/api/Keys';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
 import DomContainers from 'ephox/agar/test/DomContainers';
-import { TestLogs } from '../../../main/ts/ephox/agar/api/Main';
+import { TestLogs } from 'ephox/agar/api/TestLogs';
 
-UnitTest.asynctest('KeyboardTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('KeyboardTest', function (success, failure) {
 
   const sAssertEvent = function (type, code, modifiers, raw) {
     return Assertions.sAssertEq(
@@ -23,7 +21,7 @@ UnitTest.asynctest('KeyboardTest', function () {
         shiftKey: modifiers.shiftKey || false,
         altKey: modifiers.altKey || false,
         metaKey: modifiers.metaKey || false,
-        type: type
+        type
       }, {
         which: raw.which,
         ctrlKey: raw.ctrlKey,
@@ -99,4 +97,3 @@ UnitTest.asynctest('KeyboardTest', function () {
     success();
   }, failure);
 });
-

@@ -2,8 +2,6 @@ import * as Assertions from 'ephox/agar/api/Assertions';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import DemoContainer from 'ephox/agar/demo/DemoContainer';
 
-
-
 export default <any> function () {
   DemoContainer.init(
     'HTML Assertions',

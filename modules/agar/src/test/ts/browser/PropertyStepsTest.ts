@@ -22,4 +22,3 @@ UnitTest.asynctest('PropertyStepsTest', function () {
     )
   ], function () { success(); }, failure);
 });
-

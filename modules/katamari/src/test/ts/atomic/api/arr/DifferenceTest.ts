@@ -2,7 +2,7 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('DifferenceTest', function() {
+UnitTest.test('DifferenceTest', function () {
   const check = function <T> (expected, a1: T[], a2: T[]) {
     const readonlyA1 = Object.freeze(a1.slice());
     const readonlyA2 = Object.freeze(a2.slice());
@@ -32,9 +32,10 @@ UnitTest.test('DifferenceTest', function() {
         return Arr.contains(diffed, item);
       });
 
-      if (hasMinus) return 'Elements from second array should not be in first';
+      if (hasMinus) {
+        return 'Elements from second array should not be in first';
+      }
       return true;
     }
   );
 });
-

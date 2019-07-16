@@ -19,7 +19,8 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
           components: [
             renderCheckbox({
               label: 'TestCheckbox',
-              name: 'test-check-box'
+              name: 'test-check-box',
+              disabled: false
             }, TestProviders)
           ],
           behaviours: Behaviour.derive([

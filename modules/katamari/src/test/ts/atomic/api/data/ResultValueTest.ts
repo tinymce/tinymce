@@ -4,7 +4,7 @@ import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ResultValueTest', function() {
+UnitTest.test('ResultValueTest', function () {
   const testSanity = function () {
     const s = Result.value(5);
     assert.eq(true, s.is(5));
@@ -19,7 +19,7 @@ UnitTest.test('ResultValueTest', function() {
     }).getOrDie());
 
     assert.eq(11, s.fold(function (e) {
-      throw 'Should not get here!';
+      throw new Error('Should not get here!');
     }, function (v) {
       return v + 6;
     }));
@@ -35,7 +35,7 @@ UnitTest.test('ResultValueTest', function() {
     assert.eq(true, s.exists(Fun.always));
     assert.eq(false, s.forall(Fun.never));
 
-    assert.eq(true, Result.value(5).toOption().isSome());      
+    assert.eq(true, Result.value(5).toOption().isSome());
   };
 
   const arbResultError = ArbDataTypes.resultError;
@@ -48,11 +48,11 @@ UnitTest.test('ResultValueTest', function() {
 
     Jsc.property('Checking value.isValue === true', arbResultValue, function (res) {
       return Jsc.eq(true, res.isValue());
-    });      
+    });
 
     Jsc.property('Checking value.isError === false', arbResultValue, function (res) {
       return Jsc.eq(false, res.isError());
-    });      
+    });
 
     Jsc.property('Checking value.getOr(v) === value.value', arbResultValue, 'json', function (res, json) {
       const inside = res.fold(Fun.die('no'), Fun.identity);
@@ -124,4 +124,3 @@ UnitTest.test('ResultValueTest', function() {
   testSanity();
   testSpecs();
 });
-

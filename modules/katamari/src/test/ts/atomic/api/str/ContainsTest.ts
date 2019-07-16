@@ -2,7 +2,7 @@ import * as Strings from 'ephox/katamari/api/Strings';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('contains', function() {
+UnitTest.test('contains', function () {
   function check(expected, str, substr) {
     const actual = Strings.contains(str, substr);
     assert.eq(expected, actual);
@@ -48,4 +48,3 @@ UnitTest.test('contains', function() {
     }
   );
 });
-

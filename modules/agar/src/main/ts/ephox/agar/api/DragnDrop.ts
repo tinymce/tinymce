@@ -54,7 +54,7 @@ const dropFiles = (files: File[], to: Element) => {
   dispatchDndEvent(createDragenterEvent(toWin, toRect.left, toRect.top, transfer), to);
   dispatchDndEvent(createDragoverEvent(toWin, toRect.left, toRect.top, transfer), to);
   checkDefaultPrevented(dispatchDndEvent(createDropEvent(toWin, toRect.left, toRect.top, transfer), to));
-}
+};
 
 const cDragnDrop = (fromSelector: string, toSelector: string): Chain<Element, Element> => {
   return NamedChain.asChain([

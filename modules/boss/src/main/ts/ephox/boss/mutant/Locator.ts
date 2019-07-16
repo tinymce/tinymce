@@ -4,7 +4,9 @@ import Comparator from './Comparator';
 import Creator from './Creator';
 
 const byId = function (item: Gene, id: string): Option<Gene> {
-  if (id === undefined) throw 'Id value not specified for byId: ' + id;
+  if (id === undefined) {
+    throw new Error('Id value not specified for byId: ' + id);
+  }
   if (item.id !== undefined && item.id === id) {
     return Option.some(item);
   } else {

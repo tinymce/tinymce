@@ -1,9 +1,11 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Focus, Hierarchy, Element } from '@ephox/sugar';
+import { Focus, Hierarchy, Element, Body } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 import EditorFocus from 'tinymce/core/focus/EditorFocus';
 import Theme from 'tinymce/themes/silver/Theme';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function (success, failure) {
   Theme();
@@ -15,19 +17,34 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function (succe
     });
   };
 
-  const cFocusEditor = Chain.op(function (editor: any) {
+  const cCreateEditor = function (html) {
+    return McEditor.cFromHtml(html, {
+      base_url: '/project/tinymce/js/tinymce'
+    });
+  };
+
+  const cFocusEditor = Chain.op(function (editor: Editor) {
     EditorFocus.focus(editor, false);
   });
 
   const cFocusElement = function (elementPath) {
-    return Chain.op(function (editor: any) {
+    return Chain.op(function (editor: Editor) {
       const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie();
-      element.dom().focus();
+      Focus.focus(element);
     });
   };
 
+  const cSelectBody = Chain.op(() => {
+    const sel = document.getSelection();
+    sel.removeAllRanges();
+    const rng = document.createRange();
+    rng.selectNode(document.body);
+    sel.addRange(rng);
+    Focus.focus(Body.body());
+  });
+
   const cSetSelection = function (startPath, startOffset, endPath, endOffset) {
-    return Chain.op(function (editor: any) {
+    return Chain.op(function (editor: Editor) {
       const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
       const rng = editor.dom.createRng();
@@ -40,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function (succe
   };
 
   const cAssertSelection = function (startPath, startOffset, endPath, endOffset) {
-    return Chain.op(function (editor: any) {
+    return Chain.op(function (editor: Editor) {
       const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
       const rng = editor.selection.getRng();
@@ -53,10 +70,10 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function (succe
   };
 
   const cAssertHasFocus = function (elementPath) {
-    return Chain.op(function (editor: any) {
+    return Chain.op(function (editor: Editor) {
       const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie();
       Assertions.assertEq('Should have focus on the editor', true, EditorFocus.hasFocus(editor));
-      Assertions.assertDomEq('Should be the expected activeElement', element, Focus.active().getOrDie());
+      Assertions.assertDomEq('Should be the expected activeElement', element, Focus.active(Element.fromDom(editor.getDoc())).getOrDie());
     });
   };
 
@@ -72,6 +89,14 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function (succe
         cCreateInlineEditor('<ul class="tinymce-editor"><li>a</li></ul>'),
         cFocusEditor,
         cAssertSelection([0, 0], 0, [0, 0], 0),
+        McEditor.cRemove
+      ])),
+      Logger.t('Selection restored on focus with table cE=true', Chain.asStep({}, [
+        cCreateEditor('<div class="tinymce-editor"><p>a</p><div>b<table contenteditable="true"><tbody><tr><td>c</td><td></td></tr></tbody></table></div></div>'),
+        cSetSelection([1, 1, 0, 0, 0, 0], 0, [1, 1, 0, 0, 0, 0], 0),
+        cSelectBody,
+        cFocusEditor,
+        cAssertSelection([1, 1, 0, 0, 0, 0], 0, [1, 1, 0, 0, 0, 0], 0),
         McEditor.cRemove
       ]))
     ])),

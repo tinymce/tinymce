@@ -14,7 +14,9 @@ const extra = function <T>(expected: T, actual: T) {
 };
 
 const assertEq = function <T>(label: string, expected: T, actual: T) {
-  if (expected !== actual) assert.eq(expected, actual, label + extra(expected, actual));
+  if (expected !== actual) {
+    assert.eq(expected, actual, label + extra(expected, actual));
+  }
 };
 
 export {

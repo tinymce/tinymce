@@ -2,7 +2,7 @@ import { Adt, Arr, Option, Struct } from '@ephox/katamari';
 
 import { MixedKeyModifiers, newModifiers } from '../keyboard/FakeKeys';
 import * as SeleniumAction from '../server/SeleniumAction';
-import { Step } from './Main';
+import { Step } from './Step';
 
 interface KeyPressAdt {
   fold: <T> (combo: (modifiers: Modifiers, letters: string) => T, text: (s: string) => T, backspace: () => T) => T;
@@ -58,9 +58,9 @@ const toSimpleFormat = function (keys: KeyPressAdt[]) {
   });
 };
 
-const sSendKeysOn = function <T>(selector: string, keys: KeyPressAdt[]): Step<T,T> {
+const sSendKeysOn = function <T>(selector: string, keys: KeyPressAdt[]): Step<T, T> {
   return SeleniumAction.sPerform<T>('/keys', {
-    selector: selector,
+    selector,
     keys: toSimpleFormat(keys)
   });
 };

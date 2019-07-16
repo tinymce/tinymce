@@ -1,6 +1,6 @@
 import { ValueSchema } from '@ephox/boulder';
 import { window } from '@ephox/dom-globals';
-import { Option, Adt } from '@ephox/katamari';
+import { Option, Adt, Fun} from '@ephox/katamari';
 import { Css, Location, Element } from '@ephox/sugar';
 
 import { Bounds, box } from '../../alien/Boxes';
@@ -39,6 +39,11 @@ const position = (component: AlloyComponent, posConfig: PositioningConfig, posSt
 };
 
 const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Option<Element>): void => {
+  const boundsBox = boxElement.map(box);
+  return positionWithinBounds(component, posConfig, posState, anchor, placee, boundsBox);
+};
+
+const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, bounds: Option<Bounds>): void => {
   const anchorage: AnchorDetail<any> = ValueSchema.asRawOrDie('positioning anchor.info', AnchorSchema, anchor);
 
   // We set it to be fixed, so that it doesn't interfere with the layout of anything
@@ -56,7 +61,7 @@ const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig,
 
   const placer = anchorage.placement;
 
-  const getBounds = boxElement.map((boxElem) => () => box(boxElem)).or(posConfig.getBounds);
+  const getBounds = bounds.map(Fun.constant).or(posConfig.getBounds);
 
   placer(component, anchorage, origin).each((anchoring) => {
     const doPlace = anchoring.placer.getOr(place);
@@ -86,5 +91,6 @@ const getMode = (component: AlloyComponent, pConfig: PositioningConfig, pState: 
 export {
   position,
   positionWithin,
+  positionWithinBounds,
   getMode
 };

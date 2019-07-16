@@ -1,7 +1,7 @@
 {
   "name": "@ephox/snooker",
   "description": "This project implements the table model.",
-  "version": "4.0.40",
+  "version": "4.0.41",
   "files": [
     "lib/main",
     "lib/demo",
@@ -19,12 +19,12 @@
   },
   "dependencies": {
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/dragster": "^4.0.16",
-    "@ephox/echo": "^3.0.22",
-    "@ephox/katamari": "^2.4.23",
-    "@ephox/porkbun": "^4.0.14",
-    "@ephox/robin": "^7.0.20",
-    "@ephox/sugar": "^4.6.23"
+    "@ephox/dragster": "^4.0.17",
+    "@ephox/echo": "^3.0.23",
+    "@ephox/katamari": "^2.4.24",
+    "@ephox/porkbun": "^4.0.15",
+    "@ephox/robin": "^7.0.21",
+    "@ephox/sugar": "^4.6.24"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
@@ -35,6 +35,6 @@
     "prepublishOnly": "tsc -b",
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts",
-    "lint": "tslint --project ."
+    "lint": "tslint --config ../../tslint.json --project ."
   }
 }

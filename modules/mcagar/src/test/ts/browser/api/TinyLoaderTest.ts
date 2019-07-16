@@ -1,18 +1,18 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import TinyUi from 'ephox/mcagar/api/TinyUi';
 
 UnitTest.asynctest('TinyLoaderTest', (success, failure) => {
-  var clickedOn = false;
+  let clickedOn = false;
 
-  var sAssertState = (expected, label) => {
+  const sAssertState = (expected, label) => {
     return Step.sync(() => {
       Assertions.assertEq(label, expected, clickedOn);
     });
   };
 
-  var silverSetup = (ed) => {
+  const silverSetup = (ed) => {
     ed.ui.registry.addButton('test-button', {
       text: 'test-button',
       onAction: () => clickedOn = true
@@ -20,7 +20,7 @@ UnitTest.asynctest('TinyLoaderTest', (success, failure) => {
   };
 
   TinyLoader.setup((editor, loadSuccess, loadFailure) => {
-    var ui = TinyUi(editor);
+    const ui = TinyUi(editor);
     clickedOn = false;
 
     Pipeline.async({}, [
@@ -38,4 +38,3 @@ UnitTest.asynctest('TinyLoaderTest', (success, failure) => {
       base_url: '/project/tinymce/js/tinymce',
     }, success, failure);
 });
-

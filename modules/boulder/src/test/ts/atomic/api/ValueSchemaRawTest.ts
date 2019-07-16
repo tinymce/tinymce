@@ -415,7 +415,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
       num: number;
       str: string;
     }
-  
+
     const schema = ValueSchema.objOf([
       FieldSchema.strictOf('num', ValueSchema.number),
       FieldSchema.strictOf('str', ValueSchema.string)

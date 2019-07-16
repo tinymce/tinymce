@@ -6,6 +6,7 @@ import { Option } from '@ephox/katamari';
 import { renderTextarea } from 'tinymce/themes/silver/ui/dialog/TextField';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 import TestProviders from '../../../module/TestProviders';
+import { DisablingSteps } from '../../../module/DisablingSteps';
 
 UnitTest.asynctest('Textarea component Test', (success, failure) => {
 
@@ -15,7 +16,9 @@ UnitTest.asynctest('Textarea component Test', (success, failure) => {
         renderTextarea({
           name: 'textarea',
           label: Option.some('LabelA'),
-          placeholder: Option.none()
+          placeholder: Option.none(),
+          maximized: false,
+          disabled: false
         }, TestProviders)
       );
     },
@@ -45,7 +48,12 @@ UnitTest.asynctest('Textarea component Test', (success, failure) => {
         ),
 
         RepresentingSteps.sSetValue('basic', component, 'New-Value'),
-        RepresentingSteps.sAssertComposedValue('basic', 'New-Value', component)
+        RepresentingSteps.sAssertComposedValue('basic', 'New-Value', component),
+
+        // Disabling state
+        DisablingSteps.sAssertDisabled('Initial disabled state', false, component),
+        DisablingSteps.sSetDisabled('set disabled', component, true),
+        DisablingSteps.sAssertDisabled('enabled > disabled', true, component)
       ];
     },
     success,

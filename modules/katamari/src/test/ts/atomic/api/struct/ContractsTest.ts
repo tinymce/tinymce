@@ -2,7 +2,7 @@ import * as Fun from 'ephox/katamari/api/Fun';
 import * as Contracts from 'ephox/katamari/api/Contracts';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ContractsTest', function() {
+UnitTest.test('ContractsTest', function () {
   const a = Fun.constant('element');
   const b = Fun.constant('destroy');
   const c = Fun.constant('events');
@@ -12,7 +12,7 @@ UnitTest.test('ContractsTest', function() {
 
   const baggerMin10 = Contracts.ensureWith([ 'mustBe10', 'any' ], {
     label: '10 if mustBe10',
-    validate: function (v, k) {
+    validate (v, k) {
       return k === 'mustBe10' ? v === 10 : true;
     }
   });
@@ -40,7 +40,6 @@ UnitTest.test('ContractsTest', function() {
     assert.eq('destroy', t1.destroy());
     assert.eq('events', t1.events());
   })();
-
 
   (function () {
     const expected = 'All values need to be of type: function. Keys (element, events) were not.';
@@ -109,7 +108,7 @@ UnitTest.test('ContractsTest', function() {
         mustBe10: 'dog',
         any: 'cat'
       });
-      
+
       assert.fail('Expected failure: ' + expected);
     } catch (err) {
       assert.eq(expected, err.message);
@@ -127,4 +126,3 @@ UnitTest.test('ContractsTest', function() {
     assert.eq('cat', bg.any);
   })();
 });
-

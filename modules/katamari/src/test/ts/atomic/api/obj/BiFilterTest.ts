@@ -4,7 +4,7 @@ import * as Obj from 'ephox/katamari/api/Obj';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('BiFilterTest', function() {
+UnitTest.test('BiFilterTest', function () {
   const even = function (x) {
     return x % 2 === 0;
   };
@@ -55,12 +55,15 @@ UnitTest.test('BiFilterTest', function() {
 
       const falseKeys = Obj.keys(output.f);
       const trueKeys = Obj.keys(output.t);
-      
-      if (Arr.exists(falseKeys, matches)) return 'Something in "f" passed predicate';
-      if (Arr.exists(trueKeys, Fun.not(matches))) return 'Something in "t" failed predicate';
-      
+
+      if (Arr.exists(falseKeys, matches)) {
+        return 'Something in "f" passed predicate';
+      }
+      if (Arr.exists(trueKeys, Fun.not(matches))) {
+        return 'Something in "t" failed predicate';
+      }
+
       return true;
     }
   );
 });
-

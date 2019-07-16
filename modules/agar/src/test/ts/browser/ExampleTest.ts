@@ -87,4 +87,3 @@ UnitTest.asynctest('Example for Tutorial', function () {
     success();
   }, failure);
 });
-

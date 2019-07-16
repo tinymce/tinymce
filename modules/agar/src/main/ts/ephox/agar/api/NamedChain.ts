@@ -1,4 +1,4 @@
-import { Arr, Fun, Id, Merger, Result } from '@ephox/katamari';
+import { Arr, Id, Merger, Result } from '@ephox/katamari';
 
 import { DieFn, NextFn } from '../pipe/Pipe';
 import { Chain, Wrap } from './Chain';

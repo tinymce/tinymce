@@ -58,6 +58,7 @@ const testFolders = (tests, auto) => tests.flatMap(({location}) => [
 
 const bedrockDefaults = {
   config: 'tsconfig.json',
+  customRoutes: 'modules/tinymce/src/core/test/json/routes.json',
   overallTimeout: 180000,
   singleTimeout: 60000,
 };
@@ -72,7 +73,6 @@ const bedrockPhantom = (tests) => {
         name: 'phantom-tests',
         browser: 'phantomjs',
         testfiles: testFolders(tests, true),
-        customRoutes: 'modules/jax/src/test/json/routes.json',
       }
     }
   }
@@ -89,7 +89,6 @@ const bedrockBrowser = (tests, browserName, osName, auto) => {
         name: `${browserName}-${osName}`,
         browser: browserName,
         testfiles: testFolders(tests, auto),
-        customRoutes: 'modules/tinymce/src/core/test/json/routes.json',
 
         // we have a few tests that don't play nicely when combined together in the monorepo
         retries: 3

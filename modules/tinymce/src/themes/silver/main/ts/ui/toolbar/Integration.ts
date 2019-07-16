@@ -15,11 +15,11 @@ import { ToolbarButtonClasses } from './button/ButtonClasses';
 import {
   renderSplitButton,
   renderToolbarButton,
-  renderToolbarToggleButton,
-  renderMenuButton
+  renderToolbarToggleButton
 } from './button/ToolbarButtons';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { renderMenuButton } from '../button/MenuButton';
 import { createAlignSelect } from '../core/complex/AlignSelect';
 import { createFontSelect } from '../core/complex/FontSelect';
 import { createFontsizeSelect } from '../core/complex/FontsizeSelect';
@@ -123,6 +123,7 @@ const types = {
 const extractFrom = (spec: ToolbarButton, extras: Extras): Option<AlloySpec> => {
   return Obj.get(types, spec.type).fold(
     () => {
+      // tslint:disable-next-line:no-console
       console.error('skipping button defined by', spec);
       return Option.none();
     },

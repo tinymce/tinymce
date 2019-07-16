@@ -3,11 +3,11 @@ import ArbContent from '../arbitrary/ArbContent';
 import { Fun } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
-var scenario = function (component, overrides, exclusions) {
+const scenario = function (component, overrides, exclusions) {
   // Note, in some environments, scenarios will not work, if setting
   // the arbitrary html involves some normalisation.
-  var arbitrary = content(component, overrides);
-  var generator = arbitrary.generator.flatMap(function (root) {
+  const arbitrary = content(component, overrides);
+  const generator = arbitrary.generator.flatMap(function (root) {
     return Generators.selection(root, exclusions).map(function (selection) {
       return {
         root: Fun.constant(root),
@@ -17,15 +17,15 @@ var scenario = function (component, overrides, exclusions) {
   });
 
   return Jsc.bless({
-    generator: generator
+    generator
   });
 };
 
-var content = function (component, overrides?) {
+const content = function (component, overrides?) {
   return ArbContent.arbOf(component, overrides);
 };
 
 export default {
-  scenario: scenario,
-  content: content
+  scenario,
+  content
 };

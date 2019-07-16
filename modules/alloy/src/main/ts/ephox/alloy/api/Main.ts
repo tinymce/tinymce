@@ -1,3 +1,4 @@
+import * as Boxes from '../alien/Boxes';
 import * as EventRoot from '../alien/EventRoot';
 import { SugarEvent } from '../alien/TypeDefinitions';
 import { BehaviourState } from '../behaviour/common/BehaviourState';
@@ -131,6 +132,7 @@ import { CustomList } from './ui/CustomList';
 
 type AlloyComponent = ComponentApi.AlloyComponent;
 type MementoRecord = Memento.MementoRecord;
+type Bounds = Boxes.Bounds;
 
 // Test code - should eventually move to a separate project
 import TestHelpers from './testhelpers/TestHelpers';
@@ -230,6 +232,8 @@ export {
   AlloyParts,
   BehaviourState,
   PartType,
+  Bounds,
+  Boxes,
   EventRoot,
   TapEvent,
   AlloyLogger,

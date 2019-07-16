@@ -45,6 +45,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
           Arr.map(
             sections,
             ({ selector, exists }) => {
+              // tslint:disable-next-line:no-console
               console.log('selector', selector, 'exists', exists);
               const sExistence = exists ? UiFinder.sExists : UiFinder.sNotExists;
               return sExistence(TinyDom.fromDom(document.body), selector);

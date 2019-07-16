@@ -91,6 +91,7 @@ export const SearchReplaceDialogSpec: Types.Dialog.DialogApi<any> = {
     });
   },
   onClose: () => {
+    // tslint:disable-next-line:no-console
     console.log('dialog closing');
   }
 };

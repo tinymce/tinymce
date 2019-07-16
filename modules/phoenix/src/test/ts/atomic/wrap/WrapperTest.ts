@@ -77,4 +77,3 @@ UnitTest.test('WrapperTest', function () {
     'new-span-2'
   ], '1.1', 0, 'root', 3);
 });
-

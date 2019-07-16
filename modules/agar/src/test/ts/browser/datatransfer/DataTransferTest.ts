@@ -51,7 +51,7 @@ UnitTest.test('DataTransferTest', () => {
     RawAssertions.assertEq('Should not have a drag image', true, getDragImage(transfer).isNone());
 
     transfer.setDragImage(document.createElement('div'), 10, 20);
-  
+
     RawAssertions.assertEq('Should have a drag image', true, getDragImage(transfer).isSome());
     RawAssertions.assertEq('Should be expected element', 'DIV', getDragImage(transfer).getOrDie('Failed').image.nodeName);
     RawAssertions.assertEq('Should be expected x cord', 10, getDragImage(transfer).getOrDie('Failed').x);
@@ -85,7 +85,7 @@ UnitTest.test('DataTransferTest', () => {
     const transfer = createDataTransfer();
 
     transfer.setData('text/html', '123');
-    transfer.items.add(createFile('test.gif', 123, new Blob([''], { type: 'image/gif' })))
+    transfer.items.add(createFile('test.gif', 123, new Blob([''], { type: 'image/gif' })));
 
     setProtectedMode(transfer);
 
@@ -111,7 +111,7 @@ UnitTest.test('DataTransferTest', () => {
     const transfer = createDataTransfer();
 
     transfer.setData('text/html', '123');
-    transfer.items.add(createFile('test.gif', 123, new Blob([''], { type: 'image/gif' })))
+    transfer.items.add(createFile('test.gif', 123, new Blob([''], { type: 'image/gif' })));
 
     setReadOnlyMode(transfer);
 
@@ -140,7 +140,7 @@ UnitTest.test('DataTransferTest', () => {
   const testAddFiles = () => {
     const transfer = createDataTransfer();
 
-    transfer.items.add(createFile('test.gif', 123, new Blob([''], { type: 'image/gif' })))
+    transfer.items.add(createFile('test.gif', 123, new Blob([''], { type: 'image/gif' })));
 
     RawAssertions.assertEq('Should be able to access files length', 1, transfer.files.length);
     RawAssertions.assertEq('Should be able to access type', 'image/gif', transfer.files[0].type);

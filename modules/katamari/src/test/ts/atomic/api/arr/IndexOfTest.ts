@@ -3,7 +3,7 @@ import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('IndexOfTest', function() {
+UnitTest.test('IndexOfTest', function () {
   const checkNoneHelper = function (xs, x) {
     const actual = Arr.indexOf(xs, x);
     assert.eq(true, actual.isNone());
@@ -73,4 +73,3 @@ UnitTest.test('IndexOfTest', function() {
     }
   );
 });
-

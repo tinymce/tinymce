@@ -5,13 +5,14 @@ import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 import { console } from '@ephox/dom-globals';
 
-UnitTest.test('ADT Test', function() {
+UnitTest.test('ADT Test', function () {
   const checkInvalid = function (message, f) {
     let error = false;
     try {
       f();
     } catch (e) {
       if (e === 'ADTWHOOPS') {
+        // tslint:disable-next-line:no-console
         console.log('die function incorrectly called');
       } else {
         error = true;
@@ -19,12 +20,12 @@ UnitTest.test('ADT Test', function() {
     }
 
     if (!error) {
-      throw 'Unexpected pass: ' + message;
+      throw new Error('Unexpected pass: ' + message);
     }
   };
 
   const checkInvalidGenerate = function (cases, message) {
-    checkInvalid('generate() did not throw an error. Input: "' + message + "'", function () {
+    checkInvalid('generate() did not throw an error. Input: "' + message + '\'', function () {
       Adt.generate(cases);
     });
   };
@@ -33,22 +34,22 @@ UnitTest.test('ADT Test', function() {
   checkInvalidGenerate([], 'empty cases array');
   checkInvalidGenerate(['f'], 'array contains strings');
   checkInvalidGenerate([{}], 'empty case');
-  checkInvalidGenerate([{'t': {}}], 'object case arguments');
-  checkInvalidGenerate([{'cata': []}], 'case named cata');
-  checkInvalidGenerate([{'a': []},{'a': []}], 'duplicate names');
+  checkInvalidGenerate([{t: {}}], 'object case arguments');
+  checkInvalidGenerate([{cata: []}], 'case named cata');
+  checkInvalidGenerate([{a: []}, {a: []}], 'duplicate names');
   checkInvalidGenerate([
      {
-      'one': [],
-      'two': []
+      one: [],
+      two: []
      }
     ], 'two cases in one');
 
   // A real Adt from the soldier project
   const soldierBlock = Adt.generate([
-    { 'none':     [] },
-    { 'root':     ['target', 'block'] },
-    { 'created':  ['target', 'block'] },
-    { 'actual':   ['target', 'block'] }
+    { none:     [] },
+    { root:     ['target', 'block'] },
+    { created:  ['target', 'block'] },
+    { actual:   ['target', 'block'] }
   ]);
 
   const none = function () {
@@ -67,7 +68,7 @@ UnitTest.test('ADT Test', function() {
   let die = function () {
     // this is used when an error is expected, so we need to use fancy tricks
     // to actually fail
-    throw 'ADTWHOOPS';
+    throw new Error('ADTWHOOPS');
   };
 
   // double functions because that makes actual use better
@@ -107,7 +108,6 @@ UnitTest.test('ADT Test', function() {
   assert.eq('cheese', adtCreated.fold(   die,    die, cheese,    die));
   assert.eq('cheese', adtActual.fold(    die,    die,    die, cheese));
 
-
   const newAdt = Adt.generate([
     { nothing: [ ] },
     { unknown: [ 'guesses' ] },
@@ -132,7 +132,7 @@ UnitTest.test('ADT Test', function() {
     return r.match({
       nothing: Fun.die('not a nothing'),
       unknown: Fun.die('not an unknown'),
-      exact: function (value, precision) { return [ value, precision ]; }
+      exact (value, precision) { return [ value, precision ]; }
     });
   });
 
@@ -238,4 +238,3 @@ UnitTest.test('ADT Test', function() {
     }
   });
 });
-
