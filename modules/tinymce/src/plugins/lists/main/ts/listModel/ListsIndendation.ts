@@ -53,6 +53,7 @@ const getItemSelection = (editor: Editor): Option<ItemSelection> => {
 
 const listIndentation = (editor: Editor, lists: Element[], indentation: Indentation) => {
   const entrySets: EntrySet[] = parseLists(lists, getItemSelection(editor));
+
   Arr.each(entrySets, (entrySet) => {
     indentSelectedEntries(entrySet.entries, indentation);
     const composedLists = composeEntries(editor, entrySet.entries);
@@ -64,4 +65,4 @@ const listIndentation = (editor: Editor, lists: Element[], indentation: Indentat
   });
 };
 
-export { getItemSelection, listIndentation };
+export { listIndentation };

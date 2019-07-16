@@ -151,7 +151,6 @@ const mergeBackward = function (editor: Editor, rng: DomRange, fromLi: HTMLLIEle
   mergeLiElements(editor.dom, fromLi, toLi);
   const resolvedBookmark = Bookmark.resolveBookmark(bookmark);
   editor.selection.setRng(resolvedBookmark);
-
 };
 
 const backspaceDeleteFromListToListCaret = function (editor: Editor, isForward: boolean) {
