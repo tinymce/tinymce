@@ -23,19 +23,21 @@ const parseJson = (text: string): Option<ListItem[]> => {
 const getLinks = (editor): Future<Option<ListItem[]>> => {
   const extractor = (item) => editor.convertURL(item.value || item.url, 'href');
 
-  const linkList = Settings.getLinkList(editor.settings);
+  const linkList = Settings.getLinkList(editor);
+  const isString = (list): list is string => typeof list === 'string';
+  const isFunction = (list): list is Function => typeof list === 'function';
   return Future.nu<Option<ListItem[]>>((callback) => {
     // TODO - better handling of failure
-    if (typeof linkList === 'string') {
+    if (isString(linkList)) {
       XHR.send({
         url: linkList,
         success: (text) => callback(parseJson(text)),
         error: (_) => callback(Option.none())
       });
-    } else if (typeof linkList === 'function') {
+    } else if (isFunction(linkList)) {
       linkList((output) => callback(Option.some(output)));
     } else {
-      callback(Option.from(linkList));
+      callback(Option.from(linkList as ListItem[]));
     }
   }).map((optItems) => {
     return optItems.bind(ListOptions.sanitizeWith(extractor)).map((items) => {

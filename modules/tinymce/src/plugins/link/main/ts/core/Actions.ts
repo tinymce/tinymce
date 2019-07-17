@@ -54,7 +54,7 @@ const leftClickedOnAHref = function (editor) {
     let sel, rng, node;
     // TODO: this used to query the context menu plugin directly. Is that a good idea?
     //  && !isContextMenuVisible(editor)
-    if (Settings.hasContextToolbar(editor.settings) && Utils.isLink(elm)) {
+    if (Settings.hasContextToolbar(editor) && Utils.isLink(elm)) {
       sel = editor.selection;
       rng = sel.getRng();
       node = rng.startContainer;

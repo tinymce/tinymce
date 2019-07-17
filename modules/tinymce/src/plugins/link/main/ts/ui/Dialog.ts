@@ -57,12 +57,11 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo, assumeExternalTarget
 };
 
 const collectData = (editor): Future<LinkDialogInfo> => {
-  const settings = editor.settings;
   const anchorNode: HTMLAnchorElement = Utils.getAnchorElement(editor);
-  return DialogInfo.collect(editor, settings, anchorNode);
+  return DialogInfo.collect(editor, anchorNode);
 };
 
-const getInitialData = (info: LinkDialogInfo, defaultTarget): LinkDialogData => ({
+const getInitialData = (info: LinkDialogInfo, defaultTarget: Option<string>): LinkDialogData => ({
   url: {
     value: info.anchor.url.getOr(''),
     meta: {
@@ -85,7 +84,7 @@ const getInitialData = (info: LinkDialogInfo, defaultTarget): LinkDialogData => 
   linkClass: info.anchor.linkClass.getOr('')
 });
 
-const makeDialog = (settings: LinkDialogInfo, onSubmit, editorSettings): Types.Dialog.DialogApi<LinkDialogData> => {
+const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.Dialog.DialogApi<LinkDialogData> => {
 
   const urlInput: Types.Dialog.BodyComponentApi[] = [
     {
@@ -112,7 +111,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editorSettings): Types.D
     }
   ] : [];
 
-  const defaultTarget: Option<string> = Settings.hasDefaultLinkTarget(editorSettings) ? Option.some(Settings.getDefaultLinkTarget(editorSettings)) : Option.none();
+  const defaultTarget: Option<string> = Option.from(Settings.getDefaultLinkTarget(editor));
 
   const initialData = getInitialData(settings, defaultTarget);
   const dialogDelta = DialogChanges.init(initialData, settings);
@@ -164,7 +163,7 @@ const open = function (editor: Editor) {
   const data = collectData(editor);
   data.map((info) => {
     const onSubmit = handleSubmit(editor, info, Settings.assumeExternalTargets(editor.settings));
-    return makeDialog(info, onSubmit, editor.settings);
+    return makeDialog(info, onSubmit, editor);
   }).get((spec) => {
     editor.windowManager.open(spec);
   });

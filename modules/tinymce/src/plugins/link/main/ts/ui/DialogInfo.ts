@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLAnchorElement } from '@ephox/dom-globals';
+import { HTMLAnchorElement, Element } from '@ephox/dom-globals';
 import { Future, Option } from '@ephox/katamari';
 
 import Settings from '../api/Settings';
@@ -16,16 +16,18 @@ import { ClassListOptions } from './sections/ClassListOptions';
 import { LinkListOptions } from './sections/LinkListOptions';
 import { RelOptions } from './sections/RelOptions';
 import { TargetOptions } from './sections/TargetOptions';
+import Editor from 'tinymce/core/api/Editor';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
-const nonEmptyAttr = (dom, elem, name): Option<string> => {
+const nonEmptyAttr = (dom: DOMUtils, elem: string | Element, name: string): Option<string> => {
   const val: string | null = dom.getAttrib(elem, name);
   return val !== null && val.length > 0 ? Option.some(val) : Option.none();
 };
 
-const extractFromAnchor = (editor, settings, anchor: HTMLAnchorElement, selection) => {
+const extractFromAnchor = (editor: Editor, anchor: HTMLAnchorElement) => {
   const dom = editor.dom;
-  const onlyText = Utils.isOnlyTextSelected(selection.getContent());
-  const text: Option<string> = onlyText ? Option.some(Utils.getAnchorText(selection, anchor)) : Option.none();
+  const onlyText = Utils.isOnlyTextSelected(editor.selection.getContent());
+  const text: Option<string> = onlyText ? Option.some(Utils.getAnchorText(editor.selection, anchor)) : Option.none();
   const url: Option<string> = anchor ? Option.some(dom.getAttrib(anchor, 'href')) : Option.none();
   const target: Option<string> = anchor ? Option.from(dom.getAttrib(anchor, 'target')) : Option.none();
   const rel = nonEmptyAttr(dom, anchor, 'rel');
@@ -42,9 +44,9 @@ const extractFromAnchor = (editor, settings, anchor: HTMLAnchorElement, selectio
   };
 };
 
-const collect = (editor, settings, linkNode): Future<LinkDialogInfo> => {
+const collect = (editor: Editor, linkNode: HTMLAnchorElement): Future<LinkDialogInfo> => {
   return LinkListOptions.getLinks(editor).map((links) => {
-    const anchor = extractFromAnchor(editor, settings, linkNode, editor.selection);
+    const anchor = extractFromAnchor(editor, linkNode);
     return {
       anchor,
       catalogs: {
@@ -57,7 +59,7 @@ const collect = (editor, settings, linkNode): Future<LinkDialogInfo> => {
       },
       optNode: Option.from(linkNode),
       flags: {
-        titleEnabled: Settings.shouldShowLinkTitle(settings)
+        titleEnabled: Settings.shouldShowLinkTitle(editor)
       }
     };
   });
