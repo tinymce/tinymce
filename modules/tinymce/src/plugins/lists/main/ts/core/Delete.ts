@@ -7,19 +7,19 @@
 
 import { Element, HTMLLIElement, Node, Range as DomRange } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Element as SugarElement, Compare } from '@ephox/sugar';
-import Editor from 'tinymce/core/api/Editor';
+import { Compare, Element as SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
+import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
+import { flattenListSelection, outdentListSelection } from '../actions/Indendation';
 import ToggleList from '../actions/ToggleList';
 import Bookmark from './Bookmark';
 import NodeType from './NodeType';
 import NormalizeLists from './NormalizeLists';
 import Range from './Range';
 import Selection from './Selection';
-import { flattenListSelection } from '../actions/Indendation';
 
 const findNextCaretContainer = function (editor: Editor, rng: DomRange, isForward: Boolean, root: Node): Node {
   let node = rng.startContainer;
@@ -173,7 +173,11 @@ const backspaceDeleteFromListToListCaret = function (editor: Editor, isForward: 
         if (isForward) {
           mergeForward(editor, rng, otherLi, li);
         } else {
-          mergeBackward(editor, rng, li, otherLi);
+          if (NodeType.isFirstChild(li)) {
+            outdentListSelection(editor);
+          } else {
+            mergeBackward(editor, rng, li, otherLi);
+          }
         }
       });
 

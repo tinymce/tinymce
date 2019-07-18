@@ -1,11 +1,12 @@
-Version 5.0.12 (TBD)
-    Added `nonbreaking_wrap` setting to nonbreaking plugin to wrap user-inserted NBSPs in spans #TINY-3647
-    Changed nonbreaking plugin to always wrap user-inserted NBSPs in spans when visualchars is configured #TINY-3647
-    Fixed issue where autolink spacebar event was not being fired on Edge #TINY-3891
-    Fixed table selection missing the background color #TINY-3892
+Version 5.0.13 (TBD)
+    Changed backspace behaviour in lists to outdent nested list items #TINY-3651
+    Added wrapping to user-inserted nbsps, which can be disabled using the `nonbreaking_wrap` setting #TINY-3647
+Version 5.0.12 (2019-07-18)
     Added ability to utilize UI dialog panels inside other panels #TINY-3305
     Added help dialog tab explaining keyboard navigation of the editor #TINY-3603
     Changed the "Find and Replace" design to an inline dialog #TINY-3054
+    Fixed issue where autolink spacebar event was not being fired on Edge #TINY-3891
+    Fixed table selection missing the background color #TINY-3892
     Fixed removing shortcuts not working for function keys #TINY-3871
     Fixed non-descriptive UI component type names #TINY-3349
     Fixed UI registry components rendering as the wrong type when manually specifying a different type #TINY-3385
