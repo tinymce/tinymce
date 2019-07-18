@@ -1,5 +1,5 @@
 Version 5.0.13 (TBD)
-
+    Changed backspace behaviour in lists to outdent nested list items #TINY-3651
 Version 5.0.12 (2019-07-18)
     Added ability to utilize UI dialog panels inside other panels #TINY-3305
     Added help dialog tab explaining keyboard navigation of the editor #TINY-3603
@@ -8,7 +8,6 @@ Version 5.0.12 (2019-07-18)
     Fixed table selection missing the background color #TINY-3892
     Fixed removing shortcuts not working for function keys #TINY-3871
     Fixed non-descriptive UI component type names #TINY-3349
-    Changed backspace behaviour in lists to outdent nested list items #TINY-3651
     Fixed UI registry components rendering as the wrong type when manually specifying a different type #TINY-3385
     Fixed an issue where dialog checkbox, input, selectbox, textarea and urlinput components couldn't be disabled #TINY-3708
     Fixed the context toolbar not using viable screen space in inline/distraction free mode #TINY-3717
