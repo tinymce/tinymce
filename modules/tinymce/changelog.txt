@@ -1,3 +1,5 @@
+Version 5.0.13 (TBD)
+
 Version 5.0.12 (2019-07-18)
     Added ability to utilize UI dialog panels inside other panels #TINY-3305
     Added help dialog tab explaining keyboard navigation of the editor #TINY-3603
