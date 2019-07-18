@@ -6,6 +6,7 @@ import * as Types from './Types';
 import * as Menu from './Menu';
 import * as InlineContent from './InlineContent';
 import * as Sidebar from './Sidebar';
+import * as FooterBar from './Footerbar';
 
 export {
   Registry,
@@ -15,5 +16,6 @@ export {
   Toolbar,
   Menu,
   InlineContent,
-  Sidebar
+  Sidebar,
+  FooterBar
 };

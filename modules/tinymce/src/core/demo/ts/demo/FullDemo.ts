@@ -96,6 +96,26 @@ export default function () {
     },
     setup (ed) {
       makeSidebar(ed, 'sidebar1', 'green', 200);
+      makeSidebar(ed, 'sidebar2', 'blue', 100);
+
+      ed.ui.registry.addFooterBar('footer1', {
+        icon: 'comment',
+        tooltip: 'Tooltip for footer1',
+        onSetup: (api) => {
+          console.log('onSetup ' + 'footer1');
+          const box = Element.fromHtml('<div style="height: 20px; width: 100%; background-color: red;"></div>');
+          api.element().appendChild(box.dom());
+          return () => {
+            api.element().removeChild(box.dom());
+          };
+        },
+        onShow: (api) => {
+          console.log('onShow ' + 'footer1');
+        },
+        onHide: (api) => {
+          console.log('onHide ' + 'footer1');
+        },
+      });
     },
     plugins: [
       'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
@@ -106,7 +126,7 @@ export default function () {
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+    toolbar: 'undo redo footer1 sidebar1 sidebar2 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
     'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
 
     // Multiple toolbar array

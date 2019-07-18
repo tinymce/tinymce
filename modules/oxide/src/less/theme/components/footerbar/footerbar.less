@@ -1,0 +1,60 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// footerbar
+//
+
+@footerbar-background-color: @background-color;
+
+.tox {
+  .tox-footerbar-wrap {
+    display: flex;
+    flex-direction: column;
+    // flex-grow: 1;
+    // TC-310: Without the min-height setting, browsers like Firefox default to
+    // min-height: auto, and the footerbar-wrap will grow in height as soon
+    // as the footerbar contents does. This happens even if the footerbar contents has
+    // overflow: auto.
+    // min-width: 0;
+  }
+
+  .tox-footerbar {
+    background-color: @footerbar-background-color;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .tox-footerbar__slider {
+    display: flex;
+    overflow: hidden;
+  }
+
+  .tox-footerbar__pane-container {
+    display: flex;
+    width: 100%;
+  }
+
+  .tox-footerbar__pane {
+    display: flex;
+    width: 100%;
+  }
+
+  .tox-footerbar--sliding-closed {
+    opacity: 0;
+  }
+
+  .tox-footerbar--sliding-open {
+    opacity: 1;
+  }
+
+  .tox-footerbar--sliding-growing,
+  .tox-footerbar--sliding-shrinking {
+    transition: height .5s ease, opacity .5s ease;
+  }
+}

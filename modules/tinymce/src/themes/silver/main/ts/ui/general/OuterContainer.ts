@@ -23,6 +23,7 @@ import { Arr, Id, Option } from '@ephox/katamari';
 
 import SilverMenubar from '../menus/menubar/SilverMenubar';
 import * as Sidebar from '../sidebar/Sidebar';
+import * as FooterBar from '../footerbar/FooterBar';
 import * as Throbber from '../throbber/Throbber';
 import { renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbarGroup, renderToolbar, ToolbarSpec } from '../toolbar/CommonToolbar';
 import { ToolbarDrawer } from '../../api/Settings';
@@ -46,6 +47,9 @@ interface OuterContainerApis {
   setSidebar: (comp: AlloyComponent, panelConfigs: Sidebar.SidebarConfig) => void;
   toggleSidebar: (comp: AlloyComponent, name: string) => void;
   whichSidebar: (comp: AlloyComponent) => string | null;
+  setFooterBar: (comp: AlloyComponent, panelConfigs: FooterBar.FooterBarConfig) => void;
+  toggleFooterBar: (comp: AlloyComponent, name: string) => void;
+  whichFooterBar: (comp: AlloyComponent) => string | null;
   // Maybe just change to ToolbarAnchor.
   getToolbar: (comp: AlloyComponent) => Option<AlloyComponent>;
   setToolbar: (comp: AlloyComponent, groups) => void;
@@ -82,6 +86,22 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
     whichSidebar(comp) {
       return Composite.parts.getPart(comp, detail, 'sidebar').bind(
         Sidebar.whichSidebar
+      ).getOrNull();
+    },
+    setFooterBar(comp, panelConfigs) {
+      Composite.parts.getPart(comp, detail, 'footerbar').each(
+        // @ts-ignore
+        (footer) => FooterBar.setFooterBar(footer, panelConfigs)
+      );
+    },
+    toggleFooterBar(comp, name) {
+      Composite.parts.getPart(comp, detail, 'footerbar').each(
+        (footer) => FooterBar.toggleFooterBar(footer, name)
+      );
+    },
+    whichFooterBar(comp) {
+      return Composite.parts.getPart(comp, detail, 'sidebar').bind(
+        FooterBar.whichFooterBar
       ).getOrNull();
     },
     getToolbar(comp) {
@@ -246,6 +266,16 @@ const partSidebar = Composite.partType.optional({
   ]
 });
 
+const partFooterBar = Composite.partType.optional({
+  factory: {
+    sketch: FooterBar.renderFooterBar
+  },
+  name: 'footerbar',
+  schema: [
+    FieldSchema.strict('dom')
+  ]
+});
+
 const partThrobber = Composite.partType.optional({
   factory: {
     sketch: Throbber.renderThrobber
@@ -269,6 +299,7 @@ export default Sketcher.composite({
     partMultipleToolbar,
     partSocket,
     partSidebar,
+    partFooterBar,
     partThrobber
   ],
 
@@ -284,6 +315,15 @@ export default Sketcher.composite({
     },
     whichSidebar(apis, comp) {
       return apis.whichSidebar(comp);
+    },
+    setFooterBar(apis, comp, panelConfigs) {
+      apis.setFooterBar(comp, panelConfigs);
+    },
+    toggleFooterBar(apis, comp, name) {
+      apis.toggleFooterBar(comp, name);
+    },
+    whichFooterBar(apis, comp) {
+      return apis.whichFooterBar(comp);
     },
     getToolbar(apis, comp) {
       return apis.getToolbar(comp);

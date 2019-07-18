@@ -147,6 +147,16 @@ const registry = () => {
      */
     addToggleMenuItem: bridge.addToggleMenuItem,
 
+    /**
+     * Registers a new footerbar container.
+     *
+     * @method addFooterBar
+     * @param {String} name Unique name identifying the new footerbar.
+     * @param {any} obj The footerbar configuration object.
+     * @return {void} void
+     */
+    addFooterBar: bridge.addFooterBar,
+
     /* note getAll is an internal method and may not be supported in future revisions */
     getAll: bridge.getAll
   };

@@ -44,6 +44,7 @@ import FormatControls from './ui/core/FormatControls';
 import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterContainer';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import * as Sidebar from './ui/sidebar/Sidebar';
+import * as FooterBar from './ui/footerbar/FooterBar';
 import * as Throbber from './ui/throbber/Throbber';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
@@ -85,6 +86,7 @@ export interface RenderUiConfig extends RenderToolbarConfig {
   menus;
   menubar;
   sidebar: Sidebar.SidebarConfig;
+  footerbar: FooterBar.FooterBarConfig;
 }
 
 export interface ToolbarGroupSetting {
@@ -202,6 +204,23 @@ const setup = (editor: Editor): RenderInfo => {
     }
   });
 
+  const partFooterBar: AlloySpec = OuterContainer.parts().footerbar({
+    dom: {
+      tag: 'div',
+      classes: ['tox-footerbar']
+    }
+  });
+
+  const footerbarContainer: SimpleSpec = {
+    dom: {
+      tag: 'div',
+      classes: ['tox-footerbar-wrap']
+    },
+    components: [
+      partFooterBar,
+    ]
+  };
+
   const partThrobber: AlloySpec = OuterContainer.parts().throbber({
     dom: {
       tag: 'div',
@@ -250,7 +269,8 @@ const setup = (editor: Editor): RenderInfo => {
     // fixed_toolbar_container anchors to the editable area, else add an anchor bar
     useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ],
     // Inline mode does not have a socket/sidebar
-    isInline ? [ ] : [ socketSidebarContainer ]
+    isInline ? [ ] : [ socketSidebarContainer ],
+    [ footerbarContainer ]
   ]);
 
   const editorContainer = {
@@ -365,10 +385,11 @@ const setup = (editor: Editor): RenderInfo => {
     FormatControls.setup(editor, backstage);
     SilverContextMenu.setup(editor, lazySink, backstage);
     Sidebar.setup(editor);
+    FooterBar.setup(editor);
     Throbber.setup(editor, lazyThrobber, backstage.shared);
 
     // Apply Bridge types
-    const { buttons, menuItems, contextToolbars, sidebars } = editor.ui.registry.getAll();
+    const { buttons, menuItems, contextToolbars, sidebars, footerbars } = editor.ui.registry.getAll();
     const toolbarOpt: Option<ToolbarConfig> = getMultipleToolbarsSetting(editor);
     const rawUiConfig: RenderUiConfig = {
       menuItems,
@@ -380,7 +401,8 @@ const setup = (editor: Editor): RenderInfo => {
       buttons,
 
       // Apollo, not implemented yet
-      sidebar: sidebars
+      sidebar: sidebars,
+      footerbar: footerbars
     };
 
     ContextToolbar.register(editor, contextToolbars, sink, { backstage });

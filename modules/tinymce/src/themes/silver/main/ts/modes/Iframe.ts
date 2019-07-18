@@ -78,6 +78,11 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       rawUiConfig.sidebar
     );
 
+    OuterContainer.setFooterBar(
+      uiComponents.outerContainer,
+      rawUiConfig.footerbar
+    );
+
     setupEvents(editor);
   });
 
@@ -85,13 +90,22 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   setupReadonlyModeSwitch(editor, uiComponents);
 
-  editor.addCommand('ToggleSidebar', (ui: boolean, value: string) => {
+  editor.addCommand('ToggleSidebar', (_ui: boolean, value: string) => {
     OuterContainer.toggleSidebar(uiComponents.outerContainer, value);
     editor.fire('ToggleSidebar');
   });
 
   editor.addQueryValueHandler('ToggleSidebar', () => {
     return OuterContainer.whichSidebar(uiComponents.outerContainer);
+  });
+
+  editor.addCommand('ToggleFooterBar', (_ui: boolean, value: string) => {
+    OuterContainer.toggleFooterBar(uiComponents.outerContainer, value);
+    editor.fire('ToggleFooterBar');
+  });
+
+  editor.addQueryValueHandler('ToggleFooterBar', () => {
+    return OuterContainer.whichFooterBar(uiComponents.outerContainer);
   });
 
   const drawer = Settings.getToolbarDrawer(editor);
