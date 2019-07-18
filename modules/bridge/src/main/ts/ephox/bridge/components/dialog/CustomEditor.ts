@@ -9,21 +9,26 @@ export interface CustomEditorInit {
   destroy: () =>  void;
 }
 
+export type CustomEditorInitFn = (elm: Element) => Promise<CustomEditorInit>;
+
 export interface CustomEditorApi extends FormComponentApi {
   type: 'customeditor';
   tag?: string;
-  init: (e: Element) => Promise<CustomEditorInit>;
+  scriptId: string;
+  scriptUrl: string;
 }
 
 export interface CustomEditor extends FormComponent {
   type: 'customeditor';
   tag: string;
-  init: (e: Element) => Promise<CustomEditorInit>;
+  scriptId: string;
+  scriptUrl: string;
 }
 
 export const customEditorFields = formComponentFields.concat([
   FieldSchema.defaultedString('tag', 'textarea'),
-  FieldSchema.strictFunction('init')
+  FieldSchema.strictString('scriptId'),
+  FieldSchema.strictString('scriptUrl')
 ]);
 
 export const customEditorSchema = ValueSchema.objOf(customEditorFields);

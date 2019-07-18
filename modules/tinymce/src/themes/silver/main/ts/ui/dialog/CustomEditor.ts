@@ -11,8 +11,10 @@ import { Cell, Option } from '@ephox/katamari';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { Omit } from '../Omit';
 import { Types } from '@ephox/bridge';
+import Scripts from 'tinymce/core/api/Scripts';
 
 type CustomEditorSpec = Omit<Types.CustomEditor.CustomEditor, 'type'>;
+type CustomEditorInitFn = Types.CustomEditor.CustomEditorInitFn;
 
 export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
   const editorApi = Cell(Option.none());
@@ -34,7 +36,9 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
       AddEventsBehaviour.config('editor-foo-events', [
         AlloyEvents.runOnAttached((component) => {
           memReplaced.getOpt(component).each((ta) => {
-            spec.init(ta.element().dom()).then((ea) => {
+            Scripts.load(spec.scriptId, spec.scriptUrl).then(
+              (init: CustomEditorInitFn) => init(ta.element().dom())
+            ).then((ea) => {
               initialValue.get().each((cvalue) => {
                 ea.setValue(cvalue);
               });

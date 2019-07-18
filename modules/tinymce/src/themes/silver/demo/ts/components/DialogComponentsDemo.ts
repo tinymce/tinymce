@@ -33,7 +33,6 @@ import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
 import { renderCollection } from 'tinymce/themes/silver/ui/dialog/Collection';
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 import { setupDemo } from './DemoHelpers';
-import Promise from 'tinymce/core/api/util/Promise';
 
 // tslint:disable:no-console
 
@@ -300,16 +299,14 @@ export default () => {
     }
   }, backstage);
 
-  const customEditorSpec = renderCustomEditor({
-    name: 'customeditor',
-    tag: 'textarea',
-    init: (el) => new Promise((resolve) => {
-      const oldEl = el;
-      const newEl = el.ownerDocument.createElement('span');
+  const myScriptDataUri = `data:text/javascript,tinymce.Scripts.add('myscript', function(el) {
+    return new Promise(function (resolve) {
+      var oldEl = el;
+      var newEl = el.ownerDocument.createElement('span');
       newEl.innerText = 'this is a custom editor';
       el.parentElement.replaceChild(newEl, oldEl);
 
-      const api = {
+      var api = {
         getValue: () => newEl.innerText,
         setValue: (value) => {
           newEl.innerText = value;
@@ -317,7 +314,14 @@ export default () => {
         destroy: () => { newEl.parentElement.replaceChild(oldEl, newEl); }        };
 
       resolve(api);
-    }),
+    });
+  });`;
+
+  const customEditorSpec = renderCustomEditor({
+    name: 'customeditor',
+    tag: 'textarea',
+    scriptId: 'myscript',
+    scriptUrl: myScriptDataUri
   });
 
   const alertBannerSpec = renderAlertBanner({
