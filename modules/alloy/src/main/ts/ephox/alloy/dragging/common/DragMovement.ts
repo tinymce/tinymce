@@ -1,12 +1,13 @@
 import { Option } from '@ephox/katamari';
-import { Css, Location, Scroll, Traverse, Element } from '@ephox/sugar';
+import { Css, Location, Scroll, Traverse, Element, Height, Width } from '@ephox/sugar';
 
+import { Bounds } from '../../alien/Boxes';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as DragCoord from '../../api/data/DragCoord';
 import * as Snappables from '../snap/Snappables';
-import { DraggingConfig, SnapsConfig } from './DraggingTypes';
+import { DraggingConfig } from './DraggingTypes';
 
 const getCurrentCoord = (target: Element): DragCoord.CoordAdt => {
   return Css.getRaw(target, 'left').bind((left) => {
@@ -25,8 +26,51 @@ const getCurrentCoord = (target: Element): DragCoord.CoordAdt => {
   });
 };
 
-const calcNewCoord = (component: AlloyComponent, optSnaps: Option<SnapsConfig>, currentCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, delta: SugarPosition): DragCoord.CoordAdt => {
-  return optSnaps.fold(() => {
+const clampPos = (pos: number, offset: number, min: number, max: number) => {
+  const minInBounds = min <= pos;
+  const maxInBounds = max >= pos + offset;
+  const inBounds = maxInBounds && minInBounds;
+  if (inBounds) {
+    return pos;
+  } else if (maxInBounds) {
+    return min;
+  } else {
+    return max - offset;
+  }
+};
+
+const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, getBounds: Option<() => Bounds>): DragCoord.CoordAdt => {
+  return getBounds.map((getBounds) => {
+    const bounds = getBounds();
+    const absoluteCoord = DragCoord.asAbsolute(coords, scroll, origin);
+
+    const height = Height.getOuter(component.element());
+    const width = Width.getOuter(component.element());
+
+    const newX = clampPos(absoluteCoord.left(), width, bounds.x(), bounds.width());
+    const newY = clampPos(absoluteCoord.top(), height, bounds.y(), bounds.height());
+    const newCoords = DragCoord.absolute(newX, newY);
+
+    // Translate the absolute coord back into the previous type
+    return coords.fold(
+      // offset
+      () => {
+        const offset = DragCoord.asOffset(newCoords, scroll, origin);
+        return DragCoord.offset(offset.left(), offset.top());
+      },
+      // absolute
+      () => newCoords,
+      // fixed
+      () => {
+        const fixed = DragCoord.asFixed(newCoords, scroll, origin);
+        return DragCoord.fixed(fixed.left(), fixed.top());
+      },
+    );
+  }).getOr(coords);
+};
+
+const calcNewCoord = (component: AlloyComponent, dragConfig: DraggingConfig, currentCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, delta: SugarPosition): DragCoord.CoordAdt => {
+  const newCoord = dragConfig.snaps.fold(() => {
     // When not docking, use fixed coordinates.
     const translated = DragCoord.translate(currentCoord, delta.left(), delta.top());
     const fixedCoord = DragCoord.asFixed(translated, scroll, origin);
@@ -38,6 +82,9 @@ const calcNewCoord = (component: AlloyComponent, optSnaps: Option<SnapsConfig>, 
     });
     return snapping.coord;
   });
+
+  // Clamp the coords so that they are within the bounds
+  return clampCoords(component, newCoord, scroll, origin, dragConfig.getBounds);
 };
 
 const dragBy = (component: AlloyComponent, dragConfig: DraggingConfig, delta: SugarPosition): void => {
@@ -51,7 +98,8 @@ const dragBy = (component: AlloyComponent, dragConfig: DraggingConfig, delta: Su
 
     const currentCoord = getCurrentCoord(target);
 
-    const newCoord = calcNewCoord(component, dragConfig.snaps, currentCoord, scroll, origin, delta);
+    const newCoord = calcNewCoord(component, dragConfig, currentCoord, scroll, origin, delta);
+
     const styles = DragCoord.toStyles(newCoord, scroll, origin);
     Css.setAll(target, styles);
   }

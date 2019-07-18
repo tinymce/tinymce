@@ -14,6 +14,7 @@ import { ModalDialogDetail } from '../types/ModalDialogTypes';
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('lazySink'),
   FieldSchema.option('dragBlockClass'),
+  FieldSchema.optionFunction('getDragBounds'),
   FieldSchema.defaulted('useTabstopAt', Fun.constant(true)),
   FieldSchema.defaulted('eventOrder', {}),
   SketchBehaviours.field('modalBehaviours', [ Keying ]),
@@ -41,7 +42,8 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
                 'The drag blocker class was not specified for a dialog with a drag handle: \n' +
                 Json.stringify(spec, null, 2)
               ).message
-            )
+            ),
+            getBounds: detail.getDragBounds.getOrUndefined()
           })
         ])
       };

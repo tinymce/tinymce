@@ -93,6 +93,7 @@ const schema: FieldProcessorAdt[] = [
   FieldSchema.defaulted('onDrag', Fun.noop),
   FieldSchema.defaulted('repositionTarget', true),
   Fields.onHandler('onDrop'),
+  FieldSchema.optionFunction('getBounds'),
   SnapSchema,
   Fields.output('dragger', {
     handlers

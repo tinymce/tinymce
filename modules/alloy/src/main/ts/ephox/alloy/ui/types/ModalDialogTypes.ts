@@ -8,6 +8,7 @@ import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { LazySink } from '@ephox/alloy';
+import { Bounds } from '../../alien/Boxes';
 
 export interface ModalDialogDetail extends CompositeSketchDetail {
   uid: string;
@@ -22,6 +23,7 @@ export interface ModalDialogDetail extends CompositeSketchDetail {
 
   lazySink: LazySink;
   dragBlockClass: Option<string>;
+  getDragBounds: Option<() => Bounds>;
 }
 
 export interface ModalDialogSpec extends CompositeSketchSpec {
@@ -36,6 +38,7 @@ export interface ModalDialogSpec extends CompositeSketchSpec {
   onExecute?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   onEscape?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   dragBlockClass?: string;
+  getDragBounds?: () => Bounds;
 
   parts: {
     blocker: {

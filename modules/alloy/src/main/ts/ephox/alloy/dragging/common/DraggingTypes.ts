@@ -56,6 +56,7 @@ export interface DraggingConfig {
   onDrop: (comp: AlloyComponent, Element) => void;
   repositionTarget: boolean;
   onDrag: (comp: AlloyComponent, target: Element, delta: SugarPosition) => void;
+  getBounds: Option<() => Bounds>;
 }
 
 export interface CommonDraggingConfigSpec {
@@ -64,13 +65,8 @@ export interface CommonDraggingConfigSpec {
   repositionTarget?: boolean;
   onDrag?: (comp: AlloyComponent, target: Element, delta: SugarPosition) => void;
   getTarget?: (elem: Element) => Element;
-  snaps?: {
-    getSnapPoints: (comp: AlloyComponent) => SnapConfig[];
-    leftAttr: string;
-    topAttr: string;
-    onSensor?: (component: AlloyComponent, extra: {}) => void;
-    lazyViewport?: (component: AlloyComponent) => Bounds;
-  };
+  getBounds?: () => Bounds;
+  snaps?: SnapsConfig;
 }
 
 export type DraggingConfigSpec = MouseDraggingConfigSpec | TouchDraggingConfigSpec;

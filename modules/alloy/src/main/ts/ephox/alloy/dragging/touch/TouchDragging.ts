@@ -44,6 +44,7 @@ const schema = [
   FieldSchema.defaulted('onDrag', Fun.noop),
   FieldSchema.defaulted('repositionTarget', true),
   FieldSchema.defaulted('onDrop', Fun.noop),
+  FieldSchema.optionFunction('getBounds'),
   SnapSchema,
   Fields.output('dragger', {
     handlers
