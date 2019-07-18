@@ -6,18 +6,11 @@
  */
 
 import { KeyboardEvent } from '@ephox/dom-globals';
-import { PlatformDetection } from '@ephox/sand';
-
+import InsertNewLine from '../newline/InsertNewLine';
+import VK from '../api/util/VK';
 import Editor from '../api/Editor';
 import UndoManager from '../api/UndoManager';
 import { EditorEvent } from '../api/util/EventDispatcher';
-import VK from '../api/util/VK';
-import InsertNewLine from '../newline/InsertNewLine';
-
-const platform = PlatformDetection.detect();
-const browser = platform.browser;
-const isTouch = platform.deviceType.isTouch();
-const isSafari = browser.isSafari();
 
 const endTypingLevel = function (undoManager: UndoManager) {
   if (undoManager.typing) {
@@ -27,8 +20,7 @@ const endTypingLevel = function (undoManager: UndoManager) {
 };
 
 const handleEnterKeyEvent = function (editor: Editor, event: EditorEvent<KeyboardEvent>) {
-
-  if (event.isDefaultPrevented() || isSafari && isTouch) {
+  if (event.isDefaultPrevented()) {
     return;
   }
 
