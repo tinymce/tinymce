@@ -15,11 +15,11 @@ import { Types } from '@ephox/bridge';
 export interface DialogData {
   findtext: string;
   replacetext: string;
-  matchcase: boolean;
-  wholewords: boolean;
 }
 
 const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchState>) {
+  const matchcase = Cell(currentSearchState.get().matchCase);
+  const wholewords = Cell(currentSearchState.get().wholeWord);
   editor.undoManager.add();
 
   const selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
@@ -62,11 +62,11 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     }
 
     // Same search text, so treat the find as a next click instead
-    if (last.text === data.findtext && last.matchCase === data.matchcase && last.wholeWord === data.wholewords) {
+    if (last.text === data.findtext && last.matchCase === matchcase.get() && last.wholeWord === wholewords.get()) {
       Actions.next(editor, currentSearchState);
     } else {
       // Find new matches
-      const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords);
+      const count = Actions.find(editor, currentSearchState, data.findtext, matchcase.get(), wholewords.get());
       if (count <= 0) {
         notFoundAlert(api);
       }
@@ -78,9 +78,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
 
   const initialData: DialogData = {
     findtext: selectedText,
-    replacetext: '',
-    matchcase: currentSearchState.get().matchCase,
-    wholewords: currentSearchState.get().wholeWord
+    replacetext: ''
   };
 
   const spec: Types.Dialog.DialogApi<DialogData> = {
@@ -136,17 +134,17 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
               type: 'togglemenuitem',
               text: 'Match case',
               onAction: (api) => {
-                currentSearchState.get().matchCase = !currentSearchState.get().matchCase;
+                matchcase.set(!matchcase.get());
               },
-              active: currentSearchState.get().matchCase
+              active: matchcase.get()
             },
             {
               type: 'togglemenuitem',
               text: 'Find whole words only',
               onAction: (api) => {
-                currentSearchState.get().wholeWord = !currentSearchState.get().wholeWord;
+                wholewords.set(!wholewords.get());
               },
-              active: currentSearchState.get().wholeWord
+              active: wholewords.get()
             }
           ]);
         }

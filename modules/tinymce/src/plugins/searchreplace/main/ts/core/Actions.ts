@@ -233,6 +233,14 @@ const done = function (editor: Editor, currentSearchState: Cell<SearchState>, ke
     }
   }
 
+  // Reset the search state
+  currentSearchState.set({
+    ...searchState,
+    index: -1,
+    count: 0,
+    text: ''
+  });
+
   if (startContainer && endContainer) {
     const rng = editor.dom.createRng();
     rng.setStart(startContainer, 0);
@@ -244,14 +252,6 @@ const done = function (editor: Editor, currentSearchState: Cell<SearchState>, ke
 
     return rng;
   }
-
-  // Reset the search state
-  currentSearchState.set({
-    ...searchState,
-    index: -1,
-    count: 0,
-    text: ''
-  });
 };
 
 const hasNext = (editor: Editor, currentSearchState: Cell<SearchState>) => currentSearchState.get().count > 1;
