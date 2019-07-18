@@ -149,7 +149,7 @@ const link = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) 
       linkAttrs.target = Settings.getDefaultLinkTarget(editor);
     }
 
-    linkAttrs.href = handleExternalTargets(linkAttrs.href, Settings.assumeExternalTargets(editor.settings));
+    linkAttrs.href = handleExternalTargets(linkAttrs.href, Settings.assumeExternalTargets(editor));
 
     if (data.href === attachState.href) {
       attachState.attach();

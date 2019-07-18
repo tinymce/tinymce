@@ -162,7 +162,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.D
 const open = function (editor: Editor) {
   const data = collectData(editor);
   data.map((info) => {
-    const onSubmit = handleSubmit(editor, info, Settings.assumeExternalTargets(editor.settings));
+    const onSubmit = handleSubmit(editor, info, Settings.assumeExternalTargets(editor));
     return makeDialog(info, onSubmit, editor);
   }).get((spec) => {
     editor.windowManager.open(spec);

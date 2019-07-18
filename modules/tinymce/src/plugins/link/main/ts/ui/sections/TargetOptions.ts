@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Option, Type } from '@ephox/katamari';
 
 import Settings from '../../api/Settings';
 import { ListOptions } from '../../core/ListOptions';
@@ -21,9 +21,8 @@ const fallbacks = [
 ];
 
 const getTargets = (editor: Editor): Option<ListItem[]> => {
-  const isArray = <T>(x): x is Array<T> => Array.isArray(x);
   const list = Settings.getTargetList(editor);
-  if (isArray(list)) {
+  if (Type.isArray(list)) {
     return ListOptions.sanitize(list).orThunk(
       () => Option.some(fallbacks)
     );

@@ -8,12 +8,13 @@
 import { AssumeExternalTargets } from './Types';
 import Editor from 'tinymce/core/api/Editor';
 import { ListItem } from '../ui/DialogTypes';
+import { Type } from '@ephox/katamari';
 
-const assumeExternalTargets = (editorSettings): AssumeExternalTargets => {
-  const externalTargets = editorSettings.link_assume_external_targets;
-  if (typeof externalTargets === 'boolean' && externalTargets) {
+const assumeExternalTargets = (editor: Editor): AssumeExternalTargets => {
+  const externalTargets = editor.getParam('link_assume_external_targets', false);
+  if (Type.isBoolean(externalTargets) && externalTargets) {
     return AssumeExternalTargets.WARN;
-  } else if (typeof externalTargets === 'string'
+  } else if (Type.isString(externalTargets)
       && (externalTargets === AssumeExternalTargets.ALWAYS_HTTP
         || externalTargets === AssumeExternalTargets.ALWAYS_HTTPS)) {
     return externalTargets;

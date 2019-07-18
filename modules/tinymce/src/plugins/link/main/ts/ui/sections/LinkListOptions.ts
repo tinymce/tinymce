@@ -6,7 +6,7 @@
  */
 
 import Settings from '../../api/Settings';
-import { Future, Option } from '@ephox/katamari';
+import { Future, Option, Type } from '@ephox/katamari';
 import XHR from 'tinymce/core/api/util/XHR';
 import { ListItem } from '../DialogTypes';
 import { ListOptions } from '../../core/ListOptions';
@@ -24,17 +24,15 @@ const getLinks = (editor): Future<Option<ListItem[]>> => {
   const extractor = (item) => editor.convertURL(item.value || item.url, 'href');
 
   const linkList = Settings.getLinkList(editor);
-  const isString = (list): list is string => typeof list === 'string';
-  const isFunction = (list): list is Function => typeof list === 'function';
   return Future.nu<Option<ListItem[]>>((callback) => {
     // TODO - better handling of failure
-    if (isString(linkList)) {
+    if (Type.isString(linkList)) {
       XHR.send({
         url: linkList,
         success: (text) => callback(parseJson(text)),
         error: (_) => callback(Option.none())
       });
-    } else if (isFunction(linkList)) {
+    } else if (Type.isFunction(linkList)) {
       linkList((output) => callback(Option.some(output)));
     } else {
       callback(Option.from(linkList as ListItem[]));
