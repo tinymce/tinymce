@@ -46,10 +46,10 @@ export interface DialogSpec {
   extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
 }
 
-const getHeader = (title: string, backstage: UiFactoryBackstage, draggable: boolean = true) => {
+const getHeader = (title: string, backstage: UiFactoryBackstage) => {
   return renderModalHeader({
     title: backstage.shared.providers.translate(title),
-    draggable
+    draggable: backstage.dialog.isDraggableModal()
   }, backstage.shared.providers);
 };
 

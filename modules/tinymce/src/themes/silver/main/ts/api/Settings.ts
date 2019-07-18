@@ -98,7 +98,7 @@ const getUiContainer = (editor): Element => {
   return fixedContainer.getOr(Body.body());
 };
 
-const isDraggableModal = (editor: Editor): boolean => editor.getParam('draggable_modal', true, 'boolean');
+const isDraggableModal = (editor: Editor): boolean => editor.getParam('draggable_modal', false, 'boolean');
 
 export {
   getSkinUrl,
