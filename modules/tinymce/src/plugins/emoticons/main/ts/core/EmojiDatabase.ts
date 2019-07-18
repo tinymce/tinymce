@@ -6,11 +6,11 @@
  */
 
 import { console } from '@ephox/dom-globals';
-import { Cell, Global, Obj, Option, Result, Merger } from '@ephox/katamari';
-import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
-import Promise from 'tinymce/core/api/util/Promise';
+import { Cell, Merger, Obj, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import Scripts from 'tinymce/core/api/Scripts';
 import Delay from 'tinymce/core/api/util/Delay';
+import Promise from 'tinymce/core/api/util/Promise';
 import Settings from '../api/Settings';
 
 const ALL_CATEGORY = 'All';
@@ -48,16 +48,6 @@ export interface EmojiDatabase {
   listCategories: () => string[];
 }
 
-const extractGlobal = (url: string): Result<Record<string, any>, any> => {
-  if (Global.tinymce[GLOBAL_NAME]) {
-    const result = Result.value(Global.tinymce[GLOBAL_NAME]);
-    delete Global.tinymce[GLOBAL_NAME];
-    return result;
-  } else {
-    return Result.error(`URL ${url} did not contain the expected format for emoticons`);
-  }
-};
-
 const translateCategory = (categories: Record<string, string>, name: string) => {
   return Obj.has(categories, name) ? categories[name] : name;
 };
@@ -76,8 +66,8 @@ const initDatabase = (editor: Editor, databaseUrl: string): EmojiDatabase => {
   const all = Cell<Option<EmojiEntry[]>>(Option.none());
 
   const processEmojis = (emojis: Record<string, RawEmojiEntry>) => {
-    const cats = { };
-    const everything = [ ];
+    const cats = {};
+    const everything = [];
 
     Obj.each(emojis, (lib: RawEmojiEntry, title: string) => {
       const entry: EmojiEntry = {
@@ -87,8 +77,8 @@ const initDatabase = (editor: Editor, databaseUrl: string): EmojiDatabase => {
         char: lib.char,
         category: translateCategory(categoryNameMap, lib.category)
       };
-      const current = cats[entry.category] !== undefined ? cats[entry.category] : [ ];
-      cats[entry.category] = current.concat([ entry ]);
+      const current = cats[entry.category] !== undefined ? cats[entry.category] : [];
+      cats[entry.category] = current.concat([entry]);
       everything.push(entry);
     });
 
@@ -97,21 +87,15 @@ const initDatabase = (editor: Editor, databaseUrl: string): EmojiDatabase => {
   };
 
   editor.on('init', () => {
-    ScriptLoader.ScriptLoader.loadScript(databaseUrl, () => {
-      extractGlobal(databaseUrl).fold(
-        (err) => {
-          // tslint:disable-next-line:no-console
-          console.log(err);
-          categories.set(Option.some({ }));
-          all.set(Option.some([ ]));
-        },
-        (emojis) => {
-          const userEmojis = getUserDefinedEmoticons(editor);
-          processEmojis(Merger.merge(emojis, userEmojis));
-        }
-      );
+    Scripts.load(GLOBAL_NAME, databaseUrl).then((emojis) => {
+      const userEmojis = getUserDefinedEmoticons(editor);
+      processEmojis(Merger.merge(emojis, userEmojis));
     }, () => {
-
+      const err = `URL ${databaseUrl} did not contain the expected format for emoticons`;
+      // tslint:disable-next-line:no-console
+      console.log(err);
+      categories.set(Option.some({}));
+      all.set(Option.some([]));
     });
   });
 
@@ -119,16 +103,16 @@ const initDatabase = (editor: Editor, databaseUrl: string): EmojiDatabase => {
     if (category === ALL_CATEGORY) { return listAll(); }
     return categories.get().bind((cats) => {
       return Option.from(cats[category]);
-    }).getOr([ ]);
+    }).getOr([]);
   };
 
   const listAll = (): EmojiEntry[] => {
-    return all.get().getOr([ ]) ;
+    return all.get().getOr([]);
   };
 
   const listCategories = (): string[] => {
     // TODO: Category key order should be adjusted to match the standard
-    return [ ALL_CATEGORY ].concat(Obj.keys(categories.get().getOr({ })));
+    return [ALL_CATEGORY].concat(Obj.keys(categories.get().getOr({})));
 
   };
 
@@ -171,7 +155,4 @@ const initDatabase = (editor: Editor, databaseUrl: string): EmojiDatabase => {
 
 // Load the script.
 
-export {
-  ALL_CATEGORY,
-  initDatabase
-};
+export { ALL_CATEGORY, initDatabase };
