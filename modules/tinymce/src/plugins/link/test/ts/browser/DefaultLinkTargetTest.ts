@@ -27,6 +27,23 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DefaultLinkTargetTest', (succes
         TestLinkUi.sAssertContentPresence(tinyApis, { 'a[target="_blank"]': 1, 'a': 1 }),
         tinyApis.sSetContent('')
       ]),
+      Log.stepsAsStep('TBA', 'Link: adds target if default is set and target_list is enabled', [
+        tinyApis.sSetSetting('default_link_target', '_blank'),
+        tinyApis.sSetSetting('target_list', [
+          {title: 'None', value: ''},
+          {title: 'New', value: '_blank'}
+        ]),
+        TestLinkUi.sInsertLink('http://www.google.com'),
+        TestLinkUi.sAssertContentPresence(tinyApis, { 'a[target="_blank"]': 1, 'a': 1 }),
+        tinyApis.sSetContent('')
+      ]),
+      Log.stepsAsStep('TBA', 'Link: adds target if default is set and target_list is disabled', [
+        tinyApis.sSetSetting('default_link_target', '_blank'),
+        tinyApis.sSetSetting('target_list', false),
+        TestLinkUi.sInsertLink('http://www.google.com'),
+        TestLinkUi.sAssertContentPresence(tinyApis, { 'a[target="_blank"]': 1, 'a': 1 }),
+        tinyApis.sSetContent('')
+      ]),
       TestLinkUi.sClearHistory
     ], onSuccess, onFailure);
   }, {
