@@ -70,7 +70,7 @@ UnitTest.asynctest('UiFinderTest', function () {
         Css.set(strong, 'display', 'none');
         setTimeout(function () {
           Css.remove(strong, 'display');
-        }, 1000);
+        }, 200);
       }),
 
       Chain.inject(container),
@@ -83,7 +83,7 @@ UnitTest.asynctest('UiFinderTest', function () {
         // Intentionally not waiting before calling next.
         setTimeout(function () {
           Class.add(strong, 'changing-state');
-        }, 200);
+        }, 100);
       }),
 
       Chain.inject(container),
@@ -98,7 +98,7 @@ UnitTest.asynctest('UiFinderTest', function () {
         // Intentionally not waiting before calling next.
         setTimeout(function () {
           Class.add(strong, 'changing-state-waitfor');
-        }, 200);
+        }, 100);
       }),
 
       Chain.inject(container),

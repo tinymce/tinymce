@@ -8,16 +8,16 @@
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { Element, Fragment, InsertAll, Remove } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { fireListEvent } from '../api/Events';
+import { ListAction } from '../core/ListAction';
 import Selection from '../core/Selection';
+import { createTextBlock } from '../core/TextBlock';
 import { composeList } from './ComposeList';
 import { Entry, isIndented, isSelected } from './Entry';
-import { indentEntry, Indentation } from './Indentation';
+import { Indentation, indentEntry } from './Indentation';
 import { normalizeEntries } from './NormalizeEntries';
 import { EntrySet, ItemSelection, parseLists } from './ParseLists';
 import { hasFirstChildList } from './Util';
-import { createTextBlock } from '../core/TextBlock';
-import { fireListEvent } from '../api/Events';
-import { ListAction } from '../core/ListAction';
 
 const outdentedComposer = (editor: Editor, entries: Entry[]): Element[] => {
   return Arr.map(entries, (entry) => {
@@ -51,7 +51,7 @@ const getItemSelection = (editor: Editor): Option<ItemSelection> => {
   ], (start, end) => ({ start, end }));
 };
 
-const listsIndentation = (editor: Editor, lists: Element[], indentation: Indentation) => {
+const listIndentation = (editor: Editor, lists: Element[], indentation: Indentation) => {
   const entrySets: EntrySet[] = parseLists(lists, getItemSelection(editor));
 
   Arr.each(entrySets, (entrySet) => {
@@ -65,4 +65,4 @@ const listsIndentation = (editor: Editor, lists: Element[], indentation: Indenta
   });
 };
 
-export { listsIndentation };
+export { listIndentation };
