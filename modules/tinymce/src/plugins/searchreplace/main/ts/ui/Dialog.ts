@@ -11,16 +11,15 @@ import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Actions from '../core/Actions';
 import { Types } from '@ephox/bridge';
-import I18n from 'tinymce/core/api/util/I18n';
 
 export interface DialogData {
   findtext: string;
   replacetext: string;
-  matchcase: boolean;
-  wholewords: boolean;
 }
 
 const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchState>) {
+  const matchcase = Cell(currentSearchState.get().matchCase);
+  const wholewords = Cell(currentSearchState.get().wholeWord);
   editor.undoManager.add();
 
   const selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
@@ -63,11 +62,11 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     }
 
     // Same search text, so treat the find as a next click instead
-    if (last.text === data.findtext && last.matchCase === data.matchcase && last.wholeWord === data.wholewords) {
+    if (last.text === data.findtext && last.matchCase === matchcase.get() && last.wholeWord === wholewords.get()) {
       Actions.next(editor, currentSearchState);
     } else {
       // Find new matches
-      const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords);
+      const count = Actions.find(editor, currentSearchState, data.findtext, matchcase.get(), wholewords.get());
       if (count <= 0) {
         notFoundAlert(api);
       }
@@ -79,82 +78,93 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
 
   const initialData: DialogData = {
     findtext: selectedText,
-    replacetext: '',
-    matchcase: false,
-    wholewords: false
+    replacetext: ''
   };
-  editor.windowManager.open<DialogData>({
+
+  const spec: Types.Dialog.DialogApi<DialogData> = {
     title: 'Find and Replace',
     size: 'normal',
     body: {
       type: 'panel',
       items: [
         {
-          type: 'input',
-          name: 'findtext',
-          label: 'Find'
+          type: 'bar',
+          items: [
+            {
+              type: 'input',
+              name: 'findtext',
+              placeholder: 'Find',
+              maximized: true
+            },
+            {
+              type: 'button',
+              name: 'prev',
+              text: 'Previous',
+              icon: 'action-prev',
+              disabled: true,
+              borderless: true
+            },
+            {
+              type: 'button',
+              name: 'next',
+              text: 'Next',
+              icon: 'action-next',
+              disabled: true,
+              borderless: true
+            }
+          ]
         },
         {
           type: 'input',
           name: 'replacetext',
-          label: 'Replace with'
+          placeholder: 'Replace with'
         },
-        {
-          type: 'grid',
-          columns: 2,
-          items: [
-            {
-              type: 'checkbox',
-              name: 'matchcase',
-              label: 'Match case'
-            },
-            {
-              type: 'checkbox',
-              name: 'wholewords',
-              label: 'Find whole words only'
-            }
-          ]
-        }
       ]
     },
     buttons: [
       {
+        type: 'menu',
+        name: 'options',
+        icon: 'preferences',
+        tooltip: 'Preferences',
+        align: 'start',
+        fetch: (done) => {
+          done([
+            {
+              type: 'togglemenuitem',
+              text: 'Match case',
+              onAction: (api) => {
+                matchcase.set(!matchcase.get());
+              },
+              active: matchcase.get()
+            },
+            {
+              type: 'togglemenuitem',
+              text: 'Find whole words only',
+              onAction: (api) => {
+                wholewords.set(!wholewords.get());
+              },
+              active: wholewords.get()
+            }
+          ]);
+        }
+      },
+      {
         type: 'custom',
         name: 'find',
         text: 'Find',
-        align: 'start',
         primary: true
       },
       {
         type: 'custom',
         name: 'replace',
         text: 'Replace',
-        align: 'start',
         disabled: true,
       },
       {
         type: 'custom',
         name: 'replaceall',
         text: 'Replace All',
-        align: 'start',
-        disabled: true,
-      },
-      {
-        type: 'custom',
-        name: 'prev',
-        text: 'Previous',
-        align: 'end',
-        // TODO TINY-3598: Use css to transform the icons when dir=rtl instead of swapping them
-        icon: I18n.isRtl() ? 'arrow-right' : 'arrow-left',
-        disabled: true,
-      },
-      {
-        type: 'custom',
-        name: 'next',
-        text: 'Next',
-        align: 'end',
-        // TODO TINY-3598: Use css to transform the icons when dir=rtl instead of swapping them
-        icon: I18n.isRtl() ? 'arrow-left' : 'arrow-right',
         disabled: true,
       }
     ],
@@ -199,7 +209,9 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
       Actions.done(editor, currentSearchState);
       editor.undoManager.add();
     }
-  });
+  };
+
+  editor.windowManager.open(spec, {inline: 'toolbar'});
 };
 
 export default {

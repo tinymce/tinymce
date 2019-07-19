@@ -5,7 +5,8 @@ import { Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { Attr, Class, SelectorFind } from '@ephox/sugar';
 
-import { renderMenuButton, renderToolbarButton, renderToolbarToggleButton, renderSplitButton } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
+import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
+import { renderToolbarButton, renderToolbarToggleButton, renderSplitButton } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
 import TestExtras from '../../module/TestExtras';
 import TestProviders from '../../module/TestProviders';
 
@@ -120,7 +121,6 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
               },
               components: [
                 renderMenuButton({
-                  type: 'menubutton',
                   tooltip: Option.some('tooltip'),
                   icon: Option.none(),
                   text: Option.some('button4'),

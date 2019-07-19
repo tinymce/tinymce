@@ -73,6 +73,7 @@ export default () => {
     name: 'input',
     label: Option.some('Beta'),
     placeholder: Option.none(),
+    maximized: false,
     disabled: false
   }, sharedBackstage.providers);
 
@@ -80,6 +81,7 @@ export default () => {
     name: 'textarea',
     label: Option.some('Gamma'),
     placeholder: Option.none(),
+    maximized: false,
     disabled: false
   }, sharedBackstage.providers);
 
@@ -109,6 +111,7 @@ export default () => {
         label: Option.some('Sample input'),
         placeholder: Option.none(),
         name: 'exampleinputfieldname',
+        maximized: false,
         disabled: false
       }, sharedBackstage.providers) as any
     ]
@@ -144,6 +147,7 @@ export default () => {
             label: Option.some('Sample input'),
             placeholder: Option.none(),
             name: 'exampleinputfieldname',
+            maximized: false,
             disabled: false
           }, sharedBackstage.providers) as any
         ]

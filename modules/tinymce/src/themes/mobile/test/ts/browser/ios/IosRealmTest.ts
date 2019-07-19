@@ -110,12 +110,12 @@ UnitTest.asynctest('Browser Test: ios.IosRealmTest', function () {
   };
 
   Pipeline.async({}, detection.browser.isChrome() ? [
-    Step.wait(1000),
+    Step.wait(50),
     TestUi.sStartEditor(realm.system()),
-    Step.wait(1000),
-    Step.sync(function () {
-      // iframe.dom().contentWindow.document.querySelector('.tinymce-mobile-editor-socket').scrollTop = 200;
-    }),
+    // Step.wait(1000),
+    // Step.sync(function () {
+    // iframe.dom().contentWindow.document.querySelector('.tinymce-mobile-editor-socket').scrollTop = 200;
+    // }),
     Step.wait(1000),
     mShowKeyboard('p', 13),
     Step.sync(function () {

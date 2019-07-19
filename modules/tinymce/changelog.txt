@@ -1,9 +1,12 @@
-Version 5.0.12 (TBD)
+Version 5.0.13 (TBD)
     Added new `draggable_modal` option to disable dragging of modal dialogs #TINY-3873
-    Fixed issue where autolink spacebar event was not being fired on Edge #TINY-3891
-    Fixed table selection missing the background color #TINY-3892
+    Changed backspace behaviour in lists to outdent nested list items #TINY-3651
+Version 5.0.12 (2019-07-18)
     Added ability to utilize UI dialog panels inside other panels #TINY-3305
     Added help dialog tab explaining keyboard navigation of the editor #TINY-3603
+    Changed the "Find and Replace" design to an inline dialog #TINY-3054
+    Fixed issue where autolink spacebar event was not being fired on Edge #TINY-3891
+    Fixed table selection missing the background color #TINY-3892
     Fixed removing shortcuts not working for function keys #TINY-3871
     Fixed non-descriptive UI component type names #TINY-3349
     Fixed UI registry components rendering as the wrong type when manually specifying a different type #TINY-3385
