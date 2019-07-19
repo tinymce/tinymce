@@ -88,6 +88,9 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
                 translate: I18n.translate
               }
             },
+            dialog: {
+              isDraggableModal: () => false
+            }
           }
         );
 
