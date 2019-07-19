@@ -1,5 +1,6 @@
 Version 5.0.13 (TBD)
     Changed backspace behaviour in lists to outdent nested list items #TINY-3651
+    Fixed mobile plugin filter to only apply to the mobile theme, rather than all mobile platforms #TINY-3405
 Version 5.0.12 (2019-07-18)
     Added ability to utilize UI dialog panels inside other panels #TINY-3305
     Added help dialog tab explaining keyboard navigation of the editor #TINY-3603
