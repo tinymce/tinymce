@@ -1,6 +1,7 @@
 Version 5.0.13 (TBD)
     Added new `draggable_modal` option to enable dragging of modal dialogs #TINY-3873
     Changed backspace behaviour in lists to outdent nested list items #TINY-3651
+    Added wrapping to user-inserted nbsps, which can be disabled using the `nonbreaking_wrap` setting #TINY-3647
     Fixed mobile plugin filter to only apply to the mobile theme, rather than all mobile platforms #TINY-3405
 Version 5.0.12 (2019-07-18)
     Added ability to utilize UI dialog panels inside other panels #TINY-3305
