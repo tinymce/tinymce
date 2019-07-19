@@ -7,9 +7,10 @@
 
 import { Arr, Fun, Obj, Option, Strings, Struct, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import Tools from './api/util/Tools';
+
 import Editor from './api/Editor';
 import { EditorSettings, RawEditorSettings } from './api/SettingsTypes';
+import Tools from './api/util/Tools';
 
 export interface ParamTypeMap {
   'hash': Record<string, string>;
@@ -57,6 +58,15 @@ const hasSection = function (sectionResult, name) {
   return sectionResult.sections().hasOwnProperty(name);
 };
 
+const isSectionTheme = function (sectionResult, name, theme) {
+  const section = sectionResult.sections();
+  return hasSection(sectionResult, name) && section[name].theme === theme;
+};
+
+const getSectionConfig = function (sectionResult, name) {
+  return hasSection(sectionResult, name) ? sectionResult.sections()[name] : {};
+};
+
 const getDefaultSettings = function (id, documentBaseUrl, editor: Editor): RawEditorSettings {
   return {
     id,
@@ -92,7 +102,6 @@ const getDefaultSettings = function (id, documentBaseUrl, editor: Editor): RawEd
 
 const getExternalPlugins = function (overrideSettings: RawEditorSettings, settings: RawEditorSettings) {
   const userDefinedExternalPlugins = settings.external_plugins ? settings.external_plugins : { };
-
   if (overrideSettings && overrideSettings.external_plugins) {
     return Tools.extend({}, overrideSettings.external_plugins, userDefinedExternalPlugins);
   } else {
@@ -106,8 +115,19 @@ const combinePlugins = function (forcedPlugins, plugins) {
 
 const processPlugins = function (isTouchDevice: boolean, sectionResult, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings {
   const forcedPlugins = normalizePlugins(defaultOverrideSettings.forced_plugins);
-  const plugins = normalizePlugins(settings.plugins);
-  const platformPlugins = isTouchDevice && hasSection(sectionResult, 'mobile') ? filterMobilePlugins(plugins) : plugins;
+  const desktopPlugins = normalizePlugins(settings.plugins);
+
+  const mobileConfig = getSectionConfig(sectionResult, 'mobile');
+  const mobilePlugins = mobileConfig.plugins ? normalizePlugins(mobileConfig.plugins) : desktopPlugins;
+
+  const platformPlugins =
+    // is a mobile device with mobile theme
+    isTouchDevice && isSectionTheme(sectionResult, 'mobile', 'mobile') ? filterMobilePlugins(mobilePlugins) :
+    // is a mobile device with any mobile settings
+    isTouchDevice && hasSection(sectionResult, 'mobile') ? mobilePlugins :
+    // is desktop
+    desktopPlugins;
+
   const combinedPlugins = combinePlugins(forcedPlugins, platformPlugins);
 
   return Tools.extend(settings, {
@@ -122,6 +142,7 @@ const isOnMobile = function (isTouchDevice, sectionResult) {
 
 const combineSettings = (isTouchDevice: boolean, defaultSettings: RawEditorSettings, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings => {
   const sectionResult = extractSections(['mobile'], settings);
+
   const extendedSettings = Tools.extend(
     // Default settings
     defaultSettings,
@@ -200,8 +221,4 @@ const getParam = (editor: Editor, name: string, defaultVal?: any, type?: string)
   }
 };
 
-export {
-  getEditorSettings,
-  getParam,
-  combineSettings
-};
+export { getEditorSettings, getParam, combineSettings };

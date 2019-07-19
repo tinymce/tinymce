@@ -53,9 +53,6 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
                       s.element('div', {
                         html: str.is('Metadata and Document Properties')
                       }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-dialog__draghandle') ],
-                      }),
                       s.element('button', {
                         classes: [ arr.has('tox-button--icon'), arr.has('tox-button--naked') ],
                       })
