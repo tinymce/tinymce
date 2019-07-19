@@ -140,12 +140,16 @@ const link = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) 
     const anchorElm = getAnchorElement(editor, selectedElm);
     const linkAttrs = getLinkAttrs(data);
 
-    if (!Settings.hasRelList(editor.settings) && Settings.allowUnsafeLinkTarget(editor.settings) === false) {
+    if (!(Settings.getRelList(editor).length > 0) && Settings.allowUnsafeLinkTarget(editor) === false) {
       const newRel = applyRelTargetRules(linkAttrs.rel, linkAttrs.target === '_blank');
       linkAttrs.rel = newRel ? newRel : null;
     }
 
-    linkAttrs.href = handleExternalTargets(linkAttrs.href, Settings.assumeExternalTargets(editor.settings));
+    if (Option.from(linkAttrs.target).isNone()) {
+      linkAttrs.target = Settings.getDefaultLinkTarget(editor);
+    }
+
+    linkAttrs.href = handleExternalTargets(linkAttrs.href, Settings.assumeExternalTargets(editor));
 
     if (data.href === attachState.href) {
       attachState.attach();
