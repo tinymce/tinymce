@@ -1,9 +1,9 @@
 Version 5.0.13 (TBD)
     Changed backspace behaviour in lists to outdent nested list items #TINY-3651
+    Fixed mobile plugin filter to only apply to the mobile theme, rather than all mobile platforms #TINY-3405
 Version 5.0.12 (2019-07-18)
     Added ability to utilize UI dialog panels inside other panels #TINY-3305
     Added help dialog tab explaining keyboard navigation of the editor #TINY-3603
-    Changed mobile theme when set to silver, removes tap to edit and enables full feature set #TINY-3405
     Changed the "Find and Replace" design to an inline dialog #TINY-3054
     Fixed issue where autolink spacebar event was not being fired on Edge #TINY-3891
     Fixed table selection missing the background color #TINY-3892
