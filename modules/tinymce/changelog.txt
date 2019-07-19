@@ -1,5 +1,5 @@
 Version 5.0.13 (TBD)
-    Added new `draggable_modal` option to disable dragging of modal dialogs #TINY-3873
+    Added new `draggable_modal` option to enable dragging of modal dialogs #TINY-3873
     Changed backspace behaviour in lists to outdent nested list items #TINY-3651
 Version 5.0.12 (2019-07-18)
     Added ability to utilize UI dialog panels inside other panels #TINY-3305
