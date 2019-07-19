@@ -7,7 +7,7 @@
 
 import { Attachment } from '@ephox/alloy';
 import { Cell } from '@ephox/katamari';
-import { Body, DomEvent, Element, Position } from '@ephox/sugar';
+import { Body, DomEvent, Element, Position, Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Events from '../api/Events';
@@ -19,8 +19,11 @@ import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { iframe as loadIframeSkin } from './../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
+import { PlatformDetection } from '@ephox/sand';
 
 const DOM = DOMUtils.DOM;
+const detection = PlatformDetection.detect();
+const isTouch = detection.deviceType.isTouch();
 
 const setupEvents = (editor: Editor) => {
   const contentWindow = editor.getWin();
@@ -82,6 +85,14 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   });
 
   const socket = OuterContainer.getSocket(uiComponents.outerContainer).getOrDie('Could not find expected socket element');
+
+  if (isTouch === true) {
+    // TODO: move me, Setup mobile scrolling,
+    Css.setAll(socket.element(), {
+      'overflow': 'scroll',
+      '-webkit-overflow-scrolling': 'touch' // required for ios < 13
+    });
+  }
 
   setupReadonlyModeSwitch(editor, uiComponents);
 

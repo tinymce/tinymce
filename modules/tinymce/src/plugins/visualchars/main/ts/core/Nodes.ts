@@ -6,23 +6,24 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import { Element, Node } from '@ephox/sugar';
+import { Element, Node as SugarNode } from '@ephox/sugar';
 import Data from './Data';
 import Html from './Html';
+import { Node } from '@ephox/dom-globals';
 
-const isMatch = function (n) {
-  return Node.isText(n) &&
-    Node.value(n) !== undefined &&
-    Data.regExp.test(Node.value(n));
+const isMatch = (n: Element) => {
+  return SugarNode.isText(n) &&
+    SugarNode.value(n) !== undefined &&
+    Data.regExp.test(SugarNode.value(n));
 };
 
 // inlined sugars PredicateFilter.descendants for file size
-const filterDescendants = function (scope, predicate) {
-  let result = [];
+const filterDescendants = (scope: Element, predicate: (x: Element) => boolean) => {
+  let result: Element[] = [];
   const dom = scope.dom();
   const children = Arr.map(dom.childNodes, Element.fromDom);
 
-  Arr.each(children, function (x) {
+  Arr.each(children, (x) => {
     if (predicate(x)) {
       result = result.concat([ x ]);
     }
@@ -31,7 +32,7 @@ const filterDescendants = function (scope, predicate) {
   return result;
 };
 
-const findParentElm = function (elm, rootElm) {
+const findParentElm = (elm: Node, rootElm: Node) => {
   while (elm.parentNode) {
     if (elm.parentNode === rootElm) {
       return elm;
@@ -40,7 +41,7 @@ const findParentElm = function (elm, rootElm) {
   }
 };
 
-const replaceWithSpans = function (html) {
+const replaceWithSpans = (html: string) => {
   return html.replace(Data.regExpGlobal, Html.wrapCharWithSpan);
 };
 

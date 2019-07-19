@@ -21,6 +21,15 @@ import TestExtras from '../../module/TestExtras';
 UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
   const helpers = TestExtras();
   const windowManager = WindowManager.setup(helpers.extras);
+  const windowManagerWithDragging = WindowManager.setup({
+    editor: helpers.extras.editor,
+    backstage: {
+      ...helpers.extras.backstage,
+      dialog: {
+        isDraggableModal: () => true
+      }
+    }
+  });
 
   const shouldFail = (label, conf, asserter) => {
     return Step.async(function (next, die) {
@@ -35,8 +44,12 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
     });
   };
 
-  const sSetupDialog = (conf) => Step.sync(() => {
+  const sSetupDialogWithoutDragging = (conf) => Step.sync(() => {
     windowManager.open(conf, {}, Fun.noop);
+  });
+
+  const sSetupDialogWithDragging = (conf) => Step.sync(() => {
+    windowManagerWithDragging.open(conf, {}, Fun.noop);
   });
 
   const sTeardown = GeneralSteps.sequence([
@@ -54,7 +67,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
     Chain.op(asserter)
   ]);
 
-  const createTest = (label, conf, asserter) => Logger.t(
+  const createTest = (label, conf, asserter, drag?) => Logger.t(
     label,
     GeneralSteps.sequence([
       Waiter.sTryUntil(
@@ -63,7 +76,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
         100,
         1000
       ),
-      sSetupDialog(conf),
+      drag ? sSetupDialogWithDragging(conf) : sSetupDialogWithoutDragging(conf),
       UiFinder.sWaitFor('Waiting for dialog to appear', Body.body(), '.tox-button--icon[aria-label="Close"]'),
       sAssertSinkStructure(asserter),
       sTeardown,
@@ -95,8 +108,8 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
     Assertions.assertEq('This should throw a configuration error: showing the exact failure', message[2], 'Could not find valid *strict* value for "items" in {');
   });
 
-  const sTestMinRequiredConfig = createTest('The smallest config to get dialog working, it should have this DOM structure', {
-    title: 'test-min-required',
+  const sTestMinRequiredConfigWithDragging = createTest('The smallest config to get draggable dialog working, it should have this DOM structure', {
+    title: 'test-min-required-with-dragging',
     body: {
       type: 'panel',
       items: []
@@ -152,7 +165,65 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
       }),
       rootElement
     );
-  });
+  }, true);
+
+  const sTestMinRequiredConfigWithoutDragging = createTest('The smallest config to get non-draggable dialog working, it should have this DOM structure', {
+    title: 'test-min-required-without-dragging',
+    body: {
+      type: 'panel',
+      items: []
+    },
+    buttons: []
+  }, (rootElement: SugarElement) => {
+
+    Assertions.assertStructure('A basic dialog should have these components',
+      ApproxStructure.build((s, str, arr) => {
+        return s.element('div', {
+          classes: [ arr.has('mce-silver-sink') ],
+          children: [
+            s.element('div', {
+              classes: [ arr.has('tox-dialog-wrap') ],
+              children: [
+                s.element('div', { classes: [ arr.has('tox-dialog-wrap__backdrop') ] }),
+                s.element('div', {
+                  classes: [ arr.has('tox-dialog') ],
+                  children: [
+                    s.element('div', {
+                      classes: [ arr.has('tox-dialog__header') ],
+                      children: [
+                        s.element('div', { classes: [ arr.has('tox-dialog__title') ] }),
+                        s.element('button', { classes: [ arr.has('tox-button') ] })
+                      ]
+                    }),
+                    s.element('div', {
+                      classes: [ arr.has('tox-dialog__content-js') ],
+                      children: [
+                        s.element('div', {
+                          classes: [ arr.has('tox-dialog__body') ],
+                          children: [
+                            s.element('div', {
+                              // Potentially reinstate once we have the structure 100% defined.
+                              // attrs: {
+                              //   role: str.is('presentation')
+                              // }
+                            })
+                          ]
+                        })
+                      ]
+                    }),
+                    s.element('div', {
+                      classes: [ arr.has('tox-dialog__footer') ]
+                    })
+                  ]
+                })
+              ]
+            })
+          ]
+        });
+      }),
+      rootElement
+    );
+  }, false);
 
   const sWindowDataTest = Logger.t(
     'Initial Data test',
@@ -244,7 +315,8 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
   Pipeline.async({}, [
     sTestWrongBodyType,
     sTestMissingPanelItems,
-    sTestMinRequiredConfig,
+    sTestMinRequiredConfigWithDragging,
+    sTestMinRequiredConfigWithoutDragging,
     sWindowDataTest,
 
   ], function () {
