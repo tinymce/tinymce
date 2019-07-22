@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Remove, Element, SelectorFilter, Traverse, PredicateExists } from '@ephox/sugar';
+import { Element, PredicateExists, Remove, SelectorFilter } from '@ephox/sugar';
+import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
+import NodeType from '../dom/NodeType';
 import * as CefDeleteAction from './CefDeleteAction';
 import DeleteElement from './DeleteElement';
 import DeleteUtils from './DeleteUtils';
-import NodeType from '../dom/NodeType';
-import Editor from '../api/Editor';
-import { Node } from '@ephox/dom-globals';
 
 const deleteElement = function (editor: Editor, forward) {
   return function (element) {
