@@ -1,13 +1,13 @@
-import { Css, Location, Scroll, Traverse, Element, Height, Width } from '@ephox/sugar';
+import { Option } from '@ephox/katamari';
+import { Css, Location, Scroll, Traverse, Element } from '@ephox/sugar';
 
-import { Bounds } from '../../alien/Boxes';
 import { cap } from '../../alien/Cycles';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as DragCoord from '../../api/data/DragCoord';
 import * as Snappables from '../snap/Snappables';
-import { DraggingConfig } from './DraggingTypes';
+import { DraggingConfig, DraggingState, DragStartData, SnapsConfig } from './DraggingTypes';
 
 const getCurrentCoord = (target: Element): DragCoord.CoordAdt => {
   return Css.getRaw(target, 'left').bind((left) => {
@@ -26,15 +26,12 @@ const getCurrentCoord = (target: Element): DragCoord.CoordAdt => {
   });
 };
 
-const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, getBounds: () => Bounds): DragCoord.CoordAdt => {
-  const bounds = getBounds();
+const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, extras: DragStartData): DragCoord.CoordAdt => {
+  const bounds = extras.bounds;
   const absoluteCoord = DragCoord.asAbsolute(coords, scroll, origin);
 
-  const height = Height.getOuter(component.element());
-  const width = Width.getOuter(component.element());
-
-  const newX = cap(absoluteCoord.left(), bounds.x(), bounds.width() - width);
-  const newY = cap(absoluteCoord.top(), bounds.y(), bounds.height() - height);
+  const newX = cap(absoluteCoord.left(), bounds.x(), bounds.width() - extras.width);
+  const newY = cap(absoluteCoord.top(), bounds.y(), bounds.height() - extras.height);
   const newCoords = DragCoord.absolute(newX, newY);
 
   // Translate the absolute coord back into the previous type
@@ -54,8 +51,8 @@ const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scro
   );
 };
 
-const calcNewCoord = (component: AlloyComponent, dragConfig: DraggingConfig, currentCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, delta: SugarPosition): DragCoord.CoordAdt => {
-  const newCoord = dragConfig.snaps.fold(() => {
+const calcNewCoord = (component: AlloyComponent, snaps: Option<SnapsConfig>, currentCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, delta: SugarPosition, extras: DragStartData): DragCoord.CoordAdt => {
+  const newCoord = snaps.fold(() => {
     // When not docking, use fixed coordinates.
     const translated = DragCoord.translate(currentCoord, delta.left(), delta.top());
     const fixedCoord = DragCoord.asFixed(translated, scroll, origin);
@@ -69,13 +66,14 @@ const calcNewCoord = (component: AlloyComponent, dragConfig: DraggingConfig, cur
   });
 
   // Clamp the coords so that they are within the bounds
-  return clampCoords(component, newCoord, scroll, origin, dragConfig.getBounds);
+  return clampCoords(component, newCoord, scroll, origin, extras);
 };
 
-const dragBy = (component: AlloyComponent, dragConfig: DraggingConfig, delta: SugarPosition): void => {
+const dragBy = (component: AlloyComponent, dragConfig: DraggingConfig, dragState: DraggingState<SugarPosition>, delta: SugarPosition): void => {
   const target = dragConfig.getTarget(component.element());
 
   if (dragConfig.repositionTarget) {
+    const startData = dragState.getStartData().getOrDie();
     const doc = Traverse.owner(component.element());
     const scroll = Scroll.get(doc);
 
@@ -83,7 +81,7 @@ const dragBy = (component: AlloyComponent, dragConfig: DraggingConfig, delta: Su
 
     const currentCoord = getCurrentCoord(target);
 
-    const newCoord = calcNewCoord(component, dragConfig, currentCoord, scroll, origin, delta);
+    const newCoord = calcNewCoord(component, dragConfig.snaps, currentCoord, scroll, origin, delta, startData);
 
     const styles = DragCoord.toStyles(newCoord, scroll, origin);
     Css.setAll(target, styles);

@@ -1,12 +1,15 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { MouseEvent } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
+import { Height, Width } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import DelayedFunction from '../../alien/DelayedFunction';
 import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
+import * as SystemEvents from '../../api/events/SystemEvents';
 import { Container } from '../../api/ui/Container';
 import * as Fields from '../../data/Fields';
 import * as BlockerUtils from '../common/BlockerUtils';
@@ -19,7 +22,16 @@ import * as MouseData from './MouseData';
 import { DragApi, MouseDraggingConfig } from './MouseDraggingTypes';
 
 const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.AlloyEventRecord => {
+  const updateStartState = (comp: AlloyComponent) => {
+    dragState.setStartData({
+      bounds: dragConfig.getBounds(),
+      height: Height.getOuter(comp.element()),
+      width: Width.getOuter(comp.element())
+    });
+  };
+
   return AlloyEvents.derive([
+    AlloyEvents.run(SystemEvents.windowScroll(), updateStartState),
     AlloyEvents.run<SugarEvent>(NativeEvents.mousedown(), (component, simulatedEvent) => {
       const raw = simulatedEvent.event().raw() as MouseEvent;
       if (raw.button !== 0) { return; }
@@ -40,7 +52,7 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
           delayDrop.cancel();
           const delta = dragState.update(MouseData, event);
           delta.each((dlt) => {
-            DragMovement.dragBy(component, dragConfig, dlt);
+            DragMovement.dragBy(component, dragConfig, dragState, dlt);
           });
         }
       };
@@ -69,6 +81,7 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
           Snappables.stopDrag(component, snapInfo);
         });
         const target = dragConfig.getTarget(component.element());
+        dragState.reset();
         dragConfig.onDrop(component, target);
       };
 
@@ -77,7 +90,7 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
       const delayDrop = DelayedFunction(stop, 200);
 
       const start = () => {
-        dragState.reset();
+        updateStartState(component);
         BlockerUtils.instigate(component, blocker);
       };
 

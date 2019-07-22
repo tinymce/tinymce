@@ -20,7 +20,7 @@ export interface Stateless extends BehaviourState {
   // Add placeholder here.
 }
 
-const nu = (spec): BehaviourState => {
+const nu = <T extends BehaviourState>(spec): T => {
   return spec;
 };
 

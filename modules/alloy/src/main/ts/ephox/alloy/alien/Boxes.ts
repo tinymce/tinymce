@@ -1,9 +1,9 @@
+import { document, window } from '@ephox/dom-globals';
 import { Fun, Struct } from '@ephox/katamari';
 import { Height, Location, Width, Element, Scroll } from '@ephox/sugar';
 
 import { CssPositionAdt } from './CssPosition';
 import * as OuterPosition from '../frame/OuterPosition';
-import { document, window } from '@ephox/dom-globals';
 
 const pointed = Struct.immutable('point', 'width', 'height') as (point: CssPositionAdt, width: number, height: number) => BoxByPoint;
 const rect = Struct.immutable('x', 'y', 'width', 'height');

@@ -1,10 +1,13 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
+import { Height, Width } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import { SugarPosition, SugarEvent } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
+import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
 import * as DragMovement from '../common/DragMovement';
 import { DraggingState } from '../common/DraggingTypes';
@@ -14,16 +17,27 @@ import * as TouchData from './TouchData';
 import { TouchDraggingConfig } from './TouchDraggingTypes';
 
 const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.AlloyEventRecord => {
+  const updateStartState = (comp: AlloyComponent) => {
+    dragState.setStartData({
+      bounds: dragConfig.getBounds(),
+      height: Height.getOuter(comp.element()),
+      width: Width.getOuter(comp.element())
+    });
+  };
 
   return AlloyEvents.derive([
-    AlloyEvents.stopper(NativeEvents.touchstart()),
+    AlloyEvents.run(SystemEvents.windowScroll(), updateStartState),
+    AlloyEvents.run(NativeEvents.touchstart(), (component, simulatedEvent) => {
+      updateStartState(component);
+      simulatedEvent.stop();
+    }),
 
     AlloyEvents.run<SugarEvent>(NativeEvents.touchmove(), (component, simulatedEvent) => {
       simulatedEvent.stop();
 
       const delta = dragState.update(TouchData, simulatedEvent.event());
       delta.each((dlt) => {
-        DragMovement.dragBy(component, dragConfig, dlt);
+        DragMovement.dragBy(component, dragConfig, dragState, dlt);
       });
     }),
 
