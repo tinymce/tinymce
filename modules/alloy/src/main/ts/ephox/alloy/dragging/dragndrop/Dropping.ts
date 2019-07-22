@@ -1,4 +1,4 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { DataTransfer } from '@ephox/dom-globals';
 
 import { SugarEvent } from '../../alien/TypeDefinitions';
@@ -10,7 +10,7 @@ import * as DataTransfers from './DataTransfers';
 import { DroppingConfig } from './DragnDropTypes';
 import { createDropEventDetails } from './DropEvent';
 
-const schema: FieldProcessorAdt[] = [
+const schema = ValueSchema.objOf([
   FieldSchema.defaultedString('type', 'text/plain'),
   FieldSchema.defaultedStringEnum('dropEffect', 'move', ['copy', 'move', 'link', 'none']),
   Fields.onHandler('onDrop'),
@@ -54,6 +54,6 @@ const schema: FieldProcessorAdt[] = [
 
     return { exhibit, handlers };
   })
-];
+]);
 
 export default schema;

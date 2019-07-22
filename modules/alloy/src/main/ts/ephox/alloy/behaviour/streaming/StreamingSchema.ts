@@ -20,14 +20,14 @@ export default [
   FieldSchema.strictOf('stream', ValueSchema.choose(
     'mode',
     {
-      throttle: [
+      throttle: ValueSchema.objOf([
         FieldSchema.strict('delay'),
         FieldSchema.defaulted('stopEvent', true),
         Fields.output('streams', {
           setup,
           state: StreamingState.throttle
         })
-      ]
+      ])
     }
   )),
   FieldSchema.defaulted('event', 'input'),

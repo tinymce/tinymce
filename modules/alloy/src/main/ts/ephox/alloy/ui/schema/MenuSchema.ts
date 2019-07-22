@@ -101,18 +101,18 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   }, ValueSchema.choose(
     'mode',
     {
-      grid: [
+      grid: ValueSchema.objOf([
         Fields.initSize(),
         Fields.output('config', configureGrid)
-      ],
-      matrix: [
+      ]),
+      matrix: ValueSchema.objOf([
         Fields.output('config', configureMatrix),
         FieldSchema.strict('rowSelector'),
-      ],
-      menu: [
+      ]),
+      menu: ValueSchema.objOf([
         FieldSchema.defaulted('moveOnTab', true),
         Fields.output('config', configureMenu)
-      ]
+      ])
     }
   )),
 

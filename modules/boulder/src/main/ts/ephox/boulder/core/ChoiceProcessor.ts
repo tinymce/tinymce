@@ -3,22 +3,22 @@ import { Obj } from '@ephox/katamari';
 import * as Objects from '../api/Objects';
 import { typeAdt, FieldProcessorAdt } from '../format/TypeTokens';
 import { missingBranch, missingKey } from './SchemaError';
-import * as ValueProcessor from './ValueProcessor';
+import { Processor } from './ValueProcessor';
 
-const chooseFrom = function (path, strength, input, branches, ch) {
-  const fields = Objects.readOptFrom<FieldProcessorAdt[]>(branches, ch);
+const chooseFrom = function (path, strength, input, branches: Record<string, Processor>, ch: string) {
+  const fields = Objects.readOptFrom<Processor>(branches, ch);
   return fields.fold(function () {
     return missingBranch(path, branches, ch);
-  }, function (fs) {
-    return ValueProcessor.objOf(fs).extract(path.concat([ 'branch: ' + ch ]), strength, input);
+  }, function (vp) {
+    return vp.extract(path.concat([ 'branch: ' + ch ]), strength, input);
   });
 };
 
 // The purpose of choose is to have a key which picks which of the schemas to follow.
 // The key will index into the object of schemas: branches
-const choose = function (key, branches) {
+const choose = function (key: string, branches: Record<string, Processor>) {
   const extract = function (path, strength, input) {
-    const choice = Objects.readOptFrom(input, key);
+    const choice = Objects.readOptFrom<string>(input, key);
     return choice.fold(function () {
       return missingKey(path, key);
     }, function (chosen) {

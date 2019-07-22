@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
@@ -33,7 +33,7 @@ const onUnload = (component: AlloyComponent, repConfig, repState: DatasetReprese
   repState.clear();
 };
 
-export default [
+export default ValueSchema.objOf([
   FieldSchema.option('initialValue'),
   FieldSchema.strict('getFallbackEntry'),
   FieldSchema.strict('getDataKey'),
@@ -45,4 +45,4 @@ export default [
     onUnload,
     state: datasetState
   })
-];
+]);

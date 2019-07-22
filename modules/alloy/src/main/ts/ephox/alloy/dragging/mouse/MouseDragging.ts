@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { MouseEvent } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 
@@ -85,7 +85,7 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
   ]);
 };
 
-const schema: FieldProcessorAdt[] = [
+const schema = ValueSchema.objOf([
   // TODO: Is this used?
   FieldSchema.defaulted('useFixed', false),
   FieldSchema.strict('blockerClass'),
@@ -97,6 +97,6 @@ const schema: FieldProcessorAdt[] = [
   Fields.output('dragger', {
     handlers
   })
-];
+]);
 
 export default schema;

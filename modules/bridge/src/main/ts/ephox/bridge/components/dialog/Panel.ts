@@ -1,26 +1,26 @@
 import { BodyComponentApi, BodyComponent } from './BodyComponent';
 import { Result } from '@ephox/katamari';
 import { ValueSchema, FieldSchema, FieldPresence } from '@ephox/boulder';
-import { alertBannerFields } from './AlertBanner';
+import { alertBannerSchema } from './AlertBanner';
 import { createBarFields } from './Bar';
-import { buttonFields } from './Button';
-import { checkboxFields } from './Checkbox';
-import { colorInputFields } from './ColorInput';
-import { colorPickerFields } from './ColorPicker';
-import { dropZoneFields } from './Dropzone';
+import { buttonSchema } from './Button';
+import { checkboxSchema } from './Checkbox';
+import { colorInputSchema } from './ColorInput';
+import { colorPickerSchema } from './ColorPicker';
+import { dropZoneSchema } from './Dropzone';
 import { createGridFields } from './Grid';
-import { iframeFields } from './Iframe';
-import { inputFields } from './Input';
-import { selectBoxFields } from './SelectBox';
-import { sizeInputFields } from './SizeInput';
-import { textAreaFields } from './Textarea';
-import { urlInputFields } from './UrlInput';
-import { customEditorFields } from './CustomEditor';
-import { htmlPanelFields } from './HtmlPanel';
-import { imageToolsFields } from './ImageTools';
-import { collectionFields } from './Collection';
+import { iframeSchema } from './Iframe';
+import { inputSchema } from './Input';
+import { selectBoxSchema } from './SelectBox';
+import { sizeInputSchema } from './SizeInput';
+import { textAreaSchema } from './Textarea';
+import { urlInputSchema } from './UrlInput';
+import { customEditorSchema } from './CustomEditor';
+import { htmlPanelSchema } from './HtmlPanel';
+import { imageToolsSchema } from './ImageTools';
+import { collectionSchema } from './Collection';
 import { createLabelFields } from './Label';
-import { tableFields } from './Table';
+import { tableSchema } from './Table';
 
 export interface PanelApi {
   type: 'panel';
@@ -51,27 +51,27 @@ const createItemsField = (name: string) => {
 // We're using a thunk here so we can refer to panel fields
 export const itemSchema = ValueSchema.valueThunkOf(
   () => ValueSchema.choose('type', {
-    alertbanner: alertBannerFields,
-    bar: createBarFields(createItemsField('bar')),
-    button: buttonFields,
-    checkbox: checkboxFields,
-    colorinput: colorInputFields,
-    colorpicker: colorPickerFields,
-    dropzone: dropZoneFields,
-    grid: createGridFields(createItemsField('grid')),
-    iframe: iframeFields,
-    input: inputFields,
-    selectbox: selectBoxFields,
-    sizeinput: sizeInputFields,
-    textarea: textAreaFields,
-    urlinput: urlInputFields,
-    customeditor: customEditorFields,
-    htmlpanel: htmlPanelFields,
-    imagetools: imageToolsFields,
-    collection: collectionFields,
-    label: createLabelFields(createItemsField('label')),
-    table: tableFields,
-    panel: panelFields
+    alertbanner: alertBannerSchema,
+    bar: ValueSchema.objOf(createBarFields(createItemsField('bar'))),
+    button: buttonSchema,
+    checkbox: checkboxSchema,
+    colorinput: colorInputSchema,
+    colorpicker: colorPickerSchema,
+    dropzone: dropZoneSchema,
+    grid: ValueSchema.objOf(createGridFields(createItemsField('grid'))),
+    iframe: iframeSchema,
+    input: inputSchema,
+    selectbox: selectBoxSchema,
+    sizeinput: sizeInputSchema,
+    textarea: textAreaSchema,
+    urlinput: urlInputSchema,
+    customeditor: customEditorSchema,
+    htmlpanel: htmlPanelSchema,
+    imagetools: imageToolsSchema,
+    collection: collectionSchema,
+    label: ValueSchema.objOf(createLabelFields(createItemsField('label'))),
+    table: tableSchema,
+    panel: panelSchema
   })
 );
 

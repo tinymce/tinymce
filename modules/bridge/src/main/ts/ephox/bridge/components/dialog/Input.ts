@@ -16,7 +16,7 @@ export interface Input extends FormComponentWithLabel {
   disabled: boolean;
 }
 
-export const inputFields = formComponentWithLabelFields.concat([
+const inputFields = formComponentWithLabelFields.concat([
   FieldSchema.optionString('placeholder'),
   FieldSchema.defaultedBoolean('maximized', false),
   FieldSchema.defaultedBoolean('disabled', false)

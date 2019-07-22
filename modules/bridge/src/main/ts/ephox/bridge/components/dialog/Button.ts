@@ -21,7 +21,7 @@ export interface Button {
   borderless: boolean;
 }
 
-export const buttonFields = [
+const buttonFields = [
   FieldSchema.strictString('type'),
   FieldSchema.strictString('text'),
   FieldSchema.defaultedBoolean('disabled', false),

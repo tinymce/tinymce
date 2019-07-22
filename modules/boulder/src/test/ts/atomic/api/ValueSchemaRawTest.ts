@@ -314,12 +314,12 @@ UnitTest.test('ValueSchemaRawTest', function () {
       const processor = ValueSchema.choose(
         'type',
         {
-          general: [
+          general: ValueSchema.objOf([
             FieldSchema.strict('cards')
-          ],
-          other: [
+          ]),
+          other: ValueSchema.objOf([
             FieldSchema.strict('houses')
-          ]
+          ])
         }
       );
 

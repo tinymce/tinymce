@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Option } from '@ephox/katamari';
 
 import * as EditableFields from '../../alien/EditableFields';
@@ -102,7 +102,7 @@ const builder = (detail: WidgetItemDetail) => {
   };
 };
 
-const schema = [
+const schema = ValueSchema.objOf([
   FieldSchema.strict('uid'),
   FieldSchema.strict('data'),
   FieldSchema.strict('components'),
@@ -115,6 +115,6 @@ const schema = [
   // We don't have the uid at this point
   AlloyParts.defaultUidsSchema(WidgetParts.parts()),
   Fields.output('builder', builder)
-];
+]);
 
 export default schema;

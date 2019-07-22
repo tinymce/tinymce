@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
@@ -15,10 +15,10 @@ const builder = (detail: SeparatorItemDetail) => {
   };
 };
 
-const schema = [
+const schema = ValueSchema.objOf([
   FieldSchema.strict('dom'),
   FieldSchema.strict('components'),
   Fields.output('builder', builder)
-];
+]);
 
 export default schema;

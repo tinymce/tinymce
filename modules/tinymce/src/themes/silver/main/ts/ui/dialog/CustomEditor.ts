@@ -9,12 +9,13 @@ import { AddEventsBehaviour, AlloyEvents, Behaviour, Memento, Representing, Simp
 import { Cell, Option } from '@ephox/katamari';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
-import { Omit } from '../Omit';
 import { Types } from '@ephox/bridge';
 import Scripts from 'tinymce/core/api/Scripts';
 
-type CustomEditorSpec = Omit<Types.CustomEditor.CustomEditor, 'type'>;
+type CustomEditorSpec = Types.CustomEditor.CustomEditor;
 type CustomEditorInitFn = Types.CustomEditor.CustomEditorInitFn;
+
+const isOldCustomEditor = (spec: CustomEditorSpec): spec is Types.CustomEditor.CustomEditorOld => Object.prototype.hasOwnProperty.call(spec, 'init');
 
 export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
   const editorApi = Cell(Option.none());
@@ -36,8 +37,11 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
       AddEventsBehaviour.config('editor-foo-events', [
         AlloyEvents.runOnAttached((component) => {
           memReplaced.getOpt(component).each((ta) => {
-            Scripts.load(spec.scriptId, spec.scriptUrl).then(
-              (init: CustomEditorInitFn) => init(ta.element().dom())
+            (isOldCustomEditor(spec)
+            ? spec.init(ta.element().dom())
+            : Scripts.load(spec.scriptId, spec.scriptUrl).then(
+                (init: CustomEditorInitFn) => init(ta.element().dom(), spec.settings)
+              )
             ).then((ea) => {
               initialValue.get().each((cvalue) => {
                 ea.setValue(cvalue);

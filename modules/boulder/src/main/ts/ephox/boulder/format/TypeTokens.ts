@@ -6,12 +6,12 @@ export type SetOfTypeProcessor = (validator: ValueValidator, valueType: Processo
 export type ArrOfTypeProcessor = (prop: Processor) => any;
 export type ObjOfTypeProcessor = (fields: FieldProcessorAdt[]) => any;
 export type ItemOfTypeProcessor = (validator: ValueValidator) => any;
-export type ChoiceOfTypeProcessor = (key: string, branches: { [key: string]: FieldProcessorAdt[]; }) => any;
+export type ChoiceOfTypeProcessor = (key: string, branches: Record<string, Processor>) => any;
 export type ThunkTypeProcessor = (description: string) => any;
 export type FuncTypeProcessor = (args: string[], schema: Processor) => any;
 
 export interface TypeProcessorAdt extends Adt {
-  fold<T>(SetOfTypeProcessor, ArrOfTypeProcessor, ObjOfTypeProcessor, ItemOfTypeProcessor, ChoiceOfTypeProcessor, ThunkTypeProcessor, FuncTypeProcessor): T;
+  fold<T>(SetOfTypeProcessor, ArrOfTypeProcessor, ObjOfTypeProcessor, ItemOfTypeProcessor, ChoiceOfTypeProcessor: (key: string, branches: Record<string, Processor>) => T, ThunkTypeProcessor, FuncTypeProcessor): T;
 }
 
 export type OnFieldFieldProcessor = (name: string, presence: FieldPresenceAdt, type: Processor) => any;
@@ -26,7 +26,7 @@ const typeAdt: {
   arrOf: (valueType: Processor) => TypeProcessorAdt;
   objOf: (fields: FieldProcessorAdt[]) => TypeProcessorAdt;
   itemOf: (validator: ValueValidator) => TypeProcessorAdt;
-  choiceOf: (key: string, branches: { [key: string]: FieldProcessorAdt[]; }) => TypeProcessorAdt;
+  choiceOf: (key: string, branches: Record<string, Processor>) => TypeProcessorAdt;
   thunk: (description: string) => TypeProcessorAdt;
   func: (args: string[], outputSchema: Processor) => TypeProcessorAdt;
 } = Adt.generate([

@@ -318,10 +318,12 @@ export default () => {
   });`;
 
   const customEditorSpec = renderCustomEditor({
+    type: 'customeditor',
     name: 'customeditor',
     tag: 'textarea',
     scriptId: 'myscript',
-    scriptUrl: myScriptDataUri
+    scriptUrl: myScriptDataUri,
+    settings: undefined
   });
 
   const alertBannerSpec = renderAlertBanner({

@@ -1,10 +1,10 @@
 import { Fun, Result, Type } from '@ephox/katamari';
 
 import { arrOf, ValueProcessorAdt, func, Processor, thunk, value, valueThunk, ValueValidator, setOf as doSetOf, objOf, objOfOnly, arrOfObj as _arrOfObj } from '../core/ValueProcessor';
-import { formatErrors, formatObj} from '../format/PrettyPrinter';
+import { formatErrors, formatObj } from '../format/PrettyPrinter';
 import { choose as _choose } from '../core/ChoiceProcessor';
 import { SimpleResult } from '../alien/SimpleResult';
-export interface SchemaError <T> {
+export interface SchemaError<T> {
   input: T;
   errors: any[];
 }
@@ -33,7 +33,7 @@ const setOf = (validator: (a) => Result<any, any>, prop: Processor): Processor =
 };
 
 const extract = function (label: string, prop: Processor, strength, obj: any): SimpleResult<any, any> {
-  const res = prop.extract([ label ], strength, obj);
+  const res = prop.extract([label], strength, obj);
   return SimpleResult.mapError(res, (errs) => {
     return { input: obj, errors: errs };
   });
@@ -76,7 +76,7 @@ const formatError = function (errInfo: SchemaError<any>): string {
     '\n\nInput object: ' + formatObj(errInfo.input);
 };
 
-const choose = function (key: string, branches: any): Processor {
+const choose = function (key: string, branches: Record<string, Processor>): Processor {
   return _choose(key, branches);
 };
 
@@ -104,6 +104,34 @@ const number = typedValue(Type.isNumber, 'number');
 const string = typedValue(Type.isString, 'string');
 const boolean = typedValue(Type.isBoolean, 'boolean');
 const functionProcessor = typedValue(Type.isFunction, 'function');
+
+// Test if a value is clonable by the structured clone algorithm
+// https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
+// from https://stackoverflow.com/a/32673910/7377237 with minor adjustments for typescript
+const isCloneable = (val: any) => {
+  if (Object(val) !== val) { // Primitive value
+    return true;
+  }
+  switch ({}.toString.call(val).slice(8, -1)) { // Class
+    case 'Boolean': case 'Number': case 'String': case 'Date':
+    case 'RegExp': case 'Blob': case 'FileList':
+    case 'ImageData': case 'ImageBitmap': case 'ArrayBuffer':
+      return true;
+    case 'Array': case 'Object':
+      return Object.keys(val).every((prop) => isCloneable(val[prop]));
+    case 'Map':
+      return [...val.keys()].every(isCloneable)
+        && [...val.values()].every(isCloneable);
+    case 'Set':
+      return [...val.keys()].every(isCloneable);
+    default:
+      return false;
+  }
+};
+
+const cloneable = value((a) => {
+  return isCloneable(a) ? SimpleResult.svalue(a) : SimpleResult.serror('Expected to be clonable by the structured clone algorithm');
+});
 
 export {
   anyValue,
@@ -137,5 +165,6 @@ export {
   number,
   string,
   boolean,
-  functionProcessor as func
+  functionProcessor as func,
+  cloneable
 };

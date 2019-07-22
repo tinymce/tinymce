@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Option } from '@ephox/katamari';
 
 import * as Fields from '../../data/Fields';
@@ -25,10 +25,10 @@ const placement = (component, anchorInfo: HotspotAnchor, origin) => {
   );
 };
 
-export default [
+export default ValueSchema.objOf([
   FieldSchema.strict('hotspot'),
   FieldSchema.option('bubble'),
   FieldSchema.defaulted('overrides', { }),
   AnchorLayouts.schema(),
   Fields.output('placement', placement)
-];
+]);

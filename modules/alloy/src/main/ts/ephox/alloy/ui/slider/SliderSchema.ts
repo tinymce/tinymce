@@ -26,21 +26,21 @@ const SliderSchema: FieldProcessorAdt[] = [
   FieldSchema.strictOf('model', ValueSchema.choose(
     'mode',
     {
-      x: [
+      x: ValueSchema.objOf([
         FieldSchema.defaulted('minX', 0),
         FieldSchema.defaulted('maxX', 100),
         FieldSchema.state('value', (spec) => Cell(spec.mode.minX)),
         FieldSchema.strict('getInitialValue'),
         Fields.output('manager', HorizontalModel)
-      ],
-      y: [
+      ]),
+      y: ValueSchema.objOf([
         FieldSchema.defaulted('minY', 0),
         FieldSchema.defaulted('maxY', 100),
         FieldSchema.state('value', (spec) => Cell(spec.mode.minY)),
         FieldSchema.strict('getInitialValue'),
         Fields.output('manager', VerticalModel)
-      ],
-      xy: [
+      ]),
+      xy: ValueSchema.objOf([
         FieldSchema.defaulted('minX', 0),
         FieldSchema.defaulted('maxX', 100),
         FieldSchema.defaulted('minY', 0),
@@ -51,7 +51,7 @@ const SliderSchema: FieldProcessorAdt[] = [
         })),
         FieldSchema.strict('getInitialValue'),
         Fields.output('manager', TwoDModel)
-      ]
+      ])
     }
   )),
 

@@ -9,29 +9,58 @@ export interface CustomEditorInit {
   destroy: () =>  void;
 }
 
-export type CustomEditorInitFn = (elm: Element) => Promise<CustomEditorInit>;
+export type CustomEditorInitFn = (elm: Element, settings: any) => Promise<CustomEditorInit>;
 
-export interface CustomEditorApi extends FormComponentApi {
+interface CustomEditorOldApi extends FormComponentApi {
+  type: 'customeditor';
+  tag?: string;
+  init: (e: Element) => Promise<CustomEditorInit>;
+}
+
+interface CustomEditorNewApi extends FormComponentApi {
   type: 'customeditor';
   tag?: string;
   scriptId: string;
   scriptUrl: string;
+  settings?: any;
 }
 
-export interface CustomEditor extends FormComponent {
+export type CustomEditorApi = CustomEditorOldApi | CustomEditorNewApi;
+
+export interface CustomEditorOld extends FormComponent {
+  type: 'customeditor';
+  tag: string;
+  init: (e: Element) => Promise<CustomEditorInit>;
+}
+
+export interface CustomEditorNew extends FormComponent {
   type: 'customeditor';
   tag: string;
   scriptId: string;
   scriptUrl: string;
+  settings: any;
 }
 
-export const customEditorFields = formComponentFields.concat([
+export type CustomEditor = CustomEditorOld | CustomEditorNew;
+
+const customEditorFields = formComponentFields.concat([
   FieldSchema.defaultedString('tag', 'textarea'),
   FieldSchema.strictString('scriptId'),
-  FieldSchema.strictString('scriptUrl')
+  FieldSchema.strictString('scriptUrl'),
+  FieldSchema.defaultedCloneable('settings', undefined)
 ]);
 
-export const customEditorSchema = ValueSchema.objOf(customEditorFields);
+const customEditorFieldsOld = formComponentFields.concat([
+  FieldSchema.strictString('type'),
+  FieldSchema.defaultedString('tag', 'textarea'),
+  FieldSchema.strictFunction('init')
+]);
+
+export const customEditorSchema = ValueSchema.valueOf(
+  (v) => ValueSchema.asRaw('branch.1', ValueSchema.objOf(customEditorFields), v).orThunk(
+    () => ValueSchema.asRaw('branch.2', ValueSchema.objOf(customEditorFieldsOld), v)
+  )
+);
 
 export const customEditorDataProcessor = ValueSchema.string;
 

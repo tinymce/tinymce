@@ -39,10 +39,12 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
     (store, doc, body) => {
       return GuiFactory.build(
         renderCustomEditor({
+          type: 'customeditor',
           name: 'customeditor',
           tag: 'textarea',
           scriptId: 'BasicCustomEditorTest',
-          scriptUrl: dataScript
+          scriptUrl: dataScript,
+          settings: undefined
          })
       );
     },
