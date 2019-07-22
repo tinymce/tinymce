@@ -82,7 +82,7 @@ const setupContextToolbars = function (editor: Editor) {
       onSetup: Actions.toggleActiveState(editor)
     },
     label: 'Link',
-    predicate: (node) => !!Utils.getAnchorElement(editor, node) && Settings.hasContextToolbar(editor.settings),
+    predicate: (node) => !!Utils.getAnchorElement(editor, node) && Settings.hasContextToolbar(editor),
     initValue: () => {
       const elm = Utils.getAnchorElement(editor);
       return !!elm ? Utils.getHref(elm) : '';

@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingForceTabTest'
       Pipeline.async({}, [
         Log.stepsAsStep('TBA', 'NonBreaking: Undo level on insert tab', [
           tinyActions.sContentKeystroke(Keys.tab(), {}),
-          tinyApis.sAssertContent('<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>'),
+          tinyApis.sAssertContent('<p><span class="mce-nbsp-wrap" contenteditable="false">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>'),
           Step.sync(function () {
             editor.undoManager.undo();
           }),

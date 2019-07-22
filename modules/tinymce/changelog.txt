@@ -1,9 +1,16 @@
-Version 5.0.12 (TBD)
-    Fixed issue where autolink spacebar event was not being fired on Edge #TINY-3891
-    Fixed table selection missing the background color #TINY-3892
+Version 5.0.13 (TBD)
+    Added new `draggable_modal` option to enable dragging of modal dialogs #TINY-3873
+    Changed backspace behaviour in lists to outdent nested list items #TINY-3651
+    Fixed `default_link_target` not being respected when `target_list` is disabled #TINY-3757
+    Added wrapping to user-inserted nbsps, which can be disabled using the `nonbreaking_wrap` setting #TINY-3647
+    Fixed mobile plugin filter to only apply to the mobile theme, rather than all mobile platforms #TINY-3405
+    Fixed focus switching to another editor during mode changes #TINY-3852
+Version 5.0.12 (2019-07-18)
     Added ability to utilize UI dialog panels inside other panels #TINY-3305
     Added help dialog tab explaining keyboard navigation of the editor #TINY-3603
     Changed the "Find and Replace" design to an inline dialog #TINY-3054
+    Fixed issue where autolink spacebar event was not being fired on Edge #TINY-3891
+    Fixed table selection missing the background color #TINY-3892
     Fixed removing shortcuts not working for function keys #TINY-3871
     Fixed non-descriptive UI component type names #TINY-3349
     Fixed UI registry components rendering as the wrong type when manually specifying a different type #TINY-3385
@@ -11,7 +18,6 @@ Version 5.0.12 (TBD)
     Fixed the context toolbar not using viable screen space in inline/distraction free mode #TINY-3717
     Fixed the context toolbar overlapping the toolbar in various conditions #TINY-3205
     Fixed IE11 edge case where items were being inserted into the wrong location #TINY-3884
-    Fixed focus switching to another editor during mode changes #TINY-3852
 Version 5.0.11 (2019-07-04)
     Fixed packaging errors caused by a rollup treeshaking bug (https://github.com/rollup/rollup/issues/2970) #TINY-3866
     Fixed the customeditor component not able to get data from the dialog api #TINY-3866

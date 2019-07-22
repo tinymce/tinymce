@@ -160,7 +160,7 @@ const parseCurrentLine = function (editor, endOffset, delimiter) {
     editor.selection.setRng(rng);
     editor.execCommand('createlink', false, matches[1] + matches[2]);
 
-    if (defaultLinkTarget) {
+    if (defaultLinkTarget !== false) {
       editor.dom.setAttrib(editor.selection.getNode(), 'target', defaultLinkTarget);
     }
 

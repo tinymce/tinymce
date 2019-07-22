@@ -49,7 +49,7 @@ export interface DialogSpec {
 const getHeader = (title: string, backstage: UiFactoryBackstage) => {
   return renderModalHeader({
     title: backstage.shared.providers.translate(title),
-    draggable: true
+    draggable: backstage.dialog.isDraggableModal()
   }, backstage.shared.providers);
 };
 
