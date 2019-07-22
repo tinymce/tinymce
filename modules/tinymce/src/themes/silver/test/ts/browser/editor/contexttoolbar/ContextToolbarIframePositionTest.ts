@@ -46,6 +46,7 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
             '<p style="height: 100px"></p>' +
             '<p style="height: 100px"></p>'
           ),
+          tinyApis.sFocus,
           sScrollTo(0, 200),
           tinyApis.sSetCursor(scenario.cursor.elementPath, scenario.cursor.offset),
           UiFinder.sWaitForVisible('Waiting for toolbar to appear above content', Body.body(), '.tox-pop.tox-pop--bottom' + scenario.classes),
