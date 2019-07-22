@@ -1,7 +1,7 @@
-import { Option } from '@ephox/katamari';
 import { Css, Location, Scroll, Traverse, Element, Height, Width } from '@ephox/sugar';
 
 import { Bounds } from '../../alien/Boxes';
+import { cap } from '../../alien/Cycles';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -26,47 +26,32 @@ const getCurrentCoord = (target: Element): DragCoord.CoordAdt => {
   });
 };
 
-const clampPos = (pos: number, offset: number, min: number, max: number) => {
-  const minInBounds = min <= pos;
-  const maxInBounds = max >= pos + offset;
-  const inBounds = maxInBounds && minInBounds;
-  if (inBounds) {
-    return pos;
-  } else if (maxInBounds) {
-    return min;
-  } else {
-    return max - offset;
-  }
-};
+const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, getBounds: () => Bounds): DragCoord.CoordAdt => {
+  const bounds = getBounds();
+  const absoluteCoord = DragCoord.asAbsolute(coords, scroll, origin);
 
-const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, getBounds: Option<() => Bounds>): DragCoord.CoordAdt => {
-  return getBounds.map((getBounds) => {
-    const bounds = getBounds();
-    const absoluteCoord = DragCoord.asAbsolute(coords, scroll, origin);
+  const height = Height.getOuter(component.element());
+  const width = Width.getOuter(component.element());
 
-    const height = Height.getOuter(component.element());
-    const width = Width.getOuter(component.element());
+  const newX = cap(absoluteCoord.left(), bounds.x(), bounds.width() - width);
+  const newY = cap(absoluteCoord.top(), bounds.y(), bounds.height() - height);
+  const newCoords = DragCoord.absolute(newX, newY);
 
-    const newX = clampPos(absoluteCoord.left(), width, bounds.x(), bounds.width());
-    const newY = clampPos(absoluteCoord.top(), height, bounds.y(), bounds.height());
-    const newCoords = DragCoord.absolute(newX, newY);
-
-    // Translate the absolute coord back into the previous type
-    return coords.fold(
-      // offset
-      () => {
-        const offset = DragCoord.asOffset(newCoords, scroll, origin);
-        return DragCoord.offset(offset.left(), offset.top());
-      },
-      // absolute
-      () => newCoords,
-      // fixed
-      () => {
-        const fixed = DragCoord.asFixed(newCoords, scroll, origin);
-        return DragCoord.fixed(fixed.left(), fixed.top());
-      },
-    );
-  }).getOr(coords);
+  // Translate the absolute coord back into the previous type
+  return coords.fold(
+    // offset
+    () => {
+      const offset = DragCoord.asOffset(newCoords, scroll, origin);
+      return DragCoord.offset(offset.left(), offset.top());
+    },
+    // absolute
+    () => newCoords,
+    // fixed
+    () => {
+      const fixed = DragCoord.asFixed(newCoords, scroll, origin);
+      return DragCoord.fixed(fixed.left(), fixed.top());
+    },
+  );
 };
 
 const calcNewCoord = (component: AlloyComponent, dragConfig: DraggingConfig, currentCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, delta: SugarPosition): DragCoord.CoordAdt => {

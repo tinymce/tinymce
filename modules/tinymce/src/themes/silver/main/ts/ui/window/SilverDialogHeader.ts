@@ -9,7 +9,6 @@ import {
   AlloySpec,
   AlloyTriggers,
   Behaviour,
-  Boxes,
   Button,
   Container,
   DomFactory,
@@ -18,9 +17,8 @@ import {
   ModalDialog,
   Reflecting,
 } from '@ephox/alloy';
-import { window } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { SelectorFind, Scroll } from '@ephox/sugar';
+import { SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formCancelEvent } from '../general/FormEvents';
@@ -30,12 +28,6 @@ export interface WindowHeaderSpec {
   title: string;
   draggable: boolean;
 }
-
-const getDragBounds = () => {
-  // Bind dragging within the viewport
-  const scroll = Scroll.get();
-  return Boxes.bounds(scroll.left(), scroll.top(), window.innerWidth, window.innerHeight);
-};
 
 const renderClose = (providersBackstage: UiFactoryBackstageProviders) => {
   return Button.sketch({
@@ -109,8 +101,7 @@ const renderInlineHeader = (spec: WindowHeaderSpec, titleId: string, providersBa
           getSnapPoints: () => [ ],
           leftAttr: 'data-drag-left',
           topAttr: 'data-drag-top'
-        },
-        getBounds: getDragBounds
+        }
       }),
     ])
   });
@@ -137,7 +128,6 @@ const renderModalHeader = (spec: WindowHeaderSpec, providersBackstage: UiFactory
 };
 
 export {
-  getDragBounds,
   renderInlineHeader,
   renderModalHeader
 };

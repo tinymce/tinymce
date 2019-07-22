@@ -3,6 +3,7 @@ import { Fun } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 import { SelectorFind } from '@ephox/sugar';
 
+import * as Boxes from '../../alien/Boxes';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Dragging } from '../../api/behaviour/Dragging';
 import { Keying } from '../../api/behaviour/Keying';
@@ -14,7 +15,7 @@ import { ModalDialogDetail } from '../types/ModalDialogTypes';
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('lazySink'),
   FieldSchema.option('dragBlockClass'),
-  FieldSchema.optionFunction('getDragBounds'),
+  FieldSchema.defaultedFunction('getBounds', Boxes.win),
   FieldSchema.defaulted('useTabstopAt', Fun.constant(true)),
   FieldSchema.defaulted('eventOrder', {}),
   SketchBehaviours.field('modalBehaviours', [ Keying ]),
@@ -43,7 +44,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
                 Json.stringify(spec, null, 2)
               ).message
             ),
-            getBounds: detail.getDragBounds.getOrUndefined()
+            getBounds: detail.getDragBounds
           })
         ])
       };

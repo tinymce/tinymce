@@ -23,7 +23,7 @@ export interface ModalDialogDetail extends CompositeSketchDetail {
 
   lazySink: LazySink;
   dragBlockClass: Option<string>;
-  getDragBounds: Option<() => Bounds>;
+  getDragBounds: () => Bounds;
 }
 
 export interface ModalDialogSpec extends CompositeSketchSpec {

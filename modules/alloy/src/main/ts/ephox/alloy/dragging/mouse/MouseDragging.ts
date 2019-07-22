@@ -2,6 +2,7 @@ import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { MouseEvent } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 
+import * as Boxes from '../../alien/Boxes';
 import DelayedFunction from '../../alien/DelayedFunction';
 import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
@@ -93,7 +94,7 @@ const schema: FieldProcessorAdt[] = [
   FieldSchema.defaulted('onDrag', Fun.noop),
   FieldSchema.defaulted('repositionTarget', true),
   Fields.onHandler('onDrop'),
-  FieldSchema.optionFunction('getBounds'),
+  FieldSchema.defaultedFunction('getBounds', Boxes.win),
   SnapSchema,
   Fields.output('dragger', {
     handlers

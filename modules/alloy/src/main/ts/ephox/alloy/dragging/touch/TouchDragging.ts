@@ -1,6 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
+import * as Boxes from '../../alien/Boxes';
 import { SugarPosition, SugarEvent } from '../../alien/TypeDefinitions';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
@@ -44,7 +45,7 @@ const schema = [
   FieldSchema.defaulted('onDrag', Fun.noop),
   FieldSchema.defaulted('repositionTarget', true),
   FieldSchema.defaulted('onDrop', Fun.noop),
-  FieldSchema.optionFunction('getBounds'),
+  FieldSchema.defaultedFunction('getBounds', Boxes.win),
   SnapSchema,
   Fields.output('dragger', {
     handlers

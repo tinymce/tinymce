@@ -56,7 +56,7 @@ export interface DraggingConfig {
   onDrop: (comp: AlloyComponent, Element) => void;
   repositionTarget: boolean;
   onDrag: (comp: AlloyComponent, target: Element, delta: SugarPosition) => void;
-  getBounds: Option<() => Bounds>;
+  getBounds: () => Bounds;
 }
 
 export interface CommonDraggingConfigSpec {

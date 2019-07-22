@@ -1,10 +1,9 @@
 import { Adt, Option, Fun } from '@ephox/katamari';
 import { Element, Position, Scroll, Width, Height } from '@ephox/sugar';
 
+import * as Boxes from '../../alien/Boxes';
 import { css as NuRepositionCss, RepositionCss, RepositionDecision} from '../view/Reposition';
 import * as Direction from './Direction';
-import { Bounds, bounds } from '../../alien/Boxes';
-import * as Boxes from '../layout/Boxes';
 import * as OuterPosition from '../../frame/OuterPosition';
 
 export interface OriginAdt extends Adt {
@@ -81,7 +80,7 @@ const reposition = (origin: OriginAdt, decision: RepositionDecision): Reposition
   });
 };
 
-const toBox = (origin: OriginAdt, element: Element): Bounds => {
+const toBox = (origin: OriginAdt, element: Element): Boxes.Bounds => {
   const rel = Fun.curry(OuterPosition.find, element);
   const position = origin.fold(rel, rel, () => {
     const scroll = Scroll.get();
@@ -91,16 +90,16 @@ const toBox = (origin: OriginAdt, element: Element): Bounds => {
 
   const width = Width.getOuter(element);
   const height = Height.getOuter(element);
-  return bounds(position.left(), position.top(), width, height);
+  return Boxes.bounds(position.left(), position.top(), width, height);
 };
 
-const viewport = (origin: OriginAdt, getBounds: Option<() => Bounds>): Bounds => {
+const viewport = (origin: OriginAdt, getBounds: Option<() => Boxes.Bounds>): Boxes.Bounds => {
   return getBounds.fold(() => {
     /* There are no bounds supplied */
-    return origin.fold(Boxes.win, Boxes.win, bounds);
+    return origin.fold(Boxes.win, Boxes.win, Boxes.bounds);
   }, (b) => {
     /* Use any bounds supplied or make a bounds from the whole viewport for fixed. */
-    return origin.fold(b, b, bounds);
+    return origin.fold(b, b, Boxes.bounds);
   });
 };
 

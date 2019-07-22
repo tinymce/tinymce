@@ -30,7 +30,7 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { FormBlockEvent, formCancelEvent } from '../general/FormEvents';
 import NavigableObject from '../general/NavigableObject';
 import { dialogChannel } from './DialogChannels';
-import { renderModalHeader, getDragBounds } from './SilverDialogHeader';
+import { renderModalHeader } from './SilverDialogHeader';
 
 export interface WindowExtra<T> {
   redial?: (newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>;
@@ -153,7 +153,6 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
         ...spec.footer.toArray()
       ],
       dragBlockClass: 'tox-dialog-wrap',
-      getDragBounds,
       parts: {
         blocker: {
           dom: DomFactory.fromHtml('<div class="tox-dialog-wrap"></div>'),
@@ -172,7 +171,6 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
 };
 
 export {
-  getDragBounds,
   getHeader,
   getEventExtras,
   renderModalDialog
