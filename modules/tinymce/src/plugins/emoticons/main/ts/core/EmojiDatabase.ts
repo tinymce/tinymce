@@ -38,7 +38,7 @@ const categoryNameMap = {
 };
 
 // Do we have a better way of doing this in tinymce?
-const GLOBAL_NAME = 'emoticons_plugin_database';
+const ID_PREFIX = 'tinymce.plugins.emoticons.';
 
 export interface EmojiDatabase {
   listCategory: (category: string) => EmojiEntry[];
@@ -60,8 +60,16 @@ const getUserDefinedEmoticons = (editor: Editor) => {
   });
 };
 
+const getFilename = (url: string) => {
+  const m = /([^\/\\]+)$/.exec(url);
+  if (m !== null) {
+    return m[1];
+  }
+  return '';
+};
+
 // TODO: Consider how to share this loading across different editors
-const initDatabase = (editor: Editor, databaseUrl: string): EmojiDatabase => {
+const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string = ID_PREFIX + getFilename(databaseUrl)): EmojiDatabase => {
   const categories = Cell<Option<Record<string, EmojiEntry[]>>>(Option.none());
   const all = Cell<Option<EmojiEntry[]>>(Option.none());
 
@@ -87,7 +95,7 @@ const initDatabase = (editor: Editor, databaseUrl: string): EmojiDatabase => {
   };
 
   editor.on('init', () => {
-    Scripts.load(GLOBAL_NAME, databaseUrl).then((emojis) => {
+    Scripts.load(databaseId, databaseUrl).then((emojis) => {
       const userEmojis = getUserDefinedEmoticons(editor);
       processEmojis(Merger.merge(emojis, userEmojis));
     }, () => {
