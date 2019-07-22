@@ -1,4 +1,5 @@
 Version 5.0.13 (TBD)
+    Fixed issue with being able to delete contenteditable false elements inside other contenteditable false elements #TINY-3868
     Added new `draggable_modal` option to enable dragging of modal dialogs #TINY-3873
     Changed backspace behaviour in lists to outdent nested list items #TINY-3651
     Fixed `default_link_target` not being respected when `target_list` is disabled #TINY-3757

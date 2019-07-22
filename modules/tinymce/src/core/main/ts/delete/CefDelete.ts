@@ -6,13 +6,14 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import { Remove, Element, SelectorFilter } from '@ephox/sugar';
+import { Remove, Element, SelectorFilter, Traverse, PredicateExists } from '@ephox/sugar';
 import CaretPosition from '../caret/CaretPosition';
 import * as CefDeleteAction from './CefDeleteAction';
 import DeleteElement from './DeleteElement';
 import DeleteUtils from './DeleteUtils';
 import NodeType from '../dom/NodeType';
 import Editor from '../api/Editor';
+import { Node } from '@ephox/dom-globals';
 
 const deleteElement = function (editor: Editor, forward) {
   return function (element) {
@@ -37,16 +38,25 @@ const moveToPosition = function (editor: Editor) {
   };
 };
 
-const backspaceDeleteCaret = function (editor: Editor, forward: boolean) {
-  const result = CefDeleteAction.read(editor.getBody(), forward, editor.selection.getRng()).map(function (deleteAction) {
-    return deleteAction.fold(
-      deleteElement(editor, forward),
-      moveToElement(editor, forward),
-      moveToPosition(editor)
-    );
-  });
+const hasAncestorCef = (node: Node) => PredicateExists.ancestor(
+  Element.fromDom(node),
+  (e) => NodeType.isContentEditableFalse(e.dom())
+);
 
-  return result.getOr(false);
+const backspaceDeleteCaret = function (editor: Editor, forward: boolean) {
+  const selectedNode = editor.selection.getNode(); // is the parent node if cursor before/after cef
+  if (!NodeType.isContentEditableFalse(selectedNode) && !hasAncestorCef(selectedNode)) {
+    const result = CefDeleteAction.read(editor.getBody(), forward, editor.selection.getRng()).map(function (deleteAction) {
+      return deleteAction.fold(
+        deleteElement(editor, forward),
+        moveToElement(editor, forward),
+        moveToPosition(editor)
+      );
+    });
+
+    return result.getOr(false);
+  }
+  return false;
 };
 
 const deleteOffscreenSelection = function (rootElement) {
@@ -54,15 +64,14 @@ const deleteOffscreenSelection = function (rootElement) {
 };
 
 const backspaceDeleteRange = function (editor: Editor, forward: boolean) {
-  const selectedElement = editor.selection.getNode();
-  if (NodeType.isContentEditableFalse(selectedElement)) {
+  const selectedNode = editor.selection.getNode(); // is the cef node if cef is selected
+  if (NodeType.isContentEditableFalse(selectedNode) && !hasAncestorCef(selectedNode)) {
     deleteOffscreenSelection(Element.fromDom(editor.getBody()));
     DeleteElement.deleteElement(editor, forward, Element.fromDom(editor.selection.getNode()));
     DeleteUtils.paddEmptyBody(editor);
     return true;
-  } else {
-    return false;
   }
+  return false;
 };
 
 const getContentEditableRoot = function (root, node) {
@@ -93,9 +102,9 @@ const paddEmptyElement = function (editor: Editor) {
 
 const backspaceDelete = function (editor: Editor, forward) {
   if (editor.selection.isCollapsed()) {
-    return backspaceDeleteCaret(editor, forward);
+  return backspaceDeleteCaret(editor, forward);
   } else {
-    return backspaceDeleteRange(editor, forward);
+  return backspaceDeleteRange(editor, forward);
   }
 };
 
