@@ -7,7 +7,7 @@
 
 import { Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Element, PredicateExists, Remove, SelectorFilter } from '@ephox/sugar';
+import { Element, Remove, SelectorFilter } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
 import NodeType from '../dom/NodeType';
@@ -38,14 +38,14 @@ const moveToPosition = function (editor: Editor) {
   };
 };
 
-const hasAncestorCef = (node: Node) => PredicateExists.ancestor(
-  Element.fromDom(node),
-  (e) => NodeType.isContentEditableFalse(e.dom())
-);
+const hasAncestorCef = (editor, node: Node) => {
+  const ceRoot = getContentEditableRoot(editor.getBody(), node);
+  return ceRoot !== null ? NodeType.isContentEditableFalse(ceRoot) : false;
+};
 
 const backspaceDeleteCaret = function (editor: Editor, forward: boolean) {
   const selectedNode = editor.selection.getNode(); // is the parent node if cursor before/after cef
-  if (!NodeType.isContentEditableFalse(selectedNode) && !hasAncestorCef(selectedNode)) {
+  if (!NodeType.isContentEditableFalse(selectedNode) && !hasAncestorCef(editor, selectedNode)) {
     const result = CefDeleteAction.read(editor.getBody(), forward, editor.selection.getRng()).map(function (deleteAction) {
       return deleteAction.fold(
         deleteElement(editor, forward),
@@ -65,8 +65,8 @@ const deleteOffscreenSelection = function (rootElement) {
 
 const backspaceDeleteRange = function (editor: Editor, forward: boolean) {
   const selectedNode = editor.selection.getNode(); // is the cef node if cef is selected
-  if (NodeType.isContentEditableFalse(selectedNode) && !hasAncestorCef(selectedNode)) {
-    deleteOffscreenSelection(Element.fromDom(editor.getBody()));
+  deleteOffscreenSelection(Element.fromDom(editor.getBody())); // needs to happen either way
+  if (NodeType.isContentEditableFalse(selectedNode) && !hasAncestorCef(editor, selectedNode)) {
     DeleteElement.deleteElement(editor, forward, Element.fromDom(editor.selection.getNode()));
     DeleteUtils.paddEmptyBody(editor);
     return true;
