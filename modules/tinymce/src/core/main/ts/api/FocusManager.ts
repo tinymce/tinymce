@@ -31,7 +31,8 @@ interface FocusManager {
  */
 const isEditorUIElement = function (elm: Element) {
   // Needs to be converted to string since svg can have focus: #6776
-  return elm.className.toString().indexOf('tox-') !== -1 || elm.className.toString().indexOf('mce-') !== -1;
+  const className = elm.className.toString();
+  return className.indexOf('tox-') !== -1 || className.indexOf('mce-') !== -1;
 };
 
 const FocusManager: FocusManager = {

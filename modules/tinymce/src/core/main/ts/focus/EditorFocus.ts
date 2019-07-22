@@ -63,7 +63,7 @@ const focusBody = (body) => {
   }
 };
 
-const hasElementFocus = (elm): boolean => {
+const hasElementFocus = (elm: Element): boolean => {
   return Focus.hasFocus(elm) || Focus.search(elm).isSome();
 };
 
@@ -77,11 +77,9 @@ const hasInlineFocus = (editor: Editor): boolean => {
 };
 
 const hasUiFocus = (editor: Editor): boolean => {
-  // editor container is the obvious one (Toolbar, Status bar, Sidebar)
-  return hasElementFocus(Element.fromDom(editor.getContainer())) ||
-    // Dialogs and menus are in an auxiliary element (silver theme specific)
-    // This can't use Focus.search() because only the theme has this element reference
-    Focus.active().filter((elem) => FocusController.isUIElement(editor, elem.dom())).isSome();
+  // Editor container is the obvious one (Menubar, Toolbar, Status bar, Sidebar) and dialogs and menus are in an auxiliary element (silver theme specific)
+  // This can't use Focus.search() because only the theme has this element reference
+  return Focus.active().filter((elem) => !FocusController.isEditorContentAreaElement(elem.dom()) && FocusController.isUIElement(editor, elem.dom())).isSome();
 };
 
 const hasFocus = (editor: Editor): boolean => editor.inline ? hasInlineFocus(editor) : hasIframeFocus(editor);
