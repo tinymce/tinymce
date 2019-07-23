@@ -1,8 +1,10 @@
 import { ApproxStructure, Assertions, Pipeline, UnitTest } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body, Element, Insert, Remove } from '@ephox/sugar';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => {
+  SilverTheme();
 
   const toolbarContainer = Element.fromHtml('<div id="toolbar" style="margin: 50px 0;"></div>');
   Insert.append(Body.body(), toolbarContainer);
