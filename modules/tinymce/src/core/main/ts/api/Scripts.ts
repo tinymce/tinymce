@@ -22,9 +22,9 @@ const awaiter = (resolveCb: (data: any) => void, rejectCb: (err?: any) => void, 
   };
   const resolve = complete(resolveCb);
   const reject = complete(rejectCb);
-  const start = () => {
+  const start = (...args: Parameters<typeof reject>) => {
     if (!done && timer === null) {
-      timer = setTimeout(reject, timeout);
+      timer = setTimeout(() => reject.apply(null, args), timeout);
     }
   };
   return {
@@ -39,13 +39,15 @@ const create = (): Scripts => {
   const resultFns: Record<string, (data: any) => void> = {};
 
   const load = (id: string, url: string): Promise<any> => {
+    const loadErrMsg = `Script at URL ${url} failed to load`;
+    const runErrMsg = `Script at URL ${url} did not call \`tinymce.Scripts.add('${id}', data)\` within 1 second`;
     if (tasks[id] !== undefined) {
       return tasks[id];
     } else {
       const task = new Promise<any>((resolve, reject) => {
         const waiter = awaiter(resolve, reject);
         resultFns[id] = waiter.resolve;
-        ScriptLoader.ScriptLoader.loadScript(url, waiter.start, waiter.reject);
+        ScriptLoader.ScriptLoader.loadScript(url, () => waiter.start(runErrMsg), () => waiter.reject(loadErrMsg));
       });
       tasks[id] = task;
       return task;

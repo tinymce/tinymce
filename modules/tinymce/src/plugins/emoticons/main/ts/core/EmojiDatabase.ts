@@ -37,9 +37,6 @@ const categoryNameMap = {
   user: 'User Defined'
 };
 
-// Do we have a better way of doing this in tinymce?
-const ID_PREFIX = 'tinymce.plugins.emoticons.';
-
 export interface EmojiDatabase {
   listCategory: (category: string) => EmojiEntry[];
   hasLoaded: () => boolean;
@@ -60,16 +57,8 @@ const getUserDefinedEmoticons = (editor: Editor) => {
   });
 };
 
-const getFilename = (url: string) => {
-  const m = /([^\/\\]+)$/.exec(url);
-  if (m !== null) {
-    return m[1];
-  }
-  return '';
-};
-
 // TODO: Consider how to share this loading across different editors
-const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string = ID_PREFIX + getFilename(databaseUrl)): EmojiDatabase => {
+const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): EmojiDatabase => {
   const categories = Cell<Option<Record<string, EmojiEntry[]>>>(Option.none());
   const all = Cell<Option<EmojiEntry[]>>(Option.none());
 
@@ -98,10 +87,9 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string = 
     Scripts.load(databaseId, databaseUrl).then((emojis) => {
       const userEmojis = getUserDefinedEmoticons(editor);
       processEmojis(Merger.merge(emojis, userEmojis));
-    }, () => {
-      const err = `URL ${databaseUrl} did not contain the expected format for emoticons`;
+    }, (err) => {
       // tslint:disable-next-line:no-console
-      console.log(err);
+      console.log(`Failed to load emoticons: ${err}`);
       categories.set(Option.some({}));
       all.set(Option.some([]));
     });

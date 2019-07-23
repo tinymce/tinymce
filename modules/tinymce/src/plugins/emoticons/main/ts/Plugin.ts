@@ -22,7 +22,7 @@ import Settings from './api/Settings';
 export default function () {
   PluginManager.add('emoticons', function (editor, pluginUrl) {
     const databaseUrl = Settings.getEmoticonDatabaseUrl(editor, pluginUrl);
-    const databaseId = Settings.getEmoticonDatabaseId(editor, pluginUrl);
+    const databaseId = Settings.getEmoticonDatabaseId(editor);
 
     const database = initDatabase(editor, databaseUrl, databaseId);
 

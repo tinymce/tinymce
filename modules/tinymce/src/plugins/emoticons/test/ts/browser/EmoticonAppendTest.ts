@@ -84,6 +84,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AppendTest', (success, fai
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',
     emoticons_database_url: '/project/tinymce/src/plugins/emoticons/test/js/test-emojis.js',
+    emoticons_database_id: 'tinymce.plugins.emoticons.test-emojis.js',
     emoticons_append: {
       clock: {
         keywords: [ 'clock', 'time' ],
