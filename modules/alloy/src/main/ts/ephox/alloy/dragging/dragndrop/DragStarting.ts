@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { DataTransfer } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Element, Traverse, Body } from '@ephox/sugar';
@@ -33,7 +33,7 @@ const dragStart = (component: AlloyComponent, target: Element, config: DragStart
   });
 };
 
-const schema = ValueSchema.objOf([
+const schema: FieldProcessorAdt[] = [
   FieldSchema.defaultedString('type', 'text/plain'),
   FieldSchema.defaulted('phoneyTypes', []),
   FieldSchema.defaultedStringEnum('effectAllowed', 'all', ['copy', 'move', 'link', 'all', 'copyLink', 'linkMove', 'copyMove']),
@@ -75,6 +75,6 @@ const schema = ValueSchema.objOf([
       handlers
     };
   })
-]);
+];
 
 export default schema;

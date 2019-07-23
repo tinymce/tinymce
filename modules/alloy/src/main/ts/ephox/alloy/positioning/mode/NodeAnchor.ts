@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Option } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -20,7 +20,7 @@ const placement = (component: AlloyComponent, anchorInfo: NodeAnchor, origin: Or
   });
 };
 
-export default ValueSchema.objOf([
+export default [
   FieldSchema.strict('node'),
   FieldSchema.strict('root'),
   FieldSchema.option('bubble'),
@@ -29,4 +29,4 @@ export default ValueSchema.objOf([
   FieldSchema.defaulted('overrides', {}),
   FieldSchema.defaulted('showAbove', false),
   Fields.output('placement', placement)
-]);
+];

@@ -50,7 +50,7 @@ const createItemsField = (name: string) => {
 
 // We're using a thunk here so we can refer to panel fields
 export const itemSchema = ValueSchema.valueThunkOf(
-  () => ValueSchema.choose('type', {
+  () => ValueSchema.chooseProcessor('type', {
     alertbanner: alertBannerSchema,
     bar: ValueSchema.objOf(createBarFields(createItemsField('bar'))),
     button: buttonSchema,
@@ -75,7 +75,7 @@ export const itemSchema = ValueSchema.valueThunkOf(
   })
 );
 
-export const panelFields = [
+const panelFields = [
   FieldSchema.strictString('type'),
   FieldSchema.defaulted('classes', []),
   FieldSchema.strictArrayOf('items', itemSchema)

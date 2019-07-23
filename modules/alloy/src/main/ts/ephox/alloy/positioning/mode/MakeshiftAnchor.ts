@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Option } from '@ephox/katamari';
 
 import { bounds } from '../../alien/Boxes';
@@ -26,7 +26,7 @@ const placement = (component: AlloyComponent, anchorInfo: MakeshiftAnchor, origi
   );
 };
 
-export default ValueSchema.objOf([
+export default [
   FieldSchema.strict('x'),
   FieldSchema.strict('y'),
   FieldSchema.defaulted('height', 0),
@@ -35,4 +35,4 @@ export default ValueSchema.objOf([
   FieldSchema.defaulted('overrides', { }),
   AnchorLayouts.schema(),
   Fields.output('placement', placement)
-]);
+];

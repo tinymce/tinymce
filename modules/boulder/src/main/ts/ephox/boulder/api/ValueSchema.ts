@@ -1,9 +1,10 @@
-import { Fun, Result, Type } from '@ephox/katamari';
+import { Fun, Result, Type, Obj } from '@ephox/katamari';
 
 import { arrOf, ValueProcessorAdt, func, Processor, thunk, value, valueThunk, ValueValidator, setOf as doSetOf, objOf, objOfOnly, arrOfObj as _arrOfObj } from '../core/ValueProcessor';
 import { formatErrors, formatObj } from '../format/PrettyPrinter';
 import { choose as _choose } from '../core/ChoiceProcessor';
 import { SimpleResult } from '../alien/SimpleResult';
+import { FieldProcessorAdt } from '../format/TypeTokens';
 export interface SchemaError<T> {
   input: T;
   errors: any[];
@@ -76,8 +77,12 @@ const formatError = function (errInfo: SchemaError<any>): string {
     '\n\nInput object: ' + formatObj(errInfo.input);
 };
 
-const choose = function (key: string, branches: Record<string, Processor>): Processor {
+const chooseProcessor = function (key: string, branches: Record<string, Processor>): Processor {
   return _choose(key, branches);
+};
+
+const choose = function (key: string, branches: Record<string, FieldProcessorAdt[]>): Processor {
+  return _choose(key, Obj.map(branches, objOf));
 };
 
 const thunkOf = function (desc: string, schema: () => Processor): Processor {
@@ -157,6 +162,7 @@ export {
   formatError,
 
   choose,
+  chooseProcessor,
 
   thunkOf,
 

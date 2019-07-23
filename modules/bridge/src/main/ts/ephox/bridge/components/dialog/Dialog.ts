@@ -160,16 +160,16 @@ export const dialogButtonFields = [
   FieldSchema.strictString('text')
 ];
 
-const normalButtonFields = ValueSchema.objOf([
+const normalButtonFields = [
   FieldSchema.strictStringEnum('type', ['submit', 'cancel', 'custom']),
   ...dialogButtonFields
-]);
+];
 
-const menuButtonFields = ValueSchema.objOf([
+const menuButtonFields = [
   FieldSchema.strictStringEnum('type', ['menu']),
   ...baseButtonFields,
   ...baseMenuButtonFields
-]);
+];
 
 export const dialogButtonSchema = ValueSchema.choose(
   'type',
@@ -183,7 +183,7 @@ export const dialogButtonSchema = ValueSchema.choose(
 
 export const dialogSchema = ValueSchema.objOf([
   FieldSchema.strictString('title'),
-  FieldSchema.strictOf('body', ValueSchema.choose('type', {
+  FieldSchema.strictOf('body', ValueSchema.chooseProcessor('type', {
     panel: panelSchema,
     tabpanel: tabPanelSchema
   })),

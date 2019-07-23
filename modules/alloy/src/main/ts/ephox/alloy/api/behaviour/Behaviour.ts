@@ -68,7 +68,7 @@ const create = <C extends BehaviourConfigSpec, D extends BehaviourConfigDetail>(
 
 export interface BehaviourModeSpec {
   branchKey: string;
-  branches: Record<string, Processor>;
+  branches: Record<string, FieldProcessorAdt[]>;
   name: string;
   active?: any;
   apis?: { };

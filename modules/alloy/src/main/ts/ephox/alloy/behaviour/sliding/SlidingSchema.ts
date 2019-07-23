@@ -19,18 +19,18 @@ export default [
   FieldSchema.defaulted('expanded', false),
   FieldSchema.strictOf('dimension', ValueSchema.choose(
     'property', {
-      width: ValueSchema.objOf([
+      width: [
         Fields.output('property', 'width'),
         Fields.output('getDimension', (elem) => {
           return Width.get(elem) + 'px';
         })
-      ]),
-      height: ValueSchema.objOf([
+      ],
+      height: [
         Fields.output('property', 'height'),
         Fields.output('getDimension', (elem) => {
           return Height.get(elem) + 'px';
         })
-      ])
+      ]
     }
   ))
 

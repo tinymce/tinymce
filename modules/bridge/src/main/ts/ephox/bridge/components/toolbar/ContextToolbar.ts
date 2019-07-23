@@ -108,31 +108,31 @@ const contextBarFields = [
   FieldSchema.defaultedStringEnum('position', 'selection', ['node', 'selection', 'line']),
 ];
 
-const contextButtonSchema = ValueSchema.objOf(baseToolbarButtonFields.concat([
+const contextButtonFields = baseToolbarButtonFields.concat([
   FieldSchema.defaulted('type', 'contextformbutton'),
   FieldSchema.defaulted('primary', false),
   FieldSchema.strictFunction('onAction'),
   FieldSchema.state('original', Fun.identity)
-]));
+]);
 
-const contextToggleButtonSchema = ValueSchema.objOf(baseToolbarToggleButtonFields.concat([
+const contextToggleButtonFields = baseToolbarToggleButtonFields.concat([
   FieldSchema.defaulted('type', 'contextformbutton'),
   FieldSchema.defaulted('primary', false),
   FieldSchema.strictFunction('onAction'),
   FieldSchema.state('original', Fun.identity)
-]));
+]);
 
-const launchButtonSchema = ValueSchema.objOf(baseToolbarButtonFields.concat([
+const launchButtonFields = baseToolbarButtonFields.concat([
   FieldSchema.defaulted('type', 'contextformbutton')
-]));
+]);
 
-const launchToggleButtonSchema = ValueSchema.objOf(baseToolbarToggleButtonFields.concat([
+const launchToggleButtonFields = baseToolbarToggleButtonFields.concat([
   FieldSchema.defaulted('type', 'contextformtogglebutton')
-]));
+]);
 
 const toggleOrNormal = ValueSchema.choose('type', {
-  contextformbutton: contextButtonSchema,
-  contextformtogglebutton: contextToggleButtonSchema
+  contextformbutton: contextButtonFields,
+  contextformtogglebutton: contextToggleButtonFields
 });
 
 const contextFormSchema = ValueSchema.objOf([
@@ -141,8 +141,8 @@ const contextFormSchema = ValueSchema.objOf([
   FieldSchema.optionString('label'),
   FieldSchema.strictArrayOf('commands', toggleOrNormal),
   FieldSchema.optionOf('launch', ValueSchema.choose('type', {
-    contextformbutton: launchButtonSchema,
-    contextformtogglebutton: launchToggleButtonSchema
+    contextformbutton: launchButtonFields,
+    contextformtogglebutton: launchToggleButtonFields
   }))
 ].concat(contextBarFields));
 

@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 
 import * as Fields from '../../data/Fields';
 import * as RepresentState from './RepresentState';
@@ -25,7 +25,7 @@ const onUnload = (component, repConfig, repState) => {
   repState.clear();
 };
 
-export default ValueSchema.objOf([
+export default [
   FieldSchema.option('initialValue'),
   Fields.output('manager', {
     setValue,
@@ -34,4 +34,4 @@ export default ValueSchema.objOf([
     onUnload,
     state: RepresentState.memory
   })
-]);
+];

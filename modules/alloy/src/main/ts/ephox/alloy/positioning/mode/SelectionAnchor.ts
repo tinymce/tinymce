@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Window } from '@ephox/dom-globals';
 import { Option, Struct, Unicode } from '@ephox/katamari';
 import { Element, Insert, Node, Remove, Selection, Traverse, WindowSelection } from '@ephox/sugar';
@@ -63,7 +63,7 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
   return ContentAnchorCommon.calcNewAnchor(selectionBox, rootPoint, anchorInfo, origin, elem);
 };
 
-export default ValueSchema.objOf([
+export default [
   FieldSchema.option('getSelection'),
   FieldSchema.strict('root'),
   FieldSchema.option('bubble'),
@@ -71,4 +71,4 @@ export default ValueSchema.objOf([
   FieldSchema.defaulted('overrides', { }),
   FieldSchema.defaulted('showAbove', false),
   Fields.output('placement', placement)
-]);
+];

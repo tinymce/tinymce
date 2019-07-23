@@ -13,22 +13,22 @@ export default [
     mode: 'none'
   }, ValueSchema.choose(
     'mode', {
-      pressed: ValueSchema.objOf([
+      pressed: [
         FieldSchema.defaulted('syncWithExpanded', false),
         Fields.output('update', ToggleModes.updatePressed)
-      ]),
-      checked: ValueSchema.objOf([
+      ],
+      checked: [
         Fields.output('update', ToggleModes.updateChecked)
-      ]),
-      expanded: ValueSchema.objOf([
+      ],
+      expanded: [
         Fields.output('update', ToggleModes.updateExpanded)
-      ]),
-      selected: ValueSchema.objOf([
+      ],
+      selected: [
         Fields.output('update', ToggleModes.updateSelected)
-      ]),
-      none: ValueSchema.objOf([
+      ],
+      none: [
         Fields.output('update', Fun.noop)
-      ])
+      ]
     }
   ))
 ];

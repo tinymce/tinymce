@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import { SugarPosition, SugarEvent } from '../../alien/TypeDefinitions';
@@ -37,7 +37,7 @@ const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<Suga
   ]);
 };
 
-const schema = ValueSchema.objOf([
+const schema = [
   // Is this used?
   FieldSchema.defaulted('useFixed', false),
   FieldSchema.defaulted('getTarget', Fun.identity),
@@ -48,6 +48,6 @@ const schema = ValueSchema.objOf([
   Fields.output('dragger', {
     handlers
   })
-]);
+];
 
 export default schema;
