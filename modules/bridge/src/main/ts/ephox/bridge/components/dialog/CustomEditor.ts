@@ -57,8 +57,8 @@ const customEditorFieldsOld = formComponentFields.concat([
 ]);
 
 export const customEditorSchema = ValueSchema.valueOf(
-  (v) => ValueSchema.asRaw('branch.1', ValueSchema.objOf(customEditorFields), v).orThunk(
-    () => ValueSchema.asRaw('branch.2', ValueSchema.objOf(customEditorFieldsOld), v)
+  (v) => ValueSchema.asRaw('branch.1', ValueSchema.objOfOnly(customEditorFields), v).orThunk(
+    () => ValueSchema.asRaw('branch.2', ValueSchema.objOfOnly(customEditorFieldsOld), v)
   )
 );
 
