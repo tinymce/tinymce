@@ -299,7 +299,7 @@ export default () => {
     }
   }, backstage);
 
-  const myScriptDataUri = `data:text/javascript,tinymce.Scripts.add('myscript', function(el) {
+  const myScriptDataUri = `data:text/javascript,tinymce.Resource.add('myscript', function(el) {
     return new Promise(function (resolve) {
       var oldEl = el;
       var newEl = el.ownerDocument.createElement('span');

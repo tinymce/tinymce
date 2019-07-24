@@ -8,7 +8,7 @@
 import { console } from '@ephox/dom-globals';
 import { Cell, Merger, Obj, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import Scripts from 'tinymce/core/api/Scripts';
+import Resource from 'tinymce/core/api/Resource';
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
 import Settings from '../api/Settings';
@@ -84,7 +84,7 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
   };
 
   editor.on('init', () => {
-    Scripts.load(databaseId, databaseUrl).then((emojis) => {
+    Resource.load(databaseId, databaseUrl).then((emojis) => {
       const userEmojis = getUserDefinedEmoticons(editor);
       processEmojis(Merger.merge(emojis, userEmojis));
     }, (err) => {

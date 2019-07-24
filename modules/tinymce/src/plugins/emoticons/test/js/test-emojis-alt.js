@@ -1,5 +1,5 @@
 // NOTE: Source: npm package: emojilib, file:emojis.json
-window.tinymce.Scripts.add('tinymce.plugins.emoticons.test-emojis-alt.js', {
+window.tinymce.Resource.add('tinymce.plugins.emoticons.test-emojis-alt.js', {
   "red_car": {
     "keywords": ["red", "transportation", "vehicle"],
     "char": "🚗",

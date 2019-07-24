@@ -1,14 +1,14 @@
 import { UnitTest, assert } from '@ephox/bedrock';
 import { Global, Result } from '@ephox/katamari';
-import Scripts from 'tinymce/core/api/Scripts';
+import Resource from 'tinymce/core/api/Resource';
 import { Chain, Cleaner, Assertions, Pipeline, Step } from '@ephox/agar';
 
-declare const tinymce: { Scripts: Scripts };
+declare const tinymce: { Resource: Resource };
 
 const install = () => {
   const origTiny = Global.tinymce;
   Global.tinymce = {
-    Scripts
+    Resource
   };
   const uninstall = () => {
     Global.tinymce = origTiny;
@@ -17,15 +17,15 @@ const install = () => {
 };
 
 const testScript = (id: string, data: string) => {
-  return `data:text/javascript,tinymce.Scripts.add('${id}', '${data}')`;
+  return `data:text/javascript,tinymce.Resource.add('${id}', '${data}')`;
 };
 
 const cScriptAdd = (id: string, data: string) => Chain.op<any>((value) => {
-  tinymce.Scripts.add(id, data);
+  tinymce.Resource.add(id, data);
 });
 
 const cScriptLoad = (id: string, url: string) => Chain.async<any, Result<string, string>>((input, next, die) => {
-  tinymce.Scripts.load(id, url).then((value) => {
+  tinymce.Resource.load(id, url).then((value) => {
     next(Result.value(value));
   }, (err) => {
     next(Result.error(err));
@@ -71,7 +71,7 @@ UnitTest.asynctest('Scripts test', (success, failure) => {
     ])),
     Step.label('invalid id fails', Chain.asStep({}, [
       cScriptLoad('script.4', testScript('invalid-id', 'value.4')), // this takes 1 second to timeout
-      cAssertLoadFailure('Script at URL "data:text/javascript,tinymce.Scripts.add(\'invalid-id\', \'value.4\')" did not call `tinymce.Scripts.add(\'script.4\', data)` within 1 second'),
+      cAssertLoadFailure('Script at URL "data:text/javascript,tinymce.Resource.add(\'invalid-id\', \'value.4\')" did not call `tinymce.Resource.add(\'script.4\', data)` within 1 second'),
     ])),
   ], cleanup.wrap(success), cleanup.wrap(failure));
 });

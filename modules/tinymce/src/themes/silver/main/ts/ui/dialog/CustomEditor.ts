@@ -10,7 +10,7 @@ import { Cell, Option } from '@ephox/katamari';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { Types } from '@ephox/bridge';
-import Scripts from 'tinymce/core/api/Scripts';
+import Resource from 'tinymce/core/api/Resource';
 
 type CustomEditorSpec = Types.CustomEditor.CustomEditor;
 type CustomEditorInitFn = Types.CustomEditor.CustomEditorInitFn;
@@ -39,7 +39,7 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
           memReplaced.getOpt(component).each((ta) => {
             (isOldCustomEditor(spec)
             ? spec.init(ta.element().dom())
-            : Scripts.load(spec.scriptId, spec.scriptUrl).then(
+            : Resource.load(spec.scriptId, spec.scriptUrl).then(
                 (init: CustomEditorInitFn) => init(ta.element().dom(), spec.settings)
               )
             ).then((ea) => {

@@ -5,18 +5,18 @@ import { UnitTest } from '@ephox/bedrock';
 import { Global, Cell } from '@ephox/katamari';
 import { renderCustomEditor } from 'tinymce/themes/silver/ui/dialog/CustomEditor';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
-import Scripts from 'tinymce/core/api/Scripts';
+import Resource from 'tinymce/core/api/Resource';
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
 import { Element, Class } from '@ephox/sugar';
 import { HTMLElement } from '@ephox/dom-globals';
 
-declare const tinymce: { Scripts: Scripts };
+declare const tinymce: { Resource: Resource };
 
 const install = () => {
   const origTiny = Global.tinymce;
   Global.tinymce = {
-    Scripts
+    Resource
   };
   const uninstall = () => {
     Global.tinymce = origTiny;
@@ -30,7 +30,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
   const resolveInit = Cell(false);
   const customEditorValue = Cell('zztop');
 
-  tinymce.Scripts.add('BasicCustomEditorTest', (e: HTMLElement) => new Promise((resolve) => {
+  tinymce.Resource.add('BasicCustomEditorTest', (e: HTMLElement) => new Promise((resolve) => {
     const intervalId = Delay.setInterval(() => {
       if (resolveInit.get()) {
         Delay.clearInterval(intervalId);

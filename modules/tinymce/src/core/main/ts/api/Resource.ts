@@ -9,7 +9,7 @@ import Promise from './util/Promise';
 import ScriptLoader from './dom/ScriptLoader';
 import { setTimeout, clearTimeout } from '@ephox/dom-globals';
 
-interface Scripts {
+interface Resource {
   load(id: string, url: string): Promise<any>;
   add(id: string, data: any): void;
 }
@@ -41,13 +41,13 @@ const awaiter = (resolveCb: (data: any) => void, rejectCb: (err?: any) => void, 
   };
 };
 
-const create = (): Scripts => {
+const create = (): Resource => {
   const tasks: Record<string, Promise<any>> = {};
   const resultFns: Record<string, (data: any) => void> = {};
 
   const load = (id: string, url: string): Promise<any> => {
     const loadErrMsg = `Script at URL "${url}" failed to load`;
-    const runErrMsg = `Script at URL "${url}" did not call \`tinymce.Scripts.add('${id}', data)\` within 1 second`;
+    const runErrMsg = `Script at URL "${url}" did not call \`tinymce.Resource.add('${id}', data)\` within 1 second`;
     if (tasks[id] !== undefined) {
       return tasks[id];
     } else {
@@ -75,6 +75,6 @@ const create = (): Scripts => {
   };
 };
 
-const Scripts = create();
+const Resource = create();
 
-export default Scripts;
+export default Resource;

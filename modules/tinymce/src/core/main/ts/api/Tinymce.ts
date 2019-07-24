@@ -30,7 +30,7 @@ import DOMUtils from './dom/DOMUtils';
 import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
 import EventUtils, { EventUtilsConstructor } from './dom/EventUtils';
 import ScriptLoader, { ScriptLoaderConstructor } from './dom/ScriptLoader';
-import Scripts from './Scripts';
+import Resource from './Resource';
 import Selection from './dom/Selection';
 import Sizzle from './dom/Sizzle';
 import TreeWalker, { TreeWalkerConstructor } from './dom/TreeWalker';
@@ -129,7 +129,7 @@ export interface TinyMCE extends EditorManager {
   PluginManager: AddOnManager<void | Plugin>;
   ThemeManager: AddOnManager<Theme>;
   IconManager: IconManager;
-  Scripts: Scripts;
+  Resource: Resource;
 
   // Global utility functions
   trim: Tools['trim'];
@@ -258,7 +258,7 @@ const publicApi = {
   PluginManager: AddOnManager.PluginManager,
   ThemeManager: AddOnManager.ThemeManager,
   IconManager,
-  Scripts,
+  Resource,
 
   // Global utility functions
   trim: Tools.trim,
