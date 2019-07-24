@@ -1,4 +1,4 @@
-import { Fun, Result, Type, Obj } from '@ephox/katamari';
+import { Fun, Result, Type, Obj, Arr } from '@ephox/katamari';
 
 import { arrOf, ValueProcessorAdt, func, Processor, thunk, value, valueThunk, ValueValidator, setOf as doSetOf, objOf, objOfOnly, arrOfObj as _arrOfObj } from '../core/ValueProcessor';
 import { formatErrors, formatObj } from '../format/PrettyPrinter';
@@ -113,7 +113,17 @@ const functionProcessor = typedValue(Type.isFunction, 'function');
 // Test if a value is clonable by the structured clone algorithm
 // https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
 // from https://stackoverflow.com/a/32673910/7377237 with minor adjustments for typescript
-const isCloneable = (val: any) => {
+const isCloneable = (val: any): boolean => {
+  const every = <T> (iter: Iterator<T>, callbackFn: (value: T) => boolean): boolean => {
+    let result = iter.next();
+    while (!result.done) {
+      if (!callbackFn(result.value)) {
+        return false;
+      }
+      result = iter.next();
+    }
+    return true;
+  };
   if (Object(val) !== val) { // Primitive value
     return true;
   }
@@ -125,10 +135,10 @@ const isCloneable = (val: any) => {
     case 'Array': case 'Object':
       return Object.keys(val).every((prop) => isCloneable(val[prop]));
     case 'Map':
-      return [...val.keys()].every(isCloneable)
-        && [...val.values()].every(isCloneable);
+      return every((val as Map<any, any>).keys(), isCloneable) &&
+        every((val as Map<any, any>).values(), isCloneable);
     case 'Set':
-      return [...val.keys()].every(isCloneable);
+      return every((val as Set<any>).keys(), isCloneable);
     default:
       return false;
   }

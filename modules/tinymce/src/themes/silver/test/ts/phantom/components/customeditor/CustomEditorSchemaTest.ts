@@ -2,6 +2,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { Types } from '@ephox/bridge';
 import { ValueSchema } from '@ephox/boulder';
 import { RawAssertions } from '@ephox/agar';
+import { Blob } from '@ephox/dom-globals';
 
 UnitTest.test('Custom Editor Schema Test', () => {
   const schema = Types.CustomEditor.customEditorSchema;
@@ -54,6 +55,38 @@ UnitTest.test('Custom Editor Schema Test', () => {
         getValue: () => '',
         destroy: () =>  {}
       };
+    }
+  }).isError());
+
+  RawAssertions.assertEq('Expect scriptId + scriptUrl with structured-clonable settings to be valid', true, ValueSchema.asRaw('.', schema, {
+    ...base,
+    scriptId: 'scriptId',
+    scriptUrl: 'scriptUrl',
+    settings: {
+      a: 'text',
+      b: 1.23,
+      c: true,
+      d: false,
+      e: null,
+      f: undefined,
+      // tslint:disable-next-line:no-construct
+      g: new Boolean(false),
+      h: new Date(),
+      i: /^(?:fizz|buzz)/,
+      j: new Blob(['<a id="a"><b id="b">hey!</b></a>'], {type : 'text/html'}),
+      k: ['text', Infinity, true, false],
+      l: { prop: 'value' },
+      m: new Map([['key1', 'value1'], ['key2', 'value2']]),
+      n: new Set([1, 2, 3, 4, 5])
+    }
+  }).isValue());
+
+  RawAssertions.assertEq('Expect scriptId + scriptUrl with non structured-clonable settings to not be valid', true, ValueSchema.asRaw('.', schema, {
+    ...base,
+    scriptId: 'scriptId',
+    scriptUrl: 'scriptUrl',
+    settings: {
+      func: () => {}
     }
   }).isError());
 });
