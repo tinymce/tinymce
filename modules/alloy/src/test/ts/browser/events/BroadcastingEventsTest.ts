@@ -1,4 +1,4 @@
-import { Step, Waiter } from '@ephox/agar';
+import { Cleaner, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { window, Event } from '@ephox/dom-globals';
 import { DomEvent, Element } from '@ephox/sugar';
@@ -9,7 +9,6 @@ import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
-import { Cleaner } from '../../module/ephox/alloy/test/Cleaner';
 
 UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, failure) => {
 

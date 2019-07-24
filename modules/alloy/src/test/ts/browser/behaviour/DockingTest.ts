@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Logger, Step, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Cleaner, Logger, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { window } from '@ephox/dom-globals';
 import { DomEvent, Element } from '@ephox/sugar';
@@ -10,7 +10,6 @@ import * as Memento from 'ephox/alloy/api/component/Memento';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
-import { Cleaner } from '../../module/ephox/alloy/test/Cleaner';
 
 UnitTest.asynctest('DockingTest', (success, failure) => {
   const cleanup = Cleaner();

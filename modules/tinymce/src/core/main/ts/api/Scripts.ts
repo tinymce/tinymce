@@ -39,8 +39,8 @@ const create = (): Scripts => {
   const resultFns: Record<string, (data: any) => void> = {};
 
   const load = (id: string, url: string): Promise<any> => {
-    const loadErrMsg = `Script at URL ${url} failed to load`;
-    const runErrMsg = `Script at URL ${url} did not call \`tinymce.Scripts.add('${id}', data)\` within 1 second`;
+    const loadErrMsg = `Script at URL "${url}" failed to load`;
+    const runErrMsg = `Script at URL "${url}" did not call \`tinymce.Scripts.add('${id}', data)\` within 1 second`;
     if (tasks[id] !== undefined) {
       return tasks[id];
     } else {
