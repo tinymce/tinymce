@@ -1,10 +1,10 @@
-import { Fun, Result, Type, Obj, Arr } from '@ephox/katamari';
-
-import { arrOf, ValueProcessorAdt, func, Processor, thunk, value, valueThunk, ValueValidator, setOf as doSetOf, objOf, objOfOnly, arrOfObj as _arrOfObj } from '../core/ValueProcessor';
-import { formatErrors, formatObj } from '../format/PrettyPrinter';
-import { choose as _choose } from '../core/ChoiceProcessor';
+import { Fun, Obj, Result, Type } from '@ephox/katamari';
 import { SimpleResult } from '../alien/SimpleResult';
+import { choose as _choose } from '../core/ChoiceProcessor';
+import { arrOf, arrOfObj as _arrOfObj, func, objOf, objOfOnly, Processor, setOf as doSetOf, thunk, value, ValueProcessorAdt, valueThunk } from '../core/ValueProcessor';
+import { formatErrors, formatObj } from '../format/PrettyPrinter';
 import { FieldProcessorAdt } from '../format/TypeTokens';
+
 export interface SchemaError<T> {
   input: T;
   errors: any[];
