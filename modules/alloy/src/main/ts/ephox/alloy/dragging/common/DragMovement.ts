@@ -7,7 +7,7 @@ import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as DragCoord from '../../api/data/DragCoord';
 import * as Snappables from '../snap/Snappables';
-import { DraggingConfig, DraggingState, DragStartData, SnapsConfig } from './DraggingTypes';
+import { DraggingConfig, DragStartData, SnapsConfig } from './DraggingTypes';
 
 const getCurrentCoord = (target: Element): DragCoord.CoordAdt => {
   return Css.getRaw(target, 'left').bind((left) => {
@@ -26,12 +26,12 @@ const getCurrentCoord = (target: Element): DragCoord.CoordAdt => {
   });
 };
 
-const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, extras: DragStartData): DragCoord.CoordAdt => {
-  const bounds = extras.bounds;
+const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, startData: DragStartData): DragCoord.CoordAdt => {
+  const bounds = startData.bounds;
   const absoluteCoord = DragCoord.asAbsolute(coords, scroll, origin);
 
-  const newX = cap(absoluteCoord.left(), bounds.x(), bounds.width() - extras.width);
-  const newY = cap(absoluteCoord.top(), bounds.y(), bounds.height() - extras.height);
+  const newX = cap(absoluteCoord.left(), bounds.x(), bounds.width() - startData.width);
+  const newY = cap(absoluteCoord.top(), bounds.y(), bounds.height() - startData.height);
   const newCoords = DragCoord.absolute(newX, newY);
 
   // Translate the absolute coord back into the previous type
@@ -51,8 +51,8 @@ const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scro
   );
 };
 
-const calcNewCoord = (component: AlloyComponent, snaps: Option<SnapsConfig>, currentCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, delta: SugarPosition, extras: DragStartData): DragCoord.CoordAdt => {
-  const newCoord = snaps.fold(() => {
+const calcNewCoord = (component: AlloyComponent, optSnaps: Option<SnapsConfig>, currentCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, delta: SugarPosition, startData: DragStartData): DragCoord.CoordAdt => {
+  const newCoord = optSnaps.fold(() => {
     // When not docking, use fixed coordinates.
     const translated = DragCoord.translate(currentCoord, delta.left(), delta.top());
     const fixedCoord = DragCoord.asFixed(translated, scroll, origin);
@@ -66,14 +66,13 @@ const calcNewCoord = (component: AlloyComponent, snaps: Option<SnapsConfig>, cur
   });
 
   // Clamp the coords so that they are within the bounds
-  return clampCoords(component, newCoord, scroll, origin, extras);
+  return clampCoords(component, newCoord, scroll, origin, startData);
 };
 
-const dragBy = (component: AlloyComponent, dragConfig: DraggingConfig, dragState: DraggingState<SugarPosition>, delta: SugarPosition): void => {
+const dragBy = (component: AlloyComponent, dragConfig: DraggingConfig, startData: DragStartData, delta: SugarPosition): void => {
   const target = dragConfig.getTarget(component.element());
 
   if (dragConfig.repositionTarget) {
-    const startData = dragState.getStartData().getOrDie();
     const doc = Traverse.owner(component.element());
     const scroll = Scroll.get(doc);
 

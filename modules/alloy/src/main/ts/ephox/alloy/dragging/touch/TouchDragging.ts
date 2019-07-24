@@ -1,6 +1,5 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import { Height, Width } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import { SugarPosition, SugarEvent } from '../../alien/TypeDefinitions';
@@ -11,6 +10,7 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
 import * as DragMovement from '../common/DragMovement';
 import { DraggingState } from '../common/DraggingTypes';
+import { calcStartData } from '../common/DragUtils';
 import SnapSchema from '../common/SnapSchema';
 import * as Snappables from '../snap/Snappables';
 import * as TouchData from './TouchData';
@@ -18,11 +18,7 @@ import { TouchDraggingConfig } from './TouchDraggingTypes';
 
 const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.AlloyEventRecord => {
   const updateStartState = (comp: AlloyComponent) => {
-    dragState.setStartData({
-      bounds: dragConfig.getBounds(),
-      height: Height.getOuter(comp.element()),
-      width: Width.getOuter(comp.element())
-    });
+    dragState.setStartData(calcStartData(dragConfig, comp));
   };
 
   return AlloyEvents.derive([
@@ -36,8 +32,9 @@ const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<Suga
       simulatedEvent.stop();
 
       const delta = dragState.update(TouchData, simulatedEvent.event());
+      const dragStartData = dragState.getStartData().getOrThunk(() => calcStartData(dragConfig, component));
       delta.each((dlt) => {
-        DragMovement.dragBy(component, dragConfig, dragState, dlt);
+        DragMovement.dragBy(component, dragConfig, dragStartData, dlt);
       });
     }),
 

@@ -1,7 +1,6 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { MouseEvent } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import { Height, Width } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import DelayedFunction from '../../alien/DelayedFunction';
@@ -15,6 +14,7 @@ import * as Fields from '../../data/Fields';
 import * as BlockerUtils from '../common/BlockerUtils';
 import * as DragMovement from '../common/DragMovement';
 import { DraggingState } from '../common/DraggingTypes';
+import { calcStartData } from '../common/DragUtils';
 import SnapSchema from '../common/SnapSchema';
 import * as Snappables from '../snap/Snappables';
 import * as BlockerEvents from './BlockerEvents';
@@ -23,11 +23,7 @@ import { DragApi, MouseDraggingConfig } from './MouseDraggingTypes';
 
 const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.AlloyEventRecord => {
   const updateStartState = (comp: AlloyComponent) => {
-    dragState.setStartData({
-      bounds: dragConfig.getBounds(),
-      height: Height.getOuter(comp.element()),
-      width: Width.getOuter(comp.element())
-    });
+    dragState.setStartData(calcStartData(dragConfig, comp));
   };
 
   return AlloyEvents.derive([
@@ -51,8 +47,9 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
           // Stop any pending drops caused by mouseout
           delayDrop.cancel();
           const delta = dragState.update(MouseData, event);
+          const dragStartData = dragState.getStartData().getOrThunk(() => calcStartData(dragConfig, component));
           delta.each((dlt) => {
-            DragMovement.dragBy(component, dragConfig, dragState, dlt);
+            DragMovement.dragBy(component, dragConfig, dragStartData, dlt);
           });
         }
       };
