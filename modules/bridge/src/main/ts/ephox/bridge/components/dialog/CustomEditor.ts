@@ -51,14 +51,13 @@ const customEditorFields = formComponentFields.concat([
 ]);
 
 const customEditorFieldsOld = formComponentFields.concat([
-  FieldSchema.strictString('type'),
   FieldSchema.defaultedString('tag', 'textarea'),
   FieldSchema.strictFunction('init')
 ]);
 
 export const customEditorSchema = ValueSchema.valueOf(
-  (v) => ValueSchema.asRaw('branch.1', ValueSchema.objOfOnly(customEditorFields), v).orThunk(
-    () => ValueSchema.asRaw('branch.2', ValueSchema.objOfOnly(customEditorFieldsOld), v)
+  (v) => ValueSchema.asRaw('customeditor.old', ValueSchema.objOfOnly(customEditorFieldsOld), v).orThunk(
+    () => ValueSchema.asRaw('customeditor.new', ValueSchema.objOfOnly(customEditorFields), v)
   )
 );
 
