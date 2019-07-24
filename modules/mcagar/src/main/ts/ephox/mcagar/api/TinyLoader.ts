@@ -1,6 +1,6 @@
 import { console, document, setTimeout } from '@ephox/dom-globals';
-import { Fun, Global, Id, Merger, Type, Strings } from '@ephox/katamari';
-import { Attr, Element, Insert, Remove } from '@ephox/sugar';
+import { Arr, Fun, Global, Id, Merger, Strings, Type } from '@ephox/katamari';
+import { Attr, Element, Insert, Remove, SelectorFilter } from '@ephox/sugar';
 import 'tinymce';
 import { setTinymceBaseUrl } from '../loader/Urls';
 
@@ -13,6 +13,18 @@ const createTarget = function (inline: boolean) {
   return target;
 };
 
+const removeTinymceElements = () => {
+  // NOTE: Don't remove the link/scripts added, as those are part of the global tinymce which we don't clean up
+  const elements = Arr.flatten([
+    // Some older versions of tinymce leaves elements behind in the dom
+    SelectorFilter.all('.mce-notification,.mce-window,#mce-modal-block'),
+    // TinyMCE leaves inline editor content_styles in the dom
+    SelectorFilter.children(Element.fromDom(document.head), 'style')
+  ]);
+
+  Arr.each(elements, Remove.remove);
+};
+
 const setup = (callback: SetupCallback, settings: Record<string, any>, success: SuccessCallback, failure: FailureCallback) => {
   const target = createTarget(settings.inline);
   const randomId = Id.generate('tiny-loader');
@@ -23,6 +35,7 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
   const teardown = () => {
     tinymce.remove();
     Remove.remove(target);
+    removeTinymceElements();
   };
 
   // Agar v. ??? supports logging
