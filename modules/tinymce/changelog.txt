@@ -5,6 +5,7 @@ Version 5.0.13 (TBD)
     Added wrapping to user-inserted nbsps, which can be disabled using the `nonbreaking_wrap` setting #TINY-3647
     Fixed mobile plugin filter to only apply to the mobile theme, rather than all mobile platforms #TINY-3405
     Fixed focus switching to another editor during mode changes #TINY-3852
+    Fixed an exception being thrown when clicking on an uninitialized inline editor #TINY-3925
 Version 5.0.12 (2019-07-18)
     Added ability to utilize UI dialog panels inside other panels #TINY-3305
     Added help dialog tab explaining keyboard navigation of the editor #TINY-3603
