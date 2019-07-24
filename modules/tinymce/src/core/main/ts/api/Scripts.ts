@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import Promise from './util/Promise';
 import ScriptLoader from './dom/ScriptLoader';
 import { setTimeout, clearTimeout } from '@ephox/dom-globals';
