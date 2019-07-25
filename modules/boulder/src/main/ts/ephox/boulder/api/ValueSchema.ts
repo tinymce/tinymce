@@ -110,7 +110,7 @@ const string = typedValue(Type.isString, 'string');
 const boolean = typedValue(Type.isBoolean, 'boolean');
 const functionProcessor = typedValue(Type.isFunction, 'function');
 
-// Test if a value is clonable by the structured clone algorithm
+// Test if a value is cloneable by the structured clone algorithm
 // https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
 // from https://stackoverflow.com/a/32673910/7377237 with minor adjustments for typescript
 const isCloneable = (val: any): boolean => {
@@ -145,7 +145,7 @@ const isCloneable = (val: any): boolean => {
 };
 
 const cloneable = value((a) => {
-  return isCloneable(a) ? SimpleResult.svalue(a) : SimpleResult.serror('Expected to be clonable by the structured clone algorithm');
+  return isCloneable(a) ? SimpleResult.svalue(a) : SimpleResult.serror('Expected to be cloneable by the structured clone algorithm');
 });
 
 export {

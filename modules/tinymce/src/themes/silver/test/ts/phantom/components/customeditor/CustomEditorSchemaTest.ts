@@ -58,7 +58,7 @@ UnitTest.test('Custom Editor Schema Test', () => {
     }
   }).isError());
 
-  RawAssertions.assertEq('Expect scriptId + scriptUrl with structured-clonable settings to be valid', true, ValueSchema.asRaw('.', schema, {
+  RawAssertions.assertEq('Expect scriptId + scriptUrl with structured-cloneable settings to be valid', true, ValueSchema.asRaw('.', schema, {
     ...base,
     scriptId: 'scriptId',
     scriptUrl: 'scriptUrl',
@@ -81,7 +81,7 @@ UnitTest.test('Custom Editor Schema Test', () => {
     }
   }).isValue());
 
-  RawAssertions.assertEq('Expect scriptId + scriptUrl with non structured-clonable settings to not be valid', true, ValueSchema.asRaw('.', schema, {
+  RawAssertions.assertEq('Expect scriptId + scriptUrl with non structured-cloneable settings to not be valid', true, ValueSchema.asRaw('.', schema, {
     ...base,
     scriptId: 'scriptId',
     scriptUrl: 'scriptUrl',
