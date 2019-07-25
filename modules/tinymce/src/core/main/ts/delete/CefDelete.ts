@@ -102,9 +102,9 @@ const paddEmptyElement = function (editor: Editor) {
 
 const backspaceDelete = function (editor: Editor, forward) {
   if (editor.selection.isCollapsed()) {
-  return backspaceDeleteCaret(editor, forward);
+    return backspaceDeleteCaret(editor, forward);
   } else {
-  return backspaceDeleteRange(editor, forward);
+    return backspaceDeleteRange(editor, forward);
   }
 };
 

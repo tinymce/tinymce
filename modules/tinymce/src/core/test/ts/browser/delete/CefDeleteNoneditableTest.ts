@@ -184,6 +184,6 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
     ]), onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',
-    plugins: 'anchor noneditable'
+    plugins: 'noneditable'
   }, success, failure);
 });
