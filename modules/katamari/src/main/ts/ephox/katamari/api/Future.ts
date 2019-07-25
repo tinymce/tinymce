@@ -1,6 +1,5 @@
 import { setTimeout } from '@ephox/dom-globals';
 import Promise from '@ephox/wrap-promise-polyfill';
-import { constant } from './Fun';
 import { LazyValue } from './LazyValue';
 
 export interface Future<T> {
@@ -41,7 +40,7 @@ const make = function <T = any>(run: () => Promise<T>): Future<T> {
    *  Returns a future, which evaluates the first future, ignores the result, then evaluates the second.
    */
   const anonBind = function <U>(futureB: Future<U>) {
-    return bind(constant(futureB));
+    return make(() => run().then(() => futureB.toPromise()));
   };
 
   const toLazy = function () {
@@ -78,7 +77,7 @@ const nu = function <T = any>(baseFn: (completer: (value?: T) => void) => void):
 
 /** a -> Future a */
 const pure = function <T>(a: T) {
-  return make(constant(Promise.resolve(a)));
+  return make(() => Promise.resolve(a));
 };
 
 export const Future = {
