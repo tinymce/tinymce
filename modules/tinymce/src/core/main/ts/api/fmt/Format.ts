@@ -33,6 +33,8 @@ export interface CommonApplyFormat<T> extends CommonFormat<T> {
   styles?: Record<string, string>;
   toggle?: boolean;
   wrapper?: boolean;
+  merge_siblings?: boolean;
+  merge_with_parents?: boolean;
 }
 
 export interface BlockFormat extends CommonApplyFormat<BlockFormat> {

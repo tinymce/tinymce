@@ -32,7 +32,7 @@ const eventExpandoPrefix = 'mce-data-';
 const mouseEventRe = /^(?:mouse|contextmenu)|click/;
 const deprecated = {
   keyLocation: 1, layerX: 1, layerY: 1, returnValue: 1,
-  webkitMovementX: 1, webkitMovementY: 1, keyIdentifier: 1
+  webkitMovementX: 1, webkitMovementY: 1, keyIdentifier: 1, mozPressure: 1
 };
 
 // Checks if it is our own isDefaultPrevented function
