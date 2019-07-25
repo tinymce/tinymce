@@ -47,7 +47,7 @@ const customEditorFields = formComponentFields.concat([
   FieldSchema.defaultedString('tag', 'textarea'),
   FieldSchema.strictString('scriptId'),
   FieldSchema.strictString('scriptUrl'),
-  FieldSchema.defaultedCloneable('settings', undefined)
+  FieldSchema.defaultedPostMsg('settings', undefined)
 ]);
 
 const customEditorFieldsOld = formComponentFields.concat([

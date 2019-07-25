@@ -110,10 +110,10 @@ const string = typedValue(Type.isString, 'string');
 const boolean = typedValue(Type.isBoolean, 'boolean');
 const functionProcessor = typedValue(Type.isFunction, 'function');
 
-// Test if a value is cloneable by the structured clone algorithm
+// Test if a value can be copied by the structured clone algorithm and hence sendable via postMessage
 // https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
-// from https://stackoverflow.com/a/32673910/7377237 with minor adjustments for typescript
-const isCloneable = (val: any): boolean => {
+// from https://stackoverflow.com/a/32673910/7377237 with adjustments for typescript
+const isPostMessageable = (val: any): boolean => {
   const every = <T> (iter: Iterator<T>, callbackFn: (value: T) => boolean): boolean => {
     let result = iter.next();
     while (!result.done) {
@@ -133,19 +133,19 @@ const isCloneable = (val: any): boolean => {
     case 'ImageData': case 'ImageBitmap': case 'ArrayBuffer':
       return true;
     case 'Array': case 'Object':
-      return Object.keys(val).every((prop) => isCloneable(val[prop]));
+      return Object.keys(val).every((prop) => isPostMessageable(val[prop]));
     case 'Map':
-      return every((val as Map<any, any>).keys(), isCloneable) &&
-        every((val as Map<any, any>).values(), isCloneable);
+      return every((val as Map<any, any>).keys(), isPostMessageable) &&
+        every((val as Map<any, any>).values(), isPostMessageable);
     case 'Set':
-      return every((val as Set<any>).keys(), isCloneable);
+      return every((val as Set<any>).keys(), isPostMessageable);
     default:
       return false;
   }
 };
 
-const cloneable = value((a) => {
-  return isCloneable(a) ? SimpleResult.svalue(a) : SimpleResult.serror('Expected to be cloneable by the structured clone algorithm');
+const postMessageable = value((a) => {
+  return isPostMessageable(a) ? SimpleResult.svalue(a) : SimpleResult.serror('Expected value to be acceptable for sending via postMessage');
 });
 
 export {
@@ -182,5 +182,5 @@ export {
   string,
   boolean,
   functionProcessor as func,
-  cloneable
+  postMessageable
 };

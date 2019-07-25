@@ -39,8 +39,8 @@ const strictFunction = function (key: string): FieldProcessorAdt {
   return strictOf(key, ValueSchema.func);
 };
 
-const strictClonable = function (key: string): FieldProcessorAdt {
-  return strictOf(key, ValueSchema.cloneable);
+const strictPostMsg = function (key: string): FieldProcessorAdt {
+  return strictOf(key, ValueSchema.postMessageable);
 };
 
 const forbid = function (key: string, message: string): FieldProcessorAdt {
@@ -104,8 +104,8 @@ const optionFunction = function (key: string): FieldProcessorAdt {
   return optionOf(key, ValueSchema.func);
 };
 
-const optionCloneable = function (key: string): FieldProcessorAdt {
-  return optionOf(key, ValueSchema.cloneable);
+const optionPostMsg = function (key: string): FieldProcessorAdt {
+  return optionOf(key, ValueSchema.postMessageable);
 };
 
 const optionArrayOf = function (key: string, schema: Processor): FieldProcessorAdt {
@@ -148,8 +148,8 @@ const defaultedFunction = function (key: string, fallback: (...x: any[]) => any)
   return defaultedOf(key, fallback, ValueSchema.func);
 };
 
-const defaultedCloneable = function (key: string, fallback: any): FieldProcessorAdt {
-  return defaultedOf(key, fallback, ValueSchema.cloneable);
+const defaultedPostMsg = function (key: string, fallback: any): FieldProcessorAdt {
+  return defaultedOf(key, fallback, ValueSchema.postMessageable);
 };
 
 const defaultedArrayOf = function (key: string, fallback: any[], schema: Processor): FieldProcessorAdt {
@@ -175,7 +175,7 @@ export {
   strictStringEnum,
   strictBoolean,
   strictFunction,
-  strictClonable,
+  strictPostMsg,
 
   forbid,
 
@@ -186,7 +186,7 @@ export {
   optionStringEnum,
   optionBoolean,
   optionFunction,
-  optionCloneable,
+  optionPostMsg,
   optionObjOf,
   optionObjOfOnly,
   optionArrayOf,
@@ -198,7 +198,7 @@ export {
   defaultedStringEnum,
   defaultedBoolean,
   defaultedFunction,
-  defaultedCloneable,
+  defaultedPostMsg,
   defaultedObjOf,
   defaultedArrayOf,
 
