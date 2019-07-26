@@ -10,7 +10,7 @@ export interface DropZone extends FormComponentWithLabel {
   type: 'dropzone';
 }
 
-export const dropZoneFields = formComponentWithLabelFields;
+const dropZoneFields = formComponentWithLabelFields;
 
 export const dropZoneSchema = ValueSchema.objOf(dropZoneFields);
 

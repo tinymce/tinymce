@@ -1,8 +1,8 @@
 import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Id, Result, Option } from '@ephox/katamari';
 import { BodyComponentApi } from './BodyComponent';
-import { Panel, PanelApi, panelFields } from './Panel';
-import { TabApi, Tab, TabPanel, TabPanelApi, tabPanelFields } from './TabPanel';
+import { Panel, PanelApi, panelSchema } from './Panel';
+import { TabApi, Tab, TabPanel, TabPanelApi, tabPanelSchema } from './TabPanel';
 import { BaseMenuButton, BaseMenuButtonApi, baseMenuButtonFields, BaseMenuButtonInstanceApi, MenuButtonItemTypes } from '../../core/MenuButton';
 
 export type DialogMenuButtonItemTypes = MenuButtonItemTypes;
@@ -183,9 +183,9 @@ export const dialogButtonSchema = ValueSchema.choose(
 
 export const dialogSchema = ValueSchema.objOf([
   FieldSchema.strictString('title'),
-  FieldSchema.strictOf('body', ValueSchema.choose('type', {
-    panel: panelFields,
-    tabpanel: tabPanelFields
+  FieldSchema.strictOf('body', ValueSchema.chooseProcessor('type', {
+    panel: panelSchema,
+    tabpanel: tabPanelSchema
   })),
   FieldSchema.defaultedString('size', 'normal'),
   FieldSchema.strictArrayOf('buttons', dialogButtonSchema),

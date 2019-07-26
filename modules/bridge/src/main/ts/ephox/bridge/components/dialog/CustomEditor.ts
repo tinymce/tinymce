@@ -9,24 +9,57 @@ export interface CustomEditorInit {
   destroy: () =>  void;
 }
 
-export interface CustomEditorApi extends FormComponentApi {
+export type CustomEditorInitFn = (elm: Element, settings: any) => Promise<CustomEditorInit>;
+
+interface CustomEditorOldApi extends FormComponentApi {
   type: 'customeditor';
   tag?: string;
   init: (e: Element) => Promise<CustomEditorInit>;
 }
 
-export interface CustomEditor extends FormComponent {
+interface CustomEditorNewApi extends FormComponentApi {
+  type: 'customeditor';
+  tag?: string;
+  scriptId: string;
+  scriptUrl: string;
+  settings?: any;
+}
+
+export type CustomEditorApi = CustomEditorOldApi | CustomEditorNewApi;
+
+export interface CustomEditorOld extends FormComponent {
   type: 'customeditor';
   tag: string;
   init: (e: Element) => Promise<CustomEditorInit>;
 }
 
-export const customEditorFields = formComponentFields.concat([
+export interface CustomEditorNew extends FormComponent {
+  type: 'customeditor';
+  tag: string;
+  scriptId: string;
+  scriptUrl: string;
+  settings: any;
+}
+
+export type CustomEditor = CustomEditorOld | CustomEditorNew;
+
+const customEditorFields = formComponentFields.concat([
+  FieldSchema.defaultedString('tag', 'textarea'),
+  FieldSchema.strictString('scriptId'),
+  FieldSchema.strictString('scriptUrl'),
+  FieldSchema.defaultedPostMsg('settings', undefined)
+]);
+
+const customEditorFieldsOld = formComponentFields.concat([
   FieldSchema.defaultedString('tag', 'textarea'),
   FieldSchema.strictFunction('init')
 ]);
 
-export const customEditorSchema = ValueSchema.objOf(customEditorFields);
+export const customEditorSchema = ValueSchema.valueOf(
+  (v) => ValueSchema.asRaw('customeditor.old', ValueSchema.objOfOnly(customEditorFieldsOld), v).orThunk(
+    () => ValueSchema.asRaw('customeditor.new', ValueSchema.objOfOnly(customEditorFields), v)
+  )
+);
 
 export const customEditorDataProcessor = ValueSchema.string;
 

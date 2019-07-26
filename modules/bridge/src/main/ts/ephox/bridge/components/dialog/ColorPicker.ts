@@ -10,7 +10,7 @@ export interface ColorPicker extends FormComponentWithLabel {
   type: 'colorpicker';
 }
 
-export const colorPickerFields = formComponentWithLabelFields;
+const colorPickerFields = formComponentWithLabelFields;
 
 export const colorPickerSchema = ValueSchema.objOf(colorPickerFields);
 

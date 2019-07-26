@@ -18,7 +18,7 @@ export interface ImageTools extends FormComponentWithLabel {
   currentState: ImageToolsState;
 }
 
-export const imageToolsFields: FieldProcessorAdt[] = formComponentWithLabelFields.concat([
+const imageToolsFields: FieldProcessorAdt[] = formComponentWithLabelFields.concat([
   FieldSchema.strictOf('currentState', ValueSchema.objOf([
     FieldSchema.strict('blob'),
     FieldSchema.strictString('url')

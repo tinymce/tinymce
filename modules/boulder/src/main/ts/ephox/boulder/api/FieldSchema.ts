@@ -39,6 +39,10 @@ const strictFunction = function (key: string): FieldProcessorAdt {
   return strictOf(key, ValueSchema.func);
 };
 
+const strictPostMsg = function (key: string): FieldProcessorAdt {
+  return strictOf(key, ValueSchema.postMessageable);
+};
+
 const forbid = function (key: string, message: string): FieldProcessorAdt {
   return field(
     key,
@@ -100,6 +104,10 @@ const optionFunction = function (key: string): FieldProcessorAdt {
   return optionOf(key, ValueSchema.func);
 };
 
+const optionPostMsg = function (key: string): FieldProcessorAdt {
+  return optionOf(key, ValueSchema.postMessageable);
+};
+
 const optionArrayOf = function (key: string, schema: Processor): FieldProcessorAdt {
   return optionOf(key, arrOf(schema));
 };
@@ -140,6 +148,10 @@ const defaultedFunction = function (key: string, fallback: (...x: any[]) => any)
   return defaultedOf(key, fallback, ValueSchema.func);
 };
 
+const defaultedPostMsg = function (key: string, fallback: any): FieldProcessorAdt {
+  return defaultedOf(key, fallback, ValueSchema.postMessageable);
+};
+
 const defaultedArrayOf = function (key: string, fallback: any[], schema: Processor): FieldProcessorAdt {
   return defaultedOf(key, fallback, arrOf(schema));
 };
@@ -163,6 +175,7 @@ export {
   strictStringEnum,
   strictBoolean,
   strictFunction,
+  strictPostMsg,
 
   forbid,
 
@@ -173,6 +186,7 @@ export {
   optionStringEnum,
   optionBoolean,
   optionFunction,
+  optionPostMsg,
   optionObjOf,
   optionObjOfOnly,
   optionArrayOf,
@@ -184,6 +198,7 @@ export {
   defaultedStringEnum,
   defaultedBoolean,
   defaultedFunction,
+  defaultedPostMsg,
   defaultedObjOf,
   defaultedArrayOf,
 

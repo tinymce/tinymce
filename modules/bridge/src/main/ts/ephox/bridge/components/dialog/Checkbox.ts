@@ -15,7 +15,7 @@ export interface Checkbox {
   disabled: boolean;
 }
 
-export const checkboxFields = [
+const checkboxFields = [
   FieldSchema.strictString('type'),
   FieldSchema.strictString('name'),
   FieldSchema.strictString('label'),

@@ -26,7 +26,7 @@ export interface SelectBox extends FormComponentWithLabel {
   disabled: boolean;
 }
 
-export const selectBoxFields: FieldProcessorAdt[] = formComponentWithLabelFields.concat([
+const selectBoxFields: FieldProcessorAdt[] = formComponentWithLabelFields.concat([
   FieldSchema.strictArrayOfObj('items', [
     FieldSchema.strictString('text'),
     FieldSchema.strictString('value')
