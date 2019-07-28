@@ -61,11 +61,11 @@ const register = function (editor: Editor) {
     SelectionBookmark.store(editor);
   }, 0);
 
-  if (editor.inline) {
-    registerPageMouseUp(editor, throttledStore);
-  }
-
   editor.on('init', function () {
+    if (editor.inline) {
+      registerPageMouseUp(editor, throttledStore);
+    }
+
     registerEditorEvents(editor, throttledStore);
   });
 
