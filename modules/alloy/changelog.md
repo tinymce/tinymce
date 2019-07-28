@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.15.0] - 2019-07-23
+
+### Added
+- Added `getBounds` property to the dragging behaviour to prevent dragging outside the specified bounds.
+
+### Changed
+- Changed dragging behaviour to prevent dragging outside the window by default.
+
 # [4.14.0] - 2019-07-11
 
 ### Added

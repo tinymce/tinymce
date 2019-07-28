@@ -76,11 +76,18 @@ const renderTitle = (spec: WindowHeaderSpec, id: Option<string>, providersBackst
   };
 };
 
+const renderDragHandle = () => {
+  return {
+    dom: DomFactory.fromHtml('<div class="tox-dialog__draghandle"></div>')
+  };
+};
+
 const renderInlineHeader = (spec: WindowHeaderSpec, titleId: string, providersBackstage: UiFactoryBackstageProviders): AlloySpec => {
   return Container.sketch({
     dom: DomFactory.fromHtml('<div class="tox-dialog__header"></div>'),
     components: [
       renderTitle(spec, Option.some(titleId), providersBackstage),
+      renderDragHandle(),
       renderClose(providersBackstage)
     ],
     containerBehaviours: Behaviour.derive([
@@ -105,9 +112,9 @@ const renderModalHeader = (spec: WindowHeaderSpec, providersBackstage: UiFactory
     renderTitle(spec, Option.none(), providersBackstage)
   );
 
-  const pHandle = ModalDialog.parts().draghandle({
-    dom: DomFactory.fromHtml('<div class="tox-dialog__draghandle"></div>')
-  });
+  const pHandle = ModalDialog.parts().draghandle(
+    renderDragHandle()
+  );
 
   const pClose = ModalDialog.parts().close(
     renderClose(providersBackstage)

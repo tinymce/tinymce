@@ -8,6 +8,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { CoordAdt } from '../../api/data/DragCoord';
 import { MouseDraggingConfigSpec } from '../mouse/MouseDraggingTypes';
 import { TouchDraggingConfigSpec } from '../touch/TouchDraggingTypes';
+import { BehaviourState } from '../../behaviour/common/BehaviourState';
 
 export interface DraggingBehaviour extends Behaviour.AlloyBehaviour<DraggingConfigSpec, DraggingConfig> {
   config: (config: DraggingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DraggingConfigSpec, DraggingConfig>;
@@ -56,6 +57,7 @@ export interface DraggingConfig {
   onDrop: (comp: AlloyComponent, Element) => void;
   repositionTarget: boolean;
   onDrag: (comp: AlloyComponent, target: Element, delta: SugarPosition) => void;
+  getBounds: () => Bounds;
 }
 
 export interface CommonDraggingConfigSpec {
@@ -64,13 +66,8 @@ export interface CommonDraggingConfigSpec {
   repositionTarget?: boolean;
   onDrag?: (comp: AlloyComponent, target: Element, delta: SugarPosition) => void;
   getTarget?: (elem: Element) => Element;
-  snaps?: {
-    getSnapPoints: (comp: AlloyComponent) => SnapConfig[];
-    leftAttr: string;
-    topAttr: string;
-    onSensor?: (component: AlloyComponent, extra: {}) => void;
-    lazyViewport?: (component: AlloyComponent) => Bounds;
-  };
+  getBounds?: () => Bounds;
+  snaps?: SnapsConfig;
 }
 
 export type DraggingConfigSpec = MouseDraggingConfigSpec | TouchDraggingConfigSpec;
@@ -80,7 +77,15 @@ export interface DragModeDeltas<T> {
   getDelta: (old: T, nu: T) => T;
 }
 
-export interface DraggingState<T> {
+export interface DragStartData {
+  width: number;
+  height: number;
+  bounds: Bounds;
+}
+
+export interface DraggingState<T> extends BehaviourState {
   update: (mode: DragModeDeltas<T>, dragEvent: SugarEvent) => Option<T>;
+  setStartData: (data: DragStartData) => void;
+  getStartData: () => Option<DragStartData>;
   reset: () => void;
 }

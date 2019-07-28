@@ -2,15 +2,19 @@ import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { MouseEvent } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 
+import * as Boxes from '../../alien/Boxes';
 import DelayedFunction from '../../alien/DelayedFunction';
 import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
+import * as SystemEvents from '../../api/events/SystemEvents';
 import { Container } from '../../api/ui/Container';
 import * as Fields from '../../data/Fields';
 import * as BlockerUtils from '../common/BlockerUtils';
 import * as DragMovement from '../common/DragMovement';
 import { DraggingState } from '../common/DraggingTypes';
+import { calcStartData } from '../common/DragUtils';
 import SnapSchema from '../common/SnapSchema';
 import * as Snappables from '../snap/Snappables';
 import * as BlockerEvents from './BlockerEvents';
@@ -18,7 +22,12 @@ import * as MouseData from './MouseData';
 import { DragApi, MouseDraggingConfig } from './MouseDraggingTypes';
 
 const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.AlloyEventRecord => {
+  const updateStartState = (comp: AlloyComponent) => {
+    dragState.setStartData(calcStartData(dragConfig, comp));
+  };
+
   return AlloyEvents.derive([
+    AlloyEvents.run(SystemEvents.windowScroll(), updateStartState),
     AlloyEvents.run<SugarEvent>(NativeEvents.mousedown(), (component, simulatedEvent) => {
       const raw = simulatedEvent.event().raw() as MouseEvent;
       if (raw.button !== 0) { return; }
@@ -38,8 +47,9 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
           // Stop any pending drops caused by mouseout
           delayDrop.cancel();
           const delta = dragState.update(MouseData, event);
+          const dragStartData = dragState.getStartData().getOrThunk(() => calcStartData(dragConfig, component));
           delta.each((dlt) => {
-            DragMovement.dragBy(component, dragConfig, dlt);
+            DragMovement.dragBy(component, dragConfig, dragStartData, dlt);
           });
         }
       };
@@ -68,6 +78,7 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
           Snappables.stopDrag(component, snapInfo);
         });
         const target = dragConfig.getTarget(component.element());
+        dragState.reset();
         dragConfig.onDrop(component, target);
       };
 
@@ -76,7 +87,7 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
       const delayDrop = DelayedFunction(stop, 200);
 
       const start = () => {
-        dragState.reset();
+        updateStartState(component);
         BlockerUtils.instigate(component, blocker);
       };
 
@@ -93,6 +104,7 @@ const schema: FieldProcessorAdt[] = [
   FieldSchema.defaulted('onDrag', Fun.noop),
   FieldSchema.defaulted('repositionTarget', true),
   Fields.onHandler('onDrop'),
+  FieldSchema.defaultedFunction('getBounds', Boxes.win),
   SnapSchema,
   Fields.output('dragger', {
     handlers
