@@ -13,7 +13,7 @@ export interface HtmlPanel {
   presets: 'presentation' | 'document';
 }
 
-export const htmlPanelFields = [
+const htmlPanelFields = [
   FieldSchema.strictString('type'),
   FieldSchema.strictString('html'),
   FieldSchema.defaultedStringEnum('presets', 'presentation', ['presentation', 'document'])

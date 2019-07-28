@@ -13,7 +13,7 @@ export interface Table {
   cells: string[][];
 }
 
-export const tableFields = [
+const tableFields = [
   FieldSchema.strictString('type'),
   FieldSchema.strictArrayOf('header', ValueSchema.string),
   FieldSchema.strictArrayOf('cells', ValueSchema.arrOf(ValueSchema.string))

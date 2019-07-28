@@ -12,7 +12,7 @@ export interface Iframe extends FormComponentWithLabel {
   sandboxed: boolean;
 }
 
-export const iframeFields = formComponentWithLabelFields.concat([
+const iframeFields = formComponentWithLabelFields.concat([
   FieldSchema.defaultedBoolean('sandboxed', true)
 ]);
 

@@ -5,7 +5,7 @@ import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 import theme from 'tinymce/themes/silver/Theme';
 import Env from 'tinymce/core/api/Env';
 
-UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', (success, failure) => {
+UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', (success, failure) => {
   // Note: Uses RealKeys, so needs a browser. Headless won't work.
 
   theme();

@@ -195,6 +195,11 @@
   resolved "https://registry.yarnpkg.com/@ephox/wrap-jsverify/-/wrap-jsverify-2.0.1.tgz#8984b292eeab3bd570eab773541650d257793d4d"
   integrity sha512-RSSsUFBV9uVUPzmCRvYXZBEZhVahYXs/j0JVgCy0CrbS98nV60BeYd97QB37sr05Lv7haLWzKf9XAcVAO7M8Ng==
 
+"@ephox/wrap-promise-polyfill@^2.2.0":
+  version "2.2.0"
+  resolved "http://nexus:8081/repository/npm-group/@ephox/wrap-promise-polyfill/-/wrap-promise-polyfill-2.2.0.tgz#866e58876a47e9689e4f69ad13dfc0b2b5d50e7c"
+  integrity sha512-l/Uus/bO5usluwZXIHutD7BwM+MKHKh4AnoqbeQ68bTZQoLbpKqqvOiPmaKeG8L1ky9fM7SHFbu/fi/wQ5sshQ==
+
 "@ephox/wrap-sizzle@^4.0.0":
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/@ephox/wrap-sizzle/-/wrap-sizzle-4.0.1.tgz#84193c357de60a47fa5d65ec181801bc5b8d576c"

@@ -14,7 +14,7 @@ export interface SizeInput extends FormComponentWithLabel {
   disabled: boolean;
 }
 
-export const sizeInputFields = formComponentWithLabelFields.concat([
+const sizeInputFields = formComponentWithLabelFields.concat([
   FieldSchema.defaultedBoolean('constrain', true),
   FieldSchema.defaultedBoolean('disabled', false)
 ]);

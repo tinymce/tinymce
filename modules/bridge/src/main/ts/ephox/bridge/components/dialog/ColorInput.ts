@@ -10,7 +10,7 @@ export interface ColorInput extends FormComponentWithLabel {
   type: 'colorinput';
 }
 
-export const colorInputFields = formComponentWithLabelFields;
+const colorInputFields = formComponentWithLabelFields;
 
 export const colorInputSchema = ValueSchema.objOf(colorInputFields);
 

@@ -16,7 +16,7 @@ export interface TextArea extends FormComponentWithLabel {
   disabled: boolean;
 }
 
-export const textAreaFields = formComponentWithLabelFields.concat([
+const textAreaFields = formComponentWithLabelFields.concat([
   FieldSchema.optionString('placeholder'),
   FieldSchema.defaultedBoolean('maximized', false),
   FieldSchema.defaultedBoolean('disabled', false)

@@ -15,7 +15,7 @@ export interface UrlInput extends FormComponentWithLabel {
   disabled: boolean;
 }
 
-export const urlInputFields = formComponentWithLabelFields.concat([
+const urlInputFields = formComponentWithLabelFields.concat([
   FieldSchema.defaultedStringEnum('filetype', 'file', ['image', 'media', 'file']),
   FieldSchema.defaulted('disabled', false)
 ]);

@@ -17,7 +17,7 @@ export interface AlertBanner {
   url: string;
 }
 
-export const alertBannerFields = [
+const alertBannerFields = [
   FieldSchema.strictString('type'),
   FieldSchema.strictString('text'),
   FieldSchema.strictStringEnum('level', [ 'info', 'warn', 'error', 'success' ]),
