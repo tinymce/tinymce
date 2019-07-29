@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Disabling, SketchSpec } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Disabling, SketchSpec } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Option } from '@ephox/katamari';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
@@ -38,7 +38,7 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
   };
 };
 
-const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Option<string>): SketchSpec => {
+const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Option<string>, extraBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>> = []): SketchSpec => {
   return renderCommonDropdown({
       text: spec.text,
       icon: spec.icon,
@@ -57,7 +57,7 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
       columns: 1,
       presets: 'normal',
       classes: [],
-      dropdownBehaviours: []
+      dropdownBehaviours: extraBehaviours
     },
     prefix,
     backstage.shared);
