@@ -1,5 +1,5 @@
 import { Future, Result, Arr } from '@ephox/katamari';
-import {Class, Html, Attr, Node, Element} from '@ephox/sugar';
+import { Class, Html, Attr, Node, Element } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Stateless } from '../../behaviour/common/BehaviourState';
