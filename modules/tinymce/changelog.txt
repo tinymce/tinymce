@@ -9,6 +9,7 @@ Version 5.0.13 (TBD)
     Fixed focus switching to another editor during mode changes #TINY-3852
     Fixed an exception being thrown when clicking on an uninitialized inline editor #TINY-3925
     Fixed dialogs being able to be dragged outside the window viewport #TINY-3787
+    Fixed plugins not being filtered when defaulting to mobile on phones #TINY-3537
 Version 5.0.12 (2019-07-18)
     Added ability to utilize UI dialog panels inside other panels #TINY-3305
     Added help dialog tab explaining keyboard navigation of the editor #TINY-3603
