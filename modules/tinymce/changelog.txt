@@ -8,6 +8,7 @@ Version 5.0.13 (TBD)
     Fixed mobile plugin filter to only apply to the mobile theme, rather than all mobile platforms #TINY-3405
     Fixed focus switching to another editor during mode changes #TINY-3852
     Fixed an exception being thrown when clicking on an uninitialized inline editor #TINY-3925
+    Fixed unable to keyboard navigate to dialog menu buttons #TINY-3933
     Fixed dialogs being able to be dragged outside the window viewport #TINY-3787
     Fixed inline dialogs appearing above modal dialogs #TINY-3932
 Version 5.0.12 (2019-07-18)
