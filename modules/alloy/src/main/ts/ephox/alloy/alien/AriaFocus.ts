@@ -4,8 +4,8 @@ import { Compare, Focus, PredicateFind, Traverse, Element } from '@ephox/sugar';
 const preserve = <T>(f: (e: Element) => T, container: Element): T => {
   const ownerDoc = Traverse.owner(container);
 
-  const refocus = Focus.active(ownerDoc).bind((focused) => {
-    const hasFocus = (elem) => {
+  const refocus = Focus.active(ownerDoc).bind((focused: Element) => {
+    const hasFocus = (elem: Element) => {
       return Compare.eq(focused, elem);
     };
     return hasFocus(container) ? Option.some(container) : PredicateFind.descendant(container, hasFocus);
@@ -14,7 +14,7 @@ const preserve = <T>(f: (e: Element) => T, container: Element): T => {
   const result = f(container);
 
   // If there is a focussed element, the F function may cause focus to be lost (such as by hiding elements). Restore it afterwards.
-  refocus.each((oldFocus) => {
+  refocus.each((oldFocus: Element) => {
     Focus.active(ownerDoc).filter((newFocus) => {
       return Compare.eq(newFocus, oldFocus);
     }).fold(() => {

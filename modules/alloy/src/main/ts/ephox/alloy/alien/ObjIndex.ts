@@ -23,7 +23,7 @@ import { Obj } from '@ephox/katamari';
 type OuterKey = string;
 type InnerKey = string;
 
-const byInnerKey = <T, O>(data: Record<OuterKey, Record<InnerKey, T>>, tuple: (string, T) => O):
+const byInnerKey = <T, O>(data: Record<OuterKey, Record<InnerKey, T>>, tuple: (s: string, t: T) => O):
   Record<InnerKey, O[]> => {
 
   const r: Record<InnerKey, O[]> = {};
