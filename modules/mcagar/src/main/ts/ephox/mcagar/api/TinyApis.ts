@@ -1,6 +1,6 @@
 import { Assertions, Chain, Cursors, FocusTools, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Element, Hierarchy, Html } from '@ephox/sugar';
-import { document } from '@ephox/dom-globals';
+import { document, Range } from '@ephox/dom-globals';
 import TinySelections from '../selection/TinySelections';
 
 export interface Presence {
@@ -33,11 +33,11 @@ export default function (editor) {
     editor.nodeChanged();
   });
 
-  const cSetDomSelection = Chain.op(function (range) {
+  const cSetDomSelection = Chain.op<Range>(function (range: Range) {
     editor.selection.setRng(range);
   });
 
-  const cSelectElement = Chain.op(function (target: Element) {
+  const cSelectElement: Chain<Element, Element> = Chain.op(function (target: Element) {
     editor.selection.select(target.dom());
   });
 
