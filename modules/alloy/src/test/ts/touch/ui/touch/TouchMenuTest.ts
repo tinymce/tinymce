@@ -1,7 +1,7 @@
-import { ApproxStructure, Assertions, Chain, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Logger, Step, StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Future, Option } from '@ephox/katamari';
-import { Class } from '@ephox/sugar';
+import { Class, Element } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
@@ -99,7 +99,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
     );
   }, (doc, body, gui, component, store) => {
 
-    const fireTouchstart = (target, x, y) => {
+    const fireTouchstart = (target: Element, x: number, y: number) => {
       AlloyTriggers.dispatchWith(component, target, NativeEvents.touchstart(), {
         raw: {
           touches: [
@@ -109,15 +109,15 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
       });
     };
 
-    const fireTouchend = (target, x, y) => {
+    const fireTouchend = (target: Element, x: number, y: number) => {
       AlloyTriggers.dispatch(component, target, NativeEvents.touchend());
     };
 
-    const fireLongpress = (target) => {
+    const fireLongpress = (target: Element, x: number, y: number) => {
       AlloyTriggers.dispatch(component, target, SystemEvents.longpress());
     };
 
-    const sFireTouchmoveOn = (container, selector) => {
+    const sFireTouchmoveOn = (container: Element, selector: string) => {
       return Chain.asStep(gui.element(), [
         UiFinder.cFindIn(selector),
         Chain.op((target) => {
@@ -133,7 +133,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
       ]);
     };
 
-    const sAssertMenuStructure = (label, structure) => {
+    const sAssertMenuStructure = (label: string, structure: StructAssert) => {
       return Logger.t(label, Chain.asStep(gui.element(), [
         UiFinder.cFindIn('[role=menu]'),
         Chain.op((menu) => {
@@ -169,7 +169,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
         const rect = component.element().dom().getBoundingClientRect();
         fireTouchstart(component.element(), rect.x, rect.y);
         Step.wait(300);
-        fireLongpress(component.element());
+        fireLongpress(component.element(), 0, 0);
         Assertions.assertEq('Checking selected class should now be on', true, Class.has(component.element(), 'touch-menu-open'));
       }),
 
