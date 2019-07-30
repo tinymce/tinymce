@@ -5,7 +5,7 @@ import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
 
-  const sAssertSetting = function (editor, key, expected) {
+  const sAssertSetting = function (editor, key: string, expected) {
     return Step.sync(function () {
       const actual = editor.settings[key];
 
@@ -13,7 +13,7 @@ UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
     });
   };
 
-  const sAssertSettingType = function (editor, key, expected) {
+  const sAssertSettingType = function (editor, key: string, expected) {
     return Step.sync(function () {
       const actual = typeof editor.settings[key];
 
