@@ -43,25 +43,20 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardN
     };
 
     Pipeline.async({}, [
-      Log.stepsAsStep('TINY-3933', 'Find and replace: Reaching find and replace via the keyboard', [
+      Log.stepsAsStep('TINY-3914', 'Find and replace: Reaching find and replace via the keyboard', [
         sFocusToolbar,
         sAssertFocused('File', '.tox-mbtn:contains("File")'),
         sPressRight,
         sAssertFocused('Edit', '.tox-mbtn:contains("Edit")'),
-        sPressDown, // undo
-        tinyUi.sWaitForPopup('Wait for menu to open', '.tox-menu'),
-        sPressDown, // redo
-        sPressDown, // cut
-        sPressDown, // copy
-        sPressDown, // paste
         sPressDown, // select all
+        tinyUi.sWaitForPopup('Wait for menu to open', '.tox-menu'),
         sPressDown, // find and replace
         sAssertFocused('Find and replace edit menu item', '.tox-collection__item:contains("Find and replace")'), // Menu item can be reached by keyboard
         sPressEsc,
         sPressTab,
         sAssertFocused('Find and replace button', '.tox-tbtn'), // Button can be reached by keyboard
       ]),
-      Log.stepsAsStep('TINY-3933', 'Find and replace: Dialog keyboard navigation', [
+      Log.stepsAsStep('TINY-3914', 'Find and replace: Dialog keyboard navigation', [
         sOpenDialog(tinyUi),
         sAssertFocused('Find input', '.tox-textfield[placeholder="Find"]'),
         // TODO: Enable this fully once TINY-3914 has been fixed
@@ -82,5 +77,10 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardN
     plugins: 'searchreplace',
     toolbar: 'searchreplace',
     base_url: '/project/tinymce/js/tinymce',
+    menubar: 'file edit',
+    menu: {
+      file: { title: 'File', items: 'newdocument' },
+      edit: { title: 'Edit', items: 'selectall searchreplace' }
+    }
   }, success, failure);
 });
