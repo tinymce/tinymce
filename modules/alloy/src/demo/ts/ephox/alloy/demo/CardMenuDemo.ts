@@ -11,7 +11,7 @@ import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 import { Option } from '@ephox/katamari';
-import {AlloyComponent} from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 // tslint:disable:no-console
 
