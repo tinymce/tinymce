@@ -109,11 +109,11 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
       });
     };
 
-    const fireTouchend = (target: Element, x: number, y: number) => {
+    const fireTouchend = (target: Element) => {
       AlloyTriggers.dispatch(component, target, NativeEvents.touchend());
     };
 
-    const fireLongpress = (target: Element, x: number, y: number) => {
+    const fireLongpress = (target: Element) => {
       AlloyTriggers.dispatch(component, target, SystemEvents.longpress());
     };
 
@@ -154,7 +154,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
         fireTouchstart(component.element(), rect.x, rect.y);
         Assertions.assertEq('Checking selected class should be on', true, Class.has(component.element(), 'touch-menu-open'));
         store.assertEq('Checking no hovering messages until menu appears', [ ]);
-        fireTouchend(component.element(), rect.x, rect.y);
+        fireTouchend(component.element());
         Assertions.assertEq('Checking selected class should be off again', false, Class.has(component.element(), 'touch-menu-open'));
         store.clear();
       }),
@@ -169,7 +169,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
         const rect = component.element().dom().getBoundingClientRect();
         fireTouchstart(component.element(), rect.x, rect.y);
         Step.wait(300);
-        fireLongpress(component.element(), 0, 0);
+        fireLongpress(component.element());
         Assertions.assertEq('Checking selected class should now be on', true, Class.has(component.element(), 'touch-menu-open'));
       }),
 
