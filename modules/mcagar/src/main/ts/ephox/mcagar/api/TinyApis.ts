@@ -8,27 +8,28 @@ export interface Presence {
 }
 
 export default function (editor) {
-  const setContent = function (html: string) {
+  const setContent = function (html: string): void {
     editor.setContent(html);
   };
 
-  const sSetContent = function (html: string) {
+  const sSetContent = function <T> (html: string): Step<T, T> {
     return Step.sync(function () {
       setContent(html);
     });
   };
 
-  const sSetRawContent = function (html: string) {
+  const sSetRawContent = function <T> (html: string): Step<T, T> {
     return Step.sync(function () {
       editor.getBody().innerHTML = html;
     });
   };
 
-  const lazyBody = function () {
+  const lazyBody = function (): Element {
     return Element.fromDom(editor.getBody());
   };
 
-  const cNodeChanged = Chain.op(function () {
+  // Has to be thunked, so it can remain polymorphic
+  const cNodeChanged = <T> () => Chain.op<T>(function () {
     editor.nodeChanged();
   });
 
@@ -53,17 +54,17 @@ export default function (editor) {
     return Chain.asStep(lazyBody(), [
       TinySelections.cCreateDomSelection(startPath, soffset, finishPath, foffset),
       cSetDomSelection,
-      cNodeChanged
+      cNodeChanged()
     ]);
   };
 
-  const sSetSetting = function (key: string, value) {
+  const sSetSetting = function <T> (key: string, value: any): Step<T, T> {
     return Step.sync(function () {
       editor.settings[key] = value;
     });
   };
 
-  const sDeleteSetting = function (key: string) {
+  const sDeleteSetting = function <T> (key: string): Step<T, T> {
     return Step.sync(function () {
       delete editor.settings[key];
     });
@@ -95,7 +96,7 @@ export default function (editor) {
     ]);
   };
 
-  const sAssertContentPresence = function (expected: Presence) {
+  const sAssertContentPresence = function <T> (expected: Presence): Step<T, T> {
     return Assertions.sAssertPresence(
       'Asserting the presence of selectors inside tiny content. Complete list: ' + JSON.stringify(expected) + '\n',
       expected,
