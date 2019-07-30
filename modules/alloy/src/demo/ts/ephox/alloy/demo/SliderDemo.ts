@@ -12,8 +12,9 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { SliderValueX, SliderValueY } from 'ephox/alloy/ui/types/SliderTypes';
+import { SliderValue, SliderValueX, SliderValueY } from 'ephox/alloy/ui/types/SliderTypes';
 import { ConfiguredPart } from 'ephox/alloy/parts/AlloyParts';
+import { AlloyComponent } from '@ephox/alloy';
 
 export default (): void => {
   const gui = Gui.create();
@@ -80,15 +81,19 @@ export default (): void => {
       onDragStart(_, thumb) { Toggling.on(thumb); },
       onDragEnd(_, thumb) { Toggling.off(thumb); },
 
-      onChange(_slider, thumb, value: SliderValueY) {
-        Replacing.set(thumb, [
-          GuiFactory.text(value.y().toString())
-        ]);
+      onChange(_slider, thumb, value: SliderValue) {
+        if (isValueY(value)) {
+          Replacing.set(thumb, [
+            GuiFactory.text(value.y().toString())
+          ]);
+        }
       },
-      onInit(_slider, thumb, _spectrum, value: SliderValueY) {
-        Replacing.set(thumb, [
-          GuiFactory.text(value.y().toString())
-        ]);
+      onInit(_slider, thumb, _spectrum, value: SliderValue) {
+        if (isValueY(value)) {
+          Replacing.set(thumb, [
+            GuiFactory.text(value.y().toString())
+          ]);
+        }
       },
 
       components: [
@@ -123,7 +128,15 @@ export default (): void => {
     })
   );
 
-  const setColor = (thumb, hue) => {
+  function isValueX(v: SliderValue): v is SliderValueX {
+    return typeof (v as SliderValueX).x === 'function';
+  }
+
+  function isValueY(v: SliderValue): v is SliderValueY {
+    return typeof (v as SliderValueY).y === 'function';
+  }
+
+  const setColor = (thumb: AlloyComponent, hue: number) => {
     const color = (hue < 0) ? 'black' : (hue > 360) ? 'white' : 'hsl(' + hue + ', 100%, 50%)';
     Css.set(thumb.element(), 'background', color);
   };
@@ -145,12 +158,16 @@ export default (): void => {
       },
       stepSize: 10,
 
-      onChange(_slider, thumb, value: SliderValueX) {
-        setColor(thumb, value.x());
+      onChange(_slider, thumb, value: SliderValue) {
+        if (isValueX(value)) {
+          setColor(thumb, value.x());
+        }
       },
 
-      onInit(_slider, thumb, _spectrum, value: SliderValueX) {
-        setColor(thumb, value.x());
+      onInit(_slider, thumb, _spectrum, value: SliderValue) {
+        if (isValueX(value)) {
+          setColor(thumb, value.x());
+        }
       },
 
       components: [
