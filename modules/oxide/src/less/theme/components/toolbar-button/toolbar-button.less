@@ -107,34 +107,12 @@
     }
   }
 
-  .tox-tbtn:hover {
-    background: @toolbar-button-hover-background-color;
-    box-shadow: @toolbar-button-hover-box-shadow;
-    color: @toolbar-button-hover-text-color;
-
-    svg {
-      fill: @toolbar-button-hover-icon-color;
-    }
-  }
-
   .tox-tbtn:focus {
     background: @toolbar-button-focus-background-color;
-    box-shadow: @toolbar-button-focus-box-shadow;
-    color: @toolbar-button-focus-text-color;
-
-    svg {
-      fill: @toolbar-button-focus-icon-color;
-    }
   }
 
   .tox-tbtn:active {
     background: @toolbar-button-active-background-color;
-    box-shadow: @toolbar-button-active-box-shadow;
-    color: @toolbar-button-active-text-color;
-
-    svg {
-      fill: @toolbar-button-active-icon-color;
-    }
   }
 
   .tox-tbtn--disabled,
@@ -150,6 +128,34 @@
     // since they need to be kept the same/use the same rules
     svg { /* stylelint-disable-line no-descending-specificity */
       fill: @toolbar-button-disabled-icon-color;
+    }
+  }
+
+  .tox-tbtn:hover:not(.tox-tbtn--disabled) {
+    background: @toolbar-button-hover-background-color;
+    box-shadow: @toolbar-button-hover-box-shadow;
+    color: @toolbar-button-hover-text-color;
+
+    svg {
+      fill: @toolbar-button-hover-icon-color;
+    }
+  }
+
+  .tox-tbtn:focus:not(.tox-tbtn--disabled) {
+    box-shadow: @toolbar-button-focus-box-shadow;
+    color: @toolbar-button-focus-text-color;
+
+    svg {
+      fill: @toolbar-button-focus-icon-color;
+    }
+  }
+
+  .tox-tbtn:active:not(.tox-tbtn--disabled) {
+    box-shadow: @toolbar-button-active-box-shadow;
+    color: @toolbar-button-active-text-color;
+
+    svg {
+      fill: @toolbar-button-active-icon-color;
     }
   }
 

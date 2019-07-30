@@ -1,4 +1,5 @@
 Version 5.0.13 (TBD)
+    Fixed issue with being unable to keyboard navigate disabled toolbar buttons #TINY-3350
     Fixed issue with being able to delete contenteditable false elements inside other contenteditable false elements #TINY-3868
     Fixed `MouseEvent.mozPressure is deprecated` warning in Firefox #TINY-3919
     Added new `draggable_modal` option to enable dragging of modal dialogs #TINY-3873
