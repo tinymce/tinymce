@@ -1,10 +1,10 @@
-import { Log, Pipeline, Step, RawAssertions, ApproxStructure, Mouse, Chain, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Chain, Log, Mouse, Pipeline, RawAssertions, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Body, Class, Css, Element, SelectorFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import { Element, Css, SelectorFind, Body, Attr } from '@ephox/sugar';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) => {
   Theme();
@@ -78,7 +78,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
     const sAssertToolbarDisabled = (expectedState: boolean) => Chain.asStep(Body.body(), [
       UiFinder.cFindIn('button[title="Bold"]'),
       Chain.op((elm) => {
-        RawAssertions.assertEq('Button should have expected disabled state', expectedState, Attr.has(elm, 'disabled'));
+        RawAssertions.assertEq('Button should have expected disabled state', expectedState, Class.has(elm, 'tox-tbtn--disabled'));
       })
     ]);
 
