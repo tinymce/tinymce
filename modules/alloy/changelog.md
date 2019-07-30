@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.15.1] - 2019-07-30
+
+### Changed
+- Changed tabbing behaviour to not try to tab to disabled elements by default.
+
 # [4.15.0] - 2019-07-23
 
 ### Added
