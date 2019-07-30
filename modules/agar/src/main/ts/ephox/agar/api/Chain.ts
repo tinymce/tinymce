@@ -55,7 +55,7 @@ const control = function <T, U, V>(chain: Chain<T, U>, guard: ChainGuard<T, U, V
   });
 };
 
-const mapper = function <T, U>(fx: (value: T) => U) {
+const mapper = function <T, U>(fx: (value: T) => U): Chain<T, U> {
   return on(function (input: T, next: NextFn<Wrap<U>>, die: DieFn, logs: TestLogs) {
     next(wrap(fx(input)), logs);
   });
@@ -73,7 +73,7 @@ const binder = function <T, U, E>(fx: (input: T) => Result<U, E>) {
   });
 };
 
-const op = function <T>(fx: (value: T) => void) {
+const op = function <T>(fx: (value: T) => void): Chain<T, T> {
   return on(function (input: T, next: NextFn<Wrap<T>>, die: DieFn, logs: TestLogs) {
     fx(input);
     next(wrap(input), logs);
