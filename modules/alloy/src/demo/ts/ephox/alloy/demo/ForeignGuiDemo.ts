@@ -1,4 +1,4 @@
-import {alert, document} from '@ephox/dom-globals';
+import { document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, DomEvent, Element, Elements, Height, Insert, InsertAll, Node, SelectorFind, Width } from '@ephox/sugar';
@@ -18,7 +18,7 @@ import * as Frames from './frames/Frames';
 const resize = (element: Element, changeX: number, changeY: number): void => {
   const heading = document.querySelector('h2');
   if (heading === null) {
-    alert('heading not found');
+    throw new Error('heading not found');
   } else {
     heading.innerHTML = 'resizing';
     const width = Css.getRaw(element, 'width').map((w) => {
