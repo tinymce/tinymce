@@ -152,9 +152,7 @@ const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): s
 
 export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, backstage: UiFactoryBackstage): SketchSpec => {
   if (isMenuFooterButtonSpec(spec, buttonType)) {
-    return renderMenuButton(spec, ToolbarButtonClasses.Button, backstage, Option.none(), [
-      Tabstopping.config({ })
-    ]);
+    return renderMenuButton(spec, ToolbarButtonClasses.Button, backstage, Option.none());
   } else if (isNormalFooterButtonSpec(spec, buttonType)) {
     const action = getAction(spec.name, buttonType);
     const buttonSpec = {
