@@ -55,7 +55,7 @@ const control = function <T, U, V>(chain: Chain<T, U>, guard: ChainGuard<T, U, V
   });
 };
 
-const mapper = function <T, U>(fx: (value: T) => U): Chain<T, U> {
+const mapper = function <T, U>(fx: (value: T) => U) {
   return on(function (input: T, next: NextFn<Wrap<U>>, die: DieFn, logs: TestLogs) {
     next(wrap(fx(input)), logs);
   });
