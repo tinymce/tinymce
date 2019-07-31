@@ -177,7 +177,7 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
           onControlAttached(specialisation, editorOffCell),
           onControlDetached(specialisation, editorOffCell),
         ]),
-        DisablingConfigs.button(spec.disabled)
+        DisablingConfigs.toolbarButton(spec.disabled)
       ].concat(specialisation.toolbarButtonBehaviours)
     )
   });

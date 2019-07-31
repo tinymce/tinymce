@@ -41,6 +41,9 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
                   children: [
                     s.text(str.is('c'))
                   ]
+                }),
+                s.element('div', {
+                  classes: [ arr.has('mce-offscreen-selection') ]
                 })
               ]
             });
@@ -71,6 +74,9 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
                   children: [
                     s.text(str.is('c'))
                   ]
+                }),
+                s.element('div', {
+                  classes: [ arr.has('mce-offscreen-selection') ]
                 })
               ]
             });

@@ -1,12 +1,11 @@
 import { ApproxStructure, Assertions, Logger, Mouse, Step, Waiter } from '@ephox/agar';
-import { GuiFactory, AlloyComponent, TestHelpers } from '@ephox/alloy';
+import { AlloyComponent, GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { Attr, Class, SelectorFind } from '@ephox/sugar';
-
 import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
-import { renderToolbarButton, renderToolbarToggleButton, renderSplitButton } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
+import { renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
 import TestExtras from '../../module/TestExtras';
 import TestProviders from '../../module/TestProviders';
 
@@ -157,7 +156,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
 
       const sAssertButtonDisabledState = (label: string, expected: boolean, button: AlloyComponent) => {
         return Step.sync(() => {
-          Assertions.assertEq('Checking if disabled attr is present: ' + label, expected, Attr.has(button.element(), 'disabled'));
+          Assertions.assertEq('Checking if disabled class is present: ' + label, expected, Class.has(button.element(), 'tox-tbtn--disabled'));
         });
       };
 

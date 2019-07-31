@@ -6,7 +6,7 @@
  */
 
 import { Node } from '@ephox/dom-globals';
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { Element, Remove, SelectorFilter } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
@@ -38,25 +38,33 @@ const moveToPosition = function (editor: Editor) {
   };
 };
 
-const hasAncestorCef = (editor, node: Node) => {
-  const ceRoot = getContentEditableRoot(editor.getBody(), node);
-  return ceRoot !== null ? NodeType.isContentEditableFalse(ceRoot) : false;
+const getAncestorCe = (editor, node: Node) => {
+  return Option.from(getContentEditableRoot(editor.getBody(), node));
 };
 
 const backspaceDeleteCaret = function (editor: Editor, forward: boolean) {
   const selectedNode = editor.selection.getNode(); // is the parent node if cursor before/after cef
-  if (!NodeType.isContentEditableFalse(selectedNode) && !hasAncestorCef(editor, selectedNode)) {
-    const result = CefDeleteAction.read(editor.getBody(), forward, editor.selection.getRng()).map(function (deleteAction) {
-      return deleteAction.fold(
-        deleteElement(editor, forward),
-        moveToElement(editor, forward),
-        moveToPosition(editor)
-      );
-    });
 
-    return result.getOr(false);
-  }
-  return false;
+  // Cases:
+  // 1. CEF selectedNode -> return true
+  // 2. CET selectedNode -> try to delete, return true if possible else false
+  // 3. CET ancestor -> try to delete, return true if possible else false
+  // 4. no CET/CEF ancestor -> try to delete, return true if possible else false
+  // 5. CEF ancestor -> return true
+
+  return getAncestorCe(editor, selectedNode).filter(NodeType.isContentEditableFalse).fold(
+    () => {
+      const result = CefDeleteAction.read(editor.getBody(), forward, editor.selection.getRng()).map(function (deleteAction) {
+        return deleteAction.fold(
+          deleteElement(editor, forward),
+          moveToElement(editor, forward),
+          moveToPosition(editor)
+        );
+      });
+      return result.getOr(false);
+    },
+    () => true
+  );
 };
 
 const deleteOffscreenSelection = function (rootElement) {
@@ -65,11 +73,23 @@ const deleteOffscreenSelection = function (rootElement) {
 
 const backspaceDeleteRange = function (editor: Editor, forward: boolean) {
   const selectedNode = editor.selection.getNode(); // is the cef node if cef is selected
-  deleteOffscreenSelection(Element.fromDom(editor.getBody())); // needs to happen either way
-  if (NodeType.isContentEditableFalse(selectedNode) && !hasAncestorCef(editor, selectedNode)) {
-    DeleteElement.deleteElement(editor, forward, Element.fromDom(editor.selection.getNode()));
-    DeleteUtils.paddEmptyBody(editor);
-    return true;
+
+  // Cases:
+  // 1. CEF selectedNode
+  //    a. no ancestor CET/CEF || CET ancestor -> run delete code and return true
+  //    b. CEF ancestor -> return true
+  // 2. non-CEF selectedNode -> return false
+  if (NodeType.isContentEditableFalse(selectedNode)) {
+    const hasCefAncestor = getAncestorCe(editor, selectedNode.parentNode).filter(NodeType.isContentEditableFalse);
+    return hasCefAncestor.fold(
+      () => {
+        deleteOffscreenSelection(Element.fromDom(editor.getBody()));
+        DeleteElement.deleteElement(editor, forward, Element.fromDom(editor.selection.getNode()));
+        DeleteUtils.paddEmptyBody(editor);
+        return true;
+      },
+      () => true
+    );
   }
   return false;
 };
