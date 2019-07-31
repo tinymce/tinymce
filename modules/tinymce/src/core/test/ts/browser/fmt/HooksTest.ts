@@ -62,7 +62,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.HooksTest', function () {
     );
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     selector: 'textarea',

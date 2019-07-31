@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.ConsecutiveLinkTest', (succ
   Theme();
   AutolinkPlugin();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const steps = Env.ie && Env.ie <= 11 ? [] : [
       tinyApis.sFocus,

@@ -111,5 +111,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultAttributesTest', (
     plugins: 'table',
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',
+    statusbar: false
   }, success, failure);
 });

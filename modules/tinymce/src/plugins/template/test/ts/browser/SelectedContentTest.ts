@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.SelectedContentTest', (succ
   TemplatePlugin();
   SilverTheme();
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     const dialogSelector = 'div.tox-dialog';

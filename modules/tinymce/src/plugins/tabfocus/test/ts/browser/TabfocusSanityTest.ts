@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', (succe
     input1.parentNode.removeChild(input1);
   }));
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyActions = TinyActions(editor);
     const tinyApis = TinyApis(editor);
 

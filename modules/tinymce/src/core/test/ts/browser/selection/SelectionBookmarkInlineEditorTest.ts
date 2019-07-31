@@ -77,7 +77,7 @@ UnitTest.asynctest(
       assertPath('finish', root, finishPath, foffset, actual.finish().dom(), actual.foffset());
     };
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
       const browser = PlatformDetection.detect().browser;
 
       Pipeline.async({}, browser.isIE() || browser.isEdge() ? [ // On edge and ie it restores on focusout only

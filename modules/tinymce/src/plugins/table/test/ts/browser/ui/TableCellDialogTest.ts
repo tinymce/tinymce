@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
     valign: 'label.tox-label:contains(V Align) + div.tox-selectfield>select'
   };
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     const baseHtml = '<table>' +

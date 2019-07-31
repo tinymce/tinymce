@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorRtlTest', (success, failure) => {
 
   I18n.setCode('en');
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, [
       sAssertRtl('Should be in rtl mode after creating an editor in arabic', true),
       sSetLangCode('en'),

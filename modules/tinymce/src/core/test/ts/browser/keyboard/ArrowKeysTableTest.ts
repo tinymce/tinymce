@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysTableTest', (success,
     const visualCaretAfter = Fun.curry(visualCaret, false);
     const buildBody = (children) => ApproxStructure.build((s, str, arr) => s.element('body', { children }));
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, [
         Logger.t('FakeCaret before/after table', GeneralSteps.sequence(browser.isEdge() || browser.isFirefox() ? [
           Logger.t('Move fake caret left before table', Chain.asStep(editor, [

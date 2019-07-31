@@ -500,7 +500,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function () {
     editor.settings.forced_root_block = 'p';
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     indent: false,

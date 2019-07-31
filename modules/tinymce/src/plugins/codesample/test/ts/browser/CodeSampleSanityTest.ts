@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.CodeSampleSanityTest', (s
   CodePlugin();
   SilverTheme();
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
 
     const docBody = Element.fromDom(document.body);
     const editorBody = editor.contentDocument.body;

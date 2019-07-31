@@ -233,6 +233,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
   }, {
       base_url: '/project/tinymce/js/tinymce',
       toolbar: 'bold',
-      plugins: 'table'
+      plugins: 'table',
+      statusbar: false
     }, success, failure);
 });

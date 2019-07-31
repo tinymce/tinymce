@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
     height: 'label.tox-label:contains(Height) + input.tox-textfield'
   };
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     const baseHtml = '<table style="border: 1px solid black; border-collapse: collapse;" border="1"><tr><td>X</td></tr></table>';

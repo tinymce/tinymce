@@ -43,6 +43,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerSpanClassTe
         dict.push(text);
         success();
       }
-    }
+    },
+    statusbar: false
   }, success, failure);
 });

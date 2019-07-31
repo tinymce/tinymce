@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
     });
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const root = Element.fromDom(editor.getBody());
 

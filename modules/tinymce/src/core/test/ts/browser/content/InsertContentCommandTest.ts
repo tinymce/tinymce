@@ -422,7 +422,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(JSON.serialize(editor.getContent()), '"<p>a <strong>X</strong> c</p>"');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

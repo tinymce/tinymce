@@ -866,7 +866,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteTest', (success, failure)
     });
   }
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, appendTeardown(editor, Log.steps('TBA', 'Paste: Paste sanity tests', suite.toSteps(editor))), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

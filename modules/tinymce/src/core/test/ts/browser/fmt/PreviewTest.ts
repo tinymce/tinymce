@@ -235,7 +235,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function () {
     ].join('')), 'p li[title="Some Title"][alt="Some Alt"] (test multiple spaced attributes) ok');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Arr.flatten([
       [
         Step.sync(function () {

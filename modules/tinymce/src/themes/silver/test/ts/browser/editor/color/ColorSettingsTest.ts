@@ -98,7 +98,7 @@ UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
     }
   ];
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({},
       Log.steps('TBA', 'TextColor: getCurrentColor should return the first found forecolor, not the parent color', [
         sResetLocalStorage(),

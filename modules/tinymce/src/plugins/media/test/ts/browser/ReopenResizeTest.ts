@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (s
     }));
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const ui = TinyUi(editor);
 
     Pipeline.async({},

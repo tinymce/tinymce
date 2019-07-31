@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.DialogHeightTest', (success,
     return Css.getRaw(tabpanel, 'height').fold(() => Result.error('tabpanel has no height'), Result.value);
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
     const doc = Element.fromDom(document);

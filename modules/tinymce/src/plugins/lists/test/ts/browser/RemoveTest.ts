@@ -482,7 +482,7 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', (success, failure) => {
     });
   }
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Link: Remove tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'lists',

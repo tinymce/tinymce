@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.save.SaveSanityTest', (success, fail
   SavePlugin();
   SilverTheme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);

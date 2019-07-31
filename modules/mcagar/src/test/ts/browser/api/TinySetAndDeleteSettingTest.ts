@@ -21,7 +21,7 @@ UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
     });
   };
 
-  TinyLoader.setup((editor, loadSuccess, loadFailure) => {
+  TinyLoader.setupLight((editor, loadSuccess, loadFailure) => {
     const apis = TinyApis(editor);
 
     Pipeline.async({}, [

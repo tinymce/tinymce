@@ -325,6 +325,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
       valid_styles: {
         '*': 'width,height,vertical-align,text-align,float,border-color,border-width,background-color,border,padding,border-spacing,border-collapse,border-style'
       },
-      table_advtab: false
+      table_advtab: false,
+      statusbar: false
     }, success, failure);
 });

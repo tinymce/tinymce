@@ -117,7 +117,7 @@ UnitTest.asynctest(
       LegacyUnit.equal(editor.getContent(), '<p>text</p>');
     });
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, Log.steps('TBA', 'LegacyOutput: Test legacy formatting', suite.toSteps(editor)), onSuccess, onFailure);
     }, {
       plugins: 'legacyoutput',
