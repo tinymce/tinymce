@@ -109,10 +109,12 @@
 
   .tox-tbtn:focus {
     background: @toolbar-button-focus-background-color;
+    box-shadow: @toolbar-button-focus-box-shadow;
   }
 
   .tox-tbtn:active {
     background: @toolbar-button-active-background-color;
+    box-shadow: @toolbar-button-active-box-shadow;
   }
 
   .tox-tbtn--disabled,
@@ -142,7 +144,6 @@
   }
 
   .tox-tbtn:focus:not(.tox-tbtn--disabled) {
-    box-shadow: @toolbar-button-focus-box-shadow;
     color: @toolbar-button-focus-text-color;
 
     svg {
@@ -151,7 +152,6 @@
   }
 
   .tox-tbtn:active:not(.tox-tbtn--disabled) {
-    box-shadow: @toolbar-button-active-box-shadow;
     color: @toolbar-button-active-text-color;
 
     svg {

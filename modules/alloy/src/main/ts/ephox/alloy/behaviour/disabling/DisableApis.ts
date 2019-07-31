@@ -17,7 +17,7 @@ const onLoad = (component: AlloyComponent, disableConfig: DisableConfig, disable
 };
 
 const hasNative = (component: AlloyComponent, config: DisableConfig): boolean => {
-  return Arr.contains(nativeDisabled, Node.name(component.element())) && config.useNative === true;
+  return config.useNative === true && Arr.contains(nativeDisabled, Node.name(component.element()));
 };
 
 const nativeIsDisabled = (component: AlloyComponent): boolean => {

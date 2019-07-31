@@ -117,7 +117,8 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           sFire('test.updateButtonABC', { disable: true }),
           sCheckLastButtonGroup('Checking button is disabled after event', (s, str, arr) => [
             s.element('button', {
-              classes: [ arr.has('tox-tbtn--disabled')]
+              classes: [ arr.has('tox-tbtn--disabled')],
+              attrs: { 'aria-disabled': str.is(true) }
             })
           ]),
           sFire('test.updateButtonABC', { disable: false }),
@@ -151,7 +152,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           sFire('test.updateButtonA', { disable: true }),
           sFire('test.updateButtonC', { active: true }),
           sCheckLastButtonGroup('Checking buttons have right state', (s, str, arr) => [
-            s.element('button', { classes: [ arr.has('tox-tbtn--disabled')] }),
+            s.element('button', { classes: [ arr.has('tox-tbtn--disabled')], attrs: { 'aria-disabled': str.is(true) } }),
             s.element('button', { classes: [ arr.not('tox-tbtn--disabled')] }),
             s.element('button', { attrs: { 'aria-pressed': str.is('true') } })
           ])
