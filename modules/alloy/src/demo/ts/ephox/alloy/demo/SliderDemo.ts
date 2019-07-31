@@ -1,5 +1,5 @@
 import { document } from '@ephox/dom-globals';
-import { Fun } from '@ephox/katamari';
+import { Fun, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import { Class, Css, DomEvent, Element, Insert } from '@ephox/sugar';
@@ -129,11 +129,11 @@ export default (): void => {
   );
 
   function isValueX(v: SliderValue): v is SliderValueX {
-    return typeof (v as SliderValueX).x === 'function';
+    return Type.isFunction((v as SliderValueX).x);
   }
 
   function isValueY(v: SliderValue): v is SliderValueY {
-    return typeof (v as SliderValueY).y === 'function';
+    return Type.isFunction((v as SliderValueY).y);
   }
 
   const setColor = (thumb: AlloyComponent, hue: number) => {
