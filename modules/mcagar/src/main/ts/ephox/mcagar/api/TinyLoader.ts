@@ -25,7 +25,6 @@ const removeTinymceElements = () => {
   Arr.each(elements, Remove.remove);
 };
 
-
 const setupLight = (callback: SetupCallback, settings: Record<string, any>, success: SuccessCallback, failure: FailureCallback) => {
   const nuSettings = Merger.merge({
     toolbar: '',
