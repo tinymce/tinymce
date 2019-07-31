@@ -141,7 +141,7 @@ const translate = (coord: CoordAdt, deltaX: number, deltaY: number): CoordAdt =>
 
 const absorb = (partialCoord: CoordAdt, originalCoord: CoordAdt, scroll: SugarPosition, origin: SugarPosition): CoordAdt => {
   const absorbOne = (stencil: CoordStencil, nu: DragCoords) => {
-    return (optX, optY): CoordAdt => {
+    return (optX: Option<number>, optY: Option<number>): CoordAdt => {
       const original = stencil(originalCoord, scroll, origin);
       return nu(optX.getOr(original.left()), optY.getOr(original.top()));
     };

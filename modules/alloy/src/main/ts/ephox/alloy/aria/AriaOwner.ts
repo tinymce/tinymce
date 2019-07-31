@@ -27,11 +27,11 @@ export interface AriaManager {
 const manager = (): AriaManager => {
   const ariaId = Id.generate('aria-owns');
 
-  const link = (elem) => {
+  const link = (elem: Element) => {
     Attr.set(elem, 'aria-owns', ariaId);
   };
 
-  const unlink = (elem) => {
+  const unlink = (elem: Element) => {
     Attr.remove(elem, 'aria-owns');
   };
 

@@ -45,7 +45,7 @@ export default (): void => {
           const value = Representing.getValue(textarea);
           const output = GuiTemplate.readHtml(value).getOrDie();
           const display = button.getSystem().getByUid('pre-output').getOrDie();
-          const prettyprint = Json.stringify(output, null, 2);
+          const prettyprint = Json.stringify(output, undefined, 2);
 
           Replacing.set(display, [ GuiFactory.text(prettyprint) ]);
         }

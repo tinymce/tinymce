@@ -11,7 +11,7 @@ const init = () => {
     return popup.get();
   };
 
-  const setTooltip = (s) => {
+  const setTooltip = (s: string) => {
     popup.set(Option.some(s));
   };
 
@@ -25,7 +25,7 @@ const init = () => {
     });
   };
 
-  const resetTimer = (f, delay) => {
+  const resetTimer = (f: () => any, delay: number) => {
     clearTimer();
     timer.set(
       Option.some(
