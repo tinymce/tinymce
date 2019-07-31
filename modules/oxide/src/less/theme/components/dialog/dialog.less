@@ -53,6 +53,11 @@
 
 @dialog-table-border-color: @border-color;
 
+// These get stacked on top of the global dialog z-index (1100)
+@z-index-dialogs-offset-wrap-background: 1;
+@z-index-dialogs-offset-dialog: 2;
+@z-index-dialogs-offset-busy-spinner: 3;
+
 .tox {
   .tox-dialog-wrap {
     align-items: center;
@@ -63,7 +68,7 @@
     position: fixed;
     right: 0;
     top: 0;
-    z-index: @z-index-dialog-wrap;
+    z-index: @z-index-dialogs;
   }
 
   .tox-dialog-wrap__backdrop {
@@ -73,7 +78,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    z-index: @z-index-dialog-wrap-backdrop;
+    z-index: @z-index-dialogs-offset-wrap-background;
   }
 
   .tox-dialog {
@@ -90,7 +95,7 @@
     overflow: hidden;
     position: relative;
     width: 95vw;
-    z-index: @z-index-dialog;
+    z-index: @z-index-dialogs-offset-dialog;
 
     @media @breakpoint-sm {
       body:not(.tox-force-desktop) & {
@@ -99,6 +104,11 @@
         width: calc(100vw - @pad-md);
       }
     }
+  }
+
+  // This is needed for inline dialogs, since they don't use the wrapper/backdrop
+  .tox-dialog-inline {
+    z-index: @z-index-dialogs;
   }
 
   .tox-dialog__header {
@@ -333,7 +343,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    z-index: @z-index-dialog-busy-spinner;
+    z-index: @z-index-dialogs-offset-busy-spinner;
   }
 
   // the blocking div for dialogs
@@ -372,7 +382,7 @@
   .tox-dialog__popups {
     position: absolute;
     width: 100%;
-    z-index: @z-index-dialog-wrap;
+    z-index: @z-index-dialogs;
   }
 
   // Make iframe/url dialogs stretch contents to fit the height and width of parent container
