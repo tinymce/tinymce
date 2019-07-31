@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.15.2] - 2019-07-31
+
+### Added
+- Added `useNative` option to Disabling to allow for buttons, textareas, inputs and select to be "fake-disabled" instead of using the native disabled attribute.
+
 # [4.15.1] - 2019-07-30
 
 ### Changed
