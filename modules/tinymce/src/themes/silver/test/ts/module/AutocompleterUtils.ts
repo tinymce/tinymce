@@ -68,9 +68,11 @@ const structWithTitleAndIcon = (d) => (s, str, arr) => {
   });
 };
 
+const sWaitForAutocompleteToOpen = UiFinder.sWaitForVisible('Wait for autocompleter to appear', Body.body(), '.tox-autocompleter div[role="menu"]');
+
 const sWaitForAutocompleteToClose = Waiter.sTryUntil(
   'Autocompleter should disappear',
-  UiFinder.sNotExists(Body.body(), '.tox-autocompleter'),
+  UiFinder.sNotExists(Body.body(), '.tox-autocompleter div[role="menu"]'),
   100,
   1000
 );
@@ -121,5 +123,6 @@ export {
   structWithTitleAndIcon,
   structWithTitleAndIconAndText,
   structWithTitleAndText,
-  sWaitForAutocompleteToClose
+  sWaitForAutocompleteToClose,
+  sWaitForAutocompleteToOpen
 };

@@ -1,13 +1,15 @@
-import { ApproxStructure, GeneralSteps, Keys, Logger, Pipeline, StructAssert, Waiter, UiFinder, Mouse, Step } from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Keys, Logger, Pipeline, StructAssert, Waiter, Mouse, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Body, Element } from '@ephox/sugar';
+import { Element } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
-
 import SilverTheme from 'tinymce/themes/silver/Theme';
+
+import { sWaitForAutocompleteToClose } from '../../../module/AutocompleterUtils';
 
 UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
   const platform = PlatformDetection.detect();
@@ -47,7 +49,6 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
     const tinyApis = TinyApis(editor);
 
     const sWaitForMenuToOpen = tinyUi.sWaitForPopup('wait for autocompleter to appear', '.tox-autocompleter div[role="menu"]');
-    const sWaitForMenuToClose = Waiter.sTryUntil('Wait for autocompleter menu to hide', UiFinder.sNotExists(Body.body(), '.tox-autocompleter div[role="menu"]'), 100, 1000);
 
     const sSetContentAndTrigger = (content: string, triggerCharCode: number, template?: string, elementPath?: number[]) => {
       const htmlTemplate = template || '<p>CONTENT</p>';
@@ -91,7 +92,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
     const sTestAutocompleter = (scenario: Scenario) => GeneralSteps.sequence([
       scenario.setup ? scenario.setup : sTriggerAndAssertInitialContent(),
       scenario.action,
-      sWaitForMenuToClose,
+      sWaitForAutocompleteToClose,
       ...scenario.postAction ? [ scenario.postAction ] : [],
       sAssertContent('Check autocompleter was cancelled', scenario.assertion)
     ]);
@@ -152,7 +153,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
       ]),
       sInsertContentAndTrigger('aa'),
       sSetCursor([0, 0, 0], 2),
-      sWaitForMenuToClose,
+      sWaitForAutocompleteToClose,
       sAssertContent('Check autocompleter was not cancelled', (s, str) => [
         expectedAutocompletePara(':aaa')(s, str),
         s.element('p', { }),

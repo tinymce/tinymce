@@ -93,7 +93,12 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
             () => console.error('Lost context. Cursor probably moved'),
             ({ range }) => {
               const autocompleterApi: InlineContent.AutocompleterInstanceApi = {
-                hide: cancelIfNecessary
+                hide: cancelIfNecessary,
+                reload: (meta: Record<string, any>) => {
+                  // Hide and then reload
+                  hideIfNecessary();
+                  load(meta);
+                }
               };
               match.onAction(autocompleterApi, range, itemValue, itemMeta);
             }
@@ -147,19 +152,14 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     InlineView.getContent(autocompleter).each(Highlighting.highlightFirst);
   };
 
-  const doLookup = (): Option<AutocompleteLookupInfo> => {
+  const doLookup = (meta?: Record<string, any>): Option<AutocompleteLookupInfo> => {
     return activeAutocompleter.get().map((ac) => {
-      return getContext(editor.dom, editor.selection.getRng(), ac.triggerChar).bind((newContext) => lookupWithContext(editor, getAutocompleters, newContext));
+      return getContext(editor.dom, editor.selection.getRng(), ac.triggerChar).bind((newContext) => lookupWithContext(editor, getAutocompleters, newContext, meta));
     }).getOrThunk(() => lookup(editor, getAutocompleters));
   };
 
-  const onKeypress = Throttler.last((e) => {
-    // IE will pass the escape key here, so just don't do anything on escape
-    if (e.which === 27) {
-      return;
-    }
-
-    doLookup().fold(
+  const load = (meta?: Record<string, any>) => {
+    doLookup(meta).fold(
       cancelIfNecessary,
       (lookupInfo) => {
         commenceIfNecessary(lookupInfo.context);
@@ -178,10 +178,10 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
               // Open the autocompleter if there are items to show
               if (combinedItems.length > 0) {
                 display(ac, context, lookupData, combinedItems);
-              // close if we haven't found any matches in the last 10 chars
+                // close if we haven't found any matches in the last 10 chars
               } else if (context.text.length - ac.matchLength >= 10) {
                 cancelIfNecessary();
-              // otherwise just hide the menu
+                // otherwise just hide the menu
               } else {
                 hideIfNecessary();
               }
@@ -190,6 +190,15 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
         });
       }
     );
+  };
+
+  const onKeypress = Throttler.last((e) => {
+    // IE will pass the escape key here, so just don't do anything on escape
+    if (e.which === 27) {
+      return;
+    }
+
+    load();
   }, 50);
 
   const autocompleterUiApi: AutocompleterUiApi = {
