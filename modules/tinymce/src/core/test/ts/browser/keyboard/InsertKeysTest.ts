@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, fai
     return sInsertEmptyTextNodesAt(editor, count, path, Insert.after);
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

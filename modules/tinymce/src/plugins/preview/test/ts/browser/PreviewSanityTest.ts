@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewSanityTest', (success
   const docBody = Element.fromDom(document.body);
   const doc = TinyDom.fromDom(document);
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 

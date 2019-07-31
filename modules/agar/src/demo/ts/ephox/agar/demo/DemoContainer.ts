@@ -1,7 +1,7 @@
 import { document } from '@ephox/dom-globals';
 import { Class, Element, Elements, Html, Insert, InsertAll, Remove } from '@ephox/sugar';
 
-const init = function (name, f) {
+const init = function (name: string, f: (success: () => void, failure: (err: any) => void) => Element[]): void {
   const container = Element.fromTag('div');
   Class.add(container, 'demo-container');
   Html.set(container, '<p>' + name + '</p>');
@@ -15,15 +15,15 @@ const init = function (name, f) {
   };
 
   // Taken from tunic
-  const htmlentities = function (str) {
+  const htmlentities = function (str: string): string {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   };
 
-  const keepMarkers = function (html) {
+  const keepMarkers = function (html: string): string {
     return html.replace(/&lt;del&gt;/g, '<del>').replace(/&lt;\/del&gt;/g, '</del>').replace(/&lt;ins&gt;/g, '<ins>').replace(/&lt;\/ins&gt;/g, '</ins>');
   };
 
-  const failure = function (err) {
+  const failure = function (err: any): void {
     Class.add(outcome, 'failure');
     Remove.empty(outcome);
     if (err.diff) {
@@ -40,6 +40,6 @@ const init = function (name, f) {
   Insert.append(Element.fromDom(document.body), container);
 };
 
-export default <any> {
+export default {
   init
 };

@@ -73,7 +73,7 @@ const binder = function <T, U, E>(fx: (input: T) => Result<U, E>) {
   });
 };
 
-const op = function <T>(fx: (value: T) => void) {
+const op = function <T>(fx: (value: T) => void): Chain<T, T> {
   return on(function (input: T, next: NextFn<Wrap<T>>, die: DieFn, logs: TestLogs) {
     fx(input);
     next(wrap(input), logs);

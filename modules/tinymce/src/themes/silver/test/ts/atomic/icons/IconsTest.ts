@@ -8,7 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('IconsTest', (success, failure) => {
   Theme();
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const iconIndent = getAllOxide().indent;
     const iconDefault = getAllOxide()['temporary-placeholder'];
 

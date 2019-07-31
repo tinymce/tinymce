@@ -305,7 +305,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.MergeCellCommandTest', (succes
     ]);
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Table: Test merge cell commands', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'table',

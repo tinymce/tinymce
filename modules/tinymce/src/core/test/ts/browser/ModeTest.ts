@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
     }));
   };
 
-  TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
     const sOverrideDefaultMode = Step.label('validate default modes cannot be overwritten', Step.async((next, die) => {
       // TODO: once `assert.throws` supports error objects simplify this
       try {

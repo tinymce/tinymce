@@ -1255,7 +1255,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function () {
     testImageSelection('<p dir="rtl">abc<img style="float: left;" src="#">def</p>', 'P', 1);
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

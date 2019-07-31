@@ -179,7 +179,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', function
     expectedSelection: ['li:nth-child(1)', 0]
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     plugins: 'advlist lists',

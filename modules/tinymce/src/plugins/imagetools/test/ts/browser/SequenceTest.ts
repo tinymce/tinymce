@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', (success, 
   ImagetoolsPlugin();
   SilverTheme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const imgOps = ImageOps(editor);
 

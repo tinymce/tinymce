@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', 
   CodePlugin();
   SilverTheme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
 
     const dialogSelector = 'div.tox-dialog';
     const docBody = Element.fromDom(document.body);

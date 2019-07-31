@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.SelectedImageTest', (success, f
   LinkPlugin();
   SilverTheme();
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const doc = TinyDom.fromDom(document);
 

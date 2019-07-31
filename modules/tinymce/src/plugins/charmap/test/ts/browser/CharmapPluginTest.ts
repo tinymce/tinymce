@@ -102,7 +102,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
     LegacyUnit.equal(lastEvt.chr, 'A');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Charmap: Test replacing, appending and inserting characters', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     theme: 'silver',

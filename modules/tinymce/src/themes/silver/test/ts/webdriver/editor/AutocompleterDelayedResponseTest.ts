@@ -37,7 +37,7 @@ UnitTest.asynctest('Editor Autocompleter delay response test', (success, failure
     };
   }
 
-  TinyLoader.setup(
+  TinyLoader.setupLight(
     (editor, onSuccess, onFailure) => {
       const tinyUi = TinyUi(editor);
       const tinyApis = TinyApis(editor);

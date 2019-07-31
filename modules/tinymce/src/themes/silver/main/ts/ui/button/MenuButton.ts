@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Disabling, SketchSpec } from '@ephox/alloy';
+import { AlloyComponent, Disabling, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Option } from '@ephox/katamari';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
@@ -57,7 +57,9 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
       columns: 1,
       presets: 'normal',
       classes: [],
-      dropdownBehaviours: []
+      dropdownBehaviours: [
+        Tabstopping.config({ })
+      ]
     },
     prefix,
     backstage.shared);

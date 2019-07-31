@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorCustomThemeTest', function (
     LegacyUnit.equal(editor.getContentAreaContainer().nodeType, 1, 'Should be an element');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

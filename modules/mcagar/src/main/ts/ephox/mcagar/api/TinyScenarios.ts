@@ -38,7 +38,7 @@ export default function (editor) {
     });
   };
 
-  const sAsyncProperty = function (label, generator, step, options) {
+  const sAsyncProperty = function (label: string, generator, step, options) {
     return PropertySteps.sAsyncProperty(
       label,
       [

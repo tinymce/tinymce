@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', (s
   FullscreenPlugin();
   SilverTheme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const lastEventArgs = Cell(null);
 
     editor.on('FullscreenStateChanged', function (e) {

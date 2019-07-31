@@ -82,7 +82,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autosave.AutoSavePluginTest', (succe
     history.replaceState('', document.title, window.location.pathname + window.location.search);
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'AutoSave: Test autosave isEmpty true/false, drafts and location hash change', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'autosave',

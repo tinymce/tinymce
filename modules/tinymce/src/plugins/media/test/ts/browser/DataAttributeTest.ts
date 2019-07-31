@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.plugins.media.DataAttributeTest', function (success,
     ]));
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const ui = TinyUi(editor);
     const api = TinyApis(editor);
 

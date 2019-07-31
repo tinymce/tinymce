@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (
   Plugin();
   SilverTheme();
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const doc = Element.fromDom(document);
 

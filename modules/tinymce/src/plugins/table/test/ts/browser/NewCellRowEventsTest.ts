@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.NewCellRowEventsTest', (succes
     LegacyUnit.equal(rows[rows.length - 1].getAttribute('data-counter'), '6');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Table: Test new cell/new row events', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'table',

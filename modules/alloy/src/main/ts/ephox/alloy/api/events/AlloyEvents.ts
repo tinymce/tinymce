@@ -87,13 +87,13 @@ const runActionExtra = function <T extends EventFormat>(name: string, action: (t
   };
 };
 
-const runOnName = function <T extends EventFormat>(name): RunOnName<T> {
+const runOnName = function <T extends EventFormat>(name: string): RunOnName<T> {
   return (handler) => {
     return run(name, handler);
   };
 };
 
-const runOnSourceName = function <T extends EventFormat>(name): RunOnSourceName<T> {
+const runOnSourceName = function <T extends EventFormat>(name: string): RunOnSourceName<T> {
   return (handler: (component: AlloyComponent, simulatedEvent: SimulatedEvent<T>) => void): AlloyEventKeyAndHandler<T> => {
     return {
       key: name,
@@ -106,7 +106,7 @@ const runOnSourceName = function <T extends EventFormat>(name): RunOnSourceName<
   };
 };
 
-const redirectToUid = function <T extends EventFormat>(name, uid): AlloyEventKeyAndHandler<T> {
+const redirectToUid = function <T extends EventFormat>(name: string, uid: string): AlloyEventKeyAndHandler<T> {
   return run(name, (component: AlloyComponent, simulatedEvent: SimulatedEvent<T>) => {
     component.getSystem().getByUid(uid).each((redirectee) => {
       AlloyTriggers.dispatchEvent(redirectee, redirectee.element(), name, simulatedEvent);
@@ -114,12 +114,12 @@ const redirectToUid = function <T extends EventFormat>(name, uid): AlloyEventKey
   });
 };
 
-const redirectToPart = function <T extends EventFormat>(name, detail, partName): AlloyEventKeyAndHandler<T> {
+const redirectToPart = function <T extends EventFormat>(name: string, detail, partName: string): AlloyEventKeyAndHandler<T> {
   const uid = detail.partUids[partName];
   return redirectToUid(name, uid);
 };
 
-const runWithTarget = function <T extends EventFormat>(name, f): AlloyEventKeyAndHandler<T> {
+const runWithTarget = function <T extends EventFormat>(name: string, f): AlloyEventKeyAndHandler<T> {
   return run(name, (component, simulatedEvent) => {
     const ev: T = simulatedEvent.event();
 
@@ -142,13 +142,13 @@ const runWithTarget = function <T extends EventFormat>(name, f): AlloyEventKeyAn
   });
 };
 
-const cutter = function <T extends EventFormat>(name): AlloyEventKeyAndHandler<T> {
+const cutter = function <T extends EventFormat>(name: string): AlloyEventKeyAndHandler<T> {
   return run(name, (component, simulatedEvent) => {
     simulatedEvent.cut();
   });
 };
 
-const stopper = function <T extends EventFormat>(name): AlloyEventKeyAndHandler<T> {
+const stopper = function <T extends EventFormat>(name: string): AlloyEventKeyAndHandler<T> {
   return run(name, (component, simulatedEvent) => {
     simulatedEvent.stop();
   });

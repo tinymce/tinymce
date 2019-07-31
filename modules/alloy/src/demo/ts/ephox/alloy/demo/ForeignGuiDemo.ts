@@ -15,30 +15,33 @@ import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
 
 import * as Frames from './frames/Frames';
 
-const resize = (element, changeX, changeY) => {
-  document.querySelector('h2').innerHTML = 'resizing';
-  const width = Css.getRaw(element, 'width').map((w) => {
-    return parseInt(w, 10);
-  }).getOrThunk(() => {
-    return Width.get(element);
-  });
-
-  const height = Css.getRaw(element, 'height').map((h) => {
-    return parseInt(h, 10);
-  }).getOrThunk(() => {
-    return Height.get(element);
-  });
-
-  Css.set(element, 'width', (width + changeX) + 'px');
-  Css.set(element, 'height', (height + changeY) + 'px');
+const resize = (element: Element, changeX: number, changeY: number): void => {
+  const heading = document.querySelector('h2');
+  if (heading === null) {
+    throw new Error('heading not found');
+  } else {
+    heading.innerHTML = 'resizing';
+    const width = Css.getRaw(element, 'width').map((w) => {
+      return parseInt(w, 10);
+    }).getOrThunk(() => {
+      return Width.get(element);
+    });
+    const height = Css.getRaw(element, 'height').map((h) => {
+      return parseInt(h, 10);
+    }).getOrThunk(() => {
+      return Height.get(element);
+    });
+    Css.set(element, 'width', (width + changeX) + 'px');
+    Css.set(element, 'height', (height + changeY) + 'px');
+  }
 };
 
 export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
   const platform = PlatformDetection.detect();
 
-  const onNode = (name) => {
-    return (elem) => {
+  const onNode = (name: string) => {
+    return (elem: Element) => {
       return Node.name(elem) === name ? Option.some(elem) : Option.none();
     };
   };
@@ -66,16 +69,14 @@ export default (): void => {
       '</html>'
     );
     const root = Element.fromDom(Frames.readDoc(frame).dom().documentElement);
-    addAsForeign(root, (gui) => {
-      Insert.append(root, gui.element());
-    });
+    addAsForeign(root);
   });
 
   const inlineContainer = Element.fromHtml(
     contents
   );
 
-  const addAsForeign = (root, doInsert) => {
+  const addAsForeign = (root: Element) => {
     const connection = ForeignGui.engage({
       root,
       dispatchers: [
@@ -143,7 +144,5 @@ export default (): void => {
   Insert.append(ephoxUi, Element.fromHtml('<h3>Div Editor</h3>'));
   Insert.append(ephoxUi, inlineContainer);
 
-  addAsForeign(inlineContainer, (gui) => {
-    Insert.after(inlineContainer, gui.element());
-  });
+  addAsForeign(inlineContainer);
 };

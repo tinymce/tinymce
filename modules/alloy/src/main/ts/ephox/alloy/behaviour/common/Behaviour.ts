@@ -19,7 +19,7 @@ const loadEvent = (bConfig, bState, f): AlloyEvents.AlloyEventKeyAndHandler<Cust
   });
 };
 
-const create = (schema, name, active, apis, extra, state): AlloyBehaviour<any, any> => {
+const create = (schema, name: string, active, apis, extra, state): AlloyBehaviour<any, any> => {
   const configSchema = ValueSchema.objOfOnly(schema);
   const schemaSchema = FieldSchema.optionObjOf(name, [
     FieldSchema.optionObjOfOnly('config', schema)
@@ -27,7 +27,7 @@ const create = (schema, name, active, apis, extra, state): AlloyBehaviour<any, a
   return doCreate(configSchema, schemaSchema, name, active, apis, extra, state);
 };
 
-const createModes = (modes, name, active, apis, extra, state): AlloyBehaviour<any, any> => {
+const createModes = (modes, name: string, active, apis, extra, state): AlloyBehaviour<any, any> => {
   const configSchema = modes;
   const schemaSchema = FieldSchema.optionObjOf(name, [
     FieldSchema.optionOf('config', modes)
@@ -35,7 +35,7 @@ const createModes = (modes, name, active, apis, extra, state): AlloyBehaviour<an
   return doCreate(configSchema, schemaSchema, name, active, apis, extra, state);
 };
 
-const wrapApi = (bName, apiFunction, apiName) => {
+const wrapApi = (bName: string, apiFunction, apiName) => {
   const f = (component, ...rest) => {
     const args = [ component ].concat(rest);
     return component.config({
@@ -54,14 +54,14 @@ const wrapApi = (bName, apiFunction, apiName) => {
 };
 
 // I think the "revoke" idea is fragile at best.
-const revokeBehaviour = (name) => {
+const revokeBehaviour = (name: string) => {
   return {
     key: name,
     value: undefined
   };
 };
 
-const doCreate = (configSchema, schemaSchema, name, active, apis, extra, state): AlloyBehaviour<any, any> => {
+const doCreate = (configSchema, schemaSchema, name: string, active, apis, extra, state): AlloyBehaviour<any, any> => {
   const getConfig = (info) => {
     return Objects.hasKey(info, name) ? info[name]() : Option.none();
   };

@@ -41,7 +41,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
     });
   };
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyActions = TinyActions(editor);
     const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);

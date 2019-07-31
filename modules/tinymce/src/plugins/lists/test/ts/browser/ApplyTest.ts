@@ -961,7 +961,7 @@ UnitTest.asynctest('tinymce.lists.browser.ApplyTest', (success, failure) => {
     LegacyUnit.equal(editor.getBody().innerHTML, '<table><tbody><tr><td><ul><li>a</li></ul>b</td></tr></tbody></table>');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Lists: Apply list tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'lists',

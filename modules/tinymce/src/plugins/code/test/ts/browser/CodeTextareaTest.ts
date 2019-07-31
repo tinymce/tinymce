@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeTextareaTest', (success, fa
   CodePlugin();
   SilverTheme();
 
-  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
 
     const cOpenDialog = Chain.fromChains([

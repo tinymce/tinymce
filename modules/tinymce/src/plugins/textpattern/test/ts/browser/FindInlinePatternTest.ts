@@ -70,7 +70,7 @@ UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failur
     return cAssertPatterns([{pattern: {start: matchStart, end: matchEnd, format: formats}, startRng, endRng}]);
   };
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     const sSetContentAndCursor = (content: string, elementPath: number[], offset: number) => {

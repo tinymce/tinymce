@@ -6,7 +6,7 @@ import SilverTheme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('Editor (Silver) Configuration Cancel test', (success, failure) => {
   SilverTheme();
 
-  TinyLoader.setup(
+  TinyLoader.setupLight(
     (editor, onSuccess, onFailure) => {
       const tinyUi = TinyUi(editor);
 

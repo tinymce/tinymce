@@ -17,7 +17,7 @@ UnitTest.asynctest('Tutorial: Property Testing with TinyMCE', (success, failure)
     Assertions.assertEq('The content should be the same', editorContent1, editorContent2);
   });
 
-  TinyLoader.setup((editor, loadSuccess, loadFailure) => {
+  TinyLoader.setupLight((editor, loadSuccess, loadFailure) => {
     const apis = TinyApis(editor);
     const scenarios = TinyScenarios(editor);
     const body = TinyDom.fromDom(editor.getBody());

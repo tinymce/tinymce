@@ -7,7 +7,7 @@ import VK from 'tinymce/core/api/util/VK';
 UnitTest.asynctest('browser.tinymce.core.keyboard.HomeEndKeysTest', (success, failure) => {
     Theme();
 
-    TinyLoader.setup((editor, onSuccess, onFailure) => {
+    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
       const tinyActions = TinyActions(editor);
 

@@ -173,7 +173,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
     ]));
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'FullPage: Test full page header, footer, body attributes, hide in source view and adding and removing stylesheets',
       [
         sParseStyles(editor),

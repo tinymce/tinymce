@@ -102,7 +102,7 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
     });
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const ui = TinyUi(editor);
     const apis = TinyApis(editor);
 
