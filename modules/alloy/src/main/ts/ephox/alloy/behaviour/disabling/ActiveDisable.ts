@@ -18,7 +18,7 @@ const exhibit = (base, disableConfig: DisableConfig, disableState) => {
 const events = (disableConfig: DisableConfig, disableState) => {
   return AlloyEvents.derive([
     AlloyEvents.abort(SystemEvents.execute(), (component, simulatedEvent) => {
-      return DisableApis.isDisabled(component);
+      return DisableApis.isDisabled(component, disableConfig);
     }),
     Behaviour.loadEvent(disableConfig, disableState, DisableApis.onLoad)
   ]);

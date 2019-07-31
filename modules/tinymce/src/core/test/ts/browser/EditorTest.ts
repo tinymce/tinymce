@@ -7,7 +7,7 @@ import URI from 'tinymce/core/api/util/URI';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
-import { Body, Attr } from '@ephox/sugar';
+import { Body, Attr, Class } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
   const success = arguments[arguments.length - 2];
@@ -366,7 +366,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
 
     const isDisabled = (selector) => {
       const elm = UiFinder.findIn(Body.body(), selector);
-      return elm.forall((elm) => Attr.has(elm, 'disabled'));
+      return elm.forall((elm) => Attr.has(elm, 'disabled') || Class.has(elm, 'tox-tbtn--disabled'));
     };
 
     editor.on('click', function () {

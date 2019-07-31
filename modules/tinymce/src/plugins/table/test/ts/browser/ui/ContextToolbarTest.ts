@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success,
     };
 
     const sAssertButtonDisabled = (label: string, selector: string) => {
-      return tinyUi.sWaitForUi(label, `.tox-pop__dialog ${selector}:disabled`);
+      return tinyUi.sWaitForUi(label, `.tox-pop__dialog ${selector}.tox-tbtn--disabled`);
     };
 
     const sClickOnToolbarButton = (selector: string) => {

@@ -1,10 +1,10 @@
-import { FocusTools, Keyboard, Keys, Pipeline, Step, UiFinder, Log, Chain, Assertions, ApproxStructure, Waiter, GeneralSteps } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Element, Body } from '@ephox/sugar';
+import { Body, Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -117,17 +117,14 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           sFire('test.updateButtonABC', { disable: true }),
           sCheckLastButtonGroup('Checking button is disabled after event', (s, str, arr) => [
             s.element('button', {
-              attrs: {
-                disabled: str.is('disabled')
-              }
+              classes: [ arr.has('tox-tbtn--disabled')],
+              attrs: { 'aria-disabled': str.is('true') }
             })
           ]),
           sFire('test.updateButtonABC', { disable: false }),
           sCheckLastButtonGroup('Checking button is re-enabled after event', (s, str, arr) => [
             s.element('button', {
-              attrs: {
-                disabled: str.none()
-              }
+              classes: [ arr.not('tox-tbtn--disabled')]
             })
           ]),
 
@@ -155,8 +152,8 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           sFire('test.updateButtonA', { disable: true }),
           sFire('test.updateButtonC', { active: true }),
           sCheckLastButtonGroup('Checking buttons have right state', (s, str, arr) => [
-            s.element('button', { attrs: { disabled: str.is('disabled') } }),
-            s.element('button', { attrs: { disabled: str.none() } }),
+            s.element('button', { classes: [ arr.has('tox-tbtn--disabled')], attrs: { 'aria-disabled': str.is('true') } }),
+            s.element('button', { classes: [ arr.not('tox-tbtn--disabled')] }),
             s.element('button', { attrs: { 'aria-pressed': str.is('true') } })
           ])
         ])

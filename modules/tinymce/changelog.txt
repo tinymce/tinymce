@@ -1,4 +1,5 @@
 Version 5.0.13 (TBD)
+    Fixed issue with being unable to keyboard navigate disabled toolbar buttons #TINY-3350
     Fixed issues with backspace and delete in nested contenteditable true and false elements #TINY-3868
     Fixed issue with losing keyboard navigation in dialogs due to disabled buttons #TINY-3914
     Fixed `MouseEvent.mozPressure is deprecated` warning in Firefox #TINY-3919
