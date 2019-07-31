@@ -21,7 +21,7 @@ UnitTest.test('BindTest', function () {
   Jsc.property(
     'Check Arr.bind(xs, _ -> [_] eq xs',
     Jsc.array(Jsc.json),
-    function (arr) {
+    function (arr: any[]) {
       const output = Arr.bind(arr, Arr.pure);
       return Jsc.eq(output, arr);
     }
@@ -30,7 +30,7 @@ UnitTest.test('BindTest', function () {
   Jsc.property(
     'Check binding an array of empty arrays with identity equals an empty array',
     Jsc.array(Jsc.constant([])),
-    function (arr) {
+    function (arr: any[]) {
       const output = Arr.bind(arr, Fun.identity);
       return Jsc.eq([ ], output);
     }
@@ -40,7 +40,7 @@ UnitTest.test('BindTest', function () {
     'Bind with identity is symmetric with chunking',
     Jsc.array(Jsc.json),
     Jsc.integer(1, 5),
-    function (arr, chunkSize) {
+    function (arr: any[], chunkSize: number) {
       const chunks = Arr.chunk(arr, chunkSize);
       const bound = Arr.bind(chunks, Fun.identity);
       return Jsc.eq(arr, bound);
@@ -51,7 +51,7 @@ UnitTest.test('BindTest', function () {
     'Bind with pure is the same as map',
     Jsc.array(Jsc.json),
     Jsc.fun(Jsc.json),
-    function (arr, g) {
+    function (arr: any[], g: (x: any) => any) {
       const bound = Arr.bind(arr, Fun.compose(Arr.pure, g));
       const mapped = Arr.map(arr, g);
       return Jsc.eq(mapped, bound);
