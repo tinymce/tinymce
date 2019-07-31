@@ -4,7 +4,6 @@ const runsInPhantom = [
   '@ephox/boss',
   '@ephox/boulder',
   '@ephox/dragster',
-  '@ephox/echo',
   '@ephox/imagetools',
   '@ephox/jax',
   '@ephox/katamari',
