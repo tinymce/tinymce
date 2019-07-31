@@ -1,5 +1,4 @@
 import { Generators, PropertySteps } from '@ephox/agar';
-import { JSON as Json } from '@ephox/sand';
 import { Element, Html } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 
@@ -30,7 +29,7 @@ export default function (editor) {
       generator: genScenario(genContent, options.exclusions),
       show (scenario) {
         const root = Element.fromDom(editor.getBody());
-        return Json.stringify({
+        return JSON.stringify({
           input: scenario.input,
           selection: Generators.describeSelection(root, scenario.selection)
         }, null, 2);

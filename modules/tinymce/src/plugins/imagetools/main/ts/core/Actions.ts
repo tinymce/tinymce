@@ -7,7 +7,6 @@
 
 import { BlobConversions, ImageTransformations, ResultConversions } from '@ephox/imagetools';
 import { Option } from '@ephox/katamari';
-import { URL } from '@ephox/sand';
 
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -18,7 +17,7 @@ import * as Settings from '../api/Settings';
 import ImageSize from './ImageSize';
 import * as Proxy from './Proxy';
 import Editor from 'tinymce/core/api/Editor';
-import { HTMLImageElement, Blob } from '@ephox/dom-globals';
+import { HTMLImageElement, Blob, URL } from '@ephox/dom-globals';
 import { SelectorFind, Element } from '@ephox/sugar';
 
 let count = 0;

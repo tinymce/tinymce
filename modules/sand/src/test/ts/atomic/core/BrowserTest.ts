@@ -1,4 +1,4 @@
-import PlatformQuery from 'ephox/sand/api/PlatformQuery';
+import PlatformQuery from 'ephox/sand/test/PlatformQuery';
 import { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
 import { UnitTest, assert } from '@ephox/bedrock';
 

@@ -1,7 +1,6 @@
 import { Logger, RawAssertions } from '@ephox/agar';
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Result, Fun } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as Objects from 'ephox/boulder/api/Objects';
@@ -14,7 +13,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
       const message = ValueSchema.formatError(err);
       RawAssertions.assertEq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
     }, function (val) {
-      assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + Json.stringify(val, null, 2) + ')');
+      assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(val, null, 2) + ')');
     });
   };
 

@@ -1,6 +1,5 @@
 import { FieldProcessorAdt, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Arr, Obj, Adt } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 
 import { ComponentSpec, RawDomSchema } from '../api/component/SpecTypes';
 import { AlloyEventRecord } from '../api/events/AlloyEvents';
@@ -56,7 +55,7 @@ const getPartsSchema = (partNames, _optPartNames, _owner): FieldProcessorAdt[] =
       if (! Objects.hasKey(spec, 'parts')) {
         throw new Error(
           'Part uid definition for owner: ' + owner + ' requires "parts"\nExpected parts: ' + partNames.join(', ') + '\nSpec: ' +
-          Json.stringify(spec, null, 2)
+          JSON.stringify(spec, null, 2)
         );
       }
       const uids = Obj.map(spec.parts, (v, k) => {

@@ -1,6 +1,5 @@
 import { assert } from '@ephox/bedrock';
 import { Arr, Fun, Obj, Option } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 import { Attr, Classes, Css, Element, Html, Node, Text, Traverse, Value } from '@ephox/sugar';
 
 import * as Truncate from '../alien/Truncate';
@@ -133,7 +132,7 @@ const text = function (s: StringAssert, combineSiblings = false): StructAssert {
           }
         }
         if (s.strAssert === undefined) {
-          throw new Error(Json.stringify(s) + ' is not a *string assertion*');
+          throw new Error(JSON.stringify(s) + ' is not a *string assertion*');
         }
         s.strAssert('Checking text content', text);
       });
@@ -216,7 +215,7 @@ const anythingStruct: StructAssert = {
 const assertAttrs = function (expectedAttrs: Record<string, StringAssert>, actual: Element) {
   Obj.each(expectedAttrs, function (v, k) {
     if (v.strAssert === undefined) {
-      throw new Error(Json.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* attributes of ' + Truncate.getHtml(actual));
+      throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* attributes of ' + Truncate.getHtml(actual));
     }
     const actualValue = Attr.has(actual, k) ? Attr.get(actual, k) : ApproxComparisons.missing();
     v.strAssert(
@@ -230,7 +229,7 @@ const assertClasses = function (expectedClasses: ArrayAssert[], actual: Element)
   const actualClasses = Classes.get(actual);
   Arr.each(expectedClasses, function (eCls) {
     if (eCls.arrAssert === undefined) {
-      throw new Error(Json.stringify(eCls) + ' is not an *array assertion*.\nSpecified in *expected* classes of ' + Truncate.getHtml(actual));
+      throw new Error(JSON.stringify(eCls) + ' is not an *array assertion*.\nSpecified in *expected* classes of ' + Truncate.getHtml(actual));
     }
     eCls.arrAssert('Checking classes in ' + Truncate.getHtml(actual) + '\n', actualClasses);
   });
@@ -240,7 +239,7 @@ const assertStyles = function (expectedStyles: Record<string, StringAssert>, act
   Obj.each(expectedStyles, function (v, k) {
     const actualValue = Css.getRaw(actual, k).getOrThunk(ApproxComparisons.missing);
     if (v.strAssert === undefined) {
-      throw new Error(Json.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* styles of ' + Truncate.getHtml(actual));
+      throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* styles of ' + Truncate.getHtml(actual));
     }
     v.strAssert(
       'Checking style: "' + k + '" of ' + Truncate.getHtml(actual) + '\n',
@@ -253,7 +252,7 @@ const assertHtml = function (expectedHtml: Option<StringAssert>, actual: Element
   expectedHtml.each(function (expected) {
     const actualHtml = Html.get(actual);
     if (expected.strAssert === undefined) {
-      throw new Error(Json.stringify(expected) + ' is not a *string assertion*.\nSpecified in *expected* innerHTML of ' + Truncate.getHtml(actual));
+      throw new Error(JSON.stringify(expected) + ' is not a *string assertion*.\nSpecified in *expected* innerHTML of ' + Truncate.getHtml(actual));
     }
     expected.strAssert('Checking HTML of ' + Truncate.getHtml(actual), actualHtml);
   });
@@ -262,7 +261,7 @@ const assertHtml = function (expectedHtml: Option<StringAssert>, actual: Element
 const assertValue = function (expectedValue: Option<StringAssert>, actual: Element) {
   expectedValue.each(function (v) {
     if (v.strAssert === undefined) {
-      throw new Error(Json.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* value of ' + Truncate.getHtml(actual));
+      throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* value of ' + Truncate.getHtml(actual));
     }
     v.strAssert(
       'Checking value of ' + Truncate.getHtml(actual),
@@ -276,7 +275,7 @@ const assertChildren = function (expectedChildren: Option<StructAssert[]>, actua
     const children = elementQueue(Traverse.children(actual), Option.some(actual));
     Arr.each(expected, function (structExpectation, i) {
       if (structExpectation.doAssert === undefined) {
-        throw new Error(Json.stringify(structExpectation) + ' is not a *structure assertion*.\n' +
+        throw new Error(JSON.stringify(structExpectation) + ' is not a *structure assertion*.\n' +
           'Specified in *expected* children of ' + Truncate.getHtml(actual));
       }
       if (structExpectation.type === 'advanced') {
