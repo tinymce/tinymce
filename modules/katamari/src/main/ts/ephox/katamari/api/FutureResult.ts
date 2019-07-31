@@ -1,6 +1,7 @@
 import { Future } from './Future';
 import { Result } from './Result';
 import { clearTimeout, setTimeout } from '@ephox/dom-globals';
+import { Fun } from "@ephox/katamari";
 
 export interface FutureResult<A, E> extends Future<Result<A, E>> {
   toCached: () => FutureResult<A, E>;
@@ -50,13 +51,13 @@ const wrap = function <A = any, E = any>(delegate: Future<Result<A, E>>): Future
       let timedOut = false;
       const timer = setTimeout(() => {
         timedOut = true;
-        callback(Result.error(errorThunk()));
+        callback(Result.error(Fun.widenl<E, E2>(errorThunk())));
       }, timeout);
 
       delegate.get((result) => {
         if (!timedOut) {
           clearTimeout(timer);
-          callback(result);
+          callback(result.mapError(e => Fun.widenr<E, E2>(e)));
         }
       });
     }));

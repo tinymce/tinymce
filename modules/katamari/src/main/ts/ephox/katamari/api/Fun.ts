@@ -62,8 +62,11 @@ const call = function (f: () => any) {
   f();
 };
 
-const never = constant<false>(false) as (...args) => false;
-const always = constant<true>(true) as (...args) => true;
+const never = constant<false>(false) as (...args: any[]) => false;
+const always = constant<true>(true) as (...args: any[]) => true;
+
+const widenl = <A, B>(b: B): A | B => b;
+const widenr = <A, B>(a: A): A | B => a;
 
 export {
   noop,
@@ -79,4 +82,6 @@ export {
   call,
   never,
   always,
+  widenl,
+  widenr
 };

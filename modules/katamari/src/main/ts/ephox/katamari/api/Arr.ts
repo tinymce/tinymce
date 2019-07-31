@@ -12,12 +12,12 @@ const slice = Array.prototype.slice;
 
 // Use the native Array.indexOf if it is available (IE9+) otherwise fall back to manual iteration
 // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
-const rawIndexOf = (() => {
+const rawIndexOf: <T> (ts: ArrayLike<T>, t: T) => number = (() => {
   const pIndexOf = Array.prototype.indexOf;
 
-  const fastIndex = (xs, x) => pIndexOf.call(xs, x);
+  const fastIndex = <T> (xs: ArrayLike<T>, x: T): number => pIndexOf.call(xs, x);
 
-  const slowIndex = (xs, x) => slowIndexOf(xs, x);
+  const slowIndex = <T> (xs: ArrayLike<T>, x: T): number => slowIndexOf(xs, x);
 
   return pIndexOf === undefined ? slowIndex : fastIndex;
 })();
@@ -92,8 +92,8 @@ export const eachr = <T = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, void>): voi
 };
 
 export const partition = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): { pass: T[], fail: T[] } => {
-  const pass = [];
-  const fail = [];
+  const pass: T[] = [];
+  const fail: T[] = [];
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
     const arr = pred(x, i, xs) ? pass : fail;
@@ -200,13 +200,13 @@ export const flatten = <T = any>(xs: ArrayLike<ArrayLike<T> | T[]>): T[] => {
   // http://jsperf.com/concat-push/6
   // Note that in the past, concat() would silently work (very slowly) for array-like objects.
   // With this change it will throw an error.
-  const r = [];
+  const r: T[] = [];
   for (let i = 0, len = xs.length; i < len; ++i) {
     // Ensure that each value is an array itself
     if (!Type.isArray(xs[i])) {
       throw new Error('Arr.flatten item ' + i + ' was not an array, input: ' + xs);
     }
-    push.apply(r, xs[i]);
+    push.apply(r, xs[i] as any[]);
   }
   return r;
 };

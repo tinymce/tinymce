@@ -4,16 +4,16 @@ type MergeStrategy = (old: any, nu: any) => any;
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
-const shallow = function (old: any, nu: any) {
+const shallow = function (old: Record<string, any>, nu: Record<string, any>) {
   return nu;
 };
 
-const deep = function (old: any, nu: any) {
+const deep = function (old: Record<string, any>, nu: Record<string, any>) {
   const bothObjects = Type.isObject(old) && Type.isObject(nu);
   return bothObjects ? deepMerge(old, nu) : nu;
 };
 
-const baseMerge = function (merger: MergeStrategy): (...objs: {}[]) => any {
+const baseMerge = function (merger: MergeStrategy): (...objs: Array<Record<string, any>>) => any {
   return function () {
     // Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
     const objects = new Array(arguments.length);
@@ -25,7 +25,7 @@ const baseMerge = function (merger: MergeStrategy): (...objs: {}[]) => any {
       throw new Error('Can\'t merge zero objects');
     }
 
-    const ret = {};
+    const ret: Record<string, any> = {};
     for (let j = 0; j < objects.length; j++) {
       const curObject = objects[j];
       for (const key in curObject) {
