@@ -135,6 +135,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
               text: 'Match case',
               onAction: (api) => {
                 matchcase.set(!matchcase.get());
+                dialogApi.focus('options');
               },
               active: matchcase.get()
             },
@@ -143,6 +144,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
               text: 'Find whole words only',
               onAction: (api) => {
                 wholewords.set(!wholewords.get());
+                dialogApi.focus('options');
               },
               active: wholewords.get()
             }
@@ -211,7 +213,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     }
   };
 
-  editor.windowManager.open(spec, {inline: 'toolbar'});
+  const dialogApi = editor.windowManager.open(spec, {inline: 'toolbar'});
 };
 
 export default {
