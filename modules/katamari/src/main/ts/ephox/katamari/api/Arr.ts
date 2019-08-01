@@ -1,11 +1,9 @@
 import { Option } from './Option';
 import * as Type from './Type';
 
-type Morphism<T, U> = (a: T) => U;
-type Catamorphism<T, U> = (acc: U, x: T) => U;
 type ArrayMorphism<T, U> = (x: T, i: number, xs: ArrayLike<T>) => U;
 type ArrayPredicate<T> = ArrayMorphism<T, boolean>;
-type Predicate<T> = Morphism<T, boolean>;
+type Predicate<T> = (a: T) => boolean;
 type Comparator<T> = (a: T, b: T) => number;
 
 const slice = Array.prototype.slice;
@@ -38,7 +36,7 @@ export const exists = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): bool
   return findIndex(xs, pred).isSome();
 };
 
-export const range = <T = any>(num: number, f: Morphism<number, T>): T[] => {
+export const range = <T = any>(num: number, f: (a: number) => T): T[] => {
   const r: T[] = [];
   for (let i = 0; i < num; i++) {
     r.push(f(i));
@@ -124,7 +122,7 @@ export const filter = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[] 
  *  For a good explanation, see the group function (which is a special case of groupBy)
  *  http://hackage.haskell.org/package/base-4.7.0.0/docs/Data-List.html#v:group
  */
-export const groupBy = <T = any>(xs: ArrayLike<T>, f: Morphism<T, any>): T[][] => {
+export const groupBy = <T = any>(xs: ArrayLike<T>, f: (a: T) => any): T[][] => {
   if (xs.length === 0) {
     return [];
   } else {
@@ -149,14 +147,14 @@ export const groupBy = <T = any>(xs: ArrayLike<T>, f: Morphism<T, any>): T[][] =
   }
 };
 
-export const foldr = <T = any, U = any>(xs: ArrayLike<T>, f: Catamorphism<T, U>, acc: U): U => {
+export const foldr = <T = any, U = any>(xs: ArrayLike<T>, f: (acc: U, x: T) => U, acc: U): U => {
   eachr(xs, function (x) {
     acc = f(acc, x);
   });
   return acc;
 };
 
-export const foldl = <T = any, U = any>(xs: ArrayLike<T>, f: Catamorphism<T, U>, acc: U): U => {
+export const foldl = <T = any, U = any>(xs: ArrayLike<T>, f: (acc: U, x: T) => U, acc: U): U => {
   each(xs, function (x) {
     acc = f(acc, x);
   });
