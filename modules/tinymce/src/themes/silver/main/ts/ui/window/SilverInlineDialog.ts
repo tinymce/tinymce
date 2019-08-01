@@ -18,7 +18,9 @@ import {
   Reflecting,
   SimpleSpec,
   SystemEvents,
-  Focusing
+  Focusing,
+  AlloyEvents,
+  NativeEvents
 } from '@ephox/alloy';
 import { DialogManager, Types } from '@ephox/bridge';
 import { Option, Id } from '@ephox/katamari';
@@ -113,10 +115,14 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
         updateState,
         initialData: dialogInit
       }),
-      Focusing.config({}),
+      Focusing.config({ }),
       AddEventsBehaviour.config(
         'execute-on-form',
-        dialogEvents
+        dialogEvents.concat([
+          AlloyEvents.runOnSource(NativeEvents.focusin(), (comp, se) => {
+            Keying.focusIn(comp);
+          })
+        ])
       ),
       RepresentingConfigs.memory({ })
     ]),
