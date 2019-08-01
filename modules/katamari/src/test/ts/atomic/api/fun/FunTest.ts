@@ -83,15 +83,17 @@ UnitTest.test('Function tests', function () {
       return Jsc.eq(false, Fun.never(json));
     });
 
-    Jsc.property('Check curry :: curry(f, x)(y) = f(x, y)', Jsc.array(Jsc.json), Jsc.array(Jsc.json), function (extra1, extra2) {
-      const f = function () {
-        const args = Array.prototype.slice.call(arguments, 0);
-        return args;
+    Jsc.property('Check curry', Jsc.json, Jsc.json, Jsc.json, Jsc.json, function (a, b, c, d) {
+      const f = function(a, b, c, d) {
+        return [a, b, c, d];
       };
 
-      const curried = Fun.curry.apply(undefined, [ f ].concat(extra1));
-      const output = Fun.curry.apply(undefined, [ curried ].concat(extra2))();
-      return Jsc.eq(extra1.concat(extra2), output);
+      return (
+        Jsc.eq(Fun.curry(f, a)(b, c, d), [a, b, c, d]) &&
+        Jsc.eq(Fun.curry(f, a, b)(c, d), [a, b, c, d]) &&
+        Jsc.eq(Fun.curry(f, a, b, c)(d), [a, b, c, d]) &&
+        Jsc.eq(Fun.curry(f, a, b, c, d)(), [a, b, c, d])
+      );
     });
 
     Jsc.property('Check not :: not(f(x)) === !f(x)', Jsc.json, Jsc.fun(Jsc.bool), function (x, f) {
