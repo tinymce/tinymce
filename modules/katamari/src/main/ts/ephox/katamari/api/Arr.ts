@@ -103,7 +103,7 @@ export const partition = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): {
 };
 
 export const filter = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[] => {
-  const r = [];
+  const r: T[] = [];
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
     if (pred(x, i, xs)) {
@@ -129,8 +129,8 @@ export const groupBy = <T = any>(xs: ArrayLike<T>, f: Morphism<T, any>): T[][] =
     return [];
   } else {
     let wasType = f(xs[0]); // initial case for matching
-    const r = [];
-    let group = [];
+    const r: T[][] = [];
+    let group: T[] = [];
 
     for (let i = 0, len = xs.length; i < len; i++) {
       const x = xs[i];
