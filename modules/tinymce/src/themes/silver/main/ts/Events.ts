@@ -13,7 +13,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 const setup = (editor: Editor, mothership, uiMothership) => {
 
-  const dismissPopup = (target) => {
+  const dismissPopup = (target: Element) => {
     Arr.each([ mothership, uiMothership ], function (ship) {
       ship.broadcastOn([ Channels.dismissPopups() ], {
         target
@@ -21,31 +21,30 @@ const setup = (editor: Editor, mothership, uiMothership) => {
     });
   };
 
-  const onMousedown = DomEvent.bind(Element.fromDom(document), 'mouseup', function (evt) {
-    dismissPopup(evt.target());
-  });
-
-  const onTouchstart = DomEvent.bind(Element.fromDom(document), 'touchend', function (evt) {
+  const onTouchend = DomEvent.bind(Element.fromDom(document), 'touchend', function (evt) {
     dismissPopup(evt.target());
   });
 
   const onMouseup = DomEvent.bind(Element.fromDom(document), 'mouseup', function (evt) {
-  if (evt.raw().button === 0) {
-    Arr.each([ mothership, uiMothership ], function (ship) {
-      ship.broadcastOn([ Channels.mouseReleased() ], {
-        target: evt.target()
+    dismissPopup(evt.target());
+
+    if (evt.raw().button === 0) {
+      Arr.each([ mothership, uiMothership ], function (ship) {
+        ship.broadcastOn([ Channels.mouseReleased() ], {
+          target: evt.target()
+        });
       });
-    });
-  }
+    }
   });
 
-  const onContentMousedown = function (raw) {
+  const onContentTouchend = function (raw) {
     dismissPopup(Element.fromDom(raw.target));
   };
-  editor.on('mouseup', onContentMousedown);
-  editor.on('touchstart', onContentMousedown);
+  editor.on('touchend', onContentTouchend);
 
   const onContentMouseup = function (raw) {
+    dismissPopup(Element.fromDom(raw.target));
+
     if (raw.button === 0) {
       Arr.each([ mothership, uiMothership ], function (ship) {
         ship.broadcastOn([ Channels.mouseReleased() ], {
@@ -72,14 +71,12 @@ const setup = (editor: Editor, mothership, uiMothership) => {
 
   editor.on('remove', () => {
     // We probably don't need these unbinds, but it helps to have them if we move this code out.
-    editor.off('mousedown', onContentMousedown);
-    editor.off('touchstart', onContentMousedown);
+    editor.off('touchend', onContentTouchend);
     editor.off('mouseup', onContentMouseup);
     editor.off('ResizeWindow', onWindowResize);
     editor.off('ScrollWindow', onWindowScroll);
 
-    onMousedown.unbind();
-    onTouchstart.unbind();
+    onTouchend.unbind();
     onMouseup.unbind();
   });
 
