@@ -54,9 +54,9 @@ const filterChanges = (changes, tests) => {
  *  Restrict tinymce to 2 arbitrary levels of test base folders.
  *  All other projects need their tests in src/test/ts
  */
-const testFolders = (tests, auto) => tests.flatMap(test => {
+const testFolders = (tests, auto) => tests.flatMap((test) => {
   const testTypes = ['atomic', 'browser', 'phantom'].concat(auto ? ['webdriver'] : []);
-  const bases = test.name === "tinymce" ? ["src/test/ts", "src/*/test/ts", "src/*/*/test/ts"] : ["src/test/ts"];
+  const bases = test.name === "tinymce" ? ["src/*/test/ts", "src/*/*/test/ts"] : ["src/test/ts"];
   return bases.flatMap(base => testTypes.map(tt => `${test.location}/${base}/${tt}/**/*Test.ts`));
 });
 
