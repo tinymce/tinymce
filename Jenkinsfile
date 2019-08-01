@@ -1,4 +1,4 @@
-def runTests(extExecHandle, name, browser, os=null) {
+def runTests(extExecHandle, name, browser, os, bucket, buckets) {
   // Clean out the old XML files before running tests, since we junit import *.XML files
   dir('scratch') {
     if (isUnix()) {
@@ -10,7 +10,11 @@ def runTests(extExecHandle, name, browser, os=null) {
 
   def bedrock_os_param = os ? "--bedrock-os=" + os : "";
 
-  def bedrock = browser == "phantomjs" ? "yarn grunt phantomjs-auto" : "yarn grunt browser-auto " + bedrock_os_param + " --bedrock-browser=" + browser;
+  def bedrock = browser == "phantomjs"
+                            ? "yarn grunt phantomjs-auto"
+                            : "yarn grunt browser-auto " + bedrock_os_param + " --bedrock-browser=" + browser +
+                                                                              " --bucket=" + bucket +
+                                                                              " --buckets=" + buckets;
 
   def successfulTests = extExecHandle(bedrock)
 
@@ -52,13 +56,13 @@ node("primary") {
   }
 
   def browserPermutations = [
-    [ name: "win10Chrome", os: "windows-10", browser: "chrome" ],
-    [ name: "win10FF", os: "windows-10", browser: "firefox" ],
-    [ name: "win10Edge", os: "windows-10", browser: "MicrosoftEdge" ],
-    [ name: "win10IE", os: "windows-10", browser: "ie" ],
-    [ name: "macSafari", os: "macos", browser: "safari" ],
-    [ name: "macChrome", os: "macos", browser: "chrome" ],
-    [ name: "macFirefox", os: "macos", browser: "firefox" ]
+    [ name: "win10Chrome", os: "windows-10", browser: "chrome", buckets: 1 ],
+    [ name: "win10FF", os: "windows-10", browser: "firefox", buckets: 1 ],
+    [ name: "win10Edge", os: "windows-10", browser: "MicrosoftEdge", buckets: 2 ],
+    [ name: "win10IE", os: "windows-10", browser: "ie", buckets: 2 ],
+    [ name: "macSafari", os: "macos", browser: "safari", buckets: 1 ],
+    [ name: "macChrome", os: "macos", browser: "chrome", buckets: 1 ],
+    [ name: "macFirefox", os: "macos", browser: "firefox", buckets: 1 ]
   ]
 
   def cleanAndInstall = {
@@ -73,23 +77,25 @@ node("primary") {
   for (int i = 0; i < browserPermutations.size(); i++) {
     def permutation = browserPermutations.get(i)
     def processName = permutation.name
-    processes[processName] = {
-      stage (permutation.os + " " + permutation.browser) {
-        node("bedrock-" + permutation.os) {
-          echo "Slave checkout on node $NODE_NAME"
-          checkout scm
+    for (int bucket = 1; bucket <= permutation.buckets; buckets++) {
+      processes[processName] = {
+        stage (permutation.os + " " + permutation.browser + (buckets == 0 ? "" : "-" + bucket)) {
+          node("bedrock-" + permutation.os) {
+            echo "Slave checkout on node $NODE_NAME"
+            checkout scm
 
-          // windows tends to not have username or email set
-          extExec("git config user.email \"local@build.node\"")
-          extExec("git config user.name \"irrelevant\"")
+            // windows tends to not have username or email set
+            extExec("git config user.email \"local@build.node\"")
+            extExec("git config user.name \"irrelevant\"")
 
-          gitMerge()
+            gitMerge()
 
-          cleanAndInstall()
-          extExec "yarn ci"
+            cleanAndInstall()
+            extExec "yarn ci"
 
-          echo "Platform: browser tests for " + permutation.name + " on node: $NODE_NAME"
-          runTests(extExecHandle, permutation.name, permutation.browser, permutation.os)
+            echo "Platform: browser tests for " + permutation.name + " on node: $NODE_NAME"
+            runTests(extExecHandle, permutation.name, permutation.browser, permutation.os, bucket, buckets)
+          }
         }
       }
     }
@@ -101,7 +107,7 @@ node("primary") {
       // we are re-using the state prepared by `ci-all` below
       // if we ever change these tests to run on a different node, rollup is required in addition to the normal CI command
       echo "Platform: PhantomJS tests on node: $NODE_NAME"
-      runTests(extExecHandle, "PhantomJS", "phantomjs")
+      runTests(extExecHandle, "PhantomJS", "phantomjs", null, 1, 1)
     }
   }
 
