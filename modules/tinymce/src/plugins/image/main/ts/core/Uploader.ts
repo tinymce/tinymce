@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { FormData } from '@ephox/dom-globals';
-import { XMLHttpRequest } from '@ephox/sand';
+import { FormData, XMLHttpRequest } from '@ephox/dom-globals';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
@@ -41,7 +40,7 @@ export default (settings: UploaderSettings) => {
   const defaultHandler = (blobInfo: BlobInfo, success: SuccessCallback, failure: FailureCallback, progress: ProgressCallback) => {
     let xhr, formData;
 
-    xhr = XMLHttpRequest();
+    xhr = new XMLHttpRequest();
     xhr.open('POST', settings.url);
     xhr.withCredentials = settings.credentials;
 

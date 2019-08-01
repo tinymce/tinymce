@@ -1,9 +1,8 @@
 import { assert } from '@ephox/bedrock';
-import { JSON as Json } from '@ephox/sand';
 
 const stringify = function (v: any) {
   try {
-    return Json.stringify(v, null, 2);
+    return JSON.stringify(v, null, 2);
   } catch (_) {
     return v;
   }

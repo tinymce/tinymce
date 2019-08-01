@@ -1,6 +1,5 @@
 import { setTimeout, window } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Window } from '@ephox/sand';
 import * as Monitors from '../../impl/Monitors';
 import * as Compare from '../dom/Compare';
 import Element from '../node/Element';
@@ -103,7 +102,7 @@ const listener = function () {
   // cancelAnimationFrame isn't stable yet, so we just ignore all subsequent events until the next animation frame
   if (!throttle) {
     throttle = true;
-    Window.requestAnimationFrame(runHandler);
+    window.requestAnimationFrame(runHandler);
   }
 };
 

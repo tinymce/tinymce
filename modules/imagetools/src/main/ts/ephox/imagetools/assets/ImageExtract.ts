@@ -1,6 +1,5 @@
-import { Blob } from '@ephox/dom-globals';
+import { Blob, URL } from '@ephox/dom-globals';
 import { Future, Futures, Id } from '@ephox/katamari';
-import { URL } from '@ephox/sand';
 import * as BlobConversions from '../api/BlobConversions';
 import * as ResultConversions from '../api/ResultConversions';
 import ImageAsset from './ImageAsset';

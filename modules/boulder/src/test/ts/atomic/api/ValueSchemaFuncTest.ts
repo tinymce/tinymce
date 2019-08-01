@@ -1,7 +1,6 @@
 import { Logger, RawAssertions } from '@ephox/agar';
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Result } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as Objects from 'ephox/boulder/api/Objects';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
@@ -13,7 +12,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
       const message = ValueSchema.formatError(err);
       RawAssertions.assertEq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
     }, function (val) {
-      assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + Json.stringify(val, null, 2) + ')');
+      assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(val, null, 2) + ')');
     });
   };
 
@@ -30,7 +29,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
         RawAssertions.assertEq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
       }
 
-      if (passed !== null) { assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + Json.stringify(passed, null, 2) + ')'); }
+      if (passed !== null) { assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(passed, null, 2) + ')'); }
     });
   };
 
