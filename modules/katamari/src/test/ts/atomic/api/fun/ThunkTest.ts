@@ -4,7 +4,7 @@ import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ThunkTest', function () {
   const testSanity = function () {
-    let args = null;
+    let args: any[] | null = null;
     const f = Thunk.cached(function () {
       args = Array.prototype.slice.call(arguments);
       return args;
@@ -18,7 +18,7 @@ UnitTest.test('ThunkTest', function () {
   };
 
   const testSpecs = function () {
-    Jsc.property('Thunk.cached counter', Jsc.json, Jsc.fun(Jsc.json), Jsc.json, function (a, f, b) {
+    Jsc.property('Thunk.cached counter', Jsc.json, Jsc.fun(Jsc.json), Jsc.json, function (a: any, f: (a: any) => any, b: any) {
       let counter = 0;
       const thunk = Thunk.cached(function (x) {
         counter++;
