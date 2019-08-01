@@ -10,42 +10,42 @@ import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { DomEvent, Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import Delay from 'tinymce/core/api/util/Delay';
 
 const setup = (editor: Editor, mothership, uiMothership) => {
-
-  const dismissPopup = (target: Element) => {
-    Delay.setEditorTimeout(editor, () => {
-      Arr.each([ mothership, uiMothership ], function (ship) {
-        ship.broadcastOn([ Channels.dismissPopups() ], {
-          target
-        });
+  const onMousedown = DomEvent.bind(Element.fromDom(document), 'mouseup', function (evt) {
+    Arr.each([ mothership, uiMothership ], function (ship) {
+      ship.broadcastOn([ Channels.dismissPopups() ], {
+        target: evt.target()
       });
-    }, 0);
-  };
-
-  const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', function (evt) {
-    dismissPopup(evt.target());
+    });
   });
 
-  const onTouchstart = DomEvent.bind(Element.fromDom(document), 'touchstart', function (evt) {
-    dismissPopup(evt.target());
+  const onTouchstart = DomEvent.bind(Element.fromDom(document), 'touchend', function (evt) {
+    Arr.each([ mothership, uiMothership ], function (ship) {
+      ship.broadcastOn([ Channels.dismissPopups() ], {
+        target: evt.target()
+      });
+    });
   });
 
   const onMouseup = DomEvent.bind(Element.fromDom(document), 'mouseup', function (evt) {
-    if (evt.raw().button === 0) {
-      Arr.each([ mothership, uiMothership ], function (ship) {
-        ship.broadcastOn([ Channels.mouseReleased() ], {
-          target: evt.target()
-        });
+  if (evt.raw().button === 0) {
+    Arr.each([ mothership, uiMothership ], function (ship) {
+      ship.broadcastOn([ Channels.mouseReleased() ], {
+        target: evt.target()
       });
-    }
+    });
+  }
   });
 
   const onContentMousedown = function (raw) {
-    dismissPopup(Element.fromDom(raw.target));
+    Arr.each([ mothership, uiMothership ], function (ship) {
+      ship.broadcastOn([ Channels.dismissPopups() ], {
+        target: Element.fromDom(raw.target)
+      });
+    });
   };
-  editor.on('mousedown', onContentMousedown);
+  editor.on('mouseup', onContentMousedown);
   editor.on('touchstart', onContentMousedown);
 
   const onContentMouseup = function (raw) {
