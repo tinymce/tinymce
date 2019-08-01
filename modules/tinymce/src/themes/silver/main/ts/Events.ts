@@ -12,20 +12,21 @@ import { DomEvent, Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 const setup = (editor: Editor, mothership, uiMothership) => {
-  const onMousedown = DomEvent.bind(Element.fromDom(document), 'mouseup', function (evt) {
+
+  const dismissPopup = (target) => {
     Arr.each([ mothership, uiMothership ], function (ship) {
       ship.broadcastOn([ Channels.dismissPopups() ], {
-        target: evt.target()
+        target
       });
     });
+  };
+
+  const onMousedown = DomEvent.bind(Element.fromDom(document), 'mouseup', function (evt) {
+    dismissPopup(evt.target());
   });
 
   const onTouchstart = DomEvent.bind(Element.fromDom(document), 'touchend', function (evt) {
-    Arr.each([ mothership, uiMothership ], function (ship) {
-      ship.broadcastOn([ Channels.dismissPopups() ], {
-        target: evt.target()
-      });
-    });
+    dismissPopup(evt.target());
   });
 
   const onMouseup = DomEvent.bind(Element.fromDom(document), 'mouseup', function (evt) {
@@ -39,11 +40,7 @@ const setup = (editor: Editor, mothership, uiMothership) => {
   });
 
   const onContentMousedown = function (raw) {
-    Arr.each([ mothership, uiMothership ], function (ship) {
-      ship.broadcastOn([ Channels.dismissPopups() ], {
-        target: Element.fromDom(raw.target)
-      });
-    });
+    dismissPopup(Element.fromDom(raw.target));
   };
   editor.on('mouseup', onContentMousedown);
   editor.on('touchstart', onContentMousedown);
