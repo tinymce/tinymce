@@ -5,6 +5,7 @@
     "strict": false,
     "noImplicitThis": true,
     "strictBindCallApply": true,
+    "strictNullChecks": true,
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
