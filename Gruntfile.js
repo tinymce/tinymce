@@ -81,7 +81,7 @@ const bedrockPhantom = (tests) => {
   }
 };
 
-const bedrockBrowser = (tests, browserName, osName, auto) => {
+const bedrockBrowser = (tests, browserName, osName, bucket, buckets, auto) => {
   if (tests.length === 0) {
     return {};
   } else {
@@ -92,6 +92,8 @@ const bedrockBrowser = (tests, browserName, osName, auto) => {
         name: `${browserName}-${osName}`,
         browser: browserName,
         testfiles: testFolders(tests, auto),
+        bucket: bucket,
+        buckets: buckets,
 
         // we have a few tests that don't play nicely when combined together in the monorepo
         retries: 3
@@ -134,6 +136,9 @@ module.exports = function (grunt) {
   const runAllTests = grunt.option('ignore-lerna-changed') || false;
   const changes = fetchLernaProjects(grunt.log, runAllTests);
 
+  const bucket = grunt.option('bucket') || 1;
+  const buckets = grunt.option('buckets') || 1;
+
   const phantomTests = filterChanges(changes, runsInPhantom);
   const browserTests = filterChanges(changes, runsInBrowser);
 
@@ -149,11 +154,11 @@ module.exports = function (grunt) {
     },
     'bedrock-auto': {
       ...bedrockPhantomConfig,
-      ...bedrockBrowser(browserTests, activeBrowser, activeOs, true)
+      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, true)
     },
     'bedrock-manual': {
       ...bedrockPhantomConfig,
-      ...bedrockBrowser(browserTests, activeBrowser, activeOs, false)
+      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, false)
     }
   };
 
