@@ -1,3 +1,5 @@
+Version 5.0.14 (TBD)
+    Fixed inline dialogs not closing on escape when no dialog component is in focus #TINY-3936
 Version 5.0.13 (TBD)
     Fixed sidebar growing beyond editor bounds in IE 11 #TINY-3937
     Fixed issue with being unable to keyboard navigate disabled toolbar buttons #TINY-3350
