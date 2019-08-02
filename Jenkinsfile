@@ -33,9 +33,9 @@ properties([
   buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '1', daysToKeepStr: '', numToKeepStr: ''))
 ])
 
-def makeTask(name, suffix, os, browser, suffix, bucket, buckets) {
+def makeTask(name, suffix, os, browser, bucket, buckets) {
   return {
-    stage (permutation.os + " " + permutation.browser + suffix) {
+    stage (os + " " + browser + suffix) {
 
       node("bedrock-" + permutation.os) {
         echo "name: " + name + " bucket: " + bucket + "/" + buckets
@@ -107,7 +107,7 @@ node("primary") {
     for (int bucket = 1; bucket <= buckets; bucket++) {
       echo "name: " + processName + " bucket: " + bucket + "/" + buckets
       def suffix = buckets == 0 ? "" : "-" + bucket
-      processes[processName + suffix] = makeTask(processName, permutation.os, suffix, bucket, buckets)
+      processes[processName + suffix] = makeTask(processName, suffix, permutation.os, permutation.browser, bucket, buckets)
     }
   }
 
