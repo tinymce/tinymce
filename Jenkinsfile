@@ -33,6 +33,31 @@ properties([
   buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '1', daysToKeepStr: '', numToKeepStr: ''))
 ])
 
+def makeTask(name, suffix, os, browser, suffix, bucket, buckets) {
+  return {
+    stage (permutation.os + " " + permutation.browser + suffix) {
+
+      node("bedrock-" + permutation.os) {
+        echo "name: " + name + " bucket: " + bucket + "/" + buckets
+        echo "Slave checkout on node $NODE_NAME"
+        checkout scm
+
+        // windows tends to not have username or email set
+        extExec("git config user.email \"local@build.node\"")
+        extExec("git config user.name \"irrelevant\"")
+
+        gitMerge()
+
+        cleanAndInstall()
+        extExec "yarn ci"
+
+        echo "Platform: browser tests for " + name + " on node: $NODE_NAME"
+        runTests(extExecHandle, name, browser, os, bucket, buckets)
+      }
+    }
+  }
+}
+
 node("primary") {
   def extExec, extExecHandle, extYarnInstall, grunt
 
@@ -69,31 +94,6 @@ node("primary") {
     echo "Installing tools"
     extExec "git clean -fdx modules"
     extYarnInstall()
-  }
-
-  def makeTask(name, suffix, os, browser, suffix, bucket, buckets) {
-    return {
-      stage (permutation.os + " " + permutation.browser + suffix) {
-
-        node("bedrock-" + permutation.os) {
-          echo "name: " + name + " bucket: " + bucket + "/" + buckets
-          echo "Slave checkout on node $NODE_NAME"
-          checkout scm
-
-          // windows tends to not have username or email set
-          extExec("git config user.email \"local@build.node\"")
-          extExec("git config user.name \"irrelevant\"")
-
-          gitMerge()
-
-          cleanAndInstall()
-          extExec "yarn ci"
-
-          echo "Platform: browser tests for " + name + " on node: $NODE_NAME"
-          runTests(extExecHandle, name, browser, os, bucket, buckets)
-        }
-      }
-    }
   }
 
   def processes = [:]
