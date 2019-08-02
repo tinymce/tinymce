@@ -33,31 +33,6 @@ properties([
   buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '1', daysToKeepStr: '', numToKeepStr: ''))
 ])
 
-def makeTask(name, suffix, os, browser, bucket, buckets) {
-  return {
-    stage (os + " " + browser + suffix) {
-
-      node("bedrock-" + permutation.os) {
-        echo "name: " + name + " bucket: " + bucket + "/" + buckets
-        echo "Slave checkout on node $NODE_NAME"
-        checkout scm
-
-        // windows tends to not have username or email set
-        extExec("git config user.email \"local@build.node\"")
-        extExec("git config user.name \"irrelevant\"")
-
-        gitMerge()
-
-        cleanAndInstall()
-        extExec "yarn ci"
-
-        echo "Platform: browser tests for " + name + " on node: $NODE_NAME"
-        runTests(extExecHandle, name, browser, os, bucket, buckets)
-      }
-    }
-  }
-}
-
 node("primary") {
   def extExec, extExecHandle, extYarnInstall, grunt
 
@@ -101,13 +76,41 @@ node("primary") {
   // Browser tests
   for (int i = 0; i < browserPermutations.size(); i++) {
     def permutation = browserPermutations.get(i)
-    def processName = permutation.name
 
     def buckets = permutation.buckets
     for (int bucket = 1; bucket <= buckets; bucket++) {
-      echo "name: " + processName + " bucket: " + bucket + "/" + buckets
+      echo "name: " + permutation.name + " bucket: " + bucket + "/" + buckets
       def suffix = buckets == 0 ? "" : "-" + bucket
-      processes[processName + suffix] = makeTask(processName, suffix, permutation.os, permutation.browser, bucket, buckets)
+
+      // closure variables - Jenkins is weird about these
+      def c_suffix = suffix
+      def c_os = permutation.os
+      def c_browser = permutation.browser
+      def c_bucket = bucket
+      def c_buckets = buckets
+      def c_name = permutation.name
+
+      processes[c_name + c_suffix] = {
+        stage (c_os + " " + c_browser + c_suffix) {
+          node("bedrock-" + c_os) {
+            echo "name: " + c_name + " bucket: " + c_bucket + "/" + c_buckets
+            echo "Node checkout on node $NODE_NAME"
+            checkout scm
+
+            // windows tends to not have username or email set
+            extExec("git config user.email \"local@build.node\"")
+            extExec("git config user.name \"irrelevant\"")
+
+            gitMerge()
+
+            cleanAndInstall()
+            extExec "yarn ci"
+
+            echo "Platform: browser tests for " + c_name + " on node: $NODE_NAME"
+            runTests(extExecHandle, c_name, c_browser, c_os, c_bucket, c_buckets)
+          }
+        }
+      }
     }
   }
 
