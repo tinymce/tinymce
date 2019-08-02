@@ -79,9 +79,12 @@ node("primary") {
     def processName = permutation.name
     def buckets = permutation.buckets
     for (int bucket = 1; bucket <= buckets; bucket++) {
-      processes[processName] = {
-        stage (permutation.os + " " + permutation.browser + (buckets == 0 ? "" : "-" + bucket)) {
+      echo "name: " + processName + " bucket: " + bucket + "/" + buckets
+      def suffix = buckets == 0 ? "" : "-" + bucket
+      processes[processName + suffix] = {
+        stage (permutation.os + " " + permutation.browser + suffix) {
           node("bedrock-" + permutation.os) {
+            echo "name: " + processName + " bucket: " + bucket + "/" + buckets
             echo "Slave checkout on node $NODE_NAME"
             checkout scm
 
