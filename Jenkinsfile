@@ -71,37 +71,43 @@ node("primary") {
     extYarnInstall()
   }
 
+  def makeTask(name, suffix, os, browser, suffix, bucket, buckets) = {
+    return {
+      stage (permutation.os + " " + permutation.browser + suffix) {
+
+        node("bedrock-" + permutation.os) {
+          echo "name: " + name + " bucket: " + bucket + "/" + buckets
+          echo "Slave checkout on node $NODE_NAME"
+          checkout scm
+
+          // windows tends to not have username or email set
+          extExec("git config user.email \"local@build.node\"")
+          extExec("git config user.name \"irrelevant\"")
+
+          gitMerge()
+
+          cleanAndInstall()
+          extExec "yarn ci"
+
+          echo "Platform: browser tests for " + name + " on node: $NODE_NAME"
+          runTests(extExecHandle, name, browser, os, bucket, buckets)
+        }
+      }
+    }
+  }
+
   def processes = [:]
 
   // Browser tests
   for (int i = 0; i < browserPermutations.size(); i++) {
     def permutation = browserPermutations.get(i)
     def processName = permutation.name
+
     def buckets = permutation.buckets
     for (int bucket = 1; bucket <= buckets; bucket++) {
       echo "name: " + processName + " bucket: " + bucket + "/" + buckets
       def suffix = buckets == 0 ? "" : "-" + bucket
-      processes[processName + suffix] = {
-        stage (permutation.os + " " + permutation.browser + suffix) {
-          node("bedrock-" + permutation.os) {
-            echo "name: " + processName + " bucket: " + bucket + "/" + buckets
-            echo "Slave checkout on node $NODE_NAME"
-            checkout scm
-
-            // windows tends to not have username or email set
-            extExec("git config user.email \"local@build.node\"")
-            extExec("git config user.name \"irrelevant\"")
-
-            gitMerge()
-
-            cleanAndInstall()
-            extExec "yarn ci"
-
-            echo "Platform: browser tests for " + permutation.name + " on node: $NODE_NAME"
-            runTests(extExecHandle, permutation.name, permutation.browser, permutation.os, bucket, buckets)
-          }
-        }
-      }
+      processes[processName + suffix] = makeTask(processName, permutation.os, suffix, bucket, buckets)
     }
   }
 
