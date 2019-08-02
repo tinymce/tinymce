@@ -4,9 +4,8 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
-
-export type ElementMap = Array<{ [name: string]: boolean; }>;
-export type Attributes = Array<{ [name: string]: string; }>;
+export type ElementMap = Record<string, boolean>;
+export type Attributes = Array<{ name: string; value: string; }> & { map: Record<string, string> };
 
 const whiteSpaceRegExp = /^[ \t\r\n]*$/;
 const typeLookup = {
@@ -20,8 +19,6 @@ const typeLookup = {
 
 // Walks the tree left/right
 const walk = function (node: Node, root: Node, prev?: boolean): Node {
-  let sibling;
-  let parent;
   const startName = prev ? 'lastChild' : 'firstChild';
   const siblingName = prev ? 'prev' : 'next';
 
@@ -32,14 +29,14 @@ const walk = function (node: Node, root: Node, prev?: boolean): Node {
 
   // Return the sibling if it has one
   if (node !== root) {
-    sibling = node[siblingName];
+    let sibling = node[siblingName];
 
     if (sibling) {
       return sibling;
     }
 
     // Walk up the parents to look for siblings
-    for (parent = node.parent; parent && parent !== root; parent = parent.parent) {
+    for (let parent = node.parent; parent && parent !== root; parent = parent.parent) {
       sibling = parent[siblingName];
 
       if (sibling) {
@@ -69,15 +66,13 @@ class Node {
    * @param {String} name Name of the node type to create for example "b" or "#text".
    * @param {Object} attrs Name/value collection of attributes that will be applied to elements.
    */
-  public static create (name: string, attrs: Attributes): Node {
-    let node, attrName;
-
+  public static create (name: string, attrs: Record<string, string>): Node {
     // Create node
-    node = new Node(name, typeLookup[name] || 1);
+    const node = new Node(name, typeLookup[name] || 1);
 
     // Add attributes if needed
     if (attrs) {
-      for (attrName in attrs) {
+      for (const attrName in attrs) {
         node.attr(attrName, attrs[attrName]);
       }
     }
@@ -155,11 +150,11 @@ class Node {
   public attr (name: string): string;
   public attr (name: string | Record<string, string>, value?: string): string | Node {
     const self = this;
-    let attrs: Attributes, i;
+    let attrs: Attributes;
 
     if (typeof name !== 'string') {
-      for (i in name) {
-        self.attr(i, name[i]);
+      for (const key in name) {
+        self.attr(key, name[key]);
       }
 
       return self;
@@ -172,10 +167,10 @@ class Node {
           if (name in attrs.map) {
             delete attrs.map[name];
 
-            i = attrs.length;
+            let i = attrs.length;
             while (i--) {
               if (attrs[i].name === name) {
-                attrs = attrs.splice(i, 1);
+                attrs.splice(i, 1);
                 return self;
               }
             }
@@ -187,7 +182,7 @@ class Node {
         // Set attribute
         if (name in attrs.map) {
           // Set attribute
-          i = attrs.length;
+          let i = attrs.length;
           while (i--) {
             if (attrs[i].name === name) {
               attrs[i].value = value;
@@ -220,15 +215,15 @@ class Node {
   public clone (): Node {
     const self = this;
     const clone = new Node(self.name, self.type);
-    let i, l, selfAttrs, selfAttr, cloneAttrs;
+    let selfAttrs: Attributes;
 
     // Clone element attributes
     if ((selfAttrs = self.attributes)) {
-      cloneAttrs = [];
-      cloneAttrs.map = {};
+      const cloneAttrs = [] as Attributes;
+      (cloneAttrs as any).map = {};
 
-      for (i = 0, l = selfAttrs.length; i < l; i++) {
-        selfAttr = selfAttrs[i];
+      for (let i = 0, l = selfAttrs.length; i < l; i++) {
+        const selfAttr = selfAttrs[i];
 
         // Clone everything except id
         if (selfAttr.name !== 'id') {
@@ -273,10 +268,9 @@ class Node {
    */
   public unwrap () {
     const self = this;
-    let node, next;
 
-    for (node = self.firstChild; node;) {
-      next = node.next;
+    for (let node = self.firstChild; node;) {
+      const next = node.next;
       self.insert(node, self, true);
       node = next;
     }
@@ -335,13 +329,12 @@ class Node {
    */
   public append (node: Node): Node {
     const self = this;
-    let last;
 
     if (node.parent) {
       node.remove();
     }
 
-    last = self.lastChild;
+    const last = self.lastChild;
     if (last) {
       last.next = node;
       node.prev = last;
@@ -368,13 +361,12 @@ class Node {
    * @return {tinymce.html.Node} The node that got inserted.
    */
   public insert (node: Node, refNode: Node, before?: boolean): Node {
-    let parent;
 
     if (node.parent) {
       node.remove();
     }
 
-    parent = refNode.parent || this;
+    const parent = refNode.parent || this;
 
     if (before) {
       if (refNode === parent.firstChild) {
@@ -412,10 +404,9 @@ class Node {
    */
   public getAll (name: string): Node[] {
     const self = this;
-    let node;
-    const collection = [];
+    const collection: Node[] = [];
 
-    for (node = self.firstChild; node; node = walk(node, self)) {
+    for (let node = self.firstChild; node; node = walk(node, self)) {
       if (node.name === name) {
         collection.push(node);
       }
@@ -432,21 +423,20 @@ class Node {
    */
   public empty (): Node {
     const self = this;
-    let nodes, i, node;
 
     // Remove all children
     if (self.firstChild) {
-      nodes = [];
+      const nodes = [];
 
       // Collect the children
-      for (node = self.firstChild; node; node = walk(node, self)) {
+      for (let node = self.firstChild; node; node = walk(node, self)) {
         nodes.push(node);
       }
 
       // Remove the children
-      i = nodes.length;
+      let i = nodes.length;
       while (i--) {
-        node = nodes[i];
+        const node = nodes[i];
         node.parent = node.firstChild = node.lastChild = node.next = node.prev = null;
       }
     }
@@ -467,11 +457,9 @@ class Node {
    * @param {function} predicate Optional predicate that gets called after the other rules determine that the node is empty. Should return true if the node is a content node.
    * @return {Boolean} true/false if the node is empty or not.
    */
-  public isEmpty (elements: ElementMap, whitespace?: ElementMap, predicate?: (node: Node) => boolean) {
+  public isEmpty (elements: ElementMap, whitespace: ElementMap = {}, predicate?: (node: Node) => boolean) {
     const self = this;
-    let node = self.firstChild, i, name;
-
-    whitespace = whitespace || {} as ElementMap;
+    let node = self.firstChild;
 
     if (node) {
       do {
@@ -487,9 +475,9 @@ class Node {
           }
 
           // Keep bookmark nodes and name attribute like <a name="1"></a>
-          i = node.attributes.length;
+          let i = node.attributes.length;
           while (i--) {
-            name = node.attributes[i].name;
+            const name = node.attributes[i].name;
             if (name === 'name' || name.indexOf('data-mce-bookmark') === 0) {
               return false;
             }
