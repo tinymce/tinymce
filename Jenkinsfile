@@ -77,7 +77,8 @@ node("primary") {
   for (int i = 0; i < browserPermutations.size(); i++) {
     def permutation = browserPermutations.get(i)
     def processName = permutation.name
-    for (int bucket = 1; bucket <= permutation.buckets; buckets++) {
+    def buckets = permutation.buckets
+    for (int bucket = 1; bucket <= buckets; bucket++) {
       processes[processName] = {
         stage (permutation.os + " " + permutation.browser + (buckets == 0 ? "" : "-" + bucket)) {
           node("bedrock-" + permutation.os) {
