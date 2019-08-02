@@ -18,7 +18,7 @@ const typeLookup = {
 };
 
 // Walks the tree left/right
-const walk = function (node: Node, root: Node, prev?: boolean): Node {
+const walk = function (node: Node, root: Node | null, prev?: boolean): Node {
   const startName = prev ? 'lastChild' : 'firstChild';
   const siblingName = prev ? 'prev' : 'next';
 
@@ -66,7 +66,7 @@ class Node {
    * @param {String} name Name of the node type to create for example "b" or "#text".
    * @param {Object} attrs Name/value collection of attributes that will be applied to elements.
    */
-  public static create (name: string, attrs: Record<string, string>): Node {
+  public static create (name: string, attrs?: Record<string, string>): Node {
     // Create node
     const node = new Node(name, typeLookup[name] || 1);
 
@@ -82,14 +82,14 @@ class Node {
 
   public name: string;
   public type: number;
-  public attributes: Attributes;
-  public value: string;
-  public shortEnded: boolean;
-  public parent: Node;
-  public firstChild: Node;
-  public lastChild: Node;
-  public next: Node;
-  public prev: Node;
+  public attributes?: Attributes;
+  public value?: string;
+  public shortEnded?: boolean;
+  public parent?: Node;
+  public firstChild?: Node;
+  public lastChild?: Node;
+  public next?: Node;
+  public prev?: Node;
 
   /**
    * Constructs a new Node instance.
