@@ -80,7 +80,7 @@ node("primary") {
     def buckets = permutation.buckets
     for (int bucket = 1; bucket <= buckets; bucket++) {
       echo "name: " + permutation.name + " bucket: " + bucket + "/" + buckets
-      def suffix = buckets == 0 ? "" : "-" + bucket
+      def suffix = buckets == 1 ? "" : "-" + bucket
 
       // closure variables - Jenkins is weird about these
       def c_suffix = suffix
