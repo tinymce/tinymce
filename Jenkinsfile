@@ -114,13 +114,20 @@ node("primary") {
     }
   }
 
-  // PhantomJS is a browser, but runs on the same node as the pipeline
-  processes["phantomjs"] = {
+  processes["phantom-and-archive"] = {
     stage ("PhantomJS") {
+      // PhantomJS is a browser, but runs on the same node as the pipeline
       // we are re-using the state prepared by `ci-all` below
       // if we ever change these tests to run on a different node, rollup is required in addition to the normal CI command
       echo "Platform: PhantomJS tests on node: $NODE_NAME"
       runTests(extExecHandle, "PhantomJS", "phantomjs", null, 1, 1)
+    }
+
+    if (BRANCH_NAME != "master") {
+      stage ("Archive Build") {
+        extExec("yarn tinymce-grunt prodBuild symlink:js")
+        archiveArtifacts artifacts: 'js/**', onlyIfSuccessful: true
+      }
     }
   }
 
@@ -142,13 +149,6 @@ node("primary") {
       grunt "list-changed-phantom list-changed-browser"
       // Run all the tests in parallel
       parallel processes
-    }
-
-    if (BRANCH_NAME != "master") {
-      stage ("Archive Build") {
-        extExec("yarn tinymce-grunt prodBuild symlink:js")
-        archiveArtifacts artifacts: 'js/**', onlyIfSuccessful: true
-      }
     }
 
     // bitbucket plugin requires the result to explicitly be success
