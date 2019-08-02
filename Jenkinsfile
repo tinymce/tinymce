@@ -71,7 +71,7 @@ node("primary") {
     extYarnInstall()
   }
 
-  def makeTask(name, suffix, os, browser, suffix, bucket, buckets) = {
+  def makeTask(name, suffix, os, browser, suffix, bucket, buckets) {
     return {
       stage (permutation.os + " " + permutation.browser + suffix) {
 
