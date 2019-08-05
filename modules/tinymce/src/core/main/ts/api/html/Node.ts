@@ -4,6 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
+
 export type ElementMap = Record<string, boolean>;
 export type Attributes = Array<{ name: string; value: string; }> & { map: Record<string, string> };
 
@@ -66,7 +67,7 @@ class Node {
    * @param {String} name Name of the node type to create for example "b" or "#text".
    * @param {Object} attrs Name/value collection of attributes that will be applied to elements.
    */
-  public static create (name: string, attrs?: Record<string, string>): Node {
+  public static create(name: string, attrs?: Record<string, string>): Node {
     // Create node
     const node = new Node(name, typeLookup[name] || 1);
 
@@ -119,7 +120,7 @@ class Node {
    * @param {tinymce.html.Node} node Node to replace the current node with.
    * @return {tinymce.html.Node} The old node that got replaced.
    */
-  public replace (node: Node): Node {
+  public replace(node: Node): Node {
     const self = this;
 
     if (node.parent) {
@@ -145,10 +146,10 @@ class Node {
    * @param {String} value Optional value to set.
    * @return {String/tinymce.html.Node} String or undefined on a get operation or the current node on a set operation.
    */
-  public attr (name: string, value: string): string | Node;
-  public attr (name: Record<string, string>): Node;
-  public attr (name: string): string;
-  public attr (name: string | Record<string, string>, value?: string): string | Node {
+  public attr(name: string, value: string): string | Node;
+  public attr(name: Record<string, string>): Node;
+  public attr(name: string): string;
+  public attr(name: string | Record<string, string>, value?: string): string | Node {
     const self = this;
     let attrs: Attributes;
 
@@ -212,7 +213,7 @@ class Node {
    * @method clone
    * @return {tinymce.html.Node} New copy of the original node.
    */
-  public clone (): Node {
+  public clone(): Node {
     const self = this;
     const clone = new Node(self.name, self.type);
     let selfAttrs: Attributes;
@@ -249,7 +250,7 @@ class Node {
    *
    * @method wrap
    */
-  public wrap (wrapper: Node): Node {
+  public wrap(wrapper: Node): Node {
     const self = this;
 
     self.parent.insert(wrapper, self);
@@ -266,7 +267,7 @@ class Node {
    *
    * @method unwrap
    */
-  public unwrap () {
+  public unwrap() {
     const self = this;
 
     for (let node = self.firstChild; node;) {
@@ -287,7 +288,7 @@ class Node {
    * @method remove
    * @return {tinymce.html.Node} Current node that got removed.
    */
-  public remove (): Node {
+  public remove(): Node {
     const self = this, parent = self.parent, next = self.next, prev = self.prev;
 
     if (parent) {
@@ -327,7 +328,7 @@ class Node {
    * @param {tinymce.html.Node} node Node to append as a child of the current one.
    * @return {tinymce.html.Node} The node that got appended.
    */
-  public append (node: Node): Node {
+  public append(node: Node): Node {
     const self = this;
 
     if (node.parent) {
@@ -360,7 +361,7 @@ class Node {
    * @param {Boolean} before Optional state to insert the node before the reference node.
    * @return {tinymce.html.Node} The node that got inserted.
    */
-  public insert (node: Node, refNode: Node, before?: boolean): Node {
+  public insert(node: Node, refNode: Node, before?: boolean): Node {
 
     if (node.parent) {
       node.remove();
@@ -402,7 +403,7 @@ class Node {
    * @param {String} name Name of the child nodes to collect.
    * @return {Array} Array with child nodes matchin the specified name.
    */
-  public getAll (name: string): Node[] {
+  public getAll(name: string): Node[] {
     const self = this;
     const collection: Node[] = [];
 
@@ -421,7 +422,7 @@ class Node {
    * @method empty
    * @return {tinymce.html.Node} The current node that got cleared.
    */
-  public empty (): Node {
+  public empty(): Node {
     const self = this;
 
     // Remove all children
@@ -457,7 +458,7 @@ class Node {
    * @param {function} predicate Optional predicate that gets called after the other rules determine that the node is empty. Should return true if the node is a content node.
    * @return {Boolean} true/false if the node is empty or not.
    */
-  public isEmpty (elements: ElementMap, whitespace: ElementMap = {}, predicate?: (node: Node) => boolean) {
+  public isEmpty(elements: ElementMap, whitespace: ElementMap = {}, predicate?: (node: Node) => boolean) {
     const self = this;
     let node = self.firstChild;
 
@@ -516,7 +517,7 @@ class Node {
    * @param {Boolean} prev Optional previous node state defaults to false.
    * @return {tinymce.html.Node} Node that is next to or previous of the current node.
    */
-  public walk (prev?: boolean): Node {
+  public walk(prev?: boolean): Node {
     return walk(this, null, prev);
   }
 }
