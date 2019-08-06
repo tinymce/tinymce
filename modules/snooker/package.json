@@ -20,7 +20,6 @@
   "dependencies": {
     "@ephox/dom-globals": "^1.1.2",
     "@ephox/dragster": "^4.0.19",
-    "@ephox/echo": "^3.0.25",
     "@ephox/katamari": "^2.4.25",
     "@ephox/porkbun": "^4.0.16",
     "@ephox/robin": "^7.0.23",
