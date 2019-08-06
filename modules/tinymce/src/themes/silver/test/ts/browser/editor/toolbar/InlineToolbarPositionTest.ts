@@ -52,7 +52,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     UiFinder.sWaitForHidden('Wait for editor to hide', Body.body(), '.tox.tox-tinymce-inline')
   ]));
 
-  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
       const uiContainer = Element.fromDom(editor.getContainer());
       const contentAreaContainer = Element.fromDom(editor.getContentAreaContainer());
 

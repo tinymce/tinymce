@@ -1,23 +1,22 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 import { SelectorFind, Element } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
-import * as Fields from '../data/Fields';
+import { AlloyComponent } from '../api/component/ComponentApi';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
+import * as Fields from '../data/Fields';
+import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as DomMovement from '../navigation/DomMovement';
 import * as DomNavigation from '../navigation/DomNavigation';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
+import { FlowConfig, KeyRuleHandler } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 
-import { FlowConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
-
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { NativeSimulatedEvent } from '../events/SimulatedEvent';
-
 // NB: Tsc requires AlloyEventHandler to be imported here.
+// @ts-ignore
 import { AlloyEventHandler } from '../api/events/AlloyEvents';
 
 const schema = [
@@ -85,6 +84,6 @@ const getKeydownRules = (_component, _se, flowConfig: FlowConfig, _flowState): A
 
 const getKeyupRules: () => Array<KeyRules.KeyRule<FlowConfig, Stateless>> = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
-])
+]);
 
 export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Option.some(focusIn));

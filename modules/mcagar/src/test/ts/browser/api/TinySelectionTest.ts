@@ -4,8 +4,8 @@ import { UnitTest } from '@ephox/bedrock';
 import TinyApis from 'ephox/mcagar/api/TinyApis';
 
 UnitTest.asynctest('TinySelectionTest', (success, failure) => {
-  TinyLoader.setup((editor, loadSuccess, loadFailure) => {
-    var apis = TinyApis(editor);
+  TinyLoader.setupLight((editor, loadSuccess, loadFailure) => {
+    const apis = TinyApis(editor);
 
     Pipeline.async({}, [
       apis.sFocus,
@@ -41,4 +41,3 @@ UnitTest.asynctest('TinySelectionTest', (success, failure) => {
     base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });
-

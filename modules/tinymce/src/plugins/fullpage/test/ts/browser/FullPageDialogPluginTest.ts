@@ -53,9 +53,6 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
                       s.element('div', {
                         html: str.is('Metadata and Document Properties')
                       }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-dialog__draghandle') ],
-                      }),
                       s.element('button', {
                         classes: [ arr.has('tox-button--icon'), arr.has('tox-button--naked') ],
                       })
@@ -191,7 +188,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
     );
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const doc = Element.fromDom(document);
     Pipeline.async({},
       Log.steps('TBA', 'FullPage: Test initial data, set new input values, open dialog, verify that the dialog data matches the input values', [

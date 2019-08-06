@@ -10,27 +10,28 @@ export default <any> function () {
   DemoContainer.init(
     'Form Demo',
     function (success, failure) {
-      var doc = Element.fromDom(document);
+      const doc = Element.fromDom(document);
 
-      var form =  Element.fromTag('form');
+      const form =  Element.fromTag('form');
 
-      var start = Element.fromHtml('<button>Go</button>');
+      const start = Element.fromHtml('<button>Go</button>');
       DomEvent.bind(start, 'click', function () {
         Remove.remove(start);
 
-        
-
-        var labelName = Element.fromTag('label');
+        const labelName = Element.fromTag('label');
         Html.set(labelName, 'Name');
-        var fieldName = Element.fromHtml('<input type="text" />');
+        const fieldName = Element.fromHtml('<input type="text" />');
 
-        var submit = Element.fromTag('button');
+        const submit = Element.fromTag('button');
         Attr.set(submit, 'type', 'button');
         Html.set(submit, 'Apply');
 
         DomEvent.bind(submit, 'click', function () {
-          if (Value.get(fieldName) !== 'test') Css.set(fieldName, 'border', '3px solid red');
-          else Css.remove(fieldName, 'border');
+          if (Value.get(fieldName) !== 'test') {
+            Css.set(fieldName, 'border', '3px solid red');
+          } else {
+            Css.remove(fieldName, 'border');
+          }
         });
 
         InsertAll.append(form, [ labelName, fieldName, submit ]);
@@ -50,9 +51,9 @@ export default <any> function () {
         ], success, failure);
         */
 
-        // The chain version 
-        var cGetForm = Chain.inject(form);
-        
+        // The chain version
+        const cGetForm = Chain.inject(form);
+
         Pipeline.async({}, [
           Chain.asStep({}, [
             Chain.fromParent(cGetForm, [
@@ -68,7 +69,6 @@ export default <any> function () {
             ])
           ])
         ], success, failure);
-
 
       });
 

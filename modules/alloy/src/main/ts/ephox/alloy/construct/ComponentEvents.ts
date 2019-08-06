@@ -1,6 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Fun, Merger, Obj, Result } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
+import { Arr, Fun, Obj, Result } from '@ephox/katamari';
 
 import * as ObjIndex from '../alien/ObjIndex';
 import * as PrioritySort from '../alien/PrioritySort';
@@ -68,7 +67,7 @@ const missingOrderError = (eventName, tuples) => {
   return Result.error([
     'The event (' + eventName + ') has more than one behaviour that listens to it.\nWhen this occurs, you must ' +
     'specify an event ordering for the behaviours in your spec (e.g. [ "listing", "toggling" ]).\nThe behaviours that ' +
-    'can trigger it are: ' + Json.stringify(Arr.map(tuples, (c) => c.name()), null, 2)
+    'can trigger it are: ' + JSON.stringify(Arr.map(tuples, (c) => c.name()), null, 2)
   ]);
 };
 

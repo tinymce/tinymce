@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Merger, Option, Arr, Result } from '@ephox/katamari';
+import { Arr, Result, Option } from '@ephox/katamari';
 
 import * as EventRoot from '../alien/EventRoot';
 import * as Keys from '../alien/Keys';
@@ -13,8 +13,8 @@ import { BehaviourState } from '../behaviour/common/BehaviourState';
 import * as Fields from '../data/Fields';
 import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as KeyRules from '../navigation/KeyRules';
-import { GeneralKeyingConfig, FocusInsideModes } from './KeyingModeTypes';
 import { inSet } from '../navigation/KeyMatch';
+import { GeneralKeyingConfig, FocusInsideModes } from './KeyingModeTypes';
 
 const typical = <C extends GeneralKeyingConfig, S>(
   infoSchema: FieldProcessorAdt[],
@@ -61,7 +61,7 @@ const typical = <C extends GeneralKeyingConfig, S>(
           simulatedEvent.stop();
         });
       }
-    }
+    };
 
     return AlloyEvents.derive(
       onFocusHandler.toArray().concat([

@@ -4,7 +4,7 @@ import * as Obj from 'ephox/katamari/api/Obj';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('ObjMapTest', function() {
+UnitTest.test('ObjMapTest', function () {
   const dbl = function (x) {
     return x * 2;
   };
@@ -24,7 +24,6 @@ UnitTest.test('ObjMapTest', function() {
     assert.eq(expected, Obj.map(input, f));
   };
 
-
   const checkT = function (expected, input, f) {
     assert.eq(expected, Obj.tupleMap(input, f));
   };
@@ -34,8 +33,8 @@ UnitTest.test('ObjMapTest', function() {
   check({a: 'a.', b: 'b.', c: 'c.'}, {a: 'a', b: 'b', c: 'c'}, addDot);
 
   checkT({}, {}, tupleF);
-  checkT({ab:'ab'}, {a:'a'}, tupleF);
-  checkT({ab:'ab', bb:'bb', cb:'cb'}, {a:'a', b:'b', c:'c'}, tupleF);
+  checkT({ab: 'ab'}, {a: 'a'}, tupleF);
+  checkT({ab: 'ab', bb: 'bb', cb: 'cb'}, {a: 'a', b: 'b', c: 'c'}, tupleF);
 
   const stringify = function (x, i) {
     return i + ' :: ' + x;
@@ -46,8 +45,8 @@ UnitTest.test('ObjMapTest', function() {
   };
 
   checkMapToArray([], {}, stringify);
-  checkMapToArray(['a :: a'], {a:'a'}, stringify);
-  checkMapToArray(['a :: a','b :: b','c :: c'], {a:'a', b:'b', c:'c'}, stringify);
+  checkMapToArray(['a :: a'], {a: 'a'}, stringify);
+  checkMapToArray(['a :: a', 'b :: b', 'c :: c'], {a: 'a', b: 'b', c: 'c'}, stringify);
 
   Jsc.property(
     'map id obj = obj',
@@ -105,4 +104,3 @@ UnitTest.test('ObjMapTest', function() {
     }
   );
 });
-

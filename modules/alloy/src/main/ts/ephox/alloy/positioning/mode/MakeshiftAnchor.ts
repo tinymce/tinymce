@@ -1,12 +1,12 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 
 import { bounds } from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
-import { OriginAdt } from '../../positioning/layout/Origins';
 import * as Bubble from '../layout/Bubble';
 import * as Layout from '../layout/Layout';
+import { OriginAdt } from '../layout/Origins';
 import { MakeshiftAnchor, nu as NuAnchoring } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
@@ -17,10 +17,10 @@ const placement = (component: AlloyComponent, anchorInfo: MakeshiftAnchor, origi
 
   return Option.some(
     NuAnchoring({
-      anchorBox: anchorBox,
+      anchorBox,
       bubble: anchorInfo.bubble,
       overrides: anchorInfo.overrides,
-      layouts: layouts,
+      layouts,
       placer: Option.none()
     })
   );

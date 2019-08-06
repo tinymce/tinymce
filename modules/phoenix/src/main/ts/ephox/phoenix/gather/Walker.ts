@@ -2,7 +2,7 @@ import { Universe } from '@ephox/boss';
 import { Arr, Option, Struct } from '@ephox/katamari';
 import { Direction, Successor, Transition, Traverse } from '../api/data/Types';
 
-type TraverseConstructor = <E>(item: E, mode: Transition) => Traverse<E>
+type TraverseConstructor = <E>(item: E, mode: Transition) => Traverse<E>;
 const traverse: TraverseConstructor = Struct.immutable('item', 'mode');
 
 const backtrack: Transition = function (universe, item, _direction, transition = sidestep) {
@@ -48,7 +48,7 @@ const go = function <E, D>(universe: Universe<E, D>, item: E, mode: Transition, 
     // Attempt the current mode. If not, use the fallback and try again.
     return rule.current(universe, item, direction, rule.next).orThunk(function () {
       return rule.fallback.bind(function (fb) {
-        return go(universe, item, fb, direction)
+        return go(universe, item, fb, direction);
       });
     });
   });

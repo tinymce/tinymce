@@ -1,8 +1,9 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
+
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
 import * as Layout from '../../positioning/layout/Layout';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export default [
   FieldSchema.strict('lazySink'),

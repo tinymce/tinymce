@@ -1,12 +1,13 @@
+import { Option } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Element } from '@ephox/sugar';
-import { NativeSimulatedEvent, EventFormat } from '../../events/SimulatedEvent';
-import { DragnDropImageClone } from './ImageClone';
-import { DropEvent } from './DropEvent';
-import { Option } from '@ephox/katamari';
 import { DomModification } from '../../dom/DomModification';
+import { NativeSimulatedEvent, EventFormat } from '../../events/SimulatedEvent';
+import { DropEvent } from './DropEvent';
+import { DragnDropImageClone } from './ImageClone';
 
 export interface DragnDropBehaviour extends Behaviour.AlloyBehaviour<DragnDropConfigSpec, DragnDropConfig> {
   config: (config: DragnDropConfigSpec) => Behaviour.NamedConfiguredBehaviour<DragnDropConfigSpec, DragnDropConfig>;
@@ -15,7 +16,7 @@ export interface DragnDropBehaviour extends Behaviour.AlloyBehaviour<DragnDropCo
 export type DragnDropConfig = DragStartingConfig | DroppingConfig;
 
 export interface StartingDragndropConfigSpec {
-  mode: 'drag',
+  mode: 'drag';
   type?: string;
   phoneyTypes?: string[];
   effectAllowed?: string;
@@ -54,7 +55,7 @@ export interface DragStartingConfig {
 }
 
 export interface DropDragndropConfigSpec {
-  mode: 'drop',
+  mode: 'drop';
   type?: string;
   dropEffect?: string;
   onDrop?: (component: AlloyComponent, dropEvent: DropEvent) => void;
@@ -85,4 +86,3 @@ export interface DroppingConfig {
 }
 
 export type DragnDropConfigSpec = StartingDragndropConfigSpec | DropDragndropConfigSpec;
-

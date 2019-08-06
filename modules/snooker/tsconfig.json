@@ -18,7 +18,6 @@
   ],
   "references": [
     { "path": "../dragster" },
-    { "path": "../echo" },
     { "path": "../katamari" },
     { "path": "../porkbun" },
     { "path": "../robin" },

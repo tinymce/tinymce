@@ -1,9 +1,10 @@
 import { Objects } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 import { Attr, Class } from '@ephox/sugar';
+
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Stateless } from '../../behaviour/common/BehaviourState';
-import { TransitioningConfig, TransitionProperties } from '../../behaviour/transitioning/TransitioningTypes';
+import { TransitioningConfig, TransitionProperties } from './TransitioningTypes';
 
 export interface TransitionRoute {
   destination: string;
@@ -47,7 +48,7 @@ const disableTransition = (comp: AlloyComponent, transConfig: TransitioningConfi
 const getNewRoute = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, destination: string): TransitionRoute => {
   return {
     start: Attr.get(comp.element(), transConfig.stateAttr),
-    destination: destination
+    destination
   };
 };
 

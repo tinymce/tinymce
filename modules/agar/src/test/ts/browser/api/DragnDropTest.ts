@@ -47,7 +47,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
     if (dataTransfer.getData('text')) {
       store.push('drop text: ' + dataTransfer.getData('text'));
     } else {
-      store.push(`drop files: ${dataTransfer.files.length}`)
+      store.push(`drop files: ${dataTransfer.files.length}`);
     }
   });
 
@@ -62,7 +62,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
     Logger.t('Drag/drop element with data using selectors', GeneralSteps.sequence([
       sClearStore,
       sDragnDrop('.draggable', '.dropzone'),
-      sAssertStoreItems(['dragstart', 'dragenter', 'dragover', 'drop text: hello', 'dragend'])  
+      sAssertStoreItems(['dragstart', 'dragenter', 'dragover', 'drop text: hello', 'dragend'])
     ])),
 
     Logger.t('Drag/drop element with data using elements', GeneralSteps.sequence([
@@ -108,4 +108,3 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
     success();
   }, failure);
 });
-

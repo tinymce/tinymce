@@ -1,15 +1,16 @@
 import { Logger, GeneralSteps, Files, DragnDrop as Dnd } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Blob, DataTransfer } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { DragnDrop } from 'ephox/alloy/api/behaviour/DragnDrop';
-import { Arr } from '@ephox/katamari';
 import TestStore from 'ephox/alloy/api/testhelpers/TestStore';
 import { StartingDragndropConfigSpec, DropDragndropConfigSpec } from 'ephox/alloy/dragging/dragndrop/DragnDropTypes';
-import { Blob, DataTransfer } from '@ephox/dom-globals';
-import { PlatformDetection } from '@ephox/sand';
 
 UnitTest.asynctest('DragnDropTest', (success, failure) => {
   const platform = PlatformDetection.detect();
@@ -61,8 +62,8 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
           mode: 'drop',
           onDrop: (comp, dropEvent) => {
             const files = Arr.map(dropEvent.files, ({ name, size, type, lastModified }) => {
-              return { name, size, type, lastModified }
-            })
+              return { name, size, type, lastModified };
+            });
             store.add({ type: 'drop', files, data: dropEvent.data });
           },
           onDrag: (component, simulatedEvent) => {
@@ -81,22 +82,22 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
         })
       ])
     });
-  }
+  };
 
   const sAssertDraggedData = (label: string, store: TestStore, expectedDropData: Record<string, any>) => {
     return store.sAssertEq(label, ['canDrag', 'onDragstart', 'onDragenter', 'onDragover', {
       type: 'drop',
       files: [],
       ...expectedDropData
-    }, 'onDragend' ])
+    }, 'onDragend' ]);
   };
 
-  const sAssertDraggedFiles = (label: string, store: TestStore, expectedDropFiles: Record<string, any>[]) => {
+  const sAssertDraggedFiles = (label: string, store: TestStore, expectedDropFiles: Array<Record<string, any>>) => {
     return store.sAssertEq(label, ['canDrag', 'onDragstart', 'onDragenter', 'onDragover', {
       type: 'drop',
       data: '',
       files: expectedDropFiles
-    }, 'onDragend' ])
+    }, 'onDragend' ]);
   };
 
   GuiSetup.setup((store, doc, body) => {
@@ -186,8 +187,8 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
         store.sClear,
         Dnd.sDragnDrop('.draggableFilesA', '.dropzoneA'),
         sAssertDraggedFiles('Should have expected files', store, [
-          { name: "a.html", size: 3, type: "text/html", lastModified: 1234 },
-          { name: "b.txt", size: 4, type: "text/plain", lastModified: 123 }
+          { name: 'a.html', size: 3, type: 'text/html', lastModified: 1234 },
+          { name: 'b.txt', size: 4, type: 'text/plain', lastModified: 123 }
         ]),
       ])),
 

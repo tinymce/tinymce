@@ -6,12 +6,20 @@ import { Body, Element } from '@ephox/sugar';
 import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
+const getFilename = (url: string) => {
+  const m = /([^\/\\]+)$/.exec(url);
+  if (m !== null) {
+    return m[1];
+  }
+  return '';
+};
+
 UnitTest.asynctest('browser.tinymce.plugins.emoticons.DifferentEmojiDatabaseTest', (success, failure) => {
   EmoticonsPlugin();
   SilverTheme();
 
   const sTestEditorWithSettings = (categories, databaseUrl) => Step.async((onStepSuccess, onStepFailure) => {
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
       const tinyApis = TinyApis(editor);
       const tinyUi = TinyUi(editor);
 
@@ -42,7 +50,8 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.DifferentEmojiDatabaseTest
       toolbar: 'emoticons',
       theme: 'silver',
       base_url: '/project/tinymce/js/tinymce',
-      emoticons_database_url: databaseUrl
+      emoticons_database_url: databaseUrl,
+      emoticons_database_id: 'tinymce.plugins.emoticons.' + getFilename(databaseUrl)
     }, onStepSuccess, onStepFailure);
   });
 

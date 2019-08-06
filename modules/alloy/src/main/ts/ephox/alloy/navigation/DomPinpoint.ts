@@ -1,14 +1,9 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { Compare, SelectorFilter, Visibility } from '@ephox/sugar';
 
 import * as ArrPinpoint from './ArrPinpoint';
 
 const locateVisible = (container, current, selector) => {
-  const filter = Visibility.isVisible;
-  return locateIn(container, current, selector, filter);
-};
-
-const locateIn = (container, current, selector, filter) => {
   const predicate = Fun.curry(Compare.eq, current);
   const candidates = SelectorFilter.descendants(container, selector);
   const visible = Arr.filter(candidates, Visibility.isVisible);
@@ -23,6 +18,5 @@ const findIndex = (elements, target) => {
 
 export {
   locateVisible,
-  locateIn,
   findIndex
 };

@@ -5,17 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HTMLElement } from '@ephox/dom-globals';
 import Writer from 'tinymce/core/api/html/Writer';
 import SaxParser from 'tinymce/core/api/html/SaxParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Size from './Size';
-import { Element } from '@ephox/dom-globals';
-import { MediaDialogData } from './DataToHtml';
+import { MediaData } from './Types';
 
 const DOM = DOMUtils.DOM;
 
-const setAttributes = function (attrs, updatedAttrs) {
+type AttrList = Array<{ name: string, value: string }> & { map: Record<string, string> };
+
+const setAttributes = function (attrs: AttrList, updatedAttrs: Record<string, any>) {
   let name;
   let i;
   let value;
@@ -50,14 +52,14 @@ const setAttributes = function (attrs, updatedAttrs) {
   }
 };
 
-const normalizeHtml = function (html) {
+const normalizeHtml = function (html: string): string {
   const writer = Writer();
   const parser = SaxParser(writer);
   parser.parse(html);
   return writer.getContent();
 };
 
-const updateHtmlSax = function (html, data: Partial<MediaDialogData>, updateAll?) {
+const updateHtmlSax = function (html: string, data: Partial<MediaData>, updateAll?: boolean): string {
   const writer = Writer();
   let sourceCount = 0;
   let hasImage;
@@ -182,14 +184,14 @@ const updateHtmlSax = function (html, data: Partial<MediaDialogData>, updateAll?
   return writer.getContent();
 };
 
-const isEphoxEmbed = function (html) {
+const isEphoxEmbed = function (html: string): boolean {
   const fragment = DOM.createFragment(html);
   return DOM.getAttrib(fragment.firstChild, 'data-ephox-embed-iri') !== '';
 };
 
-const updateEphoxEmbed = function (html, data: Partial<MediaDialogData>) {
+const updateEphoxEmbed = function (html: string, data: Partial<MediaData>): string {
   const fragment = DOM.createFragment(html);
-  const div = fragment.firstChild as Element;
+  const div = fragment.firstChild as HTMLElement;
 
   Size.setMaxWidth(div, data.width);
   Size.setMaxHeight(div, data.height);
@@ -197,7 +199,7 @@ const updateEphoxEmbed = function (html, data: Partial<MediaDialogData>) {
   return normalizeHtml(div.outerHTML);
 };
 
-const updateHtml = function (html: string, data: Partial<MediaDialogData>, updateAll?: boolean) {
+const updateHtml = function (html: string, data: Partial<MediaData>, updateAll?: boolean) {
   return isEphoxEmbed(html) ? updateEphoxEmbed(html, data) : updateHtmlSax(html, data, updateAll);
 };
 

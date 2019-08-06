@@ -6,21 +6,18 @@
  */
 
 import { AddEventsBehaviour, AlloyEvents, Behaviour, Memento, Representing, SimpleSpec } from '@ephox/alloy';
-import { Element } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
+import { Types } from '@ephox/bridge';
+import Resource from 'tinymce/core/api/Resource';
 
-export interface CustomEditorFoo {
-  tag: string;
-  init: (e: Element) => Promise<{
-    setValue(value: string): void,
-    getValue(): string,
-    destroy(): void
-  }>;
-}
+type CustomEditorSpec = Types.CustomEditor.CustomEditor;
+type CustomEditorInitFn = Types.CustomEditor.CustomEditorInitFn;
 
-export const renderCustomEditor = (spec: CustomEditorFoo): SimpleSpec => {
+const isOldCustomEditor = (spec: CustomEditorSpec): spec is Types.CustomEditor.CustomEditorOld => Object.prototype.hasOwnProperty.call(spec, 'init');
+
+export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
   const editorApi = Cell(Option.none());
 
   const memReplaced = Memento.record({
@@ -40,7 +37,12 @@ export const renderCustomEditor = (spec: CustomEditorFoo): SimpleSpec => {
       AddEventsBehaviour.config('editor-foo-events', [
         AlloyEvents.runOnAttached((component) => {
           memReplaced.getOpt(component).each((ta) => {
-            spec.init(ta.element().dom()).then((ea) => {
+            (isOldCustomEditor(spec)
+            ? spec.init(ta.element().dom())
+            : Resource.load(spec.scriptId, spec.scriptUrl).then(
+                (init: CustomEditorInitFn) => init(ta.element().dom(), spec.settings)
+              )
+            ).then((ea) => {
               initialValue.get().each((cvalue) => {
                 ea.setValue(cvalue);
               });

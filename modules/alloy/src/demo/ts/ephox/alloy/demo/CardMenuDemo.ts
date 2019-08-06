@@ -1,5 +1,7 @@
 import { Objects } from '@ephox/boulder';
+import { document, console } from '@ephox/dom-globals';
 import { Class, Element, SelectorFind, Width } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Transitioning } from 'ephox/alloy/api/behaviour/Transitioning';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
@@ -7,9 +9,9 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { document, console } from '@ephox/dom-globals';
 
 import { Option } from '@ephox/katamari';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 // tslint:disable:no-console
 
@@ -19,7 +21,7 @@ export default (): void => {
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  const makeBack = (text) => {
+  const makeBack = (text: string) => {
     return {
       data: TieredMenu.collapseItem(text),
       type: 'item',
@@ -31,7 +33,7 @@ export default (): void => {
     };
   };
 
-  const makeItem = (value, text) => {
+  const makeItem = (value, text: string) => {
     return {
       data: {
         value
@@ -45,7 +47,7 @@ export default (): void => {
     };
   };
 
-  const makeSeparator = (text) => {
+  const makeSeparator = (text: string) => {
     return {
       type: 'separator',
       dom: {
@@ -119,10 +121,12 @@ export default (): void => {
       console.log('Escaping');
       return Option.some(true);
     },
-    onOpenMenu (container, menu) {
+    onOpenMenu (container: AlloyComponent, menu: AlloyComponent) {
       const w = Width.get(container.element());
       Width.set(menu.element(), w);
-      Transitioning.jumpTo(menu, 'current');
+      if (Transitioning.jumpTo) {
+        Transitioning.jumpTo(menu, 'current');
+      }
     },
     onOpenSubmenu (container, item, submenu) {
       const w = Width.get(container.element());
@@ -130,16 +134,20 @@ export default (): void => {
       const menuComp = container.getSystem().getByDom(menu).getOrDie();
       Width.set(submenu.element(), w);
 
-      Transitioning.progressTo(menuComp, 'before');
-      Transitioning.jumpTo(submenu, 'after');
-      Transitioning.progressTo(submenu, 'current');
+      if (Transitioning.progressTo && Transitioning.jumpTo) {
+        Transitioning.progressTo(menuComp, 'before');
+        Transitioning.jumpTo(submenu, 'after');
+        Transitioning.progressTo(submenu, 'current');
+      }
     },
 
     onCollapseMenu (container, item, menu) {
       const submenu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
       const submenuComp = container.getSystem().getByDom(submenu).getOrDie();
-      Transitioning.progressTo(submenuComp, 'after');
-      Transitioning.progressTo(menu, 'current');
+      if (Transitioning.progressTo) {
+        Transitioning.progressTo(submenuComp, 'after');
+        Transitioning.progressTo(menu, 'current');
+      }
     },
 
     navigateOnHover: false,
@@ -197,7 +205,7 @@ export default (): void => {
     }
   });
 
-  const menu = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'This menu is a card menu',
     tieredMenu

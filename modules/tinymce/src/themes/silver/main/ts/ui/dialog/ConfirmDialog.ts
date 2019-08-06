@@ -29,20 +29,25 @@ export const setup = (extras: ConfirmDialogSetup) => {
         name: 'yes',
         text: 'Yes',
         primary: true,
+        align: 'end',
+        disabled: false,
         icon: Option.none()
-      }, 'submit', sharedBackstage.providers)
+      }, 'submit', extras.backstage)
     );
 
     const footerNo = renderFooterButton({
       name: 'no',
       text: 'No',
       primary: true,
+      align: 'end',
+      disabled: false,
       icon: Option.none()
-    }, 'cancel', sharedBackstage.providers);
+    }, 'cancel', extras.backstage);
 
     const confirmDialog = GuiFactory.build(
       Dialogs.renderDialog({
         lazySink: () => sharedBackstage.getSink(),
+        headerOverride: Option.some(Dialogs.hiddenHeader),
         partSpecs: {
           title: Dialogs.pUntitled(),
           close: Dialogs.pClose(() => {

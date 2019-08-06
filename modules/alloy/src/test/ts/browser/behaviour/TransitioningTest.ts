@@ -1,11 +1,12 @@
 import { ApproxStructure, Assertions, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Css } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Transitioning } from 'ephox/alloy/api/behaviour/Transitioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
-import { Css } from '@ephox/sugar';
 
 UnitTest.asynctest('TransitioningTest', (success, failure) => {
 

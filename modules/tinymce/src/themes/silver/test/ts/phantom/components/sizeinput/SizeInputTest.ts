@@ -14,10 +14,10 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
     (store, doc, body) => {
       return GuiFactory.build(
         renderSizeInput({
-          type: 'sizeinput',
           name: 'dimensions',
           label: Option.some('size'),
-          constrain: true
+          constrain: true,
+          disabled: false
         }, TestProviders)
       );
     },

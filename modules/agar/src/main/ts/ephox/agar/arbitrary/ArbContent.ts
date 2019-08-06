@@ -1,6 +1,5 @@
 import { console } from '@ephox/dom-globals';
 import { Merger, Obj } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 
 import ArbSchema from './ArbSchema';
 import ArbSchemaTypes from './ArbSchemaTypes';
@@ -11,8 +10,9 @@ const makeArbOf = function (component, schema, depth) {
   const arbitrary = schema[component];
   if (arbitrary === undefined) {
     const message =
-      'Did not understand arbitrary schema element: ' + Json.stringify(component) +
-      '. Known schema elements were: ' + Json.stringify(Obj.keys(schema));
+      'Did not understand arbitrary schema element: ' + JSON.stringify(component) +
+      '. Known schema elements were: ' + JSON.stringify(Obj.keys(schema));
+    // tslint:disable-next-line:no-console
     console.error(message);
     throw new Error(message);
   }
@@ -24,10 +24,14 @@ const createSchema = function (factory, extras) {
   const schema = Merger.deepMerge(base, extras);
   return Obj.map(schema, function (s, k) {
     const type = s.type;
-    if (factory[type] === undefined && base[k] !== undefined) throw new Error('Component: ' + k + ' has invalid type: ' + type);
+    if (factory[type] === undefined && base[k] !== undefined) {
+      throw new Error('Component: ' + k + ' has invalid type: ' + type);
     // deprecate `custom` function
-    else if (factory[type] === undefined) return factory.custom(s);
-    else return factory[type](s);
+    } else if (factory[type] === undefined) {
+      return factory.custom(s);
+    } else {
+      return factory[type](s);
+    }
   });
 };
 
@@ -45,5 +49,5 @@ const arbOf = function (component, _schema?) {
 };
 
 export default {
-  arbOf: arbOf
+  arbOf
 };

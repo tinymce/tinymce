@@ -21,8 +21,15 @@ const splitButton = (disabled: boolean) => Disabling.config({
   disableClass: 'tox-tbtn--disabled'
 });
 
+const toolbarButton = (disabled: boolean) => Disabling.config({
+  disabled,
+  disableClass: 'tox-tbtn--disabled',
+  useNative: false
+});
+
 export const DisablingConfigs = {
   item,
   button,
-  splitButton
+  splitButton,
+  toolbarButton
 };

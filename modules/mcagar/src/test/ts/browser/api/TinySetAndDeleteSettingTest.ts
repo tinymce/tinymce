@@ -1,32 +1,28 @@
-import { Assertions } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import TinyApis from 'ephox/mcagar/api/TinyApis';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
 
-  var sAssertSetting = function (editor, key, expected) {
+  const sAssertSetting = function (editor, key: string, expected) {
     return Step.sync(function () {
-      var actual = editor.settings[key];
+      const actual = editor.settings[key];
 
       return Assertions.assertEq('should have expected val at key', expected, actual);
     });
   };
 
-  var sAssertSettingType = function (editor, key, expected) {
+  const sAssertSettingType = function (editor, key: string, expected) {
     return Step.sync(function () {
-      var actual = typeof editor.settings[key];
+      const actual = typeof editor.settings[key];
 
       return Assertions.assertEq('should have expected type', expected, actual);
     });
   };
 
-  TinyLoader.setup((editor, loadSuccess, loadFailure) => {
-    var apis = TinyApis(editor);
+  TinyLoader.setupLight((editor, loadSuccess, loadFailure) => {
+    const apis = TinyApis(editor);
 
     Pipeline.async({}, [
       Logger.t('set and change setting', GeneralSteps.sequence([
@@ -53,4 +49,3 @@ UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
     base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });
-

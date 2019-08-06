@@ -1,12 +1,12 @@
 import { Attr } from '@ephox/sugar';
 
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as TabbarSchema from '../../ui/schema/TabbarSchema';
 import { TabbarDetail, TabbarSketcher, TabbarSpec } from '../../ui/types/TabbarTypes';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
+import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, components, spec, externals) => {
   return {
@@ -15,7 +15,7 @@ const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, compo
     'components': components,
     'debug.sketcher': 'Tabbar',
 
-    domModification: {
+    'domModification': {
       attributes: {
         role: 'tablist'
       }

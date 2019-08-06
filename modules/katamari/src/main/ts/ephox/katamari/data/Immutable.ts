@@ -2,7 +2,7 @@ import * as Arr from '../api/Arr';
 import * as Fun from '../api/Fun';
 
 export const Immutable = <T extends string>(...fields: T[]) => {
-  return function(...values): {
+  return function (...values): {
     [key in T]: () => any
   } {
     if (fields.length !== values.length) {

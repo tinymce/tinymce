@@ -10,14 +10,14 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingForceTabTest'
     NonbreakingPlugin();
     SilverTheme();
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
       const tinyApis = TinyApis(editor);
       const tinyActions = TinyActions(editor);
 
       Pipeline.async({}, [
         Log.stepsAsStep('TBA', 'NonBreaking: Undo level on insert tab', [
           tinyActions.sContentKeystroke(Keys.tab(), {}),
-          tinyApis.sAssertContent('<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>'),
+          tinyApis.sAssertContent('<p><span class="mce-nbsp-wrap" contenteditable="false">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>'),
           Step.sync(function () {
             editor.undoManager.undo();
           }),

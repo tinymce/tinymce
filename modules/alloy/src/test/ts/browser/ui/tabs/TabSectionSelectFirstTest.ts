@@ -1,5 +1,6 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';

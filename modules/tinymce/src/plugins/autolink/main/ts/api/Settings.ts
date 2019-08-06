@@ -5,12 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const getAutoLinkPattern = function (editor) {
+import Editor from 'tinymce/core/api/Editor';
+
+const getAutoLinkPattern = function (editor: Editor) {
   return editor.getParam('autolink_pattern', /^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.|(?:mailto:)?[A-Z0-9._%+\-]+@)(.+)$/i);
 };
 
-const getDefaultLinkTarget = function (editor) {
-  return editor.getParam('default_link_target', '');
+const getDefaultLinkTarget = function (editor: Editor) {
+  return editor.getParam('default_link_target', false);
 };
 
 export default {

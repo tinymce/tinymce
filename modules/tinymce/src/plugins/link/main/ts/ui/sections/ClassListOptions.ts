@@ -14,8 +14,8 @@ import { ListOptions } from '../../core/ListOptions';
 // let you choose from one.
 
 const getClasses = (editor): Option<ListItem[]> => {
-  if (Settings.hasLinkClassList(editor.settings)) {
-    const list = Settings.getLinkClassList(editor.settings);
+  const list = Settings.getLinkClassList(editor);
+  if (list.length > 0) {
     return ListOptions.sanitize(list);
   }
   return Option.none();

@@ -11,7 +11,7 @@ import { Fun } from '@ephox/katamari';
 
 // InputEvent is experimental so we don't have an actual type
 // See https://developer.mozilla.org/en-US/docs/Web/API/InputEvent
-interface InputEvent extends Event {
+export interface InputEvent extends Event {
   readonly data: string;
   readonly dataTransfer: DataTransfer;
   readonly inputType: string;
@@ -21,6 +21,7 @@ interface InputEvent extends Event {
 export interface NativeEventMap {
   'beforepaste': Event;
   'blur': FocusEvent;
+  'beforeinput': InputEvent;
   'click': MouseEvent;
   'compositionend': Event;
   'compositionstart': Event;
@@ -98,7 +99,7 @@ export interface EventDispatcherConstructor<T extends NativeEventMap> {
 
 const nativeEvents = Tools.makeMap(
   'focus blur focusin focusout click dblclick mousedown mouseup mousemove mouseover beforepaste paste cut copy selectionchange ' +
-  'mouseout mouseenter mouseleave wheel keydown keypress keyup input contextmenu dragstart dragend dragover ' +
+  'mouseout mouseenter mouseleave wheel keydown keypress keyup input beforeinput contextmenu dragstart dragend dragover ' +
   'draggesture dragdrop drop drag submit ' +
   'compositionstart compositionend compositionupdate touchstart touchmove touchend',
   ' '

@@ -11,8 +11,7 @@ import Removal from '../mutant/Removal';
 import Styling from '../mutant/Styling';
 import Tracks from '../mutant/Tracks';
 import Up from '../mutant/Up';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { Universe } from './Universe';
 import { Gene } from './Gene';
 
@@ -81,7 +80,7 @@ export const TestUniverse = function (raw: Gene): TestUniverse {
       appendAll: Insertion.appendAll,
       afterAll: Insertion.afterAll,
       prepend: Insertion.prepend,
-      wrap: wrap
+      wrap
     }),
     remove: Fun.constant({
       unwrap: Removal.unwrap,
@@ -113,8 +112,8 @@ export const TestUniverse = function (raw: Gene): TestUniverse {
     }),
     eq: Comparator.eq,
     is: Comparator.is,
-    find: find,
-    get: get,
-    shortlog: shortlog
+    find,
+    get,
+    shortlog
   };
 };

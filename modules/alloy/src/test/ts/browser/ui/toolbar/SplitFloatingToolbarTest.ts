@@ -2,6 +2,7 @@ import { ApproxStructure, Assertions, Step, GeneralSteps } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
+
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import { Button } from 'ephox/alloy/api/ui/Button';
@@ -167,7 +168,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
           label,
           ApproxStructure.build((s, str, arr) => {
             return s.element('div', {
-              children:[
+              children: [
                 s.element('div', {
                   attrs: {
                     id: str.contains('aria-owns')

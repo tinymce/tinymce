@@ -7,7 +7,7 @@ import VK from 'tinymce/core/api/util/VK';
 UnitTest.asynctest('browser.tinymce.core.delete.ImageBlockDeleteTest',  (success, failure) => {
   Theme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 

@@ -1,4 +1,3 @@
-import { ResultCombine } from '../combine/ResultCombine';
 import * as ObjChanger from '../core/ObjChanger';
 import * as ObjReader from '../core/ObjReader';
 import * as ObjWriter from '../core/ObjWriter';
@@ -33,7 +32,7 @@ const wrapAll = function (keyvalues: Array<{key: string; value: any}>): {} {
   return ObjWriter.wrapAll(keyvalues);
 };
 
-const indexOnKey = function <T> (array: {[T: string]: any}[], key: string): {[T: string]: any} {
+const indexOnKey = function <T> (array: Array<{[T: string]: any}>, key: string): {[T: string]: any} {
   return ObjChanger.indexOnKey(array, key);
 };
 
@@ -50,8 +49,6 @@ const mergeValues = function (values, base) {
 const mergeErrors = function (errors) {
   return Fun.compose(Result.error, Arr.flatten)(errors);
 };
-
-
 
 const consolidate = function (objs, base: {}): Result <{}, string> {
   const partitions = Results.partition(objs);

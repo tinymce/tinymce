@@ -2,11 +2,10 @@ import { Gene } from 'ephox/boss/api/Gene';
 import Down from 'ephox/boss/mutant/Down';
 import Locator from 'ephox/boss/mutant/Locator';
 import Tracks from 'ephox/boss/mutant/Tracks';
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('DownTest', function() {
+UnitTest.test('DownTest', function () {
   const family = Tracks.track(
     Gene('1', 'root', [
       Gene('1.1', 'duck', [
@@ -54,4 +53,3 @@ UnitTest.test('DownTest', function() {
     return item.name.indexOf('g') > -1;
   });
 });
-

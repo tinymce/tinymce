@@ -4,22 +4,27 @@ import { Id, Result, Option } from '@ephox/katamari';
 export interface ButtonApi {
   type: 'button';
   text: string;
+  disabled?: boolean;
   primary?: boolean;
   name?: string;
   icon?: string;
+  borderless?: boolean;
 }
 
 export interface Button {
   type: 'button';
   text: string;
+  disabled: boolean;
   primary: boolean;
   name: string;
   icon: Option<string>;
+  borderless: boolean;
 }
 
-export const buttonFields = [
+const buttonFields = [
   FieldSchema.strictString('type'),
   FieldSchema.strictString('text'),
+  FieldSchema.defaultedBoolean('disabled', false),
   FieldSchema.defaultedBoolean('primary', false),
   FieldSchema.field(
     'name',
@@ -29,7 +34,8 @@ export const buttonFields = [
     }),
     ValueSchema.string
   ),
-  FieldSchema.optionString('icon')
+  FieldSchema.optionString('icon'),
+  FieldSchema.defaultedBoolean('borderless', false),
 ];
 
 export const buttonSchema = ValueSchema.objOf(buttonFields);

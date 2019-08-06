@@ -1,7 +1,8 @@
-import { Fun, Arr } from '@ephox/katamari';
-import { Position } from '@ephox/sugar';
-import { SugarPosition } from '../../alien/TypeDefinitions';
 import { Objects } from '@ephox/boulder';
+import { Arr } from '@ephox/katamari';
+import { Position } from '@ephox/sugar';
+
+import { SugarPosition } from '../../alien/TypeDefinitions';
 
 export interface BubbleInstance {
   offset: () => SugarPosition;
@@ -10,7 +11,7 @@ export interface BubbleInstance {
 }
 
 export interface Bubble {
-  southeast: () => BubbleInstance
+  southeast: () => BubbleInstance;
   southwest: () => BubbleInstance;
   northwest: () => BubbleInstance;
   northeast: () => BubbleInstance;
@@ -18,6 +19,14 @@ export interface Bubble {
   north: () => BubbleInstance;
   east: () => BubbleInstance;
   west: () => BubbleInstance;
+  innerSoutheast: () => BubbleInstance;
+  innerSouthwest: () => BubbleInstance;
+  innerNorthwest: () => BubbleInstance;
+  innerNortheast: () => BubbleInstance;
+  innerSouth: () => BubbleInstance;
+  innerNorth: () => BubbleInstance;
+  innerEast: () => BubbleInstance;
+  innerWest: () => BubbleInstance;
 }
 
 export interface BubbleAlignments {
@@ -55,7 +64,7 @@ const allAlignments = [
 
 const nu = (width, yoffset, classes: BubbleAlignments): Bubble => {
   const getClasses = (prop: string): string[] => {
-    return Objects.readOptFrom<string[]>(classes, prop).getOr([ ])
+    return Objects.readOptFrom<string[]>(classes, prop).getOr([ ]);
   };
 
   const make = (xDelta: number, yDelta: number, alignmentsOn: string[]) => {
@@ -70,12 +79,20 @@ const nu = (width, yoffset, classes: BubbleAlignments): Bubble => {
   return {
     southeast: () => make(-width, yoffset, [ 'top', 'alignLeft' ]),
     southwest: () => make(width, yoffset, [ 'top', 'alignRight' ]),
-    south: () => make(-width/2, yoffset, [ 'top', 'alignCentre' ]),
+    south: () => make(-width / 2, yoffset, [ 'top', 'alignCentre' ]),
     northeast: () => make(-width, -yoffset, [ 'bottom', 'alignLeft' ]),
     northwest: () => make(width, -yoffset, [ 'bottom', 'alignRight' ]),
-    north: () => make(-width/2, -yoffset, [ 'bottom', 'alignCentre' ]),
-    east: () => make(width, -yoffset/2, [ 'valignCentre', 'left' ]),
-    west: () => make(-width, -yoffset/2, [ 'valignCentre', 'right' ])
+    north: () => make(-width / 2, -yoffset, [ 'bottom', 'alignCentre' ]),
+    east: () => make(width, -yoffset / 2, [ 'valignCentre', 'left' ]),
+    west: () => make(-width, -yoffset / 2, [ 'valignCentre', 'right' ]),
+    innerNorthwest: () => make(-width, yoffset, [ 'top', 'alignRight' ]),
+    innerNortheast: () => make(width, yoffset, [ 'top', 'alignLeft' ]),
+    innerNorth: () => make(-width / 2, yoffset, [ 'top', 'alignCentre' ]),
+    innerSouthwest: () => make(-width, -yoffset, [ 'bottom', 'alignRight' ]),
+    innerSoutheast: () => make(width, -yoffset, [ 'bottom', 'alignLeft' ]),
+    innerSouth: () => make(-width / 2, -yoffset, [ 'bottom', 'alignCentre' ]),
+    innerWest: () => make(width, -yoffset / 2, [ 'valignCentre', 'right' ]),
+    innerEast: () => make(-width, -yoffset / 2, [ 'valignCentre', 'left' ])
   };
 };
 

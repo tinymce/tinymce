@@ -1,8 +1,9 @@
-import { Bounds, bounds } from 'ephox/alloy/alien/Boxes';
+import { UnitTest, assert } from '@ephox/bedrock';
+
+import { bounds } from 'ephox/alloy/alien/Boxes';
 import * as Bubble from 'ephox/alloy/positioning/layout/Bubble';
 import * as LinkedLayout from 'ephox/alloy/positioning/layout/LinkedLayout';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
-import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('BounderMenuTest', () => {
   /* global assert */

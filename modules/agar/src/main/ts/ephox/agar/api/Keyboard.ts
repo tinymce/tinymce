@@ -4,7 +4,7 @@ import { Element, Traverse } from '@ephox/sugar';
 import { keyevent, MixedKeyModifiers } from '../keyboard/FakeKeys';
 import { Chain } from './Chain';
 import * as FocusTools from './FocusTools';
-import { Step } from './Main';
+import { Step } from './Step';
 
 /*
   doc - document scope
@@ -26,7 +26,7 @@ const cFakeKey = (types: string[], keyvalue: number, modifiers: MixedKeyModifier
 };
 
 const sFakeKey = (types: string[]) => {
-  return <T>(doc: Element, keyvalue: number, modifiers: MixedKeyModifiers): Step<T,T> => {
+  return <T>(doc: Element, keyvalue: number, modifiers: MixedKeyModifiers): Step<T, T> => {
     return Chain.asStep<T, Element>(doc, [
       FocusTools.cGetFocused,
       cFakeKey(types, keyvalue, modifiers)

@@ -25,7 +25,6 @@
     "node_modules/@ephox/bridge": true,
     "node_modules/@ephox/darwin": true,
     "node_modules/@ephox/dragster": true,
-    "node_modules/@ephox/echo": true,
     "node_modules/@ephox/imagetools": true,
     "node_modules/@ephox/jax": true,
     "node_modules/@ephox/katamari": true,
@@ -40,11 +39,19 @@
     "node_modules/@ephox/snooker": true,
     "node_modules/@ephox/sugar": true,
     "node_modules/@ephox/tinymce": true,
+  },
 
-    // ignore oxide build output
+  "search.exclude": {
+    // hide build output from searches
     "modules/oxide/build": true,
     "modules/oxide-icons-default/dist": true,
     "modules/tinymce/js": true,
+    "modules/tinymce/dist": true,
     "modules/*/lib": true,
+    "js": true,
+    "dist": true,
+
+    // Search can just exclude node_modules completely
+    "node_modules": true
   }
 }

@@ -1,14 +1,14 @@
 {
   "name": "@ephox/alloy",
-  "version": "4.13.2",
+  "version": "4.15.3",
   "description": "Ui Framework",
   "dependencies": {
-    "@ephox/agar": "^4.13.10",
-    "@ephox/boulder": "^3.3.16",
+    "@ephox/agar": "^4.13.19",
+    "@ephox/boulder": "^3.3.23",
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^2.4.21",
-    "@ephox/sand": "^2.0.17",
-    "@ephox/sugar": "^4.6.21"
+    "@ephox/katamari": "^2.4.25",
+    "@ephox/sand": "^3.0.0",
+    "@ephox/sugar": "^4.6.26"
   },
   "files": [
     "lib/main",
@@ -28,7 +28,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/alloy"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "keywords": [
     "ui"

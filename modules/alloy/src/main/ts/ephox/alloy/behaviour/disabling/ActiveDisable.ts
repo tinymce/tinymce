@@ -5,7 +5,6 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import * as DomModification from '../../dom/DomModification';
 import * as Behaviour from '../common/Behaviour';
 import * as DisableApis from './DisableApis';
-import { EventFormat } from '../../events/SimulatedEvent';
 import { DisableConfig } from './DisableTypes';
 
 const exhibit = (base, disableConfig: DisableConfig, disableState) => {
@@ -19,7 +18,7 @@ const exhibit = (base, disableConfig: DisableConfig, disableState) => {
 const events = (disableConfig: DisableConfig, disableState) => {
   return AlloyEvents.derive([
     AlloyEvents.abort(SystemEvents.execute(), (component, simulatedEvent) => {
-      return DisableApis.isDisabled(component);
+      return DisableApis.isDisabled(component, disableConfig);
     }),
     Behaviour.loadEvent(disableConfig, disableState, DisableApis.onLoad)
   ]);

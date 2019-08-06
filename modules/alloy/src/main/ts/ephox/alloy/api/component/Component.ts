@@ -1,6 +1,5 @@
 import { ValueSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun, Option, Type } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 import { Traverse } from '@ephox/sugar';
 
 import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
@@ -15,7 +14,6 @@ import * as DomModification from '../../dom/DomModification';
 import * as DomRender from '../../dom/DomRender';
 import { UncurriedHandler } from '../../events/EventRegistry';
 import { NoContextApi, singleton } from '../system/NoContextApi';
-import * as GuiTypes from '../ui/GuiTypes';
 import * as CompBehaviours from './CompBehaviours';
 import { AlloyComponent } from './ComponentApi';
 
@@ -65,7 +63,6 @@ const build = (spec): AlloyComponent => {
   const info: CustomDefinition.CustomDetail<any> = ValueSchema.getOrDie(CustomDefinition.toInfo(spec));
   const bBlob = CompBehaviours.generate(spec);
 
-
   const bList = BehaviourBlob.getBehaviours(bBlob);
   const bData = BehaviourBlob.getData(bBlob);
 
@@ -103,7 +100,7 @@ const build = (spec): AlloyComponent => {
   const config = <D>(behaviour: AlloyBehaviour<any, D>): D | any => {
     const b = bData;
     const f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : () => {
-      throw new Error('Could not find ' + behaviour.name() + ' in ' + Json.stringify(spec, null, 2));
+      throw new Error('Could not find ' + behaviour.name() + ' in ' + JSON.stringify(spec, null, 2));
     };
     return f();
   };

@@ -1,5 +1,5 @@
 // NOTE: Source: npm package: emojilib, file:emojis.json
-window.tinymce.emoticons_plugin_database = {
+window.tinymce.Resource.add('tinymce.plugins.emoticons.test-emojis.js', {
   "grinning": {
     "keywords": ["face", "smile", "happy", "joy", ":D", "grin"],
     "char": "😀",
@@ -24,4 +24,4 @@ window.tinymce.emoticons_plugin_database = {
     "fitzpatrick_scale": false,
     "category": "people"
   }
-}
+});

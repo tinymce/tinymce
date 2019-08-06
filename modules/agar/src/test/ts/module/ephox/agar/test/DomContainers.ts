@@ -12,8 +12,8 @@ const mSetup = Step.stateful(function (state, next, die) {
 
   Insert.append(Element.fromDom(document.body), container);
   next({
-    container: container,
-    input: input
+    container,
+    input
   });
 });
 
@@ -27,6 +27,6 @@ const mTeardown = Step.stateful<TeardownState, TeardownState>(function (state, n
 });
 
 export default {
-  mSetup: mSetup,
-  mTeardown: mTeardown
+  mSetup,
+  mTeardown
 };

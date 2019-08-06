@@ -1,4 +1,4 @@
-/* tslint:disable:no-shadowed-variable */
+/* tslint:disable:no-shadowed-variable no-unimported-promise */
 import { setTimeout, Window } from '@ephox/dom-globals';
 
 /* eslint-disable */

@@ -7,15 +7,16 @@
 
 import { Node, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Compare, Focus, Element } from '@ephox/sugar';
+import { Compare, Element, Focus } from '@ephox/sugar';
+import Selection from '../api/dom/Selection';
+import Editor from '../api/Editor';
 import Env from '../api/Env';
 import CaretFinder from '../caret/CaretFinder';
+import { CaretPosition } from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
 import * as RangeNodes from '../selection/RangeNodes';
 import SelectionBookmark from '../selection/SelectionBookmark';
-import Selection from '../api/dom/Selection';
-import { CaretPosition } from '../caret/CaretPosition';
-import Editor from '../api/Editor';
+import FocusController from './FocusController';
 
 const getContentEditableHost = (editor: Editor, node: Node) => {
   return editor.dom.getParent(node, function (node) {
@@ -62,7 +63,7 @@ const focusBody = (body) => {
   }
 };
 
-const hasElementFocus = (elm): boolean => {
+const hasElementFocus = (elm: Element): boolean => {
   return Focus.hasFocus(elm) || Focus.search(elm).isSome();
 };
 
@@ -75,7 +76,15 @@ const hasInlineFocus = (editor: Editor): boolean => {
   return rawBody && hasElementFocus(Element.fromDom(rawBody));
 };
 
+const hasUiFocus = (editor: Editor): boolean => {
+  // Editor container is the obvious one (Menubar, Toolbar, Status bar, Sidebar) and dialogs and menus are in an auxiliary element (silver theme specific)
+  // This can't use Focus.search() because only the theme has this element reference
+  return Focus.active().filter((elem) => !FocusController.isEditorContentAreaElement(elem.dom()) && FocusController.isUIElement(editor, elem.dom())).isSome();
+};
+
 const hasFocus = (editor: Editor): boolean => editor.inline ? hasInlineFocus(editor) : hasIframeFocus(editor);
+
+const hasEditorOrUiFocus = (editor: Editor): boolean => hasFocus(editor) || hasUiFocus(editor);
 
 const focusEditor = (editor: Editor) => {
   const selection: Selection = editor.selection;
@@ -84,6 +93,13 @@ const focusEditor = (editor: Editor) => {
 
   editor.quirks.refreshContentEditable();
 
+  if (editor.bookmark !== undefined && hasFocus(editor) === false) {
+    SelectionBookmark.getRng(editor).each(function (bookmarkRng) {
+      editor.selection.setRng(bookmarkRng);
+      rng = bookmarkRng;
+    });
+  }
+
   // Move focus to contentEditable=true child if needed
   const contentEditableHost = getContentEditableHost(editor, selection.getNode());
   if (editor.$.contains(body, contentEditableHost)) {
@@ -91,13 +107,6 @@ const focusEditor = (editor: Editor) => {
     normalizeSelection(editor, rng);
     activateEditor(editor);
     return;
-  }
-
-  if (editor.bookmark !== undefined && hasFocus(editor) === false) {
-    SelectionBookmark.getRng(editor).each(function (bookmarkRng) {
-      editor.selection.setRng(bookmarkRng);
-      rng = bookmarkRng;
-    });
   }
 
   // Focus the window iframe
@@ -132,5 +141,6 @@ const focus = (editor: Editor, skipFocus: boolean) => {
 
 export default {
   focus,
-  hasFocus
+  hasFocus,
+  hasEditorOrUiFocus
 };

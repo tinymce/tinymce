@@ -1,11 +1,14 @@
-import { Objects } from '@ephox/boulder';
-import { Cell, Fun, Merger, Option } from '@ephox/katamari';
-import { Focus } from '@ephox/sugar';
 import { TouchEvent } from '@ephox/dom-globals';
+import { Cell, Fun, Option } from '@ephox/katamari';
+import { Focus } from '@ephox/sugar';
 
 import * as ElementFromPoint from '../../alien/ElementFromPoint';
+import { SugarEvent } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { TransitionPropertiesSpec } from '../../behaviour/transitioning/TransitioningTypes';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as TouchMenuSchema from '../../ui/schema/TouchMenuSchema';
+import { TouchMenuSketcher, TouchMenuDetail, TouchMenuSpec } from '../../ui/types/TouchMenuTypes';
 import * as AddEventsBehaviour from '../behaviour/AddEventsBehaviour';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Coupling } from '../behaviour/Coupling';
@@ -23,11 +26,7 @@ import * as SystemEvents from '../events/SystemEvents';
 import { InlineView } from './InlineView';
 import { Menu } from './Menu';
 import * as Sketcher from './Sketcher';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { TouchMenuSketcher, TouchMenuDetail, TouchMenuSpec } from '../../ui/types/TouchMenuTypes';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { SugarEvent } from '../../alien/TypeDefinitions';
-import { TransitioningConfigSpec, TransitionPropertiesSpec } from '../../behaviour/transitioning/TransitioningTypes';
+import { CompositeSketchFactory } from './UiSketcher';
 
 type TouchHoverState = (comp: AlloyComponent) => void;
 
@@ -110,7 +109,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
                       detail.menuTransition.map((t) => {
                         return {
                           transition: t
-                        } as TransitionPropertiesSpec
+                        } as TransitionPropertiesSpec;
                       }).getOr({ })
                     ),
 
@@ -127,7 +126,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
                 onShow (view: AlloyComponent) {
                   Transitioning.progressTo(view, 'open');
                 }
-              })
+              });
             }
           }
         })

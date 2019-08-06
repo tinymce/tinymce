@@ -1,8 +1,9 @@
-import { Fun, Id } from '@ephox/katamari';
+import { setTimeout } from '@ephox/dom-globals';
+import { Id } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attr, Css, Element, Insert, Remove, Traverse } from '@ephox/sugar';
+
 import { SugarDocument } from '../alien/TypeDefinitions';
-import { setTimeout } from '@ephox/dom-globals';
 
 const isFirefox: boolean = PlatformDetection.detect().browser.isFirefox();
 
@@ -45,7 +46,7 @@ const describe = (item: Element, description: string): Element => {
   return token;
 };
 
-const base = (getAttrs: (string) => { }, parent: Element, text: string): void => {
+const base = (getAttrs: (string: string) => { }, parent: Element, text: string): void => {
   const doc: SugarDocument = Traverse.owner(parent);
 
   // firefox needs aria-describedby to speak a role=alert token, which causes IE11 to read twice
@@ -75,7 +76,7 @@ const getSpeakAttrs = (text: string) => {
   };
 };
 
-const getShoutAttrs = (_text) => {
+const getShoutAttrs = (_text: string) => {
   return {
     // Don't put aria-label in alerts. It will read it twice on JAWS+Firefox.
     'aria-live': 'assertive',

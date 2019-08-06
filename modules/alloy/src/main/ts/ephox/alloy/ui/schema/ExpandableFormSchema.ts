@@ -6,13 +6,13 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
 import { Sliding } from '../../api/behaviour/Sliding';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import { Button } from '../../api/ui/Button';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
-import { ExpandableFormDetail } from '../../ui/types/ExpandableFormTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import { ExpandableFormDetail } from '../types/ExpandableFormTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.markers([

@@ -2,6 +2,7 @@ import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Arr, Fun } from '@ephox/katamari';
 
 // NB: Tsc requires ConfiguredBehaviour to be imported here.
+// @ts-ignore
 import { AlloyBehaviourRecord, ConfiguredBehaviour, NamedConfiguredBehaviour, derive } from '../../api/behaviour/Behaviour';
 
 export interface SketchBehaviours {
@@ -20,7 +21,7 @@ const get = (data: SketchBehaviours): AlloyBehaviourRecord => {
   return data.dump;
 };
 
-const augment = (data: SketchBehaviours, original: NamedConfiguredBehaviour<any, any>[]): AlloyBehaviourRecord => {
+const augment = (data: SketchBehaviours, original: Array<NamedConfiguredBehaviour<any, any>>): AlloyBehaviourRecord => {
   return {
     ...data.dump,
     ...derive(original)

@@ -28,7 +28,7 @@ export default () => {
   const mockEditor = {
     setContent: (content) => {},
     insertContent: (content: string, args?: any) => {},
-    execCommand: (cmd: string, ui?: boolean, value?: any) => {}
+    execCommand: (cmd: string, ui?: boolean, value?: any) => {},
   } as Editor;
 
   const extras = {

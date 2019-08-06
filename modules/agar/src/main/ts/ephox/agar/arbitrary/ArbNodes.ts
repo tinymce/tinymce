@@ -38,9 +38,9 @@ const textOf = function (s) {
 };
 
 export default {
-  elementOfArb: elementOfArb,
-  elementOf: elementOf,
-  comment: comment,
-  textOf: textOf,
-  textOfArb: textOfArb
+  elementOfArb,
+  elementOf,
+  comment,
+  textOf,
+  textOfArb
 };

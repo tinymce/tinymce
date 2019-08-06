@@ -1,10 +1,10 @@
 {
   "name": "@ephox/katamari",
-  "version": "2.4.21",
+  "version": "2.4.25",
   "description": "Basic data type library",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/katamari"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "scripts": {
     "prepublishOnly": "tsc -b",
@@ -15,6 +15,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@ephox/dom-globals": "^1.1.2",
+    "@ephox/wrap-promise-polyfill": "^2.2.0",
     "tslib": "^1.9.3"
   },
   "files": [

@@ -6,14 +6,15 @@
  */
 
 import { document, window } from '@ephox/dom-globals';
-import { Element, Attr, Class } from '@ephox/sugar';
+import { Attr, Class, Element } from '@ephox/sugar';
+
+import DOMUtils from '../api/dom/DOMUtils';
+import Editor from '../api/Editor';
 import Env from '../api/Env';
 import Settings from '../api/Settings';
-import DOMUtils from '../api/dom/DOMUtils';
-import InitContentBody from './InitContentBody';
-import Uuid from '../util/Uuid';
 import { TranslatedString } from '../api/util/I18n';
-import Editor from '../api/Editor';
+import Uuid from '../util/Uuid';
+import InitContentBody from './InitContentBody';
 
 const DOM = DOMUtils.DOM;
 
@@ -101,7 +102,6 @@ const createIframe = function (editor: Editor, o) {
   editor.contentAreaContainer = o.iframeContainer;
   editor.iframeElement = ifr;
   editor.iframeHTML = getIframeHtml(editor);
-
   DOM.add(o.iframeContainer, ifr);
 
   return isDomainRelaxed;

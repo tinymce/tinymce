@@ -25,23 +25,25 @@ export type ChainGuard<T, U, V> = GuardFn<Wrap<T>, Wrap<U>, Wrap<V>>;
 const on = function <T, U>(f: (value: T, next: NextFn<Wrap<U>>, die: DieFn, logs: TestLogs) => void): Chain<T, U> {
   const runChain = Pipe((input: Wrap<T>, next: NextFn<Wrap<U>>, die: DieFn, logs: TestLogs) => {
     if (!isInput(input)) {
+      // tslint:disable-next-line:no-console
       console.error('Invalid chain input: ', input);
       die(new Error('Input Value is not a chain: ' + input + '\nfunction: ' + f.toString()), logs);
-    }
-    else {
+    } else {
       f(input.chain, function (v: Wrap<U>, newLogs) {
         if (!isInput(v)) {
+          // tslint:disable-next-line:no-console
           console.error('Invalid chain output: ', v);
           die(new Error('Output value is not a chain: ' + v), newLogs);
+        } else {
+          next(v, newLogs);
         }
-        else next(v, newLogs);
       }, (err, newLogs) => die(err, newLogs), logs);
     }
 
   });
 
   return {
-    runChain: runChain
+    runChain
   };
 };
 
@@ -71,15 +73,15 @@ const binder = function <T, U, E>(fx: (input: T) => Result<U, E>) {
   });
 };
 
-const op = function <T>(fx: (value: T) => void) {
+const op = function <T>(fx: (value: T) => void): Chain<T, T> {
   return on(function (input: T, next: NextFn<Wrap<T>>, die: DieFn, logs: TestLogs) {
     fx(input);
     next(wrap(input), logs);
   });
 };
 
-const async = <T,U>(fx: (input: T, next: (v: U) => void, die: (err) => void) => void) =>
-  on<T,U>((v, n, d, logs) => fx(v, (v) => n(wrap(v), logs) , (err) => d(err, logs)));
+const async = <T, U>(fx: (input: T, next: (v: U) => void, die: (err) => void) => void) =>
+  on<T, U>((v, n, d, logs) => fx(v, (v) => n(wrap(v), logs) , (err) => d(err, logs)));
 
 const inject = function <U>(value: U) {
   return on(function (_input: any, next: NextFn<Wrap<U>>, die: DieFn, logs: TestLogs) {
@@ -94,8 +96,11 @@ const injectThunked = <U>(f: () => U) => {
 };
 
 const extract = function <T, U>(chain: Chain<T, U>): ChainRunFn<T, U> {
-  if (!chain.runChain) throw ('Step: ' + chain.toString() + ' is not a chain');
-  else return chain.runChain;
+  if (!chain.runChain) {
+    throw new Error(('Step: ' + chain.toString() + ' is not a chain'));
+  } else {
+    return chain.runChain;
+  }
 };
 
 const fromChains = function (chains: Chain<any, any>[]) {
@@ -131,7 +136,7 @@ const fromParent = function <T, U>(parent: Chain<T, U>, chains: Chain<U, any>[])
 };
 
 const asStep = function <T, U>(initial: U, chains: Chain<any, any>[]) {
-  return Step.raw<T,T>((initValue, next, die, logs) => {
+  return Step.raw<T, T>((initValue, next, die, logs) => {
     const cs = Arr.map(chains, extract);
 
     Pipeline.async(
@@ -139,7 +144,7 @@ const asStep = function <T, U>(initial: U, chains: Chain<any, any>[]) {
       cs,
       // Ignore all the values and use the original
       (_v, ls) => {
-        next(initValue, ls)
+        next(initValue, ls);
       },
       die,
       logs
@@ -152,12 +157,13 @@ const debugging = op(GeneralActions.debug);
 
 const log = function <T>(message: string) {
   return on(function (input: T, next: NextFn<Wrap<T>>, die: DieFn, logs: TestLogs) {
+    // tslint:disable-next-line:no-console
     console.log(message);
     next(wrap(input), addLogEntry(logs, message));
   });
 };
 
-const label = function <T,U>(label: string, chain: Chain<T, U>) {
+const label = function <T, U>(label: string, chain: Chain<T, U>) {
   return control(chain, addLogging(label));
 };
 
@@ -190,7 +196,7 @@ const runStepsOnValue = <I, O>(getSteps: (value: I) => Step<I, O>[]): Chain<I, O
     const steps = getSteps(input);
     Pipeline.async(input, steps, (stepsOutput, newLogs) => next(Chain.wrap(stepsOutput), newLogs), die, initLogs);
   });
-}
+};
 
 export const Chain = {
   on,

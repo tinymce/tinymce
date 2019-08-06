@@ -1,3 +1,4 @@
+/* tslint:disable:no-console */
 import { GuiFactory } from '@ephox/alloy';
 import { console } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';

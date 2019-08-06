@@ -19,7 +19,7 @@ import {
 import { Types } from '@ephox/bridge';
 import { Arr, Option } from '@ephox/katamari';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderFooterButton } from '../general/Button';
 import { footerChannel } from './DialogChannels';
 
@@ -30,12 +30,12 @@ export interface DialogMemButton {
   memento: MementoRecord;
 }
 
-export interface WindowFooterFoo {
+export interface WindowFooterSpec {
   buttons: Types.Dialog.DialogButton[];
 }
 
-const makeButton = (button: Types.Dialog.DialogButton, providersBackstage: UiFactoryBackstageProviders) => {
-  return renderFooterButton(button, button.type, providersBackstage);
+const makeButton = (button: Types.Dialog.DialogButton, backstage: UiFactoryBackstage) => {
+  return renderFooterButton(button, button.type, backstage);
 };
 
 const lookup = (compInSystem: AlloyComponent, footerButtons: DialogMemButton[], buttonName: string) => {
@@ -64,10 +64,10 @@ const renderComponents = (_data, state) => {
   return [ startButtons, endButtons ];
 };
 
-const renderFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBackstageProviders) => {
-  const updateState = (_comp, data: WindowFooterFoo) => {
+const renderFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage) => {
+  const updateState = (_comp, data: WindowFooterSpec) => {
     const footerButtons: DialogMemButton[] = Arr.map(data.buttons, (button) => {
-      const memButton = Memento.record(makeButton(button, providersBackstage));
+      const memButton = Memento.record(makeButton(button, backstage));
       return {
         name: button.name,
         align: button.align,
@@ -92,7 +92,7 @@ const renderFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBac
     behaviours: Behaviour.derive([
       Reflecting.config({
         channel: footerChannel,
-        initialData: initFoo,
+        initialData: initSpec,
         updateState,
         renderComponents
       })
@@ -100,13 +100,13 @@ const renderFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBac
   };
 };
 
-const renderInlineFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBackstageProviders) => {
-  return renderFooter(initFoo, providersBackstage);
+const renderInlineFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage) => {
+  return renderFooter(initSpec, backstage);
 };
 
-const renderModalFooter = (initFoo: WindowFooterFoo, providersBackstage: UiFactoryBackstageProviders) => {
+const renderModalFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage) => {
   return ModalDialog.parts().footer(
-    renderFooter(initFoo, providersBackstage)
+    renderFooter(initSpec, backstage)
   );
 };
 

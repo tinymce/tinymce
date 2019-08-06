@@ -25,6 +25,6 @@
 `Split`: Used to split text nodes in a given element with a given DOM universe.
 `Wrapping`: Used to wrap text nodes with a given DOM universe.
 # Tests
-`phoenix` uses `bolt` to run atomic tests.
+`phoenix` uses [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) to run atomic tests.
 ## Running Tests
 `$ yarn test`

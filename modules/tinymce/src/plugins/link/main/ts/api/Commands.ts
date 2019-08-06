@@ -10,7 +10,7 @@ import Settings from './Settings';
 
 const register = function (editor) {
   editor.addCommand('mceLink', () => {
-    if (Settings.useQuickLink(editor.settings)) {
+    if (Settings.useQuickLink(editor)) {
       // Taken from ContextEditorEvents in silver. Find a better way.
       editor.fire('contexttoolbar-show', {
         toolbarKey: 'quicklink'

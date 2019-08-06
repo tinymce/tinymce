@@ -1,14 +1,13 @@
 import { FieldPresence, FieldProcessorAdt, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Merger, Obj, Option, Result } from '@ephox/katamari';
+import { Arr, Fun, Obj, Option, Result } from '@ephox/katamari';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { AlloySpec, RawDomSchema } from '../api/component/SpecTypes';
+import { CompositeSketchDetail } from '../api/ui/Sketcher';
 import * as Fields from '../data/Fields';
-import { SpecSchemaStruct } from '../spec/SpecSchema';
 import * as UiSubstitutes from '../spec/UiSubstitutes';
 import * as PartSubstitutes from './PartSubstitutes';
 import * as PartType from './PartType';
-import { CompositeSketchDetail } from '../api/ui/Sketcher';
 
 export interface PartialSpec { }
 

@@ -1,3 +1,5 @@
+import { SelectorFind } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
@@ -8,8 +10,6 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Input } from 'ephox/alloy/api/ui/Input';
-import { JSON as Json } from '@ephox/sand';
-import { SelectorFind } from '@ephox/sugar';
 
 export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
@@ -44,7 +44,7 @@ export default (): void => {
           const value = Representing.getValue(textarea);
           const output = GuiTemplate.readHtml(value).getOrDie();
           const display = button.getSystem().getByUid('pre-output').getOrDie();
-          const prettyprint = Json.stringify(output, null, 2);
+          const prettyprint = JSON.stringify(output, undefined, 2);
 
           Replacing.set(display, [ GuiFactory.text(prettyprint) ]);
         }

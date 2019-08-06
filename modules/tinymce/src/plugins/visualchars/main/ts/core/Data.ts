@@ -38,6 +38,7 @@ export default {
   regExp: charMapToRegExp(charMap),
   regExpGlobal: charMapToRegExp(charMap, true),
   selector: charMapToSelector(charMap),
+  nbspClass: 'mce-nbsp',
   charMapToRegExp,
   charMapToSelector
 };

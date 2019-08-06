@@ -5,10 +5,9 @@ import { Css } from '@ephox/sugar';
 import { SugarEvent } from '../../alien/TypeDefinitions';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import { SlidingConfig, SlidingState } from '../../behaviour/sliding/SlidingTypes';
 import * as DomModification from '../../dom/DomModification';
 import * as SlidingApis from './SlidingApis';
-import { getAnimationRoot } from './SlidingUtils';
+import { SlidingConfig, SlidingState } from './SlidingTypes';
 
 const exhibit = (base: { }, slideConfig: SlidingConfig/*, slideState */): { } => {
   const expanded = slideConfig.expanded;

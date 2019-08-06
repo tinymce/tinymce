@@ -24,7 +24,7 @@ const toggleToolbar = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDeta
   if (Sandboxing.isOpen(sandbox)) {
     Sandboxing.close(sandbox);
   } else {
-    Sandboxing.open(sandbox, externals['overflow']());
+    Sandboxing.open(sandbox, externals.overflow());
   }
 };
 
@@ -104,7 +104,7 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
     getOverflow: (toolbar) => Sandboxing.getState(Coupling.getCoupled(toolbar, 'sandbox')),
     coupling: {
       sandbox (toolbar) {
-        return makeSandbox(toolbar, detail)
+        return makeSandbox(toolbar, detail);
       }
     }
   });

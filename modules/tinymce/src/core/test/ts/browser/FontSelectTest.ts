@@ -1,10 +1,10 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Strings } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element, TextContent } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, failure) {
   Theme();
@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
     ]);
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

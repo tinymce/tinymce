@@ -4,7 +4,6 @@ const runsInPhantom = [
   '@ephox/boss',
   '@ephox/boulder',
   '@ephox/dragster',
-  '@ephox/echo',
   '@ephox/imagetools',
   '@ephox/jax',
   '@ephox/katamari',
@@ -14,8 +13,6 @@ const runsInPhantom = [
   '@ephox/robin',
   '@ephox/snooker',
 ];
-
-const needsTinyMCE = ['@ephox/mcagar'];
 
 const runsInBrowser = [
   '@ephox/agar',
@@ -52,14 +49,19 @@ const filterChanges = (changes, tests) => {
 }
 */
 
-const testFolders = (tests, auto) => tests.flatMap(({location}) => [
-  `${location}/**/test/**/atomic/**/*Test.ts`,
-  `${location}/**/test/**/browser/**/*Test.ts`,
-  `${location}/**/test/**/phantom/**/*Test.ts`,
-].concat(auto ? `${location}/**/test/**/webdriver/**/*Test.ts` : []));
+/** Note: this is optimized for speed. Turns out globbing in node.js is time-consuming.
+ *  Restrict tinymce to 2 arbitrary levels of test base folders.
+ *  All other projects need their tests in src/test/ts
+ */
+const testFolders = (tests, auto) => tests.flatMap((test) => {
+  const testTypes = ['atomic', 'browser', 'phantom'].concat(auto ? ['webdriver'] : []);
+  const bases = test.name === "tinymce" ? ["src/*/test/ts", "src/*/*/test/ts"] : ["src/test/ts"];
+  return bases.flatMap(base => testTypes.map(tt => `${test.location}/${base}/${tt}/**/*Test.ts`));
+});
 
 const bedrockDefaults = {
   config: 'tsconfig.json',
+  customRoutes: 'modules/tinymce/src/core/test/json/routes.json',
   overallTimeout: 180000,
   singleTimeout: 60000,
 };
@@ -74,7 +76,6 @@ const bedrockPhantom = (tests) => {
         name: 'phantom-tests',
         browser: 'phantomjs',
         testfiles: testFolders(tests, true),
-        customRoutes: 'modules/jax/src/test/json/routes.json',
       }
     }
   }
@@ -91,7 +92,6 @@ const bedrockBrowser = (tests, browserName, osName, auto) => {
         name: `${browserName}-${osName}`,
         browser: browserName,
         testfiles: testFolders(tests, auto),
-        customRoutes: 'modules/tinymce/src/core/test/json/routes.json',
 
         // we have a few tests that don't play nicely when combined together in the monorepo
         retries: 3
@@ -143,7 +143,6 @@ module.exports = function (grunt) {
   const gruntConfig = {
     shell: {
       tsc: { command: 'yarn -s tsc' },
-      rollup: { command: 'yarn -s tinymce-rollup' },
       legacy: { command: 'yarn build' },
       yarn: { command: 'yarn' },
       'yarn-dev': { command: 'yarn -s dev' }
@@ -162,19 +161,14 @@ module.exports = function (grunt) {
 
   grunt.initConfig(gruntConfig);
 
-  //dupe de dupe dupe
+  //TODO: remove duplication
   if (phantomTests.length > 0) {
     grunt.registerTask('list-changed-phantom', () => {
       const changeList = JSON.stringify(phantomTests.reduce((acc, change) => acc.concat(change.name), []), null, 2);
       grunt.log.writeln('Changed projects for phantomjs testing:', changeList);
     });
-    if (phantomTests.find(({name}) => needsTinyMCE.indexOf(name) > -1)) {
-      // only run rollup if required, since it's quite slow
-      grunt.registerTask('phantomjs-auto', ['shell:rollup', 'list-changed-phantom', 'shell:tsc', 'bedrock-auto:phantomjs']);
-    } else {
-      grunt.registerTask('phantomjs-auto', ['list-changed-phantom', 'shell:tsc', 'bedrock-auto:phantomjs']);
-    }
-    grunt.registerTask('phantomjs-manual', ['shell:tsc', 'bedrock-manual:phantomjs']);
+    grunt.registerTask('phantomjs-auto', ['list-changed-phantom', 'shell:tsc', 'bedrock-auto:phantomjs']);
+    grunt.registerTask('phantomjs-manual', ['list-changed-phantom', 'shell:tsc', 'bedrock-manual:phantomjs']);
   } else {
     const noPhantom = () => {
       grunt.log.writeln('no changed modules need phantomjs testing');
@@ -184,7 +178,7 @@ module.exports = function (grunt) {
     grunt.registerTask('list-changed-phantom', noPhantom);
   }
 
-  //dupe de dupe dupe
+  //TODO: remove duplication
   if (browserTests.length > 0) {
     grunt.registerTask('list-changed-browser', () => {
       const changeList = JSON.stringify(browserTests.reduce((acc, change) => acc.concat(change.name), []), null, 2);

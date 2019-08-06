@@ -1,8 +1,7 @@
 import { FieldProcessorAdt, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Merger, Obj, Adt } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
+import { Arr, Obj, Adt } from '@ephox/katamari';
 
-import { AlloySpec, ComponentSpec, RawDomSchema } from '../api/component/SpecTypes';
+import { ComponentSpec, RawDomSchema } from '../api/component/SpecTypes';
 import { AlloyEventRecord } from '../api/events/AlloyEvents';
 import * as Fields from '../data/Fields';
 import * as UiSubstitutes from './UiSubstitutes';
@@ -20,6 +19,7 @@ export interface SpecSchemaStruct {
   // ... optional
   // some items are optional
 }
+
 export interface ContainerBehaviours {
   dump: () => {};
   [key: string]: any;
@@ -55,7 +55,7 @@ const getPartsSchema = (partNames, _optPartNames, _owner): FieldProcessorAdt[] =
       if (! Objects.hasKey(spec, 'parts')) {
         throw new Error(
           'Part uid definition for owner: ' + owner + ' requires "parts"\nExpected parts: ' + partNames.join(', ') + '\nSpec: ' +
-          Json.stringify(spec, null, 2)
+          JSON.stringify(spec, null, 2)
         );
       }
       const uids = Obj.map(spec.parts, (v, k) => {
@@ -68,26 +68,6 @@ const getPartsSchema = (partNames, _optPartNames, _owner): FieldProcessorAdt[] =
   );
 
   return [ partsSchema, partUidsSchema ];
-};
-
-const getPartUidsSchema = (label, spec): FieldProcessorAdt => {
-  return FieldSchema.state(
-    'partUids',
-    (spec) => {
-      if (! Objects.hasKey(spec, 'parts')) {
-        throw new Error(
-          'Part uid definition for owner: ' + label + ' requires "parts\nSpec: ' +
-          Json.stringify(spec, null, 2)
-        );
-      }
-      const uids = Obj.map(spec.parts, (v, k) => {
-        return Objects.readOptFrom<string>(v, 'uid').getOrThunk(() => {
-          return spec.uid + '-' + k;
-        });
-      });
-      return uids;
-    }
-  );
 };
 
 const base = (label, partSchemas, partUidsSchemas, spec) => {
@@ -114,7 +94,6 @@ const asStructOrDie = function <D, S>(label: string, schema: Adt[], spec: S, par
   const baseS = base(label, partSchemas, partUidsSchemas, spec);
   return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
-
 
 export {
   asRawOrDie,

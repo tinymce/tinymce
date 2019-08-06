@@ -1,6 +1,7 @@
 import { console, document, setTimeout } from '@ephox/dom-globals';
 import { Obj, Result } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';

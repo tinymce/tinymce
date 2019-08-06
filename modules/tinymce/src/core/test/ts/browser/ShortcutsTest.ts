@@ -70,30 +70,35 @@ UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', function () {
   });
 
   suite.test('Remove', function (editor) {
-    let called = false, eventArgs;
+    const testPattern = (pattern: string, keyCode: number, ctrlKey = false) => {
+      let called = false;
 
-    eventArgs = {
-      ctrlKey: true,
-      keyCode: 68,
-      altKey: false,
-      shiftKey: false,
-      metaKey: false
+      const eventArgs = () => ({
+        ctrlKey,
+        keyCode,
+        altKey: false,
+        shiftKey: false,
+        metaKey: false
+      });
+
+      editor.shortcuts.add(pattern, '', function () {
+        called = true;
+      });
+
+      editor.fire('keydown', eventArgs());
+      LegacyUnit.equal(called, true, 'Shortcut wasn\'t called when it should have been.');
+
+      called = false;
+      editor.shortcuts.remove(pattern);
+      editor.fire('keydown', eventArgs());
+      LegacyUnit.equal(called, false, 'Shortcut was called when it shouldn\'t.');
     };
 
-    editor.shortcuts.add('ctrl+d', '', function () {
-      called = true;
-    });
-
-    editor.fire('keydown', eventArgs);
-    LegacyUnit.equal(called, true, 'Shortcut wasn\'t called when it should have been.');
-
-    called = false;
-    editor.shortcuts.remove('ctrl+d');
-    editor.fire('keydown', eventArgs);
-    LegacyUnit.equal(called, false, 'Shortcut was called when it shouldn\'t.');
+    testPattern('ctrl+d', 68, true);
+    testPattern('ctrl+F2', 113, true);
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

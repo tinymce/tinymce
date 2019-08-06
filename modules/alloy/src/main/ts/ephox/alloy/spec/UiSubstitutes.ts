@@ -1,6 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Adt, Arr, Fun, Merger, Obj } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
+import { Adt, Arr, Fun, Obj } from '@ephox/katamari';
 
 const _placeholder = 'placeholder';
 
@@ -23,7 +22,7 @@ const subPlaceholder = (owner, detail, compSpec, placeholders) => {
   // Ignore having to find something for the time being.
   return Objects.readOptFrom<{ replace: () => any}>(placeholders, compSpec.name).fold(() => {
     throw new Error('Unknown placeholder component: ' + compSpec.name + '\nKnown: [' +
-      Obj.keys(placeholders) + ']\nNamespace: ' + owner.getOr('none') + '\nSpec: ' + Json.stringify(compSpec, null, 2)
+      Obj.keys(placeholders) + ']\nNamespace: ' + owner.getOr('none') + '\nSpec: ' + JSON.stringify(compSpec, null, 2)
     );
   }, (newSpec) => {
     // Must return a single/multiple type
@@ -114,7 +113,7 @@ const substitutePlaces = (owner, detail, components, placeholders) => {
     if (p.used() === false && p.required()) {
       throw new Error(
         'Placeholder: ' + p.name() + ' was not found in components list\nNamespace: ' + owner.getOr('none') + '\nComponents: ' +
-        Json.stringify(detail.components, null, 2)
+        JSON.stringify(detail.components, null, 2)
       );
     }
   });

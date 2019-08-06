@@ -17,10 +17,25 @@ import {
   Tabstopping,
   AlloyComponent,
 } from '@ephox/alloy';
-import { Option, Result } from '@ephox/katamari';
+import { Merger, Option, Result } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { FormCancelEvent, formCancelEvent, FormSubmitEvent, formSubmitEvent } from '../general/FormEvents';
+
+const hiddenHeader: AlloySpec = {
+  dom: {
+    tag: 'div',
+    styles: { display: 'none' },
+    classes: [ 'tox-dialog__header' ]
+  }
+};
+
+const defaultHeader: AlloySpec = {
+  dom: {
+    tag: 'div',
+    classes: [ 'tox-dialog__header' ]
+  }
+};
 
 const pClose = (onClose, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts().close(
   // Need to find a way to make it clear in the docs whether parts can be sketches
@@ -54,11 +69,19 @@ const pUntitled = () => ModalDialog.parts().title({
 const pBodyMessage = (message: string, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts().body({
   dom: {
     tag: 'div',
-    classes: [ 'tox-dialog__body', 'todo-tox-fit' ]
+    classes: [ 'tox-dialog__body' ]
   },
   components: [
     {
-      dom: DomFactory.fromHtml(`<p>${providersBackstage.translate(message)}</p>`)
+      dom: {
+        tag: 'div',
+        classes: ['tox-dialog__body-content']
+      },
+      components: [
+        {
+          dom: DomFactory.fromHtml(`<p>${providersBackstage.translate(message)}</p>`)
+        }
+      ]
     }
   ]
 });
@@ -90,8 +113,9 @@ const pFooterGroup = (startButtons: AlloySpec[], endButtons: AlloySpec[]) => {
   ];
 };
 
-export interface DialogFoo {
+export interface DialogSpec {
   lazySink: () => Result<AlloyComponent, any>;
+  headerOverride: Option<AlloySpec>;
   partSpecs: {
     title: AlloySpec,
     close: AlloySpec,
@@ -103,7 +127,7 @@ export interface DialogFoo {
   extraClasses: string[];
 }
 
-const renderDialog = (spec: DialogFoo) => {
+const renderDialog = (spec: DialogSpec) => {
   return ModalDialog.sketch(
     {
       lazySink: spec.lazySink,
@@ -117,16 +141,12 @@ const renderDialog = (spec: DialogFoo) => {
         classes: [ 'tox-dialog' ].concat(spec.extraClasses)
       },
       components: [
-        {
-          dom: {
-            tag: 'div',
-            classes: [ 'tox-dialog__header' ]
-          },
+        Merger.deepMerge(spec.headerOverride.getOr(defaultHeader), {
           components: [
             spec.partSpecs.title,
             spec.partSpecs.close
           ]
-        },
+        }),
         spec.partSpecs.body,
         spec.partSpecs.footer
       ],
@@ -158,4 +178,4 @@ const renderDialog = (spec: DialogFoo) => {
   );
 };
 
-export { pClose, pUntitled, pBodyMessage, pFooter, pFooterGroup, renderDialog };
+export { defaultHeader, hiddenHeader, pClose, pUntitled, pBodyMessage, pFooter, pFooterGroup, renderDialog };

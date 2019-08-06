@@ -181,6 +181,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
   const mAssertEditors = Step.label('mAssertEditors', Step.stateful(function (editors: any[], next, die) {
     Assertions.assertHtml('Editor contents should be the first div content', '<p>a</p>', editors[0].getContent());
     Assertions.assertHtml('Editor contents should be the second div content', '<p>b</p>', editors[1].getContent());
+    // tslint:disable-next-line:no-console
     console.log('Editor container 0:', editors[0].editorContainer);
     const containerApproxStructure = ApproxStructure.build((s, str, arr) => {
       return s.element('div', {
@@ -244,6 +245,22 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     next({});
   }));
 
+  const sInitAndAssertContent = (html: string, selector: string, expectedEditorContent: string) => {
+    return Step.async((done) => {
+      viewBlock.update(html);
+
+      EditorManager.init({
+        selector,
+        skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
+        content_css: '/project/tinymce/js/tinymce/skins/content/default',
+        init_instance_callback (ed) {
+          Assertions.assertEq('Expect editor to have content', expectedEditorContent, ed.getContent({ format: 'text' }));
+          teardown(done);
+        }
+      });
+    });
+  };
+
   setup();
   Pipeline.async({}, [
     ...suite.toSteps({}),
@@ -252,7 +269,16 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       mAssertEditors,
       sRemoveAllEditors,
       mAssertTargets
-    ]))
+    ])),
+    Logger.t('Initialize on textarea with initial content', GeneralSteps.sequence([
+      sInitAndAssertContent('<textarea>Initial Content</textarea>', 'textarea', 'Initial Content')
+    ])),
+    Logger.t('Initialize on input with initial content', GeneralSteps.sequence([
+      sInitAndAssertContent('<input value="Initial Content">', 'input', 'Initial Content')
+    ])),
+    Logger.t('Initialize on list item with initial content', GeneralSteps.sequence([
+      sInitAndAssertContent('<ul><li>Initial Content</li></ul>', 'li', 'Initial Content')
+    ])),
   ], function () {
     viewBlock.detach();
     success();

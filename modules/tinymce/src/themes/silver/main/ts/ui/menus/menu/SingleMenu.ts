@@ -57,6 +57,7 @@ const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemRes
         (d) => MenuItems.fancy(d, backstage)
       );
     default: {
+      // tslint:disable-next-line:no-console
       console.error('Unknown item in general menu', item);
       return Option.none();
     }

@@ -1,4 +1,4 @@
-import { Adt, Arr, Fun, Merger, Obj, Option, Result, Thunk, Type } from '@ephox/katamari';
+import { Adt, Arr, Fun, Merger, Obj, Option, Thunk, Type } from '@ephox/katamari';
 
 import * as FieldPresence from '../api/FieldPresence';
 import * as Objects from '../api/Objects';
@@ -113,7 +113,7 @@ const cExtractOne = function (path, obj, field, strength) {
           return SimpleResult.bind(
             optionDefaultedAccess(obj, key, fallbackThunk),
             bundleAsOption
-          )
+          );
         }, function (baseThunk) {
           const base = baseThunk(obj);
           const result = SimpleResult.map(
@@ -121,7 +121,7 @@ const cExtractOne = function (path, obj, field, strength) {
             (v) => {
               return Merger.deepMerge(base, v);
             }
-          )
+          );
           return SimpleResult.bind(result, bundle);
         });
       })();
@@ -139,6 +139,26 @@ const cExtract = function (path, obj, fields, strength) {
   });
 
   return ResultCombine.consolidateObj(results, {});
+};
+
+const valueThunk = (getDelegate: () => Processor): Processor => {
+  const extract = function (path, strength, val) {
+    return getDelegate().extract(path, strength, val);
+  };
+
+  const toString = function () {
+    return getDelegate().toString();
+  };
+
+  const toDsl = function () {
+    return getDelegate().toDsl();
+  };
+
+  return {
+    extract,
+    toString,
+    toDsl
+  };
 };
 
 const value = function (validator: ValueValidator): Processor {
@@ -346,6 +366,7 @@ const field = adt.field;
 export {
   anyValue,
   value,
+  valueThunk,
 
   objOf,
   objOfOnly,

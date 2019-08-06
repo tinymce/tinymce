@@ -11,7 +11,7 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import * as ButtonBase from '../common/ButtonBase';
-import { FormChooserDetail } from '../../ui/types/FormChooserTypes';
+import { FormChooserDetail } from '../types/FormChooserTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('choices'),

@@ -1,6 +1,7 @@
+import { DataTransfer, Element } from '@ephox/dom-globals';
 import { Arr, Type, Strings } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { DataTransfer, Element } from '@ephox/dom-globals';
+
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 const platform = PlatformDetection.detect();

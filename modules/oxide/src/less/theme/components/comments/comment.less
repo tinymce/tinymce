@@ -23,6 +23,10 @@
 @comment-text-transform: initial;
 @comment-text-color-muted: @text-color-muted;
 
+@z-index-comment-overlay: 5;
+@z-index-comment-overlay-text: 10;
+@z-index-comment-busy-spinner: 20;
+
 .tox {
   .tox-comment-thread {
     background: @comment-background-color;
@@ -100,7 +104,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    z-index: 5;
+    z-index: @z-index-comment-overlay;
   }
 
   .tox-comment__reply {
@@ -146,7 +150,7 @@
     right: 0;
     text-align: center;
     top: 0;
-    z-index: 5;
+    z-index: @z-index-comment-overlay;
   }
 
   .tox-comment__loading-text {
@@ -170,7 +174,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    z-index: 10;
+    z-index: @z-index-comment-overlay-text;
 
     p {
       background-color: @comment-background-color;
@@ -194,7 +198,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    z-index: @z-index-dialogs + 3;
+    z-index: @z-index-comment-busy-spinner;
   }
 
   .tox-comment__scroll {

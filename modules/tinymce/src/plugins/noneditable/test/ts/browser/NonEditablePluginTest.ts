@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.noneditable.NonEditablePluginTest', 
     LegacyUnit.equal(editor.dom.select('span').length, 1);
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'NonEditable: Test noneditable class and regexp', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

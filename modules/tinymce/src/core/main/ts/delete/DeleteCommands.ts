@@ -14,13 +14,16 @@ import TableDelete from './TableDelete';
 import InlineFormatDelete from './InlineFormatDelete';
 import CefBoundaryDelete from './CefBoundaryDelete';
 import Editor from '../api/Editor';
+import Outdent from './Outdent';
 
 const nativeCommand = function (editor: Editor, command: string) {
   editor.getDoc().execCommand(command, false, null);
 };
 
 const deleteCommand = function (editor: Editor) {
-  if (CefDelete.backspaceDelete(editor, false)) {
+  if (Outdent.backspaceDelete(editor, false)) {
+    return;
+  } else if (CefDelete.backspaceDelete(editor, false)) {
     return;
   } else if (CefBoundaryDelete.backspaceDelete(editor, false)) {
     return;

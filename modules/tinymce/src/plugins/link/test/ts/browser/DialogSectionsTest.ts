@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
     exists: boolean;
   }
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     // NOTE: This will open the dialog once. It is expected that you specify all the settings that you want
@@ -45,6 +45,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
           Arr.map(
             sections,
             ({ selector, exists }) => {
+              // tslint:disable-next-line:no-console
               console.log('selector', selector, 'exists', exists);
               const sExistence = exists ? UiFinder.sExists : UiFinder.sNotExists;
               return sExistence(TinyDom.fromDom(document.body), selector);

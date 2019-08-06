@@ -9,11 +9,17 @@
 // Selection
 //
 
-@document-selection-color: #b4d7ff;
+@document-selection-color: initial;
+@table-selection-color: #b4d7ff;
 @object-block-selected-color: #b4d7ff;
 @object-block-selected-outline-width: 3px;
 
 .mce-content-body {
+  // Define general selection color inside document
+  *::selection {
+    // Should be set in content/content.css. Selection does not work on Windows using high contrast mode with Firefox.
+  }
+
   // Selection outline on certain editable objects
   img[data-mce-selected],
   table[data-mce-selected] {
@@ -59,7 +65,7 @@
   // Selection of whole table cells
   td[data-mce-selected],
   th[data-mce-selected] {
-    background-color: @document-selection-color !important;
+    background-color: @table-selection-color !important;
 
     &::selection {
       //Prevent selection to be visible

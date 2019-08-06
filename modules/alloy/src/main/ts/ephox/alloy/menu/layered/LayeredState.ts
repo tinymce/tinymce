@@ -1,9 +1,9 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Cell, Fun, Obj, Option, Merger } from '@ephox/katamari';
+import { Arr, Cell, Obj, Option } from '@ephox/katamari';
 
-import * as MenuPathing from './MenuPathing';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { MenuPreparation } from '../../ui/single/TieredMenuSpec';
+import * as MenuPathing from './MenuPathing';
 
 // Object indexed by menu value. Each entry has a list of item values.
 export type MenuDirectory = Record<string, string[]>;
@@ -50,7 +50,7 @@ const init = (): LayeredState => {
         menu: built
       }
     });
-  }
+  };
 
   const setContents = (sPrimary: string, sMenus: Record<string, MenuPreparation>, sExpansions: Record<string, string>, dir: MenuDirectory): void => {
     primary.set(Option.some(sPrimary));

@@ -5,21 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Bubble, GuiFactory, InlineView, Keying, Layout, Positioning, MaxHeight } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying, Layout, LayoutInside, Positioning, MaxHeight } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Element as DomElement } from '@ephox/dom-globals';
 import { Cell, Id, Merger, Option, Thunk, Result } from '@ephox/katamari';
-import { Css, DomEvent, Element, Focus } from '@ephox/sugar';
+import { Css, DomEvent, Element, Focus, Scroll, Traverse } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { showContextToolbarEvent } from './ui/context/ContextEditorEvents';
 import { ContextForm } from './ui/context/ContextForm';
 import { forwardSlideEvent, renderContextToolbar } from './ui/context/ContextUi';
+import * as ToolbarBounds from './ui/context/ToolbarBounds';
 import ToolbarLookup from './ui/context/ToolbarLookup';
 import ToolbarScopes, { ScopedToolbars } from './ui/context/ToolbarScopes';
 import { renderToolbar } from './ui/toolbar/CommonToolbar';
 import { identifyButtons } from './ui/toolbar/Integration';
+import * as Settings from './api/Settings';
 
 const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   const contextbar = GuiFactory.build(
@@ -32,31 +34,61 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     })
   );
 
-  const getBoxElement = () => Option.some(Element.fromDom(editor.contentAreaContainer));
+  const toolbarOrMenubarEnabled = Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
+
+  const getBounds = () => {
+    const scroll = Scroll.get();
+    const contentAreaBox = Boxes.box(Element.fromDom(editor.getContentAreaContainer()));
+
+    // Create a bounds that lets the context toolbar overflow outside the content area, but remains in the viewport
+    if (editor.inline && !toolbarOrMenubarEnabled) {
+      return Option.some(ToolbarBounds.getDistractionFreeBounds(editor, scroll, contentAreaBox));
+    } else if (editor.inline) {
+      return Option.some(ToolbarBounds.getInlineBounds(editor, scroll, contentAreaBox));
+    } else {
+      return Option.some(ToolbarBounds.getIframeBounds(editor, scroll, contentAreaBox));
+    }
+  };
+
+  const getViewportTop = () => {
+    // If the toolbar is docked, then treat the bottom as the upper bounds
+    const isToolbarDocked = Css.get(Element.fromDom(editor.getContainer()), 'position') === 'fixed';
+    return toolbarOrMenubarEnabled && isToolbarDocked ? editor.getContainer().getBoundingClientRect().bottom : 0;
+  };
+
+  const shouldContextToolbarHide = (): boolean => {
+    const nodeBounds = lastElement.get().map((ele) => ele.getBoundingClientRect()).getOr(editor.selection.getRng().getBoundingClientRect());
+    const viewportHeight = Traverse.defaultView(Element.fromDom(editor.getBody())).dom().innerHeight;
+    const aboveViewport = nodeBounds.bottom < getViewportTop();
+    const belowViewport = nodeBounds.top > viewportHeight;
+    return aboveViewport || belowViewport;
+  };
+
+  // FIX: make a lot nicer.
+  const hideOrRepositionIfNecessary = () => {
+    lastAnchor.get().each((anchor) => {
+      const contextBarEle = contextbar.element();
+      Css.remove(contextBarEle, 'display');
+      if (shouldContextToolbarHide()) {
+        Css.set(contextBarEle, 'display', 'none');
+      } else {
+        Positioning.positionWithinBounds(sink, anchor, contextbar, getBounds());
+      }
+    });
+  };
 
   editor.on('init', () => {
-    const scroller = editor.getBody().ownerDocument.defaultView;
+    editor.on('ScrollWindow', hideOrRepositionIfNecessary);
 
-    // FIX: make a lot nicer.
-    const onScroll = DomEvent.bind(Element.fromDom(scroller), 'scroll', () => {
-      lastAnchor.get().each((anchor) => {
-        const elem = lastElement.get().getOr(editor.selection.getNode());
-        const nodeBounds = elem.getBoundingClientRect();
-        const contentAreaBounds = editor.contentAreaContainer.getBoundingClientRect();
-        const aboveEditor = nodeBounds.bottom < 0;
-        const belowEditor = nodeBounds.top > contentAreaBounds.height;
-        if (aboveEditor || belowEditor) {
-          Css.set(contextbar.element(), 'display', 'none');
-        } else {
-          Css.remove(contextbar.element(), 'display');
-          Positioning.positionWithin(sink, anchor, contextbar, getBoxElement());
-        }
+    // If using iframe mode, then we also need to handle the iframe window scroll events
+    if (!editor.inline) {
+      const scroller = Traverse.defaultView(Element.fromDom(editor.getBody()));
+      const onScroll = DomEvent.bind(scroller, 'scroll', hideOrRepositionIfNecessary);
+
+      editor.on('remove', () => {
+        onScroll.unbind();
       });
-    });
-
-    editor.on('remove', () => {
-      onScroll.unbind();
-    });
+    }
   });
 
   const lastAnchor = Cell(Option.none());
@@ -126,6 +158,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     });
   });
 
+  const bubbleSize = 12;
   const bubbleAlignments = {
     valignCentre: [],
     alignCentre: [],
@@ -142,7 +175,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   const lineAnchorSpec = {
-    bubble: Bubble.nu(12, 0, bubbleAlignments),
+    bubble: Bubble.nu(bubbleSize, 0, bubbleAlignments),
     layouts: {
       onLtr: () => [Layout.east],
       onRtl: () => [Layout.west]
@@ -151,10 +184,12 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   const anchorSpec = {
-    bubble: Bubble.nu(0, 12, bubbleAlignments),
+    bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
     layouts: {
-      onLtr: () => [Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest],
-      onRtl: () => [Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast]
+      onLtr: () => [Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest,
+        LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest],
+      onRtl: () => [Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast,
+        LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast]
     },
     overrides: anchorOverrides
   };
@@ -175,8 +210,14 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     const anchor = getAnchor(toolbarApi.position, sElem);
     lastAnchor.set(Option.some((anchor)));
     lastElement.set(elem);
-    InlineView.showWithin(contextbar, anchor, wrapInPopDialog(toolbarSpec), getBoxElement());
-    Css.remove(contextbar.element(), 'display');
+    const contextBarEle = contextbar.element();
+    Css.remove(contextBarEle, 'display');
+    InlineView.showWithinBounds(contextbar, anchor, wrapInPopDialog(toolbarSpec), getBounds());
+
+    // It's possible we may have launched offscreen, if so then hide
+    if (shouldContextToolbarHide()) {
+      Css.set(contextBarEle, 'display', 'none');
+    }
   };
 
   const launchContextToolbar = () => {

@@ -9,6 +9,7 @@ import SourceDumpDemo from './SourceDumpDemo';
 import TinyMceDemo from './TinyMceDemo';
 import UiContainerDemo from './UiContainerDemo';
 import IframeDemo from './IframeDemo';
+import ResponsiveDemo from './ResponsiveDemo';
 
 declare const window: any;
 
@@ -23,5 +24,6 @@ window.demos = {
   TinyMceDemo,
   UiContainerDemo,
   AnnotationsDemo,
-  SourceDumpDemo
+  SourceDumpDemo,
+  ResponsiveDemo
 };

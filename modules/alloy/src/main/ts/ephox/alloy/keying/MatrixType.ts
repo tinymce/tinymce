@@ -3,19 +3,19 @@ import { Arr, Fun, Option } from '@ephox/katamari';
 import { Focus, SelectorFilter, SelectorFind, Element } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
+import { AlloyComponent } from '../api/component/ComponentApi';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import * as DomMovement from '../navigation/DomMovement';
 import * as DomPinpoint from '../navigation/DomPinpoint';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as MatrixNavigation from '../navigation/MatrixNavigation';
+import { MatrixConfig, KeyRuleHandler } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
-import { MatrixConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
-
-import { AlloyComponent } from '../api/component/ComponentApi';
 
 // NB: Tsc requires AlloyEventHandler to be imported here.
+// @ts-ignore
 import { AlloyEventHandler } from '../api/events/AlloyEvents';
 
 const schema: FieldProcessorAdt[] = [

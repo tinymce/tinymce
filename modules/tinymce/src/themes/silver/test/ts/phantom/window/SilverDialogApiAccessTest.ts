@@ -74,7 +74,7 @@ UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure)
             api.close();
 
             store.adder('newData: ' + currentData.fieldA)();
-          }, 2000);
+          }, 180);
         }
       }, params, () => store.adder('closeWindow')());
     }),
@@ -121,7 +121,7 @@ UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure)
           'currentData: Init Value',
           'newData: Init Value'
         ]),
-        100,
+        50,
         5000
       )
     ])

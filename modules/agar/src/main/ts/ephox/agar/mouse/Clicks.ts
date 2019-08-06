@@ -7,7 +7,9 @@ const RIGHT_CLICK = 2;
 // Note: This can be used for phantomjs.
 const trigger = function (element: Element) {
   const ele: HTMLElement = element.dom();
-  if (ele.click !== undefined) return ele.click();
+  if (ele.click !== undefined) {
+    return ele.click();
+  }
   // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
   point('click', LEFT_CLICK, element, 0, 0);
   return undefined;
@@ -15,7 +17,7 @@ const trigger = function (element: Element) {
 
 const point = function (type: string, button: number, element: Element, x: number, y: number) {
   // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
-  const ev: MouseEvent = (<Document>element.dom().ownerDocument).createEvent('MouseEvents');
+  const ev: MouseEvent = (<Document> element.dom().ownerDocument).createEvent('MouseEvents');
   ev.initMouseEvent(
     type,
     true /* bubble */, true /* cancelable */,
@@ -31,18 +33,17 @@ const click = function (eventType: string, button: number) {
   return function (element: Element) {
     const position = Location.absolute(element);
     point(eventType, button, element, position.left(), position.top());
-  }
-}
+  };
+};
 
 const clickAt = function (eventType: string, button: number) {
   return function (dx: number, dy: number) {
     return function (element: Element) {
       const position = Location.absolute(element);
       point(eventType, button, element, position.left() + dx, position.top() + dy);
-    }
-  }
-}
-
+    };
+  };
+};
 
 const mousedown = click('mousedown', LEFT_CLICK);
 const mouseup = click('mouseup', LEFT_CLICK);

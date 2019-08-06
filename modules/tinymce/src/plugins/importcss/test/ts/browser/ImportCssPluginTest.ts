@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
   Theme();
 
   const sTestEditorWithSettings = (assertions, pluginSettings) => Step.async((onStepSuccess, onStepFailure) => {
-    TinyLoader.setup((editor, onSuccess, onFailure) => {
+    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
 
       const tinyUi = TinyUi(editor);
 

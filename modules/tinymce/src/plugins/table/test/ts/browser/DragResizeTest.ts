@@ -114,7 +114,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
     ]));
   };
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -243,5 +243,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
     height: 400,
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',
+    table_responsive_width: false
   }, success, failure);
 });

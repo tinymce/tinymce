@@ -1,16 +1,17 @@
 import { ValueSchema, FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { FormComponentApi, FormComponent, formComponentFields } from './FormComponent';
+import { FormComponentWithLabelApi, FormComponentWithLabel, formComponentWithLabelFields } from './FormComponent';
 
 export interface ExternalSelectBoxItem {
   text: string;
   value: string;
 }
 
-export interface SelectBoxApi extends FormComponentApi {
+export interface SelectBoxApi extends FormComponentWithLabelApi {
   type: 'selectbox';
   items: ExternalSelectBoxItem[];
   size?: number;
+  disabled?: boolean;
 }
 
 interface InternalSelectBoxItem extends ExternalSelectBoxItem {
@@ -18,18 +19,20 @@ interface InternalSelectBoxItem extends ExternalSelectBoxItem {
   value: string;
 }
 
-export interface SelectBox extends FormComponent {
+export interface SelectBox extends FormComponentWithLabel {
   type: 'selectbox';
   items: InternalSelectBoxItem[];
   size: number;
+  disabled: boolean;
 }
 
-export const selectBoxFields: FieldProcessorAdt[] = formComponentFields.concat([
+const selectBoxFields: FieldProcessorAdt[] = formComponentWithLabelFields.concat([
   FieldSchema.strictArrayOfObj('items', [
     FieldSchema.strictString('text'),
     FieldSchema.strictString('value')
   ]),
-  FieldSchema.defaultedNumber('size', 1)
+  FieldSchema.defaultedNumber('size', 1),
+  FieldSchema.defaultedBoolean('disabled', false)
 ]);
 
 export const selectBoxSchema = ValueSchema.objOf(selectBoxFields);

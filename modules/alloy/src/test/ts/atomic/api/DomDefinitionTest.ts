@@ -1,10 +1,8 @@
-import { Logger } from '@ephox/agar';
-import { assert, UnitTest } from '@ephox/bedrock';
-import * as DomDefinition from 'ephox/alloy/dom/DomDefinition';
+import { RawAssertions } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
 import { Option, Arr, Obj } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
-import { RawAssertions } from '@ephox/agar';
 
 UnitTest.test('DomDefinitionTest', () => {
   /* global assert */
@@ -16,7 +14,7 @@ UnitTest.test('DomDefinitionTest', () => {
 
   const arbOptionOf = (arb) => Jsc.tuple([ Jsc.bool, arb ]).smap(
     (arr) => {
-      return arr[0] ? Option.some(arr[1]) : Option.none()
+      return arr[0] ? Option.some(arr[1]) : Option.none();
     },
     (opt) => {
       return opt.fold(
@@ -70,15 +68,15 @@ UnitTest.test('DomDefinitionTest', () => {
         classes: arr[0],
         attributes: arr[1],
         styles: arr[2],
-      }
+      };
     },
     (mod) => {
-      return [ mod.classes, mod.attributes, mod.styles ]
+      return [ mod.classes, mod.attributes, mod.styles ];
     },
     (mod) => {
       return JSON.stringify({
         'Modification arbitrary': mod
-      }, null, 2)
+      }, null, 2);
     }
   );
 
@@ -111,7 +109,7 @@ UnitTest.test('DomDefinitionTest', () => {
           true,
           result.styles[k] === v || result.styles[k] === mod.styles[k] && mod.styles.hasOwnProperty(k)
         );
-      })
+      });
 
       RawAssertions.assertEq(
         'All attributes from modification should be in final result' + JSON.stringify(result, null, 2) + '.',
@@ -125,13 +123,12 @@ UnitTest.test('DomDefinitionTest', () => {
           true,
           result.attributes[k] === v || result.attributes[k] === mod.attributes[k] && mod.attributes.hasOwnProperty(k)
         );
-      })
+      });
       return true;
     },
     {
       tests: 100
     }
   );
-
 
 });

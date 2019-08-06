@@ -50,4 +50,3 @@ UnitTest.test('QueryTest', function () {
   checkNext('1.1.2', '1.1.1');
   checkNext('_nope_', '1.1.4');
 });
-

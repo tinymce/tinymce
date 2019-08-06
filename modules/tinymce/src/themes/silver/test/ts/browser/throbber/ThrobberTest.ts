@@ -55,7 +55,7 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.throbber.ThrobberTest', (
     }))
   ]);
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const sSetProgressState = (state: boolean, time?: number) => Step.sync(() => {
       if (state) {
         editor.setProgressState(true, time);

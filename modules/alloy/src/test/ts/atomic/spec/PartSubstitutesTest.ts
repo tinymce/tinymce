@@ -1,6 +1,7 @@
 import { Logger, RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Fun, Obj } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
+
 import { subs } from 'ephox/alloy/parts/PartSubstitutes';
 import * as PartType from 'ephox/alloy/parts/PartType';
 
@@ -11,13 +12,13 @@ UnitTest.test('PartSubstitutesTest', () => {
     'Testing subs',
     () => {
       const detail = {
-        partUids: ({
+        'partUids': ({
           'required.A': 'a-uid',
           'optional.B' : 'b-uid',
           'external.C': 'c-uid',
           'group.D': 'd-uid'
         }),
-        parts: ({
+        'parts': ({
           'required.A': ({ }),
           'optional.B': ({ }),
           'external.C': ({
@@ -43,7 +44,7 @@ UnitTest.test('PartSubstitutesTest', () => {
               return {
                 factory: 'factory.A',
                 spec
-              }
+              };
             }
           }
         }),
@@ -55,7 +56,7 @@ UnitTest.test('PartSubstitutesTest', () => {
               return {
                 factory: 'factory.B',
                 spec
-              }
+              };
             }
           }
         }),
@@ -67,7 +68,7 @@ UnitTest.test('PartSubstitutesTest', () => {
               return {
                 factory: 'factory.C',
                 spec
-              }
+              };
             }
           }
         }),
@@ -80,7 +81,7 @@ UnitTest.test('PartSubstitutesTest', () => {
               return {
                 factory: 'factory.D',
                 spec
-              }
+              };
             }
           }
         })
@@ -88,8 +89,6 @@ UnitTest.test('PartSubstitutesTest', () => {
 
       const internals = substitutes.internals();
       const externals = substitutes.externals();
-
-      const internalKeys = Obj.keys(internals);
 
       const checkSinglePart = (label: string, expected, part) => {
         Logger.sync('Checking: ' + label, () => {
@@ -99,12 +98,12 @@ UnitTest.test('PartSubstitutesTest', () => {
               RawAssertions.assertEq('Checking result', {
                 factory: expected.factory,
                 spec: expected.spec
-              }, valueThunk(detail, { }, { }))
+              }, valueThunk(detail, { }, { }));
             },
             multiple: Fun.die('Should not be a multiple')
           });
         });
-      }
+      };
 
       checkSinglePart('A', {
         required: true,

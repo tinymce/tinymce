@@ -9,16 +9,16 @@ import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { AlloyTriggers, Button, Container, SketchSpec } from '@ephox/alloy';
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 import * as Icons from '../icons/Icons';
+import { Types } from '@ephox/bridge';
+import { Omit } from '../Omit';
 
-export interface AlertBanner {
-  text: string;
-  level: 'info' | 'warn' | 'error' | 'success';
-  icon: string;
-  url?: string;
-  actionLabel: string;
+type AlertBannerSpec = Omit<Types.AlertBanner.AlertBanner, 'type'>;
+
+export interface AlertBannerWrapper extends AlertBannerSpec {
+  iconTooltip: string;
 }
 
-export const renderAlertBanner = (spec: AlertBanner, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   // For using the alert banner inside a dialog
   return Container.sketch({
     dom: {
@@ -41,7 +41,7 @@ export const renderAlertBanner = (spec: AlertBanner, providersBackstage: UiFacto
               classes: [ 'tox-button', 'tox-button--naked', 'tox-button--icon' ],
               innerHtml: Icons.get(spec.icon, providersBackstage.icons),
               attributes: {
-                title: providersBackstage.translate(spec.actionLabel)
+                title: providersBackstage.translate(spec.iconTooltip)
               }
             },
             // TODO: aria label this button!

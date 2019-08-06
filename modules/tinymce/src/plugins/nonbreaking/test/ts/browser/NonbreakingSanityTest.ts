@@ -10,18 +10,24 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingSanityTest', 
   theme();
   NonbreakingPlugin();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'NonBreaking: Click on the nbsp button and assert nonbreaking space is inserted', [
       tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
-      tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+      tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str, arr) {
         return s.element('body', {
           children: [
             s.element('p', {
               children: [
-                s.text(str.is('\u00a0'))
+                s.element('span', {
+                  classes: [ arr.has('mce-nbsp-wrap') ],
+                  children: [
+                    s.text(str.is('\u00a0'))
+                  ]
+                }),
+                s.text(str.is('\uFEFF'))
               ]
             })
           ]

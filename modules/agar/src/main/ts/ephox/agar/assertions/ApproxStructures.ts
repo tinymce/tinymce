@@ -1,6 +1,5 @@
 import { assert } from '@ephox/bedrock';
 import { Arr, Fun, Obj, Option } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 import { Attr, Classes, Css, Element, Html, Node, Text, Traverse, Value } from '@ephox/sugar';
 
 import * as Truncate from '../alien/Truncate';
@@ -49,7 +48,7 @@ export interface ElementFields {
   children?: StructAssert[];
 }
 
-const elementQueue = function(items: Element[], container: Option<Element>): ElementQueue {
+const elementQueue = function (items: Element[], container: Option<Element>): ElementQueue {
   let i = -1;
 
   const context = () => {
@@ -61,8 +60,8 @@ const elementQueue = function(items: Element[], container: Option<Element>): Ele
       return '\nContainer:\n' + Truncate.getHtml(element) +
       '\nItem[' + i + ']:' +
       (i >= 0 && i < items.length ? '\n' + Truncate.getHtml(items[i]) : ' *missing*') +
-      '\nComplete Structure:\n' + Html.getOuter(element)
-    })
+      '\nComplete Structure:\n' + Html.getOuter(element);
+    });
   };
 
   const current = () => i >= 0 && i < items.length ? Option.some(items[i]) : Option.none();
@@ -74,7 +73,7 @@ const elementQueue = function(items: Element[], container: Option<Element>): Ele
     return current();
   };
 
-  const mark = function() {
+  const mark = function () {
     const x = i;
     const reset = () => {
       i = x;
@@ -83,8 +82,8 @@ const elementQueue = function(items: Element[], container: Option<Element>): Ele
     return {
       reset,
       atMark,
-    }
-  }
+    };
+  };
 
   return {
     context,
@@ -114,7 +113,7 @@ const element = function (tag: string, fields: ElementFields): StructAssert {
   };
 
   return {
-    doAssert: doAssert
+    doAssert
   };
 };
 
@@ -132,7 +131,9 @@ const text = function (s: StringAssert, combineSiblings = false): StructAssert {
             text += queue.take().bind(Text.getOption).getOr('');
           }
         }
-        if (s.strAssert === undefined) throw new Error(Json.stringify(s) + ' is not a *string assertion*');
+        if (s.strAssert === undefined) {
+          throw new Error(JSON.stringify(s) + ' is not a *string assertion*');
+        }
         s.strAssert('Checking text content', text);
       });
     });
@@ -140,11 +141,11 @@ const text = function (s: StringAssert, combineSiblings = false): StructAssert {
 
   return {
     type: 'advanced',
-    doAssert: doAssert
+    doAssert
   };
 };
 
-const applyAssert = function(structAssert: StructAssert, queue: ElementQueue) {
+const applyAssert = function (structAssert: StructAssert, queue: ElementQueue) {
   if (structAssert.type === 'advanced') {
     structAssert.doAssert(queue);
   } else {
@@ -173,7 +174,7 @@ const either = (structAsserts: StructAssert[]): StructAssert => {
   };
   return {
     type: 'advanced',
-    doAssert: doAssert
+    doAssert
   };
 };
 
@@ -197,7 +198,7 @@ const repeat = (min: number, max: number | true = min) => (structAssert: StructA
   };
   return {
     type: 'advanced',
-    doAssert: doAssert
+    doAssert
   };
 };
 
@@ -213,7 +214,9 @@ const anythingStruct: StructAssert = {
 
 const assertAttrs = function (expectedAttrs: Record<string, StringAssert>, actual: Element) {
   Obj.each(expectedAttrs, function (v, k) {
-    if (v.strAssert === undefined) throw new Error(Json.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* attributes of ' + Truncate.getHtml(actual));
+    if (v.strAssert === undefined) {
+      throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* attributes of ' + Truncate.getHtml(actual));
+    }
     const actualValue = Attr.has(actual, k) ? Attr.get(actual, k) : ApproxComparisons.missing();
     v.strAssert(
       'Checking attribute: "' + k + '" of ' + Truncate.getHtml(actual) + '\n',
@@ -225,7 +228,9 @@ const assertAttrs = function (expectedAttrs: Record<string, StringAssert>, actua
 const assertClasses = function (expectedClasses: ArrayAssert[], actual: Element) {
   const actualClasses = Classes.get(actual);
   Arr.each(expectedClasses, function (eCls) {
-    if (eCls.arrAssert === undefined) throw new Error(Json.stringify(eCls) + ' is not an *array assertion*.\nSpecified in *expected* classes of ' + Truncate.getHtml(actual));
+    if (eCls.arrAssert === undefined) {
+      throw new Error(JSON.stringify(eCls) + ' is not an *array assertion*.\nSpecified in *expected* classes of ' + Truncate.getHtml(actual));
+    }
     eCls.arrAssert('Checking classes in ' + Truncate.getHtml(actual) + '\n', actualClasses);
   });
 };
@@ -233,7 +238,9 @@ const assertClasses = function (expectedClasses: ArrayAssert[], actual: Element)
 const assertStyles = function (expectedStyles: Record<string, StringAssert>, actual: Element) {
   Obj.each(expectedStyles, function (v, k) {
     const actualValue = Css.getRaw(actual, k).getOrThunk(ApproxComparisons.missing);
-    if (v.strAssert === undefined) throw new Error(Json.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* styles of ' + Truncate.getHtml(actual));
+    if (v.strAssert === undefined) {
+      throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* styles of ' + Truncate.getHtml(actual));
+    }
     v.strAssert(
       'Checking style: "' + k + '" of ' + Truncate.getHtml(actual) + '\n',
       actualValue
@@ -244,14 +251,18 @@ const assertStyles = function (expectedStyles: Record<string, StringAssert>, act
 const assertHtml = function (expectedHtml: Option<StringAssert>, actual: Element) {
   expectedHtml.each(function (expected) {
     const actualHtml = Html.get(actual);
-    if (expected.strAssert === undefined) throw new Error(Json.stringify(expected) + ' is not a *string assertion*.\nSpecified in *expected* innerHTML of ' + Truncate.getHtml(actual));
+    if (expected.strAssert === undefined) {
+      throw new Error(JSON.stringify(expected) + ' is not a *string assertion*.\nSpecified in *expected* innerHTML of ' + Truncate.getHtml(actual));
+    }
     expected.strAssert('Checking HTML of ' + Truncate.getHtml(actual), actualHtml);
   });
 };
 
 const assertValue = function (expectedValue: Option<StringAssert>, actual: Element) {
   expectedValue.each(function (v) {
-    if (v.strAssert === undefined) throw new Error(Json.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* value of ' + Truncate.getHtml(actual));
+    if (v.strAssert === undefined) {
+      throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* value of ' + Truncate.getHtml(actual));
+    }
     v.strAssert(
       'Checking value of ' + Truncate.getHtml(actual),
       Value.get(actual)
@@ -262,19 +273,20 @@ const assertValue = function (expectedValue: Option<StringAssert>, actual: Eleme
 const assertChildren = function (expectedChildren: Option<StructAssert[]>, actual) {
   expectedChildren.each(function (expected) {
     const children = elementQueue(Traverse.children(actual), Option.some(actual));
-    Arr.each(expected, function(structExpectation, i) {
-      if (structExpectation.doAssert === undefined) throw new Error(
-        Json.stringify(structExpectation) + ' is not a *structure assertion*.\n' +
-        'Specified in *expected* children of ' + Truncate.getHtml(actual));
-        if (structExpectation.type === 'advanced') {
-          structExpectation.doAssert(children);
-        } else {
-          children.take().fold(() => {
-            assert.fail('Expected more children to satisfy assertion ' + i + ' for ' + children.context());
-          }, (item) => {
-            structExpectation.doAssert(item);
-          });
-        }
+    Arr.each(expected, function (structExpectation, i) {
+      if (structExpectation.doAssert === undefined) {
+        throw new Error(JSON.stringify(structExpectation) + ' is not a *structure assertion*.\n' +
+          'Specified in *expected* children of ' + Truncate.getHtml(actual));
+      }
+      if (structExpectation.type === 'advanced') {
+        structExpectation.doAssert(children);
+      } else {
+        children.take().fold(() => {
+          assert.fail('Expected more children to satisfy assertion ' + i + ' for ' + children.context());
+        }, (item) => {
+          structExpectation.doAssert(item);
+        });
+      }
     });
     if (children.peek().isSome()) {
       assert.fail('More children than expected for ' + children.context());

@@ -1,7 +1,7 @@
 import { RawAssertions } from '@ephox/agar';
-import * as MenuPathing from 'ephox/alloy/menu/layered/MenuPathing';
-import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
+import Jsc from '@ephox/wrap-jsverify';
+import * as MenuPathing from 'ephox/alloy/menu/layered/MenuPathing';
 
 UnitTest.test('MenuPathingTest', () => {
   /* global assert */

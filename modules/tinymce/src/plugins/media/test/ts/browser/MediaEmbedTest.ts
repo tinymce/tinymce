@@ -12,18 +12,18 @@ UnitTest.asynctest('browser.core.MediaEmbedTest', function (success, failure) {
   Plugin();
   Theme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const ui = TinyUi(editor);
     const api = TinyApis(editor);
 
     Pipeline.async({},
       Log.steps('TBA', 'Media: Embed content, open dialog, set size and assert custom media_url_resolver formatting', [
-        Utils.sTestEmbedContentFromUrl(ui,
+        Utils.sTestEmbedContentFromUrl(api, ui,
           'https://www.youtube.com/watch?v=b3XFjWInBog',
           '<video width="300" height="150" controls="controls">\n' +
           '<source src="https://www.youtube.com/watch?v=b3XFjWInBog" />\n</video>'
         ),
-        Utils.sTestEmbedContentFromUrl(ui,
+        Utils.sTestEmbedContentFromUrl(api, ui,
           'https://www.google.com',
           '<video width="300" height="150" controls="controls">\n' +
           '<source src="https://www.google.com" />\n</video>'

@@ -11,9 +11,9 @@ import {
   AlloySpec,
   AlloyTriggers,
   Behaviour,
-  Button as AlloyButton,
   Composing,
   CustomEvent,
+  Disabling,
   FormField as AlloyFormField,
   Invalidating,
   Memento,
@@ -29,14 +29,13 @@ import { Types } from '@ephox/bridge';
 import { Arr, Future, FutureResult, Id, Option, Result, Fun } from '@ephox/katamari';
 import { Traverse, Attr } from '@ephox/sugar';
 
-import { UiFactoryBackstageProviders, UiFactoryBackstage } from '../../backstage/Backstage';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { UiFactoryBackstageForUrlInput } from '../../backstage/UrlInputBackstage';
 import { renderFormFieldDom, renderLabel } from '../alien/FieldLabeller';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';
 import * as Icons from '../icons/Icons';
 import * as MenuParts from '../menus/menu/MenuParts';
 import * as NestedMenus from '../menus/menu/NestedMenus';
-import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 import {
   anchorTargetBottom,
   anchorTargets,
@@ -47,6 +46,10 @@ import {
   joinMenuLists,
 } from '../urlinput/Completions';
 import ItemResponse from '../menus/item/ItemResponse';
+import { Omit } from '../Omit';
+import { renderButton } from '../general/Button';
+
+type UrlInputSpec = Omit<Types.UrlInput.UrlInput, 'type'>;
 
 const getItems = (fileType: 'image' | 'media' | 'file', input: AlloyComponent, urlBackstage: UiFactoryBackstageForUrlInput) => {
   const urlInputValue = Representing.getValue(input);
@@ -70,29 +73,9 @@ const getItems = (fileType: 'image' | 'media' | 'file', input: AlloyComponent, u
   );
 };
 
-// TODO: Find a place for this.
-const renderInputButton = (label: Option<string>, eventName: string, className: string, iconName: string, providersBackstage: UiFactoryBackstageProviders) => {
-  return AlloyButton.sketch({
-    dom: {
-      tag: 'button',
-      classes: [ ToolbarButtonClasses.Button, className ],
-      innerHtml: Icons.get(iconName, providersBackstage.icons),
-      attributes: {
-        title: providersBackstage.translate(label.getOr('')) // TODO: tooltips AP-213
-      }
-    },
-    buttonBehaviours: Behaviour.derive([
-      Tabstopping.config({})
-    ]),
-    action: (component) => {
-      AlloyTriggers.emit(component, eventName);
-    }
-  });
-};
-
 const errorId = Id.generate('aria-invalid');
 
-export const renderUrlInput = (spec: Types.UrlInput.UrlInput, backstage: UiFactoryBackstage, urlBackstage: UiFactoryBackstageForUrlInput): SketchSpec => {
+export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage, urlBackstage: UiFactoryBackstageForUrlInput): SketchSpec => {
   const providersBackstage = backstage.shared.providers;
 
   const updateHistory = (component: AlloyComponent): void => {
@@ -150,6 +133,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, backstage: UiFacto
         })
       ).toArray(),
       [
+        Disabling.config({ disabled: spec.disabled }),
         Tabstopping.config({}),
         AddEventsBehaviour.config('urlinput-events', Arr.flatten([
           // We want to get fast feedback for the link dialog, but not sure about others
@@ -246,9 +230,21 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, backstage: UiFacto
         tag: 'div',
         classes: ['tox-control-wrap']
       },
-      components: [pField, memStatus.asSpec()]
+      components: [pField, memStatus.asSpec()],
+      behaviours: Behaviour.derive([
+        Disabling.config({ disabled: spec.disabled })
+      ])
     }
   );
+
+  const memUrlPickerButton = Memento.record(renderButton({
+    name: spec.name,
+    icon: Option.some('browse'),
+    text: spec.label.getOr(''),
+    disabled: spec.disabled,
+    primary: false,
+    borderless: true
+  },  (component) => AlloyTriggers.emit(component, browseUrlEvent), providersBackstage, [], ['tox-browse-url']));
 
   const controlHWrapper = (): AlloySpec => {
     return {
@@ -258,7 +254,7 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, backstage: UiFacto
       },
       components: Arr.flatten([
         [memUrlBox.asSpec()],
-        optUrlPicker.map(() => renderInputButton(spec.label, browseUrlEvent, 'tox-browse-url', 'browse', providersBackstage)).toArray()
+        optUrlPicker.map(() => memUrlPickerButton.asSpec()).toArray()
       ])
     };
   };
@@ -281,6 +277,17 @@ export const renderUrlInput = (spec: Types.UrlInput.UrlInput, backstage: UiFacto
       controlHWrapper()
     ]),
     fieldBehaviours: Behaviour.derive([
+      Disabling.config({
+        disabled: spec.disabled,
+        onDisabled: (comp) => {
+          AlloyFormField.getField(comp).each(Disabling.disable);
+          memUrlPickerButton.getOpt(comp).each(Disabling.disable);
+        },
+        onEnabled: (comp) => {
+          AlloyFormField.getField(comp).each(Disabling.enable);
+          memUrlPickerButton.getOpt(comp).each(Disabling.enable);
+        }
+      }),
       AddEventsBehaviour.config('url-input-events', [
         AlloyEvents.run<CustomEvent>(browseUrlEvent, openUrlPicker)
       ])

@@ -1,15 +1,14 @@
 import { FieldSchema, ValueSchema, Processor } from '@ephox/boulder';
+import { setTimeout, KeyboardEvent, clearTimeout } from '@ephox/dom-globals';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { DomEvent, Node, Traverse, Element, Attr, SelectorExists } from '@ephox/sugar';
+import { DomEvent, Element, Node, SelectorExists } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
-import * as SystemEvents from '../api/events/SystemEvents';
-import * as TapEvent from './TapEvent';
-
 import { SugarEvent, SugarListener } from '../alien/TypeDefinitions';
-import { EventFormat } from '../events/SimulatedEvent';
-import { setTimeout, KeyboardEvent, clearTimeout } from '@ephox/dom-globals';
+import * as SystemEvents from '../api/events/SystemEvents';
+import { EventFormat } from './SimulatedEvent';
+import * as TapEvent from './TapEvent';
 
 const isDangerous = (event: SugarEvent): boolean => {
   // Will trigger the Back button in the browser
@@ -96,7 +95,7 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
       });
     }
   );
-  let pasteTimeout = Cell(Option.none<number>());
+  const pasteTimeout = Cell(Option.none<number>());
   const onPaste = DomEvent.bind(container, 'paste', (event: SugarEvent) => {
     tapEvent.fireIfReady(event, 'paste').each((tapStopped) => {
       if (tapStopped) { event.kill(); }
@@ -105,7 +104,7 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
     const stopped = settings.triggerEvent('paste', event);
     if (stopped) { event.kill(); }
     pasteTimeout.set(Option.some(setTimeout(() => {
-      settings.triggerEvent(SystemEvents.postPaste(), event)
+      settings.triggerEvent(SystemEvents.postPaste(), event);
     }, 0)));
   });
 
@@ -124,7 +123,7 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
     if (stopped) { event.kill(); }
   });
 
-  let focusoutTimeout = Cell(Option.none<number>())
+  const focusoutTimeout = Cell(Option.none<number>());
   const onFocusOut = bindBlur(container, (event: SugarEvent) => {
     const stopped = settings.triggerEvent('focusout', event);
     if (stopped) { event.kill(); }

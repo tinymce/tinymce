@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentCssTest', (suc
     }));
   };
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const contentCssUrl = editor.documentBaseURI.toAbsolute('/project/tinymce/js/tinymce/skins/content/default/content.css');
 

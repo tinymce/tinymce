@@ -1,22 +1,45 @@
 import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Id, Option, Result } from '@ephox/katamari';
+import { Fun, Id, Result, Option } from '@ephox/katamari';
 import { BodyComponentApi } from './BodyComponent';
-import { InternalPanel, PanelApi, panelFields } from './Panel';
-import { ExternalTab, InternalTabPanel, TabPanelApi, tabPanelFields } from './TabPanel';
+import { Panel, PanelApi, panelSchema } from './Panel';
+import { TabApi, Tab, TabPanel, TabPanelApi, tabPanelSchema } from './TabPanel';
+import { BaseMenuButton, BaseMenuButtonApi, baseMenuButtonFields, BaseMenuButtonInstanceApi, MenuButtonItemTypes } from '../../core/MenuButton';
 
-export interface DialogButtonApi {
-  type: 'submit' | 'cancel' | 'custom';
+export type DialogMenuButtonItemTypes = MenuButtonItemTypes;
+export type SuccessCallback = (menu: string | DialogMenuButtonItemTypes[]) => void;
+
+// Note: This interface doesn't extend from a common button interface as this is only a configuration that specifies a button, but it's not by itself a button.
+interface BaseDialogButtonApi {
   name?: string;
-  text: string;
   align?: 'start' | 'end';
   primary?: boolean;
   disabled?: boolean;
   icon?: string;
 }
 
+export interface DialogNormalButtonApi extends BaseDialogButtonApi {
+  type: 'submit' | 'cancel' | 'custom';
+  text: string;
+}
+
+export interface DialogMenuButtonInstanceApi extends BaseMenuButtonInstanceApi { }
+
+export interface DialogMenuButtonApi extends BaseDialogButtonApi, BaseMenuButtonApi {
+  type: 'menu';
+  onSetup?: (api: DialogMenuButtonInstanceApi) => (api: DialogMenuButtonInstanceApi) => void;
+}
+
+export type DialogButtonApi = DialogNormalButtonApi | DialogMenuButtonApi;
+
+// For consistency with api/Types.ts this should perhaps be in a namespace (e.g. Types.Dialog.Panels.*)
+// but there are many many references to it already / shrug
 export type PanelApi = PanelApi;
+export type Panel = Panel;
 export type TabPanelApi = TabPanelApi;
-export type TabApi = ExternalTab;
+export type TabPanel = TabPanel;
+export type TabApi = TabApi;
+export type Tab = Tab;
+
 export type BodyComponentApi = BodyComponentApi;
 
 export type DialogDataItem = any;
@@ -83,20 +106,30 @@ export interface DialogApi<T extends DialogData> {
   onTabChange?: DialogTabChangeHandler<T>;
 }
 
-export interface DialogButton {
-  type: 'submit' | 'cancel' | 'custom';
+interface BaseDialogButton {
   name: string;
-  text: string;
   align: 'start' | 'end';
   primary: boolean;
   disabled: boolean;
   icon: Option<string>;
 }
 
+export interface DialogNormalButton extends BaseDialogButton {
+  type: 'submit' | 'cancel' | 'custom';
+  text: string;
+}
+
+export interface DialogMenuButton extends BaseDialogButton, BaseMenuButton {
+  type: 'menu';
+  onSetup: (api: DialogMenuButtonInstanceApi) => (api: DialogMenuButtonInstanceApi) => void;
+}
+
+export type DialogButton = DialogNormalButton | DialogMenuButton;
+
 export interface Dialog<T> {
   title: string;
   size: DialogSize;
-  body: InternalTabPanel | InternalPanel;
+  body: TabPanel | Panel;
   buttons: DialogButton[];
   initialData: T;
   onAction: DialogActionHandler<T>;
@@ -107,7 +140,7 @@ export interface Dialog<T> {
   onTabChange: DialogTabChangeHandler<T>;
 }
 
-export const dialogButtonFields = [
+const baseButtonFields = [
   FieldSchema.field(
     'name',
     'name',
@@ -116,23 +149,43 @@ export const dialogButtonFields = [
     }),
     ValueSchema.string
   ),
-  FieldSchema.strictString('text'),
   FieldSchema.optionString('icon'),
   FieldSchema.defaultedStringEnum('align', 'end', ['start', 'end']),
   FieldSchema.defaultedBoolean('primary', false),
   FieldSchema.defaultedBoolean('disabled', false)
 ];
 
-export const dialogButtonSchema = ValueSchema.objOf([
+export const dialogButtonFields = [
+  ...baseButtonFields,
+  FieldSchema.strictString('text')
+];
+
+const normalButtonFields = [
   FieldSchema.strictStringEnum('type', ['submit', 'cancel', 'custom']),
   ...dialogButtonFields
-]);
+];
+
+const menuButtonFields = [
+  FieldSchema.strictStringEnum('type', ['menu']),
+  ...baseButtonFields,
+  ...baseMenuButtonFields
+];
+
+export const dialogButtonSchema = ValueSchema.choose(
+  'type',
+  {
+    submit: normalButtonFields,
+    cancel: normalButtonFields,
+    custom: normalButtonFields,
+    menu: menuButtonFields
+  }
+);
 
 export const dialogSchema = ValueSchema.objOf([
   FieldSchema.strictString('title'),
-  FieldSchema.strictOf('body', ValueSchema.choose('type', {
-    panel: panelFields,
-    tabpanel: tabPanelFields
+  FieldSchema.strictOf('body', ValueSchema.chooseProcessor('type', {
+    panel: panelSchema,
+    tabpanel: tabPanelSchema
   })),
   FieldSchema.defaultedString('size', 'normal'),
   FieldSchema.strictArrayOf('buttons', dialogButtonSchema),

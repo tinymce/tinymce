@@ -1,5 +1,63 @@
-Version 5.0.9 (TBD)
-
+Version 5.0.14 (TBD)
+    Fixed inline dialogs not closing on escape when no dialog component is in focus #TINY-3936
+    Fixed focus not returning to editor when dismissing dropdowns on Edge and IE #TINY-3874
+    Fixed plugins not being filtered when defaulting to mobile on phones #TINY-3537
+Version 5.0.13 (2019-08-06)
+    Changed modal dialogs to prevent dragging by default and added new `draggable_modal` setting to restore dragging #TINY-3873
+    Changed the nonbreaking plugin to insert nbsp characters wrapped in spans to aid in filtering. This can be disabled using the `nonbreaking_wrap` setting #TINY-3647
+    Changed backspace behaviour in lists to outdent nested list items when the cursor is at the start of the list item #TINY-3651
+    Fixed sidebar growing beyond editor bounds in IE 11 #TINY-3937
+    Fixed issue with being unable to keyboard navigate disabled toolbar buttons #TINY-3350
+    Fixed issues with backspace and delete in nested contenteditable true and false elements #TINY-3868
+    Fixed issue with losing keyboard navigation in dialogs due to disabled buttons #TINY-3914
+    Fixed `MouseEvent.mozPressure is deprecated` warning in Firefox #TINY-3919
+    Fixed `default_link_target` not being respected when `target_list` is disabled #TINY-3757
+    Fixed mobile plugin filter to only apply to the mobile theme, rather than all mobile platforms #TINY-3405
+    Fixed focus switching to another editor during mode changes #TINY-3852
+    Fixed an exception being thrown when clicking on an uninitialized inline editor #TINY-3925
+    Fixed unable to keyboard navigate to dialog menu buttons #TINY-3933
+    Fixed dialogs being able to be dragged outside the window viewport #TINY-3787
+    Fixed inline dialogs appearing above modal dialogs #TINY-3932
+Version 5.0.12 (2019-07-18)
+    Added ability to utilize UI dialog panels inside other panels #TINY-3305
+    Added help dialog tab explaining keyboard navigation of the editor #TINY-3603
+    Changed the "Find and Replace" design to an inline dialog #TINY-3054
+    Fixed issue where autolink spacebar event was not being fired on Edge #TINY-3891
+    Fixed table selection missing the background color #TINY-3892
+    Fixed removing shortcuts not working for function keys #TINY-3871
+    Fixed non-descriptive UI component type names #TINY-3349
+    Fixed UI registry components rendering as the wrong type when manually specifying a different type #TINY-3385
+    Fixed an issue where dialog checkbox, input, selectbox, textarea and urlinput components couldn't be disabled #TINY-3708
+    Fixed the context toolbar not using viable screen space in inline/distraction free mode #TINY-3717
+    Fixed the context toolbar overlapping the toolbar in various conditions #TINY-3205
+    Fixed IE11 edge case where items were being inserted into the wrong location #TINY-3884
+Version 5.0.11 (2019-07-04)
+    Fixed packaging errors caused by a rollup treeshaking bug (https://github.com/rollup/rollup/issues/2970) #TINY-3866
+    Fixed the customeditor component not able to get data from the dialog api #TINY-3866
+    Fixed collection component tooltips not being translated #TINY-3855
+Version 5.0.10 (2019-07-02)
+    Added support for all HTML color formats in `color_map` setting #TINY-3837
+    Changed backspace key handling to outdent content in appropriate circumstances #TINY-3685
+    Changed default palette for forecolor and backcolor to include some lighter colors suitable for highlights #TINY-2865
+    Changed the search and replace plugin to cycle through results #TINY-3800
+    Fixed inconsistent types causing some properties to be unable to be used in dialog components #TINY-3778
+    Fixed an issue in the Oxide skin where dialog content like outlines and shadows were clipped because of overflow hidden #TINY-3566
+    Fixed the search and replace plugin not resetting state when changing the search query #TINY-3800
+    Fixed backspace in lists not creating an undo level #TINY-3814
+    Fixed the editor to cancel loading in quirks mode where the UI is not supported #TINY-3391
+    Fixed applying fonts not working when the name contained spaces and numbers #TINY-3801
+    Fixed so that initial content is retained when initializing on list items #TINY-3796
+    Fixed inefficient font name and font size current value lookup during rendering #TINY-3813
+    Fixed mobile font copied into the wrong folder for the oxide-dark skin #TINY-3816
+    Fixed an issue where resizing the width of tables would produce inaccurate results #TINY-3827
+    Fixed a memory leak in the Silver theme #TINY-3797
+    Fixed alert and confirm dialogs using incorrect markup causing inconsistent padding #TINY-3835
+    Fixed an issue in the Table plugin with `table_responsive_width` not enforcing units when resizing #TINY-3790
+    Fixed leading, trailing and sequential spaces being lost when pasting plain text #TINY-3726
+    Fixed exception being thrown when creating relative URIs #TINY-3851
+    Fixed focus is no longer set to the editor content during mode changes unless the editor already had focus #TINY-3852
+Version 5.0.9 (2019-06-26)
+    Fixed print plugin not working in Firefox #TINY-3834
 Version 5.0.8 (2019-06-18)
     Added back support for multiple toolbars #TINY-2195
     Added support for .m4a files to the media plugin #TINY-3750

@@ -17,7 +17,6 @@ UnitTest.asynctest('Grid component Test', (success, failure) => {
     (store, doc, body) => {
       return GuiFactory.build(
         renderGrid({
-          type: 'grid',
           columns: 10,
           items: [
             {

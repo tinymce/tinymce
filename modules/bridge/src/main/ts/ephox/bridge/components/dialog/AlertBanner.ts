@@ -6,16 +6,18 @@ export interface AlertBannerApi {
   level: 'info' | 'warn' | 'error' | 'success';
   text: string;
   icon: string;
+  url?: string;
 }
 
 export interface AlertBanner {
+  type: 'alertbanner';
   level: 'info' | 'warn' | 'error' | 'success';
   text: string;
   icon: string;
   url: string;
 }
 
-export const alertBannerFields = [
+const alertBannerFields = [
   FieldSchema.strictString('type'),
   FieldSchema.strictString('text'),
   FieldSchema.strictStringEnum('level', [ 'info', 'warn', 'error', 'success' ]),

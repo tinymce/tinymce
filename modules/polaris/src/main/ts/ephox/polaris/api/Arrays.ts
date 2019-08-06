@@ -1,7 +1,7 @@
 import * as Boundaries from '../array/Boundaries';
 import * as Slice from '../array/Slice';
 import * as Split from '../array/Split';
-import { Splitting } from './Main';
+import { Splitting } from './Splitting';
 
 type BoundAtApi = <T, T2>(xs: T[], left: T2, right: T2, comparator: (a: T2, b: T) => boolean) => T[];
 const boundAt: BoundAtApi = Boundaries.boundAt;

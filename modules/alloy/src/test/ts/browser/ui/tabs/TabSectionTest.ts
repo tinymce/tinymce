@@ -1,5 +1,7 @@
 import { ApproxStructure, Assertions, Step, GeneralSteps, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { SelectorFind } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -8,7 +10,6 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { Tabbar } from 'ephox/alloy/api/ui/Tabbar';
 import { TabSection } from 'ephox/alloy/api/ui/TabSection';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { SelectorFind } from '@ephox/sugar';
 
 UnitTest.asynctest('TabSection Test', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {

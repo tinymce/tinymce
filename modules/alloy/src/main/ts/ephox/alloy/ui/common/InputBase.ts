@@ -1,14 +1,14 @@
-import { FieldProcessorAdt, FieldSchema, Objects } from '@ephox/boulder';
-import { Fun, Merger } from '@ephox/katamari';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { Fun } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import { RawDomSchema } from '../../api/component/SpecTypes';
 import * as Fields from '../../data/Fields';
 import { InputDetail } from '../../ui/types/InputTypes';
-import { RawDomSchema } from '../../api/component/SpecTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('data'),

@@ -1,10 +1,11 @@
-import { EventFormat, FocusingEvent } from './SimulatedEvent';
+import { console } from '@ephox/dom-globals';
+import { Compare, Element } from '@ephox/sugar';
+
+import { AlloyComponent } from '../api/component/ComponentApi';
 import * as AlloyEvents from '../api/events/AlloyEvents';
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as AlloyLogger from '../log/AlloyLogger';
-import { Compare, Element } from '@ephox/sugar';
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { console } from '@ephox/dom-globals';
+import { FocusingEvent } from './SimulatedEvent';
 
 // The purpose of this check is to ensure that a simulated focus call is not going
 // to recurse infinitely. Essentially, if the originator of the focus call is the same

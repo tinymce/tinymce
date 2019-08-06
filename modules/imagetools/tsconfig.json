@@ -1,8 +1,6 @@
 {
   "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
-    "noUnusedLocals": false,
-    "strict": false,
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
@@ -16,10 +14,10 @@
   "include": [
     "src/demo/ts",
     "src/main/ts",
-    "src/test/ts",
+    "src/test/ts"
   ],
   "references": [
     { "path": "../katamari" },
-    { "path": "../sand" },
+    { "path": "../sand" }
   ]
 }

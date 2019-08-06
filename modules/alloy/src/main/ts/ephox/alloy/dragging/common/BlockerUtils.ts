@@ -1,4 +1,5 @@
 import { Attr, Css, Traverse } from '@ephox/sugar';
+
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const initialAttribute = 'data-initial-z-index';

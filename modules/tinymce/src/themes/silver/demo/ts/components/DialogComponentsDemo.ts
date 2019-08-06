@@ -33,7 +33,6 @@ import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
 import { renderCollection } from 'tinymce/themes/silver/ui/dialog/Collection';
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 import { setupDemo } from './DemoHelpers';
-import Promise from 'tinymce/core/api/util/Promise';
 
 // tslint:disable:no-console
 
@@ -64,7 +63,6 @@ export default () => {
   }, backstage);
 
   const iframeSpec = renderIFrame({
-    type: 'iframe',
     name: 'iframe',
     label: Option.some('Iframe'),
     sandboxed: true
@@ -74,18 +72,16 @@ export default () => {
     name: 'input',
     label: Option.some('Beta'),
     placeholder: Option.none(),
-    validation: Option.some({
-      validator: (s) => s === 'bad' ? 'Bad' : true
-    })
+    maximized: false,
+    disabled: false
   }, sharedBackstage.providers);
 
   const textareaSpec = renderTextarea({
     name: 'textarea',
     label: Option.some('Gamma'),
     placeholder: Option.none(),
-    validation: Option.some({
-      validator: (s) => s === 'so bad' ? 'So bad' : true
-    })
+    maximized: false,
+    disabled: false
   }, sharedBackstage.providers);
 
   const makeItem = (text: string): Menu.MenuItemApi => {
@@ -99,53 +95,59 @@ export default () => {
 
   const labelSpec = renderLabel({
     label: 'A label wraps components in a group',
-    type: 'label',
     items: [
       renderCheckbox({
         label: 'check box item 1',
-        name: 'one'
+        name: 'one',
+        disabled: false
       }, sharedBackstage.providers) as any,
       renderCheckbox({
         label: 'check box item 2',
-        name: 'two'
+        name: 'two',
+        disabled: false
       }, sharedBackstage.providers) as any,
       renderInput({
         label: Option.some('Sample input'),
         placeholder: Option.none(),
         name: 'exampleinputfieldname',
-        validation: Option.none()
+        maximized: false,
+        disabled: false
       }, sharedBackstage.providers) as any
     ]
   }, sharedBackstage);
 
   const labelGridSpec = renderLabel({
     label: 'A label wraps a grid compontent',
-    type: 'label',
     items: [
       renderGrid({
-        type: 'grid',
         columns: 2,
         items: [
           renderButton({
             name: 'gridspecbutton',
             text: 'Click Me!',
-            primary: false
+            primary: false,
+            disabled: false,
+            icon: Option.none(),
+            borderless: false
           }, () => {
             console.log('clicked on the button in the grid wrapped by a label');
           }, sharedBackstage.providers) as any,
           renderCheckbox({
             label: 'check box item 1',
-            name: 'one'
+            name: 'one',
+            disabled: false
           }, sharedBackstage.providers) as any,
           renderCheckbox({
             label: 'check box item 2',
-            name: 'two'
+            name: 'two',
+            disabled: false
           }, sharedBackstage.providers) as any,
           renderInput({
             label: Option.some('Sample input'),
             placeholder: Option.none(),
             name: 'exampleinputfieldname',
-            validation: Option.none()
+            maximized: false,
+            disabled: false
           }, sharedBackstage.providers) as any
         ]
       }, sharedBackstage) as any
@@ -164,14 +166,16 @@ export default () => {
   }, sharedBackstage.providers);
 
   const gridSpec = renderGrid({
-    type: 'grid',
     columns: 5,
     items: [
       AlloyInput.sketch({ inputAttributes: { placeholder: 'Text goes here...' } }) as any,
       renderButton({
         name: 'gridspecbutton',
         text: 'Click Me!',
-        primary: false
+        primary: false,
+        disabled: false,
+        icon: Option.none(),
+        borderless: false
       }, () => {
         console.log('clicked on the button in the grid');
       }, sharedBackstage.providers) as any
@@ -181,7 +185,10 @@ export default () => {
   const buttonSpec = renderButton({
     name: 'button1',
     text: 'Text',
-    primary: false
+    primary: false,
+    disabled: false,
+    icon: Option.none(),
+    borderless: false
   }, () => {
     console.log('clicked on the button');
   }, sharedBackstage.providers);
@@ -190,9 +197,10 @@ export default () => {
     const memBodyPanel = Memento.record(
       renderBodyPanel({
         items: [
-          { type: 'checkbox', name: 'checked', label: 'Checked' },
-          { type: 'checkbox', name: 'unchecked', label: 'Unchecked' }
-        ]
+          { type: 'checkbox', name: 'checked', label: 'Checked', disabled: false },
+          { type: 'checkbox', name: 'unchecked', label: 'Unchecked', disabled: false }
+        ],
+        classes: []
       }, {
         shared: sharedBackstage
       })
@@ -218,28 +226,25 @@ export default () => {
   })();
 
   const colorInputSpec = renderColorInput({
-    type: 'colorinput',
     name: 'colorinput-demo',
     label: Option.some('Color input label')
   }, sharedBackstage, backstage.colorinput);
 
   const colorPickerSpec = renderColorPicker({
-    type: 'colorpicker',
     name: 'colorpicker-demo',
     label: Option.some('Color picker label')
   });
 
   const dropzoneSpec = renderDropZone({
-    type: 'dropzone',
     name: 'dropzone-demo',
     label: Option.some('Dropzone label')
   }, sharedBackstage.providers);
 
   const selectBoxSpec = renderSelectBox({
-    type: 'selectbox',
     name: 'selectbox-demo',
     size: 1,
     label: Option.some('Select one from'),
+    disabled: false,
     items: [
       { value: 'one', text: 'One' },
       { value: 'two', text: 'Two' }
@@ -247,10 +252,10 @@ export default () => {
   }, sharedBackstage.providers);
 
   const selectBoxSizeSpec = renderSelectBox({
-    type: 'selectbox',
     name: 'selectbox-demo',
     size: 6,
     label: Option.some('Select one from'),
+    disabled: false,
     items: [
       { value: 'one', text: 'One' },
       { value: 'two', text: 'Two' },
@@ -263,16 +268,16 @@ export default () => {
 
   const sizeInputSpec = renderSizeInput({
     constrain: true,
-    type: 'sizeinput',
     name: 'sizeinput-demo',
     label: Option.some('kustom fixed ratio'),
+    disabled: false
   }, sharedBackstage.providers);
 
   const urlInputSpec = renderUrlInput({
-    type: 'urlinput',
     name: 'blah',
     label: Option.some('Url'),
-    filetype: 'image' // 'image' || 'media'
+    filetype: 'image', // 'image' || 'media'
+    disabled: false
   }, backstage, backstage.urlinput);
 
   const linkInputSpec = renderTypeahead({
@@ -294,30 +299,39 @@ export default () => {
     }
   }, backstage);
 
-  const customEditorSpec = renderCustomEditor({
-      tag: 'textarea',
-      init: (el) => new Promise((resolve) => {
-        const oldEl = el;
-        const newEl = el.ownerDocument.createElement('span');
-        newEl.innerText = 'this is a custom editor';
-        el.parentElement.replaceChild(newEl, oldEl);
+  const myScriptDataUri = `data:text/javascript,tinymce.Resource.add('myscript', function(el) {
+    return new Promise(function (resolve) {
+      var oldEl = el;
+      var newEl = el.ownerDocument.createElement('span');
+      newEl.innerText = 'this is a custom editor';
+      el.parentElement.replaceChild(newEl, oldEl);
 
-        const api = {
-          getValue: () => newEl.innerText,
-          setValue: (value) => {
-            newEl.innerText = value;
-          },
-          destroy: () => { newEl.parentElement.replaceChild(oldEl, newEl); }        };
+      var api = {
+        getValue: () => newEl.innerText,
+        setValue: (value) => {
+          newEl.innerText = value;
+        },
+        destroy: () => { newEl.parentElement.replaceChild(oldEl, newEl); }        };
 
-        resolve(api);
-      }),
+      resolve(api);
     });
+  });`;
+
+  const customEditorSpec = renderCustomEditor({
+    type: 'customeditor',
+    name: 'customeditor',
+    tag: 'textarea',
+    scriptId: 'myscript',
+    scriptUrl: myScriptDataUri,
+    settings: undefined
+  });
 
   const alertBannerSpec = renderAlertBanner({
     text: 'The alert banner message',
     level: 'warn',
     icon: 'close',
-    actionLabel: 'Click here For somthing'
+    iconTooltip: 'Click here For somthing',
+    url: ''
   }, sharedBackstage.providers);
 
   const display = (label: string, spec: SimpleSpec) => {
@@ -336,7 +350,6 @@ export default () => {
 
   const memCollection = Memento.record(
     renderCollection({
-      type: 'collection',
       columns: 1,
       name: 'collection',
       label: Option.some('Collection: '),

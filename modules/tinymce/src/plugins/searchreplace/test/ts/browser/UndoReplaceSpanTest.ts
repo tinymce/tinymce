@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', 
     }));
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
@@ -35,11 +35,11 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', 
         Chain.asStep({}, [
           Chain.fromParent(tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'), [
             Chain.fromChains([
-              UiFinder.cFindIn('label:contains("Find") + input'),
+              UiFinder.cFindIn('input.tox-textfield[placeholder="Find"]'),
               UiControls.cSetValue('cats')
             ]),
             Chain.fromChains([
-              UiFinder.cFindIn('label:contains("Replace with") + input'),
+              UiFinder.cFindIn('input.tox-textfield[placeholder="Replace with"]'),
               UiControls.cSetValue('dogs')
             ]),
             Chain.fromChains([

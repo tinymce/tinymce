@@ -1,19 +1,22 @@
 import { ValueSchema, FieldSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { FormComponent, FormComponentApi, formComponentFields } from './FormComponent';
+import { FormComponentWithLabel, FormComponentWithLabelApi, formComponentWithLabelFields } from './FormComponent';
 
-export interface SizeInputApi extends FormComponentApi {
+export interface SizeInputApi extends FormComponentWithLabelApi {
   type: 'sizeinput';
   constrain?: boolean;
+  disabled?: boolean;
 }
 
-export interface SizeInput extends FormComponent {
+export interface SizeInput extends FormComponentWithLabel {
   type: 'sizeinput';
   constrain: boolean;
+  disabled: boolean;
 }
 
-export const sizeInputFields = formComponentFields.concat([
-  FieldSchema.defaultedBoolean('constrain', true)
+const sizeInputFields = formComponentWithLabelFields.concat([
+  FieldSchema.defaultedBoolean('constrain', true),
+  FieldSchema.defaultedBoolean('disabled', false)
 ]);
 
 export const sizeInputSchema = ValueSchema.objOf(sizeInputFields);

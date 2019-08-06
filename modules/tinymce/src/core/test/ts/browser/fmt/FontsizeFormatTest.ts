@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontsizeFormatTest', function () {
     });
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [

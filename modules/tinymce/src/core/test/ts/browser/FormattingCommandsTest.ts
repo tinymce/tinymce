@@ -53,6 +53,11 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function () {
 
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
+    editor.execCommand('FontName', false, 'Bauhaus 93');
+    LegacyUnit.equal(editor.getContent(), '<p><span style="font-family: \'Bauhaus 93\';">test 123</span></p>');
+
+    editor.setContent('test 123');
+    editor.execCommand('SelectAll');
     editor.execCommand('FontSize', false, '7');
     LegacyUnit.equal(editor.getContent(), '<p><span style="font-size: xx-large;">test 123</span></p>');
 
@@ -434,7 +439,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function () {
     LegacyUnit.equal(editor.getContent(), '<p>dfn tag code tag samp tag kbd tag var tag cite tag mark tag q tag</p>');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

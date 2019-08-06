@@ -25,13 +25,16 @@ export const setup = (extras) => {
         name: 'close-alert',
         text: 'OK',
         primary: true,
+        align: 'end',
+        disabled: false,
         icon: Option.none()
-      }, 'cancel', sharedBackstage.providers)
+      }, 'cancel', extras.backstage)
     );
 
     const alertDialog = GuiFactory.build(
       Dialogs.renderDialog({
         lazySink: () => sharedBackstage.getSink(),
+        headerOverride: Option.some(Dialogs.hiddenHeader),
         partSpecs: {
           title: Dialogs.pUntitled(),
           close: Dialogs.pClose(() => {

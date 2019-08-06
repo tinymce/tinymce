@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AutocompletionTest', (succ
   EmoticonsPlugin();
   SilverTheme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const eDoc = Element.fromDom(editor.getDoc());
 
@@ -33,6 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AutocompletionTest', (succ
     toolbar: 'emoticons',
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',
-    emoticons_database_url: '/project/tinymce/src/plugins/emoticons/test/js/test-emojis.js'
+    emoticons_database_url: '/project/tinymce/src/plugins/emoticons/test/js/test-emojis.js',
+    emoticons_database_id: 'tinymce.plugins.emoticons.test-emojis.js'
   }, success, failure);
 });

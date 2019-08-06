@@ -2,6 +2,7 @@ import { Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, St
 import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
 import { Attr, Focus, SelectorFind } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';

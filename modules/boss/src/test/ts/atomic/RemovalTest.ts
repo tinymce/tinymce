@@ -6,7 +6,7 @@ import { Option } from '@ephox/katamari';
 import { UnitTest, assert } from '@ephox/bedrock';
 import { Gene } from 'ephox/boss/api/Gene';
 
-UnitTest.test('RemovalTest', function() {
+UnitTest.test('RemovalTest', function () {
   const data = function (): Gene {
     return Gene('A', '.', [
       Gene('B', '.'),
@@ -29,4 +29,3 @@ UnitTest.test('RemovalTest', function() {
   check('A(B,D(E),F)', data(), 'C');
   check('A(B,C(D,F))', data(), 'E');
 });
-

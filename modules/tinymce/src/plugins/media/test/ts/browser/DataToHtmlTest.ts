@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 
-import DataToHtml from 'tinymce/plugins/media/core/DataToHtml';
+import * as DataToHtml from 'tinymce/plugins/media/core/DataToHtml';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
     );
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
 
     const videoStruct = ApproxStructure.build(function (s, str/*, arr*/) {
       return s.element('video', {

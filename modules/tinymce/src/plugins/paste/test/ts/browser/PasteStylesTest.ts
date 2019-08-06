@@ -13,7 +13,7 @@ UnitTest.asynctest('Browser Test: .PasteStylesTest', (success, failure) => {
   Theme();
   PastePlugin();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const steps = Env.webkit ? [
       Log.stepsAsStep('TBA', 'Paste: Paste span with encoded style attribute, paste_webkit_styles: font-family',

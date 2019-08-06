@@ -11,12 +11,13 @@ import Settings from '../../api/Settings';
 import Utils from '../../core/Utils';
 import { ListOptions } from '../../core/ListOptions';
 import { ListItem } from '../DialogTypes';
+import Editor from 'tinymce/core/api/Editor';
 
-const getRels = (editor, initialTarget: Option<string>): Option<ListItem[]> => {
-  if (Settings.hasRelList(editor.settings)) {
-    const list = Settings.getRelList(editor.settings);
+const getRels = (editor: Editor, initialTarget: Option<string>): Option<ListItem[]> => {
+  const list = Settings.getRelList(editor);
+  if (list.length > 0) {
     const isTargetBlank = initialTarget.is('_blank');
-    const enforceSafe = Settings.allowUnsafeLinkTarget(editor.settings) === false;
+    const enforceSafe = Settings.allowUnsafeLinkTarget(editor) === false;
     const safeRelExtractor = (item) => Utils.applyRelTargetRules(ListOptions.getValue(item), isTargetBlank);
     const sanitizer = enforceSafe ? ListOptions.sanitizeWith(safeRelExtractor) : ListOptions.sanitize;
     return sanitizer(list);

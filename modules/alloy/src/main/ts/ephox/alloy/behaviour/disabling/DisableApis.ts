@@ -2,21 +2,22 @@ import { Arr } from '@ephox/katamari';
 import { Attr, Class, Node } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Stateless } from '../../behaviour/common/BehaviourState';
-import { DisableConfig } from '../../behaviour/disabling/DisableTypes';
+import { DisableConfig } from './DisableTypes';
 
 // Just use "disabled" attribute for these, not "aria-disabled"
 const nativeDisabled = [
   'input',
   'button',
-  'textarea'
+  'textarea',
+  'select'
 ];
 
 const onLoad = (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless): void => {
   if (disableConfig.disabled) { disable(component, disableConfig, disableState); }
 };
 
-const hasNative = (component: AlloyComponent): boolean => {
-  return Arr.contains(nativeDisabled, Node.name(component.element()));
+const hasNative = (component: AlloyComponent, config: DisableConfig): boolean => {
+  return config.useNative === true && Arr.contains(nativeDisabled, Node.name(component.element()));
 };
 
 const nativeIsDisabled = (component: AlloyComponent): boolean => {
@@ -47,20 +48,22 @@ const disable = (component: AlloyComponent, disableConfig: DisableConfig, disabl
   disableConfig.disableClass.each((disableClass) => {
     Class.add(component.element(), disableClass);
   });
-  const f = hasNative(component) ? nativeDisable : ariaDisable;
+  const f = hasNative(component, disableConfig) ? nativeDisable : ariaDisable;
   f(component);
+  disableConfig.onDisabled(component);
 };
 
 const enable = (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless): void => {
   disableConfig.disableClass.each((disableClass) => {
     Class.remove(component.element(), disableClass);
   });
-  const f = hasNative(component) ? nativeEnable : ariaEnable;
+  const f = hasNative(component, disableConfig) ? nativeEnable : ariaEnable;
   f(component);
+  disableConfig.onEnabled(component);
 };
 
-const isDisabled = (component: AlloyComponent): boolean => {
-  return hasNative(component) ? nativeIsDisabled(component) : ariaIsDisabled(component);
+const isDisabled = (component: AlloyComponent, disableConfig: DisableConfig): boolean => {
+  return hasNative(component, disableConfig) ? nativeIsDisabled(component) : ariaIsDisabled(component);
 };
 
 const set = (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless, disabled: boolean) => {

@@ -1,5 +1,5 @@
 import { Element, Insert, Location, Position, Remove, Traverse } from '@ephox/sugar';
-import { SugarPosition } from '../alien/TypeDefinitions';
+import { SugarPosition } from './TypeDefinitions';
 
 /*
  * This returns the position of the offset parent excluding any scroll. That

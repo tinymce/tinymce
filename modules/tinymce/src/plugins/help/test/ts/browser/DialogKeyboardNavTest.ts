@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (succes
   HelpPlugin();
   Theme();
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const doc = Element.fromDom(document);
 
@@ -44,6 +44,15 @@ UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (succes
         sAssertFocusOnItem('Close Button', '.tox-button:contains("Close")'),
         sPressTabKey,
         sAssertFocusOnItem('Handy Shortcuts Tab', '.tox-dialog__body-nav-item:contains("Handy Shortcuts")'),
+        sPressDownArrowKey
+      ]),
+
+      Log.stepsAsStep('TBA', 'Help: test the tab key navigation cycles through all focusable fields in Keyboard Nav tab', [
+        sAssertFocusOnItem('Keyboard Nav Tab', '.tox-dialog__body-nav-item:contains("Keyboard Navigation")'),
+        sPressTabKey,
+        sAssertFocusOnItem('Close Button', '.tox-button:contains("Close")'),
+        sPressTabKey,
+        sAssertFocusOnItem('Keyboard Nav Tab', '.tox-dialog__body-nav-item:contains("Keyboard Navigation")'),
         sPressDownArrowKey
       ]),
 

@@ -5,7 +5,7 @@ const register = function (name: string, test: (success: () => void, failure: (e
     Global.__tests = [];
   }
 
-  Global.__tests.push({ name: name, test: test });
+  Global.__tests.push({ name, test });
 };
 
 const asynctest = function (name: string, test: (success: () => void, failure: (err) => void) => void) {
@@ -29,7 +29,7 @@ const domtest = function (name: string, test: () => Promise<any>) {
     const promise = test();
 
     if (!(promise instanceof Promise)) {
-      throw 'dom tests must return a promise';
+      throw new Error('dom tests must return a promise');
     }
 
     promise.then(function () {

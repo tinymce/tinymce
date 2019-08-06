@@ -1,4 +1,5 @@
 import { Arr } from '@ephox/katamari';
+
 import * as Behaviour from '../../api/behaviour/Behaviour';
 // Not ideal coupling here.
 import { Positioning } from '../../api/behaviour/Positioning';

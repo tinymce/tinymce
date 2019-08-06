@@ -5,12 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import UpdateHtml from './UpdateHtml';
 
 declare let escape: any;
 declare let unescape: any;
 
-const setup = function (editor) {
+const setup = function (editor: Editor) {
   editor.on('click keyup', function () {
     const selectedNode = editor.selection.getNode();
 
@@ -39,8 +40,8 @@ const setup = function (editor) {
         html = unescape(html);
         target.setAttribute('data-mce-html', escape(
           UpdateHtml.updateHtml(html, {
-            width: e.width,
-            height: e.height
+            width: String(e.width),
+            height: String(e.height)
           })
         ));
       }

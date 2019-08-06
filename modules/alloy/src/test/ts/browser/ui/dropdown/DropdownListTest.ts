@@ -1,6 +1,8 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, Chain, GeneralSteps, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Future, Result, Option } from '@ephox/katamari';
+import { Compare, Focus } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -17,7 +19,6 @@ import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
-import { Compare, Focus } from '@ephox/sugar';
 
 UnitTest.asynctest('Dropdown List', (success, failure) => {
 

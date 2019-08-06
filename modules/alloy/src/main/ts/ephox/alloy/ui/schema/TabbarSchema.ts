@@ -9,7 +9,7 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import { TabButton } from '../../api/ui/TabButton';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
-import { TabbarDetail } from '../../ui/types/TabbarTypes';
+import { TabbarDetail } from '../types/TabbarTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('tabs'),

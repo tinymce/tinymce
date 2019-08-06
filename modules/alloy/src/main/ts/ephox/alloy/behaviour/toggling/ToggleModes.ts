@@ -1,8 +1,9 @@
 import { Objects } from '@ephox/boulder';
 import { Arr, Option } from '@ephox/katamari';
 import { Attr, Node } from '@ephox/sugar';
+
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AriaTogglingConfig } from '../../behaviour/toggling/TogglingTypes';
+import { AriaTogglingConfig } from './TogglingTypes';
 
 const updatePressed = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status): void => {
   Attr.set(component.element(), 'aria-pressed', status);

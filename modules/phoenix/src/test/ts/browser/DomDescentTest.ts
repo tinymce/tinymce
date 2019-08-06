@@ -21,13 +21,13 @@ UnitTest.test('DomDescentTest', function () {
   };
 
   const refs = Obj.map({
-    'div': [],
-    'p': [1],
-    'span': [1].concat([1]),
-    'first': [1, 1].concat([0]),
-    'table': [2],
-    'td': [2, 1, 1, 1],
-    'tdtext': [2, 1, 1, 1, 0]
+    div: [],
+    p: [1],
+    span: [1].concat([1]),
+    first: [1, 1].concat([0]),
+    table: [2],
+    td: [2, 1, 1, 1],
+    tdtext: [2, 1, 1, 1, 0]
   }, toRef);
 
   interface CheckItem {

@@ -10,6 +10,7 @@ import {
   AlloyEvents,
   AlloyTriggers,
   Behaviour,
+  Disabling,
   FormField as AlloyFormField,
   Input as AlloyInput,
   Invalidating,
@@ -18,19 +19,22 @@ import {
   Representing,
   SketchSpec,
   Tabstopping,
-  SystemEvents,
+  SystemEvents
 } from '@ephox/alloy';
+import { Types } from '@ephox/bridge';
 import { Arr, Future, Option, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';
+import { Omit } from '../Omit';
 
-const renderTextField = function (spec: TextFieldFoo, providersBackstage: UiFactoryBackstageProviders) {
+const renderTextField = function (spec: TextField, providersBackstage: UiFactoryBackstageProviders) {
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   const baseInputBehaviours = [
+    Disabling.config({ disabled: spec.disabled }),
     Keying.config({
       mode: 'execution',
       useEnter: spec.multiline !== true,
@@ -86,60 +90,69 @@ const renderTextField = function (spec: TextFieldFoo, providersBackstage: UiFact
   });
 
   const extraClasses = spec.flex ? ['tox-form__group--stretched'] : [];
+  const extraClasses2 = extraClasses.concat(spec.maximized ? ['tox-form-group--maximize'] : []);
 
-  return renderFormFieldWith(pLabel, pField, extraClasses);
+  const extraBehaviours = [
+    Disabling.config({
+      disabled: spec.disabled,
+      onDisabled: (comp) => {
+        AlloyFormField.getField(comp).each(Disabling.disable);
+      },
+      onEnabled: (comp) => {
+        AlloyFormField.getField(comp).each(Disabling.enable);
+      }
+    })
+  ];
+
+  return renderFormFieldWith(pLabel, pField, extraClasses2, extraBehaviours);
 };
 
 export type Validator = (v: string) => true | string;
 
-export interface TextFieldFoo extends BaseTextFieldFoo {
+export interface TextField {
   multiline: boolean;
   name: string;
   classname: string;
   flex: boolean;
-}
-
-export interface BaseTextFieldFoo {
-  name: string;
   label: Option<string>;
   placeholder: Option<string>;
+  disabled: boolean;
   validation: Option<{
     validator: Validator;
     validateOnLoad?: boolean
   }>;
+  maximized: boolean;
 }
 
-// tslint:disable-next-line:no-empty-interface
-export interface InputFoo extends BaseTextFieldFoo {
-  name: string;
-}
+type InputSpec = Omit<Types.Input.Input, 'type'>;
 
-// tslint:disable-next-line:no-empty-interface
-export interface TextareaFoo extends BaseTextFieldFoo {
-  name: string;
-}
+type TextAreaSpec = Omit<Types.TextArea.TextArea, 'type'>;
 
-const renderInput = (spec: InputFoo, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   return renderTextField({
     name: spec.name,
     multiline: false,
     label: spec.label,
     placeholder: spec.placeholder,
     flex: false,
+    disabled: spec.disabled,
     classname: 'tox-textfield',
-    validation: Option.none()
+    validation: Option.none(),
+    maximized: spec.maximized
   }, providersBackstage);
 };
 
-const renderTextarea = (spec: TextareaFoo, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   return renderTextField({
     name: spec.name,
     multiline: true,
     label: spec.label,
     placeholder: spec.placeholder,
     flex: true,
+    disabled: spec.disabled,
     classname: 'tox-textarea',
     validation: Option.none(),
+    maximized: spec.maximized
   }, providersBackstage);
 };
 

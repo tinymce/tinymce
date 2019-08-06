@@ -1,6 +1,6 @@
 import { Cell, Fun, Option } from '@ephox/katamari';
 
-import { BehaviourState, nuState } from '../common/BehaviourState';
+import { nuState } from '../common/BehaviourState';
 import { FlatgridState } from '../../keying/KeyingModeTypes';
 
 const flatgrid = (spec): FlatgridState => {
@@ -33,11 +33,11 @@ const flatgrid = (spec): FlatgridState => {
         return {
           numRows: d.numRows(),
           numColumns: d.numColumns()
-        }
+        };
       }).getOr({
         numRows: '?',
         numColumns: '?'
-      })
+      });
     },
     setGridSize,
     getNumRows,

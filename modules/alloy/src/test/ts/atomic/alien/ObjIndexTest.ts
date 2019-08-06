@@ -1,6 +1,7 @@
 import { Logger, RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Obj } from '@ephox/katamari';
+
 import * as ObjIndex from 'ephox/alloy/alien/ObjIndex';
 
 UnitTest.test('ObjIndexTest', () => {

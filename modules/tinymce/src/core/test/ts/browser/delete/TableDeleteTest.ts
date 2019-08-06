@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', (success, fail
     return Keyboard.sKeystroke(Element.fromDom(editor.getDoc()), Keys.backspace(), {});
   };
 
-  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

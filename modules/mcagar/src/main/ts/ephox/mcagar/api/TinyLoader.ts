@@ -1,6 +1,6 @@
 import { console, document, setTimeout } from '@ephox/dom-globals';
-import { Fun, Global, Id, Merger, Type, Strings } from '@ephox/katamari';
-import { Attr, Element, Insert, Remove } from '@ephox/sugar';
+import { Arr, Fun, Global, Id, Merger, Strings, Type } from '@ephox/katamari';
+import { Attr, Element, Insert, Remove, SelectorFilter } from '@ephox/sugar';
 import 'tinymce';
 import { setTinymceBaseUrl } from '../loader/Urls';
 
@@ -13,6 +13,27 @@ const createTarget = function (inline: boolean) {
   return target;
 };
 
+const removeTinymceElements = () => {
+  // NOTE: Don't remove the link/scripts added, as those are part of the global tinymce which we don't clean up
+  const elements = Arr.flatten([
+    // Some older versions of tinymce leaves elements behind in the dom
+    SelectorFilter.all('.mce-notification,.mce-window,#mce-modal-block'),
+    // TinyMCE leaves inline editor content_styles in the dom
+    SelectorFilter.children(Element.fromDom(document.head), 'style')
+  ]);
+
+  Arr.each(elements, Remove.remove);
+};
+
+const setupLight = (callback: SetupCallback, settings: Record<string, any>, success: SuccessCallback, failure: FailureCallback) => {
+  const nuSettings = Merger.merge({
+    toolbar: '',
+    menubar: false,
+    statusbar: false
+  }, settings);
+  setup(callback, nuSettings, success, failure);
+};
+
 const setup = (callback: SetupCallback, settings: Record<string, any>, success: SuccessCallback, failure: FailureCallback) => {
   const target = createTarget(settings.inline);
   const randomId = Id.generate('tiny-loader');
@@ -23,6 +44,7 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
   const teardown = () => {
     tinymce.remove();
     Remove.remove(target);
+    removeTinymceElements();
   };
 
   // Agar v. ??? supports logging
@@ -35,6 +57,7 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
 
   // Agar v. ??? supports logging
   const onFailure = (err: Error | string, logs) => {
+    // tslint:disable-next-line:no-console
     console.log('Tiny Loader error: ', err);
     // Do no teardown so that the failed test still shows the editor. Important for selection
     failure(err, logs);
@@ -43,8 +66,9 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
   const settingsSetup = settings.setup !== undefined ? settings.setup : Fun.noop;
 
   const tinymce = Global.tinymce;
-  if (!tinymce) failure('Failed to get global tinymce instance');
-  else {
+  if (!tinymce) {
+    failure('Failed to get global tinymce instance');
+  } else {
     if (settings.base_url) {
       setTinymceBaseUrl(tinymce, settings.base_url);
     } else if (!Type.isString(tinymce.baseURL) || !Strings.contains(tinymce.baseURL, '/project/')) {
@@ -53,12 +77,12 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
 
     tinymce.init(Merger.merge(settings, {
       selector: '#' + randomId,
-      setup: function(editor) {
+      setup (editor) {
         // Execute the setup called by the test.
         settingsSetup(editor);
 
         editor.on('SkinLoaded', function () {
-          setTimeout(function() {
+          setTimeout(function () {
             callback(editor, onSuccess, onFailure);
           }, 0);
         });
@@ -68,5 +92,6 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
 };
 
 export default {
-  setup
+  setup,
+  setupLight
 };

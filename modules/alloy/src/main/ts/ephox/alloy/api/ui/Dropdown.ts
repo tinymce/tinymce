@@ -5,8 +5,6 @@ import { SugarEvent } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import * as TieredMenu from '../../api/ui/TieredMenu';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import { SimulatedEvent } from '../../events/SimulatedEvent';
 import * as ButtonBase from '../../ui/common/ButtonBase';
@@ -18,8 +16,10 @@ import { Keying } from '../behaviour/Keying';
 import { Sandboxing } from '../behaviour/Sandboxing';
 import { Toggling } from '../behaviour/Toggling';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import * as Sketcher from './Sketcher';
 import * as SystemEvents from '../events/SystemEvents';
+import * as Sketcher from './Sketcher';
+import * as TieredMenu from './TieredMenu';
+import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec => {
   const lookupAttr = (attr: string): Option<string> => {

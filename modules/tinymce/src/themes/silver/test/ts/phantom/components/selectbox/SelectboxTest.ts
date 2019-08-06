@@ -7,6 +7,7 @@ import { renderSelectBox } from 'tinymce/themes/silver/ui/dialog/SelectBox';
 import { DomSteps } from '../../../module/DomSteps';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 import TestProviders from '../../../module/TestProviders';
+import { DisablingSteps } from '../../../module/DisablingSteps';
 
 UnitTest.asynctest('Selectbox component Test', (success, failure) => {
 
@@ -21,10 +22,10 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
     (store, doc, body) => {
       return GuiFactory.build(
         renderSelectBox({
-          type: 'selectbox',
           name: 'selector',
           size: 1,
           label: Option.some('selector'),
+          disabled: false,
           items: [
             { value: 'one', text: 'One' },
             { value: 'two', text: 'Two' },
@@ -75,7 +76,12 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
 
         RepresentingSteps.sSetValue('Choosing three', component, 'three'),
         DomSteps.sAssertValue('After setting "three"', 'three', component, 'select'),
-        RepresentingSteps.sAssertComposedValue('Checking is three', 'three', component)
+        RepresentingSteps.sAssertComposedValue('Checking is three', 'three', component),
+
+        // Disabling state
+        DisablingSteps.sAssertDisabled('Initial disabled state', false, component),
+        DisablingSteps.sSetDisabled('set disabled', component, true),
+        DisablingSteps.sAssertDisabled('enabled > disabled', true, component)
       ];
     },
     success,

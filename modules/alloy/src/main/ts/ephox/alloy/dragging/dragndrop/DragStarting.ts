@@ -1,15 +1,16 @@
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { DataTransfer } from '@ephox/dom-globals';
+import { Fun } from '@ephox/katamari';
+import { Element, Traverse, Body } from '@ephox/sugar';
+
+import { SugarEvent } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as DomModification from '../../dom/DomModification';
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
-import { Element, Traverse, Body } from '@ephox/sugar';
-import { DataTransfer } from '@ephox/dom-globals';
 import * as DataTransfers from './DataTransfers';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { setImageClone } from './ImageClone';
 import { DragStartingConfig } from './DragnDropTypes';
-import { SugarEvent } from '../../alien/TypeDefinitions';
+import { setImageClone } from './ImageClone';
 
 const dragStart = (component: AlloyComponent, target: Element, config: DragStartingConfig, transfer: DataTransfer) => {
   DataTransfers.setEffectAllowed(transfer, config.effectAllowed);

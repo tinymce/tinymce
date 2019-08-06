@@ -26,7 +26,7 @@
 @dialog-footer-padding: @pad-sm @pad-md;
 @dialog-footer-separator-border: 1px solid @dialog-border-color;
 
-@dialog-body-padding: 0 @pad-md;
+@dialog-body-padding: @pad-md @pad-md;
 
 @dialog-title-font-family: @font-stack;
 @dialog-title-font-size: @font-size-lg;
@@ -44,7 +44,19 @@
 @dialog-body-text-color: @text-color;
 @dialog-body-text-transform: normal;
 
+@dialog-body-link-color: @color-tint;
+@dialog-body-link-text-decoration: none;
+@dialog-body-link-hover-color: darken(@color-tint, 10%);
+@dialog-body-link-hover-text-decoration: none;
+@dialog-body-link-active-color: darken(@color-tint, 10%);
+@dialog-body-link-active-text-decoration: none;
+
 @dialog-table-border-color: @border-color;
+
+// These get stacked on top of the global dialog z-index (1100)
+@z-index-dialogs-offset-wrap-background: 1;
+@z-index-dialogs-offset-dialog: 2;
+@z-index-dialogs-offset-busy-spinner: 3;
 
 .tox {
   .tox-dialog-wrap {
@@ -66,7 +78,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    z-index: @z-index-dialogs + 1;
+    z-index: @z-index-dialogs-offset-wrap-background;
   }
 
   .tox-dialog {
@@ -83,13 +95,20 @@
     overflow: hidden;
     position: relative;
     width: 95vw;
-    z-index: @z-index-dialogs + 2;
+    z-index: @z-index-dialogs-offset-dialog;
 
     @media @breakpoint-sm {
-      align-self: flex-start;
-      margin: @pad-sm auto;
-      width: calc(100vw - @pad-md);
+      body:not(.tox-force-desktop) & {
+        align-self: flex-start;
+        margin: @pad-sm auto;
+        width: calc(100vw - @pad-md);
+      }
     }
+  }
+
+  // This is needed for inline dialogs, since they don't use the wrapper/backdrop
+  .tox-dialog-inline {
+    z-index: @z-index-dialogs;
   }
 
   .tox-dialog__header {
@@ -100,7 +119,6 @@
     display: flex;
     font-size: @font-size-base;
     justify-content: space-between;
-    margin-bottom: @pad-md;
     padding: @dialog-header-padding;
     position: relative;
   }
@@ -146,12 +164,13 @@
     font-weight: @dialog-body-font-weight;
     line-height: @dialog-body-line-height;
     min-width: 0;
-    padding: @dialog-body-padding;
     text-align: @dialog-body-text-align;
     text-transform: @dialog-body-text-transform;
 
     @media @breakpoint-sm {
-      flex-direction: column;
+      body:not(.tox-force-desktop) & {
+        flex-direction: column;
+      }
     }
   }
 
@@ -159,12 +178,15 @@
     align-items: flex-start;
     display: flex;
     flex-direction: column;
+    padding: @dialog-body-padding;
 
     @media @breakpoint-sm {
-      flex-direction: row;
-      margin-bottom: @pad-sm;
-      -webkit-overflow-scrolling: touch;
-      overflow-x: auto;
+      body:not(.tox-force-desktop) & {
+        flex-direction: row;
+        -webkit-overflow-scrolling: touch;
+        overflow-x: auto;
+        padding-bottom: 0;
+      }
     }
   }
 
@@ -185,6 +207,7 @@
   }
 
   .tox-dialog__body-content {
+    box-sizing: border-box;
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -192,6 +215,7 @@
     max-height: 650px; // TODO (verify max-height for dialogs)
     overflow: auto; //overflow controls all scrolling in the dialogs
     -webkit-overflow-scrolling: touch;
+    padding: @dialog-body-padding;
 
     > * {
       margin-bottom: 0;
@@ -207,6 +231,69 @@
     }
 
     > *:only-child {
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+
+    a {
+      color: @dialog-body-link-color;
+      cursor: pointer;
+      text-decoration: @dialog-body-link-text-decoration;
+
+      &:hover,
+      &:focus {
+        color: @dialog-body-link-hover-color;
+        text-decoration: @dialog-body-link-hover-text-decoration;
+      }
+
+      &:active {
+        color: @dialog-body-link-active-color;
+        text-decoration: @dialog-body-link-active-text-decoration;
+      }
+    }
+
+    ul {
+      display: block;
+      list-style-type: disc;
+      margin-bottom: @pad-md;
+      margin-inline-end: 0;
+      margin-inline-start: 0;
+      padding-inline-start: 2.5rem;
+    }
+
+    .tox-form__group h1 {
+      font-size: @font-size-lg;
+      font-weight: bold;
+      margin-bottom: @pad-md;
+      margin-top: 2rem;
+    }
+
+    .tox-form__group h2 {
+      font-size: @font-size-md;
+      font-weight: bold;
+      margin-bottom: @pad-md;
+      margin-top: 2rem;
+    }
+
+    .tox-form__group p {
+      margin-bottom: @pad-md;
+    }
+
+    .tox-form__group h1:first-child,
+    .tox-form__group h2:first-child,
+    .tox-form__group p:first-child {
+      margin-top: 0;
+    }
+
+    .tox-form__group h1:last-child,
+    .tox-form__group h2:last-child,
+    .tox-form__group p:last-child {
+      margin-bottom: 0;
+    }
+
+    .tox-form__group h1:only-child,
+    .tox-form__group h2:only-child,
+    .tox-form__group p:only-child {
       margin-bottom: 0;
       margin-top: 0;
     }
@@ -231,19 +318,18 @@
     text-align: center;
   }
 
-  // Add more whitespace around body content
-  .tox-dialog__body-content--spacious {
-    margin-bottom: @pad-md;
-  }
-
   .tox-dialog__footer {
     align-items: center;
     background-color: @dialog-footer-background-color;
     border-top: @dialog-footer-separator-border;
     display: flex;
     justify-content: space-between;
-    margin-top: @pad-md;
     padding: @dialog-footer-padding;
+  }
+
+  .tox-dialog__footer-start,
+  .tox-dialog__footer-end {
+    display: flex;
   }
 
   // Make a dialog disabled for user input
@@ -257,7 +343,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    z-index: @z-index-dialogs + 3;
+    z-index: @z-index-dialogs-offset-busy-spinner;
   }
 
   // the blocking div for dialogs
@@ -336,17 +422,21 @@ body.tox-dialog__disable-scroll {
 
 .tox:not([dir=rtl]) {
   .tox-dialog__body-nav {
-    margin-right: @pad-xl;
 
     @media @breakpoint-sm {
-      margin-right: 0;
+      body:not(.tox-force-desktop) & {
+        margin-right: 0;
+      }
     }
   }
 
   .tox-dialog__body-nav-item {
-    @media @breakpoint-sm { /* stylelint-disable-line */
-      &:not(:first-child) {
-        margin-left: @pad-sm;
+
+    @media @breakpoint-sm {
+      body:not(.tox-force-desktop) & {
+        &:not(:first-child) {
+          margin-left: @pad-sm;
+        }
       }
     }
   }
@@ -368,17 +458,21 @@ body.tox-dialog__disable-scroll {
   }
 
   .tox-dialog__body-nav {
-    margin-left: @pad-xl;
 
     @media @breakpoint-sm {
-      margin-left: 0;
+      body:not(.tox-force-desktop) & {
+        margin-left: 0;
+      }
     }
   }
 
   .tox-dialog__body-nav-item {
-    @media @breakpoint-sm { /* stylelint-disable-line */
-      &:not(:first-child) {
-        margin-right: @pad-sm;
+
+    @media @breakpoint-sm {
+      body:not(.tox-force-desktop) & {
+        &:not(:first-child) {
+          margin-right: @pad-sm;
+        }
       }
     }
   }

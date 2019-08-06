@@ -8,7 +8,8 @@ export default {
       {
         name: 'char',
         type: 'collection',
-        columns: 'auto'
+        // TODO TINY-3229 implement collection columns properly
+        // columns: 'auto'
       }
     ]
   },

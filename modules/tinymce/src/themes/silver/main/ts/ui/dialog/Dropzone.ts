@@ -33,6 +33,7 @@ import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formChangeEvent } from '../general/FormEvents';
+import { Omit } from '../Omit';
 
 const extensionsAccepted = '.jpg,.jpeg,.png,.gif';
 
@@ -41,7 +42,9 @@ const filterByExtension = function (files: FileList) {
   return Arr.filter(Arr.from(files), (file) => re.test(file.name));
 };
 
-export const renderDropZone = (spec: Types.DropZone.DropZone, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
+type DropZoneSpec = Omit<Types.DropZone.DropZone, 'type'>;
+
+export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
 
   // TODO: Consider moving to alloy
   const stopper: AlloyEvents.EventRunHandler<SugarEvent> = (_: AlloyComponent, se: SimulatedEvent<SugarEvent>): void => {
@@ -162,5 +165,5 @@ export const renderDropZone = (spec: Types.DropZone.DropZone, providersBackstage
     factory: { sketch: renderField }
   });
 
-  return renderFormFieldWith(pLabel, pField, ['tox-form__group--stretched']);
+  return renderFormFieldWith(pLabel, pField, ['tox-form__group--stretched'], [ ]);
 };

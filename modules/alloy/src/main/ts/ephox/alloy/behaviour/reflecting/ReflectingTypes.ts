@@ -1,15 +1,16 @@
-import * as Behaviour from '../../api/behaviour/Behaviour';
-import { AlloySpec } from '../../api/component/SpecTypes';
 import { Option } from '@ephox/katamari';
-import { BehaviourState } from '../../behaviour/common/BehaviourState';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 
-export interface ReflectingBehaviour<I,S> extends Behaviour.AlloyBehaviour<ReflectingConfigSpec<I,S>, ReflectingConfig<I,S>> {
-  config: (config: ReflectingConfigSpec<I,S>) => Behaviour.NamedConfiguredBehaviour<ReflectingConfigSpec<I,S>, ReflectingConfig<I,S>>;
+import * as Behaviour from '../../api/behaviour/Behaviour';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { AlloySpec } from '../../api/component/SpecTypes';
+import { BehaviourState } from '../../behaviour/common/BehaviourState';
+
+export interface ReflectingBehaviour<I, S> extends Behaviour.AlloyBehaviour<ReflectingConfigSpec<I, S>, ReflectingConfig<I, S>> {
+  config: (config: ReflectingConfigSpec<I, S>) => Behaviour.NamedConfiguredBehaviour<ReflectingConfigSpec<I, S>, ReflectingConfig<I, S>>;
   getState: (comp: AlloyComponent) => ReflectingState<S>;
 }
 
-export interface ReflectingConfigSpec<I,S> extends Behaviour.BehaviourConfigSpec {
+export interface ReflectingConfigSpec<I, S> extends Behaviour.BehaviourConfigSpec {
   channel: string;
   renderComponents?: (data: I, state: Option<S>) => AlloySpec[ ];
   updateState?: (comp: AlloyComponent, data: I) => Option<S>;

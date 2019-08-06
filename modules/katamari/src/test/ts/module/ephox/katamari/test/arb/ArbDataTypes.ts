@@ -26,14 +26,13 @@ export const resultValue = Jsc.string.smap(function (e) {
 
 export const result = Jsc.oneof([ resultError, resultValue ]);
 
-
 const genFutureResultSchema = result.generator.map(function (result) {
   const futureResult = FutureResult.nu(function (callback) {
     callback(result);
   });
 
   return {
-    futureResult: futureResult,
+    futureResult,
     contents: result
   };
 });
@@ -51,7 +50,6 @@ export const futureResult  = Jsc.bless({
 export const futureResultSchema = Jsc.bless({
   generator: genFutureResultSchema
 });
-
 
 export const optionNone = Jsc.constant(Option.none());
 export const optionSome = Jsc.json.smap(function (v) {

@@ -1,21 +1,17 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
+import { AlloyComponent } from '../api/component/ComponentApi';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import * as DomMovement from '../navigation/DomMovement';
 import * as DomNavigation from '../navigation/DomNavigation';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
+import { KeyRuleHandler, MenuConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
-import { KeyRuleHandler, MenuConfig } from '../keying/KeyingModeTypes';
-
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { SugarEvent } from '../alien/TypeDefinitions';
-import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../events/SimulatedEvent';
-import { AlloyEventHandler } from '../api/events/AlloyEvents';
 
 const schema = [
   FieldSchema.strict('selector'),
@@ -65,4 +61,4 @@ const getKeyupRules = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
 ]);
 
-export default KeyingType.typical(schema, NoState.init, getKeydownRules,getKeyupRules, () => Option.some(focusIn));
+export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Option.some(focusIn));

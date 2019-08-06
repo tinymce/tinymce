@@ -7,7 +7,7 @@ import { Dragging } from '../api/behaviour/Dragging';
 import { Pinching } from '../api/behaviour/Pinching';
 import { Toggling } from '../api/behaviour/Toggling';
 import * as CompBehaviours from '../api/component/CompBehaviours';
-import { Dispatcher, DispatchedAlloyConfig } from '../api/system/ForeignGui';
+import { DispatchedAlloyConfig } from '../api/system/ForeignGui';
 import * as BehaviourBlob from '../behaviour/common/BehaviourBlob';
 import * as ComponentEvents from '../construct/ComponentEvents';
 

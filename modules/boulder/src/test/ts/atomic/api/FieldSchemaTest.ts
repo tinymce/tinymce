@@ -12,7 +12,7 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', function () {
     ]);
 
     ValueSchema.asRaw('spec', schema, input).fold(
-      (err) => { throw err },
+      (err) => { throw err; },
       (value) => RawAssertions.assertEq(label, expected, value)
     );
   };

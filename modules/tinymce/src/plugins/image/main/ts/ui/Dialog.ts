@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { File } from '@ephox/dom-globals';
+import { File, URL } from '@ephox/dom-globals';
 import { Arr, FutureResult, Option, Type, Merger } from '@ephox/katamari';
-import { URL } from '@ephox/sand';
 
 import Editor from 'tinymce/core/api/Editor';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';

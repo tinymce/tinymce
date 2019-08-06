@@ -7,7 +7,7 @@ import * as Attachment from '../../api/system/Attachment';
 import { ReceivingEvent } from '../../events/SimulatedEvent';
 import { ReflectingConfig, ReflectingState } from './ReflectingTypes';
 
-const events = <I,S>(reflectingConfig: ReflectingConfig<I,S>, reflectingState: ReflectingState<S>) => {
+const events = <I, S>(reflectingConfig: ReflectingConfig<I, S>, reflectingState: ReflectingState<S>) => {
   const update = (component: AlloyComponent, data: I) => {
     reflectingConfig.updateState.each((updateState) => {
       const newState = updateState(component, data);
@@ -20,10 +20,9 @@ const events = <I,S>(reflectingConfig: ReflectingConfig<I,S>, reflectingState: R
       Attachment.detachChildren(component);
       Arr.each(newComponents, (c) => {
         Attachment.attach(component, component.getSystem().build(c));
-      })
+      });
     });
-  }
-
+  };
 
   return AlloyEvents.derive([
 
@@ -37,7 +36,7 @@ const events = <I,S>(reflectingConfig: ReflectingConfig<I,S>, reflectingState: R
     AlloyEvents.runOnAttached((comp, se) => {
       reflectingConfig.initialData.each((rawData) => {
         update(comp, rawData);
-      })
+      });
     })
   ]);
 };

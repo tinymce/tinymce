@@ -1,12 +1,12 @@
 import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, Truncate, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Result } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 import { Attr, Compare, Element, Html, Insert, SelectorFilter } from '@ephox/sugar';
+
 import * as DescribedHandler from 'ephox/alloy/events/DescribedHandler';
 import EventRegistry from 'ephox/alloy/events/EventRegistry';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('EventRegistryTest', (success, failure) => {
   const body = Element.fromDom(document.body);
@@ -74,7 +74,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
         if (f.id < g.id) { return -1; } else if (f.id > g.id) { return +1; } else { return 0; }
       });
 
-      Assertions.assertEq('filter(' + type + ') = ' + Json.stringify(expected), expected, raw);
+      Assertions.assertEq('filter(' + type + ') = ' + JSON.stringify(expected), expected, raw);
     });
   };
 
@@ -90,7 +90,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
               return Result.value({ });
             }, (h) => {
               return Result.error(
-                'Unexpected handler found: ' + Json.stringify({
+                'Unexpected handler found: ' + JSON.stringify({
                   element: Truncate.getHtml(h.element()),
                   // INVESTIGATE: Should this have changed?
                   handler: h.descHandler()
@@ -129,7 +129,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
               Attr.get(section.element(), 'data-test-uid')
             );
             Assertions.assertEq(
-              'find(' + type + ', ' + id + ') = ' + Json.stringify(expected.handler),
+              'find(' + type + ', ' + id + ') = ' + JSON.stringify(expected.handler),
               expected.handler,
               section.descHandler().cHandler()
             );

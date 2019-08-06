@@ -1,8 +1,9 @@
 import { Chain, Guard, Mouse, NamedChain, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Option, Result } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 import { Css, Position } from '@ephox/sugar';
+
+import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -17,9 +18,10 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
     Container.sketch({
       dom: {
         styles: {
-          width: '100px',
-          height: '100px',
-          border: '1px solid green'
+          'box-sizing': 'border-box',
+          'width': '100px',
+          'height': '100px',
+          'border': '1px solid green'
         }
       },
       containerBehaviours: Behaviour.derive([
@@ -38,7 +40,8 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
             },
             leftAttr: 'data-snap-left',
             topAttr: 'data-snap-top'
-          }
+          },
+          getBounds: () => Boxes.bounds(0, 0, 500, 500)
         })
       ])
     })
@@ -62,7 +65,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
       Chain.binder((all: any) => {
         return all.box_position1.left !== all.box_position2.left &&
           all.box_position2.left !== all.box_position3.left ? Result.value({}) :
-          Result.error('Positions did not change.\nPosition data: ' + Json.stringify({
+          Result.error('Positions did not change.\nPosition data: ' + JSON.stringify({
             1: all.box_position1,
             2: all.box_position2,
             3: all.box_position3
@@ -70,16 +73,35 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
       }),
       Guard.addLogging('Ensuring that the position information read from the different stages was different')
     );
+    const cEnsureBound = Chain.control(
+      Chain.binder((all: any) => {
+        const boundLeft = all.box_position4.left !== all.box_position5.left &&
+          all.box_position5.left === all.box_position6_bound.left &&
+          all.box_position5.left === '0px';
+        const boundRight = all.box_position6_bound.left !== all.box_position7.left &&
+          all.box_position7.left === all.box_position8_bound.left &&
+          all.box_position7.left === '400px';
+        return boundLeft && boundRight ? Result.value({}) :
+          Result.error('Dragging should have been restricted to the bounds.\nPosition data: ' + JSON.stringify({
+            1: all.box_position4,
+            2: all.box_position5,
+            3: all.box_position6_bound,
+            4: all.box_position7,
+            5: all.box_position8_bound
+          }, null, 2));
+      }),
+      Guard.addLogging('Checking bounding behaviour at left of screen')
+    );
     const cEnsurePinned = Chain.control(
       Chain.binder((all: any) => {
-        const pinned = all.box_position4.top !== all.box_position5_pinned.top &&
-          all.box_position5_pinned.top === all.box_position6_pinned.top &&
-          all.box_position5_pinned.top === '10px';
+        const pinned = all.box_position9.top !== all.box_position10_pinned.top &&
+          all.box_position10_pinned.top === all.box_position11_pinned.top &&
+          all.box_position10_pinned.top === '10px';
         return pinned ? Result.value({ }) : Result.error(
-          'Box should only have been pinned at 2 and 3 at top: 10px. Positions: ' + Json.stringify({
-            1: all.box_position4,
-            2: all.box_position5_pinned,
-            3: all.box_position6_pinned
+          'Box should only have been pinned at 2 and 3 at top: 10px. Positions: ' + JSON.stringify({
+            1: all.box_position9,
+            2: all.box_position10_pinned,
+            3: all.box_position11_pinned
           }, null, 2)
         );
       }),
@@ -104,6 +126,26 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
       )
     ]);
 
+    const cReset = Chain.fromChains([
+      NamedChain.direct('blocker', Mouse.cMouseUp, '_'),
+      NamedChain.direct('container', Chain.control(
+        UiFinder.cFindIn('.test-blocker'),
+        Guard.tryUntilNot('There should no longer be a blocker', 100, 100)
+      ), 'blocker'),
+
+      // When testing bounds/pinning, we need every browser to behave identically, so we reset positions
+      // so we know what we are dealing with
+      NamedChain.direct('box', Chain.op((elem) => {
+        Css.setAll(elem, {
+          left: '50px',
+          top: '100px'
+        });
+      }), '_'),
+
+      NamedChain.direct('box', Mouse.cMouseDown, '_'),
+      NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
+    ]);
+
     return [
       Chain.asStep({}, [
         NamedChain.asChain([
@@ -122,33 +164,33 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
           NamedChain.direct('box', cRecordPosition, 'box_position3'),
           NamedChain.write('_', cEnsurePositionChanged),
 
-          NamedChain.direct('blocker', Mouse.cMouseUp, '_'),
-          NamedChain.direct('container', Chain.control(
-            UiFinder.cFindIn('.test-blocker'),
-            Guard.tryUntilNot('There should no longer be a blocker', 100, 100)
-          ), 'blocker'),
+          cReset,
 
-          // When testing pinning, we need every browser to behave identically, so we reset positions
-          // so we know what we are dealing with
-          NamedChain.direct('box', Chain.op((elem) => {
-            Css.setAll(elem, {
-              left: '50px',
-              top: '100px'
-            });
-          }), '_'),
+          // Test bounds
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 200), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 200), '_'),
+          NamedChain.direct('box', cRecordPosition, 'box_position4'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(0, 200), '_'),
+          NamedChain.direct('box', cRecordPosition, 'box_position5'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(-50, 200), '_'),
+          NamedChain.direct('box', cRecordPosition, 'box_position6_bound'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(400, 200), '_'),
+          NamedChain.direct('box', cRecordPosition, 'box_position7'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(500, 200), '_'),
+          NamedChain.direct('box', cRecordPosition, 'box_position8_bound'),
+          NamedChain.write('_', cEnsureBound),
 
-          NamedChain.direct('box', Mouse.cMouseDown, '_'),
-          NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
+          cReset,
 
           // Test pinning.
           NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 100), '_'),
           NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 100), '_'),
           NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 60), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position4'),
+          NamedChain.direct('box', cRecordPosition, 'box_position9'),
           NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 30), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position5_pinned'),
+          NamedChain.direct('box', cRecordPosition, 'box_position10_pinned'),
           NamedChain.direct('blocker', Mouse.cMouseMoveTo(160, 20), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position6_pinned'),
+          NamedChain.direct('box', cRecordPosition, 'box_position11_pinned'),
           NamedChain.write('_', cEnsurePinned),
 
           Chain.wait(10),

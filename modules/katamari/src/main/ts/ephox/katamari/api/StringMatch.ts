@@ -4,14 +4,14 @@ type StringMapper = (str: string) => string;
 
 export interface StringMatch extends Adt {
   fold: <T>(
-    starts:(value: string, f: StringMapper) => T,
+    starts: (value: string, f: StringMapper) => T,
     pattern: (regex: RegExp, f: StringMapper) => T,
     contains: (value: string, f: StringMapper) => T,
     exact: (value: string, f: StringMapper) => T,
     all: () => T,
     not: (other: StringMatch) => T
   ) => T;
-};
+}
 
 const adt = Adt.generate<{
   starts: (value: string, f: StringMapper) => StringMatch;
@@ -56,7 +56,7 @@ const matches = function (subject: StringMatch, str: string): boolean {
 
 const cata = function <T>(
   subject: StringMatch,
-  s:(value: string, f: StringMapper) => T,
+  s: (value: string, f: StringMapper) => T,
   p: (regex: RegExp, f: StringMapper) => T,
   c: (value: string, f: StringMapper) => T,
   e: (value: string, f: StringMapper) => T,
@@ -73,8 +73,8 @@ export const StringMatch = {
   exact: adt.exact,
   all: adt.all,
   not: adt.not,
-  cata: cata,
-  matches: matches,
-  caseSensitive: caseSensitive,
-  caseInsensitive: caseInsensitive
+  cata,
+  matches,
+  caseSensitive,
+  caseInsensitive
 };

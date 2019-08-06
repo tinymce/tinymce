@@ -22,7 +22,7 @@ const osx = 'OSX';
 const solaris = 'Solaris';
 const freebsd = 'FreeBSD';
 
-// Though there is a bit of dupe with this and Browser, trying to 
+// Though there is a bit of dupe with this and Browser, trying to
 // reuse code makes it much harder to follow and change.
 const isOS = function (name: string, current: string) {
   return function () {
@@ -42,8 +42,8 @@ const nu = function (info: UaString): OperatingSystem {
   const version = info.version;
 
   return {
-    current: current,
-    version: version,
+    current,
+    version,
 
     isWindows: isOS(windows, current),
     // TODO: Fix capitalisation
@@ -57,8 +57,8 @@ const nu = function (info: UaString): OperatingSystem {
 };
 
 export const OperatingSystem = {
-  unknown: unknown,
-  nu: nu,
+  unknown,
+  nu,
 
   windows: Fun.constant(windows),
   ios: Fun.constant(ios),

@@ -1,5 +1,4 @@
 import { Merger, Obj } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 import { Attr, Css, InsertAll } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 
@@ -21,10 +20,13 @@ const flattenTag = function (tag) {
 };
 
 const conform = function (detail) {
-  if (detail.tags !== undefined) return detail;
-  else return Merger.deepMerge(detail, {
-    tags: flattenTag(detail.tag)
-  });
+  if (detail.tags !== undefined) {
+    return detail;
+  } else {
+    return Merger.deepMerge(detail, {
+      tags: flattenTag(detail.tag)
+    });
+  }
 };
 
 const addDecorations = function (detail, element) {
@@ -54,7 +56,7 @@ export default function (construct) {
     const tags = toTags(conform(detail));
 
     const generator = WeightedChoice.generator(tags).flatMap(function (choiceOption) {
-      const choice = choiceOption.getOrDie('Every entry in tags for: ' + Json.stringify(detail) + ' must have a tag');
+      const choice = choiceOption.getOrDie('Every entry in tags for: ' + JSON.stringify(detail) + ' must have a tag');
       return childGenerator.flatMap(function (children) {
         const parent = makeTag(choice);
         InsertAll.append(parent, children);
@@ -64,9 +66,9 @@ export default function (construct) {
     });
 
     return Jsc.bless({
-      generator: generator,
+      generator,
       shrink: Jsc.shrink.noop,
-      show: show
+      show
     });
   };
 
@@ -76,7 +78,6 @@ export default function (construct) {
       return combine(detail, childGenerator);
     };
   };
-
 
   const leaf = function (detail) {
     return function (_) {
@@ -98,9 +99,9 @@ export default function (construct) {
   };
 
   return {
-    arbitrary: arbitrary,
-    leaf: leaf,
-    structure: structure,
-    composite: composite
+    arbitrary,
+    leaf,
+    structure,
+    composite
   };
-};
+}

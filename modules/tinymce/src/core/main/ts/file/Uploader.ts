@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { FormData } from '@ephox/dom-globals';
+import { FormData, XMLHttpRequest } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
-import { XMLHttpRequest } from '@ephox/sand';
 import Promise from '../api/util/Promise';
 import Tools from '../api/util/Tools';
 import { BlobInfo } from '../api/file/BlobCache';
@@ -59,7 +58,7 @@ export function Uploader(uploadStatus, settings): Uploader {
   const defaultHandler: UploadHandler = function (blobInfo, success, failure, progress) {
     let xhr, formData;
 
-    xhr = XMLHttpRequest();
+    xhr = new XMLHttpRequest();
     xhr.open('POST', settings.url);
     xhr.withCredentials = settings.credentials;
 

@@ -1,4 +1,5 @@
 import { Assertions, Chain, Step } from '@ephox/agar';
+
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 

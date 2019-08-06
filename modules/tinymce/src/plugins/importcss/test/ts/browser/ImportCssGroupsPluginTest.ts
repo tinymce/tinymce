@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
   Theme();
 
   const sTestEditorWithSettings = (assertions, pluginSettings) => Step.async((onStepSuccess, onStepFailure) => {
-    TinyLoader.setup((editor, onSuccess, onFailure) => {
+    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
       const doc = Element.fromDom(document);
 
       const tinyUi = TinyUi(editor);
@@ -130,6 +130,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
               title: 'Advanced',
               filter: /.adv/,
               selector_converter: (selector, group) => {
+                // tslint:disable-next-line:no-console
                 console.log('selector', selector, 'group', group);
                 return {
                   title: selector + '.AdvGroup',

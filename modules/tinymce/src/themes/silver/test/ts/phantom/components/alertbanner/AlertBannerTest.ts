@@ -22,7 +22,8 @@ UnitTest.asynctest('AlertBanner component Test', (success, failure) => {
           level: 'warn',
           text: 'I am a banner',
           icon: 'helpA',
-          actionLabel: 'Go'
+          iconTooltip: 'Go',
+          url: ''
         }, providers)
       );
     },

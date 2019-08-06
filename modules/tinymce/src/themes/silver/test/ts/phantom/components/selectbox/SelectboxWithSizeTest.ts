@@ -14,10 +14,10 @@ UnitTest.asynctest('Selectbox with size component Test', (success, failure) => {
     (store, doc, body) => {
       return GuiFactory.build(
         renderSelectBox({
-          type: 'selectbox',
           name: 'selector',
           size: 5,
           label: Option.some('selector'),
+          disabled: false,
           items: [
             { value: 'one', text: 'One' },
             { value: 'two', text: 'Two' },

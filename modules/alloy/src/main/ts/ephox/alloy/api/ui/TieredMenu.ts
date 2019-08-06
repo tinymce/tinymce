@@ -1,10 +1,10 @@
 import { FieldSchema, Objects } from '@ephox/boulder';
 import { Id } from '@ephox/katamari';
-import { ItemDataTuple } from '../../ui/types/ItemTypes';
-import { MenuSpec } from '../../ui/types/MenuTypes';
 
 import * as Fields from '../../data/Fields';
 import * as TieredMenuSpec from '../../ui/single/TieredMenuSpec';
+import { ItemDataTuple } from '../../ui/types/ItemTypes';
+import { MenuSpec } from '../../ui/types/MenuTypes';
 import { TieredData, TieredMenuRecord, TieredMenuSketcher } from '../../ui/types/TieredMenuTypes';
 import { Composing } from '../behaviour/Composing';
 import { Highlighting } from '../behaviour/Highlighting';

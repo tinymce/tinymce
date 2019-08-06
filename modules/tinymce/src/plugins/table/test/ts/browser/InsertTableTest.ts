@@ -46,5 +46,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertTableTest', (success, fa
     },
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',
+    statusbar: false
   }, success, failure);
 });

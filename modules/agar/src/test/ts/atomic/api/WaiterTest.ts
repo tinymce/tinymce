@@ -5,9 +5,7 @@ import { Step } from 'ephox/agar/api/Step';
 import * as Waiter from 'ephox/agar/api/Waiter';
 import StepAssertions from 'ephox/agar/test/StepAssertions';
 
-UnitTest.asynctest('WaiterTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('WaiterTest', function (success, failure) {
 
   const makeTryUntilStep = function (label, interval, amount) {
     let counter = 0;
@@ -15,8 +13,11 @@ UnitTest.asynctest('WaiterTest', function () {
       label + ': TryUntil counter',
       Step.stateful(function (_value, next, die) {
         counter++;
-        if (counter === 5) return next(counter);
-        else die('did not reach number');
+        if (counter === 5) {
+          return next(counter);
+        } else {
+          die('did not reach number');
+        }
       }),
       interval,
       amount
@@ -29,8 +30,11 @@ UnitTest.asynctest('WaiterTest', function () {
       label + ': TryUntilNot counter',
       Step.stateful(function (_value, next, die) {
         counter++;
-        if (counter < 10) return next('Not yet');
-        else die(counter);
+        if (counter < 10) {
+          return next('Not yet');
+        } else {
+          die(counter);
+        }
       }),
       interval,
       amount
@@ -48,33 +52,31 @@ UnitTest.asynctest('WaiterTest', function () {
   };
 
   Pipeline.async({}, [
-    StepAssertions.passed('tryUntil with enough time', 5, makeTryUntilStep('enough time', 100, 1000)),
+    StepAssertions.passed('tryUntil with enough time', 5, makeTryUntilStep('enough time', 10, 1000)),
     StepAssertions.failed(
       'tryUntil with *NOT* enough time',
-      'Waited for 200ms for something to be successful. not enough time: TryUntil counter\ndid not reach number',
-      makeTryUntilStep('not enough time', 100, 200)
+      'Waited for 150ms for something to be successful. not enough time: TryUntil counter\ndid not reach number',
+      makeTryUntilStep('not enough time', 50, 150)
     ),
 
-    StepAssertions.passed('tryUntilNot with enough time', StepAssertions.preserved(), makeTryUntilNotStep('enough time', 100, 2000)),
+    StepAssertions.passed('tryUntilNot with enough time', StepAssertions.preserved(), makeTryUntilNotStep('enough time', 10, 2000)),
     StepAssertions.failed(
       'tryUntilNot with *NOT* enough time',
-      'Waited for 200ms for something to be unsuccessful. not enough time: TryUntilNot counter',
-      makeTryUntilNotStep('not enough time', 100, 200)
+      'Waited for 100ms for something to be unsuccessful. not enough time: TryUntilNot counter',
+      makeTryUntilNotStep('not enough time', 40, 100)
     ),
 
     StepAssertions.passed(
       'timeout with enough time',
       StepAssertions.preserved(),
-      makeDelayStep('enough time', 1000, 200)
+      makeDelayStep('enough time', 1000, 10)
     ),
 
     StepAssertions.failed(
       'timeout with *NOT* enough time',
-      'Hit the limit (300) for: not enough time: Waiter timeout',
-      makeDelayStep('not enough time', 300, 2000)
+      'Hit the limit (50) for: not enough time: Waiter timeout',
+      makeDelayStep('not enough time', 50, 500)
     )
-
 
   ], function () { success(); }, failure);
 });
-

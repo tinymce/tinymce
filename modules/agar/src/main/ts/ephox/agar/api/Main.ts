@@ -4,6 +4,7 @@ import * as ApproxStructure from './ApproxStructure';
 import Arbitraries from './Arbitraries';
 import * as Assertions from './Assertions';
 import { Chain } from './Chain';
+import { Cleaner } from './Cleaner';
 import * as Cursors from './Cursors';
 import * as FocusTools from './FocusTools';
 import * as GeneralSteps from './GeneralSteps';
@@ -38,6 +39,7 @@ export {
   Arbitraries,
   Assertions,
   Chain,
+  Cleaner,
   Cursors,
   FocusTools,
   GeneralSteps,

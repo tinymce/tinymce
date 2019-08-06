@@ -1,7 +1,8 @@
-import * as Boxes from '../../alien/Boxes';
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
-import { Scroll } from '@ephox/sugar';
 import { window } from '@ephox/dom-globals';
+import { Scroll } from '@ephox/sugar';
+
+import * as Boxes from '../../alien/Boxes';
 
 const defaultLazyViewport = (_component): Boxes.Bounds => {
   const scroll = Scroll.get();

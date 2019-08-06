@@ -35,7 +35,9 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
       name: text,
       text,
       disabled,
-      primary
+      primary,
+      icon: Option.none(),
+      borderless: false
     }, action, providersBackstage));
   };
 
@@ -44,7 +46,9 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
       name: icon,
       icon: Option.some(icon),
       tooltip: Option.some(tooltip),
-      disabled
+      disabled,
+      primary: false,
+      borderless: false
     }, action, providersBackstage));
   };
 
@@ -168,8 +172,8 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     renderSizeInput({
       name: 'size',
       label: none,
-      type: 'sizeinput',
-      constrain: true
+      constrain: true,
+      disabled: false
     }, providersBackstage)
   );
 

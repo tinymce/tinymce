@@ -18,6 +18,7 @@ import Anchors from './Anchors';
 import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInputBackstage';
 import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
+import { UiFactoryBackstageForDialog, DialogBackstage } from './DialogBackstage';
 
 // INVESTIGATE: Make this a body component API ?
 export type BridgedType = any;
@@ -49,6 +50,7 @@ export interface UiFactoryBackstage {
   styleselect?: UiFactoryBackstageForStyleButton;
   shared?: UiFactoryBackstageShared;
   colorinput?: UiFactoryBackstageForColorInput;
+  dialog?: UiFactoryBackstageForDialog;
 }
 
 const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyMoreButton: () => AlloyComponent): UiFactoryBackstage => {
@@ -67,7 +69,8 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
     },
     urlinput: UrlInputBackstage(editor),
     styleselect: initStyleFormatBackstage(editor),
-    colorinput: ColorInputBackstage(editor)
+    colorinput: ColorInputBackstage(editor),
+    dialog: DialogBackstage(editor)
   };
 
   return backstage;

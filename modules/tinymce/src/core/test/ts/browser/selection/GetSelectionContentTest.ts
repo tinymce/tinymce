@@ -64,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', (success
     ]);
   };
 
-  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

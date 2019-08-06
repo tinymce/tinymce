@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (succes
     Assertions.assertEq(label, offset, spot.offset);
   };
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const editorBody = editor.getBody();
 

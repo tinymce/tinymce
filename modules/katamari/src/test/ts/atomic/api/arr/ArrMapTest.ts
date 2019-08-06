@@ -5,7 +5,7 @@ import * as Unique from 'ephox/katamari/api/Unique';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('MapTest', function() {
+UnitTest.test('MapTest', function () {
   const dbl = function (x) {
     return x * 2;
   };
@@ -23,15 +23,15 @@ UnitTest.test('MapTest', function() {
   checkA([2], [1], dbl);
   checkA([4, 6, 10], [2, 3, 5], dbl);
 
-  const checkToObject = function(expected, input: any[], f) {
+  const checkToObject = function (expected, input: any[], f) {
     assert.eq(expected, Arr.mapToObject(input, f));
     assert.eq(expected, Arr.mapToObject(Object.freeze(input.slice()), f));
   };
 
-  checkToObject({}, [], function() { throw 'boom'; });
-  checkToObject({'a': '3a'}, ['a'], function(x) { return 3 + x; });
-  checkToObject({'a': '3a', 'b': '3b'}, ['a', 'b'], function(x) { return 3 + x; });
-  checkToObject({'1': 4, '2': 5}, [1, 2], function(x) { return 3 + x; });
+  checkToObject({}, [], function () { throw new Error('boom'); });
+  checkToObject({a: '3a'}, ['a'], function (x) { return 3 + x; });
+  checkToObject({a: '3a', b: '3b'}, ['a', 'b'], function (x) { return 3 + x; });
+  checkToObject({1: 4, 2: 5}, [1, 2], function (x) { return 3 + x; });
 
   Jsc.property(
     'map id xs = xs',
@@ -62,7 +62,9 @@ UnitTest.test('MapTest', function() {
       const keys = Unique.stringArray(rawKeys);
       const output = Arr.mapToObject(keys, function (k) { return f(k); });
       const objKeys = Obj.keys(output);
-      if (objKeys.length !== keys.length) return 'Not all keys were mapped';
+      if (objKeys.length !== keys.length) {
+        return 'Not all keys were mapped';
+      }
 
       return Arr.forall(objKeys, function (ok) {
         return Arr.contains(keys, ok) && f(ok) === output[ok];
@@ -70,4 +72,3 @@ UnitTest.test('MapTest', function() {
     }
   );
 });
-

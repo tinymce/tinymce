@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { URL } from '@ephox/sand';
-import { navigator, window, matchMedia, document } from '@ephox/dom-globals';
+import { navigator, window, matchMedia, document, URL } from '@ephox/dom-globals';
 
 /**
  * This class contains various environment constants like browser versions etc.
@@ -51,7 +50,7 @@ const contentEditable = !iDevice || fileApi || parseInt(userAgent.match(/AppleWe
 interface Env {
   opera: boolean;
   webkit: boolean;
-  ie: number;
+  ie: boolean | number;
   gecko: boolean;
   mac: boolean;
   iOS: boolean;

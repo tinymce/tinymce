@@ -1,9 +1,8 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Obj, Option } from '@ephox/katamari';
-import { JSON } from '@ephox/sand';
 
 import { AlloyBehaviour, AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { BehaviourState, BehaviourStateInitialiser, NoState } from '../../behaviour/common/BehaviourState';
+import { BehaviourState, BehaviourStateInitialiser, NoState } from './BehaviourState';
 
 export interface BehaviourConfigAndState<C, S> {
   config: () => C;

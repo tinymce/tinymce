@@ -15,18 +15,18 @@ import * as FormValues from '../general/FormValues';
 import NavigableObject from '../general/NavigableObject';
 import { interpretInForm } from '../general/UiFactory';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { Omit } from '../Omit';
+import { Types } from '@ephox/bridge';
 
-export interface BodyPanelFoo<I> {
-  items: I[];
-}
+export type BodyPanelSpec = Omit<Types.Dialog.Panel, 'type'>;
 
-const renderBodyPanel = <I>(spec: BodyPanelFoo<I>, backstage: UiFactoryBackstage): SimpleSpec => {
+const renderBodyPanel = (spec: BodyPanelSpec, backstage: UiFactoryBackstage): SimpleSpec => {
   const memForm = Memento.record(
     AlloyForm.sketch((parts) => {
       return {
         dom: {
           tag: 'div',
-          classes: [ 'tox-form' ]
+          classes: [ 'tox-form' ].concat(spec.classes)
         },
         // All of the items passed through the form need to be put through the interpreter
         // with their form part preserved.
@@ -62,6 +62,7 @@ const renderBodyPanel = <I>(spec: BodyPanelFoo<I>, backstage: UiFactoryBackstage
       RepresentingConfigs.memento(memForm, {
         postprocess: (formValue) => FormValues.toValidValues(formValue).fold(
           (err) => {
+            // tslint:disable-next-line:no-console
             console.error(err);
             return { };
           },

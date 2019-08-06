@@ -1,4 +1,6 @@
+import { document, console } from '@ephox/dom-globals';
 import { Class, Element } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
@@ -6,7 +8,6 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
-import { document, console } from '@ephox/dom-globals';
 
 // tslint:disable:no-console
 
@@ -52,7 +53,7 @@ export default (): void => {
     }
   });
 
-  const button1 = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'This button is a <code>button</code> tag with an image',
     Button.sketch({
@@ -99,7 +100,7 @@ export default (): void => {
 
   Toggling.on(button2);
 
-  const customButton = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'This text button has two custom behaviours. One adds (among other things) "data-cat" and ' +
     'background blue, and the other adds color red',

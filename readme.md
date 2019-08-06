@@ -83,7 +83,7 @@ yarn oxide-icons-build
 
 These commands build the skin and icons but should not normally be required outside of other development scripts.
 
-`yarn oxide-watch` will set up a watch and rebuild process which is designed for integration with the external demo/test scripts.
+`yarn oxide-start` will set up a watch and rebuild process for creating custom skins.
 
 ### Focussed development
 
@@ -108,6 +108,11 @@ yarn phantomjs-test-manual
 
 Development testing will be adjusted in future so that there's only one manual entry point for ease of development. They are still separate for now because there are two projects that use bedrock route configurations; a route config combination process is required to run them at the same time.
 
+### Running a subset of tests
+
+To run a single test: `yarn bedrock -f file`
+
+To run a whole folder of tests: `yarn bedrock -d folder`
 
 ## CI builds
 

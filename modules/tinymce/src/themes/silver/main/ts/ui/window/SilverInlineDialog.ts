@@ -17,7 +17,10 @@ import {
   Receiving,
   Reflecting,
   SimpleSpec,
-  SystemEvents
+  SystemEvents,
+  Focusing,
+  AlloyEvents,
+  NativeEvents
 } from '@ephox/alloy';
 import { DialogManager, Types } from '@ephox/bridge';
 import { Option, Id } from '@ephox/katamari';
@@ -63,7 +66,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
   const memFooter = Memento.record(
     renderInlineFooter({
       buttons: dialogInit.internalDialog.buttons
-    }, backstage.shared.providers)
+    }, backstage)
   );
 
   const dialogEvents = SilverDialogEvents.initDialog(
@@ -80,7 +83,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
   const dialog = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: [ 'tox-dialog' ],
+      classes: [ 'tox-dialog', 'tox-dialog-inline' ],
       attributes: {
         role: 'dialog',
         ['aria-labelledby']: dialogLabelId,
@@ -112,9 +115,16 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
         updateState,
         initialData: dialogInit
       }),
+      Focusing.config({ }),
       AddEventsBehaviour.config(
         'execute-on-form',
-        dialogEvents
+        dialogEvents.concat([
+          // Note: `runOnSource` here will only listen to the event at the outer component level.
+          // Using just `run` instead will cause an infinite loop as `focusIn` would fire a `focusin` which would then get responded to and so forth.
+          AlloyEvents.runOnSource(NativeEvents.focusin(), (comp, se) => {
+            Keying.focusIn(comp);
+          })
+        ])
       ),
       RepresentingConfigs.memory({ })
     ]),

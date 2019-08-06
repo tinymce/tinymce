@@ -13,6 +13,7 @@ import { CustomTabSpecs, TabSpecs } from '../Plugin';
 import KeyboardShortcutsTab from './KeyboardShortcutsTab';
 import PluginsTab from './PluginsTab';
 import VersionTab from './VersionTab';
+import KeyboardNavTab from './KeyboardNavTab';
 
 interface TabData {
   tabs: TabSpecs;
@@ -53,10 +54,12 @@ const getNamesFromTabs = (tabs: TabSpecs): TabData => {
 
 const parseCustomTabs = (editor: Editor, customTabs: CustomTabSpecs) => {
   const shortcuts = KeyboardShortcutsTab.tab();
+  const nav = KeyboardNavTab.tab();
   const plugins = PluginsTab.tab(editor);
   const versions = VersionTab.tab();
   const tabs = {
     [shortcuts.name]: shortcuts,
+    [nav.name]: nav,
     [plugins.name]: plugins,
     [versions.name]: versions,
     ...customTabs.get()

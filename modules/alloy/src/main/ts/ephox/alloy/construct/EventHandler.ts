@@ -1,15 +1,9 @@
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Arr, Fun, Type } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
-
-interface EventHandler {
-  can?: (comp) => boolean;
-  abort?: (comp) => boolean;
-}
 
 const nu = (parts) => {
   if (! Objects.hasKey(parts, 'can') && !Objects.hasKey(parts, 'abort') && !Objects.hasKey(parts, 'run')) { throw new Error(
-    'EventHandler defined by: ' + Json.stringify(parts, null, 2) + ' does not have can, abort, or run!'
+    'EventHandler defined by: ' + JSON.stringify(parts, null, 2) + ' does not have can, abort, or run!'
   );
   }
   return ValueSchema.asRawOrDie('Extracting event.handler', ValueSchema.objOfOnly([

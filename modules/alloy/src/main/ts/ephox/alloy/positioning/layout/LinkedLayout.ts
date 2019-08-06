@@ -1,6 +1,6 @@
-import * as Direction from './Direction';
 import { nu as NuSpotInfo } from '../view/SpotInfo';
-import { AnchorBox, AnchorElement, AnchorLayout } from '../../positioning/layout/LayoutTypes';
+import * as Direction from './Direction';
+import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
 /*
   Layout for submenus;
   Either left or right of the anchor menu item. Never above or below.

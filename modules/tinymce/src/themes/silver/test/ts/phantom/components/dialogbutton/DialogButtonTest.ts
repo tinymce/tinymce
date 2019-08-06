@@ -16,7 +16,8 @@ UnitTest.asynctest('DialogButton component Test', (success, failure) => {
           text: 'ButtonText',
           disabled: false,
           primary: true,
-          icon: Option.none()
+          icon: Option.none(),
+          borderless: false
         }, store.adder('button.action'), TestProviders)
       );
     },

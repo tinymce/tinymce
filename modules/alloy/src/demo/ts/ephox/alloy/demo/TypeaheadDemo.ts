@@ -1,5 +1,7 @@
+import { document, console } from '@ephox/dom-globals';
 import { Arr, Future, Option, Result, Strings } from '@ephox/katamari';
 import { Class, Element, Value } from '@ephox/sugar';
+
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
@@ -7,11 +9,10 @@ import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-
-import * as DemoRenders from './forms/DemoRenders';
-import { document, console } from '@ephox/dom-globals';
 import { TypeaheadData } from 'ephox/alloy/ui/types/TypeaheadTypes';
 import { Container } from 'ephox/alloy/api/ui/Container';
+
+import * as DemoRenders from './forms/DemoRenders';
 
 // tslint:disable:no-console
 
@@ -100,9 +101,9 @@ export default (): void => {
               d.text.substring(index + inputValue.length);
             return [
               {
-                'type': 'item',
-                'data': {
-                  'value': d.value,
+                type: 'item',
+                data: {
+                  value: d.value,
                   meta: {
                     'text': d.text,
                     html,

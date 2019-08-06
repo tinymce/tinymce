@@ -11,12 +11,13 @@ import {
   AlloySpec,
   AlloyTriggers,
   Behaviour,
+  Disabling,
   FormField as AlloyFormField,
   HtmlSelect as AlloyHtmlSelect,
   NativeEvents,
   SimpleSpec,
   SketchSpec,
-  Tabstopping,
+  Tabstopping
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Arr, Option } from '@ephox/katamari';
@@ -25,8 +26,11 @@ import { renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 import * as Icons from 'tinymce/themes/silver/ui/icons/Icons';
 
 import { formChangeEvent } from '../general/FormEvents';
+import { Omit } from '../Omit';
 
-export const renderSelectBox = (spec: Types.SelectBox.SelectBox, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+type SelectBoxSpec = Omit<Types.SelectBox.SelectBox, 'type'>;
+
+export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const translatedOptions = Arr.map(spec.items, (item) => {
     return {
       text: providersBackstage.translate(item.text),
@@ -46,6 +50,7 @@ export const renderSelectBox = (spec: Types.SelectBox.SelectBox, providersBackst
     options: translatedOptions,
     factory: AlloyHtmlSelect,
     selectBehaviours: Behaviour.derive([
+      Disabling.config({ disabled: spec.disabled }),
       Tabstopping.config({ }),
       AddEventsBehaviour.config('selectbox-change', [
         AlloyEvents.run(NativeEvents.change(), (component, _) => {
@@ -77,6 +82,17 @@ export const renderSelectBox = (spec: Types.SelectBox.SelectBox, providersBackst
       tag: 'div',
       classes: ['tox-form__group']
     },
-    components: Arr.flatten<AlloySpec>([pLabel.toArray(), [selectWrap]])
+    components: Arr.flatten<AlloySpec>([pLabel.toArray(), [selectWrap]]),
+    fieldBehaviours: Behaviour.derive([
+      Disabling.config({
+        disabled: spec.disabled,
+        onDisabled: (comp) => {
+          AlloyFormField.getField(comp).each(Disabling.disable);
+        },
+        onEnabled: (comp) => {
+          AlloyFormField.getField(comp).each(Disabling.enable);
+        }
+      })
+    ])
   });
 };

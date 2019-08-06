@@ -1,12 +1,12 @@
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { Cell, Option } from '@ephox/katamari';
 
+import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { SugarPosition } from '../../alien/TypeDefinitions';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 export interface SliderValueX {
   x: () => number;

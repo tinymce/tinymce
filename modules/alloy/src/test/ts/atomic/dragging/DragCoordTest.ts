@@ -1,8 +1,9 @@
-import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
+import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest } from '@ephox/bedrock';
+
+import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
 
 UnitTest.test('DragCoordTest', () => {
   const assertPt = (label, expected, actual) => {

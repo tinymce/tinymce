@@ -1,10 +1,10 @@
+import { LazySink } from '../../api/component/CommonTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
-import { ToolbarGroupSpec } from '../types/ToolbarGroupTypes';
-import { ToolbarSpec } from '../types/ToolbarTypes';
-import { LazySink } from '../../api/component/CommonTypes';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import { SplitToolbarBaseDetail, SplitToolbarBaseSpec, SplitToolbarBaseSketcher } from './SplitToolbarBaseTypes';
+import { ToolbarGroupSpec } from './ToolbarGroupTypes';
+import { ToolbarSpec } from './ToolbarTypes';
 
 export interface SplitFloatingToolbarDetail extends SplitToolbarBaseDetail {
   lazySink: LazySink;

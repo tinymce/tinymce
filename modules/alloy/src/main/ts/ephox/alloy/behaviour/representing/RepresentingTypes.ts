@@ -1,6 +1,7 @@
+import { Option } from '@ephox/katamari';
+
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Option } from '@ephox/katamari';
 import { BehaviourState } from '../../behaviour/common/BehaviourState';
 import { ItemDataTuple } from '../../ui/types/ItemTypes';
 

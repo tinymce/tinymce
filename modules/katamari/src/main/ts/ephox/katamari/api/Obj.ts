@@ -28,33 +28,30 @@ export const map = function <T, R> (obj: T, f: (value: T[keyof T], key: string, 
 };
 
 /** tupleMap :: (JsObj(k, v), (v, k, JsObj(k, v) -> { k: x, v: y })) -> JsObj(x, y) */
-export const tupleMap = function <R, T> (obj: T, f: (value: T[keyof T], key: string, obj: T) => {k: string, v: any}) : R {
+export const tupleMap = function <R, T> (obj: T, f: (value: T[keyof T], key: string, obj: T) => {k: string, v: any}): R {
   const r: Record<string, any> = {};
   each(obj, function (x, i) {
     const tuple = f(x, i, obj);
     r[tuple.k] = tuple.v;
   });
-  return <R>r;
+  return <R> r;
 };
 
 /** bifilter :: (JsObj(k, v), (v, k -> Bool)) -> { t: JsObj(k, v), f: JsObj(k, v) } */
-export const bifilter = function <V> (obj: Record<string,V>, pred: (value: V, key: string) => boolean) {
-  const t: Record<string,V> = {};
-  const f: Record<string,V> = {};
-  each(obj, function(x, i) {
+export const bifilter = function <V> (obj: Record<string, V>, pred: (value: V, key: string) => boolean) {
+  const t: Record<string, V> = {};
+  const f: Record<string, V> = {};
+  each(obj, function (x, i) {
     const branch = pred(x, i) ? t : f;
     branch[i] = x;
   });
-  return {
-    t: t,
-    f: f
-  };
+  return { t, f };
 };
 
 /** mapToArray :: (JsObj(k, v), (v, k -> a)) -> [a] */
-export const mapToArray = function <T,R> (obj: T, f: (value: T[keyof T], key: string) => R) {
+export const mapToArray = function <T, R> (obj: T, f: (value: T[keyof T], key: string) => R) {
   const r: R[] = [];
-  each(obj, function(value, name) {
+  each(obj, function (value, name) {
     r.push(f(value, name));
   });
   return r;
@@ -83,7 +80,6 @@ export const values = function <T> (obj: T) {
 export const size = function (obj: {}) {
   return keys(obj).length;
 };
-
 
 /** get :: (JsObj(k, v), k) -> Option v */
 export const get = function <T, K extends keyof T> (obj: T, key: K): Option<NonNullable<T[K]>> {

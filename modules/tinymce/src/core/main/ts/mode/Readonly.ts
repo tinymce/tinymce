@@ -5,10 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Class, Element, SelectorFilter, Attr } from '@ephox/sugar';
-import Editor from '../api/Editor';
-import { Arr, Option } from '@ephox/katamari';
 import { Event, HTMLElement } from '@ephox/dom-globals';
+import { Arr, Option } from '@ephox/katamari';
+import { Attr, Class, Element, SelectorFilter } from '@ephox/sugar';
+import Editor from '../api/Editor';
+import EditorFocus from '../focus/EditorFocus';
 
 const internalContentEditableAttr = 'data-mce-contenteditable';
 
@@ -76,7 +77,9 @@ const toggleReadOnly = (editor: Editor, state: boolean) => {
     setEditorCommandState(editor, 'StyleWithCSS', false);
     setEditorCommandState(editor, 'enableInlineTableEditing', false);
     setEditorCommandState(editor, 'enableObjectResizing', false);
-    editor.focus();
+    if (EditorFocus.hasEditorOrUiFocus(editor)) {
+      editor.focus();
+    }
     restoreFakeSelection(editor);
     editor.nodeChanged();
   }

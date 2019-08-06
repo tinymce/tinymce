@@ -1,8 +1,8 @@
-import PlatformQuery from 'ephox/sand/api/PlatformQuery';
+import PlatformQuery from 'ephox/sand/test/PlatformQuery';
 import { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('BrowserTest', function() {
+UnitTest.test('BrowserTest', function () {
   function check(expectedQuery: string, expectedOs: string, expectedBrowser: string, expectedMajor: number, expectedMinor: number, userAgent: string) {
     const platform = PlatformDetection.detect(userAgent);
     assert.eq(expectedBrowser, platform.browser.current);
@@ -12,7 +12,9 @@ UnitTest.test('BrowserTest', function() {
     assert.eq(expectedMajor, actualBrowserVersion.major);
     assert.eq(expectedMinor, actualBrowserVersion.minor);
 
-    if (! PlatformQuery.hasOwnProperty(expectedQuery)) assert.fail('Platform query: ' + expectedQuery + ' not known');
+    if (! PlatformQuery.hasOwnProperty(expectedQuery)) {
+      assert.fail('Platform query: ' + expectedQuery + ' not known');
+    }
     assert.eq(true, PlatformQuery[expectedQuery](platform), 'The query ' + expectedQuery + ' should match.\nUser Agent: ' + userAgent +  '\nbrowser: ' + expectedBrowser);
   }
 
@@ -22,7 +24,7 @@ UnitTest.test('BrowserTest', function() {
     assert.eq(expectedMinor, platform.os.version.minor, 'invalid minor OS version ' + platform.os.version.minor + ' for agent: ' + userAgent);
   };
 
-  //These tests are assuming there is no chromeframe activeX object active in the page.
+  // These tests are assuming there is no chromeframe activeX object active in the page.
   check('isEdge', 'Windows', 'Edge', 12, 0, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36 Edge/12.0');
   check('isIE11', 'Windows', 'IE', 11, 0, 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko');
   check('isIE', 'Windows', 'IE', 10, 0, 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0; .NET4.0E; .NET4.0C; InfoPath.3)');
@@ -91,4 +93,3 @@ UnitTest.test('BrowserTest', function() {
   // iPhone5, 6 & 6 plus
   checkOSVersion(9, 2, 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_2 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13C75');
 });
-

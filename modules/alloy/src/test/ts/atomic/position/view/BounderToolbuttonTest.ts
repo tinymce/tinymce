@@ -1,8 +1,9 @@
+import { Position } from '@ephox/sugar';
+import { UnitTest, assert } from '@ephox/bedrock';
+
 import { bounds } from 'ephox/alloy/alien/Boxes';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
-import { Position } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/bedrock';
 import { Bubble } from 'ephox/alloy/positioning/layout/Bubble';
 
 UnitTest.test('BounderToolbuttonTest', () => {
@@ -91,7 +92,15 @@ UnitTest.test('BounderToolbuttonTest', () => {
       south,
       north,
       east,
-      west
+      west,
+      innerSouthwest: northeast,
+      innerSoutheast: northwest,
+      innerSouth: north,
+      innerNorthwest: southeast,
+      innerNortheast: southwest,
+      innerNorth: south,
+      innerWest: east,
+      innerEast: west
     };
   };
 

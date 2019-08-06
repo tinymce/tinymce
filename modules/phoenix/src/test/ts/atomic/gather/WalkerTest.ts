@@ -63,4 +63,3 @@ UnitTest.test('WalkerTest', function () {
   checkNone('d', Walker.advance, Walkers.right());
   checkNone('e', Walker.advance, Walkers.right());
 });
-

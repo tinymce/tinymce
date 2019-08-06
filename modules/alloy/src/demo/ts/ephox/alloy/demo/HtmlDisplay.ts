@@ -1,6 +1,7 @@
 import { document, MutationObserver } from '@ephox/dom-globals';
 import { Id, Thunk } from '@ephox/katamari';
 import { DomEvent, Element, Html, TextContent } from '@ephox/sugar';
+
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
@@ -82,7 +83,7 @@ const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyCo
 
   gui.add(all);
 
-  const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', (evt) => {
+  DomEvent.bind(Element.fromDom(document), 'mousedown', (evt) => {
     if (evt.raw().button === 0) {
       gui.broadcastOn([ Channels.dismissPopups() ], {
         target: evt.target()

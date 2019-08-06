@@ -196,8 +196,9 @@ const sAssertEmbedData = function (ui, content) {
   ]);
 };
 
-const sTestEmbedContentFromUrl = function (ui, url, content) {
+const sTestEmbedContentFromUrl = function (apis, ui, url, content) {
   return Logger.t(`Assert embed ${content} from ${url}`, GeneralSteps.sequence([
+    apis.sSetContent(''),
     sOpenDialog(ui),
     sPasteSourceValue(ui, url),
     sAssertEmbedData(ui, content),

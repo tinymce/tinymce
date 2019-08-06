@@ -34,6 +34,9 @@ export default function (sink?: AlloyComponent): UiFactoryBackstage {
       getUrlPicker: (filetype) => Option.some((entry: UrlData) => {
         return Future.pure(entry);
       })
+    },
+    dialog: {
+      isDraggableModal: () => false
     }
   };
 }
