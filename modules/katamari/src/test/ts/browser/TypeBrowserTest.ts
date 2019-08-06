@@ -52,11 +52,11 @@ UnitTest.asynctest('Type cross window test', (success, failure) => {
   iframe.addEventListener('load', () => {
     // tslint:disable-next-line: no-string-literal
     const frameEval = (script: string): any => {
-      let cw = iframe.contentWindow;
+      const cw = iframe.contentWindow;
       if (cw == null) {
-        throw new Error("contentWindow was null");
+        throw new Error('contentWindow was null');
       }
-      return cw['eval'];
+      return cw.eval;
     };
 
     try {

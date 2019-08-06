@@ -84,7 +84,7 @@ UnitTest.test('Function tests', function () {
     });
 
     Jsc.property('Check curry', Jsc.json, Jsc.json, Jsc.json, Jsc.json, function (a, b, c, d) {
-      const f = function(a, b, c, d) {
+      const f = function (a, b, c, d) {
         return [a, b, c, d];
       };
 
