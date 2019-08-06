@@ -1,6 +1,6 @@
 {
   "name": "@ephox/sugar",
-  "version": "4.6.25",
+  "version": "4.6.26",
   "description": "Basic DOM manipulation",
   "repository": {
     "type": "git",
@@ -23,7 +23,7 @@
   "dependencies": {
     "@ephox/dom-globals": "^1.1.2",
     "@ephox/katamari": "^2.4.25",
-    "@ephox/sand": "^2.0.21"
+    "@ephox/sand": "^3.0.0"
   },
   "files": [
     "lib/main",

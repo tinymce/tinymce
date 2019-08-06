@@ -1,4 +1,3 @@
-import { JSON as Json } from '@ephox/sand';
 import { SelectorFind } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -45,7 +44,7 @@ export default (): void => {
           const value = Representing.getValue(textarea);
           const output = GuiTemplate.readHtml(value).getOrDie();
           const display = button.getSystem().getByUid('pre-output').getOrDie();
-          const prettyprint = Json.stringify(output, undefined, 2);
+          const prettyprint = JSON.stringify(output, undefined, 2);
 
           Replacing.set(display, [ GuiFactory.text(prettyprint) ]);
         }

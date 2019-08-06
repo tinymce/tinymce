@@ -1,7 +1,6 @@
 import { Chain, Guard, Mouse, NamedChain, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Option, Result } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 import { Css, Position } from '@ephox/sugar';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
@@ -66,7 +65,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
       Chain.binder((all: any) => {
         return all.box_position1.left !== all.box_position2.left &&
           all.box_position2.left !== all.box_position3.left ? Result.value({}) :
-          Result.error('Positions did not change.\nPosition data: ' + Json.stringify({
+          Result.error('Positions did not change.\nPosition data: ' + JSON.stringify({
             1: all.box_position1,
             2: all.box_position2,
             3: all.box_position3
@@ -83,7 +82,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
           all.box_position7.left === all.box_position8_bound.left &&
           all.box_position7.left === '400px';
         return boundLeft && boundRight ? Result.value({}) :
-          Result.error('Dragging should have been restricted to the bounds.\nPosition data: ' + Json.stringify({
+          Result.error('Dragging should have been restricted to the bounds.\nPosition data: ' + JSON.stringify({
             1: all.box_position4,
             2: all.box_position5,
             3: all.box_position6_bound,
@@ -99,7 +98,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
           all.box_position10_pinned.top === all.box_position11_pinned.top &&
           all.box_position10_pinned.top === '10px';
         return pinned ? Result.value({ }) : Result.error(
-          'Box should only have been pinned at 2 and 3 at top: 10px. Positions: ' + Json.stringify({
+          'Box should only have been pinned at 2 and 3 at top: 10px. Positions: ' + JSON.stringify({
             1: all.box_position9,
             2: all.box_position10_pinned,
             3: all.box_position11_pinned

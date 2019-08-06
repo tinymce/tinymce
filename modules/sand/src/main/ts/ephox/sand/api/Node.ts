@@ -1,13 +1,4 @@
-import Global from '../util/Global';
 import { Node } from '@ephox/dom-globals';
-
-/*
- * MDN says (yes) for IE, but it's undefined on IE8
- */
-const node = function () {
-  const f: typeof Node = Global.getOrDie('Node');
-  return f;
-};
 
 /*
  * Most of sand doesn't alter the methods on the object.
@@ -24,11 +15,11 @@ const compareDocumentPosition = function (a: Node, b: Node, match: number) {
 };
 
 const documentPositionPreceding = function (a: Node, b: Node) {
-  return compareDocumentPosition(a, b, node().DOCUMENT_POSITION_PRECEDING);
+  return compareDocumentPosition(a, b, Node.DOCUMENT_POSITION_PRECEDING);
 };
 
 const documentPositionContainedBy = function (a: Node, b: Node) {
-  return compareDocumentPosition(a, b, node().DOCUMENT_POSITION_CONTAINED_BY);
+  return compareDocumentPosition(a, b, Node.DOCUMENT_POSITION_CONTAINED_BY);
 };
 
 export default {

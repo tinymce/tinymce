@@ -1,6 +1,5 @@
 import { console } from '@ephox/dom-globals';
 import { Merger, Obj } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 
 import ArbSchema from './ArbSchema';
 import ArbSchemaTypes from './ArbSchemaTypes';
@@ -11,8 +10,8 @@ const makeArbOf = function (component, schema, depth) {
   const arbitrary = schema[component];
   if (arbitrary === undefined) {
     const message =
-      'Did not understand arbitrary schema element: ' + Json.stringify(component) +
-      '. Known schema elements were: ' + Json.stringify(Obj.keys(schema));
+      'Did not understand arbitrary schema element: ' + JSON.stringify(component) +
+      '. Known schema elements were: ' + JSON.stringify(Obj.keys(schema));
     // tslint:disable-next-line:no-console
     console.error(message);
     throw new Error(message);

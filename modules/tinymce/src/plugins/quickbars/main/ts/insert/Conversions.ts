@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { FileReader } from '@ephox/sand';
 import Promise from 'tinymce/core/api/util/Promise';
-import { Blob } from '@ephox/dom-globals';
+import { Blob, FileReader } from '@ephox/dom-globals';
 
 const blobToBase64 = function (blob: Blob) {
   return new Promise<string>(function (resolve) {
-    const reader = FileReader();
+    const reader = new FileReader();
 
     reader.onloadend = function () {
       resolve(reader.result.split(',')[1]);
