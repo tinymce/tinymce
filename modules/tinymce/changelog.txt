@@ -1,4 +1,5 @@
 Version 5.0.14 (TBD)
+    Fixed focus not returning to editor when dismissing dropdowns on Edge and IE #TINY-3874
 
 Version 5.0.13 (2019-08-06)
     Changed modal dialogs to prevent dragging by default and added new `draggable_modal` setting to restore dragging #TINY-3873
