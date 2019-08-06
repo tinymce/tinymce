@@ -1,4 +1,5 @@
 Version 5.0.14 (TBD)
+    Fixed inline dialogs not closing on escape when no dialog component is in focus #TINY-3936
     Fixed focus not returning to editor when dismissing dropdowns on Edge and IE #TINY-3874
 
 Version 5.0.13 (2019-08-06)
