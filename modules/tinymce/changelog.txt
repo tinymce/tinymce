@@ -1,7 +1,7 @@
 Version 5.0.14 (TBD)
     Fixed inline dialogs not closing on escape when no dialog component is in focus #TINY-3936
     Fixed focus not returning to editor when dismissing dropdowns on Edge and IE #TINY-3874
-
+    Fixed plugins not being filtered when defaulting to mobile on phones #TINY-3537
 Version 5.0.13 (2019-08-06)
     Changed modal dialogs to prevent dragging by default and added new `draggable_modal` setting to restore dragging #TINY-3873
     Changed the nonbreaking plugin to insert nbsp characters wrapped in spans to aid in filtering. This can be disabled using the `nonbreaking_wrap` setting #TINY-3647
