@@ -1,7 +1,7 @@
 import * as Attr from './Attr';
 import Element from '../node/Element';
 
-export default function (attribute, value) {
+export default function (attribute: string, value: string) {
   const is = function (element: Element) {
     return Attr.get(element, attribute) === value;
   };
