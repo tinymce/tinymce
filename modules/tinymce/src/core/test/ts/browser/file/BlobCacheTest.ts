@@ -1,18 +1,18 @@
 import { Assertions } from '@ephox/agar';
-import { Blob, Uint8Array, Window } from '@ephox/sand';
 import { BlobCache, BlobInfoData } from 'tinymce/core/api/file/BlobCache';
 import { UnitTest } from '@ephox/bedrock';
+import { atob, Blob } from '@ephox/dom-globals';
 
 UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function () {
   const uriToBlob = function (base64, type) {
     let i;
-    const str = Window.atob(base64);
-    const arr = Uint8Array(str.length);
+    const str = atob(base64);
+    const arr = new Uint8Array(str.length);
 
     for (i = 0; i < arr.length; i++) {
       arr[i] = str.charCodeAt(i);
     }
-    return Blob([arr], { type });
+    return new Blob([arr], { type });
   };
 
   const id = 'blob0';

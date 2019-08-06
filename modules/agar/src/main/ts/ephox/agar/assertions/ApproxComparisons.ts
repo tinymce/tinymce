@@ -1,5 +1,4 @@
 import { Arr, Fun, Id, Strings } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 
 import { assertEq } from '../api/RawAssertions';
 
@@ -12,7 +11,7 @@ const dieWith = function (message: string) {
 const assertOnBool = function (c: boolean, label: string, value: any) {
   const strValue = value === missingValuePlaceholder ? '{missing}' : value;
   assertEq(
-    label + ', Actual value: ' + Json.stringify(strValue),
+    label + ', Actual value: ' + JSON.stringify(strValue),
     true,
     c
   );

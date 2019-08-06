@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { URL } from '@ephox/sand';
 import Uuid from '../../util/Uuid';
-import { Blob } from '@ephox/dom-globals';
+import { Blob, URL } from '@ephox/dom-globals';
 import { Type, Fun, Arr } from '@ephox/katamari';
 
 export interface BlobCache {

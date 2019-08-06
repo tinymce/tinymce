@@ -2,13 +2,13 @@ import { Pipeline, Step, Logger, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Cell } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
-import { Blob, Uint8Array, Window } from '@ephox/sand';
 
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
 import { Clipboard } from 'tinymce/plugins/paste/api/Clipboard';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+import { atob, Blob } from '@ephox/dom-globals';
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
@@ -44,14 +44,14 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
   };
 
   const base64ToBlob = function (base64, type) {
-    const buff = Window.atob(base64);
-    const bytes = Uint8Array(buff.length);
+    const buff = atob(base64);
+    const bytes = new Uint8Array(buff.length);
 
     for (let i = 0; i < bytes.length; i++) {
       bytes[i] = buff.charCodeAt(i);
     }
 
-    return Blob([bytes], { type });
+    return new Blob([bytes], { type });
   };
 
   const noop = function () {

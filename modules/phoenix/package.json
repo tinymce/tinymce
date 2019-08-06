@@ -1,7 +1,7 @@
 {
   "name": "@ephox/phoenix",
   "description": "DOM node text gathering library, rose from the ashes of some other projects we can't remember the names of now (edit: seek, sherlock, gift)",
-  "version": "5.0.28",
+  "version": "5.0.29",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce"
@@ -18,7 +18,7 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/boss": "^3.0.26",
+    "@ephox/boss": "^3.0.27",
     "@ephox/dom-globals": "^1.1.2",
     "@ephox/katamari": "^2.4.25",
     "@ephox/polaris": "^3.0.29",

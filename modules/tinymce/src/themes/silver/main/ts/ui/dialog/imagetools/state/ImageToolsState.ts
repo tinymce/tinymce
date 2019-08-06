@@ -6,10 +6,9 @@
  */
 
 import { Cell, Option } from '@ephox/katamari';
-import { URL } from '@ephox/sand';
 import Tools from 'tinymce/core/api/util/Tools';
 import UndoStack from '../UndoStack';
-import { Blob } from '@ephox/dom-globals';
+import { Blob, URL } from '@ephox/dom-globals';
 
 interface BlobState {
   blob: Blob;

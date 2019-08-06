@@ -1,6 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr, Obj, Result } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 import Jsc from '@ephox/wrap-jsverify';
 import * as Objects from 'ephox/boulder/api/Objects';
 
@@ -83,13 +82,13 @@ UnitTest.test('ObjectsTest', function () {
       Objects.consolidate(objs, base).fold(function (err) {
         assert.eq(expected, err);
       }, function (val) {
-        assert.fail(label + '\nExpected error(' + Json.stringify(expected) + '), but was: ' + Json.stringify(val));
+        assert.fail(label + '\nExpected error(' + JSON.stringify(expected) + '), but was: ' + JSON.stringify(val));
       });
     };
 
     const checkVal = function (label, expected, objs, base) {
       Objects.consolidate(objs, base).fold(function (err) {
-        assert.fail(label + '\nExpected value(' + Json.stringify(expected) + '), but was error(' + Json.stringify(err) + ')');
+        assert.fail(label + '\nExpected value(' + JSON.stringify(expected) + '), but was error(' + JSON.stringify(err) + ')');
       }, function (val) {
         assert.eq(expected, val);
       });
