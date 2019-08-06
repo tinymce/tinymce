@@ -56,7 +56,8 @@ UnitTest.asynctest('Type cross window test', (success, failure) => {
       if (cw == null) {
         throw new Error('contentWindow was null');
       }
-      return cw.eval;
+      // TypeScript doesn't think that Window.eval exists
+      return (cw as any).eval;
     };
 
     try {
