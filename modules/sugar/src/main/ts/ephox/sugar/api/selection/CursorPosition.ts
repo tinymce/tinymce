@@ -4,17 +4,17 @@ import * as Traverse from '../search/Traverse';
 import * as Awareness from './Awareness';
 import Element from '../node/Element';
 
-const first = function (element: Element) {
+const first = function (element: Element): Option<Element> {
   return PredicateFind.descendant(element, Awareness.isCursorPosition);
 };
 
-const last = function (element: Element) {
+const last = function (element: Element): Option<Element> {
   return descendantRtl(element, Awareness.isCursorPosition);
 };
 
 // Note, sugar probably needs some RTL traversals.
-const descendantRtl = function (scope: Element, predicate) {
-  const descend = function (element): Option<Element> {
+const descendantRtl = function (scope: Element, predicate): Option<Element> {
+  const descend = function (element: Element): Option<Element> {
     const children = Traverse.children(element);
     for (let i = children.length - 1; i >= 0; i--) {
       const child = children[i];
