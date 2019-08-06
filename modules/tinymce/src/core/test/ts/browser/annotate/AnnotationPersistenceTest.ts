@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationPersistenceTest', (s
         });
       }
     };
-    TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
+    TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
       Pipeline.async({}, getSteps(tinyApis, editor), onSuccess, onFailure);
     }, settings, next, die);

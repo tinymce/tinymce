@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
     );
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
 
     const videoStruct = ApproxStructure.build(function (s, str/*, arr*/) {
       return s.element('video', {

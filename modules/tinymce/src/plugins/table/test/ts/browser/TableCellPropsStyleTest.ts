@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellPropsStyleTest', (suc
   Plugin();
   SilverTheme();
 
-  TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({},

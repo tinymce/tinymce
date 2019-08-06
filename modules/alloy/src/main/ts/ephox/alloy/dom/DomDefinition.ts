@@ -1,4 +1,3 @@
-import { JSON as Json } from '@ephox/sand';
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
@@ -35,7 +34,7 @@ export interface DomDefinitionDetail extends GeneralDefinitionDetail<Element> {
 
 const defToStr = (defn: GeneralDefinitionDetail<any>): string => {
   const raw = defToRaw(defn);
-  return Json.stringify(raw, null, 2);
+  return JSON.stringify(raw, null, 2);
 };
 
 const defToRaw = (defn: GeneralDefinitionDetail<Element>): GeneralDefinitionSpec<string> => {

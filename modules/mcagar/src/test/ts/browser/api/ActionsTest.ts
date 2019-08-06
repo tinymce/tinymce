@@ -4,13 +4,13 @@ import ActionChains from 'ephox/mcagar/api/ActionChains';
 import Editor from 'ephox/mcagar/api/Editor';
 
 UnitTest.asynctest('ActionTest', (success, failure) =>  {
-  let count;
+  let count: number;
 
   const sResetCount = Step.sync(() => count = 0);
 
-  const assertEq: any = function () {
+  const assertEq = <T>(label: string, expected: T, actual: T): void => {
     count++;
-    Assertions.assertEq.apply(this, arguments);
+    Assertions.assertEq(label, expected, actual);
   };
 
   const cAssertContentKeyboardEvent = (cAction, evt) => {
@@ -33,7 +33,7 @@ UnitTest.asynctest('ActionTest', (success, failure) =>  {
     ]);
   };
 
-  const sTestStep = (major, minor) => Chain.asStep({}, [
+  const sTestStep = Chain.asStep({}, [
     Editor.cFromSettings({base_url: '/project/tinymce/js/tinymce'}),
     cAssertContentKeyboardEvent(ActionChains.cContentKeypress, {
       type: 'keypress',
@@ -64,7 +64,7 @@ UnitTest.asynctest('ActionTest', (success, failure) =>  {
 
   Pipeline.async({}, [
     sResetCount,
-    sTestStep(5, 0)
+    sTestStep
   ], function () {
     success();
   }, failure);

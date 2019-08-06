@@ -6,7 +6,7 @@ import TinyUi from 'ephox/mcagar/api/TinyUi';
 UnitTest.asynctest('TinyLoaderTest', (success, failure) => {
   let clickedOn = false;
 
-  const sAssertState = (expected, label) => {
+  const sAssertState = (expected: boolean, label: string) => {
     return Step.sync(() => {
       Assertions.assertEq(label, expected, clickedOn);
     });

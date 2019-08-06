@@ -105,7 +105,7 @@ UnitTest.asynctest('browser.tinymce.core.ForceBlocksTest', function () {
     LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<span data-mce-type="bookmark">a</span>');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     entities: 'raw',

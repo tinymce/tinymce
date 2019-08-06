@@ -62,7 +62,7 @@ UnitTest.asynctest(
       assertPath('finish', root, finishPath, foffset, actual.endContainer, actual.endOffset);
     };
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
       const browser = PlatformDetection.detect().browser;
       Pipeline.async({}, browser.isIE() ? [ // Only run on IE
         sAddTestDiv,

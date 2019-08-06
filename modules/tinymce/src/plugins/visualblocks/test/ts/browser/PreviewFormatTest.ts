@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', (s
     }), 100, 3000);
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({},

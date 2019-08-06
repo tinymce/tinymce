@@ -6,7 +6,7 @@ import { UnitTest } from '@ephox/bedrock';
 UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysContentEndpointTest', (success, failure) => {
     Theme();
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
       const tinyApis = TinyApis(editor);
       const tinyActions = TinyActions(editor);
 

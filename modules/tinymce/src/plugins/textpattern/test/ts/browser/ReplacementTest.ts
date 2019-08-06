@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.ReplacementTest', (succe
   TextpatternPlugin();
   Theme();
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 

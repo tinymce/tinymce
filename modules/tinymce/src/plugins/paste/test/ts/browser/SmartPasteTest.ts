@@ -76,7 +76,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     LegacyUnit.equal(editor.undoManager.data.length, 2);
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Paste: Test smart paste', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

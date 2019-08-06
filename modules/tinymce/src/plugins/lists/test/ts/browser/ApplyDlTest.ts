@@ -110,7 +110,7 @@ UnitTest.asynctest('tinymce.lists.browser.ApplyTest', (success, failure) => {
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'DT');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Lists: Apply DL tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'lists',

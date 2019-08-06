@@ -439,7 +439,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function () {
     LegacyUnit.equal(editor.getContent(), '<p>dfn tag code tag samp tag kbd tag var tag cite tag mark tag q tag</p>');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

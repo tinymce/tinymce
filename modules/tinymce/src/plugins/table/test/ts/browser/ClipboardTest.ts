@@ -424,7 +424,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
     );
   });
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'Table: Test Clipboard', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'table',

@@ -7,32 +7,32 @@ const lazyBody = function (editor) {
   return Element.fromDom(editor.getBody());
 };
 
-const cNodeChanged = Chain.op(function (editor: any) {
+const cNodeChanged = <T> (): Chain<T, T> => Chain.op(function (editor: any) {
   editor.nodeChanged();
 });
 
-const cSetContent = function (html: string) {
+const cSetContent = function <T> (html: string): Chain<T, T> {
   return Chain.op(function (editor: any) {
     editor.setContent(html);
   });
 };
 
-const cSetRawContent = function (html: string) {
+const cSetRawContent = function <T> (html: string): Chain<T, T> {
   return Chain.op(function (editor: any) {
     editor.getBody().innerHTML = html;
   });
 };
 
-const cSetSelectionFrom = function (spec: Cursors.CursorSpec | Cursors.RangeSpec) {
+const cSetSelectionFrom = function <T> (spec: Cursors.CursorSpec | Cursors.RangeSpec): Chain<T, T> {
   const path = Cursors.pathFrom(spec);
   return cSetSelection(path.startPath(), path.soffset(), path.finishPath(), path.foffset());
 };
 
-const cSetCursor = function (elementPath: number[], offset: number) {
+const cSetCursor = function <T> (elementPath: number[], offset: number): Chain<T, T> {
   return cSetSelection(elementPath, offset, elementPath, offset);
 };
 
-const cSetSelection = function (startPath, soffset, finishPath, foffset) {
+const cSetSelection = function <T> (startPath, soffset, finishPath, foffset): Chain<T, T> {
   return Chain.op(function (editor: any) {
     const range = TinySelections.createDomSelection(lazyBody(editor), startPath, soffset, finishPath, foffset);
     editor.selection.setRng(range);
@@ -40,19 +40,19 @@ const cSetSelection = function (startPath, soffset, finishPath, foffset) {
   });
 };
 
-const cSetSetting = function (key: string, value) {
+const cSetSetting = function <T> (key: string, value): Chain<T, T> {
   return Chain.op(function (editor: any) {
     editor.settings[key] = value;
   });
 };
 
-const cDeleteSetting = function (key: string) {
+const cDeleteSetting = function <T> (key: string): Chain<T, T> {
   return Chain.op(function (editor: any) {
     delete editor.settings[key];
   });
 };
 
-const cSelect = function (selector: string, path: number[]) {
+const cSelect = function <T> (selector: string, path: number[]): Chain<T, T> {
   return Chain.op(function (editor: any) {
     const container = UiFinder.findIn(lazyBody(editor), selector).getOrDie();
     const target = Cursors.calculateOne(container, path);
@@ -60,7 +60,7 @@ const cSelect = function (selector: string, path: number[]) {
   });
 };
 
-const cGetContent = Chain.mapper(function (editor: any) {
+const cGetContent: Chain<any, string> = Chain.mapper(function (editor: any) {
   return editor.getContent();
 });
 

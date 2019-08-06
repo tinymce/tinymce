@@ -98,7 +98,7 @@ UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', function () {
     testPattern('ctrl+F2', 113, true);
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

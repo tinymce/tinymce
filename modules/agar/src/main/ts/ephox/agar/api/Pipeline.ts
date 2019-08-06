@@ -1,6 +1,5 @@
 import { console, setTimeout } from '@ephox/dom-globals';
 import { Arr, Type } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 
 import { DieFn, NextFn } from '../pipe/Pipe';
 import { Step } from './Step';
@@ -10,7 +9,7 @@ const assertSteps = function (steps: Step<any, any>[]) {
   Arr.each(steps, function (s: Step<any, any>, i: number) {
     let msg: string;
     if (s === undefined) {
-      msg = 'step ' + i + ' was undefined. All steps: ' + Json.stringify(steps) + '\n';
+      msg = 'step ' + i + ' was undefined. All steps: ' + JSON.stringify(steps) + '\n';
     } else if (Type.isArray(s)) {
       msg = 'step ' + i + ' was an array';
     }

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell } from '@ephox/katamari';
+import { Arr, Cell, Singleton } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
@@ -18,6 +18,7 @@ export interface DialogData {
 }
 
 const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchState>) {
+  const dialogApi = Singleton.value<Types.Dialog.DialogInstanceApi<DialogData>>();
   const matchcase = Cell(currentSearchState.get().matchCase);
   const wholewords = Cell(currentSearchState.get().wholeWord);
   editor.undoManager.add();
@@ -135,6 +136,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
               text: 'Match case',
               onAction: (api) => {
                 matchcase.set(!matchcase.get());
+                dialogApi.on((dApi) => dApi.focus('options'));
               },
               active: matchcase.get()
             },
@@ -143,6 +145,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
               text: 'Find whole words only',
               onAction: (api) => {
                 wholewords.set(!wholewords.get());
+                dialogApi.on((dApi) => dApi.focus('options'));
               },
               active: wholewords.get()
             }
@@ -211,7 +214,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     }
   };
 
-  editor.windowManager.open(spec, {inline: 'toolbar'});
+  dialogApi.set(editor.windowManager.open(spec, {inline: 'toolbar'}));
 };
 
 export default {

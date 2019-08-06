@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
   Plugin();
   Theme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const apis = TinyApis(editor);
 
     Pipeline.async({}, [

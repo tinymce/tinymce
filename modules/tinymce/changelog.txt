@@ -1,16 +1,23 @@
-Version 5.0.13 (TBD)
-    Fixed issue with being able to delete contenteditable false elements inside other contenteditable false elements #TINY-3868
+Version 5.0.14 (TBD)
+    Fixed inline dialogs not closing on escape when no dialog component is in focus #TINY-3936
+    Fixed focus not returning to editor when dismissing dropdowns on Edge and IE #TINY-3874
+    Fixed plugins not being filtered when defaulting to mobile on phones #TINY-3537
+Version 5.0.13 (2019-08-06)
+    Changed modal dialogs to prevent dragging by default and added new `draggable_modal` setting to restore dragging #TINY-3873
+    Changed the nonbreaking plugin to insert nbsp characters wrapped in spans to aid in filtering. This can be disabled using the `nonbreaking_wrap` setting #TINY-3647
+    Changed backspace behaviour in lists to outdent nested list items when the cursor is at the start of the list item #TINY-3651
+    Fixed sidebar growing beyond editor bounds in IE 11 #TINY-3937
+    Fixed issue with being unable to keyboard navigate disabled toolbar buttons #TINY-3350
+    Fixed issues with backspace and delete in nested contenteditable true and false elements #TINY-3868
+    Fixed issue with losing keyboard navigation in dialogs due to disabled buttons #TINY-3914
     Fixed `MouseEvent.mozPressure is deprecated` warning in Firefox #TINY-3919
-    Added new `draggable_modal` option to enable dragging of modal dialogs #TINY-3873
-    Changed backspace behaviour in lists to outdent nested list items #TINY-3651
     Fixed `default_link_target` not being respected when `target_list` is disabled #TINY-3757
-    Added wrapping to user-inserted nbsps, which can be disabled using the `nonbreaking_wrap` setting #TINY-3647
     Fixed mobile plugin filter to only apply to the mobile theme, rather than all mobile platforms #TINY-3405
     Fixed focus switching to another editor during mode changes #TINY-3852
     Fixed an exception being thrown when clicking on an uninitialized inline editor #TINY-3925
+    Fixed unable to keyboard navigate to dialog menu buttons #TINY-3933
     Fixed dialogs being able to be dragged outside the window viewport #TINY-3787
     Fixed inline dialogs appearing above modal dialogs #TINY-3932
-    Fixed plugins not being filtered when defaulting to mobile on phones #TINY-3537
 Version 5.0.12 (2019-07-18)
     Added ability to utilize UI dialog panels inside other panels #TINY-3305
     Added help dialog tab explaining keyboard navigation of the editor #TINY-3603

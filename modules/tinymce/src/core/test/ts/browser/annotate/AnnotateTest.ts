@@ -10,7 +10,7 @@ import { Element } from '@ephox/sugar';
 UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failure) => {
   Theme();
 
-  TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     // TODO: Consider testing collapse sections.

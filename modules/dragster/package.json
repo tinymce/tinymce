@@ -1,7 +1,7 @@
 {
   "name": "@ephox/dragster",
   "description": "This project handles dragging.",
-  "version": "4.0.18",
+  "version": "4.0.19",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce"
@@ -21,7 +21,7 @@
     "@ephox/dom-globals": "^1.1.2",
     "@ephox/katamari": "^2.4.25",
     "@ephox/porkbun": "^4.0.16",
-    "@ephox/sugar": "^4.6.25"
+    "@ephox/sugar": "^4.6.26"
   },
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test",

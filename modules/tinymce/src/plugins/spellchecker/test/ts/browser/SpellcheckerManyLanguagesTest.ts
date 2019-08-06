@@ -21,6 +21,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
     plugins: 'spellchecker',
     toolbar: 'spellchecker',
     spellchecker_languages: 'English=en,French=fr,German=de',
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    statusbar: false
   }, success, failure);
 });

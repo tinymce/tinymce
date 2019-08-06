@@ -4,7 +4,7 @@ import { UnitTest } from '@ephox/bedrock';
 import TinyApis from 'ephox/mcagar/api/TinyApis';
 
 UnitTest.asynctest('TinySelectionTest', (success, failure) => {
-  TinyLoader.setup((editor, loadSuccess, loadFailure) => {
+  TinyLoader.setupLight((editor, loadSuccess, loadFailure) => {
     const apis = TinyApis(editor);
 
     Pipeline.async({}, [

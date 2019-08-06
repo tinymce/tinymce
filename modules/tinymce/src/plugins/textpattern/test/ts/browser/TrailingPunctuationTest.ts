@@ -48,7 +48,7 @@ UnitTest.asynctest(
       };
     };
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
       const tinyApis = TinyApis(editor);
       const tnt = sTypeAndTrigger(tinyApis, editor);
 

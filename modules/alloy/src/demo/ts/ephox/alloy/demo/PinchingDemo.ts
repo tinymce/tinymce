@@ -1,4 +1,4 @@
-import { Css, Height, SelectorFind, Width } from '@ephox/sugar';
+import {Css, Element, Height, SelectorFind, Width} from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Pinching } from 'ephox/alloy/api/behaviour/Pinching';
@@ -10,7 +10,7 @@ export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
   // Naive resize handler
-  const resize = (element, changeX, changeY) => {
+  const resize = (element: Element, changeX: number, changeY: number) => {
     const width = Css.getRaw(element, 'width').map((w) => {
       return parseInt(w, 10);
     }).getOrThunk(() => {

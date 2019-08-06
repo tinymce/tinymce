@@ -1,6 +1,5 @@
 import { Objects } from '@ephox/boulder';
 import { Fun, Obj } from '@ephox/katamari';
-import { JSON } from '@ephox/sand';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';

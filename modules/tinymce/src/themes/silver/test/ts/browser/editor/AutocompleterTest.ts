@@ -30,7 +30,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
     assertion: Step<any, any>;
   }
 
-  TinyLoader.setup(
+  TinyLoader.setupLight(
     (editor, onSuccess, onFailure) => {
       const tinyUi = TinyUi(editor);
       const tinyApis = TinyApis(editor);

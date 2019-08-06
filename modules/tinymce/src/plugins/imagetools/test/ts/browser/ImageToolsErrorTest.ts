@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', fun
     Mouse.cClick
   ]));
 
-  TinyLoader.setup(
+  TinyLoader.setupLight(
     function (editor, onSuccess, onFailure) {
       const tinyApis = TinyApis(editor);
 

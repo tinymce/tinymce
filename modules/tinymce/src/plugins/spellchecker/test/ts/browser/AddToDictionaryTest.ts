@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.AddToDictionaryTest', (
 
   const dict = [];
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const api = TinyApis(editor);
     const ui = TinyUi(editor);
 

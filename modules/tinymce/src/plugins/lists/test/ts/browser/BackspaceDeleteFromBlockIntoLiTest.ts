@@ -10,7 +10,7 @@ UnitTest.asynctest('Browser Test: .RemoveTrailingBlockquoteTest', (success, fail
   ListsPlugin();
   SilverTheme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 

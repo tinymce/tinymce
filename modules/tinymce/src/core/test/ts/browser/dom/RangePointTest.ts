@@ -7,7 +7,7 @@ import RangePoint from 'tinymce/core/dom/RangePoint';
 UnitTest.asynctest('browser.tinymce.core.dom.RangePointsTest', (success, failure) => {
   Theme();
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     const sAssertXYWithinRange = (x: number, y: number) => Waiter.sTryUntil('Assert XY position is within selection range', Step.sync(() => {

@@ -402,7 +402,7 @@ UnitTest.asynctest('tinymce.lists.browser.OutdentTest', (success, failure) => {
     );
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Lists: Outdent tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'lists',

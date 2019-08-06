@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.DialogTest', (success, failure
   SilverTheme();
   Plugin();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const api = TinyApis(editor);
     const doc = Element.fromDom(document);
 

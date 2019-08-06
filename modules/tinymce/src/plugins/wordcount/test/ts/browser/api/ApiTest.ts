@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.ApiTest', (success, failur
   Plugin();
   Theme();
 
-  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     const createAssertionStep = (getCount: CountGetter) => (label: string, content: string, assertedLength: number, sel?: Sel) => {

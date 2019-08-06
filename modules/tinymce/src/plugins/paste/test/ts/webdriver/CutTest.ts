@@ -37,6 +37,7 @@ UnitTest.asynctest('tinymce.plugins.paste.webdriver.CutTest', (success, failure)
     ]), onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',
-    theme: 'silver'
+    theme: 'silver',
+    statusbar: false
   }, success, failure);
 });

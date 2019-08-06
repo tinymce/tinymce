@@ -23,10 +23,9 @@ import {
 } from '@ephox/alloy';
 import { DialogManager, Types } from '@ephox/bridge';
 import { Option } from '@ephox/katamari';
-import { Attr, Body, Class, Node } from '@ephox/sugar';
-
-import { RepresentingConfigs } from '../alien/RepresentingConfigs';
+import { Body, Class } from '@ephox/sugar';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { FormBlockEvent, formCancelEvent } from '../general/FormEvents';
 import NavigableObject from '../general/NavigableObject';
 import { dialogChannel } from './DialogChannels';
@@ -102,11 +101,7 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
         return Option.some(true);
       },
 
-      useTabstopAt: (elem) => {
-        return !NavigableObject.isPseudoStop(elem) && (
-          Node.name(elem) !== 'button' || Attr.get(elem, 'disabled') !== 'disabled'
-        );
-      },
+      useTabstopAt: (elem) => !NavigableObject.isPseudoStop(elem),
 
       modalBehaviours: Behaviour.derive([
         Reflecting.config({
@@ -117,6 +112,8 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
         RepresentingConfigs.memory({ }),
         Focusing.config({}),
         AddEventsBehaviour.config('execute-on-form', dialogEvents.concat([
+          // Note: `runOnSource` here will only listen to the event at the outer component level.
+          // Using just `run` instead will cause an infinite loop as `focusIn` would fire a `focusin` which would then get responded to and so forth.
           AlloyEvents.runOnSource(NativeEvents.focusin(), (comp, se) => {
             Keying.focusIn(comp);
           })

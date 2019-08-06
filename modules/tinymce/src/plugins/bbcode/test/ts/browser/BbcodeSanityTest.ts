@@ -9,7 +9,7 @@ UnitTest.asynctest('browser.tinymce.plugins.bbcode.BbcodeSanityTest', (success, 
   BbcodePlugin();
   Theme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'BBCode: Set bbcode content and assert the equivalent html structure is present', [

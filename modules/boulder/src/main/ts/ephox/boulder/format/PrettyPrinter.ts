@@ -1,8 +1,7 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 
 const formatObj = function (input) {
-  return Type.isObject(input) && Obj.keys(input).length > 100 ? ' removed due to size' : Json.stringify(input, null, 2);
+  return Type.isObject(input) && Obj.keys(input).length > 100 ? ' removed due to size' : JSON.stringify(input, null, 2);
 
 };
 

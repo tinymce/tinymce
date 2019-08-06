@@ -11,7 +11,7 @@ import SilverTheme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('Editor Dialog Popups Test', (success, failure) => {
   SilverTheme();
 
-  TinyLoader.setup(
+  TinyLoader.setupLight(
     (editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
       const doc = Element.fromDom(document);

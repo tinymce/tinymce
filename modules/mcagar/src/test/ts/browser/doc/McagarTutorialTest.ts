@@ -26,7 +26,7 @@ UnitTest.asynctest('McagarTutorialTest', (success, failure) => {
     });
   };
 
-  TinyLoader.setup((editor, loadSuccess, loadFailure) => {
+  TinyLoader.setupLight((editor, loadSuccess, loadFailure) => {
 
     const ui = TinyUi(editor);
     const apis = TinyApis(editor);

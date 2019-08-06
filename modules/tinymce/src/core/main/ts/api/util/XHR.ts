@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { XMLHttpRequest as XMLHttpRequestType } from '@ephox/dom-globals';
-import { XMLHttpRequest } from '@ephox/sand';
+import { XMLHttpRequest } from '@ephox/dom-globals';
 import Delay from './Delay';
 import Observable from './Observable';
 import Tools from './Tools';
@@ -23,8 +22,8 @@ export interface XHRSettings {
   url: string;
   error_scope?: {};
   success_scope?: {};
-  error? (message: 'TIMED_OUT' | 'GENERAL', xhr: XMLHttpRequestType, settings: XHRSettings): void;
-  success? (text: string, xhr: XMLHttpRequestType, settings: XHRSettings): void;
+  error? (message: 'TIMED_OUT' | 'GENERAL', xhr: XMLHttpRequest, settings: XHRSettings): void;
+  success? (text: string, xhr: XMLHttpRequest, settings: XHRSettings): void;
 }
 
 export interface XHREventMap extends NativeEventMap {
@@ -91,7 +90,7 @@ const XHR: XHR = {
 
     XHR.fire('beforeInitialize', { settings });
 
-    xhr = XMLHttpRequest();
+    xhr = new XMLHttpRequest();
 
     if (xhr) {
       if (xhr.overrideMimeType) {

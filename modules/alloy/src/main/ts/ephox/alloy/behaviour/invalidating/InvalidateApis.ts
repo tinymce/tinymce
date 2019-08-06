@@ -1,5 +1,5 @@
 import { Future, Result, Arr } from '@ephox/katamari';
-import { Class, Html, Attr, Node } from '@ephox/sugar';
+import { Class, Html, Attr, Node, Element } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Stateless } from '../../behaviour/common/BehaviourState';
@@ -10,7 +10,7 @@ const ariaElements = [
   'textarea'
 ];
 
-const isAriaElement = (elem) => {
+const isAriaElement = (elem: Element) => {
   const name = Node.name(elem);
   return Arr.contains(ariaElements, name);
 };

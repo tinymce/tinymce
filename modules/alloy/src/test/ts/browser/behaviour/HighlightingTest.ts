@@ -14,7 +14,7 @@ import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 UnitTest.asynctest('HighlightingTest', (success, failure) => {
 
   GuiSetup.setup((store, doc, body) => {
-    const makeItem = (name) => {
+    const makeItem = (name: string) => {
       return Container.sketch({
         dom: {
           tag: 'span',
@@ -48,14 +48,14 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
     );
 
   }, (doc, body, gui, component, store) => {
-    const cCheckNum = (label, expected) => {
+    const cCheckNum = (label: string, expected: number) => {
       return Chain.fromChains([
         Chain.mapper((array) => array.length),
         Assertions.cAssertEq(label, expected)
       ]);
     };
 
-    const cCheckNumOf = (label, selector, expected) => {
+    const cCheckNumOf = (label: string, selector: string, expected: number) => {
       const field = 'check-' + selector;
       return Chain.fromChains([
         NamedChain.direct('container', UiFinder.cFindAllIn(selector), field),
@@ -63,7 +63,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       ]);
     };
 
-    const cCheckSelected = (label, expected) => {
+    const cCheckSelected = (label: string, expected: string) => {
       return Chain.fromChains([
         // always check there is only 1
         cCheckNumOf(label + '\nChecking number of selected: ', '.test-selected', 1),
@@ -96,13 +96,13 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       Highlighting.highlightLast(component);
     });
 
-    const cHighlightAt = (index) => {
+    const cHighlightAt = (index: number) => {
       return Chain.op(() => {
         Highlighting.highlightAt(component, index);
       });
     };
 
-    const cHighlightAtError = (index) => {
+    const cHighlightAtError = (index: number) => {
       return Chain.binder((v) => {
         try {
           Highlighting.highlightAt(component, index);
@@ -142,7 +142,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       }, Result.value);
     });
 
-    const cHasClass = (clazz) => {
+    const cHasClass = (clazz: string) => {
       return Chain.binder((comp: AlloyComponent) => {
         const elem = comp.element();
         return Class.has(elem, clazz) ? Result.value(elem) :
@@ -150,7 +150,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       });
     };
 
-    const cFindComponent = (selector) => {
+    const cFindComponent = (selector: string) => {
       return Chain.fromChains([
         UiFinder.cFindIn(selector),
         ChainUtils.eToComponent(component)
