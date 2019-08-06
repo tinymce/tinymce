@@ -50,11 +50,15 @@ const filterChanges = (changes, tests) => {
 }
 */
 
-const testFolders = (tests, auto) => tests.flatMap(({location}) => [
-  `${location}/**/test/**/atomic/**/*Test.ts`,
-  `${location}/**/test/**/browser/**/*Test.ts`,
-  `${location}/**/test/**/phantom/**/*Test.ts`,
-].concat(auto ? `${location}/**/test/**/webdriver/**/*Test.ts` : []));
+/** Note: this is optimized for speed. Turns out globbing in node.js is time-consuming.
+ *  Restrict tinymce to 2 arbitrary levels of test base folders.
+ *  All other projects need their tests in src/test/ts
+ */
+const testFolders = (tests, auto) => tests.flatMap((test) => {
+  const testTypes = ['atomic', 'browser', 'phantom'].concat(auto ? ['webdriver'] : []);
+  const bases = test.name === "tinymce" ? ["src/*/test/ts", "src/*/*/test/ts"] : ["src/test/ts"];
+  return bases.flatMap(base => testTypes.map(tt => `${test.location}/${base}/${tt}/**/*Test.ts`));
+});
 
 const bedrockDefaults = {
   config: 'tsconfig.json',
