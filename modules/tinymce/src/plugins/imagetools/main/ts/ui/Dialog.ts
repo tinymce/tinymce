@@ -5,14 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { URL } from '@ephox/sand';
-
 import Actions from '../core/Actions';
 import ImageSize from '../core/ImageSize';
 import * as ImageToolsEvents from './ImageToolsEvents';
 import Editor from 'tinymce/core/api/Editor';
 import { Types } from '@ephox/bridge';
-import { Blob } from '@ephox/dom-globals';
+import { Blob, URL } from '@ephox/dom-globals';
 
 type ImageToolsState = {
   blob: Blob,

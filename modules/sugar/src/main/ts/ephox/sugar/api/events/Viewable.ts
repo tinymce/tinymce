@@ -1,6 +1,5 @@
 import { clearInterval, setInterval } from '@ephox/dom-globals';
 import { Fun, Throttler } from '@ephox/katamari';
-import { Window } from '@ephox/sand';
 import Element from '../node/Element';
 import * as Traverse from '../search/Traverse';
 import * as Visibility from '../view/Visibility';
@@ -43,14 +42,14 @@ const wait = window.MutationObserver !== undefined && window.MutationObserver !=
 
 const onShow = function (element: Element, f: () => void): () => void {
   if (Visibility.isVisible(element)) {
-    Window.requestAnimationFrame(f);
+    window.requestAnimationFrame(f);
     return Fun.noop;
   } else {
     // these events might come in thick and fast, so throttle them
     const throttler = Throttler.adaptable(function () {
       if (Visibility.isVisible(element)) {
         unbind();
-        Window.requestAnimationFrame(f);
+        window.requestAnimationFrame(f);
       }
     }, 100);
 

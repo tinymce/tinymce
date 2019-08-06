@@ -1,6 +1,5 @@
 import { ValueSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun, Option, Type } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 import { Traverse } from '@ephox/sugar';
 
 import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
@@ -101,7 +100,7 @@ const build = (spec): AlloyComponent => {
   const config = <D>(behaviour: AlloyBehaviour<any, D>): D | any => {
     const b = bData;
     const f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : () => {
-      throw new Error('Could not find ' + behaviour.name() + ' in ' + Json.stringify(spec, null, 2));
+      throw new Error('Could not find ' + behaviour.name() + ' in ' + JSON.stringify(spec, null, 2));
     };
     return f();
   };

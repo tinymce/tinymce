@@ -1,4 +1,3 @@
-import { JSON as Json } from '@ephox/sand';
 
 import { DomDefinitionDetail } from './DomDefinition';
 
@@ -21,7 +20,7 @@ const nu = (s: DomModificationSpec): DomModification => ({
 
 const modToStr = (mod: DomModification): string => {
   const raw = modToRaw(mod);
-  return Json.stringify(raw, null, 2);
+  return JSON.stringify(raw, null, 2);
 };
 
 const modToRaw = (mod: DomModification): any => {

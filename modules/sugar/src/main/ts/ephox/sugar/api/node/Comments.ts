@@ -1,6 +1,6 @@
-import { document, Node, TreeWalker } from '@ephox/dom-globals';
+import { document, Node, TreeWalker, NodeFilter } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import { NodeFilter, PlatformDetection } from '@ephox/sand';
+import { PlatformDetection } from '@ephox/sand';
 import Element from './Element';
 
 const regularGetNodes = function (texas: TreeWalker) {
@@ -38,7 +38,7 @@ const find = function (node: Element, filterOpt: Option<(n: string) => boolean>)
   // http://www.bennadel.com/blog/2607-finding-html-comment-nodes-in-the-dom-using-treewalker.htm
   vmlFilter.acceptNode = vmlFilter;
 
-  const texas = document.createTreeWalker(node.dom() as Node, NodeFilter().SHOW_COMMENT, vmlFilter, false);
+  const texas = document.createTreeWalker(node.dom() as Node, NodeFilter.SHOW_COMMENT, vmlFilter, false);
 
   return getNodes(texas);
 };

@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { FileReader, Uint8Array, Window, XMLHttpRequest } from '@ephox/sand';
 import Promise from '../api/util/Promise';
-import { Blob } from '@ephox/dom-globals';
+import { Blob, XMLHttpRequest, FileReader, atob } from '@ephox/dom-globals';
 
 /**
  * Converts blob/uris back and forth.
@@ -24,7 +23,7 @@ const blobUriToBlob = function (url: string): Promise<Blob> {
     };
 
     try {
-      const xhr = XMLHttpRequest();
+      const xhr = new XMLHttpRequest();
 
       xhr.open('GET', url, true);
       xhr.responseType = 'blob';
@@ -73,13 +72,13 @@ const dataUriToBlob = function (uri: string): Promise<Blob> {
 
     // Might throw error if data isn't proper base64
     try {
-      str = Window.atob(uriParts.data);
+      str = atob(uriParts.data);
     } catch (e) {
       resolve(new Blob([]));
       return;
     }
 
-    arr = Uint8Array(str.length);
+    arr = new Uint8Array(str.length);
 
     for (i = 0; i < arr.length; i++) {
       arr[i] = str.charCodeAt(i);
@@ -103,7 +102,7 @@ const uriToBlob = function (url: string): Promise<Blob> {
 
 const blobToDataUri = function (blob: Blob): Promise<string> {
   return new Promise(function (resolve) {
-    const reader = FileReader();
+    const reader = new FileReader();
 
     reader.onloadend = function () {
       resolve(reader.result);

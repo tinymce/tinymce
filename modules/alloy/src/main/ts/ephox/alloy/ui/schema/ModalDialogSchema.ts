@@ -1,6 +1,5 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 import { SelectorFind } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
@@ -41,7 +40,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
               // TODO: Support errors in Option getOrDie.
               new Error(
                 'The drag blocker class was not specified for a dialog with a drag handle: \n' +
-                Json.stringify(spec, null, 2)
+                JSON.stringify(spec, null, 2)
               ).message
             ),
             getBounds: detail.getDragBounds

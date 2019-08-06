@@ -1,6 +1,5 @@
-import { Blob, HTMLCanvasElement, HTMLImageElement, Image, URL, XMLHttpRequest } from '@ephox/dom-globals';
+import { atob, Blob, HTMLCanvasElement, HTMLImageElement, Image, FileReader, URL, XMLHttpRequest } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Blob as SandBlob, FileReader, Uint8Array, Window } from '@ephox/sand';
 import * as Canvas from './Canvas';
 import * as ImageSize from './ImageSize';
 import { Promise } from './Promise';
@@ -93,7 +92,7 @@ function dataUriToBlobSync(uri: string): Option<Blob> {
 
   // al gore rhythm via http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
   const sliceSize = 1024;
-  const byteCharacters = Window.atob(base64);
+  const byteCharacters = atob(base64);
   const bytesLength = byteCharacters.length;
   const slicesCount = Math.ceil(bytesLength / sliceSize);
   const byteArrays = new Array(slicesCount);
@@ -107,9 +106,9 @@ function dataUriToBlobSync(uri: string): Option<Blob> {
     for (let offset = begin, i = 0; offset < end; ++i, ++offset) {
       bytes[i] = byteCharacters[offset].charCodeAt(0);
     }
-    byteArrays[sliceIndex] = Uint8Array(bytes);
+    byteArrays[sliceIndex] = new Uint8Array(bytes);
   }
-  return Option.some(SandBlob(byteArrays, { type: mimetype }));
+  return Option.some(new Blob(byteArrays, { type: mimetype }));
 }
 
 function dataUriToBlob(uri: string): Promise<Blob> {
@@ -171,7 +170,7 @@ function blobToCanvas(blob: Blob): Promise<HTMLCanvasElement> {
 
 function blobToDataUri(blob: Blob): Promise<string> {
   return new Promise(function (resolve) {
-    const reader = FileReader();
+    const reader = new FileReader();
 
     reader.onloadend = function () {
       resolve(reader.result);
@@ -183,7 +182,7 @@ function blobToDataUri(blob: Blob): Promise<string> {
 
 function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
   return new Promise(function (resolve) {
-    const reader = FileReader();
+    const reader = new FileReader();
 
     reader.onloadend = function () {
       resolve(reader.result);
