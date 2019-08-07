@@ -26,8 +26,8 @@ const deleteFromCallbackMap = (callbackMap, selector, callback) => {
 type SelectorChangedCallback = (active: boolean, args: { node: Node; selector: String; parents: Element[]; }) => void;
 
 export default (dom: DOMUtils, editor: Editor) => {
-  let selectorChangedData: { [x: string]: Array<SelectorChangedCallback>; };
-  let currentSelectors: { [x: string]: Array<SelectorChangedCallback>; };
+  let selectorChangedData: Record<string, SelectorChangedCallback[]>;
+  let currentSelectors: Record<string, SelectorChangedCallback[]>;
 
   return {
     selectorChangedWithUnbind(selector: string, callback: SelectorChangedCallback): { unbind: () => void } {
