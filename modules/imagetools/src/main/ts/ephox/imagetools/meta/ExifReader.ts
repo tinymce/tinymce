@@ -256,7 +256,7 @@ export class ExifReader {
     }
 
     this._offsets.IFD0 = this._offsets.tiffHeader + this.LONG(this._idx += 2)!;
-    this._tiffTags = this.extractTags<TiffTags>(this._offsets.IFD0, tags.tiff);
+    this._tiffTags = this.extractTags(this._offsets.IFD0, tags.tiff);
 
     if ('ExifIFDPointer' in this._tiffTags) {
       this._offsets.exifIFD = this._offsets.tiffHeader + this._tiffTags.ExifIFDPointer!;
@@ -350,7 +350,7 @@ export class ExifReader {
 
     if (self._offsets.exifIFD) {
       try {
-        Exif = self.extractTags<ExifTags>(self._offsets.exifIFD, tags.exif);
+        Exif = self.extractTags(self._offsets.exifIFD, tags.exif);
       } catch (ex) {
         return null;
       }
@@ -374,7 +374,7 @@ export class ExifReader {
 
     if (self._offsets.gpsIFD) {
       try {
-        GPS = self.extractTags<GPSTags>(self._offsets.gpsIFD, tags.gps);
+        GPS = self.extractTags(self._offsets.gpsIFD, tags.gps);
       } catch (ex) {
         return null;
       }
@@ -405,9 +405,9 @@ export class ExifReader {
     return null;
   }
 
-  private extractTags<T extends Record<string, any>>(IFD_offset: number, tags2extract: Record<number, string>): T {
+  private extractTags(IFD_offset: number, tags2extract: any): any {
     const self = this;
-    const hash = {} as T;
+    const hash: any = {};
 
     const types: Record<number, string> = {
       1 : 'BYTE',
