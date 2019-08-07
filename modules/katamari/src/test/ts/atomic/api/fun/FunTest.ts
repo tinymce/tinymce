@@ -1,4 +1,5 @@
 import * as Fun from 'ephox/katamari/api/Fun';
+import { Option } from 'ephox/katamari/api/Option';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
@@ -120,6 +121,17 @@ UnitTest.test('Function tests', function () {
     });
   };
 
+  const testWiden = () => {
+    const s: string = 's';
+    const n: number = 3;
+    const sn: Option<string | number> = Option.some<number>(3).map(Fun.widenl<string, number>());
+    assert.eq(3, sn.getOrDie());
+
+    const ns: Option<string | number> = Option.some<string>('cat').map(Fun.widenr<string, number>());
+    assert.eq('cat', ns.getOrDie());
+  };
+
   testSanity();
   testSpecs();
+  testWiden();
 });

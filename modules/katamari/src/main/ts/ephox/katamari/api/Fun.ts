@@ -65,8 +65,17 @@ const call = function (f: () => any) {
 const never = constant<false>(false) as (...args: any[]) => false;
 const always = constant<true>(true) as (...args: any[]) => true;
 
-const widenl = <A, B>(b: B): A | B => b;
-const widenr = <A, B>(a: A): A | B => a;
+/** widen a value of type B to union type A | B
+ *  In normal assignment, you can say:
+ *  const a: string | number = 3
+ *  but when you have a union type as a type parameter you can't.
+ *  e.g. there's no automatic conversion from Option<string> to Option<number | string>
+ *
+ */
+const widenl = <A, B>() => (b: B): A | B => b;
+
+/** widen a value of type A to union type A | B */
+const widenr = <A, B>() => (a: A): A | B => a;
 
 export {
   noop,

@@ -51,13 +51,13 @@ const wrap = function <A = any, E = any>(delegate: Future<Result<A, E>>): Future
       let timedOut = false;
       const timer = setTimeout(() => {
         timedOut = true;
-        callback(Result.error(Fun.widenl<E, E2>(errorThunk())));
+        callback(Result.error(Fun.widenl<E, E2>()(errorThunk())));
       }, timeout);
 
       delegate.get((result) => {
         if (!timedOut) {
           clearTimeout(timer);
-          callback(result.mapError((e) => Fun.widenr<E, E2>(e)));
+          callback(result.mapError(Fun.widenr<E, E2>()));
         }
       });
     }));
