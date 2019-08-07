@@ -791,8 +791,7 @@ module.exports = function (grunt) {
   });
   grunt.loadTasks('tools/tasks');
 
-  grunt.registerTask('prod', [
-    // 'validateVersion',
+  grunt.registerTask('prodBuild', [
     'shell:tsc',
     'tslint',
     'globals',
@@ -802,6 +801,11 @@ module.exports = function (grunt) {
     'uglify',
     'copy',
     'clean:release',
+    'version'
+  ]);
+
+  grunt.registerTask('prod', [
+    'prodBuild',
     'moxiezip',
     'nugetpack',
     'symlink-dist',

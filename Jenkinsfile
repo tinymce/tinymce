@@ -127,8 +127,8 @@ node("primary") {
 
     if (BRANCH_NAME != "master") {
       stage ("Archive Build") {
-        extExec("yarn tinymce-grunt prod")
-        archiveArtifacts artifacts: 'js/**, dist/**', onlyIfSuccessful: true
+        extExec("yarn tinymce-grunt prodBuild symlink:js")
+        archiveArtifacts artifacts: 'js/**', onlyIfSuccessful: true
       }
     }
 
