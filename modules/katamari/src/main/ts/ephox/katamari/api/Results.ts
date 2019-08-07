@@ -10,7 +10,7 @@ const comparison = Adt.generate([
 ]);
 
 /** partition :: [Result a] -> { errors: [String], values: [a] } */
-export const partition = function <T, E>(results: Result<T, E>[]) {
+export const partition = function <T, E>(results: Result<T, E>[]): { values: T[], errors: E[] } {
   const errors: E[] = [];
   const values: T[] = [];
 
@@ -24,8 +24,7 @@ export const partition = function <T, E>(results: Result<T, E>[]) {
   return { errors, values };
 };
 
-/** compare :: (Result a, Result b) -> Comparison a b */
-export const compare = function (result1: Result<any, any>, result2: Result<any, any>) {
+export const compare = function<A, B> (result1: Result<A, B>, result2: Result<A, B>) {
   return result1.fold(function (err1) {
     return result2.fold(function (err2) {
       return comparison.bothErrors(err1, err2);
