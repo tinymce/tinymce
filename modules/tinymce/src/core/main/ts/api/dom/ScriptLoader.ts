@@ -65,10 +65,10 @@ const FAILED = 3;
 class ScriptLoader {
   public static ScriptLoader = new ScriptLoader();
 
-  private states = {};
-  private queue = [];
-  private scriptLoadedCallbacks = {};
-  private queueLoadedCallbacks = [];
+  private states: Record<string, number> = {};
+  private queue: string[] = [];
+  private scriptLoadedCallbacks: Record<string, Array<{success: () => void, failure: () => void, scope: any}>> = {};
+  private queueLoadedCallbacks: Array<{success: () => void, failure: (urls: string[]) => void, scope: any}> = [];
   private loading = 0;
 
   constructor () { }
