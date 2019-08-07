@@ -54,7 +54,7 @@ function Plugin(editor: Editor) {
     cellSelection.destroy();
   });
 
-  return getApi(editor, clipboardRows);
+  return getApi(editor, clipboardRows, resizeHandler.lazyWire);
 }
 
 export default function () {
