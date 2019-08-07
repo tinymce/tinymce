@@ -19,7 +19,7 @@ import { AutocompleterDatabase } from './Autocompleters';
 
 export interface AutocompleteLookupData {
   matchText: string;
-  items: InlineContent.AutocompleterItemApi[];
+  items: InlineContent.AutocompleterContents[];
   columns: Types.ColumnTypes;
   onAction: (autoApi: InlineContent.AutocompleterInstanceApi, rng: Range, value: string, meta: Record<string, any>) => void;
 }
@@ -55,7 +55,7 @@ const lookup = (editor: Editor, getDatabase: () => AutocompleterDatabase): Optio
   return getTriggerContext(editor.dom, rng, database).bind((context) => lookupWithContext(editor, getDatabase, context));
 };
 
-const lookupWithContext = (editor: Editor, getDatabase: () => AutocompleterDatabase, context: AutocompleteContext): Option<AutocompleteLookupInfo> => {
+const lookupWithContext = (editor: Editor, getDatabase: () => AutocompleterDatabase, context: AutocompleteContext, fetchOptions: Record<string, any> = {}): Option<AutocompleteLookupInfo> => {
   const database = getDatabase();
   const rng = editor.selection.getRng();
   const startText = rng.startContainer.nodeValue;
@@ -70,7 +70,7 @@ const lookupWithContext = (editor: Editor, getDatabase: () => AutocompleterDatab
 
   const lookupData = Promise.all(Arr.map(autocompleters, (ac) => {
     // TODO: Find a sensible way to do maxResults
-    const fetchResult = ac.fetch(context.text, ac.maxResults);
+    const fetchResult = ac.fetch(context.text, ac.maxResults, fetchOptions);
     return fetchResult.then((results) => ({
       matchText: context.text,
       items: results,

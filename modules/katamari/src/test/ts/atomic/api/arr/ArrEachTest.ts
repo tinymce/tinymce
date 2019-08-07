@@ -3,8 +3,8 @@ import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ArrEachTest', function () {
-  const checkLHelper = function (expected, input) {
-    const values = [];
+  const checkLHelper = function <T> (expected: T[], input: ArrayLike<T>) {
+    const values: Array<{index: number, value: T}> = [];
     Arr.each(input, function (x, i) {
       values.push({index: i, value: x});
     });
@@ -16,8 +16,8 @@ UnitTest.test('ArrEachTest', function () {
     checkLHelper(expected, Object.freeze(input.slice()));
   };
 
-  const checkRHelper = function (expected, input) {
-    const values = [];
+  const checkRHelper = function <T> (expected: T[], input: ArrayLike<T>) {
+    const values: Array<{index: number, value: T}> = [];
     Arr.eachr(input, function (x, i) {
       values.push({index: i, value: x});
     });
@@ -38,8 +38,8 @@ UnitTest.test('ArrEachTest', function () {
   Jsc.property(
     'Each + push should equal the same array',
     Jsc.array(Jsc.json),
-    function (arr) {
-      const values = [ ];
+    function (arr: any[]) {
+      const values: any[] = [];
       const output = Arr.each(arr, function (x, i) {
         values.push(x);
       });
@@ -50,8 +50,8 @@ UnitTest.test('ArrEachTest', function () {
   Jsc.property(
     'eachr + push should equal the reverse of the array',
     Jsc.array(Jsc.json),
-    function (arr) {
-      const values = [ ];
+    function (arr: any[]) {
+      const values: any[] = [];
       const output = Arr.eachr(arr, function (x, i) {
         values.push(x);
       });

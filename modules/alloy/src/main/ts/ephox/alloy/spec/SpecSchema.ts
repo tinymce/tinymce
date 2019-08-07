@@ -70,7 +70,7 @@ const getPartsSchema = (partNames, _optPartNames, _owner): FieldProcessorAdt[] =
   return [ partsSchema, partUidsSchema ];
 };
 
-const base = (label, partSchemas, partUidsSchemas, spec) => {
+const base = (partSchemas, partUidsSchemas) => {
   const ps = partSchemas.length > 0 ? [
     FieldSchema.strictObjOf('parts', partSchemas)
   ] : [ ];
@@ -86,12 +86,12 @@ const base = (label, partSchemas, partUidsSchemas, spec) => {
 
 const asRawOrDie = <D, S>(label, schema: Adt[], spec: S, partSchemas, partUidsSchemas): D => {
   // OBVIOUSLY NEVER USED RAW BEFORE !!!!!!!!!!!!!!!!!!!!!
-  const baseS = base(label, partSchemas, partUidsSchemas, spec);
+  const baseS = base(partSchemas, partUidsSchemas);
   return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 
 const asStructOrDie = function <D, S>(label: string, schema: Adt[], spec: S, partSchemas: any[], partUidsSchemas: any[]): D {
-  const baseS = base(label, partSchemas, partUidsSchemas, spec);
+  const baseS = base(partSchemas, partUidsSchemas);
   return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 

@@ -32,7 +32,7 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
     )
   ]);
 
-  const sHasBasicStructure = (label) => {
+  const sHasBasicStructure = (label: string) => {
     return GeneralSteps.sequence([
       sCreateConfirm(label, Fun.noop),
       sWaitForDialog,
@@ -141,8 +141,8 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
     ]);
   };
 
-  const sCreateConfirm = (message, callback) => {
-    return Step.sync(() => {
+  const sCreateConfirm = <T> (message: string, callback: (state: boolean) => void) => {
+    return Step.sync<T>(() => {
       windowManager.confirm(message, callback);
     });
   };
@@ -154,7 +154,7 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
     10000
   );
 
-  const sInsertTheCorrectMessage = (label) => {
+  const sInsertTheCorrectMessage = (label: string) => {
     return GeneralSteps.sequence([
       sCreateConfirm(label, Fun.noop),
       Step.sync(() => {
@@ -183,7 +183,7 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
     ]);
   };
 
-  const sCallbackOnClose = (label) => {
+  const sCallbackOnClose = (label: string) => {
     let calls = 0;
 
     return GeneralSteps.sequence([

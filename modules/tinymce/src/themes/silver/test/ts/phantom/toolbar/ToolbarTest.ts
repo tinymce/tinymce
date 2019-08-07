@@ -8,7 +8,7 @@ import TestBackstage from '../../module/TestBackstage';
 
 UnitTest.asynctest('Toolbar Test', (success, failure) => {
 
-  const makeButton = (t) => {
+  const makeButton = (t: string) => {
     return {
       dom: {
         tag: 'span',

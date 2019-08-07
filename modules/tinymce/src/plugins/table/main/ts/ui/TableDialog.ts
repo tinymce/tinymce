@@ -86,7 +86,7 @@ const applyDataToElement = (editor: Editor, tableElm, data: TableData) => {
   dom.setAttribs(tableElm, Merger.merge(getDefaultAttributes(editor), attrs));
 };
 
-const onSubmitTableForm = (editor: Editor, tableElm, api: Types.Dialog.DialogInstanceApi<TableData>) => {
+const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Types.Dialog.DialogInstanceApi<TableData>) => {
   const dom = editor.dom;
   let captionElm;
   const data = api.getData();

@@ -1,23 +1,21 @@
 import { Option } from './Option';
 import * as Type from './Type';
 
-type Morphism<T, U> = (a: T) => U;
-type Catamorphism<T, U> = (acc: U, x: T) => U;
 type ArrayMorphism<T, U> = (x: T, i: number, xs: ArrayLike<T>) => U;
 type ArrayPredicate<T> = ArrayMorphism<T, boolean>;
-type Predicate<T> = Morphism<T, boolean>;
+type Predicate<T> = (a: T) => boolean;
 type Comparator<T> = (a: T, b: T) => number;
 
 const slice = Array.prototype.slice;
 
 // Use the native Array.indexOf if it is available (IE9+) otherwise fall back to manual iteration
 // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
-const rawIndexOf = (() => {
+const rawIndexOf: <T> (ts: ArrayLike<T>, t: T) => number = (() => {
   const pIndexOf = Array.prototype.indexOf;
 
-  const fastIndex = (xs, x) => pIndexOf.call(xs, x);
+  const fastIndex = <T> (xs: ArrayLike<T>, x: T): number => pIndexOf.call(xs, x);
 
-  const slowIndex = (xs, x) => slowIndexOf(xs, x);
+  const slowIndex = <T> (xs: ArrayLike<T>, x: T): number => slowIndexOf(xs, x);
 
   return pIndexOf === undefined ? slowIndex : fastIndex;
 })();
@@ -38,7 +36,7 @@ export const exists = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): bool
   return findIndex(xs, pred).isSome();
 };
 
-export const range = <T = any>(num: number, f: Morphism<number, T>): T[] => {
+export const range = <T = any>(num: number, f: (a: number) => T): T[] => {
   const r: T[] = [];
   for (let i = 0; i < num; i++) {
     r.push(f(i));
@@ -92,8 +90,8 @@ export const eachr = <T = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, void>): voi
 };
 
 export const partition = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): { pass: T[], fail: T[] } => {
-  const pass = [];
-  const fail = [];
+  const pass: T[] = [];
+  const fail: T[] = [];
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
     const arr = pred(x, i, xs) ? pass : fail;
@@ -103,7 +101,7 @@ export const partition = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): {
 };
 
 export const filter = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[] => {
-  const r = [];
+  const r: T[] = [];
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
     if (pred(x, i, xs)) {
@@ -124,13 +122,13 @@ export const filter = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[] 
  *  For a good explanation, see the group function (which is a special case of groupBy)
  *  http://hackage.haskell.org/package/base-4.7.0.0/docs/Data-List.html#v:group
  */
-export const groupBy = <T = any>(xs: ArrayLike<T>, f: Morphism<T, any>): T[][] => {
+export const groupBy = <T = any>(xs: ArrayLike<T>, f: (a: T) => any): T[][] => {
   if (xs.length === 0) {
     return [];
   } else {
     let wasType = f(xs[0]); // initial case for matching
-    const r = [];
-    let group = [];
+    const r: T[][] = [];
+    let group: T[] = [];
 
     for (let i = 0, len = xs.length; i < len; i++) {
       const x = xs[i];
@@ -149,14 +147,14 @@ export const groupBy = <T = any>(xs: ArrayLike<T>, f: Morphism<T, any>): T[][] =
   }
 };
 
-export const foldr = <T = any, U = any>(xs: ArrayLike<T>, f: Catamorphism<T, U>, acc: U): U => {
+export const foldr = <T = any, U = any>(xs: ArrayLike<T>, f: (acc: U, x: T) => U, acc: U): U => {
   eachr(xs, function (x) {
     acc = f(acc, x);
   });
   return acc;
 };
 
-export const foldl = <T = any, U = any>(xs: ArrayLike<T>, f: Catamorphism<T, U>, acc: U): U => {
+export const foldl = <T = any, U = any>(xs: ArrayLike<T>, f: (acc: U, x: T) => U, acc: U): U => {
   each(xs, function (x) {
     acc = f(acc, x);
   });
@@ -195,12 +193,12 @@ const slowIndexOf = <T = any>(xs: ArrayLike<T>, x: T): number => {
 };
 
 const push = Array.prototype.push;
-export const flatten = <T = any>(xs: ArrayLike<ArrayLike<T> | T[]>): T[] => {
+export const flatten = <T>(xs: ArrayLike<T[]>): T[] => {
   // Note, this is possible because push supports multiple arguments:
   // http://jsperf.com/concat-push/6
   // Note that in the past, concat() would silently work (very slowly) for array-like objects.
   // With this change it will throw an error.
-  const r = [];
+  const r: T[] = [];
   for (let i = 0, len = xs.length; i < len; ++i) {
     // Ensure that each value is an array itself
     if (!Type.isArray(xs[i])) {

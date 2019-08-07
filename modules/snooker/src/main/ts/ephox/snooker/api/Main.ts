@@ -5,8 +5,6 @@ import CellProperties from './CellProperties';
 import CopyRows from './CopyRows';
 import CopySelected from './CopySelected';
 import { Generators } from './Generators';
-import Picker from './Picker';
-import { PickerDirection } from './PickerDirection';
 import { ResizeDirection } from './ResizeDirection';
 import { ResizeWire } from './ResizeWire';
 import Sizes from './Sizes';
@@ -31,8 +29,6 @@ export {
   CopyRows,
   CopySelected,
   Generators,
-  Picker,
-  PickerDirection,
   ResizeDirection,
   ResizeWire,
   Sizes,

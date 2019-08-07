@@ -11,7 +11,7 @@ import * as Viewable from './Viewable';
 
 interface Monitored {
   element: Element;
-  handlers: any[];
+  handlers: Array<() => void>;
   lastWidth: number;
   lastHeight: number;
 }
@@ -52,7 +52,7 @@ const bind = function (element: Element, handler: () => void) {
   }, 100);
 };
 
-const unbind = function (element: Element, handler) {
+const unbind = function (element: Element, handler: () => void) {
   // remove any monitors on this element
   Monitors.end(element);
   const index = findElem(element);

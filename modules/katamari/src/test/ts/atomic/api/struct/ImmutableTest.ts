@@ -10,7 +10,7 @@ UnitTest.test('Struct.immutable', function () {
   assert.eq('hello', thing.fred());
   assert.eq(1, thing.barney());
 
-  const toUnique = function (array) {
+  const toUnique = function (array: string[]) {
     const r = { };
     Arr.each(array, function (v) {
       r[v] = {};
@@ -21,7 +21,7 @@ UnitTest.test('Struct.immutable', function () {
   Jsc.property(
     'Checking struct with right number of arguments',
     Jsc.nearray(Jsc.string),
-    function (rawValues) {
+    function (rawValues: string[]) {
       // Remove duplications.
       const values = toUnique(rawValues);
 
@@ -39,7 +39,7 @@ UnitTest.test('Struct.immutable', function () {
   Jsc.property(
     'Checking struct with one fewer argument',
     Jsc.nearray(Jsc.string),
-    function (rawValues) {
+    function (rawValues: string[]) {
       // Remove duplications.
       const values = toUnique(rawValues);
 
@@ -57,7 +57,7 @@ UnitTest.test('Struct.immutable', function () {
     'Checking struct with fewer arguments',
     Jsc.nearray(Jsc.string),
     Jsc.integer(1, 10),
-    function (rawValues, numToExclude) {
+    function (rawValues: string[], numToExclude: number) {
       // Remove duplications.
       const values = toUnique(rawValues);
 
@@ -75,7 +75,7 @@ UnitTest.test('Struct.immutable', function () {
     'Checking struct with more arguments',
     Jsc.nearray(Jsc.string),
     Jsc.nearray(Jsc.string),
-    function (rawValues, extra) {
+    function (rawValues: string[], extra: string[]) {
       // Remove duplications.
       const values = toUnique(rawValues);
 

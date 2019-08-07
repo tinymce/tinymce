@@ -11,7 +11,7 @@ export const Cell = <T>(initial: T): Cell<T> => {
     return value;
   };
 
-  const set = function (v) {
+  const set = function (v: T) {
     value = v;
   };
 

@@ -1,6 +1,7 @@
 import { Future } from './Future';
 import { Result } from './Result';
 import { clearTimeout, setTimeout } from '@ephox/dom-globals';
+import { Fun } from '@ephox/katamari';
 
 export interface FutureResult<A, E> extends Future<Result<A, E>> {
   toCached: () => FutureResult<A, E>;
@@ -9,7 +10,7 @@ export interface FutureResult<A, E> extends Future<Result<A, E>> {
   mapResult: <B>(f: (value: A) => B) => FutureResult<B, E>;
   mapError: <B>(f: (error: E) => B) => FutureResult<A, B>;
   foldResult: <X>(whenError: (error: E) => X, whenValue: (value: A) => X) => Future<X>;
-  withTimeout: <E2>(timeout: number, errorThunk: () => E2) => FutureResult<A, E | E2>;
+  withTimeout: (timeout: number, errorThunk: () => E) => FutureResult<A, E>;
 }
 
 const wrap = function <A = any, E = any>(delegate: Future<Result<A, E>>): FutureResult<A, E> {
@@ -45,8 +46,8 @@ const wrap = function <A = any, E = any>(delegate: Future<Result<A, E>>): Future
     return delegate.map((res) => res.fold(whenError, whenValue));
   };
 
-  const withTimeout = function <E2>(timeout: number, errorThunk: () => E2) {
-    return wrap(Future.nu(function (callback: (value: Result<A, E | E2>) => void) {
+  const withTimeout = function (timeout: number, errorThunk: () => E) {
+    return wrap(Future.nu(function (callback: (value: Result<A, E>) => void) {
       let timedOut = false;
       const timer = setTimeout(() => {
         timedOut = true;

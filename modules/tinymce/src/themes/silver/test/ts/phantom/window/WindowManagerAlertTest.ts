@@ -32,7 +32,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
     ),
   ]);
 
-  const sHasBasicStructure = (label) => {
+  const sHasBasicStructure = (label: string) => {
     return GeneralSteps.sequence([
       sCreateAlert(label, Fun.noop),
       sWaitForDialog,
@@ -131,7 +131,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
     ]);
   };
 
-  const sCreateAlert = (message, callback) => {
+  const sCreateAlert = (message: string, callback: () => void) => {
     return Step.sync(() => {
       windowManager.alert(message, callback);
     });
@@ -144,7 +144,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
     10000
   );
 
-  const sInsertTheCorrectMessage = (label) => {
+  const sInsertTheCorrectMessage = (label: string) => {
     return GeneralSteps.sequence([
       sCreateAlert(label, Fun.noop),
       Step.sync(() => {
@@ -173,7 +173,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
     ]);
   };
 
-  const sCallbackOnClose = (label) => {
+  const sCallbackOnClose = (label: string) => {
     let calls = 0;
 
     return GeneralSteps.sequence([

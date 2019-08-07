@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
   SilverTheme();
   TablePlugin();
 
-  const sDragDrop = (container, selector, dx, dy) => {
+  const sDragDrop = (container: Element, selector: string, dx: number, dy: number) => {
     return Logger.t('Drag from a point and drop at specified point', Chain.asStep(container, [
       UiFinder.cFindIn(selector),
       Mouse.cMouseDown,
@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
     ]));
   };
 
-  const sDragDropBlocker = (container, selector, dx, dy) => {
+  const sDragDropBlocker = (container: Element, selector: string, dx: number, dy: number) => {
     return Logger.t('Block dragging and dropping of any other element in the container', Chain.asStep({}, [
       Chain.fromParent(Chain.inject(container), [
         Chain.fromChains([
