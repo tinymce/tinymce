@@ -56,7 +56,7 @@ node("primary") {
   }
 
   def browserPermutations = [
-    [ name: "win10Chrome", os: "windows-10", browser: "chrome", buckets: 1 ],
+    [ name: "win10Chrome", os: "windows-10", browser: "chrome", buckets: 2 ],
     [ name: "win10FF", os: "windows-10", browser: "firefox", buckets: 2 ],
     [ name: "win10Edge", os: "windows-10", browser: "MicrosoftEdge", buckets: 2 ],
     [ name: "win10IE", os: "windows-10", browser: "ie", buckets: 4 ],
