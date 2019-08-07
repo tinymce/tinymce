@@ -26,6 +26,7 @@ import { moveEndPoint, hasAnyRanges } from '../../selection/SelectionUtils';
 import Editor from '../Editor';
 import DOMUtils from './DOMUtils';
 import SelectorChanged from './SelectorChanged';
+import Serializer from './Serializer';
 
 /**
  * This class handles text and control selection it's an crossbrowser utility class.
@@ -107,9 +108,11 @@ interface Selection {
  * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
  * @param {tinymce.Editor} editor Editor instance of the selection.
  */
-const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Editor): Selection {
-  let bookmarkManager, controlSelection: ControlSelection;
-  let selectedRange, explicitRange;
+const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, editor: Editor): Selection {
+  let bookmarkManager: BookmarkManager;
+  let controlSelection: ControlSelection;
+  let selectedRange: Range | null;
+  let explicitRange: Range | null;
 
   const { selectorChangedWithUnbind } = SelectorChanged(dom, editor);
 
@@ -286,7 +289,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
    * @see http://www.quirksmode.org/dom/range_intro.html
    * @see http://www.dotvoid.com/2001/03/using-the-range-object-in-mozilla/
    */
-  const getRng = (): Range => {
+  const getRng = (): Range | null => {
     let selection, rng, elm, doc;
 
     const tryCompareBoundaryPoints = function (how, sourceRange, destinationRange) {
