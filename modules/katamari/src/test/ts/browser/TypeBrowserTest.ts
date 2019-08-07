@@ -1,5 +1,5 @@
 import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import { document, Window } from '@ephox/dom-globals';
 import { Type } from 'ephox/katamari/api/Main';
 
 UnitTest.asynctest('Type cross window test', (success, failure) => {
@@ -52,12 +52,12 @@ UnitTest.asynctest('Type cross window test', (success, failure) => {
   iframe.addEventListener('load', () => {
     // tslint:disable-next-line: no-string-literal
     const frameEval = (script: string): any => {
-      const cw = iframe.contentWindow;
+      const cw: Window | null = iframe.contentWindow;
       if (cw == null) {
         throw new Error('contentWindow was null');
       }
       // TypeScript doesn't think that Window.eval exists
-      return (cw as any).eval;
+      return (cw as any).eval(script);
     };
 
     try {
