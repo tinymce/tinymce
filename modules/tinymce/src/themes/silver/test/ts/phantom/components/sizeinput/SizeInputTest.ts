@@ -25,11 +25,11 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
 
       const sTriggerInput = DomSteps.sTriggerEventOnFocused('input("input")', component, NativeEvents.input());
 
-      const sSetDimensions = (width, height) => RepresentingSteps.sSetValue('dimensions', component, { width, height });
+      const sSetDimensions = (width: string, height: string) => RepresentingSteps.sSetValue('dimensions', component, { width, height });
 
-      const sAssertDimensions = (width, height) => RepresentingSteps.sAssertValue('dimensions', { width, height }, component);
+      const sAssertDimensions = (width: string, height: string) => RepresentingSteps.sAssertValue('dimensions', { width, height }, component);
 
-      const sAssertLocked = (locked) =>
+      const sAssertLocked = (locked: boolean) =>
         Chain.asStep(component.element(), [
           UiFinder.cFindIn('.tox-lock'),
           Chain.op((lock) => {

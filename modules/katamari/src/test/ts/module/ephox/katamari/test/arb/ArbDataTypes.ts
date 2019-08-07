@@ -4,7 +4,7 @@ import { FutureResult } from 'ephox/katamari/api/FutureResult';
 import { Result } from 'ephox/katamari/api/Result';
 import Jsc from '@ephox/wrap-jsverify';
 
-const show = function (res) {
+const show = function (res: Result<string, string>) {
   return res.fold(function (e) {
     return 'Result.error(' + e + ')';
   }, function (v) {
@@ -12,13 +12,13 @@ const show = function (res) {
   });
 };
 
-export const resultError = Jsc.string.smap(function (e) {
+export const resultError: Result<string, string> = Jsc.string.smap(function (e: string) {
   return Result.error(e);
 }, function (res) {
   return res.fold(Fun.identity, Fun.die('This should not happen'));
 }, show);
 
-export const resultValue = Jsc.string.smap(function (e) {
+export const resultValue: Result<string, string> = Jsc.string.smap(function (e: string) {
   return Result.value(e);
 }, function (res) {
   return res.fold(Fun.die('This should not happen'), Fun.identity);
@@ -61,8 +61,8 @@ export const optionSome = Jsc.json.smap(function (v) {
 export const option = Jsc.oneof([ optionNone, optionSome ]);
 
 const genIndexArrayOf = function (len) {
-  return Jsc.integer(0, len).generator.map(function (aLength) {
-    const r = [ ];
+  return Jsc.integer(0, len).generator.map(function (aLength: number) {
+    const r: number[] = [];
     for (let i = 0; i < aLength; i++) {
       r.push(i);
     }

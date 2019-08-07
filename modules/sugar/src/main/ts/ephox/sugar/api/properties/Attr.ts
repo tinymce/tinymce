@@ -36,7 +36,8 @@ const get = function (element: Element, key: string) {
   return v === null ? undefined : v;
 };
 
-const getOpt = (element: Element, key: string) => Option.from(get(element, key));
+const getOpt = (element: Element, key: string): Option<string> =>
+  Option.from(get(element, key));
 
 const has = function (element: Element, key: string) {
   const dom: HTMLElement = element.dom();

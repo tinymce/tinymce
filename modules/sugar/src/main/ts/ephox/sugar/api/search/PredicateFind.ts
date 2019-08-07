@@ -45,7 +45,7 @@ const child = function (scope: Element, predicate: (e: Element) => boolean) {
   return result.map(Element.fromDom);
 };
 
-const descendant = function (scope: Element, predicate: (e: Element) => boolean) {
+const descendant = function (scope: Element, predicate: (e: Element) => boolean): Option<Element> {
   const descend = function (node: DomNode): Option<Element> {
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < node.childNodes.length; i++) {

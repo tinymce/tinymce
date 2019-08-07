@@ -236,7 +236,7 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
       {
         label: 'futures.par([future]).get() === [future.val]',
         arbs: [ Jsc.array(arbFutureSchema) ],
-        f (futures) {
+        f (futures: Array<{future: Future<any>, contents: any}>) {
           const rawFutures = Arr.map(futures, function (ft) { return ft.future; });
           const expected = Arr.map(futures, function (ft) { return ft.contents; });
           return AsyncProps.checkFuture(Futures.par(rawFutures), function (list) {

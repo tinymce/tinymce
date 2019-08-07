@@ -203,11 +203,11 @@ UnitTest.test('MixedBagTest', function () {
     generator: genInputs
   });
 
-  Jsc.property('Check Mixed Bag', arbInputs, Jsc.json, Jsc.fun(Jsc.bool), function (inputs, constant, pred) {
+  Jsc.property('Check Mixed Bag', arbInputs, Jsc.json, Jsc.fun(Jsc.bool), function (inputs: {required: string[], extra: string[]}, constant: any, pred: (a: any) => boolean) {
     const bag = MixedBag(inputs.required, inputs.extra);
     const fields = Arr.filter(inputs.required.concat(inputs.extra), function (x) { return pred(x); });
 
-    const r = { };
+    const r: Record<string, any> = { };
     Arr.each(fields, function (field) {
       r[field] = constant;
     });

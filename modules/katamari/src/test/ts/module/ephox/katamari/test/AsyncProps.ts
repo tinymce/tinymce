@@ -2,7 +2,7 @@
 import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
 
-export const checkProp = function (label, arbitraries, f) {
+export const checkProp = function (label: string, arbitraries: any, f: (x: any) => void) {
   return Jsc.asyncProperty(label, arbitraries, f, { tests: 100 });
 };
 

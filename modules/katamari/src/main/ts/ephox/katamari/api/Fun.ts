@@ -62,8 +62,8 @@ const call = function (f: () => any) {
   f();
 };
 
-const never = constant<false>(false) as (...args) => false;
-const always = constant<true>(true) as (...args) => true;
+const never = constant<false>(false) as (...args: any[]) => false;
+const always = constant<true>(true) as (...args: any[]) => true;
 
 export {
   noop,
@@ -78,5 +78,5 @@ export {
   apply,
   call,
   never,
-  always,
+  always
 };
