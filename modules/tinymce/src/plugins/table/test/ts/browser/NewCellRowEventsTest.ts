@@ -11,8 +11,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.NewCellRowEventsTest', (succes
   Plugin();
   SilverTheme();
 
-
-
   suite.test('TestCase-TBA: Table: Table newcell/newrow events', function (editor) {
     const cells = [];
     const rows = [];
