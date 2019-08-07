@@ -14,7 +14,7 @@ export interface DomModifier {
 
 // The get node is required here because it can be transformed
 // when switching between tags (e.g. th and td)
-export const normal = (dom, node: Node): DomModifier => {
+const normal = (dom, node: Node): DomModifier => {
   const setAttrib = (attr: string, value: string) => {
     dom.setAttrib(node, attr, value);
   };
@@ -29,7 +29,7 @@ export const normal = (dom, node: Node): DomModifier => {
   };
 };
 
-export const ifTruthy = (dom, node: Node): DomModifier => {
+const ifTruthy = (dom, node: Node): DomModifier => {
   const setAttrib = (attr: string, value: string) => {
     if (value) {
       dom.setAttrib(node, attr, value);
@@ -46,4 +46,9 @@ export const ifTruthy = (dom, node: Node): DomModifier => {
     setAttrib,
     setStyle
   };
+};
+
+export const DomModifier = {
+  normal,
+  ifTruthy
 };

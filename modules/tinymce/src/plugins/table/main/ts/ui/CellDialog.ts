@@ -14,7 +14,7 @@ import * as Util from '../alien/Util';
 import { hasAdvancedCellTab } from '../api/Settings';
 import CellDialogGeneralTab from './CellDialogGeneralTab';
 import Helpers, { CellData } from './Helpers';
-import { ifTruthy, normal } from './DomModifiers';
+import { DomModifier } from './DomModifier';
 import { Types } from '@ephox/bridge';
 
 const updateSimpleProps = (modifiers, data: CellData) => {
@@ -42,7 +42,7 @@ const applyToSingle = (editor: Editor, cells: HTMLTableCellElement[], data: Cell
   // Switch cell type
   const cellElm = data.celltype && cells[0].nodeName.toLowerCase() !== data.celltype ? (dom.rename(cells[0], data.celltype) as HTMLTableCellElement) : cells[0];
 
-  const modifiers = normal(dom, cellElm);
+  const modifiers = DomModifier.normal(dom, cellElm);
 
   updateSimpleProps(modifiers, data);
 
@@ -80,7 +80,7 @@ const applyToMultiple = (editor, cells: Node[], data: CellData) => {
     }
 
     // NOTE: This isn't tested at all.
-    const modifiers = ifTruthy(dom, cellElm);
+    const modifiers = DomModifier.ifTruthy(dom, cellElm);
 
     updateSimpleProps(modifiers, data);
 

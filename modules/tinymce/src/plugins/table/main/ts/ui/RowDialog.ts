@@ -14,7 +14,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
 import { hasAdvancedRowTab } from '../api/Settings';
-import { DomModifier, normal, ifTruthy } from './DomModifiers';
+import { DomModifier } from './DomModifier';
 import Helpers, { RowData } from './Helpers';
 import RowDialogGeneralTab from './RowDialogGeneralTab';
 import { Types } from '@ephox/bridge';
@@ -58,7 +58,7 @@ const onSubmitRowForm = (editor: Editor, rows: HTMLElement[], oldData: RowData, 
   api.close();
 
   // When selection length is 1, allow things to be turned off/cleared
-  const createModifier: (dom, node: Node) => DomModifier = rows.length === 1 ? normal : ifTruthy;
+  const createModifier: (dom, node: Node) => DomModifier = rows.length === 1 ? DomModifier.normal : DomModifier.ifTruthy;
 
   editor.undoManager.transact(() => {
     Tools.each(rows, (rowElm) => {
