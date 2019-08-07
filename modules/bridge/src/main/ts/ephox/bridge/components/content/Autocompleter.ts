@@ -33,14 +33,14 @@ export interface AutocompleterApi {
   minChars?: number;
   columns?: ColumnTypes;
   matches?: (rng: Range, text: string, pattern: string) => boolean;
-  fetch: (pattern: string, maxResults: number, meta: Record<string, any>) => Promise<AutocompleterContents[]>;
+  fetch: (pattern: string, maxResults: number, fetchOptions: Record<string, any>) => Promise<AutocompleterContents[]>;
   onAction: (autocompleterApi: AutocompleterInstanceApi, rng, value: string, meta: Record<string, any>) => void;
   maxResults?: number;
 }
 
 export interface AutocompleterInstanceApi {
   hide: () => void;
-  reload: (meta: Record<string, any>) => void;
+  reload: (fetchOptions: Record<string, any>) => void;
 }
 
 export interface Autocompleter {
@@ -49,7 +49,7 @@ export interface Autocompleter {
   minChars: number;
   columns: ColumnTypes;
   matches: Option<(rng: Range, text: string, pattern: string) => boolean>;
-  fetch: (pattern: string, maxResults: number, meta: Record<string, any>) => Promise<AutocompleterContents[]>;
+  fetch: (pattern: string, maxResults: number, fetchOptions: Record<string, any>) => Promise<AutocompleterContents[]>;
   onAction: (autocompleterApi: AutocompleterInstanceApi, rng, value: string, meta: Record<string, any>) => void;
   maxResults: number;
 }

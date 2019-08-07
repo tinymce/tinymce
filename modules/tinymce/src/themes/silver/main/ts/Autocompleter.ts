@@ -94,10 +94,10 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
             ({ range }) => {
               const autocompleterApi: InlineContent.AutocompleterInstanceApi = {
                 hide: cancelIfNecessary,
-                reload: (meta: Record<string, any>) => {
+                reload: (fetchOptions: Record<string, any>) => {
                   // Hide and then reload
                   hideIfNecessary();
-                  load(meta);
+                  load(fetchOptions);
                 }
               };
               match.onAction(autocompleterApi, range, itemValue, itemMeta);
@@ -152,14 +152,14 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     InlineView.getContent(autocompleter).each(Highlighting.highlightFirst);
   };
 
-  const doLookup = (meta?: Record<string, any>): Option<AutocompleteLookupInfo> => {
+  const doLookup = (fetchOptions?: Record<string, any>): Option<AutocompleteLookupInfo> => {
     return activeAutocompleter.get().map((ac) => {
-      return getContext(editor.dom, editor.selection.getRng(), ac.triggerChar).bind((newContext) => lookupWithContext(editor, getAutocompleters, newContext, meta));
+      return getContext(editor.dom, editor.selection.getRng(), ac.triggerChar).bind((newContext) => lookupWithContext(editor, getAutocompleters, newContext, fetchOptions));
     }).getOrThunk(() => lookup(editor, getAutocompleters));
   };
 
-  const load = (meta?: Record<string, any>) => {
-    doLookup(meta).fold(
+  const load = (fetchOptions?: Record<string, any>) => {
+    doLookup(fetchOptions).fold(
       cancelIfNecessary,
       (lookupInfo) => {
         commenceIfNecessary(lookupInfo.context);
