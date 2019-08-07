@@ -193,7 +193,7 @@ const slowIndexOf = <T = any>(xs: ArrayLike<T>, x: T): number => {
 };
 
 const push = Array.prototype.push;
-export const flatten = <T = any>(xs: T[][]): T[] => {
+export const flatten = <T>(xs: T[][]): T[] => {
   // Note, this is possible because push supports multiple arguments:
   // http://jsperf.com/concat-push/6
   // Note that in the past, concat() would silently work (very slowly) for array-like objects.
