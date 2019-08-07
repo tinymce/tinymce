@@ -24,7 +24,7 @@ const isParentListSelected = function (parentList, selectedBlocks) {
 };
 
 const findSubLists = function (parentList) {
-  return Tools.grep(parentList.querySelectorAll('ol,ul,dl'), function (elm) {
+  return Tools.grep(parentList.querySelectorAll('ol,ul,dl'), function (elm: Node) {
     return NodeType.isListNode(elm);
   });
 };
@@ -36,7 +36,7 @@ const getSelectedSubLists = function (editor) {
   if (isParentListSelected(parentList, selectedBlocks)) {
     return findSubLists(parentList);
   } else {
-    return Tools.grep(selectedBlocks, function (elm) {
+    return Tools.grep(selectedBlocks, function (elm: Node) {
       return NodeType.isListNode(elm) && parentList !== elm;
     });
   }
