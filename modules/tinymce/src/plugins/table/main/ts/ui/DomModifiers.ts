@@ -7,9 +7,14 @@
 
 import { Node } from '@ephox/dom-globals';
 
+export interface DomModifier {
+  setAttrib: (attr: string, value: string) => void;
+  setStyle: (prop: string, value: string) => void;
+}
+
 // The get node is required here because it can be transformed
 // when switching between tags (e.g. th and td)
-const normal = (dom, node: Node) => {
+export const normal = (dom, node: Node): DomModifier => {
   const setAttrib = (attr: string, value: string) => {
     dom.setAttrib(node, attr, value);
   };
@@ -24,7 +29,7 @@ const normal = (dom, node: Node) => {
   };
 };
 
-const ifTruthy = (dom, node: Node) => {
+export const ifTruthy = (dom, node: Node): DomModifier => {
   const setAttrib = (attr: string, value: string) => {
     if (value) {
       dom.setAttrib(node, attr, value);
@@ -41,9 +46,4 @@ const ifTruthy = (dom, node: Node) => {
     setAttrib,
     setStyle
   };
-};
-
-export default {
-  normal,
-  ifTruthy
 };

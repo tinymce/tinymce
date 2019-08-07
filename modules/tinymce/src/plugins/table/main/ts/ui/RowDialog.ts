@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLElement } from '@ephox/dom-globals';
+import { Element, HTMLElement, Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -14,12 +14,12 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
 import { hasAdvancedRowTab } from '../api/Settings';
-import DomModifiers from './DomModifiers';
+import { DomModifier, normal, ifTruthy } from './DomModifiers';
 import Helpers, { RowData } from './Helpers';
 import RowDialogGeneralTab from './RowDialogGeneralTab';
 import { Types } from '@ephox/bridge';
 
-const switchRowType = (dom: DOMUtils, rowElm: HTMLElement, toType) => {
+const switchRowType = (dom: DOMUtils, rowElm: HTMLElement, toType: string) => {
   const tableElm = dom.getParent(rowElm, 'table');
   const oldParentElm = rowElm.parentNode;
   let parentElm = dom.select(toType, tableElm as Element)[0];
@@ -45,10 +45,10 @@ const switchRowType = (dom: DOMUtils, rowElm: HTMLElement, toType) => {
   }
 };
 
-const updateAdvancedProps = (modifiers, data: RowData) => {
-  modifiers.setStyle('background-color', data.backgroundcolor);
-  modifiers.setStyle('border-color', data.bordercolor);
-  modifiers.setStyle('border-style', data.borderstyle);
+const updateAdvancedProps = (modifier: DomModifier, data: RowData): void => {
+  modifier.setStyle('background-color', data.backgroundcolor);
+  modifier.setStyle('border-color', data.bordercolor);
+  modifier.setStyle('border-style', data.borderstyle);
 };
 
 const onSubmitRowForm = (editor: Editor, rows: HTMLElement[], oldData: RowData, api) => {
@@ -58,7 +58,7 @@ const onSubmitRowForm = (editor: Editor, rows: HTMLElement[], oldData: RowData, 
   api.close();
 
   // When selection length is 1, allow things to be turned off/cleared
-  const createModifier = rows.length === 1 ? DomModifiers.normal : DomModifiers.ifTruthy;
+  const createModifier: (dom, node: Node) => DomModifier = rows.length === 1 ? normal : ifTruthy;
 
   editor.undoManager.transact(() => {
     Tools.each(rows, (rowElm) => {
@@ -68,14 +68,14 @@ const onSubmitRowForm = (editor: Editor, rows: HTMLElement[], oldData: RowData, 
         switchRowType(editor.dom, rowElm, data.type);
       }
 
-      const modifiers =  createModifier(dom, rowElm);
+      const modifier = createModifier(dom, rowElm);
 
-      modifiers.setAttrib('scope', data.scope);
-      modifiers.setAttrib('class', data.class);
-      modifiers.setStyle('height', Util.addSizeSuffix(data.height));
+      modifier.setAttrib('scope', data.scope);
+      modifier.setAttrib('class', data.class);
+      modifier.setStyle('height', Util.addSizeSuffix(data.height));
 
       if (hasAdvancedRowTab(editor)) {
-        updateAdvancedProps(modifiers, data);
+        updateAdvancedProps(modifier, data);
       }
 
       if (data.align !== oldData.align) {
