@@ -22,10 +22,10 @@ const arrOfVal = function (): Processor {
 
 const valueThunkOf = valueThunk;
 
-const valueOf = function (validator: (a) => Result<any, any>): Processor {
+const valueOf = function (validator: (a: any) => Result<any, any>): Processor {
   return value((v) => {
     // Intentionally not exposing "strength" at the API level
-    return validator(v).fold(SimpleResult.serror, SimpleResult.svalue);
+    return validator(v).fold<any>(SimpleResult.serror, SimpleResult.svalue);
   });
 };
 
