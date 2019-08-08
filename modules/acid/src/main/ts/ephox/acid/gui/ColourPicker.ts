@@ -43,7 +43,7 @@ const makeFactory = (translate: (key: string) => string, getClass: (key: string)
     );
 
     const updatePalette = (anyInSystem: AlloyComponent, hex: Hex) => {
-      memPalette.getOpt(anyInSystem).each((palette) => {
+      memPalette.getOpt(anyInSystem).each((palette: AlloyComponent) => {
         const rgba = RgbaColour.fromHex(hex);
         state.paletteRgba().set(rgba);
         sbPalette.setRgba(palette, rgba);
@@ -51,7 +51,7 @@ const makeFactory = (translate: (key: string) => string, getClass: (key: string)
     };
 
     const updateFields = (anyInSystem: AlloyComponent, hex: Hex) => {
-      memRgb.getOpt(anyInSystem).each((form) => {
+      memRgb.getOpt(anyInSystem).each((form: AlloyComponent) => {
         rgbForm.updateHex(form, hex);
       });
     };
@@ -100,7 +100,7 @@ const makeFactory = (translate: (key: string) => string, getClass: (key: string)
           AlloyEvents.run(ColourEvents.sliderUpdate(), sliderUpdates())
         ]),
         Composing.config({
-          find: (comp) => {
+          find: (comp: AlloyComponent) => {
             return memRgb.getOpt(comp);
           }
         }),
