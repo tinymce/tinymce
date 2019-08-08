@@ -346,46 +346,44 @@ export class ExifReader {
 
   public EXIF(): ExifTags | null {
     const self = this;
-    let Exif = null;
 
     if (self._offsets.exifIFD) {
       try {
-        Exif = self.extractTags(self._offsets.exifIFD, tags.exif);
+        const Exif: ExifTags = self.extractTags(self._offsets.exifIFD, tags.exif);
+        // Fix formatting of some tags
+        if (Exif.ExifVersion && Array.isArray(Exif.ExifVersion)) {
+          let exifVersion = '';
+          for (const ch of Exif.ExifVersion) {
+            exifVersion += String.fromCharCode(ch);
+          }
+          Exif.ExifVersion = exifVersion;
+        }
+        return Exif;
       } catch (ex) {
         return null;
       }
-
-      // Fix formatting of some tags
-      if (Exif.ExifVersion && Array.isArray(Exif.ExifVersion)) {
-        let exifVersion = '';
-        for (const ch of Exif.ExifVersion) {
-          exifVersion += String.fromCharCode(ch);
-        }
-        Exif.ExifVersion = exifVersion;
-      }
+    } else {
+      return null;
     }
-
-    return Exif;
   }
 
   public GPS(): GPSTags | null {
     const self = this;
-    let GPS = null;
 
     if (self._offsets.gpsIFD) {
       try {
-        GPS = self.extractTags(self._offsets.gpsIFD, tags.gps);
+        const GPS: GPSTags = self.extractTags(self._offsets.gpsIFD, tags.gps);
+        // iOS devices (and probably some others) do not put in GPSVersionID tag (why?..)
+        if (GPS.GPSVersionID && Array.isArray(GPS.GPSVersionID)) {
+          GPS.GPSVersionID = GPS.GPSVersionID.join('.');
+        }
+        return GPS;
       } catch (ex) {
         return null;
       }
-
-      // iOS devices (and probably some others) do not put in GPSVersionID tag (why?..)
-      if (GPS.GPSVersionID && Array.isArray(GPS.GPSVersionID)) {
-        GPS.GPSVersionID = GPS.GPSVersionID.join('.');
-      }
+    } else {
+      return null;
     }
-
-    return GPS;
   }
 
   public thumb(): ArrayBuffer | null {
