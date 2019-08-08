@@ -799,13 +799,12 @@ module.exports = function (grunt) {
     'unicode',
     'concat',
     'uglify',
-    'copy',
-    'clean:release',
-    'version'
+    'copy'
   ]);
 
   grunt.registerTask('prod', [
     'prodBuild',
+    'clean:release',
     'moxiezip',
     'nugetpack',
     'symlink-dist',
