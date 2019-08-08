@@ -559,11 +559,11 @@ const EditorManager: EditorManager = {
   },
 
   /**
-   * Returns a editor instance by id.
+   * Returns an editor instance for a given id.
    *
    * @method get
-   * @param {String/Number} id Editor instance id or index to return.
-   * @return {tinymce.Editor/Array} Editor instance to return or array of editor instances.
+   * @param {String/Number} id The id or index of the editor instance to return.
+   * @return {tinymce.Editor/Array} Editor instance or an array of editor instances.
    * @example
    * // Adds an onclick event to an editor by id
    * tinymce.get('mytextbox').on('click', function(e) {
