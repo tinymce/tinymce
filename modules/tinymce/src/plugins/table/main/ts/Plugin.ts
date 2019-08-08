@@ -34,7 +34,7 @@ function Plugin(editor: Editor) {
   Commands.registerCommands(editor, actions, cellSelection, selections, clipboardRows);
   Clipboard.registerEvents(editor, selections, actions, cellSelection);
 
-  MenuItems.addMenuItems(editor, selectionTargets);
+  const menuItems = MenuItems.addMenuItems(editor, selectionTargets);
   Buttons.addButtons(editor, selectionTargets);
   Buttons.addToolbars(editor);
 
@@ -54,7 +54,7 @@ function Plugin(editor: Editor) {
     cellSelection.destroy();
   });
 
-  return getApi(editor, clipboardRows, resizeHandler.lazyWire);
+  return getApi(editor, clipboardRows, resizeHandler.lazyWire, selectionTargets, menuItems);
 }
 
 export default function () {

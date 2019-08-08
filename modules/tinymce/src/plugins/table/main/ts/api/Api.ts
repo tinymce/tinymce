@@ -26,14 +26,16 @@ const setClipboardRows = (rows: HTMLElement[], clipboardRows) => {
   clipboardRows.set(Option.from(sugarRows));
 };
 
-const getApi = (editor: Editor, clipboardRows: Cell<Option<any>>, lazyWire: any) => {
+const getApi = (editor: Editor, clipboardRows: Cell<Option<any>>, lazyWire: any, selectionTargets, menuItems) => {
   return {
     insertTable: (columns: number, rows: number) => {
       return InsertTable.insert(editor, columns, rows);
     },
     setClipboardRows: (rows: HTMLElement[]) => setClipboardRows(rows, clipboardRows),
     getClipboardRows: () => getClipboardRows(clipboardRows),
-    lazyWire
+    lazyWire,
+    menuItems,
+    selectionTargets
   };
 };
 
