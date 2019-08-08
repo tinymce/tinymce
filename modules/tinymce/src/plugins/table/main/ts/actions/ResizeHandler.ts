@@ -24,7 +24,7 @@ export interface ResizeHandler {
   destroy: () => void;
 }
 
-export const ResizeHandler = function (editor: Editor): ResizeHandler {
+export const getResizeHandler = function (editor: Editor): ResizeHandler {
   let selectionRng = Option.none();
   let resize = Option.none();
   let wire = Option.none();

@@ -10,6 +10,9 @@ import InsertTable from '../actions/InsertTable';
 import { Arr, Option, Cell } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { HTMLElement } from '@ephox/dom-globals';
+import { ResizeHandler } from '../actions/ResizeHandler';
+import { MenuItems } from '../ui/MenuItems';
+import { SelectionTargets } from '../selection/SelectionTargets';
 
 const getClipboardRows = (clipboardRows): HTMLElement[] => {
   return clipboardRows.get().fold(function () {
@@ -26,14 +29,14 @@ const setClipboardRows = (rows: HTMLElement[], clipboardRows) => {
   clipboardRows.set(Option.from(sugarRows));
 };
 
-const getApi = (editor: Editor, clipboardRows: Cell<Option<any>>, lazyWire: any, selectionTargets, menuItems) => {
+const getApi = (editor: Editor, clipboardRows: Cell<Option<any>>, resizeHandler: ResizeHandler, selectionTargets: SelectionTargets, menuItems: MenuItems) => {
   return {
     insertTable: (columns: number, rows: number) => {
       return InsertTable.insert(editor, columns, rows);
     },
     setClipboardRows: (rows: HTMLElement[]) => setClipboardRows(rows, clipboardRows),
     getClipboardRows: () => getClipboardRows(clipboardRows),
-    lazyWire,
+    resizeHandler,
     menuItems,
     selectionTargets
   };

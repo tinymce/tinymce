@@ -11,9 +11,14 @@ import Editor from 'tinymce/core/api/Editor';
 import InsertTable from '../actions/InsertTable';
 import { hasTableGrid } from '../api/Settings';
 import { SelectionTargets } from '../selection/SelectionTargets';
-import { NestedMenuItemContents } from '@ephox/bridge/lib/main/ts/ephox/bridge/api/Menu';
 
-const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
+export interface MenuItems {
+  rowItems: Array<Menu.NestedMenuItemContents>;
+  columnItems: Array<Menu.NestedMenuItemContents>;
+  cellItems: Array<Menu.NestedMenuItemContents>;
+}
+
+const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): MenuItems => {
   const cmd = (command) => () => editor.execCommand(command);
 
   const insertTableAction = ({numRows, numColumns}) => {
@@ -47,7 +52,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
     { type: 'menuitem', text: 'Copy row', onAction: cmd('mceTableCopyRow'), onSetup:  selectionTargets.onSetupCellOrRow },
     { type: 'menuitem', text: 'Paste row before', onAction: cmd('mceTablePasteRowBefore'), onSetup:  selectionTargets.onSetupCellOrRow },
     { type: 'menuitem', text: 'Paste row after', onAction: cmd('mceTablePasteRowAfter'), onSetup:  selectionTargets.onSetupCellOrRow }
-  ] as Array<NestedMenuItemContents>;
+  ] as Array<Menu.NestedMenuItemContents>;
 
   const row: Menu.NestedMenuItemApi = {
     type: 'nestedmenuitem',
@@ -59,7 +64,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
     { type: 'menuitem', text: 'Insert column before', icon: 'table-insert-column-before', onAction: cmd('mceTableInsertColBefore'), onSetup:  selectionTargets.onSetupCellOrRow },
     { type: 'menuitem', text: 'Insert column after', icon: 'table-insert-column-after', onAction: cmd('mceTableInsertColAfter'), onSetup:  selectionTargets.onSetupCellOrRow },
     { type: 'menuitem', text: 'Delete column', icon: 'table-delete-column', onAction: cmd('mceTableDeleteCol'), onSetup:  selectionTargets.onSetupCellOrRow }
-  ] as Array<NestedMenuItemContents>;
+  ] as Array<Menu.NestedMenuItemContents>;
 
   const column: Menu.NestedMenuItemApi = {
     type: 'nestedmenuitem',
@@ -71,7 +76,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
     { type: 'menuitem', text: 'Cell properties', icon: 'table-cell-properties', onAction: cmd('mceTableCellProps'), onSetup:  selectionTargets.onSetupCellOrRow },
     { type: 'menuitem', text: 'Merge cells', icon: 'table-merge-cells', onAction: cmd('mceTableMergeCells'), onSetup: selectionTargets.onSetupMergeable },
     { type: 'menuitem', text: 'Split cell', icon: 'table-split-cells', onAction: cmd('mceTableSplitCells'), onSetup: selectionTargets.onSetupUnmergeable }
-  ] as Array<NestedMenuItemContents>;
+  ] as Array<Menu.NestedMenuItemContents>;
 
   const cell: Menu.NestedMenuItemApi = {
     type: 'nestedmenuitem',

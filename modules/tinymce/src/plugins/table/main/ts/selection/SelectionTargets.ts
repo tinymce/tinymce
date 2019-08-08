@@ -13,9 +13,9 @@ export interface Targets {
   selection: () => Element[];
 }
 
-export type SelectionTargets = ReturnType<typeof SelectionTargets>;
+export type SelectionTargets = ReturnType<typeof getSelectionTargets>;
 
-export const SelectionTargets = (editor: Editor, selections: Selections) => {
+export const getSelectionTargets = (editor: Editor, selections: Selections) => {
   const targets = Cell<Option<Targets>>(Option.none());
   const changeHandlers = Cell([]);
 

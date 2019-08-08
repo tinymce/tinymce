@@ -12,23 +12,23 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 import Clipboard from './actions/Clipboard';
 import { TableActions } from './actions/TableActions';
 import Commands from './api/Commands';
-import { ResizeHandler } from './actions/ResizeHandler';
+import { getResizeHandler } from './actions/ResizeHandler';
 import TabContext from './queries/TabContext';
 import CellSelection from './selection/CellSelection';
 import Ephemera from './selection/Ephemera';
 import { Selections } from './selection/Selections';
-import { SelectionTargets } from './selection/SelectionTargets';
+import { getSelectionTargets } from './selection/SelectionTargets';
 import Buttons from './ui/Buttons';
 import MenuItems from './ui/MenuItems';
 import { hasTabNavigation } from './api/Settings';
 import { getApi } from './api/Api';
 
 function Plugin(editor: Editor) {
-  const resizeHandler = ResizeHandler(editor);
+  const resizeHandler = getResizeHandler(editor);
   const cellSelection = CellSelection(editor, resizeHandler.lazyResize);
   const actions = TableActions(editor, resizeHandler.lazyWire);
   const selections = Selections(editor);
-  const selectionTargets = SelectionTargets(editor, selections);
+  const selectionTargets = getSelectionTargets(editor, selections);
   const clipboardRows = Cell(Option.none());
 
   Commands.registerCommands(editor, actions, cellSelection, selections, clipboardRows);
@@ -54,7 +54,7 @@ function Plugin(editor: Editor) {
     cellSelection.destroy();
   });
 
-  return getApi(editor, clipboardRows, resizeHandler.lazyWire, selectionTargets, menuItems);
+  return getApi(editor, clipboardRows, resizeHandler, selectionTargets, menuItems);
 }
 
 export default function () {
