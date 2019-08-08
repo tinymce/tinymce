@@ -209,7 +209,7 @@ const promise = <T>(): PromisePolyfillConstructor => {
   };
 
   Promise.resolve = function <U>(value?: U | PromiseLike<U>): PromisePolyfill<U | void> {
-    if (value && typeof value === 'object' && value.constructor === Promise) {
+    if (value && typeof value === 'object' && (value as any).constructor === Promise) {
       return value as PromisePolyfill<U | void>;
     }
 
