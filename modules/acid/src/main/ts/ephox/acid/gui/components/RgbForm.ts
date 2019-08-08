@@ -1,6 +1,6 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour,
-  EventFormat, Focusing, Form, FormField, Input, Invalidating, Memento,
+  EventFormat, Focusing, Form, FormField, FormParts, Input, Invalidating, Memento,
   Representing, SimulatedEvent, Sketcher, SketchSpec, Tabstopping, UiSketcher
 } from '@ephox/alloy';
 import { Cell, Fun, Future, Id, Merger, Option, Result } from '@ephox/katamari';
@@ -127,7 +127,7 @@ const rgbFormFactory = (translate: (key: string) => string, getClass: (key: stri
 
   const copyRgbToHex = (form: AlloyComponent, rgba: Rgba) => {
     const hex = HexColour.fromRgba(rgba);
-    Form.getField(form, 'hex').each((hexField) => {
+    Form.getField(form, 'hex').each((hexField: AlloyComponent) => {
       // Not amazing, but it turns out that if we have an invalid RGB field, and no hex code
       // and then type in a valid three digit hex code, the RGB field will be overriden, then validate and then set
       // the hex field to be the six digit version of that same three digit hex code. This is incorrect.
@@ -161,7 +161,7 @@ const rgbFormFactory = (translate: (key: string) => string, getClass: (key: stri
   );
 
   const updatePreview = (anyInSystem: AlloyComponent, hex: Hex) => {
-    memPreview.getOpt(anyInSystem).each((preview) => {
+    memPreview.getOpt(anyInSystem).each((preview: AlloyComponent) => {
       Css.set(preview.element(), 'background-color', '#' + hex.value());
     });
   };
@@ -269,7 +269,7 @@ const rgbFormFactory = (translate: (key: string) => string, getClass: (key: stri
 
     // TODO: Provide a nice way of adding APIs to existing sketchers
     return Merger.deepMerge(
-      Form.sketch((parts) => {
+      Form.sketch((parts: FormParts) => {
         return {
           dom: {
             tag: 'form',
