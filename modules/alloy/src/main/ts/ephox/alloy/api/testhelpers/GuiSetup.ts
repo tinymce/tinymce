@@ -1,7 +1,7 @@
 import { document } from '@ephox/dom-globals';
 import { Assertions, Pipeline, Step, TestLogs } from '@ephox/agar';
 import { Merger } from '@ephox/katamari';
-import { DomEvent, Element, Html, Insert, Remove } from '@ephox/sugar';
+import { DomEvent, Element, EventUnbinder, Html, Insert, Remove } from '@ephox/sugar';
 
 import { AlloyComponent } from '../component/ComponentApi';
 import * as Attachment from '../system/Attachment';
@@ -34,12 +34,12 @@ const setup = (createComponent: (store: TestStore, doc: Element, body: Element) 
 
 const mSetupKeyLogger = (body) => {
   return Step.stateful((oldState, next, die) => {
-    const onKeydown = DomEvent.bind(body, 'keydown', (event) => {
+    const onKeydown: EventUnbinder = DomEvent.bind(body, 'keydown', (event) => {
       newState.log.push('keydown.to.body: ' + event.raw().which);
     });
 
-    const log = [ ];
-    const newState = {
+    const log: string[] = [ ];
+    const newState: any = {
       ...oldState,
       log,
       onKeydown

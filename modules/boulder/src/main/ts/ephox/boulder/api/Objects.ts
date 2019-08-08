@@ -47,7 +47,7 @@ const mergeValues = function (values, base) {
 };
 
 const mergeErrors = function (errors) {
-  return Fun.compose(Result.error, Arr.flatten)(errors);
+  return Result.error(Arr.flatten(errors));
 };
 
 const consolidate = function (objs, base: {}): Result <{}, string> {

@@ -9,7 +9,7 @@ const emit = (component: AlloyComponent, event: string): void => {
   dispatchWith(component, component.element(), event, { });
 };
 
-const emitWith = (component: AlloyComponent, event: string, properties: {}): void => {
+const emitWith = (component: AlloyComponent, event: string, properties: Record<string, any>): void => {
   dispatchWith(component, component.element(), event, properties);
 };
 
@@ -21,7 +21,7 @@ const dispatch = (component: AlloyComponent, target: Element, event: string): vo
   dispatchWith(component, target, event, { });
 };
 
-const dispatchWith = (component: AlloyComponent, target: Element, event: string, properties: {}): void => {
+const dispatchWith = (component: AlloyComponent, target: Element, event: string, properties: Record<string, any>): void => {
   const data = {
     target,
     ...properties
