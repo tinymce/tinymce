@@ -40,18 +40,21 @@
 @toolbar-button-focus-text-color: @toolbar-button-hover-text-color;
 
 @toolbar-button-active-background-color: @toolbar-button-enabled-background-color;
+@toolbar-button-active-border: @toolbar-button-enabled-border;
 @toolbar-button-active-box-shadow: @toolbar-button-box-shadow; // set to `0 1px 1px 0 rgba(0, 0, 0, .1) inset` for a small push in effect
 @toolbar-button-active-icon-color: @toolbar-button-enabled-icon-color;
 @toolbar-button-active-text-color: @toolbar-button-enabled-text-color;
 @toolbar-button-active-transform: none; // Set to `translateY(1px)` for a small push down effect
 
 @toolbar-button-enabled-background-color:  multiply(white, contrast(@background-color, fade(@color-black, 25), fade(@color-black, 65)));
+@toolbar-button-enabled-border: @toolbar-button-hover-border;
 @toolbar-button-enabled-box-shadow: @toolbar-button-box-shadow;
 @toolbar-button-enabled-icon-color: @toolbar-button-hover-icon-color;
 @toolbar-button-enabled-text-color: @toolbar-button-hover-text-color;
 @toolbar-button-enabled-transform: none;
 
 @toolbar-button-disabled-background-color:  @toolbar-button-background-color;
+@toolbar-button-disabled-border: @toolbar-button-border;
 @toolbar-button-disabled-box-shadow: @toolbar-button-box-shadow;
 @toolbar-button-disabled-icon-color: fade(@toolbar-button-icon-color, 50%);
 @toolbar-button-disabled-text-color: fade(@toolbar-button-text-color, 50%);
@@ -95,6 +98,7 @@
   // An toggle on/off button's on state.
   .tox-tbtn--enabled {
     background: @toolbar-button-enabled-background-color;
+    border: @toolbar-button-enabled-border;
     box-shadow: @toolbar-button-enabled-box-shadow;
     color: @toolbar-button-enabled-text-color;
 
@@ -109,11 +113,13 @@
 
   .tox-tbtn:focus {
     background: @toolbar-button-focus-background-color;
+    border: @toolbar-button-focus-border;
     box-shadow: @toolbar-button-focus-box-shadow;
   }
 
   .tox-tbtn:active {
     background: @toolbar-button-active-background-color;
+    border: @toolbar-button-active-border;
     box-shadow: @toolbar-button-active-box-shadow;
   }
 
@@ -122,6 +128,7 @@
   .tox-tbtn:disabled,
   .tox-tbtn:disabled:hover {
     background: @toolbar-button-disabled-background-color;
+    border: @toolbar-button-disabled-border;
     box-shadow: @toolbar-button-disabled-box-shadow;
     color: @toolbar-button-disabled-text-color;
     cursor: not-allowed;
@@ -135,6 +142,7 @@
 
   .tox-tbtn:hover:not(.tox-tbtn--disabled) {
     background: @toolbar-button-hover-background-color;
+    border: @toolbar-button-hover-border;
     box-shadow: @toolbar-button-hover-box-shadow;
     color: @toolbar-button-hover-text-color;
 
