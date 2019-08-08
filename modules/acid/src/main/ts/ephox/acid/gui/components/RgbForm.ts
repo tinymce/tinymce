@@ -1,6 +1,6 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour,
-  EventFormat, Focusing, Form, FormField, FormParts, Input, Invalidating, Memento,
+  EventFormat, Focusing, Form, FormField, FormTypes, Input, Invalidating, Memento,
   Representing, SimulatedEvent, Sketcher, SketchSpec, Tabstopping, UiSketcher
 } from '@ephox/alloy';
 import { Cell, Fun, Future, Id, Merger, Option, Result } from '@ephox/katamari';
@@ -269,7 +269,7 @@ const rgbFormFactory = (translate: (key: string) => string, getClass: (key: stri
 
     // TODO: Provide a nice way of adding APIs to existing sketchers
     return Merger.deepMerge(
-      Form.sketch((parts: FormParts) => {
+      Form.sketch((parts: FormTypes.FormParts) => {
         return {
           dom: {
             tag: 'form',
