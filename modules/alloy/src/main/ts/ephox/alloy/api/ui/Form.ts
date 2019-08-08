@@ -17,7 +17,7 @@ const schema = [
   SketchBehaviours.field('formBehaviours', [ Representing ])
 ];
 
-const getPartName = (name) => {
+const getPartName = (name: string): string => {
   return '<alloy.field.' + name + '>';
 };
 
@@ -96,7 +96,7 @@ const make = (detail: FormDetail, components, spec) => {
 };
 
 const Form = {
-  getField: GuiTypes.makeApi((apis, component, key) => {
+  getField: GuiTypes.makeApi((apis, component: AlloyComponent, key: string) => {
     return apis.getField(component, key);
   }),
   sketch
