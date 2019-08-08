@@ -28,7 +28,7 @@
     "@ephox/imagetools": "latest",
     "@ephox/katamari": "latest",
     "@ephox/robin": "latest",
-    "@ephox/sand": "latest",
+    "@ephox/sand": "^2.0.0",
     "@ephox/snooker": "latest",
     "@ephox/sugar": "latest",
     "tslib": "^1.9.3"
@@ -62,5 +62,8 @@
     "webpack": "^4.8.3",
     "webpack-dev-server": "^3.1.5",
     "webpack-livereload-plugin": "^2.1.1"
+  },
+  "resolutions": {
+    "@ephox/sand": "^2.0.0"
   }
 }
