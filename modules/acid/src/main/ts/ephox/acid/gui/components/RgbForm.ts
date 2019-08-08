@@ -46,19 +46,19 @@ const rgbFormFactory = (translate: (key: string) => string, getClass: (key: stri
       invalidClass: getClass('invalid'),
 
       notify: {
-        onValidate: (comp) => {
+        onValidate: (comp: AlloyComponent) => {
           AlloyTriggers.emitWith(comp, validatingInput, {
             type: label
           });
         },
-        onValid: (comp) => {
+        onValid: (comp: AlloyComponent) => {
           AlloyTriggers.emitWith(comp, validInput, {
             type: label,
             value: Representing.getValue(comp)
           });
         },
 
-        onInvalid: (comp) => {
+        onInvalid: (comp: AlloyComponent) => {
           AlloyTriggers.emitWith(comp, invalidInput, {
             type: label,
             value: Representing.getValue(comp)
@@ -67,7 +67,7 @@ const rgbFormFactory = (translate: (key: string) => string, getClass: (key: stri
       },
 
       validator: {
-        validate: (comp) => {
+        validate: (comp: AlloyComponent) => {
           const value = Representing.getValue(comp);
           const res = isValid(value) ? Result.value(true) : Result.error(translate('aria.input.invalid'));
           return Future.pure(res);

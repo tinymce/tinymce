@@ -9,6 +9,7 @@ import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const owner = 'form';
 
@@ -86,7 +87,7 @@ const make = (detail: FormDetail, components, spec) => {
     ),
 
     apis: {
-      getField (form, key) {
+      getField (form: AlloyComponent, key: string) {
         // Returns an Option (not a result);
         return AlloyParts.getPart(form, detail, key).bind(Composing.getCurrent);
       }
