@@ -18,6 +18,8 @@ import TableOperations from './TableOperations';
 import TablePositions from './TablePositions';
 import * as TableRender from './TableRender';
 import TableResize from './TableResize';
+import * as RunOperation from '../model/RunOperation';
+import GridRow from '../model/GridRow';
 
 export {
   CellLocation,
@@ -39,5 +41,7 @@ export {
   TableOperations,
   TablePositions,
   TableRender,
-  TableResize
+  TableResize,
+  RunOperation,
+  GridRow
 };
