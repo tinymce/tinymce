@@ -1,3 +1,5 @@
+Version 4.9.6 (TBD)
+    Fixed image browse button sometimes displaying the browse window twice #TINY-3959
 Version 4.9.5 (2019-07-02)
     Changed annotations navigation to work the same as inline boundaries #TINY-3396
     Fixed the print plugin printing from the wrong window in IE11 #TINY-3762
