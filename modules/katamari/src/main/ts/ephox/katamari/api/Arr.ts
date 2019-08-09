@@ -102,8 +102,8 @@ export const partition = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): {
 
 export const filter: {
   <T, Q extends T>(xs: ArrayLike<T>, pred: (x: T, i: number, xs: ArrayLike<T>) => x is Q): Q[];
-  <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[]
-} = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[] => {
+  <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[]
+} = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[] => {
   const r: T[] = [];
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
