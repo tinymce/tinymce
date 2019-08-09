@@ -2,6 +2,7 @@ import * as Replication from 'ephox/sugar/api/dom/Replication';
 import Element from 'ephox/sugar/api/node/Element';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { HTMLElement } from '@ephox/dom-globals';
 
 UnitTest.test('ReplicationTest', function () {
   const checkValues = function (expected, actual) {
@@ -14,13 +15,13 @@ UnitTest.test('ReplicationTest', function () {
   };
 
   const checkCopy = function (expected, input) {
-    const initial = Element.fromHtml(input);
+    const initial = Element.fromHtml<HTMLElement>(input);
     const actual = Replication.copy(initial, 'span');
     checkValues(expected, actual);
   };
 
   const checkMutate = function (expected, input) {
-    const initial = Element.fromHtml(input);
+    const initial = Element.fromHtml<HTMLElement>(input);
 
     const actual = Replication.mutate(initial, 'span');
 

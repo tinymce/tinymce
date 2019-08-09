@@ -4,7 +4,7 @@ import * as Insert from './Insert';
 import * as InsertAll from './InsertAll';
 import * as Remove from './Remove';
 import * as Traverse from '../search/Traverse';
-import { Node as DomNode, HTMLElementTagNameMap } from '@ephox/dom-globals';
+import { Node as DomNode, Element as DomElement, HTMLElementTagNameMap } from '@ephox/dom-globals';
 
 const clone = function <E extends DomNode>(original: Element<E>, isDeep: boolean) {
   return Element.fromDom(original.dom().cloneNode(isDeep) as E);
@@ -21,7 +21,7 @@ const deep = function <E extends DomNode>(original: Element<E>) {
 };
 
 /** Shallow clone, with a new tag */
-const shallowAs = function <K extends keyof HTMLElementTagNameMap>(original: Element, tag: K): Element<HTMLElementTagNameMap[K]> {
+const shallowAs = function <K extends keyof HTMLElementTagNameMap>(original: Element<DomElement>, tag: K): Element<HTMLElementTagNameMap[K]> {
   const nu = Element.fromTag(tag);
 
   const attributes = Attr.clone(original);
@@ -31,7 +31,7 @@ const shallowAs = function <K extends keyof HTMLElementTagNameMap>(original: Ele
 };
 
 /** Deep clone, with a new tag */
-const copy = function <K extends keyof HTMLElementTagNameMap>(original: Element, tag: K) {
+const copy = function <K extends keyof HTMLElementTagNameMap>(original: Element<DomElement>, tag: K) {
   const nu = shallowAs(original, tag);
 
   // NOTE
@@ -47,7 +47,7 @@ const copy = function <K extends keyof HTMLElementTagNameMap>(original: Element,
 };
 
 /** Change the tag name, but keep all children */
-const mutate = function <K extends keyof HTMLElementTagNameMap>(original: Element, tag: K) {
+const mutate = function <K extends keyof HTMLElementTagNameMap>(original: Element<DomElement>, tag: K) {
   const nu = shallowAs(original, tag);
 
   Insert.before(original, nu);
