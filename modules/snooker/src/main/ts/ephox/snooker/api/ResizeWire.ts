@@ -25,7 +25,7 @@ const only = function (element: Element): ResizeWire {
 };
 
 const detached = function (editable: Element, chrome: Element): ResizeWire {
-  const origin = Fun.curry(Location.absolute, chrome);
+  const origin = () => Location.absolute(chrome);
   return {
     parent: Fun.constant(chrome),
     view: Fun.constant(editable),

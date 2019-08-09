@@ -1,4 +1,4 @@
-import { Range, Selection as DomSelection, Window } from '@ephox/dom-globals';
+import { Range, Selection as DomSelection, Window, Node as DomNode, Element as DomElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import * as NativeRange from '../../selection/core/NativeRange';
 import * as SelectionDirection from '../../selection/core/SelectionDirection';
@@ -20,16 +20,16 @@ const doSetNativeRange = function (win: Window, rng: Range) {
   });
 };
 
-const doSetRange = function (win: Window, start: Element, soffset: number, finish: Element, foffset: number) {
+const doSetRange = function (win: Window, start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
   const rng = NativeRange.exactToNative(win, start, soffset, finish, foffset);
   doSetNativeRange(win, rng);
 };
 
-const findWithin = function (win: Window, selection: Selection, selector) {
+const findWithin = function (win: Window, selection: Selection, selector: string): Element<DomElement>[] {
   return Within.find(win, selection, selector);
 };
 
-const setLegacyRtlRange = function (win: Window, selection: DomSelection, start: Element, soffset: number, finish: Element, foffset: number) {
+const setLegacyRtlRange = function (win: Window, selection: DomSelection, start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
   selection.collapse(start.dom(), soffset);
   selection.extend(finish.dom(), foffset);
 };
@@ -59,7 +59,7 @@ const setRangeFromRelative = function (win: Window, relative: Selection) {
   });
 };
 
-const setExact = function (win: Window, start: Element, soffset: number, finish: Element, foffset: number) {
+const setExact = function (win: Window, start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
   const relative = Prefilter.preprocessExact(start, soffset, finish, foffset);
 
   setRangeFromRelative(win, relative);
@@ -73,7 +73,7 @@ const setRelative = function (win: Window, startSitu: Situ, finishSitu: Situ) {
 
 const toNative = function (selection: Selection) {
   const win: Window = Selection.getWin(selection).dom();
-  const getDomRange = function (start: Element, soffset: number, finish: Element, foffset: number) {
+  const getDomRange = function (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
     return NativeRange.exactToNative(win, start, soffset, finish, foffset);
   };
   const filtered = Prefilter.preprocess(selection);
@@ -117,12 +117,12 @@ const doGetExact = function (selection: DomSelection) {
   ) : readRange(selection);
 };
 
-const setToElement = function (win: Window, element: Element) {
+const setToElement = function (win: Window, element: Element<DomNode>) {
   const rng = NativeRange.selectNodeContents(win, element);
   doSetNativeRange(win, rng);
 };
 
-const forElement = function (win: Window, element: Element) {
+const forElement = function (win: Window, element: Element<DomNode>) {
   const rng = NativeRange.selectNodeContents(win, element);
   return SimRange.create(
     Element.fromDom(rng.startContainer), rng.startOffset,
@@ -173,7 +173,7 @@ const clone = function (win: Window, selection: Selection) {
   return NativeRange.cloneFragment(rng);
 };
 
-const replace = function (win: Window, selection: Selection, elements: Element[]) {
+const replace = function (win: Window, selection: Selection, elements: Element<DomNode>[]) {
   const rng = SelectionDirection.asLtrRange(win, selection);
   const fragment = Fragment.fromElements(elements, win.document);
   NativeRange.replaceWith(rng, fragment);
@@ -184,7 +184,7 @@ const deleteAt = function (win: Window, selection: Selection) {
   NativeRange.deleteContents(rng);
 };
 
-const isCollapsed = function (start: Element, soffset: number, finish: Element, foffset: number) {
+const isCollapsed = function (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
   return Compare.eq(start, finish) && soffset === foffset;
 };
 

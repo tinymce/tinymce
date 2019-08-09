@@ -8,6 +8,7 @@ import { Element, Height, Hierarchy, Width, Attr } from '@ephox/sugar';
 
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
+import { HTMLElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, failure) => {
   SilverTheme();
@@ -50,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
 
   const sSetStateFrom = (editor, path) => {
     return Logger.t('Set height and width', Step.sync(() => {
-      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element');
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element') as Element<HTMLElement>;
       const height = Height.get(element);
       const width = Width.get(element);
 
@@ -78,7 +79,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
 
   const sAssertSizeChange = (editor, path, change) => {
     return Logger.t('Asset change in height and width', Step.sync(() => {
-      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element');
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element') as Element<HTMLElement>;
       const height = Height.get(element);
       const width = Width.get(element);
 

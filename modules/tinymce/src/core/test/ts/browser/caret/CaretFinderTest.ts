@@ -5,6 +5,7 @@ import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
+import { HTMLElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function () {
   const success = arguments[arguments.length - 2];
@@ -51,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function () {
 
   const cPositionIn = function (forward, path) {
     return Chain.mapper(function (_) {
-      const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+      const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie() as Element<HTMLElement>;
       return CaretFinder.positionIn(forward, element.dom());
     });
   };

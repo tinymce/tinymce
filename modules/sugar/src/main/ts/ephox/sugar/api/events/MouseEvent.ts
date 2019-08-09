@@ -12,7 +12,9 @@ const isLeftClick = function (raw: MouseEvent) {
 const isLeftButtonPressed = function (raw: MouseEvent) {
   // Only added by Chrome/Firefox in June 2015.
   // This is only to fix a 1px bug (TBIO-2836) so return true if we're on an older browser
-  if (raw.buttons === undefined) { return true; }
+  if (raw.buttons === undefined) {
+    return true;
+  }
 
   // use bitwise & for optimal comparison
   // tslint:disable-next-line:no-bitwise

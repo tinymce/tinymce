@@ -10,11 +10,12 @@ import { BarPositions, ColInfo } from 'ephox/snooker/resize/BarPositions';
 import { PlatformDetection } from '@ephox/sand';
 import { RunOperationOutput, TargetSelection, TargetElement, TargetPasteRows } from 'ephox/snooker/model/RunOperation';
 import { SimpleGenerators, Generators } from 'ephox/snooker/api/Generators';
+import { HTMLTableElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement } from '@ephox/dom-globals';
 
 type Op<T> = (wire: ResizeWire, table: Element, target: T, generators: Generators, direction: BarPositions<ColInfo>) => Option<RunOperationOutput>;
 
 const checkOld = function <T>(expCell: { section: number, row: number, column: number }, expectedHtml: string, input: string, operation: Op<TargetElement>, section: number, row: number, column: number, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
-  const table = Element.fromHtml(input);
+  const table = Element.fromHtml<HTMLTableElement>(input);
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());
   const result = operation(wire, table, { element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()) }, Bridge.generators, direction);
@@ -35,11 +36,11 @@ const checkOld = function <T>(expCell: { section: number, row: number, column: n
 };
 
 const checkPaste = function (expectedHtml: string, input: string, pasteHtml: string, operation: Op<TargetPasteRows>, section: number, row: number, column: number, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
-  const table = Element.fromHtml(input);
+  const table = Element.fromHtml<HTMLTableElement>(input);
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());
 
-  const pasteTable = Element.fromHtml('<table><tbody>' + pasteHtml + '</tbody></table>');
+  const pasteTable = Element.fromHtml<HTMLTableElement>('<table><tbody>' + pasteHtml + '</tbody></table>');
   operation(
     wire,
     table,
@@ -59,7 +60,7 @@ const checkPaste = function (expectedHtml: string, input: string, pasteHtml: str
 };
 
 const checkStructure = function (expCell: { section: number, row: number, column: number}, expected: string[][], input: string, operation: Op<TargetElement>, section: number, row: number, column: number, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
-  const table = Element.fromHtml(input);
+  const table = Element.fromHtml<HTMLTableElement>(input);
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());
   const result = operation(wire, table, { element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()) }, Bridge.generators, direction);
@@ -70,7 +71,7 @@ const checkStructure = function (expCell: { section: number, row: number, column
   // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));
   const rows = SelectorFilter.descendants(table, 'tr');
   const actual = Arr.map(rows, function (r) {
-    const cells = SelectorFilter.descendants(r, 'td,th');
+    const cells = SelectorFilter.descendants<HTMLTableDataCellElement | HTMLTableHeaderCellElement>(r, 'td,th');
     return Arr.map(cells, Html.get);
   });
   assert.eq(expected, actual);
@@ -79,7 +80,7 @@ const checkStructure = function (expCell: { section: number, row: number, column
 };
 
 const checkDelete = function (optExpCell: Option<{ section: number, row: number, column: number }>, optExpectedHtml: Option<{ ie: string, normal: string }>, input: string, operation: Op<TargetSelection>, cells: { section: number, row: number, column: number }[], platform: ReturnType<typeof PlatformDetection.detect>, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
-  const table = Element.fromHtml(input);
+  const table = Element.fromHtml<HTMLTableElement>(input);
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());
   const cellz = Arr.map(cells, function (cell) {
@@ -120,7 +121,7 @@ const checkDelete = function (optExpCell: Option<{ section: number, row: number,
 };
 
 const checkMerge = function (label: string, expected: string, input: string, selection: {section: number, row: number, column: number}[], bounds: {startRow: number, startCol: number, finishRow: number, finishCol: number}, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
-  const table = Element.fromHtml(input);
+  const table = Element.fromHtml<HTMLTableElement>(input);
   const expectedDom = Element.fromHtml(expected);
 
   Insert.append(Body.body(), expectedDom);
@@ -147,7 +148,7 @@ const checkMerge = function (label: string, expected: string, input: string, sel
 };
 
 const checkUnmerge = function (expected: string, input: string, unmergablePaths: { section: number, row: number, column: number }[], direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
-  const table = Element.fromHtml(input);
+  const table = Element.fromHtml<HTMLTableElement>(input);
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());
   const unmergables = Arr.map(unmergablePaths, function (path) {

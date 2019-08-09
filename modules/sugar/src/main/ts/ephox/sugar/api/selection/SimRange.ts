@@ -1,14 +1,15 @@
 import Element from '../node/Element';
 import { Struct } from '@ephox/katamari';
+import { Node as DomNode } from '@ephox/dom-globals';
 
 export interface SimRange {
-  start: () => Element;
+  start: () => Element<DomNode>;
   soffset: () => number;
-  finish: () => Element;
+  finish: () => Element<DomNode>;
   foffset: () => number;
 }
 
-const create: (start: Element, soffset: number, finish: Element, foffset: number) => SimRange = Struct.immutable(
+const create: (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => SimRange = Struct.immutable(
   'start',
   'soffset',
   'finish',

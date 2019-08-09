@@ -1,5 +1,6 @@
 import { Arr, Cell, Contracts, Fun, Option } from '@ephox/katamari';
 import { Attr, Css, Element } from '@ephox/sugar';
+import { HTMLElementTagNameMap } from '@ephox/dom-globals';
 
 export interface CellSpan {
   element: () => Element;
@@ -10,7 +11,7 @@ export interface CellSpan {
 export interface Generators {
   cell: (cellSpan: CellSpan) => Element;
   row: () => Element;
-  replace: (cell: Element, tag: string, attrs: Record<string, string | number | boolean | null>) => Element;
+  replace: <K extends keyof HTMLElementTagNameMap>(cell: Element, tag: K, attrs: Record<string, string | number | boolean | null>) => Element;
   gap: () => Element;
 }
 
@@ -97,7 +98,7 @@ const modification = function (generators: Generators, toData = elementToData): 
   } ;
 };
 
-const transform = function (scope: string | null, tag: string) {
+const transform = function <K extends keyof HTMLElementTagNameMap>(scope: string | null, tag: K) {
   return function (generators: Generators): GeneratorsTransform {
     const position = Cell(Option.none<Element>());
     verifyGenerators(generators);

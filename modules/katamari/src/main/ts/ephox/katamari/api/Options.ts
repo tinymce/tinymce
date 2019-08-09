@@ -13,7 +13,7 @@ const cat = function <A> (arr: Option<A>[]) {
 };
 
 /** findMap :: ([a], (a, Int -> Option b)) -> Option b */
-const findMap = function <A, B> (arr: A[], f: (a: A, index: number) => Option<B>) {
+const findMap = function <A, B> (arr: ArrayLike<A>, f: (a: A, index: number) => Option<B>) {
   for (let i = 0; i < arr.length; i++) {
     const r = f(arr[i], i);
     if (r.isSome()) {

@@ -1,6 +1,6 @@
 import { Pipeline, Step, FocusTools, Mouse, Waiter, UiFinder, Assertions, Log, Logger, GeneralSteps } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import { document, HTMLInputElement } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';
 import { Element, SelectorFilter } from '@ephox/sugar';
 
@@ -31,7 +31,7 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
 
   const sSetHex = (hex) => {
     return Logger.t('Changing textarea content to ' + hex, Step.sync(() => {
-      const inputs = SelectorFilter.descendants(docBody, 'div[role="dialog"] input');
+      const inputs = SelectorFilter.descendants<HTMLInputElement>(docBody, 'div[role="dialog"] input');
       const hexInput = inputs[inputs.length - 1];
       hexInput.dom().value = hex;
     }));

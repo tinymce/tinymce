@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Guard, Logger, Mouse, NamedChain, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { document } from '@ephox/dom-globals';
+import { document, HTMLElement } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
 import { TinyDom } from '@ephox/mcagar';
 import { Body, Element, SelectorFind, Value, Attr, Html } from '@ephox/sugar';
@@ -120,7 +120,7 @@ const cInsertTable = (cols: number, rows: number) => {
 
 const cInsertRaw = (html: string) => {
   return Chain.mapper((editor: Editor) => {
-    const element = Element.fromHtml(html);
+    const element = Element.fromHtml<HTMLElement>(html);
     Attr.set(element, 'data-mce-id', '__mce');
     editor.insertContent(Html.getOuter(element));
 

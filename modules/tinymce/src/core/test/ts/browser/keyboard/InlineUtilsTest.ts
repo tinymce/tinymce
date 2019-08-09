@@ -1,9 +1,10 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { Hierarchy, Element } from '@ephox/sugar';
+import { Hierarchy, Element, Node } from '@ephox/sugar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import InlineUtils from 'tinymce/core/keyboard/InlineUtils';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/bedrock';
+import { Text } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function () {
   const success = arguments[arguments.length - 2];
@@ -35,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function () 
 
   const cSplitAt = function (path, offset) {
     return Chain.mapper(function (elm: any) {
-      const textNode = Hierarchy.follow(elm, path).getOrDie();
+      const textNode = Hierarchy.follow(elm, path).filter(Node.isText).getOrDie() as Element<Text>;
       textNode.dom().splitText(offset);
       return elm;
     });

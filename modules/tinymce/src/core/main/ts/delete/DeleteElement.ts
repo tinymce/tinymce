@@ -7,7 +7,7 @@
 
 import { Fun, Obj, Option, Options } from '@ephox/katamari';
 import { Insert, Remove, Element, Node as SugarNode, PredicateFind, Traverse } from '@ephox/sugar';
-import { Node } from '@ephox/dom-globals';
+import { Node, Text } from '@ephox/dom-globals';
 import * as CaretCandidate from '../caret/CaretCandidate';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
@@ -126,8 +126,8 @@ const paddEmptyBlock = function (elm) {
 };
 
 const deleteNormalized = (elm: Element, afterDeletePosOpt: Option<CaretPosition>, normalizeWhitespace?: boolean): Option<CaretPosition> => {
-  const prevTextOpt = Traverse.prevSibling(elm).filter((e) => NodeType.isText(e.dom()));
-  const nextTextOpt = Traverse.nextSibling(elm).filter((e) => NodeType.isText(e.dom()));
+  const prevTextOpt = Traverse.prevSibling(elm).filter((e) => NodeType.isText(e.dom())) as Option<Element<Text>>;
+  const nextTextOpt = Traverse.nextSibling(elm).filter((e) => NodeType.isText(e.dom())) as Option<Element<Text>>;
 
   // Delete the element
   Remove.remove(elm);

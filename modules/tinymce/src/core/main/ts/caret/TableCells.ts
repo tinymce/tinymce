@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { ClientRect, HTMLElement } from '@ephox/dom-globals';
+import { ClientRect, HTMLElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement, HTMLTableCaptionElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Element, SelectorFilter } from '@ephox/sugar';
 import { findClosestHorizontalPosition, getLastLinePositions, getFirstLinePositions } from './LineReader';
@@ -56,7 +56,8 @@ const findClosestCorner = (corners: Corner[], x: number, y: number): Option<Corn
 };
 
 const getClosestCell = (getYAxisValue: GetAxisValue, isTargetCorner: IsTargetCorner, table: HTMLElement, x: number, y: number): Option<HTMLElement> => {
-  const cells = SelectorFilter.descendants(Element.fromDom(table), 'td,th,caption').map((e) => e.dom());
+  type TableThing = HTMLTableDataCellElement | HTMLTableHeaderCellElement | HTMLTableCaptionElement;
+  const cells = SelectorFilter.descendants(Element.fromDom(table), 'td,th,caption').map((e) => e.dom() as TableThing);
   const corners = Arr.filter(getCorners(getYAxisValue, cells), (corner) => isTargetCorner(corner, y));
 
   return findClosestCorner(corners, x, y).map((corner) => {

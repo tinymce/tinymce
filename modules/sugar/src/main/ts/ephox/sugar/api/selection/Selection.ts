@@ -1,4 +1,4 @@
-import { Range } from '@ephox/dom-globals';
+import { Range, Node as DomNode } from '@ephox/dom-globals';
 import { Adt } from '@ephox/katamari';
 import Element from '../node/Element';
 import * as Traverse from '../search/Traverse';
@@ -9,12 +9,12 @@ export interface Selection {
   fold: <U> (
     domRange: (rng: Range) => U,
     relative: (startSitu: Situ, finishSitu: Situ) => U,
-    exact: (start: Element, soffset: number, finish: Element, foffset: number) => U
+    exact: (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => U
   ) => U;
   match: <U> (branches: {
     domRange: (rng: Range) => U,
     relative: (startSitu: Situ, finishSitu: Situ) => U,
-    exact: (start: Element, soffset: number, finish: Element, foffset: number) => U
+    exact: (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => U
   }) => U;
   log: (label: string) => void;
 }
@@ -23,7 +23,7 @@ export interface Selection {
 const adt: {
   domRange: (rng: Range) => Selection,
   relative: (startSitu: Situ, finishSitu: Situ) => Selection,
-  exact: (start: Element, soffset: number, finish: Element, foffset: number) => Selection
+  exact: (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => Selection
 } = Adt.generate([
   { domRange: ['rng'] },
   { relative: ['startSitu', 'finishSitu'] },

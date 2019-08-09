@@ -1,9 +1,9 @@
 import * as Attr from '../properties/Attr';
 import Element from '../node/Element';
 import * as Insert from './Insert';
-import { document } from '@ephox/dom-globals';
+import { document, Document, Node as DomNode } from '@ephox/dom-globals';
 
-const addToHead = function (doc: Element, tag: Element) {
+const addToHead = function (doc: Element<Document>, tag: Element<DomNode>) {
   /*
    * IE9 and above per
    * https://developer.mozilla.org/en-US/docs/Web/API/Document/head
@@ -12,7 +12,7 @@ const addToHead = function (doc: Element, tag: Element) {
   Insert.append(head, tag);
 };
 
-const addStylesheet = function (url: string, scope?: Element) {
+const addStylesheet = function (url: string, scope?: Element<Document>) {
   const doc = scope || Element.fromDom(document);
 
   const link = Element.fromTag('link', doc.dom()); // We really need to fix that Element API

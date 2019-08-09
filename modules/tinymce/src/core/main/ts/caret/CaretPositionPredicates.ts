@@ -7,7 +7,7 @@
 
 import { Option, Fun } from '@ephox/katamari';
 import NodeType from '../dom/NodeType';
-import { Text, Node } from '@ephox/dom-globals';
+import { Text, Node as DomNode, HTMLImageElement } from '@ephox/dom-globals';
 import CaretPosition from './CaretPosition';
 import { isWhiteSpace } from '../text/CharType';
 import { getChildNodeAtRelativeOffset } from './CaretUtils';
@@ -28,15 +28,15 @@ const isEmptyText = (pos: CaretPosition) => {
   return NodeType.isText(container) && container.data.length === 0;
 };
 
-const matchesElementPosition = (before: boolean, predicate: (node: Node) => boolean) => {
+const matchesElementPosition = (before: boolean, predicate: (node: DomNode) => boolean) => {
   return (pos: CaretPosition) => Option.from(getChildNodeAtRelativeOffset(before ? 0 : -1, pos)).filter(predicate).isSome();
 };
 
-const isImageBlock = (node: Node) => {
-  return node.nodeName === 'IMG' && Css.get(Element.fromDom(node), 'display') === 'block';
+const isImageBlock = (node: DomNode) => {
+  return node.nodeName === 'IMG' && Css.get(Element.fromDom(node as HTMLImageElement), 'display') === 'block';
 };
 
-const isCefNode = (node: Node) => NodeType.isContentEditableFalse(node) && !NodeType.isBogusAll(node);
+const isCefNode = (node: DomNode) => NodeType.isContentEditableFalse(node) && !NodeType.isBogusAll(node);
 
 const isBeforeImageBlock = matchesElementPosition(true, isImageBlock);
 const isAfterImageBlock = matchesElementPosition(false, isImageBlock);

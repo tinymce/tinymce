@@ -11,6 +11,7 @@ import * as Css from 'ephox/sugar/api/properties/Css';
 import * as Location from 'ephox/sugar/api/view/Location';
 import * as Scroll from 'ephox/sugar/api/view/Scroll';
 import * as Width from 'ephox/sugar/api/view/Width';
+import { HTMLIFrameElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('ScrollTest', (success, failure) => {
   const platform = PlatformDetection.detect();
@@ -24,7 +25,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
   }
 
   const testOne = function (i, attrMap, next) {
-    const iframe = Element.fromHtml(i);
+    const iframe = Element.fromHtml<HTMLIFrameElement>(i);
     Attr.setAll(iframe, attrMap.iframe);
     const run = DomEvent.bind(iframe, 'load', function () {
       run.unbind();

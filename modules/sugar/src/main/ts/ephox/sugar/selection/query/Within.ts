@@ -5,9 +5,10 @@ import * as SelectorFilter from '../../api/search/SelectorFilter';
 import * as Selectors from '../../api/search/Selectors';
 import * as NativeRange from '../core/NativeRange';
 import * as SelectionDirection from '../core/SelectionDirection';
-import { Window } from '@ephox/dom-globals';
+import { Window, Element as DomElement, Range } from '@ephox/dom-globals';
+import { Selection } from '../../api/selection/Selection';
 
-const withinContainer = function (win: Window, ancestor, outerRange, selector) {
+const withinContainer = function (win: Window, ancestor: Element<DomElement>, outerRange: Range, selector: string) {
   const innerRange = NativeRange.create(win);
   const self = Selectors.is(ancestor, selector) ? [ ancestor ] : [];
   const elements = self.concat(SelectorFilter.descendants(ancestor, selector));
@@ -18,7 +19,7 @@ const withinContainer = function (win: Window, ancestor, outerRange, selector) {
   });
 };
 
-const find = function (win: Window, selection, selector) {
+const find = function (win: Window, selection: Selection, selector: string) {
   // Reverse the selection if it is RTL when doing the comparison
   const outerRange = SelectionDirection.asLtrRange(win, selection);
   const ancestor = Element.fromDom(outerRange.commonAncestorContainer);

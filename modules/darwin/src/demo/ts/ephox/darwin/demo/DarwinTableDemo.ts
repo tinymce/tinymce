@@ -1,4 +1,4 @@
-import { document, window } from '@ephox/dom-globals';
+import { document, window, Element as DomElement, HTMLTableElement, HTMLStyleElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import {
   Attr,
@@ -26,7 +26,7 @@ import { Response } from 'ephox/darwin/selection/Response';
 const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 Attr.set(ephoxUi, 'contenteditable', 'true');
 
-const style = Element.fromHtml(
+const style = Element.fromHtml<HTMLStyleElement>(
   '<style>' +
   'table { border-collapse: separate; border-spacing: 30px; }\n' +
   'td { text-align: left; border: 1px solid #aaa; font-size: 20px; }\n' +
@@ -35,7 +35,7 @@ const style = Element.fromHtml(
   '</style>'
 );
 
-const table = Element.fromHtml(
+const table = Element.fromHtml<HTMLTableElement>(
   '<table style="width: 400px;">' +
   '<tbody>' +
   '<tr style="height: 20px;"><td>A</td><td rowspan="2" colspan="2">B</td><td>C</td></tr>' +
@@ -135,7 +135,7 @@ DomEvent.bind(ephoxUi, 'keyup', function (event) {
 DomEvent.bind(ephoxUi, 'keydown', function (event) {
   // This might get expensive.
   WindowSelection.getExact(window).each(function (sel) {
-    const target = Node.isText(sel.start()) ? Traverse.parent(sel.start()) : Option.some(sel.start());
+    const target = Node.isText(sel.start()) ? Traverse.parent(sel.start()) : Option.some(sel.start() as Element<DomElement>);
     const direction = target.map(Direction.getDirection).getOr('ltr');
     keyHandlers.keydown(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset(), direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl).each(function (response) {
       handleResponse(event, response);

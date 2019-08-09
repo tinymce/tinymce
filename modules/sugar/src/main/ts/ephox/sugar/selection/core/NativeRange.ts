@@ -1,20 +1,20 @@
-import { Range, Window, DOMRect, ClientRect } from '@ephox/dom-globals';
+import { Range, Window, DOMRect, ClientRect, Node as DomNode } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import Element from '../../api/node/Element';
 import { Situ } from '../../api/selection/Situ';
 import { StructRect } from '../../api/selection/Rect';
 
-const selectNodeContents = function (win: Window, element: Element) {
+const selectNodeContents = function (win: Window, element: Element<DomNode>) {
   const rng = win.document.createRange();
   selectNodeContentsUsing(rng, element);
   return rng;
 };
 
-const selectNodeContentsUsing = function (rng: Range, element: Element) {
+const selectNodeContentsUsing = function (rng: Range, element: Element<DomNode>) {
   rng.selectNodeContents(element.dom());
 };
 
-const isWithin = function (outerRange, innerRange) {
+const isWithin = function (outerRange: Range, innerRange: Range) {
   // Adapted from: http://stackoverflow.com/questions/5605401/insert-link-in-contenteditable-element
   return innerRange.compareBoundaryPoints(outerRange.END_TO_START, outerRange) < 1 &&
     innerRange.compareBoundaryPoints(outerRange.START_TO_END, outerRange) > -1;
@@ -45,7 +45,7 @@ const setFinish = function (rng: Range, situ: Situ) {
   });
 };
 
-const replaceWith = function (rng: Range, fragment: Element) {
+const replaceWith = function (rng: Range, fragment: Element<DomNode>) {
   // Note: this document fragment approach may not work on IE9.
   deleteContents(rng);
   rng.insertNode(fragment.dom());
@@ -58,7 +58,7 @@ const relativeToNative = function (win: Window, startSitu: Situ, finishSitu: Sit
   return range;
 };
 
-const exactToNative = function (win: Window, start: Element, soffset: number, finish: Element, foffset: number) {
+const exactToNative = function (win: Window, start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
   const rng = win.document.createRange();
   rng.setStart(start.dom(), soffset);
   rng.setEnd(finish.dom(), foffset);

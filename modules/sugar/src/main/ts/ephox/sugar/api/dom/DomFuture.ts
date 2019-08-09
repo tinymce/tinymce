@@ -1,12 +1,14 @@
 import { clearTimeout, setTimeout } from '@ephox/dom-globals';
 import { Future, LazyValue, Result } from '@ephox/katamari';
 import * as DomEvent from '../events/DomEvent';
-import Element from '../node/Element';
 import { EventArgs } from '../events/Types';
+import Element from '../node/Element';
 
-type FTypeCallback<T> = (completer: (callback: (result: Result<EventArgs, string>) => void) => void) => T;
+type WorkDone = (res: Result<EventArgs, string>) => void;
+type Worker = (callback: WorkDone) => void;
+type TaskConstructor<T> = (worker: Worker) => T;
 
-const w = function <T> (fType: FTypeCallback<T>, element: Element, eventType: string, timeout: number): T {
+const w = function <T> (fType: TaskConstructor<T>, element: Element, eventType: string, timeout: number) {
   return fType(function (callback) {
     const listener = DomEvent.bind(element, eventType, function (event) {
       clearTimeout(time);
