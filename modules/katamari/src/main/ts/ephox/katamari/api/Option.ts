@@ -20,7 +20,10 @@ export interface Option<T> {
   flatten: () => Option<any>; // TODO: find a way to express in the typesystem
   exists: (f: (x: T) => boolean) => boolean;
   forall: (f: (x: T) => boolean) => boolean;
-  filter: (f: (x: T) => boolean) => Option<T>;
+  filter: {
+    <Q extends T>(f: (x: T) => x is Q): Option<Q>;
+    (f: (x: T) => boolean): Option<T>;
+  };
   equals: (opt: Option<T>) => boolean;
   equals_: <T2> (opt: Option<T2>, equality: (a: T, b: T2) => boolean) => boolean;
   toArray: () => T[];
@@ -178,8 +181,8 @@ const some = function <T> (a: T): Option<T> {
     flatten: <any> constant_a,
     exists: bind,
     forall: bind,
-    filter (f: (value: T) => boolean) {
-      return f(a) ? me : <Option<T>> NONE;
+    filter <Q extends T>(f: (value: T) => value is Q): Option<Q> {
+      return f(a) ? me as Option<Q> : NONE;
     },
     equals (o: Option<T>) {
       return o.is(a);
