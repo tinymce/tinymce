@@ -6,8 +6,8 @@
  */
 
 import { Fun, Obj, Option, Options } from '@ephox/katamari';
-import { Insert, Remove, Element, Node as SugarNode, PredicateFind, Traverse } from '@ephox/sugar';
-import { Node, Text } from '@ephox/dom-globals';
+import { Insert, Remove, Element, Node as SugarNode, PredicateFind, Traverse, Node } from '@ephox/sugar';
+import { Node as DomNode } from '@ephox/dom-globals';
 import * as CaretCandidate from '../caret/CaretCandidate';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
@@ -104,7 +104,7 @@ const setSelection = function (editor: Editor, forward: boolean, pos: Option<Car
   );
 };
 
-const eqRawNode = function (rawNode: Node) {
+const eqRawNode = function (rawNode: DomNode) {
   return function (elm) {
     return elm.dom() === rawNode;
   };
@@ -126,8 +126,8 @@ const paddEmptyBlock = function (elm) {
 };
 
 const deleteNormalized = (elm: Element, afterDeletePosOpt: Option<CaretPosition>, normalizeWhitespace?: boolean): Option<CaretPosition> => {
-  const prevTextOpt = Traverse.prevSibling(elm).filter((e) => NodeType.isText(e.dom())) as Option<Element<Text>>;
-  const nextTextOpt = Traverse.nextSibling(elm).filter((e) => NodeType.isText(e.dom())) as Option<Element<Text>>;
+  const prevTextOpt = Traverse.prevSibling(elm).filter(Node.isText);
+  const nextTextOpt = Traverse.nextSibling(elm).filter(Node.isText);
 
   // Delete the element
   Remove.remove(elm);
