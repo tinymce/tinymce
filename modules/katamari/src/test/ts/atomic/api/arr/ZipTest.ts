@@ -2,12 +2,13 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import * as Obj from 'ephox/katamari/api/Obj';
 import * as Unique from 'ephox/katamari/api/Unique';
 import * as Zip from 'ephox/katamari/api/Zip';
+import { Option } from 'ephox/katamari/api/Option';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Zip', function () {
-  const check1 = function (expectedZipToObject, expectedZipToTuples, keys, values) {
-    const sort = function (a, ord) {
+  const check1 = function (expectedZipToObject: Option<Record<string, string>>, expectedZipToTuples: Option<Array<{ k: string, v: string }>>, keys: string[], values: string[]) {
+    const sort = function <T>(a: T[], ord: (a: T, b: T) => -1 | 0 | 1) {
       const c = a.slice();
       c.sort(ord);
       return c;
@@ -17,8 +18,8 @@ UnitTest.test('Zip', function () {
     const lt = -1;
     const gt = 1;
 
-    const sortTuples = function (a) {
-      return sort(a, function (a, b) {
+    const sortTuples = function (a: Array<{k: string, v: string }>) {
+      return sort(a, function (a: {k: string, v: string }, b: { k: string, v: string }) {
         return (
           a.k === b.k ? a.v === b.v ? eq
                                     : a.v > b.v ? gt
@@ -29,50 +30,58 @@ UnitTest.test('Zip', function () {
       });
     };
 
-    assert.eq(expectedZipToObject, Zip.zipToObject(keys, values));
-    assert.eq(sortTuples(expectedZipToTuples), sortTuples(Zip.zipToTuples(keys, values)));
+    expectedZipToObject.fold(() => {
+      assert.throws(() => Zip.zipToObject(keys, values));
+    }, (expected) => {
+      assert.eq(expected, Zip.zipToObject(keys, values));
+    });
+    expectedZipToTuples.fold(() => {
+      assert.throws(() => Zip.zipToTuples(keys, values));
+    }, (expected) => {
+      assert.eq(sortTuples(expected), sortTuples(Zip.zipToTuples(keys, values)));
+    });
   };
 
   check1(
-    {q: 'a', r: 'x'},
-    [{k: 'q', v: 'a'}, {k: 'r', v: 'x'}],
+    Option.some({q: 'a', r: 'x'}),
+    Option.some([{k: 'q', v: 'a'}, {k: 'r', v: 'x'}]),
     ['q', 'r'],
     ['a', 'x']
   );
 
   check1(
-    {},
-    [],
+    Option.some({}),
+    Option.some([]),
     [],
     []
   );
   check1(
-    {},
-    [],
+    Option.none(),
+    Option.none(),
     [],
     ['x']
   );
   check1(
-    {},
-    [],
+    Option.none(),
+    Option.none(),
     [],
     ['x', 'y']
   );
   check1(
-    {q: undefined},
-    [{k: 'q', v: undefined}],
+    Option.none(),
+    Option.none(),
     ['q'],
     []
   );
   check1(
-    {q: undefined, r: undefined},
-    [{k: 'q', v: undefined}, {k: 'r', v: undefined}],
+    Option.none(),
+    Option.none(),
     ['q', 'r'],
     []
   );
   check1(
-    {q: 'a', r: undefined},
-    [{k: 'q', v: 'a'}, {k: 'r', v: undefined}],
+    Option.none(),
+    Option.none(),
     ['q', 'r'],
     ['a']
   );
@@ -80,7 +89,7 @@ UnitTest.test('Zip', function () {
   Jsc.property(
     'zipToObject has matching keys and values',
     Jsc.array(Jsc.nestring),
-    function (rawValues) {
+    function (rawValues: string[]) {
       const values = Unique.stringArray(rawValues);
 
       const keys = Arr.map(values, function (v, i) {
@@ -105,15 +114,19 @@ UnitTest.test('Zip', function () {
     'zipToTuples matches corresponding tuples',
     Jsc.array(Jsc.json),
     Jsc.array(Jsc.json),
-    function (keys, values) {
-      const output = Zip.zipToTuples(keys, values);
-
-      if (output.length !== keys.length) {
-        return 'Output keys did not match';
+    function (keys: any[], values: any[]) {
+      if (keys.length !== values.length) {
+        assert.throws(() => Zip.zipToTuples(keys, values));
+        return true;
+      } else {
+        const output = Zip.zipToTuples(keys, values);
+        if (keys.length !== output.length) {
+          return 'Output keys did not match';
+        }
+        return Arr.forall(output, function (x, i) {
+          return x.k === keys[i] && x.v === values[i];
+        });
       }
-      return Arr.forall(output, function (x, i) {
-        return x.k === keys[i] && x.v === values[i];
-      });
     }
   );
 });
