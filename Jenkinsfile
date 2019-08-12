@@ -30,7 +30,7 @@ def runBrowserTests(extExecHandle, name, browser, os, bucket, buckets) {
   runTests(extExecHandle, name, bedrockCommand);
 }
 
-def runPhantomTests(extExecHandle, name, browser, os, bucket, buckets) {
+def runPhantomTests(extExecHandle) {
   def bedrockCommand = "yarn grunt phantomjs-auto";
   runTests(extExecHandle, "PhantomJS", bedrockCommand);
 }
