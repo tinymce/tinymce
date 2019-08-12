@@ -8,7 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import { Obj, Arr } from '@ephox/katamari';
 
-const patchPipeConfig = (config) => typeof config === 'string' ? config.split(/[ ,]/) : config;
+const patchPipeConfig = (config: string[] | string) => typeof config === 'string' ? config.split(/[ ,]/) : config;
 
 const shouldNeverUseNative = function (editor: Editor): boolean {
   return editor.settings.contextmenu_never_use_native || false;

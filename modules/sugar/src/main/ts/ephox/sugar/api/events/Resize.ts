@@ -1,4 +1,4 @@
-import { setTimeout, window } from '@ephox/dom-globals';
+import { setTimeout, window, HTMLElement, Node as DomNode } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import * as Monitors from '../../impl/Monitors';
 import * as Compare from '../dom/Compare';
@@ -8,15 +8,16 @@ import * as Visibility from '../view/Visibility';
 import * as Width from '../view/Width';
 import * as DomEvent from './DomEvent';
 import * as Viewable from './Viewable';
+import { EventUnbinder } from './Types';
 
 interface Monitored {
-  element: Element;
+  element: Element<HTMLElement>;
   handlers: Array<() => void>;
   lastWidth: number;
   lastHeight: number;
 }
 
-const elem = function (element: Element): Monitored {
+const elem = function (element: Element<HTMLElement>): Monitored {
   return {
     element,
     handlers: [],
@@ -26,44 +27,56 @@ const elem = function (element: Element): Monitored {
 };
 const elems: Monitored[] = [];
 
-const findElem = function (element: Element) {
+const findElem = function (element: Element<DomNode>) {
   return Arr.findIndex(elems, function (el) {
     return Compare.eq(el.element, element);
   }).getOr(-1);
 };
 
-const bind = function (element: Element, handler: () => void) {
+const bind = function (element: Element<HTMLElement>, handler: () => void) {
   let el = Arr.find(elems, function (elm) {
     return Compare.eq(elm.element, element);
-  }).getOr(undefined);
+  }).getOrUndefined();
   if (el === undefined) {
     el = elem(element);
     elems.push(el);
   }
   el.handlers.push(handler);
-  if (interval.isNone()) { start(); }
+  if (interval.isNone()) {
+    start();
+  }
 
   // Fire an update event for this element on every bind call.
   // This is really handy if the element is currently hidden, the resize event
   // will fire as soon as it becomes visible.
   setTimeout(function () {
     // Ensure we don't attempt to update something that is unbound in the 100ms since the bind call
-    if (findElem(el.element) !== -1) { update(el); }
+    if (findElem(el.element) !== -1) {
+      update(el);
+    }
   }, 100);
 };
 
-const unbind = function (element: Element, handler: () => void) {
+const unbind = function (element: Element<DomNode>, handler: () => void) {
   // remove any monitors on this element
   Monitors.end(element);
   const index = findElem(element);
-  if (index === -1) { return; }
+  if (index === -1) {
+    return;
+  }
 
   const handlerIndex = Arr.indexOf(elems[index].handlers, handler);
-  if (handlerIndex.isNone()) { return; }
+  if (handlerIndex.isNone()) {
+    return;
+  }
 
   elems[index].handlers.splice(handlerIndex.getOr(0), 1);
-  if (elems[index].handlers.length === 0) { elems.splice(index, 1); }
-  if (elems.length === 0) { stop(); }
+  if (elems[index].handlers.length === 0) {
+    elems.splice(index, 1);
+  }
+  if (elems.length === 0) {
+    stop();
+  }
 };
 
 const visibleUpdate = function (el: Monitored) {
@@ -79,13 +92,16 @@ const visibleUpdate = function (el: Monitored) {
 const update = function (el: Monitored) {
   const element = el.element;
   // if already visible, run the update
-  if (Visibility.isVisible(element)) { visibleUpdate(el); } else { Monitors.begin(element, function () {
-    // the monitor is "wait for viewable"
-    return Viewable.onShow(element, function () {
-      Monitors.end(element);
-      visibleUpdate(el);
+  if (Visibility.isVisible(element)) {
+    visibleUpdate(el);
+  } else {
+    Monitors.begin(element, function () {
+      // the monitor is "wait for viewable"
+      return Viewable.onShow(element, function () {
+        Monitors.end(element);
+        visibleUpdate(el);
+      });
     });
-  });
   }
 };
 
@@ -106,7 +122,7 @@ const listener = function () {
   }
 };
 
-let interval = Option.none();
+let interval = Option.none<EventUnbinder>();
 const start = function () {
   interval = Option.some(DomEvent.bind(Element.fromDom(window), 'resize', listener));
 };

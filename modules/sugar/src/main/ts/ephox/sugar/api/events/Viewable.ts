@@ -1,4 +1,4 @@
-import { clearInterval, setInterval } from '@ephox/dom-globals';
+import { clearInterval, setInterval, Node as DomNode, MutationObserver, MutationCallback, HTMLElement } from '@ephox/dom-globals';
 import { Fun, Throttler } from '@ephox/katamari';
 import Element from '../node/Element';
 import * as Traverse from '../search/Traverse';
@@ -14,7 +14,7 @@ declare const window: any;
  * It's a bit harder to manage, though, because visibility is a one-shot listener.
  */
 
-const poll = function (element: Element, f: () => void) {
+const poll = function (element: Element<HTMLElement>, f: () => void) {
   const poller = setInterval(f, 500);
 
   return function () {
@@ -22,8 +22,8 @@ const poll = function (element: Element, f: () => void) {
   };
 };
 
-const mutate = function (element: Element, f) {
-  const observer = new window.MutationObserver(f);
+const mutate = function (element: Element<HTMLElement>, f: () => void) {
+  const observer: MutationObserver = new window.MutationObserver(f);
 
   const unbindMutate = function () {
     observer.disconnect();
@@ -39,7 +39,7 @@ const mutate = function (element: Element, f) {
 // IE11 and above, not using numerosity so we can poll on IE10
 const wait = window.MutationObserver !== undefined && window.MutationObserver !== null ? mutate : poll;
 
-const onShow = function (element: Element, f: () => void): () => void {
+const onShow = function (element: Element<HTMLElement>, f: () => void): () => void {
   if (Visibility.isVisible(element)) {
     window.requestAnimationFrame(f);
     return Fun.noop;

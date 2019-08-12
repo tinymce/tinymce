@@ -1,6 +1,6 @@
 import { Pipeline, RawAssertions, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Attr, Body, Traverse } from '@ephox/sugar';
+import { Attr, Body, Traverse, Node } from '@ephox/sugar';
 
 import * as EventRoot from 'ephox/alloy/alien/EventRoot';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -39,7 +39,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure)
         events: AlloyEvents.derive([
           AlloyEvents.runOnAttached((comp, simulatedEvent) => {
             simulatedEvent.stop();
-            const parent = Traverse.parent(comp.element()).getOrDie(
+            const parent = Traverse.parent(comp.element()).filter(Node.isElement).getOrDie(
               'At attachedToDom, a DOM parent must exist'
             );
             store.adder('attached-to:' + Attr.get(parent, 'class'))();
@@ -47,7 +47,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure)
 
           AlloyEvents.runOnDetached((comp, simulatedEvent) => {
             simulatedEvent.stop();
-            const parent = Traverse.parent(comp.element()).getOrDie(
+            const parent = Traverse.parent(comp.element()).filter(Node.isElement).getOrDie(
               'At detachedFromDom, a DOM parent must exist'
             );
             store.adder('detached-from:' + Attr.get(parent, 'class'))();

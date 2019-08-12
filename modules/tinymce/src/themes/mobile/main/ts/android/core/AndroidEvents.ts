@@ -11,6 +11,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { Compare, DomEvent, Element, Focus, Node, Traverse } from '@ephox/sugar';
 
 import TappingEvent from '../../util/TappingEvent';
+import { HTMLInputElement } from '@ephox/dom-globals';
 
 const isAndroid6 = PlatformDetection.detect().os.version.major >= 6;
 /*
@@ -37,7 +38,7 @@ const initEvents = function (editorApi, toolstrip, alloy) {
   const hasRangeInUi = function () {
     return Focus.active(outerDoc).filter(function (input) {
       return Node.name(input) === 'input';
-    }).exists(function (input) {
+    }).exists(function (input: Element<HTMLInputElement>) {
       return input.dom().selectionStart !== input.dom().selectionEnd;
     });
   };

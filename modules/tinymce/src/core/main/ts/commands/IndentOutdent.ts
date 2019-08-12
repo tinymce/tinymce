@@ -67,7 +67,7 @@ const parentIsListComponent = (el: Element) => {
 const getBlocksToIndent = (editor: Editor) => {
   return Arr.filter(Arr.map(editor.selection.getSelectedBlocks(), Element.fromDom), (el) =>
     !isListComponent(el) && !parentIsListComponent(el) && isEditable(el)
-  );
+  ) as Element<HTMLElement>[];
 };
 
 const handle = (editor: Editor, command: string) => {

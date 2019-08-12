@@ -12,7 +12,7 @@ import { getDefaultAttributes, getDefaultStyles, isPixelsForced } from '../api/S
 import { fireNewRow, fireNewCell } from '../api/Events';
 import * as Util from '../alien/Util';
 import Editor from 'tinymce/core/api/Editor';
-import { HTMLElement } from '@ephox/dom-globals';
+import { HTMLElement, HTMLTableRowElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement, HTMLTableElement } from '@ephox/dom-globals';
 
 const placeCaretInCell = (editor: Editor, cell) => {
   editor.selection.select(cell.dom(), true);
@@ -20,14 +20,14 @@ const placeCaretInCell = (editor: Editor, cell) => {
 };
 
 const selectFirstCellInTable = (editor: Editor, tableElm) => {
-  SelectorFind.descendant(tableElm, 'td,th').each(Fun.curry(placeCaretInCell, editor));
+  SelectorFind.descendant<HTMLTableDataCellElement | HTMLTableHeaderCellElement>(tableElm, 'td,th').each(Fun.curry(placeCaretInCell, editor));
 };
 
 const fireEvents = (editor: Editor, table) => {
-  Arr.each(SelectorFilter.descendants(table, 'tr'), (row) => {
+  Arr.each(SelectorFilter.descendants<HTMLTableRowElement>(table, 'tr'), (row) => {
     fireNewRow(editor, row.dom());
 
-    Arr.each(SelectorFilter.descendants(row, 'th,td'), (cell) => {
+    Arr.each(SelectorFilter.descendants<HTMLTableDataCellElement | HTMLTableHeaderCellElement>(row, 'th,td'), (cell) => {
       fireNewCell(editor, cell.dom());
     });
   });
@@ -49,7 +49,7 @@ const insert = (editor: Editor, columns: number, rows: number): HTMLElement => {
   const html = Html.getOuter(table);
   editor.insertContent(html);
 
-  return SelectorFind.descendant(Util.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
+  return SelectorFind.descendant<HTMLTableElement>(Util.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
     if (isPixelsForced(editor)) {
       Css.set(table, 'width', Css.get(table, 'width'));
     }

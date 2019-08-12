@@ -68,7 +68,7 @@ const getTextSetting = (settings: Record<string, any>, name: string, defaultValu
 };
 
 const getPicker = (settings: Record<string, any>): Option<Picker> => {
-  return Option.some(settings.file_picker_callback).filter(Type.isFunction);
+  return Option.some(settings.file_picker_callback).filter(Type.isFunction) as Option<Picker>;
 };
 
 const getPickerTypes = (settings: Record<string, any>): boolean | Record<string, boolean> => {

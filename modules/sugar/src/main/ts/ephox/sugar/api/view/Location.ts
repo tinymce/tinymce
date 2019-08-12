@@ -1,7 +1,7 @@
-import * as Dom from '../dom/Dom';
 import Element from '../node/Element';
+import { inBody } from '../node/Body';
 import { Position } from './Position';
-import { Element as DomElement, HTMLElement, Node } from '@ephox/dom-globals';
+import { Element as DomElement, HTMLElement } from '@ephox/dom-globals';
 
 const boxPosition = function (dom: DomElement) {
   const box = dom.getBoundingClientRect();
@@ -15,10 +15,10 @@ const firstDefinedOrZero = function (a: number, b: number) {
          0;
 };
 
-const absolute = function (element: Element) {
-  const doc = (element.dom() as Node).ownerDocument;
+const absolute = function (element: Element<DomElement>) {
+  const doc = element.dom().ownerDocument;
   const body = doc.body;
-  const win = Dom.windowOf(Element.fromDom(doc));
+  const win = doc.defaultView;
   const html = doc.documentElement;
 
   const scrollTop = firstDefinedOrZero(win.pageYOffset, html.scrollTop);
@@ -35,25 +35,24 @@ const absolute = function (element: Element) {
 // This is the old $.position(), but JQuery does nonsense calculations.
 // We're only 1 <-> 1 with the old value in the single place we use this function
 // (ego.api.Dragging) so the rest can bite me.
-const relative = function (element: Element) {
-  const dom: HTMLElement = element.dom();
+const relative = function (element: Element<HTMLElement>) {
+  const dom = element.dom();
   // jquery-ism: when style="position: fixed", this === boxPosition()
   // but tests reveal it returns the same thing anyway
   return Position(dom.offsetLeft, dom.offsetTop);
 };
 
-const viewport = function (element: Element) {
+const viewport = function (element: Element<DomElement>) {
   const dom = element.dom();
 
   const doc = dom.ownerDocument;
   const body = doc.body;
-  const html = Element.fromDom(doc.documentElement);
 
   if (body === dom) {
     return Position(body.offsetLeft, body.offsetTop);
   }
 
-  if (!Dom.attached(element, html)) {
+  if (!inBody(element)) {
     return Position(0, 0);
   }
 

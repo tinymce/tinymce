@@ -7,12 +7,13 @@ import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { HTMLIFrameElement, HTMLSpanElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('CssReflowTest', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
 
-  const iframe = Element.fromHtml('<iframe style="height:100px; width:500px;" src="/project/@ephox/sugar/src/test/data/cssReflowTest.html"></iframe>');
+  const iframe = Element.fromHtml<HTMLIFrameElement>('<iframe style="height:100px; width:500px;" src="/project/@ephox/sugar/src/test/data/cssReflowTest.html"></iframe>');
   Insert.append(Body.body(), iframe);
   const run = DomEvent.bind(iframe, 'load', function () {
     run.unbind();
@@ -37,7 +38,7 @@ UnitTest.asynctest('CssReflowTest', function () {
     const reflowTest = Element.fromTag('div', iframeDoc);
     Insert.append(Element.fromDom(iframeDoc.body), reflowTest);
     Html.set(reflowTest, '<span class="style">text</span>');
-    const newspan = Traverse.firstChild(reflowTest).getOrDie('test broke');
+    const newspan = Traverse.firstChild(reflowTest).getOrDie('test broke') as Element<HTMLSpanElement>;
     Css.reflow(newspan);
     // TODO: I can't actually make this fail without a reflow, we need a more stressful test. But you get the idea.
     assert.eq('solid', Css.get(newspan, 'border-left-style'));

@@ -1,8 +1,12 @@
 import { ClientRect, DOMRect } from '@ephox/dom-globals';
 
-const searchForPoint = function (rectForOffset: (number) => (ClientRect | DOMRect), x: number, y: number, maxX: number, length: number) {
+const searchForPoint = function (rectForOffset: (number: number) => (ClientRect | DOMRect), x: number, y: number, maxX: number, length: number) {
   // easy cases
-  if (length === 0) { return 0; } else if (x === maxX) { return length - 1; }
+  if (length === 0) {
+    return 0;
+  } else if (x === maxX) {
+    return length - 1;
+  }
 
   let xDelta = maxX;
 

@@ -1,6 +1,7 @@
 import { Arr, Obj, Option } from '@ephox/katamari';
 import { Attr, Compare, Css, CursorPosition, Element, Insert, Node, Replication, SelectorFilter, Traverse } from '@ephox/sugar';
 import { Generators, CellSpan, SimpleGenerators } from './Generators';
+import { HTMLElementTagNameMap } from '@ephox/dom-globals';
 
 // NOTE: This may create a td instead of a th, but it is for irregular table handling.
 const createCell = function () {
@@ -9,7 +10,7 @@ const createCell = function () {
   return td;
 };
 
-const replace = function (cell: Element, tag: string, attrs: Record<string, string | number | boolean | null>) {
+const replace = function <K extends keyof HTMLElementTagNameMap>(cell: Element, tag: K, attrs: Record<string, string | number | boolean | null>) {
   const replica = Replication.copy(cell, tag);
   // TODO: Snooker passes null to indicate 'remove attribute'
   Obj.each(attrs, function (v, k) {

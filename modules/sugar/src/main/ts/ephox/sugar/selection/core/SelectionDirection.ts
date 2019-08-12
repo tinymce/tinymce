@@ -1,10 +1,10 @@
-import { Range, Window } from '@ephox/dom-globals';
+import { Range, Window, Node as DomNode } from '@ephox/dom-globals';
 import { Adt, Fun, Option, Thunk } from '@ephox/katamari';
 import Element from '../../api/node/Element';
 import * as NativeRange from './NativeRange';
 import { Selection } from '../../api/selection/Selection';
 
-type SelectionDirectionHandler<U> =  (start: Element, soffset: number, finish: Element, foffset: number) => U;
+type SelectionDirectionHandler<U> =  (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => U;
 
 export interface SelectionDirection {
   fold: <U> (
@@ -18,7 +18,7 @@ export interface SelectionDirection {
   log: (label: string) => void;
 }
 
-type SelectionDirectionConstructor = (start: Element, soffset: number, finish: Element, foffset: number) => SelectionDirection;
+type SelectionDirectionConstructor = (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => SelectionDirection;
 
 const adt: {
   ltr: SelectionDirectionConstructor,
@@ -57,7 +57,7 @@ const getRanges = function (win: Window, selection: Selection): LtrRtlRanges {
         })
       };
     },
-    exact (start: Element, soffset: number, finish: Element, foffset: number) {
+    exact (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
       return {
         ltr: Thunk.cached(function () {
           return NativeRange.exactToNative(win, start, soffset, finish, foffset);

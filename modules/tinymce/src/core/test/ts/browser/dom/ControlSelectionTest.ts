@@ -3,6 +3,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Hierarchy, Element } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { HTMLElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (success, failure) {
 
@@ -10,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
 
   const sContextMenuClickInMiddleOf = function (editor, elementPath) {
     return Step.sync(function () {
-      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie().dom();
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie().dom() as HTMLElement;
       const rect = element.getBoundingClientRect();
       const clientX = (rect.left + rect.width / 2), clientY = (rect.top + rect.height / 2);
       editor.fire('mousedown', { target: element, clientX, clientY, button: 2 });

@@ -2,7 +2,7 @@ import * as Attr from 'ephox/sugar/api/properties/Attr';
 import Element from 'ephox/sugar/api/node/Element';
 import Div from 'ephox/sugar/test/Div';
 import { UnitTest, assert } from '@ephox/bedrock';
-import { Node } from '@ephox/dom-globals';
+import { Node, Comment, HTMLDivElement, HTMLSpanElement } from '@ephox/dom-globals';
 
 UnitTest.test('AttrTest', function () {
   const c = Div();
@@ -54,25 +54,25 @@ UnitTest.test('AttrTest', function () {
 
   // passing things that don't have attributes
   checkTypeErr(Element.fromText(''));
-  checkTypeErr(Element.fromHtml('<!--a-->'));
+  checkTypeErr(Element.fromHtml<Comment>('<!--a-->'));
   checkTypeErr(Element.fromDom({} as Node));
 
   check('name', 'black', 'blue');
 
-  assert.eq(true, Attr.hasNone(Element.fromHtml('<div></div>')));
-  assert.eq(true, Attr.hasNone(Element.fromHtml('<div>Dog</div>')));
-  assert.eq(true, Attr.hasNone(Element.fromHtml('<div><span id="cat"></span></div>')));
-  assert.eq(false, Attr.hasNone(Element.fromHtml('<div name="container"><span id="cat"></span></div>')));
+  assert.eq(true, Attr.hasNone(Element.fromHtml<HTMLDivElement>('<div></div>')));
+  assert.eq(true, Attr.hasNone(Element.fromHtml<HTMLDivElement>('<div>Dog</div>')));
+  assert.eq(true, Attr.hasNone(Element.fromHtml<HTMLDivElement>('<div><span id="cat"></span></div>')));
+  assert.eq(false, Attr.hasNone(Element.fromHtml<HTMLDivElement>('<div name="container"><span id="cat"></span></div>')));
 
   /*
    * Note: IE returns true for an empty style attribute.
-   * assert.eq(false, Attr.hasNone(Element.fromHtml('<div style=""><span id="cat"></span></div>')));
+   * assert.eq(false, Attr.hasNone(Element.fromHtml<HTMLDivElement>('<div style=""><span id="cat"></span></div>')));
    *
    */
-  assert.eq(false, Attr.hasNone(Element.fromHtml('<div style="display: block;"><span id="cat"></span></div>')));
+  assert.eq(false, Attr.hasNone(Element.fromHtml<HTMLDivElement>('<div style="display: block;"><span id="cat"></span></div>')));
 
-  assert.eq({id: 'cat'}, Attr.clone(Element.fromHtml('<span id="cat"></span>')));
-  assert.eq({'name': 'foo', 'data-ephox-foo': 'bar'}, Attr.clone(Element.fromHtml('<span name="foo" data-ephox-foo="bar"></span>')));
+  assert.eq({id: 'cat'}, Attr.clone(Element.fromHtml<HTMLSpanElement>('<span id="cat"></span>')));
+  assert.eq({'name': 'foo', 'data-ephox-foo': 'bar'}, Attr.clone(Element.fromHtml<HTMLSpanElement>('<span name="foo" data-ephox-foo="bar"></span>')));
 
   Attr.set(c, 'tabindex', -1);
   assert.eq('-1', Attr.get(c, 'tabindex'));

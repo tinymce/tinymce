@@ -3,8 +3,9 @@ import Element from '../../api/node/Element';
 import * as Node from '../../api/node/Node';
 import { Selection } from '../../api/selection/Selection';
 import { Situ } from '../../api/selection/Situ';
+import { Node as DomNode } from '@ephox/dom-globals';
 
-const beforeSpecial = function (element: Element, offset: number) {
+const beforeSpecial = function (element: Element<DomNode>, offset: number) {
   // From memory, we don't want to use <br> directly on Firefox because it locks the keyboard input.
   // It turns out that <img> directly on IE locks the keyboard as well.
   // If the offset is 0, use before. If the offset is 1, use after.
@@ -25,7 +26,7 @@ const preprocessRelative = function (startSitu: Situ, finishSitu: Situ) {
   return Selection.relative(start, finish);
 };
 
-const preprocessExact = function (start: Element, soffset: number, finish: Element, foffset: number) {
+const preprocessExact = function (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
   const startSitu = beforeSpecial(start, soffset);
   const finishSitu = beforeSpecial(finish, foffset);
   return Selection.relative(startSitu, finishSitu);

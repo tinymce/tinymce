@@ -1,4 +1,4 @@
-import { console, HTMLElement, window } from '@ephox/dom-globals';
+import { console, HTMLElement, window, Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Strings, Type } from '@ephox/katamari';
 import * as Style from '../../impl/Style';
 import * as Body from '../node/Body';
@@ -6,7 +6,7 @@ import Element from '../node/Element';
 import * as Node from '../node/Node';
 import * as Attr from './Attr';
 
-const internalSet = function (dom: HTMLElement, property: string, value: string) {
+const internalSet = function (dom: DomNode, property: string, value: string) {
   // This is going to hurt. Apologies.
   // JQuery coerces numbers to pixels for certain property names, and other times lets numbers through.
   // we're going to be explicit; strings only.
@@ -17,34 +17,38 @@ const internalSet = function (dom: HTMLElement, property: string, value: string)
   }
 
   // removed: support for dom().style[property] where prop is camel case instead of normal property name
-  if (Style.isSupported(dom)) { dom.style.setProperty(property, value); }
+  if (Style.isSupported(dom)) {
+    dom.style.setProperty(property, value);
+  }
 };
 
-const internalRemove = function (dom: HTMLElement, property: string) {
+const internalRemove = function (dom: DomNode, property: string) {
   /*
    * IE9 and above - MDN doesn't have details, but here's a couple of random internet claims
    *
    * http://help.dottoro.com/ljopsjck.php
    * http://stackoverflow.com/a/7901886/7546
    */
-  if (Style.isSupported(dom)) { dom.style.removeProperty(property); }
+  if (Style.isSupported(dom)) {
+    dom.style.removeProperty(property);
+  }
 };
 
-const set = function (element: Element, property: string, value: string) {
+const set = function (element: Element<DomNode>, property: string, value: string) {
   const dom = element.dom();
   internalSet(dom, property, value);
 };
 
-const setAll = function (element: Element, css) {
-  const dom: HTMLElement = element.dom();
+const setAll = function (element: Element<DomNode>, css: any) {
+  const dom = element.dom();
 
   Obj.each(css, function (v, k) {
     internalSet(dom, k, v);
   });
 };
 
-const setOptions = function (element: Element, css) {
-  const dom: HTMLElement = element.dom();
+const setOptions = function (element: Element<DomNode>, css: Record<string, Option<string>>) {
+  const dom = element.dom();
 
   Obj.each(css, function (v, k) {
     v.fold(function () {
@@ -61,8 +65,8 @@ const setOptions = function (element: Element, css) {
  *
  * https://developer.mozilla.org/en-US/docs/Web/CSS/used_value
  */
-const get = function (element: Element, property: string) {
-  const dom: HTMLElement = element.dom();
+const get = function (element: Element<DomElement>, property: string) {
+  const dom = element.dom();
   /*
    * IE9 and above per
    * https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle
@@ -83,7 +87,7 @@ const get = function (element: Element, property: string) {
   return v === null ? undefined : v;
 };
 
-const getUnsafeProperty = function (dom: HTMLElement, property: string) {
+const getUnsafeProperty = function (dom: DomNode, property: string) {
   // removed: support for dom().style[property] where prop is camel case instead of normal property name
   // empty string is what the browsers (IE11 and Chrome) return when the propertyValue doesn't exists.
   return Style.isSupported(dom) ? dom.style.getPropertyValue(property) : '';
@@ -95,16 +99,16 @@ const getUnsafeProperty = function (dom: HTMLElement, property: string) {
  *
  * Returns NONE if the property isn't set, or the value is an empty string.
  */
-const getRaw = function (element: Element, property: string) {
+const getRaw = function (element: Element<DomNode>, property: string) {
   const dom = element.dom();
   const raw = getUnsafeProperty(dom, property);
 
   return Option.from(raw).filter(function (r) { return r.length > 0; });
 };
 
-const getAllRaw = function (element: Element) {
-  const css: any = {};
-  const dom: HTMLElement = element.dom();
+const getAllRaw = function (element: Element<DomNode>) {
+  const css: Record<string, string> = {};
+  const dom = element.dom();
 
   if (Style.isSupported(dom)) {
     for (let i = 0; i < dom.style.length; i++) {
@@ -122,18 +126,18 @@ const isValidValue = function (tag: string, property: string, value: string) {
   return style.isSome();
 };
 
-const remove = function (element: Element, property: string) {
-  const dom: HTMLElement = element.dom();
+const remove = function (element: Element<DomNode>, property: string) {
+  const dom = element.dom();
 
   internalRemove(dom, property);
 
-  if (Attr.has(element, 'style') && Strings.trim(Attr.get(element, 'style')) === '') {
+  if (Attr.has(element, 'style') && Strings.trim(Attr.get(element as Element<DomElement>, 'style')) === '') {
     // No more styles left, remove the style attribute as well
-    Attr.remove(element, 'style');
+    Attr.remove(element as Element<DomElement>, 'style');
   }
 };
 
-const preserve = function<T = any> (element: Element, f: (e: Element) => T) {
+const preserve = function<E extends DomElement, T> (element: Element<E>, f: (e: Element<E>) => T) {
   const oldStyles = Attr.get(element, 'style');
   const result = f(element);
   const restore = oldStyles === undefined ? Attr.remove : Attr.set;
@@ -141,7 +145,7 @@ const preserve = function<T = any> (element: Element, f: (e: Element) => T) {
   return result;
 };
 
-const copy = function (source: Element, target: Element) {
+const copy = function (source: Element<DomNode>, target: Element<HTMLElement>) {
   const sourceDom = source.dom();
   const targetDom = target.dom();
   if (Style.isSupported(sourceDom) && Style.isSupported(targetDom)) {
@@ -149,23 +153,27 @@ const copy = function (source: Element, target: Element) {
   }
 };
 
-const reflow = function (e: Element) {
+const reflow = function (e: Element<HTMLElement>) {
   /* NOTE:
    * do not rely on this return value.
    * It's here so the closure compiler doesn't optimise the property access away.
    */
-  return (e.dom() as HTMLElement).offsetWidth;
+  return e.dom().offsetWidth;
 };
 
-const transferOne = function (source: Element, destination: Element, style: string) {
+const transferOne = function (source: Element<DomNode>, destination: Element<DomNode>, style: string) {
   getRaw(source, style).each(function (value) {
     // NOTE: We don't want to clobber any existing inline styles.
-    if (getRaw(destination, style).isNone()) { set(destination, style, value); }
+    if (getRaw(destination, style).isNone()) {
+      set(destination, style, value);
+    }
   });
 };
 
-const transfer = function (source: Element, destination: Element, styles: string[]) {
-  if (!Node.isElement(source) || !Node.isElement(destination)) { return; }
+const transfer = function (source: Element<DomNode>, destination: Element<DomNode>, styles: string[]) {
+  if (!Node.isElement(source) || !Node.isElement(destination)) {
+    return;
+  }
   Arr.each(styles, function (style) {
     transferOne(source, destination, style);
   });

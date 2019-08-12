@@ -11,7 +11,7 @@ import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { Selection } from 'ephox/sugar/api/selection/Selection';
 import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
 import { UnitTest, assert } from '@ephox/bedrock';
-import { setTimeout } from '@ephox/dom-globals';
+import { setTimeout, HTMLIFrameElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('Browser Test: Selection.getAtPoint', function () {
   const success = arguments[arguments.length - 2];
@@ -24,7 +24,7 @@ UnitTest.asynctest('Browser Test: Selection.getAtPoint', function () {
     return;
   }
 
-  const iframe = Element.fromHtml('<iframe style="position: fixed; top: 0; left: 0; height:700px; width:700px;" src="/project/@ephox/sugar/src/test/data/points.html"></iframe>');
+  const iframe = Element.fromHtml<HTMLIFrameElement>('<iframe style="position: fixed; top: 0; left: 0; height:700px; width:700px;" src="/project/@ephox/sugar/src/test/data/points.html"></iframe>');
   Insert.append(Body.body(), iframe);
   const run = DomEvent.bind(iframe, 'load', function () {
     run.unbind();

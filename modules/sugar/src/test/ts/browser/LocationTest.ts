@@ -1,5 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock';
-import { console } from '@ephox/dom-globals';
+import { console, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
@@ -30,7 +30,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
   };
 
   const testOne = function (i, attrMap, next) {
-    const iframe = Element.fromHtml(i);
+    const iframe = Element.fromHtml<HTMLIFrameElement>(i);
     Attr.setAll(iframe, attrMap.iframe);
 
     const run = DomEvent.bind(iframe, 'load', function () {

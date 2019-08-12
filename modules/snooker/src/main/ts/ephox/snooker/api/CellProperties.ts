@@ -21,7 +21,7 @@ const setWidth = function (cell: Element, value: string) {
   Css.set(cell, 'width', value);
 };
 
-const setType = function (cell: Element, type: string) {
+const setType = function (cell: Element, type: 'th' | 'td') {
   const replica = Replication.copy(cell, type);
   Insert.after(cell, replica);
   Remove.remove(cell);

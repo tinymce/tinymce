@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Text } from '@ephox/dom-globals';
+import { Text, Element as DomElement } from '@ephox/dom-globals';
 import { Strings, Option, Arr } from '@ephox/katamari';
 import { Element, PredicateFind, Node, Css } from '@ephox/sugar';
 import { CaretPosition } from '../caret/CaretPosition';
@@ -50,7 +50,7 @@ const isPreValue = (value: string) => Arr.contains([ 'pre', 'pre-wrap' ], value)
 const isInPre = (pos: CaretPosition) => {
   return getElementFromPosition(pos)
     .bind((elm) => PredicateFind.closest(elm, Node.isElement))
-    .exists((elm) => isPreValue(Css.get(elm, 'white-space')));
+    .exists((elm: Element<DomElement>) => isPreValue(Css.get(elm, 'white-space')));
 };
 
 const isAtBeginningOfBody = (root: Element, pos: CaretPosition) => CaretFinder.prevPosition(root.dom(), pos).isNone();

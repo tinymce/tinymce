@@ -1,19 +1,21 @@
-import { document, Node, TreeWalker, NodeFilter } from '@ephox/dom-globals';
+import { document, Node as DomNode, TreeWalker, NodeFilter, Comment } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import Element from './Element';
 
-const regularGetNodes = function (texas: TreeWalker) {
-  const ret: Element[] = [];
-  while (texas.nextNode() !== null) { ret.push(Element.fromDom(texas.currentNode)); }
+const regularGetNodes = function <T extends DomNode>(texas: TreeWalker) {
+  const ret: Element<T>[] = [];
+  while (texas.nextNode() !== null) {
+    ret.push(Element.fromDom(texas.currentNode as T));
+  }
   return ret;
 };
 
-const ieGetNodes = function (texas: TreeWalker) {
+const ieGetNodes = function <T extends DomNode>(texas: TreeWalker) {
   // IE throws an error on nextNode() when there are zero nodes available, and any attempts I made to detect this
   // just resulted in throwing away valid cases
   try {
-    return regularGetNodes(texas);
+    return regularGetNodes<T>(texas);
   } catch (e) {
     return [];
   }
@@ -26,10 +28,10 @@ const getNodes = browser.isIE() || browser.isEdge() ? ieGetNodes : regularGetNod
 // Weird, but oh well
 const noFilter = Fun.constant(Fun.constant(true));
 
-const find = function (node: Element, filterOpt: Option<(n: string) => boolean>) {
+const find = function (node: Element<DomNode>, filterOpt: Option<(n: string) => boolean>) {
 
   const vmlFilter: any = filterOpt.fold(noFilter, function (filter) {
-    return function (comment: Node) {
+    return function (comment: DomNode) {
       return filter(comment.nodeValue);
     };
   });
@@ -38,9 +40,9 @@ const find = function (node: Element, filterOpt: Option<(n: string) => boolean>)
   // http://www.bennadel.com/blog/2607-finding-html-comment-nodes-in-the-dom-using-treewalker.htm
   vmlFilter.acceptNode = vmlFilter;
 
-  const texas = document.createTreeWalker(node.dom() as Node, NodeFilter.SHOW_COMMENT, vmlFilter, false);
+  const texas = document.createTreeWalker(node.dom(), NodeFilter.SHOW_COMMENT, vmlFilter, false);
 
-  return getNodes(texas);
+  return getNodes<Comment>(texas);
 };
 
 export { find };
