@@ -87,7 +87,6 @@ node("primary") {
 
     def buckets = permutation.buckets
     for (int bucket = 1; bucket <= buckets; bucket++) {
-      echo "name: " + permutation.name + " bucket: " + bucket + "/" + buckets
       def suffix = buckets == 1 ? "" : "-" + bucket
 
       // closure variable - don't inline
