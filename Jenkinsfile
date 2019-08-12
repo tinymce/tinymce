@@ -1,4 +1,4 @@
-def runTests(extExecHandle, name, browser, os, bucket, buckets) {
+def runTests(extExecHandle, name, bedrockCommand) {
   // Clean out the old XML files before running tests, since we junit import *.XML files
   dir('scratch') {
     if (isUnix()) {
@@ -8,15 +8,7 @@ def runTests(extExecHandle, name, browser, os, bucket, buckets) {
     }
   }
 
-  def bedrock_os_param = os ? "--bedrock-os=" + os : "";
-
-  def bedrock = browser == "phantomjs"
-                            ? "yarn grunt phantomjs-auto"
-                            : "yarn grunt browser-auto " + bedrock_os_param + " --bedrock-browser=" + browser +
-                                                                              " --bucket=" + bucket +
-                                                                              " --buckets=" + buckets;
-
-  def successfulTests = extExecHandle(bedrock)
+  def successfulTests = extExecHandle(bedrockCommand)
 
   echo "Writing JUnit results for " + name + " on node: $NODE_NAME"
   junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
@@ -25,6 +17,22 @@ def runTests(extExecHandle, name, browser, os, bucket, buckets) {
     echo "Tests failed for " + name + " so passing failure as exit code for node: $NODE_NAME"
     sh "exit 1"
   }
+}
+
+def runBrowserTests(extExecHandle, name, browser, os, bucket, buckets) {
+  def bedrockCommand =
+    "yarn grunt browser-auto" +
+      " --bedrock-os=" + os +
+      " --bedrock-browser=" + browser +
+      " --bucket=" + bucket +
+      " --buckets=" + buckets;
+
+  runTests(extExecHandle, name, bedrockCommand);
+}
+
+def runPhantomTests(extExecHandle, name, browser, os, bucket, buckets) {
+  def bedrockCommand = "yarn grunt phantomjs-auto";
+  runTests(extExecHandle, "PhantomJS", bedrockCommand);
 }
 
 properties([
@@ -107,7 +115,7 @@ node("primary") {
             extExec "yarn ci"
 
             echo "Platform: browser tests for " + c_name + " on node: $NODE_NAME"
-            runTests(extExecHandle, c_name, c_browser, c_os, c_bucket, c_buckets)
+            runBrowserTests(extExecHandle, c_name, c_browser, c_os, c_bucket, c_buckets)
           }
         }
       }
@@ -120,7 +128,7 @@ node("primary") {
       // we are re-using the state prepared by `ci-all` below
       // if we ever change these tests to run on a different node, rollup is required in addition to the normal CI command
       echo "Platform: PhantomJS tests on node: $NODE_NAME"
-      runTests(extExecHandle, "PhantomJS", "phantomjs", null, 1, 1)
+      runPhantomTests(extExecHandle)
     }
 
     if (BRANCH_NAME != "master") {
