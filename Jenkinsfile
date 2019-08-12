@@ -90,18 +90,13 @@ node("primary") {
       echo "name: " + permutation.name + " bucket: " + bucket + "/" + buckets
       def suffix = buckets == 1 ? "" : "-" + bucket
 
-      // closure variables - Jenkins is weird about these
-      def c_suffix = suffix
-      def c_os = permutation.os
-      def c_browser = permutation.browser
+      // closure variable - don't inline
       def c_bucket = bucket
-      def c_buckets = buckets
-      def c_name = permutation.name
 
-      processes[c_name + c_suffix] = {
-        stage (c_os + " " + c_browser + c_suffix) {
-          node("bedrock-" + c_os) {
-            echo "name: " + c_name + " bucket: " + c_bucket + "/" + c_buckets
+      processes[permutation.name + suffix] = {
+        stage (permutation.os + " " + permutation.browser + suffix) {
+          node("bedrock-" + permutation.os) {
+            echo "name: " + permutation.name + " bucket: " + c_bucket + "/" + buckets
             echo "Node checkout on node $NODE_NAME"
             checkout scm
 
@@ -114,8 +109,8 @@ node("primary") {
             cleanAndInstall()
             extExec "yarn ci"
 
-            echo "Platform: browser tests for " + c_name + " on node: $NODE_NAME"
-            runBrowserTests(extExecHandle, c_name, c_browser, c_os, c_bucket, c_buckets)
+            echo "Platform: browser tests for " + permutation.name + " on node: $NODE_NAME"
+            runBrowserTests(extExecHandle, permutation.name, permutation.browser, permutation.os, c_bucket, buckets)
           }
         }
       }
