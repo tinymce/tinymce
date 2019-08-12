@@ -1,4 +1,4 @@
-import { document, window, Element as DomElement, HTMLTableElement, HTMLStyleElement } from '@ephox/dom-globals';
+import { document, window, HTMLTableElement, HTMLStyleElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import {
   Attr,
@@ -135,7 +135,7 @@ DomEvent.bind(ephoxUi, 'keyup', function (event) {
 DomEvent.bind(ephoxUi, 'keydown', function (event) {
   // This might get expensive.
   WindowSelection.getExact(window).each(function (sel) {
-    const target = Node.isText(sel.start()) ? Traverse.parent(sel.start()) : Option.some(sel.start() as Element<DomElement>);
+    const target = (Node.isText(sel.start()) ? Traverse.parent(sel.start()) : Option.some(sel.start())).filter(Node.isElement);
     const direction = target.map(Direction.getDirection).getOr('ltr');
     keyHandlers.keydown(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset(), direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl).each(function (response) {
       handleResponse(event, response);

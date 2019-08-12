@@ -19,7 +19,7 @@ const defaultView = function (element: Element<DomNode>) {
 };
 
 const parent = function (element: Element<DomNode>) {
-  return Option.from(element.dom().parentNode as DomElement).map(Element.fromDom);
+  return Option.from(element.dom().parentNode).map(Element.fromDom);
 };
 
 const findIndex = function (element: Element<DomNode>) {
