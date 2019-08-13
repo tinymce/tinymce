@@ -34,12 +34,12 @@ const internalRemove = function (dom: DomNode, property: string) {
   }
 };
 
-const set = function (element: Element<DomNode>, property: string, value: string) {
+const set = function (element: Element<DomNode>, property: string, value: string): void {
   const dom = element.dom();
   internalSet(dom, property, value);
 };
 
-const setAll = function (element: Element<DomNode>, css: any) {
+const setAll = function (element: Element<DomNode>, css: Record<string, string>): void {
   const dom = element.dom();
 
   Obj.each(css, function (v, k) {
@@ -47,7 +47,7 @@ const setAll = function (element: Element<DomNode>, css: any) {
   });
 };
 
-const setOptions = function (element: Element<DomNode>, css: Record<string, Option<string>>) {
+const setOptions = function (element: Element<DomNode>, css: Record<string, Option<string>>): void {
   const dom = element.dom();
 
   Obj.each(css, function (v, k) {
@@ -65,7 +65,7 @@ const setOptions = function (element: Element<DomNode>, css: Record<string, Opti
  *
  * https://developer.mozilla.org/en-US/docs/Web/CSS/used_value
  */
-const get = function (element: Element<DomElement>, property: string) {
+const get = function (element: Element<DomElement>, property: string): string | undefined {
   const dom = element.dom();
   /*
    * IE9 and above per
