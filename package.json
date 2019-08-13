@@ -32,7 +32,7 @@
     "bedrock": "bedrock --customRoutes modules/tinymce/src/core/test/json/routes.json"
   },
   "devDependencies": {
-    "@ephox/bedrock": "^4.4.1",
+    "@ephox/bedrock": "^4.5.3",
     "@ephox/dom-globals": "^1.1.2",
     "@ephox/oxide-icons-tools": "^2.0.2",
     "@ephox/swag": "^4.1.4",
