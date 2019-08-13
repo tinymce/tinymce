@@ -191,6 +191,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
           }
           break;
         case 'replaceall':
+          api.focus('findtext');
           Actions.replace(editor, currentSearchState, data.replacetext, true, true);
           reset(api);
           break;
