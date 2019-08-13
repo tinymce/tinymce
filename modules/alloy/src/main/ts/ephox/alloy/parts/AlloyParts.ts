@@ -109,8 +109,8 @@ const getPartOrDie = (component: AlloyComponent, detail: CompositeSketchDetail, 
   return getPart(component, detail, partKey).getOrDie('Could not find part: ' + partKey);
 };
 
-const getParts = (component: AlloyComponent, detail: CompositeSketchDetail, partKeys: string[]): { [key: string]: () => Result<AlloyComponent, string> } => {
-  const r = { };
+const getParts = (component: AlloyComponent, detail: CompositeSketchDetail, partKeys: string[]): Record<string, () => Result<AlloyComponent, string | Error>> => {
+  const r: Record<string, Result<AlloyComponent, string | Error>> = { };
   const uids = detail.partUids;
 
   const system = component.getSystem();
@@ -134,7 +134,7 @@ const getAllPartNames = (detail: CompositeSketchDetail) => {
 };
 
 const getPartsOrDie = (component: AlloyComponent, detail: CompositeSketchDetail, partKeys: string[]): Record<string, () => AlloyComponent> => {
-  const r = { };
+  const r: Record<string, AlloyComponent> = { };
   const uids = detail.partUids;
 
   const system = component.getSystem();
