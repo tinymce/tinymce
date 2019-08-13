@@ -1,6 +1,6 @@
 import { Element as DomElement, Window, ClientRect, DOMRect } from '@ephox/dom-globals';
-import { Fun, Obj, Option } from '@ephox/katamari';
-import { Element, RawRect, Scroll, Selection, SimRange, Situ, WindowSelection } from '@ephox/sugar';
+import { Option } from '@ephox/katamari';
+import { Element, Rect, RawRect, Scroll, Selection, SimRange, Situ, WindowSelection } from '@ephox/sugar';
 import { Situs } from '../selection/Situs';
 import Util from '../selection/Util';
 
@@ -31,9 +31,7 @@ export const WindowBridge = function (win: Window): WindowBridge {
 
   const getRangedRect = function (start: Element, soffset: number, finish: Element, foffset: number): Option<RawRect> {
     const sel = Selection.exact(start, soffset, finish, foffset);
-    return WindowSelection.getFirstRect(win, sel).map(function (structRect) {
-      return Obj.map(structRect, Fun.apply);
-    });
+    return WindowSelection.getFirstRect(win, sel).map(Rect.toRaw);
   };
 
   const getSelection = function () {
