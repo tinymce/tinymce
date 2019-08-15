@@ -56,7 +56,7 @@ const findClosestCorner = (corners: Corner[], x: number, y: number): Option<Corn
 };
 
 const getClosestCell = (getYAxisValue: GetAxisValue, isTargetCorner: IsTargetCorner, table: HTMLElement, x: number, y: number): Option<HTMLElement> => {
-  const cells = SelectorFilter.descendants(Element.fromDom(table), 'td,th,caption').map((e) => e.dom());
+  const cells = SelectorFilter.descendants<HTMLElement>(Element.fromDom(table), 'td,th,caption').map((e) => e.dom());
   const corners = Arr.filter(getCorners(getYAxisValue, cells), (corner) => isTargetCorner(corner, y));
 
   return findClosestCorner(corners, x, y).map((corner) => {

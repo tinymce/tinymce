@@ -126,8 +126,8 @@ const paddEmptyBlock = function (elm) {
 };
 
 const deleteNormalized = (elm: Element, afterDeletePosOpt: Option<CaretPosition>, normalizeWhitespace?: boolean): Option<CaretPosition> => {
-  const prevTextOpt = Traverse.prevSibling(elm).filter((e) => NodeType.isText(e.dom()));
-  const nextTextOpt = Traverse.nextSibling(elm).filter((e) => NodeType.isText(e.dom()));
+  const prevTextOpt = Traverse.prevSibling(elm).filter(SugarNode.isText);
+  const nextTextOpt = Traverse.nextSibling(elm).filter(SugarNode.isText);
 
   // Delete the element
   Remove.remove(elm);

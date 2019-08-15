@@ -1,7 +1,7 @@
 import { ApproxStructure, GeneralSteps, Logger, Mouse, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element, Hierarchy } from '@ephox/sugar';
+import { Element, Hierarchy, Node } from '@ephox/sugar';
 
 import ContextMenuPlugin from 'tinymce/plugins/contextmenu/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.contextmenu.ContextMenuPluginTest', 
 
   const sContextMenuClickInMiddleOf = function (editor, elementPath) {
     return Step.sync(function () {
-      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie().dom();
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).filter(Node.isElement).getOrDie().dom();
       const rect = element.getBoundingClientRect();
       const clientX = (rect.left + rect.width / 2), clientY = (rect.top + rect.height / 2);
 

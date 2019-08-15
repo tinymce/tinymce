@@ -38,7 +38,7 @@ const parentIsListComponent = (el: Element) => {
 };
 
 const getBlocksToIndent = (editor: Editor) => {
-  return Arr.filter(Arr.map(editor.selection.getSelectedBlocks(), Element.fromDom), (el) =>
+  return Arr.filter(Arr.map(editor.selection.getSelectedBlocks(), Element.fromDom), (el): el is Element<HTMLElement> =>
     !isListComponent(el) && !parentIsListComponent(el)
   );
 };

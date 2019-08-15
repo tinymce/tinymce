@@ -5,6 +5,7 @@ import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 import { Option } from '@ephox/katamari';
+import { HTMLTableElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function () {
   const success = arguments[arguments.length - 2];
@@ -31,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function () {
 
   const cGetClosestCellAbove = (x: number, y: number) => {
     return Chain.mapper(function (viewBlock: any) {
-      const table = SelectorFind.descendant(Element.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
+      const table = SelectorFind.descendant<HTMLTableElement>(Element.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
       const rect = table.getBoundingClientRect();
       return getClosestCellAbove(table, rect.left + x, rect.top + y);
     });
@@ -39,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function () {
 
   const cGetClosestCellBelow = (x: number, y: number) => {
     return Chain.mapper(function (viewBlock: any) {
-      const table = SelectorFind.descendant(Element.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
+      const table = SelectorFind.descendant<HTMLTableElement>(Element.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
       const rect = table.getBoundingClientRect();
       return getClosestCellBelow(table, rect.left + x, rect.top + y);
     });
@@ -47,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function () {
 
   const cFindClosestPositionInAboveCell = (path: number[], offset: number) => {
     return Chain.mapper(function (viewBlock: any) {
-      const table = SelectorFind.descendant(Element.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
+      const table = SelectorFind.descendant<HTMLTableElement>(Element.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
       const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
       const pos = CaretPosition(container.dom(), offset);
       return findClosestPositionInAboveCell(table, pos);
@@ -56,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function () {
 
   const cFindClosestPositionInBelowCell = (path: number[], offset: number) => {
     return Chain.mapper(function (viewBlock: any) {
-      const table = SelectorFind.descendant(Element.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
+      const table = SelectorFind.descendant<HTMLTableElement>(Element.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
       const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
       const pos = CaretPosition(container.dom(), offset);
       return findClosestPositionInBelowCell(table, pos);

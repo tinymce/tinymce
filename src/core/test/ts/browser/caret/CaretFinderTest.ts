@@ -1,5 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { Hierarchy, Element } from '@ephox/sugar';
+import { Hierarchy, Element, Node } from '@ephox/sugar';
 import CaretFinder from 'tinymce/core/caret/CaretFinder';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import ViewBlock from '../../module/test/ViewBlock';
@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function () {
 
   const cPositionIn = function (forward, path) {
     return Chain.mapper(function (_) {
-      const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+      const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).filter(Node.isElement).getOrDie();
       return CaretFinder.positionIn(forward, element.dom());
     });
   };

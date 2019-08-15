@@ -70,7 +70,7 @@ const getSetting = function (editorSettings, name, defaultValue) {
   return value === false ? null : value;
 };
 
-const createMenuItems = function (term, targets, fileType, editorSettings) {
+const createMenuItems = function (term, targets: any[], fileType, editorSettings) {
   const separator = { title: '-' };
 
   const fromHistoryMenuItems = function (history) {
