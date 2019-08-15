@@ -120,7 +120,8 @@ const initDialog = <T>(getInstanceApi: () => Types.Dialog.DialogInstanceApi<T>, 
       Focus.active().fold(() => {
         Keying.focusIn(component);
       }, (focused) => {
-        if (!Compare.contains(component.element(), focused) || Attr.get(focused, 'disabled') === 'disabled') {
+        // We need to check if the focused element is disabled because apparently firefox and ie like to leave focus on disabled elements.
+        if (!Compare.contains(component.element(), focused) || Attr.has(focused, 'disabled')) {
           Keying.focusIn(component);
         }
       });
