@@ -39,7 +39,7 @@ const isSeparator = function (namedMenuItem) {
   return namedMenuItem && namedMenuItem.item.text === '|';
 };
 
-const cleanupMenu = function (namedMenuItems, removedMenuItems) {
+const cleanupMenu = function (namedMenuItems: any[], removedMenuItems): any[] {
   const menuItemsPass1 = Arr.filter(namedMenuItems, function (namedMenuItem) {
     return removedMenuItems.hasOwnProperty(namedMenuItem.name) === false;
   });

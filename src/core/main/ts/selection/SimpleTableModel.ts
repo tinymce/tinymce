@@ -7,6 +7,7 @@
 
 import { Arr, Option, Struct } from '@ephox/katamari';
 import { Compare, Insert, InsertAll, Replication, Element, Attr, SelectorFilter } from '@ephox/sugar';
+import { HTMLElement } from '@ephox/dom-globals';
 
 const tableModel = Struct.immutable('element', 'width', 'rows');
 const tableRow = Struct.immutable('element', 'cells');
@@ -104,7 +105,7 @@ const createDomTable = function (table, rows) {
 
 const modelRowsToDomRows = function (table) {
   return Arr.map(table.rows(), function (row) {
-    const cells = Arr.map(row.cells(), function (cell) {
+    const cells = Arr.map(row.cells(), function (cell: Element<HTMLElement>) {
       const td = Replication.deep(cell);
       Attr.remove(td, 'colspan');
       Attr.remove(td, 'rowspan');

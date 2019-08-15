@@ -4,10 +4,11 @@ import {
 import { UnitTest } from '@ephox/bedrock';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element, Height, Hierarchy, Width, Attr } from '@ephox/sugar';
+import { Element, Height, Hierarchy, Width, Attr, Node } from '@ephox/sugar';
 
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
+import { HTMLElement, Node as DomNode } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function () {
   const success = arguments[arguments.length - 2];
@@ -15,6 +16,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function () {
 
   ModernTheme();
   TablePlugin();
+
+  const isHtmlElm = (elm: Element<DomNode>): elm is Element<HTMLElement> => Node.isElement(elm);
 
   const sDragDrop = function (container, selector, dx, dy) {
     return Chain.asStep(container, [
@@ -53,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function () {
 
   const sSetStateFrom = function (editor, path) {
     return Step.sync(function () {
-      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element');
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).filter(isHtmlElm).getOrDie('could not find element');
       const height = Height.get(element);
       const width = Width.get(element);
 
@@ -81,7 +84,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function () {
 
   const sAssertSizeChange = function (editor, path, change) {
     return Step.sync(function () {
-      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element');
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).filter(isHtmlElm).getOrDie('could not find element');
       const height = Height.get(element);
       const width = Width.get(element);
 

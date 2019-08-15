@@ -17,6 +17,7 @@ import Receivers from '../channels/Receivers';
 import SwipingModel from '../model/SwipingModel';
 import Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
+import { HTMLElement } from '@ephox/dom-globals';
 
 const sketch = function (rawSpec) {
   const navigateEvent = 'navigateEvent';
@@ -62,7 +63,7 @@ const sketch = function (rawSpec) {
   };
 
   const navigate = function (dialog, direction) {
-    const screens = SelectorFilter.descendants(dialog.element(), '.' + Styles.resolve('serialised-dialog-screen'));
+    const screens = SelectorFilter.descendants<HTMLElement>(dialog.element(), '.' + Styles.resolve('serialised-dialog-screen'));
     SelectorFind.descendant(dialog.element(), '.' + Styles.resolve('serialised-dialog-chain')).each(function (parent) {
       if ((spec.state.currentScreen.get() + direction) >= 0 && (spec.state.currentScreen.get() + direction) < screens.length) {
         Css.getRaw(parent, 'left').each(function (left) {

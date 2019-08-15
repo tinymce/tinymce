@@ -1,10 +1,11 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { Focus, Hierarchy, Element } from '@ephox/sugar';
+import { Focus, Hierarchy, Element, Node } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import EditorFocus from 'tinymce/core/focus/EditorFocus';
 import ViewBlock from '../../module/test/ViewBlock';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { Node as DomNode, HTMLElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function () {
   const success = arguments[arguments.length - 2];
@@ -36,7 +37,8 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function () {
 
   const cFocusElement = function (elementPath) {
     return Chain.op(function (editor: any) {
-      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie();
+      const isHtmlElm = (elm: Element<DomNode>): elm is Element<HTMLElement> => Node.isElement(elm);
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).filter(isHtmlElm).getOrDie();
       element.dom().focus();
     });
   };

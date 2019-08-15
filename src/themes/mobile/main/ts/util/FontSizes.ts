@@ -24,7 +24,7 @@ const sizeToIndex = function (size) {
 };
 
 const getRawOrComputed = function (isRoot, rawStart) {
-  const optStart = Node.isElement(rawStart) ? Option.some(rawStart) : Traverse.parent(rawStart);
+  const optStart = Node.isElement(rawStart) ? Option.some(rawStart) : Traverse.parent(rawStart).filter(Node.isElement);
   return optStart.map(function (start) {
     const inline = PredicateFind.closest(start, (elem) => Css.getRaw(elem, 'font-size').isSome(), isRoot)
       .bind((elem) => Css.getRaw(elem, 'font-size'));

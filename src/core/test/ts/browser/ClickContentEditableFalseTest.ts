@@ -1,6 +1,6 @@
 import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Hierarchy, Element } from '@ephox/sugar';
+import { Hierarchy, Element, Node } from '@ephox/sugar';
 import TypeText from '../module/test/TypeText';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.core.ClickContentEditableFalseTest', functio
 
   const sClickMiddleOf = function (editor, elementPath) {
     return Step.sync(function () {
-      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie().dom();
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).filter(Node.isElement).getOrDie().dom();
       const rect = element.getBoundingClientRect();
       const clientX = (rect.left + rect.width / 2), clientY = (rect.top + rect.height / 2);
 
