@@ -16,7 +16,6 @@ import {
   Keying,
 } from '@ephox/alloy';
 import { DialogManager, Types } from '@ephox/bridge';
-import { document } from '@ephox/dom-globals';
 import { Focus, Compare } from '@ephox/sugar';
 
 import {
