@@ -16,7 +16,7 @@ import {
   Keying,
 } from '@ephox/alloy';
 import { DialogManager, Types } from '@ephox/bridge';
-import { Focus, Compare } from '@ephox/sugar';
+import { Focus, Compare, Attr } from '@ephox/sugar';
 
 import {
   formActionEvent,
@@ -120,7 +120,7 @@ const initDialog = <T>(getInstanceApi: () => Types.Dialog.DialogInstanceApi<T>, 
       Focus.active().fold(() => {
         Keying.focusIn(component);
       }, (focused) => {
-        if (!Compare.contains(component.element(), focused)) {
+        if (!Compare.contains(component.element(), focused) || Attr.get(focused, 'disabled') === 'disabled') {
           Keying.focusIn(component);
         }
       });
