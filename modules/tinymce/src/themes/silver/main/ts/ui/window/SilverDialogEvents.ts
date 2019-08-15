@@ -13,8 +13,11 @@ import {
   NativeEvents,
   Reflecting,
   Representing,
+  Keying,
 } from '@ephox/alloy';
 import { DialogManager, Types } from '@ephox/bridge';
+import { document } from '@ephox/dom-globals';
+import { Focus, Compare } from '@ephox/sugar';
 
 import {
   formActionEvent,
@@ -112,8 +115,16 @@ const initDialog = <T>(getInstanceApi: () => Types.Dialog.DialogInstanceApi<T>, 
       spec.onChange(api, { name: event.name() });
     }),
 
-    fireApiEvent<FormActionEvent>(formActionEvent, (api, spec, event) => {
+    fireApiEvent<FormActionEvent>(formActionEvent, (api, spec, event, component) => {
       spec.onAction(api, { name: event.name(), value: event.value() });
+
+      Focus.active().fold(() => {
+        Keying.focusIn(component);
+      }, (focused) => {
+        if (!Compare.contains(component.element(), focused)) {
+          Keying.focusIn(component);
+        }
+      });
     }),
 
     fireApiEvent<FormTabChangeEvent>(formTabChangeEvent, (api, spec, event) => {
