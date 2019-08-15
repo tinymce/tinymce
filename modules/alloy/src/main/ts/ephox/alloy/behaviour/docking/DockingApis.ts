@@ -26,7 +26,7 @@ const refresh = (component, config: DockingConfig, state) => {
 
   Dockables.getMorph(component, config, viewport, scroll, origin).each((morph) => {
     const styles = DragCoord.toStyles(morph, scroll, origin);
-    Css.setAll(component.element(), {...styles});
+    Css.setAll(component.element(), styles);
   });
 };
 

@@ -9,11 +9,11 @@ export interface CoordAdt extends Adt {
   // TODO
 }
 
-export interface StylesCoord {
-  left: string;
-  top: string;
-  position: string;
-}
+export type StylesCoord = {
+  left: string,
+  top: string,
+  position: string
+};
 
 type CoordTransform = (coords: SugarPosition) => SugarPosition;
 
