@@ -6,6 +6,7 @@ Version 5.0.14 (TBD)
     Fixed focus not returning to editor when dismissing dropdowns on Edge and IE #TINY-3874
     Fixed plugins not being filtered when defaulting to mobile on phones #TINY-3537
     Fixed toolbar more drawer showing the content behind it when transitioning between opened and closed states #TINY-3878
+    Fixed focus not returning to the dialog after pressing the "Replace all" button in the search and replace dialog #TINY-3878
     Removed Oxide variable `@menubar-select-disabled-border-color` and replaced it with `@menubar-select-disabled-border` #TINY-3965
 Version 5.0.13 (2019-08-06)
     Changed modal dialogs to prevent dragging by default and added new `draggable_modal` setting to restore dragging #TINY-3873
