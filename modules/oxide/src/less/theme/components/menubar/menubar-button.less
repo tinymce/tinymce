@@ -75,13 +75,6 @@
     cursor: not-allowed;
   }
 
-  .tox-mbtn:hover:not(:disabled) {
-    background: @menubar-select-hover-background-color;
-    border: @menubar-select-hover-border;
-    box-shadow: @menubar-select-hover-box-shadow;
-    color: @menubar-select-hover-text-color;
-  }
-
   .tox-mbtn:focus:not(:disabled) {
     background: @menubar-select-focus-background-color;
     border: @menubar-select-focus-border;
@@ -95,6 +88,13 @@
     border: @menubar-select-active-border;
     box-shadow: @menubar-select-active-box-shadow;
     color: @menubar-select-active-text-color;
+  }
+
+  .tox-mbtn:hover:not(:disabled):not(.tox-mbtn--active) {
+    background: @menubar-select-hover-background-color;
+    border: @menubar-select-hover-border;
+    box-shadow: @menubar-select-hover-box-shadow;
+    color: @menubar-select-hover-text-color;
   }
 
   .tox-mbtn__select-label {
