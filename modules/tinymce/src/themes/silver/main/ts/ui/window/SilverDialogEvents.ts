@@ -115,14 +115,20 @@ const initDialog = <T>(getInstanceApi: () => Types.Dialog.DialogInstanceApi<T>, 
     }),
 
     fireApiEvent<FormActionEvent>(formActionEvent, (api, spec, event, component) => {
+      const focusIn = () => Keying.focusIn(component);
+      const current = Focus.active();
+
       spec.onAction(api, { name: event.name(), value: event.value() });
 
       Focus.active().fold(() => {
-        Keying.focusIn(component);
+        focusIn();
       }, (focused) => {
-        // We need to check if the focused element is disabled because apparently firefox and ie like to leave focus on disabled elements.
+        // We need to check if the focused element is disabled because apparently firefox likes to leave focus on disabled elements.
         if (!Compare.contains(component.element(), focused) || Attr.has(focused, 'disabled')) {
-          Keying.focusIn(component);
+          focusIn();
+          // And we need the below check for IE, which likes to leave focus on the parent of disabled elements
+        } else if (Compare.contains(focused, current.getOrNull()) && Attr.has(current.getOrDie(), 'disabled')) {
+          focusIn();
         }
       });
     }),
