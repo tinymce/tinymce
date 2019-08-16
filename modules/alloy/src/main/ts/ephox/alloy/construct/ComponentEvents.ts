@@ -92,7 +92,7 @@ const combineGroups = (byEventName, eventOrder) => {
     return combined.map((handler) => {
       const assembled = assemble(handler);
       const purpose = tuples.length > 1 ? Arr.filter(eventOrder, (o) => {
-        return Arr.contains(tuples, (t) => t.name() === o);
+        return Arr.exists(tuples, (t) => t.name() === o);
       }).join(' > ') : tuples[0].name();
       return Objects.wrap(eventName, DescribedHandler.uncurried(assembled, purpose));
     });
