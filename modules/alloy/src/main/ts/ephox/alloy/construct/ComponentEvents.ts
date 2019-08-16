@@ -1,11 +1,15 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Fun, Obj, Result } from '@ephox/katamari';
+import { Arr, Fun, Obj, Option, Result } from '@ephox/katamari';
 
 import * as ObjIndex from '../alien/ObjIndex';
 import * as PrioritySort from '../alien/PrioritySort';
 import * as DescribedHandler from '../events/DescribedHandler';
 import * as EventHandler from './EventHandler';
 import { UncurriedHandler } from '../events/EventRegistry';
+import * as BehaviourBlob from 'ephox/alloy/behaviour/common/BehaviourBlob';
+import { BehaviourState } from 'ephox/alloy/behaviour/common/BehaviourState';
+import { AlloyBehaviour } from 'ephox/alloy/api/behaviour/Behaviour';
+import { AlloyEventRecord } from 'ephox/alloy/api/events/AlloyEvents';
 
 /*
  * The process of combining a component's events
@@ -22,7 +26,15 @@ import { UncurriedHandler } from '../events/EventRegistry';
  *
  * So at the end, you should have Result(eventName -> single function)
  */
-const behaviourTuple = (name, handler) => {
+
+type Info = Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>;
+
+type BehaviourTuple = {
+  name: () => string,
+  handler: () => any
+};
+
+const behaviourTuple = (name: string, handler: () => any): BehaviourTuple => {
   return {
     name: Fun.constant(name),
     handler: Fun.constant(handler)
@@ -37,7 +49,7 @@ const nameToHandlers = (behaviours, info) => {
   return r;
 };
 
-const groupByEvents = (info, behaviours, base) => {
+const groupByEvents = (info: Info, behaviours: Array<AlloyBehaviour<any, any>>, base: Record<string, AlloyEventRecord>) => {
   const behaviourEvents = {
     ...base,
     ...nameToHandlers(behaviours, info)
@@ -46,8 +58,13 @@ const groupByEvents = (info, behaviours, base) => {
   return ObjIndex.byInnerKey(behaviourEvents, behaviourTuple);
 };
 
-const combine = (info, eventOrder, behaviours, base): Result<Record<string, UncurriedHandler>, string | Error> => {
-  const byEventName = groupByEvents(info, behaviours, base);
+const combine = (
+  info: Info,
+  eventOrder: Record<string, string[]>,
+  behaviours: Array<AlloyBehaviour<any, any>>,
+  base: Record<string, AlloyEventRecord>
+): Result<Record<string, UncurriedHandler>, string | Error> => {
+  const byEventName: Record<string, BehaviourTuple[]> = groupByEvents(info, behaviours, base);
   return combineGroups(byEventName, eventOrder);
 };
 
@@ -63,7 +80,7 @@ const assemble = (rawHandler) => {
   };
 };
 
-const missingOrderError = (eventName, tuples) => {
+const missingOrderError = <T> (eventName: string, tuples: BehaviourTuple[]): Result<T, string[]> => {
   return Result.error([
     'The event (' + eventName + ') has more than one behaviour that listens to it.\nWhen this occurs, you must ' +
     'specify an event ordering for the behaviours in your spec (e.g. [ "listing", "toggling" ]).\nThe behaviours that ' +
@@ -71,7 +88,7 @@ const missingOrderError = (eventName, tuples) => {
   ]);
 };
 
-const fuse = (tuples, eventOrder, eventName): Result<any, any> => {
+const fuse = (tuples: BehaviourTuple[], eventOrder: Record<string, string[]>, eventName: string): Result<any, any> => {
   // ASSUMPTION: tuples.length will never be 0, because it wouldn't have an entry if it was 0
   const order = eventOrder[eventName];
   if (! order) {
@@ -86,12 +103,12 @@ const fuse = (tuples, eventOrder, eventName): Result<any, any> => {
   }
 };
 
-const combineGroups = (byEventName, eventOrder) => {
+const combineGroups = (byEventName: Record<string, BehaviourTuple[]>, eventOrder: Record<string, string[]>) => {
   const r = Obj.mapToArray(byEventName, (tuples, eventName) => {
     const combined = tuples.length === 1 ? Result.value(tuples[0].handler()) : fuse(tuples, eventOrder, eventName);
     return combined.map((handler) => {
       const assembled = assemble(handler);
-      const purpose = tuples.length > 1 ? Arr.filter(eventOrder, (o) => {
+      const purpose = tuples.length > 1 ? Arr.filter(eventOrder[eventName], (o) => {
         return Arr.exists(tuples, (t) => t.name() === o);
       }).join(' > ') : tuples[0].name();
       return Objects.wrap(eventName, DescribedHandler.uncurried(assembled, purpose));
