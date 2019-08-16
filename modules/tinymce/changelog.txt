@@ -3,7 +3,6 @@ Version 5.0.14 (TBD)
     Fixed missing toolbar button border styling options #TINY-3965
     Fixed image upload progress notification closing before the upload is complete #TINY-3963
     Fixed inline dialogs not closing on escape when no dialog component is in focus #TINY-3936
-    Fixed focus not returning to editor when dismissing dropdowns on Edge and IE #TINY-3874
     Fixed plugins not being filtered when defaulting to mobile on phones #TINY-3537
     Fixed toolbar more drawer showing the content behind it when transitioning between opened and closed states #TINY-3878
     Fixed focus not returning to the dialog after pressing the "Replace all" button in the search and replace dialog #TINY-3878
