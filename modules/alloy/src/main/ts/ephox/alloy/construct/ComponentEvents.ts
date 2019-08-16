@@ -6,10 +6,10 @@ import * as PrioritySort from '../alien/PrioritySort';
 import * as DescribedHandler from '../events/DescribedHandler';
 import * as EventHandler from './EventHandler';
 import { UncurriedHandler } from '../events/EventRegistry';
-import * as BehaviourBlob from 'ephox/alloy/behaviour/common/BehaviourBlob';
-import { BehaviourState } from 'ephox/alloy/behaviour/common/BehaviourState';
-import { AlloyBehaviour } from 'ephox/alloy/api/behaviour/Behaviour';
-import { AlloyEventRecord } from 'ephox/alloy/api/events/AlloyEvents';
+import { AlloyBehaviour } from '../api/behaviour/Behaviour';
+import { AlloyEventRecord } from '../api/events/AlloyEvents';
+import * as BehaviourBlob from '../behaviour/common/BehaviourBlob';
+import { BehaviourState } from '../behaviour/common/BehaviourState';
 
 /*
  * The process of combining a component's events
