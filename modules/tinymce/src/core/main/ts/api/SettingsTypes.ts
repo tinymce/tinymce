@@ -77,6 +77,7 @@ export interface RawEditorSettings {
   file_picker_callback?: FilePickerCallback;
   file_picker_types?: string;
   filepicker_validator_handler?: FilePickerValidationCallback;
+  file_picker_validator_handler?: FilePickerValidationCallback;
   fix_list_elements?: boolean;
   fixed_toolbar_container?: string;
   font_formats?: string;
