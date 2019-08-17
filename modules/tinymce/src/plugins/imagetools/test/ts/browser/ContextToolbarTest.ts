@@ -16,17 +16,17 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
   ImagePlugin();
   ImageToolsPlugin();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
     const doc = Element.fromDom(document);
     const imgOps = ImageOps(editor);
 
-    const srcUrl = '/project/tinymce/src/plugins/imagetools/demo/img/dogleft.jpg';
+    const srcUrl = '/project/tinymce/src/plugins/imagetools/demo/img/dogleft.gif';
 
     const sOpenContextToolbar = (source) => {
       return GeneralSteps.sequence([
-        ImageUtils.sLoadImage(editor, source, {width: 800, height: 600}),
+        ImageUtils.sLoadImage(editor, source, {width: 460, height: 598}),
         tinyApis.sSelect('img', []),
         tinyUi.sWaitForUi('Wait for table context toolbar', '.tox-toolbar button[aria-label="Rotate counterclockwise"]'),
       ]);
@@ -41,13 +41,15 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
       return FocusTools.sTryOnSelector(`Focus should be on: ${label}`, doc, selector);
     };
 
-    const sOpenAndCloseDialog = (label) => {
+    const sOpenAndCloseDialog = (childSelector: string) => {
+      const selector = 'div[role="dialog"]';
       return GeneralSteps.sequence([
         Chain.asStep(editor, [
-          tinyUi.cWaitForPopup('wait for dialog', `div:contains("${label}")`),
-          UiChains.cCloseDialog('div[role="dialog"]')
+          tinyUi.cWaitForPopup('wait for dialog', `div.tox-dialog__title`),
+          tinyUi.cWaitForPopup('wait for dialog child element', childSelector),
+          UiChains.cCloseDialog(selector)
         ]),
-        Waiter.sTryUntil('Wait for dialog to close', UiFinder.sNotExists(TinyDom.fromDom(document.body), 'div[role="dialog"]'), 50, 5000)
+        Waiter.sTryUntil('Wait for dialog to close', UiFinder.sNotExists(TinyDom.fromDom(document.body), selector), 50, 5000)
       ]);
     };
 
@@ -103,17 +105,17 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
       Log.stepsAsStep('TBA', 'ImageTools: context toolbar functionality test', [
         sOpenContextToolbar(srcUrl),
         imgOps.sExecToolbar('Rotate counterclockwise'),
-        Waiter.sTryUntil('Wait for image to be rotated', tinyApis.sAssertContentPresence({ 'img[width="600"][height="800"]': 1 }), 50, 5000),
+        Waiter.sTryUntil('Wait for image to be rotated', tinyApis.sAssertContentPresence({ 'img[width="598"][height="460"]': 1 }), 10, 5000),
         imgOps.sExecToolbar('Rotate clockwise'),
-        Waiter.sTryUntil('Wait for image to be rotated', tinyApis.sAssertContentPresence({ 'img[width="800"][height="600"]': 1 }), 50, 5000),
+        Waiter.sTryUntil('Wait for image to be rotated', tinyApis.sAssertContentPresence({ 'img[width="460"][height="598"]': 1 }), 10, 5000),
         sAssertImageFlip('Flip horizontally'),
         sAssertImageFlip('Flip vertically'),
         Chain.asStep({}, [cClickContextToolbarButton('Edit image')]),
         // Wait for Imagetools dialog async loading
-        Step.wait(500),
-        sOpenAndCloseDialog('Edit Image'),
+        Step.wait(50),
+        sOpenAndCloseDialog('div.tox-image-tools__image>img'),
         Chain.asStep({}, [cClickContextToolbarButton('Image options')]),
-        sOpenAndCloseDialog('Insert/Edit Image'),
+        sOpenAndCloseDialog('div.tox-form'),
       ])
     ], onSuccess, onFailure);
   }, {
