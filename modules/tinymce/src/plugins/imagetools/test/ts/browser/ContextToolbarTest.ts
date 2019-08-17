@@ -1,4 +1,4 @@
-import { Log, Pipeline, Chain, UiFinder, FocusTools, Keyboard, Keys, GeneralSteps, Waiter, NamedChain, Step, Assertions } from '@ephox/agar';
+import { Log, Pipeline, Chain, UiFinder, FocusTools, Keyboard, Keys, GeneralSteps, Waiter, NamedChain, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader, TinyUi, UiChains} from '@ephox/mcagar';
@@ -9,6 +9,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { Element } from '@ephox/sugar';
 import ImageUtils from '../module/test/ImageUtils';
 import ImageOps from '../module/test/ImageOps';
+import { Option } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (success, failure) => {
   Theme();
@@ -50,11 +51,13 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
       ]);
     };
 
-    const cGetImageSrc = Chain.mapper(() => {
+    const getImageSrc = () => {
       const dom = editor.dom;
       const element = dom.getParent(editor.selection.getStart(), 'img');
       return dom.getAttrib(element, 'src');
-    });
+    };
+
+    const cGetImageSrc = Chain.mapper(getImageSrc);
 
     const cClickContextToolbarButton = (label) => {
       return Chain.fromParent(tinyUi.cWaitForPopup('wait for Imagetools toolbar', '.tox-pop__dialog div'), [
@@ -62,30 +65,18 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
       ]);
     };
 
-    const cGetImageSources = (label) => {
-      return NamedChain.asChain(
-        [
-          NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-          Chain.label('Store img src before flip', NamedChain.write('srcBeforeFlip', cGetImageSrc)),
-          Chain.label('Flip image', NamedChain.read('editor', cClickContextToolbarButton(label))),
-          // Wait for image to flip
-          Chain.wait(500),
-          Chain.label('Store img src after flip', NamedChain.write('srcAfterFlip', cGetImageSrc)),
-          NamedChain.merge(['srcBeforeFlip', 'srcAfterFlip'], 'urls'),
-          NamedChain.output('urls')
-        ]
-      );
-    };
-
     const sAssertImageFlip = (label) => {
       return Chain.asStep({editor}, [
         Chain.label(`Assert ${label}`,
         NamedChain.asChain([
           NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-          NamedChain.direct('editor', cGetImageSources(label), 'urls'),
-          NamedChain.read('urls', Chain.op((urls) => {
-            Assertions.assertEq(`Image should be flipped: ${label}`, true, ( urls.srcBeforeFlip !== urls.srcAfterFlip ));
-          }))
+          Chain.label('Store img src before flip', NamedChain.write('srcBeforeFlip', cGetImageSrc)),
+          Chain.label('Flip image', NamedChain.read('editor', cClickContextToolbarButton(label))),
+          Chain.label('Wait for image to flip', Chain.fromStep(Waiter.sTryUntilPredicate('', (state: Record<string, any>) => {
+            const oldSrc = Option.from(state.srcBeforeFlip).getOrDie();
+            const newSrc = getImageSrc();
+            return newSrc !== oldSrc;
+          })))
         ]))
       ]);
     };
