@@ -135,6 +135,13 @@ const fromParent = function <T, U>(parent: Chain<T, U>, chains: Chain<U, any>[])
   });
 };
 
+const fromStep = function <T, U>(step: Step<T, U>): Chain<T, U> {
+  return Chain.async((input, next, die) => {
+    // TODO: what should the logs be?
+    step(input, next, die, TestLogs.init());
+  });
+};
+
 const asStep = function <T, U>(initial: U, chains: Chain<any, any>[]) {
   return Step.raw<T, T>((initValue, next, die, logs) => {
     const cs = Arr.map(chains, extract);
@@ -215,6 +222,7 @@ export const Chain = {
   fromChainsWith,
   fromParent,
   asStep,
+  fromStep,
   wrap,
   unwrap,
   wait,
