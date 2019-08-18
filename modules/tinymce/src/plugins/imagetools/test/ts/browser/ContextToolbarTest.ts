@@ -1,4 +1,4 @@
-import { Log, Pipeline, Chain, UiFinder, FocusTools, Keyboard, Keys, GeneralSteps, Waiter, NamedChain, Step } from '@ephox/agar';
+import { Log, Pipeline, Chain, UiFinder, FocusTools, Keyboard, Keys, GeneralSteps, Waiter, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader, TinyUi, UiChains} from '@ephox/mcagar';
@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
       return FocusTools.sTryOnSelector(`Focus should be on: ${label}`, doc, selector);
     };
 
-    const sOpenAndCloseDialog = (childSelector: string) => {
+    const sWaitForDialogOpenThenCloseDialog = (childSelector: string) => {
       const selector = 'div[role="dialog"]';
       return GeneralSteps.sequence([
         Chain.asStep(editor, [
@@ -111,11 +111,13 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
         sAssertImageFlip('Flip horizontally'),
         sAssertImageFlip('Flip vertically'),
         Chain.asStep({}, [cClickContextToolbarButton('Edit image')]),
-        // Wait for Imagetools dialog async loading
-        Step.wait(50),
-        sOpenAndCloseDialog('div.tox-image-tools__image>img'),
+        /* Previously there was a fixed wait here, waiting for the dialog to display.
+        Without this wait, you can't see the dialog if you're watching the test.
+        However, the below DOM assertions insist that the dialog is, indeed, there.
+        */
+        sWaitForDialogOpenThenCloseDialog('div.tox-image-tools__image>img'),
         Chain.asStep({}, [cClickContextToolbarButton('Image options')]),
-        sOpenAndCloseDialog('div.tox-form'),
+        sWaitForDialogOpenThenCloseDialog('div.tox-form'),
       ])
     ], onSuccess, onFailure);
   }, {
