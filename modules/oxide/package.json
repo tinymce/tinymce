@@ -22,6 +22,8 @@
     "build/skins/ui/**/*.woff",
     "src/less/**/*",
     "src/svg/**/*",
+    "src/fonts/**/*",
+    "src/text/**/*",
     "README.md",
     "LICENSE.txt"
   ]
