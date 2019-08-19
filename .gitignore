@@ -21,7 +21,8 @@ package-lock.json
 .project
 coverage
 node_modules
-js/**/*
+/modules
+/js
 imagemanager
 filemanager
 mcmanager
