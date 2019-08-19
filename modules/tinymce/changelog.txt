@@ -1,4 +1,5 @@
 Version 5.0.15 (TBD)
+    Changed so the enabled state on toolbar buttons doesn't get the hover effect #TINY-3974
     Fixed missing CSS active state on toolbar buttons #TINY-3966
 Version 5.0.14 (2019-08-19)
     Added an API to reload the autocompleter menu with additional fetch metadata #MENTIONS-17
