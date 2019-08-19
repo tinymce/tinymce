@@ -74,11 +74,11 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
           NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
           Chain.label('Store img src before flip', NamedChain.write('srcBeforeFlip', cGetImageSrc)),
           Chain.label('Flip image', NamedChain.read('editor', cClickContextToolbarButton(label))),
-          Chain.label('Wait for image to flip', Chain.fromStep(Waiter.sTryUntilPredicate('', (state: Record<string, any>) => {
+          Waiter.cTryUntilPredicate('Wait for image to flip', (state: Record<string, any>) => {
             const oldSrc = Option.from(state.srcBeforeFlip).getOrDie();
             const newSrc = getImageSrc();
             return newSrc !== oldSrc;
-          })))
+          })
         ]))
       ]);
     };

@@ -204,6 +204,10 @@ const runStepsOnValue = <I, O>(getSteps: (value: I) => Step<I, O>[]): Chain<I, O
   });
 };
 
+const predicate = <T> (p: (value: T) => boolean): Chain<T, T> =>
+  on((input, next, die, logs) =>
+    p(input) ? next(wrap(input), logs) : die('predicate did not succeed', logs));
+
 export const Chain = {
   on,
   op,
@@ -229,5 +233,6 @@ export const Chain = {
   log,
   label,
 
-  pipeline
+  pipeline,
+  predicate
 };
