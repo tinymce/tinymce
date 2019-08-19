@@ -136,9 +136,8 @@ const fromParent = function <T, U>(parent: Chain<T, U>, chains: Chain<U, any>[])
 };
 
 const fromStep = function <T, U>(step: Step<T, U>): Chain<T, U> {
-  return Chain.async((input, next, die) => {
-    // TODO: what should the logs be?
-    step(input, next, die, TestLogs.init());
+  return on((input, next, die, logs) => {
+    step(input, (n) => next(wrap(n), logs), die, logs);
   });
 };
 
