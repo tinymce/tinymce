@@ -5,7 +5,7 @@ export interface BehaviourCellState<T> extends BehaviourState {
   get: () => T;
   set: (newState: T) => void;
   clear: () => void;
-  readState: () => T;
+  readState: () => any;
 }
 
 export const SetupBehaviourCellState = <T>(initialState: T) => {
@@ -15,7 +15,7 @@ export const SetupBehaviourCellState = <T>(initialState: T) => {
     const get = () => cell.get();
     const set = (newState: T) => cell.set(newState);
     const clear = () => cell.set(initialState);
-    const readState = () => cell.get();
+    const readState = (): any => cell.get();
 
     return {
       get,
