@@ -1,5 +1,5 @@
 import { document } from '@ephox/dom-globals';
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { Class, Element, Value } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -58,6 +58,9 @@ export default (): void => {
                     dom: { tag: 'li', innerHtml: d }
                   };
                 });
+              },
+              updateState: (comp, data) => {
+                return Option.some<any>(data);
               },
               initialData: {
                 items: [ 'dog', 'cat', 'elephant' ]
