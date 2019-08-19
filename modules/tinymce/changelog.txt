@@ -1,7 +1,8 @@
 Version 5.0.15 (TBD)
-    Fixed missing toolbar button border styling options #TINY-3965
+    Fixed missing CSS active state on toolbar buttons #TINY-3966
 Version 5.0.14 (2019-08-19)
     Added an API to reload the autocompleter menu with additional fetch metadata #MENTIONS-17
+    Fixed missing toolbar button border styling options #TINY-3965
     Fixed image upload progress notification closing before the upload is complete #TINY-3963
     Fixed inline dialogs not closing on escape when no dialog component is in focus #TINY-3936
     Fixed plugins not being filtered when defaulting to mobile on phones #TINY-3537
