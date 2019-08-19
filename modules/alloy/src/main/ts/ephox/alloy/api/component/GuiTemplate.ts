@@ -11,7 +11,7 @@ const readText = (elem: Element<DomText>) => {
   return text.trim().length > 0 ? [ { text } ] : [ ];
 };
 
-const readChildren = <T extends DomNode> (elem: Element<T>) => {
+const readChildren = (elem: Element<DomNode>) => {
   if (Node.isText(elem)) {
     return readText(elem);
   } else if (Node.isComment(elem)) {
@@ -36,7 +36,7 @@ const readChildren = <T extends DomNode> (elem: Element<T>) => {
   }
 };
 
-const read = <T extends DomNode> (elem: Element<T>): SimpleOrSketchSpec => {
+const read = (elem: Element<DomNode>): SimpleOrSketchSpec => {
   const attributes = getAttrs(elem);
   const classes = getClasses(elem);
 
