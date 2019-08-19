@@ -117,10 +117,22 @@
     box-shadow: @toolbar-button-focus-box-shadow;
   }
 
+  .tox-tbtn:hover {
+    background: @toolbar-button-hover-background-color;
+    border: @toolbar-button-hover-border;
+    box-shadow: @toolbar-button-hover-box-shadow;
+    color: @toolbar-button-hover-text-color;
+
+    svg {
+      fill: @toolbar-button-hover-icon-color;
+    }
+  }
+
   .tox-tbtn:active {
     background: @toolbar-button-active-background-color;
     border: @toolbar-button-active-border;
     box-shadow: @toolbar-button-active-box-shadow;
+    color: @toolbar-button-active-text-color;
   }
 
   .tox-tbtn--disabled,
@@ -140,30 +152,11 @@
     }
   }
 
-  .tox-tbtn:hover:not(.tox-tbtn--disabled) {
-    background: @toolbar-button-hover-background-color;
-    border: @toolbar-button-hover-border;
-    box-shadow: @toolbar-button-hover-box-shadow;
-    color: @toolbar-button-hover-text-color;
-
-    svg {
-      fill: @toolbar-button-hover-icon-color;
-    }
-  }
-
   .tox-tbtn:focus:not(.tox-tbtn--disabled) {
     color: @toolbar-button-focus-text-color;
 
     svg {
       fill: @toolbar-button-focus-icon-color;
-    }
-  }
-
-  .tox-tbtn:active:not(.tox-tbtn--disabled) {
-    color: @toolbar-button-active-text-color;
-
-    svg {
-      fill: @toolbar-button-active-icon-color;
     }
   }
 
