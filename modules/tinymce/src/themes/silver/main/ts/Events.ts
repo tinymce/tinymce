@@ -12,22 +12,23 @@ import { DomEvent, Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 const setup = (editor: Editor, mothership, uiMothership) => {
-
-  const dismissPopup = (target: Element) => {
+  const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', function (evt) {
     Arr.each([ mothership, uiMothership ], function (ship) {
       ship.broadcastOn([ Channels.dismissPopups() ], {
-        target
+        target: evt.target()
       });
     });
-  };
+  });
 
-  const onTouchend = DomEvent.bind(Element.fromDom(document), 'touchend', function (evt) {
-    dismissPopup(evt.target());
+  const onTouchstart = DomEvent.bind(Element.fromDom(document), 'touchstart', function (evt) {
+    Arr.each([ mothership, uiMothership ], function (ship) {
+      ship.broadcastOn([ Channels.dismissPopups() ], {
+        target: evt.target()
+      });
+    });
   });
 
   const onMouseup = DomEvent.bind(Element.fromDom(document), 'mouseup', function (evt) {
-    dismissPopup(evt.target());
-
     if (evt.raw().button === 0) {
       Arr.each([ mothership, uiMothership ], function (ship) {
         ship.broadcastOn([ Channels.mouseReleased() ], {
@@ -37,14 +38,17 @@ const setup = (editor: Editor, mothership, uiMothership) => {
     }
   });
 
-  const onContentTouchend = function (raw) {
-    dismissPopup(Element.fromDom(raw.target));
+  const onContentMousedown = function (raw) {
+    Arr.each([ mothership, uiMothership ], function (ship) {
+      ship.broadcastOn([ Channels.dismissPopups() ], {
+        target: Element.fromDom(raw.target)
+      });
+    });
   };
-  editor.on('touchend', onContentTouchend);
+  editor.on('mousedown', onContentMousedown);
+  editor.on('touchstart', onContentMousedown);
 
   const onContentMouseup = function (raw) {
-    dismissPopup(Element.fromDom(raw.target));
-
     if (raw.button === 0) {
       Arr.each([ mothership, uiMothership ], function (ship) {
         ship.broadcastOn([ Channels.mouseReleased() ], {
@@ -71,12 +75,14 @@ const setup = (editor: Editor, mothership, uiMothership) => {
 
   editor.on('remove', () => {
     // We probably don't need these unbinds, but it helps to have them if we move this code out.
-    editor.off('touchend', onContentTouchend);
+    editor.off('mousedown', onContentMousedown);
+    editor.off('touchstart', onContentMousedown);
     editor.off('mouseup', onContentMouseup);
     editor.off('ResizeWindow', onWindowResize);
     editor.off('ScrollWindow', onWindowScroll);
 
-    onTouchend.unbind();
+    onMousedown.unbind();
+    onTouchstart.unbind();
     onMouseup.unbind();
   });
 

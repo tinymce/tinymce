@@ -1,11 +1,11 @@
 import { Option } from '@ephox/katamari';
 import * as Css from './Css';
 import * as Style from '../../impl/Style';
-import { HTMLElement } from '@ephox/dom-globals';
+import { Node as DomNode, Element as DomElement } from '@ephox/dom-globals';
 import Element from '../node/Element';
 
-const isCentered = function (element: Element) {
-  const dom: HTMLElement = element.dom();
+const isCentered = function (element: Element<DomNode>) {
+  const dom = element.dom();
   if (Style.isSupported(dom)) {
     const marginLeft = dom.style.marginRight;
     const marginRight = dom.style.marginLeft;
@@ -15,8 +15,10 @@ const isCentered = function (element: Element) {
   }
 };
 
-const divine = function (element: Element) {
-  if (isCentered(element)) { return Option.some('center'); } else {
+const divine = function (element: Element<DomElement>) {
+  if (isCentered(element)) {
+    return Option.some('center');
+  } else {
     const val = Css.getRaw(element, 'float').getOrThunk(function () {
       return Css.get(element, 'float');
     });
@@ -24,11 +26,11 @@ const divine = function (element: Element) {
   }
 };
 
-const getRaw = function (element: Element) {
-  return Css.getRaw(element, 'float').getOr(null);
+const getRaw = function (element: Element<DomNode>) {
+  return Css.getRaw(element, 'float').getOrNull();
 };
 
-const setCentered = function (element: Element) {
+const setCentered = function (element: Element<DomNode>) {
   Css.setAll(element, {
     'margin-left': 'auto',
     'margin-right': 'auto'

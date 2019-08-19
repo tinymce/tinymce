@@ -80,7 +80,7 @@ export default function (editor: Editor, extras, uiMothership): NotificationMana
 
     uiMothership.add(notificationWrapper);
 
-    if (settings.timeout) {
+    if (settings.timeout > 0) {
       Delay.setTimeout(() => {
         close();
       }, settings.timeout);

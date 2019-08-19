@@ -12,11 +12,11 @@ import { Selection } from 'ephox/sugar/api/selection/Selection';
 import { Situ } from 'ephox/sugar/api/selection/Situ';
 import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
 import { UnitTest, assert } from '@ephox/bedrock';
-import { window } from '@ephox/dom-globals';
+import { window, HTMLParagraphElement } from '@ephox/dom-globals';
 
 UnitTest.test('Browser Test: SelectionTest', function () {
-  const p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
-  const p2 = Element.fromHtml('<p>This is the <em>second</em> paragraph</p>');
+  const p1 = Element.fromHtml<HTMLParagraphElement>('<p>This is the <strong>first</strong> paragraph</p>');
+  const p2 = Element.fromHtml<HTMLParagraphElement>('<p>This is the <em>second</em> paragraph</p>');
 
   const p1text = Hierarchy.follow(p1, [ 0 ]).getOrDie('Looking for text in p1');
   const p2text = Hierarchy.follow(p2, [ 0 ]).getOrDie('Looking for text in p1');

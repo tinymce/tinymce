@@ -256,7 +256,7 @@ export class ExifReader {
     }
 
     this._offsets.IFD0 = this._offsets.tiffHeader + this.LONG(this._idx += 2)!;
-    this._tiffTags = this.extractTags<TiffTags>(this._offsets.IFD0, tags.tiff);
+    this._tiffTags = this.extractTags(this._offsets.IFD0, tags.tiff);
 
     if ('ExifIFDPointer' in this._tiffTags) {
       this._offsets.exifIFD = this._offsets.tiffHeader + this._tiffTags.ExifIFDPointer!;
@@ -346,46 +346,44 @@ export class ExifReader {
 
   public EXIF(): ExifTags | null {
     const self = this;
-    let Exif = null;
 
     if (self._offsets.exifIFD) {
       try {
-        Exif = self.extractTags<ExifTags>(self._offsets.exifIFD, tags.exif);
+        const Exif: ExifTags = self.extractTags(self._offsets.exifIFD, tags.exif);
+        // Fix formatting of some tags
+        if (Exif.ExifVersion && Array.isArray(Exif.ExifVersion)) {
+          let exifVersion = '';
+          for (const ch of Exif.ExifVersion) {
+            exifVersion += String.fromCharCode(ch);
+          }
+          Exif.ExifVersion = exifVersion;
+        }
+        return Exif;
       } catch (ex) {
         return null;
       }
-
-      // Fix formatting of some tags
-      if (Exif.ExifVersion && Array.isArray(Exif.ExifVersion)) {
-        let exifVersion = '';
-        for (const ch of Exif.ExifVersion) {
-          exifVersion += String.fromCharCode(ch);
-        }
-        Exif.ExifVersion = exifVersion;
-      }
+    } else {
+      return null;
     }
-
-    return Exif;
   }
 
   public GPS(): GPSTags | null {
     const self = this;
-    let GPS = null;
 
     if (self._offsets.gpsIFD) {
       try {
-        GPS = self.extractTags<GPSTags>(self._offsets.gpsIFD, tags.gps);
+        const GPS: GPSTags = self.extractTags(self._offsets.gpsIFD, tags.gps);
+        // iOS devices (and probably some others) do not put in GPSVersionID tag (why?..)
+        if (GPS.GPSVersionID && Array.isArray(GPS.GPSVersionID)) {
+          GPS.GPSVersionID = GPS.GPSVersionID.join('.');
+        }
+        return GPS;
       } catch (ex) {
         return null;
       }
-
-      // iOS devices (and probably some others) do not put in GPSVersionID tag (why?..)
-      if (GPS.GPSVersionID && Array.isArray(GPS.GPSVersionID)) {
-        GPS.GPSVersionID = GPS.GPSVersionID.join('.');
-      }
+    } else {
+      return null;
     }
-
-    return GPS;
   }
 
   public thumb(): ArrayBuffer | null {
@@ -405,9 +403,9 @@ export class ExifReader {
     return null;
   }
 
-  private extractTags<T extends Record<string, any>>(IFD_offset: number, tags2extract: Record<number, string>): T {
+  private extractTags(IFD_offset: number, tags2extract: any): any {
     const self = this;
-    const hash = {} as T;
+    const hash: any = {};
 
     const types: Record<number, string> = {
       1 : 'BYTE',

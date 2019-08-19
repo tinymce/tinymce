@@ -40,7 +40,7 @@ const getResponseType = (responseType: ResponseBodyDataTypes): Option<'blob' | '
 
 const createOptions = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>) => {
   const contentType = getContentType(init.body);
-  const credentials: Option<boolean> = init.credentials === true ? Option.some(true) : Option.none();
+  const credentials: Option<boolean> = init.credentials === true ? Option.some<boolean>(true) : Option.none<boolean>();
   const accept = getAccept(init.responseType) + ', */*; q=0.01';
   const headers = init.headers !== undefined ? init.headers : {};
   const responseType = getResponseType(init.responseType);

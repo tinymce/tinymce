@@ -10,6 +10,7 @@ import Dimension from 'ephox/sugar/impl/Dimension';
 import Div from 'ephox/sugar/test/Div';
 import MathElement from 'ephox/sugar/test/MathElement';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { HTMLTableElement, HTMLDivElement } from '@ephox/dom-globals';
 
 UnitTest.test('DimensionTest', function () {
   /* Remember, these checks are run 4 times */
@@ -225,12 +226,12 @@ UnitTest.test('DimensionTest', function () {
   assert.eq(true, boundsWidth > maxWidth);
 
   // Table height test Firefox will exclude caption from offsetHeight
-  const tbl = Element.fromHtml('<table><caption style="height: 300px"></caption><tbody><tr><td style="height: 10px"></td></tr></tbody></table>');
+  const tbl = Element.fromHtml<HTMLTableElement>('<table><caption style="height: 300px"></caption><tbody><tr><td style="height: 10px"></td></tr></tbody></table>');
   Insert.append(bounds, tbl);
   assert.eq(true, Height.getOuter(tbl) > 300, 'Height should be more than 300');
 
   // Height on detached node
-  const detachedElm = Element.fromHtml('<div>a</div>');
+  const detachedElm = Element.fromHtml<HTMLDivElement>('<div>a</div>');
   assert.eq(0, Height.getOuter(detachedElm), 'Should be zero for a detached element');
 
   // This test is broken in ie10, we don't understand exactly how it calculates max-width, every other platform passes.

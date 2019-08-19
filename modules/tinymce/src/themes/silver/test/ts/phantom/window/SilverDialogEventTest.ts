@@ -57,7 +57,7 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
     } ;
   };
 
-  const sGui = (selector, sequence) => Step.async((next, die) => {
+  const sGui = (selector: string, sequence) => Step.async((next, die) => {
     TestHelpers.GuiSetup.setup(
       (store, dov, body) => {
         // Build the sink for the component

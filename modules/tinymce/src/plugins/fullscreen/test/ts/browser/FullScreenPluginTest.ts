@@ -1,6 +1,6 @@
 import { UiFinder, Assertions, Chain, Guard, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import { document, HTMLLabelElement } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { Element, Body, Attr, SelectorFind, Html } from '@ephox/sugar';
@@ -16,7 +16,7 @@ export const cWaitForDialog = (ariaLabel) =>
       Chain.op((dialog) => {
         if (Attr.has(dialog, 'aria-labelledby')) {
           const labelledby = Attr.get(dialog, 'aria-labelledby');
-          const dialogLabel = SelectorFind.descendant(dialog, '#' + labelledby).getOrDie('Could not find labelledby');
+          const dialogLabel = SelectorFind.descendant<HTMLLabelElement>(dialog, '#' + labelledby).getOrDie('Could not find labelledby');
           Assertions.assertEq('Checking label text', ariaLabel, Html.get(dialogLabel));
         } else {
           throw new Error('Dialog did not have an aria-labelledby');

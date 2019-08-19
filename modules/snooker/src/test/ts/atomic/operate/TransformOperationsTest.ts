@@ -31,7 +31,7 @@ UnitTest.test('TransformOperationsTest', function () {
     const check = function (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
-      const actual = TransformOperations.replaceColumn(structGrid, index, Fun.tripleEquals, Generators.transform('scope', 'tag')(TestGenerator()).replaceOrInit);
+      const actual = TransformOperations.replaceColumn(structGrid, index, Fun.tripleEquals, Generators.transform('scope', 'td')(TestGenerator()).replaceOrInit);
       assertGrids(structExpected, actual);
     };
 
@@ -89,7 +89,7 @@ UnitTest.test('TransformOperationsTest', function () {
     const check = function (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
-      const actual = TransformOperations.replaceRow(structGrid, index, Fun.tripleEquals, Generators.transform('scope', 'tag')(TestGenerator()).replaceOrInit);
+      const actual = TransformOperations.replaceRow(structGrid, index, Fun.tripleEquals, Generators.transform('scope', 'td')(TestGenerator()).replaceOrInit);
       assertGrids(structExpected, actual);
     };
 

@@ -2,39 +2,40 @@ import * as PredicateFind from './PredicateFind';
 import * as Selectors from './Selectors';
 import ClosestOrAncestor from '../../impl/ClosestOrAncestor';
 import Element from '../node/Element';
+import { Node as DomNode, Element as DomElement, Document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 
 // TODO: An internal SelectorFilter module that doesn't Element.fromDom() everything
 
-const first = function (selector: string) {
-  return Selectors.one(selector);
+const first = function <T extends DomElement = DomElement> (selector: string) {
+  return Selectors.one<T>(selector);
 };
 
-const ancestor = function (scope: Element, selector: string, isRoot?) {
-  return PredicateFind.ancestor(scope, function (e) {
-    return Selectors.is(e, selector);
+const ancestor = function <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string, isRoot?: (e: Element<DomNode>) => boolean) {
+  return PredicateFind.ancestor(scope, function (e): e is Element<T> {
+    return Selectors.is<T>(e, selector);
   }, isRoot);
 };
 
-const sibling = function (scope: Element, selector: string) {
-  return PredicateFind.sibling(scope, function (e) {
-    return Selectors.is(e, selector);
+const sibling = function <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) {
+  return PredicateFind.sibling(scope, function (e): e is Element<T> {
+    return Selectors.is<T>(e, selector);
   });
 };
 
-const child = function (scope: Element, selector: string) {
-  return PredicateFind.child(scope, function (e) {
-    return Selectors.is(e, selector);
+const child = function <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) {
+  return PredicateFind.child(scope, function (e): e is Element<T> {
+    return Selectors.is<T>(e, selector);
   });
 };
 
-const descendant = function (scope: Element, selector: string) {
-  return Selectors.one(selector, scope);
+const descendant = function <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) {
+  return Selectors.one<T>(selector, scope);
 };
 
 // Returns Some(closest ancestor element (sugared)) matching 'selector' up to isRoot, or None() otherwise
-const closest = function (scope: Element, selector: string, isRoot?) {
-  return ClosestOrAncestor(Selectors.is, ancestor, scope, selector, isRoot);
+const closest = function <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string, isRoot?: (e: Element<DomNode>) => boolean) {
+  return ClosestOrAncestor<string>(Selectors.is, ancestor, scope, selector, isRoot) as Option<Element<T>>;
 };
 
 export {

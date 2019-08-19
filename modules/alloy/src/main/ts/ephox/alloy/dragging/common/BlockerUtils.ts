@@ -1,4 +1,4 @@
-import { Attr, Css, Traverse } from '@ephox/sugar';
+import { Attr, Css, Traverse, Node } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
@@ -9,16 +9,20 @@ const initialAttribute = 'data-initial-z-index';
 // discarding it, we need to reset those z-indices back to what they
 // were. ASSUMPTION: the blocker has been added as a direct child of the root
 const resetZIndex = (blocker: AlloyComponent): void => {
-  Traverse.parent(blocker.element()).each((root) => {
+  Traverse.parent(blocker.element()).filter(Node.isElement).each((root) => {
     const initZIndex = Attr.get(root, initialAttribute);
-    if (Attr.has(root, initialAttribute)) { Css.set(root, 'z-index', initZIndex); } else { Css.remove(root, 'z-index'); }
+    if (Attr.has(root, initialAttribute)) {
+      Css.set(root, 'z-index', initZIndex);
+    } else {
+      Css.remove(root, 'z-index');
+    }
 
     Attr.remove(root, initialAttribute);
   });
 };
 
 const changeZIndex = (blocker: AlloyComponent): void => {
-  Traverse.parent(blocker.element()).each((root) => {
+  Traverse.parent(blocker.element()).filter(Node.isElement).each((root) => {
     Css.getRaw(root, 'z-index').each((zindex) => {
       Attr.set(root, initialAttribute, zindex);
     });

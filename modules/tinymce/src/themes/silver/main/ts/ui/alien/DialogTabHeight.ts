@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloyEvents, Replacing, SystemEvents, TabSection } from '@ephox/alloy';
-import { document, window } from '@ephox/dom-globals';
+import { document, window, Element as DomElement } from '@ephox/dom-globals';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { Css, Element, Focus, SelectorFind } from '@ephox/sugar';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -34,7 +34,7 @@ const getMaxHeight = (heights: number[]) => {
 };
 
 const getMaxTabviewHeight = (dialog: Element, dialogBody: Element) => {
-  const rootElm = SelectorFind.ancestor(dialog, '.tox-dialog-wrap').getOr(dialog);
+  const rootElm = SelectorFind.ancestor(dialog, '.tox-dialog-wrap').getOr(dialog) as Element<DomElement>;
   const isFixed = Css.get(rootElm, 'position') === 'fixed';
   // Get the document or window/viewport height
   let maxHeight;

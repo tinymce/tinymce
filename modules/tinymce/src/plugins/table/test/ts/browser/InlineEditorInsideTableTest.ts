@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
   '</tbody>' +
   '</table>';
 
-  const cOnSelector = function (selector) {
+  const cOnSelector = function (selector: string) {
     return Chain.control(
       Chain.async(function (_, next) {
         EditorManager.init({
@@ -47,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
     );
   };
 
-  const cNotExists = (container, selector) => {
+  const cNotExists = (container: Element, selector: string) => {
     return Chain.control(
       Chain.op(() => {
         UiFinder.findIn(container, selector).fold(

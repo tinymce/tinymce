@@ -1,6 +1,5 @@
 import * as Compare from './dom/Compare';
 import * as DocumentPosition from './dom/DocumentPosition';
-import * as Dom from './dom/Dom';
 import * as DomFuture from './dom/DomFuture';
 import * as Focus from './dom/Focus';
 import * as Hierarchy from './dom/Hierarchy';
@@ -74,7 +73,6 @@ import { StructRect, RawRect } from './selection/Rect';
 export {
   Compare,
   DocumentPosition,
-  Dom,
   DomFuture,
   Focus,
   Hierarchy,

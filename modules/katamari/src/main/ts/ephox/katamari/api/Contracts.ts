@@ -55,7 +55,7 @@ const baseWith = function (handleUnsupported: HandleFn, required: string[], pred
   };
 };
 
-const handleExact = function (required, keys) {
+const handleExact = function (required: string[], keys: string[]) {
   const unsupported = Arr.filter(keys, function (key) {
     return !Arr.contains(required, key);
   });

@@ -11,47 +11,47 @@ const isTextNode = function (node: Node): node is Text {
   return node && node.nodeType === 3;
 };
 
-const isListNode = function (node) {
+const isListNode = function (node: Node) {
   return node && (/^(OL|UL|DL)$/).test(node.nodeName);
 };
 
-const isOlUlNode = function (node) {
+const isOlUlNode = function (node: Node) {
   return node && (/^(OL|UL)$/).test(node.nodeName);
 };
 
-const isListItemNode = function (node) {
+const isListItemNode = function (node: Node) {
   return node && /^(LI|DT|DD)$/.test(node.nodeName);
 };
 
-const isDlItemNode = function (node) {
+const isDlItemNode = function (node: Node) {
   return node && /^(DT|DD)$/.test(node.nodeName);
 };
 
-const isTableCellNode = function (node) {
+const isTableCellNode = function (node: Node) {
   return node && /^(TH|TD)$/.test(node.nodeName);
 };
 
-const isBr = function (node) {
+const isBr = function (node: Node) {
   return node && node.nodeName === 'BR';
 };
 
-const isFirstChild = function (node) {
+const isFirstChild = function (node: Node) {
   return node.parentNode.firstChild === node;
 };
 
-const isLastChild = function (node) {
+const isLastChild = function (node: Node) {
   return node.parentNode.lastChild === node;
 };
 
-const isTextBlock = function (editor, node) {
+const isTextBlock = function (editor, node: Node) {
   return node && !!editor.schema.getTextBlockElements()[node.nodeName];
 };
 
-const isBlock = function (node, blockElements) {
+const isBlock = function (node: Node, blockElements) {
   return node && node.nodeName in blockElements;
 };
 
-const isBogusBr = function (dom, node) {
+const isBogusBr = function (dom, node: Node) {
   if (!isBr(node)) {
     return false;
   }

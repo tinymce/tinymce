@@ -11,6 +11,7 @@ import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import { TabbingConfig, KeyRuleHandler } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
+import { HTMLElement } from '@ephox/dom-globals';
 
 const create = (cyclicField: FieldProcessorAdt) => {
   const schema: FieldProcessorAdt[] = [
@@ -26,9 +27,9 @@ const create = (cyclicField: FieldProcessorAdt) => {
   ]);
 
   // TODO: Test this
-  const isVisible = (tabbingConfig: TabbingConfig, element: Element): boolean => {
+  const isVisible = (tabbingConfig: TabbingConfig, element: Element<HTMLElement>): boolean => {
     const target = tabbingConfig.visibilitySelector.bind((sel) => {
-      return SelectorFind.closest(element, sel);
+      return SelectorFind.closest<HTMLElement>(element, sel);
     }).getOr(element);
 
     // NOTE: We can't use Visibility.isVisible, because the toolbar has width when it has closed, just not height.

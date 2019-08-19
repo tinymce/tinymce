@@ -1,7 +1,7 @@
 import { UnitTest } from '@ephox/bedrock';
 import { Pipeline, Step, Chain, RawAssertions, Logger, GeneralSteps } from 'ephox/agar/api/Main';
 import { createFile } from 'ephox/agar/api/Files';
-import { Blob, FileList, navigator } from '@ephox/dom-globals';
+import { Blob, FileList, navigator, HTMLInputElement } from '@ephox/dom-globals';
 import { sRunOnPatchedFileInput, cRunOnPatchedFileInput } from 'ephox/agar/api/FileInput';
 import { Element, Body, Insert, Remove } from '@ephox/sugar';
 import { Cell, Option } from '@ephox/katamari';
@@ -11,7 +11,7 @@ UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
   const filesState = Cell(Option.none());
 
   const pickFiles = (body: Element, next: (files: FileList) => void) => {
-    const elm = Element.fromHtml('<input type="file">');
+    const elm = Element.fromHtml<HTMLInputElement>('<input type="file">');
     elm.dom().onchange = () => {
       Remove.remove(elm);
       next(elm.dom().files);

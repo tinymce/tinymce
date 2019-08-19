@@ -3,6 +3,7 @@ import { DomParent } from '@ephox/robin';
 import { TablePositions } from '@ephox/snooker';
 import { Compare, SelectorFilter, SelectorFind, Selectors, Element } from '@ephox/sugar';
 import { Identified, IdentifiedExt } from './Identified';
+import { Node as DomNode, Element as DomElement } from '@ephox/dom-globals';
 
 const lookupTable = function (container: Element) {
   return SelectorFind.ancestor(container, 'table');
@@ -67,9 +68,9 @@ const identify = function (start: Element, finish: Element, isRoot?: (element: E
   }
 };
 
-const retrieve = function (container: Element, selector: string) {
+const retrieve = function (container: Element<DomNode>, selector: string) {
   const sels = SelectorFilter.descendants(container, selector);
-  return sels.length > 0 ? Option.some(sels) : Option.none<Element[]>();
+  return sels.length > 0 ? Option.some(sels) : Option.none<Element<DomElement>[]>();
 };
 
 const getLast = function (boxes: Element[], lastSelectedSelector: string) {

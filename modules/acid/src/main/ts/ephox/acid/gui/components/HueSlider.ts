@@ -1,4 +1,4 @@
-import { AlloyTriggers, Behaviour, Focusing, Slider } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, Behaviour, Focusing, Slider } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
 import { sliderUpdate } from '../ColourEvents';
 
@@ -44,7 +44,7 @@ const sliderFactory = (translate: (key: string) => string, getClass: (key: strin
       Focusing.config({ })
     ]),
 
-    onChange: (slider, _thumb, value) => {
+    onChange: (slider: AlloyComponent, _thumb: any, value: any) => {
       AlloyTriggers.emitWith(slider, sliderUpdate(), {
         value
       });

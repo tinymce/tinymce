@@ -13,8 +13,10 @@ import {
   NativeEvents,
   Reflecting,
   Representing,
+  Keying,
 } from '@ephox/alloy';
 import { DialogManager, Types } from '@ephox/bridge';
+import { Focus, Compare, Attr } from '@ephox/sugar';
 
 import {
   formActionEvent,
@@ -112,8 +114,23 @@ const initDialog = <T>(getInstanceApi: () => Types.Dialog.DialogInstanceApi<T>, 
       spec.onChange(api, { name: event.name() });
     }),
 
-    fireApiEvent<FormActionEvent>(formActionEvent, (api, spec, event) => {
+    fireApiEvent<FormActionEvent>(formActionEvent, (api, spec, event, component) => {
+      const focusIn = () => Keying.focusIn(component);
+      const current = Focus.active();
+
       spec.onAction(api, { name: event.name(), value: event.value() });
+
+      Focus.active().fold(() => {
+        focusIn();
+      }, (focused) => {
+        // We need to check if the focused element is disabled because apparently firefox likes to leave focus on disabled elements.
+        if (!Compare.contains(component.element(), focused) || Attr.has(focused, 'disabled')) {
+          focusIn();
+          // And we need the below check for IE, which likes to leave focus on the parent of disabled elements
+        } else if (Compare.contains(focused, current.getOrNull()) && Attr.has(current.getOrDie(), 'disabled')) {
+          focusIn();
+        }
+      });
     }),
 
     fireApiEvent<FormTabChangeEvent>(formTabChangeEvent, (api, spec, event) => {

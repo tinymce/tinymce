@@ -2,6 +2,11 @@ import { window } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
+interface ChoiceOption<T> {
+  predicate: () => boolean;
+  value: () => T;
+}
+
 const platform = PlatformDetection.detect();
 const isTouch: () => boolean = platform.deviceType.isTouch;
 const isAndroid: () => boolean = platform.deviceType.isAndroid;
@@ -17,12 +22,12 @@ const isOfSize = function (width: number, height: number) {
   return window.screen.width >= width && window.screen.height >= height;
 };
 
-const choice = function (options, fallback): Option<any> {
+const choice = function <T>(options: ChoiceOption<T>[], fallback: T): T {
   const target = Arr.foldl(options, function (b, option) {
     return b.orThunk(function () {
-      return option.predicate() ? Option.some(option.value()) : Option.none();
+      return option.predicate() ? Option.some(option.value()) : Option.none<T>();
     });
-  }, Option.none());
+  }, Option.none<T>());
 
   return target.getOr(fallback);
 };

@@ -1,6 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import { Element, Html, Node, Traverse } from '@ephox/sugar';
 import { RawDomSchema, AlloySpec } from '../../api/component/SpecTypes';
+import { HTMLElement } from '@ephox/dom-globals';
 
 const getAttrs = (elem) => {
   const attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];
@@ -24,7 +25,7 @@ const fromHtml = (html: string): RawDomSchema => {
   const children = Traverse.children(elem);
   const attrs = getAttrs(elem);
   const classes = getClasses(elem);
-  const contents = children.length === 0 ? { } : { innerHtml: Html.get(elem) };
+  const contents = children.length === 0 ? { } : { innerHtml: Html.get(elem as Element<HTMLElement>) };
 
   return {
     tag: Node.name(elem),

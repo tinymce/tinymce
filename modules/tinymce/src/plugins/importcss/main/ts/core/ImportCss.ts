@@ -60,7 +60,7 @@ const compileFilter = function (filter: string | RegExp | Function) {
   return filter;
 };
 
-const getSelectors = function (editor, doc, fileFilter) {
+const getSelectors = function (editor: Editor, doc, fileFilter) {
   const selectors = [], contentCSSUrls = {};
 
   function append(styleSheet, imported?) {

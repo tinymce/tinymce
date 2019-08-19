@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', (success, 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
-    const sAssertTableSelection = function (tableHtml, selectCells, cellContents) {
+    const sAssertTableSelection = function (tableHtml: string, selectCells: string[], cellContents: string[]) {
       const selectRangeXY = (table, startTd, endTd) => {
         editor.fire('mousedown', { target: startTd, button: 0 });
         editor.fire('mouseover', { target: endTd, button: 0 });
@@ -79,7 +79,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', (success, 
       ),
     ];
 
-    const sAssertSelectionContent = function (editor, expectedHtml) {
+    const sAssertSelectionContent = function (editor, expectedHtml: string) {
       return Step.sync(() => {
         Assertions.assertHtml('Should be expected content', expectedHtml, editor.selection.getContent());
       });

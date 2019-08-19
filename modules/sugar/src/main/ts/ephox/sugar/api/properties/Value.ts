@@ -1,13 +1,15 @@
 import Element from '../node/Element';
-import { HTMLInputElement } from '@ephox/dom-globals';
+import { HTMLInputElement, HTMLTextAreaElement } from '@ephox/dom-globals';
 
-const get = function (element: Element) {
-  return (element.dom() as HTMLInputElement).value;
+const get = function (element: Element<HTMLInputElement | HTMLTextAreaElement>) {
+  return element.dom().value;
 };
 
-const set = function (element: Element, value: string) {
-  if (value === undefined) { throw new Error('Value.set was undefined'); }
-  (element.dom() as HTMLInputElement).value = value;
+const set = function (element: Element<HTMLInputElement | HTMLTextAreaElement>, value: string) {
+  if (value === undefined) {
+    throw new Error('Value.set was undefined');
+  }
+  element.dom().value = value;
 };
 
 export {

@@ -31,7 +31,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
     }
   });
 
-  const shouldFail = (label, conf, asserter) => {
+  const shouldFail = (label: string, conf, asserter: (err: Error) => void) => {
     return Step.async(function (next, die) {
       try {
         windowManager.open(conf, {}, Fun.noop);

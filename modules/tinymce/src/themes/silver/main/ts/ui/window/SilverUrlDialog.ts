@@ -7,7 +7,7 @@
 
 import { Receiving, AddEventsBehaviour, AlloyEvents } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { window } from '@ephox/dom-globals';
+import { window, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Cell, Obj, Option, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -116,7 +116,7 @@ const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: Windo
         [bodySendMessageChannel]: {
           onReceive: (comp, data) => {
             // Send the message to the iframe via postMessage
-            SelectorFind.descendant(comp.element(), 'iframe').each((iframeEle) => {
+            SelectorFind.descendant<HTMLIFrameElement>(comp.element(), 'iframe').each((iframeEle) => {
               const iframeWin = iframeEle.dom().contentWindow;
               iframeWin.postMessage(data, iframeDomain);
             });

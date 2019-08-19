@@ -791,8 +791,7 @@ module.exports = function (grunt) {
   });
   grunt.loadTasks('tools/tasks');
 
-  grunt.registerTask('prod', [
-    // 'validateVersion',
+  grunt.registerTask('prodBuild', [
     'shell:tsc',
     'tslint',
     'globals',
@@ -800,7 +799,11 @@ module.exports = function (grunt) {
     'unicode',
     'concat',
     'uglify',
-    'copy',
+    'copy'
+  ]);
+
+  grunt.registerTask('prod', [
+    'prodBuild',
     'clean:release',
     'moxiezip',
     'nugetpack',

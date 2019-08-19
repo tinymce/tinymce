@@ -2,9 +2,9 @@ import { Arr } from '@ephox/katamari';
 import * as InsertAll from './InsertAll';
 import * as Traverse from '../search/Traverse';
 import Element from '../node/Element';
-import { Node } from '@ephox/dom-globals';
+import { Node as DomNode } from '@ephox/dom-globals';
 
-const empty = function (element: Element) {
+const empty = function (element: Element<DomNode>) {
   // shortcut "empty node" trick. Requires IE 9.
   element.dom().textContent = '';
 
@@ -17,14 +17,14 @@ const empty = function (element: Element) {
   });
 };
 
-const remove = function (element: Element) {
-  const dom: Node = element.dom();
+const remove = function (element: Element<DomNode>) {
+  const dom = element.dom();
   if (dom.parentNode !== null) {
     dom.parentNode.removeChild(dom);
   }
 };
 
-const unwrap = function (wrapper: Element) {
+const unwrap = function (wrapper: Element<DomNode>) {
   const children = Traverse.children(wrapper);
   if (children.length > 0) {
     InsertAll.before(wrapper, children);

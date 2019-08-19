@@ -87,7 +87,7 @@ const wrap = function <E, D>(universe: Universe<E, D>, start: E, soffset: number
 
     return {
       wrappers: Fun.constant(wrappers),
-      temporary: Fun.constant(false),
+      temporary: Fun.constant<boolean>(false),
       range: Fun.constant(range)
     };
   });

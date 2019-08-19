@@ -7,8 +7,8 @@ UnitTest.asynctest('ThrottlerTest', (success, failure) => {
 
   const testAdaptable = function () {
     return Future.nu(function (callback) {
-      const data = [];
-      const throttler = Throttler.adaptable(function (value) {
+      const data: string[] = [];
+      const throttler = Throttler.adaptable(function (value: string) {
         data.push(value);
       }, 250);
 
@@ -31,8 +31,8 @@ UnitTest.asynctest('ThrottlerTest', (success, failure) => {
 
   const testFirst = function () {
     return Future.nu(function (callback) {
-      const data = [];
-      const throttler = Throttler.first(function (value) {
+      const data: string[] = [];
+      const throttler = Throttler.first(function (value: string) {
         data.push(value);
       }, 250);
 
@@ -55,8 +55,8 @@ UnitTest.asynctest('ThrottlerTest', (success, failure) => {
 
   const testLast = function () {
     return Future.nu(function (callback) {
-      const data = [];
-      const throttler = Throttler.last(function (value) {
+      const data: string[] = [];
+      const throttler = Throttler.last(function (value: string) {
         data.push(value);
       }, 250);
 

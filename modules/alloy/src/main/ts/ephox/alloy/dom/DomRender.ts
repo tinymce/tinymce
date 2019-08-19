@@ -2,6 +2,7 @@ import { Attr, Classes, Css, Element, Html, InsertAll, Value } from '@ephox/suga
 
 import * as Tagger from '../registry/Tagger';
 import * as DomDefinition from './DomDefinition';
+import { HTMLTextAreaElement, HTMLInputElement } from '@ephox/dom-globals';
 
 const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<Element>) => {
   const subject = Element.fromTag(definition.tag);
@@ -16,7 +17,7 @@ const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<Element>)
   InsertAll.append(subject, children);
 
   definition.value.each((value) => {
-    Value.set(subject, value);
+    Value.set(subject as Element<HTMLInputElement | HTMLTextAreaElement>, value);
   });
 
   if (!definition.uid) {

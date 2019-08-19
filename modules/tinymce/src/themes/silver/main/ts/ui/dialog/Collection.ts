@@ -36,6 +36,7 @@ import * as ItemClasses from '../menus/item/ItemClasses';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { Omit } from '../Omit';
 import I18n from 'tinymce/core/api/util/I18n';
+import { HTMLElement } from '@ephox/dom-globals';
 
 type CollectionSpec = Omit<Types.Collection.Collection, 'type'>;
 
@@ -44,7 +45,7 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   const runOnItem = (f: (c: AlloyComponent, tgt: Element, itemValue: string) => void) => <T extends EventFormat>(comp: AlloyComponent, se: SimulatedEvent<T>) => {
-    SelectorFind.closest(se.event().target(), '[data-collection-item-value]').each((target) => {
+    SelectorFind.closest(se.event().target(), '[data-collection-item-value]').each((target: Element<HTMLElement>) => {
       f(comp, target, Attr.get(target, 'data-collection-item-value'));
     });
   };

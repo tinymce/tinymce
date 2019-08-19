@@ -1,7 +1,7 @@
-import { FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Pipeline, Step } from '@ephox/agar';
+import { FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Pipeline, Step, UiControls, UiFinder, Chain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
-import { TinyLoader, TinyUi } from '@ephox/mcagar';
+import { TinyLoader, TinyUi, TinyApis } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 
 import SearchReplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
@@ -20,13 +20,16 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardN
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
     const doc = Element.fromDom(document);
+    const body = Element.fromDom(document.body);
 
     const sPressTab = Keyboard.sKeydown(doc, Keys.tab(), {});
     const sPressEsc = Keyboard.sKeydown(doc, Keys.escape(), {});
     const sPressDown = Keyboard.sKeydown(doc, Keys.down(), {});
     const sPressRight = Keyboard.sKeydown(doc, Keys.right(), {});
+    const sPressEnter = Keyboard.sKeydown(doc, Keys.enter(), {});
 
     const sFocusToolbar = Step.sync(() => {
       const args = Tools.extend({
@@ -59,17 +62,40 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardN
       Log.stepsAsStep('TINY-3914', 'Find and replace: Dialog keyboard navigation', [
         sOpenDialog(tinyUi),
         sAssertFocused('Find input', '.tox-textfield[placeholder="Find"]'),
-        // TODO: Enable this fully once TINY-3914 has been fixed
-        // sPressTab,
-        // sAssertFocused('Replace with input', '.tox-textfield[placeholder="Replace with"]'),
-        // sPressTab,
-        // sAssertFocused('Placeholder menu button', '.tox-tbtn--select[title="Preferences"]'),
-        // sPressDown,
-        // sAssertFocused('Match case menu item', '.tox-collection__item:contains("Match case")'), // Menu items can be reached by keyboard
-        // sPressEsc,
-        // sAssertFocused('Placeholder menu button', '.tox-tbtn--select[title="Preferences"]'),
-        // sPressTab,
-        // sAssertFocused('Find button', '.tox-button[title="Find"]')
+        sPressTab,
+        sAssertFocused('Replace with input', '.tox-textfield[placeholder="Replace with"]'),
+        sPressTab,
+        sAssertFocused('Placeholder menu button', '.tox-tbtn--select[title="Preferences"]'),
+        sPressDown,
+        sAssertFocused('Match case menu item', '.tox-collection__item:contains("Match case")'), // Menu items can be reached by keyboard
+        sPressEnter,
+        sAssertFocused('Placeholder menu button', '.tox-tbtn--select[title="Preferences"]'),
+        sPressTab,
+        sAssertFocused('Find button', '.tox-button[title="Find"]'),
+        sPressEsc,
+      ]),
+      Log.stepsAsStep('TINY-3961', 'Find and replace: Dialog keyboard focus is returned to find input', [
+        tinyApis.sSetContent('<p>fish fish fish</p>'),
+        sOpenDialog(tinyUi),
+        sAssertFocused('Find input', '.tox-textfield[placeholder="Find"]'),
+        sPressTab,
+        sAssertFocused('Replace with input', '.tox-textfield[placeholder="Replace with"]'),
+        sPressTab,
+        sAssertFocused('Placeholder menu button', '.tox-tbtn--select[title="Preferences"]'),
+        sPressTab,
+        sAssertFocused('Find button', '.tox-button[title="Find"]'),
+        Chain.asStep(body, [
+          UiFinder.cFindIn('input.tox-textfield[placeholder="Find"]'),
+          UiControls.cSetValue('fish')
+        ]),
+        sPressEnter,
+        sPressTab,
+        sAssertFocused('Find button', '.tox-button[title="Replace"]'),
+        sPressTab,
+        sAssertFocused('Find button', '.tox-button[title="Replace All"]'),
+        sPressEnter,
+        sAssertFocused('Find input', '.tox-textfield[placeholder="Find"]'),
+        sPressEsc,
       ])
     ], onSuccess, onFailure);
   }, {

@@ -28,8 +28,8 @@ UnitTest.test('FoldTest', function () {
   Jsc.property(
     'foldl concat [ ] xs === reverse(xs)',
     Jsc.array(Jsc.json),
-    function (arr) {
-      const output = Arr.foldl(arr, function (b, a) {
+    function (arr: any[]) {
+      const output: any[] = Arr.foldl(arr, function (b: any, a: any[]) {
         return [ a ].concat(b);
       }, [ ]);
       return Jsc.eq(Arr.reverse(arr), output);
@@ -39,8 +39,8 @@ UnitTest.test('FoldTest', function () {
   Jsc.property(
     'foldr concat [ ] xs === xs',
     Jsc.array(Jsc.json),
-    function (arr) {
-      const output = Arr.foldr(arr, function (b, a) {
+    function (arr: any[]) {
+      const output = Arr.foldr(arr, function (b: any, a: any[]) {
         return [ a ].concat(b);
       }, [ ]);
       return Jsc.eq(arr, output);

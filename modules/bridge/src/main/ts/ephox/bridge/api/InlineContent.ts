@@ -3,8 +3,12 @@ import {
   Autocompleter,
   createAutocompleter,
   createAutocompleterItem,
+  createSeparatorItem,
   AutocompleterItemApi,
   AutocompleterItem,
+  AutocompleterContents,
+  SeparatorItemApi,
+  SeparatorItem,
   AutocompleterInstanceApi
 } from '../components/content/Autocompleter';
 
@@ -13,7 +17,11 @@ export {
   Autocompleter,
   AutocompleterItemApi,
   AutocompleterItem,
+  SeparatorItemApi,
+  SeparatorItem,
+  AutocompleterContents,
   createAutocompleter,
   createAutocompleterItem,
+  createSeparatorItem,
   AutocompleterInstanceApi
 };

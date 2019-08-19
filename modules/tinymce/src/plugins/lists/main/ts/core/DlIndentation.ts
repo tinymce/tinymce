@@ -12,16 +12,16 @@ import { Indentation } from '../listModel/Indentation';
 import { Arr } from '@ephox/katamari';
 
 const outdentDlItem = (editor: Editor, item: Element): void => {
-  if (Compare.is(item, 'DD')) {
-    Replication.mutate(item, 'DT');
-  } else if (Compare.is(item, 'DT')) {
+  if (Compare.is(item, 'dd')) {
+    Replication.mutate(item, 'dt');
+  } else if (Compare.is(item, 'dt')) {
     Traverse.parent(item).each((dl) => SplitList.splitList(editor, dl.dom(), item.dom()));
   }
 };
 
 const indentDlItem = (item: Element): void => {
-  if (Compare.is(item, 'DT')) {
-    Replication.mutate(item, 'DD');
+  if (Compare.is(item, 'dt')) {
+    Replication.mutate(item, 'dd');
   }
 };
 

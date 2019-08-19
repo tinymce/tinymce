@@ -12,6 +12,10 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableResizeTest', 
   Plugin();
   SilverTheme();
 
+  interface TestData {
+    html: string;
+  }
+
   const emptyTable = {
     html: '<table style = "width: 100%;">' +
             '<tbody>' +
@@ -124,7 +128,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableResizeTest', 
           '</table>'
   };
 
-  const cInsertTable = (label, table) => {
+  const cInsertTable = (label: string, table: string) => {
     return Chain.control(
       Chain.mapper((editor: any) => {
         editor.setContent(table);
@@ -140,7 +144,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableResizeTest', 
     );
   };
 
-  const cInsertColumnMeasureWidth = (label, data) => {
+  const cInsertColumnMeasureWidth = (label: string, data: TestData) => {
     return Log.chain('TBA', 'Insert column before, insert column after, erase column and measure table widths', NamedChain.asChain(
       [
         NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
@@ -170,7 +174,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableResizeTest', 
     })
   );
 
-  const cAssertWidth = (label, data) => {
+  const cAssertWidth = (label: string, data: TestData) => {
     return Chain.label(
       `Assert width of table ${label} after inserting column`,
       NamedChain.asChain([

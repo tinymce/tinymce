@@ -7,7 +7,7 @@ import { Body } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { AutocompleterStructure, sAssertAutocompleterStructure, sWaitForAutocompleteToClose } from '../../module/AutocompleterUtils';
+import { AutocompleterStructure, sAssertAutocompleterStructure, sWaitForAutocompleteToClose, sWaitForAutocompleteToOpen } from '../../../module/AutocompleterUtils';
 
 UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
   SilverTheme();
@@ -56,7 +56,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         return GeneralSteps.sequence([
           store.sClear,
           sSetContentAndTrigger(scenario),
-          tinyUi.sWaitForPopup('wait for autocompleter to appear', '.tox-autocompleter div[role="menu"]'),
+          sWaitForAutocompleteToOpen,
           sAssertAutocompleterStructure(scenario.structure),
           scenario.choice,
           sWaitForAutocompleteToClose,

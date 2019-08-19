@@ -12,7 +12,13 @@ import InsertTable from '../actions/InsertTable';
 import { hasTableGrid } from '../api/Settings';
 import { SelectionTargets } from '../selection/SelectionTargets';
 
-const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
+export interface MenuItems {
+  rowItems: Array<Menu.NestedMenuItemContents>;
+  columnItems: Array<Menu.NestedMenuItemContents>;
+  cellItems: Array<Menu.NestedMenuItemContents>;
+}
+
+const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): MenuItems => {
   const cmd = (command) => () => editor.execCommand(command);
 
   const insertTableAction = ({numRows, numColumns}) => {
@@ -36,40 +42,46 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
     onAction: cmd('mceTableDelete')
   };
 
+  const rowItems = [
+    { type: 'menuitem', text: 'Insert row before', icon: 'table-insert-row-above', onAction: cmd('mceTableInsertRowBefore'), onSetup:  selectionTargets.onSetupCellOrRow },
+    { type: 'menuitem', text: 'Insert row after', icon: 'table-insert-row-after', onAction: cmd('mceTableInsertRowAfter'), onSetup:  selectionTargets.onSetupCellOrRow },
+    { type: 'menuitem', text: 'Delete row', icon: 'table-delete-row', onAction: cmd('mceTableDeleteRow'), onSetup:  selectionTargets.onSetupCellOrRow },
+    { type: 'menuitem', text: 'Row properties', icon: 'table-row-properties', onAction: cmd('mceTableRowProps'), onSetup:  selectionTargets.onSetupCellOrRow },
+    { type: 'separator' },
+    { type: 'menuitem', text: 'Cut row', onAction: cmd('mceTableCutRow'), onSetup:  selectionTargets.onSetupCellOrRow },
+    { type: 'menuitem', text: 'Copy row', onAction: cmd('mceTableCopyRow'), onSetup:  selectionTargets.onSetupCellOrRow },
+    { type: 'menuitem', text: 'Paste row before', onAction: cmd('mceTablePasteRowBefore'), onSetup:  selectionTargets.onSetupCellOrRow },
+    { type: 'menuitem', text: 'Paste row after', onAction: cmd('mceTablePasteRowAfter'), onSetup:  selectionTargets.onSetupCellOrRow }
+  ] as Array<Menu.NestedMenuItemContents>;
+
   const row: Menu.NestedMenuItemApi = {
     type: 'nestedmenuitem',
     text: 'Row',
-    getSubmenuItems: () => [
-      { type: 'menuitem', text: 'Insert row before', icon: 'table-insert-row-above', onAction: cmd('mceTableInsertRowBefore'), onSetup:  selectionTargets.onSetupCellOrRow },
-      { type: 'menuitem', text: 'Insert row after', icon: 'table-insert-row-after', onAction: cmd('mceTableInsertRowAfter'), onSetup:  selectionTargets.onSetupCellOrRow },
-      { type: 'menuitem', text: 'Delete row', icon: 'table-delete-row', onAction: cmd('mceTableDeleteRow'), onSetup:  selectionTargets.onSetupCellOrRow },
-      { type: 'menuitem', text: 'Row properties', icon: 'table-row-properties', onAction: cmd('mceTableRowProps'), onSetup:  selectionTargets.onSetupCellOrRow },
-      { type: 'separator' },
-      { type: 'menuitem', text: 'Cut row', onAction: cmd('mceTableCutRow'), onSetup:  selectionTargets.onSetupCellOrRow },
-      { type: 'menuitem', text: 'Copy row', onAction: cmd('mceTableCopyRow'), onSetup:  selectionTargets.onSetupCellOrRow },
-      { type: 'menuitem', text: 'Paste row before', onAction: cmd('mceTablePasteRowBefore'), onSetup:  selectionTargets.onSetupCellOrRow },
-      { type: 'menuitem', text: 'Paste row after', onAction: cmd('mceTablePasteRowAfter'), onSetup:  selectionTargets.onSetupCellOrRow }
-    ]
+    getSubmenuItems: () => rowItems
   };
+
+  const columnItems = [
+    { type: 'menuitem', text: 'Insert column before', icon: 'table-insert-column-before', onAction: cmd('mceTableInsertColBefore'), onSetup:  selectionTargets.onSetupCellOrRow },
+    { type: 'menuitem', text: 'Insert column after', icon: 'table-insert-column-after', onAction: cmd('mceTableInsertColAfter'), onSetup:  selectionTargets.onSetupCellOrRow },
+    { type: 'menuitem', text: 'Delete column', icon: 'table-delete-column', onAction: cmd('mceTableDeleteCol'), onSetup:  selectionTargets.onSetupCellOrRow }
+  ] as Array<Menu.NestedMenuItemContents>;
 
   const column: Menu.NestedMenuItemApi = {
     type: 'nestedmenuitem',
     text: 'Column',
-    getSubmenuItems: () => [
-      { type: 'menuitem', text: 'Insert column before', icon: 'table-insert-column-before', onAction: cmd('mceTableInsertColBefore'), onSetup:  selectionTargets.onSetupCellOrRow },
-      { type: 'menuitem', text: 'Insert column after', icon: 'table-insert-column-after', onAction: cmd('mceTableInsertColAfter'), onSetup:  selectionTargets.onSetupCellOrRow },
-      { type: 'menuitem', text: 'Delete column', icon: 'table-delete-column', onAction: cmd('mceTableDeleteCol'), onSetup:  selectionTargets.onSetupCellOrRow }
-    ]
+    getSubmenuItems: () => columnItems
   };
+
+  const cellItems = [
+    { type: 'menuitem', text: 'Cell properties', icon: 'table-cell-properties', onAction: cmd('mceTableCellProps'), onSetup:  selectionTargets.onSetupCellOrRow },
+    { type: 'menuitem', text: 'Merge cells', icon: 'table-merge-cells', onAction: cmd('mceTableMergeCells'), onSetup: selectionTargets.onSetupMergeable },
+    { type: 'menuitem', text: 'Split cell', icon: 'table-split-cells', onAction: cmd('mceTableSplitCells'), onSetup: selectionTargets.onSetupUnmergeable }
+  ] as Array<Menu.NestedMenuItemContents>;
 
   const cell: Menu.NestedMenuItemApi = {
     type: 'nestedmenuitem',
     text: 'Cell',
-    getSubmenuItems: () => [
-      { type: 'menuitem', text: 'Cell properties', icon: 'table-cell-properties', onAction: cmd('mceTableCellProps'), onSetup:  selectionTargets.onSetupCellOrRow },
-      { type: 'menuitem', text: 'Merge cells', icon: 'table-merge-cells', onAction: cmd('mceTableMergeCells'), onSetup: selectionTargets.onSetupMergeable },
-      { type: 'menuitem', text: 'Split cell', icon: 'table-split-cells', onAction: cmd('mceTableSplitCells'), onSetup: selectionTargets.onSetupUnmergeable }
-    ]
+    getSubmenuItems: () => cellItems
   };
 
   if (hasTableGrid(editor) === false) {
@@ -116,6 +128,12 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
       });
     }
   });
+
+  return {
+    rowItems,
+    columnItems,
+    cellItems
+  };
 };
 
 export default {
