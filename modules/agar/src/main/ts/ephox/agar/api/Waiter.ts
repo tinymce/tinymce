@@ -3,7 +3,7 @@ import { Step } from './Step';
 import { Chain, Wrap } from './Chain';
 
 const sTryUntilPredicate = <T>(label: string, p: (value: T) => boolean, interval: number = 10, amount: number = 1000): Step<T, T> =>
-  Step.control(Step.predicate(p), Guard.tryUntil<T, T>(label, interval, amount));
+  sTryUntil(label, Step.predicate(p), interval, amount);
 
 const sTryUntil = <T, U>(label: string, step: Step<T, U>, interval: number = 10, amount: number = 1000): Step<T, U> =>
   Step.control(step, Guard.tryUntil<T, U>(label, interval, amount));
@@ -15,7 +15,7 @@ const sTimeout = <T, U>(label: string, step: Step<T, U>, limit: number = 1000): 
   Step.control(step, Guard.timeout<T, U>(label, limit));
 
 const cTryUntilPredicate = <T>(label: string, p: (value: T) => boolean, interval: number = 10, amount: number = 1000): Chain<T, T> =>
-  Chain.control(Chain.predicate(p), Guard.tryUntil<Wrap<T>, Wrap<T>>(label, interval, amount));
+  cTryUntil(label, Chain.predicate(p), interval, amount);
 
 const cTryUntil = <T, U>(label: string, chain: Chain<T, U>, interval: number = 10, amount: number = 1000): Chain<T, U> =>
   Chain.control(chain, Guard.tryUntil<Wrap<T>, Wrap<U>>(label, interval, amount));
