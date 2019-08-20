@@ -1,22 +1,31 @@
-import { UnitTest, assert } from '@ephox/bedrock';
-import { RawRect, Rect, StructRect } from 'ephox/sugar/api/selection/Rect.ts';
+import { UnitTest } from '@ephox/bedrock';
+import { Rect, StructRect } from 'ephox/sugar/api/selection/Rect.ts';
+import Jsc from '@ephox/wrap-jsverify';
 
 UnitTest.test('Rect', function () {
-  const sr: StructRect = {
-    left: () => 3,
-    top: () => 2,
-    right: () => 12,
-    bottom: () => 5,
-    width: () => 533,
-    height: () => 2
-  };
-  const r: RawRect = Rect.toRaw(sr);
-  assert.eq({
-    left: 3,
-    top: 2,
-    right: 12,
-    bottom: 5,
-    width: 533,
-    height: 2
-  }, r);
+  Jsc.property(
+    'Rect',
+    Jsc.number,
+    Jsc.number,
+    Jsc.number,
+    Jsc.number,
+    Jsc.number,
+    Jsc.number,
+    (left: number, right: number, top: number, bottom: number, width: number, height: number) =>
+      Jsc.eq({
+        left,
+        top,
+        right,
+        bottom,
+        width,
+        height
+      }, Rect.toRaw({
+        left: () => left,
+        top: () => top,
+        right: () => right,
+        bottom: () => bottom,
+        width: () => width,
+        height: () => height
+      }))
+  );
 });
