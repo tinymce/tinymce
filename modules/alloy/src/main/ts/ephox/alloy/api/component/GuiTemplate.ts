@@ -28,7 +28,7 @@ const readChildren = (elem: Element<DomNode>) => {
     return [{
       dom: {
         tag: Node.name(elem),
-        ...(Obj.keys(attributes).length > 0 ? {attributes} : {}),
+        ...(!Obj.isEmpty(attributes) ? {attributes} : {}),
         ...(classes.length > 0 ? {classes} : {})
       },
       components
@@ -49,7 +49,7 @@ const read = (elem: Element<DomNode>): SimpleOrSketchSpec => {
   return {
     dom: {
       tag: Node.name(elem),
-      ...(Obj.keys(attributes).length > 0 ? {attributes} : {}),
+      ...(!Obj.isEmpty(attributes) ? {attributes} : {}),
       ...(classes.length > 0 ? {classes} : {})
     },
     components
