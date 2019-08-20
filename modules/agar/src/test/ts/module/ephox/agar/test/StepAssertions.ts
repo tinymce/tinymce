@@ -11,7 +11,7 @@ const assertError = (label: string, expectedError: any, actualError: any): Resul
   const errMessage = actualError.message !== undefined ? actualError.message : actualError;
   try {
     RawAssertions.assertEq(
-      label + ': checking error message: ' + errMessage + ' contains: ' + expectedError,
+      label + ': checking error message: ' + errMessage + '\n contains: ' + expectedError,
       true,
       errMessage.indexOf(expectedError) > -1
     );
