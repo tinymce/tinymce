@@ -22,7 +22,7 @@ const readChildren = (elem: Element<DomNode>) => {
     const children = Traverse.children(elem);
 
     const components = Arr.bind(children, (child) => {
-      if (Node.isText(child)) { return readText(child); } else { return readChildren(child); }
+      return Node.isText(child) ? readText(child) : readChildren(child);
     });
 
     return [{
