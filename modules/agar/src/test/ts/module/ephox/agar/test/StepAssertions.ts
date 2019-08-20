@@ -74,8 +74,8 @@ const passed = function (label, expected, step: Step<any, any>) {
 
 const testStepsPass = function (expected, steps: Array<Step<any, any>>) {
   return Step.raw(function (v, next, die, initLogs) {
-    return Pipeline.async({}, steps, function (v, newLogs) {
-      assertSuccess('Checking final step value', expected, v).fold(
+    return Pipeline.async(v, steps, function (v2, newLogs) {
+      assertSuccess('Checking final step value', expected, v2).fold(
         (err) => die(err, newLogs),
         (_) => {
           next(_, newLogs);
@@ -90,7 +90,7 @@ const testStepsPass = function (expected, steps: Array<Step<any, any>>) {
 
 const testStepsFail = function (expected, steps: Array<Step<any, any>>) {
   return Step.raw(function (initValue, next, die, initLogs) {
-    return Pipeline.async({}, steps, function (v, newLogs) {
+    return Pipeline.async(initValue, steps, function (v, newLogs) {
       const msg = failOnSuccess('testStepsFail', expected, v);
       die(msg, newLogs);
     }, function (err, newLogs) {
@@ -117,7 +117,7 @@ const testStepFail = function (expected, step: Step<any, any>) {
 
 const testChain = function (expected, chain: Chain<any, any>) {
   return Step.raw(function (value, next, die, initLogs) {
-    chain.runChain(Chain.wrap({}), function (actual, newLogs) {
+    chain.runChain(Chain.wrap(value), function (actual, newLogs) {
       assertSuccess('testChain', expected, actual.chain).fold(
         (err) => die(err, newLogs),
         (_) => next(value, newLogs)
