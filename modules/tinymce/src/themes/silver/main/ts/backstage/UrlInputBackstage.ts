@@ -12,6 +12,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import { LinkTarget, LinkTargets } from '../ui/core/LinkTargets';
 import { addToHistory, getHistory } from './UrlInputHistory';
 import { Types } from '@ephox/bridge';
+import { console } from '@ephox/dom-globals';
 
 type PickerCallback = (value: string, meta: Record<string, any>) => void;
 type Picker = (callback: PickerCallback, value: string, meta: Record<string, any>) => void;
@@ -129,7 +130,11 @@ export const getLinkInformation = (editor: Editor): Option<LinkInformation> => {
 export const getValidationHandler = (editor: Editor): Option<UrlValidationHandler> => {
   const optValidator = Option.from(editor.settings.file_picker_validator_handler).filter(Type.isFunction);
   const optLegacyValidator = Option.from(editor.settings.filepicker_validator_handler).filter(Type.isFunction);
-  return optValidator.or(optLegacyValidator);
+  return optValidator.orThunk(() => {
+    // tslint:disable-next-line:no-console
+    optLegacyValidator.each(() => console.warn('Setting "filepicker_validator_handler" is deprecated and will be removed in a future release, use "file_picker_validator_handler" instead.'));
+    return optLegacyValidator;
+  });
 };
 
 export const getUrlPickerTypes = (editor: Editor): boolean | Record<string, boolean> => {
