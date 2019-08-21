@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLElement, HTMLImageElement, Node } from '@ephox/dom-globals';
+import { Element, HTMLElement, HTMLImageElement, Node, ReferrerPolicy as DomReferrerPolicy } from '@ephox/dom-globals';
 import { UploadHandler } from '../file/Uploader';
 import { AllowedFormat } from './fmt/StyleFormat';
 import { Formats } from './fmt/Format';
@@ -24,6 +24,9 @@ export type SetupCallback = (editor: Editor) => void;
 export type FilePickerCallback = (callback: Function, value: any, meta: Record<string, any>) => void;
 export type FilePickerValidationStatus = 'valid' | 'unknown' | 'invalid' | 'none';
 export type FilePickerValidationCallback = (info: { type: string, url: string }, callback: (validation: { status: FilePickerValidationStatus, message: string}) => void) => void;
+
+// dom-globals is outdated and missing a number of valid values
+export type ReferrerPolicy = DomReferrerPolicy | 'origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin';
 
 export type URLConverter = (url: string, name: string, elm?: HTMLElement) => string;
 export type URLConverterCallback = (url: string, node: Node, on_save: boolean, name: string) => void;
@@ -131,6 +134,7 @@ export interface RawEditorSettings {
   preview_styles?: boolean | string;
   protect?: RegExp[];
   readonly?: boolean;
+  referrer_policy?: ReferrerPolicy;
   relative_urls?: boolean;
   remove_script_host?: boolean;
   remove_trailing_brs?: boolean;

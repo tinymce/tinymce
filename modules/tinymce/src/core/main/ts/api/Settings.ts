@@ -7,10 +7,11 @@
 
 import { HTMLImageElement } from '@ephox/dom-globals';
 import { Fun, Type, Strings, Arr } from '@ephox/katamari';
-import Editor from './Editor';
-import Tools from './util/Tools';
 import { UploadHandler } from '../file/Uploader';
+import Editor from './Editor';
+import { ReferrerPolicy } from './SettingsTypes';
 import I18n from './util/I18n';
+import Tools from './util/Tools';
 
 const getBodySetting = (editor: Editor, name: string, defaultValue: string) => {
   const value = editor.getParam(name, defaultValue);
@@ -135,6 +136,10 @@ const shouldUseContentCssCors = (editor: Editor): boolean => {
   return editor.getParam('content_css_cors', false, 'boolean');
 };
 
+const getReferrerPolicy = (editor: Editor): ReferrerPolicy => {
+  return editor.getParam('referrer_policy', '', 'string') as ReferrerPolicy;
+};
+
 const getLanguageCode = (editor: Editor): string => {
   return editor.getParam('language', 'en', 'string');
 };
@@ -200,6 +205,7 @@ export default {
   getImagesUploadCredentials,
   getImagesUploadHandler,
   shouldUseContentCssCors,
+  getReferrerPolicy,
   getLanguageCode,
   getLanguageUrl,
   shouldIndentUseMargin,

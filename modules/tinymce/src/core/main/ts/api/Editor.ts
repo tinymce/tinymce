@@ -46,6 +46,7 @@ import Node from './html/Node';
 import { Theme } from './ThemeManager';
 import { Plugin } from './PluginManager';
 import NodeType from '../dom/NodeType';
+import ScriptLoader from './dom/ScriptLoader';
 
 /**
  * This class contains the core logic for a TinyMCE editor.
@@ -297,6 +298,11 @@ class Editor implements EditorObservable {
       editorManager._setBaseUrl(this.settings.base_url);
     }
     this.baseUri = editorManager.baseURI;
+
+    if (this.settings.referrer_policy) {
+      ScriptLoader.ScriptLoader._setReferrerPolicy(this.settings.referrer_policy);
+      DOMUtils.DOM.styleSheetLoader._setReferrerPolicy(this.settings.referrer_policy);
+    }
 
     AddOnManager.languageLoad = this.settings.language_load;
     AddOnManager.baseURL = editorManager.baseURL;
