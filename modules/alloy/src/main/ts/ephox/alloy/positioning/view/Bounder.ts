@@ -18,6 +18,49 @@ const adt: {
   { nofit: [ 'reposition', 'deltaW', 'deltaH' ] }
 ]);
 
+const attemptFoo = (newX: number, newY: number, width: number, height: number, bounds: Bounds) => {
+  const boundsX = bounds.x();
+  const boundsY = bounds.y();
+  const boundsWidth = bounds.width();
+  const boundsHeight = bounds.height();
+
+  // simple checks for "is the top left inside the view"
+  const xInBounds = newX >= boundsX;
+  const yInBounds = newY >= boundsY;
+  const originInBounds = xInBounds && yInBounds;
+
+  // simple checks for "is the bottom right inside the view"
+  const xFit = (newX + width) <= (boundsX + boundsWidth);
+  const yFit = (newY + height) <= (boundsY + boundsHeight);
+  const sizeInBounds = xFit && yFit;
+
+  // measure how much of the width and height are visible. deltaW isn't necessary in the fit case but it's cleaner to read here.
+  const deltaW = xInBounds ? Math.min(width, boundsX + boundsWidth - newX)
+                         : Math.abs(boundsX - (newX + width));
+  const deltaH = yInBounds ? Math.min(height, boundsY + boundsHeight - newY)
+                         : Math.abs(boundsY - (newY + height));
+
+  // TBIO-3366 + TBIO-4236:
+  // Futz with the X position to ensure that x is positive, but not off the right side of the screen.
+  const maxX = bounds.x() + bounds.width();
+
+  // NOTE: bounds.x() is 0 in repartee here.
+  const minX = Math.max(bounds.x(), newX);
+  const limitX = Math.min(minX, maxX);
+
+  // Futz with the Y value to ensure that we're not off the top of the screen
+  const limitY = yInBounds ? newY : newY + (height - deltaH);
+
+  return {
+    originInBounds,
+    sizeInBounds,
+    limitX,
+    limitY,
+    deltaW,
+    deltaH
+  };
+};
+
 const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bounds): BounderAttemptAdt  => {
   const candidateX = candidate.x();
   const candidateY = candidate.y();
@@ -167,5 +210,6 @@ const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: 
 };
 
 export {
-  attempts
+  attempts,
+  attemptFoo
 };
