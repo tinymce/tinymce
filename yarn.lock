@@ -119,10 +119,10 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@ephox/bedrock@^4.5.3":
-  version "4.5.3"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock/-/bedrock-4.5.3.tgz#19d302f6a363765ce06953461693e103edc3f92e"
-  integrity sha512-5kahsOJCy7CJH/gtYl+GyGygTRoBx277rdidMTlPKgw5EPKJmoGRwl2bwH36vv6mKc0ax7HRqzlyFKdumqBzBQ==
+"@ephox/bedrock@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock/-/bedrock-5.0.1.tgz#727938d94882fcbfb9bb6553f1fab7fbcb432a24"
+  integrity sha512-k6ABX0hM4a3gNN9x5AGqV/tOjEBePzpwpzjVQDPBqepXCn4IxK1bnuuEGOdxGATL7Kzr6seSzoFgRrGojBn0Yw==
   dependencies:
     async "^1.5.2"
     babel-polyfill "^6.23.0"
