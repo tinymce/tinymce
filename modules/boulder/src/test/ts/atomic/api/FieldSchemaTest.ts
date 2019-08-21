@@ -28,7 +28,7 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', function () {
     );
   };
 
-  const assertOptionalFieldValue = (expected: any, input: any, field: FieldProcessorAdt) => {
+  const assertOptionalFieldValue = (expected: Record<string, Option<any>>, input: any, field: FieldProcessorAdt) => {
     const schema = ValueSchema.objOf([
       field
     ]);

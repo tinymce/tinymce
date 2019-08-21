@@ -90,3 +90,12 @@ export const get = function <T, K extends keyof T> (obj: T, key: K): Option<NonN
 export const has = function <T, K extends keyof T> (obj: T, key: K): boolean {
   return hasOwnProperty.call(obj, key);
 };
+
+export const isEmpty = (r: Record<any, any>): boolean => {
+  for (const x in r) {
+    if (hasOwnProperty.call(r, x)) {
+      return false;
+    }
+  }
+  return true;
+};
