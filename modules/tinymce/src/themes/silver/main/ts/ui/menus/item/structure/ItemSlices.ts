@@ -37,7 +37,7 @@ const renderHtml = (html: string): AlloySpec => ({
 
 interface StyleProps {
   tag: string;
-  styleAttr: string;
+  styles: Record<string, string>;
 }
 
 const renderStyledText = (style: StyleProps, text: string): AlloySpec => ({
@@ -49,7 +49,7 @@ const renderStyledText = (style: StyleProps, text: string): AlloySpec => ({
     {
       dom: {
         tag: style.tag,
-        attributes: { style: style.styleAttr  }
+        styles: style.styles
       },
       components: [ GuiFactory.text(I18n.translate(text)) ]
     }

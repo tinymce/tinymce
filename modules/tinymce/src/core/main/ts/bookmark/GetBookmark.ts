@@ -178,8 +178,10 @@ const getRangeBookmark = function (selection: Selection): RangeBookmark {
 };
 
 const createBookmarkSpan = (dom: DOMUtils, id: string, filled: boolean) => {
-  const args = { 'data-mce-type': 'bookmark', 'id': id, 'style': 'overflow:hidden;line-height:0px' };
-  return filled ? dom.create('span', args, '&#xFEFF;') : dom.create('span', args);
+  const args = { 'data-mce-type': 'bookmark', 'id': id };
+  const span = filled ? dom.create('span', args, '&#xFEFF;') : dom.create('span', args);
+  dom.setStyles(span, { 'overflow': 'hidden', 'line-height': '0px' });
+  return span;
 };
 
 const getPersistentBookmark = function (selection: Selection, filled: boolean): IdBookmark | IndexBookmark {

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, DomFactory, RawDomSchema } from '@ephox/alloy';
+import { AlloySpec, RawDomSchema } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Arr, Fun, Obj, Option } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
@@ -49,14 +49,38 @@ const renderColorStructure = (itemText: Option<string>, itemValue: string, iconS
   const getDom = () => {
     const common = ItemClasses.colorClass;
     const icon = iconSvg.getOr('');
-    const title = itemText.map((text) => ` title="${providerBackstage.translate(text)}"`).getOr('');
+    const title = itemText.map((text) => providerBackstage.translate(text)).getOr('');
+
+    const baseDom = {
+      tag: 'div',
+      attributes: { title },
+      classes: [ common ]
+    };
 
     if (itemValue === colorPickerCommand) {
-      return DomFactory.fromHtml(`<button class="${common} tox-swatches__picker-btn"${title}>${icon}</button>`);
+      return {
+        ...baseDom,
+        tag: 'button',
+        classes: [ ...baseDom.classes, 'tox-swatches__picker-btn' ],
+        innerHtml: icon
+      };
     } else if (itemValue === removeColorCommand) {
-      return DomFactory.fromHtml(`<div class="${common} tox-swatch--remove"${title}>${icon}</div>`);
+      return {
+        ...baseDom,
+        classes: [ ...baseDom.classes, 'tox-swatch--remove' ],
+        innerHtml: icon
+      };
     } else {
-      return DomFactory.fromHtml(`<div class="${common}" style="background-color: ${itemValue}" data-mce-color="${itemValue}"${title}></div>`);
+      return {
+        ...baseDom,
+        attributes: {
+          ...baseDom.attributes,
+          'data-mce-color': itemValue
+        },
+        styles: {
+          'background-color': itemValue
+        }
+      };
     }
   };
 

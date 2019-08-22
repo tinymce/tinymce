@@ -20,7 +20,7 @@ import * as FormatRegister from './utils/FormatRegister';
 
 export interface PreviewSpec {
   tag: string;
-  styleAttr: string;
+  styles: Record<string, string>;
 }
 
 export interface FormatterFormatItem {

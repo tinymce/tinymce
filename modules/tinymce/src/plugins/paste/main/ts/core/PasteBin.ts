@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, document, HTMLElement, Range } from '@ephox/dom-globals';
+import { document, Element, HTMLElement, Range } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
-import Tools from 'tinymce/core/api/util/Tools';
-import Env from 'tinymce/core/api/Env';
 import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
+import Tools from 'tinymce/core/api/util/Tools';
 
 // We can't attach the pastebin to a H1 inline element on IE since it won't allow H1 or other
 // non valid parents to be pasted into the pastebin so we need to attach it to the body
@@ -41,13 +41,22 @@ const create = (editor: Editor, lastRngCell, pasteBinDefaultContent: string) => 
   lastRngCell.set(editor.selection.getRng());
 
   // Create a pastebin
-  pasteBinElm = editor.dom.add(getPasteBinParent(editor), 'div', {
+  const parent = getPasteBinParent(editor);
+  pasteBinElm = dom.create('div', {
     'id': 'mcepastebin',
     'class': 'mce-pastebin',
-    'contentEditable': true,
-    'data-mce-bogus': 'all',
-    'style': 'position: fixed; top: 50%; width: 10px; height: 10px; overflow: hidden; opacity: 0'
+    'contentEditable': 'true',
+    'data-mce-bogus': 'all'
   }, pasteBinDefaultContent);
+  dom.setStyles(pasteBinElm, {
+    position: 'fixed',
+    top: '50%',
+    width: '10px',
+    height: '10px',
+    overflow: 'hidden',
+    opacity: '0'
+  });
+  dom.add(parent, pasteBinElm);
 
   // Move paste bin out of sight since the controlSelection rect gets displayed otherwise on IE and Gecko
   if (Env.ie || Env.gecko) {

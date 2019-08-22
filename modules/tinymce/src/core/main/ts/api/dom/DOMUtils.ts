@@ -5,8 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Node, Window, Document, Element, DocumentFragment, NamedNodeMap, Range, window, document, Attr, HTMLElementEventMap, HTMLElementTagNameMap } from '@ephox/dom-globals';
+import { Attr, Document, document, DocumentFragment, Element, HTMLElement, HTMLElementEventMap, HTMLElementTagNameMap, NamedNodeMap, Node, Range, Window, window } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
+import { VisualViewport } from '@ephox/sugar';
 import NodeType from '../../dom/NodeType';
 import Position from '../../dom/Position';
 import { StyleSheetLoader } from '../../dom/StyleSheetLoader';
@@ -22,7 +23,6 @@ import DomQuery, { DomQueryConstructor } from './DomQuery';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
 import TreeWalker from './TreeWalker';
-import { VisualViewport } from '@ephox/sugar';
 
 /**
  * Utility class for various DOM manipulation and retrieval functions.
@@ -208,7 +208,7 @@ interface DOMUtils {
       x: number;
       y: number;
   };
-  parseStyle (cssText: string): StyleMap;
+  parseStyle (cssText: string): Record<string, string>;
   serializeStyle (stylesArg: StyleMap, name?: string): string;
   addStyle (cssText: string): void;
   loadCSS (url: string): void;
@@ -789,7 +789,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     });
   };
 
-  const parseStyle = (cssText: string): StyleMap => {
+  const parseStyle = (cssText: string): Record<string, string> => {
     return styles.parse(cssText);
   };
 

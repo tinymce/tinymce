@@ -1,12 +1,12 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Step, UiFinder } from '@ephox/agar';
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 import { Body, Element } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
-import { PlatformDetection } from '@ephox/sand';
-import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
   const isIE = PlatformDetection.detect().browser.isIE();
@@ -147,7 +147,7 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                                 s.element('span', {
                                   html: str.is('Red text'),
                                   styles: {
-                                    color: (isIE ? str.is('rgb(255,0,0)') : str.is('rgb(255, 0, 0)'))
+                                    color: (isIE ? str.is('#ff0000') : str.is('rgb(255, 0, 0)'))
                                   }
                                 })
                               ]
