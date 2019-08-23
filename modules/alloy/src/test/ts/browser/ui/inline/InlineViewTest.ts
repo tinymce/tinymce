@@ -59,9 +59,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
         GeneralSteps.sequence([
           Waiter.sTryUntil(
             'Test inline should not be DOM',
-            UiFinder.sExists(gui.element(), '.test-inline'),
-            100,
-            1000
+            UiFinder.sExists(gui.element(), '.test-inline')
           ),
           Step.sync(() => {
             Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(inline));
@@ -76,9 +74,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
         GeneralSteps.sequence([
           Waiter.sTryUntil(
             'Test inline should not be in DOM',
-            UiFinder.sNotExists(gui.element(), '.test-inline'),
-            100,
-            1000
+            UiFinder.sNotExists(gui.element(), '.test-inline')
           ),
           Step.sync(() => {
             Assertions.assertEq('Checking isOpen API', false, InlineView.isOpen(inline));
@@ -268,8 +264,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
           // Wait until dropdown loads.
           Waiter.sTryUntil(
             'Waiting for dropdown list to appear',
-            UiFinder.sExists(gui.element(), 'li:contains("Option-1")'),
-            100, 1000
+            UiFinder.sExists(gui.element(), 'li:contains("Option-1")')
           ),
           TestBroadcasts.sDismissOn(
             'dropdown item: should not close',

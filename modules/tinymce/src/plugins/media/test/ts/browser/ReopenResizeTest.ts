@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (s
         Waiter.sTryUntil(
           'Try assert content',
           sRawAssertImagePresence(editor),
-          100, 3000
+          10, 3000
         )
       ])
     , onSuccess, onFailure);

@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.RangePointsTest', (success, failure
     const sAssertXYWithinRange = (x: number, y: number) => Waiter.sTryUntil('Assert XY position is within selection range', Step.sync(() => {
       const actual = RangePoint.isXYWithinRange(x, y, editor.selection.getRng());
       Assertions.assertEq('Assert XY position is within selection range', true, actual);
-    }), 100, 1000);
+    }));
 
     Pipeline.async({}, [
       Logger.t('point in image selection', GeneralSteps.sequence([

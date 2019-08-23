@@ -33,11 +33,11 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewSanityTest', (success
 
         sOpenDialog(),
         tinyUi.sClickOnUi('Click on Close button', '.tox-button:not(.tox-button--secondary)'),
-        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000),
+        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 10, 3000),
 
         sOpenDialog(),
         Keyboard.sKeydown(doc, Keys.escape(), { }),
-        Waiter.sTryUntil('Dialog should close on esc', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000)
+        Waiter.sTryUntil('Dialog should close on esc', UiFinder.sNotExists(docBody, dialogSelector), 10, 3000)
       ])
     , onSuccess, onFailure);
   }, {

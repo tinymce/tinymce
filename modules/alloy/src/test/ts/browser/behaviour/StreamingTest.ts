@@ -55,13 +55,13 @@ UnitTest.asynctest('StreamingTest', (success, failure) => {
 
       // Wait long enough to ensure everything is gone, and then test "cancelling"
       store.sClear,
-      Step.wait(1000),
+      Step.wait(500),
       Mouse.sClickOn(gui.element(), 'input'),
       Step.wait(10),
       Step.sync(() => {
         AlloyTriggers.emit(component, 'cancel.stream');
       }),
-      Step.wait(1000),
+      Step.wait(500),
       store.sAssertEq('Event should have been cancelled, so nothing should be in store', [ ]),
     ];
   }, () => { success(); }, failure);

@@ -62,7 +62,7 @@ UnitTest.asynctest('LazyValueTest', (success, failure) => {
       const lazy = LazyValue.nu(function (callback) {
         setTimeout(function () {
           callback('extra');
-        }, 100);
+        }, 50);
       });
 
       if (lazy.isReady()) {

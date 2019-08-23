@@ -297,7 +297,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
               { title: 'two', icon: '=' }
             ]
           ]
-        }), 100, 1000),
+        })),
         tinyApis.sAssertContent('<p>test=tw</p>'),
         // Check the autocompleter is hidden/closed when no items match
         sSetContentAndTrigger({

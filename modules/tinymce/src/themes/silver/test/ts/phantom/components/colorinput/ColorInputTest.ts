@@ -96,9 +96,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
               });
             }),
             Traverse.parent(input.element()).getOrDie('Could not find parent of input')
-          ),
-          100,
-          1000
+          )
         );
       };
 
@@ -183,19 +181,19 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
 
         Log.stepsAsStep('TBA', 'Check that validating an empty string passes (first time)', [
           sSetColorInputValue(''),
-          Step.wait(100),
+          Step.wait(50),
           UiFinder.sNotExists(component.element(), '.tox-textbox-field-invalid')
         ]),
 
         Log.stepsAsStep('TBA', 'Check that validating an incorrect value fails', [
           sSetColorInputValue('dog'),
-          Step.wait(100),
+          Step.wait(50),
           UiFinder.sExists(component.element(), '.tox-textbox-field-invalid')
         ]),
 
         Log.stepsAsStep('TBA', 'Check that validating an empty is string passes', [
           sSetColorInputValue(''),
-          Step.wait(100),
+          Step.wait(50),
           UiFinder.sNotExists(component.element(), '.tox-textbox-field-invalid')
         ]),
 

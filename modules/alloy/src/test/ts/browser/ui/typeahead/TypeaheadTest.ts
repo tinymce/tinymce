@@ -211,9 +211,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
       TestDropdownMenu.mWaitForNewMenu(component),
       Waiter.sTryUntil(
         'Selection should stay on neo2 if possible',
-        UiFinder.sExists(gui.element(), item('neo2').selector),
-        100,
-        1000
+        UiFinder.sExists(gui.element(), item('neo2').selector)
       ),
 
       // Focus something else.

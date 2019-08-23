@@ -59,7 +59,7 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
     Waiter.sTryUntil(
       'Waiting for an initial message to be received from the iframe',
       store.sAssertEq('Checking stuff', [ 'onMessage' ]),
-      100,
+      10,
       3000
     ),
     Step.label('Sending message to iframe', Step.sync(() => {
@@ -69,7 +69,7 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
     Waiter.sTryUntil(
       'Waiting for the reply message to be received from the iframe',
       store.sAssertEq('Checking stuff', [ 'onMessage', 'onMessage' ]),
-      100,
+      10,
       3000
     ),
     Mouse.sClickOn(Body.body(), 'button:contains("Barny Text")'),
@@ -83,7 +83,7 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
         'closeWindow',
         'onClose'
       ]),
-      100,
+      10,
       3000
     ),
     Assertions.sAssertStructure('"tox-dialog__scroll-disable" should have been removed from the body',

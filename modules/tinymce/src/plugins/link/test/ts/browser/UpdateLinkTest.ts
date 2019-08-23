@@ -36,9 +36,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.UpdateLinkTest', (success, fail
             'a[href="http://something"]': 1,
             'a[class="shouldbekept"]': 1,
             'a[title="shouldalsobekept"]': 1
-          }),
-          100,
-          1000
+          })
         ),
         TestLinkUi.sClearHistory
       ]),
@@ -62,9 +60,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.UpdateLinkTest', (success, fail
             'a[href="http://something"]': 1,
             'a[class="shouldbekept"]': 1,
             'a[title="shouldnotbekept"]': 0
-          }),
-          100,
-          1000
+          })
         ),
         TestLinkUi.sClearHistory
       ])

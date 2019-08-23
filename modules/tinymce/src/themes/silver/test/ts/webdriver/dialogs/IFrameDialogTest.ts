@@ -74,7 +74,7 @@ UnitTest.asynctest('IFrame Dialog Test (webdriver)', (success, failure) => {
         'iframe'
       ),
 
-      Step.wait(1000),
+      Step.wait(500),
 
       RealKeys.sSendKeysOn(
         'iframe => body',

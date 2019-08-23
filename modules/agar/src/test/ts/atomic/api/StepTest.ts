@@ -18,7 +18,7 @@ UnitTest.asynctest('StepTest', function (success, failure) {
 
     Logger.t(
       '[Basic API: Step.wait]\n',
-      Step.wait(1000)
+      Step.wait(5)
     ),
 
     Logger.t(

@@ -197,7 +197,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
         'closeWindow',
         'onCloseC'
       ]),
-      100,
+      10,
       3000
     )
   ], () => {

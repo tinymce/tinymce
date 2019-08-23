@@ -86,9 +86,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
         'onCancel',
         'closeWindow',
         'onClose'
-      ]),
-      100,
-      3000
+      ])
     ),
 
     store.sClear,
@@ -118,9 +116,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
         'onCancel',
         'closeWindow',
         'onClose'
-      ]),
-      100,
-      3000
+      ])
     ),
     Logger.t(
       'After broadcasting dismiss, dialog should be removed',

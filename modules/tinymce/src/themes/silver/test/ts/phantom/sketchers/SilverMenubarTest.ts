@@ -87,17 +87,13 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
         // Wait for menu to appear
         Waiter.sTryUntil(
           'Waiting for menu to be in DOM',
-          UiFinder.sExists(sink, '.tox-menu'),
-          100,
-          1000
+          UiFinder.sExists(sink, '.tox-menu')
         );
 
       const sWaitForMenuToDisappear = () =>
         Waiter.sTryUntil(
           'Waiting for menu to NO LONGER be in DOM',
-          UiFinder.sNotExists(sink, '.tox-menu'),
-          100,
-          1000
+          UiFinder.sNotExists(sink, '.tox-menu')
         );
 
       const sAssertMenuItemGroups = (label: string, groups: string[][]) => Logger.t(

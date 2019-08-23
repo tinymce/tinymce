@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsFalseEmbedTest', fun
         Waiter.sTryUntil(
           'content was not expected structure',
           tinyApis.sAssertContentStructure(struct),
-          100,
+          10,
           4000
         )
       ])

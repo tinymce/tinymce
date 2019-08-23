@@ -224,9 +224,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
 
       Waiter.sTryUntil(
         'Wait until dropdown content loads',
-        UiFinder.sExists(gui.element(), '.menu'),
-        100,
-        1000
+        UiFinder.sExists(gui.element(), '.menu')
       ),
 
       sTestMenus(

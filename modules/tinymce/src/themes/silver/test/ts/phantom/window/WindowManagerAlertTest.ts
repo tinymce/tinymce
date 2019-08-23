@@ -26,9 +26,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
     Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
     Waiter.sTryUntil(
       'Waiting for blocker to disappear after clicking close',
-      UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap'),
-      100,
-      1000
+      UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap')
     ),
   ]);
 
@@ -140,7 +138,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
   const sWaitForDialog = Waiter.sTryUntil(
     'alert dialog shows',
     UiFinder.sExists(Body.body(), '.tox-dialog__body'),
-    100,
+    10,
     10000
   );
 
@@ -188,7 +186,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
       Waiter.sTryUntil(
         'Waiting for blocker to disappear after clicking close',
         UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap'),
-        100,
+        10,
         1000
       ),
       Step.sync(() => {

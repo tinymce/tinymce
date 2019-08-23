@@ -69,7 +69,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
       tinyApis.sSetSelection([ 4, 0, 0 ], 'par'.length, [ 4, 0, 0 ], 'parag'.length ),
       sAnnotate(editor, 'delta', 'id-five', { something: 'comment-five' }),
 
-      Step.wait(1000),
+      Step.wait(500),
       sClearChanges,
 
       sAssertHtmlContent(tinyApis, [

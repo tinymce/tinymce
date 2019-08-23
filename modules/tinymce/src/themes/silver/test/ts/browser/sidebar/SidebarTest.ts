@@ -22,7 +22,7 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.sidebar.SidebarTest', fun
       return GeneralSteps.sequence([
         store.sClear,
         tinyUi.sClickOnToolbar('Toggle sidebar', 'button[aria-label="' + tooltip + '"]'),
-        Waiter.sTryUntil('Checking sidebar callbacks', store.sAssertEq('Asserting sidebar callbacks', expected), 10, 1000),
+        Waiter.sTryUntil('Checking sidebar callbacks', store.sAssertEq('Asserting sidebar callbacks', expected)),
       ]);
     };
 
@@ -69,7 +69,7 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.sidebar.SidebarTest', fun
         {name: 'mysidebar1:hide', index: 0},
         {name: 'mysidebar2:hide', index: 1},
         {name: 'mysidebar3:hide', index: 2},
-      ]), 10, 1000),
+      ])),
       sClickAndAssertEvents('My sidebar 1', [{name: 'mysidebar1:show', index: 0}]),
       sClickAndAssertEvents('My sidebar 2', [{name: 'mysidebar1:hide', index: 0}, {name: 'mysidebar2:show', index: 1}]),
       sClickAndAssertEvents('My sidebar 3', [{name: 'mysidebar2:hide', index: 1}, {name: 'mysidebar3:show', index: 2}]),

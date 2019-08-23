@@ -65,7 +65,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
           },
           caption: true
         }),
-        Guard.tryUntil('Waiting for fill active dialog', 100, 5000)
+        Guard.tryUntil('Waiting for fill active dialog', 10, 5000)
       ),
       UiChains.cSubmitDialog(),
       NamedChain.asChain([
@@ -77,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
         NamedChain.direct(NamedChain.inputName(), ApiChains.cAssertSelection([], 0, [], 1), '_'),
         NamedChain.direct('editorBody', Chain.control(
           UiFinder.cFindIn('#mceResizeHandlese'),
-          Guard.tryUntil('wait for resize handlers', 100, 40000)
+          Guard.tryUntil('wait for resize handlers', 10, 40000)
         ), '_'),
         // actually drag the handle to the right
         NamedChain.direct('editorBody', UiFinder.cFindIn('#mceResizeHandlese'), 'resizeSE'),

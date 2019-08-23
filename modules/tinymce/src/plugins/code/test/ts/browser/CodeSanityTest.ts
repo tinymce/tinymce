@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, fail
       return GeneralSteps.sequence(Logger.ts('Clicking on the Save button to close dialog', [
         FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
         Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000)
+        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector))
       ]));
     };
 

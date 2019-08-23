@@ -87,7 +87,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
             sink,
             '.tox-menu .tox-collection__item'
           ),
-          100,
+          10,
           4000
         ),
 
@@ -146,7 +146,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
               }
             })
           ]),
-          100,
+          10,
           3000
         ),
         Chain.asStep(sink, [
@@ -216,7 +216,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
 
         Waiter.sTryUntilPredicate('Checking Value.get', () => {
           return 'http://tiny.cloud' === Value.get(input.element());
-        }, 100, 4000),
+        }, 10, 4000),
 
         Step.sync(() => {
           const repValue = Representing.getValue(input);

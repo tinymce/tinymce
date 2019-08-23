@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, fai
   };
 
   const sWaitForWordcount = function (num) {
-    return Waiter.sTryUntil('wordcount did not change', sAssertWordcount(num), 100, 3000);
+    return Waiter.sTryUntil('wordcount did not change', sAssertWordcount(num), 10, 3000);
   };
 
   const sFakeTyping = function (editor, str) {

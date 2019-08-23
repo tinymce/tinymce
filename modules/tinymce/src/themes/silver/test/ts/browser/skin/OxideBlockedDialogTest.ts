@@ -58,7 +58,7 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
                 })
               )
             ]),
-            100,
+            10,
             3000
           ),
           Step.sync(() => {
@@ -88,7 +88,7 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
                 })
               )
             ]),
-            100,
+            10,
             3000
           )
         ]

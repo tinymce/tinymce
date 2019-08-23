@@ -59,9 +59,7 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, fail
       }),
       Waiter.sTryUntil(
         'Checking for scrolling message',
-        store.sAssertEq('Should have scrolled', [ 'scroll' ]),
-        100,
-        1000
+        store.sAssertEq('Should have scrolled', [ 'scroll' ])
       ),
       store.sClear,
       Step.sync(() => {
@@ -69,9 +67,7 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, fail
       }),
       Waiter.sTryUntil(
         'Checking for scrolling message (scrolling back to 0)',
-        store.sAssertEq('Should have scrolled', [ 'scroll' ]),
-        100,
-        1000
+        store.sAssertEq('Should have scrolled', [ 'scroll' ])
       ),
       store.sClear,
       Step.sync(() => {
@@ -88,9 +84,7 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, fail
       }),
       Waiter.sTryUntil(
         'Checking for resize message',
-        store.sAssertEq('Should have resized', [ 'resize' ]),
-        100,
-        1000
+        store.sAssertEq('Should have resized', [ 'resize' ])
       ),
       store.sClear,
       GuiSetup.mRemoveStyles

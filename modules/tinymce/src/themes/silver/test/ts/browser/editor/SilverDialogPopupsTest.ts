@@ -18,9 +18,7 @@ UnitTest.asynctest('Editor Dialog Popups Test', (success, failure) => {
 
       const sWaitForDialogClosed = Waiter.sTryUntil(
         'Waiting for dialog to close',
-        UiFinder.sNotExists(Body.body(), '.tox-dialog'),
-        100,
-        1000
+        UiFinder.sNotExists(Body.body(), '.tox-dialog')
       );
 
       const sAssertVisibleFocusInside = (cGetFocused, selector: string) => Chain.asStep(doc, [

@@ -83,7 +83,7 @@ UnitTest.asynctest('UiFinderTest', function () {
         // Intentionally not waiting before calling next.
         setTimeout(function () {
           Class.add(strong, 'changing-state');
-        }, 100);
+        }, 50);
       }),
 
       Chain.inject(container),
@@ -98,7 +98,7 @@ UnitTest.asynctest('UiFinderTest', function () {
         // Intentionally not waiting before calling next.
         setTimeout(function () {
           Class.add(strong, 'changing-state-waitfor');
-        }, 100);
+        }, 50);
       }),
 
       Chain.inject(container),

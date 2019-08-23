@@ -154,7 +154,7 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
         ),
         store.sAssertEq('After touch move, empty', [ ]),
 
-        Step.wait(1000),
+        Step.wait(100),
         store.sAssertEq('After touch start > major movement > wait = no longpress', [ ]),
         store.sClear
       ])
@@ -170,7 +170,7 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
         ),
         store.sAssertEq('After touch start, empty', [ ]),
 
-        Step.wait(1000),
+        Step.wait(100),
         store.sAssertEq('After touch start > major movement > wait = no longpress', [
           SystemEvents.longpress()
         ]),

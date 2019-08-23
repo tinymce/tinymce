@@ -103,9 +103,7 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
           }),
           Waiter.sTryUntil(
             'Waiting for blocker to disappear after clicking close',
-            UiFinder.sExists(Body.body(), '.tox-dialog-wrap'),
-            100,
-            1000
+            UiFinder.sExists(Body.body(), '.tox-dialog-wrap')
           ),
           Mouse.sClickOn(sink.element(), selector),
           store.sAssertEq('Check event sequence', sequence),

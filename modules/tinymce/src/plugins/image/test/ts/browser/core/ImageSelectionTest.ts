@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
   };
 
   const sWaitForDragHandles = (editor: any): Step<any, any> => {
-    return Waiter.sTryUntil('wait for draghandles', UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlenw'), 100, 5000);
+    return Waiter.sTryUntil('wait for draghandles', UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlenw'), 10, 5000);
   };
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {

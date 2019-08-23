@@ -63,7 +63,7 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
           Chain.asStep(Body.body(), [
             Chain.control(
               UiFinder.cFindIn('[role="menu"]'),
-              Guard.tryUntil('Waiting for menu', 100, 1000)
+              Guard.tryUntil('Waiting for menu', 10, 1000)
             ),
             Assertions.cAssertStructure(
               'Checking menu structure for color swatches',

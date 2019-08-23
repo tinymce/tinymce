@@ -95,9 +95,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
           'Now that box is offscreen normally, it should switch to fixed coordinates',
           boxWithPosition('fixed'),
           box.element()
-        ),
-        100,
-        1000
+        )
       ),
 
       Logger.t(
@@ -113,9 +111,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
           'Now that box is back on screen, it should switch to absolute coordinates',
           boxWithPosition('absolute'),
           box.element()
-        ),
-        100,
-        1000
+        )
       )
     ];
   }, cleanup.wrap(success), cleanup.wrap(failure));

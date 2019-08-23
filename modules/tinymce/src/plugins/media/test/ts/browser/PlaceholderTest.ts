@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
       Utils.sAssertEditorContent(apis, editor, expected),
       Waiter.sTryUntil('Wait for structure check',
         apis.sAssertContentStructure(struct),
-        100, 3000),
+        10, 3000),
       apis.sSetContent('')
     ]));
   };

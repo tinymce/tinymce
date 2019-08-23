@@ -58,7 +58,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
         containerBehaviours: Behaviour.derive([
           Tooltipping.config({
             lazySink,
-            delay: 100,
+            delay: 10,
             tooltipDom: {
               tag: 'span',
             },
@@ -108,9 +108,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
           });
         }),
         memSink.get(component).element()
-      ),
-      100,
-      1000
+      )
     );
 
     const sAssertEmptySink = Logger.t(

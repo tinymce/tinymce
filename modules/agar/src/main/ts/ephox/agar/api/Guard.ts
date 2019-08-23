@@ -7,7 +7,7 @@ import { TestLogs, addLogEntry } from './TestLogs';
 
 export type GuardFn<T, U, V> = (run: RunFn<T, U>, value: T, next: NextFn<V>, die: DieFn, logs: TestLogs) => void;
 
-const tryUntilNot = <T, U>(label: string, interval: number, amount: number): GuardFn<T, U, T> =>
+const tryUntilNot = <T, U>(label: string, interval: number = 10, amount: number = 1000): GuardFn<T, U, T> =>
   (f: RunFn<T, U>, value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) => {
     const repeat = function (startTime: number) {
       f(value, function (v, newLogs) {

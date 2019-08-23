@@ -303,9 +303,7 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
       Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
       Waiter.sTryUntil(
         'Wait for the dialog to disappear',
-        UiFinder.sNotExists(Body.body(), '.tox-button--icon[aria-label="Close"]'),
-        100,
-        1000
+        UiFinder.sNotExists(Body.body(), '.tox-button--icon[aria-label="Close"]')
       ),
     ])
   ], () => {
