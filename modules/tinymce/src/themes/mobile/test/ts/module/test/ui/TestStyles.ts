@@ -34,7 +34,7 @@ const sWaitForToolstrip = function (realm) {
         }
       })
     ]),
-    100,
+    10,
     8000
   );
 };
