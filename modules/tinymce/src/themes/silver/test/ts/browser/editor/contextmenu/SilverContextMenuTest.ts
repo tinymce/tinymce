@@ -44,7 +44,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
       ]),
       Waiter.sTryUntil(
         'Wait for dialog to close',
-        UiFinder.sNotExists(TinyDom.fromDom(document.body), 'div[role="dialog"]'), 50, 5000
+        UiFinder.sNotExists(TinyDom.fromDom(document.body), 'div[role="dialog"]')
       )
     ]);
 

@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.visualchars.DefaultStateTest', (succ
       tinyApis.sSetContent('<p>a&nbsp;&nbsp;b</p>'),
       // Need to trigger a keydown event to get the visual chars to show after calling set content
       Keyboard.sKeydown(Element.fromDom(editor.getDoc()), Keys.space(), { }),
-      Waiter.sTryUntil('Wait for visual chars to show', tinyApis.sAssertContentStructure(sAssertSpanStruct), 10, 1000),
+      Waiter.sTryUntil('Wait for visual chars to show', tinyApis.sAssertContentStructure(sAssertSpanStruct)),
       tinyUi.sClickOnToolbar('click on visualchars button', 'button'),
       tinyApis.sAssertContentStructure(sAssertNbspStruct),
       tinyUi.sClickOnToolbar('click on visualchars button', 'button'),

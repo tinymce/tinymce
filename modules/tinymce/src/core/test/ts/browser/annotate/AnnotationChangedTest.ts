@@ -38,9 +38,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
         tinyApis.sSetSelection(start, soffset, start, soffset),
         Waiter.sTryUntil(
           label,
-          sAssertChanges('sTestAnnotationEvents.sAssertChanges', expected),
-          10,
-          1000
+          sAssertChanges('sTestAnnotationEvents.sAssertChanges', expected)
         ),
       ]);
     };
@@ -93,9 +91,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
 
       Waiter.sTryUntil(
         'Waiting for no changes',
-        sAssertChanges('Should be no changes', [ ]),
-        10,
-        1000
+        sAssertChanges('Should be no changes', [ ])
       ),
 
       sTestAnnotationEvents(
@@ -140,9 +136,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
             { state: true, name: 'alpha', uid: 'id-one' },
             { state: true, name: 'alpha', uid: 'id-two' }
           ]
-        ),
-        10,
-        1000
+        )
       ),
 
       sTestAnnotationEvents(
@@ -183,9 +177,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
             { state: true, name: 'beta', uid: 'id-three' },
             { state: false, name: 'beta', uid: null }
           ]
-        ),
-        10,
-        1000
+        )
       ),
 
       tinyApis.sSetSelection([ 2, 2 ], 'd'.length, [ 2, 2 ], 'd'.length),
@@ -203,9 +195,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
             { state: true, name: 'beta', uid: 'id-three' },
             { state: false, name: 'beta', uid: null }
           ]
-        ),
-        10,
-        1000
+        )
       ),
       sClearChanges,
 
@@ -219,9 +209,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
             { state: true, name: 'delta', uid: 'id-five' },
             { state: true, name: 'gamma', uid: 'id-four' }
           ]
-        ),
-        10,
-        1000
+        )
       ),
 
       tinyApis.sSetSelection([ 4, 0, 0 ], 'p'.length, [ 4, 0, 0 ], 'p'.length),
@@ -235,9 +223,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
             { state: true, name: 'gamma', uid: 'id-four' },
             { state: false, name: 'delta', uid: null }
           ]
-        ),
-        10,
-        1000
+        )
       ),
     ]);
 

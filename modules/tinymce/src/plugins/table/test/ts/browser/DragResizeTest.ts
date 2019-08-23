@@ -109,8 +109,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
       tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
       Waiter.sTryUntil(
         'wait for resize handles',
-        UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlese'),
-        10, 1000
+        UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlese')
       )
     ]));
   };

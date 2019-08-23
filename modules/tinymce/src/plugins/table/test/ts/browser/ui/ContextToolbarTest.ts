@@ -68,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success,
         tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'),
         UiChains.cCloseDialog('div[role="dialog"]')
       ]),
-      Waiter.sTryUntil('Wait for dialog to close', UiFinder.sNotExists(body, 'div[role="dialog"]'), 50, 5000)
+      Waiter.sTryUntil('Wait for dialog to close', UiFinder.sNotExists(body, 'div[role="dialog"]'))
     ]);
 
     Pipeline.async({}, [

@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.SelectedContentTest', (succ
         Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 10, 3000),
+        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
         tinyApis.sAssertContent('<h1 class="selcontent">Text</h1>')
       ]),
 
@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.SelectedContentTest', (succ
         Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 10, 3000),
+        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
         tinyApis.sAssertContent('<h1 class="customSelected">Text</h1>')
       ])
     ], onSuccess, onFailure);

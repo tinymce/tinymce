@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
         Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 10, 3000),
+        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
         tinyApis.sAssertContent('<p><strong>c</strong></p>'),
       ]),
 
@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
         Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 10, 3000),
+        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
         tinyApis.sAssertContent('<p>Tester test@test.com</p>'),
       ]),
 
@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (succe
         ]),
         UiFinder.sExists(docBody, dialogSelector + ' p:contains("<strong>b</strong>")'),
         Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 10, 3000),
+        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
         tinyApis.sAssertContent('<p><em>this is external</em></p>'),
       ]),
 

@@ -102,7 +102,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
             }),
             component.element()
           ),
-          500,
+          10,
           5000
         ),
 

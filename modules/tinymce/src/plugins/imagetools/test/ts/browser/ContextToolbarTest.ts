@@ -105,9 +105,9 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
       Log.stepsAsStep('TBA', 'ImageTools: context toolbar functionality test', [
         sOpenContextToolbar(srcUrl),
         imgOps.sExecToolbar('Rotate counterclockwise'),
-        Waiter.sTryUntil('Wait for image to be rotated', tinyApis.sAssertContentPresence({ 'img[width="598"][height="460"]': 1 }), 10, 5000),
+        Waiter.sTryUntil('Wait for image to be rotated', tinyApis.sAssertContentPresence({ 'img[width="598"][height="460"]': 1 })),
         imgOps.sExecToolbar('Rotate clockwise'),
-        Waiter.sTryUntil('Wait for image to be rotated', tinyApis.sAssertContentPresence({ 'img[width="460"][height="598"]': 1 }), 10, 5000),
+        Waiter.sTryUntil('Wait for image to be rotated', tinyApis.sAssertContentPresence({ 'img[width="460"][height="598"]': 1 })),
         sAssertImageFlip('Flip horizontally'),
         sAssertImageFlip('Flip vertically'),
         Chain.asStep({}, [cClickContextToolbarButton('Edit image')]),
