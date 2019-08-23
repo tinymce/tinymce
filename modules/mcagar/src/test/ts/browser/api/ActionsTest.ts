@@ -1,4 +1,4 @@
-import { Assertions, Chain, Pipeline, Step } from '@ephox/agar';
+import { Assertions, Chain, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import ActionChains from 'ephox/mcagar/api/ActionChains';
 import Editor from 'ephox/mcagar/api/Editor';
@@ -55,10 +55,7 @@ UnitTest.asynctest('ActionTest', (success, failure) =>  {
         meta: true
       }
     }),
-    Chain.wait(100), // give some time to async ops to finish
-    Chain.op(function () {
-      Assertions.assertEq(count + ' assertions were run', 2, count);
-    }),
+    Waiter.cTryUntilPredicate('Wait for 2 assertions', (x) => count === 2),
     Editor.cRemove
   ]);
 
