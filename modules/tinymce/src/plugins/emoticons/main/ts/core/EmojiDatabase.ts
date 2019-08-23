@@ -117,7 +117,7 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
       return Promise.resolve(true);
     } else {
       return new Promise((resolve, reject) => {
-        let numRetries = 3;
+        let numRetries = 15;
         const interval = Delay.setInterval(() => {
           if (hasLoaded()) {
             Delay.clearInterval(interval);
@@ -131,7 +131,7 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
               reject(false);
             }
           }
-        }, 500);
+        }, 100);
       });
     }
   };
