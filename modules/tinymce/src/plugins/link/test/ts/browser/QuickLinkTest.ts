@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
       // tests were erronously allowed to pass when the quick link dialog would
       // open and very quickly close because this was happing at superhuman
       // speeds. So I'm slowing it down.
-      Step.wait(500),
+      Step.wait(100),
       FocusTools.sTryOnSelector('Selector should be in contextform input', doc, '.tox-toolbar input'),
     ]);
 
