@@ -8,7 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, failure) => {
 
-  Plugin();
+  Plugin(2);
   Theme();
 
   const sReset = function (tinyApis) {
