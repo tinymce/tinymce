@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', (succe
           Step.sync(function () {
             const input = document.getElementById('tempinput1');
             RawAssertions.assertEq('should be same', input.outerHTML, document.activeElement.outerHTML);
-          }), 10, 4000),
+          })),
         sRemoveInputs
       ])
     , onSuccess, onFailure);

@@ -35,8 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.quirks.KeyboardCellNavigationT
             'editor did not have correct selection',
             Step.sync(function () {
               RawAssertions.assertEq('state is true', true, selectionChangeState.get());
-            }),
-            10, 3000
+            })
           ),
           tinyApis.sAssertSelection([0, 0, 1, 0, 0, 0, 0], 0, [0, 0, 1, 0, 0, 0, 0], 0)
         ])

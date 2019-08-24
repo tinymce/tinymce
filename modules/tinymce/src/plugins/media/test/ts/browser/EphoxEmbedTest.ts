@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.core.EphoxEmbedTest', function (success, failure) {
         Utils.sAssertSourceValue(ui, 'embed-iri'),
         Utils.sAssertEmbedData(ui, content),
         Utils.sSubmitDialog(ui),
-        Waiter.sTryUntil('wait for div struture', sAssertDivStructure(editor, ephoxEmbedStructure), 10, 3000)
+        Waiter.sTryUntil('wait for div struture', sAssertDivStructure(editor, ephoxEmbedStructure))
       ])
     , onSuccess, onFailure);
   }, {

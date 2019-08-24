@@ -101,9 +101,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
               });
             }),
             component.element()
-          ),
-          10,
-          5000
+          )
         ),
 
         RepresentingSteps.sAssertRoundtrip(

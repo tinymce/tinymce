@@ -18,8 +18,7 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
       ui.sClickOnUi('click checkbox', Utils.selectors.saveButton),
       Utils.sAssertEditorContent(apis, editor, expected),
       Waiter.sTryUntil('Wait for structure check',
-        apis.sAssertContentStructure(struct),
-        10, 3000),
+        apis.sAssertContentStructure(struct)),
       apis.sSetContent('')
     ]));
   };

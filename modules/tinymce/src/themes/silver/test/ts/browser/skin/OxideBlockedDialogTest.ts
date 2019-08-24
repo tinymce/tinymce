@@ -85,9 +85,7 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
                   });
                 })
               )
-            ]),
-            10,
-            3000
+            ])
           )
         ]
       ), onSuccess, onFailure);

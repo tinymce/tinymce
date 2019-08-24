@@ -212,7 +212,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
 
         Waiter.sTryUntilPredicate('Checking Value.get', () => {
           return 'http://tiny.cloud' === Value.get(input.element());
-        }, 10, 4000),
+        }),
 
         Step.sync(() => {
           const repValue = Representing.getValue(input);

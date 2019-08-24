@@ -52,9 +52,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsFalseEmbedTest', fun
         Utils.sSubmitDialog(tinyUi),
         Waiter.sTryUntil(
           'content was not expected structure',
-          tinyApis.sAssertContentStructure(struct),
-          10,
-          4000
+          tinyApis.sAssertContentStructure(struct)
         )
       ])
     , onSuccess, onFailure);
