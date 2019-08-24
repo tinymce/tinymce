@@ -41,7 +41,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
           destroy() {}
         });
       }
-    }, 500);
+    }, 100);
   }));
 
   TestHelpers.GuiSetup.setup(
