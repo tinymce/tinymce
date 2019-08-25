@@ -1,11 +1,13 @@
-import { Log, Pipeline, UiFinder, Step, Assertions, Keys } from '@ephox/agar';
+import { Log, Pipeline, UiFinder, Step, Assertions, Keys, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body, Css, Element, Scroll } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failure) => {
+  FullscreenPlugin();
   SilverTheme();
 
   interface Scenario {
@@ -24,16 +26,26 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
+      const tinyUi = TinyUi(editor);
       const tinyActions = TinyActions(editor);
 
       const sScrollTo = (x: number, y: number) => Step.sync(() => Scroll.to(x, y, Element.fromDom(editor.getDoc())));
 
-      const sAssertPosition = (position: string, value: number, diff = 5) => Step.sync(() => {
+      const sAssertPosition = (position: string, value: number, diff = 5) => Waiter.sTryUntil('Wait for toolbar to be positioned', Step.sync(() => {
         UiFinder.findIn(Body.body(), '.tox-pop').each((ele) => {
           const styles = parseInt(Css.getRaw(ele, position).getOr('0').replace('px', ''), 10);
           Assertions.assertEq(`Assert toolbar position - ${position} ${styles}px ~= ${value}px`, true, Math.abs(styles - value) <= diff);
         });
-      });
+      }), 10, 1000);
+
+      const sAssertFullscreenPosition = (position: string, value: number, diff = 5) => Waiter.sTryUntil('Wait for toolbar to be positioned', Step.sync(() => {
+        UiFinder.findIn(Body.body(), '.tox-pop').each((ele) => {
+          // The context toolbar is positioned relative to the sink, so the value can change between browsers due to different default styles
+          // as such we can't reliably test using the actual top/bottom position, so use the bounding client rect instead.
+          const pos = ele.dom().getBoundingClientRect();
+          Assertions.assertEq(`Assert toolbar position - ${position} ${pos[position]}px ~= ${value}px`, true, Math.abs(pos[position] - value) <= diff);
+        });
+      }), 10, 1000);
 
       const sTestPositionWhileScrolling = (scenario: Scenario) => {
         return Log.stepsAsStep('TBA', scenario.label, [
@@ -118,13 +130,27 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
           tinyApis.sSetCursor([0], 1),
           tinyActions.sContentKeystroke(Keys.enter()),
           tinyActions.sContentKeystroke(Keys.enter()),
+          tinyApis.sNodeChanged,
           tinyApis.sSelect('img', []),
-          UiFinder.sWaitForVisible('Waiting for toolbar to appear below content', Body.body(), '.tox-pop.tox-pop--top')
-        ])
+          UiFinder.sWaitForVisible('Waiting for toolbar to appear below content', Body.body(), '.tox-pop.tox-pop--top'),
+          sAssertPosition('top', -56),
+        ]),
+
+        Log.stepsAsStep('TINY-4023', 'Context toolbar is visible in fullscreen mode', [
+          tinyUi.sClickOnToolbar('Trigger fullscreen', 'button[aria-label="Fullscreen"]'),
+          tinyUi.sWaitForUi('Wait for fullscreen to be triggered', '.tox.tox-fullscreen'),
+          tinyApis.sSetContent(`<p><img src="${imageSrc}" style="height: 380px; width: 100px"></p>`),
+          tinyApis.sSelect('img', []),
+          UiFinder.sWaitForVisible('Waiting for toolbar to appear to top inside content', Body.body(), '.tox-pop.tox-pop--top'),
+          sAssertFullscreenPosition('top', 470),
+          UiFinder.sWaitForVisible('Check toolbar is still visible', Body.body(), '.tox-pop.tox-pop--top'),
+        ]),
       ], onSuccess, onFailure);
     },
     {
       theme: 'silver',
+      plugins: 'fullscreen',
+      toolbar: 'fullscreen',
       height: 400,
       base_url: '/project/tinymce/js/tinymce',
       content_style: 'body, p { margin: 0; }',
