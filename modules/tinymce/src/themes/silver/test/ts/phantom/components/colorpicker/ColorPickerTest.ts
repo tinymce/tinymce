@@ -27,9 +27,7 @@ UnitTest.asynctest('ColorPicker component Test', (success, failure) => {
               UiFinder.cFindIn(`label:contains("${labelText}") + input`),
               UiControls.cGetValue,
               Assertions.cAssertEq('Checking value in input', expected)
-            ]),
-            100,
-            1000
+            ])
           )
         );
 

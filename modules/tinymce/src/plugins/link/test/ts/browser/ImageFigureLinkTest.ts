@@ -26,8 +26,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', (success,
 
     const sAssertPresence = function (selector: Record<string, number>) {
       return Waiter.sTryUntil('Assert element is present',
-        Assertions.sAssertPresence('Detect presence of the element', selector, TinyDom.fromDom(editor.getBody())),
-        100, 1000
+        Assertions.sAssertPresence('Detect presence of the element', selector, TinyDom.fromDom(editor.getBody()))
       );
     };
 

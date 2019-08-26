@@ -271,7 +271,7 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
     Logger.t(
       '[Basic API: Chain.wait]\n',
       Chain.asStep({}, [
-        Chain.wait(1000)
+        Chain.wait(5)
       ])
     ),
 

@@ -123,7 +123,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
 
   const sTestCut = function (editor, tinyApis) {
     const sWaitUntilAssertContent = function (expected) {
-      return Waiter.sTryUntil('Cut is async now, so need to wait for content', tinyApis.sAssertContent(expected), 100, 1000);
+      return Waiter.sTryUntil('Cut is async now, so need to wait for content', tinyApis.sAssertContent(expected));
     };
 
     return Log.stepsAsStep('TBA', 'Paste: Cut simple text', [
@@ -172,7 +172,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
   const sWaitForProcessEvents = Waiter.sTryUntil('Did not get any events fired', Step.sync(function () {
     RawAssertions.assertEq('PastePreProcess event object', lastPreProcessEvent !== null, true);
     RawAssertions.assertEq('PastePostProcess event object', lastPostProcessEvent !== null, true);
-  }), 100, 100);
+  }));
 
   const sTestPaste = function (editor, tinyApis) {
     return Log.stepsAsStep('TBA', 'Paste: Paste external content', [

@@ -82,7 +82,7 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
         sIsNotShrinking
       ]),
 
-      Step.wait(1000),
+      Step.wait(100),
 
       Log.stepsAsStep('TBA', 'Shrink during a grow should have shrinking and not growing', [
         sShrink,
@@ -90,7 +90,7 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
         sIsShrinking
       ]),
 
-      Step.wait(1000),
+      Step.wait(100),
 
       Log.stepsAsStep('TBA', 'Grow while shrinking should have growing and not shrinking', [
         Step.stateful((value, next, die) => {

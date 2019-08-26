@@ -33,9 +33,7 @@ const sWaitForToolstrip = function (realm) {
           Assertions.assertEq('Checking toolstrip is flex', 'flex', Css.get(toolstrip, 'display'));
         }
       })
-    ]),
-    100,
-    8000
+    ])
   );
 };
 

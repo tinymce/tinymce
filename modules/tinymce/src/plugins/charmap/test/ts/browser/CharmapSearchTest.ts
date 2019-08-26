@@ -51,18 +51,14 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.SearchTest', (success, failu
               return Attr.get(item, 'data-collection-item-value');
             }),
             Assertions.cAssertEq('Search should show euro', '€')
-          ]),
-          100,
-          1000
+          ])
         ),
         Keyboard.sKeydown(doc, Keys.tab(), { }),
         FocusTools.sTryOnSelector('Focus should have moved to collection', doc, '.tox-collection__item'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
         Waiter.sTryUntil(
           'Waiting for content update',
-          tinyApis.sAssertContent('<p>&euro;</p>'),
-          100,
-          1000
+          tinyApis.sAssertContent('<p>&euro;</p>')
         )
       ])
     , onSuccess, onFailure);

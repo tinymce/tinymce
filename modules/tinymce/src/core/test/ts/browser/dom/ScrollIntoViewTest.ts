@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function () {
       tinyApis.sSetContent(html),
       Waiter.sTryUntil('Wait for scrollHeight to be updated', Step.sync(function () {
         Assertions.assertEq('Scroll body should be more than 100', true, editor.getBody().scrollHeight > 100);
-      }), 100, 1000)
+      }))
     ]);
   };
 

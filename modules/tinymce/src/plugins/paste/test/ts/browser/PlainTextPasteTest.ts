@@ -67,7 +67,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
         cFireFakePasteEvent(data),
         Chain.control(
           cAssertEditorContent(label, expected),
-          Guard.tryUntil('Wait for paste to succeed.', 100, 1000)
+          Guard.tryUntil('Wait for paste to succeed.')
         ),
         cClearEditor()
       );

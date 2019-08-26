@@ -38,18 +38,14 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, fai
               return Attr.get(item, 'data-collection-item-value');
             }),
             Assertions.cAssertEq('Search should show rainbow', '🌈')
-          ]),
-          100,
-          1000
+          ])
         ),
         Keyboard.sKeydown(doc, Keys.tab(), { }),
         FocusTools.sTryOnSelector('Focus should have moved to collection', doc, '.tox-collection__item'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
         Waiter.sTryUntil(
           'Waiting for content update',
-          tinyApis.sAssertContent('<p>🌈</p>'),
-          100,
-          1000
+          tinyApis.sAssertContent('<p>🌈</p>')
         )
       ])
     , onSuccess, onFailure);

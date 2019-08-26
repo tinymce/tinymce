@@ -125,7 +125,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
     sAssertTargetFocused,
     Keyboard.sKeydown(doc, Keys.tab(), { }),
 
-    Step.wait(1000),
+    Step.wait(100),
     Logger.t('Checking pressing tab at the end should not move focus', sAssertTargetFocused),
 
     sClickPrev,
@@ -193,7 +193,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
     TestHelpers.GuiSetup.mAddStyles(doc, [
       '.tinymce-mobile-toolbar-button:before { content: "LINK"; background: black; color: white; }',
       // Speeds up tests.
-      '.tinymce-mobile-serialised-dialog-chain { transition: left linear 0.000001s !important }'
+      '* { transition-duration: 1ms !important }'
     ]),
 
     TestStyles.sWaitForToolstrip(realm),

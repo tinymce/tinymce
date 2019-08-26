@@ -101,7 +101,7 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
           Waiter.sTryUntil(
             'Waiting for animation to stop (growing)',
             sIsNotGrowing,
-            100,
+            10,
             4000
           ),
 
@@ -141,7 +141,7 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
           Waiter.sTryUntil(
             label + '\nWaiting for animation to stop (shrinking)',
             sIsNotShrinking,
-            100,
+            10,
             4000
           ),
 
@@ -251,7 +251,7 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
           'onStartShrink',
           'onShrunk'
         ]),
-        100,
+        10,
         4000
       ),
 

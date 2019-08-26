@@ -66,9 +66,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
         GeneralSteps.sequence([
           Waiter.sTryUntil(
             'Test inline should not be DOM',
-            UiFinder.sExists(gui.element(), '.test-inline'),
-            100,
-            1000
+            UiFinder.sExists(gui.element(), '.test-inline')
           ),
           Step.sync(() => {
             Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(inline));
@@ -83,9 +81,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
         GeneralSteps.sequence([
           Waiter.sTryUntil(
             'Test inline should not be in DOM',
-            UiFinder.sNotExists(gui.element(), '.test-inline'),
-            100,
-            1000
+            UiFinder.sNotExists(gui.element(), '.test-inline')
           ),
           Step.sync(() => {
             Assertions.assertEq('Checking isOpen API', false, InlineView.isOpen(inline));

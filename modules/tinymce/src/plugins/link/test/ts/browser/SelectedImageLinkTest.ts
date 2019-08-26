@@ -31,9 +31,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.SelectedImageTest', (success, f
             'a[href="http://something"]': 1,
             'img[src="image.png"]': 1,
             'p': 1
-          }),
-          100,
-          1000
+          })
         )
       ]),
       Log.stepsAsStep('TBA', 'Link: images should be preserved when editing a link', [
@@ -49,9 +47,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.SelectedImageTest', (success, f
             'a[href="http://something"]': 1,
             'img[src="image.png"]': 1,
             'p': 1
-          }),
-          100,
-          1000
+          })
         )
       ]),
       TestLinkUi.sClearHistory

@@ -58,7 +58,7 @@ const sTryOnSelector = function <T>(label: string, doc: Element, selector: strin
     Waiter.sTryUntil(
       'Waiting for focus',
       sIsOnSelector(label, doc, selector),
-      100, 4000
+      10, 4000
     )
   );
 };

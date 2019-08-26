@@ -31,7 +31,7 @@ UnitTest.asynctest('Remove context menu on focusout', (success, failure) => {
 
       Assertions.assertEq('no context toolbar', state, contextToolbar.isValue());
     }),
-    Guard.tryUntil('Wait for context menu to appear.', 100, 3000)
+    Guard.tryUntil('Wait for context menu to appear.')
   );
 
   const html = '<p>One <a href="http://tiny.cloud">link</a> Two</p>';

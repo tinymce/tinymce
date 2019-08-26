@@ -102,7 +102,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
       Step.sync(() => {
         Focus.focus(component.element());
       }),
-      Step.wait(1000),
+      Step.wait(100),
       steps.sWaitForMenu('Blurring should NOT dismiss popup due to setting'),
 
       Step.sync(() => {

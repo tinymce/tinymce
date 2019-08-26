@@ -142,9 +142,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
             cGetParts,
             cCheckThumbAtRight,
             cCheckValue(200)
-          ]),
-          100,
-          1000
+          ])
         )
       ),
 

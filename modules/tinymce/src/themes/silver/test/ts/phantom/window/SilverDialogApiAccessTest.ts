@@ -120,9 +120,7 @@ UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure)
           'onClose',
           'currentData: Init Value',
           'newData: Init Value'
-        ]),
-        50,
-        5000
+        ])
       )
     ])
   );

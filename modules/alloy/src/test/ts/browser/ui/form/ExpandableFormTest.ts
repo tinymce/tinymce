@@ -244,9 +244,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
 
           Waiter.sTryUntil(
             'Waiting until it has stopped growing',
-            UiFinder.sNotExists(gui.element(), '.expandable-growing'),
-            100,
-            10000
+            UiFinder.sNotExists(gui.element(), '.expandable-growing')
           ),
 
           Keyboard.sKeydown(doc, Keys.tab(), {}),
@@ -256,7 +254,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
           Waiter.sTryUntil(
             'Waiting until it has stopped shrinking',
             UiFinder.sNotExists(gui.element(), '.expandable-shrinking'),
-            100,
+            10,
             10000
           ),
 
@@ -275,7 +273,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
       Waiter.sTryUntil(
         'Waiting until it has stopped growing',
         UiFinder.sNotExists(gui.element(), '.expandable-growing'),
-        100,
+        10,
         10000
       ),
 
@@ -286,7 +284,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
       Waiter.sTryUntil(
         'Waiting until it has stopped shrinking',
         UiFinder.sNotExists(gui.element(), '.expandable-shrinking'),
-        100,
+        10,
         10000
       ),
 

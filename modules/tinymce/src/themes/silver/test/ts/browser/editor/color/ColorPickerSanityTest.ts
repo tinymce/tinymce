@@ -57,15 +57,15 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
 
   const sSubmitDialog = GeneralSteps.sequence(Logger.ts('Click Save and close dialog', [
     FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
-    Waiter.sTryUntil('Button is not disabled', UiFinder.sNotExists(docBody, 'button.tox-button:contains("Save")[disabled]'), 100, 1000),
+    Waiter.sTryUntil('Button is not disabled', UiFinder.sNotExists(docBody, 'button.tox-button:contains("Save")[disabled]')),
     Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-    Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000),
+    Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
   ]));
 
   const sCancelDialog = GeneralSteps.sequence(Logger.ts('Click Cancel and close dialog', [
     FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
     Mouse.sClickOn(docBody, 'button.tox-button:contains(Cancel)'),
-    Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000),
+    Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
   ]));
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {

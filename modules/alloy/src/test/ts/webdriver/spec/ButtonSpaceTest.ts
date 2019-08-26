@@ -42,7 +42,7 @@ UnitTest.asynctest('ButtonSpaceTest (webdriver)', (success, failure) => {
         // Press space.
         RealKeys.text('\uE00D')
       ]),
-      Step.wait(1000),
+      Step.wait(400),
       store.sAssertEq('Clicked should only have fired once', [ 'clicked' ]),
       store.sClear,
 
@@ -51,7 +51,7 @@ UnitTest.asynctest('ButtonSpaceTest (webdriver)', (success, failure) => {
         // Press space.
         RealKeys.text('\uE00D')
       ]),
-      Step.wait(1000),
+      Step.wait(400),
       store.sAssertEq('Clicked should only have fired once', [ 'clicked.fake' ])
     ];
   }, () => { success(); }, failure);

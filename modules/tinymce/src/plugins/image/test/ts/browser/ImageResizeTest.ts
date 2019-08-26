@@ -26,12 +26,12 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageResizeTest', (success, fa
               ]),
               Chain.control(
                 cAssertInputValue(generalTabSelectors.width, '1'),
-                Guard.tryUntil('did not find width input with value 1', 10, 1000)
+                Guard.tryUntil('did not find width input with value 1')
               ),
               cSetInputValue(generalTabSelectors.height, '5'),
               Chain.control(
                 cAssertInputValue(generalTabSelectors.width, '5'),
-                Guard.tryUntil('did not find width input with value 5', 10, 1000)
+                Guard.tryUntil('did not find width input with value 5')
               ),
             ]
           ),

@@ -143,9 +143,7 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
             cGetParts,
             cCheckThumbAtBottom,
             cCheckValue(200)
-          ]),
-          100,
-          1000
+          ])
         )
       ),
 

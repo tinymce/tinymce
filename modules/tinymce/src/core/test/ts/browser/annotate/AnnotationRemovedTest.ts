@@ -47,9 +47,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationRemovedTest', (succe
         'Nothing active (outside1)',
         tinyApis.sAssertContentPresence({
           '.mce-annotation': 3
-        }),
-        100,
-        1000
+        })
       ),
 
       Logger.t(
@@ -79,9 +77,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationRemovedTest', (succe
         'removed alpha, but was not inside alpha',
         tinyApis.sAssertContentPresence({
           '.mce-annotation': 3
-        }),
-        100,
-        1000
+        })
       ),
       Logger.t(
         'There should be still be two alpha annotations (because remove only works if you are inside)',
@@ -105,9 +101,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationRemovedTest', (succe
         'removed beta',
         tinyApis.sAssertContentPresence({
           '.mce-annotation': 2
-        }),
-        100,
-        1000
+        })
       ),
 
       Logger.t(
@@ -131,9 +125,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationRemovedTest', (succe
         'removed alpha, and was inside alpha',
         tinyApis.sAssertContentPresence({
           '.mce-annotation': 1
-        }),
-        100,
-        1000
+        })
       ),
 
       Logger.t(

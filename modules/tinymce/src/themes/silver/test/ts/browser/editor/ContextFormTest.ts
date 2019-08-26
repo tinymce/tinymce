@@ -66,9 +66,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
 
       const sCheckNoPopDialog = Waiter.sTryUntil(
         'Pop dialog should disappear (soon)',
-        UiFinder.sNotExists(Body.body(), '.tox-pop'),
-        100,
-        1000
+        UiFinder.sNotExists(Body.body(), '.tox-pop')
       );
 
       Pipeline.async({ }, [

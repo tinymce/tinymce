@@ -102,7 +102,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
                     return Result.value(data);
                   });
                 }),
-                Guard.tryUntil('Waiting for content to load in iframe', 100, 10000)
+                Guard.tryUntil('Waiting for content to load in iframe', 10, 10000)
               )
             ]
           ),

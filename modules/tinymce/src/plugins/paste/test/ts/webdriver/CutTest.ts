@@ -33,7 +33,7 @@ UnitTest.asynctest('tinymce.plugins.paste.webdriver.CutTest', (success, failure)
         ui.cWaitForUi('Wait for menu item', '[role="menuitem"]:contains("Cut")'),
         RealMouse.cClick()
       ]),
-      Waiter.sTryUntil('Cut is async now, so need to wait for content', api.sAssertContent('<p>ac</p>'), 100, 1000)
+      Waiter.sTryUntil('Cut is async now, so need to wait for content', api.sAssertContent('<p>ac</p>'))
     ]), onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',

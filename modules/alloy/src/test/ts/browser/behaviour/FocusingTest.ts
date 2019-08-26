@@ -47,7 +47,7 @@ UnitTest.asynctest('FocusingTest', (success, failure) => {
         // rather than die for its assertion, which meant that the tryUntilNot did not work.
         // I had to hack the local agar to ignore the error prototype check in Guard. Will
         // need to fix this.
-        Guard.tryUntilNot('Container should not be focused originally', 100, 1000)
+        Guard.tryUntilNot('Container should not be focused originally')
       ),
       Step.sync(() => {
         component.getSystem().triggerFocus(component.element(), gui.element());

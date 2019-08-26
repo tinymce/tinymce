@@ -17,7 +17,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     const left = Css.get(container, 'left');
     Assertions.assertEq(`Container top position (${top}) should be an integer`, true, top.indexOf('.') === -1);
     Assertions.assertEq(`Container left position (${left}) should be 0px`, '0px', left);
-  }), 100, 1000);
+  }));
 
   const sAssertDockedPos = (container: Element) => Waiter.sTryUntil('Wait for toolbar to be docked', Step.sync(() => {
     Assertions.assertEq(`Container should be docked (fixed position)`, 'fixed', Css.get(container, 'position'));
@@ -27,7 +27,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     Assertions.assertEq(`Container top position (${top}) should be 0px`, '0px', top);
     Assertions.assertEq(`Container left position (${left}) should be 0px`, '0px', left);
     Assertions.assertEq(`Container previous top position (${prevTop}) should be an integer`, true, prevTop.indexOf('.') === -1);
-  }), 100, 1000);
+  }));
 
   const sScrollToElement = (contentAreaContainer: Element, selector: string) => GeneralSteps.sequence([
     Step.sync(() => {

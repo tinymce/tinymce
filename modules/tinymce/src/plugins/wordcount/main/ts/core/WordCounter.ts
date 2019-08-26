@@ -14,8 +14,8 @@ const updateCount = (editor: Editor, api: WordCountApi) => {
   Events.fireWordCountUpdate(editor, api);
 };
 
-const setup = (editor: Editor, api: WordCountApi) => {
-  const debouncedUpdate = Delay.debounce(() => updateCount(editor, api), 300);
+const setup = (editor: Editor, api: WordCountApi, delay: number) => {
+  const debouncedUpdate = Delay.debounce(() => updateCount(editor, api), delay);
 
   editor.on('init', () => {
     updateCount(editor, api);
