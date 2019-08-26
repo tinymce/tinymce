@@ -10,8 +10,8 @@
 //
 
 body {
-  background-color: #333;
-  color: #fff;
+  background-color: #2f3742;
+  color: #dfe0e4;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.4;
   margin: 1rem;
@@ -27,7 +27,7 @@ table {
 
 table th,
 table td {
-  border: 1px solid #666;
+  border: 1px solid #6d737b;
   padding: .4rem;
 }
 
@@ -37,27 +37,33 @@ figure {
 }
 
 figure figcaption {
-  color: #999;
+  color: #8a8f97;
   display: block;
   margin-top: .25rem;
   text-align: center;
 }
 
 hr {
-  border-color: #ccc;
+  border-color: #6d737b;
   border-style: solid;
   border-width: 1px 0 0 0;
 }
 
 code {
-  background-color: #e8e8e8;
+  background-color: #6d737b;
   border-radius: 3px;
   padding: .1rem .2rem;
 }
 
+/* Make text in selected cells in tables dark and readable */
+td[data-mce-selected],
+th[data-mce-selected] {
+  color: #333;
+}
+
 .mce-content-body:not([dir=rtl]) {
   blockquote {
-    border-left: 2px solid #ccc;
+    border-left: 2px solid #6d737b;
     margin-left: 1.5rem;
     padding-left: 1rem;
   }
@@ -66,7 +72,7 @@ code {
 // RTL
 .mce-content-body[dir=rtl] {
   blockquote {
-    border-right: 2px solid #ccc;
+    border-right: 2px solid #6d737b;
     margin-right: 1.5rem;
     padding-right: 1rem;
   }
