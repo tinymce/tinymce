@@ -411,6 +411,25 @@
       height: 100%;
     }
   }
+
+  // Transition styles for inline toolbars
+  .tox-dialog-dock-fadeout {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .tox-dialog-dock-fadein {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .tox-dialog-dock-transition {
+    transition: visibility 0s linear .3s, opacity .3s ease;
+  }
+
+  .tox-dialog-dock-transition.tox-dialog-dock-fadein {
+    transition-delay: 0s;
+  }
 }
 
 // Added to the body to disable scrolling when dialogs are open

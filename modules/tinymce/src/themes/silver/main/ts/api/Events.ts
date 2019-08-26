@@ -6,29 +6,30 @@
  */
 
 import { UIEvent } from '@ephox/dom-globals';
+import Editor from 'tinymce/core/api/Editor';
 
-const fireSkinLoaded = (editor) => {
+const fireSkinLoaded = (editor: Editor) => {
   return editor.fire('SkinLoaded');
 };
 
-const fireResizeEditor = (editor) => {
+const fireResizeEditor = (editor: Editor) => {
   return editor.fire('ResizeEditor');
 };
 
-const fireBeforeRenderUI = (editor) => {
+const fireBeforeRenderUI = (editor: Editor) => {
   return editor.fire('BeforeRenderUI');
 };
 
-const fireResizeContent = (editor, e: UIEvent) => {
+const fireResizeContent = (editor: Editor, e: UIEvent) => {
   return editor.fire('ResizeContent', e);
 };
 
-const fireScrollContent = (editor, e: UIEvent) => {
+const fireScrollContent = (editor: Editor, e: UIEvent) => {
   return editor.fire('ScrollContent', e);
 };
 
-const fireTextColorChange = (editor, data) => {
-  editor.fire('TextColorChange', data);
+const fireTextColorChange = (editor: Editor, data: { name: string; color: string }) => {
+  return editor.fire('TextColorChange', data);
 };
 
 export default {
