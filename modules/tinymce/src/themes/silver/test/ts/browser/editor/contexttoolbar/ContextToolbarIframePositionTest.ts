@@ -147,9 +147,6 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
           UiFinder.sWaitForVisible('Waiting for toolbar to appear to top inside content', Body.body(), '.tox-pop.tox-pop--top'),
           sAssertFullscreenPosition('top', 470),
           UiFinder.sWaitForVisible('Check toolbar is still visible', Body.body(), '.tox-pop.tox-pop--top'),
-        ]),
-
-        Log.stepsAsStep('n/a', 'turn off fullscreen', [
           tinyUi.sClickOnToolbar('Press fullscreen button', fullscreenButtonSelector),
           Waiter.sTryUntil('Wait for fullscreen to turn off', UiFinder.sNotExists(Body.body(), fullscreenSelector)),
         ]),
