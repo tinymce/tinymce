@@ -28,7 +28,6 @@ import { Step } from './Step';
 import { TestLogs } from './TestLogs';
 import * as UiControls from './UiControls';
 import * as UiFinder from './UiFinder';
-import * as UnitTest from './UnitTest';
 import * as Waiter from './Waiter';
 import * as DragnDrop from './DragnDrop';
 import * as Files from './Files';
@@ -63,7 +62,6 @@ export {
   TestLogs,
   UiControls,
   UiFinder,
-  UnitTest,
   Waiter,
   Truncate,
   StructAssert,

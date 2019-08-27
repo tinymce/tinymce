@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, UnitTest, Waiter, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Waiter, UiFinder } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi, TinyDom, UiChains } from '@ephox/mcagar';
@@ -9,6 +9,7 @@ import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
   SilverTheme();

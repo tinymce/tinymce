@@ -1,4 +1,4 @@
-import { Chain, Log, Pipeline, UnitTest } from '@ephox/agar';
+import { Chain, Log, Pipeline } from '@ephox/agar';
 import { Editor } from '@ephox/mcagar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -13,6 +13,7 @@ import {
   generalTabSelectors,
   silverSettings,
 } from '../../module/Helpers';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Default image dialog on empty data', (success, failure) => {
   SilverTheme();
