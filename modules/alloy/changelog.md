@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed `MakeshiftAnchor` incorrectly calculating the anchor coordinates in fixed position mode.
 - Fixed custom position bounds being ignored in fixed position mode.
 - Fixed incorrect right/bottom positioning in fixed mode when a scrollbar is visible.
+- Fixed `Positioning` placing the element off the page or out of view when the anchor point is out of bounds.
 
 # [4.15.25] - 2019-09-18
 

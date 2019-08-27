@@ -1,11 +1,10 @@
 import { UnitTest } from '@ephox/bedrock';
+import Jsc from '@ephox/wrap-jsverify';
 
 import { bounds as makeBounds } from 'ephox/alloy/alien/Boxes';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 
-import Jsc from '@ephox/wrap-jsverify';
-
-UnitTest.test('BounderCursorTest', () => {
+UnitTest.test('BounderCalcRepositionTest', () => {
 
   const nonZeroArb = Jsc.integer(10, 1000);
   const zeroableArb = Jsc.integer(0, 1000);
@@ -44,44 +43,17 @@ UnitTest.test('BounderCursorTest', () => {
     arbTestCase,
     (input) => {
       const bounds = makeBounds(input.boundsX, input.boundsY, input.boundsW, input.boundsH);
-      const output = Bounder.attemptFoo(input.newX, input.newY, input.width, input.height, bounds);
+      const output = Bounder.calcReposition(input.newX, input.newY, input.width, input.height, bounds);
 
-      // const xIsVisible = output.limitX < bounds.right() && (output.limitX + input.width) > bounds.x();
-      const yIsVisible = output.limitY < bounds.bottom() && (output.limitY + input.height) > bounds.y();
-      // if (! xIsVisible) {
-      //   return 'X is not inside bounds';
-      // } else if (! yIsVisible) {
-      if (! yIsVisible) {
+      const xIsVisible = output.limitX <= bounds.right() && output.limitX >= bounds.x();
+      const yIsVisible = output.limitY <= bounds.bottom() && output.limitY >= bounds.y();
+      if (!xIsVisible) {
+        return 'X is not inside bounds. Returned: ' + JSON.stringify(output);
+      } else if (!yIsVisible) {
         return 'Y is not inside bounds. Returned: ' + JSON.stringify(output);
       } else {
         return true;
       }
     }
   );
-
-  // const check = (expected, newX, newY, width, height, bounds) => {
-  //   Jsc.
-
-  //   RawAssertions.assertEq(
-  //     'Checking attemptFoo',
-  //     expected,
-  //     Bounder.attemptFoo(newX, newY, width, height, bounds)
-  //   );
-  // };
-
-  // check(
-  //   {
-  //     limitX: 1,
-  //     limitY: 20,
-  //     deltaW: 20,
-  //     deltaH: 10,
-  //     originInBounds: true,
-  //     sizeInBounds: true
-  //   },
-  //   100,
-  //   100,
-  //   50,
-  //   50,
-  //   makeBounds(10, 10, 200, 200)
-  // );
 });

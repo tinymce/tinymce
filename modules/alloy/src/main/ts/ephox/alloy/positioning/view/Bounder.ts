@@ -1,6 +1,7 @@
 import { Adt, Arr, Fun } from '@ephox/katamari';
 
 import { Bounds } from '../../alien/Boxes';
+import { cap } from '../../alien/Cycles';
 import { Bubble } from '../layout/Bubble';
 import * as Direction from '../layout/Direction';
 import { AnchorBox, AnchorElement, AnchorLayout } from '../layout/LayoutTypes';
@@ -18,7 +19,7 @@ const adt: {
   { nofit: [ 'reposition', 'deltaW', 'deltaH' ] }
 ]);
 
-const attemptFoo = (newX: number, newY: number, width: number, height: number, bounds: Bounds) => {
+const calcReposition = (newX: number, newY: number, width: number, height: number, bounds: Bounds) => {
   const boundsX = bounds.x();
   const boundsY = bounds.y();
   const boundsWidth = bounds.width();
@@ -35,21 +36,15 @@ const attemptFoo = (newX: number, newY: number, width: number, height: number, b
   const sizeInBounds = xFit && yFit;
 
   // measure how much of the width and height are visible. deltaW isn't necessary in the fit case but it's cleaner to read here.
-  const deltaW = xInBounds ? Math.min(width, boundsX + boundsWidth - newX)
-                         : Math.abs(boundsX - (newX + width));
-  const deltaH = yInBounds ? Math.min(height, boundsY + boundsHeight - newY)
-                         : Math.abs(boundsY - (newY + height));
+  const deltaW = Math.abs(Math.min(width, xInBounds ? boundsX + boundsWidth - newX : boundsX - (newX + width)));
+  const deltaH = Math.abs(Math.min(height, yInBounds ? boundsY + boundsHeight - newY : boundsY - (newY + height)));
 
   // TBIO-3366 + TBIO-4236:
   // Futz with the X position to ensure that x is positive, but not off the right side of the screen.
-  const maxX = bounds.x() + bounds.width();
-
   // NOTE: bounds.x() is 0 in repartee here.
-  const minX = Math.max(bounds.x(), newX);
-  const limitX = Math.min(minX, maxX);
-
+  const limitX = cap(newX, bounds.x(), bounds.right());
   // Futz with the Y value to ensure that we're not off the top of the screen
-  const limitY = yInBounds ? newY : newY + (height - deltaH);
+  const limitY = cap(newY, bounds.y(), bounds.bottom());
 
   return {
     originInBounds,
@@ -67,39 +62,14 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bou
   const bubbleLeft = candidate.bubble().offset().left();
   const bubbleTop = candidate.bubble().offset().top();
 
-  const boundsX = bounds.x();
   const boundsY = bounds.y();
-  const boundsWidth = bounds.width();
   const boundsHeight = bounds.height();
 
   // candidate position is excluding the bubble, so add those values as well
   const newX = candidateX + bubbleLeft;
   const newY = candidateY + bubbleTop;
 
-  // simple checks for "is the top left inside the view"
-  const xInBounds = newX >= boundsX;
-  const yInBounds = newY >= boundsY;
-  const originInBounds = xInBounds && yInBounds;
-
-  // simple checks for "is the bottom right inside the view"
-  const xFit = (newX + width) <= (boundsX + boundsWidth);
-  const yFit = (newY + height) <= (boundsY + boundsHeight);
-  const sizeInBounds = xFit && yFit;
-
-  // measure how much of the width and height are visible. deltaW isn't necessary in the fit case but it's cleaner to read here.
-  const deltaW = xInBounds ? Math.min(width, boundsX + boundsWidth - newX)
-                         : Math.abs(boundsX - (newX + width));
-  const deltaH = yInBounds ? Math.min(height, boundsY + boundsHeight - newY)
-                         : Math.abs(boundsY - (newY + height));
-
-  // TBIO-3366 + TBIO-4236:
-  // Futz with the X position to ensure that x is positive, but not off the right side of the screen.
-  const maxX = bounds.x() + bounds.width();
-  const minX = Math.max(bounds.x(), newX);
-  const limitX = Math.min(minX, maxX);
-
-  // Futz with the Y value to ensure that we're not off the top of the screen
-  const limitY = yInBounds ? newY : newY + (height - deltaH);
+  const { originInBounds, sizeInBounds, limitX, limitY, deltaW, deltaH } = calcReposition(newX, newY, width, height, bounds);
 
   // TBIO-3367 + TBIO-3387:
   // Futz with the "height" of the popup to ensure if it doesn't fit it's capped at the available height.
@@ -107,8 +77,6 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bou
   const upAvailable = Fun.constant((limitY + deltaH) - boundsY);
   const downAvailable = Fun.constant((boundsY + boundsHeight) - limitY);
   const maxHeight = Direction.cataVertical(candidate.direction(), downAvailable, /* middle */ downAvailable, upAvailable);
-
-  // We don't futz with the width.
 
   const reposition = Reposition.decision({
     x: limitX,
@@ -211,5 +179,5 @@ const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: 
 
 export {
   attempts,
-  attemptFoo
+  calcReposition
 };
