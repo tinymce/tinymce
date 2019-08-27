@@ -1,4 +1,5 @@
 Version 5.0.15 (TBD)
+    Added a dark content_css styles to go with the dark skin TINY-3743
     Changed so the enabled state on toolbar buttons doesn't get the hover effect #TINY-3974
     Fixed missing CSS active state on toolbar buttons #TINY-3966
     Fixed context toolbars not showing in fullscreen mode #TINY-4023
