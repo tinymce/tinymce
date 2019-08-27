@@ -20,7 +20,7 @@ UnitTest.test('TableMergeContentTest', function () {
 
     TableContent.merge(cells);
     Arr.each(specs, function (spec, i) {
-      assert.eq(spec.expected, Html.get(cells[i]), spec.label + ' expected:\n' + spec.expected + '\n got: \n' + Html.get(cells[i]));
+      assert.eq(spec.expected, Html.get(cells[i]), () => spec.label + ' expected:\n' + spec.expected + '\n got: \n' + Html.get(cells[i]));
     });
 
     Remove.remove(table);

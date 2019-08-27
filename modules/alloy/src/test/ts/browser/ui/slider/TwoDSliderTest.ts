@@ -130,7 +130,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
 
     const cCheckThumbAtLeft = Chain.op((parts: any) => {
       RawAssertions.assertEq(
-        'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
+        () => 'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Left-Edge: (' + parts.ledgeRect.left + '->' + parts.ledgeRect.right + ')',
         true,
         parts.ledgeRect.right > parts.thumbRect.left && parts.ledgeRect.left < parts.thumbRect.left
@@ -139,7 +139,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
 
     const cCheckThumbAtRight = Chain.op((parts: any) => {
       RawAssertions.assertEq(
-        'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
+        () => 'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Right-Edge: (' + parts.redgeRect.left + '->' + parts.redgeRect.right + ')',
         true,
         parts.redgeRect.left < parts.thumbRect.right && parts.ledgeRect.left < parts.redgeRect.left
@@ -148,7 +148,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
 
     const cCheckThumbAtTop = Chain.op((parts: any) => {
       RawAssertions.assertEq(
-        'Thumb (' + parts.thumbRect.top + '->' + parts.thumbRect.bottom +
+        () => 'Thumb (' + parts.thumbRect.top + '->' + parts.thumbRect.bottom +
           '), Top-Edge: (' + parts.tedgeRect.top + '->' + parts.tedgeRect.bottom + ')',
         true,
         parts.tedgeRect.bottom > parts.thumbRect.top && parts.tedgeRect.top < parts.thumbRect.top
@@ -157,7 +157,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
 
     const cCheckThumbAtBottom = Chain.op((parts: any) => {
       RawAssertions.assertEq(
-        'Thumb (' + parts.thumbRect.top + '->' + parts.thumbRect.bottom +
+        () => 'Thumb (' + parts.thumbRect.top + '->' + parts.thumbRect.bottom +
           '), Bottom-Edge: (' + parts.bedgeRect.top + '->' + parts.bedgeRect.bottom + ')',
         true,
         parts.bedgeRect.top < parts.thumbRect.bottom && parts.tedgeRect.top < parts.bedgeRect.top
