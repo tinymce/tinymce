@@ -1,9 +1,9 @@
 {
   "name": "@ephox/alloy",
-  "version": "4.15.13",
+  "version": "4.15.14",
   "description": "Ui Framework",
   "dependencies": {
-    "@ephox/agar": "^4.13.29",
+    "@ephox/agar": "^4.13.30",
     "@ephox/boulder": "^3.3.29",
     "@ephox/dom-globals": "^1.1.2",
     "@ephox/katamari": "^2.5.2",
