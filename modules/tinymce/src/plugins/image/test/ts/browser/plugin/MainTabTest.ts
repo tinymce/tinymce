@@ -1,4 +1,4 @@
-import { Log, Pipeline, UnitTest } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { Editor } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
@@ -12,6 +12,7 @@ import {
   cWaitForDialog,
   silverSettings,
 } from '../../module/Helpers';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('All image dialog ui options on empty editor' + (Env.ceFalse ? '' : ' (old IE)'), (success, failure) => {
   SilverTheme();

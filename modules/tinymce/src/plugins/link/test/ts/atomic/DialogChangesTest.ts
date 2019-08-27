@@ -1,8 +1,9 @@
-import { Logger, RawAssertions, UnitTest } from '@ephox/agar';
+import { Logger, RawAssertions } from '@ephox/agar';
 
 import { DialogChanges, DialogDelta } from 'tinymce/plugins/link/ui/DialogChanges';
 import { ListItem, LinkDialogData } from 'tinymce/plugins/link/ui/DialogTypes';
 import { Fun } from '@ephox/katamari';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('DialogChanges', () => {
 
