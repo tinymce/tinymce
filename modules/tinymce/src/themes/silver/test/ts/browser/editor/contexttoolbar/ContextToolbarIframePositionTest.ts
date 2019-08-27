@@ -84,6 +84,9 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
         ]);
       };
 
+      const fullscreenSelector = '.tox.tox-fullscreen';
+      const fullscreenButtonSelector = 'button[aria-label="Fullscreen"]';
+
       Pipeline.async({ }, [
         tinyApis.sFocus,
         Log.stepsAsStep('TBA', 'Context toolbar selection position while scrolling', [
@@ -137,13 +140,15 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
         ]),
 
         Log.stepsAsStep('TINY-4023', 'Context toolbar is visible in fullscreen mode', [
-          tinyUi.sClickOnToolbar('Trigger fullscreen', 'button[aria-label="Fullscreen"]'),
-          tinyUi.sWaitForUi('Wait for fullscreen to be triggered', '.tox.tox-fullscreen'),
+          tinyUi.sClickOnToolbar('Trigger fullscreen', fullscreenButtonSelector),
+          tinyUi.sWaitForUi('Wait for fullscreen to be triggered', fullscreenSelector),
           tinyApis.sSetContent(`<p><img src="${imageSrc}" style="height: 380px; width: 100px"></p>`),
           tinyApis.sSelect('img', []),
           UiFinder.sWaitForVisible('Waiting for toolbar to appear to top inside content', Body.body(), '.tox-pop.tox-pop--top'),
           sAssertFullscreenPosition('top', 470),
           UiFinder.sWaitForVisible('Check toolbar is still visible', Body.body(), '.tox-pop.tox-pop--top'),
+          tinyUi.sClickOnToolbar('Press fullscreen button', fullscreenButtonSelector),
+          Waiter.sTryUntil('Wait for fullscreen to turn off', UiFinder.sNotExists(Body.body(), fullscreenSelector)),
         ]),
       ], onSuccess, onFailure);
     },
