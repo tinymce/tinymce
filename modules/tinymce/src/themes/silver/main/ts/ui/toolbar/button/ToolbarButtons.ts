@@ -5,47 +5,30 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AddEventsBehaviour,
-  AlloyComponent,
-  AlloyEvents,
-  AlloyTriggers,
-  Behaviour,
-  Button as AlloyButton,
-  Disabling,
-  Focusing,
-  Keying,
-  NativeEvents,
-  Reflecting,
-  Replacing,
-  SketchSpec,
-  SplitDropdown as AlloySplitDropdown,
-  Toggling,
-  SystemEvents,
-  TieredData,
-  TieredMenuTypes,
-} from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, Focusing, Keying, NativeEvents, Reflecting, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling } from '@ephox/alloy';
 import { Toolbar, Types } from '@ephox/bridge';
+import { NestedMenuItemContents } from '@ephox/bridge/lib/main/ts/ephox/bridge/api/Menu';
 import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Attr, SelectorFind } from '@ephox/sugar';
-
-import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import I18n from 'tinymce/core/api/util/I18n';
+import { UiFactoryBackstage, UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
 import { renderIconFromPack, renderLabel } from '../../button/ButtonSlices';
+import { renderMenuButton } from '../../button/MenuButton';
 import { onControlAttached, onControlDetached, OnDestroy } from '../../controls/Controls';
 import * as Icons from '../../icons/Icons';
 import { componentRenderPipeline } from '../../menus/item/build/CommonMenuItem';
 import { classForPreset } from '../../menus/item/ItemClasses';
+import ItemResponse from '../../menus/item/ItemResponse';
+import { createPartialChoiceMenu } from '../../menus/menu/MenuChoice';
 import { deriveMenuMovement } from '../../menus/menu/MenuMovement';
 import * as MenuParts from '../../menus/menu/MenuParts';
 import { createTieredDataFrom } from '../../menus/menu/SingleMenu';
-import { createPartialChoiceMenu } from '../../menus/menu/MenuChoice';
-import ItemResponse from '../../menus/item/ItemResponse';
 import { ToolbarButtonClasses } from '../button/ButtonClasses';
 import { onToolbarButtonExecute, toolbarButtonEventOrder } from '../button/ButtonEvents';
-import I18n from 'tinymce/core/api/util/I18n';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
@@ -252,7 +235,7 @@ const fetchChoices = (getApi, spec: ChoiceFetcher, providersBackstage: UiFactory
           {
             movement: deriveMenuMovement(spec.columns, spec.presets),
             menuBehaviours: SimpleBehaviours.unnamedEvents(spec.columns !== 'auto' ? [ ] : [
-              AlloyEvents.runOnAttached((comp, se) => {
+              AlloyEvents.runOnAttached((comp, _se) => {
                 detectSize(comp, 4, classForPreset(spec.presets)).each(({ numRows, numColumns }) => {
                   Keying.setGridSize(comp, numRows, numColumns);
                 });
@@ -265,8 +248,70 @@ const fetchChoices = (getApi, spec: ChoiceFetcher, providersBackstage: UiFactory
   };
 };
 
+const convertSplitToMenuButton = (spec, backstage) => {
+  const mockApi = ({
+    isDisabled: Fun.constant(false),
+    setDisabled: Fun.noop,
+    setIconFill: (_id, _value) => {},
+    setIconStroke: (_id, _value) => {},
+    isActive: Fun.constant(true),
+    setActive: Fun.noop
+  });
+
+  const isColorSwatch = spec.presets === 'color';
+
+  const getColorSwatchItem = () => ([{
+    type: 'fancymenuitem' as'fancymenuitem',
+    fancytype: 'colorswatch',
+    onAction: (data) => spec.onItemAction(mockApi, data.value)
+  }]);
+
+  const getMenuItems = (items): NestedMenuItemContents[] => Arr.map(items, (item) => {
+    return {
+      type: 'menuitem' as 'menuitem',
+      onAction: (api) => {
+        const mergedApi = { ...mockApi, ...api };
+        if ('value' in item) {
+          return spec.onItemAction(mergedApi, item.value);
+        } else {
+          return spec.onItemAction(mergedApi, '');
+        }
+      },
+      ...'text' in item ? { text: item.text } : { },
+      ...'icon' in item ? { icon: item.icon } : { }
+    };
+  });
+
+  const menuButtonSpec: Toolbar.ToolbarMenuButton = {
+    type: 'menubutton',
+    text: spec.text,
+    tooltip: spec.tooltip,
+    icon: spec.icon,
+    fetch: (callback) => {
+      spec.fetch((items) => {
+        if (isColorSwatch) {
+          callback(getColorSwatchItem());
+        } else {
+          callback(getMenuItems(items));
+        }
+      });
+    },
+    onSetup: (api) => {
+      return isColorSwatch ? spec.onSetup({ ...mockApi, ...api }) : spec.onSetup;
+    },
+  };
+  return renderMenuButton(menuButtonSpec, ToolbarButtonClasses.Button, backstage, Option.none());
+};
+
 // TODO: hookup onSetup and onDestroy
-const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
+const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, backstage: UiFactoryBackstage): SketchSpec => {
+  // TODO: this should probably be isTouch() instead?
+  const isTouchDevice = PlatformDetection.detect().deviceType.isPhone();
+  if (isTouchDevice) {
+    return convertSplitToMenuButton(spec, backstage);
+  }
+
+  const sharedBackstage = backstage.shared;
   // This is used to change the icon on the button. Normally, affected by the select call.
   const displayChannel = Id.generate('channel-update-split-dropdown-display');
 
@@ -316,7 +361,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       spec.onAction(getApi(button));
     },
 
-    onItemExecute: (a, b, c) => { },
+    onItemExecute: (_a, _b, _c) => { },
 
     splitDropdownBehaviours: Behaviour.derive([
       DisablingConfigs.splitButton(false),
@@ -360,11 +405,5 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
   });
 };
 
-export {
-  renderCommonStructure,
-  renderToolbarButton,
-  renderToolbarButtonWith,
-  renderToolbarToggleButton,
-  renderToolbarToggleButtonWith,
-  renderSplitButton
-};
+export { renderCommonStructure, renderToolbarButton, renderToolbarButtonWith, renderToolbarToggleButton, renderToolbarToggleButtonWith, renderSplitButton };
+

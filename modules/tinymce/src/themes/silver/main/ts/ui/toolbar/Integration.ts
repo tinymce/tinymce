@@ -108,7 +108,7 @@ const types = {
     (s: Toolbar.ToolbarSplitButton, extras) => {
       return renderSplitButton(
         s,
-        extras.backstage.shared
+        extras.backstage
       );
     }
   ),

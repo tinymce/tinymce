@@ -109,7 +109,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                     store.adder('onItemAction.3')();
                     api.setActive(true);
                   }
-                }, helpers.shared)
+                }, helpers)
               ]
             },
 

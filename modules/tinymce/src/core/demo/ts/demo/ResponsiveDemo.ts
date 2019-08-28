@@ -92,7 +92,7 @@ export default function () {
         'searchreplace visualblocks code fullscreen',
         'insertdatetime media table contextmenu paste'
       ],
-      toolbar: 'bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image insertfile undo redo | styleselect'
+      toolbar: 'bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image insertfile undo redo | styleselect | forecolor backcolor'
     },
     setup (ed) {
       makeSidebar(ed, 'sidebar1', 'green', 200);
