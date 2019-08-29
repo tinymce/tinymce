@@ -72,20 +72,20 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
     });
   }).toArray();
 
-  const placeholder = spec.placeholder.fold(
-    (): Object => {
+  const placeholder = spec.placeholder.fold<{ placeholder?: string }>(
+    () => {
       return {};
     },
-    (placeholder): Object => {
+    (placeholder) => {
       return { placeholder: providersBackstage.translate(placeholder) };
     }
   );
 
-  const inputType = spec.inputType.fold(
-    (): Object => {
+  const inputType = spec.inputType.fold<{ type?: string }>(
+    () => {
       return {};
     },
-    (inputType): Object => {
+    (inputType) => {
       return { type: inputType };
     }
   );
