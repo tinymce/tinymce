@@ -15,7 +15,11 @@ const runsInPhantom = [
 ];
 
 const doesNotRunInBrowser = [
-  '@ephox/mcagar'
+  '@ephox/alloy',
+  '@ephox/mcagar',
+  '@ephox/katamari',
+  '@ephox/imagetools',
+  '@ephox/jax'
 ];
 
 if (!Array.prototype.flatMap) {
