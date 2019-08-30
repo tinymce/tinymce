@@ -14,6 +14,7 @@ const runsInPhantom = [
   '@ephox/snooker',
 ];
 
+// TODO: Make these tests pass on all browsers
 const doesNotRunInBrowser = [
   '@ephox/alloy',
   '@ephox/mcagar',
