@@ -2,21 +2,17 @@ import { Element, Insert, Location, Position, Remove, Traverse } from '@ephox/su
 import { SugarPosition } from './TypeDefinitions';
 
 /*
- * This returns the position of the offset parent excluding any scroll. That
- * means that the absolute coordinates can be obtained by adding the origin
- * to the offset coordinates and not needing to know scroll.
+ * This allows the absolute coordinates to be obtained by adding the
+ * origin to the offset coordinates and not needing to know scroll.
  */
-const getOrigin = (element: Element, scroll: SugarPosition): SugarPosition => {
+const getOrigin = (element: Element): SugarPosition => {
   return Traverse.offsetParent(element).orThunk(() => {
     const marker = Element.fromTag('span');
     Insert.before(element, marker);
     const offsetParent = Traverse.offsetParent(marker);
     Remove.remove(marker);
     return offsetParent;
-  }).map((offsetP) => {
-    const loc = Location.absolute(offsetP);
-    return loc.translate(-scroll.left(), -scroll.top());
-  }).getOrThunk(() => {
+  }).map(Location.absolute).getOrThunk(() => {
     return Position(0, 0);
   });
 };

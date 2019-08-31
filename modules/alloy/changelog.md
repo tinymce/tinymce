@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [5.0.0] - 2019-09-04
+
+### Fixed
+- Fixed docking not undocking to the correct position when a parent was using `position: relative`.
+
 # [4.15.2] - 2019-07-31
 
 ### Added

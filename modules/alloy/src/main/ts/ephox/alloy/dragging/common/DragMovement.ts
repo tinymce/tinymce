@@ -76,7 +76,7 @@ const dragBy = (component: AlloyComponent, dragConfig: DraggingConfig, startData
     const doc = Traverse.owner(component.element());
     const scroll = Scroll.get(doc);
 
-    const origin = OffsetOrigin.getOrigin(target, scroll);
+    const origin = OffsetOrigin.getOrigin(target);
 
     const currentCoord = getCurrentCoord(target);
 

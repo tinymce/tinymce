@@ -93,7 +93,8 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
       relativeChecks,
       staticChecks,
       tableChecks,
-      fixedChecks // recommend making these last, as they adjust the iframe scroll
+      fixedChecks, // recommend making these last, as they adjust the iframe scroll
+      bodyChecks
     ], function (f) {
       f(doc);
     });
@@ -385,6 +386,19 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
 
     Css.setAll(doc.byId('fixed-no-top-left'), { top: '10px', left: '20px' });
     runChecks(doc, afterSetPosition);
+  };
+
+  const bodyChecks = function (doc) {
+    Scroll.to(1000, 1000, doc.rawDoc);
+    let pos = Location.absolute(doc.body);
+    assert.eq(0, pos.top());
+    assert.eq(0, pos.left());
+    pos = Location.relative(doc.body);
+    assert.eq(0, pos.top());
+    assert.eq(0, pos.left());
+    pos = Location.viewport(doc.body);
+    assert.eq(0, pos.top());
+    assert.eq(0, pos.left());
   };
 
   /* Simple verification logic */

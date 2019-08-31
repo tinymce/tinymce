@@ -22,7 +22,7 @@ const refresh = (component, config: DockingConfig, state) => {
 
   const doc = Traverse.owner(component.element());
   const scroll = Scroll.get(doc);
-  const origin = OffsetOrigin.getOrigin(component.element(), scroll);
+  const origin = OffsetOrigin.getOrigin(component.element());
 
   Dockables.getMorph(component, config, viewport, scroll, origin).each((morph) => {
     const styles = DragCoord.toStyles(morph, scroll, origin);
