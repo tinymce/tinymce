@@ -1,4 +1,4 @@
-Version 4.9.6 (TBD)
+Version 4.9.6 (2019-09-02)
     Fixed image browse button sometimes displaying the browse window twice #TINY-3959
 Version 4.9.5 (2019-07-02)
     Changed annotations navigation to work the same as inline boundaries #TINY-3396
