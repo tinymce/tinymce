@@ -92,7 +92,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
 
     const cCheckThumbAtLeft = Chain.op((parts: any) => {
       RawAssertions.assertEq(
-        () => 'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
+        'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Left-Edge: (' + parts.ledgeRect.left + '->' + parts.ledgeRect.right + ')',
         true,
         parts.ledgeRect.right > parts.thumbRect.left && parts.ledgeRect.left < parts.thumbRect.left
@@ -101,7 +101,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
 
     const cCheckThumbAtRight = Chain.op((parts: any) => {
       RawAssertions.assertEq(
-        () => 'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
+        'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Right-Edge: (' + parts.redgeRect.left + '->' + parts.redgeRect.right + ')',
         true,
         parts.redgeRect.left < parts.thumbRect.right && parts.ledgeRect.left < parts.redgeRect.left
