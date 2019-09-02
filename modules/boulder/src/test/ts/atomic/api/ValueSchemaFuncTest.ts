@@ -10,7 +10,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
     // NOTE: v is not a function here.
     ValueSchema.asRaw(label, processor, v).fold(function (err) {
       const message = ValueSchema.formatError(err);
-      RawAssertions.assertEq(() => label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
+      RawAssertions.assertEq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
     }, function (val) {
       assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(val, null, 2) + ')');
     });
