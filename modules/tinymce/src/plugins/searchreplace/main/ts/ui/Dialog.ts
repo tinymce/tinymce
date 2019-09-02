@@ -191,8 +191,6 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
           Actions.next(editor, currentSearchState);
           updateButtonStates(api);
           break;
-        case 'wholewords':
-          break;
         default:
           break;
       }

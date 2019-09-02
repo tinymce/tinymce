@@ -32,6 +32,7 @@ import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 import { Types } from '@ephox/bridge';
 import { Omit } from '../Omit';
 import { renderFormField } from '../alien/FieldLabeller';
+import { ToggleMenuItemApi } from '@ephox/bridge/lib/main/ts/ephox/bridge/api/Menu';
 
 type ButtonSpec = Omit<Types.Button.Button, 'type'>;
 type FooterButtonSpec = Omit<Types.Dialog.DialogNormalButton, 'type'> | Omit<Types.Dialog.DialogMenuButton, 'type'>;
@@ -145,21 +146,27 @@ const getAction = (name: string, buttonType: string) => {
 
 const getMenuItemAction = (name: string) => {
   return (comp: AlloyComponent) => {
-    AlloyTriggers.emitWith(comp, formActionEvent, {
-      name,
-      value: Representing.getValue(comp)
-    });
+    // AlloyTriggers.emitWith(comp, formActionEvent, {
+    //   name,
+    //   value: Representing.getValue(comp)
+    // });
   };
 };
 
 const getFetch = (items) => {
   return (success) => {
     success(Arr.map(items, (item) => {
+      const text = item.text.fold(() => {
+        return {};
+      }, (text) => {
+        return {
+          text
+        };
+      });
       return {
         type: item.type,
-        text: item.text,
-        onAction: getMenuItemAction(item.name),
-        onSetup: item.onSetup
+        ...text,
+        onAction: getMenuItemAction(item.name)
       };
     }));
   };
