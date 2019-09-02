@@ -5,9 +5,8 @@ const enrichWith = function (label: TestLabel, err: any) {
   if (Type.isString(err)) {
     return TestLabel.asString(label) + '\n' + err;
   } else if (err.name === 'HtmlAssertion') {
-    return Merger.deepMerge(err, {
-      message: TestLabel.asString(label) + '\n' + err.message
-    });
+    err.message = label + '\n' + err.message;
+    return err;
   } else if (Type.isObject(err) && err.message !== undefined) {
     const newError = new Error(err);
     newError.stack = err.stack;

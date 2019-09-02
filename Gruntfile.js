@@ -1,27 +1,10 @@
+// Tests either run in PhantomJs or real browsers
 const runsInPhantom = [
-  '@ephox/acid',
   '@ephox/alloy',
-  '@ephox/boss',
-  '@ephox/boulder',
-  '@ephox/dragster',
-  '@ephox/imagetools',
-  '@ephox/jax',
-  '@ephox/katamari',
   '@ephox/mcagar',
-  '@ephox/polaris',
-  '@ephox/porkbun',
-  '@ephox/robin',
-  '@ephox/snooker',
-];
-
-const runsInBrowser = [
-  '@ephox/agar',
-  '@ephox/bridge',
-  '@ephox/darwin',
-  '@ephox/phoenix',
-  '@ephox/sand',
-  '@ephox/sugar',
-  'tinymce',
+  '@ephox/katamari',
+  '@ephox/imagetools',
+  '@ephox/jax'
 ];
 
 if (!Array.prototype.flatMap) {
@@ -38,6 +21,10 @@ if (!Array.prototype.flatMap) {
 
 const filterChanges = (changes, tests) => {
   return changes.filter((change => tests.indexOf(change.name) > -1));
+};
+
+const filterChangesNot = (changes, badTests) => {
+  return changes.filter((change => badTests.indexOf(change.name) === -1));
 };
 
 /* structure of lerna output
@@ -140,7 +127,7 @@ module.exports = function (grunt) {
   const buckets = grunt.option('buckets') || 1;
 
   const phantomTests = filterChanges(changes, runsInPhantom);
-  const browserTests = filterChanges(changes, runsInBrowser);
+  const browserTests = filterChangesNot(changes, runsInPhantom);
 
   const activeBrowser = grunt.option('bedrock-browser') || 'chrome-headless';
   const activeOs = grunt.option('bedrock-os') || 'tests';

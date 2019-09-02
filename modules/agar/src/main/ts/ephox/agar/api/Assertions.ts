@@ -10,7 +10,7 @@ import * as Logger from './Logger';
 import { assertEq } from './RawAssertions';
 import { Step } from './Step';
 import * as UiFinder from './UiFinder';
-import { TestLabel } from '@ephox/bedrock';
+import { TestLabel, UnitTest } from '@ephox/bedrock';
 
 const toStep = function <U extends any[]> (method: (...args: U) => void) {
   return function <T> (...args: U) {
@@ -28,20 +28,17 @@ const toChain = function <B, C> (method: (label: TestLabel, expected: B, actual:
   };
 };
 
-// Note, this requires changes to tunic
-const textError = function (label: string, expected: string, actual: string) {
-  const err = new Error(label);
-  return ({
-    diff: {
-      expected,
-      actual,
-      comparison: Differ.htmlDiff(expected, actual)
-    },
-    label,
-    stack: err.stack,
-    name: 'HtmlAssertion',
-    message: err.message
-  });
+const textError = function (label: string, expected: string, actual: string): UnitTest.HtmlDiffError {
+  const err: Partial<UnitTest.HtmlDiffError> = new Error(label);
+  err.diff = {
+    expected,
+    actual,
+    comparison: Differ.htmlDiff(expected, actual)
+  };
+  err.label = label;
+  err.name = 'HtmlAssertion';
+
+  return err as UnitTest.HtmlDiffError;
 };
 
 const assertHtml = function (label: TestLabel, expected: string, actual: string) {
