@@ -1,21 +1,5 @@
+// Tests either run in PhantomJs or real browsers
 const runsInPhantom = [
-  '@ephox/acid',
-  '@ephox/alloy',
-  '@ephox/boss',
-  '@ephox/boulder',
-  '@ephox/dragster',
-  '@ephox/imagetools',
-  '@ephox/jax',
-  '@ephox/katamari',
-  '@ephox/mcagar',
-  '@ephox/polaris',
-  '@ephox/porkbun',
-  '@ephox/robin',
-  '@ephox/snooker',
-];
-
-// TODO: Make these tests pass on all browsers
-const doesNotRunInBrowser = [
   '@ephox/alloy',
   '@ephox/mcagar',
   '@ephox/katamari',
@@ -143,7 +127,7 @@ module.exports = function (grunt) {
   const buckets = grunt.option('buckets') || 1;
 
   const phantomTests = filterChanges(changes, runsInPhantom);
-  const browserTests = filterChangesNot(changes, doesNotRunInBrowser);
+  const browserTests = filterChangesNot(changes, runsInPhantom);
 
   const activeBrowser = grunt.option('bedrock-browser') || 'chrome-headless';
   const activeOs = grunt.option('bedrock-os') || 'tests';
