@@ -71,7 +71,7 @@ const assertHtmlStructure2 = function (label: TestLabel, expected: string, actua
 const assertPresence = function (label: TestLabel, expected: Record<string, number>, container: Element) {
   Obj.each(expected, function (num: number, selector: string) {
     const actual = UiFinder.findAllIn(container, selector).length;
-    assertEq('Did not find ' + num + ' of ' + selector + ', found: ' + actual + '. Test: ' + label, num, actual);
+    assertEq(TestLabel.concat('Did not find ' + num + ' of ' + selector + ', found: ' + actual + '. Test: ', label), num, actual);
   });
 };
 
