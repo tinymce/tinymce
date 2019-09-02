@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Option, Fun } from '@ephox/katamari';
 import { FieldSchema } from '@ephox/boulder';
 
 import { DialogToggleMenuItemApi, dialogToggleMenuItemSchema } from './ToggleMenuItem';
@@ -10,6 +10,7 @@ export interface BaseDialogMenuButtonApi {
   tooltip?: string;
   icon?: string;
   items: DialogMenuButtonItemTypes[];
+  onSetup?: (api: BaseDialogMenuButtonInstanceApi) => (api: BaseDialogMenuButtonInstanceApi) => void;
 }
 
 export interface BaseDialogMenuButton {
@@ -17,6 +18,7 @@ export interface BaseDialogMenuButton {
   tooltip: Option<string>;
   icon: Option<string>;
   items: DialogMenuButtonItemTypes[];
+  onSetup: (api: BaseDialogMenuButtonInstanceApi) => (api: BaseDialogMenuButtonInstanceApi) => void;
 }
 
 export interface BaseDialogMenuButtonInstanceApi {
@@ -30,5 +32,6 @@ export const baseDialogMenuButtonFields = [
   FieldSchema.optionString('text'),
   FieldSchema.optionString('tooltip'),
   FieldSchema.optionString('icon'),
-  FieldSchema.strictArrayOf('items', dialogToggleMenuItemSchema)
+  FieldSchema.strictArrayOf('items', dialogToggleMenuItemSchema),
+  FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
 ];

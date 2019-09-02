@@ -129,28 +129,17 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
         icon: 'preferences',
         tooltip: 'Preferences',
         align: 'start',
-        fetch: (done) => {
-          done([
-            {
-              type: 'togglemenuitem',
-              text: 'Match case',
-              onAction: (api) => {
-                matchcase.set(!matchcase.get());
-                dialogApi.on((dApi) => dApi.focus('options'));
-              },
-              active: matchcase.get()
-            },
-            {
-              type: 'togglemenuitem',
-              text: 'Find whole words only',
-              onAction: (api) => {
-                wholewords.set(!wholewords.get());
-                dialogApi.on((dApi) => dApi.focus('options'));
-              },
-              active: wholewords.get()
-            }
-          ]);
-        }
+        items: [
+          {
+            type: 'togglemenuitem',
+            name: 'matchcase',
+            text: 'Match case'
+          }, {
+            type: 'togglemenuitem',
+            name: 'wholewords',
+            text: 'Find whole words only'
+          }
+        ]
       },
       {
         type: 'custom',
@@ -201,6 +190,8 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
         case 'next':
           Actions.next(editor, currentSearchState);
           updateButtonStates(api);
+          break;
+        case 'wholewords':
           break;
         default:
           break;

@@ -8,7 +8,6 @@ export interface DialogToggleMenuItemApi extends CommonMenuItemApi {
   name: string;
   active?: boolean;
   onSetup?: (api: DialogToggleMenuItemInstanceApi) => void;
-  onAction: (api: DialogToggleMenuItemInstanceApi) => void;
 }
 
 export interface DialogToggleMenuItemInstanceApi extends CommonMenuItemInstanceApi {
@@ -21,15 +20,13 @@ export interface DialogToggleMenuItem extends CommonMenuItem {
   name: Option<string>;
   active: boolean;
   onSetup: (api: DialogToggleMenuItemInstanceApi) => (api: DialogToggleMenuItemInstanceApi) => void;
-  onAction: (api: DialogToggleMenuItemInstanceApi) => void;
 }
 
 export const dialogToggleMenuItemSchema = ValueSchema.objOf([
   FieldSchema.strictString('type'),
   FieldSchema.optionString('name'),
   FieldSchema.defaultedBoolean('active', false),
-  FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
-  FieldSchema.strictFunction('onAction')
+  FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
 ].concat(commonMenuItemFields));
 
 export const createToggleMenuItem = (spec: DialogToggleMenuItemApi): Result<DialogToggleMenuItem, ValueSchema.SchemaError<any>> => {

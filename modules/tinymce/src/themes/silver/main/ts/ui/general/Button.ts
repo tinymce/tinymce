@@ -14,10 +14,11 @@ import {
   Button as AlloyButton,
   FormField as AlloyFormField,
   SketchSpec,
-  Tabstopping
+  Tabstopping,
+  Representing
 } from '@ephox/alloy';
 import { console } from '@ephox/dom-globals';
-import { Merger, Option } from '@ephox/katamari';
+import { Merger, Option, Arr } from '@ephox/katamari';
 import { formActionEvent, formCancelEvent, formSubmitEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import { UiFactoryBackstageProviders, UiFactoryBackstage } from '../../backstage/Backstage';
@@ -142,6 +143,28 @@ const getAction = (name: string, buttonType: string) => {
   };
 };
 
+const getMenuItemAction = (name: string) => {
+  return (comp: AlloyComponent) => {
+    AlloyTriggers.emitWith(comp, formActionEvent, {
+      name,
+      value: Representing.getValue(comp)
+    });
+  };
+};
+
+const getFetch = (items) => {
+  return (success) => {
+    success(Arr.map(items, (item) => {
+      return {
+        type: item.type,
+        text: item.text,
+        onAction: getMenuItemAction(item.name),
+        onSetup: item.onSetup
+      };
+    }));
+  };
+};
+
 const isMenuFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Types.Dialog.DialogMenuButton => {
   return buttonType === 'menu';
 };
@@ -152,7 +175,11 @@ const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): s
 
 export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, backstage: UiFactoryBackstage): SketchSpec => {
   if (isMenuFooterButtonSpec(spec, buttonType)) {
-    return renderMenuButton(spec, ToolbarButtonClasses.Button, backstage, Option.none());
+    const fixedSpec = {
+      ...spec,
+      fetch: getFetch(spec.items)
+    };
+    return renderMenuButton(fixedSpec, ToolbarButtonClasses.Button, backstage, Option.none());
   } else if (isNormalFooterButtonSpec(spec, buttonType)) {
     const action = getAction(spec.name, buttonType);
     const buttonSpec = {
