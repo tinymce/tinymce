@@ -113,8 +113,7 @@ const build = (spec): AlloyComponent => {
     return info.apis;
   };
 
-  // TYPIFY
-  const readState = (behaviourName: string): Option<any> => {
+  const readState = (behaviourName: string): any => {
     return bData[behaviourName]().map((b) => {
       return b.state.readState();
     }).getOr('not enabled');

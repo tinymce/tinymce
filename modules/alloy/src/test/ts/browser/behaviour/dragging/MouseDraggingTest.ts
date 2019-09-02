@@ -122,7 +122,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
             return Result.error('No left,top information yet');
           });
         }),
-        Guard.tryUntil('Waiting for position data to record', 100, 1000)
+        Guard.tryUntil('Waiting for position data to record')
       )
     ]);
 
@@ -130,7 +130,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
       NamedChain.direct('blocker', Mouse.cMouseUp, '_'),
       NamedChain.direct('container', Chain.control(
         UiFinder.cFindIn('.test-blocker'),
-        Guard.tryUntilNot('There should no longer be a blocker', 100, 100)
+        Guard.tryUntilNot('There should no longer be a blocker')
       ), 'blocker'),
 
       // When testing bounds/pinning, we need every browser to behave identically, so we reset positions

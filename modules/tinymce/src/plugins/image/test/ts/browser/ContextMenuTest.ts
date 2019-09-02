@@ -1,10 +1,11 @@
-import { Chain, Keyboard, Keys, Log, Mouse, Pipeline, UnitTest } from '@ephox/agar';
+import { Chain, Keyboard, Keys, Log, Mouse, Pipeline } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.ContextMenuTest', (success, failure) => {
   SilverTheme();

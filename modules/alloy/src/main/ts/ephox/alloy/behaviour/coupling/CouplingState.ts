@@ -27,7 +27,7 @@ const init = (spec: CouplingConfigSpec) => {
     }
   };
 
-  const readState = Fun.constant({ });
+  const readState = Fun.constant<any>({ });
 
   return nuState({
     readState,

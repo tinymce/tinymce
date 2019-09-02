@@ -76,7 +76,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
         return s.element('body', {
           children: expected(s, str, arr)
         });
-      })), 100, 1000);
+      })));
     };
 
     const sTriggerAndAssertInitialContent = (template?: string, elementPath?: number[], expected?: (s, str, arr) => StructAssert[]) => {

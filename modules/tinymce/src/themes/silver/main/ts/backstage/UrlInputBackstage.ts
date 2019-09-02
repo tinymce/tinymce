@@ -127,8 +127,8 @@ export const getLinkInformation = (editor: Editor): Option<LinkInformation> => {
 };
 
 export const getValidationHandler = (editor: Editor): Option<UrlValidationHandler> => {
-  const validatorHandler = editor.settings.filepicker_validator_handler;
-  return Type.isFunction(validatorHandler) ? Option.some(validatorHandler) : Option.none();
+  const optValidator = Option.from(editor.settings.file_picker_validator_handler).filter(Type.isFunction);
+  return optValidator.orThunk(() => Option.from(editor.settings.filepicker_validator_handler).filter(Type.isFunction));
 };
 
 export const getUrlPickerTypes = (editor: Editor): boolean | Record<string, boolean> => {

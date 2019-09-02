@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.SelectionToolbarTest', (su
             })
           )
         ]),
-        Guard.tryUntil('wait for toolbar button state', 100, 1000)
+        Guard.tryUntil('wait for toolbar button state')
       )
     ]);
   };

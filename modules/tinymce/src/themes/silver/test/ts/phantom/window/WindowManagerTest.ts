@@ -56,9 +56,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
     Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
     Waiter.sTryUntil(
       'Waiting for blocker to disappear after clicking close',
-      UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap'),
-      100,
-      1000
+      UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap')
     )
   ]);
 
@@ -72,9 +70,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
     GeneralSteps.sequence([
       Waiter.sTryUntil(
         'Waiting for any other dialogs to disappear',
-        UiFinder.sNotExists(Body.body(), '.tox-button--icon[aria-label="Close"]'),
-        100,
-        1000
+        UiFinder.sNotExists(Body.body(), '.tox-button--icon[aria-label="Close"]')
       ),
       drag ? sSetupDialogWithDragging(conf) : sSetupDialogWithoutDragging(conf),
       UiFinder.sWaitFor('Waiting for dialog to appear', Body.body(), '.tox-button--icon[aria-label="Close"]'),

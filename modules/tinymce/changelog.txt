@@ -1,5 +1,9 @@
-Version 5.0.15 (TBD)
-
+Version 5.0.15 (2019-09-02)
+    Added a dark `content_css` skin to go with the dark UI skin #TINY-3743
+    Changed the enabled state on toolbar buttons so they don't get the hover effect #TINY-3974
+    Fixed missing CSS active state on toolbar buttons #TINY-3966
+    Fixed `onChange` callback not firing for the colorinput dialog component #TINY-3968
+    Fixed context toolbars not showing in fullscreen mode #TINY-4023
 Version 5.0.14 (2019-08-19)
     Added an API to reload the autocompleter menu with additional fetch metadata #MENTIONS-17
     Fixed missing toolbar button border styling options #TINY-3965

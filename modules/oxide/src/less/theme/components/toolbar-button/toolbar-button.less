@@ -95,32 +95,28 @@
     width: inherit;
   }
 
-  // An toggle on/off button's on state.
-  .tox-tbtn--enabled {
-    background: @toolbar-button-enabled-background-color;
-    border: @toolbar-button-enabled-border;
-    box-shadow: @toolbar-button-enabled-box-shadow;
-    color: @toolbar-button-enabled-text-color;
-
-    > * {
-      transform: @toolbar-button-enabled-transform;
-    }
-
-    svg {
-      fill: @toolbar-button-enabled-icon-color;
-    }
-  }
-
   .tox-tbtn:focus {
     background: @toolbar-button-focus-background-color;
     border: @toolbar-button-focus-border;
     box-shadow: @toolbar-button-focus-box-shadow;
   }
 
+  .tox-tbtn:hover {
+    background: @toolbar-button-hover-background-color;
+    border: @toolbar-button-hover-border;
+    box-shadow: @toolbar-button-hover-box-shadow;
+    color: @toolbar-button-hover-text-color;
+
+    svg {
+      fill: @toolbar-button-hover-icon-color;
+    }
+  }
+
   .tox-tbtn:active {
     background: @toolbar-button-active-background-color;
     border: @toolbar-button-active-border;
     box-shadow: @toolbar-button-active-box-shadow;
+    color: @toolbar-button-active-text-color;
   }
 
   .tox-tbtn--disabled,
@@ -140,14 +136,22 @@
     }
   }
 
-  .tox-tbtn:hover:not(.tox-tbtn--disabled) {
-    background: @toolbar-button-hover-background-color;
-    border: @toolbar-button-hover-border;
-    box-shadow: @toolbar-button-hover-box-shadow;
-    color: @toolbar-button-hover-text-color;
+  // An toggle on/off button's on state.
+  .tox-tbtn--enabled,
+  .tox-tbtn--enabled:hover {
+    background: @toolbar-button-enabled-background-color;
+    border: @toolbar-button-enabled-border;
+    box-shadow: @toolbar-button-enabled-box-shadow;
+    color: @toolbar-button-enabled-text-color;
 
-    svg {
-      fill: @toolbar-button-hover-icon-color;
+    > * {
+      transform: @toolbar-button-enabled-transform;
+    }
+
+    // Disable stylelint below because we're mixing the :hover modifier with the "--enabled" class
+    // since they need to be kept the same/use the same rules
+    svg { /* stylelint-disable-line no-descending-specificity */
+      fill: @toolbar-button-enabled-icon-color;
     }
   }
 
@@ -156,14 +160,6 @@
 
     svg {
       fill: @toolbar-button-focus-icon-color;
-    }
-  }
-
-  .tox-tbtn:active:not(.tox-tbtn--disabled) {
-    color: @toolbar-button-active-text-color;
-
-    svg {
-      fill: @toolbar-button-active-icon-color;
     }
   }
 

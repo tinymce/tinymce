@@ -53,27 +53,21 @@ UnitTest.asynctest('FocusToolsTest', function (success, failure) {
     Step.control(
       FocusTools.sIsOn('tryUntilNotCheck (sIsOn)', Element.fromTag('span')),
       Guard.tryUntilNot(
-        'Focus should not be on something that is not in the DOM',
-        100,
-        1000
+        'Focus should not be on something that is not in the DOM'
       )
     ),
 
     Step.control(
       FocusTools.sIsOnSelector('tryUntilNotCheck (sIsOnSelector)', doc, '.not-really-there'),
       Guard.tryUntilNot(
-        'Focus should not be on something that is not there',
-        100,
-        1000
+        'Focus should not be on something that is not there'
       )
     ),
 
     Step.control(
       FocusTools.sTryOnSelector('tryUntilNotCheck (sTryOnSelector)', doc, '.not-really-there'),
       Guard.tryUntilNot(
-        'Focus should not be on something that is not there',
-        100,
-        1000
+        'Focus should not be on something that is not there'
       )
     ),
 

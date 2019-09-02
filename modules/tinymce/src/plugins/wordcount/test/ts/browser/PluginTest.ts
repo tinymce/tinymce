@@ -8,7 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, failure) => {
 
-  Plugin();
+  Plugin(2);
   Theme();
 
   const sReset = function (tinyApis) {
@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, fai
   };
 
   const sWaitForWordcount = function (num) {
-    return Waiter.sTryUntil('wordcount did not change', sAssertWordcount(num), 100, 3000);
+    return Waiter.sTryUntil('wordcount did not change', sAssertWordcount(num));
   };
 
   const sFakeTyping = function (editor, str) {

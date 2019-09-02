@@ -26,7 +26,8 @@
     "no-console": true,
     "no-bitwise": false,
     "no-duplicate-imports": true,
-    "no-namespace": false
+    "no-namespace": false,
+    "interface-over-type-literal": false
   },
   "alwaysShowStatus": true,
   "rulesDirectory": []

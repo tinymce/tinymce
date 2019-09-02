@@ -124,7 +124,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
           Logger.t(
             'Wait and ensure menu does not reappear when second input triggers',
             GeneralSteps.sequence([
-              Step.wait(1500),
+              Step.wait(500),
               UiFinder.sNotExists(component.element(), '[role="menu"]')
             ])
           ),

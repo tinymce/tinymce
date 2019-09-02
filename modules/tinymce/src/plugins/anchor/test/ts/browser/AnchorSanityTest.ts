@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest.js', (succes
         Waiter.sTryUntil('wait for anchor',
           tinyApis.sAssertContentPresence(
             { 'a.mce-item-anchor': 1 }
-          ), 100, 4000
+          )
         )
     ])
     , onSuccess, onFailure);

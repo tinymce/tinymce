@@ -38,7 +38,7 @@ UnitTest.asynctest('Browser Test: Selection.getAtPoint', function () {
       } finally {
         Remove.remove(iframe);
       }
-    }, 100);
+    }, 50);
   });
 
   const checks = function () {

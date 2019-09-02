@@ -26,9 +26,7 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
     Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
     Waiter.sTryUntil(
       'Waiting for blocker to disappear after clicking close',
-      UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap'),
-      100,
-      1000
+      UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap')
     )
   ]);
 
@@ -149,9 +147,7 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
 
   const sWaitForDialog = Waiter.sTryUntil(
     'confirm dialog shows',
-    UiFinder.sExists(Body.body(), '.tox-dialog__body'),
-    100,
-    10000
+    UiFinder.sExists(Body.body(), '.tox-dialog__body')
   );
 
   const sInsertTheCorrectMessage = (label: string) => {
@@ -197,9 +193,7 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
       Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
       Waiter.sTryUntil(
         'Waiting for blocker to disappear after clicking close',
-        UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap'),
-        100,
-        1000
+        UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap')
       ),
       Step.sync(() => {
         Assertions.assertEq('Clicking on close should call the callback fn once', 1, calls);

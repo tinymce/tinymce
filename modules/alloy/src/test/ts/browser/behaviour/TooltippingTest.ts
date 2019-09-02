@@ -58,7 +58,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
         containerBehaviours: Behaviour.derive([
           Tooltipping.config({
             lazySink,
-            delay: 100,
+            delay: 10,
             tooltipDom: {
               tag: 'span',
             },
@@ -108,9 +108,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
           });
         }),
         memSink.get(component).element()
-      ),
-      100,
-      1000
+      )
     );
 
     const sAssertEmptySink = Logger.t(
@@ -173,18 +171,15 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
         'when something else is hovered',
         [
           Mouse.sHoverOn(component.element(), 'button:contains("alpha-html")'),
-          Step.wait(200),
-          sAssertSinkHtml('alpha-tooltip'),
+          Waiter.sTryUntil('alpha-tooltip', sAssertSinkHtml('alpha-tooltip')),
           Mouse.sHoverOn(component.element(), 'span:contains("alpha-tooltip")'),
-          Step.wait(200),
-          Logger.t('Hovering the tooltip itself should not dismiss it', sAssertSinkHtml('alpha-tooltip')),
+          Logger.t('Hovering the tooltip itself should not dismiss it', Waiter.sTryUntil('tt', sAssertSinkHtml('alpha-tooltip'))),
           Chain.asStep({ }, [
             Chain.inject(gui.element()),
             UiFinder.cFindIn('span:contains("alpha-tooltip")'),
             Mouse.cMouseOut
           ]),
-          Step.wait(2000),
-          Logger.t('Hovering outside the tooltip should dismiss it after delay', sAssertEmptySink),
+          Logger.t('Hovering outside the tooltip should dismiss it after delay', Waiter.sTryUntil('emptysing', sAssertEmptySink)),
         ]
       ),
 
@@ -194,10 +189,9 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
           Mouse.sHoverOn(component.element(), 'button:contains("alpha-html")'),
           Step.sync(() => {
             Replacing.remove(component, alphaButton);
-          }),
+          })
           // NOTE: This won't actual fail is this throws an error to the console :( It's
           // disconnected from the event queue.
-          Step.wait(1000)
         ]
       )
     ]);

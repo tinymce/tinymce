@@ -55,8 +55,7 @@ UnitTest.asynctest('RealMouseTest', function (success, failure) {
 
   Pipeline.async({}, [
     RealMouse.sMoveToOn('.other'),
-    // Wait 1 second. Probably don't need to...
-    Step.wait(1000),
+    Step.wait(100),
     RealMouse.sMoveToOn('button[data-test]'),
 
     Chain.asStep(container, [
@@ -68,7 +67,7 @@ UnitTest.asynctest('RealMouseTest', function (success, failure) {
             RawAssertions.assertEq('After hovering', Css.get(other, 'background-color'), Css.get(button, 'background-color'));
           }
         }),
-        Guard.tryUntil('Waiting for button to turn blue', 100, 2000)
+        Guard.tryUntil('Waiting for button to turn blue')
       ),
       Chain.inject(container),
       UiFinder.cFindIn('.click-me'),

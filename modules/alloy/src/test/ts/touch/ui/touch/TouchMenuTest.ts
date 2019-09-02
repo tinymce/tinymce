@@ -160,8 +160,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
       }),
       Waiter.sTryUntil(
         'Waiting for menu to disappear',
-        UiFinder.sNotExists(gui.element(), '[role="menu"]'),
-        100, 1000
+        UiFinder.sNotExists(gui.element(), '[role="menu"]')
       ),
 
       Step.sync(() => {
@@ -175,9 +174,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
 
       Waiter.sTryUntil(
         'Waiting until menu appears',
-        UiFinder.sExists(gui.element(), '[role=menu]'),
-        100,
-        1000
+        UiFinder.sExists(gui.element(), '[role=menu]')
       ),
       store.sAssertEq('Hover on should be fired immediately after longpress menu appears', [ 'onHoverOn' ]),
 

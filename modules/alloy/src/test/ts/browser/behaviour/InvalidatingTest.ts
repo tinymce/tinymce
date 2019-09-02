@@ -62,7 +62,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
             }),
             comp.element()
           ),
-          Guard.tryUntil('valid', 100, 1000)
+          Guard.tryUntil('valid')
         )
       );
     };
@@ -82,7 +82,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
             }),
             comp.element()
           ),
-          Guard.tryUntil('invalid', 100, 100)
+          Guard.tryUntil('invalid')
         )
       );
     };
@@ -106,7 +106,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
               Invalidating.isInvalid(comp)
             );
           }),
-          Guard.tryUntil('invalid status was not: ' + expected, 100, 100)
+          Guard.tryUntil('invalid status was not: ' + expected)
         )
       );
     };
@@ -134,7 +134,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
             }),
             comp.element()
           ),
-          Guard.tryUntil('valid', 100, 100)
+          Guard.tryUntil('valid')
         )
       );
     };
@@ -154,7 +154,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
             }),
             comp.element()
           ),
-          Guard.tryUntil('invalid', 100, 100)
+          Guard.tryUntil('invalid')
         )
       );
     };
@@ -218,7 +218,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       Waiter.sTryUntil(
         'A validation on load is configured, so wait for the first failure',
         sCheckInvalid('Should be invalid on load'),
-        100,
+        10,
         4000
       ),
 

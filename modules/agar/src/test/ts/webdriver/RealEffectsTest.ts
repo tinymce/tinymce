@@ -67,48 +67,46 @@ UnitTest.asynctest('Real Effects Test', function (success, failure) {
 
   Pipeline.async({}, [
     sCreateWorld,
-    Step.wait(2000),
+    Step.wait(200),
     RealKeys.sSendKeysOn('input', [
       RealKeys.text('I am typing thos')
     ]),
     sCheckInput('Initial typing', 'I am typing thos'),
-    Step.wait(100),
+    Step.wait(50),
     RealKeys.sSendKeysOn('input', [
       RealKeys.backspace(),
       RealKeys.backspace()
     ]),
     sCheckInput('After backspacing incorrect letters', 'I am typing th'),
-    Step.wait(100),
+    Step.wait(50),
     RealKeys.sSendKeysOn('input', [
       RealKeys.text('is')
     ]),
     sCheckInput('After correcting "this"', 'I am typing this'),
-    Step.wait(100),
+    Step.wait(50),
     RealKeys.sSendKeysOn('input', [
       RealKeys.combo({ ctrlKey: true }, 'a')
     ]),
-    Step.wait(100),
+    Step.wait(50),
     RealClipboard.sCopy('input'),
     sCheckInput('After triggering copy', 'I am typing this'),
 
-    Step.wait(100),
+    Step.wait(50),
     RealKeys.sSendKeysOn('input', [
       RealKeys.backspace()
     ]),
     sCheckInput('After pressing Backspace on Select All', ''),
-    Step.wait(100),
+    Step.wait(50),
     RealClipboard.sPaste('input'),
     sCheckInput('Post paste', 'I am typing this'),
-    Step.wait(1000),
+    Step.wait(100),
     RealMouse.sMoveToOn('input'),
     sCheckButtonBorder('Checking initial state of button border', 'rgb(0, 0, 0)'),
 
     RealMouse.sMoveToOn('button.test'),
     Waiter.sTryUntil(
       'Waiting for hovered state',
-      sCheckButtonBorder('Checking hovered state of button border', 'rgb(255, 255, 255)'),
-      100,
-      1000
+      sCheckButtonBorder('Checking hovered state of button border', 'rgb(255, 255, 255)')
     )
   ], function () {
     Remove.remove(container);

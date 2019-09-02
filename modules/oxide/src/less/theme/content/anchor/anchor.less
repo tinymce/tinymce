@@ -12,7 +12,14 @@
 .mce-content-body {
   // Anchor object
   .mce-item-anchor {
-    background: transparent data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/anchor.svg') no-repeat center;
+    & when (@content-ui-darkmode = true) {
+      background: transparent data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/anchor-light.svg') no-repeat center;
+    }
+
+    & when (@content-ui-darkmode = false) {
+      background: transparent data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/anchor.svg') no-repeat center;
+    }
+
     cursor: default;
     display: inline-block;
     height: 12px !important;

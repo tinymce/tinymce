@@ -57,9 +57,7 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
                   });
                 })
               )
-            ]),
-            100,
-            3000
+            ])
           ),
           Step.sync(() => {
             testDialogApi.get().unblock();
@@ -87,9 +85,7 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
                   });
                 })
               )
-            ]),
-            100,
-            3000
+            ])
           )
         ]
       ), onSuccess, onFailure);

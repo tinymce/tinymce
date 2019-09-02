@@ -18,8 +18,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultStylesTest', (succ
       Logger.t('no styles without setting', GeneralSteps.sequence([
         tinyApis.sFocus,
         tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
-        Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")'), 10, 1000),
-        Waiter.sTryUntil('click table grid', tinyUi.sClickOnUi('click table grid', 'div.tox-insert-table-picker div[role="button"]:nth(0)'), 10, 1000), // button for 1x1 table
+        Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")')),
+        Waiter.sTryUntil('click table grid', tinyUi.sClickOnUi('click table grid', 'div.tox-insert-table-picker div[role="button"]:nth(0)')), // button for 1x1 table
         TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, arr) => {
           return s.element('table', {
             styles: {
@@ -56,8 +56,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultStylesTest', (succ
         tinyApis.sFocus,
         tinyApis.sSetSetting('table_default_styles', { border: '3px solid blue' }),
         tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
-        Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")'), 10, 1000),
-        Waiter.sTryUntil('click table grid', tinyUi.sClickOnUi('click table grid', 'div.tox-insert-table-picker div[role="button"]:nth(0)'), 10, 1000), // button for 1x1 table
+        Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")')),
+        Waiter.sTryUntil('click table grid', tinyUi.sClickOnUi('click table grid', 'div.tox-insert-table-picker div[role="button"]:nth(0)')), // button for 1x1 table
         TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, arr) => {
           return s.element('table', {
             styles: {

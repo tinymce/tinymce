@@ -1,4 +1,4 @@
-import { GeneralSteps, Mouse, Step } from '@ephox/agar';
+import { GeneralSteps, Mouse, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -20,7 +20,7 @@ UnitTest.asynctest('StreamingTest', (success, failure) => {
           Streaming.config({
             stream: {
               mode: 'throttle',
-              delay: 500
+              delay: 200
             },
             event: 'click',
             cancelEvent: 'cancel.stream',
@@ -35,34 +35,31 @@ UnitTest.asynctest('StreamingTest', (success, failure) => {
       GeneralSteps.sequenceRepeat(
         5,
         GeneralSteps.sequence([
-          Mouse.sClickOn(gui.element(), 'input'),
-          Step.wait(10)
+          Mouse.sClickOn(gui.element(), 'input')
         ])
       ),
 
-      Step.wait(500),
+      Step.wait(220),
       store.sAssertEq('Should have only fired one event', [ 'onStream' ]),
 
       GeneralSteps.sequenceRepeat(
         5,
         GeneralSteps.sequence([
-          Mouse.sClickOn(gui.element(), 'input'),
-          Step.wait(10)
+          Mouse.sClickOn(gui.element(), 'input')
         ])
       ),
-      Step.wait(500),
+      Step.wait(220),
       store.sAssertEq('Should have only fired two events', [ 'onStream', 'onStream' ]),
 
       // Wait long enough to ensure everything is gone, and then test "cancelling"
       store.sClear,
-      Step.wait(1000),
+      Step.wait(220),
       Mouse.sClickOn(gui.element(), 'input'),
       Step.wait(10),
       Step.sync(() => {
         AlloyTriggers.emit(component, 'cancel.stream');
       }),
-      Step.wait(1000),
-      store.sAssertEq('Event should have been cancelled, so nothing should be in store', [ ]),
+      Waiter.sTryUntil('', store.sAssertEq('Event should have been cancelled, so nothing should be in store', [ ])),
     ];
   }, () => { success(); }, failure);
 });

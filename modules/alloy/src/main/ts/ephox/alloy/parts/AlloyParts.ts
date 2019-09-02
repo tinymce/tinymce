@@ -109,17 +109,16 @@ const getPartOrDie = (component: AlloyComponent, detail: CompositeSketchDetail, 
   return getPart(component, detail, partKey).getOrDie('Could not find part: ' + partKey);
 };
 
-const getParts = (component: AlloyComponent, detail: CompositeSketchDetail, partKeys: string[]): { [key: string]: () => Result<AlloyComponent, string> } => {
-  const r = { };
+const getParts = (component: AlloyComponent, detail: CompositeSketchDetail, partKeys: string[]): Record<string, () => Result<AlloyComponent, string | Error>> => {
+  const r: Record<string, () => Result<AlloyComponent, string | Error>> = { };
   const uids = detail.partUids;
 
   const system = component.getSystem();
   Arr.each(partKeys, (pk) => {
-    r[pk] = system.getByUid(uids[pk]);
+    r[pk] = Fun.constant(system.getByUid(uids[pk]));
   });
 
-  // Structing
-  return Obj.map(r, Fun.constant);
+  return r;
 };
 
 const getAllParts = (component: AlloyComponent, detail: CompositeSketchDetail): Record<string, () => Result<AlloyComponent, string | Error>> => {
@@ -134,16 +133,15 @@ const getAllPartNames = (detail: CompositeSketchDetail) => {
 };
 
 const getPartsOrDie = (component: AlloyComponent, detail: CompositeSketchDetail, partKeys: string[]): Record<string, () => AlloyComponent> => {
-  const r = { };
+  const r: Record<string, () => AlloyComponent> = { };
   const uids = detail.partUids;
 
   const system = component.getSystem();
   Arr.each(partKeys, (pk) => {
-    r[pk] = system.getByUid(uids[pk]).getOrDie();
+    r[pk] = Fun.constant(system.getByUid(uids[pk]).getOrDie());
   });
 
-  // Structing
-  return Obj.map(r, Fun.constant);
+  return r;
 };
 
 const defaultUids = (baseUid: string, partTypes: PartType.PartTypeAdt[]): Record<string, string> => {

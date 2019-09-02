@@ -215,9 +215,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
             cCheckThumbAtRight,
             cCheckThumbAtBottom,
             cCheckValue({x: 200, y: 200})
-          ]),
-          100,
-          1000
+          ])
         )
       ),
 

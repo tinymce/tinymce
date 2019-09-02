@@ -31,9 +31,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.DifferentEmojiDatabaseTest
           ]),
           Waiter.sTryUntil(
             'Wait for emojis to load',
-            UiFinder.sNotExists(Body.body(), '.tox-spinner'),
-            100,
-            1000
+            UiFinder.sNotExists(Body.body(), '.tox-spinner')
           ),
           Chain.asStep(Body.body(), [
             UiFinder.cFindAllIn('[role="tab"]'),

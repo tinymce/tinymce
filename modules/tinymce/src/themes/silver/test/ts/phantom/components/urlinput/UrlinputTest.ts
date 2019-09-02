@@ -86,9 +86,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           UiFinder.sExists(
             sink,
             '.tox-menu .tox-collection__item'
-          ),
-          100,
-          4000
+          )
         ),
 
         Chain.asStep(sink, [
@@ -145,9 +143,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                 throw Error('Menu hasn\'t been updated yet');
               }
             })
-          ]),
-          100,
-          3000
+          ])
         ),
         Chain.asStep(sink, [
           UiFinder.cFindIn('[role="menu"]'),
@@ -216,7 +212,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
 
         Waiter.sTryUntilPredicate('Checking Value.get', () => {
           return 'http://tiny.cloud' === Value.get(input.element());
-        }, 100, 4000),
+        }),
 
         Step.sync(() => {
           const repValue = Representing.getValue(input);

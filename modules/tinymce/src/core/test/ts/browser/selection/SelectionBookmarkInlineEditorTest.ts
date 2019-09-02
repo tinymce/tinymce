@@ -33,7 +33,7 @@ UnitTest.asynctest(
     const sWaitForBookmark = function (editor, startPath, startOffset, endPath, endOffset) {
       return Waiter.sTryUntil('wait for selection', Step.sync(function () {
         assertBookmark(editor, startPath, startOffset, endPath, endOffset);
-      }), 100, 3000);
+      }));
     };
 
     const focusDiv = function () {

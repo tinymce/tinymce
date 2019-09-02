@@ -41,7 +41,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
           destroy() {}
         });
       }
-    }, 500);
+    }, 100);
   }));
 
   TestHelpers.GuiSetup.setup(
@@ -101,9 +101,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
               });
             }),
             component.element()
-          ),
-          500,
-          5000
+          )
         ),
 
         RepresentingSteps.sAssertRoundtrip(

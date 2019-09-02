@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (s
   const sWaitForResizeHandles = function (editor) {
     return Waiter.sTryUntil('Wait for new width value', Step.sync(function () {
       RawAssertions.assertEq('Resize handle should exist', editor.dom.select('#mceResizeHandlenw').length, 1);
-    }), 1, 3000);
+    }));
   };
 
   const sRawAssertImagePresence = function (editor) {
@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (s
         Waiter.sTryUntil(
           'Try assert content',
           sRawAssertImagePresence(editor),
-          100, 3000
+          10, 3000
         )
       ])
     , onSuccess, onFailure);

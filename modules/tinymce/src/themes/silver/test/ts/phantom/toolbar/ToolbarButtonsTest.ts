@@ -331,8 +331,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
             // Menu item selected
             Mouse.sClickOn(component.element(), '.button3-container .tox-split-button .tox-split-button__chevron'),
             Waiter.sTryUntil('Wait for split button menu item to show',
-              Mouse.sClickOn(body, '.tox-collection .tox-collection__item'),
-              100, 1000
+              Mouse.sClickOn(body, '.tox-collection .tox-collection__item')
             ),
             store.sAssertEq('Store should have item action3', [ 'onItemAction.3' ]),
             store.sClear,
@@ -403,8 +402,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
             // Select menu item
             Mouse.sClickOn(component.element(), '.button4-container .tox-mbtn'),
             Waiter.sTryUntil('Wait for button menu to show',
-              Mouse.sClickOn(body, '.tox-collection .tox-collection__item'),
-              100, 1000
+              Mouse.sClickOn(body, '.tox-collection .tox-collection__item')
             ),
             store.sAssertEq('Store should have item action4', [ 'onAction.4' ]),
             store.sClear

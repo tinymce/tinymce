@@ -53,7 +53,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   const getViewportTop = () => {
     // If the toolbar is docked, then treat the bottom as the upper bounds
     const isToolbarDocked = Css.get(Element.fromDom(editor.getContainer()), 'position') === 'fixed';
-    return toolbarOrMenubarEnabled && isToolbarDocked ? editor.getContainer().getBoundingClientRect().bottom : 0;
+    return editor.inline && toolbarOrMenubarEnabled && isToolbarDocked ? editor.getContainer().getBoundingClientRect().bottom : 0;
   };
 
   const shouldContextToolbarHide = (): boolean => {

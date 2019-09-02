@@ -17,9 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
       Mouse.sClickOn(Body.body(), '[aria-label="' + label + '"] > .tox-tbtn + .tox-split-button__chevron'),
       Waiter.sTryUntil(
         `Waiting for ${label} menu to appear`,
-        UiFinder.sExists(Body.body(), '.tox-menu.tox-selected-menu'),
-        100,
-        1000
+        UiFinder.sExists(Body.body(), '.tox-menu.tox-selected-menu')
       )
     ]);
   };

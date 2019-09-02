@@ -34,9 +34,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.JustFirstFieldTest', (success, 
           'Waiting for link to be inserted',
           tinyApis.sAssertContentPresence({
             'a[href="http://goo"]': 1
-          }),
-          100,
-          1000
+          })
         )
       ]),
       TestLinkUi.sClearHistory,

@@ -76,7 +76,7 @@ export interface RawEditorSettings {
   event_root?: string;
   file_picker_callback?: FilePickerCallback;
   file_picker_types?: string;
-  filepicker_validator_handler?: FilePickerValidationCallback;
+  file_picker_validator_handler?: FilePickerValidationCallback;
   fix_list_elements?: boolean;
   fixed_toolbar_container?: string;
   font_formats?: string;
@@ -180,6 +180,7 @@ export interface RawEditorSettings {
   editor_deselector?: string;
   editor_selector?: string;
   elements?: string;
+  filepicker_validator_handler?: FilePickerValidationCallback;
   mode?: 'exact' | 'textareas' | 'specific_textareas';
   types?: Record<string, any>[];
 

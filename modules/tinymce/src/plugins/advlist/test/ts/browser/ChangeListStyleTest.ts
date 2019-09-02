@@ -17,9 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.ChangeListStyleTest', functi
     const sWaitForMenu = () => {
         return Waiter.sTryUntil(
         `Waiting for menu to appear`,
-        UiFinder.sExists(Body.body(), '.tox-menu.tox-selected-menu'),
-        100,
-        1000
+        UiFinder.sExists(Body.body(), '.tox-menu.tox-selected-menu')
       );
     };
 

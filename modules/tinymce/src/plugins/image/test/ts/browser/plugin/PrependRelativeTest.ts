@@ -1,4 +1,4 @@
-import { Chain, Log, Pipeline, UnitTest, UiFinder } from '@ephox/agar';
+import { Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { Editor } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
@@ -15,6 +15,7 @@ import {
   generalTabSelectors,
   silverSettings,
 } from '../../module/Helpers';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Image recognizes relative src url and prepends relative image_prepend_url setting.', (success, failure) => {
   SilverTheme();

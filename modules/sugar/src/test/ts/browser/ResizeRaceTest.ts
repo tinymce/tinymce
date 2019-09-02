@@ -26,5 +26,5 @@ UnitTest.asynctest('ResizeRaceTest', function () {
     } else {
       success();
     }
-  }, 200); // assumes the resize code still uses 100
+  }, 150); // assumes the resize code still uses 100
 });

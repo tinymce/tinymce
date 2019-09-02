@@ -70,6 +70,11 @@ const fail = function <T>(message: string): Step<T, T> {
 
 const pass = sync<any>(GeneralActions.pass);
 
+const predicate = <T> (p: (value: T) => boolean): Step<T, T> =>
+  stateful<T, T>((value: T, next, die) => {
+    p(value) ? next(value) : die('predicate did not succeed');
+  });
+
 export const Step = {
   stateful,
   control,
@@ -81,5 +86,6 @@ export const Step = {
   wait,
   fail,
   pass,
-  raw
+  raw,
+  predicate
 };

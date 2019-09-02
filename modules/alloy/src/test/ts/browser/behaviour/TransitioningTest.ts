@@ -103,8 +103,7 @@ UnitTest.asynctest('TransitioningTest', (success, failure) => {
         store.sAssertEq('Checking state', [
           'finish: beta',
           'gamma->beta'
-        ]),
-        100, 3000
+        ])
       ),
       store.sClear,
       Step.sync(() => {
@@ -115,8 +114,7 @@ UnitTest.asynctest('TransitioningTest', (success, failure) => {
         store.sAssertEq('Checking state', [
           'finish: alpha',
           'beta->alpha'
-        ]),
-        100, 3000
+        ])
       )
     ];
   }, () => { success(); }, failure);

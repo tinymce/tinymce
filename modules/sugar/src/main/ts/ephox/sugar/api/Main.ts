@@ -68,7 +68,7 @@ import * as Scroll from './view/Scroll';
 import * as Visibility from './view/Visibility';
 import * as Width from './view/Width';
 import * as SelectionDirection from '../selection/core/SelectionDirection'; // Used directly by dawin
-import { StructRect, RawRect } from './selection/Rect';
+import { StructRect, RawRect, Rect } from './selection/Rect';
 
 export {
   Compare,
@@ -145,5 +145,6 @@ export {
   Width,
   SelectionDirection,
   StructRect,
-  RawRect
+  RawRect,
+  Rect
 };

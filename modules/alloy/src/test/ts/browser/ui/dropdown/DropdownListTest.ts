@@ -159,9 +159,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
       Keyboard.sKeydown(doc, Keys.escape(), { }),
       Waiter.sTryUntil(
         'Waiting for menu to disappear',
-        FocusTools.sTryOnSelector('Focus should be back on button', doc, 'button'),
-        100,
-        1000
+        FocusTools.sTryOnSelector('Focus should be back on button', doc, 'button')
       ),
 
       UiFinder.sNotExists(gui.element(), '.menu'),
@@ -170,9 +168,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
       Waiter.sTryUntil(
         'Wait until dropdown content loads',
         // Just check the sandbox class is there.
-        UiFinder.sExists(gui.element(), '.my-test-sandbox .menu'),
-        100,
-        1000
+        UiFinder.sExists(gui.element(), '.my-test-sandbox .menu')
       ),
 
       FocusTools.sTryOnSelector(

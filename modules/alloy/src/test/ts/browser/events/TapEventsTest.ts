@@ -1,4 +1,4 @@
-import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
@@ -153,9 +153,7 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
           NativeEvents.touchmove()
         ),
         store.sAssertEq('After touch move, empty', [ ]),
-
-        Step.wait(1000),
-        store.sAssertEq('After touch start > major movement > wait = no longpress', [ ]),
+        Waiter.sTryUntil('After touch start > major movement > wait = no longpress', store.sAssertEq('[]', [])),
         store.sClear
       ])
     ),
@@ -170,10 +168,9 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
         ),
         store.sAssertEq('After touch start, empty', [ ]),
 
-        Step.wait(1000),
-        store.sAssertEq('After touch start > major movement > wait = no longpress', [
+        Waiter.sTryUntil('After touch start > major movement > wait = no longpress', store.sAssertEq('', [
           SystemEvents.longpress()
-        ]),
+        ])),
         store.sClear
       ])
     )

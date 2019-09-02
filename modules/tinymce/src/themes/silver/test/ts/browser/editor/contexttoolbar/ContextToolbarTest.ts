@@ -25,9 +25,7 @@ UnitTest.asynctest('Editor ContextToolbar test', (success, failure) => {
           tinyApis.sSetCursor([ 0, 0 ], 'O'.length),
           Waiter.sTryUntil(
             'Wait for dialog to disappear after nodeChange',
-            UiFinder.sNotExists(Body.body(), '.tox-pop'),
-            100,
-            1000
+            UiFinder.sNotExists(Body.body(), '.tox-pop')
           )
         ])
       ], onSuccess, onFailure);

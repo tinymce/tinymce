@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Chain, Log, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Log, Mouse, NamedChain, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Editor } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
@@ -8,7 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
 
   Theme();
-  Wordcount();
+  Wordcount(5);
 
   const fullStatusbarSpec = (s, str, arr) => {
     return [
@@ -104,12 +104,11 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
       NamedChain.asChain([
         NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
         NamedChain.direct('editor', cSetContent('<p><strong>hello world</strong></p>'), ''),
-        NamedChain.direct('editor', Chain.wait(300), ''),
         NamedChain.direct('editor', cGetContainer, 'editorContainer'),
-        NamedChain.direct('editorContainer', Assertions.cAssertStructure(
+        NamedChain.direct('editorContainer', Waiter.cTryUntil('', Assertions.cAssertStructure(
           structureLabel,
           editorStructure
-        ), 'assertion'),
+        )), 'assertion'),
         NamedChain.output('editor'),
       ]),
       Editor.cRemove
@@ -213,9 +212,8 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
       NamedChain.asChain([
         NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
         NamedChain.direct('editor', cSetContent('<p><strong>hello</strong></p>'), 'content'),
-        NamedChain.direct('editor', Chain.wait(300), 'wait1'),
         NamedChain.direct('editor', cGetContainer, 'editorContainer'),
-        NamedChain.direct('editorContainer', Assertions.cAssertStructure(
+        NamedChain.direct('editorContainer', Waiter.cTryUntil('', Assertions.cAssertStructure(
           'Check p>strong element path',
           ApproxStructure.build((s, str, arr) => {
             return s.element('div', {
@@ -244,11 +242,10 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
               ]
             });
           })
-        ), 'assertion1'),
+        )), 'assertion1'),
         NamedChain.direct('editorContainer', UiFinder.cFindIn('button[aria-label="Bold"]'), 'button'),
         NamedChain.direct('button', Mouse.cTrueClick, 'click'),
-        NamedChain.direct('editor', Chain.wait(300), 'wait2'),
-        NamedChain.direct('editorContainer', Assertions.cAssertStructure(
+        NamedChain.direct('editorContainer', Waiter.cTryUntil('', Assertions.cAssertStructure(
           'Check p element path',
           ApproxStructure.build((s, str, arr) => {
             return s.element('div', {
@@ -275,7 +272,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
               ]
             });
           })
-        ), 'assertion2'),
+        )), 'assertion2'),
         NamedChain.output('editor')
       ]),
       Editor.cRemove

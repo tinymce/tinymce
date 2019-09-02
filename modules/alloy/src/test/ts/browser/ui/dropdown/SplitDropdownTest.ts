@@ -164,9 +164,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
       store.sAssertEq('After clicking on action', [ ]),
       Waiter.sTryUntil(
         'Waiting until menu appears',
-        UiFinder.sExists(gui.element(), '[role="menu"]'),
-        100,
-        1000
+        UiFinder.sExists(gui.element(), '[role="menu"]')
       ),
       FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")'),
       Assertions.sAssertStructure(
@@ -216,9 +214,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
       store.sAssertEq('After down on button', [ ]),
       Waiter.sTryUntil(
         'Waiting until menu appears',
-        UiFinder.sExists(gui.element(), '[role="menu"]'),
-        100,
-        1000
+        UiFinder.sExists(gui.element(), '[role="menu"]')
       ),
       FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")'),
 

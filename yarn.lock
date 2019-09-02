@@ -119,10 +119,10 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@ephox/bedrock@^4.5.3":
-  version "4.5.3"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock/-/bedrock-4.5.3.tgz#19d302f6a363765ce06953461693e103edc3f92e"
-  integrity sha512-5kahsOJCy7CJH/gtYl+GyGygTRoBx277rdidMTlPKgw5EPKJmoGRwl2bwH36vv6mKc0ax7HRqzlyFKdumqBzBQ==
+"@ephox/bedrock@^5.0.3":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock/-/bedrock-5.0.3.tgz#4a1fd19763e596b27b90067fba7561efb591c7cd"
+  integrity sha512-BluFPgeHCgUzoAHThRwU0G8a+UYlaDGtyRJ1KiIcebYUEut+Mxgdoke3iCFR3+YLyl+4PZ6sPfNa+iJWveq1jQ==
   dependencies:
     async "^1.5.2"
     babel-polyfill "^6.23.0"
@@ -134,7 +134,7 @@
     jquery "^3.0.0"
     mkdirp "^0.5.1"
     node-glob "^1.2.0"
-    portfinder "^1.0.9"
+    portfinder "1.0.21"
     raw-loader "^0.5.1"
     recursive-readdir-sync "^1.0.6"
     selenium-webdriver "^3"
@@ -7688,19 +7688,19 @@ plugin-error@^0.1.2:
     arr-union "^2.0.1"
     extend-shallow "^1.1.2"
 
-portfinder@^1.0.17, portfinder@^1.0.20:
-  version "1.0.20"
-  resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.20.tgz#bea68632e54b2e13ab7b0c4775e9b41bf270e44a"
-  integrity sha512-Yxe4mTyDzTd59PZJY4ojZR8F+E5e97iq2ZOHPz3HDgSvYC5siNad2tLooQ5y5QHyQhc3xVqvyk/eNA3wuoa7Sw==
+portfinder@1.0.21:
+  version "1.0.21"
+  resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.21.tgz#60e1397b95ac170749db70034ece306b9a27e324"
+  integrity sha512-ESabpDCzmBS3ekHbmpAIiESq3udRsCBGiBZLsC+HgBKv2ezb0R4oG+7RnYEVZ/ZCfhel5Tx3UzdNWA0Lox2QCA==
   dependencies:
     async "^1.5.2"
     debug "^2.2.0"
     mkdirp "0.5.x"
 
-portfinder@^1.0.9:
-  version "1.0.21"
-  resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.21.tgz#60e1397b95ac170749db70034ece306b9a27e324"
-  integrity sha512-ESabpDCzmBS3ekHbmpAIiESq3udRsCBGiBZLsC+HgBKv2ezb0R4oG+7RnYEVZ/ZCfhel5Tx3UzdNWA0Lox2QCA==
+portfinder@^1.0.17, portfinder@^1.0.20:
+  version "1.0.20"
+  resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.20.tgz#bea68632e54b2e13ab7b0c4775e9b41bf270e44a"
+  integrity sha512-Yxe4mTyDzTd59PZJY4ojZR8F+E5e97iq2ZOHPz3HDgSvYC5siNad2tLooQ5y5QHyQhc3xVqvyk/eNA3wuoa7Sw==
   dependencies:
     async "^1.5.2"
     debug "^2.2.0"

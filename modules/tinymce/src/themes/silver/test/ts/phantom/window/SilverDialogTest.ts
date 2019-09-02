@@ -88,9 +88,7 @@ UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
       store.sAssertEq('Checking stuff', [
         'closeWindow',
         'onClose',
-      ]),
-      100,
-      3000
+      ])
     ),
     Assertions.sAssertStructure('"tox-dialog__scroll-disable" should have been removed from the body',
       ApproxStructure.build((s, str, arr) => {

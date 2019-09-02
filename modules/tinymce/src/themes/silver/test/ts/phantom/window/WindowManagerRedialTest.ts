@@ -196,9 +196,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
       store.sAssertEq('Checking stuff', [
         'closeWindow',
         'onCloseC'
-      ]),
-      100,
-      3000
+      ])
     )
   ], () => {
     helpers.destroy();

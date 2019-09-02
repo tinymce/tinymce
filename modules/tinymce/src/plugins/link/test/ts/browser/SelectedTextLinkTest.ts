@@ -31,9 +31,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.SelectedTextTest', (success, fa
             'p:contains(word)': 1,
             'p:contains(other)': 1,
             'p': 2
-          }),
-          100,
-          1000
+          })
         ),
         TestLinkUi.sClearHistory
       ])
