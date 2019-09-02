@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Disabling, SketchSpec, Tabstopping } from '@ephox/alloy';
+import { AlloyComponent, Disabling, SketchSpec, Tabstopping, AlloyTriggers } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Option } from '@ephox/katamari';
+import { Option, Arr } from '@ephox/katamari';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderCommonDropdown } from '../dropdown/CommonDropdown';
 import * as NestedMenus from '../menus/menu/NestedMenus';
@@ -15,6 +15,7 @@ import ItemResponse from '../menus/item/ItemResponse';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 import { Attr, Class } from '@ephox/sugar';
 import { Omit } from '../Omit';
+import { formActionEvent } from '../general/FormEvents';
 
 export type MenuButtonSpec = Omit<Toolbar.ToolbarMenuButton, 'type'>;
 
@@ -38,7 +39,7 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
   };
 };
 
-const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Option<string>): SketchSpec => {
+const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Option<string>, action?): SketchSpec => {
   return renderCommonDropdown({
       text: spec.text,
       icon: spec.icon,
@@ -47,6 +48,19 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
       role,
       fetch: (callback) => {
         spec.fetch((items) => {
+          if (action) {
+            const fixedItems = Arr.map(items, (item) => {
+              const onAction = (comp: AlloyComponent) => {
+                AlloyTriggers.emitWith(comp, formActionEvent, {
+                  name: item.name,
+                  value: { }
+                });
+              };
+              const fixedItem = item;
+              fixedItem.onAction = onAction;
+              return fixedItem;
+            });
+          }
           callback(
             NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage)
           );

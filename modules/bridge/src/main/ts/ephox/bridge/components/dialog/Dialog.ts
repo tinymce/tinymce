@@ -3,9 +3,9 @@ import { Fun, Id, Result, Option } from '@ephox/katamari';
 import { BodyComponentApi } from './BodyComponent';
 import { Panel, PanelApi, panelSchema } from './Panel';
 import { TabApi, Tab, TabPanel, TabPanelApi, tabPanelSchema } from './TabPanel';
-import { BaseMenuButton, BaseMenuButtonApi, baseMenuButtonFields, BaseMenuButtonInstanceApi, MenuButtonItemTypes } from '../../core/MenuButton';
+import { BaseDialogMenuButton, BaseDialogMenuButtonApi, baseDialogMenuButtonFields, BaseDialogMenuButtonInstanceApi, DialogMenuButtonItemTypes } from './MenuButton';
 
-export type DialogMenuButtonItemTypes = MenuButtonItemTypes;
+export type DialogMenuButtonItemTypes = DialogMenuButtonItemTypes;
 export type SuccessCallback = (menu: string | DialogMenuButtonItemTypes[]) => void;
 
 // Note: This interface doesn't extend from a common button interface as this is only a configuration that specifies a button, but it's not by itself a button.
@@ -22,9 +22,9 @@ export interface DialogNormalButtonApi extends BaseDialogButtonApi {
   text: string;
 }
 
-export interface DialogMenuButtonInstanceApi extends BaseMenuButtonInstanceApi { }
+export interface DialogMenuButtonInstanceApi extends BaseDialogMenuButtonInstanceApi { }
 
-export interface DialogMenuButtonApi extends BaseDialogButtonApi, BaseMenuButtonApi {
+export interface DialogMenuButtonApi extends BaseDialogButtonApi, BaseDialogMenuButtonApi {
   type: 'menu';
   onSetup?: (api: DialogMenuButtonInstanceApi) => (api: DialogMenuButtonInstanceApi) => void;
 }
@@ -119,7 +119,7 @@ export interface DialogNormalButton extends BaseDialogButton {
   text: string;
 }
 
-export interface DialogMenuButton extends BaseDialogButton, BaseMenuButton {
+export interface DialogMenuButton extends BaseDialogButton, BaseDialogMenuButton {
   type: 'menu';
   onSetup: (api: DialogMenuButtonInstanceApi) => (api: DialogMenuButtonInstanceApi) => void;
 }
@@ -168,7 +168,7 @@ const normalButtonFields = [
 const menuButtonFields = [
   FieldSchema.strictStringEnum('type', ['menu']),
   ...baseButtonFields,
-  ...baseMenuButtonFields
+  ...baseDialogMenuButtonFields
 ];
 
 export const dialogButtonSchema = ValueSchema.choose(
