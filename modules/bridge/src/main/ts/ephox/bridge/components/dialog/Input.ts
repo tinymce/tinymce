@@ -4,6 +4,7 @@ import { FormComponentWithLabelApi, FormComponentWithLabel, formComponentWithLab
 
 export interface InputApi extends FormComponentWithLabelApi {
   type: 'input';
+  inputType?: string;
   placeholder?: string;
   maximized?: boolean;
   disabled?: boolean;
@@ -11,12 +12,14 @@ export interface InputApi extends FormComponentWithLabelApi {
 
 export interface Input extends FormComponentWithLabel {
   type: 'input';
+  inputType: Option<string>;
   placeholder: Option<string>;
   maximized: boolean;
   disabled: boolean;
 }
 
 const inputFields = formComponentWithLabelFields.concat([
+  FieldSchema.optionString('inputType'),
   FieldSchema.optionString('placeholder'),
   FieldSchema.defaultedBoolean('maximized', false),
   FieldSchema.defaultedBoolean('disabled', false)
