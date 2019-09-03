@@ -14,11 +14,10 @@ import {
   Button as AlloyButton,
   FormField as AlloyFormField,
   SketchSpec,
-  Tabstopping,
-  Representing
+  Tabstopping
 } from '@ephox/alloy';
 import { console } from '@ephox/dom-globals';
-import { Merger, Option, Arr } from '@ephox/katamari';
+import { Merger, Option, Arr, Cell } from '@ephox/katamari';
 import { formActionEvent, formCancelEvent, formSubmitEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import { UiFactoryBackstageProviders, UiFactoryBackstage } from '../../backstage/Backstage';
@@ -32,7 +31,6 @@ import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 import { Types } from '@ephox/bridge';
 import { Omit } from '../Omit';
 import { renderFormField } from '../alien/FieldLabeller';
-import { ToggleMenuItemApi } from '@ephox/bridge/lib/main/ts/ephox/bridge/api/Menu';
 
 type ButtonSpec = Omit<Types.Button.Button, 'type'>;
 type FooterButtonSpec = Omit<Types.Dialog.DialogNormalButton, 'type'> | Omit<Types.Dialog.DialogMenuButton, 'type'>;
@@ -144,18 +142,27 @@ const getAction = (name: string, buttonType: string) => {
   };
 };
 
-const getMenuItemAction = (name: string) => {
-  return (comp: AlloyComponent) => {
-    // AlloyTriggers.emitWith(comp, formActionEvent, {
-    //   name,
-    //   value: Representing.getValue(comp)
-    // });
-  };
-};
-
 const getFetch = (items) => {
+  const cells = Arr.map(items, (item) => {
+    return Cell<Boolean>(false);
+  });
+
+  const getMenuItemAction = (index) => {
+    return (api) => {
+      const newValue = !api.isActive();
+      api.setActive(newValue);
+      cells[index].set(newValue);
+    };
+  };
+
+  const getMenuItemSetup = (index) => {
+    return (api) => {
+      api.setActive(cells[index].get());
+    };
+  };
+
   return (success) => {
-    success(Arr.map(items, (item) => {
+    success(Arr.map(items, (item, index) => {
       const text = item.text.fold(() => {
         return {};
       }, (text) => {
@@ -166,7 +173,8 @@ const getFetch = (items) => {
       return {
         type: item.type,
         ...text,
-        onAction: getMenuItemAction(item.name)
+        onAction: getMenuItemAction(index),
+        onSetup: getMenuItemSetup(index)
       };
     }));
   };

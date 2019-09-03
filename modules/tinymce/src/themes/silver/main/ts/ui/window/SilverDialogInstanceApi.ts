@@ -15,6 +15,7 @@ import {
   Reflecting,
   Representing,
   TabSection,
+  Toggling,
 } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { DialogManager, Types } from '@ephox/bridge';
@@ -72,6 +73,9 @@ const getDialogApi = <T>(
   const getData = (): T => {
     const root = access.getRoot();
     const valueComp = root.getSystem().isConnected() ? access.getFormWrapper() : root;
+    const footerComp = root.getSystem().isConnected() ? access.getFooter() : root;
+    const footerStuff = Toggling.isOn(footerComp);
+    console.log(footerStuff);
     return Representing.getValue(valueComp);
   };
 
