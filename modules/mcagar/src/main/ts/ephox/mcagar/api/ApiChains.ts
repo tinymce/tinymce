@@ -79,7 +79,7 @@ const cAssertContent = function (expected: string) {
 const cAssertContentPresence = function (expected: Presence) {
   return Chain.op(function (editor) {
     Assertions.assertPresence(
-      'Asserting the presence of selectors inside tiny content. Complete list: ' + JSON.stringify(expected) + '\n',
+      () => 'Asserting the presence of selectors inside tiny content. Complete list: ' + JSON.stringify(expected) + '\n',
       expected,
       lazyBody(editor)
     );
@@ -103,8 +103,8 @@ const assertPath = function (label, root, expPath: number[], expOffset: number, 
     const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
     return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
   };
-  Assertions.assertEq('Assert incorrect for ' + label + '.\n' + message(), true, expected.dom() === actElement);
-  Assertions.assertEq('Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
+  Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom() === actElement);
+  Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
 };
 
 const cAssertSelection = function (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
