@@ -21,8 +21,6 @@ export interface DialogData {
 
 const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchState>) {
   const dialogApi = Singleton.value<Types.Dialog.DialogInstanceApi<DialogData>>();
-  const matchcase = Cell(currentSearchState.get().matchCase);
-  const wholewords = Cell(currentSearchState.get().wholeWord);
   editor.undoManager.add();
 
   const selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
@@ -65,11 +63,11 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     }
 
     // Same search text, so treat the find as a next click instead
-    if (last.text === data.findtext && last.matchCase === matchcase.get() && last.wholeWord === wholewords.get()) {
+    if (last.text === data.findtext && last.matchCase === data.matchcase && last.wholeWord === data.wholewords) {
       Actions.next(editor, currentSearchState);
     } else {
       // Find new matches
-      const count = Actions.find(editor, currentSearchState, data.findtext, matchcase.get(), wholewords.get());
+      const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords);
       if (count <= 0) {
         notFoundAlert(api);
       }
@@ -79,11 +77,13 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     updateButtonStates(api);
   };
 
+  const initialState = currentSearchState.get();
+
   const initialData: DialogData = {
     findtext: selectedText,
     replacetext: '',
-    matchcase: true,
-    wholewords: false
+    wholewords: initialState.wholeWord,
+    matchcase: initialState.matchCase
   };
 
   const spec: Types.Dialog.DialogApi<DialogData> = {

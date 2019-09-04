@@ -17,7 +17,7 @@ import {
   Tabstopping
 } from '@ephox/alloy';
 import { console } from '@ephox/dom-globals';
-import { Merger, Option, Arr, Cell } from '@ephox/katamari';
+import { Merger, Option, Arr } from '@ephox/katamari';
 import { formActionEvent, formCancelEvent, formSubmitEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import { UiFactoryBackstageProviders, UiFactoryBackstage } from '../../backstage/Backstage';
@@ -145,6 +145,10 @@ const getAction = (name: string, buttonType: string) => {
 const getFetch = (items) => {
   const getMenuItemAction = (item) => {
     return (api) => {
+      AlloyTriggers.emitWith(comp, formActionEvent, {
+        name: item.name,
+        value: item.storage.get()
+      });
       const newValue = !api.isActive();
       api.setActive(newValue);
       item.storage.set(newValue);
