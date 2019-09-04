@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed replacing and reflecting losing component state when replacing with the same components.
 - Fixed `MakeshiftAnchor` incorrectly calculating the anchor coordinates in fixed position mode.
 - Fixed custom position bounds being ignored in fixed position mode.
+- Fixed incorrect right/bottom positioning in fixed mode when a scrollbar is visible.
 
 # [4.15.2] - 2019-07-31
 

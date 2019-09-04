@@ -1,5 +1,5 @@
 import { ValueSchema } from '@ephox/boulder';
-import { window } from '@ephox/dom-globals';
+import { document } from '@ephox/dom-globals';
 import { Adt, Fun, Option } from '@ephox/katamari';
 import { Css, Element, Location } from '@ephox/sugar';
 
@@ -16,7 +16,10 @@ import { PositioningConfig } from './PositioningTypes';
 export interface OriginAdt extends Adt { }
 
 const getFixedOrigin = (): OriginAdt => {
-  return Origins.fixed(0, 0, window.innerWidth, window.innerHeight);
+  // Don't use window.innerWidth/innerHeight here, as we don't want to include scrollbars
+  // since the right/bottom position is based on the edge of the scrollbar not the window
+  const html = document.documentElement;
+  return Origins.fixed(0, 0, html.clientWidth, html.clientHeight);
 };
 
 const getRelativeOrigin = (component: AlloyComponent): OriginAdt => {
