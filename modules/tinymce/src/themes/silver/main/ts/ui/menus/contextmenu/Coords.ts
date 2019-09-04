@@ -6,12 +6,18 @@
  */
 
 import { NodeAnchorSpec, MakeshiftAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
+import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { Option } from '@ephox/katamari';
+import { HTMLElement, PointerEvent } from '@ephox/dom-globals';
 
-const nu = function (x, y): MakeshiftAnchorSpec {
+type Position = {
+  x: number;
+  y: number;
+};
+
+const nu = function (x: number, y: number): MakeshiftAnchorSpec {
   return {
     anchor: 'makeshift',
     x,
@@ -19,24 +25,24 @@ const nu = function (x, y): MakeshiftAnchorSpec {
   };
 };
 
-const transpose = function (pos, dx, dy) {
+const transpose = function (pos: Position, dx: number, dy: number) {
   return nu(pos.x + dx, pos.y + dy);
 };
 
-const fromPageXY = function (e) {
+const fromPageXY = function (e: PointerEvent) {
   return nu(e.pageX, e.pageY);
 };
 
-const fromClientXY = function (e) {
+const fromClientXY = function (e: PointerEvent) {
   return nu(e.clientX, e.clientY);
 };
 
-const transposeContentAreaContainer = function (element, pos) {
+const transposeContentAreaContainer = function (element: HTMLElement, pos: Position) {
   const containerPos = DOMUtils.DOM.getPos(element);
   return transpose(pos, containerPos.x, containerPos.y);
 };
 
-export const getPointAnchor = function (editor: Editor, e) {
+export const getPointAnchor = function (editor: Editor, e: PointerEvent) {
   // If the contextmenu event is fired via the editor.fire() API or some other means, fall back to selection anchor
   if (e.type === 'contextmenu') {
     if (editor.inline) {

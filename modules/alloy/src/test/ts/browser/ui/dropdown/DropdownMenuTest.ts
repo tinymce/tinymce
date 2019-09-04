@@ -1,6 +1,6 @@
 import { FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Future, Obj, Result, Option } from '@ephox/katamari';
+import { Arr, Fun, Future, Obj, Result, Option } from '@ephox/katamari';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -21,7 +21,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
     Container.sketch({
       containerBehaviours: Behaviour.derive([
         Positioning.config({
-          useFixed: true
+          useFixed: Fun.always
         })
       ])
     })

@@ -30,16 +30,21 @@ const toggleToolbar = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDeta
 
 const isOpen = (over: AlloyComponent) => over.getSystem().isConnected();
 
+const position = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail, overf: AlloyComponent) => {
+  const sink = detail.lazySink(toolbar).getOrDie();
+  const anchor = detail.getAnchor(toolbar);
+  Positioning.position(sink, anchor, overf);
+};
+
 const refresh = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail) => {
   const overflow = Sandboxing.getState(Coupling.getCoupled(toolbar, 'sandbox'));
   SplitToolbarUtils.refresh(toolbar, detail, overflow, isOpen);
+  overflow.each((overf) => position(toolbar, detail, overf));
+};
 
-  // Position the overflow
-  overflow.each((overf) => {
-    const sink = detail.lazySink(toolbar).getOrDie();
-    const anchor = detail.getAnchor(toolbar);
-    Positioning.position(sink, anchor, overf);
-  });
+const reposition = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail) => {
+  const overflow = Sandboxing.getState(Coupling.getCoupled(toolbar, 'sandbox'));
+  overflow.each((overf) => position(toolbar, detail, overf));
 };
 
 const makeSandbox = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail) => {
@@ -99,13 +104,16 @@ const makeSandbox = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail
 
 const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingToolbarSpec> = (detail, components, spec, externals) => {
   return SplitToolbarBase.spec(detail, components, spec, externals, {
-    refresh,
-    toggleToolbar,
-    getOverflow: (toolbar) => Sandboxing.getState(Coupling.getCoupled(toolbar, 'sandbox')),
     coupling: {
       sandbox (toolbar) {
         return makeSandbox(toolbar, detail);
       }
+    },
+    apis: {
+      refresh: (toolbar) => refresh(toolbar, detail),
+      toggle: (toolbar) => toggleToolbar(toolbar, detail, externals),
+      getOverflow: (toolbar) => Sandboxing.getState(Coupling.getCoupled(toolbar, 'sandbox')),
+      reposition: (toolbar) => reposition(toolbar, detail)
     }
   });
 };
@@ -121,6 +129,9 @@ const SplitFloatingToolbar = Sketcher.composite({
     },
     refresh(apis, toolbar) {
       apis.refresh(toolbar);
+    },
+    reposition(apis, toolbar) {
+      apis.reposition(toolbar);
     },
     getMoreButton(apis, toolbar) {
       return apis.getMoreButton(toolbar);

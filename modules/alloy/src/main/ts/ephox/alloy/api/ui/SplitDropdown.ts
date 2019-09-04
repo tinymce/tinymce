@@ -6,16 +6,18 @@ import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ButtonBase from '../../ui/common/ButtonBase';
 import * as SplitDropdownSchema from '../../ui/schema/SplitDropdownSchema';
-import { SplitDropdownDetail, SplitDropdownSketcher, SplitDropdownSpec } from '../../ui/types/SplitDropdownTypes';
+import { SplitDropdownApis, SplitDropdownDetail, SplitDropdownSketcher, SplitDropdownSpec } from '../../ui/types/SplitDropdownTypes';
 import { Composing } from '../behaviour/Composing';
 import { Coupling } from '../behaviour/Coupling';
 import { Focusing } from '../behaviour/Focusing';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
+import { Sandboxing } from '../behaviour/Sandboxing';
 import { Toggling } from '../behaviour/Toggling';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as Sketcher from './Sketcher';
+import * as TieredMenu from './TieredMenu';
 import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = (detail, components, spec, externals) => {
@@ -57,10 +59,22 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
     ButtonBase.events(Option.some(action))
   );
 
+  const apis: SplitDropdownApis = {
+    repositionMenus: (comp) => {
+      if (Toggling.isOn(comp)) {
+        const sandbox = Coupling.getCoupled(comp, 'sandbox');
+        Sandboxing.getState(sandbox).each((tmenu) => {
+          TieredMenu.tieredMenu.repositionMenus(tmenu);
+        });
+      }
+    }
+  };
+
   return {
     uid: detail.uid,
     dom: detail.dom,
     components,
+    apis,
     eventOrder: {
       ...detail.eventOrder,
       // Order, the button state is toggled first, so assumed !selected means close.
@@ -120,7 +134,10 @@ const SplitDropdown = Sketcher.composite({
   name: 'SplitDropdown',
   configFields: SplitDropdownSchema.schema(),
   partFields: SplitDropdownSchema.parts(),
-  factory
+  factory,
+  apis: {
+    repositionMenus: (apis: SplitDropdownApis, comp) => apis.repositionMenus(comp)
+  }
 }) as SplitDropdownSketcher;
 
 export {

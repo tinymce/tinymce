@@ -32,7 +32,7 @@ export interface AlloyBehaviour<C extends BehaviourConfigSpec, D extends Behavio
 export interface ConfiguredBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail> {
   config: D;
   configAsRaw: () => C;
-  initialConfig: {};
+  initialConfig: C;
   me: AlloyBehaviour<C, D>;
   state: any;
 }

@@ -13,16 +13,14 @@ import { ToolbarGroup } from '../../api/ui/ToolbarGroup';
 import * as AlloyParts from '../../parts/AlloyParts';
 import { SplitToolbarBaseDetail, SplitToolbarBaseSpec } from '../types/SplitToolbarBaseTypes';
 
-type RefreshToolbarFunc<T extends SplitToolbarBaseDetail> = (toolbar: AlloyComponent, details: T) => void;
-type ToggleToolbarFunc<T extends SplitToolbarBaseDetail> = (toolbar: AlloyComponent, details: T, externals) => void;
-
 export interface SpecExtras<T extends SplitToolbarBaseDetail> {
-  refresh: RefreshToolbarFunc<T>;
-  toggleToolbar: ToggleToolbarFunc<T>;
-  getOverflow: (toolbar: AlloyComponent) => Option<AlloyComponent>;
-  coupling: {
-    [key: string]: (comp: AlloyComponent) => AlloySpec
+  apis: {
+    refresh: (toolbar: AlloyComponent) => void;
+    toggle: (toolbar: AlloyComponent) => void;
+    getOverflow: (toolbar: AlloyComponent) => Option<AlloyComponent>;
+    [key: string]: (toolbar: AlloyComponent) => void;
   };
+  coupling: Record<string, (comp: AlloyComponent) => AlloySpec>;
 }
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
@@ -42,15 +40,11 @@ const spec = <T extends SplitToolbarBaseDetail, U extends SplitToolbarBaseSpec>(
 
   const setGroups = (toolbar, groups) => {
     doSetGroups(toolbar, groups);
-    extras.refresh(toolbar, detail);
+    extras.apis.refresh(toolbar);
   };
 
   const getMoreButton = (toolbar) => {
     return AlloyParts.getPart(toolbar, detail, 'overflow-button');
-  };
-
-  const getOverflow = (toolbar) => {
-    return extras.getOverflow(toolbar);
   };
 
   return {
@@ -80,25 +74,17 @@ const spec = <T extends SplitToolbarBaseDetail, U extends SplitToolbarBaseSpec>(
         }),
         AddEventsBehaviour.config('toolbar-toggle-events', [
           AlloyEvents.run(toolbarToggleEvent, (toolbar) => {
-            extras.toggleToolbar(toolbar, detail, externals);
+            extras.apis.toggle(toolbar);
           })
         ])
       ]
     ),
     apis: {
       setGroups,
-      refresh(toolbar) {
-        extras.refresh(toolbar, detail);
-      },
       getMoreButton(toolbar) {
         return getMoreButton(toolbar);
       },
-      getOverflow(toolbar) {
-        return getOverflow(toolbar);
-      },
-      toggle(toolbar) {
-        extras.toggleToolbar(toolbar, detail, externals);
-      }
+      ...extras.apis
     },
 
     domModification: {

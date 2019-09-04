@@ -1,5 +1,5 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import * as ComponentStructure from '../../alien/ComponentStructure';
@@ -53,6 +53,14 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
         anchor: 'submenu',
         item
       }, submenu);
+    },
+
+    onRepositionMenu (tmenu, primaryMenu, submenuTriggers) {
+      const sink = lazySink().getOrDie();
+      Positioning.position(sink, anchor, primaryMenu);
+      Arr.each(submenuTriggers, (st) => {
+        Positioning.position(sink, { anchor: 'submenu', item: st.triggeringItem }, st.triggeredMenu);
+      });
     },
   });
 };

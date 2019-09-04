@@ -21,6 +21,7 @@ import {
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Id, Option } from '@ephox/katamari';
 
+import { renderHeader } from '../header/CommonHeader';
 import SilverMenubar from '../menus/menubar/SilverMenubar';
 import * as Sidebar from '../sidebar/Sidebar';
 import * as Throbber from '../throbber/Throbber';
@@ -42,6 +43,7 @@ export interface OuterContainerSketch extends Sketcher.CompositeSketch<OuterCont
 }
 
 interface OuterContainerApis {
+  getHeader: (comp: AlloyComponent) => Option<AlloyComponent>;
   getSocket: (comp: AlloyComponent) => Option<AlloyComponent>;
   setSidebar: (comp: AlloyComponent, panelConfigs: Sidebar.SidebarConfig) => void;
   toggleSidebar: (comp: AlloyComponent, name: string) => void;
@@ -83,6 +85,9 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
       return Composite.parts.getPart(comp, detail, 'sidebar').bind(
         Sidebar.whichSidebar
       ).getOrNull();
+    },
+    getHeader(comp) {
+      return Composite.parts.getPart(comp, detail, 'header');
     },
     getToolbar(comp) {
       return Composite.parts.getPart(comp, detail, 'toolbar');
@@ -228,6 +233,16 @@ const partToolbar = Composite.partType.optional({
   ]
 });
 
+const partHeader = Composite.partType.optional({
+  factory: {
+    sketch: renderHeader
+  },
+  name: 'header',
+  schema: [
+    FieldSchema.strict('dom')
+  ]
+});
+
 const partSocket = Composite.partType.optional({
   // factory: Fun.identity,
   name: 'socket',
@@ -264,6 +279,7 @@ export default Sketcher.composite({
     FieldSchema.strict('behaviours')
   ],
   partFields: [
+    partHeader,
     partMenubar,
     partToolbar,
     partMultipleToolbar,
@@ -284,6 +300,9 @@ export default Sketcher.composite({
     },
     whichSidebar(apis, comp) {
       return apis.whichSidebar(comp);
+    },
+    getHeader(apis, comp) {
+      return apis.getHeader(comp);
     },
     getToolbar(apis, comp) {
       return apis.getToolbar(comp);

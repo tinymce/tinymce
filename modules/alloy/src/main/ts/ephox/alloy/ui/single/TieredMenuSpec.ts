@@ -81,6 +81,16 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     return Representing.getValue(item).value;
   };
 
+  // Find the first item with value `itemValue` in any of the menus inside this tiered menu structure
+  const getItemByValue = (container: AlloyComponent, menus: AlloyComponent[], itemValue: string): Option<AlloyComponent> => {
+    // Can *greatly* improve the performance of this by calculating things up front.
+    return Options.findMap(menus, (menu) => {
+      if (! menu.getSystem().isConnected()) { return Option.none(); }
+      const candidates = Highlighting.getCandidates(menu);
+      return Arr.find(candidates, (c) => getItemValue(c) === itemValue);
+    });
+  };
+
   const toDirectory = (container: AlloyComponent): Record<string, string[]> => {
     return Obj.map(detail.data.menus, (data, menuName) => {
       return Arr.bind(data.items, (item) => {
@@ -266,12 +276,16 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   const events = AlloyEvents.derive([
     // Set "active-menu" for the menu with focus
     AlloyEvents.run<CustomEvent>(MenuEvents.focus(), (sandbox, simulatedEvent) => {
-      const menu = simulatedEvent.event().menu();
-      Highlighting.highlight(sandbox, menu);
+      // Ensure the item is actually part of the menu
+      const item = simulatedEvent.event().item();
+      layeredState.lookupItem(getItemValue(item)).each(() => {
+        const menu = simulatedEvent.event().menu();
+        Highlighting.highlight(sandbox, menu);
 
-      const value = getItemValue(simulatedEvent.event().item());
-      layeredState.refresh(value).each((path) => {
-        return closeOthers(sandbox, layeredState, path);
+        const value = getItemValue(simulatedEvent.event().item());
+        layeredState.refresh(value).each((path) => {
+          return closeOthers(sandbox, layeredState, path);
+        });
       });
     }),
 
@@ -317,11 +331,13 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     })
   ] : [ ]));
 
+  const getActiveItem = (container: AlloyComponent): Option<AlloyComponent> => {
+    return Highlighting.getHighlighted(container).bind(Highlighting.getHighlighted);
+  };
+
   const collapseMenuApi = (container: AlloyComponent) => {
-    Highlighting.getHighlighted(container).each((currentMenu) => {
-      Highlighting.getHighlighted(currentMenu).each((currentItem) => {
-        collapseLeft(container, currentItem);
-      });
+    getActiveItem(container).each((currentItem) => {
+      collapseLeft(container, currentItem);
     });
   };
 
@@ -331,9 +347,46 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     });
   };
 
+  const extractMenuFromContainer = (container: AlloyComponent) => {
+    return Option.from(container.components()[0]).filter((comp) => {
+      return Attr.get(comp.element(), 'role') === 'menu';
+    });
+  };
+
+  const repositionMenus = (container: AlloyComponent): void => {
+    // Get the primary menu
+    const maybeActivePrimary = layeredState.getPrimary().bind((primary) => {
+      // Get the triggering path (item, menu) up to the active item
+      return getActiveItem(container).bind((currentItem) => {
+        const itemValue = getItemValue(currentItem);
+        const allMenus: MenuPreparation[] = Obj.values(layeredState.getMenus());
+        const preparedMenus: AlloyComponent[] = Options.cat(
+          Arr.map(allMenus, LayeredState.extractPreparedMenu)
+        );
+        return layeredState.getTriggeringPath(itemValue, (v) => {
+          return getItemByValue(container, preparedMenus, v);
+        });
+      }).map((triggeringPath) => {
+        return { primary, triggeringPath };
+      });
+    });
+
+    maybeActivePrimary.fold(() => {
+        // When a menu is open but there is no activeItem, we get the menu from the container.
+        extractMenuFromContainer(container).each((primaryMenu) => {
+          detail.onRepositionMenu(container, primaryMenu, []);
+        });
+      },
+      ({ primary, triggeringPath }) => {
+        // Refresh all the menus up to the active item
+        detail.onRepositionMenu(container, primary, triggeringPath);
+      });
+  };
+
   const apis: TieredMenuApis = {
     collapseMenu: collapseMenuApi,
-    highlightPrimary
+    highlightPrimary,
+    repositionMenus
   };
 
   return {

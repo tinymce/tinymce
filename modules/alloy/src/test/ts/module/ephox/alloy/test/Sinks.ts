@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import { Compare, PredicateExists } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -17,7 +18,7 @@ const fixedSink = () => {
       uid: 'fixed-sink',
       containerBehaviours: Behaviour.derive([
         Positioning.config({
-          useFixed: true
+          useFixed: Fun.always
         })
       ])
     })
@@ -36,7 +37,7 @@ const relativeSink = () => {
       uid: 'relative-sink',
       containerBehaviours: Behaviour.derive([
         Positioning.config({
-          useFixed: true
+          useFixed: Fun.always
         })
       ])
     })

@@ -3,6 +3,7 @@ import { document } from '@ephox/dom-globals';
 import { Adt, Fun, Option } from '@ephox/katamari';
 import { Css, Element, Location } from '@ephox/sugar';
 
+import * as AriaFocus from '../../alien/AriaFocus';
 import { Bounds, box } from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Stateless } from '../../behaviour/common/BehaviourState';
@@ -48,46 +49,48 @@ const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig,
 const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, bounds: Option<Bounds>): void => {
   const anchorage: AnchorDetail<any> = ValueSchema.asRawOrDie('positioning anchor.info', AnchorSchema, anchor);
 
-  // We set it to be fixed, so that it doesn't interfere with the layout of anything
-  // when calculating anchors
-  Css.set(placee.element(), 'position', 'fixed');
+  // Preserve the focus as IE 11 loses it when setting visibility to hidden
+  AriaFocus.preserve(() => {
+    // We set it to be fixed, so that it doesn't interfere with the layout of anything
+    // when calculating anchors
+    Css.set(placee.element(), 'position', 'fixed');
 
-  const oldVisibility = Css.getRaw(placee.element(), 'visibility');
-  // INVESTIGATE: Will hiding the popup cause issues for focus?
-  Css.set(placee.element(), 'visibility', 'hidden');
+    const oldVisibility = Css.getRaw(placee.element(), 'visibility');
+    Css.set(placee.element(), 'visibility', 'hidden');
 
-  // We need to calculate the origin (esp. the bounding client rect) *after* we have done
-  // all the preprocessing of the component and placee. Otherwise, the relative positions
-  // (bottom and right) will be using the wrong dimensions
-  const origin = posConfig.useFixed ? getFixedOrigin() : getRelativeOrigin(component);
+    // We need to calculate the origin (esp. the bounding client rect) *after* we have done
+    // all the preprocessing of the component and placee. Otherwise, the relative positions
+    // (bottom and right) will be using the wrong dimensions
+    const origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
 
-  const placer = anchorage.placement;
+    const placer = anchorage.placement;
 
-  const getBounds = bounds.map(Fun.constant).or(posConfig.getBounds);
+    const getBounds = bounds.map(Fun.constant).or(posConfig.getBounds);
 
-  placer(component, anchorage, origin).each((anchoring) => {
-    const doPlace = anchoring.placer.getOr(place);
-    doPlace(component, origin, anchoring, getBounds, placee);
-  });
+    placer(component, anchorage, origin).each((anchoring) => {
+      const doPlace = anchoring.placer.getOr(place);
+      doPlace(component, origin, anchoring, getBounds, placee);
+    });
 
-  oldVisibility.fold(() => {
-    Css.remove(placee.element(), 'visibility');
-  }, (vis) => {
-    Css.set(placee.element(), 'visibility', vis);
-  });
+    oldVisibility.fold(() => {
+      Css.remove(placee.element(), 'visibility');
+    }, (vis) => {
+      Css.set(placee.element(), 'visibility', vis);
+    });
 
-  // We need to remove position: fixed put on by above code if it is not needed.
-  if (
-    Css.getRaw(placee.element(), 'left').isNone() &&
-    Css.getRaw(placee.element(), 'top').isNone() &&
-    Css.getRaw(placee.element(), 'right').isNone() &&
-    Css.getRaw(placee.element(), 'bottom').isNone() &&
-    Css.getRaw(placee.element(), 'position').is('fixed')
-  ) { Css.remove(placee.element(), 'position'); }
+    // We need to remove position: fixed put on by above code if it is not needed.
+    if (
+      Css.getRaw(placee.element(), 'left').isNone() &&
+      Css.getRaw(placee.element(), 'top').isNone() &&
+      Css.getRaw(placee.element(), 'right').isNone() &&
+      Css.getRaw(placee.element(), 'bottom').isNone() &&
+      Css.getRaw(placee.element(), 'position').is('fixed')
+    ) { Css.remove(placee.element(), 'position'); }
+  }, placee.element());
 };
 
 const getMode = (component: AlloyComponent, pConfig: PositioningConfig, pState: Stateless): string => {
-  return pConfig.useFixed ? 'fixed' : 'absolute';
+  return pConfig.useFixed() ? 'fixed' : 'absolute';
 };
 
 export {

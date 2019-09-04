@@ -6,31 +6,12 @@ import { DomEvent, Element } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Docking } from 'ephox/alloy/api/behaviour/Docking';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import * as Memento from 'ephox/alloy/api/component/Memento';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 
 UnitTest.asynctest('DockingTest', (success, failure) => {
   const cleanup = Cleaner();
-
-  const subject = Memento.record(
-    Container.sketch({
-      dom: {
-        styles: {
-          width: '100px',
-          height: '100px',
-          background: 'blue'
-        }
-      },
-      containerBehaviours: Behaviour.derive([
-        Docking.config({
-          leftAttr: 'data-dock-left',
-          topAttr: 'data-dock-top'
-        })
-      ])
-    })
-  );
 
   GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
@@ -42,13 +23,52 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
           }
         },
         components: [
-          subject.asSpec()
+          Container.sketch({
+            dom: {
+              styles: {
+                width: '100px',
+                height: '100px',
+                background: 'blue'
+              }
+            },
+            containerBehaviours: Behaviour.derive([
+              Docking.config({
+                leftAttr: 'data-dock-left',
+                topAttr: 'data-dock-top',
+                positionAttr: 'data-dock-pos',
+                onDocked: store.adder('static.onDocked'),
+                onUndocked: store.adder('static.onUndocked')
+              })
+            ])
+          }),
+          Container.sketch({
+            dom: {
+              styles: {
+                width: '100px',
+                height: '100px',
+                background: 'red',
+                position: 'absolute',
+                top: '2300px',
+                left: '200px'
+              }
+            },
+            containerBehaviours: Behaviour.derive([
+              Docking.config({
+                leftAttr: 'data-dock-left',
+                topAttr: 'data-dock-top',
+                positionAttr: 'data-dock-pos',
+                onDocked: store.adder('absolute.onDocked'),
+                onUndocked: store.adder('absolute.onUndocked')
+              })
+            ])
+          })
         ]
       })
     );
 
   }, (doc, body, gui, component, store) => {
-    const box = subject.get(component);
+    const staticBox = component.components()[0];
+    const absoluteBox = component.components()[1];
     cleanup.add(
       DomEvent.bind(Element.fromDom(window), 'scroll', (evt) => {
         gui.broadcastEvent(SystemEvents.windowScroll(), evt);
@@ -77,10 +97,16 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
     return [
       // On initial load, it should have no position.
       Assertions.sAssertStructure(
-        'On initial load, box should have neither position: absolute nor position: fixed',
+        'On initial load, static box should have neither position: absolute nor position: fixed',
         boxWithNoPosition(),
-        box.element()
+        staticBox.element()
       ),
+      Assertions.sAssertStructure(
+        'On initial load, absolute box should have position: absolute',
+        boxWithPosition('absolute'),
+        absoluteBox.element()
+      ),
+      store.sAssertEq('Before docking', [ ]),
 
       Logger.t(
         'Scroll completely offscreen',
@@ -92,11 +118,21 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
       Waiter.sTryUntil(
         'Waiting until position is fixed',
         Assertions.sAssertStructure(
-          'Now that box is offscreen normally, it should switch to fixed coordinates',
+          'Now that static box is offscreen normally, it should switch to fixed coordinates',
           boxWithPosition('fixed'),
-          box.element()
+          staticBox.element()
         )
       ),
+      Waiter.sTryUntil(
+        'Waiting until position is fixed',
+        Assertions.sAssertStructure(
+          'Now that absolute box is offscreen normally, it should switch to fixed coordinates',
+          boxWithPosition('fixed'),
+          absoluteBox.element()
+        )
+      ),
+      store.sAssertEq('When docked', [ 'static.onDocked', 'absolute.onDocked' ]),
+      store.sClear,
 
       Logger.t(
         'Scroll back onscreen',
@@ -106,13 +142,22 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
       ),
 
       Waiter.sTryUntil(
+        'Waiting until position is static',
+        Assertions.sAssertStructure(
+          'Now that static box is back on screen, it should switch to having no position again',
+          boxWithNoPosition(),
+          staticBox.element()
+        )
+      ),
+      Waiter.sTryUntil(
         'Waiting until position is absolute',
         Assertions.sAssertStructure(
-          'Now that box is back on screen, it should switch to absolute coordinates',
+          'Now that absolute box is back on screen, it should switch back to absolute',
           boxWithPosition('absolute'),
-          box.element()
+          absoluteBox.element()
         )
-      )
+      ),
+      store.sAssertEq('After undocked', [ 'static.onUndocked', 'absolute.onUndocked' ]),
     ];
   }, cleanup.wrap(success), cleanup.wrap(failure));
 });

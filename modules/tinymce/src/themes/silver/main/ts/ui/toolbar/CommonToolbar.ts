@@ -12,7 +12,7 @@ import {
   AlloySpec,
   Behaviour,
   Focusing,
-  Keying,
+  Keying, Receiving,
   SplitFloatingToolbar as AlloySplitFloatingToolbar,
   SplitSlidingToolbar as AlloySplitSlidingToolbar,
   Tabstopping,
@@ -24,6 +24,7 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderIconButtonSpec } from '../general/Button';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
 import { createReadonlyReceivingForOverflow } from '../../ReadOnly';
+import * as Channels from '../../Channels';
 
 export interface MoreDrawerData {
   lazyMoreButton: () => AlloyComponent;
@@ -151,6 +152,17 @@ const renderFloatingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
     markers: {
       overflowToggledClass: ToolbarButtonClasses.Ticked
     },
+    splitToolbarBehaviours: Behaviour.derive([
+      Receiving.config({
+        channels: {
+          [ Channels.reposition() ]: {
+            onReceive: (comp) => {
+              AlloySplitFloatingToolbar.reposition(comp);
+            }
+          }
+        }
+      }),
+    ])
   });
 };
 
@@ -180,6 +192,12 @@ const renderSlidingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
       growingClass: 'tox-toolbar__overflow--growing',
       shrinkingClass: 'tox-toolbar__overflow--shrinking',
       overflowToggledClass: ToolbarButtonClasses.Ticked
+    },
+    onOpened: (comp) => {
+      comp.getSystem().broadcastOn([ Channels.toolbarHeightChange() ], { type: 'opened' });
+    },
+    onClosed: (comp) => {
+      comp.getSystem().broadcastOn([ Channels.toolbarHeightChange() ], { type: 'closed' });
     }
   });
 };
