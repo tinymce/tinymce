@@ -1,4 +1,4 @@
-import { Option, Fun } from '@ephox/katamari';
+import { Option, Fun, Cell } from '@ephox/katamari';
 import { FieldSchema } from '@ephox/boulder';
 
 import { DialogToggleMenuItemApi, dialogToggleMenuItemSchema } from './ToggleMenuItem';
@@ -11,6 +11,7 @@ export interface BaseDialogMenuButtonApi {
   icon?: string;
   items: DialogMenuButtonItemTypes[];
   onSetup?: (api: BaseDialogMenuButtonInstanceApi) => (api: BaseDialogMenuButtonInstanceApi) => void;
+  storage?: Cell<Boolean>;
 }
 
 export interface BaseDialogMenuButton {
@@ -19,6 +20,7 @@ export interface BaseDialogMenuButton {
   icon: Option<string>;
   items: DialogMenuButtonItemTypes[];
   onSetup: (api: BaseDialogMenuButtonInstanceApi) => (api: BaseDialogMenuButtonInstanceApi) => void;
+  storage: Cell<Boolean>;
 }
 
 export interface BaseDialogMenuButtonInstanceApi {
@@ -33,5 +35,6 @@ export const baseDialogMenuButtonFields = [
   FieldSchema.optionString('tooltip'),
   FieldSchema.optionString('icon'),
   FieldSchema.strictArrayOf('items', dialogToggleMenuItemSchema),
-  FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
+  FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
+  FieldSchema.defaulted('storage', Cell<Boolean>(false))
 ];
