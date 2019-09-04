@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 # [5.0.0] - 2019-09-04
 
+### Added
+- Added `onOpened` and `onClosed` configuration callbacks for the `SplitSlidingToolbar` component.
+
 ### Fixed
 - Fixed docking not undocking to the correct position when a parent was using `position: relative`.
 - Fixed replacing and reflecting losing component state when replacing with the same components.

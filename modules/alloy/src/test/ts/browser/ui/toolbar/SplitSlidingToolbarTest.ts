@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
@@ -54,6 +54,8 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
           growingClass: 'test-sliding-height-growing',
           overflowToggledClass: 'test-more-button-toggled'
         },
+        onOpened: store.adder('onOpened'),
+        onClosed: store.adder('onClosed'),
 
         parts: {
           'overflow-group': TestPartialToolbarGroup.munge({
@@ -162,6 +164,8 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
         '.test-split-toolbar button.more-button { width: 50px; }'
       ]),
 
+      store.sAssertEq('Assert initial store state', [ ]),
+
       Step.sync(() => {
         const groups = TestPartialToolbarGroup.createGroups([
           { items: Arr.map([ { text: 'A' }, { text: 'B' } ], makeButton) },
@@ -171,6 +175,9 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
         SplitSlidingToolbar.setGroups(component, groups);
         SplitSlidingToolbar.toggle(component);
       }),
+
+      Waiter.sTryUntil('Wait for toolbar to be completely open', store.sAssertEq('Assert store contains opened state', [ 'onOpened' ])),
+      store.sClear,
 
       sAssertGroups('width=400px (1 +)', [ group1, oGroup ], [ group2, group3 ]),
 
@@ -195,6 +202,11 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
 
       sResetWidth('400px'),
       sAssertGroups('width=400px (1 +)', [ group1, oGroup ], [ group2, group3 ]),
+
+      Step.sync(() => {
+        SplitSlidingToolbar.toggle(component);
+      }),
+      Waiter.sTryUntil('Wait for toolbar to be completely closed', store.sAssertEq('Assert store contains closed state', [ 'onClosed' ])),
 
       // TODO: Add testing for sliding?
       GuiSetup.mRemoveStyles

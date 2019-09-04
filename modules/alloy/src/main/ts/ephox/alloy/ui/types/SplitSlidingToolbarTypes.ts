@@ -1,6 +1,7 @@
 import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import { SplitToolbarBaseDetail, SplitToolbarBaseSpec, SplitToolbarBaseSketcher } from './SplitToolbarBaseTypes';
 import { ToolbarGroupSpec } from './ToolbarGroupTypes';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface SplitSlidingToolbarDetail extends SplitToolbarBaseDetail {
   markers: {
@@ -10,6 +11,9 @@ export interface SplitSlidingToolbarDetail extends SplitToolbarBaseDetail {
     growingClass: string;
     overflowToggledClass: string;
   };
+
+  onOpened: (comp: AlloyComponent) => void;
+  onClosed: (comp: AlloyComponent) => void;
 }
 
 export interface SplitSlidingToolbarSpec extends SplitToolbarBaseSpec {
@@ -20,6 +24,9 @@ export interface SplitSlidingToolbarSpec extends SplitToolbarBaseSpec {
     growingClass: string;
     overflowToggledClass: string;
   };
+
+  onOpened?: (comp: AlloyComponent) => void;
+  onClosed?: (comp: AlloyComponent) => void;
 
   parts: {
     'overflow-group': Partial<ToolbarGroupSpec>,

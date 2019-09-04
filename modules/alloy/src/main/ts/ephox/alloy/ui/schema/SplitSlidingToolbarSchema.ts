@@ -15,7 +15,9 @@ import { SplitSlidingToolbarDetail } from '../types/SplitSlidingToolbarTypes';
 import * as ToolbarSchema from './ToolbarSchema';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
-  Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass', 'overflowToggledClass' ])
+  Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass', 'overflowToggledClass' ]),
+  Fields.onHandler('onOpened'),
+  Fields.onHandler('onClosed')
 ].concat(
   SplitToolbarBase.schema()
 ));
@@ -47,9 +49,11 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
                 Toggling.off(button);
                 Focusing.focus(button);
               });
+              detail.onClosed(comp);
             },
             onGrown: (comp) => {
               Keying.focusIn(comp);
+              detail.onOpened(comp);
             },
             onStartGrow: (comp) => {
               AlloyParts.getPart(comp, detail, 'overflow-button').each(Toggling.on);
