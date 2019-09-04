@@ -1,4 +1,5 @@
 import { Chain, Guard, NamedChain } from '@ephox/agar';
+import { window } from '@ephox/dom-globals';
 import { Result, Option } from '@ephox/katamari';
 import { Css, Scroll, Traverse } from '@ephox/sugar';
 
@@ -39,7 +40,20 @@ const cTestPopupInSink = (label, sinkName) => {
         new Error('The popup does not appear within the ' + label + ' sink container')
       );
     }),
-    Guard.tryUntil('Ensuring that the popup is inside the ' + label + ' sink', 100, 3000)
+    Guard.tryUntil('Ensuring that the popup is inside the ' + label + ' sink')
+  );
+};
+
+const cTestPopupInViewport = (sinkName) => {
+  return Chain.control(
+    NamedChain.bundle((data: any) => {
+      const bounds = data.popup.element().dom().getBoundingClientRect();
+      const inside = bounds.top >= 0 && bounds.left >= 0 && bounds.top <= window.innerHeight && bounds.left <= window.innerWidth;
+      return inside ? Result.value(data) : Result.error(
+        new Error('The popup does not appear within window viewport for the ' + sinkName + ' sink')
+      );
+    }),
+    Guard.tryUntil('Ensuring that the popup is inside window viewport for the ' + sinkName + ' sink')
   );
 };
 
@@ -49,9 +63,10 @@ const cScrollTo = Chain.mapper((component: any) => {
   return Scroll.get(doc);
 });
 
-const cAddTopMargin = (amount) => {
+const cAddTopBottomMargin = (amount) => {
   return Chain.mapper((component: any) => {
     Css.set(component.element(), 'margin-top', amount);
+    Css.set(component.element(), 'margin-bottom', amount);
     return component;
   });
 };
@@ -61,7 +76,8 @@ const cTestSink = (label, sinkName) => {
     label,
     [
       cAddPopupToSink(sinkName),
-      cTestPopupInSink(sinkName, sinkName)
+      cTestPopupInSink(sinkName, sinkName),
+      cTestPopupInViewport(sinkName)
     ]
   );
 };
@@ -71,16 +87,17 @@ const cTestSinkWithin = (label, sinkName, elem) => {
     label,
     [
       cAddPopupToSinkWithin(sinkName, elem),
-      cTestPopupInSink(sinkName, sinkName)
+      cTestPopupInSink(sinkName, sinkName),
+      cTestPopupInViewport(sinkName)
     ]
   );
 };
 
-const cScrollDown = (componentName: string, amount) => {
+const cScrollDown = (componentName: string, amount: string) => {
   return ChainUtils.cLogging(
     'Adding margin to ' + componentName + ' and scrolling to it',
     [
-      NamedChain.direct(componentName, cAddTopMargin(amount), '_'),
+      NamedChain.direct(componentName, cAddTopBottomMargin(amount), '_'),
       NamedChain.direct(componentName, cScrollTo, '_')
     ]
   );

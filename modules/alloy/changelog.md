@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Fixed docking not undocking to the correct position when a parent was using `position: relative`.
 - Fixed replacing and reflecting losing component state when replacing with the same components.
+- Fixed `MakeshiftAnchor` incorrectly calculating the anchor coordinates in fixed position mode.
 
 # [4.15.2] - 2019-07-31
 

@@ -103,7 +103,7 @@ const viewport = (origin: OriginAdt, getBounds: Option<() => Boxes.Bounds>): Box
   });
 };
 
-const translate = (origin, x, y) => {
+const translate = (origin: OriginAdt, x: number, y: number): Position => {
   const pos = Position(x, y);
   const removeScroll = () => {
     const outerScroll = Scroll.get();

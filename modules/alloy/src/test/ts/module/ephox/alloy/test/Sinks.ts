@@ -2,6 +2,7 @@ import { Compare, PredicateExists } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 
@@ -58,7 +59,7 @@ const popup = () => {
   );
 };
 
-const isInside = (sinkComponent, popupComponent) => {
+const isInside = (sinkComponent: AlloyComponent, popupComponent: AlloyComponent) => {
   const isSink = (el) => {
     return Compare.eq(el, sinkComponent.element());
   };

@@ -152,7 +152,10 @@ const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: 
       height: elementBox.height(),
       maxHeight: elementBox.height(),
       direction: Direction.southeast(),
-      classes: [],
+      classes: {
+        on: [],
+        off: []
+      },
       label: 'none',
       candidateYforTest: anchorBox.y()
     }), -1, -1)
