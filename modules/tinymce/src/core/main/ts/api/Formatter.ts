@@ -7,18 +7,16 @@
 
 import { Node, Range } from '@ephox/dom-globals';
 import { Cell, Fun } from '@ephox/katamari';
-import * as ApplyFormat from '../fmt/ApplyFormat';
 import * as CaretFormat from '../fmt/CaretFormat';
 import * as FormatChanged from '../fmt/FormatChanged';
 import { FormatRegistry } from '../fmt/FormatRegistry';
 import * as MatchFormat from '../fmt/MatchFormat';
 import * as Preview from '../fmt/Preview';
-import * as RemoveFormat from '../fmt/RemoveFormat';
-import * as ToggleFormat from '../fmt/ToggleFormat';
 import * as FormatShortcuts from '../keyboard/FormatShortcuts';
 import { Format, FormatVars } from './fmt/Format';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import Editor from './Editor';
+import * as Rtc from '../Rtc';
 
 /**
  * Text formatter engine class. This class is used to apply formats like bold, italic, font size
@@ -99,7 +97,9 @@ const Formatter = function (editor: Editor): Formatter {
      * @param {Object} vars Optional list of variables to replace within format before applying it.
      * @param {Node} node Optional node to apply the format to defaults to current selection.
      */
-    apply: Fun.curry(ApplyFormat.applyFormat, editor),
+    apply: (name, vars?, node?) => {
+      Rtc.applyFormat(editor, name, vars, node);
+    },
 
     /**
      * Removes the specified format from the current selection or specified node.
@@ -109,7 +109,9 @@ const Formatter = function (editor: Editor): Formatter {
      * @param {Object} vars Optional list of variables to replace within format before removing it.
      * @param {Node/Range} node Optional node or DOM range to remove the format from defaults to current selection.
      */
-    remove: Fun.curry(RemoveFormat.remove, editor),
+    remove: (name, vars?, node?) => {
+      Rtc.removeFormat(editor, name, vars, node);
+    },
 
     /**
      * Toggles the specified format on/off.
@@ -119,7 +121,9 @@ const Formatter = function (editor: Editor): Formatter {
      * @param {Object} vars Optional list of variables to replace within format before applying/removing it.
      * @param {Node} node Optional node to apply the format to or remove from. Defaults to current selection.
      */
-    toggle: Fun.curry(ToggleFormat.toggle, editor, formats),
+    toggle: (name, vars?, node?) => {
+      Rtc.toggleFormat(editor, formats, name, vars, node);
+    },
 
     /**
      * Matches the current selection or specified node against the specified format name.

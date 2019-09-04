@@ -1,0 +1,91 @@
+@rtc-caret-1-color: rgba(255, 159, 67, 1);
+@rtc-caret-3-color: rgba(29, 209, 161, 1);
+@rtc-caret-2-color: rgba(255, 107, 107, 1);
+@rtc-caret-4-color: #236FA1;
+@rtc-caret-5-color: #F1C40F;
+@rtc-caret-6-color: #ECCAFA;
+@rtc-caret-7-color: #E67E23;
+@rtc-caret-8-color: #fff0b7;
+
+.rtc-user-selection {
+  position: relative;
+}
+
+.rtc-user-cursor {
+  bottom: 0;
+  cursor: default;
+  position: absolute;
+  top: 0;
+  width: 2px;
+
+  &::before {
+    background-color: inherit;
+    border-radius: 50%;
+    content: '';
+    display: block;
+    height: 8px;
+    position: absolute;
+    right: -3px;
+    top: -3px;
+    width: 8px;
+  }
+
+  &:hover::after {
+    background-color: inherit;
+    border-radius: 100px;
+    box-sizing: border-box;
+    color: #fff;
+    content: attr(data-user);
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    left: -5px;
+    min-height: 8px;
+    min-width: 8px;
+    padding: 0 12px;
+    position: absolute;
+    top: -11px;
+    white-space: nowrap;
+    z-index: 1000;
+  }
+}
+
+.rtc-user-selection--1 .rtc-user-cursor {
+  background-color: @rtc-caret-1-color;
+}
+
+.rtc-user-selection--2 .rtc-user-cursor {
+  background-color: @rtc-caret-2-color;
+}
+
+.rtc-user-selection--3 .rtc-user-cursor {
+  background-color: @rtc-caret-3-color;
+}
+
+.rtc-user-selection--4 .rtc-user-cursor {
+  background-color: @rtc-caret-4-color;
+}
+
+.rtc-user-selection--5 .rtc-user-cursor {
+  background-color: @rtc-caret-5-color;
+}
+
+.rtc-user-selection--6 .rtc-user-cursor {
+  background-color: @rtc-caret-6-color;
+}
+
+.rtc-user-selection--7 .rtc-user-cursor {
+  background-color: @rtc-caret-7-color;
+}
+
+.rtc-user-selection--8 .rtc-user-cursor {
+  background-color: @rtc-caret-8-color;
+}
+
+.rtc-remote-image {
+  background: #eaeaea;
+  border: 1px solid #bbb;
+  display: inline-block;
+  min-height: 240px;
+  min-width: 320px;
+}
