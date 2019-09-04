@@ -72,12 +72,32 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
     });
   }).toArray();
 
+  const placeholder = spec.placeholder.fold<{ placeholder?: string }>(
+    () => {
+      return {};
+    },
+    (placeholder) => {
+      return { placeholder: providersBackstage.translate(placeholder) };
+    }
+  );
+
+  const inputType = spec.inputType.fold<{ type?: string }>(
+    () => {
+      return {};
+    },
+    (inputType) => {
+      return { type: inputType };
+    }
+  );
+
+  const inputAttributes = {
+    ...placeholder,
+    ...inputType
+  };
+
   const pField = AlloyFormField.parts().field({
     tag: spec.multiline === true ? 'textarea' : 'input',
-    inputAttributes: spec.placeholder.fold(
-      () => {},
-      (placeholder) => ({ placeholder: providersBackstage.translate(placeholder) })
-    ),
+    inputAttributes,
     inputClasses: [spec.classname],
     inputBehaviours: Behaviour.derive(
       Arr.flatten<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>([
@@ -115,6 +135,7 @@ export interface TextField {
   classname: string;
   flex: boolean;
   label: Option<string>;
+  inputType: Option<string>;
   placeholder: Option<string>;
   disabled: boolean;
   validation: Option<{
@@ -133,6 +154,7 @@ const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProv
     name: spec.name,
     multiline: false,
     label: spec.label,
+    inputType: spec.inputType,
     placeholder: spec.placeholder,
     flex: false,
     disabled: spec.disabled,
@@ -147,6 +169,7 @@ const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBacksta
     name: spec.name,
     multiline: true,
     label: spec.label,
+    inputType: Option.none(), // type attribute is not valid for textareas
     placeholder: spec.placeholder,
     flex: true,
     disabled: spec.disabled,

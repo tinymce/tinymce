@@ -1,4 +1,4 @@
-import { assert } from '@ephox/bedrock';
+import { assert, TestLabel } from '@ephox/bedrock';
 import { Arr, Fun, Obj, Option } from '@ephox/katamari';
 import { Attr, Classes, Css, Element, Html, Node, Text, Traverse, Value } from '@ephox/sugar';
 
@@ -8,12 +8,12 @@ import * as ApproxComparisons from './ApproxComparisons';
 
 export interface StringAssert {
   show: () => void;
-  strAssert: (label: string, actual: string) => void;
+  strAssert: (label: TestLabel, actual: string) => void;
 }
 
 export interface ArrayAssert {
   show: () => void;
-  arrAssert: (label: string, array: any[]) => void;
+  arrAssert: (label: TestLabel, array: any[]) => void;
 }
 
 export interface ElementQueue {
@@ -96,7 +96,7 @@ const elementQueue = function (items: Element[], container: Option<Element>): El
 
 const element = function (tag: string, fields: ElementFields): StructAssert {
   const doAssert = function (actual: Element) {
-    assertEq('Incorrect node name for: ' + Truncate.getHtml(actual), tag, Node.name(actual));
+    assertEq(() => 'Incorrect node name for: ' + Truncate.getHtml(actual), tag, Node.name(actual));
     const attrs = fields.attrs !== undefined ? fields.attrs : {};
     const classes = fields.classes !== undefined ? fields.classes : [];
     const styles = fields.styles !== undefined ? fields.styles : {};
@@ -219,7 +219,7 @@ const assertAttrs = function (expectedAttrs: Record<string, StringAssert>, actua
     }
     const actualValue = Attr.has(actual, k) ? Attr.get(actual, k) : ApproxComparisons.missing();
     v.strAssert(
-      'Checking attribute: "' + k + '" of ' + Truncate.getHtml(actual) + '\n',
+      () => 'Checking attribute: "' + k + '" of ' + Truncate.getHtml(actual) + '\n',
       actualValue
     );
   });
@@ -231,7 +231,7 @@ const assertClasses = function (expectedClasses: ArrayAssert[], actual: Element)
     if (eCls.arrAssert === undefined) {
       throw new Error(JSON.stringify(eCls) + ' is not an *array assertion*.\nSpecified in *expected* classes of ' + Truncate.getHtml(actual));
     }
-    eCls.arrAssert('Checking classes in ' + Truncate.getHtml(actual) + '\n', actualClasses);
+    eCls.arrAssert(() => 'Checking classes in ' + Truncate.getHtml(actual) + '\n', actualClasses);
   });
 };
 
@@ -242,7 +242,7 @@ const assertStyles = function (expectedStyles: Record<string, StringAssert>, act
       throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* styles of ' + Truncate.getHtml(actual));
     }
     v.strAssert(
-      'Checking style: "' + k + '" of ' + Truncate.getHtml(actual) + '\n',
+      () => 'Checking style: "' + k + '" of ' + Truncate.getHtml(actual) + '\n',
       actualValue
     );
   });
@@ -254,7 +254,7 @@ const assertHtml = function (expectedHtml: Option<StringAssert>, actual: Element
     if (expected.strAssert === undefined) {
       throw new Error(JSON.stringify(expected) + ' is not a *string assertion*.\nSpecified in *expected* innerHTML of ' + Truncate.getHtml(actual));
     }
-    expected.strAssert('Checking HTML of ' + Truncate.getHtml(actual), actualHtml);
+    expected.strAssert(() => 'Checking HTML of ' + Truncate.getHtml(actual), actualHtml);
   });
 };
 
@@ -264,7 +264,7 @@ const assertValue = function (expectedValue: Option<StringAssert>, actual: Eleme
       throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* value of ' + Truncate.getHtml(actual));
     }
     v.strAssert(
-      'Checking value of ' + Truncate.getHtml(actual),
+      () => 'Checking value of ' + Truncate.getHtml(actual),
       Value.get(actual)
     );
   });

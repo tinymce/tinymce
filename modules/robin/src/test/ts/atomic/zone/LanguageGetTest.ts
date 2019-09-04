@@ -9,7 +9,7 @@ UnitTest.test('LanguageGetTest', function () {
     const item = doc.find(doc.get(), id).getOrDie();
     const itemLang = LanguageZones.calculate(doc, item);
     RawAssertions.assertEq(
-      'check lang(). Expected: ' + lang.getOr('none') + ', actual: ' + itemLang.getOr('none'),
+      () => 'check lang(). Expected: ' + lang.getOr('none') + ', actual: ' + itemLang.getOr('none'),
       true,
       lang.equals(itemLang)
     );

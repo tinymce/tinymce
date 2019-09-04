@@ -88,38 +88,38 @@ UnitTest.test('DomDefinitionTest', () => {
     ], (defn, mod) => {
       const result = DomModification.merge(defn, mod);
       RawAssertions.assertEq(
-        'All classes in mod should be in final result: ' + JSON.stringify(result, null, 2) + '. Should be none left over.',
+        () => 'All classes in mod should be in final result: ' + JSON.stringify(result, null, 2) + '. Should be none left over.',
         [ ],
         Arr.difference(mod.classes, result.classes)
       );
       RawAssertions.assertEq(
-        'All classes in defn should be in final result ' + JSON.stringify(result, null, 2) + '.too. Should be none left over.',
+        () => 'All classes in defn should be in final result ' + JSON.stringify(result, null, 2) + '.too. Should be none left over.',
         [ ],
         Arr.difference(defn.classes, result.classes)
       );
       RawAssertions.assertEq(
-        'All styles from modification should be in final result' + JSON.stringify(result, null, 2) + '.',
+        () => 'All styles from modification should be in final result' + JSON.stringify(result, null, 2) + '.',
         true,
         Obj.find(mod.styles, (v, k) => result.styles[k] !== v).isNone()
       );
 
       Obj.each(defn.styles, (v, k) => {
         RawAssertions.assertEq(
-          'Defn Style: ' + k + '=' + v + ' should appear in result: ' + JSON.stringify(result, null, 2) + '., unless modification changed it',
+          () => 'Defn Style: ' + k + '=' + v + ' should appear in result: ' + JSON.stringify(result, null, 2) + '., unless modification changed it',
           true,
           result.styles[k] === v || result.styles[k] === mod.styles[k] && mod.styles.hasOwnProperty(k)
         );
       });
 
       RawAssertions.assertEq(
-        'All attributes from modification should be in final result' + JSON.stringify(result, null, 2) + '.',
+        () => 'All attributes from modification should be in final result' + JSON.stringify(result, null, 2) + '.',
         true,
         Obj.find(mod.attributes, (v, k) => result.attributes[k] !== v).isNone()
       );
 
       Obj.each(defn.attributes, (v, k) => {
         RawAssertions.assertEq(
-          'Defn attribute: ' + k + '=' + v + ' should appear in result: ' + JSON.stringify(result, null, 2) + '., unless modification changed it',
+          () => 'Defn attribute: ' + k + '=' + v + ' should appear in result: ' + JSON.stringify(result, null, 2) + '., unless modification changed it',
           true,
           result.attributes[k] === v || result.attributes[k] === mod.attributes[k] && mod.attributes.hasOwnProperty(k)
         );

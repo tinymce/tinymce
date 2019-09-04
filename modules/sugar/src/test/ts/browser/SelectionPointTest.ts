@@ -56,9 +56,9 @@ UnitTest.asynctest('Browser Test: Selection.getAtPoint', function () {
 
       const range = WindowSelection.getExact(iframeWin).getOrDie('Could not get window selection after setting it');
       const starts = Compare.eq(expected.start(), range.start());
-      assert.eq(true, starts, 'start elements were not equal, was ' + Node.name(range.start()) + ', expected ' + Node.name(expected.start()));
+      assert.eq(true, starts, () => 'start elements were not equal, was ' + Node.name(range.start()) + ', expected ' + Node.name(expected.start()));
       assert.eq(expected.soffset(), range.soffset());
-      assert.eq(true, Compare.eq(expected.finish(), range.finish()), 'finish elements were not equal, was ' + Node.name(range.finish()));
+      assert.eq(true, Compare.eq(expected.finish(), range.finish()), () => 'finish elements were not equal, was ' + Node.name(range.finish()));
       assert.eq(expected.foffset(), range.foffset());
     };
 
