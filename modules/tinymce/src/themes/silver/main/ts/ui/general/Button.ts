@@ -143,26 +143,22 @@ const getAction = (name: string, buttonType: string) => {
 };
 
 const getFetch = (items) => {
-  const cells = Arr.map(items, (item) => {
-    return Cell<Boolean>(false);
-  });
-
-  const getMenuItemAction = (index) => {
+  const getMenuItemAction = (item) => {
     return (api) => {
       const newValue = !api.isActive();
       api.setActive(newValue);
-      cells[index].set(newValue);
+      item.storage.set(newValue);
     };
   };
 
-  const getMenuItemSetup = (index) => {
+  const getMenuItemSetup = (item) => {
     return (api) => {
-      api.setActive(cells[index].get());
+      api.setActive(item.storage.get());
     };
   };
 
   return (success) => {
-    success(Arr.map(items, (item, index) => {
+    success(Arr.map(items, (item) => {
       const text = item.text.fold(() => {
         return {};
       }, (text) => {
@@ -173,8 +169,8 @@ const getFetch = (items) => {
       return {
         type: item.type,
         ...text,
-        onAction: getMenuItemAction(index),
-        onSetup: getMenuItemSetup(index)
+        onAction: getMenuItemAction(item),
+        onSetup: getMenuItemSetup(item)
       };
     }));
   };

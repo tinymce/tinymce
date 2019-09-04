@@ -1,5 +1,5 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Result, Option } from '@ephox/katamari';
+import { Fun, Result } from '@ephox/katamari';
 
 import { CommonMenuItem, CommonMenuItemApi, commonMenuItemFields, CommonMenuItemInstanceApi } from '../menu/CommonMenuItem';
 
@@ -17,17 +17,19 @@ export interface DialogToggleMenuItemInstanceApi extends CommonMenuItemInstanceA
 
 export interface DialogToggleMenuItem extends CommonMenuItem {
   type: 'togglemenuitem';
-  name: Option<string>;
+  name: string;
   active: boolean;
   onSetup: (api: DialogToggleMenuItemInstanceApi) => (api: DialogToggleMenuItemInstanceApi) => void;
 }
 
 export const dialogToggleMenuItemSchema = ValueSchema.objOf([
   FieldSchema.strictString('type'),
-  FieldSchema.optionString('name'),
+  FieldSchema.strictString('name'),
   FieldSchema.defaultedBoolean('active', false),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
 ].concat(commonMenuItemFields));
+
+export const dialogToggleMenuItemDataProcessor = ValueSchema.boolean;
 
 export const createToggleMenuItem = (spec: DialogToggleMenuItemApi): Result<DialogToggleMenuItem, ValueSchema.SchemaError<any>> => {
   return ValueSchema.asRaw('togglemenuitem', dialogToggleMenuItemSchema, spec);

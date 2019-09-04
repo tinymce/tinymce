@@ -15,6 +15,8 @@ import { Types } from '@ephox/bridge';
 export interface DialogData {
   findtext: string;
   replacetext: string;
+  matchcase: boolean;
+  wholewords: boolean;
 }
 
 const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchState>) {
@@ -79,7 +81,9 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
 
   const initialData: DialogData = {
     findtext: selectedText,
-    replacetext: ''
+    replacetext: '',
+    matchcase: true,
+    wholewords: false
   };
 
   const spec: Types.Dialog.DialogApi<DialogData> = {
