@@ -119,10 +119,10 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@ephox/bedrock@^6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock/-/bedrock-6.0.1.tgz#1f9de33ff83aeaec295cc9b2756cd2c50a8d1a04"
-  integrity sha512-GRJ9aI3yDMMBbdxounijih+RMEqceig7FZXef7pFFM+SEtrR8l6BhD+j4SNCBi5JbQMg/aZPPjbdwb2l5HXowA==
+"@ephox/bedrock@^7.0.1":
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock/-/bedrock-7.0.1.tgz#c9d9f0fcdf806e9251edba9c8d4564308c3970e8"
+  integrity sha512-L8GPHmKKYGNUh47yZfD5kPnyHEpJGiUkLQCiYNXHrbLKDEJArlcL8XL3HYlpW8Ez8iNC0uFCWM+g5njH15i3hQ==
   dependencies:
     async "^1.5.2"
     babel-polyfill "^6.23.0"
@@ -131,7 +131,7 @@
     finalhandler "^1.1.2"
     fork-ts-checker-webpack-plugin "~1.0.4"
     istanbul-instrumenter-loader "^3.0.1"
-    jquery "^3.0.0"
+    jquery "^3.4.1"
     mkdirp "^0.5.1"
     node-glob "^1.2.0"
     portfinder "1.0.21"
@@ -5767,7 +5767,7 @@ istanbul-lib-instrument@^1.7.3:
     istanbul-lib-coverage "^1.2.1"
     semver "^5.3.0"
 
-jquery@^3.0.0:
+jquery@^3.4.1:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.4.1.tgz#714f1f8d9dde4bdfa55764ba37ef214630d80ef2"
   integrity sha512-36+AdBzCL+y6qjw5Tx7HgzeGCzC81MDDgaUP8ld2zhx58HdqXGoBd+tHdrBMiyjGQs0Hxs/MLZTu/eHNJJuWPw==
