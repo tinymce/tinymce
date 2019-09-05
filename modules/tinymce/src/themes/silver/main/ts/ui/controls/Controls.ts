@@ -21,7 +21,7 @@ export interface OnControlAttachedType<T> extends GetApiType<T> {
 const runWithApi = <T>(info: GetApiType<T>, comp: AlloyComponent) => {
   const api = info.getApi(comp);
   return (f: OnDestroy<T>) => {
-    f(api);
+    f(api, comp);
   };
 };
 
