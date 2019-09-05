@@ -81,6 +81,7 @@ const cDropFiles = (files: File[]) => Chain.op<Element>((elm) => {
 });
 
 export {
+  isDraggable,
   dragnDrop,
   dropFiles,
   cDragnDrop,

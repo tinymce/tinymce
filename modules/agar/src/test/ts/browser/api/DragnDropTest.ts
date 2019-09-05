@@ -1,11 +1,23 @@
-import { UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock';
 import { Element, Insert, Remove, Body, DomEvent, SelectorFind } from '@ephox/sugar';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
-import { sDragnDrop, dragnDrop, sDropFiles, dropFiles } from 'ephox/agar/api/DragnDrop';
+import { sDragnDrop, dragnDrop, sDropFiles, dropFiles, isDraggable } from 'ephox/agar/api/DragnDrop';
 import { Step } from 'ephox/agar/api/Step';
 import { RawAssertions, Logger, GeneralSteps } from 'ephox/agar/api/Main';
 import { createFile } from 'ephox/agar/api/Files';
 import { Blob } from '@ephox/dom-globals';
+
+UnitTest.test('DragDrop.isDraggable', () => {
+  assert.eq(false, isDraggable(Element.fromHtml('<div/>')));
+  assert.eq(false, isDraggable(Element.fromHtml('<a/>')));
+  assert.eq(false, isDraggable(Element.fromHtml('<a name="blah"/>')));
+  assert.eq(true, isDraggable(Element.fromHtml('<a href=""/>')));
+  assert.eq(true, isDraggable(Element.fromHtml('<a href="cat.com"/>')));
+  assert.eq(true, isDraggable(Element.fromHtml('<ol draggable="true" />')));
+  assert.eq(false, isDraggable(Element.fromHtml('<ol draggable="" />')));
+  assert.eq(false, isDraggable(Element.fromHtml('<ol draggable="false" />')));
+  assert.eq(true, isDraggable(Element.fromHtml('<img />')));
+});
 
 UnitTest.asynctest('DragnDropTest', (success, failure) => {
   const dropzone = Element.fromHtml('<div class="dropzone"></div>');
