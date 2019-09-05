@@ -6,15 +6,12 @@ import { File, DragEvent } from '@ephox/dom-globals';
 import { createDataTransfer, getDragImage } from '../datatransfer/DataTransfer';
 
 const isDraggable = (element: Element) => {
-  if (Node.name(element) === 'img') {
-    return true;
-  } else if (Node.name(element) === 'a' && Attr.has(element, 'href')) {
-    return true;
-  } else if (Attr.get(element, 'draggable') === 'true') {
-    return true;
-  } else {
-    return false;
-  }
+  const name = Node.name(element);
+  return (
+    name === 'img' ||
+    name === 'a' && Attr.has(element, 'href') ||
+    Attr.get(element, 'draggable') === 'true'
+  );
 };
 
 const checkDefaultPrevented = (evt: DragEvent) => {
