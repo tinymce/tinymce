@@ -11,7 +11,8 @@ export const selectors = {
   saveButton: 'button.tox-button:contains(Save)',
   xClose: 'button[aria-label=Close]',
   lockIcon: 'button.tox-lock',
-  embedButton: 'div.tox-tab:contains(Embed)'
+  embedButton: 'div.tox-tab:contains(Embed)',
+  poster: 'label.tox-label:contains(Media poster (Image URL)) + div > div > input.tox-textfield'
 };
 
 const sOpenDialog = function (ui) {
@@ -78,6 +79,10 @@ const sSetValueAndTrigger = (selector, value, events: string[]) => (ui) => {
 
 const sPasteSourceValue = function (ui, value: string) {
   return sSetValueAndTrigger(selectors.source, value, [ 'paste' ])(ui);
+};
+
+const sPastePosterValue = (ui, value: string) => {
+  return sSetValueAndTrigger(selectors.poster, value, [ 'paste' ])(ui);
 };
 
 const sChangeWidthValue = function (ui, value: string) {
@@ -292,6 +297,7 @@ export default {
   sAssertWidthValue,
   sAssertHeightValue,
   sPasteSourceValue,
+  sPastePosterValue,
   sAssertSizeRecalcConstrained,
   sAssertSizeRecalcConstrainedReopen,
   sAssertSizeRecalcUnconstrained,

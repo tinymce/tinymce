@@ -15,6 +15,7 @@ import * as HtmlToData from '../core/HtmlToData';
 import Service from '../core/Service';
 import { MediaData } from '../core/Types';
 import UpdateHtml from '../core/UpdateHtml';
+import { dataToHtml } from '../core/DataToHtml';
 
 type DialogData = {
   source1?: {
@@ -172,6 +173,15 @@ const showDialog = function (editor: Editor) {
     api.setData(wrap(dataFromEmbed));
   };
 
+  const handleUpdate = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
+    const data = getSourceData(api);
+    const embed = dataToHtml(editor, data);
+    api.setData(wrap({
+      ...data,
+      embed
+    }));
+  };
+
   const mediaInput: Types.Dialog.BodyComponentApi[] = [{
     name: 'source1',
     type: 'urlinput',
@@ -274,6 +284,11 @@ const showDialog = function (editor: Editor) {
 
         case 'embed':
           handleEmbed(api);
+          break;
+
+        case 'dimensions':
+        case 'poster':
+          handleUpdate(api);
           break;
 
         default:

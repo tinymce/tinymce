@@ -1,5 +1,6 @@
 Version 5.0.16 (TBD)
     Added inputType config field to specify type attribute of "input" dialog components #TINY-4062
+    Fixed media poster value not updating on change #TINY-4013
 Version 5.0.15 (2019-09-02)
     Added a dark `content_css` skin to go with the dark UI skin #TINY-3743
     Changed the enabled state on toolbar buttons so they don't get the hover effect #TINY-3974
