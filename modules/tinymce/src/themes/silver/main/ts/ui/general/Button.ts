@@ -19,7 +19,7 @@ import {
   SimpleOrSketchSpec
 } from '@ephox/alloy';
 import { console } from '@ephox/dom-globals';
-import { Merger, Option, Arr, Cell } from '@ephox/katamari';
+import { Merger, Option, Arr } from '@ephox/katamari';
 import { formActionEvent, formCancelEvent, formSubmitEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import { UiFactoryBackstageProviders, UiFactoryBackstage } from '../../backstage/Backstage';
@@ -144,15 +144,13 @@ const getAction = (name: string, buttonType: string) => {
   };
 };
 
-const getFetch = (items, thisIsABadIdea) => {
+const getFetch = (items, getButton) => {
   const getMenuItemAction = (item) => {
-    return (api, button) => {
-      thisIsABadIdea.get().each((memButton) => {
-        memButton.getOpt(button).each((orig) => {
-          AlloyTriggers.emitWith(orig, formActionEvent, {
-            name: item.name,
-            value: item.storage.get()
-          });
+    return (api, itemComp) => {
+      getButton().getOpt(itemComp).each((orig) => {
+        AlloyTriggers.emitWith(orig, formActionEvent, {
+          name: item.name,
+          value: item.storage.get()
         });
       });
       const newValue = !api.isActive();
@@ -196,14 +194,16 @@ const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): s
 
 export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, backstage: UiFactoryBackstage): SimpleOrSketchSpec => {
   if (isMenuFooterButtonSpec(spec, buttonType)) {
-    const thisIsABadIdea = Cell(Option.none());
+    const getButton = () => memButton;
+
     const fixedSpec = {
       ...spec,
-      fetch: getFetch(spec.items, thisIsABadIdea)
+      fetch: getFetch(spec.items, getButton)
     };
-    const memColorButton = Memento.record(renderMenuButton(fixedSpec, ToolbarButtonClasses.Button, backstage, Option.none()));
-    thisIsABadIdea.set(Option.some(memColorButton));
-    return memColorButton.asSpec();
+
+    const memButton = Memento.record(renderMenuButton(fixedSpec, ToolbarButtonClasses.Button, backstage, Option.none()));
+
+    return memButton.asSpec();
   } else if (isNormalFooterButtonSpec(spec, buttonType)) {
     const action = getAction(spec.name, buttonType);
     const buttonSpec = {

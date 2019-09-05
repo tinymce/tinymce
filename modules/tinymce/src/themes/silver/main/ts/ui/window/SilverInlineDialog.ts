@@ -23,7 +23,7 @@ import {
   NativeEvents
 } from '@ephox/alloy';
 import { DialogManager, Types } from '@ephox/bridge';
-import { Option, Id, Arr, Cell } from '@ephox/katamari';
+import { Option, Id } from '@ephox/katamari';
 import { Attr, Node } from '@ephox/sugar';
 
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
@@ -36,6 +36,7 @@ import { renderInlineFooter } from './SilverDialogFooter';
 import { renderInlineHeader } from './SilverDialogHeader';
 import { getDialogApi } from './SilverDialogInstanceApi';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+import * as SilverDialogCommon from './SilverDialogCommon';
 
 interface WindowExtra<T> {
   redial: (newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>;
@@ -63,36 +64,9 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
     }, dialogContentId, backstage, ariaAttrs) as SimpleSpec
   );
 
-  const mapItems = (button: Types.Dialog.DialogMenuButton) => {
-    const items = Arr.map(button.items, (item) => {
-      const cell = Cell<Boolean>(false);
-      return {
-        ...item,
-        storage: cell
-      };
-    });
-    return {
-      ...button,
-      items
-    };
-  };
+  const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(dialogInit.internalDialog.buttons);
 
-  const storagedMenuButtons = Arr.map(dialogInit.internalDialog.buttons, (button) => {
-    if (button.type === 'menu') {
-      return mapItems(button);
-    }
-    return button;
-  });
-
-  const objOfCells = Arr.foldl(storagedMenuButtons, (acc, button) => {
-    if (button.type === 'menu') {
-      return Arr.foldl(button.items, (innerAcc, item) => {
-        innerAcc[item.name] = item.storage;
-        return innerAcc;
-      }, acc);
-    }
-    return acc;
-  }, {});
+  const objOfCells = SilverDialogCommon.extractCellsToObject(storagedMenuButtons);
 
   const memFooter = Memento.record(
     renderInlineFooter({

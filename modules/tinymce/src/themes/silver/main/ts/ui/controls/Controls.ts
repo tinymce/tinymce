@@ -12,7 +12,7 @@ export interface GetApiType<T> {
   getApi: (comp: AlloyComponent) => T;
 }
 
-export type OnDestroy<T> = (controlApi: T) => void;
+export type OnDestroy<T> = (controlApi: T, comp: AlloyComponent) => void;
 
 export interface OnControlAttachedType<T> extends GetApiType<T> {
   onSetup: (controlApi: T) => OnDestroy<T>; // TODO: check: no change here?

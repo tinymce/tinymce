@@ -22,7 +22,7 @@ import {
   AlloySpec,
 } from '@ephox/alloy';
 import { DialogManager, Types } from '@ephox/bridge';
-import { Option } from '@ephox/katamari';
+import { Option, Arr, Cell } from '@ephox/katamari';
 import { Body, Class } from '@ephox/sugar';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
@@ -167,8 +167,45 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
   );
 };
 
+const mapMenuButtons = (buttons) => {
+  const mapItems = (button: Types.Dialog.DialogMenuButton) => {
+    const items = Arr.map(button.items, (item) => {
+      const cell = Cell<Boolean>(false);
+      return {
+        ...item,
+        storage: cell
+      };
+    });
+    return {
+      ...button,
+      items
+    };
+  };
+
+  return Arr.map(buttons, (button) => {
+    if (button.type === 'menu') {
+      return mapItems(button);
+    }
+    return button;
+  });
+};
+
+const extractCellsToObject = (buttons) => {
+  return Arr.foldl(buttons, (acc, button) => {
+    if (button.type === 'menu') {
+      return Arr.foldl(button.items, (innerAcc, item) => {
+        innerAcc[item.name] = item.storage;
+        return innerAcc;
+      }, acc);
+    }
+    return acc;
+  }, {});
+};
+
 export {
   getHeader,
   getEventExtras,
-  renderModalDialog
+  renderModalDialog,
+  mapMenuButtons,
+  extractCellsToObject
 };
