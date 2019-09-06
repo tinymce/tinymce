@@ -33,6 +33,7 @@ import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 import { Types } from '@ephox/bridge';
 import { Omit } from '../Omit';
 import { renderFormField } from '../alien/FieldLabeller';
+import { Focus } from '@ephox/sugar';
 
 type ButtonSpec = Omit<Types.Button.Button, 'type'>;
 type FooterButtonSpec = Omit<Types.Dialog.DialogNormalButton, 'type'> | Omit<Types.Dialog.DialogMenuButton, 'type'>;
@@ -148,6 +149,7 @@ const getFetch = (items, getButton) => {
   const getMenuItemAction = (item) => {
     return (api, itemComp) => {
       getButton().getOpt(itemComp).each((orig) => {
+        Focus.focus(orig.element());
         AlloyTriggers.emitWith(orig, formActionEvent, {
           name: item.name,
           value: item.storage.get()
