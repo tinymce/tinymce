@@ -1,7 +1,7 @@
 import { RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
-import { Option } from '@ephox/katamari';
+import { Option, Options } from '@ephox/katamari';
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
 
 UnitTest.test('LanguageGetTest', function () {
@@ -11,7 +11,7 @@ UnitTest.test('LanguageGetTest', function () {
     RawAssertions.assertEq(
       () => 'check lang(). Expected: ' + lang.getOr('none') + ', actual: ' + itemLang.getOr('none'),
       true,
-      lang.equals(itemLang)
+      Options.equals(lang, itemLang)
     );
   };
 

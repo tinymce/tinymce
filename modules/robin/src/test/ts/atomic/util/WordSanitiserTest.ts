@@ -1,5 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock';
-import { Option } from '@ephox/katamari';
+import { Option, Options } from '@ephox/katamari';
 import { WordScope } from 'ephox/robin/data/WordScope';
 import WordSanitiser from 'ephox/robin/util/WordSanitiser';
 
@@ -13,8 +13,8 @@ UnitTest.test('Word Sanitiser', function () {
   const check = function (expected: WordScope, input: WordScope) {
     const actual = WordSanitiser.scope(input);
     assert.eq(expected.word(), actual.word());
-    assert.eq(true, expected.left().equals(actual.left()));
-    assert.eq(true, expected.right().equals(actual.right()));
+    assert.eq(true, Options.equals(expected.left(), actual.left()));
+    assert.eq(true, Options.equals(expected.right(), actual.right()));
   };
 
   check(ss('one', '<', '>'), ss('one', '<', '>'));

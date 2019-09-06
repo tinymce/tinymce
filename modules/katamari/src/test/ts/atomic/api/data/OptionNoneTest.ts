@@ -1,12 +1,14 @@
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Option } from 'ephox/katamari/api/Option';
+import * as Options from 'ephox/katamari/api/Options';
 import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('OptionNoneTest', function () {
+
   const testSanity = function () {
-    const s = Option.none();
+    const s = Option.none<number>();
     assert.eq(false, s.isSome());
     assert.eq(true, s.isNone());
     assert.eq(6, s.getOr(6));
@@ -25,22 +27,20 @@ UnitTest.test('OptionNoneTest', function () {
       return Option.some('test' + v);
     }).isNone());
 
-    assert.eq(true, s.flatten().isNone());
-    assert.eq(true, s.filter(Fun.constant(true)).flatten().isNone());
-    assert.eq(true, s.filter(Fun.constant(false)).flatten().isNone());
+    assert.eq(true, s.filter(Fun.constant(true)).isNone());
+    assert.eq(true, s.filter(Fun.constant(false)).isNone());
+    assert.eq(true, s.filter(Fun.die('oof')).isNone());
 
     assert.eq(false, Option.from(null).isSome());
     assert.eq(false, Option.from(undefined).isSome());
 
-    assert.eq(true, Option.none().equals(Option.none()));
-    assert.eq(false, Option.none().equals(Option.some(3)));
+    assert.eq(true, Options.equals(Option.none(), Option.none()));
+    assert.eq(false, Options.equals(Option.none(), Option.some(3)));
 
     assert.eq([], Option.none().toArray());
 
-    assert.eq(true, Option.none().ap(Option.some(Fun.die('boom'))).equals(Option.none()));
-
-    assert.eq(true, Option.none().or(Option.some(7)).equals(Option.some(7)));
-    assert.eq(true, Option.none().or(Option.none()).equals(Option.none()));
+    assert.eq(true, Options.equals(Option.none().or(Option.some(7)), Option.some(7)));
+    assert.eq(true, Options.equals(Option.none().or(Option.none()), Option.none()));
 
     const assertOptionEq = function (expected, actual) {
       const same = expected.isNone() ? actual.isNone() : (actual.isSome() && expected.getOrDie() === actual.getOrDie());
@@ -117,13 +117,7 @@ UnitTest.test('OptionNoneTest', function () {
       return Jsc.eq(true, actual.isNone());
     });
 
-    Jsc.property('Checking none.ap(Option.some(string -> json) === none', arbOptionNone, 'string -> json', function (opt, f) {
-      const g = Option.some(f);
-      const actual = opt.ap(g);
-      return Jsc.eq(true, actual.isNone());
-    });
-
-    Jsc.property('Checking none.each(f) === undefined and f does not fire', arbOptionNone, 'string -> json', function (opt, f) {
+    Jsc.property('Checking none.each(f) === undefined and f does not fire', arbOptionNone, function (opt) {
       const actual = opt.each(Fun.die('should not invoke'));
       return Jsc.eq(undefined, actual);
     });
@@ -159,7 +153,7 @@ UnitTest.test('OptionNoneTest', function () {
     });
 
     Jsc.property('Checking none.equals_(none) === true', arbOptionNone, arbOptionNone, function (opt1, opt2) {
-      return Jsc.eq(true, opt1.equals_(opt2));
+      return Jsc.eq(true, Options.equals(opt1, opt2));
     });
 
     Jsc.property('Checking none.toArray equals [ ]', arbOptionNone, function (opt) {

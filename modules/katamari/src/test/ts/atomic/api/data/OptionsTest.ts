@@ -12,10 +12,6 @@ UnitTest.test('OptionsTest', function () {
   };
 
   assert.eq({name: 'bob', age: 25, address: 'the moon'}, Options.liftN([Option.some('bob'), Option.some(25), Option.some('the moon')], person).getOrDie());
-
-  assert.eq(true, Options.liftN([Option.some('bob'), Option.none(), Option.some('the moon')], function () { throw new Error('barf'); }).isNone());
-  assert.eq(true, Options.liftN([Option.none(), Option.none(), Option.some('the moon')], function () { throw new Error('barf'); }).isNone());
-
   const arr1 = [Option.some(1), Option.none(), Option.some(2), Option.some(3), Option.none(), Option.none(), Option.none(), Option.none(), Option.some(4)];
   assert.eq([1, 2, 3, 4], Options.cat(arr1));
 
@@ -149,7 +145,7 @@ UnitTest.test('OptionsTest', function () {
     Jsc.fun(Jsc.json),
     function (a, b, f) {
       const args = Options.cat([a, b]);
-      const output = Options.lift(a, b, f);
+      const output = Options.lift2(a, b, f);
 
       if (args.length === 2) {
         return Jsc.eq(output.getOrDie(), f.apply(undefined, args));
