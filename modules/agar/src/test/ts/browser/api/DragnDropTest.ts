@@ -8,15 +8,18 @@ import { createFile } from 'ephox/agar/api/Files';
 import { Blob } from '@ephox/dom-globals';
 
 UnitTest.test('DragDrop.isDraggable', () => {
-  assert.eq(false, isDraggable(Element.fromHtml('<div/>')));
-  assert.eq(false, isDraggable(Element.fromHtml('<a/>')));
-  assert.eq(false, isDraggable(Element.fromHtml('<a name="blah"/>')));
-  assert.eq(true, isDraggable(Element.fromHtml('<a href=""/>')));
-  assert.eq(true, isDraggable(Element.fromHtml('<a href="cat.com"/>')));
-  assert.eq(true, isDraggable(Element.fromHtml('<ol draggable="true" />')));
-  assert.eq(false, isDraggable(Element.fromHtml('<ol draggable="" />')));
-  assert.eq(false, isDraggable(Element.fromHtml('<ol draggable="false" />')));
-  assert.eq(true, isDraggable(Element.fromHtml('<img />')));
+  const check = (expected: boolean, html: string) => {
+    assert.eq(expected, isDraggable(Element.fromHtml(html)));
+  };
+  check(false, '<div/>');
+  check(false, '<a/>');
+  check(false, '<a name="blah"/>');
+  check(true, '<a href=""/>');
+  check(true, '<a href="cat.com"/>');
+  check(true, '<ol draggable="true" />');
+  check(false, '<ol draggable="" />');
+  check(false, '<ol draggable="false" />');
+  check(true, '<img />');
 });
 
 UnitTest.asynctest('DragnDropTest', (success, failure) => {
