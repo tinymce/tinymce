@@ -22,6 +22,7 @@ import Buttons from './ui/Buttons';
 import MenuItems from './ui/MenuItems';
 import { hasTabNavigation } from './api/Settings';
 import { getApi } from './api/Api';
+import { Element } from '@ephox/sugar';
 
 function Plugin(editor: Editor) {
   const resizeHandler = getResizeHandler(editor);
@@ -29,7 +30,7 @@ function Plugin(editor: Editor) {
   const actions = TableActions(editor, resizeHandler.lazyWire);
   const selections = Selections(editor);
   const selectionTargets = getSelectionTargets(editor, selections);
-  const clipboardRows = Cell(Option.none());
+  const clipboardRows = Cell(Option.none<Element<any>[]>());
 
   Commands.registerCommands(editor, actions, cellSelection, selections, clipboardRows);
   Clipboard.registerEvents(editor, selections, actions, cellSelection);

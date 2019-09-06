@@ -64,9 +64,9 @@ const elementQueue = function (items: Element[], container: Option<Element>): El
     });
   };
 
-  const current = () => i >= 0 && i < items.length ? Option.some(items[i]) : Option.none();
+  const current = () => i >= 0 && i < items.length ? Option.some(items[i]) : Option.none<Element<any>>();
 
-  const peek = () => i + 1 < items.length ? Option.some(items[i + 1]) : Option.none();
+  const peek = () => i + 1 < items.length ? Option.some(items[i + 1]) : Option.none<Element<any>>();
 
   const take = () => {
     i += 1;
@@ -100,9 +100,9 @@ const element = function (tag: string, fields: ElementFields): StructAssert {
     const attrs = fields.attrs !== undefined ? fields.attrs : {};
     const classes = fields.classes !== undefined ? fields.classes : [];
     const styles = fields.styles !== undefined ? fields.styles : {};
-    const html = fields.html !== undefined ? Option.some(fields.html) : Option.none();
-    const value = fields.value !== undefined ? Option.some(fields.value) : Option.none();
-    const children = fields.children !== undefined ? Option.some(fields.children) : Option.none();
+    const html = fields.html !== undefined ? Option.some(fields.html) : Option.none<StringAssert>();
+    const value = fields.value !== undefined ? Option.some(fields.value) : Option.none<StringAssert>();
+    const children = fields.children !== undefined ? Option.some(fields.children) : Option.none<StructAssert[]>();
     assertAttrs(attrs, actual);
     assertClasses(classes, actual);
     assertStyles(styles, actual);

@@ -15,8 +15,8 @@ UnitTest.test('Options.bindFrom === Options.bind().from()', () => {
     assert.eq(true, Options.equals(Options.bindFrom(input, f), Option.from(input).bind(f)));
   }
 
-  const s = (x: number) => Option.some(x + 1);
-  const n = (x: number) => Option.none();
+  const s = (x: number) => Option.some<number>(x + 1);
+  const n = (x: number) => Option.none<number>();
 
   check(3, s);
   check(null, s);

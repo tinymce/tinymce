@@ -6,7 +6,7 @@
  */
 
 import { Fun, Option } from '@ephox/katamari';
-import { Compare, DomEvent, Element, WindowSelection } from '@ephox/sugar';
+import { Compare, DomEvent, Element, WindowSelection, StructRect } from '@ephox/sugar';
 
 const getBodyFromFrame = function (frame) {
   return Option.some(Element.fromDom(frame.dom().contentWindow.document.body));
@@ -73,7 +73,7 @@ const getActiveApi = function (editor) {
 
     const toStartRect = function (sel) {
       const rect = sel.start().dom().getBoundingClientRect();
-      return rect.width > 0 || rect.height > 0 ? Option.some(rect).map(toRect) : Option.none();
+      return rect.width > 0 || rect.height > 0 ? Option.some(rect).map(toRect) : Option.none<StructRect>();
     };
 
     return WindowSelection.getExact(win).filter(isCollapsed).bind(toStartRect);
