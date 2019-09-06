@@ -12,7 +12,7 @@ export const selectors = {
   xClose: 'button[aria-label=Close]',
   lockIcon: 'button.tox-lock',
   embedButton: 'div.tox-tab:contains(Embed)',
-  poster: 'label.tox-label:contains(Media poster (Image URL)) + div.tox-form__controls-h-stack input.tox-textfield'
+  poster: 'label:contains(Media poster (Image URL)) + div.tox-form__controls-h-stack input.tox-textfield'
 };
 
 const sOpenDialog = function (ui) {
