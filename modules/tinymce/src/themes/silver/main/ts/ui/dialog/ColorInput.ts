@@ -34,6 +34,7 @@ import { renderLabel } from '../alien/FieldLabeller';
 import ColorSwatch from '../core/color/ColorSwatch';
 import Settings from '../core/color/Settings';
 import { renderPanelButton } from '../general/PanelButton';
+import { formChangeEvent } from '../general/FormEvents';
 import { Omit } from '../Omit';
 
 const colorInputChangeEvent = Id.generate('color-input-change');
@@ -176,6 +177,7 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
           memColorButton.getOpt(comp).each((colorButton) => {
             Css.set(colorButton.element(), 'background-color', se.event().color());
           });
+          AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name } );
         }),
         AlloyEvents.run<ColorSwatchChangeEvent>(colorSwatchChangeEvent, (comp, se) => {
           FormField.getField(comp).each((field) => {

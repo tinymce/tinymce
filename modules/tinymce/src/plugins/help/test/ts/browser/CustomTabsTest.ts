@@ -1,5 +1,5 @@
-import { Chain, Logger, NamedChain, Pipeline, UiFinder, UnitTest } from '@ephox/agar';
-import { assert } from '@ephox/bedrock';
+import { Chain, Logger, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
+import { assert, UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Editor as McEditor } from '@ephox/mcagar';

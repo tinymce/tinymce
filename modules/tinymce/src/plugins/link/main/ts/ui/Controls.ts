@@ -22,6 +22,13 @@ const setupButtons = function (editor: Editor) {
     onSetup: Actions.toggleActiveState(editor)
   });
 
+  editor.ui.registry.addButton('openlink', {
+    icon: 'new-tab',
+    tooltip: 'Open link',
+    onAction: Actions.gotoSelectedLink(editor),
+    onSetup: Actions.toggleEnabledState(editor)
+  });
+
   editor.ui.registry.addButton('unlink', {
     icon: 'unlink',
     tooltip: 'Remove link',
