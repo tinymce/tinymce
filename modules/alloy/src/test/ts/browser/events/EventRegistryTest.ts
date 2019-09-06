@@ -74,7 +74,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
         if (f.id < g.id) { return -1; } else if (f.id > g.id) { return +1; } else { return 0; }
       });
 
-      Assertions.assertEq('filter(' + type + ') = ' + JSON.stringify(expected), expected, raw);
+      Assertions.assertEq(() => 'filter(' + type + ') = ' + JSON.stringify(expected), expected, raw);
     });
   };
 
@@ -129,7 +129,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
               Attr.get(section.element(), 'data-test-uid')
             );
             Assertions.assertEq(
-              'find(' + type + ', ' + id + ') = ' + JSON.stringify(expected.handler),
+              () => 'find(' + type + ', ' + id + ') = ' + JSON.stringify(expected.handler),
               expected.handler,
               section.descHandler().cHandler()
             );

@@ -5,6 +5,7 @@ import * as ErrorTypes from '../alien/ErrorTypes';
 import { DieFn, NextFn } from '../pipe/Pipe';
 import { Step } from './Step';
 import { addLogEntry, popLogLevel, pushLogLevel, TestLogs } from './TestLogs';
+import { TestLabel } from '@ephox/bedrock';
 
 const t = function <T, U>(label: string, f: Step<T, U>): Step<T, U> {
   const enrich = function (err) {
@@ -23,7 +24,7 @@ const t = function <T, U>(label: string, f: Step<T, U>): Step<T, U> {
   };
 };
 
-const sync = function <T>(label: string, f: () => T): T {
+const sync = function <T>(label: TestLabel, f: () => T): T {
   const enrich = function (err) {
     return ErrorTypes.enrichWith(label, err);
   };

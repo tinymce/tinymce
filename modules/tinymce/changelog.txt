@@ -1,9 +1,11 @@
-Version 5.0.15 (TBD)
-    Fixed openlink button not being registered in the editor #TINY-4024
-    Added a dark content_css styles to go with the dark skin #TINY-3743
-    Changed so the enabled state on toolbar buttons doesn't get the hover effect #TINY-3974
+Version 5.0.16 (TBD)
+    Fixed openlink was not registered as a toolbar button #TINY-4024
+    Added inputType config field to specify type attribute of "input" dialog components #TINY-4062
+Version 5.0.15 (2019-09-02)
+    Added a dark `content_css` skin to go with the dark UI skin #TINY-3743
+    Changed the enabled state on toolbar buttons so they don't get the hover effect #TINY-3974
     Fixed missing CSS active state on toolbar buttons #TINY-3966
-    Fixed onChange callback not firing for the colorinput dialog component #TINY-3968
+    Fixed `onChange` callback not firing for the colorinput dialog component #TINY-3968
     Fixed context toolbars not showing in fullscreen mode #TINY-4023
 Version 5.0.14 (2019-08-19)
     Added an API to reload the autocompleter menu with additional fetch metadata #MENTIONS-17
