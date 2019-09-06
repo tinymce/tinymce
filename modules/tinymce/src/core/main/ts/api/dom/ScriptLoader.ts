@@ -8,6 +8,7 @@
 import { console, document } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
 import DOMUtils from './DOMUtils';
+import { ReferrerPolicy } from '../SettingsTypes';
 import Tools from '../util/Tools';
 
 /**
@@ -39,6 +40,10 @@ import Tools from '../util/Tools';
 const DOM = DOMUtils.DOM;
 const each = Tools.each, grep = Tools.grep;
 
+export interface ScriptLoaderSettings {
+  referrerPolicy?: ReferrerPolicy;
+}
+
 export interface ScriptLoaderConstructor {
   readonly prototype: ScriptLoader;
   ScriptLoader: ScriptLoader;
@@ -55,6 +60,7 @@ interface ScriptLoader {
   load (url: string, success?: () => void, scope?: {}, failure?: () => void): void;
   remove (url: string);
   loadQueue (success?: () => void, scope?: {}, failure?: (urls: string[]) => void): void;
+  _setReferrerPolicy (referrerPolicy: ReferrerPolicy): void;
 }
 
 const QUEUED = 0;
@@ -65,13 +71,20 @@ const FAILED = 3;
 class ScriptLoader {
   public static ScriptLoader = new ScriptLoader();
 
+  private settings: Partial<ScriptLoaderSettings>;
   private states: Record<string, number> = {};
   private queue: string[] = [];
   private scriptLoadedCallbacks: Record<string, Array<{success: () => void, failure: () => void, scope: any}>> = {};
   private queueLoadedCallbacks: Array<{success: () => void, failure: (urls: string[]) => void, scope: any}> = [];
   private loading = 0;
 
-  constructor () { }
+  constructor (settings: Partial<ScriptLoaderSettings> = {}) {
+    this.settings = settings;
+  }
+
+  public _setReferrerPolicy(referrerPolicy: ReferrerPolicy) {
+    this.settings.referrerPolicy = referrerPolicy;
+  }
 
   /**
    * Loads a specific script directly without adding it to the load queue.
@@ -122,6 +135,10 @@ class ScriptLoader {
     elm.id = id;
     elm.type = 'text/javascript';
     elm.src = Tools._addCacheSuffix(url);
+
+    if (this.settings.referrerPolicy) {
+      elm.referrerPolicy = this.settings.referrerPolicy;
+    }
 
     elm.onload = done;
 
