@@ -6,8 +6,7 @@
  */
 
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, Focusing, Keying, NativeEvents, Reflecting, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling } from '@ephox/alloy';
-import { Toolbar, Types } from '@ephox/bridge';
-import { NestedMenuItemContents } from '@ephox/bridge/lib/main/ts/ephox/bridge/api/Menu';
+import { Toolbar, Types, Menu } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attr, SelectorFind } from '@ephox/sugar';
@@ -266,21 +265,23 @@ const convertSplitToMenuButton = (spec, backstage) => {
     onAction: (data) => spec.onItemAction(mockApi, data.value)
   }]);
 
-  const getMenuItems = (items): NestedMenuItemContents[] => Arr.map(items, (item) => {
-    return {
-      type: 'menuitem' as 'menuitem',
-      onAction: (api) => {
-        const mergedApi = { ...mockApi, ...api };
-        if ('value' in item) {
-          return spec.onItemAction(mergedApi, item.value);
-        } else {
-          return spec.onItemAction(mergedApi, '');
-        }
-      },
-      ...'text' in item ? { text: item.text } : { },
-      ...'icon' in item ? { icon: item.icon } : { }
-    };
-  });
+  const getMenuItems = (items): Menu.NestedMenuItemContents[] => {
+    return Arr.map(items, (item) => {
+      return {
+        type: 'menuitem' as 'menuitem',
+        onAction: (api) => {
+          const mergedApi = { ...mockApi, ...api };
+          if ('value' in item) {
+            return spec.onItemAction(mergedApi, item.value);
+          } else {
+            return spec.onItemAction(mergedApi, '');
+          }
+        },
+        ...'text' in item ? { text: item.text } : {},
+        ...'icon' in item ? { icon: item.icon } : {}
+      };
+    });
+  };
 
   const menuButtonSpec: Toolbar.ToolbarMenuButton = {
     type: 'menubutton',
@@ -406,4 +407,3 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, backstage: UiFactor
 };
 
 export { renderCommonStructure, renderToolbarButton, renderToolbarButtonWith, renderToolbarToggleButton, renderToolbarToggleButtonWith, renderSplitButton };
-
