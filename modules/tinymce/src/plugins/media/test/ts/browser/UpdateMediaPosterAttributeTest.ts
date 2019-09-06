@@ -6,7 +6,7 @@ import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 import Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.core.UpdateMediaPosterAttributeTest', (success, failure) => {
+UnitTest.asynctest('browser.plugins.media.UpdateMediaPosterAttributeTest', (success, failure) => {
   Plugin();
   Theme();
 
