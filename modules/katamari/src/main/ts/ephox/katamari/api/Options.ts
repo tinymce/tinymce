@@ -22,22 +22,12 @@ export const findMap = <A, B>(arr: ArrayLike<A>, f: (a: A, index: number) => Opt
   return Option.none<B>();
 };
 
-/**
- * if all elements in arr are 'some', their inner values are passed as arguments to f
- * f must have arity arr.length
- */
-export const liftN = <B>(arr: Option<any>[], f: (...args: any[]) => B): Option<B> => {
-  const r: any[] = [];
-  for (let i = 0; i < arr.length; i++) {
-    const x = arr[i];
-    if (x.isSome()) {
-      r.push(x.getOrDie());
-    } else {
-      return Option.none<B>();
-    }
-  }
-  return Option.some(<B> f.apply(null, r));
-};
+/*
+Notes on the lift functions:
+- We used to have a generic liftN, but we were concerned about its type-safety, and the below variants were faster in microbenchmarks.
+- The getOrDie calls are partial functions, but are checked beforehand. This is faster and more convenient (but less safe) than folds.
+- && is used instead of a loop for simplicity and performance.
+*/
 
 export const lift2 = <A, B, C> (oa: Option<A>, ob: Option<B>, f: (a: A, b: B) => C): Option<C> =>
   oa.isSome() && ob.isSome() ? Option.some(f(oa.getOrDie(), ob.getOrDie())) : Option.none<C>();

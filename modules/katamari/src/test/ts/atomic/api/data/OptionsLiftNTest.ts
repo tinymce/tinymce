@@ -10,11 +10,6 @@ const boom = function (): string {
   throw new Error('barf');
 };
 
-UnitTest.test('Options.liftN', () => {
-  assert.eq(true, Options.liftN([Option.some('bob'), Option.none(), Option.some('the moon')], boom).isNone());
-  assert.eq(true, Options.liftN([Option.none(), Option.none(), Option.some('the moon')], boom).isNone());
-});
-
 UnitTest.test('Options.lift2', () => {
   assertOption(Option.none<string>(), Options.lift2(Option.none<string>(), Option.none<number>(), boom));
   assertOption(Option.none<string>(), Options.lift2(Option.none<string>(), Option.some<number>(3), boom));

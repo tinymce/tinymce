@@ -66,7 +66,7 @@ const readFromRange = function (rootNode, forward, rng) {
     });
   });
 
-  return Options.liftN([fromBlockPos, toBlockPos], BlockBoundary).filter(function (blockBoundary) {
+  return Options.lift2(fromBlockPos, toBlockPos, BlockBoundary).filter(function (blockBoundary) {
     return isDifferentBlocks(blockBoundary) && hasSameParent(blockBoundary) && isEditable(blockBoundary);
   });
 };
