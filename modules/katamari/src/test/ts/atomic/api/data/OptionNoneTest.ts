@@ -1,6 +1,5 @@
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Option } from 'ephox/katamari/api/Option';
-import * as Options from 'ephox/katamari/api/Options';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
@@ -59,8 +58,6 @@ UnitTest.test('OptionNoneTest', () => {
   };
 
   const testSpecs = () => {
-    // const arbOptionSome = ArbDataTypes.optionSome;
-
     Jsc.property('Checking none.fold(_ -> x, die) === x', 'json', (json: any) => {
       const actual = Option.none<string>().fold(Fun.constant(json), Fun.die('Should not die'));
       return Jsc.eq(json, actual);
