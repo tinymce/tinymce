@@ -1,5 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock';
-import { Arr, Option, Options } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { WordScope } from 'ephox/robin/data/WordScope';
 import Identify from 'ephox/robin/words/Identify';
 
@@ -12,8 +12,8 @@ UnitTest.test('words :: Identify', function () {
     assert.eq(expected.length, actual.length);
     Arr.map(expected, function (x, i) {
       assert.eq(expected[i].word(), actual[i].word());
-      assert.eq(true, Options.equals(expected[i].left(), actual[i].left()));
-      assert.eq(true, Options.equals(expected[i].right(), actual[i].right()));
+      assert.eq(true, expected[i].left().equals(actual[i].left()));
+      assert.eq(true, expected[i].right().equals(actual[i].right()));
     });
   };
 

@@ -1,7 +1,7 @@
 import { Logger, RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
-import { Arr, Option, Options } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 import { ArbTextIds, arbTextIds } from 'ephox/robin/test/Arbitraries';
 import Clustering from 'ephox/robin/words/Clustering';
@@ -26,7 +26,7 @@ UnitTest.test('ClusteringTest', function () {
         RawAssertions.assertEq('start: ' + id + ', check right()', expRight, checkWords(universe, act.right()));
         RawAssertions.assertEq(
           () => 'start: ' + id + ', check lang(): expected: ' + expLang.toString() + ', actual: ' + act.lang().toString(),
-          true, Options.equals(expLang, act.lang())
+          true, expLang.equals(act.lang())
         );
         // .all() is:  tfel + middle + right
         RawAssertions.assertEq('start: ' + id + ', check all()', expLeft.reverse().concat(expMiddle).concat(expRight), checkWords(universe, act.all()));

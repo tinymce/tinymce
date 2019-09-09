@@ -28,13 +28,10 @@ UnitTest.test('OptionNoneTest', () => {
     assert.eq(false, Option.from(null).isSome());
     assert.eq(false, Option.from(undefined).isSome());
 
-    assert.eq(true, Options.equals(Option.none(), Option.none()));
-    assert.eq(false, Options.equals(Option.none(), Option.some(3)));
+    assert.eq(true, Option.none().or(Option.some(7)).equals(Option.some(7)));
+    assert.eq(true, Option.none().or(Option.none()).equals(Option.none()));
 
     assert.eq([], Option.none().toArray());
-
-    assert.eq(true, Options.equals(Option.none().or(Option.some(7)), Option.some(7)));
-    assert.eq(true, Options.equals(Option.none().or(Option.none()), Option.none()));
 
     const assertOptionEq = <T> (expected: Option<T>, actual: Option<T>): void => {
       const same = expected.isNone() ? actual.isNone() : (actual.isSome() && expected.getOrDie() === actual.getOrDie());

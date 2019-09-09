@@ -3,14 +3,14 @@ import Jsc from '@ephox/wrap-jsverify';
 
 import { convertUnit, nuSize, SizeUnit, Size } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 import { convertableUnits, largeSensible, units } from './SizeInputShared';
-import { Option, Arr, Options } from '@ephox/katamari';
+import { Option, Arr } from '@ephox/katamari';
 
 UnitTest.test('SizeInputConvertTest', () => {
 
   const check = (expected: Option<number>, size: Size, unit: SizeUnit) => {
     const result = convertUnit(size, unit);
     assert.eq(
-      true, Options.equals(expected, result),
+      true, expected.equals(result),
       'Expected conversion of ' + JSON.stringify(size) +
       ' to ' + unit + ' = ' + result.toString()
     );

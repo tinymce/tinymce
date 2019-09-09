@@ -36,22 +36,12 @@ UnitTest.test('OptionSomeTest', function () {
     assert.eq(true, Option.from(5).isSome());
     assert.eq(5, Option.from(5).getOrDie('Died!'));
 
-    assert.eq(false, Options.equals(Option.some(4), Option.none()));
-    assert.eq(false, Options.equals(Option.some(2), Option.some(4)));
-    assert.eq(true, Options.equals(Option.some(5), Option.some(5)));
-    assert.eq(false, Options.equals(Option.some(5.1), Option.some(5.3)));
-
-    const comparator = function (a, b) { return Math.round(a) === Math.round(b); };
-
-    assert.eq(true, Options.equals_(comparator)(Option.some(5.1), Option.some(5.3)));
-    assert.eq(false, Options.equals_(comparator)(Option.some(5.1), Option.some(5.9)));
-
     assert.eq([1], Option.some(1).toArray());
     assert.eq([{ cat: 'dog' }], Option.some({ cat: 'dog' }).toArray());
     assert.eq([[ 1 ]], Option.some([1]).toArray());
 
-    assert.eq(true, Options.equals(Option.some(6).or(Option.some(7)), Option.some(6)));
-    assert.eq(true, Options.equals(Option.some(3).or(Option.none()), Option.some(3)));
+    assert.eq(true, Option.some(6).or(Option.some(7)).equals(Option.some(6)));
+    assert.eq(true, Option.some(3).or(Option.none()).equals(Option.some(3)));
 
     const assertOptionEq = function (expected, actual) {
       const same = expected.isNone() ? actual.isNone() : (actual.isSome() && expected.getOrDie() === actual.getOrDie());
@@ -139,7 +129,7 @@ UnitTest.test('OptionSomeTest', function () {
 
     Jsc.property('Given f :: s -> some(b), checking some(x).bind(f) === some(b)', arbOptionSome, Jsc.fn(arbOptionSome), function (opt, f) {
       const actual = opt.bind(f);
-      return actual.isSome() && Jsc.eq(true, Options.equals(actual, f(opt.getOrDie())));
+      return actual.isSome() && Jsc.eq(true, actual.equals(f(opt.getOrDie())));
     });
 
     Jsc.property('Given f :: s -> none, checking some(x).bind(f) === none', arbOptionSome, Jsc.fn(arbOptionNone), function (opt, f) {

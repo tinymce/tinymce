@@ -32,6 +32,8 @@ export interface Option<T> {
     <Q extends T>(f: (x: T) => x is Q): Option<Q>;
     (f: (x: T) => boolean): Option<T>;
   };
+  equals: (opt: Option<T>) => boolean;
+  equals_: <T2> (opt: Option<T2>, equality: (a: T, b: T2) => boolean) => boolean;
   toArray: () => T[];
   toString: () => string;
 }
@@ -39,10 +41,13 @@ export interface Option<T> {
 const none = <T = any>() => <Option<T>> NONE;
 
 const NONE: Option<any> = (() => {
+  const eq = function (o) {
+    return o.isNone();
+  };
+
   // inlined from peanut, maybe a micro-optimisation?
   const call = (thunk) => thunk();
   const id = (n) => n;
-  const noop = () => { };
   const me: Option<any> = {
     fold: (n, s) => n(),
     is: Fun.never,
@@ -58,11 +63,13 @@ const NONE: Option<any> = (() => {
     or: id,
     orThunk: call,
     map: none,
-    each: noop,
+    each: Fun.noop,
     bind: none,
     exists: Fun.never,
     forall: Fun.always,
     filter: none,
+    equals: eq,
+    equals_: eq,
     toArray () { return []; },
     toString: Fun.constant('none()')
   };
@@ -73,10 +80,15 @@ const NONE: Option<any> = (() => {
 })();
 
 const some = <T>(a: T): Option<T> => {
+  const constant_a = Fun.constant(a);
 
   const self = () => {
     // can't Fun.constant this one
     return me;
+  };
+
+  const bind = function <T2> (f: (value: T) => T2) {
+    return f(a);
   };
 
   const me: Option<T> = {
@@ -84,24 +96,33 @@ const some = <T>(a: T): Option<T> => {
     is: (v: T): boolean => a === v,
     isSome: Fun.always,
     isNone: Fun.never,
-    getOr: (): T => a,
-    getOrThunk: (f) => a,
-    getOrDie: () => a,
-    getOrNull: () => a,
-    getOrUndefined: () => a,
+    getOr: constant_a,
+    getOrThunk: constant_a,
+    getOrDie: constant_a,
+    getOrNull: constant_a,
+    getOrUndefined: constant_a,
     or: self,
     orThunk: self,
     map: <T2> (f: (value: T) => T2) => some(f(a)),
     each: (f: (value: T) => void): void => {
       f(a);
     },
-    bind: <T2>(f: (value: T) => Option<T2>) => f(a),
-    exists: (f: (value: T) => boolean) => f(a),
-    forall: (f: (value: T) => boolean) => f(a),
+    bind,
+    exists: bind,
+    forall: bind,
     filter: <Q extends T>(f: (value: T) => value is Q): Option<Q> =>
       f(a) ? me as Option<Q> : NONE,
     toArray: () => [a],
     toString: () => 'some(' + a + ')',
+    equals (o: Option<T>) {
+      return o.is(a);
+    },
+    equals_<T2> (o: Option<T2>, elementEq: (a: T, b: T2) => boolean) {
+      return o.fold(
+        Fun.never,
+        function (b) { return elementEq(a, b); }
+      );
+    },
   };
   return me;
 };

@@ -13,7 +13,7 @@ UnitTest.test('Options.mapFrom === Options.map().from()', () => {
   const f = (x) => x + 1;
 
   function check(input: number | null | undefined) {
-    assert.eq(true, Options.equals(Options.mapFrom(input, f), Option.from(input).map(f)));
+    assert.eq(true, Options.mapFrom(input, f).equals(Option.from(input).map(f)));
   }
 
   check(3);

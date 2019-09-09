@@ -12,7 +12,7 @@ UnitTest.test('Options.bindFrom', () => {
 
 UnitTest.test('Options.bindFrom === Options.bind().from()', () => {
   function check(input: number | null | undefined, f: (a: number) => Option<number>) {
-    assert.eq(true, Options.equals(Options.bindFrom(input, f), Option.from(input).bind(f)));
+    assert.eq(true, Options.bindFrom(input, f).equals(Option.from(input).bind(f)));
   }
 
   const s = (x: number) => Option.some<number>(x + 1);

@@ -59,12 +59,3 @@ export const bindFrom = <A, B> (a: A | null | undefined, f: (a: A) => Option<B>)
 
 export const flatten = <T> (oot: Option<Option<T>>): Option<T> =>
   oot.bind(Fun.identity);
-
-export const equals = <A> (oa: Option<A>, ob: Option<A>): boolean =>
-  equals_(Fun.tripleEquals)(oa, ob);
-
-export const equals_ = <A> (elementEq: (a: A, b: A) => boolean) => (oa: Option<A>, ob: Option<A>): boolean =>
-  oa.fold(
-    ob.isNone,
-    (a: A) => ob.fold(Fun.constant(false), (b) => elementEq(a, b))
-  );

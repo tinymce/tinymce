@@ -3,7 +3,7 @@ import * as Options from 'ephox/katamari/api/Options';
 import { Option } from '@ephox/katamari';
 
 const assertOption = <A> (a: Option<A>, b: Option<A>) => {
-  assert.eq(true, Options.equals(a, b));
+  assert.eq(true, a.equals(b));
 };
 
 const boom = function (): string {
