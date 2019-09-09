@@ -47,5 +47,4 @@ export const mapFrom = <A, B> (a: A | null | undefined, f: (a: A) => B): Option<
 export const bindFrom = <A, B> (a: A | null | undefined, f: (a: A) => Option<B>): Option<B> =>
   (a !== undefined && a !== null) ? f(a) : Option.none<B>();
 
-export const flatten = <T> (oot: Option<Option<T>>): Option<T> =>
-  oot.bind(Fun.identity);
+export const flatten = <T> (oot: Option<Option<T>>): Option<T> => oot.bind(Fun.identity);
