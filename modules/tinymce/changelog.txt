@@ -1,5 +1,5 @@
 Version 5.0.16 (TBD)
-    Added inputType config field to specify type attribute of "input" dialog components #TINY-4062
+    Added `inputMode` config field to specify inputmode attribute of `input` dialog components #TINY-4062
     Added new `referrer_policy` setting to add the `referrerpolicy` attribute when loading scripts or stylesheets #TINY-3978
     Fixed media poster value not updating on change #TINY-4013
     Fixed openlink was not registered as a toolbar button #TINY-4024

@@ -22,7 +22,7 @@ import {
   SystemEvents
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Arr, Future, Option, Result } from '@ephox/katamari';
+import { Arr, Fun, Future, Option, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 
@@ -72,27 +72,12 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
     });
   }).toArray();
 
-  const placeholder = spec.placeholder.fold<{ placeholder?: string }>(
-    () => {
-      return {};
-    },
-    (placeholder) => {
-      return { placeholder: providersBackstage.translate(placeholder) };
-    }
-  );
-
-  const inputType = spec.inputType.fold<{ type?: string }>(
-    () => {
-      return {};
-    },
-    (inputType) => {
-      return { type: inputType };
-    }
-  );
+  const placeholder = spec.placeholder.fold( Fun.constant({}), (p) => ({ placeholder: providersBackstage.translate(p) }));
+  const inputMode = spec.inputMode.fold(Fun.constant({}), (mode) => ({ inputmode: mode }));
 
   const inputAttributes = {
     ...placeholder,
-    ...inputType
+    ...inputMode
   };
 
   const pField = AlloyFormField.parts().field({
@@ -135,7 +120,7 @@ export interface TextField {
   classname: string;
   flex: boolean;
   label: Option<string>;
-  inputType: Option<string>;
+  inputMode: Option<string>;
   placeholder: Option<string>;
   disabled: boolean;
   validation: Option<{
@@ -154,7 +139,7 @@ const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProv
     name: spec.name,
     multiline: false,
     label: spec.label,
-    inputType: spec.inputType,
+    inputMode: spec.inputMode,
     placeholder: spec.placeholder,
     flex: false,
     disabled: spec.disabled,
@@ -169,7 +154,7 @@ const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBacksta
     name: spec.name,
     multiline: true,
     label: spec.label,
-    inputType: Option.none(), // type attribute is not valid for textareas
+    inputMode: Option.none(), // type attribute is not valid for textareas
     placeholder: spec.placeholder,
     flex: true,
     disabled: spec.disabled,
