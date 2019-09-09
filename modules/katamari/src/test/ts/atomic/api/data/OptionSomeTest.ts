@@ -186,40 +186,6 @@ UnitTest.test('OptionSomeTest', function () {
       return f(json) === true ? Jsc.eq(json, opt.filter(f).getOrDie()) : Jsc.eq(true, opt.filter(f).isNone());
     });
 
-    Jsc.property('Checking some(x).equals(none) === false', arbOptionSome, arbOptionNone, function (opt1, opt2) {
-      return Jsc.eq(false, Options.equals(opt1, opt2));
-    });
-
-    Jsc.property('Checking some(x).equals(some(y)) iff. x === y', arbOptionSome, arbOptionSome, function (json1, json2) {
-      const opt1 = Option.some(json1);
-      const opt2 = Option.some(json2);
-      return json1 === json2 ? Options.equals(opt1, opt2) : !Options.equals(opt1, opt2);
-    });
-
-    Jsc.property('Checking some(x).equals_(none, _ -> false) === false', arbOptionSome, arbOptionNone, function (opt1, opt2) {
-      return Jsc.eq(false, Options.equals_(Fun.constant(false))(opt1, opt2));
-    });
-
-    Jsc.property('Checking some(x).equals_(none, _, _ -> true) === false', arbOptionSome, arbOptionNone, function (opt1, opt2) {
-      return Jsc.eq(false, Options.equals_(Fun.constant(true))(opt1, opt2));
-    });
-
-    Jsc.property('Checking some(x).equals_(some(y), _, _ -> false) === false', arbOptionSome, arbOptionSome, function (opt1, opt2) {
-      return Jsc.eq(false, Options.equals_(Fun.constant(false))(opt1, opt2));
-    });
-
-    Jsc.property('Checking some(x).equals_(some(y), _, _ -> true) === true', 'json', 'json', function (json1, json2) {
-      const opt1 = Option.some(json1);
-      const opt2 = Option.some(json2);
-      return Jsc.eq(true, Options.equals_(Fun.constant(true))(opt1, opt2));
-    });
-
-    Jsc.property('Checking some(x).equals_(some(y), f) iff. f(x, y)', arbOptionSome, arbOptionSome, 'json, json -> bool', function (json1, json2, f) {
-      const opt1 = Option.some(json1);
-      const opt2 = Option.some(json2);
-      return f(json1, json2) === Options.equals_(f)(opt1, opt2);
-    });
-
     Jsc.property('Checking some(x).toArray equals [ x ]', 'json', function (json) {
       return Jsc.eq([ json ], Option.some(json).toArray());
     });
