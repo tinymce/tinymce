@@ -81,18 +81,18 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
     }
   );
 
-  const inputType = spec.inputType.fold<{ type?: string }>(
+  const inputMode = spec.inputMode.fold<{ inputmode?: string }>(
     () => {
       return {};
     },
-    (inputType) => {
-      return { type: inputType };
+    (inputMode) => {
+      return { inputmode: inputMode };
     }
   );
 
   const inputAttributes = {
     ...placeholder,
-    ...inputType
+    ...inputMode
   };
 
   const pField = AlloyFormField.parts().field({
@@ -135,7 +135,7 @@ export interface TextField {
   classname: string;
   flex: boolean;
   label: Option<string>;
-  inputType: Option<string>;
+  inputMode: Option<string>;
   placeholder: Option<string>;
   disabled: boolean;
   validation: Option<{
@@ -154,7 +154,7 @@ const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProv
     name: spec.name,
     multiline: false,
     label: spec.label,
-    inputType: spec.inputType,
+    inputMode: spec.inputMode,
     placeholder: spec.placeholder,
     flex: false,
     disabled: spec.disabled,
@@ -169,7 +169,7 @@ const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBacksta
     name: spec.name,
     multiline: true,
     label: spec.label,
-    inputType: Option.none(), // type attribute is not valid for textareas
+    inputMode: Option.none(), // type attribute is not valid for textareas
     placeholder: spec.placeholder,
     flex: true,
     disabled: spec.disabled,
