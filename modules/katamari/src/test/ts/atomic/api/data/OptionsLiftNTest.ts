@@ -1,6 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock';
 import * as Options from 'ephox/katamari/api/Options';
-import { Option } from '@ephox/katamari';
+import { Option } from 'ephox/katamari/api/Option';
 
 const assertOption = <A> (a: Option<A>, b: Option<A>) => {
   assert.eq(true, a.equals(b));
