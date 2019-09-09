@@ -1,13 +1,29 @@
 import * as Fun from './Fun';
 
+/** A value which may be Option.some(a) or Option.none().
+ *  Useful for representing partiality or pass/fail conditions that produce a value when successful.
+ *  Sometimes called a "type-safe alternative to null".
+ *  Can be thought of as a list of exactly zero or 1 elements.
+ */
 export interface Option<T> {
+  /** If none, run whenNone; if some(a) run whenSome(a) */
   fold: <T2> (whenNone: () => T2, whenSome: (v: T) => T2) => T2;
-  is: (value: T) => boolean;
+
+  /** is this value some(t)?  */
+  is: (t: T) => boolean;
+
   isSome: () => boolean;
   isNone: () => boolean;
+
+  /** If some(x) return x, otherwise return the specified default value */
   getOr: (value: T) => T;
+
+  /** getOr with a thunked default value */
   getOrThunk: (makeValue: () => T) => T;
+
+  /** get the 'some' value; throw if none */
   getOrDie: (msg?: string) => T;
+
   getOrNull: () => T | null;
   getOrUndefined: () => T | undefined;
   /**
@@ -18,23 +34,43 @@ export interface Option<T> {
 
   /** Same as "or", but uses a thunk instead of a value */
   orThunk: (makeOption: () => Option<T>) => Option<T>;
+
+  /** Run a function over the 'some' value.
+   *  "map" operation on the Option functor.
+   */
   map: <T2> (mapper: (x: T) => T2) => Option<T2>;
 
+  /** Run a side effect over the 'some' value */
   each: (worker: (x: T) => void) => void;
 
   /** "bind"/"flatMap" operation on the Option Bind/Monad.
    *  Equivalent to >>= in Haskell/PureScript; flatMap in Scala.
    */
   bind: <T2> (f: (x: T) => Option<T2>) => Option<T2>;
+
+  /** Does this Option contain a value that predicate? */
   exists: (f: (x: T) => boolean) => boolean;
+
+  /** Do all values contained in this option match this predicate? */
   forall: (f: (x: T) => boolean) => boolean;
+
+  /** Return all values in this Option that match the predicate.
+   *  The predicate may refine the constituent type using TypeScript type predicates.
+   */
   filter: {
     <Q extends T>(f: (x: T) => x is Q): Option<Q>;
     (f: (x: T) => boolean): Option<T>;
   };
+
+  /** Compare two Options using === */
   equals: (opt: Option<T>) => boolean;
+
+  /** Compare two Options using a specified comparator. */
   equals_: <T2> (opt: Option<T2>, equality: (a: T, b: T2) => boolean) => boolean;
+
+  /** Returns all the values in this Option as an array */
   toArray: () => T[];
+
   toString: () => string;
 }
 
