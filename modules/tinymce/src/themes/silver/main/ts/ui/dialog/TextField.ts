@@ -22,7 +22,7 @@ import {
   SystemEvents
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Arr, Future, Option, Result } from '@ephox/katamari';
+import { Arr, Fun, Future, Option, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 
@@ -72,23 +72,8 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
     });
   }).toArray();
 
-  const placeholder = spec.placeholder.fold<{ placeholder?: string }>(
-    () => {
-      return {};
-    },
-    (placeholder) => {
-      return { placeholder: providersBackstage.translate(placeholder) };
-    }
-  );
-
-  const inputMode = spec.inputMode.fold<{ inputmode?: string }>(
-    () => {
-      return {};
-    },
-    (inputMode) => {
-      return { inputmode: inputMode };
-    }
-  );
+  const placeholder = spec.placeholder.fold( Fun.constant({}), (p) => ({ placeholder: providersBackstage.translate(p) }));
+  const inputMode = spec.inputMode.fold(Fun.constant({}), (mode) => ({ inputmode: mode }));
 
   const inputAttributes = {
     ...placeholder,
