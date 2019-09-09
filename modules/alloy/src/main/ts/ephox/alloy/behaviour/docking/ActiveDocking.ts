@@ -8,13 +8,14 @@ import { DockingConfig, DockingState } from './DockingTypes';
 
 const events = (dockInfo: DockingConfig, dockState: DockingState) => {
   return AlloyEvents.derive([
-    AlloyEvents.runOnSource(NativeEvents.transitionend(), (component, _) => {
+    AlloyEvents.runOnSource(NativeEvents.transitionend(), (component, simulatedEvent) => {
       dockInfo.contextual.each((contextInfo) => {
         if (Class.has(component.element(), contextInfo.transitionClass)) {
           Classes.remove(component.element(), [ contextInfo.transitionClass, contextInfo.fadeInClass ]);
           const notify = dockState.isVisible() ? contextInfo.onShown : contextInfo.onHidden;
           notify(component);
         }
+        simulatedEvent.stop();
       });
     }),
 

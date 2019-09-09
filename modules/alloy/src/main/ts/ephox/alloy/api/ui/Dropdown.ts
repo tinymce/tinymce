@@ -59,10 +59,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     // If we are open, refresh the menus in the tiered menu system
     repositionMenus: (comp) => {
       if (Toggling.isOn(comp)) {
-        const sandbox = Coupling.getCoupled(comp, 'sandbox');
-        Sandboxing.getState(sandbox).each((tmenu) => {
-          TieredMenu.tieredMenu.repositionMenus(tmenu);
-        });
+        DropdownUtils.repositionMenus(comp);
       }
     }
   };

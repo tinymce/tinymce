@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import { Insert, Element, Traverse, Remove } from '@ephox/sugar';
+import { Body, Insert, Element, Traverse, Remove } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { GuiSystem } from '../../api/system/Gui';
@@ -11,20 +11,32 @@ const attach = (parent: AlloyComponent, child: AlloyComponent): void => {
 
 const attachWith = (parent: AlloyComponent, child: AlloyComponent, insertion: (parent: Element, child: Element) => void): void => {
   parent.getSystem().addToWorld(child);
-  InternalAttachment.attachWith(parent, child, insertion);
+  insertion(parent.element(), child.element());
+  if (Body.inBody(parent.element())) { InternalAttachment.fireAttaching(child); }
+  parent.syncComponents();
+};
+
+const doDetach = (component: AlloyComponent) => {
+  InternalAttachment.fireDetaching(component);
+  Remove.remove(component.element());
+  component.getSystem().removeFromWorld(component);
 };
 
 const detach = (component: AlloyComponent): void => {
-  InternalAttachment.detach(component);
-  component.getSystem().removeFromWorld(component);
+  const parent = Traverse.parent(component.element()).bind((p) => {
+    return component.getSystem().getByDom(p).toOption();
+  });
+
+  doDetach(component);
+  parent.each((p) => {
+    p.syncComponents();
+  });
 };
 
 const detachChildren = (component: AlloyComponent): void => {
   // This will not detach the component, but will detach its children and sync at the end.
-  Arr.each(component.components(), (childComp) => {
-    InternalAttachment.doDetach(childComp);
-    component.getSystem().removeFromWorld(childComp);
-  });
+  const subs = component.components();
+  Arr.each(subs, doDetach);
   // Clear the component also.
   Remove.empty(component.element());
   component.syncComponents();

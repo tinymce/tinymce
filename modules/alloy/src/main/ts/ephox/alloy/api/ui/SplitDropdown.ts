@@ -12,12 +12,10 @@ import { Coupling } from '../behaviour/Coupling';
 import { Focusing } from '../behaviour/Focusing';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
-import { Sandboxing } from '../behaviour/Sandboxing';
 import { Toggling } from '../behaviour/Toggling';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as Sketcher from './Sketcher';
-import * as TieredMenu from './TieredMenu';
 import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = (detail, components, spec, externals) => {
@@ -62,10 +60,7 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
   const apis: SplitDropdownApis = {
     repositionMenus: (comp) => {
       if (Toggling.isOn(comp)) {
-        const sandbox = Coupling.getCoupled(comp, 'sandbox');
-        Sandboxing.getState(sandbox).each((tmenu) => {
-          TieredMenu.tieredMenu.repositionMenus(tmenu);
-        });
+        DropdownUtils.repositionMenus(comp);
       }
     }
   };

@@ -315,7 +315,7 @@ class Editor implements EditorObservable {
       base_uri: this.baseUri
     });
     this.baseURI = this.baseUri;
-    this.inline = this.settings.inline;
+    this.inline = !!this.settings.inline;
 
     this.shortcuts = new Shortcuts(this);
     this.editorCommands = new EditorCommands(this);

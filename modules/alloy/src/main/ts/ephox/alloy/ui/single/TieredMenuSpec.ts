@@ -276,7 +276,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   const events = AlloyEvents.derive([
     // Set "active-menu" for the menu with focus
     AlloyEvents.run<CustomEvent>(MenuEvents.focus(), (sandbox, simulatedEvent) => {
-      // Ensure the item is actually part of the menu
+      // Ensure the item is actually part of this menu structure, and not part of another menu structure that's bubbling.
       const item = simulatedEvent.event().item();
       layeredState.lookupItem(getItemValue(item)).each(() => {
         const menu = simulatedEvent.event().menu();

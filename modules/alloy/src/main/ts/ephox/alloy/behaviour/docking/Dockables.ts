@@ -120,13 +120,9 @@ const revertToOriginal = (elem: Element<HTMLElement>, dockInfo: DockingConfig, b
 };
 
 const morphToOriginal = (elem: Element<HTMLElement>, dockInfo: DockingConfig, viewport: Boxes.Bounds): Option<DragCoord.CoordAdt> => {
-  return getPrior(elem, dockInfo).bind((box) => {
-    if (isVisibleForModes(dockInfo.modes, box, viewport)) {
-      return revertToOriginal(elem, dockInfo, box);
-    } else {
-      return Option.none();
-    }
-  });
+  return getPrior(elem, dockInfo)
+    .filter((box) => isVisibleForModes(dockInfo.modes, box, viewport))
+    .bind((box) => revertToOriginal(elem, dockInfo, box));
 };
 
 const morphToFixed = (elem: Element<HTMLElement>, dockInfo: DockingConfig, viewport: Boxes.Bounds, scroll: SugarPosition, origin: SugarPosition): Option<DragCoord.CoordAdt> => {

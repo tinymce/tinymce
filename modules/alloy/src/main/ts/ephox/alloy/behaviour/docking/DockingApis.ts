@@ -1,5 +1,5 @@
 import { Arr, Fun } from '@ephox/katamari';
-import { Body, Classes, Css, Scroll, Traverse } from '@ephox/sugar';
+import { Classes, Css, Scroll, Traverse } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
@@ -44,16 +44,11 @@ const updateVisibility = (component: AlloyComponent, config: DockingConfig, stat
   });
 };
 
-const refresh = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
-  // Ensure the component is attached, if not then do nothing
-  const elem = component.element();
-  if (!Body.inBody(elem)) {
-    return;
-  }
-
+const refreshInternal = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
   // Absolute coordinates (considers scroll)
   const viewport = config.lazyViewport(component);
 
+  const elem = component.element();
   const doc = Traverse.owner(elem);
   const scroll = Scroll.get(doc);
   const origin = OffsetOrigin.getOrigin(elem);
@@ -79,16 +74,9 @@ const refresh = (component: AlloyComponent, config: DockingConfig, state: Dockin
   });
 };
 
-const reset = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
-  // If the component is not docked then do nothing
-  if (!state.isDocked()) {
-    return;
-  }
-
-  // Hide the element to prevent flickering while resetting
-  const elem = component.element();
-
+const resetInternal = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
   // Morph back to the original position
+  const elem = component.element();
   state.setDocked(false);
   Dockables.getMorphToOriginal(component, config).each((morph) => {
     morph.fold(
@@ -112,6 +100,22 @@ const reset = (component: AlloyComponent, config: DockingConfig, state: DockingS
 
   // Apply docking again to reset the position
   refresh(component, config, state);
+};
+
+const refresh = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
+  // Ensure the component is attached to the document/world, if not then do nothing as we can't
+  // check if the component should be docked or not when in a detached state
+  if (component.getSystem().isConnected()) {
+    refreshInternal(component, config, state);
+  }
+};
+
+const reset = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
+  // If the component is not docked then there's no need to reset the state,
+  // so only reset when docked
+  if (state.isDocked()) {
+    resetInternal(component, config, state);
+  }
 };
 
 const isDocked = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {

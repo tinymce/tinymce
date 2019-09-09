@@ -217,10 +217,18 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
   };
 };
 
+const repositionMenus = (comp: AlloyComponent) => {
+  const sandbox = Coupling.getCoupled(comp, 'sandbox');
+  Sandboxing.getState(sandbox).each((tmenu) => {
+    TieredMenu.repositionMenus(tmenu);
+  });
+};
+
 export {
   makeSandbox,
   togglePopup,
   open,
+  repositionMenus,
 
   getSink
 };
