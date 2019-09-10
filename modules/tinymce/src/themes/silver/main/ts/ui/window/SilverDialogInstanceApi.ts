@@ -18,7 +18,7 @@ import {
 } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { DialogManager, Types } from '@ephox/bridge';
-import { Merger, Option, Type, Obj } from '@ephox/katamari';
+import { Merger, Option, Type, Obj, Cell } from '@ephox/katamari';
 
 import { formBlockEvent, formCloseEvent, formUnblockEvent } from '../general/FormEvents';
 import { bodyChannel, dialogChannel, footerChannel, titleChannel } from './DialogChannels';
@@ -61,7 +61,7 @@ export interface DialogAccess<T> {
 const getDialogApi = <T>(
   access: DialogAccess<T>,
   doRedial: (newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>,
-  menuItemStates: Object
+  menuItemStates: Record<string, Cell<Boolean>>
 ): Types.Dialog.DialogInstanceApi<T> => {
   const withRoot = (f: (r: AlloyComponent) => void): void => {
     const root = access.getRoot();
@@ -91,7 +91,7 @@ const getDialogApi = <T>(
       const newInternalData = validateData(access, mergedData);
       const form = access.getFormWrapper();
       Representing.setValue(form, newInternalData);
-      Obj.each(menuItemStates, (v: any, k) => {
+      Obj.each(menuItemStates, (v, k) => {
         if (Obj.has(mergedData, k)) {
           v.set(mergedData[k]);
         }

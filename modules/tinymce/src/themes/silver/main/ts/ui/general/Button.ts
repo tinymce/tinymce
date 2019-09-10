@@ -19,7 +19,7 @@ import {
   SimpleOrSketchSpec
 } from '@ephox/alloy';
 import { console } from '@ephox/dom-globals';
-import { Merger, Option, Arr } from '@ephox/katamari';
+import { Merger, Option } from '@ephox/katamari';
 import { formActionEvent, formCancelEvent, formSubmitEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import { UiFactoryBackstageProviders, UiFactoryBackstage } from '../../backstage/Backstage';
@@ -27,13 +27,12 @@ import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { renderIconFromPack } from '../button/ButtonSlices';
-import { renderMenuButton } from '../button/MenuButton';
+import { renderMenuButton, getFetch } from '../button/MenuButton';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 import { Types } from '@ephox/bridge';
 import { Omit } from '../Omit';
 import { renderFormField } from '../alien/FieldLabeller';
-import { Focus } from '@ephox/sugar';
 
 type ButtonSpec = Omit<Types.Button.Button, 'type'>;
 type FooterButtonSpec = Omit<Types.Dialog.DialogNormalButton, 'type'> | Omit<Types.Dialog.DialogMenuButton, 'type'>;
@@ -145,47 +144,6 @@ const getAction = (name: string, buttonType: string) => {
   };
 };
 
-const getFetch = (items, getButton) => {
-  const getMenuItemAction = (item) => {
-    return (api, itemComp) => {
-      getButton().getOpt(itemComp).each((orig) => {
-        Focus.focus(orig.element());
-        AlloyTriggers.emitWith(orig, formActionEvent, {
-          name: item.name,
-          value: item.storage.get()
-        });
-      });
-      const newValue = !api.isActive();
-      api.setActive(newValue);
-      item.storage.set(newValue);
-    };
-  };
-
-  const getMenuItemSetup = (item) => {
-    return (api) => {
-      api.setActive(item.storage.get());
-    };
-  };
-
-  return (success) => {
-    success(Arr.map(items, (item) => {
-      const text = item.text.fold(() => {
-        return {};
-      }, (text) => {
-        return {
-          text
-        };
-      });
-      return {
-        type: item.type,
-        ...text,
-        onAction: getMenuItemAction(item),
-        onSetup: getMenuItemSetup(item)
-      };
-    }));
-  };
-};
-
 const isMenuFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Types.Dialog.DialogMenuButton => {
   return buttonType === 'menu';
 };
@@ -200,7 +158,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
 
     const fixedSpec = {
       ...spec,
-      fetch: getFetch(spec.items, getButton)
+      fetch: getFetch(spec.items, getButton, backstage)
     };
 
     const memButton = Memento.record(renderMenuButton(fixedSpec, ToolbarButtonClasses.Button, backstage, Option.none()));
