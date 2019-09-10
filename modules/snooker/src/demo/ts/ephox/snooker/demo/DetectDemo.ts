@@ -1,10 +1,10 @@
-import { window } from '@ephox/dom-globals';
-import { Fun, Obj, Option } from '@ephox/katamari';
-import { Attr, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind, EventArgs } from '@ephox/sugar';
+import { Element as DomElement, window } from '@ephox/dom-globals';
+import { Fun, Obj, Option, Options } from '@ephox/katamari';
+import { Attr, Css, Direction, DomEvent, Element, Insert, InsertAll, Node, Ready, Replication, SelectorFind, EventArgs } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
 import TableOperations from 'ephox/snooker/api/TableOperations';
-import TableResize from 'ephox/snooker/api/TableResize';
+import { TableResize } from 'ephox/snooker/api/TableResize';
 import { Generators } from 'ephox/snooker/api/Generators';
 import { BarPositions, ColInfo } from 'ephox/snooker/resize/BarPositions';
 import { RunOperationOutput, TargetElement, TargetSelection } from 'ephox/snooker/model/RunOperation';
@@ -107,9 +107,9 @@ Ready.execute(function () {
   InsertAll.append(rtls, [ Element.fromHtml('<p>Right to Left table</p>'), subject3 ]);
   InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
-  const ltrManager = TableResize(ResizeWire.body(tester, ltrs), ResizeDirection.ltr);
+  const ltrManager = TableResize.create(ResizeWire.body(tester, ltrs), ResizeDirection.ltr);
   ltrManager.on();
-  const rtlManager = TableResize(ResizeWire.body(subject3, rtls), ResizeDirection.rtl);
+  const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls), ResizeDirection.rtl);
   rtlManager.on();
 
   // For firefox.
@@ -162,12 +162,12 @@ Ready.execute(function () {
   const makeRowHeader = makeButton('makeRowHeader');
   const unmakeRowHeader = makeButton('unmakeRowHeader');
 
-  const detection = function () {
+  const detection = (): Option<Element<DomElement>> => {
     const selection = window.getSelection();
     if (selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
       const firstElement = range.startContainer.nodeType === 3 ? range.startContainer.parentNode : range.startContainer;
-      return Option.from(firstElement).map(Element.fromDom);
+      return Options.mapFrom(firstElement, Element.fromDom).filter(Node.isElement);
     } else {
       return Option.none();
     }
@@ -188,8 +188,7 @@ Ready.execute(function () {
   };
 
   const newRow: Generators['row'] = function () {
-    const tr = Element.fromTag('tr');
-    return tr;
+    return Element.fromTag('tr');
   };
 
   const replace: Generators['replace'] = function (cell, tag, attrs) {
