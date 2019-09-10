@@ -1,12 +1,12 @@
 import { ValueSchema } from '@ephox/boulder';
 import { window } from '@ephox/dom-globals';
-import { Option, Adt, Fun} from '@ephox/katamari';
-import { Css, Location, Element } from '@ephox/sugar';
+import { Adt, Fun, Option } from '@ephox/katamari';
+import { Css, Element, Location } from '@ephox/sugar';
 
 import { Bounds, box } from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Stateless } from '../../behaviour/common/BehaviourState';
-import { Anchoring, AnchorSpec, AnchorDetail } from '../../positioning/mode/Anchoring';
+import { AnchorDetail, Anchoring, AnchorSpec } from '../../positioning/mode/Anchoring';
 import AnchorSchema from '../../positioning/mode/AnchorSchema';
 import * as Anchor from '../../positioning/layout/Anchor';
 import * as Origins from '../../positioning/layout/Origins';
@@ -34,8 +34,7 @@ const place = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchorin
 };
 
 const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent): void => {
-  const boxElement = Option.none();
-  positionWithin(component, posConfig, posState, anchor, placee, boxElement);
+  positionWithin(component, posConfig, posState, anchor, placee, Option.none());
 };
 
 const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Option<Element>): void => {
