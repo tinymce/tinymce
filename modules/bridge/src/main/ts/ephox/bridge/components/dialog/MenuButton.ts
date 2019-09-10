@@ -5,32 +5,34 @@ import { DialogToggleMenuItemApi, dialogToggleMenuItemSchema } from './ToggleMen
 
 export type DialogMenuButtonItemTypes = DialogToggleMenuItemApi;
 
-export interface BaseDialogMenuButtonApi {
+export interface DialogMenuButtonApi {
   text?: string;
   tooltip?: string;
   icon?: string;
   items: DialogMenuButtonItemTypes[];
-  onSetup?: (api: BaseDialogMenuButtonInstanceApi) => (api: BaseDialogMenuButtonInstanceApi) => void;
-  storage?: Cell<Boolean>;
+  onSetup?: (api: DialogMenuButtonInstanceApi) => (api: DialogMenuButtonInstanceApi) => void;
 }
 
-export interface BaseDialogMenuButton {
+export interface DialogMenuButton {
+  name: string;
+  align: 'start' | 'end';
+  type: 'menu';
   text: Option<string>;
   tooltip: Option<string>;
   icon: Option<string>;
   items: DialogMenuButtonItemTypes[];
-  onSetup: (api: BaseDialogMenuButtonInstanceApi) => (api: BaseDialogMenuButtonInstanceApi) => void;
+  onSetup: (api: DialogMenuButtonInstanceApi) => (api: DialogMenuButtonInstanceApi) => void;
   storage: Cell<Boolean>;
 }
 
-export interface BaseDialogMenuButtonInstanceApi {
+export interface DialogMenuButtonInstanceApi {
   isDisabled: () => boolean;
   setDisabled: (state: boolean) => void;
   isActive: () => boolean;
   setActive: (state: boolean) => void;
 }
 
-export const baseDialogMenuButtonFields = [
+export const dialogMenuButtonFields = [
   FieldSchema.optionString('text'),
   FieldSchema.optionString('tooltip'),
   FieldSchema.optionString('icon'),

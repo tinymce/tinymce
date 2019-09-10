@@ -3,7 +3,7 @@ import { Fun, Id, Result, Option } from '@ephox/katamari';
 import { BodyComponentApi } from './BodyComponent';
 import { Panel, PanelApi, panelSchema } from './Panel';
 import { TabApi, Tab, TabPanel, TabPanelApi, tabPanelSchema } from './TabPanel';
-import { BaseDialogMenuButton, BaseDialogMenuButtonApi, baseDialogMenuButtonFields, BaseDialogMenuButtonInstanceApi, DialogMenuButtonItemTypes } from './MenuButton';
+import { DialogMenuButton, DialogMenuButtonApi, dialogMenuButtonFields, DialogMenuButtonInstanceApi, DialogMenuButtonItemTypes } from './MenuButton';
 
 export type DialogMenuButtonItemTypes = DialogMenuButtonItemTypes;
 export type SuccessCallback = (menu: string | DialogMenuButtonItemTypes[]) => void;
@@ -22,9 +22,9 @@ export interface DialogNormalButtonApi extends BaseDialogButtonApi {
   text: string;
 }
 
-export interface DialogMenuButtonInstanceApi extends BaseDialogMenuButtonInstanceApi { }
+export interface DialogMenuButtonInstanceApi extends DialogMenuButtonInstanceApi { }
 
-export interface DialogMenuButtonApi extends BaseDialogButtonApi, BaseDialogMenuButtonApi {
+export interface DialogMenuButtonApi extends BaseDialogButtonApi, DialogMenuButtonApi {
   type: 'menu';
   onSetup?: (api: DialogMenuButtonInstanceApi) => (api: DialogMenuButtonInstanceApi) => void;
 }
@@ -119,10 +119,7 @@ export interface DialogNormalButton extends BaseDialogButton {
   text: string;
 }
 
-export interface DialogMenuButton extends BaseDialogButton, BaseDialogMenuButton {
-  type: 'menu';
-  onSetup: (api: DialogMenuButtonInstanceApi) => (api: DialogMenuButtonInstanceApi) => void;
-}
+export type DialogMenuButton = DialogMenuButton;
 
 export type DialogButton = DialogNormalButton | DialogMenuButton;
 
@@ -168,7 +165,7 @@ const normalButtonFields = [
 const menuButtonFields = [
   FieldSchema.strictStringEnum('type', ['menu']),
   ...baseButtonFields,
-  ...baseDialogMenuButtonFields
+  ...dialogMenuButtonFields
 ];
 
 export const dialogButtonSchema = ValueSchema.choose(
