@@ -48,3 +48,7 @@ export const bindFrom = <A, B> (a: A | null | undefined, f: (a: A) => Option<B>)
   (a !== undefined && a !== null) ? f(a) : Option.none<B>();
 
 export const flatten = <T> (oot: Option<Option<T>>): Option<T> => oot.bind(Fun.identity);
+
+// This can help with type inference, by specifying the type param on the none case, so the caller doesn't have to.
+export const someIf = <A> (b: boolean, a: A): Option<A> =>
+  b ? Option.some(a) : Option.none<A>();
