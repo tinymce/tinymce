@@ -247,7 +247,7 @@ const EditorManager: EditorManager = {
       // Get base where the tinymce script is located
       const scripts = document.getElementsByTagName('script');
       for (let i = 0; i < scripts.length; i++) {
-        src = scripts[i].src;
+        src = scripts[i].src || '';
 
         // Script types supported:
         // tinymce.js tinymce.min.js tinymce.dev.js
