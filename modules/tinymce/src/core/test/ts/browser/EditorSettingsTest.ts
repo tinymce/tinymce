@@ -194,6 +194,14 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           );
         })),
 
+        Logger.t('Default settings (mobile)', Step.sync(() => {
+          Assertions.assertEq(
+            'Should have different defaults for certain settings on mobile',
+            { validate: true, external_plugins: {}, plugins: '', theme: 'mobile', menubar: false, table_grid: false },
+            EditorSettings.combineSettings(true, true, {}, {}, {})
+          );
+        })),
+
         Logger.t('Merged settings forced_plugins in default override settings (desktop)', Step.sync(function () {
           Assertions.assertEq(
             'Should be have plugins merged with forced plugins',
@@ -253,7 +261,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Logger.t('Merged settings when mobile is undefined, on a mobile device (phone)', Step.sync(function () {
           Assertions.assertEq(
             'Should fallback to filtered white listed. settings.plugins ',
-            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile' },
+            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile', menubar: false, table_grid: false },
             EditorSettings.combineSettings(true, true, {}, {}, { plugins: [ 'lists', 'b', 'autolink' ] })
           );
         })),
@@ -269,7 +277,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Logger.t('Merged settings when mobile.plugins is undefined, on a mobile device (phone)', Step.sync(function () {
           Assertions.assertEq(
             'Should fallback to filtered white listed. settings.plugins',
-            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile' },
+            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile', menubar: false, table_grid: false },
             EditorSettings.combineSettings(true, true, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: { } })
           );
         })),
@@ -285,7 +293,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Logger.t('Merged settings with empty mobile.plugins="" (phone)', Step.sync(function () {
           Assertions.assertEq(
             'Should not have any plugins when mobile.plugins is explicitly empty',
-            { validate: true, external_plugins: {}, plugins: '', theme: 'mobile' },
+            { validate: true, external_plugins: {}, plugins: '', theme: 'mobile', menubar: false, table_grid: false },
             EditorSettings.combineSettings(true, true, {}, {}, { mobile: { plugins: ''} })
           );
         })),
@@ -301,7 +309,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Logger.t('Merged settings with defined mobile.plugins (phone)', Step.sync(function () {
           Assertions.assertEq(
             'Should fallback to filtered white listed',
-            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile' },
+            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile', menubar: false, table_grid: false },
             EditorSettings.combineSettings(true, true, {}, {}, { mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ]} })
           );
         })),
@@ -317,7 +325,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Logger.t('Merged settings with mobile.theme silver and mobile.plugins (phone)', Step.sync(function () {
           Assertions.assertEq(
             'Should fallback to filtered white listed',
-            { validate: true, theme: 'silver', external_plugins: {}, plugins: 'lists autolink foo bar' },
+            { validate: true, theme: 'silver', external_plugins: {}, plugins: 'lists autolink foo bar', menubar: false, table_grid: false },
             EditorSettings.combineSettings(true, true, {}, {}, { theme: 'test', mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' } })
           );
         })),
