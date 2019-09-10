@@ -403,11 +403,11 @@ export namespace CaretPosition {
   export const before = (node: Node) => CaretPosition(node.parentNode, nodeIndex(node));
 
   export const isAbove = (pos1: CaretPosition, pos2: CaretPosition): boolean => {
-    return Options.liftN([Arr.head(pos2.getClientRects()), Arr.last(pos1.getClientRects())], GeomClientRect.isAbove).getOr(false);
+    return Options.lift2(Arr.head(pos2.getClientRects()), Arr.last(pos1.getClientRects()), GeomClientRect.isAbove).getOr(false);
   };
 
   export const isBelow = (pos1: CaretPosition, pos2: CaretPosition): boolean => {
-    return Options.liftN([Arr.last(pos2.getClientRects()), Arr.head(pos1.getClientRects())], GeomClientRect.isBelow).getOr(false);
+    return Options.lift2(Arr.last(pos2.getClientRects()), Arr.head(pos1.getClientRects()), GeomClientRect.isBelow).getOr(false);
   };
 
   export const isAtStart = (pos: CaretPosition) => pos ? pos.isAtStart() : false;

@@ -229,15 +229,16 @@ const resolveId = (dom: DOMUtils, bookmark: IdBookmark) => {
   const startPos = restoreEndPoint(dom, 'start', bookmark);
   const endPos = restoreEndPoint(dom, 'end', bookmark);
 
-  return Options.liftN([
+  return Options.lift2(
     startPos,
-    alt(endPos, startPos)
-  ], (spos, epos) => {
-    const rng = dom.createRng();
-    rng.setStart(addBogus(dom, spos.container()), spos.offset());
-    rng.setEnd(addBogus(dom, epos.container()), epos.offset());
-    return rng;
-  });
+    alt(endPos, startPos),
+    (spos, epos) => {
+      const rng = dom.createRng();
+      rng.setStart(addBogus(dom, spos.container()), spos.offset());
+      rng.setEnd(addBogus(dom, epos.container()), epos.offset());
+      return rng;
+    }
+  );
 };
 
 const resolveIndex = (dom: DOMUtils, bookmark: IndexBookmark) => {

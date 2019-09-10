@@ -27,7 +27,7 @@ const joinSegments = (segments: Segment[]): void => {
 };
 
 const appendSegments = (head: Segment[], tail: Segment[]): void => {
-  Options.liftN([ Arr.last(head), Arr.head(tail)], joinSegment);
+  Options.lift2(Arr.last(head), Arr.head(tail), joinSegment);
 };
 
 const createSegment = (scope: Document, listType: ListType): Segment => {
