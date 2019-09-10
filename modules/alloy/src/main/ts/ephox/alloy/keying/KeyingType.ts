@@ -15,7 +15,6 @@ import { EventFormat, NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as KeyRules from '../navigation/KeyRules';
 import { inSet } from '../navigation/KeyMatch';
 import { GeneralKeyingConfig, FocusInsideModes } from './KeyingModeTypes';
-import { AlloyEventKeyAndHandler } from '../api/events/AlloyEvents';
 
 const typical = <C extends GeneralKeyingConfig, S>(
   infoSchema: FieldProcessorAdt[],
@@ -45,12 +44,13 @@ const typical = <C extends GeneralKeyingConfig, S>(
 
   const toEvents = (keyingConfig: C, keyingState: S): AlloyEvents.AlloyEventRecord => {
 
-    const onFocusHandler = keyingConfig.focusInside !== FocusInsideModes.OnFocusMode ? Option.none<AlloyEventKeyAndHandler<EventFormat>>() : optFocusIn(keyingConfig).map((focusIn) => {
-      return AlloyEvents.run(SystemEvents.focus(), (component, simulatedEvent) => {
-        focusIn(component, keyingConfig, keyingState);
-        simulatedEvent.stop();
-      });
-    });
+    const onFocusHandler = keyingConfig.focusInside !== FocusInsideModes.OnFocusMode
+      ? Option.none<AlloyEvents.AlloyEventKeyAndHandler<EventFormat>>()
+      : optFocusIn(keyingConfig).map((focusIn) =>
+        AlloyEvents.run(SystemEvents.focus(), (component, simulatedEvent) => {
+          focusIn(component, keyingConfig, keyingState);
+          simulatedEvent.stop();
+        }));
 
     // On enter or space on root element, if using EnterOrSpace focus mode, fire a focusIn on the component
     const tryGoInsideComponent = (component: AlloyComponent, simulatedEvent) => {
