@@ -26,7 +26,7 @@ const defaultBlocks = (
   'Preformatted=pre'
 );
 
-const getSpec = (editor): SelectSpec & { dataset } => {
+const getSpec = (editor): SelectSpec => {
   const getMatchingValue = (nodeChangeEvent) => {
     return findNearest(editor, () => dataset.data, nodeChangeEvent);
   };
@@ -80,14 +80,12 @@ const getSpec = (editor): SelectSpec & { dataset } => {
 };
 
 const createFormatSelect = (editor: Editor, backstage) => {
-  const spec = getSpec(editor);
-  return createSelectButton(editor, backstage, spec.dataset, spec);
+  return createSelectButton(editor, backstage, getSpec(editor));
 };
 
 // FIX: Test this!
 const formatSelectMenu = (editor: Editor, backstage) => {
-  const spec = getSpec(editor);
-  const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
+  const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('blockformats', {
     text: 'Blocks',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())

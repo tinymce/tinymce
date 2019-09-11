@@ -9,7 +9,7 @@ import { AlloyTriggers, AlloyComponent } from '@ephox/alloy';
 import { Arr, Obj, Option, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { createMenuItems, createSelectButton } from './BespokeSelect';
+import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 
 const defaultFontsizeFormats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
@@ -42,7 +42,7 @@ const toLegacy = (fontSize: string): string => {
   return Obj.get(legacyFontSizes as Record<string, string>, fontSize).getOr('');
 };
 
-const getSpec = (editor: Editor) => {
+const getSpec = (editor: Editor): SelectSpec => {
   const getMatchingValue = () => {
     let matchOpt = Option.none<{ title: string; format: string; }>();
     const items = dataset.data;
@@ -111,14 +111,12 @@ const getSpec = (editor: Editor) => {
 };
 
 const createFontsizeSelect = (editor: Editor, backstage) => {
-  const spec = getSpec(editor);
-  return createSelectButton(editor, backstage, spec.dataset, spec);
+  return createSelectButton(editor, backstage, getSpec(editor));
 };
 
 // TODO: Test this!
 const fontsizeSelectMenu = (editor: Editor, backstage) => {
-  const spec = getSpec(editor);
-  const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
+  const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('fontsizes', {
     text: 'Font sizes',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())

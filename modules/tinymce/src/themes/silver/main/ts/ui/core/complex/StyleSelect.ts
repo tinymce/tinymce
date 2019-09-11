@@ -14,8 +14,9 @@ import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { onActionToggleFormat } from './utils/Utils';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { findNearest, getCurrentSelectionParents } from './utils/FormatDetection';
+import { BasicSelectDataset, AdvancedSelectDataset } from './SelectDatasets';
 
-const getSpec = (editor): SelectSpec => {
+const getSpec = (editor, dataset: BasicSelectDataset | AdvancedSelectDataset): SelectSpec => {
   const isSelectedFor = (format) => {
     return () => {
       return editor.formatter.match(format);
@@ -67,19 +68,20 @@ const getSpec = (editor): SelectSpec => {
     setInitialValue,
     nodeChangeHandler,
     shouldHide: editor.getParam('style_formats_autohide', false, 'boolean'),
-    isInvalid: (item) => !editor.formatter.canApply(item.format)
+    isInvalid: (item) => !editor.formatter.canApply(item.format),
+    dataset
   } as SelectSpec;
 };
 
 const createStyleSelect = (editor: Editor, backstage) => {
   // FIX: Not right.
-  const data = backstage.styleselect;
-  return createSelectButton(editor, backstage, data, getSpec(editor));
+  const dataset = backstage.styleselect;
+  return createSelectButton(editor, backstage, getSpec(editor, dataset));
 };
 
 const styleSelectMenu = (editor: Editor, backstage) => {
-  const data = backstage.styleselect;
-  const menuItems = createMenuItems(editor, backstage, data, getSpec(editor));
+  const dataset = backstage.styleselect;
+  const menuItems = createMenuItems(editor, backstage, getSpec(editor, dataset));
   editor.ui.registry.addNestedMenuItem('formats', {
     text: 'Formats',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())

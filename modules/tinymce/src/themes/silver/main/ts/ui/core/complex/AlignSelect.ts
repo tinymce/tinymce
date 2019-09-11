@@ -11,7 +11,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { updateMenuIcon } from '../../dropdown/CommonDropdown';
 import { onActionToggleFormat } from './utils/Utils';
-import { createMenuItems, createSelectButton, FormatItem, PreviewSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, FormatItem, PreviewSpec, SelectSpec } from './BespokeSelect';
 import { buildBasicStaticDataset } from './SelectDatasets';
 import { IsSelectedForType } from './utils/FormatRegister';
 
@@ -22,7 +22,7 @@ const alignMenuItems = [
   { title: 'Justify', icon: 'align-justify', format: 'alignjustify' }
 ];
 
-const getSpec = (editor: Editor) => {
+const getSpec = (editor: Editor): SelectSpec => {
   const getMatchingValue = (): Option<Partial<FormatItem>> => {
     return  Arr.find(alignMenuItems, (item) => editor.formatter.match(item.format));
   };
@@ -63,13 +63,11 @@ const getSpec = (editor: Editor) => {
 };
 
 const createAlignSelect = (editor, backstage) => {
-  const spec = getSpec(editor);
-  return createSelectButton(editor, backstage, spec.dataset, spec);
+  return createSelectButton(editor, backstage, getSpec(editor));
 };
 
 const alignSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
-  const spec = getSpec(editor);
-  const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
+  const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('align', {
     text: backstage.shared.providers.translate('Align'),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())

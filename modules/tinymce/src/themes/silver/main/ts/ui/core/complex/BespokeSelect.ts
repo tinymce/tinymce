@@ -54,6 +54,8 @@ export interface SelectSpec {
 
   // This is used for assigning initial values
   setInitialValue: Option<(comp: AlloyComponent) => void>;
+
+  dataset: BasicSelectDataset | AdvancedSelectDataset;
 }
 
 export interface SelectData {
@@ -131,7 +133,8 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
   };
 };
 
-const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
+const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
+  const dataset = spec.dataset; // needs to be a var for tsc to understand the ternary
   const getStyleItems = dataset.type === 'basic' ? () => Arr.map(dataset.data, (d) => FormatRegister.processBasic(d, spec.isSelectedFor, spec.getPreviewFor)) : dataset.getData;
   return {
     items: generateSelectItems(editor, backstage, spec),
@@ -139,8 +142,8 @@ const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, dataset:
   };
 };
 
-const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
-  const { items, getStyleItems } = createMenuItems(editor, backstage, dataset, spec);
+const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
+  const { items, getStyleItems } = createMenuItems(editor, backstage, spec);
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => {
     return { getComponent: () => comp };
