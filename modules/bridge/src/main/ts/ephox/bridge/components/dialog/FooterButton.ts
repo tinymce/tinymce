@@ -1,8 +1,9 @@
 import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Id, Option } from '@ephox/katamari';
-import { DialogToggleMenuItemApi, dialogToggleMenuItemSchema } from './ToggleMenuItem';
+import { DialogToggleMenuItemApi, dialogToggleMenuItemSchema, DialogToggleMenuItem } from './ToggleMenuItem';
 
 export type DialogMenuButtonItemTypes = DialogToggleMenuItemApi;
+export type DialogToggleMenuItem = DialogToggleMenuItem;
 
 // Note: This interface doesn't extend from a common button interface as this is only a configuration that specifies a button, but it's not by itself a button.
 interface BaseDialogButtonApi {
@@ -54,7 +55,7 @@ export interface DialogMenuButton extends BaseDialogButton {
   text: Option<string>;
   tooltip: Option<string>;
   icon: Option<string>;
-  items: DialogMenuButtonItemTypes[];
+  items: DialogToggleMenuItem[];
   onSetup: (api: DialogMenuButtonInstanceApi) => (api: DialogMenuButtonInstanceApi) => void;
 }
 

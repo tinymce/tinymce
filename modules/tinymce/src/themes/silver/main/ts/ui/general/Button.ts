@@ -27,7 +27,7 @@ import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { renderIconFromPack } from '../button/ButtonSlices';
-import { renderMenuButton, getFetch } from '../button/MenuButton';
+import { renderMenuButton, getFetch, StoragedMenuButton } from '../button/MenuButton';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 import { Types } from '@ephox/bridge';
@@ -156,9 +156,11 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
   if (isMenuFooterButtonSpec(spec, buttonType)) {
     const getButton = () => memButton;
 
+    const menuButtonSpec = spec as StoragedMenuButton;
+
     const fixedSpec = {
       ...spec,
-      fetch: getFetch(spec.items, getButton, backstage)
+      fetch: getFetch(menuButtonSpec.items, getButton, backstage)
     };
 
     const memButton = Memento.record(renderMenuButton(fixedSpec, ToolbarButtonClasses.Button, backstage, Option.none()));

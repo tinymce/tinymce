@@ -91,6 +91,7 @@ export interface DialogApi<T extends DialogData> {
 export type DialogNormalButton = FooterButton.DialogNormalButton;
 export type DialogMenuButton = FooterButton.DialogMenuButton;
 export type DialogButton = FooterButton.DialogButton;
+export type DialogToggleMenuItem = FooterButton.DialogToggleMenuItem;
 
 export interface Dialog<T> {
   title: string;

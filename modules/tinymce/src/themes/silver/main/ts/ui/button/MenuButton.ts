@@ -6,8 +6,8 @@
  */
 
 import { AlloyComponent, Disabling, SketchSpec, Tabstopping, AlloyTriggers, MementoRecord } from '@ephox/alloy';
-import { Toolbar } from '@ephox/bridge';
-import { Option, Arr } from '@ephox/katamari';
+import { Toolbar, Types } from '@ephox/bridge';
+import { Option, Arr, Cell } from '@ephox/katamari';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderCommonDropdown } from '../dropdown/CommonDropdown';
 import * as NestedMenus from '../menus/menu/NestedMenus';
@@ -66,7 +66,15 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
     backstage.shared);
 };
 
-const getFetch = (items, getButton: () => MementoRecord, backstage) => {
+interface StoragedMenuItem extends Types.Dialog.DialogToggleMenuItem {
+  storage: Cell<Boolean>;
+}
+
+interface StoragedMenuButton extends Omit<Types.Dialog.DialogMenuButton, 'items'> {
+  items: StoragedMenuItem[];
+}
+
+const getFetch = (items: StoragedMenuItem[], getButton: () => MementoRecord, backstage: UiFactoryBackstage) => {
   const getMenuItemAction = (item) => {
     return (api) => {
       backstage.shared.getSink().each((sink) => {
@@ -111,5 +119,7 @@ const getFetch = (items, getButton: () => MementoRecord, backstage) => {
 
 export {
   renderMenuButton,
-  getFetch
+  getFetch,
+  StoragedMenuItem,
+  StoragedMenuButton
 };
