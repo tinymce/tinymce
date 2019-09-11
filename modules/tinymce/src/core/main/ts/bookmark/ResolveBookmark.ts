@@ -18,17 +18,11 @@ import Zwsp from '../text/Zwsp';
 import DOMUtils from '../api/dom/DOMUtils';
 import CaretFinder from '../caret/CaretFinder';
 import { isPathBookmark, isStringPathBookmark, isIdBookmark, isIndexBookmark, isRangeBookmark, PathBookmark, IdBookmark, Bookmark, IndexBookmark } from './BookmarkTypes';
-import { Element } from '@ephox/sugar';
-import * as ElementType from '../dom/ElementType';
 
 const addBogus = (dom: DOMUtils, node: DomNode): DomNode => {
-  const e = Element.fromDom(node);
   // Adds a bogus BR element for empty block elements
-  if (ElementType.isBlock(e)) {
-    const d = e.dom();
-    if (!d.innerHTML && !Env.ie) {
-      d.innerHTML = '<br data-mce-bogus="1" />';
-    }
+  if (NodeType.isElement(node) && dom.isBlock(node) && !node.innerHTML && !Env.ie) {
+    node.innerHTML = '<br data-mce-bogus="1" />';
   }
 
   return node;
