@@ -31,7 +31,11 @@ const detection = PlatformDetection.detect();
 const isTouch = detection.deviceType.isTouch();
 const isPhone = detection.deviceType.isPhone();
 const mobilePlugins = [ 'lists', 'autolink', 'autosave' ];
-const defaultMobileSettings = { theme: 'mobile' };
+const defaultMobileSettings = {
+  theme: 'mobile',
+  menubar: false,
+  table_grid: false
+};
 
 const normalizePlugins = function (plugins: string | string[]) {
   const pluginNames = Type.isArray(plugins) ? plugins.join(' ') : plugins;
