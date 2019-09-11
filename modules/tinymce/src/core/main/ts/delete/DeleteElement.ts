@@ -114,7 +114,7 @@ const isBlock = function (editor: Editor, elm) {
   return elm && editor.schema.getBlockElements().hasOwnProperty(SugarNode.name(elm));
 };
 
-const paddEmptyBlock = function (elm) {
+const paddEmptyBlock = (elm: Element<any>): Option<CaretPosition> => {
   if (Empty.isEmpty(elm)) {
     const br = Element.fromHtml('<br data-mce-bogus="1">');
     Remove.empty(elm);

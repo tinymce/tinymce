@@ -60,7 +60,7 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
   const master = makeAnnotation(editor.getDoc(), data, annotationName, decorate);
 
   // Set the current wrapping element
-  const wrapper = Cell(Option.none());
+  const wrapper = Cell(Option.none<Element<any>>());
 
   // Clear the current wrapping element, so that subsequent calls to
   // getOrOpenWrapper spawns a new one.
@@ -69,14 +69,13 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
   };
 
   // Get the existing wrapper, or spawn a new one.
-  const getOrOpenWrapper = () => {
-    return wrapper.get().getOrThunk(() => {
+  const getOrOpenWrapper = (): Element<any> =>
+    wrapper.get().getOrThunk(() => {
       const nu = Replication.shallow(master);
       newWrappers.push(nu);
       wrapper.set(Option.some(nu));
       return nu;
     });
-  };
 
   const processElements = (elems) => {
     Arr.each(elems, processElement);
