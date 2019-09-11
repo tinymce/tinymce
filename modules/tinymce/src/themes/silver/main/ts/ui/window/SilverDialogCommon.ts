@@ -22,7 +22,7 @@ import {
   AlloySpec,
 } from '@ephox/alloy';
 import { DialogManager, Types } from '@ephox/bridge';
-import { Option } from '@ephox/katamari';
+import { Option, Arr, Cell } from '@ephox/katamari';
 import { Body, Class } from '@ephox/sugar';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
@@ -30,6 +30,7 @@ import { FormBlockEvent, formCancelEvent } from '../general/FormEvents';
 import NavigableObject from '../general/NavigableObject';
 import { dialogChannel } from './DialogChannels';
 import { renderModalHeader } from './SilverDialogHeader';
+import { StoragedMenuItem, StoragedMenuButton } from '../button/MenuButton';
 
 export interface WindowExtra<T> {
   redial?: (newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>;
@@ -167,8 +168,46 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
   );
 };
 
+const mapMenuButtons = (buttons: Types.Dialog.DialogButton[]): (Types.Dialog.DialogButton | StoragedMenuButton)[] => {
+  const mapItems = (button: Types.Dialog.DialogMenuButton): StoragedMenuButton => {
+    const items = Arr.map(button.items, (item: Types.Dialog.DialogToggleMenuItem): StoragedMenuItem => {
+      const cell = Cell<Boolean>(false);
+      return {
+        ...item,
+        storage: cell
+      };
+    });
+    return {
+      ...button,
+      items
+    };
+  };
+
+  return Arr.map(buttons, (button: Types.Dialog.DialogMenuButton) => {
+    if (button.type === 'menu') {
+      return mapItems(button);
+    }
+    return button;
+  });
+};
+
+const extractCellsToObject = (buttons: (StoragedMenuButton | Types.Dialog.DialogMenuButton | Types.Dialog.DialogNormalButton)[]) => {
+  return Arr.foldl(buttons, (acc, button) => {
+    if (button.type === 'menu') {
+      const menuButton = button as StoragedMenuButton;
+      return Arr.foldl(menuButton.items, (innerAcc, item) => {
+        innerAcc[item.name] = item.storage;
+        return innerAcc;
+      }, acc);
+    }
+    return acc;
+  }, {});
+};
+
 export {
   getHeader,
   getEventExtras,
-  renderModalDialog
+  renderModalDialog,
+  mapMenuButtons,
+  extractCellsToObject
 };

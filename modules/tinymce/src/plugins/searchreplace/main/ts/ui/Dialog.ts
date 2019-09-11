@@ -15,12 +15,12 @@ import { Types } from '@ephox/bridge';
 export interface DialogData {
   findtext: string;
   replacetext: string;
+  matchcase: boolean;
+  wholewords: boolean;
 }
 
 const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchState>) {
   const dialogApi = Singleton.value<Types.Dialog.DialogInstanceApi<DialogData>>();
-  const matchcase = Cell(currentSearchState.get().matchCase);
-  const wholewords = Cell(currentSearchState.get().wholeWord);
   editor.undoManager.add();
 
   const selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
@@ -63,11 +63,11 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     }
 
     // Same search text, so treat the find as a next click instead
-    if (last.text === data.findtext && last.matchCase === matchcase.get() && last.wholeWord === wholewords.get()) {
+    if (last.text === data.findtext && last.matchCase === data.matchcase && last.wholeWord === data.wholewords) {
       Actions.next(editor, currentSearchState);
     } else {
       // Find new matches
-      const count = Actions.find(editor, currentSearchState, data.findtext, matchcase.get(), wholewords.get());
+      const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords);
       if (count <= 0) {
         notFoundAlert(api);
       }
@@ -77,9 +77,13 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     updateButtonStates(api);
   };
 
+  const initialState = currentSearchState.get();
+
   const initialData: DialogData = {
     findtext: selectedText,
-    replacetext: ''
+    replacetext: '',
+    wholewords: initialState.wholeWord,
+    matchcase: initialState.matchCase
   };
 
   const spec: Types.Dialog.DialogApi<DialogData> = {
@@ -129,28 +133,17 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
         icon: 'preferences',
         tooltip: 'Preferences',
         align: 'start',
-        fetch: (done) => {
-          done([
-            {
-              type: 'togglemenuitem',
-              text: 'Match case',
-              onAction: (api) => {
-                matchcase.set(!matchcase.get());
-                dialogApi.on((dApi) => dApi.focus('options'));
-              },
-              active: matchcase.get()
-            },
-            {
-              type: 'togglemenuitem',
-              text: 'Find whole words only',
-              onAction: (api) => {
-                wholewords.set(!wholewords.get());
-                dialogApi.on((dApi) => dApi.focus('options'));
-              },
-              active: wholewords.get()
-            }
-          ]);
-        }
+        items: [
+          {
+            type: 'togglemenuitem',
+            name: 'matchcase',
+            text: 'Match case'
+          }, {
+            type: 'togglemenuitem',
+            name: 'wholewords',
+            text: 'Find whole words only'
+          }
+        ]
       },
       {
         type: 'custom',

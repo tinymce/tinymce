@@ -1,35 +1,17 @@
-import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Id, Result, Option } from '@ephox/katamari';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Fun, Result } from '@ephox/katamari';
 import { BodyComponentApi } from './BodyComponent';
 import { Panel, PanelApi, panelSchema } from './Panel';
 import { TabApi, Tab, TabPanel, TabPanelApi, tabPanelSchema } from './TabPanel';
-import { BaseMenuButton, BaseMenuButtonApi, baseMenuButtonFields, BaseMenuButtonInstanceApi, MenuButtonItemTypes } from '../../core/MenuButton';
+import * as FooterButton from './FooterButton';
 
-export type DialogMenuButtonItemTypes = MenuButtonItemTypes;
+export type DialogMenuButtonItemTypes = FooterButton.DialogMenuButtonItemTypes;
 export type SuccessCallback = (menu: string | DialogMenuButtonItemTypes[]) => void;
 
-// Note: This interface doesn't extend from a common button interface as this is only a configuration that specifies a button, but it's not by itself a button.
-interface BaseDialogButtonApi {
-  name?: string;
-  align?: 'start' | 'end';
-  primary?: boolean;
-  disabled?: boolean;
-  icon?: string;
-}
-
-export interface DialogNormalButtonApi extends BaseDialogButtonApi {
-  type: 'submit' | 'cancel' | 'custom';
-  text: string;
-}
-
-export interface DialogMenuButtonInstanceApi extends BaseMenuButtonInstanceApi { }
-
-export interface DialogMenuButtonApi extends BaseDialogButtonApi, BaseMenuButtonApi {
-  type: 'menu';
-  onSetup?: (api: DialogMenuButtonInstanceApi) => (api: DialogMenuButtonInstanceApi) => void;
-}
-
-export type DialogButtonApi = DialogNormalButtonApi | DialogMenuButtonApi;
+export type DialogNormalButtonApi = FooterButton.DialogNormalButtonApi;
+export type DialogMenuButtonApi = FooterButton.DialogMenuButtonApi;
+export type DialogMenuButtonInstanceApi = FooterButton.DialogMenuButtonInstanceApi;
+export type DialogButtonApi = FooterButton.DialogButtonApi;
 
 // For consistency with api/Types.ts this should perhaps be in a namespace (e.g. Types.Dialog.Panels.*)
 // but there are many many references to it already / shrug
@@ -106,25 +88,10 @@ export interface DialogApi<T extends DialogData> {
   onTabChange?: DialogTabChangeHandler<T>;
 }
 
-interface BaseDialogButton {
-  name: string;
-  align: 'start' | 'end';
-  primary: boolean;
-  disabled: boolean;
-  icon: Option<string>;
-}
-
-export interface DialogNormalButton extends BaseDialogButton {
-  type: 'submit' | 'cancel' | 'custom';
-  text: string;
-}
-
-export interface DialogMenuButton extends BaseDialogButton, BaseMenuButton {
-  type: 'menu';
-  onSetup: (api: DialogMenuButtonInstanceApi) => (api: DialogMenuButtonInstanceApi) => void;
-}
-
-export type DialogButton = DialogNormalButton | DialogMenuButton;
+export type DialogNormalButton = FooterButton.DialogNormalButton;
+export type DialogMenuButton = FooterButton.DialogMenuButton;
+export type DialogButton = FooterButton.DialogButton;
+export type DialogToggleMenuItem = FooterButton.DialogToggleMenuItem;
 
 export interface Dialog<T> {
   title: string;
@@ -140,46 +107,8 @@ export interface Dialog<T> {
   onTabChange: DialogTabChangeHandler<T>;
 }
 
-const baseButtonFields = [
-  FieldSchema.field(
-    'name',
-    'name',
-    FieldPresence.defaultedThunk(() => {
-      return Id.generate('button-name');
-    }),
-    ValueSchema.string
-  ),
-  FieldSchema.optionString('icon'),
-  FieldSchema.defaultedStringEnum('align', 'end', ['start', 'end']),
-  FieldSchema.defaultedBoolean('primary', false),
-  FieldSchema.defaultedBoolean('disabled', false)
-];
-
-export const dialogButtonFields = [
-  ...baseButtonFields,
-  FieldSchema.strictString('text')
-];
-
-const normalButtonFields = [
-  FieldSchema.strictStringEnum('type', ['submit', 'cancel', 'custom']),
-  ...dialogButtonFields
-];
-
-const menuButtonFields = [
-  FieldSchema.strictStringEnum('type', ['menu']),
-  ...baseButtonFields,
-  ...baseMenuButtonFields
-];
-
-export const dialogButtonSchema = ValueSchema.choose(
-  'type',
-  {
-    submit: normalButtonFields,
-    cancel: normalButtonFields,
-    custom: normalButtonFields,
-    menu: menuButtonFields
-  }
-);
+export const dialogButtonFields = FooterButton.dialogButtonFields;
+export const dialogButtonSchema = FooterButton.dialogButtonSchema;
 
 export const dialogSchema = ValueSchema.objOf([
   FieldSchema.strictString('title'),
