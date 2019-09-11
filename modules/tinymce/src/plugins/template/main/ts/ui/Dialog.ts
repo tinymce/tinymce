@@ -16,7 +16,7 @@ import Templates from '../core/Templates';
 import * as Utils from '../core/Utils';
 
 interface TemplateValues {
-  title: string;
+  title?: string;
   url?: string;
   content: string;
   description: string;
@@ -73,14 +73,14 @@ const getPreviewContent = (editor: Editor, html: string) => {
 };
 
 const open = (editor: Editor, templateList: TemplateValues[]) => {
-  const createTemplates = () => {
+  const createTemplates = (): Option<TemplateData[]> => {
     if (!templateList || templateList.length === 0) {
       const message = editor.translate('No templates defined.');
       editor.notificationManager.open({ text: message, type: 'info' });
       return Option.none();
     }
 
-    return Option.from(Tools.map(templateList, (template, index) => {
+    return Option.some(Tools.map(templateList, (template, index) => {
       return {
         selected: index === 0,
         text: template.title,
