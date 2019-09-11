@@ -21,7 +21,7 @@ import { isPathBookmark, isStringPathBookmark, isIdBookmark, isIndexBookmark, is
 import { Element } from '@ephox/sugar';
 import * as ElementType from '../dom/ElementType';
 
-const addBogus = (node: DomNode): DomNode => {
+const addBogus = (dom: DOMUtils, node: DomNode): DomNode => {
   const e = Element.fromDom(node);
   // Adds a bogus BR element for empty block elements
   if (ElementType.isBlock(e)) {
@@ -237,8 +237,8 @@ const resolveId = (dom: DOMUtils, bookmark: IdBookmark): Option<Range> => {
     endPos.or(startPos),
     (spos, epos) => {
       const rng = dom.createRng();
-      rng.setStart(addBogus(spos.container()), spos.offset());
-      rng.setEnd(addBogus(epos.container()), epos.offset());
+      rng.setStart(addBogus(dom, spos.container()), spos.offset());
+      rng.setEnd(addBogus(dom, epos.container()), epos.offset());
       return rng;
     }
   );
