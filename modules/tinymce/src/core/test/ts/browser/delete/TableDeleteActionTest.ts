@@ -1,7 +1,7 @@
 import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
 import { Arr, Fun, Result, Option } from '@ephox/katamari';
 import { Hierarchy,  Element,  Html } from '@ephox/sugar';
-import TableDeleteAction from 'tinymce/core/delete/TableDeleteAction';
+import * as TableDeleteAction from 'tinymce/core/delete/TableDeleteAction';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 
@@ -9,8 +9,8 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
 
-  const cFromHtml = function (html, startPath, startOffset, endPath, endOffset) {
-    return Chain.mapper(function () {
+  const cFromHtml = (html, startPath, startOffset, endPath, endOffset) =>
+    Chain.mapper(() => {
       const elm = Element.fromHtml(html);
       const sc = Hierarchy.follow(elm, startPath).getOrDie();
       const ec = Hierarchy.follow(elm, endPath).getOrDie();
@@ -21,11 +21,8 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
 
       return TableDeleteAction.getActionFromRange(elm, rng);
     });
-  };
 
-  const fail = function (message) {
-    return Fun.constant(Result.error(message));
-  };
+  const fail = (message: string) => Fun.constant(Result.error(message));
 
   const cAssertNone = Chain.op(function (x: Option<any>) {
     Assertions.assertEq('Is none', true, x.isNone());

@@ -5,20 +5,40 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Adt, Arr, Fun, Option, Options, Struct } from '@ephox/katamari';
+import { Adt, Arr, Fun, Option, Options } from '@ephox/katamari';
 import { Compare, Element, SelectorFilter, SelectorFind } from '@ephox/sugar';
-import { Range } from '@ephox/dom-globals';
+import { Range, Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
 
-const tableCellRng = Struct.immutable('start', 'end');
-const tableSelection = Struct.immutable('rng', 'table', 'cells');
+interface TableCellRng {
+  start: () => Element<DomElement>;
+  end: () => Element<DomElement>;
+}
+
+const tableCellRng = (start: Element<DomElement>, end: Element<DomElement>): TableCellRng => ({
+  start: Fun.constant(start),
+  end: Fun.constant(end)
+});
+
+interface TableSelection {
+  rng: () => TableCellRng;
+  table: () => Element<DomElement>;
+  cells: () => Element<DomElement>[];
+}
+
+const tableSelection = (rng: TableCellRng, table: Element<DomElement>, cells: Element<DomElement>[]): TableSelection => ({
+  rng: Fun.constant(rng),
+  table: Fun.constant(table),
+  cells: Fun.constant(cells)
+});
+
 const deleteAction = Adt.generate([
   { removeTable: [ 'element' ] },
   { emptyCells: [ 'cells' ] }
 ]);
 
-const isRootFromElement = (root) => Fun.curry(Compare.eq, root);
+const isRootFromElement = (root: Element<any>) => (cur: Element<any>): boolean => Compare.eq(root, cur);
 
-const getClosestCell = (container, isRoot) => {
+const getClosestCell = (container: DomNode, isRoot: (e: Element<any>) => boolean) => {
   return SelectorFind.closest(Element.fromDom(container), 'td,th', isRoot);
 };
 
@@ -30,15 +50,11 @@ const isExpandedCellRng = (cellRng) => {
   return Compare.eq(cellRng.start(), cellRng.end()) === false;
 };
 
-const getTableFromCellRng = (cellRng, isRoot) => {
-  return getClosestTable(cellRng.start(), isRoot)
-    .bind((startParentTable) => {
-      return getClosestTable(cellRng.end(), isRoot)
-        .bind((endParentTable) => {
-          return Compare.eq(startParentTable, endParentTable) ? Option.some(startParentTable) : Option.none();
-        });
-    });
-};
+const getTableFromCellRng = (cellRng: TableCellRng, isRoot: (e: Element<any>) => boolean): Option<Element<DomElement>> =>
+  getClosestTable(cellRng.start(), isRoot)
+    .bind((startParentTable) =>
+      getClosestTable(cellRng.end(), isRoot)
+        .bind((endParentTable) => Options.someIf(Compare.eq(startParentTable, endParentTable), startParentTable)));
 
 const getTableCells = (table) => SelectorFilter.descendants(table, 'td,th');
 
@@ -46,7 +62,7 @@ const getCellRangeFromStartTable = (cellRng: any, isRoot) => getClosestTable(cel
   return Arr.last(getTableCells(table)).map((endCell) => tableCellRng(cellRng.start(), endCell));
 });
 
-const partialSelection = (isRoot, rng) => {
+const partialSelection = (isRoot: (e: Element<any>) => boolean, rng: Range): Option<TableCellRng> => {
   const startCell = getClosestCell(rng.startContainer, isRoot);
   const endCell = getClosestCell(rng.endContainer, isRoot);
 
@@ -63,9 +79,10 @@ const partialSelection = (isRoot, rng) => {
   );
 };
 
-const isWithinSameTable = (isRoot, cellRng) => getTableFromCellRng(cellRng, isRoot).isSome();
+const isWithinSameTable = (isRoot: (e: Element<any>) => boolean, cellRng: TableCellRng) =>
+  getTableFromCellRng(cellRng, isRoot).isSome();
 
-const getCellRng = (rng: Range, isRoot) => {
+const getCellRng = (rng: Range, isRoot: (e: Element<any>) => boolean) => {
   const startCell = getClosestCell(rng.startContainer, isRoot);
   const endCell = getClosestCell(rng.endContainer, isRoot);
 
@@ -75,7 +92,7 @@ const getCellRng = (rng: Range, isRoot) => {
     .orThunk(() => partialSelection(isRoot, rng));
 };
 
-const getTableSelectionFromCellRng = (cellRng, isRoot) => {
+const getTableSelectionFromCellRng = (cellRng: TableCellRng, isRoot: (e: Element<any>) => boolean) => {
   return getTableFromCellRng(cellRng, isRoot).map((table) => tableSelection(cellRng, table, getTableCells(table)));
 };
 
@@ -95,18 +112,12 @@ const getSelectedCells = (tableSelection) => {
     (startIndex, endIndex) => tableSelection.cells().slice(startIndex, endIndex + 1));
 };
 
-const getAction = (tableSelection) => {
-  return getSelectedCells(tableSelection)
+const getAction = (tableSelection) =>
+  getSelectedCells(tableSelection)
     .map((selected) => {
       const cells = tableSelection.cells();
       return selected.length === cells.length ? deleteAction.removeTable(tableSelection.table()) : deleteAction.emptyCells(selected);
     });
-};
 
-const getActionFromCells = (cells) => deleteAction.emptyCells(cells);
-const getActionFromRange = (root, rng: Range) => getTableSelectionFromRng(root, rng).bind(getAction);
-
-export default {
-  getActionFromRange,
-  getActionFromCells
-};
+export const getActionFromCells = (cells) => deleteAction.emptyCells(cells);
+export const getActionFromRange = (root, rng: Range) => getTableSelectionFromRng(root, rng).bind(getAction);
