@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Receiving, AddEventsBehaviour, AlloyEvents } from '@ephox/alloy';
+import { Receiving, AddEventsBehaviour, AlloyEvents, AlloyParts } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { window, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Cell, Obj, Option, Type } from '@ephox/katamari';
@@ -18,9 +18,9 @@ import { renderIframeBody } from './SilverDialogBody';
 import { SilverDialogEvents } from './SilverDialogEvents';
 import { renderModalFooter } from './SilverDialogFooter';
 import { getUrlDialogApi } from './SilverUrlDialogInstanceApi';
-import { getEventExtras, getHeader, renderModalDialog, WindowExtra } from './SilverDialogCommon';
+import { DialogSpec, getEventExtras, getHeader, renderModalDialog, WindowExtra } from './SilverDialogCommon';
 import {  bodySendMessageChannel } from './DialogChannels';
-import { DomEvent, Element, SelectorFind } from '@ephox/sugar';
+import { DomEvent, Element, EventUnbinder, SelectorFind } from '@ephox/sugar';
 
 // A list of supported message actions
 const SUPPORTED_MESSAGE_ACTIONS = ['insertContent', 'setContent', 'execCommand', 'close', 'block', 'unblock'];
@@ -63,7 +63,7 @@ const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: Windo
   const footer = internalDialog.buttons.bind((buttons) => {
     // Don't render a footer if no buttons are specified
     if (buttons.length === 0) {
-      return Option.none();
+      return Option.none<AlloyParts.ConfiguredPart>();
     } else {
       return Option.some(renderModalFooter({ buttons }, backstage));
     }
@@ -83,7 +83,7 @@ const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: Windo
   // Determine the iframe urls domain, so we can target that specifically when sending messages
   const iframeUri = new URI(internalDialog.url, { base_uri: new URI(window.location.href) });
   const iframeDomain = `${iframeUri.protocol}://${iframeUri.host}${iframeUri.port ? ':' + iframeUri.port : ''}`;
-  const messageHandlerUnbinder = Cell(Option.none());
+  const messageHandlerUnbinder = Cell(Option.none<EventUnbinder>());
 
   // Setup the behaviours for dealing with messages between the iframe and current window
   const extraBehaviours = [
@@ -126,7 +126,7 @@ const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: Windo
     })
   ];
 
-  const spec = {
+  const spec: DialogSpec = {
     header,
     body,
     footer,

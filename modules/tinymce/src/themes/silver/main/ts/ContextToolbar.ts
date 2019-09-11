@@ -107,7 +107,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     }
   });
 
-  const lastAnchor = Cell(Option.none());
+  const lastAnchor = Cell(Option.none<AnchorSpec>());
   const lastElement = Cell<Option<DomElement>>(Option.none<DomElement>());
   const timer = Cell(null);
 
