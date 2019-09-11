@@ -3,13 +3,12 @@ import { document } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { Element, Html, Insert } from '@ephox/sugar';
 import TableFill from 'ephox/snooker/api/TableFill';
-import { CellSpan } from '../../../main/ts/ephox/snooker/api/Generators';
+import { CellSpan } from 'ephox/snooker/api/Generators';
 
 UnitTest.test('CloneFormatsTest', function () {
   const doc = Element.fromDom(document);
-  const cloneFormats = Option.none();
   const noCloneFormats = Option.some([] as string[]);
-  const cloneTableFill = TableFill.cellOperations(Fun.noop, doc, cloneFormats);
+  const cloneTableFill = TableFill.cellOperations(Fun.noop, doc, Option.none());
   const noCloneTableFill = TableFill.cellOperations(Fun.noop, doc, noCloneFormats);
 
   const cellElement = Element.fromTag('td');
