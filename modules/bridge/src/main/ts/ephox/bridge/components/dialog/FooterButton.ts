@@ -93,7 +93,7 @@ const menuButtonFields = [
   FieldSchema.optionString('icon'),
   FieldSchema.strictArrayOf('items', dialogToggleMenuItemSchema),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
-  ...dialogButtonFields
+  ...baseButtonFields
 ];
 
 export const dialogButtonSchema = ValueSchema.choose(
