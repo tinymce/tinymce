@@ -15,17 +15,28 @@ import Settings from '../api/Settings';
 import Templates from '../core/Templates';
 import * as Utils from '../core/Utils';
 
-interface TemplateValues {
+interface UrlTemplate {
   title: string;
-  url?: string;
-  content: string;
   description: string;
+  url: string;
 }
 
-interface TemplateData {
+interface ContentTemplate {
+  title: string;
+  description: string;
+  content: string;
+}
+
+type ExternalTemplate = UrlTemplate | ContentTemplate;
+
+interface InternalTemplate {
   selected: boolean;
   text: string;
-  value: TemplateValues;
+  value: {
+    url: Option<string>;
+    content: Option<string>;
+    description: string;
+  };
 }
 
 type DialogData = {
@@ -33,7 +44,7 @@ type DialogData = {
   preview: string;
 };
 
-type UpdateDialogCallback = (dialogApi: Types.Dialog.DialogInstanceApi<DialogData>, template: TemplateData, previewHtml: string) => void;
+type UpdateDialogCallback = (dialogApi: Types.Dialog.DialogInstanceApi<DialogData>, template: InternalTemplate, previewHtml: string) => void;
 
 const getPreviewContent = (editor: Editor, html: string) => {
   if (html.indexOf('<html>') === -1) {
@@ -72,61 +83,58 @@ const getPreviewContent = (editor: Editor, html: string) => {
   return Templates.replaceTemplateValues(html, Settings.getPreviewReplaceValues(editor));
 };
 
-const open = (editor: Editor, templateList: TemplateValues[]) => {
-  const createTemplates = () => {
+const open = (editor: Editor, templateList: ExternalTemplate[]) => {
+  const createTemplates = (): Option<Array<InternalTemplate>> => {
     if (!templateList || templateList.length === 0) {
       const message = editor.translate('No templates defined.');
       editor.notificationManager.open({ text: message, type: 'info' });
       return Option.none();
     }
 
-    return Option.from(Tools.map(templateList, (template, index) => {
+    return Option.from(Tools.map(templateList, (template: ExternalTemplate, index) => {
+      const isUrlTemplate = (t: ExternalTemplate): t is UrlTemplate => (t as UrlTemplate).url !== undefined;
       return {
         selected: index === 0,
         text: template.title,
         value: {
-          url: template.url,
-          content: template.content,
+          url: isUrlTemplate(template) ? Option.from(template.url) : Option.none(),
+          content: !isUrlTemplate(template) ? Option.from(template.content) : Option.none(),
           description: template.description
         }
       };
     }));
   };
 
-  const createSelectBoxItems = (templates: TemplateData[]) => {
-    return Arr.map(templates, (v) => {
+  const createSelectBoxItems = (templates: InternalTemplate[]) => {
+    return Arr.map(templates, (t) => {
       return {
-        text: v.text,
-        value: v.text
+        text: t.text,
+        value: t.text
       };
     });
   };
 
-  const findTemplate = (templates: TemplateData[], templateTitle: string) => {
+  const findTemplate = (templates: InternalTemplate[], templateTitle: string) => {
     return Arr.find(templates, (t) => {
       return t.text === templateTitle;
     });
   };
 
-  const getTemplateContent = (t: TemplateData) => {
+  const getTemplateContent = (t: InternalTemplate) => {
     return new Promise<string>((resolve, reject) => {
-      if (t.value.url) {
-        XHR.send({
-          url: t.value.url,
-          success (html: string) {
-            resolve(html);
-          },
-          error: (e) => {
-            reject(e);
-          }
-        });
-      } else {
-        resolve(t.value.content);
-      }
+      t.value.url.fold(() => resolve(t.value.content.getOr('')), (url) => XHR.send({
+        url,
+        success (html: string) {
+          resolve(html);
+        },
+        error: (e) => {
+          reject(e);
+        }
+      }));
     });
   };
 
-  const onChange = (templates: TemplateData[], updateDialog: UpdateDialogCallback) => (api: Types.Dialog.DialogInstanceApi<DialogData>, change: { name: string }) => {
+  const onChange = (templates: InternalTemplate[], updateDialog: UpdateDialogCallback) => (api: Types.Dialog.DialogInstanceApi<DialogData>, change: { name: string }) => {
     if (change.name === 'template') {
       const newTemplateTitle = api.getData().template;
       findTemplate(templates, newTemplateTitle).each((t) => {
@@ -139,7 +147,7 @@ const open = (editor: Editor, templateList: TemplateValues[]) => {
     }
   };
 
-  const onSubmit = (templates: TemplateData[]) => (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
+  const onSubmit = (templates: InternalTemplate[]) => (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
     const data = api.getData();
     findTemplate(templates, data.template).each((t) => {
       getTemplateContent(t).then((previewHtml) => {
@@ -149,7 +157,7 @@ const open = (editor: Editor, templateList: TemplateValues[]) => {
     });
   };
 
-  const openDialog = (templates: TemplateData[]) => {
+  const openDialog = (templates: InternalTemplate[]) => {
     const selectBoxItems = createSelectBoxItems(templates);
 
     const buildDialogSpec = (bodyItems: Types.Dialog.BodyComponentApi[], initialData: DialogData): Types.Dialog.DialogApi<DialogData> => ({
@@ -177,7 +185,7 @@ const open = (editor: Editor, templateList: TemplateValues[]) => {
       onChange: onChange(templates, updateDialog)
     });
 
-    const updateDialog = (dialogApi: Types.Dialog.DialogInstanceApi<DialogData>, template: TemplateData, previewHtml: string) => {
+    const updateDialog = (dialogApi: Types.Dialog.DialogInstanceApi<DialogData>, template: InternalTemplate, previewHtml: string) => {
       const content = getPreviewContent(editor, previewHtml);
       const bodyItems: Types.Dialog.BodyComponentApi[] = [
         {
@@ -216,7 +224,7 @@ const open = (editor: Editor, templateList: TemplateValues[]) => {
     });
   };
 
-  const optTemplates: Option<TemplateData[]> = createTemplates();
+  const optTemplates: Option<InternalTemplate[]> = createTemplates();
   optTemplates.each(openDialog);
 };
 
