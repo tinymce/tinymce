@@ -14,6 +14,7 @@ import { onActionToggleFormat } from './utils/Utils';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import { findNearest, getCurrentSelectionParents } from './utils/FormatDetection';
+import { UiFactoryBackstage } from '../../../backstage/Backstage';
 
 const defaultBlocks = (
   'Paragraph=p;' +
@@ -26,18 +27,18 @@ const defaultBlocks = (
   'Preformatted=pre'
 );
 
-const getSpec = (editor): SelectSpec => {
+const getSpec = (editor: Editor): SelectSpec => {
   const getMatchingValue = (nodeChangeEvent) => {
     return findNearest(editor, () => dataset.data, nodeChangeEvent);
   };
 
-  const isSelectedFor = (format) => {
+  const isSelectedFor = (format: string) => {
     return () => {
       return editor.formatter.match(format);
     };
   };
 
-  const getPreviewFor = (format) => () => {
+  const getPreviewFor = (format: string) => () => {
     const fmt = editor.formatter.get(format);
     return Option.some({
       tag: fmt.length > 0 ? fmt[0].inline || fmt[0].block || 'div' : 'div',
@@ -79,12 +80,12 @@ const getSpec = (editor): SelectSpec => {
   };
 };
 
-const createFormatSelect = (editor: Editor, backstage) => {
+const createFormatSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
   return createSelectButton(editor, backstage, getSpec(editor));
 };
 
 // FIX: Test this!
-const formatSelectMenu = (editor: Editor, backstage) => {
+const formatSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('blockformats', {
     text: 'Blocks',

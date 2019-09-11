@@ -29,7 +29,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   const isSelectedFor: IsSelectedForType = (format: string) => () => editor.formatter.match(format);
 
-  const getPreviewFor = (format: string) => () => {
+  const getPreviewFor = (_format: string) => () => {
     return Option.none<PreviewSpec>();
   };
 
@@ -43,7 +43,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   const nodeChangeHandler = Option.some((comp: AlloyComponent) => () => updateSelectMenuIcon(comp));
 
-  const setInitialValue = Option.some((comp) => updateSelectMenuIcon(comp));
+  const setInitialValue = Option.some((comp: AlloyComponent) => updateSelectMenuIcon(comp));
 
   const dataset = buildBasicStaticDataset(alignMenuItems);
 
@@ -62,7 +62,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
-const createAlignSelect = (editor, backstage) => {
+const createAlignSelect = (editor, backstage: UiFactoryBackstage) => {
   return createSelectButton(editor, backstage, getSpec(editor));
 };
 

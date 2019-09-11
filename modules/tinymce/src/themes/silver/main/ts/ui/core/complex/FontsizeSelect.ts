@@ -9,8 +9,9 @@ import { AlloyTriggers, AlloyComponent } from '@ephox/alloy';
 import { Arr, Obj, Option, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, SelectSpec, FormatItem } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
+import { UiFactoryBackstage } from '../../../backstage/Backstage';
 
 const defaultFontsizeFormats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
 
@@ -73,7 +74,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   const getPreviewFor = () => Fun.constant(Option.none());
 
-  const onAction = (rawItem) => () => {
+  const onAction = (rawItem: FormatItem) => () => {
     editor.undoManager.transact(() => {
       editor.focus();
       editor.execCommand('FontSize', false, rawItem.format);
@@ -89,9 +90,9 @@ const getSpec = (editor: Editor): SelectSpec => {
     });
   };
 
-  const nodeChangeHandler = Option.some((comp) => () => updateSelectMenuText(comp));
+  const nodeChangeHandler = Option.some((comp: AlloyComponent) => () => updateSelectMenuText(comp));
 
-  const setInitialValue = Option.some((comp) => updateSelectMenuText(comp));
+  const setInitialValue = Option.some((comp: AlloyComponent) => updateSelectMenuText(comp));
 
   const dataset = buildBasicSettingsDataset(editor, 'fontsize_formats', defaultFontsizeFormats, Delimiter.Space);
 
@@ -110,12 +111,12 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
-const createFontsizeSelect = (editor: Editor, backstage) => {
+const createFontsizeSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
   return createSelectButton(editor, backstage, getSpec(editor));
 };
 
 // TODO: Test this!
-const fontsizeSelectMenu = (editor: Editor, backstage) => {
+const fontsizeSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('fontsizes', {
     text: 'Font sizes',
