@@ -10,7 +10,7 @@ import { Arr, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { createMenuItems, createSelectButton } from './BespokeSelect';
+import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 
 const defaultFontsFormats = 'Andale Mono=andale mono,monospace;' +
@@ -54,7 +54,7 @@ const isSystemFontStack = (fontFamily: string): boolean => {
   return fontFamily.indexOf('-apple-system') === 0 && matchesSystemStack();
 };
 
-const getSpec = (editor: Editor) => {
+const getSpec = (editor: Editor): SelectSpec => {
   const getMatchingValue = () => {
     const getFirstFont = (fontFamily) => {
       return fontFamily ? splitFonts(fontFamily)[0] : '';
@@ -136,14 +136,12 @@ const getSpec = (editor: Editor) => {
 };
 
 const createFontSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
-  const spec = getSpec(editor);
-  return createSelectButton(editor, backstage, spec.dataset, spec);
+  return createSelectButton(editor, backstage, getSpec(editor));
 };
 
 // TODO: Test this!
 const fontSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
-  const spec = getSpec(editor);
-  const menuItems = createMenuItems(editor, backstage, spec.dataset, spec);
+  const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('fontformats', {
     text: backstage.shared.providers.translate('Fonts'),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
