@@ -18,7 +18,7 @@ const setCells = function (gridRow: Structs.RowCells, cells: Structs.ElementNew[
   return Structs.rowcells(cells, gridRow.section());
 };
 
-const mapCells = function (gridRow: Structs.RowCells, f: (ex: Structs.ElementNew, c: number, a: ArrayLike<Structs.ElementNew>) => Structs.ElementNew) {
+const mapCells = function (gridRow: Structs.RowCells, f: (ex: Structs.ElementNew, c: number) => Structs.ElementNew) {
   const cells = gridRow.cells();
   const r = Arr.map(cells, f);
   return Structs.rowcells(r, gridRow.section());

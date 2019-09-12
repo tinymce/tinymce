@@ -70,7 +70,7 @@ const getSharedValues = (data) => {
 
   Arr.each(comparisonData, (items) => {
     Arr.each(keys, (key) => {
-      Obj.each(items, (itemValue, itemKey, _) => {
+      Obj.each(items, (itemValue, itemKey) => {
         const comparisonValue = baseData[key];
         if (comparisonValue !== '' && key === itemKey) {
           if (comparisonValue !== itemValue) {
