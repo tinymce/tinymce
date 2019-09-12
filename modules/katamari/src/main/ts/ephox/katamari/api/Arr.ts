@@ -3,22 +3,12 @@ import * as Type from './Type';
 
 type ArrayMorphism<T, U> = (x: T, i: number) => U;
 type ArrayPredicate<T> = ArrayMorphism<T, boolean>;
-type Predicate<T> = (a: T) => boolean;
 type Comparator<T> = (a: T, b: T) => number;
 
 const slice = Array.prototype.slice;
 
-// Use the native Array.indexOf if it is available (IE9+) otherwise fall back to manual iteration
-// https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
-const rawIndexOf: <T> (ts: ArrayLike<T>, t: T) => number = (() => {
-  const pIndexOf = Array.prototype.indexOf;
-
-  const fastIndex = <T> (xs: ArrayLike<T>, x: T): number => pIndexOf.call(xs, x);
-
-  const slowIndex = <T> (xs: ArrayLike<T>, x: T): number => slowIndexOf(xs, x);
-
-  return pIndexOf === undefined ? slowIndex : fastIndex;
-})();
+const rawIndexOf = <T> (ts: ArrayLike<T>, t: T): number =>
+  Array.prototype.indexOf.call(ts, t);
 
 export const indexOf = <T = any>(xs: ArrayLike<T>, x: T): Option<number> => {
   // The rawIndexOf method does not wrap up in an option. This is for performance reasons.
@@ -30,10 +20,15 @@ export const contains = <T = any>(xs: ArrayLike<T>, x: T): boolean => {
   return rawIndexOf(xs, x) > -1;
 };
 
-// Using findIndex is likely less optimal in Chrome (dynamic return type instead of bool)
-// but if we need that micro-optimisation we can inline it later.
 export const exists = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): boolean => {
-  return findIndex(xs, pred).isSome();
+  for (let i = 0, len = xs.length; i < len; i++) {
+    const x = xs[i];
+    if (pred(x, i)) {
+      return true;
+    }
+  }
+
+  return false;
 };
 
 export const range = <T = any>(num: number, f: (a: number) => T): T[] => {
