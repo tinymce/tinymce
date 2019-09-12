@@ -6,6 +6,7 @@
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
       "ephox/agar/test/*": ["src/test/ts/module/ephox/agar/test/*"],
       "ephox/agar/demo/*": ["src/demo/ts/ephox/agar/demo/*"],
