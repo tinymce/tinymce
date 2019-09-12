@@ -17,7 +17,6 @@ export const each = function <T> (obj: T, f: (value: T[keyof T], key: string, ob
   }
 };
 
-/** map :: (JsObj(k, v), (v, k, JsObj(k, v) -> x)) -> JsObj(k, x) */
 export const map = function <T, R> (obj: T, f: (value: T[keyof T], key: string, obj: T) => R) {
   return tupleMap<{[k in keyof T]: R}, T>(obj, function (x, i, obj) {
     return {
@@ -27,7 +26,6 @@ export const map = function <T, R> (obj: T, f: (value: T[keyof T], key: string, 
   });
 };
 
-/** tupleMap :: (JsObj(k, v), (v, k, JsObj(k, v) -> { k: x, v: y })) -> JsObj(x, y) */
 export const tupleMap = function <R, T> (obj: T, f: (value: T[keyof T], key: string, obj: T) => {k: string, v: any}): R {
   const r: Record<string, any> = {};
   each(obj, function (x, i) {
@@ -37,7 +35,6 @@ export const tupleMap = function <R, T> (obj: T, f: (value: T[keyof T], key: str
   return <R> r;
 };
 
-/** bifilter :: (JsObj(k, v), (v, k -> Bool)) -> { t: JsObj(k, v), f: JsObj(k, v) } */
 export const bifilter = function <V> (obj: Record<string, V>, pred: (value: V, key: string) => boolean) {
   const t: Record<string, V> = {};
   const f: Record<string, V> = {};
@@ -48,7 +45,6 @@ export const bifilter = function <V> (obj: Record<string, V>, pred: (value: V, k
   return { t, f };
 };
 
-/** mapToArray :: (JsObj(k, v), (v, k -> a)) -> [a] */
 export const mapToArray = function <T, R> (obj: T, f: (value: T[keyof T], key: string) => R) {
   const r: R[] = [];
   each(obj, function (value, name) {
@@ -57,7 +53,6 @@ export const mapToArray = function <T, R> (obj: T, f: (value: T[keyof T], key: s
   return r;
 };
 
-/** find :: (JsObj(k, v), (v, k, JsObj(k, v) -> Bool)) -> Option v */
 export const find = function <T> (obj: T, pred: (value: T[keyof T], key: string, obj: T) => boolean): Option<T[keyof T]> {
   const props = keys(obj);
   for (let k = 0, len = props.length; k < len; k++) {
@@ -70,7 +65,6 @@ export const find = function <T> (obj: T, pred: (value: T[keyof T], key: string,
   return Option.none();
 };
 
-/** values :: JsObj(k, v) -> [v] */
 export const values = function <T> (obj: T) {
   return mapToArray(obj, function (v) {
     return v;
@@ -81,12 +75,10 @@ export const size = function (obj: {}) {
   return keys(obj).length;
 };
 
-/** get :: (JsObj(k, v), k) -> Option v */
 export const get = function <T, K extends keyof T> (obj: T, key: K): Option<NonNullable<T[K]>> {
   return has(obj, key) ? Option.from(obj[key] as NonNullable<T[K]>) : Option.none();
 };
 
-/** has :: (JsObj(k, v), k) -> Bool */
 export const has = function <T, K extends keyof T> (obj: T, key: K): boolean {
   return hasOwnProperty.call(obj, key);
 };
