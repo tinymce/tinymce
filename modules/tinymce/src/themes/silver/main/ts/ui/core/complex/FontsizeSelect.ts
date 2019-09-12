@@ -6,6 +6,7 @@
  */
 
 import { AlloyTriggers, AlloyComponent } from '@ephox/alloy';
+import * as FormatRegister from './utils/FormatRegister';
 import { Arr, Obj, Option, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
@@ -72,7 +73,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     return matchOpt;
   };
 
-  const getPreviewFor = () => Fun.constant(Option.none());
+  const getPreviewFor: FormatRegister.GetPreviewForType = Fun.constant(Fun.constant(Option.none()));
 
   const onAction = (rawItem: FormatItem) => () => {
     editor.undoManager.transact(() => {
