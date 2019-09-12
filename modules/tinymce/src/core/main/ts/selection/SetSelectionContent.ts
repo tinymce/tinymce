@@ -34,13 +34,13 @@ const rngSetContent = (rng: Range, fragment: DocumentFragment): void => {
   const nextText = lastChild.bind(Traverse.nextSibling).filter(Node.isText).bind(removeEmpty);
 
   // Join start
-  Options.liftN([prevText, firstChild.filter(Node.isText)], (prev: Element, start: Element) => {
+  Options.lift2(prevText, firstChild.filter(Node.isText), (prev: Element, start: Element) => {
     prependData(start.dom(), prev.dom().data);
     Remove.remove(prev);
   });
 
   // Join end
-  Options.liftN([nextText, lastChild.filter(Node.isText)], (next: Element, end: Element) => {
+  Options.lift2(nextText, lastChild.filter(Node.isText), (next: Element, end: Element) => {
     const oldLength = end.dom().length;
     end.dom().appendData(next.dom().data);
     rng.setEnd(end.dom(), oldLength);

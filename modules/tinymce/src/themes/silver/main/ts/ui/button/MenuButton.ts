@@ -5,16 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Disabling, SketchSpec, Tabstopping } from '@ephox/alloy';
-import { Toolbar } from '@ephox/bridge';
-import { Option } from '@ephox/katamari';
+import { AlloyComponent, Disabling, SketchSpec, Tabstopping, AlloyTriggers, MementoRecord } from '@ephox/alloy';
+import { Toolbar, Types } from '@ephox/bridge';
+import { Option, Arr, Cell } from '@ephox/katamari';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderCommonDropdown } from '../dropdown/CommonDropdown';
 import * as NestedMenus from '../menus/menu/NestedMenus';
 import ItemResponse from '../menus/item/ItemResponse';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
-import { Attr, Class } from '@ephox/sugar';
+import { Attr, Class, Focus } from '@ephox/sugar';
 import { Omit } from '../Omit';
+import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 export type MenuButtonSpec = Omit<Toolbar.ToolbarMenuButton, 'type'>;
 
@@ -65,6 +66,60 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
     backstage.shared);
 };
 
+interface StoragedMenuItem extends Types.Dialog.DialogToggleMenuItem {
+  storage: Cell<Boolean>;
+}
+
+interface StoragedMenuButton extends Omit<Types.Dialog.DialogMenuButton, 'items'> {
+  items: StoragedMenuItem[];
+}
+
+const getFetch = (items: StoragedMenuItem[], getButton: () => MementoRecord, backstage: UiFactoryBackstage) => {
+  const getMenuItemAction = (item) => {
+    return (api) => {
+      backstage.shared.getSink().each((sink) => {
+        getButton().getOpt(sink).each((orig) => {
+          Focus.focus(orig.element());
+          AlloyTriggers.emitWith(orig, formActionEvent, {
+            name: item.name,
+            value: item.storage.get()
+          });
+        });
+      });
+      const newValue = !api.isActive();
+      api.setActive(newValue);
+      item.storage.set(newValue);
+    };
+  };
+
+  const getMenuItemSetup = (item) => {
+    return (api) => {
+      api.setActive(item.storage.get());
+    };
+  };
+
+  return (success) => {
+    success(Arr.map(items, (item) => {
+      const text = item.text.fold(() => {
+        return {};
+      }, (text) => {
+        return {
+          text
+        };
+      });
+      return {
+        type: item.type,
+        ...text,
+        onAction: getMenuItemAction(item),
+        onSetup: getMenuItemSetup(item)
+      };
+    }));
+  };
+};
+
 export {
-  renderMenuButton
+  renderMenuButton,
+  getFetch,
+  StoragedMenuItem,
+  StoragedMenuButton
 };

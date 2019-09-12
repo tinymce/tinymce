@@ -18,10 +18,10 @@ import Editor from '../api/Editor';
 const deleteRangeMergeBlocks = function (rootNode, selection: Selection) {
   const rng = selection.getRng();
 
-  return Options.liftN([
+  return Options.lift2(
     DeleteUtils.getParentBlock(rootNode, Element.fromDom(rng.startContainer)),
-    DeleteUtils.getParentBlock(rootNode, Element.fromDom(rng.endContainer))
-  ], function (block1, block2) {
+    DeleteUtils.getParentBlock(rootNode, Element.fromDom(rng.endContainer)),
+   function (block1, block2) {
     if (Compare.eq(block1, block2) === false) {
       rng.deleteContents();
 

@@ -7,6 +7,7 @@
 
 import { navigator } from '@ephox/dom-globals';
 import { Arr, Fun, Future, Futures, Result } from '@ephox/katamari';
+import { Attr, Element } from '@ephox/sugar';
 import { ReferrerPolicy } from '../api/SettingsTypes';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
@@ -193,7 +194,8 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
     }
 
     if (settings.referrerPolicy) {
-      link.referrerPolicy = settings.referrerPolicy;
+      // Note: Don't use link.referrerPolicy = ... here as it doesn't work on Safari
+      Attr.set(Element.fromDom(link), 'referrerpolicy', settings.referrerPolicy);
     }
 
     // Feature detect onload on link element and sniff older webkits since it has an broken onload event

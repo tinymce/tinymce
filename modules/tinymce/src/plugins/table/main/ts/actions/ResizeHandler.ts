@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, HTMLTableElement, HTMLTableCellElement, HTMLTableRowElement, Element } from '@ephox/dom-globals';
+import { Node, HTMLTableElement, HTMLTableCellElement, HTMLTableRowElement, Element, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { ResizeWire, TableDirection, TableResize } from '@ephox/snooker';
 import { Element as SugarElement } from '@ephox/sugar';
@@ -25,7 +25,7 @@ export interface ResizeHandler {
 }
 
 export const getResizeHandler = function (editor: Editor): ResizeHandler {
-  let selectionRng = Option.none();
+  let selectionRng = Option.none<Range>();
   let resize = Option.none();
   let wire = Option.none();
   const percentageBasedSizeRegex = /(\d+(\.\d+)?)%/;

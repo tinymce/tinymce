@@ -137,7 +137,8 @@ class ScriptLoader {
     elm.src = Tools._addCacheSuffix(url);
 
     if (this.settings.referrerPolicy) {
-      elm.referrerPolicy = this.settings.referrerPolicy;
+      // Note: Don't use elm.referrerPolicy = ... here as it doesn't work on Safari
+      dom.setAttrib(elm, 'referrerpolicy', this.settings.referrerPolicy);
     }
 
     elm.onload = done;

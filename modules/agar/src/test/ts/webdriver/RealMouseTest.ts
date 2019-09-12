@@ -16,8 +16,8 @@ UnitTest.asynctest('RealMouseTest', function (success, failure) {
 
   const detection = PlatformDetection.detect();
 
-  // Firefox was disabled before, and IE never passes unless watched
-  if (detection.browser.isIE() || detection.browser.isFirefox() || detection.os.isOSX()) {
+  // Firefox was disabled before, IE never passes unless watched and Edge 18 fails to hover on mousemove
+  if (detection.browser.isIE() || detection.browser.isEdge() || detection.browser.isFirefox() || detection.os.isOSX()) {
     return success();
   }
 
@@ -49,7 +49,7 @@ UnitTest.asynctest('RealMouseTest', function (success, failure) {
 
   const count = Cell(0);
   // add a MouseUp handler
-  DomEvent.bind(clickMe, 'mouseup', () => {
+  const binder = DomEvent.bind(clickMe, 'mouseup', () => {
     count.set(count.get() + 1);
   });
 
@@ -62,10 +62,7 @@ UnitTest.asynctest('RealMouseTest', function (success, failure) {
       UiFinder.cFindIn('button[data-test]'),
       Chain.control(
         Chain.op(function (button) {
-          // Geckodriver does not have support for API actions yet.
-          if (!detection.browser.isFirefox()) {
-            RawAssertions.assertEq('After hovering', Css.get(other, 'background-color'), Css.get(button, 'background-color'));
-          }
+          RawAssertions.assertEq('After hovering', Css.get(other, 'background-color'), Css.get(button, 'background-color'));
         }),
         Guard.tryUntil('Waiting for button to turn blue')
       ),
@@ -73,14 +70,12 @@ UnitTest.asynctest('RealMouseTest', function (success, failure) {
       UiFinder.cFindIn('.click-me'),
       RealMouse.cClick(),
       Chain.op((button) => {
-        // Geckodriver does not have support for API actions yet.
-        if (!detection.browser.isFirefox()) {
-          Assertions.assertEq('mouseup event has fired', 1, count.get());
-          Assertions.assertEq(`button doesn\'t have ${RealMouse.BedrockIdAttribute} attribute`, false, Attr.has(button, RealMouse.BedrockIdAttribute));
-        }
+        Assertions.assertEq('mouseup event has fired', 1, count.get());
+        Assertions.assertEq(`button doesn\'t have ${RealMouse.BedrockIdAttribute} attribute`, false, Attr.has(button, RealMouse.BedrockIdAttribute));
       })
     ])
   ], function () {
+    binder.unbind();
     Remove.remove(container);
     success();
   }, failure);

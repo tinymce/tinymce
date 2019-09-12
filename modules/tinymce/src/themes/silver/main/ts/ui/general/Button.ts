@@ -14,7 +14,9 @@ import {
   Button as AlloyButton,
   FormField as AlloyFormField,
   SketchSpec,
-  Tabstopping
+  Tabstopping,
+  Memento,
+  SimpleOrSketchSpec
 } from '@ephox/alloy';
 import { console } from '@ephox/dom-globals';
 import { Merger, Option } from '@ephox/katamari';
@@ -25,7 +27,7 @@ import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { renderIconFromPack } from '../button/ButtonSlices';
-import { renderMenuButton } from '../button/MenuButton';
+import { renderMenuButton, getFetch, StoragedMenuButton } from '../button/MenuButton';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 import { Types } from '@ephox/bridge';
@@ -150,9 +152,20 @@ const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): s
   return buttonType === 'custom' || buttonType === 'cancel' || buttonType === 'submit';
 };
 
-export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, backstage: UiFactoryBackstage): SketchSpec => {
+export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, backstage: UiFactoryBackstage): SimpleOrSketchSpec => {
   if (isMenuFooterButtonSpec(spec, buttonType)) {
-    return renderMenuButton(spec, ToolbarButtonClasses.Button, backstage, Option.none());
+    const getButton = () => memButton;
+
+    const menuButtonSpec = spec as StoragedMenuButton;
+
+    const fixedSpec = {
+      ...spec,
+      fetch: getFetch(menuButtonSpec.items, getButton, backstage)
+    };
+
+    const memButton = Memento.record(renderMenuButton(fixedSpec, ToolbarButtonClasses.Button, backstage, Option.none()));
+
+    return memButton.asSpec();
   } else if (isNormalFooterButtonSpec(spec, buttonType)) {
     const action = getAction(spec.name, buttonType);
     const buttonSpec = {

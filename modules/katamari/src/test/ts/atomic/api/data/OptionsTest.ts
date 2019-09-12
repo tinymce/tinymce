@@ -11,11 +11,6 @@ UnitTest.test('OptionsTest', function () {
     return { name, age, address };
   };
 
-  assert.eq({name: 'bob', age: 25, address: 'the moon'}, Options.liftN([Option.some('bob'), Option.some(25), Option.some('the moon')], person).getOrDie());
-
-  assert.eq(true, Options.liftN([Option.some('bob'), Option.none(), Option.some('the moon')], function () { throw new Error('barf'); }).isNone());
-  assert.eq(true, Options.liftN([Option.none(), Option.none(), Option.some('the moon')], function () { throw new Error('barf'); }).isNone());
-
   const arr1 = [Option.some(1), Option.none(), Option.some(2), Option.some(3), Option.none(), Option.none(), Option.none(), Option.none(), Option.some(4)];
   assert.eq([1, 2, 3, 4], Options.cat(arr1));
 
@@ -108,48 +103,13 @@ UnitTest.test('OptionsTest', function () {
   );
 
   Jsc.property(
-    'Options.liftN of an array of nones returns a none',
-    Jsc.nearray(ArbDataTypes.optionNone),
-    function (arr) {
-      const output = Options.liftN(arr, Fun.die('Never executes f'));
-      return output.isNone();
-    }
-  );
-
-  Jsc.property(
-    'Options.liftN of an array of somes returns a some',
-    Jsc.nearray(ArbDataTypes.optionSome),
-    Jsc.fun(Jsc.json),
-    function (arr, f) {
-      const output = Options.liftN(arr, f);
-      return output.isSome();
-    }
-  );
-
-  Jsc.property(
-    'Options.liftN of an array mirrors cat',
-    Jsc.nearray(ArbDataTypes.option),
-    Jsc.fun(Jsc.json),
-    function (arr, f) {
-      const args = Options.cat(arr);
-      const output = Options.liftN(arr, f);
-
-      if (args.length === arr.length) {
-        return Jsc.eq(output.getOrDie(), f.apply(undefined, args));
-      } else {
-        return output.isNone();
-      }
-    }
-  );
-
-  Jsc.property(
     'Options.lift with two arguments mirrors cat with two items',
     ArbDataTypes.option,
     ArbDataTypes.option,
     Jsc.fun(Jsc.json),
     function (a, b, f) {
       const args = Options.cat([a, b]);
-      const output = Options.lift(a, b, f);
+      const output = Options.lift2(a, b, f);
 
       if (args.length === 2) {
         return Jsc.eq(output.getOrDie(), f.apply(undefined, args));

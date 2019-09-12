@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Attr, Body, Css, Element, Scroll } from '@ephox/sugar';
+import { Attr, Body, Css, Element } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
@@ -32,7 +32,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
   const sScrollToElement = (contentAreaContainer: Element, selector: string) => GeneralSteps.sequence([
     Step.sync(() => {
       const elm = UiFinder.findIn(contentAreaContainer, selector).getOrDie();
-      Scroll.intoView(elm, false);
+      elm.dom().scrollIntoView(false);
     })
   ]);
 
@@ -52,7 +52,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     UiFinder.sWaitForHidden('Wait for editor to hide', Body.body(), '.tox.tox-tinymce-inline')
   ]));
 
-  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
+  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
       const uiContainer = Element.fromDom(editor.getContainer());
       const contentAreaContainer = Element.fromDom(editor.getContentAreaContainer());
 

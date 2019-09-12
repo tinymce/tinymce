@@ -16,7 +16,7 @@ UnitTest.asynctest('Input component Test', (success, failure) => {
         renderInput({
           name: 'input',
           label: Option.some('LabelA'),
-          inputType: Option.none(),
+          inputMode: Option.none(),
           placeholder: Option.none(),
           maximized: false,
           disabled: false

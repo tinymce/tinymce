@@ -36,6 +36,7 @@ import { renderInlineFooter } from './SilverDialogFooter';
 import { renderInlineHeader } from './SilverDialogHeader';
 import { getDialogApi } from './SilverDialogInstanceApi';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+import * as SilverDialogCommon from './SilverDialogCommon';
 
 interface WindowExtra<T> {
   redial: (newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>;
@@ -63,9 +64,13 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
     }, dialogContentId, backstage, ariaAttrs) as SimpleSpec
   );
 
+  const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(dialogInit.internalDialog.buttons);
+
+  const objOfCells = SilverDialogCommon.extractCellsToObject(storagedMenuButtons);
+
   const memFooter = Memento.record(
     renderInlineFooter({
-      buttons: dialogInit.internalDialog.buttons
+      buttons: storagedMenuButtons
     }, backstage)
   );
 
@@ -145,7 +150,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: W
       const body = memBody.get(dialog);
       return Composing.getCurrent(body).getOr(body);
     }
-  }, extra.redial);
+  }, extra.redial, objOfCells);
 
   return {
     dialog,

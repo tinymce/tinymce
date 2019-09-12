@@ -39,10 +39,10 @@ const paddEmptyBody = function (editor: Editor) {
 };
 
 const willDeleteLastPositionInElement = function (forward: boolean, fromPos: CaretPosition, elm) {
-  return Options.liftN([
+  return Options.lift2(
     CaretFinder.firstPositionIn(elm),
-    CaretFinder.lastPositionIn(elm)
-  ], function (firstPos, lastPos) {
+    CaretFinder.lastPositionIn(elm),
+    function (firstPos, lastPos) {
     const normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
     const normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
     const normalizedFromPos = InlineUtils.normalizePosition(false, fromPos);

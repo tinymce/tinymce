@@ -44,7 +44,7 @@ const toLegacy = (fontSize: string): string => {
 
 const getSpec = (editor: Editor) => {
   const getMatchingValue = () => {
-    let matchOpt = Option.none();
+    let matchOpt = Option.none<{ title: string; format: string; }>();
     const items = dataset.data;
 
     const px = editor.queryCommandValue('FontSize');
