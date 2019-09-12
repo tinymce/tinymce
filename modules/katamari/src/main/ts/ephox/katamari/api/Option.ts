@@ -74,7 +74,7 @@ export interface Option<T> {
   toString: () => string;
 }
 
-const none = <T = any>() => <Option<T>> NONE;
+const none = <T>() => <Option<T>> NONE;
 
 const NONE: Option<any> = (() => {
   const eq = function (o) {
