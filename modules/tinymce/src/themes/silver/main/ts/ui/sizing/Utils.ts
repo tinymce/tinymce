@@ -7,7 +7,7 @@
 
 import { Option, Type } from '@ephox/katamari';
 
-const parseToInt = (val) => {
+const parseToInt = (val): Option<number> => {
   // if size is a number or '_px', will return the number
   const re = /^[0-9\.]+(|px)$/i;
   if (re.test('' + val)) {

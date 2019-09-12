@@ -9,6 +9,7 @@ import {
   AddEventsBehaviour,
   AlloyComponent,
   AlloyEvents,
+  AlloySpec,
   AlloyTriggers,
   Behaviour,
   Button as AlloyButton,
@@ -96,7 +97,7 @@ export const renderIconButton = (spec: IconButtonWrapper, action: (comp: AlloyCo
 export const renderButtonSpec = (spec: ButtonSpec, action: Option<(comp: AlloyComponent) => void>, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = [], extraClasses = []) => {
   const translatedText = providersBackstage.translate(spec.text);
 
-  const icon = spec.icon ? spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)) : Option.none();
+  const icon: Option<AlloySpec> = spec.icon ? spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)) : Option.none();
   const components = icon.isSome() ? componentRenderPipeline([ icon ]) : [];
 
   const innerHtml = icon.isSome() ? {} : {

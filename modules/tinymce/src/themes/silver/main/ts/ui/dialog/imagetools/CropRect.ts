@@ -6,8 +6,7 @@
  */
 
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
-import Rect from 'tinymce/core/api/geom/Rect';
-// import Factory from 'tinymce/core/api/ui/Factory';
+import Rect, { GeomRect } from 'tinymce/core/api/geom/Rect';
 import Observable from 'tinymce/core/api/util/Observable';
 import Tools from 'tinymce/core/api/util/Tools';
 import VK from 'tinymce/core/api/util/VK';
@@ -16,15 +15,24 @@ import DragHelper from './DragHelper';
 
 let count = 0;
 
-export default function (currentRect, viewPortRect, clampRect, containerElm, action) {
+export interface CropRect extends Observable<any> {
+  toggleVisibility: (state: boolean) => void;
+  setClampRect: (rect: GeomRect) => void;
+  setRect: (rect: GeomRect) => void;
+  getInnerRect: (rect: GeomRect) => void;
+  setInnerRect: (rect: GeomRect) => void;
+  setViewPortRect: (rect: GeomRect) => void;
+  destroy: () => void;
+}
+
+const create = (currentRect, viewPortRect, clampRect, containerElm, action): CropRect => {
   let instance;
-  let handles;
   let dragHelpers;
   let blockers;
   const prefix = 'tox-';
   const id = prefix + 'crid-' + count++;
 
-  handles = [
+  const handles = [
     { name: 'move', xMul: 0, yMul: 0, deltaX: 1, deltaY: 1, deltaW: 0, deltaH: 0, label: 'Crop Mask' },
     { name: 'nw', xMul: 0, yMul: 0, deltaX: 1, deltaY: 1, deltaW: -1, deltaH: -1, label: 'Top Left Crop Handle' },
     { name: 'ne', xMul: 1, yMul: 0, deltaX: 0, deltaY: 1, deltaW: 1, deltaH: -1, label: 'Top Right Crop Handle' },
@@ -34,27 +42,21 @@ export default function (currentRect, viewPortRect, clampRect, containerElm, act
 
   blockers = ['top', 'right', 'bottom', 'left'];
 
-  function getAbsoluteRect(outerRect, relativeRect) {
-    return {
-      x: relativeRect.x + outerRect.x,
-      y: relativeRect.y + outerRect.y,
-      w: relativeRect.w,
-      h: relativeRect.h
-    };
-  }
+  const getAbsoluteRect = (outerRect, relativeRect) => ({
+    x: relativeRect.x + outerRect.x,
+    y: relativeRect.y + outerRect.y,
+    w: relativeRect.w,
+    h: relativeRect.h
+  });
 
-  function getRelativeRect(outerRect, innerRect) {
-    return {
-      x: innerRect.x - outerRect.x,
-      y: innerRect.y - outerRect.y,
-      w: innerRect.w,
-      h: innerRect.h
-    };
-  }
+  const getRelativeRect = (outerRect: GeomRect, innerRect: GeomRect): GeomRect => ({
+    x: innerRect.x - outerRect.x,
+    y: innerRect.y - outerRect.y,
+    w: innerRect.w,
+    h: innerRect.h
+  });
 
-  function getInnerRect() {
-    return getRelativeRect(clampRect, currentRect);
-  }
+  const getInnerRect = () => getRelativeRect(clampRect, currentRect);
 
   function moveRect(handle, startRect, deltaX, deltaY) {
     let x, y, w, h, rect;
@@ -172,7 +174,7 @@ export default function (currentRect, viewPortRect, clampRect, containerElm, act
     });
   }
 
-  function toggleVisibility(state) {
+  function toggleVisibility(state: boolean) {
     let selectors;
 
     selectors = Tools.map(handles, function (handle) {
@@ -225,21 +227,21 @@ export default function (currentRect, viewPortRect, clampRect, containerElm, act
     updateElementRect('move', rect);
   }
 
-  function setRect(rect) {
+  function setRect(rect: GeomRect): void {
     currentRect = rect;
     repaint(currentRect);
   }
 
-  function setViewPortRect(rect) {
+  function setViewPortRect(rect: GeomRect): void {
     viewPortRect = rect;
     repaint(currentRect);
   }
 
-  function setInnerRect(rect) {
+  function setInnerRect(rect: GeomRect): void {
     setRect(getAbsoluteRect(clampRect, rect));
   }
 
-  function setClampRect(rect) {
+  function setClampRect(rect: GeomRect): void {
     clampRect = rect;
     repaint(currentRect);
   }
@@ -265,4 +267,8 @@ export default function (currentRect, viewPortRect, clampRect, containerElm, act
   }, Observable);
 
   return instance;
-}
+};
+
+export const CropRect = {
+  create
+};

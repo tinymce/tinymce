@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { Body, Insert, Remove, Traverse, Element } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { GuiSystem } from '../../api/system/Gui';
@@ -36,8 +36,8 @@ const doDetach = (component) => {
 };
 
 const detach = (component: AlloyComponent): void => {
-  const parent = Traverse.parent(component.element()).bind((p) => {
-    return component.getSystem().getByDom(p).fold(Option.none, Option.some);
+  const parent = Traverse.parent(component.element()).bind<AlloyComponent>((p) => {
+    return component.getSystem().getByDom(p).toOption();
   });
 
   doDetach(component);

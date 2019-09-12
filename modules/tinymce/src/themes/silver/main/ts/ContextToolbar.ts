@@ -5,11 +5,27 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying, Layout, LayoutInside, Positioning, MaxHeight } from '@ephox/alloy';
+import {
+  AddEventsBehaviour,
+  AlloyEvents,
+  AlloySpec,
+  AlloyTriggers,
+  AnchorSpec,
+  Behaviour,
+  Boxes,
+  Bubble,
+  GuiFactory,
+  InlineView,
+  Keying,
+  Layout,
+  LayoutInside,
+  MaxHeight,
+  Positioning
+} from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Element as DomElement } from '@ephox/dom-globals';
-import { Cell, Id, Merger, Option, Thunk, Result } from '@ephox/katamari';
+import { Cell, Id, Merger, Option, Result, Thunk } from '@ephox/katamari';
 import { Css, DomEvent, Element, Focus, Scroll, Traverse } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -91,7 +107,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     }
   });
 
-  const lastAnchor = Cell(Option.none());
+  const lastAnchor = Cell(Option.none<AnchorSpec>());
   const lastElement = Cell<Option<DomElement>>(Option.none<DomElement>());
   const timer = Cell(null);
 
@@ -194,13 +210,12 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     overrides: anchorOverrides
   };
 
-  const getAnchor = (position: Toolbar.ContextToolbarPosition, element: Option<Element>) => {
+  const getAnchor = (position: Toolbar.ContextToolbarPosition, element: Option<Element>): AnchorSpec => {
     const anchorage = position === 'node' ? extras.backstage.shared.anchors.node(element) : extras.backstage.shared.anchors.cursor();
-    const anchor = Merger.deepMerge(
+    return Merger.deepMerge(
       anchorage,
       position === 'line' ? lineAnchorSpec : anchorSpec
     );
-    return anchor;
   };
 
   const launchContext = (toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm, elem: Option<DomElement>) => {

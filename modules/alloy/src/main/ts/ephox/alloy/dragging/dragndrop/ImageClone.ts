@@ -71,7 +71,7 @@ const blockDefaultGhost = (target: Element) => {
 // Edge doesn't have setDragImage support and just hiding the target element will position the drop icon incorrectly so we need custom ghost
 // TODO: Get rid of this once Edge switches to Chromium we feature detect setDragImage support so once they have it should use that instead
 const setDragImageFromCloneEdgeFallback = (image: DragnDropImageClone, parent: Element, target: Element) => {
-  const ghostState = Cell(Option.none());
+  const ghostState = Cell(Option.none<Element<any>>());
 
   const drag = DomEvent.bind(target, 'drag', (evt) => {
     // The calculated position needs to at least be cord + 1 since it would otherwise interfere with dropping

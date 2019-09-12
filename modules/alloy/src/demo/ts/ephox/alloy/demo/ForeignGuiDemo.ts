@@ -1,5 +1,5 @@
 import { document } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import { Option, Options } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, DomEvent, Element, Elements, Height, Insert, InsertAll, Node, SelectorFind, Width } from '@ephox/sugar';
 
@@ -40,11 +40,8 @@ export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
   const platform = PlatformDetection.detect();
 
-  const onNode = (name: string) => {
-    return (elem: Element) => {
-      return Node.name(elem) === name ? Option.some(elem) : Option.none();
-    };
-  };
+  const onNode = (name: string) => (elem: Element): Option<Element> =>
+    Options.someIf(Node.name(elem) === name, elem);
 
   const contents = '<div><strong>drag1</strong> and <code>click1</code> and <strong>drag2</strong> ' +
     'and <code>click2</code> and <img style="width: 140px; height: 130px;" /></div>';

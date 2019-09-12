@@ -19,6 +19,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Attachment from '../system/Attachment';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (detail, components, spec, externals) => {
 
@@ -43,7 +44,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
   const showDialog = (dialog) => {
     const sink = detail.lazySink(dialog).getOrDie();
 
-    const busyComp = Cell(Option.none());
+    const busyComp = Cell(Option.none<AlloyComponent>());
 
     const externalBlocker = externals.blocker();
 

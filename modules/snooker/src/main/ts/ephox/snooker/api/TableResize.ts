@@ -13,12 +13,14 @@ export interface AfterTableResizeEvent {
   table: () => Element;
 }
 
+type TableResizeEventRegistry = {
+  beforeResize: Bindable<BeforeTableResizeEvent>,
+  afterResize: Bindable<AfterTableResizeEvent>,
+  startDrag: Bindable<{}>
+};
+
 interface TableResizeEvents {
-  registry: {
-    beforeResize: Bindable<BeforeTableResizeEvent>;
-    afterResize: Bindable<AfterTableResizeEvent>;
-    startDrag: Bindable<{}>;
-  };
+  registry: TableResizeEventRegistry;
   trigger: {
     beforeResize: (table: Element) => void;
     afterResize: (table: Element) => void;
@@ -26,7 +28,16 @@ interface TableResizeEvents {
   };
 }
 
-export default function (wire: ResizeWire, vdirection: BarPositions<ColInfo>) {
+export interface TableResize {
+  on: () => void;
+  off: () => void;
+  hideBars: () => void;
+  showBars: () => void;
+  destroy: () => void;
+  events: TableResizeEventRegistry;
+}
+
+const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>): TableResize => {
   const hdirection = BarPositions.height;
   const manager = BarManager(wire, vdirection, hdirection);
 
@@ -62,4 +73,8 @@ export default function (wire: ResizeWire, vdirection: BarPositions<ColInfo>) {
     destroy: manager.destroy,
     events: events.registry
   };
-}
+};
+
+export const TableResize = {
+  create
+};

@@ -4,8 +4,21 @@ import * as PositionArray from '../alien/PositionArray';
 
 const output = Struct.immutable('within', 'extra', 'withinWidth');
 
-const apportion = (units, total, len) => {
-  const parray = PositionArray.generate(units, (unit, current) => {
+interface Pos {
+  element: () => any;
+  start: () => number;
+  finish: () => number;
+  width: () => number;
+}
+
+interface Widths {
+  within: () => Pos[];
+  extra: () => Pos[];
+  withinWidth: () => number;
+}
+
+const apportion = (units, total, len): Widths => {
+  const parray: Pos[] = PositionArray.generate(units, (unit, current) => {
     const width = len(unit);
     return Option.some({
       element: Fun.constant(unit),
@@ -51,7 +64,7 @@ const fitAll = (within, extra, withinWidth) => {
   return output(toUnit(within), [], withinWidth);
 };
 
-const tryFit = (total, units, len) => {
+const tryFit = (total, units, len): Option<Widths> => {
   const divide = apportion(units, total, len);
   return divide.extra().length === 0 ? Option.some(divide) : Option.none();
 };
