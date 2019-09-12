@@ -180,16 +180,6 @@ export const findIndex = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): O
   return Option.none();
 };
 
-const slowIndexOf = <T = any>(xs: ArrayLike<T>, x: T): number => {
-  for (let i = 0, len = xs.length; i < len; ++i) {
-    if (xs[i] === x) {
-      return i;
-    }
-  }
-
-  return -1;
-};
-
 const push = Array.prototype.push;
 export const flatten = <T>(xs: ArrayLike<T[]>): T[] => {
   // Note, this is possible because push supports multiple arguments:
