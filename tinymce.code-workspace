@@ -1,0 +1,163 @@
+{
+  "folders": [
+    {
+      "name": "TinyMCE project",
+      "path": "."
+    },
+    {
+      "name": "tinymce core",
+      "path": "modules/tinymce/src/core/main/ts"
+    },
+    {
+      "name": "tinymce core tests",
+      "path": "modules/tinymce/src/core/test/ts"
+    },
+    {
+      "name": "tinymce silver theme",
+      "path": "modules/tinymce/src/themes/silver/main/ts"
+    },
+    {
+      "name": "tinymce silver theme tests",
+      "path": "modules/tinymce/src/themes/silver/test/ts"
+    },
+    {
+      "name": "tinymce plugins",
+      "path": "modules/tinymce/src/plugins"
+    },
+    {
+      "name": "alloy",
+      "path": "modules/alloy/src/main/ts/ephox/alloy"
+    },
+    {
+      "name": "alloy tests",
+      "path": "modules/alloy/src/test/ts"
+    },
+    {
+      "name": "sugar",
+      "path": "modules/sugar/src/main/ts/ephox/sugar"
+    },
+    {
+      "name": "katamari",
+      "path": "modules/katamari/src/main/ts/ephox/katamari"
+    },
+    {
+      "name": "acid",
+      "path": "modules/acid/src/main/ts/ephox/acid"
+    },
+    {
+      "name": "boss",
+      "path": "modules/boss/src/main/ts/ephox/boss"
+    },
+    {
+      "name": "boulder",
+      "path": "modules/boulder/src/main/ts/ephox/boulder"
+    },
+    {
+      "name": "darwin",
+      "path": "modules/darwin/src/main/ts/ephox/darwin"
+    },
+    {
+      "name": "dragster",
+      "path": "modules/dragster/src/main/ts/ephox/dragster"
+    },
+    {
+      "name": "imagetools",
+      "path": "modules/imagetools/src/main/ts/ephox/imagetools"
+    },
+    {
+      "name": "jax",
+      "path": "modules/jax/src/main/ts/ephox/jax"
+    },
+    {
+      "name": "mcagar",
+      "path": "modules/mcagar/src/main/ts/ephox/mcagar"
+    },
+    {
+      "name": "phoenix",
+      "path": "modules/phoenix/src/main/ts/ephox/phoenix"
+    },
+    {
+      "name": "polaris",
+      "path": "modules/polaris/src/main/ts/ephox/polaris"
+    },
+    {
+      "name": "porkbun",
+      "path": "modules/porkbun/src/main/ts/ephox/porkbun"
+    },
+    {
+      "name": "robin",
+      "path": "modules/robin/src/main/ts/ephox/robin"
+    },
+    {
+      "name": "sand",
+      "path": "modules/sand/src/main/ts/ephox/sand"
+    }
+  ],
+  "settings": {
+    // We don't always upgrade typescript immediately, this helps avoid errors when vscode is ahead
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "files.exclude": {
+      // start by ignoring _most_ of node_modules
+      "node_modules/[a-zA-Z]*": true,
+      "node_modules/@babel": true,
+      "node_modules/@gulp-sourcemaps": true,
+      "node_modules/@lerna": true,
+      "node_modules/@mrmlnc": true,
+      "node_modules/@nodelib": true,
+      "node_modules/@octokit": true,
+      "node_modules/@types": true,
+      "node_modules/@webassemblyjs": true,
+      "node_modules/@xtuc": true,
+      // ignore monorepo packages symlinked into node_modules
+      "node_modules/@ephox/acid": true,
+      "node_modules/@ephox/agar": true,
+      "node_modules/@ephox/alloy": true,
+      "node_modules/@ephox/boss": true,
+      "node_modules/@ephox/boulder": true,
+      "node_modules/@ephox/bridge": true,
+      "node_modules/@ephox/darwin": true,
+      "node_modules/@ephox/dragster": true,
+      "node_modules/@ephox/imagetools": true,
+      "node_modules/@ephox/jax": true,
+      "node_modules/@ephox/katamari": true,
+      "node_modules/@ephox/mcagar": true,
+      "node_modules/@tinymce/oxide": true,
+      "node_modules/@tinymce/oxide-icons-default": true,
+      "node_modules/@ephox/phoenix": true,
+      "node_modules/@ephox/polaris": true,
+      "node_modules/@ephox/porkbun": true,
+      "node_modules/@ephox/robin": true,
+      "node_modules/@ephox/sand": true,
+      "node_modules/@ephox/snooker": true,
+      "node_modules/@ephox/sugar": true,
+      "node_modules/@ephox/tinymce": true,
+    },
+    "search.exclude": {
+      // hide things exposed as folders above so they don't appear twice
+      "modules/tinymce/src/core/main/ts": true,
+      "modules/tinymce/src/core/test/ts": true,
+      "modules/tinymce/src/themes/silver/main/ts": true,
+      "modules/tinymce/src/themes/silver/test/ts": true,
+      "modules/tinymce/src/plugins": true,
+      "modules/*/src/main/ts": true,
+      "modules/alloy/src/test/ts": true,
+      // hide build output from searches
+      "modules/oxide/build": true,
+      "modules/oxide-icons-default/dist": true,
+      "modules/tinymce/js": true,
+      "modules/tinymce/dist": true,
+      "modules/*/lib": true,
+      "js": true,
+      "dist": true,
+      // Search can just exclude node_modules completely
+      "node_modules": true
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-vscode.vscode-typescript-tslint-plugin",
+      "editorconfig.editorconfig"
+    ]
+  }
+}
