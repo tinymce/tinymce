@@ -8,28 +8,26 @@ export const keys = Object.keys;
 
 export const hasOwnProperty = Object.hasOwnProperty;
 
-export const each = function <T> (obj: T, f: (value: T[keyof T], key: string, obj: T) => void) {
+export const each = function <T> (obj: T, f: (value: T[keyof T], key: string) => void) {
   const props = keys(obj);
   for (let k = 0, len = props.length; k < len; k++) {
     const i = props[k];
     const x = obj[i];
-    f(x, i, obj);
+    f(x, i);
   }
 };
 
-export const map = function <T, R> (obj: T, f: (value: T[keyof T], key: string, obj: T) => R) {
-  return tupleMap<{[k in keyof T]: R}, T>(obj, function (x, i, obj) {
-    return {
-      k: i,
-      v: f(x, i, obj)
-    };
-  });
+export const map = function <T, R> (obj: T, f: (value: T[keyof T], key: string) => R) {
+  return tupleMap<{[k in keyof T]: R}, T>(obj, (x, i) => ({
+    k: i,
+    v: f(x, i)
+  }));
 };
 
-export const tupleMap = function <R, T> (obj: T, f: (value: T[keyof T], key: string, obj: T) => {k: string, v: any}): R {
+export const tupleMap = function <R, T> (obj: T, f: (value: T[keyof T], key: string) => {k: string, v: any}): R {
   const r: Record<string, any> = {};
   each(obj, function (x, i) {
-    const tuple = f(x, i, obj);
+    const tuple = f(x, i);
     r[tuple.k] = tuple.v;
   });
   return <R> r;

@@ -1,7 +1,7 @@
 import { Option } from './Option';
 import * as Type from './Type';
 
-type ArrayMorphism<T, U> = (x: T, i: number, xs: ArrayLike<T>) => U;
+type ArrayMorphism<T, U> = (x: T, i: number) => U;
 type ArrayPredicate<T> = ArrayMorphism<T, boolean>;
 type Predicate<T> = (a: T) => boolean;
 type Comparator<T> = (a: T, b: T) => number;
@@ -67,7 +67,7 @@ export const map = <T = any, U = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, U>):
   const r = new Array(len);
   for (let i = 0; i < len; i++) {
     const x = xs[i];
-    r[i] = f(x, i, xs);
+    r[i] = f(x, i);
   }
   return r;
 };
@@ -78,14 +78,14 @@ export const map = <T = any, U = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, U>):
 export const each = <T = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, void>): void => {
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
-    f(x, i, xs);
+    f(x, i);
   }
 };
 
 export const eachr = <T = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, void>): void => {
   for (let i = xs.length - 1; i >= 0; i--) {
     const x = xs[i];
-    f(x, i, xs);
+    f(x, i);
   }
 };
 
@@ -94,20 +94,20 @@ export const partition = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): {
   const fail: T[] = [];
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
-    const arr = pred(x, i, xs) ? pass : fail;
+    const arr = pred(x, i) ? pass : fail;
     arr.push(x);
   }
   return { pass, fail };
 };
 
 export const filter: {
-  <T, Q extends T>(xs: ArrayLike<T>, pred: (x: T, i: number, xs: ArrayLike<T>) => x is Q): Q[];
+  <T, Q extends T>(xs: ArrayLike<T>, pred: (x: T, i: number) => x is Q): Q[];
   <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[]
 } = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[] => {
   const r: T[] = [];
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
-    if (pred(x, i, xs)) {
+    if (pred(x, i)) {
       r.push(x);
     }
   }
@@ -167,7 +167,7 @@ export const foldl = <T = any, U = any>(xs: ArrayLike<T>, f: (acc: U, x: T) => U
 export const find = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Option<T> => {
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
-    if (pred(x, i, xs)) {
+    if (pred(x, i)) {
       return Option.some(x);
     }
   }
@@ -177,7 +177,7 @@ export const find = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Option
 export const findIndex = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Option<number> => {
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
-    if (pred(x, i, xs)) {
+    if (pred(x, i)) {
       return Option.some(i);
     }
   }
@@ -220,7 +220,7 @@ export const bind = <T = any, U = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, U[]
 export const forall = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): boolean => {
   for (let i = 0, len = xs.length; i < len; ++i) {
     const x = xs[i];
-    if (pred(x, i, xs) !== true) {
+    if (pred(x, i) !== true) {
       return false;
     }
   }
