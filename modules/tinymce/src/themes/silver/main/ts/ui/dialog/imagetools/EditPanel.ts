@@ -6,20 +6,20 @@
  */
 
 import {
+  AddEventsBehaviour,
   AlloyComponent,
   AlloyEvents,
   AlloySpec,
   AlloyTriggers,
   Behaviour,
   Container,
+  Disabling,
   Focusing,
   Memento,
   Replacing,
   Representing,
   Slider,
-  SliderTypes,
-  Disabling,
-  AddEventsBehaviour
+  SliderTypes
 } from '@ephox/alloy';
 import { ImageResult, ImageTransformations } from '@ephox/imagetools';
 import { Fun, Option } from '@ephox/katamari';
@@ -75,7 +75,6 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     classes: [ 'tox-image-tools__toolbar', 'tox-image-tools-edit-panel']
   };
 
-  const none = Option.none();
   const noop = Fun.noop;
 
   const emit = (comp: AlloyComponent, event: string, data: Object): void => {
@@ -171,7 +170,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   const memSize = Memento.record(
     renderSizeInput({
       name: 'size',
-      label: none,
+      label: Option.none(),
       constrain: true,
       disabled: false
     }, providersBackstage)
@@ -439,14 +438,14 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   const invertTransform = Option.some(ImageTransformations.invert);
 
   const buttonPanelComponents = [
-    createIconButton('crop', 'Crop', getTransformPanelEvent(CropPanel, none, cropPanelUpdate), false),
-    createIconButton('resize', 'Resize', getTransformPanelEvent(ResizePanel, none, resizePanelUpdate), false),
-    createIconButton('orientation', 'Orientation', getTransformPanelEvent(FlipRotatePanel, none, noop), false),
-    createIconButton('brightness', 'Brightness', getTransformPanelEvent(BrightnessPanel, none, noop), false),
+    createIconButton('crop', 'Crop', getTransformPanelEvent(CropPanel, Option.none(), cropPanelUpdate), false),
+    createIconButton('resize', 'Resize', getTransformPanelEvent(ResizePanel, Option.none(), resizePanelUpdate), false),
+    createIconButton('orientation', 'Orientation', getTransformPanelEvent(FlipRotatePanel, Option.none(), noop), false),
+    createIconButton('brightness', 'Brightness', getTransformPanelEvent(BrightnessPanel, Option.none(), noop), false),
     createIconButton('sharpen', 'Sharpen', getTransformPanelEvent(FilterPanel, sharpenTransform, noop), false),
-    createIconButton('contrast', 'Contrast', getTransformPanelEvent(ContrastPanel, none, noop), false),
-    createIconButton('color-levels', 'Color levels', getTransformPanelEvent(ColorizePanel, none, noop), false),
-    createIconButton('gamma', 'Gamma', getTransformPanelEvent(GammaPanel, none, noop), false),
+    createIconButton('contrast', 'Contrast', getTransformPanelEvent(ContrastPanel, Option.none(), noop), false),
+    createIconButton('color-levels', 'Color levels', getTransformPanelEvent(ColorizePanel, Option.none(), noop), false),
+    createIconButton('gamma', 'Gamma', getTransformPanelEvent(GammaPanel, Option.none(), noop), false),
     createIconButton('invert', 'Invert', getTransformPanelEvent(FilterPanel, invertTransform, noop), false),
   ];
 

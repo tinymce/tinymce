@@ -1,4 +1,5 @@
 export interface BehaviourState {
+  /** This is for debug purposes only, and only used by the Alloy Inspector Chrome Plugin */
   readState: () => any;
 }
 

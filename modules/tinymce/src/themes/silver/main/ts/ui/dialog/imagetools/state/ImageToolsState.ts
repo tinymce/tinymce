@@ -22,7 +22,7 @@ interface UndoRedoState {
 
 const makeState = (initialState: BlobState) => {
   const blobState = Cell(initialState);
-  const tempState = Cell(Option.none());
+  const tempState = Cell(Option.none<BlobState>());
   const undoStack = UndoStack();
   undoStack.add(initialState);
 

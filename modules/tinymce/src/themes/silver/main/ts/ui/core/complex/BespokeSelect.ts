@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent } from '@ephox/alloy';
+import { AlloyComponent, TieredData } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Arr, Option, Fun } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
@@ -15,8 +15,8 @@ import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
 import ItemResponse from '../../menus/item/ItemResponse';
 import * as NestedMenus from '../../menus/menu/NestedMenus';
 import { ToolbarButtonClasses } from '../../toolbar/button/ButtonClasses';
-import { AdvancedSelectDataset, BasicSelectDataset } from './SelectDatasets';
 import * as FormatRegister from './utils/FormatRegister';
+import { SelectDataset } from './SelectDatasets';
 
 export interface PreviewSpec {
   tag: string;
@@ -54,6 +54,8 @@ export interface SelectSpec {
 
   // This is used for assigning initial values
   setInitialValue: Option<(comp: AlloyComponent) => void>;
+
+  dataset: SelectDataset;
 }
 
 export interface SelectData {
@@ -67,7 +69,7 @@ interface BespokeSelectApi {
 
 const enum IrrelevantStyleItemResponse { Hide, Disable }
 
-const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
+const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
   const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean, value: Option<any>): Option<Menu.NestedMenuItemContents> => {
     const translatedText = backstage.shared.providers.translate(rawItem.title);
     if (rawItem.type === 'separator') {
@@ -113,13 +115,13 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
     }
   };
 
-  const validateItems = (preItems) => {
+  const validateItems = (preItems: FormatItem[]) => {
     const value = spec.getCurrentValue();
     const response = spec.shouldHide ? IrrelevantStyleItemResponse.Hide : IrrelevantStyleItemResponse.Disable;
     return Arr.bind(preItems, (item) => validate(item, response, value));
   };
 
-  const getFetch = (backstage, getStyleItems) => (callback) => {
+  const getFetch = (backstage: UiFactoryBackstage, getStyleItems: () => FormatItem[]) => (callback: (menu: Option<TieredData>) => null) => {
     const preItems = getStyleItems();
     const items = validateItems(preItems);
     const menu = NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage);
@@ -131,7 +133,8 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
   };
 };
 
-const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
+const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
+  const dataset = spec.dataset; // needs to be a var for tsc to understand the ternary
   const getStyleItems = dataset.type === 'basic' ? () => Arr.map(dataset.data, (d) => FormatRegister.processBasic(d, spec.isSelectedFor, spec.getPreviewFor)) : dataset.getData;
   return {
     items: generateSelectItems(editor, backstage, spec),
@@ -139,8 +142,8 @@ const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, dataset:
   };
 };
 
-const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
-  const { items, getStyleItems } = createMenuItems(editor, backstage, dataset, spec);
+const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
+  const { items, getStyleItems } = createMenuItems(editor, backstage, spec);
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => {
     return { getComponent: () => comp };

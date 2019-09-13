@@ -210,7 +210,10 @@ const setup = (editor: Editor): RenderInfo => {
     backstage
   });
 
-  const statusbar = editor.getParam('statusbar', true, 'boolean') && !isInline ? Option.some(renderStatusbar(editor, backstage.shared.providers)) : Option.none();
+  const sb = editor.getParam('statusbar', true, 'boolean');
+
+  const statusbar: Option<AlloySpec> =
+    sb && !isInline ? Option.some(renderStatusbar(editor, backstage.shared.providers)) : Option.none<AlloySpec>();
 
   const socketSidebarContainer: SimpleSpec = {
     dom: {
@@ -261,7 +264,7 @@ const setup = (editor: Editor): RenderInfo => {
     components: editorComponents,
   };
 
-  const containerComponents = Arr.flatten<SimpleSpec>([
+  const containerComponents = Arr.flatten<AlloySpec>([
     [editorContainer],
     // Inline mode does not have a status bar
     isInline ? [ ] : statusbar.toArray(),

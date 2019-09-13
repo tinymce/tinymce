@@ -11,7 +11,7 @@ import { Compare, Element, Node } from '@ephox/sugar';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import DeleteElement from './DeleteElement';
-import TableDeleteAction from './TableDeleteAction';
+import * as TableDeleteAction from './TableDeleteAction';
 import * as ElementType from '../dom/ElementType';
 import Empty from '../dom/Empty';
 import PaddingBr from '../dom/PaddingBr';

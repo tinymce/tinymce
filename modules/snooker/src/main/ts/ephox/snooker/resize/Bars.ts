@@ -65,7 +65,7 @@ const refresh = function (wire: ResizeWire, table: Element, hdirection: BarPosit
   refreshGrid(wire, table, rows, cols, hdirection, vdirection);
 };
 
-const each = function (wire: ResizeWire, f: (bar: Element, idx: number, array: ArrayLike<Element>) => void) {
+const each = function (wire: ResizeWire, f: (bar: Element, idx: number) => void) {
   const bars = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
   Arr.each(bars, f);
 };

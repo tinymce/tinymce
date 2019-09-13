@@ -8,22 +8,20 @@
 import { Option, Options } from '@ephox/katamari';
 import { Compare, Element, PredicateFind } from '@ephox/sugar';
 import CaretFinder from '../caret/CaretFinder';
-import * as ElementType from '../dom/ElementType';
+import { isTextBlock, isListItem } from '../dom/ElementType';
 import InlineUtils from '../keyboard/InlineUtils';
 import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
+import { Node as DomNode } from '@ephox/dom-globals';
 
-const isBeforeRoot = function (rootNode) {
-  return function (elm) {
-    return Compare.eq(rootNode, Element.fromDom(elm.dom().parentNode));
-  };
-};
+const isBeforeRoot = (rootNode: Element<any>) => (elm: Element<any>): boolean =>
+  Compare.eq(rootNode, Element.fromDom(elm.dom().parentNode));
 
-const getParentBlock = function (rootNode, elm) {
-  return Compare.contains(rootNode, elm) ? PredicateFind.closest(elm, function (element) {
-    return ElementType.isTextBlock(element) || ElementType.isListItem(element);
-  }, isBeforeRoot(rootNode)) : Option.none();
-};
+const getParentBlock = (rootNode, elm: Element<DomNode>): Option<Element<DomNode>> =>
+  (Compare.contains(rootNode, elm)
+    ? PredicateFind.closest(elm, (element) => isTextBlock(element) || isListItem(element), isBeforeRoot(rootNode))
+    : Option.none()
+  );
 
 const placeCaretInEmptyBody = function (editor: Editor) {
   const body = editor.getBody();

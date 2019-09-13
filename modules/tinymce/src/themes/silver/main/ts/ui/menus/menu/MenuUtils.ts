@@ -1,4 +1,4 @@
-import { MenuTypes } from '@ephox/alloy';
+import { MenuTypes, ItemTypes } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
@@ -11,7 +11,7 @@ import { SingleMenuItemApi } from './SingleMenuTypes';
 export const hasIcon = (item) => item.icon !== undefined || item.type === 'togglemenuitem' || item.type === 'choicemenuitem';
 export const menuHasIcons = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasIcon);
 
-export const handleError = (error: ValueSchema.SchemaError<any>) => {
+export const handleError = (error: ValueSchema.SchemaError<any>): Option<ItemTypes.ItemSpec> => {
   // tslint:disable-next-line:no-console
   console.error(ValueSchema.formatError(error));
   // tslint:disable-next-line:no-console
