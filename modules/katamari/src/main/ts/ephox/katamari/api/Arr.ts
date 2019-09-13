@@ -5,10 +5,12 @@ type ArrayMorphism<T, U> = (x: T, i: number) => U;
 type ArrayPredicate<T> = ArrayMorphism<T, boolean>;
 type Comparator<T> = (a: T, b: T) => number;
 
-const slice = Array.prototype.slice;
+const nativeSlice = Array.prototype.slice;
+const nativeIndexOf = Array.prototype.indexOf;
+const nativePush = Array.prototype.push;
 
 const rawIndexOf = <T> (ts: ArrayLike<T>, t: T): number =>
-  Array.prototype.indexOf.call(ts, t);
+  nativeIndexOf.call(ts, t);
 
 export const indexOf = <T = any>(xs: ArrayLike<T>, x: T): Option<number> => {
   // The rawIndexOf method does not wrap up in an option. This is for performance reasons.
@@ -49,7 +51,7 @@ export const range = <T = any>(num: number, f: (a: number) => T): T[] => {
 export const chunk = <T = any>(array: ArrayLike<T>, size: number): T[][] => {
   const r: T[][] = [];
   for (let i = 0; i < array.length; i += size) {
-    const s: T[] = slice.call(array, i, i + size);
+    const s: T[] = nativeSlice.call(array, i, i + size);
     r.push(s);
   }
   return r;
@@ -180,7 +182,6 @@ export const findIndex = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): O
   return Option.none();
 };
 
-const push = Array.prototype.push;
 export const flatten = <T>(xs: ArrayLike<T[]>): T[] => {
   // Note, this is possible because push supports multiple arguments:
   // http://jsperf.com/concat-push/6
@@ -192,7 +193,7 @@ export const flatten = <T>(xs: ArrayLike<T[]>): T[] => {
     if (!Type.isArray(xs[i])) {
       throw new Error('Arr.flatten item ' + i + ' was not an array, input: ' + xs);
     }
-    push.apply(r, xs[i]);
+    nativePush.apply(r, xs[i]);
   }
   return r;
 };
@@ -217,7 +218,7 @@ export const equal = <T = any>(a1: ArrayLike<T>, a2: T[]) => {
 };
 
 export const reverse = <T = any>(xs: ArrayLike<T>): T[] => {
-  const r: T[] = slice.call(xs, 0);
+  const r: T[] = nativeSlice.call(xs, 0);
   r.reverse();
   return r;
 };
@@ -238,7 +239,7 @@ export const mapToObject = <T = any, U = any>(xs: ArrayLike<T>, f: (x: T, i: num
 export const pure = <T = any>(x: T): T[] => [x];
 
 export const sort = <T = any>(xs: ArrayLike<T>, comparator?: Comparator<T>): T[] => {
-  const copy: T[] = slice.call(xs, 0);
+  const copy: T[] = nativeSlice.call(xs, 0);
   copy.sort(comparator);
   return copy;
 };
@@ -247,4 +248,4 @@ export const head = <T = any>(xs: ArrayLike<T>): Option<T> => xs.length === 0 ? 
 
 export const last = <T = any>(xs: ArrayLike<T>): Option<T> => xs.length === 0 ? Option.none() : Option.some(xs[xs.length - 1]);
 
-export const from: <T = any>(x: ArrayLike<T>) => T[] = Type.isFunction(Array.from) ? Array.from : (x) => slice.call(x);
+export const from: <T = any>(x: ArrayLike<T>) => T[] = Type.isFunction(Array.from) ? Array.from : (x) => nativeSlice.call(x);
