@@ -12,7 +12,7 @@ export const cat = <A>(arr: Option<A>[]): A[] => {
   return r;
 };
 
-export const sequence = <A> (arr: Array<Option<A>>): Option<Array<A>> => {
+export const sequence = <A> (arr: ArrayLike<Option<A>>): Option<Array<A>> => {
   const r: A[] = [];
   for (let i = 0; i < arr.length; i++) {
     const x = arr[i];
