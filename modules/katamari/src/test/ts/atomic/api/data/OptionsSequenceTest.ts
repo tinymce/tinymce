@@ -1,8 +1,8 @@
 import { assert, UnitTest } from '@ephox/bedrock';
+import * as Arr from 'ephox/katamari/api/Arr';
 import * as Options from 'ephox/katamari/api/Options';
 import { Option } from 'ephox/katamari/api/Option';
 import Jsc from '@ephox/wrap-jsverify';
-import { Arr } from '@ephox/katamari';
 
 UnitTest.test('Options.sequence - unit tests', () => {
   assert.eq([], Options.sequence<number>([]).getOrDie());
