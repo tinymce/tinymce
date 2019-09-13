@@ -117,7 +117,7 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
         });
       };
 
-      Futures.mapM(['q', 'r', 's'], fn).get(function (r) {
+      Futures.traverse(['q', 'r', 's'], fn).get(function (r) {
         assert.eq(['q bizarro', 'r bizarro', 's bizarro'], r);
         resolve(true);
       });
@@ -248,10 +248,10 @@ UnitTest.asynctest('FutureTest', (success, failure) => {
       },
 
       {
-        label: 'futures.mapM([json], json -> future).get(length) === [json].length',
+        label: 'futures.traverse([json], json -> future).get(length) === [json].length',
         arbs: [ Jsc.array(arbFuture), Jsc.fun(arbFuture) ],
         f (inputs, g) {
-          const fResult = Futures.mapM(inputs, g);
+          const fResult = Futures.traverse(inputs, g);
           return AsyncProps.checkFuture(fResult, function (list) {
             return Jsc.eq(inputs.length, list.length) ? Result.value(true) : Result.error('input length was not the same as output length');
           });

@@ -5,8 +5,11 @@ import * as AsyncValues from '../async/AsyncValues';
 export const par = <T>(futures: ArrayLike<Future<T>>): Future<Array<T>> =>
   AsyncValues.par(futures, Future.nu);
 
-export const mapM = <A, B>(array: ArrayLike<A>, fn: (value: A) => Future<B>): Future<B[]> =>
+export const traverse = <A, B>(array: ArrayLike<A>, fn: (value: A) => Future<B>): Future<B[]> =>
   par(Arr.map(array, fn));
+
+/** Deprecated for rename to traverse */
+export const mapM = traverse;
 
 /** Kleisli composition of two functions: a -> Future b.
  *  Note the order of arguments: g is invoked first, then the result passed to f.
