@@ -5,6 +5,7 @@
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
       "ephox/sand/test/*": ["src/test/ts/module/ephox/sand/test/*"],
       "ephox/sand/demo/*": ["src/demo/ts/ephox/sand/demo/*"],

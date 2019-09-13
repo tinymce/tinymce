@@ -4,6 +4,7 @@
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
       "ephox/porkbun/test/*": ["src/test/ts/module/ephox/porkbun/test/*"],
       "ephox/porkbun/demo/*": ["src/demo/ts/ephox/porkbun/demo/*"],
