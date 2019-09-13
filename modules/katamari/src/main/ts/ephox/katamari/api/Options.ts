@@ -12,6 +12,19 @@ export const cat = <A>(arr: Option<A>[]): A[] => {
   return r;
 };
 
+export const sequence = <A> (arr: Array<Option<A>>): Option<Array<A>> => {
+  const r: A[] = [];
+  for (let i = 0; i < arr.length; i++) {
+    const x = arr[i];
+    if (x.isSome()) {
+      r.push(x.getOrDie());
+    } else {
+      return Option.none<Array<A>>();
+    }
+  }
+  return Option.some(r);
+};
+
 export const findMap = <A, B>(arr: ArrayLike<A>, f: (a: A, index: number) => Option<B>): Option<B> => {
   for (let i = 0; i < arr.length; i++) {
     const r = f(arr[i], i);
