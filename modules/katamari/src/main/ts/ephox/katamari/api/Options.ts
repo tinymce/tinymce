@@ -35,6 +35,23 @@ export const findMap = <A, B>(arr: ArrayLike<A>, f: (a: A, index: number) => Opt
   return Option.none<B>();
 };
 
+/** Map each element of an array to an Option and collect the results.
+ *  If all results are "some", return Option.some of the results.
+ *  If any result is "none", return Option.none
+ */
+export const traverse = <A, B> (arr: ArrayLike<A>, f: (a: A) => Option<B>): Option<Array<B>> => {
+  const r: B[] = [];
+  for (let i = 0; i < arr.length; i++) {
+    const x = f(arr[i]);
+    if (x.isSome()) {
+      r.push(x.getOrDie());
+    } else {
+      return Option.none<Array<B>>();
+    }
+  }
+  return Option.some(r);
+};
+
 /*
 Notes on the lift functions:
 - We used to have a generic liftN, but we were concerned about its type-safety, and the below variants were faster in microbenchmarks.
