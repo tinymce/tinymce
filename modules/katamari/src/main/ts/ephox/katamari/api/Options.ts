@@ -1,4 +1,5 @@
 import { Option } from './Option';
+import * as Arr from './Arr';
 import * as Fun from './Fun';
 
 export const cat = <A>(arr: Option<A>[]): A[] => {
@@ -39,18 +40,8 @@ export const findMap = <A, B>(arr: ArrayLike<A>, f: (a: A, index: number) => Opt
  *  If all results are "some", return Option.some of the results.
  *  If any result is "none", return Option.none
  */
-export const traverse = <A, B> (arr: ArrayLike<A>, f: (a: A) => Option<B>): Option<Array<B>> => {
-  const r: B[] = [];
-  for (let i = 0; i < arr.length; i++) {
-    const x = f(arr[i]);
-    if (x.isSome()) {
-      r.push(x.getOrDie());
-    } else {
-      return Option.none<Array<B>>();
-    }
-  }
-  return Option.some(r);
-};
+export const traverse = <A, B> (arr: ArrayLike<A>, f: (a: A) => Option<B>): Option<Array<B>> =>
+  sequence(Arr.map(arr, f));
 
 /*
 Notes on the lift functions:
