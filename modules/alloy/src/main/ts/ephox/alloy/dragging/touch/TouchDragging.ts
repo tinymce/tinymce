@@ -51,7 +51,7 @@ const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<Suga
 
 const schema = [
   // Is this used?
-  FieldSchema.defaulted('useFixed', false),
+  FieldSchema.defaulted('useFixed', Fun.never),
   FieldSchema.defaulted('getTarget', Fun.identity),
   FieldSchema.defaulted('onDrag', Fun.noop),
   FieldSchema.defaulted('repositionTarget', true),

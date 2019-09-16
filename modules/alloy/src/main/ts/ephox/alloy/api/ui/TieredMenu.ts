@@ -46,6 +46,7 @@ const tieredMenu: TieredMenuSketcher = single({
 
     Fields.onStrictHandler('onOpenMenu'),
     Fields.onStrictHandler('onOpenSubmenu'),
+    Fields.onStrictHandler('onRepositionMenu'),
     Fields.onHandler('onCollapseMenu'),
 
     FieldSchema.defaulted('highlightImmediately', true),
@@ -76,6 +77,9 @@ const tieredMenu: TieredMenuSketcher = single({
     },
     highlightPrimary (apis, tmenu) {
       apis.highlightPrimary(tmenu);
+    },
+    repositionMenus (apis, tmenu) {
+      apis.repositionMenus(tmenu);
     }
   },
 

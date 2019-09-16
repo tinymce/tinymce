@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { UIEvent } from '@ephox/dom-globals';
+
 const fireSkinLoaded = (editor) => {
   return editor.fire('SkinLoaded');
 };
@@ -17,8 +19,12 @@ const fireBeforeRenderUI = (editor) => {
   return editor.fire('BeforeRenderUI');
 };
 
-const fireResizeContent = (editor) => {
-  return editor.fire('ResizeContent');
+const fireResizeContent = (editor, e: UIEvent) => {
+  return editor.fire('ResizeContent', e);
+};
+
+const fireScrollContent = (editor, e: UIEvent) => {
+  return editor.fire('ScrollContent', e);
 };
 
 const fireTextColorChange = (editor, data) => {
@@ -28,6 +34,7 @@ const fireTextColorChange = (editor, data) => {
 export default {
   fireSkinLoaded,
   fireResizeEditor,
+  fireScrollContent,
   fireBeforeRenderUI,
   fireResizeContent,
   fireTextColorChange

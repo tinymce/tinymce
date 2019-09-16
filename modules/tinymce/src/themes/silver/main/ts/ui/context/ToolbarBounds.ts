@@ -7,7 +7,7 @@
 
 import { Bounds, Boxes } from '@ephox/alloy';
 import { window } from '@ephox/dom-globals';
-import { Element, Position } from '@ephox/sugar';
+import { Element, Position, SelectorFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 const getHorizontalBounds = (editor: Editor, scroll: Position, contentAreaBox: Bounds) => {
@@ -21,9 +21,12 @@ const getHorizontalBounds = (editor: Editor, scroll: Position, contentAreaBox: B
 // Allow the toolbar to overflow over the statusbar only
 const getIframeBounds = (editor: Editor, scroll: Position, contentAreaBox: Bounds): Bounds => {
   const { x, width } = getHorizontalBounds(editor, scroll, contentAreaBox);
-  const containerBox = Boxes.box(Element.fromDom(editor.getContainer()));
+  const container = Element.fromDom(editor.getContainer());
+  const header = SelectorFind.descendant(container, '.tox-editor-header').getOr(container);
+  const containerBox = Boxes.box(container);
+  const headerBox = Boxes.box(header);
 
-  const y = Math.max(scroll.top(), contentAreaBox.y());
+  const y = Math.max(scroll.top(), contentAreaBox.y(), headerBox.bottom());
   // Use the container here, so that the statusbar is included
   const contentBoxHeight = containerBox.bottom() - y;
   const maxViewportHeight = window.innerHeight - (y - scroll.top());
@@ -35,20 +38,22 @@ const getIframeBounds = (editor: Editor, scroll: Position, contentAreaBox: Bound
 // Allow the toolbar to overflow over the bottom when a toolbar/menubar is visible
 const getInlineBounds = (editor: Editor, scroll: Position, contentAreaBox: Bounds): Bounds => {
   const { x, width } = getHorizontalBounds(editor, scroll, contentAreaBox);
-  const containerBox = Boxes.box(Element.fromDom(editor.getContainer()));
+  const container = Element.fromDom(editor.getContainer());
+  const header = SelectorFind.descendant(container, '.tox-editor-header').getOr(container);
+  const headerBox = Boxes.box(header);
   const windowHeight = window.innerHeight;
   const scrollTop = scroll.top();
 
   // Fixed toolbar container allows the toolbar to be above or below
   // so we need to constrain the overflow based on that
-  if (containerBox.y() >= contentAreaBox.bottom()) {
+  if (headerBox.y() >= contentAreaBox.bottom()) {
     // Toolbar is below, so allow overflowing the top
-    const bottom = Math.min(windowHeight + scrollTop, containerBox.y());
+    const bottom = Math.min(windowHeight + scrollTop, headerBox.y());
     const height = bottom - scrollTop;
     return Boxes.bounds(x, scrollTop, width, height);
   } else {
     // Toolbar is above, so allow overflowing the bottom
-    const y = Math.max(scrollTop, containerBox.bottom());
+    const y = Math.max(scrollTop, headerBox.bottom());
     const height = windowHeight - (y - scrollTop);
     return Boxes.bounds(x, y, width, height);
   }

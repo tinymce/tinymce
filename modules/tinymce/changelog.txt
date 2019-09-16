@@ -1,4 +1,5 @@
 Version 5.1.0 (TBD)
+    Added new `toolbar_sticky` setting to allow the iframe menubar/toolbar to stick to the top of the window when scrolling #TINY-3982
     Changed `menubar` to default to `false` on mobile #TINY-4077
     Changed `table_grid` to default to `false` on mobile #TINY-4075
     Fixed Slider UI component not firing onChange event on touch devices #TINY-4092

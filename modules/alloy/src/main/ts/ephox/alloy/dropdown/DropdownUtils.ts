@@ -1,4 +1,4 @@
-import { Fun, Future, Option, Result } from '@ephox/katamari';
+import { Arr, Fun, Future, Option, Result } from '@ephox/katamari';
 import { Width, Element, Css } from '@ephox/sugar';
 
 import * as ComponentStructure from '../alien/ComponentStructure';
@@ -67,8 +67,16 @@ const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Optio
             item
           }, submenu);
           Sandboxing.decloak(sandbox);
-
         },
+
+        onRepositionMenu (tmenu, primaryMenu, submenuTriggers) {
+          const sink = getLazySink().getOrDie();
+          Positioning.position(sink, anchor, primaryMenu);
+          Arr.each(submenuTriggers, (st) => {
+            Positioning.position(sink, { anchor: 'submenu', item: st.triggeringItem }, st.triggeredMenu);
+          });
+        },
+
         onEscape () {
           // Focus the triggering component after escaping the menu
           Focusing.focus(component);
@@ -209,10 +217,18 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
   };
 };
 
+const repositionMenus = (comp: AlloyComponent) => {
+  const sandbox = Coupling.getCoupled(comp, 'sandbox');
+  Sandboxing.getState(sandbox).each((tmenu) => {
+    TieredMenu.repositionMenus(tmenu);
+  });
+};
+
 export {
   makeSandbox,
   togglePopup,
   open,
+  repositionMenus,
 
   getSink
 };

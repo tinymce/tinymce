@@ -3,8 +3,8 @@ import { Arr } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
-import * as Attachment from '../../api/system/Attachment';
 import { ReceivingEvent } from '../../events/SimulatedEvent';
+import * as InternalAttachment from '../../system/InternalAttachment';
 import { ReflectingConfig, ReflectingState } from './ReflectingTypes';
 
 const events = <I, S>(reflectingConfig: ReflectingConfig<I, S>, reflectingState: ReflectingState<S>) => {
@@ -17,10 +17,8 @@ const events = <I, S>(reflectingConfig: ReflectingConfig<I, S>, reflectingState:
     // FIX: Partial duplication of Replacing + Receiving
     reflectingConfig.renderComponents.each((renderComponents) => {
       const newComponents = renderComponents(data, reflectingState.get());
-      Attachment.detachChildren(component);
-      Arr.each(newComponents, (c) => {
-        Attachment.attach(component, component.getSystem().build(c));
-      });
+      const newChildren = Arr.map(newComponents, component.getSystem().build);
+      InternalAttachment.replaceChildren(component, newChildren);
     });
   };
 

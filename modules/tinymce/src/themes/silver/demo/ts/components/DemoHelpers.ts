@@ -19,7 +19,7 @@ const setupDemo = () => {
     dom: DomFactory.fromHtml('<div class="mce-silver-sink"></div>'),
     behaviours: Behaviour.derive([
       Positioning.config({
-        useFixed: true
+        useFixed: Fun.always
       })
     ])
   });

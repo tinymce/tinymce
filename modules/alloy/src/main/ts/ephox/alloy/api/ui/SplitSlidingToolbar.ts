@@ -25,10 +25,12 @@ const refresh = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) => 
 
 const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToolbarSpec> = (detail, components, spec, externals) => {
   return SplitToolbarBase.spec(detail, components, spec, externals, {
-    refresh,
-    toggleToolbar,
-    getOverflow: (toolbar) => AlloyParts.getPart(toolbar, detail, 'overflow'),
-    coupling: {}
+    coupling: {},
+    apis: {
+      refresh: (toolbar) => refresh(toolbar, detail),
+      toggle: (toolbar) => toggleToolbar(toolbar, detail),
+      getOverflow: (toolbar) => AlloyParts.getPart(toolbar, detail, 'overflow'),
+    }
   });
 };
 

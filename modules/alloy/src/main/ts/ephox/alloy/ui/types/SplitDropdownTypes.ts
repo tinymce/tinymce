@@ -17,6 +17,10 @@ export interface SplitDropdownDetail extends CommonDropdownDetail<TieredData> {
   onItemExecute: (comp: AlloyComponent, button: AlloyComponent, item: AlloyComponent) => void;
 }
 
+export interface SplitDropdownApis {
+  repositionMenus: (comp: AlloyComponent) => void;
+}
+
 export interface SplitDropdownSpec extends CompositeSketchSpec {
   uid?: string;
   dom: RawDomSchema;
@@ -45,4 +49,4 @@ export interface SplitDropdownSpec extends CompositeSketchSpec {
   };
 }
 
-export interface SplitDropdownSketcher extends CompositeSketch<SplitDropdownSpec, SplitDropdownDetail> { }
+export interface SplitDropdownSketcher extends CompositeSketch<SplitDropdownSpec, SplitDropdownDetail>, SplitDropdownApis { }

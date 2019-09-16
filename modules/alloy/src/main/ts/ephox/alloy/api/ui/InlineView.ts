@@ -17,12 +17,12 @@ import { Sandboxing } from '../behaviour/Sandboxing';
 import { LazySink } from '../component/CommonTypes';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
-import { tieredMenu } from './TieredMenu';
+import { tieredMenu as TieredMenu } from './TieredMenu';
 import { SingleSketchFactory } from './UiSketcher';
 
 const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
   const lazySink: () => ReturnType<LazySink> = () => detail.lazySink(menuSandbox);
-  return tieredMenu.sketch({
+  return TieredMenu.sketch({
     dom: {
       tag: 'div'
     },
@@ -54,6 +54,11 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
         item
       }, submenu);
     },
+
+    onRepositionMenu (/*tmenu, primaryMenu, submenuTriggers*/) {
+      // There's currently no API to reposition an inline view menu at this stage. If we
+      // do want to implement an API to do this at some stage, then take a look at DropdownUtils.
+    }
   });
 };
 

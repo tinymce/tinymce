@@ -6,6 +6,28 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [5.0.0] - 2019-09-04
+
+### Added
+- Added `onDocked`, `onUndocked`, `onShow`, `onShown`, `onHide` and `onHidden` configuration callbacks for the `Docking` behaviour.
+- Added `modes` configuration to `Docking` to control where the component should be docked. eg: `top` or `bottom` of the viewport.
+- Added `isDocked` and `reset` APIs to `Docking` to check if a component is docked and to reset the stored original position and state.
+- Added reposition APIs for `TieredMenu`, `Dropdown`, `SplitDropdown` and `SplitFloatingToolbar` components.
+- Added `onOpened` and `onClosed` configuration callbacks for the `SplitSlidingToolbar` component.
+
+### Changed
+- Reworked the `Docking` behaviour to support both absolute and static positioning.
+- Changed the `Docking` behaviours `lazyContext` configuration to require a `Bounds` be returned instead of an `Element`.
+- Changed the `Positioning` behaviours `useFixed` configuration to require a `Function` instead of a `boolean`.
+
+### Fixed
+- Fixed `Docking` not undocking to the correct position when a parent was using `position: relative`.
+- Fixed `Docking` not undocking to the correct position when the window has been resized.
+- Fixed replacing and reflecting losing component state when replacing with the same components.
+- Fixed `MakeshiftAnchor` incorrectly calculating the anchor coordinates in fixed position mode.
+- Fixed custom position bounds being ignored in fixed position mode.
+- Fixed incorrect right/bottom positioning in fixed mode when a scrollbar is visible.
+
 # [4.15.2] - 2019-07-31
 
 ### Added

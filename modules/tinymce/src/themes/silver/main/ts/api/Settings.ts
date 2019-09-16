@@ -6,10 +6,10 @@
  */
 
 import { Option, Type, Obj, Arr } from '@ephox/katamari';
+import { SelectorFind, Body, Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { AllowedFormat } from 'tinymce/core/api/fmt/StyleFormat';
-import { SelectorFind, Body, Element } from '@ephox/sugar';
 
 const getSkinUrl = function (editor: Editor): string {
   const settings = editor.settings;
@@ -86,16 +86,24 @@ const fixedContainerSelector = (editor): string => editor.getParam('fixed_toolba
 
 const fixedContainerElement = (editor): Option<Element> => {
   const selector = fixedContainerSelector(editor);
-  const isInline = editor.getParam('inline', false, 'boolean');
   // If we have a valid selector and are in inline mode, try to get the fixed_toolbar_container
-  return selector.length > 0 && isInline ? SelectorFind.descendant(Body.body(), selector) : Option.none();
+  return selector.length > 0 && editor.inline ? SelectorFind.descendant(Body.body(), selector) : Option.none();
 };
 
-const useFixedContainer = (editor): boolean => editor.getParam('inline', false, 'boolean') && fixedContainerElement(editor).isSome();
+const useFixedContainer = (editor): boolean => editor.inline && fixedContainerElement(editor).isSome();
 
 const getUiContainer = (editor): Element => {
   const fixedContainer = fixedContainerElement(editor);
   return fixedContainer.getOr(Body.body());
+};
+
+const isDistractionFree = (editor: Editor) => {
+  return editor.inline && !isMenubarEnabled(editor) && !isToolbarEnabled(editor) && !isMultipleToolbars(editor);
+};
+
+const isStickyToolbar = (editor: Editor) => {
+  const isStickyToolbar = editor.getParam('toolbar_sticky', false, 'boolean');
+  return (isStickyToolbar || editor.inline) && !useFixedContainer(editor) && !isDistractionFree(editor);
 };
 
 const isDraggableModal = (editor: Editor): boolean => editor.getParam('draggable_modal', false, 'boolean');
@@ -119,5 +127,7 @@ export {
   getUiContainer,
   useFixedContainer,
   getToolbarDrawer,
-  isDraggableModal
+  isDraggableModal,
+  isDistractionFree,
+  isStickyToolbar
 };
