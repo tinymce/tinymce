@@ -3,6 +3,7 @@ Version 5.0.16 (TBD)
     Added new `referrer_policy` setting to add the `referrerpolicy` attribute when loading scripts or stylesheets #TINY-3978
     Fixed media poster value not updating on change #TINY-4013
     Fixed openlink was not registered as a toolbar button #TINY-4024
+    Fixed double top border showing on toolbar without menubar when toolbar_drawer is enabled #TINY-4118
 Version 5.0.15 (2019-09-02)
     Added a dark `content_css` skin to go with the dark UI skin #TINY-3743
     Changed the enabled state on toolbar buttons so they don't get the hover effect #TINY-3974

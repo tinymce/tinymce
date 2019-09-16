@@ -34,7 +34,10 @@
   flex-direction: column;
   overflow: hidden;
 
-  > *:first-child {
+  // Remove double top borders
+  > *:first-child,
+  > .tox-toolbar-overlord:first-child .tox-toolbar__primary,
+  > .tox-anchorbar:first-child + .tox-sidebar-wrap .tox-edit-area {
     // !important required because we don't know
     // if menubar, toolbar or edit area comes first
     border-top: none !important;
