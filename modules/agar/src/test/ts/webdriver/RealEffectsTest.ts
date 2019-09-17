@@ -18,8 +18,8 @@ UnitTest.asynctest('Real Effects Test', function (success, failure) {
 
   const platform = PlatformDetection.detect();
 
-  // Firefox was disabled before, IE never passes unless watched and Edge 18 fails to hover on mousemove
-  if (platform.browser.isIE() || platform.browser.isEdge() || platform.browser.isFirefox() || platform.os.isOSX()) {
+  // IE never passes unless watched and Edge 18 fails to hover on mousemove
+  if (platform.browser.isIE() || platform.browser.isEdge() || platform.os.isOSX()) {
     return success();
   }
 
