@@ -1,13 +1,12 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { window } from '@ephox/dom-globals';
-import { Scroll } from '@ephox/sugar';
+import { VisualViewport } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import * as Fields from '../../data/Fields';
 
 const defaultLazyViewport = (_component): Boxes.Bounds => {
-  const scroll = Scroll.get();
-  return Boxes.bounds(scroll.left(), scroll.top(), window.innerWidth, window.innerHeight);
+  return VisualViewport.getBounds(window);
 };
 
 export default [

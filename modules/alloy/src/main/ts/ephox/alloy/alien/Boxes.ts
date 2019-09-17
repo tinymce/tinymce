@@ -1,6 +1,6 @@
-import { document, window } from '@ephox/dom-globals';
+import { window } from '@ephox/dom-globals';
 import { Fun, Struct } from '@ephox/katamari';
-import { Height, Location, Width, Element, Scroll } from '@ephox/sugar';
+import { Height, Location, Width, Element, VisualViewport } from '@ephox/sugar';
 
 import { CssPositionAdt } from './CssPosition';
 import * as OuterPosition from '../frame/OuterPosition';
@@ -51,11 +51,7 @@ const absolute = (element: Element): Bounds => {
 };
 
 const win = (): Bounds => {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-  const doc = Element.fromDom(document);
-  const scroll = Scroll.get(doc);
-  return bounds(scroll.left(), scroll.top(), width, height);
+  return VisualViewport.getBounds(window);
 };
 
 export {
