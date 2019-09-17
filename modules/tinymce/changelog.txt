@@ -4,6 +4,7 @@ Version 5.0.16 (TBD)
     Added a slight background color to dialog tab links when focused to aid keyboard navigation #TINY-3877
     Fixed media poster value not updating on change #TINY-4013
     Fixed openlink was not registered as a toolbar button #TINY-4024
+    Fixed failing to initialize if a script tag was used inside an SVG #TINY-4087
     Fixed double top border showing on toolbar without menubar when toolbar_drawer is enabled #TINY-4118
 Version 5.0.15 (2019-09-02)
     Added a dark `content_css` skin to go with the dark UI skin #TINY-3743
