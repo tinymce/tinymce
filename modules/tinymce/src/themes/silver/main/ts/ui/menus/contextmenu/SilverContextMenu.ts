@@ -7,7 +7,7 @@
 
 import { AlloyComponent, GuiFactory, InlineView, Behaviour, AddEventsBehaviour, AlloyEvents, SystemEvents, Sandboxing } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Element } from '@ephox/dom-globals';
+import { Element as DomElement } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as MenuParts from '../menu/MenuParts';
@@ -74,7 +74,7 @@ const addContextMenuGroup = (xs: Array<MenuItem>, groupItems: Array<MenuItem>) =
   return xs.concat(before).concat(groupItems).concat([ separator ]);
 };
 
-const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, menuConfig: string[], selectedElement: Element) => {
+const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, menuConfig: string[], selectedElement: DomElement) => {
   const items = Arr.foldl(menuConfig, (acc, name) => {
     // Either read and convert the list of items out of the plugin, or assume it's a standard menu item reference
     if (Obj.has(contextMenus, name)) {
@@ -125,7 +125,12 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     }),
   );
 
+  const hideContextMenu = () => InlineView.hide(contextmenu);
+
   editor.on('init', () => {
+    // Hide the context menu when scrolling or resizing
+    editor.on('ResizeEditor ResizeWindow ScrollContent ScrollWindow', hideContextMenu);
+
     editor.on('contextmenu', (e) => {
       // Prevent the default if we should never use native
       if (Settings.shouldNeverUseNative(editor)) {
@@ -148,7 +153,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       const menuConfig = Settings.getContextMenu(editor);
 
       // Use the event target element for mouse clicks, otherwise fallback to the current selection
-      const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target as Element;
+      const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target as DomElement;
 
       const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
 

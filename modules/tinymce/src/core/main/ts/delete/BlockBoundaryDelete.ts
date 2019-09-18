@@ -10,13 +10,11 @@ import BlockMergeBoundary from './BlockMergeBoundary';
 import MergeBlocks from './MergeBlocks';
 import Editor from '../api/Editor';
 
-const backspaceDelete = function (editor: Editor, forward) {
-  let position;
+const backspaceDelete = (editor: Editor, forward: boolean): boolean => {
   const rootNode = Element.fromDom(editor.getBody());
 
-  position = BlockMergeBoundary.read(rootNode.dom(), forward, editor.selection.getRng()).bind(function (blockBoundary) {
-    return MergeBlocks.mergeBlocks(rootNode, forward, blockBoundary.from().block(), blockBoundary.to().block());
-  });
+  const position = BlockMergeBoundary.read(rootNode.dom(), forward, editor.selection.getRng()).bind((blockBoundary) =>
+    MergeBlocks.mergeBlocks(rootNode, forward, blockBoundary.from().block(), blockBoundary.to().block()));
 
   position.each(function (pos) {
     editor.selection.setRng(pos.toRange());

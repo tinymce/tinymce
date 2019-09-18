@@ -69,7 +69,8 @@ UnitTest.asynctest('TieredMenuWithoutImmediateHighlightTest', (success, failure)
         onExecute: store.adderH('onExecute'),
         onEscape: store.adderH('onEscape'),
         onOpenMenu: store.adderH('onOpenMenu'),
-        onOpenSubmenu: store.adderH('onOpenSubmenu')
+        onOpenSubmenu: store.adderH('onOpenSubmenu'),
+        onRepositionMenu: store.adderH('onRepositionMenu')
       })
     );
   }, (doc, body, gui, component, store) => {

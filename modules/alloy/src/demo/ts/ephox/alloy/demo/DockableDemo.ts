@@ -1,7 +1,7 @@
 import { document, window } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
 import { Class, Css, Element, DomEvent } from '@ephox/sugar';
 
+import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Docking } from 'ephox/alloy/api/behaviour/Docking';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
@@ -65,14 +65,11 @@ export default (): void => {
                 transitionClass: 'demo-alloy-dock-transition',
                 fadeOutClass: 'demo-alloy-dock-fade-out',
                 fadeInClass: 'demo-alloy-dock-fade-in',
-                lazyContext (component) {
-                  return component.getSystem().getByUid('panel-container').fold(Option.none, (comp) => {
-                    return Option.some(comp.element());
-                  });
-                }
+                lazyContext: (component) => component.getSystem().getByUid('panel-container').toOption().map((comp) => Boxes.box(comp.element()))
               },
               leftAttr: 'data-dock-left',
-              topAttr: 'data-dock-top'
+              topAttr: 'data-dock-top',
+              positionAttr: 'data-dock-pos'
             })
           ])
         })

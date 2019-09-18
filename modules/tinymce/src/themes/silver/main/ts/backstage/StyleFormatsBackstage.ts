@@ -23,7 +23,7 @@ export const init = (editor: Editor) => {
     };
   };
 
-  const getPreviewFor = (format) => () => {
+  const getPreviewFor: FormatRegister.GetPreviewForType = (format) => () => {
     const fmt = editor.formatter.get(format);
     return fmt !== undefined ? Option.some({
       tag: fmt.length > 0 ? fmt[0].inline || fmt[0].block || 'div' : 'div',

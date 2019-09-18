@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, HTMLTableElement, HTMLTableCellElement, HTMLTableRowElement, Element } from '@ephox/dom-globals';
+import { Node, HTMLTableElement, HTMLTableCellElement, HTMLTableRowElement, Element, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { ResizeWire, TableDirection, TableResize } from '@ephox/snooker';
 import { Element as SugarElement } from '@ephox/sugar';
@@ -25,8 +25,8 @@ export interface ResizeHandler {
 }
 
 export const getResizeHandler = function (editor: Editor): ResizeHandler {
-  let selectionRng = Option.none();
-  let resize = Option.none();
+  let selectionRng = Option.none<Range>();
+  let resize = Option.none<TableResize>();
   let wire = Option.none();
   const percentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
   let startW: number;
@@ -64,7 +64,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     const rawWire = TableWire.get(editor);
     wire = Option.some(rawWire);
     if (hasObjectResizing(editor) && hasTableResizeBars(editor)) {
-      const sz = TableResize(rawWire, direction);
+      const sz = TableResize.create(rawWire, direction);
       sz.on();
       sz.events.startDrag.bind(function (event) {
         selectionRng = Option.some(editor.selection.getRng());

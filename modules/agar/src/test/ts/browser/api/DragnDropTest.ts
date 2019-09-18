@@ -1,11 +1,26 @@
-import { UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock';
 import { Element, Insert, Remove, Body, DomEvent, SelectorFind } from '@ephox/sugar';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
-import { sDragnDrop, dragnDrop, sDropFiles, dropFiles } from 'ephox/agar/api/DragnDrop';
+import { sDragnDrop, dragnDrop, sDropFiles, dropFiles, isDraggable } from 'ephox/agar/api/DragnDrop';
 import { Step } from 'ephox/agar/api/Step';
 import { RawAssertions, Logger, GeneralSteps } from 'ephox/agar/api/Main';
 import { createFile } from 'ephox/agar/api/Files';
 import { Blob } from '@ephox/dom-globals';
+
+UnitTest.test('DragDrop.isDraggable', () => {
+  const check = (expected: boolean, html: string) => {
+    assert.eq(expected, isDraggable(Element.fromHtml(html)));
+  };
+  check(false, '<div/>');
+  check(false, '<a/>');
+  check(false, '<a name="blah"/>');
+  check(true, '<a href=""/>');
+  check(true, '<a href="cat.com"/>');
+  check(true, '<ol draggable="true" />');
+  check(false, '<ol draggable="" />');
+  check(false, '<ol draggable="false" />');
+  check(true, '<img />');
+});
 
 UnitTest.asynctest('DragnDropTest', (success, failure) => {
   const dropzone = Element.fromHtml('<div class="dropzone"></div>');

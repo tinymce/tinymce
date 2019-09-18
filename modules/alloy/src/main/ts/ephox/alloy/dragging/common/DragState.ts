@@ -10,10 +10,10 @@ const init = <T>(): DraggingState<T> => {
   // Dragging operates on the difference between the previous user
   // interaction and the next user interaction. Therefore, we store
   // the previous interaction so that we can compare it.
-  let previous = Option.none();
+  let previous = Option.none<T>();
   // Dragging requires calculating the bounds, so we store that data initially
   // to reduce the amount of computation each mouse movement
-  let startData = Option.none();
+  let startData = Option.none<DragStartData>();
 
   const reset = (): void => {
     previous = Option.none();

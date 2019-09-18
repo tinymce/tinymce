@@ -19,4 +19,7 @@ UnitTest.test('browser.tinymce.core.api.SettingsTest', function () {
 
   Assertions.assertEq('Should default content_css_cors to false', false, Settings.shouldUseContentCssCors(new Editor('id', {}, EditorManager)));
   Assertions.assertEq('Should return true if content_css_cors is set', true, Settings.shouldUseContentCssCors(new Editor('id', { content_css_cors: true }, EditorManager)));
+
+  Assertions.assertEq('Should default referrer_policy to empty string', '', Settings.getReferrerPolicy(new Editor('id', {}, EditorManager)));
+  Assertions.assertEq('Should return origin if referrer_policy is configured to origin', 'origin', Settings.getReferrerPolicy(new Editor('id', { referrer_policy: 'origin' }, EditorManager)));
 });

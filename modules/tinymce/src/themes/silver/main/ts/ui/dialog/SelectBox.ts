@@ -60,7 +60,7 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
     ])
   });
 
-  const chevron = spec.size > 1 ? Option.none() :
+  const chevron: Option<AlloySpec> = spec.size > 1 ? Option.none() :
     Option.some({
         dom: {
           tag: 'div',

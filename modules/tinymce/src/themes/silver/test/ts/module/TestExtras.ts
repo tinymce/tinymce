@@ -1,4 +1,5 @@
 import { Attachment, GuiFactory, DomFactory, Behaviour, Positioning, Gui } from '@ephox/alloy';
+import { Fun } from '@ephox/katamari';
 import { Body, Class } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
 import TestBackstage from './TestBackstage';
@@ -15,7 +16,7 @@ export default () => {
     dom: DomFactory.fromHtml('<div class="mce-silver-sink"></div>'),
     behaviours: Behaviour.derive([
       Positioning.config({
-        useFixed: true
+        useFixed: Fun.always
       })
     ])
   });

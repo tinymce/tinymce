@@ -93,7 +93,7 @@ const getFirst = (component: AlloyComponent, hConfig: HighlightingConfig, hState
 
 const getLast = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): Option<AlloyComponent> => {
   const items: Element[] = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass);
-  const last = items.length > 0 ? Option.some(items[items.length - 1]) : Option.none();
+  const last = items.length > 0 ? Option.some(items[items.length - 1]) : Option.none<Element<any>>();
   return last.bind((c) => component.getSystem().getByDom(c).toOption());
 };
 

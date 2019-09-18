@@ -119,10 +119,10 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@ephox/bedrock@^5.0.3":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock/-/bedrock-5.0.3.tgz#4a1fd19763e596b27b90067fba7561efb591c7cd"
-  integrity sha512-BluFPgeHCgUzoAHThRwU0G8a+UYlaDGtyRJ1KiIcebYUEut+Mxgdoke3iCFR3+YLyl+4PZ6sPfNa+iJWveq1jQ==
+"@ephox/bedrock@^7.0.1", "@ephox/bedrock@^7.0.3":
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock/-/bedrock-7.0.3.tgz#8e872d236d2d0da404bd9368ef01621e3cd95a55"
+  integrity sha512-ZhF8xwJAMLaJHUENgQk8v+Ex66uPU4OvbMdZzanaXzyZ8fhr8qtgt5k07qaEHFfDBGZaKf5Kc413ODZr5VDJ8Q==
   dependencies:
     async "^1.5.2"
     babel-polyfill "^6.23.0"
@@ -131,7 +131,7 @@
     finalhandler "^1.1.2"
     fork-ts-checker-webpack-plugin "~1.0.4"
     istanbul-instrumenter-loader "^3.0.1"
-    jquery "^3.0.0"
+    jquery "^3.4.1"
     mkdirp "^0.5.1"
     node-glob "^1.2.0"
     portfinder "1.0.21"
@@ -5767,7 +5767,7 @@ istanbul-lib-instrument@^1.7.3:
     istanbul-lib-coverage "^1.2.1"
     semver "^5.3.0"
 
-jquery@^3.0.0:
+jquery@^3.4.1:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.4.1.tgz#714f1f8d9dde4bdfa55764ba37ef214630d80ef2"
   integrity sha512-36+AdBzCL+y6qjw5Tx7HgzeGCzC81MDDgaUP8ld2zhx58HdqXGoBd+tHdrBMiyjGQs0Hxs/MLZTu/eHNJJuWPw==
@@ -9770,10 +9770,15 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^3.3.0, typescript@^3.5.3:
+typescript@^3.3.0:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.3.tgz#c830f657f93f1ea846819e929092f5fe5983e977"
   integrity sha512-ACzBtm/PhXBDId6a6sDJfroT2pOWt/oOnk4/dElG5G33ZL776N3Y6/6bKZJBFpd+b05F3Ct9qDjMeJmRWtE2/g==
+
+typescript@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.6.3.tgz#fea942fabb20f7e1ca7164ff626f1a9f3f70b4da"
+  integrity sha512-N7bceJL1CtRQ2RiG0AQME13ksR7DiuQh/QehubYcghzv20tnh+MQnQIuJddTmsbqYj+dztchykemz0zFzlvdQw==
 
 typical@^2.6.0, typical@^2.6.1:
   version "2.6.1"

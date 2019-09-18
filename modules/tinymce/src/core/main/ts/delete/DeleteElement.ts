@@ -114,7 +114,7 @@ const isBlock = function (editor: Editor, elm) {
   return elm && editor.schema.getBlockElements().hasOwnProperty(SugarNode.name(elm));
 };
 
-const paddEmptyBlock = function (elm) {
+const paddEmptyBlock = (elm: Element<any>): Option<CaretPosition> => {
   if (Empty.isEmpty(elm)) {
     const br = Element.fromHtml('<br data-mce-bogus="1">');
     Remove.empty(elm);
@@ -134,7 +134,7 @@ const deleteNormalized = (elm: Element, afterDeletePosOpt: Option<CaretPosition>
 
   // Merge and normalize any prev/next text nodes, so that they are merged and don't lose meaningful whitespace
   // eg. <p>a <span></span> b</p> -> <p>a &nsbp;b</p> or <p><span></span> a</p> -> <p>&nbsp;a</a>
-  return Options.liftN([ prevTextOpt, nextTextOpt, afterDeletePosOpt ], (prev, next, pos) => {
+  return Options.lift3(prevTextOpt, nextTextOpt, afterDeletePosOpt, (prev, next, pos) => {
     const prevNode = prev.dom(), nextNode = next.dom();
     const offset = prevNode.data.length;
     MergeText.mergeTextNodes(prevNode, nextNode, normalizeWhitespace);

@@ -61,7 +61,7 @@ export interface DraggingConfig {
 }
 
 export interface CommonDraggingConfigSpec {
-  useFixed?: boolean;
+  useFixed?: () => boolean;
   onDrop?: (comp: AlloyComponent, target: Element) => void;
   repositionTarget?: boolean;
   onDrag?: (comp: AlloyComponent, target: Element, delta: SugarPosition) => void;

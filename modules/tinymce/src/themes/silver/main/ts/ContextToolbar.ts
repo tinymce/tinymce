@@ -5,12 +5,28 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying, Layout, LayoutInside, Positioning, MaxHeight } from '@ephox/alloy';
+import {
+  AddEventsBehaviour,
+  AlloyEvents,
+  AlloySpec,
+  AlloyTriggers,
+  AnchorSpec,
+  Behaviour,
+  Boxes,
+  Bubble,
+  GuiFactory,
+  InlineView,
+  Keying,
+  Layout,
+  LayoutInside,
+  MaxHeight,
+  Positioning
+} from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { Element as DomElement } from '@ephox/dom-globals';
-import { Cell, Id, Merger, Option, Thunk, Result } from '@ephox/katamari';
-import { Css, DomEvent, Element, Focus, Scroll, Traverse } from '@ephox/sugar';
+import { ClientRect, Element as DomElement } from '@ephox/dom-globals';
+import { Cell, Id, Merger, Option, Result, Thunk } from '@ephox/katamari';
+import { Css, Element, Focus, Scroll, SelectorFind, Traverse } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { showContextToolbarEvent } from './ui/context/ContextEditorEvents';
@@ -50,18 +66,33 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     }
   };
 
-  const getViewportTop = () => {
-    // If the toolbar is docked, then treat the bottom as the upper bounds
-    const isToolbarDocked = Css.get(Element.fromDom(editor.getContainer()), 'position') === 'fixed';
-    return editor.inline && toolbarOrMenubarEnabled && isToolbarDocked ? editor.getContainer().getBoundingClientRect().bottom : 0;
+  const isCompletelyBehindHeader = (nodeBounds: ClientRect): boolean => {
+    const headerEle = SelectorFind.descendant(Element.fromDom(editor.getContainer()), '.tox-editor-header').getOrDie();
+    const isHeaderDocked = Css.get(headerEle, 'position') === 'fixed';
+    if (toolbarOrMenubarEnabled && isHeaderDocked) {
+      const headerBounds = headerEle.dom().getBoundingClientRect();
+      if (editor.inline) {
+        return nodeBounds.bottom < headerBounds.bottom;
+      } else {
+        // Translate the node bounds to the top level document, as nodeBounds is relative to the iframe viewport
+        const scroll = Scroll.get();
+        const bodyBounds = Boxes.absolute(Element.fromDom(editor.getBody()));
+        const nodeBottom = nodeBounds.bottom + (bodyBounds.y() - scroll.top());
+        return nodeBottom < headerBounds.bottom;
+      }
+    } else {
+      return false;
+    }
   };
 
   const shouldContextToolbarHide = (): boolean => {
-    const nodeBounds = lastElement.get().map((ele) => ele.getBoundingClientRect()).getOr(editor.selection.getRng().getBoundingClientRect());
+    const nodeBounds = lastElement.get().map((ele) => ele.getBoundingClientRect()).getOrThunk(() => {
+      return editor.selection.getRng().getBoundingClientRect();
+    });
     const viewportHeight = Traverse.defaultView(Element.fromDom(editor.getBody())).dom().innerHeight;
-    const aboveViewport = nodeBounds.bottom < getViewportTop();
+    const aboveViewport = nodeBounds.bottom < 0;
     const belowViewport = nodeBounds.top > viewportHeight;
-    return aboveViewport || belowViewport;
+    return aboveViewport || belowViewport || isCompletelyBehindHeader(nodeBounds);
   };
 
   // FIX: make a lot nicer.
@@ -77,21 +108,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     });
   };
 
-  editor.on('init', () => {
-    editor.on('ScrollWindow', hideOrRepositionIfNecessary);
-
-    // If using iframe mode, then we also need to handle the iframe window scroll events
-    if (!editor.inline) {
-      const scroller = Traverse.defaultView(Element.fromDom(editor.getBody()));
-      const onScroll = DomEvent.bind(scroller, 'scroll', hideOrRepositionIfNecessary);
-
-      editor.on('remove', () => {
-        onScroll.unbind();
-      });
-    }
-  });
-
-  const lastAnchor = Cell(Option.none());
+  const lastAnchor = Cell(Option.none<AnchorSpec>());
   const lastElement = Cell<Option<DomElement>>(Option.none<DomElement>());
   const timer = Cell(null);
 
@@ -194,13 +211,12 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     overrides: anchorOverrides
   };
 
-  const getAnchor = (position: Toolbar.ContextToolbarPosition, element: Option<Element>) => {
+  const getAnchor = (position: Toolbar.ContextToolbarPosition, element: Option<Element>): AnchorSpec => {
     const anchorage = position === 'node' ? extras.backstage.shared.anchors.node(element) : extras.backstage.shared.anchors.cursor();
-    const anchor = Merger.deepMerge(
+    return Merger.deepMerge(
       anchorage,
       position === 'line' ? lineAnchorSpec : anchorSpec
     );
-    return anchor;
   };
 
   const launchContext = (toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm, elem: Option<DomElement>) => {
@@ -248,6 +264,8 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   editor.on('init', () => {
+    editor.on('ScrollContent ScrollWindow', hideOrRepositionIfNecessary);
+
     // FIX: Make it go away when the action makes it go away. E.g. deleting a column deletes the table.
     editor.on('click keyup SetContent ObjectResized ResizeEditor', (e) => {
       // Fixing issue with chrome focus on img.

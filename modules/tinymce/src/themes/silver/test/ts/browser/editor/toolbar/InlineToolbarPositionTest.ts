@@ -3,13 +3,17 @@ import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Attr, Body, Css, Element, Scroll } from '@ephox/sugar';
+import { Attr, Body, Css, Element, SelectorFind } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => {
   Theme();
+
+  const sAssertStaticPos = (container: Element) => Waiter.sTryUntil('Wait for toolbar to be absolute', Step.sync(() => {
+    Assertions.assertEq(`Container should be statically positioned`, 'static', Css.get(container, 'position'));
+  }));
 
   const sAssertAbsolutePos = (container: Element) => Waiter.sTryUntil('Wait for toolbar to be absolute', Step.sync(() => {
     Assertions.assertEq(`Container should be absolutely positioned`, 'absolute', Css.get(container, 'position'));
@@ -32,7 +36,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
   const sScrollToElement = (contentAreaContainer: Element, selector: string) => GeneralSteps.sequence([
     Step.sync(() => {
       const elm = UiFinder.findIn(contentAreaContainer, selector).getOrDie();
-      Scroll.intoView(elm, false);
+      elm.dom().scrollIntoView(false);
     })
   ]);
 
@@ -41,7 +45,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     tinyApis.sSelect(selector, []),
     tinyApis.sFocus,
     tinyApis.sNodeChanged,
-    UiFinder.sWaitForVisible('Wait for editor to be visible', Body.body(), '.tox.tox-tinymce-inline')
+    UiFinder.sWaitForVisible('Wait for editor to be visible', Body.body(), '.tox-editor-header')
   ]));
 
   const sDeactivateEditor = (editor: Editor) => Step.label('Deactivate editor', GeneralSteps.sequence([
@@ -52,8 +56,9 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     UiFinder.sWaitForHidden('Wait for editor to hide', Body.body(), '.tox.tox-tinymce-inline')
   ]));
 
-  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
+  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
       const uiContainer = Element.fromDom(editor.getContainer());
+      const uiHeader = SelectorFind.descendant(Element.fromDom(editor.getContainer()), '.tox-editor-header').getOr(uiContainer);
       const contentAreaContainer = Element.fromDom(editor.getContentAreaContainer());
 
       const tinyApis = TinyApis(editor);
@@ -69,25 +74,26 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
         Log.stepsAsStep('TINY-3621', 'Select item at the top of the content (absolute position)', [
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
           sAssertAbsolutePos(uiContainer),
+          sAssertStaticPos(uiHeader),
           sDeactivateEditor(editor)
         ]),
         Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position)', [
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
-          sAssertDockedPos(uiContainer),
+          sAssertDockedPos(uiHeader),
           sDeactivateEditor(editor)
         ]),
         Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content (docked position)', [
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child'),
-          sAssertDockedPos(uiContainer),
+          sAssertDockedPos(uiHeader),
           sDeactivateEditor(editor)
         ]),
         Log.stepsAsStep('TINY-3621', 'Select item at the top of the content and scroll to middle and back', [
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
-          sAssertAbsolutePos(uiContainer),
+          sAssertStaticPos(uiHeader),
           sScrollToElement(contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
-          sAssertDockedPos(uiContainer),
+          sAssertDockedPos(uiHeader),
           sScrollToElement(contentAreaContainer, ':first-child'),
-          sAssertAbsolutePos(uiContainer),
+          sAssertStaticPos(uiHeader),
           sDeactivateEditor(editor)
         ]),
         Step.sync(() => {

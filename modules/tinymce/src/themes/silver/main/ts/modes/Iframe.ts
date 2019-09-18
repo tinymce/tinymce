@@ -32,7 +32,7 @@ const setupEvents = (editor: Editor) => {
   const lastWindowDimensions = Cell(Position(contentWindow.innerWidth, contentWindow.innerHeight));
   const lastDocumentDimensions = Cell(Position(initialDocEle.offsetWidth, initialDocEle.offsetHeight));
 
-  const resize = () => {
+  const resize = (e) => {
     // Don't use the initial doc ele, as there's a small chance it may have changed
     const docEle = editor.getDoc().documentElement;
 
@@ -41,14 +41,17 @@ const setupEvents = (editor: Editor) => {
     const inner = lastDocumentDimensions.get();
     if (outer.left() !== contentWindow.innerWidth || outer.top() !== contentWindow.innerHeight) {
       lastWindowDimensions.set(Position(contentWindow.innerWidth, contentWindow.innerHeight));
-      Events.fireResizeContent(editor);
+      Events.fireResizeContent(editor, e);
     } else if (inner.left() !== docEle.offsetWidth || inner.top() !== docEle.offsetHeight) {
       lastDocumentDimensions.set(Position(docEle.offsetWidth, docEle.offsetHeight));
-      Events.fireResizeContent(editor);
+      Events.fireResizeContent(editor, e);
     }
   };
 
+  const scroll = (e) => Events.fireScrollContent(editor, e);
+
   DOM.bind(contentWindow, 'resize', resize);
+  DOM.bind(contentWindow, 'scroll', scroll);
 
   // Bind to async load events and trigger a content resize event if the size has changed
   const elementLoad = DomEvent.capture(Element.fromDom(editor.getBody()), 'load', resize);
@@ -56,6 +59,7 @@ const setupEvents = (editor: Editor) => {
   editor.on('remove', () => {
     elementLoad.unbind();
     DOM.unbind(contentWindow, 'resize', resize);
+    DOM.unbind(contentWindow, 'scroll', scroll);
   });
 };
 
@@ -67,7 +71,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   Attachment.attachSystemAfter(Element.fromDom(args.targetNode), uiComponents.mothership);
   Attachment.attachSystem(Body.body(), uiComponents.uiMothership);
 
-  editor.on('init', () => {
+  editor.on('PostRender', () => {
     setToolbar(editor, uiComponents, rawUiConfig, backstage);
     lastToolbarWidth.set(editor.getWin().innerWidth);
 
@@ -128,7 +132,4 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 };
 
-export default {
-  render,
-  getBehaviours: (_) => []
-};
+export default { render };

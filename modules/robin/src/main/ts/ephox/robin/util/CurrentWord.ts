@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Option, Options } from '@ephox/katamari';
 import { BeforeAfter } from '../data/BeforeAfter';
 import WordUtil from './WordUtil';
 
@@ -23,15 +23,10 @@ const around = function (text: string, position: number) {
 
   const current = BeforeAfter(Option.some(position), Option.some(position));
 
-  const endOfWord = after.bind(function (a) {
-    return position === a ? Option.some(current) : Option.none<BeforeAfter>();
-  });
+  const endOfWord = after.bind((a) => Options.someIf(position === a, current));
 
-  return endOfWord.getOrThunk(function () {
-    return before.bind(function (b) {
-      return position === b ? Option.some(current) : Option.none();
-    }).getOr(fallback);
-  });
+  return endOfWord.getOrThunk(() =>
+    before.bind((b) => Options.someIf(position === b, current)).getOr(fallback));
 };
 
 export default {

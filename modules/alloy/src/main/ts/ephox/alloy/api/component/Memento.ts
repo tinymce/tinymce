@@ -20,7 +20,7 @@ const record = (spec: SimpleOrSketchSpec): MementoRecord => {
   };
 
   const getOpt = (anyInSystem: AlloyComponent): Option<AlloyComponent> => {
-    return anyInSystem.getSystem().getByUid(uid).fold(Option.none, Option.some);
+    return anyInSystem.getSystem().getByUid(uid).toOption();
   };
 
   const asSpec = (): SimpleOrSketchSpec => {

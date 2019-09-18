@@ -6,6 +6,7 @@
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
       "tinymce": ["src/core/main/ts/api/Main"],
       "tinymce/core/*": ["src/core/main/ts/*"],

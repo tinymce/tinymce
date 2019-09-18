@@ -127,10 +127,10 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
           Step.sync(() => {
             const groups = Arr.map([
               {
-                title: Option.none(), items: Arr.map([ 'A', 'B' ], makeButton)
+                title: Option.none<string>(), items: Arr.map([ 'A', 'B' ], makeButton)
               },
               {
-                title: Option.none(), items: Arr.map([ 'C' ], makeButton)
+                title: Option.none<string>(), items: Arr.map([ 'C' ], makeButton)
               }
             ], renderToolbarGroup);
             Toolbar.setGroups(toolbar, groups);

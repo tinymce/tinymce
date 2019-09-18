@@ -16,6 +16,7 @@ import {
   Focusing,
   Keying,
   NativeEvents,
+  Receiving,
   Reflecting,
   Replacing,
   SketchSpec,
@@ -29,7 +30,9 @@ import { Toolbar, Types } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
 import { Attr, SelectorFind } from '@ephox/sugar';
 
+import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import * as Channels from '../../../Channels';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
@@ -45,7 +48,6 @@ import { createPartialChoiceMenu } from '../../menus/menu/MenuChoice';
 import ItemResponse from '../../menus/item/ItemResponse';
 import { ToolbarButtonClasses } from '../button/ButtonClasses';
 import { onToolbarButtonExecute, toolbarButtonEventOrder } from '../button/ButtonEvents';
-import I18n from 'tinymce/core/api/util/I18n';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
@@ -320,6 +322,15 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
 
     splitDropdownBehaviours: Behaviour.derive([
       DisablingConfigs.splitButton(false),
+      Receiving.config({
+        channels: {
+          [ Channels.reposition() ]: {
+            onReceive: (comp) => {
+              AlloySplitDropdown.repositionMenus(comp);
+            }
+          }
+        }
+      }),
       AddEventsBehaviour.config('split-dropdown-events', [
         AlloyEvents.run(focusButtonEvent, Focusing.focus),
         onControlAttached(specialisation, editorOffCell),

@@ -10,6 +10,7 @@ import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { DomEvent, Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import * as EditorChannels from './Channels';
 
 const setup = (editor: Editor, mothership, uiMothership) => {
   const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', function (evt) {
@@ -45,8 +46,6 @@ const setup = (editor: Editor, mothership, uiMothership) => {
       });
     });
   };
-  editor.on('mousedown', onContentMousedown);
-  editor.on('touchstart', onContentMousedown);
 
   const onContentMouseup = function (raw) {
     if (raw.button === 0) {
@@ -57,29 +56,36 @@ const setup = (editor: Editor, mothership, uiMothership) => {
       });
     }
   };
-  editor.on('mouseup', onContentMouseup);
 
   const onWindowScroll = (evt) => {
     Arr.each([ mothership, uiMothership ], (ship) => {
       ship.broadcastEvent(SystemEvents.windowScroll(), evt);
     });
   };
-  editor.on('ScrollWindow', onWindowScroll);
 
   const onWindowResize = (evt) => {
     Arr.each([ mothership, uiMothership ], (ship) => {
       ship.broadcastEvent(SystemEvents.windowResize(), evt);
+      ship.broadcastOn( [ EditorChannels.reposition() ], evt);
     });
   };
-  editor.on('ResizeWindow', onWindowResize);
+
+  // Don't start listening to events until the UI has rendered
+  editor.on('PostRender', () => {
+    editor.on('mousedown', onContentMousedown);
+    editor.on('touchstart', onContentMousedown);
+    editor.on('mouseup', onContentMouseup);
+    editor.on('ScrollWindow', onWindowScroll);
+    editor.on('ResizeWindow', onWindowResize);
+  });
 
   editor.on('remove', () => {
     // We probably don't need these unbinds, but it helps to have them if we move this code out.
     editor.off('mousedown', onContentMousedown);
     editor.off('touchstart', onContentMousedown);
     editor.off('mouseup', onContentMouseup);
-    editor.off('ResizeWindow', onWindowResize);
     editor.off('ScrollWindow', onWindowScroll);
+    editor.off('ResizeWindow', onWindowResize);
 
     onMousedown.unbind();
     onTouchstart.unbind();

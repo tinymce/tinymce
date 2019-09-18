@@ -98,7 +98,7 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
 
 const schema: FieldProcessorAdt[] = [
   // TODO: Is this used?
-  FieldSchema.defaulted('useFixed', false),
+  FieldSchema.defaulted('useFixed', Fun.never),
   FieldSchema.strict('blockerClass'),
   FieldSchema.defaulted('getTarget', Fun.identity),
   FieldSchema.defaulted('onDrag', Fun.noop),

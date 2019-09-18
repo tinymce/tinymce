@@ -7,21 +7,21 @@
 
 import { HTMLElement, Node, Window, Document, Element, DocumentFragment, NamedNodeMap, Range, window, document, Attr, HTMLElementEventMap } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
-import Env from '../Env';
-import DomQuery, { DomQueryConstructor } from './DomQuery';
-import EventUtils, { EventUtilsCallback } from './EventUtils';
-import Position from '../../dom/Position';
-import Sizzle from './Sizzle';
-import { StyleSheetLoader } from '../../dom/StyleSheetLoader';
 import NodeType from '../../dom/NodeType';
-import TreeWalker from './TreeWalker';
+import Position from '../../dom/Position';
+import { StyleSheetLoader } from '../../dom/StyleSheetLoader';
 import TrimNode from '../../dom/TrimNode';
+import Env from '../Env';
+import { GeomRect } from '../geom/Rect';
 import Entities from '../html/Entities';
 import Schema from '../html/Schema';
 import Styles, { StyleMap } from '../html/Styles';
+import { ReferrerPolicy, URLConverter } from '../SettingsTypes';
 import Tools from '../util/Tools';
-import { GeomRect } from '../geom/Rect';
-import { URLConverter } from '../SettingsTypes';
+import DomQuery, { DomQueryConstructor } from './DomQuery';
+import EventUtils, { EventUtilsCallback } from './EventUtils';
+import Sizzle from './Sizzle';
+import TreeWalker from './TreeWalker';
 
 /**
  * Utility class for various DOM manipulation and retrieval functions.
@@ -151,6 +151,7 @@ export interface DOMUtilsSettings {
   collect: Function;
   onSetAttrib: Function;
   contentCssCors: boolean;
+  referrerPolicy: ReferrerPolicy;
 }
 
 export type Target = Node | Window | Array<Node | Window>;
@@ -262,7 +263,10 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   let counter = 0;
   const stdMode = true;
   const boxModel = true;
-  const styleSheetLoader = StyleSheetLoader(doc, { contentCssCors: settings.contentCssCors });
+  const styleSheetLoader = StyleSheetLoader(doc, {
+    contentCssCors: settings.contentCssCors,
+    referrerPolicy: settings.referrerPolicy
+  });
   const boundEvents = [];
   const schema = settings.schema ? settings.schema : Schema({});
   const styles = Styles({
@@ -857,7 +861,8 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
         rel: 'stylesheet',
         type: 'text/css',
         href: url,
-        ...settings.contentCssCors ? { crossOrigin: 'anonymous' } : { }
+        ...settings.contentCssCors ? { crossOrigin: 'anonymous' } : { },
+        ...settings.referrerPolicy ? { referrerPolicy: settings.referrerPolicy } : { }
       });
 
       head.appendChild(link);

@@ -27,12 +27,12 @@ UnitTest.test('Browser Test: CursorPositionTest', function () {
 
   const checkFirst = function (label, expected, root) {
     const actual = CursorPosition.first(root).getOrDie('No cursor position found for: ' + label);
-    assert.eq(true, Compare.eq(expected, actual), 'Incorrect element. \nExpected: ' + Html.getOuter(expected) + '\nWas: ' + Html.getOuter(actual));
+    assert.eq(true, Compare.eq(expected, actual), () => 'Incorrect element. \nExpected: ' + Html.getOuter(expected) + '\nWas: ' + Html.getOuter(actual));
   };
 
   const checkLast = function (label, expected, root) {
     const actual = CursorPosition.last(root).getOrDie('No cursor position found for: ' + label);
-    assert.eq(true, Compare.eq(expected, actual), 'Incorrect element. \nExpected: ' + Html.getOuter(expected) + '\nWas: ' + Html.getOuter(actual));
+    assert.eq(true, Compare.eq(expected, actual), () => 'Incorrect element. \nExpected: ' + Html.getOuter(expected) + '\nWas: ' + Html.getOuter(actual));
   };
 
   checkFirst('First of container (should skip empty container)', child3a, container);

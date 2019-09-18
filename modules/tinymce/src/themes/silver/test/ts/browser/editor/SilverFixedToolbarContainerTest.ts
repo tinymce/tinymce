@@ -23,50 +23,55 @@ UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => 
                 classes: [ arr.has('tox-editor-container') ],
                 children: [
                   s.element('div', {
-                    classes: [ arr.has('tox-menubar') ],
-                    attrs: { role: str.is('menubar') },
+                    classes: [ arr.has('tox-editor-header') ],
                     children: [
-                      s.element('button', {
-                        classes: [ arr.has('tox-mbtn'), arr.has('tox-mbtn--select') ],
+                      s.element('div', {
+                        classes: [arr.has('tox-menubar')],
+                        attrs: { role: str.is('menubar') },
                         children: [
-                          s.element('span', {
-                            classes: [ arr.has('tox-mbtn__select-label') ],
-                            html: str.is('File')
-                          }),
-                          s.element('div', {
-                            classes: [ arr.has('tox-mbtn__select-chevron') ],
+                          s.element('button', {
+                            classes: [arr.has('tox-mbtn'), arr.has('tox-mbtn--select')],
                             children: [
-                              s.element('svg', { })
+                              s.element('span', {
+                                classes: [arr.has('tox-mbtn__select-label')],
+                                html: str.is('File')
+                              }),
+                              s.element('div', {
+                                classes: [arr.has('tox-mbtn__select-chevron')],
+                                children: [
+                                  s.element('svg', {})
+                                ]
+                              }),
                             ]
-                          }),
+                          })
+                        ]
+                      }),
+
+                      s.element('div', {
+                        classes: [ arr.has('tox-toolbar') ],
+                        attrs: { role: str.is('group') },
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('tox-toolbar__group') ],
+                            children: [
+                              s.element('button', {
+                                classes: [ arr.has('tox-tbtn'), arr.not('tox-btn--enabled') ],
+                                attrs: {
+                                  'aria-label': str.is('Undo')
+                                }
+                              }),
+                              s.element('button', {
+                                classes: [ arr.has('tox-tbtn'), arr.not('tox-btn--enabled') ],
+                                attrs: {
+                                  'aria-label': str.is('Bold')
+                                }
+                              }),
+                            ]
+                          })
                         ]
                       })
                     ]
                   }),
-
-                  s.element('div', {
-                    classes: [ arr.has('tox-toolbar') ],
-                    attrs: { role: str.is('group') },
-                    children: [
-                      s.element('div', {
-                        classes: [ arr.has('tox-toolbar__group') ],
-                        children: [
-                          s.element('button', {
-                            classes: [ arr.has('tox-tbtn'), arr.not('tox-btn--enabled') ],
-                            attrs: {
-                              'aria-label': str.is('Undo')
-                            }
-                          }),
-                          s.element('button', {
-                            classes: [ arr.has('tox-tbtn'), arr.not('tox-btn--enabled') ],
-                            attrs: {
-                              'aria-label': str.is('Bold')
-                            }
-                          }),
-                        ]
-                      })
-                    ]
-                  })
                 ]
               }),
               s.element('div', {

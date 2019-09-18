@@ -15,11 +15,11 @@ export interface PositioningBehaviour extends Behaviour.AlloyBehaviour<Positioni
 }
 
 export interface PositioningConfigSpec extends Behaviour.BehaviourConfigSpec {
-  useFixed?: boolean;
+  useFixed?: () => boolean;
   getBounds?: () => Bounds;
 }
 
 export interface PositioningConfig extends Behaviour.BehaviourConfigDetail {
-  useFixed: boolean;
+  useFixed: () => boolean;
   getBounds: Option<() => Bounds>; // TODO: Strengthen types
 }

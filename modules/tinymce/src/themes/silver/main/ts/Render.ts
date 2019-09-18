@@ -33,6 +33,8 @@ import {
   isToolbarEnabled,
   useFixedContainer,
   isMultipleToolbars,
+  isStickyToolbar,
+  isDistractionFree,
   ToolbarDrawer
 } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
@@ -42,6 +44,8 @@ import Iframe from './modes/Iframe';
 import Inline from './modes/Inline';
 import FormatControls from './ui/core/FormatControls';
 import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterContainer';
+import * as StickyHeader from './ui/header/StickyHeader';
+import * as StaticHeader from './ui/header/StaticHeader';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import * as Sidebar from './ui/sidebar/Sidebar';
 import * as Throbber from './ui/throbber/Throbber';
@@ -98,8 +102,9 @@ export interface RenderArgs {
 }
 
 const setup = (editor: Editor): RenderInfo => {
-  const isInline = editor.getParam('inline', false, 'boolean');
+  const isInline = editor.inline;
   const mode = isInline ? Inline : Iframe;
+  const header = isStickyToolbar(editor) ? StickyHeader : StaticHeader;
   let lazyOuterContainer: Option<AlloyComponent> = Option.none();
 
   const platform = PlatformDetection.detect();
@@ -112,6 +117,8 @@ const setup = (editor: Editor): RenderInfo => {
     }
   } : {};
 
+  const lazyHeader = () => lazyOuterContainer.bind(OuterContainer.getHeader);
+
   const sink = GuiFactory.build({
     dom: {
       tag: 'div',
@@ -120,10 +127,12 @@ const setup = (editor: Editor): RenderInfo => {
     },
     behaviours: Behaviour.derive([
       Positioning.config({
-        useFixed: false // this allows menus to scroll with the outer page, we don't want position: fixed
+        useFixed: () => header.isDocked(lazyHeader)
       })
     ])
   });
+
+  const lazySink = () => Result.value<AlloyComponent, Error>(sink);
 
   const memAnchorBar = Memento.record({
     dom: {
@@ -149,8 +158,6 @@ const setup = (editor: Editor): RenderInfo => {
   }).getOrDie('Could not find throbber element');
 
   const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar, lazyMoreButton);
-
-  const lazySink = () => Result.value<AlloyComponent, Error>(sink);
 
   const partMenubar: AlloySpec = OuterContainer.parts().menubar({
     dom: {
@@ -210,7 +217,10 @@ const setup = (editor: Editor): RenderInfo => {
     backstage
   });
 
-  const statusbar = editor.getParam('statusbar', true, 'boolean') && !isInline ? Option.some(renderStatusbar(editor, backstage.shared.providers)) : Option.none();
+  const sb = editor.getParam('statusbar', true, 'boolean');
+
+  const statusbar: Option<AlloySpec> =
+    sb && !isInline ? Option.some(renderStatusbar(editor, backstage.shared.providers)) : Option.none<AlloySpec>();
 
   const socketSidebarContainer: SimpleSpec = {
     dom: {
@@ -243,12 +253,25 @@ const setup = (editor: Editor): RenderInfo => {
     }
   };
 
+  const partHeader = OuterContainer.parts().header({
+    dom: {
+      tag: 'div',
+      classes: ['tox-editor-header']
+    },
+    components: Arr.flatten<AlloySpec>([
+      hasMenubar ? [ partMenubar ] : [ ],
+      getPartToolbar(),
+      // fixed_toolbar_container anchors to the editable area, else add an anchor bar
+      useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ]
+    ]),
+    sticky: isStickyToolbar(editor),
+    editor,
+    getSink: lazySink,
+  });
+
   // We need the statusbar to be separate to everything else so resizing works properly
   const editorComponents = Arr.flatten<AlloySpec>([
-    hasMenubar ? [ partMenubar ] : [ ],
-    getPartToolbar(),
-    // fixed_toolbar_container anchors to the editable area, else add an anchor bar
-    useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ],
+    [ partHeader ],
     // Inline mode does not have a socket/sidebar
     isInline ? [ ] : [ socketSidebarContainer ]
   ]);
@@ -261,7 +284,7 @@ const setup = (editor: Editor): RenderInfo => {
     components: editorComponents,
   };
 
-  const containerComponents = Arr.flatten<SimpleSpec>([
+  const containerComponents = Arr.flatten<AlloySpec>([
     [editorContainer],
     // Inline mode does not have a status bar
     isInline ? [ ] : statusbar.toArray(),
@@ -269,7 +292,7 @@ const setup = (editor: Editor): RenderInfo => {
   ]);
 
   // Hide the outer container if using inline mode and there's no menubar or toolbar
-  const isHidden = isInline && !hasMenubar && !hasToolbar && !hasMultipleToolbar;
+  const isHidden = isDistractionFree(editor);
 
   const attributes = {
     role: 'application',
@@ -291,12 +314,12 @@ const setup = (editor: Editor): RenderInfo => {
         attributes
       },
       components: containerComponents,
-      behaviours: Behaviour.derive(mode.getBehaviours(editor).concat([
+      behaviours: Behaviour.derive([
         Keying.config({
           mode: 'cyclic',
           selector: '.tox-menubar, .tox-toolbar, .tox-toolbar__primary, .tox-toolbar__overflow--open, .tox-sidebar__overflow--open, .tox-statusbar__path, .tox-statusbar__wordcount, .tox-statusbar__branding a'
         })
-      ]))
+      ])
     } as OuterContainerSketchSpec)
   );
 
@@ -362,6 +385,7 @@ const setup = (editor: Editor): RenderInfo => {
   };
 
   const renderUI = function (): ModeRenderInfo {
+    header.setup(editor, lazyHeader);
     FormatControls.setup(editor, backstage);
     SilverContextMenu.setup(editor, lazySink, backstage);
     Sidebar.setup(editor);

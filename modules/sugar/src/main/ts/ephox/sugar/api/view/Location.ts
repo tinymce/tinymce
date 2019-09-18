@@ -21,6 +21,10 @@ const absolute = function (element: Element<DomElement>) {
   const win = doc.defaultView;
   const html = doc.documentElement;
 
+  if (body === element.dom()) {
+    return Position(body.offsetLeft, body.offsetTop);
+  }
+
   const scrollTop = firstDefinedOrZero(win.pageYOffset, html.scrollTop);
   const scrollLeft = firstDefinedOrZero(win.pageXOffset, html.scrollLeft);
 

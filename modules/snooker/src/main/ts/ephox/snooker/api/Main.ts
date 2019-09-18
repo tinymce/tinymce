@@ -17,7 +17,7 @@ import TableLookup from './TableLookup';
 import TableOperations from './TableOperations';
 import TablePositions from './TablePositions';
 import * as TableRender from './TableRender';
-import TableResize from './TableResize';
+import { TableResize } from './TableResize';
 import * as RunOperation from '../model/RunOperation';
 import GridRow from '../model/GridRow';
 

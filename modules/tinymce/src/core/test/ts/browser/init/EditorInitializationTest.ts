@@ -191,19 +191,24 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
             classes: [ arr.has('tox-editor-container') ],
             children: [
               s.element('div', {
-                classes: [ arr.has('tox-menubar') ],
-                attrs: {
-                  role: str.is('menubar'),
-                },
-              }),
-              s.element('div', {
-                classes: [ arr.has('tox-toolbar') ],
-                attrs: {
-                  role: str.is('group'),
-                },
-              }),
-              s.element('div', {
-                classes: [ arr.has('tox-anchorbar') ]
+                classes: [ arr.has('tox-editor-header') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-menubar') ],
+                    attrs: {
+                      role: str.is('menubar'),
+                    },
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar') ],
+                    attrs: {
+                      role: str.is('group'),
+                    },
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-anchorbar') ]
+                  })
+                ]
               })
             ]
           }),

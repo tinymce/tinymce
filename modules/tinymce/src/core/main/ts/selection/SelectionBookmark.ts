@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document } from '@ephox/dom-globals';
-import { Fun, Option } from '@ephox/katamari';
+import { document, Range } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, Element, Node, Text, Traverse, Selection } from '@ephox/sugar';
 import Editor from '../api/Editor';
@@ -72,7 +72,7 @@ const validate = function (root, bookmark) {
       .map(normalizeRng);
 };
 
-const bookmarkToNativeRng = function (bookmark) {
+const bookmarkToNativeRng = function (bookmark): Option<Range> {
   const rng = document.createRange();
 
   try {
@@ -101,11 +101,11 @@ const storeNative = function (editor: Editor, rng) {
   editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
 };
 
-const getRng = function (editor: Editor) {
+const getRng = function (editor: Editor): Option<Range> {
   const bookmark = editor.bookmark ? editor.bookmark : Option.none();
 
   return bookmark
-    .bind(Fun.curry(validate, Element.fromDom(editor.getBody())))
+    .bind((x) => validate(Element.fromDom(editor.getBody()), x))
     .bind(bookmarkToNativeRng);
 };
 

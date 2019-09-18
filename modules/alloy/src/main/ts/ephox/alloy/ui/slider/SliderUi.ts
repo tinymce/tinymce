@@ -107,15 +107,23 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
             channels: {
               'mouse.released': {
                 onReceive: (slider, se) => {
-                  const wasDown = detail.mouseIsDown.get();
-                  detail.mouseIsDown.set(false);
-
-                  // We don't this to fire if the mouse wasn't pressed down over anything other than the slider.
-                  if (wasDown) {
+                  const fireOnChoose = () => {
                     AlloyParts.getPart(slider, detail, 'thumb').each((thumb) => {
                       const value = modelDetail.value.get();
                       detail.onChoose(slider, thumb, value);
                     });
+                  };
+
+                  if (isTouch) {
+                    fireOnChoose();
+                  } else {
+                    const wasDown = detail.mouseIsDown.get();
+                    detail.mouseIsDown.set(false);
+
+                    // We don't this to fire if the mouse wasn't pressed down over anything other than the slider.
+                    if (wasDown) {
+                      fireOnChoose();
+                    }
                   }
                 }
               }

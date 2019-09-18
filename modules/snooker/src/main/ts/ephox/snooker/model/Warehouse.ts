@@ -25,7 +25,7 @@ const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T,
   return filtered.length > 0 ? Option.some(filtered[0]) : Option.none<Structs.DetailExt>();
 };
 
-const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: number, xs: ArrayLike<Structs.DetailExt>) => boolean) {
+const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: number) => boolean) {
   const all = Arr.bind(warehouse.all(), function (r) { return r.cells(); });
   return Arr.filter(all, predicate);
 };

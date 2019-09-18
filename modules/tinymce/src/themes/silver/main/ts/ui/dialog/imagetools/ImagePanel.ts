@@ -8,7 +8,7 @@
 import { AlloyComponent, Memento, Replacing, Behaviour, GuiFactory, AlloyEvents, AddEventsBehaviour, Container } from '@ephox/alloy';
 import { Element, Attr, Css, Width, Height } from '@ephox/sugar';
 import { Cell, Option } from '@ephox/katamari';
-import CropRect from './CropRect';
+import { CropRect } from './CropRect';
 import Rect from 'tinymce/core/api/geom/Rect';
 import Promise from 'tinymce/core/api/util/Promise';
 
@@ -41,7 +41,7 @@ const renderImagePanel = (initialUrl: string) => {
   );
 
   const zoomState = Cell(1);
-  const cropRect = Cell(Option.none());
+  const cropRect = Cell(Option.none<CropRect>());
   const rectState = Cell({
     x: 0,
     y: 0,
@@ -202,7 +202,7 @@ const renderImagePanel = (initialUrl: string) => {
             AlloyEvents.runOnAttached((comp) => {
               memContainer.getOpt(comp).each((container) => {
                 const el = container.element().dom();
-                const cRect = CropRect(
+                const cRect = CropRect.create(
                   { x: 10, y: 10, w: 100, h: 100 },
                   { x: 0, y: 0, w: 200, h: 200 },
                   { x: 0, y: 0, w: 200, h: 200 },
