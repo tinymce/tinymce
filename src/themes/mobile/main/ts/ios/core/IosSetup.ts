@@ -28,7 +28,7 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
   // NOTE: This is a WebView specific way of scrolling when out of bounds. When we need to make
   // the webapp work again, we'll have to adjust this function. Essentially, it just jumps the scroll
   // back to show the current selection rectangle.
-  const scrollBounds = function () {
+  const scrollBounds = function (): Option<{top: () => number, bottom: () => number}> {
     const rects = Rectangles.getRectangles(cWin);
     return Option.from(rects[0]).bind(function (rect) {
       const viewTop = rect.top() - socket.dom().scrollTop;

@@ -57,7 +57,7 @@ const getLastChildren = function (node) {
 };
 
 const hasAllContentsSelected = function (elm, rng) {
-  return Options.liftN([getStartNode(rng), getEndNode(rng)], function (startNode, endNode) {
+  return Options.lift2(getStartNode(rng), getEndNode(rng), function (startNode, endNode) {
     const start = Arr.find(getFirstChildren(elm), Fun.curry(Compare.eq, startNode));
     const end = Arr.find(getLastChildren(elm), Fun.curry(Compare.eq, endNode));
     return start.isSome() && end.isSome();

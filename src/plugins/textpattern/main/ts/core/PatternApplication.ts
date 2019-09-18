@@ -185,7 +185,7 @@ const applyReplacementPattern = (editor: Editor, patterns: ReplacementPattern[],
 
   if (rng.collapsed && isText(container)) {
     findReplacementPattern(patterns, rng.startOffset, container.data).each((match) => {
-      const char = inline ? Option.some(extractChar(container, match)) : Option.none();
+      const char = inline ? Option.some(extractChar(container, match)) : Option.none<string>();
 
       applyReplacement(editor, container, match);
 

@@ -15,8 +15,15 @@ import { hasTableGrid } from '../api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';
 import { Selections } from 'tinymce/plugins/table/selection/Selections';
 
+interface Targets {
+  element: () => Element;
+  mergable: () => Option<any>;
+  unmergable: () => Option<any>;
+  selection: () => Element[];
+}
+
 const addMenuItems = function (editor: Editor, selections: Selections) {
-  let targets = Option.none();
+  let targets = Option.none<Targets>();
 
   const tableCtrls = [];
   const cellCtrls = [];

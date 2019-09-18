@@ -33,12 +33,12 @@ const isSeparator = function (menuItem) {
 };
 
 const trimMenuItems = function (menuItems) {
-  const menuItems2 = Arr.filter(menuItems, function (menuItem, i, menuItems) {
+  const menuItems2 = Arr.filter(menuItems, function (menuItem, i) {
     return !isSeparator(menuItem) || !isSeparator(menuItems[i - 1]);
   });
 
-  return Arr.filter(menuItems2, function (menuItem, i, menuItems) {
-    return !isSeparator(menuItem) || i > 0 && i < menuItems.length - 1;
+  return Arr.filter(menuItems2, function (menuItem, i) {
+    return !isSeparator(menuItem) || i > 0 && i < menuItems2.length - 1;
   });
 };
 

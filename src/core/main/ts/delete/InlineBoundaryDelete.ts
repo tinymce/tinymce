@@ -32,17 +32,18 @@ const rangeFromPositions = function (from, to) {
 
 // Checks for delete at <code>|a</code> when there is only one item left except the zwsp caret container nodes
 const hasOnlyTwoOrLessPositionsLeft = function (elm) {
-  return Options.liftN([
+  return Options.lift2(
     CaretFinder.firstPositionIn(elm),
-    CaretFinder.lastPositionIn(elm)
-  ], function (firstPos, lastPos) {
-    const normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
-    const normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
+    CaretFinder.lastPositionIn(elm),
+    function (firstPos, lastPos) {
+      const normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
+      const normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
 
-    return CaretFinder.nextPosition(elm, normalizedFirstPos).map(function (pos) {
-      return pos.isEqual(normalizedLastPos);
-    }).getOr(true);
-  }).getOr(true);
+      return CaretFinder.nextPosition(elm, normalizedFirstPos).map(function (pos) {
+        return pos.isEqual(normalizedLastPos);
+      }).getOr(true);
+    }
+  ).getOr(true);
 };
 
 const setCaretLocation = function (editor, caret) {

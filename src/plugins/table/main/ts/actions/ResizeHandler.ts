@@ -15,18 +15,18 @@ import { hasTableResizeBars, hasObjectResizing } from '../api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 import * as Util from '../alien/Util';
-import { Node, HTMLTableElement, HTMLTableCellElement, HTMLTableRowElement } from '@ephox/dom-globals';
+import { Node, HTMLTableElement, HTMLTableCellElement, HTMLTableRowElement, Range } from '@ephox/dom-globals';
 
 export interface ResizeHandler {
-  lazyResize: () => Option<any>;
+  lazyResize: () => Option<TableResize>;
   lazyWire: () => any;
   destroy: () => void;
 }
 
 export const ResizeHandler = function (editor: Editor): ResizeHandler {
-  let selectionRng = Option.none();
-  let resize = Option.none();
-  let wire = Option.none();
+  let selectionRng = Option.none<Range>();
+  let resize = Option.none<TableResize>();
+  let wire = Option.none<ResizeWire>();
   const percentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
   let startW, startRawW;
 
@@ -61,7 +61,7 @@ export const ResizeHandler = function (editor: Editor): ResizeHandler {
     const rawWire = TableWire.get(editor);
     wire = Option.some(rawWire);
     if (hasObjectResizing(editor) && hasTableResizeBars(editor)) {
-      const sz = TableResize(rawWire, direction);
+      const sz = TableResize.create(rawWire, direction);
       sz.on();
       sz.events.startDrag.bind(function (event) {
         selectionRng = Option.some(editor.selection.getRng());

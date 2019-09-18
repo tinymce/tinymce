@@ -7,7 +7,12 @@
 
 import { Adt, Arr, Fun, Option, Options, Struct } from '@ephox/katamari';
 import { Compare, Element, SelectorFilter, SelectorFind } from '@ephox/sugar';
-import { Range } from '@ephox/dom-globals';
+import { Element as DomElement, Range } from '@ephox/dom-globals';
+
+interface TableCellRng {
+  start: () => Element<DomElement>;
+  end: () => Element<DomElement>;
+}
 
 const tableCellRng = Struct.immutable('start', 'end');
 const tableSelection = Struct.immutable('rng', 'table', 'cells');
@@ -46,11 +51,11 @@ const getCellRangeFromStartTable = (cellRng: any, isRoot) => getClosestTable(cel
   return Arr.last(getTableCells(table)).map((endCell) => tableCellRng(cellRng.start(), endCell));
 });
 
-const partialSelection = (isRoot, rng) => {
+const partialSelection = (isRoot: (e: Element) => boolean, rng: Range): Option<TableCellRng> => {
   const startCell = getClosestCell(rng.startContainer, isRoot);
   const endCell = getClosestCell(rng.endContainer, isRoot);
 
-  return rng.collapsed ? Option.none() : Options.liftN([startCell, endCell], tableCellRng).fold(
+  return rng.collapsed ? Option.none() : Options.lift2(startCell, endCell, tableCellRng).fold(
     () => startCell.fold(
       () => endCell.bind((endCell) => getClosestTable(endCell, isRoot).bind((table) => {
         return Arr.head(getTableCells(table)).map((startCell) => tableCellRng(startCell, endCell));
@@ -69,7 +74,7 @@ const getCellRng = (rng: Range, isRoot) => {
   const startCell = getClosestCell(rng.startContainer, isRoot);
   const endCell = getClosestCell(rng.endContainer, isRoot);
 
-  return Options.liftN([startCell, endCell], tableCellRng)
+  return Options.lift2(startCell, endCell, tableCellRng)
     .filter(isExpandedCellRng)
     .filter((cellRng) => isWithinSameTable(isRoot, cellRng))
     .orThunk(() => partialSelection(isRoot, rng));
@@ -89,12 +94,10 @@ const getCellIndex = (cells, cell) => {
 };
 
 const getSelectedCells = (tableSelection) => {
-  return Options.liftN([
+  return Options.lift2(
     getCellIndex(tableSelection.cells(), tableSelection.rng().start()),
-    getCellIndex(tableSelection.cells(), tableSelection.rng().end())
-  ], (startIndex, endIndex) => {
-    return tableSelection.cells().slice(startIndex, endIndex + 1);
-  });
+    getCellIndex(tableSelection.cells(), tableSelection.rng().end()),
+    (startIndex, endIndex) => tableSelection.cells().slice(startIndex, endIndex + 1));
 };
 
 const getAction = (tableSelection) => {

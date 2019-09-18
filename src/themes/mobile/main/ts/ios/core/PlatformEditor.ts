@@ -6,7 +6,7 @@
  */
 
 import { Fun, Option } from '@ephox/katamari';
-import { Compare, DomEvent, Element, WindowSelection } from '@ephox/sugar';
+import { Compare, DomEvent, Element, StructRect, WindowSelection } from '@ephox/sugar';
 
 const getBodyFromFrame = function (frame) {
   return Option.some(Element.fromDom(frame.dom().contentWindow.document.body));
@@ -71,7 +71,7 @@ const getActiveApi = function (editor) {
       return Compare.eq(sel.start(), sel.finish()) && sel.soffset() === sel.foffset();
     };
 
-    const toStartRect = function (sel) {
+    const toStartRect = function (sel): Option<StructRect> {
       const rect = sel.start().dom().getBoundingClientRect();
       return rect.width > 0 || rect.height > 0 ? Option.some(rect).map(toRect) : Option.none();
     };

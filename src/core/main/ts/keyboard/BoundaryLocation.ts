@@ -134,17 +134,18 @@ const isEq = function (location1, location2) {
 };
 
 const betweenInlines = function (forward, isInlineTarget, rootNode, from, to, location) {
-  return Options.liftN([
+  return Options.lift2(
     InlineUtils.findRootInline(isInlineTarget, rootNode, from),
-    InlineUtils.findRootInline(isInlineTarget, rootNode, to)
-  ], function (fromInline, toInline) {
-    if (fromInline !== toInline && InlineUtils.hasSameParentBlock(rootNode, fromInline, toInline)) {
-      // Force after since some browsers normalize and lean left into the closest inline
-      return Location.after(forward ? fromInline : toInline);
-    } else {
-      return location;
+    InlineUtils.findRootInline(isInlineTarget, rootNode, to),
+    function (fromInline, toInline) {
+      if (fromInline !== toInline && InlineUtils.hasSameParentBlock(rootNode, fromInline, toInline)) {
+        // Force after since some browsers normalize and lean left into the closest inline
+        return Location.after(forward ? fromInline : toInline);
+      } else {
+        return location;
+      }
     }
-  }).getOr(location);
+  ).getOr(location);
 };
 
 const skipNoMovement = function (fromLocation, toLocation) {
