@@ -37,3 +37,11 @@ UnitTest.test('Options.sequence - property tests', () => {
     return Jsc.eq(true, Options.sequence<number>([Option.none<number>(), ...someNumbers]).isNone());
   });
 });
+
+UnitTest.test('Options.sequence - sequence-map-some is traverse-some', () => {
+  Jsc.property('all some', 'array number', (n: number[]) =>
+    Jsc.eq(
+      Options.traverse<number, number>(n, (x) => Option.some(x)).getOrDie(),
+      Options.sequence<number>(Arr.map(n, (x) => Option.some(x))).getOrDie())
+  );
+});

@@ -33,7 +33,7 @@ const singleWithUrl = (img: Blob, objurl: string) => {
 
 const multiple = (imgs: Blob[]): Future<ImageAssetAdt[]> => {
   // edge case: where a drop of a non-file takes place
-  return Futures.mapM(imgs, single);
+  return Futures.traverse(imgs, single);
 };
 
 export { multiple, single, singleWithUrl };
