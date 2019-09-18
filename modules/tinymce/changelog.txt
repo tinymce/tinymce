@@ -1,5 +1,4 @@
 Version 5.0.16 (TBD)
-    Added `inputMode` config field to specify inputmode attribute of `input` dialog components #TINY-4062
     Added new `referrer_policy` setting to add the `referrerpolicy` attribute when loading scripts or stylesheets #TINY-3978
     Added a slight background color to dialog tab links when focused to aid keyboard navigation #TINY-3877
     Fixed media poster value not updating on change #TINY-4013
