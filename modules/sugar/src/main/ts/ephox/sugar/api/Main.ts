@@ -66,7 +66,7 @@ import * as Platform from './view/Platform';
 import { Position } from './view/Position';
 import * as Scroll from './view/Scroll';
 import * as Visibility from './view/Visibility';
-import * as VisiualViewport from './view/VisiualViewport';
+import * as VisualViewport from './view/VisualViewport';
 import * as Width from './view/Width';
 import * as SelectionDirection from '../selection/core/SelectionDirection'; // Used directly by dawin
 import { StructRect, RawRect, Rect } from './selection/Rect';
@@ -143,7 +143,7 @@ export {
   Position,
   Scroll,
   Visibility,
-  VisiualViewport,
+  VisualViewport,
   Width,
   SelectionDirection,
   StructRect,
