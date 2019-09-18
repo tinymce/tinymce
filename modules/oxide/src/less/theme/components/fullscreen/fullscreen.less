@@ -32,3 +32,23 @@
     z-index: @z-index-fullscreen + 1;
   }
 }
+
+body.tox-fullscreen,
+html.tox-fullscreen {
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  min-height: 100%;
+  overflow: hidden;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+div.tox-edit-area {
+  position: absolute;
+}
+
+html {
+  background-color: red;
+}

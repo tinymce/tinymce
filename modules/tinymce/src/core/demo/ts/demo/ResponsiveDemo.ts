@@ -1,4 +1,5 @@
-import { Element } from '@ephox/sugar';
+import { Element, Css } from '@ephox/sugar';
+import { console, window, document } from '@ephox/dom-globals';
 
 declare let tinymce: any;
 
@@ -92,7 +93,7 @@ export default function () {
         'searchreplace visualblocks code fullscreen',
         'insertdatetime media table contextmenu paste'
       ],
-      toolbar: 'bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image insertfile undo redo | styleselect'
+      toolbar: 'fullscreen bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image insertfile undo redo | styleselect'
     },
     setup (ed) {
       makeSidebar(ed, 'sidebar1', 'green', 200);
@@ -135,7 +136,7 @@ export default function () {
     //     name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ]
     //   },
     //   {
-    //     name: 'indentation', items: [ 'outdent', 'indent' ]
+    //     name: 'indentatπion', items: [ 'outdent', 'indent' ]
     //   },
     //   {
     //     name: 'permanent pen', items: [ 'permanentpen' ]
@@ -145,7 +146,75 @@ export default function () {
     //   }
     // ],
     toolbar_drawer: 'sliding',
-    emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js'
+    emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js',
+    init_instance_callback: (editor) => {
+
+      const touchdirection = (editor) => {
+        // Load this when touch device is detected
+        const start = { x: 0, y: 0 };
+
+        editor.on('touchstart', (e) => {
+          start.x = e.touches[0].pageX;
+          start.y = e.touches[0].pageY;
+
+          // editor.on('touchend', () => {
+          //   // todo bind a visual viewport refresh here to fix glitch
+          // });
+        });
+
+        editor.on('touchmove', (e) => {
+          const delta = { x: 0 , y: 0 };
+
+          delta.x = start.x - e.touches[0].pageX;
+          delta.y = start.y - e.touches[0].pageY;
+
+          const vertical = delta.y > 0;
+          const horizontal = delta.x > 0;
+
+          editor.fire(vertical ? 'swipeup' : 'swipedown');
+          editor.fire(horizontal ? 'swipeleft' : 'swiperight');
+        });
+      };
+
+      const bod = Element.fromDom(document.body);
+      Css.setAll(bod, {
+        padding: '0',
+        margin: '0'
+      });
+
+      touchdirection(editor);
+
+      editor.on('swipeup', (e) => {
+
+        // console.log(window.document.body.scrollTop, window.document.body.scrollHeight);
+        // console.log(window.document.documentElement.scrollTop , window.document.documentElement.scrollHeight);
+        window.requestAnimationFrame(() => {
+            console.log('down', window.document.documentElement.scrollTop, window.document.body.scrollTop);
+
+            /* tslint:disable-next-line:no-string-literal */
+            const visualViewport = window['visualViewport'];
+            const bodyRect = window.document.body.getClientRects();
+
+            if (window.document.body.scrollTop === window.document.body.scrollHeight - bodyRect[0].height) {
+              console.log('noop');
+            } else {
+              console.log('reset');
+              window.document.body.scrollTop = window.document.body.scrollHeight;
+
+              // we don't scroll to the very end of the <html>, theres room in their for rubber band
+              window.document.documentElement.scrollTop = window.document.documentElement.scrollHeight - visualViewport.height;
+            }
+        });
+
+      });
+
+      editor.on('swipedown', (e) => {
+        window.document.documentElement.scrollTop = 1;
+        window.document.body.scrollTop = 0;
+        console.log('up', window.document.documentElement.scrollTop, window.document.body.scrollTop);
+      });
+
+    }
   };
 
   tinymce.init(settings);

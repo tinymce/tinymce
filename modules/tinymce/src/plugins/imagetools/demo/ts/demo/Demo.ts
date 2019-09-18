@@ -31,6 +31,9 @@ tinymce.init({
 
   selector: 'textarea.tinymce',
   theme: 'silver',
+  mobile: {
+    theme: 'silver'
+  },
   skin_url: '../../../../../js/tinymce/skins/ui/oxide',
   plugins: 'image imagetools code',
   add_unload_trigger: false,
