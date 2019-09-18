@@ -17,6 +17,9 @@ UnitTest.asynctest('Editor with sticky toolbar', (success, failure) => {
         const forceScrollDiv = StickyUtils.createScrollDiv();
         Pipeline.async({}, [
           tinyApis.sFocus,
+          // Need to wait for a fraction for some reason on safari,
+          // otherwise the initial scrolling doesn't work
+          Step.wait(100),
           Step.label('Setup page for scrolling', StickyUtils.sSetupScrolling(forceScrollDiv)),
           Step.label('Checking startup structure', StickyUtils.sAssertEditorContainer(StickyUtils.expectedInFullView)),
           Step.label('Checking scroll event listeners are bound, scroll by 1px then assert', StickyUtils.sScrollAndAssertStructure(1, StickyUtils.expectedScrollEventBound)),
