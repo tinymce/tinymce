@@ -71,7 +71,6 @@ export default () => {
   const inputSpec = renderInput({
     name: 'input',
     label: Option.some('Beta'),
-    inputMode: Option.none(),
     placeholder: Option.none(),
     maximized: false,
     disabled: false
@@ -109,7 +108,6 @@ export default () => {
       }, sharedBackstage.providers) as any,
       renderInput({
         label: Option.some('Sample input'),
-        inputMode: Option.none(),
         placeholder: Option.none(),
         name: 'exampleinputfieldname',
         maximized: false,
@@ -146,7 +144,6 @@ export default () => {
           }, sharedBackstage.providers) as any,
           renderInput({
             label: Option.some('Sample input'),
-            inputMode: Option.none(),
             placeholder: Option.none(),
             name: 'exampleinputfieldname',
             maximized: false,
