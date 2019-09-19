@@ -7,19 +7,19 @@
 
 import { document, window } from '@ephox/dom-globals';
 import { Fun, Singleton } from '@ephox/katamari';
-import { Css, Element } from '@ephox/sugar';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { Css, Element, VisualViewport } from '@ephox/sugar';
 import Events from '../api/Events';
 import { PlatformDetection } from '@ephox/sand';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 const DOM = DOMUtils.DOM;
 
 const getScrollPos = function () {
-  const vp = DOM.getViewPort();
+  const vp = VisualViewport.getBounds(window);
 
   return {
-    x: vp.x,
-    y: vp.y
+    x: vp.x(),
+    y: vp.y()
   };
 };
 
