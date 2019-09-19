@@ -1,4 +1,4 @@
-import { Window } from '@ephox/dom-globals';
+import { Window, window } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import Element from '../node/Element';
 import * as Scroll from './Scroll';
@@ -23,7 +23,8 @@ const bounds = (x: number, y: number, width: number, height: number): Bounds => 
   };
 };
 
-const getBounds = (win: Window) => {
+const getBounds = (_win?: Window): Bounds => {
+  const win = _win === undefined ? window : _win;
   /* tslint:disable-next-line:no-string-literal */
   const visualViewport = win['visualViewport'];
   if (visualViewport !== undefined) {
