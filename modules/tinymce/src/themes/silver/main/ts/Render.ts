@@ -136,8 +136,16 @@ const setup = (editor: Editor): RenderInfo => {
     return memAnchorBar.getOpt(container);
   }).getOrDie('Could not find a anchor bar element');
 
+  let savedLazyButton = null;
   const lazyMoreButton = () => lazyOuterContainer.bind((container) => {
-    return OuterContainer.getMoreButton(container);
+    const lazyButton = OuterContainer.getMoreButton(container);
+    try{
+      lazyButton.getOrDie()
+      savedLazyButton = lazyButton;
+    }
+    finally{
+      return savedLazyButton;  
+    }
   }).getOrDie('Could not find more button element');
 
   const lazyToolbar = () => lazyOuterContainer.bind((container) => {
