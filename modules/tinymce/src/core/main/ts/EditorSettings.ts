@@ -36,7 +36,6 @@ const defaultMobileSettings = {
   menubar: false,
   table_grid: false,
   object_resizing: false,
-  table_resize_bars: false,
   resize: false
 };
 
