@@ -5,17 +5,15 @@ import * as Fields from '../../data/Fields';
 import * as Bubble from '../layout/Bubble';
 import * as Layout from '../layout/Layout';
 import * as Origins from '../layout/Origins';
-import { nu as NuAnchor, HotspotAnchor } from './Anchoring';
+import { nu as NuAnchor, HotspotAnchor, Anchoring } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-const belowAbove = () => [ Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.south, Layout.north ];
-const belowAboveRtl = () => [ Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.south, Layout.north ];
-
-const placement = (component, anchorInfo: HotspotAnchor, origin) => {
+const placement = (component: AlloyComponent, anchorInfo: HotspotAnchor, origin: Origins.OriginAdt): Option<Anchoring> => {
   const hotspot = anchorInfo.hotspot;
   const anchorBox = Origins.toBox(origin, hotspot.element());
 
-  const layouts = AnchorLayouts.get(component.element(), anchorInfo, belowAbove(), belowAboveRtl());
+  const layouts = AnchorLayouts.get(component.element(), anchorInfo, Layout.belowOrAbove(), Layout.belowOrAboveRtl());
 
   return Option.some(
     NuAnchor({
