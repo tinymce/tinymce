@@ -903,8 +903,8 @@ class Editor implements EditorObservable {
   }
 
   /**
-   * Returns the editors container element. The container element wrappes in
-   * all the elements added to the page for the editor. Such as UI, iframe etc.
+   * Returns the container element of the editor. The container element includes
+   * all the elements added to the page for the editor. Such as UI, iframe, etc.
    *
    * @method getContainer
    * @return {Element} HTML DOM element for the editor container.
@@ -920,7 +920,7 @@ class Editor implements EditorObservable {
   }
 
   /**
-   * Returns the editors content area container element. The this element is the one who
+   * Returns the content area container element of the editor. This element
    * holds the iframe or the editable element.
    *
    * @method getContentAreaContainer
