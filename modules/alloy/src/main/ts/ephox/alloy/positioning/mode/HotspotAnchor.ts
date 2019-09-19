@@ -7,7 +7,7 @@ import * as Layout from '../layout/Layout';
 import * as Origins from '../layout/Origins';
 import { nu as NuAnchor, HotspotAnchor, Anchoring } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const placement = (component: AlloyComponent, anchorInfo: HotspotAnchor, origin: Origins.OriginAdt): Option<Anchoring> => {
   const hotspot = anchorInfo.hotspot;
