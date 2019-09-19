@@ -31,9 +31,10 @@ const getBounds = (_win?: Window): Bounds => {
     return bounds(visualViewport.pageLeft, visualViewport.pageTop, visualViewport.width, visualViewport.height);
   } else {
     const doc = Element.fromDom(win.document);
+    const html = win.document.documentElement;
     const scroll = Scroll.get(doc);
-    const width = win.innerWidth;
-    const height = win.innerHeight;
+    const width = html.clientWidth;
+    const height = html.clientHeight;
     return bounds(scroll.left(), scroll.top(), width, height);
   }
 };
