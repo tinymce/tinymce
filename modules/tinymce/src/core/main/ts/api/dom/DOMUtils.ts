@@ -22,6 +22,7 @@ import DomQuery, { DomQueryConstructor } from './DomQuery';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
 import TreeWalker from './TreeWalker';
+import { VisualViewport } from '@ephox/sugar';
 
 /**
  * Utility class for various DOM manipulation and retrieval functions.
@@ -418,16 +419,14 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   };
 
   const getViewPort = (argWin?: Window): GeomRect => {
-    const actWin = !argWin ? win : argWin;
-    const doc = actWin.document;
-    const rootElm = boxModel ? doc.documentElement : doc.body;
+    const vp = VisualViewport.getBounds(argWin);
 
     // Returns viewport size excluding scrollbars
     return {
-      x: actWin.pageXOffset || rootElm.scrollLeft,
-      y: actWin.pageYOffset || rootElm.scrollTop,
-      w: actWin.innerWidth || rootElm.clientWidth,
-      h: actWin.innerHeight || rootElm.clientHeight
+      x: vp.x(),
+      y: vp.y(),
+      w: vp.width(),
+      h: vp.height()
     };
   };
 

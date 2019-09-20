@@ -7,19 +7,19 @@
 
 import { document, window } from '@ephox/dom-globals';
 import { Fun, Singleton } from '@ephox/katamari';
-import { Css, Element } from '@ephox/sugar';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { Css, Element, VisualViewport } from '@ephox/sugar';
 import Events from '../api/Events';
 import { PlatformDetection } from '@ephox/sand';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 const DOM = DOMUtils.DOM;
 
 const getScrollPos = function () {
-  const vp = DOM.getViewPort();
+  const vp = VisualViewport.getBounds(window);
 
   return {
-    x: vp.x,
-    y: vp.y
+    x: vp.x(),
+    y: vp.y()
   };
 };
 
@@ -27,20 +27,8 @@ const setScrollPos = function (pos) {
   window.scrollTo(pos.x, pos.y);
 };
 
-// Experimental support for visual viewport
-type VisualViewport = {
-  offsetLeft: number,
-  offsetTop: number,
-  pageLeft: number,
-  pageTop: number,
-  width: number,
-  height: number,
-  scale: number,
-  addEventListener: (event: string, handler: () => void) => void,
-  removeEventListener: (event: string, handler: () => void) => void
-};
 /* tslint:disable-next-line:no-string-literal */
-const visualViewport: VisualViewport = window['visualViewport'];
+const visualViewport: VisualViewport.VisualViewport = window['visualViewport'];
 
 // Experiment is for ipadOS 13 only at this stage. Chrome supports this on desktop, and ipadOS cannot be UA detected, so restrict to Safari.
 const isSafari = PlatformDetection.detect().browser.isSafari();

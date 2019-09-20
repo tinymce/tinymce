@@ -79,13 +79,11 @@ const west: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: 
   return NuSpotInfo(westEdgeX(anchor, element), centreY(anchor, element), bubbles.west(), Direction.west(), 'layout-w');
 };
 
-const all = (): AnchorLayout[] => {
-  return [ southeast, southwest, northeast, northwest, south, north, east, west ];
-};
+const all = (): AnchorLayout[] => [ southeast, southwest, northeast, northwest, south, north, east, west ];
+const allRtl = (): AnchorLayout[] => [ southwest, southeast, northwest, northeast, south, north, east, west ];
 
-const allRtl = (): AnchorLayout[] => {
-  return [ southwest, southeast, northwest, northeast, south, north, east, west ];
-};
+const belowOrAbove = (): AnchorLayout[] => [ southeast, southwest, northeast, northwest, south, north ];
+const belowOrAboveRtl = (): AnchorLayout[] => [ southwest, southeast, northwest, northeast, south, north ];
 
 export {
   southeast,
@@ -97,5 +95,7 @@ export {
   east,
   west,
   all,
-  allRtl
+  allRtl,
+  belowOrAbove,
+  belowOrAboveRtl
 };

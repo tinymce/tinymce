@@ -24,17 +24,17 @@ import {
 } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { ClientRect, Element as DomElement } from '@ephox/dom-globals';
+import { ClientRect, Element as DomElement, window } from '@ephox/dom-globals';
 import { Cell, Id, Merger, Option, Result, Thunk } from '@ephox/katamari';
-import { Css, Element, Focus, Scroll, SelectorFind, Traverse } from '@ephox/sugar';
+import { Css, Element, Focus, Scroll, SelectorFind, Traverse, VisualViewport } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { showContextToolbarEvent } from './ui/context/ContextEditorEvents';
 import { ContextForm } from './ui/context/ContextForm';
 import { forwardSlideEvent, renderContextToolbar } from './ui/context/ContextUi';
-import * as ToolbarBounds from './ui/context/ToolbarBounds';
-import ToolbarLookup from './ui/context/ToolbarLookup';
-import ToolbarScopes, { ScopedToolbars } from './ui/context/ToolbarScopes';
+import * as ContextToolbarBounds from './ui/context/ContextToolbarBounds';
+import ToolbarLookup from './ui/context/ContextToolbarLookup';
+import ToolbarScopes, { ScopedToolbars } from './ui/context/ContextToolbarScopes';
 import { renderToolbar } from './ui/toolbar/CommonToolbar';
 import { identifyButtons } from './ui/toolbar/Integration';
 import * as Settings from './api/Settings';
@@ -53,16 +53,16 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   const toolbarOrMenubarEnabled = Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
 
   const getBounds = () => {
-    const scroll = Scroll.get();
+    const viewportBounds = VisualViewport.getBounds(window);
     const contentAreaBox = Boxes.box(Element.fromDom(editor.getContentAreaContainer()));
 
     // Create a bounds that lets the context toolbar overflow outside the content area, but remains in the viewport
     if (editor.inline && !toolbarOrMenubarEnabled) {
-      return Option.some(ToolbarBounds.getDistractionFreeBounds(editor, scroll, contentAreaBox));
+      return Option.some(ContextToolbarBounds.getDistractionFreeBounds(editor, contentAreaBox, viewportBounds));
     } else if (editor.inline) {
-      return Option.some(ToolbarBounds.getInlineBounds(editor, scroll, contentAreaBox));
+      return Option.some(ContextToolbarBounds.getInlineBounds(editor, contentAreaBox, viewportBounds));
     } else {
-      return Option.some(ToolbarBounds.getIframeBounds(editor, scroll, contentAreaBox));
+      return Option.some(ContextToolbarBounds.getIframeBounds(editor, contentAreaBox, viewportBounds));
     }
   };
 

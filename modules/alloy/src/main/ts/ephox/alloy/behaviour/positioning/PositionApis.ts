@@ -1,7 +1,7 @@
 import { ValueSchema } from '@ephox/boulder';
-import { document } from '@ephox/dom-globals';
+import { window } from '@ephox/dom-globals';
 import { Adt, Fun, Option } from '@ephox/katamari';
-import { Css, Element, Location } from '@ephox/sugar';
+import { Css, Element, Location, VisualViewport } from '@ephox/sugar';
 
 import * as AriaFocus from '../../alien/AriaFocus';
 import { Bounds, box } from '../../alien/Boxes';
@@ -17,10 +17,8 @@ import { PositioningConfig } from './PositioningTypes';
 export interface OriginAdt extends Adt { }
 
 const getFixedOrigin = (): OriginAdt => {
-  // Don't use window.innerWidth/innerHeight here, as we don't want to include scrollbars
-  // since the right/bottom position is based on the edge of the scrollbar not the window
-  const html = document.documentElement;
-  return Origins.fixed(0, 0, html.clientWidth, html.clientHeight);
+  const bounds = VisualViewport.getBounds(window);
+  return Origins.fixed(0, 0, bounds.width(), bounds.height());
 };
 
 const getRelativeOrigin = (component: AlloyComponent): OriginAdt => {
