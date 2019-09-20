@@ -65,7 +65,6 @@
   },
   "resolutions": {
     "@ephox/sand": "^2.0.0",
-    "@ephox/katamari": "^4.0.0",
-    "webdriver": "5.11.10"
+    "@ephox/katamari": "^4.0.0"
   }
 }
