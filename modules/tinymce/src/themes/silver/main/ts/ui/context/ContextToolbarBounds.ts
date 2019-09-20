@@ -41,17 +41,20 @@ const getInlineBounds = (editor: Editor, contentAreaBox: Bounds, viewportBounds:
   const header = SelectorFind.descendant(container, '.tox-editor-header').getOr(container);
   const headerBox = Boxes.box(header);
 
+  const vpHeight = viewportBounds.height();
+  const vpTop = viewportBounds.y();
+
   // Fixed toolbar container allows the toolbar to be above or below
   // so we need to constrain the overflow based on that
   if (headerBox.y() >= contentAreaBox.bottom()) {
     // Toolbar is below, so allow overflowing the top
-    const bottom = Math.min(viewportBounds.height() + viewportBounds.y(), headerBox.y());
-    const height = bottom - viewportBounds.y();
-    return Boxes.bounds(x, viewportBounds.y(), width, height);
+    const bottom = Math.min(vpHeight + vpTop, headerBox.y());
+    const height = bottom - vpTop;
+    return Boxes.bounds(x, vpTop, width, height);
   } else {
     // Toolbar is above, so allow overflowing the bottom
-    const y = Math.max(viewportBounds.y(), headerBox.bottom());
-    const height = viewportBounds.height() - (y - viewportBounds.y());
+    const y = Math.max(vpTop, headerBox.bottom());
+    const height = vpHeight - (y - vpTop);
     return Boxes.bounds(x, y, width, height);
   }
 };

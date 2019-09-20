@@ -12,6 +12,19 @@ export interface Bounds {
   bottom: () => number;
 }
 
+// Experimental support for visual viewport
+type VisualViewport = {
+  offsetLeft: number,
+  offsetTop: number,
+  pageLeft: number,
+  pageTop: number,
+  width: number,
+  height: number,
+  scale: number,
+  addEventListener: (event: string, handler: () => void) => void,
+  removeEventListener: (event: string, handler: () => void) => void
+};
+
 const bounds = (x: number, y: number, width: number, height: number): Bounds => {
   return {
     x: Fun.constant(x),
@@ -33,6 +46,8 @@ const getBounds = (_win?: Window): Bounds => {
     const doc = Element.fromDom(win.document);
     const html = win.document.documentElement;
     const scroll = Scroll.get(doc);
+    // Don't use window.innerWidth/innerHeight here, as we don't want to include scrollbars
+    // since the right/bottom position is based on the edge of the scrollbar not the window
     const width = html.clientWidth;
     const height = html.clientHeight;
     return bounds(scroll.left(), scroll.top(), width, height);
@@ -40,5 +55,6 @@ const getBounds = (_win?: Window): Bounds => {
 };
 
 export {
-  getBounds
+  getBounds,
+  VisualViewport
 };

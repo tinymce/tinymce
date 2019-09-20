@@ -27,20 +27,8 @@ const setScrollPos = function (pos) {
   window.scrollTo(pos.x, pos.y);
 };
 
-// Experimental support for visual viewport
-type VisualViewport = {
-  offsetLeft: number,
-  offsetTop: number,
-  pageLeft: number,
-  pageTop: number,
-  width: number,
-  height: number,
-  scale: number,
-  addEventListener: (event: string, handler: () => void) => void,
-  removeEventListener: (event: string, handler: () => void) => void
-};
 /* tslint:disable-next-line:no-string-literal */
-const visualViewport: VisualViewport = window['visualViewport'];
+const visualViewport: VisualViewport.VisualViewport = window['visualViewport'];
 
 // Experiment is for ipadOS 13 only at this stage. Chrome supports this on desktop, and ipadOS cannot be UA detected, so restrict to Safari.
 const isSafari = PlatformDetection.detect().browser.isSafari();
