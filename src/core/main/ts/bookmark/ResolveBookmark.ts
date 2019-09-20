@@ -19,9 +19,9 @@ import CaretFinder from 'tinymce/core/caret/CaretFinder';
 import { isPathBookmark, isStringPathBookmark, isIdBookmark, isIndexBookmark, isRangeBookmark, PathBookmark, IdBookmark, Bookmark, IndexBookmark } from './BookmarkTypes';
 import { HTMLElement, Node, Element, Range, Text } from '@ephox/dom-globals';
 
-const addBogus = (dom: DOMUtils, node: HTMLElement) => {
+const addBogus = (dom: DOMUtils, node: Node) => {
   // Adds a bogus BR element for empty block elements
-  if (dom.isBlock(node) && !node.innerHTML && !Env.ie) {
+  if (NodeType.isElement(node) && dom.isBlock(node) && !node.innerHTML && !Env.ie) {
     node.innerHTML = '<br data-mce-bogus="1" />';
   }
 
@@ -122,7 +122,7 @@ const setEndPoint = (dom: DOMUtils, start: boolean, bookmark: PathBookmark, rng:
 
 const isValidTextNode = (node: Node): node is Text => NodeType.isText(node) && node.data.length > 0;
 
-const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark: IdBookmark) => {
+const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark: IdBookmark): Option<CaretPosition> => {
   let marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev;
   const keep = bookmark.keep;
   let container, offset;
@@ -229,15 +229,16 @@ const resolveId = (dom: DOMUtils, bookmark: IdBookmark) => {
   const startPos = restoreEndPoint(dom, 'start', bookmark);
   const endPos = restoreEndPoint(dom, 'end', bookmark);
 
-  return Options.liftN([
+  return Options.lift2(
     startPos,
-    alt(endPos, startPos)
-  ], (spos, epos) => {
-    const rng = dom.createRng();
-    rng.setStart(addBogus(dom, spos.container()), spos.offset());
-    rng.setEnd(addBogus(dom, epos.container()), epos.offset());
-    return rng;
-  });
+    alt(endPos, startPos),
+    (spos, epos) => {
+      const rng = dom.createRng();
+      rng.setStart(addBogus(dom, spos.container()), spos.offset());
+      rng.setEnd(addBogus(dom, epos.container()), epos.offset());
+      return rng;
+    }
+  );
 };
 
 const resolveIndex = (dom: DOMUtils, bookmark: IndexBookmark) => {

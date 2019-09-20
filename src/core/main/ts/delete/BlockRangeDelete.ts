@@ -17,22 +17,23 @@ import { Selection } from '../api/dom/Selection';
 const deleteRangeMergeBlocks = function (rootNode, selection: Selection) {
   const rng = selection.getRng();
 
-  return Options.liftN([
+  return Options.lift2(
     DeleteUtils.getParentBlock(rootNode, Element.fromDom(rng.startContainer)),
-    DeleteUtils.getParentBlock(rootNode, Element.fromDom(rng.endContainer))
-  ], function (block1, block2) {
-    if (Compare.eq(block1, block2) === false) {
-      rng.deleteContents();
+    DeleteUtils.getParentBlock(rootNode, Element.fromDom(rng.endContainer)),
+    function (block1, block2) {
+      if (Compare.eq(block1, block2) === false) {
+        rng.deleteContents();
 
-      MergeBlocks.mergeBlocks(rootNode, true, block1, block2).each(function (pos) {
-        selection.setRng(pos.toRange());
-      });
+        MergeBlocks.mergeBlocks(rootNode, true, block1, block2).each(function (pos) {
+          selection.setRng(pos.toRange());
+        });
 
-      return true;
-    } else {
-      return false;
+        return true;
+      } else {
+        return false;
+      }
     }
-  }).getOr(false);
+  ).getOr(false);
 };
 
 const isRawNodeInTable = function (root, rawNode) {

@@ -21,13 +21,14 @@ import { getApi } from './api/Api';
 import { Cell, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import { KeyboardEvent } from '@ephox/dom-globals';
+import { Element } from '@ephox/sugar';
 
 function Plugin(editor: Editor) {
   const resizeHandler = ResizeHandler(editor);
   const cellSelection = CellSelection(editor, resizeHandler.lazyResize);
   const actions = TableActions(editor, resizeHandler.lazyWire);
   const selections = Selections(editor);
-  const clipboardRows = Cell(Option.none());
+  const clipboardRows = Cell(Option.none<Element[]>());
 
   Commands.registerCommands(editor, actions, cellSelection, selections, clipboardRows);
   Clipboard.registerEvents(editor, selections, actions, cellSelection);

@@ -60,7 +60,7 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
   const master = makeAnnotation(editor.getDoc(), data, annotationName, decorate);
 
   // Set the current wrapping element
-  const wrapper = Cell(Option.none());
+  const wrapper = Cell(Option.none<Element>());
 
   // Clear the current wrapping element, so that subsequent calls to
   // getOrOpenWrapper spawns a new one.

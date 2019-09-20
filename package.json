@@ -64,6 +64,7 @@
     "webpack-livereload-plugin": "^2.1.1"
   },
   "resolutions": {
-    "@ephox/sand": "^2.0.0"
+    "@ephox/sand": "^2.0.0",
+    "@ephox/katamari": "^4.0.0"
   }
 }

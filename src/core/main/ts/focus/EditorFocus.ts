@@ -23,7 +23,7 @@ const getContentEditableHost = (editor: Editor, node: Node) => {
   });
 };
 
-const getCollapsedNode = (rng: Range) => {
+const getCollapsedNode = (rng: Range): Option<Element> => {
   return rng.collapsed ? Option.from(RangeNodes.getNode(rng.startContainer, rng.startOffset)).map(Element.fromDom) : Option.none();
 };
 

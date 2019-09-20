@@ -134,7 +134,7 @@ const deleteNormalized = (elm: Element, afterDeletePosOpt: Option<CaretPosition>
 
   // Merge and normalize any prev/next text nodes, so that they are merged and don't lose meaningful whitespace
   // eg. <p>a <span></span> b</p> -> <p>a &nsbp;b</p> or <p><span></span> a</p> -> <p>&nbsp;a</a>
-  return Options.liftN([ prevTextOpt, nextTextOpt, afterDeletePosOpt ], (prev, next, pos) => {
+  return Options.lift3(prevTextOpt, nextTextOpt, afterDeletePosOpt, (prev, next, pos) => {
     const prevNode = prev.dom(), nextNode = next.dom();
     const offset = prevNode.data.length;
     MergeText.mergeTextNodes(prevNode, nextNode, normalizeWhitespace);

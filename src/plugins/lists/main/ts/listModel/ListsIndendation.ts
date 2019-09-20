@@ -43,10 +43,11 @@ const indentSelectedEntries = (entries: Entry[], indentation: Indentation): void
 const getItemSelection = (editor: Editor): Option<ItemSelection> => {
   const selectedListItems = Arr.map(Selection.getSelectedListItems(editor), Element.fromDom);
 
-  return Options.liftN([
+  return Options.lift2(
     Arr.find(selectedListItems, Fun.not(hasFirstChildList)),
-    Arr.find(Arr.reverse(selectedListItems), Fun.not(hasFirstChildList))
-  ], (start, end) => ({ start, end }));
+    Arr.find(Arr.reverse(selectedListItems), Fun.not(hasFirstChildList)),
+    (start, end) => ({ start, end })
+  );
 };
 
 const listsIndentation = (editor: Editor, lists: Element[], indentation: Indentation) => {

@@ -78,7 +78,7 @@ const navigateIgnore = (forward: boolean, root: Element, from: CaretPosition, ig
   });
 };
 
-const positionIn = (forward: boolean, element: Element): Option<CaretPosition> => {
+const positionIn = (forward: boolean, element: Node): Option<CaretPosition> => {
   const startNode = forward ? element.firstChild : element.lastChild;
   if (NodeType.isText(startNode)) {
     return Option.some(CaretPosition(startNode, forward ? 0 : startNode.data.length));

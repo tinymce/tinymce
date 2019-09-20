@@ -117,7 +117,8 @@ const hasNbsp = (pos: CaretPosition) => {
 };
 
 const normalizeNbspMiddle = (text: string): string => {
-  return Arr.map(text.split(''), (chr, i, chars) => {
+  const chars = text.split('');
+  return Arr.map(chars, (chr, i) => {
     if (isNbsp(chr) && i > 0 && i < chars.length - 1 && isContent(chars[i - 1]) && isContent(chars[i + 1])) {
       return ' ';
     } else {

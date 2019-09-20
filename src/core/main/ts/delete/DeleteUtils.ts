@@ -20,7 +20,7 @@ const isBeforeRoot = function (rootNode) {
 const getParentBlock = function (rootNode, elm) {
   return Compare.contains(rootNode, elm) ? PredicateFind.closest(elm, function (element) {
     return ElementType.isTextBlock(element) || ElementType.isListItem(element);
-  }, isBeforeRoot(rootNode)) : Option.none();
+  }, isBeforeRoot(rootNode)) : Option.none<Element>();
 };
 
 const placeCaretInEmptyBody = function (editor) {
@@ -37,24 +37,25 @@ const paddEmptyBody = function (editor) {
 };
 
 const willDeleteLastPositionInElement = function (forward, fromPos, elm) {
-  return Options.liftN([
+  return Options.lift2(
     CaretFinder.firstPositionIn(elm),
-    CaretFinder.lastPositionIn(elm)
-  ], function (firstPos, lastPos) {
-    const normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
-    const normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
-    const normalizedFromPos = InlineUtils.normalizePosition(false, fromPos);
+    CaretFinder.lastPositionIn(elm),
+    function (firstPos, lastPos) {
+      const normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
+      const normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
+      const normalizedFromPos = InlineUtils.normalizePosition(false, fromPos);
 
-    if (forward) {
-      return CaretFinder.nextPosition(elm, normalizedFromPos).map(function (nextPos) {
-        return nextPos.isEqual(normalizedLastPos) && fromPos.isEqual(normalizedFirstPos);
-      }).getOr(false);
-    } else {
-      return CaretFinder.prevPosition(elm, normalizedFromPos).map(function (prevPos) {
-        return prevPos.isEqual(normalizedFirstPos) && fromPos.isEqual(normalizedLastPos);
-      }).getOr(false);
+      if (forward) {
+        return CaretFinder.nextPosition(elm, normalizedFromPos).map(function (nextPos) {
+          return nextPos.isEqual(normalizedLastPos) && fromPos.isEqual(normalizedFirstPos);
+        }).getOr(false);
+      } else {
+        return CaretFinder.prevPosition(elm, normalizedFromPos).map(function (prevPos) {
+          return prevPos.isEqual(normalizedFirstPos) && fromPos.isEqual(normalizedLastPos);
+        }).getOr(false);
+      }
     }
-  }).getOr(true);
+  ).getOr(true);
 };
 
 export default {
