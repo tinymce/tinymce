@@ -52,6 +52,7 @@
 @dialog-body-link-active-text-decoration: none;
 
 @dialog-table-border-color: @border-color;
+@dialog-nav-focus-background-color: fade(@color-tint, 10%);
 
 // These get stacked on top of the global dialog z-index (1100)
 @z-index-dialogs-offset-wrap-background: 1;
@@ -199,6 +200,10 @@
     margin-bottom: @pad-sm;
     text-decoration: none;
     white-space: nowrap;
+
+    &:focus {
+      background-color: @dialog-nav-focus-background-color;
+    }
   }
 
   .tox-dialog__body-nav-item--active {

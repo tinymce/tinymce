@@ -1,4 +1,5 @@
 import { Option } from './Option';
+import * as Arr from './Arr';
 import * as Fun from './Fun';
 
 export const cat = <A>(arr: Option<A>[]): A[] => {
@@ -34,6 +35,13 @@ export const findMap = <A, B>(arr: ArrayLike<A>, f: (a: A, index: number) => Opt
   }
   return Option.none<B>();
 };
+
+/** Map each element of an array to an Option and collect the results.
+ *  If all results are "some", return Option.some of the results.
+ *  If any result is "none", return Option.none
+ */
+export const traverse = <A, B> (arr: ArrayLike<A>, f: (a: A) => Option<B>): Option<Array<B>> =>
+  sequence(Arr.map(arr, f));
 
 /*
 Notes on the lift functions:

@@ -1,7 +1,7 @@
 import { Chain, Guard, Mouse, NamedChain, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Option, Result } from '@ephox/katamari';
-import { Css, Position } from '@ephox/sugar';
+import { Css, Position, Scroll } from '@ephox/sugar';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -41,7 +41,10 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
             leftAttr: 'data-snap-left',
             topAttr: 'data-snap-top'
           },
-          getBounds: () => Boxes.bounds(0, 0, 500, 500)
+          getBounds: () => {
+            const scroll = Scroll.get();
+            return Boxes.bounds(scroll.left(), scroll.top(), 500, 500);
+          }
         })
       ])
     })
@@ -50,6 +53,12 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
+        dom: {
+          tag: 'div',
+          styles: {
+            'margin-bottom': '2000px'
+          }
+        },
         components: [
           subject.asSpec()
         ]
@@ -77,10 +86,10 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
       Chain.binder((all: any) => {
         const boundLeft = all.box_position4.left !== all.box_position5.left &&
           all.box_position5.left === all.box_position6_bound.left &&
-          all.box_position5.left === '0px';
+          all.box_position5.left === '0px' && all.box_position6_bound.top === '100px';
         const boundRight = all.box_position6_bound.left !== all.box_position7.left &&
           all.box_position7.left === all.box_position8_bound.left &&
-          all.box_position7.left === '400px';
+          all.box_position7.left === '400px' && all.box_position8_bound.top === '100px';
         return boundLeft && boundRight ? Result.value({}) :
           Result.error('Dragging should have been restricted to the bounds.\nPosition data: ' + JSON.stringify({
             1: all.box_position4,
@@ -90,18 +99,30 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
             5: all.box_position8_bound
           }, null, 2));
       }),
-      Guard.addLogging('Checking bounding behaviour at left of screen')
+      Guard.addLogging('Checking bounding behaviour at left and right of screen')
+    );
+    const cEnsureScrollBound = Chain.control(
+      Chain.binder((all: any) => {
+        const boundBottom = all.box_scrolled_position9.top === all.box_scrolled_position10_bound.top &&
+          all.box_scrolled_position9.top === '400px' && all.box_scrolled_position10_bound.left === '50px';
+        return boundBottom ? Result.value({}) :
+          Result.error('Dragging should have been restricted to the bounds.\nPosition data: ' + JSON.stringify({
+            1: all.box_scrolled_position9,
+            2: all.box_scrolled_position10_bound
+          }, null, 2));
+      }),
+      Guard.addLogging('Checking bounding behaviour at bottom of screen')
     );
     const cEnsurePinned = Chain.control(
       Chain.binder((all: any) => {
-        const pinned = all.box_position9.top !== all.box_position10_pinned.top &&
-          all.box_position10_pinned.top === all.box_position11_pinned.top &&
-          all.box_position10_pinned.top === '10px';
+        const pinned = all.box_position11.top !== all.box_position12_pinned.top &&
+          all.box_position12_pinned.top === all.box_position13_pinned.top &&
+          all.box_position12_pinned.top === '10px';
         return pinned ? Result.value({ }) : Result.error(
           'Box should only have been pinned at 2 and 3 at top: 10px. Positions: ' + JSON.stringify({
-            1: all.box_position9,
-            2: all.box_position10_pinned,
-            3: all.box_position11_pinned
+            1: all.box_position11,
+            2: all.box_position12_pinned,
+            3: all.box_position13_pinned
           }, null, 2)
         );
       }),
@@ -125,6 +146,10 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
         Guard.tryUntil('Waiting for position data to record')
       )
     ]);
+
+    const cScrollTo = (x: number, y: number) => Chain.op(() => {
+      Scroll.to(x, y);
+    });
 
     const cReset = Chain.fromChains([
       NamedChain.direct('blocker', Mouse.cMouseUp, '_'),
@@ -180,17 +205,30 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
           NamedChain.direct('box', cRecordPosition, 'box_position8_bound'),
           NamedChain.write('_', cEnsureBound),
 
+          // Test bounds when scrolled
+          cScrollTo(0, 1000),
+          cReset,
+
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 1100), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 1100), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 1400), '_'),
+          NamedChain.direct('box', cRecordPosition, 'box_scrolled_position9'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 1500), '_'),
+          NamedChain.direct('box', cRecordPosition, 'box_scrolled_position10_bound'),
+          NamedChain.write('_', cEnsureScrollBound),
+
+          cScrollTo(0, 0),
           cReset,
 
           // Test pinning.
           NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 100), '_'),
           NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 100), '_'),
           NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 60), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position9'),
+          NamedChain.direct('box', cRecordPosition, 'box_position11'),
           NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 30), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position10_pinned'),
+          NamedChain.direct('box', cRecordPosition, 'box_position12_pinned'),
           NamedChain.direct('blocker', Mouse.cMouseMoveTo(160, 20), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position11_pinned'),
+          NamedChain.direct('box', cRecordPosition, 'box_position13_pinned'),
           NamedChain.write('_', cEnsurePinned),
 
           Chain.wait(10),

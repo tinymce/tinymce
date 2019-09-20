@@ -28,6 +28,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed custom position bounds being ignored in fixed position mode.
 - Fixed incorrect right/bottom positioning in fixed mode when a scrollbar is visible.
 
+# [4.15.25] - 2019-09-18
+
+### Fixed
+
+- Fixed dragging being blocked when scrolled and not at the bottom of the viewport.
+
 # [4.15.2] - 2019-07-31
 
 ### Added
