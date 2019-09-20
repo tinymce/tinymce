@@ -14,6 +14,13 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
 
   Theme();
 
+  const mobileDefaultSettingOverrides = {
+    menubar: false,
+    table_grid: false,
+    object_resizing: false,
+    resize: false
+  };
+
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, [
       Logger.t('getEditorSettings tests', GeneralSteps.sequence([
@@ -197,7 +204,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Logger.t('Default settings (mobile)', Step.sync(() => {
           Assertions.assertEq(
             'Should have different defaults for certain settings on mobile',
-            { validate: true, external_plugins: {}, plugins: '', theme: 'mobile', menubar: false, table_grid: false },
+            { validate: true, external_plugins: {}, plugins: '', theme: 'mobile', ...mobileDefaultSettingOverrides },
             EditorSettings.combineSettings(true, true, {}, {}, {})
           );
         })),
@@ -261,7 +268,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Logger.t('Merged settings when mobile is undefined, on a mobile device (phone)', Step.sync(function () {
           Assertions.assertEq(
             'Should fallback to filtered white listed. settings.plugins ',
-            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile', menubar: false, table_grid: false },
+            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile', ...mobileDefaultSettingOverrides },
             EditorSettings.combineSettings(true, true, {}, {}, { plugins: [ 'lists', 'b', 'autolink' ] })
           );
         })),
@@ -277,7 +284,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Logger.t('Merged settings when mobile.plugins is undefined, on a mobile device (phone)', Step.sync(function () {
           Assertions.assertEq(
             'Should fallback to filtered white listed. settings.plugins',
-            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile', menubar: false, table_grid: false },
+            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile', ...mobileDefaultSettingOverrides },
             EditorSettings.combineSettings(true, true, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: { } })
           );
         })),
@@ -293,7 +300,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Logger.t('Merged settings with empty mobile.plugins="" (phone)', Step.sync(function () {
           Assertions.assertEq(
             'Should not have any plugins when mobile.plugins is explicitly empty',
-            { validate: true, external_plugins: {}, plugins: '', theme: 'mobile', menubar: false, table_grid: false },
+            { validate: true, external_plugins: {}, plugins: '', theme: 'mobile', ...mobileDefaultSettingOverrides },
             EditorSettings.combineSettings(true, true, {}, {}, { mobile: { plugins: ''} })
           );
         })),
@@ -309,7 +316,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Logger.t('Merged settings with defined mobile.plugins (phone)', Step.sync(function () {
           Assertions.assertEq(
             'Should fallback to filtered white listed',
-            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile', menubar: false, table_grid: false },
+            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile', ...mobileDefaultSettingOverrides },
             EditorSettings.combineSettings(true, true, {}, {}, { mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ]} })
           );
         })),
@@ -325,7 +332,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Logger.t('Merged settings with mobile.theme silver and mobile.plugins (phone)', Step.sync(function () {
           Assertions.assertEq(
             'Should fallback to filtered white listed',
-            { validate: true, theme: 'silver', external_plugins: {}, plugins: 'lists autolink foo bar', menubar: false, table_grid: false },
+            { validate: true, theme: 'silver', external_plugins: {}, plugins: 'lists autolink foo bar', ...mobileDefaultSettingOverrides },
             EditorSettings.combineSettings(true, true, {}, {}, { theme: 'test', mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' } })
           );
         })),
