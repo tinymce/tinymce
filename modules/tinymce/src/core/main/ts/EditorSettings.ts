@@ -34,7 +34,9 @@ const mobilePlugins = [ 'lists', 'autolink', 'autosave' ];
 const defaultMobileSettings = {
   theme: 'mobile',
   menubar: false,
-  table_grid: false
+  table_grid: false,
+  object_resizing: false,
+  resize: false
 };
 
 const normalizePlugins = function (plugins: string | string[]) {
