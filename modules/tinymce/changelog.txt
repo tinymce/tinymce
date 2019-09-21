@@ -10,7 +10,8 @@ Version 5.1.0 (TBD)
     Changed `menubar` to default to `false` on mobile #TINY-4077
     Changed `table_grid` to default to `false` on mobile #TINY-4075
     Fixed Slider UI component not firing onChange event on touch devices #TINY-4092
-    Fixed inline dialogs incorrectly being placed when the page is scrolled or resized #TINY-4018
+    Fixed inline dialogs positioning incorrectly when the page is scrolled #TINY-4018
+    Fixed inline dialogs and menus not repositioning when resizing #TINY-3227
 Version 5.0.16 (TBD)
     Added new `referrer_policy` setting to add the `referrerpolicy` attribute when loading scripts or stylesheets #TINY-3978
     Added a slight background color to dialog tab links when focused to aid keyboard navigation #TINY-3877

@@ -71,6 +71,12 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     });
   };
 
+  const onEditorResize = () => {
+    Arr.each([ mothership, uiMothership ], (ship) => {
+      ship.broadcastOn( [ Channels.repositionPopups() ], { });
+    });
+  };
+
   // Don't start listening to events until the UI has rendered
   editor.on('PostRender', () => {
     editor.on('mousedown', onContentMousedown);
@@ -78,6 +84,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     editor.on('mouseup', onContentMouseup);
     editor.on('ScrollWindow', onWindowScroll);
     editor.on('ResizeWindow', onWindowResize);
+    editor.on('ResizeEditor', onEditorResize);
   });
 
   editor.on('remove', () => {
@@ -87,6 +94,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     editor.off('mouseup', onContentMouseup);
     editor.off('ScrollWindow', onWindowScroll);
     editor.off('ResizeWindow', onWindowResize);
+    editor.off('ResizeEditor', onEditorResize);
 
     onMousedown.unbind();
     onTouchstart.unbind();

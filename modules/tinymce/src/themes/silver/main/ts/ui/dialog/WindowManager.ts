@@ -165,12 +165,8 @@ const setup = (extras: WindowManagerSetup) => {
         internalDialog: contents
       };
 
-      const reposition = () => inlineDialog.on((dialog) => {
-        InlineView.reposition(dialog);
-        if (!isStickyToolbar) {
-          // Update the docking state based on the new position
-          Docking.refresh(dialog);
-        }
+      const refreshDocking = () => inlineDialog.on((dialog) => {
+        Docking.refresh(dialog);
       });
 
       const dialogUi = renderInlineDialog<T>(
@@ -179,7 +175,7 @@ const setup = (extras: WindowManagerSetup) => {
           redial: DialogManager.DialogManager.redial,
           closeWindow: () => {
             inlineDialog.on(InlineView.hide);
-            editor.off('ResizeEditor', reposition);
+            editor.off('ResizeEditor', refreshDocking);
             inlineDialog.clear();
             closeWindow(dialogUi.instanceApi);
           }
@@ -218,15 +214,15 @@ const setup = (extras: WindowManagerSetup) => {
       // Refresh the docking position if not using a sticky toolbar
       if (!isStickyToolbar) {
         Docking.refresh(inlineDialogComp);
+
+        // Bind to the editor resize event and update docking as needed. We don't need to worry about
+        // 'ResizeWindow` as that's handled by docking already.
+        editor.on('ResizeEditor', refreshDocking);
       }
 
       // Set the initial data in the dialog and focus the first focusable item
       dialogUi.instanceApi.setData(initialData);
       Keying.focusIn(dialogUi.dialog);
-
-      // Bind to the editor resize event and reposition as needed. We don't need to worry about
-      // 'ResizeWindow` as that's handled for all components in 'Events.ts'
-      editor.on('ResizeEditor', reposition);
 
       return dialogUi.instanceApi;
     };
