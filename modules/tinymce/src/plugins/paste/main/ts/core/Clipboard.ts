@@ -172,7 +172,7 @@ const pasteImage = (editor: Editor, imageItem) => {
 const isClipboardEvent = (event: Event): event is ClipboardEvent => event.type === 'paste';
 
 const readBlobsAsDataUris = (items: File[]) => {
-  return Futures.mapM(items, (item: any) => {
+  return Futures.traverse(items, (item: any) => {
     return Future.nu((resolve) => {
       const blob = item.getAsFile ? item.getAsFile() : item;
 

@@ -7,7 +7,7 @@
 
 import { HTMLElement, Element, Range, window } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import { Css, Element as SugarElement, Height, Insert, Location, Node, Position, Remove, Scroll, Text, Traverse } from '@ephox/sugar';
+import { Css, Element as SugarElement, Height, Insert, Location, Node, Position, Remove, Scroll, Text, Traverse, VisualViewport } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as OuterPosition from '../frames/OuterPosition';
 import Zwsp from '../text/Zwsp';
@@ -144,11 +144,10 @@ const intoFrame = (editor: Editor, doc: SugarElement, scrollTop: number, marker:
 
   // If the new position is outside the window viewport, scroll to it
   const op = OuterPosition.find(marker.element);
-  const viewTop = Scroll.get().top(); // abs top of screen
-  const viewBot = window.innerHeight + viewTop; // abs bottom of screen
-  if (op.top() < viewTop) {
+  const viewportBounds = VisualViewport.getBounds(window);
+  if (op.top() < viewportBounds.y()) {
     Scroll.intoView(marker.element, alignToTop !== false);
-  } else if (op.top() > viewBot) {
+  } else if (op.top() > viewportBounds.bottom()) {
     Scroll.intoView(marker.element, alignToTop === true);
   }
 };

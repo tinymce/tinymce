@@ -1,14 +1,7 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { window } from '@ephox/dom-globals';
-import { Scroll } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import * as Fields from '../../data/Fields';
-
-const defaultLazyViewport = (_component): Boxes.Bounds => {
-  const scroll = Scroll.get();
-  return Boxes.bounds(scroll.left(), scroll.top(), window.innerWidth, window.innerHeight);
-};
 
 export default [
   FieldSchema.optionObjOf('contextual', [
@@ -21,7 +14,7 @@ export default [
     Fields.onHandler('onHide'),
     Fields.onHandler('onHidden')
   ]),
-  FieldSchema.defaultedFunction('lazyViewport', defaultLazyViewport),
+  FieldSchema.defaultedFunction('lazyViewport', Boxes.win),
   FieldSchema.strictString('leftAttr'),
   FieldSchema.strictString('topAttr'),
   FieldSchema.strictString('positionAttr'),
