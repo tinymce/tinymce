@@ -15,7 +15,7 @@ const bubbleAlignments = {
   top: []
 };
 
-const getToolbarAnchor = (bodyElement, lazyAnchorbar, useFixedToolbarContainer): () => AnchorSpec => {
+const getToolbarAnchor = (bodyElement: () => Element, lazyAnchorbar: () => AlloyComponent, useFixedToolbarContainer: boolean): () => AnchorSpec => {
   // If using fixed_toolbar_container, anchor to the inside top of the editable area
   // Else, anchor below the div.tox-anchorbar in the editor chrome
   const fixedToolbarAnchor = (): AnchorSpec => ({
@@ -42,7 +42,7 @@ const getToolbarAnchor = (bodyElement, lazyAnchorbar, useFixedToolbarContainer):
   return useFixedToolbarContainer ? fixedToolbarAnchor : standardAnchor;
 };
 
-const getBannerAnchor = (bodyElement, lazyAnchorbar, useFixedToolbarContainer): () => AnchorSpec => {
+const getBannerAnchor = (bodyElement: () => Element, lazyAnchorbar: () => AlloyComponent, useFixedToolbarContainer: boolean): () => AnchorSpec => {
   // If using fixed_toolbar_container, anchor to the inside top of the editable area
   // Else, anchor below the div.tox-anchorbar in the editor chrome
   const fixedToolbarAnchor = (): AnchorSpec => ({
@@ -67,7 +67,7 @@ const getBannerAnchor = (bodyElement, lazyAnchorbar, useFixedToolbarContainer): 
   return useFixedToolbarContainer ? fixedToolbarAnchor : standardAnchor;
 };
 
-const getToolbarOverflowAnchor = (lazyMoreButton) => (): AnchorSpec => {
+const getToolbarOverflowAnchor = (lazyMoreButton: () => AlloyComponent) => (): AnchorSpec => {
   return {
     anchor: 'hotspot',
     hotspot: lazyMoreButton(),
@@ -78,7 +78,7 @@ const getToolbarOverflowAnchor = (lazyMoreButton) => (): AnchorSpec => {
   };
 };
 
-const getCursorAnchor = (editor, bodyElement) => (): AnchorSpec => {
+const getCursorAnchor = (editor: Editor, bodyElement: () => Element) => (): AnchorSpec => {
   return {
     anchor: 'selection',
     root: bodyElement(),
@@ -106,7 +106,7 @@ const getAnchors = (editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyMor
   return {
     toolbar: getToolbarAnchor(bodyElement, lazyAnchorbar, useFixedToolbarContainer),
     toolbarOverflow: getToolbarOverflowAnchor(lazyMoreButton),
-    banner: getBannerAnchor(bodyElement, lazyAnchorbar, lazyMoreButton),
+    banner: getBannerAnchor(bodyElement, lazyAnchorbar, useFixedToolbarContainer),
     cursor: getCursorAnchor(editor, bodyElement),
     node: getNodeAnchor(bodyElement)
   };
