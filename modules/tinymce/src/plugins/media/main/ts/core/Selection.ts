@@ -11,8 +11,8 @@ import UpdateHtml from './UpdateHtml';
 declare let escape: any;
 declare let unescape: any;
 
-const setup = function (editor: Editor) {
-  editor.on('click keyup', function () {
+const setup = (editor: Editor) => {
+  editor.on('click keyup touchend', () => {
     const selectedNode = editor.selection.getNode();
 
     if (selectedNode && editor.dom.hasClass(selectedNode, 'mce-preview-object')) {
@@ -22,7 +22,7 @@ const setup = function (editor: Editor) {
     }
   });
 
-  editor.on('ObjectSelected', function (e) {
+  editor.on('ObjectSelected', (e) => {
     const objectType = e.target.getAttribute('data-mce-object');
 
     if (objectType === 'audio' || objectType === 'script') {
@@ -30,7 +30,7 @@ const setup = function (editor: Editor) {
     }
   });
 
-  editor.on('ObjectResized', function (e) {
+  editor.on('ObjectResized', (e) => {
     const target = e.target;
     let html;
 

@@ -10,7 +10,7 @@ import { Option, Options } from '@ephox/katamari';
 import { Element, TransformFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
-import { ScopedToolbars } from './ToolbarScopes';
+import { ScopedToolbars } from './ContextToolbarScopes';
 
 const matchTargetWith = (elem: Element, toolbars: Array<Toolbar.ContextToolbar | Toolbar.ContextForm>): Option<{ toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm, elem: Element }> => {
   return Options.findMap(toolbars, (toolbarApi) =>
