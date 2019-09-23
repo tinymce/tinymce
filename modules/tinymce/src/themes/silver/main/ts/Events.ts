@@ -5,33 +5,32 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Channels, Attachment, SystemEvents } from '@ephox/alloy';
-import { document } from '@ephox/dom-globals';
+import { Attachment, Channels, Gui, SystemEvents } from '@ephox/alloy';
+import { document, MouseEvent, Node as DomNode, UIEvent } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { DomEvent, Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import * as EditorChannels from './Channels';
 
-const setup = (editor: Editor, mothership, uiMothership) => {
-  const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', function (evt) {
-    Arr.each([ mothership, uiMothership ], function (ship) {
+const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiSystem) => {
+  const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', (evt) => {
+    Arr.each([ mothership, uiMothership ], (ship) => {
       ship.broadcastOn([ Channels.dismissPopups() ], {
         target: evt.target()
       });
     });
   });
 
-  const onTouchstart = DomEvent.bind(Element.fromDom(document), 'touchstart', function (evt) {
-    Arr.each([ mothership, uiMothership ], function (ship) {
+  const onTouchstart = DomEvent.bind(Element.fromDom(document), 'touchstart', (evt) => {
+    Arr.each([ mothership, uiMothership ], (ship) => {
       ship.broadcastOn([ Channels.dismissPopups() ], {
         target: evt.target()
       });
     });
   });
 
-  const onMouseup = DomEvent.bind(Element.fromDom(document), 'mouseup', function (evt) {
+  const onMouseup = DomEvent.bind(Element.fromDom(document), 'mouseup', (evt) => {
     if (evt.raw().button === 0) {
-      Arr.each([ mothership, uiMothership ], function (ship) {
+      Arr.each([ mothership, uiMothership ], (ship) => {
         ship.broadcastOn([ Channels.mouseReleased() ], {
           target: evt.target()
         });
@@ -39,34 +38,42 @@ const setup = (editor: Editor, mothership, uiMothership) => {
     }
   });
 
-  const onContentMousedown = function (raw) {
-    Arr.each([ mothership, uiMothership ], function (ship) {
+  const onContentMousedown = (raw: MouseEvent) => {
+    Arr.each([ mothership, uiMothership ], (ship) => {
       ship.broadcastOn([ Channels.dismissPopups() ], {
-        target: Element.fromDom(raw.target)
+        target: Element.fromDom(raw.target as DomNode)
       });
     });
   };
 
-  const onContentMouseup = function (raw) {
+  const onContentMouseup = (raw: MouseEvent) => {
     if (raw.button === 0) {
-      Arr.each([ mothership, uiMothership ], function (ship) {
+      Arr.each([ mothership, uiMothership ], (ship) => {
         ship.broadcastOn([ Channels.mouseReleased() ], {
-          target: Element.fromDom(raw.target)
+          target: Element.fromDom(raw.target as DomNode)
         });
       });
     }
   };
 
-  const onWindowScroll = (evt) => {
+  const onWindowScroll = (evt: UIEvent) => {
+    const sugarEvent = DomEvent.fromRawEvent(evt);
     Arr.each([ mothership, uiMothership ], (ship) => {
-      ship.broadcastEvent(SystemEvents.windowScroll(), evt);
+      ship.broadcastEvent(SystemEvents.windowScroll(), sugarEvent);
     });
   };
 
-  const onWindowResize = (evt) => {
+  const onWindowResize = (evt: UIEvent) => {
+    const sugarEvent = DomEvent.fromRawEvent(evt);
     Arr.each([ mothership, uiMothership ], (ship) => {
-      ship.broadcastEvent(SystemEvents.windowResize(), evt);
-      ship.broadcastOn( [ EditorChannels.reposition() ], evt);
+      ship.broadcastOn( [ Channels.repositionPopups() ], { });
+      ship.broadcastEvent(SystemEvents.windowResize(), sugarEvent);
+    });
+  };
+
+  const onEditorResize = () => {
+    Arr.each([ mothership, uiMothership ], (ship) => {
+      ship.broadcastOn( [ Channels.repositionPopups() ], { });
     });
   };
 
@@ -77,6 +84,7 @@ const setup = (editor: Editor, mothership, uiMothership) => {
     editor.on('mouseup', onContentMouseup);
     editor.on('ScrollWindow', onWindowScroll);
     editor.on('ResizeWindow', onWindowResize);
+    editor.on('ResizeEditor', onEditorResize);
   });
 
   editor.on('remove', () => {
@@ -86,6 +94,7 @@ const setup = (editor: Editor, mothership, uiMothership) => {
     editor.off('mouseup', onContentMouseup);
     editor.off('ScrollWindow', onWindowScroll);
     editor.off('ResizeWindow', onWindowResize);
+    editor.off('ResizeEditor', onEditorResize);
 
     onMousedown.unbind();
     onTouchstart.unbind();

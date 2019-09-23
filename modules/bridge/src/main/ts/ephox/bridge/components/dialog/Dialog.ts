@@ -33,7 +33,7 @@ export interface DialogInstanceApi<T extends DialogData> {
   disable: (name: string) => void;
   focus: (name: string) => void;
   showTab: (name: string) => void;
-  redial: (nu: DialogApi<T>) => void;
+  redial: <N extends DialogData>(nu: DialogApi<N>) => void;
   enable: (name: string) => void;
   block: (msg: string) => void;
   unblock: () => void;

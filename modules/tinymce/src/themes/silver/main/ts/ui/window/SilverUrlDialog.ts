@@ -57,7 +57,7 @@ const handleMessage = (editor: Editor, api: Types.UrlDialog.UrlDialogInstanceApi
   }
 };
 
-const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: WindowExtra<any>, editor: Editor, backstage: UiFactoryBackstage) => {
+const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: WindowExtra, editor: Editor, backstage: UiFactoryBackstage) => {
   const header = getHeader(internalDialog.title, backstage);
   const body = renderIframeBody(internalDialog);
   const footer = internalDialog.buttons.bind((buttons) => {

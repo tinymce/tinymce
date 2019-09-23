@@ -6,13 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-# [5.0.0] - 2019-09-04
+# [5.0.0] - TBD
 
 ### Added
 - Added `onDocked`, `onUndocked`, `onShow`, `onShown`, `onHide` and `onHidden` configuration callbacks for the `Docking` behaviour.
 - Added `modes` configuration to `Docking` to control where the component should be docked. eg: `top` or `bottom` of the viewport.
 - Added `isDocked` and `reset` APIs to `Docking` to check if a component is docked and to reset the stored original position and state.
-- Added reposition APIs for `TieredMenu`, `Dropdown`, `SplitDropdown` and `SplitFloatingToolbar` components.
+- Added reposition APIs for `TieredMenu`, `Dropdown`, `InlineView`, `SplitDropdown` and `SplitFloatingToolbar` components.
+- Added new reposition channel to notify sandboxed components that they should reposition.
 - Added `onOpened` and `onClosed` configuration callbacks for the `SplitSlidingToolbar` component.
 
 ### Changed
@@ -27,6 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed `MakeshiftAnchor` incorrectly calculating the anchor coordinates in fixed position mode.
 - Fixed custom position bounds being ignored in fixed position mode.
 - Fixed incorrect right/bottom positioning in fixed mode when a scrollbar is visible.
+- Fixed `Positioning` placing the element off the page or out of view when the anchor point is out of bounds.
 
 # [4.15.25] - 2019-09-18
 

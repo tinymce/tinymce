@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { GuiFactory, InlineView } from '@ephox/alloy';
+import { Gui, GuiFactory, InlineView } from '@ephox/alloy';
 import { Element } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 
@@ -15,7 +15,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { NotificationManagerImpl, NotificationSpec } from 'tinymce/core/api/NotificationManager';
 
-export default function (editor: Editor, extras, uiMothership): NotificationManagerImpl {
+export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): NotificationManagerImpl {
   const backstage: UiFactoryBackstage = extras.backstage;
 
   const getEditorContainer = function (editor) {

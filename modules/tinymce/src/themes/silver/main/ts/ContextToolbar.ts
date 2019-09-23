@@ -228,7 +228,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     lastElement.set(elem);
     const contextBarEle = contextbar.element();
     Css.remove(contextBarEle, 'display');
-    InlineView.showWithinBounds(contextbar, anchor, wrapInPopDialog(toolbarSpec), getBounds());
+    InlineView.showWithinBounds(contextbar, anchor, wrapInPopDialog(toolbarSpec), getBounds);
 
     // It's possible we may have launched offscreen, if so then hide
     if (shouldContextToolbarHide()) {
