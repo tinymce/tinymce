@@ -12,7 +12,7 @@ var cp = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-var autoprefix = new lessAutoprefix({ browsers: ['IE 11', 'last 2 Safari versions', 'iOS 9.0', 'last 2 Chrome versions', 'Firefox ESR'] });
+var autoprefix = new lessAutoprefix({ browsers: ['IE 11', 'last 2 Safari versions', 'iOS 9.0', 'last 2 Chrome versions', 'Firefox ESR'], grid: 'no-autoplace' });
 
 //
 // Lint less files using stylelint
