@@ -6,13 +6,13 @@ import { DialogManager } from '@ephox/bridge';
 import { Fun, Result, Option } from '@ephox/katamari';
 import { Body } from '@ephox/sugar';
 
+import I18n from 'tinymce/core/api/util/I18n';
 import { renderDialog } from 'tinymce/themes/silver/ui/window/SilverDialog';
 import { WindowExtra } from 'tinymce/themes/silver/ui/window/SilverDialogCommon';
-import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
 
-  const dialogSpec = (store): DialogManager.DialogInit<Record<string, any>> => {
+  const dialogSpec = (store): DialogManager.DialogInit<{}> => {
     // the `any` here can't be removed, because internalDialog uses types that aren't exposed from Bridge
     return {
       internalDialog: {
