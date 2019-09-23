@@ -47,6 +47,11 @@ const setHeight = (element, decision, options) => {
   maxHeightFunction(element, decision.maxHeight());
 };
 
+const setWidth = (element, decision, options) => {
+  const maxWidthFunction = options.maxWidthFunction();
+  maxWidthFunction(element, decision.maxWidth());
+};
+
 const position = (element, decision, options) => {
   const addPx = (num) => num + 'px';
 
@@ -66,5 +71,6 @@ export {
   layout,
   setClasses,
   setHeight,
+  setWidth,
   position
 };

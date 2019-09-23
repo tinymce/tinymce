@@ -65,6 +65,9 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bou
   const boundsY = bounds.y();
   const boundsHeight = bounds.height();
 
+  const boundsX = bounds.x();
+  const boundsWidth = bounds.width();
+
   // candidate position is excluding the bubble, so add those values as well
   const newX = candidateX + bubbleLeft;
   const newY = candidateY + bubbleTop;
@@ -78,12 +81,17 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bou
   const downAvailable = Fun.constant((boundsY + boundsHeight) - limitY);
   const maxHeight = Direction.cataVertical(candidate.direction(), downAvailable, /* middle */ downAvailable, upAvailable);
 
+  const westAvailable = Fun.constant((limitX + deltaW) - boundsX);
+  const eastAvailable = Fun.constant((boundsX + boundsWidth) - limitX);
+  const maxWidth = Direction.cataHorizontal(candidate.direction(), eastAvailable, /* middle */ eastAvailable, westAvailable);
+
   const reposition = Reposition.decision({
     x: limitX,
     y: limitY,
     width: deltaW,
     height: deltaH,
     maxHeight,
+    maxWidth,
     direction: candidate.direction(),
     classes: {
       on: candidate.bubble().classesOn(),
@@ -162,6 +170,7 @@ const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: 
       width: elementBox.width(),
       height: elementBox.height(),
       maxHeight: elementBox.height(),
+      maxWidth: elementBox.width(),
       direction: Direction.southeast(),
       classes: {
         on: [],
