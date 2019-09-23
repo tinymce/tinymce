@@ -16,7 +16,6 @@ import {
   Focusing,
   Keying,
   NativeEvents,
-  Receiving,
   Reflecting,
   Replacing,
   SketchSpec,
@@ -32,7 +31,6 @@ import { Attr, SelectorFind } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
-import * as Channels from '../../../Channels';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
@@ -322,15 +320,6 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
 
     splitDropdownBehaviours: Behaviour.derive([
       DisablingConfigs.splitButton(false),
-      Receiving.config({
-        channels: {
-          [ Channels.reposition() ]: {
-            onReceive: (comp) => {
-              AlloySplitDropdown.repositionMenus(comp);
-            }
-          }
-        }
-      }),
       AddEventsBehaviour.config('split-dropdown-events', [
         AlloyEvents.run(focusButtonEvent, Focusing.focus),
         onControlAttached(specialisation, editorOffCell),

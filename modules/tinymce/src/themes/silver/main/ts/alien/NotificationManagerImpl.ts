@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { GuiFactory, InlineView, Layout, LayoutInside, NodeAnchorSpec } from '@ephox/alloy';
+import { Gui, GuiFactory, InlineView, Layout, LayoutInside, NodeAnchorSpec } from '@ephox/alloy';
 import { Element as DomElement } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { Body, Element } from '@ephox/sugar';
@@ -16,7 +16,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { NotificationManagerImpl, NotificationSpec, NotificationApi } from 'tinymce/core/api/NotificationManager';
 
-export default function (editor: Editor, extras, uiMothership): NotificationManagerImpl {
+export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): NotificationManagerImpl {
   const backstage: UiFactoryBackstage = extras.backstage;
 
   const getLayoutDirection = (rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc') => {

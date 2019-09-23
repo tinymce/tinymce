@@ -16,7 +16,7 @@ import {
   Focusing,
   GuiFactory,
   Keying,
-  Memento, Receiving,
+  Memento,
   Replacing,
   Representing,
   SimulatedEvent,
@@ -36,7 +36,6 @@ import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Controls';
-import * as Channels from '../../Channels';
 
 export const updateMenuText = Id.generate('update-menu-text');
 export const updateMenuIcon = Id.generate('update-menu-icon');
@@ -140,15 +139,6 @@ const renderCommonDropdown = <T>(spec: CommonDropdownSpec<T>, prefix: string, sh
           onControlAttached(spec, editorOffCell),
           onControlDetached(spec, editorOffCell)
         ]),
-        Receiving.config({
-          channels: {
-            [ Channels.reposition() ]: {
-              onReceive: (comp) => {
-                AlloyDropdown.repositionMenus(comp);
-              }
-            }
-          }
-        }),
         AddEventsBehaviour.config('menubutton-update-display-text', [
           AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
             optMemDisplayText.bind((mem) => mem.getOpt(comp)).each((displayText) => {

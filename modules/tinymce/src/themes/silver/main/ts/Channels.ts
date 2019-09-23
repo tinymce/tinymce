@@ -7,10 +7,8 @@
 
 import { Fun, Id } from '@ephox/katamari';
 
-const reposition = Fun.constant(Id.generate('reposition'));
 const toolbarHeightChange = Fun.constant(Id.generate('toolbar-height-change'));
 
 export {
-  reposition,
   toolbarHeightChange
 };

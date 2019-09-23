@@ -2,12 +2,13 @@ import { Logger, Mouse, Pipeline, Step, Waiter, UiFinder } from '@ephox/agar';
 import { Behaviour, GuiFactory, ModalDialog, Positioning, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
 import { ValueSchema } from '@ephox/boulder';
-import { Types, DialogManager } from '@ephox/bridge';
+import { DialogManager } from '@ephox/bridge';
 import { Fun, Result, Option } from '@ephox/katamari';
-
-import { renderDialog } from 'tinymce/themes/silver/ui/window/SilverDialog';
-import I18n from 'tinymce/core/api/util/I18n';
 import { Body } from '@ephox/sugar';
+
+import I18n from 'tinymce/core/api/util/I18n';
+import { renderDialog } from 'tinymce/themes/silver/ui/window/SilverDialog';
+import { WindowExtra } from 'tinymce/themes/silver/ui/window/SilverDialogCommon';
 
 UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
 
@@ -19,7 +20,8 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
         size: 'normal',
         body: {
           type: 'panel',
-          items: []
+          items: [],
+          classes: []
         },
         buttons: [
           {
@@ -51,7 +53,7 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
         },
         onClose: store.adder('onClose'),
         onCancel: store.adder('onCancel')
-      } as Types.Dialog.Dialog<Record<string, any>>,
+      },
       initialData: {},
       dataValidator: ValueSchema.anyValue()
     } ;
@@ -78,7 +80,7 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
           {
             redial: () => dialogSpec(store),
             closeWindow: () => store.adder('closeWindow')
-          },
+          } as WindowExtra,
           {
             shared: {
               getSink: () => Result.value(sink),

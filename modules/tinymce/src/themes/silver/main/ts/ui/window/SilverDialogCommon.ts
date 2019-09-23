@@ -32,8 +32,8 @@ import { dialogChannel } from './DialogChannels';
 import { renderModalHeader } from './SilverDialogHeader';
 import { StoragedMenuItem, StoragedMenuButton } from '../button/MenuButton';
 
-export interface WindowExtra<T> {
-  redial?: (newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>;
+export interface WindowExtra {
+  redial?: <T extends Types.Dialog.DialogData>(newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>;
   closeWindow: () => void;
 }
 
@@ -53,7 +53,7 @@ const getHeader = (title: string, backstage: UiFactoryBackstage) => {
   }, backstage.shared.providers);
 };
 
-const getEventExtras = (lazyDialog, extra: WindowExtra<any>) => {
+const getEventExtras = (lazyDialog, extra: WindowExtra) => {
   return {
     onClose: () => extra.closeWindow(),
     onBlock: (blockEvent: FormBlockEvent) => {
