@@ -58,7 +58,8 @@
     }
   }
 
-  .tox-notification--warn {
+  .tox-notification--warn,
+  .tox-notification--warning {
     background-color: #fcf8e3;
     border-color: #faebcc;
   }
@@ -74,7 +75,6 @@
     color: @text-color;
     font-size: 14px;
     grid-column-end: 3;
-    -ms-grid-column-span: 1;
     grid-column-start: 2;
     grid-row-end: 2;
     grid-row-start: 1;
@@ -98,9 +98,7 @@
 
   .tox-notification__icon {
     align-self: center;
-    -ms-grid-column-align: end;
     grid-column-end: 2;
-    -ms-grid-column-span: 1;
     grid-column-start: 1;
     grid-row-end: 2;
     grid-row-start: 1;
@@ -113,9 +111,7 @@
 
   .tox-notification__dismiss {
     align-self: start;
-    -ms-grid-column-align: end;
     grid-column-end: 4;
-    -ms-grid-column-span: 1;
     grid-column-start: 3;
     grid-row-end: 2;
     grid-row-start: 1;
@@ -123,12 +119,9 @@
   }
 
   .tox-notification .tox-progress-bar {
-    -ms-grid-column-align: center;
     grid-column-end: 4;
-    -ms-grid-column-span: 3;
     grid-column-start: 1;
     grid-row-end: 3;
-    -ms-grid-row-span: 1;
     grid-row-start: 2;
     justify-self: center;
   }

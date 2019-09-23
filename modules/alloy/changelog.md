@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Reworked the `Docking` behaviour to support both absolute and static positioning.
 - Changed the `Docking` behaviours `lazyContext` configuration to require a `Bounds` be returned instead of an `Element`.
 - Changed the `Positioning` behaviours `useFixed` configuration to require a `Function` instead of a `boolean`.
+- Changed `Boxes.win` to use the visual viewport API where available to determine the window bounds.
 
 ### Fixed
 - Fixed `Docking` not undocking to the correct position when a parent was using `position: relative`.

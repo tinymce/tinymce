@@ -19,7 +19,7 @@ export interface NotificationSketchApis {
 // tslint:disable-next-line:no-empty-interface
 export interface NotificationSketchSpec extends Sketcher.SingleSketchSpec {
   text: string;
-  level: 'info' | 'warn' | 'error' | 'success';
+  level: 'info' | 'warn' | 'warning' | 'error' | 'success';
   icon: Option<string>;
   progress: boolean;
   onAction: Function;
@@ -31,7 +31,7 @@ export interface NotificationSketchSpec extends Sketcher.SingleSketchSpec {
 export interface NotificationSketchDetail extends Sketcher.SingleSketchDetail {
 
   text: string;
-  level: Option<'info' | 'warn' | 'error' | 'success'>;
+  level: Option<'info' | 'warn' | 'warning' | 'error' | 'success'>;
   icon: Option<string>;
   onAction: Function;
   progress: Boolean;
