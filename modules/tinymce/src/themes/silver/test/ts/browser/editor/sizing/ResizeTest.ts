@@ -1,11 +1,11 @@
 import { Assertions, Chain, Guard, NamedChain, Mouse, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
+import { cResizeToPos } from '../../../module/UiChainUtils';
 
 UnitTest.asynctest('Editor resize test', (success, failure) => {
   Theme();
@@ -18,32 +18,6 @@ UnitTest.asynctest('Editor resize test', (success, failure) => {
           Assertions.assertEq(`Editor should be ${expectedWidth}px wide`, expectedWidth, container.dom().offsetWidth);
         }),
         Guard.addLogging('Ensure that the editor has resized')
-      );
-    };
-
-    const cResizeToPos = (sx: number, sy: number, dx: number, dy: number, delta: number = 10) => {
-      // Simulate moving the mouse, by making a number of movements
-      const numMoves = sy === dy ? Math.abs(dx - sx) / delta : Math.abs(dy - sy) / delta;
-      // Determine the deltas based on the number of moves to make
-      const deltaX = (dx - sx) / numMoves;
-      const deltaY = (dy - sy) / numMoves;
-      // Move and release the mouse
-      return Chain.control(
-        Chain.fromChains([
-            UiFinder.cFindIn('.tox-blocker'),
-            Mouse.cMouseMoveTo(sx, sy)
-          ].concat(
-            Arr.range(numMoves, (count) => {
-              const nx = sx + count * deltaX;
-              const ny = sy + count * deltaY;
-              return Mouse.cMouseMoveTo(nx, ny);
-            })
-          ).concat([
-            Mouse.cMouseMoveTo(dx, dy),
-            Mouse.cMouseUp
-          ])
-        ),
-        Guard.addLogging(`Resizing from (${sx}, ${sy}) to (${dx}, ${dy})`)
       );
     };
 

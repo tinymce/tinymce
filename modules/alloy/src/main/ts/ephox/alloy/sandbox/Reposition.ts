@@ -11,15 +11,17 @@ import * as SystemEvents from '../api/events/SystemEvents';
 import * as Channels from '../api/messages/Channels';
 import { ReceivingConfig, ReceivingConfigSpec } from '../behaviour/receiving/ReceivingTypes';
 
-interface DismissalReceivingDetail {
+export interface RepositionReceivingDetail {
   isExtraPart: (sandbox: AlloyComponent, target: () => Element) => boolean;
+  doReposition: (sandbox: AlloyComponent) => void;
   fireEventInstead: Option<{
     event: string;
   }>;
 }
 
-export interface DismissalReceivingSpec {
+export interface RepositionReceivingSpec {
   isExtraPart?: (sandbox: AlloyComponent, target: () => Element) => boolean;
+  doReposition: (sandbox: AlloyComponent) => void;
   fireEventInstead?: {
     event?: string;
   };
@@ -28,33 +30,28 @@ export interface DismissalReceivingSpec {
 const schema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('isExtraPart', Fun.constant(false)),
   FieldSchema.optionObjOf('fireEventInstead', [
-    FieldSchema.defaulted('event', SystemEvents.dismissRequested())
-  ])
+    FieldSchema.defaulted('event', SystemEvents.repositionRequested())
+  ]),
+  FieldSchema.strictFunction('doReposition')
 ]);
 
-const receivingConfig = (rawSpec: DismissalReceivingSpec): NamedConfiguredBehaviour<ReceivingConfigSpec, ReceivingConfig> => {
+const receivingConfig = (rawSpec: RepositionReceivingSpec): NamedConfiguredBehaviour<ReceivingConfigSpec, ReceivingConfig> => {
   const c = receivingChannel(rawSpec);
   return Receiving.config({
     channels: c
   });
 };
 
-const receivingChannel = (rawSpec: DismissalReceivingSpec) => {
-  const detail: DismissalReceivingDetail = ValueSchema.asRawOrDie('Dismissal', schema, rawSpec);
+const receivingChannel = (rawSpec: RepositionReceivingSpec) => {
+  const detail: RepositionReceivingDetail = ValueSchema.asRawOrDie('Reposition', schema, rawSpec);
   return {
-    [Channels.dismissPopups()]: {
-      schema: ValueSchema.objOfOnly([
-        FieldSchema.strict('target')
-      ]),
-      onReceive (sandbox, data) {
+    [ Channels.repositionPopups() ]: {
+      onReceive(sandbox) {
         if (Sandboxing.isOpen(sandbox)) {
-          const isPart = Sandboxing.isPartOf(sandbox, data.target) || detail.isExtraPart(sandbox, data.target);
-          if (!isPart) {
-            detail.fireEventInstead.fold(
-              () => Sandboxing.close(sandbox),
-              (fe) => AlloyTriggers.emit(sandbox, fe.event)
-            );
-          }
+          detail.fireEventInstead.fold(
+            () => detail.doReposition(sandbox),
+            (fe) => AlloyTriggers.emit(sandbox, fe.event)
+          );
         }
       }
     }

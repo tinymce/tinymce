@@ -7,17 +7,26 @@
 
 import {
   AddEventsBehaviour,
+  AlloyComponent,
   AlloyEvents,
   AlloyTriggers,
   Behaviour,
+  Boxes,
+  Docking,
   GuiFactory,
+  HotspotAnchorSpec,
   InlineView,
   Keying,
+  MakeshiftAnchorSpec,
   ModalDialog,
+  NodeAnchorSpec,
+  SelectionAnchorSpec,
   SystemEvents,
 } from '@ephox/alloy';
 import { Processor, ValueSchema } from '@ephox/boulder';
 import { DialogManager, Types } from '@ephox/bridge';
+import { Option, Singleton } from '@ephox/katamari';
+import { Body, Element, SelectorFind } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -27,6 +36,7 @@ import { renderUrlDialog } from '../window/SilverUrlDialog';
 import { renderInlineDialog } from '../window/SilverInlineDialog';
 import * as AlertDialog from './AlertDialog';
 import * as ConfirmDialog from './ConfirmDialog';
+import * as Settings from '../../api/Settings';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 
 export interface WindowManagerSetup {
@@ -34,19 +44,55 @@ export interface WindowManagerSetup {
   editor: Editor;
 }
 
+type InlineDialogAnchor = HotspotAnchorSpec | MakeshiftAnchorSpec | NodeAnchorSpec | SelectionAnchorSpec;
+
 const validateData = <T extends Types.Dialog.DialogData>(data: T, validator: Processor) => {
   return ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
 };
 
+const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
+  // When using sticky toolbars it already handles the docking behaviours so applying docking would
+  // do nothing except add additional processing when scrolling, so we don't want to include it here
+  if (isStickyToolbar) {
+    return [ ];
+  } else {
+    return [
+      Docking.config({
+        contextual: {
+          lazyContext: () => Option.some(Boxes.box(Element.fromDom(editor.getContentAreaContainer()))),
+          fadeInClass: 'tox-dialog-dock-fadein',
+          fadeOutClass: 'tox-dialog-dock-fadeout',
+          transitionClass: 'tox-dialog-dock-transition'
+        },
+        leftAttr: 'data-dock-left',
+        topAttr: 'data-dock-top',
+        positionAttr: 'data-dock-pos',
+        modes: [ 'top' ],
+        lazyViewport: () => {
+          const win = Boxes.win();
+          const headerEle = SelectorFind.descendant(Element.fromDom(editor.getContainer()), '.tox-editor-header').getOrDie();
+          const headerBounds = Boxes.absolute(headerEle);
+          const topBounds = Math.max(win.y(), headerBounds.bottom());
+          return Boxes.bounds(win.x(), topBounds, win.width(), win.bottom() - topBounds);
+        }
+      })
+    ];
+  }
+};
+
 const setup = (extras: WindowManagerSetup) => {
+  const backstage = extras.backstage;
+  const editor = extras.editor;
+  const isStickyToolbar = Settings.isStickyToolbar(editor);
+
   const alertDialog = AlertDialog.setup(extras);
   const confirmDialog = ConfirmDialog.setup(extras);
 
   const open = <T extends Types.Dialog.DialogData>(config: Types.Dialog.DialogApi<T>, params, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void): Types.Dialog.DialogInstanceApi<T> => {
     if (params !== undefined && params.inline === 'toolbar') {
-      return openInlineDialog(config, extras.backstage.shared.anchors.toolbar(), closeWindow, params.ariaAttrs);
+      return openInlineDialog(config, backstage.shared.anchors.toolbar(), closeWindow, params.ariaAttrs);
     } else if (params !== undefined && params.inline === 'cursor') {
-      return openInlineDialog(config, extras.backstage.shared.anchors.cursor(), closeWindow, params.ariaAttrs);
+      return openInlineDialog(config, backstage.shared.anchors.cursor(), closeWindow, params.ariaAttrs);
     } else {
       return openModalDialog(config, closeWindow);
     }
@@ -66,8 +112,8 @@ const setup = (extras: WindowManagerSetup) => {
             closeWindow(dialog.instanceApi);
           }
         },
-        extras.editor,
-        extras.backstage
+        editor,
+        backstage
       );
 
       ModalDialog.show(dialog.dialog);
@@ -97,7 +143,7 @@ const setup = (extras: WindowManagerSetup) => {
             closeWindow(dialog.instanceApi);
           }
         },
-        extras.backstage
+        backstage
       );
 
       ModalDialog.show(dialog.dialog);
@@ -108,9 +154,10 @@ const setup = (extras: WindowManagerSetup) => {
     return DialogManager.DialogManager.open<T>(factory, config);
   };
 
-  const openInlineDialog = <T extends Types.Dialog.DialogData>(config/*: Types.Dialog.DialogApi<T>*/, anchor, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void, ariaAttrs): Types.Dialog.DialogInstanceApi<T> => {
+  const openInlineDialog = <T extends Types.Dialog.DialogData>(config/*: Types.Dialog.DialogApi<T>*/, anchor: InlineDialogAnchor, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void, ariaAttrs): Types.Dialog.DialogInstanceApi<T> => {
     const factory = (contents: Types.Dialog.Dialog<T>, internalInitialData: T, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
       const initialData = validateData<T>(internalInitialData, dataValidator);
+      const inlineDialog = Singleton.value<AlloyComponent>();
 
       const dialogInit = {
         dataValidator,
@@ -118,20 +165,26 @@ const setup = (extras: WindowManagerSetup) => {
         internalDialog: contents
       };
 
+      const refreshDocking = () => inlineDialog.on((dialog) => {
+        Docking.refresh(dialog);
+      });
+
       const dialogUi = renderInlineDialog<T>(
         dialogInit,
         {
           redial: DialogManager.DialogManager.redial,
           closeWindow: () => {
-            InlineView.hide(inlineDialog);
+            inlineDialog.on(InlineView.hide);
+            editor.off('ResizeEditor', refreshDocking);
+            inlineDialog.clear();
             closeWindow(dialogUi.instanceApi);
           }
         },
-        extras.backstage, ariaAttrs
+        backstage, ariaAttrs
       );
 
-      const inlineDialog = GuiFactory.build(InlineView.sketch({
-        lazySink: extras.backstage.shared.getSink,
+      const inlineDialogComp = GuiFactory.build(InlineView.sketch({
+        lazySink: backstage.shared.getSink,
         dom: {
           tag: 'div',
           classes: [ ]
@@ -140,20 +193,37 @@ const setup = (extras: WindowManagerSetup) => {
         fireDismissalEventInstead: { },
         inlineBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('window-manager-inline-events', [
-            // Can't just fireDimissalEvent formCloseEvent, because it is on the parent component of the dialog
+            // Can't just fireDismissalEvent formCloseEvent, because it is on the parent component of the dialog
             AlloyEvents.run(SystemEvents.dismissRequested(), (comp, se) => {
               AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
-            })
-          ])
+            }),
+          ]),
+          ...inlineAdditionalBehaviours(editor, isStickyToolbar)
         ])
       }));
-      InlineView.showAt(
-        inlineDialog,
+      inlineDialog.set(inlineDialogComp);
+
+      // Position the inline dialog
+      InlineView.showWithin(
+        inlineDialogComp,
         anchor,
-        GuiFactory.premade(dialogUi.dialog)
+        GuiFactory.premade(dialogUi.dialog),
+        Option.some(Body.body())
       );
+
+      // Refresh the docking position if not using a sticky toolbar
+      if (!isStickyToolbar) {
+        Docking.refresh(inlineDialogComp);
+
+        // Bind to the editor resize event and update docking as needed. We don't need to worry about
+        // 'ResizeWindow` as that's handled by docking already.
+        editor.on('ResizeEditor', refreshDocking);
+      }
+
+      // Set the initial data in the dialog and focus the first focusable item
       dialogUi.instanceApi.setData(initialData);
       Keying.focusIn(dialogUi.dialog);
+
       return dialogUi.instanceApi;
     };
 

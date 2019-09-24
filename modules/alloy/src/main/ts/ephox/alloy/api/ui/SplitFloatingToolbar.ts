@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -14,10 +14,12 @@ import { Coupling } from '../behaviour/Coupling';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { Positioning } from '../behaviour/Positioning';
+import { Receiving } from '../behaviour/Receiving';
 import { Sandboxing } from '../behaviour/Sandboxing';
 import { Toggling } from '../behaviour/Toggling';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as Sketcher from './Sketcher';
+import * as Reposition from '../../sandbox/Reposition';
 
 const toggleToolbar = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail, externals: Record<string, any>) => {
   const sandbox = Coupling.getCoupled(toolbar, 'sandbox');
@@ -96,7 +98,15 @@ const makeSandbox = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail
           getAttachPoint () {
             return detail.lazySink(toolbar).getOrDie();
           }
-        })
+        }),
+        Receiving.config({
+          channels: {
+            ...Reposition.receivingChannel({
+              isExtraPart: Fun.constant(false),
+              doReposition: () => reposition(toolbar, detail)
+            })
+          }
+        }),
       ]
     )
   };

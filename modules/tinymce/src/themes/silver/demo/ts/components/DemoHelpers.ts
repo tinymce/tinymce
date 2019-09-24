@@ -133,15 +133,16 @@ const setupDemo = () => {
         cursor: () => {
           // NOTE: Non-sensical
           return {
-            anchor: 'hotspot',
-            hotspot: sink
+            anchor: 'selection',
+            root: Body.body()
           };
         },
         node: (elem) => {
           // NOTE: Non-sensical
           return {
-            anchor: 'hotspot',
-            hotspot: sink
+            anchor: 'node',
+            root: Body.body(),
+            node: elem
           };
         }
       }

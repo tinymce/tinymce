@@ -18,6 +18,8 @@ import { HotspotAnchorSpec } from '../positioning/mode/Anchoring';
 import * as Tagger from '../registry/Tagger';
 import * as Dismissal from '../sandbox/Dismissal';
 import { CommonDropdownDetail } from '../ui/types/DropdownTypes';
+import { Receiving } from '@ephox/alloy';
+import * as Reposition from '../sandbox/Reposition';
 
 export enum HighlightOnOpen { HighlightFirst, HighlightNone }
 
@@ -155,6 +157,12 @@ const getSink = (anyInSystem: AlloyComponent, sinkDetail: SinkDetail): () => Ret
   });
 };
 
+const doRepositionMenus = (sandbox: AlloyComponent) => {
+  Sandboxing.getState(sandbox).each((tmenu) => {
+    TieredMenu.repositionMenus(tmenu);
+  });
+};
+
 const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyComponent, extras) => {
   const ariaOwner = AriaOwner.manager();
 
@@ -209,8 +217,16 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
             });
           }
         }),
-        Dismissal.receivingConfig({
-          isExtraPart: Fun.constant(false)
+        Receiving.config({
+          channels: {
+            ...Dismissal.receivingChannel({
+              isExtraPart: Fun.constant(false)
+            }),
+            ...Reposition.receivingChannel({
+              isExtraPart: Fun.constant(false),
+              doReposition: doRepositionMenus
+            })
+          }
         })
       ]
     )
@@ -219,9 +235,7 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
 
 const repositionMenus = (comp: AlloyComponent) => {
   const sandbox = Coupling.getCoupled(comp, 'sandbox');
-  Sandboxing.getState(sandbox).each((tmenu) => {
-    TieredMenu.repositionMenus(tmenu);
-  });
+  doRepositionMenus(sandbox);
 };
 
 export {

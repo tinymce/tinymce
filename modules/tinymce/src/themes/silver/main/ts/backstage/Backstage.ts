@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, AnchorSpec, FormTypes } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, FormTypes, HotspotAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
@@ -35,11 +35,11 @@ export interface UiFactoryBackstageShared {
   providers?: UiFactoryBackstageProviders;
   interpreter?: (spec: BridgedType) => AlloySpec;
   anchors?: {
-    toolbar: () => AnchorSpec,
-    toolbarOverflow: () => AnchorSpec,
-    banner: () => AnchorSpec,
-    cursor: () => AnchorSpec,
-    node: (elem: Option<Element>) => AnchorSpec
+    toolbar: () => HotspotAnchorSpec | NodeAnchorSpec,
+    toolbarOverflow: () => HotspotAnchorSpec,
+    banner: () => HotspotAnchorSpec | NodeAnchorSpec,
+    cursor: () => SelectionAnchorSpec,
+    node: (elem: Option<Element>) => NodeAnchorSpec
   };
   formInterpreter?: (parts: FormTypes.FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
   getSink?: () => Result<AlloyComponent, any>;

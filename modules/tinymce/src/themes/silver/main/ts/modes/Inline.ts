@@ -113,7 +113,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     editor.on('activate', show);
     editor.on('deactivate', hide);
 
-    editor.on('SkinLoaded ResizeWindow', () => {
+    editor.on('NodeChange SkinLoaded ResizeWindow', () => {
       if (!editor.hidden) {
         updateChromeUi(true);
       }

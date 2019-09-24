@@ -267,7 +267,11 @@ const renderMobileTheme = function (editor: Editor) {
         open: Fun.constant({
           progressBar: { value: Fun.noop },
           close: Fun.noop,
-          text: Fun.noop
+          text: Fun.noop,
+          getEl: Fun.constant(null),
+          moveTo: Fun.noop,
+          moveRel: Fun.noop,
+          settings: {} as NotificationSpec
         }),
         close: Fun.noop,
         reposition: Fun.noop,
