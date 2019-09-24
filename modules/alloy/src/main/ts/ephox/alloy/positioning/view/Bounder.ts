@@ -1,5 +1,4 @@
 import { Adt, Arr, Fun } from '@ephox/katamari';
-
 import { Bounds } from '../../alien/Boxes';
 import { cap } from '../../alien/Cycles';
 import { Bubble } from '../layout/Bubble';
@@ -83,7 +82,8 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bou
 
   const westAvailable = Fun.constant((limitX + deltaW) - boundsX);
   const eastAvailable = Fun.constant((boundsX + boundsWidth) - limitX);
-  const maxWidth = Direction.cataHorizontal(candidate.direction(), eastAvailable, /* middle */ eastAvailable, westAvailable);
+  const bestAvailable = Fun.constant(Math.max(westAvailable(), eastAvailable()));
+  const maxWidth = Direction.cataHorizontal(candidate.direction(), eastAvailable, /* middle */ bestAvailable, westAvailable);
 
   const reposition = Reposition.decision({
     x: limitX,
@@ -186,7 +186,4 @@ const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: 
   return abc.fold(Fun.identity, Fun.identity) as Reposition.RepositionDecision;
 };
 
-export {
-  attempts,
-  calcReposition
-};
+export { attempts, calcReposition };
