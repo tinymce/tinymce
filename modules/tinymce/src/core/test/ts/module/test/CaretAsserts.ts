@@ -14,8 +14,8 @@ const assertCaretPosition = function (actual, expected, message?) {
     return;
   }
 
-  const defaultMessage = `["${expected.getNode().textContent}", ${expected.offset()}] doesn't match actual position ["${actual.getNode().textContent}", ${actual.offset()}]`;
-  Assertions.assertEq(message || defaultMessage, true, expected.isEqual(actual));
+  const defaultMessage = () => `["${expected.getNode().textContent}", ${expected.offset()}] doesn't match actual position ["${actual.getNode().textContent}", ${actual.offset()}]`;
+  Assertions.assertEq(() => message || defaultMessage(), true, expected.isEqual(actual));
 };
 
 const assertRange = function (expected, actual) {

@@ -29,13 +29,13 @@ const builder = (detail: WidgetItemDetail) => {
     });
   };
 
-  const onHorizontalArrow = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
-    return EditableFields.inside(simulatedEvent.event().target()) ? Option.none() : (() => {
+  const onHorizontalArrow = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Option<boolean> => {
+    return EditableFields.inside(simulatedEvent.event().target()) ? Option.none<boolean>() : (() => {
       if (detail.autofocus) {
         simulatedEvent.setSource(component.element());
-        return Option.none();
+        return Option.none<boolean>();
       } else {
-        return Option.none();
+        return Option.none<boolean>();
       }
     })();
   };
@@ -88,12 +88,12 @@ const builder = (detail: WidgetItemDetail) => {
             // let its outer menu handle escape
             if (! Focusing.isFocused(component) && !detail.autofocus) {
               Focusing.focus(component);
-              return Option.some(true);
+              return Option.some<boolean>(true);
             } else if (detail.autofocus) {
               simulatedEvent.setSource(component.element());
-              return Option.none();
+              return Option.none<boolean>();
             } else {
-              return Option.none();
+              return Option.none<boolean>();
             }
           }
         })

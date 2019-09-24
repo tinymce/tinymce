@@ -3,6 +3,7 @@ import { Element } from '@ephox/sugar';
 
 import * as SizzleFind from '../alien/SizzleFind';
 import * as Truncate from '../alien/Truncate';
+import { TestLabel } from '@ephox/bedrock';
 
 interface TargetAdt {
   fold: <T> (
@@ -41,11 +42,11 @@ const derive = function (element: Element, selector: string) {
   }
 };
 
-const matchesSelf = function (element: Element, selector: string): Option<Element> {
+const matchesSelf = function (element: Element<any>, selector: string): Option<Element<any>> {
   return SizzleFind.matches(element, selector) ? Option.some(element) : Option.none();
 };
 
-const select = function (element: Element, selector: string): Option<Element> {
+const select = function (element: Element<any>, selector: string): Option<Element<any>> {
   return derive(element, selector).fold(
     matchesSelf,
     SizzleFind.child,
@@ -53,7 +54,7 @@ const select = function (element: Element, selector: string): Option<Element> {
   );
 };
 
-const selectAll = function (element: Element, selector: string) {
+const selectAll = function (element: Element<any>, selector: string): Array<Element<any>> {
   return derive(element, selector).fold(
     (element, selector) => matchesSelf(element, selector).toArray(),
     SizzleFind.children,
@@ -61,20 +62,20 @@ const selectAll = function (element: Element, selector: string) {
   );
 };
 
-const toResult = function <T>(message: string, option: Option<T>): Result<T, string> {
+const toResult = function <T>(message: TestLabel, option: Option<T>): Result<T, TestLabel> {
   return option.fold(function () {
-    return Result.error<T, string>(message);
+    return Result.error<T, TestLabel>(message);
   }, Result.value);
 };
 
-const findIn = function (container: Element, selector: string) {
+const findIn = function (container: Element<any>, selector: string): Result<Element<any>, TestLabel> {
   return toResult(
-    'Could not find selector: ' + selector + ' in ' + Truncate.getHtml(container),
+    () => 'Could not find selector: ' + selector + ' in ' + Truncate.getHtml(container),
     select(container, selector)
   );
 };
 
-const findAllIn = function (container: Element, selector: string) {
+const findAllIn = function (container: Element<any>, selector: string): Array<Element<any>> {
   return selectAll(container, selector);
 };
 

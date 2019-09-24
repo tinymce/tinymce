@@ -4,8 +4,8 @@ import { Fun, Option, Cell } from '@ephox/katamari';
 import { nuState } from '../common/BehaviourState';
 
 const init = () => {
-  const timer = Cell(Option.none());
-  const popup = Cell(Option.none());
+  const timer = Cell(Option.none<number>());
+  const popup = Cell(Option.none<string>());
 
   const getTooltip = () => {
     return popup.get();

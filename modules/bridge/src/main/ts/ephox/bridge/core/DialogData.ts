@@ -4,7 +4,8 @@ import { Arr } from '@ephox/katamari';
 import { DialogApi } from '../components/dialog/Dialog';
 
 export const createDataValidator = <T>(structure: DialogApi<T>): Processor => {
-  const fields = Arr.bind(getNamedItems(structure), (item) => {
+  const namedItems = getNamedItems(structure);
+  const fields = Arr.bind(namedItems, (item) => {
     return getDataProcessor(item).fold(
       () => [],
       (schema) => [ FieldSchema.strictOf(item.name, schema) ]

@@ -14,20 +14,24 @@ import { renderModalBody } from './SilverDialogBody';
 import { SilverDialogEvents } from './SilverDialogEvents';
 import { renderModalFooter } from './SilverDialogFooter';
 import { getDialogApi } from './SilverDialogInstanceApi';
-import { getEventExtras, getHeader, renderModalDialog, WindowExtra } from './SilverDialogCommon';
+import * as SilverDialogCommon from './SilverDialogCommon';
 
-const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowExtra<T>, backstage: UiFactoryBackstage) => {
-  const header = getHeader(dialogInit.internalDialog.title, backstage);
+const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: UiFactoryBackstage) => {
+  const header = SilverDialogCommon.getHeader(dialogInit.internalDialog.title, backstage);
 
   const body = renderModalBody({
     body: dialogInit.internalDialog.body
   }, backstage);
 
+  const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(dialogInit.internalDialog.buttons);
+
+  const objOfCells = SilverDialogCommon.extractCellsToObject(storagedMenuButtons);
+
   const footer = renderModalFooter({
-    buttons: dialogInit.internalDialog.buttons
+    buttons: storagedMenuButtons
   }, backstage);
 
-  const dialogEvents = SilverDialogEvents.initDialog(() => instanceApi, getEventExtras(() => dialog, extra));
+  const dialogEvents = SilverDialogEvents.initDialog(() => instanceApi, SilverDialogCommon.getEventExtras(() => dialog, extra));
 
   const dialogSize = dialogInit.internalDialog.size !== 'normal'
     ? dialogInit.internalDialog.size === 'large'
@@ -44,7 +48,7 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowE
     extraStyles: {}
   };
 
-  const dialog = renderModalDialog(spec, dialogInit, dialogEvents, backstage);
+  const dialog = SilverDialogCommon.renderModalDialog(spec, dialogInit, dialogEvents, backstage);
 
   const modalAccess = (() => {
     const getForm = (): AlloyComponent => {
@@ -61,7 +65,7 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowE
   })();
 
   // TODO: Get the validator from the dialog state.
-  const instanceApi = getDialogApi<T>(modalAccess, extra.redial);
+  const instanceApi = getDialogApi<T>(modalAccess, extra.redial, objOfCells);
 
   return {
     dialog,

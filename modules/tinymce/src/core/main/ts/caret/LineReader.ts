@@ -95,7 +95,7 @@ const findClosestHorizontalPositionFromPoint = (positions: CaretPosition[], x: n
     return acc.fold(
       () => Option.some(newPos),
       (lastPos) => {
-        return Options.liftN([Arr.head(lastPos.getClientRects()), Arr.head(newPos.getClientRects())], (lastRect, newRect) => {
+        return Options.lift2(Arr.head(lastPos.getClientRects()), Arr.head(newPos.getClientRects()), (lastRect, newRect) => {
           const lastDist = Math.abs(x - lastRect.left);
           const newDist = Math.abs(x - newRect.left);
           return newDist <= lastDist ? newPos : lastPos;

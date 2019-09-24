@@ -22,7 +22,7 @@ import {
   SystemEvents
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Arr, Future, Option, Result } from '@ephox/katamari';
+import { Arr, Fun, Future, Option, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 
@@ -72,12 +72,15 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
     });
   }).toArray();
 
+  const placeholder = spec.placeholder.fold( Fun.constant({}), (p) => ({ placeholder: providersBackstage.translate(p) }));
+
+  const inputAttributes = {
+    ...placeholder
+  };
+
   const pField = AlloyFormField.parts().field({
     tag: spec.multiline === true ? 'textarea' : 'input',
-    inputAttributes: spec.placeholder.fold(
-      () => {},
-      (placeholder) => ({ placeholder: providersBackstage.translate(placeholder) })
-    ),
+    inputAttributes,
     inputClasses: [spec.classname],
     inputBehaviours: Behaviour.derive(
       Arr.flatten<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>([

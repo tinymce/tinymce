@@ -5,10 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { navigator } from '@ephox/dom-globals';
 import { Arr, Fun, Future, Futures, Result } from '@ephox/katamari';
+import { Attr, Element } from '@ephox/sugar';
+import { ReferrerPolicy } from '../api/SettingsTypes';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
-import { navigator } from '@ephox/dom-globals';
 
 /**
  * This class handles loading of external stylesheets and fires events when these are loaded.
@@ -20,11 +22,13 @@ import { navigator } from '@ephox/dom-globals';
 export interface StyleSheetLoader {
   load: (url: string, loadedCallback: Function, errorCallback?: Function) => void;
   loadAll: (urls: string[], success: Function, failure: Function) => void;
+  _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
 }
 
 export interface StyleSheetLoaderSettings {
   maxLoadTime: number;
   contentCssCors: boolean;
+  referrerPolicy: ReferrerPolicy;
 }
 
 export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
@@ -33,6 +37,10 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
   let maxLoadTime;
 
   maxLoadTime = settings.maxLoadTime || 5000;
+
+  const _setReferrerPolicy = (referrerPolicy: ReferrerPolicy) => {
+    settings.referrerPolicy = referrerPolicy;
+  };
 
   const appendToHead = function (node) {
     document.getElementsByTagName('head')[0].appendChild(node);
@@ -185,6 +193,11 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
       link.crossOrigin = 'anonymous';
     }
 
+    if (settings.referrerPolicy) {
+      // Note: Don't use link.referrerPolicy = ... here as it doesn't work on Safari
+      Attr.set(Element.fromDom(link), 'referrerpolicy', settings.referrerPolicy);
+    }
+
     // Feature detect onload on link element and sniff older webkits since it has an broken onload event
     if ('onload' in link && !isOldWebKit()) {
       link.onload = waitForWebKitLinkLoaded;
@@ -238,6 +251,7 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
 
   return {
     load,
-    loadAll
+    loadAll,
+    _setReferrerPolicy
   };
 }

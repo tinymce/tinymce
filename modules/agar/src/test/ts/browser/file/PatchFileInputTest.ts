@@ -8,7 +8,7 @@ import { Cell, Option } from '@ephox/katamari';
 
 UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
   const files = [ createFile('a.txt', 0, new Blob(['x'])) ];
-  const filesState = Cell(Option.none());
+  const filesState = Cell(Option.none<FileList>());
 
   const pickFiles = (body: Element, next: (files: FileList) => void) => {
     const elm = Element.fromHtml<HTMLInputElement>('<input type="file">');

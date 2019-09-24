@@ -3,8 +3,13 @@ import { Cell, Fun, Option } from '@ephox/katamari';
 import { nuState } from '../common/BehaviourState';
 import { FlatgridState } from '../../keying/KeyingModeTypes';
 
+interface RowsCols {
+  numRows: () => number;
+  numColumns: () => number;
+}
+
 const flatgrid = (spec): FlatgridState => {
-  const dimensions = Cell(Option.none());
+  const dimensions = Cell(Option.none<RowsCols>());
 
   const setGridSize = (numRows, numColumns) => {
     dimensions.set(
@@ -28,8 +33,8 @@ const flatgrid = (spec): FlatgridState => {
   };
 
   return nuState({
-    readState: () => {
-      return dimensions.get().map((d) => {
+    readState: (): any => {
+      return dimensions.get().map<any>((d) => {
         return {
           numRows: d.numRows(),
           numColumns: d.numColumns()

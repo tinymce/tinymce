@@ -25,7 +25,7 @@ UnitTest.test('ClusteringTest', function () {
         RawAssertions.assertEq('start: ' + id + ', check middle()', expMiddle, checkWords(universe, act.middle()));
         RawAssertions.assertEq('start: ' + id + ', check right()', expRight, checkWords(universe, act.right()));
         RawAssertions.assertEq(
-          'start: ' + id + ', check lang(): expected: ' + expLang.toString() + ', actual: ' + act.lang().toString(),
+          () => 'start: ' + id + ', check lang(): expected: ' + expLang.toString() + ', actual: ' + act.lang().toString(),
           true, expLang.equals(act.lang())
         );
         // .all() is:  tfel + middle + right

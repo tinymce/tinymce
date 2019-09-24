@@ -30,8 +30,8 @@ const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scro
   const bounds = startData.bounds;
   const absoluteCoord = DragCoord.asAbsolute(coords, scroll, origin);
 
-  const newX = cap(absoluteCoord.left(), bounds.x(), bounds.width() - startData.width);
-  const newY = cap(absoluteCoord.top(), bounds.y(), bounds.height() - startData.height);
+  const newX = cap(absoluteCoord.left(), bounds.x(), bounds.x() + bounds.width() - startData.width);
+  const newY = cap(absoluteCoord.top(), bounds.y(), bounds.y() + bounds.height() - startData.height);
   const newCoords = DragCoord.absolute(newX, newY);
 
   // Translate the absolute coord back into the previous type

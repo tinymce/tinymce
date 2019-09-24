@@ -70,8 +70,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
     Sandboxing.open(sandbox, thing);
   };
   const showAt = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) => {
-    const getBounds = Option.none();
-    showWithin(sandbox, anchor, thing, getBounds);
+    showWithin(sandbox, anchor, thing, Option.none());
   };
   const showWithin = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Option<Element>) => {
     const sink = detail.lazySink(sandbox).getOrDie();

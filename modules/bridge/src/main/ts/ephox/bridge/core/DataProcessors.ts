@@ -14,6 +14,7 @@ import { textAreaDataProcessor } from '../components/dialog/Textarea';
 import { urlInputDataProcessor } from '../components/dialog/UrlInput';
 import { getAllObjects } from './ObjUtils';
 import { collectionDataProcessor } from '../components/dialog/Collection';
+import { dialogToggleMenuItemDataProcessor } from '../components/dialog/ToggleMenuItem';
 
 const isNamedItem = (obj) => Type.isString(obj.type) && Type.isString(obj.name);
 
@@ -30,7 +31,8 @@ const dataProcessors = {
   textarea: textAreaDataProcessor,
   urlinput: urlInputDataProcessor,
   customeditor: customEditorDataProcessor,
-  collection: collectionDataProcessor
+  collection: collectionDataProcessor,
+  togglemenuitem: dialogToggleMenuItemDataProcessor
 };
 
 const getDataProcessor = (item): Option<Processor> => {

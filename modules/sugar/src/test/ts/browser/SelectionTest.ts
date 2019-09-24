@@ -37,9 +37,9 @@ UnitTest.test('Browser Test: SelectionTest', function () {
     WindowSelection.getExact(window).fold(function () {
       assert.fail('After setting selection ' + label + ', could not find a selection');
     }, function (sel) {
-      assert.eq(true, Compare.eq(sel.start(), expStart), 'Start container should be: ' + Html.getOuter(expStart) + '\n' + label);
+      assert.eq(true, Compare.eq(sel.start(), expStart), () => 'Start container should be: ' + Html.getOuter(expStart) + '\n' + label);
       assert.eq(expSoffset, sel.soffset());
-      assert.eq(true, Compare.eq(sel.finish(), expFinish), 'Finish container should be ' + Html.getOuter(expFinish) + '\n' + label);
+      assert.eq(true, Compare.eq(sel.finish(), expFinish), () => 'Finish container should be ' + Html.getOuter(expFinish) + '\n' + label);
       assert.eq(expFoffset, sel.foffset());
     });
   };
@@ -83,9 +83,9 @@ UnitTest.test('Browser Test: SelectionTest', function () {
   const assertRng = function (selection, expStart, expSoffset, expFinish, expFoffset) {
     const r = WindowSelection.toNative(selection);
 
-    assert.eq(expStart.dom(), r.startContainer, 'Start Container should be: ' + Html.getOuter(expStart));
+    assert.eq(expStart.dom(), r.startContainer, () => 'Start Container should be: ' + Html.getOuter(expStart));
     assert.eq(expSoffset, r.startOffset, 'Start offset should be: ' + expSoffset);
-    assert.eq(expFinish.dom(), r.endContainer, 'End Container should be: ' + Html.getOuter(expFinish));
+    assert.eq(expFinish.dom(), r.endContainer, () => 'End Container should be: ' + Html.getOuter(expFinish));
     assert.eq(expFoffset, r.endOffset, 'End offset should be: ' + expFoffset);
 
     return r;

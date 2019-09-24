@@ -70,9 +70,11 @@ const isSelectorFormat = (format: AllowedFormat): format is SelectorStyleFormat 
   return Obj.has(format as Record<string, any>, 'selector');
 };
 
+type FormatTypes = Separator | FormatReference | NestedFormatting;
+
 interface CustomFormatMapping {
   customFormats: { name: string, format: StyleFormat }[];
-  formats: (Separator | FormatReference | NestedFormatting)[];
+  formats: FormatTypes[];
 }
 
 const mapFormats = (userFormats: AllowedFormat[]): CustomFormatMapping => {
@@ -97,7 +99,7 @@ const mapFormats = (userFormats: AllowedFormat[]): CustomFormatMapping => {
   }, { customFormats: [], formats: [] });
 };
 
-const registerCustomFormats = (editor: Editor, userFormats: AllowedFormat[]): (Separator | FormatReference | NestedFormatting)[] => {
+const registerCustomFormats = (editor: Editor, userFormats: AllowedFormat[]): FormatTypes[] => {
   const result = mapFormats(userFormats);
 
   const registerFormats = (customFormats: {name: string, format: StyleFormat}[]) => {
@@ -121,7 +123,7 @@ const registerCustomFormats = (editor: Editor, userFormats: AllowedFormat[]): (S
   return result.formats;
 };
 
-export const getStyleFormats = (editor: Editor): (Separator | FormatReference | NestedFormatting)[] => {
+export const getStyleFormats = (editor: Editor): FormatTypes[] => {
   return getUserStyleFormats(editor).map((userFormats) => {
     // Ensure that any custom formats specified by the user are registered with the editor
     const registeredUserFormats = registerCustomFormats(editor, userFormats);

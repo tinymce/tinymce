@@ -1,130 +1,108 @@
 import * as Fun from './Fun';
 
+/** A value which may be Option.some(a) or Option.none().
+ *  Useful for representing partiality or pass/fail conditions that produce a value when successful.
+ *  Sometimes called a "type-safe alternative to null".
+ *  Can be thought of as a list of exactly zero or 1 elements.
+ */
 export interface Option<T> {
+  /** If none, run whenNone; if some(a) run whenSome(a) */
   fold: <T2> (whenNone: () => T2, whenSome: (v: T) => T2) => T2;
-  is: (value: T) => boolean;
+
+  /** is this value some(t)?  */
+  is: (t: T) => boolean;
+
   isSome: () => boolean;
   isNone: () => boolean;
+
+  /** If some(x) return x, otherwise return the specified default value */
   getOr: (value: T) => T;
+
+  /** getOr with a thunked default value */
   getOrThunk: (makeValue: () => T) => T;
+
+  /** get the 'some' value; throw if none */
   getOrDie: (msg?: string) => T;
+
   getOrNull: () => T | null;
   getOrUndefined: () => T | undefined;
+  /**
+  - if some: return self
+  - if none: return opt
+  */
   or: (opt: Option<T>) => Option<T>;
+
+  /** Same as "or", but uses a thunk instead of a value */
   orThunk: (makeOption: () => Option<T>) => Option<T>;
+
+  /** Run a function over the 'some' value.
+   *  "map" operation on the Option functor.
+   */
   map: <T2> (mapper: (x: T) => T2) => Option<T2>;
-  ap: <T2> (optfab: Option<(a: T) => T2>) => Option<T2>;
+
+  /** Run a side effect over the 'some' value */
   each: (worker: (x: T) => void) => void;
+
+  /** "bind"/"flatMap" operation on the Option Bind/Monad.
+   *  Equivalent to >>= in Haskell/PureScript; flatMap in Scala.
+   */
   bind: <T2> (f: (x: T) => Option<T2>) => Option<T2>;
-  /** convert an Option<Option<A>> to Option<A> */
-  flatten: () => Option<any>; // TODO: find a way to express in the typesystem
+
+  /** Does this Option contain a value that predicate? */
   exists: (f: (x: T) => boolean) => boolean;
+
+  /** Do all values contained in this option match this predicate? */
   forall: (f: (x: T) => boolean) => boolean;
+
+  /** Return all values in this Option that match the predicate.
+   *  The predicate may refine the constituent type using TypeScript type predicates.
+   */
   filter: {
     <Q extends T>(f: (x: T) => x is Q): Option<Q>;
     (f: (x: T) => boolean): Option<T>;
   };
+
+  /** Compare two Options using === */
   equals: (opt: Option<T>) => boolean;
+
+  /** Compare two Options using a specified comparator. */
   equals_: <T2> (opt: Option<T2>, equality: (a: T, b: T2) => boolean) => boolean;
+
+  /** Returns all the values in this Option as an array */
   toArray: () => T[];
+
   toString: () => string;
 }
 
-const never: () => false = Fun.never;
-const always: () => true = Fun.always;
+const none = <T>() => <Option<T>> NONE;
 
-/**
-  Option objects support the following methods:
-
-  fold :: this Option a -> ((() -> b, a -> b)) -> Option b
-
-  is :: this Option a -> a -> Boolean
-
-  isSome :: this Option a -> () -> Boolean
-
-  isNone :: this Option a -> () -> Boolean
-
-  getOr :: this Option a -> a -> a
-
-  getOrThunk :: this Option a -> (() -> a) -> a
-
-  getOrDie :: this Option a -> String -> a
-
-  or :: this Option a -> Option a -> Option a
-    - if some: return self
-    - if none: return opt
-
-  orThunk :: this Option a -> (() -> Option a) -> Option a
-    - Same as "or", but uses a thunk instead of a value
-
-  map :: this Option a -> (a -> b) -> Option b
-    - "fmap" operation on the Option Functor.
-    - same as 'each'
-
-  ap :: this Option a -> Option (a -> b) -> Option b
-    - "apply" operation on the Option Apply/Applicative.
-    - Equivalent to <*> in Haskell/PureScript.
-
-  each :: this Option a -> (a -> b) -> undefined
-    - similar to 'map', but doesn't return a value.
-    - intended for clarity when performing side effects.
-
-  bind :: this Option a -> (a -> Option b) -> Option b
-    - "bind"/"flatMap" operation on the Option Bind/Monad.
-    - Equivalent to >>= in Haskell/PureScript; flatMap in Scala.
-
-  flatten :: {this Option (Option a))} -> () -> Option a
-    - "flatten"/"join" operation on the Option Monad.
-
-  exists :: this Option a -> (a -> Boolean) -> Boolean
-
-  forall :: this Option a -> (a -> Boolean) -> Boolean
-
-  filter :: this Option a -> (a -> Boolean) -> Option a
-
-  equals :: this Option a -> Option a -> Boolean
-
-  equals_ :: this Option a -> (Option a, a -> Boolean) -> Boolean
-
-  toArray :: this Option a -> () -> [a]
-
-*/
-
-const none = function<T = any> () { return <Option<T>> NONE; };
-
-const NONE: Option<any> = (function () {
+const NONE: Option<any> = (() => {
   const eq = function (o) {
     return o.isNone();
   };
 
   // inlined from peanut, maybe a micro-optimisation?
-  const call = function (thunk) { return thunk(); };
-  const id = function (n) { return n; };
-  const noop = function () { };
-  const nul = function () { return null; };
-  const undef = function () { return undefined; };
-
+  const call = (thunk) => thunk();
+  const id = (n) => n;
   const me: Option<any> = {
-    fold (n, s) { return n(); },
-    is: never,
-    isSome: never,
-    isNone: always,
+    fold: (n, s) => n(),
+    is: Fun.never,
+    isSome: Fun.never,
+    isNone: Fun.always,
     getOr: id,
     getOrThunk: call,
     getOrDie (msg) {
       throw new Error(msg || 'error: getOrDie called on none.');
     },
-    getOrNull: nul,
-    getOrUndefined: undef,
+    getOrNull: Fun.constant(null),
+    getOrUndefined: Fun.constant(undefined),
     or: id,
     orThunk: call,
     map: none,
-    ap: none,
-    each: noop,
+    each: Fun.noop,
     bind: none,
-    flatten: none,
-    exists: never,
-    forall: always,
+    exists: Fun.never,
+    forall: Fun.always,
     filter: none,
     equals: eq,
     equals_: eq,
@@ -137,19 +115,12 @@ const NONE: Option<any> = (function () {
   return me;
 })();
 
-/** some :: a -> Option a */
-const some = function <T> (a: T): Option<T> {
+const some = <T>(a: T): Option<T> => {
+  const constant_a = Fun.constant(a);
 
-  // inlined from peanut, maybe a micro-optimisation?
-  const constant_a = function () { return a; };
-
-  const self = function () {
+  const self = () => {
     // can't Fun.constant this one
     return me;
-  };
-
-  const map = function <T2> (f: (value: T) => T2) {
-    return some(f(a));
   };
 
   const bind = function <T2> (f: (value: T) => T2) {
@@ -157,10 +128,10 @@ const some = function <T> (a: T): Option<T> {
   };
 
   const me: Option<T> = {
-    fold<T2> (n: () => T2, s: (v: T) => T2) { return s(a); },
-    is (v: T) { return a === v; },
-    isSome: always,
-    isNone: never,
+    fold: <T2> (n: () => T2, s: (v: T) => T2): T2 => s(a),
+    is: (v: T): boolean => a === v,
+    isSome: Fun.always,
+    isNone: Fun.never,
     getOr: constant_a,
     getOrThunk: constant_a,
     getOrDie: constant_a,
@@ -168,45 +139,31 @@ const some = function <T> (a: T): Option<T> {
     getOrUndefined: constant_a,
     or: self,
     orThunk: self,
-    map,
-    ap<T2> (optfab: Option<(a: T) => T2>) {
-      return optfab.fold(<() => Option<T2>> none, function (fab) {
-        return some(fab(a));
-      });
-    },
-    each (f: (value: T) => void) {
+    map: <T2> (f: (value: T) => T2) => some(f(a)),
+    each: (f: (value: T) => void): void => {
       f(a);
     },
     bind,
-    flatten: <any> constant_a,
     exists: bind,
     forall: bind,
-    filter <Q extends T>(f: (value: T) => value is Q): Option<Q> {
-      return f(a) ? me as Option<Q> : NONE;
-    },
+    filter: <Q extends T>(f: (value: T) => value is Q): Option<Q> =>
+      f(a) ? me as Option<Q> : NONE,
+    toArray: () => [a],
+    toString: () => 'some(' + a + ')',
     equals (o: Option<T>) {
       return o.is(a);
     },
     equals_<T2> (o: Option<T2>, elementEq: (a: T, b: T2) => boolean) {
       return o.fold(
-        never,
+        Fun.never,
         function (b) { return elementEq(a, b); }
       );
     },
-    toArray () {
-      return [a];
-    },
-    toString () {
-      return 'some(' + a + ')';
-    }
   };
   return me;
 };
 
-/** from :: undefined|null|a -> Option a */
-const from = function <T> (value: T | undefined | null): Option<NonNullable<T>> {
-  return value === null || value === undefined ? NONE : some(value as NonNullable<T>);
-};
+const from = <T>(value: T | undefined | null): Option<NonNullable<T>> => value === null || value === undefined ? NONE : some(value as NonNullable<T>);
 
 export const Option = {
   some,

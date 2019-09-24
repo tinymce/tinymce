@@ -1,4 +1,6 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 import { LegacyUnit } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -8,12 +10,8 @@ import ViewBlock from '../module/test/ViewBlock';
 import Delay from 'tinymce/core/api/util/Delay';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 

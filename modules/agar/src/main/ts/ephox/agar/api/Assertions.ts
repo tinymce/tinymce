@@ -10,6 +10,7 @@ import * as Logger from './Logger';
 import { assertEq } from './RawAssertions';
 import { Step } from './Step';
 import * as UiFinder from './UiFinder';
+import { TestLabel, UnitTest } from '@ephox/bedrock';
 
 const toStep = function <U extends any[]> (method: (...args: U) => void) {
   return function <T> (...args: U) {
@@ -19,7 +20,7 @@ const toStep = function <U extends any[]> (method: (...args: U) => void) {
   };
 };
 
-const toChain = function <B, C> (method: (label: string, expected: B, actual: C) => void) {
+const toChain = function <B, C> (method: (label: TestLabel, expected: B, actual: C) => void) {
   return function (label: string, expected: B) {
     return Chain.op<C>(function (actual: C) {
       method.call(undefined, label, expected, actual);
@@ -27,29 +28,26 @@ const toChain = function <B, C> (method: (label: string, expected: B, actual: C)
   };
 };
 
-// Note, this requires changes to tunic
-const textError = function (label: string, expected: string, actual: string) {
-  const err = new Error(label);
-  return ({
-    diff: {
-      expected,
-      actual,
-      comparison: Differ.htmlDiff(expected, actual)
-    },
-    label,
-    stack: err.stack,
-    name: 'HtmlAssertion',
-    message: err.message
-  });
+const textError = function (label: string, expected: string, actual: string): UnitTest.HtmlDiffError {
+  const err: Partial<UnitTest.HtmlDiffError> = new Error(label);
+  err.diff = {
+    expected,
+    actual,
+    comparison: Differ.htmlDiff(expected, actual)
+  };
+  err.label = label;
+  err.name = 'HtmlAssertion';
+
+  return err as UnitTest.HtmlDiffError;
 };
 
-const assertHtml = function (label: string, expected: string, actual: string) {
+const assertHtml = function (label: TestLabel, expected: string, actual: string) {
   if (expected !== actual) {
-    throw textError(label, expected, actual);
+    throw textError(TestLabel.asString(label), expected, actual);
   }
 };
 
-const assertStructure = function (label: string, expected: StructAssert, container: Element) {
+const assertStructure = function (label: TestLabel, expected: StructAssert, container: Element) {
   Logger.sync(label, function () {
     if (expected.type === 'advanced') {
       expected.doAssert(elementQueue([container], Option.none()));
@@ -59,30 +57,30 @@ const assertStructure = function (label: string, expected: StructAssert, contain
   });
 };
 
-const assertHtmlStructure = function (label: string, expected: string, actual: string) {
+const assertHtmlStructure = function (label: TestLabel, expected: string, actual: string) {
   assertStructure(label, ApproxStructure.fromHtml(expected), Element.fromHtml(actual));
 };
 
-const assertHtmlStructure2 = function (label: string, expected: string, actual: Element) {
+const assertHtmlStructure2 = function (label: TestLabel, expected: string, actual: Element) {
   assertStructure(label, ApproxStructure.fromHtml(expected), actual);
 };
 
-const assertPresence = function (label: string, expected: Record<string, number>, container: Element) {
+const assertPresence = function (label: TestLabel, expected: Record<string, number>, container: Element) {
   Obj.each(expected, function (num: number, selector: string) {
     const actual = UiFinder.findAllIn(container, selector).length;
-    assertEq('Did not find ' + num + ' of ' + selector + ', found: ' + actual + '. Test: ' + label, num, actual);
+    assertEq(TestLabel.concat('Did not find ' + num + ' of ' + selector + ', found: ' + actual + '. Test: ', label), num, actual);
   });
 };
 
-const assertDomEq = function (label: string, expected: Element, actual: Element) {
+const assertDomEq = function (label: TestLabel, expected: Element, actual: Element) {
   assertEq(
-    label + '\nExpected : ' + Truncate.getHtml(expected) + '\nActual: ' + Truncate.getHtml(actual),
+    TestLabel.concat(label, () => '\nExpected : ' + Truncate.getHtml(expected) + '\nActual: ' + Truncate.getHtml(actual)),
     true,
     Compare.eq(expected, actual)
   );
 };
 
-const sAssertEq: <T, V> (label: string, expected: V, actual: V) => Step<T, T> = toStep(assertEq);
+const sAssertEq: <T, V> (label: TestLabel, expected: V, actual: V) => Step<T, T> = toStep(assertEq);
 const sAssertHtml = toStep(assertHtml);
 const sAssertPresence = toStep(assertPresence);
 const sAssertStructure = toStep(assertStructure);

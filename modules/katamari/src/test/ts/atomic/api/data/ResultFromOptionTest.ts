@@ -5,8 +5,8 @@ import { Result } from 'ephox/katamari/api/Result';
 UnitTest.test('Result.fromOption tests', function () {
   const extractError = <T, E>(result: Result<T, E>): Option<E> => {
     return result.fold(
-      Option.some,
-      Option.none
+      (e) => Option.some(e),
+      () => Option.none()
     );
   };
 

@@ -69,7 +69,7 @@ const renderColorStructure = (itemText: Option<string>, itemValue: string, iconS
 // TODO: Maybe need aria-label
 const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>, renderIcons: boolean, textRender: (text: string) => AlloySpec, rtlClass: boolean): ItemStructure => {
   // checkmark has priority, otherwise render icon if we have one, otherwise empty icon for spacing
-  const leftIcon = renderIcons ? info.checkMark.orThunk(() => icon.or(Option.some('')).map(renderIcon)) : Option.none();
+  const leftIcon: Option<AlloySpec> = renderIcons ? info.checkMark.orThunk(() => icon.or(Option.some('')).map(renderIcon)) : Option.none();
   const domTitle = info.ariaLabel.map((label): {attributes?: {title: string}} => {
     return {
       attributes: {

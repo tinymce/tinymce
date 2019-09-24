@@ -124,7 +124,13 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
               const urlEntry = Representing.getValue(input);
               return FutureResult.nu((completer) => {
                 handler({ type: spec.filetype, url: urlEntry.value }, (validation) => {
-                  completer((validation.status === 'invalid' ? Result.error : Result.value)(validation.message));
+                  if (validation.status === 'invalid') {
+                    const err = Result.error(validation.message);
+                    completer(err);
+                  } else {
+                    const val = Result.value(validation.message);
+                    completer(val);
+                  }
                 });
               });
             },

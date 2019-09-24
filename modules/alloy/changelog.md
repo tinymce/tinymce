@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [4.15.25] - 2019-09-18
+
+### Fixed
+
+- Fixed dragging being blocked when scrolled and not at the bottom of the viewport.
+
 # [4.15.2] - 2019-07-31
 
 ### Added

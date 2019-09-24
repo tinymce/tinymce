@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest, TestLabel } from '@ephox/bedrock';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attr, Body, Css, Element, Html, Insert, Remove, SelectorFilter } from '@ephox/sugar';
@@ -45,21 +45,20 @@ UnitTest.test('Runtime Size Test', function () {
     });
   };
 
-  const fuzzyAssertEq = function (a: number, b: number, msg: string) {
+  const fuzzyAssertEq = function (a: number, b: number, msg: TestLabel) {
     // Sometimes the widths of the cells are 1 px off due to rounding but the total table width is never off
     assert.eq(true, Math.abs(a - b) <= 1, msg);
   };
 
   const assertSize = function (s1: { total: number, cells: number[] }, table: Element, getOuterSize: (e: Element) => number, message: string) {
     const s2 = measureTable(table, getOuterSize);
-    const html = Html.getOuter(table);
     const cellAssertEq = platform.browser.isIE() || platform.browser.isEdge() ? fuzzyAssertEq : assert.eq;
 
-    assert.eq(s1.total, s2.total, message + ', expected table size: ' + s1.total + ', actual: ' + s2.total + ', table: ' + html);
+    assert.eq(s1.total, s2.total, () => message + ', expected table size: ' + s1.total + ', actual: ' + s2.total + ', table: ' + Html.getOuter(table));
 
     Arr.each(s1.cells, function (cz1, i) {
       const cz2 = s2.cells[i];
-      cellAssertEq(cz1, cz2, message + ', expected cell size: ' + cz1 + ', actual: ' + cz2 + ', table: ' + html);
+      cellAssertEq(cz1, cz2, () => message + ', expected cell size: ' + cz1 + ', actual: ' + cz2 + ', table: ' + Html.getOuter(table));
     });
   };
 

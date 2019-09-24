@@ -18,7 +18,7 @@ type CustomEditorInitFn = Types.CustomEditor.CustomEditorInitFn;
 const isOldCustomEditor = (spec: CustomEditorSpec): spec is Types.CustomEditor.CustomEditorOld => Object.prototype.hasOwnProperty.call(spec, 'init');
 
 export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
-  const editorApi = Cell(Option.none());
+  const editorApi = Cell(Option.none<Types.CustomEditor.CustomEditorInit>());
 
   const memReplaced = Memento.record({
     dom: {
@@ -26,7 +26,7 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
     }
   });
 
-  const initialValue = Cell(Option.none());
+  const initialValue = Cell(Option.none<string>());
 
   return {
     dom: {

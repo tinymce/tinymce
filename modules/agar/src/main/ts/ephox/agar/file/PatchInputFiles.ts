@@ -3,7 +3,12 @@ import { Cell, Option } from '@ephox/katamari';
 import { Step, GeneralSteps, Chain } from '@ephox/agar';
 import { createFileList } from './FileList';
 
-const inputPrototypeState = Cell(Option.none());
+interface Props {
+  files: PropertyDescriptor;
+  click: () => void;
+}
+
+const inputPrototypeState = Cell(Option.none<Props>());
 
 const createChangeEvent = (win: Window): Event => {
   const event: any = document.createEvent('CustomEvent');

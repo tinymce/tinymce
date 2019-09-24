@@ -10,6 +10,7 @@ import Prism from './Prism';
 import Utils from '../util/Utils';
 import { Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Element } from '@ephox/dom-globals';
 
 const getSelectedCodeSample = (editor: Editor) => {
   const node = editor.selection ? editor.selection.getNode() : null;
@@ -18,7 +19,7 @@ const getSelectedCodeSample = (editor: Editor) => {
     return Option.some(node);
   }
 
-  return Option.none();
+  return Option.none<Element>();
 };
 
 const insertCodeSample = (editor: Editor, language: string, code: string) => {

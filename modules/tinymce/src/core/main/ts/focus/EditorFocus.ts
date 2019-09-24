@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Range } from '@ephox/dom-globals';
+import { Node, Range, Element as DomElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Compare, Element, Focus } from '@ephox/sugar';
 import Selection from '../api/dom/Selection';
@@ -18,17 +18,14 @@ import * as RangeNodes from '../selection/RangeNodes';
 import SelectionBookmark from '../selection/SelectionBookmark';
 import FocusController from './FocusController';
 
-const getContentEditableHost = (editor: Editor, node: Node) => {
-  return editor.dom.getParent(node, function (node) {
-    return editor.dom.getContentEditable(node) === 'true';
-  });
-};
+const getContentEditableHost = (editor: Editor, node: Node): DomElement =>
+  editor.dom.getParent(node, (node) => editor.dom.getContentEditable(node) === 'true');
 
-const getCollapsedNode = (rng: Range) => {
+const getCollapsedNode = (rng: Range): Option<Element<Node>> => {
   return rng.collapsed ? Option.from(RangeNodes.getNode(rng.startContainer, rng.startOffset)).map(Element.fromDom) : Option.none();
 };
 
-const getFocusInElement = (root, rng: Range) => {
+const getFocusInElement = (root: Element<any>, rng: Range): Option<Element<any>> => {
   return getCollapsedNode(rng).bind(function (node) {
     if (ElementType.isTableSection(node)) {
       return Option.some(node);

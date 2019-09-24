@@ -24,19 +24,23 @@ const process = (rawFormats): Array<{ title: string, format: string}> => {
   });
 };
 
-export interface BasicSelectDataset {
-  type: 'basic';
-  data: Array<{
+export interface BasicSelectItem {
     title: string;
     format: string;
-  }>;
+}
+
+export interface BasicSelectDataset {
+  type: 'basic';
+  data: Array<BasicSelectItem>;
 }
 
 export interface AdvancedSelectDataset extends SelectData {
   type: 'advanced';
 }
 
-const buildBasicStaticDataset = (data): BasicSelectDataset => {
+export type SelectDataset = BasicSelectDataset | AdvancedSelectDataset;
+
+const buildBasicStaticDataset = (data: Array<BasicSelectItem>): BasicSelectDataset => {
   return {
     type: 'basic',
     data
