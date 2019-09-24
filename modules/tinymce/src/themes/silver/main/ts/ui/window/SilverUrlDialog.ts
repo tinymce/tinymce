@@ -9,6 +9,7 @@ import { Receiving, AddEventsBehaviour, AlloyEvents, AlloyParts } from '@ephox/a
 import { Types } from '@ephox/bridge';
 import { window, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Cell, Obj, Option, Type } from '@ephox/katamari';
+import { DomEvent, Element, EventUnbinder, SelectorFind } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import URI from 'tinymce/core/api/util/URI';
@@ -20,7 +21,6 @@ import { renderModalFooter } from './SilverDialogFooter';
 import { getUrlDialogApi } from './SilverUrlDialogInstanceApi';
 import { DialogSpec, getEventExtras, getHeader, renderModalDialog, WindowExtra } from './SilverDialogCommon';
 import {  bodySendMessageChannel } from './DialogChannels';
-import { DomEvent, Element, EventUnbinder, SelectorFind } from '@ephox/sugar';
 
 // A list of supported message actions
 const SUPPORTED_MESSAGE_ACTIONS = ['insertContent', 'setContent', 'execCommand', 'close', 'block', 'unblock'];

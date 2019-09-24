@@ -108,7 +108,7 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
       contextual: {
         lazyContext (comp) {
           const headerHeight = Height.getOuter(comp.element());
-          const container = editor.inline ? editor.getBody() : editor.getContainer();
+          const container = editor.inline ? editor.getContentAreaContainer() : editor.getContainer();
           const box = Boxes.box(Element.fromDom(container));
           // Force the header to hide before it overflows outside the container
           const boxHeight = box.height() - headerHeight;

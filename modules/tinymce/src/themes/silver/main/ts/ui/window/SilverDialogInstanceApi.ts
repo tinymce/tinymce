@@ -58,9 +58,9 @@ export interface DialogAccess {
   getFormWrapper: () => AlloyComponent;
 }
 
-const getDialogApi = <T>(
+const getDialogApi = <T extends Types.Dialog.DialogData>(
   access: DialogAccess,
-  doRedial: <N extends Types.Dialog.DialogData>(newConfig: Types.Dialog.DialogApi<N>) => DialogManager.DialogInit<N>,
+  doRedial: (newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>,
   menuItemStates: Record<string, Cell<Boolean>>
 ): Types.Dialog.DialogInstanceApi<T> => {
   const withRoot = (f: (r: AlloyComponent) => void): void => {
@@ -138,7 +138,7 @@ const getDialogApi = <T>(
     });
   };
 
-  const redial = <N>(d: Types.Dialog.DialogApi<N>): void => {
+  const redial = (d: Types.Dialog.DialogApi<T>): void => {
     withRoot((root) => {
       const dialogInit = doRedial(d);
       root.getSystem().broadcastOn( [ dialogChannel ], dialogInit);
