@@ -20,6 +20,7 @@ import {
   Layout,
   LayoutInside,
   MaxHeight,
+  MaxWidth,
   Positioning
 } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
@@ -189,7 +190,8 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   const anchorOverrides = {
-    maxHeightFunction: MaxHeight.expandable()
+    maxHeightFunction: MaxHeight.expandable(),
+    maxWidthFunction: MaxWidth.anchored()
   };
 
   const lineAnchorSpec = {

@@ -1,6 +1,5 @@
-import { Option, Struct } from '@ephox/katamari';
+import { Fun, Option, Struct } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-
 import { Bounds } from '../../alien/Boxes';
 import { AnchorOverrides, MaxHeightFunction, MaxWidthFunction } from '../mode/Anchoring';
 import * as Callouts from '../view/Callouts';
@@ -8,7 +7,6 @@ import { Anchor } from './Anchor';
 import { Bubble } from './Bubble';
 import * as LayoutTypes from './LayoutTypes';
 import * as MaxHeight from './MaxHeight';
-import * as MaxWidth from './MaxWidth';
 import * as Origins from './Origins';
 
 export interface ReparteeOptionsSpec {
@@ -36,7 +34,7 @@ const defaultOr = (options, key, dephault) => {
 const simple = (anchor: Anchor, element: Element, bubble: Bubble, layouts: LayoutTypes.AnchorLayout[], getBounds: Option<() => Bounds>, overrideOptions: AnchorOverrides): void => {
   // the only supported override at the moment. Once relative has been deleted, maybe this can be optional in the bag
   const maxHeightFunction: MaxHeightFunction = defaultOr(overrideOptions, 'maxHeightFunction', MaxHeight.anchored());
-  const maxWidthFunction: MaxWidthFunction = defaultOr(overrideOptions, 'maxWidthFunction', MaxWidth.anchored());
+  const maxWidthFunction: MaxWidthFunction = defaultOr(overrideOptions, 'maxWidthFunction', Fun.noop);
 
   const anchorBox = anchor.anchorBox();
   const origin = anchor.origin();
@@ -62,6 +60,4 @@ const go = (anchorBox: LayoutTypes.AnchorBox, element: Element, bubble: Bubble, 
   Callouts.setWidth(element, decision, options);
 };
 
-export {
-  simple
-};
+export { simple };
