@@ -1,5 +1,6 @@
-import { Element, Css } from '@ephox/sugar';
+import { Element, Css, DomEvent } from '@ephox/sugar';
 import { console, window, document } from '@ephox/dom-globals';
+import { Fun } from '@ephox/katamari';
 
 declare let tinymce: any;
 
@@ -159,17 +160,21 @@ export default function () {
       const touchdirection = (editor) => {
         // Load this when touch device is detected
         const start = { x: 0, y: 0 };
+        const editorContainer = Element.fromDom(editor.editorContainer);
 
-        editor.on('touchstart', (e) => {
-          start.x = e.touches[0].pageX;
-          start.y = e.touches[0].pageY;
+        // tslint:disable-next-line:no-unused-expression
+        const touchstartHandler = DomEvent.capture(editorContainer, 'touchstart', (e) => {
+          const ev = e.raw();
+          start.x = ev.touches[0].pageX;
+          start.y = ev.touches[0].pageY;
         });
 
-        editor.on('touchend', (e) => {
+        const touchendHandler = DomEvent.capture(editorContainer, 'touchend', (e) => {
+          const ev = e.raw();
           const flickDelta = { x: 0 , y: 0 };
 
-          flickDelta.x = start.x - e.pageX;
-          flickDelta.y = start.y - e.pageY;
+          flickDelta.x = start.x - ev.pageX;
+          flickDelta.y = start.y - ev.pageY;
 
           const vertical = flickDelta.y > 0;
           const horizontal = flickDelta.x > 0;
@@ -181,12 +186,12 @@ export default function () {
           // TODO: redraw visual viewport, perhaps an animate to smoothen out the rubber band back.
         });
 
-        // todo - this only captures content, we need to capture on toolbar and footerbar also...perhaps a higher level delegation
-        editor.on('touchmove', (e) => {
+        const touchmoveHandler = DomEvent.capture(editorContainer, 'touchmove', (e) => {
+          const ev = e.raw();
           const delta = { x: 0 , y: 0 };
 
-          delta.x = start.x - e.touches[0].pageX;
-          delta.y = start.y - e.touches[0].pageY;
+          delta.x = start.x - ev.touches[0].pageX;
+          delta.y = start.y - ev.touches[0].pageY;
 
           const vertical = delta.y > 0;
           const horizontal = delta.x > 0;
@@ -195,6 +200,14 @@ export default function () {
           editor.fire(vertical ? 'swipedown' : 'swipeup');
           editor.fire(horizontal ? 'swipeleft' : 'swiperight');
         });
+
+        return {
+          destroy: () => {
+            touchmoveHandler.unbind();
+            touchendHandler.unbind();
+            touchstartHandler.unbind();
+          }
+        };
       };
 
       const bod = Element.fromDom(document.body);
@@ -204,7 +217,8 @@ export default function () {
         margin: '0'
       });
 
-      touchdirection(editor);
+      // todo hook in handle.destroy since we are using delegation events, on exit fullscreen
+      const handle = touchdirection(editor);
 
       editor.on('swipedown flickdown', (e) => {
         // console.log(window.document.body.scrollTop, window.document.body.scrollHeight);
