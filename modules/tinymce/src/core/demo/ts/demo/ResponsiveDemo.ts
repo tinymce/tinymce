@@ -149,7 +149,12 @@ export default function () {
     emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js',
     init_instance_callback: (editor) => {
 
-      const rubberBand = 100;
+      // TODOS
+      // detect flick scroll, see where touch end is above or below touch start, bypass touchmove
+      // see if we can disable animation on scrolltop
+      // android disable overscroll via CSS -> testing
+
+      const rubberBand = 50;
 
       const touchdirection = (editor) => {
         // Load this when touch device is detected
@@ -158,12 +163,25 @@ export default function () {
         editor.on('touchstart', (e) => {
           start.x = e.touches[0].pageX;
           start.y = e.touches[0].pageY;
-
-          // editor.on('touchend', () => {
-          //   // todo bind a visual viewport refresh here to fix glitch
-          // });
         });
 
+        editor.on('touchend', (e) => {
+          const flickDelta = { x: 0 , y: 0 };
+
+          flickDelta.x = start.x - e.pageX;
+          flickDelta.y = start.y - e.pageY;
+
+          const vertical = flickDelta.y > 0;
+          const horizontal = flickDelta.x > 0;
+
+          // TODO: test these events
+          editor.fire(vertical ? 'flickdown' : 'flickup');
+          editor.fire(horizontal ? 'flickleft' : 'flickright');
+
+          // TODO: redraw visual viewport, perhaps an animate to smoothen out the rubber band back.
+        });
+
+        // todo - this only captures content, we need to capture on toolbar and footerbar also...perhaps a higher level delegation
         editor.on('touchmove', (e) => {
           const delta = { x: 0 , y: 0 };
 
@@ -173,6 +191,7 @@ export default function () {
           const vertical = delta.y > 0;
           const horizontal = delta.x > 0;
 
+          // TODO: test these events
           editor.fire(vertical ? 'swipedown' : 'swipeup');
           editor.fire(horizontal ? 'swipeleft' : 'swiperight');
         });
@@ -187,7 +206,7 @@ export default function () {
 
       touchdirection(editor);
 
-      editor.on('swipedown', (e) => {
+      editor.on('swipedown flickdown', (e) => {
         // console.log(window.document.body.scrollTop, window.document.body.scrollHeight);
         // console.log(window.document.documentElement.scrollTop , window.document.documentElement.scrollHeight);
         window.requestAnimationFrame(() => {
@@ -212,7 +231,7 @@ export default function () {
         });
       });
 
-      editor.on('swipeup', (e) => {
+      editor.on('swipeup flickup', (e) => {
 
         if (window.document.documentElement.scrollTop <= rubberBand) {
           console.log('up noop');
