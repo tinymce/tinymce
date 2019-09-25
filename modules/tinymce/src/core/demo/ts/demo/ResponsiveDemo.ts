@@ -149,6 +149,8 @@ export default function () {
     emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js',
     init_instance_callback: (editor) => {
 
+      const rubberBand = 100;
+
       const touchdirection = (editor) => {
         // Load this when touch device is detected
         const start = { x: 0, y: 0 };
@@ -171,47 +173,56 @@ export default function () {
           const vertical = delta.y > 0;
           const horizontal = delta.x > 0;
 
-          editor.fire(vertical ? 'swipeup' : 'swipedown');
+          editor.fire(vertical ? 'swipedown' : 'swipeup');
           editor.fire(horizontal ? 'swipeleft' : 'swiperight');
         });
       };
 
       const bod = Element.fromDom(document.body);
+      // todo: revert to previous styles when exit from mobile fullscreen, see Thor attr backups
       Css.setAll(bod, {
-        padding: '0',
+        padding: rubberBand + 'px 0',
         margin: '0'
       });
 
       touchdirection(editor);
 
-      editor.on('swipeup', (e) => {
-
+      editor.on('swipedown', (e) => {
         // console.log(window.document.body.scrollTop, window.document.body.scrollHeight);
         // console.log(window.document.documentElement.scrollTop , window.document.documentElement.scrollHeight);
         window.requestAnimationFrame(() => {
-            console.log('down', window.document.documentElement.scrollTop, window.document.body.scrollTop);
+            console.log('down', window.document.documentElement.scrollTop, window.document.body.scrollTop, Date());
 
             /* tslint:disable-next-line:no-string-literal */
             const visualViewport = window['visualViewport'];
             const bodyRect = window.document.body.getClientRects();
 
-            if (window.document.body.scrollTop === window.document.body.scrollHeight - bodyRect[0].height) {
-              console.log('noop');
+            if (window.document.documentElement.scrollTop >= window.document.documentElement.scrollHeight - bodyRect[0].height) {
+              // We are in a good peaceful place, do nothing
+              console.log('down noop');
             } else {
-              console.log('reset');
-              window.document.body.scrollTop = window.document.body.scrollHeight;
-
-              // we don't scroll to the very end of the <html>, theres room in their for rubber band
+              console.log('setscroll');
+              // TODO: future bug, when we are nested in another iframe, we'd have to scroll that to the extremity also.
+              // we don't scroll to the very end of the <html>, so theres room in their for rubber band effect
               window.document.documentElement.scrollTop = window.document.documentElement.scrollHeight - visualViewport.height;
             }
-        });
 
+            // scroll the content to the extremity
+            window.document.body.scrollTop = window.document.body.scrollHeight;
+        });
       });
 
-      editor.on('swipedown', (e) => {
-        window.document.documentElement.scrollTop = 1;
+      editor.on('swipeup', (e) => {
+
+        if (window.document.documentElement.scrollTop <= rubberBand) {
+          console.log('up noop');
+        } else {
+          window.document.documentElement.scrollTop = rubberBand;
+          console.log('up', window.document.documentElement.scrollTop, window.document.body.scrollTop);
+        }
+
         window.document.body.scrollTop = 0;
-        console.log('up', window.document.documentElement.scrollTop, window.document.body.scrollTop);
+
       });
 
     }
