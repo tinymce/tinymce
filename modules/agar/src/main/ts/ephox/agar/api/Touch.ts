@@ -48,15 +48,15 @@ const cTapOn = (selector: string): Chain<Element, Element> => {
   });
 };
 
-const cTouchStartAt = function (dx: number, dy: number) {
+const cTouchStartAt = (dx: number, dy: number) => {
   return Chain.op(Touches.touchstartAt(dx, dy));
 };
 
-const cTouchEndAt = function (dx: number, dy: number) {
+const cTouchEndAt = (dx: number, dy: number) => {
   return Chain.op(Touches.touchendAt(dx, dy));
 };
 
-const cTouchMoveTo = function (dx: number, dy: number) {
+const cTouchMoveTo = (dx: number, dy: number) => {
   return Chain.op(Touches.touchmoveTo(dx, dy));
 };
 
