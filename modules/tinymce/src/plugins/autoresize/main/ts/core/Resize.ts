@@ -116,6 +116,11 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
     oldSize.set(resizeHeight);
     Events.fireResizeEditor(editor);
 
+    // Ensure the selected node is in view, as it's potentially out of view after resizing the editor
+    if (editor.hasFocus()) {
+      editor.selection.scrollIntoView(editor.selection.getNode());
+    }
+
     // WebKit doesn't decrease the size of the body element until the iframe gets resized
     // So we need to continue to resize the iframe down until the size gets fixed
     if (Env.webkit && deltaSize < 0) {
@@ -137,7 +142,7 @@ const setup = (editor: Editor, oldSize: Cell<number>) => {
     });
   });
 
-  editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', function (e) {
+  editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', () => {
     resize(editor, oldSize);
   });
 
