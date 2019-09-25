@@ -68,7 +68,7 @@ const forToolbar = (columns: number) => {
 };
 
 // NOTE: That type signature isn't quite true.
-const preprocessCollection = (items: ItemTypes.ItemSpec[], isSeparator: (a: ItemTypes.ItemSpec, index: number) => boolean): AlloySpec[] => {
+const preprocessCollection = (items: ItemTypes.ItemSpec[], horizontalMenu: boolean, isSeparator: (a: ItemTypes.ItemSpec, index: number) => boolean): AlloySpec[] => {
   const allSplits = [ ];
   let currentSplit = [ ];
   Arr.each(items, (item, i) => {
@@ -93,7 +93,7 @@ const preprocessCollection = (items: ItemTypes.ItemSpec[], isSeparator: (a: Item
     return {
       dom: {
         tag: 'div',
-        classes: [ 'tox-collection__group' ]
+        classes: horizontalMenu ? [ 'tox-toolbar__group' ] : [ 'tox-collection__group' ]
       },
       components: s
     };
@@ -116,10 +116,29 @@ const forCollection = (columns: number | 'auto', initItems, hasIcons: boolean = 
               classes: [ 'tox-collection__group' ]
             }, columns)(items);
           } else {
-            return preprocessCollection(items, (item, i) => {
+            return preprocessCollection(items, false, (item, i) => {
               return initItems[i].type === 'separator';
             });
           }
+        }
+      })
+    ]
+  };
+};
+
+const forHorizontalCollection = (initItems, hasIcons: boolean = true) => {
+  return {
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-toolbar' ]
+    },
+    components: [
+      // TODO: Clean up code and test atomically
+      AlloyMenu.parts().items({
+        preprocess: (items: ItemTypes.ItemSpec[]) => {
+          return preprocessCollection(items, true, (item, i) => {
+            return initItems[i].type === 'separator';
+          });
         }
       })
     ]
@@ -130,5 +149,6 @@ export {
   chunk,
   forSwatch,
   forCollection,
+  forHorizontalCollection,
   forToolbar
 };

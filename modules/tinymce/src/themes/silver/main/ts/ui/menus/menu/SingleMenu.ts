@@ -16,7 +16,7 @@ import ItemResponse from '../item/ItemResponse';
 import * as MenuItems from '../item/MenuItems';
 import { deriveMenuMovement } from './MenuMovement';
 import { markers as getMenuMarkers } from './MenuParts';
-import { createPartialMenuWithAlloyItems, handleError } from './MenuUtils';
+import { createPartialMenuWithAlloyItems, handleError, createHorizontalPartialMenuWithAlloyItems } from './MenuUtils';
 import { SingleMenuItemApi } from './SingleMenuTypes';
 
 export type ItemChoiceActionHandler = (value: string) => void;
@@ -87,7 +87,7 @@ export const createAutocompleteItems = (items: InlineContent.AutocompleterConten
   );
 };
 
-export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, backstage: UiFactoryBackstage): Partial<MenuTypes.MenuSpec> => {
+export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, backstage: UiFactoryBackstage, horizontalMenu: boolean = false): Partial<MenuTypes.MenuSpec> => {
   const hasIcons = menuHasIcons(items);
 
   const alloyItems = Options.cat(
@@ -100,7 +100,8 @@ export const createPartialMenu = (value: string, items: SingleMenuItemApi[], ite
       }
     })
   );
-  return createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, 1, 'normal');
+  const createPartial = horizontalMenu ? createHorizontalPartialMenuWithAlloyItems : createPartialMenuWithAlloyItems;
+  return createPartial(value, hasIcons, alloyItems, 1, 'normal');
 };
 
 export const createTieredDataFrom = (partialMenu: Partial<MenuTypes.MenuSpec>) => {

@@ -4,7 +4,7 @@ import { Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 
-import { forCollection, forSwatch, forToolbar } from './MenuStructures';
+import { forCollection, forSwatch, forToolbar, forHorizontalCollection } from './MenuStructures';
 import { components as menuComponents, dom as menuDom } from './MenuParts';
 import { SingleMenuItemApi } from './SingleMenuTypes';
 
@@ -17,6 +17,16 @@ export const handleError = (error: ValueSchema.SchemaError<any>): Option<ItemTyp
   // tslint:disable-next-line:no-console
   console.log(error);
   return Option.none();
+};
+
+export const createHorizontalPartialMenuWithAlloyItems = (value: string, hasIcons: boolean, items, columns: Types.ColumnTypes, presets: Types.PresetTypes): Partial<MenuTypes.MenuSpec> => {
+  const structure = forHorizontalCollection(items);
+  return {
+    value,
+    dom: structure.dom,
+    components: structure.components,
+    items
+  };
 };
 
 // TODO: Potentially make this private again.

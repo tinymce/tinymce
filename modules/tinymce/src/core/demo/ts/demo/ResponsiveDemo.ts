@@ -1,8 +1,9 @@
 import { Element } from '@ephox/sugar';
+import Editor from '../../../main/ts/api/Editor';
 
 declare let tinymce: any;
 
-export default function () {
+export default () => {
 
   const makeSidebar = (ed, name: string, background: string, width: number) => {
     ed.ui.registry.addSidebar(name, {
@@ -92,23 +93,76 @@ export default function () {
         'searchreplace visualblocks code fullscreen',
         'insertdatetime media table contextmenu paste'
       ],
-      toolbar: 'bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image insertfile undo redo | styleselect'
+      toolbar: 'bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image insertfile undo redo | styleselect',
+      menubar: 'file edit insert',
+      table_toolbar: false,
     },
-    setup (ed) {
+    menubar: 'file edit insert',
+    setup (ed: Editor) {
       makeSidebar(ed, 'sidebar1', 'green', 200);
+      ed.ui.registry.addButton('test1', {
+        text: 'test1',
+        onAction: () => {}
+      });
+      ed.ui.registry.addMenuButton('test2', {
+        text: 'test2',
+        fetch: (callback) => {
+          const items: any[] = [
+            {
+              type: 'menuitem',
+              text: 'Menu item 1',
+              onAction: () => {
+                ed.insertContent('&nbsp;<em>You clicked menu item 1!</em>');
+              }
+            },
+            {
+              type: 'nestedmenuitem',
+              text: 'Menu item 2',
+              icon: 'user',
+              getSubmenuItems: () => {
+                return [
+                  {
+                    type: 'menuitem',
+                    text: 'Sub menu item 1',
+                    icon: 'unlock',
+                    onAction: () => {
+                      ed.insertContent('&nbsp;<em>You clicked Sub menu item 1!</em>');
+                    }
+                  },
+                  {
+                    type: 'menuitem',
+                    text: 'Sub menu item 2',
+                    icon: 'lock',
+                    onAction: () => {
+                      ed.insertContent('&nbsp;<em>You clicked Sub menu item 2!</em>');
+                    }
+                  }
+                ];
+              }
+            }
+          ];
+          callback(items);
+        }
+      });
+      // ed.ui.registry.addContextToolbar('texttoolbar', {
+      //   predicate: () => !ed.selection.isCollapsed(),
+      //   items: 'test1 test2 test1 test1 test1 test1 test1 test1 test1 test1 test1 test1 test2 test1 test1 test1 test2 test1 test1',
+      //   position: 'selection',
+      //   scope: 'node'
+      // });
     },
     plugins: [
-      'help'
-      // 'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
-      // 'searchreplace wordcount visualblocks visualchars code fullscreen fullpage insertdatetime media nonbreaking',
-      // 'save table directionality emoticons template paste textcolor importcss colorpicker textpattern',
-      // 'codesample help noneditable print'
+      'help',
+      'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
+      'searchreplace wordcount visualblocks visualchars code fullscreen fullpage insertdatetime media nonbreaking',
+      'save table directionality emoticons template paste textcolor importcss colorpicker textpattern',
+      'codesample help noneditable print'
     ],
+    // width: 600,
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo fullscreen sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
-    'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
+    toolbar: 'undo redo fullscreen sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
 
     // Multiple toolbar array
     // toolbar: ['undo redo sidebar1 align fontsizeselect insertfile | fontselect formatselect styleselect insertfile | styleselect | bold italic',
@@ -144,10 +198,10 @@ export default function () {
     //     name: 'comments', items: [ 'addcomment' ]
     //   }
     // ],
-    toolbar_drawer: 'sliding',
+    toolbar_drawer: false,
     emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js'
   };
 
   tinymce.init(settings);
   // tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
-}
+};

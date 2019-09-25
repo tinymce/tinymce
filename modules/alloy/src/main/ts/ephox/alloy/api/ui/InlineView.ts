@@ -1,9 +1,9 @@
+import { Boxes, Representing, Layout } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-
-import * as ComponentStructure from '../../alien/ComponentStructure';
 import { Bounds } from '../../alien/Boxes';
+import * as ComponentStructure from '../../alien/ComponentStructure';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as SystemEvents from '../../api/events/SystemEvents';
@@ -20,9 +20,8 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { tieredMenu as TieredMenu } from './TieredMenu';
 import { SingleSketchFactory } from './UiSketcher';
-import { Boxes, Representing } from '@ephox/alloy';
 
-const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
+const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, onOpen) => {
   const lazySink: () => ReturnType<LazySink> = () => detail.lazySink(menuSandbox);
   return TieredMenu.sketch({
     dom: {
@@ -46,14 +45,18 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
     },
 
     onOpenMenu(tmenu, menu) {
-      Positioning.position(lazySink().getOrDie(), anchor, menu);
+      onOpen(menu, lazySink().getOrDie());
     },
 
     onOpenSubmenu(tmenu, item, submenu) {
       const sink = lazySink().getOrDie();
       Positioning.position(sink, {
         anchor: 'submenu',
-        item
+        item,
+        layouts: {
+          onLtr: () => [Layout.southeast],
+          onRtl: () => [Layout.southwest]
+        }
       }, submenu);
     },
 
@@ -97,8 +100,18 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
   };
   // TODO AP-191 write a test for showMenuAt
   const showMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
-    const menu = makeMenu(detail, sandbox, anchor, menuSpec);
+    const menu = makeMenu(detail, sandbox, anchor, menuSpec, (menu, sink) => Positioning.position(sink, anchor, menu));
 
+    Sandboxing.open(sandbox, menu);
+    Representing.setValue(sandbox, Option.some({
+      mode: 'menu',
+      menu
+    }));
+    detail.onShow(sandbox);
+  };
+  const showHorizontalMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Option<Bounds>) => {
+    const onOpen = (menu, sink) => Positioning.positionWithinBounds(sink, anchor, menu, getBounds());
+    const menu = makeMenu(detail, sandbox, anchor, menuSpec, onOpen);
     Sandboxing.open(sandbox, menu);
     Representing.setValue(sandbox, Option.some({
       mode: 'menu',
@@ -138,6 +151,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
     showWithin,
     showWithinBounds,
     showMenuAt,
+    showHorizontalMenuAt,
     hide,
     getContent,
     reposition,
@@ -216,6 +230,9 @@ const InlineView = Sketcher.single({
     showMenuAt(apis, component, anchor, menuSpec) {
       apis.showMenuAt(component, anchor, menuSpec);
     },
+    showHorizontalMenuAt(apis, component, anchor, menuSpec, bounds) {
+      apis.showHorizontalMenuAt(component, anchor, menuSpec, bounds);
+    },
     hide (apis, component) {
       apis.hide(component);
     },
@@ -235,3 +252,4 @@ const InlineView = Sketcher.single({
 }) as InlineViewSketcher;
 
 export { InlineView };
+

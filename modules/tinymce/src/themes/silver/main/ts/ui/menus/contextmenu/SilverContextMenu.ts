@@ -5,18 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, GuiFactory, InlineView, Behaviour, AddEventsBehaviour, AlloyEvents, SystemEvents, Sandboxing } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, GuiFactory, InlineView, Sandboxing, SystemEvents } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Element as DomElement } from '@ephox/dom-globals';
+import { Element as DomElement, PointerEvent } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import Editor from 'tinymce/core/api/Editor';
-import * as MenuParts from '../menu/MenuParts';
-import * as NestedMenus from '../menu/NestedMenus';
-import { getPointAnchor, getNodeAnchor } from './Coords';
-import Settings from './Settings';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import ItemResponse from '../item/ItemResponse';
-import { PlatformDetection } from '@ephox/sand';
+import * as MenuParts from '../menu/MenuParts';
+import * as NestedMenus from '../menu/NestedMenus';
+import { getNodeAnchor, getPointAnchor } from './Coords';
+import MobileContextMenu from './MobileContextMenu';
+import Settings from './Settings';
 
 type MenuItem =  string | Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.SeparatorMenuItemApi;
 
@@ -107,9 +109,6 @@ const isNativeOverrideKeyEvent = function (editor: Editor, e) {
 };
 
 export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
-  const detection = PlatformDetection.detect();
-  const isTouch = detection.deviceType.isTouch();
-
   const contextmenu = GuiFactory.build(
     InlineView.sketch({
       dom: {
@@ -131,49 +130,55 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
 
   const hideContextMenu = () => InlineView.hide(contextmenu);
 
-  if (!isTouch) {
-    editor.on('init', () => {
-      // Hide the context menu when scrolling or resizing
-      editor.on('ResizeEditor ResizeWindow ScrollContent ScrollWindow', hideContextMenu);
+  editor.on('init', () => {
+    // Hide the context menu when scrolling or resizing
+    editor.on('ResizeEditor ResizeWindow', hideContextMenu);
 
-      editor.on('contextmenu', (e) => {
-        // Prevent the default if we should never use native
-        if (Settings.shouldNeverUseNative(editor)) {
-          e.preventDefault();
-        }
+    editor.on('contextmenu', (e) => {
+      // Prevent the default if we should never use native
+      if (Settings.shouldNeverUseNative(editor)) {
+        e.preventDefault();
+      }
 
-        if (isNativeOverrideKeyEvent(editor, e) || Settings.isContextMenuDisabled(editor)) {
-          return;
-        }
+      if (isNativeOverrideKeyEvent(editor, e) || Settings.isContextMenuDisabled(editor)) {
+        return;
+      }
 
-        // Different browsers trigger the context menu from keyboards differently, so need to check both the button and target here
-        // Chrome: button = 0 & target = the selection range node
-        // Firefox: button = 0 & target = body
-        // IE/Edge: button = 2 & target = body
-        // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
-        const isTriggeredByKeyboardEvent = e.button !== 2 || e.target === editor.getBody();
-        const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
+      const detection = PlatformDetection.detect();
+      const isTouch = detection.deviceType.isTouch();
 
-        const registry = editor.ui.registry.getAll();
-        const menuConfig = Settings.getContextMenu(editor);
-
-        // Use the event target element for mouse clicks, otherwise fallback to the current selection
-        const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target as DomElement;
-
-        const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
-
+      const show = (_editor: Editor, e: EditorEvent<PointerEvent>, items, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, nuAnchorSpec) => {
         NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage).map((menuData) => {
           e.preventDefault();
 
           // show the context menu, with items set to close on click
-          InlineView.showMenuAt(contextmenu, anchorSpec, {
+          InlineView.showMenuAt(contextmenu, nuAnchorSpec, {
             menu: {
               markers: MenuParts.markers('normal')
             },
             data: menuData
           });
         });
-      });
+      };
+
+      // Different browsers trigger the context menu from keyboards differently, so need to check both the button and target here
+      // Chrome: button = 0 & target = the selection range node
+      // Firefox: button = 0 & target = body
+      // IE/Edge: button = 2 & target = body
+      // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
+      const isTriggeredByKeyboardEvent = e.button !== 2 || e.target === editor.getBody();
+      const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
+
+      const registry = editor.ui.registry.getAll();
+      const menuConfig = Settings.getContextMenu(editor);
+
+      // Use the event target element for mouse clicks, otherwise fallback to the current selection
+      const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target as DomElement;
+
+      const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
+
+      const showContextMenu = isTouch ? MobileContextMenu.show : show;
+      showContextMenu(editor, e, items, backstage, contextmenu, anchorSpec);
     });
-  }
+  });
 };
