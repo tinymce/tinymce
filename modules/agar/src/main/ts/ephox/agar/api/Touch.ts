@@ -77,6 +77,7 @@ export {
 
   cTap,
   cTapOn,
+  cTrueTap,
   cTouchStart,
   cTouchStartAt,
   cTouchMove,
