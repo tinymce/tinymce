@@ -191,7 +191,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
   const anchorOverrides = {
     maxHeightFunction: MaxHeight.expandable(),
-    maxWidthFunction: MaxWidth.anchored()
+    maxWidthFunction: MaxWidth.expandable()
   };
 
   const lineAnchorSpec = {
