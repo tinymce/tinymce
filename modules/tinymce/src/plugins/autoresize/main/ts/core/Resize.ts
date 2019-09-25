@@ -116,6 +116,13 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
     oldSize.set(resizeHeight);
     Events.fireResizeEditor(editor);
 
+    // iPadOS has an issue where it won't rerender the body when the iframe is resized
+    // however if we reset the scroll position then it re-renders correctly
+    if (Env.webkit && Env.mac) {
+      const win = editor.getWin();
+      win.scrollTo(win.pageXOffset, win.pageYOffset);
+    }
+
     // Ensure the selected node is in view, as it's potentially out of view after resizing the editor
     if (editor.hasFocus()) {
       editor.selection.scrollIntoView(editor.selection.getNode());
