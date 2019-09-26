@@ -252,4 +252,3 @@ const InlineView = Sketcher.single({
 }) as InlineViewSketcher;
 
 export { InlineView };
-
