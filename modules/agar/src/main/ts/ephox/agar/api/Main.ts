@@ -26,6 +26,7 @@ import { RealKeys } from './RealKeys';
 import * as RealMouse from './RealMouse';
 import { Step } from './Step';
 import { TestLogs } from './TestLogs';
+import * as Touch from './Touch';
 import * as UiControls from './UiControls';
 import * as UiFinder from './UiFinder';
 import * as Waiter from './Waiter';
@@ -63,6 +64,7 @@ export {
   UiControls,
   UiFinder,
   Waiter,
+  Touch,
   Truncate,
   StructAssert,
   StructAssertBasic,
