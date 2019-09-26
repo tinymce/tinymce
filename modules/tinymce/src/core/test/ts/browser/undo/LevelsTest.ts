@@ -1,6 +1,5 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
-import Env from 'tinymce/core/api/Env';
 import Levels from 'tinymce/core/undo/Levels';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
@@ -40,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', function () {
     LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
-      content: Env.ie && Env.ie < 11 ? '<p></p>' : '<p><br data-mce-bogus="1"></p>',
+      content: '<p><br data-mce-bogus="1"></p>',
       fragments: null,
       type: 'complete'
     });

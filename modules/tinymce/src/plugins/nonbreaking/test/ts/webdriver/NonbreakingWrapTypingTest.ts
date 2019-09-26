@@ -11,7 +11,8 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
   theme();
   NonbreakingPlugin();
 
-  const isGeckoOrIE = Env.gecko || (Env.ie && Env.ie <= 11);
+  const isGecko = Env.browser.isFirefox();
+  const isGeckoOrIE = isGecko || Env.browser.isIE();
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
@@ -125,7 +126,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                     ]
                   }),
                   s.text(str.is(isGeckoOrIE ? '\uFEFF' + ' ' : '\uFEFF' + '\u00a0'))
-                ].concat(Env.gecko ? [ s.element('br', {})] : [])
+                ].concat(isGecko ? [ s.element('br', {})] : [])
               })
             ]
           });
@@ -175,7 +176,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                     ]
                   }),
                   s.text(str.is(isGeckoOrIE ? '\uFEFF' + 'test ' : '\uFEFF' + 'test\u00a0'))
-                ].concat(Env.gecko ? [ s.element('br', {})] : [])
+                ].concat(isGecko ? [ s.element('br', {})] : [])
               })
             ]
           });
@@ -225,7 +226,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                     ]
                   }),
                   s.text(str.is(isGeckoOrIE ? '\uFEFF' + 'test ' : '\uFEFF' + 'test\u00a0'))
-                ].concat(Env.gecko ? [ s.element('br', {})] : [])
+                ].concat(isGecko ? [ s.element('br', {})] : [])
               })
             ]
           });
@@ -249,7 +250,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                     ]
                   }),
                   s.text(str.is(isGeckoOrIE ? '\uFEFF' + 'test test ' : '\uFEFF' + 'test test\u00a0'))
-                ].concat(Env.gecko ? [ s.element('br', {})] : [])
+                ].concat(isGecko ? [ s.element('br', {})] : [])
               })
             ]
           });

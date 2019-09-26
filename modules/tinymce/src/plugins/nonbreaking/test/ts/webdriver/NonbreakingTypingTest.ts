@@ -11,7 +11,8 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest'
   theme();
   NonbreakingPlugin();
 
-  const isGeckoOrIE = Env.gecko || (Env.ie && Env.ie <= 11);
+  const isGecko = Env.browser.isFirefox();
+  const isGeckoOrIE = isGecko || Env.browser.isIE();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyUi = TinyUi(editor);
@@ -99,7 +100,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest'
               s.element('p', {
                 children: [
                   s.text(str.is(isGeckoOrIE ? '\u00a0 ' : '\u00a0\u00a0'))
-                ].concat(Env.gecko ? [ s.element('br', {})] : [])
+                ].concat(isGecko ? [ s.element('br', {})] : [])
               })
             ]
           });
@@ -122,7 +123,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest'
               s.element('p', {
                 children: [
                   s.text(str.is(isGeckoOrIE ? 'test test ' : 'test test\u00a0'))
-                ].concat(Env.gecko ? [ s.element('br', {})] : [])
+                ].concat(isGecko ? [ s.element('br', {})] : [])
               })
             ]
           });
