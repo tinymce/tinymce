@@ -203,6 +203,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     overrides: anchorOverrides
   };
 
+  // On desktop we prioritise north-then-south because it's cleaner, but on mobile we prioritise south to try to avoid overlapping with native context toolbars
   const desktopAnchorSpecLayouts = {
     onLtr: () => [Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest,
       LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest],
