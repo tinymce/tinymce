@@ -6,6 +6,7 @@
  */
 
 import { navigator, window, matchMedia, document, URL } from '@ephox/dom-globals';
+import { PlatformDetection } from '@ephox/sand';
 
 /**
  * This class contains various environment constants like browser versions etc.
@@ -17,27 +18,26 @@ import { navigator, window, matchMedia, document, URL } from '@ephox/dom-globals
  */
 
 const nav = navigator, userAgent = nav.userAgent;
-let opera, webkit, ie, ie11, ie12, gecko, mac, iDevice, android, fileApi, phone, tablet, windowsPhone;
 
 const matchMediaQuery = function (query) {
   return 'matchMedia' in window ? matchMedia(query).matches : false;
 };
 
-opera = false;
-android = /Android/.test(userAgent);
-webkit = /WebKit/.test(userAgent);
-ie = !webkit && !opera && (/MSIE/gi).test(userAgent) && (/Explorer/gi).test(nav.appName);
+const opera = false;
+const android = /Android/.test(userAgent);
+let webkit = /WebKit/.test(userAgent);
+let ie: any = !webkit && !opera && (/MSIE/gi).test(userAgent) && (/Explorer/gi).test(nav.appName);
 ie = ie && /MSIE (\w+)\./.exec(userAgent)[1];
-ie11 = userAgent.indexOf('Trident/') !== -1 && (userAgent.indexOf('rv:') !== -1 || nav.appName.indexOf('Netscape') !== -1) ? 11 : false;
-ie12 = (userAgent.indexOf('Edge/') !== -1 && !ie && !ie11) ? 12 : false;
+const ie11 = userAgent.indexOf('Trident/') !== -1 && (userAgent.indexOf('rv:') !== -1 || nav.appName.indexOf('Netscape') !== -1) ? 11 : false;
+const ie12 = (userAgent.indexOf('Edge/') !== -1 && !ie && !ie11) ? 12 : false;
 ie = ie || ie11 || ie12;
-gecko = !webkit && !ie11 && /Gecko/.test(userAgent);
-mac = userAgent.indexOf('Mac') !== -1;
-iDevice = /(iPad|iPhone)/.test(userAgent);
-fileApi = 'FormData' in window && 'FileReader' in window && 'URL' in window && !!URL.createObjectURL;
-phone = matchMediaQuery('only screen and (max-device-width: 480px)') && (android || iDevice);
-tablet = matchMediaQuery('only screen and (min-width: 800px)') && (android || iDevice);
-windowsPhone = userAgent.indexOf('Windows Phone') !== -1;
+const gecko = !webkit && !ie11 && /Gecko/.test(userAgent);
+const mac = userAgent.indexOf('Mac') !== -1;
+const iDevice = /(iPad|iPhone)/.test(userAgent);
+const fileApi = 'FormData' in window && 'FileReader' in window && 'URL' in window && !!URL.createObjectURL;
+const phone = matchMediaQuery('only screen and (max-device-width: 480px)') && (android || iDevice);
+const tablet = matchMediaQuery('only screen and (min-width: 800px)') && (android || iDevice);
+const windowsPhone = userAgent.indexOf('Windows Phone') !== -1;
 
 if (ie12) {
   webkit = false;
@@ -47,10 +47,15 @@ if (ie12) {
 // says it has contentEditable support but there is no visible caret.
 const contentEditable = !iDevice || fileApi || parseInt(userAgent.match(/AppleWebKit\/(\d*)/)[1], 10) >= 534;
 
+const platform = PlatformDetection.detect();
+const browser = platform.browser;
+const os = platform.os;
+const deviceType = platform.deviceType;
+
 interface Env {
   opera: boolean;
   webkit: boolean;
-  ie: boolean | number;
+  ie: false | number;
   gecko: boolean;
   mac: boolean;
   iOS: boolean;
@@ -68,6 +73,10 @@ interface Env {
   canHaveCSP: boolean;
   desktop: boolean;
   windowsPhone: boolean;
+
+  browser: PlatformDetection.Browser;
+  os: PlatformDetection.OperatingSystem;
+  deviceType: Omit<Omit<PlatformDetection.DeviceType, 'isiOS'>, 'isAndroid'>;
 }
 
 const Env: Env = {
@@ -77,6 +86,7 @@ const Env: Env = {
    * @property opera
    * @type Boolean
    * @final
+   * @deprecated since version 5.1. Use Env.browser.isOpera() instead.
    */
   opera,
 
@@ -86,6 +96,7 @@ const Env: Env = {
    * @property webKit
    * @type Boolean
    * @final
+   * @deprecated since version 5.1. Use Env.browser.isSafari() or Env.browser.isChrome() instead.
    */
   webkit,
 
@@ -95,6 +106,7 @@ const Env: Env = {
    * @property ie
    * @type Boolean
    * @final
+   * @deprecated since version 5.1. Use Env.browser.isIE() or Env.browser.isEdge() instead.
    */
   ie,
 
@@ -104,6 +116,7 @@ const Env: Env = {
    * @property gecko
    * @type Boolean
    * @final
+   * @deprecated since version 5.1. Use Env.browser.isFirefox() instead.
    */
   gecko,
 
@@ -113,6 +126,7 @@ const Env: Env = {
    * @property mac
    * @type Boolean
    * @final
+   * @deprecated since version 5.1. Use Env.os.isOSX() instead.
    */
   mac,
 
@@ -122,6 +136,7 @@ const Env: Env = {
    * @property iOS
    * @type Boolean
    * @final
+   * @deprecated since version 5.1. Use Env.os.isiOS() instead.
    */
   iOS: iDevice,
 
@@ -131,6 +146,7 @@ const Env: Env = {
    * @property android
    * @type Boolean
    * @final
+   * @deprecated since version 5.1. Use Env.os.isAndroid() instead.
    */
   android,
 
@@ -175,7 +191,7 @@ const Env: Env = {
    * @property documentMode
    * @type Number
    */
-  documentMode: ie && !ie12 ? ((<any> document).documentMode || 7) : 10,
+  documentMode: browser.isIE() ? ((<any> document).documentMode || 7) : 10,
 
   /**
    * Constant that is true if the browser has a modern file api.
@@ -191,7 +207,7 @@ const Env: Env = {
    * @property ceFalse
    * @type Boolean
    */
-  ceFalse: (ie === false || ie > 8),
+  ceFalse: !browser.isIE() || browser.version.major > 8,
 
   cacheSuffix: null,
   container: null,
@@ -200,10 +216,51 @@ const Env: Env = {
   /**
    * Constant if CSP mode is possible or not. Meaning we can't use script urls for the iframe.
    */
-  canHaveCSP: (ie === false || ie > 11),
+  canHaveCSP: !browser.isIE(),
 
+  /**
+   * @deprecated since version 5.1. Use Env.deviceType.isDesktop() instead
+   */
   desktop: !phone && !tablet,
-  windowsPhone
+  windowsPhone,
+
+  /**
+   * A collection of utility functions that help to determine what DeviceType is being used,
+   * based on the browsers User Agent.
+   *
+   * @property browser
+   * @type Object
+   * @final
+   */
+  browser,
+
+  /**
+   * A collection of utility functions that help to determine what Operating System (OS) is being used,
+   * based on the browsers User Agent.
+   *
+   * @property os
+   * @type Object
+   * @final
+   */
+  os,
+
+  /**
+   * A collection of utility functions that help to determine what DeviceType is being used,
+   * based on the browsers User Agent.
+   *
+   * @property deviceType
+   * @type Object
+   * @final
+   */
+  deviceType: {
+    isiPad: deviceType.isiPad,
+    isiPhone: deviceType.isiPhone,
+    isPhone: deviceType.isPhone,
+    isTablet: deviceType.isTablet,
+    isTouch: deviceType.isTouch,
+    isWebView: deviceType.isWebView,
+    isDesktop: deviceType.isDesktop
+  }
 };
 
 export default Env;

@@ -1,6 +1,6 @@
 import HTMLElement from './HTMLElement';
 import Node from './Node';
-import PlatformDetection from './PlatformDetection';
+import * as PlatformDetection from './PlatformDetection';
 
 export {
   HTMLElement,
