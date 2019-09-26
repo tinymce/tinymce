@@ -1,4 +1,4 @@
-import { AlloyComponent, Bubble, InlineView, Layout, LayoutInside, MaxWidth, Boxes } from '@ephox/alloy';
+import { AlloyComponent, Bubble, InlineView, Layout, LayoutInside, MaxWidth, Boxes, MaxHeight } from '@ephox/alloy';
 import { PointerEvent, window } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Element, VisualViewport } from '@ephox/sugar';
@@ -16,10 +16,6 @@ const toolbarOrMenubarEnabled = (editor) => Settings.isMenubarEnabled(editor) ||
 const getBounds = (editor: Editor) => () => {
   const viewportBounds = VisualViewport.getBounds(window);
   const contentAreaBox = Boxes.box(Element.fromDom(editor.getContentAreaContainer()));
-
-  // @ts-ignore
-  // tslint:disable-next-line: no-console
-  console.log({viewportBounds, contentAreaBox});
 
   // Create a bounds that lets the context toolbar overflow outside the content area, but remains in the viewport
   if (editor.inline && !toolbarOrMenubarEnabled) {
@@ -54,7 +50,15 @@ const show = (editor: Editor, e: EditorEvent<PointerEvent>, items, backstage: Ui
   NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, true).map((menuData) => {
     e.preventDefault();
 
-    const nuAnchorSpec = { bubble: Bubble.nu(0, bubbleSize, bubbleAlignments), layouts, overrides: { maxWidthFunction: MaxWidth.expandable() }, ...anchorSpec };
+    const nuAnchorSpec = {
+      bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
+      layouts,
+      overrides: {
+        maxWidthFunction: MaxWidth.expandable(),
+        maxHeightFunction: MaxHeight.expandable()
+      },
+      ...anchorSpec
+    };
 
     // show the context menu, with items set to close on click
     InlineView.showHorizontalMenuAt(contextmenu, nuAnchorSpec, {

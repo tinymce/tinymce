@@ -93,7 +93,7 @@ const preprocessCollection = (items: ItemTypes.ItemSpec[], isHorizontalMenu: boo
     return {
       dom: {
         tag: 'div',
-        classes: isHorizontalMenu ? [ 'tox-toolbar__group' ] : [ 'tox-collection__group' ]
+        classes: isHorizontalMenu ? [ 'tox-horizcollection__group' ] : [ 'tox-collection__group' ]
       },
       components: s
     };
@@ -130,7 +130,7 @@ const forHorizontalCollection = (initItems, hasIcons: boolean = true) => {
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar' ]
+      classes: [ 'tox-horizcollection' ]
     },
     components: [
       // TODO: Clean up code and test atomically
