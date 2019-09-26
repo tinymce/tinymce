@@ -1,6 +1,5 @@
-import { Element, Css, DomEvent } from '@ephox/sugar';
+import { Element, Css, DomEvent, Class } from '@ephox/sugar';
 import { console, window, document } from '@ephox/dom-globals';
-import { Fun } from '@ephox/katamari';
 
 declare let tinymce: any;
 
@@ -100,7 +99,7 @@ export default function () {
       makeSidebar(ed, 'sidebar1', 'green', 200);
     },
     plugins: [
-      'help'
+      'fullscreen help'
       // 'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
       // 'searchreplace wordcount visualblocks visualchars code fullscreen fullpage insertdatetime media nonbreaking',
       // 'save table directionality emoticons template paste textcolor importcss colorpicker textpattern',
@@ -109,7 +108,7 @@ export default function () {
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo fullscreen sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+    toolbar: 'fullscreen undo redo fullscreen sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
     'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
 
     // Multiple toolbar array
@@ -149,6 +148,7 @@ export default function () {
     toolbar_drawer: 'sliding',
     emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js',
     init_instance_callback: (editor) => {
+      editor.on('refreshVisualViewport', console.log('VV refresh'));
 
       // TODOS
       // detect flick scroll, see where touch end is above or below touch start, bypass touchmove
@@ -188,6 +188,11 @@ export default function () {
 
         const touchmoveHandler = DomEvent.capture(editorContainer, 'touchmove', (e) => {
           const ev = e.raw();
+
+          if (Class.has(Element.fromDom(ev.target), 'tox-statusbar__path')) {
+            ev.preventDefault();
+            console.log('prevented');
+          }
           const delta = { x: 0 , y: 0 };
 
           delta.x = start.x - ev.touches[0].pageX;
@@ -217,24 +222,23 @@ export default function () {
         margin: '0'
       });
 
-      // todo hook in handle.destroy since we are using delegation events, on exit fullscreen
+      // todo hook in handle.destroy() since we are using delegation events, on exit fullscreen
       const handle = touchdirection(editor);
 
-      editor.on('swipedown flickdown', (e) => {
-        // console.log(window.document.body.scrollTop, window.document.body.scrollHeight);
-        // console.log(window.document.documentElement.scrollTop , window.document.documentElement.scrollHeight);
+      const downControl = (e) => {
+        // if (e.type === 'flickdown') {debugger; }
+
         window.requestAnimationFrame(() => {
-            console.log('down', window.document.documentElement.scrollTop, window.document.body.scrollTop, Date());
+            // console.log('down', window.document.documentElement.scrollTop, window.document.body.scrollTop, Date());
 
             /* tslint:disable-next-line:no-string-literal */
             const visualViewport = window['visualViewport'];
             const bodyRect = window.document.body.getClientRects();
 
-            if (window.document.documentElement.scrollTop >= window.document.documentElement.scrollHeight - bodyRect[0].height) {
+            if (e.type !== 'flickdown' || window.document.documentElement.scrollTop >= window.document.documentElement.scrollHeight - bodyRect[0].height) {
               // We are in a good peaceful place, do nothing
-              console.log('down noop');
+              // console.log('down noop');
             } else {
-              console.log('setscroll');
               // TODO: future bug, when we are nested in another iframe, we'd have to scroll that to the extremity also.
               // we don't scroll to the very end of the <html>, so theres room in their for rubber band effect
               window.document.documentElement.scrollTop = window.document.documentElement.scrollHeight - visualViewport.height;
@@ -242,22 +246,27 @@ export default function () {
 
             // scroll the content to the extremity
             window.document.body.scrollTop = window.document.body.scrollHeight;
+            if (e.type === 'flickdown') {
+              editor.fire('refreshVisualViewport');
+              console.log('flick down');
+            }
         });
-      });
+      };
 
-      editor.on('swipeup flickup', (e) => {
-
-        if (window.document.documentElement.scrollTop <= rubberBand) {
-          console.log('up noop');
-        } else {
+      const upControl = (e) => {
+        if (window.document.documentElement.scrollTop >= rubberBand) {
           window.document.documentElement.scrollTop = rubberBand;
-          console.log('up', window.document.documentElement.scrollTop, window.document.body.scrollTop);
+          // console.log('up', window.document.documentElement.scrollTop, window.document.body.scrollTop);
         }
-
         window.document.body.scrollTop = 0;
+        if (e.type === 'flickup') {
+          editor.fire('refreshVisualViewport');
+          console.log('flick up');
+        }
+      };
 
-      });
-
+      editor.on('swipedown flickdown', downControl);
+      editor.on('swipeup flickup', upControl);
     }
   };
 

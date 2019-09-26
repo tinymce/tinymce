@@ -33,7 +33,7 @@ const visualViewport: VisualViewport.VisualViewport = window['visualViewport'];
 // Experiment is for ipadOS 13 only at this stage. Chrome supports this on desktop, and ipadOS cannot be UA detected, so restrict to Safari.
 const isSafari = PlatformDetection.detect().browser.isSafari();
 
-const viewportUpdate = !isSafari || visualViewport === undefined ? { bind: Fun.noop, unbind: Fun.noop } : (() => {
+const viewportUpdate = !isSafari || visualViewport === undefined ? { bind: Fun.noop, unbind: Fun.noop, update: Fun.noop } : (() => {
   const editorContainer = Singleton.value<Element>();
 
   const update = () => {
@@ -63,6 +63,7 @@ const viewportUpdate = !isSafari || visualViewport === undefined ? { bind: Fun.n
   };
 
   return {
+    update,
     bind,
     unbind
   };
@@ -97,7 +98,12 @@ const toggleFullscreen = function (editor, fullscreenState) {
     DOM.addClass(editorContainer, 'tox-fullscreen');
 
     viewportUpdate.bind(Element.fromDom(editorContainer));
-    editor.on('remove', viewportUpdate.unbind);
+    window.foo = viewportUpdate;
+    editor.on('refreshVisualViewport', viewportUpdate.update());
+    editor.on('remove', () => {
+      editor.off('refreshVisualViewport', viewportUpdate.update());
+      viewportUpdate.unbind();
+    });
     fullscreenState.set(newFullScreenInfo);
     Events.fireFullscreenStateChanged(editor, true);
   } else {
