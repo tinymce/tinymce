@@ -1,21 +1,24 @@
 import { Element, Focus } from '@ephox/sugar';
-import { Step, TestLogs } from '@ephox/agar';
+import { Step } from '@ephox/agar';
 
-import { DieFn, NextFn } from '../pipe/Pipe';
 import * as Touches from '../touch/Touches';
-import { Chain, Wrap } from './Chain';
+import { Chain } from './Chain';
 import * as UiFinder from './UiFinder';
 
-const triggerWith = <T>(container: Element, selector: string, action: (ele: Element) => void) => {
-  return Step.async<T>((next, die) => {
-    const element = UiFinder.findIn(container, selector);
-    element.fold(() => {
-      die(new Error('Could not find element: ' + selector));
-    }, (elem) => {
-      action(elem);
-      next();
-    });
+const cTrigger = (selector: string, action: (ele: Element) => void) => {
+  return Chain.async<Element, Element>((container, next, die) => {
+    UiFinder.findIn(container, selector).fold(
+      () => die('Could not find element: ' + selector),
+      (ele) => {
+        action(ele);
+        next(container);
+      }
+    );
   });
+};
+
+const sTriggerWith = <T>(container: Element, selector: string, action: (ele: Element) => void) => {
+  return Chain.asStep<T, Element>(container, [ cTrigger(selector, action) ]);
 };
 
 const trueTap = (elem: Element) => {
@@ -30,22 +33,18 @@ const tap = (elem: Element) => {
   Touches.touchend(elem);
 };
 
-const sTap = (element: Element) => Step.sync(() => tap(element));
+const sTap = <T>(element: Element) => Step.sync<T>(() => tap(element));
 
 const sTrueTapOn = <T>(container: Element, selector: string) => {
-  return triggerWith<T>(container, selector, trueTap);
+  return sTriggerWith<T>(container, selector, trueTap);
 };
 
 const sTapOn = <T>(container: Element, selector: string) => {
-  return triggerWith<T>(container, selector, tap);
+  return sTriggerWith<T>(container, selector, tap);
 };
 
 const cTapOn = (selector: string): Chain<Element, Element> => {
-  return Chain.on((container: Element, next: NextFn<Wrap<Element>>, die: DieFn, initLogs: TestLogs) => {
-    triggerWith(container, selector, tap)({}, (v, newLogs) => {
-      next(Chain.wrap(container), newLogs);
-    }, (err, newLogs) => die(err, newLogs), initLogs);
-  });
+  return cTrigger(selector, tap);
 };
 
 const cTouchStartAt = (dx: number, dy: number) => {
