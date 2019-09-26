@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { navigator, window, matchMedia, document, URL } from '@ephox/dom-globals';
+import { navigator, window, document, URL } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 
 /**
@@ -17,40 +17,15 @@ import { PlatformDetection } from '@ephox/sand';
  * @static
  */
 
-const nav = navigator, userAgent = nav.userAgent;
-
-const matchMediaQuery = function (query) {
-  return 'matchMedia' in window ? matchMedia(query).matches : false;
-};
-
-const opera = false;
-const android = /Android/.test(userAgent);
-let webkit = /WebKit/.test(userAgent);
-let ie: any = !webkit && !opera && (/MSIE/gi).test(userAgent) && (/Explorer/gi).test(nav.appName);
-ie = ie && /MSIE (\w+)\./.exec(userAgent)[1];
-const ie11 = userAgent.indexOf('Trident/') !== -1 && (userAgent.indexOf('rv:') !== -1 || nav.appName.indexOf('Netscape') !== -1) ? 11 : false;
-const ie12 = (userAgent.indexOf('Edge/') !== -1 && !ie && !ie11) ? 12 : false;
-ie = ie || ie11 || ie12;
-const gecko = !webkit && !ie11 && /Gecko/.test(userAgent);
-const mac = userAgent.indexOf('Mac') !== -1;
-const iDevice = /(iPad|iPhone)/.test(userAgent);
-const fileApi = 'FormData' in window && 'FileReader' in window && 'URL' in window && !!URL.createObjectURL;
-const phone = matchMediaQuery('only screen and (max-device-width: 480px)') && (android || iDevice);
-const tablet = matchMediaQuery('only screen and (min-width: 800px)') && (android || iDevice);
-const windowsPhone = userAgent.indexOf('Windows Phone') !== -1;
-
-if (ie12) {
-  webkit = false;
-}
-
-// Is a iPad/iPhone and not on iOS5 sniff the WebKit version since older iOS WebKit versions
-// says it has contentEditable support but there is no visible caret.
-const contentEditable = !iDevice || fileApi || parseInt(userAgent.match(/AppleWebKit\/(\d*)/)[1], 10) >= 534;
-
+const userAgent = navigator.userAgent;
 const platform = PlatformDetection.detect();
 const browser = platform.browser;
 const os = platform.os;
 const deviceType = platform.deviceType;
+
+const webkit = /WebKit/.test(userAgent) && !browser.isEdge();
+const fileApi = 'FormData' in window && 'FileReader' in window && 'URL' in window && !!URL.createObjectURL;
+const windowsPhone = userAgent.indexOf('Windows Phone') !== -1;
 
 interface Env {
   opera: boolean;
@@ -88,7 +63,7 @@ const Env: Env = {
    * @final
    * @deprecated since version 5.1. Use Env.browser.isOpera() instead.
    */
-  opera,
+  opera: browser.isOpera(),
 
   /**
    * Constant that is true if the browser is WebKit (Safari/Chrome).
@@ -104,11 +79,11 @@ const Env: Env = {
    * Constant that is more than zero if the browser is IE.
    *
    * @property ie
-   * @type Boolean
+   * @type Boolean | Number
    * @final
    * @deprecated since version 5.1. Use Env.browser.isIE() or Env.browser.isEdge() instead.
    */
-  ie,
+  ie: browser.isIE() || browser.isEdge() ? browser.version.major : false,
 
   /**
    * Constant that is true if the browser is Gecko.
@@ -118,7 +93,7 @@ const Env: Env = {
    * @final
    * @deprecated since version 5.1. Use Env.browser.isFirefox() instead.
    */
-  gecko,
+  gecko: browser.isFirefox(),
 
   /**
    * Constant that is true if the os is Mac OS.
@@ -128,7 +103,7 @@ const Env: Env = {
    * @final
    * @deprecated since version 5.1. Use Env.os.isOSX() instead.
    */
-  mac,
+  mac: os.isOSX(),
 
   /**
    * Constant that is true if the os is iOS.
@@ -138,7 +113,7 @@ const Env: Env = {
    * @final
    * @deprecated since version 5.1. Use Env.os.isiOS() instead.
    */
-  iOS: iDevice,
+  iOS: deviceType.isiPad() || deviceType.isiPhone(),
 
   /**
    * Constant that is true if the os is android.
@@ -148,7 +123,7 @@ const Env: Env = {
    * @final
    * @deprecated since version 5.1. Use Env.os.isAndroid() instead.
    */
-  android,
+  android: os.isAndroid(),
 
   /**
    * Constant that is true if the browser supports editing.
@@ -157,7 +132,8 @@ const Env: Env = {
    * @type Boolean
    * @final
    */
-  contentEditable,
+  // All supported browsers support contentEditable now
+  contentEditable: true,
 
   /**
    * Transparent image data url.
@@ -175,7 +151,8 @@ const Env: Env = {
    * @type Boolean
    * @final
    */
-  caretAfter: ie !== 8,
+  // All supported browsers support carets after an inline block now
+  caretAfter: true,
 
   /**
    * Constant that is true if the browser supports native DOM Ranges. IE 9+.
@@ -207,7 +184,8 @@ const Env: Env = {
    * @property ceFalse
    * @type Boolean
    */
-  ceFalse: !browser.isIE() || browser.version.major > 8,
+  // All supported browsers support contenteditable=false now
+  ceFalse: true,
 
   cacheSuffix: null,
   container: null,
@@ -221,7 +199,7 @@ const Env: Env = {
   /**
    * @deprecated since version 5.1. Use Env.deviceType.isDesktop() instead
    */
-  desktop: !phone && !tablet,
+  desktop: deviceType.isDesktop(),
   windowsPhone,
 
   /**
