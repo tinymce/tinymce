@@ -109,6 +109,9 @@ const isNativeOverrideKeyEvent = function (editor: Editor, e) {
 };
 
 export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
+  const detection = PlatformDetection.detect();
+  const isTouch = detection.deviceType.isTouch();
+
   const contextmenu = GuiFactory.build(
     InlineView.sketch({
       dom: {
@@ -132,7 +135,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
 
   editor.on('init', () => {
     // Hide the context menu when scrolling or resizing
-    editor.on('ResizeEditor ResizeWindow', hideContextMenu);
+    editor.on('ResizeEditor ResizeWindow ScrollContent ScrollWindow', hideContextMenu);
 
     editor.on('contextmenu', (e) => {
       // Prevent the default if we should never use native
@@ -143,9 +146,6 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       if (isNativeOverrideKeyEvent(editor, e) || Settings.isContextMenuDisabled(editor)) {
         return;
       }
-
-      const detection = PlatformDetection.detect();
-      const isTouch = detection.deviceType.isTouch();
 
       const show = (_editor: Editor, e: EditorEvent<PointerEvent>, items, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, nuAnchorSpec) => {
         NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false).map((menuData) => {
