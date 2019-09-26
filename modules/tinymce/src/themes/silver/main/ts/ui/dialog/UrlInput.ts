@@ -90,7 +90,8 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     inputClasses: ['tox-textfield'],
     sandboxClasses: ['tox-dialog__popups'],
     inputAttributes: {
-      'aria-errormessage': errorId
+      'aria-errormessage': errorId,
+      'type': 'url'
     },
     minChars: 0,
     responseTime: 0,
