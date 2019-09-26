@@ -68,6 +68,14 @@
   .tox-tbtn__icon-wrap {
     //
   }
+
+  @media @breakpoint-sm {
+    // On small screens we want the toolbar to sidescroll, instead of wrapping to many rows
+    .tox-toolbar {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+  }
 }
 
 // Floating more drawer styles. Uses pop toolbar styles

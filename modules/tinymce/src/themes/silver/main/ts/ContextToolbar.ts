@@ -20,6 +20,7 @@ import {
   Layout,
   LayoutInside,
   MaxHeight,
+  MaxWidth,
   Positioning
 } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
@@ -38,6 +39,7 @@ import ToolbarScopes, { ScopedToolbars } from './ui/context/ContextToolbarScopes
 import { renderToolbar } from './ui/toolbar/CommonToolbar';
 import { identifyButtons } from './ui/toolbar/Integration';
 import * as Settings from './api/Settings';
+import { PlatformDetection } from '@ephox/sand';
 
 const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   const contextbar = GuiFactory.build(
@@ -188,7 +190,8 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   const anchorOverrides = {
-    maxHeightFunction: MaxHeight.expandable()
+    maxHeightFunction: MaxHeight.expandable(),
+    maxWidthFunction: MaxWidth.expandable()
   };
 
   const lineAnchorSpec = {
@@ -200,14 +203,27 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     overrides: anchorOverrides
   };
 
+  // On desktop we prioritise north-then-south because it's cleaner, but on mobile we prioritise south to try to avoid overlapping with native context toolbars
+  const desktopAnchorSpecLayouts = {
+    onLtr: () => [Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest,
+      LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest],
+    onRtl: () => [Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast,
+      LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast]
+  };
+
+  const mobileAnchorSpecLayouts = {
+    onLtr: () => [Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
+      LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest],
+    onRtl: () => [Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north,
+      LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast]
+  };
+
+  const detection = PlatformDetection.detect();
+  const isTouch = detection.deviceType.isTouch();
+
   const anchorSpec = {
     bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
-    layouts: {
-      onLtr: () => [Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest,
-        LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest],
-      onRtl: () => [Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast,
-        LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast]
-    },
+    layouts: isTouch ? mobileAnchorSpecLayouts : desktopAnchorSpecLayouts,
     overrides: anchorOverrides
   };
 

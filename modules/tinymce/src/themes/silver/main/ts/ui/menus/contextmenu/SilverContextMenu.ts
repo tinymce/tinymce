@@ -16,6 +16,7 @@ import { getPointAnchor, getNodeAnchor } from './Coords';
 import Settings from './Settings';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import ItemResponse from '../item/ItemResponse';
+import { PlatformDetection } from '@ephox/sand';
 
 type MenuItem =  string | Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.SeparatorMenuItemApi;
 
@@ -106,6 +107,13 @@ const isNativeOverrideKeyEvent = function (editor: Editor, e) {
 };
 
 export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
+  const detection = PlatformDetection.detect();
+  const isTouch = detection.deviceType.isTouch();
+
+  if (isTouch) {
+    return;
+  }
+
   const contextmenu = GuiFactory.build(
     InlineView.sketch({
       dom: {
