@@ -59,7 +59,7 @@ const XHR: XHR = {
 
   /**
    * Sends a XMLHTTPRequest.
-   * Consult the Wiki for details on what settings this method takes.
+   * Consult the TinyMCE Documentation for details on what settings this method takes.
    *
    * @method send
    * @param {Object} settings Object will target URL, callbacks and other info needed to make the request.

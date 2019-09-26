@@ -1,4 +1,5 @@
 Version 5.1.0 (TBD)
+    Changed toolbars and context toolbars to sidescroll on mobile #TINY-3894 #TINY-4107
     Added touch event listener to media plugin to make embeds playable #TINY-4093
     Changed some editor settings to default to false on mobile:
         - `menubar` #TINY-4077
@@ -15,12 +16,12 @@ Version 5.1.0 (TBD)
     Fixed inline dialogs positioning incorrectly when the page is scrolled #TINY-4018
     Fixed inline dialogs and menus not repositioning when resizing #TINY-3227
     Fixed the autoresize plugin not keeping the selection in view when resizing #TINY-4094
-Version 5.0.16 (TBD)
+Version 5.0.16 (2019-09-24)
     Added new `referrer_policy` setting to add the `referrerpolicy` attribute when loading scripts or stylesheets #TINY-3978
     Added a slight background color to dialog tab links when focused to aid keyboard navigation #TINY-3877
     Fixed media poster value not updating on change #TINY-4013
     Fixed openlink was not registered as a toolbar button #TINY-4024
-    Fixed failing to initialize if a script tag was used inside an SVG #TINY-4087
+    Fixed failing to initialize if a script tag was used inside a SVG #TINY-4087
     Fixed double top border showing on toolbar without menubar when toolbar_drawer is enabled #TINY-4118
     Fixed unable to drag inline dialogs to the bottom of the screen when scrolled #TINY-4154
     Fixed notifications appearing on top of the toolbar when scrolled in inline mode #TINY-4159
