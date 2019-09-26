@@ -68,7 +68,7 @@ export interface JSONRequestConstructor {
 class JSONRequest {
   /**
    * Simple helper function to send a JSON-RPC request without the need to initialize an object.
-   * Consult the Wiki API documentation for more details on what you can pass to this function.
+   * Consult the TinyMCE API Documentation for more details on what you can pass to this function.
    *
    * @method sendRPC
    * @static
@@ -87,7 +87,7 @@ class JSONRequest {
   }
 
   /**
-   * Sends a JSON-RPC call. Consult the Wiki API documentation for more details on what you can pass to this function.
+   * Sends a JSON-RPC call. Consult the TinyMCE API Documentation for more details on what you can pass to this function.
    *
    * @method send
    * @param {Object} args Call object where there are three field id, method and params this object should also contain callbacks etc.

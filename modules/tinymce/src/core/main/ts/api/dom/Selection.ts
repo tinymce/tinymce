@@ -30,7 +30,7 @@ import Serializer from './Serializer';
 
 /**
  * This class handles text and control selection it's an crossbrowser utility class.
- * Consult the TinyMCE Wiki API for more details and examples on how to use this class.
+ * Consult the TinyMCE API Documentation for more details and examples on how to use this class.
  *
  * @class tinymce.dom.Selection
  * @example
