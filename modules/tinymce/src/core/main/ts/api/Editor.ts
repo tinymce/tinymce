@@ -12,7 +12,6 @@ import Annotator from './Annotator';
 import Selection from './dom/Selection';
 import Schema from './html/Schema';
 import Formatter from './Formatter';
-import UndoManager from './UndoManager';
 import * as EditorContent from '../content/EditorContent';
 import SelectionOverrides from '../SelectionOverrides';
 import * as EditorRemove from '../EditorRemove';
@@ -47,6 +46,7 @@ import { Theme } from './ThemeManager';
 import { Plugin } from './PluginManager';
 import NodeType from '../dom/NodeType';
 import ScriptLoader from './dom/ScriptLoader';
+import { UndoManager } from '../undo/UndoManagerTypes';
 
 /**
  * This class contains the core logic for a TinyMCE editor.

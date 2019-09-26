@@ -11,7 +11,7 @@ import Editor from './Editor';
 import { NativeEventMap } from './util/EventDispatcher';
 import { GetContentArgs } from '../content/GetContent';
 import { SetContentArgs } from '../content/SetContent';
-import { UndoLevel } from '../undo/Levels';
+import { UndoLevel } from '../undo/UndoManagerTypes';
 
 export type ExecCommandEvent = { command: string, ui?: boolean, value?: any };
 
