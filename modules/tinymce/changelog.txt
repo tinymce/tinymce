@@ -7,10 +7,12 @@ Version 5.1.0 (TBD)
         - `resize` #TINY-4157
         - `object_resizing` #TINY-4157
     Added `inputMode` config field to specify inputmode attribute of `input` dialog components #TINY-4062
+    Added new `inputMode` property to relevant plugins/dialogs #TINY-4102
     Added new `toolbar_sticky` setting to allow the iframe menubar/toolbar to stick to the top of the window when scrolling #TINY-3982
     Changed the editor to use the `VisualViewport` API of the browser where possible #TINY-4078
     Changed `menubar` to default to `false` on mobile #TINY-4077
     Changed `table_grid` to default to `false` on mobile #TINY-4075
+    Changed the `urlinput` dialog component to use the `url` type attribute #TINY-4102
     Fixed Slider UI component not firing onChange event on touch devices #TINY-4092
     Fixed notifications overlapping instead of stacking #TINY-3478
     Fixed inline dialogs positioning incorrectly when the page is scrolled #TINY-4018

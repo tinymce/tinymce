@@ -28,17 +28,20 @@ export const createTableDialog = () => {
                   {
                     name: 'cellspacing',
                     type: 'input',
-                    label: 'Cell spacing'
+                    label: 'Cell spacing',
+                    inputMode: 'numeric'
                   },
                   {
                     name: 'cellpadding',
                     type: 'input',
-                    label: 'Cell padding'
+                    label: 'Cell padding',
+                    inputMode: 'numeric'
                   },
                   {
                     name: 'border',
                     type: 'input',
-                    label: 'Border'
+                    label: 'Border',
+                    inputMode: 'numeric'
                   },
                   {
                     name: 'caption',
