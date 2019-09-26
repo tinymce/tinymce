@@ -9,15 +9,8 @@ import { KeyboardEvent } from '@ephox/dom-globals';
 import InsertNewLine from '../newline/InsertNewLine';
 import VK from '../api/util/VK';
 import Editor from '../api/Editor';
-import UndoManager from '../api/UndoManager';
 import { EditorEvent } from '../api/util/EventDispatcher';
-
-const endTypingLevel = function (undoManager: UndoManager) {
-  if (undoManager.typing) {
-    undoManager.typing = false;
-    undoManager.add();
-  }
-};
+import { endTypingLevelIgnoreLocks } from '../undo/TypingState';
 
 const handleEnterKeyEvent = function (editor: Editor, event: EditorEvent<KeyboardEvent>) {
   if (event.isDefaultPrevented()) {
@@ -26,7 +19,7 @@ const handleEnterKeyEvent = function (editor: Editor, event: EditorEvent<Keyboar
 
   event.preventDefault();
 
-  endTypingLevel(editor.undoManager);
+  endTypingLevelIgnoreLocks(editor.undoManager);
   editor.undoManager.transact(function () {
     if (editor.selection.isCollapsed() === false) {
       editor.execCommand('Delete');
