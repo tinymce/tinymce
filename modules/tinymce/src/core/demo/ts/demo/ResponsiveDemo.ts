@@ -183,6 +183,7 @@ export default function () {
           editor.fire(vertical ? 'flickdown' : 'flickup');
           editor.fire(horizontal ? 'flickleft' : 'flickright');
 
+          editor.fire('refreshVisualViewport');
           // TODO: redraw visual viewport, perhaps an animate to smoothen out the rubber band back.
         });
 
@@ -235,34 +236,35 @@ export default function () {
             const visualViewport = window['visualViewport'];
             const bodyRect = window.document.body.getClientRects();
 
-            if (e.type !== 'flickdown' || window.document.documentElement.scrollTop >= window.document.documentElement.scrollHeight - bodyRect[0].height) {
+            if (e.type !== 'flickdown' || window.document.documentElement.scrollTop <= window.document.documentElement.scrollHeight - rubberBand) {
               // We are in a good peaceful place, do nothing
               // console.log('down noop');
             } else {
               // TODO: future bug, when we are nested in another iframe, we'd have to scroll that to the extremity also.
               // we don't scroll to the very end of the <html>, so theres room in their for rubber band effect
-              window.document.documentElement.scrollTop = window.document.documentElement.scrollHeight - visualViewport.height;
+              window.document.documentElement.scrollTop = window.document.documentElement.scrollHeight - rubberBand;
+              // scroll the content to the extremity
+              window.document.body.scrollTop = window.document.body.scrollHeight - 1;
             }
-
-            // scroll the content to the extremity
-            window.document.body.scrollTop = window.document.body.scrollHeight;
-            if (e.type === 'flickdown') {
-              editor.fire('refreshVisualViewport');
-              console.log('flick down');
-            }
+            editor.fire('refreshVisualViewport');
+            // if (e.type === 'flickdown') {
+            //   editor.fire('refreshVisualViewport');
+            //   console.log('flick down');
+            // }
         });
       };
 
       const upControl = (e) => {
         if (window.document.documentElement.scrollTop >= rubberBand) {
           window.document.documentElement.scrollTop = rubberBand;
+          window.document.body.scrollTop = 1;
           // console.log('up', window.document.documentElement.scrollTop, window.document.body.scrollTop);
         }
-        window.document.body.scrollTop = 0;
-        if (e.type === 'flickup') {
-          editor.fire('refreshVisualViewport');
-          console.log('flick up');
-        }
+        editor.fire('refreshVisualViewport');
+        // if (e.type === 'flickup') {
+        //   editor.fire('refreshVisualViewport');
+        //   console.log('flick up');
+        // }
       };
 
       editor.on('swipedown flickdown', downControl);
