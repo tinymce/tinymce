@@ -24,7 +24,7 @@ export interface Mode {
   isReadOnly: () => boolean;
 
   /**
-   * Sets the editor mode. Mode can be for example "design", "code" or "readonly".
+   * Sets the editor mode. The available modes are "design" and "readonly". Additional modes can be registered using 'register'.
    *
    * @method set
    * @param {String} mode Mode to set the editor in.
