@@ -8,8 +8,8 @@ import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 // Note, this does not create a valid SketchSpec.
-const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true, isHorizontalMenu: boolean): ItemTypes.ItemSpec => {
-  const caret = isHorizontalMenu ? renderDownwardsCaret(providersBackstage.icons) : renderSubmenuCaret(providersBackstage.icons);
+const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true, downwardsCaret: boolean = false): ItemTypes.ItemSpec => {
+  const caret = downwardsCaret ? renderDownwardsCaret(providersBackstage.icons) : renderSubmenuCaret(providersBackstage.icons);
   const getApi = (component: AlloyComponent): Menu.NestedMenuItemInstanceApi => {
     return {
       isDisabled: () => Disabling.isDisabled(component),
@@ -17,17 +17,15 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
     };
   };
 
-  // If we're making a horizontal menu (mobile context menu) we want text OR icons
-  // to simplify the UI. We also don't want shortcut text.
   const structure = renderItemStructure({
     presets: 'normal',
-    iconContent: isHorizontalMenu && spec.text.isSome() ? Option.none() : spec.icon,
+    iconContent: spec.icon,
     textContent: spec.text,
     htmlContent: Option.none(),
     ariaLabel: spec.text,
     caret: Option.some(caret),
     checkMark: Option.none(),
-    shortcutContent: isHorizontalMenu ? Option.none() : spec.shortcut
+    shortcutContent: spec.shortcut
   }, providersBackstage, renderIcons);
 
   return renderCommonItem({

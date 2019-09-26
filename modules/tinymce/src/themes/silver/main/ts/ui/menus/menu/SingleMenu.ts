@@ -28,23 +28,30 @@ const menuHasIcons = (xs: Array<SingleMenuItemApi | InlineContent.AutocompleterC
 
 const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, backstage: UiFactoryBackstage, menuHasIcons: boolean, isHorizontalMenu: boolean): Option<ItemTypes.ItemSpec> => {
   const providersBackstage = backstage.shared.providers;
+  // If we're making a horizontal menu (mobile context menu) we want text OR icons
+  // to simplify the UI. We also don't want shortcut text.
+  const parseForHorizontalMenu = (menuitem) => !isHorizontalMenu ? menuitem : ({
+    ...menuitem,
+    shortcut: Option.none(),
+    icon: menuitem.text.isSome() ? Option.none() : menuitem.icon,
+  });
   switch (item.type) {
     case 'menuitem':
       return BridgeMenu.createMenuItem(item).fold(
         handleError,
-        (d) => Option.some(MenuItems.normal(d, itemResponse, providersBackstage, menuHasIcons, isHorizontalMenu))
+        (d) => Option.some(MenuItems.normal(parseForHorizontalMenu(d), itemResponse, providersBackstage, menuHasIcons))
       );
 
     case 'nestedmenuitem':
       return BridgeMenu.createNestedMenuItem(item).fold(
         handleError,
-        (d) => Option.some(MenuItems.nested(d, itemResponse, providersBackstage, menuHasIcons, isHorizontalMenu))
+        (d) => Option.some(MenuItems.nested(parseForHorizontalMenu(d), itemResponse, providersBackstage, menuHasIcons, isHorizontalMenu))
       );
 
     case 'togglemenuitem':
       return BridgeMenu.createToggleMenuItem(item).fold(
         handleError,
-        (d) => Option.some(MenuItems.toggle(d, itemResponse, providersBackstage, isHorizontalMenu))
+        (d) => Option.some(MenuItems.toggle(parseForHorizontalMenu(d), itemResponse, providersBackstage))
       );
     case 'separator':
       return BridgeMenu.createSeparatorMenuItem(item).fold(
@@ -54,7 +61,7 @@ const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemRes
     case 'fancymenuitem':
       return BridgeMenu.createFancyMenuItem(item).fold(
         handleError,
-        (d) => MenuItems.fancy(d, backstage)
+        (d) => MenuItems.fancy(parseForHorizontalMenu(d), backstage)
       );
     default: {
       // tslint:disable-next-line:no-console

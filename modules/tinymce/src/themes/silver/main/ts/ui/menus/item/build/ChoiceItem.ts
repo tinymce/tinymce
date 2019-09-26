@@ -15,7 +15,7 @@ import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
-const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: (itemValue: string) => void, isSelected: boolean, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, isHorizontalMenu: boolean) => {
+const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: (itemValue: string) => void, isSelected: boolean, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders) => {
   const getApi = (component): Menu.ToggleMenuItemInstanceApi => {
     return {
       setActive: (state) => {
@@ -27,15 +27,13 @@ const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: 
     };
   };
 
-  // If we're making a horizontal menu (mobile context menu) we want text OR icons
-  // to simplify the UI. We also don't want shortcut text.
   const structure = renderItemStructure({
     presets,
     textContent:  useText ? spec.text : Option.none(),
     htmlContent: Option.none(),
     ariaLabel: spec.text,
-    iconContent: useText && isHorizontalMenu ? Option.none() : spec.icon,
-    shortcutContent: useText && !isHorizontalMenu ? spec.shortcut : Option.none(),
+    iconContent: spec.icon,
+    shortcutContent: useText ? spec.shortcut : Option.none(),
 
     // useText essentially says that we have one column. In one column lists, we should show a tick
     // The tick is controlled by the tickedClass (via css). It is always present
