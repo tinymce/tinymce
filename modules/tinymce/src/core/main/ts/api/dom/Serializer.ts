@@ -18,7 +18,7 @@ interface Serializer extends DomSerializer {
 }
 
 /**
- * This class is used to serialize DOM trees into a string. Consult the TinyMCE Wiki API for
+ * This class is used to serialize DOM trees into a string. Consult the TinyMCE API Documentation for
  * more details and examples on how to use this class.
  *
  * @class tinymce.dom.Serializer
@@ -81,7 +81,7 @@ const Serializer = function (settings: SerializerSettings, editor?: Editor): Ser
     /**
      * Adds valid elements rules to the serializers schema instance this enables you to specify things
      * like what elements should be outputted and what attributes specific elements might have.
-     * Consult the Wiki for more details on this format.
+     * Consult the TinyMCE Documentation for more details on this format.
      *
      * @method addRules
      * @param {String} rules Valid elements rules string to add to schema.
@@ -91,7 +91,7 @@ const Serializer = function (settings: SerializerSettings, editor?: Editor): Ser
     /**
      * Sets the valid elements rules to the serializers schema instance this enables you to specify things
      * like what elements should be outputted and what attributes specific elements might have.
-     * Consult the Wiki for more details on this format.
+     * Consult the TinyMCE Documentation for more details on this format.
      *
      * @method setRules
      * @param {String} rules Valid elements rules string.
