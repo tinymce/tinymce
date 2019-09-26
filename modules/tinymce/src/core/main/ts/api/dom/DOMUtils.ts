@@ -247,7 +247,7 @@ interface DOMUtils {
 }
 
 /**
- * Constructs a new DOMUtils instance. Consult the Wiki for more details on settings etc for this class.
+ * Constructs a new DOMUtils instance. Consult the TinyMCE Documentation for more details on settings etc for this class.
  *
  * @constructor
  * @method DOMUtils
