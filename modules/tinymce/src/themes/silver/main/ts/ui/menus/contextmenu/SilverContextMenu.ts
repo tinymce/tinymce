@@ -148,7 +148,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       const isTouch = detection.deviceType.isTouch();
 
       const show = (_editor: Editor, e: EditorEvent<PointerEvent>, items, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, nuAnchorSpec) => {
-        NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage).map((menuData) => {
+        NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false).map((menuData) => {
           e.preventDefault();
 
           // show the context menu, with items set to close on click

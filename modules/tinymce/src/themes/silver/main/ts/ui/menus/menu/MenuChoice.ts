@@ -21,7 +21,7 @@ export const createChoiceItems = (items: SingleMenuItemApi[], onItemValueHandler
       if (item.type === 'choiceitem') {
         return BridgeMenu.createChoiceMenuItem(item).fold(
           handleError,
-          (d: BridgeMenu.ChoiceMenuItem) => Option.some(renderChoiceItem(d, columns === 1, itemPresets, onItemValueHandler, select(item.value), itemResponse, providersBackstage))
+          (d: BridgeMenu.ChoiceMenuItem) => Option.some(renderChoiceItem(d, columns === 1, itemPresets, onItemValueHandler, select(item.value), itemResponse, providersBackstage, false))
         );
       } else {
         return Option.none();

@@ -14,7 +14,7 @@ import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 // Note, this does not create a valid SketchSpec.
-const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true): ItemTypes.ItemSpec => {
+const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true, isHorizontalMenu: boolean): ItemTypes.ItemSpec => {
   const getApi = (component: AlloyComponent): Menu.MenuItemInstanceApi => {
     return {
       isDisabled: () => Disabling.isDisabled(component),
@@ -22,15 +22,17 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
     };
   };
 
+  // If we're making a horizontal menu (mobile context menu) we want text OR icons
+  // to simplify the UI. We also don't want shortcut text.
   const structure = renderItemStructure({
     presets: 'normal',
-    iconContent: spec.icon,
+    iconContent: isHorizontalMenu && spec.text.isSome() ? Option.none() : spec.icon,
     textContent: spec.text,
     htmlContent: Option.none(),
     ariaLabel: spec.text,
     caret: Option.none(),
     checkMark: Option.none(),
-    shortcutContent: spec.shortcut
+    shortcutContent: isHorizontalMenu ? Option.none() : spec.shortcut
   }, providersBackstage, renderIcons);
 
   return renderCommonItem({
@@ -45,3 +47,4 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
 };
 
 export { renderNormalItem };
+

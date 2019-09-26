@@ -68,7 +68,7 @@ const forToolbar = (columns: number) => {
 };
 
 // NOTE: That type signature isn't quite true.
-const preprocessCollection = (items: ItemTypes.ItemSpec[], horizontalMenu: boolean, isSeparator: (a: ItemTypes.ItemSpec, index: number) => boolean): AlloySpec[] => {
+const preprocessCollection = (items: ItemTypes.ItemSpec[], isHorizontalMenu: boolean, isSeparator: (a: ItemTypes.ItemSpec, index: number) => boolean): AlloySpec[] => {
   const allSplits = [ ];
   let currentSplit = [ ];
   Arr.each(items, (item, i) => {
@@ -93,7 +93,7 @@ const preprocessCollection = (items: ItemTypes.ItemSpec[], horizontalMenu: boole
     return {
       dom: {
         tag: 'div',
-        classes: horizontalMenu ? [ 'tox-toolbar__group' ] : [ 'tox-collection__group' ]
+        classes: isHorizontalMenu ? [ 'tox-toolbar__group' ] : [ 'tox-collection__group' ]
       },
       components: s
     };

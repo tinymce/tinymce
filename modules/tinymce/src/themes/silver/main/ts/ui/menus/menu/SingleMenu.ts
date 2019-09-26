@@ -16,7 +16,7 @@ import ItemResponse from '../item/ItemResponse';
 import * as MenuItems from '../item/MenuItems';
 import { deriveMenuMovement } from './MenuMovement';
 import { markers as getMenuMarkers } from './MenuParts';
-import { createPartialMenuWithAlloyItems, handleError, createHorizontalPartialMenuWithAlloyItems } from './MenuUtils';
+import { createHorizontalPartialMenuWithAlloyItems, createPartialMenuWithAlloyItems, handleError } from './MenuUtils';
 import { SingleMenuItemApi } from './SingleMenuTypes';
 
 export type ItemChoiceActionHandler = (value: string) => void;
@@ -26,25 +26,25 @@ export enum FocusMode { ContentFocus, UiFocus }
 const hasIcon = (item) => item.icon !== undefined || item.type === 'togglemenuitem' || item.type === 'choicemenuitem';
 const menuHasIcons = (xs: Array<SingleMenuItemApi | InlineContent.AutocompleterContents>) => Arr.exists(xs, hasIcon);
 
-const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, backstage: UiFactoryBackstage, menuHasIcons: boolean = true): Option<ItemTypes.ItemSpec> => {
+const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, backstage: UiFactoryBackstage, menuHasIcons: boolean, isHorizontalMenu: boolean): Option<ItemTypes.ItemSpec> => {
   const providersBackstage = backstage.shared.providers;
   switch (item.type) {
     case 'menuitem':
       return BridgeMenu.createMenuItem(item).fold(
         handleError,
-        (d) => Option.some(MenuItems.normal(d, itemResponse, providersBackstage, menuHasIcons))
+        (d) => Option.some(MenuItems.normal(d, itemResponse, providersBackstage, menuHasIcons, isHorizontalMenu))
       );
 
     case 'nestedmenuitem':
       return BridgeMenu.createNestedMenuItem(item).fold(
         handleError,
-        (d) => Option.some(MenuItems.nested(d, itemResponse, providersBackstage, menuHasIcons))
+        (d) => Option.some(MenuItems.nested(d, itemResponse, providersBackstage, menuHasIcons, isHorizontalMenu))
       );
 
     case 'togglemenuitem':
       return BridgeMenu.createToggleMenuItem(item).fold(
         handleError,
-        (d) => Option.some(MenuItems.toggle(d, itemResponse, providersBackstage))
+        (d) => Option.some(MenuItems.toggle(d, itemResponse, providersBackstage, isHorizontalMenu))
       );
     case 'separator':
       return BridgeMenu.createSeparatorMenuItem(item).fold(
@@ -87,12 +87,15 @@ export const createAutocompleteItems = (items: InlineContent.AutocompleterConten
   );
 };
 
-export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, backstage: UiFactoryBackstage, horizontalMenu: boolean = false): Partial<MenuTypes.MenuSpec> => {
+export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, backstage: UiFactoryBackstage, isHorizontalMenu: boolean): Partial<MenuTypes.MenuSpec> => {
   const hasIcons = menuHasIcons(items);
 
   const alloyItems = Options.cat(
     Arr.map(items, (item: SingleMenuItemApi) => {
-      const createItem = (i: SingleMenuItemApi) => createMenuItemFromBridge(i, itemResponse, backstage, hasIcons);
+      // Have to check this for each item, instead of as part of hasIcons above, else
+      // in horizontal menus items with an icon but no text display with nothing at all
+      const itemHasIcon = (i) => isHorizontalMenu ? !i.hasOwnProperty('text') : hasIcons;
+      const createItem = (i: SingleMenuItemApi) => createMenuItemFromBridge(i, itemResponse, backstage, itemHasIcon(i), isHorizontalMenu);
       if (item.type === 'nestedmenuitem' && item.getSubmenuItems().length <= 0) {
         return createItem(Merger.merge(item, {disabled: true}));
       } else {
@@ -100,7 +103,7 @@ export const createPartialMenu = (value: string, items: SingleMenuItemApi[], ite
       }
     })
   );
-  const createPartial = horizontalMenu ? createHorizontalPartialMenuWithAlloyItems : createPartialMenuWithAlloyItems;
+  const createPartial = isHorizontalMenu ? createHorizontalPartialMenuWithAlloyItems : createPartialMenuWithAlloyItems;
   return createPartial(value, hasIcons, alloyItems, 1, 'normal');
 };
 

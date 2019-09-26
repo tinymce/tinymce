@@ -33,7 +33,7 @@ export const renderAutocomplete = (spec: AutocompleteSpec, backstage: UiFactoryB
     fetch: (input) => {
       const value = Representing.getValue(input);
       const items = spec.getItems(value);
-      const tdata = NestedMenus.build(items, ItemResponse.BUBBLE_TO_SANDBOX, backstage);
+      const tdata = NestedMenus.build(items, ItemResponse.BUBBLE_TO_SANDBOX, backstage, false);
       return Future.pure(tdata);
     },
 

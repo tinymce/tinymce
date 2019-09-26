@@ -15,7 +15,7 @@ import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
-const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemTypes.ItemSpec => {
+const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, isHorizontalMenu: boolean): ItemTypes.ItemSpec => {
   const getApi = (component): Menu.ToggleMenuItemInstanceApi => {
     return {
       setActive: (state) => {
@@ -27,8 +27,9 @@ const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemRespo
     };
   };
 
-  // BespokeSelects use meta to pass through styling information. Bespokes should only
+  // - BespokeSelects use meta to pass through styling information. Bespokes should only
   // be togglemenuitems hence meta is only passed through in this MenuItem.
+  // - If we're making a horizontal menu (mobile context menu) we don't want shortcuts.
   const structure = renderItemStructure({
     iconContent: Option.none(),
     textContent: spec.text,
@@ -36,7 +37,7 @@ const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemRespo
     ariaLabel: spec.text,
     checkMark: Option.some(renderCheckmark(providersBackstage.icons)),
     caret: Option.none(),
-    shortcutContent: spec.shortcut,
+    shortcutContent: isHorizontalMenu ? Option.none() : spec.shortcut,
     presets: 'normal',
     meta: spec.meta
   }, providersBackstage, true);
