@@ -57,71 +57,85 @@ interface Env {
 const Env: Env = {
   /**
    * Constant that is true if the browser is Opera.
+   * <br>
+   * <em>Deprecated in TinyMCE 5.1</em> - Use <code>browser.isOpera()</code> instead.
    *
    * @property opera
    * @type Boolean
    * @final
-   * @deprecated since version 5.1. Use Env.browser.isOpera() instead.
+   * @deprecated
    */
   opera: browser.isOpera(),
 
   /**
    * Constant that is true if the browser is WebKit (Safari/Chrome).
+   * <br>
+   * <em>Deprecated in TinyMCE 5.1</em> - Use <code>browser.isSafari()</code> or <code>browser.isChrome()</code> instead.
    *
    * @property webKit
    * @type Boolean
    * @final
-   * @deprecated since version 5.1. Use Env.browser.isSafari() or Env.browser.isChrome() instead.
+   * @deprecated
    */
   webkit,
 
   /**
    * Constant that is more than zero if the browser is IE.
+   * <br>
+   * <em>Deprecated in TinyMCE 5.1</em> - Use <code>browser.version.major</code> and <code>browser.isIE()</code> or <code>browser.ieEdge()</code> instead.
    *
    * @property ie
-   * @type Boolean | Number
+   * @type Number
    * @final
-   * @deprecated since version 5.1. Use Env.browser.isIE() or Env.browser.isEdge() instead.
+   * @deprecated
    */
   ie: browser.isIE() || browser.isEdge() ? browser.version.major : false,
 
   /**
    * Constant that is true if the browser is Gecko.
+   * <br>
+   * <em>Deprecated in TinyMCE 5.1</em> - Use <code>browser.isFirefox()</code> instead.
    *
    * @property gecko
    * @type Boolean
    * @final
-   * @deprecated since version 5.1. Use Env.browser.isFirefox() instead.
+   * @deprecated
    */
   gecko: browser.isFirefox(),
 
   /**
    * Constant that is true if the os is Mac OS.
+   * <br>
+   * <em>Deprecated in TinyMCE 5.1</em> - Use <code>os.isOSX()</code> instead.
    *
    * @property mac
    * @type Boolean
    * @final
-   * @deprecated since version 5.1. Use Env.os.isOSX() instead.
+   * @deprecated
    */
   mac: os.isOSX(),
 
   /**
    * Constant that is true if the os is iOS.
+   * <br>
+   * <em>Deprecated in TinyMCE 5.1</em> - Use <code>os.isiOS()</code> instead.
    *
    * @property iOS
    * @type Boolean
    * @final
-   * @deprecated since version 5.1. Use Env.os.isiOS() instead.
+   * @deprecated
    */
   iOS: deviceType.isiPad() || deviceType.isiPhone(),
 
   /**
    * Constant that is true if the os is android.
+   * <br>
+   * <em>Deprecated in TinyMCE 5.1</em> - Use <code>os.isAndroid()</code> instead.
    *
    * @property android
    * @type Boolean
    * @final
-   * @deprecated since version 5.1. Use Env.os.isAndroid() instead.
+   * @deprecated
    */
   android: os.isAndroid(),
 
@@ -147,7 +161,7 @@ const Env: Env = {
   /**
    * Returns true/false if the browser can or can't place the caret after a inline block like an image.
    *
-   * @property noCaretAfter
+   * @property caretAfter
    * @type Boolean
    * @final
    */
@@ -197,47 +211,26 @@ const Env: Env = {
   canHaveCSP: !browser.isIE(),
 
   /**
-   * @deprecated since version 5.1. Use Env.deviceType.isDesktop() instead
+   * <em>Deprecated in TinyMCE 5.1</em> - Use <code>deviceType.isDesktop()</code> instead.
+   *
+   * @deprecated
    */
   desktop: deviceType.isDesktop(),
   windowsPhone,
 
   /**
-   * A collection of utility functions that help to determine what DeviceType is being used,
-   * based on the browsers User Agent.
-   *
-   * @property browser
-   * @type Object
-   * @final
+   * @include ../../../../../tools/docs/tinymce.Env.js
    */
   browser,
-
-  /**
-   * A collection of utility functions that help to determine what Operating System (OS) is being used,
-   * based on the browsers User Agent.
-   *
-   * @property os
-   * @type Object
-   * @final
-   */
   os,
-
-  /**
-   * A collection of utility functions that help to determine what DeviceType is being used,
-   * based on the browsers User Agent.
-   *
-   * @property deviceType
-   * @type Object
-   * @final
-   */
   deviceType: {
+    isDesktop: deviceType.isDesktop,
     isiPad: deviceType.isiPad,
     isiPhone: deviceType.isiPhone,
     isPhone: deviceType.isPhone,
     isTablet: deviceType.isTablet,
     isTouch: deviceType.isTouch,
-    isWebView: deviceType.isWebView,
-    isDesktop: deviceType.isDesktop
+    isWebView: deviceType.isWebView
   }
 };
 
