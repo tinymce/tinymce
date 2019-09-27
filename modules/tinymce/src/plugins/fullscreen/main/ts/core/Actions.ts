@@ -11,6 +11,7 @@ import { Css, Element, VisualViewport } from '@ephox/sugar';
 import Events from '../api/Events';
 import { PlatformDetection } from '@ephox/sand';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Delay from 'tinymce/core/api/util/Delay';
 
 const DOM = DOMUtils.DOM;
 
@@ -36,7 +37,7 @@ const isSafari = PlatformDetection.detect().browser.isSafari();
 const viewportUpdate = !isSafari || visualViewport === undefined ? { bind: Fun.noop, unbind: Fun.noop, update: Fun.noop } : (() => {
   const editorContainer = Singleton.value<Element>();
 
-  const update = () => {
+  const refreshVisualViewport = () => {
     window.requestAnimationFrame(() => {
       editorContainer.on((container) => Css.setAll(container, {
         top: visualViewport.offsetTop + 'px',
@@ -44,14 +45,17 @@ const viewportUpdate = !isSafari || visualViewport === undefined ? { bind: Fun.n
         height: visualViewport.height + 'px',
         width: visualViewport.width + 'px'
       }));
+      console.log('refresh VV');
     });
   };
+
+  const update = Delay.throttle(refreshVisualViewport, 50);
 
   const bind = (element) => {
     editorContainer.set(element);
     update();
     visualViewport.addEventListener('resize', update);
-    visualViewport.addEventListener('scroll', update);
+    // visualViewport.addEventListener('scroll', update);
   };
 
   const unbind = () => {
@@ -98,10 +102,10 @@ const toggleFullscreen = function (editor, fullscreenState) {
     DOM.addClass(editorContainer, 'tox-fullscreen');
 
     viewportUpdate.bind(Element.fromDom(editorContainer));
-
-    editor.on('refreshVisualViewport', viewportUpdate.update());
+    window.foo = viewportUpdate;
+    editor.on('refreshVisualViewport', viewportUpdate.update);
     editor.on('remove', () => {
-      editor.off('refreshVisualViewport', viewportUpdate.update());
+      editor.off('refreshVisualViewport', viewportUpdate.update);
       viewportUpdate.unbind();
     });
     fullscreenState.set(newFullScreenInfo);

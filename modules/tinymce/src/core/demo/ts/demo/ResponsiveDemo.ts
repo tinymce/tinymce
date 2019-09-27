@@ -1,5 +1,7 @@
 import { Element, Css, DomEvent, Class } from '@ephox/sugar';
 import { console, window, document } from '@ephox/dom-globals';
+import { Cell } from '@ephox/katamari';
+import Delay from 'tinymce/core/api/util/Delay';
 
 declare let tinymce: any;
 
@@ -148,7 +150,7 @@ export default function () {
     toolbar_drawer: 'sliding',
     emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js',
     init_instance_callback: (editor) => {
-      editor.on('refreshVisualViewport', console.log('VV refresh'));
+      editor.on('refreshVisualViewport', console.log('======================= VV refresh'));
 
       // TODOS
       // detect flick scroll, see where touch end is above or below touch start, bypass touchmove
@@ -157,40 +159,29 @@ export default function () {
 
       const rubberBand = 50;
 
-      const touchdirection = (editor) => {
+      // optimisations
+      const lastDirection = Cell(null);
+
+      const touchdirection = (editor, lastDirection) => {
+        // This could prol move to TapEvents?
+
         // Load this when touch device is detected
         const start = { x: 0, y: 0 };
         const editorContainer = Element.fromDom(editor.editorContainer);
 
-        // tslint:disable-next-line:no-unused-expression
-        const touchstartHandler = DomEvent.capture(editorContainer, 'touchstart', (e) => {
-          const ev = e.raw();
+        const vertical = Cell(false);
+        const horizontal = Cell(false);
+
+        const onTouchStart = (e) => {
+          const ev = e.raw ? e.raw() : e;
           start.x = ev.touches[0].pageX;
           start.y = ev.touches[0].pageY;
-        });
+        };
 
-        const touchendHandler = DomEvent.capture(editorContainer, 'touchend', (e) => {
-          const ev = e.raw();
-          const flickDelta = { x: 0 , y: 0 };
+        const onTouchMove = (e) => {
+          const ev = e.raw ? e.raw() : e;
 
-          flickDelta.x = start.x - ev.pageX;
-          flickDelta.y = start.y - ev.pageY;
-
-          const vertical = flickDelta.y > 0;
-          const horizontal = flickDelta.x > 0;
-
-          // TODO: test these events
-          editor.fire(vertical ? 'flickdown' : 'flickup');
-          editor.fire(horizontal ? 'flickleft' : 'flickright');
-
-          editor.fire('refreshVisualViewport');
-          // TODO: redraw visual viewport, perhaps an animate to smoothen out the rubber band back.
-        });
-
-        const touchmoveHandler = DomEvent.capture(editorContainer, 'touchmove', (e) => {
-          const ev = e.raw();
-
-          if (Class.has(Element.fromDom(ev.target), 'tox-statusbar__path')) {
+          if (e.raw && Class.has(Element.fromDom(ev.target), 'tox-statusbar__path')) {
             ev.preventDefault();
             console.log('prevented');
           }
@@ -199,15 +190,51 @@ export default function () {
           delta.x = start.x - ev.touches[0].pageX;
           delta.y = start.y - ev.touches[0].pageY;
 
-          const vertical = delta.y > 0;
-          const horizontal = delta.x > 0;
+          vertical.set(delta.y > 0);
+          horizontal.set(delta.x > 0);
+
+          editor.fire(vertical.get() ? 'swipedown' : 'swipeup');
+          editor.fire(horizontal.get() ? 'swipeleft' : 'swiperight');
+        };
+
+        const onTouchEnd = (e) => {
+          const ev = e.raw ? e.raw() : e;
+
+          const flickDelta = { x: 0 , y: 0 };
+
+          flickDelta.x = start.x - ev.pageX;
+          flickDelta.y = start.y - ev.pageY;
+
+          const verticleFlick = flickDelta.y > 0;
+          const horizontalFlick = flickDelta.x > 0;
 
           // TODO: test these events
-          editor.fire(vertical ? 'swipedown' : 'swipeup');
-          editor.fire(horizontal ? 'swipeleft' : 'swiperight');
-        });
+          editor.fire(verticleFlick ? 'flickdown' : 'flickup');
+          editor.fire(horizontalFlick ? 'flickleft' : 'flickright');
+
+          editor.fire('refreshVisualViewport');
+          // TODO: redraw visual viewport, perhaps an animate to smoothen out the rubber band back.
+        };
+
+        // tslint:disable-next-line:no-unused-expression
+        const touchstartHandler = DomEvent.capture(editorContainer, 'touchstart', onTouchStart);
+        const touchendHandler = DomEvent.capture(editorContainer, 'touchend', onTouchEnd);
+        const touchmoveHandler = DomEvent.capture(editorContainer, 'touchmove', onTouchMove);
+
+        editor.on('touchstart', onTouchStart);
+        editor.on('touchend', onTouchEnd);
+        editor.on('touchmove', onTouchMove);
+
+        const adjustScrollStructure = () => {
+          const doHorizontal = lastDirection.get() === 'up' ? adjustUp : adjustDown;
+          doHorizontal();
+          console.log('DOING tap', lastDirection.get(), Date());
+        };
+
+        const tap = Delay.debounce(adjustScrollStructure, 50);
 
         return {
+          tap,
           destroy: () => {
             touchmoveHandler.unbind();
             touchendHandler.unbind();
@@ -224,51 +251,57 @@ export default function () {
       });
 
       // todo hook in handle.destroy() since we are using delegation events, on exit fullscreen
-      const handle = touchdirection(editor);
+      const scrollAdjuster = touchdirection(editor, lastDirection);
 
-      const downControl = (e) => {
-        // if (e.type === 'flickdown') {debugger; }
-
+      const adjustDown = () => {
         window.requestAnimationFrame(() => {
-            // console.log('down', window.document.documentElement.scrollTop, window.document.body.scrollTop, Date());
+          console.log('down set before', window.document.documentElement.scrollTop , window.document.body.scrollTop, window.document.documentElement.scrollHeight);
 
-            /* tslint:disable-next-line:no-string-literal */
-            const visualViewport = window['visualViewport'];
-            const bodyRect = window.document.body.getClientRects();
+          // scroll the content to the extremity
+          window.document.body.scrollTop = window.document.body.scrollHeight;
 
-            if (e.type !== 'flickdown' || window.document.documentElement.scrollTop <= window.document.documentElement.scrollHeight - rubberBand) {
-              // We are in a good peaceful place, do nothing
-              // console.log('down noop');
-            } else {
-              // TODO: future bug, when we are nested in another iframe, we'd have to scroll that to the extremity also.
-              // we don't scroll to the very end of the <html>, so theres room in their for rubber band effect
-              window.document.documentElement.scrollTop = window.document.documentElement.scrollHeight - rubberBand;
-              // scroll the content to the extremity
-              window.document.body.scrollTop = window.document.body.scrollHeight - 1;
-            }
-            editor.fire('refreshVisualViewport');
-            // if (e.type === 'flickdown') {
-            //   editor.fire('refreshVisualViewport');
-            //   console.log('flick down');
-            // }
+          // TODO: future bug, when we are nested in another iframe, we'd have to scroll that to the extremity also.
+          // we don't scroll to the very end of the <html>, so theres room in their for rubber band effect
+          window.document.documentElement.scrollTop = window.document.documentElement.scrollHeight;
+
+          console.log('down set after', window.document.documentElement.scrollTop , window.document.body.scrollTop, window.document.documentElement.scrollHeight);
+          editor.fire('refreshVisualViewport');
         });
       };
 
-      const upControl = (e) => {
-        if (window.document.documentElement.scrollTop >= rubberBand) {
-          window.document.documentElement.scrollTop = rubberBand;
-          window.document.body.scrollTop = 1;
-          // console.log('up', window.document.documentElement.scrollTop, window.document.body.scrollTop);
+      const adjustUp = () => {
+        if (window.document.documentElement.scrollTop > rubberBand) {
+          window.requestAnimationFrame(() => {
+            console.log('up set', window.document.documentElement.scrollTop, window.document.body.scrollTop, 1);
+            window.document.documentElement.scrollTop = rubberBand;
+            window.document.body.scrollTop = 1;
+            editor.fire('refreshVisualViewport');
+          });
+
+        } else {
+          console.log('up noop');
         }
-        editor.fire('refreshVisualViewport');
-        // if (e.type === 'flickup') {
-        //   editor.fire('refreshVisualViewport');
-        //   console.log('flick up');
-        // }
       };
 
-      editor.on('swipedown flickdown', downControl);
-      editor.on('swipeup flickup', upControl);
+      const onLastDirection = (e) => {
+        console.log('dir ', e.type);
+        if (e.type === 'swipeup' || e.type === 'flickup') {
+          lastDirection.set('up');
+        } else {
+          lastDirection.set('down');
+        }
+      };
+
+      // editor.on('swipedown flickdown', scrollAdjuster.tap);
+      // editor.on('swipeup flickup', scrollAdjuster.tap);
+      editor.on('flickup flickdown swipedown swipeup', (e) => {
+        onLastDirection(e);
+        scrollAdjuster.tap();
+      });
+      // window.setInterval(() => {
+      //   console.log(lastDirection.get());
+      // }, 100);
+
     }
   };
 
