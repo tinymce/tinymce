@@ -115,9 +115,14 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): MenuI
 
   editor.ui.registry.addContextMenu('table', {
     update: () => {
+      // tslint:disable-next-line: no-console
+      console.log(editor.selection.getStart());
       // context menu fires before node change, so check the selection here first
       selectionTargets.resetTargets();
       // ignoring element since it's monitored elsewhere
+      // @ts-ignore
+      // tslint:disable-next-line: no-console
+      console.log(selectionTargets.targets().fold(() => console.log('nope'), (t) => console.log(t)));
       return selectionTargets.targets().fold(() => '', (targets) => {
         // If clicking in a caption, then we shouldn't show the cell/row/column options
         if (Node.name(targets.element()) === 'caption') {

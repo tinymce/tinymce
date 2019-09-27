@@ -1,4 +1,4 @@
-import { AlloyComponent, Bubble, InlineView, Layout, LayoutInside, MaxWidth, Boxes, MaxHeight } from '@ephox/alloy';
+import { AlloyComponent, Boxes, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
 import { PointerEvent, window } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Element, VisualViewport } from '@ephox/sugar';
