@@ -8,6 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
+import Env from 'tinymce/core/api/Env';
 
 const getPreviewHtml = function (editor: Editor) {
   let headHtml = '';
@@ -37,11 +38,13 @@ const getPreviewHtml = function (editor: Editor) {
     bodyClass = bodyClass[editor.id] || '';
   }
 
+  const isMetaKeyPressed = Env.mac ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';
+
   const preventClicksOnLinksScript = (
     '<script>' +
     'document.addEventListener && document.addEventListener("click", function(e) {' +
     'for (var elm = e.target; elm; elm = elm.parentNode) {' +
-    'if (elm.nodeName === "A") {' +
+    'if (elm.nodeName === "A" && !(' + isMetaKeyPressed + ')) {' +
     'e.preventDefault();' +
     '}' +
     '}' +
