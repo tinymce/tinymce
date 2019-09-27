@@ -126,7 +126,6 @@ const toggleFullscreen = function (editor, fullscreenState) {
     DOM.addClass(editorContainer, 'tox-fullscreen');
 
     viewportUpdate.bind(Element.fromDom(editorContainer));
-    window.foo = viewportUpdate;
 
     editor.on('refreshVisualViewport', viewportUpdate.update);
 

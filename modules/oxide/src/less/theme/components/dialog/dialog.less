@@ -10,6 +10,8 @@
 //
 
 @dialog-backdrop-background-color: fade(@background-color, 75);
+@dialog-backdrop-background-color-full: @background-color;
+
 @dialog-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
 @dialog-busy-backdrop-background-color: @dialog-backdrop-background-color;
 
@@ -80,6 +82,10 @@
     right: 0;
     top: 0;
     z-index: @z-index-dialogs-offset-wrap-background;
+  }
+
+  .tox-dialog-wrap__backdrop-full {
+    background-color: @dialog-backdrop-background-color-full;
   }
 
   .tox-dialog {

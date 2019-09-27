@@ -31,6 +31,7 @@ import NavigableObject from '../general/NavigableObject';
 import { dialogChannel } from './DialogChannels';
 import { renderModalHeader } from './SilverDialogHeader';
 import { StoragedMenuItem, StoragedMenuButton } from '../button/MenuButton';
+import { PlatformDetection } from '@ephox/sand';
 
 export interface WindowExtra {
   redial?: <T extends Types.Dialog.DialogData>(newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>;
@@ -45,6 +46,8 @@ export interface DialogSpec {
   extraStyles: Record<string, string>;
   extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
 }
+
+const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
 const getHeader = (title: string, backstage: UiFactoryBackstage) => {
   return renderModalHeader({
@@ -158,7 +161,7 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
             {
               dom: {
                 tag: 'div',
-                classes: [ 'tox-dialog-wrap__backdrop' ]
+                classes: (isTouch ? [ 'tox-dialog-wrap__backdrop', 'tox-dialog-wrap__backdrop-full' ] : [ 'tox-dialog-wrap__backdrop' ])
               }
             }
           ]

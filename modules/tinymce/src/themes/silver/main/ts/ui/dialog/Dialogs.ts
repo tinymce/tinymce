@@ -21,6 +21,8 @@ import { Merger, Option, Result } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { FormCancelEvent, formCancelEvent, FormSubmitEvent, formSubmitEvent } from '../general/FormEvents';
+import { PlatformDetection } from '@ephox/sand';
+const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
 const hiddenHeader: AlloySpec = {
   dom: {
@@ -157,7 +159,7 @@ const renderDialog = (spec: DialogSpec) => {
             {
               dom: {
                 tag: 'div',
-                classes: [ 'tox-dialog-wrap__backdrop' ]
+                classes: (isTouch ? [ 'tox-dialog-wrap__backdrop', 'tox-dialog-wrap__backdrop-full' ] : [ 'tox-dialog-wrap__backdrop' ])
               }
             }
           ]
