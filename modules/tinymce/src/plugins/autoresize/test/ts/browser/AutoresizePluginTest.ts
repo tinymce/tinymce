@@ -1,6 +1,6 @@
 import { Assertions, Log, Logger, Pipeline, RawAssertions, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { navigator } from '@ephox/dom-globals';
+import { navigator, Window, window } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import AutoresizePlugin from 'tinymce/plugins/autoresize/Plugin';
@@ -28,16 +28,23 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
     }));
   };
 
-  const sAssertEditorContentApproxHeight = (editor: Editor, height: number, expectedDiff: number = 5) => {
+  const sAssertEditorContentApproxHeight = (editor: Editor, height: number, diff: number = 5) => {
     return Logger.t(`Assert editor content height is approx ${height}`, Step.sync(() => {
       // Get the editor height, but exclude the 10px margin from the calculations
       const editorContentHeight = editor.getContentAreaContainer().offsetHeight - 10;
       const actualDiff = Math.abs(editorContentHeight - height);
-      RawAssertions.assertEq(`should be approx (within ${expectedDiff}px): ${editorContentHeight} ~= ${height}`, true,  actualDiff <= expectedDiff);
+      RawAssertions.assertEq(`should be approx (within ${diff}px): ${editorContentHeight} ~= ${height}`, true,  actualDiff <= diff);
     }));
   };
 
-  const sAssertScroll = (editor, state) => {
+  const sAssertScrollPositionGreaterThan = (window: Window, position: number) => {
+    return Logger.t(`Assert scroll position is ~${position}px`, Step.sync(() => {
+      const scroll = window.pageYOffset;
+      Assertions.assertEq(`should be greater than: ${scroll}px >= ${position}px`, true, scroll >= position);
+    }));
+  };
+
+  const sAssertScroll = (editor: Editor, state: boolean) => {
     return Logger.t(`Assert scroll ${state}`, Step.sync(function () {
       const body = editor.getBody();
       Assertions.assertEq('', !state, body.style.overflowY === 'hidden');
@@ -57,6 +64,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
             resizeEventsCount.set(resizeEventsCount.get() + 1);
           });
         }),
+        tinyApis.sFocus,
         Log.stepsAsStep('TBA', 'AutoResize: Fullscreen toggle scroll state', [
           tinyApis.sExecCommand('mceFullScreen'),
           sAssertScroll(editor, true),
@@ -112,7 +120,18 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
           tinyApis.sSetContent('<div style="height: 10px;">a</div>'),
           Waiter.sTryUntil('wait for editor height', sAssertEditorHeightAbove(editor, 500), 10, 3000),
           tinyApis.sSetSetting('min_height', 0)
-        ])
+        ]),
+        Log.stepsAsStep('TBA', 'AutoResize: Editor keeps selection in view when resizing', [
+          tinyApis.sSetContent(''),
+          Step.sync(() => {
+            window.scrollTo(0, 0);
+            // Set content will keep the selection at the start, whereas insert will keep it after the inserted content
+            editor.insertContent('<div style="height: 5000px;">a</div><div style="height: 50px">b</div>');
+          }),
+          Waiter.sTryUntil('wait for editor height', sAssertEditorContentApproxHeight(editor, 5100), 10, 3000),
+          Waiter.sTryUntil('wait for editor height', sAssertEditorHeightAbove(editor, 5100), 10, 3000),
+          sAssertScrollPositionGreaterThan(window, 3500)
+        ]),
       ] : []
     , onSuccess, onFailure);
   }, {

@@ -117,9 +117,9 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
 
           // Check items are positioned so that they are stacked
           NamedChain.direct('nError', cAssertPosition('Error notification', 220, -200), '_'),
-          NamedChain.direct('nWarn', cAssertPosition('Warning notification', 220, -150), '_'),
-          NamedChain.direct('nInfo', cAssertPosition('Info notification', 220, -100), '_'),
-          NamedChain.direct('nSuccess', cAssertPosition('Success notification', 220, -50), '_'),
+          NamedChain.direct('nWarn', cAssertPosition('Warning notification', 220, -152), '_'),
+          NamedChain.direct('nInfo', cAssertPosition('Info notification', 220, -104), '_'),
+          NamedChain.direct('nSuccess', cAssertPosition('Success notification', 220, -56), '_'),
 
           NamedChain.direct('nError', cCloseNotification, '_'),
 

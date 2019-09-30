@@ -12,12 +12,14 @@ export const SearchReplaceDialogSpec: Types.Dialog.DialogApi<any> = {
       {
         type: 'input',
         name: 'findtext',
-        label: 'Find'
+        label: 'Find',
+        inputMode: 'search'
       },
       {
         type: 'input',
         name: 'replacetext',
-        label: 'Replace with'
+        label: 'Replace with',
+        inputMode: 'search'
       },
       {
         type: 'grid',

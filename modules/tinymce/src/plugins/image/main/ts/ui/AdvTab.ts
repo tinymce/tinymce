@@ -24,17 +24,20 @@ const makeTab = (info: ImageDialogInfo) => {
           {
             type: 'input',
             label: 'Vertical space',
-            name: 'vspace'
+            name: 'vspace',
+            inputMode: 'numeric'
           },
           {
             type: 'input',
             label: 'Horizontal space',
-            name: 'hspace'
+            name: 'hspace',
+            inputMode: 'numeric'
           },
           {
             type: 'input',
             label: 'Border width',
-            name: 'border'
+            name: 'border',
+            inputMode: 'numeric'
           },
           {
             type: 'selectbox',

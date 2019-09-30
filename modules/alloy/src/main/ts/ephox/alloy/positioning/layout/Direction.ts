@@ -42,6 +42,10 @@ const cataVertical = <B>(subject: DirectionAdt, south: () => B, middle: () => B,
   return subject.fold(south, south, north, north, south, north, middle, middle);
 };
 
+const cataHorizontal = <B>(subject: DirectionAdt, east: () => B, middle: () => B, west: () => B): B => {
+  return subject.fold(east, west, east, west, middle, middle, east, west);
+};
+
 // TODO: Simplify with the typescript approach.
 const southeast = adt.southeast;
 const southwest = adt.southwest;
@@ -62,5 +66,6 @@ export {
   east,
   west,
   cata,
-  cataVertical
+  cataVertical,
+  cataHorizontal
 };

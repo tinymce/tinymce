@@ -99,7 +99,8 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
               type: 'input',
               name: 'findtext',
               placeholder: 'Find',
-              maximized: true
+              maximized: true,
+              inputMode: 'search'
             },
             {
               type: 'button',
@@ -122,7 +123,8 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
         {
           type: 'input',
           name: 'replacetext',
-          placeholder: 'Replace with'
+          placeholder: 'Replace with',
+          inputMode: 'search'
         },
       ]
     },
