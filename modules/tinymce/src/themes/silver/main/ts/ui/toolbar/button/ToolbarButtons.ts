@@ -24,6 +24,7 @@ import {
   SystemEvents,
   TieredData,
   TieredMenuTypes,
+  Unselecting,
 } from '@ephox/alloy';
 import { Toolbar, Types } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
@@ -324,7 +325,8 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         AlloyEvents.run(focusButtonEvent, Focusing.focus),
         onControlAttached(specialisation, editorOffCell),
         onControlDetached(specialisation, editorOffCell),
-      ])
+      ]),
+      Unselecting.config({ })
     ]),
 
     eventOrder: {
