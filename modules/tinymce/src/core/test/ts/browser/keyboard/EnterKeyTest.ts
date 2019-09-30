@@ -59,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     editor.setContent('<p><b><img src="about:blank" /></b></p>');
     editor.selection.setCursorLocation(editor.getBody().firstChild.firstChild, 0);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getBody().firstChild.innerHTML, (Env.ie && Env.ie < 11) ? '' : '<br data-mce-bogus="1">');
+    LegacyUnit.equal(editor.getBody().firstChild.innerHTML, '<br data-mce-bogus="1">');
     LegacyUnit.equal(editor.getContent(), '<p>\u00a0</p><p><b><img src="about:blank" /></b></p>');
   });
 
@@ -292,7 +292,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     editor.getBody().innerHTML = '<p>abc</p>';
     LegacyUnit.setSelection(editor, 'p', 3);
     pressEnter(editor);
-    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), (Env.ie && Env.ie < 11) ? '<p>abc<br></p>' : '<p>abc<br><br></p>');
+    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>abc<br><br></p>');
     editor.settings.forced_root_block = 'p';
   });
 
@@ -322,14 +322,13 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     LegacyUnit.setSelection(editor, 'body', 4);
     editor.focus();
     pressEnter(editor);
-    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), (Env.ie && Env.ie < 11) ? 'abcd<br>' : 'abcd<br><br>');
+    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), 'abcd<br><br>');
     editor.settings.forced_root_block = 'p';
   });
 
   suite.test('Enter in empty P at the end of a blockquote and end_container_on_empty_block: true', function (editor) {
     editor.settings.end_container_on_empty_block = true;
-    editor.getBody().innerHTML = (Env.ie && Env.ie < 11) ?
-      '<blockquote><p>abc</p><p></p></blockquote>' : '<blockquote><p>abc</p><p><br></p></blockquote>';
+    editor.getBody().innerHTML = '<blockquote><p>abc</p><p><br></p></blockquote>';
     LegacyUnit.setSelection(editor, 'p:last', 0);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<blockquote><p>abc</p></blockquote><p>\u00a0</p>');
@@ -338,8 +337,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
 
   suite.test('Enter in empty P at the beginning of a blockquote and end_container_on_empty_block: true', function (editor) {
     editor.settings.end_container_on_empty_block = true;
-    editor.getBody().innerHTML = (Env.ie && Env.ie < 11) ?
-      '<blockquote><p></p><p>abc</p></blockquote>' : '<blockquote><p><br></p><p>abc</p></blockquote>';
+    editor.getBody().innerHTML = '<blockquote><p><br></p><p>abc</p></blockquote>';
     LegacyUnit.setSelection(editor, 'p', 0);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p>\u00a0</p><blockquote><p>abc</p></blockquote>');
@@ -348,8 +346,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
 
   suite.test('Enter in empty P at in the middle of a blockquote and end_container_on_empty_block: true', function (editor) {
     editor.settings.end_container_on_empty_block = true;
-    editor.getBody().innerHTML = (Env.ie && Env.ie < 11) ?
-      '<blockquote><p>abc</p><p></p><p>123</p></blockquote>' : '<blockquote><p>abc</p><p><br></p><p>123</p></blockquote>';
+    editor.getBody().innerHTML = '<blockquote><p>abc</p><p><br></p><p>123</p></blockquote>';
     LegacyUnit.setSelection(editor, 'p:nth-child(2)', 0);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<blockquote><p>abc</p></blockquote><p>\u00a0</p><blockquote><p>123</p></blockquote>');
@@ -400,7 +397,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     editor.getBody().innerHTML = '<p>abcd</p>';
     LegacyUnit.setSelection(editor, 'p', 4);
     pressEnter(editor, { shiftKey: true });
-    LegacyUnit.equal(editor.getContent(), (Env.ie && Env.ie < 11) ? '<p>abcd</p>' : '<p>abcd<br /><br /></p>');
+    LegacyUnit.equal(editor.getContent(), '<p>abcd<br /><br /></p>');
   });
 
   suite.test('Shift+Enter in the middle of B with a BR after it', function (editor) {
@@ -435,7 +432,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     editor.getBody().innerHTML = '<pre>abcd</pre>';
     LegacyUnit.setSelection(editor, 'pre', 4);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getContent(), (Env.ie && Env.ie < 11) ? '<pre>abcd</pre>' : '<pre>abcd<br /><br /></pre>');
+    LegacyUnit.equal(editor.getContent(), '<pre>abcd<br /><br /></pre>');
   });
 
   suite.test('Enter in beginning of PRE and br_in_pre: false', function (editor) {

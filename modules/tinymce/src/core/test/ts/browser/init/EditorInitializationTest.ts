@@ -91,21 +91,23 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     });
   });
 
-  suite.asyncTest('selector on an unsupported browser', function (_, done) {
-    // Fake IE 8
-    const oldIeValue = Env.ie;
-    Env.ie = 8;
+  if (Env.browser.isIE()) {
+    suite.asyncTest('selector on an unsupported browser', function (_, done) {
+      // Fake IE 8
+      const oldIeValue = Env.browser.version.major;
+      Env.browser.version.major = 8;
 
-    EditorManager.init({
-      selector: '#elm-2',
-      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-      content_css: '/project/tinymce/js/tinymce/skins/content/default',
-    }).then(function (result) {
-      Assertions.assertEq('Should be an result that is zero length', 0, result.length);
-      Env.ie = oldIeValue;
-      teardown(done);
+      EditorManager.init({
+        selector: '#elm-2',
+        skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
+        content_css: '/project/tinymce/js/tinymce/skins/content/default',
+      }).then(function (result) {
+        Assertions.assertEq('Should be an result that is zero length', 0, result.length);
+        Env.browser.version.major = oldIeValue;
+        teardown(done);
+      });
     });
-  });
+  }
 
   suite.asyncTest('target (each editor should have a different target)', function (_, done) {
     const maxCount = document.querySelectorAll('.elm-even').length;
