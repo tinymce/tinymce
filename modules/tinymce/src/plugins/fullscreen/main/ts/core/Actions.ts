@@ -44,12 +44,14 @@ const viewportUpdate = !isSafari || visualViewport === undefined ? { bind: Fun.n
   };
 
   const refreshVisualViewport = () => {
-    editorContainer.on((container) => Css.setAll(container, {
-      top: visualViewport.offsetTop + 'px',
-      left: visualViewport.offsetLeft + 'px',
-      height: visualViewport.height + 'px',
-      width: visualViewport.width + 'px'
-    }));
+    window.requestAnimationFrame(() => {
+      editorContainer.on((container) => Css.setAll(container, {
+        top: visualViewport.offsetTop + 'px',
+        left: visualViewport.offsetLeft + 'px',
+        height: visualViewport.height + 'px',
+        width: visualViewport.width + 'px'
+      }));
+    });
   };
 
   const update = Delay.throttle(() => {

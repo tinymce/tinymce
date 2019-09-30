@@ -135,7 +135,7 @@ export default function () {
     //     name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ]
     //   },
     //   {
-    //     name: 'indentatπion', items: [ 'outdent', 'indent' ]
+    //     name: 'indentation', items: [ 'outdent', 'indent' ]
     //   },
     //   {
     //     name: 'permanent pen', items: [ 'permanentpen' ]
@@ -146,9 +146,6 @@ export default function () {
     // ],
     toolbar_drawer: 'sliding',
     emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js',
-    init_instance_callback: () => {
-
-    }
   };
 
   tinymce.init(settings);
