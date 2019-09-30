@@ -7,7 +7,7 @@
 
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, GuiFactory, InlineView, Sandboxing, SystemEvents } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { console, Element as DomElement, PointerEvent } from '@ephox/dom-globals';
+import { console, Element as DomElement, PointerEvent, setTimeout } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import Editor from 'tinymce/core/api/Editor';
@@ -131,16 +131,21 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     }),
   );
 
-  const hideContextMenu = (e) => InlineView.hide(contextmenu);
+  const hideContextMenu = (e) => {
+    // tslint:disable-next-line: no-console
+    console.log('hide', e.type);
+    InlineView.hide(contextmenu);
+  };
 
   editor.on('init', () => {
     // Hide the context menu when scrolling or resizing
     // editor.on('ResizeWindow ScrollContent ScrollWindow', hideContextMenu);
-    editor.on('ResizeEditor ScrollContent ScrollWindow', hideContextMenu);
+    editor.on('ResizeEditor ScrollContent ScrollWindow longpresscancel', hideContextMenu);
 
     editor.on(isTouch ? 'longpress' : 'contextmenu', (e) => {
 
       const event = isTouch ? e.rawEvent : e;
+      console.log(Settings.shouldNeverUseNative(editor));
       // Prevent the default if we should never use native
       if (Settings.shouldNeverUseNative(editor)) {
         event.preventDefault();
@@ -150,11 +155,9 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
         return;
       }
 
-      console.log('selection', editor.selection.getStart(), event.target, event.type);
       if (event.type === 'longpress') {
-        editor.selection.select(event.target);
+        editor.selection.setCursorLocation(event.target, 0);
       }
-      console.log('selection', editor.selection.getStart());
 
       const show = (_editor: Editor, e: EditorEvent<PointerEvent>, items, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, nuAnchorSpec) => {
         NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false).map((menuData) => {
@@ -183,7 +186,6 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
 
       // Use the event target element for mouse clicks, otherwise fallback to the current selection
       const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : event.target as DomElement;
-      console.log({isTriggeredByKeyboardEvent, selectedElement, event, target: event.target});
 
       const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
 

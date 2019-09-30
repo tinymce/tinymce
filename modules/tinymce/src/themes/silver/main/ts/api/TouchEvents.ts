@@ -1,7 +1,6 @@
 import { console, Touch } from '@ephox/dom-globals';
 import { Cell, Fun, Option } from '@ephox/katamari';
 import DelayedFunction from '../alien/DelayedFunction';
-import { Compare, Element } from '@ephox/sugar';
 
 const SIGNIFICANT_MOVE = 5;
 
@@ -32,13 +31,13 @@ const isFarEnough = (touch, data: TouchHistoryData): boolean => {
 const setupLongpress = (editor) => {
   const longpress = DelayedFunction((e) => {
     // Stop longpress firing a tap
-    startData.set(Option.none());
+    // tslint:disable-next-line: no-console
+    console.log(e);
     longpressFlag.set(true);
     editor.fire('longpress', { rawEvent: { ...e, type: 'longpress' } });
   }, LONGPRESS_DELAY);
 
   editor.on('touchstart', (e) => {
-    console.log('touchstart', e);
     longpressFlag.set(false);
     getTouch(e).each((touch) => {
       longpress.cancel();
@@ -55,33 +54,26 @@ const setupLongpress = (editor) => {
   }, true);
 
   editor.on('touchmove', (e) => {
-    longpress.cancel();
+    // tslint:disable-next-line: no-console
     console.log('touchmove');
+    longpress.cancel();
     getTouch(e).each((touch) => {
+      // tslint:disable-next-line: no-console
+      console.log('startdata', startData.get());
       startData.get().each((data) => {
+        // tslint:disable-next-line: no-console
+        console.log(touch, data, isFarEnough(touch, data));
         if (isFarEnough(touch, data)) {
           startData.set(Option.none());
+          editor.fire('longpresscancel');
         }
       });
     });
   }, true);
 
-  editor.on('touchend', (e) => {
-    console.log('touchend');
-
+  editor.on('touchend touchcancel', (e) => {
+    console.log('end cancel');
     longpress.cancel();
-
-    const isSame = (data) => {
-      return Compare.eq(Element.fromDom(data.target()), Element.fromDom(e.target));
-    };
-
-    startData.get().fold(longpress.cancel, (data) => {
-      if (isSame(data) && longpressFlag.get()) {
-        console.log('fire longpress 2');
-        e.preventDefault();
-        longpressFlag.set(false);
-      }
-    });
   }, true);
 };
 

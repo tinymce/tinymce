@@ -65,8 +65,6 @@ const setupContextMenu = function (editor: Editor) {
   const inLink = 'link unlink openlink';
   editor.ui.registry.addContextMenu('link', {
     update: (element) => {
-      // tslint:disable-next-line: no-console
-      console.log('link', editor.dom.getParents(element, 'a'));
       return Utils.hasLinks(editor.dom.getParents(element, 'a') as HTMLAnchorElement[]) ? inLink : noLink;
     }
   });
