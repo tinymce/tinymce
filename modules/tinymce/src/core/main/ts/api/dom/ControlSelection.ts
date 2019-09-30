@@ -433,7 +433,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     disableGeckoResize();
 
     // Sniff sniff, hard to feature detect this stuff
-    if (Env.browser.isIE()) {
+    if (Env.browser.isIE() || Env.browser.isEdge()) {
       // Needs to be mousedown for drag/drop to work on IE 11
       // Needs to be click on Edge to properly select images
       editor.on('mousedown click', function (e) {
