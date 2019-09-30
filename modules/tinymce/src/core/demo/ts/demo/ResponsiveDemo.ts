@@ -1,7 +1,4 @@
-import { Element, Css, DomEvent, Class } from '@ephox/sugar';
-import { console, window, document } from '@ephox/dom-globals';
-import { Cell } from '@ephox/katamari';
-import Delay from 'tinymce/core/api/util/Delay';
+import { Element } from '@ephox/sugar';
 
 declare let tinymce: any;
 
