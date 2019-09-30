@@ -17,57 +17,57 @@
  */
 
 /**
- * Returns true if the users browser is Microsoft Edge.
+ * Returns <code>true</code> if the user's browser is Microsoft Edge.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method browser.isEdge
- * @return {Boolean} Returns true if the users browser is Microsoft Edge.
+ * @return {Boolean} Returns <code>true</code> if the user's browser is Microsoft Edge.
  */
 
 /**
- * Returns true if the users browser is Google Chrome.
+ * Returns <code>true</code> if the user's browser is Google Chrome.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method browser.isChrome
- * @return {Boolean} Returns true if the users browser is Google Chrome.
+ * @return {Boolean} Returns <code>true</code> if the user's browser is Google Chrome.
  */
 
 /**
- * Returns true if the users browser is Microsoft Internet Explorer.
+ * Returns <code>true</code> if the user's browser is Microsoft Internet Explorer.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method browser.isIE
- * @return {Boolean} Returns true if the users browser is Microsoft Internet Explorer.
+ * @return {Boolean} Returns <code>true</code> if the user's browser is Microsoft Internet Explorer.
  */
 
 /**
- * Returns true if the users browser is Opera.
+ * Returns <code>true</code> if the user's browser is Opera.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method browser.isOpera
- * @return {Boolean} Returns true if the users browser is Opera.
+ * @return {Boolean} Returns <code>true</code> if the user's browser is Opera.
  */
 
 /**
- * Returns true if the users browser is Firefox.
+ * Returns <code>true</code> if the user's browser is Firefox.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method browser.isFirefox
- * @return {Boolean} Returns true if the users browser is Firefox.
+ * @return {Boolean} Returns <code>true</code> if the user's browser is Firefox.
  */
 
 /**
- * Returns true if the users browser is Safari.
+ * Returns <code>true</code> if the user's browser is Safari.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method browser.isSafari
- * @return {Boolean} Returns true if the users browser is Safari.
+ * @return {Boolean} Returns <code>true if the user's browser is Safari.
  */
 
 /**
@@ -89,127 +89,127 @@
  */
 
 /**
- * Returns true if the users operating system is Microsoft Windows.
+ * Returns <code>true</code> if the user's operating system is Microsoft Windows.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method os.isWindows
- * @return {Boolean} Returns true if the users operating system is Microsoft Windows.
+ * @return {Boolean} Returns <code>true</code> if the user's operating system is Microsoft Windows.
  */
 
 /**
- * Returns true if the users operating system is iOS.
+ * Returns <code>true</code> if the user's operating system is iOS.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method os.isiOS
- * @return {Boolean} Returns true if the users operating system is iOS.
+ * @return {Boolean} Returns <code>true</code> if the user's operating system is iOS.
  */
 
 /**
- * Returns true if the users operating system is Android.
+ * Returns <code>true</code> if the user's operating system is Android.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method os.isAndroid
- * @return {Boolean} Returns true if the users operating system is Android.
+ * @return {Boolean} Returns <code>true</code> if the user's operating system is Android.
  */
 
 /**
- * Returns true if the users operating system is Mac OS X.
+ * Returns <code>true</code> if the user's operating system is Mac OS X.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method os.isOSX
- * @return {Boolean} Returns true if the users operating system is Mac OS X.
+ * @return {Boolean} Returns <code>true</code> if the user's operating system is Mac OS X.
  */
 
 /**
- * Returns true if the users operating system is Linux.
+ * Returns <code>true</code> if the user's operating system is Linux.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method os.isLinux
- * @return {Boolean} Returns true if the users operating system is Linux.
+ * @return {Boolean} Returns <code>true</code> if the user's operating system is Linux.
  */
 
 /**
- * Returns true if the users operating system is Solaris.
+ * Returns <code>true</code> if the user's operating system is Solaris.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method os.isSolaris
- * @return {Boolean} Returns true if the users operating system is Solaris.
+ * @return {Boolean} Returns <code>true</code> if the user's operating system is Solaris.
  */
 
 /**
- * Returns true if the users operating system is FreeBSD.
+ * Returns <code>true</code> if the user's operating system is FreeBSD.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method os.isFreeBSD
- * @return {Boolean} Returns true if the users operating system is FreeBSD.
+ * @return {Boolean} Returns <code>true</code> if the user's operating system is FreeBSD.
  */
 
 /**
- * Returns true if the users device is a desktop device.
+ * Returns <code>true</code> if the user's device is a desktop device.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method deviceType.isDesktop
- * @return {Boolean} Returns true if the users device is a desktop device.
+ * @return {Boolean} Returns <code>true</code> if the user's device is a desktop device.
  */
 
 /**
- * Returns true if the users device is an iPad.
+ * Returns <code>true</code> if the user's device is an iPad.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method deviceType.isiPad
- * @return {Boolean} Returns true if the users device is an iPad.
+ * @return {Boolean} Returns <code>true</code> if the user's device is an iPad.
  */
 
 /**
- * Returns true if the users device is an iPhone.
+ * Returns <code>true</code> if the user's device is an iPhone.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method deviceType.isiPhone
- * @return {Boolean} Returns true if the users device is an iPhone.
+ * @return {Boolean} Returns <code>true</code> if the user's device is an iPhone.
  */
 
 /**
- * Returns true if the users device is a phone.
+ * Returns <code>true</code> if the user's device is a phone.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method deviceType.isPhone
- * @return {Boolean} Returns true if the users device is a phone.
+ * @return {Boolean} Returns <code>true</code> if the user's device is a phone.
  */
 
 /**
- * Returns true if the users device is a tablet.
+ * Returns <code>true</code> if the user's device is a tablet.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method deviceType.isTablet
- * @return {Boolean} Returns true if the users device is a tablet.
+ * @return {Boolean} Returns <code>true</code> if the user's device is a tablet.
  */
 
 /**
- * Returns true if the users device is a touch device.
+ * Returns <code>true</code> if the user's device is a touch device.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method deviceType.isTouch
- * @return {Boolean} Returns true if the users device is a touch device.
+ * @return {Boolean} Returns <code>true</code> if the user's device is a touch device.
  */
 
 /**
- * Returns true if the users device is a WebView device.
+ * Returns <code>true</code> if the user's device is a WebView device.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method deviceType.isWebView
- * @return {Boolean} Returns true if the users device is a WebView device.
+ * @return {Boolean} Returns <code>true</code> if the user's device is a WebView device.
  */
