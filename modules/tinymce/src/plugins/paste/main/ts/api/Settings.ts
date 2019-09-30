@@ -71,6 +71,10 @@ const shouldUseDefaultFilters = (editor: Editor): boolean => {
   return editor.getParam('paste_enable_default_filters', true);
 };
 
+const shouldUseSinglePlaintextBlock = (editor: Editor): boolean => {
+  return editor.getParam('paste_single_plaintext_block', false);
+};
+
 export default {
   shouldBlockDrop,
   shouldPasteDataImages,
@@ -85,5 +89,6 @@ export default {
   getRetainStyleProps,
   getWordValidElements,
   shouldConvertWordFakeLists,
-  shouldUseDefaultFilters
+  shouldUseDefaultFilters,
+  shouldUseSinglePlaintextBlock
 };

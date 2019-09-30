@@ -47,8 +47,8 @@ const openContainer = function (rootTag: string, rootAttrs: RootAttrs) {
   return tag + '>';
 };
 
-const toBlockElements = function (text: string, rootTag: string, rootAttrs: RootAttrs) {
-  const blocks = text.split(/\n\n/);
+const toBlockElements = function (text: string, rootTag: string, rootAttrs: RootAttrs, useSingleBlock: boolean) {
+  const blocks = useSingleBlock ? [text] : text.split(/\n\n/);
   const tagOpen = openContainer(rootTag, rootAttrs);
   const tagClose = '</' + rootTag + '>';
 
@@ -63,8 +63,8 @@ const toBlockElements = function (text: string, rootTag: string, rootAttrs: Root
   return paragraphs.length === 1 ? paragraphs[0] : Tools.map(paragraphs, stitch).join('');
 };
 
-const convert = function (text: string, rootTag: string | boolean, rootAttrs: RootAttrs) {
-  return rootTag ? toBlockElements(text, rootTag === true ? 'p' : rootTag, rootAttrs) : toBRs(text);
+const convert = function (text: string, rootTag: string | boolean, rootAttrs: RootAttrs, useSingleBlock: boolean) {
+  return rootTag ? toBlockElements(text, rootTag === true ? 'p' : rootTag, rootAttrs, useSingleBlock) : toBRs(text);
 };
 
 export default {

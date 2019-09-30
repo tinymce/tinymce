@@ -102,6 +102,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
 
   const expectedWithRootBlock = '<p>one<br />two</p><p>three</p><p><br />four</p><p>&nbsp;</p><p>.</p>';
   const expectedWithRootBlockAndAttrs = '<p class="attr">one<br />two</p><p class="attr">three</p><p class="attr"><br />four</p><p class="attr">&nbsp;</p><p class="attr">.</p>';
+  const expectedWithSingleRootBlock = '<p>one<br />two<br /><br />three<br /><br /><br />four<br /><br /><br /><br />.</p>';
   const expectedWithoutRootBlock = 'one<br />two<br /><br />three<br /><br /><br />four<br /><br /><br /><br />.';
 
   Pipeline.async({}, [
@@ -122,6 +123,15 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, fai
         }
       }),
       cAssertClipboardPaste(expectedWithRootBlockAndAttrs, pasteData),
+      cRemoveEditor()
+    ])),
+    Chain.asStep({}, Log.chains('TBA', 'Paste: Assert forced_root_block <p></p> is added only once to pasted data', [
+      cCreateEditorFromSettings({
+        plugins: 'paste',
+        forced_root_block: 'p',
+        paste_single_plaintext_block: true,
+      }),
+      cAssertClipboardPaste(expectedWithSingleRootBlock, pasteData),
       cRemoveEditor()
     ])),
     Chain.asStep({}, Log.chains('TBA', 'Paste: Assert forced_root_block is not added to the pasted data', [

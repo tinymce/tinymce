@@ -14,6 +14,7 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Tools from 'tinymce/core/api/util/Tools';
 import VK from 'tinymce/core/api/util/VK';
 import Events from '../api/Events';
+import Settings from '../api/Settings';
 import InternalHtml from './InternalHtml';
 import Newlines from './Newlines';
 import { PasteBin } from './PasteBin';
@@ -50,7 +51,11 @@ const pasteHtml = (editor: Editor, html: string, internalFlag: boolean) => {
 const pasteText = (editor: Editor, text: string) => {
   const encodedText = editor.dom.encode(text).replace(/\r\n/g, '\n');
   const normalizedText = Whitespace.normalizeWhitespace(encodedText);
-  const html = Newlines.convert(normalizedText, editor.settings.forced_root_block, editor.settings.forced_root_block_attrs);
+  const html = Newlines.convert(
+      normalizedText,
+      editor.settings.forced_root_block,
+      editor.settings.forced_root_block_attrs,
+      Settings.shouldUseSinglePlaintextBlock(editor));
 
   pasteHtml(editor, html, false);
 };
