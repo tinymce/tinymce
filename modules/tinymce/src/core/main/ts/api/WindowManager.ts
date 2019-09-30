@@ -161,7 +161,7 @@ const WindowManager = function (editor: Editor): WindowManager {
     openUrl,
 
     /**
-     * Creates a alert dialog. Please don't use the blocking behavior of this
+     * Creates an alert dialog. Please don't use the blocking behavior of this
      * native version use the callback method instead then it can be extended.
      *
      * @method alert
