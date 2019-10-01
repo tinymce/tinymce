@@ -13,6 +13,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Actions from '../core/Actions';
 import Utils from '../core/Utils';
 import Settings from '../api/Settings';
+import Env from 'tinymce/core/api/Env';
 
 const setupButtons = function (editor: Editor) {
   editor.ui.registry.addToggleButton('link', {
@@ -61,7 +62,7 @@ const setupMenuItems = function (editor: Editor) {
 };
 
 const setupContextMenu = function (editor: Editor) {
-  const noLink = 'link';
+  const noLink = Env.iOS ? '' : 'link';
   const inLink = 'link unlink openlink';
   editor.ui.registry.addContextMenu('link', {
     update: (element) => {
