@@ -7,7 +7,7 @@
 
 import { AlloyComponent, AlloySpec, FormTypes, HotspotAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Option, Result } from '@ephox/katamari';
+import { Option, Result, Cell } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
@@ -19,6 +19,7 @@ import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInp
 import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
 import { UiFactoryBackstageForDialog, DialogBackstage } from './DialogBackstage';
+import { console } from '@ephox/dom-globals';
 
 // INVESTIGATE: Make this a body component API ?
 export type BridgedType = any;
@@ -30,6 +31,8 @@ export interface UiFactoryBackstageProviders {
 }
 
 type UiFactoryBackstageForStyleButton = SelectData;
+
+const contextMenuState = Cell(false);
 
 export interface UiFactoryBackstageShared {
   providers?: UiFactoryBackstageProviders;
@@ -51,6 +54,8 @@ export interface UiFactoryBackstage {
   shared?: UiFactoryBackstageShared;
   colorinput?: UiFactoryBackstageForColorInput;
   dialog?: UiFactoryBackstageForDialog;
+  isContextMenuOpen?: () => boolean;
+  setContextMenuState?: (state: boolean) => void;
 }
 
 const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyMoreButton: () => AlloyComponent): UiFactoryBackstage => {
@@ -70,7 +75,9 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
     urlinput: UrlInputBackstage(editor),
     styleselect: initStyleFormatBackstage(editor),
     colorinput: ColorInputBackstage(editor),
-    dialog: DialogBackstage(editor)
+    dialog: DialogBackstage(editor),
+    isContextMenuOpen: () => contextMenuState.get(),
+    setContextMenuState: (state) => contextMenuState.set(state)
   };
 
   return backstage;

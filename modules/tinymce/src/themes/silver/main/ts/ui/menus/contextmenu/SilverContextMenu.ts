@@ -119,6 +119,8 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       },
       lazySink,
       onEscape: () => editor.focus(),
+      onShow: () => backstage.setContextMenuState(true),
+      onHide: () => backstage.setContextMenuState(false),
       fireDismissalEventInstead: { },
       inlineBehaviours: Behaviour.derive([
         AddEventsBehaviour.config('dismissContextMenu', [
@@ -140,7 +142,8 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     editor.on(isTouch ? 'longpress' : 'contextmenu', (e) => {
 
       // longpress is a TinyMCE-generated event, so the touchstart event data is wrapped.
-      const event = e.type === 'longpress' ? e.rawEvent : e;
+      const isLongpress = e.type === 'longpress';
+      const event = isLongpress ? e.rawEvent : e;
       // Prevent the default if we should never use native
       if (Settings.shouldNeverUseNative(editor)) {
         event.preventDefault();
@@ -152,7 +155,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
 
       // For longpress, editor.selection hasn't updated yet at this point, so need to do it manually
       // Without this longpress causes drag-n-drop duplication of code on Android
-      if (event.type === 'longpress') {
+      if (isLongpress) {
         editor.selection.setCursorLocation(event.target, 0);
       }
 
@@ -176,7 +179,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       // Firefox: button = 0 & target = body
       // IE/Edge: button = 2 & target = body
       // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
-      const isTriggeredByKeyboardEvent = !isTouch && (event.button !== 2 || event.target === editor.getBody());
+      const isTriggeredByKeyboardEvent = !isLongpress && (event.button !== 2 || event.target === editor.getBody());
       const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, event);
 
       const registry = editor.ui.registry.getAll();
@@ -187,7 +190,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
 
       const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
 
-      const showContextMenu = isTouch ? MobileContextMenu.show : show;
+      const showContextMenu = isLongpress ? MobileContextMenu.show : show;
       if (detection.deviceType.isiOS()) {
         // Need a short wait here for iOS due to browser focus events or something causing the keyboard to open after
         // the context menu opens, closing it again

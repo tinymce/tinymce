@@ -1,6 +1,6 @@
-import { AlloyComponent, Boxes, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
+import { AlloyComponent, Boxes, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth, Sandboxing } from '@ephox/alloy';
 import { PointerEvent, window } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import { Cell, Obj, Option } from '@ephox/katamari';
 import { Element, VisualViewport } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -10,6 +10,14 @@ import * as ContextToolbarBounds from '../../context/ContextToolbarBounds';
 import ItemResponse from '../item/ItemResponse';
 import * as MenuParts from '../menu/MenuParts';
 import * as NestedMenus from '../menu/NestedMenus';
+import { hideContextToolbarEvent } from '../../context/ContextEditorEvents';
+
+const contextmenuRecord = Cell<Record<string, AlloyComponent>>({});
+
+const isMobileContextMenuOpen = (editor) => {
+  // AFAIK this module can't differentiate between multiple editors on the page, so index by editor ID
+  return Obj.get(contextmenuRecord.get(), editor.id).fold(() => false, (menu) => Sandboxing.isOpen(menu));
+};
 
 const toolbarOrMenubarEnabled = (editor) => Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
 
@@ -47,6 +55,9 @@ const bubbleAlignments = {
 };
 
 const show = (editor: Editor, e: EditorEvent<PointerEvent>, items, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorSpec) => {
+  const menuRecord = contextmenuRecord.get();
+  contextmenuRecord.set({ ...menuRecord, [editor.id]: contextmenu });
+
   NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, true).map((menuData) => {
     e.preventDefault();
 
@@ -60,16 +71,20 @@ const show = (editor: Editor, e: EditorEvent<PointerEvent>, items, backstage: Ui
       ...anchorSpec
     };
 
-    // show the context menu, with items set to close on click
+    // Show the context menu, with items set to close on click
     InlineView.showHorizontalMenuAt(contextmenu, nuAnchorSpec, {
       menu: {
         markers: MenuParts.markers('normal')
       },
       data: menuData
     }, getBounds(editor));
+
+    // iOS is weird and doesn't close contexttoolbars when contextmenus open, unlike Android. So force hide.
+    editor.fire(hideContextToolbarEvent);
   });
 };
 
 export default {
-  show
+  show,
+  isMobileContextMenuOpen
 };

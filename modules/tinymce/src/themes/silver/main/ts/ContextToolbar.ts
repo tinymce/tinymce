@@ -5,41 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  AlloySpec,
-  AlloyTriggers,
-  AnchorSpec,
-  Behaviour,
-  Boxes,
-  Bubble,
-  GuiFactory,
-  InlineView,
-  Keying,
-  Layout,
-  LayoutInside,
-  MaxHeight,
-  MaxWidth,
-  Positioning
-} from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying, Layout, LayoutInside, MaxHeight, MaxWidth, Positioning } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { ClientRect, Element as DomElement, window } from '@ephox/dom-globals';
 import { Cell, Id, Merger, Option, Result, Thunk } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Css, Element, Focus, Scroll, SelectorFind, Traverse, VisualViewport } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
-import { showContextToolbarEvent } from './ui/context/ContextEditorEvents';
+import * as Settings from './api/Settings';
+import { showContextToolbarEvent, hideContextToolbarEvent } from './ui/context/ContextEditorEvents';
 import { ContextForm } from './ui/context/ContextForm';
-import { forwardSlideEvent, renderContextToolbar } from './ui/context/ContextUi';
 import * as ContextToolbarBounds from './ui/context/ContextToolbarBounds';
 import ToolbarLookup from './ui/context/ContextToolbarLookup';
 import ToolbarScopes, { ScopedToolbars } from './ui/context/ContextToolbarScopes';
+import { forwardSlideEvent, renderContextToolbar } from './ui/context/ContextUi';
 import { renderToolbar } from './ui/toolbar/CommonToolbar';
 import { identifyButtons } from './ui/toolbar/Integration';
-import * as Settings from './api/Settings';
-import { PlatformDetection } from '@ephox/sand';
 
 const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   const contextbar = GuiFactory.build(
@@ -88,6 +71,10 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   const shouldContextToolbarHide = (): boolean => {
+    // If a mobile context menu is open, hide any context toolbars so they don't overlap
+    if (extras.backstage.isContextMenuOpen()) {
+      return true;
+    }
     const nodeBounds = lastElement.get().map((ele) => ele.getBoundingClientRect()).getOrThunk(() => {
       return editor.selection.getRng().getBoundingClientRect();
     });
@@ -237,6 +224,12 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
   const launchContext = (toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm, elem: Option<DomElement>) => {
     clearTimer();
+
+    // If a mobile context menu is open, don't launch else they'll probably overlap
+    if (extras.backstage.isContextMenuOpen()) {
+      return;
+    }
+
     const toolbarSpec = buildToolbar(toolbarApi);
     const sElem = elem.map(Element.fromDom);
     const anchor = getAnchor(toolbarApi.position, sElem);
@@ -280,7 +273,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   editor.on('init', () => {
-    editor.on('ScrollContent ScrollWindow', hideOrRepositionIfNecessary);
+    editor.on('ScrollContent ScrollWindow longpress'.concat(hideContextToolbarEvent), hideOrRepositionIfNecessary);
 
     // FIX: Make it go away when the action makes it go away. E.g. deleting a column deletes the table.
     editor.on('click keyup SetContent ObjectResized ResizeEditor', (e) => {

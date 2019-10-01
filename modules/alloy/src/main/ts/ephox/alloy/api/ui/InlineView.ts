@@ -96,7 +96,6 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       anchor,
       getBounds
     }));
-    detail.onShow(sandbox);
   };
   // TODO AP-191 write a test for showMenuAt
   const showMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
@@ -107,7 +106,6 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       mode: 'menu',
       menu
     }));
-    detail.onShow(sandbox);
   };
   const showHorizontalMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Option<Bounds>) => {
     const onOpen = (menu, sink) => Positioning.positionWithinBounds(sink, anchor, menu, getBounds());
@@ -117,12 +115,10 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       mode: 'menu',
       menu
     }));
-    detail.onShow(sandbox);
   };
   const hide = (sandbox: AlloyComponent) => {
     Representing.setValue(sandbox, Option.none());
     Sandboxing.close(sandbox);
-    detail.onHide(sandbox);
   };
   const getContent = (sandbox: AlloyComponent): Option<AlloyComponent> => {
     return Sandboxing.getState(sandbox);
@@ -170,6 +166,12 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
           },
           getAttachPoint (sandbox) {
             return detail.lazySink(sandbox).getOrDie();
+          },
+          onOpen (sandbox) {
+            detail.onShow(sandbox);
+          },
+          onClose (sandbox) {
+            detail.onHide(sandbox);
           }
         }),
         Representing.config({
