@@ -412,7 +412,7 @@ const EditorManager: EditorManager = {
     const findTargets = function (settings): Element[] {
       let l, targets = [];
 
-      if (Env.ie && Env.ie < 11) {
+      if (Env.browser.isIE() && Env.browser.version.major < 11) {
         ErrorReporter.initError(
           'TinyMCE does not support the browser you are using. For a list of supported' +
           ' browsers please see: https://www.tinymce.com/docs/get-started/system-requirements/'

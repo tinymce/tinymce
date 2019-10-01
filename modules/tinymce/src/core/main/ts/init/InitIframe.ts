@@ -21,7 +21,7 @@ const DOM = DOMUtils.DOM;
 const relaxDomain = function (editor: Editor, ifr) {
   // Domain relaxing is required since the user has messed around with document.domain
   // This only applies to IE 11 other browsers including Edge seems to handle document.domain
-  if (document.domain !== window.location.hostname && Env.ie && Env.ie < 12) {
+  if (document.domain !== window.location.hostname && Env.browser.isIE()) {
     const bodyUuid = Uuid.uuid('mce');
 
     editor[bodyUuid] = function () {

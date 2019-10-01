@@ -691,7 +691,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function () {
   });
 
   suite.test('normalize with contentEditable:true parent and contentEditable:false child element', function (editor) {
-    if (Env.ie && Env.ie < 12) {
+    if (Env.browser.isIE()) {
       editor.setContent('<p contentEditable="true">a<em contentEditable="false">b</em></p>');
       LegacyUnit.setSelection(editor, 'em', 0);
       editor.selection.normalize();

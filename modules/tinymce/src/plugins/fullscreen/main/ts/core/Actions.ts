@@ -6,12 +6,11 @@
  */
 import { document, window } from '@ephox/dom-globals';
 import { Fun, Singleton } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { Css, Element, VisualViewport } from '@ephox/sugar';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Delay from 'tinymce/core/api/util/Delay';
-
 import Events from '../api/Events';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Env from 'tinymce/core/api/Env';
+import Delay from 'tinymce/core/api/util/Delay';
 import Thor from './Thor';
 
 const DOM = DOMUtils.DOM;
@@ -33,7 +32,7 @@ const setScrollPos = function (pos) {
 const visualViewport: VisualViewport.VisualViewport = window['visualViewport'];
 
 // Experiment is for ipadOS 13 only at this stage. Chrome supports this on desktop, and ipadOS cannot be UA detected, so restrict to Safari.
-const isSafari = PlatformDetection.detect().browser.isSafari();
+const isSafari = Env.browser.isSafari();
 
 const viewportUpdate = !isSafari || visualViewport === undefined ? { bind: Fun.noop, unbind: Fun.noop, update: Fun.noop } : (() => {
   const editorContainer = Singleton.value<Element>();
@@ -92,7 +91,7 @@ const toggleFullscreen = function (editor, fullscreenState) {
   const fullscreenInfo = fullscreenState.get();
   const editorBody = Element.fromDom(editor.getBody());
 
-  const isTouch = PlatformDetection.detect().deviceType.isTouch();
+  const isTouch = Env.deviceType.isTouch();
 
   editorContainerStyle = editorContainer.style;
   iframe = editor.getContentAreaContainer().firstChild;

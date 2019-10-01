@@ -11,6 +11,7 @@ export interface DeviceType {
   isAndroid: () => boolean;
   isiOS: () => boolean;
   isWebView: () => boolean;
+  isDesktop: () => boolean;
 }
 
 export const DeviceType = function (os: OperatingSystem, browser: Browser, userAgent: string): DeviceType {
@@ -23,6 +24,7 @@ export const DeviceType = function (os: OperatingSystem, browser: Browser, userA
   const isPhone = isTouch && !isTablet;
 
   const iOSwebview = browser.isSafari() && os.isiOS() && /safari/i.test(userAgent) === false;
+  const isDesktop = !isPhone && !isTablet && !iOSwebview;
 
   return {
     isiPad : Fun.constant(isiPad),
@@ -32,6 +34,7 @@ export const DeviceType = function (os: OperatingSystem, browser: Browser, userA
     isTouch: Fun.constant(isTouch),
     isAndroid: os.isAndroid,
     isiOS: os.isiOS,
-    isWebView: Fun.constant(iOSwebview)
+    isWebView: Fun.constant(iOSwebview),
+    isDesktop: Fun.constant(isDesktop)
   };
 };

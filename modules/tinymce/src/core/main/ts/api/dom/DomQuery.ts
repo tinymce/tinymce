@@ -8,7 +8,6 @@
 import { document, HTMLElementEventMap, Node, Window } from '@ephox/dom-globals';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
-import Env from '../Env';
 import Tools from '../util/Tools';
 
 /**
@@ -1627,80 +1626,6 @@ DomQueryConstructor.overrideDefaults = function (callback) {
 
   return sub;
 };
-
-const appendHooks = function (targetHooks, prop, hooks) {
-  each(hooks, function (name, func) {
-    targetHooks[name] = targetHooks[name] || {};
-    targetHooks[name][prop] = func;
-  });
-};
-
-if (Env.ie && Env.ie < 8) {
-  appendHooks(attrHooks, 'get', {
-    maxlength (elm) {
-      const value = elm.maxLength;
-
-      if (value === 0x7fffffff) {
-        return undefined;
-      }
-
-      return value;
-    },
-
-    size (elm) {
-      const value = elm.size;
-
-      if (value === 20) {
-        return undefined;
-      }
-
-      return value;
-    },
-
-    class (elm) {
-      return elm.className;
-    },
-
-    style (elm) {
-      const value = elm.style.cssText;
-
-      if (value.length === 0) {
-        return undefined;
-      }
-
-      return value;
-    }
-  });
-
-  appendHooks(attrHooks, 'set', {
-    class (elm, value) {
-      elm.className = value;
-    },
-
-    style (elm, value) {
-      elm.style.cssText = value;
-    }
-  });
-}
-
-if (Env.ie && Env.ie < 9) {
-  /*jshint sub:true */
-  /*eslint dot-notation: 0*/
-  cssFix.float = 'styleFloat';
-
-  appendHooks(cssHooks, 'set', {
-    opacity (elm, value) {
-      const style = elm.style;
-
-      if (value === null || value === '') {
-        style.removeAttribute('filter');
-      } else {
-        style.zoom = 1;
-        style.filter = 'alpha(opacity=' + (value * 100) + ')';
-      }
-    }
-  });
-}
 
 DomQueryConstructor.attrHooks = attrHooks;
 DomQueryConstructor.cssHooks = cssHooks;

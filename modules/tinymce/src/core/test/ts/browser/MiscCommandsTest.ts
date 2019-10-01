@@ -80,7 +80,7 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function () {
     editor.setContent('<p>123</p>');
     LegacyUnit.setSelection(editor, 'p', 3);
     editor.execCommand('InsertLineBreak');
-    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), (Env.ie && Env.ie < 11) ? '<p>123<br></p>' : '<p>123<br><br></p>');
+    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>123<br><br></p>');
   });
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
