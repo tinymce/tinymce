@@ -74,7 +74,6 @@ const viewportUpdate = !isSafari || visualViewport === undefined ? { bind: Fun.n
   };
 
   return {
-    update,
     bind,
     unbind
   };
@@ -119,12 +118,8 @@ const toggleFullscreen = function (editor, fullscreenState) {
 
     viewportUpdate.bind(editorContainerS);
 
-    editor.on('refreshVisualViewport', viewportUpdate.update);
+    editor.on('remove', viewportUpdate.unbind);
 
-    editor.on('remove', () => {
-      editor.off('refreshVisualViewport', viewportUpdate.update);
-      viewportUpdate.unbind();
-    });
     fullscreenState.set(newFullScreenInfo);
     Events.fireFullscreenStateChanged(editor, true);
   } else {

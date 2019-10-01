@@ -23,9 +23,6 @@ tinymce.init({
   table_style_by_css: true,
   // table grid TBD
   table_grid: true,
-  mobile: {
-    theme: 'silver'
-  },
   // table_advtab: true,
   // table_cell_advtab: false,
   // table_row_advtab: false,

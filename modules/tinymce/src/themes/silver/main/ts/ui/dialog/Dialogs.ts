@@ -4,9 +4,9 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
-
 import {
   AddEventsBehaviour,
+  AlloyComponent,
   AlloyEvents,
   AlloySpec,
   Behaviour,
@@ -15,14 +15,14 @@ import {
   DomFactory,
   ModalDialog,
   Tabstopping,
-  AlloyComponent,
 } from '@ephox/alloy';
 import { Merger, Option, Result } from '@ephox/katamari';
+import Env from 'tinymce/core/api/Env';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { FormCancelEvent, formCancelEvent, FormSubmitEvent, formSubmitEvent } from '../general/FormEvents';
-import { PlatformDetection } from '@ephox/sand';
-const isTouch = PlatformDetection.detect().deviceType.isTouch();
+
+const isTouch = Env.deviceType.isTouch();
 
 const hiddenHeader: AlloySpec = {
   dom: {

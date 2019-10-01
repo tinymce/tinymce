@@ -4,10 +4,9 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
-
 import { Arr } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { Attr, Css, SelectorFilter } from '@ephox/sugar';
+import Env from 'tinymce/core/api/Env';
 import { SugarElement } from 'tinymce/themes/mobile/alien/TypeDefinitions';
 
 const attr = 'data-ephox-mobile-fullscreen-style';
@@ -17,7 +16,7 @@ const ancestorPosition = 'position:absolute!important;';
 const ancestorStyles = 'top:0!important;left:0!important;margin:0!important;padding:0!important;width:100%!important;height:100%!important;overflow:visible!important;';
 const bgFallback = 'background-color:rgb(255,255,255)!important;';
 
-const isAndroid = PlatformDetection.detect().os.isAndroid();
+const isAndroid = Env.os.isAndroid();
 
 const matchColor = function (editorBody: SugarElement) {
   // in iOS you can overscroll, sometimes when you overscroll you can reveal the bgcolor of an element beneath,
@@ -37,7 +36,6 @@ const clobberStyles = function (container: SugarElement, editorBody: SugarElemen
     return function (element) {
       const styles = Attr.get(element, 'style');
       const backup = styles === undefined ? 'no-styles' : styles.trim();
-
       if (backup === clobberStyle) {
         return;
       } else {
