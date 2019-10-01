@@ -27,6 +27,7 @@ import { Objects } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { ClientRect, Element as DomElement, window } from '@ephox/dom-globals';
 import { Cell, Id, Merger, Option, Result, Thunk } from '@ephox/katamari';
+import { LazyPlatformDetection } from '@ephox/sand';
 import { Css, Element, Focus, Scroll, SelectorFind, Traverse, VisualViewport } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -39,7 +40,6 @@ import ToolbarScopes, { ScopedToolbars } from './ui/context/ContextToolbarScopes
 import { renderToolbar } from './ui/toolbar/CommonToolbar';
 import { identifyButtons } from './ui/toolbar/Integration';
 import * as Settings from './api/Settings';
-import { PlatformDetection } from '@ephox/sand';
 
 const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   const contextbar = GuiFactory.build(
@@ -218,8 +218,8 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast]
   };
 
-  const detection = PlatformDetection.detect();
-  const isTouch = detection.deviceType.isTouch();
+  const lazyDetection = LazyPlatformDetection.detect();
+  const isTouch = lazyDetection.deviceType.isTouch();
 
   const anchorSpec = {
     bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
