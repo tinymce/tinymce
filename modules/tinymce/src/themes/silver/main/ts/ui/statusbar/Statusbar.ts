@@ -22,7 +22,8 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
         tag: 'div',
         classes: [ 'tox-statusbar__resize-handle' ],
         attributes: {
-          title: providersBackstage.translate('Resize') // TODO: tooltips AP-213
+          'title': providersBackstage.translate('Resize'), // TODO: tooltips AP-213
+          'aria-hidden': 'true',
         },
         innerHtml: getIcon('resize-handle', providersBackstage.icons),
       },
