@@ -102,7 +102,7 @@ const nativeEvents = Tools.makeMap(
   'focus blur focusin focusout click dblclick mousedown mouseup mousemove mouseover beforepaste paste cut copy selectionchange ' +
   'mouseout mouseenter mouseleave wheel keydown keypress keyup input beforeinput contextmenu dragstart dragend dragover ' +
   'draggesture dragdrop drop drag submit ' +
-  'compositionstart compositionend compositionupdate touchstart touchmove touchend touchcancel gotPointerCapture',
+  'compositionstart compositionend compositionupdate touchstart touchmove touchend touchcancel',
   ' '
 );
 

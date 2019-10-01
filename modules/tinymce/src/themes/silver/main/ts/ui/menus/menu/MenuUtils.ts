@@ -19,7 +19,7 @@ export const handleError = (error: ValueSchema.SchemaError<any>): Option<ItemTyp
   return Option.none();
 };
 
-export const createHorizontalPartialMenuWithAlloyItems = (value: string, hasIcons: boolean, items, columns: Types.ColumnTypes, presets: Types.PresetTypes): Partial<MenuTypes.MenuSpec> => {
+export const createHorizontalPartialMenuWithAlloyItems = (value: string, _hasIcons: boolean, items, _columns: Types.ColumnTypes, _presets: Types.PresetTypes): Partial<MenuTypes.MenuSpec> => {
   const structure = forHorizontalCollection(items);
   return {
     value,

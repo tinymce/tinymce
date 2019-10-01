@@ -1,9 +1,10 @@
-import { console, Touch } from '@ephox/dom-globals';
+import { Touch } from '@ephox/dom-globals';
 import { Cell, Fun, Option } from '@ephox/katamari';
 import DelayedFunction from '../alien/DelayedFunction';
 
-const SIGNIFICANT_MOVE = 5;
+// This is based heavily on Alloy's TapEvent.ts, just modified to use TinyMCE's event system.
 
+const SIGNIFICANT_MOVE = 5;
 const LONGPRESS_DELAY = 400;
 
 export interface TouchHistoryData {
@@ -20,7 +21,6 @@ const getTouch = (event): Option<Touch> => {
 };
 
 const startData = Cell<Option<TouchHistoryData>>(Option.none());
-const longpressFlag = Cell<boolean>(false);
 
 const isFarEnough = (touch, data: TouchHistoryData): boolean => {
   const distX = Math.abs(touch.clientX - data.x());
@@ -29,16 +29,9 @@ const isFarEnough = (touch, data: TouchHistoryData): boolean => {
 };
 
 const setupLongpress = (editor) => {
-  const longpress = DelayedFunction((e) => {
-    // Stop longpress firing a tap
-    // tslint:disable-next-line: no-console
-    console.log(e);
-    longpressFlag.set(true);
-    editor.fire('longpress', { rawEvent: { ...e, type: 'longpress' } });
-  }, LONGPRESS_DELAY);
+  const longpress = DelayedFunction((e) => editor.fire('longpress', { rawEvent: { ...e, type: 'longpress' } }), LONGPRESS_DELAY);
 
   editor.on('touchstart', (e) => {
-    longpressFlag.set(false);
     getTouch(e).each((touch) => {
       longpress.cancel();
 
@@ -54,15 +47,9 @@ const setupLongpress = (editor) => {
   }, true);
 
   editor.on('touchmove', (e) => {
-    // tslint:disable-next-line: no-console
-    console.log('touchmove');
     longpress.cancel();
     getTouch(e).each((touch) => {
-      // tslint:disable-next-line: no-console
-      console.log('startdata', startData.get());
       startData.get().each((data) => {
-        // tslint:disable-next-line: no-console
-        console.log(touch, data, isFarEnough(touch, data));
         if (isFarEnough(touch, data)) {
           startData.set(Option.none());
           editor.fire('longpresscancel');
@@ -71,8 +58,7 @@ const setupLongpress = (editor) => {
     });
   }, true);
 
-  editor.on('touchend touchcancel', (e) => {
-    console.log('end cancel');
+  editor.on('touchend touchcancel', (_e) => {
     longpress.cancel();
   }, true);
 };

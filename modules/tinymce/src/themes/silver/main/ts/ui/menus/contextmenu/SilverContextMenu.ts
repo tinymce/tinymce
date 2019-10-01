@@ -7,7 +7,7 @@
 
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, GuiFactory, InlineView, Sandboxing, SystemEvents } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { console, Element as DomElement, PointerEvent, setTimeout } from '@ephox/dom-globals';
+import { Element as DomElement, PointerEvent, setTimeout } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import Editor from 'tinymce/core/api/Editor';
@@ -131,21 +131,16 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     }),
   );
 
-  const hideContextMenu = (e) => {
-    // tslint:disable-next-line: no-console
-    console.log('hide', e.type);
-    InlineView.hide(contextmenu);
-  };
+  const hideContextMenu = (_e) => InlineView.hide(contextmenu);
 
   editor.on('init', () => {
     // Hide the context menu when scrolling or resizing
-    // editor.on('ResizeWindow ScrollContent ScrollWindow', hideContextMenu);
     editor.on('ResizeEditor ScrollContent ScrollWindow longpresscancel', hideContextMenu);
 
     editor.on(isTouch ? 'longpress' : 'contextmenu', (e) => {
 
-      const event = isTouch ? e.rawEvent : e;
-      console.log(Settings.shouldNeverUseNative(editor));
+      // longpress is a TinyMCE-generated event, so the touchstart event data is wrapped.
+      const event = e.type === 'longpress' ? e.rawEvent : e;
       // Prevent the default if we should never use native
       if (Settings.shouldNeverUseNative(editor)) {
         event.preventDefault();
@@ -155,6 +150,8 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
         return;
       }
 
+      // For longpress, editor.selection hasn't updated yet at this point, so need to do it manually
+      // Without this longpress causes drag-n-drop duplication of code on Android
       if (event.type === 'longpress') {
         editor.selection.setCursorLocation(event.target, 0);
       }
@@ -173,7 +170,8 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
         });
       };
 
-      // Different browsers trigger the context menu from keyboards differently, so need to check both the button and target here
+      // Different browsers trigger the context menu from keyboards differently, so need to check both the button and target here.
+      // Unless it's a touchevent, in which case we don't care.
       // Chrome: button = 0 & target = the selection range node
       // Firefox: button = 0 & target = body
       // IE/Edge: button = 2 & target = body
@@ -190,7 +188,14 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
 
       const showContextMenu = isTouch ? MobileContextMenu.show : show;
-      showContextMenu(editor, event, items, backstage, contextmenu, anchorSpec);
+      if (detection.deviceType.isiOS()) {
+        // Need a short wait here for iOS due to browser focus events or something causing the keyboard to open after
+        // the context menu opens, closing it again
+        setTimeout(() => showContextMenu(editor, event, items, backstage, contextmenu, anchorSpec), 200);
+      } else {
+        // Waiting on Android causes the native context toolbar to not show, so don't wait
+        showContextMenu(editor, event, items, backstage, contextmenu, anchorSpec);
+      }
     });
   });
 };

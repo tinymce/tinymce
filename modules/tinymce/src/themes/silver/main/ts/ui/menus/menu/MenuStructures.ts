@@ -100,7 +100,7 @@ const preprocessCollection = (items: ItemTypes.ItemSpec[], isHorizontalMenu: boo
   });
 };
 
-const forCollection = (columns: number | 'auto', initItems, hasIcons: boolean = true) => {
+const forCollection = (columns: number | 'auto', initItems, _hasIcons: boolean = true) => {
   return {
     dom: {
       tag: 'div',
@@ -116,7 +116,7 @@ const forCollection = (columns: number | 'auto', initItems, hasIcons: boolean = 
               classes: [ 'tox-collection__group' ]
             }, columns)(items);
           } else {
-            return preprocessCollection(items, false, (item, i) => {
+            return preprocessCollection(items, false, (_item, i) => {
               return initItems[i].type === 'separator';
             });
           }
@@ -126,17 +126,16 @@ const forCollection = (columns: number | 'auto', initItems, hasIcons: boolean = 
   };
 };
 
-const forHorizontalCollection = (initItems, hasIcons: boolean = true) => {
+const forHorizontalCollection = (initItems, _hasIcons: boolean = true) => {
   return {
     dom: {
       tag: 'div',
       classes: [ 'tox-horizcollection' ]
     },
     components: [
-      // TODO: Clean up code and test atomically
       AlloyMenu.parts().items({
         preprocess: (items: ItemTypes.ItemSpec[]) => {
-          return preprocessCollection(items, true, (item, i) => {
+          return preprocessCollection(items, true, (_item, i) => {
             return initItems[i].type === 'separator';
           });
         }

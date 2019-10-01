@@ -1,5 +1,4 @@
 import { Element } from '@ephox/sugar';
-import Editor from '../../../main/ts/api/Editor';
 
 declare let tinymce: any;
 
@@ -16,12 +15,8 @@ export default () => {
           api.element().removeChild(box.dom());
         };
       },
-      onShow: (api) => {
-
-      },
-      onHide: (api) => {
-
-      },
+      onShow: (api) => { },
+      onHide: (api) => { },
     });
   };
 
@@ -94,62 +89,10 @@ export default () => {
         'insertdatetime media table contextmenu paste'
       ],
       toolbar: 'bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image insertfile undo redo | styleselect',
-      menubar: 'file edit insert',
-      table_toolbar: false,
+      // table_toolbar: false,
     },
-    menubar: 'file edit insert',
-    setup (ed: Editor) {
+    setup (ed) {
       makeSidebar(ed, 'sidebar1', 'green', 200);
-      ed.ui.registry.addButton('test1', {
-        text: 'test1',
-        onAction: () => {}
-      });
-      ed.ui.registry.addMenuButton('test2', {
-        text: 'test2',
-        fetch: (callback) => {
-          const items: any[] = [
-            {
-              type: 'menuitem',
-              text: 'Menu item 1',
-              onAction: () => {
-                ed.insertContent('&nbsp;<em>You clicked menu item 1!</em>');
-              }
-            },
-            {
-              type: 'nestedmenuitem',
-              text: 'Menu item 2',
-              icon: 'user',
-              getSubmenuItems: () => {
-                return [
-                  {
-                    type: 'menuitem',
-                    text: 'Sub menu item 1',
-                    icon: 'unlock',
-                    onAction: () => {
-                      ed.insertContent('&nbsp;<em>You clicked Sub menu item 1!</em>');
-                    }
-                  },
-                  {
-                    type: 'menuitem',
-                    text: 'Sub menu item 2',
-                    icon: 'lock',
-                    onAction: () => {
-                      ed.insertContent('&nbsp;<em>You clicked Sub menu item 2!</em>');
-                    }
-                  }
-                ];
-              }
-            }
-          ];
-          callback(items);
-        }
-      });
-      // ed.ui.registry.addContextToolbar('texttoolbar', {
-      //   predicate: () => !ed.selection.isCollapsed(),
-      //   items: 'test1 test2 test1 test1 test1 test1 test1 test1 test1 test1 test1 test1 test2 test1 test1 test1 test2 test1 test1',
-      //   position: 'selection',
-      //   scope: 'node'
-      // });
     },
     plugins: [
       'help',
@@ -158,7 +101,6 @@ export default () => {
       'save table directionality emoticons template paste textcolor importcss colorpicker textpattern',
       'codesample help noneditable print'
     ],
-    // width: 600,
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
