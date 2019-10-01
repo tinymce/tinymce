@@ -15,7 +15,7 @@ import { Css, Element, Focus, Scroll, SelectorFind, Traverse, VisualViewport } f
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import * as Settings from './api/Settings';
-import { showContextToolbarEvent, hideContextToolbarEvent } from './ui/context/ContextEditorEvents';
+import { hideContextToolbarEvent, showContextToolbarEvent } from './ui/context/ContextEditorEvents';
 import { ContextForm } from './ui/context/ContextForm';
 import * as ContextToolbarBounds from './ui/context/ContextToolbarBounds';
 import ToolbarLookup from './ui/context/ContextToolbarLookup';
@@ -72,7 +72,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
   const shouldContextToolbarHide = (): boolean => {
     // If a mobile context menu is open, hide any context toolbars so they don't overlap
-    if (extras.backstage.isContextMenuOpen()) {
+    if (isTouch && extras.backstage.isContextMenuOpen()) {
       return true;
     }
     const nodeBounds = lastElement.get().map((ele) => ele.getBoundingClientRect()).getOrThunk(() => {
@@ -82,6 +82,11 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     const aboveViewport = nodeBounds.bottom < 0;
     const belowViewport = nodeBounds.top > viewportHeight;
     return aboveViewport || belowViewport || isCompletelyBehindHeader(nodeBounds);
+  };
+
+  const forceHide = () => {
+    const contextBarEle = contextbar.element();
+    Css.set(contextBarEle, 'display', 'none');
   };
 
   // FIX: make a lot nicer.
@@ -226,7 +231,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     clearTimer();
 
     // If a mobile context menu is open, don't launch else they'll probably overlap
-    if (extras.backstage.isContextMenuOpen()) {
+    if (isTouch && extras.backstage.isContextMenuOpen()) {
       return;
     }
 
@@ -273,7 +278,8 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   editor.on('init', () => {
-    editor.on('ScrollContent ScrollWindow longpress'.concat(hideContextToolbarEvent), hideOrRepositionIfNecessary);
+    editor.on(hideContextToolbarEvent, forceHide);
+    editor.on('ScrollContent ScrollWindow longpress', hideOrRepositionIfNecessary);
 
     // FIX: Make it go away when the action makes it go away. E.g. deleting a column deletes the table.
     editor.on('click keyup SetContent ObjectResized ResizeEditor', (e) => {

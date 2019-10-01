@@ -7,7 +7,7 @@
 
 import { AlloyComponent, AlloySpec, FormTypes, HotspotAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Option, Result, Cell } from '@ephox/katamari';
+import { Cell, Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
@@ -16,10 +16,9 @@ import { SelectData } from '../ui/core/complex/BespokeSelect';
 import { IconProvider } from '../ui/icons/Icons';
 import Anchors from './Anchors';
 import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInputBackstage';
+import { DialogBackstage, UiFactoryBackstageForDialog } from './DialogBackstage';
 import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
-import { UiFactoryBackstageForDialog, DialogBackstage } from './DialogBackstage';
-import { console } from '@ephox/dom-globals';
 
 // INVESTIGATE: Make this a body component API ?
 export type BridgedType = any;
