@@ -108,6 +108,15 @@ const withinRange = (coord1: CoordAdt, coord2: CoordAdt, xRange: number, yRange:
     Math.abs(a1.top() - a2.top()) <= yRange;
 };
 
+const getDeltas = (coord1: CoordAdt, coord2: CoordAdt, xRange: number, yRange: number, scroll: SugarPosition, origin: SugarPosition) => {
+  const a1 = asAbsolute(coord1, scroll, origin);
+  const a2 = asAbsolute(coord2, scroll, origin);
+  return {
+    left: xRange - Math.abs(a1.left() - a2.left()),
+    top: yRange - Math.abs(a1.top() - a2.top())
+  };
+};
+
 const toStyles = (coord: CoordAdt, scroll: SugarPosition, origin: SugarPosition): StylesCoord => {
   return coord.fold(
     (x, y) => {
@@ -167,6 +176,7 @@ export {
   asAbsolute,
   asOffset,
   withinRange,
+  getDeltas,
   toStyles,
   translate,
 

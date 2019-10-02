@@ -49,6 +49,7 @@ export interface SnapsConfig {
   topAttr: string;
   onSensor?: (component: AlloyComponent, extra: {}) => void;
   lazyViewport?: (component: AlloyComponent) => Bounds;
+  mustSnap?: boolean;
 }
 
 export interface DraggingConfig {

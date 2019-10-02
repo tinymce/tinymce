@@ -6,13 +6,14 @@
  */
 
 import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
-import { Fun, Option, Struct } from '@ephox/katamari';
-import { TableLookup } from '@ephox/snooker';
+import { Fun, Option, Struct, Cell } from '@ephox/katamari';
+import { TableLookup, OtherCells } from '@ephox/snooker';
 import {
-    Element, Selection, SelectionDirection, Class
+    Element, Selection, SelectionDirection, Class, Node, Compare, Attr
 } from '@ephox/sugar';
 
 import * as Util from '../alien/Util';
+import * as TouchSelector from '../ui/TouchSelector';
 import Direction from '../queries/Direction';
 import Ephemera from './Ephemera';
 import { DomParent } from '@ephox/robin';
@@ -157,9 +158,43 @@ export default function (editor, lazyResize) {
       }
     };
 
+    const lastTarget = Cell<Element>(Element.fromDom(body as any));
+    const lastTimeStamp = Cell<number>(0);
+
+    const touchEnd = (t) => {
+      const target = Element.fromDom(t.target);
+      if (Node.name(target) === 'td' || Node.name(target) === 'th') {
+        const lT = lastTarget.get();
+        const lTS = lastTimeStamp.get();
+        if (Compare.eq(lT, target) && (t.timeStamp - lTS) < 300) {
+          t.preventDefault();
+          Attr.set(target, 'data-mce-selected', '1');
+          const table = TableLookup.table(target);
+          const tabTarget = {
+            selection: () => [target]
+          };
+          table.each((tab) => {
+            const ul = OtherCells.getUpOrLeft(tab, tabTarget);
+            ul.each((upperLeftCells) => {
+              const getTableBits = () => {
+                return {
+                  topLeft: upperLeftCells
+                };
+              };
+              const touchSelector = TouchSelector.getSelectors(getTableBits);
+            });
+            console.log(ul.getOrDie());
+          });
+        }
+      }
+      lastTarget.set(target);
+      lastTimeStamp.set(t.timeStamp);
+    };
+
     editor.on('mousedown', mouseDown);
     editor.on('mouseover', mouseOver);
     editor.on('mouseup', mouseUp);
+    editor.on('touchend', touchEnd);
     editor.on('keyup', keyup);
     editor.on('keydown', keydown);
     editor.on('NodeChange', syncSelection);

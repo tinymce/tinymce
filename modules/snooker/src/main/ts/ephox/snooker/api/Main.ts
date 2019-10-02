@@ -20,6 +20,7 @@ import * as TableRender from './TableRender';
 import { TableResize } from './TableResize';
 import * as RunOperation from '../model/RunOperation';
 import GridRow from '../model/GridRow';
+import OtherCells from './OtherCells';
 
 export {
   CellLocation,
@@ -43,5 +44,6 @@ export {
   TableRender,
   TableResize,
   RunOperation,
-  GridRow
+  GridRow,
+  OtherCells
 };

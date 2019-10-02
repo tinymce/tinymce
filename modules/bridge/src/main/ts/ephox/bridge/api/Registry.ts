@@ -9,6 +9,7 @@ import { ContextMenuApi } from '../components/menu/ContextMenu';
 import { ContextToolbarApi, ContextFormApi } from '../components/toolbar/ContextToolbar';
 import { AutocompleterApi } from '../components/content/Autocompleter';
 import { SidebarApi } from '../components/sidebar/Sidebar';
+import { SizerApi } from '../components/sizer/Sizer';
 
 // This would be part of the tinymce api under editor.ui.* so editor.ui.addButton('bold', ...)
 // TODO: This should maybe not be part of this project but rather something built into tinymce core using these public types
@@ -27,6 +28,7 @@ export interface Registry {
   addIcon: (name: string, svgData: string) => void;
   addAutocompleter: (name: string, spec: AutocompleterApi) => void;
   addSidebar: (name: string, spec: SidebarApi) => void;
+  addSizer: (name: string, spec: SizerApi) => void;
 
   getAll: () => {
     buttons: Record<string, ToolbarButtonApi | ToolbarMenuButtonApi | ToolbarSplitButtonApi | ToolbarToggleButtonApi>;
@@ -36,6 +38,7 @@ export interface Registry {
     contextToolbars: Record<string, ContextToolbarApi | ContextFormApi>;
     icons: Record<string, string>;
     sidebars: Record<string, SidebarApi>;
+    sizers: Record<string, SizerApi>;
   };
 }
 
@@ -47,6 +50,7 @@ export const create = (): Registry => {
   const contextMenus: Record<string, ContextMenuApi> = {};
   const contextToolbars: Record<string, ContextToolbarApi | ContextFormApi> = {};
   const sidebars: Record<string, SidebarApi> = {};
+  const sizers: Record<string, SizerApi> = {};
   const add = (collection, type: string) => (name: string, spec: any): void => collection[name.toLowerCase()] = { ...spec, type };
   const addIcon = (name: string, svgData: string) => icons[name.toLowerCase()] = svgData;
 
@@ -63,6 +67,7 @@ export const create = (): Registry => {
     addContextToolbar: add(contextToolbars, 'contexttoolbar'),
     addContextForm: add(contextToolbars, 'contextform'),
     addSidebar: add(sidebars, 'sidebar'),
+    addSizer: add(sizers, 'sizer'),
     addIcon,
 
     getAll: () => ({
@@ -77,7 +82,8 @@ export const create = (): Registry => {
       contextMenus,
 
       contextToolbars,
-      sidebars
+      sidebars,
+      sizers
     })
   };
 };

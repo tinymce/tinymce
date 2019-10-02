@@ -51,6 +51,7 @@ import * as Sidebar from './ui/sidebar/Sidebar';
 import * as Throbber from './ui/throbber/Throbber';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
+import Sizer from './Sizer';
 
 export interface RenderInfo {
   mothership: Gui.GuiSystem;
@@ -408,6 +409,8 @@ const setup = (editor: Editor): RenderInfo => {
     };
 
     ContextToolbar.register(editor, contextToolbars, sink, { backstage });
+
+    Sizer.register(editor, sink, { backstage });
 
     const elm = editor.getElement();
     const height = setEditorSize(elm);
