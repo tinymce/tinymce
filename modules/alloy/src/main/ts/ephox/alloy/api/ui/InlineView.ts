@@ -1,4 +1,3 @@
-import { Boxes, Representing, Layout } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
@@ -20,6 +19,8 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { tieredMenu as TieredMenu } from './TieredMenu';
 import { SingleSketchFactory } from './UiSketcher';
+import { Representing } from '../behaviour/Representing';
+import { Boxes, Layout } from '../Main';
 
 const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, onOpen) => {
   const lazySink: () => ReturnType<LazySink> = () => detail.lazySink(menuSandbox);
@@ -117,11 +118,11 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       mode: 'menu',
       menu
     }));
+    detail.onShow(sandbox);
   };
   const hide = (sandbox: AlloyComponent) => {
     Representing.setValue(sandbox, Option.none());
     Sandboxing.close(sandbox);
-    detail.onHide(sandbox);
   };
   const getContent = (sandbox: AlloyComponent): Option<AlloyComponent> => {
     return Sandboxing.getState(sandbox);
@@ -170,6 +171,9 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
           getAttachPoint (sandbox) {
             return detail.lazySink(sandbox).getOrDie();
           },
+          onClose (sandbox) {
+            detail.onHide(sandbox);
+          }
         }),
         Representing.config({
           store: {

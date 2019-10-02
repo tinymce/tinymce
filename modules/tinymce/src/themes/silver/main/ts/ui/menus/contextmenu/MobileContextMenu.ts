@@ -1,23 +1,18 @@
-import { AlloyComponent, Boxes, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth, Sandboxing } from '@ephox/alloy';
+import { AlloyComponent, Boxes, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
 import { PointerEvent, window } from '@ephox/dom-globals';
-import { Cell, Obj, Option } from '@ephox/katamari';
+import { Cell, Option } from '@ephox/katamari';
 import { Element, VisualViewport } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as Settings from 'tinymce/themes/silver/api/Settings';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
+import { hideContextToolbarEvent } from '../../context/ContextEditorEvents';
 import * as ContextToolbarBounds from '../../context/ContextToolbarBounds';
 import ItemResponse from '../item/ItemResponse';
 import * as MenuParts from '../menu/MenuParts';
 import * as NestedMenus from '../menu/NestedMenus';
-import { hideContextToolbarEvent } from '../../context/ContextEditorEvents';
 
 const contextmenuRecord = Cell<Record<string, AlloyComponent>>({});
-
-const isMobileContextMenuOpen = (editor) => {
-  // AFAIK this module can't differentiate between multiple editors on the page, so index by editor ID
-  return Obj.get(contextmenuRecord.get(), editor.id).fold(() => false, (menu) => Sandboxing.isOpen(menu));
-};
 
 const toolbarOrMenubarEnabled = (editor) => Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
 
@@ -85,6 +80,5 @@ const show = (editor: Editor, e: EditorEvent<PointerEvent>, items, backstage: Ui
 };
 
 export default {
-  show,
-  isMobileContextMenuOpen
+  show
 };

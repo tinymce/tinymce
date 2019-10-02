@@ -29,7 +29,7 @@ const isFarEnough = (touch, data: TouchHistoryData): boolean => {
 };
 
 const setupLongpress = (editor) => {
-  const longpress = DelayedFunction((e) => editor.fire('longpress', { rawEvent: { ...e, type: 'longpress' } }), LONGPRESS_DELAY);
+  const longpress = DelayedFunction((e) => editor.fire('longpress', { ...e, type: 'longpress' }), LONGPRESS_DELAY);
 
   editor.on('touchstart', (e) => {
     getTouch(e).each((touch) => {
