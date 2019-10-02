@@ -26,7 +26,7 @@ Version 5.1.0 (TBD)
     Fixed Oxide using the wrong text color variable for menubar button focused state #TINY-4146
     Fixed the autoresize plugin not keeping the selection in view when resizing #TINY-4094
     Fixed missing CSS fill styles for toolbar button icon active state #TINY-4147
-    Fixed selection being lost in inline mode when opening split dropdowns #TINY-4197
+    Fixed browser selection being lost in inline mode when opening split dropdowns #TINY-4197
 Version 5.0.16 (2019-09-24)
     Added new `referrer_policy` setting to add the `referrerpolicy` attribute when loading scripts or stylesheets #TINY-3978
     Added a slight background color to dialog tab links when focused to aid keyboard navigation #TINY-3877
