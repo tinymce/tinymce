@@ -31,7 +31,6 @@
   .tox-toolbar__overflow {
     background: @toolbar-background;
     background-color: @toolbar-background-color;
-    border-top: 1px solid @toolbar-separator-color;
     display: flex;
     flex: 0 0 auto;
     flex-shrink: 0;
@@ -54,6 +53,13 @@
 
   .tox-toolbar__overflow--shrinking {
     transition: opacity .3s ease, height .2s linear .1s, visibility 0s linear .3s;
+  }
+
+  // Add top borders
+  .tox-menubar + .tox-toolbar,
+  .tox-menubar + .tox-toolbar-overlord .tox-toolbar__primary,
+  .tox-toolbar__overflow {
+    border-top: 1px solid @toolbar-separator-color;
   }
 
   .tox-pop .tox-toolbar {
