@@ -4,13 +4,14 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
-
 import { document, window } from '@ephox/dom-globals';
 import { Fun, Singleton } from '@ephox/katamari';
 import { Css, Element, VisualViewport } from '@ephox/sugar';
 import Events from '../api/Events';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Env from 'tinymce/core/api/Env';
+import Delay from 'tinymce/core/api/util/Delay';
+import Thor from './Thor';
 
 const DOM = DOMUtils.DOM;
 
@@ -33,10 +34,15 @@ const visualViewport: VisualViewport.VisualViewport = window['visualViewport'];
 // Experiment is for ipadOS 13 only at this stage. Chrome supports this on desktop, and ipadOS cannot be UA detected, so restrict to Safari.
 const isSafari = Env.browser.isSafari();
 
-const viewportUpdate = !isSafari || visualViewport === undefined ? { bind: Fun.noop, unbind: Fun.noop } : (() => {
+const viewportUpdate = !isSafari || visualViewport === undefined ? { bind: Fun.noop, unbind: Fun.noop, update: Fun.noop } : (() => {
   const editorContainer = Singleton.value<Element>();
 
-  const update = () => {
+  const refreshScroll = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  };
+
+  const refreshVisualViewport = () => {
     window.requestAnimationFrame(() => {
       editorContainer.on((container) => Css.setAll(container, {
         top: visualViewport.offsetTop + 'px',
@@ -46,6 +52,11 @@ const viewportUpdate = !isSafari || visualViewport === undefined ? { bind: Fun.n
       }));
     });
   };
+
+  const update = Delay.throttle(() => {
+    refreshScroll();
+    refreshVisualViewport();
+  }, 50);
 
   const bind = (element) => {
     editorContainer.set(element);
@@ -73,9 +84,14 @@ const toggleFullscreen = function (editor, fullscreenState) {
   const documentElement = document.documentElement;
   let editorContainerStyle;
   let editorContainer, iframe, iframeStyle;
-  const fullscreenInfo = fullscreenState.get();
-
   editorContainer = editor.getContainer();
+  const editorContainerS = Element.fromDom(editorContainer);
+
+  const fullscreenInfo = fullscreenState.get();
+  const editorBody = Element.fromDom(editor.getBody());
+
+  const isTouch = Env.deviceType.isTouch();
+
   editorContainerStyle = editorContainer.style;
   iframe = editor.getContentAreaContainer().firstChild;
   iframeStyle = iframe.style;
@@ -89,6 +105,10 @@ const toggleFullscreen = function (editor, fullscreenState) {
       iframeHeight: iframeStyle.height
     };
 
+    if (isTouch) {
+      Thor.clobberStyles(editorContainerS, editorBody);
+    }
+
     iframeStyle.width = iframeStyle.height = '100%';
     editorContainerStyle.width = editorContainerStyle.height = '';
 
@@ -96,8 +116,10 @@ const toggleFullscreen = function (editor, fullscreenState) {
     DOM.addClass(documentElement, 'tox-fullscreen');
     DOM.addClass(editorContainer, 'tox-fullscreen');
 
-    viewportUpdate.bind(Element.fromDom(editorContainer));
+    viewportUpdate.bind(editorContainerS);
+
     editor.on('remove', viewportUpdate.unbind);
+
     fullscreenState.set(newFullScreenInfo);
     Events.fireFullscreenStateChanged(editor, true);
   } else {
@@ -112,6 +134,9 @@ const toggleFullscreen = function (editor, fullscreenState) {
       editorContainerStyle.height = fullscreenInfo.containerHeight;
     }
 
+    if (isTouch) {
+      Thor.restoreStyles();
+    }
     DOM.removeClass(body, 'tox-fullscreen');
     DOM.removeClass(documentElement, 'tox-fullscreen');
     DOM.removeClass(editorContainer, 'tox-fullscreen');
