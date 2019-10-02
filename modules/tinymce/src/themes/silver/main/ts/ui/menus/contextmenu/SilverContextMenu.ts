@@ -9,7 +9,7 @@ import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, GuiFactory,
 import { Menu } from '@ephox/bridge';
 import { Element as DomElement, PointerEvent, setTimeout } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
+import { LazyPlatformDetection, PlatformDetection } from '@ephox/sand';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
@@ -109,8 +109,8 @@ const isNativeOverrideKeyEvent = function (editor: Editor, e) {
 };
 
 export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
-  const detection = PlatformDetection.detect();
-  const isTouch = detection.deviceType.isTouch();
+  const isiOS = PlatformDetection.detect().deviceType.isiOS;
+  const isTouch = LazyPlatformDetection.detect().deviceType.isTouch;
 
   const contextmenu = GuiFactory.build(
     InlineView.sketch({
@@ -135,69 +135,72 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
 
   const hideContextMenu = (_e) => InlineView.hide(contextmenu);
 
+  const showContextMenu = (e) => {
+    const isLongpress = e.type === 'longpress';
+    // Prevent the default if we should never use native
+    if (Settings.shouldNeverUseNative(editor)) {
+      e.preventDefault();
+    }
+
+    if (isNativeOverrideKeyEvent(editor, e) || Settings.isContextMenuDisabled(editor)) {
+      return;
+    }
+
+    // For longpress, editor.selection hasn't updated yet at this point, so need to do it manually
+    // Without this longpress causes drag-n-drop duplication of code on Android
+    if (isLongpress) {
+      editor.selection.setCursorLocation(e.target, 0);
+    }
+
+    const show = (_editor: Editor, e: EditorEvent<PointerEvent>, items, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, nuAnchorSpec) => {
+      NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false).map((menuData) => {
+        e.preventDefault();
+
+        // show the context menu, with items set to close on click
+        InlineView.showMenuAt(contextmenu, nuAnchorSpec, {
+          menu: {
+            markers: MenuParts.markers('normal')
+          },
+          data: menuData
+        });
+      });
+    };
+
+    // Different browsers trigger the context menu from keyboards differently, so need to check both the button and target here.
+    // Unless it's a touchevent, in which case we don't care.
+    // Chrome: button = 0 & target = the selection range node
+    // Firefox: button = 0 & target = body
+    // IE/Edge: button = 2 & target = body
+    // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
+    const isTriggeredByKeyboardEvent = !isLongpress && (e.button !== 2 || e.target === editor.getBody());
+    const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
+
+    const registry = editor.ui.registry.getAll();
+    const menuConfig = Settings.getContextMenu(editor);
+
+    // Use the event target element for mouse clicks, otherwise fallback to the current selection
+    const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target as DomElement;
+
+    const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
+
+    const showContextMenu = isLongpress ? MobileContextMenu.show : show;
+    if (isiOS()) {
+      // Need a short wait here for iOS due to browser focus events or something causing the keyboard to open after
+      // the context menu opens, closing it again
+      setTimeout(() => showContextMenu(editor, e, items, backstage, contextmenu, anchorSpec), 400);
+    } else {
+      // Waiting on Android causes the native context toolbar to not show, so don't wait
+      showContextMenu(editor, e, items, backstage, contextmenu, anchorSpec);
+    }
+  };
+
   editor.on('init', () => {
     // Hide the context menu when scrolling or resizing
-    editor.on('ResizeEditor ScrollContent ScrollWindow longpresscancel', hideContextMenu);
+    // Except ResizeWindow on mobile which fires when the keyboard appears/disappears
+    const hideEvents = 'ResizeEditor ScrollContent ScrollWindow longpresscancel'.concat(isTouch() ? '' : 'ResizeWindow');
 
-    editor.on(isTouch ? 'longpress' : 'contextmenu', (e) => {
+    editor.on(hideEvents, hideContextMenu);
 
-      // longpress is a TinyMCE-generated event, so the touchstart event data is wrapped.
-      const isLongpress = e.type === 'longpress';
-      // Prevent the default if we should never use native
-      if (Settings.shouldNeverUseNative(editor)) {
-        e.preventDefault();
-      }
-
-      if (isNativeOverrideKeyEvent(editor, e) || Settings.isContextMenuDisabled(editor)) {
-        return;
-      }
-
-      // For longpress, editor.selection hasn't updated yet at this point, so need to do it manually
-      // Without this longpress causes drag-n-drop duplication of code on Android
-      if (isLongpress) {
-        editor.selection.setCursorLocation(e.target, 0);
-      }
-
-      const show = (_editor: Editor, e: EditorEvent<PointerEvent>, items, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, nuAnchorSpec) => {
-        NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false).map((menuData) => {
-          e.preventDefault();
-
-          // show the context menu, with items set to close on click
-          InlineView.showMenuAt(contextmenu, nuAnchorSpec, {
-            menu: {
-              markers: MenuParts.markers('normal')
-            },
-            data: menuData
-          });
-        });
-      };
-
-      // Different browsers trigger the context menu from keyboards differently, so need to check both the button and target here.
-      // Unless it's a touchevent, in which case we don't care.
-      // Chrome: button = 0 & target = the selection range node
-      // Firefox: button = 0 & target = body
-      // IE/Edge: button = 2 & target = body
-      // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
-      const isTriggeredByKeyboardEvent = !isLongpress && (e.button !== 2 || e.target === editor.getBody());
-      const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
-
-      const registry = editor.ui.registry.getAll();
-      const menuConfig = Settings.getContextMenu(editor);
-
-      // Use the event target element for mouse clicks, otherwise fallback to the current selection
-      const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target as DomElement;
-
-      const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
-
-      const showContextMenu = isLongpress ? MobileContextMenu.show : show;
-      if (detection.deviceType.isiOS()) {
-        // Need a short wait here for iOS due to browser focus events or something causing the keyboard to open after
-        // the context menu opens, closing it again
-        setTimeout(() => showContextMenu(editor, e, items, backstage, contextmenu, anchorSpec), 200);
-      } else {
-        // Waiting on Android causes the native context toolbar to not show, so don't wait
-        showContextMenu(editor, e, items, backstage, contextmenu, anchorSpec);
-      }
-    });
+    editor.on(isTouch() ? 'longpress' : 'contextmenu', showContextMenu);
   });
 };
