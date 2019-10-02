@@ -22,6 +22,11 @@
     position: relative; // Required for the iframe to resize in IE and Edge
   }
 
+  // Remove top border if toolbar and menubar is hidden
+  .tox-anchorbar:first-child + .tox-sidebar-wrap .tox-edit-area {
+    border-top-color: transparent;
+  }
+
   .tox-edit-area__iframe {
     background-color: @edit-area-iframe-background-color;
     border: 0;
