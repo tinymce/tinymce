@@ -24,7 +24,7 @@ import { forwardSlideEvent, renderContextToolbar } from './ui/context/ContextUi'
 import { renderToolbar } from './ui/toolbar/CommonToolbar';
 import { identifyButtons } from './ui/toolbar/Integration';
 
-const lazyDetection = LazyPlatformDetection.detect();
+const isTouch = LazyPlatformDetection.detect().deviceType.isTouch;
 
 const bubbleSize = 12;
 const bubbleAlignments = {
@@ -71,7 +71,7 @@ const getAnchorLayout = (position: Toolbar.ContextToolbarPosition): Partial<Anch
   } else {
     return {
       bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
-      layouts: lazyDetection.deviceType.isTouch() ? mobileAnchorSpecLayouts : desktopAnchorSpecLayouts,
+      layouts: isTouch() ? mobileAnchorSpecLayouts : desktopAnchorSpecLayouts,
       overrides: anchorOverrides
     };
   }
@@ -125,8 +125,8 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   const shouldContextToolbarHide = (): boolean => {
-    // If a mobile context menu is open, hide any context toolbars so they don't overlap
-    if (lazyDetection.deviceType.isTouch() && extras.backstage.isContextMenuOpen()) {
+    // If a mobile context menu is open, don't launch else they'll probably overlap. For android, specifically.
+    if (isTouch() && extras.backstage.isContextMenuOpen()) {
       return true;
     }
     const nodeBounds = lastElement.get().map((ele) => ele.getBoundingClientRect()).getOrThunk(() => {
@@ -139,8 +139,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   const forceHide = () => {
-    const contextBarEle = contextbar.element();
-    Css.set(contextBarEle, 'display', 'none');
+    InlineView.hide(contextbar);
   };
 
   // FIX: make a lot nicer.
@@ -234,8 +233,8 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   const launchContext = (toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm, elem: Option<DomElement>) => {
     clearTimer();
 
-    // If a mobile context menu is open, don't launch else they'll probably overlap
-    if (lazyDetection.deviceType.isTouch() && extras.backstage.isContextMenuOpen()) {
+    // If a mobile context menu is open, don't launch else they'll probably overlap. For android, specifically.
+    if (isTouch() && extras.backstage.isContextMenuOpen()) {
       return;
     }
 

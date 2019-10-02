@@ -3,15 +3,15 @@ import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
-import { PlatformDetection } from '@ephox/sand';
-import { Element } from '@ephox/sugar';
+import { Element, Body } from '@ephox/sugar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
+import { PlatformDetection } from '@ephox/sand';
 
-UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
+UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
   SilverTheme();
   LinkPlugin();
   ImagePlugin();
@@ -19,7 +19,8 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
   TablePlugin();
 
   // HACK. We should really add methods to Sand for mocking deviceType, etc...
-  PlatformDetection.detect().deviceType.isTouch = () => true;
+  // This forces LazyPlatformDetection.detect().deviceType.isTouch() to return true
+  Touch.point('touchstart', Body.body(), 0, 0);
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
@@ -37,7 +38,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
       Touch.cTouchEnd,
       Chain.wait(100),
       Chain.inject(dialogRoot),
-      tinyUi.cWaitForPopup('trigger context menu', '.tox-silver-sink')
+      tinyUi.cWaitForPopup('trigger context menu', '.tox-silver-sink .tox-horizcollection [role="menuitem"]')
     ]);
 
     // Assert focus is on the expected menu item
@@ -108,7 +109,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
       });
     }), editorBody);
 
-    Pipeline.async({}, [
+    const steps = [
       tinyApis.sFocus,
       Log.stepsAsStep('TBA', 'Test context menus on empty editor', [
         sOpenContextMenu('p'),
@@ -216,7 +217,12 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         sPressDownArrowKey,
         sAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")'),
       ])
-    ], onSuccess, onFailure);
+    ];
+
+    const browser = PlatformDetection.detect().browser;
+    const runTests = browser.isChrome || browser.isFirefox || browser.isSafari;
+
+    Pipeline.async({}, runTests ? steps : [], onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'image imagetools link table',

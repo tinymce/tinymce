@@ -1,7 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import { Bounds } from '../../alien/Boxes';
+import * as Boxes from '../../alien/Boxes';
 import * as ComponentStructure from '../../alien/ComponentStructure';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
@@ -20,7 +20,7 @@ import * as Sketcher from './Sketcher';
 import { tieredMenu as TieredMenu } from './TieredMenu';
 import { SingleSketchFactory } from './UiSketcher';
 import { Representing } from '../behaviour/Representing';
-import { Boxes, Layout } from '../Main';
+import * as Layout from '../../positioning/layout/Layout';
 
 const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, onOpen) => {
   const lazySink: () => ReturnType<LazySink> = () => detail.lazySink(menuSandbox);
@@ -81,7 +81,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
 
   const setContent = (sandbox: AlloyComponent, thing: AlloySpec) => {
     // Keep the same location, and just change the content.
-    Sandboxing.open(sandbox, thing);
+    Sandboxing.setContent(sandbox, thing);
   };
   const showAt = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) => {
     showWithin(sandbox, anchor, thing, Option.none());
@@ -89,7 +89,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
   const showWithin = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Option<Element>) => {
     showWithinBounds(sandbox, anchor, thing, () => boxElement.map((elem) => Boxes.box(elem)));
   };
-  const showWithinBounds = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBounds: () => Option<Bounds>) => {
+  const showWithinBounds = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBounds: () => Option<Boxes.Bounds>) => {
     const sink = detail.lazySink(sandbox).getOrDie();
     Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.positionWithinBounds(sink, anchor, sandbox, getBounds()));
     Representing.setValue(sandbox, Option.some({
@@ -97,7 +97,6 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       anchor,
       getBounds
     }));
-    detail.onShow(sandbox);
   };
   // TODO AP-191 write a test for showMenuAt
   const showMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
@@ -108,9 +107,8 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       mode: 'menu',
       menu
     }));
-    detail.onShow(sandbox);
   };
-  const showHorizontalMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Option<Bounds>) => {
+  const showHorizontalMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Option<Boxes.Bounds>) => {
     const onOpen = (menu, sink) => Positioning.positionWithinBounds(sink, anchor, menu, getBounds());
     const menu = makeMenu(detail, sandbox, anchor, menuSpec, onOpen);
     Sandboxing.open(sandbox, menu);
@@ -118,7 +116,6 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       mode: 'menu',
       menu
     }));
-    detail.onShow(sandbox);
   };
   const hide = (sandbox: AlloyComponent) => {
     Representing.setValue(sandbox, Option.none());
@@ -170,6 +167,9 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
           },
           getAttachPoint (sandbox) {
             return detail.lazySink(sandbox).getOrDie();
+          },
+          onOpen (sandbox) {
+            detail.onShow(sandbox);
           },
           onClose (sandbox) {
             detail.onHide(sandbox);

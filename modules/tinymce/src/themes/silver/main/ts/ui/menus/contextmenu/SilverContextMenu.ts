@@ -183,14 +183,14 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
 
     const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
 
-    const showContextMenu = isLongpress ? MobileContextMenu.show : show;
+    const showMenu = isLongpress ? MobileContextMenu.show : show;
     if (isiOS()) {
       // Need a short wait here for iOS due to browser focus events or something causing the keyboard to open after
-      // the context menu opens, closing it again
-      setTimeout(() => showContextMenu(editor, e, items, backstage, contextmenu, anchorSpec), 400);
+      // the context menu opens, closing it again. 200 is arbitrary but mostly works
+      setTimeout(() => showMenu(editor, e, items, backstage, contextmenu, anchorSpec), 200);
     } else {
       // Waiting on Android causes the native context toolbar to not show, so don't wait
-      showContextMenu(editor, e, items, backstage, contextmenu, anchorSpec);
+      showMenu(editor, e, items, backstage, contextmenu, anchorSpec);
     }
   };
 
@@ -198,9 +198,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     // Hide the context menu when scrolling or resizing
     // Except ResizeWindow on mobile which fires when the keyboard appears/disappears
     const hideEvents = 'ResizeEditor ScrollContent ScrollWindow longpresscancel'.concat(isTouch() ? '' : 'ResizeWindow');
-
     editor.on(hideEvents, hideContextMenu);
-
     editor.on(isTouch() ? 'longpress' : 'contextmenu', showContextMenu);
   });
 };
