@@ -10,7 +10,7 @@
 //
 
 @dialog-backdrop-background-color: fade(@background-color, 75);
-@dialog-backdrop-background-color-full: @background-color;
+@dialog-backdrop-background-color-opaque: @background-color;
 
 @dialog-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
 @dialog-busy-backdrop-background-color: @dialog-backdrop-background-color;
@@ -85,8 +85,8 @@
   }
 
   // modal backdrop with 100% full opacity for mobile
-  .tox-dialog-wrap__backdrop-full {
-    background-color: @dialog-backdrop-background-color-full;
+  .tox-dialog-wrap__backdrop--opaque {
+    background-color: @dialog-backdrop-background-color-opaque;
   }
 
   .tox-dialog {

@@ -161,7 +161,7 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
             {
               dom: {
                 tag: 'div',
-                classes: (isTouch ? [ 'tox-dialog-wrap__backdrop', 'tox-dialog-wrap__backdrop-full' ] : [ 'tox-dialog-wrap__backdrop' ])
+                classes: (isTouch ? [ 'tox-dialog-wrap__backdrop', 'tox-dialog-wrap__backdrop--opaque' ] : [ 'tox-dialog-wrap__backdrop' ])
               }
             }
           ]
