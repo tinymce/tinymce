@@ -3,7 +3,7 @@ import { detect as eagerDetect } from './PlatformDetection';
 import { OperatingSystem } from '../core/OperatingSystem';
 import { PlatformDetection } from '../core/PlatformDetection';
 import { DeviceType } from '../detect/DeviceType';
-import * as LazyTouch from '../detect/LazyTouch';
+import * as TouchDetect from '../detect/TouchDetect';
 
 export type Browser = Browser;
 export type OperatingSystem = OperatingSystem;
@@ -16,7 +16,7 @@ export const detect = (): PlatformDetection => {
     browser: platform.browser,
     deviceType: {
       ...platform.deviceType,
-      isTouch: LazyTouch.isTouch
+      isTouch: TouchDetect.isTouch
     }
   };
 };
