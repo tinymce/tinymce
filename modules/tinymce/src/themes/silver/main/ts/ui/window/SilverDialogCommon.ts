@@ -4,33 +4,34 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
-
 import {
   AddEventsBehaviour,
+  AlloyEvents,
+  AlloyParts,
+  AlloySpec,
   AlloyTriggers,
   Behaviour,
   DomFactory,
+  Focusing,
   GuiFactory,
+  Keying,
   ModalDialog,
+  NativeEvents,
   Reflecting,
   SystemEvents,
-  Focusing,
-  AlloyEvents,
-  NativeEvents,
-  Keying,
-  AlloyParts,
-  AlloySpec,
 } from '@ephox/alloy';
 import { DialogManager, Types } from '@ephox/bridge';
-import { Option, Arr, Cell } from '@ephox/katamari';
+import { Arr, Cell, Option } from '@ephox/katamari';
 import { Body, Class } from '@ephox/sugar';
+import Env from 'tinymce/core/api/Env';
+
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
+import { StoragedMenuButton, StoragedMenuItem } from '../button/MenuButton';
 import { FormBlockEvent, formCancelEvent } from '../general/FormEvents';
 import NavigableObject from '../general/NavigableObject';
 import { dialogChannel } from './DialogChannels';
 import { renderModalHeader } from './SilverDialogHeader';
-import { StoragedMenuItem, StoragedMenuButton } from '../button/MenuButton';
 
 export interface WindowExtra {
   redial?: <T extends Types.Dialog.DialogData>(newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>;
@@ -45,6 +46,8 @@ export interface DialogSpec {
   extraStyles: Record<string, string>;
   extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
 }
+
+const isTouch = Env.deviceType.isTouch();
 
 const getHeader = (title: string, backstage: UiFactoryBackstage) => {
   return renderModalHeader({
@@ -158,7 +161,7 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
             {
               dom: {
                 tag: 'div',
-                classes: [ 'tox-dialog-wrap__backdrop' ]
+                classes: (isTouch ? [ 'tox-dialog-wrap__backdrop', 'tox-dialog-wrap__backdrop--opaque' ] : [ 'tox-dialog-wrap__backdrop' ])
               }
             }
           ]

@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Env from 'tinymce/core/api/Env';
 import NodeType from './NodeType';
 import { DocumentFragment, Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
@@ -61,8 +60,8 @@ const createTextBlock = (editor: Editor, contentNode: Node): DocumentFragment =>
   if (!editor.settings.forced_root_block) {
     fragment.appendChild(dom.create('br'));
   } else {
-    // BR is needed in empty blocks on non IE browsers
-    if (!hasContentNode && (!Env.ie || Env.ie > 10)) {
+    // BR is needed in empty blocks
+    if (!hasContentNode) {
       textBlock.appendChild(dom.create('br', { 'data-mce-bogus': '1' }));
     }
   }

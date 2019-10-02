@@ -179,7 +179,7 @@ const setup = function (editor: Editor) {
   });
 
   // Internet Explorer has built-in automatic linking for most cases
-  if (Env.ie && Env.ie <= 11) {
+  if (Env.browser.isIE()) {
     editor.on('focus', function () {
       if (!autoUrlDetectState) {
         autoUrlDetectState = true;

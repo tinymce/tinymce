@@ -9,7 +9,6 @@ import { Range } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { Compare, Element, Node, Traverse } from '@ephox/sugar';
 import NodeType from '../dom/NodeType';
-import Env from '../api/Env';
 import TreeWalker from '../api/dom/TreeWalker';
 import Tools from '../api/util/Tools';
 import Editor from '../api/Editor';
@@ -90,17 +89,6 @@ const moveEndPoint = (dom, rng: Range, node, start: boolean): void => {
         } else {
           rng.setEndAfter(node);
         }
-      }
-
-      return;
-    }
-
-    // Found empty text block old IE can place the selection inside those
-    if (Env.ie && Env.ie < 11 && dom.isBlock(node) && dom.isEmpty(node)) {
-      if (start) {
-        rng.setStart(node, 0);
-      } else {
-        rng.setEnd(node, 0);
       }
 
       return;
