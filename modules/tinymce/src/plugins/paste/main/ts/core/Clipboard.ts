@@ -244,7 +244,12 @@ const isKeyboardPasteEvent = (e: KeyboardEvent) => (VK.metaKeyPressed(e) && e.ke
 
 const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: Cell<string>) => {
   const keyboardPasteEvent = Singleton.value();
+  const keyboardPastePressed = Singleton.value();
   let keyboardPastePlainTextState;
+
+  editor.on('keyup', function () {
+    keyboardPastePressed.clear();
+  });
 
   editor.on('keydown', function (e) {
     function removePasteBinOnKeyUp(e) {
@@ -267,12 +272,11 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
       // Prevent undoManager keydown handler from making an undo level with the pastebin in it
       e.stopImmediatePropagation();
 
-      // track that this is a keyboard paste event but remove it once the paste event
-      // has had enough time to be added to the stack first
+      // track that this is a keyboard paste event, this will be removed when the paste event fires.
       keyboardPasteEvent.set(e);
-      window.setTimeout(() => {
-        keyboardPasteEvent.clear();
-      }, 100);
+      // IE doesn't always fire keydown if the keys are spammed fast enough, so register that paste is
+      // pressed, this will be removed on keyup
+      keyboardPastePressed.set(true);
 
       // IE doesn't support Ctrl+Shift+V and it doesn't even produce a paste event
       // so lets fake a paste event and let IE use the execCommand/dataTransfer methods
@@ -357,7 +361,10 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
   };
 
   editor.on('paste', function (e: EditorEvent<ClipboardEvent & { ieFake: boolean }>) {
-    const isKeyBoardPaste = keyboardPasteEvent.isSet();
+    const isKeyBoardPaste = keyboardPasteEvent.isSet() || keyboardPastePressed.isSet();
+    if (isKeyBoardPaste) {
+      keyboardPasteEvent.clear();
+    }
     const clipboardContent = getClipboardContent(editor, e);
 
     const plainTextMode = pasteFormat.get() === 'text' || keyboardPastePlainTextState;
