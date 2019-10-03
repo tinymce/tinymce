@@ -23,7 +23,6 @@ import { PlatformDetection } from '@ephox/sand';
 
 const DOM = DOMUtils.DOM;
 const detection = PlatformDetection.detect();
-const isTouch = detection.deviceType.isTouch();
 const isiOS12 = detection.os.isiOS() && detection.os.version.major <= 12;
 
 const setupEvents = (editor: Editor) => {
