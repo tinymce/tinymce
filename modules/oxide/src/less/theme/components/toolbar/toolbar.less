@@ -35,7 +35,6 @@
     flex: 0 0 auto;
     flex-shrink: 0;
     flex-wrap: wrap;
-    margin-bottom: -1px;
     padding: @toolbar-padding-y @toolbar-padding-x;
   }
 
@@ -53,13 +52,6 @@
 
   .tox-toolbar__overflow--shrinking {
     transition: opacity .3s ease, height .2s linear .1s, visibility 0s linear .3s;
-  }
-
-  // Add top borders
-  .tox-menubar + .tox-toolbar,
-  .tox-menubar + .tox-toolbar-overlord .tox-toolbar__primary,
-  .tox-toolbar__overflow {
-    border-top: 1px solid @toolbar-separator-color;
   }
 
   .tox-pop .tox-toolbar {
