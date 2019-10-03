@@ -6,6 +6,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
+import { Obj } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success, failure) {
   const detection = PlatformDetection.detect();
@@ -14,15 +15,46 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
 
   Theme();
 
-  const mobileDefaultSettingOverrides = {
-    menubar: false,
+  const expectedDefaultSettings = {
+    toolbar_drawer: 'sliding',
+    toolbar_sticky: true
+  };
+
+  const expectedTouchDefaultSettings = {
     table_grid: false,
     object_resizing: false,
-    resize: false
+    resize: false,
+    toolbar_drawer: false,
+    toolbar_sticky: false
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, [
+      Logger.t('default desktop settings', Step.sync(() => {
+        const defaultSettings = EditorSettings.getDefaultSettings('id', 'documentBaseUrl', false, false, editor);
+        Obj.each(expectedDefaultSettings, (value, key) => {
+          Assertions.assertEq(`Should have default ${key} setting`, value, Obj.get(defaultSettings, key).getOrUndefined());
+        });
+        Obj.each(expectedTouchDefaultSettings, (value, key) => {
+          Assertions.assertEq(`Should not have default ${key} touch setting`, true, value !== Obj.get(defaultSettings, key).getOrUndefined());
+        });
+      })),
+
+      Logger.t('default touch device settings', Step.sync(() => {
+        const defaultSettings = EditorSettings.getDefaultSettings('id', 'documentBaseUrl', true, false, editor);
+        Obj.each(expectedTouchDefaultSettings, (value, key) => {
+          Assertions.assertEq(`Should have default ${key} setting`, value, Obj.get(defaultSettings, key).getOrUndefined());
+        });
+      })),
+
+      Logger.t('default phone settings', Step.sync(() => {
+        const defaultSettings = EditorSettings.getDefaultSettings('id', 'documentBaseUrl', true, true, editor);
+        Obj.each(expectedTouchDefaultSettings, (value, key) => {
+          Assertions.assertEq(`Should have default ${key} setting`, value, Obj.get(defaultSettings, key).getOrUndefined());
+        });
+        Assertions.assertEq(`Should have default menubar setting`, false, Obj.get(defaultSettings, 'menubar').getOrUndefined());
+      })),
+
       Logger.t('getEditorSettings tests', GeneralSteps.sequence([
         Logger.t('Override defaults plugins', Step.sync(function () {
           const settings = EditorSettings.getEditorSettings(
@@ -195,33 +227,17 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
       Logger.t('combineSettings tests', GeneralSteps.sequence([
         Logger.t('Merged settings (desktop)', Step.sync(function () {
           Assertions.assertEq(
-            'Should be have validate forced and empty plugins the merged settings',
+            'Should have validate, forced and empty plugins in the merged settings',
             { a: 1, b: 2, c: 3, validate: true, external_plugins: {}, plugins: '' },
-            EditorSettings.combineSettings(false, false, { a: 1, b: 1, c: 1 }, { b: 2 }, { c: 3 })
-          );
-        })),
-
-        Logger.t('Default settings (mobile)', Step.sync(() => {
-          Assertions.assertEq(
-            'Should have different defaults for certain settings on mobile',
-            { validate: true, external_plugins: {}, plugins: '', theme: 'mobile', ...mobileDefaultSettingOverrides },
-            EditorSettings.combineSettings(true, true, {}, {}, {})
+            EditorSettings.combineSettings(false, { a: 1, b: 1, c: 1 }, { b: 2 }, { c: 3 })
           );
         })),
 
         Logger.t('Merged settings forced_plugins in default override settings (desktop)', Step.sync(function () {
           Assertions.assertEq(
-            'Should be have plugins merged with forced plugins',
+            'Should have plugins merged with forced plugins',
             { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a b' },
-            EditorSettings.combineSettings(false, false, {}, { forced_plugins: ['a'] }, { plugins: ['b'] })
-          );
-        })),
-
-        Logger.t('Merged settings (mobile)', Step.sync(function () {
-          Assertions.assertEq(
-            'Should be have validate forced and empty plugins the merged settings',
-            { a: 1, b: 2, c: 3, validate: true, external_plugins: {}, plugins: '' },
-            EditorSettings.combineSettings(true, false, { a: 1, b: 1, c: 1 }, { b: 2 }, { c: 3 })
+            EditorSettings.combineSettings(false, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ] })
           );
         })),
 
@@ -229,7 +245,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq(
             'Should be have plugins merged with forced plugins',
             { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a b' },
-            EditorSettings.combineSettings(true, false, {}, { forced_plugins: ['a'] }, { plugins: ['b'] })
+            EditorSettings.combineSettings(true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ] })
           );
         })),
 
@@ -237,7 +253,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq(
             'Should not have plugins merged with mobile plugins',
             { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a b' },
-            EditorSettings.combineSettings(false, false, {}, { forced_plugins: ['a'] }, { plugins: ['b'], mobile: { plugins: ['c'] } })
+            EditorSettings.combineSettings(false, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ], mobile: { plugins: [ 'c' ] } })
           );
         })),
 
@@ -245,7 +261,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq(
             'Should have forced_plugins merged with mobile plugins but only whitelisted user plugins',
             { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a lists', theme: 'mobile' },
-            EditorSettings.combineSettings(true, false, {}, { forced_plugins: ['a'] }, { plugins: ['b'], mobile: { plugins: ['lists custom'], theme: 'mobile' } })
+            EditorSettings.combineSettings(true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ], mobile: { plugins: [ 'lists custom' ], theme: 'mobile' } })
           );
         })),
 
@@ -253,7 +269,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq(
             'Should not merge forced_plugins with mobile plugins when theme is not mobile',
             { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a lists custom' },
-            EditorSettings.combineSettings(true, false, {}, { forced_plugins: ['a'] }, { plugins: ['b'], mobile: { plugins: ['lists custom'] } })
+            EditorSettings.combineSettings(true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ], mobile: { plugins: [ 'lists custom' ] } })
           );
         })),
 
@@ -261,79 +277,63 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq(
             'Should not have user forced plugins',
             { validate: true, external_plugins: {}, forced_plugins: ['b'], plugins: 'a' },
-            EditorSettings.combineSettings(false, false, {}, { forced_plugins: ['a'] }, { forced_plugins: ['b'] })
+            EditorSettings.combineSettings(false, {}, { forced_plugins: [ 'a' ] }, { forced_plugins: [ 'b' ] })
           );
         })),
 
-        Logger.t('Merged settings when mobile is undefined, on a mobile device (phone)', Step.sync(function () {
+        Logger.t('Merged settings when theme is mobile, on a mobile device (phone)', Step.sync(function () {
           Assertions.assertEq(
             'Should fallback to filtered white listed. settings.plugins ',
-            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile', ...mobileDefaultSettingOverrides },
-            EditorSettings.combineSettings(true, true, {}, {}, { plugins: [ 'lists', 'b', 'autolink' ] })
+            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile' },
+            EditorSettings.combineSettings(true, {}, {}, { mobile: { theme: 'mobile' }, plugins: [ 'lists', 'b', 'autolink' ] })
           );
         })),
 
-        Logger.t('Merged settings when mobile.plugins is undefined, on a mobile device (tablet)', Step.sync(function () {
+        Logger.t('Merged settings when mobile.plugins is undefined, on a mobile device', Step.sync(function () {
           Assertions.assertEq(
             'Should use settings.plugins when mobile theme is not set',
             { validate: true, external_plugins: {}, plugins: 'lists b autolink', theme: 'silver' },
-            EditorSettings.combineSettings(true, false, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: { } })
+            EditorSettings.combineSettings(true, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: {} })
           );
         })),
 
-        Logger.t('Merged settings when mobile.plugins is undefined, on a mobile device (phone)', Step.sync(function () {
+        Logger.t('Merged settings when mobile.plugins is undefined, legacy mobile theme and on a mobile device', Step.sync(function () {
           Assertions.assertEq(
             'Should fallback to filtered white listed. settings.plugins',
-            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile', ...mobileDefaultSettingOverrides },
-            EditorSettings.combineSettings(true, true, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: { } })
+            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile' },
+            EditorSettings.combineSettings(true, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: { theme: 'mobile' } })
           );
         })),
 
-        Logger.t('Merged settings with empty mobile.plugins="" (tablet)', Step.sync(function () {
+        Logger.t('Merged settings with empty mobile.plugins="" on mobile', Step.sync(function () {
           Assertions.assertEq(
             'Should not have any plugins when mobile.plugins is explicitly empty',
             { validate: true, external_plugins: {}, plugins: '' },
-            EditorSettings.combineSettings(true, false, {}, {}, { mobile: { plugins: ''} })
+            EditorSettings.combineSettings(true, {}, {}, { mobile: { plugins: '' } })
           );
         })),
 
-        Logger.t('Merged settings with empty mobile.plugins="" (phone)', Step.sync(function () {
-          Assertions.assertEq(
-            'Should not have any plugins when mobile.plugins is explicitly empty',
-            { validate: true, external_plugins: {}, plugins: '', theme: 'mobile', ...mobileDefaultSettingOverrides },
-            EditorSettings.combineSettings(true, true, {}, {}, { mobile: { plugins: ''} })
-          );
-        })),
-
-        Logger.t('Merged settings with defined mobile.plugins (tablet)', Step.sync(function () {
+        Logger.t('Merged settings with defined mobile.plugins', Step.sync(function () {
           Assertions.assertEq(
             'Should allow all plugins',
             { validate: true, external_plugins: {}, plugins: 'lists autolink foo bar' },
-            EditorSettings.combineSettings(true, false, {}, {}, { mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ]} })
+            EditorSettings.combineSettings(true, {}, {}, { mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ] } })
           );
         })),
 
-        Logger.t('Merged settings with defined mobile.plugins (phone)', Step.sync(function () {
+        Logger.t('Merged settings with defined mobile.plugins and legacy mobile theme', Step.sync(function () {
           Assertions.assertEq(
             'Should fallback to filtered white listed',
-            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile', ...mobileDefaultSettingOverrides },
-            EditorSettings.combineSettings(true, true, {}, {}, { mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ]} })
+            { validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile' },
+            EditorSettings.combineSettings(true, {}, {}, { mobile: { theme: 'mobile', plugins: [ 'lists', 'autolink', 'foo', 'bar' ] } })
           );
         })),
 
-        Logger.t('Merged settings with mobile.theme silver and mobile.plugins (tablet)', Step.sync(function () {
+        Logger.t('Merged settings with mobile.theme silver and mobile.plugins', Step.sync(function () {
           Assertions.assertEq(
             'Should allow all mobile plugin',
             { validate: true, theme: 'silver', external_plugins: {}, plugins: 'lists autolink foo bar' },
-            EditorSettings.combineSettings(true, false, {}, {}, { theme: 'test', mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' } })
-          );
-        })),
-
-        Logger.t('Merged settings with mobile.theme silver and mobile.plugins (phone)', Step.sync(function () {
-          Assertions.assertEq(
-            'Should fallback to filtered white listed',
-            { validate: true, theme: 'silver', external_plugins: {}, plugins: 'lists autolink foo bar', ...mobileDefaultSettingOverrides },
-            EditorSettings.combineSettings(true, true, {}, {}, { theme: 'test', mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' } })
+            EditorSettings.combineSettings(true, {}, {}, { theme: 'test', mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' } })
           );
         })),
 
@@ -341,7 +341,11 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq(
             'Should respect the desktop settings',
             { validate: true, theme: 'silver', external_plugins: {}, plugins: 'aa bb cc' },
-            EditorSettings.combineSettings(false, false, {}, {}, { theme: 'silver', plugins: [ 'aa', 'bb', 'cc' ], mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' } })
+            EditorSettings.combineSettings(false, {}, {}, {
+              theme: 'silver',
+              plugins: [ 'aa', 'bb', 'cc' ],
+              mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' }
+            })
           );
         })),
       ])),

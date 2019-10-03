@@ -166,7 +166,7 @@ export interface RawEditorSettings {
   toolbar7?: string;
   toolbar8?: string;
   toolbar9?: string;
-  toolbar_drawer?: 'floating' | 'sliding';
+  toolbar_drawer?: false | 'floating' | 'sliding';
   typeahead_urls?: boolean;
   url_converter?: URLConverter;
   url_converter_scope?: {};
