@@ -1,0 +1,39 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Horizontal Collection
+//
+
+@horizcollection-separator-color: @border-color;
+@horizcollection-border-radius: @panel-border-radius;
+
+.tox {
+  .tox-toolbar.tox-horizcollection {
+    border-top: 0;
+  }
+
+  .tox-horizcollection {
+    border: 1px solid @horizcollection-separator-color;
+    border-radius: @horizcollection-border-radius;
+    box-shadow: @pop-box-shadow;
+    height: @_toolbar-height;
+    margin-bottom: 0;
+  }
+
+  .tox-horizcollection__group .tox-collection__item {
+    padding: 0 8px;
+  }
+
+  .tox-horizcollection__group .tox-collection__item .tox-collection__item-label {
+    white-space: nowrap;
+  }
+
+  .tox-horizcollection__group .tox-collection__item .tox-collection__item-caret {
+    margin-left: 8px;
+  }
+}
