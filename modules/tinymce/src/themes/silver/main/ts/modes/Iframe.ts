@@ -6,7 +6,7 @@
  */
 
 import { Attachment } from '@ephox/alloy';
-import { Cell } from '@ephox/katamari';
+import { Cell, Throttler } from '@ephox/katamari';
 import { Body, DomEvent, Element, Position, Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -24,6 +24,7 @@ import { PlatformDetection } from '@ephox/sand';
 const DOM = DOMUtils.DOM;
 const detection = PlatformDetection.detect();
 const isTouch = detection.deviceType.isTouch();
+const isiOS12 = detection.os.isiOS() && detection.os.version.major <= 12;
 
 const setupEvents = (editor: Editor) => {
   const contentWindow = editor.getWin();
@@ -90,12 +91,17 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   const socket = OuterContainer.getSocket(uiComponents.outerContainer).getOrDie('Could not find expected socket element');
 
-  if (isTouch === true) {
-    // TODO: move me, Setup mobile scrolling,
+  if (isiOS12 === true) {
     Css.setAll(socket.element(), {
       'overflow': 'scroll',
-      '-webkit-overflow-scrolling': 'touch' // required for ios < 13
+      '-webkit-overflow-scrolling': 'touch' // required for ios < 13 content scrolling
     });
+
+    const limit = Throttler.adaptable(() => {
+      editor.fire('ScrollContent');
+    }, 20);
+
+    DomEvent.bind(socket.element(), 'scroll', limit.throttle);
   }
 
   setupReadonlyModeSwitch(editor, uiComponents);
