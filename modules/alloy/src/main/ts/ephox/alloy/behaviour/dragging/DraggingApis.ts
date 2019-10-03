@@ -1,12 +1,25 @@
-import { Adt } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { DraggingConfigSpec } from '../../dragging/common/DraggingTypes';
+import { DraggingConfigSpec, SnapConfig } from '../../dragging/common/DraggingTypes';
+import { Traverse, Scroll, Css } from '@ephox/sugar';
+import * as OffsetOrigin from '../../alien/OffsetOrigin';
+import * as Snappables from '../../dragging/snap/Snappables';
+import * as DragCoord from '../../api/data/DragCoord';
 
-export interface OriginAdt extends Adt { }
+const snapTo = function (component: AlloyComponent, dragConfig: DraggingConfigSpec, _state: any, snap: SnapConfig): void {
+  const target = dragConfig.getTarget(component.element());
+  if (dragConfig.repositionTarget) {
+    const doc = Traverse.owner(component.element());
+    const scroll = Scroll.get(doc);
 
-const setSnap = (component: AlloyComponent, config: DraggingConfigSpec, state: any, sConfig: number): void => {
+    const origin = OffsetOrigin.getOrigin(target);
+
+    const snapPin = Snappables.snapTo(snap, scroll, origin);
+
+    const styles = DragCoord.toStyles(snapPin.coord, scroll, origin);
+    Css.setAll(target, styles);
+  }
 };
 
 export {
-  setSnap
+  snapTo
 };

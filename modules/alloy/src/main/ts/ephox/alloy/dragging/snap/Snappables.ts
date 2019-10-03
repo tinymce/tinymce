@@ -149,7 +149,15 @@ const findSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCoord: Dr
   return findMatchingSnap(snaps, newCoord, scroll, origin);
 };
 
+const snapTo = (snap: SnapConfig, scroll: SugarPosition, origin: SugarPosition): SnapPin => {
+  return {
+    coord: DragCoord.absorb(snap.output(), snap.output(), scroll, origin),
+    extra: snap.extra()
+  };
+};
+
 export {
   moveOrSnap,
-  stopDrag
+  stopDrag,
+  snapTo
 };

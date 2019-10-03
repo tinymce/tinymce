@@ -16,7 +16,7 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "strict": true,
-    "noEmitOnError": true,
+    "noEmitOnError": false,
     "types": []
   }
 }

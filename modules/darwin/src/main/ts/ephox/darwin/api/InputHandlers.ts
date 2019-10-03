@@ -1,5 +1,5 @@
 import { Fun, Option, Options, Struct } from '@ephox/katamari';
-import { Situ, Element, EventArgs } from '@ephox/sugar';
+import { Situ, Element, EventArgs, Compare } from '@ephox/sugar';
 import KeySelection from '../keyboard/KeySelection';
 import VerticalMovement from '../keyboard/VerticalMovement';
 import MouseSelection from '../mouse/MouseSelection';
@@ -120,7 +120,27 @@ const keyboard = function (win: Window, container: Element, isRoot: (e: Element)
   };
 };
 
+const external = (win: Window, container: Element<any>, isRoot: (e: Element) => boolean, annotations: SelectionAnnotation) => {
+  const bridge = WindowBridge(win);
+
+  return (start: Element, finish: Element) => {
+    CellSelection.identify(start, finish, isRoot).each(function (cellSel) {
+      const boxes = cellSel.boxes().getOr([]);
+      // Wait until we have more than one, otherwise you can't do text selection inside a cell.
+      // Alternatively, if the one cell selection starts in one cell and ends in a different cell,
+      // we can assume that the user is trying to make a one cell selection in two different tables which should be possible.
+      if (boxes.length > 1 || (boxes.length === 1 && !Compare.eq(start, finish))) {
+        annotations.selectRange(container, boxes, cellSel.start(), cellSel.finish());
+
+        // stop the browser from creating a big text selection, select the cell where the cursor is
+        bridge.selectContents(finish);
+      }
+    });
+  };
+};
+
 export default {
   mouse,
-  keyboard
+  keyboard,
+  external
 };
