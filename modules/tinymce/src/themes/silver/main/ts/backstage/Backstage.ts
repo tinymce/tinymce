@@ -31,8 +31,6 @@ export interface UiFactoryBackstageProviders {
 
 type UiFactoryBackstageForStyleButton = SelectData;
 
-const contextMenuState = Cell(false);
-
 export interface UiFactoryBackstageShared {
   providers?: UiFactoryBackstageProviders;
   interpreter?: (spec: BridgedType) => AlloySpec;
@@ -58,6 +56,7 @@ export interface UiFactoryBackstage {
 }
 
 const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyMoreButton: () => AlloyComponent): UiFactoryBackstage => {
+  const contextMenuState = Cell(false);
   const backstage: UiFactoryBackstage = {
     shared: {
       providers: {

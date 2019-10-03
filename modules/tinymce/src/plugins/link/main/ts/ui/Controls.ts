@@ -62,7 +62,7 @@ const setupMenuItems = function (editor: Editor) {
 };
 
 const setupContextMenu = function (editor: Editor) {
-  const noLink = Env.iOS ? '' : 'link';
+  const noLink = Env.os.isiOS() ? '' : 'link';
   const inLink = 'link unlink openlink';
   editor.ui.registry.addContextMenu('link', {
     update: (element) => {

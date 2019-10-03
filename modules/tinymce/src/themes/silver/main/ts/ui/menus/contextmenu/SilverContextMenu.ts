@@ -109,7 +109,9 @@ const isNativeOverrideKeyEvent = function (editor: Editor, e) {
 };
 
 export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
-  const isiOS = PlatformDetection.detect().deviceType.isiOS;
+  const detection = PlatformDetection.detect();
+  const isiOS = detection.deviceType.isiOS();
+  const isOSX = detection.os.isOSX();
   const isTouch = LazyPlatformDetection.detect().deviceType.isTouch;
 
   const contextmenu = GuiFactory.build(
@@ -184,7 +186,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
 
     const showMenu = isLongpress ? MobileContextMenu.show : show;
-    if (isiOS()) {
+    if ((isiOS || isOSX) && isTouch()) {
       // Need a short wait here for iOS due to browser focus events or something causing the keyboard to open after
       // the context menu opens, closing it again. 200 is arbitrary but mostly works
       setTimeout(() => showMenu(editor, e, items, backstage, contextmenu, anchorSpec), 200);
@@ -197,7 +199,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
   editor.on('init', () => {
     // Hide the context menu when scrolling or resizing
     // Except ResizeWindow on mobile which fires when the keyboard appears/disappears
-    const hideEvents = 'ResizeEditor ScrollContent ScrollWindow longpresscancel'.concat(isTouch() ? '' : 'ResizeWindow');
+    const hideEvents = 'ResizeEditor ScrollContent ScrollWindow longpresscancel' + (isTouch() ? '' : 'ResizeWindow');
     editor.on(hideEvents, hideContextMenu);
     editor.on(isTouch() ? 'longpress' : 'contextmenu', showContextMenu);
   });

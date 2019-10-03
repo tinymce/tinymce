@@ -12,6 +12,12 @@ import SilverTheme from 'tinymce/themes/silver/Theme';
 import { PlatformDetection } from '@ephox/sand';
 
 UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
+  const browser = PlatformDetection.detect().browser;
+  const runTests = browser.isChrome() || browser.isFirefox() || browser.isSafari();
+  if (!runTests) {
+    return success();
+  }
+
   SilverTheme();
   LinkPlugin();
   ImagePlugin();
@@ -27,7 +33,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
     const tinyUi = TinyUi(editor);
 
     const doc = Element.fromDom(document);
-    const dialogRoot = Element.fromDom(document.body);
+    const dialogRoot = Body.body();
     const editorBody = Element.fromDom(editor.getBody());
 
     const sOpenContextMenu = (target: string) => Chain.asStep(target, [
@@ -219,10 +225,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
       ])
     ];
 
-    const browser = PlatformDetection.detect().browser;
-    const runTests = browser.isChrome() || browser.isFirefox() || browser.isSafari();
-
-    Pipeline.async({}, runTests ? steps : [], onSuccess, onFailure);
+    Pipeline.async({}, steps, onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'image imagetools link table',

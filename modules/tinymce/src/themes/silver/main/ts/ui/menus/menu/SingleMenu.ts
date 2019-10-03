@@ -99,8 +99,9 @@ export const createPartialMenu = (value: string, items: SingleMenuItemApi[], ite
 
   const alloyItems = Options.cat(
     Arr.map(items, (item: SingleMenuItemApi) => {
-      // Have to check this for each item, instead of as part of hasIcons above, else
-      // in horizontal menus items with an icon but no text display with nothing at all
+      // Have to check each item for an icon, instead of as part of hasIcons above,
+      // else in horizontal menus, items with an icon but without text will display
+      // with neither
       const itemHasIcon = (i) => isHorizontalMenu ? !i.hasOwnProperty('text') : hasIcons;
       const createItem = (i: SingleMenuItemApi) => createMenuItemFromBridge(i, itemResponse, backstage, itemHasIcon(i), isHorizontalMenu);
       if (item.type === 'nestedmenuitem' && item.getSubmenuItems().length <= 0) {

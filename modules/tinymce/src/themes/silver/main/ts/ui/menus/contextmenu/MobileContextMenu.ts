@@ -1,6 +1,6 @@
-import { AlloyComponent, Boxes, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
-import { PointerEvent, window } from '@ephox/dom-globals';
-import { Cell, Option } from '@ephox/katamari';
+import { AlloyComponent, AnchorSpec, Boxes, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
+import { TouchEvent, window } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
 import { Element, VisualViewport } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -12,9 +12,7 @@ import ItemResponse from '../item/ItemResponse';
 import * as MenuParts from '../menu/MenuParts';
 import * as NestedMenus from '../menu/NestedMenus';
 
-const contextmenuRecord = Cell<Record<string, AlloyComponent>>({});
-
-const toolbarOrMenubarEnabled = (editor) => Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
+const toolbarOrMenubarEnabled = (editor: Editor) => Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
 
 const getBounds = (editor: Editor) => () => {
   const viewportBounds = VisualViewport.getBounds(window);
@@ -49,10 +47,7 @@ const bubbleAlignments = {
   top: ['tox-pop--top']
 };
 
-const show = (editor: Editor, e: EditorEvent<PointerEvent>, items, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorSpec) => {
-  const menuRecord = contextmenuRecord.get();
-  contextmenuRecord.set({ ...menuRecord, [editor.id]: contextmenu });
-
+const show = (editor: Editor, e: EditorEvent<TouchEvent>, items, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorSpec: AnchorSpec) => {
   NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, true).map((menuData) => {
     e.preventDefault();
 
