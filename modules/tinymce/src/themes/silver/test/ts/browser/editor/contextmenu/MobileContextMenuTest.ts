@@ -220,7 +220,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
     ];
 
     const browser = PlatformDetection.detect().browser;
-    const runTests = browser.isChrome || browser.isFirefox || browser.isSafari;
+    const runTests = browser.isChrome() || browser.isFirefox() || browser.isSafari();
 
     Pipeline.async({}, runTests ? steps : [], onSuccess, onFailure);
   }, {
