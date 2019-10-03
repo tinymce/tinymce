@@ -7,13 +7,12 @@
 
 import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
 import { Fun, Option, Struct, Cell } from '@ephox/katamari';
-import { TableLookup, OtherCells } from '@ephox/snooker';
+import { TableLookup } from '@ephox/snooker';
 import {
     Element, Selection, SelectionDirection, Class, Node, Compare, Attr
 } from '@ephox/sugar';
 
 import * as Util from '../alien/Util';
-import * as TouchSelector from '../ui/TouchSelector';
 import Direction from '../queries/Direction';
 import Ephemera from './Ephemera';
 import { DomParent } from '@ephox/robin';
@@ -169,22 +168,6 @@ export default function (editor, lazyResize) {
         if (Compare.eq(lT, target) && (t.timeStamp - lTS) < 300) {
           t.preventDefault();
           Attr.set(target, 'data-mce-selected', '1');
-          const table = TableLookup.table(target);
-          const tabTarget = {
-            selection: () => [target]
-          };
-          table.each((tab) => {
-            const ul = OtherCells.getUpOrLeft(tab, tabTarget);
-            ul.each((upperLeftCells) => {
-              const getTableBits = () => {
-                return {
-                  topLeft: upperLeftCells
-                };
-              };
-              const touchSelector = TouchSelector.getSelectors(getTableBits);
-            });
-            console.log(ul.getOrDie());
-          });
         }
       }
       lastTarget.set(target);
