@@ -1,60 +1,56 @@
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Option } from 'ephox/katamari/api/Option';
+import { tOption } from 'ephox/katamari/api/OptionInstances';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock';
+import { Testable } from '@ephox/dispute';
+
+const { tNumber } = Testable;
 
 UnitTest.test('OptionNoneTest', () => {
 
   const testSanity = () => {
     const s = Option.none<number>();
-    assert.eq(false, s.isSome());
-    assert.eq(true, s.isNone());
-    assert.eq(6, s.getOr(6));
-    assert.eq(6, s.getOrThunk(() => 6));
-    assert.throws(() => { s.getOrDie('Died!'); });
-    assert.eq(6, s.or(Option.some(6)).getOrDie());
-    assert.eq(6, s.orThunk(() => Option.some(6)).getOrDie());
+    Assert.eq('none is not some', false, s.isSome());
+    Assert.eq('none is none', true, s.isNone());
+    Assert.eq('getOr', 6, s.getOr(6));
+    Assert.eq('getOrThunk', 6, s.getOrThunk(() => 6));
+    Assert.throws('getOrDie dies', () => { s.getOrDie('Died!'); });
+    Assert.eq('or', 6, s.or(Option.some(6)).getOrDie());
+    Assert.eq('orThunk', 6, s.orThunk(() => Option.some(6)).getOrDie());
 
-    assert.eq(true, s.map((v) => v * 2).isNone());
-    assert.eq(true, s.map(Fun.die('boom')).isNone());
+    Assert.eq('map is none', true, s.map((v) => v * 2).isNone());
+    Assert.eq('map bottom is none', true, s.map(Fun.die('boom')).isNone());
 
-    assert.eq(true, s.bind((v) => Option.some('test' + v)).isNone());
+    Assert.eq('bind none some is none', true, s.bind((v) => Option.some('test' + v)).isNone());
 
-    assert.eq(true, s.filter(Fun.constant(true)).isNone());
-    assert.eq(true, s.filter(Fun.constant(false)).isNone());
-    assert.eq(true, s.filter(Fun.die('oof')).isNone());
+    Assert.eq('filter none is none #1', Option.none(), s.filter(Fun.constant(true)), tOption());
+    Assert.eq('filter none is none #2', Option.none(), s.filter(Fun.constant(false)), tOption());
+    Assert.eq('filter none is none #3', Option.none(), s.filter(Fun.die('oof')), tOption());
+    Assert.eq('filter none is none #4', Option.none(), Option.none().filter(Fun.die('boom')), tOption());
+    Assert.eq('filter some is none #5', Option.none(), Option.some(5).filter((x) => x === 8), tOption(tNumber));
+    Assert.eq('filter const false is none', Option.none(), Option.some(5).filter(Fun.constant(false)), tOption(tNumber));
+    Assert.eq('filter none bottom is none', Option.none(), Option.none().filter(Fun.die('boom')), tOption());
 
-    assert.eq(false, Option.from(null).isSome());
-    assert.eq(false, Option.from(undefined).isSome());
+    Assert.eq('from null is none', false, Option.from(null).isSome());
+    Assert.eq('from undefined is none', false, Option.from(undefined).isSome());
 
-    assert.eq(true, Option.none().or(Option.some(7)).equals(Option.some(7)));
-    assert.eq(true, Option.none().or(Option.none()).equals(Option.none()));
+    Assert.eq('none or some(7) is some(s)', true, Option.none().or(Option.some(7)).equals(Option.some(7)));
+    Assert.eq('none or none is none', true, Option.none().or(Option.none()).equals(Option.none()));
 
-    assert.eq([], Option.none().toArray());
+    Assert.eq('none to array is empty array', [], Option.none().toArray());
 
-    const assertOptionEq = <T> (expected: Option<T>, actual: Option<T>): void => {
-      const same = expected.isNone() ? actual.isNone() : (actual.isSome() && expected.getOrDie() === actual.getOrDie());
-      if (!same) {
-        // assumes toString() works
-        assert.fail('Expected: ' + expected.toString() + ' Actual: ' + actual.toString());
-      }
-    };
+    Assert.eq('fold #1', 'zz', Option.none().fold(() => 'zz', Fun.die('boom')));
+    Assert.eq('fold #2', [], Option.none().fold(function () { return Array.prototype.slice.call(arguments); }, Fun.die('boom')));
 
-    assertOptionEq(Option.none(), Option.some(5).filter((x) => x === 8));
-    assertOptionEq(Option.none(), Option.some(5).filter(Fun.constant(false)));
-    assertOptionEq(Option.none(), Option.none().filter(Fun.die('boom')));
+    Assert.eq('fold #3', 'b', Option.none().fold(Fun.constant('b'), Fun.die('boom')));
+    Assert.eq('bind', true, Option.none().bind(Fun.die('boom')).isNone());
+    Assert.eq('each', undefined, Option.none().each(Fun.die('boom')));
 
-    assert.eq('zz', Option.none().fold(() => 'zz', Fun.die('boom')));
-    assert.eq([], Option.none().fold(function () { return Array.prototype.slice.call(arguments); }, Fun.die('boom')));
+    Assert.eq('forall none is true', true, Option.none().forall(Fun.die('boom')));
+    Assert.eq('exists none is false', false, Option.none().exists(Fun.die('boom')));
 
-    assert.eq('b', Option.none().fold(Fun.constant('b'), Fun.die('boom')));
-    assert.eq(true, Option.none().bind(Fun.die('boom')).isNone());
-    assert.eq(undefined, Option.none().each(Fun.die('boom')));
-    assert.eq(true, Option.none().filter(Fun.die('boom')).isNone());
-    assert.eq(true, Option.none().forall(Fun.die('boom')));
-    assert.eq(false, Option.none().exists(Fun.die('boom')));
-
-    assert.eq('none()', Option.none().toString());
+    Assert.eq('toString', 'none()', Option.none().toString());
   };
 
   const testSpecs = () => {
