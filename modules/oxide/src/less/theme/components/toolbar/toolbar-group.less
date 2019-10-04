@@ -14,8 +14,7 @@
 @toolbar-group-separator-color: @border-color;
 
 .tox {
-  .tox-toolbar__group,
-  .tox-horizcollection__group {
+  .tox-toolbar__group {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
@@ -29,24 +28,21 @@
   }
 
   @media @breakpoint-sm {
-    .tox-toolbar__group,
-    .tox-horizcollection__group {
+    .tox-toolbar__group {
       flex-wrap: nowrap;
     }
   }
 }
 
 .tox:not([dir=rtl]) {
-  .tox-toolbar__group:not(:last-of-type),
-  .tox-horizcollection__group:not(:last-of-type) {
+  .tox-toolbar__group:not(:last-of-type) {
     border-right: 1px solid @toolbar-group-separator-color;
   }
 }
 
 // RTL
 .tox[dir=rtl] {
-  .tox-toolbar__group:not(:last-of-type),
-  .tox-horizcollection__group:not(:last-of-type) {
+  .tox-toolbar__group:not(:last-of-type) {
     border-left: 1px solid @toolbar-group-separator-color;
   }
 }

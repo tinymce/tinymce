@@ -68,7 +68,7 @@ const forToolbar = (columns: number) => {
 };
 
 // NOTE: That type signature isn't quite true.
-const preprocessCollection = (items: ItemTypes.ItemSpec[], isHorizontalMenu: boolean, isSeparator: (a: ItemTypes.ItemSpec, index: number) => boolean): AlloySpec[] => {
+const preprocessCollection = (items: ItemTypes.ItemSpec[], isSeparator: (a: ItemTypes.ItemSpec, index: number) => boolean): AlloySpec[] => {
   const allSplits = [ ];
   let currentSplit = [ ];
   Arr.each(items, (item, i) => {
@@ -93,7 +93,7 @@ const preprocessCollection = (items: ItemTypes.ItemSpec[], isHorizontalMenu: boo
     return {
       dom: {
         tag: 'div',
-        classes: isHorizontalMenu ? [ 'tox-horizcollection__group' ] : [ 'tox-collection__group' ]
+        classes: [ 'tox-collection__group' ]
       },
       components: s
     };
@@ -116,7 +116,7 @@ const forCollection = (columns: number | 'auto', initItems, _hasIcons: boolean =
               classes: [ 'tox-collection__group' ]
             }, columns)(items);
           } else {
-            return preprocessCollection(items, false, (_item, i) => {
+            return preprocessCollection(items, (_item, i) => {
               return initItems[i].type === 'separator';
             });
           }
@@ -130,12 +130,12 @@ const forHorizontalCollection = (initItems, _hasIcons: boolean = true) => {
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-horizcollection' ]
+      classes: [ 'tox-collection--horizontal' ]
     },
     components: [
       AlloyMenu.parts().items({
         preprocess: (items: ItemTypes.ItemSpec[]) => {
-          return preprocessCollection(items, true, (_item, i) => {
+          return preprocessCollection(items, (_item, i) => {
             return initItems[i].type === 'separator';
           });
         }
