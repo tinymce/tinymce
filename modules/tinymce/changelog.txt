@@ -17,6 +17,7 @@ Version 5.1.0 (TBD)
     Changed Oxide default for `@toolbar-button-chevron-color` to follow toolbar button icon color #TINY-4153
     Changed the `urlinput` dialog component to use the `url` type attribute #TINY-4102
     Fixed scroll issues on mobile devices #TINY-3976
+    Fixed context toolbar unable to refresh position on iOS12 #TINY-4107
     Fixed ctrl+left click not opening links on readonly mode and the preview dialog #TINY-4138
     Fixed Slider UI component not firing onChange event on touch devices #TINY-4092
     Fixed notifications overlapping instead of stacking #TINY-3478

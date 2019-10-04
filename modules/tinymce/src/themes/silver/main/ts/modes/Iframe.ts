@@ -96,7 +96,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       '-webkit-overflow-scrolling': 'touch' // required for ios < 13 content scrolling
     });
 
-    const limit = Throttler.adaptable(() => {
+    const limit = Throttler.first(() => {
       editor.fire('ScrollContent');
     }, 20);
 
