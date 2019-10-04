@@ -168,6 +168,10 @@ export default function (editor, lazyResize) {
         if (Compare.eq(lT, target) && (t.timeStamp - lTS) < 300) {
           t.preventDefault();
           Attr.set(target, 'data-mce-selected', '1');
+          editor.fire('tableselectionchange', {
+            start: target,
+            end: target
+          });
         }
       }
       lastTarget.set(target);

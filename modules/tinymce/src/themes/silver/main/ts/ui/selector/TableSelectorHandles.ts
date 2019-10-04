@@ -165,13 +165,13 @@ const setup = (editor, sink) => {
   const startCell = Cell<any>(null);
   const endCell = Cell<any>(null);
 
-  editor.on('nodechange', () => {
-    const startNode = Element.fromDom(editor.selection.getNode());
-    startCell.set(startNode);
-    endCell.set(startNode);
-    const table = TableLookup.table(startNode);
+  editor.on('tableselectionchange', (e) => {
+    // const startNode = Element.fromDom(editor.selection.getNode());
+    startCell.set(e.start);
+    endCell.set(e.end);
+    const table = TableLookup.table(e.start);
     const tabTarget = {
-      selection: () => [startNode]
+      selection: () => [e.start]
     };
     table.each((tab) => {
       const ul = OtherCells.getUpOrLeft(tab, tabTarget);
