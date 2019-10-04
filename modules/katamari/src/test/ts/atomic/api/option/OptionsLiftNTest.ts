@@ -1,9 +1,10 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock';
 import * as Options from 'ephox/katamari/api/Options';
 import { Option } from 'ephox/katamari/api/Option';
+import { tOption } from 'ephox/katamari/api/OptionInstances';
 
 const assertOption = <A> (a: Option<A>, b: Option<A>) => {
-  assert.eq(true, a.equals(b));
+  Assert.eq('option eq', a, b, tOption());
 };
 
 const boom = function (): string {
