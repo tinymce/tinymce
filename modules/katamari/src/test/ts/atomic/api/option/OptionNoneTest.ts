@@ -24,14 +24,6 @@ UnitTest.test('OptionNoneTest', () => {
 
     Assert.eq('bind none some is none', true, s.bind((v) => Option.some('test' + v)).isNone());
 
-    Assert.eq('filter none is none #1', Option.none(), s.filter(Fun.constant(true)), tOption());
-    Assert.eq('filter none is none #2', Option.none(), s.filter(Fun.constant(false)), tOption());
-    Assert.eq('filter none is none #3', Option.none(), s.filter(Fun.die('oof')), tOption());
-    Assert.eq('filter none is none #4', Option.none(), Option.none().filter(Fun.die('boom')), tOption());
-    Assert.eq('filter some is none #5', Option.none(), Option.some(5).filter((x) => x === 8), tOption(tNumber));
-    Assert.eq('filter const false is none', Option.none(), Option.some(5).filter(Fun.constant(false)), tOption(tNumber));
-    Assert.eq('filter none bottom is none', Option.none(), Option.none().filter(Fun.die('boom')), tOption());
-
     Assert.eq('from null is none', false, Option.from(null).isSome());
     Assert.eq('from undefined is none', false, Option.from(undefined).isSome());
 

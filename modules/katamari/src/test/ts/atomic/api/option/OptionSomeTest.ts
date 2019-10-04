@@ -163,19 +163,6 @@ UnitTest.test('OptionSomeTest', function () {
       return f(json) === true ? Jsc.eq(true, opt.forall(f)) : Jsc.eq(false, opt.forall(f));
     });
 
-    Jsc.property('Checking some(x).filter(_ -> false) === none', arbOptionSome, function (opt) {
-      return Jsc.eq(true, opt.filter(Fun.constant(false)).isNone());
-    });
-
-    Jsc.property('Checking some(x).filter(_ -> true) === some(x)', arbOptionSome, function (opt) {
-      return Jsc.eq(opt.getOrDie(), opt.filter(Fun.constant(true)).getOrDie());
-    });
-
-    Jsc.property('Checking some(x).filter(f) === some(x) iff. f(x)', 'json', Jsc.fun(Jsc.bool), function (json, f) {
-      const opt = Option.some(json);
-      return f(json) === true ? Jsc.eq(json, opt.filter(f).getOrDie()) : Jsc.eq(true, opt.filter(f).isNone());
-    });
-
     Jsc.property('Checking some(x).toArray equals [ x ]', 'json', function (json) {
       return Jsc.eq([ json ], Option.some(json).toArray());
     });
