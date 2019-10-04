@@ -16,6 +16,7 @@ import * as Namespace from './Namespace';
 import * as Obj from './Obj';
 import { Option } from './Option';
 import * as Options from './Options';
+import * as OptionInstances from './OptionInstances';
 import * as Resolve from './Resolve';
 import { Result } from './Result';
 import * as Results from './Results';
@@ -49,6 +50,7 @@ export {
   Obj,
   Option,
   Options,
+  OptionInstances,
   Resolve,
   Result,
   Results,
