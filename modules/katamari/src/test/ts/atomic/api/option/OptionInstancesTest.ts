@@ -1,7 +1,5 @@
-import * as Fun from 'ephox/katamari/api/Fun';
 import { Option } from 'ephox/katamari/api/Option';
 import { tOption } from 'ephox/katamari/api/OptionInstances';
-import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, Assert } from '@ephox/bedrock';
 import { Testable, Pprint } from '@ephox/dispute';
 
