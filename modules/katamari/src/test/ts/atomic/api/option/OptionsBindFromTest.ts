@@ -1,19 +1,23 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock';
 import * as Options from 'ephox/katamari/api/Options';
 import { Option } from 'ephox/katamari/api/Option';
+import { tOption } from 'ephox/katamari/api/OptionInstances';
 import * as Fun from 'ephox/katamari/api/Fun';
+import { Testable } from '@ephox/dispute';
+
+const { tNumber } = Testable;
 
 UnitTest.test('Options.bindFrom', () => {
-  assert.eq(4, Options.bindFrom(3, (x) => Option.some(x + 1)).getOrDie());
-  assert.eq(true, Options.bindFrom(3, (x) => Option.none()).isNone());
-  assert.eq(true, Options.bindFrom<number, number>(null, Fun.die('boom')).isNone());
-  assert.eq(true, Options.bindFrom<number, number>(undefined, Fun.die('boom')).isNone());
+  Assert.eq('bindFrom value to some', Option.some(4), Options.bindFrom(3, (x) => Option.some(x + 1)), tOption(tNumber));
+  Assert.eq('bindFrom value to none', Option.none(), Options.bindFrom(3, (x) => Option.none()), tOption(tNumber));
+  Assert.eq('bindFrom null', Option.none(), Options.bindFrom<number, number>(null, Fun.die('boom')), tOption());
+  Assert.eq('bindFrom undefined', true, Options.bindFrom<number, number>(undefined, Fun.die('boom')).isNone());
 });
 
 UnitTest.test('Options.bindFrom === Options.bind().from()', () => {
-  function check(input: number | null | undefined, f: (a: number) => Option<number>) {
-    assert.eq(true, Options.bindFrom(input, f).equals(Option.from(input).bind(f)));
-  }
+  const check = (input: number | null | undefined, f: (a: number) => Option<number>) => {
+    Assert.eq('bindFrom equivalent ot bind', Option.from(input).bind(f), Options.bindFrom(input, f), tOption(tNumber));
+  };
 
   const s = (x: number) => Option.some<number>(x + 1);
   const n = (x: number) => Option.none<number>();
