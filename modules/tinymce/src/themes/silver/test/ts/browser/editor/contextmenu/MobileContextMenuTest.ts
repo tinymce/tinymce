@@ -44,7 +44,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
       Touch.cTouchEnd,
       Chain.wait(100),
       Chain.inject(dialogRoot),
-      tinyUi.cWaitForPopup('trigger context menu', '.tox-silver-sink .tox-horizcollection [role="menuitem"]')
+      tinyUi.cWaitForPopup('trigger context menu', '.tox-silver-sink .tox-collection--horizontal [role="menuitem"]')
     ]);
 
     // Assert focus is on the expected menu item
