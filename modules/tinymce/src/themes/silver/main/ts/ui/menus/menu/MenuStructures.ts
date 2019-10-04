@@ -130,7 +130,7 @@ const forHorizontalCollection = (initItems, _hasIcons: boolean = true) => {
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-collection--horizontal' ]
+      classes: [ 'tox-collection', 'tox-collection--horizontal' ]
     },
     components: [
       AlloyMenu.parts().items({
