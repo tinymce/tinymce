@@ -12,17 +12,16 @@ const getUpOrLeft = (table: Element, target: TargetSelection, generators: Genera
   const details = onCells(house, target);
   return details.map(function (selectedCells) {
     const grid = Transitions.toGrid(house, generators, false);
-    const slicedGrid = grid.slice(0, selectedCells[0].row() + 1);
+    const slicedGrid = grid.slice(0, selectedCells[selectedCells.length - 1].row() + 1);
     const slicedDetails = toDetailList(slicedGrid, generators);
     return Arr.bind(slicedDetails, (detail) => {
-      const slicedCells = detail.cells().slice(0, selectedCells[0].column() + 1);
+      const slicedCells = detail.cells().slice(0, selectedCells[selectedCells.length - 1].column() + 1);
       return Arr.map(slicedCells, (cell) => {
         return cell.element();
       });
     });
   });
 };
-
 
 // TODO: ROWSPANS COLSPANS
 const getDownOrRight = (table: Element, target: TargetSelection, generators: Generators) => {
@@ -31,10 +30,10 @@ const getDownOrRight = (table: Element, target: TargetSelection, generators: Gen
   const details = onCells(house, target);
   return details.map(function (selectedCells) {
     const grid = Transitions.toGrid(house, generators, false);
-    const slicedGrid = grid.slice(0, selectedCells[0].row() + 1);
+    const slicedGrid = grid.slice(selectedCells[0].row() + selectedCells[0].rowspan() - 1, grid.length);
     const slicedDetails = toDetailList(slicedGrid, generators);
     return Arr.bind(slicedDetails, (detail) => {
-      const slicedCells = detail.cells().slice(0, selectedCells[0].column() + 1);
+      const slicedCells = detail.cells().slice(selectedCells[0].column() + selectedCells[0].colspan() - 1,  + detail.cells().length);
       return Arr.map(slicedCells, (cell) => {
         return cell.element();
       });

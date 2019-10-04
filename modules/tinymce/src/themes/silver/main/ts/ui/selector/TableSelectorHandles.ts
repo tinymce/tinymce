@@ -27,7 +27,7 @@ const setup = (editor, sink) => {
 
   // TODO: Make the sensor snap to the bottom right by subtracting the width and height of the button from the output
   const getBottomRightSnaps = () => {
-    return Arr.map(tlTds.get(), (td) => {
+    return Arr.map(brTds.get(), (td) => {
       const thisRect = td.dom().getBoundingClientRect();
       return Dragging.snap({
         sensor: DragCoord.fixed(thisRect.left, thisRect.top),
@@ -53,7 +53,7 @@ const setup = (editor, sink) => {
   };
 
   const bottomRightSnaps = {
-    getSnapPoints: getTopLeftSnaps,
+    getSnapPoints: getBottomRightSnaps,
     leftAttr: 'data-drag-left',
     topAttr: 'data-drag-top',
     onSensor: (component, extra) => {
@@ -95,7 +95,40 @@ const setup = (editor, sink) => {
     }
   });
 
+  const bottomRightSketch = Button.sketch({
+    dom: {
+      tag: 'span',
+      innerHtml: 'BR',
+      styles: {
+        padding: '10px',
+        display: 'inline-block',
+        background: '#333',
+        color: '#fff'
+      }
+    },
+
+    buttonBehaviours: Behaviour.derive([
+      Dragging.config(
+        PlatformDetection.detect().deviceType.isTouch() ? {
+          mode: 'touch',
+          snaps: bottomRightSnaps
+        } : {
+          mode: 'mouse',
+          blockerClass: 'blocker',
+          snaps: bottomRightSnaps
+        }
+      ),
+      Unselecting.config({ })
+    ]),
+    eventOrder: {
+      // Because this is a button, allow dragging. It will stop clicking.
+      mousedown: [ 'dragging', 'alloy.base.behaviour' ]
+    }
+  });
+
   const topLeft = GuiFactory.build(topLeftSketch);
+  const bottomRight = GuiFactory.build(bottomRightSketch);
+
   const selected = 'data-mce-selected';
   const selectedSelector = 'td[' + selected + '],th[' + selected + ']';
   // used with not selectors
@@ -125,6 +158,7 @@ const setup = (editor, sink) => {
 
   editor.on('init', () => {
     Attachment.attach(sink, topLeft);
+    Attachment.attach(sink, bottomRight);
     external.set(InputHandlers.external(editor.getWin(), Element.fromDom(editor.getBody()), isRoot, annotations));
   });
 
@@ -146,6 +180,13 @@ const setup = (editor, sink) => {
         const snaps = getTopLeftSnaps();
         const lastSnap = snaps[snaps.length - 1];
         Dragging.snapTo(topLeft, lastSnap);
+      });
+      const br = OtherCells.getDownOrRight(tab, tabTarget);
+      br.each((bottomRightCells) => {
+        brTds.set(bottomRightCells);
+        const snaps = getBottomRightSnaps();
+        const firstSnap = snaps[0];
+        Dragging.snapTo(bottomRight, firstSnap);
       });
     });
   });
