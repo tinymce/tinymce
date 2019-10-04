@@ -11,7 +11,7 @@ UnitTest.test('Options.bindFrom', () => {
   Assert.eq('bindFrom value to some', Option.some(4), Options.bindFrom(3, (x) => Option.some(x + 1)), tOption(tNumber));
   Assert.eq('bindFrom value to none', Option.none(), Options.bindFrom(3, (x) => Option.none()), tOption(tNumber));
   Assert.eq('bindFrom null', Option.none(), Options.bindFrom<number, number>(null, Fun.die('boom')), tOption());
-  Assert.eq('bindFrom undefined', true, Options.bindFrom<number, number>(undefined, Fun.die('boom')).isNone());
+  Assert.eq('bindFrom undefined', Option.none(), Options.bindFrom<number, number>(undefined, Fun.die('boom')), tOption(tNumber));
 });
 
 UnitTest.test('Options.bindFrom === Options.bind().from()', () => {
