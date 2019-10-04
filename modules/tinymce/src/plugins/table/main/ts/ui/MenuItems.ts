@@ -51,7 +51,12 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): MenuI
     { type: 'menuitem', text: 'Cut row', onAction: cmd('mceTableCutRow'), onSetup:  selectionTargets.onSetupCellOrRow },
     { type: 'menuitem', text: 'Copy row', onAction: cmd('mceTableCopyRow'), onSetup:  selectionTargets.onSetupCellOrRow },
     { type: 'menuitem', text: 'Paste row before', onAction: cmd('mceTablePasteRowBefore'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Paste row after', onAction: cmd('mceTablePasteRowAfter'), onSetup:  selectionTargets.onSetupCellOrRow }
+    { type: 'menuitem', text: 'Paste row after', onAction: cmd('mceTablePasteRowAfter'), onSetup:  selectionTargets.onSetupCellOrRow },
+    {
+      type: 'nestedmenuitem',
+      text: 'Cell',
+      getSubmenuItems: () => cellItems
+    }
   ] as Array<Menu.NestedMenuItemContents>;
 
   const row: Menu.NestedMenuItemApi = {

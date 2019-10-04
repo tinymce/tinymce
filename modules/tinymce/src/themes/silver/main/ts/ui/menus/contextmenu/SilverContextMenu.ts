@@ -169,12 +169,12 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     };
 
     // Different browsers trigger the context menu from keyboards differently, so need to check both the button and target here.
-    // Unless it's a touchevent, in which case we don't care.
+    // If a longpress touch event, treat it the same as a keyboard event (anchoring to the node, etc.)
     // Chrome: button = 0 & target = the selection range node
     // Firefox: button = 0 & target = body
     // IE/Edge: button = 2 & target = body
     // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
-    const isTriggeredByKeyboardEvent = !isLongpress && (e.button !== 2 || e.target === editor.getBody());
+    const isTriggeredByKeyboardEvent = isLongpress || (e.button !== 2 || e.target === editor.getBody());
     const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
 
     const registry = editor.ui.registry.getAll();

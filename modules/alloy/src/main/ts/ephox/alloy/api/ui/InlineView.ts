@@ -1,29 +1,43 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Compare, Element, PredicateFind, Traverse } from '@ephox/sugar';
 import * as Boxes from '../../alien/Boxes';
 import * as ComponentStructure from '../../alien/ComponentStructure';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
+import * as Layout from '../../positioning/layout/Layout';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import * as Dismissal from '../../sandbox/Dismissal';
 import * as Reposition from '../../sandbox/Reposition';
 import { InlineMenuSpec, InlineViewDetail, InlineViewSketcher, InlineViewSpec } from '../../ui/types/InlineViewTypes';
 import { Positioning } from '../behaviour/Positioning';
 import { Receiving } from '../behaviour/Receiving';
+import { Representing } from '../behaviour/Representing';
 import { Sandboxing } from '../behaviour/Sandboxing';
 import { LazySink } from '../component/CommonTypes';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { tieredMenu as TieredMenu } from './TieredMenu';
 import { SingleSketchFactory } from './UiSketcher';
-import { Representing } from '../behaviour/Representing';
-import * as Layout from '../../positioning/layout/Layout';
 
-const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, onOpen) => {
+const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Option<Boxes.Bounds>) => {
   const lazySink: () => ReturnType<LazySink> = () => detail.lazySink(menuSandbox);
+
+  const layouts = menuSpec.type === 'horizontal' ? { layouts: {
+    onLtr: () => [Layout.southeast, Layout.southwest, Layout.south, Layout.northeast, Layout.northwest, Layout.north, Layout.east, Layout.west],
+    onRtl: () => [Layout.southwest, Layout.southeast, Layout.south, Layout.northwest, Layout.northeast, Layout.north, Layout.west, Layout.east]
+  } } : { };
+
+  const isFirstTierSubmenu = (tmenu: Element, parentItem: Element) => {
+    // ASSUMPTION: The first-tier menu is the first child of tmenu
+    return Traverse.firstChild(tmenu).fold(() => false, (root) => {
+      return PredicateFind.descendant(root, (e) => Compare.eq(e, parentItem)).isSome();
+    });
+  };
+  const getSubmenuLayouts = (tmenu: AlloyComponent, item: AlloyComponent) => isFirstTierSubmenu(tmenu.element(), item.element()) ? layouts : { };
+
   return TieredMenu.sketch({
     dom: {
       tag: 'div'
@@ -46,7 +60,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
     },
 
     onOpenMenu(tmenu, menu) {
-      onOpen(menu, lazySink().getOrDie());
+      Positioning.positionWithinBounds(lazySink().getOrDie(), anchor, menu, getBounds());
     },
 
     onOpenSubmenu(tmenu, item, submenu) {
@@ -54,18 +68,16 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
       Positioning.position(sink, {
         anchor: 'submenu',
         item,
-        layouts: {
-          onLtr: () => [Layout.southeast],
-          onRtl: () => [Layout.southwest]
-        }
+        ...getSubmenuLayouts(tmenu, item)
       }, submenu);
     },
 
     onRepositionMenu (tmenu, primaryMenu, submenuTriggers) {
       const sink = lazySink().getOrDie();
-      Positioning.position(sink, anchor, primaryMenu);
+      Positioning.positionWithinBounds(sink, anchor, primaryMenu, getBounds());
       Arr.each(submenuTriggers, (st) => {
-        Positioning.position(sink, { anchor: 'submenu', item: st.triggeringItem }, st.triggeredMenu);
+        const submenuLayouts = getSubmenuLayouts(tmenu, st.triggeringItem);
+        Positioning.position(sink, { anchor: 'submenu', item: st.triggeringItem, ...submenuLayouts }, st.triggeredMenu);
       });
     },
   });
@@ -100,7 +112,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
   };
   // TODO AP-191 write a test for showMenuAt
   const showMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
-    const menu = makeMenu(detail, sandbox, anchor, menuSpec, (menu, sink) => Positioning.position(sink, anchor, menu));
+    const menu = makeMenu(detail, sandbox, anchor, menuSpec, Fun.constant(Option.none()));
 
     Sandboxing.open(sandbox, menu);
     Representing.setValue(sandbox, Option.some({
@@ -108,9 +120,8 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       menu
     }));
   };
-  const showHorizontalMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Option<Boxes.Bounds>) => {
-    const onOpen = (menu, sink) => Positioning.positionWithinBounds(sink, anchor, menu, getBounds());
-    const menu = makeMenu(detail, sandbox, anchor, menuSpec, onOpen);
+  const showMenuWithinBounds = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Option<Boxes.Bounds>) => {
+    const menu = makeMenu(detail, sandbox, anchor, menuSpec, getBounds);
     Sandboxing.open(sandbox, menu);
     Representing.setValue(sandbox, Option.some({
       mode: 'menu',
@@ -148,7 +159,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
     showWithin,
     showWithinBounds,
     showMenuAt,
-    showHorizontalMenuAt,
+    showMenuWithinBounds,
     hide,
     getContent,
     reposition,
@@ -233,8 +244,8 @@ const InlineView = Sketcher.single({
     showMenuAt(apis, component, anchor, menuSpec) {
       apis.showMenuAt(component, anchor, menuSpec);
     },
-    showHorizontalMenuAt(apis, component, anchor, menuSpec, bounds) {
-      apis.showHorizontalMenuAt(component, anchor, menuSpec, bounds);
+    showMenuWithinBounds(apis, component, anchor, menuSpec, bounds) {
+      apis.showMenuWithinBounds(component, anchor, menuSpec, bounds);
     },
     hide (apis, component) {
       apis.hide(component);

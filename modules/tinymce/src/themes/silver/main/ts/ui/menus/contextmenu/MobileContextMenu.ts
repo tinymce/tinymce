@@ -62,11 +62,12 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items, backstage: UiFa
     };
 
     // Show the context menu, with items set to close on click
-    InlineView.showHorizontalMenuAt(contextmenu, nuAnchorSpec, {
+    InlineView.showMenuWithinBounds(contextmenu, nuAnchorSpec, {
       menu: {
         markers: MenuParts.markers('normal')
       },
-      data: menuData
+      data: menuData,
+      type: 'horizontal'
     }, getBounds(editor));
 
     // iOS is weird and doesn't close contexttoolbars when contextmenus open, unlike Android. So force hide.
