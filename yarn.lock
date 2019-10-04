@@ -149,6 +149,11 @@
     webpack-dev-server "^3.2.1"
     xml-writer "^1.6.0"
 
+"@ephox/dispute@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@ephox/dispute/-/dispute-1.0.1.tgz#6b05810dd86463b138c248fbce7c173bed3abfa2"
+  integrity sha512-FBAJDuRYFoOdO9jAZ95aX7LhHt++GUTgXAzkfJSniBwd9T2hcsJfRsBAvVfBeaoHTUJhMcxytpsgSuby2kmBmw==
+
 "@ephox/dom-globals@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@ephox/dom-globals/-/dom-globals-1.1.2.tgz#cb181a7652c1f097c9920fcf551c1fe202f70041"
