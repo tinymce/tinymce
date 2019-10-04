@@ -1,6 +1,5 @@
 import { Touch } from '@ephox/dom-globals';
-import { Cell, Fun, Option } from '@ephox/katamari';
-import DelayedFunction from '../alien/DelayedFunction';
+import { Cell, Fun, Option, Throttler } from '@ephox/katamari';
 
 // This is based heavily on Alloy's TapEvent.ts, just modified to use TinyMCE's event system.
 
@@ -29,11 +28,11 @@ const isFarEnough = (touch, data: TouchHistoryData): boolean => {
 };
 
 const setupLongpress = (editor) => {
-  const longpress = DelayedFunction((e) => editor.fire('longpress', { ...e, type: 'longpress' }), LONGPRESS_DELAY);
+  const debounceLongpress = Throttler.last((e) => editor.fire('longpress', { ...e, type: 'longpress' }), LONGPRESS_DELAY);
 
   editor.on('touchstart', (e) => {
     getTouch(e).each((touch) => {
-      longpress.cancel();
+      debounceLongpress.cancel();
 
       const data = {
         x: Fun.constant(touch.clientX),
@@ -41,13 +40,13 @@ const setupLongpress = (editor) => {
         target: Fun.constant(e.target)
       };
 
-      longpress.schedule(e);
+      debounceLongpress.throttle(e);
       startData.set(Option.some(data));
     });
   }, true);
 
   editor.on('touchmove', (e) => {
-    longpress.cancel();
+    debounceLongpress.cancel();
     getTouch(e).each((touch) => {
       startData.get().each((data) => {
         if (isFarEnough(touch, data)) {
@@ -59,7 +58,7 @@ const setupLongpress = (editor) => {
   }, true);
 
   editor.on('touchend touchcancel', (_e) => {
-    longpress.cancel();
+    debounceLongpress.cancel();
   }, true);
 };
 
