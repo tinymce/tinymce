@@ -45,7 +45,7 @@ const setup = (editor, sink) => {
     leftAttr: 'data-drag-left',
     topAttr: 'data-drag-top',
     onSensor: (component, extra) => {
-      endCell.set(extra.td);
+      startCell.set(extra.td);
       const select = external.get();
       select(startCell.get(), endCell.get());
     },
