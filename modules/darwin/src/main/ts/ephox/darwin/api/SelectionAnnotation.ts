@@ -3,6 +3,7 @@ import { Attr, Class, OnNode, SelectorFilter, Element } from '@ephox/sugar';
 import { Ephemera } from './Ephemera';
 
 export interface SelectionAnnotation {
+  _clear: (container: Element) => void;
   clear: (container: Element) => void;
   selectRange: (container: Element, cells: Element[], start: Element, finish: Element) => void;
   selectedSelector: () => string;
@@ -27,6 +28,7 @@ const byClass = function (ephemera: Ephemera): SelectionAnnotation {
   };
 
   return {
+    _clear: clear,
     clear,
     selectRange,
     selectedSelector: ephemera.selectedSelector,
@@ -35,7 +37,7 @@ const byClass = function (ephemera: Ephemera): SelectionAnnotation {
   };
 };
 
-const byAttr = function (ephemera: Ephemera): SelectionAnnotation {
+const byAttr = function (ephemera: Ephemera, onSelection: (cells: Element[], start: Element, finish: Element) => void, onClear: () => void): SelectionAnnotation {
   const removeSelectionAttributes = function (element: Element) {
     Attr.remove(element, ephemera.selected());
     Attr.remove(element, ephemera.firstSelected());
@@ -46,7 +48,12 @@ const byAttr = function (ephemera: Ephemera): SelectionAnnotation {
     Attr.set(element, ephemera.selected(), '1');
   };
 
-  const clear = function (container: Element) {
+  const clear = (container: Element) => {
+    _clear(container);
+    onClear();
+  };
+
+  const _clear = (container: Element) => {
     const sels = SelectorFilter.descendants(container, ephemera.selectedSelector());
     Arr.each(sels, removeSelectionAttributes);
   };
@@ -56,8 +63,10 @@ const byAttr = function (ephemera: Ephemera): SelectionAnnotation {
     Arr.each(cells, addSelectionAttribute);
     Attr.set(start, ephemera.firstSelected(), '1');
     Attr.set(finish, ephemera.lastSelected(), '1');
+    onSelection(cells, start, finish);
   };
   return {
+    _clear,
     clear,
     selectRange,
     selectedSelector: ephemera.selectedSelector,

@@ -124,7 +124,7 @@ const external = (win: Window, container: Element<any>, isRoot: (e: Element) => 
   const bridge = WindowBridge(win);
 
   return (start: Element, finish: Element) => {
-    annotations.clear(container);
+    annotations._clear(container);
     CellSelection.identify(start, finish, isRoot).each(function (cellSel) {
       const boxes = cellSel.boxes().getOr([]);
       annotations.selectRange(container, boxes, cellSel.start(), cellSel.finish());

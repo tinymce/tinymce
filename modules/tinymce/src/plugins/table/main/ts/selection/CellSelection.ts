@@ -7,7 +7,7 @@
 
 import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
 import { Fun, Option, Struct, Cell } from '@ephox/katamari';
-import { TableLookup } from '@ephox/snooker';
+import { TableLookup, OtherCells } from '@ephox/snooker';
 import {
     Element, Selection, SelectionDirection, Class, Node, Compare, Attr
 } from '@ephox/sugar';
@@ -22,11 +22,28 @@ const hasInternalTarget = (e: Event) => {
 };
 import { KeyboardEvent, MouseEvent, Event, HTMLElement } from '@ephox/dom-globals';
 
-export default function (editor, lazyResize) {
+export default function (editor, lazyResize, selectionTargets) {
   const handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);
   let handlers = Option.none();
 
-  const annotations = SelectionAnnotation.byAttr(Ephemera);
+  const onSelection = (cells: Element[], start: Element, finish: Element) => {
+    selectionTargets.targets().each((targets) => {
+      const table = TableLookup.table(start);
+      const otherCells = OtherCells.getOtherCells(table, targets, {});
+      editor.fire('tableselectionchange', {
+        cells,
+        start,
+        finish,
+        otherCells
+      });
+    })
+  }
+
+  const onClear = () => {
+    editor.fire('tableselectionclear');
+  };
+
+  const annotations = SelectionAnnotation.byAttr(Ephemera, onSelection, onClear);
 
   editor.on('init', function (e) {
     const win = editor.getWin();
@@ -47,7 +64,12 @@ export default function (editor, lazyResize) {
 
     const mouseHandlers = InputHandlers.mouse(win, body, isRoot, annotations);
     const keyHandlers = InputHandlers.keyboard(win, body, isRoot, annotations);
+    const external = InputHandlers.external(win, body, isRoot, annotations);
     const hasShiftKey = (event) => event.raw().shiftKey === true;
+
+    editor.on('tableselectorchange', (e) => {
+      external(e.start, e.finish);
+    });
 
     const handleResponse = function (event, response) {
       // Only handle shift key non shiftkey cell navigation is handled by core
@@ -167,11 +189,7 @@ export default function (editor, lazyResize) {
         const lTS = lastTimeStamp.get();
         if (Compare.eq(lT, target) && (t.timeStamp - lTS) < 300) {
           t.preventDefault();
-          Attr.set(target, 'data-mce-selected', '1');
-          editor.fire('tableselectionchange', {
-            start: target,
-            end: target
-          });
+          external(target, target);
         }
       }
       lastTarget.set(target);

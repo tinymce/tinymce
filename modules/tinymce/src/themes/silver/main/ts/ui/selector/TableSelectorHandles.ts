@@ -1,15 +1,11 @@
 import { Button, Behaviour, Dragging, Unselecting, DragCoord, Attachment, GuiFactory } from "@ephox/alloy";
 import { PlatformDetection } from '@ephox/sand';
 import { Arr, Option, Cell } from '@ephox/katamari';
-import { Position, Element, Compare } from '@ephox/sugar';
-
-// TODO: BEFORE THIS IS MERGED, THIS NEEDS TO BE IN THE TABLE PLUGIN SOMEHOW
-import { TableLookup, OtherCells } from '@ephox/snooker';
-import { InputHandlers, SelectionAnnotation } from '@ephox/darwin';
+import { Position, Element } from '@ephox/sugar';
 
 const setup = (editor, sink) => {
-  const tlTds = Cell<any[]>([]);
-  const brTds = Cell<any[]>([]);
+  const tlTds = Cell<Element[]>([]);
+  const brTds = Cell<Element[]>([]);
 
   const getTopLeftSnaps = () => {
     return Arr.map(tlTds.get(), (td) => {
@@ -46,8 +42,10 @@ const setup = (editor, sink) => {
     topAttr: 'data-drag-top',
     onSensor: (component, extra) => {
       startCell.set(extra.td);
-      const select = external.get();
-      select(startCell.get(), endCell.get());
+      editor.fire('tableselectorchange', {
+        start: startCell.get(),
+        finish: endCell.get()
+      });
     },
     mustSnap: true
   };
@@ -58,8 +56,10 @@ const setup = (editor, sink) => {
     topAttr: 'data-drag-top',
     onSensor: (component, extra) => {
       endCell.set(extra.td);
-      const select = external.get();
-      select(startCell.get(), endCell.get());
+      editor.fire('tableselectorchange', {
+        start: startCell.get(),
+        finish: endCell.get()
+      });
     },
     mustSnap: true
   };
@@ -129,66 +129,38 @@ const setup = (editor, sink) => {
   const topLeft = GuiFactory.build(topLeftSketch);
   const bottomRight = GuiFactory.build(bottomRightSketch);
 
-  const selected = 'data-mce-selected';
-  const selectedSelector = 'td[' + selected + '],th[' + selected + ']';
-  // used with not selectors
-  const attributeSelector = '[' + selected + ']';
-  const firstSelected = 'data-mce-first-selected';
-  const firstSelectedSelector = 'td[' + firstSelected + '],th[' + firstSelected + ']';
-  const lastSelected = 'data-mce-last-selected';
-  const lastSelectedSelector = 'td[' + lastSelected + '],th[' + lastSelected + ']';
-
-  const ephemera = {
-    selected: () => selected,
-    selectedSelector: () => selectedSelector,
-    attributeSelector: () => attributeSelector,
-    firstSelected: () => firstSelected,
-    firstSelectedSelector: () => firstSelectedSelector,
-    lastSelected: () => lastSelected,
-    lastSelectedSelector: () => lastSelectedSelector
-  };
-
-  const isRoot = (element) => {
-    return Compare.eq(element, Element.fromDom(editor.getBody()));
-  };
-
-  const annotations = SelectionAnnotation.byAttr(ephemera);
-
-  const external = Cell<any>(null);
-
-  editor.on('init', () => {
-    Attachment.attach(sink, topLeft);
-    Attachment.attach(sink, bottomRight);
-    external.set(InputHandlers.external(editor.getWin(), Element.fromDom(editor.getBody()), isRoot, annotations));
-  });
-
+  const isVisible = Cell<Boolean>(false);
   const startCell = Cell<any>(null);
   const endCell = Cell<any>(null);
 
   editor.on('tableselectionchange', (e) => {
-    // const startNode = Element.fromDom(editor.selection.getNode());
+    if (!isVisible.get()) {
+      Attachment.attach(sink, topLeft);
+      Attachment.attach(sink, bottomRight);
+      isVisible.set(true);
+    }
     startCell.set(e.start);
     endCell.set(e.end);
-    const table = TableLookup.table(e.start);
-    const tabTarget = {
-      selection: () => [e.start]
-    };
-    table.each((tab) => {
-      const ul = OtherCells.getUpOrLeft(tab, tabTarget);
-      ul.each((upperLeftCells) => {
-        tlTds.set(upperLeftCells);
-        const snaps = getTopLeftSnaps();
-        const lastSnap = snaps[snaps.length - 1];
-        Dragging.snapTo(topLeft, lastSnap);
-      });
-      const br = OtherCells.getDownOrRight(tab, tabTarget);
-      br.each((bottomRightCells) => {
-        brTds.set(bottomRightCells);
-        const snaps = getBottomRightSnaps();
-        const firstSnap = snaps[0];
-        Dragging.snapTo(bottomRight, firstSnap);
-      });
+    
+    e.otherCells.each((otherCells) => {
+      tlTds.set(otherCells.upOrLeftCells);
+      const tLsnaps = getTopLeftSnaps();
+      const lastSnap = tLsnaps[tLsnaps.length - 1];
+      Dragging.snapTo(topLeft, lastSnap);
+
+      brTds.set(otherCells.downOrRightCells);
+      const snaps = getBottomRightSnaps();
+      const firstSnap = snaps[0];
+      Dragging.snapTo(bottomRight, firstSnap);
     });
+  });
+
+  editor.on('tableselectionclear', () => {
+    if (isVisible.get()) {
+      Attachment.detach(topLeft);
+      Attachment.detach(bottomRight);
+      isVisible.set(false);
+    }
   });
 };
 
