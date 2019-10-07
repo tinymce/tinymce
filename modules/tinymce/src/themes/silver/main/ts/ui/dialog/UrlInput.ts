@@ -176,8 +176,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     },
 
     markers: {
-      // FIX:
-      openClass: 'dog'
+      openClass: 'tox-textfield--popup-open'
     },
 
     lazySink: backstage.shared.getSink,
