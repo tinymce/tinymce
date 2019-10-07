@@ -18,7 +18,7 @@ const toggleActiveState = (editor: Editor, enabledStated: Cell<boolean>) => (api
 const register = (editor: Editor, toggleState: Cell<boolean>) => {
   editor.ui.registry.addToggleButton('visualchars', {
     tooltip: 'Show invisible characters',
-    icon: 'paragraph',
+    icon: 'visualchars',
     onAction: () => editor.execCommand('mceVisualChars'),
     onSetup: toggleActiveState(editor, toggleState)
   });

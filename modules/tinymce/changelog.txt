@@ -14,6 +14,7 @@ Version 5.1.0 (TBD)
         - `object_resizing` #TINY-4157
     Changed toolbars and context toolbars to sidescroll on mobile #TINY-3894 #TINY-4107
     Changed the editor to use the `VisualViewport` API of the browser where possible #TINY-4078
+    Changed visualblocks toolbar button icon and renamed `paragraph` icon to `visualchars` #TINY-4074
     Changed Oxide default for `@toolbar-button-chevron-color` to follow toolbar button icon color #TINY-4153
     Changed the `urlinput` dialog component to use the `url` type attribute #TINY-4102
     Fixed scroll issues on mobile devices #TINY-3976
