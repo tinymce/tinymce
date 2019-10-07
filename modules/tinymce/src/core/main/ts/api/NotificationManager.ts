@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import EditorView from '../EditorView';
 import { NotificationManagerImpl } from '../ui/NotificationManagerImpl';
@@ -12,32 +13,36 @@ import Editor from './Editor';
 import Delay from './util/Delay';
 
 export interface NotificationManagerImpl {
-  open (spec: NotificationSpec, closeCallback?: () => void): Notification;
-  close <T extends Notification>(notification: T): void;
-  reposition <T extends Notification>(notifications: T[]): void;
-  getArgs <T extends Notification>(notification: T): NotificationSpec;
+  open (spec: NotificationSpec, closeCallback?: () => void): NotificationApi;
+  close <T extends NotificationApi>(notification: T): void;
+  reposition <T extends NotificationApi>(notifications: T[]): void;
+  getArgs <T extends NotificationApi>(notification: T): NotificationSpec;
 }
 
 export interface NotificationSpec {
-  type: 'info' | 'warn' | 'error' | 'success';
+  type: 'info' | 'warning' | 'error' | 'success';
   text: string;
   icon?: string;
   progressBar?: boolean;
   timeout?: number;
 }
 
-export interface Notification {
+export interface NotificationApi {
   close: () => void;
   progressBar: {
     value: (percent: number) => void;
   };
   text: (text: string) => void;
+  moveTo: (x: number, y: number) => void;
+  moveRel: (element: Element, rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc' | 'banner') => void;
+  getEl: () => Element;
+  settings: NotificationSpec;
 }
 
 interface NotificationManager {
-  open: (spec: NotificationSpec) => Notification;
+  open: (spec: NotificationSpec) => NotificationApi;
   close: () => void;
-  getNotifications: () => Notification[];
+  getNotifications: () => NotificationApi[];
 }
 
 /**
@@ -53,14 +58,14 @@ interface NotificationManager {
  */
 
 function NotificationManager(editor: Editor): NotificationManager {
-  const notifications: Notification[] = [];
+  const notifications: NotificationApi[] = [];
 
   const getImplementation = function (): NotificationManagerImpl {
     const theme = editor.theme;
     return theme && theme.getNotificationManagerImpl ? theme.getNotificationManagerImpl() : NotificationManagerImpl();
   };
 
-  const getTopNotification = function (): Option<Notification> {
+  const getTopNotification = function (): Option<NotificationApi> {
     return Option.from(notifications[0]);
   };
 
@@ -74,11 +79,11 @@ function NotificationManager(editor: Editor): NotificationManager {
     }
   };
 
-  const addNotification = function (notification: Notification) {
+  const addNotification = function (notification: NotificationApi) {
     notifications.push(notification);
   };
 
-  const closeNotification = function (notification: Notification) {
+  const closeNotification = function (notification: NotificationApi) {
     Arr.findIndex(notifications, function (otherNotification) {
       return otherNotification === notification;
     }).each(function (index) {
@@ -118,7 +123,7 @@ function NotificationManager(editor: Editor): NotificationManager {
     });
   };
 
-  const getNotifications = function (): Notification[] {
+  const getNotifications = function (): NotificationApi[] {
     return notifications;
   };
 
@@ -129,7 +134,7 @@ function NotificationManager(editor: Editor): NotificationManager {
       if (serviceMessage) {
         open({
           text: serviceMessage,
-          type: 'warn',
+          type: 'warning',
           timeout: 0,
         });
       }

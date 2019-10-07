@@ -186,11 +186,6 @@
     width: @collection-item-list-icon-width * 2;
   }
 
-  // Tickable items that are not ticked hide the check mark SVG (not the entire icon so there is still a gap)
-  .tox-collection__item[role="menuitemcheckbox"]:not(.tox-collection__item--enabled) .tox-collection__item-checkmark svg {
-    display: none;
-  }
-
   .tox-collection__item-label {
     color: currentColor;
     display: inline-block;
@@ -224,6 +219,15 @@
       font-size: 0;
       min-height: inherit;
     }
+
+    svg {
+      fill: @collection-item-label-text-color;
+    }
+  }
+
+  // Tickable items that are not ticked hide the check mark SVG (not the entire icon so there is still a gap)
+  .tox-collection__item[role="menuitemcheckbox"]:not(.tox-collection__item--enabled) .tox-collection__item-checkmark svg {
+    display: none;
   }
 }
 

@@ -1,8 +1,7 @@
-import { Option, Struct } from '@ephox/katamari';
+import { Fun, Option, Struct } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-
 import { Bounds } from '../../alien/Boxes';
-import { AnchorOverrides, MaxHeightFunction } from '../mode/Anchoring';
+import { AnchorOverrides, MaxHeightFunction, MaxWidthFunction } from '../mode/Anchoring';
 import * as Callouts from '../view/Callouts';
 import { Anchor } from './Anchor';
 import { Bubble } from './Bubble';
@@ -15,6 +14,7 @@ export interface ReparteeOptionsSpec {
   origin?: Origins.OriginAdt;
   preference?: LayoutTypes.AnchorLayout[];
   maxHeightFunction?: MaxHeightFunction;
+  maxWidthFunction?: MaxWidthFunction;
 }
 
 export interface ReparteeOptions {
@@ -22,9 +22,10 @@ export interface ReparteeOptions {
   origin: () => Origins.OriginAdt;
   preference: () => LayoutTypes.AnchorLayout[];
   maxHeightFunction: () => MaxHeightFunction;
+  maxWidthFunction: () => MaxWidthFunction;
 }
 
-const reparteeOptions = Struct.immutableBag(['bounds', 'origin', 'preference', 'maxHeightFunction'], []) as (obj) => ReparteeOptions;
+const reparteeOptions = Struct.immutableBag(['bounds', 'origin', 'preference', 'maxHeightFunction', 'maxWidthFunction'], []) as (obj) => ReparteeOptions;
 const defaultOr = (options, key, dephault) => {
   return options[key] === undefined ? dephault : options[key];
 };
@@ -33,6 +34,7 @@ const defaultOr = (options, key, dephault) => {
 const simple = (anchor: Anchor, element: Element, bubble: Bubble, layouts: LayoutTypes.AnchorLayout[], getBounds: Option<() => Bounds>, overrideOptions: AnchorOverrides): void => {
   // the only supported override at the moment. Once relative has been deleted, maybe this can be optional in the bag
   const maxHeightFunction: MaxHeightFunction = defaultOr(overrideOptions, 'maxHeightFunction', MaxHeight.anchored());
+  const maxWidthFunction: MaxWidthFunction = defaultOr(overrideOptions, 'maxWidthFunction', Fun.noop);
 
   const anchorBox = anchor.anchorBox();
   const origin = anchor.origin();
@@ -41,7 +43,8 @@ const simple = (anchor: Anchor, element: Element, bubble: Bubble, layouts: Layou
     bounds: Origins.viewport(origin, getBounds),
     origin,
     preference: layouts,
-    maxHeightFunction
+    maxHeightFunction,
+    maxWidthFunction
   });
 
   go(anchorBox, element, bubble, options);
@@ -54,8 +57,7 @@ const go = (anchorBox: LayoutTypes.AnchorBox, element: Element, bubble: Bubble, 
   Callouts.position(element, decision, options);
   Callouts.setClasses(element, decision);
   Callouts.setHeight(element, decision, options);
+  Callouts.setWidth(element, decision, options);
 };
 
-export {
-  simple
-};
+export { simple };

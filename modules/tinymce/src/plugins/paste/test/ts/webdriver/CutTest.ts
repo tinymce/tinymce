@@ -23,8 +23,8 @@ UnitTest.asynctest('tinymce.plugins.paste.webdriver.CutTest', (success, failure)
     const api = TinyApis(editor);
     const ui = TinyUi(editor);
 
-    // Cut doesn't seem to work in webdriver mode on ie, firefox is producing moveto not supported, edge fails if it's not observed
-    Pipeline.async({}, (platform.browser.isIE() || platform.browser.isFirefox() || platform.browser.isEdge()) ? [] :
+    // Cut doesn't seem to work in webdriver mode on ie, safari has broken webdriver elementClick in 13.0.1, edge fails if it's not observed
+    Pipeline.async({}, (platform.browser.isIE() || platform.browser.isSafari() || platform.browser.isEdge()) ? [] :
     Log.steps('TBA', 'Paste: Set and select content, cut using edit menu and assert cut content', [
       api.sSetContent('<p>abc</p>'),
       api.sSetSelection([0, 0], 1, [0, 0], 2),

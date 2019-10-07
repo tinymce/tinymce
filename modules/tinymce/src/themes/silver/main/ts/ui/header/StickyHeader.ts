@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Boxes, Docking, Focusing, Receiving } from '@ephox/alloy';
+import { AlloyComponent, Boxes, Channels, Docking, Focusing, Receiving } from '@ephox/alloy';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Cell, Option, Result } from '@ephox/katamari';
 import { Classes, Compare, Css, Element, Focus, Height, Traverse, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import * as Channels from '../../Channels';
+import * as EditorChannels from '../../Channels';
 
 const visibility = {
   fadeInClass: 'tox-editor-dock-fadein',
@@ -96,8 +96,8 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
     if (!editor.inline) {
       updateContentFlow(comp);
     }
-    comp.getSystem().broadcastOn( [ Channels.reposition() ], { });
-    lazySink().each((sink) => sink.getSystem().broadcastOn( [ Channels.reposition() ], { }));
+    comp.getSystem().broadcastOn( [ Channels.repositionPopups() ], { });
+    lazySink().each((sink) => sink.getSystem().broadcastOn( [ Channels.repositionPopups() ], { }));
   };
 
   return [
@@ -108,7 +108,7 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
       contextual: {
         lazyContext (comp) {
           const headerHeight = Height.getOuter(comp.element());
-          const container = editor.inline ? editor.getBody() : editor.getContainer();
+          const container = editor.inline ? editor.getContentAreaContainer() : editor.getContainer();
           const box = Boxes.box(Element.fromDom(container));
           // Force the header to hide before it overflows outside the container
           const boxHeight = box.height() - headerHeight;
@@ -141,7 +141,7 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
     Focusing.config({ }),
     Receiving.config({
       channels: {
-        [ Channels.toolbarHeightChange() ]: {
+        [ EditorChannels.toolbarHeightChange() ]: {
           onReceive: (comp) => {
             updateContentFlow(comp);
           }

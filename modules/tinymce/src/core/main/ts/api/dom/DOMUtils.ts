@@ -248,7 +248,7 @@ interface DOMUtils {
 }
 
 /**
- * Constructs a new DOMUtils instance. Consult the Wiki for more details on settings etc for this class.
+ * Constructs a new DOMUtils instance. Consult the TinyMCE Documentation for more details on settings etc for this class.
  *
  * @constructor
  * @method DOMUtils
@@ -463,7 +463,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     });
 
     if (name === 'float') {
-      name = Env.ie && Env.ie < 12 ? 'styleFloat' : 'cssFloat';
+      name = Env.browser.isIE() ? 'styleFloat' : 'cssFloat';
     }
 
     return $elm[0] && $elm[0].style ? $elm[0].style[name] : undefined;

@@ -63,7 +63,7 @@
     "lerna": "^3.14.1",
     "less-plugin-autoprefix": "^2.0.0",
     "load-grunt-tasks": "^4.0.0",
-    "moxie-zip": "^0.0.3",
+    "moxie-zip": "0.0.4",
     "npm-run-all": "^4.1.5",
     "source-map-loader": "^0.2.3",
     "string-replace-loader": "^2.1.1",

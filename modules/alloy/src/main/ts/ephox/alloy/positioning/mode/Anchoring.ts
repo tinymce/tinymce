@@ -23,8 +23,10 @@ export interface AnchorDetail<D> {
 }
 
 export type MaxHeightFunction =  (elem: Element, available: number) => void;
+export type MaxWidthFunction =  (elem: Element, available: number) => void;
 export interface AnchorOverrides {
   maxHeightFunction?: MaxHeightFunction;
+  maxWidthFunction?: MaxWidthFunction;
 }
 
 export interface HasLayoutAnchor {

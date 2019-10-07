@@ -10,7 +10,8 @@ export default {
         name: 'general',
         items: [
           {
-            type: 'input',
+            type: 'urlinput',
+            filetype: 'media',
             name: 'source',
             label: 'Source'
           },
@@ -36,12 +37,14 @@ export default {
         name: 'advanced',
         items: [
           {
-            type: 'input',
+            type: 'urlinput',
+            filetype: 'media',
             name: 'altsource',
             label: 'Alternative source'
           },
           {
-            type: 'input',
+            type: 'urlinput',
+            filetype: 'image',
             name: 'poster',
             label: 'Poster'
           }

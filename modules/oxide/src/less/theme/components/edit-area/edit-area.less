@@ -10,11 +10,10 @@
 //
 
 @edit-area-iframe-background-color: @color-white;
-@edit-area-separator-color: @border-color;
+@edit-area-border: 0;
 
 .tox {
   .tox-edit-area {
-    border-top: 1px solid @edit-area-separator-color;
     display: flex;
     flex: 1;
     -ms-flex-preferred-size: auto;
@@ -24,7 +23,7 @@
 
   .tox-edit-area__iframe {
     background-color: @edit-area-iframe-background-color;
-    border: 0;
+    border: @edit-area-border;
     box-sizing: border-box;
     flex: 1;
     -ms-flex-preferred-size: auto;

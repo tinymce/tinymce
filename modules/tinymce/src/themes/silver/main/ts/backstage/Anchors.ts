@@ -1,4 +1,4 @@
-import { AlloyComponent, AnchorSpec, Bubble, Layout, LayoutInside } from '@ephox/alloy';
+import { AlloyComponent, Bubble, HotspotAnchorSpec, Layout, LayoutInside, MaxHeight, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 import { Element, Selection } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -15,10 +15,10 @@ const bubbleAlignments = {
   top: []
 };
 
-const getToolbarAnchor = (bodyElement: () => Element, lazyAnchorbar: () => AlloyComponent, useFixedToolbarContainer: boolean): () => AnchorSpec => {
+const getToolbarAnchor = (bodyElement: () => Element, lazyAnchorbar: () => AlloyComponent, useFixedToolbarContainer: boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
   // If using fixed_toolbar_container, anchor to the inside top of the editable area
   // Else, anchor below the div.tox-anchorbar in the editor chrome
-  const fixedToolbarAnchor = (): AnchorSpec => ({
+  const fixedToolbarAnchor = (): NodeAnchorSpec => ({
     anchor: 'node',
     root: bodyElement(),
     node: Option.from(bodyElement()),
@@ -26,26 +26,32 @@ const getToolbarAnchor = (bodyElement: () => Element, lazyAnchorbar: () => Alloy
     layouts: {
       onRtl: () => [ LayoutInside.northeast ],
       onLtr: () => [ LayoutInside.northwest ]
+    },
+    overrides: {
+      maxHeightFunction: MaxHeight.expandable()
     }
   });
 
-  const standardAnchor = (): AnchorSpec => ({
+  const standardAnchor = (): HotspotAnchorSpec => ({
     anchor: 'hotspot',
     hotspot: lazyAnchorbar(),
     bubble: Bubble.nu(-12, 12, bubbleAlignments),
     layouts: {
       onRtl: () => [ Layout.southeast ],
       onLtr: () => [ Layout.southwest ]
+    },
+    overrides: {
+      maxHeightFunction: MaxHeight.expandable()
     }
   });
 
   return useFixedToolbarContainer ? fixedToolbarAnchor : standardAnchor;
 };
 
-const getBannerAnchor = (bodyElement: () => Element, lazyAnchorbar: () => AlloyComponent, useFixedToolbarContainer: boolean): () => AnchorSpec => {
+const getBannerAnchor = (bodyElement: () => Element, lazyAnchorbar: () => AlloyComponent, useFixedToolbarContainer: boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
   // If using fixed_toolbar_container, anchor to the inside top of the editable area
   // Else, anchor below the div.tox-anchorbar in the editor chrome
-  const fixedToolbarAnchor = (): AnchorSpec => ({
+  const fixedToolbarAnchor = (): NodeAnchorSpec => ({
     anchor: 'node',
     root: bodyElement(),
     node: Option.from(bodyElement()),
@@ -55,7 +61,7 @@ const getBannerAnchor = (bodyElement: () => Element, lazyAnchorbar: () => AlloyC
     }
   });
 
-  const standardAnchor = (): AnchorSpec => ({
+  const standardAnchor = (): HotspotAnchorSpec => ({
     anchor: 'hotspot',
     hotspot: lazyAnchorbar(),
     layouts: {
@@ -67,7 +73,7 @@ const getBannerAnchor = (bodyElement: () => Element, lazyAnchorbar: () => AlloyC
   return useFixedToolbarContainer ? fixedToolbarAnchor : standardAnchor;
 };
 
-const getToolbarOverflowAnchor = (lazyMoreButton: () => AlloyComponent) => (): AnchorSpec => {
+const getToolbarOverflowAnchor = (lazyMoreButton: () => AlloyComponent) => (): HotspotAnchorSpec => {
   return {
     anchor: 'hotspot',
     hotspot: lazyMoreButton(),
@@ -78,7 +84,7 @@ const getToolbarOverflowAnchor = (lazyMoreButton: () => AlloyComponent) => (): A
   };
 };
 
-const getCursorAnchor = (editor: Editor, bodyElement: () => Element) => (): AnchorSpec => {
+const getCursorAnchor = (editor: Editor, bodyElement: () => Element) => (): SelectionAnchorSpec => {
   return {
     anchor: 'selection',
     root: bodyElement(),
@@ -91,7 +97,7 @@ const getCursorAnchor = (editor: Editor, bodyElement: () => Element) => (): Anch
   };
 };
 
-const getNodeAnchor = (bodyElement) => (element: Option<Element>): AnchorSpec => {
+const getNodeAnchor = (bodyElement) => (element: Option<Element>): NodeAnchorSpec => {
   return {
     anchor: 'node',
     root: bodyElement(),

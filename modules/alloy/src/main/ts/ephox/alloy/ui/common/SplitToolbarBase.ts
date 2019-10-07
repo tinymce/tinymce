@@ -24,7 +24,7 @@ export interface SpecExtras<T extends SplitToolbarBaseDetail> {
 }
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
-  SketchBehaviours.field('splitToolbarBehaviours', [ ]),
+  SketchBehaviours.field('splitToolbarBehaviours', [ Coupling ]),
   FieldSchema.state('builtGroups', () => {
     return Cell([ ]);
   })

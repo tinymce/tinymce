@@ -9,22 +9,9 @@ import { Document, document } from '@ephox/dom-globals';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { Element, Html, Remove, SelectorFilter } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import { Bookmark } from '../bookmark/BookmarkTypes';
 import TrimHtml from '../dom/TrimHtml';
 import Fragments from './Fragments';
-
-export const enum UndoLevelType {
-  Fragmented = 'fragmented',
-  Complete = 'complete'
-}
-
-export interface UndoLevel {
-  type: UndoLevelType;
-  fragments: string[];
-  content: string;
-  bookmark: Bookmark;
-  beforeBookmark: Bookmark;
-}
+import { UndoLevel, UndoLevelType } from './UndoManagerTypes';
 
 const undoLevelDocument = Cell<Option<Document>>(Option.none());
 

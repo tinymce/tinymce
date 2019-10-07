@@ -8,9 +8,15 @@ const dismiss = (gui, element) => {
   });
 };
 
+const reposition = (gui) => {
+  gui.broadcastOn([
+    'reposition.popups'
+  ], { });
+};
+
 const sDismiss = (label, gui, element) => {
   return Logger.t(
-    'Broadcast dimiss: ' + label,
+    'Broadcast dismiss: ' + label,
     GeneralSteps.sequence([
       Step.sync(() => {
         dismiss(gui, element);
@@ -21,7 +27,7 @@ const sDismiss = (label, gui, element) => {
 
 const sDismissOn = (label, gui, selector) => {
   return Logger.t(
-    'Broadcast dimiss: ' + label,
+    'Broadcast dismiss: ' + label,
     GeneralSteps.sequence([
       Step.sync(() => {
         const item = UiFinder.findIn(gui.element(), selector).getOrDie();
@@ -32,7 +38,19 @@ const sDismissOn = (label, gui, selector) => {
   );
 };
 
+const sReposition = (label, gui) => {
+  return Logger.t(
+    'Broadcast reposition: ' + label,
+    GeneralSteps.sequence([
+      Step.sync(() => {
+        reposition(gui);
+      })
+    ])
+  );
+};
+
 export {
   sDismissOn,
-  sDismiss
+  sDismiss,
+  sReposition
 };

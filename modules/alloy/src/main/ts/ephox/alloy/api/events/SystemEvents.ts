@@ -59,6 +59,7 @@ const attachedToDom = Fun.constant('alloy.system.attached');
 const detachedFromDom = Fun.constant('alloy.system.detached');
 
 const dismissRequested = Fun.constant('alloy.system.dismissRequested');
+const repositionRequested = Fun.constant('alloy.system.repositionRequested');
 
 export interface AlloyFocusShiftedEvent extends CustomEvent {
   prevFocus: () => Option<Element>;
@@ -105,6 +106,7 @@ export {
   windowResize,
 
   dismissRequested,
+  repositionRequested,
   focusShifted,
 
   attachedToDom,

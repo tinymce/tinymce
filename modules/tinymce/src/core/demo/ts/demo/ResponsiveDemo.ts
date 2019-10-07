@@ -92,13 +92,13 @@ export default function () {
         'searchreplace visualblocks code fullscreen',
         'insertdatetime media table contextmenu paste'
       ],
-      toolbar: 'bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image insertfile undo redo | styleselect'
+      toolbar: 'fullscreen bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image insertfile undo redo | styleselect'
     },
     setup (ed) {
       makeSidebar(ed, 'sidebar1', 'green', 200);
     },
     plugins: [
-      'help'
+      'fullscreen help'
       // 'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
       // 'searchreplace wordcount visualblocks visualchars code fullscreen fullpage insertdatetime media nonbreaking',
       // 'save table directionality emoticons template paste textcolor importcss colorpicker textpattern',
@@ -107,7 +107,7 @@ export default function () {
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo fullscreen sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+    toolbar: 'fullscreen undo redo fullscreen sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
     'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
 
     // Multiple toolbar array
@@ -145,7 +145,7 @@ export default function () {
     //   }
     // ],
     toolbar_drawer: 'sliding',
-    emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js'
+    emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js',
   };
 
   tinymce.init(settings);

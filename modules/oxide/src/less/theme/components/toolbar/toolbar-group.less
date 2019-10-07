@@ -26,6 +26,13 @@
   .tox-toolbar__group--pull-right {
     margin-left: auto;
   }
+
+  @media @breakpoint-sm {
+    // On small screens we want the toolbar to sidescroll, instead of wrapping to many rows
+    .tox-toolbar__group {
+      flex-wrap: nowrap;
+    }
+  }
 }
 
 .tox:not([dir=rtl]) {

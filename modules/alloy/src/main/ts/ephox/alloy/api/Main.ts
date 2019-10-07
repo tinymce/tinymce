@@ -123,6 +123,7 @@ import * as LayoutInside from '../positioning/layout/LayoutInside';
 import * as LayoutTypes from '../positioning/layout/LayoutTypes';
 import * as Bubble from '../positioning/layout/Bubble';
 import * as MaxHeight from '../positioning/layout/MaxHeight';
+import * as MaxWidth from '../positioning/layout/MaxWidth';
 import { LazySink } from './component/CommonTypes';
 import { FocusInsideModes } from '../keying/KeyingModeTypes';
 import * as SlotContainerTypes from '../ui/types/SlotContainerTypes';
@@ -262,6 +263,7 @@ export {
   LayoutTypes,
   Bubble,
   MaxHeight,
+  MaxWidth,
   LazySink,
 
   // types

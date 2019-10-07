@@ -12,7 +12,7 @@ import {
   AlloySpec,
   Behaviour,
   Focusing,
-  Keying, Receiving,
+  Keying,
   SplitFloatingToolbar as AlloySplitFloatingToolbar,
   SplitSlidingToolbar as AlloySplitSlidingToolbar,
   Tabstopping,
@@ -151,18 +151,7 @@ const renderFloatingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
     components: [ primary ],
     markers: {
       overflowToggledClass: ToolbarButtonClasses.Ticked
-    },
-    splitToolbarBehaviours: Behaviour.derive([
-      Receiving.config({
-        channels: {
-          [ Channels.reposition() ]: {
-            onReceive: (comp) => {
-              AlloySplitFloatingToolbar.reposition(comp);
-            }
-          }
-        }
-      }),
-    ])
+    }
   });
 };
 
