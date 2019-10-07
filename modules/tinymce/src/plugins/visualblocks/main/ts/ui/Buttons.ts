@@ -17,7 +17,7 @@ const toggleActiveState = (editor: Editor, enabledState: Cell<boolean>) => (api)
 
 const register = (editor: Editor, enabledState: Cell<boolean>) => {
   editor.ui.registry.addToggleButton('visualblocks', {
-    icon: 'paragraph',
+    icon: 'visualblocks',
     tooltip: 'Show blocks',
     onAction: () => editor.execCommand('mceVisualBlocks'),
     onSetup: toggleActiveState(editor, enabledState)
