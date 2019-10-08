@@ -20,7 +20,7 @@ const getTouch = (event): Option<Touch> => {
   return Option.some(event.touches[0]);
 };
 
-const isFarEnough = (touch, data: TouchHistoryData): boolean => {
+const isFarEnough = (touch: Touch, data: TouchHistoryData): boolean => {
   const distX = Math.abs(touch.clientX - data.x());
   const distY = Math.abs(touch.clientY - data.y());
   return distX > SIGNIFICANT_MOVE || distY > SIGNIFICANT_MOVE;
@@ -28,7 +28,12 @@ const isFarEnough = (touch, data: TouchHistoryData): boolean => {
 
 const setupLongpress = (editor: Editor) => {
   const startData = Cell<Option<TouchHistoryData>>(Option.none());
-  const debounceLongpress = Throttler.last((e) => editor.fire('longpress', { ...e, type: 'longpress' }), LONGPRESS_DELAY);
+  const longpressFired = Cell<boolean>(false);
+
+  const debounceLongpress = Throttler.last((e) => {
+    editor.fire('longpress', { ...e, type: 'longpress' });
+    longpressFired.set(true);
+  }, LONGPRESS_DELAY);
 
   editor.on('touchstart', (e) => {
     getTouch(e).each((touch) => {
@@ -41,6 +46,7 @@ const setupLongpress = (editor: Editor) => {
       };
 
       debounceLongpress.throttle(e);
+      longpressFired.set(false);
       startData.set(Option.some(data));
     });
   }, true);
@@ -51,14 +57,24 @@ const setupLongpress = (editor: Editor) => {
       startData.get().each((data) => {
         if (isFarEnough(touch, data)) {
           startData.set(Option.none());
+          longpressFired.set(false);
           editor.fire('longpresscancel');
         }
       });
     });
   }, true);
 
-  editor.on('touchend touchcancel', (_e) => {
+  editor.on('touchend touchcancel', (e) => {
     debounceLongpress.cancel();
+
+    // Cancel the touchend event if a longpress was fired
+    if (e.type === 'touchend' && longpressFired.get()) {
+      startData.get()
+        .filter((data) => data.target().isEqualNode(e.target))
+        .map(() => {
+          e.preventDefault();
+        });
+    }
   }, true);
 };
 
