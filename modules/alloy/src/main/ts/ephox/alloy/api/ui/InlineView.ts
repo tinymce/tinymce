@@ -26,8 +26,8 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
   const lazySink: () => ReturnType<LazySink> = () => detail.lazySink(menuSandbox);
 
   const layouts = menuSpec.type === 'horizontal' ? { layouts: {
-    onLtr: () => [Layout.southeast, Layout.southwest, Layout.south, Layout.northeast, Layout.northwest, Layout.north, Layout.east, Layout.west],
-    onRtl: () => [Layout.southwest, Layout.southeast, Layout.south, Layout.northwest, Layout.northeast, Layout.north, Layout.west, Layout.east]
+    onLtr: () => Layout.belowOrAbove(),
+    onRtl: () => Layout.belowOrAboveRtl()
   } } : { };
 
   const isFirstTierSubmenu = (tmenu: Element, parentItem: Element) => {
@@ -112,13 +112,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
   };
   // TODO AP-191 write a test for showMenuAt
   const showMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
-    const menu = makeMenu(detail, sandbox, anchor, menuSpec, Fun.constant(Option.none()));
-
-    Sandboxing.open(sandbox, menu);
-    Representing.setValue(sandbox, Option.some({
-      mode: 'menu',
-      menu
-    }));
+    showMenuWithinBounds(sandbox, anchor, menuSpec, () => Option.none());
   };
   const showMenuWithinBounds = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Option<Boxes.Bounds>) => {
     const menu = makeMenu(detail, sandbox, anchor, menuSpec, getBounds);

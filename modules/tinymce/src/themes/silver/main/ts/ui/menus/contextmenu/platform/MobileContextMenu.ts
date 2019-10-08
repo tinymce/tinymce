@@ -1,16 +1,19 @@
 import { AlloyComponent, AnchorSpec, Boxes, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
-import { TouchEvent, window } from '@ephox/dom-globals';
+import { PointerEvent, window } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
+import { LazyPlatformDetection } from '@ephox/sand';
 import { Element, VisualViewport } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import * as Settings from 'tinymce/themes/silver/api/Settings';
-import { UiFactoryBackstage } from '../../../backstage/Backstage';
-import { hideContextToolbarEvent } from '../../context/ContextEditorEvents';
-import * as ContextToolbarBounds from '../../context/ContextToolbarBounds';
-import ItemResponse from '../item/ItemResponse';
-import * as MenuParts from '../menu/MenuParts';
-import * as NestedMenus from '../menu/NestedMenus';
+import * as Settings from '../../../../api/Settings';
+import { UiFactoryBackstage } from '../../../../backstage/Backstage';
+import { hideContextToolbarEvent } from '../../../context/ContextEditorEvents';
+import * as ContextToolbarBounds from '../../../context/ContextToolbarBounds';
+import ItemResponse from '../../item/ItemResponse';
+import * as MenuParts from '../../menu/MenuParts';
+import * as NestedMenus from '../../menu/NestedMenus';
+import { getNodeAnchor, getSelectionAnchor } from '../Coords';
 
 const toolbarOrMenubarEnabled = (editor: Editor) => Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
 
@@ -47,22 +50,25 @@ const bubbleAlignments = {
   top: ['tox-pop--top']
 };
 
-const show = (editor: Editor, e: EditorEvent<TouchEvent>, items, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorSpec: AnchorSpec) => {
+export const getAnchorSpec = (editor: Editor, isTriggeredByKeyboardEvent: boolean) => {
+  const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getSelectionAnchor(editor);
+  return {
+    bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
+    layouts,
+    overrides: {
+      maxWidthFunction: MaxWidth.expandable(),
+      maxHeightFunction: MaxHeight.expandable()
+    },
+    ...anchorSpec
+  };
+};
+
+const showMenu = (editor: Editor, e: EditorEvent<PointerEvent>, items, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorSpec: AnchorSpec) => {
   NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, true).map((menuData) => {
     e.preventDefault();
 
-    const nuAnchorSpec = {
-      bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
-      layouts,
-      overrides: {
-        maxWidthFunction: MaxWidth.expandable(),
-        maxHeightFunction: MaxHeight.expandable()
-      },
-      ...anchorSpec
-    };
-
     // Show the context menu, with items set to close on click
-    InlineView.showMenuWithinBounds(contextmenu, nuAnchorSpec, {
+    InlineView.showMenuWithinBounds(contextmenu, anchorSpec, {
       menu: {
         markers: MenuParts.markers('normal')
       },
@@ -75,6 +81,19 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items, backstage: UiFa
   });
 };
 
-export default {
-  show
+export const show = (editor: Editor, e: EditorEvent<PointerEvent>, items, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, isTriggeredByKeyboardEvent: boolean) => {
+  const detection = LazyPlatformDetection.detect();
+  const isiOS = detection.os.isiOS();
+  const isOSX = detection.os.isOSX();
+
+  const anchorSpec = getAnchorSpec(editor, isTriggeredByKeyboardEvent);
+
+  if (isiOS || isOSX) {
+    // Need a short wait here for iOS due to browser focus events or something causing the keyboard to open after
+    // the context menu opens, closing it again. 200 is arbitrary but mostly works
+    Delay.setEditorTimeout(editor, () => showMenu(editor, e, items, backstage, contextmenu, anchorSpec), 200);
+  } else {
+    // Waiting on Android causes the native context toolbar to not show, so don't wait
+    showMenu(editor, e, items, backstage, contextmenu, anchorSpec);
+  }
 };

@@ -7,17 +7,13 @@
 
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, GuiFactory, InlineView, Sandboxing, SystemEvents } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Element as DomElement, PointerEvent, setTimeout } from '@ephox/dom-globals';
+import { Element as DomElement } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
-import { LazyPlatformDetection, PlatformDetection } from '@ephox/sand';
+import { LazyPlatformDetection } from '@ephox/sand';
 import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
-import ItemResponse from '../item/ItemResponse';
-import * as MenuParts from '../menu/MenuParts';
-import * as NestedMenus from '../menu/NestedMenus';
-import { getNodeAnchor, getPointAnchor } from './Coords';
-import MobileContextMenu from './MobileContextMenu';
+import * as DesktopContextMenu from './platform/DesktopContextMenu';
+import * as MobileContextMenu from './platform/MobileContextMenu';
 import Settings from './Settings';
 
 type MenuItem =  string | Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.SeparatorMenuItemApi;
@@ -109,10 +105,8 @@ const isNativeOverrideKeyEvent = function (editor: Editor, e) {
 };
 
 export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
-  const detection = PlatformDetection.detect();
-  const isiOS = detection.deviceType.isiOS();
-  const isOSX = detection.os.isOSX();
-  const isTouch = LazyPlatformDetection.detect().deviceType.isTouch;
+  const detection = LazyPlatformDetection.detect();
+  const isTouch = detection.deviceType.isTouch;
 
   const contextmenu = GuiFactory.build(
     InlineView.sketch({
@@ -154,20 +148,6 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       editor.selection.setCursorLocation(e.target, 0);
     }
 
-    const show = (_editor: Editor, e: EditorEvent<PointerEvent>, items, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, nuAnchorSpec) => {
-      NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false).map((menuData) => {
-        e.preventDefault();
-
-        // show the context menu, with items set to close on click
-        InlineView.showMenuAt(contextmenu, nuAnchorSpec, {
-          menu: {
-            markers: MenuParts.markers('normal')
-          },
-          data: menuData
-        });
-      });
-    };
-
     // Different browsers trigger the context menu from keyboards differently, so need to check both the button and target here.
     // If a longpress touch event, treat it the same as a keyboard event (anchoring to the node, etc.)
     // Chrome: button = 0 & target = the selection range node
@@ -175,25 +155,16 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     // IE/Edge: button = 2 & target = body
     // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
     const isTriggeredByKeyboardEvent = isLongpress || (e.button !== 2 || e.target === editor.getBody());
-    const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
-
-    const registry = editor.ui.registry.getAll();
-    const menuConfig = Settings.getContextMenu(editor);
 
     // Use the event target element for mouse clicks, otherwise fallback to the current selection
     const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target as DomElement;
 
+    const registry = editor.ui.registry.getAll();
+    const menuConfig = Settings.getContextMenu(editor);
     const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
 
-    const showMenu = isLongpress ? MobileContextMenu.show : show;
-    if ((isiOS || isOSX) && isTouch()) {
-      // Need a short wait here for iOS due to browser focus events or something causing the keyboard to open after
-      // the context menu opens, closing it again. 200 is arbitrary but mostly works
-      setTimeout(() => showMenu(editor, e, items, backstage, contextmenu, anchorSpec), 200);
-    } else {
-      // Waiting on Android causes the native context toolbar to not show, so don't wait
-      showMenu(editor, e, items, backstage, contextmenu, anchorSpec);
-    }
+    const showMenu = isLongpress ? MobileContextMenu.show : DesktopContextMenu.show;
+    showMenu(editor, e, items, backstage, contextmenu, isTriggeredByKeyboardEvent);
   };
 
   editor.on('init', () => {
