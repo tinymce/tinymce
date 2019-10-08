@@ -101,6 +101,8 @@ const toggleFullscreen = function (editor, fullscreenState) {
       scrollPos: getScrollPos(),
       containerWidth: editorContainerStyle.width,
       containerHeight: editorContainerStyle.height,
+      containerTop: editorContainerStyle.top,
+      containerLeft: editorContainerStyle.left,
       iframeWidth: iframeStyle.width,
       iframeHeight: iframeStyle.height
     };
@@ -126,13 +128,10 @@ const toggleFullscreen = function (editor, fullscreenState) {
     iframeStyle.width = fullscreenInfo.iframeWidth;
     iframeStyle.height = fullscreenInfo.iframeHeight;
 
-    if (fullscreenInfo.containerWidth) {
-      editorContainerStyle.width = fullscreenInfo.containerWidth;
-    }
-
-    if (fullscreenInfo.containerHeight) {
-      editorContainerStyle.height = fullscreenInfo.containerHeight;
-    }
+    editorContainerStyle.width = fullscreenInfo.containerWidth;
+    editorContainerStyle.height = fullscreenInfo.containerHeight;
+    editorContainerStyle.top = fullscreenInfo.containerTop;
+    editorContainerStyle.left = fullscreenInfo.containerLeft;
 
     if (isTouch) {
       Thor.restoreStyles();
