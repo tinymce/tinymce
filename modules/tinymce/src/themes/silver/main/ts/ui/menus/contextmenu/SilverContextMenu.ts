@@ -154,7 +154,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     // Firefox: button = 0 & target = body
     // IE/Edge: button = 2 & target = body
     // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
-    const isTriggeredByKeyboardEvent = isLongpress || (e.button !== 2 || e.target === editor.getBody());
+    const isTriggeredByKeyboardEvent = !isLongpress && (e.button !== 2 || e.target === editor.getBody());
 
     // Use the event target element for mouse clicks, otherwise fallback to the current selection
     const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target as DomElement;
