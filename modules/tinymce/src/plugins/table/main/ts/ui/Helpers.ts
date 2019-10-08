@@ -50,11 +50,13 @@ const buildListItems = (inputList, itemCallback, startItems?): Types.SelectBox.E
 const extractAdvancedStyles = (dom, elm) => {
   const rgbToHex = (value: string) => Strings.startsWith(value, 'rgb') ? dom.toHex(value) : value;
 
+  const borderWidth = Css.getRaw(Element.fromDom(elm), 'border-width').getOr('');
   const borderStyle = Css.getRaw(Element.fromDom(elm), 'border-style').getOr('');
   const borderColor = Css.getRaw(Element.fromDom(elm), 'border-color').map(rgbToHex).getOr('');
   const bgColor = Css.getRaw(Element.fromDom(elm), 'background-color').map(rgbToHex).getOr('');
 
   return {
+    border: borderWidth,
     borderstyle: borderStyle,
     bordercolor: borderColor,
     backgroundcolor: bgColor
@@ -84,8 +86,8 @@ const getSharedValues = (data) => {
   return baseData;
 };
 
-const getAdvancedTab = () => {
-  const items: Types.Dialog.BodyComponentApi[] = [
+const getAdvancedTab = (isCellDialog: boolean) => {
+  const advTabitems: Types.Dialog.BodyComponentApi[] = [
     {
       name: 'borderstyle',
       type: 'selectbox',
@@ -115,6 +117,24 @@ const getAdvancedTab = () => {
       label: 'Background color'
     }
   ];
+
+  const addBorderWidth = () => {
+    const borderWidth: Types.Dialog.BodyComponentApi = {
+      name: 'border',
+      type: 'input',
+      label: 'Border width'
+    };
+
+    if (isCellDialog) {
+      advTabitems.unshift(borderWidth);
+      return advTabitems;
+    } else {
+      return advTabitems;
+    }
+  };
+
+  const items = addBorderWidth();
+
   return {
     title: 'Advanced',
     name: 'advanced',
@@ -288,6 +308,7 @@ export interface CellData {
   class: string;
   halign: string;
   valign: string;
+  border?: string;
   borderstyle?: string;
   bordercolor?: string;
   backgroundcolor?: string;
