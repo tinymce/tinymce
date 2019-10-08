@@ -8,9 +8,7 @@
 import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
 import { Fun, Option, Struct, Cell } from '@ephox/katamari';
 import { TableLookup, OtherCells } from '@ephox/snooker';
-import {
-    Element, Selection, SelectionDirection, Class, Node, Compare, Attr
-} from '@ephox/sugar';
+import { Element, Selection, SelectionDirection, Class, Node, Compare } from '@ephox/sugar';
 
 import * as Util from '../alien/Util';
 import Direction from '../queries/Direction';
@@ -28,16 +26,18 @@ export default function (editor, lazyResize, selectionTargets) {
 
   const onSelection = (cells: Element[], start: Element, finish: Element) => {
     selectionTargets.targets().each((targets) => {
-      const table = TableLookup.table(start);
-      const otherCells = OtherCells.getOtherCells(table, targets, {});
-      editor.fire('tableselectionchange', {
-        cells,
-        start,
-        finish,
-        otherCells
+      const tableOpt = TableLookup.table(start);
+      tableOpt.each((table) => {
+        const otherCells = OtherCells.getOtherCells(table, targets, {});
+        editor.fire('tableselectionchange', {
+          cells,
+          start,
+          finish,
+          otherCells
+        });
       });
-    })
-  }
+    });
+  };
 
   const onClear = () => {
     editor.fire('tableselectionclear');

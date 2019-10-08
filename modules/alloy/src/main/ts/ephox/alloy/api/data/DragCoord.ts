@@ -2,6 +2,8 @@ import { Adt, Arr, Option } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 import { SugarPosition } from '../../alien/TypeDefinitions';
 
+import { console } from '@ephox/dom-globals';
+
 // TODO: Morgan, check why and how this type can take both a number or an option.
 export type DragCoords = (x: number | Option<number>, y: number | Option<number>) => CoordAdt;
 
@@ -104,6 +106,9 @@ const toString = (coord: CoordAdt): string => {
 const withinRange = (coord1: CoordAdt, coord2: CoordAdt, xRange: number, yRange: number, scroll: SugarPosition, origin: SugarPosition): boolean => {
   const a1 = asAbsolute(coord1, scroll, origin);
   const a2 = asAbsolute(coord2, scroll, origin);
+  // tslint:disable-next-line:no-console
+  console.log(`a1.left(): ${a1.left()}, a2.left(): ${a2.left()}, leftDelta: ${a1.left() - a2.left()}, xRange: ${xRange}, lD <= xRange: ${Math.abs(a1.left() - a2.left()) <= xRange}`);
+  console.log(`a1.top(): ${a1.top()}, a2.top(): ${a2.top()}, topDelta: ${a1.top() - a2.top()}, yRange: ${yRange}, lD <= xRange: ${Math.abs(a1.top() - a2.top()) <= yRange}`);
   return Math.abs(a1.left() - a2.left()) <= xRange &&
     Math.abs(a1.top() - a2.top()) <= yRange;
 };

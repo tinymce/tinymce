@@ -1,4 +1,4 @@
-import { Button, Behaviour, Dragging, Unselecting, DragCoord, Attachment, GuiFactory } from "@ephox/alloy";
+import { Button, Behaviour, Dragging, Unselecting, DragCoord, Attachment, GuiFactory, Boxes } from "@ephox/alloy";
 import { PlatformDetection } from '@ephox/sand';
 import { Arr, Option, Cell } from '@ephox/katamari';
 import { Position, Element } from '@ephox/sugar';
@@ -7,32 +7,40 @@ const setup = (editor, sink) => {
   const tlTds = Cell<Element[]>([]);
   const brTds = Cell<Element[]>([]);
 
+  const getTopLeftSnap = (td) => {
+    const box = Boxes.absolute(td);
+    return Dragging.snap({
+      sensor: DragCoord.absolute(box.x(), box.y()),
+      range: Position(box.width(), box.height()),
+      output: DragCoord.absolute(Option.some(box.x()), Option.some(box.y())),
+      extra: {
+        td
+      }
+    });
+  };
+
   const getTopLeftSnaps = () => {
     return Arr.map(tlTds.get(), (td) => {
-      const thisRect = td.dom().getBoundingClientRect();
-      return Dragging.snap({
-        sensor: DragCoord.fixed(thisRect.left, thisRect.top),
-        range: Position(thisRect.width, thisRect.height),
-        output: DragCoord.absolute(Option.some(thisRect.left), Option.some(thisRect.top)),
-        extra: {
-          td
-        }
-      });
+      return getTopLeftSnap(td);
+    });
+  };
+
+  const getBottomRightSnap = (td) => {
+    const box = Boxes.absolute(td);
+    return Dragging.snap({
+      sensor: DragCoord.fixed(box.x(), box.y()),
+      range: Position(box.width(), box.height()),
+      output: DragCoord.absolute(Option.some(box.right()), Option.some(box.bottom())),
+      extra: {
+        td
+      }
     });
   };
 
   // TODO: Make the sensor snap to the bottom right by subtracting the width and height of the button from the output
   const getBottomRightSnaps = () => {
     return Arr.map(brTds.get(), (td) => {
-      const thisRect = td.dom().getBoundingClientRect();
-      return Dragging.snap({
-        sensor: DragCoord.fixed(thisRect.left, thisRect.top),
-        range: Position(thisRect.width, thisRect.height),
-        output: DragCoord.absolute(Option.some(thisRect.left + thisRect.width), Option.some(thisRect.top + thisRect.height)),
-        extra: {
-          td
-        }
-      });
+      return getBottomRightSnap(td);
     });
   };
 
@@ -44,7 +52,7 @@ const setup = (editor, sink) => {
       startCell.set(extra.td);
       editor.fire('tableselectorchange', {
         start: startCell.get(),
-        finish: endCell.get()
+        finish: finishCell.get()
       });
     },
     mustSnap: true
@@ -55,10 +63,10 @@ const setup = (editor, sink) => {
     leftAttr: 'data-drag-left',
     topAttr: 'data-drag-top',
     onSensor: (component, extra) => {
-      endCell.set(extra.td);
+      finishCell.set(extra.td);
       editor.fire('tableselectorchange', {
         start: startCell.get(),
-        finish: endCell.get()
+        finish: finishCell.get()
       });
     },
     mustSnap: true
@@ -131,7 +139,7 @@ const setup = (editor, sink) => {
 
   const isVisible = Cell<Boolean>(false);
   const startCell = Cell<any>(null);
-  const endCell = Cell<any>(null);
+  const finishCell = Cell<any>(null);
 
   editor.on('tableselectionchange', (e) => {
     if (!isVisible.get()) {
@@ -140,17 +148,15 @@ const setup = (editor, sink) => {
       isVisible.set(true);
     }
     startCell.set(e.start);
-    endCell.set(e.end);
-    
+    finishCell.set(e.finish);
+
     e.otherCells.each((otherCells) => {
       tlTds.set(otherCells.upOrLeftCells);
-      const tLsnaps = getTopLeftSnaps();
-      const lastSnap = tLsnaps[tLsnaps.length - 1];
-      Dragging.snapTo(topLeft, lastSnap);
+      const tLSnap = getTopLeftSnap(e.start);
+      Dragging.snapTo(topLeft, tLSnap);
 
       brTds.set(otherCells.downOrRightCells);
-      const snaps = getBottomRightSnaps();
-      const firstSnap = snaps[0];
+      const firstSnap = getBottomRightSnap(e.finish);
       Dragging.snapTo(bottomRight, firstSnap);
     });
   });
