@@ -86,8 +86,8 @@ const getSharedValues = (data) => {
   return baseData;
 };
 
-const getAdvancedTab = (isCellDialog: boolean) => {
-  const advTabitems: Types.Dialog.BodyComponentApi[] = [
+const getAdvancedTab = (dialogName: string) => {
+  const advTabItems: Types.Dialog.BodyComponentApi[] = [
     {
       name: 'borderstyle',
       type: 'selectbox',
@@ -118,22 +118,13 @@ const getAdvancedTab = (isCellDialog: boolean) => {
     }
   ];
 
-  const addBorderWidth = () => {
-    const borderWidth: Types.Dialog.BodyComponentApi = {
-      name: 'border',
-      type: 'input',
-      label: 'Border width'
-    };
-
-    if (isCellDialog) {
-      advTabitems.unshift(borderWidth);
-      return advTabitems;
-    } else {
-      return advTabitems;
-    }
+  const borderWidth: Types.Input.InputApi = {
+    name: 'border',
+    type: 'input',
+    label: 'Border width'
   };
 
-  const items = addBorderWidth();
+  const items = dialogName === 'cell' ? advTabItems.concat([borderWidth]) : advTabItems;
 
   return {
     title: 'Advanced',

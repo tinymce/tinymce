@@ -144,7 +144,7 @@ const open = (editor: Editor) => {
         name: 'general',
         items: CellDialogGeneralTab.getItems(editor)
       },
-      Helpers.getAdvancedTab(true)
+      Helpers.getAdvancedTab('cell')
     ]
   };
   const dialogPanel: Types.Dialog.PanelApi = {

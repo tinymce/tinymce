@@ -196,7 +196,7 @@ const open = (editor: Editor, insertNewTable: boolean) => {
           name: 'general',
           items: [ generalPanel ]
         },
-        Helpers.getAdvancedTab(false)
+        Helpers.getAdvancedTab('table')
       ]
     };
   };
