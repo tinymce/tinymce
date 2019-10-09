@@ -35,7 +35,7 @@ const getOtherCells = (table: Element, target: TargetSelection, generators: Gene
     return {
       upOrLeftCells,
       downOrRightCells
-    }
+    };
   });
 };
 
