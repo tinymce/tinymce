@@ -119,16 +119,19 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@ephox/bedrock@^8.0.1", "@ephox/bedrock@^8.0.2":
-  version "8.0.2"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock/-/bedrock-8.0.2.tgz#e5b0b66468142fc52fc7a0af6704bc23298e0d8c"
-  integrity sha512-5zeaVJuBTSfE38kIhZjjAnNFcjxrV40MFRxiPLufsRJOr3lIGjQkaUBkHJeUOcVSGe2bDiKc/h60XInTLwiktA==
+"@ephox/bedrock@^8.1.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock/-/bedrock-8.1.1.tgz#b7637dc902a056a2dfde59d30dece8a82866f546"
+  integrity sha512-+1aJuYhI4fRFSvChLBBlzlq4rP4qyKYdcntPGK4lgcnY9cDOb3o1kREqYl2orUqkG4HFlIu+8fUhxt7VGwqToQ==
   dependencies:
+    "@ephox/dispute" "^1.0.2"
+    "@types/diff" "^4.0.2"
     async "^1.5.2"
     babel-polyfill "^6.23.0"
     command-line-args "^5.0.0"
     command-line-usage "^5.0.1"
     cross-spawn "^7.0.0"
+    diff "^4.0.1"
     finalhandler "^1.1.2"
     fork-ts-checker-webpack-plugin "~1.0.4"
     istanbul-instrumenter-loader "^3.0.1"
@@ -149,10 +152,10 @@
     webpack-dev-server "^3.2.1"
     xml-writer "^1.6.0"
 
-"@ephox/dispute@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@ephox/dispute/-/dispute-1.0.1.tgz#6b05810dd86463b138c248fbce7c173bed3abfa2"
-  integrity sha512-FBAJDuRYFoOdO9jAZ95aX7LhHt++GUTgXAzkfJSniBwd9T2hcsJfRsBAvVfBeaoHTUJhMcxytpsgSuby2kmBmw==
+"@ephox/dispute@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@ephox/dispute/-/dispute-1.0.2.tgz#3816a2e68cd5e880f1e2554c931bb29929b591ac"
+  integrity sha512-OX9TLj4Vh/SXT5nPnixB+9GYYe4euZiIxTobSE6d8ow5/NAVHrxGOaSEu2FN5Nywr1rcoTsThCwAtLPqLQDcHg==
 
 "@ephox/dom-globals@^1.1.2":
   version "1.1.2"
@@ -1048,6 +1051,11 @@
     once "^1.4.0"
     universal-user-agent "^3.0.0"
     url-template "^2.0.8"
+
+"@types/diff@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@types/diff/-/diff-4.0.2.tgz#2e9bb89f9acc3ab0108f0f3dc4dbdcf2fff8a99c"
+  integrity sha512-mIenTfsIe586/yzsyfql69KRnA75S8SVXQbTLpDejRrjH0QSJcpu3AUOi/Vjnt9IOsXKxPhJfGpQUNMueIU1fQ==
 
 "@types/escodegen@0.0.6":
   version "0.0.6"
