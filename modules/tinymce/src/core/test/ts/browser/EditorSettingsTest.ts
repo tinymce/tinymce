@@ -16,16 +16,14 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
   Theme();
 
   const expectedDefaultSettings = {
-    toolbar_drawer: 'sliding',
-    toolbar_sticky: true
+    toolbar_drawer: 'sliding'
   };
 
   const expectedTouchDefaultSettings = {
     table_grid: false,
     object_resizing: false,
     resize: false,
-    toolbar_drawer: false,
-    toolbar_sticky: false
+    toolbar_drawer: false
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {

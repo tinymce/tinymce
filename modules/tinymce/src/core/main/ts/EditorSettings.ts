@@ -77,7 +77,6 @@ const getDefaultSettings = function (id: string, documentBaseUrl: string, isTouc
     id,
     theme: 'silver',
     toolbar_drawer: 'sliding',
-    toolbar_sticky: true,
     plugins: '',
     document_base_url: documentBaseUrl,
     add_form_submit_trigger: true,
@@ -111,7 +110,6 @@ const getDefaultSettings = function (id: string, documentBaseUrl: string, isTouc
     object_resizing: false,     // No nice way to do object resizing at this stage
     resize: false,              // Editor resize doesn't make sense on mobile
     toolbar_drawer: false,      // Disable more drawer and use the default sliding toolbar
-    toolbar_sticky: false       // Only enable sticky toolbar on desktop by default
   };
 
   const defaultPhoneSettings: RawEditorSettings = {
