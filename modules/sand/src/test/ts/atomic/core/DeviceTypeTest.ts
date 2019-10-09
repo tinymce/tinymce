@@ -3,7 +3,7 @@ import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('DeviceTypeTest', function () {
   const getPlatform = function (userAgent: string) {
-    return PlatformDetection.detect(userAgent);
+    return PlatformDetection.detect(userAgent, () => false);
   };
 
   const checkTablet = function (expected: boolean, userAgent: string) {

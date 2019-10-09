@@ -1,4 +1,4 @@
-import { navigator } from '@ephox/dom-globals';
+import { navigator, window } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 
 import { Browser } from '../core/Browser';
@@ -10,7 +10,9 @@ export type Browser = Browser;
 export type OperatingSystem = OperatingSystem;
 export type DeviceType = DeviceType;
 
-const platform = Cell<PlatformDetection>(PlatformDetection.detect(navigator.userAgent));
+const mediaMatch = (query: string) => window.matchMedia(query).matches;
+
+const platform = Cell<PlatformDetection>(PlatformDetection.detect(navigator.userAgent, mediaMatch));
 
 export const detect = (): PlatformDetection => platform.get();
 
