@@ -8,7 +8,6 @@
 import { Toolbar } from '@ephox/bridge';
 import { HTMLAnchorElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { LazyPlatformDetection } from '@ephox/sand';
 import Editor from 'tinymce/core/api/Editor';
 
 import Actions from '../core/Actions';
@@ -63,12 +62,9 @@ const setupMenuItems = function (editor: Editor) {
 
 const setupContextMenu = function (editor: Editor) {
   const inLink = 'link unlink openlink';
+  const noLink = 'link';
   editor.ui.registry.addContextMenu('link', {
     update: (element) => {
-      // TODO: Investigate more as on iOS a touch range selection resets the selection so the link text will be incorrect
-      // For now though just don't show link as an option when a link isn't currently selected
-      const platform = LazyPlatformDetection.detect();
-      const noLink = platform.os.isiOS() || platform.os.isOSX() && platform.deviceType.isTouch() ? '' : 'link';
       return Utils.hasLinks(editor.dom.getParents(element, 'a') as HTMLAnchorElement[]) ? inLink : noLink;
     }
   });

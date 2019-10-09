@@ -142,29 +142,25 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       return;
     }
 
-    // For longpress, editor.selection hasn't updated yet at this point, so need to do it manually
-    // Without this longpress causes drag-n-drop duplication of code on Android
-    if (isLongpress) {
-      editor.selection.setCursorLocation(e.target, 0);
-    }
-
     // Different browsers trigger the context menu from keyboards differently, so need to check both the button and target here.
-    // If a longpress touch event, treat it the same as a keyboard event (anchoring to the node, etc.)
+    // If a longpress touch event, always treat it as a pointer event
     // Chrome: button = 0 & target = the selection range node
     // Firefox: button = 0 & target = body
     // IE/Edge: button = 2 & target = body
     // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
     const isTriggeredByKeyboardEvent = !isLongpress && (e.button !== 2 || e.target === editor.getBody());
 
-    // Use the event target element for mouse clicks, otherwise fallback to the current selection
-    const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target as DomElement;
+    const buildMenu = () => {
+      // Use the event target element for touch events, otherwise fallback to the current selection
+      const selectedElement = isTriggeredByKeyboardEvent ? editor.selection.getStart(true) : e.target as DomElement;
 
-    const registry = editor.ui.registry.getAll();
-    const menuConfig = Settings.getContextMenu(editor);
-    const items = generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
+      const registry = editor.ui.registry.getAll();
+      const menuConfig = Settings.getContextMenu(editor);
+      return generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
+    };
 
-    const showMenu = isLongpress ? MobileContextMenu.show : DesktopContextMenu.show;
-    showMenu(editor, e, items, backstage, contextmenu, isTriggeredByKeyboardEvent);
+    const initAndShow = isTouch() ? MobileContextMenu.initAndShow : DesktopContextMenu.initAndShow;
+    initAndShow(editor, e, buildMenu, backstage, contextmenu, isTriggeredByKeyboardEvent);
   };
 
   editor.on('init', () => {

@@ -8,10 +8,10 @@
 import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying, Layout, LayoutInside, MaxHeight, MaxWidth, Positioning } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { ClientRect, Element as DomElement, window } from '@ephox/dom-globals';
+import { ClientRect, Element as DomElement } from '@ephox/dom-globals';
 import { Cell, Id, Merger, Option, Result, Thunk } from '@ephox/katamari';
 import { LazyPlatformDetection } from '@ephox/sand';
-import { Css, Element, Focus, Scroll, SelectorFind, Traverse, VisualViewport } from '@ephox/sugar';
+import { Css, Element, Focus, Scroll, SelectorFind, Traverse } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import * as Settings from './api/Settings';
@@ -90,20 +90,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   );
 
   const toolbarOrMenubarEnabled = Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
-
-  const getBounds = () => {
-    const viewportBounds = VisualViewport.getBounds(window);
-    const contentAreaBox = Boxes.box(Element.fromDom(editor.getContentAreaContainer()));
-
-    // Create a bounds that lets the context toolbar overflow outside the content area, but remains in the viewport
-    if (editor.inline && !toolbarOrMenubarEnabled) {
-      return Option.some(ContextToolbarBounds.getDistractionFreeBounds(editor, contentAreaBox, viewportBounds));
-    } else if (editor.inline) {
-      return Option.some(ContextToolbarBounds.getInlineBounds(editor, contentAreaBox, viewportBounds));
-    } else {
-      return Option.some(ContextToolbarBounds.getIframeBounds(editor, contentAreaBox, viewportBounds));
-    }
-  };
+  const getBounds = () => ContextToolbarBounds.getBounds(editor, toolbarOrMenubarEnabled);
 
   const isCompletelyBehindHeader = (nodeBounds: ClientRect): boolean => {
     const headerEle = SelectorFind.descendant(Element.fromDom(editor.getContainer()), '.tox-editor-header').getOrDie();

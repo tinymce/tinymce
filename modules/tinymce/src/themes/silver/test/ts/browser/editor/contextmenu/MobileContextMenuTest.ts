@@ -41,6 +41,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
       UiFinder.cFindIn(target),
       Touch.cTouchStart,
       Chain.wait(500),
+      Chain.op(() => editor.fire('selectionchange')),
       Touch.cTouchEnd,
       Chain.wait(100),
       Chain.inject(dialogRoot),

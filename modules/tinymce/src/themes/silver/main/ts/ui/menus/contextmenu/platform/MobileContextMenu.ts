@@ -1,35 +1,21 @@
-import { AlloyComponent, AnchorSpec, Boxes, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
-import { PointerEvent, window } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import { AlloyComponent, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
+import { MouseEvent, TouchEvent } from '@ephox/dom-globals';
 import { LazyPlatformDetection } from '@ephox/sand';
-import { Element, VisualViewport } from '@ephox/sugar';
+import { Selection, WindowSelection } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as Settings from '../../../../api/Settings';
 import { UiFactoryBackstage } from '../../../../backstage/Backstage';
-import { hideContextToolbarEvent } from '../../../context/ContextEditorEvents';
 import * as ContextToolbarBounds from '../../../context/ContextToolbarBounds';
 import ItemResponse from '../../item/ItemResponse';
 import * as MenuParts from '../../menu/MenuParts';
 import * as NestedMenus from '../../menu/NestedMenus';
 import { getNodeAnchor, getSelectionAnchor } from '../Coords';
+import { SingleMenuItemApi } from '../../menu/SingleMenuTypes';
+import { hideContextToolbarEvent } from '../../../context/ContextEditorEvents';
 
-const toolbarOrMenubarEnabled = (editor: Editor) => Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
-
-const getBounds = (editor: Editor) => () => {
-  const viewportBounds = VisualViewport.getBounds(window);
-  const contentAreaBox = Boxes.box(Element.fromDom(editor.getContentAreaContainer()));
-
-  // Create a bounds that lets the context toolbar overflow outside the content area, but remains in the viewport
-  if (editor.inline && !toolbarOrMenubarEnabled) {
-    return Option.some(ContextToolbarBounds.getDistractionFreeBounds(editor, contentAreaBox, viewportBounds));
-  } else if (editor.inline) {
-    return Option.some(ContextToolbarBounds.getInlineBounds(editor, contentAreaBox, viewportBounds));
-  } else {
-    return Option.some(ContextToolbarBounds.getIframeBounds(editor, contentAreaBox, viewportBounds));
-  }
-};
+type MenuItems = string | Array<string | SingleMenuItemApi>;
 
 const layouts = {
   onLtr: () => [Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
@@ -50,7 +36,23 @@ const bubbleAlignments = {
   top: ['tox-pop--top']
 };
 
-export const getAnchorSpec = (editor: Editor, isTriggeredByKeyboardEvent: boolean) => {
+const isTouchWithinSelection = (editor: Editor, e: EditorEvent<TouchEvent>) => {
+  const selection = editor.selection;
+  if (selection.isCollapsed() || e.touches.length < 1) {
+    return false;
+  } else {
+    const touch = e.touches[0];
+    const rng = selection.getRng();
+    const rngRectOpt = WindowSelection.getFirstRect(editor.getWin(), Selection.domRange(rng));
+    return rngRectOpt.exists((rngRect) => rngRect.left() <= touch.clientX &&
+      rngRect.right() >= touch.clientX &&
+      rngRect.top() <= touch.clientY &&
+      rngRect.bottom() >= touch.clientY
+    );
+  }
+};
+
+const getAnchorSpec = (editor: Editor, isTriggeredByKeyboardEvent: boolean) => {
   const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getSelectionAnchor(editor);
   return {
     bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
@@ -63,7 +65,41 @@ export const getAnchorSpec = (editor: Editor, isTriggeredByKeyboardEvent: boolea
   };
 };
 
-const showMenu = (editor: Editor, e: EditorEvent<PointerEvent>, items, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorSpec: AnchorSpec) => {
+const setupiOSOverrides = (editor: Editor) => {
+  // iOS will change the selection due to longpress also being a range selection gesture. As such we
+  // need to reset the selection back to the original selection after the touchend event has fired
+  const originalSelection = editor.selection.getRng();
+  const selectionReset = () => {
+    Delay.setEditorTimeout(editor, () => {
+      editor.selection.setRng(originalSelection);
+    }, 10);
+    unbindEventListeners();
+  };
+  editor.once('touchend', selectionReset);
+
+  // iPadOS will trigger a mousedown after the longpress which will close open context menus
+  // so we want to prevent that from running
+  const preventMousedown = (e: EditorEvent<MouseEvent>) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+  };
+  editor.on('mousedown', preventMousedown, true);
+
+  // If a longpresscancel is fired, then a touchmove has occurred so we shouldn't do any overrides
+  const clearSelectionReset = () => unbindEventListeners();
+  editor.once('longpresscancel', clearSelectionReset);
+
+  const unbindEventListeners = () => {
+    editor.off('touchend', selectionReset);
+    editor.off('longpresscancel', clearSelectionReset);
+    editor.off('mousedown', preventMousedown);
+  };
+};
+
+const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, isTriggeredByKeyboardEvent: boolean) => {
+  const toolbarOrMenubarEnabled = Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
+  const anchorSpec = getAnchorSpec(editor, isTriggeredByKeyboardEvent);
+
   NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, true).map((menuData) => {
     e.preventDefault();
 
@@ -74,26 +110,46 @@ const showMenu = (editor: Editor, e: EditorEvent<PointerEvent>, items, backstage
       },
       data: menuData,
       type: 'horizontal'
-    }, getBounds(editor));
+    }, () => ContextToolbarBounds.getBounds(editor, toolbarOrMenubarEnabled));
 
-    // iOS is weird and doesn't close contexttoolbars when contextmenus open, unlike Android. So force hide.
+    // Ensure the context toolbar is hidden
     editor.fire(hideContextToolbarEvent);
   });
 };
 
-export const show = (editor: Editor, e: EditorEvent<PointerEvent>, items, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, isTriggeredByKeyboardEvent: boolean) => {
+export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMenu: () => MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, isTriggeredByKeyboardEvent: boolean): void => {
   const detection = LazyPlatformDetection.detect();
   const isiOS = detection.os.isiOS();
   const isOSX = detection.os.isOSX();
+  const isAndroid = detection.os.isAndroid();
 
-  const anchorSpec = getAnchorSpec(editor, isTriggeredByKeyboardEvent);
+  const open = () => {
+    const items = buildMenu();
+    show(editor, e, items, backstage, contextmenu, isTriggeredByKeyboardEvent);
+  };
 
-  if (isiOS || isOSX) {
-    // Need a short wait here for iOS due to browser focus events or something causing the keyboard to open after
-    // the context menu opens, closing it again. 200 is arbitrary but mostly works
-    Delay.setEditorTimeout(editor, () => showMenu(editor, e, items, backstage, contextmenu, anchorSpec), 200);
+  // On iOS/iPadOS if we've long pressed on a ranged selection then we've already selected the content
+  // and just need to open the menu. Otherwise we need to wait for a selection change to occur as long
+  // press triggers a ranged selection on iOS.
+  if ((isOSX || isiOS) && !isTriggeredByKeyboardEvent) {
+    const openiOS = () => {
+      setupiOSOverrides(editor);
+      open();
+    };
+
+    if (isTouchWithinSelection(editor, e)) {
+      openiOS();
+    } else {
+      editor.once('selectionchange', openiOS);
+      editor.once('touchend', () => editor.off('selectionchange', openiOS));
+    }
   } else {
-    // Waiting on Android causes the native context toolbar to not show, so don't wait
-    showMenu(editor, e, items, backstage, contextmenu, anchorSpec);
+    // On Android editor.selection hasn't updated yet at this point, so need to do it manually
+    // Without this longpress causes drag-n-drop duplication of code on Android
+    if (isAndroid && !isTriggeredByKeyboardEvent) {
+      editor.selection.setCursorLocation(e.target, 0);
+    }
+
+    open();
   }
 };
