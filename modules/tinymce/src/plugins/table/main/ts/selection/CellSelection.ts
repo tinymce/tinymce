@@ -7,9 +7,10 @@
 
 import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
 import { Fun, Option, Struct, Cell } from '@ephox/katamari';
-import { TableLookup, OtherCells } from '@ephox/snooker';
+import { TableLookup, OtherCells, TableFill } from '@ephox/snooker';
 import { Element, Selection, SelectionDirection, Class, Node, Compare } from '@ephox/sugar';
 
+import { getCloneElements } from '../api/Settings';
 import * as Util from '../alien/Util';
 import Direction from '../queries/Direction';
 import Ephemera from './Ephemera';
@@ -24,11 +25,15 @@ export default function (editor, lazyResize, selectionTargets) {
   const handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);
   let handlers = Option.none();
 
+  const cloneFormats = getCloneElements(editor);
+
   const onSelection = (cells: Element[], start: Element, finish: Element) => {
     selectionTargets.targets().each((targets) => {
       const tableOpt = TableLookup.table(start);
       tableOpt.each((table) => {
-        const otherCells = OtherCells.getOtherCells(table, targets, {});
+        const doc = Element.fromDom(editor.getDoc());
+        const generators = TableFill.cellOperations(Fun.noop, doc, cloneFormats);
+        const otherCells = OtherCells.getOtherCells(table, targets, generators);
         editor.fire('tableselectionchange', {
           cells,
           start,
