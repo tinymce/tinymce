@@ -191,7 +191,8 @@ const setup = (editor: Editor): RenderInfo => {
     },
     split: toolbarDrawer(editor),
     lazyToolbar,
-    lazyMoreButton
+    lazyMoreButton,
+    lazyHeader: () => lazyHeader().getOrDie('Could not find header element')
   });
 
   const partMultipleToolbar: AlloySpec = OuterContainer.parts()['multiple-toolbar']({
