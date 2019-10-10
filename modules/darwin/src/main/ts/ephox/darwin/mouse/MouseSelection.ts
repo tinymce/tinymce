@@ -23,7 +23,7 @@ export default function (bridge: WindowBridge, container: Element, isRoot: (e: E
   /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
   const mouseover = function (event: EventArgs) {
     cursor.each(function (start) {
-      annotations._clear(container);
+      annotations.clearBeforeUpdate(container);
       findCell(event.target(), isRoot).each(function (finish) {
         CellSelection.identify(start, finish, isRoot).each(function (cellSel) {
           const boxes = cellSel.boxes().getOr([]);

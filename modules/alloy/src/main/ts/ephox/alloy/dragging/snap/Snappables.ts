@@ -91,10 +91,7 @@ const findMatchingSnap = (snaps: SnapConfig[], newCoord: DragCoord.CoordAdt, scr
 };
 
 interface SnapCandidate {
-  deltas: Option<{
-    left: number;
-    top: number;
-  }>;
+  deltas: Option<SugarPosition>;
   snap: Option<SnapConfig>;
 }
 
@@ -115,8 +112,8 @@ const findClosestSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCo
         };
       }, () => {
         const bestDeltas = acc.deltas.getOrUndefined();
-        const currAvg = (deltas.left + deltas.top) / 2;
-        const bestAvg = (bestDeltas.left + bestDeltas.top) / 2;
+        const currAvg = (deltas.left() + deltas.top()) / 2;
+        const bestAvg = (bestDeltas.left() + bestDeltas.top()) / 2;
         if (currAvg <= bestAvg) {
           return {
             deltas: Option.some(deltas),

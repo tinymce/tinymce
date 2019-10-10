@@ -28,7 +28,6 @@ export interface Registry {
   addIcon: (name: string, svgData: string) => void;
   addAutocompleter: (name: string, spec: AutocompleterApi) => void;
   addSidebar: (name: string, spec: SidebarApi) => void;
-  addSizer: (name: string, spec: SizerApi) => void;
 
   getAll: () => {
     buttons: Record<string, ToolbarButtonApi | ToolbarMenuButtonApi | ToolbarSplitButtonApi | ToolbarToggleButtonApi>;
@@ -38,7 +37,6 @@ export interface Registry {
     contextToolbars: Record<string, ContextToolbarApi | ContextFormApi>;
     icons: Record<string, string>;
     sidebars: Record<string, SidebarApi>;
-    sizers: Record<string, SizerApi>;
   };
 }
 
@@ -50,7 +48,6 @@ export const create = (): Registry => {
   const contextMenus: Record<string, ContextMenuApi> = {};
   const contextToolbars: Record<string, ContextToolbarApi | ContextFormApi> = {};
   const sidebars: Record<string, SidebarApi> = {};
-  const sizers: Record<string, SizerApi> = {};
   const add = (collection, type: string) => (name: string, spec: any): void => collection[name.toLowerCase()] = { ...spec, type };
   const addIcon = (name: string, svgData: string) => icons[name.toLowerCase()] = svgData;
 
@@ -67,7 +64,6 @@ export const create = (): Registry => {
     addContextToolbar: add(contextToolbars, 'contexttoolbar'),
     addContextForm: add(contextToolbars, 'contextform'),
     addSidebar: add(sidebars, 'sidebar'),
-    addSizer: add(sizers, 'sizer'),
     addIcon,
 
     getAll: () => ({
@@ -82,8 +78,7 @@ export const create = (): Registry => {
       contextMenus,
 
       contextToolbars,
-      sidebars,
-      sizers
+      sidebars
     })
   };
 };

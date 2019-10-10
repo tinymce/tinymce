@@ -113,13 +113,12 @@ const withinRange = (coord1: CoordAdt, coord2: CoordAdt, xRange: number, yRange:
     Math.abs(a1.top() - a2.top()) <= yRange;
 };
 
-const getDeltas = (coord1: CoordAdt, coord2: CoordAdt, xRange: number, yRange: number, scroll: SugarPosition, origin: SugarPosition) => {
+const getDeltas = (coord1: CoordAdt, coord2: CoordAdt, xRange: number, yRange: number, scroll: SugarPosition, origin: SugarPosition): SugarPosition => {
   const a1 = asAbsolute(coord1, scroll, origin);
   const a2 = asAbsolute(coord2, scroll, origin);
-  return {
-    left: Math.abs(a1.left() - a2.left()),
-    top: Math.abs(a1.top() - a2.top())
-  };
+  const left = Math.abs(a1.left() - a2.left());
+  const top = Math.abs(a1.top() - a2.top());
+  return Position(left, top);
 };
 
 const toStyles = (coord: CoordAdt, scroll: SugarPosition, origin: SugarPosition): StylesCoord => {

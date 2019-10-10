@@ -118,16 +118,6 @@ const registry = () => {
     addSidebar: bridge.addSidebar,
 
     /**
-     * Registers a new sizer.
-     *
-     * @method addSizer
-     * @param {String} name Unique name identifying the new sidebar.
-     * @param {Sidebar.SizerApi} obj The sidebar configuration object.
-     * @return {void} void
-     */
-    addSizer: bridge.addSizer,
-
-    /**
      * Registers a new split button for the toolbar. The advanced list plugin uses a split button to simplify its functionality.
      *
      * @method addSplitButton

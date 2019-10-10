@@ -41,7 +41,7 @@ const detect = function (container: Element, isRoot: (element: Element) => boole
 
 const update = function (rows: number, columns: number, container: Element, selected: Element[], annotations: SelectionAnnotation) {
   const updateSelection = function (newSels: IdentifiedExt) {
-    annotations._clear(container);
+    annotations.clearBeforeUpdate(container);
     annotations.selectRange(container, newSels.boxes(), newSels.start(), newSels.finish());
     return newSels.boxes();
   };
