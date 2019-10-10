@@ -86,7 +86,7 @@ const getSharedValues = (data) => {
   return baseData;
 };
 
-const getAdvancedTab = (dialogName: string) => {
+const getAdvancedTab = (dialogName: 'table' | 'row' | 'cell') => {
   const advTabItems: Types.Dialog.BodyComponentApi[] = [
     {
       name: 'borderstyle',
