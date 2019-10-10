@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added reposition APIs for `TieredMenu`, `Dropdown`, `InlineView`, `SplitDropdown` and `SplitFloatingToolbar` components.
 - Added new reposition channel to notify sandboxed components that they should reposition.
 - Added `onOpened` and `onClosed` configuration callbacks for the `SplitSlidingToolbar` component.
+- Added `getOverflowBounds` configuration to the `SplitFloatingToolbar` component.
 
 ### Changed
 - Reworked the `Docking` behaviour to support both absolute and static positioning.

@@ -219,7 +219,8 @@ const partToolbar = Composite.partType.optional({
         backstage: spec.backstage,
         moreDrawerData: {
           lazyToolbar: spec.lazyToolbar,
-          lazyMoreButton: spec.lazyMoreButton
+          lazyMoreButton: spec.lazyMoreButton,
+          lazyHeader: spec.lazyHeader
         }
       };
       return renderer(toolbarSpec);

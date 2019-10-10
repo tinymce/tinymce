@@ -16,6 +16,7 @@ import * as ToolbarSchema from './ToolbarSchema';
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.markers([ 'overflowToggledClass' ]),
   FieldSchema.strict('getAnchor'),
+  FieldSchema.optionFunction('getOverflowBounds'),
   FieldSchema.strict('lazySink')
 ].concat(
   SplitToolbarBase.schema()

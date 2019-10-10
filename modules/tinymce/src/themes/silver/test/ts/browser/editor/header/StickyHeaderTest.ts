@@ -1,4 +1,4 @@
-import { Pipeline, Step } from '@ephox/agar';
+import { GeneralSteps, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
@@ -21,11 +21,20 @@ UnitTest.asynctest('Editor with sticky toolbar', (success, failure) => {
           // otherwise the initial scrolling doesn't work
           Step.wait(100),
           Step.label('Setup page for scrolling', StickyUtils.sSetupScrolling(forceScrollDiv)),
-          Step.label('Checking startup structure', StickyUtils.sAssertEditorContainer(StickyUtils.expectedInFullView)),
+          Step.label('Checking startup structure', GeneralSteps.sequence([
+            StickyUtils.sAssertEditorContainer(StickyUtils.expectedInFullView),
+            StickyUtils.sAssertEditorClasses(false)
+          ])),
           Step.label('Checking scroll event listeners are bound, scroll by 1px then assert', StickyUtils.sScrollAndAssertStructure(1, StickyUtils.expectedScrollEventBound)),
-          Step.label('Scroll to half the editor should have sticky css markings', StickyUtils.sScrollAndAssertStructure(300, StickyUtils.expectedHalfView)),
+          Step.label('Scroll to half the editor should have sticky css markings', GeneralSteps.sequence([
+            StickyUtils.sScrollAndAssertStructure(300, StickyUtils.expectedHalfView),
+            StickyUtils.sAssertEditorClasses(true)
+          ])),
           Step.label('Scroll down so the editor is hidden from view, it should have hidden css markings', StickyUtils.sScrollAndAssertStructure(800, StickyUtils.expectedEditorHidden)),
-          Step.label('Scroll back to top should not have sticky', StickyUtils.sScrollAndAssertStructure(0, StickyUtils.expectedInFullView)),
+          Step.label('Scroll back to top should not have sticky', GeneralSteps.sequence([
+            StickyUtils.sScrollAndAssertStructure(0, StickyUtils.expectedInFullView),
+            StickyUtils.sAssertEditorClasses(false)
+          ])),
 
           Step.label('Open align menu and check sticky states', StickyUtils.sOpenMenuAndTestScrolling(MenuUtils.sOpenAlignMenu('open align'), 1)),
           ...toolbarDrawer === ToolbarDrawer.default ? [ ] : [ Step.label('Open the more drawer to reveal items first', MenuUtils.sOpenMore(toolbarDrawer)) ],
