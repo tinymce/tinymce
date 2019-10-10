@@ -35,7 +35,8 @@ const isOpen = (over: AlloyComponent) => over.getSystem().isConnected();
 const position = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail, overf: AlloyComponent) => {
   const sink = detail.lazySink(toolbar).getOrDie();
   const anchor = detail.getAnchor(toolbar);
-  Positioning.position(sink, anchor, overf);
+  const bounds = detail.getOverflowBounds.map((bounder) => bounder());
+  Positioning.positionWithinBounds(sink, anchor, overf, bounds);
 };
 
 const refresh = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail) => {

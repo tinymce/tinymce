@@ -1,3 +1,5 @@
+import { Cell } from '@ephox/katamari';
+
 import { Browser } from '../core/Browser';
 import { detect as eagerDetect } from './PlatformDetection';
 import { OperatingSystem } from '../core/OperatingSystem';
@@ -9,7 +11,7 @@ export type Browser = Browser;
 export type OperatingSystem = OperatingSystem;
 export type DeviceType = DeviceType;
 
-export const detect = (): PlatformDetection => {
+const platform = Cell<PlatformDetection>((() => {
   const platform = eagerDetect();
   return {
     os: platform.os,
@@ -19,4 +21,13 @@ export const detect = (): PlatformDetection => {
       isTouch: TouchDetect.isTouch
     }
   };
+})());
+
+export const detect = (): PlatformDetection => platform.get();
+
+export const override = (overrides: Partial<PlatformDetection>) => {
+  platform.set({
+    ...platform.get(),
+    ...overrides
+  });
 };

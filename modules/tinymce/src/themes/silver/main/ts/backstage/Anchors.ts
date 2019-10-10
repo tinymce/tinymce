@@ -1,4 +1,4 @@
-import { AlloyComponent, Bubble, HotspotAnchorSpec, Layout, LayoutInside, MaxHeight, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
+import { AlloyComponent, Bubble, HotspotAnchorSpec, Layout, LayoutInside, MaxHeight, MaxWidth, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 import { Element, Selection } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -77,9 +77,12 @@ const getToolbarOverflowAnchor = (lazyMoreButton: () => AlloyComponent) => (): H
   return {
     anchor: 'hotspot',
     hotspot: lazyMoreButton(),
+    overrides: {
+      maxWidthFunction: MaxWidth.expandable()
+    },
     layouts: {
-      onRtl: () => [ Layout.southeast ],
-      onLtr: () => [ Layout.southwest ]
+      onRtl: () => [ Layout.southeast, Layout.southwest ],
+      onLtr: () => [ Layout.southwest, Layout.southeast ]
     }
   };
 };
