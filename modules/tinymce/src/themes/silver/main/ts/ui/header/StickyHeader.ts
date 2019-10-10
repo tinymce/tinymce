@@ -8,7 +8,7 @@
 import { AlloyComponent, Boxes, Channels, Docking, Focusing, Receiving } from '@ephox/alloy';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Cell, Option, Result } from '@ephox/katamari';
-import { Classes, Compare, Css, Element, Focus, Height, Traverse, Width } from '@ephox/sugar';
+import { Class, Classes, Compare, Css, Element, Focus, Height, Traverse, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as EditorChannels from '../../Channels';
@@ -18,6 +18,9 @@ const visibility = {
   fadeOutClass: 'tox-editor-dock-fadeout',
   transitionClass: 'tox-editor-dock-transition'
 };
+
+const editorStickyOnClass = 'tox-tinymce--toolbar-sticky-on';
+const editorStickyOffClass = 'tox-tinymce--toolbar-sticky-off';
 
 const updateContentFlow = (header: AlloyComponent): void => {
   const elm = header.element();
@@ -36,11 +39,22 @@ const updateContentFlow = (header: AlloyComponent): void => {
 
 const updateSinkVisibility = (sinkElem: Element<HTMLElement>, visible: boolean): void => {
   if (visible) {
-    Classes.remove(sinkElem, [ visibility.fadeOutClass ]);
+    Class.remove(sinkElem, visibility.fadeOutClass);
     Classes.add(sinkElem, [ visibility.transitionClass, visibility.fadeInClass ]);
   } else {
-    Classes.remove(sinkElem, [ visibility.fadeInClass ]);
+    Class.remove(sinkElem, visibility.fadeInClass);
     Classes.add(sinkElem, [ visibility.fadeOutClass, visibility.transitionClass ]);
+  }
+};
+
+const updateEditorClasses = (editor: Editor, docked: boolean) => {
+  const editorContainer = Element.fromDom(editor.getContainer());
+  if (docked) {
+    Class.add(editorContainer, editorStickyOnClass);
+    Class.remove(editorContainer, editorStickyOffClass);
+  } else {
+    Class.add(editorContainer, editorStickyOffClass);
+    Class.remove(editorContainer, editorStickyOnClass);
   }
 };
 
@@ -79,6 +93,11 @@ const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void =
       lazyHeader().each(Docking.reset);
     });
   }
+
+  // Update the editor classes once initial rendering has completed
+  editor.on('PostRender', () => {
+    updateEditorClasses(editor, false);
+  });
 };
 
 const isDocked = (lazyHeader: () => Option<AlloyComponent>): boolean => {
@@ -96,6 +115,7 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
     if (!editor.inline) {
       updateContentFlow(comp);
     }
+    updateEditorClasses(editor, Docking.isDocked(comp));
     comp.getSystem().broadcastOn( [ Channels.repositionPopups() ], { });
     lazySink().each((sink) => sink.getSystem().broadcastOn( [ Channels.repositionPopups() ], { }));
   };
