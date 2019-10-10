@@ -1,25 +1,27 @@
 import { Button, Behaviour, Dragging, Unselecting, DragCoord, Attachment, GuiFactory, Boxes, Memento } from '@ephox/alloy';
 import { PlatformDetection } from '@ephox/sand';
 import { Arr, Option, Cell } from '@ephox/katamari';
-import { Position, Element, SelectorFilter, Body, Remove, Css, Insert } from '@ephox/sugar';
+import { Position, Element, Traverse, Css } from '@ephox/sugar';
+
+import { console } from '@ephox/dom-globals';
 
 const setup = (editor, sink) => {
   const tlTds = Cell<Element[]>([]);
   const brTds = Cell<Element[]>([]);
 
-  const insertDebugDiv = (left, top, width, height, color, clazz) => {
-    const debugArea = Element.fromHtml(`<div class="${clazz}"></div>`);
-    Css.setAll(debugArea, {
-      'left': left.toString() + 'px',
-      'top': top.toString() + 'px',
-      'background-color': color,
-      'position': 'absolute',
-      'width': width.toString() + 'px',
-      'height': height.toString() + 'px',
-      'opacity': '0.2'
-    });
-    Insert.append(Body.body(), debugArea);
-  };
+  // const insertDebugDiv = (left, top, width, height, color, clazz) => {
+  //   const debugArea = Element.fromHtml(`<div class="${clazz}"></div>`);
+  //   Css.setAll(debugArea, {
+  //     'left': left.toString() + 'px',
+  //     'top': top.toString() + 'px',
+  //     'background-color': color,
+  //     'position': 'absolute',
+  //     'width': width.toString() + 'px',
+  //     'height': height.toString() + 'px',
+  //     'opacity': '0.2'
+  //   });
+  //   Insert.append(Body.body(), debugArea);
+  // };
 
   const getTopLeftSnap = (td) => {
     const box = Boxes.absolute(td);
@@ -38,7 +40,7 @@ const setup = (editor, sink) => {
       const sensorWidth = 40; // box.width();
       const sensorHeight = 40; // box.height();
       const rect = selectorHandle.element().dom().getBoundingClientRect();
-      insertDebugDiv(sensorLeft, sensorTop, sensorWidth, sensorHeight, 'green', 'top-left-snap-debug');
+      // insertDebugDiv(sensorLeft, sensorTop, sensorWidth, sensorHeight, 'green', 'top-left-snap-debug');
       return Dragging.snap({
         sensor: DragCoord.absolute(sensorLeft, sensorTop),
         range: Position(sensorWidth, sensorHeight),
@@ -51,11 +53,11 @@ const setup = (editor, sink) => {
   };
 
   const getTopLeftSnaps = () => {
-    const body = Body.body();
-    const debugs = SelectorFilter.descendants(body, '.top-left-snap-debug');
-    Arr.each(debugs, (debugArea) => {
-      Remove.remove(debugArea);
-    });
+    // const body = Body.body();
+    // const debugs = SelectorFilter.descendants(body, '.top-left-snap-debug');
+    // Arr.each(debugs, (debugArea) => {
+    //   Remove.remove(debugArea);
+    // });
     return Arr.map(tlTds.get(), (td) => {
       return getTopLeftSnap(td);
     });
@@ -78,7 +80,7 @@ const setup = (editor, sink) => {
       const sensorWidth = 40; // box.width();
       const sensorHeight = 40; // box.height();
       const rect = selectorHandle.element().dom().getBoundingClientRect();
-      insertDebugDiv(sensorLeft, sensorTop, sensorWidth, sensorHeight, 'red', 'bottom-right-snap-debug');
+      // insertDebugDiv(sensorLeft, sensorTop, sensorWidth, sensorHeight, 'red', 'bottom-right-snap-debug');
       return Dragging.snap({
         sensor: DragCoord.absolute(sensorLeft, sensorTop),
         range: Position(sensorWidth, sensorHeight),
@@ -90,13 +92,12 @@ const setup = (editor, sink) => {
     });
   };
 
-  // TODO: Make the sensor snap to the bottom right by subtracting the width and height of the button from the output
   const getBottomRightSnaps = () => {
-    const body = Body.body();
-    const debugs = SelectorFilter.descendants(body, '.bottom-right-snap-debug');
-    Arr.each(debugs, (debugArea) => {
-      Remove.remove(debugArea);
-    });
+    // const body = Body.body();
+    // const debugs = SelectorFilter.descendants(body, '.bottom-right-snap-debug');
+    // Arr.each(debugs, (debugArea) => {
+    //   Remove.remove(debugArea);
+    // });
     return Arr.map(brTds.get(), (td) => {
       return getBottomRightSnap(td);
     });
@@ -134,12 +135,7 @@ const setup = (editor, sink) => {
     Button.sketch({
       dom: {
         tag: 'div',
-        innerHtml: 'TL',
-        styles: {
-          display: 'inline-block',
-          background: '#333',
-          color: '#fff'
-        }
+        classes: ['tox-selector']
       },
 
       buttonBehaviours: Behaviour.derive([
@@ -166,12 +162,7 @@ const setup = (editor, sink) => {
     Button.sketch({
       dom: {
         tag: 'span',
-        innerHtml: 'BR',
-        styles: {
-          display: 'inline-block',
-          background: '#333',
-          color: '#fff'
-        }
+        classes: ['tox-selector']
       },
 
       buttonBehaviours: Behaviour.derive([
@@ -201,6 +192,51 @@ const setup = (editor, sink) => {
   const startCell = Cell<any>(null);
   const finishCell = Cell<any>(null);
 
+  const showOrHideHandle = (selector, cell, isAbove, isBelow) => {
+    const cellRect = cell.dom().getBoundingClientRect();
+    Css.remove(selector.element(), 'display');
+    const viewportHeight = Traverse.defaultView(Element.fromDom(editor.getBody())).dom().innerHeight;
+    const aboveViewport = isAbove(cellRect);
+    const belowViewport = isBelow(cellRect, viewportHeight);
+    if (aboveViewport || belowViewport) {
+      Css.set(selector.element(), 'display', 'none');
+    }
+  };
+
+  const snapTopLeft = () => {
+    const cell = startCell.get();
+    const snap = getTopLeftSnap(cell);
+    Dragging.snapTo(topLeft, snap);
+    const isAbove = (rect) => {
+      return rect.top < 0;
+    };
+    const isBelow = (rect, viewportHeight) => {
+      return rect.top > viewportHeight;
+    };
+    showOrHideHandle(topLeft, cell, isAbove, isBelow);
+  };
+
+  const snapBottomRight = () => {
+    const cell = finishCell.get();
+    const firstSnap = getBottomRightSnap(cell);
+    Dragging.snapTo(bottomRight, firstSnap);
+    const isAbove = (rect) => {
+      return rect.bottom < 0;
+    };
+    const isBelow = (rect, viewportHeight) => {
+      return rect.bottom > viewportHeight;
+    };
+    showOrHideHandle(bottomRight, cell, isAbove, isBelow);
+  };
+
+  editor.on('init', () => {
+    const body = editor.getBody();
+    body.addEventListener('touchmove', (e) => {
+      // tslint:disable-next-line:no-console
+      console.log(e);
+    });
+  });
+
   editor.on('tableselectionchange', (e) => {
     if (!isVisible.get()) {
       Attachment.attach(sink, topLeft);
@@ -214,14 +250,14 @@ const setup = (editor, sink) => {
       tlTds.set(otherCells.upOrLeftCells);
       brTds.set(otherCells.downOrRightCells);
 
-      getTopLeftSnaps();
-      const tLSnap = getTopLeftSnap(e.start);
-      Dragging.snapTo(topLeft, tLSnap);
-
-      getBottomRightSnaps();
-      const firstSnap = getBottomRightSnap(e.finish);
-      Dragging.snapTo(bottomRight, firstSnap);
+      snapTopLeft();
+      snapBottomRight();
     });
+  });
+
+  editor.on('resize ScrollContent', () => {
+    snapTopLeft();
+    snapBottomRight();
   });
 
   editor.on('tableselectionclear', () => {

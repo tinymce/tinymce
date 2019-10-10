@@ -8,9 +8,20 @@
 //
 // Selector
 //
+@resize-handle-color: #4099ff;
+@resize-handle-size: 10px;
 
 .tox {
-  .tox-spinner {
+  .tox-selector {
+    background-color: @resize-handle-color;
+    border-color: @resize-handle-color;
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
     display: inline-block;
+    height: @resize-handle-size;
+    position: absolute;
+    width: @resize-handle-size;
+    z-index: 10000;
   }
 }

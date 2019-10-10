@@ -16,6 +16,8 @@ import * as Snappables from '../snap/Snappables';
 import * as TouchData from './TouchData';
 import { TouchDraggingConfig } from './TouchDraggingTypes';
 
+import { console } from '@ephox/dom-globals';
+
 const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.AlloyEventRecord => {
   const updateStartState = (comp: AlloyComponent) => {
     dragState.setStartData(calcStartData(dragConfig, comp));
@@ -30,6 +32,9 @@ const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<Suga
 
     AlloyEvents.run<SugarEvent>(NativeEvents.touchmove(), (component, simulatedEvent) => {
       simulatedEvent.stop();
+
+      // tslint:disable-next-line:no-console
+      console.log('touchmove');
 
       const delta = dragState.update(TouchData, simulatedEvent.event());
       const dragStartData = dragState.getStartData().getOrThunk(() => calcStartData(dragConfig, component));

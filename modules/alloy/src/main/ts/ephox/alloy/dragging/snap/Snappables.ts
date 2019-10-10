@@ -6,8 +6,6 @@ import * as DragCoord from '../../api/data/DragCoord';
 import { SnapsConfig, SnapOutput, SnapPin, SnapConfig } from '../common/DraggingTypes';
 import * as Presnaps from './Presnaps';
 
-import { console } from '@ephox/dom-globals';
-
 // Types of coordinates
 // Location: This is the position on the screen including scroll.
 // Absolute: This is the css setting that would be applied. Therefore, it subtracts
@@ -105,8 +103,6 @@ const findClosestSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCo
   const snaps = snapInfo.getSnapPoints(component);
 
   const matchSnap = findMatchingSnap(snaps, newCoord, scroll, origin);
-  // tslint:disable-next-line:no-console
-  console.log(matchSnap.isSome());
   return matchSnap.orThunk((): Option<SnapOutput> => {
     const bestSnap = Arr.foldl(snaps, (acc: SnapCandidate, snap: SnapConfig): SnapCandidate => {
       // NOTE: These are structs because of the immutableBag in Dragging.ts
