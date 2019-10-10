@@ -175,6 +175,18 @@ const sScrollAndAssertStructure = (scrollY: number, expectedPart: (s, str, arr) 
   )
 ]);
 
+const sAssertEditorClasses = (docked: boolean) => Chain.asStep(Body.body(), [
+  UiFinder.cFindIn('.tox-tinymce'),
+  Assertions.cAssertStructure('Check root container classes', ApproxStructure.build((s, str, arr) => {
+    return s.element('div', {
+      classes: [
+        arr.has('tox-tinymce--toolbar-sticky-' + (docked ? 'on' : 'off')),
+        arr.not('tox-tinymce--toolbar-sticky-' + (docked ? 'off' : 'on'))
+      ]
+    });
+  }))
+]);
+
 const sCloseMenus = (numOpenedMenus: number) => Logger.t('Close all opened menus', GeneralSteps.sequenceRepeat(
   numOpenedMenus,
   Chain.asStep(Body.body(), [
@@ -214,5 +226,6 @@ export {
   sAssertEditorContainer,
   sOpenMenuAndTestScrolling,
   sScrollAndAssertStructure,
+  sAssertEditorClasses,
   sSetupScrolling
 };

@@ -1,3 +1,6 @@
+import { Option } from '@ephox/katamari';
+
+import { Bounds } from '../../alien/Boxes';
 import { LazySink } from '../../api/component/CommonTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
@@ -9,6 +12,7 @@ import { ToolbarSpec } from './ToolbarTypes';
 export interface SplitFloatingToolbarDetail extends SplitToolbarBaseDetail {
   lazySink: LazySink;
   getAnchor: (toolbar: AlloyComponent) => AnchorSpec;
+  getOverflowBounds: Option<() => Bounds>;
 
   markers: {
     overflowToggledClass: string;
@@ -22,6 +26,7 @@ export interface SplitFloatingToolbarApis extends SplitToolbarBaseApis {
 export interface SplitFloatingToolbarSpec extends SplitToolbarBaseSpec {
   lazySink: LazySink;
   getAnchor: (toolbar: AlloyComponent) => AnchorSpec;
+  getOverflowBounds?: () => Bounds;
 
   markers: {
     overflowToggledClass: string;

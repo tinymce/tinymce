@@ -1,5 +1,5 @@
 import { console, document, setTimeout } from '@ephox/dom-globals';
-import { Arr, Fun, Global, Id, Merger, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Global, Id, Strings, Type } from '@ephox/katamari';
 import { Attr, Element, Insert, Remove, SelectorFilter } from '@ephox/sugar';
 import 'tinymce';
 import { setTinymceBaseUrl } from '../loader/Urls';
@@ -26,16 +26,22 @@ const removeTinymceElements = () => {
 };
 
 const setupLight = (callback: SetupCallback, settings: Record<string, any>, success: SuccessCallback, failure: FailureCallback) => {
-  const nuSettings = Merger.merge({
+  const nuSettings: Record<string, any> = {
     toolbar: '',
     menubar: false,
-    statusbar: false
-  }, settings);
+    statusbar: false,
+    ...settings
+  };
   setup(callback, nuSettings, success, failure);
 };
 
 const setup = (callback: SetupCallback, settings: Record<string, any>, success: SuccessCallback, failure: FailureCallback) => {
-  const target = createTarget(settings.inline);
+  const nuSettings: Record<string, any> = {
+    toolbar_drawer: false,
+    ...settings
+  };
+
+  const target = createTarget(nuSettings.inline);
   const randomId = Id.generate('tiny-loader');
   Attr.set(target, 'id', randomId);
 
@@ -63,19 +69,20 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
     failure(err, logs);
   };
 
-  const settingsSetup = settings.setup !== undefined ? settings.setup : Fun.noop;
+  const settingsSetup = nuSettings.setup !== undefined ? nuSettings.setup : Fun.noop;
 
   const tinymce = Global.tinymce;
   if (!tinymce) {
     failure('Failed to get global tinymce instance');
   } else {
-    if (settings.base_url) {
-      setTinymceBaseUrl(tinymce, settings.base_url);
+    if (nuSettings.base_url) {
+      setTinymceBaseUrl(tinymce, nuSettings.base_url);
     } else if (!Type.isString(tinymce.baseURL) || !Strings.contains(tinymce.baseURL, '/project/')) {
       setTinymceBaseUrl(Global.tinymce, `/project/node_modules/tinymce`);
     }
 
-    tinymce.init(Merger.merge(settings, {
+    tinymce.init({
+      ...nuSettings,
       selector: '#' + randomId,
       setup (editor) {
         // Execute the setup called by the test.
@@ -87,7 +94,7 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
           }, 0);
         });
       }
-    }));
+    });
   }
 };
 
