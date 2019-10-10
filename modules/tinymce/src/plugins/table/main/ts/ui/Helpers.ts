@@ -56,7 +56,7 @@ const extractAdvancedStyles = (dom, elm) => {
   const bgColor = Css.getRaw(Element.fromDom(elm), 'background-color').map(rgbToHex).getOr('');
 
   return {
-    border: borderWidth,
+    borderwidth: borderWidth,
     borderstyle: borderStyle,
     bordercolor: borderColor,
     backgroundcolor: bgColor
@@ -119,7 +119,7 @@ const getAdvancedTab = (dialogName: string) => {
   ];
 
   const borderWidth: Types.Input.InputApi = {
-    name: 'border',
+    name: 'borderwidth',
     type: 'input',
     label: 'Border width'
   };
@@ -299,7 +299,7 @@ export interface CellData {
   class: string;
   halign: string;
   valign: string;
-  border?: string;
+  borderwidth?: string;
   borderstyle?: string;
   bordercolor?: string;
   backgroundcolor?: string;
