@@ -3,16 +3,17 @@ import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
+import { LazyPlatformDetection } from '@ephox/sand';
 import { Element, Body } from '@ephox/sugar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { PlatformDetection } from '@ephox/sand';
 
 UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
-  const browser = PlatformDetection.detect().browser;
+  const detection = LazyPlatformDetection.detect();
+  const browser = detection.browser;
   const runTests = browser.isChrome() || browser.isFirefox() || browser.isSafari();
   if (!runTests) {
     return success();
@@ -24,9 +25,13 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
   ImageToolsPlugin();
   TablePlugin();
 
-  // HACK. We should really add methods to Sand for mocking deviceType, etc...
-  // This forces LazyPlatformDetection.detect().deviceType.isTouch() to return true
-  Touch.point('touchstart', Body.body(), 0, 0);
+  // Override the platform detection, so that it thinks we're on a touch device
+  LazyPlatformDetection.override({
+    deviceType: {
+      ...detection.deviceType,
+      isTouch: () => true
+    }
+  });
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
@@ -234,5 +239,11 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     image_caption: true,
-  }, success, failure);
+  }, () => {
+    LazyPlatformDetection.override(detection);
+    success();
+  }, (err, logs) => {
+    LazyPlatformDetection.override(detection);
+    failure(err, logs);
+  });
 });
