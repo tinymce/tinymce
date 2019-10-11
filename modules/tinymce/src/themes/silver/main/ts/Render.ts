@@ -19,7 +19,7 @@ import {
 import { HTMLElement, HTMLIFrameElement, console } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Css } from '@ephox/sugar';
+import { Css, Class } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
@@ -111,6 +111,9 @@ const setup = (editor: Editor): RenderInfo => {
   const platform = PlatformDetection.detect();
   const isIE = platform.browser.isIE();
   const platformClasses = isIE ? ['tox-platform-ie'] : [];
+  const isTouch = platform.deviceType.isTouch();
+  const touchPlatformClass = 'tox-platform-touch';
+  const deviceClasses = isTouch ? [touchPlatformClass] : [];
 
   const dirAttributes = I18n.isRtl() ? {
     attributes: {
@@ -123,7 +126,7 @@ const setup = (editor: Editor): RenderInfo => {
   const sink = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: ['tox', 'tox-silver-sink', 'tox-tinymce-aux'].concat(platformClasses),
+      classes: ['tox', 'tox-silver-sink', 'tox-tinymce-aux'].concat(platformClasses).concat(deviceClasses),
       ...dirAttributes
     },
     behaviours: Behaviour.derive([
@@ -132,6 +135,10 @@ const setup = (editor: Editor): RenderInfo => {
       })
     ])
   });
+
+  if (!isTouch) {
+    editor.once('touchstart', () => Class.add(sink.element(), touchPlatformClass));
+  }
 
   const lazySink = () => Result.value<AlloyComponent, Error>(sink);
 
@@ -185,7 +192,8 @@ const setup = (editor: Editor): RenderInfo => {
     },
     split: toolbarDrawer(editor),
     lazyToolbar,
-    lazyMoreButton
+    lazyMoreButton,
+    lazyHeader: () => lazyHeader().getOrDie('Could not find header element')
   });
 
   const partMultipleToolbar: AlloySpec = OuterContainer.parts()['multiple-toolbar']({
@@ -305,7 +313,7 @@ const setup = (editor: Editor): RenderInfo => {
     OuterContainer.sketch({
       dom: {
         tag: 'div',
-        classes: ['tox', 'tox-tinymce'].concat(isInline ? ['tox-tinymce-inline'] : []).concat(platformClasses),
+        classes: ['tox', 'tox-tinymce'].concat(isInline ? ['tox-tinymce-inline'] : []).concat(deviceClasses).concat(platformClasses),
         styles: {
           // This is overridden by the skin, it helps avoid FOUC
           visibility: 'hidden',

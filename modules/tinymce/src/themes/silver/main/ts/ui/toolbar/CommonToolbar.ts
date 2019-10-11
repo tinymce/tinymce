@@ -10,7 +10,7 @@ import {
   AlloyComponent,
   AlloyEvents,
   AlloySpec,
-  Behaviour,
+  Behaviour, Boxes,
   Focusing,
   Keying,
   SplitFloatingToolbar as AlloySplitFloatingToolbar,
@@ -20,6 +20,7 @@ import {
   ToolbarGroup as AlloyToolbarGroup
 } from '@ephox/alloy';
 import { Arr, Option, Result, Fun } from '@ephox/katamari';
+import { Traverse } from '@ephox/sugar';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderIconButtonSpec } from '../general/Button';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
@@ -29,6 +30,7 @@ import * as Channels from '../../Channels';
 export interface MoreDrawerData {
   lazyMoreButton: () => AlloyComponent;
   lazyToolbar: () => AlloyComponent;
+  lazyHeader: () => AlloyComponent;
 }
 export interface ToolbarSpec {
   uid: string;
@@ -127,6 +129,7 @@ const renderMoreToolbarCommon = (toolbarSpec: ToolbarSpec, getOverflow: (comp: A
 
 const renderFloatingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
   const baseSpec = renderMoreToolbarCommon(toolbarSpec, AlloySplitFloatingToolbar.getOverflow);
+  const overflowXOffset = 4;
 
   const primary = AlloySplitFloatingToolbar.parts().primary({
     dom: {
@@ -139,6 +142,18 @@ const renderFloatingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
     ...baseSpec,
     lazySink: toolbarSpec.getSink,
     getAnchor: () => toolbarSpec.backstage.shared.anchors.toolbarOverflow(),
+    getOverflowBounds: () => {
+      // Restrict the left/right bounds to the editor header width, but don't restrict the top/height
+      const headerElem = toolbarSpec.moreDrawerData.lazyHeader().element();
+      const headerBounds = Boxes.absolute(headerElem);
+      const docElem = Traverse.documentElement(headerElem);
+      return Boxes.bounds(
+        headerBounds.x() + overflowXOffset,
+        docElem.dom().clientTop,
+        headerBounds.width() - overflowXOffset * 2,
+        docElem.dom().clientHeight
+      );
+    },
     parts: {
       ...baseSpec.parts,
       overflow: {

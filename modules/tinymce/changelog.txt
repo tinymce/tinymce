@@ -1,22 +1,26 @@
 Version 5.1.0 (TBD)
-    Changed toolbars and context toolbars to sidescroll on mobile #TINY-3894 #TINY-4107
     Added touch event listener to media plugin to make embeds playable #TINY-4093
     Added oxide styling options to notifications and tweaked the default variables #TINY-4153
-    Changed some editor settings to default to false on mobile:
-        - `menubar` #TINY-4077
-        - `table_grid` #TINY-4075
-        - `resize` #TINY-4157
-        - `object_resizing` #TINY-4157
+    Added additional padding to split button chevrons on touch devices, to make them easier to interact with #TINY-4223
     Added new platform detection functions to `Env` and deprecated older detection properties #TINY-4184
     Added `inputMode` config field to specify inputmode attribute of `input` dialog components #TINY-4062
     Added new `inputMode` property to relevant plugins/dialogs #TINY-4102
     Added new `toolbar_sticky` setting to allow the iframe menubar/toolbar to stick to the top of the window when scrolling #TINY-3982
+    Changed default settings for `toolbar_drawer` to `sliding` and `toolbar_sticky` to `true` #TINY-3634
+    Changed phones to use the `silver` theme by default #TINY-3634
+    Changed some editor settings to default to `false` on touch devices:
+        - `menubar`(phones only) #TINY-4077
+        - `table_grid` #TINY-4075
+        - `resize` #TINY-4157
+        - `object_resizing` #TINY-4157
+    Changed toolbars and context toolbars to sidescroll on mobile #TINY-3894 #TINY-4107
     Changed the editor to use the `VisualViewport` API of the browser where possible #TINY-4078
-    Changed `menubar` to default to `false` on mobile #TINY-4077
-    Changed `table_grid` to default to `false` on mobile #TINY-4075
+    Changed visualblocks toolbar button icon and renamed `paragraph` icon to `visualchars` #TINY-4074
     Changed Oxide default for `@toolbar-button-chevron-color` to follow toolbar button icon color #TINY-4153
     Changed the `urlinput` dialog component to use the `url` type attribute #TINY-4102
+    Fixed Safari desktop visual viewport fires resize on fullscreen breaking the restore function #TINY-3976
     Fixed scroll issues on mobile devices #TINY-3976
+    Fixed context toolbar unable to refresh position on iOS12 #TINY-4107
     Fixed ctrl+left click not opening links on readonly mode and the preview dialog #TINY-4138
     Fixed Slider UI component not firing onChange event on touch devices #TINY-4092
     Fixed notifications overlapping instead of stacking #TINY-3478
@@ -28,6 +32,7 @@ Version 5.1.0 (TBD)
     Fixed the autoresize plugin not keeping the selection in view when resizing #TINY-4094
     Fixed missing CSS fill styles for toolbar button icon active state #TINY-4147
     Fixed browser selection being lost in inline mode when opening split dropdowns #TINY-4197
+    Fixed floating toolbar drawer expanding outside the bounds of the editor #TINY-3941
 Version 5.0.16 (2019-09-24)
     Added new `referrer_policy` setting to add the `referrerpolicy` attribute when loading scripts or stylesheets #TINY-3978
     Added a slight background color to dialog tab links when focused to aid keyboard navigation #TINY-3877
