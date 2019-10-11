@@ -1,4 +1,5 @@
 Version 5.1.0 (TBD)
+    Added touch selector handles for table selections on Android touch devices #TINY-4097
     Added touch event listener to media plugin to make embeds playable #TINY-4093
     Added oxide styling options to notifications and tweaked the default variables #TINY-4153
     Added additional padding to split button chevrons on touch devices, to make them easier to interact with #TINY-4223

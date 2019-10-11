@@ -1,11 +1,13 @@
-import { Button, Behaviour, Dragging, Unselecting, DragCoord, Attachment, GuiFactory, Boxes, Memento } from '@ephox/alloy';
+import { Button, Behaviour, Dragging, Unselecting, DragCoord, Attachment, GuiFactory, Boxes, Memento, AlloyComponent } from '@ephox/alloy';
 import { PlatformDetection } from '@ephox/sand';
 import { Arr, Option, Cell } from '@ephox/katamari';
 import { Position, Element, Traverse, Css } from '@ephox/sugar';
 
-import { console } from '@ephox/dom-globals';
+import Editor from 'tinymce/core/api/Editor';
 
-const setup = (editor, sink) => {
+const platform = PlatformDetection.detect();
+
+const setup = (editor: Editor, sink: AlloyComponent) => {
   const tlTds = Cell<Element[]>([]);
   const brTds = Cell<Element[]>([]);
 
@@ -23,7 +25,7 @@ const setup = (editor, sink) => {
   //   Insert.append(Body.body(), debugArea);
   // };
 
-  const getTopLeftSnap = (td) => {
+  const getTopLeftSnap = (td: Element) => {
     const box = Boxes.absolute(td);
     return memTopLeft.getOpt(sink).fold(() => {
       return Dragging.snap({
@@ -63,7 +65,7 @@ const setup = (editor, sink) => {
     });
   };
 
-  const getBottomRightSnap = (td) => {
+  const getBottomRightSnap = (td: Element) => {
     const box = Boxes.absolute(td);
     return memBottomRight.getOpt(sink).fold(() => {
       return Dragging.snap({
@@ -140,7 +142,7 @@ const setup = (editor, sink) => {
 
       buttonBehaviours: Behaviour.derive([
         Dragging.config(
-          PlatformDetection.detect().deviceType.isTouch() ? {
+          platform.deviceType.isTouch() ? {
             mode: 'touch',
             snaps: topLeftSnaps
           } : {
@@ -167,7 +169,7 @@ const setup = (editor, sink) => {
 
       buttonBehaviours: Behaviour.derive([
         Dragging.config(
-          PlatformDetection.detect().deviceType.isTouch() ? {
+          platform.deviceType.isTouch() ? {
             mode: 'touch',
             snaps: bottomRightSnaps
           } : {
@@ -229,44 +231,39 @@ const setup = (editor, sink) => {
     showOrHideHandle(bottomRight, cell, isAbove, isBelow);
   };
 
-  editor.on('init', () => {
-    const body = editor.getBody();
-    body.addEventListener('touchmove', (e) => {
-      // tslint:disable-next-line:no-console
-      console.log(e);
+  // TODO: Make this work for desktop maybe?
+  if (platform.deviceType.isTouch() && platform.os.isAndroid()) {
+    editor.on('tableselectionchange', (e) => {
+      if (!isVisible.get()) {
+        Attachment.attach(sink, topLeft);
+        Attachment.attach(sink, bottomRight);
+        isVisible.set(true);
+      }
+      startCell.set(e.start);
+      finishCell.set(e.finish);
+
+      e.otherCells.each((otherCells) => {
+        tlTds.set(otherCells.upOrLeftCells);
+        brTds.set(otherCells.downOrRightCells);
+
+        snapTopLeft();
+        snapBottomRight();
+      });
     });
-  });
 
-  editor.on('tableselectionchange', (e) => {
-    if (!isVisible.get()) {
-      Attachment.attach(sink, topLeft);
-      Attachment.attach(sink, bottomRight);
-      isVisible.set(true);
-    }
-    startCell.set(e.start);
-    finishCell.set(e.finish);
-
-    e.otherCells.each((otherCells) => {
-      tlTds.set(otherCells.upOrLeftCells);
-      brTds.set(otherCells.downOrRightCells);
-
+    editor.on('resize ScrollContent', () => {
       snapTopLeft();
       snapBottomRight();
     });
-  });
 
-  editor.on('resize ScrollContent', () => {
-    snapTopLeft();
-    snapBottomRight();
-  });
-
-  editor.on('tableselectionclear', () => {
-    if (isVisible.get()) {
-      Attachment.detach(topLeft);
-      Attachment.detach(bottomRight);
-      isVisible.set(false);
-    }
-  });
+    editor.on('tableselectionclear', () => {
+      if (isVisible.get()) {
+        Attachment.detach(topLeft);
+        Attachment.detach(bottomRight);
+        isVisible.set(false);
+      }
+    });
+  }
 };
 
 export default {
