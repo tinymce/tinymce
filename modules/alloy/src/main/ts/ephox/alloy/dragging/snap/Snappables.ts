@@ -110,8 +110,7 @@ const findClosestSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCo
           deltas: Option.some(deltas),
           snap: Option.some(snap)
         };
-      }, () => {
-        const bestDeltas = acc.deltas.getOrUndefined();
+      }, (bestDeltas) => {
         const currAvg = (deltas.left() + deltas.top()) / 2;
         const bestAvg = (bestDeltas.left() + bestDeltas.top()) / 2;
         if (currAvg <= bestAvg) {

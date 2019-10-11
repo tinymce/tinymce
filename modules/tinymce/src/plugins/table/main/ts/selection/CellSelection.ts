@@ -184,27 +184,34 @@ export default function (editor, lazyResize, selectionTargets) {
       }
     };
 
-    const lastTarget = Cell<Element>(Element.fromDom(body as any));
-    const lastTimeStamp = Cell<number>(0);
+    const getTouchEnd = () => {
+      const lastTarget = Cell<Element>(Element.fromDom(body as any));
+      const lastTimeStamp = Cell<number>(0);
 
-    const touchEnd = (t) => {
-      const target = Element.fromDom(t.target);
-      if (Node.name(target) === 'td' || Node.name(target) === 'th') {
-        const lT = lastTarget.get();
-        const lTS = lastTimeStamp.get();
-        if (Compare.eq(lT, target) && (t.timeStamp - lTS) < 300) {
-          t.preventDefault();
-          external(target, target);
+      const touchEnd = (t) => {
+        const target = Element.fromDom(t.target);
+        if (Node.name(target) === 'td' || Node.name(target) === 'th') {
+          const lT = lastTarget.get();
+          const lTS = lastTimeStamp.get();
+          if (Compare.eq(lT, target) && (t.timeStamp - lTS) < 300) {
+            t.preventDefault();
+            external(target, target);
+          }
         }
-      }
-      lastTarget.set(target);
-      lastTimeStamp.set(t.timeStamp);
+        lastTarget.set(target);
+        lastTimeStamp.set(t.timeStamp);
+      };
+      return {
+        touchEnd
+      };
     };
+
+    const touchEnd = getTouchEnd();
 
     editor.on('mousedown', mouseDown);
     editor.on('mouseover', mouseOver);
     editor.on('mouseup', mouseUp);
-    editor.on('touchend', touchEnd);
+    editor.on('touchend', touchEnd.touchEnd);
     editor.on('keyup', keyup);
     editor.on('keydown', keydown);
     editor.on('NodeChange', syncSelection);

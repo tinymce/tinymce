@@ -7,6 +7,9 @@ import Editor from 'tinymce/core/api/Editor';
 
 const platform = PlatformDetection.detect();
 
+const snapWidth = 40;
+const snapOffset = snapWidth / 2;
+
 const setup = (editor: Editor, sink: AlloyComponent) => {
   const tlTds = Cell<Element[]>([]);
   const brTds = Cell<Element[]>([]);
@@ -29,7 +32,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
     const box = Boxes.absolute(td);
     return memTopLeft.getOpt(sink).fold(() => {
       return Dragging.snap({
-        sensor: DragCoord.absolute(box.x() - 20, box.y() - 20),
+        sensor: DragCoord.absolute(box.x() - snapOffset, box.y() - snapOffset),
         range: Position(box.width(), box.height()),
         output: DragCoord.absolute(Option.some(box.x()), Option.some(box.y())),
         extra: {
@@ -37,10 +40,10 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
         }
       });
     }, (selectorHandle) => {
-      const sensorLeft = box.x() - 20;
-      const sensorTop = box.y() - 20;
-      const sensorWidth = 40; // box.width();
-      const sensorHeight = 40; // box.height();
+      const sensorLeft = box.x() - snapOffset;
+      const sensorTop = box.y() - snapOffset;
+      const sensorWidth = snapWidth; // box.width();
+      const sensorHeight = snapWidth; // box.height();
       const rect = selectorHandle.element().dom().getBoundingClientRect();
       // insertDebugDiv(sensorLeft, sensorTop, sensorWidth, sensorHeight, 'green', 'top-left-snap-debug');
       return Dragging.snap({
@@ -69,7 +72,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
     const box = Boxes.absolute(td);
     return memBottomRight.getOpt(sink).fold(() => {
       return Dragging.snap({
-        sensor: DragCoord.absolute(box.x() - 20, box.y() - 20),
+        sensor: DragCoord.absolute(box.x() - snapOffset, box.y() - snapOffset),
         range: Position(box.width(), box.height()),
         output: DragCoord.absolute(Option.some(box.right()), Option.some(box.bottom())),
         extra: {
@@ -77,10 +80,10 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
         }
       });
     }, (selectorHandle) => {
-      const sensorLeft = box.right() - 20;
-      const sensorTop = box.bottom() - 20;
-      const sensorWidth = 40; // box.width();
-      const sensorHeight = 40; // box.height();
+      const sensorLeft = box.right() - snapOffset;
+      const sensorTop = box.bottom() - snapOffset;
+      const sensorWidth = snapWidth; // box.width();
+      const sensorHeight = snapWidth; // box.height();
       const rect = selectorHandle.element().dom().getBoundingClientRect();
       // insertDebugDiv(sensorLeft, sensorTop, sensorWidth, sensorHeight, 'red', 'bottom-right-snap-debug');
       return Dragging.snap({
@@ -205,8 +208,12 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
     }
   };
 
-  const snapTopLeft = () => {
+  const snapLastTopLeft = () => {
     const cell = startCell.get();
+    snapTopLeft(cell);
+  };
+
+  const snapTopLeft = (cell: Element) => {
     const snap = getTopLeftSnap(cell);
     Dragging.snapTo(topLeft, snap);
     const isAbove = (rect) => {
@@ -218,8 +225,12 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
     showOrHideHandle(topLeft, cell, isAbove, isBelow);
   };
 
-  const snapBottomRight = () => {
+  const snapLastBottomRight = () => {
     const cell = finishCell.get();
+    snapBottomRight(cell);
+  };
+
+  const snapBottomRight = (cell: Element) => {
     const firstSnap = getBottomRightSnap(cell);
     Dragging.snapTo(bottomRight, firstSnap);
     const isAbove = (rect) => {
@@ -246,14 +257,14 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
         tlTds.set(otherCells.upOrLeftCells);
         brTds.set(otherCells.downOrRightCells);
 
-        snapTopLeft();
-        snapBottomRight();
+        snapTopLeft(e.start);
+        snapBottomRight(e.finish);
       });
     });
 
     editor.on('resize ScrollContent', () => {
-      snapTopLeft();
-      snapBottomRight();
+      snapLastTopLeft();
+      snapLastBottomRight();
     });
 
     editor.on('tableselectionclear', () => {
