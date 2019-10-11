@@ -75,6 +75,12 @@
   overflow-x: auto;
 }
 
+// Add a top border when toolbar_location is bottom and menubar is hidden
+.tox-editor-header:not(:first-child) .tox-toolbar:first-child,
+.tox-editor-header:not(:first-child) .tox-toolbar-overlord:first-child .tox-toolbar__primary {
+  border-top: 1px solid @toolbar-separator-color;
+}
+
 // Floating more drawer styles. Uses pop toolbar styles
 .tox.tox-tinymce-aux {
   .tox-toolbar__overflow {
