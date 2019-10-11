@@ -1,6 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Compare, Element, PredicateFind, Traverse } from '@ephox/sugar';
+import { Element } from '@ephox/sugar';
 import * as Boxes from '../../alien/Boxes';
 import * as ComponentStructure from '../../alien/ComponentStructure';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -30,13 +30,8 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
     onRtl: () => Layout.belowOrAboveRtl()
   } } : { };
 
-  const isFirstTierSubmenu = (tmenu: Element, parentItem: Element) => {
-    // ASSUMPTION: The first-tier menu is the first child of tmenu
-    return Traverse.firstChild(tmenu).fold(() => false, (root) => {
-      return PredicateFind.descendant(root, (e) => Compare.eq(e, parentItem)).isSome();
-    });
-  };
-  const getSubmenuLayouts = (tmenu: AlloyComponent, item: AlloyComponent) => isFirstTierSubmenu(tmenu.element(), item.element()) ? layouts : { };
+  const isFirstTierSubmenu = (triggeringPaths: string[]) => triggeringPaths.length === 2; // primary and first tier menu === 2 items
+  const getSubmenuLayouts = (triggeringPaths: string[]) => isFirstTierSubmenu(triggeringPaths) ? layouts : { };
 
   return TieredMenu.sketch({
     dom: {
@@ -63,12 +58,12 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
       Positioning.positionWithinBounds(lazySink().getOrDie(), anchor, menu, getBounds());
     },
 
-    onOpenSubmenu(tmenu, item, submenu) {
+    onOpenSubmenu(tmenu, item, submenu, triggeringPaths) {
       const sink = lazySink().getOrDie();
       Positioning.position(sink, {
         anchor: 'submenu',
         item,
-        ...getSubmenuLayouts(tmenu, item)
+        ...getSubmenuLayouts(triggeringPaths)
       }, submenu);
     },
 
@@ -76,7 +71,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
       const sink = lazySink().getOrDie();
       Positioning.positionWithinBounds(sink, anchor, primaryMenu, getBounds());
       Arr.each(submenuTriggers, (st) => {
-        const submenuLayouts = getSubmenuLayouts(tmenu, st.triggeringItem);
+        const submenuLayouts = getSubmenuLayouts(st.triggeringPath);
         Positioning.position(sink, { anchor: 'submenu', item: st.triggeringItem, ...submenuLayouts }, st.triggeredMenu);
       });
     },
