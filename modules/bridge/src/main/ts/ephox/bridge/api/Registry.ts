@@ -9,7 +9,6 @@ import { ContextMenuApi } from '../components/menu/ContextMenu';
 import { ContextToolbarApi, ContextFormApi } from '../components/toolbar/ContextToolbar';
 import { AutocompleterApi } from '../components/content/Autocompleter';
 import { SidebarApi } from '../components/sidebar/Sidebar';
-import { SizerApi } from '../components/sizer/Sizer';
 
 // This would be part of the tinymce api under editor.ui.* so editor.ui.addButton('bold', ...)
 // TODO: This should maybe not be part of this project but rather something built into tinymce core using these public types

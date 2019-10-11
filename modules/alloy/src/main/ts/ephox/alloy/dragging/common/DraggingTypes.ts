@@ -13,7 +13,7 @@ import { BehaviourState } from '../../behaviour/common/BehaviourState';
 export interface DraggingBehaviour extends Behaviour.AlloyBehaviour<DraggingConfigSpec, DraggingConfig> {
   config: (config: DraggingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DraggingConfigSpec, DraggingConfig>;
   snap: (sConfig: SnapConfigSpec) => any;
-  snapTo: (component: AlloyComponent, sConfig: number) => void;
+  snapTo: (component: AlloyComponent, sConfig: SnapConfig) => void;
 }
 
 export type DraggingMode = 'touch' | 'mouse';

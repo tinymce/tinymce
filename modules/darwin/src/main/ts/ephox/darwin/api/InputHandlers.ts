@@ -123,7 +123,7 @@ const keyboard = function (win: Window, container: Element, isRoot: (e: Element)
 
 const platform = PlatformDetection.detect();
 
-const external = (win: Window, container: Element<any>, isRoot: (e: Element) => boolean, annotations: SelectionAnnotation) => {
+const external = (win: Window, container: Element, isRoot: (e: Element) => boolean, annotations: SelectionAnnotation) => {
   const bridge = WindowBridge(win);
 
   return (start: Element, finish: Element) => {
