@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
   Theme();
 
   const expectedDefaultSettings: EditorSettingsType = {
-    toolbar_drawer: 'sliding'
+    toolbar_drawer: 'floating'
   };
 
   const expectedTouchDefaultSettings: EditorSettingsType = {

@@ -81,7 +81,7 @@ const getDefaultSettings = function (id: string, documentBaseUrl: string, isTouc
   const baseDefaults: RawEditorSettings = {
     id,
     theme: 'silver',
-    toolbar_drawer: 'sliding',
+    toolbar_drawer: 'floating',
     plugins: '',
     document_base_url: documentBaseUrl,
     add_form_submit_trigger: true,
