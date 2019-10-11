@@ -3,7 +3,7 @@ import { Element } from '@ephox/sugar';
 
 import * as SizzleFind from '../alien/SizzleFind';
 import * as Truncate from '../alien/Truncate';
-import { TestLabel } from '@ephox/bedrock';
+import { TestLabel } from '@ephox/bedrock-client';
 
 interface TargetAdt {
   fold: <T> (

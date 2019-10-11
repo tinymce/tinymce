@@ -5,7 +5,7 @@ import Env from 'tinymce/core/api/Env';
 import HtmlUtils from '../module/test/HtmlUtils';
 import URI from 'tinymce/core/api/util/URI';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Body, Attr, Class } from '@ephox/sugar';
 

@@ -1,7 +1,7 @@
 import {
     Assertions, Chain, Log, Mouse, Pipeline, Step, UiFinder, Waiter, RawAssertions, Logger, GeneralSteps
 } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element, Height, Hierarchy, Width, Attr } from '@ephox/sugar';

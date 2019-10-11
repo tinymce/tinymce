@@ -1,6 +1,6 @@
 import { Version } from 'ephox/sand/detect/Version';
 import Asserts from 'ephox/sand/test/Asserts';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('VersionDetectorTest', function () {
   const edgeRegex = /.*?edge\/ ?([0-9]+)\.([0-9]+)$/;

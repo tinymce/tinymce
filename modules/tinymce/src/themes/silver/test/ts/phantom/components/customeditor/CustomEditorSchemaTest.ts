@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 import { ValueSchema } from '@ephox/boulder';
 import { RawAssertions } from '@ephox/agar';

@@ -1,5 +1,5 @@
 import { Logger, Pipeline, RawAssertions, Step, Log } from '@ephox/agar';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
 
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';

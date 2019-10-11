@@ -3,7 +3,7 @@ import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();

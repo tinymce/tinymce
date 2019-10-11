@@ -5,7 +5,7 @@ import * as ErrorTypes from '../alien/ErrorTypes';
 import { DieFn, NextFn } from '../pipe/Pipe';
 import { Step } from './Step';
 import { addLogEntry, popLogLevel, pushLogLevel, TestLogs } from './TestLogs';
-import { TestLabel } from '@ephox/bedrock';
+import { TestLabel } from '@ephox/bedrock-client';
 
 const t = function <T, U>(label: string, f: Step<T, U>): Step<T, U> {
   const enrich = function (err) {

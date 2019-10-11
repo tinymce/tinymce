@@ -1,5 +1,5 @@
 import { Assertions, Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
 import { Css, Element } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';

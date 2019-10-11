@@ -1,5 +1,5 @@
 import { Chain, Pipeline, Logger } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { ApiChains, Editor } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 

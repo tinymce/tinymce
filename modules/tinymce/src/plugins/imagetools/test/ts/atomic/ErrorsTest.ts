@@ -1,6 +1,6 @@
 import { RawAssertions } from '@ephox/agar';
 import Errors from 'tinymce/plugins/imagetools/core/Errors';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('atomic.tinymce.plugins.imagetools.ErrorsTest', function () {
   const testHttpErrors = function () {

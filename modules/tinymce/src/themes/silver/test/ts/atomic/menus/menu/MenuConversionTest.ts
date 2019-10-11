@@ -1,4 +1,4 @@
-import { assert, UnitTest} from '@ephox/bedrock';
+import { assert, UnitTest} from '@ephox/bedrock-client';
 import { Menu } from '@ephox/bridge';
 import * as MenuConversion from 'tinymce/themes/silver/ui/menus/menu/MenuConversion';
 

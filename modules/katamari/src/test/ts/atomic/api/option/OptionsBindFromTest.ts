@@ -1,4 +1,4 @@
-import { Assert, UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as Options from 'ephox/katamari/api/Options';
 import { Option } from 'ephox/katamari/api/Option';
 import { tOption } from 'ephox/katamari/api/OptionInstances';

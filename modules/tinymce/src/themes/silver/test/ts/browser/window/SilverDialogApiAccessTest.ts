@@ -1,6 +1,6 @@
 import { Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 import { Cell } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';

@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, Universe } from '@ephox/boss';
 import { Arr, Option } from '@ephox/katamari';
 import { oneAll } from 'ephox/robin/parent/Shared';

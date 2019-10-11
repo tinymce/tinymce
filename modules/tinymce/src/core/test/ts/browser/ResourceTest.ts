@@ -1,4 +1,4 @@
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { Global, Result } from '@ephox/katamari';
 import Resource from 'tinymce/core/api/Resource';
 import { Chain, Cleaner, Assertions, Pipeline, Step } from '@ephox/agar';

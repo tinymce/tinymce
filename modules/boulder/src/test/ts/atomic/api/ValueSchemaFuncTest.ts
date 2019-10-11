@@ -1,5 +1,5 @@
 import { Logger, RawAssertions } from '@ephox/agar';
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as Objects from 'ephox/boulder/api/Objects';

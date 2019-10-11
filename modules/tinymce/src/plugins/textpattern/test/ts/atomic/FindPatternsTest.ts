@@ -1,5 +1,5 @@
 import { RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import * as Settings from 'tinymce/plugins/textpattern/api/Settings';
 import { findPattern } from 'tinymce/plugins/textpattern/utils/Utils';
 

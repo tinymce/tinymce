@@ -1,5 +1,5 @@
 import { FocusTools, Keyboard, Keys, Step, Assertions, Logger, Chain, GeneralSteps } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Future, Result, Option } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
 

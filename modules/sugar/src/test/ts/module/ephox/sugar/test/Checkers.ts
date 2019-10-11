@@ -1,4 +1,4 @@
-import { assert } from '@ephox/bedrock';
+import { assert } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Node from 'ephox/sugar/api/node/Node';

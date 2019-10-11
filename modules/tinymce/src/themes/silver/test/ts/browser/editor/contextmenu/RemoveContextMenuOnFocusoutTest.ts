@@ -1,5 +1,5 @@
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor, ApiChains } from '@ephox/mcagar';
 import { Pipeline, Logger, Chain, Step, UiFinder, Assertions, Guard } from '@ephox/agar';
 import { Cell, Fun } from '@ephox/katamari';

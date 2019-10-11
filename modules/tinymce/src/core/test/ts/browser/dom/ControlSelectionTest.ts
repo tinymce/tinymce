@@ -2,7 +2,7 @@ import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Hierarchy, Element } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { HTMLElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (success, failure) {

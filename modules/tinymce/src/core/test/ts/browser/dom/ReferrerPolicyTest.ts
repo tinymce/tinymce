@@ -1,5 +1,5 @@
 import { Chain, Logger, Pipeline, RawAssertions, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import Editor from 'tinymce/core/api/Editor';

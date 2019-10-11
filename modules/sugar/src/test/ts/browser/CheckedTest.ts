@@ -2,7 +2,7 @@ import * as Checked from 'ephox/sugar/api/properties/Checked';
 import Element from 'ephox/sugar/api/node/Element';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import * as Value from 'ephox/sugar/api/properties/Value';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { HTMLInputElement } from '@ephox/dom-globals';
 
 UnitTest.test('CheckedTest', function () {

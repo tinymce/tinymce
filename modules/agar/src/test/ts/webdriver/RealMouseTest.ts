@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 import { Attr, Class, Css, Element, Html, Insert, Remove, DomEvent } from '@ephox/sugar';

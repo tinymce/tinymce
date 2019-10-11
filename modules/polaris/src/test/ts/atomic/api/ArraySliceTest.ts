@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Arrays from 'ephox/polaris/api/Arrays';
 
 UnitTest.test('api.Arrays.sliceby', function () {

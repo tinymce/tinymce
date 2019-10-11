@@ -5,7 +5,7 @@ import { Element } from '@ephox/sugar';
 
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.ContextMenuTest', (success, failure) => {
   SilverTheme();

@@ -1,5 +1,5 @@
 import { Merger, Type } from '@ephox/katamari';
-import { TestLabel } from '@ephox/bedrock';
+import { TestLabel } from '@ephox/bedrock-client';
 
 const enrichWith = function (label: TestLabel, err: any) {
   if (Type.isString(err)) {

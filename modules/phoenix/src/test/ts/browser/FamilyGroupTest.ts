@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { DomUniverse } from '@ephox/boss';
 import { Document } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';

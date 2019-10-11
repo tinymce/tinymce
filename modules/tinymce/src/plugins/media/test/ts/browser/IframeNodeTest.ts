@@ -1,5 +1,5 @@
 import { Pipeline, UiFinder, Chain, Assertions, ApproxStructure, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 

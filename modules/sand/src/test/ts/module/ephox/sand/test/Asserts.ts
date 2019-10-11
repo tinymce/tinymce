@@ -1,4 +1,4 @@
-import { assert } from '@ephox/bedrock';
+import { assert } from '@ephox/bedrock-client';
 import { console } from '@ephox/dom-globals';
 
 const assertEq = function (expected: any, actual: any, message: string) {

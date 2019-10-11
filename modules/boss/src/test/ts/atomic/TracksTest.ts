@@ -1,6 +1,6 @@
 import Tracks from 'ephox/boss/mutant/Tracks';
 import { Option } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { Gene } from 'ephox/boss/api/Gene';
 
 UnitTest.test('TracksTest', function () {

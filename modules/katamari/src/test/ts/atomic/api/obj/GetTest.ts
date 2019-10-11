@@ -1,7 +1,7 @@
 import * as Obj from 'ephox/katamari/api/Obj';
 import { Option } from 'ephox/katamari/api/Option';
 import { tOption } from 'ephox/katamari/api/OptionInstances';
-import { UnitTest, Assert } from '@ephox/bedrock';
+import { UnitTest, Assert } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
 
 const { tArray, tNumber } = Testable;

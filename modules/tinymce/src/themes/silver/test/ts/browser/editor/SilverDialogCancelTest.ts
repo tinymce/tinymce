@@ -1,5 +1,5 @@
 import { Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 

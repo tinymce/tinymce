@@ -1,5 +1,5 @@
 import * as Strings from 'ephox/katamari/api/Strings';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('supplant', function () {
   function check(expected, str, obj) {

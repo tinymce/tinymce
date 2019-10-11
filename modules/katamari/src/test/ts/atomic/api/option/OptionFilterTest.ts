@@ -1,7 +1,7 @@
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Option } from 'ephox/katamari/api/Option';
 import { tOption } from 'ephox/katamari/api/OptionInstances';
-import { Assert, UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
 import Jsc from '@ephox/wrap-jsverify';
 import { optionSome as arbOptionSome } from 'ephox/katamari/test/arb/ArbDataTypes';

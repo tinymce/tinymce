@@ -1,5 +1,5 @@
 import { RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
 import { Option, Arr, Obj } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';

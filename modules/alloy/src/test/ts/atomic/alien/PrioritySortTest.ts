@@ -1,5 +1,5 @@
 import { Logger, RawAssertions } from '@ephox/agar';
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Struct } from '@ephox/katamari';
 
 import * as PrioritySort from 'ephox/alloy/alien/PrioritySort';

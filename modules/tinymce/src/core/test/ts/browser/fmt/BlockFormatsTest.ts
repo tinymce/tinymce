@@ -3,7 +3,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorSettings } from 'tinymce/core/api/SettingsTypes';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Body } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.BlockFormatsTest', (success, failure) => {

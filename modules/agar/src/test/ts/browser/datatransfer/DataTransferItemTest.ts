@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { RawAssertions, Pipeline, Logger, Step } from 'ephox/agar/api/Main';
 import { createFile } from 'ephox/agar/api/Files';
 import { Blob } from '@ephox/dom-globals';

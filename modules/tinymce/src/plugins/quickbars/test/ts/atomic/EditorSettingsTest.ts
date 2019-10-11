@@ -2,7 +2,7 @@ import { Logger, RawAssertions } from '@ephox/agar';
 import { Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Settings from 'tinymce/plugins/quickbars/api/Settings';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('DialogChanges', () => {
   Logger.sync(

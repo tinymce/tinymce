@@ -6,7 +6,7 @@ import * as Html from 'ephox/sugar/api/properties/Html';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { HTMLIFrameElement, HTMLSpanElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('CssReflowTest', function () {

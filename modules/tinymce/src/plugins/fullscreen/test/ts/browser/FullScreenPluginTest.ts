@@ -1,5 +1,5 @@
 import { UiFinder, Assertions, Chain, Guard, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document, HTMLLabelElement } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';

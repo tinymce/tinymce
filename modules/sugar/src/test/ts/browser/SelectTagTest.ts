@@ -1,6 +1,6 @@
 import Element from 'ephox/sugar/api/node/Element';
 import Select from 'ephox/sugar/api/tag/SelectTag';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { HTMLSelectElement } from '@ephox/dom-globals';
 
 UnitTest.test('SelectTagTest', function () {

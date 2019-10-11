@@ -14,7 +14,7 @@ import {
   Mouse,
 } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Fun, Arr, Strings } from '@ephox/katamari';
 import { Element, SelectorFind, Selectors } from '@ephox/sugar';

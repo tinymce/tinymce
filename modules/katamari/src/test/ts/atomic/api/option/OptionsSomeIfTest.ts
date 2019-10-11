@@ -1,6 +1,6 @@
 import * as Options from 'ephox/katamari/api/Options';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('OptionSomeIfTest', () => {
   Jsc.property('false -> none', 'number', (n: number) => Jsc.eq(true, Options.someIf<number>(false, n).isNone()));

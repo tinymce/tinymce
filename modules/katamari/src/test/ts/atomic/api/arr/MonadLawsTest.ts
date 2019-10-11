@@ -1,6 +1,6 @@
 import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('MonadLawsTest', function () {
   // return a >>= f ≡ f a

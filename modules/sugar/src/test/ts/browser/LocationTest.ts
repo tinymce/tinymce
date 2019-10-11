@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { console, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';

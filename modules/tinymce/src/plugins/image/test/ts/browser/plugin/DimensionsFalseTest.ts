@@ -11,7 +11,7 @@ import {
   cWaitForDialog,
   silverSettings,
 } from '../../module/Helpers';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('Image dialog image_dimensions: false', (success, failure) => {
   SilverTheme();

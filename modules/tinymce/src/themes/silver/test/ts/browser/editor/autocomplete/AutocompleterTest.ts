@@ -1,6 +1,6 @@
 import { Logger, Pipeline, Step, Keys, UiFinder, GeneralSteps, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader, TinyUi, TinyApis, TinyActions } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';

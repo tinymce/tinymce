@@ -11,7 +11,7 @@ import {
   UiFinder,
   Waiter,
 } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Result } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 

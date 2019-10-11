@@ -1,6 +1,6 @@
 import { RawAssertions } from '@ephox/agar';
 import StyleConversions from 'tinymce/themes/mobile/util/StyleConversions';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
   const check = function (label, expected, input) {

@@ -2,7 +2,7 @@ import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function () {
   const success = arguments[arguments.length - 2];

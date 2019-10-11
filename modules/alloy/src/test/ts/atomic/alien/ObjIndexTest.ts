@@ -1,5 +1,5 @@
 import { Logger, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
 
 import * as ObjIndex from 'ephox/alloy/alien/ObjIndex';

@@ -1,5 +1,5 @@
 import { Logger } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Obj, Struct } from '@ephox/katamari';
 
 import * as ComponentEvents from 'ephox/alloy/construct/ComponentEvents';

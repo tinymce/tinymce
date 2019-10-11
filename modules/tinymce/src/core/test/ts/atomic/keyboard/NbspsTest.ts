@@ -1,5 +1,5 @@
 import { RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { normalizeNbspMiddle } from 'tinymce/core/keyboard/Nbsps';
 
 UnitTest.test('atomic.tinymce.core.keyboard.NbspsTest', () => {

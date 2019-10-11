@@ -1,5 +1,5 @@
 import { Logger, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 
 import * as UiSubstitutes from 'ephox/alloy/spec/UiSubstitutes';

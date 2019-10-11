@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Body, Element, Html, Insert, Remove } from '@ephox/sugar';
 import TableContent from 'ephox/snooker/api/TableContent';

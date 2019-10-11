@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Chain, UiControls, UiFinder, Mouse } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
 import { Class } from '@ephox/sugar';
 

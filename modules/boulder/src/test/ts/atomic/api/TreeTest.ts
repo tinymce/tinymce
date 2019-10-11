@@ -1,5 +1,5 @@
 import { RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Obj } from '@ephox/katamari';
 import * as DslType from 'ephox/boulder/api/DslType';
 import * as FieldPresence from 'ephox/boulder/api/FieldPresence';

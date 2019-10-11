@@ -1,5 +1,5 @@
 import { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('DeviceTypeTest', function () {
   const getPlatform = function (userAgent: string) {

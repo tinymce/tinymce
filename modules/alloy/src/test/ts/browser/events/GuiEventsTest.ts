@@ -12,7 +12,7 @@ import {
   Step,
   UiFinder
 } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Attr, DomEvent, Element, Insert, Node, Remove, Text } from '@ephox/sugar';
 

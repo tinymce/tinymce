@@ -5,7 +5,7 @@ import * as CaretFormat from 'tinymce/core/fmt/CaretFormat';
 import TypeText from '../../module/test/TypeText';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { isCaretNode, getParentCaretContainer } from 'tinymce/core/fmt/FormatContainer';
 import { Text } from '@ephox/dom-globals';
 

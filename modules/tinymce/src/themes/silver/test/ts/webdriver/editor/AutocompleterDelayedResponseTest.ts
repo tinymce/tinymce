@@ -1,6 +1,6 @@
 import { Logger, Pipeline, Keyboard, Step, Keys, GeneralSteps, RealKeys } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { setTimeout } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader, TinyUi, TinyApis } from '@ephox/mcagar';

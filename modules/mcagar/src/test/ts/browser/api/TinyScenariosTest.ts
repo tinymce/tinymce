@@ -1,5 +1,5 @@
 import { Arbitraries, Assertions, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { console, navigator } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 import { Node } from '@ephox/sugar';

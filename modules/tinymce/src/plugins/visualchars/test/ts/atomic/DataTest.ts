@@ -1,6 +1,6 @@
 import { RawAssertions } from '@ephox/agar';
 import Data from 'tinymce/plugins/visualchars/core/Data';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('atomic.tinymce.plugins.visualchars.DataTest', function () {
   RawAssertions.assertEq(

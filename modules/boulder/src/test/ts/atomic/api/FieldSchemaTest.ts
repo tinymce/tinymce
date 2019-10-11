@@ -1,5 +1,5 @@
 import { RawAssertions } from '@ephox/agar';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 import { FieldProcessorAdt } from 'ephox/boulder/api/Main';

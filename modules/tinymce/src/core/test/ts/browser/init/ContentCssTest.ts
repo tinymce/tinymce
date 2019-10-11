@@ -1,5 +1,5 @@
 import { RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Editor from 'tinymce/core/api/Editor';
 import { appendContentCssFromSettings } from 'tinymce/core/init/ContentCss';

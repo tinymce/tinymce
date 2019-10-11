@@ -1,5 +1,5 @@
 import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
 import { Element, Hierarchy } from '@ephox/sugar';
 import FontInfo from 'tinymce/core/fmt/FontInfo';

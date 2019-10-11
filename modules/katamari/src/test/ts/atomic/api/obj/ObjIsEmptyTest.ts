@@ -1,6 +1,6 @@
 import * as Obj from 'ephox/katamari/api/Obj';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('ObjIsEmptyTest', function () {
   assert.eq(true, Obj.isEmpty({}));

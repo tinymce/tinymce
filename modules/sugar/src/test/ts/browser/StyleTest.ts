@@ -1,5 +1,5 @@
 import * as Style from 'ephox/sugar/impl/Style';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('SizeTest', function () {
   const fakeElement = {

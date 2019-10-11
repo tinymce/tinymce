@@ -13,7 +13,7 @@ import {
   Waiter,
 } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr, Cell } from '@ephox/katamari';
 import { Body, Element } from '@ephox/sugar';

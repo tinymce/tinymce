@@ -1,6 +1,6 @@
 import { Cell } from 'ephox/katamari/api/Cell';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('Cell', function () {
   const single = Cell('hello world');

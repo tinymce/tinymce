@@ -1,4 +1,4 @@
-import { assert, TestLabel } from '@ephox/bedrock';
+import { assert, TestLabel } from '@ephox/bedrock-client';
 import { Arr, Fun, Obj, Option } from '@ephox/katamari';
 import { Attr, Classes, Css, Element, Html, Node, Text, Traverse, Value } from '@ephox/sugar';
 

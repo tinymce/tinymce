@@ -1,7 +1,7 @@
 import Element from 'ephox/sugar/api/node/Element';
 import * as Text from 'ephox/sugar/api/node/Text';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { HTMLSpanElement, Text as DomText } from '@ephox/dom-globals';
 
 UnitTest.test('TextTest', function () {

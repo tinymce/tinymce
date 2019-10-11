@@ -1,5 +1,5 @@
 import { Assertions, Chain, Files, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder, Waiter, FileInput } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import Conversions from 'tinymce/core/file/Conversions';

@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Element, Insert, Remove, Body, DomEvent, SelectorFind } from '@ephox/sugar';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { sDragnDrop, dragnDrop, sDropFiles, dropFiles, isDraggable } from 'ephox/agar/api/DragnDrop';

@@ -1,6 +1,6 @@
 import PlatformQuery from 'ephox/sand/test/PlatformQuery';
 import { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('BrowserTest', function () {
   function check(expectedQuery: string, expectedOs: string, expectedBrowser: string, expectedMajor: number, expectedMinor: number, userAgent: string) {

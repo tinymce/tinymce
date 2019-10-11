@@ -4,7 +4,7 @@ import * as Node from 'ephox/sugar/api/node/Node';
 import * as NodeTypes from 'ephox/sugar/api/node/NodeTypes';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
 UnitTest.test('NodeTest', function () {

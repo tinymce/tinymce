@@ -1,5 +1,5 @@
 import { RawAssertions } from '@ephox/agar';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import Jsc from '@ephox/wrap-jsverify';
 import * as MenuPathing from 'ephox/alloy/menu/layered/MenuPathing';
 

@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Chain, Keyboard, Keys, NamedChain, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 

@@ -1,6 +1,6 @@
 import { Chain, Pipeline, UiFinder, NamedChain, GeneralSteps, Logger } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 import { document } from '@ephox/dom-globals';
 import { Result } from '@ephox/katamari';

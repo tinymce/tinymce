@@ -1,6 +1,6 @@
 /* tslint:disable:no-console */
 import { ApproxStructure, Assertions, Logger, Mouse, Pipeline, Step, Chain, UiFinder, Keyboard, Keys, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { console, document } from '@ephox/dom-globals';
 import { Cell, Arr } from '@ephox/katamari';
 import { TinyLoader, TinyApis } from '@ephox/mcagar';

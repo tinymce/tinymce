@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Chain, Logger, Step, UiFinder } from '@ephox/agar';
 import { AlloyTriggers, Composing, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 
 import { renderDropZone } from 'tinymce/themes/silver/ui/dialog/Dropzone';

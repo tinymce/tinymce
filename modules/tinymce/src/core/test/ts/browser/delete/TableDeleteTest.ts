@@ -4,7 +4,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Remove, Replication, Element, Attr, Html, SelectorFilter } from '@ephox/sugar';
 import TableDelete from 'tinymce/core/delete/TableDelete';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', (success, failure) => {

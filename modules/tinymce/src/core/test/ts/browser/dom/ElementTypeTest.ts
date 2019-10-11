@@ -1,7 +1,7 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { Element } from '@ephox/sugar';
 import * as ElementType from 'tinymce/core/dom/ElementType';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.dom.ElementTypeTest', (success, failure) => {
   const sCheckElement = function (name, predicate, expectedValue) {

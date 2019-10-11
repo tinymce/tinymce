@@ -2,7 +2,7 @@ import { Pipeline, Log } from '@ephox/agar';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/autosave/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document, window, history } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.autosave.AutoSavePluginTest', (success, failure) => {

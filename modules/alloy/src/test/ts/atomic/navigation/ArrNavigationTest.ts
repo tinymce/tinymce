@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
