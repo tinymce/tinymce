@@ -326,9 +326,9 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
   };
 
   const isRangeWithinShortEndedElement = (rng: Range) => {
-    if (rng.collapsed && rng.startContainer === rng.endContainer) {
-      const shortEndedElements = Obj.keys(editor.schema.getShortEndedElements());
-      return Arr.contains(shortEndedElements, rng.startContainer.nodeName.toLowerCase());
+    if (rng.collapsed) {
+      const shortEndedElements = editor.schema.getShortEndedElements();
+      return Obj.has(shortEndedElements, rng.startContainer.nodeName.toLowerCase());
     } else {
       return false;
     }
@@ -348,15 +348,14 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
 
   const normalizeShortEndedElementSelection = (rng: Range) => {
     const newRng = editor.dom.createRng();
+    const startContainer = rng.startContainer;
+    // Note: Assumes rng is a collapsed selection as per `isRangeWithinShortEndedElement`
     if (rng.startOffset === 0) {
-      newRng.setStartBefore(rng.startContainer);
+      newRng.setStartBefore(startContainer);
+      newRng.setEndBefore(startContainer);
     } else {
-      newRng.setStartAfter(rng.startContainer);
-    }
-    if (rng.endOffset === 0) {
-      newRng.setEndBefore(rng.endContainer);
-    } else {
-      newRng.setEndAfter(rng.endContainer);
+      newRng.setStartAfter(startContainer);
+      newRng.setEndAfter(startContainer);
     }
 
     return newRng;
