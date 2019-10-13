@@ -27,6 +27,7 @@ Version 5.1.0 (TBD)
     Fixed notifications overlapping instead of stacking #TINY-3478
     Fixed inline dialogs positioning incorrectly when the page is scrolled #TINY-4018
     Fixed inline dialogs and menus not repositioning when resizing #TINY-3227
+    Fixed inline toolbar incorrectly stretching to the full width when a width value was provided #TINY-4066
     Fixed menu chevrons color to follow the menu text color #TINY-4153
     Fixed table menu selection grid from staying black when using dark skins, now follows border color #TINY-4153
     Fixed Oxide using the wrong text color variable for menubar button focused state #TINY-4146
