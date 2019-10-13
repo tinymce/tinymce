@@ -2,8 +2,8 @@ import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard,
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { TinyApis, TinyDom, TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
-import { LazyPlatformDetection } from '@ephox/sand';
+import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 import { Element, Body } from '@ephox/sugar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
@@ -12,7 +12,7 @@ import TablePlugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
-  const detection = LazyPlatformDetection.detect();
+  const detection = PlatformDetection.detect();
   const browser = detection.browser;
   const runTests = browser.isChrome() || browser.isFirefox() || browser.isSafari();
   if (!runTests) {
@@ -26,7 +26,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
   TablePlugin();
 
   // Override the platform detection, so that it thinks we're on a touch device
-  LazyPlatformDetection.override({
+  PlatformDetection.override({
     deviceType: {
       ...detection.deviceType,
       isTouch: () => true
@@ -62,7 +62,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
     const sWaitForAndCloseDialog = GeneralSteps.sequence([
       Chain.asStep(editor, [
         tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'),
-        UiChains.cCloseDialog('div[role="dialog"]')
+        Touch.cTapOn('.tox-button:contains("Cancel")')
       ]),
       Waiter.sTryUntil(
         'Wait for dialog to close',
@@ -240,10 +240,10 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
     base_url: '/project/tinymce/js/tinymce',
     image_caption: true,
   }, () => {
-    LazyPlatformDetection.override(detection);
+    PlatformDetection.override(detection);
     success();
   }, (err, logs) => {
-    LazyPlatformDetection.override(detection);
+    PlatformDetection.override(detection);
     failure(err, logs);
   });
 });

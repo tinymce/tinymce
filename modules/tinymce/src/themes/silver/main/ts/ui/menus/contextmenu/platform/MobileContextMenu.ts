@@ -1,6 +1,6 @@
 import { AlloyComponent, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
 import { MouseEvent, TouchEvent } from '@ephox/dom-globals';
-import { LazyPlatformDetection } from '@ephox/sand';
+import { PlatformDetection } from '@ephox/sand';
 import { Selection, WindowSelection } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -118,7 +118,7 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, back
 };
 
 export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMenu: () => MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, isTriggeredByKeyboardEvent: boolean): void => {
-  const detection = LazyPlatformDetection.detect();
+  const detection = PlatformDetection.detect();
   const isiOS = detection.os.isiOS();
   const isOSX = detection.os.isOSX();
   const isAndroid = detection.os.isAndroid();
