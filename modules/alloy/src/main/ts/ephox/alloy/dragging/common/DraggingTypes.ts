@@ -83,6 +83,7 @@ export interface DragStartData {
   width: number;
   height: number;
   bounds: Bounds;
+  comp: AlloyComponent;
 }
 
 export interface DraggingState<T> extends BehaviourState {

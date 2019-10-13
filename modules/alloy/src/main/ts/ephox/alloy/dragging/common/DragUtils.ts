@@ -25,7 +25,8 @@ const calcStartData = (dragConfig: DraggingConfig, comp: AlloyComponent): DragSt
   return {
     bounds: dragConfig.getBounds(),
     height: Height.getOuter(comp.element()),
-    width: Width.getOuter(comp.element())
+    width: Width.getOuter(comp.element()),
+    comp
   };
 };
 
