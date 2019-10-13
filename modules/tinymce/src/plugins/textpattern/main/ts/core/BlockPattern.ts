@@ -10,6 +10,7 @@ import { Arr } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Tools from 'tinymce/core/api/util/Tools';
 import Editor from 'tinymce/core/api/Editor';
+import * as Settings from '../api/Settings';
 import * as TextSearch from '../text/TextSearch';
 import { TextWalker } from '../text/TextWalker';
 import { generatePathRange, resolvePathRange } from '../utils/PathRange';
@@ -35,7 +36,7 @@ const applyPattern = (editor: Editor, match: BlockPatternMatch): boolean => {
   const dom = editor.dom;
   const pattern = match.pattern;
   const rng = resolvePathRange(dom.getRoot(), match.range).getOrDie('Unable to resolve path range');
-  const block = dom.getParent(rng.startContainer, dom.isBlock);
+  const block = Utils.getParentBlock(editor, rng);
 
   if (pattern.type === 'block-format') {
     if (Utils.isBlockFormatName(pattern.format, editor.formatter)) {
@@ -57,9 +58,11 @@ const applyPattern = (editor: Editor, match: BlockPatternMatch): boolean => {
 const findPatterns = (editor: Editor, patterns: BlockPattern[]): BlockPatternMatch[] => {
   const dom = editor.dom;
   const rng = editor.selection.getRng();
-  const block = dom.getParent(rng.startContainer, dom.isBlock);
+  const block = Utils.getParentBlock(editor, rng);
+  const forcedRootBlock = Settings.getForcedRootBlock(editor);
+  const matchesForcedRootBlock = forcedRootBlock === '' && dom.is(block, 'body') || dom.is(block, forcedRootBlock);
 
-  if (!(dom.is(block, 'p') && Utils.isElement(block))) {
+  if (block === null || !matchesForcedRootBlock) {
     return [];
   }
 

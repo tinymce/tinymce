@@ -7,8 +7,10 @@
 
 import { HTMLElement, Node, Range, Text } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Type } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Formatter from 'tinymce/core/api/Formatter';
+import * as Settings from '../api/Settings';
 import { InlinePattern, Pattern } from '../core/PatternTypes';
 
 const isElement = (node: Node): node is HTMLElement => node.nodeType === Node.ELEMENT_NODE;
@@ -71,10 +73,20 @@ const findPattern = <P extends Pattern>(patterns: P[], text: string): Option<P> 
   });
 };
 
+const getParentBlock = (editor: Editor, rng: Range) => {
+  const parentBlock = editor.dom.getParent(rng.startContainer, editor.dom.isBlock);
+  if (Settings.getForcedRootBlock(editor) === '') {
+    return parentBlock || editor.getBody();
+  } else {
+    return parentBlock;
+  }
+};
+
 export {
   cleanEmptyNodes,
   deleteRng,
   findPattern,
+  getParentBlock,
   isBlockFormatName,
   isElement,
   isReplacementPattern,
