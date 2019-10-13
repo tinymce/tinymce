@@ -48,8 +48,7 @@ const getItems = (editor: Editor, hasClasses: boolean, insertNewTable: boolean) 
     {
       type: 'input',
       name: 'border',
-      label: 'Border width',
-      inputMode: 'numeric'
+      label: 'Border width'
     },
     {
       type: 'label',

@@ -10,7 +10,7 @@ import { Objects } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { ClientRect, Element as DomElement } from '@ephox/dom-globals';
 import { Cell, Id, Merger, Option, Result, Thunk } from '@ephox/katamari';
-import { LazyPlatformDetection } from '@ephox/sand';
+import { PlatformDetection } from '@ephox/sand';
 import { Css, Element, Focus, Scroll, SelectorFind, Traverse } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -23,8 +23,6 @@ import ToolbarScopes, { ScopedToolbars } from './ui/context/ContextToolbarScopes
 import { forwardSlideEvent, renderContextToolbar } from './ui/context/ContextUi';
 import { renderToolbar } from './ui/toolbar/CommonToolbar';
 import { identifyButtons } from './ui/toolbar/Integration';
-
-const isTouch = LazyPlatformDetection.detect().deviceType.isTouch;
 
 const bubbleSize = 12;
 const bubbleAlignments = {
@@ -58,7 +56,7 @@ const mobileAnchorSpecLayouts = {
     LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast]
 };
 
-const getAnchorLayout = (position: Toolbar.ContextToolbarPosition): Partial<AnchorSpec> => {
+const getAnchorLayout = (position: Toolbar.ContextToolbarPosition, isTouch: boolean): Partial<AnchorSpec> => {
   if (position === 'line') {
     return {
       bubble: Bubble.nu(bubbleSize, 0, bubbleAlignments),
@@ -71,13 +69,14 @@ const getAnchorLayout = (position: Toolbar.ContextToolbarPosition): Partial<Anch
   } else {
     return {
       bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
-      layouts: isTouch() ? mobileAnchorSpecLayouts : desktopAnchorSpecLayouts,
+      layouts: isTouch ? mobileAnchorSpecLayouts : desktopAnchorSpecLayouts,
       overrides: anchorOverrides
     };
   }
 };
 
 const register = (editor: Editor, registryContextToolbars, sink, extras) => {
+  const isTouch = PlatformDetection.detect().deviceType.isTouch;
 
   const contextbar = GuiFactory.build(
     renderContextToolbar({
@@ -213,7 +212,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     const anchorage = position === 'node' ? extras.backstage.shared.anchors.node(element) : extras.backstage.shared.anchors.cursor();
     return Merger.deepMerge(
       anchorage,
-      getAnchorLayout(position)
+      getAnchorLayout(position, isTouch())
     );
   };
 

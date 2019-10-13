@@ -9,7 +9,7 @@ import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, GuiFactory,
 import { Menu } from '@ephox/bridge';
 import { Element as DomElement } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
-import { LazyPlatformDetection } from '@ephox/sand';
+import { PlatformDetection } from '@ephox/sand';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import * as DesktopContextMenu from './platform/DesktopContextMenu';
@@ -105,7 +105,7 @@ const isNativeOverrideKeyEvent = function (editor: Editor, e) {
 };
 
 export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
-  const detection = LazyPlatformDetection.detect();
+  const detection = PlatformDetection.detect();
   const isTouch = detection.deviceType.isTouch;
 
   const contextmenu = GuiFactory.build(

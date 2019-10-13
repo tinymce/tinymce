@@ -51,7 +51,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
       scope: '',
       backgroundcolor: '',
       bordercolor: '',
-      borderstyle: ''
+      borderstyle: '',
+      border: ''
     };
 
     const baseGetTest = () => {
@@ -87,7 +88,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
 
     const advGetTest = () => {
       const complexHtml = '<table><tr><th style="text-align: right; vertical-align: top; width: 10px; height: 11px; ' +
-      'border-color: red; background-color: blue; border-style: dashed;" scope="row">X</th></tr></table>';
+      'border-width: 2px; border-color: red; background-color: blue; border-style: dashed;" scope="row">X</th></tr></table>';
 
       const complexData = {
         width: '10px',
@@ -99,6 +100,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         borderstyle: 'dashed',
         bordercolor: 'red',
         backgroundcolor: 'blue',
+        border: '2px'
       };
 
       return Log.stepsAsStep('TBA', 'Table: Table cell properties dialog (get data from advanced cell)', [
@@ -122,6 +124,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         backgroundcolor: 'blue',
         bordercolor: 'red',
         borderstyle: 'dashed',
+        border: ''
       };
 
       const advHtml = '<table><tbody><tr><th style="width: 10px; height: 11px; vertical-align: top; text-align: right; ' +
@@ -167,6 +170,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         borderstyle: 'dashed',
         bordercolor: '',
         backgroundcolor: 'red',
+        border: ''
       };
 
       return Log.stepsAsStep('TBA', 'Table: Table cell properties dialog update multiple cells', [
@@ -194,6 +198,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         backgroundcolor: 'blue',
         bordercolor: 'red',
         borderstyle: 'dashed',
+        border: ''
       };
 
       const emptyTable = '<table><tbody><tr><th>X</th></tr></tbody></table>';
@@ -208,6 +213,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         backgroundcolor: '',
         bordercolor: '',
         borderstyle: '',
+        border: ''
       };
 
       return Log.stepsAsStep('TBA', 'Table: Remove all styles', [
@@ -223,7 +229,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
 
     const execCommandTest = () => {
       const advHtml = '<table><tbody><tr><th style="width: 10px; height: 11px; vertical-align: top; text-align: right; ' +
-      'border-color: red; border-style: dashed; background-color: blue;" scope="row">X</th></tr></tbody></table>';
+      'border-width: thick; border-color: red; border-style: dashed; background-color: blue;" scope="row">X</th></tr></tbody></table>';
 
       const advData = {
         width: '10px',
@@ -235,6 +241,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         backgroundcolor: 'blue',
         bordercolor: 'red',
         borderstyle: 'dashed',
+        border: 'thick'
       };
 
       return Log.stepsAsStep('TBA', 'Table: Open dialog via execCommand', [
@@ -257,6 +264,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         borderstyle: 'dashed',
         bordercolor: 'red',
         backgroundcolor: 'blue',
+        border: ''
       };
 
       const advHtml = '<table><tbody><tr><th style="width: 10px; height: 11px; vertical-align: top; text-align: right; ' +
@@ -298,7 +306,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
     toolbar: 'tablecellprops',
     indent: false,
     valid_styles: {
-      '*': 'width,height,vertical-align,text-align,float,border-color,border-style,background-color,border,padding,border-spacing,border-collapse'
+      '*': 'width,height,vertical-align,text-align,float,border-color,border-style,background-color,border,padding,border-spacing,border-collapse,border-width'
     },
   }, success, failure);
 });
