@@ -1,11 +1,11 @@
 import Element from '../node/Element';
-import { HTMLInputElement, HTMLTextAreaElement } from '@ephox/dom-globals';
+import { HTMLInputElement, HTMLTextAreaElement, HTMLSelectElement, HTMLButtonElement, HTMLOptionElement } from '@ephox/dom-globals';
 
-const get = function (element: Element<HTMLInputElement | HTMLTextAreaElement>) {
+const get = function (element: Element<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLOptionElement | HTMLButtonElement>) {
   return element.dom().value;
 };
 
-const set = function (element: Element<HTMLInputElement | HTMLTextAreaElement>, value: string) {
+const set = function (element: Element<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLOptionElement | HTMLButtonElement>, value: string) {
   if (value === undefined) {
     throw new Error('Value.set was undefined');
   }
