@@ -27,7 +27,7 @@ import { Objects } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { ClientRect, Element as DomElement, window } from '@ephox/dom-globals';
 import { Cell, Id, Merger, Option, Result, Thunk } from '@ephox/katamari';
-import { LazyPlatformDetection } from '@ephox/sand';
+import { PlatformDetection } from '@ephox/sand';
 import { Css, Element, Focus, Scroll, SelectorFind, Traverse, VisualViewport } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -40,8 +40,6 @@ import ToolbarScopes, { ScopedToolbars } from './ui/context/ContextToolbarScopes
 import { renderToolbar } from './ui/toolbar/CommonToolbar';
 import { identifyButtons } from './ui/toolbar/Integration';
 import * as Settings from './api/Settings';
-
-const lazyDetection = LazyPlatformDetection.detect();
 
 const bubbleSize = 12;
 const bubbleAlignments = {
@@ -76,6 +74,7 @@ const mobileAnchorSpecLayouts = {
 };
 
 const getAnchorLayout = (position: Toolbar.ContextToolbarPosition): Partial<AnchorSpec> => {
+  const detection = PlatformDetection.detect();
   if (position === 'line') {
     return {
       bubble: Bubble.nu(bubbleSize, 0, bubbleAlignments),
@@ -88,7 +87,7 @@ const getAnchorLayout = (position: Toolbar.ContextToolbarPosition): Partial<Anch
   } else {
     return {
       bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
-      layouts: lazyDetection.deviceType.isTouch() ? mobileAnchorSpecLayouts : desktopAnchorSpecLayouts,
+      layouts: detection.deviceType.isTouch() ? mobileAnchorSpecLayouts : desktopAnchorSpecLayouts,
       overrides: anchorOverrides
     };
   }

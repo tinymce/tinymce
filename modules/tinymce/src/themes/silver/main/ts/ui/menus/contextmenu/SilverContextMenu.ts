@@ -9,7 +9,7 @@ import { AlloyComponent, GuiFactory, InlineView, Behaviour, AddEventsBehaviour, 
 import { Menu } from '@ephox/bridge';
 import { Element as DomElement } from '@ephox/dom-globals';
 import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
-import { LazyPlatformDetection } from '@ephox/sand';
+import { PlatformDetection } from '@ephox/sand';
 import Editor from 'tinymce/core/api/Editor';
 import * as MenuParts from '../menu/MenuParts';
 import * as NestedMenus from '../menu/NestedMenus';
@@ -107,7 +107,7 @@ const isNativeOverrideKeyEvent = function (editor: Editor, e) {
 };
 
 export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
-  const lazyDetection = LazyPlatformDetection.detect();
+  const detection = PlatformDetection.detect();
 
   const contextmenu = GuiFactory.build(
     InlineView.sketch({
@@ -136,7 +136,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       e.preventDefault();
     }
 
-    if (isNativeOverrideKeyEvent(editor, e) || Settings.isContextMenuDisabled(editor) || lazyDetection.deviceType.isTouch()) {
+    if (isNativeOverrideKeyEvent(editor, e) || Settings.isContextMenuDisabled(editor) || detection.deviceType.isTouch()) {
       return;
     }
 
