@@ -279,9 +279,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     editor.on('SetSelectionRange', function (e) {
       // If the range is set inside a short ended element, then move it
       // to the side as IE for example will try to add content inside
-      if (isRangeWithinShortEndedElement(e.range)) {
-        e.range = normalizeShortEndedElementSelection(e.range);
-      }
+      e.range = normalizeShortEndedElementSelection(e.range);
 
       const rng = setContentEditableSelection(e.range, e.forward);
       if (rng) {
@@ -325,15 +323,6 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     CefFocus.setup(editor);
   };
 
-  const isRangeWithinShortEndedElement = (rng: Range) => {
-    if (rng.collapsed) {
-      const shortEndedElements = editor.schema.getShortEndedElements();
-      return Obj.has(shortEndedElements, rng.startContainer.nodeName.toLowerCase());
-    } else {
-      return false;
-    }
-  };
-
   const isWithinCaretContainer = function (node: Node) {
     return (
       CaretContainer.isCaretContainer(node) ||
@@ -347,15 +336,31 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
   };
 
   const normalizeShortEndedElementSelection = (rng: Range) => {
+    const shortEndedElements = editor.schema.getShortEndedElements();
     const newRng = editor.dom.createRng();
     const startContainer = rng.startContainer;
-    // Note: Assumes rng is a collapsed selection as per `isRangeWithinShortEndedElement`
-    if (rng.startOffset === 0) {
-      newRng.setStartBefore(startContainer);
-      newRng.setEndBefore(startContainer);
+    const startOffset = rng.startOffset;
+    const endContainer = rng.endContainer;
+    const endOffset = rng.endOffset;
+
+    if (Obj.has(shortEndedElements, startContainer.nodeName.toLowerCase())) {
+      if (startOffset === 0) {
+        newRng.setStartBefore(startContainer);
+      } else {
+        newRng.setStartAfter(startContainer);
+      }
     } else {
-      newRng.setStartAfter(startContainer);
-      newRng.setEndAfter(startContainer);
+      newRng.setStart(startContainer, startOffset);
+    }
+
+    if (Obj.has(shortEndedElements, endContainer.nodeName.toLowerCase())) {
+      if (endOffset === 0) {
+        newRng.setEndBefore(endContainer);
+      } else {
+        newRng.setEndAfter(endContainer);
+      }
+    } else {
+      newRng.setEnd(endContainer, endOffset);
     }
 
     return newRng;
