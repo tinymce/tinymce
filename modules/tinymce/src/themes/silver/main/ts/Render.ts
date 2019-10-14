@@ -351,8 +351,9 @@ const setup = (editor: Editor): RenderInfo => {
     }).getOr(baseHeight);
 
     const stringWidth = Utils.numToPx(parsedWidth);
-    if (Css.isValidValue('div', 'width', stringWidth)) {
-      Css.set(outerContainer.element(), 'width', stringWidth);
+    const widthProperty = editor.inline ? 'max-width' : 'width';
+    if (Css.isValidValue('div', widthProperty, stringWidth)) {
+      Css.set(outerContainer.element(), widthProperty, stringWidth);
     }
 
     if (!editor.inline) {
