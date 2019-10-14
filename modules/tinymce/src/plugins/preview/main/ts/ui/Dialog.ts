@@ -7,14 +7,17 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import IframeContent from '../core/IframeContent';
+import Settings from '../api/Settings';
 
 export const open = (editor: Editor) => {
 
   const content = IframeContent.getPreviewHtml(editor);
+  const dialogClasses = Settings.getExtraClasses(editor);
 
   const dataApi = editor.windowManager.open({
     title: 'Preview',
     size: 'large',
+    extraClasses: dialogClasses,
     body: {
       type: 'panel',
       items: [

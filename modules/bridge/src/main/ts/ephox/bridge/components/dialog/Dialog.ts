@@ -117,6 +117,7 @@ export const dialogSchema = ValueSchema.objOf([
     tabpanel: tabPanelSchema
   })),
   FieldSchema.defaultedString('size', 'normal'),
+  FieldSchema.strictString('extraClasses'),
   FieldSchema.strictArrayOf('buttons', dialogButtonSchema),
   FieldSchema.defaulted('initialData', {}),
   FieldSchema.defaultedFunction('onAction', Fun.noop),

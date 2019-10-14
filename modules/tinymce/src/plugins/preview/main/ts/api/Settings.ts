@@ -22,9 +22,14 @@ const shouldUseContentCssCors = (editor: Editor): boolean => {
   return editor.getParam('content_css_cors', false, 'boolean');
 };
 
+const getExtraClasses = function (editor) {
+  return editor.getParam('plugin_preview_classes', '');
+};
+
 export default {
   getPreviewDialogWidth,
   getPreviewDialogHeight,
   getContentStyle,
-  shouldUseContentCssCors
+  shouldUseContentCssCors,
+  getExtraClasses
 };

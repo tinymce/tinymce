@@ -33,11 +33,16 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverD
 
   const dialogEvents = SilverDialogEvents.initDialog(() => instanceApi, SilverDialogCommon.getEventExtras(() => dialog, extra));
 
-  const dialogSize = dialogInit.internalDialog.size !== 'normal'
+  let dialogSize = dialogInit.internalDialog.size !== 'normal'
     ? dialogInit.internalDialog.size === 'large'
       ? [ 'tox-dialog--width-lg' ]
       : [ 'tox-dialog--width-md' ]
     : [];
+
+  // if there is any extra classname
+  if (dialogInit.internalDialog.extraClasses) {
+    dialogSize = dialogSize.concat(dialogInit.internalDialog.extraClasses);
+  }
 
   const spec = {
     header,
