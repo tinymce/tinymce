@@ -10,7 +10,7 @@ export type MenuDirectory = Record<string, string[]>;
 
 // A tuple of (item, menu). This can be used to refresh the menu and position them next to the right
 // triggering items.
-export interface LayeredItemTrigger { triggeringItem: AlloyComponent; triggeredMenu: AlloyComponent; }
+export interface LayeredItemTrigger { triggeringItem: AlloyComponent; triggeredMenu: AlloyComponent; triggeringPath: string[]; }
 
 export interface LayeredState {
   setContents: (sPrimary: string, sMenus: Record<string, MenuPreparation>, sExpansions: Record<string, string>, dir: MenuDirectory) => void;
@@ -73,13 +73,14 @@ const init = (): LayeredState => {
     });
   };
 
-  const getTriggerData = (menuValue: string, getItemByValue: (v: string) => Option<AlloyComponent>): Option<LayeredItemTrigger> => {
+  const getTriggerData = (menuValue: string, getItemByValue: (v: string) => Option<AlloyComponent>, path: string[]): Option<LayeredItemTrigger> => {
     return getPreparedMenu(menuValue).bind((menu) => {
       return getTriggeringItem(menuValue).bind((triggeringItemValue) => {
         return getItemByValue(triggeringItemValue).map((triggeredItem) => {
           return {
             triggeredMenu: menu,
-            triggeringItem: triggeredItem
+            triggeringItem: triggeredItem,
+            triggeringPath: path
           };
         });
       });
@@ -100,9 +101,9 @@ const init = (): LayeredState => {
       // straightforward version when prototyping
       const revPath = Arr.reverse(extraPath.concat(path));
 
-      const triggers: Array<Option<LayeredItemTrigger>> = Arr.bind(revPath, (menuValue) => {
+      const triggers: Array<Option<LayeredItemTrigger>> = Arr.bind(revPath, (menuValue, menuIndex) => {
         // finding menuValue, it should match the trigger
-        return getTriggerData(menuValue, getItemByValue).fold(
+        return getTriggerData(menuValue, getItemByValue, revPath.slice(0, menuIndex + 1)).fold(
           () => primary.get().is(menuValue) ? [ ] : [ Option.none() ],
           (data) => [ Option.some(data) ]
         );

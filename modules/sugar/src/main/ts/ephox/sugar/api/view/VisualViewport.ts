@@ -1,4 +1,4 @@
-import { Window, window } from '@ephox/dom-globals';
+import { EventListenerOrEventListenerObject, Window, window } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import Element from '../node/Element';
 import * as Scroll from './Scroll';
@@ -21,8 +21,8 @@ type VisualViewport = {
   width: number,
   height: number,
   scale: number,
-  addEventListener: (event: string, handler: () => void) => void,
-  removeEventListener: (event: string, handler: () => void) => void
+  addEventListener: (event: string, handler: EventListenerOrEventListenerObject) => void,
+  removeEventListener: (event: string, handler: EventListenerOrEventListenerObject) => void
 };
 
 const bounds = (x: number, y: number, width: number, height: number): Bounds => {

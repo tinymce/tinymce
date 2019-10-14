@@ -80,7 +80,12 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   };
 
   const isEventOnImageOutsideRange = function (evt, range) {
-    return isImage(evt.target) && !RangePoint.isXYWithinRange(evt.clientX, evt.clientY, range);
+    if (evt.type === 'longpress' || evt.type.indexOf('touch') === 0) {
+      const touch = evt.touches[0];
+      return isImage(evt.target) && !RangePoint.isXYWithinRange(touch.clientX, touch.clientY, range);
+    } else {
+      return isImage(evt.target) && !RangePoint.isXYWithinRange(evt.clientX, evt.clientY, range);
+    }
   };
 
   const contextMenuSelectImage = function (evt) {
@@ -493,7 +498,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     });
 
     editor.on('hide blur', hideResizeRect);
-    editor.on('contextmenu', contextMenuSelectImage, true);
+    editor.on('contextmenu longpress', contextMenuSelectImage, true);
 
     // Hide rect on focusout since it would float on top of windows otherwise
     // editor.on('focusout', hideResizeRect);

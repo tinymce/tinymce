@@ -16,7 +16,7 @@ import ItemResponse from '../item/ItemResponse';
 import * as MenuItems from '../item/MenuItems';
 import { deriveMenuMovement } from './MenuMovement';
 import { markers as getMenuMarkers } from './MenuParts';
-import { createPartialMenuWithAlloyItems, handleError } from './MenuUtils';
+import { createHorizontalPartialMenuWithAlloyItems, createPartialMenuWithAlloyItems, handleError } from './MenuUtils';
 import { SingleMenuItemApi } from './SingleMenuTypes';
 
 export type ItemChoiceActionHandler = (value: string) => void;
@@ -26,25 +26,32 @@ export enum FocusMode { ContentFocus, UiFocus }
 const hasIcon = (item) => item.icon !== undefined || item.type === 'togglemenuitem' || item.type === 'choicemenuitem';
 const menuHasIcons = (xs: Array<SingleMenuItemApi | InlineContent.AutocompleterContents>) => Arr.exists(xs, hasIcon);
 
-const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, backstage: UiFactoryBackstage, menuHasIcons: boolean = true): Option<ItemTypes.ItemSpec> => {
+const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemResponse, backstage: UiFactoryBackstage, menuHasIcons: boolean, isHorizontalMenu: boolean): Option<ItemTypes.ItemSpec> => {
   const providersBackstage = backstage.shared.providers;
+  // If we're making a horizontal menu (mobile context menu) we want text OR icons
+  // to simplify the UI. We also don't want shortcut text.
+  const parseForHorizontalMenu = (menuitem) => !isHorizontalMenu ? menuitem : ({
+    ...menuitem,
+    shortcut: Option.none(),
+    icon: menuitem.text.isSome() ? Option.none() : menuitem.icon,
+  });
   switch (item.type) {
     case 'menuitem':
       return BridgeMenu.createMenuItem(item).fold(
         handleError,
-        (d) => Option.some(MenuItems.normal(d, itemResponse, providersBackstage, menuHasIcons))
+        (d) => Option.some(MenuItems.normal(parseForHorizontalMenu(d), itemResponse, providersBackstage, menuHasIcons))
       );
 
     case 'nestedmenuitem':
       return BridgeMenu.createNestedMenuItem(item).fold(
         handleError,
-        (d) => Option.some(MenuItems.nested(d, itemResponse, providersBackstage, menuHasIcons))
+        (d) => Option.some(MenuItems.nested(parseForHorizontalMenu(d), itemResponse, providersBackstage, menuHasIcons, isHorizontalMenu))
       );
 
     case 'togglemenuitem':
       return BridgeMenu.createToggleMenuItem(item).fold(
         handleError,
-        (d) => Option.some(MenuItems.toggle(d, itemResponse, providersBackstage))
+        (d) => Option.some(MenuItems.toggle(parseForHorizontalMenu(d), itemResponse, providersBackstage))
       );
     case 'separator':
       return BridgeMenu.createSeparatorMenuItem(item).fold(
@@ -54,7 +61,7 @@ const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemRes
     case 'fancymenuitem':
       return BridgeMenu.createFancyMenuItem(item).fold(
         handleError,
-        (d) => MenuItems.fancy(d, backstage)
+        (d) => MenuItems.fancy(parseForHorizontalMenu(d), backstage)
       );
     default: {
       // tslint:disable-next-line:no-console
@@ -87,12 +94,16 @@ export const createAutocompleteItems = (items: InlineContent.AutocompleterConten
   );
 };
 
-export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, backstage: UiFactoryBackstage): Partial<MenuTypes.MenuSpec> => {
+export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, backstage: UiFactoryBackstage, isHorizontalMenu: boolean): Partial<MenuTypes.MenuSpec> => {
   const hasIcons = menuHasIcons(items);
 
   const alloyItems = Options.cat(
     Arr.map(items, (item: SingleMenuItemApi) => {
-      const createItem = (i: SingleMenuItemApi) => createMenuItemFromBridge(i, itemResponse, backstage, hasIcons);
+      // Have to check each item for an icon, instead of as part of hasIcons above,
+      // else in horizontal menus, items with an icon but without text will display
+      // with neither
+      const itemHasIcon = (i) => isHorizontalMenu ? !i.hasOwnProperty('text') : hasIcons;
+      const createItem = (i: SingleMenuItemApi) => createMenuItemFromBridge(i, itemResponse, backstage, itemHasIcon(i), isHorizontalMenu);
       if (item.type === 'nestedmenuitem' && item.getSubmenuItems().length <= 0) {
         return createItem(Merger.merge(item, {disabled: true}));
       } else {
@@ -100,7 +111,8 @@ export const createPartialMenu = (value: string, items: SingleMenuItemApi[], ite
       }
     })
   );
-  return createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, 1, 'normal');
+  const createPartial = isHorizontalMenu ? createHorizontalPartialMenuWithAlloyItems : createPartialMenuWithAlloyItems;
+  return createPartial(value, hasIcons, alloyItems, 1, 'normal');
 };
 
 export const createTieredDataFrom = (partialMenu: Partial<MenuTypes.MenuSpec>) => {

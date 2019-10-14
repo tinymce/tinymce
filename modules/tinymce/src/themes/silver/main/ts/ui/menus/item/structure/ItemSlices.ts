@@ -80,6 +80,14 @@ const renderSubmenuCaret = (icons: IconProvider): AlloySpec => ({
   }
 });
 
+const renderDownwardsCaret = (icons: IconProvider): AlloySpec => ({
+  dom: {
+    tag: 'div',
+    classes: [ ItemClasses.caretClass ],
+    innerHtml: getIcon('chevron-down', icons)
+  }
+});
+
 export {
   renderIcon,
   renderText,
@@ -87,5 +95,6 @@ export {
   renderStyledText,
   renderShortcut,
   renderCheckmark,
-  renderSubmenuCaret
+  renderSubmenuCaret,
+  renderDownwardsCaret
 };

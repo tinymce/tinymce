@@ -62,10 +62,10 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bou
   const bubbleTop = candidate.bubble().offset().top();
 
   const boundsY = bounds.y();
-  const boundsHeight = bounds.height();
+  const boundsBottom = bounds.bottom();
 
   const boundsX = bounds.x();
-  const boundsWidth = bounds.width();
+  const boundsRight = bounds.right();
 
   // candidate position is excluding the bubble, so add those values as well
   const newX = candidateX + bubbleLeft;
@@ -77,13 +77,12 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bou
   // Futz with the "height" of the popup to ensure if it doesn't fit it's capped at the available height.
   // As of TBIO-4291, we provide all available space for both up and down.
   const upAvailable = Fun.constant((limitY + deltaH) - boundsY);
-  const downAvailable = Fun.constant((boundsY + boundsHeight) - limitY);
+  const downAvailable = Fun.constant(boundsBottom - limitY);
   const maxHeight = Direction.cataVertical(candidate.direction(), downAvailable, /* middle */ downAvailable, upAvailable);
 
   const westAvailable = Fun.constant((limitX + deltaW) - boundsX);
-  const eastAvailable = Fun.constant((boundsX + boundsWidth) - limitX);
-  const bestAvailable = Fun.constant(Math.max(westAvailable(), eastAvailable()));
-  const maxWidth = Direction.cataHorizontal(candidate.direction(), eastAvailable, /* middle */ bestAvailable, westAvailable);
+  const eastAvailable = Fun.constant(boundsRight - limitX);
+  const maxWidth = Direction.cataHorizontal(candidate.direction(), eastAvailable, /* middle */ eastAvailable, westAvailable);
 
   const reposition = Reposition.decision({
     x: limitX,

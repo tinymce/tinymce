@@ -5,38 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  AlloySpec,
-  Behaviour,
-  Gui,
-  GuiFactory,
-  Keying,
-  Memento,
-  Positioning,
-  SimpleSpec
-} from '@ephox/alloy';
-import { HTMLElement, HTMLIFrameElement, console } from '@ephox/dom-globals';
+import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec } from '@ephox/alloy';
+import { console, HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import {
-  getHeightSetting,
-  getMinHeightSetting,
-  getMinWidthSetting,
-  getMultipleToolbarsSetting,
-  getToolbarDrawer,
-  isMenubarEnabled,
-  isToolbarEnabled,
-  useFixedContainer,
-  isMultipleToolbars,
-  isStickyToolbar,
-  isDistractionFree,
-  ToolbarDrawer
-} from './api/Settings';
+import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, getMultipleToolbarsSetting, getToolbarDrawer, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, ToolbarDrawer, useFixedContainer } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -44,14 +21,15 @@ import Iframe from './modes/Iframe';
 import Inline from './modes/Inline';
 import FormatControls from './ui/core/FormatControls';
 import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterContainer';
-import * as StickyHeader from './ui/header/StickyHeader';
 import * as StaticHeader from './ui/header/StaticHeader';
+import * as StickyHeader from './ui/header/StickyHeader';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import * as Sidebar from './ui/sidebar/Sidebar';
-import * as Throbber from './ui/throbber/Throbber';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
 import TableSelectorHandles from './ui/selector/TableSelectorHandles';
+import * as Throbber from './ui/throbber/Throbber';
+import TouchEvents from './api/TouchEvents';
 
 export interface RenderInfo {
   mothership: Gui.GuiSystem;
@@ -344,6 +322,7 @@ const setup = (editor: Editor): RenderInfo => {
   const uiMothership = Gui.takeover(sink);
 
   Events.setup(editor, mothership, uiMothership);
+  TouchEvents.setupLongpress(editor);
 
   const getUi = () => {
     const channels = {

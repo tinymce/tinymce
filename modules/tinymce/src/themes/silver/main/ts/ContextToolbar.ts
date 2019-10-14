@@ -5,41 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  AlloySpec,
-  AlloyTriggers,
-  AnchorSpec,
-  Behaviour,
-  Boxes,
-  Bubble,
-  GuiFactory,
-  InlineView,
-  Keying,
-  Layout,
-  LayoutInside,
-  MaxHeight,
-  MaxWidth,
-  Positioning
-} from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying, Layout, LayoutInside, MaxHeight, MaxWidth, Positioning } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { ClientRect, Element as DomElement, window } from '@ephox/dom-globals';
+import { ClientRect, Element as DomElement } from '@ephox/dom-globals';
 import { Cell, Id, Merger, Option, Result, Thunk } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, Element, Focus, Scroll, SelectorFind, Traverse, VisualViewport } from '@ephox/sugar';
+import { Css, Element, Focus, Scroll, SelectorFind, Traverse } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
-import { showContextToolbarEvent } from './ui/context/ContextEditorEvents';
+import * as Settings from './api/Settings';
+import { hideContextToolbarEvent, showContextToolbarEvent } from './ui/context/ContextEditorEvents';
 import { ContextForm } from './ui/context/ContextForm';
-import { forwardSlideEvent, renderContextToolbar } from './ui/context/ContextUi';
 import * as ContextToolbarBounds from './ui/context/ContextToolbarBounds';
 import ToolbarLookup from './ui/context/ContextToolbarLookup';
 import ToolbarScopes, { ScopedToolbars } from './ui/context/ContextToolbarScopes';
+import { forwardSlideEvent, renderContextToolbar } from './ui/context/ContextUi';
 import { renderToolbar } from './ui/toolbar/CommonToolbar';
 import { identifyButtons } from './ui/toolbar/Integration';
-import * as Settings from './api/Settings';
 
 const bubbleSize = 12;
 const bubbleAlignments = {
@@ -73,8 +56,7 @@ const mobileAnchorSpecLayouts = {
     LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast]
 };
 
-const getAnchorLayout = (position: Toolbar.ContextToolbarPosition): Partial<AnchorSpec> => {
-  const detection = PlatformDetection.detect();
+const getAnchorLayout = (position: Toolbar.ContextToolbarPosition, isTouch: boolean): Partial<AnchorSpec> => {
   if (position === 'line') {
     return {
       bubble: Bubble.nu(bubbleSize, 0, bubbleAlignments),
@@ -87,13 +69,14 @@ const getAnchorLayout = (position: Toolbar.ContextToolbarPosition): Partial<Anch
   } else {
     return {
       bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
-      layouts: detection.deviceType.isTouch() ? mobileAnchorSpecLayouts : desktopAnchorSpecLayouts,
+      layouts: isTouch ? mobileAnchorSpecLayouts : desktopAnchorSpecLayouts,
       overrides: anchorOverrides
     };
   }
 };
 
 const register = (editor: Editor, registryContextToolbars, sink, extras) => {
+  const isTouch = PlatformDetection.detect().deviceType.isTouch;
 
   const contextbar = GuiFactory.build(
     renderContextToolbar({
@@ -106,20 +89,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   );
 
   const toolbarOrMenubarEnabled = Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
-
-  const getBounds = () => {
-    const viewportBounds = VisualViewport.getBounds(window);
-    const contentAreaBox = Boxes.box(Element.fromDom(editor.getContentAreaContainer()));
-
-    // Create a bounds that lets the context toolbar overflow outside the content area, but remains in the viewport
-    if (editor.inline && !toolbarOrMenubarEnabled) {
-      return Option.some(ContextToolbarBounds.getDistractionFreeBounds(editor, contentAreaBox, viewportBounds));
-    } else if (editor.inline) {
-      return Option.some(ContextToolbarBounds.getInlineBounds(editor, contentAreaBox, viewportBounds));
-    } else {
-      return Option.some(ContextToolbarBounds.getIframeBounds(editor, contentAreaBox, viewportBounds));
-    }
-  };
+  const getBounds = () => ContextToolbarBounds.getBounds(editor, toolbarOrMenubarEnabled);
 
   const isCompletelyBehindHeader = (nodeBounds: ClientRect): boolean => {
     const headerEle = SelectorFind.descendant(Element.fromDom(editor.getContainer()), '.tox-editor-header').getOrDie();
@@ -141,6 +111,10 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   const shouldContextToolbarHide = (): boolean => {
+    // If a mobile context menu is open, don't launch else they'll probably overlap. For android, specifically.
+    if (isTouch() && extras.backstage.isContextMenuOpen()) {
+      return true;
+    }
     const nodeBounds = lastElement.get().map((ele) => ele.getBoundingClientRect()).getOrThunk(() => {
       return editor.selection.getRng().getBoundingClientRect();
     });
@@ -148,6 +122,10 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     const aboveViewport = nodeBounds.bottom < 0;
     const belowViewport = nodeBounds.top > viewportHeight;
     return aboveViewport || belowViewport || isCompletelyBehindHeader(nodeBounds);
+  };
+
+  const forceHide = () => {
+    InlineView.hide(contextbar);
   };
 
   // FIX: make a lot nicer.
@@ -234,12 +212,18 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     const anchorage = position === 'node' ? extras.backstage.shared.anchors.node(element) : extras.backstage.shared.anchors.cursor();
     return Merger.deepMerge(
       anchorage,
-      getAnchorLayout(position)
+      getAnchorLayout(position, isTouch())
     );
   };
 
   const launchContext = (toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm, elem: Option<DomElement>) => {
     clearTimer();
+
+    // If a mobile context menu is open, don't launch else they'll probably overlap. For android, specifically.
+    if (isTouch() && extras.backstage.isContextMenuOpen()) {
+      return;
+    }
+
     const toolbarSpec = buildToolbar(toolbarApi);
     const sElem = elem.map(Element.fromDom);
     const anchor = getAnchor(toolbarApi.position, sElem);
@@ -283,7 +267,8 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   editor.on('init', () => {
-    editor.on('ScrollContent ScrollWindow', hideOrRepositionIfNecessary);
+    editor.on(hideContextToolbarEvent, forceHide);
+    editor.on('ScrollContent ScrollWindow longpress', hideOrRepositionIfNecessary);
 
     // FIX: Make it go away when the action makes it go away. E.g. deleting a column deletes the table.
     editor.on('click keyup SetContent ObjectResized ResizeEditor', (e) => {

@@ -1,36 +1,57 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Waiter, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Touch, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { TinyApis, TinyLoader, TinyUi, TinyDom, UiChains } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
-
+import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
+import { Element, Body } from '@ephox/sugar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
+import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
+UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
+  const detection = PlatformDetection.detect();
+  const browser = detection.browser;
+  const runTests = browser.isChrome() || browser.isFirefox() || browser.isSafari();
+  if (!runTests) {
+    return success();
+  }
+
   SilverTheme();
   LinkPlugin();
   ImagePlugin();
   ImageToolsPlugin();
   TablePlugin();
 
+  // Override the platform detection, so that it thinks we're on a touch device
+  PlatformDetection.override({
+    deviceType: {
+      ...detection.deviceType,
+      isTouch: () => true
+    }
+  });
+
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
     const doc = Element.fromDom(document);
+    const dialogRoot = Body.body();
     const editorBody = Element.fromDom(editor.getBody());
 
-    const sOpenContextMenu = (target) => {
-      return Chain.asStep(editor, [
-        tinyUi.cTriggerContextMenu('trigger context menu', target, '.tox-silver-sink .tox-collection [role="menuitem"]'),
-        Chain.wait(0)
-      ]);
-    };
+    const sOpenContextMenu = (target: string) => Chain.asStep(target, [
+      Chain.inject(editorBody),
+      UiFinder.cFindIn(target),
+      Touch.cTouchStart,
+      Chain.wait(500),
+      Chain.op(() => editor.fire('selectionchange')),
+      Touch.cTouchEnd,
+      Chain.wait(100),
+      Chain.inject(dialogRoot),
+      tinyUi.cWaitForPopup('trigger context menu', '.tox-silver-sink .tox-collection--horizontal [role="menuitem"]')
+    ]);
 
     // Assert focus is on the expected menu item
     const sAssertFocusOnItem = (label, selector) => {
@@ -41,7 +62,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
     const sWaitForAndCloseDialog = GeneralSteps.sequence([
       Chain.asStep(editor, [
         tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'),
-        UiChains.cCloseDialog('div[role="dialog"]')
+        Touch.cTapOn('.tox-button:contains("Cancel")')
       ]),
       Waiter.sTryUntil(
         'Wait for dialog to close',
@@ -100,7 +121,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
       });
     }), editorBody);
 
-    Pipeline.async({}, [
+    const steps = [
       tinyApis.sFocus,
       Log.stepsAsStep('TBA', 'Test context menus on empty editor', [
         sOpenContextMenu('p'),
@@ -208,7 +229,9 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
         sPressDownArrowKey,
         sAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")'),
       ])
-    ], onSuccess, onFailure);
+    ];
+
+    Pipeline.async({}, steps, onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'image imagetools link table',
@@ -216,5 +239,11 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     image_caption: true,
-  }, success, failure);
+  }, () => {
+    PlatformDetection.override(detection);
+    success();
+  }, (err, logs) => {
+    PlatformDetection.override(detection);
+    failure(err, logs);
+  });
 });
