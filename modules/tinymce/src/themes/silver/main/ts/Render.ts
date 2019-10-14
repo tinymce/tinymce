@@ -19,7 +19,7 @@ import {
 import { HTMLElement, HTMLIFrameElement, console } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, Class } from '@ephox/sugar';
+import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
@@ -135,10 +135,6 @@ const setup = (editor: Editor): RenderInfo => {
       })
     ])
   });
-
-  if (!isTouch) {
-    editor.once('touchstart', () => Class.add(sink.element(), touchPlatformClass));
-  }
 
   const lazySink = () => Result.value<AlloyComponent, Error>(sink);
 

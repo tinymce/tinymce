@@ -28,6 +28,7 @@ const updateAdvancedProps = (modifiers, data: CellData) => {
   modifiers.setStyle('background-color', data.backgroundcolor);
   modifiers.setStyle('border-color', data.bordercolor);
   modifiers.setStyle('border-style', data.borderstyle);
+  modifiers.setStyle('border-width', Util.addSizeSuffix(data.borderwidth));
 };
 
 // When applying to a single cell, values can be falsy. That is
@@ -143,7 +144,7 @@ const open = (editor: Editor) => {
         name: 'general',
         items: CellDialogGeneralTab.getItems(editor)
       },
-      Helpers.getAdvancedTab()
+      Helpers.getAdvancedTab('cell')
     ]
   };
   const dialogPanel: Types.Dialog.PanelApi = {
