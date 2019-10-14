@@ -39,11 +39,11 @@ const monitor = (settings: GuiEventSettings) => {
 
   // Need a return value, so can't use Singleton.value;
   const startData: Cell<Option<TouchHistoryData>> = Cell(Option.none());
+  const longpressFired = Cell<boolean>(false);
 
   const longpress = DelayedFunction((event: SugarEvent) => {
-    // Stop longpress firing a tap
-    startData.set(Option.none());
     settings.triggerEvent(SystemEvents.longpress(), event);
+    longpressFired.set(true);
   }, LONGPRESS_DELAY);
 
   const handleTouchstart = (event: SugarEvent): Option<boolean> => {
@@ -57,12 +57,13 @@ const monitor = (settings: GuiEventSettings) => {
       };
 
       longpress.schedule(event);
+      longpressFired.set(false);
       startData.set(Option.some(data));
     });
     return Option.none();
   };
 
-  const handleTouchmove = (event): Option<boolean> => {
+  const handleTouchmove = (event: SugarEvent): Option<boolean> => {
     longpress.cancel();
     getTouch(event).each((touch) => {
       startData.get().each((data) => {
@@ -72,7 +73,7 @@ const monitor = (settings: GuiEventSettings) => {
     return Option.none();
   };
 
-  const handleTouchend = (event): Option<boolean> => {
+  const handleTouchend = (event: SugarEvent): Option<boolean> => {
     longpress.cancel();
 
     const isSame = (data) => {
@@ -80,7 +81,12 @@ const monitor = (settings: GuiEventSettings) => {
     };
 
     return startData.get().filter(isSame).map((data) => {
-      return settings.triggerEvent(SystemEvents.tap(), event);
+      if (longpressFired.get()) {
+        event.prevent();
+        return false;
+      } else {
+        return settings.triggerEvent(SystemEvents.tap(), event);
+      }
     });
   };
 

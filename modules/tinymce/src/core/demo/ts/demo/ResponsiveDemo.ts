@@ -2,7 +2,7 @@ import { Element } from '@ephox/sugar';
 
 declare let tinymce: any;
 
-export default function () {
+export default () => {
 
   const makeSidebar = (ed, name: string, background: string, width: number) => {
     ed.ui.registry.addSidebar(name, {
@@ -15,12 +15,8 @@ export default function () {
           api.element().removeChild(box.dom());
         };
       },
-      onShow: (api) => {
-
-      },
-      onHide: (api) => {
-
-      },
+      onShow: (api) => { },
+      onHide: (api) => { },
     });
   };
 
@@ -98,11 +94,11 @@ export default function () {
       makeSidebar(ed, 'sidebar1', 'green', 200);
     },
     plugins: [
-      'fullscreen help'
-      // 'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
-      // 'searchreplace wordcount visualblocks visualchars code fullscreen fullpage insertdatetime media nonbreaking',
-      // 'save table directionality emoticons template paste textcolor importcss colorpicker textpattern',
-      // 'codesample help noneditable print'
+      'fullscreen help',
+      'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
+      'searchreplace wordcount visualblocks visualchars code fullscreen fullpage insertdatetime media nonbreaking',
+      'save table directionality emoticons template paste textcolor importcss colorpicker textpattern',
+      'codesample help noneditable print'
     ],
     // rtl_ui: true,
     add_unload_trigger: false,
@@ -150,4 +146,4 @@ export default function () {
 
   tinymce.init(settings);
   // tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
-}
+};
