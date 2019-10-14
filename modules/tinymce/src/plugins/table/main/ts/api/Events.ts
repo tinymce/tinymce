@@ -7,6 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import { HTMLElement } from '@ephox/dom-globals';
+import { Element } from '@ephox/sugar';
 
 const fireNewRow = (editor: Editor, row: HTMLElement) => editor.fire('newrow', { node: row });
 const fireNewCell = (editor: Editor, cell: HTMLElement) => editor.fire('newcell', { node: cell });
@@ -19,9 +20,24 @@ const fireObjectResized = (editor: Editor, target: HTMLElement, width: number, h
   editor.fire('ObjectResized', { target, width, height });
 };
 
+const fireTableSelectionChange = (editor: Editor, cells: Element[], start: Element, finish: Element, otherCells) => {
+  editor.fire('tableselectionchange', {
+    cells,
+    start,
+    finish,
+    otherCells
+  });
+};
+
+const fireTableSelectionClear = (editor: Editor) => {
+  editor.fire('tableselectionclear');
+};
+
 export {
   fireNewRow,
   fireNewCell,
   fireObjectResizeStart,
-  fireObjectResized
+  fireObjectResized,
+  fireTableSelectionChange,
+  fireTableSelectionClear
 };

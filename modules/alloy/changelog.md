@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 # [5.0.0] - TBD
 
 ### Added
+- Added `mustSnap` configuration to `Dragging` to force draggables to snapping points.
 - Added the ability to calculate a max width to `Bounder` though defaulted it to a no-op.
 - Added `MaxWidth` export for use in anchor overrides.
 - Added `onDocked`, `onUndocked`, `onShow`, `onShown`, `onHide` and `onHidden` configuration callbacks for the `Docking` behaviour.

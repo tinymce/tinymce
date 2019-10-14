@@ -7,21 +7,24 @@
 
 import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
 import { Fun, Option, Struct, Cell } from '@ephox/katamari';
-import { TableLookup, OtherCells, TableFill } from '@ephox/snooker';
+import { TableLookup, OtherCells, TableFill, TableResize } from '@ephox/snooker';
 import { Element, Selection, SelectionDirection, Class, Node, Compare } from '@ephox/sugar';
 
 import { getCloneElements } from '../api/Settings';
 import * as Util from '../alien/Util';
 import Direction from '../queries/Direction';
 import Ephemera from './Ephemera';
+import * as Events from '../api/Events';
 import { DomParent } from '@ephox/robin';
 
 const hasInternalTarget = (e: Event) => {
   return Class.has(Element.fromDom(e.target as HTMLElement), 'ephox-snooker-resizer-bar') === false;
 };
-import { KeyboardEvent, MouseEvent, Event, HTMLElement } from '@ephox/dom-globals';
+import { KeyboardEvent, MouseEvent, Event, HTMLElement, TouchEvent, Node as HtmlNode } from '@ephox/dom-globals';
+import Editor from 'tinymce/core/api/Editor';
+import { SelectionTargets } from './SelectionTargets';
 
-export default function (editor, lazyResize, selectionTargets) {
+export default function (editor: Editor, lazyResize: () => Option<TableResize>, selectionTargets: SelectionTargets) {
   const handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);
   let handlers = Option.none();
 
@@ -34,18 +37,13 @@ export default function (editor, lazyResize, selectionTargets) {
         const doc = Element.fromDom(editor.getDoc());
         const generators = TableFill.cellOperations(Fun.noop, doc, cloneFormats);
         const otherCells = OtherCells.getOtherCells(table, targets, generators);
-        editor.fire('tableselectionchange', {
-          cells,
-          start,
-          finish,
-          otherCells
-        });
+        Events.fireTableSelectionChange(editor, cells, start, finish, otherCells);
       });
     });
   };
 
   const onClear = () => {
-    editor.fire('tableselectionclear');
+    Events.fireTableSelectionClear(editor);
   };
 
   const annotations = SelectionAnnotation.byAttr(Ephemera, onSelection, onClear);
@@ -184,12 +182,12 @@ export default function (editor, lazyResize, selectionTargets) {
       }
     };
 
-    const getTouchEnd = () => {
+    const getDoubleTap = () => {
       const lastTarget = Cell<Element>(Element.fromDom(body as any));
       const lastTimeStamp = Cell<number>(0);
 
-      const touchEnd = (t) => {
-        const target = Element.fromDom(t.target);
+      const touchEnd = (t: TouchEvent) => {
+        const target = Element.fromDom(<HtmlNode> t.target);
         if (Node.name(target) === 'td' || Node.name(target) === 'th') {
           const lT = lastTarget.get();
           const lTS = lastTimeStamp.get();
@@ -206,12 +204,12 @@ export default function (editor, lazyResize, selectionTargets) {
       };
     };
 
-    const touchEnd = getTouchEnd();
+    const doubleTap = getDoubleTap();
 
     editor.on('mousedown', mouseDown);
     editor.on('mouseover', mouseOver);
     editor.on('mouseup', mouseUp);
-    editor.on('touchend', touchEnd.touchEnd);
+    editor.on('touchend', doubleTap.touchEnd);
     editor.on('keyup', keyup);
     editor.on('keydown', keydown);
     editor.on('NodeChange', syncSelection);

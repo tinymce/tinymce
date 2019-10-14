@@ -166,7 +166,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
   const memBottomRight = Memento.record(
     Button.sketch({
       dom: {
-        tag: 'span',
+        tag: 'div',
         classes: ['tox-selector']
       },
 
