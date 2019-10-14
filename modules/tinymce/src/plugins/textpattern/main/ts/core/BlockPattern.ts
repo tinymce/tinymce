@@ -36,21 +36,22 @@ const applyPattern = (editor: Editor, match: BlockPatternMatch): boolean => {
   const dom = editor.dom;
   const pattern = match.pattern;
   const rng = resolvePathRange(dom.getRoot(), match.range).getOrDie('Unable to resolve path range');
-  const block = Utils.getParentBlock(editor, rng);
 
-  if (pattern.type === 'block-format') {
-    if (Utils.isBlockFormatName(pattern.format, editor.formatter)) {
+  Utils.getParentBlock(editor, rng).each((block) => {
+    if (pattern.type === 'block-format') {
+      if (Utils.isBlockFormatName(pattern.format, editor.formatter)) {
+        editor.undoManager.transact(() => {
+          stripPattern(editor.dom, block, pattern);
+          editor.formatter.apply(pattern.format);
+        });
+      }
+    } else if (pattern.type === 'block-command') {
       editor.undoManager.transact(() => {
         stripPattern(editor.dom, block, pattern);
-        editor.formatter.apply(pattern.format);
+        editor.execCommand(pattern.cmd, false, pattern.value);
       });
     }
-  } else if (pattern.type === 'block-command') {
-    editor.undoManager.transact(() => {
-      stripPattern(editor.dom, block, pattern);
-      editor.execCommand(pattern.cmd, false, pattern.value);
-    });
-  }
+  });
 
   return true;
 };
@@ -58,28 +59,27 @@ const applyPattern = (editor: Editor, match: BlockPatternMatch): boolean => {
 const findPatterns = (editor: Editor, patterns: BlockPattern[]): BlockPatternMatch[] => {
   const dom = editor.dom;
   const rng = editor.selection.getRng();
-  const block = Utils.getParentBlock(editor, rng);
-  const forcedRootBlock = Settings.getForcedRootBlock(editor);
-  const matchesForcedRootBlock = forcedRootBlock === '' && dom.is(block, 'body') || dom.is(block, forcedRootBlock);
 
-  if (block === null || !matchesForcedRootBlock) {
-    return [];
-  }
+  return Utils.getParentBlock(editor, rng).filter((block) => {
+    const forcedRootBlock = Settings.getForcedRootBlock(editor);
+    const matchesForcedRootBlock = forcedRootBlock === '' && dom.is(block, 'body') || dom.is(block, forcedRootBlock);
+    return block !== null && matchesForcedRootBlock;
+  }).bind((block) => {
+    // Get the block text
+    const blockText = block.textContent;
 
-  // Get the block text
-  const blockText = block.textContent;
+    // Find the pattern
+    const matchedPattern = Utils.findPattern(patterns, blockText);
+    return matchedPattern.map((pattern) => {
+      if (Tools.trim(blockText).length === pattern.start.length) {
+        return [];
+      }
 
-  // Find the pattern
-  const matchedPattern = Utils.findPattern(patterns, blockText);
-  return matchedPattern.map((pattern) => {
-    if (Tools.trim(blockText).length === pattern.start.length) {
-      return [];
-    }
-
-    return [{
-      pattern,
-      range: generatePathRange(dom.getRoot(), block, 0, block, 0)
-    }];
+      return [{
+        pattern,
+        range: generatePathRange(dom.getRoot(), block, 0, block, 0)
+      }];
+    });
   }).getOr([]);
 };
 

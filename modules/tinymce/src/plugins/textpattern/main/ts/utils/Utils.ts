@@ -74,11 +74,11 @@ const findPattern = <P extends Pattern>(patterns: P[], text: string): Option<P> 
 };
 
 const getParentBlock = (editor: Editor, rng: Range) => {
-  const parentBlock = editor.dom.getParent(rng.startContainer, editor.dom.isBlock);
+  const parentBlockOpt = Option.from(editor.dom.getParent(rng.startContainer, editor.dom.isBlock));
   if (Settings.getForcedRootBlock(editor) === '') {
-    return parentBlock || editor.getBody();
+    return parentBlockOpt.orThunk(() => Option.some(editor.getBody()));
   } else {
-    return parentBlock;
+    return parentBlockOpt;
   }
 };
 
