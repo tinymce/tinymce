@@ -7,6 +7,7 @@
 
 import { Console } from '@ephox/dom-globals';
 import { Obj, Type, Results, Arr, Global } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 import { PatternSet } from '../core/PatternTypes';
 import { createPatternSet, normalizePattern } from './Pattern';
 
@@ -49,6 +50,18 @@ const getPatternSet = (editorSettings): PatternSet => {
   return createPatternSet(normalized.values);
 };
 
+const getForcedRootBlock = (editor: Editor): string => {
+  const block = editor.getParam('forced_root_block', 'p');
+  if (block === false) {
+    return '';
+  } else if (block === true) {
+    return 'p';
+  } else {
+    return block;
+  }
+};
+
 export {
-  getPatternSet,
+  getForcedRootBlock,
+  getPatternSet
 };

@@ -32,6 +32,7 @@ Version 5.1.0 (TBD)
     Fixed table menu selection grid from staying black when using dark skins, now follows border color #TINY-4153
     Fixed Oxide using the wrong text color variable for menubar button focused state #TINY-4146
     Fixed the autoresize plugin not keeping the selection in view when resizing #TINY-4094
+    Fixed textpattern plugin throwing exceptions when using `forced_root_block: false` #TINY-4172
     Fixed missing CSS fill styles for toolbar button icon active state #TINY-4147
     Fixed browser selection being lost in inline mode when opening split dropdowns #TINY-4197
     Fixed floating toolbar drawer expanding outside the bounds of the editor #TINY-3941
