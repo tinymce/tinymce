@@ -41,6 +41,7 @@ Version 5.1.0 (TBD)
     Fixed backspace throwing an exception when using `forced_root_block: false` #TINY-4099
     Fixed floating toolbar drawer expanding outside the bounds of the editor #TINY-3941
     Fixed the autocompleter not activating immediately after a `br` or `contenteditable=false` element #TINY-4194
+    Fixed an issue where the autocompleter would incorrectly close on IE 11 in certain edge cases #TINY-4205
 Version 5.0.16 (2019-09-24)
     Added new `referrer_policy` setting to add the `referrerpolicy` attribute when loading scripts or stylesheets #TINY-3978
     Added a slight background color to dialog tab links when focused to aid keyboard navigation #TINY-3877

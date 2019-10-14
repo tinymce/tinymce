@@ -21,7 +21,7 @@ export type SetContentEvent = SetContentArgs & { paste: boolean, selection: bool
 
 export type NewBlockEvent = { newBlock: Element };
 
-export type NodeChangedEvent = { element: Element, parents: Node[] };
+export type NodeChangedEvent = { element: Element, parents: Node[], selectionChange?: boolean };
 
 export type ObjectResizedEvent = { target: HTMLElement, width: number, height: number };
 
