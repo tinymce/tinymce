@@ -27,6 +27,7 @@ import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import * as Sidebar from './ui/sidebar/Sidebar';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
+import TableSelectorHandles from './ui/selector/TableSelectorHandles';
 import * as Throbber from './ui/throbber/Throbber';
 import TouchEvents from './api/TouchEvents';
 
@@ -392,6 +393,8 @@ const setup = (editor: Editor): RenderInfo => {
     };
 
     ContextToolbar.register(editor, contextToolbars, sink, { backstage });
+
+    TableSelectorHandles.setup(editor, sink);
 
     const elm = editor.getElement();
     const height = setEditorSize(elm);

@@ -28,6 +28,18 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     });
   });
 
+  const onTouchmove = DomEvent.bind(Element.fromDom(document), 'touchmove', (evt) => {
+    Arr.each([ mothership, uiMothership ], (ship) => {
+      ship.broadcastEvent(SystemEvents.documentTouchmove(), evt);
+    });
+  });
+
+  const onTouchend = DomEvent.bind(Element.fromDom(document), 'touchend', (evt) => {
+    Arr.each([ mothership, uiMothership ], (ship) => {
+      ship.broadcastEvent(SystemEvents.documentTouchend(), evt);
+    });
+  });
+
   const onMouseup = DomEvent.bind(Element.fromDom(document), 'mouseup', (evt) => {
     if (evt.raw().button === 0) {
       Arr.each([ mothership, uiMothership ], (ship) => {
@@ -98,6 +110,8 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
 
     onMousedown.unbind();
     onTouchstart.unbind();
+    onTouchmove.unbind();
+    onTouchend.unbind();
     onMouseup.unbind();
   });
 

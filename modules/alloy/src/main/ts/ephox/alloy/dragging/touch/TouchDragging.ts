@@ -15,6 +15,7 @@ import SnapSchema from '../common/SnapSchema';
 import * as Snappables from '../snap/Snappables';
 import * as TouchData from './TouchData';
 import { TouchDraggingConfig } from './TouchDraggingTypes';
+import { Compare } from '@ephox/sugar';
 
 const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.AlloyEventRecord => {
   const updateStartState = (comp: AlloyComponent) => {
@@ -28,23 +29,31 @@ const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<Suga
       simulatedEvent.stop();
     }),
 
-    AlloyEvents.run<SugarEvent>(NativeEvents.touchmove(), (component, simulatedEvent) => {
-      simulatedEvent.stop();
+    AlloyEvents.run<SugarEvent>(SystemEvents.documentTouchmove(), (component, simulatedEvent) => {
+      dragState.getStartData().each((startData) => {
+        if (Compare.eq(startData.comp.element(), component.element())) {
+          simulatedEvent.stop();
 
-      const delta = dragState.update(TouchData, simulatedEvent.event());
-      const dragStartData = dragState.getStartData().getOrThunk(() => calcStartData(dragConfig, component));
-      delta.each((dlt) => {
-        DragMovement.dragBy(component, dragConfig, dragStartData, dlt);
+          const delta = dragState.update(TouchData, simulatedEvent.event());
+          const dragStartData = dragState.getStartData().getOrThunk(() => calcStartData(dragConfig, component));
+          delta.each((dlt) => {
+            DragMovement.dragBy(component, dragConfig, dragStartData, dlt);
+          });
+        }
       });
     }),
 
-    AlloyEvents.run(NativeEvents.touchend(), (component, simulatedEvent) => {
-      dragConfig.snaps.each((snapInfo) => {
-        Snappables.stopDrag(component, snapInfo);
+    AlloyEvents.run<SugarEvent>(SystemEvents.documentTouchend(), (component, simulatedEvent) => {
+      dragState.getStartData().each((startData) => {
+        if (Compare.eq(startData.comp.element(), component.element())) {
+          dragConfig.snaps.each((snapInfo) => {
+            Snappables.stopDrag(component, snapInfo);
+          });
+          const target = dragConfig.getTarget(component.element());
+          dragState.reset();
+          dragConfig.onDrop(component, target);
+        }
       });
-      const target = dragConfig.getTarget(component.element());
-      dragState.reset();
-      dragConfig.onDrop(component, target);
     })
   ]);
 };

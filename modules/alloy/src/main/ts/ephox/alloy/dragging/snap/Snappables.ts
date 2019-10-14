@@ -1,9 +1,9 @@
-import { Fun, Option, Options } from '@ephox/katamari';
+import { Fun, Option, Options, Arr } from '@ephox/katamari';
 
 import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as DragCoord from '../../api/data/DragCoord';
-import { SnapsConfig, SnapOutput, SnapPin } from '../common/DraggingTypes';
+import { SnapsConfig, SnapOutput, SnapPin, SnapConfig } from '../common/DraggingTypes';
 import * as Presnaps from './Presnaps';
 
 // Types of coordinates
@@ -49,7 +49,8 @@ const getCoords = (component: AlloyComponent, snapInfo: SnapsConfig, coord: Drag
 
 const moveOrSnap = (component, snapInfo, coord, delta, scroll, origin): SnapPin => {
   const newCoord = getCoords(component, snapInfo, coord, delta);
-  const snap = findSnap(component, snapInfo, newCoord, scroll, origin);
+  const snap = snapInfo.mustSnap ? findClosestSnap(component, snapInfo, newCoord, scroll, origin) :
+    findSnap(component, snapInfo, newCoord, scroll, origin);
 
   const fixedCoord = DragCoord.asFixed(newCoord, scroll, origin);
   Presnaps.set(component, snapInfo, fixedCoord);
@@ -75,15 +76,7 @@ const stopDrag = (component: AlloyComponent, snapInfo: SnapsConfig): void => {
   Presnaps.clear(component, snapInfo);
 };
 
-// x: the absolute position.left of the draggable element
-// y: the absolute position.top of the draggable element
-// deltaX: the amount the mouse has moved horizontally
-// deltaY: the amount the mouse has moved vertically
-const findSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition): Option<SnapOutput> => {
-  // You need to pass in the absX and absY so that they can be used for things which only care about snapping one axis and keeping the other one.
-  const snaps = snapInfo.getSnapPoints(component);
-
-  // HERE
+const findMatchingSnap = (snaps: SnapConfig[], newCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition): Option<SnapOutput> => {
   return Options.findMap(snaps, (snap) => {
     // NOTE: These are structs because of the immutableBag in Dragging.ts
     const sensor = snap.sensor();
@@ -97,7 +90,72 @@ const findSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCoord: Dr
   });
 };
 
+interface SnapCandidate {
+  deltas: Option<SugarPosition>;
+  snap: Option<SnapConfig>;
+}
+
+const findClosestSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition): Option<SnapOutput> => {
+  // You need to pass in the absX and absY so that they can be used for things which only care about snapping one axis and keeping the other one.
+  const snaps = snapInfo.getSnapPoints(component);
+
+  const matchSnap = findMatchingSnap(snaps, newCoord, scroll, origin);
+  return matchSnap.orThunk((): Option<SnapOutput> => {
+    const bestSnap = Arr.foldl(snaps, (acc: SnapCandidate, snap: SnapConfig): SnapCandidate => {
+      // NOTE: These are structs because of the immutableBag in Dragging.ts
+      const sensor = snap.sensor();
+      const deltas = DragCoord.getDeltas(newCoord, sensor, snap.range().left(), snap.range().top(), scroll, origin);
+      return acc.deltas.fold(() => {
+        return {
+          deltas: Option.some(deltas),
+          snap: Option.some(snap)
+        };
+      }, (bestDeltas) => {
+        const currAvg = (deltas.left() + deltas.top()) / 2;
+        const bestAvg = (bestDeltas.left() + bestDeltas.top()) / 2;
+        if (currAvg <= bestAvg) {
+          return {
+            deltas: Option.some(deltas),
+            snap: Option.some(snap)
+          };
+        } else {
+          return acc;
+        }
+      });
+    }, {
+      deltas: Option.none(),
+      snap: Option.none()
+    });
+    return bestSnap.snap.map((snap: SnapConfig): SnapOutput => {
+      return {
+        output: Fun.constant(DragCoord.absorb(snap.output(), newCoord, scroll, origin)),
+        extra: snap.extra
+      };
+    });
+  });
+};
+
+// x: the absolute position.left of the draggable element
+// y: the absolute position.top of the draggable element
+// deltaX: the amount the mouse has moved horizontally
+// deltaY: the amount the mouse has moved vertically
+const findSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition): Option<SnapOutput> => {
+  // You need to pass in the absX and absY so that they can be used for things which only care about snapping one axis and keeping the other one.
+  const snaps = snapInfo.getSnapPoints(component);
+
+  // HERE
+  return findMatchingSnap(snaps, newCoord, scroll, origin);
+};
+
+const snapTo = (snap: SnapConfig, scroll: SugarPosition, origin: SugarPosition): SnapPin => {
+  return {
+    coord: DragCoord.absorb(snap.output(), snap.output(), scroll, origin),
+    extra: snap.extra()
+  };
+};
+
 export {
   moveOrSnap,
-  stopDrag
+  stopDrag,
+  snapTo
 };
