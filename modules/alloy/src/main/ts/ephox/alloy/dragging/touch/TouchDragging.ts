@@ -43,13 +43,17 @@ const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<Suga
       });
     }),
 
-    AlloyEvents.run(NativeEvents.touchend(), (component, simulatedEvent) => {
-      dragConfig.snaps.each((snapInfo) => {
-        Snappables.stopDrag(component, snapInfo);
+    AlloyEvents.run<SugarEvent>(SystemEvents.documentTouchend(), (component, simulatedEvent) => {
+      dragState.getStartData().each((startData) => {
+        if (Compare.eq(startData.comp.element(), component.element())) {
+          dragConfig.snaps.each((snapInfo) => {
+            Snappables.stopDrag(component, snapInfo);
+          });
+          const target = dragConfig.getTarget(component.element());
+          dragState.reset();
+          dragConfig.onDrop(component, target);
+        }
       });
-      const target = dragConfig.getTarget(component.element());
-      dragState.reset();
-      dragConfig.onDrop(component, target);
     })
   ]);
 };

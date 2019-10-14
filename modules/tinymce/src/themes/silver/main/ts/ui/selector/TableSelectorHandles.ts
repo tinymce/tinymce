@@ -243,7 +243,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
   };
 
   // TODO: Make this work for desktop maybe?
-  if (platform.deviceType.isTouch() && platform.os.isAndroid()) {
+  if (platform.deviceType.isTouch()) {
     editor.on('tableselectionchange', (e) => {
       if (!isVisible.get()) {
         Attachment.attach(sink, topLeft);
