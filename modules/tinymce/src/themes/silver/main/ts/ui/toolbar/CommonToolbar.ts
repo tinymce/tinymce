@@ -147,11 +147,12 @@ const renderFloatingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
       const headerElem = toolbarSpec.moreDrawerData.lazyHeader().element();
       const headerBounds = Boxes.absolute(headerElem);
       const docElem = Traverse.documentElement(headerElem);
+      const docBounds = Boxes.absolute(docElem);
       return Boxes.bounds(
         headerBounds.x() + overflowXOffset,
-        docElem.dom().clientTop,
+        docBounds.y(),
         headerBounds.width() - overflowXOffset * 2,
-        docElem.dom().clientHeight
+        docBounds.height()
       );
     },
     parts: {
