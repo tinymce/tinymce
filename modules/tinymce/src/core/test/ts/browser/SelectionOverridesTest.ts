@@ -1,5 +1,5 @@
 import { Keyboard, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyDom, TinyLoader } from '@ephox/mcagar';
@@ -8,7 +8,6 @@ import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import KeyUtils from '../module/test/KeyUtils';
 import VK from 'tinymce/core/api/util/VK';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 import Zwsp from 'tinymce/core/text/Zwsp';
 
 UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function () {
