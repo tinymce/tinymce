@@ -122,11 +122,18 @@ const scrollTo = (marker: MarkerInfo, viewHeight: number, alignToTop: boolean, d
 };
 
 const intoWindowIfNeeded = (doc: SugarElement, scrollTop: number, viewHeight: number, marker: MarkerInfo, alignToTop?: boolean) => {
+  const viewportBottom = viewHeight + scrollTop;
+  const largerThanViewport = marker.bottom - marker.pos.top() >= viewHeight;
   // above the screen, scroll to top by default
   if (marker.pos.top() < scrollTop) {
     scrollTo(marker, viewHeight, alignToTop !== false, doc);
-  // below the screen, scroll to bottom by default
-  } else if (marker.bottom > viewHeight + scrollTop) {
+  // completely below the screen. Default scroll to the top if element height is larger
+  // than the viewport, otherwise default to scrolling to the bottom
+  } else if (marker.pos.top() > viewportBottom) {
+    const align = largerThanViewport ? alignToTop !== false : alignToTop === true;
+    scrollTo(marker, viewHeight, align, doc);
+  // partially below the bottom, only scroll if element height is less than viewport
+  } else if (marker.bottom > viewportBottom && !largerThanViewport) {
     scrollTo(marker, viewHeight, alignToTop === true, doc);
   }
 };
