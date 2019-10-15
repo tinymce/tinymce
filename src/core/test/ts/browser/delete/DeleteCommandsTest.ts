@@ -2,7 +2,7 @@ import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import DeleteCommands from 'tinymce/core/delete/DeleteCommands';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.delete.DeleteCommandsTest', function () {
   const success = arguments[arguments.length - 2];

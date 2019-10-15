@@ -4,7 +4,7 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import HtmlUtils from '../module/test/HtmlUtils';
 import KeyUtils from '../module/test/KeyUtils';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
   const success = arguments[arguments.length - 2];

@@ -1,5 +1,5 @@
 import { Assertions, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Uint8Array, Window } from '@ephox/sand';
 
 import Conversions from 'tinymce/themes/inlite/file/Conversions';

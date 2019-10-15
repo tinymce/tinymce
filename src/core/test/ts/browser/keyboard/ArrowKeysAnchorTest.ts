@@ -5,7 +5,7 @@ import { Element } from '@ephox/sugar';
 import Env from 'tinymce/core/api/Env';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function () {
   const success = arguments[arguments.length - 2];

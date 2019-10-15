@@ -1,5 +1,5 @@
 import Convert from 'tinymce/themes/inlite/core/Convert';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('atomic.themes.core.ConvertTest', function () {
   const testConvert = function () {

@@ -1,5 +1,5 @@
 import { GeneralSteps, Pipeline, Logger, Assertions, ApproxStructure } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Editor } from 'tinymce/core/api/Editor';
 import ModernTheme from 'tinymce/themes/modern/Theme';

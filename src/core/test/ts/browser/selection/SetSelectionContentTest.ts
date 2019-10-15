@@ -2,7 +2,7 @@ import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function () {
   const success = arguments[arguments.length - 2];

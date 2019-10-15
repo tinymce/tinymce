@@ -4,7 +4,7 @@ import Env from 'tinymce/core/api/Env';
 import AutolinkPlugin from 'tinymce/plugins/autolink/Plugin';
 import KeyUtils from '../module/test/KeyUtils';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.plugins.autolink.ConsecutiveLinkTest', function () {
   const success = arguments[arguments.length - 2];

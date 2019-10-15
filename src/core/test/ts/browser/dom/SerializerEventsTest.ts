@@ -1,7 +1,7 @@
 import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.dom.SerializerEventsTest', function () {
   const success = arguments[arguments.length - 2];

@@ -1,5 +1,5 @@
 import WordGetter from 'tinymce/plugins/wordcount/text/WordGetter';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('atomic.core.WordGetterTest', function () {
   const getWords = WordGetter.getWords;

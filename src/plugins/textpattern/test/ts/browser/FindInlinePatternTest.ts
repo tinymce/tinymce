@@ -1,5 +1,5 @@
 import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 import * as Settings from 'tinymce/plugins/textpattern/api/Settings';
 import { document, Range } from '@ephox/dom-globals';

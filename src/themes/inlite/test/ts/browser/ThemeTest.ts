@@ -1,7 +1,7 @@
 import {
     Assertions, Chain, FocusTools, GeneralSteps, Keys, Mouse, Step, Pipeline, UiControls, UiFinder, Waiter, ApproxStructure, Logger
 } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 
 import ContextMenuPlugin from 'tinymce/plugins/contextmenu/Plugin';

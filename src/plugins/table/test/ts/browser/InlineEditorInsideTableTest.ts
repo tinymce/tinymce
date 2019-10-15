@@ -1,5 +1,5 @@
 import { Chain, Mouse, NamedChain, UiFinder, RawAssertions, TestLogs } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';

@@ -1,5 +1,5 @@
 import { Pipeline, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/media/Plugin';

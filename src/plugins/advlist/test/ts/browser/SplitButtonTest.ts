@@ -3,7 +3,7 @@ import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.plugins.lists.SplitButtonTest', function () {
   const success = arguments[arguments.length - 2];

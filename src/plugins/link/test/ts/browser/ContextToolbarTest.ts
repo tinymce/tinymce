@@ -1,5 +1,5 @@
 import { Mouse, Pipeline, UiFinder, Logger, GeneralSteps } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import LinkPlugin from 'tinymce/plugins/link/Plugin';

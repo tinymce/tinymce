@@ -1,6 +1,6 @@
 import { Logger, Pipeline, Chain, ApproxStructure, Keys, GeneralSteps } from '@ephox/agar';
 import { TinyLoader, ApiChains, ActionChains } from '@ephox/mcagar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';

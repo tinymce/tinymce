@@ -7,7 +7,7 @@ import ViewBlock from '../module/test/ViewBlock';
 import Api from 'tinymce/ui/Api';
 import Factory from 'tinymce/core/api/ui/Factory';
 import Tools from 'tinymce/core/api/util/Tools';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.ui.WindowTest', function () {
   const success = arguments[arguments.length - 2];

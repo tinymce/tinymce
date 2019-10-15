@@ -2,7 +2,7 @@ import { GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest(
   'browser.tinymce.core.fmt.RemoveTrailingWhitespaceFormatTest',

@@ -3,7 +3,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element, Css } from '@ephox/sugar';
 import EditorView from 'tinymce/core/EditorView';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.EditorViewInlineTest', function () {
   const success = arguments[arguments.length - 2];

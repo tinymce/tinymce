@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Logger, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Cell, Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';

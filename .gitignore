@@ -15,7 +15,6 @@ tmp
 *.bak
 *.log
 *.swp
-yarn.lock
 package-lock.json
 .DS_Store
 .project

@@ -1,5 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import { Html } from '@ephox/sugar';

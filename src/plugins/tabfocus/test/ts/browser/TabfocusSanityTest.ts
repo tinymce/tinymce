@@ -1,5 +1,5 @@
 import { Keys, Pipeline, RawAssertions, Step, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import TabfocusPlugin from 'tinymce/plugins/tabfocus/Plugin';

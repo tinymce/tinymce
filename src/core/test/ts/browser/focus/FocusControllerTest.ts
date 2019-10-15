@@ -4,7 +4,7 @@ import FocusManager from 'tinymce/core/api/FocusManager';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import FocusController from 'tinymce/core/focus/FocusController';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.focus.FocusControllerTest', function () {
   const success = arguments[arguments.length - 2];

@@ -2,7 +2,7 @@ import { GeneralSteps, Logger, Pipeline, Step, ApproxStructure } from '@ephox/ag
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import InsertBr from 'tinymce/core/newline/InsertBr';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function () {
   const success = arguments[arguments.length - 2];

@@ -1,7 +1,7 @@
 import { Assertions } from '@ephox/agar';
 import { Blob, Uint8Array, Window } from '@ephox/sand';
 import BlobCache, { BlobInfoData } from 'tinymce/core/api/file/BlobCache';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function () {
   const uriToBlob = function (base64, type) {

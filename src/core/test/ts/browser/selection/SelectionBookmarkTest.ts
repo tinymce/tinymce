@@ -3,7 +3,7 @@ import { Fun, Option } from '@ephox/katamari';
 import { Hierarchy, Remove, Element, Traverse, Selection, WindowSelection } from '@ephox/sugar';
 import SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', function () {
   const success = arguments[arguments.length - 2];

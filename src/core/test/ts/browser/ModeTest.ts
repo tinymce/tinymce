@@ -1,7 +1,7 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { EditorMode, getMode, setMode } from 'tinymce/core/Mode';
 import { Editor } from 'tinymce/core/api/Editor';
 import {  Class, Element } from '@ephox/sugar';

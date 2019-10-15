@@ -2,7 +2,7 @@ import { GeneralSteps, Logger, Pipeline, RawAssertions, Step } from '@ephox/agar
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import TextcolorPlugin from 'tinymce/plugins/textcolor/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import TextColor from '../../../main/ts/core/TextColor';
 

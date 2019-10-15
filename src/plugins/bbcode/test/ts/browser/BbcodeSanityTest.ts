@@ -2,7 +2,7 @@ import { ApproxStructure, Pipeline } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import BbcodePlugin from 'tinymce/plugins/bbcode/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.plugins.bbcode.BbcodeSanityTest', function () {
   const success = arguments[arguments.length - 2];

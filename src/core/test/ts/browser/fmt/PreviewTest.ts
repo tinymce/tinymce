@@ -4,7 +4,7 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Preview from 'tinymce/core/fmt/Preview';
 import HtmlUtils from '../../module/test/HtmlUtils';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function () {
   const success = arguments[arguments.length - 2];

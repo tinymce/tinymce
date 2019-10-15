@@ -3,7 +3,7 @@ import { Pipeline } from '@ephox/agar';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Serializer from 'tinymce/core/api/html/Serializer';
 import Schema from 'tinymce/core/api/html/Schema';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.html.SerializerTest', function () {
   const success = arguments[arguments.length - 2];

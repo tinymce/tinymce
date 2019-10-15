@@ -1,6 +1,6 @@
 import HtmlToData from 'tinymce/plugins/media/core/HtmlToData';
 import { RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('atomic.core.HtmlToDataTest', function () {
   const testHtmlToData = function (html, expected) {

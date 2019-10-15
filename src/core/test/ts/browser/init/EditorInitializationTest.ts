@@ -7,7 +7,7 @@ import Env from 'tinymce/core/api/Env';
 import ViewBlock from '../../module/test/ViewBlock';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { window, document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', function () {

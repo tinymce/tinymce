@@ -1,6 +1,6 @@
 import { Pipeline, Logger, Chain, UiFinder } from '@ephox/agar';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor, ApiChains } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 

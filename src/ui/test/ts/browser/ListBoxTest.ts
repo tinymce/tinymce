@@ -6,7 +6,7 @@ import ViewBlock from '../module/test/ViewBlock';
 import Api from 'tinymce/ui/Api';
 import Factory from 'tinymce/core/api/ui/Factory';
 import Tools from 'tinymce/core/api/util/Tools';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import * as Assertions from '@ephox/agar/lib/main/ts/ephox/agar/api/Assertions';
 
 UnitTest.asynctest('browser.tinymce.ui.ListBoxtest', function () {

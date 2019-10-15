@@ -4,7 +4,7 @@ import SaxParser from 'tinymce/core/api/html/SaxParser';
 import Writer from 'tinymce/core/api/html/Writer';
 import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
   const success = arguments[arguments.length - 2];

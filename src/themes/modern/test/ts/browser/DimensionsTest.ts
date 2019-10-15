@@ -1,5 +1,5 @@
 import { Assertions, Chain, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Id, Merger } from '@ephox/katamari';
 import { Element, Height, Width } from '@ephox/sugar';
 

@@ -1,5 +1,5 @@
 import UrlType from 'tinymce/themes/inlite/core/UrlType';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('atomic.themes.core.UrlTypeTest', function () {
   const testIsDomainLike = function () {

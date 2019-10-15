@@ -1,5 +1,5 @@
 import { Chain, Keys, Pipeline, RawAssertions, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import LinkPlugin from 'tinymce/plugins/link/Plugin';

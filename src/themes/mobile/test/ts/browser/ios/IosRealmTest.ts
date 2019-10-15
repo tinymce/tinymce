@@ -1,6 +1,6 @@
 import { Assertions, Pipeline, Step } from '@ephox/agar';
 import { Attachment, GuiFactory, Replacing } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Fun, Merger, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attr, Body, Css, DomEvent, Element, Insert, Remove, WindowSelection } from '@ephox/sugar';

@@ -1,5 +1,5 @@
 import { ApproxStructure, Pipeline, GeneralSteps, Logger } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
 import TextcolorPlugin from 'tinymce/plugins/textcolor/Plugin';

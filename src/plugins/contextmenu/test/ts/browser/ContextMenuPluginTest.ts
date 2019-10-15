@@ -1,5 +1,5 @@
 import { ApproxStructure, GeneralSteps, Logger, Mouse, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Element, Hierarchy, Node } from '@ephox/sugar';
 

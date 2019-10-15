@@ -5,7 +5,7 @@ import UiUtils from '../module/test/UiUtils';
 import ViewBlock from '../module/test/ViewBlock';
 import Api from 'tinymce/ui/Api';
 import Factory from 'tinymce/core/api/ui/Factory';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.ui.SelectorTest', function () {
   const success = arguments[arguments.length - 2];

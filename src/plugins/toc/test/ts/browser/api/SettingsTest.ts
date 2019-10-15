@@ -2,7 +2,7 @@ import { Assertions } from '@ephox/agar';
 import { Editor } from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Settings from 'tinymce/plugins/toc/api/Settings';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('browser.tinymce.plugins.toc.api.SettingsTest', function () {
   Assertions.assertEq('Should be default toc class', 'mce-toc', Settings.getTocClass(new Editor('x', {}, EditorManager)));

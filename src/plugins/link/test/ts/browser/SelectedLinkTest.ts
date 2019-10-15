@@ -1,7 +1,7 @@
 import {
     Assertions, Chain, GeneralSteps, Logger, Pipeline, UiControls, UiFinder
 } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import LinkPlugin from 'tinymce/plugins/link/Plugin';

@@ -2,7 +2,7 @@ import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { Fun, Result } from '@ephox/katamari';
 import { Hierarchy, Element, Html } from '@ephox/sugar';
 import SimpleTableModel from 'tinymce/core/selection/SimpleTableModel';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', function () {
   const success = arguments[arguments.length - 2];

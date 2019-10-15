@@ -1,7 +1,7 @@
 import { Assertions, Logger, Pipeline, NamedChain, Chain, RawAssertions } from '@ephox/agar';
 import { Editor, ApiChains } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
 import { Hierarchy, Element, Remove, Html, SelectorFilter, Replication } from '@ephox/sugar';
 import { Result, Arr } from '@ephox/katamari';

@@ -4,7 +4,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Schema from 'tinymce/core/api/html/Schema';
 import HtmlUtils from '../../module/test/HtmlUtils';
 import Tools from 'tinymce/core/api/util/Tools';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document, window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {

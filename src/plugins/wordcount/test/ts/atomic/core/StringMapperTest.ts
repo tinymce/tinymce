@@ -1,6 +1,6 @@
 import StringMapper from 'tinymce/plugins/wordcount/text/StringMapper';
 import UnicodeData from 'tinymce/plugins/wordcount/text/UnicodeData';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('atomic.core.StringMapperTest', function () {
   const ci = UnicodeData.characterIndices;

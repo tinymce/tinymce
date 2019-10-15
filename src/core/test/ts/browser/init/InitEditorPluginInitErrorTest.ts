@@ -1,6 +1,6 @@
 import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 import Theme from 'tinymce/themes/modern/Theme';
 import PluginManager from 'tinymce/core/api/PluginManager';

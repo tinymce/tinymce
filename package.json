@@ -35,7 +35,8 @@
   },
   "devDependencies": {
     "@ephox/agar": "latest",
-    "@ephox/bedrock": "latest",
+    "@ephox/bedrock-client": "^9.0.0",
+    "@ephox/bedrock-server": "^9.0.0",
     "@ephox/mcagar": "latest",
     "@ephox/swag": "latest",
     "@ephox/wrap-jsverify": "latest",
@@ -65,6 +66,7 @@
   },
   "resolutions": {
     "@ephox/sand": "^2.0.0",
-    "@ephox/katamari": "^4.0.0"
+    "@ephox/katamari": "^4.0.0",
+    "@ephox/boulder": "3.3.35"
   }
 }

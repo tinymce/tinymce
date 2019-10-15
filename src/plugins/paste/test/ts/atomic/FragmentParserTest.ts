@@ -1,6 +1,6 @@
 import { RawAssertions } from '@ephox/agar';
 import FragmentParser from 'tinymce/plugins/paste/core/FragmentParser';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('atomic.tinymce.plugins.paste.FragmentParserTest', function () {
   const testGetFragmentInfo = function () {

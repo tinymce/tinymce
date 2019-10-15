@@ -2,7 +2,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import { Styles } from 'tinymce/core/api/html/Styles';
 import Schema from 'tinymce/core/api/html/Schema';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function () {
   const success = arguments[arguments.length - 2];

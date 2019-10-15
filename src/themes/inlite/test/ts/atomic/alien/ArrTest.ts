@@ -1,5 +1,5 @@
 import DeepFlatten from 'tinymce/themes/inlite/alien/DeepFlatten';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('atomic.themes.alien.ArrTest', function () {
   const testFlatten = function () {
