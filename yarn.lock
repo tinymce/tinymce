@@ -178,11 +178,6 @@
     webpack-dev-server "^3.2.1"
     xml-writer "^1.6.0"
 
-"@ephox/dispute@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@ephox/dispute/-/dispute-1.0.2.tgz#3816a2e68cd5e880f1e2554c931bb29929b591ac"
-  integrity sha512-OX9TLj4Vh/SXT5nPnixB+9GYYe4euZiIxTobSE6d8ow5/NAVHrxGOaSEu2FN5Nywr1rcoTsThCwAtLPqLQDcHg==
-
 "@ephox/dispute@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@ephox/dispute/-/dispute-1.0.3.tgz#1424530cc0569df194c97d8a03e92d0ac526a1a1"
