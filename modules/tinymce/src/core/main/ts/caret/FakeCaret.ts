@@ -15,6 +15,7 @@ import NodeType from '../dom/NodeType';
 import * as GeomClientRect from '../geom/ClientRect';
 import * as CaretContainer from './CaretContainer';
 import CaretContainerRemove from './CaretContainerRemove';
+import Settings from '../api/Settings';
 
 export interface FakeCaret {
   show: (before: boolean, element: Element) => Range;
@@ -114,8 +115,8 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
     }
 
     if (isBlock(element)) {
-      const rootBlock = editor.getParam('forced_root_block', 'p', 'string');
-      caretContainerNode = CaretContainer.insertBlock(editor.schema.isValid(rootBlock) ? rootBlock : 'p', element, before);
+      const rootBlock = Settings.getForcedRootBlock(editor);
+      caretContainerNode = CaretContainer.insertBlock(rootBlock.length > 0 ? rootBlock : 'p', element, before);
       clientRect = getAbsoluteClientRect(root, element, before);
       DomQuery(caretContainerNode).css('top', clientRect.top);
 
