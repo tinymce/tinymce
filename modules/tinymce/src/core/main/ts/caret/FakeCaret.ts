@@ -104,6 +104,8 @@ const trimInlineCaretContainers = (root: Node): void => {
 export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Node) => boolean, hasFocus: () => boolean): FakeCaret => {
   const lastVisualCaret = Cell<Option<CaretState>>(Option.none());
   let cursorInterval, caretContainerNode;
+  const rootBlock = Settings.getForcedRootBlock(editor);
+  const caretBlock = rootBlock.length > 0 ? rootBlock : 'p';
 
   const show = (before: boolean, element: HTMLElement): Range => {
     let clientRect, rng;
@@ -115,8 +117,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
     }
 
     if (isBlock(element)) {
-      const rootBlock = Settings.getForcedRootBlock(editor);
-      caretContainerNode = CaretContainer.insertBlock(rootBlock.length > 0 ? rootBlock : 'p', element, before);
+      caretContainerNode = CaretContainer.insertBlock(caretBlock, element, before);
       clientRect = getAbsoluteClientRect(root, element, before);
       DomQuery(caretContainerNode).css('top', clientRect.top);
 
