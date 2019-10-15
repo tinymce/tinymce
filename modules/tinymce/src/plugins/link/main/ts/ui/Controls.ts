@@ -61,8 +61,8 @@ const setupMenuItems = function (editor: Editor) {
 };
 
 const setupContextMenu = function (editor: Editor) {
-  const noLink = 'link';
   const inLink = 'link unlink openlink';
+  const noLink = 'link';
   editor.ui.registry.addContextMenu('link', {
     update: (element) => {
       return Utils.hasLinks(editor.dom.getParents(element, 'a') as HTMLAnchorElement[]) ? inLink : noLink;

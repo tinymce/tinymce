@@ -1,4 +1,4 @@
-import { Global, Id, Merger, Strings, Type } from '@ephox/katamari';
+import { Global, Id, Strings, Type } from '@ephox/katamari';
 import { Attr, Element, Insert, Remove, Selectors } from '@ephox/sugar';
 import { Chain } from '@ephox/agar';
 import 'tinymce';
@@ -7,6 +7,11 @@ import { setTinymceBaseUrl } from '../loader/Urls';
 
 const cFromElement = function (element, settings: Record<string, any>) {
   return Chain.async(function (_, next, die) {
+    const nuSettings: Record<string, any> = {
+      toolbar_drawer: false,
+      ...settings
+    };
+
     const randomId = Id.generate('tiny-loader');
 
     Attr.set(element, 'id', randomId);
@@ -14,17 +19,18 @@ const cFromElement = function (element, settings: Record<string, any>) {
 
     const tinymce = Global.tinymce;
 
-    if (settings.base_url) {
-      setTinymceBaseUrl(tinymce, settings.base_url);
+    if (nuSettings.base_url) {
+      setTinymceBaseUrl(tinymce, nuSettings.base_url);
     } else if (!Type.isString(tinymce.baseURL) || !Strings.contains(tinymce.baseURL, '/project/')) {
       setTinymceBaseUrl(Global.tinymce, `/project/node_modules/tinymce`);
     }
 
-    tinymce.init(Merger.merge(settings, {
+    tinymce.init({
+      ...nuSettings,
       selector: '#' + randomId,
       setup (editor) {
-        if (Type.isFunction(settings.setup)) {
-          settings.setup(editor);
+        if (Type.isFunction(nuSettings.setup)) {
+          nuSettings.setup(editor);
         }
         editor.on('SkinLoaded', function () {
           setTimeout(function () {
@@ -32,7 +38,7 @@ const cFromElement = function (element, settings: Record<string, any>) {
           }, 0);
         });
       }
-    }));
+    });
   });
 };
 

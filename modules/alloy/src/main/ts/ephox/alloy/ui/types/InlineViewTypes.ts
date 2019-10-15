@@ -52,6 +52,7 @@ export interface InlineViewSpec extends SingleSketchSpec {
 export interface InlineMenuSpec {
   data: TieredData;
   menu: Partial<TieredMenuSpec>;
+  type?: 'vertical' | 'horizontal';
 }
 
 export interface InlineViewSketcher extends SingleSketch<InlineViewSpec, InlineViewDetail> {
@@ -59,6 +60,7 @@ export interface InlineViewSketcher extends SingleSketch<InlineViewSpec, InlineV
   showWithin: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Option<Element>) => void;
   showWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBounds: () => Option<Bounds>) => void;
   showMenuAt: (component: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => void;
+  showMenuWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Option<Bounds>) => void;
   hide: (component: AlloyComponent) => void;
   isOpen: (component: AlloyComponent) => boolean;
   getContent: (component: AlloyComponent) => Option<AlloyComponent>;

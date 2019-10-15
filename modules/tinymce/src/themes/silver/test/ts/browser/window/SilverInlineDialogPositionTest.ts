@@ -137,6 +137,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
     base_url: '/project/tinymce/js/tinymce',
     resize: 'both',
     height: 400,
-    width: 600
+    width: 600,
+    toolbar_sticky: false
   }, success, failure);
 });

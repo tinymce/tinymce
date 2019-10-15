@@ -210,7 +210,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
 
           // updateMenuPath is the code which changes the active menu. We don't always
           // want to change the active menu. Sometimes, we just want to show it (e.g. hover)
-          detail.onOpenSubmenu(container, item, activeMenu);
+          detail.onOpenSubmenu(container, item, activeMenu, Arr.reverse(path));
           if (decision === ExpandHighlightDecision.HighlightSubmenu) {
             Highlighting.highlightFirst(activeMenu);
             return updateMenuPath(container, layeredState, path);

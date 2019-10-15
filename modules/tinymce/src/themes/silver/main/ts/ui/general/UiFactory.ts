@@ -8,11 +8,10 @@
 import { AlloySpec, SimpleOrSketchSpec, FormTypes } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { console } from '@ephox/dom-globals';
-import { Fun, Merger } from '@ephox/katamari';
-import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
+import { Merger } from '@ephox/katamari';
 
 import { BridgedType, UiFactoryBackstage } from '../../backstage/Backstage';
-import { renderAutocomplete } from '../dialog/Autocomplete';
+import { renderAlertBanner } from '../general/AlertBanner';
 import { renderBar } from '../dialog/Bar';
 import { renderColorInput } from '../dialog/ColorInput';
 import { renderColorPicker } from '../dialog/ColorPicker';
@@ -28,7 +27,6 @@ import { renderUrlInput } from '../dialog/UrlInput';
 import { renderDialogButton } from './Button';
 import { renderCheckbox } from './Checkbox';
 import { renderHtmlPanel } from './HtmlPanel';
-import { renderListbox } from './Listbox';
 import { renderLabel } from '../dialog/Label';
 import { renderCollection } from '../dialog/Collection';
 import { renderTable } from '../dialog/Table';
@@ -60,16 +58,11 @@ const makeIframe = (render: NoFormRenderer): FormPartRenderer => {
 const factories: Record<string, FormPartRenderer> = {
   bar: make((spec, backstage) => renderBar(spec, backstage.shared)),
   collection: make((spec, backstage) => renderCollection(spec, backstage.shared.providers)),
-  alloy: make(Fun.identity),
   alertbanner: make((spec, backstage) => renderAlertBanner(spec, backstage.shared.providers)),
   input: make((spec, backstage) => renderInput(spec, backstage.shared.providers)),
   textarea: make((spec, backstage) => renderTextarea(spec, backstage.shared.providers)),
-  // textbutton: make(Buttons.text().sketch),
-  // iconbutton: make(Buttons.icon().sketch),
-  listbox: make((spec, backstage) => renderListbox(spec, backstage.shared.providers)),
   label: make((spec, backstage) => renderLabel(spec, backstage.shared)),
   iframe: makeIframe((spec, backstage) => renderIFrame(spec, backstage.shared.providers)),
-  autocomplete: make((spec, backstage) => renderAutocomplete(spec, backstage)),
   button: make((spec, backstage) => renderDialogButton(spec, backstage.shared.providers)),
   checkbox: make((spec, backstage) => renderCheckbox(spec, backstage.shared.providers)),
   colorinput: make((spec, backstage) => renderColorInput(spec, backstage.shared, backstage.colorinput)),

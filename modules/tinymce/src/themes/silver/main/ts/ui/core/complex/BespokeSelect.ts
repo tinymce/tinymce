@@ -124,7 +124,7 @@ const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spe
   const getFetch = (backstage: UiFactoryBackstage, getStyleItems: () => FormatItem[]) => (callback: (menu: Option<TieredData>) => null) => {
     const preItems = getStyleItems();
     const items = validateItems(preItems);
-    const menu = NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage);
+    const menu = NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false);
     callback(menu);
   };
 

@@ -97,7 +97,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     responseTime: 0,
     fetch: (input: AlloyComponent) => {
       const items = getItems(spec.filetype, input, urlBackstage);
-      const tdata = NestedMenus.build(items, ItemResponse.BUBBLE_TO_SANDBOX, backstage);
+      const tdata = NestedMenus.build(items, ItemResponse.BUBBLE_TO_SANDBOX, backstage, false);
       return Future.pure(tdata);
     },
 
@@ -176,8 +176,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     },
 
     markers: {
-      // FIX:
-      openClass: 'dog'
+      openClass: 'tox-textfield--popup-open'
     },
 
     lazySink: backstage.shared.getSink,

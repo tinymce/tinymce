@@ -1,5 +1,5 @@
-import { navigator } from '@ephox/dom-globals';
-import { Thunk } from '@ephox/katamari';
+import { navigator, window } from '@ephox/dom-globals';
+import { Cell } from '@ephox/katamari';
 
 import { Browser } from '../core/Browser';
 import { OperatingSystem } from '../core/OperatingSystem';
@@ -10,7 +10,15 @@ export type Browser = Browser;
 export type OperatingSystem = OperatingSystem;
 export type DeviceType = DeviceType;
 
-export const detect: () => PlatformDetection = Thunk.cached(function () {
-  const userAgent = navigator.userAgent;
-  return PlatformDetection.detect(userAgent);
-});
+const mediaMatch = (query: string) => window.matchMedia(query).matches;
+
+const platform = Cell<PlatformDetection>(PlatformDetection.detect(navigator.userAgent, mediaMatch));
+
+export const detect = (): PlatformDetection => platform.get();
+
+export const override = (overrides: Partial<PlatformDetection>) => {
+  platform.set({
+    ...platform.get(),
+    ...overrides
+  });
+};

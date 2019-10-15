@@ -6,7 +6,7 @@
  */
 
 import { Element, HTMLElement, MouseEvent, Node, Range } from '@ephox/dom-globals';
-import { Arr } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import { Attr, Compare, Element as SugarElement, Remove, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import Editor from './api/Editor';
 import Env from './api/Env';
@@ -98,16 +98,6 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     }
 
     return fakeCaret.show(before, node);
-  };
-
-  const getNormalizedRangeEndPoint = function (direction: number, range: Range): CaretPosition {
-    range = CaretUtils.normalizeRange(direction, rootNode, range);
-
-    if (direction === -1) {
-      return CaretPosition.fromRangeStart(range);
-    }
-
-    return CaretPosition.fromRangeEnd(range);
   };
 
   const showBlockCaretContainer = function (blockCaretContainer: HTMLElement) {
@@ -287,9 +277,11 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     });
 
     editor.on('SetSelectionRange', function (e) {
-      let rng;
+      // If the range is set inside a short ended element, then move it
+      // to the side as IE for example will try to add content inside
+      e.range = normalizeShortEndedElementSelection(e.range);
 
-      rng = setContentEditableSelection(e.range, e.forward);
+      const rng = setContentEditableSelection(e.range, e.forward);
       if (rng) {
         e.range = rng;
       }
@@ -343,6 +335,37 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     return isWithinCaretContainer(rng.startContainer) || isWithinCaretContainer(rng.endContainer);
   };
 
+  const normalizeShortEndedElementSelection = (rng: Range) => {
+    const shortEndedElements = editor.schema.getShortEndedElements();
+    const newRng = editor.dom.createRng();
+    const startContainer = rng.startContainer;
+    const startOffset = rng.startOffset;
+    const endContainer = rng.endContainer;
+    const endOffset = rng.endOffset;
+
+    if (Obj.has(shortEndedElements, startContainer.nodeName.toLowerCase())) {
+      if (startOffset === 0) {
+        newRng.setStartBefore(startContainer);
+      } else {
+        newRng.setStartAfter(startContainer);
+      }
+    } else {
+      newRng.setStart(startContainer, startOffset);
+    }
+
+    if (Obj.has(shortEndedElements, endContainer.nodeName.toLowerCase())) {
+      if (endOffset === 0) {
+        newRng.setEndBefore(endContainer);
+      } else {
+        newRng.setEndAfter(endContainer);
+      }
+    } else {
+      newRng.setEnd(endContainer, endOffset);
+    }
+
+    return newRng;
+  };
+
   const setContentEditableSelection = function (range: Range, forward?: boolean) {
     let node;
     const $ = editor.$;
@@ -357,7 +380,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     if (range.collapsed) {
       if (!isRangeInCaretContainer(range)) {
         if (forward === false) {
-          caretPosition = getNormalizedRangeEndPoint(-1, range);
+          caretPosition = CaretUtils.getNormalizedRangeEndPoint(-1, rootNode, range);
 
           if (isFakeCaretTarget(caretPosition.getNode(true))) {
             return showCaret(-1, caretPosition.getNode(true), false, false);
@@ -367,7 +390,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
             return showCaret(-1, caretPosition.getNode(), !caretPosition.isAtEnd(), false);
           }
         } else {
-          caretPosition = getNormalizedRangeEndPoint(1, range);
+          caretPosition = CaretUtils.getNormalizedRangeEndPoint(1, rootNode, range);
 
           if (isFakeCaretTarget(caretPosition.getNode())) {
             return showCaret(1, caretPosition.getNode(), !caretPosition.isAtEnd(), false);

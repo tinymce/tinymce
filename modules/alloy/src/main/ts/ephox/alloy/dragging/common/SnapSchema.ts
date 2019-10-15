@@ -8,5 +8,6 @@ export default FieldSchema.optionObjOf('snaps', [
   Fields.onHandler('onSensor'),
   FieldSchema.strict('leftAttr'),
   FieldSchema.strict('topAttr'),
-  FieldSchema.defaulted('lazyViewport', Boxes.win)
+  FieldSchema.defaulted('lazyViewport', Boxes.win),
+  FieldSchema.defaulted('mustSnap', false)
 ]);

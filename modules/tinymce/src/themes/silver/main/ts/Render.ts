@@ -5,38 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  AlloySpec,
-  Behaviour,
-  Gui,
-  GuiFactory,
-  Keying,
-  Memento,
-  Positioning,
-  SimpleSpec
-} from '@ephox/alloy';
-import { HTMLElement, HTMLIFrameElement, console } from '@ephox/dom-globals';
+import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec } from '@ephox/alloy';
+import { console, HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import {
-  getHeightSetting,
-  getMinHeightSetting,
-  getMinWidthSetting,
-  getMultipleToolbarsSetting,
-  getToolbarDrawer,
-  isMenubarEnabled,
-  isToolbarEnabled,
-  useFixedContainer,
-  isMultipleToolbars,
-  isStickyToolbar,
-  isDistractionFree,
-  ToolbarDrawer
-} from './api/Settings';
+import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, getMultipleToolbarsSetting, getToolbarDrawer, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, ToolbarDrawer, useFixedContainer } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -44,13 +21,15 @@ import Iframe from './modes/Iframe';
 import Inline from './modes/Inline';
 import FormatControls from './ui/core/FormatControls';
 import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterContainer';
-import * as StickyHeader from './ui/header/StickyHeader';
 import * as StaticHeader from './ui/header/StaticHeader';
+import * as StickyHeader from './ui/header/StickyHeader';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import * as Sidebar from './ui/sidebar/Sidebar';
-import * as Throbber from './ui/throbber/Throbber';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
+import TableSelectorHandles from './ui/selector/TableSelectorHandles';
+import * as Throbber from './ui/throbber/Throbber';
+import TouchEvents from './api/TouchEvents';
 
 export interface RenderInfo {
   mothership: Gui.GuiSystem;
@@ -110,6 +89,9 @@ const setup = (editor: Editor): RenderInfo => {
   const platform = PlatformDetection.detect();
   const isIE = platform.browser.isIE();
   const platformClasses = isIE ? ['tox-platform-ie'] : [];
+  const isTouch = platform.deviceType.isTouch();
+  const touchPlatformClass = 'tox-platform-touch';
+  const deviceClasses = isTouch ? [touchPlatformClass] : [];
 
   const dirAttributes = I18n.isRtl() ? {
     attributes: {
@@ -122,7 +104,7 @@ const setup = (editor: Editor): RenderInfo => {
   const sink = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: ['tox', 'tox-silver-sink', 'tox-tinymce-aux'].concat(platformClasses),
+      classes: ['tox', 'tox-silver-sink', 'tox-tinymce-aux'].concat(platformClasses).concat(deviceClasses),
       ...dirAttributes
     },
     behaviours: Behaviour.derive([
@@ -184,7 +166,8 @@ const setup = (editor: Editor): RenderInfo => {
     },
     split: toolbarDrawer(editor),
     lazyToolbar,
-    lazyMoreButton
+    lazyMoreButton,
+    lazyHeader: () => lazyHeader().getOrDie('Could not find header element')
   });
 
   const partMultipleToolbar: AlloySpec = OuterContainer.parts()['multiple-toolbar']({
@@ -304,7 +287,7 @@ const setup = (editor: Editor): RenderInfo => {
     OuterContainer.sketch({
       dom: {
         tag: 'div',
-        classes: ['tox', 'tox-tinymce'].concat(isInline ? ['tox-tinymce-inline'] : []).concat(platformClasses),
+        classes: ['tox', 'tox-tinymce'].concat(isInline ? ['tox-tinymce-inline'] : []).concat(deviceClasses).concat(platformClasses),
         styles: {
           // This is overridden by the skin, it helps avoid FOUC
           visibility: 'hidden',
@@ -339,6 +322,7 @@ const setup = (editor: Editor): RenderInfo => {
   const uiMothership = Gui.takeover(sink);
 
   Events.setup(editor, mothership, uiMothership);
+  TouchEvents.setupLongpress(editor);
 
   const getUi = () => {
     const channels = {
@@ -368,8 +352,9 @@ const setup = (editor: Editor): RenderInfo => {
     }).getOr(baseHeight);
 
     const stringWidth = Utils.numToPx(parsedWidth);
-    if (Css.isValidValue('div', 'width', stringWidth)) {
-      Css.set(outerContainer.element(), 'width', stringWidth);
+    const widthProperty = editor.inline ? 'max-width' : 'width';
+    if (Css.isValidValue('div', widthProperty, stringWidth)) {
+      Css.set(outerContainer.element(), widthProperty, stringWidth);
     }
 
     if (!editor.inline) {
@@ -408,6 +393,8 @@ const setup = (editor: Editor): RenderInfo => {
     };
 
     ContextToolbar.register(editor, contextToolbars, sink, { backstage });
+
+    TableSelectorHandles.setup(editor, sink);
 
     const elm = editor.getElement();
     const height = setEditorSize(elm);

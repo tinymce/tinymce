@@ -2,9 +2,9 @@ import { ApproxStructure, GeneralSteps, Keys, Logger, Step } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 
 const sSetContentAndFireKeystroke = function (key) {
-  return function (tinyApis, tinyActions, content: string, offset = content.length, elementPath = [0, 0]) {
+  return function (tinyApis, tinyActions, content: string, offset = content.length, elementPath = [0, 0], wrapInP = true) {
     return Logger.t(`Set content and press ${key}`, GeneralSteps.sequence([
-      tinyApis.sSetContent('<p>' + content + '</p>'),
+      tinyApis.sSetContent(wrapInP ? '<p>' + content + '</p>' : content),
       tinyApis.sFocus,
       tinyApis.sSetCursor(
         elementPath,
@@ -90,6 +90,35 @@ const blockStructHelper = function (tag, content) {
   });
 };
 
+const forcedRootBlockInlineStructHelper = function (tag, content) {
+  return ApproxStructure.build(function (s, str) {
+    return bodyStruct([
+      s.element(tag, {
+        children: [
+          s.text(str.is(content), true)
+        ]
+      }),
+      s.text(str.is('')),
+      s.element('br', {}),
+      s.element('br', {})
+    ]);
+  });
+};
+
+const forcedRootBlockStructHelper = function (tag, content) {
+  return ApproxStructure.build(function (s, str) {
+    return bodyStruct([
+      s.element(tag, {
+        children: [
+          s.text(str.is(content), true),
+          s.element('br', {}),
+          s.element('br', {})
+        ]
+      }),
+    ]);
+  });
+};
+
 export default {
   sSetContentAndPressSpace,
   sSetContentAndPressEnter: sSetContentAndFireKeystroke(Keys.enter()),
@@ -97,5 +126,7 @@ export default {
   bodyStruct,
   inlineStructHelper,
   inlineBlockStructHelper,
-  blockStructHelper
+  blockStructHelper,
+  forcedRootBlockInlineStructHelper,
+  forcedRootBlockStructHelper
 };

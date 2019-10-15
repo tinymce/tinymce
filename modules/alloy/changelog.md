@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 # [5.0.0] - TBD
 
 ### Added
+- Added `mustSnap` configuration to `Dragging` to force draggables to snapping points.
 - Added the ability to calculate a max width to `Bounder` though defaulted it to a no-op.
 - Added `MaxWidth` export for use in anchor overrides.
 - Added `onDocked`, `onUndocked`, `onShow`, `onShown`, `onHide` and `onHidden` configuration callbacks for the `Docking` behaviour.
@@ -17,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added reposition APIs for `TieredMenu`, `Dropdown`, `InlineView`, `SplitDropdown` and `SplitFloatingToolbar` components.
 - Added new reposition channel to notify sandboxed components that they should reposition.
 - Added `onOpened` and `onClosed` configuration callbacks for the `SplitSlidingToolbar` component.
+- Added `getOverflowBounds` configuration to the `SplitFloatingToolbar` component.
 
 ### Changed
 - Reworked the `Docking` behaviour to support both absolute and static positioning.

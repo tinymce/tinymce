@@ -23,6 +23,7 @@ const elementSize = (p: Element): AnchorElement => {
 const layout = (anchorBox: AnchorBox, element: Element, bubbles: Bubble, options: ReparteeOptions) => {
   // clear the potentially limiting factors before measuring
   Css.remove(element, 'max-height');
+  Css.remove(element, 'max-width');
 
   const elementBox = elementSize(element);
   return Bounder.attempts(options.preference(), anchorBox, elementBox, bubbles, options.bounds());

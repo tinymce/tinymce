@@ -27,7 +27,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
 
     const sOpenContextMenu = (target) => {
       return Chain.asStep(editor, [
-        tinyUi.cTriggerContextMenu('trigger context menu', target, '.tox-silver-sink [role="menuitem"]'),
+        tinyUi.cTriggerContextMenu('trigger context menu', target, '.tox-silver-sink .tox-collection [role="menuitem"]'),
         Chain.wait(0)
       ]);
     };

@@ -3,10 +3,7 @@ import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.delete.DeindentTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('browser.tinymce.core.delete.DeindentTest', function (success, failure) {
   Theme();
 
   const sTestDeleteOrBackspaceKey = function (editor, tinyApis, tinyActions, key) {
@@ -42,6 +39,14 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeindentTest', function () {
         sTestBackspace('<p>aa</p>', [0, 0], 1, '<p style="padding-left: 40px;">aa</p>', [0, 0], 1), // no outdent
         sTestBackspace('<p>a</p><p>b</p>', [1, 0], 0, '<p>a</p>\n<p>b</p>', [1, 0], 0), // outdent
         sTestBackspace('<p>a</p><p>bb</p>', [1, 0], 1, '<p>a</p>\n<p style="padding-left: 40px;">bb</p>', [1, 0], 1), // no outdent
+      ])),
+      Logger.t('Backspace key on text with forced_root_block: false', GeneralSteps.sequence([
+        tinyApis.sSetSetting('forced_root_block', false),
+        sTestBackspace('a', [0], 0, '<div>a</div>', [0, 0], 0), // outdent
+        sTestBackspace('aa', [0], 1, '<div style="padding-left: 40px;">aa</div>', [0, 0], 1), // no outdent
+        sTestBackspace('a <br>b', [2], 0, 'a\n<div>b</div>', [1, 0], 0), // outdent
+        sTestBackspace('aa<br>bb', [2], 1, 'aa\n<div style="padding-left: 40px;">bb</div>', [1, 0], 1), // no outdent
+        tinyApis.sDeleteSetting('forced_root_block')
       ]))
     ], onSuccess, onFailure);
   }, {

@@ -1,4 +1,7 @@
 import { Keyboard, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyDom, TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
@@ -6,7 +9,6 @@ import KeyUtils from '../module/test/KeyUtils';
 import VK from 'tinymce/core/api/util/VK';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import Zwsp from 'tinymce/core/text/Zwsp';
 
 UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function () {
@@ -260,6 +262,25 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function () {
     rng = editor._selectionOverrides.showCaret(1, editor.dom.select('p[contenteditable=false]')[1], false);
     LegacyUnit.equal(true, rng === null, 'Should not return a range excluded by ShowCaret event');
     editor._selectionOverrides.hideFakeCaret();
+  });
+
+  suite.test('set range in short ended element', function (editor) {
+    Arr.each(['br', 'img', 'input'], (elmName) => {
+      editor.setContent('<p><' + elmName + '/></p>');
+      const paraElem = editor.dom.select('p')[0];
+      const elem = editor.dom.select(elmName)[0];
+
+      const rng = document.createRange();
+      rng.setStart(elem, 0);
+      rng.setEnd(elem, 0);
+      editor.selection.setRng(rng);
+
+      const newRng = editor.selection.getRng();
+      LegacyUnit.equal(newRng.startContainer, paraElem, `Start container should be before ${elmName}`);
+      LegacyUnit.equal(newRng.startOffset, 0, `Start offset should be before ${elmName}`);
+      LegacyUnit.equal(newRng.endContainer, paraElem, `End container should be before ${elmName}`);
+      LegacyUnit.equal(newRng.endOffset, 0, `End offset should be before ${elmName}`);
+    });
   });
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
