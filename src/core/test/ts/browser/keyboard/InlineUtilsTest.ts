@@ -3,7 +3,7 @@ import { Hierarchy, Element, Node } from '@ephox/sugar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import InlineUtils from 'tinymce/core/keyboard/InlineUtils';
 import Zwsp from 'tinymce/core/text/Zwsp';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Node as DomNode } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function () {

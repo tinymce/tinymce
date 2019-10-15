@@ -1,5 +1,5 @@
 import Matcher from 'tinymce/themes/inlite/core/Matcher';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('browser.themes.inlite.MatcherTest', function () {
   const testMatch = function (mockEditor, matches, expectedResult) {

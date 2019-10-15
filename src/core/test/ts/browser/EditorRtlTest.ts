@@ -5,7 +5,7 @@ import EditorManager from 'tinymce/core/api/EditorManager';
 import Factory from 'tinymce/core/api/ui/Factory';
 import I18n from 'tinymce/core/api/util/I18n';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.EditorRtlTest', function () {

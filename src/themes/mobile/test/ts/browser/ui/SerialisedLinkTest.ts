@@ -3,7 +3,7 @@ import {
     Pipeline, Step, UiFinder
 } from '@ephox/agar';
 import { Attachment } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';

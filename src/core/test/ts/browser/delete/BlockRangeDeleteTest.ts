@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } fro
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import BlockRangeDelete from 'tinymce/core/delete/BlockRangeDelete';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.delete.BlockRangeDeleteTest', function () {
   const success = arguments[arguments.length - 2];

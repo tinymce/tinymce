@@ -2,7 +2,7 @@ import { Chain,  Keys,  Logger,  Pipeline } from '@ephox/agar';
 import { Merger } from '@ephox/katamari';
 import { ActionChains, ApiChains, Editor } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyInlineTest', function () {
   const success = arguments[arguments.length - 2];

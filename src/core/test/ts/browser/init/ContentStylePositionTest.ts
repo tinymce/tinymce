@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { Element, Node } from '@ephox/sugar';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.init.ContentStylePositionTest', function () {
   const success = arguments[arguments.length - 2];

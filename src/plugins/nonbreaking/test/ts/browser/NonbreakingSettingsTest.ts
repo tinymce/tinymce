@@ -2,7 +2,7 @@ import { Assertions } from '@ephox/agar';
 import { Editor } from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Settings from 'tinymce/plugins/nonbreaking/api/Settings';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('browser.tinymce.plugins.nonbreaking.SettingsTest', function () {
   Assertions.assertEq('Should be 0 as default', 0, Settings.getKeyboardSpaces(new Editor('x', {}, EditorManager)));

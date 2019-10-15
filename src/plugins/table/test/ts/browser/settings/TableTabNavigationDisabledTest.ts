@@ -1,5 +1,5 @@
 import { GeneralSteps, Keys, Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import TablePlugin from 'tinymce/plugins/table/Plugin';

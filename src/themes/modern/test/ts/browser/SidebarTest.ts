@@ -1,5 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyDom, TinyLoader } from '@ephox/mcagar';
 
 import Theme from 'tinymce/themes/modern/Theme';

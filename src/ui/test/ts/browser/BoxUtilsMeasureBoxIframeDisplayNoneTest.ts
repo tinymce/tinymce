@@ -1,5 +1,5 @@
 import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import BoxUtils from 'tinymce/ui/BoxUtils';

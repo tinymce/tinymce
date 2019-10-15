@@ -1,6 +1,6 @@
 import { Pipeline, Step, Keys, GeneralSteps, Logger, RawAssertions } from '@ephox/agar';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import VK from 'tinymce/core/api/util/VK';
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';

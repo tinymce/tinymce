@@ -1,5 +1,5 @@
 import InternalHtml from 'tinymce/plugins/paste/core/InternalHtml';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('atomic.tinymce.plugins.paste.InternalHtmlTest', function () {
   const testMark = function () {

@@ -6,7 +6,7 @@ import ViewBlock from '../module/test/ViewBlock';
 import Api from 'tinymce/ui/Api';
 import Container from 'tinymce/ui/Container';
 import Control from 'tinymce/ui/Control';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.ui.ControlTest', function () {
   const success = arguments[arguments.length - 2];

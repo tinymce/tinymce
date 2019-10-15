@@ -1,5 +1,5 @@
 import { ApproxStructure, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import InsertDatetimePlugin from 'tinymce/plugins/insertdatetime/Plugin';

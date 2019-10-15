@@ -1,5 +1,5 @@
 import Uuid from 'tinymce/themes/inlite/alien/Uuid';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('atomic.themes.alien.UuidTest', function () {
   const testUuid = function () {

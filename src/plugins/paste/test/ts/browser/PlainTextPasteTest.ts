@@ -1,5 +1,5 @@
 import { Assertions, Chain, Guard, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Id, Merger, Obj } from '@ephox/katamari';
 
 import EditorManager from 'tinymce/core/api/EditorManager';

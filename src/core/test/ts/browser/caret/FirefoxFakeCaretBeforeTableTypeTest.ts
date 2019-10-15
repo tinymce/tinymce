@@ -1,7 +1,7 @@
 import { GeneralSteps, Logger, Pipeline, Step, RawAssertions } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import KeyUtils from '../../module/test/KeyUtils';
 import Env from 'tinymce/core/api/Env';

@@ -1,6 +1,6 @@
 import { RawAssertions } from '@ephox/agar';
 import * as Settings from 'tinymce/plugins/textpattern/api/Settings';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { findEndPattern, findPattern } from '../../../main/ts/core/FindPatterns';
 
 UnitTest.test('atomic.tinymce.plugins.textpattern.FindPatternTest', function () {

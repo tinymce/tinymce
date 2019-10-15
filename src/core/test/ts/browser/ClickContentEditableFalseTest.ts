@@ -3,7 +3,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Hierarchy, Element, Node } from '@ephox/sugar';
 import TypeText from '../module/test/TypeText';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.ClickContentEditableFalseTest', function () {
   const success = arguments[arguments.length - 2];

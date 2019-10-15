@@ -1,6 +1,6 @@
 import { GeneralSteps, Pipeline } from '@ephox/agar';
 import { Attachment, Memento } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Body, Class, Traverse } from '@ephox/sugar';
 
 import TinyChannels from 'tinymce/themes/mobile/channels/TinyChannels';

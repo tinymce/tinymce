@@ -2,7 +2,7 @@ import { Chain, Mouse, Pipeline, UiFinder } from '@ephox/agar';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.plugins.charmap.InsertQuotationMarkTest', function () {
   const success = arguments[arguments.length - 2];

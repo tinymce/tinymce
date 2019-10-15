@@ -811,7 +811,7 @@ module.exports = function (grunt) {
 
   require('load-grunt-tasks')(grunt);
   grunt.loadTasks('tools/tasks');
-  grunt.loadNpmTasks('@ephox/bedrock');
+  grunt.loadNpmTasks('@ephox/bedrock-server');
   grunt.loadNpmTasks('@ephox/swag');
   grunt.loadNpmTasks('grunt-tslint');
 

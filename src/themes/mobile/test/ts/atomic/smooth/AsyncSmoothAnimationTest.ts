@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Future } from '@ephox/katamari';
 
 import SmoothAnimation from 'tinymce/themes/mobile/ios/smooth/SmoothAnimation';

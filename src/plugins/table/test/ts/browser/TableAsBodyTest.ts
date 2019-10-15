@@ -1,5 +1,5 @@
 import { Assertions, Chain, Cursors, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Id, Merger } from '@ephox/katamari';
 import { Attr, Element, Insert, Remove, Selectors, Traverse } from '@ephox/sugar';
 

@@ -2,7 +2,7 @@ import { Assertions, Keys, Pipeline, Step } from '@ephox/agar';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import AutoLinkPlugin from 'tinymce/plugins/autolink/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.plugins.autolink.EnterKeyTest', function () {
   const success = arguments[arguments.length - 2];

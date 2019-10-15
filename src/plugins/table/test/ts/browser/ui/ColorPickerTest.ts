@@ -15,7 +15,7 @@
 // import TablePlugin from 'tinymce/plugins/table/Plugin';
 // import ColorPickerPlugin from 'tinymce/plugins/colorpicker/Plugin';
 // import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.ColorPickerTest', function () {
   const success = arguments[arguments.length - 2];

@@ -2,7 +2,7 @@ import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
 import { Element, Attr } from '@ephox/sugar';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest(
   'browser.tinymce.core.init.InitIframeEditorWithCustomAttrsTest',

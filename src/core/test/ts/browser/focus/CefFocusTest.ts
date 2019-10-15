@@ -3,7 +3,7 @@ import { Hierarchy, Element } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import ViewBlock from '../../module/test/ViewBlock';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function () {
   const success = arguments[arguments.length - 2];

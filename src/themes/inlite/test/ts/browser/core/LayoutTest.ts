@@ -1,5 +1,5 @@
 import Layout from 'tinymce/themes/inlite/core/Layout';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('browser/core/LayoutTest', function () {
   // TODO: Move this to atomic test when we can require parts of tinymce core using bolt

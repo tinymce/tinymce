@@ -3,7 +3,7 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import HtmlUtils from '../../module/test/HtmlUtils';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', function () {
   const success = arguments[arguments.length - 2];

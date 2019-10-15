@@ -3,7 +3,7 @@ import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import AdvlistPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.plugins.lists.ChangeListStyleTest', function () {
   const success = arguments[arguments.length - 2];
