@@ -1,4 +1,4 @@
-import { assert } from '@ephox/bedrock';
+import { assert } from '@ephox/bedrock-client';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { Attr, Body, Css, Element, Hierarchy, Html, Insert, Remove, SelectorFilter, SelectorFind, Traverse } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';

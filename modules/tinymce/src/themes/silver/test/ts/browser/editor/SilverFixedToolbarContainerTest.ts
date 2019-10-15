@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Pipeline   } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body, Element, Insert, Remove } from '@ephox/sugar';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => {
   SilverTheme();

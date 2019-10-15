@@ -1,5 +1,5 @@
 import { Arr, FutureResult, Result } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { console, Blob } from '@ephox/dom-globals';
 import { DataType } from 'ephox/jax/core/DataType';
 import * as Http from 'ephox/jax/core/Http';

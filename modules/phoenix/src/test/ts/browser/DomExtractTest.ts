@@ -1,4 +1,4 @@
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { Page } from '../module/ephox/phoenix/test/Page';
 import { Arr, Fun } from '@ephox/katamari';
 import { Compare, Element, Text } from '@ephox/sugar';

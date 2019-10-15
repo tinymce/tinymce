@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 import { Element, Node, Traverse } from '@ephox/sugar';
 import DomLook from 'ephox/robin/api/dom/DomLook';

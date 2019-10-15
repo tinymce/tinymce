@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Chain, Log, Logger, Mouse, Pipeline, UiFin
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('Menu group heading test', (success, failure) => {
   Theme();

@@ -1,4 +1,4 @@
-import { assert, TestLabel } from '@ephox/bedrock';
+import { assert, TestLabel } from '@ephox/bedrock-client';
 
 const stringify = function (v: any): string {
   try {

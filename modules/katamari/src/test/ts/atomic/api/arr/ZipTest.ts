@@ -4,7 +4,7 @@ import * as Unique from 'ephox/katamari/api/Unique';
 import * as Zip from 'ephox/katamari/api/Zip';
 import { Option } from 'ephox/katamari/api/Option';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('Zip', function () {
   const check1 = function (expectedZipToObject: Option<Record<string, string>>, expectedZipToTuples: Option<Array<{ k: string, v: string }>>, keys: string[], values: string[]) {

@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { IconProvider, get } from 'tinymce/themes/silver/ui/icons/Icons';
 import { Assertions, Pipeline, Step } from '@ephox/agar';
 import { getAll as getAllOxide } from '@tinymce/oxide-icons-default';

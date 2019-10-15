@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { renderTable } from 'tinymce/themes/silver/ui/dialog/Table';
 import { Assertions, ApproxStructure } from '@ephox/agar';

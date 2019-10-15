@@ -1,6 +1,6 @@
 import { Mouse, Pipeline, Step } from '@ephox/agar';
 import { Attachment } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { Body, Class } from '@ephox/sugar';
 

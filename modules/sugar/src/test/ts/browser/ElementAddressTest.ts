@@ -8,7 +8,7 @@ import * as Node from 'ephox/sugar/api/node/Node';
 import * as Attr from 'ephox/sugar/api/properties/Attr';
 import * as Html from 'ephox/sugar/api/properties/Html';
 import * as ElementAddress from 'ephox/sugar/api/search/ElementAddress';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('ElementAddressTest', function () {
   const page = Element.fromHtml(

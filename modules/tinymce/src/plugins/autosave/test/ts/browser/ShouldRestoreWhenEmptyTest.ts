@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import Editor from 'tinymce/core/api/Editor';
 import { Editor as McEditor, ApiChains } from '@ephox/mcagar';
 import { Pipeline, Logger, Chain, RawAssertions } from '@ephox/agar';

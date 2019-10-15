@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Attr, Compare, Element, Hierarchy, Html, SelectorFind } from '@ephox/sugar';
 import DomParent from 'ephox/robin/api/dom/DomParent';

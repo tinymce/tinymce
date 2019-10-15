@@ -1,5 +1,5 @@
 import { RawAssertions } from '@ephox/agar';
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Fun, Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';

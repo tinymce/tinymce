@@ -1,5 +1,5 @@
 import { Assertions, Chain, Guard, NamedChain, Mouse, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 import { document, HTMLElement } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';

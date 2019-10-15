@@ -1,5 +1,5 @@
 import { Assertions, Chain, Logger, Mouse, NamedChain, Pipeline, TestLogs } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';

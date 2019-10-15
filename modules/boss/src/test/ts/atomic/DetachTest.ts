@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 import { Gene } from 'ephox/boss/api/Gene';
 import Detach from 'ephox/boss/mutant/Detach';

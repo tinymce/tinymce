@@ -1,6 +1,6 @@
 import { RawAssertions } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
-import { assert } from '@ephox/bedrock';
+import { assert } from '@ephox/bedrock-client';
 
 /* global assert */
 const errsToString = (err) => {

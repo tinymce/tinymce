@@ -6,7 +6,7 @@ import * as Futures from 'ephox/katamari/api/Futures';
 import { Result } from 'ephox/katamari/api/Result';
 import * as AsyncProps from 'ephox/katamari/test/AsyncProps';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { setTimeout } from '@ephox/dom-globals';
 
 UnitTest.asynctest('FutureTest', (success, failure) => {

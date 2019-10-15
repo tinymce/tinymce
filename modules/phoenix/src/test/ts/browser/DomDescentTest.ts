@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
 import { Element, Hierarchy } from '@ephox/sugar';
 import { SpotPoint } from 'ephox/phoenix/api/data/Types';

@@ -1,5 +1,5 @@
 import Element from 'ephox/sugar/api/node/Element';
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import NodeValue from 'ephox/sugar/impl/NodeValue';
 import * as Node from 'ephox/sugar/api/node/Node';
 import { document } from '@ephox/dom-globals';

@@ -1,5 +1,5 @@
 import * as Ready from 'ephox/sugar/api/events/Ready';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('ReadyTest', function () {
   // This isn't really a test. By definition, tests are run after document load.

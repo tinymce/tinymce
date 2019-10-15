@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Option, Unicode } from '@ephox/katamari';
 import WordUtil from 'ephox/robin/util/WordUtil';
 

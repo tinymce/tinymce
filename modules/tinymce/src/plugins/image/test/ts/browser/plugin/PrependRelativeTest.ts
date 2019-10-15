@@ -15,7 +15,7 @@ import {
   generalTabSelectors,
   silverSettings,
 } from '../../module/Helpers';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('Image recognizes relative src url and prepends relative image_prepend_url setting.', (success, failure) => {
   SilverTheme();

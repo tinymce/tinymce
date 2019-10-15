@@ -1,5 +1,5 @@
 import { Pipeline, Step, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
 import { Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';

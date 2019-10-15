@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import * as Structs from 'ephox/snooker/api/Structs';
 import TableGrid from 'ephox/snooker/model/TableGrid';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { Element } from '@ephox/sugar';
 
 UnitTest.test('TableGrid.subgrid test', function () {

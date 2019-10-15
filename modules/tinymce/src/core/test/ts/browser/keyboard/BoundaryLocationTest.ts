@@ -5,7 +5,7 @@ import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';
 import ViewBlock from '../../module/test/ViewBlock';
 import Zwsp from 'tinymce/core/text/Zwsp';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', function () {
   const success = arguments[arguments.length - 2];

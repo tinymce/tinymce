@@ -1,5 +1,5 @@
 import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Objects } from '@ephox/boulder';
 import { document } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';

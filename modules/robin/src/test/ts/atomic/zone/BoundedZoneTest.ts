@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { ZoneViewports } from 'ephox/robin/api/general/ZoneViewports';
 import { ArbRangeIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';

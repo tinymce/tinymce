@@ -1,6 +1,6 @@
 import { Chain, Pipeline, Assertions, ApproxStructure, RawAssertions, Step, Guard, Log } from '@ephox/agar';
 import { Element, Html, SelectorFind, Node } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { read, write, create, isImage, isFigure, defaultData, getStyleValue } from 'tinymce/plugins/image/core/ImageData';
 import { Merger, Obj, Arr } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';

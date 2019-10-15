@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { DomEvent, Element, Focus } from '@ephox/sugar';
 import * as Assertions from 'ephox/agar/api/Assertions';

@@ -1,5 +1,5 @@
 import { Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, RawAssertions, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Fun, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 

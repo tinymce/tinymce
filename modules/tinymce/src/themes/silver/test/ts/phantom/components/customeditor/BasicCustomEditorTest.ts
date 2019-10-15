@@ -1,7 +1,7 @@
 // TODO: Expose properly through alloy.
 import { ApproxStructure, Assertions, Logger, Step, Waiter, Cleaner } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Global, Cell } from '@ephox/katamari';
 import { renderCustomEditor } from 'tinymce/themes/silver/ui/dialog/CustomEditor';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';

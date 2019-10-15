@@ -1,6 +1,6 @@
 import { Future } from 'ephox/katamari/api/Future';
 import * as Throttler from 'ephox/katamari/api/Throttler';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { setTimeout } from '@ephox/dom-globals';
 
 UnitTest.asynctest('ThrottlerTest', (success, failure) => {

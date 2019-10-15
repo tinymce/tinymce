@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { Sidebar } from '@ephox/bridge';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body, Element, Traverse } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';

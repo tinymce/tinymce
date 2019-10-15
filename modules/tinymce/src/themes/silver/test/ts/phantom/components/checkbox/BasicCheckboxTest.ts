@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Chain, Keyboard, Keys, Logger, Step, UiFinder } from '@ephox/agar';
 import { GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { HTMLInputElement } from '@ephox/dom-globals';
 
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';

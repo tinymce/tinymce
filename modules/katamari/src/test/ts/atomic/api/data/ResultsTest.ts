@@ -3,7 +3,7 @@ import { Result } from 'ephox/katamari/api/Result';
 import * as Results from 'ephox/katamari/api/Results';
 import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('ResultsTest', function () {
   const testPartition = function () {

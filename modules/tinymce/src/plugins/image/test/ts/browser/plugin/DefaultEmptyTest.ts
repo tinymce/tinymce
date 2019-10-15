@@ -13,7 +13,7 @@ import {
   generalTabSelectors,
   silverSettings,
 } from '../../module/Helpers';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('Default image dialog on empty data', (success, failure) => {
   SilverTheme();

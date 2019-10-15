@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Blob, XMLHttpRequest } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
 import Assertion from 'ephox/imagetools/test/Assertion';

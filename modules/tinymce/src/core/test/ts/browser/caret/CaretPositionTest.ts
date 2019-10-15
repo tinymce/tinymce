@@ -4,7 +4,7 @@ import Env from 'tinymce/core/api/Env';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import CaretAsserts from '../../module/test/CaretAsserts';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Text } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.CaretPositionTest', function () {

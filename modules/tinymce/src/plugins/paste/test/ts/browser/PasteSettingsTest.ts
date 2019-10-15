@@ -1,5 +1,5 @@
 import { Assertions, Chain, Pipeline, Guard, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Merger } from '@ephox/katamari';
 import { Editor as McEditor } from '@ephox/mcagar';
 

@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { RawAssertions } from 'ephox/agar/api/Main';
 import { createDataTransfer, getDragImage } from 'ephox/agar/datatransfer/DataTransfer';
 import { document, Blob } from '@ephox/dom-globals';

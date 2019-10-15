@@ -1,5 +1,5 @@
 import { Chain, Pipeline, UiFinder, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Editor, UiChains } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/media/Plugin';

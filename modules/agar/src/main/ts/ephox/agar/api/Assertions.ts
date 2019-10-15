@@ -10,7 +10,7 @@ import * as Logger from './Logger';
 import { assertEq } from './RawAssertions';
 import { Step } from './Step';
 import * as UiFinder from './UiFinder';
-import { TestLabel, UnitTest } from '@ephox/bedrock';
+import { TestLabel, UnitTest } from '@ephox/bedrock-client';
 
 const toStep = function <U extends any[]> (method: (...args: U) => void) {
   return function <T> (...args: U) {

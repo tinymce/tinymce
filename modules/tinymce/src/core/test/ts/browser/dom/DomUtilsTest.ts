@@ -1,5 +1,5 @@
 import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document, Element, HTMLIFrameElement, HTMLLinkElement, window } from '@ephox/dom-globals';
 import { LegacyUnit } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';

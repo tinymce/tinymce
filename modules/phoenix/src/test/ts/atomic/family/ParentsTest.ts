@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse } from '@ephox/boss';
 import * as Parents from 'ephox/phoenix/family/Parents';
 import * as Finder from 'ephox/phoenix/test/Finder';

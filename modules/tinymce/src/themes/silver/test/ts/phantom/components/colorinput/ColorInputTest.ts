@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, FocusTools, GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, Keys, Keyboard, Log, Chain } from '@ephox/agar';
 import { AlloyTriggers, Container, GuiFactory, Invalidating, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 import { Element, SelectorFind, Traverse } from '@ephox/sugar';
 

@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Chain, Guard, NamedChain } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { HTMLElement } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';
 import { Css, Element, Traverse } from '@ephox/sugar';

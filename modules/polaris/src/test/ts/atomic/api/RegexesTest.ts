@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
 import * as Regexes from 'ephox/polaris/api/Regexes';
 import { console } from '@ephox/dom-globals';

@@ -1,6 +1,6 @@
 import * as Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('ReverseTest', function () {
   Jsc.property('Reversing twice is identity', '[nat]', function (a) {

@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Element, Remove } from '@ephox/sugar';
 import TableGridSize from 'ephox/snooker/api/TableGridSize';
 

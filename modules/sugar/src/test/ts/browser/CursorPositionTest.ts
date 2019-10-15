@@ -5,7 +5,7 @@ import * as Html from 'ephox/sugar/api/properties/Html';
 import * as Awareness from 'ephox/sugar/api/selection/Awareness';
 import * as CursorPosition from 'ephox/sugar/api/selection/CursorPosition';
 import * as Edge from 'ephox/sugar/api/selection/Edge';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('Browser Test: CursorPositionTest', function () {
   const container = Element.fromTag('div');

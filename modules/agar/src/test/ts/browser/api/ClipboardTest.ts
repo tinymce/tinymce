@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { DataTransfer, navigator } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 import { Body, DomEvent, Element, Insert, Remove } from '@ephox/sugar';

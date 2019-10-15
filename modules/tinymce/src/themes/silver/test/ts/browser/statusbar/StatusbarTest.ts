@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Chain, Log, Mouse, NamedChain, Pipeline, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Editor } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import Wordcount from 'tinymce/plugins/wordcount/Plugin';

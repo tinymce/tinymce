@@ -1,5 +1,5 @@
 import * as Obj from 'ephox/katamari/api/Obj';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('SizeTest', function () {
   const check = function (expected, input) {

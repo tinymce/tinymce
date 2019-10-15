@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import Jsc from '@ephox/wrap-jsverify';
 
 import { bounds as makeBounds } from 'ephox/alloy/alien/Boxes';

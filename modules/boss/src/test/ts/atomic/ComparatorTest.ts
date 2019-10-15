@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene } from 'ephox/boss/api/Gene';
 import Comparator from 'ephox/boss/mutant/Comparator';
 

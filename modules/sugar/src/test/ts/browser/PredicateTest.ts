@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Option } from '@ephox/katamari';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Node from 'ephox/sugar/api/node/Node';

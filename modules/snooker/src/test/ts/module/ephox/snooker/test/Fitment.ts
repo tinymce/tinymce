@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import * as Structs from 'ephox/snooker/api/Structs';
 import Fitment, { Delta } from 'ephox/snooker/model/Fitment';
-import { assert } from '@ephox/bedrock';
+import { assert } from '@ephox/bedrock-client';
 import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 
 const mapToStructGrid = function (grid: Structs.ElementNew[][]) {

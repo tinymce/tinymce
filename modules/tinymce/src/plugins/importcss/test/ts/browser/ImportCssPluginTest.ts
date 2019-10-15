@@ -1,7 +1,7 @@
 import { Step, Pipeline, Chain, UiFinder, Assertions, ApproxStructure, GeneralSteps, Mouse, Log } from '@ephox/agar';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import Plugin from 'tinymce/plugins/importcss/Plugin';
 import { Body, Element } from '@ephox/sugar';
 import { Arr, Option } from '@ephox/katamari';

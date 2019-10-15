@@ -1,5 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, Truncate, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Result } from '@ephox/katamari';
 import { Attr, Compare, Element, Html, Insert, SelectorFilter } from '@ephox/sugar';

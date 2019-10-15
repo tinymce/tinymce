@@ -1,4 +1,4 @@
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { buildUrl } from 'ephox/jax/core/UrlBuilder';
 import { Option } from '@ephox/katamari';
 

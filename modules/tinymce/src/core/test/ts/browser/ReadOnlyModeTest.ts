@@ -1,5 +1,5 @@
 import { ApproxStructure, Chain, Log, Mouse, Pipeline, RawAssertions, Step, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body, Class, Css, Element, SelectorFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';

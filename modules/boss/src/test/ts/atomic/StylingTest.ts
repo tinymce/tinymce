@@ -1,5 +1,5 @@
 import Styling from 'ephox/boss/mutant/Styling';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { Gene } from 'ephox/boss/api/Gene';
 
 UnitTest.test('StylingTest', function () {

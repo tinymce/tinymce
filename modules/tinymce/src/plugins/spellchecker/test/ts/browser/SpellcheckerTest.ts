@@ -1,5 +1,5 @@
 import { Pipeline, RawAssertions, Step, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import Settings from 'tinymce/plugins/spellchecker/api/Settings';

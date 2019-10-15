@@ -10,7 +10,7 @@ import * as Selectors from 'ephox/sugar/api/search/Selectors';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { Selection } from 'ephox/sugar/api/selection/Selection';
 import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { setTimeout, HTMLIFrameElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('Browser Test: Selection.getAtPoint', function () {

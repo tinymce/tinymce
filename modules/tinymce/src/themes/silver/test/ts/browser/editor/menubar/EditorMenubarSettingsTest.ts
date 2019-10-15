@@ -1,5 +1,5 @@
 import { Log, Pipeline, UiFinder, NamedChain, Assertions, ApproxStructure } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Result, Arr, Id } from '@ephox/katamari';
 import { Editor as McagarEditor } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';

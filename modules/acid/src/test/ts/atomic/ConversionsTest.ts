@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as HexColour from '../../../main/ts/ephox/acid/api/colour/HexColour';
 import * as RgbaColour from '../../../main/ts/ephox/acid/api/colour/RgbaColour';
 

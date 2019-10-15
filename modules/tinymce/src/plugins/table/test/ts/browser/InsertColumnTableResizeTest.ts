@@ -1,5 +1,5 @@
 import { Assertions, Chain, Guard, NamedChain, UiFinder, Log, TestLogs, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Editor, TinyDom } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/table/Plugin';

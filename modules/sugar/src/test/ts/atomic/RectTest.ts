@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Rect, StructRect } from 'ephox/sugar/api/selection/Rect.ts';
 import Jsc from '@ephox/wrap-jsverify';
 

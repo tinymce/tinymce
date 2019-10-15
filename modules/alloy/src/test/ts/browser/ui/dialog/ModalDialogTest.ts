@@ -10,7 +10,7 @@ import {
   Step,
   UiFinder,
 } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
 import { Attr, Class, Compare } from '@ephox/sugar';
 

@@ -1,5 +1,5 @@
 import { Pipeline, Mouse, UiFinder, Chain, Assertions, ApproxStructure, FocusTools, Keyboard, Keys, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
 import { document } from '@ephox/dom-globals';
 

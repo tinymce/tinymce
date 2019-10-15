@@ -3,7 +3,7 @@ import TinyApis from 'ephox/mcagar/api/TinyApis';
 import TinyDom from 'ephox/mcagar/api/TinyDom';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import TinyScenarios from 'ephox/mcagar/api/TinyScenarios';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('Tutorial: Property Testing with TinyMCE', (success, failure) => {
 
