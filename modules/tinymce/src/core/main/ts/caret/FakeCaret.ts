@@ -5,15 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Range, HTMLElement, Node } from '@ephox/dom-globals';
+import { Element, HTMLElement, Node, Range } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import * as CaretContainer from './CaretContainer';
-import CaretContainerRemove from './CaretContainerRemove';
 import DomQuery from '../api/dom/DomQuery';
+import Editor from '../api/Editor';
+import Delay from '../api/util/Delay';
 import NodeType from '../dom/NodeType';
 import * as GeomClientRect from '../geom/ClientRect';
-import Delay from '../api/util/Delay';
+import * as CaretContainer from './CaretContainer';
+import CaretContainerRemove from './CaretContainerRemove';
 
 export interface FakeCaret {
   show: (before: boolean, element: Element) => Range;
@@ -99,7 +100,7 @@ const trimInlineCaretContainers = (root: Node): void => {
   }
 };
 
-export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean, hasFocus: () => boolean): FakeCaret => {
+export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Node) => boolean, hasFocus: () => boolean): FakeCaret => {
   const lastVisualCaret = Cell<Option<CaretState>>(Option.none());
   let cursorInterval, caretContainerNode;
 
@@ -113,7 +114,8 @@ export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean, h
     }
 
     if (isBlock(element)) {
-      caretContainerNode = CaretContainer.insertBlock('p', element, before);
+      const rootBlock = editor.getParam('forced_root_block', 'p', 'string');
+      caretContainerNode = CaretContainer.insertBlock(editor.schema.isValid(rootBlock) ? rootBlock : 'p', element, before);
       clientRect = getAbsoluteClientRect(root, element, before);
       DomQuery(caretContainerNode).css('top', clientRect.top);
 

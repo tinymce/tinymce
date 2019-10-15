@@ -25,8 +25,15 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function (success
     return viewBlock.get();
   };
 
+  const mockEditor: any = {
+    getParam: () => 'p',
+    schema: {
+      isValid: () => false
+    }
+  };
+
   const setup = function () {
-    fakeCaret = FakeCaret(getRoot(), isBlock, Fun.constant(true));
+    fakeCaret = FakeCaret(mockEditor, getRoot(), isBlock, Fun.constant(true));
   };
 
   const teardown = function () {
