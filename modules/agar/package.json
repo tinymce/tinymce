@@ -22,7 +22,7 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ephox/bedrock-client": "^9.0.0",
+    "@ephox/bedrock-client": "^9.0.1",
     "@ephox/dom-globals": "^1.1.2",
     "@ephox/jax": "^4.1.26",
     "@ephox/sand": "^3.0.12",
