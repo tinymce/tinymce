@@ -1,7 +1,8 @@
 import { Assertions, Chain, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import ActionChains from 'ephox/mcagar/api/ActionChains';
-import Editor from 'ephox/mcagar/api/Editor';
+import { ActionChains } from 'ephox/mcagar/api/ActionChains';
+import { Editor } from 'ephox/mcagar/api/Editor';
+import { Editor as EditorType } from 'ephox/mcagar/alien/EditorTypes';
 
 UnitTest.asynctest('ActionTest', (success, failure) =>  {
   let count: number;
@@ -13,9 +14,9 @@ UnitTest.asynctest('ActionTest', (success, failure) =>  {
     Assertions.assertEq(label, expected, actual);
   };
 
-  const cAssertContentKeyboardEvent = (cAction, evt) => {
+  const cAssertContentKeyboardEvent = (cAction: (code: number, modifiers?: Record<string, any>) => Chain<EditorType, EditorType>, evt: Record<string, any>) => {
     return Chain.fromChains([
-      Chain.op((editor) => {
+      Chain.op((editor: EditorType) => {
         editor.once(evt.type, (e) => {
           assertEq('asserting keyboard event', evt, {
             type: e.type,

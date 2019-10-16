@@ -1,7 +1,8 @@
 import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import TinyLoader from 'ephox/mcagar/api/TinyLoader';
-import TinyUi from 'ephox/mcagar/api/TinyUi';
+import { Editor } from 'ephox/mcagar/alien/EditorTypes';
+import { TinyLoader } from 'ephox/mcagar/api/TinyLoader';
+import { TinyUi } from 'ephox/mcagar/api/TinyUi';
 
 UnitTest.asynctest('TinyLoaderTest', (success, failure) => {
   let clickedOn = false;
@@ -12,7 +13,7 @@ UnitTest.asynctest('TinyLoaderTest', (success, failure) => {
     });
   };
 
-  const silverSetup = (ed) => {
+  const silverSetup = (ed: Editor) => {
     ed.ui.registry.addButton('test-button', {
       text: 'test-button',
       onAction: () => clickedOn = true

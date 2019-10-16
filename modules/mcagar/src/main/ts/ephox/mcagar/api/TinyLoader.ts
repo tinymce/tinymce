@@ -1,12 +1,14 @@
+import { TestLogs } from '@ephox/agar';
 import { console, document, setTimeout } from '@ephox/dom-globals';
 import { Arr, Fun, Global, Id, Strings, Type } from '@ephox/katamari';
 import { Attr, Element, Insert, Remove, SelectorFilter } from '@ephox/sugar';
 import 'tinymce';
+import { Editor } from '../alien/EditorTypes';
 import { setTinymceBaseUrl } from '../loader/Urls';
 
-type SuccessCallback = (v: any, logs?) => void;
-type FailureCallback = (err: Error | string, logs?) => void;
-type SetupCallback = (editor, SuccessCallback, FailureCallback) => void;
+type SuccessCallback = (v?: any, logs?: TestLogs) => void;
+type FailureCallback = (err: Error | string, logs?: TestLogs) => void;
+type SetupCallback = (editor: any, success: SuccessCallback, failure: FailureCallback) => void;
 
 const createTarget = function (inline: boolean) {
   const target = Element.fromTag(inline ? 'div' : 'textarea');
@@ -54,7 +56,7 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
   };
 
   // Agar v. ??? supports logging
-  const onSuccess = (v, logs) => {
+  const onSuccess = (v?: any, logs?: TestLogs) => {
     teardown();
     // We may want to continue the logs for multiple editor
     // loads in the same test
@@ -62,7 +64,7 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
   };
 
   // Agar v. ??? supports logging
-  const onFailure = (err: Error | string, logs) => {
+  const onFailure = (err: Error | string, logs?: TestLogs) => {
     // tslint:disable-next-line:no-console
     console.log('Tiny Loader error: ', err);
     // Do no teardown so that the failed test still shows the editor. Important for selection
@@ -84,7 +86,7 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
     tinymce.init({
       ...nuSettings,
       selector: '#' + randomId,
-      setup (editor) {
+      setup (editor: Editor) {
         // Execute the setup called by the test.
         settingsSetup(editor);
 
@@ -98,7 +100,7 @@ const setup = (callback: SetupCallback, settings: Record<string, any>, success: 
   }
 };
 
-export default {
+export const TinyLoader = {
   setup,
   setupLight
 };

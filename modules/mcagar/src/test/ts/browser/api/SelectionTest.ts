@@ -1,7 +1,7 @@
 import { Chain, Pipeline } from '@ephox/agar';
-import ApiChains from 'ephox/mcagar/api/ApiChains';
-import Editor from 'ephox/mcagar/api/Editor';
 import { UnitTest } from '@ephox/bedrock-client';
+import { ApiChains } from 'ephox/mcagar/api/ApiChains';
+import { Editor } from 'ephox/mcagar/api/Editor';
 
 UnitTest.asynctest('SelectionTest', (success, failure) => {
 

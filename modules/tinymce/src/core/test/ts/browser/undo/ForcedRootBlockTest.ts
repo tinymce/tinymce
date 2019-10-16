@@ -1,6 +1,7 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Levels from 'tinymce/core/undo/Levels';
+import { UndoLevelType } from 'tinymce/core/undo/UndoManagerTypes';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 
@@ -19,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', function () 
       bookmark: null,
       content: '<strong>a</strong> <span>b</span>',
       fragments: null,
-      type: 'complete'
+      type: UndoLevelType.Complete
     });
   });
 
@@ -37,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', function () 
         ' ',
         '<span>b</span>'
       ],
-      type: 'fragmented'
+      type: UndoLevelType.Fragmented
     });
   });
 

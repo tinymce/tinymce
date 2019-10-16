@@ -1,8 +1,9 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Levels from 'tinymce/core/undo/Levels';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
+import { UndoLevelType } from 'tinymce/core/undo/UndoManagerTypes';
 
 UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', function () {
   const success = arguments[arguments.length - 2];
@@ -21,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', function () {
       bookmark: null,
       content: '',
       fragments: ['a', 'b'],
-      type: 'fragmented'
+      type: UndoLevelType.Fragmented
     });
   });
 
@@ -31,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', function () {
       bookmark: null,
       content: 'a',
       fragments: null,
-      type: 'complete'
+      type: UndoLevelType.Complete
     });
   });
 
@@ -41,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', function () {
       bookmark: null,
       content: '<p><br data-mce-bogus="1"></p>',
       fragments: null,
-      type: 'complete'
+      type: UndoLevelType.Complete
     });
 
     editor.getBody().innerHTML = '<iframe src="about:blank"></iframe>a<!--b-->c';
@@ -51,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', function () {
       bookmark: null,
       content: '',
       fragments: ['<iframe src="about:blank"></iframe>', 'a', '<!--b-->', 'c'],
-      type: 'fragmented'
+      type: UndoLevelType.Fragmented
     });
   });
 
@@ -63,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', function () {
       bookmark: null,
       content: ' <span>b</span>',
       fragments: null,
-      type: 'complete'
+      type: UndoLevelType.Complete
     });
   });
 
@@ -80,7 +81,7 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', function () {
         ' ',
         '<span>b</span>'
       ],
-      type: 'fragmented'
+      type: UndoLevelType.Fragmented
     });
   });
 

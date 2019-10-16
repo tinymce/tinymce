@@ -1,11 +1,12 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import TinyApis from 'ephox/mcagar/api/TinyApis';
-import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Editor } from 'ephox/mcagar/alien/EditorTypes';
+import { TinyApis } from 'ephox/mcagar/api/TinyApis';
+import { TinyLoader } from 'ephox/mcagar/api/TinyLoader';
 
 UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
 
-  const sAssertSetting = function (editor, key: string, expected) {
+  const sAssertSetting = function (editor: Editor, key: string, expected: any) {
     return Step.sync(function () {
       const actual = editor.settings[key];
 
@@ -13,7 +14,7 @@ UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
     });
   };
 
-  const sAssertSettingType = function (editor, key: string, expected) {
+  const sAssertSettingType = function (editor: Editor, key: string, expected: any) {
     return Step.sync(function () {
       const actual = typeof editor.settings[key];
 
@@ -33,7 +34,7 @@ UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
       ])),
 
       Logger.t('set setting to function', GeneralSteps.sequence([
-        apis.sSetSetting('a', function (a) {
+        apis.sSetSetting('a', function (a: any) {
           return a;
         }),
         sAssertSettingType(editor, 'a', 'function')

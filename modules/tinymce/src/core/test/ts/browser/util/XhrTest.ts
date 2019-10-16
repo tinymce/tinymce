@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.util.XhrTest', function (success, failu
 
     XHR.send({
       url: '/custom/json_rpc_ok',
-      success (data, xhr: XMLHttpRequest & { test: string }, input: XHRSettings & { test: string }) {
+      success (data, xhr: XMLHttpRequest & { test: number }, input: XHRSettings & { test: number }) {
         LegacyUnit.equal(JSON.parse(data), { result: 'Hello JSON-RPC', error: null, id: 1 });
         LegacyUnit.equal(xhr.status, 200);
         LegacyUnit.equal(input.url, '/custom/json_rpc_ok');
