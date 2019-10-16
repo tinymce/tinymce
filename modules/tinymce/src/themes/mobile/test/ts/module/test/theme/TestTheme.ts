@@ -1,10 +1,15 @@
-import { Attachment, Behaviour, Gui, GuiFactory, Memento, Replacing } from '@ephox/alloy';
+import { AlloyComponent, Attachment, Behaviour, Gui, GuiFactory, Memento, Replacing } from '@ephox/alloy';
 import { Arr, Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import ThemeManager from 'tinymce/core/api/ThemeManager';
 import Features from 'tinymce/themes/mobile/features/Features';
 import FormatChangers from 'tinymce/themes/mobile/util/FormatChangers';
+
+interface Realm {
+  system: () => Gui.GuiSystem;
+  socket: () => AlloyComponent;
+}
 
 const name = 'test';
 
@@ -53,7 +58,7 @@ const setup = function (info, onSuccess, onFailure) {
   });
 
   return {
-    use (f) {
+    use (f: (realm: Realm, apis: TinyApis, toolbar: AlloyComponent, socket: AlloyComponent, buttons, onSuccess: () => void, onFailure: (err?: any) => void) => void) {
       TinyLoader.setup(function (editor, onS, onF) {
         const features = Features.setup(realm, editor);
 

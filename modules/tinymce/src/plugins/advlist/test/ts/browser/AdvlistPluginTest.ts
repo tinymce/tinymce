@@ -1,23 +1,24 @@
+import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', function (success, failure) {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   AdvListPlugin();
   ListsPlugin();
   Theme();
 
-  const listStyleTest = function (title, definition) {
+  const listStyleTest = function (title: string, definition) {
     suite.test(title, function (editor) {
       editor.getBody().innerHTML = definition.inputContent;
       LegacyUnit.setSelection(editor, definition.inputSelection[0], definition.inputSelection[1]);
       editor.execCommand(definition.command, false, { 'list-style-type': definition.listType });
-      const rng = editor.selection.getRng(true);
+      const rng = editor.selection.getRng();
       const expectedElm = editor.dom.select(definition.expectedSelection[0])[0];
 
       LegacyUnit.equal(editor.getContent(), definition.expectedContent, 'Editor content should be equal');

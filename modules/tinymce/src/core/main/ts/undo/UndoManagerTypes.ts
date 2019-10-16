@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Event } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 import { Bookmark } from '../bookmark/BookmarkTypes';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 export const enum UndoLevelType {
   Fragmented = 'fragmented',
@@ -25,7 +25,7 @@ export interface UndoLevel {
 export interface UndoManager {
   data: UndoLevel[];
   typing: boolean;
-  add: (level?: UndoLevel, event?: Event) => UndoLevel;
+  add: (level?: UndoLevel, event?: EditorEvent<any>) => UndoLevel;
   beforeChange: () => void;
   undo: () => UndoLevel;
   redo: () => UndoLevel;

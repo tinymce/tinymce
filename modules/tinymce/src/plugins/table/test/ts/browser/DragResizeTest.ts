@@ -2,13 +2,14 @@ import {
     Assertions, Chain, Log, Mouse, Pipeline, Step, UiFinder, Waiter, RawAssertions, Logger, GeneralSteps
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { HTMLElement } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element, Height, Hierarchy, Width, Attr } from '@ephox/sugar';
 
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { HTMLElement } from '@ephox/dom-globals';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, failure) => {
   SilverTheme();
@@ -104,7 +105,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
                     '</tbody>' +
                   '</table>';
 
-  const sWaitForSelection = (editor, tinyApis) => {
+  const sWaitForSelection = (editor: Editor, tinyApis: TinyApis) => {
     return Logger.t('Wait for resize handles to be visible', GeneralSteps.sequence([
       tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
       Waiter.sTryUntil(

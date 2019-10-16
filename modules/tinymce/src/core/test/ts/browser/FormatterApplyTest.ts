@@ -1,15 +1,14 @@
 import { Assertions, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 import HtmlUtils from '../module/test/HtmlUtils';
 import KeyUtils from '../module/test/KeyUtils';
-import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success, failure) {
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
@@ -55,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     // Toggle OFF - Inline element on partially selected text
     editor.formatter.register('format', {
       inline: 'b',
-      toggle: 0
+      toggle: false
     });
     editor.getBody().innerHTML = '<p>1<b>23</b>4</p>';
     const rng = editor.dom.createRng();
@@ -477,8 +476,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
       inline: 'span',
       styles: {
         fontWeight: 'bold'
-      },
-      merge: true
+      }
     });
     editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
     const rng = editor.dom.createRng();
@@ -510,8 +508,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
       inline: 'font',
       attributes: {
         face: 'arial'
-      },
-      merge: true
+      }
     });
     editor.getBody().innerHTML = '<p><font size="7">1234</font></p>';
     const rng = editor.dom.createRng();
@@ -714,9 +711,6 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
       attributes: {
         title: '%title'
       }
-    }, {
-      color: '#ff0000',
-      title: 'title'
     });
     editor.getBody().innerHTML = '<p>1234</p>';
     const rng = editor.dom.createRng();
@@ -897,7 +891,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
   suite.test('Block element wrapper 1', function (editor) {
     editor.formatter.register('format', {
       block: 'blockquote',
-      wrapper: 1
+      wrapper: true
     });
     editor.getBody().innerHTML = '<h1>1234</h1><p>5678</p>';
     const rng = editor.dom.createRng();
@@ -911,7 +905,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
   suite.test('Block element wrapper 2', function (editor) {
     editor.formatter.register('format', {
       block: 'blockquote',
-      wrapper: 1
+      wrapper: true
     });
     editor.getBody().innerHTML = '<h1>1234</h1>';
     const rng = editor.dom.createRng();
@@ -925,7 +919,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
   suite.test('Block element wrapper 3', function (editor) {
     editor.formatter.register('format', {
       block: 'blockquote',
-      wrapper: 1
+      wrapper: true
     });
     editor.getBody().innerHTML = '<br /><h1>1234</h1><br />';
     const rng = editor.dom.createRng();
@@ -1091,7 +1085,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.selection.setRng(rng);
     editor.execCommand('Italic');
     LegacyUnit.equal(
-      editor.getContent(editor),
+      editor.getContent(),
       '<p><span style="font-family: Arial;"><strong>test1 <em>test2</em></strong> test3 test4 test5 test6</span></p>',
       'Selected text should be bold.'
     );
@@ -1114,7 +1108,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.formatter.apply('format');
 
     LegacyUnit.equal(
-      editor.getContent(editor),
+      editor.getContent(),
       '<p><span style="color: #ff0000;">123<a style="color: #ff0000;" href="#">abc</a>456</span></p>',
       'Link should have it\'s own color.'
     );
@@ -1137,7 +1131,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.formatter.apply('format');
 
     LegacyUnit.equal(
-      editor.getContent(editor),
+      editor.getContent(),
       '<p><span style="color: #ff0000; font-size: 10px;">123<a style="color: #ff0000;" href="#">abc</a>456</span></p>',
       'Link should have it\'s own color.'
     );
@@ -1151,7 +1145,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.selection.setRng(rng);
     editor.formatter.apply('h1');
     LegacyUnit.equal(
-      editor.getContent(editor),
+      editor.getContent(),
       '<ul><li><h1>text</h1><ul><li>nested</li></ul></li></ul>',
       'heading should not automatically apply to sublists'
     );
@@ -1162,7 +1156,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     LegacyUnit.setSelection(editor, 'li:nth-child(1)', 0, 'li:nth-child(1)', 0);
     editor.formatter.apply('h1');
     LegacyUnit.equal(
-      editor.getContent(editor),
+      editor.getContent(),
       '<ul><li><h1>ab</h1></li><li>cd</li></ul>',
       'heading should be applied to first li'
     );
@@ -1173,7 +1167,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     LegacyUnit.setSelection(editor, 'li:nth-child(1)', 1, 'li:nth-child(1)', 1);
     editor.formatter.apply('h1');
     LegacyUnit.equal(
-      editor.getContent(editor),
+      editor.getContent(),
       '<div><ul><li><h1>ab</h1></li><li>cd</li></ul></div>',
       'heading should be applied to first li only'
     );
@@ -1188,7 +1182,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
     LegacyUnit.equal(
-      editor.getContent(editor),
+      editor.getContent(),
       '<ol><li><strong>a</strong></li><li><strong>b</strong><ul><li><strong>c</strong></li><li><strong>d</strong>' +
       '<br /><ol><li><strong>e</strong></li><li><strong>f</strong></li></ol></li></ul></li><li><strong>g</strong>' +
       '</li></ol>',
@@ -1204,7 +1198,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.selection.setRng(rng);
     editor.formatter.apply('h1');
     LegacyUnit.equal(
-      editor.getContent(editor),
+      editor.getContent(),
       '<ul><li><h1>text</h1><ul><li><h1>nested</h1></li></ul></li></ul>',
       'heading should automatically apply to sublists, when selection spans the sublist'
     );
@@ -1218,7 +1212,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.selection.setRng(rng);
     editor.formatter.apply('h1');
     LegacyUnit.equal(
-      editor.getContent(editor),
+      editor.getContent(),
       '<ul><li>before<ul><li>nested</li></ul><h1>after</h1></li></ul>',
       'heading should automatically apply to sublists, when selection spans the sublist'
     );
@@ -1232,7 +1226,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.selection.setRng(rng);
     editor.formatter.apply('h1');
     LegacyUnit.equal(
-      editor.getContent(editor),
+      editor.getContent(),
       '<ul><li>before<ul><li><h1>nested</h1></li></ul><h1>after</h1></li></ul>',
       'heading should automatically apply to sublists, when selection spans the sublist'
     );
@@ -1246,7 +1240,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.selection.setRng(rng);
     editor.formatter.apply('h1');
     LegacyUnit.equal(
-      editor.getContent(editor),
+      editor.getContent(),
       '<ul><li><h1>before</h1><ul><li><h1>nested</h1></li></ul><h1>after</h1></li></ul>',
       'heading should apply correctly when selection is after a sublist'
     );
@@ -1263,7 +1257,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.execCommand('SelectAll');
     editor.formatter.apply('format');
     LegacyUnit.equal(
-      editor.getContent(editor),
+      editor.getContent(),
       '<p><span style="color: #ff0000; font-family: \'arial black\'; text-decoration: underline;">test</span></p>',
       'Coloring an underlined text should result in a colored underline'
     );
@@ -1281,7 +1275,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.execCommand('SelectAll');
     editor.formatter.apply('format');
     LegacyUnit.equal(
-      editor.getContent(editor),
+      editor.getContent(),
       '<p><span style="text-decoration: underline;"><span style="color: #ff0000; font-family: ' +
       '\'arial black\'; text-decoration: underline;">test</span></span></p>',
       'Underlining colored text should result in a colored underline'
@@ -1303,7 +1297,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.execCommand('SelectAll');
     editor.formatter.apply('format');
     LegacyUnit.equal(
-      editor.getContent(editor),
+      editor.getContent(),
       '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\';"><em>' +
       '<strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong>' +
       '</em> text</span></span></p>', 'Underlining colored and underlined text should result in a colored underline'
@@ -1353,7 +1347,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
     LegacyUnit.equal(
-      editor.getContent(editor),
+      editor.getContent(),
       '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"' +
       '><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong' +
       '></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: ' +
@@ -1381,7 +1375,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.formatter.apply('format');
     editor.formatter.remove('format');
     LegacyUnit.equal(
-      editor.getContent(editor),
+      editor.getContent(),
       '<p><span style="text-decoration: underline;">This is some text.</span></p>',
       'Children nodes that are underlined should be removed if their parent nodes are underlined'
     );
@@ -1405,7 +1399,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     LegacyUnit.equal(
-      editor.getContent(editor),
+      editor.getContent(),
       '<p><span style=\"text-decoration: underline;\">This is <span style=\"background-color: #ff0000;\">' +
       'some</span> text.</span></p>',
       'Children nodes that are underlined should be removed if their parent nodes are underlined'
@@ -1419,7 +1413,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     });
     LegacyUnit.setSelection(editor, 'p', 2, 'p', 2);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p><b>abc</b></p>');
+    LegacyUnit.equal(editor.getContent(), '<p><b>abc</b></p>');
   });
 
   suite.test('Caret format inside non-ascii single block word', function (editor) {
@@ -1429,7 +1423,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     });
     LegacyUnit.setSelection(editor, 'p', 2, 'p', 2);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p><b>noël</b></p>');
+    LegacyUnit.equal(editor.getContent(), '<p><b>noël</b></p>');
   });
 
   suite.test('Caret format inside first block word', function (editor) {
@@ -1439,7 +1433,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     });
     LegacyUnit.setSelection(editor, 'p', 2, 'p', 2);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p><b>abc</b> 123</p>');
+    LegacyUnit.equal(editor.getContent(), '<p><b>abc</b> 123</p>');
   });
 
   suite.test('Caret format inside last block word', function (editor) {
@@ -1449,7 +1443,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     });
     LegacyUnit.setSelection(editor, 'p', 5, 'p', 5);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p>abc <b>123</b></p>');
+    LegacyUnit.equal(editor.getContent(), '<p>abc <b>123</b></p>');
   });
 
   suite.test('Caret format inside middle block word', function (editor) {
@@ -1459,7 +1453,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     });
     LegacyUnit.setSelection(editor, 'p', 5, 'p', 5);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p>abc <b>123</b> 456</p>');
+    LegacyUnit.equal(editor.getContent(), '<p>abc <b>123</b> 456</p>');
   });
 
   suite.test('Caret format on word separated by non breaking space', function (editor) {
@@ -1469,7 +1463,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     });
     LegacyUnit.setSelection(editor, 'p', 1, 'p', 1);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p><b>one</b>\u00a0two</p>');
+    LegacyUnit.equal(editor.getContent(), '<p><b>one</b>\u00a0two</p>');
   });
 
   suite.test('Caret format inside single inline wrapped word', function (editor) {
@@ -1479,7 +1473,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     });
     LegacyUnit.setSelection(editor, 'em', 1, 'em', 1);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p>abc <b><em>123</em></b> 456</p>');
+    LegacyUnit.equal(editor.getContent(), '<p>abc <b><em>123</em></b> 456</p>');
   });
 
   suite.test('Caret format inside word before similar format', function (editor) {
@@ -1489,7 +1483,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     });
     LegacyUnit.setSelection(editor, 'p', 1, 'p', 1);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p><b>abc</b> 123 <b>456</b></p>');
+    LegacyUnit.equal(editor.getContent(), '<p><b>abc</b> 123 <b>456</b></p>');
   });
 
   suite.test('Caret format inside last inline wrapped word', function (editor) {
@@ -1499,7 +1493,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     });
     LegacyUnit.setSelection(editor, 'em', 5, 'em', 5);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p>abc <em>abc <b>123</b></em> 456</p>');
+    LegacyUnit.equal(editor.getContent(), '<p>abc <em>abc <b>123</b></em> 456</p>');
   });
 
   suite.test('Caret format before text', function (editor) {
@@ -1510,7 +1504,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
     editor.formatter.apply('format');
     KeyUtils.type(editor, 'b');
-    LegacyUnit.equal(editor.getContent(editor), '<p><b>b</b>a</p>');
+    LegacyUnit.equal(editor.getContent(), '<p><b>b</b>a</p>');
   });
 
   suite.test('Caret format after text', function (editor) {
@@ -1521,7 +1515,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     LegacyUnit.setSelection(editor, 'p', 1, 'p', 1);
     editor.formatter.apply('format');
     KeyUtils.type(editor, 'b');
-    LegacyUnit.equal(editor.getContent(editor), '<p>a<b>b</b></p>');
+    LegacyUnit.equal(editor.getContent(), '<p>a<b>b</b></p>');
   });
 
   suite.test('Caret format and no key press', function (editor) {
@@ -1531,7 +1525,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     });
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p>a</p>');
+    LegacyUnit.equal(editor.getContent(), '<p>a</p>');
   });
 
   suite.test('Caret format and arrow left', function (editor) {
@@ -1544,7 +1538,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     KeyUtils.type(editor, {
       keyCode: 37
     });
-    LegacyUnit.equal(editor.getContent(editor), '<p>a</p>');
+    LegacyUnit.equal(editor.getContent(), '<p>a</p>');
   });
 
   suite.test('Caret format and arrow right', function (editor) {
@@ -1557,7 +1551,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     KeyUtils.type(editor, {
       keyCode: 39
     });
-    LegacyUnit.equal(editor.getContent(editor), '<p>a</p>');
+    LegacyUnit.equal(editor.getContent(), '<p>a</p>');
   });
 
   suite.test('Caret format and backspace', function (editor) {
@@ -1575,7 +1569,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
 
     editor.formatter.apply('format');
     KeyUtils.type(editor, '\b');
-    LegacyUnit.equal(editor.getContent(editor), '<p>ab</p>');
+    LegacyUnit.equal(editor.getContent(), '<p>ab</p>');
   });
 
   suite.test('Caret format on word in li with word in parent li before it', function (editor) {
@@ -1585,7 +1579,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     });
     LegacyUnit.setSelection(editor, 'ul li li', 1, 'ul li li', 1);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<ul><li>one<ul><li><b>two</b></li></ul></li></ul>');
+    LegacyUnit.equal(editor.getContent(), '<ul><li>one<ul><li><b>two</b></li></ul></li></ul>');
   });
 
   suite.test('Format caret with multiple formats', function (editor) {
@@ -1608,7 +1602,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     });
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p class="test">a</p>');
+    LegacyUnit.equal(editor.getContent(), '<p class="test">a</p>');
   });
 
   suite.test('format inline on contentEditable: false block', function (editor) {
@@ -1618,7 +1612,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.setContent('<p>abc</p><p contenteditable="false">def</p>');
     editor.selection.select(editor.getBody().childNodes[1]);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p>abc</p><p contenteditable="false">def</p>', 'Text is not bold');
+    LegacyUnit.equal(editor.getContent(), '<p>abc</p><p contenteditable="false">def</p>', 'Text is not bold');
   });
 
   suite.test('format block on contentEditable: false block', function (editor) {
@@ -1628,7 +1622,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.setContent('<p>abc</p><p contenteditable="false">def</p>');
     editor.selection.select(editor.getBody().childNodes[1]);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p>abc</p><p contenteditable="false">def</p>', 'P is not h1');
+    LegacyUnit.equal(editor.getContent(), '<p>abc</p><p contenteditable="false">def</p>', 'P is not h1');
   });
 
   suite.test('contentEditable: false on start and contentEditable: true on end', function (editor) {
@@ -1641,7 +1635,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     rng.setEnd(editor.dom.select('p')[2].firstChild, 3);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p>abc</p><p contenteditable="false">def</p><p><b>ghi</b></p>', 'Text in last paragraph is bold');
+    LegacyUnit.equal(editor.getContent(), '<p>abc</p><p contenteditable="false">def</p><p><b>ghi</b></p>', 'Text in last paragraph is bold');
   });
 
   suite.test('contentEditable: true on start and contentEditable: false on end', function (editor) {
@@ -1651,7 +1645,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.setContent('<p>abc</p><p contenteditable="false">def</p>');
     LegacyUnit.setSelection(editor, 'p:nth-child(1)', 0, 'p:nth-child(2)', 3);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p><b>abc</b></p><p contenteditable="false">def</p>', 'Text in first paragraph is bold');
+    LegacyUnit.equal(editor.getContent(), '<p><b>abc</b></p><p contenteditable="false">def</p>', 'Text in first paragraph is bold');
   });
 
   suite.test('contentEditable: true inside contentEditable: false', function (editor) {
@@ -1661,7 +1655,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.setContent('<p>abc</p><p contenteditable="false"><span contenteditable="true">def</span></p>');
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p>abc</p><p contenteditable="false"><span contenteditable="true"><b>def</b></span></p>', 'Text is bold');
+    LegacyUnit.equal(editor.getContent(), '<p>abc</p><p contenteditable="false"><span contenteditable="true"><b>def</b></span></p>', 'Text is bold');
   });
 
   suite.test('Del element wrapping blocks', function (editor) {
@@ -1826,7 +1820,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.formatter.apply('format');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p><span style="font-weight: bold;">abc</span></p>');
+    LegacyUnit.equal(editor.getContent(), '<p><span style="font-weight: bold;">abc</span></p>');
   });
 
   suite.test('merge_with_parents', function (editor) {
@@ -1840,7 +1834,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     editor.setContent('<p><span style="color: red">a</span></p>');
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 1);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(editor), '<p><span style="color: red; font-weight: bold;">a</span></p>');
+    LegacyUnit.equal(editor.getContent(), '<p><span style="color: red; font-weight: bold;">a</span></p>');
   });
 
   suite.test('Format selection from with end at beginning of block', function (editor) {
@@ -2085,7 +2079,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
   suite.test('Apply defaultBlock format', function (editor) {
     editor.getBody().innerHTML = 'a<br>b';
     editor.formatter.register('format', { selector: 'div', defaultBlock: 'div', classes: ['a'] });
-    editor.selection.setCursorLocation(editor.firstChild, 0);
+    editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
     editor.formatter.apply('format');
     LegacyUnit.equal(getContent(editor), '<div class="a">a</div>b');
   });

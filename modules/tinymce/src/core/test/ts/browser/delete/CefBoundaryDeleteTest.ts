@@ -1,13 +1,14 @@
 import { ApproxStructure, GeneralSteps, Keys, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 import Zwsp from 'tinymce/core/text/Zwsp';
 
 UnitTest.asynctest('browser.tinymce.core.delete.CefBoundaryDeleteTest',  (success, failure) => {
   Theme();
 
-  const sTestDelete = function (editor, tinyApis, tinyActions) {
+  const sTestDelete = function (editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions) {
     return GeneralSteps.sequence([
       tinyApis.sFocus,
 

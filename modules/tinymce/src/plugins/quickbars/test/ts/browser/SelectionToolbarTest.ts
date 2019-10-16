@@ -2,8 +2,8 @@ import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Log, Pipeline,
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
-import Editor from 'tinymce/core/api/Editor';
 
+import Editor from 'tinymce/core/api/Editor';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import QuickbarsPlugin from 'tinymce/plugins/quickbars/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.SelectionToolbarTest', (su
     ]);
   };
 
-  const sWaitForTextToolbarAndAssertState = (tinyUi, bold: boolean, italic: boolean, heading2: boolean, heading3: boolean, link: boolean, blockquote: boolean) => {
+  const sWaitForTextToolbarAndAssertState = (tinyUi: TinyUi, bold: boolean, italic: boolean, heading2: boolean, heading3: boolean, link: boolean, blockquote: boolean) => {
     return GeneralSteps.sequence([
       tinyUi.sWaitForUi('wait for text selection toolbar to show', '.tox-toolbar'),
       sAssertButtonToggledState('Bold', bold),
@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.SelectionToolbarTest', (su
     ]);
   };
 
-  const sSetImageAndAssertToolbarState = (tinyApis, tinyUi, useFigure: boolean, alignment?: Alignment) => {
+  const sSetImageAndAssertToolbarState = (tinyApis: TinyApis, tinyUi: TinyUi, useFigure: boolean, alignment?: Alignment) => {
     let attrs, imageHtml;
     if (alignment === undefined) {
       attrs = useFigure ? 'class="image"' : '';

@@ -1,18 +1,18 @@
 import { Pipeline } from '@ephox/agar';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
-import Env from 'tinymce/core/api/Env';
-import HtmlUtils from '../module/test/HtmlUtils';
-import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Range } from '@ephox/dom-globals';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
+import Theme from 'tinymce/themes/silver/Theme';
+import HtmlUtils from '../module/test/HtmlUtils';
 
-UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (success, failure) {
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
-  const normalizeRng = function (rng) {
+  const normalizeRng = function (rng: Range) {
     if (rng.startContainer.nodeType === 3) {
       if (rng.startOffset === 0) {
         rng.setStartBefore(rng.startContainer);
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function () {
     return rng;
   };
 
-  const ok = function (value, label?) {
+  const ok = function (value: boolean, label?: string) {
     return LegacyUnit.equal(value, true, label);
   };
 
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function () {
     editor.selection.setRng(rng);
     editor.execCommand('InsertHorizontalRule');
     LegacyUnit.equal(editor.getContent(), '<p>1</p><hr /><p>3</p>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equalDom(rng.startContainer, editor.getBody().lastChild);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
