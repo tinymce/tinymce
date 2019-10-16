@@ -2,7 +2,7 @@ import { AlloyComponent, Bubble, HotspotAnchorSpec, Layout, LayoutInside, MaxHei
 import { Option } from '@ephox/katamari';
 import { Element, Selection } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { useFixedContainer } from '../api/Settings';
+import { useFixedContainer, isToolbarLocationTop } from '../api/Settings';
 
 const bubbleAlignments = {
   valignCentre: [],
@@ -73,7 +73,7 @@ const getBannerAnchor = (bodyElement: () => Element, lazyAnchorbar: () => AlloyC
   return useFixedToolbarContainer ? fixedToolbarAnchor : standardAnchor;
 };
 
-const getToolbarOverflowAnchor = (lazyMoreButton: () => AlloyComponent) => (): HotspotAnchorSpec => {
+const getToolbarOverflowAnchor = (lazyMoreButton: () => AlloyComponent, isHeaderDockedBottom: () => boolean) => (): HotspotAnchorSpec => {
   return {
     anchor: 'hotspot',
     hotspot: lazyMoreButton(),
@@ -81,8 +81,8 @@ const getToolbarOverflowAnchor = (lazyMoreButton: () => AlloyComponent) => (): H
       maxWidthFunction: MaxWidth.expandable()
     },
     layouts: {
-      onRtl: () => [ Layout.southeast, Layout.southwest ],
-      onLtr: () => [ Layout.southwest, Layout.southeast ]
+      onRtl: () => isHeaderDockedBottom() ? [ Layout.northeast, Layout.northwest ] : [ Layout.southeast, Layout.southwest ],
+      onLtr: () => isHeaderDockedBottom() ? [ Layout.northwest, Layout.northeast ] : [ Layout.southwest, Layout.southeast ]
     }
   };
 };
@@ -108,13 +108,16 @@ const getNodeAnchor = (bodyElement) => (element: Option<Element>): NodeAnchorSpe
   };
 };
 
-const getAnchors = (editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyMoreButton: () => AlloyComponent) => {
+const getAnchors = (editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyMoreButton: () => AlloyComponent, isHeaderDocked: () => boolean) => {
   const useFixedToolbarContainer: boolean = useFixedContainer(editor);
   const bodyElement = (): Element => Element.fromDom(editor.getBody());
+  const isHeaderDockedBottom = () => {
+    return isHeaderDocked() && !isToolbarLocationTop(editor);
+  };
 
   return {
     toolbar: getToolbarAnchor(bodyElement, lazyAnchorbar, useFixedToolbarContainer),
-    toolbarOverflow: getToolbarOverflowAnchor(lazyMoreButton),
+    toolbarOverflow: getToolbarOverflowAnchor(lazyMoreButton, isHeaderDockedBottom),
     banner: getBannerAnchor(bodyElement, lazyAnchorbar, useFixedToolbarContainer),
     cursor: getCursorAnchor(editor, bodyElement),
     node: getNodeAnchor(bodyElement)

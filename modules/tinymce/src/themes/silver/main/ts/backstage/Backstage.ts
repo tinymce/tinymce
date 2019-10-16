@@ -55,7 +55,7 @@ export interface UiFactoryBackstage {
   setContextMenuState?: (state: boolean) => void;
 }
 
-const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyMoreButton: () => AlloyComponent): UiFactoryBackstage => {
+const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyMoreButton: () => AlloyComponent, isHeaderDocked: () => boolean): UiFactoryBackstage => {
   const contextMenuState = Cell(false);
   const backstage: UiFactoryBackstage = {
     shared: {
@@ -67,7 +67,7 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
       interpreter: (s) => {
         return UiFactory.interpretWithoutForm(s, backstage);
       },
-      anchors: Anchors.getAnchors(editor, lazyAnchorbar, lazyMoreButton),
+      anchors: Anchors.getAnchors(editor, lazyAnchorbar, lazyMoreButton, isHeaderDocked),
       getSink: () => Result.value(sink)
     },
     urlinput: UrlInputBackstage(editor),

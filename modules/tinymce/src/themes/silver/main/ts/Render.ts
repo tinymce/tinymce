@@ -101,6 +101,8 @@ const setup = (editor: Editor): RenderInfo => {
 
   const lazyHeader = () => lazyOuterContainer.bind(OuterContainer.getHeader);
 
+  const isHeaderDocked = () => header.isDocked(lazyHeader);
+
   const sink = GuiFactory.build({
     dom: {
       tag: 'div',
@@ -109,7 +111,7 @@ const setup = (editor: Editor): RenderInfo => {
     },
     behaviours: Behaviour.derive([
       Positioning.config({
-        useFixed: () => header.isDocked(lazyHeader)
+        useFixed: () => isHeaderDocked()
       })
     ])
   });
@@ -139,7 +141,7 @@ const setup = (editor: Editor): RenderInfo => {
     return OuterContainer.getThrobber(container);
   }).getOrDie('Could not find throbber element');
 
-  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar, lazyMoreButton);
+  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar, lazyMoreButton, isHeaderDocked);
 
   const partMenubar: AlloySpec = OuterContainer.parts().menubar({
     dom: {
