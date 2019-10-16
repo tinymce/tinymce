@@ -9,29 +9,66 @@
 // Color
 //
 
+@color-input-swatch-checker-color: contrast(@textfield-background-color, rgba(255, 255, 255, .25), rgba(0, 0, 0, .25));
+
 .tox {
   .tox-color-input {
     display: flex;
+    position: relative;
+    z-index: 1;
 
     .tox-textfield {
-      border-radius: 3px 0 0 3px;
-      display: flex;
+      z-index: -1;
     }
 
     span {
       border-color: rgba(red(@color-black), green(@color-black), blue(@color-black), .2);
-      border-radius: 0 3px 3px 0;
+      border-radius: 50%;
       border-style: solid;
-      border-width: 1px 1px 1px 0;
+      border-width: 1px;
       box-shadow: none;
       box-sizing: border-box;
       cursor: pointer;
-      display: flex;
-      width: 35px;
+      height: @textfield-height - 8px;
+      position: absolute;
+      top: 4px;
+      width: $height;
 
       &:focus {
         border-color: @input-button-focus-border-color;
       }
+
+      &::before {
+        background-image:
+          linear-gradient(45deg, @color-input-swatch-checker-color 25%, transparent 25%),
+          linear-gradient(-45deg, @color-input-swatch-checker-color 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, @color-input-swatch-checker-color 75%),
+          linear-gradient(-45deg, transparent 75%, @color-input-swatch-checker-color 75%);
+        background-position: 0 0, 0 5px, 5px -5px, -5px 0;
+        background-size: 10px 10px;
+        border: 1px solid @textfield-background-color;
+        border-radius: 50%;
+        box-sizing: border-box;
+        content: '';
+        height: @textfield-height - 8px;
+        left: -1px;
+        position: absolute;
+        top: -1px;
+        width: $height;
+        z-index: -1;
+      }
+    }
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-color-input {
+    .tox-textfield {
+      padding-left: @textfield-height;
+    }
+
+    span {
+      left: 4px;
     }
   }
 }
@@ -40,12 +77,11 @@
 .tox[dir="rtl"] {
   .tox-color-input {
     .tox-textfield {
-      border-radius: 0 3px 3px 0;
+      padding-right: @textfield-height;
     }
 
     span {
-      border-radius: 3px 0 0 3px;
-      border-width: 1px 0 1px 1px;
+      right: 4px;
     }
   }
 }
