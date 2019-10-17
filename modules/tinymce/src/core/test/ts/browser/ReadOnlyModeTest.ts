@@ -1,5 +1,5 @@
-import { ApproxStructure, Chain, Log, Mouse, Pipeline, RawAssertions, Step, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { ApproxStructure, Chain, Log, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body, Class, Css, Element, SelectorFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -52,19 +52,19 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
     };
 
     const sAssertFakeSelection = (expectedState: boolean) => Step.sync(() => {
-      RawAssertions.assertEq('Selected element should have expected state', expectedState, editor.selection.getNode().hasAttribute('data-mce-selected'));
+      Assert.eq('Selected element should have expected state', expectedState, editor.selection.getNode().hasAttribute('data-mce-selected'));
     });
 
     const sAssertResizeBars = (expectedState: boolean) => {
       return Step.sync(() => {
         SelectorFind.descendant(Element.fromDom(editor.getDoc().documentElement), '.ephox-snooker-resizer-bar').fold(
           () => {
-            RawAssertions.assertEq('Was expecting to find resize bars', expectedState, false);
+            Assert.eq('Was expecting to find resize bars', expectedState, false);
           },
           (bar) => {
             const actualDisplay = Css.get(bar, 'display');
             const expectedDisplay = expectedState ? 'block' : 'none';
-            RawAssertions.assertEq('Should be expected display state on resize bar', expectedDisplay, actualDisplay);
+            Assert.eq('Should be expected display state on resize bar', expectedDisplay, actualDisplay);
           }
         );
       });
@@ -78,7 +78,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
     const sAssertToolbarDisabled = (expectedState: boolean) => Chain.asStep(Body.body(), [
       UiFinder.cFindIn('button[title="Bold"]'),
       Chain.op((elm) => {
-        RawAssertions.assertEq('Button should have expected disabled state', expectedState, Class.has(elm, 'tox-tbtn--disabled'));
+        Assert.eq('Button should have expected disabled state', expectedState, Class.has(elm, 'tox-tbtn--disabled'));
       })
     ]);
 

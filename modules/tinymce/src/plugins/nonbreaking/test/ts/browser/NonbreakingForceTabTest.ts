@@ -1,6 +1,6 @@
-import { Pipeline, Step, Keys, RawAssertions, Log } from '@ephox/agar';
+import { Keys, Log, Pipeline, Step } from '@ephox/agar';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import VK from 'tinymce/core/api/util/VK';
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -26,8 +26,8 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingForceTabTest'
         Log.step('TBA', 'NonBreaking: Prevent default and other handlers on insert tab',
           Step.sync(function () {
             const args = editor.fire('keydown', { keyCode: VK.TAB });
-            RawAssertions.assertEq('Default should be prevented', true, args.isDefaultPrevented());
-            RawAssertions.assertEq('Should not propagate', true, args.isImmediatePropagationStopped());
+            Assert.eq('Default should be prevented', true, args.isDefaultPrevented());
+            Assert.eq('Should not propagate', true, args.isImmediatePropagationStopped());
           })
         )
       ], onSuccess, onFailure);

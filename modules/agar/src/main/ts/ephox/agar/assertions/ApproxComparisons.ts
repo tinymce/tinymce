@@ -1,7 +1,5 @@
 import { Arr, Fun, Id, Strings } from '@ephox/katamari';
-
-import { assertEq } from '../api/RawAssertions';
-import { TestLabel } from '@ephox/bedrock-client';
+import { Assert, TestLabel } from '@ephox/bedrock-client';
 import { ArrayAssert, StringAssert } from './ApproxStructures';
 
 const missingValuePlaceholder: string = Id.generate('missing');
@@ -12,7 +10,7 @@ const dieWith = function (message: string) {
 
 const assertOnBool = function (c: boolean, label: TestLabel, value: any): void {
   const strValue = value === missingValuePlaceholder ? '{missing}' : value;
-  assertEq(
+  Assert.eq(
     TestLabel.concat(label, () => ', Actual value: ' + JSON.stringify(strValue)),
     true,
     c

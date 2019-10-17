@@ -1,5 +1,5 @@
-import { Chain, Logger, Pipeline, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Chain, Logger, Pipeline } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -19,12 +19,12 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentNotInitializedTest
   const cSetContentAndAssertReturn = (content) => Chain.op((editor: any) => {
     const actual = editor.setContent(content);
 
-    RawAssertions.assertEq('should return what you tried to set', content, actual);
+    Assert.eq('should return what you tried to set', content, actual);
   });
   const cGetAndAssertContent = (expected, tree?) => Chain.op((editor: any) => {
     const actual = tree ? editor.getContent({format: 'tree'}) : editor.getContent();
 
-    RawAssertions.assertEq('content should be equal', expected, actual);
+    Assert.eq('content should be equal', expected, actual);
   });
 
   const cRemoveBodyElement = Chain.op((editor: any) => {

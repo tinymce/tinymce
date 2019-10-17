@@ -1,5 +1,4 @@
-import { RawAssertions } from '@ephox/agar';
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Fun, Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
@@ -63,7 +62,7 @@ UnitTest.test('TextZoneTest', function () {
       actual.fold(function () {
         assert.fail(label + '\nDid not find a zone. Expected to find: ' + JSON.stringify(exp, null, 2));
       }, function (act) {
-        RawAssertions.assertEq(label + '\nTesting zone: ', exp, rawOne(doc1, act));
+        Assert.eq(label + '\nTesting zone: ', exp, rawOne(doc1, act));
       });
     });
   };

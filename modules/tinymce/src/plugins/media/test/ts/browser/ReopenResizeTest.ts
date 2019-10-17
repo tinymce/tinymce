@@ -1,5 +1,5 @@
-import { Pipeline, RawAssertions, Step, Waiter, Logger, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Log, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/media/Plugin';
@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (s
 
   const sWaitForResizeHandles = function (editor) {
     return Waiter.sTryUntil('Wait for new width value', Step.sync(function () {
-      RawAssertions.assertEq('Resize handle should exist', editor.dom.select('#mceResizeHandlenw').length, 1);
+      Assert.eq('Resize handle should exist', editor.dom.select('#mceResizeHandlenw').length, 1);
     }));
   };
 
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (s
     // browsers insert BRs and some do not
     return Logger.t('Assert image is present', Step.sync(function () {
       const actualCount = editor.dom.select('img.mce-object').length;
-      RawAssertions.assertEq('assert raw content', 1, actualCount);
+      Assert.eq('assert raw content', 1, actualCount);
     }));
   };
 

@@ -1,11 +1,17 @@
-import { Assertions, Logger, Pipeline, NamedChain, Chain, RawAssertions } from '@ephox/agar';
-import { Editor, ApiChains } from '@ephox/mcagar';
+import { Assertions, Chain, Logger, NamedChain, Pipeline } from '@ephox/agar';
+import { ApiChains, Editor } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
-import { Hierarchy, Element, Remove, Html, SelectorFilter, Replication } from '@ephox/sugar';
-import { Result, Arr } from '@ephox/katamari';
-import { isRangeBookmark, isPathBookmark, isIdBookmark, isIndexBookmark, isStringPathBookmark } from 'tinymce/core/bookmark/BookmarkTypes';
+import { Element, Hierarchy, Html, Remove, Replication, SelectorFilter } from '@ephox/sugar';
+import { Arr, Result } from '@ephox/katamari';
+import {
+  isIdBookmark,
+  isIndexBookmark,
+  isPathBookmark,
+  isRangeBookmark,
+  isStringPathBookmark
+} from 'tinymce/core/bookmark/BookmarkTypes';
 import ResolveBookmark from 'tinymce/core/bookmark/ResolveBookmark';
 
 UnitTest.asynctest('browser.tinymce.core.bookmark.BookmarksTest', (success, failure) => {
@@ -69,30 +75,30 @@ UnitTest.asynctest('browser.tinymce.core.bookmark.BookmarksTest', (success, fail
   };
 
   const cAssertRangeBookmark = (spath, soffset, fpath, foffset) => cBundleOp((input) => {
-    RawAssertions.assertEq('Should be a range bookmark', true, isRangeBookmark(input.bookmark));
+    Assert.eq('Should be a range bookmark', true, isRangeBookmark(input.bookmark));
     assertRawRange(Element.fromDom(input.editor.getBody()), input.bookmark.rng, spath, soffset, fpath, foffset);
   });
 
   const cAssertPathBookmark = (expectedStart, expectedEnd) => cBundleOp((input) => {
-    RawAssertions.assertEq('Should be a path bookmark', true, isPathBookmark(input.bookmark));
-    RawAssertions.assertEq('Should be expected start path', expectedStart, input.bookmark.start);
-    RawAssertions.assertEq('Should be expected end path', expectedEnd, input.bookmark.end);
+    Assert.eq('Should be a path bookmark', true, isPathBookmark(input.bookmark));
+    Assert.eq('Should be expected start path', expectedStart, input.bookmark.start);
+    Assert.eq('Should be expected end path', expectedEnd, input.bookmark.end);
   });
 
   const cAssertIndexBookmark = (expectedName, expectedIndex) => cBundleOp((input) => {
-    RawAssertions.assertEq('Should be an index bookmark', true, isIndexBookmark(input.bookmark));
-    RawAssertions.assertEq('Should be expected name', expectedName, input.bookmark.name);
-    RawAssertions.assertEq('Should be expected index', expectedIndex, input.bookmark.index);
+    Assert.eq('Should be an index bookmark', true, isIndexBookmark(input.bookmark));
+    Assert.eq('Should be expected name', expectedName, input.bookmark.name);
+    Assert.eq('Should be expected index', expectedIndex, input.bookmark.index);
   });
 
   const cAssertStringPathBookmark = (expectedStart, expectedEnd) => cBundleOp((input) => {
-    RawAssertions.assertEq('Should be a string bookmark', true, isStringPathBookmark(input.bookmark));
-    RawAssertions.assertEq('Should be expected start', expectedStart, input.bookmark.start);
-    RawAssertions.assertEq('Should be expected end', expectedEnd, input.bookmark.end);
+    Assert.eq('Should be a string bookmark', true, isStringPathBookmark(input.bookmark));
+    Assert.eq('Should be expected start', expectedStart, input.bookmark.start);
+    Assert.eq('Should be expected end', expectedEnd, input.bookmark.end);
   });
 
   const cAssertIdBookmark = cBundleOp((input) => {
-    RawAssertions.assertEq('Should be an id bookmark', true, isIdBookmark(input.bookmark));
+    Assert.eq('Should be an id bookmark', true, isIdBookmark(input.bookmark));
   });
 
   const cAssertApproxRawContent = (expectedHtml) => NamedChain.read('editor', Chain.op((editor) => {

@@ -1,8 +1,8 @@
-import { Logger, RawAssertions } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
 import { Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Settings from 'tinymce/plugins/quickbars/api/Settings';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('DialogChanges', () => {
   Logger.sync(
@@ -17,7 +17,7 @@ UnitTest.test('DialogChanges', () => {
 
         Logger.sync(label, () => {
           const result = method(mockEditor);
-          RawAssertions.assertEq(label, expected, result);
+          Assert.eq(label, expected, result);
         });
       };
 
