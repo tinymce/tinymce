@@ -46,9 +46,9 @@ node("primary") {
     def extExec, extExecHandle, extYarnInstall, grunt
 
     def gitMerge = {
-      if (BRANCH_NAME != "master" && BRANCH_NAME != "next/5.1") {
-        echo "Merging next/5.1 into this branch to run tests"
-        extExec("git merge --no-commit --no-ff origin/next/5.1")
+      if (BRANCH_NAME != "master") {
+        echo "Merging master into this branch to run tests"
+        extExec("git merge --no-commit --no-ff origin/master")
       }
     }
 
