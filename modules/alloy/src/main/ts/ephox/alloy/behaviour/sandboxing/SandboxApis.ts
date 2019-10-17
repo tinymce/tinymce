@@ -33,6 +33,10 @@ const open = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sandbo
   return newState;
 };
 
+const setContent = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data) => {
+  return sState.get().map(() => rebuild(sandbox, sConfig, sState, data));
+};
+
 // TODO AP-191 write a test for openWhileCloaked
 const openWhileCloaked = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data, transaction: () => void) => {
   cloak(sandbox, sConfig, sState);
@@ -110,5 +114,6 @@ export {
   close,
   isOpen,
   isPartOf,
-  getState
+  getState,
+  setContent
 };

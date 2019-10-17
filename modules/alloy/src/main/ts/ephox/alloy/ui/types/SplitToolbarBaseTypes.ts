@@ -16,6 +16,15 @@ export interface SplitToolbarBaseDetail extends CompositeSketchDetail {
   builtGroups: Cell<AlloyComponent[]>;
 }
 
+export interface SplitToolbarBaseApis {
+  setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
+  refresh: (toolbar: AlloyComponent) => void;
+  toggle: (toolbar: AlloyComponent) => void;
+  getMoreButton: (toolbar: AlloyComponent) => Option<AlloyComponent>;
+  getOverflow: (toolbar: AlloyComponent) => Option<AlloyComponent>;
+  overflowToggledClass: (toolbar: AlloyComponent) => Option<AlloyComponent>;
+}
+
 export interface SplitToolbarBaseSpec extends CompositeSketchSpec {
   uid?: string;
   dom: RawDomSchema;
@@ -28,10 +37,5 @@ export interface SplitToolbarBaseSpec extends CompositeSketchSpec {
   };
 }
 
-export interface SplitToolbarBaseSketcher<T extends SplitToolbarBaseSpec, U extends SplitToolbarBaseDetail> extends CompositeSketch<T, U> {
-  setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
-  refresh: (toolbar: AlloyComponent) => void;
-  toggle: (toolbar: AlloyComponent) => void;
-  getMoreButton: (toolbar: AlloyComponent) => Option<AlloyComponent>;
-  getOverflow: (toolbar: AlloyComponent) => Option<AlloyComponent>;
-}
+export interface SplitToolbarBaseSketcher<T extends SplitToolbarBaseSpec, U extends SplitToolbarBaseDetail>
+  extends CompositeSketch<T, U>, SplitToolbarBaseApis { }

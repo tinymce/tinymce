@@ -50,11 +50,13 @@ const buildListItems = (inputList, itemCallback, startItems?): Types.SelectBox.E
 const extractAdvancedStyles = (dom, elm) => {
   const rgbToHex = (value: string) => Strings.startsWith(value, 'rgb') ? dom.toHex(value) : value;
 
+  const borderWidth = Css.getRaw(Element.fromDom(elm), 'border-width').getOr('');
   const borderStyle = Css.getRaw(Element.fromDom(elm), 'border-style').getOr('');
   const borderColor = Css.getRaw(Element.fromDom(elm), 'border-color').map(rgbToHex).getOr('');
   const bgColor = Css.getRaw(Element.fromDom(elm), 'background-color').map(rgbToHex).getOr('');
 
   return {
+    borderwidth: borderWidth,
     borderstyle: borderStyle,
     bordercolor: borderColor,
     backgroundcolor: bgColor
@@ -84,8 +86,8 @@ const getSharedValues = (data) => {
   return baseData;
 };
 
-const getAdvancedTab = () => {
-  const items: Types.Dialog.BodyComponentApi[] = [
+const getAdvancedTab = (dialogName: 'table' | 'row' | 'cell') => {
+  const advTabItems: Types.Dialog.BodyComponentApi[] = [
     {
       name: 'borderstyle',
       type: 'selectbox',
@@ -115,6 +117,15 @@ const getAdvancedTab = () => {
       label: 'Background color'
     }
   ];
+
+  const borderWidth: Types.Input.InputApi = {
+    name: 'borderwidth',
+    type: 'input',
+    label: 'Border width'
+  };
+
+  const items = dialogName === 'cell' ? ([borderWidth] as Types.Dialog.BodyComponentApi[]).concat(advTabItems) : advTabItems;
+
   return {
     title: 'Advanced',
     name: 'advanced',
@@ -288,6 +299,7 @@ export interface CellData {
   class: string;
   halign: string;
   valign: string;
+  borderwidth?: string;
   borderstyle?: string;
   bordercolor?: string;
   backgroundcolor?: string;

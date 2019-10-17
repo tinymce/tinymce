@@ -91,21 +91,23 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     });
   });
 
-  suite.asyncTest('selector on an unsupported browser', function (_, done) {
-    // Fake IE 8
-    const oldIeValue = Env.ie;
-    Env.ie = 8;
+  if (Env.browser.isIE()) {
+    suite.asyncTest('selector on an unsupported browser', function (_, done) {
+      // Fake IE 8
+      const oldIeValue = Env.browser.version.major;
+      Env.browser.version.major = 8;
 
-    EditorManager.init({
-      selector: '#elm-2',
-      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-      content_css: '/project/tinymce/js/tinymce/skins/content/default',
-    }).then(function (result) {
-      Assertions.assertEq('Should be an result that is zero length', 0, result.length);
-      Env.ie = oldIeValue;
-      teardown(done);
+      EditorManager.init({
+        selector: '#elm-2',
+        skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
+        content_css: '/project/tinymce/js/tinymce/skins/content/default',
+      }).then(function (result) {
+        Assertions.assertEq('Should be an result that is zero length', 0, result.length);
+        Env.browser.version.major = oldIeValue;
+        teardown(done);
+      });
     });
-  });
+  }
 
   suite.asyncTest('target (each editor should have a different target)', function (_, done) {
     const maxCount = document.querySelectorAll('.elm-even').length;
@@ -175,6 +177,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       inline: true,
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
+      toolbar_drawer: false
     }).then(next, die);
   }));
 
@@ -191,19 +194,24 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
             classes: [ arr.has('tox-editor-container') ],
             children: [
               s.element('div', {
-                classes: [ arr.has('tox-menubar') ],
-                attrs: {
-                  role: str.is('menubar'),
-                },
-              }),
-              s.element('div', {
-                classes: [ arr.has('tox-toolbar') ],
-                attrs: {
-                  role: str.is('group'),
-                },
-              }),
-              s.element('div', {
-                classes: [ arr.has('tox-anchorbar') ]
+                classes: [ arr.has('tox-editor-header') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-menubar') ],
+                    attrs: {
+                      role: str.is('menubar'),
+                    },
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar') ],
+                    attrs: {
+                      role: str.is('group'),
+                    },
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-anchorbar') ]
+                  })
+                ]
               })
             ]
           }),

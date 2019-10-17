@@ -31,15 +31,18 @@ export default {
         items: [
           {
             name: 'vspace',
-            type: 'input'
+            type: 'input',
+            inputMode: 'numeric'
           },
           {
             name: 'hspace',
-            type: 'input'
+            type: 'input',
+            inputMode: 'numeric'
           },
           {
             name: 'borderwidth',
-            type: 'input'
+            type: 'input',
+            inputMode: 'numeric'
           },
           {
             name: 'borderstyle',

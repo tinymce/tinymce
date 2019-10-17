@@ -55,6 +55,12 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
       if (Toggling.isOn(comp)) {
         DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
       }
+    },
+    // If we are open, refresh the menus in the tiered menu system
+    repositionMenus: (comp) => {
+      if (Toggling.isOn(comp)) {
+        DropdownUtils.repositionMenus(comp);
+      }
     }
   };
 
@@ -144,7 +150,8 @@ const Dropdown = Sketcher.composite({
     open: (apis: DropdownApis, comp) => apis.open(comp),
     expand: (apis: DropdownApis, comp) => apis.expand(comp),
     close: (apis: DropdownApis, comp) => apis.close(comp),
-    isOpen: (apis: DropdownApis, comp) => apis.isOpen(comp)
+    isOpen: (apis: DropdownApis, comp) => apis.isOpen(comp),
+    repositionMenus: (apis: DropdownApis, comp) => apis.repositionMenus(comp)
   }
 }) as DropdownSketcher;
 

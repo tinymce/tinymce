@@ -25,6 +25,9 @@ export interface InlineViewDetail extends SingleSketchDetail {
   fireDismissalEventInstead: Option<{
     event: string
   }>;
+  fireRepositionEventInstead: Option<{
+    event: string
+  }>;
 }
 
 export interface InlineViewSpec extends SingleSketchSpec {
@@ -41,20 +44,26 @@ export interface InlineViewSpec extends SingleSketchSpec {
   fireDismissalEventInstead?: {
     event?: string
   };
+  fireRepositionEventInstead?: {
+    event: string
+  };
 }
 
 export interface InlineMenuSpec {
   data: TieredData;
   menu: Partial<TieredMenuSpec>;
+  type?: 'vertical' | 'horizontal';
 }
 
 export interface InlineViewSketcher extends SingleSketch<InlineViewSpec, InlineViewDetail> {
   showAt: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) => void;
   showWithin: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Option<Element>) => void;
-  showWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, bounds: Option<Bounds>) => void;
+  showWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBounds: () => Option<Bounds>) => void;
   showMenuAt: (component: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => void;
+  showMenuWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Option<Bounds>) => void;
   hide: (component: AlloyComponent) => void;
   isOpen: (component: AlloyComponent) => boolean;
   getContent: (component: AlloyComponent) => Option<AlloyComponent>;
   setContent: (component: AlloyComponent, thing: AlloySpec) => void;
+  reposition: (component: AlloyComponent) => void;
 }

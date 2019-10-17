@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Attachment, Docking, Focusing } from '@ephox/alloy';
-import { Obj, Option } from '@ephox/katamari';
-import { Attr, Css, Element, Height, Location } from '@ephox/sugar';
+import { AlloyComponent, Attachment, Docking } from '@ephox/alloy';
+import { Option } from '@ephox/katamari';
+import { Css, Element, Height, Location } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { getToolbarDrawer, getUiContainer, ToolbarDrawer, useFixedContainer } from '../api/Settings';
+import { getToolbarDrawer, getUiContainer, isStickyToolbar, ToolbarDrawer, useFixedContainer } from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import { setupReadonlyModeSwitch } from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
@@ -19,70 +19,57 @@ import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
 
-interface Position {
-  top: number;
-  left: number;
-}
-
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   let floatContainer;
   const DOM = DOMUtils.DOM;
   const useFixedToolbarContainer = useFixedContainer(editor);
+  const isSticky = isStickyToolbar(editor);
+  const targetElm = Element.fromDom(args.targetNode);
 
   const splitSetting = getToolbarDrawer(editor);
   const split = splitSetting === ToolbarDrawer.sliding || splitSetting === ToolbarDrawer.floating;
 
   loadInlineSkin(editor);
 
-  const calcPosition = (offset: number = 0): Position => {
-    // Note: The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
-    // so we need to round this to account for that.
-    const location = Location.absolute(Element.fromDom(editor.getBody()));
-    return {
-      top: Math.round(location.top() - Height.get(floatContainer.element())) + offset,
-      left: Math.round(location.left())
-    };
-  };
-
-  const setChromePosition = (toolbar) => {
-    const isDocked = Css.getRaw(floatContainer.element(), 'position').is('fixed');
-    // We need to always recalculate the toolbar's position so Docking switches between fixed and
-    // absolute correctly. Only recalculating when position: absolute breaks transition on window
-    // resize behaviour (chrome gets stuck fixed to the top of the viewport).
+  const updateChromePosition = (toolbar: Option<AlloyComponent>) => {
+    // Calculate the toolbar offset when using a split toolbar drawer
     const offset = split ? toolbar.fold(() => 0, (tbar) => {
       // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
       return tbar.components().length > 1 ? Height.get(tbar.components()[1].element()) : 0;
     }) : 0;
-    const position = calcPosition(offset);
 
-    // If we're docked then we need to update the dock attributes instead, so that when it transitions back to absolute it has the correct position
-    if (isDocked) {
-      Attr.setAll(floatContainer.element(), Obj.tupleMap(position, (value, key) => ({ k: `data-dock-${key}`, v: value })));
-    } else {
-      Css.setAll(floatContainer.element(), Obj.map(position, (value) => value + 'px'));
-    }
-
-    // Let Docking handle fixed <-> absolute transitions, etc.
-    Docking.refresh(floatContainer);
+    // The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
+    // so we need to round this to account for that.
+    const location = Location.absolute(targetElm);
+    const top = location.top() - Height.get(floatContainer.element()) + offset;
+    Css.setAll(uiComponents.outerContainer.element(), {
+      position: 'absolute',
+      top: Math.round(top) + 'px',
+      left: Math.round(location.left()) + 'px'
+    });
   };
 
-  const updateChromeUi = () => {
-    // Handles positioning, Docking and SplitToolbar (more drawer) behaviour. Modes:
-    // 1. Basic inline: does positioning and Docking
-    // 2. Inline + more drawer: does positioning, Docking and SplitToolbar
+  const updateChromeUi = (resetDocking: boolean = false) => {
+    // Handles positioning, docking and SplitToolbar (more drawer) behaviour. Modes:
+    // 1. Basic inline: does positioning and docking
+    // 2. Inline + more drawer: does positioning, docking and SplitToolbar
     // 3. Inline + fixed_toolbar_container: does nothing
     // 4. Inline + fixed_toolbar_container + more drawer: does SplitToolbar
 
-    const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
-
-    // SplitToolbar
+    // Refresh split toolbar
     if (split) {
       OuterContainer.refreshToolbar(uiComponents.outerContainer);
     }
 
-    // Positioning and Docking
+    // Positioning
     if (!useFixedToolbarContainer) {
-      setChromePosition(toolbar);
+      const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+      updateChromePosition(toolbar);
+    }
+
+    // Docking
+    if (isSticky) {
+      resetDocking ? Docking.reset(floatContainer) : Docking.refresh(floatContainer);
     }
   };
 
@@ -107,7 +94,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       return;
     }
 
-    floatContainer = uiComponents.outerContainer;
+    floatContainer = OuterContainer.getHeader(uiComponents.outerContainer).getOrDie();
 
     const uiContainer = getUiContainer(editor);
     Attachment.attachSystem(uiContainer, uiComponents.mothership);
@@ -120,18 +107,17 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       identifyMenus(editor, rawUiConfig)
     );
 
-    if (!useFixedToolbarContainer) {
-      // Do not set position if using fixed_toolbar_container
-      Css.set(floatContainer.element(), 'position', 'absolute');
-    }
-
     // Initialise the toolbar - set initial positioning then show
-    updateChromeUi();
     show();
 
-    editor.on('NodeChange ResizeWindow', updateChromeUi);
     editor.on('activate', show);
     editor.on('deactivate', hide);
+
+    editor.on('NodeChange SkinLoaded ResizeWindow', () => {
+      if (!editor.hidden) {
+        updateChromeUi(true);
+      }
+    });
 
     editor.nodeChanged();
   };
@@ -152,22 +138,4 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 };
 
-const getBehaviours = (editor: Editor) => {
-  return useFixedContainer(editor) ? [] : [
-    Docking.config({
-      leftAttr: 'data-dock-left',
-      topAttr: 'data-dock-top',
-      contextual: {
-        lazyContext (_) {
-          return Option.from(editor).map((ed) => Element.fromDom(ed.getBody()));
-        },
-        fadeInClass: 'tox-toolbar-dock-fadein',
-        fadeOutClass: 'tox-toolbar-dock-fadeout',
-        transitionClass: 'tox-toolbar-dock-transition'
-      }
-    }),
-    Focusing.config({ })
-  ];
-};
-
-export default { render, getBehaviours };
+export default { render };

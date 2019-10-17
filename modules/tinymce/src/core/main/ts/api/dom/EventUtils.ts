@@ -224,21 +224,10 @@ const bindOnReady = function (win, callback, eventUtils) {
     readyHandler();
   };
 
-  // Use W3C method (exclude IE 9,10 - readyState "interactive" became valid only in IE 11)
-  if (doc.addEventListener && !(Env.ie && Env.ie < 11)) {
-    if (isDocReady()) {
-      readyHandler();
-    } else {
-      addEvent(win, 'DOMContentLoaded', readyHandler);
-    }
+  if (isDocReady()) {
+    readyHandler();
   } else {
-    // Use IE method
-    addEvent(doc, 'readystatechange', waitForDomLoaded);
-
-    // Wait until we can scroll, when we can the DOM is initialized
-    if (doc.documentElement.doScroll && win.self === win.top) {
-      tryScroll();
-    }
+    addEvent(win, 'DOMContentLoaded', readyHandler);
   }
 
   // Fallback if any of the above methods should fail for some odd reason

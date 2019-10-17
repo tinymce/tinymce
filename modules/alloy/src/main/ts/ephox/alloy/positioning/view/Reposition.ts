@@ -14,6 +14,7 @@ export interface RepositionDecision {
   width: () => number;
   height: () => number;
   maxHeight: () => number;
+  maxWidth: () => number;
   direction: () => any;
   classes: () => {
     off: string[];
@@ -23,7 +24,7 @@ export interface RepositionDecision {
   candidateYforTest: any;
 }
 
-const decision: (...args)  => RepositionDecision = Struct.immutableBag(['x', 'y', 'width', 'height', 'maxHeight', 'direction', 'classes', 'label', 'candidateYforTest'], []);
+const decision: (...args)  => RepositionDecision = Struct.immutableBag(['x', 'y', 'width', 'height', 'maxHeight', 'maxWidth', 'direction', 'classes', 'label', 'candidateYforTest'], []);
 const css: (...args) => RepositionCss = Struct.immutable('position', 'left', 'top', 'right', 'bottom');
 
 export {

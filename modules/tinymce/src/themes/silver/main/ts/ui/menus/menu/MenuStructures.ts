@@ -100,7 +100,7 @@ const preprocessCollection = (items: ItemTypes.ItemSpec[], isSeparator: (a: Item
   });
 };
 
-const forCollection = (columns: number | 'auto', initItems, hasIcons: boolean = true) => {
+const forCollection = (columns: number | 'auto', initItems, _hasIcons: boolean = true) => {
   return {
     dom: {
       tag: 'div',
@@ -116,10 +116,28 @@ const forCollection = (columns: number | 'auto', initItems, hasIcons: boolean = 
               classes: [ 'tox-collection__group' ]
             }, columns)(items);
           } else {
-            return preprocessCollection(items, (item, i) => {
+            return preprocessCollection(items, (_item, i) => {
               return initItems[i].type === 'separator';
             });
           }
+        }
+      })
+    ]
+  };
+};
+
+const forHorizontalCollection = (initItems, _hasIcons: boolean = true) => {
+  return {
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-collection', 'tox-collection--horizontal' ]
+    },
+    components: [
+      AlloyMenu.parts().items({
+        preprocess: (items: ItemTypes.ItemSpec[]) => {
+          return preprocessCollection(items, (_item, i) => {
+            return initItems[i].type === 'separator';
+          });
         }
       })
     ]
@@ -130,5 +148,6 @@ export {
   chunk,
   forSwatch,
   forCollection,
+  forHorizontalCollection,
   forToolbar
 };

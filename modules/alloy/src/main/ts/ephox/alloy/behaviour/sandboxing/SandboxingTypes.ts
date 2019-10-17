@@ -15,6 +15,7 @@ export interface SandboxingBehaviour extends Behaviour.AlloyBehaviour<Sandboxing
   isOpen: (sandbox: AlloyComponent) => boolean;
   isPartOf: (sandbox: AlloyComponent, candidate: () => Element) => boolean;
   getState: (sandbox: AlloyComponent) => Option<AlloyComponent>;
+  setContent: (sandbox: AlloyComponent, thing: AlloySpec) => Option<AlloyComponent>;
   closeSandbox: (sandbox: AlloyComponent) => void;
 }
 

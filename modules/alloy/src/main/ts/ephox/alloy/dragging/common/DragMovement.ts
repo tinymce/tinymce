@@ -1,5 +1,5 @@
 import { Option } from '@ephox/katamari';
-import { Css, Location, Scroll, Traverse, Element } from '@ephox/sugar';
+import { Css, Scroll, Traverse } from '@ephox/sugar';
 
 import { cap } from '../../alien/Cycles';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
@@ -8,23 +8,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as DragCoord from '../../api/data/DragCoord';
 import * as Snappables from '../snap/Snappables';
 import { DraggingConfig, DragStartData, SnapsConfig } from './DraggingTypes';
-
-const getCurrentCoord = (target: Element): DragCoord.CoordAdt => {
-  return Css.getRaw(target, 'left').bind((left) => {
-    return Css.getRaw(target, 'top').bind((top) => {
-      return Css.getRaw(target, 'position').map((position) => {
-        const nu = position === 'fixed' ? DragCoord.fixed : DragCoord.offset;
-        return nu(
-          parseInt(left, 10),
-          parseInt(top, 10)
-        );
-      });
-    });
-  }).getOrThunk(() => {
-    const location = Location.absolute(target);
-    return DragCoord.absolute(location.left(), location.top());
-  });
-};
+import * as DragUtils from './DragUtils';
 
 const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition, startData: DragStartData): DragCoord.CoordAdt => {
   const bounds = startData.bounds;
@@ -76,9 +60,9 @@ const dragBy = (component: AlloyComponent, dragConfig: DraggingConfig, startData
     const doc = Traverse.owner(component.element());
     const scroll = Scroll.get(doc);
 
-    const origin = OffsetOrigin.getOrigin(target, scroll);
+    const origin = OffsetOrigin.getOrigin(target);
 
-    const currentCoord = getCurrentCoord(target);
+    const currentCoord = DragUtils.getCurrentCoord(target);
 
     const newCoord = calcNewCoord(component, dragConfig.snaps, currentCoord, scroll, origin, delta, startData);
 

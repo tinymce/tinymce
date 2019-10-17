@@ -16,7 +16,7 @@ import { renderModalFooter } from './SilverDialogFooter';
 import { getDialogApi } from './SilverDialogInstanceApi';
 import * as SilverDialogCommon from './SilverDialogCommon';
 
-const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: UiFactoryBackstage) => {
+const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra, backstage: UiFactoryBackstage) => {
   const header = SilverDialogCommon.getHeader(dialogInit.internalDialog.title, backstage);
 
   const body = renderModalBody({

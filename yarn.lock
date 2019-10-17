@@ -6960,12 +6960,7 @@ move-concurrently@^1.0.1:
     rimraf "^2.5.4"
     run-queue "^1.0.3"
 
-moxie-zip@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/moxie-zip/-/moxie-zip-0.0.3.tgz#b28023e40c0328cb4329e61eabb5b55696779c07"
-  integrity sha1-soAj5AwDKMtDKeYeq7W1VpZ3nAc=
-
-moxie-zip@~0.0.3:
+moxie-zip@0.0.4, moxie-zip@~0.0.3:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/moxie-zip/-/moxie-zip-0.0.4.tgz#072a34b0faeffc901b01ebaa4039be5a21de7c3c"
   integrity sha1-Byo0sPrv/JAbAeuqQDm+WiHefDw=

@@ -14,7 +14,7 @@
 @toolbar-button-border-radius: 3px;
 @toolbar-button-border: 0;
 @toolbar-button-box-shadow: none;
-@toolbar-button-chevron-color: @text-color-muted;
+@toolbar-button-chevron-color: fade(@toolbar-button-icon-color, 50%);
 @toolbar-button-chevron-width: @base-value;
 @toolbar-button-font-size: @font-size-sm;
 @toolbar-button-font-style: normal;
@@ -117,6 +117,10 @@
     border: @toolbar-button-active-border;
     box-shadow: @toolbar-button-active-box-shadow;
     color: @toolbar-button-active-text-color;
+
+    svg {
+      fill: @toolbar-button-active-icon-color;
+    }
   }
 
   .tox-tbtn--disabled,

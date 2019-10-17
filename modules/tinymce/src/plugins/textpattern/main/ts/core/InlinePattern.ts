@@ -244,11 +244,10 @@ const findPatterns = (editor: Editor, patterns: InlinePattern[], space: boolean)
     return [];
   }
 
-  const block = editor.dom.getParent(rng.startContainer, editor.dom.isBlock);
-  const offset =  rng.startOffset - (space ? 1 : 0);
-
-  const resultOpt = findPatternsRec(editor, patterns, rng.startContainer, offset, block);
-  return resultOpt.fold(() => [], (result) => result.matches);
+  return Utils.getParentBlock(editor, rng).bind((block) => {
+    const offset =  rng.startOffset - (space ? 1 : 0);
+    return findPatternsRec(editor, patterns, rng.startContainer, offset, block);
+  }).fold(() => [], (result) => result.matches);
 };
 
 const applyMatches = (editor: Editor, matches: InlinePatternMatch[]) => {

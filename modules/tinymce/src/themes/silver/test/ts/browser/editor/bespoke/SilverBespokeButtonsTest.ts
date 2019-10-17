@@ -20,6 +20,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
+import * as MenuUtils from '../../../module/MenuUtils';
 
 UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
   Theme();
@@ -49,31 +50,6 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
           `Focus should be on Align`,
           doc,
           `.tox-toolbar button[aria-label="Align"]`
-        );
-      };
-
-      const sOpenMenu = (label: string, menuText: string) => {
-        const menuTextParts = menuText.indexOf(':') > -1 ? menuText.split(':') : [ menuText ];
-        const btnText = menuTextParts[0];
-        const pseudo = menuTextParts.length > 1 ? ':' + menuTextParts[1] : '';
-        const selector = `button:contains(${btnText})${pseudo}`;
-        return sOpenMenuWithSelector(label, selector);
-      };
-
-      const sOpenAlignMenu = (label: string) => {
-        const selector = `button[aria-label="Align"]`;
-        return sOpenMenuWithSelector(label, selector);
-      };
-
-      const sOpenMenuWithSelector = (label: string, selector: string) => {
-        return Logger.t(
-          `Trying to open menu: ${label}`,
-          GeneralSteps.sequence([
-            Mouse.sClickOn(Body.body(), selector),
-            Chain.asStep(Body.body(), [
-              UiFinder.cWaitForVisible('Waiting for menu', '[role="menu"]')
-            ]),
-          ])
         );
       };
 
@@ -110,8 +86,8 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         ])
       );
 
-      const sCheckItemsAtLocation = sCheckItemsAtLocationPlus(Step.pass, Step.pass, (text) => sOpenMenu('', text));
-      const sCheckAlignItemsAtLocation = sCheckItemsAtLocationPlus(Step.pass, Step.pass, () => sOpenAlignMenu(''));
+      const sCheckItemsAtLocation = sCheckItemsAtLocationPlus(Step.pass, Step.pass, (text) => MenuUtils.sOpenMenu('', text));
+      const sCheckAlignItemsAtLocation = sCheckItemsAtLocationPlus(Step.pass, Step.pass, () => MenuUtils.sOpenAlignMenu(''));
 
       const sCheckSubItemsAtLocation = (expectedSubmenu: string) => sCheckItemsAtLocationPlus(
         GeneralSteps.sequence([
@@ -120,13 +96,13 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         ]),
         // Afterwards, escape the submenu
         Keyboard.sKeydown(doc, Keys.escape(), { }),
-        (text) => sOpenMenu('', text)
+        (text) => MenuUtils.sOpenMenu('', text)
       );
 
       const sTestAlignment = Log.stepsAsStep('TBA', 'Checking alignment ticks and updating', [
         tinyApis.sSetContent('<p>First paragraph</p><p>Second paragraph</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 'Fi'.length),
-        sOpenAlignMenu('Align'),
+        MenuUtils.sOpenAlignMenu('Align'),
         sAssertFocusOnItem('Left'),
         Keyboard.sKeydown(doc, Keys.down(), { }),
         sAssertFocusOnItem('Center'),
@@ -166,7 +142,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
       const sTestFontSelect = Log.stepsAsStep('TBA', 'Checking fontselect ticks and updating', [
         tinyApis.sSetContent('<p>First paragraph</p><p>Second paragraph</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 'Fi'.length),
-        sOpenMenu('FontSelect', 'Verdana'),
+        MenuUtils.sOpenMenu('FontSelect', 'Verdana'),
         sAssertFocusOnItem('Andale Mono'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
         UiFinder.sNotExists(Body.body(), '[role="menu"]'),
@@ -196,7 +172,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
       const sTestFontSizeSelect = Log.stepsAsStep('TBA', 'Checking fontsize ticks and updating', [
         tinyApis.sSetContent('<p>First paragraph</p><p>Second paragraph</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 'Fi'.length),
-        sOpenMenu('FontSelect', '12pt'), // This might be fragile.
+        MenuUtils.sOpenMenu('FontSelect', '12pt'), // This might be fragile.
         sAssertFocusOnItem('8pt'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
         UiFinder.sNotExists(Body.body(), '[role="menu"]'),
@@ -226,7 +202,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
       const sTestFormatSelect = Log.stepsAsStep('TBA', 'Checking format ticks and updating', [
         tinyApis.sSetContent('<p>First paragraph</p><p>Second paragraph</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 'Fi'.length),
-        sOpenMenu('Format', 'Paragraph:first'),
+        MenuUtils.sOpenMenu('Format', 'Paragraph:first'),
         sAssertFocusOnItem('Paragraph'),
         Keyboard.sKeydown(doc, Keys.down(), { }),
         sAssertFocusOnItem('Heading 1'),
@@ -285,7 +261,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
       const sTestStyleSelect = Log.stepsAsStep('TBA', 'Checking style ticks and updating', [
         tinyApis.sSetContent('<p>First paragraph</p><p>Second paragraph</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 'Fi'.length),
-        sOpenMenu('Format', 'Paragraph:last'),
+        MenuUtils.sOpenMenu('Format', 'Paragraph:last'),
         sAssertFocusOnItem('Headings'),
         Keyboard.sKeydown(doc, Keys.right(), { }),
         sAssertFocusOnItem('Heading 1'),
@@ -345,7 +321,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
       const sTestToolbarKeyboardNav = Log.stepsAsStep('TBA', 'Checking toolbar keyboard navigation', [
         tinyApis.sSetContent('<p>First paragraph</p><p>Second paragraph</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 'Fi'.length),
-        sOpenAlignMenu('Align'),
+        MenuUtils.sOpenAlignMenu('Align'),
         sAssertFocusOnItem('Left'),
         Keyboard.sKeydown(doc, Keys.down(), { }),
         sAssertFocusOnItem('Center'),

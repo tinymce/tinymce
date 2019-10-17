@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -14,10 +14,12 @@ import { Coupling } from '../behaviour/Coupling';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { Positioning } from '../behaviour/Positioning';
+import { Receiving } from '../behaviour/Receiving';
 import { Sandboxing } from '../behaviour/Sandboxing';
 import { Toggling } from '../behaviour/Toggling';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as Sketcher from './Sketcher';
+import * as Reposition from '../../sandbox/Reposition';
 
 const toggleToolbar = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail, externals: Record<string, any>) => {
   const sandbox = Coupling.getCoupled(toolbar, 'sandbox');
@@ -30,16 +32,22 @@ const toggleToolbar = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDeta
 
 const isOpen = (over: AlloyComponent) => over.getSystem().isConnected();
 
+const position = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail, overf: AlloyComponent) => {
+  const sink = detail.lazySink(toolbar).getOrDie();
+  const anchor = detail.getAnchor(toolbar);
+  const bounds = detail.getOverflowBounds.map((bounder) => bounder());
+  Positioning.positionWithinBounds(sink, anchor, overf, bounds);
+};
+
 const refresh = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail) => {
   const overflow = Sandboxing.getState(Coupling.getCoupled(toolbar, 'sandbox'));
   SplitToolbarUtils.refresh(toolbar, detail, overflow, isOpen);
+  overflow.each((overf) => position(toolbar, detail, overf));
+};
 
-  // Position the overflow
-  overflow.each((overf) => {
-    const sink = detail.lazySink(toolbar).getOrDie();
-    const anchor = detail.getAnchor(toolbar);
-    Positioning.position(sink, anchor, overf);
-  });
+const reposition = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail) => {
+  const overflow = Sandboxing.getState(Coupling.getCoupled(toolbar, 'sandbox'));
+  overflow.each((overf) => position(toolbar, detail, overf));
 };
 
 const makeSandbox = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail) => {
@@ -91,7 +99,15 @@ const makeSandbox = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail
           getAttachPoint () {
             return detail.lazySink(toolbar).getOrDie();
           }
-        })
+        }),
+        Receiving.config({
+          channels: {
+            ...Reposition.receivingChannel({
+              isExtraPart: Fun.constant(false),
+              doReposition: () => reposition(toolbar, detail)
+            })
+          }
+        }),
       ]
     )
   };
@@ -99,13 +115,16 @@ const makeSandbox = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail
 
 const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingToolbarSpec> = (detail, components, spec, externals) => {
   return SplitToolbarBase.spec(detail, components, spec, externals, {
-    refresh,
-    toggleToolbar,
-    getOverflow: (toolbar) => Sandboxing.getState(Coupling.getCoupled(toolbar, 'sandbox')),
     coupling: {
       sandbox (toolbar) {
         return makeSandbox(toolbar, detail);
       }
+    },
+    apis: {
+      refresh: (toolbar) => refresh(toolbar, detail),
+      toggle: (toolbar) => toggleToolbar(toolbar, detail, externals),
+      getOverflow: (toolbar) => Sandboxing.getState(Coupling.getCoupled(toolbar, 'sandbox')),
+      reposition: (toolbar) => reposition(toolbar, detail)
     }
   });
 };
@@ -121,6 +140,9 @@ const SplitFloatingToolbar = Sketcher.composite({
     },
     refresh(apis, toolbar) {
       apis.refresh(toolbar);
+    },
+    reposition(apis, toolbar) {
+      apis.reposition(toolbar);
     },
     getMoreButton(apis, toolbar) {
       return apis.getMoreButton(toolbar);

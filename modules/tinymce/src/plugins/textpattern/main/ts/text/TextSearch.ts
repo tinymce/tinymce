@@ -6,7 +6,7 @@
  */
 
 import { Node, Text } from '@ephox/dom-globals';
-import { Adt, Option } from '@ephox/katamari';
+import { Adt, Arr, Option } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import { isText } from '../utils/Utils';
@@ -80,6 +80,10 @@ const scanRight = (node: Text, offset: number, rootNode: Node): Option<Spot.Spot
   }
 };
 
+// This largely is derived from robins isBoundary check, however it also treats contenteditable=false elements as a boundary
+// See robins `Structure.isEmptyTag` for the list of quasi block elements
+const isBoundary = (dom: DOMUtils, node: Node) => dom.isBlock(node) || Arr.contains(['BR', 'IMG', 'HR', 'INPUT'], node.nodeName) || dom.getContentEditable(node) === 'false';
+
 const outcome = Adt.generate<Outcome<any>>([
   { aborted: [ ] },
   { edge: [ 'element' ] },
@@ -106,7 +110,7 @@ const repeat = <T>(dom: DOMUtils, node: Node, offset: Option<number>, process: P
     }
   };
 
-  if (dom.isBlock(node)) {
+  if (isBoundary(dom, node)) {
     return terminate();
   } else if (!isText(node)) {
     return recurse();

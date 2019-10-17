@@ -625,33 +625,30 @@ UnitTest.asynctest('tinymce.lists.browser.ApplyTest', (success, failure) => {
     LegacyUnit.equal(editor.selection.getEnd().nodeName, Env.ie && Env.ie < 9 ? 'LI' : 'EM');
   });
 
-  // Ignore on IE 7, 8 this is a known bug not worth fixing
-  if (!Env.ie || Env.ie > 8) {
-    suite.test('TestCase-TBA: Lists: Apply UL list to br line and text block line', function (editor) {
-      editor.settings.forced_root_block = false;
+  suite.test('TestCase-TBA: Lists: Apply UL list to br line and text block line', function (editor) {
+    editor.settings.forced_root_block = false;
 
-      editor.setContent(
-        'a' +
-        '<p>b</p>'
-      );
+    editor.setContent(
+      'a' +
+      '<p>b</p>'
+    );
 
-      const rng = editor.dom.createRng();
-      rng.setStart(editor.getBody().firstChild, 0);
-      rng.setEnd(editor.getBody().lastChild.firstChild, 1);
-      editor.selection.setRng(rng);
-      LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    const rng = editor.dom.createRng();
+    rng.setStart(editor.getBody().firstChild, 0);
+    rng.setEnd(editor.getBody().lastChild.firstChild, 1);
+    editor.selection.setRng(rng);
+    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
 
-      LegacyUnit.equal(editor.getContent(),
-        '<ul>' +
-        '<li>a</li>' +
-        '<li>b</li>' +
-        '</ul>'
-      );
+    LegacyUnit.equal(editor.getContent(),
+      '<ul>' +
+      '<li>a</li>' +
+      '<li>b</li>' +
+      '</ul>'
+    );
 
-      LegacyUnit.equal(editor.selection.getStart().nodeName, 'LI');
-      LegacyUnit.equal(editor.selection.getEnd().nodeName, 'LI');
-    });
-  }
+    LegacyUnit.equal(editor.selection.getStart().nodeName, 'LI');
+    LegacyUnit.equal(editor.selection.getEnd().nodeName, 'LI');
+  });
 
   suite.test('TestCase-TBA: Lists: Apply UL list to text block line and br line', function (editor) {
     editor.settings.forced_root_block = false;

@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, Chain, GeneralSteps, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Future, Result, Option } from '@ephox/katamari';
+import { Arr, Fun, Future, Result, Option } from '@ephox/katamari';
 import { Compare, Focus } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -26,7 +26,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
     Container.sketch({
       containerBehaviours: Behaviour.derive([
         Positioning.config({
-          useFixed: true
+          useFixed: Fun.always
         })
       ])
     })

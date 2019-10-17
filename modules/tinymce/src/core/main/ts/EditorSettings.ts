@@ -27,11 +27,15 @@ interface SectionResult {
 }
 
 const sectionResult = Struct.immutable('sections', 'settings');
-const detection = PlatformDetection.detect();
-const isTouch = detection.deviceType.isTouch();
-const isPhone = detection.deviceType.isPhone();
-const mobilePlugins = [ 'lists', 'autolink', 'autosave' ];
-const defaultMobileSettings = { theme: 'mobile' };
+const deviceDetection = PlatformDetection.detect().deviceType;
+const isTouch = deviceDetection.isTouch();
+const isPhone = deviceDetection.isPhone();
+const legacyMobilePlugins = [ 'lists', 'autolink', 'autosave' ];
+const defaultTouchSettings: RawEditorSettings = {
+  table_grid: false,          // Table grid relies on hover, which isn't available so use the dialog instead
+  object_resizing: false,     // No nice way to do object resizing at this stage
+  resize: false,              // Editor resize doesn't work on touch devices at this stage
+};
 
 const normalizePlugins = function (plugins: string | string[]) {
   const pluginNames = Type.isArray(plugins) ? plugins.join(' ') : plugins;
@@ -41,8 +45,9 @@ const normalizePlugins = function (plugins: string | string[]) {
   });
 };
 
-const filterMobilePlugins = function (plugins: string[]) {
-  return Arr.filter(plugins, Fun.curry(Arr.contains, mobilePlugins));
+// Filter out plugins for the legacy mobile theme
+const filterLegacyMobilePlugins = function (plugins: string[]) {
+  return Arr.filter(plugins, Fun.curry(Arr.contains, legacyMobilePlugins));
 };
 
 const extractSections = function (keys, settings) {
@@ -72,10 +77,11 @@ const getSectionConfig = function (sectionResult: SectionResult, name: string) {
   return hasSection(sectionResult, name) ? sectionResult.sections()[name] : {};
 };
 
-const getDefaultSettings = function (id: string, documentBaseUrl: string, editor: Editor): RawEditorSettings {
-  return {
+const getDefaultSettings = function (id: string, documentBaseUrl: string, isTouch: boolean, editor: Editor): RawEditorSettings {
+  const baseDefaults: RawEditorSettings = {
     id,
     theme: 'silver',
+    toolbar_drawer: 'floating',
     plugins: '',
     document_base_url: documentBaseUrl,
     add_form_submit_trigger: true,
@@ -103,6 +109,29 @@ const getDefaultSettings = function (id: string, documentBaseUrl: string, editor
     url_converter: editor.convertURL,
     url_converter_scope: editor
   };
+
+  return {
+    ...baseDefaults,
+    ...isTouch ? defaultTouchSettings : { }
+  };
+};
+
+const getDefaultMobileSettings = (isPhone: boolean): RawEditorSettings => {
+  const defaultMobileSettings: RawEditorSettings = {
+    resize: false,              // Editor resize doesn't make sense on mobile
+    toolbar_drawer: false,      // Disable more drawer and use the default side-scrolling toolbar
+    toolbar_sticky: false       // Only enable sticky toolbar on desktop by default
+  };
+
+  const defaultPhoneSettings: RawEditorSettings = {
+    menubar: false              // Phones don't have a lot of screen space, so disable the menubar
+  };
+
+  return {
+    ...defaultTouchSettings,
+    ...defaultMobileSettings,
+    ...isPhone ? defaultPhoneSettings : { }
+  };
 };
 
 const getExternalPlugins = function (overrideSettings: RawEditorSettings, settings: RawEditorSettings) {
@@ -127,7 +156,7 @@ const processPlugins = function (isTouchDevice: boolean, sectionResult: SectionR
 
   const platformPlugins =
     // is a mobile device with mobile theme
-    isTouchDevice && isSectionTheme(sectionResult, 'mobile', 'mobile') ? filterMobilePlugins(mobilePlugins) :
+    isTouchDevice && isSectionTheme(sectionResult, 'mobile', 'mobile') ? filterLegacyMobilePlugins(mobilePlugins) :
     // is a mobile device with any mobile settings
     isTouchDevice && hasSection(sectionResult, 'mobile') ? mobilePlugins :
     // is desktop
@@ -141,13 +170,12 @@ const processPlugins = function (isTouchDevice: boolean, sectionResult: SectionR
 };
 
 const isOnMobile = function (isTouchDevice: boolean, sectionResult: SectionResult) {
-  const isInline = sectionResult.settings().inline; // We don't support mobile inline yet
-  return isTouchDevice && hasSection(sectionResult, 'mobile') && !isInline;
+  return isTouchDevice && hasSection(sectionResult, 'mobile');
 };
 
-const combineSettings = (isTouchDevice: boolean, isPhone: boolean, defaultSettings: RawEditorSettings, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings => {
+const combineSettings = (isTouchDevice: boolean, isPhone: boolean,  defaultSettings: RawEditorSettings, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings => {
   // Use mobile mode by default on phones, so patch in the default mobile settings
-  const defaultDeviceSettings = isPhone ? { mobile: defaultMobileSettings } : { };
+  const defaultDeviceSettings = isTouchDevice ? { mobile: getDefaultMobileSettings(isPhone) } : { };
   const sectionResult = extractSections(['mobile'], Merger.deepMerge(defaultDeviceSettings, settings));
 
   const extendedSettings = Tools.extend(
@@ -174,7 +202,7 @@ const combineSettings = (isTouchDevice: boolean, isPhone: boolean, defaultSettin
 };
 
 const getEditorSettings = function (editor: Editor, id: string, documentBaseUrl: string, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings {
-  const defaultSettings = getDefaultSettings(id, documentBaseUrl, editor);
+  const defaultSettings = getDefaultSettings(id, documentBaseUrl, isTouch, editor);
   return combineSettings(isTouch, isPhone, defaultSettings, defaultOverrideSettings, settings);
 };
 
@@ -228,4 +256,4 @@ const getParam = (editor: Editor, name: string, defaultVal?: any, type?: string)
   }
 };
 
-export { getEditorSettings, getParam, combineSettings };
+export { getEditorSettings, getParam, combineSettings, getDefaultSettings, getDefaultMobileSettings };

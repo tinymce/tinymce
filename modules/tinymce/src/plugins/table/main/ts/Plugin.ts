@@ -25,11 +25,11 @@ import { getApi } from './api/Api';
 import { Element } from '@ephox/sugar';
 
 function Plugin(editor: Editor) {
-  const resizeHandler = getResizeHandler(editor);
-  const cellSelection = CellSelection(editor, resizeHandler.lazyResize);
-  const actions = TableActions(editor, resizeHandler.lazyWire);
   const selections = Selections(editor);
   const selectionTargets = getSelectionTargets(editor, selections);
+  const resizeHandler = getResizeHandler(editor);
+  const cellSelection = CellSelection(editor, resizeHandler.lazyResize, selectionTargets);
+  const actions = TableActions(editor, resizeHandler.lazyWire);
   const clipboardRows = Cell(Option.none<Element<any>[]>());
 
   Commands.registerCommands(editor, actions, cellSelection, selections, clipboardRows);

@@ -30,6 +30,7 @@ interface ActiveAutocompleter {
 
 const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => {
   const activeAutocompleter = Cell<Option<ActiveAutocompleter>>(Option.none());
+  const processingAction = Cell<boolean>(false);
 
   const autocompleter = GuiFactory.build(
     InlineView.sketch({
@@ -66,6 +67,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
       // Hide the menu and reset
       hideIfNecessary();
       activeAutocompleter.set(Option.none());
+      processingAction.set(false);
     }
   };
 
@@ -93,14 +95,18 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
             () => console.error('Lost context. Cursor probably moved'),
             ({ range }) => {
               const autocompleterApi: InlineContent.AutocompleterInstanceApi = {
-                hide: cancelIfNecessary,
+                hide: () => {
+                  cancelIfNecessary();
+                },
                 reload: (fetchOptions: Record<string, any>) => {
                   // Hide and then reload
                   hideIfNecessary();
                   load(fetchOptions);
                 }
               };
+              processingAction.set(true);
               match.onAction(autocompleterApi, range, itemValue, itemMeta);
+              processingAction.set(false);
             }
           );
         },
@@ -122,6 +128,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
         element: wrapper,
         matchLength: context.text.length
       }));
+      processingAction.set(false);
     }
   };
 
@@ -206,6 +213,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     cancelIfNecessary,
     isMenuOpen,
     isActive,
+    isProcessingAction: processingAction.get,
     getView: () => InlineView.getContent(autocompleter),
   };
 

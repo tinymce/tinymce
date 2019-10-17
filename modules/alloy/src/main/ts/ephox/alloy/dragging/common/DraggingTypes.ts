@@ -13,6 +13,7 @@ import { BehaviourState } from '../../behaviour/common/BehaviourState';
 export interface DraggingBehaviour extends Behaviour.AlloyBehaviour<DraggingConfigSpec, DraggingConfig> {
   config: (config: DraggingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DraggingConfigSpec, DraggingConfig>;
   snap: (sConfig: SnapConfigSpec) => any;
+  snapTo: (component: AlloyComponent, sConfig: SnapConfig) => void;
 }
 
 export type DraggingMode = 'touch' | 'mouse';
@@ -49,6 +50,7 @@ export interface SnapsConfig {
   topAttr: string;
   onSensor?: (component: AlloyComponent, extra: {}) => void;
   lazyViewport?: (component: AlloyComponent) => Bounds;
+  mustSnap?: boolean;
 }
 
 export interface DraggingConfig {
@@ -61,7 +63,7 @@ export interface DraggingConfig {
 }
 
 export interface CommonDraggingConfigSpec {
-  useFixed?: boolean;
+  useFixed?: () => boolean;
   onDrop?: (comp: AlloyComponent, target: Element) => void;
   repositionTarget?: boolean;
   onDrag?: (comp: AlloyComponent, target: Element, delta: SugarPosition) => void;
@@ -81,6 +83,7 @@ export interface DragStartData {
   width: number;
   height: number;
   bounds: Bounds;
+  comp: AlloyComponent;
 }
 
 export interface DraggingState<T> extends BehaviourState {

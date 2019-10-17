@@ -49,6 +49,12 @@ const typeaheadCancel = Fun.constant('alloy.typeahead.cancel');
 // Fired when adding to a world
 const systemInit = Fun.constant('alloy.system.init');
 
+// Fired when a touchmove on the document happens
+const documentTouchmove = Fun.constant('alloy.system.touchmove');
+
+// Fired when a touchend on the document happens
+const documentTouchend = Fun.constant('alloy.system.touchend');
+
 // Fired when the window scrolls
 const windowScroll = Fun.constant('alloy.system.scroll');
 
@@ -59,6 +65,7 @@ const attachedToDom = Fun.constant('alloy.system.attached');
 const detachedFromDom = Fun.constant('alloy.system.detached');
 
 const dismissRequested = Fun.constant('alloy.system.dismissRequested');
+const repositionRequested = Fun.constant('alloy.system.repositionRequested');
 
 export interface AlloyFocusShiftedEvent extends CustomEvent {
   prevFocus: () => Option<Element>;
@@ -101,10 +108,13 @@ export {
   sandboxClose,
   systemInit,
   typeaheadCancel,
+  documentTouchmove,
+  documentTouchend,
   windowScroll,
   windowResize,
 
   dismissRequested,
+  repositionRequested,
   focusShifted,
 
   attachedToDom,

@@ -5,29 +5,37 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const fireSkinLoaded = (editor) => {
+import { UIEvent } from '@ephox/dom-globals';
+import Editor from 'tinymce/core/api/Editor';
+
+const fireSkinLoaded = (editor: Editor) => {
   return editor.fire('SkinLoaded');
 };
 
-const fireResizeEditor = (editor) => {
+const fireResizeEditor = (editor: Editor) => {
   return editor.fire('ResizeEditor');
 };
 
-const fireBeforeRenderUI = (editor) => {
+const fireBeforeRenderUI = (editor: Editor) => {
   return editor.fire('BeforeRenderUI');
 };
 
-const fireResizeContent = (editor) => {
-  return editor.fire('ResizeContent');
+const fireResizeContent = (editor: Editor, e: UIEvent) => {
+  return editor.fire('ResizeContent', e);
 };
 
-const fireTextColorChange = (editor, data) => {
-  editor.fire('TextColorChange', data);
+const fireScrollContent = (editor: Editor, e: UIEvent) => {
+  return editor.fire('ScrollContent', e);
+};
+
+const fireTextColorChange = (editor: Editor, data: { name: string; color: string }) => {
+  return editor.fire('TextColorChange', data);
 };
 
 export default {
   fireSkinLoaded,
   fireResizeEditor,
+  fireScrollContent,
   fireBeforeRenderUI,
   fireResizeContent,
   fireTextColorChange

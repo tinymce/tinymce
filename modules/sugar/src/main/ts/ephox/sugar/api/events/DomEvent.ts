@@ -13,7 +13,10 @@ const capture = (element: Element, event: string, handler: (evt: EventArgs) => v
   return FilteredEvent.capture(element, event, filter, handler);
 };
 
+const fromRawEvent = FilteredEvent.fromRawEvent;
+
 export {
   bind,
   capture,
+  fromRawEvent
 };

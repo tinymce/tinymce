@@ -5,36 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  AlloySpec,
-  Behaviour,
-  Gui,
-  GuiFactory,
-  Keying,
-  Memento,
-  Positioning,
-  SimpleSpec
-} from '@ephox/alloy';
-import { HTMLElement, HTMLIFrameElement, console } from '@ephox/dom-globals';
+import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec } from '@ephox/alloy';
+import { console, HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import {
-  getHeightSetting,
-  getMinHeightSetting,
-  getMinWidthSetting,
-  getMultipleToolbarsSetting,
-  getToolbarDrawer,
-  isMenubarEnabled,
-  isToolbarEnabled,
-  useFixedContainer,
-  isMultipleToolbars,
-  ToolbarDrawer
-} from './api/Settings';
+import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, getMultipleToolbarsSetting, getToolbarDrawer, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, ToolbarDrawer, useFixedContainer } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -42,11 +21,15 @@ import Iframe from './modes/Iframe';
 import Inline from './modes/Inline';
 import FormatControls from './ui/core/FormatControls';
 import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterContainer';
+import * as StaticHeader from './ui/header/StaticHeader';
+import * as StickyHeader from './ui/header/StickyHeader';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import * as Sidebar from './ui/sidebar/Sidebar';
-import * as Throbber from './ui/throbber/Throbber';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
+import TableSelectorHandles from './ui/selector/TableSelectorHandles';
+import * as Throbber from './ui/throbber/Throbber';
+import TouchEvents from './api/TouchEvents';
 
 export interface RenderInfo {
   mothership: Gui.GuiSystem;
@@ -98,13 +81,17 @@ export interface RenderArgs {
 }
 
 const setup = (editor: Editor): RenderInfo => {
-  const isInline = editor.getParam('inline', false, 'boolean');
+  const isInline = editor.inline;
   const mode = isInline ? Inline : Iframe;
+  const header = isStickyToolbar(editor) ? StickyHeader : StaticHeader;
   let lazyOuterContainer: Option<AlloyComponent> = Option.none();
 
   const platform = PlatformDetection.detect();
   const isIE = platform.browser.isIE();
   const platformClasses = isIE ? ['tox-platform-ie'] : [];
+  const isTouch = platform.deviceType.isTouch();
+  const touchPlatformClass = 'tox-platform-touch';
+  const deviceClasses = isTouch ? [touchPlatformClass] : [];
 
   const dirAttributes = I18n.isRtl() ? {
     attributes: {
@@ -112,18 +99,22 @@ const setup = (editor: Editor): RenderInfo => {
     }
   } : {};
 
+  const lazyHeader = () => lazyOuterContainer.bind(OuterContainer.getHeader);
+
   const sink = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: ['tox', 'tox-silver-sink', 'tox-tinymce-aux'].concat(platformClasses),
+      classes: ['tox', 'tox-silver-sink', 'tox-tinymce-aux'].concat(platformClasses).concat(deviceClasses),
       ...dirAttributes
     },
     behaviours: Behaviour.derive([
       Positioning.config({
-        useFixed: false // this allows menus to scroll with the outer page, we don't want position: fixed
+        useFixed: () => header.isDocked(lazyHeader)
       })
     ])
   });
+
+  const lazySink = () => Result.value<AlloyComponent, Error>(sink);
 
   const memAnchorBar = Memento.record({
     dom: {
@@ -150,8 +141,6 @@ const setup = (editor: Editor): RenderInfo => {
 
   const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar, lazyMoreButton);
 
-  const lazySink = () => Result.value<AlloyComponent, Error>(sink);
-
   const partMenubar: AlloySpec = OuterContainer.parts().menubar({
     dom: {
       tag: 'div',
@@ -177,7 +166,8 @@ const setup = (editor: Editor): RenderInfo => {
     },
     split: toolbarDrawer(editor),
     lazyToolbar,
-    lazyMoreButton
+    lazyMoreButton,
+    lazyHeader: () => lazyHeader().getOrDie('Could not find header element')
   });
 
   const partMultipleToolbar: AlloySpec = OuterContainer.parts()['multiple-toolbar']({
@@ -246,12 +236,25 @@ const setup = (editor: Editor): RenderInfo => {
     }
   };
 
+  const partHeader = OuterContainer.parts().header({
+    dom: {
+      tag: 'div',
+      classes: ['tox-editor-header']
+    },
+    components: Arr.flatten<AlloySpec>([
+      hasMenubar ? [ partMenubar ] : [ ],
+      getPartToolbar(),
+      // fixed_toolbar_container anchors to the editable area, else add an anchor bar
+      useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ]
+    ]),
+    sticky: isStickyToolbar(editor),
+    editor,
+    getSink: lazySink,
+  });
+
   // We need the statusbar to be separate to everything else so resizing works properly
   const editorComponents = Arr.flatten<AlloySpec>([
-    hasMenubar ? [ partMenubar ] : [ ],
-    getPartToolbar(),
-    // fixed_toolbar_container anchors to the editable area, else add an anchor bar
-    useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ],
+    [ partHeader ],
     // Inline mode does not have a socket/sidebar
     isInline ? [ ] : [ socketSidebarContainer ]
   ]);
@@ -272,7 +275,7 @@ const setup = (editor: Editor): RenderInfo => {
   ]);
 
   // Hide the outer container if using inline mode and there's no menubar or toolbar
-  const isHidden = isInline && !hasMenubar && !hasToolbar && !hasMultipleToolbar;
+  const isHidden = isDistractionFree(editor);
 
   const attributes = {
     role: 'application',
@@ -284,7 +287,7 @@ const setup = (editor: Editor): RenderInfo => {
     OuterContainer.sketch({
       dom: {
         tag: 'div',
-        classes: ['tox', 'tox-tinymce'].concat(isInline ? ['tox-tinymce-inline'] : []).concat(platformClasses),
+        classes: ['tox', 'tox-tinymce'].concat(isInline ? ['tox-tinymce-inline'] : []).concat(deviceClasses).concat(platformClasses),
         styles: {
           // This is overridden by the skin, it helps avoid FOUC
           visibility: 'hidden',
@@ -294,12 +297,12 @@ const setup = (editor: Editor): RenderInfo => {
         attributes
       },
       components: containerComponents,
-      behaviours: Behaviour.derive(mode.getBehaviours(editor).concat([
+      behaviours: Behaviour.derive([
         Keying.config({
           mode: 'cyclic',
           selector: '.tox-menubar, .tox-toolbar, .tox-toolbar__primary, .tox-toolbar__overflow--open, .tox-sidebar__overflow--open, .tox-statusbar__path, .tox-statusbar__wordcount, .tox-statusbar__branding a'
         })
-      ]))
+      ])
     } as OuterContainerSketchSpec)
   );
 
@@ -319,6 +322,7 @@ const setup = (editor: Editor): RenderInfo => {
   const uiMothership = Gui.takeover(sink);
 
   Events.setup(editor, mothership, uiMothership);
+  TouchEvents.setupLongpress(editor);
 
   const getUi = () => {
     const channels = {
@@ -348,8 +352,9 @@ const setup = (editor: Editor): RenderInfo => {
     }).getOr(baseHeight);
 
     const stringWidth = Utils.numToPx(parsedWidth);
-    if (Css.isValidValue('div', 'width', stringWidth)) {
-      Css.set(outerContainer.element(), 'width', stringWidth);
+    const widthProperty = editor.inline ? 'max-width' : 'width';
+    if (Css.isValidValue('div', widthProperty, stringWidth)) {
+      Css.set(outerContainer.element(), widthProperty, stringWidth);
     }
 
     if (!editor.inline) {
@@ -365,6 +370,7 @@ const setup = (editor: Editor): RenderInfo => {
   };
 
   const renderUI = function (): ModeRenderInfo {
+    header.setup(editor, lazyHeader);
     FormatControls.setup(editor, backstage);
     SilverContextMenu.setup(editor, lazySink, backstage);
     Sidebar.setup(editor);
@@ -387,6 +393,8 @@ const setup = (editor: Editor): RenderInfo => {
     };
 
     ContextToolbar.register(editor, contextToolbars, sink, { backstage });
+
+    TableSelectorHandles.setup(editor, sink);
 
     const elm = editor.getElement();
     const height = setEditorSize(elm);

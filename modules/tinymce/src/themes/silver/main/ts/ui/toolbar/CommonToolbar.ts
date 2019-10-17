@@ -10,7 +10,7 @@ import {
   AlloyComponent,
   AlloyEvents,
   AlloySpec,
-  Behaviour,
+  Behaviour, Boxes,
   Focusing,
   Keying,
   SplitFloatingToolbar as AlloySplitFloatingToolbar,
@@ -20,14 +20,17 @@ import {
   ToolbarGroup as AlloyToolbarGroup
 } from '@ephox/alloy';
 import { Arr, Option, Result, Fun } from '@ephox/katamari';
+import { Traverse } from '@ephox/sugar';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderIconButtonSpec } from '../general/Button';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
 import { createReadonlyReceivingForOverflow } from '../../ReadOnly';
+import * as Channels from '../../Channels';
 
 export interface MoreDrawerData {
   lazyMoreButton: () => AlloyComponent;
   lazyToolbar: () => AlloyComponent;
+  lazyHeader: () => AlloyComponent;
 }
 export interface ToolbarSpec {
   uid: string;
@@ -126,6 +129,7 @@ const renderMoreToolbarCommon = (toolbarSpec: ToolbarSpec, getOverflow: (comp: A
 
 const renderFloatingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
   const baseSpec = renderMoreToolbarCommon(toolbarSpec, AlloySplitFloatingToolbar.getOverflow);
+  const overflowXOffset = 4;
 
   const primary = AlloySplitFloatingToolbar.parts().primary({
     dom: {
@@ -138,6 +142,19 @@ const renderFloatingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
     ...baseSpec,
     lazySink: toolbarSpec.getSink,
     getAnchor: () => toolbarSpec.backstage.shared.anchors.toolbarOverflow(),
+    getOverflowBounds: () => {
+      // Restrict the left/right bounds to the editor header width, but don't restrict the top/height
+      const headerElem = toolbarSpec.moreDrawerData.lazyHeader().element();
+      const headerBounds = Boxes.absolute(headerElem);
+      const docElem = Traverse.documentElement(headerElem);
+      const docBounds = Boxes.absolute(docElem);
+      return Boxes.bounds(
+        headerBounds.x() + overflowXOffset,
+        docBounds.y(),
+        headerBounds.width() - overflowXOffset * 2,
+        docBounds.height()
+      );
+    },
     parts: {
       ...baseSpec.parts,
       overflow: {
@@ -150,7 +167,7 @@ const renderFloatingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
     components: [ primary ],
     markers: {
       overflowToggledClass: ToolbarButtonClasses.Ticked
-    },
+    }
   });
 };
 
@@ -180,6 +197,12 @@ const renderSlidingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
       growingClass: 'tox-toolbar__overflow--growing',
       shrinkingClass: 'tox-toolbar__overflow--shrinking',
       overflowToggledClass: ToolbarButtonClasses.Ticked
+    },
+    onOpened: (comp) => {
+      comp.getSystem().broadcastOn([ Channels.toolbarHeightChange() ], { type: 'opened' });
+    },
+    onClosed: (comp) => {
+      comp.getSystem().broadcastOn([ Channels.toolbarHeightChange() ], { type: 'closed' });
     }
   });
 };
