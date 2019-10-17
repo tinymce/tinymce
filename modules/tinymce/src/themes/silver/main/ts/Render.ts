@@ -13,7 +13,7 @@ import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, getMultipleToolbarsSetting, getToolbarDrawer, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, ToolbarDrawer, useFixedContainer } from './api/Settings';
+import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, getMultipleToolbarsSetting, getToolbarDrawer, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, ToolbarDrawer, isToolbarLocationTop, useFixedContainer } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -221,6 +221,7 @@ const setup = (editor: Editor): RenderInfo => {
   const hasToolbar = isToolbarEnabled(editor);
   const hasMenubar = isMenubarEnabled(editor);
   const hasToolbarDrawer = toolbarDrawer(editor) !== ToolbarDrawer.default;
+  const isToolbarTop = isToolbarLocationTop(editor);
 
   const getPartToolbar = () => {
     if (hasMultipleToolbar) {
@@ -244,8 +245,6 @@ const setup = (editor: Editor): RenderInfo => {
     components: Arr.flatten<AlloySpec>([
       hasMenubar ? [ partMenubar ] : [ ],
       getPartToolbar(),
-      // fixed_toolbar_container anchors to the editable area, else add an anchor bar
-      useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ]
     ]),
     sticky: isStickyToolbar(editor),
     editor,
@@ -254,9 +253,12 @@ const setup = (editor: Editor): RenderInfo => {
 
   // We need the statusbar to be separate to everything else so resizing works properly
   const editorComponents = Arr.flatten<AlloySpec>([
-    [ partHeader ],
+    isToolbarTop ? [ partHeader ] : [ ],
+    // fixed_toolbar_container anchors to the editable area, else add an anchor bar
+    useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ],
     // Inline mode does not have a socket/sidebar
-    isInline ? [ ] : [ socketSidebarContainer ]
+    isInline ? [ ] : [ socketSidebarContainer ],
+    isToolbarTop ? [ ] : [ partHeader ]
   ]);
 
   const editorContainer = {

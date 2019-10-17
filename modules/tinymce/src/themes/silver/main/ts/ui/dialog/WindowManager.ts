@@ -26,7 +26,7 @@ import {
 import { Processor, ValueSchema } from '@ephox/boulder';
 import { DialogManager, Types } from '@ephox/bridge';
 import { Option, Singleton } from '@ephox/katamari';
-import { Body, Element, SelectorFind } from '@ephox/sugar';
+import { Element, SelectorFind, Body } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -50,10 +50,11 @@ const validateData = <T extends Types.Dialog.DialogData>(data: T, validator: Pro
   return ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
 };
 
-const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
+const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, isToolbarLocationTop: boolean): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
   // When using sticky toolbars it already handles the docking behaviours so applying docking would
   // do nothing except add additional processing when scrolling, so we don't want to include it here
-  if (isStickyToolbar) {
+  // (Except when the toolbar is located at the bottom since the anchor will be at the top)
+  if (isStickyToolbar && isToolbarLocationTop) {
     return [ ];
   } else {
     return [
@@ -70,9 +71,9 @@ const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean): B
         modes: [ 'top' ],
         lazyViewport: () => {
           const win = Boxes.win();
-          const headerEle = SelectorFind.descendant(Element.fromDom(editor.getContainer()), '.tox-editor-header').getOrDie();
-          const headerBounds = Boxes.absolute(headerEle);
-          const topBounds = Math.max(win.y(), headerBounds.bottom());
+          const anchorElement = SelectorFind.descendant(Element.fromDom(editor.getContainer()), '.tox-anchorbar').getOrDie();
+          const anchorBounds = Boxes.absolute(anchorElement);
+          const topBounds = Math.max(win.y(), anchorBounds.bottom());
           return Boxes.bounds(win.x(), topBounds, win.width(), win.bottom() - topBounds);
         }
       })
@@ -84,6 +85,7 @@ const setup = (extras: WindowManagerSetup) => {
   const backstage = extras.backstage;
   const editor = extras.editor;
   const isStickyToolbar = Settings.isStickyToolbar(editor);
+  const isToolbarLocationTop = Settings.isToolbarLocationTop(editor);
 
   const alertDialog = AlertDialog.setup(extras);
   const confirmDialog = ConfirmDialog.setup(extras);
@@ -198,7 +200,7 @@ const setup = (extras: WindowManagerSetup) => {
               AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
             }),
           ]),
-          ...inlineAdditionalBehaviours(editor, isStickyToolbar)
+          ...inlineAdditionalBehaviours(editor, isStickyToolbar, isToolbarLocationTop)
         ])
       }));
       inlineDialog.set(inlineDialogComp);
@@ -212,7 +214,7 @@ const setup = (extras: WindowManagerSetup) => {
       );
 
       // Refresh the docking position if not using a sticky toolbar
-      if (!isStickyToolbar) {
+      if (!isStickyToolbar || !isToolbarLocationTop) {
         Docking.refresh(inlineDialogComp);
 
         // Bind to the editor resize event and update docking as needed. We don't need to worry about

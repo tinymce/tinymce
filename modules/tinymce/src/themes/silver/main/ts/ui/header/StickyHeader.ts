@@ -13,6 +13,7 @@ import { Class, Classes, Compare, Css, Element, Focus, Height, Location, Scroll,
 import Editor from 'tinymce/core/api/Editor';
 import { ScrollIntoViewEvent } from 'tinymce/core/api/EventTypes';
 import * as EditorChannels from '../../Channels';
+import { isToolbarLocationTop } from '../../api/Settings';
 
 const visibility = {
   fadeInClass: 'tox-editor-dock-fadein',
@@ -55,14 +56,16 @@ const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: Element
   }
 };
 
-const updateContentFlow = (header: AlloyComponent): void => {
+const updateContentFlow = (header: AlloyComponent, isToolbarTop: boolean): void => {
   const elm = header.element();
   Traverse.parent(elm).each((parentElem: Element<HTMLElement>) => {
     if (Docking.isDocked(header)) {
       const parentWidth = Width.get(parentElem);
       Css.set(elm, 'width', parentWidth + 'px');
-      const headerHeight = Height.getOuter(elm);
-      Css.set(parentElem, 'padding-top', headerHeight + 'px');
+      if (isToolbarTop) {
+        const headerHeight = Height.getOuter(elm);
+        Css.set(parentElem, 'padding-top', headerHeight + 'px');
+      }
     } else {
       Css.remove(elm, 'width');
       Css.remove(parentElem, 'padding-top');
@@ -116,7 +119,7 @@ const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void =
   if (!editor.inline) {
     // No need to update the content flow in inline mode as the header always floats
     editor.on('ResizeWindow ResizeEditor ResizeContent', () => {
-      lazyHeader().each(updateContentFlow);
+      lazyHeader().each((header) => updateContentFlow(header, isToolbarLocationTop(editor)));
     });
 
     // Need to reset the docking position on skin loaded as the original position will have
@@ -155,6 +158,7 @@ const isDocked = (lazyHeader: () => Option<AlloyComponent>): boolean => {
 
 const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>) => {
   const focusedElm = Cell<Option<Element>>(Option.none());
+  const isToolbarTop = isToolbarLocationTop(editor);
 
   const runOnSinkElement = (f: (sink: Element) => void) => {
     lazySink().each((sink) => f(sink.element()));
@@ -162,7 +166,7 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
 
   const onDockingSwitch = (comp: AlloyComponent) => {
     if (!editor.inline) {
-      updateContentFlow(comp);
+      updateContentFlow(comp, isToolbarTop);
     }
     updateEditorClasses(editor, Docking.isDocked(comp));
     comp.getSystem().broadcastOn( [ Channels.repositionPopups() ], { });
@@ -181,7 +185,8 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
           const box = Boxes.box(Element.fromDom(container));
           // Force the header to hide before it overflows outside the container
           const boxHeight = box.height() - headerHeight;
-          return Option.some(Boxes.bounds(box.x(), box.y(), box.width(), boxHeight));
+          const topBound = box.y() + (isToolbarTop ? 0 : headerHeight);
+          return Option.some(Boxes.bounds(box.x(), topBound, box.width(), boxHeight));
         },
         onShow: () => {
           runOnSinkElement((elem) => updateSinkVisibility(elem, true));
@@ -203,7 +208,7 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
         },
         ...visibility
       },
-      modes: [ 'top' ],
+      modes: [ isToolbarTop ? 'top' : 'bottom' ],
       onDocked: onDockingSwitch,
       onUndocked: onDockingSwitch
     }),
@@ -212,7 +217,7 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
       channels: {
         [ EditorChannels.toolbarHeightChange() ]: {
           onReceive: (comp) => {
-            updateContentFlow(comp);
+            updateContentFlow(comp, isToolbarTop);
           }
         }
       }

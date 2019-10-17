@@ -23,11 +23,11 @@ const getHorizontalBounds = (contentAreaBox: Bounds, viewportBounds: Bounds) => 
 const getIframeBounds = (editor: Editor, contentAreaBox: Bounds, viewportBounds: Bounds): Bounds => {
   const { x, width } = getHorizontalBounds(contentAreaBox, viewportBounds);
   const container = Element.fromDom(editor.getContainer());
-  const header = SelectorFind.descendant(container, '.tox-editor-header').getOr(container);
+  const anchorBar = SelectorFind.descendant(container, '.tox-anchorbar').getOr(container);
   const containerBox = Boxes.box(container);
-  const headerBox = Boxes.box(header);
+  const anchorBox = Boxes.box(anchorBar);
 
-  const y = Math.max(viewportBounds.y(), contentAreaBox.y(), headerBox.bottom());
+  const y = Math.max(viewportBounds.y(), contentAreaBox.y(), anchorBox.bottom());
   // Use the container here, so that the statusbar is included
   const contentBoxHeight = containerBox.bottom() - y;
   const maxViewportHeight = viewportBounds.height() - (y - viewportBounds.y());
