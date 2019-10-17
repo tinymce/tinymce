@@ -1,14 +1,14 @@
 {
   "name": "@ephox/alloy",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Ui Framework",
   "dependencies": {
-    "@ephox/agar": "^4.14.2",
-    "@ephox/boulder": "^3.3.36",
+    "@ephox/agar": "^4.14.3",
+    "@ephox/boulder": "^3.3.37",
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^4.0.4",
-    "@ephox/sand": "^3.1.0",
-    "@ephox/sugar": "^5.0.15"
+    "@ephox/katamari": "^4.0.5",
+    "@ephox/sand": "^3.1.1",
+    "@ephox/sugar": "^5.0.16"
   },
   "files": [
     "lib/main",
