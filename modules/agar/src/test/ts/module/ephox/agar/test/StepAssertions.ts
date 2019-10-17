@@ -3,6 +3,8 @@ import { Chain } from 'ephox/agar/api/Chain';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 import { Step } from 'ephox/agar/api/Step';
+import { Pprint } from '@ephox/dispute';
+import { Assert } from '@ephox/bedrock-client';
 
 const preserved = '..preserved..';
 
@@ -11,10 +13,22 @@ const assertError = (label: string, expectedError: any, actualError: any): Resul
   const errMessage = actualError.message !== undefined ? actualError.message : actualError;
   try {
     RawAssertions.assertEq(
-      label + ': checking error message: ' + errMessage + '\n contains: ' + expectedError,
+      label + ': checking error message: ' + errMessage + '\n contains: ' + expectedError + '\nActual error: \n' + Pprint.render(actualError, Pprint.pprintAny),
       true,
       errMessage.indexOf(expectedError) > -1
     );
+    return Result.value(actualError);
+  } catch (err) {
+    return Result.error(err);
+  }
+};
+
+const assertPprintError = (label: string, expectedExpectedValue: any, expectedActualValue: any, actualError: any): Result<any, any> => {
+  try {
+    Assert.eq('checking expected diff of error', actualError.diff, {
+      actual: expectedActualValue,
+      expected: expectedExpectedValue
+    });
     return Result.value(actualError);
   } catch (err) {
     return Result.error(err);
@@ -115,6 +129,19 @@ const testStepFail = function (expected, step: Step<any, any>) {
   });
 };
 
+const testStepFailPprintError = function (expectedExpectedValue, expectedActualValue, step: Step<any, any>) {
+  return Step.raw(function (value, next, die, initLogs) {
+    step(value, function (v, newLogs) {
+      const msg = failOnSuccess('testStepFail', expectedExpectedValue, v);
+      die(msg, newLogs);
+    }, function (err, newLogs) {
+      assertPprintError('testStepFail', expectedExpectedValue, expectedActualValue, err).fold(
+        (err) => die(err, newLogs),
+        (_) => next(value, newLogs));
+    }, initLogs);
+  });
+};
+
 const testChain = function (expected, chain: Chain<any, any>) {
   return Step.raw(function (value, next, die, initLogs) {
     chain.runChain(Chain.wrap(value), function (actual, newLogs) {
@@ -176,6 +203,7 @@ export default {
   preserved: Fun.constant(preserved),
 
   testStepFail,
+  testStepFailPprintError,
   testStepsFail,
   testStepsPass,
   testChain,
