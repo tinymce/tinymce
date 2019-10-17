@@ -9,7 +9,7 @@ Version 5.1.0 (TBD)
     Added new `inputMode` property to relevant plugins/dialogs #TINY-4102
     Added new `toolbar_sticky` setting to allow the iframe menubar/toolbar to stick to the top of the window when scrolling #TINY-3982
     Changed default setting for `toolbar_drawer` to `floating` #TINY-3634
-    Changed phones to use the `silver` theme by default #TINY-3634
+    Changed mobile phones to use the `silver` theme by default #TINY-3634
     Changed some editor settings to default to `false` on touch devices:
         - `menubar`(phones only) #TINY-4077
         - `table_grid` #TINY-4075
@@ -25,7 +25,7 @@ Version 5.1.0 (TBD)
     Fixed scroll issues on mobile devices #TINY-3976
     Fixed context toolbar unable to refresh position on iOS12 #TINY-4107
     Fixed ctrl+left click not opening links on readonly mode and the preview dialog #TINY-4138
-    Fixed Slider UI component not firing onChange event on touch devices #TINY-4092
+    Fixed Slider UI component not firing `onChange` event on touch devices #TINY-4092
     Fixed notifications overlapping instead of stacking #TINY-3478
     Fixed inline dialogs positioning incorrectly when the page is scrolled #TINY-4018
     Fixed inline dialogs and menus not repositioning when resizing #TINY-3227
@@ -36,7 +36,7 @@ Version 5.1.0 (TBD)
     Fixed the autoresize plugin not keeping the selection in view when resizing #TINY-4094
     Fixed textpattern plugin throwing exceptions when using `forced_root_block: false` #TINY-4172
     Fixed missing CSS fill styles for toolbar button icon active state #TINY-4147
-    Fixed an issue where the editor selection could end up inside a short ended element (eg br) #TINY-3999
+    Fixed an issue where the editor selection could end up inside a short ended element (such as `br`) #TINY-3999
     Fixed browser selection being lost in inline mode when opening split dropdowns #TINY-4197
     Fixed backspace throwing an exception when using `forced_root_block: false` #TINY-4099
     Fixed floating toolbar drawer expanding outside the bounds of the editor #TINY-3941
