@@ -1,7 +1,7 @@
 {
   "name": "@ephox/darwin",
   "description": "This project's purpose is to handle selection and cursor navigation.",
-  "version": "3.0.39",
+  "version": "4.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce"
@@ -19,12 +19,12 @@
   ],
   "dependencies": {
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^4.0.3",
-    "@ephox/phoenix": "^5.0.46",
-    "@ephox/robin": "^7.0.40",
-    "@ephox/sand": "^3.0.12",
-    "@ephox/snooker": "^5.0.17",
-    "@ephox/sugar": "^5.0.14"
+    "@ephox/katamari": "^4.0.4",
+    "@ephox/phoenix": "^5.0.47",
+    "@ephox/robin": "^7.0.41",
+    "@ephox/sand": "^3.1.0",
+    "@ephox/snooker": "^5.1.0",
+    "@ephox/sugar": "^5.0.15"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
