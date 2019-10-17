@@ -2,15 +2,14 @@ import { Obj, Option } from '@ephox/katamari';
 import { Compare, Element } from '@ephox/sugar';
 
 import * as Truncate from '../alien/Truncate';
-import { StructAssert, elementQueue } from '../assertions/ApproxStructures';
+import { elementQueue, StructAssert } from '../assertions/ApproxStructures';
 import * as Differ from '../assertions/Differ';
 import * as ApproxStructure from './ApproxStructure';
 import { Chain } from './Chain';
 import * as Logger from './Logger';
-import { assertEq } from './RawAssertions';
 import { Step } from './Step';
 import * as UiFinder from './UiFinder';
-import { TestLabel, UnitTest } from '@ephox/bedrock-client';
+import { Assert, TestLabel, UnitTest } from '@ephox/bedrock-client';
 
 const toStep = function <U extends any[]> (method: (...args: U) => void) {
   return function <T> (...args: U) {
@@ -68,24 +67,26 @@ const assertHtmlStructure2 = function (label: TestLabel, expected: string, actua
 const assertPresence = function (label: TestLabel, expected: Record<string, number>, container: Element) {
   Obj.each(expected, function (num: number, selector: string) {
     const actual = UiFinder.findAllIn(container, selector).length;
-    assertEq(TestLabel.concat('Did not find ' + num + ' of ' + selector + ', found: ' + actual + '. Test: ', label), num, actual);
+    Assert.eq(TestLabel.concat('Did not find ' + num + ' of ' + selector + ', found: ' + actual + '. Test: ', label), num, actual);
   });
 };
 
+const assertEq = Assert.eq;
+
 const assertDomEq = function (label: TestLabel, expected: Element, actual: Element) {
-  assertEq(
+  Assert.eq(
     TestLabel.concat(label, () => '\nExpected : ' + Truncate.getHtml(expected) + '\nActual: ' + Truncate.getHtml(actual)),
     true,
     Compare.eq(expected, actual)
   );
 };
 
-const sAssertEq: <T, V> (label: TestLabel, expected: V, actual: V) => Step<T, T> = toStep(assertEq);
+const sAssertEq: <T, V> (label: TestLabel, expected: V, actual: V) => Step<T, T> = toStep(Assert.eq);
 const sAssertHtml = toStep(assertHtml);
 const sAssertPresence = toStep(assertPresence);
 const sAssertStructure = toStep(assertStructure);
 
-const cAssertEq: <T> (label: string, expected: T) => Chain<T, T> = toChain(assertEq);
+const cAssertEq: <T> (label: string, expected: T) => Chain<T, T> = toChain(Assert.eq);
 const cAssertDomEq = toChain(assertDomEq);
 const cAssertHtml = toChain(assertHtml);
 const cAssertPresence = toChain(assertPresence);

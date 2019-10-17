@@ -123,8 +123,9 @@ UnitTest.asynctest('LogTest', (success, failure) => {
     ])
   );
 
-  const logStepPassTestWithMessage = StepAssertions.testStepFail(
-    'right-value',
+  const logStepPassTestWithMessage = StepAssertions.testStepFailPprintError(
+    '"TestCase-13b: right-value"',
+    '"TestCase-13b: wrong-value"',
     StepAssertions.testStepsPass(
       'TestCase-13b: right-value',
       Log.steps('TestCase-13b', 'Steps passing value', [
