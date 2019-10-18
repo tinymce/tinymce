@@ -1,6 +1,6 @@
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader } from 'ephox/mcagar/api/TinyLoader';
+import * as TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import { TinyApis } from 'ephox/mcagar/api/TinyApis';
 
 UnitTest.asynctest('TinySelectionTest', (success, failure) => {

@@ -36,7 +36,7 @@ const setup = (callback: Loader.RunCallback, settings: Record<string, any>, succ
   }, settings);
 };
 
-export const TinyLoader = {
+export {
   setup,
   setupLight
 };

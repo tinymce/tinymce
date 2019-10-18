@@ -2,7 +2,7 @@ import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Editor } from 'ephox/mcagar/alien/EditorTypes';
 import { TinyApis } from 'ephox/mcagar/api/TinyApis';
-import { TinyLoader } from 'ephox/mcagar/api/TinyLoader';
+import * as TinyLoader from 'ephox/mcagar/api/TinyLoader';
 
 UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
 

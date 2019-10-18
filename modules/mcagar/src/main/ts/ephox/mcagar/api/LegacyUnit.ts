@@ -116,7 +116,10 @@ const equal = function <T> (actual: T, expected: T, message?: string) {
   Assertions.assertEq(typeof message !== 'undefined' ? message : 'No message specified', expected, actual);
 };
 
-export const LegacyUnit = {
+const strictEqual = equal;
+const deepEqual = equal;
+
+export {
   test,
   asyncTest,
   createSuite,
@@ -128,6 +131,6 @@ export const LegacyUnit = {
 
   equal,
   equalDom,
-  strictEqual: equal,
-  deepEqual: equal
+  strictEqual,
+  deepEqual
 };

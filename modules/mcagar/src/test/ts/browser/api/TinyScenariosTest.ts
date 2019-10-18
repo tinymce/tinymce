@@ -5,7 +5,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { Node } from '@ephox/sugar';
 import { Editor } from 'ephox/mcagar/alien/EditorTypes';
 import { TinyApis } from 'ephox/mcagar/api/TinyApis';
-import { TinyLoader } from 'ephox/mcagar/api/TinyLoader';
+import * as TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import { TinyScenarios } from 'ephox/mcagar/api/TinyScenarios';
 
 const isPhantom = navigator.userAgent.indexOf('PhantomJS') > -1;

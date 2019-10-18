@@ -1,8 +1,8 @@
 import { Assertions, Chain, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { ActionChains } from 'ephox/mcagar/api/ActionChains';
-import { Editor } from 'ephox/mcagar/api/Editor';
 import { Editor as EditorType } from 'ephox/mcagar/alien/EditorTypes';
+import { ActionChains } from 'ephox/mcagar/api/ActionChains';
+import * as Editor from 'ephox/mcagar/api/Editor';
 
 UnitTest.asynctest('ActionTest', (success, failure) =>  {
   let count: number;

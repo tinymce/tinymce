@@ -5,7 +5,7 @@ import { Element } from '@ephox/sugar';
 import { Editor } from 'ephox/mcagar/alien/EditorTypes';
 import { TinyApis } from 'ephox/mcagar/api/TinyApis';
 import { TinyDom } from 'ephox/mcagar/api/TinyDom';
-import { TinyLoader } from 'ephox/mcagar/api/TinyLoader';
+import * as TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import { TinyScenarios } from 'ephox/mcagar/api/TinyScenarios';
 
 UnitTest.asynctest('Tutorial: Property Testing with TinyMCE', (success, failure) => {

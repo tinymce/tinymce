@@ -58,11 +58,14 @@ const cRemove = Chain.op(function (editor: EditorType) {
   Selectors.one('#' + id).each(Remove.remove);
 });
 
-export const Editor = {
+const cCreate = cFromSettings({});
+const cCreateInline = cFromSettings({ inline: true });
+
+export {
   cFromHtml,
   cFromElement,
   cFromSettings,
-  cCreate: cFromSettings({}),
-  cCreateInline: cFromSettings({ inline: true }),
+  cCreate,
+  cCreateInline,
   cRemove
 };

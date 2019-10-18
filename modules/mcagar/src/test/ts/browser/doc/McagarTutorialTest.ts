@@ -2,7 +2,7 @@ import { Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Editor } from 'ephox/mcagar/alien/EditorTypes';
 import { TinyApis } from 'ephox/mcagar/api/TinyApis';
-import { TinyLoader } from 'ephox/mcagar/api/TinyLoader';
+import * as TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import { TinyUi } from 'ephox/mcagar/api/TinyUi';
 
 UnitTest.asynctest('McagarTutorialTest', (success, failure) => {
