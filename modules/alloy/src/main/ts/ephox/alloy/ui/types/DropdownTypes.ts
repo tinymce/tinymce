@@ -47,6 +47,7 @@ export interface DropdownApis {
   expand: (comp: AlloyComponent) => void;
   isOpen: (comp: AlloyComponent) => boolean;
   close: (comp: AlloyComponent) => void;
+  repositionMenus: (comp: AlloyComponent) => void;
 }
 
 export interface DropdownSpec extends CompositeSketchSpec {

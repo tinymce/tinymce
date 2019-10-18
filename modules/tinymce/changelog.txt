@@ -1,3 +1,47 @@
+Version 5.1.0 (2019-10-17)
+    Added touch selector handles for table selections on touch devices #TINY-4097
+    Added border width field to Table Cell dialog #TINY-4028
+    Added touch event listener to media plugin to make embeds playable #TINY-4093
+    Added oxide styling options to notifications and tweaked the default variables #TINY-4153
+    Added additional padding to split button chevrons on touch devices, to make them easier to interact with #TINY-4223
+    Added new platform detection functions to `Env` and deprecated older detection properties #TINY-4184
+    Added `inputMode` config field to specify inputmode attribute of `input` dialog components #TINY-4062
+    Added new `inputMode` property to relevant plugins/dialogs #TINY-4102
+    Added new `toolbar_sticky` setting to allow the iframe menubar/toolbar to stick to the top of the window when scrolling #TINY-3982
+    Changed default setting for `toolbar_drawer` to `floating` #TINY-3634
+    Changed mobile phones to use the `silver` theme by default #TINY-3634
+    Changed some editor settings to default to `false` on touch devices:
+        - `menubar`(phones only) #TINY-4077
+        - `table_grid` #TINY-4075
+        - `resize` #TINY-4157
+        - `object_resizing` #TINY-4157
+    Changed toolbars and context toolbars to sidescroll on mobile #TINY-3894 #TINY-4107
+    Changed context menus to render as horizontal menus on touch devices #TINY-4107
+    Changed the editor to use the `VisualViewport` API of the browser where possible #TINY-4078
+    Changed visualblocks toolbar button icon and renamed `paragraph` icon to `visualchars` #TINY-4074
+    Changed Oxide default for `@toolbar-button-chevron-color` to follow toolbar button icon color #TINY-4153
+    Changed the `urlinput` dialog component to use the `url` type attribute #TINY-4102
+    Fixed Safari desktop visual viewport fires resize on fullscreen breaking the restore function #TINY-3976
+    Fixed scroll issues on mobile devices #TINY-3976
+    Fixed context toolbar unable to refresh position on iOS12 #TINY-4107
+    Fixed ctrl+left click not opening links on readonly mode and the preview dialog #TINY-4138
+    Fixed Slider UI component not firing `onChange` event on touch devices #TINY-4092
+    Fixed notifications overlapping instead of stacking #TINY-3478
+    Fixed inline dialogs positioning incorrectly when the page is scrolled #TINY-4018
+    Fixed inline dialogs and menus not repositioning when resizing #TINY-3227
+    Fixed inline toolbar incorrectly stretching to the full width when a width value was provided #TINY-4066
+    Fixed menu chevrons color to follow the menu text color #TINY-4153
+    Fixed table menu selection grid from staying black when using dark skins, now follows border color #TINY-4153
+    Fixed Oxide using the wrong text color variable for menubar button focused state #TINY-4146
+    Fixed the autoresize plugin not keeping the selection in view when resizing #TINY-4094
+    Fixed textpattern plugin throwing exceptions when using `forced_root_block: false` #TINY-4172
+    Fixed missing CSS fill styles for toolbar button icon active state #TINY-4147
+    Fixed an issue where the editor selection could end up inside a short ended element (such as `br`) #TINY-3999
+    Fixed browser selection being lost in inline mode when opening split dropdowns #TINY-4197
+    Fixed backspace throwing an exception when using `forced_root_block: false` #TINY-4099
+    Fixed floating toolbar drawer expanding outside the bounds of the editor #TINY-3941
+    Fixed the autocompleter not activating immediately after a `br` or `contenteditable=false` element #TINY-4194
+    Fixed an issue where the autocompleter would incorrectly close on IE 11 in certain edge cases #TINY-4205
 Version 5.0.16 (2019-09-24)
     Added new `referrer_policy` setting to add the `referrerpolicy` attribute when loading scripts or stylesheets #TINY-3978
     Added a slight background color to dialog tab links when focused to aid keyboard navigation #TINY-3877

@@ -49,7 +49,7 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
       fetch: (callback) => {
         spec.fetch((items) => {
           callback(
-            NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage)
+            NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false)
           );
         });
       },

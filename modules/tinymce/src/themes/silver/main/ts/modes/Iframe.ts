@@ -6,7 +6,7 @@
  */
 
 import { Attachment } from '@ephox/alloy';
-import { Cell } from '@ephox/katamari';
+import { Cell, Throttler } from '@ephox/katamari';
 import { Body, DomEvent, Element, Position, Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -23,7 +23,7 @@ import { PlatformDetection } from '@ephox/sand';
 
 const DOM = DOMUtils.DOM;
 const detection = PlatformDetection.detect();
-const isTouch = detection.deviceType.isTouch();
+const isiOS12 = detection.os.isiOS() && detection.os.version.major <= 12;
 
 const setupEvents = (editor: Editor) => {
   const contentWindow = editor.getWin();
@@ -32,7 +32,7 @@ const setupEvents = (editor: Editor) => {
   const lastWindowDimensions = Cell(Position(contentWindow.innerWidth, contentWindow.innerHeight));
   const lastDocumentDimensions = Cell(Position(initialDocEle.offsetWidth, initialDocEle.offsetHeight));
 
-  const resize = () => {
+  const resize = (e) => {
     // Don't use the initial doc ele, as there's a small chance it may have changed
     const docEle = editor.getDoc().documentElement;
 
@@ -41,14 +41,17 @@ const setupEvents = (editor: Editor) => {
     const inner = lastDocumentDimensions.get();
     if (outer.left() !== contentWindow.innerWidth || outer.top() !== contentWindow.innerHeight) {
       lastWindowDimensions.set(Position(contentWindow.innerWidth, contentWindow.innerHeight));
-      Events.fireResizeContent(editor);
+      Events.fireResizeContent(editor, e);
     } else if (inner.left() !== docEle.offsetWidth || inner.top() !== docEle.offsetHeight) {
       lastDocumentDimensions.set(Position(docEle.offsetWidth, docEle.offsetHeight));
-      Events.fireResizeContent(editor);
+      Events.fireResizeContent(editor, e);
     }
   };
 
+  const scroll = (e) => Events.fireScrollContent(editor, e);
+
   DOM.bind(contentWindow, 'resize', resize);
+  DOM.bind(contentWindow, 'scroll', scroll);
 
   // Bind to async load events and trigger a content resize event if the size has changed
   const elementLoad = DomEvent.capture(Element.fromDom(editor.getBody()), 'load', resize);
@@ -56,6 +59,7 @@ const setupEvents = (editor: Editor) => {
   editor.on('remove', () => {
     elementLoad.unbind();
     DOM.unbind(contentWindow, 'resize', resize);
+    DOM.unbind(contentWindow, 'scroll', scroll);
   });
 };
 
@@ -67,7 +71,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   Attachment.attachSystemAfter(Element.fromDom(args.targetNode), uiComponents.mothership);
   Attachment.attachSystem(Body.body(), uiComponents.uiMothership);
 
-  editor.on('init', () => {
+  editor.on('PostRender', () => {
     setToolbar(editor, uiComponents, rawUiConfig, backstage);
     lastToolbarWidth.set(editor.getWin().innerWidth);
 
@@ -86,12 +90,17 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   const socket = OuterContainer.getSocket(uiComponents.outerContainer).getOrDie('Could not find expected socket element');
 
-  if (isTouch === true) {
-    // TODO: move me, Setup mobile scrolling,
+  if (isiOS12 === true) {
     Css.setAll(socket.element(), {
       'overflow': 'scroll',
-      '-webkit-overflow-scrolling': 'touch' // required for ios < 13
+      '-webkit-overflow-scrolling': 'touch' // required for ios < 13 content scrolling
     });
+
+    const limit = Throttler.first(() => {
+      editor.fire('ScrollContent');
+    }, 20);
+
+    DomEvent.bind(socket.element(), 'scroll', limit.throttle);
   }
 
   setupReadonlyModeSwitch(editor, uiComponents);
@@ -112,13 +121,13 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 
   if (drawer === Settings.ToolbarDrawer.sliding || drawer === Settings.ToolbarDrawer.floating) {
-    editor.on('ResizeContent', () => {
+    editor.on('ResizeWindow ResizeEditor ResizeContent', () => {
       // Check if the width has changed, if so then refresh the toolbar drawer. We don't care if height changes.
       const width = editor.getWin().innerWidth;
       if (width !== lastToolbarWidth.get()) {
         refreshDrawer();
+        lastToolbarWidth.set(width);
       }
-      lastToolbarWidth.set(width);
     });
   }
 
@@ -128,7 +137,4 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 };
 
-export default {
-  render,
-  getBehaviours: (_) => []
-};
+export default { render };

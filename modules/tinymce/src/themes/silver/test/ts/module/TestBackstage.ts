@@ -1,12 +1,13 @@
-import { AlloyComponent, AnchorSpec } from '@ephox/alloy';
+import { AlloyComponent, HotspotAnchorSpec } from '@ephox/alloy';
 import { Fun, Future, Option, Result } from '@ephox/katamari';
+import { Body } from '@ephox/sugar';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { UrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import TestProviders from './TestProviders';
 
 export default function (sink?: AlloyComponent): UiFactoryBackstage {
   // NOTE: Non-sensical anchor
-  const anchorFn = (): AnchorSpec => {
+  const hotspotAnchorFn = (): HotspotAnchorSpec => {
     return {
       anchor: 'hotspot',
       hotspot: sink
@@ -18,11 +19,22 @@ export default function (sink?: AlloyComponent): UiFactoryBackstage {
       providers: TestProviders,
       interpreter: Fun.identity,
       anchors: {
-        toolbar: anchorFn,
-        toolbarOverflow: anchorFn,
-        banner: anchorFn,
-        cursor: anchorFn,
-        node: anchorFn
+        toolbar: hotspotAnchorFn,
+        toolbarOverflow: hotspotAnchorFn,
+        banner: hotspotAnchorFn,
+        cursor: () => {
+          return {
+            anchor: 'selection',
+            root: Body.body()
+          };
+        },
+        node: (elem) => {
+          return {
+            anchor: 'node',
+            root: Body.body(),
+            node: elem
+          };
+        }
       },
       getSink: () => Result.value(sink)
     },

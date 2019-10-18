@@ -23,6 +23,7 @@ const elementSize = (p: Element): AnchorElement => {
 const layout = (anchorBox: AnchorBox, element: Element, bubbles: Bubble, options: ReparteeOptions) => {
   // clear the potentially limiting factors before measuring
   Css.remove(element, 'max-height');
+  Css.remove(element, 'max-width');
 
   const elementBox = elementSize(element);
   return Bounder.attempts(options.preference(), anchorBox, elementBox, bubbles, options.bounds());
@@ -47,6 +48,11 @@ const setHeight = (element, decision, options) => {
   maxHeightFunction(element, decision.maxHeight());
 };
 
+const setWidth = (element, decision, options) => {
+  const maxWidthFunction = options.maxWidthFunction();
+  maxWidthFunction(element, decision.maxWidth());
+};
+
 const position = (element, decision, options) => {
   const addPx = (num) => num + 'px';
 
@@ -66,5 +72,6 @@ export {
   layout,
   setClasses,
   setHeight,
+  setWidth,
   position
 };

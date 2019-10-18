@@ -18,7 +18,7 @@ const isXYWithinRange = function (clientX: number, clientY: number, range: Range
 
   // IE 11 incorrectly returns an empty client rect list if a single element is selected.
   // So use the element client rects directly instead of using the range.
-  if (Env.ie && Env.ie <= 11 && range.startOffset === range.endOffset - 1 && range.startContainer === range.endContainer) {
+  if (Env.browser.isIE() && range.startOffset === range.endOffset - 1 && range.startContainer === range.endContainer) {
     const elm = range.startContainer.childNodes[range.startOffset];
     if (NodeType.isElement(elm)) {
       return Arr.exists(elm.getClientRects(), (rect) => ClientRect.containsXY(rect, clientX, clientY));

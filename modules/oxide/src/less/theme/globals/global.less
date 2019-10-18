@@ -27,25 +27,23 @@
   visibility: inherit !important;
 }
 
-// styles for making statusbar appear above toolbars when making the editor height very small
-.tox-editor-container {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  overflow: hidden;
+// Place the border/shadow on the header in inline mode instead of the root component
+.tox-tinymce-inline {
+  border: none;
+  box-shadow: none;
 
-  // Remove double top borders
-  > *:first-child,
-  > .tox-toolbar-overlord:first-child .tox-toolbar__primary,
-  > .tox-anchorbar:first-child + .tox-sidebar-wrap .tox-edit-area {
-    // !important required because we don't know
-    // if menubar, toolbar or edit area comes first
-    border-top: none !important;
+  .tox-editor-header {
+    border: @tinymce-border-width solid @tinymce-border-color;
+    // Don't include the bottom border on inline mode, since there's no editor content area
+    border-bottom: 0;
+    border-radius: @tinymce-border-radius;
+    box-shadow: @tinymce-box-shadow;
   }
 }
 
 .tox-tinymce-aux {
   font-family: @font-stack;
+  z-index: @z-index-sink;
 }
 
 // Reset focus states
@@ -57,8 +55,4 @@
 // Reset firefox focus states
 button::-moz-focus-inner {
   border: 0;
-}
-
-.tox-silver-sink {
-  z-index: @z-index-sink;
 }

@@ -277,7 +277,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function () {
                       'data-mce-bogus': str.is('1')
                     },
                     children: [
-                      s.element('br', {})
+                      s.text(str.is(Zwsp.ZWSP))
                     ]
                   })
                 ]

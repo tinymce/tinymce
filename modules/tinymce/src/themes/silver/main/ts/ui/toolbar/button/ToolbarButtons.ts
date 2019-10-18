@@ -24,11 +24,13 @@ import {
   SystemEvents,
   TieredData,
   TieredMenuTypes,
+  Unselecting,
 } from '@ephox/alloy';
 import { Toolbar, Types } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
 import { Attr, SelectorFind } from '@ephox/sugar';
 
+import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
@@ -45,7 +47,6 @@ import { createPartialChoiceMenu } from '../../menus/menu/MenuChoice';
 import ItemResponse from '../../menus/item/ItemResponse';
 import { ToolbarButtonClasses } from '../button/ButtonClasses';
 import { onToolbarButtonExecute, toolbarButtonEventOrder } from '../button/ButtonEvents';
-import I18n from 'tinymce/core/api/util/I18n';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
@@ -324,7 +325,8 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         AlloyEvents.run(focusButtonEvent, Focusing.focus),
         onControlAttached(specialisation, editorOffCell),
         onControlDetached(specialisation, editorOffCell),
-      ])
+      ]),
+      Unselecting.config({ })
     ]),
 
     eventOrder: {

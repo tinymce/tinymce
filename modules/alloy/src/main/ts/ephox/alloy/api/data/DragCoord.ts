@@ -104,8 +104,19 @@ const toString = (coord: CoordAdt): string => {
 const withinRange = (coord1: CoordAdt, coord2: CoordAdt, xRange: number, yRange: number, scroll: SugarPosition, origin: SugarPosition): boolean => {
   const a1 = asAbsolute(coord1, scroll, origin);
   const a2 = asAbsolute(coord2, scroll, origin);
+  // tslint:disable-next-line:no-console
+  // console.log(`a1.left(): ${a1.left()}, a2.left(): ${a2.left()}, leftDelta: ${a1.left() - a2.left()}, xRange: ${xRange}, lD <= xRange: ${Math.abs(a1.left() - a2.left()) <= xRange}`);
+  // console.log(`a1.top(): ${a1.top()}, a2.top(): ${a2.top()}, topDelta: ${a1.top() - a2.top()}, yRange: ${yRange}, lD <= xRange: ${Math.abs(a1.top() - a2.top()) <= yRange}`);
   return Math.abs(a1.left() - a2.left()) <= xRange &&
     Math.abs(a1.top() - a2.top()) <= yRange;
+};
+
+const getDeltas = (coord1: CoordAdt, coord2: CoordAdt, xRange: number, yRange: number, scroll: SugarPosition, origin: SugarPosition): SugarPosition => {
+  const a1 = asAbsolute(coord1, scroll, origin);
+  const a2 = asAbsolute(coord2, scroll, origin);
+  const left = Math.abs(a1.left() - a2.left());
+  const top = Math.abs(a1.top() - a2.top());
+  return Position(left, top);
 };
 
 const toStyles = (coord: CoordAdt, scroll: SugarPosition, origin: SugarPosition): StylesCoord => {
@@ -167,6 +178,7 @@ export {
   asAbsolute,
   asOffset,
   withinRange,
+  getDeltas,
   toStyles,
   translate,
 

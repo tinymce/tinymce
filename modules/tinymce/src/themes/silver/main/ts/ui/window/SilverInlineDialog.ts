@@ -22,7 +22,7 @@ import {
   AlloyEvents,
   NativeEvents
 } from '@ephox/alloy';
-import { DialogManager, Types } from '@ephox/bridge';
+import { DialogManager } from '@ephox/bridge';
 import { Option, Id } from '@ephox/katamari';
 import { Attr, Node } from '@ephox/sugar';
 
@@ -38,12 +38,7 @@ import { getDialogApi } from './SilverDialogInstanceApi';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import * as SilverDialogCommon from './SilverDialogCommon';
 
-interface WindowExtra<T> {
-  redial: (newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>;
-  closeWindow: () => void;
-}
-
-const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: WindowExtra<T>, backstage: UiFactoryBackstage, ariaAttrs: boolean) => {
+const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra, backstage: UiFactoryBackstage, ariaAttrs: boolean) => {
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
 

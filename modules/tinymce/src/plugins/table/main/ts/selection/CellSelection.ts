@@ -6,27 +6,47 @@
  */
 
 import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
-import { Fun, Option, Struct } from '@ephox/katamari';
-import { TableLookup } from '@ephox/snooker';
-import {
-    Element, Selection, SelectionDirection, Class
-} from '@ephox/sugar';
+import { Fun, Option, Struct, Cell } from '@ephox/katamari';
+import { TableLookup, OtherCells, TableFill, TableResize } from '@ephox/snooker';
+import { Element, Selection, SelectionDirection, Class, Node, Compare } from '@ephox/sugar';
 
+import { getCloneElements } from '../api/Settings';
 import * as Util from '../alien/Util';
 import Direction from '../queries/Direction';
 import Ephemera from './Ephemera';
+import * as Events from '../api/Events';
 import { DomParent } from '@ephox/robin';
 
 const hasInternalTarget = (e: Event) => {
   return Class.has(Element.fromDom(e.target as HTMLElement), 'ephox-snooker-resizer-bar') === false;
 };
-import { KeyboardEvent, MouseEvent, Event, HTMLElement } from '@ephox/dom-globals';
+import { KeyboardEvent, MouseEvent, Event, HTMLElement, TouchEvent, Node as HtmlNode } from '@ephox/dom-globals';
+import Editor from 'tinymce/core/api/Editor';
+import { SelectionTargets } from './SelectionTargets';
 
-export default function (editor, lazyResize) {
+export default function (editor: Editor, lazyResize: () => Option<TableResize>, selectionTargets: SelectionTargets) {
   const handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);
   let handlers = Option.none();
 
-  const annotations = SelectionAnnotation.byAttr(Ephemera);
+  const cloneFormats = getCloneElements(editor);
+
+  const onSelection = (cells: Element[], start: Element, finish: Element) => {
+    selectionTargets.targets().each((targets) => {
+      const tableOpt = TableLookup.table(start);
+      tableOpt.each((table) => {
+        const doc = Element.fromDom(editor.getDoc());
+        const generators = TableFill.cellOperations(Fun.noop, doc, cloneFormats);
+        const otherCells = OtherCells.getOtherCells(table, targets, generators);
+        Events.fireTableSelectionChange(editor, cells, start, finish, otherCells);
+      });
+    });
+  };
+
+  const onClear = () => {
+    Events.fireTableSelectionClear(editor);
+  };
+
+  const annotations = SelectionAnnotation.byAttr(Ephemera, onSelection, onClear);
 
   editor.on('init', function (e) {
     const win = editor.getWin();
@@ -47,7 +67,12 @@ export default function (editor, lazyResize) {
 
     const mouseHandlers = InputHandlers.mouse(win, body, isRoot, annotations);
     const keyHandlers = InputHandlers.keyboard(win, body, isRoot, annotations);
+    const external = InputHandlers.external(win, body, isRoot, annotations);
     const hasShiftKey = (event) => event.raw().shiftKey === true;
+
+    editor.on('tableselectorchange', (e) => {
+      external(e.start, e.finish);
+    });
 
     const handleResponse = function (event, response) {
       // Only handle shift key non shiftkey cell navigation is handled by core
@@ -157,9 +182,34 @@ export default function (editor, lazyResize) {
       }
     };
 
+    const getDoubleTap = () => {
+      const lastTarget = Cell<Element>(Element.fromDom(body as any));
+      const lastTimeStamp = Cell<number>(0);
+
+      const touchEnd = (t: TouchEvent) => {
+        const target = Element.fromDom(<HtmlNode> t.target);
+        if (Node.name(target) === 'td' || Node.name(target) === 'th') {
+          const lT = lastTarget.get();
+          const lTS = lastTimeStamp.get();
+          if (Compare.eq(lT, target) && (t.timeStamp - lTS) < 300) {
+            t.preventDefault();
+            external(target, target);
+          }
+        }
+        lastTarget.set(target);
+        lastTimeStamp.set(t.timeStamp);
+      };
+      return {
+        touchEnd
+      };
+    };
+
+    const doubleTap = getDoubleTap();
+
     editor.on('mousedown', mouseDown);
     editor.on('mouseover', mouseOver);
     editor.on('mouseup', mouseUp);
+    editor.on('touchend', doubleTap.touchEnd);
     editor.on('keyup', keyup);
     editor.on('keydown', keydown);
     editor.on('NodeChange', syncSelection);

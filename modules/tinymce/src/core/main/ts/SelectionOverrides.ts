@@ -5,26 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range, Element, Node, HTMLElement, MouseEvent } from '@ephox/dom-globals';
-import { Arr } from '@ephox/katamari';
-import { Remove, Element as SugarElement, Attr, SelectorFilter, SelectorFind } from '@ephox/sugar';
-import DragDropOverrides from './DragDropOverrides';
-import EditorView from './EditorView';
+import { Element, HTMLElement, MouseEvent, Node, Range } from '@ephox/dom-globals';
+import { Arr, Obj } from '@ephox/katamari';
+import { Attr, Compare, Element as SugarElement, Remove, SelectorFilter, SelectorFind } from '@ephox/sugar';
+import Editor from './api/Editor';
 import Env from './api/Env';
+import VK from './api/util/VK';
 import * as CaretContainer from './caret/CaretContainer';
 import CaretPosition from './caret/CaretPosition';
+import { isAfterContentEditableFalse, isBeforeContentEditableFalse } from './caret/CaretPositionPredicates';
 import * as CaretUtils from './caret/CaretUtils';
 import { CaretWalker } from './caret/CaretWalker';
+import { FakeCaret, isFakeCaretTarget } from './caret/FakeCaret';
 import * as LineUtils from './caret/LineUtils';
 import NodeType from './dom/NodeType';
 import RangePoint from './dom/RangePoint';
+import DragDropOverrides from './DragDropOverrides';
+import EditorView from './EditorView';
 import CefFocus from './focus/CefFocus';
-import * as CefUtils from './keyboard/CefUtils';
-import VK from './api/util/VK';
-import { FakeCaret, isFakeCaretTarget } from './caret/FakeCaret';
-import Editor from './api/Editor';
 import EditorFocus from './focus/EditorFocus';
-import { isBeforeContentEditableFalse, isAfterContentEditableFalse } from './caret/CaretPositionPredicates';
+import * as CefUtils from './keyboard/CefUtils';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
@@ -100,16 +100,6 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     return fakeCaret.show(before, node);
   };
 
-  const getNormalizedRangeEndPoint = function (direction: number, range: Range): CaretPosition {
-    range = CaretUtils.normalizeRange(direction, rootNode, range);
-
-    if (direction === -1) {
-      return CaretPosition.fromRangeStart(range);
-    }
-
-    return CaretPosition.fromRangeEnd(range);
-  };
-
   const showBlockCaretContainer = function (blockCaretContainer: HTMLElement) {
     if (blockCaretContainer.hasAttribute('data-mce-caret')) {
       CaretContainer.showCaretContainerBlock(blockCaretContainer);
@@ -167,15 +157,14 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
       });
 
       editor.on('touchend', function (e) {
-        const contentEditableRoot = getContentEditableRoot(editor, e.target);
-
-        if (isContentEditableFalse(contentEditableRoot)) {
-          if (!moved) {
+        if (!moved) {
+          const contentEditableRoot = getContentEditableRoot(editor, e.target);
+          if (isContentEditableFalse(contentEditableRoot)) {
             e.preventDefault();
             setContentEditableSelection(CefUtils.selectNode(editor, contentEditableRoot));
           }
         }
-      });
+      }, true);
     };
 
     const hasNormalCaretPosition = function (elm) {
@@ -288,9 +277,11 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     });
 
     editor.on('SetSelectionRange', function (e) {
-      let rng;
+      // If the range is set inside a short ended element, then move it
+      // to the side as IE for example will try to add content inside
+      e.range = normalizeShortEndedElementSelection(e.range);
 
-      rng = setContentEditableSelection(e.range, e.forward);
+      const rng = setContentEditableSelection(e.range, e.forward);
       if (rng) {
         e.range = rng;
       }
@@ -344,6 +335,37 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     return isWithinCaretContainer(rng.startContainer) || isWithinCaretContainer(rng.endContainer);
   };
 
+  const normalizeShortEndedElementSelection = (rng: Range) => {
+    const shortEndedElements = editor.schema.getShortEndedElements();
+    const newRng = editor.dom.createRng();
+    const startContainer = rng.startContainer;
+    const startOffset = rng.startOffset;
+    const endContainer = rng.endContainer;
+    const endOffset = rng.endOffset;
+
+    if (Obj.has(shortEndedElements, startContainer.nodeName.toLowerCase())) {
+      if (startOffset === 0) {
+        newRng.setStartBefore(startContainer);
+      } else {
+        newRng.setStartAfter(startContainer);
+      }
+    } else {
+      newRng.setStart(startContainer, startOffset);
+    }
+
+    if (Obj.has(shortEndedElements, endContainer.nodeName.toLowerCase())) {
+      if (endOffset === 0) {
+        newRng.setEndBefore(endContainer);
+      } else {
+        newRng.setEndAfter(endContainer);
+      }
+    } else {
+      newRng.setEnd(endContainer, endOffset);
+    }
+
+    return newRng;
+  };
+
   const setContentEditableSelection = function (range: Range, forward?: boolean) {
     let node;
     const $ = editor.$;
@@ -358,7 +380,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     if (range.collapsed) {
       if (!isRangeInCaretContainer(range)) {
         if (forward === false) {
-          caretPosition = getNormalizedRangeEndPoint(-1, range);
+          caretPosition = CaretUtils.getNormalizedRangeEndPoint(-1, rootNode, range);
 
           if (isFakeCaretTarget(caretPosition.getNode(true))) {
             return showCaret(-1, caretPosition.getNode(true), false, false);
@@ -368,7 +390,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
             return showCaret(-1, caretPosition.getNode(), !caretPosition.isAtEnd(), false);
           }
         } else {
-          caretPosition = getNormalizedRangeEndPoint(1, range);
+          caretPosition = CaretUtils.getNormalizedRangeEndPoint(1, rootNode, range);
 
           if (isFakeCaretTarget(caretPosition.getNode())) {
             return showCaret(1, caretPosition.getNode(), !caretPosition.isAtEnd(), false);
@@ -454,11 +476,19 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     sel.removeAllRanges();
     sel.addRange(range);
 
+    // We used to just remove all data-mce-selected values and set 1 on node.
+    // But data-mce-selected can be values other than 1 so keep existing value if
+    // node has one, and remove data-mce-selected from everything else
+    const nodeElm = SugarElement.fromDom(node);
     Arr.each(SelectorFilter.descendants(SugarElement.fromDom(editor.getBody()), '*[data-mce-selected]'), function (elm) {
-      Attr.remove(elm, 'data-mce-selected');
+      if (!Compare.eq(nodeElm, elm)) {
+        Attr.remove(elm, 'data-mce-selected');
+      }
     });
 
-    node.setAttribute('data-mce-selected', '1');
+    if (!editor.dom.getAttrib(node, 'data-mce-selected')) {
+      node.setAttribute('data-mce-selected', '1');
+    }
     selectedContentEditableNode = node;
     hideFakeCaret();
 

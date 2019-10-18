@@ -19,7 +19,7 @@ import * as Util from '../alien/Util';
 import { enforcePixels, enforcePercentage } from './EnforceUnit';
 
 export interface ResizeHandler {
-  lazyResize: () => Option<any>;
+  lazyResize: () => Option<TableResize>;
   lazyWire: () => any;
   destroy: () => void;
 }

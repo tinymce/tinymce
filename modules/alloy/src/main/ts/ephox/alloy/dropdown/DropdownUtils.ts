@@ -1,4 +1,4 @@
-import { Fun, Future, Option, Result } from '@ephox/katamari';
+import { Arr, Fun, Future, Option, Result } from '@ephox/katamari';
 import { Width, Element, Css } from '@ephox/sugar';
 
 import * as ComponentStructure from '../alien/ComponentStructure';
@@ -18,6 +18,8 @@ import { HotspotAnchorSpec } from '../positioning/mode/Anchoring';
 import * as Tagger from '../registry/Tagger';
 import * as Dismissal from '../sandbox/Dismissal';
 import { CommonDropdownDetail } from '../ui/types/DropdownTypes';
+import { Receiving } from '@ephox/alloy';
+import * as Reposition from '../sandbox/Reposition';
 
 export enum HighlightOnOpen { HighlightFirst, HighlightNone }
 
@@ -67,8 +69,16 @@ const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Optio
             item
           }, submenu);
           Sandboxing.decloak(sandbox);
-
         },
+
+        onRepositionMenu (tmenu, primaryMenu, submenuTriggers) {
+          const sink = getLazySink().getOrDie();
+          Positioning.position(sink, anchor, primaryMenu);
+          Arr.each(submenuTriggers, (st) => {
+            Positioning.position(sink, { anchor: 'submenu', item: st.triggeringItem }, st.triggeredMenu);
+          });
+        },
+
         onEscape () {
           // Focus the triggering component after escaping the menu
           Focusing.focus(component);
@@ -147,6 +157,12 @@ const getSink = (anyInSystem: AlloyComponent, sinkDetail: SinkDetail): () => Ret
   });
 };
 
+const doRepositionMenus = (sandbox: AlloyComponent) => {
+  Sandboxing.getState(sandbox).each((tmenu) => {
+    TieredMenu.repositionMenus(tmenu);
+  });
+};
+
 const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyComponent, extras) => {
   const ariaOwner = AriaOwner.manager();
 
@@ -201,18 +217,32 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
             });
           }
         }),
-        Dismissal.receivingConfig({
-          isExtraPart: Fun.constant(false)
+        Receiving.config({
+          channels: {
+            ...Dismissal.receivingChannel({
+              isExtraPart: Fun.constant(false)
+            }),
+            ...Reposition.receivingChannel({
+              isExtraPart: Fun.constant(false),
+              doReposition: doRepositionMenus
+            })
+          }
         })
       ]
     )
   };
 };
 
+const repositionMenus = (comp: AlloyComponent) => {
+  const sandbox = Coupling.getCoupled(comp, 'sandbox');
+  doRepositionMenus(sandbox);
+};
+
 export {
   makeSandbox,
   togglePopup,
   open,
+  repositionMenus,
 
   getSink
 };

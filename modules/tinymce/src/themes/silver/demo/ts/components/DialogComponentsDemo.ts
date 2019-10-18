@@ -7,13 +7,12 @@ import {
   Representing,
   SimpleSpec,
 } from '@ephox/alloy';
-import { Menu, Types } from '@ephox/bridge';
+import { Types } from '@ephox/bridge';
 import { ValueSchema } from '@ephox/boulder';
 import { console } from '@ephox/dom-globals';
-import { Arr, Id, Option } from '@ephox/katamari';
-import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
+import { Option } from '@ephox/katamari';
 
-import { renderAutocomplete } from 'tinymce/themes/silver/ui/dialog/Autocomplete';
+import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
 import { renderBodyPanel } from 'tinymce/themes/silver/ui/dialog/BodyPanel';
 import { renderColorInput } from 'tinymce/themes/silver/ui/dialog/ColorInput';
 import { renderColorPicker } from 'tinymce/themes/silver/ui/dialog/ColorPicker';
@@ -24,10 +23,8 @@ import { renderIFrame } from 'tinymce/themes/silver/ui/dialog/IFrame';
 import { renderSelectBox } from 'tinymce/themes/silver/ui/dialog/SelectBox';
 import { renderSizeInput } from 'tinymce/themes/silver/ui/dialog/SizeInput';
 import { renderInput, renderTextarea } from 'tinymce/themes/silver/ui/dialog/TextField';
-import { renderTypeahead } from 'tinymce/themes/silver/ui/dialog/TypeAheadInput';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
 import { renderButton } from 'tinymce/themes/silver/ui/general/Button';
-import { renderListbox } from 'tinymce/themes/silver/ui/general/Listbox';
 import { UiFactoryBackstageShared, UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
 import { renderCollection } from 'tinymce/themes/silver/ui/dialog/Collection';
@@ -46,22 +43,6 @@ export default () => {
     interpreter: (x) => x
   };
 
-  const autocompleteSpec = renderAutocomplete({
-    name: 'alpha',
-    initialValue: '',
-    label: Option.some('Alpha'),
-    getItems: (value) => {
-      return Arr.map([
-        {
-          text: 'Cat'
-        },
-        {
-          text: 'Dog'
-        }
-      ], (d) => makeItem(d.text));
-    }
-  }, backstage);
-
   const iframeSpec = renderIFrame({
     name: 'iframe',
     label: Option.some('Iframe'),
@@ -71,6 +52,7 @@ export default () => {
   const inputSpec = renderInput({
     name: 'input',
     label: Option.some('Beta'),
+    inputMode: Option.none(),
     placeholder: Option.none(),
     maximized: false,
     disabled: false
@@ -83,15 +65,6 @@ export default () => {
     maximized: false,
     disabled: false
   }, sharedBackstage.providers);
-
-  const makeItem = (text: string): Menu.MenuItemApi => {
-    return {
-      type: 'menuitem',
-      value: Id.generate('item'),
-      text,
-      onAction: () => console.log('clicked: ' + text)
-    };
-  };
 
   const labelSpec = renderLabel({
     label: 'A label wraps components in a group',
@@ -108,6 +81,7 @@ export default () => {
       }, sharedBackstage.providers) as any,
       renderInput({
         label: Option.some('Sample input'),
+        inputMode: Option.none(),
         placeholder: Option.none(),
         name: 'exampleinputfieldname',
         maximized: false,
@@ -144,6 +118,7 @@ export default () => {
           }, sharedBackstage.providers) as any,
           renderInput({
             label: Option.some('Sample input'),
+            inputMode: Option.none(),
             placeholder: Option.none(),
             name: 'exampleinputfieldname',
             maximized: false,
@@ -153,17 +128,6 @@ export default () => {
       }, sharedBackstage) as any
     ]
   }, sharedBackstage);
-
-  const listboxSpec = renderListbox({
-    name: 'listbox1',
-    label: 'Listbox',
-    values: [
-      { value: 'alpha', text: 'Alpha' },
-      { value: 'beta', text: 'Beta' },
-      { value: 'gamma', text: 'Gamma' }
-    ],
-    initialValue: Option.some('beta')
-  }, sharedBackstage.providers);
 
   const gridSpec = renderGrid({
     columns: 5,
@@ -280,25 +244,6 @@ export default () => {
     disabled: false
   }, backstage, backstage.urlinput);
 
-  const linkInputSpec = renderTypeahead({
-    label: Option.some('Url'),
-    name: 'linkInput',
-    icon: 'embed',
-    initialValue: '',
-    getItems: (value) => {
-      return Arr.map([
-        {
-          value: 'https://www.tinymce.com',
-          text: 'My page 1'
-        },
-        {
-          value: 'https://www.ephox.com',
-          text: 'My page 2'
-        }
-      ], (d) => makeItem(d.text));
-    }
-  }, backstage);
-
   const myScriptDataUri = `data:text/javascript,tinymce.Resource.add('myscript', function(el) {
     return new Promise(function (resolve) {
       var oldEl = el;
@@ -364,7 +309,6 @@ export default () => {
       display('Collection', memCollection.asSpec()),
       display('Dropzone', dropzoneSpec),
       display('UrlInput', urlInputSpec),
-      display('LinkTypeAheadInput', linkInputSpec),
       display('SizeInput', sizeInputSpec),
       display('SelectBox', selectBoxSpec),
       display('SelectBox with Size', selectBoxSizeSpec),
@@ -373,10 +317,8 @@ export default () => {
       display('ColorInput', colorInputSpec),
       display('Checkbox', checkboxSpec),
       display('Button', buttonSpec),
-      display('Listbox', listboxSpec),
       display('Label', labelSpec),
       display('Grid Label', labelGridSpec),
-      display('Autocomplete', autocompleteSpec),
       display('IFrame', iframeSpec),
       display('Input', inputSpec),
       display('Textarea', textareaSpec),

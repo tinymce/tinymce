@@ -186,7 +186,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
     Pipeline.async({}, Arr.flatten([
       [ tinyApis.sFocus ],
       generalTests,
-      Env.ie && Env.ie <= 11 ? [] : nonIeTests
+      Env.browser.isIE() ? [] : nonIeTests
     ]), onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',

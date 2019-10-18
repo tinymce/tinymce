@@ -233,32 +233,84 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
 
       const sTestAutocompleteStartOfWord = GeneralSteps.sequence([
         store.sClear,
-        sSetContentAndTrigger({
-          triggerChar: '*',
-          initialContent: 'a*',
-          additionalContent: 'bc'
-        }),
-        // Can't wait for anything to change, so just wait for a prefixed amount of time
-        Step.wait(500),
-        Step.label('Check the autocompleter does not appear', UiFinder.sNotExists(Body.body(), '.tox-autocompleter')),
-        sSetContentAndTrigger({
-          triggerChar: '*',
-          additionalContent: 'bc'
-        }),
-        tinyUi.sWaitForPopup('wait for autocompleter to appear', '.tox-autocompleter div[role="menu"]'),
-        sAssertAutocompleterStructure({
-          type: 'grid',
-          groups: [
-            [
-              { title: 'asterisk-a', icon: '*' },
-              { title: 'asterisk-b', icon: '*' },
-              { title: 'asterisk-c', icon: '*' },
-              { title: 'asterisk-d', icon: '*' }
+        Step.label('No spaces', GeneralSteps.sequence([
+          sSetContentAndTrigger({
+            triggerChar: '*',
+            initialContent: 'a*',
+            additionalContent: 'bc'
+          }),
+          // Can't wait for anything to change, so just wait for a prefixed amount of time
+          Step.wait(500),
+          Step.label('Check the autocompleter does not appear', UiFinder.sNotExists(Body.body(), '.tox-autocompleter')),
+          sSetContentAndTrigger({
+            triggerChar: '*',
+            additionalContent: 'bc'
+          }),
+          tinyUi.sWaitForPopup('wait for autocompleter to appear', '.tox-autocompleter div[role="menu"]'),
+          sAssertAutocompleterStructure({
+            type: 'grid',
+            groups: [
+              [
+                { title: 'asterisk-a', icon: '*' },
+                { title: 'asterisk-b', icon: '*' },
+                { title: 'asterisk-c', icon: '*' },
+                { title: 'asterisk-d', icon: '*' }
+              ]
             ]
-          ]
-        }),
-        tinyActions.sContentKeydown(Keys.enter(), { }),
-        sWaitForAutocompleteToClose
+          }),
+          tinyActions.sContentKeydown(Keys.enter(), { }),
+          sWaitForAutocompleteToClose
+        ])),
+        Step.label('Immediately after a br element', GeneralSteps.sequence([
+          sSetContentAndTrigger({
+            initialContent: 'First line<br>*',
+            triggerChar: '*',
+            additionalContent: 'bc',
+            cursorPos: {
+              elementPath: [0, 2],
+              offset: 1
+            }
+          }),
+          tinyUi.sWaitForPopup('wait for autocompleter to appear', '.tox-autocompleter div[role="menu"]'),
+          sAssertAutocompleterStructure({
+            type: 'grid',
+            groups: [
+              [
+                { title: 'asterisk-a', icon: '*' },
+                { title: 'asterisk-b', icon: '*' },
+                { title: 'asterisk-c', icon: '*' },
+                { title: 'asterisk-d', icon: '*' }
+              ]
+            ]
+          }),
+          tinyActions.sContentKeydown(Keys.enter(), { }),
+          sWaitForAutocompleteToClose
+        ])),
+        Step.label('Immediately after a ce=false element', GeneralSteps.sequence([
+          sSetContentAndTrigger({
+            initialContent: 'Some content <span contenteditable="false">uneditable content</span>*',
+            triggerChar: '*',
+            additionalContent: 'bc',
+            cursorPos: {
+              elementPath: [0, 2],
+              offset: 1
+            }
+          }),
+          tinyUi.sWaitForPopup('wait for autocompleter to appear', '.tox-autocompleter div[role="menu"]'),
+          sAssertAutocompleterStructure({
+            type: 'grid',
+            groups: [
+              [
+                { title: 'asterisk-a', icon: '*' },
+                { title: 'asterisk-b', icon: '*' },
+                { title: 'asterisk-c', icon: '*' },
+                { title: 'asterisk-d', icon: '*' }
+              ]
+            ]
+          }),
+          tinyActions.sContentKeydown(Keys.enter(), { }),
+          sWaitForAutocompleteToClose
+        ]))
       ]);
 
       const sTestAutocompleteActivation = GeneralSteps.sequence([

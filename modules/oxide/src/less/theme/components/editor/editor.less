@@ -1,0 +1,48 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Editor
+//
+
+.tox {
+  // styles for making statusbar appear above toolbars when making the editor height very small
+  .tox-editor-container {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .tox-editor-header {
+    z-index: 1;
+  }
+}
+
+// Docking styles for the editor container and sink
+.tox-editor-dock-fadeout {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.tox-editor-dock-fadein {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tox-editor-dock-transition {
+  transition: visibility 0s linear .25s, opacity .25s ease;
+
+  // Set all transition delays to 0s, overriding visibility to apply immediately
+  // and thus allowing the opacity to fade in
+  //
+  // transition-delay: 0s;
+}
+
+.tox-editor-dock-transition.tox-editor-dock-fadein {
+  transition-delay: 0s;
+}

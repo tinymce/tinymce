@@ -8,12 +8,14 @@ const getItems = (editor: Editor, hasClasses: boolean, insertNewTable: boolean) 
     {
       type: 'input',
       name: 'cols',
-      label: 'Cols'
+      label: 'Cols',
+      inputMode: 'numeric'
     },
     {
       type: 'input',
       name: 'rows',
-      label: 'Rows'
+      label: 'Rows',
+      inputMode: 'numeric'
     }
   ];
 
@@ -34,12 +36,14 @@ const getItems = (editor: Editor, hasClasses: boolean, insertNewTable: boolean) 
     {
       type: 'input',
       name: 'cellspacing',
-      label: 'Cell spacing'
+      label: 'Cell spacing',
+      inputMode: 'numeric'
     },
     {
       type: 'input',
       name: 'cellpadding',
-      label: 'Cell padding'
+      label: 'Cell padding',
+      inputMode: 'numeric'
     },
     {
       type: 'input',

@@ -13,7 +13,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 
-UnitTest.asynctest('InlineViewTest', (success, failure) => {
+UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
 
   GuiSetup.setup((store, doc, body) => {
     return Sinks.relativeSink();
@@ -39,7 +39,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
         },
 
         inlineBehaviours: Behaviour.derive([
-          AddEventsBehaviour.config('inline-dimiss-test', [
+          AddEventsBehaviour.config('inline-dismiss-test', [
             AlloyEvents.run('test-dismiss', store.adder('test-dismiss-fired'))
           ])
         ])

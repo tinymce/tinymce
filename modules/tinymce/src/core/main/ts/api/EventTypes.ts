@@ -11,7 +11,7 @@ import Editor from './Editor';
 import { NativeEventMap } from './util/EventDispatcher';
 import { GetContentArgs } from '../content/GetContent';
 import { SetContentArgs } from '../content/SetContent';
-import { UndoLevel } from '../undo/Levels';
+import { UndoLevel } from '../undo/UndoManagerTypes';
 
 export type ExecCommandEvent = { command: string, ui?: boolean, value?: any };
 
@@ -21,7 +21,7 @@ export type SetContentEvent = SetContentArgs & { paste: boolean, selection: bool
 
 export type NewBlockEvent = { newBlock: Element };
 
-export type NodeChangedEvent = { element: Element, parents: Node[] };
+export type NodeChangedEvent = { element: Element, parents: Node[], selectionChange?: boolean };
 
 export type ObjectResizedEvent = { target: HTMLElement, width: number, height: number };
 

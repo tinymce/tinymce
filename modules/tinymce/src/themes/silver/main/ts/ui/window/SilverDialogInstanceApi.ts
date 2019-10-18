@@ -23,7 +23,7 @@ import { Merger, Option, Type, Obj, Cell } from '@ephox/katamari';
 import { formBlockEvent, formCloseEvent, formUnblockEvent } from '../general/FormEvents';
 import { bodyChannel, dialogChannel, footerChannel, titleChannel } from './DialogChannels';
 
-const getCompByName = (access: DialogAccess<any>, name: string): Option<AlloyComponent> => {
+const getCompByName = (access: DialogAccess, name: string): Option<AlloyComponent> => {
   // TODO: Add API to alloy to find the inner most component of a Composing chain.
   const root = access.getRoot();
   // This is just to avoid throwing errors if the dialog closes before this. We should take it out
@@ -42,7 +42,7 @@ const getCompByName = (access: DialogAccess<any>, name: string): Option<AlloyCom
   }
 };
 
-const validateData = <T>(access: DialogAccess<T>, data) => {
+const validateData = <T>(access: DialogAccess, data) => {
   const root = access.getRoot();
   return Reflecting.getState(root).get().map((dialogState: DialogManager.DialogInit<T>) => {
     return ValueSchema.getOrDie(
@@ -51,15 +51,15 @@ const validateData = <T>(access: DialogAccess<T>, data) => {
   }).getOr(data);
 };
 
-export interface DialogAccess<T> {
+export interface DialogAccess {
   getRoot: () => AlloyComponent;
   getBody: () => AlloyComponent;
   getFooter: () => AlloyComponent;
   getFormWrapper: () => AlloyComponent;
 }
 
-const getDialogApi = <T>(
-  access: DialogAccess<T>,
+const getDialogApi = <T extends Types.Dialog.DialogData>(
+  access: DialogAccess,
   doRedial: (newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>,
   menuItemStates: Record<string, Cell<Boolean>>
 ): Types.Dialog.DialogInstanceApi<T> => {
