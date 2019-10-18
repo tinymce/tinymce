@@ -1,7 +1,6 @@
 import { Arr, Fun, Result } from '@ephox/katamari';
 import { Chain } from 'ephox/agar/api/Chain';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
-import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 import { Step } from 'ephox/agar/api/Step';
 import { Pprint } from '@ephox/dispute';
 import { Assert } from '@ephox/bedrock-client';
@@ -12,7 +11,7 @@ const preserved = '..preserved..';
 const assertError = (label: string, expectedError: any, actualError: any): Result<any, any> => {
   const errMessage = actualError.message !== undefined ? actualError.message : actualError;
   try {
-    RawAssertions.assertEq(
+    Assert.eq(
       label + ': checking error message: ' + errMessage + '\n contains: ' + expectedError + '\nActual error: \n' + Pprint.render(actualError, Pprint.pprintAny),
       true,
       errMessage.indexOf(expectedError) > -1
@@ -44,7 +43,7 @@ const failOnSuccess = (label: string, expectedError: any, unexpectedSuccess: any
 // We expect it to pass, so we are checking that the passing value is the right one
 const assertSuccess = (label: string, expected: any, actual: any): Result<any, any> => {
   try {
-    RawAssertions.assertEq(label + ': checking successful value', expected, actual);
+    Assert.eq(label + ': checking successful value', expected, actual);
     return Result.value(actual);
   } catch (err) {
     return Result.error(err);

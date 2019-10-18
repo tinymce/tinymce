@@ -1,9 +1,9 @@
-import { Pipeline, Step, RawAssertions, Logger, GeneralSteps, UiFinder } from '@ephox/agar';
+import { GeneralSteps, Logger, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorSettings } from 'tinymce/core/api/SettingsTypes';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Body } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.BlockFormatsTest', (success, failure) => {
@@ -28,13 +28,13 @@ UnitTest.asynctest('browser.tinymce.core.fmt.BlockFormatsTest', (success, failur
           tinyApis.sSetContent('<p>a</p>'),
           tinyApis.sSetCursor([0, 0], 1),
           Step.sync(() => editor.formatter.apply('h1')),
-          Step.sync(() => RawAssertions.assertEq('should still have a collapsed rng', true, editor.selection.isCollapsed()))
+          Step.sync(() => Assert.eq('should still have a collapsed rng', true, editor.selection.isCollapsed()))
         ])),
         Logger.t('apply alignright format at the end of paragraph should not expand selection', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),
           tinyApis.sSetCursor([0, 0], 1),
           Step.sync(() => editor.formatter.apply('alignright')),
-          Step.sync(() => RawAssertions.assertEq('should still have a collapsed rng', true, editor.selection.isCollapsed()))
+          Step.sync(() => Assert.eq('should still have a collapsed rng', true, editor.selection.isCollapsed()))
         ])),
         Logger.t('Using default style formats config, the Block formatting dropdown should show the correct format selection', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),

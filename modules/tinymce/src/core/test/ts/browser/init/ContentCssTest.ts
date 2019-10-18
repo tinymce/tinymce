@@ -1,5 +1,4 @@
-import { RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Editor from 'tinymce/core/api/Editor';
 import { appendContentCssFromSettings } from 'tinymce/core/init/ContentCss';
@@ -15,7 +14,7 @@ UnitTest.test('browser.tinymce.core.init.ContentCssTest', () => {
 
     appendContentCssFromSettings(editor);
 
-    RawAssertions.assertEq(label, expectedContentCss, editor.contentCSS);
+    Assert.eq(label, expectedContentCss, editor.contentCSS);
   };
 
   testContentCss('Expected empty array on empty input', [], []);
@@ -40,5 +39,5 @@ UnitTest.test('browser.tinymce.core.init.ContentCssTest', () => {
 
   const inlineEditor = new Editor('id', { content_css: 'document', inline: true }, EditorManager);
   appendContentCssFromSettings(inlineEditor);
-  RawAssertions.assertEq('Content skins should not load in inline mode', [`${baseUrl}/document`], inlineEditor.contentCSS);
+  Assert.eq('Content skins should not load in inline mode', [`${baseUrl}/document`], inlineEditor.contentCSS);
 });

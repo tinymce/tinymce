@@ -20,7 +20,6 @@ import * as Mouse from './Mouse';
 import { NamedChain } from './NamedChain';
 import { Pipeline } from './Pipeline';
 import * as PropertySteps from './PropertySteps';
-import * as RawAssertions from './RawAssertions';
 import * as RealClipboard from './RealClipboard';
 import { RealKeys } from './RealKeys';
 import * as RealMouse from './RealMouse';
@@ -55,7 +54,6 @@ export {
   NamedChain,
   Pipeline,
   PropertySteps,
-  RawAssertions,
   RealClipboard,
   RealKeys,
   RealMouse,

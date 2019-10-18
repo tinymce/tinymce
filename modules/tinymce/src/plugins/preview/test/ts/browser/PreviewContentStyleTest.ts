@@ -1,5 +1,5 @@
-import { Pipeline, RawAssertions, Step, Logger, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Log, Logger, Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import PreviewPlugin from 'tinymce/plugins/preview/Plugin';
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', (s
     const actual = IframeContent.getPreviewHtml(editor);
     const regexp = new RegExp(text);
 
-    RawAssertions.assertEq('Should be same html', expected, regexp.test(actual));
+    Assert.eq('Should be same html', expected, regexp.test(actual));
   });
 
   const sAssertIframeHtmlContains = function (editor, text) {

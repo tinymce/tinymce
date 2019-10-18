@@ -1,11 +1,10 @@
-import { RawAssertions } from '@ephox/agar';
 import StyleConversions from 'tinymce/themes/mobile/util/StyleConversions';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
   const check = function (label, expected, input) {
     const output = StyleConversions.expand(input);
-    RawAssertions.assertEq('StyleConversions.expand (' + label + ')', expected, output);
+    Assert.eq('StyleConversions.expand (' + label + ')', expected, output);
   };
 
   check(

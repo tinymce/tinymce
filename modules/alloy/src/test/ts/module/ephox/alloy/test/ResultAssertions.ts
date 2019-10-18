@@ -1,6 +1,5 @@
-import { RawAssertions } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
-import { assert } from '@ephox/bedrock-client';
+import { Assert, assert } from '@ephox/bedrock-client';
 
 /* global assert */
 const errsToString = (err) => {
@@ -14,7 +13,7 @@ const checkErr = (label, expectedPart, f) => {
   actual.fold((err) => {
     const errMessage = errsToString(err);
     // Not using message when coming from getOrDie
-    RawAssertions.assertEq(
+    Assert.eq(
       label + '\nExpecting to contain("' + expectedPart + '")\nActual: ' + errMessage,
       true,
       errMessage.indexOf(expectedPart) > -1
@@ -28,7 +27,7 @@ const checkErrStr = (label, expectedPart, f) => {
   const actual = f();
   actual.fold((err) => {
     // Not using message when coming from getOrDie
-    RawAssertions.assertEq(
+    Assert.eq(
       label + '\nExpecting to contain("' + expectedPart + '")\nActual: ' + err,
       true,
       err.indexOf(expectedPart) > -1

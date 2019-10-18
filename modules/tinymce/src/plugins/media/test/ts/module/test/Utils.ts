@@ -1,7 +1,8 @@
-import { Assertions, Chain, GeneralSteps, Step, UiControls, UiFinder, Waiter, Mouse, Logger, Guard, RawAssertions } from '@ephox/agar';
-import { Event, HTMLElement, document } from '@ephox/dom-globals';
+import { Assertions, Chain, GeneralSteps, Guard, Logger, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
+import { document, Event, HTMLElement } from '@ephox/dom-globals';
 import { Body, Element, Focus } from '@ephox/sugar';
 import { Arr, Type } from '@ephox/katamari';
+import { Assert } from '@ephox/bedrock-client';
 
 export const selectors = {
   source: 'label:contains(Source) + div.tox-form__controls-h-stack input.tox-textfield',
@@ -247,8 +248,8 @@ const cNotExists = (selector) => {
   return Chain.control(
     Chain.op((container: Element) => {
       UiFinder.findIn(container, selector).fold(
-        () => RawAssertions.assertEq('should not find anything', true, true),
-        () => RawAssertions.assertEq('Expected ' + selector + ' not to exist.', true, false)
+        () => Assert.eq('should not find anything', true, true),
+        () => Assert.eq('Expected ' + selector + ' not to exist.', true, false)
       );
     }),
     Guard.addLogging(`Assert ${selector} does not exist`)
@@ -259,8 +260,8 @@ const cExists = (selector) => {
   return Chain.control(
     Chain.op((container: Element) => {
       UiFinder.findIn(container, selector).fold(
-        () => RawAssertions.assertEq('Expected ' + selector + ' to exist.', true, false),
-        () => RawAssertions.assertEq('found element', true, true)
+        () => Assert.eq('Expected ' + selector + ' to exist.', true, false),
+        () => Assert.eq('found element', true, true)
       );
     }),
     Guard.addLogging(`Assert ${selector} exists`)

@@ -1,5 +1,5 @@
-import { Logger, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Logger } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 
 import * as UiSubstitutes from 'ephox/alloy/spec/UiSubstitutes';
@@ -9,7 +9,7 @@ UnitTest.test('UiSubstitutesTest', () => {
     'Testing empty components',
     () => {
       const actual = UiSubstitutes.substitutePlaces(Option.some('detail'), { }, [ ], { });
-      RawAssertions.assertEq('Components should stay empty', [ ], actual);
+      Assert.eq('Components should stay empty', [ ], actual);
     }
   );
 
@@ -19,7 +19,7 @@ UnitTest.test('UiSubstitutesTest', () => {
       const actual = UiSubstitutes.substitutePlaces(Option.some('owner'), 'detail', [
         { uiType: 'normal' }
       ], { });
-      RawAssertions.assertEq('Normal should be returned as is', [
+      Assert.eq('Normal should be returned as is', [
         { uiType: 'normal', components: [ ] }
       ], actual);
     }
@@ -39,7 +39,7 @@ UnitTest.test('UiSubstitutesTest', () => {
           };
         })
       });
-      RawAssertions.assertEq('Dependent should be substituted', [
+      Assert.eq('Dependent should be substituted', [
         { uiType: 'normal', components: [ ] },
         { uiType: 'foo-dependent', detail: 'detail', components: [ ] }
       ], actual);

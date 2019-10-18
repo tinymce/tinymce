@@ -1,5 +1,5 @@
-import { Logger, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Logger } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { FieldSchema, Objects } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
 
@@ -47,14 +47,14 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
       // Check that config and validated match what was passed through
       Obj.each(generated, (g, k) => {
         const output = g(data);
-        RawAssertions.assertEq('Checking config', data, output.config);
-        RawAssertions.assertEq('Checking validated', {
+        Assert.eq('Checking config', data, output.config);
+        Assert.eq('Checking validated', {
           'test-data': data['test-data'],
           'state': 'state'
         }, output.validated);
       });
 
-      RawAssertions.assertEq(
+      Assert.eq(
         'Checking PartType.generate',
         expected,
         Obj.map(generated, (g) => {
@@ -73,12 +73,12 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
       // Check that config, and ensure that preprocessor is all that is in validated
       Obj.each(generated, (g, k) => {
         const output = g(data);
-        RawAssertions.assertEq('Checking config', data, output.config);
-        RawAssertions.assertEq('Checking validated', 'PREPROCESSOR', output.validated.preprocess.getOr('none'));
-        RawAssertions.assertEq('Should only be one key: preprocess', [ 'preprocess' ], Obj.keys(output.validated));
+        Assert.eq('Checking config', data, output.config);
+        Assert.eq('Checking validated', 'PREPROCESSOR', output.validated.preprocess.getOr('none'));
+        Assert.eq('Should only be one key: preprocess', [ 'preprocess' ], Obj.keys(output.validated));
       });
 
-      RawAssertions.assertEq(
+      Assert.eq(
         'Checking PartType.generate',
         expected,
         Obj.map(generated, (g) => {

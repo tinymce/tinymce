@@ -1,5 +1,5 @@
-import { Pipeline, RawAssertions, Step, Log, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Log, Pipeline, Step, UiFinder } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { BlobConversions } from '@ephox/imagetools';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest
           const actualSrc = fetchState.get().getOrDie('Could not get fetch state');
           const expectedSrc = document.location.protocol + '//' + document.location.host + '/project/tinymce/src/plugins/imagetools/demo/img/dogleft.jpg';
 
-          RawAssertions.assertEq('Should be the expected input image', expectedSrc, actualSrc);
+          Assert.eq('Should be the expected input image', expectedSrc, actualSrc);
         })
       ]),
 

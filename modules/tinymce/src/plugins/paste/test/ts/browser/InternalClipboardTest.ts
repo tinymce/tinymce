@@ -1,5 +1,5 @@
-import { GeneralSteps, Logger, Pipeline, RawAssertions, Step, Waiter, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { GeneralSteps, Log, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import InternalHtml from 'tinymce/plugins/paste/core/InternalHtml';
@@ -38,8 +38,8 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
 
   const sAssertClipboardData = function (expectedHtml, expectedText) {
     return Logger.t(`Assert clipboard data ${expectedHtml}, ${expectedText}`, Step.sync(function () {
-      RawAssertions.assertEq('text/html data should match', expectedHtml, dataTransfer.getData('text/html'));
-      RawAssertions.assertEq('text/plain data should match', expectedText, dataTransfer.getData('text/plain'));
+      Assert.eq('text/html data should match', expectedHtml, dataTransfer.getData('text/html'));
+      Assert.eq('text/plain data should match', expectedText, dataTransfer.getData('text/plain'));
     }));
   };
 
@@ -157,21 +157,21 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
 
   const sAssertLastPreProcessEvent = function (expectedData) {
     return Logger.t('Assert last preprocess event', Step.sync(function () {
-      RawAssertions.assertEq('Internal property should be equal', expectedData.internal, lastPreProcessEvent.internal);
-      RawAssertions.assertEq('Content property should be equal', expectedData.content, lastPreProcessEvent.content);
+      Assert.eq('Internal property should be equal', expectedData.internal, lastPreProcessEvent.internal);
+      Assert.eq('Content property should be equal', expectedData.content, lastPreProcessEvent.content);
     }));
   };
 
   const sAssertLastPostProcessEvent = function (expectedData) {
     return Logger.t('Assert last postprocess event', Step.sync(function () {
-      RawAssertions.assertEq('Internal property should be equal', expectedData.internal, lastPostProcessEvent.internal);
-      RawAssertions.assertEq('Content property should be equal', expectedData.content, lastPostProcessEvent.node.innerHTML);
+      Assert.eq('Internal property should be equal', expectedData.internal, lastPostProcessEvent.internal);
+      Assert.eq('Content property should be equal', expectedData.content, lastPostProcessEvent.node.innerHTML);
     }));
   };
 
   const sWaitForProcessEvents = Waiter.sTryUntil('Did not get any events fired', Step.sync(function () {
-    RawAssertions.assertEq('PastePreProcess event object', lastPreProcessEvent !== null, true);
-    RawAssertions.assertEq('PastePostProcess event object', lastPostProcessEvent !== null, true);
+    Assert.eq('PastePreProcess event object', lastPreProcessEvent !== null, true);
+    Assert.eq('PastePostProcess event object', lastPostProcessEvent !== null, true);
   }));
 
   const sTestPaste = function (editor, tinyApis) {

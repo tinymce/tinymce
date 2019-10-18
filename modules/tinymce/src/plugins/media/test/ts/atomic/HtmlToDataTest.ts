@@ -1,11 +1,10 @@
 import * as HtmlToData from 'tinymce/plugins/media/core/HtmlToData';
-import { RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('atomic.core.HtmlToDataTest', function () {
   const testHtmlToData = function (html, expected) {
     const actual = HtmlToData.htmlToData([], html);
-    RawAssertions.assertEq('Assert equal', expected, actual);
+    Assert.eq('Assert equal', expected, actual);
   };
 
   testHtmlToData('<div data-ephox-embed-iri="a"></div>', {
