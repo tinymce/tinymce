@@ -2,7 +2,7 @@ import { AlloyComponent, Bubble, HotspotAnchorSpec, Layout, LayoutInside, MaxHei
 import { Option } from '@ephox/katamari';
 import { Element, Selection } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { useFixedContainer, isToolbarLocationTop } from '../api/Settings';
+import { useFixedContainer } from '../api/Settings';
 
 const bubbleAlignments = {
   valignCentre: [],
@@ -108,12 +108,9 @@ const getNodeAnchor = (bodyElement) => (element: Option<Element>): NodeAnchorSpe
   };
 };
 
-const getAnchors = (editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyMoreButton: () => AlloyComponent, isHeaderDocked: () => boolean) => {
+const getAnchors = (editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyMoreButton: () => AlloyComponent, isHeaderDockedBottom: () => boolean) => {
   const useFixedToolbarContainer: boolean = useFixedContainer(editor);
   const bodyElement = (): Element => Element.fromDom(editor.getBody());
-  const isHeaderDockedBottom = () => {
-    return isHeaderDocked() && !isToolbarLocationTop(editor);
-  };
 
   return {
     toolbar: getToolbarAnchor(bodyElement, lazyAnchorbar, useFixedToolbarContainer),

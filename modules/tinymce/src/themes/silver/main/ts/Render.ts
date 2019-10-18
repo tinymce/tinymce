@@ -92,6 +92,7 @@ const setup = (editor: Editor): RenderInfo => {
   const isTouch = platform.deviceType.isTouch();
   const touchPlatformClass = 'tox-platform-touch';
   const deviceClasses = isTouch ? [touchPlatformClass] : [];
+  const isToolbarTop = isToolbarLocationTop(editor);
 
   const dirAttributes = I18n.isRtl() ? {
     attributes: {
@@ -102,6 +103,10 @@ const setup = (editor: Editor): RenderInfo => {
   const lazyHeader = () => lazyOuterContainer.bind(OuterContainer.getHeader);
 
   const isHeaderDocked = () => header.isDocked(lazyHeader);
+
+  const isHeaderDockedBottom = () => {
+    return isHeaderDocked() && !isToolbarTop;
+  };
 
   const sink = GuiFactory.build({
     dom: {
@@ -141,7 +146,7 @@ const setup = (editor: Editor): RenderInfo => {
     return OuterContainer.getThrobber(container);
   }).getOrDie('Could not find throbber element');
 
-  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar, lazyMoreButton, isHeaderDocked);
+  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar, lazyMoreButton, isHeaderDockedBottom);
 
   const partMenubar: AlloySpec = OuterContainer.parts().menubar({
     dom: {
@@ -223,7 +228,6 @@ const setup = (editor: Editor): RenderInfo => {
   const hasToolbar = isToolbarEnabled(editor);
   const hasMenubar = isMenubarEnabled(editor);
   const hasToolbarDrawer = toolbarDrawer(editor) !== ToolbarDrawer.default;
-  const isToolbarTop = isToolbarLocationTop(editor);
 
   const getPartToolbar = () => {
     if (hasMultipleToolbar) {
