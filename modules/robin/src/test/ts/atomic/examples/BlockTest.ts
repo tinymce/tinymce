@@ -1,5 +1,4 @@
-import { RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene, Universe } from '@ephox/boss';
 import { Arr, Option } from '@ephox/katamari';
 import Look from 'ephox/robin/api/general/Look';
@@ -37,7 +36,7 @@ UnitTest.test('BlockTest', function () {
       return doc.find(doc.get(), id).getOrDie();
     });
     const actual = Parent.sharedOne(doc, look, items);
-    RawAssertions.assertEq('Checking parent :: Option', expected.getOr('none'), actual.getOr(Gene('none', 'none')).id);
+    Assert.eq('Checking parent :: Option', expected.getOr('none'), actual.getOr(Gene('none', 'none')).id);
   };
 
   check(Option.some('ol1'), ['li2'], Look.selector(doc, 'ol'));

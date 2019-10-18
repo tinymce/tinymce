@@ -1,6 +1,6 @@
-import { Pipeline, RawAssertions, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Attr, Body, Traverse, Node } from '@ephox/sugar';
+import { Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Attr, Body, Node, Traverse } from '@ephox/sugar';
 
 import * as EventRoot from 'ephox/alloy/alien/EventRoot';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -66,7 +66,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure)
 
   Pipeline.async({}, [
     Step.sync(() => {
-      RawAssertions.assertEq(
+      Assert.eq(
         'Checking that the component has no size',
         0,
         wrapper.element().dom().getBoundingClientRect().width
@@ -83,7 +83,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure)
     Step.wait(500),
 
     Step.sync(() => {
-      RawAssertions.assertEq(
+      Assert.eq(
         'Even though added to system, not added to DOM yet so still size 0',
         0,
         wrapper.element().dom().getBoundingClientRect().width
@@ -97,7 +97,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure)
     }),
 
     Step.sync(() => {
-      RawAssertions.assertEq(
+      Assert.eq(
         'Now added to the DOM, so should have size 100',
         100,
         wrapper.element().dom().getBoundingClientRect().width

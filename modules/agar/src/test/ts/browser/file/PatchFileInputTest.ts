@@ -1,9 +1,9 @@
-import { UnitTest } from '@ephox/bedrock-client';
-import { Pipeline, Step, Chain, RawAssertions, Logger, GeneralSteps } from 'ephox/agar/api/Main';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Chain, GeneralSteps, Logger, Pipeline, Step } from 'ephox/agar/api/Main';
 import { createFile } from 'ephox/agar/api/Files';
-import { Blob, FileList, navigator, HTMLInputElement } from '@ephox/dom-globals';
-import { sRunOnPatchedFileInput, cRunOnPatchedFileInput } from 'ephox/agar/api/FileInput';
-import { Element, Body, Insert, Remove } from '@ephox/sugar';
+import { Blob, FileList, HTMLInputElement, navigator } from '@ephox/dom-globals';
+import { cRunOnPatchedFileInput, sRunOnPatchedFileInput } from 'ephox/agar/api/FileInput';
+import { Body, Element, Insert, Remove } from '@ephox/sugar';
 import { Cell, Option } from '@ephox/katamari';
 
 UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
@@ -27,9 +27,9 @@ UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
   }));
 
   const assetFiles = (files: FileList) => {
-    RawAssertions.assertEq('Should be expected number of files', 1, files.length);
-    RawAssertions.assertEq('Should be expected file name', 'a.txt', files[0].name);
-    RawAssertions.assertEq('Should be expected file size', 1, files[0].size);
+    Assert.eq('Should be expected number of files', 1, files.length);
+    Assert.eq('Should be expected file name', 'a.txt', files[0].name);
+    Assert.eq('Should be expected file size', 1, files[0].size);
   };
 
   Pipeline.async({}, /phantom/i.test(navigator.userAgent) ? [] : [

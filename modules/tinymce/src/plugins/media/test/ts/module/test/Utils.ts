@@ -1,4 +1,5 @@
-import { Assertions, Chain, GeneralSteps, Step, UiControls, UiFinder, Waiter, Mouse, Logger, Guard, RawAssertions } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Guard, Logger, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
+import { Assert } from '@ephox/bedrock-client';
 import { Event, HTMLElement, document } from '@ephox/dom-globals';
 import { Arr, Type } from '@ephox/katamari';
 import { TinyApis, TinyUi } from '@ephox/mcagar';
@@ -249,8 +250,8 @@ const cNotExists = (selector: string) => {
   return Chain.control(
     Chain.op((container: Element) => {
       UiFinder.findIn(container, selector).fold(
-        () => RawAssertions.assertEq('should not find anything', true, true),
-        () => RawAssertions.assertEq('Expected ' + selector + ' not to exist.', true, false)
+        () => Assert.eq('should not find anything', true, true),
+        () => Assert.eq('Expected ' + selector + ' not to exist.', true, false)
       );
     }),
     Guard.addLogging(`Assert ${selector} does not exist`)
@@ -261,8 +262,8 @@ const cExists = (selector: string) => {
   return Chain.control(
     Chain.op((container: Element) => {
       UiFinder.findIn(container, selector).fold(
-        () => RawAssertions.assertEq('Expected ' + selector + ' to exist.', true, false),
-        () => RawAssertions.assertEq('found element', true, true)
+        () => Assert.eq('Expected ' + selector + ' to exist.', true, false),
+        () => Assert.eq('found element', true, true)
       );
     }),
     Guard.addLogging(`Assert ${selector} exists`)

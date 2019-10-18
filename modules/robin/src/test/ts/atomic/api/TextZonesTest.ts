@@ -1,5 +1,5 @@
-import { Logger, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Logger } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Fun } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
@@ -69,7 +69,7 @@ UnitTest.test('TextZonesTest', function () {
     function () {
       const item = doc1.find(doc1.get(), 'isolated').getOrDie();
       const actual = TextZones.single(doc1, item, 'en', ZoneViewports.anything());
-      RawAssertions.assertEq(
+      Assert.eq(
         'Zone assertion',
         [{
           lang: 'en',
@@ -88,7 +88,7 @@ UnitTest.test('TextZonesTest', function () {
     function () {
       const item = doc1.find(doc1.get(), 'en-k').getOrDie();
       const actual = TextZones.single(doc1, item, 'en', ZoneViewports.anything());
-      RawAssertions.assertEq(
+      Assert.eq(
         'Zone assertion',
         [{
           lang: 'en',

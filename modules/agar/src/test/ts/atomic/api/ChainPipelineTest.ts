@@ -1,6 +1,5 @@
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Chain } from 'ephox/agar/api/Chain';
-import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 
 UnitTest.asynctest('ChainPipelineTest', function (success, failure) {
 
@@ -16,7 +15,7 @@ UnitTest.asynctest('ChainPipelineTest', function (success, failure) {
     cAcc(3)
   ], function (result) {
       try {
-        RawAssertions.assertEq('Expected result to be the sum', 6, result);
+        Assert.eq('Expected result to be the sum', 6, result);
         success();
       } catch (err) {
           failure(err);

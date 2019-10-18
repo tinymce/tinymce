@@ -30,7 +30,7 @@ export const Cleaner = () => {
 
   const wrap = <T extends any[], U> (fn: (...a: T) => U) => (...args: T): U => {
     run();
-    return fn.call(null, args);
+    return fn.apply(null, args);
   };
 
   return {
