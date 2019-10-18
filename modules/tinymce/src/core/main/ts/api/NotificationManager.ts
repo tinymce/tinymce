@@ -20,7 +20,7 @@ export interface NotificationManagerImpl {
 }
 
 export interface NotificationSpec {
-  type: 'info' | 'warning' | 'error' | 'success';
+  type?: 'info' | 'warning' | 'error' | 'success';
   text: string;
   icon?: string;
   progressBar?: boolean;

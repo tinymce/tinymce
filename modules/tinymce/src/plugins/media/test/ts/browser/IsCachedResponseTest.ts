@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', functio
   Theme();
   MediaPlugin();
 
-  const sWaitForAndAssertNotification = function (expected) {
+  const sWaitForAndAssertNotification = function (expected: string) {
     return Chain.asStep(TinyDom.fromDom(document.body), [
       UiFinder.cWaitFor('Could not find notification', 'div.tox-notification__body'),
       Chain.mapper(Html.get),

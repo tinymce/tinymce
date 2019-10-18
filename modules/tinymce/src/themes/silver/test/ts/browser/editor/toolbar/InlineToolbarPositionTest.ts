@@ -40,7 +40,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     })
   ]);
 
-  const sScrollToElementAndActivate = (tinyApis, contentAreaContainer: Element, selector: string) => Step.label('Activate editor', GeneralSteps.sequence([
+  const sScrollToElementAndActivate = (tinyApis: TinyApis, contentAreaContainer: Element, selector: string) => Step.label('Activate editor', GeneralSteps.sequence([
     sScrollToElement(contentAreaContainer, selector),
     tinyApis.sSelect(selector, []),
     tinyApis.sFocus,

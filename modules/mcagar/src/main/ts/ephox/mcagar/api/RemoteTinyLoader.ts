@@ -53,6 +53,6 @@ const setup = (callback: Loader.RunCallback, urls: string[], settings: Record<st
   }, failure);
 };
 
-export const RemoteTinyLoader = {
+export {
   setup
 };

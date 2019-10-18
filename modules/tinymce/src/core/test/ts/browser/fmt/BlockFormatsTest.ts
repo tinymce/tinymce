@@ -1,15 +1,15 @@
 import { GeneralSteps, Logger, Pipeline, Step, UiFinder } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Body } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorSettings } from 'tinymce/core/api/SettingsTypes';
 import Theme from 'tinymce/themes/silver/Theme';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Body } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.BlockFormatsTest', (success, failure) => {
   Theme();
 
-  const sRunTinyWithSettings = (settings: EditorSettings, getSteps: (tinyApis: any, editor: Editor) => any[]) => Step.async((next, die) => {
+  const sRunTinyWithSettings = (settings: EditorSettings, getSteps: (tinyApis: TinyApis, editor: Editor) => Step<any, any>[]) => Step.async((next, die) => {
     TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
       Pipeline.async({}, getSteps(tinyApis, editor), onSuccess, onFailure);
@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.BlockFormatsTest', (success, failur
         statusbar: false,
         menubar: false,
         base_url: '/project/tinymce/js/tinymce',
-      }, (tinyApis: any, editor: Editor) => [
+      }, (tinyApis: TinyApis, editor: Editor) => [
         Logger.t('apply heading format at the end of paragraph should not expand selection', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),
           tinyApis.sSetCursor([0, 0], 1),

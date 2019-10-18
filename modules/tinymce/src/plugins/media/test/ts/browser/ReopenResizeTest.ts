@@ -2,6 +2,7 @@ import { Log, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -11,13 +12,13 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (s
   Plugin();
   Theme();
 
-  const sWaitForResizeHandles = function (editor) {
+  const sWaitForResizeHandles = function (editor: Editor) {
     return Waiter.sTryUntil('Wait for new width value', Step.sync(function () {
       Assert.eq('Resize handle should exist', editor.dom.select('#mceResizeHandlenw').length, 1);
     }));
   };
 
-  const sRawAssertImagePresence = function (editor) {
+  const sRawAssertImagePresence = function (editor: Editor) {
     // Hacky way to assert that the placeholder image is in
     // the correct place that works cross browser
     // assertContentStructure did not work because some

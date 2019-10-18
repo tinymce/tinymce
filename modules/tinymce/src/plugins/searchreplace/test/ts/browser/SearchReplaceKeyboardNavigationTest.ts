@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardN
   SilverTheme();
   SearchReplacePlugin();
 
-  const sOpenDialog = (ui) => {
+  const sOpenDialog = (ui: TinyUi) => {
     return Logger.t('Open dialog', GeneralSteps.sequence([
       ui.sClickOnToolbar('Click on find and replace button, there should be only 1 button in the toolbar', 'div.tox-toolbar__group > button'),
       ui.sWaitForPopup('wait for dialog', 'div.tox-dialog')

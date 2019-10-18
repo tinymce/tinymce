@@ -1,8 +1,9 @@
 import { ApproxStructure, GeneralSteps, Keyboard, Keys, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function () {
   const success = arguments[arguments.length - 2];
@@ -24,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function () {
     ]);
   };
 
-  const sTestDeletePadd = function (editor, tinyApis, tinyActions) {
+  const sTestDeletePadd = function (editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions) {
     return GeneralSteps.sequence([
       tinyApis.sFocus,
       Logger.t('Should padd empty ce=true inside ce=false when everything is deleted', GeneralSteps.sequence([

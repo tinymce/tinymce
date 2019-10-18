@@ -2,11 +2,12 @@ import { Pipeline, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('tinymce.lists.browser.OutdentTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
   Theme();
@@ -197,8 +198,8 @@ UnitTest.asynctest('tinymce.lists.browser.OutdentTest', (success, failure) => {
       '</ol>'
     );
 
-    LegacyUnit.equal(editor.selection.getRng(true).startContainer.nodeValue, '2');
-    LegacyUnit.equal(editor.selection.getRng(true).endContainer.nodeValue, '3');
+    LegacyUnit.equal(editor.selection.getRng().startContainer.nodeValue, '2');
+    LegacyUnit.equal(editor.selection.getRng().endContainer.nodeValue, '3');
   });
 
   suite.test('TestCase-TBA: Lists: Outdent inside first LI in inner OL where OL is single child of parent LI', function (editor) {

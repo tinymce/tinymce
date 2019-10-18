@@ -47,7 +47,7 @@ interface Formatter extends FormatRegistry {
   remove (name: string, vars?: FormatVars, node?: Node | RangeLikeObject, similar?: boolean): void;
   toggle (name: string, vars?: FormatVars, node?: Node): void;
   match (name: string, vars?: FormatVars, node?: Node): boolean;
-  matchAll (names: string[], vars?: FormatVars): Format[];
+  matchAll (names: string[], vars?: FormatVars): string[];
   matchNode (node: Node, name: string, vars?: FormatVars, similar?: boolean): boolean;
   canApply (name: string): boolean;
   formatChanged (names: string, callback: FormatChanged.FormatChangeCallback, similar?: boolean): { unbind: () => void };

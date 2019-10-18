@@ -103,16 +103,16 @@ const extract = function <T, U>(chain: Chain<T, U>): ChainRunFn<T, U> {
   }
 };
 
-const fromChains = function (chains: Chain<any, any>[]) {
+const fromChains = function <T = any, U = any>(chains: Chain<any, any>[]) {
   const cs = Arr.map(chains, extract);
 
-  return on<any, any>((value, next, die, initLogs) => {
+  return on<T, U>((value, next, die, initLogs) => {
     Pipeline.async(wrap(value), cs, (v, newLogs) => next(v, newLogs), die, initLogs);
   });
 };
 
-const fromChainsWith = function <T>(initial: T, chains: Chain<any, any>[]) {
-  return fromChains(
+const fromChainsWith = function <T, U = any, V = any>(initial: T, chains: Chain<any, any>[]) {
+  return fromChains<U, V>(
     [inject(initial)].concat(chains)
   );
 };

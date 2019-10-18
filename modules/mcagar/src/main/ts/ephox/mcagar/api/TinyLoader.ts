@@ -36,7 +36,7 @@ const setup = (callback: Loader.RunCallback, settings: Record<string, any>, succ
   }, settings);
 };
 
-export default {
+export {
   setup,
   setupLight
 };

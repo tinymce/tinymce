@@ -1,11 +1,12 @@
-import { ApproxStructure, Assertions, GeneralSteps, Keys, Logger, Pipeline, Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, GeneralSteps, Keys, Logger, Pipeline, Step, StructAssert } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function () {
   const success = arguments[arguments.length - 2];
@@ -23,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
     }
   };
 
-  const anchorSurroundedWithText = function (expectedText) {
+  const anchorSurroundedWithText = function (expectedText: string) {
     return ApproxStructure.build(function (s, str/*, arr*/) {
       return s.element('p', {
         children: [
@@ -44,11 +45,11 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
     });
   };
 
-  const anchorSurroundedWithZwspInside = function (start) {
+  const anchorSurroundedWithZwspInside = function (start: boolean) {
     return anchorSurroundedWithText(start ? Zwsp.ZWSP + 'b' : 'b' + Zwsp.ZWSP);
   };
 
-  const anchorSurroundedWithZwspOutside = function (before) {
+  const anchorSurroundedWithZwspOutside = function (before: boolean) {
     return ApproxStructure.build(function (s, str/*, arr*/) {
       return s.element('p', {
         children: [
@@ -69,7 +70,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
     });
   };
 
-  const anchorsZwspOutside = function (texts, before, index) {
+  const anchorsZwspOutside = function (texts: string[], before: boolean, index: number) {
     return ApproxStructure.build(function (s, str/*, arr*/) {
       const children = Arr.map(texts, function (text, i) {
         return Arr.flatten([
@@ -99,7 +100,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
     });
   };
 
-  const anchorsZwspInside = function (texts, start, index) {
+  const anchorsZwspInside = function (texts: string[], start: boolean, index: number) {
     return ApproxStructure.build(function (s, str/*, arr*/) {
       const children = Arr.map(texts, function (text, i) {
         const zwspText = start ? Zwsp.ZWSP + text : text + Zwsp.ZWSP;
@@ -125,18 +126,18 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
     });
   };
 
-  const sAssertContentStructure = function (editor, expected) {
+  const sAssertContentStructure = function (editor: Editor, expected: StructAssert) {
     return Step.sync(function () {
       const actual = Element.fromHtml(editor.getBody().innerHTML);
       return Assertions.assertStructure('Should be the same structure', expected, actual);
     });
   };
 
-  const sAssertCursor = function (tinyApis, elementPath, offset) {
+  const sAssertCursor = function (tinyApis: TinyApis, elementPath: number[], offset: number) {
     return tinyApis.sAssertSelection(elementPath, offset, elementPath, offset);
   };
 
-  const sTestArrowsSingleAnchor = function (tinyApis, tinyActions, editor) {
+  const sTestArrowsSingleAnchor = function (tinyApis: TinyApis, tinyActions: TinyActions, editor: Editor) {
     return Logger.t('sTestArrowsSingleAnchor', GeneralSteps.sequence([
       tinyApis.sSetContent('<p><a href="#">b</a></p>'),
 
@@ -171,7 +172,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
     ]));
   };
 
-  const sTestArrowsAnchorSurroundedByText = function (tinyApis, tinyActions, editor) {
+  const sTestArrowsAnchorSurroundedByText = function (tinyApis: TinyApis, tinyActions: TinyActions, editor: Editor) {
     return Logger.t('sTestArrowsAnchorSurroundedByText', GeneralSteps.sequence([
       tinyApis.sSetContent('<p>a<a href="#">b</a>c</p>'),
 
@@ -198,7 +199,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
     ]));
   };
 
-  const sTestArrowsMultipleAnchors = function (tinyApis, tinyActions, editor) {
+  const sTestArrowsMultipleAnchors = function (tinyApis: TinyApis, tinyActions: TinyActions, editor: Editor) {
     return Logger.t('sTestArrowsMultipleAnchors', GeneralSteps.sequence([
       tinyApis.sSetContent('<p><a href="#">a</a><a href="#">b</a></p>'),
 
