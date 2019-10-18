@@ -3,8 +3,8 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ToolbarDrawer, ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
-import * as MenuUtils from '../../../module/MenuUtils';
-import * as StickyUtils from '../../../module/StickyHeaderUtils';
+import * as MenuUtils from './MenuUtils';
+import * as StickyUtils from './StickyHeaderUtils';
 import { Cell } from '@ephox/katamari';
 
 const sTestStickyHeader = (toolbarDrawer: ToolbarDrawer, toolbarLocation: ToolbarLocation) => {

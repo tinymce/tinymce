@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 
 import { ToolbarDrawer, ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
 import Theme from 'tinymce/themes/silver/Theme';
-import { sTestStickyHeader } from './StickyHeaderStep';
+import { sTestStickyHeader } from '../../../module/StickyHeaderStep';
 
 UnitTest.asynctest('Editor with sticky toolbar', (success, failure) => {
   Theme();
