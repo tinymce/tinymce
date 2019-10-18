@@ -9,7 +9,7 @@ const setupBaseUrl = (tinymce: any, settings: Record<string, any>) => {
   }
 };
 
-const loadScript = (url: string): FutureResult<any, Error> => {
+const loadScript = (url: string): FutureResult<string, Error> => {
   return FutureResult.nu((resolve) => {
     const script = Element.fromTag('script');
 
@@ -19,7 +19,7 @@ const loadScript = (url: string): FutureResult<any, Error> => {
     const onLoad = DomEvent.bind(script, 'load', () => {
       onLoad.unbind();
       onError.unbind();
-      resolve(Result.value({}));
+      resolve(Result.value(url));
     });
     const onError = DomEvent.bind(script, 'error', () => {
       onLoad.unbind();
@@ -30,20 +30,16 @@ const loadScript = (url: string): FutureResult<any, Error> => {
   });
 };
 
-const loadScripts = (urls: string[], success: () => void, failure: (err: any) => void) => {
-  if (urls.length === 0) {
-    failure(new Error('No scripts to load'));
-  } else {
-    Futures.par(Arr.map(urls, loadScript)).map((results) => {
-      const partition = Results.partition(results);
-      if (partition.errors.length > 0) {
-        // Pass back the first failure
-        failure(partition.errors[0]);
-      } else {
-        success();
-      }
-    });
-  }
+const loadScripts = (urls: string[], success: () => void, failure: (err: Error) => void) => {
+  Futures.par(Arr.map(urls, loadScript)).get((results) => {
+    const partition = Results.partition(results);
+    if (partition.errors.length > 0) {
+      // Pass back the first failure
+      failure(partition.errors[0]);
+    } else {
+      success();
+    }
+  });
 };
 
 const setup = (callback: Loader.RunCallback, urls: string[], settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
