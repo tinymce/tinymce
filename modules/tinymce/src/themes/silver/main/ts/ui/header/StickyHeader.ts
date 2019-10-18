@@ -59,16 +59,16 @@ const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: Element
 const updateContentFlow = (header: AlloyComponent, isToolbarTop: boolean): void => {
   const elm = header.element();
   Traverse.parent(elm).each((parentElem: Element<HTMLElement>) => {
+    const padding = 'padding-' + (isToolbarTop ? 'top' : 'bottom');
+
     if (Docking.isDocked(header)) {
       const parentWidth = Width.get(parentElem);
       Css.set(elm, 'width', parentWidth + 'px');
-      if (isToolbarTop) {
-        const headerHeight = Height.getOuter(elm);
-        Css.set(parentElem, 'padding-top', headerHeight + 'px');
-      }
+      const headerHeight = Height.getOuter(elm);
+      Css.set(parentElem, padding, headerHeight + 'px');
     } else {
       Css.remove(elm, 'width');
-      Css.remove(parentElem, 'padding-top');
+      Css.remove(parentElem, padding);
     }
   });
 };
