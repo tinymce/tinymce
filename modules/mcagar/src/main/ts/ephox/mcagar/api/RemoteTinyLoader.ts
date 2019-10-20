@@ -1,3 +1,4 @@
+import { TestLogs } from '@ephox/agar';
 import { Arr, FutureResult, Result } from '@ephox/katamari';
 import { Attr, Body, DomEvent, Element, Insert } from '@ephox/sugar';
 import * as Loader from '../loader/Loader';
@@ -30,13 +31,13 @@ const loadScript = (url: string): FutureResult<string, Error> => {
   });
 };
 
-const loadScripts = (urls: string[], success: () => void, failure: (err: Error) => void) => {
-  const result = Arr.foldr(urls, (acc, url) => {
-    return FutureResult.wrap(loadScript(url).bind(() => acc));
+const loadScripts = (urls: string[], success: () => void, failure: Loader.FailureCallback) => {
+  const result = Arr.foldl(urls, (acc, url) => {
+    return FutureResult.wrap(acc.bind(() => loadScript(url)));
   }, FutureResult.pure(''));
 
   result.get((res) => {
-    res.fold(failure, success);
+    res.fold((e) => failure(e, TestLogs.init()), success);
   });
 };
 
