@@ -5,13 +5,14 @@ const LEFT_CLICK = 0;
 const RIGHT_CLICK = 2;
 
 // Note: This can be used for phantomjs.
-const trigger = (element: Element<any>): void => {
+const trigger = function (element: Element<any>): any {
   const ele: HTMLElement = element.dom();
   if (ele.click !== undefined) {
-    ele.click();
+    return ele.click();
   }
   // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
   point('click', LEFT_CLICK, element, 0, 0);
+  return undefined;
 };
 
 const point = (type: string, button: number, element: Element<any>, x: number, y: number): void => {

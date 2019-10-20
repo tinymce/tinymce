@@ -3,10 +3,9 @@ import { Element, Focus } from '@ephox/sugar';
 import * as Clicks from '../mouse/Clicks';
 import { Chain } from './Chain';
 import * as UiFinder from './UiFinder';
-import { Step } from './Step';
 
-const cTrigger = (selector: string, action: (ele: Element<any>) => void): Chain<Element<any>, Element<any>> => {
-  return Chain.async<Element<any>, Element<any>>((container, next, die) => {
+const cTrigger = (selector: string, action: (ele: Element) => void) => {
+  return Chain.async<Element, Element>((container, next, die) => {
     UiFinder.findIn(container, selector).fold(
       () => die('Could not find element: ' + selector),
       (ele) => {
@@ -17,11 +16,11 @@ const cTrigger = (selector: string, action: (ele: Element<any>) => void): Chain<
   });
 };
 
-const sTriggerWith = <T>(container: Element<any>, selector: string, action: (ele: Element<any>) => void): Step<T, T> => {
-  return Chain.asStep<T, Element<any>>(container, [ cTrigger(selector, action) ]);
+const sTriggerWith = <T>(container: Element, selector: string, action: (ele: Element) => void) => {
+  return Chain.asStep<T, Element>(container, [ cTrigger(selector, action) ]);
 };
 
-const trueClick = (elem: Element<any>): void => {
+const trueClick = function (elem: Element) {
   // The closest event queue to a true Click
   Focus.focus(elem);
   Clicks.mousedown(elem);
@@ -29,27 +28,27 @@ const trueClick = (elem: Element<any>): void => {
   Clicks.trigger(elem);
 };
 
-const sClickOn = <T>(container: Element<any>, selector: string): Step<T, T> => {
+const sClickOn = <T>(container: Element, selector: string) => {
   return sTriggerWith<T>(container, selector, Clicks.trigger);
 };
 
-const sHoverOn = <T>(container: Element<any>, selector: string): Step<T, T> => {
+const sHoverOn = <T>(container: Element, selector: string) => {
   return sTriggerWith<T>(container, selector, Clicks.mouseover);
 };
 
-const sTrueClickOn = <T>(container: Element<any>, selector: string): Step<T, T> => {
+const sTrueClickOn = <T>(container: Element, selector: string) => {
   return sTriggerWith<T>(container, selector, trueClick);
 };
 
-const sContextMenuOn = <T>(container: Element<any>, selector: string): Step<T, T> => {
+const sContextMenuOn = <T>(container: Element, selector: string) => {
   return sTriggerWith<T>(container, selector, Clicks.contextmenu);
 };
 
-const cClickOn = (selector: string): Chain<Element<any>, Element<any>> => {
+const cClickOn = (selector: string): Chain<Element, Element> => {
   return cTrigger(selector, Clicks.trigger);
 };
 
-const cMouseUpTo = (dx: number, dy: number): Chain<Element<any>, Element<any>> => {
+const cMouseUpTo = (dx: number, dy: number) => {
   return Chain.op(Clicks.mouseupTo(dx, dy));
 };
 
