@@ -26,36 +26,33 @@ UnitTest.asynctest('MouseTest', function () {
   let repository = [];
 
   // TODO: Free handlers.
-  const handlers = Arr.bind(['mousedown', 'mouseup', 'mouseover', 'click', 'focus', 'contextmenu'], function (evt) {
-    return [
-      DomEvent.bind(container, evt, function () {
+  const handlers = Arr.bind(['mousedown', 'mouseup', 'mouseover', 'click', 'focus', 'contextmenu'], (evt) =>
+    [
+      DomEvent.bind(container, evt, () => {
         repository.push('container.' + evt);
       }),
-      DomEvent.bind(input, evt, function () {
+      DomEvent.bind(input, evt, () => {
         repository.push('input.' + evt);
       })
-    ];
-  });
+    ]);
 
-  const clearRepository = Step.sync(function () {
+  const clearRepository = Step.sync(() => {
     repository = [];
   });
 
-  const assertRepository = function (label, expected) {
-    return Step.sync(function () {
+  const assertRepository = (label, expected) =>
+    Step.sync(() => {
       Assertions.assertEq(label, expected, repository);
     });
-  };
 
-  const runStep = function (label, expected, step) {
-    return GeneralSteps.sequence([
+  const runStep = (label, expected, step) =>
+    GeneralSteps.sequence([
       clearRepository,
       step,
       assertRepository(label, expected)
     ]);
-  };
 
-  const isUnfocusedFirefox = function () {
+  const isUnfocusedFirefox = () => {
     // Focus events are not fired until the window has focus: https://bugzilla.mozilla.org/show_bug.cgi?id=566671
     return platform.browser.isFirefox() && !document.hasFocus();
   };
@@ -70,7 +67,7 @@ UnitTest.asynctest('MouseTest', function () {
       Mouse.sClickOn(container, 'input')
     ),
 
-    runStep('point test', [ 'container.click' ], Step.sync(() => Mouse.point('click', 0, container, 0, 0))),
+    runStep('point test', ['container.click'], Step.sync(() => Mouse.point('click', 0, container, 0, 0))),
 
     runStep(
       'sTrueClickOn (container > input)',
@@ -85,11 +82,11 @@ UnitTest.asynctest('MouseTest', function () {
         'input.mouseup', 'container.mouseup',
         'input.click', 'container.click'
       ] : [
-          'input.focus',
-          'input.mousedown', 'container.mousedown',
-          'input.mouseup', 'container.mouseup',
-          'input.click', 'container.click'
-        ]),
+        'input.focus',
+        'input.mousedown', 'container.mousedown',
+        'input.mouseup', 'container.mouseup',
+        'input.click', 'container.click'
+      ]),
       Mouse.sTrueClickOn(container, 'input')
     ),
 
@@ -142,12 +139,16 @@ UnitTest.asynctest('MouseTest', function () {
       ])
     )
 
-  ], function () {
-    Arr.each(handlers, function (h) { h.unbind(); });
+  ], () => {
+    Arr.each(handlers, (h) => {
+      h.unbind();
+    });
     Remove.remove(container);
     success();
-  }, function (err) {
-    Arr.each(handlers, function (h) { h.unbind(); });
+  }, (err) => {
+    Arr.each(handlers, (h) => {
+      h.unbind();
+    });
     failure(err);
   });
 });

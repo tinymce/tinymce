@@ -7,9 +7,9 @@ const enum Mode {
   ReadOnly
 }
 
-const modeId = Id.generate('mode');
+const modeId: string = Id.generate('mode');
 
-const setMode = (mode: Mode) => (transfer: DataTransfer) => {
+const setMode = (mode: Mode) => (transfer: DataTransfer): void => {
   const dt: any = transfer;
   dt[modeId] = mode;
 };

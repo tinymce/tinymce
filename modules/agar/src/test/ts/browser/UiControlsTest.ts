@@ -5,9 +5,7 @@ import { Chain } from 'ephox/agar/api/Chain';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as UiControls from 'ephox/agar/api/UiControls';
 
-UnitTest.asynctest('UiControlsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('UiControlsTest', function (success, failure) {
 
   const input = Element.fromTag('input');
   const container = Element.fromTag('container');
@@ -34,5 +32,5 @@ UnitTest.asynctest('UiControlsTest', function () {
       Assertions.cAssertEq('Checking that cSetValue sets the value and cGetValue reads it', 'chain.value.1')
     ])
 
-  ], function () { success(); }, failure);
+  ], () => { success(); }, failure);
 });

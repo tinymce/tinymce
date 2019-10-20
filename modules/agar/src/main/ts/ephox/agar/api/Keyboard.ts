@@ -12,7 +12,7 @@ import { Step } from './Step';
   modifiers - { shift: BOOL, alt: BOOL }
   dispatcher - dispatch event from some element
 */
-const fakeKeys = (types: string[]) => (value: number, modifiers: MixedKeyModifiers, dispatcher: Element) => {
+const fakeKeys = (types: string[]) => (value: number, modifiers: MixedKeyModifiers, dispatcher: Element<any>) => {
   const doc = Traverse.owner(dispatcher);
   Arr.each(types, (type) => {
     keyevent(type, doc, value, modifiers, dispatcher);
@@ -20,13 +20,13 @@ const fakeKeys = (types: string[]) => (value: number, modifiers: MixedKeyModifie
 };
 
 const cFakeKey = (types: string[], keyvalue: number, modifiers: MixedKeyModifiers) => {
-  return Chain.op(function (dispatcher: Element) {
+  return Chain.op((dispatcher: Element<any>) => {
     fakeKeys(types)(keyvalue, modifiers, dispatcher);
   });
 };
 
 const sFakeKey = (types: string[]) => {
-  return <T>(doc: Element, keyvalue: number, modifiers: MixedKeyModifiers): Step<T, T> => {
+  return <T>(doc: Element<any>, keyvalue: number, modifiers: MixedKeyModifiers): Step<T, T> => {
     return Chain.asStep<T, Element>(doc, [
       FocusTools.cGetFocused,
       cFakeKey(types, keyvalue, modifiers)

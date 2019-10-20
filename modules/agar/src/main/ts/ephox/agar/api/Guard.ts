@@ -12,8 +12,8 @@ const defaultAmount = 3000;
 
 const tryUntilNot = <T, U>(label: string, interval: number = defaultInterval, amount: number = defaultAmount): GuardFn<T, U, T> =>
   (f: RunFn<T, U>, value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) => {
-    const repeat = function (startTime: number) {
-      f(value, function (v, newLogs) {
+    const repeat = (startTime: number) => {
+      f(value, (v, newLogs) => {
         const elapsed = Date.now() - startTime;
         if (elapsed >= amount) {
           die(
@@ -21,11 +21,11 @@ const tryUntilNot = <T, U>(label: string, interval: number = defaultInterval, am
             addLogEntry(newLogs, 'WaitErr: ' + label + ' = Failed (after ' + amount + 'ms)')
           );
         } else {
-          setTimeout(function () {
+          setTimeout(() => {
             repeat(startTime);
           }, interval);
         }
-      }, function (err, newLogs) {
+      }, (err, newLogs) => {
         // Note, this one is fairly experimental.
         // Because errors cause die as well, this is not always the best option.
         // What we do is check to see if it is an error prototype.
@@ -44,7 +44,7 @@ const tryUntil = <T, U>(label: string, interval: number = defaultInterval, amoun
     const repeat = (startTime: number) => {
       f(value, (v, newLogs) => {
         next(v, addLogEntry(newLogs, 'Wait: ' + label + ' = SUCCESS!'));
-      }, function (err, newLogs) {
+      }, (err, newLogs) => {
         const elapsed = Date.now() - startTime;
         if (elapsed >= amount) {
           die(
@@ -52,7 +52,7 @@ const tryUntil = <T, U>(label: string, interval: number = defaultInterval, amoun
             addLogEntry(newLogs, 'Wait: ' + label + ' = FAILED (after ' + amount + 'ms)')
           );
         } else {
-          setTimeout(function () {
+          setTimeout(() => {
             repeat(startTime);
           }, interval);
         }
@@ -66,24 +66,22 @@ const timeout = <T, U>(label: string, limit: number): GuardFn<T, U, U> =>
     let passed = false;
     let failed = false;
 
-    const hasNotExited = function () {
-      return passed === false && failed === false;
-    };
+    const hasNotExited = () => passed === false && failed === false;
 
-    const timer = setTimeout(function () {
+    const timer = setTimeout(() => {
       if (hasNotExited()) {
         failed = true;
         die('Hit the limit (' + limit + ') for: ' + label, logs);
       }
     }, limit);
 
-    f(value, function (v: U, newLogs: TestLogs) {
+    f(value, (v: U, newLogs: TestLogs) => {
       clearTimeout(timer);
       if (hasNotExited()) {
         passed = true;
         next(v, newLogs);
       }
-    }, function (err, newLogs) {
+    }, (err, newLogs) => {
       if (hasNotExited()) {
         failed = true;
         die(err, newLogs);

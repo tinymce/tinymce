@@ -3,7 +3,7 @@ import * as Logger from 'ephox/agar/api/Logger';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
 
-UnitTest.asynctest('StepTest', function (success, failure) {
+UnitTest.asynctest('StepTest', (success, failure) => {
 
   Pipeline.async('cat', [
     Logger.t(
@@ -30,11 +30,11 @@ UnitTest.asynctest('StepTest', function (success, failure) {
       '[Basic API: Step.fail]\n',
       Step.fail('last test')
     )
-  ], function () {
+  ], () => {
     failure('The last test should have failed, so the pipeline should have failed.\n' +
       'Expected: Fake failure: last test'
     );
-  }, function (err) {
+  }, (err) => {
     const expected = '[Basic API: Step.fail]\n\nFake failure: last test';
     try {
       assert.eq(expected, err, '\nFailure incorrect. \nExpected:\n' + expected + '\nActual: ' + err);
@@ -45,18 +45,18 @@ UnitTest.asynctest('StepTest', function (success, failure) {
   });
 });
 
-UnitTest.asynctest('Step.predicate false Test', function (success, failure) {
+UnitTest.asynctest('Step.predicate false Test', (success, failure) => {
 
   Pipeline.async('chicken', [
     Logger.t(
       '[ Predicate false ]',
       Step.predicate((s) => s === 'egg')
     ),
-  ], function () {
+  ], () => {
     failure('The last test should have failed, so the pipeline should have failed.\n' +
       'Expected: Fake failure: last test'
     );
-  }, function (err) {
+  }, (err) => {
     const expected = '[ Predicate false ]\npredicate did not succeed';
     try {
       assert.eq(expected, err, '\nFailure incorrect. \nExpected:\n' + expected + '\nActual: ' + err);
