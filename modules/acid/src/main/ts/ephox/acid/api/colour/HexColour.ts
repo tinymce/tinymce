@@ -15,16 +15,16 @@ const isHexString = (hex: string): boolean => {
 };
 
 const fromString = (hex: string): Option<Hex> => {
-  return isHexString(hex) ? Option.some({ value: Fun.constant(hex) }) : Option.none();
+  return isHexString(hex) ? Option.some({value: Fun.constant(hex)}) : Option.none();
 };
 
 // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
 const getLongForm = (hex: Hex): Hex => {
-  const hexString = hex.value().replace(shorthandRegex, function (m, r, g, b) {
-    return r + r + g + g + b + b;
-  });
+  const hexString = hex.value().replace(shorthandRegex, (m, r, g, b) =>
+    r + r + g + g + b + b
+  );
 
-  return { value: Fun.constant(hexString) };
+  return {value: Fun.constant(hexString)};
 };
 
 const extractValues = (hex: Hex): RegExpExecArray | [string, string, string, string] => {

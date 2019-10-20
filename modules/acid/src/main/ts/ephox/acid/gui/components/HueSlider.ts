@@ -1,8 +1,8 @@
-import { AlloyComponent, AlloyTriggers, Behaviour, Focusing, Slider } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, Behaviour, Focusing, SketchSpec, Slider } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
 import { sliderUpdate } from '../ColourEvents';
 
-const sliderFactory = (translate: (key: string) => string, getClass: (key: string) => string) => {
+const sliderFactory = (translate: (key: string) => string, getClass: (key: string) => string): SketchSpec => {
   const spectrum = Slider.parts().spectrum({
     dom: {
       tag: 'div',
@@ -52,6 +52,6 @@ const sliderFactory = (translate: (key: string) => string, getClass: (key: strin
   });
 };
 
-export default {
+export {
   sliderFactory
 };
