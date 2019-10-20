@@ -1,4 +1,4 @@
-import { Arr, FutureResult, Futures, Result, Results } from '@ephox/katamari';
+import { Arr, FutureResult, Result } from '@ephox/katamari';
 import { Attr, Body, DomEvent, Element, Insert } from '@ephox/sugar';
 import * as Loader from '../loader/Loader';
 import { setTinymceBaseUrl } from '../loader/Urls';
@@ -31,14 +31,12 @@ const loadScript = (url: string): FutureResult<string, Error> => {
 };
 
 const loadScripts = (urls: string[], success: () => void, failure: (err: Error) => void) => {
-  Futures.par(Arr.map(urls, loadScript)).get((results) => {
-    const partition = Results.partition(results);
-    if (partition.errors.length > 0) {
-      // Pass back the first failure
-      failure(partition.errors[0]);
-    } else {
-      success();
-    }
+  const result = Arr.foldr(urls, (acc, url) => {
+    return FutureResult.wrap(loadScript(url).bind(() => acc));
+  }, FutureResult.pure(''));
+
+  result.get((res) => {
+    res.fold(failure, success);
   });
 };
 
