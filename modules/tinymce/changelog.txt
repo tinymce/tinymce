@@ -1,3 +1,5 @@
+Version 5.1.1 (TBD)
+    Fixed so that fonts formats containing spaces get wrapped with single quotes instead of quot entities #TINY-4275
 Version 5.1.0 (2019-10-17)
     Added touch selector handles for table selections on touch devices #TINY-4097
     Added border width field to Table Cell dialog #TINY-4028
