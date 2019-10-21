@@ -20,10 +20,7 @@ const cGetFocused: Chain<Element<any>, Element<any>> =
   );
 
 const cSetFocused: Chain<Element<any>, Element<any>> =
-  Chain.mapper((element) => {
-    Focus.focus(element);
-    return element;
-  });
+  Chain.op(Focus.focus);
 
 const cGetOwnerDoc: Chain<Element<Node>, Element<Document>> =
   Chain.mapper(Traverse.owner);
