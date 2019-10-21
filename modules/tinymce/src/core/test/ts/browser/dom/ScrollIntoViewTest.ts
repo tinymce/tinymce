@@ -100,7 +100,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
 
   const steps = function (editor: Editor, tinyApis: TinyApis) {
     return [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Public Selection API', GeneralSteps.sequence([
         Logger.t('Scroll to element align to bottom', GeneralSteps.sequence([
           sScrollReset(editor),

@@ -74,7 +74,7 @@ UnitTest.asynctest('Browser Test: features.ListTest', function (success, failure
           '.tinymce-mobile-icon-unordered-list:before { content: "ul"; }',
           '.tinymce-mobile-icon-ordered-list:before { content: "ol"; }'
         ]),
-        apis.sFocus,
+        apis.sFocus(),
         apis.sSetContent(
           '<ol><li>This is an ordered list</li></ol><p>Normal paragraph</p><ul><li>Bullet list</li></ul>'
         ),

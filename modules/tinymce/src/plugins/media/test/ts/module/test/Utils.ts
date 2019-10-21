@@ -223,7 +223,7 @@ const sSetFormItemNoEvent = function (ui: TinyUi, value: string) {
 const sAssertEditorContent = function (apis: TinyApis, editor: Editor, expected: string) {
   return Waiter.sTryUntil('Wait for editor value',
     Chain.asStep({}, [
-      apis.cGetContent,
+      apis.cGetContent(),
       Assertions.cAssertHtml('Assert body content', expected)
     ]), 10, 3000
   );

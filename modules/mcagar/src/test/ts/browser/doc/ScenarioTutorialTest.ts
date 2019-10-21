@@ -26,7 +26,7 @@ UnitTest.asynctest('Tutorial: Property Testing with TinyMCE', (success, failure)
     const body = TinyDom.fromDom(editor.getBody());
 
     Pipeline.async({}, [
-      apis.sFocus,
+      apis.sFocus(),
       scenarios.sAsyncProperty('tutorial spec', Arbitraries.content('inline', {
         inline: {
           tags: {

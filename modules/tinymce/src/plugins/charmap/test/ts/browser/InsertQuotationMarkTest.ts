@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.InsertQuotationMarkTest', (s
 
     Pipeline.async({},
       Log.steps('TBA', 'Charmap: Open dialog, click on the All tab and click on Quotation Mark and then assert Quotation Mark is inserted', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyUi.sClickOnToolbar('click charmap', 'button[aria-label="Special character"]'),
         Chain.asStep({}, [
           Chain.fromParent(

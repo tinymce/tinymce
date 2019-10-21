@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function () 
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Delete image forwards', GeneralSteps.sequence([
         tinyApis.sSetContent('<p><img src="#1"></p>'),
         tinyApis.sSetCursor([0], 0),

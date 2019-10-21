@@ -38,10 +38,10 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', 
         Log.stepsAsStep('TBA', 'CodeSample: Selecting code sample should update button state', [
           tinyApis.sSetContent('<p>abc</p><pre class="language-markup"><code></code></pre>'),
           tinyApis.sSelect('p', []),
-          tinyApis.sNodeChanged,
+          tinyApis.sNodeChanged(),
           UiFinder.sNotExists(docBody, 'button[aria-pressed="true"]'),
           tinyApis.sSelect('pre.language-markup', []),
-          tinyApis.sNodeChanged,
+          tinyApis.sNodeChanged(),
           UiFinder.sExists(docBody, 'button[aria-pressed="true"]'),
         ]),
       ]

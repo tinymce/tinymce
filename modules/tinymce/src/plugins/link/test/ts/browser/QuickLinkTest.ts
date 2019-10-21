@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
     ]);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       TestLinkUi.sClearHistory,
 
       Log.stepsAsStep('TBA', 'Checking that QuickLink can insert a link', [

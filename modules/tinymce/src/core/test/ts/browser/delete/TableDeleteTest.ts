@@ -60,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', (success, fail
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
 
       Logger.t('Delete selected cells or cell ranges', GeneralSteps.sequence([
         Logger.t('Collapsed range should be noop', GeneralSteps.sequence([

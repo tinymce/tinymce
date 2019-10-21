@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function () {
 
   const sTestDeletePadd = function (editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions) {
     return GeneralSteps.sequence([
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Should padd empty ce=true inside ce=false when everything is deleted', GeneralSteps.sequence([
         tinyApis.sSetContent('<div contenteditable="false">a<p contenteditable="true">a</p>b</div>'),
         tinyApis.sSetSelection([1, 1, 0], 0, [1, 1, 0], 1),

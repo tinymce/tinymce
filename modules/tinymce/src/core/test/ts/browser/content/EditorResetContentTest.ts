@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorResetContentTest', (succe
         Step.sync(() => editor.undoManager.add()),
         tinyApis.sSetContent('<p>some</p><p>other</p><p>content</p>'),
         Step.sync(() => editor.undoManager.add()),
-        tinyApis.sNodeChanged,
+        tinyApis.sNodeChanged(),
         Step.sync(() => {
           Assertions.assertEq('Editor should be dirty', true, editor.isDirty());
           Assertions.assertEq('UndoManager should have some undo levels', true, editor.undoManager.hasUndo());

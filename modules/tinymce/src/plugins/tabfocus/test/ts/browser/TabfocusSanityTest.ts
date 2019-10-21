@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', (succe
     Pipeline.async({},
       Log.steps('TBA', 'TabFocus: Add an input field outside the editor, focus on the editor, press the tab key and assert focus shifts to the input field', [
         sAddInputs(editor),
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         Step.sync(function () {
           Assert.eq('should be same', 'IFRAME', document.activeElement.nodeName);
         }),

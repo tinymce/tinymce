@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.TypeTextAtCef', function () {
     const tinyActions = TinyActions(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Type text before cef inline element', GeneralSteps.sequence([
         tinyApis.sSetContent('<p><span contenteditable="false">a</span></p>'),
         tinyApis.sSelect('p', [1]),

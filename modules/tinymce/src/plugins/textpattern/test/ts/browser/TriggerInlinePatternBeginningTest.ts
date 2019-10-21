@@ -20,7 +20,7 @@ UnitTest.asynctest(
       const steps = Utils.withTeardown([
         Log.stepsAsStep('TBA', 'TextPattern: enter after first * in *a*', [
           tinyApis.sSetContent('<p>*a*</p>'),
-          tinyApis.sFocus,
+          tinyApis.sFocus(),
           tinyApis.sSetCursor([0, 0], 1),
           Step.sync(function () {
             editor.fire('keydown', { keyCode: 13 });
@@ -29,7 +29,7 @@ UnitTest.asynctest(
         ]),
         Log.stepsAsStep('TBA', 'TextPattern: enter after first * in *b*', [
           tinyApis.sSetContent('<p><strong>a</strong>*b*</p>'),
-          tinyApis.sFocus,
+          tinyApis.sFocus(),
           tinyApis.sSetCursor([0, 1], 1),
           Step.sync(function () {
             editor.fire('keydown', { keyCode: 13 });

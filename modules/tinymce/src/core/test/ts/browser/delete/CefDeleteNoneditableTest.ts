@@ -184,7 +184,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
     ];
 
     Pipeline.async({}, Arr.flatten([
-      [ tinyApis.sFocus ],
+      [ tinyApis.sFocus() ],
       generalTests,
       Env.browser.isIE() ? [] : nonIeTests
     ]), onSuccess, onFailure);

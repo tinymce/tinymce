@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.ImageBlockDeleteTest',  (success
     const tinyActions = TinyActions(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
 
       Log.stepsAsStep('TBA', 'Delete keys for image block element', [
         Logger.t('Should place the selection on the image block element on delete before', GeneralSteps.sequence([

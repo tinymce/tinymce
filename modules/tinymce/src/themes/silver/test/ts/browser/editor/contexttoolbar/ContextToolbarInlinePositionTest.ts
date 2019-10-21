@@ -73,7 +73,7 @@ UnitTest.asynctest('Inline editor ContextToolbar Position test', (success, failu
             'margin-bottom': '1500px'
           });
         }),
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         Log.stepsAsStep('TBA', 'Context toolbar position while scrolling', [
           // north/south
           sTestPositionWhileScrolling({

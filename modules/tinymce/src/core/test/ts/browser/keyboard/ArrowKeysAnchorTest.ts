@@ -142,7 +142,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
       tinyApis.sSetContent('<p><a href="#">b</a></p>'),
 
       tinyApis.sSetCursor([0, 0, 0], 0),
-      tinyApis.sNodeChanged,
+      tinyApis.sNodeChanged(),
       sAssertCursor(tinyApis, [0, 0, 0], 1),
       sAssertContentStructure(editor, anchorsZwspInside(['b'], START, 0)),
 
@@ -177,7 +177,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
       tinyApis.sSetContent('<p>a<a href="#">b</a>c</p>'),
 
       tinyApis.sSetCursor([0, 1, 0], 0),
-      tinyApis.sNodeChanged,
+      tinyApis.sNodeChanged(),
       sAssertCursor(tinyApis, [0, 1, 0], 1),
       sAssertContentStructure(editor, anchorSurroundedWithZwspInside(START)),
 
@@ -204,7 +204,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
       tinyApis.sSetContent('<p><a href="#">a</a><a href="#">b</a></p>'),
 
       tinyApis.sSetCursor([0, 0, 0], 0),
-      tinyApis.sNodeChanged,
+      tinyApis.sNodeChanged(),
       sAssertCursor(tinyApis, [0, 0, 0], 1),
       sAssertContentStructure(editor, anchorsZwspInside(['a', 'b'], START, 0)),
 
@@ -251,7 +251,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
     const tinyActions = TinyActions(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       sTestArrowsSingleAnchor(tinyApis, tinyActions, editor),
       sTestArrowsAnchorSurroundedByText(tinyApis, tinyActions, editor),
       sTestArrowsMultipleAnchors(tinyApis, tinyActions, editor)

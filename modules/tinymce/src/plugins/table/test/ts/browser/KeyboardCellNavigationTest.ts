@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.quirks.KeyboardCellNavigationT
 
       Pipeline.async({}, Env.webkit ?
         Log.steps('TBA', 'TestCase-Table-TBA-Create lists within table cells and verify keyboard navigation for the cells', [
-          tinyApis.sFocus,
+          tinyApis.sFocus(),
           tinyApis.sSetContent(
             '<table><tbody><tr><td><ul><li>a</li><li>b</li></ul></td></tr><tr><td><ul><li>c</li><li>d</li></ul></td></tr></tbody></table>'
           ),

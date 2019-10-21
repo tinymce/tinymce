@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveTrailingWhitespaceFormatTest'
       const boldSelector = 'button[aria-label="Bold"]';
 
       Pipeline.async({}, [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         Logger.t('remove bold with leading whitespace', GeneralSteps.sequence([
           tinyApis.sSetRawContent('<p><strong>a b</strong></p>'),
           tinyApis.sSetSelection([0, 0, 0], 1, [0, 0, 0], 3),

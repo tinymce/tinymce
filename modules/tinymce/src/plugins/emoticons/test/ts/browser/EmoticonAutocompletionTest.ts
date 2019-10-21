@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AutocompletionTest', (succ
     // NOTE: This is almost identical to charmap
     Pipeline.async({},
       Log.steps('TBA', 'Emoticons: Autocomplete, trigger an autocomplete and check it appears', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent('<p>:ha</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 3),
         Keyboard.sKeypress(eDoc, 'a'.charCodeAt(0), { }),

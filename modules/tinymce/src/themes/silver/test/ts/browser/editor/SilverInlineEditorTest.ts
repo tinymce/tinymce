@@ -16,7 +16,7 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
   const store = Cell([ ]);
 
   const sUiContainerTest = (editor: Editor, container: Element, tinyApis: TinyApis) => Logger.ts('Check basic container structure and actions', [
-    tinyApis.sFocus,
+    tinyApis.sFocus(),
     Assertions.sAssertStructure(
       'Container structure',
       ApproxStructure.build((s, str, arr) => {

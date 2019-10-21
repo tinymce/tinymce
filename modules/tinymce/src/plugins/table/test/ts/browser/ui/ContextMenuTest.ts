@@ -113,7 +113,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextMenuTest', (success, fa
     }), editorBody);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Test context menus on a table', [
         tinyApis.sSetContent(tableHtml),
         sOpenContextMenu('td'),

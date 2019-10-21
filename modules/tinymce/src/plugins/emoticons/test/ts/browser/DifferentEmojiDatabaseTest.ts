@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.DifferentEmojiDatabaseTest
       const tinyUi = TinyUi(editor);
 
       Pipeline.async({}, [
-          tinyApis.sFocus,
+          tinyApis.sFocus(),
           tinyUi.sClickOnToolbar('click emoticons', 'button'),
           Chain.asStep({}, [
             tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),

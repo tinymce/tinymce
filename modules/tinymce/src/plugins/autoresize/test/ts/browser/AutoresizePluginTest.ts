@@ -64,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
             resizeEventsCount.set(resizeEventsCount.get() + 1);
           });
         }),
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         Log.stepsAsStep('TBA', 'AutoResize: Fullscreen toggle scroll state', [
           tinyApis.sExecCommand('mceFullScreen'),
           sAssertScroll(editor, true),

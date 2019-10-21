@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ToolbarFalseTest', (succes
     ]);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Text selection toolbar is not shown', [
         tinyApis.sSetContent('<p>Some <strong>bold</strong> and <em>italic</em> content.</p><blockquote><p>Some quoted content</p></blockquote>'),
         tinyApis.sSetSelection([0, 0], 0, [0, 0], 4),

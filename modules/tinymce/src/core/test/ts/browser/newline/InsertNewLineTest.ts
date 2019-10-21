@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', (success, failu
     const body = Element.fromDom(editor.getBody());
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Enter in paragraph', GeneralSteps.sequence([
         Logger.t('Insert block before', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>ab</p>'),
@@ -86,21 +86,21 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', (success, failu
           tinyApis.sSetContent('<p>ab</p>'),
           tinyApis.sSetCursor([0, 0], 1),
           sInsertNewline(editor, { }),
-          tinyApis.sNodeChanged,
+          tinyApis.sNodeChanged(),
           tinyApis.sAssertContent('<p>a<br />b</p>')
         ])),
         Logger.t('Insert newline where br is forced', GeneralSteps.sequence([
           tinyApis.sSetContent('<div class="test">ab</div>'),
           tinyApis.sSetCursor([0, 0], 1),
           sInsertNewline(editor, { }),
-          tinyApis.sNodeChanged,
+          tinyApis.sNodeChanged(),
           tinyApis.sAssertContent('<div class="test">a<br />b</div>')
         ])),
         Logger.t('Insert newline where br is not forced', GeneralSteps.sequence([
           tinyApis.sSetContent('<div>ab</div>'),
           tinyApis.sSetCursor([0, 0], 1),
           sInsertNewline(editor, { }),
-          tinyApis.sNodeChanged,
+          tinyApis.sNodeChanged(),
           tinyApis.sAssertContent('<div>a</div><div>b</div>')
         ])),
         tinyApis.sDeleteSetting('br_newline_selector')
@@ -111,21 +111,21 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', (success, failu
           tinyApis.sSetContent('<p>ab</p>'),
           tinyApis.sSetCursor([0, 0], 1),
           sInsertNewline(editor, { }),
-          tinyApis.sNodeChanged,
+          tinyApis.sNodeChanged(),
           tinyApis.sAssertContent('<p>ab</p>')
         ])),
         Logger.t('Insert newline where newline is blocked', GeneralSteps.sequence([
           tinyApis.sSetContent('<div class="test">ab</div>'),
           tinyApis.sSetCursor([0, 0], 1),
           sInsertNewline(editor, { }),
-          tinyApis.sNodeChanged,
+          tinyApis.sNodeChanged(),
           tinyApis.sAssertContent('<div class="test">ab</div>')
         ])),
         Logger.t('Insert newline where newline is not blocked', GeneralSteps.sequence([
           tinyApis.sSetContent('<div>ab</div>'),
           tinyApis.sSetCursor([0, 0], 1),
           sInsertNewline(editor, { }),
-          tinyApis.sNodeChanged,
+          tinyApis.sNodeChanged(),
           tinyApis.sAssertContent('<div>a</div><div>b</div>')
         ])),
         tinyApis.sDeleteSetting('no_newline_selector')

@@ -73,7 +73,7 @@ UnitTest.asynctest('Browser Test: features.BasicFormattingTest', function (succe
           '.tinymce-mobile-icon-italic:before { content: "ITALIC"; }',
           '.tinymce-mobile-icon-underline:before { content: "UNDERLINE"; }'
         ]),
-        apis.sFocus,
+        apis.sFocus(),
 
         sTestFormatter('strong', 'strong', 'bold'),
         sTestFormatter('em', 'em', 'italic'),

@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.HomeEndKeysTest', (success, fa
       const tinyActions = TinyActions(editor);
 
       Pipeline.async({}, [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         Logger.t('Home key', GeneralSteps.sequence([
           Logger.t('Home key should move caret before cef within the same block', GeneralSteps.sequence([
             tinyApis.sSetContent('<p>123</p><p><span contenteditable="false">CEF</span>456</p>'),

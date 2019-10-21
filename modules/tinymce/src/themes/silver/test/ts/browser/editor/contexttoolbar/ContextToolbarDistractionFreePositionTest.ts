@@ -64,7 +64,7 @@ UnitTest.asynctest('Distraction free editor ContextToolbar Position test', (succ
       };
 
       Pipeline.async({ }, [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         Step.sync(() => {
           Css.setAll(Element.fromDom(editor.getContentAreaContainer()), {
             'margin-top': '1500px',

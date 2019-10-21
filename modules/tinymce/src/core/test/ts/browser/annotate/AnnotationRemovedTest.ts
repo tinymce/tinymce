@@ -141,7 +141,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationRemovedTest', (succe
     ]);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       sSetupData,
       sTestGetAndRemove
     ], onSuccess, onFailure);

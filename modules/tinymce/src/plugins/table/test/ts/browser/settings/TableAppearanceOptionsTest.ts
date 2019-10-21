@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAppearanceTest', (success
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Table: test that settings for appearance can be disabled', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent(tableHtml),
         // This used to be opening the context toolbar.
         tinyApis.sSelect('table td', [0]),
@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAppearanceTest', (success
 
       Log.stepsAsStep('TBA', 'Table: test that settings for appearance can be enabled', [
         tinyApis.sSetSetting('table_appearance_options', true),
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent(tableHtml),
         // This used to be opening the context toolbar.
         tinyApis.sSelect('table td', [0]),

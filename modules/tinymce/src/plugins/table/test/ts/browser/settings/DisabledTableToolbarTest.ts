@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DisableTableToolbarTest', (suc
 
     Pipeline.async({},
      Log.steps('TBA', 'Table: test that table toolbar can be disabled', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetSetting('table_toolbar', 'tableprops tabledelete'),
         tinyApis.sSetContent(tableHtml),
         tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1),

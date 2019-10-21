@@ -101,7 +101,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
     }), editorBody);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Test context menus on empty editor', [
         sOpenContextMenu('p'),
         sAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")'),

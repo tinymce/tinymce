@@ -196,7 +196,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success,
     const tinyActions = TinyActions(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       sTestEnterAtStartOfAnchorZwsp(tinyApis, tinyActions),
       sTestEnterAtEndOfAnchorZwsp(tinyApis, tinyActions),
       sTestEnterAtStartOfAnchorZwspWithAdjacentContent(tinyApis, tinyActions),

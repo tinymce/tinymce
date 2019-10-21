@@ -47,7 +47,7 @@ UnitTest.asynctest('TinyScenariosTest', (success, failure) => {
     const scenarios = TinyScenarios(editor);
 
     Pipeline.async({}, [
-      apis.sFocus,
+      apis.sFocus(),
       scenarios.sAsyncProperty('Test', Arbitraries.content('inline', {}).generator, sAssertion(editor), {
         property: {
           tests: 100

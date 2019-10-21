@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function (suc
     };
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
 
       Logger.t('Test normalization for floated images', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a<img src="about:blank" style="float: right"></p>'),

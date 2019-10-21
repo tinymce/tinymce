@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.AddToDictionaryTest', (
     const ui = TinyUi(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'Spellchecker: Add a new word to dictionary', [
-      api.sFocus,
+      api.sFocus(),
       api.sSetContent('<p>hello world</p>'),
       ui.sClickOnToolbar('click spellcheck button', '[title="Spellcheck"] > .tox-tbtn'),
       api.sSetCursor([ 0, 0, 0 ], 0),

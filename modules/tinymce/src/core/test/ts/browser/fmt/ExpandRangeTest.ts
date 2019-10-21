@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function () {
     const selectorFormatCollapsed = [{ selector: 'div', classes: 'b', collapsed: true }];
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Expand inline format words', GeneralSteps.sequence([
         Logger.t('In middle of single word in paragraph', Chain.asStep(editor, [
           cSetRawContent('<p>ab</p>'),

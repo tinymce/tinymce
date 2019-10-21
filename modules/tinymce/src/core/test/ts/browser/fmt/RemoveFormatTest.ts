@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveFormatTest', (success, failur
     }];
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Remove format with collapsed selection', GeneralSteps.sequence([
         Logger.t('In middle of single word wrapped in strong', GeneralSteps.sequence([
           tinyApis.sSetContent('<p><strong>ab</strong></p>'),

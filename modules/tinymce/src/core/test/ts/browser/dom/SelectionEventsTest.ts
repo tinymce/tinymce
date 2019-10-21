@@ -85,7 +85,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function () {
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('SetSelectionRange event', GeneralSteps.sequence([
         mBindEvent(editor, 'SetSelectionRange'),
         tinyApis.sSetContent('<p>a</p>'),

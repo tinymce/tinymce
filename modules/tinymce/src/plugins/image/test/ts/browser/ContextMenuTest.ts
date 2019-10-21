@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ContextMenuTest', (success, fa
     ]);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Opening context menus on a selected figure', [
         tinyApis.sSetRawContent('<figure class="image" contenteditable="false"><img src="image.png"><figcaption contenteditable="true">Caption</figcaption></figure><p>Second paragraph</p>'),
         tinyApis.sSetSelection([], 0, [], 1),

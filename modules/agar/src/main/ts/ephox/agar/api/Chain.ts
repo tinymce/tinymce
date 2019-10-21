@@ -83,13 +83,13 @@ const op = function <T>(fx: (value: T) => void): Chain<T, T> {
 const async = <T, U>(fx: (input: T, next: (v: U) => void, die: (err) => void) => void) =>
   on<T, U>((v, n, d, logs) => fx(v, (v) => n(wrap(v), logs) , (err) => d(err, logs)));
 
-const inject = function <U>(value: U) {
-  return on(function (_input: any, next: NextFn<Wrap<U>>, die: DieFn, logs: TestLogs) {
+const inject = function <T, U>(value: U): Chain<T, U> {
+  return on(function (_input: T, next: NextFn<Wrap<U>>, die: DieFn, logs: TestLogs) {
     next(wrap(value), logs);
   });
 };
 
-const injectThunked = <U>(f: () => U) => {
+const injectThunked = <T, U>(f: () => U): Chain<T, U> => {
   return on((_input: any, next: NextFn<Wrap<U>>, die: DieFn, logs: TestLogs) => {
     next(wrap(f()), logs);
   });

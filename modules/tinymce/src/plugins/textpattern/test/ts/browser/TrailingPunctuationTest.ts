@@ -23,7 +23,7 @@ UnitTest.asynctest(
       return function (label, patternText, trigger, tag, rawText) {
         return Logger.t(label, GeneralSteps.sequence([
           tinyApis.sSetContent('<p>' + patternText + trigger + '</p>'),
-          tinyApis.sFocus,
+          tinyApis.sFocus(),
           tinyApis.sSetCursor([0, 0], patternText.length + 1),
           sTypeChar(editor, trigger),
           Waiter.sTryUntil(

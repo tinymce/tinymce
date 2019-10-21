@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultStylesTest', (succ
 
     Pipeline.async({}, [
       Logger.t('no styles without setting', GeneralSteps.sequence([
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
         Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")')),
         Waiter.sTryUntil('click table grid', tinyUi.sClickOnUi('click table grid', 'div.tox-insert-table-picker div[role="button"]:nth(0)')), // button for 1x1 table
@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultStylesTest', (succ
       ])),
 
       Logger.t('test default style border attribute', GeneralSteps.sequence([
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetSetting('table_default_styles', { border: '3px solid blue' }),
         tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
         Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")')),

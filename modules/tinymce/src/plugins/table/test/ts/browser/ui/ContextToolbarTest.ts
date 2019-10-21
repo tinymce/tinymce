@@ -72,7 +72,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success,
     ]);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Table: context toolbar keyboard navigation test', [
         sAddTableAndOpenContextToolbar(tableHtml),
         sPressKeyboardShortcutKey,

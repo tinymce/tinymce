@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysContentEndpointTest',
       const tinyActions = TinyActions(editor);
 
       Pipeline.async({}, [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         Logger.t('Arrow keys in figcaption', GeneralSteps.sequence([
           Logger.t('Arrow up from start of figcaption to paragraph before figure', GeneralSteps.sequence([
             tinyApis.sSetContent('<figure><figcaption>a</figcaption></figure>'),

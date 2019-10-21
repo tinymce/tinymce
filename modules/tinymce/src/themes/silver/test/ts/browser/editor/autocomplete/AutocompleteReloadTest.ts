@@ -58,7 +58,7 @@ UnitTest.asynctest('Editor Autocompleter Reload test', (success, failure) => {
       return GeneralSteps.sequence([
         tinyApis.sSetContent(`<p>${content}</p>`),
         tinyApis.sSetCursor([ 0, 0 ], content.length),
-        tinyApis.sNodeChanged,
+        tinyApis.sNodeChanged(),
         tinyActions.sContentKeypress(triggerCharCode, { }),
         sWaitForAutocompleteToOpen
       ]);
@@ -77,7 +77,7 @@ UnitTest.asynctest('Editor Autocompleter Reload test', (success, failure) => {
     Pipeline.async({ }, Logger.ts(
       'Trigger autocompleter and reload items',
       [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         sTestAutocompleter({
           action: Step.pass,
           assertion: sAssertInitialMenu,
