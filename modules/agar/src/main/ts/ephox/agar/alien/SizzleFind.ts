@@ -12,7 +12,7 @@ const descendant = (sugarElement: Element<any>, selector: string): Option<Elemen
   return toOptionEl(siz);
 };
 
-const toArrayEl = (elements: (Node | Window)[]): Element<any>[] =>
+const toArrayEl = (elements: (Node | Window)[]): Element<Node | Window>[] =>
   Arr.map(elements, Element.fromDom);
 
 /* Petrie makes extensive use of :visible, :has() and :contains() which are sizzle extensions */
