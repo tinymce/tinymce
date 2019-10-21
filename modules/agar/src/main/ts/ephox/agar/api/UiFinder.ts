@@ -33,8 +33,8 @@ const sWaitForVisible = <T>(message: string, container: Element<any>, selector: 
 const sWaitForHidden = <T>(message: string, container: Element<any>, selector: string): Step<T, T> =>
   Chain.asStep<T, Element>(container, [cWaitForHidden(message, selector)]);
 
-const cHasState = (predicate: (element: Element<any>) => boolean): Chain<Element<any>, Element<any>> =>
-  Chain.binder((element: Element<any>): Result<Element<any>, string> => predicate(element) ? Result.value(element) :
+const cHasState = <T> (predicate: (element: Element<T>) => boolean): Chain<Element<T>, Element<T>> =>
+  Chain.binder((element) => predicate(element) ? Result.value(element) :
     Result.error(Truncate.getHtml(element) + ' did not match predicate: ' + predicate.toString()));
 
 const cFindWithState = (selector: string, predicate: (element: Element<any>) => boolean): Chain<Element<any>, Element<any>> =>
