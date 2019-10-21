@@ -15,7 +15,7 @@ const isHexString = (hex: string): boolean => {
 };
 
 const fromString = (hex: string): Option<Hex> => {
-  return isHexString(hex) ? Option.some({value: Fun.constant(hex)}) : Option.none();
+  return isHexString(hex) ? Option.some({ value: Fun.constant(hex) }) : Option.none();
 };
 
 // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
@@ -24,13 +24,13 @@ const getLongForm = (hex: Hex): Hex => {
     r + r + g + g + b + b
   );
 
-  return {value: Fun.constant(hexString)};
+  return { value: Fun.constant(hexString) };
 };
 
 const extractValues = (hex: Hex): RegExpExecArray | [string, string, string, string] => {
   const longForm = getLongForm(hex);
   const splitForm = longformRegex.exec(longForm.value());
-  return splitForm === null ? ['FFFFFF', 'FF', 'FF', 'FF'] : splitForm;
+  return splitForm === null ? [ 'FFFFFF', 'FF', 'FF', 'FF' ] : splitForm;
 };
 
 const toHex = (component: number): string => {
