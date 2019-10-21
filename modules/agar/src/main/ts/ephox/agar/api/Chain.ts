@@ -4,15 +4,13 @@ import { Arr, Fun, Result } from '@ephox/katamari';
 import * as AsyncActions from '../pipe/AsyncActions';
 import * as GeneralActions from '../pipe/GeneralActions';
 import { DieFn, NextFn, Pipe, RunFn } from '../pipe/Pipe';
-import { GuardFn, addLogging } from './Guard';
+import { addLogging, GuardFn } from './Guard';
 import { Pipeline } from './Pipeline';
 import { Step } from './Step';
-import { TestLogs, addLogEntry } from './TestLogs';
-
-export type ChainRunFn<T, U> = RunFn<T, U>;
+import { addLogEntry, TestLogs } from './TestLogs';
 
 export interface Chain<T, U> {
-  runChain: ChainRunFn<T, U>;
+  runChain: RunFn<T, U>;
 }
 
 export type ChainGuard<T, U, V> = GuardFn<T, U, V>;
