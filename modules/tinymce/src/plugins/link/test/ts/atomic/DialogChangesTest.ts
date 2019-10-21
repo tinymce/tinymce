@@ -1,9 +1,9 @@
-import { Logger, RawAssertions } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
 
 import { DialogChanges, DialogDelta } from 'tinymce/plugins/link/ui/DialogChanges';
-import { ListItem, LinkDialogData } from 'tinymce/plugins/link/ui/DialogTypes';
+import { LinkDialogData, ListItem } from 'tinymce/plugins/link/ui/DialogTypes';
 import { Fun } from '@ephox/katamari';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('DialogChanges', () => {
 
@@ -33,7 +33,7 @@ UnitTest.test('DialogChanges', () => {
       const assertSome = (label: string, expected: DialogDelta, previousText: string, catalog: ListItem[], data: Partial<LinkDialogData>) => {
         Logger.sync('assertSome(' + label + ')', () => {
           const actual = DialogChanges.getDelta(previousText, 'anchor', catalog, data);
-          RawAssertions.assertEq('Checking replacement text', expected, actual.getOrDie(
+          Assert.eq('Checking replacement text', expected, actual.getOrDie(
             'Should be some'
           ));
         });

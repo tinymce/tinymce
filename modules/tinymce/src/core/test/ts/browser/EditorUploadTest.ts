@@ -11,7 +11,7 @@ import Delay from 'tinymce/core/api/util/Delay';
 import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     return;
   }
 
-  const teardown = function (editor) {
+  const teardown = function (editor: Editor) {
     return Step.sync(function () {
       editor.editorUpload.destroy();
       editor.settings.automatic_uploads = false;
@@ -30,17 +30,17 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     });
   };
 
-  const appendTeardown = function (editor, steps) {
+  const appendTeardown = function (editor: Editor, steps: Step<any, any>[]) {
     return Arr.bind(steps, function (step) {
       return [step, teardown(editor)];
     });
   };
 
-  const imageHtml = function (uri) {
+  const imageHtml = function (uri: string) {
     return DOMUtils.DOM.createHTML('img', { src: uri });
   };
 
-  const assertResult = function (editor, uploadedBlobInfo, result) {
+  const assertResult = function (editor: Editor, uploadedBlobInfo, result) {
     LegacyUnit.strictEqual(result.length, 1);
     LegacyUnit.strictEqual(result[0].status, true);
     LegacyUnit.strictEqual(result[0].element.src.indexOf(uploadedBlobInfo.id() + '.png') !== -1, true);
@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     return elm.src.indexOf('blob:') === 0;
   };
 
-  suite.asyncTest('_scanForImages', function (editor: Editor, done, fail) {
+  suite.asyncTest('_scanForImages', function (editor, done, fail) {
     editor.setContent(imageHtml(testBlobDataUri));
 
     editor._scanForImages().then(function (result) {

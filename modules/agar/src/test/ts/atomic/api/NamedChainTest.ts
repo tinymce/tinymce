@@ -1,11 +1,10 @@
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Merger, Result } from '@ephox/katamari';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as GeneralSteps from 'ephox/agar/api/GeneralSteps';
 import * as Logger from 'ephox/agar/api/Logger';
-import { NamedChain, _outputName, _outputUnset } from 'ephox/agar/api/NamedChain';
+import { _outputName, _outputUnset, NamedChain } from 'ephox/agar/api/NamedChain';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
-import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 import StepAssertions from 'ephox/agar/test/StepAssertions';
 
 UnitTest.asynctest('NamedChainTest', function (success, failure) {
@@ -60,7 +59,7 @@ UnitTest.asynctest('NamedChainTest', function (success, failure) {
           NamedChain.read('x', cIsEqual(10)),
 
           NamedChain.bundle(function (input) {
-            RawAssertions.assertEq('Checking bundled chain output', Merger.merge(
+            Assert.eq('Checking bundled chain output', Merger.merge(
               {
                 'x': 5 * 2,
                 'y': 8,

@@ -1,19 +1,19 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Text } from '@ephox/dom-globals';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
+import Theme from 'tinymce/themes/silver/Theme';
 import HtmlUtils from '../module/test/HtmlUtils';
 import KeyUtils from '../module/test/KeyUtils';
-import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.UndoManager', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failure) {
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
-  const ok = function (value, label?) {
+  const ok = function (value: boolean, label?: string) {
     return LegacyUnit.equal(value, true, label);
   };
 
@@ -474,7 +474,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function () {
     LegacyUnit.equal(editor.undoManager.typing, true);
     LegacyUnit.equal(editor.getContent(), '<p>aB</p>');
     editor.undoManager.transact(function () {
-      editor.getBody().firstChild.firstChild.data = 'aBC';
+      (editor.getBody().firstChild.firstChild as Text).data = 'aBC';
     });
     LegacyUnit.equal(editor.undoManager.typing, false);
     LegacyUnit.equal(editor.undoManager.data.length, 3);

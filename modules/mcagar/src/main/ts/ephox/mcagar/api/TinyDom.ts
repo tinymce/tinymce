@@ -1,13 +1,19 @@
+import { Node as DomNode, Range } from '@ephox/dom-globals';
 import { Struct } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Element, SimRange } from '@ephox/sugar';
 
-const range = Struct.immutableBag([ 'start', 'soffset', 'finish', 'foffset' ], [ ]);
+export interface TinyDom {
+  fromDom: (elm: DomNode) => Element;
+  fromRange: (rng: Range) => SimRange;
+}
 
-const fromDom = function (elm) {
+const range: (range: { start: DomNode; soffset: number; finish: DomNode; foffset: number; }) => SimRange = Struct.immutableBag([ 'start', 'soffset', 'finish', 'foffset' ], [ ]);
+
+const fromDom = function (elm: DomNode) {
   return Element.fromDom(elm);
 };
 
-const fromRange = function (rng) {
+const fromRange = function (rng: Range) {
   return range({
     start: rng.startContainer,
     soffset: rng.startOffset,
@@ -16,7 +22,7 @@ const fromRange = function (rng) {
   });
 };
 
-export default {
+export const TinyDom: TinyDom = {
   fromDom,
   fromRange
 };

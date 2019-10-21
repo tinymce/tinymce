@@ -10,7 +10,7 @@ const isSilver = () => {
 
 const isModern = () => !isSilver();
 
-interface ThemeSelectors {
+export interface ThemeSelectors {
   toolBarSelector: string;
   menuBarSelector: string;
   dialogCloseSelector: string;

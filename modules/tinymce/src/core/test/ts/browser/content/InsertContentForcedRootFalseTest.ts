@@ -1,15 +1,16 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import InsertContent from 'tinymce/core/content/InsertContent';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.content.InsertContentForcedRootBlockFalseTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
-  const trimBrs = function (string) {
+  const trimBrs = function (string: string) {
     return string.replace(/<br>/g, '');
   };
 

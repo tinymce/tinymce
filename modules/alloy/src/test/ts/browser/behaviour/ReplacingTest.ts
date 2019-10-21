@@ -1,5 +1,5 @@
-import { ApproxStructure, Assertions, Logger, RawAssertions, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { ApproxStructure, Assertions, Logger, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Option } from '@ephox/katamari';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -83,7 +83,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         component.element()
       ),
       Step.sync(() => {
-        RawAssertions.assertEq('Should have no contents', [ ], Replacing.contents(component));
+        Assert.eq('Should have no contents', [ ], Replacing.contents(component));
       }),
 
       Step.sync(() => {
@@ -106,7 +106,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         component.element()
       ),
       Step.sync(() => {
-        RawAssertions.assertEq('Should have 2 children', 2, Replacing.contents(component).length);
+        Assert.eq('Should have 2 children', 2, Replacing.contents(component).length);
       }),
 
       Logger.t(
@@ -131,7 +131,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         component.element()
       ),
       Step.sync(() => {
-        RawAssertions.assertEq('Should have 2 children still', 2, Replacing.contents(component).length);
+        Assert.eq('Should have 2 children still', 2, Replacing.contents(component).length);
       }),
 
       Logger.t(
@@ -154,7 +154,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         component.element()
       ),
       Step.sync(() => {
-        RawAssertions.assertEq('Should have 3 children now', 3, Replacing.contents(component).length);
+        Assert.eq('Should have 3 children now', 3, Replacing.contents(component).length);
       }),
 
       Logger.t(
@@ -183,7 +183,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         component.element()
       ),
       Step.sync(() => {
-        RawAssertions.assertEq('Should have 4 children now', 4, Replacing.contents(component).length);
+        Assert.eq('Should have 4 children now', 4, Replacing.contents(component).length);
       }),
 
       Logger.t(
@@ -208,7 +208,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         component.element()
       ),
       Step.sync(() => {
-        RawAssertions.assertEq('Should have 3 children again', 3, Replacing.contents(component).length);
+        Assert.eq('Should have 3 children again', 3, Replacing.contents(component).length);
       }),
 
       Logger.t(
@@ -233,7 +233,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         component.element()
       ),
       Step.sync(() => {
-        RawAssertions.assertEq('Should have 4 children again', 4, Replacing.contents(component).length);
+        Assert.eq('Should have 4 children again', 4, Replacing.contents(component).length);
       }),
 
       sCheckReplaceAt(

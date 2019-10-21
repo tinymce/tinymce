@@ -1,11 +1,12 @@
 import { Pipeline, Step } from '@ephox/agar';
-import TinyApis from 'ephox/mcagar/api/TinyApis';
-import TinyLoader from 'ephox/mcagar/api/TinyLoader';
-import TinyUi from 'ephox/mcagar/api/TinyUi';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Editor } from 'ephox/mcagar/alien/EditorTypes';
+import { TinyApis } from 'ephox/mcagar/api/TinyApis';
+import * as TinyLoader from 'ephox/mcagar/api/TinyLoader';
+import { TinyUi } from 'ephox/mcagar/api/TinyUi';
 
 UnitTest.asynctest('McagarTutorialTest', (success, failure) => {
-  const handler = (ed) => () => {
+  const handler = (ed: Editor) => () => {
     const content = ed.getContent();
     ed.focus();
     if (content === '<p>tutorial content</p>') {
@@ -19,7 +20,7 @@ UnitTest.asynctest('McagarTutorialTest', (success, failure) => {
     }
   };
 
-  const silverSetup = (ed) => {
+  const silverSetup = (ed: Editor) => {
     ed.ui.registry.addButton('tutorial-button', {
       text: 'tutorial',
       onAction: handler(ed)

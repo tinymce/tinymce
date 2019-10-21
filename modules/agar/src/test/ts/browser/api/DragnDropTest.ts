@@ -1,9 +1,9 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Element, Insert, Remove, Body, DomEvent, SelectorFind } from '@ephox/sugar';
+import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
+import { Body, DomEvent, Element, Insert, Remove, SelectorFind } from '@ephox/sugar';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
-import { sDragnDrop, dragnDrop, sDropFiles, dropFiles, isDraggable } from 'ephox/agar/api/DragnDrop';
+import { dragnDrop, dropFiles, isDraggable, sDragnDrop, sDropFiles } from 'ephox/agar/api/DragnDrop';
 import { Step } from 'ephox/agar/api/Step';
-import { RawAssertions, Logger, GeneralSteps } from 'ephox/agar/api/Main';
+import { GeneralSteps, Logger } from 'ephox/agar/api/Main';
 import { createFile } from 'ephox/agar/api/Files';
 import { Blob } from '@ephox/dom-globals';
 
@@ -32,7 +32,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
   });
 
   const sAssertStoreItems = (expectedStoreItems: string[]) => Step.sync(() => {
-    RawAssertions.assertEq('Should have the expetec items', expectedStoreItems, store);
+    Assert.eq('Should have the expetec items', expectedStoreItems, store);
   });
 
   const dragStartUnbinder = DomEvent.bind(draggable, 'dragstart', (evt) => {

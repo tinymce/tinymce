@@ -1,12 +1,14 @@
 import { Pipeline, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Text } from '@ephox/dom-globals';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('tinymce.lists.browser.RemoveTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
   Theme();
@@ -425,8 +427,8 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', (success, failure) => {
       '<li>d</li>' +
       '</ul>'
     );
-    LegacyUnit.equal(editor.selection.getStart().firstChild.data, 'b');
-    LegacyUnit.equal(editor.selection.getEnd().firstChild.data, 'c');
+    LegacyUnit.equal((editor.selection.getStart().firstChild as Text).data, 'b');
+    LegacyUnit.equal((editor.selection.getEnd().firstChild as Text).data, 'c');
   });
 
   suite.test('TestCase-TBA: Lists: Remove indented list with multiple items', function (editor) {

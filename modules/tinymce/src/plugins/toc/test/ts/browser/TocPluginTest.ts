@@ -2,6 +2,7 @@ import { Pipeline, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Plugin from 'tinymce/plugins/toc/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -9,8 +10,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import HtmlUtils from '../module/test/HtmlUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failure) => {
-
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
   Theme();

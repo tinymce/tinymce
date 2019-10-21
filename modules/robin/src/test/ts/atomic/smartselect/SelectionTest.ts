@@ -1,5 +1,4 @@
-import { RawAssertions } from '@ephox/agar';
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import Selection from 'ephox/robin/smartselect/Selection';
 
@@ -54,10 +53,10 @@ UnitTest.test('SelectionTest', function () {
   const check = function (expected: Expected, doc: TestUniverse, id: string, offset: number) {
     const item = doc.find(doc.get(), id).getOrDie('Could not find item: ' + id);
     const actual = Selection.word(doc, item, offset).getOrDie('Selection for: (' + id + ', ' + offset + ') yielded nothing');
-    RawAssertions.assertEq('Selection for: (' + id + ', ' + offset + ') => startContainer', expected.startContainer, actual.startContainer().id);
-    RawAssertions.assertEq('Selection for: (' + id + ', ' + offset + ') => startOffset', expected.startOffset, actual.startOffset());
-    RawAssertions.assertEq('Selection for: (' + id + ', ' + offset + ') => endContainer', expected.endContainer, actual.endContainer().id);
-    RawAssertions.assertEq('Selection for: (' + id + ', ' + offset + ') => endOffset', expected.endOffset, actual.endOffset());
+    Assert.eq('Selection for: (' + id + ', ' + offset + ') => startContainer', expected.startContainer, actual.startContainer().id);
+    Assert.eq('Selection for: (' + id + ', ' + offset + ') => startOffset', expected.startOffset, actual.startOffset());
+    Assert.eq('Selection for: (' + id + ', ' + offset + ') => endContainer', expected.endContainer, actual.endContainer().id);
+    Assert.eq('Selection for: (' + id + ', ' + offset + ') => endOffset', expected.endOffset, actual.endOffset());
   };
 
   const checkNone = function (doc: TestUniverse, id: string, offset: number) {

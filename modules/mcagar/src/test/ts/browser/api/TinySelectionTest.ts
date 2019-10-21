@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
-import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import { UnitTest } from '@ephox/bedrock-client';
-import TinyApis from 'ephox/mcagar/api/TinyApis';
+import * as TinyLoader from 'ephox/mcagar/api/TinyLoader';
+import { TinyApis } from 'ephox/mcagar/api/TinyApis';
 
 UnitTest.asynctest('TinySelectionTest', (success, failure) => {
   TinyLoader.setupLight((editor, loadSuccess, loadFailure) => {

@@ -1,7 +1,6 @@
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { setTimeout } from '@ephox/dom-globals';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
-import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 import { Step } from 'ephox/agar/api/Step';
 
 UnitTest.asynctest('PipelineSuite Test', function (success, failure) {
@@ -20,7 +19,7 @@ UnitTest.asynctest('PipelineSuite Test', function (success, failure) {
     mutator('purpose', 'unknown'),
     mutator('correctness', 'tbd')
   ], function (result) {
-    RawAssertions.assertEq('Should have all state properties', {
+    Assert.eq('Should have all state properties', {
       name: 'testfile',
       purpose: 'unknown',
       correctness: 'tbd'

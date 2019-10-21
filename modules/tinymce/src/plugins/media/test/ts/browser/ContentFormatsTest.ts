@@ -1,12 +1,14 @@
 import { Pipeline, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { HTMLImageElement } from '@ephox/dom-globals';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function (success, failure) {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
   Theme();
@@ -94,7 +96,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function 
       '</video>'
     );
 
-    const placeholderElm = editor.getBody().firstChild.firstChild;
+    const placeholderElm = editor.getBody().firstChild.firstChild as HTMLImageElement;
     placeholderElm.width = 100;
     placeholderElm.height = 200;
     editor.fire('objectResized', { target: placeholderElm, width: placeholderElm.width, height: placeholderElm.height });

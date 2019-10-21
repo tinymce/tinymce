@@ -1,7 +1,8 @@
-import { ApproxStructure, GeneralSteps, Pipeline, Waiter, Logger, Log } from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Pipeline, Waiter, Logger, Log, StructAssert } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -11,7 +12,7 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
   Plugin();
   Theme();
 
-  const sTestPlaceholder = function (ui, editor, apis, url, expected, struct) {
+  const sTestPlaceholder = function (ui: TinyUi, editor: Editor, apis: TinyApis, url: string, expected: string, struct: StructAssert) {
     return Logger.t(`Test placeholder ${expected}`, GeneralSteps.sequence([
       Utils.sOpenDialog(ui),
       Utils.sSetFormItemNoEvent(ui, url),
@@ -23,7 +24,7 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
     ]));
   };
 
-  const sTestScriptPlaceholder = function (ui, editor, apis, expected, struct) {
+  const sTestScriptPlaceholder = function (ui: TinyUi, editor: Editor, apis: TinyApis, expected: string, struct: StructAssert) {
     return Logger.t(`Test script placeholder ${expected}`, GeneralSteps.sequence([
       apis.sSetContent(
         '<script src="http://media1.tinymce.com/123456"></script>' +
