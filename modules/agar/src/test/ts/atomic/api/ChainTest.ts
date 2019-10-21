@@ -199,18 +199,6 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
 
   return Pipeline.async({}, [
     Logger.t(
-      '[Should fail validation if the chain function does not wrap the output]\n',
-      testInputValueFails
-    ),
-    Logger.t(
-      '[Should pass validation if the chain function does wrap the output]\n',
-      testInputValuePasses
-    ),
-    Logger.t(
-      '[Should pass validation if the chain function does wrap the output, even if that output is undefined]\n',
-      testInputValueOfUndefinedPasses
-    ),
-    Logger.t(
       '[When a previous link passes a failure that fails a chain, the step should fail]\n',
       testChainingFails
     ),
