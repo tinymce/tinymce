@@ -9,6 +9,7 @@ import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
 import DomContainers from 'ephox/agar/test/DomContainers';
 import { TestLogs } from 'ephox/agar/api/TestLogs';
+import { MixedKeyModifiers } from 'ephox/agar/keyboard/FakeKeys';
 
 UnitTest.asynctest('KeyboardTest', function (success, failure) {
 
@@ -33,7 +34,7 @@ UnitTest.asynctest('KeyboardTest', function (success, failure) {
     );
   };
 
-  const listenOn = function (type, f, code, modifiers) {
+  const listenOn = function (type, f: (doc: Element, keyvalue: number, modifiers: MixedKeyModifiers) => Step<any, any>, code, modifiers) {
     return Step.control(
       Step.raw(function (value: { container: any; }, next, die, logs) {
         const listener = DomEvent.bind(value.container, type, function (event) {
@@ -43,7 +44,7 @@ UnitTest.asynctest('KeyboardTest', function (success, failure) {
           sAssertEvent(type, code, modifiers, raw).runStep(value, next, die, logs);
         });
 
-        f(Element.fromDom(document), code, modifiers)(value, function () { }, die);
+        f(Element.fromDom(document), code, modifiers).runStep(value, function () { }, die, logs);
       }),
       Guard.timeout('Key event did not fire in time: ' + type, 1000)
     );
