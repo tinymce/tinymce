@@ -84,7 +84,7 @@ UnitTest.asynctest('Real Effects Test', (success, failure) => {
     sCheckInput('After correcting "this"', 'I am typing this'),
     Step.wait(50),
     RealKeys.sSendKeysOn('input', [
-      RealKeys.combo(platform.os.isOSX() ? {metaKey: true} : {ctrlKey: true}, 'a')
+      RealKeys.combo(platform.os.isOSX() ? { metaKey: true } : { ctrlKey: true }, 'a')
     ]),
     Step.wait(50),
     RealClipboard.sCopy('input'),
