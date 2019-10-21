@@ -65,8 +65,7 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
         });
       });
 
-      Keyboard.sKeystroke(Element.fromDom(document), code, modifiers)(value, () => {
-      }, die, TestLogs.init());
+      Keyboard.sKeystroke(Element.fromDom(document), code, modifiers)(value, () => {}, die, TestLogs.init());
     }),
     Guard.timeout('keystroke (keydown + keyup) did not fire', 1000)
   );
