@@ -3,11 +3,11 @@ import { Arr, Option } from '@ephox/katamari';
 import { Element, Traverse } from '@ephox/sugar';
 import Sizzle from '@ephox/wrap-sizzle';
 
-const toOptionEl = (output: DomElement[]): Option<Element<any>> =>
+const toOptionEl = (output: DomElement[]): Option<Element<DomElement>> =>
   output.length === 0 ? Option.none() : Option.from(output[0]).map(Element.fromDom);
 
 /* Petrie makes extensive use of :visible, :has() and :contains() which are sizzle extensions */
-const descendant = (sugarElement: Element<any>, selector: string): Option<Element<any>> => {
+const descendant = (sugarElement: Element<any>, selector: string): Option<Element<DomElement>> => {
   const siz: DomElement[] = Sizzle(selector, sugarElement.dom());
   return toOptionEl(siz);
 };
