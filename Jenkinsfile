@@ -44,7 +44,7 @@ properties([
 node("primary") {
   timestamps {
     def extExec, extExecHandle, extYarnInstall, grunt
-    def primaryBranch = "next/5.2"
+    def primaryBranch = "develop"
 
     def gitMerge = {
       if (BRANCH_NAME != primaryBranch) {
