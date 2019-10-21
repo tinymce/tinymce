@@ -23,9 +23,9 @@ const point = (type: string, element: Element<any>, x: number, y: number): void 
       cancelable: true,
       bubbles: true,
       view: window,
-      touches: [touchAction],
+      touches: [ touchAction ],
       targetTouches: [],
-      changedTouches: [touchAction]
+      changedTouches: [ touchAction ]
     });
     element.dom().dispatchEvent(ev);
   } else {
@@ -43,9 +43,9 @@ const point = (type: string, element: Element<any>, x: number, y: number): void 
       ev.initUIEvent(type, true, true, window, null);
     }
     // Patch in the touch properties
-    ev.touches = [touch];
+    ev.touches = [ touch ];
     ev.targetTouches = [];
-    ev.changedTouches = [touch];
+    ev.changedTouches = [ touch ];
     element.dom().dispatchEvent(ev);
   }
 };
