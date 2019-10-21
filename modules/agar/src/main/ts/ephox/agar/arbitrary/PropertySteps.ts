@@ -26,7 +26,7 @@ const stepToPromise = function <T, U>(step: Step<T, U>) {
   return function (input: T): PromiseLike<true> {
     // tslint:disable-next-line:no-unimported-promise
     return typeof Promise !== 'undefined' ? new Promise<true>(function (resolve, reject) {
-      step(input, function () {
+      step.runStep(input, function () {
         resolve(true);
       // Not sure what to do about logging for this.
       }, reject, TestLogs.init());

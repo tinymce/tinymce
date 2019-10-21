@@ -40,7 +40,7 @@ UnitTest.asynctest('KeyboardTest', function (success, failure) {
           const raw = event.raw();
           listener.unbind();
 
-          sAssertEvent(type, code, modifiers, raw)(value, next, die, logs);
+          sAssertEvent(type, code, modifiers, raw).runStep(value, next, die, logs);
         });
 
         f(Element.fromDom(document), code, modifiers)(value, function () { }, die);
@@ -67,7 +67,7 @@ UnitTest.asynctest('KeyboardTest', function (success, failure) {
           });
         });
 
-        Keyboard.sKeystroke(Element.fromDom(document), code, modifiers)(value, function () { }, die, TestLogs.init());
+        Keyboard.sKeystroke(Element.fromDom(document), code, modifiers).runStep(value, function () { }, die, TestLogs.init());
       }),
       Guard.timeout('keystroke (keydown + keyup) did not fire', 1000)
     );

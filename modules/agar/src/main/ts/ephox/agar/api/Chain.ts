@@ -95,11 +95,11 @@ const injectThunked = <U>(f: () => U) => {
   });
 };
 
-const extract = function <T, U>(chain: Chain<T, U>): ChainRunFn<T, U> {
+const extract = function <T, U>(chain: Chain<T, U>): Step<Wrap<T>, Wrap<U>> {
   if (!chain.runChain) {
     throw new Error(('Step: ' + chain.toString() + ' is not a chain'));
   } else {
-    return chain.runChain;
+    return Step.raw(chain.runChain);
   }
 };
 
@@ -119,9 +119,9 @@ const fromChainsWith = function <T, U = any, V = any>(initial: T, chains: Chain<
 
 const fromParent = function <T, U>(parent: Chain<T, U>, chains: Chain<U, any>[]) {
   return on(function (cvalue: T, cnext: NextFn<Wrap<U>>, cdie: DieFn, clogs: TestLogs) {
-    Pipeline.async(wrap(cvalue), [parent.runChain], function (value: Wrap<U>, parentLogs: TestLogs) {
+    Pipeline.async(wrap(cvalue), [Step.raw(parent.runChain)], function (value: Wrap<U>, parentLogs: TestLogs) {
       const cs = Arr.map(chains, function (c) {
-        return Pipe(function (_, next, die, logs) {
+        return Step.raw(function (_, next, die, logs) {
           // Replace _ with value
           c.runChain(value, next, die, logs);
         });

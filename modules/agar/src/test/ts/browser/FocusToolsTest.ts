@@ -38,7 +38,7 @@ UnitTest.asynctest('FocusToolsTest', function (success, failure) {
       )
     ]),
     Step.raw(function (state, next, die, logs) {
-      FocusTools.sIsOn('checking that sIsOn works', state.input)(state, next, die, logs);
+      FocusTools.sIsOn('checking that sIsOn works', state.input).runStep(state, next, die, logs);
     }),
     FocusTools.sTryOnSelector(
       'Should be on div[test-id] input',
@@ -74,28 +74,28 @@ UnitTest.asynctest('FocusToolsTest', function (success, failure) {
     Step.raw(function (value, next, die, logs) {
       Chain.asStep(value.container, [
         FocusTools.cSetFocus('Setting focus via chains on the input', 'input')
-      ])(value, next, die, logs);
+      ]).runStep(value, next, die, logs);
     }),
     FocusTools.sIsOnSelector('Should now be on input again', doc, 'input'),
 
     Step.raw(function (value, next, die, logs) {
       Chain.asStep(value.container, [
         FocusTools.cSetActiveValue('chained.value')
-      ])(value, next, die, logs);
+      ]).runStep(value, next, die, logs);
     }),
 
     Step.raw(function (value, next, die, logs) {
       Chain.asStep(value.container, [
         FocusTools.cGetActiveValue,
         Assertions.cAssertEq('Checking the value of input after set by chaining APIs', 'chained.value')
-      ])(value, next, die, logs);
+      ]).runStep(value, next, die, logs);
     }),
 
     Step.raw(function (value, next, die, logs) {
       Chain.asStep(doc, [
         FocusTools.cGetFocused,
         Assertions.cAssertDomEq('Checking that focused element is the input', value.input)
-      ])(value, next, die, logs);
+      ]).runStep(value, next, die, logs);
     }),
 
     DomContainers.mTeardown

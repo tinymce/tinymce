@@ -12,16 +12,16 @@ const t = function <T, U>(label: string, f: Step<T, U>): Step<T, U> {
     return ErrorTypes.enrichWith(label, err);
   };
 
-  return function (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) {
+  return Step.raw(function (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) {
     const updatedLogs = pushLogLevel(addLogEntry(logs, label));
     const dieWith: DieFn = (err, newLogs) => die(enrich(err), popLogLevel(newLogs));
     try {
-      return f(value, (v, newLogs) => next(v, popLogLevel(newLogs)), dieWith, updatedLogs);
+      return f.runStep(value, (v, newLogs) => next(v, popLogLevel(newLogs)), dieWith, updatedLogs);
     } catch (err) {
 
       dieWith(err, updatedLogs);
     }
-  };
+  });
 };
 
 const sync = function <T>(label: TestLabel, f: () => T): T {

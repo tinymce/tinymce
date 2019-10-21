@@ -6,14 +6,16 @@ import { DieFn, NextFn, Pipe, RunFn } from '../pipe/Pipe';
 import { addLogging, GuardFn } from './Guard';
 import { addLogEntry, TestLogs } from './TestLogs';
 
-export type Step<T, U> = (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => void;
+export interface Step<T, U> {
+  runStep: (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => void;
+}
 
 const raw = function <T, U>(f: RunFn<T, U>): Step<T, U> {
-  return Pipe(f);
+  return { runStep: Pipe(f) };
 };
 
 const stateful = function <T, U>(f: (v: T, next: (v: U) => void, die: (err) => void) => void): Step<T, U> {
-  return Pipe<T, U>((value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => {
+  return raw<T, U>((value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => {
     f(
       value,
       (nextValue: U) => next(nextValue, logs),
@@ -24,20 +26,20 @@ const stateful = function <T, U>(f: (v: T, next: (v: U) => void, die: (err) => v
 
 // Chiefly used for limiting things with timeouts.
 const control = function <T, U, V>(step: Step<T, U>, guard: GuardFn<T, U, V>): Step<T, V> {
-  return Pipe<T, V>(function (value: T, next: NextFn<V>, die: DieFn, logs: TestLogs) {
-    guard(step, value, next, die, logs);
+  return raw<T, V>(function (value: T, next: NextFn<V>, die: DieFn, logs: TestLogs) {
+    guard(step.runStep, value, next, die, logs);
   });
 };
 
 const sync = function <T>(f: () => void): Step<T, T> {
-  return Pipe<T, T>(function (value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) {
+  return raw<T, T>(function (value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) {
     f();
     next(value, logs);
   });
 };
 
 const async = function <T>(f: (next: () => void, die: (err) => void) => void): Step<T, T> {
-  return Pipe<T, T>(function (value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) {
+  return raw<T, T>(function (value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) {
     f(
       () => next(value, logs),
       (err) => die(err, logs)
@@ -49,7 +51,7 @@ const async = function <T>(f: (next: () => void, die: (err) => void) => void): S
 const debugging = sync<any>(GeneralActions.debug);
 
 const log = function <T>(message: string): Step<T, T> {
-  return Pipe<T, T>(function (value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) {
+  return raw<T, T>(function (value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) {
     // tslint:disable-next-line:no-console
     console.log(message);
     next(value, addLogEntry(logs, message));
