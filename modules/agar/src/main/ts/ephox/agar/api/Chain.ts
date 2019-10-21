@@ -9,37 +9,20 @@ import { Pipeline } from './Pipeline';
 import { Step } from './Step';
 import { TestLogs, addLogEntry } from './TestLogs';
 
-export interface Wrap<T> {
-  chain: T;
-}
-
-export type ChainRunFn<T, U> = RunFn<Wrap<T>, Wrap<U>>;
+export type ChainRunFn<T, U> = RunFn<T, U>;
 
 export interface Chain<T, U> {
   runChain: ChainRunFn<T, U>;
 }
 
-export type ChainGuard<T, U, V> = GuardFn<Wrap<T>, Wrap<U>, Wrap<V>>;
+export type ChainGuard<T, U, V> = GuardFn<T, U, V>;
 
 // TODO: Add generic step validation later.
-const on = function <T, U>(f: (value: T, next: NextFn<Wrap<U>>, die: DieFn, logs: TestLogs) => void): Chain<T, U> {
-  const runChain = Pipe((input: Wrap<T>, next: NextFn<Wrap<U>>, die: DieFn, logs: TestLogs) => {
-    if (!isInput(input)) {
-      // tslint:disable-next-line:no-console
-      console.error('Invalid chain input: ', input);
-      die(new Error('Input Value is not a chain: ' + input + '\nfunction: ' + f.toString()), logs);
-    } else {
-      f(input.chain, function (v: Wrap<U>, newLogs) {
-        if (!isInput(v)) {
-          // tslint:disable-next-line:no-console
-          console.error('Invalid chain output: ', v);
-          die(new Error('Output value is not a chain: ' + v), newLogs);
-        } else {
-          next(v, newLogs);
-        }
-      }, (err, newLogs) => die(err, newLogs), logs);
-    }
-
+const on = function <T, U>(f: (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => void): Chain<T, U> {
+  const runChain = Pipe((input: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => {
+    f(input, function (v: U, newLogs) {
+      next(v, newLogs);
+    }, (err, newLogs) => die(err, newLogs), logs);
   });
 
   return {
@@ -48,54 +31,54 @@ const on = function <T, U>(f: (value: T, next: NextFn<Wrap<U>>, die: DieFn, logs
 };
 
 const control = function <T, U, V>(chain: Chain<T, U>, guard: ChainGuard<T, U, V>) {
-  return on(function (input: T, next: NextFn<Wrap<V>>, die: DieFn, logs: TestLogs) {
-    guard(chain.runChain, wrap(input), function (v: Wrap<V>, newLogs: TestLogs) {
+  return on(function (input: T, next: NextFn<V>, die: DieFn, logs: TestLogs) {
+    guard(chain.runChain, input, function (v: V, newLogs: TestLogs) {
       next(v, newLogs);
     }, die, logs);
   });
 };
 
 const mapper = function <T, U>(fx: (value: T) => U) {
-  return on(function (input: T, next: NextFn<Wrap<U>>, die: DieFn, logs: TestLogs) {
-    next(wrap(fx(input)), logs);
+  return on(function (input: T, next: NextFn<U>, die: DieFn, logs: TestLogs) {
+    next(fx(input), logs);
   });
 };
 
 const identity = mapper(Fun.identity);
 
 const binder = function <T, U, E>(fx: (input: T) => Result<U, E>) {
-  return on(function (input: T, next: NextFn<Wrap<U>>, die: DieFn, logs: TestLogs) {
+  return on(function (input: T, next: NextFn<U>, die: DieFn, logs: TestLogs) {
     fx(input).fold(function (err) {
       die(err, logs);
     }, function (v) {
-      next(wrap(v), logs);
+      next(v, logs);
     });
   });
 };
 
 const op = function <T>(fx: (value: T) => void): Chain<T, T> {
-  return on(function (input: T, next: NextFn<Wrap<T>>, die: DieFn, logs: TestLogs) {
+  return on(function (input: T, next: NextFn<T>, die: DieFn, logs: TestLogs) {
     fx(input);
-    next(wrap(input), logs);
+    next(input, logs);
   });
 };
 
 const async = <T, U>(fx: (input: T, next: (v: U) => void, die: (err) => void) => void) =>
-  on<T, U>((v, n, d, logs) => fx(v, (v) => n(wrap(v), logs) , (err) => d(err, logs)));
+  on<T, U>((v, n, d, logs) => fx(v, (v) => n(v, logs) , (err) => d(err, logs)));
 
 const inject = function <T, U>(value: U): Chain<T, U> {
-  return on(function (_input: T, next: NextFn<Wrap<U>>, die: DieFn, logs: TestLogs) {
-    next(wrap(value), logs);
+  return on(function (_input: T, next: NextFn<U>, die: DieFn, logs: TestLogs) {
+    next(value, logs);
   });
 };
 
 const injectThunked = <T, U>(f: () => U): Chain<T, U> => {
-  return on((_input: any, next: NextFn<Wrap<U>>, die: DieFn, logs: TestLogs) => {
-    next(wrap(f()), logs);
+  return on((_input: any, next: NextFn<U>, die: DieFn, logs: TestLogs) => {
+    next(f(), logs);
   });
 };
 
-const extract = function <T, U>(chain: Chain<T, U>): Step<Wrap<T>, Wrap<U>> {
+const extract = function <T, U>(chain: Chain<T, U>): Step<T, U> {
   if (!chain.runChain) {
     throw new Error(('Step: ' + chain.toString() + ' is not a chain'));
   } else {
@@ -107,7 +90,7 @@ const fromChains = function <T = any, U = any>(chains: Chain<any, any>[]) {
   const cs = Arr.map(chains, extract);
 
   return on<T, U>((value, next, die, initLogs) => {
-    Pipeline.async(wrap(value), cs, (v, newLogs) => next(v, newLogs), die, initLogs);
+    Pipeline.async(value, cs, (v, newLogs) => next(v, newLogs), die, initLogs);
   });
 };
 
@@ -118,8 +101,8 @@ const fromChainsWith = function <T, U = any, V = any>(initial: T, chains: Chain<
 };
 
 const fromParent = function <T, U>(parent: Chain<T, U>, chains: Chain<U, any>[]) {
-  return on(function (cvalue: T, cnext: NextFn<Wrap<U>>, cdie: DieFn, clogs: TestLogs) {
-    Pipeline.async(wrap(cvalue), [Step.raw(parent.runChain)], function (value: Wrap<U>, parentLogs: TestLogs) {
+  return on(function (cvalue: T, cnext: NextFn<U>, cdie: DieFn, clogs: TestLogs) {
+    Pipeline.async(cvalue, [Step.raw(parent.runChain)], function (value: U, parentLogs: TestLogs) {
       const cs = Arr.map(chains, function (c) {
         return Step.raw(function (_, next, die, logs) {
           // Replace _ with value
@@ -127,7 +110,7 @@ const fromParent = function <T, U>(parent: Chain<T, U>, chains: Chain<U, any>[])
         });
       });
 
-      Pipeline.async(wrap(cvalue), cs, function (_, finalLogs) {
+      Pipeline.async(cvalue, cs, function (_, finalLogs) {
         // Ignore all the values and use the original
         cnext(value, finalLogs);
       }, cdie, parentLogs);
@@ -140,7 +123,7 @@ const asStep = function <T, U>(initial: U, chains: Chain<any, any>[]) {
     const cs = Arr.map(chains, extract);
 
     Pipeline.async(
-      wrap(initial),
+      initial,
       cs,
       // Ignore all the values and use the original
       (_v, ls) => {
@@ -156,10 +139,10 @@ const asStep = function <T, U>(initial: U, chains: Chain<any, any>[]) {
 const debugging = op(GeneralActions.debug);
 
 const log = function <T>(message: string) {
-  return on(function (input: T, next: NextFn<Wrap<T>>, die: DieFn, logs: TestLogs) {
+  return on(function (input: T, next: NextFn<T>, die: DieFn, logs: TestLogs) {
     // tslint:disable-next-line:no-console
     console.log(message);
-    next(wrap(input), addLogEntry(logs, message));
+    next(input, addLogEntry(logs, message));
   });
 };
 
@@ -168,39 +151,27 @@ const label = function <T, U>(label: string, chain: Chain<T, U>) {
 };
 
 const wait = function <T>(amount: number) {
-  return on<T, T>(function (input: T, next: NextFn<Wrap<T>>, die: DieFn, logs: TestLogs) {
-    AsyncActions.delay(amount)(() => next(wrap(input), logs), die);
+  return on<T, T>(function (input: T, next: NextFn<T>, die: DieFn, logs: TestLogs) {
+    AsyncActions.delay(amount)(() => next(input, logs), die);
   });
 };
 
-const wrap = function <V>(v: V): Wrap<V> {
-  return { chain: v };
-};
-
-const unwrap = function <V>(c: Wrap<V>): V {
-  return c.chain;
-};
-
-const isInput = function (v): v is Wrap<any> {
-  return Object.prototype.hasOwnProperty.call(v, 'chain');
-};
-
 const pipeline = function (chains: Chain<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs?: TestLogs) {
-  Pipeline.async(wrap({}), Arr.map(chains, extract), (output, logs) => {
-    onSuccess(unwrap(output), logs);
+  Pipeline.async({}, Arr.map(chains, extract), (output, logs) => {
+    onSuccess(output, logs);
   }, onFailure, TestLogs.getOrInit(initLogs));
 };
 
 const runStepsOnValue = <I, O>(getSteps: (value: I) => Step<I, O>[]): Chain<I, O> => {
   return Chain.on((input: I, next, die, initLogs) => {
     const steps = getSteps(input);
-    Pipeline.async(input, steps, (stepsOutput, newLogs) => next(Chain.wrap(stepsOutput), newLogs), die, initLogs);
+    Pipeline.async(input, steps, (stepsOutput, newLogs) => next(stepsOutput, newLogs), die, initLogs);
   });
 };
 
 const predicate = <T> (p: (value: T) => boolean): Chain<T, T> =>
   on((input, next, die, logs) =>
-    p(input) ? next(wrap(input), logs) : die('predicate did not succeed', logs));
+    p(input) ? next(input, logs) : die('predicate did not succeed', logs));
 
 export const Chain = {
   on,
@@ -219,8 +190,6 @@ export const Chain = {
   fromChainsWith,
   fromParent,
   asStep,
-  wrap,
-  unwrap,
   wait,
   debugging,
   log,

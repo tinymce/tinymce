@@ -14,7 +14,7 @@ UnitTest.asynctest('WaiterChainTest', function (success, failure) {
       Chain.on(function (_value, next, die, logs) {
         counter++;
         if (counter === 5) {
-          return next(Chain.wrap(counter), logs);
+          return next(counter, logs);
         } else {
           die('did not reach number', logs);
         }
@@ -31,7 +31,7 @@ UnitTest.asynctest('WaiterChainTest', function (success, failure) {
       Chain.on(function (_value, next, die, logs) {
         counter++;
         if (counter < 10) {
-          return next(Chain.wrap('not yet'), logs);
+          return next('not yet', logs);
         } else {
           die(counter, logs);
         }
@@ -46,7 +46,7 @@ UnitTest.asynctest('WaiterChainTest', function (success, failure) {
       label + ': Waiter timeout',
       Chain.on(function (_value, next, die, logs) {
         setTimeout(function () {
-          next(Chain.wrap(_value), logs);
+          next(_value, logs);
         }, delay);
       }), timeout);
   };

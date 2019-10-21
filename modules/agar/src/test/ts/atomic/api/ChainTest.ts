@@ -48,7 +48,7 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
     [
       Chain.asStep({}, [
         Chain.on(function (cInput, cNext, cDie, cLogs) {
-          cNext(Chain.wrap('doge'), cLogs);
+          cNext('doge', cLogs);
         })
       ])
     ]
@@ -59,7 +59,7 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
     [
       Chain.asStep({}, [
         Chain.on(function (cInput, cNext, cDie, cLogs) {
-          cNext(Chain.wrap(undefined), cLogs);
+          cNext(undefined, cLogs);
         })
       ])
     ]

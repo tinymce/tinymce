@@ -143,7 +143,7 @@ const testStepFailPprintError = function (expectedExpectedValue, expectedActualV
 
 const testChain = function (expected, chain: Chain<any, any>) {
   return Step.raw(function (value, next, die, initLogs) {
-    chain.runChain(Chain.wrap(value), function (actual, newLogs) {
+    chain.runChain(value, function (actual, newLogs) {
       assertSuccess('testChain', expected, actual.chain).fold(
         (err) => die(err, newLogs),
         (_) => next(value, newLogs)
@@ -158,7 +158,7 @@ const testChain = function (expected, chain: Chain<any, any>) {
 const testChainFail = function (expected, initial, chain: Chain<any, any>) {
   return Step.raw(function (initValue, next, die, initLogs) {
     chain.runChain(
-      Chain.wrap(initial),
+      initial,
       function (actual, newLogs) {
         const msg = failOnSuccess('testChainFail', expected, actual.chain);
         die(msg, newLogs);
