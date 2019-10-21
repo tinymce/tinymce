@@ -3,19 +3,19 @@ import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success, failure) => {
   Theme();
 
-  const sSetup = function (tinyApis, html, elementPath, offset) {
+  const sSetup = function (tinyApis: TinyApis, html: string, elementPath: number[], offset: number) {
     return GeneralSteps.sequence([
       tinyApis.sSetContent(html),
       tinyApis.sSetCursor(elementPath, offset)
     ]);
   };
 
-  const sEnterKey = function (tinyActions) {
+  const sEnterKey = function (tinyActions: TinyActions) {
     return tinyActions.sContentKeystroke(Keys.enter(), {});
   };
 
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success,
     }
   };
 
-  const sTestEnterAtStartOfAnchorZwsp = function (tinyApis, tinyActions) {
+  const sTestEnterAtStartOfAnchorZwsp = function (tinyApis: TinyApis, tinyActions: TinyActions) {
     return Logger.t(
       'sTestEnterAtStartOfAnchorZwsp',
       GeneralSteps.sequence([
@@ -68,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success,
     );
   };
 
-  const sTestEnterAtEndOfAnchorZwsp = function (tinyApis, tinyActions) {
+  const sTestEnterAtEndOfAnchorZwsp = function (tinyApis: TinyApis, tinyActions: TinyActions) {
     return Logger.t(
       'sTestEnterAtEndOfAnchorZwsp',
       GeneralSteps.sequence([
@@ -109,7 +109,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success,
     );
   };
 
-  const sTestEnterAtStartOfAnchorZwspWithAdjacentContent = function (tinyApis, tinyActions) {
+  const sTestEnterAtStartOfAnchorZwspWithAdjacentContent = function (tinyApis: TinyApis, tinyActions: TinyActions) {
     return Logger.t(
       'sTestEnterAtStartOfAnchorZwspWithAdjacentContent',
       GeneralSteps.sequence([
@@ -153,7 +153,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success,
     );
   };
 
-  const sTestEnterAtEndOfAnchorZwspWithAdjacentContent = function (tinyApis, tinyActions) {
+  const sTestEnterAtEndOfAnchorZwspWithAdjacentContent = function (tinyApis: TinyApis, tinyActions: TinyActions) {
     return Logger.t(
       'sTestEnterAtStartOfAnchorZwspWithAdjacentContent',
       GeneralSteps.sequence([

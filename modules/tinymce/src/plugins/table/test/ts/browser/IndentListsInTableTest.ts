@@ -1,5 +1,5 @@
-import { Keys, Pipeline, RawAssertions, Step, Log, Logger } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Keys, Log, Logger, Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
@@ -14,7 +14,7 @@ UnitTest.asynctest('tinymce.plugins.table.IndentListsInTableTest', (success, fai
   const sAssertTableInnerHTML = function (editor, expected) {
     return Logger.t('Assert table InnerHTML ' + expected, Step.sync(function () {
       const actual = editor.getBody().firstChild.innerHTML;
-      RawAssertions.assertEq('Does not have correct html', expected, actual);
+      Assert.eq('Does not have correct html', expected, actual);
     }));
   };
 

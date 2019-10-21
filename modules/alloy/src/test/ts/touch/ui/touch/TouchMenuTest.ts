@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Chain, Logger, Step, StructAssert, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Future, Option } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
 

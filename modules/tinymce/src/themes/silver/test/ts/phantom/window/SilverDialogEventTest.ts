@@ -1,6 +1,6 @@
 import { Logger, Mouse, Pipeline, Step, Waiter, UiFinder } from '@ephox/agar';
 import { Behaviour, GuiFactory, ModalDialog, Positioning, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { ValueSchema } from '@ephox/boulder';
 import { DialogManager } from '@ephox/bridge';
 import { Fun, Result, Option } from '@ephox/katamari';

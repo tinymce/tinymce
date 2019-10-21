@@ -1,6 +1,6 @@
 import { Keyboard, FocusTools, Keys } from '@ephox/agar';
 import { GuiFactory, Behaviour, AddEventsBehaviour, AlloyEvents, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 import { formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';

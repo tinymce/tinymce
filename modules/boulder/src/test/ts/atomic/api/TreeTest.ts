@@ -1,6 +1,5 @@
-import { RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { Arr, Fun, Obj } from '@ephox/katamari';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Arr, Fun } from '@ephox/katamari';
 import * as DslType from 'ephox/boulder/api/DslType';
 import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
@@ -53,7 +52,7 @@ UnitTest.test('Atomic Test: api.TreeTest', function () {
 
   const check = function (label, expected, input) {
     const actual = ValueSchema.asRawOrDie(label, schema, input);
-    RawAssertions.assertEq(label, expected, actual);
+    Assert.eq(label, expected, actual);
   };
 
   check('Single leaf', { value: 'a', text: '?', branches: [ ] }, { value: 'a' });

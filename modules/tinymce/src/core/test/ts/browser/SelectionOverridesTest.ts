@@ -1,8 +1,9 @@
 import { Keyboard, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyDom, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import KeyUtils from '../module/test/KeyUtils';
@@ -10,20 +11,18 @@ import VK from 'tinymce/core/api/util/VK';
 import Theme from 'tinymce/themes/silver/Theme';
 import Zwsp from 'tinymce/core/text/Zwsp';
 
-UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (success, failure) {
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
-  const pressKey = function (key) {
-    return function (editor) {
+  const pressKey = function (key: number) {
+    return function (editor: Editor) {
       Keyboard.keystroke(key, {}, TinyDom.fromDom(editor.getBody()));
     };
   };
 
-  const exitPreTest = function (arrow, offset, expectedContent) {
+  const exitPreTest = function (arrow, offset: number, expectedContent: string) {
     return function (editor) {
       editor.setContent('<pre>abc</pre>');
 
@@ -39,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function () {
     };
   };
 
-  const ok = function (a, label) {
+  const ok = function (a: boolean, label: string) {
     LegacyUnit.equal(a, true, label);
   };
 

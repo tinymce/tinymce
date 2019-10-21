@@ -1,5 +1,4 @@
-import { RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
@@ -65,7 +64,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
       arbData
     ], (data) => {
       const newValue = SliderModel.reduceBy(data.value, data.min, data.max, data.stepSize);
-      RawAssertions.assertEq('Checking value', true, newValue <= data.value && newValue >= data.min - 1);
+      Assert.eq('Checking value', true, newValue <= data.value && newValue >= data.min - 1);
       return true;
     },
     { }
@@ -77,7 +76,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
       arbData
     ], (data) => {
       const newValue = SliderModel.increaseBy(data.value, data.min, data.max, data.stepSize);
-      RawAssertions.assertEq('Checking value', true, newValue >= data.value && newValue <= data.max + 1);
+      Assert.eq('Checking value', true, newValue >= data.value && newValue <= data.max + 1);
       return true;
     },
     { }
@@ -109,7 +108,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
       const newValue = SliderModel.findValueOf(args);
       const f = Math.abs((newValue - data.min) / data.stepSize);
       const actual = Math.floor(f) === f || newValue === data.min || newValue === data.max || newValue === data.min - 1 || newValue === data.max + 1;
-      RawAssertions.assertEq('Checking factors correctly', true, actual);
+      Assert.eq('Checking factors correctly', true, actual);
       return true;
     },
     { }
@@ -141,7 +140,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
       };
       const newValue = SliderModel.findValueOf(args);
       const f = Math.abs((newValue - (data.min + snapOffset)) / data.stepSize);
-      RawAssertions.assertEq('Checking factors correctly: ' + newValue, true,
+      Assert.eq('Checking factors correctly: ' + newValue, true,
         Math.floor(f) === f || newValue === data.min || newValue === data.max || newValue === data.min - 1 || newValue === data.max + 1
       );
       return true;
@@ -173,7 +172,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
         screenRange: bounds.width
       };
       const newValue = SliderModel.findValueOf(args);
-      RawAssertions.assertEq(
+      Assert.eq(
         'Assert within range: ' + newValue, true,
         newValue >= data.min - 1 && newValue <= data.max + 1
       );
@@ -206,7 +205,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
         screenRange: bounds.width
       };
       const newValue = SliderModel.findValueOf(args);
-      RawAssertions.assertEq(
+      Assert.eq(
         'Assert within range: ' + newValue, true,
         newValue >= data.min - 1 && newValue <= data.max + 1
       );

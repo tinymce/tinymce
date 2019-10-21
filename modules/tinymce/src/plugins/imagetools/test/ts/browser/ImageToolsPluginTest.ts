@@ -1,5 +1,5 @@
-import { Pipeline, RawAssertions, Step, Logger, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Logger, Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import URI from 'tinymce/core/api/util/URI';
@@ -19,14 +19,14 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (s
   const sAssertUploadFilename = function (expected) {
     return Logger.t('Assert uploaded filename', Step.sync(function () {
       const blobInfo = uploadHandlerState.get().blobInfo;
-      RawAssertions.assertEq('Should be expected file name', expected, blobInfo.filename());
+      Assert.eq('Should be expected file name', expected, blobInfo.filename());
     }));
   };
 
   const sAssertUploadFilenameMatches = function (matchRegex) {
     return Logger.t('Assert uploaded filename', Step.sync(function () {
       const blobInfo = uploadHandlerState.get().blobInfo;
-      RawAssertions.assertEq(`File name ${blobInfo.filename()} should match ${matchRegex}`, true, matchRegex.test(blobInfo.filename()));
+      Assert.eq(`File name ${blobInfo.filename()} should match ${matchRegex}`, true, matchRegex.test(blobInfo.filename()));
     }));
   };
 
@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (s
     return Logger.t('ImageTools: Assert uri', Step.sync(function () {
       const blobInfo = uploadHandlerState.get().blobInfo;
       const uri = new URI(blobInfo.uri());
-      RawAssertions.assertEq('Should be expected uri', expected, uri.relative);
+      Assert.eq('Should be expected uri', expected, uri.relative);
     }));
   };
 

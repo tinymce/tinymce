@@ -1,5 +1,5 @@
 import { Keyboard, Keys, Log, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';

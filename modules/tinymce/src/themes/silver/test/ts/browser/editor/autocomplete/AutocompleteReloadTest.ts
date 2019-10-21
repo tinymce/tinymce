@@ -1,5 +1,5 @@
 import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { InlineContent } from '@ephox/bridge';
 import { Arr, Obj } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';

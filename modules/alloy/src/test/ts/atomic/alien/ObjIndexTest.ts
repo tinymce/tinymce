@@ -1,5 +1,5 @@
-import { Logger, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Logger } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
 
 import * as ObjIndex from 'ephox/alloy/alien/ObjIndex';
@@ -18,7 +18,7 @@ UnitTest.test('ObjIndexTest', () => {
   };
 
   const assertSortedEq = (label, expected, actual) => {
-    RawAssertions.assertEq(label, sortObjValue(expected), sortObjValue(actual));
+    Assert.eq(label, sortObjValue(expected), sortObjValue(actual));
   };
 
   Logger.sync(

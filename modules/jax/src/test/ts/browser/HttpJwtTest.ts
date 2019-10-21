@@ -1,5 +1,5 @@
 import { Arr, FutureResult, Result } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { console } from '@ephox/dom-globals';
 import * as HttpJwt from 'ephox/jax/core/HttpJwt';
 import { JwtTokenFactory } from 'ephox/jax/core/HttpTypes';

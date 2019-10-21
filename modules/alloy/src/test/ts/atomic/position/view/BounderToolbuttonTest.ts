@@ -1,5 +1,5 @@
 import { Position } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 import { bounds } from 'ephox/alloy/alien/Boxes';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';

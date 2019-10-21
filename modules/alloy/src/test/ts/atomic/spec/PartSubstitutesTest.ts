@@ -1,5 +1,5 @@
-import { Logger, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Logger } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 
 import { subs } from 'ephox/alloy/parts/PartSubstitutes';
@@ -94,8 +94,8 @@ UnitTest.test('PartSubstitutesTest', () => {
         Logger.sync('Checking: ' + label, () => {
           part.match({
             single: (required, valueThunk) => {
-              RawAssertions.assertEq('Checking required status', expected.required, required);
-              RawAssertions.assertEq('Checking result', {
+              Assert.eq('Checking required status', expected.required, required);
+              Assert.eq('Checking result', {
                 factory: expected.factory,
                 spec: expected.spec
               }, valueThunk(detail, { }, { }));
@@ -124,7 +124,7 @@ UnitTest.test('PartSubstitutesTest', () => {
       Logger.sync('Checking external.C', () => {
         const outcome = externals['external.C']();
 
-        RawAssertions.assertEq('Checking result', {
+        Assert.eq('Checking result', {
           factory: 'factory.C',
           spec: {
             uid: 'c-uid'
@@ -136,8 +136,8 @@ UnitTest.test('PartSubstitutesTest', () => {
         internals['part:d'].match({
           single: Fun.die('Should not be a single'),
           multiple: (required, valueThunks) => {
-            RawAssertions.assertEq('Checking required status', true, required);
-            RawAssertions.assertEq('Checking result',
+            Assert.eq('Checking required status', true, required);
+            Assert.eq('Checking result',
               [
                 {
                   factory: 'factory.D',

@@ -1,26 +1,24 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step, Waiter, Cursors } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { window } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 import Editor from 'tinymce/core/api/Editor';
-import { window } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, failure) => {
 
   Theme();
 
-  const sScrollReset = function (editor) {
+  const sScrollReset = function (editor: Editor) {
     return Step.sync(function () {
       editor.getWin().scrollTo(0, 0);
     });
   };
 
-  const sSetContent = function (editor, tinyApis, html) {
+  const sSetContent = function (editor: Editor, tinyApis: TinyApis, html: string) {
     return GeneralSteps.sequence([
       tinyApis.sSetContent(html),
       Waiter.sTryUntil('Wait for scrollHeight to be updated', Step.sync(function () {
@@ -29,13 +27,13 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function () {
     ]);
   };
 
-  const sScrollIntoView = function (editor, selector, alignToTop) {
+  const sScrollIntoView = function (editor: Editor, selector: string, alignToTop: boolean) {
     return Step.sync(function () {
       editor.selection.scrollIntoView(editor.dom.select(selector)[0], alignToTop);
     });
   };
 
-  const sScrollElementIntoView = function (editor, selector, alignToTop) {
+  const sScrollElementIntoView = function (editor: Editor, selector: string, alignToTop: boolean) {
     return Step.sync(function () {
       ScrollIntoView.scrollElementIntoView(editor, editor.dom.select(selector)[0], alignToTop);
     });
@@ -68,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function () {
     });
   };
 
-  const mBindScrollIntoViewEvent = function (editor) {
+  const mBindScrollIntoViewEvent = function (editor: Editor) {
     return Step.stateful(function (value, next, die) {
       const state = Cell({});
 
@@ -89,7 +87,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function () {
     });
   };
 
-  const mAssertScrollIntoViewEventInfo = function (editor, expectedElementSelector, expectedAlignToTop) {
+  const mAssertScrollIntoViewEventInfo = function (editor: Editor, expectedElementSelector: string, expectedAlignToTop: boolean) {
     return Step.stateful(function (value: any, next, die) {
       const expectedTarget = Element.fromDom(editor.dom.select(expectedElementSelector)[0]);
       const actualTarget = Element.fromDom(value.state.get().elm);
@@ -100,7 +98,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function () {
     });
   };
 
-  const steps = function (editor, tinyApis) {
+  const steps = function (editor: Editor, tinyApis: TinyApis) {
     return [
       tinyApis.sFocus,
       Logger.t('Public Selection API', GeneralSteps.sequence([

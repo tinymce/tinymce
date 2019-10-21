@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Chain, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor, UiChains } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { Body, Element, Insert, Remove, Selectors } from '@ephox/sugar';

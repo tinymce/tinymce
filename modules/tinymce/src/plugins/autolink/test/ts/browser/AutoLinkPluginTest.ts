@@ -1,18 +1,19 @@
 import { Pipeline, Log } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/autolink/Plugin';
-import KeyUtils from '../module/test/KeyUtils';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import KeyUtils from '../module/test/KeyUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
   Plugin();
 
-  const typeUrl = function (editor, url) {
+  const typeUrl = function (editor: Editor, url: string) {
     editor.setContent('<p>' + url + '</p>');
     LegacyUnit.setSelection(editor, 'p', url.length);
     KeyUtils.type(editor, ' ');

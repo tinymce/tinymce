@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Attr, Class, Element, Html, InsertAll } from '@ephox/sugar';
 import CopySelected from 'ephox/snooker/api/CopySelected';

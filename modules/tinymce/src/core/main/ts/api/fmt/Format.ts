@@ -30,7 +30,7 @@ export interface CommonFormat<T> {
 export interface CommonApplyFormat<T> extends CommonFormat<T> {
   attributes?: Record<string, string | ((vars?: FormatVars) => string | number)>;
   preview?: string | boolean;
-  styles?: Record<string, string>;
+  styles?: Record<string, string | ((vars?: FormatVars) => string)>;
   toggle?: boolean;
   wrapper?: boolean;
   merge_siblings?: boolean;

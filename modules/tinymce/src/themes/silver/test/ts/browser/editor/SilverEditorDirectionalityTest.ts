@@ -1,7 +1,7 @@
 import { Assertions, Pipeline, Log, ApproxStructure, NamedChain, Chain } from '@ephox/agar';
 import { Editor as McEditor } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Element } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Editor from 'tinymce/core/api/Editor';

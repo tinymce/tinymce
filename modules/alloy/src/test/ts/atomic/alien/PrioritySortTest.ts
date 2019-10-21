@@ -1,5 +1,5 @@
-import { Logger, RawAssertions } from '@ephox/agar';
-import { assert, UnitTest } from '@ephox/bedrock';
+import { Logger } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Struct } from '@ephox/katamari';
 
 import * as PrioritySort from 'ephox/alloy/alien/PrioritySort';
@@ -13,18 +13,18 @@ UnitTest.test('PrioritySortTest', () => {
       const errMessage = Arr.map(err, (e) => {
         return e.message !== undefined ? e.message : e;
       }).join('');
-      RawAssertions.assertEq('Checking the error of priority sort', errMessage.indexOf(expected) > -1, true);
+      Assert.eq('Checking the error of priority sort', errMessage.indexOf(expected) > -1, true);
     }, (val) => {
-      assert.fail('Priority sort should have thrown error: ' + expected + '\nWas: ' + JSON.stringify(val, null, 2));
+      Assert.fail('Priority sort should have thrown error: ' + expected + '\nWas: ' + JSON.stringify(val, null, 2));
     });
   };
 
   const checkVal = (expected, input, order) => {
     const actual = PrioritySort.sortKeys('test.sort', 'letter', input, order);
     actual.fold((err) => {
-      assert.fail('Unexpected error: ' + err + '\nWas wanting value(' + JSON.stringify(expected, null, 2) + ')');
+      Assert.fail('Unexpected error: ' + err + '\nWas wanting value(' + JSON.stringify(expected, null, 2) + ')');
     }, (val) => {
-      RawAssertions.assertEq('Checking the value of priority sort', expected, Arr.map(val, (v) => v.letter()));
+      Assert.eq('Checking the value of priority sort', expected, Arr.map(val, (v) => v.letter()));
     });
   };
 

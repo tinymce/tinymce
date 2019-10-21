@@ -1,5 +1,5 @@
 import { Assertions, Chain, NamedChain } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { window } from '@ephox/dom-globals';
 
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';

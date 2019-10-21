@@ -2,7 +2,7 @@ import { Pipeline, Step, Waiter, Logger, Log } from '@ephox/agar';
 import { TinyApis, TinyLoader, TinyUi  } from '@ephox/mcagar';
 import AchorPlugin from 'tinymce/plugins/anchor/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest.js', (success, failure) => {

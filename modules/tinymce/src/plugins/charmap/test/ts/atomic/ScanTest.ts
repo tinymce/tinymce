@@ -1,5 +1,5 @@
 import { Assertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import Scan from 'tinymce/plugins/charmap/core/Scan';
 import { CharMap } from 'tinymce/plugins/charmap/core/CharMap';
 

@@ -3,7 +3,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Hierarchy, Element } from '@ephox/sugar';
 import ExpandRange from 'tinymce/core/fmt/ExpandRange';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function () {
   const success = arguments[arguments.length - 2];

@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Logger } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as ToggleModes from 'ephox/alloy/behaviour/toggling/ToggleModes';

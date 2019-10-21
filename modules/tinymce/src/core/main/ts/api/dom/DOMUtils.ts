@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Node, Window, Document, Element, DocumentFragment, NamedNodeMap, Range, window, document, Attr, HTMLElementEventMap } from '@ephox/dom-globals';
+import { HTMLElement, Node, Window, Document, Element, DocumentFragment, NamedNodeMap, Range, window, document, Attr, HTMLElementEventMap, HTMLElementTagNameMap } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
 import NodeType from '../../dom/NodeType';
 import Position from '../../dom/Position';
@@ -188,6 +188,7 @@ interface DOMUtils {
   get (elm: string | Node): HTMLElement;
   getNext (node: Node, selector: string | Function): Node;
   getPrev (node: Node, selector: string | Function): Node;
+  select <K extends keyof HTMLElementTagNameMap>(selector: K, scope?: string | Element): Array<HTMLElementTagNameMap[K]>;
   select (selector: string, scope?: string | Element): HTMLElement[];
   is (elm: Node | Node[], selector: string): boolean;
   add (parentElm: RunArguments, name: string | Node, attrs?: Record<string, any>, html?: string | Node, create?: boolean): HTMLElement;

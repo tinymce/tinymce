@@ -1,7 +1,7 @@
 import { LegacyUnit } from '@ephox/mcagar';
-import { Pipeline, RawAssertions } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
 import I18n from 'tinymce/core/api/util/I18n';
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
@@ -73,9 +73,9 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, fail
       text: 'translation1'
     });
 
-    RawAssertions.assertEq('Should not have switched language code', 'en', I18n.getCode());
-    RawAssertions.assertEq('Should not be in in rtl mode', false, I18n.isRtl());
-    RawAssertions.assertEq('Should not get code1 translation', 'text', I18n.translate('text'));
+    Assert.eq('Should not have switched language code', 'en', I18n.getCode());
+    Assert.eq('Should not be in in rtl mode', false, I18n.isRtl());
+    Assert.eq('Should not get code1 translation', 'text', I18n.translate('text'));
 
     I18n.add('code2', {
       _dir: 'rtl',
@@ -83,9 +83,9 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, fail
     });
 
     I18n.setCode('code2');
-    RawAssertions.assertEq('Should have switched language code', 'code2', I18n.getCode());
-    RawAssertions.assertEq('Should be in in rtl mode', true, I18n.isRtl());
-    RawAssertions.assertEq('Should be get code2 translation', 'translation2', I18n.translate('text'));
+    Assert.eq('Should have switched language code', 'code2', I18n.getCode());
+    Assert.eq('Should be in in rtl mode', true, I18n.isRtl());
+    Assert.eq('Should be get code2 translation', 'translation2', I18n.translate('text'));
 
     I18n.setCode('en');
   });

@@ -1,6 +1,6 @@
 import { Assertions } from '@ephox/agar';
 import Features from 'tinymce/themes/mobile/features/Features';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('features.IdentifyToolbarTest', function () {
   const check = function (label, expected, input) {

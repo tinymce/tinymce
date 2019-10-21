@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
 
 import TestProviders from '../../../module/TestProviders';

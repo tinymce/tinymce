@@ -1,5 +1,5 @@
 import { Chain, FocusTools, Guard, Keyboard, Keys, Log, Pipeline, UiFinder, NamedChain } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Result } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';

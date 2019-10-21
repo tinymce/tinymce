@@ -1,7 +1,7 @@
 import * as Comment from 'ephox/sugar/api/node/Comment';
 import Element from 'ephox/sugar/api/node/Element';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { HTMLSpanElement, Comment as DomComment } from '@ephox/dom-globals';
 
 UnitTest.test('CommentTest', function () {

@@ -1,5 +1,5 @@
 import { Assertions, Logger, Log, Pipeline, Step, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import LinkPluginUtils from 'tinymce/plugins/link/core/Utils';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';

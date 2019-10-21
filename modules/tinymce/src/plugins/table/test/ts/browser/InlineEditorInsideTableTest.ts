@@ -1,7 +1,7 @@
-import { Chain, Mouse, NamedChain, UiFinder, RawAssertions, Guard, Step, Pipeline, Log, TestLogs } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Chain, Guard, Log, Mouse, NamedChain, Pipeline, Step, TestLogs, UiFinder } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Editor } from '@ephox/mcagar';
-import { Insert, Body, Element, Html, Attr, Remove } from '@ephox/sugar';
+import { Attr, Body, Element, Html, Insert, Remove } from '@ephox/sugar';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -51,8 +51,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
     return Chain.control(
       Chain.op(() => {
         UiFinder.findIn(container, selector).fold(
-          () => RawAssertions.assertEq('should not find anything', true, true),
-          () => RawAssertions.assertEq('Expected ' + selector + ' not to exist.', true, false)
+          () => Assert.eq('should not find anything', true, true),
+          () => Assert.eq('Expected ' + selector + ' not to exist.', true, false)
         );
       }),
       Guard.addLogging('Assert ' + selector + ' does not exist')

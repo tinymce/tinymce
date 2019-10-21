@@ -4,7 +4,7 @@ import * as Direction from 'ephox/sugar/api/properties/Direction';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('DirectionTest', function () {
   const el = EphoxElement('div');

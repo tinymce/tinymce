@@ -1,5 +1,5 @@
 import { Assertions, Chain, NamedChain, Truncate, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Result } from '@ephox/katamari';
 import { Attr, Class, Compare } from '@ephox/sugar';
 

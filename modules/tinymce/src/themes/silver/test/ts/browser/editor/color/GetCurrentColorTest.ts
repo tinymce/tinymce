@@ -1,5 +1,5 @@
-import { Logger, Pipeline, RawAssertions, Step, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Logger, Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 
@@ -15,7 +15,7 @@ UnitTest.asynctest('GetCurrentColorTest', (success, failure) => {
     Step.sync(() => {
       const actual = ColorSwatch.getCurrentColor(editor, format);
 
-      RawAssertions.assertEq(label, expected, actual);
+      Assert.eq(label, expected, actual);
     })
   );
 

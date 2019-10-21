@@ -1,9 +1,9 @@
-import { Assertions, Chain, Logger, Pipeline, RawAssertions } from '@ephox/agar';
+import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
 import { Fun, Option } from '@ephox/katamari';
-import { Hierarchy, Remove, Element, Traverse, Selection, WindowSelection } from '@ephox/sugar';
+import { Element, Hierarchy, Remove, Selection, Traverse, WindowSelection } from '@ephox/sugar';
 import SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', function () {
   const success = arguments[arguments.length - 2];
@@ -47,11 +47,11 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
   };
 
   const cAssertNone = Chain.op(function (x: Option<any>) {
-    RawAssertions.assertEq('should be none', true, x.isNone());
+    Assert.eq('should be none', true, x.isNone());
   });
 
   const cAssertSome = Chain.op(function (x: Option<any>) {
-    RawAssertions.assertEq('should be some', true, x.isSome());
+    Assert.eq('should be some', true, x.isSome());
   });
 
   const cAssertSelection = function (startPath, startOffset, finishPath, finishOffset) {

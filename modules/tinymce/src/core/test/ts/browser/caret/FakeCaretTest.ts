@@ -6,7 +6,7 @@ import $ from 'tinymce/core/api/dom/DomQuery';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import CaretAsserts from '../../module/test/CaretAsserts';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Element } from '@ephox/sugar';
 import { isFakeCaretTableBrowser } from 'tinymce/core/keyboard/TableNavigation';
 import { Fun } from '@ephox/katamari';

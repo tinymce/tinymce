@@ -1,10 +1,10 @@
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { DataTransfer, navigator } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 import { Body, DomEvent, Element, Insert, Remove } from '@ephox/sugar';
 import { cCopy, cCut, sPasteDataTransfer, sPasteFiles, sPasteItems } from 'ephox/agar/api/Clipboard';
 import { createFileFromString } from 'ephox/agar/api/Files';
-import { Chain, GeneralSteps, Logger, RawAssertions, Step } from 'ephox/agar/api/Main';
+import { Chain, GeneralSteps, Logger, Step } from 'ephox/agar/api/Main';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 
 UnitTest.asynctest('ClipboardTest', (success, failure) => {
@@ -37,8 +37,8 @@ UnitTest.asynctest('ClipboardTest', (success, failure) => {
       Step.sync(() => {
         const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
-        RawAssertions.assertEq('Should be expected plain text', 'Hello world!', dataTransfer.getData('text/plain'));
-        RawAssertions.assertEq('Should be expected html', '<b>Hello world!</b>', dataTransfer.getData('text/html'));
+        Assert.eq('Should be expected plain text', 'Hello world!', dataTransfer.getData('text/plain'));
+        Assert.eq('Should be expected html', '<b>Hello world!</b>', dataTransfer.getData('text/html'));
       })
     ])),
 
@@ -50,11 +50,11 @@ UnitTest.asynctest('ClipboardTest', (success, failure) => {
       Step.sync(() => {
         const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
-        RawAssertions.assertEq('Should be expected mime type', 'text/plain', dataTransfer.items[0].type);
-        RawAssertions.assertEq('Should be expected mime type', 'text/plain', dataTransfer.files[0].type);
+        Assert.eq('Should be expected mime type', 'text/plain', dataTransfer.items[0].type);
+        Assert.eq('Should be expected mime type', 'text/plain', dataTransfer.files[0].type);
 
-        RawAssertions.assertEq('Should be expected mime type', 'text/html', dataTransfer.items[1].type);
-        RawAssertions.assertEq('Should be expected mime type', 'text/html', dataTransfer.files[1].type);
+        Assert.eq('Should be expected mime type', 'text/html', dataTransfer.items[1].type);
+        Assert.eq('Should be expected mime type', 'text/html', dataTransfer.files[1].type);
       })
     ])),
 
@@ -66,25 +66,25 @@ UnitTest.asynctest('ClipboardTest', (success, failure) => {
       Step.sync(() => {
         const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
-        RawAssertions.assertEq('Should be expected mime type', 'text/plain', dataTransfer.items[0].type);
-        RawAssertions.assertEq('Should be expected mime type', 'file', dataTransfer.items[0].kind);
+        Assert.eq('Should be expected mime type', 'text/plain', dataTransfer.items[0].type);
+        Assert.eq('Should be expected mime type', 'file', dataTransfer.items[0].kind);
 
-        RawAssertions.assertEq('Should be expected mime type', 'text/html', dataTransfer.items[1].type);
-        RawAssertions.assertEq('Should be expected mime type', 'string', dataTransfer.items[1].kind);
+        Assert.eq('Should be expected mime type', 'text/html', dataTransfer.items[1].type);
+        Assert.eq('Should be expected mime type', 'string', dataTransfer.items[1].kind);
       })
     ])),
 
     Logger.t('Cut', Chain.asStep(pastebin, [
       cCut,
       Chain.op((dataTransfer: DataTransfer) => {
-        RawAssertions.assertEq('Should be extected cut data', 'cut-data', dataTransfer.getData('text/plain'));
+        Assert.eq('Should be extected cut data', 'cut-data', dataTransfer.getData('text/plain'));
       })
     ])),
 
     Logger.t('Copy', Chain.asStep(pastebin, [
       cCopy,
       Chain.op((dataTransfer: DataTransfer) => {
-        RawAssertions.assertEq('Should be extected copy data', 'copy-data', dataTransfer.getData('text/plain'));
+        Assert.eq('Should be extected copy data', 'copy-data', dataTransfer.getData('text/plain'));
       })
     ]))
   ], () => {

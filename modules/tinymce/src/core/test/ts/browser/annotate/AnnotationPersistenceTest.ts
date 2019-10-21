@@ -1,5 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { AnnotatorSettings } from 'tinymce/core/api/Annotator';
 import Editor from 'tinymce/core/api/Editor';
@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationPersistenceTest', (s
     editor.undoManager.add();
   });
 
-  const sRunTinyWithSettings = (annotation: AnnotatorSettings, getSteps: (tinyApis: any, editor: Editor) => any[]) => Step.async((next, die) => {
+  const sRunTinyWithSettings = (annotation: AnnotatorSettings, getSteps: (tinyApis: TinyApis, editor: Editor) => Step<any, any>[]) => Step.async((next, die) => {
     const settings = {
       base_url: '/project/tinymce/js/tinymce',
       setup: (ed: Editor) => {
@@ -64,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationPersistenceTest', (s
     }
   };
 
-  const sSetupSingleAnnotation = (tinyApis, editor) => GeneralSteps.sequence([
+  const sSetupSingleAnnotation = (tinyApis: TinyApis, editor: Editor) => GeneralSteps.sequence([
     // '<p>This is the only p|ar|agraph</p>'
     tinyApis.sSetContent('<p>This is the only paragraph <em>here</em></p>'),
     sUndoLevel(editor),
@@ -90,7 +90,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationPersistenceTest', (s
     })
   ]);
 
-  const sContentContains = (tinyApis: any, ed: Editor, pattern: string, isContained: boolean) => {
+  const sContentContains = (tinyApis: TinyApis, ed: Editor, pattern: string, isContained: boolean) => {
     return Chain.asStep({ }, [
       Chain.mapper(() => ed.getContent()),
       Chain.op((content) => {
@@ -106,7 +106,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationPersistenceTest', (s
   Pipeline.async({ }, [
     Logger.t(
       'Testing configuration with persistence',
-      sRunTinyWithSettings(settingsWithPersistence, (tinyApis: any, ed: Editor) => [
+      sRunTinyWithSettings(settingsWithPersistence, (tinyApis: TinyApis, ed: Editor) => [
         sSetupSingleAnnotation(tinyApis, ed),
         sContentContains(tinyApis, ed, 'mce-annotation', true)
       ])
@@ -114,7 +114,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationPersistenceTest', (s
 
     Logger.t(
       'Testing configuration with *no* persistence',
-      sRunTinyWithSettings(settingsWithoutPersistence, (tinyApis: any, ed: Editor) => [
+      sRunTinyWithSettings(settingsWithoutPersistence, (tinyApis: TinyApis, ed: Editor) => [
         sSetupSingleAnnotation(tinyApis, ed),
         sContentContains(tinyApis, ed, 'mce-annotation', false)
       ])
@@ -122,7 +122,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationPersistenceTest', (s
 
     Logger.t(
       'Testing configuration with default persistence',
-      sRunTinyWithSettings(settingsWithDefaultPersistence, (tinyApis: any, ed: Editor) => [
+      sRunTinyWithSettings(settingsWithDefaultPersistence, (tinyApis: TinyApis, ed: Editor) => [
         sSetupSingleAnnotation(tinyApis, ed),
         sContentContains(tinyApis, ed, 'mce-annotation', true)
       ])

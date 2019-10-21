@@ -1,9 +1,8 @@
-import { RawAssertions } from '@ephox/agar';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { assert, Assert, UnitTest } from '@ephox/bedrock-client';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 import { FieldProcessorAdt } from 'ephox/boulder/api/Main';
-import { Option, Obj, Arr } from '@ephox/katamari';
+import { Obj, Option } from '@ephox/katamari';
 
 UnitTest.test('Atomic Test: api.FieldSchemaTest', function () {
   const assertFieldValue = (label: string, expected: any, input: any, field: FieldProcessorAdt) => {
@@ -13,7 +12,7 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', function () {
 
     ValueSchema.asRaw('spec', schema, input).fold(
       (err) => { throw err; },
-      (value) => RawAssertions.assertEq(label, expected, value)
+      (value) => Assert.eq(label, expected, value)
     );
   };
 
@@ -38,11 +37,11 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', function () {
       (actual: any) => {
        Obj.each(expected, (expectedValueOpt, expectedKey) => {
           if (expectedValueOpt.isNone()) {
-            RawAssertions.assertEq(`Expected value for key ${expectedKey} to be none`, true, actual[expectedKey].isNone());
+            Assert.eq(`Expected value for key ${expectedKey} to be none`, true, actual[expectedKey].isNone());
           } else if (expectedValueOpt.isSome()) {
             const actualValue = actual[expectedKey].getOrDie(`Expected value for key ${expectedKey} to be some`);
             const expectedValue = expectedValueOpt.getOrDie(`Expected value for key ${expectedKey} to be some`);
-            RawAssertions.assertEq(`Expected value for key ${expectedKey} to be some`, expectedValue, actualValue);
+            Assert.eq(`Expected value for key ${expectedKey} to be some`, expectedValue, actualValue);
           }
         });
       }

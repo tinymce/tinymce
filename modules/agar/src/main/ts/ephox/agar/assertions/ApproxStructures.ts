@@ -1,9 +1,8 @@
-import { assert, TestLabel } from '@ephox/bedrock';
+import { Assert, assert, TestLabel } from '@ephox/bedrock-client';
 import { Arr, Fun, Obj, Option } from '@ephox/katamari';
 import { Attr, Classes, Css, Element, Html, Node, Text, Traverse, Value } from '@ephox/sugar';
 
 import * as Truncate from '../alien/Truncate';
-import { assertEq } from '../api/RawAssertions';
 import * as ApproxComparisons from './ApproxComparisons';
 
 export interface StringAssert {
@@ -96,7 +95,7 @@ const elementQueue = function (items: Element[], container: Option<Element>): El
 
 const element = function (tag: string, fields: ElementFields): StructAssert {
   const doAssert = function (actual: Element) {
-    assertEq(() => 'Incorrect node name for: ' + Truncate.getHtml(actual), tag, Node.name(actual));
+    Assert.eq(() => 'Incorrect node name for: ' + Truncate.getHtml(actual), tag, Node.name(actual));
     const attrs = fields.attrs !== undefined ? fields.attrs : {};
     const classes = fields.classes !== undefined ? fields.classes : [];
     const styles = fields.styles !== undefined ? fields.styles : {};

@@ -1,5 +1,5 @@
-import { Keys, Pipeline, RawAssertions, Step, Waiter, Logger, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Keys, Log, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import TabfocusPlugin from 'tinymce/plugins/tabfocus/Plugin';
@@ -36,13 +36,13 @@ UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', (succe
         sAddInputs(editor),
         tinyApis.sFocus,
         Step.sync(function () {
-          RawAssertions.assertEq('should be same', 'IFRAME', document.activeElement.nodeName);
+          Assert.eq('should be same', 'IFRAME', document.activeElement.nodeName);
         }),
         tinyActions.sContentKeystroke(Keys.tab(), {}),
         Waiter.sTryUntil('wait for focus',
           Step.sync(function () {
             const input = document.getElementById('tempinput1');
-            RawAssertions.assertEq('should be same', input.outerHTML, document.activeElement.outerHTML);
+            Assert.eq('should be same', input.outerHTML, document.activeElement.outerHTML);
           })),
         sRemoveInputs
       ])

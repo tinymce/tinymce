@@ -1,7 +1,9 @@
-import { ApproxStructure, Assertions, Pipeline, Step, Waiter, Logger, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { ApproxStructure, Assertions, Pipeline, Step, Waiter, Logger, Log, StructAssert } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
+
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -31,7 +33,7 @@ UnitTest.asynctest('browser.core.EphoxEmbedTest', function (success, failure) {
     });
   });
 
-  const sAssertDivStructure = function (editor, expected) {
+  const sAssertDivStructure = function (editor: Editor, expected: StructAssert) {
     return Logger.t(`Assert div structure ${expected}`, Step.sync(function () {
       const div = editor.dom.select('div')[0];
       const actual = div ? Element.fromHtml(div.outerHTML) : Element.fromHtml('');

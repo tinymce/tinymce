@@ -1,5 +1,5 @@
 import { ApproxStructure, Log, Pipeline, RealKeys } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';

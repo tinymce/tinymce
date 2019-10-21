@@ -10,7 +10,7 @@ import {
   Pipeline,
   UiFinder,
 } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';

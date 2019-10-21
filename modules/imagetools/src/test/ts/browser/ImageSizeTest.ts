@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Blob, document } from '@ephox/dom-globals';
 import Assertion from 'ephox/imagetools/test/Assertion';
 import * as Conversions from 'ephox/imagetools/util/Conversions';

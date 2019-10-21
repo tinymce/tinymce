@@ -1,5 +1,5 @@
 import * as Arr from 'ephox/katamari/api/Arr';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 const arrayLike: ArrayLike<number> = {
   length: 6,

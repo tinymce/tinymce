@@ -1,4 +1,4 @@
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 import * as Overflows from 'ephox/alloy/toolbar/Overflows';
 

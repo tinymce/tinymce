@@ -1,5 +1,5 @@
 import { ApproxStructure, GeneralSteps, Keys, Logger, Pipeline, StructAssert, Waiter, Mouse, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';

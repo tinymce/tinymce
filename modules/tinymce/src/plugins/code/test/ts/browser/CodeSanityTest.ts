@@ -1,5 +1,5 @@
-import { GeneralSteps, FocusTools, Logger, Mouse, Pipeline, RawAssertions, Step, UiFinder, Waiter, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { FocusTools, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, fail
     const sAssertTextareaContent = (expected) => {
       return Logger.t('Asserting textarea content is ' + expected, Step.sync(() => {
         const textarea: any = document.querySelector('div[role="dialog"] textarea');
-        RawAssertions.assertEq('Should have correct value', expected, textarea.value);
+        Assert.eq('Should have correct value', expected, textarea.value);
       }));
     };
 

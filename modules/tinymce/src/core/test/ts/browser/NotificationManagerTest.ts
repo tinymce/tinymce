@@ -1,16 +1,18 @@
 import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
+import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
 
 UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (success, failure) {
   Theme();
 
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
-  const teardown = function (editor) {
+  const teardown = function (editor: Editor) {
     const notifications = [].concat(editor.notificationManager.getNotifications());
 
     Tools.each(notifications, function (notification) {
@@ -19,10 +21,10 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (suc
   };
 
   suite.test('TestCase-TBA: Should not add duplicate text message', function (editor) {
-    const testMsg1 = { type: 'default', text: 'test default message' };
-    const testMsg2 = { type: 'warning', text: 'test warning message' };
-    const testMsg3 = { type: 'error', text: 'test error message' };
-    const testMsg4 = { type: 'info', text: 'test info message' };
+    const testMsg1: NotificationSpec = { type: 'success', text: 'test success message' };
+    const testMsg2: NotificationSpec = { type: 'warning', text: 'test warning message' };
+    const testMsg3: NotificationSpec = { type: 'error', text: 'test error message' };
+    const testMsg4: NotificationSpec = { type: 'info', text: 'test info message' };
     const notifications = editor.notificationManager.getNotifications();
 
     editor.notificationManager.open(testMsg1);
@@ -49,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (suc
   });
 
   suite.test('TestCase-TBA: Should add duplicate progressBar messages', function (editor) {
-    const testMsg1 = { text: 'test progressBar message', progressBar: true };
+    const testMsg1: NotificationSpec = { text: 'test progressBar message', progressBar: true };
     const notifications = editor.notificationManager.getNotifications();
 
     editor.notificationManager.open(testMsg1);
@@ -73,7 +75,7 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (suc
         teardown(editor);
       }
     };
-    const testMsg1 = { text: 'test timeout message', timeout: 1 };
+    const testMsg1: NotificationSpec = { text: 'test timeout message', timeout: 1 };
     const notifications = editor.notificationManager.getNotifications();
 
     editor.notificationManager.open(testMsg1);
@@ -90,7 +92,7 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (suc
   });
 
   suite.test('TestCase-TBA: Should not open notification if editor is removed', function (editor) {
-    const testMsg1 = { type: 'default', text: 'test progressBar message' };
+    const testMsg1: NotificationSpec = { type: 'warning', text: 'test progressBar message' };
 
     editor.remove();
 

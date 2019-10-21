@@ -1,4 +1,4 @@
-import { assert, UnitTest, TestLabel } from '@ephox/bedrock';
+import { assert, UnitTest, TestLabel } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attr, Body, Css, Element, Html, Insert, Remove, SelectorFilter } from '@ephox/sugar';

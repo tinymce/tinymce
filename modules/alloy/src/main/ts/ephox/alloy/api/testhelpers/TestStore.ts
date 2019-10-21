@@ -1,6 +1,7 @@
-import { RawAssertions, Step, Chain } from '@ephox/agar';
+import { Chain, Step } from '@ephox/agar';
 import { Option } from '@ephox/katamari';
 import { console } from '@ephox/dom-globals';
+import { Assert } from '@ephox/bedrock-client';
 
 interface TestStore {
   add: (value: any) => void;
@@ -51,7 +52,7 @@ const TestStore = (): TestStore => {
   const sAssertEq = (label: string, expected: any) => {
     return Step.sync(() => {
       // Can't use a normal step here, because we don't need to get array lazily
-      return RawAssertions.assertEq(label, expected, array.slice(0));
+      return Assert.eq(label, expected, array.slice(0));
     });
   };
 
@@ -62,13 +63,13 @@ const TestStore = (): TestStore => {
   };
 
   const assertEq = (label: string, expected: any) => {
-    return RawAssertions.assertEq(label, expected, array.slice(0));
+    return Assert.eq(label, expected, array.slice(0));
   };
 
   const sAssertSortedEq = (label: string, expected: any) => {
     return Step.sync(() => {
       // Can't use a normal step here, because we don't need to get array lazily
-      return RawAssertions.assertEq(label, expected.slice(0).sort(), array.slice(0).sort());
+      return Assert.eq(label, expected.slice(0).sort(), array.slice(0).sort());
     });
   };
 

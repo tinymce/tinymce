@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Objects } from '@ephox/boulder';
 import { Arr, Obj } from '@ephox/katamari';
 

@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Spot } from '@ephox/phoenix';
 import { Pattern } from '@ephox/polaris';
 import { Compare, Element, Html, Insert, InsertAll } from '@ephox/sugar';

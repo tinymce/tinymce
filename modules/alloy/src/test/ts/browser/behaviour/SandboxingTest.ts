@@ -1,5 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Logger, Step, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { Node } from '@ephox/sugar';
 

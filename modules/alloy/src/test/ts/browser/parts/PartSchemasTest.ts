@@ -1,5 +1,4 @@
-import { RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
@@ -64,7 +63,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
       input
     );
 
-    RawAssertions.assertEq(label, expected, output);
+    Assert.eq(label, expected, output);
     return true;
   };
 

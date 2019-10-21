@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import * as Extract from 'ephox/phoenix/api/general/Extract';
 import * as Finder from 'ephox/phoenix/test/Finder';
 import * as TestRenders from 'ephox/phoenix/test/TestRenders';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('api.Extract.(from,all,extract,extractTo)', function () {
   const doc = TestUniverse(

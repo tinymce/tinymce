@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Boundaries from 'ephox/polaris/array/Boundaries';
 
 UnitTest.test('BoundariesTest', function () {

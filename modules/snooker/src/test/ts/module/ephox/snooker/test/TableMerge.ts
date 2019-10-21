@@ -1,4 +1,4 @@
-import { assert } from '@ephox/bedrock';
+import { assert } from '@ephox/bedrock-client';
 import { Arr, Fun, Result } from '@ephox/katamari';
 import * as Structs from 'ephox/snooker/api/Structs';
 import TableMerge from 'ephox/snooker/model/TableMerge';

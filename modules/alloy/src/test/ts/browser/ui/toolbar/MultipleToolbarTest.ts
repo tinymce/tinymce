@@ -7,7 +7,7 @@ import { CustomList } from 'ephox/alloy/api/ui/CustomList';
 import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {

@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document, setTimeout } from '@ephox/dom-globals';
 import { Class, Css, Element, Hierarchy, Html, Insert, Node, Remove } from '@ephox/sugar';
 import * as Assertions from 'ephox/agar/api/Assertions';

@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import XHR, { XHRSettings } from 'tinymce/core/api/util/XHR';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { XMLHttpRequest } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.util.XhrTest', function (success, failure) {
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.util.XhrTest', function (success, failu
 
     XHR.send({
       url: '/custom/json_rpc_ok',
-      success (data, xhr: XMLHttpRequest & { test: string }, input: XHRSettings & { test: string }) {
+      success (data, xhr: XMLHttpRequest & { test: number }, input: XHRSettings & { test: number }) {
         LegacyUnit.equal(JSON.parse(data), { result: 'Hello JSON-RPC', error: null, id: 1 });
         LegacyUnit.equal(xhr.status, 200);
         LegacyUnit.equal(input.url, '/custom/json_rpc_ok');

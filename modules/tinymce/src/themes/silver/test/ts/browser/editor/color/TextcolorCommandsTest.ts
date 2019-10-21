@@ -1,7 +1,7 @@
-import { Logger, Pipeline, RawAssertions, Step, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Logger, Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
-import { TinyApis, TinyLoader, TinyUi  } from '@ephox/mcagar';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -15,7 +15,7 @@ UnitTest.asynctest('TextcolorCommandsTest', (success, failure) => {
 
   const sAssertState = function (expected) {
     return Logger.t(`Assert state ${expected}`, Step.sync(function () {
-      RawAssertions.assertEq('should be same', expected, state.get());
+      Assert.eq('should be same', expected, state.get());
     }));
   };
 

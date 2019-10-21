@@ -1,5 +1,5 @@
 import { GeneralSteps, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Body, Traverse } from '@ephox/sugar';
 
 import TestTheme from '../../module/test/theme/TestTheme';

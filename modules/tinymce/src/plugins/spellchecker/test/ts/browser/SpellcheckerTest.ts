@@ -1,5 +1,5 @@
-import { Pipeline, RawAssertions, Step, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import Settings from 'tinymce/plugins/spellchecker/api/Settings';
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
 
   const sTestDefaultLanguage = function (editor) {
     return Step.sync(function () {
-      RawAssertions.assertEq('should be same', Settings.getLanguage(editor), 'en');
+      Assert.eq('should be same', Settings.getLanguage(editor), 'en');
     });
   };
 

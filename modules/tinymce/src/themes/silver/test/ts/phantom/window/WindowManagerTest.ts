@@ -10,7 +10,7 @@ import {
   UiFinder,
   Waiter,
 } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 import { document, HTMLInputElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';

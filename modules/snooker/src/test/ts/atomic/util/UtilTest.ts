@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Option } from '@ephox/katamari';
 import * as Util from 'ephox/snooker/util/Util';
 

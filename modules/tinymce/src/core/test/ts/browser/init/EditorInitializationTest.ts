@@ -1,5 +1,5 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step, ApproxStructure } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { console, document, window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';

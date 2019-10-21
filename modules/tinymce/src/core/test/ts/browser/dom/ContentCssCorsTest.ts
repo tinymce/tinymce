@@ -1,8 +1,8 @@
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import Editor from 'tinymce/core/api/Editor';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Pipeline, RawAssertions, Logger, Chain } from '@ephox/agar';
+import { Chain, Logger, Pipeline } from '@ephox/agar';
 import Env from 'tinymce/core/api/Env';
 
 UnitTest.asynctest('browser.tinymce.core.dom.ContentCssCorsTest', (success, failure) => {
@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ContentCssCorsTest', (success, fail
 
   const cAssertCorsLinkPresence = (expected: boolean) => Chain.op((editor: Editor) => {
     const corsLinks = editor.getDoc().querySelectorAll('link[crossorigin="anonymous"]');
-    RawAssertions.assertEq('should have link with crossorigin="anonymous"', expected, corsLinks.length > 0);
+    Assert.eq('should have link with crossorigin="anonymous"', expected, corsLinks.length > 0);
   });
 
   Pipeline.async({}, Env.ie < 12 ? [] : [

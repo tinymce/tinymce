@@ -12,7 +12,7 @@ import {
   UiFinder,
   Log
 } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document, navigator } from '@ephox/dom-globals';
 import { Arr, Option, Options, Result } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';

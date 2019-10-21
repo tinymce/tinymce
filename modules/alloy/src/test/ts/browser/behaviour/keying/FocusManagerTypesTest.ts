@@ -1,5 +1,5 @@
 import { Chain, UiFinder, Step, Logger, GeneralSteps, Assertions, FocusTools } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';

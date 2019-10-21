@@ -5,7 +5,7 @@ import CaretContainerRemove from 'tinymce/core/caret/CaretContainerRemove';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import Env from 'tinymce/core/api/Env';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.CaretContainerRemoveTest', function () {
   const success = arguments[arguments.length - 2];

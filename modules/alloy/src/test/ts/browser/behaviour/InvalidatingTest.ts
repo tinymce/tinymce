@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Logger, Step, UiControls, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Cell, Future, Option, Result } from '@ephox/katamari';
 import { Element, Value } from '@ephox/sugar';
 

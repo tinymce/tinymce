@@ -1,7 +1,7 @@
 import * as Replication from 'ephox/sugar/api/dom/Replication';
 import Element from 'ephox/sugar/api/node/Element';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { HTMLElement } from '@ephox/dom-globals';
 
 UnitTest.test('ReplicationTest', function () {

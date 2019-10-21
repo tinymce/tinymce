@@ -1,15 +1,17 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Range } from '@ephox/dom-globals';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import JSON from 'tinymce/core/api/util/JSON';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
-  const normalizeRng = function (rng) {
+  const normalizeRng = function (rng: Range) {
     if (rng.startContainer.nodeType === 3) {
       if (rng.startOffset === 0) {
         rng.setStartBefore(rng.startContainer);
@@ -29,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     return rng;
   };
 
-  const ok = function (value, label?) {
+  const ok = function (value: boolean, label?: string) {
     return LegacyUnit.equal(value, true, label);
   };
 
@@ -48,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<p>abc</p>');
     LegacyUnit.equal(getContent(editor), '<p>1</p><p>abc</p><p>4</p>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startOffset, 1);
@@ -124,7 +126,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<p>abc</p>');
     LegacyUnit.equal(getContent(editor), '<p>abc</p>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startOffset, 1);
@@ -143,7 +145,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<pre>abc</pre>');
     LegacyUnit.equal(getContent(editor), '<pre>1</pre><pre>abc</pre><pre>4</pre>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'PRE');
     LegacyUnit.equal(rng.startOffset, 1);
@@ -162,7 +164,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<h1>abc</h1>');
     LegacyUnit.equal(getContent(editor), '<h1>1</h1><h1>abc</h1><h1>4</h1>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'H1');
     LegacyUnit.equal(rng.startOffset, 1);
@@ -181,7 +183,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<li>abc</li>');
     LegacyUnit.equal(getContent(editor), '<ul><li>1</li><li>abc</li><li>4</li></ul>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'LI');
     LegacyUnit.equal(rng.startOffset, 1);
@@ -196,7 +198,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     editor.setContent('');
     editor.execCommand('mceInsertContent', false, '<p>abc</p>');
     LegacyUnit.equal(getContent(editor), '<p>abc</p>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startOffset, 1);
@@ -215,7 +217,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
       editor.getBody().innerHTML.toLowerCase().replace(/^<br>/, ''),
       '<p>abc</p>'
     ); // Opera inserts a BR at the beginning of contents if the P is empty
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startOffset, 1);
@@ -234,7 +236,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, 'abc');
     LegacyUnit.equal(editor.getBody().innerHTML.toLowerCase(), '<p>abc</p>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startOffset, 1);
@@ -253,7 +255,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<img src="about:blank" />');
     LegacyUnit.equal(editor.getContent(), '<p><img src="about:blank" /></p>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startOffset, 1);
@@ -287,7 +289,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<hr />');
     LegacyUnit.equal(editor.getContent(), '<p>1</p><hr /><p>3</p>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equalDom(rng.startContainer, editor.getBody().lastChild);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');

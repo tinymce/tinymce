@@ -1,6 +1,6 @@
 import * as Resolve from 'ephox/katamari/api/Resolve';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('ObjResolverTest', function () {
   const testNamespace = function () {

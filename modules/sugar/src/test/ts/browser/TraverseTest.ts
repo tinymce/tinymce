@@ -3,7 +3,7 @@ import * as Attr from 'ephox/sugar/api/properties/Attr';
 import Element from 'ephox/sugar/api/node/Element';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { document, window } from '@ephox/dom-globals';
 
 UnitTest.test('TraverseTest', function () {

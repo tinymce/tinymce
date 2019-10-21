@@ -1,5 +1,5 @@
 import { Assertions, FocusTools, GeneralSteps, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
@@ -40,7 +40,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     })
   ]);
 
-  const sScrollToElementAndActivate = (tinyApis, contentAreaContainer: Element, selector: string) => Step.label('Activate editor', GeneralSteps.sequence([
+  const sScrollToElementAndActivate = (tinyApis: TinyApis, contentAreaContainer: Element, selector: string) => Step.label('Activate editor', GeneralSteps.sequence([
     sScrollToElement(contentAreaContainer, selector),
     tinyApis.sSelect(selector, []),
     tinyApis.sFocus,
