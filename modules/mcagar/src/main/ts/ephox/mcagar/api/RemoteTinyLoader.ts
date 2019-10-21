@@ -33,7 +33,7 @@ const loadScript = (url: string): FutureResult<string, Error> => {
 
 const loadScripts = (urls: string[], success: () => void, failure: Loader.FailureCallback) => {
   const result = Arr.foldl(urls, (acc, url) => {
-    return FutureResult.wrap(acc.bind(() => loadScript(url)));
+    return acc.bindFuture(() => loadScript(url));
   }, FutureResult.pure(''));
 
   result.get((res) => {
