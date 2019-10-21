@@ -134,17 +134,6 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
     ])
   );
 
-  const testChainEnforcesInput = StepAssertions.testStepsFail(
-    'Input Value is not a chain: raw.input',
-    [
-      Step.raw(function (_, next, die, logs) {
-        Chain.on(function (input: any, n, d, clogs) {
-          n(input, clogs);
-        }).runChain(<any> 'raw.input', next, die, logs);
-      })
-    ]
-  );
-
   const testChainAsync = StepAssertions.testChain(
     'async works!',
     Chain.async((_value, next) => {
@@ -222,11 +211,6 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
       '[When using fromChains, chains do accumulate when passing]\n',
       testChainAcc
     ),
-    Logger.t(
-      '[Chains should enforce input conditions]\n',
-      testChainEnforcesInput
-    ),
-
     Logger.t(
       '[Chain should async]\n',
       testChainAsync
