@@ -42,8 +42,7 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
           sAssertEvent(type, code, modifiers, raw)(value, next, die, logs);
         });
 
-        f(Element.fromDom(document), code, modifiers)(value, () => {
-        }, die);
+        f(Element.fromDom(document), code, modifiers)(value, () => {}, die);
       }),
       Guard.timeout('Key event did not fire in time: ' + type, 1000)
     );
@@ -84,7 +83,7 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
     listenOn('keydown', (doc, code, modifiers) => Step.sync(() => {
       const focused = Focus.active(doc).getOrDie();
       Keyboard.keydown(code, modifiers, focused);
-    }), Keys.space(), {ctrlKey: true}),
+    }), Keys.space(), { ctrlKey: true }),
 
     listenOnKeystroke(Keys.space(), {}),
     DomContainers.mTeardown
