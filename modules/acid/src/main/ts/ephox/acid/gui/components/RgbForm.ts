@@ -40,7 +40,12 @@ export interface RgbFormSketcher extends Sketcher.SingleSketch<RgbFormSpec, RgbF
   updateHex: (slider: AlloyComponent, colour: Hex) => void;
 }
 
-const rgbFormFactory = (translate: (key: string) => string, getClass: (key: string) => string, onValidHexx: (component: AlloyComponent) => void, onInvalidHexx: (component: AlloyComponent) => void) => {
+const rgbFormFactory = (
+  translate: (key: string) => string,
+  getClass: (key: string) => string,
+  onValidHexx: (component: AlloyComponent) => void,
+  onInvalidHexx: (component: AlloyComponent) => void
+): RgbFormSketcher => {
   const invalidation = (label: string, isValid: (value: string) => boolean) => {
     return Invalidating.config({
       invalidClass: getClass('invalid'),
@@ -330,6 +335,6 @@ const rgbFormFactory = (translate: (key: string) => string, getClass: (key: stri
   return rgbFormSketcher;
 };
 
-export default {
+export {
   rgbFormFactory
 };
