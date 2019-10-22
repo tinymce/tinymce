@@ -10,6 +10,7 @@
 //
 
 @color-input-swatch-checker-color: contrast(@textfield-background-color, rgba(255, 255, 255, .25), rgba(0, 0, 0, .25));
+@color-input-swatch-border-radius: @control-border-radius;
 
 .tox {
   .tox-color-input {
@@ -23,15 +24,15 @@
 
     span {
       border-color: rgba(red(@color-black), green(@color-black), blue(@color-black), .2);
-      border-radius: 50%;
+      border-radius: @color-input-swatch-border-radius;
       border-style: solid;
       border-width: 1px;
       box-shadow: none;
       box-sizing: border-box;
       cursor: pointer;
-      height: @textfield-height - 8px;
+      height: @textfield-height - 12px;
       position: absolute;
-      top: 4px;
+      top: 6px;
       width: $height;
 
       &:focus {
@@ -44,13 +45,13 @@
           linear-gradient(-45deg, @color-input-swatch-checker-color 25%, transparent 25%),
           linear-gradient(45deg, transparent 75%, @color-input-swatch-checker-color 75%),
           linear-gradient(-45deg, transparent 75%, @color-input-swatch-checker-color 75%);
-        background-position: 0 0, 0 5px, 5px -5px, -5px 0;
-        background-size: 10px 10px;
+        background-position: 0 0, 0 6px, 6px -6px, -6px 0;
+        background-size: 12px 12px;
         border: 1px solid @textfield-background-color;
-        border-radius: 50%;
+        border-radius: @color-input-swatch-border-radius;
         box-sizing: border-box;
         content: '';
-        height: @textfield-height - 8px;
+        height: @textfield-height - 12px;
         left: -1px;
         position: absolute;
         top: -1px;
@@ -68,7 +69,7 @@
     }
 
     span {
-      left: 4px;
+      left: 6px;
     }
   }
 }
@@ -81,7 +82,7 @@
     }
 
     span {
-      right: 4px;
+      right: 6px;
     }
   }
 }
