@@ -2,7 +2,7 @@ import { Chain, UiFinder, NamedChain3 as NC } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { Body, Element, Node, Attr } from '@ephox/sugar';
 import { dispatchDndEvent, createDragstartEvent, createDragEvent, createDragenterEvent, createDragoverEvent, createDropEvent, createDragendEvent, isDefaultPrevented, getWindowFromElement } from '../dragndrop/DndEvents';
-import { File, DragEvent, HTMLElement } from '@ephox/dom-globals';
+import { File, DragEvent, HTMLElement, Element as DomElement } from '@ephox/dom-globals';
 import { createDataTransfer, getDragImage } from '../datatransfer/DataTransfer';
 
 const isDraggable = (element: Element) => {
@@ -20,7 +20,7 @@ const checkDefaultPrevented = (evt: DragEvent) => {
   }
 };
 
-const dragnDrop = (from: Element<HTMLElement>, to: Element<HTMLElement>) => {
+const dragnDrop = (from: Element<DomElement>, to: Element<DomElement>) => {
   const fromWin = getWindowFromElement(from);
   const toWin = getWindowFromElement(to);
   const fromRect = from.dom().getBoundingClientRect();
@@ -59,7 +59,7 @@ const cDragnDrop = (fromSelector: string, toSelector: string) => {
     from: Element<HTMLElement>;
     to: Element<HTMLElement>;
   };
-  return NC.asOpChain<DnD>()('container', [
+  return NC.asInputChain<DnD>()('container', [
     NC.direct('container', UiFinder.cFindIn(fromSelector), 'from'),
     NC.direct('container', UiFinder.cFindIn(toSelector), 'to'),
     NC.readX(NC.getKeys('from', 'to'), Chain.op(([from, to]) => dragnDrop(from, to)))
