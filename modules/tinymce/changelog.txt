@@ -1,4 +1,5 @@
 Version 5.2.0 (TBD)
+    Changed and improved the visual appearance of the color input field #TINY-2917
     Changed fake caret container to use `forced_root_block` when possible #TINY-4190
 Version 5.1.0 (2019-10-17)
     Added touch selector handles for table selections on touch devices #TINY-4097
