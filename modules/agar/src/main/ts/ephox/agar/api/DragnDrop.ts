@@ -1,8 +1,8 @@
-import { Chain, UiFinder, NamedChain3 } from '@ephox/agar';
+import { Chain, UiFinder, NamedChain3 as NC } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { Body, Element, Node, Attr } from '@ephox/sugar';
 import { dispatchDndEvent, createDragstartEvent, createDragEvent, createDragenterEvent, createDragoverEvent, createDropEvent, createDragendEvent, isDefaultPrevented, getWindowFromElement } from '../dragndrop/DndEvents';
-import { File, DragEvent } from '@ephox/dom-globals';
+import { File, DragEvent, HTMLElement } from '@ephox/dom-globals';
 import { createDataTransfer, getDragImage } from '../datatransfer/DataTransfer';
 
 const isDraggable = (element: Element) => {
@@ -20,11 +20,11 @@ const checkDefaultPrevented = (evt: DragEvent) => {
   }
 };
 
-const dragnDrop = (from: Element, to: Element) => {
+const dragnDrop = (from: Element<HTMLElement>, to: Element<HTMLElement>) => {
   const fromWin = getWindowFromElement(from);
   const toWin = getWindowFromElement(to);
   const fromRect = from.dom().getBoundingClientRect();
-  const toRect = from.dom().getBoundingClientRect();
+  const toRect = to.dom().getBoundingClientRect();
   const transfer = createDataTransfer();
 
   if (isDraggable(from) === false) {
@@ -53,22 +53,16 @@ const dropFiles = (files: File[], to: Element) => {
   checkDefaultPrevented(dispatchDndEvent(createDropEvent(toWin, toRect.left, toRect.top, transfer), to));
 };
 
-const cDragnDrop = (fromSelector: string, toSelector: string): Chain<Element, Element> => {
-  // return NamedChain.asChain([
-  //   NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(fromSelector), 'from'),
-  //   NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(toSelector), 'to'),
-  //   Chain.op((obj) => dragnDrop(obj.from, obj.to)),
-  //   NamedChain.output(NamedChain.inputName())
-  // ]);
+const cDragnDrop = (fromSelector: string, toSelector: string) => {
   type DnD = {
-    container: Element<any>;
-    from: Element<any>;
-    to: Element<any>;
+    container: Element<HTMLElement>;
+    from: Element<HTMLElement>;
+    to: Element<HTMLElement>;
   };
-  return NamedChain3.asIOChain<DnD>()('container', 'container', [
-    NamedChain3.direct('container', UiFinder.cFindIn(fromSelector), 'from'),
-    NamedChain3.direct('container', UiFinder.cFindIn(toSelector), 'to'),
-    NamedChain3.readX(NamedChain3.getKeys('from', 'to'), Chain.op(([from, to]) => dragnDrop(from, to)))
+  return NC.asOpChain<DnD>()('container', [
+    NC.direct('container', UiFinder.cFindIn(fromSelector), 'from'),
+    NC.direct('container', UiFinder.cFindIn(toSelector), 'to'),
+    NC.readX(NC.getKeys('from', 'to'), Chain.op(([from, to]) => dragnDrop(from, to)))
   ]);
 };
 
