@@ -1,4 +1,5 @@
-Version 5.2.0(TBD)
+Version 5.2.0 (TBD)
+    Changed fake caret container to use `forced_root_block` when possible #TINY-4190
     Fixed content incorrectly scrolling to the top or bottom when pressing enter if they were already in view #TINY-4162
     Fixed `scrollIntoView` potentially hiding elements behind the toolbar #TINY-4162
 Version 5.1.0 (2019-10-17)
