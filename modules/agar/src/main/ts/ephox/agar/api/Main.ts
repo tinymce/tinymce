@@ -18,6 +18,7 @@ import * as Logger from './Logger';
 import { Monitor } from './Monitor';
 import * as Mouse from './Mouse';
 import { NamedChain } from './NamedChain';
+import { NamedChain3 } from './NamedChain3';
 import { Pipeline } from './Pipeline';
 import * as PropertySteps from './PropertySteps';
 import * as RawAssertions from './RawAssertions';
@@ -53,6 +54,7 @@ export {
   Monitor,
   Mouse,
   NamedChain,
+  NamedChain3,
   Pipeline,
   PropertySteps,
   RawAssertions,

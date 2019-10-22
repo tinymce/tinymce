@@ -1,4 +1,4 @@
-import { Chain, UiFinder, NamedChain } from '@ephox/agar';
+import { Chain, UiFinder, NamedChain3 } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { Body, Element, Node, Attr } from '@ephox/sugar';
 import { dispatchDndEvent, createDragstartEvent, createDragEvent, createDragenterEvent, createDragoverEvent, createDropEvent, createDragendEvent, isDefaultPrevented, getWindowFromElement } from '../dragndrop/DndEvents';
@@ -54,11 +54,23 @@ const dropFiles = (files: File[], to: Element) => {
 };
 
 const cDragnDrop = (fromSelector: string, toSelector: string): Chain<Element, Element> => {
-  return NamedChain.asChain([
-    NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(fromSelector), 'from'),
-    NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(toSelector), 'to'),
-    Chain.op((obj) => dragnDrop(obj.from, obj.to)),
-    NamedChain.output(NamedChain.inputName())
+  // return NamedChain.asChain([
+  //   NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(fromSelector), 'from'),
+  //   NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(toSelector), 'to'),
+  //   Chain.op((obj) => dragnDrop(obj.from, obj.to)),
+  //   NamedChain.output(NamedChain.inputName())
+  // ]);
+  type DnD = {
+    container: Element<any>;
+    from: Element<any>;
+    to: Element<any>;
+  };
+  return NamedChain3.asIOChain<DnD>()('container', 'container', [
+    NamedChain3.direct('container', UiFinder.cFindIn(fromSelector), 'from'),
+    NamedChain3.direct('container', UiFinder.cFindIn(toSelector), 'to'),
+    NamedChain3.readX(NamedChain3.getKeys('from', 'to'), Chain.op(([from, to]) => {
+      dragnDrop(from, to);
+    }))
   ]);
 };
 
