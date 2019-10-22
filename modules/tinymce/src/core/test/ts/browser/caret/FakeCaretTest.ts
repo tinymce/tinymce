@@ -26,10 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function (success
   };
 
   const mockEditor: any = {
-    getParam: () => 'p',
-    schema: {
-      isValid: () => false
-    }
+    getParam: () => 'p'
   };
 
   const setup = function () {
