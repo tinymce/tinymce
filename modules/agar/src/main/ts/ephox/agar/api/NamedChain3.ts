@@ -37,7 +37,7 @@ const directX = <X, I, O>(get: Chain<Partial<X>, I>, calc: Chain<I, O>, put: Cha
   });
 };
 
-const readX = <X, I>(get: Chain<Partial<X>, I>, calc: Chain<I, any>): NamedChain<X> =>
+const readX = <X, I, O>(get: Chain<Partial<X>, I>, calc: Chain<I, O>): NamedChain<X> =>
   directX(get, calc, putIdentity());
 
 const writeX = <X, O>(calc: Chain<void, O>, put: Chain<[Partial<X>, O], Partial<X>>): NamedChain<X> =>

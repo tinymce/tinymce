@@ -68,9 +68,7 @@ const cDragnDrop = (fromSelector: string, toSelector: string): Chain<Element, El
   return NamedChain3.asIOChain<DnD>()('container', 'container', [
     NamedChain3.direct('container', UiFinder.cFindIn(fromSelector), 'from'),
     NamedChain3.direct('container', UiFinder.cFindIn(toSelector), 'to'),
-    NamedChain3.readX(NamedChain3.getKeys('from', 'to'), Chain.op(([from, to]) => {
-      dragnDrop(from, to);
-    }))
+    NamedChain3.readX(NamedChain3.getKeys('from', 'to'), Chain.op(([from, to]) => dragnDrop(from, to)))
   ]);
 };
 
