@@ -7,10 +7,11 @@
 
 import { Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+import Editor from '../api/Editor';
+import TreeWalker from '../api/dom/TreeWalker';
 import * as ElementType from '../dom/ElementType';
 import NodeType from '../dom/NodeType';
-import TreeWalker from '../api/dom/TreeWalker';
-import Editor from '../api/Editor';
+import ScrollIntoView from '../dom/ScrollIntoView';
 
 const firstNonWhiteSpaceNodeSibling = function (node) {
   while (node) {
@@ -82,7 +83,7 @@ const moveToCaretPosition = function (editor: Editor, root) {
   }
 
   editor.selection.setRng(rng);
-  editor.selection.scrollIntoView(root);
+  ScrollIntoView.scrollRangeIntoView(editor, rng);
 };
 
 const getEditableRoot = function (dom, node) {

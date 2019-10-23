@@ -8,9 +8,10 @@
 import { AlloyComponent, Boxes, Channels, Docking, Focusing, Receiving } from '@ephox/alloy';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Cell, Option, Result } from '@ephox/katamari';
-import { Class, Classes, Compare, Css, Element, Focus, Height, Traverse, Width } from '@ephox/sugar';
+import { Class, Classes, Compare, Css, Element, Focus, Height, Location, Scroll, Traverse, Visibility, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { ScrollIntoViewEvent } from 'tinymce/core/api/EventTypes';
 import * as EditorChannels from '../../Channels';
 
 const visibility = {
@@ -21,6 +22,38 @@ const visibility = {
 
 const editorStickyOnClass = 'tox-tinymce--toolbar-sticky-on';
 const editorStickyOffClass = 'tox-tinymce--toolbar-sticky-off';
+
+const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: Element) => {
+  const doc = Traverse.owner(containerHeader);
+  const viewHeight = doc.dom().defaultView.innerHeight;
+  const scrollPos = Scroll.get(doc);
+
+  const markerElement = Element.fromDom(e.elm);
+  const markerPos = Boxes.absolute(markerElement);
+  const markerHeight = Height.get(markerElement);
+  const markerTop = markerPos.y();
+  const markerBottom = markerTop + markerHeight;
+
+  const editorHeaderPos = Location.absolute(containerHeader);
+  const editorHeaderHeight = Height.get(containerHeader);
+  const editorHeaderTop = editorHeaderPos.top();
+  const editorHeaderBottom = editorHeaderTop + editorHeaderHeight;
+
+  // Check to see if the header is docked to the top/bottom of the page (eg is floating)
+  const editorHeaderDockedAtTop = Math.abs(editorHeaderTop - scrollPos.top()) < 2;
+  const editorHeaderDockedAtBottom = Math.abs(editorHeaderBottom - (scrollPos.top() + viewHeight)) < 2;
+
+  // If the element is behind the header at the top of the page, then
+  // scroll the element down by the header height
+  if (editorHeaderDockedAtTop && markerTop < editorHeaderBottom) {
+    Scroll.to(scrollPos.left(), markerTop - editorHeaderHeight, doc);
+    // If the element is behind the header at the bottom of the page, then
+    // scroll the element up by the header height
+  } else if (editorHeaderDockedAtBottom && markerBottom > editorHeaderTop) {
+    const y = (markerTop - viewHeight) + markerHeight + editorHeaderHeight;
+    Scroll.to(scrollPos.left(), y, doc);
+  }
+};
 
 const updateContentFlow = (header: AlloyComponent): void => {
   const elm = header.element();
@@ -93,6 +126,22 @@ const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void =
       lazyHeader().each(Docking.reset);
     });
   }
+
+  // If inline or sticky toolbars is enabled, then when scrolling into view we may still be
+  // behind the editor header so we need to adjust the scroll position to account for that
+  editor.on('AfterScrollIntoView', (e) => {
+    lazyHeader().each((header) => {
+      // We need to make sure the header docking has refreshed, otherwise if a large scroll occurred
+      // the header may have gone off page and need to be docked before doing calculations
+      Docking.refresh(header);
+
+      // If the header element is still visible, then adjust the scroll position if required
+      const headerElem = header.element();
+      if (Visibility.isVisible(headerElem)) {
+        scrollFromBehindHeader(e, headerElem);
+      }
+    });
+  });
 
   // Update the editor classes once initial rendering has completed
   editor.on('PostRender', () => {

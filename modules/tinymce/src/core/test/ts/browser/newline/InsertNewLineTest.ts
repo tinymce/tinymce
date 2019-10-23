@@ -1,13 +1,10 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { PlatformDetection } from '@ephox/sand';
 import { Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 import Theme from 'tinymce/themes/silver/Theme';
-
-const browser = PlatformDetection.detect().browser;
 
 UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', (success, failure) => {
   Theme();
@@ -135,8 +132,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', (success, failu
         tinyApis.sSetCursor([0, 0], 1),
         sInsertNewline(editor, { }),
         tinyApis.sAssertContent('<p><a href="#">a</a></p><p><a href="#"><img src="about:blank" /></a></p>'),
-        // For some bizarre IE issue getSelection().addRange() creates a zwsp from nowhere and moves the caret after it
-        browser.isIE() ? tinyApis.sAssertSelection([1, 0, 0], 1, [1, 0, 0], 1) : tinyApis.sAssertSelection([1, 0], 0, [1, 0], 0)
+        tinyApis.sAssertSelection([1, 0], 0, [1, 0], 0)
       ]))
     ], onSuccess, onFailure);
   }, {
