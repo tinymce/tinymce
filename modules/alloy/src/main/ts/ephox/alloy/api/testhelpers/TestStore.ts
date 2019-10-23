@@ -10,8 +10,8 @@ interface TestStore {
   clear: () => void;
   sClear: Step<any, any>;
   cClear: Chain<any, any>;
-  sAssertEq: (label: string, expected: any) => Step<any, any>;
-  cAssertEq: (label: string, expected: any) => Chain<any, any>;
+  sAssertEq: <T> (label: string, expected: any) => Step<T, T>;
+  cAssertEq: <T> (label: string, expected: any) => Chain<T, T>;
   assertEq: (label: string, expected: any) => void;
   sAssertSortedEq: (label: string, expected: any) => Step<any, any>;
 }
@@ -49,14 +49,14 @@ const TestStore = (): TestStore => {
     clear();
   });
 
-  const sAssertEq = (label: string, expected: any) => {
+  const sAssertEq = <T> (label: string, expected: any): Step<T, T> => {
     return Step.sync(() => {
       // Can't use a normal step here, because we don't need to get array lazily
       return Assert.eq(label, expected, array.slice(0));
     });
   };
 
-  const cAssertEq = (label: string, expected: any) => {
+  const cAssertEq = <T> (label: string, expected: any): Chain<T, T> => {
     return Chain.op(() => {
       assertEq(label, expected);
     });
