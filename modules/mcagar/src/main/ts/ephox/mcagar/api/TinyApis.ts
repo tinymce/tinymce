@@ -73,7 +73,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
     return sSetSelection<T>(elementPath, offset, elementPath, offset);
   };
 
-  const sSetSelection = function <T> (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
+  const sSetSelection = function <T> (startPath: number[], soffset: number, finishPath: number[], foffset: number): Step<T, T> {
     return Chain.asStep<T, Element>(lazyBody(), [
       TinySelections.cCreateDomSelection(startPath, soffset, finishPath, foffset),
       cSetDomSelection,
