@@ -1,4 +1,6 @@
 Version 5.2.0 (TBD)
+    Changed iframe mode to set selection on content init if selection doesn't exist #TINY-4139
+    Fixed bug with alignment toolbar buttons sometimes not changing state correctly #TINY-4139
     Changed and improved the visual appearance of the color input field #TINY-2917
     Changed fake caret container to use `forced_root_block` when possible #TINY-4190
     Fixed content incorrectly scrolling to the top or bottom when pressing enter if they were already in view #TINY-4162
