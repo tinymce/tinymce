@@ -27,13 +27,13 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
     ]);
   };
 
-  const sScrollIntoView = function (editor: Editor, selector: string, alignToTop: boolean) {
+  const sScrollIntoView = function (editor: Editor, selector: string, alignToTop?: boolean) {
     return Step.sync(function () {
       editor.selection.scrollIntoView(editor.dom.select(selector)[0], alignToTop);
     });
   };
 
-  const sScrollElementIntoView = function (editor: Editor, selector: string, alignToTop: boolean) {
+  const sScrollElementIntoView = function (editor: Editor, selector: string, alignToTop?: boolean) {
     return Step.sync(function () {
       ScrollIntoView.scrollElementIntoView(editor, editor.dom.select(selector)[0], alignToTop);
     });
@@ -52,8 +52,10 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
 
   const sAssertScrollPosition = function (editor: Editor, x: number, y: number) {
     return Step.sync(function () {
-      Assertions.assertEq('Scroll position X should be expected value', x, Math.round(editor.dom.getViewPort(editor.getWin()).x));
-      Assertions.assertEq('Scroll position Y should be expected value', y, Math.round(editor.dom.getViewPort(editor.getWin()).y));
+      const actualX = Math.round(editor.dom.getViewPort(editor.getWin()).x);
+      const actualY = Math.round(editor.dom.getViewPort(editor.getWin()).y);
+      Assertions.assertEq(`Scroll position X should be expected value: ${x} got ${actualX}`, x, actualX);
+      Assertions.assertEq(`Scroll position Y should be expected value: ${y} got ${actualY}`, y, actualY);
     });
   };
 
@@ -106,13 +108,28 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
           sScrollReset(editor),
           sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>'),
           sScrollIntoView(editor, 'div:nth-child(2)', false),
-          sAssertScrollPosition(editor, 0, 948)
+          sAssertScrollPosition(editor, 0, 648)
         ])),
         Logger.t('Scroll to element align to top', GeneralSteps.sequence([
           sScrollReset(editor),
           sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>'),
           sScrollIntoView(editor, 'div:nth-child(2)', true),
           sAssertScrollPosition(editor, 0, 1000)
+        ])),
+        Logger.t('Scroll to element already in view shouldn\'t do anything', GeneralSteps.sequence([
+          sScrollReset(editor),
+          sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 600px">a</div>'),
+          Step.sync(() => {
+            editor.getWin().scrollTo(0, 900);
+          }),
+          sScrollIntoView(editor, 'div:nth-child(2)'),
+          sAssertScrollPosition(editor, 0, 900)
+        ])),
+        Logger.t('Scroll to element with height larger than viewport should align to top', GeneralSteps.sequence([
+          sScrollReset(editor),
+          sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 600px">a</div>'),
+          sScrollIntoView(editor, 'div:nth-child(3)'),
+          sAssertScrollPosition(editor, 0, 1050)
         ]))
       ])),
       Logger.t('Private ScrollElementIntoView', GeneralSteps.sequence([
@@ -120,7 +137,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
           sScrollReset(editor),
           sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>'),
           sScrollElementIntoView(editor, 'div:nth-child(2)', false),
-          sAssertScrollPosition(editor, 0, 948)
+          sAssertScrollPosition(editor, 0, 648)
         ])),
         Logger.t('Scroll to element align to top', GeneralSteps.sequence([
           sScrollReset(editor),
@@ -134,11 +151,11 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
           sScrollReset(editor),
           sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>'),
           sScrollRangeIntoView(editor, [1, 0], 0),
-          sAssertApproxScrollPosition(editor, 0, 918), // Height of the text content/cursor
+          sAssertApproxScrollPosition(editor, 0, 618), // Height of the text content/cursor
           sScrollRangeIntoView(editor, [0, 0], 0),
           sAssertApproxScrollPosition(editor, 0, 0),
           sScrollRangeIntoView(editor, [2, 0], 0),
-          sAssertApproxScrollPosition(editor, 0, 968)
+          sAssertApproxScrollPosition(editor, 0, 668)
         ]))
       ])),
       Logger.t('Override scrollIntoView event', GeneralSteps.sequence([
@@ -189,6 +206,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
     Pipeline.async({}, isPhantomJs() ? [ ] : steps(editor, tinyApis), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
+    height: 500,
     base_url: '/project/tinymce/js/tinymce',
     content_style: 'body.mce-content-body  { margin: 0 }'
   }, success, failure);

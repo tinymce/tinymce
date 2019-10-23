@@ -69,13 +69,9 @@ const injectThunked = <T, U>(f: () => U): Chain<T, U> =>
     next(f(), logs);
   });
 
-const extract = <T, U>(chain: Chain<T, U>): Step<T, U> => {
-  if (!chain.runChain) {
-    throw new Error(('Step: ' + chain.toString() + ' is not a chain'));
-  } else {
-    return Step.raw(chain.runChain);
-  }
-};
+const extract = <T, U>(chain: Chain<T, U>): Step<T, U> => ({
+  runStep: chain.runChain
+});
 
 const fromChains = <T = any, U = any>(chains: Chain<any, any>[]): Chain<T, U> => {
   const cs = Arr.map(chains, extract);
@@ -92,7 +88,7 @@ const fromChainsWith = <T, U = any, V = any>(initial: T, chains: Chain<any, any>
 
 const fromParent = <T, U, V>(parent: Chain<T, U>, chains: Chain<U, V>[]): Chain<T, U> =>
   on((cvalue: T, cnext: NextFn<U>, cdie: DieFn, clogs: TestLogs) => {
-    Pipeline.async(cvalue, [Step.raw(parent.runChain)], (value: U, parentLogs: TestLogs) => {
+    Pipeline.async(cvalue, [extract(parent)], (value: U, parentLogs: TestLogs) => {
       const cs = Arr.map(chains, (c) =>
         Step.raw((_, next, die, logs) => {
           // Replace _ with value
