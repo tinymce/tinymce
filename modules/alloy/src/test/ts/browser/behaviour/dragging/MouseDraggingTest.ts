@@ -1,4 +1,4 @@
-import { Chain, Guard, Mouse, NamedChain3 as NC, UiFinder } from '@ephox/agar';
+import { Chain, Guard, Mouse, NamedChain3 as NamedChain, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Option, Result } from '@ephox/katamari';
 import { Css, Position, Scroll, Element } from '@ephox/sugar';
@@ -175,85 +175,85 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
       box_position13_pinned: Pos;
     };
 
-    const cReset = NC.fragment<MDT>([
-      NC.read('blocker', Mouse.cMouseUp),
-      NC.read('container', Chain.control(
+    const cReset = NamedChain.fragment<MDT>([
+      NamedChain.read('blocker', Mouse.cMouseUp),
+      NamedChain.read('container', Chain.control(
         UiFinder.cFindIn('.test-blocker'),
         Guard.tryUntilNot('There should no longer be a blocker')
       )),
 
       // When testing bounds/pinning, we need every browser to behave identically, so we reset positions
       // so we know what we are dealing with
-      NC.read('box', Chain.op((elem) => {
+      NamedChain.read('box', Chain.op((elem) => {
         Css.setAll(elem, {
           left: '50px',
           top: '100px'
         });
       })),
 
-      NC.read('box', Mouse.cMouseDown),
-      NC.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
+      NamedChain.read('box', Mouse.cMouseDown),
+      NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
     ]);
 
     return [
       Chain.asStep({}, [
-        NC.asEffectChain<MDT>()([
-          NC.write(cSubject, 'box'),
-          NC.read('box', Mouse.cMouseDown),
-          NC.inject(gui.element(), 'container'),
-          NC.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
+        NamedChain.asEffectChain<MDT>()([
+          NamedChain.write(cSubject, 'box'),
+          NamedChain.read('box', Mouse.cMouseDown),
+          NamedChain.inject(gui.element(), 'container'),
+          NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
 
-          NC.read('blocker', Mouse.cMouseMoveTo(100, 200)),
-          NC.read('blocker', Mouse.cMouseMoveTo(120, 200)),
-          NC.direct('box', cRecordPosition, 'box_position1'),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(100, 200)),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(120, 200)),
+          NamedChain.direct('box', cRecordPosition, 'box_position1'),
 
-          NC.read('blocker', Mouse.cMouseMoveTo(140, 200)),
-          NC.direct('box', cRecordPosition, 'box_position2'),
-          NC.read('blocker', Mouse.cMouseMoveTo(160, 200)),
-          NC.direct('box', cRecordPosition, 'box_position3'),
-          NC.readX(NC.getKeys('box_position1', 'box_position2', 'box_position3'), cEnsurePositionChanged),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(140, 200)),
+          NamedChain.direct('box', cRecordPosition, 'box_position2'),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(160, 200)),
+          NamedChain.direct('box', cRecordPosition, 'box_position3'),
+          NamedChain.readX(NamedChain.getKeys('box_position1', 'box_position2', 'box_position3'), cEnsurePositionChanged),
 
           cReset,
 
           // Test bounds
-          NC.read('blocker', Mouse.cMouseMoveTo(100, 200)),
-          NC.read('blocker', Mouse.cMouseMoveTo(50, 200)),
-          NC.direct('box', cRecordPosition, 'box_position4'),
-          NC.read('blocker', Mouse.cMouseMoveTo(0, 200)),
-          NC.direct('box', cRecordPosition, 'box_position5'),
-          NC.read('blocker', Mouse.cMouseMoveTo(-50, 200)),
-          NC.direct('box', cRecordPosition, 'box_position6_bound'),
-          NC.read('blocker', Mouse.cMouseMoveTo(400, 200)),
-          NC.direct('box', cRecordPosition, 'box_position7'),
-          NC.read('blocker', Mouse.cMouseMoveTo(500, 200)),
-          NC.direct('box', cRecordPosition, 'box_position8_bound'),
-          NC.readX(NC.getKeys('box_position4', 'box_position5', 'box_position6_bound', 'box_position7', 'box_position8_bound'), cEnsureBound),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(100, 200)),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(50, 200)),
+          NamedChain.direct('box', cRecordPosition, 'box_position4'),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(0, 200)),
+          NamedChain.direct('box', cRecordPosition, 'box_position5'),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(-50, 200)),
+          NamedChain.direct('box', cRecordPosition, 'box_position6_bound'),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(400, 200)),
+          NamedChain.direct('box', cRecordPosition, 'box_position7'),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(500, 200)),
+          NamedChain.direct('box', cRecordPosition, 'box_position8_bound'),
+          NamedChain.readX(NamedChain.getKeys('box_position4', 'box_position5', 'box_position6_bound', 'box_position7', 'box_position8_bound'), cEnsureBound),
 
           // Test bounds when scrolled
           cScrollTo(0, 1000),
           cReset,
 
-          NC.read('blocker', Mouse.cMouseMoveTo(100, 1100)),
-          NC.read('blocker', Mouse.cMouseMoveTo(100, 1100)),
-          NC.read('blocker', Mouse.cMouseMoveTo(100, 1400)),
-          NC.direct('box', cRecordPosition, 'box_scrolled_position9'),
-          NC.read('blocker', Mouse.cMouseMoveTo(100, 1500)),
-          NC.direct('box', cRecordPosition, 'box_scrolled_position10_bound'),
-          NC.readX(NC.getKeys('box_scrolled_position9', 'box_scrolled_position10_bound'), cEnsureScrollBound),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(100, 1100)),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(100, 1100)),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(100, 1400)),
+          NamedChain.direct('box', cRecordPosition, 'box_scrolled_position9'),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(100, 1500)),
+          NamedChain.direct('box', cRecordPosition, 'box_scrolled_position10_bound'),
+          NamedChain.readX(NamedChain.getKeys('box_scrolled_position9', 'box_scrolled_position10_bound'), cEnsureScrollBound),
 
           cScrollTo(0, 0),
           cReset,
 
           // Test pinning.
-          NC.read('blocker', Mouse.cMouseMoveTo(50, 100)),
-          NC.read('blocker', Mouse.cMouseMoveTo(50, 100)),
-          NC.read('blocker', Mouse.cMouseMoveTo(50, 60)),
-          NC.direct('box', cRecordPosition, 'box_position11'),
-          NC.read('blocker', Mouse.cMouseMoveTo(50, 30)),
-          NC.direct('box', cRecordPosition, 'box_position12_pinned'),
-          NC.read('blocker', Mouse.cMouseMoveTo(160, 20)),
-          NC.direct('box', cRecordPosition, 'box_position13_pinned'),
-          NC.readX(NC.getKeys('box_position11', 'box_position12_pinned', 'box_position13_pinned'), cEnsurePinned),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(50, 100)),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(50, 100)),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(50, 60)),
+          NamedChain.direct('box', cRecordPosition, 'box_position11'),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(50, 30)),
+          NamedChain.direct('box', cRecordPosition, 'box_position12_pinned'),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(160, 20)),
+          NamedChain.direct('box', cRecordPosition, 'box_position13_pinned'),
+          NamedChain.readX(NamedChain.getKeys('box_position11', 'box_position12_pinned', 'box_position13_pinned'), cEnsurePinned),
 
           Chain.wait(10),
         ])

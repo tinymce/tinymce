@@ -1,4 +1,4 @@
-import { Chain, UiFinder, NamedChain3 as NC } from '@ephox/agar';
+import { Chain, UiFinder, NamedChain3 as NamedChain } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { Body, Element, Node, Attr } from '@ephox/sugar';
 import { dispatchDndEvent, createDragstartEvent, createDragEvent, createDragenterEvent, createDragoverEvent, createDropEvent, createDragendEvent, isDefaultPrevented, getWindowFromElement } from '../dragndrop/DndEvents';
@@ -59,10 +59,10 @@ const cDragnDrop = (fromSelector: string, toSelector: string) => {
     from: Element<HTMLElement>;
     to: Element<HTMLElement>;
   };
-  return NC.asInputChain<DnD>()('container', [
-    NC.direct('container', UiFinder.cFindIn(fromSelector), 'from'),
-    NC.direct('container', UiFinder.cFindIn(toSelector), 'to'),
-    NC.readX(NC.getKeys('from', 'to'), Chain.op(([from, to]) => dragnDrop(from, to)))
+  return NamedChain.asInputChain<DnD>()('container', [
+    NamedChain.direct('container', UiFinder.cFindIn(fromSelector), 'from'),
+    NamedChain.direct('container', UiFinder.cFindIn(toSelector), 'to'),
+    NamedChain.readX(NamedChain.getKeys('from', 'to'), Chain.op(([from, to]) => dragnDrop(from, to)))
   ]);
 };
 

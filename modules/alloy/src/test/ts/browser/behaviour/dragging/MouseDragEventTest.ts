@@ -1,4 +1,4 @@
-import { Assertions, Chain, Mouse, NamedChain3 as NC, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, Mouse, NamedChain3 as NamedChain, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Css, Element } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -40,26 +40,26 @@ UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
 
     return [
       Chain.asStep({}, [
-        NC.asEffectChain<MDT>()([
-          NC.inject(component.element(), 'box'),
-          NC.inject(gui.element(), 'container'),
+        NamedChain.asEffectChain<MDT>()([
+          NamedChain.inject(component.element(), 'box'),
+          NamedChain.inject(gui.element(), 'container'),
           store.cClear,
-          NC.read('box', Mouse.cMouseDown),
-          NC.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
+          NamedChain.read('box', Mouse.cMouseDown),
+          NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
 
-          NC.read('blocker', Mouse.cMouseMoveTo(100, 200)),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(100, 200)),
           store.cAssertEq('Checking that no drag events have fired yet', [ ]),
-          NC.read('blocker', Mouse.cMouseMoveTo(120, 200)),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(120, 200)),
           store.cAssertEq('Checking that a drag event has fired with (20, 0) delta', [ { left: 20, top: 0 } ]),
-          NC.read('box', cAssertNoPositionInfo),
-          NC.read('blocker', Mouse.cMouseUp),
+          NamedChain.read('box', cAssertNoPositionInfo),
+          NamedChain.read('blocker', Mouse.cMouseUp),
           store.cClear,
 
-          NC.read('box', Mouse.cMouseDown),
-          NC.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
-          NC.read('blocker', Mouse.cMouseMoveTo(300, 100)),
+          NamedChain.read('box', Mouse.cMouseDown),
+          NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(300, 100)),
           store.cAssertEq('The state should have been reset, so one position should not give us a delta', [ ]),
-          NC.read('blocker', Mouse.cMouseMoveTo(303, 100)),
+          NamedChain.read('blocker', Mouse.cMouseMoveTo(303, 100)),
           store.cAssertEq('The state should have been reset, so two positions should give us a delta of (3, 0)', [ { left: 3, top: 0 } ]),
         ])
       ])

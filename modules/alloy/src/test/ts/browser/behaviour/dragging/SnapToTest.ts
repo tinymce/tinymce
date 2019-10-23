@@ -1,4 +1,4 @@
-import { Chain, NamedChain3 as NC, Guard } from '@ephox/agar';
+import { Chain, NamedChain3 as NamedChain, Guard } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Option, Result } from '@ephox/katamari';
 import { Position, Scroll, Css, Element } from '@ephox/sugar';
@@ -119,12 +119,12 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
 
     return [
       Chain.asStep({}, [
-        NC.asEffectChain<TestTypes>()([
-          NC.write(cSubject, 'box'),
-          NC.direct('box', cRecordPosition, 'box_position1'),
-          NC.read('box', cSnapTo),
-          NC.direct('box', cRecordPosition, 'box_position2'),
-          NC.readX(NC.getKeys('box_position1', 'box_position2'), cEnsurePositionChanged),
+        NamedChain.asEffectChain<TestTypes>()([
+          NamedChain.write(cSubject, 'box'),
+          NamedChain.direct('box', cRecordPosition, 'box_position1'),
+          NamedChain.read('box', cSnapTo),
+          NamedChain.direct('box', cRecordPosition, 'box_position2'),
+          NamedChain.readX(NamedChain.getKeys('box_position1', 'box_position2'), cEnsurePositionChanged),
           Chain.wait(1000)
         ])
       ])

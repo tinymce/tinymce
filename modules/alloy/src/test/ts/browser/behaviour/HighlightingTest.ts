@@ -1,4 +1,4 @@
-import { Assertions, Chain, NamedChain3 as NC, Truncate, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, NamedChain3 as NamedChain, Truncate, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Result } from '@ephox/katamari';
 import { Attr, Class, Compare, Element } from '@ephox/sugar';
@@ -71,18 +71,18 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
     };
 
     const cCheckNumOf = (label: string, selector: string, expected: number) => {
-      return NC.fragment<TestTypes>([
-        NC.direct('container', UiFinder.cFindAllIn(selector), 'list'),
-        NC.read('list', cCheckNum(label, expected))
+      return NamedChain.fragment<TestTypes>([
+        NamedChain.direct('container', UiFinder.cFindAllIn(selector), 'list'),
+        NamedChain.read('list', cCheckNum(label, expected))
       ]);
     };
 
     const cCheckSelected = (label: string, expected: string) => {
-      return NC.fragment<TestTypes>([
+      return NamedChain.fragment<TestTypes>([
         // always check there is only 1
         cCheckNumOf(label + '\nChecking number of selected: ', '.test-selected', 1),
-        NC.direct('container', UiFinder.cFindIn('.test-selected'), 'selected'),
-        NC.read('selected', Chain.binder((sel) => {
+        NamedChain.direct('container', UiFinder.cFindIn('.test-selected'), 'selected'),
+        NamedChain.read('selected', Chain.binder((sel) => {
           return Class.has(sel, expected) ? Result.value(sel) :
             Result.error(label + '\nIncorrect element selected. Expected: ' + expected + ', but was: ' +
               Attr.get(sel, 'class'));
@@ -173,20 +173,20 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
 
     return [
       Chain.asStep({}, [
-        NC.asEffectChain<TestTypes>()([
-          NC.inject(component.element(), 'container'),
-          NC.direct('container', cFindComponent('.alpha'), 'alpha'),
-          NC.direct('container', cFindComponent('.beta'), 'beta'),
-          NC.direct('container', cFindComponent('.gamma'), 'gamma'),
+        NamedChain.asEffectChain<TestTypes>()([
+          NamedChain.inject(component.element(), 'container'),
+          NamedChain.direct('container', cFindComponent('.alpha'), 'alpha'),
+          NamedChain.direct('container', cFindComponent('.beta'), 'beta'),
+          NamedChain.direct('container', cFindComponent('.gamma'), 'gamma'),
 
           cCheckNumOf('Should be none selected', '.test-selected', 0),
           cCheckNumOf('Should be three items', '.test-item', 3),
 
-          NC.write(cGetFirst, 'first'),
-          NC.write(cGetLast, 'last'),
+          NamedChain.write(cGetFirst, 'first'),
+          NamedChain.write(cGetLast, 'last'),
 
-          NC.read('first', cHasClass('alpha')),
-          NC.read('last', cHasClass('gamma')),
+          NamedChain.read('first', cHasClass('alpha')),
+          NamedChain.read('last', cHasClass('gamma')),
 
           cHighlightFirst(),
           cCheckSelected('highlightFirst => Alpha is selected', 'alpha'),
@@ -194,10 +194,10 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
           cHighlightLast(),
           cCheckSelected('highlightLast => Gamma is selected', 'gamma'),
 
-          NC.read('beta', cHighlight),
+          NamedChain.read('beta', cHighlight),
           cCheckSelected('highlight(beta) => Beta is selected', 'beta'),
 
-          NC.read('beta', cDehighlight),
+          NamedChain.read('beta', cDehighlight),
           cCheckNumOf('beta should be deselected', '.test-selected', 0),
 
           cHighlightAt(1),
@@ -211,17 +211,17 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
           cCheckNumOf('everything should be deselected', '.test-selected', 0),
 
           cHighlightLast(),
-          NC.direct('beta', cIsHighlighted, 'beta-is'),
-          NC.read('beta-is', Assertions.cAssertEq('isHighlighted(beta)', false)),
+          NamedChain.direct('beta', cIsHighlighted, 'beta-is'),
+          NamedChain.read('beta-is', Assertions.cAssertEq('isHighlighted(beta)', false)),
 
-          NC.direct('gamma', cIsHighlighted, 'gamma-is'),
-          NC.read('gamma-is', Assertions.cAssertEq('isHighlighted(gamma)', true)),
+          NamedChain.direct('gamma', cIsHighlighted, 'gamma-is'),
+          NamedChain.read('gamma-is', Assertions.cAssertEq('isHighlighted(gamma)', true)),
 
-          NC.write(cGetHighlightedOrDie, 'highlighted-comp'),
-          NC.read('highlighted-comp', cHasClass('gamma')),
+          NamedChain.write(cGetHighlightedOrDie, 'highlighted-comp'),
+          NamedChain.read('highlighted-comp', cHasClass('gamma')),
 
           cDehighlightAll(),
-          NC.effect(cGetHighlightedIsNone),
+          NamedChain.effect(cGetHighlightedIsNone),
 
           Chain.op((_input) => {
             Highlighting.highlightBy(component, (comp) => {
@@ -229,9 +229,9 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
             });
           }),
 
-          NC.effect(cGetHighlightedOrDie),
+          NamedChain.effect(cGetHighlightedOrDie),
 
-          NC.readX(NC.getKeys('alpha', 'beta', 'gamma'), Chain.op((expected) => {
+          NamedChain.readX(NamedChain.getKeys('alpha', 'beta', 'gamma'), Chain.op((expected) => {
             const candidates = Highlighting.getCandidates(component);
 
             Assertions.assertEq('Checking length of getCandidates array', expected.length, candidates.length);
