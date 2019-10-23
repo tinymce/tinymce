@@ -1,7 +1,7 @@
-import { Chain, Guard, Mouse, NamedChain, UiFinder } from '@ephox/agar';
+import { Chain, Guard, Mouse, NamedChain3 as NC, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Option, Result } from '@ephox/katamari';
-import { Css, Position, Scroll } from '@ephox/sugar';
+import { Css, Position, Scroll, Element } from '@ephox/sugar';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -11,6 +11,12 @@ import * as Memento from 'ephox/alloy/api/component/Memento';
 import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { HTMLElement } from '@ephox/dom-globals';
+
+type Pos = {
+  left: string;
+  top: string;
+};
 
 UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
 
@@ -29,7 +35,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
           mode: 'mouse',
           blockerClass: 'test-blocker',
           snaps: {
-            getSnapPoints () {
+            getSnapPoints() {
               return [
                 Dragging.snap({
                   sensor: DragCoord.fixed(300, 10),
@@ -70,171 +76,186 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
       return subject.get(component).element();
     });
 
+    // box_position1, box_position2, box_position3
     const cEnsurePositionChanged = Chain.control(
-      Chain.binder((all: any) => {
-        return all.box_position1.left !== all.box_position2.left &&
-          all.box_position2.left !== all.box_position3.left ? Result.value({}) :
+      Chain.binder<[Pos, Pos, Pos], {}, string>(([pos1, pos2, pos3]) => {
+        return pos1.left !== pos2.left &&
+          pos2.left !== pos3.left ? Result.value({}) :
           Result.error('Positions did not change.\nPosition data: ' + JSON.stringify({
-            1: all.box_position1,
-            2: all.box_position2,
-            3: all.box_position3
+            1: pos1,
+            2: pos2,
+            3: pos3
           }, null, 2));
       }),
       Guard.addLogging('Ensuring that the position information read from the different stages was different')
     );
     const cEnsureBound = Chain.control(
-      Chain.binder((all: any) => {
-        const boundLeft = all.box_position4.left !== all.box_position5.left &&
-          all.box_position5.left === all.box_position6_bound.left &&
-          all.box_position5.left === '0px' && all.box_position6_bound.top === '100px';
-        const boundRight = all.box_position6_bound.left !== all.box_position7.left &&
-          all.box_position7.left === all.box_position8_bound.left &&
-          all.box_position7.left === '400px' && all.box_position8_bound.top === '100px';
+      Chain.binder<[Pos, Pos, Pos, Pos, Pos], {}, string>(([pos4, pos5, pos6_bound, pos7, pos8_bound]) => {
+        const boundLeft = pos4.left !== pos5.left &&
+          pos5.left === pos6_bound.left &&
+          pos5.left === '0px' && pos6_bound.top === '100px';
+        const boundRight = pos6_bound.left !== pos7.left &&
+          pos7.left === pos8_bound.left &&
+          pos7.left === '400px' && pos8_bound.top === '100px';
         return boundLeft && boundRight ? Result.value({}) :
           Result.error('Dragging should have been restricted to the bounds.\nPosition data: ' + JSON.stringify({
-            1: all.box_position4,
-            2: all.box_position5,
-            3: all.box_position6_bound,
-            4: all.box_position7,
-            5: all.box_position8_bound
+            1: pos4,
+            2: pos5,
+            3: pos6_bound,
+            4: pos7,
+            5: pos8_bound
           }, null, 2));
       }),
       Guard.addLogging('Checking bounding behaviour at left and right of screen')
     );
     const cEnsureScrollBound = Chain.control(
-      Chain.binder((all: any) => {
-        const boundBottom = all.box_scrolled_position9.top === all.box_scrolled_position10_bound.top &&
-          all.box_scrolled_position9.top === '400px' && all.box_scrolled_position10_bound.left === '50px';
+      Chain.binder<[Pos, Pos], {}, string>(([pos9, pos10_bound]) => {
+        const boundBottom = pos9.top === pos10_bound.top &&
+          pos9.top === '400px' && pos10_bound.left === '50px';
         return boundBottom ? Result.value({}) :
           Result.error('Dragging should have been restricted to the bounds.\nPosition data: ' + JSON.stringify({
-            1: all.box_scrolled_position9,
-            2: all.box_scrolled_position10_bound
+            1: pos9,
+            2: pos10_bound
           }, null, 2));
       }),
       Guard.addLogging('Checking bounding behaviour at bottom of screen')
     );
     const cEnsurePinned = Chain.control(
-      Chain.binder((all: any) => {
-        const pinned = all.box_position11.top !== all.box_position12_pinned.top &&
-          all.box_position12_pinned.top === all.box_position13_pinned.top &&
-          all.box_position12_pinned.top === '10px';
-        return pinned ? Result.value({ }) : Result.error(
+      Chain.binder<[Pos, Pos, Pos], {}, string>(([pos11, pos12_pinned, pos13_pinned]) => {
+        const pinned = pos11.top !== pos12_pinned.top &&
+          pos12_pinned.top === pos13_pinned.top &&
+          pos12_pinned.top === '10px';
+        return pinned ? Result.value({}) : Result.error(
           'Box should only have been pinned at 2 and 3 at top: 10px. Positions: ' + JSON.stringify({
-            1: all.box_position11,
-            2: all.box_position12_pinned,
-            3: all.box_position13_pinned
+            1: pos11,
+            2: pos12_pinned,
+            3: pos13_pinned
           }, null, 2)
         );
       }),
       Guard.addLogging('Checking pinning behaviour to top of screen')
     );
 
-    const cRecordPosition = Chain.fromChains([
-      Chain.control(
-        Chain.binder((box) => {
-          return Css.getRaw(box, 'left').bind((left) => {
-            return Css.getRaw(box, 'top').map((top) => {
-              return Result.value({
-                left,
-                top
-              });
+    const cRecordPosition = Chain.control(
+      Chain.binder((box: Element<HTMLElement>) => {
+        return Css.getRaw(box, 'left').bind((left) => {
+          return Css.getRaw(box, 'top').map((top) => {
+            return Result.value({
+              left,
+              top
             });
-          }).getOrThunk(() => {
-            return Result.error('No left,top information yet');
           });
-        }),
-        Guard.tryUntil('Waiting for position data to record')
-      )
-    ]);
+        }).getOrThunk(() => {
+          return Result.error('No left,top information yet');
+        });
+      }),
+      Guard.tryUntil('Waiting for position data to record')
+    );
 
-    const cScrollTo = (x: number, y: number) => Chain.op(() => {
+    const cScrollTo = <T>(x: number, y: number) => Chain.op<T>(() => {
       Scroll.to(x, y);
     });
 
-    const cReset = Chain.fromChains([
-      NamedChain.direct('blocker', Mouse.cMouseUp, '_'),
-      NamedChain.direct('container', Chain.control(
+    type MDT = {
+      blocker: Element<HTMLElement>;
+      container: Element<HTMLElement>;
+      box: Element<HTMLElement>;
+      box_position1: Pos;
+      box_position2: Pos;
+      box_position3: Pos;
+      box_position4: Pos;
+      box_position5: Pos;
+      box_position6_bound: Pos;
+      box_position7: Pos;
+      box_position8_bound: Pos;
+      box_scrolled_position9: Pos;
+      box_scrolled_position10_bound: Pos;
+      box_position11: Pos;
+      box_position12_pinned: Pos;
+      box_position13_pinned: Pos;
+    };
+
+    const reset: Array<NC.NamedChain<MDT>> = [
+      NC.read('blocker', Mouse.cMouseUp),
+      NC.read('container', Chain.control(
         UiFinder.cFindIn('.test-blocker'),
         Guard.tryUntilNot('There should no longer be a blocker')
-      ), 'blocker'),
+      )),
 
       // When testing bounds/pinning, we need every browser to behave identically, so we reset positions
       // so we know what we are dealing with
-      NamedChain.direct('box', Chain.op((elem) => {
+      NC.read('box', Chain.op((elem) => {
         Css.setAll(elem, {
           left: '50px',
           top: '100px'
         });
-      }), '_'),
+      })),
 
-      NamedChain.direct('box', Mouse.cMouseDown, '_'),
-      NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
-    ]);
+      NC.read('box', Mouse.cMouseDown),
+      NC.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
+    ];
 
     return [
       Chain.asStep({}, [
-        NamedChain.asChain([
-          NamedChain.write('box', cSubject),
-          NamedChain.direct('box', Mouse.cMouseDown, '_'),
-          NamedChain.writeValue('container', gui.element()),
-          NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
+        NC.asEffectChain<MDT>()([
+          NC.write(cSubject, 'box'),
+          NC.read('box', Mouse.cMouseDown),
+          NC.inject(gui.element(), 'container'),
+          NC.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
 
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 200), '_'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(120, 200), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position1'),
+          NC.read('blocker', Mouse.cMouseMoveTo(100, 200)),
+          NC.read('blocker', Mouse.cMouseMoveTo(120, 200)),
+          NC.direct('box', cRecordPosition, 'box_position1'),
 
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(140, 200), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position2'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(160, 200), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position3'),
-          NamedChain.write('_', cEnsurePositionChanged),
+          NC.read('blocker', Mouse.cMouseMoveTo(140, 200)),
+          NC.direct('box', cRecordPosition, 'box_position2'),
+          NC.read('blocker', Mouse.cMouseMoveTo(160, 200)),
+          NC.direct('box', cRecordPosition, 'box_position3'),
+          NC.readX(NC.getKeys('box_position1', 'box_position2', 'box_position3'), cEnsurePositionChanged),
 
-          cReset,
+          ...reset,
 
           // Test bounds
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 200), '_'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 200), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position4'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(0, 200), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position5'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(-50, 200), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position6_bound'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(400, 200), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position7'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(500, 200), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position8_bound'),
-          NamedChain.write('_', cEnsureBound),
+          NC.read('blocker', Mouse.cMouseMoveTo(100, 200)),
+          NC.read('blocker', Mouse.cMouseMoveTo(50, 200)),
+          NC.direct('box', cRecordPosition, 'box_position4'),
+          NC.read('blocker', Mouse.cMouseMoveTo(0, 200)),
+          NC.direct('box', cRecordPosition, 'box_position5'),
+          NC.read('blocker', Mouse.cMouseMoveTo(-50, 200)),
+          NC.direct('box', cRecordPosition, 'box_position6_bound'),
+          NC.read('blocker', Mouse.cMouseMoveTo(400, 200)),
+          NC.direct('box', cRecordPosition, 'box_position7'),
+          NC.read('blocker', Mouse.cMouseMoveTo(500, 200)),
+          NC.direct('box', cRecordPosition, 'box_position8_bound'),
+          NC.readX(NC.getKeys('box_position4', 'box_position5', 'box_position6_bound', 'box_position7', 'box_position8_bound'), cEnsureBound),
 
           // Test bounds when scrolled
           cScrollTo(0, 1000),
-          cReset,
+          ...reset,
 
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 1100), '_'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 1100), '_'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 1400), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_scrolled_position9'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 1500), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_scrolled_position10_bound'),
-          NamedChain.write('_', cEnsureScrollBound),
+          NC.read('blocker', Mouse.cMouseMoveTo(100, 1100)),
+          NC.read('blocker', Mouse.cMouseMoveTo(100, 1100)),
+          NC.read('blocker', Mouse.cMouseMoveTo(100, 1400)),
+          NC.direct('box', cRecordPosition, 'box_scrolled_position9'),
+          NC.read('blocker', Mouse.cMouseMoveTo(100, 1500)),
+          NC.direct('box', cRecordPosition, 'box_scrolled_position10_bound'),
+          NC.readX(NC.getKeys('box_scrolled_position9', 'box_scrolled_position10_bound'), cEnsureScrollBound),
 
           cScrollTo(0, 0),
-          cReset,
+          ...reset,
 
           // Test pinning.
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 100), '_'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 100), '_'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 60), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position11'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 30), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position12_pinned'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(160, 20), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position13_pinned'),
-          NamedChain.write('_', cEnsurePinned),
+          NC.read('blocker', Mouse.cMouseMoveTo(50, 100)),
+          NC.read('blocker', Mouse.cMouseMoveTo(50, 100)),
+          NC.read('blocker', Mouse.cMouseMoveTo(50, 60)),
+          NC.direct('box', cRecordPosition, 'box_position11'),
+          NC.read('blocker', Mouse.cMouseMoveTo(50, 30)),
+          NC.direct('box', cRecordPosition, 'box_position12_pinned'),
+          NC.read('blocker', Mouse.cMouseMoveTo(160, 20)),
+          NC.direct('box', cRecordPosition, 'box_position13_pinned'),
+          NC.readX(NC.getKeys('box_position11', 'box_position12_pinned', 'box_position13_pinned'), cEnsurePinned),
 
           Chain.wait(10),
-          NamedChain.bundle((output) => {
-            return Result.value(output);
-          })
         ])
       ])
     ];

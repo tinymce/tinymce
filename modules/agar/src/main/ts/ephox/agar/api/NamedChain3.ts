@@ -46,11 +46,14 @@ export const writeX = <X, O>(calc: Chain<void, O>, put: Chain<[Partial<X>, O], P
 export const direct = <X, K1 extends keyof X, K2 extends keyof X>(inputName: K1, calc: Chain<X[K1], X[K2]>, outputName: K2): NamedChain<X> =>
   directX(getKey(inputName), calc, putKey(outputName));
 
-export const read = <X, K extends keyof X>(inputName: K, calc: Chain<X[K], any>): NamedChain<X> =>
+export const read = <X, K extends keyof X, O>(inputName: K, calc: Chain<X[K], O>): NamedChain<X> =>
   readX(getKey(inputName), calc);
 
 export const write = <X, K extends keyof X>(calc: Chain<void, X[K]>, outputName: K): NamedChain<X> =>
   writeX(calc, putKey(outputName));
+
+export const op = <X, K extends keyof X>(inputName: K, calc: (value: X[K]) => void): NamedChain<X> =>
+readX(getKey(inputName), Chain.op(calc));
 
 export const map = <X, K1 extends keyof X, K2 extends keyof X>(inputName: K1, calc: (value: X[K1]) => X[K2], outputName: K2): NamedChain<X> =>
   direct(inputName, Chain.mapper(calc), outputName);
