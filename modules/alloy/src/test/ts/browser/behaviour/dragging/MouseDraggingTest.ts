@@ -175,7 +175,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
       box_position13_pinned: Pos;
     };
 
-    const reset: Array<NC.NamedChain<MDT>> = [
+    const cReset = NC.fragment<MDT>([
       NC.read('blocker', Mouse.cMouseUp),
       NC.read('container', Chain.control(
         UiFinder.cFindIn('.test-blocker'),
@@ -193,7 +193,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
 
       NC.read('box', Mouse.cMouseDown),
       NC.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
-    ];
+    ]);
 
     return [
       Chain.asStep({}, [
@@ -213,7 +213,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
           NC.direct('box', cRecordPosition, 'box_position3'),
           NC.readX(NC.getKeys('box_position1', 'box_position2', 'box_position3'), cEnsurePositionChanged),
 
-          ...reset,
+          cReset,
 
           // Test bounds
           NC.read('blocker', Mouse.cMouseMoveTo(100, 200)),
@@ -231,7 +231,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
 
           // Test bounds when scrolled
           cScrollTo(0, 1000),
-          ...reset,
+          cReset,
 
           NC.read('blocker', Mouse.cMouseMoveTo(100, 1100)),
           NC.read('blocker', Mouse.cMouseMoveTo(100, 1100)),
@@ -242,7 +242,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
           NC.readX(NC.getKeys('box_scrolled_position9', 'box_scrolled_position10_bound'), cEnsureScrollBound),
 
           cScrollTo(0, 0),
-          ...reset,
+          cReset,
 
           // Test pinning.
           NC.read('blocker', Mouse.cMouseMoveTo(50, 100)),
