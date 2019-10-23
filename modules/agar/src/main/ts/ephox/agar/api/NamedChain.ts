@@ -28,7 +28,7 @@ const asChain = <T>(chains: NamedChain[]): Chain<T, any> =>
 // Write merges in its output into input because it knows that it was
 // given a complete input.
 const write = (name: string, chain: Chain<NamedData, any>) =>
-  Chain.on(function (input: NamedData, next: NextFn<NamedData>, die: DieFn, initLogs: TestLogs) {
+  Chain.on((input: NamedData, next: NextFn<NamedData>, die: DieFn, initLogs: TestLogs) => {
     chain.runChain(input, (output: any, newLogs: TestLogs) => {
       const self = wrapSingle(name, output);
       return next(
@@ -40,14 +40,13 @@ const write = (name: string, chain: Chain<NamedData, any>) =>
 
 // Partial write does not try and merge in input, because it knows that it
 // might not be getting the full input
-const partialWrite = function (name: string, chain: Chain<any, any>) {
-  return Chain.on(function (input: any, next: NextFn<NamedData>, die: DieFn, initLogs: TestLogs) {
-    chain.runChain(input, function (output: any, newLogs: TestLogs) {
+const partialWrite = (name: string, chain: Chain<any, any>) =>
+  Chain.on((input: any, next: NextFn<NamedData>, die: DieFn, initLogs: TestLogs) => {
+    chain.runChain(input, (output: any, newLogs: TestLogs) => {
       const self = wrapSingle(name, output);
       return next(self, newLogs);
     }, die, initLogs);
   });
-};
 
 const wrapSingle = (name: string, value: any): NamedData => {
   if (name === '_') {
@@ -61,10 +60,10 @@ const wrapSingle = (name: string, value: any): NamedData => {
 const combine = (input: NamedData, name: string, value: any): NamedData => Merger.merge(input, wrapSingle(name, value));
 
 const process = (name: string, chain: Chain<any, any>) =>
-  Chain.on(function (input: NamedData, next: NextFn<NamedData>, die, initLogs: TestLogs) {
+  Chain.on((input: NamedData, next: NextFn<NamedData>, die, initLogs: TestLogs) => {
     if (Object.prototype.hasOwnProperty.call(input, name)) {
       const part = input[name];
-      chain.runChain(part, function (other, newLogs: TestLogs) {
+      chain.runChain(part, (other, newLogs: TestLogs) => {
         const merged: NamedData = Merger.merge(input, other);
         next(merged, newLogs);
       }, die, initLogs);
@@ -82,13 +81,12 @@ const overwrite = (inputName: string, chain: Chain<any, any>) =>
 const writeValue = (name: string, value: any) =>
   Chain.mapper((input: NamedData) => combine(input, name, value));
 
-const read = function (name: string, chain: Chain<any, any>) {
-  return Chain.on(function (input: NamedData, next: NextFn<NamedData>, die: DieFn, initLogs: TestLogs) {
-    chain.runChain(input[name], function (_, newLogs) {
-      return next(input, newLogs);
-    }, die, initLogs);
+const read = (name: string, chain: Chain<any, any>) =>
+  Chain.on((input: NamedData, next: NextFn<NamedData>, die: DieFn, initLogs: TestLogs) => {
+    chain.runChain(input[name], (_, newLogs) =>
+      next(input, newLogs), die, initLogs
+    );
   });
-};
 
 const merge = (names: string[], combinedName: string) =>
   Chain.mapper((input: NamedData) => {
