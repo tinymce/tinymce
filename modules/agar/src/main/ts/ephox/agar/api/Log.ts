@@ -4,7 +4,7 @@ import { Chain } from './Chain';
 import { sequence } from './GeneralSteps';
 import { Step } from './Step';
 
-const generateLogMsg = (testId: string, description: string) => {
+const generateLogMsg = (testId: string, description: string): string => {
   // AP-147 Format: 'TestCase-<plugin name>-<test case ID / TBA:> <description of the test>'
   return `TestCase-${testId}: ${description}`;
 };

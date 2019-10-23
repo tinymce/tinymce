@@ -26,14 +26,12 @@ const newModifiers = (modifiers: MixedKeyModifiers): KeyModifiers => isNewKeyMod
 
 // Take from Orwellophile's answer on
 // http://stackoverflow.com/questions/10455626/keydown-simulation-in-chrome-fires-normally-but-not-the-correct-key
-const keyevent = function (type: string, doc: Element, value: number, modifiers: MixedKeyModifiers, focus?: Element) {
+const keyevent = (type: string, doc: Element<any>, value: number, modifiers: MixedKeyModifiers, focus?: Element<any>): void => {
   const domDoc: Document = doc.dom();
   const mod = newModifiers(modifiers);
   const oEvent = domDoc.createEvent('KeyboardEvent');
-  const getter = function () {
-    return value;
-  };
-  const defineGetter = function (obj, key: string, propGetter) {
+  const getter = () => value;
+  const defineGetter = (obj, key: string, propGetter) => {
     Object.defineProperty(obj, key, { get: propGetter, enumerable: true });
   };
   const dispatcher = focus !== undefined ? focus : doc;
@@ -46,10 +44,10 @@ const keyevent = function (type: string, doc: Element, value: number, modifiers:
     if (platform.browser.isChrome() || platform.browser.isEdge() || platform.browser.isFirefox()) {
       defineGetter(oEvent, 'keyCode', getter);
       defineGetter(oEvent, 'which', getter);
-      defineGetter(oEvent, 'shiftKey', function () { return mod.shiftKey === true; });
-      defineGetter(oEvent, 'metaKey', function () { return mod.metaKey === true; });
-      defineGetter(oEvent, 'ctrlKey', function () { return mod.ctrlKey === true; });
-      defineGetter(oEvent, 'altKey', function () { return mod.altKey === true; });
+      defineGetter(oEvent, 'shiftKey', () => mod.shiftKey === true);
+      defineGetter(oEvent, 'metaKey', () => mod.metaKey === true);
+      defineGetter(oEvent, 'ctrlKey', () => mod.ctrlKey === true);
+      defineGetter(oEvent, 'altKey', () => mod.altKey === true);
     }
 
     const canBubble = true;
@@ -71,7 +69,7 @@ const keyevent = function (type: string, doc: Element, value: number, modifiers:
   }
 };
 
-const safari = function (type: string, doc: Element, value: number, modifiers: KeyModifiers, dispatcher: Element) {
+const safari = (type: string, doc: Element<any>, value: number, modifiers: KeyModifiers, dispatcher: Element<any>): void => {
   const oEvent = (<Document> doc.dom()).createEvent('Events');
   oEvent.initEvent(type, true, true);
 

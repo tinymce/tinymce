@@ -12,11 +12,11 @@
  *
  * QUnit.diff( "the quick brown fox jumped over", "the quick fox jumps over" ) == "the  quick <del>brown </del> fox <del>jumped </del><ins>jumps </ins> over"
  */
-const htmlDiff: (v1: string, v2: string) => string = (function () {
+const htmlDiff: (v1: string, v2: string) => string = (() => {
   const hasOwn = Object.prototype.hasOwnProperty;
 
   /*jshint eqeqeq:false, eqnull:true */
-  function diff(o, n) {
+  const diff = (o, n) => {
     let i;
     const ns = {};
     const os = {};
@@ -90,9 +90,9 @@ const htmlDiff: (v1: string, v2: string) => string = (function () {
       o,
       n
     };
-  }
+  };
 
-  return function (o, n) {
+  return (o, n) => {
     o = o.replace(/\s+$/, '');
     n = n.replace(/\s+$/, '');
 

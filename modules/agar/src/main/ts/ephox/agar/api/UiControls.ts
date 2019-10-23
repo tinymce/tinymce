@@ -4,28 +4,24 @@ import { Chain } from './Chain';
 import * as UiFinder from './UiFinder';
 import { Step } from './Step';
 
-const cSetValue = function (newValue: string) {
-  return Chain.op(function (element: Element) {
+const cSetValue = (newValue: string): Chain<Element<any>, Element<any>> =>
+  Chain.op((element: Element<any>) => {
     Value.set(element, newValue);
   });
-};
 
-const cGetValue = Chain.mapper(function (element: Element) {
-  return Value.get(element);
-});
+const cGetValue: Chain<Element<any>, string> =
+  Chain.mapper(Value.get);
 
-const sSetValue = function <T>(element: Element, newValue: string): Step<T, T> {
-  return Chain.asStep<T, Element>(element, [
+const sSetValue = <T>(element: Element<any>, newValue: string): Step<T, T> =>
+  Chain.asStep<T, Element>(element, [
     cSetValue(newValue)
   ]);
-};
 
-const sSetValueOn = function <T>(container: Element, selector: string, newValue: string): Step<T, T> {
-  return Chain.asStep<T, Element>(container, [
+const sSetValueOn = <T>(container: Element<any>, selector: string, newValue: string): Step<T, T> =>
+  Chain.asStep<T, Element>(container, [
     UiFinder.cFindIn(selector),
     cSetValue(newValue)
   ]);
-};
 
 export {
   sSetValueOn,

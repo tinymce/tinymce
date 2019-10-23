@@ -3,15 +3,15 @@ import { setTimeout } from '@ephox/dom-globals';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as Waiter from 'ephox/agar/api/Waiter';
-import StepAssertions from 'ephox/agar/test/StepAssertions';
+import * as StepAssertions from 'ephox/agar/test/StepAssertions';
 
-UnitTest.asynctest('WaiterChainTest', function (success, failure) {
+UnitTest.asynctest('WaiterChainTest', (success, failure) => {
 
-  const makeTryUntilChain = function (label: string, interval: number, amount: number) {
+  const makeTryUntilChain = (label: string, interval: number, amount: number) => {
     let counter = 0;
     return Waiter.cTryUntil(
       label + ': TryUntil counter',
-      Chain.on(function (_value, next, die, logs) {
+      Chain.on((_value, next, die, logs) => {
         counter++;
         if (counter === 5) {
           return next(counter, logs);
@@ -24,11 +24,11 @@ UnitTest.asynctest('WaiterChainTest', function (success, failure) {
     );
   };
 
-  const makeTryUntilNotChain = function (label: string, interval: number, amount: number) {
+  const makeTryUntilNotChain = (label: string, interval: number, amount: number) => {
     let counter = 0;
     return Waiter.cTryUntilNot(
       label + ': TryUntilNot counter',
-      Chain.on(function (_value, next, die, logs) {
+      Chain.on((_value, next, die, logs) => {
         counter++;
         if (counter < 10) {
           return next('not yet', logs);
@@ -41,15 +41,14 @@ UnitTest.asynctest('WaiterChainTest', function (success, failure) {
     );
   };
 
-  const makeDelayChain = function (label: string, timeout: number, delay: number) {
-    return Waiter.cTimeout(
+  const makeDelayChain = (label: string, timeout: number, delay: number) =>
+    Waiter.cTimeout(
       label + ': Waiter timeout',
       Chain.on(function (_value, next, die, logs) {
         setTimeout(function () {
           next(_value, logs);
         }, delay);
       }), timeout);
-  };
 
   Pipeline.async({}, [
     // tryUntil with enough time
@@ -83,5 +82,7 @@ UnitTest.asynctest('WaiterChainTest', function (success, failure) {
       makeDelayChain('not enough time', 50, 500)
     )
 
-  ], function () { success(); }, failure);
+  ], () => {
+    success();
+  }, failure);
 });

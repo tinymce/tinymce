@@ -1,18 +1,15 @@
 import { console } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-
 import * as ErrorTypes from '../alien/ErrorTypes';
 import { DieFn, NextFn } from '../pipe/Pipe';
 import { Step } from './Step';
 import { addLogEntry, popLogLevel, pushLogLevel, TestLogs } from './TestLogs';
 import { TestLabel } from '@ephox/bedrock-client';
 
-const t = function <T, U>(label: string, f: Step<T, U>): Step<T, U> {
-  const enrich = function (err) {
-    return ErrorTypes.enrichWith(label, err);
-  };
+const t = <T, U>(label: string, f: Step<T, U>): Step<T, U> => {
+  const enrich = (err) => ErrorTypes.enrichWith(label, err);
 
-  return Step.raw(function (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) {
+  return Step.raw((value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => {
     const updatedLogs = pushLogLevel(addLogEntry(logs, label));
     const dieWith: DieFn = (err, newLogs) => die(enrich(err), popLogLevel(newLogs));
     try {
@@ -24,10 +21,8 @@ const t = function <T, U>(label: string, f: Step<T, U>): Step<T, U> {
   });
 };
 
-const sync = function <T>(label: TestLabel, f: () => T): T {
-  const enrich = function (err) {
-    return ErrorTypes.enrichWith(label, err);
-  };
+const sync = <T>(label: TestLabel, f: () => T): T => {
+  const enrich = (err) => ErrorTypes.enrichWith(label, err);
 
   try {
     return f();
@@ -36,16 +31,14 @@ const sync = function <T>(label: TestLabel, f: () => T): T {
   }
 };
 
-const ts = function <T, U>(label: string, fs: Step<T, U>[]) {
+const ts = <T, U>(label: string, fs: Step<T, U>[]): Step<T, U>[] => {
   if (fs.length === 0) {
     return fs;
   }
-  return Arr.map(fs, function (f: Step<T, U>, i: number) {
-    return t(label + '(' + i + ')', f);
-  });
+  return Arr.map(fs, (f: Step<T, U>, i: number) => t(label + '(' + i + ')', f));
 };
 
-const spec = function (msg) {
+const spec = (msg): void => {
   // TMP, WIP
   // tslint:disable-next-line:no-console
   console.log(msg);

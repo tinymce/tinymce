@@ -9,25 +9,19 @@ interface Decorator {
   value: any; // generator
 }
 
-const gOne = function (wDecorations: Decorator[]) {
-  return WeightedChoice.generator(wDecorations).flatMap(function (choice: Option<Decorator>) {
-    return choice.fold(function () {
-      return Jsc.constant({}).generator;
-    }, function (c) {
-      return c.value.map(function (v) {
+const gOne = (wDecorations: Decorator[]) =>
+  WeightedChoice.generator(wDecorations).flatMap((choice: Option<Decorator>) =>
+    choice.fold(() =>
+        Jsc.constant({}).generator,
+      (c) => c.value.map((v) => {
         const r = {};
         r[c.property] = v;
         return r;
-      });
-    });
-  });
-};
+      })));
 
-const gEnforce = function (decorations) {
-  return Jsc.constant(decorations).generator;
-};
+const gEnforce = (decorations) => Jsc.constant(decorations).generator;
 
-export default {
+export {
   gOne,
   gEnforce
 };

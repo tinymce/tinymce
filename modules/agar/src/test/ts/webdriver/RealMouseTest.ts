@@ -11,7 +11,7 @@ import * as UiFinder from 'ephox/agar/api/UiFinder';
 import { Cell } from '@ephox/katamari';
 import { Assertions } from 'ephox/agar/api/Main';
 
-UnitTest.asynctest('RealMouseTest', function (success, failure) {
+UnitTest.asynctest('RealMouseTest', (success, failure) => {
 
   const detection = PlatformDetection.detect();
 
@@ -60,7 +60,7 @@ UnitTest.asynctest('RealMouseTest', function (success, failure) {
     Chain.asStep(container, [
       UiFinder.cFindIn('button[data-test]'),
       Chain.control(
-        Chain.op(function (button) {
+        Chain.op((button) => {
           Assert.eq('After hovering', Css.get(other, 'background-color'), Css.get(button, 'background-color'));
         }),
         Guard.tryUntil('Waiting for button to turn blue')
@@ -73,7 +73,7 @@ UnitTest.asynctest('RealMouseTest', function (success, failure) {
         Assertions.assertEq(`button doesn\'t have ${RealMouse.BedrockIdAttribute} attribute`, false, Attr.has(button, RealMouse.BedrockIdAttribute));
       })
     ])
-  ], function () {
+  ], () => {
     binder.unbind();
     Remove.remove(container);
     success();

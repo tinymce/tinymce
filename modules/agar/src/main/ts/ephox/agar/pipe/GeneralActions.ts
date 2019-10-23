@@ -1,9 +1,9 @@
-const debug = function () {
+const debug = (): void => {
   // tslint:disable-next-line:no-debugger
   debugger;
 };
 
-const pass = function () { };
+const pass = (): void => {};
 
 export {
   debug,
