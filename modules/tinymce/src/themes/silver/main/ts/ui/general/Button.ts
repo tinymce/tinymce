@@ -20,7 +20,7 @@ import {
   SimpleOrSketchSpec
 } from '@ephox/alloy';
 import { console } from '@ephox/dom-globals';
-import { Merger, Option } from '@ephox/katamari';
+import { Fun, Merger, Option } from '@ephox/katamari';
 import { formActionEvent, formCancelEvent, formSubmitEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import { UiFactoryBackstageProviders, UiFactoryBackstage } from '../../backstage/Backstage';
@@ -161,6 +161,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
 
     const fixedSpec = {
       ...spec,
+      onSetup: () => Fun.noop,
       fetch: getFetch(menuButtonSpec.items, getButton, backstage)
     };
 

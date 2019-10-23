@@ -109,6 +109,7 @@ const getFetch = (items: StoragedMenuItem[], getButton: () => MementoRecord, bac
       });
       return {
         type: item.type,
+        active: false,
         ...text,
         onAction: getMenuItemAction(item),
         onSetup: getMenuItemSetup(item)

@@ -10,7 +10,6 @@ export type SuccessCallback = (menu: string | DialogMenuButtonItemTypes[]) => vo
 
 export type DialogNormalButtonApi = FooterButton.DialogNormalButtonApi;
 export type DialogMenuButtonApi = FooterButton.DialogMenuButtonApi;
-export type DialogMenuButtonInstanceApi = FooterButton.DialogMenuButtonInstanceApi;
 export type DialogButtonApi = FooterButton.DialogButtonApi;
 
 // For consistency with api/Types.ts this should perhaps be in a namespace (e.g. Types.Dialog.Panels.*)
