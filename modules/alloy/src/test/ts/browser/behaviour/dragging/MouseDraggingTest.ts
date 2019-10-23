@@ -137,7 +137,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
     );
 
     const cRecordPosition = Chain.control(
-      Chain.binder((box: Element<HTMLElement>) => {
+      Chain.binder<Element<HTMLElement>, Pos, string>((box) => {
         return Css.getRaw(box, 'left').bind((left) => {
           return Css.getRaw(box, 'top').map((top) => {
             return Result.value({

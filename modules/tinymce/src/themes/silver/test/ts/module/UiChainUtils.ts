@@ -1,14 +1,16 @@
 import { Chain, Guard, Mouse, UiFinder } from '@ephox/agar';
 import { Arr, Result } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+import { Element as DomElement } from '@ephox/dom-globals';
 
-const cCountNumber = (selector) => Chain.fromChains([
+const cCountNumber = (selector: string): Chain<Element<DomElement>, number> => Chain.fromChains([
   UiFinder.cFindAllIn(selector),
   Chain.mapper((ts) => ts.length)
 ]);
 
-const cExtractOnlyOne = (selector) => Chain.fromChains([
+const cExtractOnlyOne = (selector: string): Chain<Element<DomElement>, Element<DomElement>> => Chain.fromChains([
   UiFinder.cFindAllIn(selector),
-  Chain.binder((ts) => ts.length === 1 ? Result.value(ts[0]) : Result.error('Did not find exactly 1 of ' +
+  Chain.binder<Element<DomElement>[], Element<DomElement>, string>((ts) => ts.length === 1 ? Result.value(ts[0]) : Result.error('Did not find exactly 1 of ' +
     selector + '. Found: ' + ts.length))
 ]);
 
