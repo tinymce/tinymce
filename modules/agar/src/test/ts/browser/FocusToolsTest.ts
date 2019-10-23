@@ -32,7 +32,7 @@ UnitTest.asynctest('FocusToolsTest', (success, failure) => {
       Chain.control(
         Chain.on((active, next, die, logs) => {
           Assert.eq('Should be expected value', 'new value', Value.get(active));
-          next(Chain.wrap(active), logs);
+          next(active, logs);
         }),
         Guard.addLogging('Asserting the value of the input field after it has been set.')
       )

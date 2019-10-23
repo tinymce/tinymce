@@ -43,8 +43,8 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
     {},
     [
       Chain.asStep({}, [
-        Chain.on((cInput, cNext, cDie, cLogs) => {
-          cNext(Chain.wrap('doge'), cLogs);
+        Chain.on(function (cInput, cNext, cDie, cLogs) {
+          cNext('doge', cLogs);
         })
       ])
     ]
@@ -54,8 +54,8 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
     {},
     [
       Chain.asStep({}, [
-        Chain.on((cInput, cNext, cDie, cLogs) => {
-          cNext(Chain.wrap(undefined), cLogs);
+        Chain.on(function (cInput, cNext, cDie, cLogs) {
+          cNext(undefined, cLogs);
         })
       ])
     ]
@@ -130,17 +130,6 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
     ])
   );
 
-  const testChainEnforcesInput = StepAssertions.testStepsFail(
-    'Input Value is not a chain: raw.input',
-    [
-      Step.raw((_, next, die, logs) => {
-        Chain.on((input: any, n, d, clogs) => {
-          n(input, clogs);
-        }).runChain(<any> 'raw.input', next, die, logs);
-      })
-    ]
-  );
-
   const testChainAsync = StepAssertions.testChain(
     'async works!',
     Chain.async((_value, next) => {
@@ -195,18 +184,6 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
 
   return Pipeline.async({}, [
     Logger.t(
-      '[Should fail validation if the chain function does not wrap the output]\n',
-      testInputValueFails
-    ),
-    Logger.t(
-      '[Should pass validation if the chain function does wrap the output]\n',
-      testInputValuePasses
-    ),
-    Logger.t(
-      '[Should pass validation if the chain function does wrap the output, even if that output is undefined]\n',
-      testInputValueOfUndefinedPasses
-    ),
-    Logger.t(
       '[When a previous link passes a failure that fails a chain, the step should fail]\n',
       testChainingFails
     ),
@@ -230,11 +207,6 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
       '[When using fromChains, chains do accumulate when passing]\n',
       testChainAcc
     ),
-    Logger.t(
-      '[Chains should enforce input conditions]\n',
-      testChainEnforcesInput
-    ),
-
     Logger.t(
       '[Chain should async]\n',
       testChainAsync

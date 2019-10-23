@@ -1,6 +1,6 @@
 import * as Guard from './Guard';
 import { Step } from './Step';
-import { Chain, Wrap } from './Chain';
+import { Chain } from './Chain';
 
 const defaultAmount = 3000;
 const defaultInterval = 10;
@@ -21,13 +21,13 @@ const cTryUntilPredicate = <T>(label: string, p: (value: T) => boolean, interval
   cTryUntil(label, Chain.predicate(p), interval, amount);
 
 const cTryUntil = <T, U>(label: string, chain: Chain<T, U>, interval: number = defaultInterval, amount: number = defaultAmount): Chain<T, U> =>
-  Chain.control(chain, Guard.tryUntil<Wrap<T>, Wrap<U>>(label, interval, amount));
+  Chain.control(chain, Guard.tryUntil<T, U>(label, interval, amount));
 
 const cTryUntilNot = <T, U>(label: string, chain: Chain<T, U>, interval: number = defaultInterval, amount: number = defaultAmount): Chain<T, T> =>
-  Chain.control(chain, Guard.tryUntilNot<Wrap<T>, Wrap<U>>(label, interval, amount));
+  Chain.control(chain, Guard.tryUntilNot<T, U>(label, interval, amount));
 
 const cTimeout = <T, U>(label: string, chain: Chain<T, U>, limit: number = defaultAmount): Chain<T, U> =>
-  Chain.control(chain, Guard.timeout<Wrap<T>, Wrap<U>>(label, limit));
+  Chain.control(chain, Guard.timeout<T, U>(label, limit));
 
 export {
   sTryUntilPredicate,
