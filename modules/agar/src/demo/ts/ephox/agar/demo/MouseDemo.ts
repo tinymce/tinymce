@@ -1,9 +1,9 @@
-import DemoContainer from 'ephox/agar/demo/DemoContainer';
+import * as DemoContainer from 'ephox/agar/demo/DemoContainer';
 
-export default <any> function () {
+export const demo = (): void => {
   DemoContainer.init(
     'Mouse testing',
-    function (success, failure) {
+    (success, failure) => {
       failure('Not implemented.');
 
       return [ ];

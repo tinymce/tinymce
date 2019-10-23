@@ -56,7 +56,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
   };
 
   const rootNode = editor.getBody();
-  const fakeCaret = FakeCaret(editor.getBody(), isBlock, () => EditorFocus.hasFocus(editor));
+  const fakeCaret = FakeCaret(editor, rootNode, isBlock, () => EditorFocus.hasFocus(editor));
   const realSelectionId = 'sel-' + editor.dom.uniqueId();
   let selectedContentEditableNode;
 

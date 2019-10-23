@@ -5,7 +5,7 @@ import * as Touches from '../touch/Touches';
 import { Chain } from './Chain';
 import * as UiFinder from './UiFinder';
 
-const cTrigger = (selector: string, action: (ele: Element) => void) => {
+const cTrigger = (selector: string, action: (ele: Element<any>) => void) => {
   return Chain.async<Element, Element>((container, next, die) => {
     UiFinder.findIn(container, selector).fold(
       () => die('Could not find element: ' + selector),
@@ -17,29 +17,29 @@ const cTrigger = (selector: string, action: (ele: Element) => void) => {
   });
 };
 
-const sTriggerWith = <T>(container: Element, selector: string, action: (ele: Element) => void) => {
+const sTriggerWith = <T>(container: Element<any>, selector: string, action: (ele: Element<any>) => void) => {
   return Chain.asStep<T, Element>(container, [ cTrigger(selector, action) ]);
 };
 
-const trueTap = (elem: Element) => {
+const trueTap = (elem: Element<any>) => {
   // The closest event queue to a true tap event
   Focus.focus(elem);
   Touches.touchstart(elem);
   Touches.touchend(elem);
 };
 
-const tap = (elem: Element) => {
+const tap = (elem: Element<any>) => {
   Touches.touchstart(elem);
   Touches.touchend(elem);
 };
 
-const sTap = <T>(element: Element) => Step.sync<T>(() => tap(element));
+const sTap = <T>(element: Element<any>) => Step.sync<T>(() => tap(element));
 
-const sTrueTapOn = <T>(container: Element, selector: string) => {
+const sTrueTapOn = <T>(container: Element<any>, selector: string) => {
   return sTriggerWith<T>(container, selector, trueTap);
 };
 
-const sTapOn = <T>(container: Element, selector: string) => {
+const sTapOn = <T>(container: Element<any>, selector: string) => {
   return sTriggerWith<T>(container, selector, tap);
 };
 

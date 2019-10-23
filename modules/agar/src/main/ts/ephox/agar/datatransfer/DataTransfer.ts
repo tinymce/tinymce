@@ -1,5 +1,5 @@
 import { Arr, Type, Id, Option } from '@ephox/katamari';
-import { Element, DataTransfer, DataTransferItemList } from '@ephox/dom-globals';
+import { Element as DomElement, DataTransfer, DataTransferItemList } from '@ephox/dom-globals';
 import { createDataTransferItemList } from './DataTransferItemList';
 import { createFileList } from '../file/FileList';
 import { getData } from './DataTransferItem';
@@ -11,7 +11,7 @@ const validDropEffects = ['none', 'copy', 'link', 'move'];
 const validEffectAlloweds = ['none', 'copy', 'copyLink', 'copyMove', 'link', 'linkMove', 'move', 'all', 'uninitialized'];
 
 export interface DragImageData {
-  image: Element;
+  image: DomElement;
   x: number;
   y: number;
 }
@@ -86,7 +86,7 @@ const createDataTransfer = (): DataTransfer => {
       return types.concat(hasFiles ? ['Files'] : []);
     },
 
-    setDragImage: (image: Element, x: number, y: number) => {
+    setDragImage: (image: DomElement, x: number, y: number) => {
       if (isInReadWriteMode(dataTransfer)) {
         setDragImage(dataTransfer, { image, x, y });
       }

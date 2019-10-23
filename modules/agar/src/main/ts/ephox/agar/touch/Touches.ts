@@ -1,7 +1,7 @@
 import { Document, Touch, TouchEvent, UIEvent, window } from '@ephox/dom-globals';
 import { Element, Location } from '@ephox/sugar';
 
-const point = (type: string, element: Element, x: number, y: number) => {
+const point = (type: string, element: Element<any>, x: number, y: number): void => {
   const touch = {
     identifier: Date.now(),
     target: element.dom(),
@@ -50,20 +50,14 @@ const point = (type: string, element: Element, x: number, y: number) => {
   }
 };
 
-const touch = (eventType: string) => {
-  return (element: Element) => {
-    const position = Location.absolute(element);
-    point(eventType, element, position.left(), position.top());
-  };
+const touch = (eventType: string) => (element: Element<any>): void => {
+  const position = Location.absolute(element);
+  point(eventType, element, position.left(), position.top());
 };
 
-const touchAt = (eventType: string) => {
-  return (dx: number, dy: number) => {
-    return (element: Element) => {
-      const position = Location.absolute(element);
-      point(eventType, element, position.left() + dx, position.top() + dy);
-    };
-  };
+const touchAt = (eventType: string) => (dx: number, dy: number) => (element: Element<any>): void => {
+  const position = Location.absolute(element);
+  point(eventType, element, position.left() + dx, position.top() + dy);
 };
 
 const touchstart = touch('touchstart');
