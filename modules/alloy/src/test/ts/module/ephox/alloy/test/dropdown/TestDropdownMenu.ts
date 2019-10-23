@@ -93,7 +93,7 @@ const mWaitForNewMenu = (component) => {
       }),
       100,
       3000
-    )(value, next, die, logs);
+    ).runStep(value, next, die, logs);
   });
 };
 

@@ -58,7 +58,7 @@ const failOnError = (label: string, expectedSuccess: any, unexpectedError: any):
 
 const failed = (label, expected, step: Step<any, any>) =>
   Step.raw((value, next, die, initLogs) => {
-    step(value, (v, newLogs) => {
+    step.runStep(value, (v, newLogs) => {
       const msg = failOnSuccess(label, expected, v);
       die(msg, newLogs);
     }, (err, newLogs) => {
@@ -71,7 +71,7 @@ const failed = (label, expected, step: Step<any, any>) =>
 
 const passed = (label, expected, step: Step<any, any>) =>
   Step.raw((value, next, die, initLogs) => {
-    step(value, (v, newLogs) => {
+    step.runStep(value, (v, newLogs) => {
       const exp = expected === sPreserved ? value : expected;
       assertSuccess(label, exp, v).fold(
         (err) => die(err, newLogs),
@@ -109,7 +109,7 @@ const testStepsFail = (expected, steps: Array<Step<any, any>>) =>
 
 const testStepFail = (expected, step: Step<any, any>) =>
   Step.raw((value, next, die, initLogs) => {
-    step(value, (v, newLogs) => {
+    step.runStep(value, (v, newLogs) => {
       const msg = failOnSuccess('testStepFail', expected, v);
       die(msg, newLogs);
     }, (err, newLogs) => {
@@ -121,7 +121,7 @@ const testStepFail = (expected, step: Step<any, any>) =>
 
 const testStepFailPprintError = (expectedExpectedValue, expectedActualValue, step: Step<any, any>) =>
   Step.raw((value, next, die, initLogs) => {
-    step(value, (v, newLogs) => {
+    step.runStep(value, (v, newLogs) => {
       const msg = failOnSuccess('testStepFail', expectedExpectedValue, v);
       die(msg, newLogs);
     }, (err, newLogs) => {

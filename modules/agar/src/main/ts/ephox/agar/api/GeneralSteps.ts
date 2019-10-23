@@ -30,9 +30,9 @@ const repeatUntil = <T, U>(label: string, repeatStep: Step<T, T>, successStep: S
     if (num <= 0) {
       die(label + '\nRan out of attempts', logs);
     } else {
-      repeatStep(value, () => {
+      repeatStep.runStep(value, () => {
         // Any fancy setting of log here? Or ignore previous attempts?
-        successStep(value, next, () => {
+        successStep.runStep(value, next, () => {
           again(num - 1);
         }, logs);
       }, die, logs);

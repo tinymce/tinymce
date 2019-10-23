@@ -6,13 +6,15 @@ import { DieFn, NextFn, Pipe, RunFn } from '../pipe/Pipe';
 import { addLogging, GuardFn } from './Guard';
 import { addLogEntry, TestLogs } from './TestLogs';
 
-export type Step<T, U> = (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => void;
+export interface Step<T, U> {
+  runStep: (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => void;
+}
 
 const raw = <T, U>(f: RunFn<T, U>): Step<T, U> =>
-  Pipe(f);
+  ({ runStep: Pipe(f) });
 
 const stateful = <T, U>(f: (v: T, next: (v: U) => void, die: (err) => void) => void): Step<T, U> =>
-  Pipe((value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => {
+  raw<T, U>((value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => {
     f(
       value,
       (nextValue: U) => next(nextValue, logs),
@@ -22,18 +24,18 @@ const stateful = <T, U>(f: (v: T, next: (v: U) => void, die: (err) => void) => v
 
 // Chiefly used for limiting things with timeouts.
 const control = <T, U, V>(step: Step<T, U>, guard: GuardFn<T, U, V>): Step<T, V> =>
-  Pipe((value: T, next: NextFn<V>, die: DieFn, logs: TestLogs) => {
-    guard(step, value, next, die, logs);
+  raw<T, V>((value: T, next: NextFn<V>, die: DieFn, logs: TestLogs) => {
+    guard(step.runStep, value, next, die, logs);
   });
 
 const sync = <T>(f: () => void): Step<T, T> =>
-  Pipe((value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) => {
+  raw<T, T>((value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) => {
     f();
     next(value, logs);
   });
 
 const async = <T>(f: (next: () => void, die: (err) => void) => void): Step<T, T> =>
-  Pipe((value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) => {
+  raw<T, T>((value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) => {
     f(
       () => next(value, logs),
       (err) => die(err, logs)
@@ -45,7 +47,7 @@ const debugging: Step<any, any> =
   sync<any>(GeneralActions.debug);
 
 const log = <T>(message: string): Step<T, T> =>
-  Pipe((value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) => {
+  raw<T, T>((value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) => {
     // tslint:disable-next-line:no-console
     console.log(message);
     next(value, addLogEntry(logs, message));

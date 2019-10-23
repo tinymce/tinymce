@@ -42,7 +42,7 @@ const async = (initial: any, steps: Step<any, any>[], onSuccess: NextFn<any>, on
           chain(result, newLogs, index + 1);
         };
 
-        asyncOperation(lastLink, (x, newLogs) => {
+        asyncOperation.runStep(lastLink, (x, newLogs) => {
           callAsync(() => { nextStep(x, newLogs); });
         }, onFailure, logs);
       } catch (error) {
