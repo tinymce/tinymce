@@ -22,7 +22,11 @@ const assertSteps = (steps: Step<any, any>[]) => {
   });
 };
 
-const async = (initial: any, steps: Step<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs?: TestLogs) => {
+const async1 = <T, U> (initial: T, step: Step<T, U>, onSuccess: NextFn<U>, onFailure: DieFn, initLogs?: TestLogs): void => {
+  step.runStep(initial, onSuccess, onFailure, TestLogs.getOrInit(initLogs));
+};
+
+const async = (initial: any, steps: Step<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs?: TestLogs): void => {
   assertSteps(steps);
 
   const chain = (lastLink: any, logs: TestLogs, index: number) => {
@@ -54,5 +58,6 @@ const async = (initial: any, steps: Step<any, any>[], onSuccess: NextFn<any>, on
 };
 
 export const Pipeline = {
-  async
+  async,
+  async1
 };
