@@ -63,7 +63,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
     );
 
   }, (doc, body, gui, component, store) => {
-    const cCheckNum = (label: string, expected: number) => {
+    const cCheckNum = (label: string, expected: number): Chain<any[], number> => {
       return Chain.fromChains([
         Chain.mapper((array) => array.length),
         Assertions.cAssertEq(label, expected)
@@ -136,9 +136,9 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       }, Result.value);
     });
 
-    const cGetHighlightedIsNone = Chain.binder((v) => {
+    const cGetHighlightedIsNone = Chain.binder<void, void, string>(() => {
       return Highlighting.getHighlighted(component).fold(() => {
-        return Result.value(v);
+        return Result.value(undefined);
       }, (comp) => {
         return Result.error('Highlighted value should be nothing. Was: ' + Truncate.getHtml(comp.element()));
       });
@@ -221,7 +221,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
           NC.read('highlighted-comp', cHasClass('gamma')),
 
           cDehighlightAll(),
-          NC.read('container', cGetHighlightedIsNone),
+          NC.effect(cGetHighlightedIsNone),
 
           Chain.op((_input) => {
             Highlighting.highlightBy(component, (comp) => {
