@@ -161,7 +161,10 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
 
     const fixedSpec = {
       ...spec,
-      onSetup: () => Fun.noop,
+      onSetup: (api) => {
+        api.setDisabled(spec.disabled);
+        return Fun.noop;
+      },
       fetch: getFetch(menuButtonSpec.items, getButton, backstage)
     };
 
