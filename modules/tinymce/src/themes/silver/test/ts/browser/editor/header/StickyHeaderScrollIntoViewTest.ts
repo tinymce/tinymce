@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderScro
     const expectedSecondParaScrollTopPos = 2000 + initialContainerPos.top() - headerHeight;
 
     const steps = [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('ScrollElementIntoView', GeneralSteps.sequence([
         Logger.t('Scroll to element align to bottom', GeneralSteps.sequence([
           sScrollReset(editor),
