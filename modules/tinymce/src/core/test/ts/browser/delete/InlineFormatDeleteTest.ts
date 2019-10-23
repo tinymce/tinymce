@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function ()
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Backspace/delete in unformatted plain text', GeneralSteps.sequence([
         Logger.t('Backspace after plain text should do nothing', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),

@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefBoundaryDeleteTest',  (succes
 
   const sTestDelete = function (editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions) {
     return GeneralSteps.sequence([
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
 
       Logger.t('Should delete single space between cef elements', GeneralSteps.sequence([
         tinyApis.sSetContent('<p><span contenteditable="false">a</span>&nbsp;<span contenteditable="false">b</span>&nbsp;</p>'),

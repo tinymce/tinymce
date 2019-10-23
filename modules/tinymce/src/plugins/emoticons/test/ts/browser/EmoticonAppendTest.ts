@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AppendTest', (success, fai
 
     Pipeline.async({},
       Log.steps('TBA', 'Emoticons: Open dialog, verify custom categories listed and search for custom emoticon', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyUi.sClickOnToolbar('click emoticons', 'button'),
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),

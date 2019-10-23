@@ -68,7 +68,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
 
     const sSetCursor = (elementPath: number[], offset: number) => GeneralSteps.sequence([
       tinyApis.sSetCursor(elementPath, offset),
-      tinyApis.sNodeChanged
+      tinyApis.sNodeChanged()
     ]);
 
     const sAssertContent = (label: string, expected: (s, str, arr) => StructAssert[]) => {
@@ -180,7 +180,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
     Pipeline.async({ }, Logger.ts(
       'Trigger autocompleter',
       [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         Logger.t('Checking escape in menu cancels the autocompleter', sTestEscapeMenu),
         Logger.t('Checking inserting a new line cancels the autocompleter', sTestNewline),
         Logger.t('Checking inserting at least 10 chars after no matches cancels the autocompleter', sTestContinueTypingWithNoMatch),

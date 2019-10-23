@@ -11,8 +11,8 @@ export interface Presence {
 export interface TinyApis {
   sSetContent: <T> (html: string) => Step<T, T>;
   sSetRawContent: <T> (html: string) => Step<T, T>;
-  sFocus: Step<unknown, unknown>;
-  sNodeChanged: Step<unknown, unknown>;
+  sFocus: <T> () => Step<T, T>;
+  sNodeChanged: <T> () => Step<T, T>;
   sAssertContent: <T> (expected: string) => Step<T, T>;
   sAssertContentPresence: <T> (expected: Presence) => Step<T, T>;
   sAssertContentStructure: <T> (expected: StructAssert) => Step<T, T>;
@@ -24,10 +24,10 @@ export interface TinyApis {
   sDeleteSetting: <T> (key: string) => Step<T, T>;
   sSetSetting: <T> (key: string, value: any) => Step<T, T>;
   sExecCommand: <T> (command: string, value?: any) => Step<T, T>;
-  sTryAssertFocus: Step<unknown, unknown>;
+  sTryAssertFocus: <T> () => Step<T, T>;
 
   cNodeChanged: <T> () => Chain<T, T>;
-  cGetContent: Chain<unknown, string>;
+  cGetContent: <T> () => Chain<T, string>;
 }
 
 export const TinyApis = function (editor: Editor): TinyApis {
@@ -101,7 +101,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
     ]);
   };
 
-  const cGetContent = Chain.mapper(function (input) {
+  const cGetContent = <T> () => Chain.injectThunked<T, string>(function () {
     // Technically not mapping value.
     return editor.getContent();
   });
@@ -114,7 +114,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
 
   const sAssertContent = function <T> (expected: string) {
     return Chain.asStep<T, any>({}, [
-      cGetContent,
+      cGetContent(),
       Assertions.cAssertHtml('Checking TinyMCE content', expected)
     ]);
   };
@@ -158,15 +158,15 @@ export const TinyApis = function (editor: Editor): TinyApis {
     });
   };
 
-  const sFocus = Step.sync(function () {
+  const sFocus = <T> () => Step.sync<T>(function () {
     editor.focus();
   });
 
-  const sNodeChanged = Step.sync(function () {
+  const sNodeChanged = <T> () => Step.sync<T>(function () {
     editor.nodeChanged();
   });
 
-  const sTryAssertFocus = Waiter.sTryUntil(
+  const sTryAssertFocus = <T> () => Waiter.sTryUntil<T, T>(
     'Waiting for focus on tinymce editor',
     FocusTools.sIsOnSelector(
       'iframe focus',

@@ -42,7 +42,7 @@ UnitTest.asynctest('Editor Dialog Popups Test', (success, failure) => {
       // the urlinput are on top of the dialog. Just test in Chrome.
       Pipeline.async({ }, PlatformDetection.detect().browser.isChrome() ? [
         Log.stepsAsStep('TBA', 'Trigger the colorswatch and check that the swatch appears in front of the dialog', [
-          tinyApis.sFocus,
+          tinyApis.sFocus(),
           Mouse.sClickOn(Body.body(), 'button:contains("Show Color Dialog")'),
           FocusTools.sTryOnSelector('Focus should be on colorinput', doc, 'input'),
           Keyboard.sKeydown(doc, Keys.tab(), { }),
@@ -57,7 +57,7 @@ UnitTest.asynctest('Editor Dialog Popups Test', (success, failure) => {
         ]),
 
         Log.stepsAsStep('TBA', 'Trigger the urlinput and check that the dropdown appears in front of the dialog', [
-          tinyApis.sFocus,
+          tinyApis.sFocus(),
           tinyApis.sSetContent('<p><a href="http://foo">Foo</a> <a href="http://goo">Goo</a></p>'),
           Mouse.sClickOn(Body.body(), 'button:contains("Show Urlinput Dialog")'),
           FocusTools.sTryOnSelector('Focus should be on urlinput', doc, 'input'),

@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureDeleteTest', (success, f
     const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Image: removing src in dialog should remove figure element', [
         tinyApis.sSetContent('<figure class="image"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" /><figcaption>x</figcaption></figure>'),
         tinyApis.sSetSelection([], 1, [], 2),

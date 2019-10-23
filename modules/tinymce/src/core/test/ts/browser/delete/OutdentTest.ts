@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeindentTest', function (success
         tinyApis.sSetContent(setupHtml),
         tinyApis.sSetCursor(setupPath, setupOffset),
         tinyApis.sExecCommand('indent'),
-        tinyApis.sNodeChanged,
+        tinyApis.sNodeChanged(),
         tinyActions.sContentKeystroke(key, { }),
         sNormalizeBody(editor),
         tinyApis.sAssertContent(expectedHtml),
@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeindentTest', function (success
     const sTestBackspace = sTestDeleteOrBackspaceKey(editor, tinyApis, tinyActions, Keys.backspace());
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Backspace key on text', GeneralSteps.sequence([
         sTestBackspace('<p>a</p>', [0, 0], 0, '<p>a</p>', [0, 0], 0), // outdent
         sTestBackspace('<p>aa</p>', [0, 0], 1, '<p style="padding-left: 40px;">aa</p>', [0, 0], 1), // no outdent

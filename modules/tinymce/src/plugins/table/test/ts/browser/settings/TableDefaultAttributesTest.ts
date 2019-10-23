@@ -61,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultAttributesTest', (
 
     Pipeline.async({}, [
       Logger.t('no attributes without setting', GeneralSteps.sequence([
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
         Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")')),
         Waiter.sTryUntil('click table grid', tinyUi.sClickOnUi('click table grid', 'div.tox-insert-table-picker div[role="button"]:nth(11)')), // button for 2x2 table
@@ -83,7 +83,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultAttributesTest', (
       ])),
 
       Logger.t('test default title attribute', GeneralSteps.sequence([
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetSetting('table_default_attributes', { title: 'x' }),
         tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
         Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")'), 10, 1000),

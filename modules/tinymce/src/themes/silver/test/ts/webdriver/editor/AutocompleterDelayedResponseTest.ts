@@ -96,7 +96,7 @@ UnitTest.asynctest('Editor Autocompleter delay response test', (success, failure
       });
 
       Pipeline.async({ }, Logger.ts('Trigger autocompleter', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         Logger.t('Checking delayed autocomplete, (columns = auto), trigger: "$"', sTestDelayedResponseAutocomplete)
       ]), onSuccess, onFailure);
     },

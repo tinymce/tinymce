@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorEditTest', (success, fa
 
     Pipeline.async({},
       Log.steps('TBA', 'Anchor: Add anchor, change anchor, undo anchor then the anchor should be there as first entered', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent('abc'),
         tinyApis.sExecCommand('mceAnchor'),
         tinyUi.sWaitForPopup('wait for window', 'div[role="dialog"].tox-dialog'),

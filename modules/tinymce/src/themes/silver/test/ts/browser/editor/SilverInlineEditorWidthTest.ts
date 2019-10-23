@@ -61,7 +61,7 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
       const tinyApis = TinyApis(editor);
 
       Pipeline.async({}, [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         sStructureTest(editor, uiContainer, width),
         sAssetWidth(uiContainer, width)
       ], onSuccess, onFailure);

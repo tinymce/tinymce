@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyHrTest', function () {
     const tinyActions = TinyActions(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
 
       Logger.t('Enter before HR in the beginning of content', GeneralSteps.sequence([
         tinyApis.sSetContent('<hr /><p>a</p>'),
@@ -49,7 +49,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyHrTest', function () {
       ])),
 
       Logger.t('Enter before HR in the end of content', GeneralSteps.sequence([
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent('<p>a</p><hr />'),
         tinyApis.sSetCursor([], 1),
         tinyActions.sContentKeystroke(Keys.enter(), {}),
@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyHrTest', function () {
       ])),
 
       Logger.t('Enter after HR in the end of content', GeneralSteps.sequence([
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent('<p>a</p><hr />'),
         tinyApis.sSetCursor([], 2),
         tinyActions.sContentKeystroke(Keys.enter(), {}),

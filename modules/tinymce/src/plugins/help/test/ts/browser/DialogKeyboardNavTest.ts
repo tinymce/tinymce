@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (succes
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Help: Open dialog', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sExecCommand('mceHelp')
       ]),
 

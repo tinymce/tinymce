@@ -58,7 +58,7 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
             '<p style="height: 100px"></p>' +
             '<p style="height: 100px"></p>'
           ),
-          tinyApis.sFocus,
+          tinyApis.sFocus(),
           sScrollTo(0, 200),
           tinyApis.sSetCursor(scenario.cursor.elementPath, scenario.cursor.offset),
           UiFinder.sWaitForVisible('Waiting for toolbar to appear above content', Body.body(), '.tox-pop.tox-pop--bottom' + scenario.classes),
@@ -88,7 +88,7 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
       const fullscreenButtonSelector = 'button[aria-label="Fullscreen"]';
 
       Pipeline.async({ }, [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         Log.stepsAsStep('TBA', 'Context toolbar selection position while scrolling', [
           // north/south
           sTestPositionWhileScrolling({
@@ -133,7 +133,7 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
           tinyApis.sSetCursor([0], 1),
           tinyActions.sContentKeystroke(Keys.enter()),
           tinyActions.sContentKeystroke(Keys.enter()),
-          tinyApis.sNodeChanged,
+          tinyApis.sNodeChanged(),
           tinyApis.sSelect('img', []),
           UiFinder.sWaitForVisible('Waiting for toolbar to appear below content', Body.body(), '.tox-pop.tox-pop--top'),
           sAssertPosition('top', -56),

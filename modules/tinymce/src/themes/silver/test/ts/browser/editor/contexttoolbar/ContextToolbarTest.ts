@@ -17,7 +17,7 @@ UnitTest.asynctest('Editor ContextToolbar test', (success, failure) => {
 
       Pipeline.async({ }, [
         Log.stepsAsStep('TBA', 'Moving selection away from the context toolbar predicate should make it disappear', [
-          tinyApis.sFocus,
+          tinyApis.sFocus(),
           tinyApis.sSetContent('<p>One <a href="http://tiny.cloud">link</a> Two</p>'),
           tinyApis.sSetCursor([ 0, 1, 0 ], 'L'.length),
           UiFinder.sWaitForVisible('Waiting for toolbar', Body.body(), '.tox-pop'),

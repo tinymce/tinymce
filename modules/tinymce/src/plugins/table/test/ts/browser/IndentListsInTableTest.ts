@@ -23,7 +23,7 @@ UnitTest.asynctest('tinymce.plugins.table.IndentListsInTableTest', (success, fai
     const tinyActions = TinyActions(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
 
       Log.stepsAsStep('TBA', 'Table: ul > li in table', [
         tinyApis.sSetContent('<table><tbody><tr><td><ul><li>a</li><li>b</li></ul></td></tr></tbody></table>'),

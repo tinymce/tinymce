@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowClassListTest', (succe
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Table: no class input without setting', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent(tableHtml),
         tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1),
         tinyApis.sExecCommand('mceTableRowProps'),
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowClassListTest', (succe
       ]),
 
       Log.stepsAsStep('TBA', 'Table: class input with setting', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetSetting('table_row_class_list', [{ title: 'test', value: 'test' }]),
         tinyApis.sSetContent(tableHtml),
         tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1),

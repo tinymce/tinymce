@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.ConsecutiveLinkTest', (succ
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const steps = Env.browser.isIE() ? [] : [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'AutoLink: Chrome adds a nbsp between link and text', [
         tinyApis.sSetContent('<p><a href="http://www.domain.com">www.domain.com</a>&nbsp;www.domain.com</p>'),
         tinyApis.sSetCursor([0, 1], 15),

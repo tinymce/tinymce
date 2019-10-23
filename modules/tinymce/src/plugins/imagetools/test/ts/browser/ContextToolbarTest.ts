@@ -84,7 +84,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
     };
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'ImageTools: context toolbar keyboard navigation test', [
         sOpenContextToolbar(srcUrl),
         sPressKeyboardShortcutKey,

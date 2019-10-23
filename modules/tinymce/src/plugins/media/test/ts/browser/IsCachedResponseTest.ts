@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', functio
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Media: test cached response', [
         tinyUi.sClickOnToolbar('click media button', 'button[aria-label="Insert/edit media"]'),
         Chain.asStep({}, [

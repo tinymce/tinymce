@@ -6,7 +6,7 @@ const sSetContentAndFireKeystroke = function (key: number) {
   return function (tinyApis: TinyApis, tinyActions: TinyActions, content: string, offset = content.length, elementPath = [0, 0], wrapInP = true) {
     return Logger.t(`Set content and press ${key}`, GeneralSteps.sequence([
       tinyApis.sSetContent(wrapInP ? '<p>' + content + '</p>' : content),
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       tinyApis.sSetCursor(
         elementPath,
         offset
@@ -19,7 +19,7 @@ const sSetContentAndFireKeystroke = function (key: number) {
 const sSetContentAndPressSpace = (tinyApis: TinyApis, tinyActions: TinyActions, content: string, offset = content.length, elementPath = [0, 0]) => {
   return Step.label(`Set content and press space`, GeneralSteps.sequence([
     tinyApis.sSetContent('<p>' + content + '</p>'),
-    tinyApis.sFocus,
+    tinyApis.sFocus(),
     tinyApis.sSetCursor(
       elementPath,
       offset

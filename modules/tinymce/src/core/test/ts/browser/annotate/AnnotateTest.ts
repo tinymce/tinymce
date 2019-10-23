@@ -195,7 +195,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
     );
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       sTestWordGrabIfCollapsed,
       sTestDoesNotWordGrabIfNotCollapsed,
       sTestCanAnnotateDirectParentOfRoot,

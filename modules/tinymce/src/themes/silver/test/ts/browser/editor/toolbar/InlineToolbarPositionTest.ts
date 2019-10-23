@@ -43,8 +43,8 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
   const sScrollToElementAndActivate = (tinyApis: TinyApis, contentAreaContainer: Element, selector: string) => Step.label('Activate editor', GeneralSteps.sequence([
     sScrollToElement(contentAreaContainer, selector),
     tinyApis.sSelect(selector, []),
-    tinyApis.sFocus,
-    tinyApis.sNodeChanged,
+    tinyApis.sFocus(),
+    tinyApis.sNodeChanged(),
     UiFinder.sWaitForVisible('Wait for editor to be visible', Body.body(), '.tox-editor-header')
   ]));
 

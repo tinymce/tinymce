@@ -49,7 +49,7 @@ UnitTest.asynctest('browser.core.EphoxEmbedTest', function (success, failure) {
 
     Pipeline.async({},
       Log.steps('TBA', 'Media: Open dialog, assert embeded content, close dialog and aseert div structure', [
-        apis.sFocus,
+        apis.sFocus(),
         apis.sSetContent(content),
         sAssertDivStructure(editor, ephoxEmbedStructure),
         apis.sSelect('div', []),

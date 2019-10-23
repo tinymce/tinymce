@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.MultiClickSelectionTest', (su
       ]);
 
       Pipeline.async({}, [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         testXClicksNormalisation(3),
         testXClicksNormalisation(4),
         testXClicksNormalisation(5),

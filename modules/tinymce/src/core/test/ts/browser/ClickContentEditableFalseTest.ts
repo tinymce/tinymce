@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.ClickContentEditableFalseTest', functio
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Click on content editable false', GeneralSteps.sequence([
         tinyApis.sSetContent('<p contenteditable="false">a</p>'),
         sClickMiddleOf(editor, [1]),

@@ -99,8 +99,8 @@ UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function () {
         sUploadImages(editor),
         tinyApis.sSetContent('a'),
         tinyApis.sExecCommand('bold'),
-        tinyApis.sFocus,
-        tinyApis.sNodeChanged,
+        tinyApis.sFocus(),
+        tinyApis.sNodeChanged(),
         sExecCallback(editor, 'test_callback', 1)
       ]))
     ], onSuccess, onFailure);

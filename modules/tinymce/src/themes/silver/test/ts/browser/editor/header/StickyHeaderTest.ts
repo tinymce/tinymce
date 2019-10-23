@@ -16,7 +16,7 @@ UnitTest.asynctest('Editor with sticky toolbar', (success, failure) => {
         const tinyApis = TinyApis(editor);
         const forceScrollDiv = StickyUtils.createScrollDiv();
         Pipeline.async({}, [
-          tinyApis.sFocus,
+          tinyApis.sFocus(),
           // Need to wait for a fraction for some reason on safari,
           // otherwise the initial scrolling doesn't work
           Step.wait(100),

@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableTablNavigationDisabledTes
 
       Pipeline.async({},
         Log.steps('TBA', 'Table: test table grid disabled', [
-          tinyApis.sFocus,
+          tinyApis.sFocus(),
           tinyApis.sSetContent(tableHtml),
           // NOTE: This isn't really testing anything because this does not exist yet.
           TableTestUtils.sOpenToolbarOn(editor, 'td', [0]),

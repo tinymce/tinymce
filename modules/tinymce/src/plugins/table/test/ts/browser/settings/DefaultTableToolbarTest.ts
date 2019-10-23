@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DefaultTableToolbarTest', (suc
 
     Pipeline.async({}, [
       Logger.t('test default count of toolbar buttons', GeneralSteps.sequence([
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent(tableHtml),
         TableTestUtils.sOpenToolbarOn(editor, 'table td', [0]),
         Chain.asStep({}, [

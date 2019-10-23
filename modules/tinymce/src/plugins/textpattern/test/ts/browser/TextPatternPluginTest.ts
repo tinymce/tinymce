@@ -142,14 +142,14 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
       ])),
       Step.label('enter with uncollapsed range does not insert list', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>* ab</p>'),
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetSelection([0, 0], 3, [0, 0], 4),
         tinyActions.sContentKeystroke(Keys.enter(), {}),
         tinyApis.sAssertContentPresence({ ul: 0 })
       ])),
       Step.label('enter with only pattern does not insert list', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>*</p>'),
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetCursor([0, 0], 1),
         tinyActions.sContentKeystroke(Keys.enter(), {}),
         tinyApis.sAssertContentPresence({ ul: 0 })

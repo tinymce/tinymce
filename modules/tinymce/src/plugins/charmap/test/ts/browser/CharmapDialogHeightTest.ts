@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.DialogHeightTest', (success,
 
     Pipeline.async({},
       Log.steps('TBA', 'Charmap: Search for items, dialog height should not change when fewer items returned', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyUi.sClickOnToolbar('click charmap', 'button[aria-label="Special character"]'),
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),

@@ -8,7 +8,7 @@ UnitTest.asynctest('TinySelectionTest', (success, failure) => {
     const apis = TinyApis(editor);
 
     Pipeline.async({}, [
-      apis.sFocus,
+      apis.sFocus(),
       apis.sSetContent('<p>this is one paragraph</p><p>This is another</p>'),
       apis.sSetSelection([ 0, 0 ], 'this'.length, [ 1, 0 ], 'This is'.length),
       apis.sAssertSelection([ 0, 0 ], 'this'.length, [ 1, 0 ], 'This is'.length),

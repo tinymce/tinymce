@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerSpanClassTe
     const ui = TinyUi(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'Spellchecker: Spelling marks should not reuse existing span. Spelling marks will be nested inside existing spans', [
-      api.sFocus,
+      api.sFocus(),
       api.sSetContent('<p>hello <span class="bold">bold</span> world</p>'),
       api.sAssertContentPresence({
         span: 1

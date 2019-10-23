@@ -93,7 +93,7 @@ UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => 
 
       Pipeline.async({ }, [
         tinyApis.sSetContent('fixed_toolbar_container test'),
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         sToolbarTest(),
       ], onSuccess, onFailure);
     }, {
