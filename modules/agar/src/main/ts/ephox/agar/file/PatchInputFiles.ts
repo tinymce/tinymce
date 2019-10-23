@@ -51,7 +51,7 @@ const cUnpatchInputElement = Chain.op<any>(() => {
   });
 });
 
-const sRunOnPatchedFileInput = (files: File[], step: Step<any, any>) => {
+const sRunOnPatchedFileInput = (files: File[], step: Step<any, any>): Step<any, any> => {
   return GeneralSteps.sequence([
     Chain.asStep({}, [ cPatchInputElement(files) ]),
     step,
@@ -59,7 +59,7 @@ const sRunOnPatchedFileInput = (files: File[], step: Step<any, any>) => {
   ]);
 };
 
-const cRunOnPatchedFileInput = (files: File[], chain: Chain<any, any>) => {
+const cRunOnPatchedFileInput = (files: File[], chain: Chain<any, any>): Chain<any, any> => {
   return Chain.fromChains([
     cPatchInputElement(files),
     chain,

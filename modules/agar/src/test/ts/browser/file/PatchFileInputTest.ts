@@ -10,7 +10,7 @@ UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
   const files = [ createFile('a.txt', 0, new Blob(['x'])) ];
   const filesState = Cell(Option.none<FileList>());
 
-  const pickFiles = (body: Element, next: (files: FileList) => void) => {
+  const pickFiles = (body: Element<any>, next: (files: FileList) => void) => {
     const elm = Element.fromHtml<HTMLInputElement>('<input type="file">');
     elm.dom().onchange = () => {
       Remove.remove(elm);

@@ -5,36 +5,28 @@ import * as GeneralSteps from 'ephox/agar/api/GeneralSteps';
 import * as Logger from 'ephox/agar/api/Logger';
 import { _outputName, _outputUnset, NamedChain } from 'ephox/agar/api/NamedChain';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
-import StepAssertions from 'ephox/agar/test/StepAssertions';
+import * as StepAssertions from 'ephox/agar/test/StepAssertions';
 
-UnitTest.asynctest('NamedChainTest', function (success, failure) {
+UnitTest.asynctest('NamedChainTest', (success, failure) => {
 
-  const cIsEqual = function (expected) {
-    return Chain.async((actual, next, die) => {
+  const cIsEqual = (expected) =>
+    Chain.async((actual, next, die) => {
       if (expected === actual) {
         next(actual);
       } else {
         die('Unexpected input. Expected: ' + expected + ', Actual: ' + actual);
       }
     });
-  };
 
-  const addLetters = function (s) {
-    return Chain.mapper(function (input) {
-      return input + s;
-    });
-  };
+  const addLetters = (s) =>
+    Chain.mapper((input) => input + s);
 
-  const mult10 = Chain.mapper(function (input: number) {
-    return input * 10;
-  });
+  const mult10 = Chain.mapper((input: number) => input * 10);
 
-  const doubleNum = Chain.mapper(function (input: number) {
-    return input * 2;
-  });
+  const doubleNum = Chain.mapper((input: number) => input * 2);
 
-  const wrapObj = function (k, v) {
-    const r = { };
+  const wrapObj = (k, v) => {
+    const r = {};
     r[k] = v;
     return r;
   };
@@ -58,7 +50,7 @@ UnitTest.asynctest('NamedChainTest', function (success, failure) {
 
           NamedChain.read('x', cIsEqual(10)),
 
-          NamedChain.bundle(function (input) {
+          NamedChain.bundle((input) => {
             Assert.eq('Checking bundled chain output', Merger.merge(
               {
                 'x': 5 * 2,
@@ -107,7 +99,7 @@ UnitTest.asynctest('NamedChainTest', function (success, failure) {
       ]),
 
       StepAssertions.testStepsPass({}, [
-        Chain.asStep({ }, [
+        Chain.asStep({}, [
           Chain.inject('input.name.value'),
           NamedChain.asChain([
             NamedChain.write('x', Chain.inject(5)),
@@ -119,7 +111,7 @@ UnitTest.asynctest('NamedChainTest', function (success, failure) {
       ]),
 
       StepAssertions.testStepsPass({}, [
-        Chain.asStep({ }, [
+        Chain.asStep({}, [
           Chain.inject('input.name.value'),
           NamedChain.asChain([
             NamedChain.write('x', Chain.inject(5)),
@@ -141,7 +133,7 @@ UnitTest.asynctest('NamedChainTest', function (success, failure) {
         ])
       ])
     ]))
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

@@ -1,19 +1,17 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Chain } from 'ephox/agar/api/Chain';
 
-UnitTest.asynctest('ChainPipelineTest', function (success, failure) {
+UnitTest.asynctest('ChainPipelineTest', (success, failure) => {
 
-  const cAcc = function (ch) {
-    return Chain.async(function (input, next, die) {
-      next(input + ch);
-    });
-  };
+  const cAcc = (ch) => Chain.async((input, next, die) => {
+    next(input + ch);
+  });
 
   Chain.pipeline([
     Chain.inject(1),
     cAcc(2),
     cAcc(3)
-  ], function (result) {
+  ], (result) => {
       try {
         Assert.eq('Expected result to be the sum', 6, result);
         success();

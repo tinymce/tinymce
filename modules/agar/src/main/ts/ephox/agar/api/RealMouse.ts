@@ -6,28 +6,23 @@ import { Attr, Element } from '@ephox/sugar';
 
 const BedrockIdAttribute = 'data-bedrockid';
 
-const sActionOn = function <T>(selector: string, type: string): Step<T, T> {
-  return SeleniumAction.sPerform<T>('/mouse', {
+const sActionOn = <T>(selector: string, type: string): Step<T, T> =>
+  SeleniumAction.sPerform<T>('/mouse', {
     selector,
     type
   });
-};
 
-const sMoveToOn = function <T>(selector: string): Step<T, T> {
-  return sActionOn<T>(selector, 'move');
-};
+const sMoveToOn = <T>(selector: string): Step<T, T> =>
+  sActionOn<T>(selector, 'move');
 
-const sDownOn = function <T>(selector: string): Step<T, T> {
-  return sActionOn<T>(selector, 'down');
-};
+const sDownOn = <T>(selector: string): Step<T, T> =>
+  sActionOn<T>(selector, 'down');
 
-const sUpOn = function <T>(selector: string): Step<T, T> {
-  return sActionOn<T>(selector, 'up');
-};
+const sUpOn = <T>(selector: string): Step<T, T> =>
+  sActionOn<T>(selector, 'up');
 
-const sClickOn = function <T>(selector: string): Step<T, T> {
-  return sActionOn<T>(selector, 'click');
-};
+const sClickOn = <T>(selector: string): Step<T, T> =>
+  sActionOn<T>(selector, 'click');
 
 const cAction = (action) =>
   Chain.fromChains([
@@ -41,14 +36,14 @@ const cAction = (action) =>
 const cClick = () =>
   Chain.fromParent(Chain.mapper(Fun.identity), [
     Chain.fromChains([
-      Chain.mapper((elem: Element) => {
+      Chain.mapper((elem: Element<any>) => {
         const id = Id.generate('');
         Attr.set(elem, BedrockIdAttribute, id);
         return `[${BedrockIdAttribute}="${id}"]`;
       }),
       cAction('click')
     ]),
-    Chain.op((elem: Element) => {
+    Chain.op((elem: Element<any>) => {
       Attr.remove(elem, BedrockIdAttribute);
     })
   ]);

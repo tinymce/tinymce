@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as HexColour from '../../../main/ts/ephox/acid/api/colour/HexColour';
 import * as RgbaColour from '../../../main/ts/ephox/acid/api/colour/RgbaColour';
 
-UnitTest.test('ConversionsTest', function () {
+UnitTest.test('ConversionsTest', () => {
   const rgbaBlack = RgbaColour.rgbaColour(0, 0, 0, 1);
   const rgbaWhite = RgbaColour.rgbaColour(255, 255, 255, 1);
 

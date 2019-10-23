@@ -7,9 +7,7 @@ import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
 import * as UiFinder from 'ephox/agar/api/UiFinder';
 
-UnitTest.asynctest('UiFinderTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('UiFinderTest', (success, failure) => {
 
   const container = Element.fromHtml(
     '<div>' +
@@ -19,7 +17,7 @@ UnitTest.asynctest('UiFinderTest', function () {
   );
   Insert.append(Element.fromDom(document.body), container);
 
-  const teardown = function () {
+  const teardown = () => {
     Remove.remove(container);
   };
 
@@ -31,25 +29,25 @@ UnitTest.asynctest('UiFinderTest', function () {
       UiFinder.cNotExists('em'),
       UiFinder.cExists('strong'),
       UiFinder.cFindIn('strong'),
-      Chain.op(function (strong) {
+      Chain.op((strong) => {
         Assertions.assertEq('Checking contents of strong tag', 'bold', Html.get(strong));
       }),
 
       Chain.inject(container),
       UiFinder.cFindAllIn('strong'),
-      Chain.op(function (strongs) {
+      Chain.op((strongs) => {
         Assertions.assertEq('Should only find 1 strong', 1, strongs.length);
       }),
 
       Chain.inject(container),
       UiFinder.cFindAllIn('p'),
-      Chain.op(function (ps) {
+      Chain.op((ps) => {
         Assertions.assertEq('Should find two paragraphs', 2, ps.length);
         Assertions.assertEq('Should be sugared paragraphs', 'p', Node.name(ps[0]));
       })
     ]),
 
-    Step.sync(function () {
+    Step.sync(() => {
       const result = UiFinder.findIn(container, 'strong').getOrDie();
       Assertions.assertDomEq(
         'Checking findIn',
@@ -58,17 +56,17 @@ UnitTest.asynctest('UiFinderTest', function () {
       );
     }),
 
-    Step.sync(function () {
+    Step.sync(() => {
       const result = UiFinder.findAllIn(container, 'p');
       Assertions.assertEq('Checking findAllIn length', 2, result.length);
     }),
 
     Chain.asStep(container, [
       UiFinder.cFindIn('strong'),
-      Chain.op(function (strong) {
+      Chain.op((strong) => {
         // Intentionally not waiting before calling next.
         Css.set(strong, 'display', 'none');
-        setTimeout(function () {
+        setTimeout(() => {
           Css.remove(strong, 'display');
         }, 200);
       }),
@@ -79,24 +77,22 @@ UnitTest.asynctest('UiFinderTest', function () {
 
     Chain.asStep(container, [
       UiFinder.cFindIn('strong'),
-      Chain.op(function (strong) {
+      Chain.op((strong) => {
         // Intentionally not waiting before calling next.
-        setTimeout(function () {
+        setTimeout(() => {
           Class.add(strong, 'changing-state');
         }, 50);
       }),
 
       Chain.inject(container),
-      UiFinder.cWaitForState('Waiting for the strong tag to gain class: changing-state', 'strong', function (elem) {
-        return Class.has(elem, 'changing-state');
-      })
+      UiFinder.cWaitForState('Waiting for the strong tag to gain class: changing-state', 'strong', (elem) => Class.has(elem, 'changing-state'))
     ]),
 
     Chain.asStep(container, [
       UiFinder.cFindIn('strong'),
-      Chain.op(function (strong) {
+      Chain.op((strong) => {
         // Intentionally not waiting before calling next.
-        setTimeout(function () {
+        setTimeout(() => {
           Class.add(strong, 'changing-state-waitfor');
         }, 50);
       }),
@@ -104,5 +100,5 @@ UnitTest.asynctest('UiFinderTest', function () {
       Chain.inject(container),
       UiFinder.cWaitFor('Waiting for the strong tag to gain class: changing-state-waitfor', 'strong.changing-state-waitfor')
     ])
-  ], function () { teardown(); success(); }, failure);
+  ], () => { teardown(); success(); }, failure);
 });

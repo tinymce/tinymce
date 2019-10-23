@@ -7,11 +7,9 @@ import * as Mouse from 'ephox/agar/api/Mouse';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as UiFinder from 'ephox/agar/api/UiFinder';
 
-UnitTest.asynctest('Example for Tutorial', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Example for Tutorial', (success, failure) => {
 
-  const makeSource = function () {
+  const makeSource = () => {
     const editor = Element.fromTag('div');
     Class.add(editor, 'editor');
     // Css.set(editor, 'display', 'none');
@@ -42,19 +40,19 @@ UnitTest.asynctest('Example for Tutorial', function () {
 
     Insert.append(editor, showButton);
 
-    setTimeout(function () {
+    setTimeout(() => {
       Insert.append(Element.fromDom(document.body), editor);
     }, 5);
 
-    const onClick = DomEvent.bind(showButton, 'click', function () {
-      setTimeout(function () {
+    const onClick = DomEvent.bind(showButton, 'click', () => {
+      setTimeout(() => {
         Insert.append(editor, dialog);
       }, 5);
       onClick.unbind();
     });
 
-    const onCancel = DomEvent.bind(cancelButton, 'click', function () {
-      setTimeout(function () {
+    const onCancel = DomEvent.bind(cancelButton, 'click', () => {
+      setTimeout(() => {
         Remove.remove(dialog);
       }, 5);
       onCancel.unbind();
@@ -82,7 +80,7 @@ UnitTest.asynctest('Example for Tutorial', function () {
         Guard.tryUntilNot('Keep going until .dialog is not in the DOM', 10, 2000)
       )
     ])
-  ], function () {
+  ], () => {
     Remove.remove(source);
     success();
   }, failure);

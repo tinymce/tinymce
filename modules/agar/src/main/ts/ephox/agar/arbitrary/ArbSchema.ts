@@ -1,6 +1,6 @@
 import Jsc from '@ephox/wrap-jsverify';
 
-import ArbNodes from './ArbNodes';
+import * as ArbNodes from './ArbNodes';
 
 const formatting = {
   type: 'composite',
@@ -185,7 +185,7 @@ const comment = {
   component: ArbNodes.comment
 };
 
-export default {
+export {
   whitespace,
   formatting,
   inline,
