@@ -235,7 +235,7 @@ class Editor implements EditorObservable {
   public hasHiddenInput: boolean;
   public hasVisual: boolean;
   public hidden: boolean;
-  public iframeElement: HTMLIFrameElement;
+  public iframeElement: HTMLIFrameElement | null;
   public iframeHTML: string;
   public initialized: boolean;
   public notificationManager: NotificationManager;
