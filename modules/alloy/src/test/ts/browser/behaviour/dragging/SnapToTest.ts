@@ -1,7 +1,7 @@
-import { Chain, NamedChain, Guard } from '@ephox/agar';
+import { Chain, NamedChain3 as NC, Guard } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Option, Result } from '@ephox/katamari';
-import { Position, Scroll, Css } from '@ephox/sugar';
+import { Position, Scroll, Css, Element } from '@ephox/sugar';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -11,6 +11,12 @@ import * as Memento from 'ephox/alloy/api/component/Memento';
 import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Element as DomElement } from '@ephox/dom-globals';
+
+type Pos = {
+  left: string;
+  top: string;
+};
 
 UnitTest.asynctest('SnapToTest', (success, failure) => {
 
@@ -37,7 +43,7 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
           mode: 'mouse',
           blockerClass: 'test-blocker',
           snaps: {
-            getSnapPoints () {
+            getSnapPoints() {
               return [
                 snap
               ];
@@ -74,30 +80,28 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
       return subject.get(component).element();
     });
 
-    const cRecordPosition = Chain.fromChains([
-      Chain.control(
-        Chain.binder((box) => {
-          return Css.getRaw(box, 'left').bind((left) => {
-            return Css.getRaw(box, 'top').map((top) => {
-              return Result.value({
-                left,
-                top
-              });
+    const cRecordPosition = Chain.control(
+      Chain.binder<Element<DomElement>, Pos, string>((box) => {
+        return Css.getRaw(box, 'left').bind((left) => {
+          return Css.getRaw(box, 'top').map((top) => {
+            return Result.value({
+              left,
+              top
             });
-          }).getOrThunk(() => {
-            return Result.error('No left,top information yet');
           });
-        }),
-        Guard.tryUntil('Waiting for position data to record')
-      )
-    ]);
+        }).getOrThunk(() => {
+          return Result.error('No left,top information yet');
+        });
+      }),
+      Guard.tryUntil('Waiting for position data to record')
+    );
 
     const cEnsurePositionChanged = Chain.control(
-      Chain.binder((all: any) => {
-        return all.box_position1.left !== all.box_position2.left ? Result.value({}) :
+      Chain.binder<[Pos, Pos], {}, string>(([pos1, pos2]) => {
+        return pos1.left !== pos2.left ? Result.value({}) :
           Result.error('Positions did not change.\nPosition data: ' + JSON.stringify({
-            1: all.box_position1,
-            2: all.box_position2
+            1: pos1,
+            2: pos2
           }, null, 2));
       }),
       Guard.addLogging('Ensuring that the position information read from the different stages was different')
@@ -107,17 +111,20 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
       Dragging.snapTo(subject.get(component), snap);
     });
 
+    type TestTypes = {
+      box: Element<DomElement>;
+      box_position1: Pos;
+      box_position2: Pos;
+    };
+
     return [
       Chain.asStep({}, [
-        NamedChain.asChain([
-          NamedChain.write('box', cSubject),
-          NamedChain.direct('box', cRecordPosition, 'box_position1'),
-          NamedChain.direct('box', cSnapTo, '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position2'),
-          NamedChain.write('_', cEnsurePositionChanged),
-          NamedChain.bundle((output) => {
-            return Result.value(output);
-          }),
+        NC.asEffectChain<TestTypes>()([
+          NC.write(cSubject, 'box'),
+          NC.direct('box', cRecordPosition, 'box_position1'),
+          NC.read('box', cSnapTo),
+          NC.direct('box', cRecordPosition, 'box_position2'),
+          NC.readX(NC.getKeys('box_position1', 'box_position2'), cEnsurePositionChanged),
           Chain.wait(1000)
         ])
       ])

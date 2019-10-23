@@ -1,7 +1,7 @@
-import { Assertions, Chain, NamedChain, Truncate, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, NamedChain3 as NC, Truncate, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Result } from '@ephox/katamari';
-import { Attr, Class, Compare } from '@ephox/sugar';
+import { Attr, Class, Compare, Element } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Highlighting } from 'ephox/alloy/api/behaviour/Highlighting';
@@ -10,6 +10,21 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { Element as DomElement } from '@ephox/dom-globals';
+
+type TestTypes = {
+  container: Element<DomElement>;
+  list: Array<Element<DomElement>>;
+  selected: Element<DomElement>;
+  alpha: AlloyComponent;
+  beta: AlloyComponent;
+  gamma: AlloyComponent;
+  first: AlloyComponent;
+  last: AlloyComponent;
+  'beta-is': boolean;
+  'gamma-is': boolean;
+  'highlighted-comp': AlloyComponent;
+};
 
 UnitTest.asynctest('HighlightingTest', (success, failure) => {
 
@@ -56,23 +71,22 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
     };
 
     const cCheckNumOf = (label: string, selector: string, expected: number) => {
-      const field = 'check-' + selector;
-      return Chain.fromChains([
-        NamedChain.direct('container', UiFinder.cFindAllIn(selector), field),
-        NamedChain.direct(field, cCheckNum(label, expected), '_')
+      return NC.fragment<TestTypes>([
+        NC.direct('container', UiFinder.cFindAllIn(selector), 'list'),
+        NC.read('list', cCheckNum(label, expected))
       ]);
     };
 
     const cCheckSelected = (label: string, expected: string) => {
-      return Chain.fromChains([
+      return NC.fragment<TestTypes>([
         // always check there is only 1
         cCheckNumOf(label + '\nChecking number of selected: ', '.test-selected', 1),
-        NamedChain.direct('container', UiFinder.cFindIn('.test-selected'), 'selected'),
-        NamedChain.direct('selected', Chain.binder((sel) => {
+        NC.direct('container', UiFinder.cFindIn('.test-selected'), 'selected'),
+        NC.read('selected', Chain.binder((sel) => {
           return Class.has(sel, expected) ? Result.value(sel) :
             Result.error(label + '\nIncorrect element selected. Expected: ' + expected + ', but was: ' +
               Attr.get(sel, 'class'));
-        }), '_')
+        }))
       ]);
     };
 
@@ -84,26 +98,26 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       Highlighting.dehighlight(component, item);
     });
 
-    const cDehighlightAll = Chain.op(() => {
+    const cDehighlightAll = <T> () => Chain.op<T>(() => {
       Highlighting.dehighlightAll(component);
     });
 
-    const cHighlightFirst = Chain.op(() => {
+    const cHighlightFirst = <T> () => Chain.op<T>(() => {
       Highlighting.highlightFirst(component);
     });
 
-    const cHighlightLast = Chain.op(() => {
+    const cHighlightLast = <T> () => Chain.op<T>(() => {
       Highlighting.highlightLast(component);
     });
 
-    const cHighlightAt = (index: number) => {
-      return Chain.op(() => {
+    const cHighlightAt = <T>(index: number) => {
+      return Chain.op<T>(() => {
         Highlighting.highlightAt(component, index);
       });
     };
 
-    const cHighlightAtError = (index: number) => {
-      return Chain.binder((v) => {
+    const cHighlightAtError = <T> (index: number) => {
+      return Chain.binder<T, T, string>((v) => {
         try {
           Highlighting.highlightAt(component, index);
           return Result.error('Expected to get an error because there should be no item with index ' + index);
@@ -112,11 +126,11 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       });
     };
 
-    const cIsHighlighted = Chain.mapper((item) => {
+    const cIsHighlighted = Chain.mapper((item: AlloyComponent) => {
       return Highlighting.isHighlighted(component, item);
     });
 
-    const cGetHighlightedOrDie = Chain.binder(() => {
+    const cGetHighlightedOrDie = Chain.binder<void, AlloyComponent, Error>(() => {
       return Highlighting.getHighlighted(component).fold(() => {
         return Result.error(new Error('getHighlighted did not find a selection'));
       }, Result.value);
@@ -130,27 +144,27 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       });
     });
 
-    const cGetFirst = Chain.binder(() => {
+    const cGetFirst = Chain.binder<void, AlloyComponent, Error>(() => {
       return Highlighting.getFirst(component).fold(() => {
         return Result.error(new Error('getFirst found nothing'));
       }, Result.value);
     });
 
-    const cGetLast = Chain.binder(() => {
+    const cGetLast = Chain.binder<void, AlloyComponent, Error>(() => {
       return Highlighting.getLast(component).fold(() => {
         return Result.error(new Error('getLast found nothing'));
       }, Result.value);
     });
 
     const cHasClass = (clazz: string) => {
-      return Chain.binder((comp: AlloyComponent) => {
+      return Chain.binder<AlloyComponent, Element<DomElement>, string>((comp: AlloyComponent) => {
         const elem = comp.element();
         return Class.has(elem, clazz) ? Result.value(elem) :
           Result.error('element ' + Truncate.getHtml(elem) + ' did not have class: ' + clazz);
       });
     };
 
-    const cFindComponent = (selector: string) => {
+    const cFindComponent = (selector: string): Chain<Element<DomElement>, AlloyComponent> => {
       return Chain.fromChains([
         UiFinder.cFindIn(selector),
         ChainUtils.eToComponent(component)
@@ -159,31 +173,31 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
 
     return [
       Chain.asStep({}, [
-        NamedChain.asChain([
-          NamedChain.writeValue('container', component.element()),
-          NamedChain.direct('container', cFindComponent('.alpha'), 'alpha'),
-          NamedChain.direct('container', cFindComponent('.beta'), 'beta'),
-          NamedChain.direct('container', cFindComponent('.gamma'), 'gamma'),
+        NC.asEffectChain<TestTypes>()([
+          NC.inject(component.element(), 'container'),
+          NC.direct('container', cFindComponent('.alpha'), 'alpha'),
+          NC.direct('container', cFindComponent('.beta'), 'beta'),
+          NC.direct('container', cFindComponent('.gamma'), 'gamma'),
 
           cCheckNumOf('Should be none selected', '.test-selected', 0),
           cCheckNumOf('Should be three items', '.test-item', 3),
 
-          NamedChain.write('first', cGetFirst),
-          NamedChain.write('last', cGetLast),
+          NC.write(cGetFirst, 'first'),
+          NC.write(cGetLast, 'last'),
 
-          NamedChain.direct('first', cHasClass('alpha'), '_'),
-          NamedChain.direct('last', cHasClass('gamma'), '_'),
+          NC.read('first', cHasClass('alpha')),
+          NC.read('last', cHasClass('gamma')),
 
-          cHighlightFirst,
+          cHighlightFirst(),
           cCheckSelected('highlightFirst => Alpha is selected', 'alpha'),
 
-          cHighlightLast,
+          cHighlightLast(),
           cCheckSelected('highlightLast => Gamma is selected', 'gamma'),
 
-          NamedChain.direct('beta', cHighlight, '_'),
+          NC.read('beta', cHighlight),
           cCheckSelected('highlight(beta) => Beta is selected', 'beta'),
 
-          NamedChain.direct('beta', cDehighlight, '_'),
+          NC.read('beta', cDehighlight),
           cCheckNumOf('beta should be deselected', '.test-selected', 0),
 
           cHighlightAt(1),
@@ -191,35 +205,34 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
 
           cHighlightAtError(6),
 
-          cHighlightFirst,
+          cHighlightFirst(),
           cCheckSelected('highlightFirst => Alpha is selected', 'alpha'),
-          cDehighlightAll,
+          cDehighlightAll(),
           cCheckNumOf('everything should be deselected', '.test-selected', 0),
 
-          cHighlightLast,
-          NamedChain.direct('beta', cIsHighlighted, 'beta-is'),
-          NamedChain.direct('beta-is', Assertions.cAssertEq('isHighlighted(beta)', false), '_'),
+          cHighlightLast(),
+          NC.direct('beta', cIsHighlighted, 'beta-is'),
+          NC.read('beta-is', Assertions.cAssertEq('isHighlighted(beta)', false)),
 
-          NamedChain.direct('gamma', cIsHighlighted, 'gamma-is'),
-          NamedChain.direct('gamma-is', Assertions.cAssertEq('isHighlighted(gamma)', true), '_'),
+          NC.direct('gamma', cIsHighlighted, 'gamma-is'),
+          NC.read('gamma-is', Assertions.cAssertEq('isHighlighted(gamma)', true)),
 
-          NamedChain.direct('container', cGetHighlightedOrDie, 'highlighted-comp'),
-          NamedChain.direct('highlighted-comp', cHasClass('gamma'), '_'),
+          NC.write(cGetHighlightedOrDie, 'highlighted-comp'),
+          NC.read('highlighted-comp', cHasClass('gamma')),
 
-          cDehighlightAll,
-          NamedChain.direct('container', cGetHighlightedIsNone, '_'),
+          cDehighlightAll(),
+          NC.read('container', cGetHighlightedIsNone),
 
-          Chain.op((input) => {
+          Chain.op((_input) => {
             Highlighting.highlightBy(component, (comp) => {
               return Class.has(comp.element(), 'beta');
             });
           }),
 
-          NamedChain.direct('container', cGetHighlightedOrDie, 'blah'),
+          NC.effect(cGetHighlightedOrDie),
 
-          NamedChain.bundle((output) => {
+          NC.readX(NC.getKeys('alpha', 'beta', 'gamma'), Chain.op((expected) => {
             const candidates = Highlighting.getCandidates(component);
-            const expected = [ output.alpha, output.beta, output.gamma ];
 
             Assertions.assertEq('Checking length of getCandidates array', expected.length, candidates.length);
             Arr.each(expected, (exp, i) => {
@@ -229,10 +242,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
                 Compare.eq(exp.element(), actual.element())
               );
             });
-
-            return Result.value(output);
-
-          })
+          })),
         ])
       ])
     ];

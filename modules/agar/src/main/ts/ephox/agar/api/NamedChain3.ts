@@ -52,6 +52,9 @@ export const read = <X, K extends keyof X, O>(inputName: K, calc: Chain<X[K], O>
 export const write = <X, K extends keyof X>(calc: Chain<void, X[K]>, outputName: K): NamedChain<X> =>
   writeX(calc, putKey(outputName));
 
+export const effect = <X, O>(calc: Chain<void, O>): NamedChain<X> =>
+  directX(getNone(), calc, putIdentity());
+
 export const op = <X, K extends keyof X>(inputName: K, calc: (value: X[K]) => void): NamedChain<X> =>
 readX(getKey(inputName), Chain.op(calc));
 
@@ -95,3 +98,5 @@ export const asOutputChain = <X>() => <O extends keyof X>(outKey: O, chains: Nam
 
 export const asEffectChain = <X>() => <T> (chains: NamedChain<X>[]) =>
   asChain<X, T, T>(inputEmpty(), chains, outputInput());
+
+export const fragment = <X>(chains: NamedChain<X>[]): NamedChain<X> => Chain.fromChains(chains);
