@@ -22,11 +22,6 @@ const assertSteps = (steps: Step<any, any>[]) => {
   });
 };
 
-const callAsync = (f) => {
-  // tslint:disable-next-line:no-unimported-promise
-  typeof Promise !== 'undefined' ? Promise.resolve().then(f) : setTimeout(f, 0);
-};
-
 const async = (initial: any, steps: Step<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs?: TestLogs) => {
   assertSteps(steps);
 
@@ -43,7 +38,7 @@ const async = (initial: any, steps: Step<any, any>[], onSuccess: NextFn<any>, on
         };
 
         asyncOperation.runStep(lastLink, (x, newLogs) => {
-          callAsync(() => { nextStep(x, newLogs); });
+          nextStep(x, newLogs);
         }, onFailure, logs);
       } catch (error) {
         onFailure(error, logs);
