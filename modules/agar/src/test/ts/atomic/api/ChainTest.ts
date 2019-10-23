@@ -3,40 +3,36 @@ import { Chain } from 'ephox/agar/api/Chain';
 import * as Logger from 'ephox/agar/api/Logger';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
-import StepAssertions from 'ephox/agar/test/StepAssertions';
+import * as StepAssertions from 'ephox/agar/test/StepAssertions';
 
-UnitTest.asynctest('ChainTest', function (success, failure) {
+UnitTest.asynctest('ChainTest', (success, failure) => {
 
-  const cIsEqual = function (expected) {
-    return Chain.async(function (actual, next, die) {
+  const cIsEqual = (expected) =>
+    Chain.async((actual, next, die) => {
       if (expected === actual) {
         next(actual);
       } else {
         die('Cat is not a dog');
       }
     });
-  };
 
-  const cIsEqualAndChange = function (expected, newValue) {
-    return Chain.async(function (actual, next, die) {
+  const cIsEqualAndChange = (expected, newValue) =>
+    Chain.async((actual, next, die) => {
       if (expected === actual) {
         next(newValue);
       } else {
         die('Cat is not a dog');
       }
     });
-  };
 
-  const acc = function (ch) {
-    return Chain.async(function (input, next, die) {
-      next(input + ch);
-    });
-  };
+  const acc = (ch) => Chain.async((input, next, die) => {
+    next(input + ch);
+  });
   const testInputValueFails = StepAssertions.testStepsFail(
     'Output value is not a chain: dog',
     [
       Chain.asStep({}, [
-        Chain.on(function (cInput, cNext, cDie, cLogs) {
+        Chain.on((cInput, cNext, cDie, cLogs) => {
           cNext(<any> 'dog', cLogs);
         })
       ])
@@ -47,7 +43,7 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
     {},
     [
       Chain.asStep({}, [
-        Chain.on(function (cInput, cNext, cDie, cLogs) {
+        Chain.on((cInput, cNext, cDie, cLogs) => {
           cNext(Chain.wrap('doge'), cLogs);
         })
       ])
@@ -58,7 +54,7 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
     {},
     [
       Chain.asStep({}, [
-        Chain.on(function (cInput, cNext, cDie, cLogs) {
+        Chain.on((cInput, cNext, cDie, cLogs) => {
           cNext(Chain.wrap(undefined), cLogs);
         })
       ])
@@ -86,15 +82,15 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
   );
 
   const testChainingFailsBecauseChanges = StepAssertions.testStepsFail(
-   'Cat is not a dog',
-   [
-     Chain.asStep('value', [
-       Chain.inject('cat'),
-       cIsEqualAndChange('cat', 'new.cat'),
-       cIsEqualAndChange('cat', 'new.dog')
-     ])
-   ]
- );
+    'Cat is not a dog',
+    [
+      Chain.asStep('value', [
+        Chain.inject('cat'),
+        cIsEqualAndChange('cat', 'new.cat'),
+        cIsEqualAndChange('cat', 'new.dog')
+      ])
+    ]
+  );
 
   const testChainParentPasses = StepAssertions.testStepsPass(
     {},
@@ -137,8 +133,8 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
   const testChainEnforcesInput = StepAssertions.testStepsFail(
     'Input Value is not a chain: raw.input',
     [
-      Step.raw(function (_, next, die, logs) {
-        Chain.on(function (input: any, n, d, clogs) {
+      Step.raw((_, next, die, logs) => {
+        Chain.on((input: any, n, d, clogs) => {
           n(input, clogs);
         }).runChain(<any> 'raw.input', next, die, logs);
       })
@@ -284,12 +280,12 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
       '[Basic API: Chain.injectThunked\n',
       testChainInjectThunked
     )
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });
 
-UnitTest.asynctest('Chain.predicate true', function (success, failure) {
+UnitTest.asynctest('Chain.predicate true', (success, failure) => {
   Pipeline.async('stepstate', [
     StepAssertions.testStepsPass(
       'stepstate',
@@ -300,7 +296,7 @@ UnitTest.asynctest('Chain.predicate true', function (success, failure) {
   ], () => success(), failure);
 });
 
-UnitTest.asynctest('Chain.predicate false', function (success, failure) {
+UnitTest.asynctest('Chain.predicate false', (success, failure) => {
   Pipeline.async('stepstate', [
     StepAssertions.testStepsFail(
       'predicate did not succeed',

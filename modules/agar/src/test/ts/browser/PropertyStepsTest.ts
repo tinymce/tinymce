@@ -4,9 +4,7 @@ import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as PropertySteps from 'ephox/agar/api/PropertySteps';
 import { Step } from 'ephox/agar/api/Step';
 
-UnitTest.asynctest('PropertyStepsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('PropertyStepsTest', (success, failure) => {
 
   // NOTE: Make this fail to test output errors.
   Pipeline.async({}, [
@@ -19,5 +17,5 @@ UnitTest.asynctest('PropertyStepsTest', function () {
       }),
       {}
     )
-  ], function () { success(); }, failure);
+  ], () => { success(); }, failure);
 });

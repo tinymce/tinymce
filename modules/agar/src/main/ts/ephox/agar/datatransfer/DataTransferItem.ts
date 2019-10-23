@@ -4,7 +4,7 @@ import { isInProtectedMode } from './Mode';
 
 const dataId = Id.generate('data');
 
-const setData = (item: DataTransferItem, data: string) => {
+const setData = (item: DataTransferItem, data: string): void => {
   const itemObj: any = item;
   itemObj[dataId] = data;
 };

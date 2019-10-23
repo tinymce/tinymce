@@ -1,11 +1,22 @@
 import { Chain, UiFinder, NamedChain } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { Body, Element, Node, Attr } from '@ephox/sugar';
-import { dispatchDndEvent, createDragstartEvent, createDragEvent, createDragenterEvent, createDragoverEvent, createDropEvent, createDragendEvent, isDefaultPrevented, getWindowFromElement } from '../dragndrop/DndEvents';
+import {
+  dispatchDndEvent,
+  createDragstartEvent,
+  createDragEvent,
+  createDragenterEvent,
+  createDragoverEvent,
+  createDropEvent,
+  createDragendEvent,
+  isDefaultPrevented,
+  getWindowFromElement
+} from '../dragndrop/DndEvents';
 import { File, DragEvent } from '@ephox/dom-globals';
 import { createDataTransfer, getDragImage } from '../datatransfer/DataTransfer';
+import { Step } from './Step';
 
-const isDraggable = (element: Element) => {
+const isDraggable = (element: Element<any>): boolean => {
   const name = Node.name(element);
   return (
     name === 'img' ||
@@ -14,13 +25,13 @@ const isDraggable = (element: Element) => {
   );
 };
 
-const checkDefaultPrevented = (evt: DragEvent) => {
+const checkDefaultPrevented = (evt: DragEvent): void => {
   if (isDefaultPrevented(evt) === false) {
     throw new Error(`preventDefault was not called on drag event: ${evt.type}`);
   }
 };
 
-const dragnDrop = (from: Element, to: Element) => {
+const dragnDrop = (from: Element<any>, to: Element<any>): void => {
   const fromWin = getWindowFromElement(from);
   const toWin = getWindowFromElement(to);
   const fromRect = from.dom().getBoundingClientRect();
@@ -39,7 +50,7 @@ const dragnDrop = (from: Element, to: Element) => {
   dispatchDndEvent(createDragendEvent(fromWin, fromRect.left, fromRect.top, transfer), from);
 };
 
-const dropFiles = (files: File[], to: Element) => {
+const dropFiles = (files: File[], to: Element<any>): void => {
   const toWin = getWindowFromElement(to);
   const toRect = to.dom().getBoundingClientRect();
   const transfer = createDataTransfer();
@@ -53,7 +64,7 @@ const dropFiles = (files: File[], to: Element) => {
   checkDefaultPrevented(dispatchDndEvent(createDropEvent(toWin, toRect.left, toRect.top, transfer), to));
 };
 
-const cDragnDrop = (fromSelector: string, toSelector: string): Chain<Element, Element> => {
+const cDragnDrop = <T> (fromSelector: string, toSelector: string): Chain<Element<T>, Element<T>> => {
   return NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(fromSelector), 'from'),
     NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(toSelector), 'to'),
@@ -62,20 +73,20 @@ const cDragnDrop = (fromSelector: string, toSelector: string): Chain<Element, El
   ]);
 };
 
-const sDragnDrop = (fromSelector: string, toSelector: string) => {
-  return Chain.asStep(Body.body(), [ cDragnDrop(fromSelector, toSelector) ]);
-};
+const sDragnDrop = <T>(fromSelector: string, toSelector: string): Step<T, T> =>
+  Chain.asStep(Body.body(), [cDragnDrop(fromSelector, toSelector)]);
 
-const sDropFiles = (files: File[], toSelector: string) => {
+const sDropFiles = <T>(files: File[], toSelector: string): Step<T, T> => {
   return Chain.asStep(Body.body(), [
     UiFinder.cFindIn(toSelector),
     cDropFiles(files)
   ]);
 };
 
-const cDropFiles = (files: File[]) => Chain.op<Element>((elm) => {
-  dropFiles(files, elm);
-});
+const cDropFiles = <T> (files: File[]): Chain<Element<T>, Element<T>> =>
+  Chain.op((elm) => {
+    dropFiles(files, elm);
+  });
 
 export {
   isDraggable,
