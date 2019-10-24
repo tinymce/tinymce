@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [5.0.1] - 2019-10-25
+
+### Fixed
+- Fixed clicking on the modal dialog blocker component focusing the document body.
+
 # [5.0.0] - 2019-10-17
 
 ### Added
