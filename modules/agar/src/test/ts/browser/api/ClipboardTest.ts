@@ -4,7 +4,7 @@ import { Cell, Option } from '@ephox/katamari';
 import { Body, DomEvent, Element, Insert, Remove } from '@ephox/sugar';
 import { cCopy, cCut, sPasteDataTransfer, sPasteFiles, sPasteItems } from 'ephox/agar/api/Clipboard';
 import { createFileFromString } from 'ephox/agar/api/Files';
-import { Chain, GeneralSteps, Logger, Step } from 'ephox/agar/api/Main';
+import { Chain, Logger, Step, ChainSequence, StepSequence } from 'ephox/agar/api/Main';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 
 UnitTest.asynctest('ClipboardTest', (success, failure) => {
@@ -28,8 +28,11 @@ UnitTest.asynctest('ClipboardTest', (success, failure) => {
     pasteState.set(Option.some(dataTransfer));
   });
 
-  Pipeline.async({}, /phantom/i.test(navigator.userAgent) ? [] : [
-    Logger.t('Paste text and html items', GeneralSteps.sequence([
+  if (/phantom/i.test(navigator.userAgent)) {
+    success();
+  } else 
+  Pipeline.async1({}, StepSequence.sequenceSame([
+    Logger.t('Paste text and html items', StepSequence.sequenceSame([
       sPasteItems({
         'text/plain': 'Hello world!',
         'text/html': '<b>Hello world!</b>'
@@ -42,7 +45,7 @@ UnitTest.asynctest('ClipboardTest', (success, failure) => {
       })
     ])),
 
-    Logger.t('Paste text and html files', GeneralSteps.sequence([
+    Logger.t('Paste text and html files', StepSequence.sequenceSame([
       sPasteFiles([
         createFileFromString('a.txt', 123, 'Hello world!', 'text/plain'),
         createFileFromString('a.html', 123, '<b>Hello world!</b>', 'text/html')
@@ -58,7 +61,7 @@ UnitTest.asynctest('ClipboardTest', (success, failure) => {
       })
     ])),
 
-    Logger.t('Paste using dataTransfer mutator', GeneralSteps.sequence([
+    Logger.t('Paste using dataTransfer mutator', StepSequence.sequenceSame([
       sPasteDataTransfer((dataTransfer) => {
         dataTransfer.items.add(createFileFromString('a.txt', 123, 'Hello world!', 'text/plain'));
         dataTransfer.items.add('<b>Hello world!</b>', 'text/html');
@@ -74,20 +77,20 @@ UnitTest.asynctest('ClipboardTest', (success, failure) => {
       })
     ])),
 
-    Logger.t('Cut', Chain.asStep(pastebin, [
+    Logger.t('Cut',Chain.asStep1(pastebin, ChainSequence.sequence([
       cCut,
       Chain.op((dataTransfer: DataTransfer) => {
         Assert.eq('Should be extected cut data', 'cut-data', dataTransfer.getData('text/plain'));
       })
-    ])),
+    ]))),
 
-    Logger.t('Copy', Chain.asStep(pastebin, [
+    Logger.t('Copy', Chain.asStep1(pastebin, ChainSequence.sequence([
       cCopy,
       Chain.op((dataTransfer: DataTransfer) => {
         Assert.eq('Should be extected copy data', 'copy-data', dataTransfer.getData('text/plain'));
       })
-    ]))
-  ], () => {
+    ])))
+  ]), () => {
     cutUnbinder.unbind();
     copyUnbinder.unbind();
     pasteUnbinder.unbind();

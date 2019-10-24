@@ -7,6 +7,7 @@ import { createDataTransfer } from '../datatransfer/DataTransfer';
 import { Arr, Obj } from '@ephox/katamari';
 import { createPasteEvent, createCopyEvent, createCutEvent } from '../clipboard/ClipboardEvents';
 import { Step } from './Step';
+import { ChainSequence } from './Main';
 
 const cPasteDataTransfer = (mutator: (dataTransfer: DataTransfer) => void): Chain<Element<any>, Element<any>> =>
   Chain.op<Element<any>>((target) => {
@@ -34,25 +35,25 @@ const cPasteFiles = (files: File[]): Chain<Element<any>, Element<any>> =>
   });
 
 const sPasteDataTransfer = <T>(mutator: (dataTransfer: DataTransfer) => void, selector: string): Step<T, T> =>
-  Chain.asStep({}, [
+  Chain.asStep1({}, ChainSequence.sequence([
     Chain.injectThunked(Body.body),
     cFindIn(selector),
     cPasteDataTransfer(mutator)
-  ]);
+  ]));
 
 const sPasteItems = <T>(items: Record<string, string>, selector: string): Step<T, T> =>
-  Chain.asStep({}, [
+  Chain.asStep1({}, ChainSequence.sequence([
     Chain.injectThunked(Body.body),
     cFindIn(selector),
     cPasteItems(items)
-  ]);
+  ]));
 
 const sPasteFiles = <T>(files: File[], selector: string): Step<T, T> =>
-  Chain.asStep({}, [
+  Chain.asStep1({}, ChainSequence.sequence([
     Chain.injectThunked(Body.body),
     cFindIn(selector),
     cPasteFiles(files)
-  ]);
+  ]));
 
 const cCut: Chain<Element<any>, DataTransfer> =
   Chain.mapper<Element<any>, DataTransfer>((target) => {
