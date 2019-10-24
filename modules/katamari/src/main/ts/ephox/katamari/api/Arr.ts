@@ -18,7 +18,7 @@ export const indexOf = <T = any>(xs: ArrayLike<T>, x: T): Option<number> => {
   return r === -1 ? Option.none() : Option.some(r);
 };
 
-export const contains = <T = any>(xs: ArrayLike<T>, x: T): boolean => {
+export const contains = <T>(xs: ArrayLike<T>, x: T): boolean => {
   return rawIndexOf(xs, x) > -1;
 };
 
@@ -33,7 +33,7 @@ export const exists = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): bool
   return false;
 };
 
-export const range = <T = any>(num: number, f: (a: number) => T): T[] => {
+export const range = <T>(num: number, f: (a: number) => T): T[] => {
   const r: T[] = [];
   for (let i = 0; i < num; i++) {
     r.push(f(i));
@@ -48,7 +48,7 @@ export const range = <T = any>(num: number, f: (a: number) => T): T[] => {
 // - not using push
 // http://jsperf.com/array-direct-assignment-vs-push/2
 
-export const chunk = <T = any>(array: ArrayLike<T>, size: number): T[][] => {
+export const chunk = <T>(array: ArrayLike<T>, size: number): T[][] => {
   const r: T[][] = [];
   for (let i = 0; i < array.length; i += size) {
     const s: T[] = nativeSlice.call(array, i, i + size);
