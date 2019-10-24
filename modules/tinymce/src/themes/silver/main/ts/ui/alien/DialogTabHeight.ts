@@ -48,7 +48,8 @@ const getMaxTabviewHeight = (dialog: Element, dialogBody: Element) => {
   return maxHeight - dialogChrome;
 };
 
-const showTab = (allTabs, comp: AlloyComponent) => {
+// TODO: add a stronger type for allTabs
+const showTab = (allTabs: any[], comp: AlloyComponent) => {
   Arr.head(allTabs).each((tab) => TabSection.showTab(comp, tab.value));
 };
 
@@ -64,6 +65,7 @@ const updateTabviewHeight = (dialogBody: Element, tabview: Element, maxTabHeight
   });
 };
 
+// TODO: what type is allTabs?
 const setMode = (allTabs) => {
   const smartTabHeight = (() => {
     const maxTabHeight = Cell<Option<number>>(Option.none());

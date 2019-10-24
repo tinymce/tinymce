@@ -244,7 +244,7 @@ export const sort = <T = any>(xs: ArrayLike<T>, comparator?: Comparator<T>): T[]
   return copy;
 };
 
-export const head = <T = any>(xs: ArrayLike<T>): Option<T> => xs.length === 0 ? Option.none() : Option.some(xs[0]);
+export const head = <T>(xs: ArrayLike<T>): Option<T> => xs.length === 0 ? Option.none() : Option.some(xs[0]);
 
 export const last = <T>(xs: ArrayLike<T>): Option<T> => xs.length === 0 ? Option.none() : Option.some(xs[xs.length - 1]);
 

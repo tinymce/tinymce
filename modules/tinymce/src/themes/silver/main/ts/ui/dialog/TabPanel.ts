@@ -42,6 +42,7 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
 
   const oldTab = Cell(null);
 
+  // TODO: what type is allTabs?
   const allTabs = Arr.map(spec.tabs, function (tab) {
     return {
       value: tab.name,
