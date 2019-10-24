@@ -57,7 +57,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
           footerNo,
           memFooterYes.asSpec()
         ]))),
-        onCancel: () => closeDialog(false),
+        onEscape: () => closeDialog(false),
         extraClasses: [ 'tox-confirm-dialog' ],
         extraBehaviours: [ ],
         extraStyles: { },

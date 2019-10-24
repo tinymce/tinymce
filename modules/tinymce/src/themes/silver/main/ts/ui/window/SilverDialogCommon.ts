@@ -89,7 +89,7 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
       RepresentingConfigs.memory({ }),
       ...spec.extraBehaviours
     ],
-    onCancel: (comp) => {
+    onEscape: (comp) => {
       AlloyTriggers.emit(comp, formCancelEvent);
     },
     dialogEvents,

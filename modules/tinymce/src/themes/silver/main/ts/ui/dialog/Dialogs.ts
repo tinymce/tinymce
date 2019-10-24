@@ -122,7 +122,7 @@ export interface DialogSpec {
   header: AlloySpec;
   body: AlloyParts.ConfiguredPart;
   footer: Option<AlloyParts.ConfiguredPart>;
-  onCancel: (comp: AlloyComponent) => void;
+  onEscape: (comp: AlloyComponent) => void;
   extraClasses: string[];
   extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
   extraStyles: Record<string, string>;
@@ -131,18 +131,23 @@ export interface DialogSpec {
 }
 
 const renderDialog = (spec: DialogSpec) => {
+  const dialogClass = 'tox-dialog';
+  const blockerClass = dialogClass + '-wrap';
+  const blockerBackdropClass = blockerClass + '__backdrop';
+  const scrollLockClass = dialogClass + '__disable-scroll';
+
   return ModalDialog.sketch(
     {
       lazySink: spec.lazySink,
       onEscape: (comp) => {
-        spec.onCancel(comp);
+        spec.onEscape(comp);
         // TODO: Make a strong type for Handled KeyEvent
         return Option.some(true);
       },
       useTabstopAt: (elem) => !NavigableObject.isPseudoStop(elem),
       dom: {
         tag: 'div',
-        classes: [ 'tox-dialog' ].concat(spec.extraClasses),
+        classes: [ dialogClass ].concat(spec.extraClasses),
         styles: {
           position: 'relative',
           ...spec.extraStyles
@@ -155,18 +160,18 @@ const renderDialog = (spec: DialogSpec) => {
       ],
       parts: {
         blocker: {
-          dom: DomFactory.fromHtml('<div class="tox-dialog-wrap"></div>'),
+          dom: DomFactory.fromHtml(`<div class="${blockerClass}"></div>`),
           components: [
             {
               dom: {
                 tag: 'div',
-                classes: (isTouch ? [ 'tox-dialog-wrap__backdrop', 'tox-dialog-wrap__backdrop--opaque' ] : [ 'tox-dialog-wrap__backdrop' ])
+                classes: (isTouch ? [ blockerBackdropClass, blockerBackdropClass + '--opaque' ] : [ blockerBackdropClass ])
               }
             }
           ]
         }
       },
-      dragBlockClass: 'tox-dialog-wrap',
+      dragBlockClass: blockerClass,
 
       modalBehaviours: Behaviour.derive([
         Focusing.config({}),
@@ -179,10 +184,10 @@ const renderDialog = (spec: DialogSpec) => {
         ])),
         AddEventsBehaviour.config('scroll-lock', [
           AlloyEvents.runOnAttached(() => {
-            Class.add(Body.body(), 'tox-dialog__disable-scroll');
+            Class.add(Body.body(), scrollLockClass);
           }),
           AlloyEvents.runOnDetached(() => {
-            Class.remove(Body.body(), 'tox-dialog__disable-scroll');
+            Class.remove(Body.body(), scrollLockClass);
           }),
         ]),
         ...spec.extraBehaviours

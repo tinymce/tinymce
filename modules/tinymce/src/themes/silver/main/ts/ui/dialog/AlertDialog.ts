@@ -43,7 +43,7 @@ export const setup = (extras) => {
         footer: Option.some(Dialogs.pFooter(Dialogs.pFooterGroup([], [
           memFooterClose.asSpec()
         ]))),
-        onCancel: closeDialog,
+        onEscape: closeDialog,
         extraClasses: [ 'tox-alert-dialog' ],
         extraBehaviours: [ ],
         extraStyles: { },
