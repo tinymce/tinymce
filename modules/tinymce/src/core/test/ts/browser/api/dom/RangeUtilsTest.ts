@@ -4,9 +4,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import ViewBlock from '../../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.api.dom.RangeUtilsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.api.dom.RangeUtilsTest', function (success, failure) {
   const DOM = DOMUtils.DOM;
   const viewBlock = ViewBlock();
 

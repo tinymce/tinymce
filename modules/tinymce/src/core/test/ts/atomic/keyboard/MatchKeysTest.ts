@@ -3,9 +3,7 @@ import { Arr, Cell, Merger } from '@ephox/katamari';
 import MatchKeys from 'tinymce/core/keyboard/MatchKeys';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (success, failure) {
   const state = Cell([]);
 
   const event = function (evt) {

@@ -3,9 +3,7 @@ import { Pipeline } from '@ephox/agar';
 import Writer from 'tinymce/core/api/html/Writer';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('Comment', function () {

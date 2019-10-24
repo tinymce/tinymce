@@ -9,9 +9,7 @@ import ImageUtils from '../module/test/ImageUtils';
 
 // TODO: This needs to be looked at again once notifications come back
 
-UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', function (success, failure) {
   const uploadHandlerState = ImageUtils.createStateContainer();
 
   const corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';

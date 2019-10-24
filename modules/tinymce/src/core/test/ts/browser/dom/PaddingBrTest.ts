@@ -3,9 +3,7 @@ import { Element, Html } from '@ephox/sugar';
 import PaddingBr from 'tinymce/core/dom/PaddingBr';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', function (success, failure) {
 
   const sTestRemoveTrailingBr = function (label, inputHtml, expectedHtml) {
     return Step.sync(function () {

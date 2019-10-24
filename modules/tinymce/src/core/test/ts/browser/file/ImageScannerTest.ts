@@ -9,9 +9,7 @@ import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 import { URL } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 

@@ -5,9 +5,7 @@ import SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
 import ViewBlock from '../../module/test/ViewBlock';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', function (success, failure) {
 
   const viewBlock = ViewBlock();
 

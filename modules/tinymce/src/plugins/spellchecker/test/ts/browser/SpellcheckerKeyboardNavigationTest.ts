@@ -9,9 +9,7 @@ import { document } from '@ephox/dom-globals';
 import { Element } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';
 
-UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', function (success, failure) {
 
   SilverTheme();
   SpellcheckerPlugin();
