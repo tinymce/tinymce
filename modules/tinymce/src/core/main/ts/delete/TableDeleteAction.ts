@@ -101,7 +101,7 @@ const getTableSelectionFromRng = (root, rng: Range) => {
   return getCellRng(rng, isRoot).bind((cellRng) => getTableSelectionFromCellRng(cellRng, isRoot));
 };
 
-const getCellIndex = (cells, cell) => {
+const getCellIndex = (cells: Element<any>[], cell: Element<any>): Option<number> => {
   return Arr.findIndex(cells, (x) => Compare.eq(x, cell));
 };
 

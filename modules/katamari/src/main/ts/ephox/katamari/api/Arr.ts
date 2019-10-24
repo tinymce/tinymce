@@ -171,7 +171,7 @@ export const find = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Option
   return Option.none();
 };
 
-export const findIndex = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Option<number> => {
+export const findIndex = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Option<number> => {
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
     if (pred(x, i)) {
