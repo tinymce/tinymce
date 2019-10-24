@@ -79,7 +79,7 @@ export const each = <T = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, void>): void
   }
 };
 
-export const eachr = <T = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, void>): void => {
+export const eachr = <T>(xs: ArrayLike<T>, f: ArrayMorphism<T, void>): void => {
   for (let i = xs.length - 1; i >= 0; i--) {
     const x = xs[i];
     f(x, i);
@@ -122,7 +122,7 @@ export const filter: {
  *  For a good explanation, see the group function (which is a special case of groupBy)
  *  http://hackage.haskell.org/package/base-4.7.0.0/docs/Data-List.html#v:group
  */
-export const groupBy = <T = any>(xs: ArrayLike<T>, f: (a: T) => any): T[][] => {
+export const groupBy = <T>(xs: ArrayLike<T>, f: (a: T) => any): T[][] => {
   if (xs.length === 0) {
     return [];
   } else {
