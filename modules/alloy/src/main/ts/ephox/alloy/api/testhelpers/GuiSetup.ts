@@ -32,6 +32,11 @@ const setup = (createComponent: (store: TestStore, doc: Element, body: Element) 
   }, TestLogs.init());
 };
 
+const setup1 = <A, B> (createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
+                       f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Step<A, B>, success, failure) => {
+ setup(createComponent, (doc, body, gui, component, store) => [f(doc, body, gui, component, store)], success, failure);
+};
+
 const mSetupKeyLogger = (body) => {
   return Step.stateful((oldState, next, die) => {
     const onKeydown: EventUnbinder = DomEvent.bind(body, 'keydown', (event) => {
@@ -77,6 +82,7 @@ const mRemoveStyles = Step.stateful((value: any, next, die) => {
 
 export {
   setup,
+  setup1,
   mSetupKeyLogger,
   mTeardownKeyLogger,
 

@@ -7,7 +7,7 @@ import { createDataTransfer } from '../datatransfer/DataTransfer';
 import { Arr, Obj } from '@ephox/katamari';
 import { createPasteEvent, createCopyEvent, createCutEvent } from '../clipboard/ClipboardEvents';
 import { Step } from './Step';
-import { ChainSequence } from './Main';
+import * as ChainSequence from './ChainSequence';
 
 const cPasteDataTransfer = (mutator: (dataTransfer: DataTransfer) => void): Chain<Element<any>, Element<any>> =>
   Chain.op<Element<any>>((target) => {

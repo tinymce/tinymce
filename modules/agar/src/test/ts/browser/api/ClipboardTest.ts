@@ -30,71 +30,72 @@ UnitTest.asynctest('ClipboardTest', (success, failure) => {
 
   if (/phantom/i.test(navigator.userAgent)) {
     success();
-  } else 
-  Pipeline.async1({}, StepSequence.sequenceSame([
-    Logger.t('Paste text and html items', StepSequence.sequenceSame([
-      sPasteItems({
-        'text/plain': 'Hello world!',
-        'text/html': '<b>Hello world!</b>'
-      }, '.pastebin'),
-      Step.sync(() => {
-        const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
+  } else {
+    Pipeline.async1({}, StepSequence.sequenceSame([
+      Logger.t('Paste text and html items', StepSequence.sequenceSame([
+        sPasteItems({
+          'text/plain': 'Hello world!',
+          'text/html': '<b>Hello world!</b>'
+        }, '.pastebin'),
+        Step.sync(() => {
+          const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
-        Assert.eq('Should be expected plain text', 'Hello world!', dataTransfer.getData('text/plain'));
-        Assert.eq('Should be expected html', '<b>Hello world!</b>', dataTransfer.getData('text/html'));
-      })
-    ])),
+          Assert.eq('Should be expected plain text', 'Hello world!', dataTransfer.getData('text/plain'));
+          Assert.eq('Should be expected html', '<b>Hello world!</b>', dataTransfer.getData('text/html'));
+        })
+      ])),
 
-    Logger.t('Paste text and html files', StepSequence.sequenceSame([
-      sPasteFiles([
-        createFileFromString('a.txt', 123, 'Hello world!', 'text/plain'),
-        createFileFromString('a.html', 123, '<b>Hello world!</b>', 'text/html')
-      ], '.pastebin'),
-      Step.sync(() => {
-        const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
+      Logger.t('Paste text and html files', StepSequence.sequenceSame([
+        sPasteFiles([
+          createFileFromString('a.txt', 123, 'Hello world!', 'text/plain'),
+          createFileFromString('a.html', 123, '<b>Hello world!</b>', 'text/html')
+        ], '.pastebin'),
+        Step.sync(() => {
+          const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
-        Assert.eq('Should be expected mime type', 'text/plain', dataTransfer.items[0].type);
-        Assert.eq('Should be expected mime type', 'text/plain', dataTransfer.files[0].type);
+          Assert.eq('Should be expected mime type', 'text/plain', dataTransfer.items[0].type);
+          Assert.eq('Should be expected mime type', 'text/plain', dataTransfer.files[0].type);
 
-        Assert.eq('Should be expected mime type', 'text/html', dataTransfer.items[1].type);
-        Assert.eq('Should be expected mime type', 'text/html', dataTransfer.files[1].type);
-      })
-    ])),
+          Assert.eq('Should be expected mime type', 'text/html', dataTransfer.items[1].type);
+          Assert.eq('Should be expected mime type', 'text/html', dataTransfer.files[1].type);
+        })
+      ])),
 
-    Logger.t('Paste using dataTransfer mutator', StepSequence.sequenceSame([
-      sPasteDataTransfer((dataTransfer) => {
-        dataTransfer.items.add(createFileFromString('a.txt', 123, 'Hello world!', 'text/plain'));
-        dataTransfer.items.add('<b>Hello world!</b>', 'text/html');
-      }, '.pastebin'),
-      Step.sync(() => {
-        const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
+      Logger.t('Paste using dataTransfer mutator', StepSequence.sequenceSame([
+        sPasteDataTransfer((dataTransfer) => {
+          dataTransfer.items.add(createFileFromString('a.txt', 123, 'Hello world!', 'text/plain'));
+          dataTransfer.items.add('<b>Hello world!</b>', 'text/html');
+        }, '.pastebin'),
+        Step.sync(() => {
+          const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
-        Assert.eq('Should be expected mime type', 'text/plain', dataTransfer.items[0].type);
-        Assert.eq('Should be expected mime type', 'file', dataTransfer.items[0].kind);
+          Assert.eq('Should be expected mime type', 'text/plain', dataTransfer.items[0].type);
+          Assert.eq('Should be expected mime type', 'file', dataTransfer.items[0].kind);
 
-        Assert.eq('Should be expected mime type', 'text/html', dataTransfer.items[1].type);
-        Assert.eq('Should be expected mime type', 'string', dataTransfer.items[1].kind);
-      })
-    ])),
+          Assert.eq('Should be expected mime type', 'text/html', dataTransfer.items[1].type);
+          Assert.eq('Should be expected mime type', 'string', dataTransfer.items[1].kind);
+        })
+      ])),
 
-    Logger.t('Cut',Chain.asStep1(pastebin, ChainSequence.sequence([
-      cCut,
-      Chain.op((dataTransfer: DataTransfer) => {
-        Assert.eq('Should be extected cut data', 'cut-data', dataTransfer.getData('text/plain'));
-      })
-    ]))),
+      Logger.t('Cut', Chain.asStep1(pastebin, ChainSequence.sequence([
+        cCut,
+        Chain.op((dataTransfer: DataTransfer) => {
+          Assert.eq('Should be extected cut data', 'cut-data', dataTransfer.getData('text/plain'));
+        })
+      ]))),
 
-    Logger.t('Copy', Chain.asStep1(pastebin, ChainSequence.sequence([
-      cCopy,
-      Chain.op((dataTransfer: DataTransfer) => {
-        Assert.eq('Should be extected copy data', 'copy-data', dataTransfer.getData('text/plain'));
-      })
-    ])))
-  ]), () => {
-    cutUnbinder.unbind();
-    copyUnbinder.unbind();
-    pasteUnbinder.unbind();
-    Remove.remove(pastebin);
-    success();
-  }, failure);
+      Logger.t('Copy', Chain.asStep1(pastebin, ChainSequence.sequence([
+        cCopy,
+        Chain.op((dataTransfer: DataTransfer) => {
+          Assert.eq('Should be extected copy data', 'copy-data', dataTransfer.getData('text/plain'));
+        })
+      ])))
+    ]), () => {
+      cutUnbinder.unbind();
+      copyUnbinder.unbind();
+      pasteUnbinder.unbind();
+      Remove.remove(pastebin);
+      success();
+    }, failure);
+  }
 });

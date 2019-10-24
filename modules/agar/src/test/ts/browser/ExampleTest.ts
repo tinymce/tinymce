@@ -66,7 +66,7 @@ UnitTest.asynctest('Example for Tutorial', (success, failure) => {
 
   const body = Element.fromDom(document.body);
 
-  Pipeline.async1({}, 
+  Pipeline.async1({},
     // Inject as the first input: body
     Chain.asStep1(body, ChainSequence.sequence([
       // Input: > container, output: visible element
