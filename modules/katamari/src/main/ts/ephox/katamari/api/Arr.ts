@@ -227,7 +227,7 @@ export const difference = <T>(a1: ArrayLike<T>, a2: ArrayLike<T>): T[] => {
   return filter(a1, (x) => !contains(a2, x));
 };
 
-export const mapToObject = <T = any, U = any>(xs: ArrayLike<T>, f: (x: T, i: number) => U): Record<string, U> => {
+export const mapToObject = <T, U>(xs: ArrayLike<T>, f: (x: T, i: number) => U): Record<string, U> => {
   const r: Record<string, U> = {};
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
