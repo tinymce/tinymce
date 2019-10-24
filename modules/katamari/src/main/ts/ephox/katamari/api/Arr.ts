@@ -213,7 +213,7 @@ export const forall = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): boolean =>
   return true;
 };
 
-export const equal = <T = any>(a1: ArrayLike<T>, a2: T[]) => {
+export const equal = <T>(a1: ArrayLike<T>, a2: T[]) => {
   return a1.length === a2.length && forall(a1, (x, i) => x === a2[i]);
 };
 
