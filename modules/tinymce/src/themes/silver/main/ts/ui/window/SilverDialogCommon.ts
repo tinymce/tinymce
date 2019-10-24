@@ -4,32 +4,15 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
-import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  AlloyParts,
-  AlloySpec,
-  AlloyTriggers,
-  Behaviour,
-  DomFactory,
-  Focusing,
-  GuiFactory,
-  Keying,
-  ModalDialog,
-  NativeEvents,
-  Reflecting,
-  SystemEvents,
-} from '@ephox/alloy';
+import { AlloyEvents, AlloyParts, AlloySpec, AlloyTriggers, Behaviour, DomFactory, GuiFactory, ModalDialog, Reflecting, SystemEvents, } from '@ephox/alloy';
 import { DialogManager, Types } from '@ephox/bridge';
 import { Arr, Cell, Option } from '@ephox/katamari';
-import { Body, Class } from '@ephox/sugar';
-import Env from 'tinymce/core/api/Env';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { StoragedMenuButton, StoragedMenuItem } from '../button/MenuButton';
+import * as Dialogs from '../dialog/Dialogs';
 import { FormBlockEvent, formCancelEvent } from '../general/FormEvents';
-import NavigableObject from '../general/NavigableObject';
 import { dialogChannel } from './DialogChannels';
 import { renderModalHeader } from './SilverDialogHeader';
 
@@ -46,8 +29,6 @@ export interface DialogSpec {
   extraStyles: Record<string, string>;
   extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
 }
-
-const isTouch = Env.deviceType.isTouch();
 
 const getHeader = (title: string, backstage: UiFactoryBackstage) => {
   return renderModalHeader({
@@ -96,79 +77,28 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
     return Option.some(incoming);
   };
 
-  return GuiFactory.build(
-    ModalDialog.sketch({
-      lazySink: backstage.shared.getSink,
-      // TODO: Disable while validating
-      onEscape(c) {
-        AlloyTriggers.emit(c, formCancelEvent);
-        return Option.some(true);
-      },
-
-      useTabstopAt: (elem) => !NavigableObject.isPseudoStop(elem),
-
-      modalBehaviours: Behaviour.derive([
-        Reflecting.config({
-          channel: dialogChannel,
-          updateState,
-          initialData
-        }),
-        RepresentingConfigs.memory({ }),
-        Focusing.config({}),
-        AddEventsBehaviour.config('execute-on-form', dialogEvents.concat([
-          // Note: `runOnSource` here will only listen to the event at the outer component level.
-          // Using just `run` instead will cause an infinite loop as `focusIn` would fire a `focusin` which would then get responded to and so forth.
-          AlloyEvents.runOnSource(NativeEvents.focusin(), (comp, se) => {
-            Keying.focusIn(comp);
-          })
-        ])),
-        AddEventsBehaviour.config('scroll-lock', [
-          AlloyEvents.runOnAttached(() => {
-            Class.add(Body.body(), 'tox-dialog__disable-scroll');
-          }),
-          AlloyEvents.runOnDetached(() => {
-            Class.remove(Body.body(), 'tox-dialog__disable-scroll');
-          }),
-        ]),
-        ...spec.extraBehaviours
-      ]),
-
-      eventOrder: {
-        [SystemEvents.execute()]: [ 'execute-on-form' ],
-        [SystemEvents.receive()]: [ 'reflecting', 'receiving' ],
-        [SystemEvents.attachedToDom()]: [ 'scroll-lock', 'reflecting', 'messages', 'execute-on-form', 'alloy.base.behaviour' ],
-        [SystemEvents.detachedFromDom()]: [ 'alloy.base.behaviour', 'execute-on-form', 'messages', 'reflecting', 'scroll-lock' ],
-      },
-
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-dialog' ].concat(spec.extraClasses),
-        styles: {
-          position: 'relative',
-          ...spec.extraStyles
-        }
-      },
-      components: [
-        spec.header,
-        spec.body,
-        ...spec.footer.toArray()
-      ],
-      dragBlockClass: 'tox-dialog-wrap',
-      parts: {
-        blocker: {
-          dom: DomFactory.fromHtml('<div class="tox-dialog-wrap"></div>'),
-          components: [
-            {
-              dom: {
-                tag: 'div',
-                classes: (isTouch ? [ 'tox-dialog-wrap__backdrop', 'tox-dialog-wrap__backdrop--opaque' ] : [ 'tox-dialog-wrap__backdrop' ])
-              }
-            }
-          ]
-        }
-      }
-    })
-  );
+  return GuiFactory.build(Dialogs.renderDialog({
+    ...spec,
+    lazySink: backstage.shared.getSink,
+    extraBehaviours: [
+      Reflecting.config({
+        channel: dialogChannel,
+        updateState,
+        initialData
+      }),
+      RepresentingConfigs.memory({ }),
+      ...spec.extraBehaviours
+    ],
+    onCancel: (comp) => {
+      AlloyTriggers.emit(comp, formCancelEvent);
+    },
+    dialogEvents,
+    eventOrder: {
+      [SystemEvents.receive()]: [ 'reflecting', 'receiving' ],
+      [SystemEvents.attachedToDom()]: [ 'scroll-lock', 'reflecting', 'messages', 'dialog-events', 'alloy.base.behaviour' ],
+      [SystemEvents.detachedFromDom()]: [ 'alloy.base.behaviour', 'dialog-events', 'messages', 'reflecting', 'scroll-lock' ],
+    }
+  }));
 };
 
 const mapMenuButtons = (buttons: Types.Dialog.DialogButton[]): (Types.Dialog.DialogButton | StoragedMenuButton)[] => {

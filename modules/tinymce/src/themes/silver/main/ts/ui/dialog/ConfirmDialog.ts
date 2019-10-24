@@ -5,11 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Focusing, GuiFactory, Memento, ModalDialog } from '@ephox/alloy';
-import { renderFooterButton } from 'tinymce/themes/silver/ui/general/Button';
-import * as Dialogs from './Dialogs';
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { AlloyEvents, Focusing, GuiFactory, Memento, ModalDialog } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { renderFooterButton } from '../general/Button';
+import { formCancelEvent, FormCancelEvent, formSubmitEvent, FormSubmitEvent } from '../general/FormEvents';
+import * as Dialogs from './Dialogs';
 
 export interface ConfirmDialogSetup {
     backstage: UiFactoryBackstage;
@@ -44,24 +45,27 @@ export const setup = (extras: ConfirmDialogSetup) => {
       icon: Option.none()
     }, 'cancel', extras.backstage);
 
+    const titleSpec = Dialogs.pUntitled();
+    const closeSpec = Dialogs.pClose(() => closeDialog(false), sharedBackstage.providers);
+
     const confirmDialog = GuiFactory.build(
       Dialogs.renderDialog({
         lazySink: () => sharedBackstage.getSink(),
-        headerOverride: Option.some(Dialogs.hiddenHeader),
-        partSpecs: {
-          title: Dialogs.pUntitled(),
-          close: Dialogs.pClose(() => {
-            closeDialog(false);
-          }, sharedBackstage.providers),
-          body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
-          footer: Dialogs.pFooter(Dialogs.pFooterGroup([], [
-            footerNo,
-            memFooterYes.asSpec()
-          ]))
-        },
+        header: Dialogs.hiddenHeader(titleSpec, closeSpec),
+        body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
+        footer: Option.some(Dialogs.pFooter(Dialogs.pFooterGroup([], [
+          footerNo,
+          memFooterYes.asSpec()
+        ]))),
         onCancel: () => closeDialog(false),
-        onSubmit: () => closeDialog(true),
-        extraClasses: [ 'tox-confirm-dialog' ]
+        extraClasses: [ 'tox-confirm-dialog' ],
+        extraBehaviours: [ ],
+        extraStyles: { },
+        dialogEvents: [
+          AlloyEvents.run<FormCancelEvent>(formCancelEvent, () => closeDialog(false)),
+          AlloyEvents.run<FormSubmitEvent>(formSubmitEvent, () => closeDialog(true))
+        ],
+        eventOrder: { }
       })
     );
 

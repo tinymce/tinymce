@@ -4,42 +4,44 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
-import {
-  AddEventsBehaviour,
-  AlloyComponent,
-  AlloyEvents,
-  AlloySpec,
-  Behaviour,
-  Button,
-  Container,
-  DomFactory,
-  ModalDialog,
-  Tabstopping,
-} from '@ephox/alloy';
-import { Merger, Option, Result } from '@ephox/katamari';
+import {AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Button, Container, DomFactory, Focusing, Keying, ModalDialog, NativeEvents, SystemEvents, Tabstopping } from '@ephox/alloy';
+import { Option, Result } from '@ephox/katamari';
+import { Body, Class } from '@ephox/sugar';
 import Env from 'tinymce/core/api/Env';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { FormCancelEvent, formCancelEvent, FormSubmitEvent, formSubmitEvent } from '../general/FormEvents';
+import NavigableObject from '../general/NavigableObject';
 
 const isTouch = Env.deviceType.isTouch();
 
-const hiddenHeader: AlloySpec = {
-  dom: {
-    tag: 'div',
-    styles: { display: 'none' },
-    classes: [ 'tox-dialog__header' ]
-  }
+const hiddenHeader = (title: AlloyParts.ConfiguredPart, close: AlloyParts.ConfiguredPart): AlloySpec => {
+  return {
+    dom: {
+      tag: 'div',
+      styles: { display: 'none' },
+      classes: [ 'tox-dialog__header' ]
+    },
+    components: [
+      title,
+      close
+    ]
+  };
 };
 
-const defaultHeader: AlloySpec = {
-  dom: {
-    tag: 'div',
-    classes: [ 'tox-dialog__header' ]
-  }
+const defaultHeader = (title: AlloyParts.ConfiguredPart, close: AlloyParts.ConfiguredPart): AlloySpec => {
+  return {
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-dialog__header' ]
+    },
+    components: [
+      title,
+      close
+    ]
+  };
 };
 
-const pClose = (onClose, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts().close(
+const pClose = (onClose: () => void, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts().close(
   // Need to find a way to make it clear in the docs whether parts can be sketches
   Button.sketch({
     dom: {
@@ -117,40 +119,39 @@ const pFooterGroup = (startButtons: AlloySpec[], endButtons: AlloySpec[]) => {
 
 export interface DialogSpec {
   lazySink: () => Result<AlloyComponent, any>;
-  headerOverride: Option<AlloySpec>;
-  partSpecs: {
-    title: AlloySpec,
-    close: AlloySpec,
-    body: AlloySpec,
-    footer: AlloySpec
-  };
-  onCancel: () => void;
-  onSubmit: () => void;
+  header: AlloySpec;
+  body: AlloyParts.ConfiguredPart;
+  footer: Option<AlloyParts.ConfiguredPart>;
+  onCancel: (comp: AlloyComponent) => void;
   extraClasses: string[];
+  extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
+  extraStyles: Record<string, string>;
+  dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[];
+  eventOrder: Record<string, string[]>;
 }
 
 const renderDialog = (spec: DialogSpec) => {
   return ModalDialog.sketch(
     {
       lazySink: spec.lazySink,
-      onEscape: () => {
-        spec.onCancel();
+      onEscape: (comp) => {
+        spec.onCancel(comp);
         // TODO: Make a strong type for Handled KeyEvent
         return Option.some(true);
       },
+      useTabstopAt: (elem) => !NavigableObject.isPseudoStop(elem),
       dom: {
         tag: 'div',
-        classes: [ 'tox-dialog' ].concat(spec.extraClasses)
+        classes: [ 'tox-dialog' ].concat(spec.extraClasses),
+        styles: {
+          position: 'relative',
+          ...spec.extraStyles
+        },
       },
       components: [
-        Merger.deepMerge(spec.headerOverride.getOr(defaultHeader), {
-          components: [
-            spec.partSpecs.title,
-            spec.partSpecs.close
-          ]
-        }),
-        spec.partSpecs.body,
-        spec.partSpecs.footer
+        spec.header,
+        spec.body,
+        ...spec.footer.toArray()
       ],
       parts: {
         blocker: {
@@ -165,17 +166,34 @@ const renderDialog = (spec: DialogSpec) => {
           ]
         }
       },
+      dragBlockClass: 'tox-dialog-wrap',
+
       modalBehaviours: Behaviour.derive([
-        // Dupe warning.
-        AddEventsBehaviour.config('basic-dialog-events', [
-          AlloyEvents.run<FormCancelEvent>(formCancelEvent, (comp, se) => {
-            spec.onCancel();
+        Focusing.config({}),
+        AddEventsBehaviour.config('dialog-events', spec.dialogEvents.concat([
+          // Note: `runOnSource` here will only listen to the event at the outer component level.
+          // Using just `run` instead will cause an infinite loop as `focusIn` would fire a `focusin` which would then get responded to and so forth.
+          AlloyEvents.runOnSource(NativeEvents.focusin(), (comp, se) => {
+            Keying.focusIn(comp);
+          })
+        ])),
+        AddEventsBehaviour.config('scroll-lock', [
+          AlloyEvents.runOnAttached(() => {
+            Class.add(Body.body(), 'tox-dialog__disable-scroll');
           }),
-          AlloyEvents.run<FormSubmitEvent>(formSubmitEvent, (comp, se) => {
-            spec.onSubmit();
+          AlloyEvents.runOnDetached(() => {
+            Class.remove(Body.body(), 'tox-dialog__disable-scroll');
           }),
-        ])
-      ])
+        ]),
+        ...spec.extraBehaviours
+      ]),
+
+      eventOrder: {
+        [SystemEvents.execute()]: [ 'dialog-events' ],
+        [SystemEvents.attachedToDom()]: [ 'scroll-lock', 'dialog-events', 'alloy.base.behaviour' ],
+        [SystemEvents.detachedFromDom()]: [ 'alloy.base.behaviour', 'dialog-events', 'scroll-lock' ],
+        ...spec.eventOrder
+      },
     }
   );
 };

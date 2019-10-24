@@ -5,10 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Focusing, GuiFactory, Memento, ModalDialog } from '@ephox/alloy';
-import { renderFooterButton } from 'tinymce/themes/silver/ui/general/Button';
+import { AlloyEvents, Focusing, GuiFactory, Memento, ModalDialog } from '@ephox/alloy';
+import { Option } from '@ephox/katamari';
+import { renderFooterButton } from '../general/Button';
+import { formCancelEvent, FormCancelEvent } from '../general/FormEvents';
 import * as Dialogs from './Dialogs';
-import { Fun, Option } from '@ephox/katamari';
 
 export const setup = (extras) => {
   const sharedBackstage = extras.backstage.shared;
@@ -31,23 +32,25 @@ export const setup = (extras) => {
       }, 'cancel', extras.backstage)
     );
 
+    const titleSpec = Dialogs.pUntitled();
+    const closeSpec = Dialogs.pClose(closeDialog, sharedBackstage.providers);
+
     const alertDialog = GuiFactory.build(
       Dialogs.renderDialog({
         lazySink: () => sharedBackstage.getSink(),
-        headerOverride: Option.some(Dialogs.hiddenHeader),
-        partSpecs: {
-          title: Dialogs.pUntitled(),
-          close: Dialogs.pClose(() => {
-            closeDialog();
-          }, sharedBackstage.providers),
-          body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
-          footer: Dialogs.pFooter(Dialogs.pFooterGroup([], [
-            memFooterClose.asSpec()
-          ]))
-        },
-        onCancel: () => closeDialog(),
-        onSubmit: Fun.noop,
-        extraClasses: [ 'tox-alert-dialog' ]
+        header: Dialogs.hiddenHeader(titleSpec, closeSpec),
+        body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
+        footer: Option.some(Dialogs.pFooter(Dialogs.pFooterGroup([], [
+          memFooterClose.asSpec()
+        ]))),
+        onCancel: closeDialog,
+        extraClasses: [ 'tox-alert-dialog' ],
+        extraBehaviours: [ ],
+        extraStyles: { },
+        dialogEvents: [
+          AlloyEvents.run<FormCancelEvent>(formCancelEvent, closeDialog)
+        ],
+        eventOrder: { }
       })
     );
 
