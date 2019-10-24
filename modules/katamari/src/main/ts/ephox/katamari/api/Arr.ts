@@ -223,7 +223,7 @@ export const reverse = <T>(xs: ArrayLike<T>): T[] => {
   return r;
 };
 
-export const difference = <T = any>(a1: ArrayLike<T>, a2: ArrayLike<T>): T[] => {
+export const difference = <T>(a1: ArrayLike<T>, a2: ArrayLike<T>): T[] => {
   return filter(a1, (x) => !contains(a2, x));
 };
 
@@ -236,7 +236,7 @@ export const mapToObject = <T = any, U = any>(xs: ArrayLike<T>, f: (x: T, i: num
   return r;
 };
 
-export const pure = <T = any>(x: T): T[] => [x];
+export const pure = <T>(x: T): T[] => [x];
 
 export const sort = <T = any>(xs: ArrayLike<T>, comparator?: Comparator<T>): T[] => {
   const copy: T[] = nativeSlice.call(xs, 0);
