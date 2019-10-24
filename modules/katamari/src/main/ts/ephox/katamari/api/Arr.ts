@@ -203,7 +203,7 @@ export const bind = <T = any, U = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, U[]
   return flatten(output);
 };
 
-export const forall = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): boolean => {
+export const forall = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): boolean => {
   for (let i = 0, len = xs.length; i < len; ++i) {
     const x = xs[i];
     if (pred(x, i) !== true) {
@@ -217,7 +217,7 @@ export const equal = <T = any>(a1: ArrayLike<T>, a2: T[]) => {
   return a1.length === a2.length && forall(a1, (x, i) => x === a2[i]);
 };
 
-export const reverse = <T = any>(xs: ArrayLike<T>): T[] => {
+export const reverse = <T>(xs: ArrayLike<T>): T[] => {
   const r: T[] = nativeSlice.call(xs, 0);
   r.reverse();
   return r;
