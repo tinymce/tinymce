@@ -151,12 +151,12 @@ const insertCaretContainerNode = function (editor: Editor, caretContainer, forma
   }
 };
 
-const appendNode = function (parentNode, node) {
+const appendNode = function (parentNode: Node, node: Node) {
   parentNode.appendChild(node);
   return node;
 };
 
-const insertFormatNodesIntoCaretContainer = function (formatNodes, caretContainer) {
+const insertFormatNodesIntoCaretContainer = function (formatNodes: Node[], caretContainer) {
   const innerMostFormatNode = Arr.foldr(formatNodes, function (parentNode, formatNode) {
     return appendNode(parentNode, formatNode.cloneNode(false));
   }, caretContainer);

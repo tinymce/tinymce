@@ -147,7 +147,7 @@ export const groupBy = <T>(xs: ArrayLike<T>, f: (a: T) => any): T[][] => {
   }
 };
 
-export const foldr = <T = any, U = any>(xs: ArrayLike<T>, f: (acc: U, x: T) => U, acc: U): U => {
+export const foldr = <T, U>(xs: ArrayLike<T>, f: (acc: U, x: T) => U, acc: U): U => {
   eachr(xs, function (x) {
     acc = f(acc, x);
   });
