@@ -1,19 +1,19 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import Jsc from '@ephox/wrap-jsverify';
+import fc from 'fast-check';
 
 import * as Cycles from 'ephox/alloy/alien/Cycles';
 
-UnitTest.test('CyclesTest', () => {
-  Jsc.property(
-    'CycleBy should have an adjustment of delta, or be the min or max',
-    Jsc.nat,
-    Jsc.integer,
-    Jsc.nat,
-    Jsc.nat,
+UnitTest.test('CycleBy should have an adjustment of delta, or be the min or max', () => {
+
+  fc.assert(fc.property(
+    fc.nat(),
+    fc.integer(),
+    fc.nat(),
+    fc.nat(),
     (value, delta, min, range) => {
       const max = min + range;
       const actual = Cycles.cycleBy(value, delta, min, max);
-      return Jsc.eq((actual - value) === delta, true) || actual === min || actual === max;
+      return (actual - value) === delta || actual === min || actual === max;
     }
-  );
+  ));
 });
