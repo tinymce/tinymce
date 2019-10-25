@@ -46,7 +46,10 @@
             toolbar_drawer: 'floating',
             height: 600,
             skin_url: '/skins/ui/' +  skin,
-            content_css: '/skins/content/' + contentcss + '/content.css'
+            content_css: '/skins/content/' + contentcss + '/content.css',
+            templates: [
+              {title: 'Some title', description: 'Some description', content: 'Some content'},
+            ],
         });
 
         function addOptionTo (select) {
