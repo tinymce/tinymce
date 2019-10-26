@@ -5,7 +5,7 @@ import * as fc from 'fast-check';
 import { Pprint, Testable as T } from '@ephox/dispute';
 
 UnitTest.test('Type.is*: Unit tests', () => {
-  const check = (expected, method, input) => {
+  const check = (expected: boolean, method: string, input: unknown) => {
     const actual = Type[method](input);
     Assert.eq(
       () => 'Expected: ' + method + '(' + Pprint.render(input, Pprint.pprintAny) + ') to be ' + expected,
