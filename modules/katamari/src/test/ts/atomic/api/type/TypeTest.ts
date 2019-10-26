@@ -1,17 +1,21 @@
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Type from 'ephox/katamari/api/Type';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import { UnitTest, Assert } from '@ephox/bedrock-client';
+import * as fc from 'fast-check';
+import { Pprint, Testable as T } from '@ephox/dispute';
 
-UnitTest.test('Type', function () {
-  const check = function (expected, method, input) {
+UnitTest.test('Type.is*: Unit tests', () => {
+  const check = (expected, method, input) => {
     const actual = Type[method](input);
-    assert.eq(expected, actual, 'I\'m a failure.');
+    Assert.eq(
+      () => 'Expected: ' + method + '(' + Pprint.render(input, Pprint.pprintAny) + ') to be ' + expected,
+      expected, actual
+    );
   };
 
   // tslint:disable-next-line:no-construct
   const objectString = new String('ball');
-  const noop = function () { };
+  const noop = () => {};
 
   check(true, 'isNull', null);
   check(false, 'isNull', undefined);
@@ -109,22 +113,22 @@ UnitTest.test('Type', function () {
   check(false, 'isNumber', [1, 3, 4, 5]);
   check(true, 'isNumber', 1);
 
-  Jsc.property('Check Type.is* :: only one should match for every value', Jsc.json, function (json) {
-    const classifiers = [
-      Type.isString,
-      Type.isObject,
-      Type.isArray,
-      Type.isNull,
-      Type.isBoolean,
-      Type.isUndefined,
-      Type.isFunction,
-      Type.isNumber
-    ];
+});
 
-    const matches = Arr.filter(classifiers, function (c) {
-      return c(json);
-    });
+UnitTest.test('Type.is*: only one should match for every value', () => {
+  const classifiers = [
+    Type.isString,
+    Type.isObject,
+    Type.isArray,
+    Type.isNull,
+    Type.isBoolean,
+    Type.isUndefined,
+    Type.isFunction,
+    Type.isNumber
+  ];
 
-    return matches.length === 1;
-  });
+  fc.assert(fc.property(fc.anything(), (x) => {
+    const matches = Arr.filter(classifiers, (c) => c(x));
+    Assert.eq('number of matching types', 1, matches.length, T.tNumber);
+  }));
 });
