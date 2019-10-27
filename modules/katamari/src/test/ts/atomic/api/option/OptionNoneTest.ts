@@ -11,10 +11,6 @@ UnitTest.test('OptionNoneTest', () => {
 
   const testSanity = () => {
     const s = Option.none<number>();
-    Assert.eq('none is not some', false, s.isSome());
-    Assert.eq('none is none', true, s.isNone());
-    Assert.eq('getOr', 6, s.getOr(6));
-    Assert.eq('getOrThunk', 6, s.getOrThunk(() => 6));
     Assert.throws('getOrDie dies', () => { s.getOrDie('Died!'); });
     Assert.eq('or', 6, s.or(Option.some(6)).getOrDie());
     Assert.eq('orThunk', 6, s.orThunk(() => Option.some(6)).getOrDie());

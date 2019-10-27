@@ -13,10 +13,6 @@ UnitTest.test('OptionSomeTest', () => {
     const boom = () => { throw new Error('Should not be called'); };
 
     const s = Option.some(5);
-    Assert.eq('some is some', true, s.isSome());
-    Assert.eq('some is not none', false, s.isNone());
-    Assert.eq('getOr', 5, s.getOr(6));
-    Assert.eq('getOrThunk', 5, s.getOrThunk(() => 6));
     Assert.eq('getOrDie', 5, s.getOrDie('Died!'));
     Assert.eq('or', Option.some(5), s.or(Option.some(6)), tOption(tNumber));
     Assert.eq('orThunk', Option.some(5), s.orThunk(boom), tOption(tNumber));
