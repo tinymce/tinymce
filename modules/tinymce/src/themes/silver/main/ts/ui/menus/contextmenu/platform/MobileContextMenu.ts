@@ -5,15 +5,15 @@ import { Selection, WindowSelection } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import * as Settings from '../../../../api/Settings';
 import { UiFactoryBackstage } from '../../../../backstage/Backstage';
-import * as ContextToolbarBounds from '../../../context/ContextToolbarBounds';
 import ItemResponse from '../../item/ItemResponse';
 import * as MenuParts from '../../menu/MenuParts';
 import * as NestedMenus from '../../menu/NestedMenus';
 import { getNodeAnchor, getSelectionAnchor } from '../Coords';
 import { SingleMenuItemApi } from '../../menu/SingleMenuTypes';
 import { hideContextToolbarEvent } from '../../../context/ContextEditorEvents';
+import { getContextToolbarBounds } from '../../../context/ContextToolbarBounds';
+import { Option } from '@ephox/katamari';
 
 type MenuItems = string | Array<string | SingleMenuItemApi>;
 
@@ -97,7 +97,6 @@ const setupiOSOverrides = (editor: Editor) => {
 };
 
 const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, isTriggeredByKeyboardEvent: boolean) => {
-  const toolbarOrMenubarEnabled = Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
   const anchorSpec = getAnchorSpec(editor, isTriggeredByKeyboardEvent);
 
   NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, true).map((menuData) => {
@@ -110,7 +109,7 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, back
       },
       data: menuData,
       type: 'horizontal'
-    }, () => ContextToolbarBounds.getBounds(editor, toolbarOrMenubarEnabled));
+    }, () => Option.some(getContextToolbarBounds(editor)));
 
     // Ensure the context toolbar is hidden
     editor.fire(hideContextToolbarEvent);

@@ -9,7 +9,7 @@ import { Bounds, Boxes } from '@ephox/alloy';
 import { Element, SelectorFind, VisualViewport } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { window } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import * as Settings from '../../api/Settings';
 
 const getHorizontalBounds = (contentAreaBox: Bounds, viewportBounds: Bounds) => {
   const x = Math.max(viewportBounds.x(), contentAreaBox.x());
@@ -67,23 +67,21 @@ const getDistractionFreeBounds = (_editor: Editor, contentAreaBox: Bounds, viewp
   return Boxes.bounds(x, viewportBounds.y(), width, viewportBounds.height());
 };
 
-const getBounds = (editor: Editor, toolbarOrMenubarEnabled: boolean) => {
+const getContextToolbarBounds = (editor: Editor) => {
+  const toolbarOrMenubarEnabled = Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
   const viewportBounds = VisualViewport.getBounds(window);
   const contentAreaBox = Boxes.box(Element.fromDom(editor.getContentAreaContainer()));
 
   // Create a bounds that lets the context toolbar overflow outside the content area, but remains in the viewport
   if (editor.inline && !toolbarOrMenubarEnabled) {
-    return Option.some(getDistractionFreeBounds(editor, contentAreaBox, viewportBounds));
+    return getDistractionFreeBounds(editor, contentAreaBox, viewportBounds);
   } else if (editor.inline) {
-    return Option.some(getInlineBounds(editor, contentAreaBox, viewportBounds));
+    return getInlineBounds(editor, contentAreaBox, viewportBounds);
   } else {
-    return Option.some(getIframeBounds(editor, contentAreaBox, viewportBounds));
+    return getIframeBounds(editor, contentAreaBox, viewportBounds);
   }
 };
 
 export {
-  getDistractionFreeBounds,
-  getIframeBounds,
-  getInlineBounds,
-  getBounds
+  getContextToolbarBounds
 };
