@@ -43,6 +43,16 @@ export const bifilter = function <V> (obj: Record<string, V>, pred: (value: V, k
   return { t, f };
 };
 
+export const filter = function <V> (obj: Record<string, V>, pred: (value: V, key: string) => boolean): Record<string, V> {
+  const r: Record<string, V> = {};
+  each(obj, function (x, i) {
+    if (pred(x, i)) {
+      r[i] = x;
+    }
+  });
+  return r;
+};
+
 export const mapToArray = function <T, R> (obj: T, f: (value: T[keyof T], key: string) => R) {
   const r: R[] = [];
   each(obj, function (value, name) {
