@@ -194,9 +194,17 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
     ]);
   };
 
-  const sShouldFocusOnCloseButton = GeneralSteps.sequence([
-    sCreateAlert('initial focus should be on Close', Fun.noop),
+  const sShouldFocusOnOkButton = GeneralSteps.sequence([
+    sCreateAlert('initial focus should be on ok button', Fun.noop),
     FocusTools.sTryOnSelector('When the alert dialog loads, focus should be on the ok button', Element.fromDom(document), 'button:contains(OK)'),
+    sTeardown
+  ]);
+
+  const sClickShouldFocusOnFirstButton = GeneralSteps.sequence([
+    sCreateAlert('Click should focus ok button', Fun.noop),
+    FocusTools.sTryOnSelector('When the alert dialog loads, focus should be on the ok button', Element.fromDom(document), 'button:contains(OK)'),
+    Mouse.sTrueClickOn(Element.fromDom(document), '.tox-dialog'),
+    FocusTools.sTryOnSelector('Focus should still be on the ok button', Element.fromDom(document), 'button:contains(OK)'),
     sTeardown
   ]);
 
@@ -213,7 +221,8 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
     sHasBasicStructure('The alert dialog loads with the basic structure'),
     sInsertTheCorrectMessage('should display this <strong>message</strong>'),
     sCallbackOnClose('The callback should fire when ok is invoked'),
-    sShouldFocusOnCloseButton,
+    sClickShouldFocusOnFirstButton,
+    sShouldFocusOnOkButton,
     sCloseButtonShouldWork
   ], function () {
     helpers.destroy();
