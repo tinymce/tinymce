@@ -9,9 +9,7 @@ import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { UnitTest, assert } from '@ephox/bedrock-client';
 import { HTMLIFrameElement, HTMLSpanElement } from '@ephox/dom-globals';
 
-UnitTest.asynctest('CssReflowTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('CssReflowTest', function (success, failure) {
 
   const iframe = Element.fromHtml<HTMLIFrameElement>('<iframe style="height:100px; width:500px;" src="/project/@ephox/sugar/src/test/data/cssReflowTest.html"></iframe>');
   Insert.append(Body.body(), iframe);

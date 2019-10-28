@@ -6,7 +6,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 import { NodeListOf, HTMLElement } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.init.ContentStylePositionTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.init.ContentStylePositionTest', (success, failure) => {
   Theme();
 
   const contentStyle = '.class {color: blue;}';

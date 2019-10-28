@@ -9,9 +9,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { isCaretNode, getParentCaretContainer } from 'tinymce/core/fmt/FormatContainer';
 import { Text } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success, failure) {
 
   Theme();
 

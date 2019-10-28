@@ -5,9 +5,7 @@ import TypeText from '../../module/test/TypeText';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.TypeTextAtCef', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.keyboard.TypeTextAtCef', function (success, failure) {
 
   Theme();
 

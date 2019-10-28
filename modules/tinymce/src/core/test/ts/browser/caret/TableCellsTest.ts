@@ -7,9 +7,7 @@ import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 import { Option } from '@ephox/katamari';
 import { HTMLTableElement } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function (success, failure) {
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {

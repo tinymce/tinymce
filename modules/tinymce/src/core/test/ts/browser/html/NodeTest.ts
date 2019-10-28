@@ -3,9 +3,7 @@ import { Pipeline } from '@ephox/agar';
 import Node from 'tinymce/core/api/html/Node';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   const ok = function (value, label?) {

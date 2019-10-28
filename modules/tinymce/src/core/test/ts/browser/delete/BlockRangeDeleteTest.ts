@@ -4,9 +4,7 @@ import BlockRangeDelete from 'tinymce/core/delete/BlockRangeDelete';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.delete.BlockRangeDeleteTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.BlockRangeDeleteTest', function (success, failure) {
 
   Theme();
 

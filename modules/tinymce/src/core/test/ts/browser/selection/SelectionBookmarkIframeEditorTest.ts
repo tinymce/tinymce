@@ -8,9 +8,7 @@ import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest(
   'browser.tinymce.core.selection.SelectionBookmarkIframeEditorTest',
-  function () {
-    const success = arguments[arguments.length - 2];
-    const failure = arguments[arguments.length - 1];
+  function (success, failure) {
 
     Theme();
     const testDivId = 'testDiv1234';

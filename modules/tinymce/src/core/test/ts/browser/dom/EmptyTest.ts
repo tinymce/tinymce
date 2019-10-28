@@ -3,9 +3,7 @@ import { Element } from '@ephox/sugar';
 import Empty from 'tinymce/core/dom/Empty';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.dom.EmptyTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.EmptyTest', function (success, failure) {
 
   const sTestEmpty = function (html, expected) {
     return Step.sync(function () {

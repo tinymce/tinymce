@@ -5,9 +5,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Element } from '@ephox/sugar';
 
-UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function (success, failure) {
 
   Theme();
 

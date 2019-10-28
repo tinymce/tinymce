@@ -6,9 +6,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 
-UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (success, failure) {
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {

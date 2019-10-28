@@ -8,9 +8,7 @@ import Env from 'tinymce/core/api/Env';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function (success, failure) {
   const BEFORE = true, AFTER = false;
   const START = true, END = false;
 

@@ -6,9 +6,7 @@ import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest(
   'browser.tinymce.core.init.InitEditorThemeFunctionIframeTest',
-  function () {
-    const success = arguments[arguments.length - 2];
-    const failure = arguments[arguments.length - 1];
+  function (success, failure) {
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       const tinyApis = TinyApis(editor);

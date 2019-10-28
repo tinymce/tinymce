@@ -7,9 +7,7 @@ import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Text } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.CaretPositionTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.CaretPositionTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
   const createRange = CaretAsserts.createRange;
   const viewBlock = ViewBlock();
