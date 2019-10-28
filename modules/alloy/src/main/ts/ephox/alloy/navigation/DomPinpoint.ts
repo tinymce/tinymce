@@ -11,7 +11,7 @@ const locateVisible = (container: Element<HTMLElement>, current: Element<HTMLEle
   return ArrPinpoint.locate(visible, predicate);
 };
 
-const findIndex = (elements: Array<Element<any>>, target: Element<any>): Option<number> =>
+const findIndex = <T> (elements: Array<Element<T>>, target: Element<T>): Option<number> =>
   Arr.findIndex(elements, (elem) => Compare.eq(target, elem));
 
 export {
