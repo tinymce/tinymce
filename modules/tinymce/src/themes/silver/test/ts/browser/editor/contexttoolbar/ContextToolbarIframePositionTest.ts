@@ -161,6 +161,7 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
           tinyApis.sSetContent('<p><a href="http://tiny.cloud">link</a></p>'),
           tinyApis.sSetCursor([0, 0, 0], 1),
           UiFinder.sWaitForVisible('Waiting for toolbar to appear below content', Body.body(), '.tox-pop.tox-pop--top'),
+          Step.wait(250), // TODO: Find out why Safari fails without this wait
           Step.sync(() => {
             window.scrollTo(0, 2000);
           }),
