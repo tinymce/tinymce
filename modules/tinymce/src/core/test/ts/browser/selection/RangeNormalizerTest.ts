@@ -5,9 +5,7 @@ import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', function (success, failure) {
   const viewBlock = ViewBlock();
 
   const sSetContent = function (html) {

@@ -4,9 +4,7 @@ import TrimNode from 'tinymce/core/dom/TrimNode';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function (success, failure) {
 
   const dom = DOMUtils(document, {});
 

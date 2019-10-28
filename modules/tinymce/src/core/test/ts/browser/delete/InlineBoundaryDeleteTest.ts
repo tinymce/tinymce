@@ -8,9 +8,7 @@ import BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';
 import InlineUtils from 'tinymce/core/keyboard/InlineUtils';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', function (success, failure) {
 
   Theme();
 

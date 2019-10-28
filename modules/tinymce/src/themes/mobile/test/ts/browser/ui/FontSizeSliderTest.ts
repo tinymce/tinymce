@@ -12,9 +12,7 @@ import TestSelectors from '../../module/test/ui/TestSelectors';
 import TestStyles from '../../module/test/ui/TestStyles';
 import { Fun } from '@ephox/katamari';
 
-UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function (success, failure) {
   const detection = PlatformDetection.detect();
 
   const realm = IosRealm(Fun.noop);

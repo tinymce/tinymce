@@ -4,9 +4,7 @@ import Styles from 'tinymce/core/api/html/Styles';
 import Schema from 'tinymce/core/api/html/Schema';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('Basic parsing/serializing', function () {

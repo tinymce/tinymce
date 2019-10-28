@@ -5,9 +5,7 @@ import { Element, Node } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.init.ContentStylePositionTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.init.ContentStylePositionTest', function (success, failure) {
 
   Theme();
 

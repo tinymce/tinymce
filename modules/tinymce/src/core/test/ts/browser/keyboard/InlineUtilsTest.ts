@@ -6,9 +6,7 @@ import Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Text } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function (success, failure) {
   const ZWSP = Zwsp.ZWSP;
 
   const cCreateElement = function (html) {

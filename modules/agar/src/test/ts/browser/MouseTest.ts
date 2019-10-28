@@ -11,9 +11,7 @@ import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
 import * as UiFinder from 'ephox/agar/api/UiFinder';
 
-UnitTest.asynctest('MouseTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('MouseTest', function (success, failure) {
 
   const input = Element.fromTag('input');
   const container = Element.fromTag('container');

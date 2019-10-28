@@ -4,9 +4,7 @@ import Delay from 'tinymce/core/api/util/Delay';
 import { UnitTest } from '@ephox/bedrock-client';
 import Editor from 'tinymce/core/api/Editor';
 
-UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   const ok = function (value, label) {

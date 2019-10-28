@@ -3,9 +3,7 @@ import * as DomFuture from 'ephox/sugar/api/dom/DomFuture';
 import Element from 'ephox/sugar/api/node/Element';
 import { UnitTest, assert } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('Browser Test: .DomFutureTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: .DomFutureTest', function (success, failure) {
 
   const testElement = Element.fromTag('button');
 

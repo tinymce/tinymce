@@ -6,9 +6,7 @@ import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   const writer = Writer(), schema = Schema();

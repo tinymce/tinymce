@@ -8,9 +8,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest(
   'browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest',
-  function () {
-    const success = arguments[arguments.length - 2];
-    const failure = arguments[arguments.length - 1];
+  function (success, failure) {
     const os = PlatformDetection.detect().os;
 
     Theme();
