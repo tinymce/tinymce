@@ -129,6 +129,7 @@ import { FocusInsideModes } from '../keying/KeyingModeTypes';
 import * as SlotContainerTypes from '../ui/types/SlotContainerTypes';
 import * as SliderTypes from '../ui/types/SliderTypes';
 import * as FormTypes from '../ui/types/FormTypes';
+import * as TabbarTypes from '../ui/types/TabbarTypes';
 import { CustomList } from './ui/CustomList';
 
 type AlloyComponent = ComponentApi.AlloyComponent;
@@ -272,6 +273,7 @@ export {
   SlotContainerTypes,
   SliderTypes,
   FormTypes,
+  TabbarTypes,
   AnchorSpec,
   NodeAnchorSpec,
   MakeshiftAnchorSpec,
