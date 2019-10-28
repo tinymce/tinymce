@@ -5,6 +5,7 @@ import { Body, Css, Element, Scroll } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
+import { window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failure) => {
   FullscreenPlugin();
@@ -149,6 +150,22 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
           UiFinder.sWaitForVisible('Check toolbar is still visible', Body.body(), '.tox-pop.tox-pop--top'),
           tinyUi.sClickOnToolbar('Press fullscreen button', fullscreenButtonSelector),
           Waiter.sTryUntil('Wait for fullscreen to turn off', UiFinder.sNotExists(Body.body(), fullscreenSelector)),
+        ]),
+
+        Log.stepsAsStep('TBA', 'Context toolbar should hide when scrolled out of view', [
+          Step.sync(() => {
+            Css.setAll(Element.fromDom(editor.getContainer()), {
+              'margin-bottom': '5000px'
+            });
+          }),
+          tinyApis.sSetContent('<p><a href="http://tiny.cloud">link</a></p>'),
+          tinyApis.sSetCursor([0, 0, 0], 1),
+          UiFinder.sWaitForVisible('Waiting for toolbar to appear below content', Body.body(), '.tox-pop.tox-pop--top'),
+          Step.wait(250), // TODO: Find out why Safari fails without this wait
+          Step.sync(() => {
+            window.scrollTo(0, 2000);
+          }),
+          UiFinder.sWaitForHidden('Waiting for toolbar to be hidden', Body.body(), '.tox-pop'),
         ]),
       ], onSuccess, onFailure);
     },

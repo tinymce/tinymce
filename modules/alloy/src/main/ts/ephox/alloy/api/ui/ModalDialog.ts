@@ -2,8 +2,10 @@ import { Cell, Id, Option } from '@ephox/katamari';
 import { Attr, Traverse } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
+import * as NativeEvents from '../../api/events/NativeEvents';
 import * as AriaDescribe from '../../aria/AriaDescribe';
 import AriaLabel from '../../aria/AriaLabel';
 import { CustomEvent } from '../../events/SimulatedEvent';
@@ -19,7 +21,6 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Attachment from '../system/Attachment';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (detail, components, spec, externals) => {
 
@@ -54,7 +55,13 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
         GuiFactory.premade(dialog)
       ]),
       behaviours: Behaviour.derive([
+        Focusing.config({ }),
         AddEventsBehaviour.config('dialog-blocker-events', [
+          // Ensure we use runOnSource otherwise this would cause an infinite loop, as `focusIn` would fire a `focusin` which would then get responded to and so forth
+          AlloyEvents.runOnSource(NativeEvents.focusin(), () => {
+            Keying.focusIn(dialog);
+          }),
+
           AlloyEvents.run(dialogIdleEvent, (blocker, se) => {
             if (Attr.has(dialog.element(), 'aria-busy')) {
               Attr.remove(dialog.element(), 'aria-busy');

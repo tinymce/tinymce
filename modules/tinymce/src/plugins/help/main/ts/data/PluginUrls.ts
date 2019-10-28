@@ -62,7 +62,9 @@ const urls = [
   { key: 'casechange', name: 'Case Change*'},
   { key: 'permanentpen', name: 'Permanent Pen*'},
   { key: 'pageembed', name: 'Page Embed*'},
-  { key: 'tinycomments', name: 'Tiny Comments*'}
+  { key: 'tinycomments', name: 'Tiny Comments*'},
+  { key: 'advtable', name: 'Advanced Tables*'},
+  { key: 'autocorrect', name: 'Autocorrect*'}
 ];
 
 export default {

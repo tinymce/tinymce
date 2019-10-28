@@ -202,9 +202,17 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
     ]);
   };
 
-  const sShouldFocusOnCloseButton = GeneralSteps.sequence([
-    sCreateConfirm('initial focus should be on Close', Fun.noop),
+  const sShouldFocusOnYesButton = GeneralSteps.sequence([
+    sCreateConfirm('initial focus should be on the yes button', Fun.noop),
     FocusTools.sTryOnSelector('When the confirm dialog loads, focus should be on the yes button', Element.fromDom(document), 'button:contains(Yes)'),
+    sTeardown
+  ]);
+
+  const sClickShouldFocusOnFirstButton = GeneralSteps.sequence([
+    sCreateConfirm('Click should focus the yes button', Fun.noop),
+    FocusTools.sTryOnSelector('When the alert dialog loads, focus should be on the yes button', Element.fromDom(document), 'button:contains(Yes)'),
+    Mouse.sTrueClickOn(Element.fromDom(document), '.tox-dialog'),
+    FocusTools.sTryOnSelector('Focus should be on the first button (no)', Element.fromDom(document), 'button:contains(No)'),
     sTeardown
   ]);
 
@@ -221,7 +229,8 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
     sHasBasicStructure('The confirm dialog loads with the basic structure'),
     sInsertTheCorrectMessage('should display this <strong>message</strong>'),
     sCallbackOnClose('The callback should fire when close is invoked'),
-    sShouldFocusOnCloseButton,
+    sShouldFocusOnYesButton,
+    sClickShouldFocusOnFirstButton,
     sCloseButtonShouldWork
   ], function () {
     helpers.destroy();
