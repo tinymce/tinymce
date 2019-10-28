@@ -105,7 +105,7 @@ const getCellIndex = (cells: Element<any>[], cell: Element<any>): Option<number>
   return Arr.findIndex(cells, (x) => Compare.eq(x, cell));
 };
 
-const getSelectedCells = (tableSelection) => {
+const getSelectedCells = (tableSelection: TableSelection) => {
   return Options.lift2(
     getCellIndex(tableSelection.cells(), tableSelection.rng().start()),
     getCellIndex(tableSelection.cells(), tableSelection.rng().end()),
