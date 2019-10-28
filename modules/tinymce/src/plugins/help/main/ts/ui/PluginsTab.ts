@@ -22,6 +22,8 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
       // TODO: Add other premium plugins such as permanent pen when they are included in the website
       'Accessibility Checker',
       'Advanced Code Editor',
+      'Advanced Tables',
+      // 'Autocorrect',
       'Case Change',
       'Checklist',
       'Tiny Comments',
