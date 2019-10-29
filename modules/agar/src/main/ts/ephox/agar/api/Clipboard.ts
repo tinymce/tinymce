@@ -35,21 +35,21 @@ const cPasteFiles = (files: File[]): Chain<Element<any>, Element<any>> =>
   });
 
 const sPasteDataTransfer = <T>(mutator: (dataTransfer: DataTransfer) => void, selector: string): Step<T, T> =>
-  Chain.asStep1({}, ChainSequence.sequence([
+  Chain.isolate({}, ChainSequence.sequence([
     Chain.injectThunked(Body.body),
     cFindIn(selector),
     cPasteDataTransfer(mutator)
   ]));
 
 const sPasteItems = <T>(items: Record<string, string>, selector: string): Step<T, T> =>
-  Chain.asStep1({}, ChainSequence.sequence([
+  Chain.isolate({}, ChainSequence.sequence([
     Chain.injectThunked(Body.body),
     cFindIn(selector),
     cPasteItems(items)
   ]));
 
 const sPasteFiles = <T>(files: File[], selector: string): Step<T, T> =>
-  Chain.asStep1({}, ChainSequence.sequence([
+  Chain.isolate({}, ChainSequence.sequence([
     Chain.injectThunked(Body.body),
     cFindIn(selector),
     cPasteFiles(files)

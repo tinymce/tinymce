@@ -75,14 +75,14 @@ if (! /phantom/i.test(navigator.userAgent)) {
         })
       ])),
 
-      Logger.t('Cut', Chain.asStep1(pastebin, ChainSequence.sequence([
+      Logger.t('Cut', Chain.isolate(pastebin, ChainSequence.sequence([
         cCut,
         Chain.op((dataTransfer: DataTransfer) => {
           Assert.eq('Should be extected cut data', 'cut-data', dataTransfer.getData('text/plain'));
         })
       ]))),
 
-      Logger.t('Copy', Chain.asStep1(pastebin, ChainSequence.sequence([
+      Logger.t('Copy', Chain.isolate(pastebin, ChainSequence.sequence([
         cCopy,
         Chain.op((dataTransfer: DataTransfer) => {
           Assert.eq('Should be extected copy data', 'copy-data', dataTransfer.getData('text/plain'));

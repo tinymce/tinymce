@@ -68,7 +68,7 @@ UnitTest.asynctest('Example for Tutorial', (success, failure) => {
 
   Pipeline.runStep({},
     // Inject as the first input: body
-    Chain.asStep1(body, ChainSequence.sequence([
+    Chain.isolate(body, ChainSequence.sequence([
       // Input: > container, output: visible element
       UiFinder.cWaitForVisible('Waiting for ".editor" to be visible', '.editor'),
       Mouse.cClickOn('button.show'),
