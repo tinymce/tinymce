@@ -16,7 +16,7 @@ UnitTest.asynctest('AllowBubblingTest', (success, failure) => {
     });
   };
 
-  GuiSetup.setup1((store, doc, body) => {
+  GuiSetup.guiSetup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
