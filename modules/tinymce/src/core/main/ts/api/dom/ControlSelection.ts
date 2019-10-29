@@ -16,6 +16,7 @@ import VK from '../util/VK';
 import Selection from './Selection';
 import Editor from '../Editor';
 import Events from '../Events';
+import Settings from '../Settings';
 
 interface ControlSelection {
   isResizable (elm: Element): boolean;
@@ -101,7 +102,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   };
 
   const isResizable = function (elm) {
-    let selector = editor.settings.object_resizing;
+    let selector = Settings.getObjectResizing(editor);
 
     if (selector === false || Env.iOS) {
       return false;
@@ -138,10 +139,10 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     width = width < 5 ? 5 : width;
     height = height < 5 ? 5 : height;
 
-    if (isImage(selectedElm) && editor.settings.resize_img_proportional !== false) {
+    if (isImage(selectedElm) && Settings.getResizeImgProportional(editor) !== false) {
       proportional = !VK.modifierPressed(e);
     } else {
-      proportional = VK.modifierPressed(e) || (isImage(selectedElm) && selectedHandle[2] * selectedHandle[3] !== 0);
+      proportional = VK.modifierPressed(e);
     }
 
     // Constrain proportions

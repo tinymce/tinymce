@@ -144,7 +144,8 @@ export default function () {
     //   }
     // ],
     toolbar_drawer: 'floating',
-    emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js'
+    emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js',
+    resize_img_proportional: true
   };
 
   tinymce.init(settings);
