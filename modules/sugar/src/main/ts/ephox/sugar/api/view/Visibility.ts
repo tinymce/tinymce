@@ -27,11 +27,11 @@ const displayToggler = function (element: Element<DomElement>, value: string) {
   return visibilityToggler(element, 'display', 'none', value);
 };
 
-const isHidden = function (dom: HTMLElement) {
+const isHidden = function (dom: HTMLElement): boolean {
   return dom.offsetWidth <= 0 && dom.offsetHeight <= 0;
 };
 
-const isVisible = function (element: Element<HTMLElement>) {
+const isVisible = function (element: Element<HTMLElement>): boolean {
   const dom = element.dom();
   return !isHidden(dom);
 };

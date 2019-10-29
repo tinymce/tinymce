@@ -4,9 +4,9 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Element, Node } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
+import { NodeListOf, HTMLElement } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.init.ContentStylePositionTest', function (success, failure) {
-
+UnitTest.asynctest('browser.tinymce.core.init.ContentStylePositionTest', (success, failure) => {
   Theme();
 
   const contentStyle = '.class {color: blue;}';
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.init.ContentStylePositionTest', functio
 
     Pipeline.async({}, [
       Step.sync(function () {
-        const headStuff = editor.getDoc().head.querySelectorAll('link, style');
+        const headStuff: NodeListOf<HTMLElement> = editor.getDoc().head.querySelectorAll('link, style');
         const linkIndex = Arr.findIndex(headStuff, function (elm) {
           return Node.name(Element.fromDom(elm)) === 'link';
         }).getOrDie('could not find link elemnt');
