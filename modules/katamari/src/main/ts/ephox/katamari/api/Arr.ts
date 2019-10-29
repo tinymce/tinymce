@@ -1,5 +1,6 @@
 import { Option } from './Option';
 import * as Type from './Type';
+import { Eq } from '@ephox/dispute';
 
 type ArrayMorphism<T, U> = (x: T, i: number) => U;
 type ArrayPredicate<T> = ArrayMorphism<T, boolean>;
@@ -213,9 +214,8 @@ export const forall = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): boolean =>
   return true;
 };
 
-export const equal = <T>(a1: ArrayLike<T>, a2: T[]) => {
-  return a1.length === a2.length && forall(a1, (x, i) => x === a2[i]);
-};
+export const equal = <T>(a1: ArrayLike<T>, a2: ArrayLike<T>, eq: Eq.Eq<T> = Eq.eqAny) =>
+  Eq.eqArray(eq).eq(a1, a2);
 
 export const reverse = <T>(xs: ArrayLike<T>): T[] => {
   const r: T[] = nativeSlice.call(xs, 0);
