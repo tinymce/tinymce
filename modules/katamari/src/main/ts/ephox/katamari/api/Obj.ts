@@ -1,4 +1,5 @@
 import { Option } from './Option';
+import * as Fun from './Fun';
 
 // There are many variations of Object iteration that are faster than the 'for-in' style:
 // http://jsperf.com/object-keys-iteration/107
@@ -33,24 +34,29 @@ export const tupleMap = function <R, T> (obj: T, f: (value: T[keyof T], key: str
   return <R> r;
 };
 
-export const bifilter = function <V> (obj: Record<string, V>, pred: (value: V, key: string) => boolean) {
+const objAcc = <K extends number | string | symbol, V> (r: Record<K, V>) => (x: V, i: K): void => {
+  r[i] = x;
+};
+
+const internalFilter = function <V> (obj: Record<string, V>, pred: (value: V, key: string) => boolean, onTrue: (value: V, key: string) => void, onFalse: (value: V, key: string) => void) {
+  const r: Record<string, V> = {};
+  each(obj, function (x, i) {
+    (pred(x, i) ? onTrue : onFalse)(x, i);
+  });
+  return r;
+};
+
+export const bifilter = function <V> (obj: Record<string, V>, pred: (value: V, key: string) => boolean): {t: Record<string, V>, f: Record<string, V>} {
   const t: Record<string, V> = {};
   const f: Record<string, V> = {};
-  each(obj, function (x, i) {
-    const branch = pred(x, i) ? t : f;
-    branch[i] = x;
-  });
+  internalFilter(obj, pred, objAcc(t), objAcc(f));
   return { t, f };
 };
 
 export const filter = function <V> (obj: Record<string, V>, pred: (value: V, key: string) => boolean): Record<string, V> {
-  const r: Record<string, V> = {};
-  each(obj, function (x, i) {
-    if (pred(x, i)) {
-      r[i] = x;
-    }
-  });
-  return r;
+  const t: Record<string, V> = {};
+  internalFilter(obj, pred, objAcc(t), Fun.noop);
+  return t;
 };
 
 export const mapToArray = function <T, R> (obj: T, f: (value: T[keyof T], key: string) => R) {
