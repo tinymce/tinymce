@@ -194,7 +194,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
       ])
     );
 
-    Pipeline.async1({}, StepSequence.sequenceSame([
+    Pipeline.runStep({}, StepSequence.sequenceSame([
       tinyApis.sFocus(),
       sTestWordGrabIfCollapsed(),
       sTestDoesNotWordGrabIfNotCollapsed(),

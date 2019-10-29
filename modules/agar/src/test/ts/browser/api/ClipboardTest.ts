@@ -29,7 +29,7 @@ if (! /phantom/i.test(navigator.userAgent)) {
       pasteState.set(Option.some(dataTransfer));
     });
 
-    Pipeline.async1({}, StepSequence.sequenceSame([
+    Pipeline.runStep({}, StepSequence.sequenceSame([
       Logger.t('Paste text and html items', StepSequence.sequenceSame([
         sPasteItems({
           'text/plain': 'Hello world!',

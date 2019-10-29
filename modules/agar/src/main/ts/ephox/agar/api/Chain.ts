@@ -120,7 +120,7 @@ const asStep = <T, U>(initial: U, chains: Chain<any, any>[]): Step<T, T> =>
 
 const asStep1 = <T, U, V>(initial: U, chain: Chain<U, V>): Step<T, T> =>
   Step.raw<T, T>((initValue, next, die, logs) => {
-    Pipeline.async1(
+    Pipeline.runStep(
       initial,
       extract(chain),
       // Ignore all the values and use the original

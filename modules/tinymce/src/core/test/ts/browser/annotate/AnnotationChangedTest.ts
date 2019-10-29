@@ -230,7 +230,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
       ),
     ]);
 
-    Pipeline.async1({}, sTestChanges<{}>(), onSuccess, onFailure);
+    Pipeline.runStep({}, sTestChanges<{}>(), onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
