@@ -7,30 +7,28 @@ import { createFileFromString } from 'ephox/agar/api/Files';
 import { Chain, Logger, Step, ChainSequence, StepSequence } from 'ephox/agar/api/Main';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 
-UnitTest.asynctest('ClipboardTest', (success, failure) => {
-  const pastebin = Element.fromHtml('<div class="pastebin"></div>');
-  const pasteState = Cell(Option.none<DataTransfer>());
+if (! /phantom/i.test(navigator.userAgent)) {
+  UnitTest.asynctest('ClipboardTest', (success, failure) => {
+    const pastebin = Element.fromHtml('<div class="pastebin"></div>');
+    const pasteState = Cell(Option.none<DataTransfer>());
 
-  Insert.append(Body.body(), pastebin);
+    Insert.append(Body.body(), pastebin);
 
-  const cutUnbinder = DomEvent.bind(pastebin, 'cut', (evt) => {
-    const dataTransfer = evt.raw().clipboardData;
-    dataTransfer.setData('text/plain', 'cut-data');
-  });
+    const cutUnbinder = DomEvent.bind(pastebin, 'cut', (evt) => {
+      const dataTransfer = evt.raw().clipboardData;
+      dataTransfer.setData('text/plain', 'cut-data');
+    });
 
-  const copyUnbinder = DomEvent.bind(pastebin, 'copy', (evt) => {
-    const dataTransfer = evt.raw().clipboardData;
-    dataTransfer.setData('text/plain', 'copy-data');
-  });
+    const copyUnbinder = DomEvent.bind(pastebin, 'copy', (evt) => {
+      const dataTransfer = evt.raw().clipboardData;
+      dataTransfer.setData('text/plain', 'copy-data');
+    });
 
-  const pasteUnbinder = DomEvent.bind(pastebin, 'paste', (evt) => {
-    const dataTransfer = evt.raw().clipboardData;
-    pasteState.set(Option.some(dataTransfer));
-  });
+    const pasteUnbinder = DomEvent.bind(pastebin, 'paste', (evt) => {
+      const dataTransfer = evt.raw().clipboardData;
+      pasteState.set(Option.some(dataTransfer));
+    });
 
-  if (/phantom/i.test(navigator.userAgent)) {
-    success();
-  } else {
     Pipeline.async1({}, StepSequence.sequenceSame([
       Logger.t('Paste text and html items', StepSequence.sequenceSame([
         sPasteItems({
@@ -97,5 +95,5 @@ UnitTest.asynctest('ClipboardTest', (success, failure) => {
       Remove.remove(pastebin);
       success();
     }, failure);
-  }
-});
+  });
+}
