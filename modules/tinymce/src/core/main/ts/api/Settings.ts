@@ -178,6 +178,14 @@ const getInlineBoundarySelector = (editor: Editor): string => {
   return editor.getParam('inline_boundaries_selector', 'a[href],code,.mce-annotation', 'string');
 };
 
+const getObjectResizing = (editor: Editor) => {
+  return editor.getParam('object_resizing');
+};
+
+const getResizeImgProportional = (editor: Editor): boolean => {
+  return editor.getParam('resize_img_proportional', true, 'boolean');
+};
+
 export default {
   getIframeAttrs,
   getDocType,
@@ -212,5 +220,7 @@ export default {
   getIndentation,
   getContentCss,
   getDirectionality,
-  getInlineBoundarySelector
+  getInlineBoundarySelector,
+  getObjectResizing,
+  getResizeImgProportional
 };
