@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Attachment, Docking } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
-import { Css, Element, Height, Location } from '@ephox/sugar';
+import { AlloyComponent, Attachment, Docking, Boxes, SplitFloatingToolbar } from '@ephox/alloy';
+import { Option, Cell } from '@ephox/katamari';
+import { Css, Element, Height } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { getToolbarDrawer, getUiContainer, isStickyToolbar, ToolbarDrawer, useFixedContainer } from '../api/Settings';
+import { getToolbarDrawer, getUiContainer, isStickyToolbar, ToolbarDrawer, useFixedContainer, isToolbarLocationTop } from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import { setupReadonlyModeSwitch } from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
@@ -18,6 +18,7 @@ import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
+import Delay from 'tinymce/core/api/util/Delay';
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   let floatContainer;
@@ -25,27 +26,33 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const useFixedToolbarContainer = useFixedContainer(editor);
   const isSticky = isStickyToolbar(editor);
   const targetElm = Element.fromDom(args.targetNode);
+  const prevTargetHeight = Cell(Height.get(targetElm));
 
   const splitSetting = getToolbarDrawer(editor);
-  const split = splitSetting === ToolbarDrawer.sliding || splitSetting === ToolbarDrawer.floating;
+  const isSplitFloatingToolbar = splitSetting === ToolbarDrawer.floating;
+  const isSplitToolbar = splitSetting === ToolbarDrawer.sliding || isSplitFloatingToolbar;
+  const isToolbarTop = isToolbarLocationTop(editor);
 
   loadInlineSkin(editor);
 
   const updateChromePosition = (toolbar: Option<AlloyComponent>) => {
     // Calculate the toolbar offset when using a split toolbar drawer
-    const offset = split ? toolbar.fold(() => 0, (tbar) => {
+    const offset = isSplitToolbar ? toolbar.fold(() => 0, (tbar) => {
       // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
       return tbar.components().length > 1 ? Height.get(tbar.components()[1].element()) : 0;
     }) : 0;
 
     // The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
     // so we need to round this to account for that.
-    const location = Location.absolute(targetElm);
-    const top = location.top() - Height.get(floatContainer.element()) + offset;
+    const targetBounds = Boxes.box(targetElm);
+    const top = isToolbarTop ?
+      targetBounds.y() - Height.get(floatContainer.element()) + offset :
+      targetBounds.bottom();
+
     Css.setAll(uiComponents.outerContainer.element(), {
       position: 'absolute',
       top: Math.round(top) + 'px',
-      left: Math.round(location.left()) + 'px'
+      left: Math.round(targetBounds.x()) + 'px'
     });
   };
 
@@ -57,7 +64,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     // 4. Inline + fixed_toolbar_container + more drawer: does SplitToolbar
 
     // Refresh split toolbar
-    if (split) {
+    if (isSplitToolbar) {
       OuterContainer.refreshToolbar(uiComponents.outerContainer);
     }
 
@@ -70,6 +77,12 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     // Docking
     if (isSticky) {
       resetDocking ? Docking.reset(floatContainer) : Docking.refresh(floatContainer);
+    }
+
+    if (isSplitFloatingToolbar) {
+      OuterContainer.getToolbar(uiComponents.outerContainer).each((toolbar) => {
+        SplitFloatingToolbar.reposition(toolbar);
+      });
     }
   };
 
@@ -113,10 +126,21 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     editor.on('activate', show);
     editor.on('deactivate', hide);
 
-    editor.on('NodeChange SkinLoaded ResizeWindow', () => {
+    editor.on('SkinLoaded ResizeWindow', () => {
       if (!editor.hidden) {
         updateChromeUi(true);
       }
+    });
+
+    editor.on('NodeChange keydown', () => {
+      Delay.requestAnimationFrame(() => {
+        const targetHeight = Height.get(targetElm);
+
+        if (!editor.hidden && targetHeight !== prevTargetHeight.get()) {
+          updateChromeUi(true);
+          prevTargetHeight.set(targetHeight);
+        }
+      });
     });
 
     editor.nodeChanged();

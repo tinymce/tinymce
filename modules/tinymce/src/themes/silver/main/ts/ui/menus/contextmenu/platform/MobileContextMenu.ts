@@ -6,13 +6,13 @@ import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { UiFactoryBackstage } from '../../../../backstage/Backstage';
+import { getContextToolbarBounds } from '../../../context/ContextToolbarBounds';
 import ItemResponse from '../../item/ItemResponse';
 import * as MenuParts from '../../menu/MenuParts';
 import * as NestedMenus from '../../menu/NestedMenus';
 import { getNodeAnchor, getSelectionAnchor } from '../Coords';
 import { SingleMenuItemApi } from '../../menu/SingleMenuTypes';
 import { hideContextToolbarEvent } from '../../../context/ContextEditorEvents';
-import { getContextToolbarBounds } from '../../../context/ContextToolbarBounds';
 import { Option } from '@ephox/katamari';
 
 type MenuItems = string | Array<string | SingleMenuItemApi>;

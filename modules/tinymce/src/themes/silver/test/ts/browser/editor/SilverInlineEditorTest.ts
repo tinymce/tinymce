@@ -171,12 +171,12 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
                           ]
                         })
                       ]
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-anchorbar') ]
                     })
                   ]
                 }),
+                s.element('div', {
+                  classes: [ arr.has('tox-anchorbar') ]
+                })
               ]
             }),
             s.element('div', {

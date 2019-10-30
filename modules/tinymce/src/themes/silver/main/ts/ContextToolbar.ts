@@ -16,7 +16,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { hideContextToolbarEvent, showContextToolbarEvent } from './ui/context/ContextEditorEvents';
 import { ContextForm } from './ui/context/ContextForm';
-import * as ContextToolbarBounds from './ui/context/ContextToolbarBounds';
+import { getContextToolbarBounds } from './ui/context/ContextToolbarBounds';
 import ToolbarLookup from './ui/context/ContextToolbarLookup';
 import ToolbarScopes, { ScopedToolbars } from './ui/context/ContextToolbarScopes';
 import { forwardSlideEvent, renderContextToolbar } from './ui/context/ContextUi';
@@ -87,7 +87,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     })
   );
 
-  const getBounds = () => ContextToolbarBounds.getContextToolbarBounds(editor);
+  const getBounds = () => getContextToolbarBounds(editor);
 
   const isRangeOverlapping = (aTop: number, aBottom: number, bTop: number, bBottom: number) => {
     return Math.max(aTop, bTop) <= Math.min(aBottom, bBottom);

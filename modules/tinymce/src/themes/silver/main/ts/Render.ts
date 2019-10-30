@@ -13,7 +13,7 @@ import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, getMultipleToolbarsSetting, getToolbarDrawer, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, ToolbarDrawer, useFixedContainer } from './api/Settings';
+import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, getMultipleToolbarsSetting, getToolbarDrawer, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, ToolbarDrawer, isToolbarLocationTop, useFixedContainer } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -92,6 +92,7 @@ const setup = (editor: Editor): RenderInfo => {
   const isTouch = platform.deviceType.isTouch();
   const touchPlatformClass = 'tox-platform-touch';
   const deviceClasses = isTouch ? [touchPlatformClass] : [];
+  const isToolbarTop = isToolbarLocationTop(editor);
 
   const dirAttributes = I18n.isRtl() ? {
     attributes: {
@@ -101,6 +102,12 @@ const setup = (editor: Editor): RenderInfo => {
 
   const lazyHeader = () => lazyOuterContainer.bind(OuterContainer.getHeader);
 
+  const isHeaderDocked = () => header.isDocked(lazyHeader);
+
+  const isHeaderDockedBottom = () => {
+    return isHeaderDocked() && !isToolbarTop;
+  };
+
   const sink = GuiFactory.build({
     dom: {
       tag: 'div',
@@ -109,7 +116,7 @@ const setup = (editor: Editor): RenderInfo => {
     },
     behaviours: Behaviour.derive([
       Positioning.config({
-        useFixed: () => header.isDocked(lazyHeader)
+        useFixed: () => isHeaderDocked()
       })
     ])
   });
@@ -139,7 +146,7 @@ const setup = (editor: Editor): RenderInfo => {
     return OuterContainer.getThrobber(container);
   }).getOrDie('Could not find throbber element');
 
-  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar, lazyMoreButton);
+  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar, lazyMoreButton, isHeaderDockedBottom);
 
   const partMenubar: AlloySpec = OuterContainer.parts().menubar({
     dom: {
@@ -244,8 +251,6 @@ const setup = (editor: Editor): RenderInfo => {
     components: Arr.flatten<AlloySpec>([
       hasMenubar ? [ partMenubar ] : [ ],
       getPartToolbar(),
-      // fixed_toolbar_container anchors to the editable area, else add an anchor bar
-      useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ]
     ]),
     sticky: isStickyToolbar(editor),
     editor,
@@ -254,9 +259,12 @@ const setup = (editor: Editor): RenderInfo => {
 
   // We need the statusbar to be separate to everything else so resizing works properly
   const editorComponents = Arr.flatten<AlloySpec>([
-    [ partHeader ],
+    isToolbarTop ? [ partHeader ] : [ ],
+    // fixed_toolbar_container anchors to the editable area, else add an anchor bar
+    useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ],
     // Inline mode does not have a socket/sidebar
-    isInline ? [ ] : [ socketSidebarContainer ]
+    isInline ? [ ] : [ socketSidebarContainer ],
+    isToolbarTop ? [ ] : [ partHeader ]
   ]);
 
   const editorContainer = {
@@ -287,7 +295,11 @@ const setup = (editor: Editor): RenderInfo => {
     OuterContainer.sketch({
       dom: {
         tag: 'div',
-        classes: ['tox', 'tox-tinymce'].concat(isInline ? ['tox-tinymce-inline'] : []).concat(deviceClasses).concat(platformClasses),
+        classes: ['tox', 'tox-tinymce']
+          .concat(isInline ? ['tox-tinymce-inline'] : [])
+          .concat(isToolbarTop ? [] : ['tox-tinymce--toolbar-bottom'])
+          .concat(deviceClasses)
+          .concat(platformClasses),
         styles: {
           // This is overridden by the skin, it helps avoid FOUC
           visibility: 'hidden',

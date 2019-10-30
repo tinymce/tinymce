@@ -1,12 +1,13 @@
-import { Assertions, FocusTools, GeneralSteps, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { Assertions, FocusTools, GeneralSteps, Log, Pipeline, Step, UiFinder, Waiter, Chain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
-import { Arr } from '@ephox/katamari';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Attr, Body, Css, Element, SelectorFind } from '@ephox/sugar';
+import { document, window, HTMLElement } from '@ephox/dom-globals';
+import { Arr, Strings } from '@ephox/katamari';
+import { TinyApis, Editor as McEditor } from '@ephox/mcagar';
+import { Attr, Body, Css, Element, SelectorFind, Insert, Remove } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
+import { Boxes } from '@ephox/alloy';
 
 UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => {
   Theme();
@@ -15,33 +16,40 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     Assertions.assertEq(`Container should be statically positioned`, 'static', Css.get(container, 'position'));
   }));
 
-  const sAssertAbsolutePos = (container: Element) => Waiter.sTryUntil('Wait for toolbar to be absolute', Step.sync(() => {
+  const sAssertAbsolutePos = (container: Element, contentArea: Element, position: 'above' | 'below') => Waiter.sTryUntil('Wait for toolbar to be absolute', Step.sync(() => {
+    const left = Css.get(container, 'left');
+    const top = parseInt(Strings.removeTrailing(Css.get(container, 'top'), 'px'), 10);
+
+    const containerAreaBounds = Boxes.box(contentArea);
+    const assertTop = position === 'above' ?
+      containerAreaBounds.y() - container.dom().clientHeight :
+      containerAreaBounds.bottom();
+
     Assertions.assertEq(`Container should be absolutely positioned`, 'absolute', Css.get(container, 'position'));
-    const top = Css.get(container, 'top');
-    const left = Css.get(container, 'left');
-    Assertions.assertEq(`Container top position (${top}) should be an integer`, true, top.indexOf('.') === -1);
     Assertions.assertEq(`Container left position (${left}) should be 0px`, '0px', left);
+    Assertions.assertEq(`Container should be positioned ${position} contentarea, ${top} should be ~${assertTop}px`, true, Math.abs(top - assertTop) < 3);
   }));
 
-  const sAssertDockedPos = (container: Element) => Waiter.sTryUntil('Wait for toolbar to be docked', Step.sync(() => {
-    Assertions.assertEq(`Container should be docked (fixed position)`, 'fixed', Css.get(container, 'position'));
-    const top = Css.get(container, 'top');
-    const left = Css.get(container, 'left');
-    const prevTop = Attr.get(container, 'data-dock-top');
-    Assertions.assertEq(`Container top position (${top}) should be 0px`, '0px', top);
-    Assertions.assertEq(`Container left position (${left}) should be 0px`, '0px', left);
-    Assertions.assertEq(`Container previous top position (${prevTop}) should be an integer`, true, prevTop.indexOf('.') === -1);
+  const sAssertDockedPos = (header: Element, position: 'top' | 'bottom') => Waiter.sTryUntil('Wait for toolbar to be docked', Step.sync(() => {
+    const left = Css.get(header, 'left');
+    const top = parseInt(Strings.removeTrailing(Css.get(header, 'top'), 'px'), 10);
+
+    const prevTop = Attr.get(header, 'data-dock-top');
+    const assertTop = position === 'top' ? 0 : window.innerHeight - header.dom().clientHeight;
+
+    Assertions.assertEq(`Header container should be docked (fixed position)`, 'fixed', Css.get(header, 'position'));
+    Assertions.assertEq(`Header container left position (${left}) should be 0px`, '0px', left);
+    Assertions.assertEq(`Header container shold be docked to ${position}, ${top} should be ~${assertTop}px`, true, Math.abs(top - assertTop) < 3);
+    Assertions.assertEq(`Header container previous top position (${prevTop}) should be an integer`, true, prevTop.indexOf('.') === -1);
   }));
 
-  const sScrollToElement = (contentAreaContainer: Element, selector: string) => GeneralSteps.sequence([
-    Step.sync(() => {
-      const elm = UiFinder.findIn(contentAreaContainer, selector).getOrDie();
-      elm.dom().scrollIntoView(false);
-    })
-  ]);
+  const sScrollToElement = (contentAreaContainer: Element, selector: string, alignWindowBottom = false) => Step.sync(() => {
+    const elm = UiFinder.findIn(contentAreaContainer, selector).getOrDie();
+    elm.dom().scrollIntoView(alignWindowBottom);
+  });
 
-  const sScrollToElementAndActivate = (tinyApis: TinyApis, contentAreaContainer: Element, selector: string) => Step.label('Activate editor', GeneralSteps.sequence([
-    sScrollToElement(contentAreaContainer, selector),
+  const sScrollToElementAndActivate = (tinyApis: TinyApis, element: Element, selector: string, alignWindowBottom = false) => Step.label('Activate editor', GeneralSteps.sequence([
+    sScrollToElement(element, selector, alignWindowBottom),
     tinyApis.sSelect(selector, []),
     tinyApis.sFocus(),
     tinyApis.sNodeChanged(),
@@ -49,67 +57,151 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
   ]));
 
   const sDeactivateEditor = (editor: Editor) => Step.label('Deactivate editor', GeneralSteps.sequence([
-    FocusTools.sSetFocus('Focus outside editor', Element.fromDom(document.documentElement), 'div.prepend-content'),
+    FocusTools.sSetFocus('Focus outside editor', Element.fromDom(document.documentElement), 'div.scroll-div'),
     Step.sync(() => {
       editor.fire('focusout');
     }),
     UiFinder.sWaitForHidden('Wait for editor to hide', Body.body(), '.tox.tox-tinymce-inline')
   ]));
 
-  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
-      const uiContainer = Element.fromDom(editor.getContainer());
-      const uiHeader = SelectorFind.descendant(Element.fromDom(editor.getContainer()), '.tox-editor-header').getOr(uiContainer);
-      const contentAreaContainer = Element.fromDom(editor.getContentAreaContainer());
+  const setupPageScroll = (contentAreaContainer: Element) => {
+    const createScrollDiv = () => {
+      return Element.fromHtml<HTMLElement>('<div tabindex="0" class="scroll-div" style="height: 500px;"></div>');
+    };
 
+    const divBefore = createScrollDiv();
+    const divAfter = createScrollDiv();
+
+    Insert.after(contentAreaContainer, divBefore);
+    Insert.before(contentAreaContainer, divAfter);
+
+    return () => {
+      Remove.remove(divBefore);
+      Remove.remove(divAfter);
+    };
+  };
+
+  interface Data {
+    editor: Editor;
+    tinyApis: TinyApis;
+    header: Element;
+    container: Element;
+    contentAreaContainer: Element;
+  }
+
+  const cTest = (getSteps: (data: Data) => Step<any, any>[]) => {
+    return Chain.runStepsOnValue((editor: Editor) => {
       const tinyApis = TinyApis(editor);
-      const content = '<p>START CONTENT</p>' + Arr.range(98, (i) => i === 49 ? '<p>STOP AND CLICK HERE</p>' : '<p>Some content...</p>').join('\n') + '<p>END CONTENT</p>';
-      const prependContent = document.createElement('div');
-      prependContent.innerHTML = '<div class="prepend-content" tabindex="0">' + Arr.range(20, () => '<p>Prepended content</p>').join('\n') + '</div>';
+      const container = Element.fromDom(editor.getContainer());
+      const contentAreaContainer = Element.fromDom(editor.getContentAreaContainer());
+      const header = SelectorFind.descendant(Element.fromDom(editor.getContainer()), '.tox-editor-header').getOr(container);
+      editor.setContent('<p>START CONTENT</p>' + Arr.range(98, (i) => i === 49 ? '<p>STOP AND CLICK HERE</p>' : '<p>Some content...</p>').join('\n') + '<p>END CONTENT</p>');
 
-      Pipeline.async({ }, [
+      let teardownScroll: () => void;
+
+      return [
         Step.sync(() => {
-          contentAreaContainer.dom().parentNode.insertBefore(prependContent, contentAreaContainer.dom());
+          teardownScroll = setupPageScroll(contentAreaContainer);
         }),
-        tinyApis.sSetContent(content),
-        Log.stepsAsStep('TINY-3621', 'Select item at the top of the content (absolute position)', [
+        ...getSteps({
+          editor,
+          tinyApis,
+          header,
+          container,
+          contentAreaContainer,
+        }),
+        Step.sync(() => {
+          teardownScroll();
+        }),
+      ];
+    });
+  };
+
+  const settings = {
+    theme: 'silver',
+    inline: true,
+    menubar: false,
+    base_url: '/project/tinymce/js/tinymce',
+  };
+
+  Pipeline.async({}, [
+    Log.chainsAsStep('', 'Test inline toolbar position with toolbar_location: "top"', [
+      McEditor.cFromSettings(settings),
+      cTest(({
+        editor,
+        tinyApis,
+        header,
+        container,
+        contentAreaContainer,
+      }) => [
+        Log.stepsAsStep('TINY-3621', 'Select item at the start of the content (absolute position)', [
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
-          sAssertAbsolutePos(uiContainer),
-          sAssertStaticPos(uiHeader),
+          sAssertAbsolutePos(container, contentAreaContainer, 'above'),
+          sAssertStaticPos(header),
           sDeactivateEditor(editor)
         ]),
         Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position)', [
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
-          sAssertDockedPos(uiHeader),
+          sAssertDockedPos(header, 'top'),
           sDeactivateEditor(editor)
         ]),
         Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content (docked position)', [
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child'),
-          sAssertDockedPos(uiHeader),
+          sAssertDockedPos(header, 'top'),
           sDeactivateEditor(editor)
         ]),
         Log.stepsAsStep('TINY-3621', 'Select item at the top of the content and scroll to middle and back', [
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
-          sAssertStaticPos(uiHeader),
+          sAssertStaticPos(header),
           sScrollToElement(contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
-          sAssertDockedPos(uiHeader),
+          sAssertDockedPos(header, 'top'),
           sScrollToElement(contentAreaContainer, ':first-child'),
-          sAssertStaticPos(uiHeader),
+          sAssertStaticPos(header),
           sDeactivateEditor(editor)
         ]),
-        Step.sync(() => {
-          contentAreaContainer.dom().parentNode.removeChild(prependContent);
-        })
-      ], onSuccess, onFailure);
-    },
-    {
-      theme: 'silver',
-      inline: true,
-      menubar: false,
-      base_url: '/project/tinymce/js/tinymce',
-    },
-    () => {
-      success();
-    },
-    failure
-  );
+      ]),
+      McEditor.cRemove
+    ]),
+
+    Log.chainsAsStep('', 'Test inline toolbar position with toolbar_location: "bottom"', [
+      McEditor.cFromSettings({
+        ...settings,
+        toolbar_location: 'bottom'
+      }),
+      cTest(({
+        editor,
+        tinyApis,
+        header,
+        container,
+        contentAreaContainer,
+      }) => [
+        Log.stepsAsStep('TINY-3621', 'Select item at the start of the content (docked position)', [
+          sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
+          sAssertDockedPos(header, 'bottom'),
+          sDeactivateEditor(editor)
+        ]),
+        Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position)', [
+          sScrollToElementAndActivate(tinyApis, contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
+          sAssertDockedPos(header, 'bottom'),
+          sDeactivateEditor(editor)
+        ]),
+        Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content (absolute position)', [
+          sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child', true),
+          sAssertAbsolutePos(container, contentAreaContainer, 'below'),
+          sAssertStaticPos(header),
+          sDeactivateEditor(editor)
+        ]),
+        Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content and scroll to middle and back', [
+          sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child', true),
+          sAssertStaticPos(header),
+          sScrollToElement(contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
+          sAssertDockedPos(header, 'bottom'),
+          sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child', true),
+          sAssertStaticPos(header),
+          sDeactivateEditor(editor)
+        ])
+      ]),
+      McEditor.cRemove
+    ]),
+  ], success, failure);
 });

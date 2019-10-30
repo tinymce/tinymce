@@ -2,7 +2,7 @@ import { Assertions, Chain, Guard, NamedChain, Mouse, Pipeline, UiFinder } from 
 import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 import { document, HTMLElement } from '@ephox/dom-globals';
-import { TinyLoader } from '@ephox/mcagar';
+import { Editor as McEditor } from '@ephox/mcagar';
 import { Body, Css, Element, Height, Scroll, Traverse, Width } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
@@ -29,8 +29,9 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
     initialData: {}
   };
 
-  const cAssertPos = (pos: string, x: number, y: number, diff: number = 5) => Chain.control(
+  const cAssertPos = (pos: string, x: number, y: number) => Chain.control(
     Chain.op((dialog: Element<HTMLElement>) => {
+      const diff = 5;
       const position = Css.get(dialog, 'position');
       const top = parseInt(Css.get(dialog, 'top').replace('px', ''), 10);
       // Note: We can't use Css.get(dialog, 'left') here as IE returns 'auto' for the computed value,
@@ -48,96 +49,142 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
     Guard.addLogging(`Scrolling to (${x}, ${y})`)
   );
 
-  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
-    const cTestOpen = Chain.fromChains([
-      DialogUtils.cOpen(editor, dialogSpec, { inline: 'toolbar'}),
-      Chain.mapper(() => {
-        const dialog = UiFinder.findIn(Body.body(), '.tox-dialog-inline').getOrDie();
-        return Traverse.parent(dialog).getOr(dialog);
-      })
-    ]);
+  const createTestOpenChain = (editor: Editor) => Chain.fromChains([
+    DialogUtils.cOpen(editor, dialogSpec, { inline: 'toolbar'}),
+    Chain.mapper(() => {
+      const dialog = UiFinder.findIn(Body.body(), '.tox-dialog-inline').getOrDie();
+      return Traverse.parent(dialog).getOr(dialog);
+    })
+  ]);
 
-    Pipeline.async({ }, [
-      Chain.asStep(Body.body(), [
-        Chain.label('Test position when resizing', NamedChain.asChain([
-          NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
-          NamedChain.writeValue('container', Element.fromDom(editor.getContainer())),
-          NamedChain.direct('body', UiFinder.cFindIn('.tox-statusbar__resize-handle'), 'resizeHandle'),
-          NamedChain.direct('body', cTestOpen, 'dialog'),
-          NamedChain.direct('dialog', cAssertPos('absolute', 105, -310), '_'),
+  const sToolbarTopTestStep = Chain.asStep({}, [
+    McEditor.cFromSettings({
+      theme: 'silver',
+      base_url: '/project/tinymce/js/tinymce',
+      resize: 'both',
+      height: 400,
+      width: 600,
+      toolbar_sticky: false
+    }),
+    Chain.async((editor: Editor, onSuccess, onFailure) => {
+      const cTestOpen = createTestOpenChain(editor);
 
-          // Shrink the editor to 300px
-          NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
-          NamedChain.direct('body', cResizeToPos(600, 400, 500, 300), '_'),
-          NamedChain.direct('dialog', cAssertPos('absolute', 5, -171), '_'), // Toolbar wraps so y diff is 100 + toolbar height
+      Pipeline.async({ }, [
+        Chain.asStep(Body.body(), [
+          Chain.label('Test position when resizing', NamedChain.asChain([
+            NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
+            NamedChain.writeValue('container', Element.fromDom(editor.getContainer())),
+            NamedChain.direct('body', UiFinder.cFindIn('.tox-statusbar__resize-handle'), 'resizeHandle'),
+            NamedChain.direct('body', cTestOpen, 'dialog'),
+            NamedChain.direct('dialog', cAssertPos('absolute', 105, -310), '_'),
 
-          // Enlarge the editor to 500px
-          NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
-          NamedChain.direct('body', cResizeToPos(500, 300, 700, 500), '_'),
-          NamedChain.direct('dialog', cAssertPos('absolute', 205, -410), '_'),
+            // Shrink the editor to 300px
+            NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
+            NamedChain.direct('body', cResizeToPos(600, 400, 500, 300), '_'),
+            NamedChain.direct('dialog', cAssertPos('absolute', 5, -171), '_'), // Toolbar wraps so y diff is 100 + toolbar height
 
-          // Resize back to the original size
-          NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
-          NamedChain.direct('body', cResizeToPos(700, 500, 600, 400), '_'),
-          NamedChain.direct('dialog', cAssertPos('absolute', 105, -310), '_'),
+            // Enlarge the editor to 500px
+            NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
+            NamedChain.direct('body', cResizeToPos(500, 300, 700, 500), '_'),
+            NamedChain.direct('dialog', cAssertPos('absolute', 205, -410), '_'),
 
-          NamedChain.direct('body', DialogUtils.cClose, '_'),
-          NamedChain.outputInput
-        ])),
-        Chain.label('Test position when scrolling', NamedChain.asChain([
-          NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
-          NamedChain.writeValue('container', Element.fromDom(editor.getContainer())),
-          NamedChain.direct('body', cTestOpen, 'dialog'),
+            // Resize back to the original size
+            NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
+            NamedChain.direct('body', cResizeToPos(700, 500, 600, 400), '_'),
+            NamedChain.direct('dialog', cAssertPos('absolute', 105, -310), '_'),
 
-          // Enlarge the editor to 2000px
-          NamedChain.direct('container', Chain.op((container) => {
-            Height.set(container, 2000);
-            editor.fire('ResizeEditor');
-          }), '_'),
-          NamedChain.direct('dialog', cAssertPos('absolute', 105, -1910), '_'),
+            NamedChain.direct('body', DialogUtils.cClose, '_'),
+            NamedChain.outputInput
+          ])),
+          Chain.label('Test position when scrolling', NamedChain.asChain([
+            NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
+            NamedChain.writeValue('container', Element.fromDom(editor.getContainer())),
+            NamedChain.direct('body', cTestOpen, 'dialog'),
 
-          // Scroll to 1500px and assert docked
-          NamedChain.direct('body', cScrollTo(0, 1500), '_'),
-          NamedChain.direct('dialog', cAssertPos('fixed', 105, 0), '_'),
+            // Enlarge the editor to 2000px
+            NamedChain.direct('container', Chain.op((container) => {
+              Height.set(container, 2000);
+              editor.fire('ResizeEditor');
+            }), '_'),
+            NamedChain.direct('dialog', cAssertPos('absolute', 105, -1910), '_'),
 
-          // Scroll back to top and assert not docked
-          NamedChain.direct('body', cScrollTo(0, 0), '_'),
-          NamedChain.direct('dialog', cAssertPos('absolute', 105, -1910), '_'),
+            // Scroll to 1500px and assert docked
+            NamedChain.direct('body', cScrollTo(0, 1500), '_'),
+            NamedChain.direct('dialog', cAssertPos('fixed', 105, 0), '_'),
 
-          NamedChain.direct('body', DialogUtils.cClose, '_'),
-          NamedChain.outputInput
-        ])),
-        Chain.label('Test initial position when initially scrolled', NamedChain.asChain([
-          NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
-          NamedChain.writeValue('container', Element.fromDom(editor.getContainer())),
+            // Scroll back to top and assert not docked
+            NamedChain.direct('body', cScrollTo(0, 0), '_'),
+            NamedChain.direct('dialog', cAssertPos('absolute', 105, -1910), '_'),
 
-          // Enlarge the editor to 2000px
-          NamedChain.direct('container', Chain.op((container) => {
-            Height.set(container, 2000);
-            editor.fire('ResizeEditor');
-          }), '_'),
+            NamedChain.direct('body', DialogUtils.cClose, '_'),
+            NamedChain.outputInput
+          ])),
+          Chain.label('Test initial position when initially scrolled', NamedChain.asChain([
+            NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
+            NamedChain.writeValue('container', Element.fromDom(editor.getContainer())),
 
-          // Scroll to 1500px, open the dialog and assert docked
-          NamedChain.direct('body', cScrollTo(0, 1500), '_'),
-          NamedChain.direct('body', cTestOpen, 'dialog'),
-          NamedChain.direct('dialog', cAssertPos('fixed', 105, 0), '_'),
+            // Enlarge the editor to 2000px
+            NamedChain.direct('container', Chain.op((container) => {
+              Height.set(container, 2000);
+              editor.fire('ResizeEditor');
+            }), '_'),
 
-          // Scroll back to top and assert not docked
-          NamedChain.direct('body', cScrollTo(0, 0), '_'),
-          NamedChain.direct('dialog', cAssertPos('absolute', 105, -1910), '_'),
+            // Scroll to 1500px, open the dialog and assert docked
+            NamedChain.direct('body', cScrollTo(0, 1500), '_'),
+            NamedChain.direct('body', cTestOpen, 'dialog'),
+            NamedChain.direct('dialog', cAssertPos('fixed', 105, 0), '_'),
 
-          NamedChain.direct('body', DialogUtils.cClose, '_'),
-          NamedChain.outputInput
-        ]))
-      ])
-    ], onSuccess, onFailure);
-  },
-  {
-    theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
-    resize: 'both',
-    height: 400,
-    width: 600,
-    toolbar_sticky: false
-  }, success, failure);
+            // Scroll back to top and assert not docked
+            NamedChain.direct('body', cScrollTo(0, 0), '_'),
+            NamedChain.direct('dialog', cAssertPos('absolute', 105, -1910), '_'),
+
+            NamedChain.direct('body', DialogUtils.cClose, '_'),
+            NamedChain.outputInput
+          ]))
+        ])
+      ], () => onSuccess(editor), onFailure);
+    }),
+    McEditor.cRemove
+  ]);
+
+  const sToolbarBottomTestStep = Chain.asStep({}, [
+    McEditor.cFromSettings({
+      theme: 'silver',
+      base_url: '/project/tinymce/js/tinymce',
+      resize: 'both',
+      height: 2000,
+      width: 600,
+      toolbar_sticky: true,
+      toolbar_location: 'bottom'
+    }),
+    Chain.async((editor: Editor, onSuccess, onFailure) => {
+      const cTestOpen = createTestOpenChain(editor);
+
+      Pipeline.async({ }, [
+        Chain.asStep(Body.body(), [
+          Chain.label('Test initial position when initially scrolled', NamedChain.asChain([
+            NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
+
+            // Scroll to 1500px, open the dialog and assert docked
+            NamedChain.direct('body', cScrollTo(0, 1500), '_'),
+            NamedChain.direct('body', cTestOpen, 'dialog'),
+            NamedChain.direct('dialog', cAssertPos('fixed', 105, 0), '_'),
+
+            // Scroll back to top and assert not docked
+            NamedChain.direct('body', cScrollTo(0, 0), '_'),
+            NamedChain.direct('dialog', cAssertPos('absolute', 105, -1987), '_'),
+
+            NamedChain.direct('body', DialogUtils.cClose, '_'),
+            NamedChain.outputInput
+          ]))
+        ])
+      ], () => onSuccess(editor), onFailure);
+    }),
+    McEditor.cRemove
+  ]);
+
+  Pipeline.async({}, [
+    sToolbarTopTestStep,
+    sToolbarBottomTestStep
+  ], success, failure);
 });
