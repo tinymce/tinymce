@@ -295,7 +295,11 @@ const setup = (editor: Editor): RenderInfo => {
     OuterContainer.sketch({
       dom: {
         tag: 'div',
-        classes: ['tox', 'tox-tinymce'].concat(isInline ? ['tox-tinymce-inline'] : []).concat(deviceClasses).concat(platformClasses),
+        classes: ['tox', 'tox-tinymce']
+          .concat(isInline ? ['tox-tinymce-inline'] : [])
+          .concat(isToolbarTop ? [] : ['tox-tinymce--toolbar-bottom'])
+          .concat(deviceClasses)
+          .concat(platformClasses),
         styles: {
           // This is overridden by the skin, it helps avoid FOUC
           visibility: 'hidden',
