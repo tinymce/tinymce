@@ -29,8 +29,8 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const prevTargetHeight = Cell(Height.get(targetElm));
 
   const splitSetting = getToolbarDrawer(editor);
-  const isSplitFloatinToolbar = splitSetting === ToolbarDrawer.floating;
-  const isSplitToolbar = splitSetting === ToolbarDrawer.sliding || isSplitFloatinToolbar;
+  const isSplitFloatingToolbar = splitSetting === ToolbarDrawer.floating;
+  const isSplitToolbar = splitSetting === ToolbarDrawer.sliding || isSplitFloatingToolbar;
   const isToolbarTop = isToolbarLocationTop(editor);
 
   loadInlineSkin(editor);
@@ -79,7 +79,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       resetDocking ? Docking.reset(floatContainer) : Docking.refresh(floatContainer);
     }
 
-    if (isSplitFloatinToolbar) {
+    if (isSplitFloatingToolbar) {
       OuterContainer.getToolbar(uiComponents.outerContainer).each((toolbar) => {
         SplitFloatingToolbar.reposition(toolbar);
       });

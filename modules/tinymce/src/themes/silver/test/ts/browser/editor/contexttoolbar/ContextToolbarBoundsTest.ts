@@ -82,10 +82,13 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
         NamedChain.read('editor', cScrollRelativeEditorContainer(scenario.scroll.relativeTop, scenario.scroll.delta)),
         NamedChain.read('editor', Chain.op((editor) => {
           const assertBounds = (bound: 'x' | 'y' | 'right' | 'bottom') => {
+            const expectedBound = asserted[bound];
+            const actualBound = actual[bound]();
+
             Assertions.assertEq(
-              `Assert context toolbar bounds.${bound} === ${actual[bound]()}px`,
-              actual[bound](),
-              asserted[bound],
+              `Expect context toolbar bounds.${bound} === ${expectedBound} (Actual: ${actualBound})`,
+              actualBound,
+              expectedBound
             );
           };
 
@@ -170,6 +173,17 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
         assertBounds: (bounds: TestBounds) => ({
           x: bounds.content.x(),
           y: bounds.container.y(),
+          right: bounds.content.right(),
+          bottom: bounds.header.y(),
+        }),
+      }),
+      sTestScenario({
+        label: 'Inline(full view): Top of the viewport -> Top of the header',
+        settings: { inline: true, toolbar_location: 'bottom' },
+        scroll: { relativeTop: true, delta: -10 },
+        assertBounds: (bounds: TestBounds) => ({
+          x: bounds.content.x(),
+          y: bounds.viewport.y(),
           right: bounds.content.right(),
           bottom: bounds.header.y(),
         }),
