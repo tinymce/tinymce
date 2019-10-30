@@ -8,6 +8,10 @@ import * as Attachment from '../system/Attachment';
 import * as Gui from '../system/Gui';
 import TestStore from './TestStore';
 
+/**
+ * @deprecated use guiSetup instead.
+ * TODO: remove and inline
+ */
 const setup = (createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
                f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Array<Step<any, any>>, success, failure) => {
   const store = TestStore();
@@ -30,6 +34,20 @@ const setup = (createComponent: (store: TestStore, doc: Element, body: Element) 
     // console.error(e);
     failure(e, logs);
   }, TestLogs.init());
+};
+
+/**
+ * Setup an editor, run a Step, then tear down.
+ * If you need to run multiple Steps, compose them using the functions in StepSequence.
+ *
+ * @param createComponent
+ * @param f
+ * @param success
+ * @param failure
+ */
+const guiSetup = <A, B> (createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
+                         f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Step<A, B>, success, failure) => {
+ setup(createComponent, (doc, body, gui, component, store) => [f(doc, body, gui, component, store)], success, failure);
 };
 
 const mSetupKeyLogger = (body) => {
@@ -77,6 +95,7 @@ const mRemoveStyles = Step.stateful((value: any, next, die) => {
 
 export {
   setup,
+  guiSetup,
   mSetupKeyLogger,
   mTeardownKeyLogger,
 

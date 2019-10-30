@@ -5,15 +5,16 @@ import { TinyApis } from '@ephox/mcagar';
 import { Element as SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
-const sAnnotate = (editor: Editor, name: string, uid: string, data: { }) => Step.sync(() => {
-  editor.annotator.annotate(name, {
-    uid,
-    ...data
+const sAnnotate = <T> (editor: Editor, name: string, uid: string, data: { }): Step<T, T> =>
+  Step.sync(() => {
+    editor.annotator.annotate(name, {
+      uid,
+      ...data
+    });
   });
-});
 
 // This will result in an attribute order-insensitive HTML assertion
-const sAssertHtmlContent = (tinyApis: TinyApis, children: string[]) => {
+const sAssertHtmlContent = <T> (tinyApis: TinyApis, children: string[]): Step<T, T> => {
   return tinyApis.sAssertContentStructure(
     ApproxStructure.build((s, str, arr) => {
       return s.element('body', {

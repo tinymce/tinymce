@@ -102,6 +102,10 @@ const fromParent = <T, U, V>(parent: Chain<T, U>, chains: Chain<U, V>[]): Chain<
     }, cdie, clogs);
   });
 
+/**
+ * @deprecated Use isolate() instead
+ * TODO: remove
+ */
 const asStep = <T, U>(initial: U, chains: Chain<any, any>[]): Step<T, T> =>
   Step.raw<T, T>((initValue, next, die, logs) => {
     const cs = Arr.map(chains, extract);
@@ -109,6 +113,28 @@ const asStep = <T, U>(initial: U, chains: Chain<any, any>[]): Step<T, T> =>
     Pipeline.async(
       initial,
       cs,
+      // Ignore all the values and use the original
+      (_v, ls) => {
+        next(initValue, ls);
+      },
+      die,
+      logs
+    );
+  });
+
+/**
+ * Wrap a Chain into an "isolated" Step, with its own local state.
+ * The state of the outer Step is passed-through.
+ * Use the functions in ChainSequence to compose multiple Chains.
+ *
+ * @param initial
+ * @param chain
+ */
+const isolate = <T, U, V>(initial: U, chain: Chain<U, V>): Step<T, T> =>
+  Step.raw<T, T>((initValue, next, die, logs) => {
+    Pipeline.runStep(
+      initial,
+      extract(chain),
       // Ignore all the values and use the original
       (_v, ls) => {
         next(initValue, ls);
@@ -169,6 +195,7 @@ export const Chain = {
   fromChainsWith,
   fromParent,
   asStep,
+  isolate,
   wait,
   debugging,
   log,

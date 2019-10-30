@@ -22,12 +22,20 @@ const assertSteps = (steps: Step<any, any>[]) => {
   });
 };
 
-const callAsync = (f) => {
-  // tslint:disable-next-line:no-unimported-promise
-  typeof Promise !== 'undefined' ? Promise.resolve().then(f) : setTimeout(f, 0);
+/**
+ * Execute a Step, supplying default logs.
+ *
+ * If you need to run a sequence of steps, compose them using the functions in StepSequence
+ */
+const runStep = <T, U> (initial: T, step: Step<T, U>, onSuccess: NextFn<U>, onFailure: DieFn, initLogs?: TestLogs): void => {
+  step.runStep(initial, onSuccess, onFailure, TestLogs.getOrInit(initLogs));
 };
 
-const async = (initial: any, steps: Step<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs?: TestLogs) => {
+/**
+ * @deprecated Use runStep instead
+ * TODO: Remove
+ */
+const async = (initial: any, steps: Step<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs?: TestLogs): void => {
   assertSteps(steps);
 
   const chain = (lastLink: any, logs: TestLogs, index: number) => {
@@ -43,7 +51,7 @@ const async = (initial: any, steps: Step<any, any>[], onSuccess: NextFn<any>, on
         };
 
         asyncOperation.runStep(lastLink, (x, newLogs) => {
-          callAsync(() => { nextStep(x, newLogs); });
+          nextStep(x, newLogs);
         }, onFailure, logs);
       } catch (error) {
         onFailure(error, logs);
@@ -59,5 +67,6 @@ const async = (initial: any, steps: Step<any, any>[], onSuccess: NextFn<any>, on
 };
 
 export const Pipeline = {
-  async
+  async,
+  runStep
 };

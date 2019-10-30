@@ -1,4 +1,4 @@
-import { GeneralSteps, Pipeline, Logger, Assertions, ApproxStructure } from '@ephox/agar';
+import { Pipeline, Logger, Assertions, ApproxStructure, StepSequence, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
@@ -14,25 +14,25 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
     const tinyApis = TinyApis(editor);
 
     // TODO: Consider testing collapse sections.
-    const sTestWordGrabIfCollapsed = Logger.t(
+    const sTestWordGrabIfCollapsed = <T> (): Step<T, T> => Logger.t(
       'Should word grab with a collapsed selection',
-      GeneralSteps.sequence([
+      StepSequence.sequenceSame([
         // '<p>This |is| the first paragraph</p><p>This is the second.</p>'
         tinyApis.sSetContent('<p>This is the first paragraph here</p><p>This is the second.</p>'),
         tinyApis.sSetSelection([ 0, 0 ], 'This is the first p'.length, [ 0, 0 ], 'This is the first p'.length),
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'one-paragraph' }),
         sAssertHtmlContent(tinyApis, [
           `<p>This is the first <span data-test-anything="one-paragraph" data-mce-annotation="test-annotation" data-mce-annotation-uid="test-uid" class="mce-annotation">paragraph</span> here</p>`,
-          '<p>This is the second.</p'
+          '<p>This is the second.</p>'
         ]),
 
         tinyApis.sAssertSelection([ 0 ], 1, [ 0 ], 2)
       ])
     );
 
-    const sTestCanAnnotateDirectParentOfRoot = Logger.t(
+    const sTestCanAnnotateDirectParentOfRoot = <T> (): Step<T, T> => Logger.t(
       'Should be able to annotate a direct parent of the body (e.g. an empty paragraph)',
-      GeneralSteps.sequence([
+      StepSequence.sequenceSame([
         tinyApis.sSetContent('<p>First</p><p><br/></p><p>Third</p>'),
         tinyApis.sSetSelection([ 1 ], 0, [ 1 ], 0),
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'empty-paragraph' }),
@@ -44,9 +44,9 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
       ])
     );
 
-    const sTestCanAnnotateBeforeTwoNonBreakingSpaces = Logger.t(
+    const sTestCanAnnotateBeforeTwoNonBreakingSpaces = <T> (): Step<T, T> => Logger.t(
       'Should annotate when the cursor is collapsed before two nbsps',
-      GeneralSteps.sequence([
+      StepSequence.sequenceSame([
         tinyApis.sSetContent('<p>Annotation here &nbsp;&nbsp;, please</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 'Annotation here '.length),
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'nbsp-paragraph' }),
@@ -73,9 +73,9 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
       ])
     );
 
-    const sTestCanAnnotateWithinTwoNonBreakingSpaces = Logger.t(
+    const sTestCanAnnotateWithinTwoNonBreakingSpaces = <T> (): Step<T, T> => Logger.t(
       'Should annotate when the cursor is collapsed between two nbsps',
-      GeneralSteps.sequence([
+      StepSequence.sequenceSame([
         tinyApis.sSetContent('<p>Annotation here &nbsp;&nbsp;, please</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 'Annotation here  '.length),
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'nbsp-paragraph' }),
@@ -102,9 +102,9 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
       ])
     );
 
-    const sTestCanAnnotateAfterTwoNonBreakingSpaces = Logger.t(
+    const sTestCanAnnotateAfterTwoNonBreakingSpaces = <T> (): Step<T, T> => Logger.t(
       'Should annotate when the cursor is collapsed after two nbsps',
-      GeneralSteps.sequence([
+      StepSequence.sequenceSame([
         tinyApis.sSetContent('<p>Annotation here &nbsp;&nbsp;, please</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 'Annotation here   '.length),
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'nbsp-paragraph' }),
@@ -131,41 +131,41 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
       ])
     );
 
-    const sTestDoesNotWordGrabIfNotCollapsed = Logger.t(
+    const sTestDoesNotWordGrabIfNotCollapsed = <T> (): Step<T, T> => Logger.t(
       'Should not word grab if the selection is not collapsed',
-      GeneralSteps.sequence([
+      StepSequence.sequenceSame([
         // '<p>This |is| the first paragraph</p><p>This is the second.</p>'
         tinyApis.sSetContent('<p>This is the first paragraph</p><p>This is the second.</p>'),
         tinyApis.sSetSelection([ 0, 0 ], 'This is the first p'.length, [ 0, 0 ], 'This is the first par'.length),
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'one-paragraph' }),
         sAssertHtmlContent(tinyApis, [
           `<p>This is the first p<span data-test-anything="one-paragraph" data-mce-annotation="test-annotation" data-mce-annotation-uid="test-uid" class="mce-annotation">ar</span>agraph</p>`,
-          '<p>This is the second.</p'
+          '<p>This is the second.</p>'
         ]),
 
         tinyApis.sAssertSelection([ 0 ], 1, [ 0 ], 2)
       ])
     );
 
-    const sTestInOneParagraph = Logger.t(
+    const sTestInOneParagraph = <T> (): Step<T, T> => Logger.t(
       'Testing in one pararaph',
-      GeneralSteps.sequence([
+      StepSequence.sequenceSame([
         // '<p>This |is| the first paragraph</p><p>This is the second.</p>'
         tinyApis.sSetContent('<p>This is the first paragraph</p><p>This is the second.</p>'),
         tinyApis.sSetSelection([ 0, 0 ], 'This '.length, [ 0, 0 ], 'This is'.length),
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'one-paragraph' }),
         sAssertHtmlContent(tinyApis, [
           `<p>This <span data-test-anything="one-paragraph" data-mce-annotation="test-annotation" data-mce-annotation-uid="test-uid" class="mce-annotation">is</span> the first paragraph</p>`,
-          '<p>This is the second.</p'
+          '<p>This is the second.</p>'
         ]),
 
         tinyApis.sAssertSelection([ 0 ], 1, [ 0 ], 2)
       ])
     );
 
-    const sTestInTwoParagraphs = Logger.t(
+    const sTestInTwoParagraphs = <T> (): Step<T, T> => Logger.t(
       'Testing over two paragraphs',
-      GeneralSteps.sequence([
+      StepSequence.sequenceSame([
         // '<p>This |is the first paragraph</p><p>This is| the second.</p>'
         tinyApis.sSetContent('<p>This is the first paragraph</p><p>This is the second.</p>'),
         tinyApis.sSetSelection([ 0, 0 ], 'This '.length, [ 1, 0 ], 'This is'.length),
@@ -178,9 +178,9 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
       ])
     );
 
-    const sTestInThreeParagraphs = Logger.t(
+    const sTestInThreeParagraphs = <T> (): Step<T, T> => Logger.t(
       'Testing over three paragraphs',
-      GeneralSteps.sequence([
+      StepSequence.sequenceSame([
         // '<p>This |is the first paragraph</p><p>This is the second.</p><p>This is| the third.</p>'
         tinyApis.sSetContent('<p>This is the first paragraph</p><p>This is the second.</p><p>This is the third.</p>'),
         tinyApis.sSetSelection([ 0, 0 ], 'This '.length, [ 2, 0 ], 'This is'.length),
@@ -194,18 +194,18 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
       ])
     );
 
-    Pipeline.async({}, [
+    Pipeline.runStep({}, StepSequence.sequenceSame([
       tinyApis.sFocus(),
-      sTestWordGrabIfCollapsed,
-      sTestDoesNotWordGrabIfNotCollapsed,
-      sTestCanAnnotateDirectParentOfRoot,
-      sTestCanAnnotateBeforeTwoNonBreakingSpaces,
-      sTestCanAnnotateWithinTwoNonBreakingSpaces,
-      sTestCanAnnotateAfterTwoNonBreakingSpaces,
-      sTestInOneParagraph,
-      sTestInTwoParagraphs,
-      sTestInThreeParagraphs
-    ], onSuccess, onFailure);
+      sTestWordGrabIfCollapsed(),
+      sTestDoesNotWordGrabIfNotCollapsed(),
+      sTestCanAnnotateDirectParentOfRoot(),
+      sTestCanAnnotateBeforeTwoNonBreakingSpaces(),
+      sTestCanAnnotateWithinTwoNonBreakingSpaces(),
+      sTestCanAnnotateAfterTwoNonBreakingSpaces(),
+      sTestInOneParagraph(),
+      sTestInTwoParagraphs(),
+      sTestInThreeParagraphs()
+    ]), onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {

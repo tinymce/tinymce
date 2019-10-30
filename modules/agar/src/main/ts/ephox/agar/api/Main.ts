@@ -24,6 +24,8 @@ import * as RealClipboard from './RealClipboard';
 import { RealKeys } from './RealKeys';
 import * as RealMouse from './RealMouse';
 import { Step } from './Step';
+import * as StepSequence from './StepSequence';
+import * as ChainSequence from './ChainSequence';
 import { TestLogs } from './TestLogs';
 import * as Touch from './Touch';
 import * as UiControls from './UiControls';
@@ -38,10 +40,12 @@ export {
   Arbitraries,
   Assertions,
   Chain,
+  ChainSequence,
   Cleaner,
   Cursors,
   FocusTools,
   GeneralSteps,
+  StepSequence,
   Generators,
   GroupStore,
   Guard,

@@ -56,7 +56,6 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, fai
     return GeneralSteps.sequence(Log.steps('TBA', 'WordCount: Test keystroke and assert word count', [
       sReset(tinyApis),
       sFakeTyping(editor, 'a b c'),
-      sAssertWordcount(0),
       sWaitForWordcount(3)
     ]));
   };
