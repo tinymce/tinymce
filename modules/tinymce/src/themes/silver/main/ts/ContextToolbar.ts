@@ -8,13 +8,12 @@
 import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying, Layout, LayoutInside, MaxHeight, MaxWidth, Positioning } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { ClientRect, Element as DomElement } from '@ephox/dom-globals';
+import { Element as DomElement } from '@ephox/dom-globals';
 import { Cell, Id, Merger, Option, Result, Thunk } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, Element, Focus, Scroll, SelectorFind, Traverse } from '@ephox/sugar';
+import { Css, Element, Focus, Scroll } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
-import * as Settings from './api/Settings';
 import { hideContextToolbarEvent, showContextToolbarEvent } from './ui/context/ContextEditorEvents';
 import { ContextForm } from './ui/context/ContextForm';
 import * as ContextToolbarBounds from './ui/context/ContextToolbarBounds';
@@ -88,26 +87,24 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     })
   );
 
-  const toolbarOrMenubarEnabled = Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
-  const getBounds = () => ContextToolbarBounds.getBounds(editor, toolbarOrMenubarEnabled);
+  const getBounds = () => ContextToolbarBounds.getContextToolbarBounds(editor);
 
-  const isCompletelyBehindHeader = (nodeBounds: ClientRect): boolean => {
-    const headerEle = SelectorFind.descendant(Element.fromDom(editor.getContainer()), '.tox-editor-header').getOrDie();
-    const isHeaderDocked = Css.get(headerEle, 'position') === 'fixed';
-    if (toolbarOrMenubarEnabled && isHeaderDocked) {
-      const headerBounds = headerEle.dom().getBoundingClientRect();
-      if (editor.inline) {
-        return nodeBounds.bottom < headerBounds.bottom;
-      } else {
-        // Translate the node bounds to the top level document, as nodeBounds is relative to the iframe viewport
-        const scroll = Scroll.get();
-        const bodyBounds = Boxes.absolute(Element.fromDom(editor.getBody()));
-        const nodeBottom = nodeBounds.bottom + (bodyBounds.y() - scroll.top());
-        return nodeBottom < headerBounds.bottom;
-      }
-    } else {
-      return false;
-    }
+  const isRangeOverlapping = (aTop: number, aBottom: number, bTop: number, bBottom: number) => {
+    return Math.max(aTop, bTop) <= Math.min(aBottom, bBottom);
+  };
+
+  const getLastElementVerticalBound = () => {
+    const nodeBounds = lastElement.get().map((ele) => ele.getBoundingClientRect()).getOrThunk(() => {
+      return editor.selection.getRng().getBoundingClientRect();
+    });
+
+    // Translate to the top level document, as nodeBounds is relative to the iframe viewport
+    const diffTop = editor.inline ? Scroll.get().top() : Boxes.absolute(Element.fromDom(editor.getBody())).y();
+
+    return {
+      y: nodeBounds.top + diffTop,
+      bottom: nodeBounds.bottom + diffTop
+    };
   };
 
   const shouldContextToolbarHide = (): boolean => {
@@ -115,13 +112,17 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     if (isTouch() && extras.backstage.isContextMenuOpen()) {
       return true;
     }
-    const nodeBounds = lastElement.get().map((ele) => ele.getBoundingClientRect()).getOrThunk(() => {
-      return editor.selection.getRng().getBoundingClientRect();
-    });
-    const viewportHeight = Traverse.defaultView(Element.fromDom(editor.getBody())).dom().innerHeight;
-    const aboveViewport = nodeBounds.bottom < 0;
-    const belowViewport = nodeBounds.top > viewportHeight;
-    return aboveViewport || belowViewport || isCompletelyBehindHeader(nodeBounds);
+
+    const lastElementBounds = getLastElementVerticalBound();
+    const contextToolbarBounds = getBounds();
+
+    // If the element bound isn't overlapping with the contexToolbarBound, the contextToolbar should hide
+    return !isRangeOverlapping(
+      lastElementBounds.y,
+      lastElementBounds.bottom,
+      contextToolbarBounds.y(),
+      contextToolbarBounds.bottom()
+    );
   };
 
   const forceHide = () => {
@@ -136,7 +137,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       if (shouldContextToolbarHide()) {
         Css.set(contextBarEle, 'display', 'none');
       } else {
-        Positioning.positionWithinBounds(sink, anchor, contextbar, getBounds());
+        Positioning.positionWithinBounds(sink, anchor, contextbar, Option.some(getBounds()));
       }
     });
   };
@@ -231,7 +232,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     lastElement.set(elem);
     const contextBarEle = contextbar.element();
     Css.remove(contextBarEle, 'display');
-    InlineView.showWithinBounds(contextbar, anchor, wrapInPopDialog(toolbarSpec), getBounds);
+    InlineView.showWithinBounds(contextbar, anchor, wrapInPopDialog(toolbarSpec), () => Option.some(getBounds()));
 
     // It's possible we may have launched offscreen, if so then hide
     if (shouldContextToolbarHide()) {

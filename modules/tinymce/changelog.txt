@@ -1,3 +1,8 @@
+Version 5.1.1 (2019-10-28)
+    Fixed font formats containing spaces being wrapped in `&quot;` entities instead of single quotes #TINY-4275
+    Fixed alert and confirm dialogs losing focus when clicked #TINY-4248
+    Fixed clicking outside a modal dialog focusing on the document body #TINY-4249
+    Fixed the context toolbar not hiding when scrolled out of view #TINY-4265
 Version 5.1.0 (2019-10-17)
     Added touch selector handles for table selections on touch devices #TINY-4097
     Added border width field to Table Cell dialog #TINY-4028

@@ -6,6 +6,7 @@ import {
   Keyboard,
   Keys,
   Logger,
+  Mouse,
   NamedChain,
   Step,
   UiFinder,
@@ -248,6 +249,9 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       FocusTools.sTryOnSelector('Focus should be back to body now', doc, '.test-dialog-body'),
       Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
       FocusTools.sTryOnSelector('Focus should be back to title now', doc, '.test-dialog-title'),
+
+      Mouse.sTrueClickOn(doc, '.test-dialog-blocker'),
+      FocusTools.sTryOnSelector('Focus should move to first focusable element when clicking the blocker', doc, '.test-dialog-title'),
 
       Step.sync(() => {
         const body = ModalDialog.getBody(dialog);
