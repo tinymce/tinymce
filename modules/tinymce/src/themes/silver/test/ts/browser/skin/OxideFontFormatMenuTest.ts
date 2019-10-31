@@ -1,20 +1,7 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  FocusTools,
-  Keyboard,
-  Keys,
-  Mouse,
-  Pipeline,
-  UiFinder,
-  GeneralSteps,
-  Log,
-  Step,
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
@@ -30,6 +17,7 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
       const doc = Element.fromDom(document);
 
       const apis = TinyApis(editor);
+      const tinyUi = TinyUi(editor);
 
       Pipeline.async({}, [
         Log.step('TBA', 'Check structure of font format', GeneralSteps.sequence([
@@ -41,7 +29,7 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
           Step.label('Set editor content', apis.sSetContent('<blockquote>Text</blockquote>')),
           Step.label('Set cursor position', apis.sSetCursor([0, 0], 'Te'.length)),
 
-          Step.label('Click on the style select button', Mouse.sClickOn(Body.body(), '.tox-toolbar button')),
+          tinyUi.sClickOnToolbar('Click on the style select button', 'button'),
           Step.label('Wait for the style select menu', UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]')),
           Step.label('Checking menu structure', Chain.asStep(Body.body(), [
             UiFinder.cFindIn('[role="menu"]'),

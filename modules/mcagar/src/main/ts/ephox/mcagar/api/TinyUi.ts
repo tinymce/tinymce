@@ -35,7 +35,7 @@ export const TinyUi = function (editor: Editor): TinyUi {
 
   const cGetToolbarRoot = Chain.fromChainsWith<Element, Element, Element>(toolstripRoot, [
     Chain.binder((container: Element) => {
-      return UiFinder.findIn(container, getThemeSelectors().toolBarSelector);
+      return UiFinder.findIn(container, getThemeSelectors().toolBarSelector(editor));
     })
   ]);
 

@@ -71,6 +71,7 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
       menubar: false,
       inline: true,
       width,
+      toolbar_drawer: false,
       base_url: '/project/tinymce/js/tinymce'
     }, success, failure
   );

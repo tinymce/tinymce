@@ -32,7 +32,7 @@ UnitTest.asynctest('Menu and toolbar location test', (success, failure) => {
                           classes: [ arr.has('tox-menubar') ]
                         }),
                         s.element('div', {
-                          classes: [ arr.has('tox-toolbar') ]
+                          classes: [ arr.has('tox-toolbar-overlord') ]
                         })
                       ]
                     }),

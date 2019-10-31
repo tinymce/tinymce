@@ -1,8 +1,9 @@
 import { Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
 import { Fun } from '@ephox/katamari';
 import { Element, Visibility, Body } from '@ephox/sugar';
-import { ThemeSelectors, getThemeSelectors } from './ThemeSelectors';
+import { getThemeSelectors } from './ThemeSelectors';
 import { Editor } from '../alien/EditorTypes';
+import { HTMLElement } from '@ephox/dom-globals';
 
 export interface UiChains {
   cClickOnToolbar: <T extends Editor> (label: string, selector: string) => Chain<T, T>;
@@ -29,11 +30,14 @@ const cEditorRoot = Chain.mapper(function (editor: Editor) {
 
 const cDialogRoot = Chain.injectThunked(Body.body);
 
-const cGetToolbarRoot = Chain.fromChains<Editor, Element>([
-  cToolstripRoot,
-  Chain.binder((container: Element) => {
-    return UiFinder.findIn(container, getThemeSelectors().toolBarSelector);
-  })
+const cGetToolbarRoot: Chain<Editor, Element> = NamedChain.asChain([
+  NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
+  NamedChain.direct('editor', cToolstripRoot, 'container'),
+  NamedChain.merge([ 'editor', 'container' ], 'data'),
+  NamedChain.direct('data', Chain.binder((data: { editor: Editor, container: Element<HTMLElement> }) => {
+    return UiFinder.findIn(data.container, getThemeSelectors().toolBarSelector(data.editor));
+  }), 'toolbar'),
+  NamedChain.output('toolbar')
 ]);
 
 const cGetMenuRoot = Chain.fromChains<Editor, Element>([
@@ -102,7 +106,7 @@ const cTriggerContextMenu = function (label: string, target: string, menu: strin
   ]);
 };
 
-const cClickPopupButton = function (btnType: keyof ThemeSelectors, selector?: string) {
+const cClickPopupButton = function (btnType: 'dialogCloseSelector' | 'dialogSubmitSelector', selector?: string) {
   const popupSelector = selector ? selector : '[role="dialog"]';
 
   return NamedChain.asChain([

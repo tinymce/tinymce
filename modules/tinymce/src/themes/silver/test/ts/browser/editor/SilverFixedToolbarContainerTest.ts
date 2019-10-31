@@ -48,24 +48,30 @@ UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => 
                       }),
 
                       s.element('div', {
-                        classes: [ arr.has('tox-toolbar') ],
+                        classes: [ arr.has('tox-toolbar-overlord') ],
                         attrs: { role: str.is('group') },
                         children: [
                           s.element('div', {
-                            classes: [ arr.has('tox-toolbar__group') ],
+                            classes: [ arr.has('tox-toolbar__primary') ],
+                            attrs: { role: str.is('group') },
                             children: [
-                              s.element('button', {
-                                classes: [ arr.has('tox-tbtn'), arr.not('tox-btn--enabled') ],
-                                attrs: {
-                                  'aria-label': str.is('Undo')
-                                }
-                              }),
-                              s.element('button', {
-                                classes: [ arr.has('tox-tbtn'), arr.not('tox-btn--enabled') ],
-                                attrs: {
-                                  'aria-label': str.is('Bold')
-                                }
-                              }),
+                              s.element('div', {
+                                classes: [ arr.has('tox-toolbar__group') ],
+                                children: [
+                                  s.element('button', {
+                                    classes: [ arr.has('tox-tbtn'), arr.not('tox-btn--enabled') ],
+                                    attrs: {
+                                      'aria-label': str.is('Undo')
+                                    }
+                                  }),
+                                  s.element('button', {
+                                    classes: [ arr.has('tox-tbtn'), arr.not('tox-btn--enabled') ],
+                                    attrs: {
+                                      'aria-label': str.is('Bold')
+                                    }
+                                  }),
+                                ]
+                              })
                             ]
                           })
                         ]
