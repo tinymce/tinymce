@@ -25,7 +25,7 @@ const ModernThemeSelectors: ThemeSelectors = {
   dialogSubmitSelector: 'div[role="button"].mce-primary'
 };
 
-const silverThemeSelectors: ThemeSelectors = {
+const SilverThemeSelectors: ThemeSelectors = {
   toolBarSelector: (editor: Editor) => editor.settings.toolbar_drawer === 'floating' || editor.settings.toolbar_drawer === 'sliding' ? '.tox-toolbar-overlord' : '.tox-toolbar',
   menuBarSelector: '.tox-menubar',
   dialogCloseSelector: '.tox-button:contains("Cancel")',
@@ -33,7 +33,7 @@ const silverThemeSelectors: ThemeSelectors = {
 };
 
 const getThemeSelectors = (): ThemeSelectors => {
-  return isModern() ? ModernThemeSelectors : silverThemeSelectors;
+  return isModern() ? ModernThemeSelectors : SilverThemeSelectors;
 };
 
 export {
