@@ -1,4 +1,5 @@
 import { Global } from '@ephox/katamari';
+import { Editor } from '../alien/EditorTypes';
 
 const isSilver = () => {
   const tinymce = Global.tinymce;
@@ -11,21 +12,21 @@ const isSilver = () => {
 const isModern = () => !isSilver();
 
 export interface ThemeSelectors {
-  toolBarSelector: string;
+  toolBarSelector: (editor: Editor) => string;
   menuBarSelector: string;
   dialogCloseSelector: string;
   dialogSubmitSelector: string;
 }
 
 const ModernThemeSelectors: ThemeSelectors = {
-  toolBarSelector: '.mce-toolbar-grp',
+  toolBarSelector: () => '.mce-toolbar-grp',
   menuBarSelector: '.mce-menubar',
   dialogCloseSelector: 'div[role="button"]:contains(Cancel)',
   dialogSubmitSelector: 'div[role="button"].mce-primary'
 };
 
 const SilverThemeSelectors: ThemeSelectors = {
-  toolBarSelector: '.tox-toolbar',
+  toolBarSelector: (editor: Editor) => editor.settings.toolbar_drawer === 'floating' || editor.settings.toolbar_drawer === 'sliding' ? '.tox-toolbar-overlord' : '.tox-toolbar',
   menuBarSelector: '.tox-menubar',
   dialogCloseSelector: '.tox-button:contains("Cancel")',
   dialogSubmitSelector: '.tox-button:contains("Save")'

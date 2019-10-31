@@ -1,7 +1,6 @@
-import { Pipeline, Mouse, Log} from '@ephox/agar';
+import { Pipeline, Log} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
 
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
@@ -16,11 +15,11 @@ UnitTest.asynctest('browser.plugin.IgnoreForcedPluginsTest', (success, failure) 
   SilverTheme();
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
-    TinyUi(editor);
+    const ui = TinyUi(editor);
 
     Pipeline.async({},
       Log.steps('TBA', 'Help: Hide forced plugins from Help plugin list', [
-        Mouse.sClickOn(Element.fromDom(editor.getContainer()), Selectors.toolbarHelpButton),
+        ui.sClickOnToolbar('Click help button', Selectors.toolbarHelpButton),
         PluginAssert.sAssert(
           'Could not ignore forced plugin: link',
           {

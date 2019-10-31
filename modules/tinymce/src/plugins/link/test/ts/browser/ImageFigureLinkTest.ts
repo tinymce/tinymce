@@ -1,6 +1,6 @@
 import { Assertions, Logger, Log, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
+import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import LinkPluginUtils from 'tinymce/plugins/link/core/Utils';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -13,9 +13,10 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', (success,
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const api = TinyApis(editor);
+    const ui = TinyUi(editor);
 
     const sLinkTheSelection = function () {
-      return Logger.t('Link the selection', TestLinkUi.sInsertLink('http://google.com'));
+      return Logger.t('Link the selection', TestLinkUi.sInsertLink(ui, 'http://google.com'));
     };
 
     const sUnlinkSelection = function () {

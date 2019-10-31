@@ -33,12 +33,7 @@ const removeTinymceElements = () => {
 };
 
 const setup = (callbacks: Callbacks, settings: Record<string, any>) => {
-  const nuSettings: Record<string, any> = {
-    toolbar_drawer: false,
-    ...settings
-  };
-
-  const target = createTarget(nuSettings.inline);
+  const target = createTarget(settings.inline);
   const randomId = Id.generate('tiny-loader');
   Attr.set(target, 'id', randomId);
 
@@ -66,7 +61,7 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>) => {
     callbacks.failure(err, logs);
   };
 
-  const settingsSetup = nuSettings.setup !== undefined ? nuSettings.setup : Fun.noop;
+  const settingsSetup = settings.setup !== undefined ? settings.setup : Fun.noop;
 
   const tinymce = Global.tinymce;
   if (!tinymce) {
@@ -75,7 +70,7 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>) => {
     callbacks.preInit(tinymce, settings);
 
     tinymce.init({
-      ...nuSettings,
+      ...settings,
       selector: '#' + randomId,
       setup (editor: Editor) {
         // Execute the setup called by the test.
