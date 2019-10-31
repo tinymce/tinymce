@@ -1,4 +1,4 @@
-import { GeneralSteps, Pipeline } from '@ephox/agar';
+import { GeneralSteps, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Body, Traverse } from '@ephox/sugar';
 
@@ -53,10 +53,11 @@ UnitTest.asynctest('Browser Test: features.BasicFormattingTest', function (succe
 
           TestUi.sClickComponent(realm, buttons[name]),
           sCheckComponent('"no" converted to ' + name, true)(buttons[name]),
+          Step.debugging,
           TestUi.sClickComponent(realm, buttons[name]),
           sCheckComponent('"no" reverted to normal', false)(buttons[name]),
 
-          apis.sSetSelection([ 0, 1 + 1, 0 ], 'for'.length, [ 0, 1 + 1, 0 ], 'for'.length),
+          apis.sSetSelection([ 0, 3, 0 ], 'for'.length, [ 0, 3, 0 ], 'for'.length),
           sCheckComponent('moving back to ' + name, true)(buttons[name]),
           TestUi.sClickComponent(realm, buttons[name]),
           sCheckComponent('converting ' + name + ' to normal', false)(buttons[name]),

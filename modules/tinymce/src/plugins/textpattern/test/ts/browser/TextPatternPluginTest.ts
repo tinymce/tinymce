@@ -40,10 +40,10 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
               children: [
                 s.element('em', {
                   children: [
-                    s.text(str.is('a\u00A0'), true)
+                    s.text(str.is('a\u00A0 '), true)
                   ]
                 }),
-                s.text(str.is(' \u00A0'), true),
+                s.text(str.is('\u00A0'), true),
               ]
             })
           ]);

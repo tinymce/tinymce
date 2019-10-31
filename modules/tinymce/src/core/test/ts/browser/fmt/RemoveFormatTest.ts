@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveFormatTest', (success, failur
           tinyApis.sSetContent('<p><strong>ab cd</strong></p>'),
           tinyApis.sSetCursor([0, 0, 0], 1),
           sRemoveFormat(editor, removeFormat),
-          tinyApis.sAssertContent('<p>ab<strong> cd</strong></p>'),
+          tinyApis.sAssertContent('<p>ab <strong>cd</strong></p>'),
           tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
         ])),
         Logger.t('In middle of last of two words wrapped in strong', GeneralSteps.sequence([
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveFormatTest', (success, failur
           tinyApis.sSetContent('<p><strong><em>ab</em> cd</strong></p>'),
           tinyApis.sSetCursor([0, 0, 0, 0], 1),
           sRemoveFormat(editor, removeFormat),
-          tinyApis.sAssertContent('<p>ab<strong> cd</strong></p>'),
+          tinyApis.sAssertContent('<p>ab <strong>cd</strong></p>'),
           tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
         ])),
       ])),
@@ -65,7 +65,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveFormatTest', (success, failur
           tinyApis.sSetContent('<p><em><strong>ab cd</strong></em></p>'),
           tinyApis.sSetCursor([0, 0, 0, 0], 1),
           sRemoveFormat(editor, boldFormat),
-          tinyApis.sAssertContent('<p><em>ab<strong> cd</strong></em></p>'),
+          tinyApis.sAssertContent('<p><em>ab <strong>cd</strong></em></p>'),
           tinyApis.sAssertSelection([0, 0, 0], 1, [0, 0, 0], 1)
         ])),
       ]))

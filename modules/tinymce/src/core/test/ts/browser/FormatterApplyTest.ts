@@ -2084,12 +2084,28 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     LegacyUnit.equal(getContent(editor), '<div class="a">a</div>b');
   });
 
-  suite.test('Apply format excluding trailing space', function (editor) {
+  suite.test('Apply format including trailing space', function (editor) {
     editor.setContent('<p>a b</p>');
     editor.formatter.register('format', { inline: 'b' });
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 2);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>a</b> b</p>');
+    LegacyUnit.equal(getContent(editor), '<p><b>a </b>b</p>');
+  });
+
+  suite.test('Apply format on single space', function (editor) {
+    editor.setContent('<p>a&nbsp; &nbsp; &nbsp;b</p>');
+    editor.formatter.register('format', { inline: 'b' });
+    LegacyUnit.setSelection(editor, 'p', 2, 'p', 3);
+    editor.formatter.apply('format');
+    LegacyUnit.equal(getContent(editor), '<p>a\u00a0<b> </b>\u00a0 \u00a0b</p>');
+  });
+
+  suite.test('Apply format on multiple spaces', function (editor) {
+    editor.setContent('<p>a&nbsp; &nbsp; &nbsp;b</p>');
+    editor.formatter.register('format', { inline: 'b' });
+    LegacyUnit.setSelection(editor, 'p', 2, 'p', 5);
+    editor.formatter.apply('format');
+    LegacyUnit.equal(getContent(editor), '<p>a\u00a0<b> \u00a0 </b>\u00a0b</p>');
   });
 
   suite.test('Apply format with onformat handler', function (editor) {
@@ -2118,7 +2134,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     LegacyUnit.equal(getContent(editor), '<p><b>a</b></p><ul><li>a</li><li>b</li></ul>');
   });
 
-  suite.test('Applying background color to partically selected contents', function (editor) {
+  suite.test('Applying background color to partially selected contents', function (editor) {
     editor.setContent('<p><span style="background-color: #ff0000;">ab<span style="font-size: 32px;">cd</span><strong>ef</strong></span></p>');
     LegacyUnit.setSelection(editor, 'span span', 1, 'strong', 1);
     editor.formatter.apply('hilitecolor', { value: '#00ff00' });

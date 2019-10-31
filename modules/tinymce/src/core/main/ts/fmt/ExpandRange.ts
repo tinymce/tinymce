@@ -17,45 +17,6 @@ import NodeType from '../dom/NodeType';
 const isBookmarkNode = Bookmarks.isBookmarkNode;
 const getParents = FormatUtils.getParents, isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode, isTextBlock = FormatUtils.isTextBlock;
 
-// This function walks down the tree to find the leaf at the selection.
-// The offset is also returned as if node initially a leaf, the offset may be in the middle of the text node.
-const findLeaf = function (node: Node, offset?: number) {
-  if (typeof offset === 'undefined') {
-    offset = NodeType.isText(node) ? node.length : node.childNodes.length;
-  }
-
-  while (node && node.hasChildNodes()) {
-    node = node.childNodes[offset];
-    if (node) {
-      offset = NodeType.isText(node) ? node.length : node.childNodes.length;
-    }
-  }
-
-  return { node, offset };
-};
-
-const excludeTrailingWhitespace = function (endContainer: Node, endOffset: number) {
-  // Avoid applying formatting to a trailing space,
-  // but remove formatting from trailing space
-  let leaf = findLeaf(endContainer, endOffset);
-  if (leaf.node) {
-    while (leaf.node && leaf.offset === 0 && leaf.node.previousSibling) {
-      leaf = findLeaf(leaf.node.previousSibling);
-    }
-
-    if (leaf.node && leaf.offset > 0 && NodeType.isText(leaf.node) &&
-        leaf.node.nodeValue.charAt(leaf.offset - 1) === ' ') {
-
-      if (leaf.offset > 1) {
-        leaf.node.splitText(leaf.offset - 1);
-        endContainer = leaf.node;
-      }
-    }
-  }
-
-  return endContainer;
-};
-
 const isBogusBr = function (node: Element) {
   return node.nodeName === 'BR' && node.getAttribute('data-mce-bogus') && !node.nextSibling;
 };
@@ -75,7 +36,7 @@ const findParentContentEditable = function (dom: DOMUtils, node: Node) {
   return node;
 };
 
-const findSpace = function (start: boolean, remove: boolean, node: Node, offset?: number) {
+const findSpace = function (start: boolean, node: Node, includeTrailingSpace: boolean, offset?: number) {
   let pos, pos2;
   const str = node.nodeValue;
 
@@ -88,26 +49,27 @@ const findSpace = function (start: boolean, remove: boolean, node: Node, offset?
     pos2 = str.lastIndexOf('\u00a0', offset);
     pos = pos > pos2 ? pos : pos2;
 
-    // Include the space on remove to avoid tag soup
-    // As long as we are either going to the right,
-    // - OR - going to the left and pos isn't already at the end of the string
-    if (pos !== -1 && !remove && (pos < offset || !start) && pos <= str.length) {
+    if (pos !== -1 && !includeTrailingSpace && pos < offset) {
       pos++;
     }
   } else {
     pos = str.indexOf(' ', offset);
     pos2 = str.indexOf('\u00a0', offset);
     pos = pos !== -1 && (pos2 === -1 || pos < pos2) ? pos : pos2;
+
+    if (pos !== -1 && includeTrailingSpace && pos < str.length) {
+      pos++;
+    }
   }
 
   return pos;
 };
 
-const findWordEndPoint = function (dom: DOMUtils, body: HTMLElement, container: Node, offset: number, start: boolean, remove: boolean) {
+const findWordEndPoint = function (dom: DOMUtils, body: HTMLElement, container: Node, offset: number, start: boolean, includeTrailingSpaces: boolean) {
   let node, lastTextNode;
 
   if (NodeType.isText(container)) {
-    const pos = findSpace(start, remove, container, offset);
+    const pos = findSpace(start, container, includeTrailingSpaces, offset);
 
     if (pos !== -1) {
       return { container, offset: pos };
@@ -121,7 +83,7 @@ const findWordEndPoint = function (dom: DOMUtils, body: HTMLElement, container: 
   while ((node = walker[start ? 'prev' : 'next']())) {
     if (NodeType.isText(node) && !isBookmarkNode(node.parentNode)) {
       lastTextNode = node;
-      const pos = findSpace(start, remove, node);
+      const pos = findSpace(start, node, includeTrailingSpaces);
 
       if (pos !== -1) {
         return { container: node, offset: pos };
@@ -249,7 +211,7 @@ const findParentContainer = function (dom: DOMUtils, format, startContainer: Nod
   return container;
 };
 
-const expandRng = function (editor: Editor, rng: Range, format, remove?: boolean) {
+const expandRng = function (editor: Editor, rng: Range, format, includeTrailingSpace: boolean = false) {
   let endPoint,
     startContainer = rng.startContainer,
     startOffset = rng.startOffset,
@@ -306,23 +268,18 @@ const expandRng = function (editor: Editor, rng: Range, format, remove?: boolean
 
   if (rng.collapsed) {
     // Expand left to closest word boundary
-    endPoint = findWordEndPoint(dom, editor.getBody(), startContainer, startOffset, true, remove);
+    endPoint = findWordEndPoint(dom, editor.getBody(), startContainer, startOffset, true, includeTrailingSpace);
     if (endPoint) {
       startContainer = endPoint.container;
       startOffset = endPoint.offset;
     }
 
     // Expand right to closest word boundary
-    endPoint = findWordEndPoint(dom, editor.getBody(), endContainer, endOffset, false, remove);
+    endPoint = findWordEndPoint(dom, editor.getBody(), endContainer, endOffset, false, includeTrailingSpace);
     if (endPoint) {
       endContainer = endPoint.container;
       endOffset = endPoint.offset;
     }
-  }
-
-  if (format[0].inline) {
-    // For "removeformat", we include trailing whitespace. For other formatting, we don't
-    endContainer = remove ? endContainer : excludeTrailingWhitespace(endContainer, endOffset);
   }
 
   // Move start/end point up the tree if the leaves are sharp and if we are in different containers

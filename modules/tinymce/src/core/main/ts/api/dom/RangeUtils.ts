@@ -27,7 +27,7 @@ interface RangeUtils {
  *
  * @class tinymce.dom.RangeUtils
  */
-function RangeUtils(dom: DOMUtils) {
+function RangeUtils(dom: DOMUtils): RangeUtils {
   /**
    * Walks the specified range like object and executes the callback for each sibling collection it finds.
    *
