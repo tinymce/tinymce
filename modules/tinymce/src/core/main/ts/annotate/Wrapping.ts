@@ -11,7 +11,7 @@ import { Attr, Class, Classes, Element, Insert, Node, Replication, Traverse, Htm
 import { AnnotatorSettings } from './AnnotationsRegistry';
 import Editor from '../api/Editor';
 import GetBookmark from '../bookmark/GetBookmark';
-import ExpandRange from '../fmt/ExpandRange';
+import * as ExpandRange from '../fmt/ExpandRange';
 
 import RangeWalk from '../selection/RangeWalk';
 import { ChildContext, context } from './AnnotationContext';

@@ -8,7 +8,7 @@
 import { Unicode } from '@ephox/katamari';
 import { Node, Text, Traverse } from '@ephox/sugar';
 import { isCaretNode } from '../fmt/FormatContainer';
-import FormatUtils from '../fmt/FormatUtils';
+import * as FormatUtils from '../fmt/FormatUtils';
 import { isAnnotation } from './Identification';
 import Editor from '../api/Editor';
 

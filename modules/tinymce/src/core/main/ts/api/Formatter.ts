@@ -5,18 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
+import { Node, Range } from '@ephox/dom-globals';
 import { Cell, Fun } from '@ephox/katamari';
-import ApplyFormat from '../fmt/ApplyFormat';
+import * as ApplyFormat from '../fmt/ApplyFormat';
 import * as CaretFormat from '../fmt/CaretFormat';
 import * as FormatChanged from '../fmt/FormatChanged';
 import { FormatRegistry } from '../fmt/FormatRegistry';
-import MatchFormat from '../fmt/MatchFormat';
-import Preview from '../fmt/Preview';
-import RemoveFormat from '../fmt/RemoveFormat';
-import ToggleFormat from '../fmt/ToggleFormat';
+import * as MatchFormat from '../fmt/MatchFormat';
+import * as Preview from '../fmt/Preview';
+import * as RemoveFormat from '../fmt/RemoveFormat';
+import * as ToggleFormat from '../fmt/ToggleFormat';
 import FormatShortcuts from '../keyboard/FormatShortcuts';
 import { Format, FormatVars } from './fmt/Format';
+import { RangeLikeObject } from '../selection/RangeTypes';
 import Editor from './Editor';
 
 /**
@@ -34,17 +35,9 @@ import Editor from './Editor';
  *  tinymce.activeEditor.formatter.apply('mycustomformat');
  */
 
-// TODO: Figure out why we need a range like object, instead of an actual range (see ExpandRange.ts)
-interface RangeLikeObject {
-  startContainer: Node;
-  startOffset: number;
-  endContainer: Node;
-  endOffset: number;
-}
-
 interface Formatter extends FormatRegistry {
   apply (name: string, vars?: FormatVars, node?: Node | RangeLikeObject): void;
-  remove (name: string, vars?: FormatVars, node?: Node | RangeLikeObject, similar?: boolean): void;
+  remove (name: string, vars?: FormatVars, node?: Node | Range, similar?: boolean): void;
   toggle (name: string, vars?: FormatVars, node?: Node): void;
   match (name: string, vars?: FormatVars, node?: Node): boolean;
   matchAll (names: string[], vars?: FormatVars): string[];

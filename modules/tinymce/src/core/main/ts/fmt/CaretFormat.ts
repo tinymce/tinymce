@@ -7,28 +7,29 @@
 
 import { Arr, Fun } from '@ephox/katamari';
 import { Insert, Remove, Element, Node as SugarNode, Attr } from '@ephox/sugar';
-import { Node } from '@ephox/dom-globals';
+import { Document, Node, Range } from '@ephox/dom-globals';
 import CaretPosition from '../caret/CaretPosition';
 import NodeType from '../dom/NodeType';
 import PaddingBr from '../dom/PaddingBr';
 import TreeWalker from '../api/dom/TreeWalker';
-import ExpandRange from './ExpandRange';
-import FormatUtils from './FormatUtils';
-import MatchFormat from './MatchFormat';
+import * as ExpandRange from './ExpandRange';
+import * as FormatUtils from './FormatUtils';
+import * as MatchFormat from './MatchFormat';
 import * as SplitRange from '../selection/SplitRange';
 import Zwsp from '../text/Zwsp';
 import Selection from '../api/dom/Selection';
 import Editor from '../api/Editor';
 import { isCaretNode, getParentCaretContainer } from './FormatContainer';
 import DeleteElement from '../delete/DeleteElement';
+import { FormatVars } from '../api/fmt/Format';
 
 const ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret';
 
-const importNode = function (ownerDocument, node) {
+const importNode = function (ownerDocument: Document, node: Node) {
   return ownerDocument.importNode(node, true);
 };
 
-const getEmptyCaretContainers = function (node) {
+const getEmptyCaretContainers = function (node: Node) {
   const nodes = [];
 
   while (node) {
@@ -47,16 +48,16 @@ const getEmptyCaretContainers = function (node) {
   return nodes;
 };
 
-const isCaretContainerEmpty = function (node) {
+const isCaretContainerEmpty = function (node: Node) {
   return getEmptyCaretContainers(node).length > 0;
 };
 
-const findFirstTextNode = function (node) {
+const findFirstTextNode = function (node: Node) {
   if (node) {
     const walker = new TreeWalker(node, node);
 
     for (node = walker.current(); node; node = walker.next()) {
-      if (node.nodeType === 3) {
+      if (NodeType.isText(node)) {
         return node;
       }
     }
@@ -65,7 +66,7 @@ const findFirstTextNode = function (node) {
   return null;
 };
 
-const createCaretContainer = function (fill) {
+const createCaretContainer = function (fill: boolean) {
   const caretContainer = Element.fromTag('span');
 
   Attr.setAll(caretContainer, {
@@ -82,7 +83,7 @@ const createCaretContainer = function (fill) {
   return caretContainer;
 };
 
-const trimZwspFromCaretContainer = function (caretContainerNode) {
+const trimZwspFromCaretContainer = function (caretContainerNode: Node) {
   const textNode = findFirstTextNode(caretContainerNode);
   if (textNode && textNode.nodeValue.charAt(0) === ZWSP) {
     textNode.deleteData(0, 1);
@@ -135,7 +136,7 @@ const removeCaretContainer = function (editor: Editor, node: Node, moveCaret: bo
   }
 };
 
-const insertCaretContainerNode = function (editor: Editor, caretContainer, formatNode) {
+const insertCaretContainerNode = function (editor: Editor, caretContainer: Node, formatNode: Node) {
   const dom = editor.dom, block = dom.getParent(formatNode, Fun.curry(FormatUtils.isTextBlock, editor));
 
   if (block && dom.isEmpty(block)) {
@@ -156,7 +157,7 @@ const appendNode = function (parentNode: Node, node: Node) {
   return node;
 };
 
-const insertFormatNodesIntoCaretContainer = function (formatNodes: Node[], caretContainer) {
+const insertFormatNodesIntoCaretContainer = function (formatNodes: Node[], caretContainer: Node) {
   const innerMostFormatNode = Arr.foldr(formatNodes, function (parentNode, formatNode) {
     return appendNode(parentNode, formatNode.cloneNode(false));
   }, caretContainer);
@@ -164,7 +165,7 @@ const insertFormatNodesIntoCaretContainer = function (formatNodes: Node[], caret
   return appendNode(innerMostFormatNode, innerMostFormatNode.ownerDocument.createTextNode(ZWSP));
 };
 
-const applyCaretFormat = function (editor: Editor, name, vars) {
+const applyCaretFormat = function (editor: Editor, name: string, vars: FormatVars) {
   let rng, caretContainer, textNode, offset, bookmark, container, text;
   const selection = editor.selection;
 
@@ -216,7 +217,7 @@ const applyCaretFormat = function (editor: Editor, name, vars) {
   }
 };
 
-const removeCaretFormat = function (editor: Editor, name, vars, similar) {
+const removeCaretFormat = function (editor: Editor, name: string, vars: FormatVars, similar: boolean) {
   const dom = editor.dom, selection: Selection = editor.selection;
   let container, offset, bookmark;
   let hasContentAfter, node, formatNode;
@@ -265,7 +266,9 @@ const removeCaretFormat = function (editor: Editor, name, vars, similar) {
     let expandedRng = ExpandRange.expandRng(editor, rng, editor.formatter.get(name), true);
     expandedRng = SplitRange.split(expandedRng);
 
-    editor.formatter.remove(name, vars, expandedRng);
+    // TODO: Figure out how on earth this works, as it shouldn't since remove format
+    //  definitely seems to require an actual Range
+    editor.formatter.remove(name, vars, expandedRng as Range);
     selection.moveToBookmark(bookmark);
   } else {
     caretContainer = getParentCaretContainer(editor.getBody(), formatNode);
@@ -309,7 +312,7 @@ const setup = function (editor: Editor) {
   });
 };
 
-const replaceWithCaretFormat = function (targetNode, formatNodes) {
+const replaceWithCaretFormat = function (targetNode: Node, formatNodes: Node[]) {
   const caretContainer = createCaretContainer(false);
   const innerMost = insertFormatNodesIntoCaretContainer(formatNodes, caretContainer.dom());
   Insert.before(Element.fromDom(targetNode), caretContainer);

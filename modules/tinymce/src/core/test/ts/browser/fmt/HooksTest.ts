@@ -2,7 +2,7 @@ import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
-import Hooks from 'tinymce/core/fmt/Hooks';
+import * as Hooks from 'tinymce/core/fmt/Hooks';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.HooksTest', function (success, failure) {

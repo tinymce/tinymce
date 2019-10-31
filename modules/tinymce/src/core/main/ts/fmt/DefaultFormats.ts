@@ -6,9 +6,10 @@
  */
 
 import Tools from '../api/util/Tools';
+import DOMUtils from '../api/dom/DOMUtils';
 import { Formats } from '../api/fmt/Format';
 
-const get = function (dom) {
+const get = function (dom: DOMUtils) {
   const formats: Formats = {
     valigntop: [
       { selector: 'td,th', styles: { verticalAlign: 'top' } }

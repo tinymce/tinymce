@@ -12,7 +12,8 @@ export type RemoveFormat = RemoveBlockFormat | RemoveInlineFormat | RemoveSelect
 export type Format = ApplyFormat | RemoveFormat;
 export type Formats = Record<string, Format | Format[]>;
 
-export type FormatVars = Record<string, any>;
+export type FormatAttrOrStyleValue = string | ((vars?: FormatVars) => string);
+export type FormatVars = Record<string, string>;
 
 // Largely derived from the docs and src/core/main/ts/fmt/DefaultFormats.ts
 export interface CommonFormat<T> {
@@ -28,9 +29,9 @@ export interface CommonFormat<T> {
 }
 
 export interface CommonApplyFormat<T> extends CommonFormat<T> {
-  attributes?: Record<string, string | ((vars?: FormatVars) => string | number)>;
+  attributes?: Record<string, FormatAttrOrStyleValue>;
   preview?: string | boolean;
-  styles?: Record<string, string | ((vars?: FormatVars) => string)>;
+  styles?: Record<string, FormatAttrOrStyleValue>;
   toggle?: boolean;
   wrapper?: boolean;
   merge_siblings?: boolean;
@@ -55,8 +56,8 @@ export interface SelectorFormat extends CommonApplyFormat<SelectorFormat> {
 
 export interface CommonRemoveFormat<T> extends CommonFormat<T> {
   remove?: 'none' | 'empty' | 'all';
-  attributes?: string[];
-  styles?: string[];
+  attributes?: string[] | Record<string, FormatAttrOrStyleValue>;
+  styles?: string[] | Record<string, FormatAttrOrStyleValue>;
   split?: boolean;
   deep?: boolean;
 }

@@ -5,13 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import FormatUtils from './FormatUtils';
+import * as FormatUtils from './FormatUtils';
 import Editor from '../api/Editor';
-import { Format, SelectorFormat } from '../api/fmt/Format';
+import { Format, FormatVars, SelectorFormat } from '../api/fmt/Format';
+import { Node } from '@ephox/dom-globals';
+import DOMUtils from '../api/dom/DOMUtils';
 
 const isEq = FormatUtils.isEq;
 
-const matchesUnInheritedFormatSelector = function (ed, node, name) {
+const matchesUnInheritedFormatSelector = function (ed: Editor, node: Node, name: string) {
   const formatList = ed.formatter.get(name);
 
   if (formatList) {
@@ -25,7 +27,7 @@ const matchesUnInheritedFormatSelector = function (ed, node, name) {
   return false;
 };
 
-const matchParents = function (editor: Editor, node, name, vars) {
+const matchParents = function (editor: Editor, node: Node, name: string, vars: FormatVars) {
   const root = editor.dom.getRoot();
 
   if (node === root) {
@@ -45,7 +47,7 @@ const matchParents = function (editor: Editor, node, name, vars) {
   return matchNode(editor, node, name, vars);
 };
 
-const matchName = function (dom, node, format) {
+const matchName = function (dom: DOMUtils, node: Node, format) {
   // Check for inline match
   if (isEq(node, format.inline)) {
     return true;
@@ -62,7 +64,7 @@ const matchName = function (dom, node, format) {
   }
 };
 
-const matchItems = function (dom, node, format, itemName, similar, vars) {
+const matchItems = function (dom: DOMUtils, node: Node, format, itemName: string, similar: boolean, vars: FormatVars) {
   let key, value;
   const items = format[itemName];
   let i;
@@ -106,7 +108,7 @@ const matchItems = function (dom, node, format, itemName, similar, vars) {
   return format;
 };
 
-const matchNode = function (ed, node, name, vars?, similar?) {
+const matchNode = function (ed: Editor, node: Node, name: string, vars?: FormatVars, similar?: boolean) {
   const formatList = ed.formatter.get(name);
   let format, i, x, classes;
   const dom = ed.dom;
@@ -133,7 +135,7 @@ const matchNode = function (ed, node, name, vars?, similar?) {
   }
 };
 
-const match = function (editor: Editor, name, vars, node) {
+const match = function (editor: Editor, name: string, vars: FormatVars, node) {
   let startNode;
 
   // Check specified node
@@ -158,7 +160,7 @@ const match = function (editor: Editor, name, vars, node) {
   return false;
 };
 
-const matchAll = function (editor: Editor, names, vars) {
+const matchAll = function (editor: Editor, names: string[], vars: FormatVars) {
   let startElement;
   const matchedFormatNames = [];
   const checkedMap = {};
@@ -181,7 +183,7 @@ const matchAll = function (editor: Editor, names, vars) {
   return matchedFormatNames;
 };
 
-const canApply = function (editor: Editor, name) {
+const canApply = function (editor: Editor, name: string) {
   const formatList = editor.formatter.get(name) as Format[];
   let startNode, parents, i, x, selector;
   const dom = editor.dom;
@@ -210,7 +212,7 @@ const canApply = function (editor: Editor, name) {
   return false;
 };
 
-export default {
+export {
   matchNode,
   matchName,
   match,
