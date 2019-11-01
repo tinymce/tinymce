@@ -36,7 +36,7 @@ const splitTextBlock = (editor: Editor, figure: HTMLElement) => {
   const dom = editor.dom;
 
   const textBlock = dom.getParent(figure.parentNode, (node: Node) => {
-    return editor.schema.getTextBlockElements()[node.nodeName];
+    return !!editor.schema.getTextBlockElements()[node.nodeName];
   }, editor.getBody());
 
   if (textBlock) {

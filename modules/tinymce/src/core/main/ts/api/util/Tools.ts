@@ -21,9 +21,9 @@ interface Tools {
   toArray <T>(obj: ArrayLike<T>): T[];
   hasOwn (obj: any, name: string): boolean;
   makeMap <T>(items: ArrayLike<T> | string, delim?: string | RegExp, map?: Record<string, T | string>): Record<string, T | string>;
-  each <T>(arr: ReadonlyArray<T>, cb: ArrayCallback<T, any>, scope?: any): void;
+  each <T>(arr: ArrayLike<T>, cb: ArrayCallback<T, any>, scope?: any): void;
   each <T>(obj: T, cb: ObjCallback<T, any>, scope?: any): void;
-  map <T, U>(arr: ReadonlyArray<T>, cb: ArrayCallback<T, U>, scope?: any): Array<U>;
+  map <T, U>(arr: ArrayLike<T>, cb: ArrayCallback<T, U>, scope?: any): Array<U>;
   map <T, U>(obj: T, cb: ObjCallback<T, U>, scope?: any): Array<U>;
   extend (obj: {}, ext: {}, ...objs: {}[]): any;
   create (name: string, p: {}, root?: {});

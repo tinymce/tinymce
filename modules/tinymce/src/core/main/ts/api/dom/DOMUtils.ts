@@ -183,13 +183,13 @@ interface DOMUtils {
       w: number;
       h: number;
   };
-  getParent (node: string | Node, selector?: string | Function, root?: Node): Element;
-  getParents (elm: string | Node, selector?: string | Function, root?: Node, collect?: boolean): Element[];
+  getParent (node: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node): Element;
+  getParents (elm: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node, collect?: boolean): Element[];
   get (elm: string | Node): HTMLElement;
   getNext (node: Node, selector: string | Function): Node;
   getPrev (node: Node, selector: string | Function): Node;
-  select <K extends keyof HTMLElementTagNameMap>(selector: K, scope?: string | Element): Array<HTMLElementTagNameMap[K]>;
-  select (selector: string, scope?: string | Element): HTMLElement[];
+  select <K extends keyof HTMLElementTagNameMap>(selector: K, scope?: string | Node): Array<HTMLElementTagNameMap[K]>;
+  select (selector: string, scope?: string | Node): HTMLElement[];
   is (elm: Node | Node[], selector: string): boolean;
   add (parentElm: RunArguments, name: string | Node, attrs?: Record<string, any>, html?: string | Node, create?: boolean): HTMLElement;
   create (name: string, attrs?: Record<string, string | number>, html?: string | Node): HTMLElement;
@@ -546,11 +546,11 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return Sizzle(selector, elms[0].ownerDocument || elms[0], null, elms).length > 0;
   };
 
-  const getParents = (elm: string | Node, selector?: string | Function, root?: Node, collect?: boolean): Element[] => {
+  const getParents = (elm: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node, collect?: boolean): Element[] => {
     const result = [];
     let selectorVal;
 
-    let node: Element = get(elm);
+    let node: HTMLElement = get(elm);
     collect = collect === undefined;
 
     // Default root on inline mode
@@ -584,13 +584,13 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
         }
       }
 
-      node = node.parentNode as Element;
+      node = node.parentNode as HTMLElement;
     }
 
     return collect ? result : null;
   };
 
-  const getParent = (node: string | Node, selector?: string | Function, root?: Node): Element => {
+  const getParent = (node: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node): Element => {
     const parents = getParents(node, selector, root, false);
     return parents && parents.length > 0 ? parents[0] : null;
   };
@@ -625,7 +625,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return _findSib(node, selector, 'previousSibling');
   };
 
-  const select = (selector: string, scope?: Element | string) => {
+  const select = (selector: string, scope?: Node | string) => {
     return Sizzle(selector, get(scope) || settings.root_element || doc, []);
   };
 

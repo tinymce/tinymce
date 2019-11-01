@@ -2,7 +2,7 @@ import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
-import RemoveFormat from 'tinymce/core/fmt/RemoveFormat';
+import * as RemoveFormat from 'tinymce/core/fmt/RemoveFormat';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.RemoveFormatTest', (success, failure) => {
   SilverTheme();

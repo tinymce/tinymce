@@ -5,13 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import ApplyFormat from './ApplyFormat';
-import MatchFormat from './MatchFormat';
-import RemoveFormat from './RemoveFormat';
+import { Node } from '@ephox/dom-globals';
 import Editor from '../api/Editor';
+import { FormatVars } from '../api/fmt/Format';
+import * as ApplyFormat from './ApplyFormat';
 import { FormatRegistry } from './FormatRegistry';
+import * as MatchFormat from './MatchFormat';
+import * as RemoveFormat from './RemoveFormat';
 
-const toggle = function (editor: Editor, formats: FormatRegistry, name: string, vars, node) {
+const toggle = function (editor: Editor, formats: FormatRegistry, name: string, vars: FormatVars, node: Node) {
   const fmt = formats.get(name);
 
   if (MatchFormat.match(editor, name, vars, node) && (!('toggle' in fmt[0]) || fmt[0].toggle)) {
@@ -21,6 +23,6 @@ const toggle = function (editor: Editor, formats: FormatRegistry, name: string, 
   }
 };
 
-export default {
+export {
   toggle
 };

@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
-import Preview from 'tinymce/core/fmt/Preview';
+import * as Preview from 'tinymce/core/fmt/Preview';
 import Theme from 'tinymce/themes/silver/Theme';
 import HtmlUtils from '../../module/test/HtmlUtils';
 

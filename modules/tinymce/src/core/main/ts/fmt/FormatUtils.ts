@@ -10,6 +10,10 @@ import TreeWalker from '../api/dom/TreeWalker';
 import Selection from '../api/dom/Selection';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
+import NodeType from '../dom/NodeType';
+import { FormatAttrOrStyleValue, FormatVars } from '../api/fmt/Format';
+
+const isNode = (node: any): node is Node => !!(node as any).nodeType;
 
 const isInlineBlock = function (node: Node): boolean {
   return node && /^(IMG)$/.test(node.nodeName);
@@ -57,11 +61,11 @@ const moveStart = function (dom: DOMUtils, selection: Selection, rng: Range) {
  * @param {boolean} inc (Optional) Include the current node in checking. Defaults to false.
  * @return {Node} Next or previous node or undefined if it wasn't found.
  */
-const getNonWhiteSpaceSibling = function (node, next?, inc?) {
+const getNonWhiteSpaceSibling = function (node: Node, next?: boolean, inc?: boolean) {
   if (node) {
-    next = next ? 'nextSibling' : 'previousSibling';
+    const nextName = next ? 'nextSibling' : 'previousSibling';
 
-    for (node = inc ? node : node[next]; node; node = node[next]) {
+    for (node = inc ? node : node[nextName]; node; node = node[nextName]) {
       if (node.nodeType === 1 || !isWhiteSpaceNode(node)) {
         return node;
       }
@@ -69,8 +73,8 @@ const getNonWhiteSpaceSibling = function (node, next?, inc?) {
   }
 };
 
-const isTextBlock = function (editor: Editor, name) {
-  if (name.nodeType) {
+const isTextBlock = function (editor: Editor, name: string | Node) {
+  if (isNode(name)) {
     name = name.nodeName;
   }
 
@@ -82,7 +86,7 @@ const isValid = function (ed: Editor, parent: string, child: string) {
 };
 
 const isWhiteSpaceNode = function (node: Node) {
-  return node && node.nodeType === 3 && /^([\t \r\n]+|)$/.test(node.nodeValue);
+  return node && NodeType.isText(node) && /^([\t \r\n]+|)$/.test(node.nodeValue);
 };
 
 /**
@@ -93,7 +97,7 @@ const isWhiteSpaceNode = function (node: Node) {
  * @param {Object} vars Name/value array with variables to replace.
  * @return {String} New value with replaced variables.
  */
-const replaceVars = function <T>(value: string | ((vars: T) => string), vars: T): string {
+const replaceVars = function (value: FormatAttrOrStyleValue, vars: FormatVars): string {
   if (typeof value !== 'string') {
     value = value(vars);
   } else if (vars) {
@@ -146,7 +150,7 @@ const getStyle = function (dom: DOMUtils, node: Node, name: string) {
   return normalizeStyleValue(dom, dom.getStyle(node, name), name);
 };
 
-const getTextDecoration = function (dom: DOMUtils, node: Node) {
+const getTextDecoration = function (dom: DOMUtils, node: Node): string {
   let decoration;
 
   dom.getParent(node, function (n) {
@@ -161,7 +165,8 @@ const getParents = function (dom: DOMUtils, node: Node, selector?: string) {
   return dom.getParents(node, selector, dom.getRoot());
 };
 
-export default {
+export {
+  isNode,
   isInlineBlock,
   moveStart,
   getNonWhiteSpaceSibling,
