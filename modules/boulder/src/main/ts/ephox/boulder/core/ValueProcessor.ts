@@ -3,7 +3,6 @@ import { Adt, Arr, Fun, Merger, Obj, Option, Thunk, Type } from '@ephox/katamari
 import * as FieldPresence from '../api/FieldPresence';
 import * as Objects from '../api/Objects';
 import { ResultCombine } from '../combine/ResultCombine';
-import { fieldAdt, TypeProcessorAdt, FieldProcessorAdt, typeAdt } from '../format/TypeTokens';
 import * as ObjReader from './ObjReader';
 import * as ObjWriter from './ObjWriter';
 import * as SchemaError from './SchemaError';
@@ -16,15 +15,18 @@ export type ValueExtractor = (label: string, prop: Processor, strength: () => an
 export interface Processor {
   extract: PropExtractor;
   toString: () => string;
-  toDsl: () => TypeProcessorAdt;
 }
 
-export type FieldValueProcessor = (key: string, okey: string, presence: FieldPresence.FieldPresenceAdt, prop: Processor) => FieldProcessorAdt;
-export type StateValueProcessor = <T>(okey: string, instantiator) => T;
+export interface FieldProcessorAdt extends Adt {
+  fold<T>(OnFieldFieldProcessor, StateFieldProcessor): T;
+}
 
 export interface ValueProcessorAdt extends Adt {
   fold: (FieldValueProcessor, StateValueProcessor) => any;
 }
+
+export type FieldValueProcessor = (key: string, okey: string, presence: FieldPresence.FieldPresenceAdt, prop: Processor) => FieldProcessorAdt;
+export type StateValueProcessor = <T>(okey: string, instantiator) => T;
 
 export interface ValueProcessor {
   field: FieldValueProcessor;
@@ -150,14 +152,9 @@ const valueThunk = (getDelegate: () => Processor): Processor => {
     return getDelegate().toString();
   };
 
-  const toDsl = function () {
-    return getDelegate().toDsl();
-  };
-
   return {
     extract,
-    toString,
-    toDsl
+    toString
   };
 };
 
@@ -176,14 +173,9 @@ const value = function (validator: ValueValidator): Processor {
     return 'val';
   };
 
-  const toDsl = function () {
-    return typeAdt.itemOf(validator);
-  };
-
   return {
     extract,
-    toString,
-    toDsl
+    toString
   };
 };
 
@@ -216,8 +208,7 @@ const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
 
   return {
     extract,
-    toString: delegate.toString,
-    toDsl: delegate.toDsl
+    toString: delegate.toString
   };
 };
 
@@ -237,22 +228,9 @@ const objOf = function (fields: FieldProcessorAdt[]): Processor {
     return 'obj{\n' + fieldStrings.join('\n') + '}';
   };
 
-  const toDsl = function () {
-    return typeAdt.objOf(
-      Arr.map(fields, function (f) {
-        return f.fold(function (key, okey, presence, prop) {
-          return fieldAdt.field(key, presence, prop);
-        }, function (okey, instantiator) {
-          return fieldAdt.state(okey);
-        });
-      })
-    );
-  };
-
   return {
     extract,
-    toString,
-    toDsl
+    toString
   };
 };
 
@@ -268,14 +246,9 @@ const arrOf = function (prop: Processor): Processor {
     return 'array(' + prop.toString() + ')';
   };
 
-  const toDsl = function () {
-    return typeAdt.arrOf(prop);
-  };
-
   return {
     extract,
-    toString,
-    toDsl
+    toString
   };
 };
 
@@ -300,14 +273,9 @@ const setOf = function (validator: ValueValidator, prop: Processor): Processor {
     return 'setOf(' + prop.toString() + ')';
   };
 
-  const toDsl = function () {
-    return typeAdt.setOf(validator, prop);
-  };
-
   return {
     extract,
-    toString,
-    toDsl
+    toString
   };
 };
 
@@ -326,9 +294,6 @@ const func = function (args: string[], schema: Processor, retriever): Processor 
     extract: delegate.extract,
     toString () {
       return 'function';
-    },
-    toDsl () {
-      return typeAdt.func(args, schema);
     }
   };
 };
@@ -346,14 +311,9 @@ const thunk = function (desc: string, processor: () => Processor): Processor {
     return getP().toString();
   };
 
-  const toDsl = function () {
-    return typeAdt.thunk(desc);
-  };
-
   return {
     extract,
-    toString,
-    toDsl
+    toString
   };
 };
 

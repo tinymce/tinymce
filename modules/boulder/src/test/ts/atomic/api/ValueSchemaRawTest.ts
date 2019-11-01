@@ -5,7 +5,7 @@ import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as Objects from 'ephox/boulder/api/Objects';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
-import { Processor } from 'ephox/boulder/api/DslType';
+import { Processor } from 'ephox/boulder/api/Main';
 
 UnitTest.test('ValueSchemaRawTest', function () {
   const checkErr = function (label: string, expectedPart: string, input: any, processor: Processor) {
