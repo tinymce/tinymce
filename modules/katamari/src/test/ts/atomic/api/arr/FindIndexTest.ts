@@ -4,6 +4,7 @@ import { tOption } from 'ephox/katamari/api/OptionInstances';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable as T } from '@ephox/dispute';
 import fc from 'fast-check';
+import { negativeInteger } from 'ephox/katamari/test/arb/ArbDataTypes';
 
 UnitTest.test('Arr.findIndex: unit tests', () => {
   const checkNoneHelper = (input: ArrayLike<number>, pred: (x: number) => boolean): void => {
@@ -31,8 +32,6 @@ UnitTest.test('Arr.findIndex: unit tests', () => {
   check(5, [ 4, 2, 10, 41, 3, 100 ], (x) => x > 80);
   checkNone([ 4, 2, 10, 412, 3 ], (x) => x === 41);
 });
-
-const negativeInteger = () => fc.integer(Number.MIN_SAFE_INTEGER, -1);
 
 UnitTest.test('Arr.findIndex: find in middle of array', () => {
   fc.assert(fc.property(fc.array(fc.nat()), negativeInteger(), fc.array(fc.nat()), (prefix, element, suffix) => {
