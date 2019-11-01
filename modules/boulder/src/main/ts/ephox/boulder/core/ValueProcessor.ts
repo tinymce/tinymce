@@ -6,7 +6,7 @@ import { ResultCombine } from '../combine/ResultCombine';
 import * as ObjReader from './ObjReader';
 import * as ObjWriter from './ObjWriter';
 import * as SchemaError from './SchemaError';
-import { SimpleResult } from '../alien/SimpleResult';
+import { SimpleResult, SimpleResultType } from '../alien/SimpleResult';
 
 // TODO: Handle the fact that strength shouldn't be pushed outside this project.
 export type ValueValidator = (a, strength?: () => any) => SimpleResult<string, any>;
@@ -252,6 +252,33 @@ const arrOf = function (prop: Processor): Processor {
   };
 };
 
+const oneOf = function (props: Processor[]): Processor {
+  const extract = function (path: string[], strength, val: any): SimpleResult<any, any> {
+    const errors: Array<SimpleResult<string[], any>> = [];
+
+    // Return on first match
+    for (const prop of props) {
+      const res = prop.extract(path, strength, val);
+      if (res.stype === SimpleResultType.Value) {
+        return res;
+      }
+      errors.push(res);
+    }
+
+    // All failed, return errors
+    return ResultCombine.consolidateArr(errors);
+  };
+
+  const toString = function () {
+    return 'oneOf(' + Arr.map(props, (prop) => prop.toString()).join(', ') + ')';
+  };
+
+  return {
+    extract,
+    toString
+  };
+};
+
 const setOf = function (validator: ValueValidator, prop: Processor): Processor {
   const validateKeys = function (path, keys) {
     return arrOf(value(validator)).extract(path, Fun.identity, keys);
@@ -331,6 +358,7 @@ export {
   objOf,
   objOfOnly,
   arrOf,
+  oneOf,
   setOf,
   arrOfObj,
 

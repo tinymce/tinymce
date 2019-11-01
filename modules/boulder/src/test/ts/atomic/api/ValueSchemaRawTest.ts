@@ -436,4 +436,30 @@ UnitTest.test('ValueSchemaRawTest', function () {
       (actual) => assert.fail('Should not pass')
     );
   });
+
+  Logger.sync('Checking oneOf', () => {
+    const processor = ValueSchema.oneOf([
+      ValueSchema.string,
+      ValueSchema.number
+    ]);
+
+    check('oneOf ',
+      'a',
+      processor
+    );
+
+    check('oneOf',
+      1,
+      processor
+    );
+
+    checkErr('oneOf',
+      'Failed path: (oneOf)\n' +
+      'Expected type: string but got: object\n' +
+      'Failed path: (oneOf)\n' +
+      'Expected type: number but got: object',
+      {},
+      processor
+    );
+  });
 });
