@@ -26,7 +26,7 @@ UnitTest.test('Arr.bind: binding an array of empty arrays with identity equals a
   }));
 });
 
-UnitTest.test('Arr.bind: bind is map', () => {
+UnitTest.test('Arr.bind: bind (pure .) is map', () => {
   fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), (arr, j) => {
     const f = (x: number) => x + j;
     Assert.eq('bind pure', Arr.map(arr, f), Arr.bind(arr, Fun.compose(Arr.pure, f)), tArrayNumber);
