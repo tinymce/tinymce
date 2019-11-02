@@ -54,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.themes.mobile.EditorRemoveTest', (success, f
         NamedChain.outputInput
       ]),
       McEditor.cRemove,
-      Chain.mapper(() => Body.body()),
+      Chain.injectThunked(Body.body),
       Assertions.cAssertStructure('Assert Thor overrides removed from body', ApproxStructure.build((s, str) => {
         return s.element('body', {
           attrs: cleanedThorAttrsStruct(str),

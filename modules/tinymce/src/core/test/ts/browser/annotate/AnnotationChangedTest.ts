@@ -18,9 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
       message,
       // Use a chain so that changes.get() can be evaluated at run-time.
       Chain.asStep({ }, [
-        Chain.mapper((_) => {
-          return changes.get();
-        }),
+        Chain.injectThunked(changes.get),
         Chain.op((cs: Array<{uid: string, name: string}>) => {
           Assertions.assertEq('Checking changes', expected, cs);
         })

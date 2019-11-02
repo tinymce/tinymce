@@ -49,7 +49,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (success, fa
   };
 
   const cPositionIn = function (forward, path) {
-    return Chain.mapper(function (_) {
+    return Chain.injectThunked(function () {
       const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie() as Element<HTMLElement>;
       return CaretFinder.positionIn(forward, element.dom());
     });

@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function (su
   const ZWSP = Zwsp.ZWSP;
 
   const cCreateElement = function (html) {
-    return Chain.mapper(function (_) {
+    return Chain.injectThunked(function () {
       return Element.fromHtml(html);
     });
   };

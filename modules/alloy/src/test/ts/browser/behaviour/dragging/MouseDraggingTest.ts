@@ -66,7 +66,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
     );
   }, (doc, body, gui, component, store) => {
 
-    const cSubject = Chain.mapper(() => {
+    const cSubject = Chain.injectThunked(() => {
       return subject.get(component).element();
     });
 

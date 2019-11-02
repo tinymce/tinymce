@@ -16,7 +16,7 @@ const cIDoc = Chain.mapper(function (editor: Editor) {
   return Element.fromDom(editor.getDoc());
 });
 
-const cUiDoc = Chain.mapper(function () {
+const cUiDoc = Chain.injectThunked(function () {
   return Element.fromDom(document);
 });
 
