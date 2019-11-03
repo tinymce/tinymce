@@ -12,7 +12,7 @@ import Events from '../api/Events';
 import Settings from '../api/Settings';
 import { DomTextMatcher } from './DomTextMatcher';
 import Editor from 'tinymce/core/api/Editor';
-import { Cell } from '@ephox/katamari';
+import { Cell, Obj } from '@ephox/katamari';
 import { Element, HTMLElement } from '@ephox/dom-globals';
 
 export interface Data {
@@ -27,14 +27,6 @@ const getTextMatcher = function (editor, textMatcherState) {
   }
 
   return textMatcherState.get();
-};
-
-const isEmpty = function (obj) {
-  for (const _ in obj) {
-    return false;
-  }
-
-  return true;
 };
 
 const defaultSpellcheckCallback = function (editor: Editor, pluginUrl: string, currentLanguageState: Cell<string>) {
@@ -196,7 +188,7 @@ const markErrors = function (editor: Editor, startedState: Cell<boolean>, textMa
 
   editor.setProgressState(false);
 
-  if (isEmpty(suggestions)) {
+  if (Obj.isEmpty(suggestions)) {
     const message = editor.translate('No misspellings found.');
     editor.notificationManager.open({ text: message, type: 'info' });
     startedState.set(false);
