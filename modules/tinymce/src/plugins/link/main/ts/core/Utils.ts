@@ -145,7 +145,7 @@ const link = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) 
       linkAttrs.rel = newRel ? newRel : null;
     }
 
-    if (Option.from(linkAttrs.target).isNone()) {
+    if (Option.from(linkAttrs.target).isNone() && Settings.getTargetList(editor) === false) {
       linkAttrs.target = Settings.getDefaultLinkTarget(editor);
     }
 
