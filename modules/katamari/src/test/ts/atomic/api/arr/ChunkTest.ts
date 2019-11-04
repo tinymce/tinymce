@@ -1,7 +1,9 @@
 import * as Arr from 'ephox/katamari/api/Arr';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import fc from 'fast-check';
-import { Testable as T } from '@ephox/dispute';
+import { Testable } from '@ephox/dispute';
+
+const { tArray, tNumber } = Testable;
 
 UnitTest.test('chunk: unit tests', () => {
   const check = (expected: number[][], initial: number[], size: number): void => {
@@ -32,7 +34,7 @@ UnitTest.test('Chunking should create an array of the appropriate length except 
       const firstParts = chunks.slice(0, numChunks - 1);
       Assert.eq('Incorrect chunk size', true, Arr.forall(firstParts, hasRightSize));
       if (arr.length === 0) {
-        Assert.eq('empty', [], chunks, T.tArray(T.tArray(T.tNumber)));
+        Assert.eq('empty', [], chunks, tArray(tArray(tNumber)));
       } else {
         Assert.eq('nonEmpty', true, chunks[chunks.length - 1].length <= chunkSize);
       }

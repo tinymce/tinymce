@@ -3,11 +3,13 @@ import { Option } from 'ephox/katamari/api/Option';
 import { tOption } from 'ephox/katamari/api/OptionInstances';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
-import { Testable as T } from '@ephox/dispute';
+import { Testable } from '@ephox/dispute';
+
+const { tNumber } = Testable;
 
 UnitTest.test('Arr.find: Unit tests', () => {
   const checkNoneHelper = (input: ArrayLike<number>, pred: (n: number, i: number) => boolean): void => {
-    Assert.eq('none', Option.none(), Arr.find(input, pred), tOption(T.tNumber));
+    Assert.eq('none', Option.none(), Arr.find(input, pred), tOption(tNumber));
   };
 
   const checkNone = (input: ArrayLike<number>, pred: (n: number, i: number) => boolean) => {
@@ -17,7 +19,7 @@ UnitTest.test('Arr.find: Unit tests', () => {
 
   const checkArrHelper = (expected: number, input: ArrayLike<number>, pred: (n: number, i: number) => boolean): void => {
     const actual = Arr.find(input, pred);
-    Assert.eq('some', Option.some(expected), actual, tOption(T.tNumber));
+    Assert.eq('some', Option.some(expected), actual, tOption(tNumber));
   };
 
   const checkArr = (expected: number, input: ArrayLike<number>, pred: (n: number, i: number) => boolean): void => {
@@ -41,13 +43,13 @@ UnitTest.test('Arr.find: finds a value in the array', () => {
     const arr = prefix.concat([i]).concat(suffix);
     const pred = (x) => x === i;
     const result = Arr.find(arr, pred);
-    Assert.eq('Element found in array', Option.some(i), result, tOption(T.tNumber));
+    Assert.eq('Element found in array', Option.some(i), result, tOption(tNumber));
   }));
 });
 
 UnitTest.test('Arr.find: value not found', () => {
   fc.assert(fc.property(fc.array(fc.integer()), (arr) => {
     const result = Arr.find(arr, () => false);
-    Assert.eq('Element not found in array', Option.none(), result, tOption(T.tNumber));
+    Assert.eq('Element not found in array', Option.none(), result, tOption(tNumber));
   }));
 });

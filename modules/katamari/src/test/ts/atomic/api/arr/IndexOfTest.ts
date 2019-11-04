@@ -4,7 +4,9 @@ import { tOption } from 'ephox/katamari/api/OptionInstances';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import fc from 'fast-check';
 import { negativeInteger } from 'ephox/katamari/test/arb/ArbDataTypes';
-import { Testable as T } from '@ephox/dispute';
+import { Testable } from '@ephox/dispute';
+
+const { tNumber } = Testable;
 
 UnitTest.test('Arr.indexOf: unit tests', () => {
   const checkNoneHelper = (xs, x) => {
@@ -42,7 +44,7 @@ UnitTest.test('Arr.indexOf: find in middle of array', () => {
       'Element should be found immediately after the prefix array',
       Option.some(prefix.length),
       Arr.indexOf(arr, element),
-      tOption(T.tNumber)
+      tOption(tNumber)
     );
   }));
 });
