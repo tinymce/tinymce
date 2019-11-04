@@ -29,7 +29,7 @@ UnitTest.test('ClusteringTest', function () {
           true, expLang.equals(act.lang())
         );
         // .all() is:  tfel + middle + right
-        Assert.eq('start: ' + id + ', check all()', expLeft.reverse().concat(expMiddle).concat(expRight), checkWords(universe, act.all()));
+        Assert.eq('start: ' + id + ', check all()', Arr.reverse(expLeft).concat(expMiddle).concat(expRight), checkWords(universe, act.all()));
       }
     );
   };

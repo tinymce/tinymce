@@ -5,7 +5,6 @@ import { Arr, Struct } from '@ephox/katamari';
 import * as PrioritySort from 'ephox/alloy/alien/PrioritySort';
 
 UnitTest.test('PrioritySortTest', () => {
-  /* global assert */
   const checkErr = (expected, input, order) => {
     const actual = PrioritySort.sortKeys('test.sort', 'letter', input, order);
     // TODO: Use ResultAssertions test?
