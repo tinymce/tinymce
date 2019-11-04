@@ -8,7 +8,7 @@ import { document } from '@ephox/dom-globals';
 UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function (success, failure) {
 
   const cFromHtml = (html, startPath, startOffset, endPath, endOffset) =>
-    Chain.mapper(() => {
+    Chain.injectThunked(() => {
       const elm = Element.fromHtml(html);
       const sc = Hierarchy.follow(elm, startPath).getOrDie();
       const ec = Hierarchy.follow(elm, endPath).getOrDie();

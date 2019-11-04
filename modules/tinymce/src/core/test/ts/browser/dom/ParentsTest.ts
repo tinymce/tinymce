@@ -7,7 +7,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function (success, failure) {
 
   const cCreateStructure = function (html) {
-    return Chain.mapper(function (_) {
+    return Chain.injectThunked(function () {
       return Element.fromHtml(html);
     });
   };

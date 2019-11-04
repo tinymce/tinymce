@@ -92,7 +92,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationPersistenceTest', (s
 
   const sContentContains = (tinyApis: TinyApis, ed: Editor, pattern: string, isContained: boolean) => {
     return Chain.asStep({ }, [
-      Chain.mapper(() => ed.getContent()),
+      Chain.injectThunked(() => ed.getContent()),
       Chain.op((content) => {
         Assertions.assertEq(
           'editor.getContent() should contain: ' + pattern + ' = ' + isContained,

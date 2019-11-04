@@ -59,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
       return dom.getAttrib(element, 'src');
     };
 
-    const cGetImageSrc = Chain.mapper(getImageSrc);
+    const cGetImageSrc = Chain.injectThunked(getImageSrc);
 
     const cClickContextToolbarButton = (label) => {
       return Chain.fromParent(tinyUi.cWaitForPopup('wait for Imagetools toolbar', '.tox-pop__dialog div'), [

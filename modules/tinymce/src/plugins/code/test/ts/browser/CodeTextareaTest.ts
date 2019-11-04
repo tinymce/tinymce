@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeTextareaTest', (success, fa
       tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'),
     ]);
 
-    const cGetWhiteSpace = Chain.mapper(() => {
+    const cGetWhiteSpace = Chain.injectThunked(() => {
       const element = editor.getElement();
       return editor.dom.getStyle(element, 'white-space', true);
     });

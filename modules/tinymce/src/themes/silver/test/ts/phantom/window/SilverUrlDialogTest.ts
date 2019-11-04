@@ -17,7 +17,7 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
   const store = TestHelpers.TestStore();
 
   const sTestOpen = Chain.asStep({ }, [
-    Chain.mapper((_) => {
+    Chain.injectThunked(() => {
       return windowManager.openUrl({
         title: 'Silver Test Modal URL Dialog',
         url: '/project/tinymce/src/themes/silver/test/html/iframe.html',
