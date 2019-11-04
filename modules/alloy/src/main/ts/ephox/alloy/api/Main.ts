@@ -106,6 +106,7 @@ import * as TieredMenuTypes from '../ui/types/TieredMenuTypes';
 import * as MenuTypes from '../ui/types/MenuTypes';
 import { Toolbar } from './ui/Toolbar';
 import { ToolbarGroup } from './ui/ToolbarGroup';
+import { FloatingToolbarButton } from './ui/FloatingToolbarButton';
 import { TouchMenu } from './ui/TouchMenu';
 import { Typeahead } from './ui/Typeahead';
 import * as UiSketcher from './ui/UiSketcher';
@@ -226,6 +227,7 @@ export {
   TieredData,
   Toolbar,
   ToolbarGroup,
+  FloatingToolbarButton,
   TouchMenu,
   Typeahead,
   UiSketcher,

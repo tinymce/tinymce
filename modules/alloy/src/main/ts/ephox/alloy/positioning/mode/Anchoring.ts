@@ -36,11 +36,13 @@ export interface HasLayoutAnchor {
   }>;
 }
 
+export interface Layouts {
+  onLtr: (elem: Element) => AnchorLayout[];
+  onRtl: (elem: Element) => AnchorLayout[];
+}
+
 export interface HasLayoutAnchorSpec {
-  layouts?: {
-    onLtr: (elem: Element) => AnchorLayout[];
-    onRtl: (elem: Element) => AnchorLayout[];
-  };
+  layouts?: Layouts;
 }
 
 export interface SelectionAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
