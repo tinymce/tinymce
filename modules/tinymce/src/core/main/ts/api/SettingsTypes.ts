@@ -7,9 +7,9 @@
 
 import { Element, HTMLElement, HTMLImageElement, Node, ReferrerPolicy as DomReferrerPolicy } from '@ephox/dom-globals';
 import { UploadHandler } from '../file/Uploader';
-import { AllowedFormat } from './fmt/StyleFormat';
-import { Formats } from './fmt/Format';
 import Editor from './Editor';
+import { Formats } from './fmt/Format';
+import { AllowedFormat } from './fmt/StyleFormat';
 import { SchemaType } from './html/Schema';
 
 export type ThemeInitFunc = (editor: Editor, elm: HTMLElement) => {
@@ -166,7 +166,7 @@ export interface RawEditorSettings {
   toolbar7?: string;
   toolbar8?: string;
   toolbar9?: string;
-  toolbar_drawer?: false | 'floating' | 'sliding';
+  toolbar_drawer?: false | 'floating' | 'sliding' | 'scrolling';
   typeahead_urls?: boolean;
   url_converter?: URLConverter;
   url_converter_scope?: {};

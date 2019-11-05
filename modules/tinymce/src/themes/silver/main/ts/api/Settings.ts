@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option, Type, Obj, Arr } from '@ephox/katamari';
-import { SelectorFind, Body, Element } from '@ephox/sugar';
+import { Arr, Obj, Option, Type } from '@ephox/katamari';
+import { Body, Element, SelectorFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { AllowedFormat } from 'tinymce/core/api/fmt/StyleFormat';
@@ -77,7 +77,8 @@ const isMultipleToolbars = (editor: Editor): boolean => {
 export enum ToolbarDrawer {
   default = '',
   floating = 'floating',
-  sliding = 'sliding'
+  sliding = 'sliding',
+  scrolling = 'scrolling'
 }
 
 const getToolbarDrawer = (editor: Editor): ToolbarDrawer => editor.getParam('toolbar_drawer', '', 'string') as ToolbarDrawer;

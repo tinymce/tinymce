@@ -10,7 +10,8 @@ import {
   AlloyComponent,
   AlloyEvents,
   AlloySpec,
-  Behaviour, Boxes,
+  Behaviour,
+  Boxes,
   Focusing,
   Keying,
   SplitFloatingToolbar as AlloySplitFloatingToolbar,
@@ -19,13 +20,14 @@ import {
   Toolbar as AlloyToolbar,
   ToolbarGroup as AlloyToolbarGroup
 } from '@ephox/alloy';
-import { Arr, Option, Result, Fun } from '@ephox/katamari';
+import { Arr, Fun, Option, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
+import { ToolbarDrawer } from '../../api/Settings';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+import * as Channels from '../../Channels';
+import { createReadonlyReceivingForOverflow } from '../../ReadOnly';
 import { renderIconButtonSpec } from '../general/Button';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
-import { createReadonlyReceivingForOverflow } from '../../ReadOnly';
-import * as Channels from '../../Channels';
 
 export interface MoreDrawerData {
   lazyMoreButton: () => AlloyComponent;
@@ -33,6 +35,7 @@ export interface MoreDrawerData {
   lazyHeader: () => AlloyComponent;
 }
 export interface ToolbarSpec {
+  type: ToolbarDrawer;
   uid: string;
   cyclicKeying: boolean;
   onEscape: (comp: AlloyComponent) => Option<boolean>;
@@ -214,7 +217,7 @@ const renderToolbar = (toolbarSpec: ToolbarSpec) => {
     uid: toolbarSpec.uid,
     dom: {
       tag: 'div',
-      classes: ['tox-toolbar']
+      classes: ['tox-toolbar'].concat(toolbarSpec.type === ToolbarDrawer.scrolling ? [ 'tox-toolbar--scrolling' ] : [])
     },
     components: [
       AlloyToolbar.parts().groups({})
