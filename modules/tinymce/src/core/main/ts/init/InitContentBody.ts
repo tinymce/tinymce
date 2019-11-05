@@ -22,6 +22,7 @@ import UndoManager from '../api/UndoManager';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
 import CaretFinder from '../caret/CaretFinder';
+import CaretPosition from '../caret/CaretPosition';
 import ForceBlocks from '../ForceBlocks';
 import KeyboardOverrides from '../keyboard/KeyboardOverrides';
 import { NodeChange } from '../NodeChange';
@@ -30,7 +31,6 @@ import * as MultiClickSelection from '../selection/MultiClickSelection';
 import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import Quirks from '../util/Quirks';
-import CaretPosition from '../caret/CaretPosition';
 
 declare const escape: any;
 
@@ -142,17 +142,22 @@ const autoFocus = function (editor: Editor) {
   }
 };
 
+const moveSelectionToFirstCaretPosition = (editor: Editor) => {
+  // If not inline and no useful selection, we want to set selection to the first valid cursor position
+  // We don't do this on inline because then it selects the editor container
+  // This must run AFTER editor.focus!
+  const root = editor.dom.getRoot();
+  if (!editor.inline && !hasAnyRanges(editor)) {
+    CaretFinder.firstPositionIn(root).each((pos: CaretPosition) => editor.selection.setRng(pos.toRange()));
+  }
+};
+
 const initEditor = function (editor: Editor) {
   editor.bindPendingEventDelegates();
   editor.initialized = true;
   editor.fire('init');
   editor.focus(true);
-  const root = editor.dom.getRoot();
-  // If not inline and no useful selection, we want to set selection to the first valid cursor position
-  // We don't do this on inline because then it selects the editor container
-  if (!editor.inline && (!hasAnyRanges(editor) || editor.selection.getStart(true) === root)) {
-    CaretFinder.firstPositionIn(root).each((pos: CaretPosition) => editor.selection.setRng(pos.toRange()));
-  }
+  moveSelectionToFirstCaretPosition(editor);
   editor.nodeChanged({ initial: true });
   editor.execCallback('init_instance_callback', editor);
   autoFocus(editor);
