@@ -7,7 +7,7 @@
 
 import { document, Element } from '@ephox/dom-globals';
 import { Merger } from '@ephox/katamari';
-import Events from '../api/Events';
+import * as Events from '../api/Events';
 import Tools from '../api/util/Tools';
 import Editor from '../api/Editor';
 
