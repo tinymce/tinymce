@@ -56,7 +56,7 @@ export interface RenderUiComponents {
   outerContainer: AlloyComponent;
 }
 
-type ToolbarConfig = Array<string | ToolbarGroupSetting> | string | boolean;
+export type ToolbarConfig = Array<string | ToolbarGroupSetting> | string | boolean;
 
 export interface RenderToolbarConfig {
   toolbar: ToolbarConfig;
@@ -387,6 +387,10 @@ const setup = (editor: Editor): RenderInfo => {
     SilverContextMenu.setup(editor, lazySink, backstage);
     Sidebar.setup(editor);
     Throbber.setup(editor, lazyThrobber, backstage.shared);
+
+    Obj.map(editor.getParam('toolbar_grouped', {}), (toolbarGroupButtonConfig, name) => {
+      editor.ui.registry.addFloatingToolbarButton(name, toolbarGroupButtonConfig);
+    });
 
     // Apply Bridge types
     const { buttons, menuItems, contextToolbars, sidebars } = editor.ui.registry.getAll();

@@ -25,13 +25,15 @@ import {
   TieredData,
   TieredMenuTypes,
   Unselecting,
+  FloatingToolbarButton,
+  Layout,
 } from '@ephox/alloy';
 import { Toolbar, Types } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
 import { Attr, SelectorFind } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
-import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import { UiFactoryBackstageProviders, UiFactoryBackstageShared, UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
@@ -47,6 +49,8 @@ import { createPartialChoiceMenu } from '../../menus/menu/MenuChoice';
 import ItemResponse from '../../menus/item/ItemResponse';
 import { ToolbarButtonClasses } from '../button/ButtonClasses';
 import { onToolbarButtonExecute, toolbarButtonEventOrder } from '../button/ButtonEvents';
+import { ToolbarGroup, renderToolbarGroup } from '../CommonToolbar';
+import { ToolbarConfig } from '../../../Render';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
@@ -158,6 +162,35 @@ const renderCommonStructure = (icon: Option<string>, text: Option<string>, toolt
       ).concat(behaviours.getOr([ ]))
     )
   };
+};
+
+const renderFloatingToolbarButton = (spec: Toolbar.FloatingToolbarButton, backstage: UiFactoryBackstage, identifyButtons: (toolbar: ToolbarConfig) => ToolbarGroup[]) => {
+  const sharedBackstage = backstage.shared;
+
+  return FloatingToolbarButton.sketch({
+    layouts: {
+      onRtl: () => [ Layout.southwest, Layout.northwest ],
+      onLtr: () => [ Layout.southeast, Layout.northeast ]
+    },
+    lazySink: sharedBackstage.getSink,
+    fetch: () => {
+      return Future.nu((resolve) => {
+        resolve(Arr.map(identifyButtons(spec.toolbar), renderToolbarGroup));
+      });
+    },
+    markers: {
+      toggledClass: ToolbarButtonClasses.Ticked
+    },
+    parts: {
+      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, Option.none(), Option.none(), sharedBackstage.providers),
+      toolbar: {
+        dom: {
+          tag: 'div',
+          classes: [ 'tox-toolbar__overflow' ]
+        }
+      }
+    },
+  });
 };
 
 const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisation: Specialisation<T>, providersBackstage: UiFactoryBackstageProviders) => {
@@ -364,6 +397,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
 
 export {
   renderCommonStructure,
+  renderFloatingToolbarButton,
   renderToolbarButton,
   renderToolbarButtonWith,
   renderToolbarToggleButton,

@@ -9,12 +9,14 @@ import { ContextMenuApi } from '../components/menu/ContextMenu';
 import { ContextToolbarApi, ContextFormApi } from '../components/toolbar/ContextToolbar';
 import { AutocompleterApi } from '../components/content/Autocompleter';
 import { SidebarApi } from '../components/sidebar/Sidebar';
+import { FloatingToolbarButtonApi } from '../components/toolbar/FloatingToolbarButton';
 
 // This would be part of the tinymce api under editor.ui.* so editor.ui.addButton('bold', ...)
 // TODO: This should maybe not be part of this project but rather something built into tinymce core using these public types
 
 export interface Registry {
   addButton: (name: string, spec: ToolbarButtonApi) => void;
+  addFloatingToolbarButton: (name: string, spec: FloatingToolbarButtonApi) => void;
   addToggleButton: (name: string, spec: ToolbarToggleButtonApi) => void;
   addMenuButton: (name: string, spec: ToolbarMenuButtonApi) => void;
   addSplitButton: (name: string, spec: ToolbarSplitButtonApi) => void;
@@ -29,7 +31,7 @@ export interface Registry {
   addSidebar: (name: string, spec: SidebarApi) => void;
 
   getAll: () => {
-    buttons: Record<string, ToolbarButtonApi | ToolbarMenuButtonApi | ToolbarSplitButtonApi | ToolbarToggleButtonApi>;
+    buttons: Record<string, ToolbarButtonApi | FloatingToolbarButtonApi | ToolbarMenuButtonApi | ToolbarSplitButtonApi | ToolbarToggleButtonApi>;
     menuItems: Record<string, MenuItemApi | NestedMenuItemApi | ToggleMenuItemApi>;
     popups: Record<string, AutocompleterApi>;
     contextMenus: Record<string, ContextMenuApi>;
@@ -52,6 +54,7 @@ export const create = (): Registry => {
 
   return {
     addButton: add(buttons, 'button'),
+    addFloatingToolbarButton: add(buttons, 'floatingtoolbarbutton'),
     addToggleButton: add(buttons, 'togglebutton'),
     addMenuButton: add(buttons, 'menubutton'),
     addSplitButton: add(buttons, 'splitbutton'),

@@ -15,7 +15,8 @@ import { ToolbarButtonClasses } from './button/ButtonClasses';
 import {
   renderSplitButton,
   renderToolbarButton,
-  renderToolbarToggleButton
+  renderToolbarToggleButton,
+  renderFloatingToolbarButton
 } from './button/ToolbarButtons';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
@@ -63,11 +64,11 @@ const defaultToolbar = [
   }
 ];
 
-const renderFromBridge = <BI, ToolbarButton>(bridgeBuilder: (i: BI) => Result<ToolbarButton, ValueSchema.SchemaError<any>>, render: (o: ToolbarButton, extras: Extras) => AlloySpec) => {
-  return (spec, extras) => {
+const renderFromBridge = <BI, ToolbarButton>(bridgeBuilder: (i: BI) => Result<ToolbarButton, ValueSchema.SchemaError<any>>, render: (o: ToolbarButton, extras: Extras, editor: Editor) => AlloySpec) => {
+  return (spec, extras, editor) => {
     const internal = bridgeBuilder(spec).mapError((errInfo) => ValueSchema.formatError(errInfo)).getOrDie();
 
-    return render(internal, extras);
+    return render(internal, extras, editor);
   };
 };
 
@@ -91,6 +92,7 @@ const types = {
       );
     }
   ),
+
   menubutton: renderFromBridge<Toolbar.ToolbarMenuButtonApi, Toolbar.ToolbarMenuButton>(
     Toolbar.createMenuButton,
     (s: Toolbar.ToolbarMenuButton, extras) => {
@@ -113,6 +115,25 @@ const types = {
     }
   ),
 
+  floatingtoolbarbutton: renderFromBridge(
+    Toolbar.createFloatingToolbarButton,
+    (s: Toolbar.FloatingToolbarButton, extras, editor: Editor) => {
+      return renderFloatingToolbarButton(
+        s,
+        extras.backstage,
+        (toolbar) => identifyButtons(
+          editor,
+          {
+            buttons: editor.ui.registry.getAll().buttons,
+            toolbar
+          },
+          extras,
+          Option.none()
+        )
+      );
+    }
+  ),
+
   styleSelectButton: (editor: Editor, extras: Extras) => createStyleSelect(editor, extras.backstage),
   fontsizeSelectButton: (editor: Editor, extras: Extras) => createFontsizeSelect(editor, extras.backstage),
   fontSelectButton: (editor: Editor, extras: Extras) => createFontSelect(editor, extras.backstage),
@@ -120,7 +141,7 @@ const types = {
   alignMenuButton: (editor: Editor, extras: Extras) => createAlignSelect(editor, extras.backstage)
 };
 
-const extractFrom = (spec: ToolbarButton, extras: Extras): Option<AlloySpec> => {
+const extractFrom = (spec: ToolbarButton, extras: Extras, editor: Editor): Option<AlloySpec> => {
   return Obj.get(types, spec.type).fold(
     () => {
       // tslint:disable-next-line:no-console
@@ -129,7 +150,7 @@ const extractFrom = (spec: ToolbarButton, extras: Extras): Option<AlloySpec> => 
     },
     (render) => {
       return Option.some(
-        render(spec, extras)
+        render(spec, extras, editor)
       );
     }
   );
@@ -209,7 +230,7 @@ const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem:
       });
     },
     (spec) => {
-      return extractFrom(spec, extras);
+      return extractFrom(spec, extras, editor);
     }
   );
 };

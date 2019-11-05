@@ -138,6 +138,16 @@ const registry = () => {
     addToggleButton: bridge.addToggleButton,
 
     /**
+     * Registers a new floating toolbar button for the toolbar. Renders a floating toolbar when clicked.
+     *
+     * @method addFloatingToolbarButton
+     * @param {String} name Unique name identifying the new floating toolbar button.
+     * @param {Toolbar.FloatingToolbarButtonApi} obj The floating toolbar button configuration object.
+     * @return {void} void
+     */
+    addFloatingToolbarButton: bridge.addFloatingToolbarButton,
+
+    /**
      * Registers a new menu item that will act like a toggle button, showing a tick in the menu item to represent state.
      *
      * @method addToggleMenuItem
