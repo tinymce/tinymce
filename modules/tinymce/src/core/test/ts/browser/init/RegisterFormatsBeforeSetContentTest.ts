@@ -7,7 +7,7 @@ import { Cell, Option, Obj, Arr, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('Register formats before setContent test', (success, failure) => {
-  const customFormatNames = Cell<Option<any>>(Option.none());
+  const customFormatNames = Cell<Option<string[]>>(Option.none());
 
   const storeFormats = (editor: Editor) => {
     const names = Arr.filter(Obj.keys(editor.formatter.get()), (key) => Strings.startsWith(key, 'custom-'));
