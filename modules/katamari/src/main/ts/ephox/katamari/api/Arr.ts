@@ -199,10 +199,8 @@ export const flatten = <T>(xs: ArrayLike<T[]>): T[] => {
   return r;
 };
 
-export const bind = <T = any, U = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, U[]>): U[] => {
-  const output = map(xs, f);
-  return flatten(output);
-};
+export const bind = <T = any, U = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, U[]>): U[] =>
+  flatten(map(xs, f));
 
 export const forall = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): boolean => {
   for (let i = 0, len = xs.length; i < len; ++i) {
