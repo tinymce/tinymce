@@ -19,7 +19,7 @@ UnitTest.asynctest('Register formats before setContent test', (success, failure)
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, [
       Step.sync(() => {
-        Assert.eq('', [
+        Assert.eq('Should be custom formats names based on the titles in style_formats', [
           'custom-my-block-format',
           'custom-my-inline-format',
           'custom-my-selector-format'
