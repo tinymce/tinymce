@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { getHeightSetting, getMaxHeightSetting, getMaxWidthSetting, getMinHeightSetting, getMinWidthSetting, getWidthSetting } from '../../api/Settings';
 import Utils from './Utils';
@@ -18,13 +18,20 @@ export const getHeight = (editor: Editor) => {
   return Utils.parseToInt(baseHeight).map((height) => Utils.calcCappedSize(height, minHeight, maxHeight));
 };
 
-export const getWidth = (editor: Editor) => {
-  const DOM = DOMUtils.DOM;
-  const elm = editor.getElement();
+export const getHeightWithFallback = (editor: Editor) => {
+  const height: Option<string | number> = getHeight(editor);
+  return height.getOr(getHeightSetting(editor));
+};
 
-  const baseWidth = getWidthSetting(editor, DOM.getStyle(elm, 'width'));
+export const getWidth = (editor: Editor) => {
+  const baseWidth = getWidthSetting(editor);
   const minWidth = getMinWidthSetting(editor);
   const maxWidth = getMaxWidthSetting(editor);
 
   return Utils.parseToInt(baseWidth).map((width) => Utils.calcCappedSize(width, minWidth, maxWidth));
+};
+
+export const getWidthWithFallback = (editor: Editor) => {
+  const width: Option<string | number> = getWidth(editor);
+  return width.getOr(getWidthSetting(editor));
 };

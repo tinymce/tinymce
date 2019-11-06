@@ -7,6 +7,7 @@
 
 import { Arr, Obj, Option, Type } from '@ephox/katamari';
 import { Body, Element, SelectorFind } from '@ephox/sugar';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { AllowedFormat } from 'tinymce/core/api/fmt/StyleFormat';
@@ -33,7 +34,7 @@ const isReadOnly = (editor): boolean => editor.getParam('readonly', false, 'bool
 const isSkinDisabled = (editor: Editor) => editor.getParam('skin') === false;
 
 const getHeightSetting = (editor: Editor): string | number => editor.getParam('height', Math.max(editor.getElement().offsetHeight, 200));
-const getWidthSetting = (editor: Editor, defaultVal?: string | number): string | number => editor.getParam('width', defaultVal);
+const getWidthSetting = (editor: Editor): string | number => editor.getParam('width', DOMUtils.DOM.getStyle(editor.getElement(), 'width'));
 const getMinWidthSetting = (editor: Editor): Option<number> => Option.from(editor.settings.min_width).filter(Type.isNumber);
 const getMinHeightSetting = (editor: Editor): Option<number> => Option.from(editor.settings.min_height).filter(Type.isNumber);
 const getMaxWidthSetting = (editor: Editor): Option<number> => Option.from(editor.getParam('max_width')).filter(Type.isNumber);

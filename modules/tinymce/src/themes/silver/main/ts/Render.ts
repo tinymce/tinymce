@@ -77,7 +77,7 @@ export interface ToolbarGroupSetting {
 
 export interface RenderArgs {
   targetNode: HTMLElement;
-  height: number;
+  height: string;
 }
 
 const setup = (editor: Editor): RenderInfo => {
@@ -332,14 +332,14 @@ const setup = (editor: Editor): RenderInfo => {
 
   const setEditorSize = () => {
     // Set height and width if they were given, though height only applies to iframe mode
-    const parsedHeight = EditorSize.getHeight(editor).map(Utils.numToPx).getOr('200px');
-    const parsedWidth = EditorSize.getWidth(editor).map(Utils.numToPx);
+    const parsedHeight = Utils.numToPx(EditorSize.getHeightWithFallback(editor));
+    const parsedWidth = Utils.numToPx(EditorSize.getWidthWithFallback(editor));
 
     if (!editor.inline) {
       // Update the width
-      parsedWidth.filter((width) => Css.isValidValue('div', 'width', width)).each((width) => {
-        Css.set(outerContainer.element(), 'width', width);
-      });
+      if (Css.isValidValue('div', 'width', parsedWidth)) {
+        Css.set(outerContainer.element(), 'width', parsedWidth);
+      }
 
       // Update the height
       if (Css.isValidValue('div', 'height', parsedHeight)) {
