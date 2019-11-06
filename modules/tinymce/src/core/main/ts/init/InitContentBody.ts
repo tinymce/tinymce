@@ -28,6 +28,7 @@ import Editor from '../api/Editor';
 import * as MultiClickSelection from '../selection/MultiClickSelection';
 import * as DetailsElement from '../selection/DetailsElement';
 import Settings from '../api/Settings';
+import * as Events from '../api/Events';
 
 declare const escape: any;
 
@@ -142,7 +143,7 @@ const autoFocus = function (editor: Editor) {
 const initEditor = function (editor: Editor) {
   editor.bindPendingEventDelegates();
   editor.initialized = true;
-  editor.fire('init');
+  Events.fireInit(editor);
   editor.focus(true);
   editor.nodeChanged({ initial: true });
   editor.execCallback('init_instance_callback', editor);
@@ -236,7 +237,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   KeyboardOverrides.setup(editor);
   ForceBlocks.setup(editor);
 
-  editor.fire('PreInit');
+  Events.firePreInit(editor);
 
   if (!settings.browser_spellcheck && !settings.gecko_spellcheck) {
     doc.body.spellcheck = false; // Gecko
@@ -244,7 +245,8 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   }
 
   editor.quirks = Quirks(editor);
-  editor.fire('PostRender');
+
+  Events.firePostRender(editor);
 
   const directionality = Settings.getDirectionality(editor);
   if (directionality !== undefined) {

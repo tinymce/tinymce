@@ -8,7 +8,7 @@
 import { Element as DOMElement } from '@ephox/dom-globals';
 import { Fun, Merger } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import Events from '../api/Events';
+import * as Events from '../api/Events';
 import DOMUtils from '../api/dom/DOMUtils';
 import DomSerializerFilters from './DomSerializerFilters';
 import DomSerializerPreProcess from './DomSerializerPreProcess';
