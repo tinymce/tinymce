@@ -44,7 +44,7 @@ export const init = (editor: Editor) => {
 
   const replaceSettings = Cell(false);
 
-  editor.on('preinit', () => {
+  editor.on('PreInit', (e) => {
     const formats = getStyleFormats(editor);
     const enriched = FormatRegister.register(editor, formats, isSelectedFor, getPreviewFor);
     settingsFormats.set(enriched);
