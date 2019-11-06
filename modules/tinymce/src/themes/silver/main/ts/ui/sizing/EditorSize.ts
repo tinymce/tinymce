@@ -7,7 +7,7 @@
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { getHeightSetting, getMaxHeightSetting, getMaxWidthSetting, getMinHeightSetting, getMinWidthSetting } from '../../api/Settings';
+import { getHeightSetting, getMaxHeightSetting, getMaxWidthSetting, getMinHeightSetting, getMinWidthSetting, getWidthSetting } from '../../api/Settings';
 import Utils from './Utils';
 
 export const getHeight = (editor: Editor) => {
@@ -22,7 +22,7 @@ export const getWidth = (editor: Editor) => {
   const DOM = DOMUtils.DOM;
   const elm = editor.getElement();
 
-  const baseWidth = editor.getParam('width', parseInt(DOM.getStyle(elm, 'width'), 10));
+  const baseWidth = getWidthSetting(editor, DOM.getStyle(elm, 'width'));
   const minWidth = getMinWidthSetting(editor);
   const maxWidth = getMaxWidthSetting(editor);
 

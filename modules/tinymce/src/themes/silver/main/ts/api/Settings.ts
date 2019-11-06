@@ -32,11 +32,12 @@ const getSkinUrl = function (editor: Editor): string {
 const isReadOnly = (editor): boolean => editor.getParam('readonly', false, 'boolean');
 const isSkinDisabled = (editor: Editor) => editor.getParam('skin') === false;
 
-const getHeightSetting = (editor): number => editor.getParam('height', Math.max(editor.getElement().offsetHeight, 200));
-const getMinWidthSetting = (editor): Option<number> => Option.from(editor.settings.min_width).filter(Type.isNumber);
-const getMinHeightSetting = (editor): Option<number> => Option.from(editor.settings.min_height).filter(Type.isNumber);
-const getMaxWidthSetting = (editor): Option<number> => Option.from(editor.getParam('max_width')).filter(Type.isNumber);
-const getMaxHeightSetting = (editor): Option<number> => Option.from(editor.getParam('max_height')).filter(Type.isNumber);
+const getHeightSetting = (editor: Editor): string | number => editor.getParam('height', Math.max(editor.getElement().offsetHeight, 200));
+const getWidthSetting = (editor: Editor, defaultVal?: string | number): string | number => editor.getParam('width', defaultVal);
+const getMinWidthSetting = (editor: Editor): Option<number> => Option.from(editor.settings.min_width).filter(Type.isNumber);
+const getMinHeightSetting = (editor: Editor): Option<number> => Option.from(editor.settings.min_height).filter(Type.isNumber);
+const getMaxWidthSetting = (editor: Editor): Option<number> => Option.from(editor.getParam('max_width')).filter(Type.isNumber);
+const getMaxHeightSetting = (editor: Editor): Option<number> => Option.from(editor.getParam('max_height')).filter(Type.isNumber);
 
 const getUserStyleFormats = (editor: Editor): Option<AllowedFormat[]> => Option.from(editor.getParam('style_formats')).filter(Type.isArray);
 const isMergeStyleFormats = (editor: Editor): boolean => editor.getParam('style_formats_merge', false, 'boolean');
@@ -114,6 +115,7 @@ export {
   isReadOnly,
   isSkinDisabled,
   getHeightSetting,
+  getWidthSetting,
   getMinWidthSetting,
   getMinHeightSetting,
   getMaxWidthSetting,
