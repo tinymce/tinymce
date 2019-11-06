@@ -1,8 +1,8 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Result } from '@ephox/katamari';
-import { BodyComponentApi } from './BodyComponent';
-import { Panel, PanelApi, panelSchema } from './Panel';
-import { TabApi, Tab, TabPanel, TabPanelApi, tabPanelSchema } from './TabPanel';
+import { BodyComponentApi as BodyComponentApiType } from './BodyComponent';
+import { Panel as PanelType, PanelApi as PanelApiType, panelSchema } from './Panel';
+import { TabApi as TabApiType, Tab as TabType, TabPanel as TabPanelType, TabPanelApi as TabPanelApiType, tabPanelSchema } from './TabPanel';
 import * as FooterButton from './FooterButton';
 
 export type DialogMenuButtonItemTypes = FooterButton.DialogMenuButtonItemTypes;
@@ -15,14 +15,14 @@ export type DialogButtonApi = FooterButton.DialogButtonApi;
 
 // For consistency with api/Types.ts this should perhaps be in a namespace (e.g. Types.Dialog.Panels.*)
 // but there are many many references to it already / shrug
-export type PanelApi = PanelApi;
-export type Panel = Panel;
-export type TabPanelApi = TabPanelApi;
-export type TabPanel = TabPanel;
-export type TabApi = TabApi;
-export type Tab = Tab;
+export type PanelApi = PanelApiType;
+export type Panel = PanelType;
+export type TabPanelApi = TabPanelApiType;
+export type TabPanel = TabPanelType;
+export type TabApi = TabApiType;
+export type Tab = TabType;
 
-export type BodyComponentApi = BodyComponentApi;
+export type BodyComponentApi = BodyComponentApiType;
 
 export type DialogDataItem = any;
 export type DialogData = Record<string, DialogDataItem>;
