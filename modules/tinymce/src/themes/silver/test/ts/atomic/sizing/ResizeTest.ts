@@ -1,7 +1,8 @@
 import { Assertions, Log, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
-import { calcCappedSize, getDimensions, ResizeTypes } from 'tinymce/themes/silver/ui/sizing/Resize';
+import { getDimensions, ResizeTypes } from 'tinymce/themes/silver/ui/sizing/Resize';
+import Utils from 'tinymce/themes/silver/ui/sizing/Utils';
 
 const mockEditor = (containerHeight, contentAreaHeight) => {
   const settings = {
@@ -22,7 +23,7 @@ const mockEditor = (containerHeight, contentAreaHeight) => {
 UnitTest.asynctest('Editor resizing tests', function (success, failure) {
   const makeCappedSizeTest = (label, originalSize, delta, minSize, maxSize, expected) => {
     return Logger.t(label, Step.sync(() => {
-      const actual = calcCappedSize(originalSize, delta, Option.some(minSize), Option.some(maxSize));
+      const actual = Utils.calcCappedSize(originalSize + delta, Option.some(minSize), Option.some(maxSize));
       Assertions.assertEq('Editor size should match expected', expected, actual);
     }));
   };
