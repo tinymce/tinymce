@@ -14,6 +14,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { Css, Element, Focus, Scroll } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
+import { getToolbarDrawer, ToolbarDrawer } from './api/Settings';
 import { hideContextToolbarEvent, showContextToolbarEvent } from './ui/context/ContextEditorEvents';
 import { ContextForm } from './ui/context/ContextForm';
 import * as ContextToolbarBounds from './ui/context/ContextToolbarBounds';
@@ -182,11 +183,16 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   const buildToolbar = (ctx): AlloySpec => {
     const { buttons } = editor.ui.registry.getAll();
 
+    // For context toolbars we don't want to use floating or sliding, so just restrict this
+    // to scrolling or wrapping (default)
+    const toolbarType = getToolbarDrawer(editor) === ToolbarDrawer.scrolling ? ToolbarDrawer.scrolling : ToolbarDrawer.default;
+
     const scopes = getScopes();
     return ctx.type === 'contexttoolbar' ? (() => {
       const allButtons = Merger.merge(buttons, scopes.formNavigators);
       const initGroups = identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items }, extras, Option.some([ 'form:' ]));
       return renderToolbar({
+        type: toolbarType,
         uid: Id.generate('context-toolbar'),
         initGroups,
         onEscape: Option.none,
@@ -195,7 +201,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
         getSink: () => Result.error('')
       });
     })() : (() => {
-      return ContextForm.renderContextForm(ctx, extras.backstage);
+      return ContextForm.renderContextForm(toolbarType, ctx, extras.backstage);
     })();
   };
 

@@ -6,13 +6,14 @@
  */
 
 import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec } from '@ephox/alloy';
-import { console, HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
+import { HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import { getMultipleToolbarsSetting, getToolbarDrawer, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, ToolbarDrawer, useFixedContainer } from './api/Settings';
+import { getMultipleToolbarsSetting, getToolbarDrawer, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, useFixedContainer } from './api/Settings';
+import TouchEvents from './api/TouchEvents';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -23,13 +24,12 @@ import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterCont
 import * as StaticHeader from './ui/header/StaticHeader';
 import * as StickyHeader from './ui/header/StickyHeader';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
+import TableSelectorHandles from './ui/selector/TableSelectorHandles';
 import * as Sidebar from './ui/sidebar/Sidebar';
 import * as EditorSize from './ui/sizing/EditorSize';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
-import TableSelectorHandles from './ui/selector/TableSelectorHandles';
 import * as Throbber from './ui/throbber/Throbber';
-import TouchEvents from './api/TouchEvents';
 
 export interface RenderInfo {
   mothership: Gui.GuiSystem;
@@ -152,7 +152,7 @@ const setup = (editor: Editor): RenderInfo => {
     }
   });
 
-  const toolbarDrawer = (editor: Editor) => getToolbarDrawer(editor);
+  const toolbarDrawer = getToolbarDrawer(editor);
 
   const partToolbar: AlloySpec = OuterContainer.parts().toolbar({
     dom: {
@@ -164,7 +164,7 @@ const setup = (editor: Editor): RenderInfo => {
     onEscape() {
       editor.focus();
     },
-    split: toolbarDrawer(editor),
+    split: toolbarDrawer,
     lazyToolbar,
     lazyMoreButton,
     lazyHeader: () => lazyHeader().getOrDie('Could not find header element')
@@ -175,7 +175,8 @@ const setup = (editor: Editor): RenderInfo => {
       tag: 'div',
       classes: [ 'tox-toolbar-overlord' ]
     },
-    onEscape: () => { }
+    onEscape: () => { },
+    split: toolbarDrawer
   });
 
   const partSocket: AlloySpec = OuterContainer.parts().socket({
@@ -220,14 +221,9 @@ const setup = (editor: Editor): RenderInfo => {
   const hasMultipleToolbar = isMultipleToolbars(editor);
   const hasToolbar = isToolbarEnabled(editor);
   const hasMenubar = isMenubarEnabled(editor);
-  const hasToolbarDrawer = toolbarDrawer(editor) !== ToolbarDrawer.default;
 
   const getPartToolbar = () => {
     if (hasMultipleToolbar) {
-      if (hasToolbarDrawer) {
-        // tslint:disable-next-line:no-console
-        console.warn('Toolbar drawer cannot be applied when multiple toolbars are active');
-      }
       return [ partMultipleToolbar ];
     } else if (hasToolbar) {
       return [ partToolbar ];
