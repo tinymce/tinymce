@@ -6,6 +6,7 @@ Version 5.2.0 (TBD)
     Fixed editor not respecting the `resize_img_proportional` setting due to legacy code. #TINY-4162
     Added new `toolbar_location` setting to allow for positioning the menu- and toolbar at the bottom of the editor #TINY-4210
     Fixed flickering floating toolbar drawer in inline mode #TINY-4210
+    Fixed Confirm Dialog footer buttons so only the "Yes" button is highlighted #TINY-4130
 Version 5.1.1 (2019-10-28)
     Fixed font formats containing spaces being wrapped in `&quot;` entities instead of single quotes #TINY-4275
     Fixed alert and confirm dialogs losing focus when clicked #TINY-4248
