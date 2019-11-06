@@ -10,13 +10,13 @@ import { Focusing } from '../../api/behaviour/Focusing';
 import * as Fields from '../../data/Fields';
 import { FloatingToolbarButtonDetail } from '../types/FloatingToolbarButtonTypes';
 import * as ToolbarSchema from './ToolbarSchema';
+import * as AnchorLayouts from '../../positioning/mode/AnchorLayouts';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.markers([ 'toggledClass' ]),
   FieldSchema.strict('lazySink'),
-  FieldSchema.strict('layouts'),
-  FieldSchema.optionFunction('getToolbarBounds'),
-  FieldSchema.strictFunction('fetch')
+  FieldSchema.strictFunction('fetch'),
+  AnchorLayouts.schema()
 ]);
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([

@@ -169,8 +169,8 @@ const renderFloatingToolbarButton = (spec: Toolbar.FloatingToolbarButton, backst
 
   return FloatingToolbarButton.sketch({
     layouts: {
-      onRtl: () => [ Layout.southwest, Layout.northwest ],
-      onLtr: () => [ Layout.southeast, Layout.northeast ]
+      onRtl: () => Layout.belowOrAbove(),
+      onLtr: () => Layout.belowOrAboveRtl()
     },
     lazySink: sharedBackstage.getSink,
     fetch: () => {

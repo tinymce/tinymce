@@ -29,16 +29,13 @@ export interface AnchorOverrides {
   maxWidthFunction?: MaxWidthFunction;
 }
 
-export interface HasLayoutAnchor {
-  layouts: Option<{
-    onLtr: (elem: Element) => AnchorLayout[];
-    onRtl: (elem: Element) => AnchorLayout[];
-  }>;
-}
-
 export interface Layouts {
   onLtr: (elem: Element) => AnchorLayout[];
   onRtl: (elem: Element) => AnchorLayout[];
+}
+
+export interface HasLayoutAnchor {
+  layouts: Option<Layouts>;
 }
 
 export interface HasLayoutAnchorSpec {

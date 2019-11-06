@@ -161,7 +161,6 @@ export interface RawEditorSettings {
   target?: Element;
   theme?: string | ThemeInitFunc;
   theme_url?: string;
-  toolbar_grouped?: Record<string, { icon: string, tooltip: string, toolbar: string | Array<ToolbarGroup> }>;
   toolbar?: boolean | string | string[] | Array<ToolbarGroup>;
   toolbar1?: string;
   toolbar2?: string;
