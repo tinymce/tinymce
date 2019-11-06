@@ -1,6 +1,6 @@
 {
   "name": "@ephox/agar",
-  "version": "4.14.4",
+  "version": "4.14.5",
   "description": "Testing infrastructure",
   "repository": {
     "type": "git",
@@ -25,8 +25,8 @@
     "@ephox/bedrock": "^8.0.1",
     "@ephox/dom-globals": "^1.1.2",
     "@ephox/jax": "^4.1.28",
-    "@ephox/sand": "^3.1.1",
-    "@ephox/sugar": "^5.0.16",
+    "@ephox/sand": "^3.1.2",
+    "@ephox/sugar": "^5.0.17",
     "@ephox/wrap-jsverify": "^2.0.1",
     "@ephox/wrap-sizzle": "^4.0.0"
   },

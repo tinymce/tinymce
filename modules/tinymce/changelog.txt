@@ -1,6 +1,7 @@
 Version 5.1.2 (TBD)
     Fixed desktop touch devices using mobile configuration overrides #TINY-4345
     Fixed unable to disable the new scrolling toolbar #TINY-4345
+    Fixed errors being raised by table selector handles not properly guarding against non-table selections #TINY-4338
 Version 5.1.1 (2019-10-28)
     Fixed font formats containing spaces being wrapped in `&quot;` entities instead of single quotes #TINY-4275
     Fixed alert and confirm dialogs losing focus when clicked #TINY-4248
