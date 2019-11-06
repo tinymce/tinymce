@@ -113,10 +113,13 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
     leftAttr: 'data-drag-left',
     topAttr: 'data-drag-top',
     onSensor: (component, extra) => {
-      startCell.set(extra.td);
-      editor.fire('tableselectorchange', {
-        start: startCell.get(),
-        finish: finishCell.get()
+      const start = extra.td;
+      startCell.set(Option.some(start));
+      finishCell.get().each((finish) => {
+        editor.fire('tableselectorchange', {
+          start,
+          finish
+        });
       });
     },
     mustSnap: true
@@ -127,10 +130,13 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
     leftAttr: 'data-drag-left',
     topAttr: 'data-drag-top',
     onSensor: (component, extra) => {
-      finishCell.set(extra.td);
-      editor.fire('tableselectorchange', {
-        start: startCell.get(),
-        finish: finishCell.get()
+      const finish = extra.td;
+      finishCell.set(Option.some(finish));
+      startCell.get().each((start) => {
+        editor.fire('tableselectorchange', {
+          start,
+          finish
+        });
       });
     },
     mustSnap: true
@@ -194,8 +200,8 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
   const bottomRight = GuiFactory.build(memBottomRight.asSpec());
 
   const isVisible = Cell<Boolean>(false);
-  const startCell = Cell<any>(null);
-  const finishCell = Cell<any>(null);
+  const startCell = Cell<Option<Element>>(Option.none());
+  const finishCell = Cell<Option<Element>>(Option.none());
 
   const showOrHideHandle = (selector, cell, isAbove, isBelow) => {
     const cellRect = cell.dom().getBoundingClientRect();
@@ -209,8 +215,9 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
   };
 
   const snapLastTopLeft = () => {
-    const cell = startCell.get();
-    snapTopLeft(cell);
+    startCell.get().each((cell) => {
+      snapTopLeft(cell);
+    });
   };
 
   const snapTopLeft = (cell: Element) => {
@@ -226,8 +233,9 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
   };
 
   const snapLastBottomRight = () => {
-    const cell = finishCell.get();
-    snapBottomRight(cell);
+    finishCell.get().each((cell) => {
+      snapBottomRight(cell);
+    });
   };
 
   const snapBottomRight = (cell: Element) => {
@@ -250,8 +258,8 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
         Attachment.attach(sink, bottomRight);
         isVisible.set(true);
       }
-      startCell.set(e.start);
-      finishCell.set(e.finish);
+      startCell.set(Option.some(e.start));
+      finishCell.set(Option.some(e.finish));
 
       e.otherCells.each((otherCells) => {
         tlTds.set(otherCells.upOrLeftCells);
@@ -273,6 +281,8 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
         Attachment.detach(bottomRight);
         isVisible.set(false);
       }
+      startCell.set(Option.none());
+      finishCell.set(Option.none());
     });
   }
 };
