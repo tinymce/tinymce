@@ -26,11 +26,11 @@
   .tox-toolbar__group--pull-right {
     margin-left: auto;
   }
-}
 
-// Prevent wrapping to many rows if using a sliding toolbar
-.tox .tox-toolbar.tox-toolbar--scrolling .tox-toolbar__group {
-  flex-wrap: nowrap;
+  // Prevent wrapping to multiple rows if using a sliding toolbar
+  .tox-toolbar--scrolling .tox-toolbar__group {
+    flex-wrap: nowrap;
+  }
 }
 
 .tox:not([dir=rtl]) {

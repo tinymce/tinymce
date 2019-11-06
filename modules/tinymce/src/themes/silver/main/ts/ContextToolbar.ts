@@ -182,6 +182,9 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
   const buildToolbar = (ctx): AlloySpec => {
     const { buttons } = editor.ui.registry.getAll();
+
+    // For context toolbars we don't want to use floating or sliding, so just restrict this
+    // to scrolling or wrapping (default)
     const toolbarType = getToolbarDrawer(editor) === ToolbarDrawer.scrolling ? ToolbarDrawer.scrolling : ToolbarDrawer.default;
 
     const scopes = getScopes();
