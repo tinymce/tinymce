@@ -10,7 +10,6 @@ import SelectionKeys from './SelectionKeys';
 import { WindowBridge } from './WindowBridge';
 import { Window, KeyboardEvent } from '@ephox/dom-globals';
 import { SelectionAnnotation } from './SelectionAnnotation';
-import { PlatformDetection } from '@ephox/sand';
 
 interface RC {
   rows: () => number;
@@ -121,8 +120,6 @@ const keyboard = function (win: Window, container: Element, isRoot: (e: Element)
   };
 };
 
-const platform = PlatformDetection.detect();
-
 const external = (win: Window, container: Element, isRoot: (e: Element) => boolean, annotations: SelectionAnnotation) => {
   const bridge = WindowBridge(win);
 
@@ -132,12 +129,8 @@ const external = (win: Window, container: Element, isRoot: (e: Element) => boole
       const boxes = cellSel.boxes().getOr([]);
       annotations.selectRange(container, boxes, cellSel.start(), cellSel.finish());
 
-      if (platform.deviceType.isTouch()) {
-        bridge.clearSelection();
-      } else {
-        // stop the browser from creating a big text selection, select the cell where the cursor is
-        bridge.selectContents(finish);
-      }
+      // stop the browser from creating a big text selection, select the cell where the cursor is
+      bridge.selectContents(finish);
     });
   };
 };
