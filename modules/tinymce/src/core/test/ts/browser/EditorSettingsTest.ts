@@ -1,13 +1,13 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import { Obj } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import * as EditorSettings from 'tinymce/core/EditorSettings';
-import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { EditorSettings as EditorSettingsType } from 'tinymce/core/api/SettingsTypes';
+import * as EditorSettings from 'tinymce/core/EditorSettings';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success, failure) {
   const detection = PlatformDetection.detect();
@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
 
   const expectedTabletDefaultSettings: EditorSettingsType = {
     ...expectedTouchDefaultSettings,
-    toolbar_drawer: false,
+    toolbar_drawer: 'scrolling',
     toolbar_sticky: false
   };
 

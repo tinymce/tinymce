@@ -1,9 +1,10 @@
-import { AlloyComponent, GuiFactory, Behaviour, Focusing, Keying, Toolbar, TestHelpers } from '@ephox/alloy';
+import { ApproxStructure, Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Step } from '@ephox/agar';
+import { AlloyComponent, Behaviour, Focusing, GuiFactory, Keying, TestHelpers, Toolbar } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock';
-
-import { renderToolbar, renderToolbarGroup } from 'tinymce/themes/silver/ui/toolbar/CommonToolbar';
-import { Step, Assertions, ApproxStructure, FocusTools, Keyboard, Keys, GeneralSteps, Logger } from '@ephox/agar';
 import { Arr, Option, Result } from '@ephox/katamari';
+
+import { ToolbarDrawer } from 'tinymce/themes/silver/api/Settings';
+import { renderToolbar, renderToolbarGroup } from 'tinymce/themes/silver/ui/toolbar/CommonToolbar';
 import TestBackstage from '../../module/TestBackstage';
 
 UnitTest.asynctest('Toolbar Test', (success, failure) => {
@@ -26,6 +27,7 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
     (store, doc, body) => {
       return GuiFactory.build(
         renderToolbar({
+          type: ToolbarDrawer.default,
           uid: 'test-toolbar-uid',
           onEscape: store.adderH('onEscape'),
           cyclicKeying: true,

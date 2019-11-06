@@ -54,6 +54,11 @@
     transition: opacity .3s ease, height .2s linear .1s, visibility 0s linear .3s;
   }
 
+  .tox-toolbar--scrolling {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
   .tox-pop .tox-toolbar {
     border-width: 0;
   }
@@ -66,13 +71,6 @@
   .tox-tbtn__icon-wrap {
     //
   }
-}
-
-// On touch devices we want toolbars to sidescroll, instead of wrapping to many rows
-.tox.tox-platform-touch .tox-editor-container .tox-toolbar,
-.tox.tox-tinymce-aux.tox-platform-touch .tox-toolbar {
-  flex-wrap: nowrap;
-  overflow-x: auto;
 }
 
 // Floating more drawer styles. Uses pop toolbar styles

@@ -5,28 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  AlloySpec,
-  Behaviour,
-  CustomList,
-  Composite,
-  Keying,
-  RawDomSchema,
-  Toolbar,
-  Sketcher,
-  SketchSpec,
-  UiSketcher
-} from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, Behaviour, Composite, CustomList, Keying, RawDomSchema, Sketcher, SketchSpec, Toolbar, UiSketcher } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Id, Option } from '@ephox/katamari';
+import { ToolbarDrawer } from '../../api/Settings';
 
 import { renderHeader } from '../header/CommonHeader';
 import SilverMenubar from '../menus/menubar/SilverMenubar';
 import * as Sidebar from '../sidebar/Sidebar';
 import * as Throbber from '../throbber/Throbber';
-import { renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbarGroup, renderToolbar, ToolbarSpec } from '../toolbar/CommonToolbar';
-import { ToolbarDrawer } from '../../api/Settings';
+import { renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbar, renderToolbarGroup, ToolbarSpec } from '../toolbar/CommonToolbar';
 
 export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
   dom: RawDomSchema;
@@ -181,6 +169,7 @@ const partMultipleToolbar = Composite.partType.optional({
 
         makeItem: () => {
           return renderToolbar({
+            type: spec.split,
             uid: Id.generate('multiple-toolbar-item'),
             backstage: spec.backstage,
             cyclicKeying: false,
@@ -208,6 +197,7 @@ const partToolbar = Composite.partType.optional({
     sketch: (spec) => {
       const renderer = toolbarFactory(spec);
       const toolbarSpec: ToolbarSpec = {
+        type: spec.split,
         uid: spec.uid,
         onEscape: () => {
           spec.onEscape();
