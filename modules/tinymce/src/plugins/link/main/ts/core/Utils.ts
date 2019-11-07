@@ -106,18 +106,19 @@ const handleExternalTargets = (href: string, assumeExternalTargets: AssumeExtern
 };
 
 const applyLinkOverrides = (editor: Editor, linkAttrs: Record<string, string>) => {
+  const newLinkAttrs = { ...linkAttrs };
   if (!(Settings.getRelList(editor).length > 0) && Settings.allowUnsafeLinkTarget(editor) === false) {
-    const newRel = applyRelTargetRules(linkAttrs.rel, linkAttrs.target === '_blank');
-    linkAttrs.rel = newRel ? newRel : null;
+    const newRel = applyRelTargetRules(newLinkAttrs.rel, newLinkAttrs.target === '_blank');
+    newLinkAttrs.rel = newRel ? newRel : null;
   }
 
-  if (Option.from(linkAttrs.target).isNone() && Settings.getTargetList(editor) === false) {
-    linkAttrs.target = Settings.getDefaultLinkTarget(editor);
+  if (Option.from(newLinkAttrs.target).isNone() && Settings.getTargetList(editor) === false) {
+    newLinkAttrs.target = Settings.getDefaultLinkTarget(editor);
   }
 
-  linkAttrs.href = handleExternalTargets(linkAttrs.href, Settings.assumeExternalTargets(editor));
+  newLinkAttrs.href = handleExternalTargets(newLinkAttrs.href, Settings.assumeExternalTargets(editor));
 
-  return linkAttrs;
+  return newLinkAttrs;
 };
 
 const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Option<string>, linkAttrs: Record<string, string>) => {
