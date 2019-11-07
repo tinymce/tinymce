@@ -15,7 +15,7 @@ import Tools from '../util/Tools';
 import VK from '../util/VK';
 import Selection from './Selection';
 import Editor from '../Editor';
-import Events from '../Events';
+import * as Events from '../Events';
 import Settings from '../Settings';
 
 interface ControlSelection {

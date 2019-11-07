@@ -3,6 +3,7 @@ import { Option } from 'ephox/katamari/api/Option';
 import { FutureResult } from 'ephox/katamari/api/FutureResult';
 import { Result } from 'ephox/katamari/api/Result';
 import Jsc from '@ephox/wrap-jsverify';
+import fc from 'fast-check';
 
 const show = function (res: Result<string, string>) {
   return res.fold(function (e) {
@@ -60,18 +61,4 @@ export const optionSome = Jsc.json.smap(function (v) {
 
 export const option = Jsc.oneof([ optionNone, optionSome ]);
 
-const genIndexArrayOf = function (len) {
-  return Jsc.integer(0, len).generator.map(function (aLength: number) {
-    const r: number[] = [];
-    for (let i = 0; i < aLength; i++) {
-      r.push(i);
-    }
-    return r;
-  });
-};
-
-export const indexArrayOf = function (len) {
-  return Jsc.bless({
-    generator: genIndexArrayOf(len)
-  });
-};
+export const negativeInteger = () => fc.integer(Number.MIN_SAFE_INTEGER, -1);
