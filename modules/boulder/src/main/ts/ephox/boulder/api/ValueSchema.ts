@@ -1,9 +1,8 @@
 import { Fun, Obj, Result, Type } from '@ephox/katamari';
 import { SimpleResult } from '../alien/SimpleResult';
 import { choose as _choose } from '../core/ChoiceProcessor';
-import { arrOf, arrOfObj as _arrOfObj, func, objOf, objOfOnly, Processor, setOf as doSetOf, thunk, value, ValueProcessorAdt, valueThunk } from '../core/ValueProcessor';
+import { arrOf, arrOfObj as _arrOfObj, oneOf, func, objOf, objOfOnly, Processor, setOf as doSetOf, thunk, value, ValueProcessorAdt, valueThunk, FieldProcessorAdt } from '../core/ValueProcessor';
 import { formatErrors, formatObj } from '../format/PrettyPrinter';
-import { FieldProcessorAdt } from '../format/TypeTokens';
 
 export interface SchemaError<T> {
   input: T;
@@ -73,7 +72,7 @@ const asStructOrDie = function (label: string, prop: Processor, obj: any): any {
 };
 
 const formatError = function (errInfo: SchemaError<any>): string {
-  return 'Errors: \n' + formatErrors(errInfo.errors) +
+  return 'Errors: \n' + formatErrors(errInfo.errors).join('\n') +
     '\n\nInput object: ' + formatObj(errInfo.input);
 };
 
@@ -154,6 +153,8 @@ export {
   arrOfObj,
   arrOf,
   arrOfVal,
+
+  oneOf,
 
   valueOf,
   valueThunkOf,

@@ -87,6 +87,10 @@ export enum ToolbarLocation {
   bottom = 'bottom'
 }
 
+const getToolbarGrouped = (editor: Editor) => {
+  return editor.getParam('toolbar_grouped', {});
+};
+
 // In case of a string not equal to 'top' nor 'bottom', default to position top
 const isToolbarLocationTop = (editor) => editor.getParam('toolbar_location', ToolbarLocation.top, 'string') !== ToolbarLocation.bottom;
 
@@ -138,5 +142,6 @@ export {
   isDraggableModal,
   isDistractionFree,
   isStickyToolbar,
-  isToolbarLocationTop
+  isToolbarLocationTop,
+  getToolbarGrouped
 };

@@ -1,0 +1,4 @@
+# List of packages to bump:
+# Format: [packagename]@[new_version]
+@ephox/boulder@4.0.0
+@ephox/alloy@5.1.0

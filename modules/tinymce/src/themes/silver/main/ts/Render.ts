@@ -13,7 +13,7 @@ import { Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, getMultipleToolbarsSetting, getToolbarDrawer, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, ToolbarDrawer, isToolbarLocationTop, useFixedContainer } from './api/Settings';
+import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, getMultipleToolbarsSetting, getToolbarDrawer, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, ToolbarDrawer, isToolbarLocationTop, useFixedContainer, getToolbarGrouped } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -56,7 +56,7 @@ export interface RenderUiComponents {
   outerContainer: AlloyComponent;
 }
 
-type ToolbarConfig = Array<string | ToolbarGroupSetting> | string | boolean;
+export type ToolbarConfig = Array<string | ToolbarGroupSetting> | string | boolean;
 
 export interface RenderToolbarConfig {
   toolbar: ToolbarConfig;
@@ -387,6 +387,10 @@ const setup = (editor: Editor): RenderInfo => {
     SilverContextMenu.setup(editor, lazySink, backstage);
     Sidebar.setup(editor);
     Throbber.setup(editor, lazyThrobber, backstage.shared);
+
+    Obj.map(getToolbarGrouped(editor), (toolbarGroupButtonConfig, name) => {
+      editor.ui.registry.addFloatingToolbarButton(name, toolbarGroupButtonConfig);
+    });
 
     // Apply Bridge types
     const { buttons, menuItems, contextToolbars, sidebars } = editor.ui.registry.getAll();
