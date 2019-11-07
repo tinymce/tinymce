@@ -105,6 +105,22 @@ const handleExternalTargets = (href: string, assumeExternalTargets: AssumeExtern
   return href;
 };
 
+const applyLinkOverrides = (editor: Editor, linkAttrs: Record<string, string>) => {
+  const newLinkAttrs = { ...linkAttrs };
+  if (!(Settings.getRelList(editor).length > 0) && Settings.allowUnsafeLinkTarget(editor) === false) {
+    const newRel = applyRelTargetRules(newLinkAttrs.rel, newLinkAttrs.target === '_blank');
+    newLinkAttrs.rel = newRel ? newRel : null;
+  }
+
+  if (Option.from(newLinkAttrs.target).isNone() && Settings.getTargetList(editor) === false) {
+    newLinkAttrs.target = Settings.getDefaultLinkTarget(editor);
+  }
+
+  newLinkAttrs.href = handleExternalTargets(newLinkAttrs.href, Settings.assumeExternalTargets(editor));
+
+  return newLinkAttrs;
+};
+
 const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Option<string>, linkAttrs: Record<string, string>) => {
   // If we have text, then update the anchor elements text content
   text.each((text) => {
@@ -135,22 +151,11 @@ const createLink = (editor: Editor, selectedElm: Element, text: Option<string>, 
 };
 
 const link = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) => {
+  const selectedElm = editor.selection.getNode();
+  const anchorElm = getAnchorElement(editor, selectedElm);
+  const linkAttrs = applyLinkOverrides(editor, getLinkAttrs(data));
+
   editor.undoManager.transact(() => {
-    const selectedElm = editor.selection.getNode();
-    const anchorElm = getAnchorElement(editor, selectedElm);
-    const linkAttrs = getLinkAttrs(data);
-
-    if (!(Settings.getRelList(editor).length > 0) && Settings.allowUnsafeLinkTarget(editor) === false) {
-      const newRel = applyRelTargetRules(linkAttrs.rel, linkAttrs.target === '_blank');
-      linkAttrs.rel = newRel ? newRel : null;
-    }
-
-    if (Option.from(linkAttrs.target).isNone()) {
-      linkAttrs.target = Settings.getDefaultLinkTarget(editor);
-    }
-
-    linkAttrs.href = handleExternalTargets(linkAttrs.href, Settings.assumeExternalTargets(editor));
-
     if (data.href === attachState.href) {
       attachState.attach();
     }
