@@ -13,6 +13,7 @@ import Selection from '../api/dom/Selection';
 import DomSerializer from '../api/dom/Serializer';
 import Editor from '../api/Editor';
 import EditorUpload from '../api/EditorUpload';
+import * as Events from '../api/Events';
 import Formatter from '../api/Formatter';
 import DomParser from '../api/html/DomParser';
 import Node from '../api/html/Node';
@@ -31,7 +32,6 @@ import * as MultiClickSelection from '../selection/MultiClickSelection';
 import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import Quirks from '../util/Quirks';
-
 declare const escape: any;
 
 const DOM = DOMUtils.DOM;
@@ -155,7 +155,7 @@ const moveSelectionToFirstCaretPosition = (editor: Editor) => {
 const initEditor = function (editor: Editor) {
   editor.bindPendingEventDelegates();
   editor.initialized = true;
-  editor.fire('init');
+  Events.fireInit(editor);
   editor.focus(true);
   moveSelectionToFirstCaretPosition(editor);
   editor.nodeChanged({ initial: true });
@@ -250,7 +250,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   KeyboardOverrides.setup(editor);
   ForceBlocks.setup(editor);
 
-  editor.fire('PreInit');
+  Events.firePreInit(editor);
 
   if (!settings.browser_spellcheck && !settings.gecko_spellcheck) {
     doc.body.spellcheck = false; // Gecko
@@ -258,7 +258,8 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   }
 
   editor.quirks = Quirks(editor);
-  editor.fire('PostRender');
+
+  Events.firePostRender(editor);
 
   const directionality = Settings.getDirectionality(editor);
   if (directionality !== undefined) {

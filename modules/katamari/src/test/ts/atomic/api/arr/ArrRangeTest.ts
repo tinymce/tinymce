@@ -2,12 +2,14 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import * as fc from 'fast-check';
-import { Testable as T } from '@ephox/dispute';
+import { Testable } from '@ephox/dispute';
+
+const { tArray, tNumber } = Testable;
 
 UnitTest.test('Arr.range: unit tests', () => {
   const check = (expected, input, f) => {
     const actual = Arr.range(input, f);
-    Assert.eq('range', expected, actual, T.tArray(T.tNumber));
+    Assert.eq('range', expected, actual, tArray(tNumber));
   };
 
   check([], 0, Fun.constant(10));
@@ -20,7 +22,7 @@ UnitTest.test('Arr.range: property tests', () => {
     fc.nat(30),
     (num) => {
       const range = Arr.range(num, Fun.identity);
-      Assert.eq('length', range.length, num, T.tNumber);
+      Assert.eq('length', range.length, num, tNumber);
       return Arr.forall(range, (x, i) => x === i);
     }));
 });

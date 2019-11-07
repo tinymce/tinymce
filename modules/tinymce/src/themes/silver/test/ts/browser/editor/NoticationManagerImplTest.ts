@@ -12,7 +12,7 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
   Theme();
 
   TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
-    const cOpenNotification = (type: 'info' | 'warning' | 'error' | 'success', text: string, progressBar = false) => Chain.mapper(() => {
+    const cOpenNotification = (type: 'info' | 'warning' | 'error' | 'success', text: string, progressBar = false) => Chain.injectThunked(() => {
       return editor.notificationManager.open({ type, text, progressBar });
     });
 

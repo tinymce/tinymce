@@ -7,6 +7,7 @@
 
 import { document } from '@ephox/dom-globals';
 import Tools from './Tools';
+import { Arr } from '@ephox/katamari';
 
 /**
  * This class handles parsing, modification and serialization of URI/URL strings.
@@ -382,9 +383,9 @@ class URI {
 
     // If /a/b/c or /
     if (i <= 0) {
-      outPath = o.reverse().join('/');
+      outPath = Arr.reverse(o).join('/');
     } else {
-      outPath = normalizedBase.slice(0, i).join('/') + '/' + o.reverse().join('/');
+      outPath = normalizedBase.slice(0, i).join('/') + '/' + Arr.reverse(o).join('/');
     }
 
     // Add front / if it's needed

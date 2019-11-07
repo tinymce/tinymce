@@ -51,7 +51,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
 
   const createTestOpenChain = (editor: Editor) => Chain.fromChains([
     DialogUtils.cOpen(editor, dialogSpec, { inline: 'toolbar'}),
-    Chain.mapper(() => {
+    Chain.injectThunked(() => {
       const dialog = UiFinder.findIn(Body.body(), '.tox-dialog-inline').getOrDie();
       return Traverse.parent(dialog).getOr(dialog);
     })

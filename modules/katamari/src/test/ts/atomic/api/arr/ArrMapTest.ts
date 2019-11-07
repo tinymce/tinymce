@@ -2,7 +2,9 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as fc from 'fast-check';
-import { Testable as T } from '@ephox/dispute';
+import { Testable } from '@ephox/dispute';
+
+const { tArray, tNumber } = Testable;
 
 const dbl = (x) => x * 2;
 
@@ -26,7 +28,7 @@ UnitTest.test('Arr.map: functor laws', () => {
       'map id = id',
       Fun.identity(xs),
       Arr.map(xs, Fun.identity),
-      T.tArray(T.tNumber)
+      tArray(tNumber)
     )
   ));
 
@@ -38,7 +40,7 @@ UnitTest.test('Arr.map: functor laws', () => {
       'map (f . g) = map f . map g',
       Arr.map(xs, Fun.compose(f, g)),
       Arr.map(Arr.map(xs, g), f),
-      T.tArray(T.tNumber)
+      tArray(tNumber)
     )
   ));
 });

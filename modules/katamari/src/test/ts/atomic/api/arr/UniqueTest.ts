@@ -2,7 +2,9 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import * as Unique from 'ephox/katamari/api/Unique';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import * as fc from 'fast-check';
-import { Testable as T } from '@ephox/dispute';
+import { Testable } from '@ephox/dispute';
+
+const { tArray, tString } = Testable;
 
 UnitTest.test('Arr.unique: unit tests', () => {
   const expected = ['three', 'two', 'one'];
@@ -31,6 +33,6 @@ UnitTest.test('Arr.unique is idempotent', () => {
   fc.assert(fc.property(fc.array(fc.string()), (arr) => {
     const once = Unique.stringArray(arr);
     const twice = Unique.stringArray(once);
-    Assert.eq('idempotent', Arr.sort(once), Arr.sort(twice), T.tArray(T.tString));
+    Assert.eq('idempotent', Arr.sort(once), Arr.sort(twice), tArray(tString));
   }));
 });

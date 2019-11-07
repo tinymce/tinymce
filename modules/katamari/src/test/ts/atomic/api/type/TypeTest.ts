@@ -2,7 +2,9 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import * as Type from 'ephox/katamari/api/Type';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import * as fc from 'fast-check';
-import { Pprint, Testable as T } from '@ephox/dispute';
+import { Pprint, Testable } from '@ephox/dispute';
+
+const { tNumber } = Testable;
 
 UnitTest.test('Type.is*: Unit tests', () => {
   const check = (method: (u: unknown) => boolean, methodName: string) => (expected: boolean, input: unknown) => {
@@ -138,6 +140,6 @@ UnitTest.test('Type.is*: only one should match for every value', () => {
 
   fc.assert(fc.property(fc.anything(), (x) => {
     const matches = Arr.filter(classifiers, (c) => c(x));
-    Assert.eq('number of matching types', 1, matches.length, T.tNumber);
+    Assert.eq('number of matching types', 1, matches.length, tNumber);
   }));
 });

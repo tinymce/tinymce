@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
   };
 
   const cGetBookmark = function (rootPath) {
-    return Chain.mapper(function () {
+    return Chain.injectThunked(function () {
       const root = Hierarchy.follow(Element.fromDom(viewBlock.get()), rootPath).getOrDie();
       return SelectionBookmark.getBookmark(root);
     });
@@ -196,7 +196,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
       cAssertBookmark([0, 0], 2, [1, 0], 3)
     ])),
     Logger.t('readRange with with win without getSelection should return Option.none', Chain.asStep({}, [
-      Chain.mapper(function () {
+      Chain.injectThunked(function () {
         const mockWin = { getSelection: Fun.constant(null) };
         return SelectionBookmark.readRange(mockWin);
       }),

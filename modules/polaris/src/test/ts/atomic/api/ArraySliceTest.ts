@@ -1,7 +1,9 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as Arrays from 'ephox/polaris/api/Arrays';
 import * as fc from 'fast-check';
-import { Testable as T } from '@ephox/dispute';
+import { Testable } from '@ephox/dispute';
+
+const { tArray, tNumber } = Testable;
 
 const is = <T> (a: T) => (b: T) => a === b;
 
@@ -9,7 +11,7 @@ UnitTest.test('sliceby: unit tests', function () {
 
   const check = function (expected: number[], input: number[], pred: (x: number, i: number) => boolean) {
     const actual = Arrays.sliceby(input, pred);
-    Assert.eq('sliceby', expected, actual, T.tArray(T.tNumber));
+    Assert.eq('sliceby', expected, actual, tArray(tNumber));
   };
 
   check([], [], is(0));
@@ -28,7 +30,7 @@ UnitTest.test('sliceby: property tests', function () {
       Assert.eq('sliceby',
         a1,
         Arrays.sliceby(input, is(-1)),
-        T.tArray(T.tNumber)
+        tArray(tNumber)
       );
     }));
 });

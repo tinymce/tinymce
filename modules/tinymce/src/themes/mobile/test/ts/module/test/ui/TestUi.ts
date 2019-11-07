@@ -38,7 +38,7 @@ const sStartEditor = function (alloy) {
 
 const sClickComponent = function (realm, memento) {
   return Chain.asStep({ }, [
-    Chain.mapper(function () {
+    Chain.injectThunked(function () {
       return memento.get(realm.socket()).element();
     }),
     Mouse.cClick

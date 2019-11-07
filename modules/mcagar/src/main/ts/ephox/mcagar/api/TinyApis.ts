@@ -101,8 +101,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
     ]);
   };
 
-  const cGetContent = <T> () => Chain.injectThunked<T, string>(function () {
-    // Technically not mapping value.
+  const cGetContent = <T> () => Chain.injectThunked<T, string>(() => {
     return editor.getContent();
   });
 
