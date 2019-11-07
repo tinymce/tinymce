@@ -1,80 +1,55 @@
 import * as Arr from 'ephox/katamari/api/Arr';
-import * as Fun from 'ephox/katamari/api/Fun';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import { Option } from 'ephox/katamari/api/Option';
+import { tOption } from 'ephox/katamari/api/OptionInstances';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
+import { Testable } from '@ephox/dispute';
 
-UnitTest.test('ArrFindTest', () => {
-  const checkNoneHelper = (input, pred) => {
-    const actual = Arr.find(input, pred);
-    assert.eq(true, actual.isNone());
+const { tNumber } = Testable;
+
+UnitTest.test('Arr.find: Unit tests', () => {
+  const checkNoneHelper = (input: ArrayLike<number>, pred: (n: number, i: number) => boolean): void => {
+    Assert.eq('none', Option.none(), Arr.find(input, pred), tOption(tNumber));
   };
 
-  const checkNone = (input: any[], pred) => {
+  const checkNone = (input: ArrayLike<number>, pred: (n: number, i: number) => boolean) => {
     checkNoneHelper(input, pred);
-    checkNoneHelper(Object.freeze(input.slice()), pred);
+    checkNoneHelper(Object.freeze(input), pred);
   };
 
-  const checkArrHelper = (expected, input, pred) => {
-    const actual = Arr.find(input, pred).getOrDie('should have value');
-    assert.eq(expected, actual);
+  const checkArrHelper = (expected: number, input: ArrayLike<number>, pred: (n: number, i: number) => boolean): void => {
+    const actual = Arr.find(input, pred);
+    Assert.eq('some', Option.some(expected), actual, tOption(tNumber));
   };
 
-  const checkArr = (expected, input, pred) => {
+  const checkArr = (expected: number, input: ArrayLike<number>, pred: (n: number, i: number) => boolean): void => {
     checkArrHelper(expected, input, pred);
-    checkArrHelper(expected, Object.freeze(input.slice()), pred);
+    checkArrHelper(expected, Object.freeze(input), pred);
   };
+
   checkNone([], (x) => x > 0);
-  checkNone([-1], (x) => x > 0);
-  checkArr(1, [1], (x) => x > 0);
-  checkArr(41, [4, 2, 10, 41, 3], (x) => x === 41);
-  checkArr(100, [4, 2, 10, 41, 3, 100], (x) => x > 80);
-  checkNone([4, 2, 10, 412, 3], (x) => x === 41);
+  checkNone([], (x) => { throw new Error('should not be called'); });
+  checkNone([ -1 ], (x) => x > 0);
+  checkArr(1, [ 1 ], (x) => x > 0);
+  checkArr(41, [ 4, 2, 10, 41, 3 ], (x) => x === 41);
+  checkArr(100, [ 4, 2, 10, 41, 3, 100 ], (x) => x > 80);
+  checkNone([ 4, 2, 10, 412, 3 ], (x) => x === 41);
 
-  checkArr(10, [4, 2, 10, 412, 3], (x, i) => i === 2);
+  checkArr(10, [ 4, 2, 10, 412, 3 ], (x, i) => i === 2);
+});
 
-  Jsc.property(
-    'the value found by find always passes predicate',
-    Jsc.array(Jsc.json),
-    Jsc.fun(Jsc.bool),
-    (arr, pred) => {
-      const value = Arr.find(arr, pred);
-      if (value.isNone()) {
-        return !Arr.exists(arr, pred);
-        // nothing in array matches predicate
-      } else {
-        return pred(value.getOrDie('should have value'));
-      }
-    }
-  );
+UnitTest.test('Arr.find: finds a value in the array', () => {
+  fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), fc.array(fc.integer()), (prefix, i, suffix) => {
+    const arr = prefix.concat([i]).concat(suffix);
+    const pred = (x) => x === i;
+    const result = Arr.find(arr, pred);
+    Assert.eq('Element found in array', Option.some(i), result, tOption(tNumber));
+  }));
+});
 
-  Jsc.property(
-    'If predicate is always false, then find is always none',
-    Jsc.array(Jsc.json),
-    (arr) => {
-      const value = Arr.find(arr, Fun.constant(false));
-      return value.isNone();
-    }
-  );
-
-  Jsc.property(
-    'If array is empty, find is always none',
-    Jsc.fun(Jsc.bool),
-    (pred) => {
-      const value = Arr.find([ ], pred);
-      return value.isNone();
-    }
-  );
-
-  Jsc.property(
-    'If predicate is always true, then value is always some(first), or none if array is empty',
-    Jsc.array(Jsc.json),
-    (arr) => {
-      const value = Arr.find(arr, Fun.constant(true));
-      if (arr.length === 0) {
-        return Jsc.eq(true, value.isNone());
-      } else {
-        return Jsc.eq(arr[0], value.getOrDie('should have value'));
-      }
-    }
-  );
+UnitTest.test('Arr.find: value not found', () => {
+  fc.assert(fc.property(fc.array(fc.integer()), (arr) => {
+    const result = Arr.find(arr, () => false);
+    Assert.eq('Element not found in array', Option.none(), result, tOption(tNumber));
+  }));
 });

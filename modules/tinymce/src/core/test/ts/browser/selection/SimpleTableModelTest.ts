@@ -7,7 +7,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', function (success, failure) {
 
   const cFromDom = function (html) {
-    return Chain.mapper(function (_) {
+    return Chain.injectThunked(function () {
       return SimpleTableModel.fromDom(Element.fromHtml(html));
     });
   };

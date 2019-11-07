@@ -51,11 +51,7 @@ export const contains = function (str: string, substr: string) {
 };
 
 export const capitalize = function (str: string) {
-  return StringParts.head(str).bind(function (head) {
-    return StringParts.tail(str).map(function (tail) {
-      return head.toUpperCase() + tail;
-    });
-  }).getOr(str);
+  return str === '' ? '' : str.charAt(0).toUpperCase() + str.substring(1);
 };
 
 /** Does 'str' start with 'prefix'?

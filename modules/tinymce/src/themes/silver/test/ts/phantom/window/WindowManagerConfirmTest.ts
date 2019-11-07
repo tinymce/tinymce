@@ -105,6 +105,7 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
                                   html: str.is('No'),
                                   classes: [
                                     arr.has('tox-button'),
+                                    arr.has('tox-button--secondary')
                                   ],
                                   attrs: {
                                     'type': str.is('button'),

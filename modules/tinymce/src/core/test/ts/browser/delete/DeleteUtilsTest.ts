@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function (succ
   };
 
   const cWillDeleteLastPositionInElement = function (forward, caretPath, caretOffset, elementPath) {
-    return Chain.mapper(function (actualBlock) {
+    return Chain.injectThunked(function () {
       const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
       const caretNode = Hierarchy.follow(Element.fromDom(viewBlock.get()), caretPath).getOrDie();
 

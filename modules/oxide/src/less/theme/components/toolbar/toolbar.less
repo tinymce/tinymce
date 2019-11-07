@@ -83,8 +83,8 @@
 }
 
 // Add a top border when toolbar_location is bottom and menubar is hidden
-.tox-editor-header:not(:first-child) .tox-toolbar:first-child,
-.tox-editor-header:not(:first-child) .tox-toolbar-overlord:first-child .tox-toolbar__primary {
+&.tox-tinymce:not(.tox-tinymce-inline) .tox-editor-header:not(:first-child) .tox-toolbar:first-child,
+&.tox-tinymce:not(.tox-tinymce-inline) .tox-editor-header:not(:first-child) .tox-toolbar-overlord:first-child .tox-toolbar__primary {
   border-top: 1px solid @toolbar-separator-color;
 }
 
