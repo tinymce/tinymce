@@ -9,6 +9,9 @@
 // Editor
 //
 
+@editor-header-box-shadow: none;
+@editor-header-sticky-box-shadow: 0 4px 4px -3px rgba(0, 0, 0, .25);
+
 .tox {
   // styles for making statusbar appear above toolbars when making the editor height very small
   .tox-editor-container {
@@ -19,6 +22,8 @@
   }
 
   .tox-editor-header {
+    box-shadow: @editor-header-box-shadow;
+    transition: box-shadow .5s;
     z-index: 1;
   }
 }
@@ -29,6 +34,16 @@
 .tox.tox-tinymce-inline {
   .tox-editor-header {
     margin-bottom: -1px;
+  }
+}
+
+.tox.tox-tinymce--toolbar-sticky-off {
+  //
+}
+
+.tox.tox-tinymce--toolbar-sticky-on {
+  .tox-editor-header {
+    box-shadow: @editor-header-sticky-box-shadow;
   }
 }
 
