@@ -1,7 +1,7 @@
-import { Button, Behaviour, Dragging, Unselecting, DragCoord, Attachment, GuiFactory, Boxes, Memento, AlloyComponent } from '@ephox/alloy';
+import { AlloyComponent, Attachment, Behaviour, Boxes, Button, DragCoord, Dragging, GuiFactory, Memento, Unselecting } from '@ephox/alloy';
+import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Arr, Option, Cell } from '@ephox/katamari';
-import { Position, Element, Traverse, Css } from '@ephox/sugar';
+import { Css, Element, Position, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -164,7 +164,8 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
       ]),
       eventOrder: {
         // Because this is a button, allow dragging. It will stop clicking.
-        mousedown: [ 'dragging', 'alloy.base.behaviour' ]
+        mousedown: [ 'dragging', 'alloy.base.behaviour' ],
+        touchstart: [ 'dragging', 'alloy.base.behaviour' ]
       }
     })
   );
@@ -191,7 +192,8 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
       ]),
       eventOrder: {
         // Because this is a button, allow dragging. It will stop clicking.
-        mousedown: [ 'dragging', 'alloy.base.behaviour' ]
+        mousedown: [ 'dragging', 'alloy.base.behaviour' ],
+        touchstart: [ 'dragging', 'alloy.base.behaviour' ]
       }
     })
   );
