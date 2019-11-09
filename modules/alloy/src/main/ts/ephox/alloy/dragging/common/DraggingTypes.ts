@@ -12,7 +12,7 @@ import { TouchDraggingConfigSpec } from '../touch/TouchDraggingTypes';
 
 export interface DraggingBehaviour extends Behaviour.AlloyBehaviour<DraggingConfigSpec, DraggingConfig> {
   config: (config: DraggingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DraggingConfigSpec, DraggingConfig>;
-  snap: (sConfig: SnapConfigSpec) => any;
+  snap: (sConfig: SnapConfigSpec) => SnapConfig;
   snapTo: (component: AlloyComponent, sConfig: SnapConfig) => void;
 }
 
@@ -48,7 +48,7 @@ export interface SnapsConfig {
   getSnapPoints: (comp: AlloyComponent) => SnapConfig[];
   leftAttr: string;
   topAttr: string;
-  onSensor?: (component: AlloyComponent, extra: {}) => void;
+  onSensor?: (component: AlloyComponent, extra: any) => void;
   lazyViewport?: (component: AlloyComponent) => Bounds;
   mustSnap?: boolean;
 }
