@@ -1,7 +1,7 @@
 import { AlloyComponent, Attachment, Behaviour, Boxes, Button, DragCoord, Dragging, DraggingTypes, GuiFactory, Memento, Unselecting } from '@ephox/alloy';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, Element, Position, Traverse } from '@ephox/sugar';
+import { Compare, Css, Element, Position, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -110,19 +110,24 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
     });
   };
 
+  // Can't use Option.is() here since we need to do a dom compare, not an equality compare
+  const isSameCell = (cellOpt: Option<Element>, elm: Element) => cellOpt.exists((s) => Compare.eq(s, elm));
+
   const topLeftSnaps = {
     getSnapPoints: getTopLeftSnaps,
     leftAttr: 'data-drag-left',
     topAttr: 'data-drag-top',
     onSensor: (component, extra) => {
       const start = extra.td;
-      startCell.set(Option.some(start));
-      finishCell.get().each((finish) => {
-        editor.fire('TableSelectorChange', {
-          start,
-          finish
+      if (!isSameCell(startCell.get(), start)) {
+        startCell.set(Option.some(start));
+        finishCell.get().each((finish) => {
+          editor.fire('TableSelectorChange', {
+            start,
+            finish
+          });
         });
-      });
+      }
     },
     mustSnap: true
   };
@@ -133,13 +138,15 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
     topAttr: 'data-drag-top',
     onSensor: (component, extra) => {
       const finish = extra.td;
-      finishCell.set(Option.some(finish));
-      startCell.get().each((start) => {
-        editor.fire('TableSelectorChange', {
-          start,
-          finish
+      if (!isSameCell(finishCell.get(), finish)) {
+        finishCell.set(Option.some(finish));
+        startCell.get().each((start) => {
+          editor.fire('TableSelectorChange', {
+            start,
+            finish
+          });
         });
-      });
+      }
     },
     mustSnap: true
   };
