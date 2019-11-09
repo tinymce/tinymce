@@ -1,7 +1,7 @@
-import { Button, Behaviour, Dragging, Unselecting, DragCoord, Attachment, GuiFactory, Boxes, Memento, AlloyComponent } from '@ephox/alloy';
+import { AlloyComponent, Attachment, Behaviour, Boxes, Button, DragCoord, Dragging, GuiFactory, Memento, Unselecting } from '@ephox/alloy';
+import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Arr, Option, Cell } from '@ephox/katamari';
-import { Position, Element, Traverse, Css } from '@ephox/sugar';
+import { Css, Element, Position, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -150,16 +150,11 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
       },
 
       buttonBehaviours: Behaviour.derive([
-        Dragging.config(
-          platform.deviceType.isTouch() ? {
-            mode: 'touch',
-            snaps: topLeftSnaps
-          } : {
-            mode: 'mouse',
-            blockerClass: 'blocker',
-            snaps: topLeftSnaps
-          }
-        ),
+        Dragging.config({
+          mode: platform.deviceType.isTouch() ? 'touch' : 'mouse',
+          blockerClass: 'blocker',
+          snaps: topLeftSnaps
+        }),
         Unselecting.config({ })
       ]),
       eventOrder: {
@@ -177,16 +172,11 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
       },
 
       buttonBehaviours: Behaviour.derive([
-        Dragging.config(
-          platform.deviceType.isTouch() ? {
-            mode: 'touch',
-            snaps: bottomRightSnaps
-          } : {
-            mode: 'mouse',
-            blockerClass: 'blocker',
-            snaps: bottomRightSnaps
-          }
-        ),
+        Dragging.config({
+          mode: platform.deviceType.isTouch() ? 'touch' : 'mouse',
+          blockerClass: 'blocker',
+          snaps: bottomRightSnaps
+        }),
         Unselecting.config({ })
       ]),
       eventOrder: {
