@@ -118,7 +118,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
       const start = extra.td;
       startCell.set(Option.some(start));
       finishCell.get().each((finish) => {
-        editor.fire('tableselectorchange', {
+        editor.fire('TableSelectorChange', {
           start,
           finish
         });
@@ -135,7 +135,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
       const finish = extra.td;
       finishCell.set(Option.some(finish));
       startCell.get().each((start) => {
-        editor.fire('tableselectorchange', {
+        editor.fire('TableSelectorChange', {
           start,
           finish
         });
@@ -203,7 +203,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
 
   // TODO: Make this work for desktop maybe?
   if (platform.deviceType.isTouch()) {
-    editor.on('tableselectionchange', (e) => {
+    editor.on('TableSelectionChange', (e) => {
       if (!isVisible.get()) {
         Attachment.attach(sink, topLeft);
         Attachment.attach(sink, bottomRight);
@@ -226,7 +226,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
       snapLastBottomRight();
     });
 
-    editor.on('tableselectionclear', () => {
+    editor.on('TableSelectionClear', () => {
       if (isVisible.get()) {
         Attachment.detach(topLeft);
         Attachment.detach(bottomRight);
