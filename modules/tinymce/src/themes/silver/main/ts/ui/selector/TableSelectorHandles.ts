@@ -1,4 +1,4 @@
-import { AlloyComponent, Attachment, Behaviour, Boxes, Button, DragCoord, Dragging, GuiFactory, Memento, Unselecting } from '@ephox/alloy';
+import { AlloyComponent, Attachment, Behaviour, Boxes, Button, DragCoord, Dragging, DraggingTypes, GuiFactory, Memento, Unselecting } from '@ephox/alloy';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Element, Position, Traverse } from '@ephox/sugar';
@@ -10,51 +10,77 @@ const platform = PlatformDetection.detect();
 const snapWidth = 40;
 const snapOffset = snapWidth / 2;
 
+// const insertDebugDiv = (left, top, width, height, color, clazz) => {
+//   const debugArea = Element.fromHtml(`<div class="${clazz}"></div>`);
+//   Css.setAll(debugArea, {
+//     'left': left.toString() + 'px',
+//     'top': top.toString() + 'px',
+//     'background-color': color,
+//     'position': 'absolute',
+//     'width': width.toString() + 'px',
+//     'height': height.toString() + 'px',
+//     'opacity': '0.2'
+//   });
+//   Insert.append(Body.body(), debugArea);
+// };
+
+const calcSnap = (selectorOpt: Option<AlloyComponent>, td: Element, x: number, y: number, width: number, height: number) => {
+  return selectorOpt.fold(() => {
+    return Dragging.snap({
+      sensor: DragCoord.absolute(x - snapOffset, y - snapOffset),
+      range: Position(width, height),
+      output: DragCoord.absolute(Option.some(x), Option.some(y)),
+      extra: {
+        td
+      }
+    });
+  }, (selectorHandle) => {
+    const sensorLeft = x - snapOffset;
+    const sensorTop = y - snapOffset;
+    const sensorWidth = snapWidth; // box.width();
+    const sensorHeight = snapWidth; // box.height();
+    const rect = selectorHandle.element().dom().getBoundingClientRect();
+    // insertDebugDiv(sensorLeft, sensorTop, sensorWidth, sensorHeight, 'green', 'top-left-snap-debug');
+    return Dragging.snap({
+      sensor: DragCoord.absolute(sensorLeft, sensorTop),
+      range: Position(sensorWidth, sensorHeight),
+      output: DragCoord.absolute(Option.some(x - (rect.width / 2)), Option.some(y - (rect.height / 2))),
+      extra: {
+        td
+      }
+    });
+  });
+};
+
+const createSelector = (snaps: DraggingTypes.SnapsConfig) => Memento.record(
+  Button.sketch({
+    dom: {
+      tag: 'div',
+      classes: ['tox-selector']
+    },
+
+    buttonBehaviours: Behaviour.derive([
+      Dragging.config({
+        mode: platform.deviceType.isTouch() ? 'touch' : 'mouse',
+        blockerClass: 'blocker',
+        snaps
+      }),
+      Unselecting.config({ })
+    ]),
+    eventOrder: {
+      // Because this is a button, allow dragging. It will stop clicking.
+      mousedown: [ 'dragging', 'alloy.base.behaviour' ]
+    }
+  })
+);
+
 const setup = (editor: Editor, sink: AlloyComponent) => {
   const tlTds = Cell<Element[]>([]);
   const brTds = Cell<Element[]>([]);
 
-  // const insertDebugDiv = (left, top, width, height, color, clazz) => {
-  //   const debugArea = Element.fromHtml(`<div class="${clazz}"></div>`);
-  //   Css.setAll(debugArea, {
-  //     'left': left.toString() + 'px',
-  //     'top': top.toString() + 'px',
-  //     'background-color': color,
-  //     'position': 'absolute',
-  //     'width': width.toString() + 'px',
-  //     'height': height.toString() + 'px',
-  //     'opacity': '0.2'
-  //   });
-  //   Insert.append(Body.body(), debugArea);
-  // };
-
   const getTopLeftSnap = (td: Element) => {
     const box = Boxes.absolute(td);
-    return memTopLeft.getOpt(sink).fold(() => {
-      return Dragging.snap({
-        sensor: DragCoord.absolute(box.x() - snapOffset, box.y() - snapOffset),
-        range: Position(box.width(), box.height()),
-        output: DragCoord.absolute(Option.some(box.x()), Option.some(box.y())),
-        extra: {
-          td
-        }
-      });
-    }, (selectorHandle) => {
-      const sensorLeft = box.x() - snapOffset;
-      const sensorTop = box.y() - snapOffset;
-      const sensorWidth = snapWidth; // box.width();
-      const sensorHeight = snapWidth; // box.height();
-      const rect = selectorHandle.element().dom().getBoundingClientRect();
-      // insertDebugDiv(sensorLeft, sensorTop, sensorWidth, sensorHeight, 'green', 'top-left-snap-debug');
-      return Dragging.snap({
-        sensor: DragCoord.absolute(sensorLeft, sensorTop),
-        range: Position(sensorWidth, sensorHeight),
-        output: DragCoord.absolute(Option.some(box.x() - (rect.width / 2)), Option.some(box.y() - (rect.height / 2))),
-        extra: {
-          td
-        }
-      });
-    });
+    return calcSnap(memTopLeft.getOpt(sink), td, box.x(), box.y(), box.width(), box.height());
   };
 
   const getTopLeftSnaps = () => {
@@ -70,31 +96,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
 
   const getBottomRightSnap = (td: Element) => {
     const box = Boxes.absolute(td);
-    return memBottomRight.getOpt(sink).fold(() => {
-      return Dragging.snap({
-        sensor: DragCoord.absolute(box.x() - snapOffset, box.y() - snapOffset),
-        range: Position(box.width(), box.height()),
-        output: DragCoord.absolute(Option.some(box.right()), Option.some(box.bottom())),
-        extra: {
-          td
-        }
-      });
-    }, (selectorHandle) => {
-      const sensorLeft = box.right() - snapOffset;
-      const sensorTop = box.bottom() - snapOffset;
-      const sensorWidth = snapWidth; // box.width();
-      const sensorHeight = snapWidth; // box.height();
-      const rect = selectorHandle.element().dom().getBoundingClientRect();
-      // insertDebugDiv(sensorLeft, sensorTop, sensorWidth, sensorHeight, 'red', 'bottom-right-snap-debug');
-      return Dragging.snap({
-        sensor: DragCoord.absolute(sensorLeft, sensorTop),
-        range: Position(sensorWidth, sensorHeight),
-        output: DragCoord.absolute(Option.some(box.right() - (rect.width / 2)), Option.some(box.bottom() - (rect.height / 2))),
-        extra: {
-          td
-        }
-      });
-    });
+    return calcSnap(memBottomRight.getOpt(sink), td, box.right(), box.bottom(), box.width(), box.height());
   };
 
   const getBottomRightSnaps = () => {
@@ -142,49 +144,8 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
     mustSnap: true
   };
 
-  const memTopLeft  = Memento.record(
-    Button.sketch({
-      dom: {
-        tag: 'div',
-        classes: ['tox-selector']
-      },
-
-      buttonBehaviours: Behaviour.derive([
-        Dragging.config({
-          mode: platform.deviceType.isTouch() ? 'touch' : 'mouse',
-          blockerClass: 'blocker',
-          snaps: topLeftSnaps
-        }),
-        Unselecting.config({ })
-      ]),
-      eventOrder: {
-        // Because this is a button, allow dragging. It will stop clicking.
-        mousedown: [ 'dragging', 'alloy.base.behaviour' ]
-      }
-    })
-  );
-
-  const memBottomRight = Memento.record(
-    Button.sketch({
-      dom: {
-        tag: 'div',
-        classes: ['tox-selector']
-      },
-
-      buttonBehaviours: Behaviour.derive([
-        Dragging.config({
-          mode: platform.deviceType.isTouch() ? 'touch' : 'mouse',
-          blockerClass: 'blocker',
-          snaps: bottomRightSnaps
-        }),
-        Unselecting.config({ })
-      ]),
-      eventOrder: {
-        // Because this is a button, allow dragging. It will stop clicking.
-        mousedown: [ 'dragging', 'alloy.base.behaviour' ]
-      }
-    })
-  );
+  const memTopLeft = createSelector(topLeftSnaps);
+  const memBottomRight = createSelector(bottomRightSnaps);
 
   const topLeft = GuiFactory.build(memTopLeft.asSpec());
   const bottomRight = GuiFactory.build(memBottomRight.asSpec());
