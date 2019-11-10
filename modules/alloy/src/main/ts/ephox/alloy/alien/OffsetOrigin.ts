@@ -1,5 +1,5 @@
-import { Css, Element, Insert, Location, Position, Remove, Traverse } from '@ephox/sugar';
 import { Option } from '@ephox/katamari';
+import { Css, Element, Insert, Location, Position, Remove, Traverse } from '@ephox/sugar';
 import { SugarPosition } from './TypeDefinitions';
 
 /*
@@ -14,6 +14,8 @@ const getOrigin = (element: Element): SugarPosition => {
   const offsetParent = isFixed ? Option.none<Element>() : Traverse.offsetParent(element);
   return offsetParent.orThunk(() => {
     const marker = Element.fromTag('span');
+    // PERFORMANCE: Append the marker to the parent element, as adding it before the current element will
+    // trigger the styles to be recalculated which is a little costly (particularly in scroll/resize events)
     return Traverse.parent(element).bind((parent) => {
       Insert.append(parent, marker);
       const offsetParent = Traverse.offsetParent(marker);

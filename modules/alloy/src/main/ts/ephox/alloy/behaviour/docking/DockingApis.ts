@@ -51,8 +51,8 @@ const refreshInternal = (component: AlloyComponent, config: DockingConfig, state
   const elem = component.element();
   const doc = Traverse.owner(elem);
   const scroll = Scroll.get(doc);
-  // OffsetOrigin.getOrigin() is a little bit slow for scrolling performance, so only
-  // do the calculations as required and cache the result to avoid multiple calls
+  // PERFORMANCE: OffsetOrigin.getOrigin() is a little bit slow for scrolling performance, so
+  // only do the calculations as required and cache the result to avoid multiple calls
   const lazyOrigin = Thunk.cached(() => OffsetOrigin.getOrigin(elem));
 
   // If docked then check if we need to hide/show the component
