@@ -25,7 +25,10 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
   };
 
   return AlloyEvents.derive([
-    AlloyEvents.run(SystemEvents.windowScroll(), updateStartState),
+    AlloyEvents.run(SystemEvents.windowScroll(), (comp) => {
+      // Only update if we have some start data
+      dragState.getStartData().each(() => updateStartState(comp));
+    }),
     AlloyEvents.run<SugarEvent>(NativeEvents.mousedown(), (component, simulatedEvent) => {
       const raw = simulatedEvent.event().raw() as MouseEvent;
       if (raw.button !== 0) { return; }

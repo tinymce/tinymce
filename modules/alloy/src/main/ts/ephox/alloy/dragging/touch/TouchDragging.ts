@@ -28,7 +28,10 @@ const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<Suga
   // but once moved off the component then fires on the element behind. As such we need to use
   // a blocker and then listen to both touchmove/touchend on both the component and blocker.
   return AlloyEvents.derive([
-    AlloyEvents.run(SystemEvents.windowScroll(), updateStartState),
+    AlloyEvents.run(SystemEvents.windowScroll(), (comp) => {
+      // Only update if we have some start data
+      dragState.getStartData().each(() => updateStartState(comp));
+    }),
     AlloyEvents.run(NativeEvents.touchstart(), (component, simulatedEvent) => {
       simulatedEvent.stop();
 
