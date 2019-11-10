@@ -1,30 +1,12 @@
 import { Option } from '@ephox/katamari';
-import { Css, Element, Height, Location, Width } from '@ephox/sugar';
+import { Height, Width } from '@ephox/sugar';
 
 import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import * as DragCoord from '../../api/data/DragCoord';
 import * as Snappables from '../snap/Snappables';
 import * as BlockerUtils from './BlockerUtils';
 import { DraggingConfig, DraggingState, DragModeDeltas, DragStartData } from './DraggingTypes';
 import * as DragMovement from './DragMovement';
-
-const getCurrentCoord = (target: Element): DragCoord.CoordAdt => {
-  return Css.getRaw(target, 'left').bind((left) => {
-    return Css.getRaw(target, 'top').bind((top) => {
-      return Css.getRaw(target, 'position').map((position) => {
-        const nu = position === 'fixed' ? DragCoord.fixed : DragCoord.offset;
-        return nu(
-          parseInt(left, 10),
-          parseInt(top, 10)
-        );
-      });
-    });
-  }).getOrThunk(() => {
-    const location = Location.absolute(target);
-    return DragCoord.absolute(location.left(), location.top());
-  });
-};
 
 const calcStartData = (dragConfig: DraggingConfig, comp: AlloyComponent): DragStartData => {
   return {
@@ -53,7 +35,6 @@ const stop = (component: AlloyComponent, blocker: Option<AlloyComponent>, dragCo
 };
 
 export {
-  getCurrentCoord,
   calcStartData,
   move,
   stop
