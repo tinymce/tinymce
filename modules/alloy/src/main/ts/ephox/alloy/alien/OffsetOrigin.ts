@@ -14,10 +14,12 @@ const getOrigin = (element: Element): SugarPosition => {
   const offsetParent = isFixed ? Option.none<Element>() : Traverse.offsetParent(element);
   return offsetParent.orThunk(() => {
     const marker = Element.fromTag('span');
-    Insert.before(element, marker);
-    const offsetParent = Traverse.offsetParent(marker);
-    Remove.remove(marker);
-    return offsetParent;
+    return Traverse.parent(element).bind((parent) => {
+      Insert.append(parent, marker);
+      const offsetParent = Traverse.offsetParent(marker);
+      Remove.remove(marker);
+      return offsetParent;
+    });
   }).map(Location.absolute).getOrThunk(() => {
     return Position(0, 0);
   });
