@@ -27,6 +27,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const isSticky = isStickyToolbar(editor);
   const targetElm = Element.fromDom(args.targetNode);
   const prevTargetHeight = Cell(Height.get(targetElm));
+  const visible = Cell(false);
 
   const splitSetting = getToolbarDrawer(editor);
   const isSplitFloatingToolbar = splitSetting === ToolbarDrawer.floating;
@@ -87,6 +88,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 
   const show = () => {
+    visible.set(true);
     Css.set(uiComponents.outerContainer.element(), 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
     Css.remove(uiComponents.uiMothership.element(), 'display');
@@ -94,6 +96,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 
   const hide = () => {
+    visible.set(false);
     if (uiComponents.outerContainer) {
       Css.set(uiComponents.outerContainer.element(), 'display', 'none');
       DOM.removeClass(editor.getBody(), 'mce-edit-focus');
@@ -127,7 +130,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     editor.on('deactivate', hide);
 
     editor.on('SkinLoaded ResizeWindow', () => {
-      if (!editor.hidden) {
+      if (visible.get()) {
         updateChromeUi(true);
       }
     });
@@ -136,7 +139,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       Delay.requestAnimationFrame(() => {
         const targetHeight = Height.get(targetElm);
 
-        if (!editor.hidden && targetHeight !== prevTargetHeight.get()) {
+        if (visible.get() && targetHeight !== prevTargetHeight.get()) {
           updateChromeUi(true);
           prevTargetHeight.set(targetHeight);
         }
