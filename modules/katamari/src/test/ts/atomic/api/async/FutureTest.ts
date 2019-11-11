@@ -3,266 +3,158 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Future } from 'ephox/katamari/api/Future';
 import * as Futures from 'ephox/katamari/api/Futures';
-import { Result } from 'ephox/katamari/api/Result';
-import * as AsyncProps from 'ephox/katamari/test/AsyncProps';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import { promiseTest, eqAsync } from 'ephox/katamari/test/AsyncProps';
 import { setTimeout } from '@ephox/dom-globals';
+import fc from 'fast-check';
+import { Testable } from '@ephox/dispute';
 
-UnitTest.asynctest('FutureTest', (success, failure) => {
+const { tNumber, tString, tArray } = Testable;
 
-  const testPure = function () {
-    return new Promise(function (resolve, reject) {
-      Future.pure('hello').get(function (a) {
-        assert.eq('hello', a);
-        resolve(true);
-      });
+promiseTest('Future: pure get', () =>
+  fc.assert(fc.asyncProperty(fc.integer(), (i) => new Promise((resolve, reject) => {
+    Future.pure(i).get((ii) => {
+      eqAsync('pure get', i, ii, reject, tNumber);
+      resolve();
     });
-  };
+  }))));
 
-  const testGet = function () {
-    return new Promise(function (resolve, reject) {
-      Future.nu(function (callback) {
-        setTimeout(Fun.curry(callback, 'blah'), 10);
-      }).get(function (a) {
-        assert.eq('blah', a);
-        resolve(true);
-      });
+promiseTest('Future: future soon get', () =>
+  fc.assert(fc.asyncProperty(fc.integer(), (i) => new Promise((resolve, reject) => {
+    Future.nu((cb) => {
+      setTimeout(() => {
+        cb(i);
+      }, 3);
+    }).get((ii) => {
+      eqAsync('get', i, ii, reject, tNumber);
+      resolve();
     });
-  };
+  }))));
 
-  const testMap = function () {
-    return new Promise(function (resolve, reject) {
-      const fut = Future.nu(function (callback) {
-        setTimeout(Fun.curry(callback, 'blah'), 10);
-      });
-
-      const f = function (x) {
-        return x + 'hello';
-      };
-
-      fut.map(f).get(function (a) {
-        assert.eq('blahhello', a);
-        resolve(true);
-      });
+promiseTest('Future: map', () =>
+  fc.assert(fc.asyncProperty(fc.integer(), fc.func(fc.string()), (i, f) => new Promise((resolve, reject) => {
+    Future.pure(i).map(f).get((ii) => {
+      eqAsync('get', f(i), ii, reject, tString);
+      resolve();
     });
-  };
+  }))));
 
-  const testBind = function () {
-    return new Promise(function (resolve, reject) {
-      const fut = Future.nu(function (callback) {
-        setTimeout(Fun.curry(callback, 'blah'), 10);
-      });
-
-      const f = function (x) {
-        return Future.nu(function (callback) {
-          callback(x + 'hello');
-        });
-      };
-
-      fut.bind(f).get(function (a) {
-        assert.eq('blahhello', a);
-        resolve(true);
-      });
+promiseTest('Future: bind', () =>
+  fc.assert(fc.asyncProperty(fc.integer(), fc.func(fc.string()), (i, f) => new Promise((resolve, reject) => {
+    Future.pure(i).bind(Fun.compose(Future.pure, f)).get((ii) => {
+      eqAsync('get', f(i), ii, reject, tString);
+      resolve();
     });
-  };
+  }))));
 
-  const testAnonBind = function () {
-    return new Promise(function (resolve, reject) {
-      let called = false;
-
-      const fut = Future.nu(function (callback) {
-        called = true;
-        setTimeout(Fun.curry(callback, 'blah'), 10);
-      });
-
-      const f = Future.nu(function (callback) {
-        callback('hello');
-      });
-
-      fut.anonBind(f).get(function (a) {
-        assert.eq('hello', a);
-        assert.eq(true, called);
-        resolve(true);
-      });
+promiseTest('Future: anonBind', () =>
+  fc.assert(fc.asyncProperty(fc.integer(), fc.string(), (i, s) => new Promise((resolve, reject) => {
+    Future.pure(i).anonBind(Future.pure(s)).get((ii) => {
+      eqAsync('get', s, ii, reject, tString);
+      resolve();
     });
-  };
+  }))));
 
-  const testParallel = function () {
-    return new Promise(function (resolve, reject) {
-      const f = Future.nu(function (callback) {
-        setTimeout(Fun.curry(callback, 'apple'), 10);
-      });
-      const g = Future.nu(function (callback) {
-        setTimeout(Fun.curry(callback, 'banana'), 5);
-      });
-      const h = Future.nu(function (callback) {
-        callback('carrot');
-      });
-
-      Futures.par([f, g, h]).get(function (r) {
-        assert.eq(r[0], 'apple');
-        assert.eq(r[1], 'banana');
-        assert.eq(r[2], 'carrot');
-        resolve(true);
-      });
+promiseTest('Future: parallel', () => {
+  return new Promise(function (resolve, reject) {
+    const f = Future.nu(function (callback) {
+      setTimeout(Fun.curry(callback, 'apple'), 10);
     });
-  };
-
-  const testMapM = function () {
-    return new Promise(function (resolve, reject) {
-      const fn = function (a) {
-        return Future.nu(function (cb) {
-          setTimeout(Fun.curry(cb, a + ' bizarro'), 10);
-        });
-      };
-
-      Futures.traverse(['q', 'r', 's'], fn).get(function (r) {
-        assert.eq(['q bizarro', 'r bizarro', 's bizarro'], r);
-        resolve(true);
-      });
-
+    const g = Future.nu(function (callback) {
+      setTimeout(Fun.curry(callback, 'banana'), 5);
     });
-  };
-
-  const testCompose = function () {
-    return new Promise(function (resolve, reject) {
-      const f = function (a) {
-        return Future.nu(function (cb) {
-          setTimeout(Fun.curry(cb, a + ' f'), 10);
-        });
-      };
-
-      const g = function (a) {
-        return Future.nu(function (cb) {
-          setTimeout(Fun.curry(cb, a + ' g'), 10);
-        });
-      };
-
-      Futures.compose(f, g)('a').get(function (r) {
-        assert.eq('a g f', r);
-        resolve(true);
-      });
-    });
-  };
-
-  const testCache = function () {
-    return new Promise(function (resolve, reject) {
-      let callCount = 0;
-      const future = Future.nu(function (cb) {
-        callCount++;
-        setTimeout(Fun.curry(cb, callCount), 10);
-      });
-      const cachedFuture = future.toCached();
-
-      assert.eq(0, callCount);
-      cachedFuture.get(function (r) {
-        assert.eq(1, r);
-        assert.eq(1, callCount);
-        cachedFuture.get(function (r2) {
-          assert.eq(1, r2);
-          assert.eq(1, callCount);
-          resolve(true);
-        });
-      });
-    });
-  };
-
-  const testSpecs = function () {
-    const genFutureSchema = Jsc.json.generator.map(function (json) {
-      const future = Future.nu(function (done) {
-        setTimeout(function () {
-          done(json);
-        }, 10);
-      });
-
-      return {
-        future,
-        contents: json
-      };
+    const h = Future.nu(function (callback) {
+      callback('carrot');
     });
 
-    const genFuture = Jsc.json.generator.map(function (json) {
-      return Future.nu(function (done) {
-        setTimeout(function () {
-          done(json);
-        }, 10);
+    Futures.par([ f, g, h ]).get(function (r) {
+      eqAsync('r[0]', r[0], 'apple', reject);
+      eqAsync('r[1]', r[1], 'banana', reject);
+      eqAsync('r[2]', r[2], 'carrot', reject);
+      resolve(true);
+    });
+  });
+});
+
+promiseTest('Future: parallel spec', () =>
+  fc.assert(fc.asyncProperty(fc.array(fc.tuple(fc.integer(1, 10), fc.integer())), (tuples) => new Promise((resolve, reject) => {
+    Futures.par(Arr.map(tuples, ([ timeout, value ]) => Future.nu((cb) => {
+      setTimeout(() => {
+        cb(value);
+      }, timeout);
+    }))).get((ii) => {
+      eqAsync('pars', tuples.map(([_, i]) => i), ii, reject, tArray(tNumber));
+      resolve();
+    });
+  })))
+);
+
+promiseTest('Future: mapM', function () {
+  return new Promise(function (resolve, reject) {
+    const fn = function (a) {
+      return Future.nu(function (cb) {
+        setTimeout(Fun.curry(cb, a + ' bizarro'), 10);
+      });
+    };
+
+    Futures.traverse([ 'q', 'r', 's' ], fn).get(function (r) {
+      eqAsync('eq', [ 'q bizarro', 'r bizarro', 's bizarro' ], r, reject);
+      resolve();
+    });
+  });
+});
+
+promiseTest('Future: mapM spec', () =>
+  fc.assert(fc.asyncProperty(fc.array(fc.tuple(fc.integer(1, 10), fc.integer())), (tuples) => new Promise((resolve, reject) => {
+    Futures.mapM(tuples, ([ timeout, value ]) => Future.nu((cb) => {
+      setTimeout(() => {
+        cb(value);
+      }, timeout);
+    })).get((ii) => {
+      eqAsync('pars', tuples.map(([_, i]) => i), ii, reject, tArray(tNumber));
+      resolve();
+    });
+  })))
+);
+
+promiseTest('Future: compose', function () {
+  return new Promise(function (resolve, reject) {
+    const f = function (a) {
+      return Future.nu(function (cb) {
+        setTimeout(Fun.curry(cb, a + ' f'), 10);
+      });
+    };
+
+    const g = function (a) {
+      return Future.nu(function (cb) {
+        setTimeout(Fun.curry(cb, a + ' g'), 10);
+      });
+    };
+
+    Futures.compose(f, g)('a').get(function (r) {
+      eqAsync('compose', 'a g f', r, reject);
+      resolve(true);
+    });
+  });
+});
+
+promiseTest('Future: cache', function () {
+  return new Promise(function (resolve, reject) {
+    let callCount = 0;
+    const future = Future.nu(function (cb) {
+      callCount++;
+      setTimeout(Fun.curry(cb, callCount), 10);
+    });
+    const cachedFuture = future.toCached();
+
+    eqAsync('eq', 0, callCount, reject);
+    cachedFuture.get(function (r) {
+      eqAsync('eq', 1, r, reject);
+      eqAsync('eq', 1, callCount, reject);
+      cachedFuture.get(function (r2) {
+        eqAsync('eq', 1, r2, reject);
+        eqAsync('eq', 1, callCount, reject);
+        resolve();
       });
     });
-
-    const arbFuture = Jsc.bless({
-      generator: genFuture
-    });
-
-    const arbFutureSchema = Jsc.bless({
-      generator: genFutureSchema
-    });
-
-    return AsyncProps.checkProps([
-      {
-        label: 'Future.pure resolves with data',
-        arbs: [ Jsc.json ],
-        f (json) {
-          return AsyncProps.checkFuture(Future.pure(json), function (data) {
-            return Jsc.eq(json, data) ? Result.value(true) : Result.error('Payload is not the same');
-          });
-        }
-      },
-
-      {
-        label: 'Future.pure map f resolves with f data',
-        arbs: [ Jsc.json, Jsc.fun(Jsc.json) ],
-        f (json, f) {
-          return AsyncProps.checkFuture(Future.pure(json).map(f), function (data) {
-            return Jsc.eq(f(json), data) ? Result.value(true) : Result.error('f(json) !== data');
-          });
-        }
-      },
-
-      {
-        label: 'future.bind(binder) equiv future.get(bind)',
-        arbs: [ arbFutureSchema, Jsc.fun(arbFuture) ],
-        f (arbF, binder) {
-          return AsyncProps.futureToPromise(arbF.future.bind(binder)).then(function (data) {
-            return new Promise(function (resolve, reject) {
-              binder(arbF.contents).toLazy().get(function (bInitial) {
-                return Jsc.eq(data, bInitial) ? resolve(true) : reject('Data did not match');
-              });
-            });
-          });
-        }
-      },
-
-      {
-        label: 'futures.par([future]).get() === [future.val]',
-        arbs: [ Jsc.array(arbFutureSchema) ],
-        f (futures: Array<{future: Future<any>, contents: any}>) {
-          const rawFutures = Arr.map(futures, function (ft) { return ft.future; });
-          const expected = Arr.map(futures, function (ft) { return ft.contents; });
-          return AsyncProps.checkFuture(Futures.par(rawFutures), function (list) {
-            return Jsc.eq(expected, list) ? Result.value(true) : Result.error(
-              'Expected: ' + expected.join(',') + ', actual: ' + list.join(',')
-            );
-          });
-        }
-      },
-
-      {
-        label: 'futures.traverse([json], json -> future).get(length) === [json].length',
-        arbs: [ Jsc.array(arbFuture), Jsc.fun(arbFuture) ],
-        f (inputs, g) {
-          const fResult = Futures.traverse(inputs, g);
-          return AsyncProps.checkFuture(fResult, function (list) {
-            return Jsc.eq(inputs.length, list.length) ? Result.value(true) : Result.error('input length was not the same as output length');
-          });
-        }
-      }
-    ]);
-  };
-
-  testPure().then(testGet).then(testMap).then(testBind).then(testAnonBind).
-    then(testParallel).then(testMapM).then(testCompose).then(testCache).
-    then(testSpecs).then(function () {
-    success();
-  }, failure);
+  });
 });

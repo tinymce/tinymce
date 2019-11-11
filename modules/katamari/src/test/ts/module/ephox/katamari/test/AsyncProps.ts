@@ -1,49 +1,40 @@
 /* tslint:disable:no-unimported-promise */
-import * as Arr from 'ephox/katamari/api/Arr';
-import Jsc from '@ephox/wrap-jsverify';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Testable } from '@ephox/dispute';
 
-export const checkProp = function (label: string, arbitraries: any, f: (x: any) => void) {
-  return Jsc.asyncProperty(label, arbitraries, f, { tests: 100 });
-};
+type Testable<A> = Testable.Testable<A>;
 
-export const checkProps = function (props) {
-  return Arr.foldl(props, function (b, prop) {
-    return b.then(function () {
-      return checkProp(prop.label, prop.arbs, prop.f);
-    });
-  }, Promise.resolve(true));
-};
-
-export const futureToPromise = function (future) {
-  const lazy = future.toLazy();
-  return lazyToPromise(lazy);
-};
-
-export const lazyToPromise = function (lazy) {
-  return new Promise<any>(function (resolve, reject) {
-    lazy.get(function (data) {
-      resolve(data);
-    });
+// TODO: move to bedrock
+/**
+ * Execute a test defined as a Promise.
+ *
+ * Useful for fast-check asyncProperty tests. e.g.:
+ *
+ * ```
+ * promiseTest('', () => {
+ *   return fc.assert(fc.asyncProperty(fc.integer(), (i) => {
+ *     return new Promise((resolve, reject) => {
+ *
+ *     });
+ *   }));
+ * });
+ * ```
+ * @param name
+ * @param f
+ */
+export const promiseTest = <A>(name: string, f: () => Promise<A>): void => {
+  UnitTest.asynctest(name, (success, failure) => {
+    f().then(function () {
+      success();
+    }, failure);
   });
 };
 
-const checkPromise = function (answer, predicate) {
-  return new Promise<any>(function (resolve, reject) {
-    return predicate(answer).fold(
-      function (err) { reject(err); },
-      function (v) { resolve(true); }
-    );
-  });
-};
-
-export const checkFuture = function (future, predicate) {
-  return futureToPromise(future).then(function (answer) {
-    return checkPromise(answer, predicate);
-  });
-};
-
-export const checkLazy = function (lazy, predicate) {
-  return lazyToPromise(lazy).then(function (answer) {
-    return checkPromise(answer, predicate);
-  });
+// TODO: move to bedrock
+export const eqAsync = <A>(label: string, expected: A, actual: A, reject: (a: any) => void, testableA: Testable<A> = Testable.tAny) => {
+  try {
+    Assert.eq(label, expected, actual, testableA);
+  } catch (e) {
+    reject(e);
+  }
 };

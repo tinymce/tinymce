@@ -3,7 +3,7 @@ import { Option } from 'ephox/katamari/api/Option';
 import { tOption } from 'ephox/katamari/api/OptionInstances';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import fc from 'fast-check';
-import { negativeInteger } from 'ephox/katamari/test/arb/ArbDataTypes';
+import { arbNegativeInteger } from 'ephox/katamari/test/arb/ArbDataTypes';
 import { Testable } from '@ephox/dispute';
 
 const { tNumber } = Testable;
@@ -38,7 +38,7 @@ UnitTest.test('Arr.indexOf: unit tests', () => {
 });
 
 UnitTest.test('Arr.indexOf: find in middle of array', () => {
-  fc.assert(fc.property(fc.array(fc.nat()), negativeInteger(), fc.array(fc.nat()), (prefix, element, suffix) => {
+  fc.assert(fc.property(fc.array(fc.nat()), arbNegativeInteger(), fc.array(fc.nat()), (prefix, element, suffix) => {
     const arr = prefix.concat([ element ]).concat(suffix);
     Assert.eq(
       'Element should be found immediately after the prefix array',

@@ -1,14 +1,17 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Option } from 'ephox/katamari/api/Option';
 import * as Options from 'ephox/katamari/api/Options';
-import Jsc from '@ephox/wrap-jsverify';
+import { tOption } from 'ephox/katamari/api/OptionInstances';
+import fc from 'fast-check';
 
-UnitTest.test('OptionsFlattenTest', function () {
-  assert.eq(true, Options.flatten(Option.none<Option<string>>()).isNone());
-  assert.eq(true, Options.flatten(Option.some(Option.none<string>())).isNone());
-  assert.eq('meow', Options.flatten(Option.some(Option.some<string>('meow'))).getOrDie());
+UnitTest.test('Options.flatten: unit tests', function () {
+  Assert.eq('none', Option.none(), Options.flatten(Option.none<Option<string>>()), tOption());
+  Assert.eq('some(none)', Option.none(), Options.flatten(Option.some(Option.none<string>())), tOption());
+  Assert.eq('some(some)', Option.some('meow'), Options.flatten(Option.some(Option.some<string>('meow'))), tOption());
+});
 
-  Jsc.property('Checking some', Jsc.number, function (n: number) {
-    return Jsc.eq(n, Options.flatten(Option.some(Option.some<number>(n))).getOrDie());
-  });
+UnitTest.test('Options.flatten: some(some(x))', () => {
+  fc.assert(fc.property(fc.integer(), function (n) {
+    Assert.eq('eq', Option.some(n), Options.flatten(Option.some(Option.some<number>(n))), tOption());
+  }));
 });

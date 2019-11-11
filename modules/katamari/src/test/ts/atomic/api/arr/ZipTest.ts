@@ -3,7 +3,7 @@ import * as Obj from 'ephox/katamari/api/Obj';
 import * as Unique from 'ephox/katamari/api/Unique';
 import * as Zip from 'ephox/katamari/api/Zip';
 import { Option } from 'ephox/katamari/api/Option';
-import { UnitTest, assert, Assert } from '@ephox/bedrock-client';
+import { UnitTest, Assert } from '@ephox/bedrock-client';
 import fc from 'fast-check';
 
 UnitTest.test('Zip: unit tests', () => {
@@ -27,14 +27,14 @@ UnitTest.test('Zip: unit tests', () => {
     ));
 
     expectedZipToObject.fold(() => {
-      assert.throws(() => Zip.zipToObject(keys, values));
+      Assert.throws('boom', () => Zip.zipToObject(keys, values));
     }, (expected) => {
-      assert.eq(expected, Zip.zipToObject(keys, values));
+      Assert.eq('eq', expected, Zip.zipToObject(keys, values));
     });
     expectedZipToTuples.fold(() => {
-      assert.throws(() => Zip.zipToTuples(keys, values));
+      Assert.throws('boom', () => Zip.zipToTuples(keys, values));
     }, (expected) => {
-      assert.eq(sortTuples(expected), sortTuples(Zip.zipToTuples(keys, values)));
+      Assert.eq('eq', sortTuples(expected), sortTuples(Zip.zipToTuples(keys, values)));
     });
   };
 
