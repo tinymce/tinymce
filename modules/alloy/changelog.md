@@ -9,7 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 # [5.1.0] - TBD
 
 ### Added
- - Added new `FloatingToolbar` component.
+- Added new `FloatingToolbar` component.
+ 
+### Fixed
+- Improved `Docking` scroll performance by only calculating the offset origin as required.
 
 # [5.0.1] - 2019-10-25
 
