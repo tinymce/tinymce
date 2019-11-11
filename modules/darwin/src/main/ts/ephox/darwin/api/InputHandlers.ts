@@ -1,15 +1,15 @@
+import { KeyboardEvent, Window } from '@ephox/dom-globals';
 import { Fun, Option, Options, Struct } from '@ephox/katamari';
-import { Situ, Element, EventArgs } from '@ephox/sugar';
+import { Element, EventArgs, Situ } from '@ephox/sugar';
 import KeySelection from '../keyboard/KeySelection';
 import VerticalMovement from '../keyboard/VerticalMovement';
 import MouseSelection from '../mouse/MouseSelection';
 import { KeyDirection } from '../navigation/KeyDirection';
 import CellSelection from '../selection/CellSelection';
 import { Response } from '../selection/Response';
+import { SelectionAnnotation } from './SelectionAnnotation';
 import SelectionKeys from './SelectionKeys';
 import { WindowBridge } from './WindowBridge';
-import { Window, KeyboardEvent } from '@ephox/dom-globals';
-import { SelectionAnnotation } from './SelectionAnnotation';
 
 interface RC {
   rows: () => number;
@@ -129,8 +129,9 @@ const external = (win: Window, container: Element, isRoot: (e: Element) => boole
       const boxes = cellSel.boxes().getOr([]);
       annotations.selectRange(container, boxes, cellSel.start(), cellSel.finish());
 
-      // stop the browser from creating a big text selection, select the cell where the cursor is
+      // stop the browser from creating a big text selection, place the selection at the end of the cell where the cursor is
       bridge.selectContents(finish);
+      bridge.collapseSelection();
     });
   };
 };

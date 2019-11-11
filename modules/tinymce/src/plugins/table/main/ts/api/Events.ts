@@ -21,7 +21,7 @@ const fireObjectResized = (editor: Editor, target: HTMLElement, width: number, h
 };
 
 const fireTableSelectionChange = (editor: Editor, cells: Element[], start: Element, finish: Element, otherCells) => {
-  editor.fire('tableselectionchange', {
+  editor.fire('TableSelectionChange', {
     cells,
     start,
     finish,
@@ -30,7 +30,7 @@ const fireTableSelectionChange = (editor: Editor, cells: Element[], start: Eleme
 };
 
 const fireTableSelectionClear = (editor: Editor) => {
-  editor.fire('tableselectionclear');
+  editor.fire('TableSelectionClear');
 };
 
 export {

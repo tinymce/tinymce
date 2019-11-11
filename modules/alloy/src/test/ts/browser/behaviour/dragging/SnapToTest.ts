@@ -1,7 +1,7 @@
-import { Chain, NamedChain, Guard } from '@ephox/agar';
+import { Chain, Guard, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Option, Result } from '@ephox/katamari';
-import { Position, Scroll, Css } from '@ephox/sugar';
+import { Css, Position, Scroll } from '@ephox/sugar';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -9,8 +9,8 @@ import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('SnapToTest', (success, failure) => {
 
@@ -117,8 +117,7 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
           NamedChain.write('_', cEnsurePositionChanged),
           NamedChain.bundle((output) => {
             return Result.value(output);
-          }),
-          Chain.wait(1000)
+          })
         ])
       ])
     ];

@@ -2,17 +2,17 @@ import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import { Bounds } from '../../alien/Boxes';
-import { SugarPosition, SugarEvent } from '../../alien/TypeDefinitions';
+import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { CoordAdt } from '../../api/data/DragCoord';
+import { BehaviourState } from '../../behaviour/common/BehaviourState';
 import { MouseDraggingConfigSpec } from '../mouse/MouseDraggingTypes';
 import { TouchDraggingConfigSpec } from '../touch/TouchDraggingTypes';
-import { BehaviourState } from '../../behaviour/common/BehaviourState';
 
 export interface DraggingBehaviour extends Behaviour.AlloyBehaviour<DraggingConfigSpec, DraggingConfig> {
   config: (config: DraggingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DraggingConfigSpec, DraggingConfig>;
-  snap: (sConfig: SnapConfigSpec) => any;
+  snap: (sConfig: SnapConfigSpec) => SnapConfig;
   snapTo: (component: AlloyComponent, sConfig: SnapConfig) => void;
 }
 
@@ -48,7 +48,7 @@ export interface SnapsConfig {
   getSnapPoints: (comp: AlloyComponent) => SnapConfig[];
   leftAttr: string;
   topAttr: string;
-  onSensor?: (component: AlloyComponent, extra: {}) => void;
+  onSensor?: (component: AlloyComponent, extra: any) => void;
   lazyViewport?: (component: AlloyComponent) => Bounds;
   mustSnap?: boolean;
 }
@@ -60,6 +60,7 @@ export interface DraggingConfig {
   repositionTarget: boolean;
   onDrag: (comp: AlloyComponent, target: Element, delta: SugarPosition) => void;
   getBounds: () => Bounds;
+  blockerClass: string;
 }
 
 export interface CommonDraggingConfigSpec {
@@ -70,6 +71,7 @@ export interface CommonDraggingConfigSpec {
   getTarget?: (elem: Element) => Element;
   getBounds?: () => Bounds;
   snaps?: SnapsConfig;
+  blockerClass: string;
 }
 
 export type DraggingConfigSpec = MouseDraggingConfigSpec | TouchDraggingConfigSpec;
@@ -83,7 +85,6 @@ export interface DragStartData {
   width: number;
   height: number;
   bounds: Bounds;
-  comp: AlloyComponent;
 }
 
 export interface DraggingState<T> extends BehaviourState {
