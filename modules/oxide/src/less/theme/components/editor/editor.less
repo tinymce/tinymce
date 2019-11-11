@@ -22,9 +22,12 @@
   }
 
   .tox-editor-header {
+    z-index: 1;
+  }
+
+  &:not(.tox-tinymce-inline) .tox-editor-header {
     box-shadow: @editor-header-box-shadow;
     transition: box-shadow .5s;
-    z-index: 1;
   }
 }
 

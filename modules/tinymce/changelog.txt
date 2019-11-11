@@ -12,7 +12,6 @@ Version 5.2.0 (TBD)
     Fixed flickering floating toolbar drawer in inline mode #TINY-4210
     Fixed the "Current Window" target not applying when saving from the link dialog #TINY-4063
     Fixed Confirm Dialog footer buttons so only the "Yes" button is highlighted #TINY-4130
-    Removed Oxide variable `@oxide-box-shadow` from `.tox-tinymce-inline .tox-editor-header` CSS rule. Drop shadow on inline editor is now set via `@editor-header-box-shadow` #TINY-4343
 Version 5.1.1 (2019-10-28)
     Fixed font formats containing spaces being wrapped in `&quot;` entities instead of single quotes #TINY-4275
     Fixed alert and confirm dialogs losing focus when clicked #TINY-4248
