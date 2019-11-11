@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Option, Options } from '@ephox/katamari';
 import { Css, Element, Location, Scroll, Traverse } from '@ephox/sugar';
 
 import { cap } from '../../alien/Cycles';
@@ -10,16 +10,12 @@ import * as Snappables from '../snap/Snappables';
 import { DraggingConfig, DragStartData, SnapsConfig } from './DraggingTypes';
 
 const getCurrentCoord = (target: Element): DragCoord.CoordAdt => {
-  return Css.getRaw(target, 'left').bind((left) => {
-    return Css.getRaw(target, 'top').bind((top) => {
-      return Css.getRaw(target, 'position').map((position) => {
-        const nu = position === 'fixed' ? DragCoord.fixed : DragCoord.offset;
-        return nu(
-          parseInt(left, 10),
-          parseInt(top, 10)
-        );
-      });
-    });
+  return Options.lift3(Css.getRaw(target, 'left'), Css.getRaw(target, 'top'), Css.getRaw(target, 'position'), (left, top, position) => {
+    const nu = position === 'fixed' ? DragCoord.fixed : DragCoord.offset;
+    return nu(
+      parseInt(left, 10),
+      parseInt(top, 10)
+    );
   }).getOrThunk(() => {
     const location = Location.absolute(target);
     return DragCoord.absolute(location.left(), location.top());
