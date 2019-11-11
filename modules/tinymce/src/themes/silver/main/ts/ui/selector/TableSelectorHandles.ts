@@ -89,7 +89,8 @@ const createSelector = (snaps: DraggingTypes.SnapsConfig) => Memento.record(
     ]),
     eventOrder: {
       // Because this is a button, allow dragging. It will stop clicking.
-      mousedown: [ 'dragging', 'alloy.base.behaviour' ]
+      mousedown: [ 'dragging', 'alloy.base.behaviour' ],
+      touchstart: [ 'dragging', 'alloy.base.behaviour' ]
     }
   })
 );
