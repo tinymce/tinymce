@@ -5,18 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Event, Node, document } from '@ephox/dom-globals';
+import { document, Element, Event, Node } from '@ephox/dom-globals';
 import { Element as SugarElement, Selectors } from '@ephox/sugar';
 import NodeType from '../../dom/NodeType';
 import RangePoint from '../../dom/RangePoint';
+import Editor from '../Editor';
 import Env from '../Env';
+import * as Events from '../Events';
+import Settings from '../Settings';
 import Delay from '../util/Delay';
 import Tools from '../util/Tools';
 import VK from '../util/VK';
 import Selection from './Selection';
-import Editor from '../Editor';
-import * as Events from '../Events';
-import Settings from '../Settings';
 
 interface ControlSelection {
   isResizable (elm: Element): boolean;
@@ -453,11 +453,9 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
         }
       });
 
-      editor.dom.bind(rootElement, 'mscontrolselect', function (e) {
-        const delayedSelect = function (node) {
-          Delay.setEditorTimeout(editor, function () {
-            editor.selection.select(node);
-          });
+      const handleMSControlSelect = (e) => {
+        const delayedSelect = (node: Node) => {
+          Delay.setEditorTimeout(editor, () => editor.selection.select(node));
         };
 
         if (isWithinContentEditableFalse(e.target)) {
@@ -475,7 +473,10 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
             delayedSelect(e.target);
           }
         }
-      });
+      };
+
+      dom.bind(rootElement, 'mscontrolselect', handleMSControlSelect);
+      editor.on('remove', () => dom.unbind(rootElement, 'mscontrolselect', handleMSControlSelect));
     }
 
     const throttledUpdateResizeRect = Delay.throttle(function (e) {
