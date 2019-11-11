@@ -115,7 +115,7 @@ gulp.task('monitor', function (done) {
     livereload: true
   }, function () { this.server.on('close', done) });
 
-  gulp.watch('./src/**/*').on('change', gulp.series('css', 'buildDemos'));
+  gulp.watch('./src/**/*').on('change', gulp.series('css', 'buildDemos', 'copyTinymce'));
 });
 
 //
