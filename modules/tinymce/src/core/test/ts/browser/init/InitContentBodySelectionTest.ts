@@ -1,5 +1,6 @@
-import { Log, Logger, Pipeline, Step } from '@ephox/agar';
+import { Assertions, Log, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { HTMLTextAreaElement } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -11,14 +12,18 @@ UnitTest.asynctest('browser.tinymce.core.init.InitContentBodySelectionTest', (su
     return Logger.t(label, Step.async((done, die) => {
       TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
         const api = TinyApis(editor);
-        Pipeline.async({}, [Step.sync(() => api.sAssertSelection(path, offset, path, offset))], onSuccess, onFailure);
+        Pipeline.async({}, [
+          api.sAssertSelection(path, offset, path, offset),
+          Step.sync(() => {
+            Assertions.assertEq('Check editor doesn\'t have focus', false, editor.hasFocus());
+          })
+        ], onSuccess, onFailure);
       }, {
         toolbar_sticky: false,
         base_url: '/project/tinymce/js/tinymce',
         setup: (ed: Editor) => {
-          ed.on('LoadContent', () => {
-            ed.focus();
-            ed.setContent(html);
+          ed.on('PreInit', () => {
+            (ed.getElement() as HTMLTextAreaElement).value = html;
           }, true);
         },
         ...extraSettings
