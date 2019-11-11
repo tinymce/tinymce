@@ -1,6 +1,6 @@
-import { Element as DomElement, Window, ClientRect, DOMRect } from '@ephox/dom-globals';
+import { ClientRect, DOMRect, Element as DomElement, Window } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Element, Rect, RawRect, Scroll, Selection, SimRange, Situ, WindowSelection } from '@ephox/sugar';
+import { Element, RawRect, Rect, Scroll, Selection, SimRange, Situ, WindowSelection } from '@ephox/sugar';
 import { Situs } from '../selection/Situs';
 import Util from '../selection/Util';
 
@@ -12,6 +12,7 @@ export interface WindowBridge {
   fromSitus: (situs: Situs) => SimRange;
   situsFromPoint: (x: number, y: number) => Option<Situs>;
   clearSelection: () => void;
+  collapseSelection: (toStart?: boolean) => void;
   setSelection: (sel: SimRange) => void;
   setRelativeSelection: (start: Situ, finish: Situ) => void;
   selectContents: (element: Element) => void;
@@ -55,6 +56,21 @@ export const WindowBridge = function (win: Window): WindowBridge {
     WindowSelection.clear(win);
   };
 
+  const collapseSelection = function (toStart: boolean = false) {
+    WindowSelection.get(win).each((sel) => sel.fold(
+      (rng) => rng.collapse(toStart),
+      (startSitu, finishSitu) => {
+        const situ = toStart ? startSitu : finishSitu;
+        WindowSelection.setRelative(win, situ, situ);
+      },
+      (start, soffset, finish, foffset) => {
+        const node = toStart ? start : finish;
+        const offset = toStart ? soffset : foffset;
+        WindowSelection.setExact(win, node, offset, node, offset);
+      }
+    ));
+  };
+
   const selectContents = function (element: Element) {
     WindowSelection.setToElement(win, element);
   };
@@ -88,6 +104,7 @@ export const WindowBridge = function (win: Window): WindowBridge {
     fromSitus,
     situsFromPoint,
     clearSelection,
+    collapseSelection,
     setSelection,
     setRelativeSelection,
     selectContents,

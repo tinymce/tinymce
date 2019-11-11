@@ -51,7 +51,7 @@ const guiSetup = <A, B> (createComponent: (store: TestStore, doc: Element, body:
 };
 
 const mSetupKeyLogger = (body) => {
-  return Step.stateful((oldState, next, die) => {
+  return Step.stateful((oldState: Record<string, any>, next, die) => {
     const onKeydown: EventUnbinder = DomEvent.bind(body, 'keydown', (event) => {
       newState.log.push('keydown.to.body: ' + event.raw().which);
     });

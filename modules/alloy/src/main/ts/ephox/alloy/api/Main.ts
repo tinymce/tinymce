@@ -110,6 +110,7 @@ import { FloatingToolbarButton } from './ui/FloatingToolbarButton';
 import { TouchMenu } from './ui/TouchMenu';
 import { Typeahead } from './ui/Typeahead';
 import * as UiSketcher from './ui/UiSketcher';
+import * as DraggingTypes from '../dragging/common/DraggingTypes';
 import {
   AnchorSpec,
   NodeAnchorSpec,
@@ -282,6 +283,7 @@ export {
   SelectionAnchorSpec,
   HotspotAnchorSpec,
   SubmenuAnchorSpec,
+  DraggingTypes,
 
   FocusInsideModes,
 

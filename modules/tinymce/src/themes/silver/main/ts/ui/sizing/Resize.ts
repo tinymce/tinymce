@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Obj, Option } from '@ephox/katamari';
+import { Obj } from '@ephox/katamari';
 import { Css, Element, Height, Width } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 import { getMaxHeightSetting, getMaxWidthSetting, getMinHeightSetting, getMinWidthSetting } from '../../api/Settings';
 import Events from '../../api/Events';
 import Utils from './Utils';
-import Editor from 'tinymce/core/api/Editor';
 
 interface EditorDimensions {
   height?: number;
@@ -21,20 +21,13 @@ export enum ResizeTypes {
   None, Both, Vertical
 }
 
-export const calcCappedSize = (originalSize: number, delta: number, minSize: Option<number>, maxSize: Option<number>): number => {
-  const newSize = originalSize + delta;
-  const minOverride = minSize.filter((min) => newSize < min);
-  const maxOverride = maxSize.filter((max) => newSize > max);
-  return minOverride.or(maxOverride).getOr(newSize);
-};
-
 export const getDimensions = (editor, deltas, resizeType: ResizeTypes, originalHeight, originalWidth) => {
   const dimensions: EditorDimensions = {};
 
-  dimensions.height = calcCappedSize(originalHeight, deltas.top(), getMinHeightSetting(editor), getMaxHeightSetting(editor));
+  dimensions.height = Utils.calcCappedSize(originalHeight + deltas.top(), getMinHeightSetting(editor), getMaxHeightSetting(editor));
 
   if (resizeType === ResizeTypes.Both) {
-    dimensions.width = calcCappedSize(originalWidth, deltas.left(), getMinWidthSetting(editor), getMaxWidthSetting(editor));
+    dimensions.width = Utils.calcCappedSize(originalWidth + deltas.left(), getMinWidthSetting(editor), getMaxWidthSetting(editor));
   }
 
   return dimensions;

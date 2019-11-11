@@ -11,6 +11,16 @@ Version 5.2.0 (TBD)
     Fixed flickering floating toolbar drawer in inline mode #TINY-4210
     Fixed the "Current Window" target not applying when saving from the link dialog #TINY-4063
     Fixed Confirm Dialog footer buttons so only the "Yes" button is highlighted #TINY-4130
+Version 5.1.2 (TBD)
+    Fixed desktop touch devices using mobile configuration overrides #TINY-4345
+    Fixed unable to disable the new scrolling toolbar #TINY-4345
+    Fixed touch events burning through to the content on Android #TINY-4367
+    Fixed errors being raised by table selector handles not properly guarding against non-table selections #TINY-4338
+    Fixed cut not removing selected content on Android #TINY-4362
+    Fixed inline toolbar not constrained by default to the window width #TINY-4314
+    Fixed unable to access the dialog footer in tabbed dialogs on small screens #TINY-4360
+    Fixed mobile table selectors hard to touch by marginally increasing their size #TINY-4366
+    Fixed mobile table selectors moving when moving outside the editor #TINY-4366
 Version 5.1.1 (2019-10-28)
     Fixed font formats containing spaces being wrapped in `&quot;` entities instead of single quotes #TINY-4275
     Fixed alert and confirm dialogs losing focus when clicked #TINY-4248
