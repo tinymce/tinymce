@@ -34,16 +34,16 @@ export const removeLeading = function (str: string, prefix: string) {
   return startsWith(str, prefix) ? StrAppend.removeFromStart(str, prefix.length) : str;
 };
 
-export const removeTrailing = function (str: string, prefix: string) {
-  return endsWith(str, prefix) ? StrAppend.removeFromEnd(str, prefix.length) : str;
+export const removeTrailing = function (str: string, suffix: string) {
+  return endsWith(str, suffix) ? StrAppend.removeFromEnd(str, suffix.length) : str;
 };
 
 export const ensureLeading = function (str: string, prefix: string) {
   return startsWith(str, prefix) ? str : StrAppend.addToStart(str, prefix);
 };
 
-export const ensureTrailing = function (str: string, prefix: string) {
-  return endsWith(str, prefix) ? str : StrAppend.addToEnd(str, prefix);
+export const ensureTrailing = function (str: string, suffix: string) {
+  return endsWith(str, suffix) ? str : StrAppend.addToEnd(str, suffix);
 };
 
 export const contains = function (str: string, substr: string) {
