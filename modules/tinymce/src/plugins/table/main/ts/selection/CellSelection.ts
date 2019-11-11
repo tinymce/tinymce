@@ -70,7 +70,7 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
     const external = InputHandlers.external(win, body, isRoot, annotations);
     const hasShiftKey = (event) => event.raw().shiftKey === true;
 
-    editor.on('tableselectorchange', (e) => {
+    editor.on('TableSelectorChange', (e) => {
       external(e.start, e.finish);
     });
 

@@ -3,7 +3,11 @@ Version 5.1.2 (TBD)
     Fixed unable to disable the new scrolling toolbar #TINY-4345
     Fixed touch events burning through to the content on Android #TINY-4367
     Fixed errors being raised by table selector handles not properly guarding against non-table selections #TINY-4338
+    Fixed cut not removing selected content on Android #TINY-4362
     Fixed inline toolbar not constrained by default to the window width #TINY-4314
+    Fixed unable to access the dialog footer in tabbed dialogs on small screens #TINY-4360
+    Fixed mobile table selectors hard to touch by marginally increasing their size #TINY-4366
+    Fixed mobile table selectors moving when moving outside the editor #TINY-4366
 Version 5.1.1 (2019-10-28)
     Fixed font formats containing spaces being wrapped in `&quot;` entities instead of single quotes #TINY-4275
     Fixed alert and confirm dialogs losing focus when clicked #TINY-4248
