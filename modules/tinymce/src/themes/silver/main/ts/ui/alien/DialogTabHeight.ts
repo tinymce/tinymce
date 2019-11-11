@@ -65,9 +65,18 @@ const showTab = (allTabs, comp: AlloyComponent) => {
   Arr.head(allTabs).each((tab) => TabSection.showTab(comp, tab.value));
 };
 
-const updateTabviewHeight = (dialogBody: Element, tabview: Element, maxTabHeight: Cell<Option<number>>) => {
-  const browser = PlatformDetection.detect().browser;
+const setTabviewHeight = (tabview: Element<DomElement>, height: number) => {
+  // Set both height and flex-basis as some browsers don't support flex-basis. However don't set it on
+  // IE 11 since it incorrectly includes margins in the flex-basis calculations so it can't be relied on.
+  Css.set(tabview, 'height', height + 'px');
+  if (!PlatformDetection.detect().browser.isIE()) {
+    Css.set(tabview, 'flex-basis', height + 'px');
+  } else {
+    Css.remove(tabview, 'flex-basis');
+  }
+};
 
+const updateTabviewHeight = (dialogBody: Element, tabview: Element, maxTabHeight: Cell<Option<number>>) => {
   SelectorFind.ancestor(dialogBody, '[role="dialog"]').each((dialog) => {
     SelectorFind.descendant(dialog, '[role="tablist"]').each((tablist) => {
       maxTabHeight.get().map((height) => {
@@ -76,14 +85,7 @@ const updateTabviewHeight = (dialogBody: Element, tabview: Element, maxTabHeight
         Css.set(tabview, 'flex-basis', '0');
         return Math.min(height, getMaxTabviewHeight(dialog, tabview, tablist));
       }).each((height) => {
-        // Set both height and flex-basis as some browsers don't support flex-basis. However don't set it on
-        // IE 11 since it incorrectly includes margins in the flex-basis calculations so it can't be relied on.
-        Css.set(tabview, 'height', height + 'px');
-        if (!browser.isIE()) {
-          Css.set(tabview, 'flex-basis', height + 'px');
-        } else {
-          Css.remove(tabview, 'flex-basis');
-        }
+        setTabviewHeight(tabview, height);
       });
     });
   });
@@ -137,6 +139,7 @@ const setMode = (allTabs) => {
           Css.set(tabview, 'visibility', 'hidden');
           const oldHeight = Css.getRaw(tabview, 'height').map((h) => parseInt(h, 10));
           Css.remove(tabview, 'height');
+          Css.remove(tabview, 'flex-basis');
           const newHeight = tabview.dom().getBoundingClientRect().height;
           const hasGrown = oldHeight.forall((h) => newHeight > h);
 
@@ -145,7 +148,7 @@ const setMode = (allTabs) => {
             updateTabviewHeight(dialog, tabview, maxTabHeight);
           } else {
             oldHeight.each((h) => {
-              Css.set(tabview, 'height', `${h}px`);
+              setTabviewHeight(tabview, h);
             });
           }
 
