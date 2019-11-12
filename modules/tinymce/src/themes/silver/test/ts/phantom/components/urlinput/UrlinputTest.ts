@@ -5,7 +5,7 @@ import { document } from '@ephox/dom-globals';
 import { Future, Option } from '@ephox/katamari';
 import { Element, SelectorFind, Value } from '@ephox/sugar';
 
-import { UrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
+import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import { LinkTargetType } from 'tinymce/themes/silver/ui/core/LinkTargets';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
 
@@ -48,9 +48,9 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
             anchorBottom: undefined
           }),
           getValidationHandler: () => Option.none(),
-          getUrlPicker: (filetype) => Option.some((entry: UrlData) => {
+          getUrlPicker: (filetype) => Option.some((entry: ApiUrlData) => {
             store.adder('urlpicker')();
-            return Future.pure({ value: 'http://tiny.cloud', meta: { before: entry.value } });
+            return Future.pure({ value: 'http://tiny.cloud', meta: { before: entry.value }, fieldName: 'test' });
           })
         })
       );

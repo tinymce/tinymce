@@ -2,7 +2,7 @@ import { AlloyComponent, HotspotAnchorSpec } from '@ephox/alloy';
 import { Fun, Future, Option, Result } from '@ephox/katamari';
 import { Body } from '@ephox/sugar';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
-import { UrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
+import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import TestProviders from './TestProviders';
 
 export default function (sink?: AlloyComponent): UiFactoryBackstage {
@@ -43,7 +43,7 @@ export default function (sink?: AlloyComponent): UiFactoryBackstage {
       addToHistory: () => {},
       getLinkInformation: () => Option.none(),
       getValidationHandler: () => Option.none(),
-      getUrlPicker: (filetype) => Option.some((entry: UrlData) => {
+      getUrlPicker: (filetype) => Option.some((entry: ApiUrlData) => {
         return Future.pure(entry);
       })
     },

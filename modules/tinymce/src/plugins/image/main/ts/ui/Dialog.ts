@@ -137,6 +137,9 @@ const formFillFromMeta2 = (info: ImageDialogInfo, data: ImageDialogData, meta: I
     }
   }
   if (info.hasAdvTab) {
+    if (Type.isString(meta.style)) {
+      data.style = meta.style;
+    }
     if (Type.isString(meta.vspace)) {
       data.vspace = meta.vspace;
     }

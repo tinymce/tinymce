@@ -38,12 +38,16 @@ export type UrlValidationCallback = (result: ValidationResult) => void;
 
 export type UrlValidationHandler = (info: UrlValidationQuery, callback: UrlValidationCallback) => any;
 
-export interface UrlData {
+export interface ApiUrlData {
   value: string;
   meta?: Record<string, any>;
 }
 
-export type UrlPicker = (entry: UrlData) => Future<UrlData>;
+export interface InternalUrlData extends ApiUrlData {
+  fieldname: string;
+}
+
+export type UrlPicker = (entry: InternalUrlData) => Future<ApiUrlData>;
 
 export interface UiFactoryBackstageForUrlInput {
   getHistory: (fileType: string) => string[];
@@ -94,7 +98,7 @@ const getPickerSetting = (settings: Record<string, any>, filetype: string): Opti
 
 const getUrlPicker = (editor: Editor, filetype: string): Option<UrlPicker> => {
   return getPickerSetting(editor.settings, filetype).map((picker) => {
-    return (entry: UrlData): Future<UrlData> => {
+    return (entry: InternalUrlData): Future<ApiUrlData> => {
       return Future.nu((completer) => {
         const handler = (value: string, meta?: Record<string, any>) => {
           if (!Type.isString(value)) {
@@ -103,10 +107,14 @@ const getUrlPicker = (editor: Editor, filetype: string): Option<UrlPicker> => {
           if (meta !== undefined && !Type.isObject(meta)) {
             throw new Error('Expected meta to be a object');
           }
-          const r: UrlData = { value, meta };
+          const r: ApiUrlData = { value, meta };
           completer(r);
         };
-        const meta = Tools.extend({ filetype }, Option.from(entry.meta).getOr({}));
+        const meta = {
+          filetype,
+          fieldname: entry.fieldname,
+          ...Option.from(entry.meta).getOr({})
+        };
         // file_picker_callback(callback, currentValue, metaData)
         picker.call(editor, handler, entry.value, meta);
       });

@@ -7,13 +7,13 @@
 
 export interface MediaData {
   allowFullscreen?: boolean;
-  source1: string;
-  source1mime?: string;
+  source: string;
+  sourcemime?: string;
   width: string;
   height: string;
   embed?: string;
   poster: string;
-  source2: string;
-  source2mime?: string;
+  altsource: string;
+  altsourcemime?: string;
   type?: 'ephox-embed-iri' | 'script' | 'object' | 'iframe' | 'embed' | 'video' | 'audio';
 }

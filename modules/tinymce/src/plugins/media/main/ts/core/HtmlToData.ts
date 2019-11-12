@@ -31,8 +31,8 @@ const htmlToDataSax = function (prefixes: VideoScript[], html: string): MediaDat
     validate: false,
     allow_conditional_comments: true,
     start (name, attrs) {
-      if (!data.source1 && name === 'param') {
-        data.source1 = attrs.map.movie;
+      if (!data.source && name === 'param') {
+        data.source = attrs.map.movie;
       }
 
       if (name === 'iframe' || name === 'object' || name === 'embed' || name === 'video' || name === 'audio') {
@@ -51,17 +51,17 @@ const htmlToDataSax = function (prefixes: VideoScript[], html: string): MediaDat
 
         data = {
           type: 'script',
-          source1: attrs.map.src,
+          source: attrs.map.src,
           width: String(videoScript.width),
           height: String(videoScript.height)
         };
       }
 
       if (name === 'source') {
-        if (!data.source1) {
-          data.source1 = attrs.map.src;
-        } else if (!data.source2) {
-          data.source2 = attrs.map.src;
+        if (!data.source) {
+          data.source = attrs.map.src;
+        } else if (!data.altsource) {
+          data.altsource = attrs.map.src;
         }
       }
 
@@ -71,8 +71,8 @@ const htmlToDataSax = function (prefixes: VideoScript[], html: string): MediaDat
     }
   }).parse(html);
 
-  data.source1 = data.source1 || data.src || data.data;
-  data.source2 = data.source2 || '';
+  data.source = data.source || data.src || data.data;
+  data.altsource = data.altsource || '';
   data.poster = data.poster || '';
 
   return data;
@@ -84,8 +84,8 @@ const ephoxEmbedHtmlToData = function (html: string): MediaData {
 
   return {
     type: 'ephox-embed-iri',
-    source1: getEphoxEmbedIri(div),
-    source2: '',
+    source: getEphoxEmbedIri(div),
+    altsource: '',
     poster: '',
     width: Size.getMaxWidth(div),
     height: Size.getMaxHeight(div)

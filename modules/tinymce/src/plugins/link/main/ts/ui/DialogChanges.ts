@@ -55,8 +55,10 @@ const init = (initialData: LinkDialogData, linkSettings: LinkDialogInfo) => {
     // We are going to change the text, because it has not been manually entered by the user.
     if (persistentText.get().length <= 0) {
       const urlText = data.url.meta.text !== undefined ? data.url.meta.text : data.url.value;
+      const urlTitle = data.url.meta.title !== undefined ? data.url.meta.title : '';
       return Option.some({
-        text: urlText
+        text: urlText,
+        title: urlTitle
       });
     } else {
       return Option.none();

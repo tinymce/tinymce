@@ -104,7 +104,7 @@ const updateHtmlSax = function (html: string, data: Partial<MediaData>, updateAl
               src: ''
             });
 
-            if (data.source2) {
+            if (data.altsource) {
               setAttributes(attrs, {
                 src: ''
               });
@@ -113,7 +113,7 @@ const updateHtmlSax = function (html: string, data: Partial<MediaData>, updateAl
 
           case 'iframe':
             setAttributes(attrs, {
-              src: data.source1
+              src: data.source
             });
             break;
 
