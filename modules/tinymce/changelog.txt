@@ -21,6 +21,7 @@ Version 5.1.2 (TBD)
     Fixed unable to access the dialog footer in tabbed dialogs on small screens #TINY-4360
     Fixed mobile table selectors hard to touch by marginally increasing their size #TINY-4366
     Fixed mobile table selectors moving when moving outside the editor #TINY-4366
+    Fixed block textpatterns so that spaces and NBSPs in patterns are interchangeable #TINY-4378
 Version 5.1.1 (2019-10-28)
     Fixed font formats containing spaces being wrapped in `&quot;` entities instead of single quotes #TINY-4275
     Fixed alert and confirm dialogs losing focus when clicked #TINY-4248
