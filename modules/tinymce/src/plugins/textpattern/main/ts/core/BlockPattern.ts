@@ -6,16 +6,16 @@
  */
 
 import { Node } from '@ephox/dom-globals';
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Tools from 'tinymce/core/api/util/Tools';
 import Editor from 'tinymce/core/api/Editor';
+import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import * as TextSearch from '../text/TextSearch';
 import { TextWalker } from '../text/TextWalker';
 import { generatePathRange, resolvePathRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
-import { BlockPattern, BlockPatternMatch } from './PatternTypes';
+import { BlockPattern, BlockPatternMatch, Pattern } from './PatternTypes';
 
 const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern) => {
   // The pattern could be across fragmented text nodes, so we need to find the end
@@ -56,6 +56,18 @@ const applyPattern = (editor: Editor, match: BlockPatternMatch): boolean => {
   return true;
 };
 
+// Finds a matching pattern to the specified text
+const findPattern = <P extends Pattern>(patterns: P[], text: string): Option<P> => {
+  const nuText = text.replace('\u00a0', ' ');
+  return Arr.find(patterns, (pattern) => {
+    if (text.indexOf(pattern.start) !== 0 && nuText.indexOf(pattern.start) !== 0) {
+      return false;
+    }
+
+    return true;
+  });
+};
+
 const findPatterns = (editor: Editor, patterns: BlockPattern[]): BlockPatternMatch[] => {
   const dom = editor.dom;
   const rng = editor.selection.getRng();
@@ -69,7 +81,7 @@ const findPatterns = (editor: Editor, patterns: BlockPattern[]): BlockPatternMat
     const blockText = block.textContent;
 
     // Find the pattern
-    const matchedPattern = Utils.findPattern(patterns, blockText);
+    const matchedPattern = findPattern(patterns, blockText);
     return matchedPattern.map((pattern) => {
       if (Tools.trim(blockText).length === pattern.start.length) {
         return [];
@@ -94,4 +106,4 @@ const applyMatches = (editor: Editor, matches: BlockPatternMatch[]) => {
   editor.selection.moveToBookmark(bookmark);
 };
 
-export { applyMatches, findPatterns };
+export { applyMatches, findPattern, findPatterns };

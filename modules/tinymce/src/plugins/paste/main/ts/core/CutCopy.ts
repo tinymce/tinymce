@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { DataTransfer, ClipboardEvent, Range } from '@ephox/dom-globals';
-import Env from 'tinymce/core/api/Env';
+import { ClipboardEvent, DataTransfer, Range } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
 import InternalHtml from './InternalHtml';
 import Utils from './Utils';
@@ -103,11 +103,19 @@ const hasSelectedContent = (editor: Editor): boolean => {
 const cut = (editor: Editor) => (evt: ClipboardEvent) => {
   if (hasSelectedContent(editor)) {
     setClipboardData(evt, getData(editor), fallback(editor), () => {
-      // Chrome fails to execCommand from another execCommand with this message:
-      // "We don't execute document.execCommand() this time, because it is called recursively.""
-      Delay.setTimeout(() => { // detach
+      if (Env.browser.isChrome()) {
+        const rng = editor.selection.getRng();
+        // Chrome fails to execCommand from another execCommand with this message:
+        // "We don't execute document.execCommand() this time, because it is called recursively.""
+        Delay.setEditorTimeout(editor, () => { // detach
+          // Restore the range before deleting, as Chrome on Android will
+          // collapse the selection after a cut event has fired.
+          editor.selection.setRng(rng);
+          editor.execCommand('Delete');
+        }, 0);
+      } else {
         editor.execCommand('Delete');
-      }, 0);
+      }
     });
   }
 };

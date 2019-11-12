@@ -63,7 +63,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
   const onSetupMergeable = (api) => onSetup(api, (targets) => targets.mergable().isNone());
   const onSetupUnmergeable = (api) => onSetup(api, (targets) => targets.unmergable().isNone());
 
-  editor.on('NodeChange', resetTargets);
+  editor.on('NodeChange TableSelectorChange', resetTargets);
 
   return {
     onSetupTable,

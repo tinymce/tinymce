@@ -7,11 +7,11 @@
 
 import { HTMLElement, Node, Range, Text } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Type } from '@ephox/katamari';
-import Editor from 'tinymce/core/api/Editor';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
 import Formatter from 'tinymce/core/api/Formatter';
 import * as Settings from '../api/Settings';
-import { InlinePattern, Pattern } from '../core/PatternTypes';
+import { InlinePattern } from '../core/PatternTypes';
 
 const isElement = (node: Node): node is HTMLElement => node.nodeType === Node.ELEMENT_NODE;
 const isText = (node: Node): node is Text => node.nodeType === Node.TEXT_NODE;
@@ -50,27 +50,8 @@ const isBlockFormatName = (name: string, formatter: Formatter): boolean => {
   return Type.isArray(formatSet) && Arr.head(formatSet).exists((format) => Obj.has(format as any, 'block'));
 };
 
-const isInlinePattern = (pattern: Pattern): pattern is InlinePattern => {
-  return Obj.has(pattern as Record<string, any>, 'end');
-};
-
 const isReplacementPattern = (pattern: InlinePattern) => {
   return pattern.start.length === 0;
-};
-
-// Finds a matching pattern to the specified text
-const findPattern = <P extends Pattern>(patterns: P[], text: string): Option<P> => {
-  return Arr.find(patterns, (pattern) => {
-    if (text.indexOf(pattern.start) !== 0) {
-      return false;
-    }
-
-    if (isInlinePattern(pattern) && pattern.end && text.lastIndexOf(pattern.end) !== (text.length - pattern.end.length)) {
-      return false;
-    }
-
-    return true;
-  });
 };
 
 const getParentBlock = (editor: Editor, rng: Range) => {
@@ -82,13 +63,4 @@ const getParentBlock = (editor: Editor, rng: Range) => {
   }
 };
 
-export {
-  cleanEmptyNodes,
-  deleteRng,
-  findPattern,
-  getParentBlock,
-  isBlockFormatName,
-  isElement,
-  isReplacementPattern,
-  isText
-};
+export { cleanEmptyNodes, deleteRng, getParentBlock, isBlockFormatName, isElement, isReplacementPattern, isText };
