@@ -1,14 +1,11 @@
 import { RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import * as Settings from 'tinymce/plugins/textpattern/api/Settings';
-import { findPattern } from 'tinymce/plugins/textpattern/utils/Utils';
+import { findPattern } from 'tinymce/plugins/textpattern/core/BlockPattern';
+import { getPatternSet } from 'tinymce/plugins/textpattern/api/Settings';
 
-UnitTest.test('atomic.tinymce.plugins.textpattern.FindPatternTest', function () {
-  const patternSet = Settings.getPatternSet({});
-  const defaultPatterns = [
-    ...patternSet.inlinePatterns,
-    ...patternSet.blockPatterns
-  ];
+UnitTest.test('atomic.tinymce.plugins.textpattern.FindBlockPatternsTest', function () {
+  const patternSet = getPatternSet({});
+  const defaultPatterns = patternSet.blockPatterns;
 
   const testFindStartPattern = function (text: string, expectedPattern: string) {
     const actual = findPattern(defaultPatterns, text).getOrNull();
@@ -25,4 +22,7 @@ UnitTest.test('atomic.tinymce.plugins.textpattern.FindPatternTest', function () 
   testFindStartPattern('1. x', '1. ');
   testFindStartPattern('* x', '* ');
   testFindStartPattern('- x', '- ');
+  testFindStartPattern('#\u00a0x', '#');
+  testFindStartPattern('1.\u00a0x', '1. ');
+  testFindStartPattern('*\u00a0x', '* ');
 });
