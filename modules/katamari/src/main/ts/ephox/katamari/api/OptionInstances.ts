@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Option } from './Option';
 import { Pprint, Eq, Testable, Pnode } from '@ephox/dispute';
 
 type Pprint<A> = Pprint.Pprint<A>;

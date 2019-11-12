@@ -1,10 +1,10 @@
 import * as Strings from 'ephox/katamari/api/Strings';
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import { UnitTest, Assert } from '@ephox/bedrock-client';
 
 UnitTest.test('supplant', function () {
   function check(expected, str, obj) {
     const actual = Strings.supplant(str, obj);
-    assert.eq(expected, actual);
+    Assert.eq('eq', expected, actual);
   }
 
   check('', '', {});
