@@ -1,10 +1,13 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Arr, Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Body, Css, Element } from '@ephox/sugar';
+import { Body, Css, Element, Scroll } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { ToolbarDrawer } from 'tinymce/themes/silver/api/Settings';
 import Theme from 'tinymce/themes/silver/Theme';
+import { sOpenMore } from '../../module/MenuUtils';
 
 UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
   Theme();
@@ -26,7 +29,7 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
                   },
                   children: [
                     s.element('div', {
-                      classes: [ arr.has('tox-toolbar') ],
+                      classes: [ arr.has('tox-toolbar-overlord') ],
                       attrs: { role: str.is('group') }
                     }),
                     s.element('div', {
@@ -46,16 +49,17 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
     )
   ]));
 
-  const sAssetWidth = (uiContainer: Element, maxWidth: number) => Chain.asStep(uiContainer, [
-    UiFinder.cFindIn('.tox-toolbar'),
+  const sAssetWidth = (uiContainer: Element, maxWidth: number, minWidth: number = 0) => Chain.asStep(uiContainer, [
+    UiFinder.cFindIn('.tox-toolbar-overlord'),
     Chain.op((toolbar) => {
       const widthString = Css.get(toolbar, 'width') || '0px';
       const width = parseInt(widthString.replace('px', ''), 10);
       Assertions.assertEq(`Toolbar with should be less than ${maxWidth}px - ${width}<=${maxWidth}`, true, width <= maxWidth);
+      Assertions.assertEq(`Toolbar with should be greater than ${minWidth}px - ${width}>=${minWidth}`, true, width >= minWidth);
     })
   ]);
 
-  const sTestRender = (label: string, settings: Record<string, any>, expectedWidth: number) => {
+  const sTestRender = (label: string, settings: Record<string, any>, expectedWidth: number, additionalSteps: (editor: Editor, apis) => Step<any, any>[] = Fun.constant([])) => {
     return Step.label(label, Step.raw((_, done, die, logs) => {
       TinyLoader.setup((editor, onSuccess, onFailure) => {
           const uiContainer = Element.fromDom(editor.getContainer());
@@ -64,7 +68,8 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
           Pipeline.async({}, [
             tinyApis.sFocus,
             sStructureTest(editor, uiContainer, expectedWidth),
-            sAssetWidth(uiContainer, expectedWidth)
+            sAssetWidth(uiContainer, expectedWidth, expectedWidth - 100),
+            ...additionalSteps(editor, tinyApis)
           ], onSuccess, onFailure, logs);
         },
         {
@@ -72,6 +77,7 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
           menubar: false,
           inline: true,
           base_url: '/project/tinymce/js/tinymce',
+          toolbar_drawer: 'floating',
           ...settings
         }, done, die
       );
@@ -95,5 +101,15 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
         });
       }
     }, 400),
+    sTestRender('Check width when expanding sliding toolbar while docked', {
+      toolbar_drawer: 'sliding',
+      width: 400
+    }, 400, (editor, tinyApis) => [
+      tinyApis.sSetContent(Arr.range(100, () => '<p></p>').join('')),
+      Step.sync(() => Scroll.to(0, 500)),
+      UiFinder.sWaitForVisible('Wait to be docked', Body.body(), '.tox-tinymce--toolbar-sticky-on .tox-editor-header'),
+      sOpenMore(ToolbarDrawer.sliding),
+      sAssetWidth(Element.fromDom(editor.getContainer()), 400, 300)
+    ]),
   ], success, failure);
 });
