@@ -1,8 +1,9 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import BlockBoundaryDelete from 'tinymce/core/delete/BlockBoundaryDelete';
+import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', function () {
   const success = arguments[arguments.length - 2];
@@ -256,7 +257,65 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
           })
         ),
         tinyApis.sAssertSelection([0], 0, [0], 0)
-      ]))
+      ])),
+      Logger.t('Backspace from block into block with trailing noneditable should merge', GeneralSteps.sequence([
+        tinyApis.sSetRawContent('<p>a<span contentEditable="false">b</span></p><p>c</p>'),
+        tinyApis.sSetCursor([1, 0], 0),
+        sBackspace(editor),
+        tinyApis.sAssertContentStructure(
+          ApproxStructure.build((s, str, arr) => {
+            return s.element('body', {
+              children: [
+                s.element('p', {
+                  children: [
+                    s.text(str.is('a')),
+                    s.element('span', {
+                      attrs: {
+                        contenteditable: str.is('false')
+                      },
+                      children: [
+                        s.text(str.is('b'))
+                      ]
+                    }),
+                    s.text(str.is(Zwsp.ZWSP)),
+                    s.text(str.is('c'))
+                  ]
+                })
+              ]
+            });
+          })
+        ),
+        tinyApis.sAssertSelection([0, 2], 1, [0, 2], 1)
+      ])),
+      Logger.t('Delete from block into block with trailing contenteditable should merge', GeneralSteps.sequence([
+        tinyApis.sSetRawContent('<p>a<span contentEditable="false">b</span></p><p>c</p>'),
+        tinyApis.sSetCursor([0], 2),
+        sDelete(editor),
+        tinyApis.sAssertContentStructure(
+          ApproxStructure.build((s, str, arr) => {
+            return s.element('body', {
+              children: [
+                s.element('p', {
+                  children: [
+                    s.text(str.is('a')),
+                    s.element('span', {
+                      attrs: {
+                        contenteditable: str.is('false')
+                      },
+                      children: [
+                        s.text(str.is('b'))
+                      ]
+                    }),
+                    s.text(str.is(Zwsp.ZWSP)),
+                    s.text(str.is('c'))
+                  ]
+                })
+              ]
+            });
+          })
+        ),
+        tinyApis.sAssertSelection([0, 2], 1, [0, 2], 1)
+      ])),
     ], onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',
