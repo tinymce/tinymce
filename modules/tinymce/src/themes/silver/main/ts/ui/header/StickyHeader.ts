@@ -132,6 +132,8 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
     lazySink().each((sink) => sink.getSystem().broadcastOn( [ Channels.repositionPopups() ], { }));
   };
 
+  const additionalBehaviours = editor.inline ? [ ] : getIframeBehaviours();
+
   return [
     Focusing.config({ }),
     Docking.config({
@@ -172,7 +174,7 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
       onUndocked: onDockingSwitch
     }),
 
-    ...editor.inline ? [ ] : getIframeBehaviours()
+    ...additionalBehaviours
   ];
 };
 

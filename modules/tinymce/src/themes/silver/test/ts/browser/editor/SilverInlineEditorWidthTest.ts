@@ -66,8 +66,13 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
           const tinyApis = TinyApis(editor);
 
           Pipeline.async({}, [
+            Step.sync(() => Scroll.to(0, 0)),
             tinyApis.sFocus,
             sStructureTest(editor, uiContainer, expectedWidth),
+            sAssetWidth(uiContainer, expectedWidth, expectedWidth - 100),
+            tinyApis.sSetContent(Arr.range(100, () => '<p></p>').join('')),
+            Step.sync(() => Scroll.to(0, 500)),
+            UiFinder.sWaitForVisible('Wait to be docked', Body.body(), '.tox-tinymce--toolbar-sticky-on .tox-editor-header'),
             sAssetWidth(uiContainer, expectedWidth, expectedWidth - 100),
             ...additionalSteps(editor, tinyApis)
           ], onSuccess, onFailure, logs);
@@ -104,10 +109,7 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
     sTestRender('Check width when expanding sliding toolbar while docked', {
       toolbar_drawer: 'sliding',
       width: 400
-    }, 400, (editor, tinyApis) => [
-      tinyApis.sSetContent(Arr.range(100, () => '<p></p>').join('')),
-      Step.sync(() => Scroll.to(0, 500)),
-      UiFinder.sWaitForVisible('Wait to be docked', Body.body(), '.tox-tinymce--toolbar-sticky-on .tox-editor-header'),
+    }, 400, (editor) => [
       sOpenMore(ToolbarDrawer.sliding),
       sAssetWidth(Element.fromDom(editor.getContainer()), 400, 300)
     ]),
