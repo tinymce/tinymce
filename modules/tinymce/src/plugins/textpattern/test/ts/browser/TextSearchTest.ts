@@ -1,6 +1,6 @@
 import { Pipeline, Step, Log, Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Node, Text } from '@ephox/dom-globals';
+import { Text } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
@@ -18,30 +18,30 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (succes
   Theme();
   TextpatternPlugin();
 
-  const process = (content: string) => (phase: TextSearch.Phase<Node>, element: Node, text: string) => {
-    if (text === content) {
-      return phase.finish(element);
-    } else {
-      return phase.kontinue();
-    }
+  const process = (content: string) => (element: Text, offset: number) => {
+    return element.data === content ? offset : -1;
   };
 
   const repeatLeftUntil = (editor: Editor, content: string) => {
     const rng = editor.selection.getRng();
-    const outcome =  TextSearch.repeatLeft(editor.dom, rng.startContainer, rng.startOffset, process(content), editor.getBody());
-    return outcome.fold(() => null, () => null, (elm) => elm);
+    return TextSearch.repeatLeft(editor.dom, rng.startContainer, rng.startOffset, process(content), editor.getBody()).fold(
+      () => null,
+      (spot) => spot.node
+    );
   };
 
   const repeatRightUntil = (editor: Editor, content: string) => {
     const rng = editor.selection.getRng();
-    const outcome =  TextSearch.repeatRight(editor.dom, rng.startContainer, rng.startOffset, process(content), editor.getBody());
-    return outcome.fold(() => null, () => null, (elm) => elm);
+    return TextSearch.repeatRight(editor.dom, rng.startContainer, rng.startOffset, process(content), editor.getBody()).fold(
+      () => null,
+      (spot) => spot.node
+    );
   };
 
   const assertSpot = (label: string, spotOpt: Option<SpotPoint<Text>>, elementText: String, offset: number) => {
     const spot = spotOpt.getOrDie(`${label} - Spot not found`);
 
-    Assertions.assertEq(label, elementText, spot.element.textContent);
+    Assertions.assertEq(label, elementText, spot.node.textContent);
     Assertions.assertEq(label, offset, spot.offset);
   };
 

@@ -12,7 +12,6 @@ import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import * as TextSearch from '../text/TextSearch';
-import { TextWalker } from '../text/TextWalker';
 import { generatePathRange, resolvePathRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
 import { BlockPattern, BlockPatternMatch, Pattern } from './PatternTypes';
@@ -20,12 +19,13 @@ import { BlockPattern, BlockPatternMatch, Pattern } from './PatternTypes';
 const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern) => {
   // The pattern could be across fragmented text nodes, so we need to find the end
   // of the pattern and then remove all elements between the start/end range
-  const firstTextNode = TextWalker(block, block).next();
-  firstTextNode.each((node) => {
+  const firstTextNode = TextSearch.textAfter(block, 0, block);
+  firstTextNode.each((spot) => {
+    const node = spot.node;
     TextSearch.scanRight(node, pattern.start.length, block).each((end) => {
       const rng = dom.createRng();
       rng.setStart(node, 0);
-      rng.setEnd(end.element, end.offset);
+      rng.setEnd(end.node, end.offset);
 
       Utils.deleteRng(dom, rng, (e: Node) => e === block);
     });

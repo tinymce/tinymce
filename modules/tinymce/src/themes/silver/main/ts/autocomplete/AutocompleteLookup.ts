@@ -6,16 +6,18 @@
  */
 
 import { InlineContent, Types } from '@ephox/bridge';
-import { Range, Text } from '@ephox/dom-globals';
-import { Arr, Option, Options, Fun } from '@ephox/katamari';
+import { Node, Range } from '@ephox/dom-globals';
+import { Arr, Option, Options } from '@ephox/katamari';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
+import * as Spot from '../alien/Spot';
 import { toLeaf } from '../alien/TextDescent';
-import { Phase, repeatLeft } from '../alien/TextSearch';
+import { repeatLeft } from '../alien/TextSearch';
 import { AutocompleteContext, getContext } from './AutocompleteContext';
 import { AutocompleterDatabase } from './Autocompleters';
+import { isWhitespace } from './AutocompleteUtils';
 
 export interface AutocompleteLookupData {
   matchText: string;
@@ -29,16 +31,18 @@ export interface AutocompleteLookupInfo {
   lookupData: Promise<AutocompleteLookupData[]>;
 }
 
-const isStartOfWord = (dom: DOMUtils) => {
-  const process = (phase: Phase<boolean>, element: Text, text: string, optOffset: Option<number>) => {
-    const index = optOffset.getOr(text.length);
-    // If at the start of the range, then we need to look backwards one more place. Otherwise we just need to look at the current text
-    return (index === 0) ? phase.kontinue() : phase.finish(/\s/.test(text.charAt(index - 1)));
-  };
+const isPreviousCharContent = (dom: DOMUtils, leaf: Spot.SpotPoint<Node>) => {
+  // If at the start of the range, then we need to look backwards one more place. Otherwise we just need to look at the current text
+  return repeatLeft(dom, leaf.node, leaf.offset, (element, offset) => offset === 0 ? -1 : offset, dom.getRoot()).filter((spot) => {
+    const char = spot.node.data.charAt(spot.offset - 1);
+    return !isWhitespace(char);
+  }).isSome();
+};
 
+const isStartOfWord = (dom: DOMUtils) => {
   return (rng: Range) => {
     const leaf = toLeaf(rng.startContainer, rng.startOffset);
-    return repeatLeft(dom, leaf.element, leaf.offset, process).fold(Fun.constant(true), Fun.constant(true), Fun.identity);
+    return !isPreviousCharContent(dom, leaf);
   };
 };
 

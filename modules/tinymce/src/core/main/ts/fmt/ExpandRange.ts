@@ -5,14 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLElement, Node, Range } from '@ephox/dom-globals';
-import Bookmarks from '../bookmark/Bookmarks';
+import { Element, HTMLElement, Node, Range, Text } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
-import TreeWalker from '../api/dom/TreeWalker';
-import * as FormatUtils from './FormatUtils';
-import * as RangeNodes from '../selection/RangeNodes';
+import TextSeeker from '../api/dom/TextSeeker';
 import Editor from '../api/Editor';
+import Bookmarks from '../bookmark/Bookmarks';
 import NodeType from '../dom/NodeType';
+import * as RangeNodes from '../selection/RangeNodes';
+import { isContent, isNbsp, isWhiteSpace } from '../text/CharType';
+import * as FormatUtils from './FormatUtils';
 
 const isBookmarkNode = Bookmarks.isBookmarkNode;
 const getParents = FormatUtils.getParents, isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode, isTextBlock = FormatUtils.isTextBlock;
@@ -36,72 +38,42 @@ const findParentContentEditable = function (dom: DOMUtils, node: Node) {
   return node;
 };
 
-const findSpace = function (start: boolean, node: Node, includeTrailingSpace: boolean, offset?: number) {
-  let pos, pos2;
-  const str = node.nodeValue;
-
-  if (typeof offset === 'undefined') {
-    offset = start ? str.length : 0;
-  }
-
-  if (start) {
-    pos = str.lastIndexOf(' ', offset);
-    pos2 = str.lastIndexOf('\u00a0', offset);
-    pos = pos > pos2 ? pos : pos2;
-
-    if (pos !== -1 && !includeTrailingSpace && pos < offset) {
-      pos++;
-    }
-  } else {
-    pos = str.indexOf(' ', offset);
-    pos2 = str.indexOf('\u00a0', offset);
-    pos = pos !== -1 && (pos2 === -1 || pos < pos2) ? pos : pos2;
-
-    if (pos !== -1 && includeTrailingSpace && pos < str.length) {
-      pos++;
+const walkText = (start: boolean, node: Text, offset: number, predicate: (chr: string) => boolean) => {
+  const str = node.data;
+  for (let i = offset; start ? i >= 0 : i < str.length; start ? i-- : i++) {
+    if (predicate(str.charAt(i))) {
+      return start ? i + 1 : i;
     }
   }
-
-  return pos;
+  return -1;
 };
 
-const findWordEndPoint = function (dom: DOMUtils, body: HTMLElement, container: Node, offset: number, start: boolean, includeTrailingSpaces: boolean) {
-  let node, lastTextNode;
+const findSpace = (start: boolean, node: Text, offset: number) => walkText(start, node, offset, (c) => isNbsp(c) || isWhiteSpace(c));
+const findContent = (start: boolean, node: Text, offset: number) => walkText(start, node, offset, isContent);
 
-  if (NodeType.isText(container)) {
-    const pos = findSpace(start, container, includeTrailingSpaces, offset);
+const findWordEndPoint = (dom: DOMUtils, body: HTMLElement, container: Node, offset: number, start: boolean, includeTrailingSpaces: boolean) => {
+  let lastTextNode: Text;
+  const rootNode = dom.getParent(container, dom.isBlock) || body;
 
-    if (pos !== -1) {
-      return { container, offset: pos };
-    }
-
-    lastTextNode = container;
-  }
-
-  // Walk the nodes inside the block
-  const walker = new TreeWalker(container, dom.getParent(container, dom.isBlock) || body);
-  while ((node = walker[start ? 'prev' : 'next']())) {
-    if (NodeType.isText(node) && !isBookmarkNode(node.parentNode)) {
-      lastTextNode = node;
-      const pos = findSpace(start, node, includeTrailingSpaces);
-
-      if (pos !== -1) {
-        return { container: node, offset: pos };
+  const walk = (container: Node, offset: number, pred: (start: boolean, node: Text, offset?: number) => number) => {
+    const textSeeker = TextSeeker(dom);
+    const walker = start ? textSeeker.backwards : textSeeker.forwards;
+    return Option.from(walker(container, offset, (text, textOffset) => {
+      if (isBookmarkNode(text.parentNode)) {
+        return -1;
+      } else {
+        lastTextNode = text;
+        return pred(start, text, textOffset);
       }
-    } else if (dom.isBlock(node) || FormatUtils.isEq(node, 'BR')) {
-      break;
-    }
-  }
+    }, rootNode));
+  };
 
-  if (lastTextNode) {
-    if (start) {
-      offset = 0;
-    } else {
-      offset = lastTextNode.length;
-    }
-
-    return { container: lastTextNode, offset };
-  }
+  const spaceResult = walk(container, offset, findSpace);
+  return spaceResult.bind((result) => {
+    return includeTrailingSpaces ? walk(result.node, result.offset + (start ? -1 : 0), findContent) : Option.some(result);
+  }).orThunk(() => {
+    return lastTextNode ? Option.some({ node: lastTextNode, offset: start ? 0 : lastTextNode.length }) : Option.none();
+  });
 };
 
 const findSelectorEndPoint = function (dom: DOMUtils, format, rng: Range, container: Node, siblingName: 'previousSibling' | 'nextSibling') {
@@ -212,8 +184,7 @@ const findParentContainer = function (dom: DOMUtils, format, startContainer: Nod
 };
 
 const expandRng = function (editor: Editor, rng: Range, format, includeTrailingSpace: boolean = false) {
-  let endPoint,
-    startContainer = rng.startContainer,
+  let startContainer = rng.startContainer,
     startOffset = rng.startOffset,
     endContainer = rng.endContainer,
     endOffset = rng.endOffset;
@@ -268,18 +239,18 @@ const expandRng = function (editor: Editor, rng: Range, format, includeTrailingS
 
   if (rng.collapsed) {
     // Expand left to closest word boundary
-    endPoint = findWordEndPoint(dom, editor.getBody(), startContainer, startOffset, true, includeTrailingSpace);
-    if (endPoint) {
-      startContainer = endPoint.container;
-      startOffset = endPoint.offset;
-    }
+    const startPoint = findWordEndPoint(dom, editor.getBody(), startContainer, startOffset, true, includeTrailingSpace);
+    startPoint.each(({ node, offset }) => {
+      startContainer = node;
+      startOffset = offset;
+    });
 
     // Expand right to closest word boundary
-    endPoint = findWordEndPoint(dom, editor.getBody(), endContainer, endOffset, false, includeTrailingSpace);
-    if (endPoint) {
-      endContainer = endPoint.container;
-      endOffset = endPoint.offset;
-    }
+    const endPoint = findWordEndPoint(dom, editor.getBody(), endContainer, endOffset, false, includeTrailingSpace);
+    endPoint.each(({ node, offset }) => {
+      endContainer = node;
+      endOffset = offset;
+    });
   }
 
   // Move start/end point up the tree if the leaves are sharp and if we are in different containers

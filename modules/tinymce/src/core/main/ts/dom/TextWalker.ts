@@ -6,27 +6,30 @@
  */
 
 import { Node, Text } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
+import { Fun, Option } from '@ephox/katamari';
+import NodeType from './NodeType';
+import TreeWalker from '../api/dom/TreeWalker';
 
 interface TextWalker {
+  current (): Option<Text>;
   next (): Option<Text>;
   prev (): Option<Text>;
   prev2 (): Option<Text>;
 }
 
-const TextWalker = (startNode: Node, rootNode: Node): TextWalker => {
+const TextWalker = (startNode: Node, rootNode: Node, isBoundary: (node: Node) => boolean = Fun.never): TextWalker => {
   const walker = new TreeWalker(startNode, rootNode);
 
   const walk = (direction: 'next' | 'prev' | 'prev2'): Option<Text> => {
-    let next = walker[direction]();
-    while (next && next.nodeType !== Node.TEXT_NODE) {
+    let next: Node;
+    do {
       next = walker[direction]();
-    }
-    return next && next.nodeType === Node.TEXT_NODE ? Option.some(next as Text) : Option.none();
+    } while (next && !NodeType.isText(next) && !isBoundary(next));
+    return Option.from(next).filter(NodeType.isText);
   };
 
   return {
+    current: () => Option.from(walker.current()).filter(NodeType.isText),
     next: () => walk('next'),
     prev: () => walk('prev'),
     prev2: () => walk('prev2')

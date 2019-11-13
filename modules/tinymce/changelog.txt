@@ -1,4 +1,6 @@
 Version 5.2.0 (TBD)
+    Added the ability to apply formats to spaces #TINY-4200
+    Added new `tinymce.dom.TextSeeker` API to allow searching text across different DOM nodes #TINY-4200
     Added a drop shadow below the toolbar while in sticky mode and introduced Oxide variables to customize it when creating a custom skin #TINY-4343
     Changed iframe mode to set selection on content init if selection doesn't exist #TINY-4139
     Fixed bug with alignment toolbar buttons sometimes not changing state correctly #TINY-4139
