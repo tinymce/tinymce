@@ -9,8 +9,8 @@ export interface MediaData {
   allowFullscreen?: boolean;
   source: string;
   sourcemime?: string;
-  width: string;
-  height: string;
+  width?: string;
+  height?: string;
   embed?: string;
   poster: string;
   altsource: string;

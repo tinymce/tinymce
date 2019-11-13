@@ -48,20 +48,26 @@ export default function () {
     ],
     importcss_append: true,
     height: 400,
+    image_advtab: true,
     file_picker_callback (callback, value, meta) {
+      if (meta.fieldname === 'poster') {
+        callback('test.mp4', { altsource: 'blah.ogg', width: '400px', poster: 'testing.jpg', embed: '<p>test</p>' });
+        return;
+      }
       // Provide file and text for the link dialog
       if (meta.filetype === 'file') {
-        callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
+        callback('https://www.google.com/logos/google.jpg', { text: 'My text', title: 'blah' });
       }
 
       // Provide image and alt text for the image dialog
       if (meta.filetype === 'image') {
-        callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
+        // tslint:disable-next-line: no-debugger
+        callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text', style: 'border: 10px solid black;' });
       }
 
       // Provide alternative source and posted for the media dialog
       if (meta.filetype === 'media') {
-        callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
+        callback('movie.mp4', { embed: '<p>test</p>' });
       }
     },
     spellchecker_callback (method, text, success, failure) {

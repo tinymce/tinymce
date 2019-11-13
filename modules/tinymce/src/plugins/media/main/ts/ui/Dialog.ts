@@ -6,16 +6,15 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Element, HTMLElement, console } from '@ephox/dom-globals';
-import { Arr, Cell, Merger, Obj, Type, Option } from '@ephox/katamari';
+import { Element, HTMLElement } from '@ephox/dom-globals';
+import { Arr, Cell, Merger, Obj, Option, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-
 import Settings from '../api/Settings';
+import { dataToHtml } from '../core/DataToHtml';
 import * as HtmlToData from '../core/HtmlToData';
 import Service from '../core/Service';
 import { MediaData } from '../core/Types';
 import UpdateHtml from '../core/UpdateHtml';
-import { dataToHtml } from '../core/DataToHtml';
 
 type ApiSubData = {
   value: string;
@@ -55,47 +54,26 @@ const getValue = (data: ApiData, metaData: Record<string, any>) => (prop: string
 };
 
 const getDimensions = (data: ApiData, metaData: Record<string, any>) => {
-  const dataDimensions = Obj.get(data, 'dimensions');
-  return {
-    width: '',
-    height: '',
-    ...dataDimensions.getOr({}),
-    ...Obj.get(metaData, 'width').fold(() => ({}), (width) => ({ width })),
-    ...Obj.get(metaData, 'height').fold(() => ({}), (height) => ({ height }))
-  };
-};
-
-const extractApiData = (sourceInput: string, data: ApiData): MediaData => {
-  const meta = extractMeta(sourceInput, data);
-
-  return meta.fold(() => unwrap(data), (metaData: Record<string, any>) => {
-    const get = getValue(data, metaData);
-    const dims = getDimensions(data, metaData);
-    return {
-      source: get('source'),
-      altsource: get('altsource'),
-      poster: get('poster'),
-      embed: get('embed'),
-      ...dims
-    };
-  });
-};
-
-const unwrap = (data: ApiData): MediaData => {
-  const unwrapped = Merger.merge(data, {
-    source: Obj.get(data, 'source').bind((source) => Obj.get(source, 'value')).getOr(''),
-    altsource: Obj.get(data, 'altsource').bind((altsource) => Obj.get(altsource, 'value')).getOr(''),
-    poster: Obj.get(data, 'poster').bind((poster) => Obj.get(poster, 'value')).getOr('')
-  });
-
-  // Add additional size values that may or may not have been in the data
-  Obj.get(data, 'dimensions').each((dimensions) => {
+  const dimensions = {};
+  Obj.get(data, 'dimensions').each((dims) => {
     Arr.each([ 'width', 'height' ] as ('width' | 'height')[], (prop) => {
-      Obj.get(dimensions, prop).each((value) => unwrapped[prop] = value);
+      Obj.get(metaData, prop).or(Obj.get(dims, prop)).each((value) => dimensions[prop] = value);
     });
   });
+  return dimensions;
+};
 
-  return unwrapped;
+const unwrap = (data: ApiData, sourceInput?: string): MediaData => {
+  const metaData = sourceInput ? extractMeta(sourceInput, data).getOr({}) : {};
+  const get = getValue(data, metaData);
+  const dims = getDimensions(data, metaData);
+  return {
+    source: get('source'),
+    altsource: get('altsource'),
+    poster: get('poster'),
+    embed: get('embed'),
+    ...dims
+  };
 };
 
 const wrap = (data: MediaData): ApiData => {
@@ -197,12 +175,8 @@ const showDialog = function (editor: Editor) {
   const currentData = Cell<MediaData>(editorData);
   const initialData = wrap(editorData);
 
-  const getSourceData = (api: Types.Dialog.DialogInstanceApi<ApiData>, sourceInput?: string): MediaData => {
-    return Option.from(sourceInput).fold(() => unwrap(api.getData()), (i) => extractApiData(i, api.getData()));
-  };
-
   const handleSource = (prevData: MediaData, api: Types.Dialog.DialogInstanceApi<ApiData>) => {
-    const serviceData = getSourceData(api, 'source');
+    const serviceData = unwrap(api.getData(), 'source');
 
     // If a new URL is entered, then clear the embed html and fetch the new data
     if (prevData.source !== serviceData.source) {
@@ -221,7 +195,7 @@ const showDialog = function (editor: Editor) {
   };
 
   const handleUpdate = (api: Types.Dialog.DialogInstanceApi<ApiData>, sourceInput: string) => {
-    const data = getSourceData(api, sourceInput);
+    const data = unwrap(api.getData(), sourceInput);
     const embed = dataToHtml(editor, data);
     api.setData(wrap({
       ...data,
@@ -319,7 +293,7 @@ const showDialog = function (editor: Editor) {
       }
     ],
     onSubmit (api) {
-      const serviceData = getSourceData(api);
+      const serviceData = unwrap(api.getData());
       submitForm(currentData.get(), serviceData, editor);
       api.close();
     },
@@ -342,7 +316,7 @@ const showDialog = function (editor: Editor) {
         default:
           break;
       }
-      currentData.set(getSourceData(api));
+      currentData.set(unwrap(api.getData()));
     },
     initialData
   });

@@ -9,8 +9,8 @@ UnitTest.test('atomic.core.HtmlToDataTest', function () {
 
   testHtmlToData('<div data-ephox-embed-iri="a"></div>', {
     type: 'ephox-embed-iri',
-    source1: 'a',
-    source2: '',
+    source: 'a',
+    altsource: '',
     poster: '',
     width: '',
     height: ''
@@ -18,8 +18,8 @@ UnitTest.test('atomic.core.HtmlToDataTest', function () {
 
   testHtmlToData('<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 200px"></div>', {
     type: 'ephox-embed-iri',
-    source1: 'a',
-    source2: '',
+    source: 'a',
+    altsource: '',
     poster: '',
     width: '300',
     height: '200'
@@ -31,8 +31,8 @@ UnitTest.test('atomic.core.HtmlToDataTest', function () {
     height: '314',
     allowfullscreen: '1',
     type: 'iframe',
-    source1: '//www.youtube.com/embed/b3XFjWInBog',
-    source2: '',
+    source: '//www.youtube.com/embed/b3XFjWInBog',
+    altsource: '',
     poster: ''
   });
 });
