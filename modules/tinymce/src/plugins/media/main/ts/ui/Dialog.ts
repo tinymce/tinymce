@@ -36,24 +36,23 @@ const extractMeta = (sourceInput: string, data: ApiData): Option<Record<string, 
   return Obj.get(data, sourceInput as any).bind((mainData: ApiSubData) => Obj.get(mainData, 'meta'));
 };
 
-const getValue = (data: ApiData, metaData: Record<string, any>) => (prop: string): string => {
+const getValue = (data: ApiData, metaData: Record<string, any>) => (prop: string): Record<string, string> => {
   // Cases:
   // 1. Get the nested value prop (component is the executed urlinput)
   // 2. Get from metadata (a urlinput was executed but urlinput != this component)
   // 3. Not a urlinput so just get string
-  // ASSUMPTION: data will always contain an entry for every prop. Since it's typed
-  // this seems extremely likely.
+  // ASSUMPTION: we only want to get values for props that already exist in data
+  const getFromData: Option<string | Record<string, string>> = Obj.get(data, prop as any);
+  const getFromMetaData: Option<string> = Obj.get(metaData, prop);
+  const getNonEmptyValue = (c: Record<string, string>) => Obj.get(c, 'value').bind((v) => v.length > 0 ? Option.some(v) : Option.none());
 
-  const getFromMetaData = Obj.get(metaData, prop);
-  const getFromData = Obj.get(data, prop as any);
-  const getNonEmptyValue = (c) => Obj.get(c, 'value').bind((v) => v.length > 0 ? Option.some(v) : Option.none());
-
-  return Obj.get(data, prop as any).bind((child) => {
-    return Type.isObject(child) ? getNonEmptyValue(child).or(getFromMetaData) : getFromMetaData.or(getFromData);
-  }).getOr('');
+  return getFromData.bind((child): Option<Record<string, string>> => {
+    const val = Type.isObject(child) ? getNonEmptyValue(child as Record<string, string>).or(getFromMetaData) : getFromMetaData.or(getFromData as Option<string>);
+    return val.fold(() => Option.none(), (v: string) => Option.some({ [prop]: v }));
+  }).getOr({});
 };
 
-const getDimensions = (data: ApiData, metaData: Record<string, any>) => {
+const getDimensions = (data: ApiData, metaData: Record<string, string>) => {
   const dimensions = {};
   Obj.get(data, 'dimensions').each((dims) => {
     Arr.each([ 'width', 'height' ] as ('width' | 'height')[], (prop) => {
@@ -66,14 +65,13 @@ const getDimensions = (data: ApiData, metaData: Record<string, any>) => {
 const unwrap = (data: ApiData, sourceInput?: string): MediaData => {
   const metaData = sourceInput ? extractMeta(sourceInput, data).getOr({}) : {};
   const get = getValue(data, metaData);
-  const dims = getDimensions(data, metaData);
   return {
-    source: get('source'),
-    altsource: get('altsource'),
-    poster: get('poster'),
-    embed: get('embed'),
-    ...dims
-  };
+    ...get('source'),
+    ...get('altsource'),
+    ...get('poster'),
+    ...get('embed'),
+    ...getDimensions(data, metaData)
+  } as any;
 };
 
 const wrap = (data: MediaData): ApiData => {
