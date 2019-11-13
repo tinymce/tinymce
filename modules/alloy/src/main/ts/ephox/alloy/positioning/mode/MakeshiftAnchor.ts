@@ -14,7 +14,16 @@ const placement = (component: AlloyComponent, anchorInfo: MakeshiftAnchor, origi
   const pos = Origins.translate(origin, anchorInfo.x, anchorInfo.y);
   const anchorBox = bounds(pos.left(), pos.top(), anchorInfo.width, anchorInfo.height);
 
-  const layouts = AnchorLayouts.get(component.element(), anchorInfo, Layout.all(), Layout.allRtl());
+  const layouts = AnchorLayouts.get(
+    component.element(),
+    anchorInfo,
+    Layout.all(),
+    Layout.allRtl(),
+    // No default bottomToTop layouts currently needed
+    Layout.all(),
+    Layout.allRtl(),
+    Option.none()
+  );
 
   return Option.some(
     NuAnchoring({

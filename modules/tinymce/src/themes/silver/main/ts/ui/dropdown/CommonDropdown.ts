@@ -24,6 +24,7 @@ import {
   SugarEvent,
   TieredData,
   Unselecting,
+  VerticalDir,
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Future, Id, Merger, Option, Arr, Cell, Fun } from '@ephox/katamari';
@@ -36,6 +37,7 @@ import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Controls';
+import { Html } from '@ephox/sugar';
 
 export const updateMenuText = Id.generate('update-menu-text');
 export const updateMenuIcon = Id.generate('update-menu-icon');
@@ -62,6 +64,7 @@ export interface CommonDropdownSpec<T> {
   classes: string[];
   dropdownBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
 }
+
 // TODO: Use renderCommonStructure here.
 const renderCommonDropdown = <T>(spec: CommonDropdownSpec<T>, prefix: string, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
@@ -123,7 +126,16 @@ const renderCommonDropdown = <T>(spec: CommonDropdownSpec<T>, prefix: string, sh
             tag: 'div',
             classes: [ `${prefix}__select-chevron` ],
             innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons)
-          }
+          },
+          behaviours: Behaviour.derive([
+            Replacing.config({ }),
+            AddEventsBehaviour.config('attach-event', [
+              AlloyEvents.runOnAttached((comp) => {
+                const iconName = 'chevron-' + (VerticalDir.isBottomToTopDir(comp.element()) ? 'up' : 'down');
+                Html.set(comp.element(), Icons.get(iconName, sharedBackstage.providers.icons));
+              })
+            ])
+          ])
         })
       ]),
       matchWidth: true,

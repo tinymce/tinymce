@@ -13,7 +13,16 @@ import * as AnchorLayouts from './AnchorLayouts';
 const placement = (component: AlloyComponent, submenuInfo: SubmenuAnchor, origin: OriginAdt): Option<Anchoring> => {
   const anchorBox = Origins.toBox(origin, submenuInfo.item.element());
 
-  const layouts = AnchorLayouts.get(component.element(), submenuInfo, LinkedLayout.all(), LinkedLayout.allRtl());
+  const layouts = AnchorLayouts.get(
+    component.element(),
+    submenuInfo,
+    LinkedLayout.all(),
+    LinkedLayout.allRtl(),
+    // No default bottomToTop layouts currently needed
+    LinkedLayout.all(),
+    LinkedLayout.allRtl(),
+    Option.none()
+  );
 
   return Option.some(
     NuAnchoring({

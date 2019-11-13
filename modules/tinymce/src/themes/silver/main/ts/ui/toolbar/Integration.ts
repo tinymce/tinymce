@@ -28,6 +28,7 @@ import { createFormatSelect } from '../core/complex/FormatSelect';
 import { createStyleSelect } from '../core/complex/StyleSelect';
 import { RenderToolbarConfig, ToolbarGroupSetting } from '../../Render';
 import { ToolbarGroup } from './CommonToolbar';
+import { isToolbarLocationTop } from '../../api/Settings';
 
 export const handleError = (error) => {
   // tslint:disable-next-line:no-console
@@ -129,7 +130,10 @@ const types = {
           },
           extras,
           Option.none()
-        )
+        ),
+        {
+          'data-vertical-dir': isToolbarLocationTop(editor) ? 'toptobottom' : 'bottomtotop'
+        }
       );
     }
   ),

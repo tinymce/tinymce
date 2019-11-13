@@ -141,10 +141,10 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
           'aria-label': sharedBackstage.providers.translate('Color swatch')
         }
       },
-      layouts: Option.some({
+      layouts: {
         onRtl: () => [ Layout.southeast ],
         onLtr: () => [ Layout.southwest ]
-      }),
+      },
       components: [],
       fetch: ColorSwatch.getFetch(colorInputBackstage.getColors(), colorInputBackstage.hasCustomColors()),
       columns: colorInputBackstage.getColorCols(),

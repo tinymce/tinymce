@@ -117,7 +117,8 @@ import {
   MakeshiftAnchorSpec,
   SelectionAnchorSpec,
   HotspotAnchorSpec,
-  SubmenuAnchorSpec
+  SubmenuAnchorSpec,
+  Layouts
 } from '../positioning/mode/Anchoring';
 
 import * as Layout from '../positioning/layout/Layout';
@@ -133,6 +134,7 @@ import * as SliderTypes from '../ui/types/SliderTypes';
 import * as FormTypes from '../ui/types/FormTypes';
 import * as TabbarTypes from '../ui/types/TabbarTypes';
 import { CustomList } from './ui/CustomList';
+import * as VerticalDir from '../positioning/mode/VerticalDir';
 
 type AlloyComponent = ComponentApi.AlloyComponent;
 type MementoRecord = Memento.MementoRecord;
@@ -269,6 +271,7 @@ export {
   MaxHeight,
   MaxWidth,
   LazySink,
+  VerticalDir,
 
   // types
   TieredMenuTypes,
@@ -284,6 +287,7 @@ export {
   HotspotAnchorSpec,
   SubmenuAnchorSpec,
   DraggingTypes,
+  Layouts,
 
   FocusInsideModes,
 

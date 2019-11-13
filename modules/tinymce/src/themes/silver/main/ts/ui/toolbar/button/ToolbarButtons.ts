@@ -26,11 +26,11 @@ import {
   TieredMenuTypes,
   Unselecting,
   FloatingToolbarButton,
-  Layout,
+  VerticalDir
 } from '@ephox/alloy';
 import { Toolbar, Types } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
-import { Attr, SelectorFind } from '@ephox/sugar';
+import { Attr, SelectorFind, Html } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared, UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
@@ -164,14 +164,10 @@ const renderCommonStructure = (icon: Option<string>, text: Option<string>, toolt
   };
 };
 
-const renderFloatingToolbarButton = (spec: Toolbar.FloatingToolbarButton, backstage: UiFactoryBackstage, identifyButtons: (toolbar: ToolbarConfig) => ToolbarGroup[]) => {
+const renderFloatingToolbarButton = (spec: Toolbar.FloatingToolbarButton, backstage: UiFactoryBackstage, identifyButtons: (toolbar: ToolbarConfig) => ToolbarGroup[], attributes: Record<string, string>) => {
   const sharedBackstage = backstage.shared;
 
   return FloatingToolbarButton.sketch({
-    layouts: {
-      onRtl: () => Layout.belowOrAbove(),
-      onLtr: () => Layout.belowOrAboveRtl()
-    },
     lazySink: sharedBackstage.getSink,
     fetch: () => {
       return Future.nu((resolve) => {
@@ -186,7 +182,8 @@ const renderFloatingToolbarButton = (spec: Toolbar.FloatingToolbarButton, backst
       toolbar: {
         dom: {
           tag: 'div',
-          classes: [ 'tox-toolbar__overflow' ]
+          classes: [ 'tox-toolbar__overflow' ],
+          attributes
         }
       }
     },
@@ -385,8 +382,16 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         dom: {
           tag: 'button',
           classes: [ ToolbarButtonClasses.Button, 'tox-split-button__chevron' ],
-          innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons)
-        }
+        },
+        buttonBehaviours: Behaviour.derive([
+          Replacing.config({ }),
+          AddEventsBehaviour.config('attach-events', [
+            AlloyEvents.runOnAttached((comp) => {
+              const iconName = 'chevron-' + (VerticalDir.isBottomToTopDir(comp.element()) ? 'up' : 'down');
+              Html.set(comp.element(), Icons.get(iconName, sharedBackstage.providers.icons));
+            }),
+          ])
+        ])
       }),
       AlloySplitDropdown.parts()['aria-descriptor']({
         text: sharedBackstage.providers.translate('To open the popup, press Shift+Enter')

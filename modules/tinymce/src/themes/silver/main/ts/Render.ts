@@ -100,13 +100,15 @@ const setup = (editor: Editor): RenderInfo => {
     }
   } : {};
 
+  const verticalDirAttributes = {
+    attributes: {
+      'data-vertical-dir': isToolbarTop ? 'toptobottom' : 'bottomtotop'
+    }
+  };
+
   const lazyHeader = () => lazyOuterContainer.bind(OuterContainer.getHeader);
 
   const isHeaderDocked = () => header.isDocked(lazyHeader);
-
-  const isHeaderDockedBottom = () => {
-    return isHeaderDocked() && !isToolbarTop;
-  };
 
   const sink = GuiFactory.build({
     dom: {
@@ -146,7 +148,7 @@ const setup = (editor: Editor): RenderInfo => {
     return OuterContainer.getThrobber(container);
   }).getOrDie('Could not find throbber element');
 
-  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar, lazyMoreButton, isHeaderDockedBottom);
+  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar, lazyMoreButton);
 
   const partMenubar: AlloySpec = OuterContainer.parts().menubar({
     dom: {
@@ -174,7 +176,8 @@ const setup = (editor: Editor): RenderInfo => {
     split: toolbarDrawer,
     lazyToolbar,
     lazyMoreButton,
-    lazyHeader: () => lazyHeader().getOrDie('Could not find header element')
+    lazyHeader: () => lazyHeader().getOrDie('Could not find header element'),
+    ...verticalDirAttributes
   });
 
   const partMultipleToolbar: AlloySpec = OuterContainer.parts()['multiple-toolbar']({
@@ -242,7 +245,8 @@ const setup = (editor: Editor): RenderInfo => {
   const partHeader = OuterContainer.parts().header({
     dom: {
       tag: 'div',
-      classes: ['tox-editor-header']
+      classes: ['tox-editor-header'],
+      ...verticalDirAttributes,
     },
     components: Arr.flatten<AlloySpec>([
       hasMenubar ? [ partMenubar ] : [ ],

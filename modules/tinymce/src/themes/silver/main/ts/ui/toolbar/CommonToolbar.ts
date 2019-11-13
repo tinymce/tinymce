@@ -43,6 +43,7 @@ export interface ToolbarSpec {
   getSink: () => Result<AlloyComponent, string>;
   backstage: UiFactoryBackstage;
   moreDrawerData?: MoreDrawerData;
+  attributes?: Record<string, string>;
 }
 
 export interface ToolbarGroup {
@@ -163,7 +164,8 @@ const renderFloatingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
       overflow: {
         dom: {
           tag: 'div',
-          classes: ['tox-toolbar__overflow']
+          classes: ['tox-toolbar__overflow'],
+          attributes: toolbarSpec.attributes
         }
       }
     },
