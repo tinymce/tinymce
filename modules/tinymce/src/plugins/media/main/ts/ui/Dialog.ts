@@ -16,28 +16,28 @@ import Service from '../core/Service';
 import { DialogSubData, MediaData, MediaDialogData } from '../core/Types';
 import UpdateHtml from '../core/UpdateHtml';
 
-const extractMeta = (sourceInput: string, data: MediaDialogData): Option<Record<string, any>> => {
-  return Obj.get(data, sourceInput as any).bind((mainData: DialogSubData) => Obj.get(mainData, 'meta'));
+const extractMeta = (sourceInput: keyof MediaDialogData, data: MediaDialogData): Option<Record<string, string>> => {
+  return Obj.get(data, sourceInput).bind((mainData: DialogSubData) => Obj.get(mainData, 'meta'));
 };
 
-const getValue = (data: MediaDialogData, metaData: Record<string, any>, sourceInput?: string) => (prop: string): Record<string, string> => {
+const getValue = (data: MediaDialogData, metaData: Record<string, string>, sourceInput?: keyof MediaDialogData) => (prop: keyof MediaDialogData): Record<string, string> => {
   // Cases:
   // 1. Get the nested value prop (component is the executed urlinput)
   // 2. Get from metadata (a urlinput was executed but urlinput != this component)
   // 3. Not a urlinput so just get string
   // If prop === sourceInput do 1, 2 then 3, else do 2 then 1 or 3
   // ASSUMPTION: we only want to get values for props that already exist in data
-  const getFromData = (): Option<string | Record<string, string>> => Obj.get(data, prop as any);
+  const getFromData = (): Option<string | Record<string, string> | DialogSubData> => Obj.get(data, prop);
   const getFromMetaData = (): Option<string> => Obj.get(metaData, prop);
   const getNonEmptyValue = (c: Record<string, string>): Option<string> => Obj.get(c, 'value').bind((v: string) => v.length > 0 ? Option.some(v) : Option.none());
 
   const getFromValueFirst = () => getFromData().bind((child) => {
     return Type.isObject(child)
-      ? getNonEmptyValue(child as Record<string, string>).or(getFromMetaData())
-      : getFromMetaData().or(Option.from(child as string));
+      ? getNonEmptyValue(child as Record<string, string>).orThunk(getFromMetaData)
+      : getFromMetaData().orThunk(() => Option.from(child as string));
   });
 
-  const getFromMetaFirst = () => getFromMetaData().or(getFromData().bind((child: Record<string, string> | string) => {
+  const getFromMetaFirst = () => getFromMetaData().orThunk(() => getFromData().bind((child) => {
     return Type.isObject(child)
       ? getNonEmptyValue(child as Record<string, string>)
       : Option.from(child as string);
@@ -51,13 +51,13 @@ const getDimensions = (data: MediaDialogData, metaData: Record<string, string>) 
   const dimensions = {};
   Obj.get(data, 'dimensions').each((dims) => {
     Arr.each([ 'width', 'height' ] as ('width' | 'height')[], (prop) => {
-      Obj.get(metaData, prop).or(Obj.get(dims, prop)).each((value) => dimensions[prop] = value);
+      Obj.get(metaData, prop).orThunk(() => Obj.get(dims, prop)).each((value) => dimensions[prop] = value);
     });
   });
   return dimensions;
 };
 
-const unwrap = (data: MediaDialogData, sourceInput?: string): MediaData => {
+const unwrap = (data: MediaDialogData, sourceInput?: keyof MediaDialogData): MediaData => {
   const metaData = sourceInput ? extractMeta(sourceInput, data).getOr({}) : {};
   const get = getValue(data, metaData, sourceInput);
   return {
@@ -66,7 +66,7 @@ const unwrap = (data: MediaDialogData, sourceInput?: string): MediaData => {
     ...get('poster'),
     ...get('embed'),
     ...getDimensions(data, metaData)
-  } as any;
+  } as MediaData;
 };
 
 const wrap = (data: MediaData): MediaDialogData => {
@@ -187,7 +187,7 @@ const showDialog = function (editor: Editor) {
     api.setData(wrap(dataFromEmbed));
   };
 
-  const handleUpdate = (api: Types.Dialog.DialogInstanceApi<MediaDialogData>, sourceInput: string) => {
+  const handleUpdate = (api: Types.Dialog.DialogInstanceApi<MediaDialogData>, sourceInput: keyof MediaDialogData) => {
     const data = unwrap(api.getData(), sourceInput);
     const embed = dataToHtml(editor, data);
     api.setData(wrap({
