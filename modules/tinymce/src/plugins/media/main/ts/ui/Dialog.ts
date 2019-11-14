@@ -13,46 +13,41 @@ import Settings from '../api/Settings';
 import { dataToHtml } from '../core/DataToHtml';
 import * as HtmlToData from '../core/HtmlToData';
 import Service from '../core/Service';
-import { MediaData } from '../core/Types';
+import { DialogSubData, MediaData, MediaDialogData } from '../core/Types';
 import UpdateHtml from '../core/UpdateHtml';
 
-type ApiSubData = {
-  value: string;
-  meta: Record<string, any>;
+const extractMeta = (sourceInput: string, data: MediaDialogData): Option<Record<string, any>> => {
+  return Obj.get(data, sourceInput as any).bind((mainData: DialogSubData) => Obj.get(mainData, 'meta'));
 };
 
-type ApiData = {
-  source?: ApiSubData;
-  altsource?: ApiSubData;
-  poster?: ApiSubData;
-  embed?: string;
-  dimensions?: {
-    width?: string;
-    height?: string;
-  };
-};
-
-const extractMeta = (sourceInput: string, data: ApiData): Option<Record<string, any>> => {
-  return Obj.get(data, sourceInput as any).bind((mainData: ApiSubData) => Obj.get(mainData, 'meta'));
-};
-
-const getValue = (data: ApiData, metaData: Record<string, any>) => (prop: string): Record<string, string> => {
+const getValue = (data: MediaDialogData, metaData: Record<string, any>, sourceInput?: string) => (prop: string): Record<string, string> => {
   // Cases:
   // 1. Get the nested value prop (component is the executed urlinput)
   // 2. Get from metadata (a urlinput was executed but urlinput != this component)
   // 3. Not a urlinput so just get string
+  // If prop === sourceInput do 1, 2 then 3, else do 2 then 1 or 3
   // ASSUMPTION: we only want to get values for props that already exist in data
-  const getFromData: Option<string | Record<string, string>> = Obj.get(data, prop as any);
-  const getFromMetaData: Option<string> = Obj.get(metaData, prop);
-  const getNonEmptyValue = (c: Record<string, string>) => Obj.get(c, 'value').bind((v) => v.length > 0 ? Option.some(v) : Option.none());
+  const getFromData = (): Option<string | Record<string, string>> => Obj.get(data, prop as any);
+  const getFromMetaData = (): Option<string> => Obj.get(metaData, prop);
+  const getNonEmptyValue = (c: Record<string, string>): Option<string> => Obj.get(c, 'value').bind((v: string) => v.length > 0 ? Option.some(v) : Option.none());
 
-  return getFromData.bind((child): Option<Record<string, string>> => {
-    const val = Type.isObject(child) ? getNonEmptyValue(child as Record<string, string>).or(getFromMetaData) : getFromMetaData.or(getFromData as Option<string>);
-    return val.fold(() => Option.none(), (v: string) => Option.some({ [prop]: v }));
-  }).getOr({});
+  const getFromValueFirst = () => getFromData().bind((child) => {
+    return Type.isObject(child)
+      ? getNonEmptyValue(child as Record<string, string>).or(getFromMetaData())
+      : getFromMetaData().or(Option.from(child as string));
+  });
+
+  const getFromMetaFirst = () => getFromMetaData().or(getFromData().bind((child: Record<string, string> | string) => {
+    return Type.isObject(child)
+      ? getNonEmptyValue(child as Record<string, string>)
+      : Option.from(child as string);
+  }));
+
+  const val = prop === sourceInput ? getFromValueFirst() : getFromMetaFirst();
+  return val.fold(() => ({}), (v: string) => ({ [prop]: v }));
 };
 
-const getDimensions = (data: ApiData, metaData: Record<string, string>) => {
+const getDimensions = (data: MediaDialogData, metaData: Record<string, string>) => {
   const dimensions = {};
   Obj.get(data, 'dimensions').each((dims) => {
     Arr.each([ 'width', 'height' ] as ('width' | 'height')[], (prop) => {
@@ -62,9 +57,9 @@ const getDimensions = (data: ApiData, metaData: Record<string, string>) => {
   return dimensions;
 };
 
-const unwrap = (data: ApiData, sourceInput?: string): MediaData => {
+const unwrap = (data: MediaDialogData, sourceInput?: string): MediaData => {
   const metaData = sourceInput ? extractMeta(sourceInput, data).getOr({}) : {};
-  const get = getValue(data, metaData);
+  const get = getValue(data, metaData, sourceInput);
   return {
     ...get('source'),
     ...get('altsource'),
@@ -74,7 +69,7 @@ const unwrap = (data: ApiData, sourceInput?: string): MediaData => {
   } as any;
 };
 
-const wrap = (data: MediaData): ApiData => {
+const wrap = (data: MediaData): MediaDialogData => {
   const wrapped = Merger.merge(data, {
     source: { value: Obj.get(data, 'source').getOr('') },
     altsource: { value: Obj.get(data, 'altsource').getOr('') },
@@ -114,7 +109,7 @@ const getEditorData = function (editor: Editor): MediaData {
   return Merger.merge({ embed: snippet }, HtmlToData.htmlToData(Settings.getScripts(editor), snippet));
 };
 
-const addEmbedHtml = function (api: Types.Dialog.DialogInstanceApi<ApiData>, editor: Editor) {
+const addEmbedHtml = function (api: Types.Dialog.DialogInstanceApi<MediaDialogData>, editor: Editor) {
   return function (response: { url: string; html: string }) {
     // Only set values if a URL has been defined
     if (Type.isString(response.url) && response.url.trim().length > 0) {
@@ -173,7 +168,7 @@ const showDialog = function (editor: Editor) {
   const currentData = Cell<MediaData>(editorData);
   const initialData = wrap(editorData);
 
-  const handleSource = (prevData: MediaData, api: Types.Dialog.DialogInstanceApi<ApiData>) => {
+  const handleSource = (prevData: MediaData, api: Types.Dialog.DialogInstanceApi<MediaDialogData>) => {
     const serviceData = unwrap(api.getData(), 'source');
 
     // If a new URL is entered, then clear the embed html and fetch the new data
@@ -186,13 +181,13 @@ const showDialog = function (editor: Editor) {
     }
   };
 
-  const handleEmbed = (api: Types.Dialog.DialogInstanceApi<ApiData>) => {
+  const handleEmbed = (api: Types.Dialog.DialogInstanceApi<MediaDialogData>) => {
     const data = unwrap(api.getData());
     const dataFromEmbed = snippetToData(editor, data.embed);
     api.setData(wrap(dataFromEmbed));
   };
 
-  const handleUpdate = (api: Types.Dialog.DialogInstanceApi<ApiData>, sourceInput: string) => {
+  const handleUpdate = (api: Types.Dialog.DialogInstanceApi<MediaDialogData>, sourceInput: string) => {
     const data = unwrap(api.getData(), sourceInput);
     const embed = dataToHtml(editor, data);
     api.setData(wrap({
@@ -321,5 +316,6 @@ const showDialog = function (editor: Editor) {
 };
 
 export default {
-  showDialog
+  showDialog,
+  unwrap
 };
