@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added new `FloatingToolbar` component.
+- Added new vertical directionality for layouts
  
 ### Fixed
 - Improved `Docking` scroll performance by only calculating the offset origin as required.
