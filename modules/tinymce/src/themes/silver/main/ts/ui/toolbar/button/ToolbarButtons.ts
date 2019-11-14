@@ -384,7 +384,6 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
           classes: [ ToolbarButtonClasses.Button, 'tox-split-button__chevron' ],
         },
         buttonBehaviours: Behaviour.derive([
-          Replacing.config({ }),
           AddEventsBehaviour.config('attach-events', [
             AlloyEvents.runOnAttached((comp) => {
               const iconName = 'chevron-' + (VerticalDir.isBottomToTopDir(comp.element()) ? 'up' : 'down');

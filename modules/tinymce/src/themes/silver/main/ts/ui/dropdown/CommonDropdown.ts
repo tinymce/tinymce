@@ -128,7 +128,6 @@ const renderCommonDropdown = <T>(spec: CommonDropdownSpec<T>, prefix: string, sh
             innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons)
           },
           behaviours: Behaviour.derive([
-            Replacing.config({ }),
             AddEventsBehaviour.config('attach-event', [
               AlloyEvents.runOnAttached((comp) => {
                 const iconName = 'chevron-' + (VerticalDir.isBottomToTopDir(comp.element()) ? 'up' : 'down');
