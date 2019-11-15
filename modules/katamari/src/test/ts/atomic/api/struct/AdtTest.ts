@@ -1,12 +1,12 @@
 import { Adt } from 'ephox/katamari/api/Adt';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import fc from 'fast-check';
+import { UnitTest, Assert } from '@ephox/bedrock-client';
 import { console } from '@ephox/dom-globals';
 
-UnitTest.test('ADT Test', function () {
-  const checkInvalid = function (message, f) {
+UnitTest.test('ADT Test', () => {
+  const checkInvalid = (message, f) => {
     let error = false;
     try {
       f();
@@ -24,48 +24,48 @@ UnitTest.test('ADT Test', function () {
     }
   };
 
-  const checkInvalidGenerate = function (cases, message) {
-    checkInvalid('generate() did not throw an error. Input: "' + message + '\'', function () {
+  const checkInvalidGenerate = (cases, message) => {
+    checkInvalid('generate() did not throw an error. Input: "' + message + '\'', () => {
       Adt.generate(cases);
     });
   };
 
   checkInvalidGenerate({}, 'object instead of array');
   checkInvalidGenerate([], 'empty cases array');
-  checkInvalidGenerate(['f'], 'array contains strings');
-  checkInvalidGenerate([{}], 'empty case');
-  checkInvalidGenerate([{t: {}}], 'object case arguments');
-  checkInvalidGenerate([{cata: []}], 'case named cata');
-  checkInvalidGenerate([{a: []}, {a: []}], 'duplicate names');
+  checkInvalidGenerate([ 'f' ], 'array contains strings');
+  checkInvalidGenerate([ {} ], 'empty case');
+  checkInvalidGenerate([ { t: {} } ], 'object case arguments');
+  checkInvalidGenerate([ { cata: [] } ], 'case named cata');
+  checkInvalidGenerate([ { a: [] }, { a: [] } ], 'duplicate names');
   checkInvalidGenerate([
-     {
+    {
       one: [],
       two: []
-     }
-    ], 'two cases in one');
+    }
+  ], 'two cases in one');
 
   // A real Adt from the soldier project
   const soldierBlock = Adt.generate([
-    { none:     [] },
-    { root:     ['target', 'block'] },
-    { created:  ['target', 'block'] },
-    { actual:   ['target', 'block'] }
+    { none: [] },
+    { root: [ 'target', 'block' ] },
+    { created: [ 'target', 'block' ] },
+    { actual: [ 'target', 'block' ] }
   ]);
 
   const none = function () {
-    assert.eq(0, arguments.length);
+    Assert.eq('eq', 0, arguments.length);
   };
 
   const targetStr = 'target';
   const blockStr = 'block';
 
   const tag = function (target, block) {
-    assert.eq(2, arguments.length);
-    assert.eq(targetStr, target);
-    assert.eq(blockStr, block);
+    Assert.eq('eq', 2, arguments.length);
+    Assert.eq('eq', targetStr, target);
+    Assert.eq('eq', blockStr, block);
   };
 
-  let die = function () {
+  let die = () => {
     // this is used when an error is expected, so we need to use fancy tricks
     // to actually fail
     throw new Error('ADTWHOOPS');
@@ -77,104 +77,90 @@ UnitTest.test('ADT Test', function () {
   const adtCreated = soldierBlock.created(targetStr, blockStr);
   const adtActual = soldierBlock.actual(targetStr, blockStr);
 
-  checkInvalid('tag passed to none', function () {
+  checkInvalid('tag passed to none', () => {
     adtNone.fold(tag, die, die, die);
   });
 
-  checkInvalid('none passed to root', function () {
+  checkInvalid('none passed to root', () => {
     adtRoot.fold(die, none, die, die);
   });
 
-  checkInvalid('none passed to created', function () {
+  checkInvalid('none passed to created', () => {
     adtCreated.fold(die, die, none, die);
   });
 
-  checkInvalid('none passed to actual', function () {
+  checkInvalid('none passed to actual', () => {
     adtActual.fold(die, die, die, none);
   });
 
   // valid checks, so we can redefine die to be sensible now
   die = Fun.die('Well that was unexpected');
 
-  adtNone.fold(   none, die, die, die);
-  adtRoot.fold(    die, tag, die, die);
-  adtCreated.fold( die, die, tag, die);
-  adtActual.fold(  die, die, die, tag);
+  adtNone.fold(none, die, die, die);
+  adtRoot.fold(die, tag, die, die);
+  adtCreated.fold(die, die, tag, die);
+  adtActual.fold(die, die, die, tag);
 
   const cheese = Fun.constant('cheese');
 
-  assert.eq('cheese', adtNone.fold(   cheese,    die,    die,    die));
-  assert.eq('cheese', adtRoot.fold(      die, cheese,    die,    die));
-  assert.eq('cheese', adtCreated.fold(   die,    die, cheese,    die));
-  assert.eq('cheese', adtActual.fold(    die,    die,    die, cheese));
+  Assert.eq('eq', 'cheese', adtNone.fold(cheese, die, die, die));
+  Assert.eq('eq', 'cheese', adtRoot.fold(die, cheese, die, die));
+  Assert.eq('eq', 'cheese', adtCreated.fold(die, die, cheese, die));
+  Assert.eq('eq', 'cheese', adtActual.fold(die, die, die, cheese));
+});
 
-  const newAdt = Adt.generate([
-    { nothing: [ ] },
-    { unknown: [ 'guesses' ] },
-    { exact: [ 'value', 'precision' ] }
-  ]);
+const newAdt = Adt.generate([
+  { nothing: [] },
+  { unknown: [ 'guesses' ] },
+  { exact: [ 'value', 'precision' ] }
+]);
 
-  const arbNothing = Jsc.constant(newAdt.nothing());
+const arbNothing = fc.constant(newAdt.nothing());
 
-  const arbUnknown = Jsc.array(Jsc.string).smap(function (guesses) {
-    return newAdt.unknown(guesses);
-  }, function (r) {
-    return r.match({
-      nothing: Fun.die('not a nothing'),
-      unknown: Fun.identity,
-      exact: Fun.die('not an exact')
-    });
-  });
+const arbUnknown = fc.array(fc.string()).map((guesses) => newAdt.unknown(guesses));
 
-  const arbExact = Jsc.tuple([Jsc.number, Jsc.number]).smap(function (arr) {
-    return newAdt.exact(arr[0], arr[1]);
-  }, function (r) {
-    return r.match({
-      nothing: Fun.die('not a nothing'),
-      unknown: Fun.die('not an unknown'),
-      exact (value, precision) { return [ value, precision ]; }
-    });
-  });
+const arbExact = fc.tuple(fc.integer(), fc.integer()).map((arr) => newAdt.exact(arr[0], arr[1]));
 
-  const arbAdt = Jsc.oneof([
-    arbNothing,
-    arbUnknown,
-    arbExact
-  ]);
+const arbAdt = fc.oneof(
+  arbNothing,
+  arbUnknown,
+  arbExact
+);
 
-  const allKeys = [ 'nothing', 'unknown', 'exact' ];
-  const arbKeys = Jsc.elements(allKeys);
+const allKeys = [ 'nothing', 'unknown', 'exact' ];
+const arbKeys = fc.constantFrom(...allKeys);
 
-  Jsc.property('Error is thrown if not all arguments are supplied', arbAdt, Jsc.nearray(arbKeys), function (subject, exclusions) {
-    const original = Arr.filter(allKeys, function (k) {
-      return !Arr.contains(exclusions, k);
-    });
+UnitTest.test('Error is thrown if not all arguments are supplied', () => {
+  fc.assert(fc.property(arbAdt, fc.array(arbKeys, 1, 40), (subject, exclusions) => {
+    const original = Arr.filter(allKeys, (k) => !Arr.contains(exclusions, k));
 
     try {
-      const branches = Arr.mapToObject(original, function () {
-        return Fun.identity;
-      });
+      const branches = Arr.mapToObject(original, () => Fun.identity);
       subject.match(branches);
       return false;
     } catch (err) {
       return err.message.indexOf('nothing') > -1;
     }
-  });
+  }));
+});
 
-  const record = function () {
-    return Array.prototype.slice.call(arguments, 0);
-  };
+const record = function () {
+  return Array.prototype.slice.call(arguments, 0);
+};
 
-  Jsc.property('adt.nothing.match should pass [ ]', arbNothing, function (subject) {
+UnitTest.test('adt.nothing.match should pass [ ]', () => {
+  fc.assert(fc.property(arbNothing, (subject) => {
     const contents = subject.match({
       nothing: record,
       unknown: Fun.die('should not be unknown'),
       exact: Fun.die('should not be exact')
     });
-    return Jsc.eq([ ], contents);
-  });
+    Assert.eq('eq', [], contents);
+  }));
+});
 
-  Jsc.property('adt.nothing.match should be same as fold', arbNothing, function (subject) {
+UnitTest.test('adt.nothing.match should be same as fold', () => {
+  fc.assert(fc.property(arbNothing, (subject) => {
     const matched = subject.match({
       nothing: record,
       unknown: Fun.die('should not be unknown'),
@@ -182,19 +168,23 @@ UnitTest.test('ADT Test', function () {
     });
 
     const folded = subject.fold(record, Fun.die('should not be unknown'), Fun.die('should not be exact'));
-    return Jsc.eq(matched, folded);
-  });
+    Assert.eq('eq', matched, folded);
+  }));
+});
 
-  Jsc.property('adt.unknown.match should pass 1 parameter: [ guesses ]', arbUnknown, function (subject) {
+UnitTest.test('adt.unknown.match should pass 1 parameter: [ guesses ]', () => {
+  fc.assert(fc.property(arbUnknown, (subject) => {
     const contents = subject.match({
       nothing: Fun.die('should not be nothing'),
       unknown: record,
       exact: Fun.die('should not be exact')
     });
-    return Jsc.eq(1, contents.length);
-  });
+    Assert.eq('eq', 1, contents.length);
+  }));
+});
 
-  Jsc.property('adt.unknown.match should be same as fold', arbUnknown, function (subject) {
+UnitTest.test('adt.unknown.match should be same as fold', () => {
+  fc.assert(fc.property(arbUnknown, (subject) => {
     const matched = subject.match({
       nothing: Fun.die('should not be nothing'),
       unknown: record,
@@ -202,19 +192,23 @@ UnitTest.test('ADT Test', function () {
     });
 
     const folded = subject.fold(Fun.die('should not be nothing'), record, Fun.die('should not be exact'));
-    return Jsc.eq(matched, folded);
-  });
+    Assert.eq('eq', matched, folded);
+  }));
+});
 
-  Jsc.property('adt.exact.match should pass 2 parameters [ value, precision ]', arbExact, function (subject) {
+UnitTest.test('adt.exact.match should pass 2 parameters [ value, precision ]', () => {
+  fc.assert(fc.property(arbExact, (subject) => {
     const contents = subject.match({
       nothing: Fun.die('should not be nothing'),
       unknown: Fun.die('should not be unknown'),
       exact: record
     });
-    return Jsc.eq(2, contents.length);
-  });
+    Assert.eq('eq', 2, contents.length);
+  }));
+});
 
-  Jsc.property('adt.exact.match should be same as fold', arbExact, function (subject) {
+UnitTest.test('adt.exact.match should be same as fold', () => {
+  fc.assert(fc.property(arbExact, (subject) => {
     const matched = subject.match({
       nothing: Fun.die('should not be nothing'),
       unknown: Fun.die('should not be unknown'),
@@ -222,10 +216,12 @@ UnitTest.test('ADT Test', function () {
     });
 
     const folded = subject.fold(Fun.die('should not be nothing'), Fun.die('should not be unknown'), record);
-    return Jsc.eq(matched, folded);
-  });
+    Assert.eq('eq', matched, folded);
+  }));
+});
 
-  Jsc.property('adt.match must have the right arguments, not just the right number', arbAdt, function (subject) {
+UnitTest.test('adt.match must have the right arguments, not just the right number', () => {
+  fc.assert(fc.property(arbAdt, (subject) => {
     try {
       subject.match({
         not: Fun.identity,
@@ -236,5 +232,5 @@ UnitTest.test('ADT Test', function () {
     } catch (err) {
       return err.message.indexOf('nothing') > -1;
     }
-  });
+  }));
 });

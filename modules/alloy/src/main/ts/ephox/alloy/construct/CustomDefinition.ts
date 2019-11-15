@@ -50,6 +50,7 @@ const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail<any>, any> => {
         'input': [ 'alloy.base.behaviour', 'representing', 'streaming', 'invalidating' ],
         'alloy.system.detached': [ 'alloy.base.behaviour', 'representing', 'item-events', 'tooltipping' ],
         'mousedown': [ 'focusing', 'alloy.base.behaviour', 'item-type-events' ],
+        'touchstart': [ 'focusing', 'alloy.base.behaviour', 'item-type-events' ],
         'mouseover': [ 'item-type-events', 'tooltipping' ]
       }),
       ValueSchema.anyValue()

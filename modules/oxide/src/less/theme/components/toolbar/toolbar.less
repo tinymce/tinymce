@@ -61,6 +61,11 @@
     margin-top: -1px; // Temporary fix to hide menubar bottom border below the toolbar
   }
 
+  .tox-toolbar--scrolling {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
   .tox-pop .tox-toolbar {
     border-width: 0;
   }
@@ -73,13 +78,6 @@
   .tox-tbtn__icon-wrap {
     //
   }
-}
-
-// On touch devices we want toolbars to sidescroll, instead of wrapping to many rows
-.tox.tox-platform-touch .tox-editor-container .tox-toolbar,
-.tox.tox-tinymce-aux.tox-platform-touch .tox-toolbar {
-  flex-wrap: nowrap;
-  overflow-x: auto;
 }
 
 // Add a top border when toolbar_location is bottom and menubar is hidden

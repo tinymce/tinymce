@@ -6,14 +6,14 @@
  */
 
 import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec } from '@ephox/alloy';
-import { console, HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
+import { HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css } from '@ephox/sugar';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import { getHeightSetting, getMinHeightSetting, getMinWidthSetting, getMultipleToolbarsSetting, getToolbarDrawer, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, ToolbarDrawer, isToolbarLocationTop, useFixedContainer, getToolbarGrouped } from './api/Settings';
+import { getMultipleToolbarsSetting, getToolbarDrawer, getToolbarGrouped, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, isToolbarLocationTop, useFixedContainer } from './api/Settings';
+import TouchEvents from './api/TouchEvents';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -24,12 +24,12 @@ import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterCont
 import * as StaticHeader from './ui/header/StaticHeader';
 import * as StickyHeader from './ui/header/StickyHeader';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
+import TableSelectorHandles from './ui/selector/TableSelectorHandles';
 import * as Sidebar from './ui/sidebar/Sidebar';
+import * as EditorSize from './ui/sizing/EditorSize';
 import Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
-import TableSelectorHandles from './ui/selector/TableSelectorHandles';
 import * as Throbber from './ui/throbber/Throbber';
-import TouchEvents from './api/TouchEvents';
 
 export interface RenderInfo {
   mothership: Gui.GuiSystem;
@@ -77,7 +77,7 @@ export interface ToolbarGroupSetting {
 
 export interface RenderArgs {
   targetNode: HTMLElement;
-  height: number;
+  height: string;
 }
 
 const setup = (editor: Editor): RenderInfo => {
@@ -159,7 +159,7 @@ const setup = (editor: Editor): RenderInfo => {
     }
   });
 
-  const toolbarDrawer = (editor: Editor) => getToolbarDrawer(editor);
+  const toolbarDrawer = getToolbarDrawer(editor);
 
   const partToolbar: AlloySpec = OuterContainer.parts().toolbar({
     dom: {
@@ -171,7 +171,7 @@ const setup = (editor: Editor): RenderInfo => {
     onEscape() {
       editor.focus();
     },
-    split: toolbarDrawer(editor),
+    split: toolbarDrawer,
     lazyToolbar,
     lazyMoreButton,
     lazyHeader: () => lazyHeader().getOrDie('Could not find header element')
@@ -182,7 +182,8 @@ const setup = (editor: Editor): RenderInfo => {
       tag: 'div',
       classes: [ 'tox-toolbar-overlord' ]
     },
-    onEscape: () => { }
+    onEscape: () => { },
+    split: toolbarDrawer
   });
 
   const partSocket: AlloySpec = OuterContainer.parts().socket({
@@ -227,14 +228,9 @@ const setup = (editor: Editor): RenderInfo => {
   const hasMultipleToolbar = isMultipleToolbars(editor);
   const hasToolbar = isToolbarEnabled(editor);
   const hasMenubar = isMenubarEnabled(editor);
-  const hasToolbarDrawer = toolbarDrawer(editor) !== ToolbarDrawer.default;
 
   const getPartToolbar = () => {
     if (hasMultipleToolbar) {
-      if (hasToolbarDrawer) {
-        // tslint:disable-next-line:no-console
-        console.warn('Toolbar drawer cannot be applied when multiple toolbars are active');
-      }
       return [ partMultipleToolbar ];
     } else if (hasToolbar) {
       return [ partToolbar ];
@@ -346,33 +342,20 @@ const setup = (editor: Editor): RenderInfo => {
     return { channels };
   };
 
-  const setEditorSize = (elm) => {
+  const setEditorSize = () => {
     // Set height and width if they were given, though height only applies to iframe mode
-    const DOM = DOMUtils.DOM;
-
-    const baseWidth = editor.getParam('width', DOM.getStyle(elm, 'width'));
-    const baseHeight = getHeightSetting(editor);
-    const minWidth = getMinWidthSetting(editor);
-    const minHeight = getMinHeightSetting(editor);
-
-    const parsedWidth = Utils.parseToInt(baseWidth).bind((w) => {
-      return Utils.numToPx(minWidth.map((mw) => Math.max(w, mw)));
-    }).getOr(Utils.numToPx(baseWidth));
-
-    const parsedHeight = Utils.parseToInt(baseHeight).bind((h) => {
-      return minHeight.map((mh) => Math.max(h, mh));
-    }).getOr(baseHeight);
-
-    const stringWidth = Utils.numToPx(parsedWidth);
-    const widthProperty = editor.inline ? 'max-width' : 'width';
-    if (Css.isValidValue('div', widthProperty, stringWidth)) {
-      Css.set(outerContainer.element(), widthProperty, stringWidth);
-    }
+    const parsedHeight = Utils.numToPx(EditorSize.getHeightWithFallback(editor));
+    const parsedWidth = Utils.numToPx(EditorSize.getWidthWithFallback(editor));
 
     if (!editor.inline) {
-      const stringHeight = Utils.numToPx(parsedHeight);
-      if (Css.isValidValue('div', 'height', stringHeight)) {
-        Css.set(outerContainer.element(), 'height', stringHeight);
+      // Update the width
+      if (Css.isValidValue('div', 'width', parsedWidth)) {
+        Css.set(outerContainer.element(), 'width', parsedWidth);
+      }
+
+      // Update the height
+      if (Css.isValidValue('div', 'height', parsedHeight)) {
+        Css.set(outerContainer.element(), 'height', parsedHeight);
       } else {
         Css.set(outerContainer.element(), 'height', '200px');
       }
@@ -413,7 +396,7 @@ const setup = (editor: Editor): RenderInfo => {
     TableSelectorHandles.setup(editor, sink);
 
     const elm = editor.getElement();
-    const height = setEditorSize(elm);
+    const height = setEditorSize();
 
     const uiComponents: RenderUiComponents = { mothership, uiMothership, outerContainer };
     const args: RenderArgs = { targetNode: elm, height };

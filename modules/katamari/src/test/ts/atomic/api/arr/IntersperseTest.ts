@@ -2,7 +2,7 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import * as Jam from 'ephox/katamari/api/Jam';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import fc from 'fast-check';
-import { negativeInteger } from 'ephox/katamari/test/arb/ArbDataTypes';
+import { arbNegativeInteger } from 'ephox/katamari/test/arb/ArbDataTypes';
 
 UnitTest.test('Intersperse', () => {
   const check = (expected, input, delimiter) => {
@@ -53,7 +53,7 @@ UnitTest.test('Every odd element matches delimiter', () => {
 UnitTest.test('Filtering out delimiters (assuming different type to array to avoid removing original array) should equal original', () => {
   fc.assert(fc.property(
     fc.array(fc.nat()),
-    negativeInteger(),
+    arbNegativeInteger(),
     (arr, delimiter) => {
       const actual = Jam.intersperse(arr, delimiter);
       const filtered = Arr.filter(actual, (a) => a !== delimiter);

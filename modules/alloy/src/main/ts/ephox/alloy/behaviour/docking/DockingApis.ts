@@ -1,4 +1,4 @@
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Thunk } from '@ephox/katamari';
 import { Classes, Css, Scroll, Traverse } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
@@ -51,7 +51,9 @@ const refreshInternal = (component: AlloyComponent, config: DockingConfig, state
   const elem = component.element();
   const doc = Traverse.owner(elem);
   const scroll = Scroll.get(doc);
-  const origin = OffsetOrigin.getOrigin(elem);
+  // PERFORMANCE: OffsetOrigin.getOrigin() is a little bit slow for scrolling performance, so
+  // only do the calculations as required and cache the result to avoid multiple calls
+  const lazyOrigin = Thunk.cached(() => OffsetOrigin.getOrigin(elem));
 
   // If docked then check if we need to hide/show the component
   const isDocked = state.isDocked();
@@ -59,16 +61,16 @@ const refreshInternal = (component: AlloyComponent, config: DockingConfig, state
     updateVisibility(component, config, state, viewport);
   }
 
-  Dockables.getMorph(component, config, viewport, scroll, origin).each((morph) => {
+  Dockables.getMorph(component, config, viewport, scroll, lazyOrigin).each((morph) => {
     // Toggle the docked state
     state.setDocked(!isDocked);
     // Apply the morph result
     morph.fold(
       () => morphToStatic(component, config),
-      (x, y) => morphToCoord(component, config, scroll, origin, DragCoord.absolute(x, y)),
+      (x, y) => morphToCoord(component, config, scroll, lazyOrigin(), DragCoord.absolute(x, y)),
       (x, y) => {
         updateVisibility(component, config, state, viewport, true);
-        morphToCoord(component, config, scroll, origin, DragCoord.fixed(x, y));
+        morphToCoord(component, config, scroll, lazyOrigin(), DragCoord.fixed(x, y));
       },
     );
   });

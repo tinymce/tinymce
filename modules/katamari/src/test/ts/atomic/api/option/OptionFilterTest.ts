@@ -3,8 +3,8 @@ import { Option } from 'ephox/katamari/api/Option';
 import { tOption } from 'ephox/katamari/api/OptionInstances';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
-import Jsc from '@ephox/wrap-jsverify';
-import { optionSome as arbOptionSome } from 'ephox/katamari/test/arb/ArbDataTypes';
+import fc from 'fast-check';
+import { arbOptionSome as arbOptionSome } from 'ephox/katamari/test/arb/ArbDataTypes';
 
 const { die, constant } = Fun;
 const { some, none } = Option;
@@ -22,22 +22,32 @@ UnitTest.test('Option.filter', () => {
   Assert.eq('filter #9', some(6), some(6).filter(Fun.constant(true)), tOption(tNumber));
   Assert.eq('filter', 5, some(5).filter(Fun.constant(true)).getOrDie());
   Assert.eq('filter', true, some(5).filter(Fun.constant(false)).isNone());
+});
 
-  Jsc.property('Checking some(x).filter(_ -> false) === none', arbOptionSome, function (opt) {
-    return Jsc.eq(true, tOption().eq(
+UnitTest.test('Checking some(x).filter(_ -> false) === none', () => {
+  fc.assert(fc.property(arbOptionSome(fc.integer()), (opt) => {
+    Assert.eq('eq',  true, tOption().eq(
       none(),
       opt.filter(Fun.constant(false))));
-  });
+  }));
+});
 
-  Jsc.property('Checking some(x).filter(_ -> true) === some(x)', 'json', function (x) {
-    return Jsc.eq(true, tOption().eq(
+UnitTest.test('Checking some(x).filter(_ -> true) === some(x)', () => {
+  fc.assert(fc.property(fc.integer(), (x) => {
+    Assert.eq('eq',  true, tOption().eq(
       some(x),
       some(x).filter(Fun.constant(true))
     ));
-  });
+  }));
+});
 
-  Jsc.property('Checking some(x).filter(f) === some(x) iff. f(x)', 'json', Jsc.fun(Jsc.bool), function (json, f) {
-    const opt = some(json);
-    return f(json) === true ? Jsc.eq(json, opt.filter(f).getOrDie()) : Jsc.eq(true, opt.filter(f).isNone());
-  });
+UnitTest.test('Checking some(x).filter(f) === some(x) iff. f(x)', () => {
+  fc.assert(fc.property(fc.integer(), fc.func(fc.boolean()), (i, f) => {
+    const opt = some(i);
+    if (f(i)) {
+      Assert.eq('filter true', Option.some(i), opt.filter(f), tOption(tNumber));
+    } else {
+      Assert.eq('filter false', Option.none(), opt.filter(f), tOption(tNumber));
+    }
+  }));
 });

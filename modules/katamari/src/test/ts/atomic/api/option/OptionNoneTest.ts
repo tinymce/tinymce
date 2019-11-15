@@ -1,81 +1,92 @@
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Option } from 'ephox/katamari/api/Option';
 import { tOption } from 'ephox/katamari/api/OptionInstances';
-import Jsc from '@ephox/wrap-jsverify';
+import fc from 'fast-check';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
 
 const { tNumber } = Testable;
 
-UnitTest.test('OptionNoneTest', () => {
+UnitTest.test('Option.none: unit tests', () => {
+  const s = Option.none<number>();
+  Assert.throws('getOrDie dies', () => {
+    s.getOrDie('Died!');
+  });
+  Assert.eq('or', 6, s.or(Option.some(6)).getOrDie());
+  Assert.eq('orThunk', 6, s.orThunk(() => Option.some(6)).getOrDie());
 
-  const testSanity = () => {
-    const s = Option.none<number>();
-    Assert.throws('getOrDie dies', () => { s.getOrDie('Died!'); });
-    Assert.eq('or', 6, s.or(Option.some(6)).getOrDie());
-    Assert.eq('orThunk', 6, s.orThunk(() => Option.some(6)).getOrDie());
+  Assert.eq('map is none', true, s.map((v) => v * 2).isNone());
+  Assert.eq('map bottom is none', true, s.map(Fun.die('boom')).isNone());
 
-    Assert.eq('map is none', true, s.map((v) => v * 2).isNone());
-    Assert.eq('map bottom is none', true, s.map(Fun.die('boom')).isNone());
+  Assert.eq('bind none some is none', true, s.bind((v) => Option.some('test' + v)).isNone());
 
-    Assert.eq('bind none some is none', true, s.bind((v) => Option.some('test' + v)).isNone());
+  Assert.eq('from null is none', false, Option.from(null).isSome());
+  Assert.eq('from undefined is none', false, Option.from(undefined).isSome());
 
-    Assert.eq('from null is none', false, Option.from(null).isSome());
-    Assert.eq('from undefined is none', false, Option.from(undefined).isSome());
+  Assert.eq('none or some(7) is some(s)', true, Option.none().or(Option.some(7)).equals(Option.some(7)));
+  Assert.eq('none or none is none', true, Option.none().or(Option.none()).equals(Option.none()));
 
-    Assert.eq('none or some(7) is some(s)', true, Option.none().or(Option.some(7)).equals(Option.some(7)));
-    Assert.eq('none or none is none', true, Option.none().or(Option.none()).equals(Option.none()));
+  Assert.eq('none to array is empty array', [], Option.none().toArray());
 
-    Assert.eq('none to array is empty array', [], Option.none().toArray());
+  Assert.eq('fold #1', 'zz', Option.none().fold(() => 'zz', Fun.die('boom')));
+  Assert.eq('fold #2', [], Option.none().fold(function () {
+    return Array.prototype.slice.call(arguments);
+  }, Fun.die('boom')));
 
-    Assert.eq('fold #1', 'zz', Option.none().fold(() => 'zz', Fun.die('boom')));
-    Assert.eq('fold #2', [], Option.none().fold(function () { return Array.prototype.slice.call(arguments); }, Fun.die('boom')));
+  Assert.eq('fold #3', 'b', Option.none().fold(Fun.constant('b'), Fun.die('boom')));
+  Assert.eq('bind', true, Option.none().bind(Fun.die('boom')).isNone());
+  Assert.eq('each', undefined, Option.none().each(Fun.die('boom')));
 
-    Assert.eq('fold #3', 'b', Option.none().fold(Fun.constant('b'), Fun.die('boom')));
-    Assert.eq('bind', true, Option.none().bind(Fun.die('boom')).isNone());
-    Assert.eq('each', undefined, Option.none().each(Fun.die('boom')));
+  Assert.eq('forall none is true', true, Option.none().forall(Fun.die('boom')));
+  Assert.eq('exists none is false', false, Option.none().exists(Fun.die('boom')));
 
-    Assert.eq('forall none is true', true, Option.none().forall(Fun.die('boom')));
-    Assert.eq('exists none is false', false, Option.none().exists(Fun.die('boom')));
+  Assert.eq('toString', 'none()', Option.none().toString());
+});
 
-    Assert.eq('toString', 'none()', Option.none().toString());
-  };
+UnitTest.test('Checking none.fold(_ -> x, die) === x', () => {
+  fc.assert(fc.property(fc.integer(), (i) => {
+    const actual = Option.none<string>().fold(Fun.constant(i), Fun.die('Should not die'));
+    Assert.eq('eq', i, actual);
+  }));
+});
 
-  const testSpecs = () => {
-    Jsc.property('Checking none.fold(_ -> x, die) === x', 'json', (json: any) => {
-      const actual = Option.none<string>().fold(Fun.constant(json), Fun.die('Should not die'));
-      return Jsc.eq(json, actual);
+UnitTest.test('Checking none.is === false', () => {
+  fc.assert(fc.property(fc.integer(), (v) => {
+    Assert.eq('none is', false, Option.none<number>().is(v));
+  }));
+});
+
+UnitTest.test('Checking none.getOr(v) === v', () => {
+  fc.assert(fc.property(fc.integer(), (i) => {
+    Assert.eq('eq', i, Option.none<any>().getOr(i));
+  }));
+});
+
+UnitTest.test('Checking none.getOrThunk(_ -> v) === v', () => {
+  fc.assert(fc.property(fc.func(fc.integer()), (thunk) => {
+    Assert.eq('eq', thunk(), Option.none<number>().getOrThunk(thunk));
+  }));
+});
+
+UnitTest.test('Checking none.getOrDie() always throws', () => {
+  // Require non empty string of msg falsiness gets in the way.
+  fc.assert(fc.property(fc.string(1, 40), (s) => {
+    Assert.throws('getOrDie', () => {
+      Option.none().getOrDie(s);
     });
+  }));
+});
 
-    Jsc.property('Checking none.is === false', 'json', (v: any) =>
-      Jsc.eq(false, Option.none<any>().is(v)));
+UnitTest.test('Checking none.or(oSomeValue) === oSomeValue', () => {
+  fc.assert(fc.property(fc.integer(), (i) => {
+    const output = Option.none().or(Option.some(i));
+    Assert.eq('eq', true, output.is(i));
+  }));
+});
 
-    Jsc.property('Checking none.getOr(v) === v', 'json', (json: any) => Jsc.eq(json, Option.none<any>().getOr(json)));
-
-    Jsc.property('Checking none.getOrThunk(_ -> v) === v', Jsc.fun(Jsc.json),
-      (thunk: () => any) => Jsc.eq(thunk(), Option.none<any>().getOrThunk(thunk)));
-
-    // Require non empty string of msg falsiness gets in the way.
-    Jsc.property('Checking none.getOrDie() always throws', Jsc.nestring, (s) => {
-      try {
-        Option.none().getOrDie(s);
-        return false;
-      } catch (err) {
-        return Jsc.eq(s, err.message);
-      }
-    });
-
-    Jsc.property('Checking none.or(oSomeValue) === oSomeValue', 'json', (json) => {
-      const output = Option.none().or(Option.some(json));
-      return Jsc.eq(true, output.is(json));
-    });
-
-    Jsc.property('Checking none.orThunk(_ -> v) === v', 'json', (json) => {
-      const output = Option.none().orThunk(() => Option.some(json));
-      return Jsc.eq(true, output.is(json));
-    });
-  };
-
-  testSanity();
-  testSpecs();
+UnitTest.test('Checking none.orThunk(_ -> v) === v', () => {
+  fc.assert(fc.property(fc.integer(), (i) => {
+    const output = Option.none().orThunk(() => Option.some(i));
+    Assert.eq('eq', true, output.is(i));
+  }));
 });

@@ -1,6 +1,6 @@
 import * as Thunk from 'ephox/katamari/api/Thunk';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import fc from 'fast-check';
+import { UnitTest, Assert } from '@ephox/bedrock-client';
 
 UnitTest.test('ThunkTest', function () {
   const testSanity = function () {
@@ -10,29 +10,26 @@ UnitTest.test('ThunkTest', function () {
       return args;
     });
     const r1 = f('a');
-    assert.eq(['a'], args);
-    assert.eq(['a'], r1);
+    Assert.eq('eq', [ 'a' ], args);
+    Assert.eq('eq', [ 'a' ], r1);
     const r2 = f('b');
-    assert.eq(['a'], args);
-    assert.eq(['a'], r2);
+    Assert.eq('eq', [ 'a' ], args);
+    Assert.eq('eq', [ 'a' ], r2);
   };
+});
 
-  const testSpecs = function () {
-    Jsc.property('Thunk.cached counter', Jsc.json, Jsc.fun(Jsc.json), Jsc.json, function (a: any, f: (a: any) => any, b: any) {
-      let counter = 0;
-      const thunk = Thunk.cached(function (x) {
-        counter++;
-        return {
-          counter,
-          output: f(x)
-        };
-      });
-      const value = thunk(a);
-      const other = thunk(b);
-      return Jsc.eq(value, other);
+UnitTest.test('Thunk.cached counter', () => {
+  fc.assert(fc.property(fc.json(), fc.func(fc.json()), fc.json(), function (a, f, b) {
+    let counter = 0;
+    const thunk = Thunk.cached(function (x) {
+      counter++;
+      return {
+        counter,
+        output: f(x)
+      };
     });
-  };
-
-  testSanity();
-  testSpecs();
+    const value = thunk(a);
+    const other = thunk(b);
+    Assert.eq('eq', value, other);
+  }));
 });

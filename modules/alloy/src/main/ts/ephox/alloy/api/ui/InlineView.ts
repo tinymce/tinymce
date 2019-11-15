@@ -118,8 +118,10 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
     }));
   };
   const hide = (sandbox: AlloyComponent) => {
-    Representing.setValue(sandbox, Option.none());
-    Sandboxing.close(sandbox);
+    if (Sandboxing.isOpen(sandbox)) {
+      Representing.setValue(sandbox, Option.none());
+      Sandboxing.close(sandbox);
+    }
   };
   const getContent = (sandbox: AlloyComponent): Option<AlloyComponent> => {
     return Sandboxing.getState(sandbox);

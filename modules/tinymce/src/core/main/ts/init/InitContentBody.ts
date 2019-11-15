@@ -24,6 +24,7 @@ import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
+import NodeType from '../dom/NodeType';
 import ForceBlocks from '../ForceBlocks';
 import KeyboardOverrides from '../keyboard/KeyboardOverrides';
 import { NodeChange } from '../NodeChange';
@@ -32,6 +33,7 @@ import * as MultiClickSelection from '../selection/MultiClickSelection';
 import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import Quirks from '../util/Quirks';
+
 declare const escape: any;
 
 const DOM = DOMUtils.DOM;
@@ -147,8 +149,13 @@ const moveSelectionToFirstCaretPosition = (editor: Editor) => {
   // We don't do this on inline because then it selects the editor container
   // This must run AFTER editor.focus!
   const root = editor.dom.getRoot();
-  if (!editor.inline && !hasAnyRanges(editor)) {
-    CaretFinder.firstPositionIn(root).each((pos: CaretPosition) => editor.selection.setRng(pos.toRange()));
+  if (!editor.inline && (!hasAnyRanges(editor) || editor.selection.getStart(true) === root)) {
+    CaretFinder.firstPositionIn(root).each((pos: CaretPosition) => {
+      const node = pos.getNode();
+      // If a table is the first caret pos, then walk down one more level
+      const caretPos = NodeType.isTable(node) ? CaretFinder.firstPositionIn(node).getOr(pos) : pos;
+      editor.selection.setRng(caretPos.toRange());
+    });
   }
 };
 

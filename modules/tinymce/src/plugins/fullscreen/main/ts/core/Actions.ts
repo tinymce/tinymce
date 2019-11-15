@@ -7,10 +7,10 @@
 import { document, window } from '@ephox/dom-globals';
 import { Fun, Singleton } from '@ephox/katamari';
 import { Css, Element, VisualViewport } from '@ephox/sugar';
-import Events from '../api/Events';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
+import Events from '../api/Events';
 import Thor from './Thor';
 
 const DOM = DOMUtils.DOM;
@@ -28,56 +28,55 @@ const setScrollPos = function (pos) {
   window.scrollTo(pos.x, pos.y);
 };
 
-/* tslint:disable-next-line:no-string-literal */
-const visualViewport: VisualViewport.VisualViewport = window['visualViewport'];
+const viewportUpdate = VisualViewport.get().fold(
+  () => ({ bind: Fun.noop, unbind: Fun.noop }),
+  (visualViewport) => {
+    const editorContainer = Singleton.value<Element>();
+    const resizeBinder = Singleton.unbindable();
+    const scrollBinder = Singleton.unbindable();
 
-// Experiment is for ipadOS 13 only at this stage. Chrome supports this on desktop, and ipadOS cannot be UA detected, so restrict to Safari.
-const isSafari = Env.browser.isSafari();
+    const refreshScroll = () => {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    };
 
-const viewportUpdate = !isSafari || visualViewport === undefined ? { bind: Fun.noop, unbind: Fun.noop, update: Fun.noop } : (() => {
-  const editorContainer = Singleton.value<Element>();
+    const refreshVisualViewport = () => {
+      window.requestAnimationFrame(() => {
+        editorContainer.on((container) => Css.setAll(container, {
+          top: visualViewport.offsetTop + 'px',
+          left: visualViewport.offsetLeft + 'px',
+          height: visualViewport.height + 'px',
+          width: visualViewport.width + 'px'
+        }));
+      });
+    };
 
-  const refreshScroll = () => {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-  };
+    const update = Delay.throttle(() => {
+      refreshScroll();
+      refreshVisualViewport();
+    }, 50);
 
-  const refreshVisualViewport = () => {
-    window.requestAnimationFrame(() => {
-      editorContainer.on((container) => Css.setAll(container, {
-        top: visualViewport.offsetTop + 'px',
-        left: visualViewport.offsetLeft + 'px',
-        height: visualViewport.height + 'px',
-        width: visualViewport.width + 'px'
-      }));
-    });
-  };
+    const bind = (element) => {
+      editorContainer.set(element);
+      update();
+      resizeBinder.set(VisualViewport.bind('resize', update));
+      scrollBinder.set(VisualViewport.bind('scroll', update));
+    };
 
-  const update = Delay.throttle(() => {
-    refreshScroll();
-    refreshVisualViewport();
-  }, 50);
+    const unbind = () => {
+      editorContainer.on(() => {
+        resizeBinder.clear();
+        scrollBinder.clear();
+      });
+      editorContainer.clear();
+    };
 
-  const bind = (element) => {
-    editorContainer.set(element);
-    update();
-    visualViewport.addEventListener('resize', update);
-    visualViewport.addEventListener('scroll', update);
-  };
-
-  const unbind = () => {
-    editorContainer.on(() => {
-      visualViewport.removeEventListener('scroll', update);
-      visualViewport.removeEventListener('resize', update);
-    });
-    editorContainer.clear();
-  };
-
-  return {
-    bind,
-    unbind
-  };
-})();
+    return {
+      bind,
+      unbind
+    };
+  }
+);
 
 const toggleFullscreen = function (editor, fullscreenState) {
   const body = document.body;
