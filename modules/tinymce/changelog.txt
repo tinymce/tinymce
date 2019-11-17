@@ -27,6 +27,8 @@ Version 5.1.2 (TBD)
     Fixed inline toolbars collapsing when using sliding toolbars #TINY-4389
     Fixed block textpatterns so that spaces and NBSPs in patterns are interchangeable #TINY-4378
     Fixed backspace not merging blocks when the last element in the previous block was a contenteditable="false" element #TINY-4235
+    Fixed toolbar buttons that only contain text overlapping on mobile devices #TINY-4395
+    Fixed quickbars quickimage picker not working on mobile #TINY-4377
 Version 5.1.1 (2019-10-28)
     Fixed font formats containing spaces being wrapped in `&quot;` entities instead of single quotes #TINY-4275
     Fixed alert and confirm dialogs losing focus when clicked #TINY-4248

@@ -6,26 +6,34 @@
  */
 
 import Promise from 'tinymce/core/api/util/Promise';
-import { document } from '@ephox/dom-globals';
+import { document, File, HTMLInputElement } from '@ephox/dom-globals';
+import Editor from 'tinymce/core/api/Editor';
 
-const pickFile = function () {
-  return new Promise(function (resolve) {
-    let fileInput;
-
-    fileInput = document.createElement('input');
+const pickFile = (editor: Editor) => {
+  return new Promise((resolve: (files: File[]) => void) => {
+    const fileInput: HTMLInputElement = document.createElement('input');
     fileInput.type = 'file';
     fileInput.style.position = 'fixed';
-    fileInput.style.left = 0;
-    fileInput.style.top = 0;
-    fileInput.style.opacity = 0.001;
+    fileInput.style.left = '0';
+    fileInput.style.top = '0';
+    fileInput.style.opacity = '0.001';
     document.body.appendChild(fileInput);
 
-    fileInput.onchange = function (e) {
-      resolve(Array.prototype.slice.call(e.target.files));
+    const changeHandler = (e) => {
+      resolve(Array.prototype.slice.call((e.target as any).files));
     };
 
+    fileInput.addEventListener('change', changeHandler);
+
+    const cancelHandler = () => {
+      resolve([]);
+      fileInput.parentNode.removeChild(fileInput);
+      editor.off('focusin remove', cancelHandler);
+    };
+
+    editor.on('focusin remove', cancelHandler);
+
     fileInput.click();
-    fileInput.parentNode.removeChild(fileInput);
   });
 };
 
