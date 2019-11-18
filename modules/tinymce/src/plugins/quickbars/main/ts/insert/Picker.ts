@@ -5,9 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Promise from 'tinymce/core/api/util/Promise';
 import { document, File, HTMLInputElement } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
+import Delay from 'tinymce/core/api/util/Delay';
+import Promise from 'tinymce/core/api/util/Promise';
 
 const pickFile = (editor: Editor) => {
   return new Promise((resolve: (files: File[]) => void) => {
@@ -25,9 +27,19 @@ const pickFile = (editor: Editor) => {
 
     fileInput.addEventListener('change', changeHandler);
 
-    const cancelHandler = () => {
-      resolve([]);
-      fileInput.parentNode.removeChild(fileInput);
+    const cancelHandler = (e) => {
+      const cleanup = () => {
+        resolve([]);
+        fileInput.parentNode.removeChild(fileInput);
+      };
+
+      // Android will fire focusin before the input change event
+      // so we need to do a slight delay to get outside the event loop
+      if (Env.os.isAndroid() && e.type !== 'remove') {
+        Delay.setEditorTimeout(editor, cleanup, 0);
+      } else {
+        cleanup();
+      }
       editor.off('focusin remove', cancelHandler);
     };
 
