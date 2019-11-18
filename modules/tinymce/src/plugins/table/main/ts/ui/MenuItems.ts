@@ -117,7 +117,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
         if (Node.name(targets.element()) === 'caption') {
           return 'tableprops deletetable';
         } else {
-          return 'cell row column | advtablesort tableprops deletetable';
+          return 'cell row column | advtablesort | tableprops deletetable';
         }
       });
     }
