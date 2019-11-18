@@ -21,11 +21,11 @@ const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern) => {
   // of the pattern and then remove all elements between the start/end range
   const firstTextNode = TextSearch.textAfter(block, 0, block);
   firstTextNode.each((spot) => {
-    const node = spot.node;
+    const node = spot.container;
     TextSearch.scanRight(node, pattern.start.length, block).each((end) => {
       const rng = dom.createRng();
       rng.setStart(node, 0);
-      rng.setEnd(end.node, end.offset);
+      rng.setEnd(end.container, end.offset);
 
       Utils.deleteRng(dom, rng, (e: Node) => e === block);
     });

@@ -9,8 +9,8 @@ import { Node, Text } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import TextSeeker from 'tinymce/core/api/dom/TextSeeker';
-import { isText } from '../utils/Utils';
 import * as Spot from '../utils/Spot';
+import { isText } from '../utils/Utils';
 
 const DOM = DOMUtils.DOM;
 
@@ -25,7 +25,7 @@ const textBefore = (node: Node, offset: number, rootNode: Node): Option<Spot.Spo
   } else {
     const textSeeker = TextSeeker(DOM, Fun.never);
     return Option.from(textSeeker.backwards(node, offset, alwaysNext(node), rootNode)).map((prev) => {
-      return Spot.point(prev.node, prev.node.data.length);
+      return Spot.point(prev.container, prev.container.data.length);
     });
   }
 };
@@ -36,7 +36,7 @@ const textAfter = (node: Node, offset: number, rootNode: Node): Option<Spot.Spot
   } else {
     const textSeeker = TextSeeker(DOM, Fun.never);
     return Option.from(textSeeker.forwards(node, offset, alwaysNext(node), rootNode)).map((prev) => {
-      return Spot.point(prev.node, 0);
+      return Spot.point(prev.container, 0);
     });
   }
 };
@@ -51,8 +51,8 @@ const scanLeft = (node: Text, offset: number, rootNode: Node): Option<Spot.SpotP
   } else {
     const textSeeker = TextSeeker(DOM, Fun.never);
     return Option.from(textSeeker.backwards(node, offset, alwaysNext(node), rootNode)).bind((prev) => {
-      const prevText = prev.node.data;
-      return scanLeft(prev.node, offset + prevText.length, rootNode);
+      const prevText = prev.container.data;
+      return scanLeft(prev.container, offset + prevText.length, rootNode);
     });
   }
 };
@@ -67,7 +67,7 @@ const scanRight = (node: Text, offset: number, rootNode: Node): Option<Spot.Spot
   } else {
     const textSeeker = TextSeeker(DOM, Fun.never);
     return Option.from(textSeeker.forwards(node, offset, alwaysNext(node), rootNode)).bind((next) => {
-      return scanRight(next.node, offset - text.length, rootNode);
+      return scanRight(next.container, offset - text.length, rootNode);
     });
   }
 };

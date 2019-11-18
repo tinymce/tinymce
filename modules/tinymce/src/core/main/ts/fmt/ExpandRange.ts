@@ -70,9 +70,9 @@ const findWordEndPoint = (dom: DOMUtils, body: HTMLElement, container: Node, off
 
   const spaceResult = walk(container, offset, findSpace);
   return spaceResult.bind((result) => {
-    return includeTrailingSpaces ? walk(result.node, result.offset + (start ? -1 : 0), findContent) : Option.some(result);
+    return includeTrailingSpaces ? walk(result.container, result.offset + (start ? -1 : 0), findContent) : Option.some(result);
   }).orThunk(() => {
-    return lastTextNode ? Option.some({ node: lastTextNode, offset: start ? 0 : lastTextNode.length }) : Option.none();
+    return lastTextNode ? Option.some({ container: lastTextNode, offset: start ? 0 : lastTextNode.length }) : Option.none();
   });
 };
 
@@ -240,15 +240,15 @@ const expandRng = function (editor: Editor, rng: Range, format, includeTrailingS
   if (rng.collapsed) {
     // Expand left to closest word boundary
     const startPoint = findWordEndPoint(dom, editor.getBody(), startContainer, startOffset, true, includeTrailingSpace);
-    startPoint.each(({ node, offset }) => {
-      startContainer = node;
+    startPoint.each(({ container, offset }) => {
+      startContainer = container;
       startOffset = offset;
     });
 
     // Expand right to closest word boundary
     const endPoint = findWordEndPoint(dom, editor.getBody(), endContainer, endOffset, false, includeTrailingSpace);
-    endPoint.each(({ node, offset }) => {
-      endContainer = node;
+    endPoint.each(({ container, offset }) => {
+      endContainer = container;
       endOffset = offset;
     });
   }

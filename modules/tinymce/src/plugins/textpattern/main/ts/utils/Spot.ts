@@ -6,13 +6,13 @@
  */
 
 export interface SpotPoint<T> {
-  node: T;
+  container: T;
   offset: number;
 }
 
-const point = <T>(node: T, offset: number): SpotPoint<T> => {
+const point = <T>(container: T, offset: number): SpotPoint<T> => {
   return {
-    node,
+    container,
     offset
   };
 };

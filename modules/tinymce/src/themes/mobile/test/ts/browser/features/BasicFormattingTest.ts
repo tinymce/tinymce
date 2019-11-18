@@ -1,11 +1,11 @@
-import { GeneralSteps, Pipeline, Step } from '@ephox/agar';
+import { GeneralSteps, Pipeline } from '@ephox/agar';
+import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { Body, Traverse } from '@ephox/sugar';
 
 import TestTheme from '../../module/test/theme/TestTheme';
 import TestUi from '../../module/test/ui/TestUi';
-import { PlatformDetection } from '@ephox/sand';
-import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('Browser Test: features.BasicFormattingTest', function (success, failure) {
   const browser = PlatformDetection.detect().browser;
@@ -53,7 +53,6 @@ UnitTest.asynctest('Browser Test: features.BasicFormattingTest', function (succe
 
           TestUi.sClickComponent(realm, buttons[name]),
           sCheckComponent('"no" converted to ' + name, true)(buttons[name]),
-          Step.debugging,
           TestUi.sClickComponent(realm, buttons[name]),
           sCheckComponent('"no" reverted to normal', false)(buttons[name]),
 

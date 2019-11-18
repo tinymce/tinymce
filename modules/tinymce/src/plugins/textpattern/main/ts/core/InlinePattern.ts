@@ -10,7 +10,7 @@ import { Arr, Id, Option, Strings } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import * as TextSearch from '../text/TextSearch';
-import { Marker, createMarker, rangeFromMarker, removeMarker } from '../utils/Marker';
+import { createMarker, Marker, rangeFromMarker, removeMarker } from '../utils/Marker';
 import { generatePathRange, generatePathRangeFromRange } from '../utils/PathRange';
 import * as Spot from '../utils/Spot';
 import * as Utils from '../utils/Utils';
@@ -46,29 +46,29 @@ const matchesPattern = (dom: DOMUtils, block: Node, patternContent: string) => (
 
 const findPatternStartFromSpot = (dom: DOMUtils, pattern: InlinePattern, block: Node, spot: Spot.SpotPoint<Text>): Option<Range> => {
   const startPattern = pattern.start;
-  const startSpot = TextSearch.repeatLeft(dom, spot.node, spot.offset, matchesPattern(dom, block, startPattern), block);
+  const startSpot = TextSearch.repeatLeft(dom, spot.container, spot.offset, matchesPattern(dom, block, startPattern), block);
   return startSpot.bind((spot) => {
     if (spot.offset >= startPattern.length) {
       // Complete match
       const rng = dom.createRng();
-      rng.setStart(spot.node, spot.offset - startPattern.length);
-      rng.setEnd(spot.node, spot.offset);
+      rng.setStart(spot.container, spot.offset - startPattern.length);
+      rng.setEnd(spot.container, spot.offset);
       return Option.some(rng);
     } else {
       // Partial match so lean left to see if the string exists over fragmented text nodes
       const offset = spot.offset - startPattern.length;
-      return TextSearch.scanLeft(spot.node, offset, block).map((nextSpot) => {
+      return TextSearch.scanLeft(spot.container, offset, block).map((nextSpot) => {
         // Build up the range between the last char and the first char
         const rng = dom.createRng();
-        rng.setStart(nextSpot.node, nextSpot.offset);
-        rng.setEnd(spot.node, spot.offset);
+        rng.setStart(nextSpot.container, nextSpot.offset);
+        rng.setEnd(spot.container, spot.offset);
         return rng;
       }).filter((rng) => {
         // Ensure the range content matches the start
         return rng.toString() === startPattern;
       }).orThunk(() => {
         // No match found, so continue searching
-        return findPatternStartFromSpot(dom, pattern, block, Spot.point(spot.node, 0));
+        return findPatternStartFromSpot(dom, pattern, block, Spot.point(spot.container, 0));
       });
     }
   });
@@ -86,7 +86,7 @@ const findPatternStart = (dom: DOMUtils, pattern: InlinePattern, node: Node, off
     const start = findPatternStartFromSpot(dom, pattern, block, spot);
     return start.bind((startRange: Range) => {
       if (requireGap) {
-        if (startRange.endContainer === spot.node && startRange.endOffset === spot.offset) {
+        if (startRange.endContainer === spot.container && startRange.endOffset === spot.offset) {
           return Option.none();
         } else if (spot.offset === 0 && startRange.endContainer.textContent.length === startRange.endOffset) {
           return Option.none();
@@ -102,12 +102,12 @@ const findPattern = (editor: Editor, block: Node, details: PatternDetails): Opti
   const dom = editor.dom;
   const root = dom.getRoot();
   const pattern = details.pattern;
-  const endNode = details.position.node;
+  const endNode = details.position.container;
   const endOffset = details.position.offset;
 
   // Lean left to find the start of the end pattern, as it could be across fragmented nodes
   return TextSearch.scanLeft(endNode, endOffset - details.pattern.end.length, block).bind((spot) => {
-    const endPathRng = generatePathRange(root, spot.node, spot.offset, endNode, endOffset);
+    const endPathRng = generatePathRange(root, spot.container, spot.offset, endNode, endOffset);
 
     // If we have a replacement pattern, then it can't have nested patterns so just return immediately
     if (Utils.isReplacementPattern(pattern)) {
@@ -121,12 +121,12 @@ const findPattern = (editor: Editor, block: Node, details: PatternDetails): Opti
       });
     } else {
       // Find any nested patterns, making sure not to process the current pattern again
-      const resultsOpt = findPatternsRec(editor, details.remainingPatterns, spot.node, spot.offset, block);
+      const resultsOpt = findPatternsRec(editor, details.remainingPatterns, spot.container, spot.offset, block);
       const results = resultsOpt.getOr({ matches: [], position: spot });
       const pos = results.position;
 
       // Find the start of the matched pattern
-      const start = findPatternStart(dom, pattern, pos.node, pos.offset, block, resultsOpt.isNone());
+      const start = findPatternStart(dom, pattern, pos.container, pos.offset, block, resultsOpt.isNone());
       return start.map((startRng) => {
         const startPathRng = generatePathRangeFromRange(root, startRng);
         return {

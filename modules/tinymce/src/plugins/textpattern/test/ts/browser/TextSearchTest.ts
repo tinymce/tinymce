@@ -1,4 +1,4 @@
-import { Pipeline, Step, Log, Assertions } from '@ephox/agar';
+import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Text } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
@@ -7,8 +7,8 @@ import { Element } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
-import { SpotPoint } from 'tinymce/plugins/textpattern/utils/Spot';
 import * as TextSearch from 'tinymce/plugins/textpattern/text/TextSearch';
+import { SpotPoint } from 'tinymce/plugins/textpattern/utils/Spot';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import Utils from '../module/test/Utils';
@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (succes
     const rng = editor.selection.getRng();
     return TextSearch.repeatLeft(editor.dom, rng.startContainer, rng.startOffset, process(content), editor.getBody()).fold(
       () => null,
-      (spot) => spot.node
+      (spot) => spot.container
     );
   };
 
@@ -34,14 +34,14 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (succes
     const rng = editor.selection.getRng();
     return TextSearch.repeatRight(editor.dom, rng.startContainer, rng.startOffset, process(content), editor.getBody()).fold(
       () => null,
-      (spot) => spot.node
+      (spot) => spot.container
     );
   };
 
   const assertSpot = (label: string, spotOpt: Option<SpotPoint<Text>>, elementText: String, offset: number) => {
     const spot = spotOpt.getOrDie(`${label} - Spot not found`);
 
-    Assertions.assertEq(label, elementText, spot.node.textContent);
+    Assertions.assertEq(label, elementText, spot.container.textContent);
     Assertions.assertEq(label, offset, spot.offset);
   };
 

@@ -53,7 +53,7 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
   const root = dom.getParent(initRange.startContainer, dom.isBlock) || dom.getRoot();
   return repeatLeft(dom, initRange.startContainer, initRange.startOffset, findTriggerChIndex, root).bind((spot) => {
     const range = initRange.cloneRange();
-    range.setStart(spot.node, spot.offset);
+    range.setStart(spot.container, spot.offset);
     range.setEnd(initRange.endContainer, initRange.endOffset);
 
     // If the range is collapsed then we didn't find a match so abort
