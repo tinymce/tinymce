@@ -31,10 +31,7 @@ const setScrollPos = function (pos) {
 /* tslint:disable-next-line:no-string-literal */
 const visualViewport: VisualViewport.VisualViewport = window['visualViewport'];
 
-// Experiment is for ipadOS 13 only at this stage. Chrome supports this on desktop, and ipadOS cannot be UA detected, so restrict to Safari.
-const isSafari = Env.browser.isSafari();
-
-const viewportUpdate = !isSafari || visualViewport === undefined ? { bind: Fun.noop, unbind: Fun.noop, update: Fun.noop } : (() => {
+const viewportUpdate = visualViewport === undefined ? { bind: Fun.noop, unbind: Fun.noop } : (() => {
   const editorContainer = Singleton.value<Element>();
 
   const refreshScroll = () => {
