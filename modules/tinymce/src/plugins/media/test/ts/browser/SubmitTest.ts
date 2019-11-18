@@ -1,12 +1,10 @@
-import { GeneralSteps, Pipeline, Logger, Log } from '@ephox/agar';
+import { GeneralSteps, Log, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-
 import Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.core.SubmitTest', (success, failure) => {

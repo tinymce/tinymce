@@ -43,8 +43,7 @@ const getValue = (data: MediaDialogData, metaData: Record<string, string>, sourc
       : Option.from(child as string);
   }));
 
-  const val = prop === sourceInput ? getFromValueFirst() : getFromMetaFirst();
-  return val.fold(() => ({}), (v: string) => ({ [prop]: v }));
+  return { [prop]: (prop === sourceInput ? getFromValueFirst() : getFromMetaFirst()).getOr('') };
 };
 
 const getDimensions = (data: MediaDialogData, metaData: Record<string, string>) => {
