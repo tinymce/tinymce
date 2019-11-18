@@ -14,7 +14,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets) => {
   editor.ui.registry.addMenuButton('table', {
     tooltip: 'Table',
     icon: 'table',
-    fetch: (callback) => callback('inserttable tableprops deletetable | cell row column advtablesort')
+    fetch: (callback) => callback('inserttable advtablesort tableprops deletetable | cell row column')
   });
 
   const cmd = (command) => () => editor.execCommand(command);
