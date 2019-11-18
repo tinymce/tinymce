@@ -5,20 +5,22 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Attachment, Docking, Boxes, SplitFloatingToolbar } from '@ephox/alloy';
-import { Option, Cell } from '@ephox/katamari';
-import { Css, Element, Height } from '@ephox/sugar';
+import { AlloyComponent, Attachment, Boxes, Docking, SplitFloatingToolbar } from '@ephox/alloy';
+import { Cell, Option } from '@ephox/katamari';
+import { Body, Css, Element, Height, Width } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { getToolbarDrawer, getUiContainer, isStickyToolbar, ToolbarDrawer, useFixedContainer, isToolbarLocationTop } from '../api/Settings';
+import Delay from 'tinymce/core/api/util/Delay';
+import { getMaxWidthSetting, getToolbarDrawer, getUiContainer, isStickyToolbar, isToolbarLocationTop, ToolbarDrawer, useFixedContainer } from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import { setupReadonlyModeSwitch } from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
+import * as EditorSize from '../ui/sizing/EditorSize';
+import Utils from '../ui/sizing/Utils';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
-import Delay from 'tinymce/core/api/util/Delay';
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   let floatContainer;
@@ -26,7 +28,9 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const useFixedToolbarContainer = useFixedContainer(editor);
   const isSticky = isStickyToolbar(editor);
   const targetElm = Element.fromDom(args.targetNode);
+  const editorMaxWidthOpt = getMaxWidthSetting(editor).or(EditorSize.getWidth(editor));
   const prevTargetHeight = Cell(Height.get(targetElm));
+  const visible = Cell(false);
 
   const splitSetting = getToolbarDrawer(editor);
   const isSplitFloatingToolbar = splitSetting === ToolbarDrawer.floating;
@@ -54,6 +58,14 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       top: Math.round(top) + 'px',
       left: Math.round(targetBounds.x()) + 'px'
     });
+
+    // Update the max width of the inline toolbar
+    const maxWidth = editorMaxWidthOpt.getOrThunk(() => {
+      // No max width, so use the body width, minus the left pos as the maximum
+      const bodyMargin = Utils.parseToInt(Css.get(Body.body(), 'margin-left')).getOr(0);
+      return Width.get(Body.body()) - targetBounds.x() + bodyMargin;
+    });
+    Css.set(floatContainer.element(), 'max-width', maxWidth + 'px');
   };
 
   const updateChromeUi = (resetDocking: boolean = false) => {
@@ -87,6 +99,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 
   const show = () => {
+    visible.set(true);
     Css.set(uiComponents.outerContainer.element(), 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
     Css.remove(uiComponents.uiMothership.element(), 'display');
@@ -94,6 +107,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 
   const hide = () => {
+    visible.set(false);
     if (uiComponents.outerContainer) {
       Css.set(uiComponents.outerContainer.element(), 'display', 'none');
       DOM.removeClass(editor.getBody(), 'mce-edit-focus');
@@ -127,7 +141,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     editor.on('deactivate', hide);
 
     editor.on('SkinLoaded ResizeWindow', () => {
-      if (!editor.hidden) {
+      if (visible.get()) {
         updateChromeUi(true);
       }
     });
@@ -136,7 +150,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       Delay.requestAnimationFrame(() => {
         const targetHeight = Height.get(targetElm);
 
-        if (!editor.hidden && targetHeight !== prevTargetHeight.get()) {
+        if (visible.get() && targetHeight !== prevTargetHeight.get()) {
           updateChromeUi(true);
           prevTargetHeight.set(targetHeight);
         }

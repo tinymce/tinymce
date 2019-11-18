@@ -54,6 +54,7 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
     'touchstart',
     'touchmove',
     'touchend',
+    'touchcancel',
     'gesturestart'
   ] : [
     'mousedown',

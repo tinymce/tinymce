@@ -5,7 +5,7 @@ import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as Objects from 'ephox/boulder/api/Objects';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
-import { Processor } from 'ephox/boulder/api/DslType';
+import { Processor } from 'ephox/boulder/api/Main';
 
 UnitTest.test('ValueSchemaRawTest', function () {
   const checkErr = function (label: string, expectedPart: string, input: any, processor: Processor) {
@@ -434,6 +434,32 @@ UnitTest.test('ValueSchemaRawTest', function () {
     ValueSchema.asRaw<SomeType>('SomeType', schema, {}).fold(
       (err) => Assert.eq('Should be two errors', 2, err.errors.length),
       (actual) => assert.fail('Should not pass')
+    );
+  });
+
+  Logger.sync('Checking oneOf', () => {
+    const processor = ValueSchema.oneOf([
+      ValueSchema.string,
+      ValueSchema.number
+    ]);
+
+    check('oneOf ',
+      'a',
+      processor
+    );
+
+    check('oneOf',
+      1,
+      processor
+    );
+
+    checkErr('oneOf',
+      'Failed path: (oneOf)\n' +
+      'Expected type: string but got: object\n' +
+      'Failed path: (oneOf)\n' +
+      'Expected type: number but got: object',
+      {},
+      processor
     );
   });
 });

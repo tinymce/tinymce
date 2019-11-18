@@ -7,9 +7,9 @@
 
 import { Element, HTMLElement, HTMLImageElement, Node, ReferrerPolicy as DomReferrerPolicy } from '@ephox/dom-globals';
 import { UploadHandler } from '../file/Uploader';
-import { AllowedFormat } from './fmt/StyleFormat';
-import { Formats } from './fmt/Format';
 import Editor from './Editor';
+import { Formats } from './fmt/Format';
+import { AllowedFormat } from './fmt/StyleFormat';
 import { SchemaType } from './html/Schema';
 
 export type ThemeInitFunc = (editor: Editor, elm: HTMLElement) => {
@@ -30,6 +30,11 @@ export type ReferrerPolicy = DomReferrerPolicy | 'origin' | 'same-origin' | 'str
 
 export type URLConverter = (url: string, name: string, elm?: HTMLElement) => string;
 export type URLConverterCallback = (url: string, node: Node, on_save: boolean, name: string) => void;
+
+interface ToolbarGroup {
+  name?: string;
+  items: string[];
+}
 
 export interface RawEditorSettings {
   add_form_submit_trigger?: boolean;
@@ -156,7 +161,7 @@ export interface RawEditorSettings {
   target?: Element;
   theme?: string | ThemeInitFunc;
   theme_url?: string;
-  toolbar?: boolean | string | string[] | { name: string, items: string[]}[];
+  toolbar?: boolean | string | string[] | Array<ToolbarGroup>;
   toolbar1?: string;
   toolbar2?: string;
   toolbar3?: string;
@@ -166,7 +171,7 @@ export interface RawEditorSettings {
   toolbar7?: string;
   toolbar8?: string;
   toolbar9?: string;
-  toolbar_drawer?: false | 'floating' | 'sliding';
+  toolbar_drawer?: false | 'floating' | 'sliding' | 'scrolling';
   typeahead_urls?: boolean;
   url_converter?: URLConverter;
   url_converter_scope?: {};

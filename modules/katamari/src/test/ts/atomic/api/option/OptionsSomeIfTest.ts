@@ -1,8 +1,15 @@
 import * as Options from 'ephox/katamari/api/Options';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import fc from 'fast-check';
+import { UnitTest, Assert } from '@ephox/bedrock-client';
 
-UnitTest.test('OptionSomeIfTest', () => {
-  Jsc.property('false -> none', 'number', (n: number) => Jsc.eq(true, Options.someIf<number>(false, n).isNone()));
-  Jsc.property('true -> some', 'number', (n: number) => Jsc.eq(n, Options.someIf<number>(true, n).getOrDie()));
+UnitTest.test('Option.someIf: false -> none', () => {
+  fc.assert(fc.property(fc.integer(), (n) => {
+    Assert.eq('eq', true, Options.someIf<number>(false, n).isNone());
+  }));
+});
+
+UnitTest.test('Option.someIf: true -> some', () => {
+  fc.assert(fc.property(fc.integer(), (n) => {
+    Assert.eq('eq', n, Options.someIf<number>(true, n).getOrDie());
+  }));
 });

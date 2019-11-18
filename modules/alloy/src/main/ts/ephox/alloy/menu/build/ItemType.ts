@@ -1,4 +1,4 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -8,11 +8,11 @@ import { Toggling } from '../../api/behaviour/Toggling';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
-import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import { TogglingConfigSpec } from '../../behaviour/toggling/TogglingTypes';
 import * as Fields from '../../data/Fields';
+import * as ButtonBase from '../../ui/common/ButtonBase';
 import { NormalItemDetail } from '../../ui/types/ItemTypes';
 import * as ItemEvents from '../util/ItemEvents';
 
@@ -64,11 +64,8 @@ const builder = (detail: NormalItemDetail): AlloySpec => {
         }),
 
         AddEventsBehaviour.config('item-type-events', [
-          // Trigger execute when clicked
-          AlloyEvents.run(SystemEvents.tapOrClick(), AlloyTriggers.emitExecute),
-
-          // Like button, stop mousedown propagating up the DOM tree.
-          AlloyEvents.cutter(NativeEvents.mousedown()),
+          // Treat clicks the same as a button
+          ...ButtonBase.pointerEvents(),
 
           AlloyEvents.run(NativeEvents.mouseover(), ItemEvents.onHover),
 

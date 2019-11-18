@@ -26,12 +26,12 @@
   .tox-toolbar__group--pull-right {
     margin-left: auto;
   }
-}
 
-// On touch devices we want toolbars to sidescroll, instead of wrapping to many rows
-.tox.tox-platform-touch .tox-editor-container .tox-toolbar__group,
-.tox.tox-tinymce-aux.tox-platform-touch .tox-toolbar__group {
-  flex-wrap: nowrap;
+  // Prevent wrapping to multiple rows if using a sliding toolbar
+  .tox-toolbar--scrolling .tox-toolbar__group {
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+  }
 }
 
 .tox:not([dir=rtl]) {

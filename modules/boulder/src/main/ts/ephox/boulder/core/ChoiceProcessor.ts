@@ -1,7 +1,6 @@
 import { Obj } from '@ephox/katamari';
 
 import * as Objects from '../api/Objects';
-import { typeAdt, FieldProcessorAdt } from '../format/TypeTokens';
 import { missingBranch, missingKey } from './SchemaError';
 import { Processor } from './ValueProcessor';
 
@@ -30,14 +29,9 @@ const choose = function (key: string, branches: Record<string, Processor>) {
     return 'chooseOn(' + key + '). Possible values: ' + Obj.keys(branches);
   };
 
-  const toDsl = function () {
-    return typeAdt.choiceOf(key, branches);
-  };
-
   return {
     extract,
-    toString,
-    toDsl
+    toString
   };
 };
 

@@ -1,8 +1,8 @@
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import * as Obj from 'ephox/katamari/api/Obj';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import fc from 'fast-check';
+import { UnitTest, Assert } from '@ephox/bedrock-client';
 
 UnitTest.test('ObjFindTest', function () {
   const checkNone = function (input, pred) {
@@ -12,7 +12,7 @@ UnitTest.test('ObjFindTest', function () {
 
   const checkObj = function (expected, input, pred) {
     const actual = Obj.find(input, pred).getOrDie('should have value');
-    assert.eq(expected, actual);
+    Assert.eq('eq', expected, actual);
   };
 
   checkNone({}, function (v, k) { return v > 0; });
@@ -23,13 +23,14 @@ UnitTest.test('ObjFindTest', function () {
 
   const obj = { blah: 4, test: 3 };
   checkObj(4, obj, function (v, k, o) { return o === obj; });
+});
 
-  Jsc.property(
-    'the value found by find always passes predicate',
-    Jsc.dict(Jsc.json),
-    Jsc.fun(Jsc.bool),
+UnitTest.test('the value found by find always passes predicate', () => {
+  fc.assert(fc.property(
+    fc.dictionary(fc.asciiString(), fc.json()),
+    fc.func(fc.boolean()),
     function (obj, pred) {
-      // It looks like the way that Jsc.fun works is it cares about all of its arguments, so therefore
+      // It looks like the way that fc.fun works is it cares about all of its arguments, so therefore
       // we have to only pass in one if we want it to be deterministic. Just an assumption
       const value = Obj.find(obj, function (v) {
         return pred(v);
@@ -43,33 +44,36 @@ UnitTest.test('ObjFindTest', function () {
         return pred(v);
       });
     }
-  );
+  ));
+});
 
-  Jsc.property(
-    'If predicate is always false, then find is always none',
-    Jsc.dict(Jsc.json),
+UnitTest.test('If predicate is always false, then find is always none', () => {
+  fc.assert(fc.property(
+    fc.dictionary(fc.asciiString(), fc.json()),
     function (obj) {
       const value = Obj.find(obj, Fun.constant(false));
       return value.isNone();
     }
-  );
+  ));
+});
 
-  Jsc.property(
-    'If object is empty, find is always none',
-    Jsc.fun(Jsc.bool),
+UnitTest.test('If object is empty, find is always none', () => {
+  fc.assert(fc.property(
+    fc.func(fc.boolean()),
     function (pred) {
       const value = Obj.find({ }, pred);
       return value.isNone();
     }
-  );
+  ));
+});
 
-  Jsc.property(
-    'If predicate is always true, then value is always the some(first), or none if dict is empty',
-    Jsc.dict(Jsc.json),
+UnitTest.test('If predicate is always true, then value is always the some(first), or none if dict is empty', () => {
+  fc.assert(fc.property(
+    fc.dictionary(fc.asciiString(), fc.json()),
     function (obj) {
       const value = Obj.find(obj, Fun.constant(true));
       // No order is specified, so we cannot know what "first" is
       return Obj.keys(obj).length === 0 ? value.isNone() : true;
     }
-  );
+  ));
 });
