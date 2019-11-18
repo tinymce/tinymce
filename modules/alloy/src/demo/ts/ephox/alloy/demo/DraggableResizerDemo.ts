@@ -1,17 +1,17 @@
 import { document } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 import { Class, Css, Element, Traverse } from '@ephox/sugar';
+import { SugarPosition } from 'ephox/alloy/alien/TypeDefinitions';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
 import { Unselecting } from 'ephox/alloy/api/behaviour/Unselecting';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SugarPosition } from 'ephox/alloy/alien/TypeDefinitions';
 
 export default (): void => {
   const gui = Gui.create();
@@ -75,18 +75,12 @@ export default (): void => {
               },
 
               buttonBehaviours: Behaviour.derive([
-                Dragging.config(
-                  PlatformDetection.detect().deviceType.isTouch() ? {
-                    mode: 'touch',
-                    repositionTarget: false,
-                    onDrag
-                  } : {
-                    mode: 'mouse',
-                    blockerClass: 'blocker',
-                    repositionTarget: false,
-                    onDrag
-                  }
-                ),
+                Dragging.config({
+                  mode: PlatformDetection.detect().deviceType.isTouch() ? 'touch' : 'mouse',
+                  blockerClass: 'blocker',
+                  repositionTarget: false,
+                  onDrag
+                }),
                 Unselecting.config({ })
               ]),
               eventOrder: {

@@ -1,9 +1,9 @@
 import { SugarEvent } from '../../alien/TypeDefinitions';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import { DragApi } from './MouseDraggingTypes';
+import { BlockerDragApi } from '../common/BlockerTypes';
 
-const init = (dragApi: DragApi): AlloyEvents.AlloyEventRecord => {
+const init = (dragApi: BlockerDragApi): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
     // When the user clicks on the blocker, something has probably gone slightly
     // wrong, so we'll just drop for safety. The blocker should really only

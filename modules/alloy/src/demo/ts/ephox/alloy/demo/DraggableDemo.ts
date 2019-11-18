@@ -85,16 +85,11 @@ export default (): void => {
           },
 
           buttonBehaviours: Behaviour.derive([
-            Dragging.config(
-              PlatformDetection.detect().deviceType.isTouch() ? {
-                mode: 'touch',
-                snaps: snapData
-              } : {
-                mode: 'mouse',
-                blockerClass: 'blocker',
-                snaps: snapData
-              }
-            ),
+            Dragging.config({
+              mode: PlatformDetection.detect().deviceType.isTouch() ? 'touch' : 'mouse',
+              blockerClass: 'blocker',
+              snaps: snapData
+            }),
             Unselecting.config({ })
           ]),
           eventOrder: {

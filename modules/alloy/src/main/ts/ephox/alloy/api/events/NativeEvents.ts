@@ -4,6 +4,7 @@ const contextmenu = Fun.constant('contextmenu');
 const touchstart = Fun.constant('touchstart');
 const touchmove = Fun.constant('touchmove');
 const touchend = Fun.constant('touchend');
+const touchcancel = Fun.constant('touchcancel');
 const gesturestart = Fun.constant('gesturestart');
 const mousedown = Fun.constant('mousedown');
 const mousemove = Fun.constant('mousemove');
@@ -35,6 +36,7 @@ export {
   touchstart,
   touchmove,
   touchend,
+  touchcancel,
   gesturestart,
   mousedown,
   mousemove,
