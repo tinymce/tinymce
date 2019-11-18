@@ -20,12 +20,6 @@ const TextSeeker = (dom: DOMUtils, isBoundary?: (node: Node) => boolean): TextSe
   const isBlockBoundary = isBoundary ? isBoundary : (node: Node) => dom.isBlock(node) || NodeType.isBr(node) || NodeType.isContentEditableFalse(node);
 
   const walk = (node: Node, offset: number, walker: () => Option<Spot>, process: TextProcessCallback): Option<Spot> => {
-    const recurse = () => {
-      return walker().bind((next) => {
-        return walk(next.container, next.offset, walker, process);
-      });
-    };
-
     if (NodeType.isText(node)) {
       const newOffset = process(node, offset, node.data);
       if (newOffset !== -1) {
@@ -33,7 +27,7 @@ const TextSeeker = (dom: DOMUtils, isBoundary?: (node: Node) => boolean): TextSe
       }
     }
 
-    return recurse();
+    return walker().bind((next) => walk(next.container, next.offset, walker, process));
   };
 
   const backwards = (node: Node, offset: number, process: TextProcessCallback, root?: Node) => {
