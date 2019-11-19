@@ -25,12 +25,11 @@ import {
   TieredData,
   TieredMenuTypes,
   Unselecting,
-  FloatingToolbarButton,
-  VerticalDir
+  FloatingToolbarButton
 } from '@ephox/alloy';
 import { Toolbar, Types } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
-import { Attr, SelectorFind, Html } from '@ephox/sugar';
+import { Attr, SelectorFind } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared, UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
@@ -39,7 +38,6 @@ import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
 import { renderIconFromPack, renderLabel } from '../../button/ButtonSlices';
 import { onControlAttached, onControlDetached, OnDestroy } from '../../controls/Controls';
-import * as Icons from '../../icons/Icons';
 import { componentRenderPipeline } from '../../menus/item/build/CommonMenuItem';
 import { classForPreset } from '../../menus/item/ItemClasses';
 import { deriveMenuMovement } from '../../menus/menu/MenuMovement';
@@ -51,6 +49,7 @@ import { ToolbarButtonClasses } from '../button/ButtonClasses';
 import { onToolbarButtonExecute, toolbarButtonEventOrder } from '../button/ButtonEvents';
 import { ToolbarGroup, renderToolbarGroup } from '../CommonToolbar';
 import { ToolbarConfig } from '../../../Render';
+import { chevronSetter } from '../../button/Behaviours';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
@@ -384,12 +383,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
           classes: [ ToolbarButtonClasses.Button, 'tox-split-button__chevron' ],
         },
         buttonBehaviours: Behaviour.derive([
-          AddEventsBehaviour.config('attach-events', [
-            AlloyEvents.runOnAttached((comp) => {
-              const iconName = 'chevron-' + (VerticalDir.isBottomToTopDir(comp.element()) ? 'up' : 'down');
-              Html.set(comp.element(), Icons.get(iconName, sharedBackstage.providers.icons));
-            }),
-          ])
+          chevronSetter(sharedBackstage.providers.icons)
         ])
       }),
       AlloySplitDropdown.parts()['aria-descriptor']({
