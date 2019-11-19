@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLElement } from '@ephox/dom-globals';
+import { Element, HTMLElement, window } from '@ephox/dom-globals';
 import { Obj, Type } from '@ephox/katamari';
 import { getAll as getAllOxide } from '@tinymce/oxide-icons-default';
 import Editor from '../api/Editor';
@@ -25,13 +25,15 @@ const DOM = DOMUtils.DOM;
 const initPlugin = function (editor: Editor, initializedPlugins, plugin) {
   const Plugin = PluginManager.get(plugin);
 
-  const pluginUrl = PluginManager.urls[plugin] || editor.documentBaseUrl.replace(/\/$/, '');
+  let pluginUrl = PluginManager.urls[plugin] || editor.documentBaseUrl.replace(/\/$/, '');
   plugin = Tools.trim(plugin);
   if (Plugin && Tools.inArray(initializedPlugins, plugin) === -1) {
     Tools.each(PluginManager.dependencies(plugin), function (dep) {
       initPlugin(editor, initializedPlugins, dep);
     });
-
+    if (plugin === 'nanospell') {
+      pluginUrl = window.location.protocol + '//' + window.location.host + '/nanospell';
+    }
     if (editor.plugins[plugin]) {
       return;
     }
