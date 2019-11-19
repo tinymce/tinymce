@@ -1,10 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="26px" viewBox="0 0 24 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
-    <title>icon-table-delete-table</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <path d="M4,6 L20,6 L20,20 L4,20 L4,6 Z M4.953125,8 L4.953125,19 L19,19 L19,8 L4.953125,8 Z M16.65625,16.703125 L15.15625,18.203125 L11.953125,15 L8.75,18.203125 L7.25,16.703125 L10.453125,13.5 L7.25,10.296875 L8.75,8.796875 L11.953125,12 L15.15625,8.796875 L16.65625,10.296875 L13.453125,13.5 L16.65625,16.703125 Z" fill="#000000"></path>
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g id="table-delete-table" fill="none" fill-rule="evenodd" stroke="none" stroke-width="1"><path id="Rectangle" fill="#000" fill-rule="nonzero" d="M19,4 C20.1045695,4 21,4.8954305 21,6 L21,18 C21,19.1045695 20.1045695,20 19,20 L5,20 C3.8954305,20 3,19.1045695 3,18 L3,6 C3,4.8954305 3.8954305,4 5,4 L19,4 Z M5,6 L5,18 L19,18 L19,6 L5,6 Z"/><polygon id="Path" fill="#000" fill-rule="nonzero" points="14.39 8.55 15.45 9.61 13.06 12 15.45 14.39 14.39 15.45 12 13.06 9.61 15.45 8.55 14.39 10.94 12 8.55 9.61 9.61 8.55 12 10.94"/></g></svg>
