@@ -1,4 +1,4 @@
-Version 5.1.2 (TBD)
+Version 5.1.2 (2019-11-19)
     Fixed desktop touch devices using `mobile` configuration overrides #TINY-4345
     Fixed unable to disable the new scrolling toolbar feature #TINY-4345
     Fixed touch events passing through any pop-up items to the content underneath on Android devices #TINY-4367
