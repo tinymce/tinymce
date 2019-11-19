@@ -35,7 +35,7 @@ function Plugin(editor: Editor) {
   Commands.registerCommands(editor, actions, cellSelection, selections, clipboardRows);
   Clipboard.registerEvents(editor, selections, actions, cellSelection);
 
-  const menuItems = MenuItems.addMenuItems(editor, selectionTargets);
+  MenuItems.addMenuItems(editor, selectionTargets);
   Buttons.addButtons(editor, selectionTargets);
   Buttons.addToolbars(editor);
 
@@ -55,7 +55,7 @@ function Plugin(editor: Editor) {
     cellSelection.destroy();
   });
 
-  return getApi(editor, clipboardRows, resizeHandler, selectionTargets, menuItems);
+  return getApi(editor, clipboardRows, resizeHandler, selectionTargets);
 }
 
 export default function () {
