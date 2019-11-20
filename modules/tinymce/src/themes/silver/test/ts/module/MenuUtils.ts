@@ -1,4 +1,4 @@
-import { Chain, GeneralSteps, Logger, Mouse, UiFinder } from '@ephox/agar';
+import { Chain, GeneralSteps, Logger, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { Body } from '@ephox/sugar';
 
 import { ToolbarDrawer } from 'tinymce/themes/silver/api/Settings';
@@ -30,9 +30,22 @@ const sOpenMore = (type: ToolbarDrawer) => {
     `Trying to open more drawer`,
     GeneralSteps.sequence([
       Mouse.sClickOn(Body.body(), 'button[title="More..."]'),
-      Chain.asStep(Body.body(), [
-        UiFinder.cWaitForVisible('Waiting for more drawer to open', selector)
-      ]),
+      UiFinder.sWaitForVisible('Waiting for more drawer to open', Body.body(), selector)
+    ])
+  );
+};
+
+const sCloseMore = (type: ToolbarDrawer) => {
+  // type floating or sliding
+  const slidingClass = 'div.tox-toolbar__overflow--open:not(.tox-toolbar__overflow--growing)';
+  const floatingClass = 'div.tox-toolbar__overflow';
+  const selector = type === ToolbarDrawer.sliding ? slidingClass : floatingClass;
+
+  return Logger.t(
+    `Trying to close more drawer`,
+    GeneralSteps.sequence([
+      Mouse.sClickOn(Body.body(), 'button[title="More..."]'),
+      Waiter.sTryUntil('Waiting for more drawer to close', UiFinder.sNotExists(Body.body(), selector))
     ])
   );
 };
@@ -65,5 +78,6 @@ export {
 
   // specific pre-composed
   sOpenAlignMenu,
-  sOpenMore
+  sOpenMore,
+  sCloseMore
 };
