@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, VerticalDir } from '@ephox/alloy';
 import { HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
@@ -102,7 +102,9 @@ const setup = (editor: Editor): RenderInfo => {
 
   const verticalDirAttributes = {
     attributes: {
-      'data-vertical-dir': isToolbarTop ? 'toptobottom' : 'bottomtotop'
+      [VerticalDir.Attribute]: isToolbarTop ?
+        VerticalDir.AttributeValue.TopToBottom :
+        VerticalDir.AttributeValue.BottomToTop
     }
   };
 

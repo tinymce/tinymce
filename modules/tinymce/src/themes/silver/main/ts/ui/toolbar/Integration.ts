@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, SketchSpec } from '@ephox/alloy';
+import { AlloySpec, SketchSpec, VerticalDir } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
@@ -132,7 +132,9 @@ const types = {
           Option.none()
         ),
         {
-          'data-vertical-dir': isToolbarLocationTop(editor) ? 'toptobottom' : 'bottomtotop'
+          [VerticalDir.Attribute]: isToolbarLocationTop(editor) ?
+            VerticalDir.AttributeValue.TopToBottom :
+            VerticalDir.AttributeValue.BottomToTop
         }
       );
     }
