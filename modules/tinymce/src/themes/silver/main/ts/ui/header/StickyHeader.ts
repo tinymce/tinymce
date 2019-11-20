@@ -92,6 +92,12 @@ const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void =
     editor.on('SkinLoaded', () => {
       lazyHeader().each(Docking.reset);
     });
+
+    // Need to refresh when we go fullscreen so that if the header is docked,
+    // then it'll undock and viceversa
+    editor.on('FullscreenStateChanged', () => {
+      lazyHeader().each(Docking.refresh);
+    });
   }
 
   // Update the editor classes once initial rendering has completed
