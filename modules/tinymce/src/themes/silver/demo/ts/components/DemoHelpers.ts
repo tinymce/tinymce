@@ -3,7 +3,7 @@ import { console, document, window } from '@ephox/dom-globals';
 import { Fun, Future, Id, Option, Result } from '@ephox/katamari';
 import { Body, Class } from '@ephox/sugar';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
-import { LinkInformation, UrlData, UrlValidationHandler } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
+import { LinkInformation, ApiUrlData, UrlValidationHandler } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import I18n from 'tinymce/core/api/util/I18n';
 import Editor from 'tinymce/core/api/Editor';
 
@@ -153,7 +153,7 @@ const setupDemo = () => {
       addToHistory: (url: string, fileType: string) => {},
       getLinkInformation: () => Option.some(fakeLinkInfo),
       getValidationHandler: () => Option.some(fakeValidator),
-      getUrlPicker: (filetype) => Option.some((entry: UrlData) => {
+      getUrlPicker: (filetype) => Option.some((entry: ApiUrlData) => {
         const newUrl = Option.from(window.prompt('File browser would show instead of this...', entry.value));
         return Future.pure({...entry, value: newUrl.getOr(entry.value)});
       })

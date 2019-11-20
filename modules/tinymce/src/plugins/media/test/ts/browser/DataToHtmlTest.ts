@@ -54,8 +54,8 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
         sTestDataToHtml(editor,
           {
             'type': 'video',
-            'source1': 'a',
-            'source2': '',
+            'source': 'a',
+            'altsource': '',
             'poster': '',
             'data-ephox-embed': 'a'
           },
@@ -63,8 +63,8 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
         sTestDataToHtml(editor,
           {
             'type': 'iframe',
-            'source1': 'a',
-            'source2': '',
+            'source': 'a',
+            'altsource': '',
             'poster': '',
             'data-ephox-embed': 'a'
           },

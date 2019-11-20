@@ -72,6 +72,7 @@ export interface LinkDialogOutput {
 
 interface LinkUrlMeta {
   text?: string;
+  title?: string;
   attach?: () => void;
   original?: {
     value: string;

@@ -14,6 +14,7 @@ Version 5.2.0 (TBD)
     Fixed the `mscontrolselect` event not being unbound on IE/Edge #TINY-4196
     Fixed the "Current Window" target not applying when saving from the link dialog #TINY-4063
     Fixed Confirm Dialog footer buttons so only the "Yes" button is highlighted #TINY-4130
+    Fixed `file_picker_callback` functionality for Image, Link and Media plugins #TINY-4163
 Version 5.1.2 (2019-11-19)
     Fixed desktop touch devices using `mobile` configuration overrides #TINY-4345
     Fixed unable to disable the new scrolling toolbar feature #TINY-4345

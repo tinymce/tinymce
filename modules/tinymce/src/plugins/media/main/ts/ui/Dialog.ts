@@ -7,54 +7,71 @@
 
 import { Types } from '@ephox/bridge';
 import { Element, HTMLElement } from '@ephox/dom-globals';
-import { Arr, Cell, Merger, Obj, Type } from '@ephox/katamari';
+import { Arr, Cell, Merger, Obj, Option, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-
 import Settings from '../api/Settings';
+import { dataToHtml } from '../core/DataToHtml';
 import * as HtmlToData from '../core/HtmlToData';
 import Service from '../core/Service';
-import { MediaData } from '../core/Types';
+import { DialogSubData, MediaData, MediaDialogData } from '../core/Types';
 import UpdateHtml from '../core/UpdateHtml';
-import { dataToHtml } from '../core/DataToHtml';
 
-type DialogData = {
-  source1?: {
-    value: string
-  };
-  source2?: {
-    value: string
-  };
-  embed?: string;
-  dimensions?: {
-    width?: string;
-    height?: string;
-  };
-  poster?: {
-    value: string
-  };
+const extractMeta = (sourceInput: keyof MediaDialogData, data: MediaDialogData): Option<Record<string, string>> => {
+  return Obj.get(data, sourceInput).bind((mainData: DialogSubData) => Obj.get(mainData, 'meta'));
 };
 
-const unwrap = (data: DialogData): MediaData => {
-  const unwrapped = Merger.merge(data, {
-    source1: data.source1.value,
-    source2: Obj.get(data, 'source2').bind((source2) => Obj.get(source2, 'value')).getOr(''),
-    poster: Obj.get(data, 'poster').bind((poster) => Obj.get(poster, 'value')).getOr('')
+const getValue = (data: MediaDialogData, metaData: Record<string, string>, sourceInput?: keyof MediaDialogData) => (prop: keyof MediaDialogData): Record<string, string> => {
+  // Cases:
+  // 1. Get the nested value prop (component is the executed urlinput)
+  // 2. Get from metadata (a urlinput was executed but urlinput != this component)
+  // 3. Not a urlinput so just get string
+  // If prop === sourceInput do 1, 2 then 3, else do 2 then 1 or 3
+  // ASSUMPTION: we only want to get values for props that already exist in data
+  const getFromData = (): Option<string | Record<string, string> | DialogSubData> => Obj.get(data, prop);
+  const getFromMetaData = (): Option<string> => Obj.get(metaData, prop);
+  const getNonEmptyValue = (c: Record<string, string>): Option<string> => Obj.get(c, 'value').bind((v: string) => v.length > 0 ? Option.some(v) : Option.none());
+
+  const getFromValueFirst = () => getFromData().bind((child) => {
+    return Type.isObject(child)
+      ? getNonEmptyValue(child as Record<string, string>).orThunk(getFromMetaData)
+      : getFromMetaData().orThunk(() => Option.from(child as string));
   });
 
-  // Add additional size values that may or may not have been in the data
-  Obj.get(data, 'dimensions').each((dimensions) => {
+  const getFromMetaFirst = () => getFromMetaData().orThunk(() => getFromData().bind((child) => {
+    return Type.isObject(child)
+      ? getNonEmptyValue(child as Record<string, string>)
+      : Option.from(child as string);
+  }));
+
+  return { [prop]: (prop === sourceInput ? getFromValueFirst() : getFromMetaFirst()).getOr('') };
+};
+
+const getDimensions = (data: MediaDialogData, metaData: Record<string, string>) => {
+  const dimensions = {};
+  Obj.get(data, 'dimensions').each((dims) => {
     Arr.each([ 'width', 'height' ] as ('width' | 'height')[], (prop) => {
-      Obj.get(dimensions, prop).each((value) => unwrapped[prop] = value);
+      Obj.get(metaData, prop).orThunk(() => Obj.get(dims, prop)).each((value) => dimensions[prop] = value);
     });
   });
-
-  return unwrapped;
+  return dimensions;
 };
 
-const wrap = (data: MediaData): DialogData => {
+const unwrap = (data: MediaDialogData, sourceInput?: keyof MediaDialogData): MediaData => {
+  const metaData = sourceInput ? extractMeta(sourceInput, data).getOr({}) : {};
+  const get = getValue(data, metaData, sourceInput);
+  return {
+    ...get('source'),
+    ...get('altsource'),
+    ...get('poster'),
+    ...get('embed'),
+    ...getDimensions(data, metaData)
+  } as MediaData;
+};
+
+const wrap = (data: MediaData): MediaDialogData => {
   const wrapped = Merger.merge(data, {
-    source1: { value: Obj.get(data, 'source1').getOr('') },
-    source2: { value: Obj.get(data, 'source2').getOr('') },
+    source: { value: Obj.get(data, 'source').getOr('') },
+    altsource: { value: Obj.get(data, 'altsource').getOr('') },
     poster: { value: Obj.get(data, 'poster').getOr('') }
   });
 
@@ -91,7 +108,7 @@ const getEditorData = function (editor: Editor): MediaData {
   return Merger.merge({ embed: snippet }, HtmlToData.htmlToData(Settings.getScripts(editor), snippet));
 };
 
-const addEmbedHtml = function (api: Types.Dialog.DialogInstanceApi<DialogData>, editor: Editor) {
+const addEmbedHtml = function (api: Types.Dialog.DialogInstanceApi<MediaDialogData>, editor: Editor) {
   return function (response: { url: string; html: string }) {
     // Only set values if a URL has been defined
     if (Type.isString(response.url) && response.url.trim().length > 0) {
@@ -99,7 +116,7 @@ const addEmbedHtml = function (api: Types.Dialog.DialogInstanceApi<DialogData>, 
       const snippetData = snippetToData(editor, html);
       const nuData: MediaData = {
         ...snippetData,
-        source1: response.url,
+        source: response.url,
         embed: html
       };
 
@@ -135,7 +152,7 @@ const submitForm = function (prevData: MediaData, newData: MediaData, editor: Ed
   newData.embed = UpdateHtml.updateHtml(newData.embed, newData);
 
   // Only fetch the embed HTML content if the URL has changed from what it previously was
-  if (newData.embed && (prevData.source1 === newData.source1 || Service.isCached(newData.source1))) {
+  if (newData.embed && (prevData.source === newData.source || Service.isCached(newData.source))) {
     handleInsert(editor, newData.embed);
   } else {
     Service.getEmbedHtml(editor, newData)
@@ -150,16 +167,12 @@ const showDialog = function (editor: Editor) {
   const currentData = Cell<MediaData>(editorData);
   const initialData = wrap(editorData);
 
-  const getSourceData = (api: Types.Dialog.DialogInstanceApi<DialogData>): MediaData => {
-    return unwrap(api.getData());
-  };
-
-  const handleSource1 = (prevData: MediaData, api: Types.Dialog.DialogInstanceApi<DialogData>) => {
-    const serviceData = getSourceData(api);
+  const handleSource = (prevData: MediaData, api: Types.Dialog.DialogInstanceApi<MediaDialogData>) => {
+    const serviceData = unwrap(api.getData(), 'source');
 
     // If a new URL is entered, then clear the embed html and fetch the new data
-    if (prevData.source1 !== serviceData.source1) {
-      addEmbedHtml(win, editor)({ url: serviceData.source1, html: '' });
+    if (prevData.source !== serviceData.source) {
+      addEmbedHtml(win, editor)({ url: serviceData.source, html: '' });
 
       Service.getEmbedHtml(editor, serviceData)
         .then(addEmbedHtml(win, editor))
@@ -167,14 +180,14 @@ const showDialog = function (editor: Editor) {
     }
   };
 
-  const handleEmbed = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
+  const handleEmbed = (api: Types.Dialog.DialogInstanceApi<MediaDialogData>) => {
     const data = unwrap(api.getData());
     const dataFromEmbed = snippetToData(editor, data.embed);
     api.setData(wrap(dataFromEmbed));
   };
 
-  const handleUpdate = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
-    const data = getSourceData(api);
+  const handleUpdate = (api: Types.Dialog.DialogInstanceApi<MediaDialogData>, sourceInput: keyof MediaDialogData) => {
+    const data = unwrap(api.getData(), sourceInput);
     const embed = dataToHtml(editor, data);
     api.setData(wrap({
       ...data,
@@ -183,7 +196,7 @@ const showDialog = function (editor: Editor) {
   };
 
   const mediaInput: Types.Dialog.BodyComponentApi[] = [{
-    name: 'source1',
+    name: 'source',
     type: 'urlinput',
     filetype: 'media',
     label: 'Source'
@@ -217,7 +230,7 @@ const showDialog = function (editor: Editor) {
 
   if (Settings.hasAltSource(editor)) {
     advancedFormItems.push({
-        name: 'source2',
+        name: 'altsource',
         type: 'urlinput',
         filetype: 'media',
         label: 'Alternative source URL'
@@ -272,14 +285,14 @@ const showDialog = function (editor: Editor) {
       }
     ],
     onSubmit (api) {
-      const serviceData = getSourceData(api);
+      const serviceData = unwrap(api.getData());
       submitForm(currentData.get(), serviceData, editor);
       api.close();
     },
     onChange (api, detail) {
       switch (detail.name) {
-        case 'source1':
-          handleSource1(currentData.get(), api);
+        case 'source':
+          handleSource(currentData.get(), api);
           break;
 
         case 'embed':
@@ -287,19 +300,21 @@ const showDialog = function (editor: Editor) {
           break;
 
         case 'dimensions':
+        case 'altsource':
         case 'poster':
-          handleUpdate(api);
+          handleUpdate(api, detail.name);
           break;
 
         default:
           break;
       }
-      currentData.set(getSourceData(api));
+      currentData.set(unwrap(api.getData()));
     },
     initialData
   });
 };
 
 export default {
-  showDialog
+  showDialog,
+  unwrap
 };

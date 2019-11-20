@@ -1,16 +1,14 @@
-import { Assertions, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, ApproxStructure, Chain, UiControls } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Keyboard, Keys, Logger, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { AlloyTriggers, Focusing, GuiFactory, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Future, Option } from '@ephox/katamari';
 import { Element, SelectorFind, Value } from '@ephox/sugar';
-
-import { UrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
+import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import { LinkTargetType } from 'tinymce/themes/silver/ui/core/LinkTargets';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
-
-import TestExtras from '../../../module/TestExtras';
 import { DisablingSteps } from '../../../module/DisablingSteps';
+import TestExtras from '../../../module/TestExtras';
 
 UnitTest.asynctest('UrlInput component Test', (success, failure) => {
   const helpers = TestExtras();
@@ -48,9 +46,9 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
             anchorBottom: undefined
           }),
           getValidationHandler: () => Option.none(),
-          getUrlPicker: (filetype) => Option.some((entry: UrlData) => {
+          getUrlPicker: (filetype) => Option.some((entry: ApiUrlData) => {
             store.adder('urlpicker')();
-            return Future.pure({ value: 'http://tiny.cloud', meta: { before: entry.value } });
+            return Future.pure({ value: 'http://tiny.cloud', meta: { before: entry.value }, fieldname: 'test' });
           })
         })
       );
@@ -184,11 +182,13 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           Assertions.assertEq('Checking Rep.getValue',
             {
               value: '#header',
-              meta: { text: 'Header1' }
+              meta: { text: 'Header1' },
+              fieldname: 'test'
             },
             {
               value: repValue.value,
-              meta: { text: repValue.meta.text }
+              meta: { text: repValue.meta.text },
+              fieldname: 'test'
             }
           );
         }),
@@ -218,7 +218,8 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           const repValue = Representing.getValue(input);
           Assertions.assertEq('Checking Rep.getValue', {
             value: 'http://tiny.cloud',
-            meta: { before: '#header'}
+            meta: { before: '#header'},
+            fieldname: 'test'
           }, repValue);
         }),
 

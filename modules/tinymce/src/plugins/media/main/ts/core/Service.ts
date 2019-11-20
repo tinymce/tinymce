@@ -16,24 +16,24 @@ const embedPromise = function (data: MediaData, dataToHtml: DataToHtml.DataToHtm
   return new Promise<{url: string, html: string}>(function (res, rej) {
     const wrappedResolve = function (response) {
       if (response.html) {
-        cache[data.source1] = response;
+        cache[data.source] = response;
       }
       return res({
-        url: data.source1,
+        url: data.source,
         html: response.html ? response.html : dataToHtml(data)
       });
     };
-    if (cache[data.source1]) {
-      wrappedResolve(cache[data.source1]);
+    if (cache[data.source]) {
+      wrappedResolve(cache[data.source]);
     } else {
-      handler({ url: data.source1 }, wrappedResolve, rej);
+      handler({ url: data.source }, wrappedResolve, rej);
     }
   });
 };
 
 const defaultPromise = function (data: MediaData, dataToHtml: DataToHtml.DataToHtmlCallback) {
   return new Promise<{url: string, html: string}>(function (res) {
-    res({ html: dataToHtml(data), url: data.source1 });
+    res({ html: dataToHtml(data), url: data.source });
   });
 };
 
