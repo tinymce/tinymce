@@ -1,10 +1,11 @@
 Version 5.2.0 (TBD)
     Added a drop shadow below the toolbar while in sticky mode and introduced Oxide variables to customize it when creating a custom skin #TINY-4343
     Changed iframe mode to set selection on content init if selection doesn't exist #TINY-4139
-    Fixed bug with alignment toolbar buttons sometimes not changing state correctly #TINY-4139
+    Changed table related icons to align them with the visual style of the other icons #TINY-4341
     Changed and improved the visual appearance of the color input field #TINY-2917
     Changed fake caret container to use `forced_root_block` when possible #TINY-4190
     Changed so style_formats gets registered to the formatter before the initial content is loaded into the editor. #TINY-4238
+    Fixed bug with alignment toolbar buttons sometimes not changing state correctly #TINY-4139
     Fixed content incorrectly scrolling to the top or bottom when pressing enter if they were already in view #TINY-4162
     Fixed `scrollIntoView` potentially hiding elements behind the toolbar #TINY-4162
     Fixed editor not respecting the `resize_img_proportional` setting due to legacy code. #TINY-4162
@@ -13,23 +14,24 @@ Version 5.2.0 (TBD)
     Fixed the `mscontrolselect` event not being unbound on IE/Edge #TINY-4196
     Fixed the "Current Window" target not applying when saving from the link dialog #TINY-4063
     Fixed Confirm Dialog footer buttons so only the "Yes" button is highlighted #TINY-4130
-    Fixed file_picker_callback functionality for Image, Link and Media plugins #TINY-4163
-Version 5.1.2 (TBD)
-    Fixed desktop touch devices using mobile configuration overrides #TINY-4345
-    Fixed unable to disable the new scrolling toolbar #TINY-4345
-    Fixed touch events burning through to the content on Android #TINY-4367
-    Fixed errors being raised by table selector handles not properly guarding against non-table selections #TINY-4338
-    Fixed cut not removing selected content on Android #TINY-4362
-    Fixed inline toolbar not constrained by default to the window width #TINY-4314
-    Fixed context toolbar split button chevrons pointing right instead of down #TINY-4257
+    Fixed `file_picker_callback` functionality for Image, Link and Media plugins #TINY-4163
+Version 5.1.2 (2019-11-19)
+    Fixed desktop touch devices using `mobile` configuration overrides #TINY-4345
+    Fixed unable to disable the new scrolling toolbar feature #TINY-4345
+    Fixed touch events passing through any pop-up items to the content underneath on Android devices #TINY-4367
+    Fixed the table selector handles throwing JavaScript exceptions for non-table selections #TINY-4338
+    Fixed `cut` operations not removing selected content on Android devices when the `paste` plugin is enabled #TINY-4362
+    Fixed inline toolbar not constrained to the window width by default #TINY-4314
+    Fixed context toolbar split button chevrons pointing right when they should be pointing down #TINY-4257
     Fixed unable to access the dialog footer in tabbed dialogs on small screens #TINY-4360
-    Fixed mobile table selectors hard to touch by marginally increasing their size #TINY-4366
+    Fixed mobile table selectors were hard to select with touch by increasing the size #TINY-4366
     Fixed mobile table selectors moving when moving outside the editor #TINY-4366
     Fixed inline toolbars collapsing when using sliding toolbars #TINY-4389
-    Fixed block textpatterns so that spaces and NBSPs in patterns are interchangeable #TINY-4378
-    Fixed backspace not merging blocks when the last element in the previous block was a contenteditable="false" element #TINY-4235
-    Fixed toolbar buttons that only contain text overlapping on mobile devices #TINY-4395
+    Fixed block textpatterns not treating NBSPs as spaces #TINY-4378
+    Fixed backspace not merging blocks when the last element in the preceding block was a `contenteditable="false"` element #TINY-4235
+    Fixed toolbar buttons that only contain text labels overlapping on mobile devices #TINY-4395
     Fixed quickbars quickimage picker not working on mobile #TINY-4377
+    Fixed fullscreen not resizing in an iOS WKWebView component #TINY-4413
 Version 5.1.1 (2019-10-28)
     Fixed font formats containing spaces being wrapped in `&quot;` entities instead of single quotes #TINY-4275
     Fixed alert and confirm dialogs losing focus when clicked #TINY-4248
