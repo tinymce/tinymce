@@ -78,7 +78,11 @@ const setup = (editor: Editor) => {
         if (longpressFired.get()) {
           e.preventDefault();
         } else {
-          editor.fire('tap', e);
+          // Don't use "e" as the args for fire since it'll mutate the type. See TINY-3254
+          const result = editor.fire('tap');
+          if (result.isDefaultPrevented()) {
+            e.preventDefault();
+          }
         }
       });
   }, true);
