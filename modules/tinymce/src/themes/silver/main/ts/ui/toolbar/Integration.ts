@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, SketchSpec } from '@ephox/alloy';
+import { AlloySpec, SketchSpec, VerticalDir } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
@@ -28,6 +28,7 @@ import { createFormatSelect } from '../core/complex/FormatSelect';
 import { createStyleSelect } from '../core/complex/StyleSelect';
 import { RenderToolbarConfig, ToolbarGroupSetting } from '../../Render';
 import { ToolbarGroup } from './CommonToolbar';
+import { isToolbarLocationTop } from '../../api/Settings';
 
 export const handleError = (error) => {
   // tslint:disable-next-line:no-console
@@ -129,7 +130,12 @@ const types = {
           },
           extras,
           Option.none()
-        )
+        ),
+        {
+          [VerticalDir.Attribute]: isToolbarLocationTop(editor) ?
+            VerticalDir.AttributeValue.TopToBottom :
+            VerticalDir.AttributeValue.BottomToTop
+        }
       );
     }
   ),

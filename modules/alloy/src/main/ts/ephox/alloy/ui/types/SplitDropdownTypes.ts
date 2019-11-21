@@ -5,7 +5,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { AnchorOverrides } from '../../positioning/mode/Anchoring';
+import { AnchorOverrides, HasLayoutAnchorSpec } from '../../positioning/mode/Anchoring';
 import { CommonDropdownDetail } from './DropdownTypes';
 import { TieredMenuSpec, TieredData } from './TieredMenuTypes';
 
@@ -21,7 +21,7 @@ export interface SplitDropdownApis {
   repositionMenus: (comp: AlloyComponent) => void;
 }
 
-export interface SplitDropdownSpec extends CompositeSketchSpec {
+export interface SplitDropdownSpec extends CompositeSketchSpec, HasLayoutAnchorSpec {
   uid?: string;
   dom: RawDomSchema;
   role?: string;

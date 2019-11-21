@@ -13,6 +13,7 @@ import * as Fields from '../../data/Fields';
 import * as SketcherFields from '../../data/SketcherFields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
+import * as AnchorLayouts from '../../positioning/mode/AnchorLayouts';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('toggleClass'),
@@ -20,7 +21,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.onStrictHandler('onExecute'),
   FieldSchema.defaulted('getHotspot', Option.some),
   FieldSchema.defaulted('getAnchorOverrides', Fun.constant({ })),
-  FieldSchema.defaulted('layouts', Option.none()),
+  AnchorLayouts.schema(),
   Fields.onStrictHandler('onItemExecute'),
   FieldSchema.option('lazySink'),
   FieldSchema.strict('dom'),

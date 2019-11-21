@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, VerticalDir } from '@ephox/alloy';
 import { HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
@@ -100,13 +100,17 @@ const setup = (editor: Editor): RenderInfo => {
     }
   } : {};
 
+  const verticalDirAttributes = {
+    attributes: {
+      [VerticalDir.Attribute]: isToolbarTop ?
+        VerticalDir.AttributeValue.TopToBottom :
+        VerticalDir.AttributeValue.BottomToTop
+    }
+  };
+
   const lazyHeader = () => lazyOuterContainer.bind(OuterContainer.getHeader);
 
   const isHeaderDocked = () => header.isDocked(lazyHeader);
-
-  const isHeaderDockedBottom = () => {
-    return isHeaderDocked() && !isToolbarTop;
-  };
 
   const sink = GuiFactory.build({
     dom: {
@@ -146,7 +150,7 @@ const setup = (editor: Editor): RenderInfo => {
     return OuterContainer.getThrobber(container);
   }).getOrDie('Could not find throbber element');
 
-  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar, lazyMoreButton, isHeaderDockedBottom);
+  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar, lazyMoreButton);
 
   const partMenubar: AlloySpec = OuterContainer.parts().menubar({
     dom: {
@@ -174,7 +178,8 @@ const setup = (editor: Editor): RenderInfo => {
     split: toolbarDrawer,
     lazyToolbar,
     lazyMoreButton,
-    lazyHeader: () => lazyHeader().getOrDie('Could not find header element')
+    lazyHeader: () => lazyHeader().getOrDie('Could not find header element'),
+    ...verticalDirAttributes
   });
 
   const partMultipleToolbar: AlloySpec = OuterContainer.parts()['multiple-toolbar']({
@@ -242,7 +247,8 @@ const setup = (editor: Editor): RenderInfo => {
   const partHeader = OuterContainer.parts().header({
     dom: {
       tag: 'div',
-      classes: ['tox-editor-header']
+      classes: ['tox-editor-header'],
+      ...verticalDirAttributes,
     },
     components: Arr.flatten<AlloySpec>([
       hasMenubar ? [ partMenubar ] : [ ],

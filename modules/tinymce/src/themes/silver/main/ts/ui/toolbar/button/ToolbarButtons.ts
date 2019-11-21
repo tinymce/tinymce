@@ -25,8 +25,7 @@ import {
   TieredData,
   TieredMenuTypes,
   Unselecting,
-  FloatingToolbarButton,
-  Layout,
+  FloatingToolbarButton
 } from '@ephox/alloy';
 import { Toolbar, Types } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
@@ -39,7 +38,6 @@ import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
 import { renderIconFromPack, renderLabel } from '../../button/ButtonSlices';
 import { onControlAttached, onControlDetached, OnDestroy } from '../../controls/Controls';
-import * as Icons from '../../icons/Icons';
 import { componentRenderPipeline } from '../../menus/item/build/CommonMenuItem';
 import { classForPreset } from '../../menus/item/ItemClasses';
 import { deriveMenuMovement } from '../../menus/menu/MenuMovement';
@@ -51,6 +49,7 @@ import { ToolbarButtonClasses } from '../button/ButtonClasses';
 import { onToolbarButtonExecute, toolbarButtonEventOrder } from '../button/ButtonEvents';
 import { ToolbarGroup, renderToolbarGroup } from '../CommonToolbar';
 import { ToolbarConfig } from '../../../Render';
+import { chevronSetter } from '../../button/Behaviours';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
@@ -164,14 +163,10 @@ const renderCommonStructure = (icon: Option<string>, text: Option<string>, toolt
   };
 };
 
-const renderFloatingToolbarButton = (spec: Toolbar.FloatingToolbarButton, backstage: UiFactoryBackstage, identifyButtons: (toolbar: ToolbarConfig) => ToolbarGroup[]) => {
+const renderFloatingToolbarButton = (spec: Toolbar.FloatingToolbarButton, backstage: UiFactoryBackstage, identifyButtons: (toolbar: ToolbarConfig) => ToolbarGroup[], attributes: Record<string, string>) => {
   const sharedBackstage = backstage.shared;
 
   return FloatingToolbarButton.sketch({
-    layouts: {
-      onRtl: () => Layout.belowOrAbove(),
-      onLtr: () => Layout.belowOrAboveRtl()
-    },
     lazySink: sharedBackstage.getSink,
     fetch: () => {
       return Future.nu((resolve) => {
@@ -186,7 +181,8 @@ const renderFloatingToolbarButton = (spec: Toolbar.FloatingToolbarButton, backst
       toolbar: {
         dom: {
           tag: 'div',
-          classes: [ 'tox-toolbar__overflow' ]
+          classes: [ 'tox-toolbar__overflow' ],
+          attributes
         }
       }
     },
@@ -385,8 +381,10 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         dom: {
           tag: 'button',
           classes: [ ToolbarButtonClasses.Button, 'tox-split-button__chevron' ],
-          innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons)
-        }
+        },
+        buttonBehaviours: Behaviour.derive([
+          chevronSetter(sharedBackstage.providers.icons)
+        ])
       }),
       AlloySplitDropdown.parts()['aria-descriptor']({
         text: sharedBackstage.providers.translate('To open the popup, press Shift+Enter')
