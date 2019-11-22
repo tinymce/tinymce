@@ -5,16 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range, Document } from '@ephox/dom-globals';
+import { Document, Range } from '@ephox/dom-globals';
 import { Arr, Cell, Id, Option } from '@ephox/katamari';
-import { Attr, Class, Classes, Element, Insert, Node, Replication, Traverse, Html } from '@ephox/sugar';
-import { AnnotatorSettings } from './AnnotationsRegistry';
+import { Attr, Class, Classes, Element, Html, Insert, Node, Replication, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import GetBookmark from '../bookmark/GetBookmark';
 import * as ExpandRange from '../fmt/ExpandRange';
 
 import RangeWalk from '../selection/RangeWalk';
 import { ChildContext, context } from './AnnotationContext';
+import { AnnotatorSettings } from './AnnotationsRegistry';
 import * as Markings from './Markings';
 
 export type DecoratorData = Record<string, any>;
@@ -27,14 +27,8 @@ export type Decorator = (
   classes?: string[]
 };
 
-// We want it to apply to trailing spaces (like removeFormat does) when dealing with non breaking spaces. There
-// will likely be other edge cases as well.
-const shouldApplyToTrailingSpaces = (rng: Range) => {
-  return rng.startContainer.nodeType === 3 && rng.startContainer.nodeValue.length >= rng.startOffset && rng.startContainer.nodeValue[rng.startOffset] === '\u00A0';
-};
-
 const applyWordGrab = (editor: Editor, rng: Range): void => {
-  const r = ExpandRange.expandRng(editor, rng, [{ inline: true }], shouldApplyToTrailingSpaces(rng));
+  const r = ExpandRange.expandRng(editor, rng, [{ inline: true }]);
   rng.setStart(r.startContainer, r.startOffset);
   rng.setEnd(r.endContainer, r.endOffset);
   editor.selection.setRng(rng);

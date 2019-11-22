@@ -6,25 +6,25 @@
  */
 
 import { Element as DomElement, Node, Range } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { Element, Traverse, InsertAll, Insert } from '@ephox/sugar';
-import Bookmarks from '../bookmark/Bookmarks';
-import NodeType from '../dom/NodeType';
+import { Arr, Option } from '@ephox/katamari';
+import { Element, Insert, InsertAll, Traverse } from '@ephox/sugar';
+import DOMUtils from '../api/dom/DOMUtils';
+import Selection from '../api/dom/Selection';
 import TreeWalker from '../api/dom/TreeWalker';
+import Editor from '../api/Editor';
+import { FormatAttrOrStyleValue, FormatVars, RemoveFormat } from '../api/fmt/Format';
+import Settings from '../api/Settings';
+import Tools from '../api/util/Tools';
+import Bookmarks from '../bookmark/Bookmarks';
+import GetBookmark from '../bookmark/GetBookmark';
+import NodeType from '../dom/NodeType';
+import { RangeLikeObject } from '../selection/RangeTypes';
+import RangeWalk from '../selection/RangeWalk';
+import * as SplitRange from '../selection/SplitRange';
 import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
-import RangeWalk from '../selection/RangeWalk';
-import Tools from '../api/util/Tools';
-import Selection from '../api/dom/Selection';
-import GetBookmark from '../bookmark/GetBookmark';
-import Editor from '../api/Editor';
-import * as SplitRange from '../selection/SplitRange';
-import DOMUtils from '../api/dom/DOMUtils';
-import Settings from '../api/Settings';
-import { FormatAttrOrStyleValue, FormatVars, RemoveFormat } from '../api/fmt/Format';
-import { RangeLikeObject } from '../selection/RangeTypes';
 
 const MCE_ATTR_RE = /^(src|href|style)$/;
 const each = Tools.each;
@@ -506,7 +506,17 @@ const remove = function (ed: Editor, name: string, vars?: FormatVars, node?: Nod
         startContainer = wrap(dom, startContainer, 'span', { 'id': '_start', 'data-mce-type': 'bookmark' });
         endContainer = wrap(dom, endContainer, 'span', { 'id': '_end', 'data-mce-type': 'bookmark' });
 
-        // Split start/end
+        // Split start/end and anything in between
+        const newRng = dom.createRng();
+        newRng.setStartAfter(startContainer);
+        newRng.setEndBefore(endContainer);
+        RangeWalk.walk(dom, newRng, (nodes) => {
+          Arr.each(nodes, (n) => {
+            if (!Bookmarks.isBookmarkNode(n) && !Bookmarks.isBookmarkNode(n.parentNode)) {
+              splitToFormatRoot(n);
+            }
+          });
+        });
         splitToFormatRoot(startContainer);
         splitToFormatRoot(endContainer);
 

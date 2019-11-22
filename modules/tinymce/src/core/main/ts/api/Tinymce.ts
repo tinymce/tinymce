@@ -33,6 +33,7 @@ import ScriptLoader, { ScriptLoaderConstructor } from './dom/ScriptLoader';
 import Resource from './Resource';
 import Selection from './dom/Selection';
 import Sizzle from './dom/Sizzle';
+import TextSeeker from './dom/TextSeeker';
 import TreeWalker, { TreeWalkerConstructor } from './dom/TreeWalker';
 import Rect from './geom/Rect';
 import DomParser, { DomParserSettings } from './html/DomParser';
@@ -89,6 +90,7 @@ export interface TinyMCE extends EditorManager {
     Sizzle: any;
     DomQuery: DomQueryConstructor;
     TreeWalker: TreeWalkerConstructor;
+    TextSeeker: (dom: DOMUtils, isBlockBoundary?: (node: Node) => boolean) => TextSeeker;
     DOMUtils: DOMUtils;
     ScriptLoader: ScriptLoaderConstructor;
     RangeUtils: (dom: DOMUtils) => RangeUtils;
@@ -218,6 +220,7 @@ const publicApi = {
     Sizzle,
     DomQuery,
     TreeWalker,
+    TextSeeker,
     DOMUtils,
     ScriptLoader,
     RangeUtils,

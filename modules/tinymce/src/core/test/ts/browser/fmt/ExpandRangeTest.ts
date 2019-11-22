@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (success
     });
   };
 
-  const cExpandRng = function (startPath: number[], startOffset: number, endPath: number[], endOffset: number, format, remove: boolean) {
+  const cExpandRng = function (startPath: number[], startOffset: number, endPath: number[], endOffset: number, format, excludeTrailingSpaces: boolean = false) {
     return Chain.mapper(function (editor: Editor) {
       const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (success
       rng.setStart(startContainer.dom(), startOffset);
       rng.setEnd(endContainer.dom(), endOffset);
 
-      return ExpandRange.expandRng(editor, rng, format, remove);
+      return ExpandRange.expandRng(editor, rng, format, excludeTrailingSpaces);
     });
   };
 

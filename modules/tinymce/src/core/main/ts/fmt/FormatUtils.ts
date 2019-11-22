@@ -89,6 +89,10 @@ const isWhiteSpaceNode = function (node: Node) {
   return node && NodeType.isText(node) && /^([\t \r\n]+|)$/.test(node.nodeValue);
 };
 
+const isEmptyTextNode = function (node: Node) {
+  return node && NodeType.isText(node) && node.length === 0;
+};
+
 /**
  * Replaces variables in the value. The variable format is %var.
  *
@@ -173,6 +177,7 @@ export {
   isTextBlock,
   isValid,
   isWhiteSpaceNode,
+  isEmptyTextNode,
   replaceVars,
   isEq,
   normalizeStyleValue,
