@@ -8,7 +8,7 @@
 import { GuiFactory, InlineView, Menu, Highlighting, ItemTypes, Behaviour, AddEventsBehaviour, AlloyEvents, SystemEvents } from '@ephox/alloy';
 import { InlineContent, Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
-import { Arr, Cell, Option, Options, Throttler, Thunk } from '@ephox/katamari';
+import { Arr, Cell, Option, Throttler, Thunk } from '@ephox/katamari';
 import { Element, Remove } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -80,7 +80,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
   });
 
   const getCombinedItems = (triggerChar: string, matches: AutocompleteLookupData[]): ItemTypes.ItemSpec[] => {
-    const columns = Options.findMap(matches, (m) => Option.from(m.columns)).getOr(1);
+    const columns = Arr.findMap(matches, (m) => Option.from(m.columns)).getOr(1);
 
     return Arr.bind(matches, (match) => {
       const choices = match.items;
@@ -137,7 +137,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     ac.matchLength = context.text.length;
 
     // Display the autocompleter menu
-    const columns: Types.ColumnTypes = Options.findMap(lookupData, (ld) => Option.from(ld.columns)).getOr(1);
+    const columns: Types.ColumnTypes = Arr.findMap(lookupData, (ld) => Option.from(ld.columns)).getOr(1);
     InlineView.showAt(
       autocompleter,
       {

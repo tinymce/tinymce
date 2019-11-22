@@ -7,7 +7,7 @@
 
 import { InlineContent, Types } from '@ephox/bridge';
 import { Node, Range } from '@ephox/dom-globals';
-import { Arr, Option, Options } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -47,7 +47,7 @@ const isStartOfWord = (dom: DOMUtils) => {
 };
 
 const getTriggerContext = (dom: DOMUtils, initRange: Range, database: AutocompleterDatabase): Option<AutocompleteContext> => {
-  return Options.findMap(database.triggerChars, (ch) => {
+  return Arr.findMap(database.triggerChars, (ch) => {
     return getContext(dom, initRange, ch);
   });
 };

@@ -247,3 +247,13 @@ export const head = <T>(xs: ArrayLike<T>): Option<T> => xs.length === 0 ? Option
 export const last = <T>(xs: ArrayLike<T>): Option<T> => xs.length === 0 ? Option.none() : Option.some(xs[xs.length - 1]);
 
 export const from: <T>(x: ArrayLike<T>) => T[] = Type.isFunction(Array.from) ? Array.from : (x) => nativeSlice.call(x);
+
+export const findMap = <A, B>(arr: ArrayLike<A>, f: (a: A, index: number) => Option<B>): Option<B> => {
+  for (let i = 0; i < arr.length; i++) {
+    const r = f(arr[i], i);
+    if (r.isSome()) {
+      return r;
+    }
+  }
+  return Option.none<B>();
+};

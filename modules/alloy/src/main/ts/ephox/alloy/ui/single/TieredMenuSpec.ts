@@ -84,7 +84,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   // Find the first item with value `itemValue` in any of the menus inside this tiered menu structure
   const getItemByValue = (container: AlloyComponent, menus: AlloyComponent[], itemValue: string): Option<AlloyComponent> => {
     // Can *greatly* improve the performance of this by calculating things up front.
-    return Options.findMap(menus, (menu) => {
+    return Arr.findMap(menus, (menu) => {
       if (! menu.getSystem().isConnected()) { return Option.none(); }
       const candidates = Highlighting.getCandidates(menu);
       return Arr.find(candidates, (c) => getItemValue(c) === itemValue);

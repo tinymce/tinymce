@@ -6,14 +6,14 @@
  */
 
 import { Toolbar } from '@ephox/bridge';
-import { Option, Options } from '@ephox/katamari';
+import { Option, Arr } from '@ephox/katamari';
 import { Element, TransformFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import { ScopedToolbars } from './ContextToolbarScopes';
 
 const matchTargetWith = (elem: Element, toolbars: Array<Toolbar.ContextToolbar | Toolbar.ContextForm>): Option<{ toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm, elem: Element }> => {
-  return Options.findMap(toolbars, (toolbarApi) =>
+  return Arr.findMap(toolbars, (toolbarApi) =>
     toolbarApi.predicate(elem.dom()) ? Option.some({ toolbarApi, elem }) : Option.none());
 };
 

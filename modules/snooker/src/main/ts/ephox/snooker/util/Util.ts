@@ -1,4 +1,4 @@
-import { Arr, Option, Options } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 
 // Rename this module, and repeat should be in Arr.
 const repeat = function <T>(repititions: number, f: (idx: number) => T) {
@@ -36,7 +36,7 @@ const deduce = function (xs: Option<number>[], index: number) {
 
   const current = xs[index].fold(function () {
     const rest = Arr.reverse(xs.slice(0, index));
-    return Options.findMap(rest, function (a, i) {
+    return Arr.findMap(rest, function (a, i) {
       return a.map(function (aa) {
         return { value: aa, delta: i + 1 };
       });
@@ -46,7 +46,7 @@ const deduce = function (xs: Option<number>[], index: number) {
   });
   const next = xs[index + 1].fold(function () {
     const rest = xs.slice(index + 1);
-    return Options.findMap(rest, function (a, i) {
+    return Arr.findMap(rest, function (a, i) {
       return a.map(function (aa) {
         return { value: aa, delta: i + 1 };
       });

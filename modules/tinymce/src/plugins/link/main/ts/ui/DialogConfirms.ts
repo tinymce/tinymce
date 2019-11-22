@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Future, Option, Options } from '@ephox/katamari';
+import { Arr, Future, Option } from '@ephox/katamari';
 import Delay from 'tinymce/core/api/util/Delay';
 import Editor from 'tinymce/core/api/Editor';
 
@@ -53,7 +53,7 @@ const tryProtocolTransform = (assumeExternalTargets: AssumeExternalTargets) => (
 };
 
 const preprocess = (editor: Editor, assumeExternalTargets: AssumeExternalTargets, data: LinkDialogOutput): Future<LinkDialogOutput> => {
-  return Options.findMap(
+  return Arr.findMap(
     [ tryEmailTransform, tryProtocolTransform(assumeExternalTargets) ],
     (f) => f(data)
   ).fold(
