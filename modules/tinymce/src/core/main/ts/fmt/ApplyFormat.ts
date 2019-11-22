@@ -239,7 +239,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
         let count = 0;
 
         each(node.childNodes, function (node) {
-          if (!FormatUtils.isWhiteSpaceNode(node) && !Bookmarks.isBookmarkNode(node)) {
+          if (!FormatUtils.isEmptyTextNode(node) && !Bookmarks.isBookmarkNode(node)) {
             count++;
           }
         });

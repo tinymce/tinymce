@@ -41,9 +41,10 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
         editor.execCommand('mceInsertNewLine');
         // clean up the cursor position we used to preserve the format
         spot.each((s) => {
-          if (s.element.data.charAt(s.offset - 1) === Unicode.zeroWidth()) {
-            s.element.deleteData(s.offset - 1, 1);
-            cleanEmptyNodes(editor.dom, s.element.parentNode, (e: Node) => e === editor.dom.getRoot());
+          const node = s.container;
+          if (node.data.charAt(s.offset - 1) === Unicode.zeroWidth()) {
+            node.deleteData(s.offset - 1, 1);
+            cleanEmptyNodes(editor.dom, node.parentNode, (e: Node) => e === editor.dom.getRoot());
           }
         });
       }

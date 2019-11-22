@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Keys, Pipeline, Step, GeneralSteps } from '@ephox/agar';
+import { ApproxStructure, Assertions, GeneralSteps, Keys, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
@@ -33,17 +33,17 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
       ])),
       Step.label('Italic format on single word using space 1', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a&nbsp; *', 5),
-        Step.label('Check italic format was applied around the "a" and nbsp but excluded the trailing space',
+        Step.label('Check italic format was applied around the "a" and trailing whitespace',
         tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
           return Utils.bodyStruct([
             s.element('p', {
               children: [
                 s.element('em', {
                   children: [
-                    s.text(str.is('a\u00A0'), true)
+                    s.text(str.is('a\u00A0 '), true)
                   ]
                 }),
-                s.text(str.is(' \u00A0'), true),
+                s.text(str.is('\u00A0'), true),
               ]
             })
           ]);
