@@ -1,5 +1,5 @@
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Options, Option } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { DomEvent, Insert, Element } from '@ephox/sugar';
 
 import { SugarEvent } from '../../alien/TypeDefinitions';
@@ -95,7 +95,7 @@ interface DispatcherMission {
 // Find the dispatcher information for the target if available. Note, the
 // dispatcher may also change the target.
 const findDispatcher = (dispatchers: Dispatcher[], target: Element): Option<DispatcherMission> => {
-  return Options.findMap(dispatchers, (dispatcher: Dispatcher) => {
+  return Arr.findMap(dispatchers, (dispatcher: Dispatcher) => {
     return dispatcher.getTarget(target).map((newTarget) => {
       return {
         target: newTarget,

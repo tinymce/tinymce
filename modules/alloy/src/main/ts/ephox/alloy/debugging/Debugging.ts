@@ -1,6 +1,6 @@
 import { Objects } from '@ephox/boulder';
 import { console, window } from '@ephox/dom-globals';
-import { Arr, Cell, Fun, Obj, Option, Options } from '@ephox/katamari';
+import { Arr, Cell, Fun, Obj, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import * as SystemEvents from '../api/events/SystemEvents';
@@ -68,7 +68,7 @@ const makeEventLogger = (eventName: string, initialTarget: Element) => {
 const processEvent = (eventName: string, initialTarget: Element, f: EventProcessor) => {
   const status = Objects.readOptFrom<EventConfiguration>(eventConfig.get(), eventName).orThunk(() => {
     const patterns = Obj.keys(eventConfig.get());
-    return Options.findMap(patterns, (p) => {
+    return Arr.findMap(patterns, (p) => {
       return eventName.indexOf(p) > -1 ? Option.some(eventConfig.get()[p]) : Option.none();
     });
   }).getOr(
@@ -170,7 +170,7 @@ const getOrInitConnection = () => {
       lookup (uid) {
         const systems = window[CHROME_INSPECTOR_GLOBAL].systems;
         const connections: string[] = Obj.keys(systems);
-        return Options.findMap(connections, (conn) => {
+        return Arr.findMap(connections, (conn) => {
           const connGui = systems[conn];
           return connGui.getByUid(uid).toOption().map((comp) => {
             return Objects.wrap(AlloyLogger.element(comp.element()), inspectorInfo(comp));

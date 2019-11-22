@@ -1,5 +1,5 @@
-import { ClientRect, Document, DOMRect, Range, Text as DomText } from '@ephox/dom-globals';
-import { Option, Options } from '@ephox/katamari';
+import { ClientRect, Document, DOMRect, Text as DomText } from '@ephox/dom-globals';
+import { Option, Arr } from '@ephox/katamari';
 import Element from '../../api/node/Element';
 import * as Text from '../../api/node/Text';
 import * as Geometry from '../alien/Geometry';
@@ -26,7 +26,7 @@ const locate = function (doc: Element<Document>, node: Element<DomText>, x: numb
   const r = doc.dom().createRange();
   r.selectNode(node.dom());
   const rects = r.getClientRects();
-  const foundRect = Options.findMap<ClientRect | DOMRect, ClientRect | DOMRect>(rects, function (rect) {
+  const foundRect = Arr.findMap<ClientRect | DOMRect, ClientRect | DOMRect>(rects, function (rect) {
     return Geometry.inRect(rect, x, y) ? Option.some(rect) : Option.none();
   });
 

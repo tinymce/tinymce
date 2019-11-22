@@ -1,4 +1,4 @@
-import { Fun, Option, Options, Arr } from '@ephox/katamari';
+import { Fun, Option, Arr } from '@ephox/katamari';
 
 import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -77,7 +77,7 @@ const stopDrag = (component: AlloyComponent, snapInfo: SnapsConfig): void => {
 };
 
 const findMatchingSnap = (snaps: SnapConfig[], newCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition): Option<SnapOutput> => {
-  return Options.findMap(snaps, (snap) => {
+  return Arr.findMap(snaps, (snap) => {
     // NOTE: These are structs because of the immutableBag in Dragging.ts
     const sensor = snap.sensor();
     const inRange = DragCoord.withinRange(newCoord, sensor, snap.range().left(), snap.range().top(), scroll, origin);

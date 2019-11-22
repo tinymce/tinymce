@@ -1,5 +1,5 @@
 import { KeyboardEvent, Window } from '@ephox/dom-globals';
-import { Fun, Option, Options, Struct } from '@ephox/katamari';
+import { Arr, Fun, Option, Struct } from '@ephox/katamari';
 import { Element, EventArgs, Situ } from '@ephox/sugar';
 import KeySelection from '../keyboard/KeySelection';
 import VerticalMovement from '../keyboard/VerticalMovement';
@@ -60,7 +60,7 @@ const keyboard = function (win: Window, container: Element, isRoot: (e: Element)
 
       const update = function (attempts: RC[]) {
         return function () {
-          const navigation = Options.findMap(attempts, function (delta) {
+          const navigation = Arr.findMap(attempts, function (delta) {
             return KeySelection.update(delta.rows(), delta.cols(), container, selected, annotations);
           });
 

@@ -69,30 +69,3 @@ UnitTest.test('Options.cat of nones.concat(somes).concat(nones) should be somes'
     }
   ));
 });
-
-UnitTest.test('Options.findMap of empty is none', () => {
-  fc.assert(fc.property(
-    fc.func(ArbDataTypes.arbOption(fc.integer())),
-    (f) => {
-      Assert.eq('eq',  true, Options.findMap([ ], f).isNone());
-    }
-  ));
-});
-
-UnitTest.test('Options.findMap of non-empty is first if f is Option.some', () => {
-  fc.assert(fc.property(
-    fc.array(fc.json(), 1, 40),
-    (arr) => {
-      Assert.eq('eq',  arr[0], Options.findMap(arr, Option.some).getOrDie());
-    }
-  ));
-});
-
-UnitTest.test('Options.findMap of non-empty is none if f is Option.none', () => {
-  fc.assert(fc.property(
-    fc.array(fc.json(), 1, 40),
-    (arr) => {
-      Assert.eq('eq',  true, Options.findMap(arr, Option.none).isNone());
-    }
-  ));
-});

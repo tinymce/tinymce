@@ -26,15 +26,8 @@ export const sequence = <A> (arr: ArrayLike<Option<A>>): Option<Array<A>> => {
   return Option.some(r);
 };
 
-export const findMap = <A, B>(arr: ArrayLike<A>, f: (a: A, index: number) => Option<B>): Option<B> => {
-  for (let i = 0; i < arr.length; i++) {
-    const r = f(arr[i], i);
-    if (r.isSome()) {
-      return r;
-    }
-  }
-  return Option.none<B>();
-};
+/** @deprecated Use Arr.findMap instead. */
+export const findMap = Arr.findMap;
 
 /** Map each element of an array to an Option and collect the results.
  *  If all results are "some", return Option.some of the results.

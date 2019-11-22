@@ -9,7 +9,7 @@ import { AlloySpec, SketchSpec, VerticalDir } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
-import { Arr, Obj, Option, Options, Result, Type } from '@ephox/katamari';
+import { Arr, Obj, Option, Result, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
 import {
@@ -221,7 +221,7 @@ const createToolbar = (toolbarConfig: RenderToolbarConfig): ToolbarGroupSetting[
 const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, extras: Extras, prefixes: Option<string[]>): Option<AlloySpec> => {
   return Obj.get(buttons, toolbarItem.toLowerCase()).orThunk(() => {
     return prefixes.bind((ps) => {
-      return Options.findMap(ps, (prefix) => {
+      return Arr.findMap(ps, (prefix) => {
         return Obj.get(buttons, prefix + toolbarItem.toLowerCase());
       });
     });
