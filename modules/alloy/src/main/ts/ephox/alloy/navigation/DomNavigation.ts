@@ -1,6 +1,5 @@
-import { Option } from '@ephox/katamari';
+import { Option, Cycles } from '@ephox/katamari';
 
-import * as Cycles from '../alien/Cycles';
 import * as DomPinpoint from './DomPinpoint';
 import { Element, Attr, Node } from '@ephox/sugar';
 

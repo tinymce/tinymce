@@ -1,6 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
-
-import * as Cycles from '../alien/Cycles';
+import { Fun, Option, Cycles } from '@ephox/katamari';
 
 const withGrid = (values, index, numCols, f) => {
   const oldRow = Math.floor(index / numCols);

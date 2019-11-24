@@ -1,11 +1,12 @@
-import { Adt, Arr, Fun } from '@ephox/katamari';
+import { Adt, Arr, Fun, Cycles } from '@ephox/katamari';
 import { Bounds } from '../../alien/Boxes';
-import { cap } from '../../alien/Cycles';
 import { Bubble } from '../layout/Bubble';
 import * as Direction from '../layout/Direction';
 import { AnchorBox, AnchorElement, AnchorLayout } from '../layout/LayoutTypes';
 import * as Reposition from './Reposition';
 import { SpotInfo } from './SpotInfo';
+
+const { cap } = Cycles;
 
 export interface BounderAttemptAdt extends Adt {
 }

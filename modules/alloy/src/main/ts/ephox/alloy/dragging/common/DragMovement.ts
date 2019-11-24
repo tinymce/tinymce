@@ -1,13 +1,14 @@
-import { Option, Options } from '@ephox/katamari';
+import { Option, Options, Cycles } from '@ephox/katamari';
 import { Css, Element, Location, Scroll, Traverse } from '@ephox/sugar';
 
-import { cap } from '../../alien/Cycles';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as DragCoord from '../../api/data/DragCoord';
 import * as Snappables from '../snap/Snappables';
 import { DraggingConfig, DragStartData, SnapsConfig } from './DraggingTypes';
+
+const { cap } = Cycles;
 
 const getCurrentCoord = (target: Element): DragCoord.CoordAdt => {
   return Options.lift3(Css.getRaw(target, 'left'), Css.getRaw(target, 'top'), Css.getRaw(target, 'position'), (left, top, position) => {

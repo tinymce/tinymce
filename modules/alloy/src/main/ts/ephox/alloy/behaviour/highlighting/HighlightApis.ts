@@ -1,7 +1,6 @@
-import { Arr, Option, Options, Result } from '@ephox/katamari';
+import { Arr, Option, Options, Result, Cycles } from '@ephox/katamari';
 import { Class, SelectorFilter, SelectorFind, Element } from '@ephox/sugar';
 
-import * as Cycles from '../../alien/Cycles';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as SystemEvents from '../../api/events/SystemEvents';

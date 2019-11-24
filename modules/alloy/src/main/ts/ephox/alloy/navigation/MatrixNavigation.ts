@@ -1,6 +1,4 @@
-import { Option, Struct } from '@ephox/katamari';
-
-import * as Cycles from '../alien/Cycles';
+import { Cycles, Option, Struct } from '@ephox/katamari';
 
 const outcome = Struct.immutableBag([ 'rowIndex', 'columnIndex', 'cell' ], [ ]);
 

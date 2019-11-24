@@ -1,7 +1,7 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
 
-import * as Cycles from 'ephox/alloy/alien/Cycles';
+import * as Cycles from 'ephox/katamari/api/Cycles';
 
 UnitTest.test('CycleBy should have an adjustment of delta, or be the min or max', () => {
 
