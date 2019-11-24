@@ -1,7 +1,7 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
 
-import * as Cycles from 'ephox/katamari/api/Cycles';
+import * as Num from 'ephox/katamari/api/Num';
 
 UnitTest.test('CycleBy should have an adjustment of delta, or be the min or max', () => {
 
@@ -12,7 +12,7 @@ UnitTest.test('CycleBy should have an adjustment of delta, or be the min or max'
     fc.nat(),
     (value, delta, min, range) => {
       const max = min + range;
-      const actual = Cycles.cycleBy(value, delta, min, max);
+      const actual = Num.cycleBy(value, delta, min, max);
       return (actual - value) === delta || actual === min || actual === max;
     }
   ));

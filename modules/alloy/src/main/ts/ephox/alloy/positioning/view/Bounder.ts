@@ -1,12 +1,10 @@
-import { Adt, Arr, Fun, Cycles } from '@ephox/katamari';
+import { Adt, Arr, Fun, Num } from '@ephox/katamari';
 import { Bounds } from '../../alien/Boxes';
 import { Bubble } from '../layout/Bubble';
 import * as Direction from '../layout/Direction';
 import { AnchorBox, AnchorElement, AnchorLayout } from '../layout/LayoutTypes';
 import * as Reposition from './Reposition';
 import { SpotInfo } from './SpotInfo';
-
-const { cap } = Cycles;
 
 export interface BounderAttemptAdt extends Adt {
 }
@@ -42,9 +40,9 @@ const calcReposition = (newX: number, newY: number, width: number, height: numbe
   // TBIO-3366 + TBIO-4236:
   // Futz with the X position to ensure that x is positive, but not off the right side of the screen.
   // NOTE: bounds.x() is 0 in repartee here.
-  const limitX = cap(newX, bounds.x(), bounds.right());
+  const limitX = Num.cap(newX, bounds.x(), bounds.right());
   // Futz with the Y value to ensure that we're not off the top of the screen
-  const limitY = cap(newY, bounds.y(), bounds.bottom());
+  const limitY = Num.cap(newY, bounds.y(), bounds.bottom());
 
   return {
     originInBounds,

@@ -1,4 +1,4 @@
-import { Fun, Option, Cycles } from '@ephox/katamari';
+import { Fun, Option, Num } from '@ephox/katamari';
 
 const withGrid = (values, index, numCols, f) => {
   const oldRow = Math.floor(index / numCols);
@@ -14,7 +14,7 @@ const cycleHorizontal = (values, index, numRows, numCols, delta) => {
   return withGrid(values, index, numCols, (oldRow, oldColumn) => {
     const onLastRow = oldRow === numRows - 1;
     const colsInRow = onLastRow ? values.length - (oldRow * numCols) : numCols;
-    const newColumn = Cycles.cycleBy(oldColumn, delta, 0, colsInRow - 1);
+    const newColumn = Num.cycleBy(oldColumn, delta, 0, colsInRow - 1);
     return Option.some({
       row: Fun.constant(oldRow),
       column: Fun.constant(newColumn)
@@ -24,10 +24,10 @@ const cycleHorizontal = (values, index, numRows, numCols, delta) => {
 
 const cycleVertical = (values, index, numRows, numCols, delta) => {
   return withGrid(values, index, numCols, (oldRow, oldColumn) => {
-    const newRow = Cycles.cycleBy(oldRow, delta, 0, numRows - 1);
+    const newRow = Num.cycleBy(oldRow, delta, 0, numRows - 1);
     const onLastRow = newRow === numRows - 1;
     const colsInRow = onLastRow ? values.length - (newRow * numCols) : numCols;
-    const newCol = Cycles.cap(oldColumn, 0, colsInRow - 1);
+    const newCol = Num.cap(oldColumn, 0, colsInRow - 1);
     return Option.some({
       row: Fun.constant(newRow),
       column: Fun.constant(newCol)

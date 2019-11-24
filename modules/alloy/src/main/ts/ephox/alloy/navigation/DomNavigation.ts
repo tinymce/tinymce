@@ -1,4 +1,4 @@
-import { Option, Cycles } from '@ephox/katamari';
+import { Option, Num } from '@ephox/katamari';
 
 import * as DomPinpoint from './DomPinpoint';
 import { Element, Attr, Node } from '@ephox/sugar';
@@ -10,7 +10,7 @@ const horizontal = (container, selector, current, delta): Option<Element> => {
   };
 
   const tryCycle = (initial, index, candidates) => {
-    const newIndex = Cycles.cycleBy(index, delta, 0, candidates.length - 1);
+    const newIndex = Num.cycleBy(index, delta, 0, candidates.length - 1);
     if (newIndex === initial) { // If we've cycled back to the original index, we've failed to find a new valid candidate
       return Option.none();
     } else {
