@@ -7,13 +7,11 @@ const { tResult } = ResultInstances;
 const { tAny } = Testable;
 type Testable<A> = Testable.Testable<A>;
 
-// TODO: add tests for these assertions
-
 export const eqOption = <A> (message: TestLabel, expected: Option<A>, actual: Option<A>, testableA: Testable<A> = tAny): void =>
   Assert.eq(message, expected, actual, tOption(testableA));
 
-export const eqNone = <A> (message: TestLabel, actual: Option<A>, testableA: Testable<A> = tAny): void =>
-  eqOption(message, Option.none<A>(), actual, testableA);
+export const eqNone = <A> (message: TestLabel, actual: Option<A>): void =>
+  eqOption(message, Option.none<A>(), actual, tAny);
 
 export const eqSome = <A> (message: TestLabel, expected: A, actual: Option<A>, testableA: Testable<A> = tAny): void =>
   eqOption(message, Option.some<A>(expected), actual, testableA);
