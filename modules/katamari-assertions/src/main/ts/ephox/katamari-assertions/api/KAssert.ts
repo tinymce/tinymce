@@ -7,6 +7,8 @@ const { tResult } = ResultInstances;
 const { tAny } = Testable;
 type Testable<A> = Testable.Testable<A>;
 
+// NOTE: Don't use this within Agar - use tOption directly
+
 export const eqOption = <A> (message: TestLabel, expected: Option<A>, actual: Option<A>, testableA: Testable<A> = tAny): void =>
   Assert.eq(message, expected, actual, tOption(testableA));
 
