@@ -3,6 +3,7 @@ const runsInPhantom = [
   '@ephox/alloy',
   '@ephox/mcagar',
   '@ephox/katamari',
+  '@ephox/katamari-test',
   '@ephox/imagetools',
   '@ephox/jax'
 ];
