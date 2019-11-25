@@ -7,11 +7,11 @@
 
 import LegacyFilter from '../../html/LegacyFilter';
 import * as ParserFilters from '../../html/ParserFilters';
-import { paddEmptyNode,  isPaddedWithNbsp,  hasOnlyChild, isEmpty, isLineBreakNode } from '../../html/ParserUtils';
+import { hasOnlyChild, isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
+import Tools from '../util/Tools';
 import Node from './Node';
 import SaxParser from './SaxParser';
 import Schema from './Schema';
-import Tools from '../util/Tools';
 
 /**
  * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
