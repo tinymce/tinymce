@@ -13,6 +13,8 @@ UnitTest.test('CycleBy: Unit tests', () => {
 
   Assert.eq('eq', 5, Num.cycleBy(-10, 1, -5, 5));
   Assert.eq('eq', -5, Num.cycleBy(-10, 50, -5, 5));
+
+  Assert.eq('eq', 5, Num.cycleBy(50, -150, -5, 5));
 });
 
 UnitTest.test('CycleBy should have an adjustment of delta, or be the min or max', () => {
