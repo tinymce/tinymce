@@ -1,28 +1,77 @@
 /* tslint:disable:no-console */
 import { console } from '@ephox/dom-globals';
-import { Merger } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Merger, Singleton } from '@ephox/katamari';
+import { Css, Element, Insert, Location, SelectorFind } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 declare let tinymce: any;
 
+const syncCommentPos = (ed: Editor, comment: Element, selector: string) => {
+  SelectorFind.descendant(Element.fromDom(ed.getBody()), selector).fold(
+    () => {
+      Css.set(comment, 'display', 'none');
+    },
+    (element) => {
+      Css.remove(comment, 'display');
+      const loc = Location.absolute(element);
+      Css.set(comment, 'top', loc.top() + 'px');
+    }
+  );
+};
+
+const setupPositioning = (ed: Editor, box: Element, comment: Element) => {
+  const updateHeight = () => {
+    const height = Math.max(ed.getBody().offsetHeight, ed.getContentAreaContainer().offsetHeight);
+    Css.set(box, 'height', height + 'px');
+  };
+
+  const updatePos = () => {
+    Css.set(box, 'top', '-' + ed.getWin().pageYOffset + 'px');
+    syncCommentPos(ed, comment, '#second');
+  };
+
+  // Set initial height/position
+  updateHeight();
+  updatePos();
+
+  // Update pos/height as required
+  ed.on('ResizeContent NodeChange', updateHeight);
+  ed.on('ScrollContent NodeChange', updatePos);
+
+  return () => {
+    ed.off('ResizeContent NodeChange', updateHeight);
+    ed.off('ScrollContent NodeChange', updatePos);
+  };
+};
+
 export default function () {
 
-  const makeSidebar = (ed, name: string, background: string, width: number) => {
+  const makeSidebar = (ed: Editor, name: string, background: string, width: number) => {
+    const unbinder = Singleton.unbindable();
+    const box = Element.fromHtml('<div style="position: absolute; top: 0; left: 0; width: 100%; overflow-y: hidden;"></div>');
+    const comment = Element.fromHtml('<div style="position: absolute; height: 50px; width: 100%; background: blue; color: white">Comment 1</div>');
+
     ed.ui.registry.addSidebar(name, {
       icon: 'comment',
       tooltip: 'Tooltip for ' + name,
       onSetup: (api) => {
         console.log('onSetup ' + name);
-        const box = Element.fromHtml('<div style="width: ' + width + 'px; background: ' + background + ';"></div>');
-        api.element().appendChild(box.dom());
+        const wrapper = Element.fromHtml('<div style="position: relative; width: ' + width + 'px; background: ' + background + ';"></div>');
+        Insert.append(wrapper, box);
+        Insert.append(box, comment);
+        api.element().appendChild(wrapper.dom());
         return () => {
-          api.element().removeChild(box.dom());
+          unbinder.clear();
+          api.element().removeChild(wrapper.dom());
         };
       },
       onShow: (api) => {
+        const unbindPos = setupPositioning(ed, box, comment);
+        unbinder.set({ unbind: unbindPos });
         console.log('onShow ' + name);
       },
       onHide: (api) => {
+        unbinder.clear();
         console.log('onHide ' + name);
       },
     });
