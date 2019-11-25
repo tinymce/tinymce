@@ -318,7 +318,7 @@ const setup = (editor: Editor): RenderInfo => {
   const uiMothership = Gui.takeover(sink);
 
   Events.setup(editor, mothership, uiMothership);
-  TouchEvents.setupLongpress(editor);
+  TouchEvents.setup(editor);
 
   const getUi = () => {
     const channels = {
