@@ -12,13 +12,7 @@ import InsertTable from '../actions/InsertTable';
 import { hasTableGrid } from '../api/Settings';
 import { SelectionTargets } from '../selection/SelectionTargets';
 
-export interface MenuItems {
-  rowItems: Array<Menu.NestedMenuItemContents>;
-  columnItems: Array<Menu.NestedMenuItemContents>;
-  cellItems: Array<Menu.NestedMenuItemContents>;
-}
-
-const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): MenuItems => {
+const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
   const cmd = (command) => () => editor.execCommand(command);
 
   const insertTableAction = ({numRows, numColumns}) => {
@@ -123,17 +117,11 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): MenuI
         if (Node.name(targets.element()) === 'caption') {
           return 'tableprops deletetable';
         } else {
-          return 'cell row column | tableprops deletetable';
+          return 'cell row column | advtablesort | tableprops deletetable';
         }
       });
     }
   });
-
-  return {
-    rowItems,
-    columnItems,
-    cellItems
-  };
 };
 
 export default {

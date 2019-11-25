@@ -5,39 +5,22 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AddEventsBehaviour,
-  AlloyComponent,
-  AlloyEvents,
-  AlloyTriggers,
-  Behaviour,
-  Boxes,
-  Docking,
-  GuiFactory,
-  HotspotAnchorSpec,
-  InlineView,
-  Keying,
-  MakeshiftAnchorSpec,
-  ModalDialog,
-  NodeAnchorSpec,
-  SelectionAnchorSpec,
-  SystemEvents,
-} from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Docking, GuiFactory, HotspotAnchorSpec, InlineView, Keying, MakeshiftAnchorSpec, ModalDialog, NodeAnchorSpec, SelectionAnchorSpec, SystemEvents, } from '@ephox/alloy';
 import { Processor, ValueSchema } from '@ephox/boulder';
 import { DialogManager, Types } from '@ephox/bridge';
 import { Option, Singleton } from '@ephox/katamari';
-import { Body, Element, SelectorFind } from '@ephox/sugar';
+import { Body, Element } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import * as Settings from '../../api/Settings';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 
 import { formCancelEvent } from '../general/FormEvents';
 import { renderDialog } from '../window/SilverDialog';
-import { renderUrlDialog } from '../window/SilverUrlDialog';
 import { renderInlineDialog } from '../window/SilverInlineDialog';
+import { renderUrlDialog } from '../window/SilverUrlDialog';
 import * as AlertDialog from './AlertDialog';
 import * as ConfirmDialog from './ConfirmDialog';
-import * as Settings from '../../api/Settings';
-import { UiFactoryBackstage } from '../../backstage/Backstage';
 
 export interface WindowManagerSetup {
   backstage: UiFactoryBackstage;
@@ -67,14 +50,7 @@ const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean): B
         leftAttr: 'data-dock-left',
         topAttr: 'data-dock-top',
         positionAttr: 'data-dock-pos',
-        modes: [ 'top' ],
-        lazyViewport: () => {
-          const win = Boxes.win();
-          const headerEle = SelectorFind.descendant(Element.fromDom(editor.getContainer()), '.tox-editor-header').getOrDie();
-          const headerBounds = Boxes.absolute(headerEle);
-          const topBounds = Math.max(win.y(), headerBounds.bottom());
-          return Boxes.bounds(win.x(), topBounds, win.width(), win.bottom() - topBounds);
-        }
+        modes: [ 'top' ]
       })
     ];
   }

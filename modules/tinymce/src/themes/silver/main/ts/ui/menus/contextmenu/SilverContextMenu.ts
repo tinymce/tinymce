@@ -166,7 +166,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
   editor.on('init', () => {
     // Hide the context menu when scrolling or resizing
     // Except ResizeWindow on mobile which fires when the keyboard appears/disappears
-    const hideEvents = 'ResizeEditor ScrollContent ScrollWindow longpresscancel' + (isTouch() ? '' : 'ResizeWindow');
+    const hideEvents = 'ResizeEditor ScrollContent ScrollWindow longpresscancel' + (isTouch() ? '' : ' ResizeWindow');
     editor.on(hideEvents, hideContextMenu);
     editor.on(isTouch() ? 'longpress' : 'longpress contextmenu', showContextMenu);
   });

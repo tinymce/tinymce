@@ -1,14 +1,17 @@
-import { GeneralSteps, Pipeline, Step } from '@ephox/agar';
+import { GeneralSteps, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Body } from '@ephox/sugar';
 
-import Theme from 'tinymce/themes/silver/Theme';
+import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import { ToolbarDrawer } from 'tinymce/themes/silver/api/Settings';
+import Theme from 'tinymce/themes/silver/Theme';
 import * as MenuUtils from '../../../module/MenuUtils';
 import * as StickyUtils from '../../../module/StickyHeaderUtils';
 
 UnitTest.asynctest('Editor with sticky toolbar', (success, failure) => {
   Theme();
+  FullscreenPlugin();
 
   const sTestWithToolbarDrawer = (toolbarDrawer: ToolbarDrawer) => {
     return Step.label('Test editor with toolbar_drawer: ' + toolbarDrawer, Step.raw((_, next, die, logs) => {
@@ -70,6 +73,17 @@ UnitTest.asynctest('Editor with sticky toolbar', (success, failure) => {
               selector: 'div[title="Text color"][aria-expanded=false]'
             }
           ]), 1)),
+          ...toolbarDrawer === ToolbarDrawer.default ? [ ] : [ Step.label('Close the more drawer', MenuUtils.sCloseMore(toolbarDrawer)) ],
+
+          Step.label('Toggle fullscreen mode and ensure header moves from docked -> undocked -> docked', GeneralSteps.sequence([
+            StickyUtils.sScrollAndAssertStructure(300, StickyUtils.expectedHalfView),
+            tinyApis.sExecCommand('mceFullscreen'),
+            UiFinder.sWaitForVisible('Wait for fullscreen to be activated', Body.body(), '.tox-fullscreen'),
+            StickyUtils.sAssertEditorContainer(StickyUtils.expectedInFullView),
+            tinyApis.sExecCommand('mceFullscreen'),
+            Waiter.sTryUntil('Wait for fullscreen to be deactivated', UiFinder.sNotExists(Body.body(), '.tox-fullscreen')),
+            StickyUtils.sScrollAndAssertStructure(300, StickyUtils.expectedHalfView),
+          ])),
 
           StickyUtils.tearDown(forceScrollDiv)
         ], onSuccess, onFailure, logs);
@@ -77,6 +91,7 @@ UnitTest.asynctest('Editor with sticky toolbar', (success, failure) => {
       {
         theme: 'silver',
         base_url: '/project/tinymce/js/tinymce',
+        plugins: 'fullscreen',
         toolbar: 'align | fontsizeselect | fontselect | formatselect | styleselect | insertfile | forecolor | backcolor ',
         resize: 'both',
         min_height: 300,

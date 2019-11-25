@@ -7,15 +7,15 @@
 
 import { Element, Node, Range } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import Editor from '../api/Editor';
 import DOMUtils from '../api/dom/DOMUtils';
+import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
+import { isAfterContentEditableFalse, isBeforeContentEditableFalse } from '../caret/CaretPositionPredicates';
 import * as CaretUtils from '../caret/CaretUtils';
 import { CaretWalker, HDirection } from '../caret/CaretWalker';
 import NodeType from '../dom/NodeType';
 import * as CefUtils from '../keyboard/CefUtils';
 import InlineUtils from '../keyboard/InlineUtils';
-import { isBeforeContentEditableFalse, isAfterContentEditableFalse } from '../caret/CaretPositionPredicates';
 
 const trimEmptyTextNode = (dom: DOMUtils, node: Node) => {
   if (NodeType.isText(node) && node.data.length === 0) {
@@ -60,7 +60,7 @@ const deleteCefBoundaryText = function (editor: Editor, forward: boolean) {
   // Get the next caret position. ie where it'll be after the delete
   const caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
   const nextCaretPosition = InlineUtils.normalizePosition(forward, getNextPosFn(caretPosition));
-  if (!nextCaretPosition) {
+  if (!nextCaretPosition || !CaretUtils.isMoveInsideSameBlock(caretPosition, nextCaretPosition)) {
     return false;
   } else if (isBeforeContentEditableFalseFn(nextCaretPosition)) {
     return deleteContentAndShowCaret(editor, range, caretPosition.getNode(), direction, forward, nextCaretPosition);

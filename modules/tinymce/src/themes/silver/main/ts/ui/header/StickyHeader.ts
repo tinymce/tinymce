@@ -22,7 +22,7 @@ const visibility = {
 const editorStickyOnClass = 'tox-tinymce--toolbar-sticky-on';
 const editorStickyOffClass = 'tox-tinymce--toolbar-sticky-off';
 
-const updateContentFlow = (header: AlloyComponent): void => {
+const updateIframeContentFlow = (header: AlloyComponent): void => {
   const elm = header.element();
   Traverse.parent(elm).each((parentElem: Element<HTMLElement>) => {
     if (Docking.isDocked(header)) {
@@ -83,7 +83,7 @@ const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void =
   if (!editor.inline) {
     // No need to update the content flow in inline mode as the header always floats
     editor.on('ResizeWindow ResizeEditor ResizeContent', () => {
-      lazyHeader().each(updateContentFlow);
+      lazyHeader().each(updateIframeContentFlow);
     });
 
     // Need to reset the docking position on skin loaded as the original position will have
@@ -91,6 +91,12 @@ const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void =
     // Note: Inline handles it's own skin loading, as it needs to do other initial positioning
     editor.on('SkinLoaded', () => {
       lazyHeader().each(Docking.reset);
+    });
+
+    // Need to refresh when we go fullscreen so that if the header is docked,
+    // then it'll undock and viceversa
+    editor.on('FullscreenStateChanged', () => {
+      lazyHeader().each(Docking.refresh);
     });
   }
 
@@ -104,6 +110,18 @@ const isDocked = (lazyHeader: () => Option<AlloyComponent>): boolean => {
   return lazyHeader().map(Docking.isDocked).getOr(false);
 };
 
+const getIframeBehaviours = () => {
+  return [
+    Receiving.config({
+      channels: {
+        [ EditorChannels.toolbarHeightChange() ]: {
+          onReceive: updateIframeContentFlow
+        }
+      }
+    })
+  ];
+};
+
 const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>) => {
   const focusedElm = Cell<Option<Element>>(Option.none());
 
@@ -113,14 +131,17 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
 
   const onDockingSwitch = (comp: AlloyComponent) => {
     if (!editor.inline) {
-      updateContentFlow(comp);
+      updateIframeContentFlow(comp);
     }
     updateEditorClasses(editor, Docking.isDocked(comp));
     comp.getSystem().broadcastOn( [ Channels.repositionPopups() ], { });
     lazySink().each((sink) => sink.getSystem().broadcastOn( [ Channels.repositionPopups() ], { }));
   };
 
+  const additionalBehaviours = editor.inline ? [ ] : getIframeBehaviours();
+
   return [
+    Focusing.config({ }),
     Docking.config({
       leftAttr: 'data-dock-left',
       topAttr: 'data-dock-top',
@@ -158,16 +179,8 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
       onDocked: onDockingSwitch,
       onUndocked: onDockingSwitch
     }),
-    Focusing.config({ }),
-    Receiving.config({
-      channels: {
-        [ EditorChannels.toolbarHeightChange() ]: {
-          onReceive: (comp) => {
-            updateContentFlow(comp);
-          }
-        }
-      }
-    })
+
+    ...additionalBehaviours
   ];
 };
 

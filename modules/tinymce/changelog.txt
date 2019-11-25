@@ -1,3 +1,27 @@
+Version 5.1.3 (TBD)
+    Fixed sticky toolbar not undocking when fullscreen mode is activated #TINY-4390
+    Fixed the "Current Window" target not applying when saving from the link dialog #TINY-4063
+    Fixed disabled menu items not highlighting when focused #TINY-4339
+    Fixed touch events passing through dialog collection items to the content underneath on Android devices #TINY-4367
+    Fixed keyboard navigation of the Help dialog's Keyboard Navigation tab #TINY-4391
+    Fixed search and replace dialog disappearing when finding offscreen matches on iOS devices #TINY-4350
+Version 5.1.2 (2019-11-19)
+    Fixed desktop touch devices using `mobile` configuration overrides #TINY-4345
+    Fixed unable to disable the new scrolling toolbar feature #TINY-4345
+    Fixed touch events passing through any pop-up items to the content underneath on Android devices #TINY-4367
+    Fixed the table selector handles throwing JavaScript exceptions for non-table selections #TINY-4338
+    Fixed `cut` operations not removing selected content on Android devices when the `paste` plugin is enabled #TINY-4362
+    Fixed inline toolbar not constrained to the window width by default #TINY-4314
+    Fixed context toolbar split button chevrons pointing right when they should be pointing down #TINY-4257
+    Fixed unable to access the dialog footer in tabbed dialogs on small screens #TINY-4360
+    Fixed mobile table selectors were hard to select with touch by increasing the size #TINY-4366
+    Fixed mobile table selectors moving when moving outside the editor #TINY-4366
+    Fixed inline toolbars collapsing when using sliding toolbars #TINY-4389
+    Fixed block textpatterns not treating NBSPs as spaces #TINY-4378
+    Fixed backspace not merging blocks when the last element in the preceding block was a `contenteditable="false"` element #TINY-4235
+    Fixed toolbar buttons that only contain text labels overlapping on mobile devices #TINY-4395
+    Fixed quickbars quickimage picker not working on mobile #TINY-4377
+    Fixed fullscreen not resizing in an iOS WKWebView component #TINY-4413
 Version 5.1.1 (2019-10-28)
     Fixed font formats containing spaces being wrapped in `&quot;` entities instead of single quotes #TINY-4275
     Fixed alert and confirm dialogs losing focus when clicked #TINY-4248
