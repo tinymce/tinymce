@@ -1,6 +1,7 @@
-import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import Selection from 'ephox/robin/smartselect/Selection';
+import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('SelectionTest', function () {
   const doc1 = TestUniverse(Gene('root', 'root', [
@@ -60,9 +61,10 @@ UnitTest.test('SelectionTest', function () {
   };
 
   const checkNone = function (doc: TestUniverse, id: string, offset: number) {
-    const item = doc.find(doc.get(), id).getOrDie();
-    const actual = Selection.word(doc, item, offset);
-    assert.eq(true, actual.isNone());
+    const actual = doc.find(doc.get(), id).bind((item) =>
+      Selection.word(doc, item, offset)
+    );
+    KAssert.eqNone('eq', actual);
   };
 
   check({

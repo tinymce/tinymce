@@ -30,6 +30,9 @@
     "@ephox/wrap-jsverify": "^2.0.1",
     "@ephox/wrap-sizzle": "^4.0.0"
   },
+  "devDependencies": {
+    "@ephox/katamari-assertions": "^1.0.0"
+  },
   "files": [
     "lib/main",
     "lib/demo",

@@ -1,32 +1,22 @@
-import { assert } from '@ephox/bedrock-client';
-import { Arr, Fun } from '@ephox/katamari';
-import * as Compare from 'ephox/sugar/api/dom/Compare';
+import { Assert } from '@ephox/bedrock-client';
+import { Option } from '@ephox/katamari';
+import { tElement } from './ElementInstances';
 import * as Node from 'ephox/sugar/api/node/Node';
+import { Element } from '@ephox/sugar';
+import { Testable } from '@ephox/dispute';
+import { KAssert } from '@ephox/katamari-assertions';
 
-const expectedSome = Fun.curry(assert.fail, 'Expected actual to be some, was none');
+const { tArray } = Testable;
 
-const checkOpt = function (expected, actual) {
-  expected.fold(function () {
-    assert.eq(true, actual.isNone(), 'Expected actual to be none, was some');
-  }, function (v) {
-    actual.fold(expectedSome, function (vv) {
-      assert.eq(true, Compare.eq(v, vv));
-    });
-  });
+const checkOpt = (expected: Option<Element<unknown>>, actual: Option<Element<unknown>>) => {
+  KAssert.eqOption('eq', expected, actual, tElement);
 };
 
-const checkList = function (expected, actual) {
-  assert.eq(expected.length, actual.length);
-  Arr.each(expected, function (x, i) {
-    assert.eq(true, Compare.eq(expected[i], actual[i]));
-  });
+const checkList = (expected: ArrayLike<Element<unknown>>, actual: ArrayLike<Element<unknown>>) => {
+  Assert.eq('eq', expected, actual, tArray(tElement));
 };
 
-const isName = function (name) {
-  return function (x) {
-    return Node.name(x) === name;
-  };
-};
+const isName = (name) => (x) => Node.name(x) === name;
 
 export default {
   checkOpt,

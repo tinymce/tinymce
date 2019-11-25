@@ -1,9 +1,10 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Spot } from '@ephox/phoenix';
 import { Pattern } from '@ephox/polaris';
 import { Compare, Element, Html, Insert, InsertAll } from '@ephox/sugar';
 import DomTextSearch from 'ephox/robin/api/dom/DomTextSearch';
 import { TextSeekerOutcome, TextSeekerPhaseConstructor } from 'ephox/robin/textdata/TextSeeker';
+import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('DomTextSearchTest', function () {
   const wordbreaker = function () {
@@ -19,32 +20,32 @@ UnitTest.test('DomTextSearchTest', function () {
 
   const checkInfo = function (result: TextSeekerOutcome<Element>, expectedElement: Element, expectedOffset: number) {
     result.fold(function () {
-      assert.fail('Unexpected abort');
-    }, function (edge) {
-      assert.fail('Unexpected edge');
+      Assert.fail('Unexpected abort');
+    }, function () {
+      Assert.fail('Unexpected edge');
     }, function (info) {
       const isSame = Compare.eq(info.element(), expectedElement);
-      assert.eq(true, isSame);
-      assert.eq(info.offset(), expectedOffset);
+      Assert.eq('eq', true, isSame);
+      Assert.eq('eq', info.offset(), expectedOffset);
     });
   };
 
   const checkEdge = function (result: TextSeekerOutcome<Element>, expectedElement: Element) {
     result.fold(function () {
-      assert.fail('Unexpected abort');
+      Assert.fail('Unexpected abort');
     }, function (edge) {
       const isSame = Compare.eq(edge, expectedElement);
-      assert.eq(true, isSame);
-    }, function (info) {
-      assert.fail('Unexpected info');
+      Assert.eq('eq', true, isSame);
+    }, function () {
+      Assert.fail('Unexpected info');
     });
   };
   const checkAbort = function (result: TextSeekerOutcome<Element>) {
     result.fold(function () {
-    }, function (edge) {
-      assert.fail('Unexpected edge');
-    }, function (info) {
-      assert.fail('Unexpected info found');
+    }, function () {
+      Assert.fail('Unexpected edge');
+    }, function () {
+      Assert.fail('Unexpected info found');
     });
   };
 
@@ -57,8 +58,8 @@ UnitTest.test('DomTextSearchTest', function () {
   const text = Element.fromText('@maurizio@ ');
   Insert.append(element, text);
 
-  assert.eq(1, element.dom().childNodes.length); // Range offsets [0, 1)
-  assert.eq(11, text.dom().length);              // Range offsets [0, 11)
+  Assert.eq('eq', 1, element.dom().childNodes.length); // Range offsets [0, 1)
+  Assert.eq('eq', 11, text.dom().length);              // Range offsets [0, 11)
 
   const elemResult = DomTextSearch.expandRight(element, 0, { regex: wordbreaker, attempt: stopAtGap });
   checkAbort(elemResult);
@@ -101,14 +102,14 @@ UnitTest.test('DomTextSearchTest', function () {
   //
   const textR = Element.fromText('   words');
   //                     Pos:  0  23    8
-  assert.eq(8, textR.dom().length);
+  Assert.eq('eq', 8, textR.dom().length);
   checkInfo(DomTextSearch.expandRight(textR, 0, { regex: wordfinder, attempt: stopAtGap }),
     textR, 3); // 3 is the location after the last space, starting from the left
   checkInfo(DomTextSearch.expandLeft(textR, 8, { regex: wordbreaker, attempt: stopAtGap }),
     textR, 2); // 2 is the location after the last character, starting from the right
   const textL = Element.fromText('words   ');
   //                     Pos:  0    45  8
-  assert.eq(8, textL.dom().length);
+  Assert.eq('eq', 8, textL.dom().length);
   checkInfo(DomTextSearch.expandRight(textL, 0, { regex: wordbreaker, attempt: stopAtGap }),
     textL, 5); // 5 is the location after the last character, starting from the left
   checkInfo(DomTextSearch.expandLeft(textL, 8, { regex: wordfinder, attempt: stopAtGap }),
@@ -126,10 +127,10 @@ UnitTest.test('DomTextSearchTest', function () {
   Insert.append(span2, w2);
   InsertAll.append(element, [w1, span2, w3]);
 
-  assert.eq(3, element.dom().childNodes.length); // Range offsets [0, 3)
-  assert.eq(1, span2.dom().childNodes.length);              // Range offsets [0, 1)
-  assert.eq(9, w1.dom().length);                 // Range offsets [0, 7)
-  assert.eq('<div>  wordy  <span>  words  </span>  wordd  </div>', Html.getOuter(element));
+  Assert.eq('eq', 3, element.dom().childNodes.length); // Range offsets [0, 3)
+  Assert.eq('eq', 1, span2.dom().childNodes.length);              // Range offsets [0, 1)
+  Assert.eq('eq', 9, w1.dom().length);                 // Range offsets [0, 7)
+  Assert.eq('eq', '<div>  wordy  <span>  words  </span>  wordd  </div>', Html.getOuter(element));
 
   const r0 = DomTextSearch.expandRight(w1, 0, { regex: wordfinder, attempt: stopAtGap });
   const r1 = DomTextSearch.expandRight(w1, 3, { regex: wordbreaker, attempt: stopAtGap });
@@ -197,13 +198,13 @@ UnitTest.test('DomTextSearchTest', function () {
     InsertAll.append(betaSpan, [betaText1, betaText2]);
 
     const checkNoneScan = function (label: string, start: Element, offset: number) {
-      assert.eq(true, DomTextSearch.scanRight(start, offset).isNone(), 'There should be no scanning (' + label + ')');
+      KAssert.eqNone('There should be no scanning (' + label + ')', DomTextSearch.scanRight(start, offset));
     };
 
     const checkScan = function (label: string, expected: { element: Element, offset: number }, start: Element, offset: number) {
       const actual = DomTextSearch.scanRight(start, offset).getOrDie('Could not find scan result for: ' + label);
-      assert.eq(expected.offset, actual.offset());
-      assert.eq(true, Compare.eq(expected.element, actual.element()), 'Element did not match scan: (' + label + ')');
+      Assert.eq('eq', expected.offset, actual.offset());
+      Assert.eq('Element did not match scan: (' + label + ')', true, Compare.eq(expected.element, actual.element()));
     };
 
     checkNoneScan('Alpha:exceed', alphaText, 'alphabeta\uFEFFepisilon!'.length);

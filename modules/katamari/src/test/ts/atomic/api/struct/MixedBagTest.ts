@@ -4,6 +4,8 @@ import * as Unique from 'ephox/katamari/api/Unique';
 import { MixedBag } from 'ephox/katamari/data/MixedBag';
 import fc from 'fast-check';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
+import { Option } from 'ephox/katamari/api/Option';
+import { tOption } from 'ephox/katamari/api/OptionInstances';
 
 UnitTest.test('MixedBag: unit tests', () => {
   const bagger = MixedBag([ 'alpha', 'beta', 'gamma' ], [ 'oDelta', 'oEpsilon' ]);
@@ -17,8 +19,8 @@ UnitTest.test('MixedBag: unit tests', () => {
     Assert.eq('eq', 'a', t1.alpha());
     Assert.eq('eq', 'b', t1.beta());
     Assert.eq('eq', 'g', t1.gamma());
-    Assert.eq('eq', true, t1.oDelta().isNone());
-    Assert.eq('eq', true, t1.oEpsilon().isNone());
+    Assert.eq('eq', Option.none(), t1.oDelta(), tOption());
+    Assert.eq('eq', Option.none(), t1.oEpsilon(), tOption());
   })();
 
   (() => {
@@ -32,8 +34,8 @@ UnitTest.test('MixedBag: unit tests', () => {
     Assert.eq('eq', 'a', t1.alpha());
     Assert.eq('eq', 'b', t1.beta());
     Assert.eq('eq', 'g', t1.gamma());
-    Assert.eq('eq', 'd', t1.oDelta().getOrDie());
-    Assert.eq('eq', true, t1.oEpsilon().isNone());
+    Assert.eq('eq', Option.some('d'), t1.oDelta(), tOption());
+    Assert.eq('eq', Option.none(), t1.oEpsilon(), tOption());
   })();
 
   (() => {
@@ -48,8 +50,8 @@ UnitTest.test('MixedBag: unit tests', () => {
     Assert.eq('eq', 'a', t1.alpha());
     Assert.eq('eq', 'b', t1.beta());
     Assert.eq('eq', 'g', t1.gamma());
-    Assert.eq('eq', 'd', t1.oDelta().getOrDie());
-    Assert.eq('eq', 'e', t1.oEpsilon().getOrDie());
+    Assert.eq('eq', Option.some('d'), t1.oDelta(), tOption());
+    Assert.eq('eq', Option.some('e'), t1.oEpsilon(), tOption());
   })();
 
   (() => {
@@ -80,8 +82,8 @@ UnitTest.test('MixedBag: unit tests', () => {
     Assert.eq('eq', 'a', t1.alpha());
     Assert.eq('eq', 'b', t1.beta());
     Assert.eq('eq', undefined, t1.gamma());
-    Assert.eq('eq', 'd', t1.oDelta().getOrDie());
-    Assert.eq('eq', 'e', t1.oEpsilon().getOrDie());
+    Assert.eq('eq', Option.some('d'), t1.oDelta(), tOption());
+    Assert.eq('eq', Option.some('e'), t1.oEpsilon(), tOption());
   })();
 
   (() => {
@@ -96,8 +98,8 @@ UnitTest.test('MixedBag: unit tests', () => {
     Assert.eq('eq', 'a', t1.alpha());
     Assert.eq('eq', 'b', t1.beta());
     Assert.eq('eq', undefined, t1.gamma());
-    Assert.eq('eq', 'd', t1.oDelta().getOrDie());
-    Assert.eq('eq', undefined, t1.oEpsilon().getOrDie());
+    Assert.eq('eq', Option.some('d'), t1.oDelta(), tOption());
+    Assert.eq('eq', Option.some(undefined), t1.oEpsilon(), tOption());
   })();
 
   (() => {

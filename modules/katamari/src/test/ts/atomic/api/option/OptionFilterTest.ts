@@ -20,8 +20,8 @@ UnitTest.test('Option.filter', () => {
   Assert.eq('filter #7', none(), none().filter(die('boom')), tOption());
   Assert.eq('filter #8', some(6), some(6).filter((x) => x === 6), tOption(tNumber));
   Assert.eq('filter #9', some(6), some(6).filter(Fun.constant(true)), tOption(tNumber));
-  Assert.eq('filter', 5, some(5).filter(Fun.constant(true)).getOrDie());
-  Assert.eq('filter', true, some(5).filter(Fun.constant(false)).isNone());
+  Assert.eq('filter', some(5), some(5).filter(Fun.constant(true)), tOption(tNumber));
+  Assert.eq('filter', none(), some(5).filter(Fun.constant(false)), tOption(tNumber));
 });
 
 UnitTest.test('Checking some(x).filter(_ -> false) === none', () => {

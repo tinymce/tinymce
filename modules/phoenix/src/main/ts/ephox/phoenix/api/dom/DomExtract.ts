@@ -1,6 +1,8 @@
 import { DomUniverse } from '@ephox/boss';
 import { Element } from '@ephox/sugar';
 import * as Extract from '../general/Extract';
+import { Option } from '@ephox/katamari';
+import { SpotPoint } from '../data/Types';
 
 const universe = DomUniverse();
 
@@ -20,7 +22,7 @@ const extractTo = function (child: Element, offset: number, pred: (e: Element) =
   return Extract.extractTo(universe, child, offset, pred, optimise);
 };
 
-const find = function (parent: Element, offset: number, optimise?: (e: Element) => boolean) {
+const find = function (parent: Element, offset: number, optimise?: (e: Element) => boolean): Option<SpotPoint<Element>> {
   return Extract.find(universe, parent, offset, optimise);
 };
 

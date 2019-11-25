@@ -6,6 +6,9 @@
     "@ephox/katamari": "^4.0.5",
     "@ephox/sand": "^3.1.2"
   },
+  "devDependencies": {
+    "@ephox/katamari-assertions": "^1.0.0"
+  },
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts",

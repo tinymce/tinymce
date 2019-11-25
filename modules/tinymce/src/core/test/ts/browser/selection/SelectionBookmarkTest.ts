@@ -4,6 +4,7 @@ import { Element, Hierarchy, Remove, Selection, Traverse, WindowSelection } from
 import SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
 import ViewBlock from '../../module/test/ViewBlock';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', function (success, failure) {
 
@@ -35,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
   };
 
   const cValidateBookmark = function (rootPath) {
-    return Chain.async(function (input: any, next, die) {
+    return Chain.async(function (input: any, next) {
       const root = Hierarchy.follow(Element.fromDom(viewBlock.get()), rootPath).getOrDie();
 
       return input.each(function (b) {
@@ -44,8 +45,8 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
     });
   };
 
-  const cAssertNone = Chain.op(function (x: Option<any>) {
-    Assert.eq('should be none', true, x.isNone());
+  const cAssertNone = <T> () => Chain.op(function (x: Option<T>) {
+    KAssert.eqNone('should be none', x);
   });
 
   const cAssertSome = Chain.op(function (x: Option<any>) {
@@ -167,7 +168,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
       cAssertSome,
       cDeleteElement([0]),
       cValidateBookmark([]),
-      cAssertNone
+      cAssertNone()
     ])),
     Logger.t('three p tags, delete middle and should be none', Chain.asStep(viewBlock, [
       cSetHtml('<p>abc</p><p>xyz</p><p>123</p>'),
@@ -200,7 +201,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
         const mockWin = { getSelection: Fun.constant(null) };
         return SelectionBookmark.readRange(mockWin);
       }),
-      cAssertNone
+      cAssertNone()
     ]))
   ], function () {
     viewBlock.detach();

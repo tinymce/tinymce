@@ -4,7 +4,7 @@ import { Node, PlatformDetection } from '@ephox/sand';
 import Element from '../node/Element';
 import * as Selectors from '../search/Selectors';
 
-const eq = function (e1: Element, e2: Element) {
+const eq = function (e1: Element<unknown>, e2: Element<unknown>) {
   return e1.dom() === e2.dom();
 };
 
@@ -41,7 +41,7 @@ const contains = browser.isIE() ? ieContains : regularContains;
 const is = Selectors.is;
 
 export {
-eq, isEqualNode, member, contains,
+  eq, isEqualNode, member, contains,
   // Only used by DomUniverse. Remove (or should Selectors.is move here?)
   is
 };

@@ -6,6 +6,7 @@ import { Element } from '@ephox/sugar';
 
 import LinkBridge from 'tinymce/themes/mobile/bridge/LinkBridge';
 import { TestHelpers } from '@ephox/alloy';
+import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
   const store = TestHelpers.TestStore();
@@ -56,7 +57,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
         title: '',
         target: ''
       }, Objects.narrow(info, [ 'url', 'text', 'target', 'title' ]));
-      Assert.eq('Checking link is not set', true, info.link.isNone());
+      KAssert.eqNone('Checking link is not set', info.link);
     });
   };
 

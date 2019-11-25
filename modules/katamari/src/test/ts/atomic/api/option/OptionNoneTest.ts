@@ -15,13 +15,13 @@ UnitTest.test('Option.none: unit tests', () => {
   Assert.eq('or', 6, s.or(Option.some(6)).getOrDie());
   Assert.eq('orThunk', 6, s.orThunk(() => Option.some(6)).getOrDie());
 
-  Assert.eq('map is none', true, s.map((v) => v * 2).isNone());
-  Assert.eq('map bottom is none', true, s.map(Fun.die('boom')).isNone());
+  Assert.eq('map is none', Option.none(), s.map((v) => v * 2), tOption());
+  Assert.eq('map bottom is none', Option.none(), s.map(Fun.die('boom')), tOption());
 
-  Assert.eq('bind none some is none', true, s.bind((v) => Option.some('test' + v)).isNone());
+  Assert.eq('bind none some is none', Option.none(), s.bind((v) => Option.some('test' + v)), tOption());
 
-  Assert.eq('from null is none', false, Option.from(null).isSome());
-  Assert.eq('from undefined is none', false, Option.from(undefined).isSome());
+  Assert.eq('from null is none', Option.none(), Option.from(null), tOption());
+  Assert.eq('from undefined is none', Option.none(), Option.from(undefined), tOption());
 
   Assert.eq('none or some(7) is some(s)', true, Option.none().or(Option.some(7)).equals(Option.some(7)));
   Assert.eq('none or none is none', true, Option.none().or(Option.none()).equals(Option.none()));
@@ -34,7 +34,7 @@ UnitTest.test('Option.none: unit tests', () => {
   }, Fun.die('boom')));
 
   Assert.eq('fold #3', 'b', Option.none().fold(Fun.constant('b'), Fun.die('boom')));
-  Assert.eq('bind', true, Option.none().bind(Fun.die('boom')).isNone());
+  Assert.eq('bind', Option.none(), Option.none().bind(Fun.die('boom')), tOption());
   Assert.eq('each', undefined, Option.none().each(Fun.die('boom')));
 
   Assert.eq('forall none is true', true, Option.none().forall(Fun.die('boom')));

@@ -17,12 +17,13 @@
   "include": [
     "src/demo/ts",
     "src/main/ts",
-    "src/test/ts",
+    "src/test/ts"
   ],
   "references": [
     { "path": "../jax" },
     { "path": "../katamari" },
+    { "path": "../katamari-assertions" },
     { "path": "../sugar" },
-    { "path": "../sand" },
+    { "path": "../sand" }
   ]
 }
