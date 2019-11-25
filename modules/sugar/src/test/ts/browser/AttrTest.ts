@@ -4,10 +4,8 @@ import Div from 'ephox/sugar/test/Div';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import { Node, Comment, HTMLDivElement, HTMLSpanElement } from '@ephox/dom-globals';
 import { OptionInstances, Option } from '@ephox/katamari';
+import { KAssert } from '@ephox/katamari-assertions';
 import { Testable } from '@ephox/dispute';
-
-const { tOption } = OptionInstances;
-const { tString } = Testable;
 
 UnitTest.test('AttrTest', function () {
   const c = Div();
@@ -35,22 +33,22 @@ UnitTest.test('AttrTest', function () {
   const check = function (k, v1, v2) {
     Assert.eq('has', false, Attr.has(c, k));
     Assert.eq('get', undefined, Attr.get(c, k));
-    Assert.eq('getOpt', Option.none(), Attr.getOpt(c, k), tOption());
+    KAssert.eqNone('getOpt', Attr.getOpt(c, k));
 
     Attr.set(c, k, v1);
     Assert.eq('has', true, Attr.has(c, k));
     Assert.eq('get', v1, Attr.get(c, k));
-    Assert.eq('getOpt', Option.some(v1), Attr.getOpt(c, k), tOption());
+    KAssert.eqSome('getOpt', v1, Attr.getOpt(c, k));
 
     Attr.set(c, k, v2);
     Assert.eq('has', true, Attr.has(c, k));
     Assert.eq('get', v2, Attr.get(c, k));
-    Assert.eq('getOpt', Option.some(v2), Attr.getOpt(c, k), tOption());
+    KAssert.eqSome('getOpt', v2, Attr.getOpt(c, k));
 
     Attr.remove(c, k);
     Assert.eq('has', false, Attr.has(c, k));
     Assert.eq('get', undefined, Attr.get(c, k));
-    Assert.eq('getOpt', Option.none(), Attr.getOpt(c, k), tOption());
+    KAssert.eqNone('getOpt', Attr.getOpt(c, k));
   };
 
   // setting a non-simple value

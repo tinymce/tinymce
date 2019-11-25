@@ -1,5 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Option, OptionInstances } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
+import { KAssert } from '@ephox/katamari-assertions';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
@@ -8,8 +9,6 @@ import * as Attr from 'ephox/sugar/api/properties/Attr';
 import * as Css from 'ephox/sugar/api/properties/Css';
 import Div from 'ephox/sugar/test/Div';
 import MathElement from 'ephox/sugar/test/MathElement';
-
-const { tOption } = OptionInstances;
 
 UnitTest.test('CssTest', function () {
   const runChecks = function (connected) {
@@ -53,7 +52,7 @@ UnitTest.test('CssTest', function () {
     if (connected) {
       Insert.append(Body.body(), d);
     }
-    Assert.eq('getRaw bogus', Option.none(), Css.getRaw(d, 'bogus'), tOption());
+    KAssert.eqNone('getRaw bogus', Css.getRaw(d, 'bogus'));
 
     Assert.eq('getRaw display 1', true, Css.getRaw(d, 'display').isNone());
     Css.set(d, 'display', 'inline-block');
@@ -126,12 +125,12 @@ UnitTest.test('CssTest', function () {
       'font-family': Option.some('Arial')
     });
 
-    Assert.eq('getRaw left', Option.none(), Css.getRaw(play, 'left'), tOption());
-    Assert.eq('getRaw right', Option.none(), Css.getRaw(play, 'right'), tOption());
-    Assert.eq('getRaw font-size', Option.none(), Css.getRaw(play, 'font-size'), tOption());
-    Assert.eq('getRaw top', Option.some('0px'), Css.getRaw(play, 'top'), tOption());
-    Assert.eq('getRaw bottom', Option.some('0px'), Css.getRaw(play, 'bottom'), tOption());
-    Assert.eq('getRaw font-family', Option.some('Arial'), Css.getRaw(play, 'font-family'), tOption());
+    KAssert.eqNone('getRaw left', Css.getRaw(play, 'left'));
+    KAssert.eqNone('getRaw right', Css.getRaw(play, 'right'));
+    KAssert.eqNone('getRaw font-size', Css.getRaw(play, 'font-size'));
+    KAssert.eqSome('getRaw top', '0px', Css.getRaw(play, 'top'));
+    KAssert.eqSome('getRaw bottom', '0px', Css.getRaw(play, 'bottom'));
+    KAssert.eqSome('getRaw font-family', 'Arial', Css.getRaw(play, 'font-family'));
 
     // final cleanup
     Arr.each([c, d, play], Remove.remove);

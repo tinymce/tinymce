@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "noUnusedLocals": false,
+    "strict": false,
+    "noImplicitThis": true,
+    "strictBindCallApply": true,
+    "strictNullChecks": true,
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "paths": {
+      "ephox/katamari-assertions/test/*": ["src/test/ts/module/ephox/katamari-assertions/test/*"],
+      "ephox/katamari-assertions/demo/*": ["src/demo/ts/ephox/katamari-assertions/demo/*"],
+      "ephox/katamari-assertions/*": ["src/main/ts/ephox/katamari-assertions/*"],
+      "@ephox/katamari-assertions": ["src/main/ts/ephox/katamari-assertions/api/Main.ts"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts"
+  ]
+}
