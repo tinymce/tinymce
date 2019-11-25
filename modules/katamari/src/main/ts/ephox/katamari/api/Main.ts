@@ -21,6 +21,7 @@ import * as OptionInstances from './OptionInstances';
 import * as Resolve from './Resolve';
 import { Result } from './Result';
 import * as Results from './Results';
+import * as ResultInstances from './ResultInstances';
 import * as Singleton from './Singleton';
 import { StringMatch } from './StringMatch';
 import * as Strings from './Strings';
@@ -56,6 +57,7 @@ export {
   Resolve,
   Result,
   Results,
+  ResultInstances,
   Singleton,
   StringMatch,
   Strings,

@@ -25,6 +25,9 @@
     "@ephox/katamari": "^4.0.5",
     "@ephox/sand": "^3.1.2"
   },
+  "devDependencies": {
+    "@ephox/katamari-assertions": "^1.0.0"
+  },
   "files": [
     "lib/main",
     "lib/demo",
