@@ -145,7 +145,6 @@ const renderFloatingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
   return AlloySplitFloatingToolbar.sketch({
     ...baseSpec,
     lazySink: toolbarSpec.getSink,
-    getAnchor: () => toolbarSpec.backstage.shared.anchors.toolbarOverflow(),
     getOverflowBounds: () => {
       // Restrict the left/right bounds to the editor header width, but don't restrict the top/height
       const headerElem = toolbarSpec.moreDrawerData.lazyHeader().element();
@@ -191,7 +190,7 @@ const renderSlidingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
     }
   });
 
-  const baseSpec = renderMoreToolbarCommon(toolbarSpec, AlloySplitSlidingToolbar.getOverflow);
+  const baseSpec = renderMoreToolbarCommon(toolbarSpec, Option.none);
 
   return AlloySplitSlidingToolbar.sketch({
     ...baseSpec,

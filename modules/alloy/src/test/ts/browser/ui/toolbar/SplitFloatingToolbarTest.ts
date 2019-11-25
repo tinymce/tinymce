@@ -11,7 +11,6 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 import * as TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
-import * as Layout from 'ephox/alloy/positioning/layout/Layout';
 
 UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
   // Tests requiring 'flex' do not currently work on phantom. Use the remote to see how it is
@@ -49,16 +48,6 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
         },
         lazySink (comp) {
           return Result.value(sinkComp);
-        },
-        getAnchor (comp) {
-          return {
-            anchor: 'hotspot',
-            hotspot: anchorButtonMem.get(comp),
-            layouts: {
-              onRtl: () => [ Layout.southeast ],
-              onLtr: () => [ Layout.southwest ]
-            }
-          };
         },
         components: [
           pPrimary
