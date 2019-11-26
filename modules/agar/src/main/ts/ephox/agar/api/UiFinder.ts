@@ -1,7 +1,6 @@
 import { Fun, Result } from '@ephox/katamari';
-import { Element, Visibility } from '@ephox/sugar';
+import { Element, Visibility, Truncate } from '@ephox/sugar';
 
-import * as Truncate from '../alien/Truncate';
 import * as UiSearcher from '../find/UiSearcher';
 import { Chain } from './Chain';
 import * as Guard from './Guard';

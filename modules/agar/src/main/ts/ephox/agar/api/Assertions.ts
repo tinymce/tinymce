@@ -1,7 +1,6 @@
 import { Obj, Option } from '@ephox/katamari';
-import { Compare, Element } from '@ephox/sugar';
+import { Compare, Element, Truncate } from '@ephox/sugar';
 
-import * as Truncate from '../alien/Truncate';
 import { elementQueue, StructAssert } from '../assertions/ApproxStructures';
 import * as Differ from '../assertions/Differ';
 import * as ApproxStructure from './ApproxStructure';
