@@ -1,5 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Option } from '@ephox/katamari';
+import { Obj, Option } from '@ephox/katamari';
 import { Body, Element } from '@ephox/sugar';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -57,7 +57,7 @@ export default () => {
   };
 
   const getById = (id: string): Option<AlloyComponent> => {
-    return Objects.readOpt(id)(components) as Option<AlloyComponent>;
+    return Obj.get(components, id);
   };
 
   return {

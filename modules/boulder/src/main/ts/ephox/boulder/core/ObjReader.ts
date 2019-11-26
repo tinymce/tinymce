@@ -1,10 +1,4 @@
-import { Option, Obj } from '@ephox/katamari';
-
-const readOpt = function (key) {
-  return function (obj) {
-    return Obj.has(obj, key) ? Option.from(obj[key]) : Option.none();
-  };
-};
+import { Obj } from '@ephox/katamari';
 
 const readOr = function (key, fallback) {
   return function (obj) {
@@ -17,7 +11,6 @@ const hasKey = function (obj, key) {
 };
 
 export {
-  readOpt,
   readOr,
   hasKey
 };

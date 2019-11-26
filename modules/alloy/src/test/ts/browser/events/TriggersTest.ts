@@ -1,6 +1,5 @@
 import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Objects } from '@ephox/boulder';
 import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Obj } from '@ephox/katamari';
 import { Attr, Element, Html, Insert, SelectorFind } from '@ephox/sugar';
@@ -67,7 +66,7 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
   const lookup = (eventType, target) => {
     const targetId = Attr.get(target, 'data-event-id');
 
-    return Obj.get(domEvents, eventType).bind(Objects.readOpt<(e) => void>(targetId)).map((h: Function) => {
+    return Obj.get(domEvents, eventType).bind((x) => Obj.get(x, targetId)).map((h: Function) => {
       return {
         descHandler: Fun.constant({
           cHandler: h,

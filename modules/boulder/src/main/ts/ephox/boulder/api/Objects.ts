@@ -12,10 +12,6 @@ const exclude = function (obj: {}, fields: any[]): {} {
   return ObjChanger.exclude(obj, fields);
 };
 
-const readOpt = function <T>(key: string): ({}) => Option <T> {
-  return ObjReader.readOpt(key);
-};
-
 const readOr = function <T>(key: string, fallback: T): ({}) => T {
   return ObjReader.readOr(key, fallback);
 };
@@ -58,7 +54,6 @@ const hasKey = function (obj: {}, key: string): boolean {
 export {
   narrow,
   exclude,
-  readOpt,
   readOr,
   wrap,
   wrapAll,
