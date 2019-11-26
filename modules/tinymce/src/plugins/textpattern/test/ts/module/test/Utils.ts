@@ -1,5 +1,5 @@
 import { ApproxStructure, GeneralSteps, Keys, Logger, Step, StructAssert } from '@ephox/agar';
-import { Arr } from '@ephox/katamari';
+import { Arr, Unicode } from '@ephox/katamari';
 import { TinyActions, TinyApis } from '@ephox/mcagar';
 
 const sSetContentAndFireKeystroke = function (key: number) {
@@ -53,7 +53,7 @@ const inlineStructHelper = function (tag: string, content: string) {
               s.text(str.is(content), true)
             ]
           }),
-          s.text(str.is('\u00A0'), true)
+          s.text(str.is(Unicode.nbsp), true)
         ]
       })
     ]);

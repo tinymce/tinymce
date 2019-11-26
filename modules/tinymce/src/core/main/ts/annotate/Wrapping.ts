@@ -6,7 +6,7 @@
  */
 
 import { Document, Range } from '@ephox/dom-globals';
-import { Arr, Cell, Id, Option } from '@ephox/katamari';
+import { Arr, Cell, Id, Option, Unicode } from '@ephox/katamari';
 import { Attr, Class, Classes, Element, Html, Insert, Node, Replication, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import GetBookmark from '../bookmark/GetBookmark';
@@ -127,7 +127,7 @@ const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorS
     if (editor.selection.getRng().collapsed)  {
       const wrapper = makeAnnotation(editor.getDoc(), data, name, settings.decorate);
       // Put something visible in the marker
-      Html.set(wrapper, '\u00A0');
+      Html.set(wrapper, Unicode.nbsp);
       editor.selection.getRng().insertNode(wrapper.dom());
       editor.selection.select(wrapper.dom());
     } else {

@@ -7,9 +7,10 @@
 
 import { Node, Range } from '@ephox/dom-globals';
 import NodeType from '../dom/NodeType';
+import { Unicode } from '@ephox/katamari';
 
 const isAfterNbsp = (container: Node, offset: number) => {
-  return NodeType.isText(container) && container.nodeValue[offset - 1] === '\u00a0';
+  return NodeType.isText(container) && container.nodeValue[offset - 1] === Unicode.nbsp;
 };
 
 const trimOrPadLeftRight = (rng: Range, html: string): string => {
@@ -47,13 +48,13 @@ const trimNbspAfterDeleteAndPadValue = (rng: Range, value: string): string => {
   offset = rng.startOffset;
 
   if (container.nodeType === 3 && rng.collapsed) {
-    if (container.data[offset] === '\u00a0') {
+    if (container.data[offset] === Unicode.nbsp) {
       container.deleteData(offset, 1);
 
       if (!/[\u00a0| ]$/.test(value)) {
         value += ' ';
       }
-    } else if (container.data[offset - 1] === '\u00a0') {
+    } else if (container.data[offset - 1] === Unicode.nbsp) {
       container.deleteData(offset - 1, 1);
 
       if (!/[\u00a0| ]$/.test(value)) {

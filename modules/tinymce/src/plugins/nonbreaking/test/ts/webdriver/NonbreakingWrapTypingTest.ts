@@ -36,7 +36,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
                   s.text(str.is(Unicode.zeroWidth + 'test'))
@@ -62,7 +62,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
                   s.text(str.is(Unicode.zeroWidth))
@@ -94,7 +94,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
                   s.text(str.is(Unicode.zeroWidth + 'test'))
@@ -123,10 +123,10 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
-                  s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + ' ' : Unicode.zeroWidth + '\u00a0'))
+                  s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + ' ' : Unicode.zeroWidth + Unicode.nbsp))
                 ].concat(isGecko ? [ s.element('br', {})] : [])
               })
             ]
@@ -149,7 +149,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
                   s.text(str.is(Unicode.zeroWidth))
@@ -173,7 +173,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
                   s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + 'test ' : Unicode.zeroWidth + 'test\u00a0'))
@@ -199,7 +199,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
                   s.text(str.is(Unicode.zeroWidth))
@@ -223,7 +223,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
                   s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + 'test ' : Unicode.zeroWidth + 'test\u00a0'))
@@ -247,7 +247,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
                   s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + 'test test ' : Unicode.zeroWidth + 'test test\u00a0'))

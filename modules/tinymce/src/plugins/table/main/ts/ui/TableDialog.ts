@@ -7,7 +7,7 @@
 
 import { Types } from '@ephox/bridge';
 import { Element } from '@ephox/dom-globals';
-import { Fun, Merger, Type } from '@ephox/katamari';
+import { Fun, Merger, Type, Unicode } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -116,7 +116,7 @@ const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Types.Dialog.
 
     if (!captionElm && data.caption) {
       captionElm = dom.create('caption');
-      captionElm.innerHTML = !Env.ie ? '<br data-mce-bogus="1"/>' : '\u00a0';
+      captionElm.innerHTML = !Env.ie ? '<br data-mce-bogus="1"/>' : Unicode.nbsp;
       tableElm.insertBefore(captionElm, tableElm.firstChild);
     }
 

@@ -8,6 +8,7 @@
 import Tools from '../api/util/Tools';
 import { isEmpty, paddEmptyNode } from './ParserUtils';
 import Node from '../api/html/Node';
+import { Unicode } from '@ephox/katamari';
 
 const register = (parser, settings: any): void => {
   const schema = parser.schema;
@@ -91,7 +92,7 @@ const register = (parser, settings: any): void => {
 
           if (lastParent === parent && settings.padd_empty_with_br !== true) {
             textNode = new Node('#text', 3);
-            textNode.value = '\u00a0';
+            textNode.value = Unicode.nbsp;
             node.replace(textNode);
           }
         }

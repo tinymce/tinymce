@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
+import { Arr, Unicode } from '@ephox/katamari';
 
 // Don't compare other unicode spaces here, as we're only concerned about whitespace the browser would collapse
 const isCollapsibleWhitespace = (c: string): boolean => ' \f\t\v'.indexOf(c) !== -1;
@@ -16,11 +16,11 @@ const isNewline = (text: string, idx: number): boolean => (idx < text.length && 
 const normalizeWhitespace = (text: string): string => {
   const result = Arr.foldl(text, (acc, c) => {
     // Are we dealing with a char other than some collapsible whitespace or nbsp? if so then just use it as is
-    if (isCollapsibleWhitespace(c) || c === '\u00a0') {
+    if (isCollapsibleWhitespace(c) || c === Unicode.nbsp) {
       // If the previous char is a space, we are at the start or end, or if the next char is a new line char, then we need
       // to convert the space to a nbsp
       if (acc.pcIsSpace || acc.str === '' || acc.str.length === text.length - 1 || isNewline(text, acc.str.length + 1)) {
-        return { pcIsSpace: false, str: acc.str + '\u00a0' };
+        return { pcIsSpace: false, str: acc.str + Unicode.nbsp };
       } else {
         return { pcIsSpace: true, str: acc.str + ' ' };
       }

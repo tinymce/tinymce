@@ -98,7 +98,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
                   children: [
                     s.element('span', {
                       children: [
-                        s.text(str.is('\u00A0' + 'b'))
+                        s.text(str.is(Unicode.nbsp + 'b'))
                       ]
                     }),
                     s.text(str.is(' c'))

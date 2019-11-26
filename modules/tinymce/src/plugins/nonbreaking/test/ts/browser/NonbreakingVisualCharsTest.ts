@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTe
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
                   s.text(str.is(Unicode.zeroWidth))
@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTe
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
                   s.text(str.is(Unicode.zeroWidth))

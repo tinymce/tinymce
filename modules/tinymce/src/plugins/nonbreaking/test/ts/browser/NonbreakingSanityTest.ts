@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingSanityTest', 
                 s.element('span', {
                   classes: [ arr.has('mce-nbsp-wrap') ],
                   children: [
-                    s.text(str.is('\u00a0'))
+                    s.text(str.is(Unicode.nbsp))
                   ]
                 }),
                 s.text(str.is(Unicode.zeroWidth))

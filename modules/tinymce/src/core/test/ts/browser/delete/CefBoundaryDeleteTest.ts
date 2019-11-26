@@ -4,6 +4,7 @@ import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 import Zwsp from 'tinymce/core/text/Zwsp';
+import { Unicode } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.core.delete.CefBoundaryDeleteTest',  (success, failure) => {
   Theme();
@@ -40,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefBoundaryDeleteTest',  (succes
                         s.text(str.is('b'))
                       ]
                     }),
-                    s.text(str.is('\u00a0'))
+                    s.text(str.is(Unicode.nbsp))
                   ]
                 })
               ]

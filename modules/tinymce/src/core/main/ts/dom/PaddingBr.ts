@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
+import { Arr, Unicode } from '@ephox/katamari';
 import { Insert, Remove, Element, Node, Text, SelectorFilter, Traverse } from '@ephox/sugar';
 import * as ElementType from './ElementType';
 
@@ -35,7 +35,7 @@ const fillWithPaddingBr = function (elm) {
 };
 
 const isPaddingContents = function (elm) {
-  return Node.isText(elm) ? Text.get(elm) === '\u00a0' : ElementType.isBr(elm);
+  return Node.isText(elm) ? Text.get(elm) === Unicode.nbsp : ElementType.isBr(elm);
 };
 
 const isPaddedElement = function (elm) {
