@@ -15,14 +15,15 @@
   "include": [
     "src/demo/ts",
     "src/main/ts",
-    "src/test/ts",
+    "src/test/ts"
   ],
   "references": [
     { "path": "../agar" },
     { "path": "../boss" },
     { "path": "../katamari" },
+    { "path": "../katamari-assertions" },
     { "path": "../phoenix" },
     { "path": "../polaris" },
-    { "path": "../sugar" },
+    { "path": "../sugar" }
   ]
 }

@@ -24,5 +24,8 @@
   },
   "dependencies": {
     "tslib": "^1.9.3"
+  },
+  "devDependencies": {
+    "@ephox/katamari-assertions": "^1.0.0"
   }
 }

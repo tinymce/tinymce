@@ -29,7 +29,8 @@
     "browser-test-manual": "yarn -s grunt browser-manual",
     "phantomjs-test": "yarn -s grunt phantomjs-auto",
     "phantomjs-test-manual": "yarn -s grunt phantomjs-manual",
-    "bedrock": "bedrock --customRoutes modules/tinymce/src/core/test/json/routes.json"
+    "bedrock": "bedrock --customRoutes modules/tinymce/src/core/test/json/routes.json",
+    "test-one": "yarn tsc && yarn bedrock-auto -b chrome-headless -f"
   },
   "devDependencies": {
     "@ephox/bedrock-client": "^9.3.2",

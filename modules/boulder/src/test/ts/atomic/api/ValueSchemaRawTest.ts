@@ -6,6 +6,7 @@ import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as Objects from 'ephox/boulder/api/Objects';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 import { Processor } from 'ephox/boulder/api/Main';
+import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('ValueSchemaRawTest', function () {
   const checkErr = function (label: string, expectedPart: string, input: any, processor: Processor) {
@@ -199,35 +200,35 @@ UnitTest.test('ValueSchemaRawTest', function () {
     const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.option('alpha')
     ]), {});
-    Assert.eq('alpha should be none', true, v.alpha.isNone());
+    KAssert.eqNone('alpha should be none', v.alpha);
   });
 
   Logger.sync('option, value supplied', function () {
     const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.option('alpha')
     ]), { alpha: 'beta' });
-    Assert.eq('alpha should be some(beta)', 'beta', v.alpha.getOrDie('expected some'));
+    KAssert.eqSome('alpha should be some(beta)', 'beta', v.alpha);
   });
 
   Logger.sync('defaulted option(fallback), value supplied', function () {
     const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
     ]), { alpha: 'beta' });
-    Assert.eq('fallback.opt: alpha:beta should be some(beta)', 'beta', v.alpha.getOrDie());
+    KAssert.eqSome('fallback.opt: alpha:beta should be some(beta)', 'beta', v.alpha);
   });
 
   Logger.sync('defaulted option(fallback), value supplied as true', function () {
     const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
     ]), { alpha: true });
-    Assert.eq('fallback.opt: alpha:true should be some(fallback)', 'fallback', v.alpha.getOrDie());
+    KAssert.eqSome('fallback.opt: alpha:true should be some(fallback)', 'fallback', v.alpha);
   });
 
   Logger.sync('defaulted option(fallback), value not supplied', function () {
     const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
     ]), {  });
-    Assert.eq('fallback.opt: no alpha should be none', true, v.alpha.isNone());
+    KAssert.eqNone('fallback.opt: no alpha should be none', v.alpha);
   });
 
   Logger.sync('asDefaultedOptionThunk not supplied', function () {
@@ -240,7 +241,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
       ]),
       { label: 'defaulted thunk' }
     );
-    Assert.eq('fallback.opt: no alpha should be none', true, v.alpha.isNone());
+    KAssert.eqNone('fallback.opt: no alpha should be none', v.alpha);
   });
 
   Logger.sync('asDefaultedOptionThunk supplied as true', function () {
@@ -253,9 +254,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
       ]),
       { label: 'defaulted thunk', alpha: true }
     );
-    Assert.eq('Checking output', 'defaulted thunk.fallback', v.alpha.getOrDie(
-      'Alpha should be some'
-    ));
+    KAssert.eqSome('Checking output', 'defaulted thunk.fallback', v.alpha);
   });
 
   Logger.sync('asDefaultedOptionThunk supplied', function () {
@@ -268,9 +267,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
       ]),
       { label: 'defaulted thunk', alpha: 'alpha.value' }
     );
-    Assert.eq('Checking output', 'alpha.value', v.alpha.getOrDie(
-      'Alpha should be some'
-    ));
+    KAssert.eqSome('Checking output', 'alpha.value', v.alpha);
   });
 
   Logger.sync('mergeWithThunk({ extra: s.label }), value supplied', function () {
@@ -433,7 +430,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
 
     ValueSchema.asRaw<SomeType>('SomeType', schema, {}).fold(
       (err) => Assert.eq('Should be two errors', 2, err.errors.length),
-      (actual) => assert.fail('Should not pass')
+      () => assert.fail('Should not pass')
     );
   });
 

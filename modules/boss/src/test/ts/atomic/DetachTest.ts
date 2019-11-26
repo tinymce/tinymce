@@ -1,5 +1,6 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
+import { KAssert } from '@ephox/katamari-assertions';
 import { Gene } from 'ephox/boss/api/Gene';
 import Detach from 'ephox/boss/mutant/Detach';
 import Logger from 'ephox/boss/mutant/Logger';
@@ -10,16 +11,8 @@ UnitTest.test('DetachTest', function () {
   const check = function (expectedRemain: string, expectedDetach: Option<string>, input: Gene, id: string) {
     const family = Tracks.track(input, Option.none());
     const actualDetach = Detach.detach(family, Gene(id, '.'));
-    assert.eq(expectedRemain, Logger.basic(family));
-    expectedDetach.fold(() => {
-      assert.eq(true, actualDetach.isNone(), 'Expected no detached node');
-    }, (expected) => {
-      actualDetach.map(Logger.basic).fold(() => {
-        assert.fail('Expected detached node to be ' + expected + ' but no node found.');
-      }, (actual) => {
-        assert.eq(expected, actual);
-      });
-    });
+    Assert.eq('expectedRemain', expectedRemain, Logger.basic(family));
+    KAssert.eqOption('expectedDetach', expectedDetach, actualDetach.map(Logger.basic));
   };
 
   check('A(B)', Option.some('C(D(E),F)'),

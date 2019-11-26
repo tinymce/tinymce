@@ -6,8 +6,9 @@ import * as Body from 'ephox/sugar/api/node/Body';
 import * as Css from 'ephox/sugar/api/properties/Css';
 import Element from 'ephox/sugar/api/node/Element';
 import Div from 'ephox/sugar/test/Div';
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import { UnitTest, Assert } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
+import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('ElementFromPointTest', function () {
   const a = Div();
@@ -32,11 +33,11 @@ UnitTest.test('ElementFromPointTest', function () {
   const checkMatch = function (p, placeX, placeY, expectedElm, testX, testY) {
     const actualElm = getAt(p, placeX, placeY, testX, testY).getOrDie('Should be some element.');
     // debugger
-    assert.eq(true, Compare.eq(expectedElm, actualElm), 'Should be expected element');
+    Assert.eq('Should be expected element', true, Compare.eq(expectedElm, actualElm));
   };
 
   const checkNone = function (p, placeX, placeY, testX, testY) {
-    assert.eq(true, getAt(p, placeX, placeY, testX, testY).isNone(), 'Should be none');
+    KAssert.eqNone('Should be none', getAt(p, placeX, placeY, testX, testY));
   };
 
   Arr.each([bg, a], function (elm) {

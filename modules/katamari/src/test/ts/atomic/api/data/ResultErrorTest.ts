@@ -6,6 +6,9 @@ import fc from 'fast-check';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import { tResult } from 'ephox/katamari/api/ResultInstances';
 import { tOption } from 'ephox/katamari/api/OptionInstances';
+import { Testable } from '@ephox/dispute';
+
+const { tNumber } = Testable;
 
 UnitTest.test('Result.error: unit tests', () => {
   const s = Result.error('error');
@@ -35,7 +38,7 @@ UnitTest.test('Result.error: unit tests', () => {
   Assert.eq('eq', false, s.exists(Fun.always));
   Assert.eq('eq', true, s.forall(Fun.never));
 
-  Assert.eq('eq', true, Result.error(4).toOption().isNone());
+  Assert.eq('eq', Option.none(), Result.error(4).toOption(), tOption(tNumber));
 });
 
 const getErrorOrDie = (res) => res.fold((err) => err, Fun.die('Was not an error!'));

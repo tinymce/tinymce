@@ -1,8 +1,9 @@
-import { assert, Assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 import { FieldProcessorAdt } from 'ephox/boulder/api/Main';
 import { Obj, Option } from '@ephox/katamari';
+import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('Atomic Test: api.FieldSchemaTest', function () {
   const assertFieldValue = (label: string, expected: any, input: any, field: FieldProcessorAdt) => {
@@ -23,7 +24,7 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', function () {
 
     ValueSchema.asRaw('spec', schema, input).fold(
       (err) => {},
-      (value) => assert.fail('Should fail on value')
+      (value) => Assert.fail('Should fail on value')
     );
   };
 
@@ -33,16 +34,10 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', function () {
     ]);
 
     ValueSchema.asRaw('spec', schema, input).fold(
-      (err) => assert.fail('Should not fail'),
+      (err) => Assert.fail('Should not fail'),
       (actual: any) => {
-       Obj.each(expected, (expectedValueOpt, expectedKey) => {
-          if (expectedValueOpt.isNone()) {
-            Assert.eq(`Expected value for key ${expectedKey} to be none`, true, actual[expectedKey].isNone());
-          } else if (expectedValueOpt.isSome()) {
-            const actualValue = actual[expectedKey].getOrDie(`Expected value for key ${expectedKey} to be some`);
-            const expectedValue = expectedValueOpt.getOrDie(`Expected value for key ${expectedKey} to be some`);
-            Assert.eq(`Expected value for key ${expectedKey} to be some`, expectedValue, actualValue);
-          }
+        Obj.each(expected, (expectedValueOpt, expectedKey) => {
+          KAssert.eqOption('eq', expectedValueOpt, actual[expectedKey]);
         });
       }
     );

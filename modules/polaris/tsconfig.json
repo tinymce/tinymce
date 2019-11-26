@@ -15,9 +15,10 @@
   "include": [
     "src/demo/ts",
     "src/main/ts",
-    "src/test/ts",
+    "src/test/ts"
   ],
   "references": [
     { "path": "../katamari" },
+    { "path": "../katamari-assertions" }
   ]
 }
