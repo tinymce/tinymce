@@ -1,5 +1,4 @@
-import { Objects } from '@ephox/boulder';
-import { Option } from '@ephox/katamari';
+import { Obj, Option } from '@ephox/katamari';
 import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 
 import { isSketchSpec } from '../../api/ui/Sketcher';
@@ -13,7 +12,7 @@ export interface MementoRecord {
 }
 
 const record = (spec: SimpleOrSketchSpec): MementoRecord => {
-  const uid = isSketchSpec(spec) && Objects.hasKey(spec, 'uid') ? spec.uid : Tagger.generate('memento');
+  const uid = isSketchSpec(spec) && Obj.hasNonNullableKey(spec, 'uid') ? spec.uid : Tagger.generate('memento');
 
   const get = (anyInSystem: AlloyComponent): AlloyComponent => {
     return anyInSystem.getSystem().getByUid(uid).getOrDie();

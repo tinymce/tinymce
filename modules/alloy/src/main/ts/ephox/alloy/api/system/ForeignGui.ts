@@ -1,5 +1,5 @@
-import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Arr, Fun, Obj, Option } from '@ephox/katamari';
 import { DomEvent, Insert, Element } from '@ephox/sugar';
 
 import { SugarEvent } from '../../alien/TypeDefinitions';
@@ -172,7 +172,7 @@ const engage = (spec: ForeignGuiSpec) => {
       const events = data.evts();
 
       // if this dispatcher defines this event, proxy it and fire the handler
-      if (Objects.hasKey(events, type)) { proxyFor(event, mission.target, events[type]); }
+      if (Obj.hasNonNullableKey(events, type)) { proxyFor(event, mission.target, events[type]); }
     });
   };
 

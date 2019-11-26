@@ -7,7 +7,7 @@
 
 import { Behaviour, Receiving, Toggling } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
-import { Arr, Option, Type } from '@ephox/katamari';
+import { Arr, Obj, Option, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -129,7 +129,7 @@ const setup = function (realm, editor: Editor) {
         // NOTE: forall is true for none
         const buttons = editor.ui.registry.getAll().buttons;
         return prereq.forall(function (p) {
-          return Objects.hasKey(buttons, p);
+          return Obj.hasNonNullableKey(buttons, p);
         });
       },
       sketch
@@ -162,7 +162,7 @@ const detect = function (settings, features) {
   // Now, build the list only including supported features and no duplicates.
   const present = { };
   return Arr.bind(itemNames, function (iName) {
-    const r = !Objects.hasKey(present, iName) && Objects.hasKey(features, iName) && features[iName].isSupported() ? [ features[iName].sketch() ] : [];
+    const r = !Obj.hasNonNullableKey<any, string>(present, iName) && Obj.hasNonNullableKey(features, iName) && features[iName].isSupported() ? [ features[iName].sketch() ] : [];
     // NOTE: Could use fold to avoid mutation, but it might be overkill and not performant
     present[iName] = true;
     return r;

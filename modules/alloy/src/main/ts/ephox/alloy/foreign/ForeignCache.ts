@@ -1,5 +1,4 @@
-import { Objects } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
+import { Fun, Obj } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import * as DomState from '../alien/DomState';
@@ -17,8 +16,8 @@ export default () => {
       // If we haven't already setup this particular element, then generate any state and config
       // required by its behaviours and put it in the cache.
       const info = {
-        events: Objects.hasKey(spec, 'events') ? spec.events : { },
-        eventOrder: Objects.hasKey(spec, 'eventOrder') ? spec.eventOrder : { }
+        events: Obj.hasNonNullableKey(spec, 'events') ? spec.events : { },
+        eventOrder: Obj.hasNonNullableKey(spec, 'eventOrder') ? spec.eventOrder : { }
       };
 
       // NOTE: Note all behaviours are supported at the moment

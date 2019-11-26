@@ -1,8 +1,8 @@
-import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Type } from '@ephox/katamari';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 
 const nu = (parts) => {
-  if (! Objects.hasKey(parts, 'can') && !Objects.hasKey(parts, 'abort') && !Objects.hasKey(parts, 'run')) { throw new Error(
+  if (! Obj.hasNonNullableKey(parts, 'can') && !Obj.hasNonNullableKey(parts, 'abort') && !Obj.hasNonNullableKey(parts, 'run')) { throw new Error(
     'EventHandler defined by: ' + JSON.stringify(parts, null, 2) + ' does not have can, abort, or run!'
   );
   }

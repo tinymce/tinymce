@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Obj, Adt } from '@ephox/katamari';
 
 import { ComponentSpec, RawDomSchema } from '../api/component/SpecTypes';
@@ -52,7 +52,7 @@ const getPartsSchema = (partNames, _optPartNames, _owner): FieldProcessorAdt[] =
   const partUidsSchema = FieldSchema.state(
     'partUids',
     (spec) => {
-      if (! Objects.hasKey(spec, 'parts')) {
+      if (! Obj.hasNonNullableKey(spec, 'parts')) {
         throw new Error(
           'Part uid definition for owner: ' + owner + ' requires "parts"\nExpected parts: ' + partNames.join(', ') + '\nSpec: ' +
           JSON.stringify(spec, null, 2)

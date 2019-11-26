@@ -93,9 +93,11 @@ export const get = function <T, K extends keyof T> (obj: T, key: K): Option<NonN
   return has(obj, key) ? Option.from(obj[key] as NonNullable<T[K]>) : Option.none();
 };
 
-export const has = function <T, K extends keyof T> (obj: T, key: K): boolean {
-  return hasOwnProperty.call(obj, key);
-};
+export const has = <T, K extends keyof T>(obj: T, key: K): boolean =>
+  hasOwnProperty.call(obj, key);
+
+export const hasNonNullableKey = <T, K extends keyof T>(obj: T, key: K): boolean =>
+  has(obj, key) && obj[key] !== undefined && obj[key] !== null;
 
 export const isEmpty = (r: Record<any, any>): boolean => {
   for (const x in r) {

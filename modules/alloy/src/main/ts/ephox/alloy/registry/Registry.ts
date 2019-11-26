@@ -1,4 +1,3 @@
-import { Objects } from '@ephox/boulder';
 import { Obj, Option } from '@ephox/katamari';
 import { Body, Element } from '@ephox/sugar';
 
@@ -34,7 +33,7 @@ export default () => {
 
   const register = (component: AlloyComponent): void => {
     const tagId = readOrTag(component);
-    if (Objects.hasKey(components, tagId)) { failOnDuplicate(component, tagId); }
+    if (Obj.hasNonNullableKey(components, tagId)) { failOnDuplicate(component, tagId); }
     // Component is passed through an an extra argument to all events
     const extraArgs = [ component ];
     events.registerId(extraArgs, tagId, component.events());

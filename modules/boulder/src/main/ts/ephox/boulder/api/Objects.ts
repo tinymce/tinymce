@@ -1,7 +1,6 @@
 import * as ObjChanger from '../core/ObjChanger';
-import * as ObjReader from '../core/ObjReader';
 import * as ObjWriter from '../core/ObjWriter';
-import { Option, Result, Results, Merger, Fun, Arr } from '@ephox/katamari';
+import { Result, Results, Merger, Fun, Arr } from '@ephox/katamari';
 
 // Perhaps this level of indirection is unnecessary.
 const narrow = function (obj: {}, fields: any[]): {} {
@@ -43,16 +42,11 @@ const consolidate = function (objs, base: {}): Result <{}, string> {
   return partitions.errors.length > 0 ? mergeErrors(partitions.errors) : mergeValues(partitions.values, base);
 };
 
-const hasKey = function (obj: {}, key: string): boolean {
-  return ObjReader.hasKey(obj, key);
-};
-
 export {
   narrow,
   exclude,
   wrap,
   wrapAll,
   indexOnKey,
-  hasKey,
   consolidate
 };

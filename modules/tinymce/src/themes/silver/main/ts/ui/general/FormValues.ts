@@ -6,7 +6,6 @@
  */
 
 import { Form, Invalidating, Representing } from '@ephox/alloy';
-import { Objects } from '@ephox/boulder';
 import { Arr, Future, Futures, Merger, Obj, Option, Result, Results } from '@ephox/katamari';
 
 export interface FormValidator { 'value': string | number; 'text': string; }
@@ -42,7 +41,7 @@ interface ValueHolder {
   text: any;
 }
 
-const isValueHolder = (v: any): v is ValueHolder => Objects.hasKey(v, 'value') && Objects.hasKey(v, 'text');
+const isValueHolder = (v: any): v is ValueHolder => Obj.hasNonNullableKey(v, 'value') && Obj.hasNonNullableKey(v, 'text');
 
 const extract = <T>(form) => {
   // FIX: May hit race conditions here is the validation is ongoing and I fire
