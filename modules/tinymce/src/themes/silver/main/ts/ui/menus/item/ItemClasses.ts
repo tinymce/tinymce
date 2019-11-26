@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Objects } from '@ephox/boulder';
 import { Types } from '@ephox/bridge';
+import { Obj } from '@ephox/katamari';
 
 const navClass = 'tox-menu-nav__js';
 const selectableClass = 'tox-collection__item';
 const colorClass = 'tox-swatch';
 
-const presetClasses = {
+const presetClasses: { [K in Types.PresetTypes]?: string } = {
   normal: navClass,
   color: colorClass
 };
@@ -29,7 +29,7 @@ const activeClass = 'tox-collection__item--active';
 const iconClassRtl = 'tox-collection__item-icon-rtl';
 
 const classForPreset = (presets: Types.PresetTypes): string => {
-  return Objects.readOptFrom<string>(presetClasses, presets).getOr(navClass);
+  return Obj.get(presetClasses, presets).getOr(navClass);
 };
 
 export {

@@ -80,8 +80,7 @@ UnitTest.test('ObjectsTest', () => {
     Assert.eq('readOr(alpha) => Alpha', 'Alpha', Objects.readOr('alpha', 'fallback')(subject));
     Assert.eq('readOr(beta) => fallback', 'fallback', Objects.readOr('beta', 'fallback')(subject));
 
-    KAssert.eqSome('readOptFrom(alpha) => some(Alpha)', 'Alpha', Objects.readOptFrom(subject, 'alpha'));
-    KAssert.eqNone('readOptFrom(beta) => none', Objects.readOptFrom(subject, 'beta'));
+    KAssert.eqSome('readOptFrom(alpha) => some(Alpha)', 'Alpha', Obj.get(subject, 'alpha'));
   };
 
   const testConsolidate = () => {

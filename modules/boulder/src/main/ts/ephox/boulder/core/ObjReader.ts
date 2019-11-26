@@ -12,10 +12,6 @@ const readOr = function (key, fallback) {
   };
 };
 
-const readOptFrom = <O>(obj, key): Option<O> => {
-  return readOpt(key)(obj);
-};
-
 const hasKey = function (obj, key) {
   return Obj.has(obj, key) && obj[key] !== undefined && obj[key] !== null;
 };
@@ -23,6 +19,5 @@ const hasKey = function (obj, key) {
 export {
   readOpt,
   readOr,
-  readOptFrom,
   hasKey
 };

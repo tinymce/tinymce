@@ -20,15 +20,11 @@ const readOr = function <T>(key: string, fallback: T): ({}) => T {
   return ObjReader.readOr(key, fallback);
 };
 
-const readOptFrom = <O>(obj: {}, key: string): Option<O> => {
-  return ObjReader.readOptFrom<O>(obj, key);
-};
-
-const wrap = function (key: string, value: {}): {} {
+const wrap = function <V> (key: string, value: V): {[key: string]: V} {
   return ObjWriter.wrap(key, value);
 };
 
-const wrapAll = function (keyvalues: Array<{key: string; value: any}>): {} {
+const wrapAll = function (keyvalues: Array<{key: string; value: any}>): Record<string, any> {
   return ObjWriter.wrapAll(keyvalues);
 };
 
@@ -64,7 +60,6 @@ export {
   exclude,
   readOpt,
   readOr,
-  readOptFrom,
   wrap,
   wrapAll,
   indexOnKey,

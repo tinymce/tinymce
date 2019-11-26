@@ -1,5 +1,5 @@
-import { FieldSchema, Objects } from '@ephox/boulder';
-import { Option } from '@ephox/katamari';
+import { FieldSchema } from '@ephox/boulder';
+import { Obj, Option } from '@ephox/katamari';
 
 import { SketchSpec } from '../../api/component/SpecTypes';
 import * as ButtonBase from '../../ui/common/ButtonBase';
@@ -16,8 +16,8 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
   const tag = detail.dom.tag;
 
   const lookupAttr = (attr: string): Option<string> => {
-    return Objects.readOptFrom<Record<string, string>>(detail.dom, 'attributes').bind((attrs) => {
-      return Objects.readOptFrom<string>(attrs, attr);
+    return Obj.get(detail.dom, 'attributes').bind((attrs) => {
+      return Obj.get(attrs, attr);
     });
   };
 

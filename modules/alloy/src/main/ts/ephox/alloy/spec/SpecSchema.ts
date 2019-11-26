@@ -59,7 +59,7 @@ const getPartsSchema = (partNames, _optPartNames, _owner): FieldProcessorAdt[] =
         );
       }
       const uids = Obj.map(spec.parts, (v, k) => {
-        return Objects.readOptFrom<string>(v, 'uid').getOrThunk(() => {
+        return Obj.get(v, 'uid').getOrThunk(() => {
           return spec.uid + '-' + k;
         });
       });

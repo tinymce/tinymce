@@ -101,7 +101,7 @@ const doCreate = (configSchema, schemaSchema, name: string, active, apis, extra,
 
     exhibit (info, base) {
       return getConfig(info).bind((behaviourInfo) => {
-        return Objects.readOptFrom<any>(active, 'exhibit').map((exhibitor) => {
+        return Obj.get(active, 'exhibit').map((exhibitor) => {
           return exhibitor(base, behaviourInfo.config, behaviourInfo.state);
         });
       }).getOr(DomModification.nu({ }));

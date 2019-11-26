@@ -7,7 +7,7 @@
 
 import { Toggling } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
-import { Arr, Fun, Id, Merger } from '@ephox/katamari';
+import { Arr, Fun, Id, Merger, Obj } from '@ephox/katamari';
 
 import DefaultStyleFormats from '../features/DefaultStyleFormats';
 import StylesMenu from '../ui/StylesMenu';
@@ -54,7 +54,7 @@ const register = function (editor, settings) {
     return newItem;
   };
 
-  const formats = Objects.readOptFrom(settings, 'style_formats').getOr(DefaultStyleFormats);
+  const formats = Obj.get(settings, 'style_formats').getOr(DefaultStyleFormats);
 
   const doEnrich = function (items) {
     return Arr.map(items, function (item) {

@@ -49,24 +49,24 @@ const snapshot = function (okey): ValueProcessorAdt {
 
 const strictAccess = function (path, obj, key) {
   // In strict mode, if it undefined, it is an error.
-  return ObjReader.readOptFrom(obj, key).fold(function () {
+  return Obj.get(obj, key).fold(function () {
     return SchemaError.missingStrict(path, key, obj);
   }, SimpleResult.svalue);
 };
 
 const fallbackAccess = function (obj, key, fallbackThunk) {
-  const v = ObjReader.readOptFrom(obj, key).fold(function () {
+  const v = Obj.get(obj, key).fold(function () {
     return fallbackThunk(obj);
   }, Fun.identity);
   return SimpleResult.svalue(v);
 };
 
 const optionAccess = function (obj, key) {
-  return SimpleResult.svalue(ObjReader.readOptFrom(obj, key));
+  return SimpleResult.svalue(Obj.get(obj, key));
 };
 
 const optionDefaultedAccess = function (obj, key, fallback) {
-  const opt = ObjReader.readOptFrom(obj, key).map(function (val) {
+  const opt = Obj.get(obj, key).map(function (val) {
     return val === true ? fallback(obj) : val;
   });
   return SimpleResult.svalue(opt);

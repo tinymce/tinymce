@@ -1,5 +1,4 @@
-import { Objects } from '@ephox/boulder';
-import { Cell, Arr, Option } from '@ephox/katamari';
+import { Cell, Arr, Option, Obj } from '@ephox/katamari';
 
 import { ItemDataTuple } from '../../ui/types/ItemTypes';
 import { nuState } from '../common/BehaviourState';
@@ -66,9 +65,10 @@ const dataset = (): DatasetRepresentingState => {
   };
 
   // itemString can be matching value or text.
+  // TODO: type problem - impossible to correctly return value when type parameter only exists in return type
   const lookup = <T extends ItemDataTuple>(itemString: string): Option<T> => {
-    return Objects.readOptFrom<T>(dataByValue.get(), itemString).orThunk(() => {
-      return Objects.readOptFrom<T>(dataByText.get(), itemString);
+    return Obj.get<any, string>(dataByValue.get(), itemString).orThunk(() => {
+      return Obj.get<any, string>(dataByText.get(), itemString);
     });
   };
 
@@ -79,8 +79,8 @@ const dataset = (): DatasetRepresentingState => {
     const newDataByText = { };
     Arr.each(items, (item) => {
       newDataByValue[item.value] = item;
-      Objects.readOptFrom<Record<string, any>>(item, 'meta').each((meta) => {
-        Objects.readOptFrom<string>(meta, 'text').each((text) => {
+      Obj.get<any, string>(item, 'meta').each((meta) => {
+        Obj.get<any, string>(meta, 'text').each((text) => {
           newDataByText[text] = item;
         });
       });

@@ -63,7 +63,7 @@ export default () => {
 
   // Given just the event type, find all handlers regardless of element
   const filterByType = (type: string): UidAndHandler[] => {
-    return Objects.readOptFrom<Record<string, CurriedHandler>>(registry, type).map((handlers) => {
+    return Obj.get(registry, type).map((handlers) => {
       return Obj.mapToArray(handlers, (f, id) => {
         return broadcastHandler(id, f);
       });

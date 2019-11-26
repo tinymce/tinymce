@@ -1,5 +1,4 @@
-import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 
 import { SugarPosition } from '../../alien/TypeDefinitions';
@@ -63,8 +62,8 @@ const allAlignments = [
 ];
 
 const nu = (width, yoffset, classes: BubbleAlignments): Bubble => {
-  const getClasses = (prop: string): string[] => {
-    return Objects.readOptFrom<string[]>(classes, prop).getOr([ ]);
+  const getClasses = (prop: keyof BubbleAlignments): string[] => {
+    return Obj.get(classes, prop).getOr([ ]);
   };
 
   const make = (xDelta: number, yDelta: number, alignmentsOn: string[]) => {

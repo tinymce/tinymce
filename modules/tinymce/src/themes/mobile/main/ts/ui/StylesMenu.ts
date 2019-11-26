@@ -18,7 +18,7 @@ import Styles from '../style/Styles';
 import Scrollable from '../touch/scroll/Scrollable';
 
 const getValue = function (item): string {
-  return Objects.readOptFrom<string>(item, 'format').getOr(item.title);
+  return Obj.get(item, 'format').getOr(item.title);
 };
 
 const convert = function (formats, memMenuThunk) {

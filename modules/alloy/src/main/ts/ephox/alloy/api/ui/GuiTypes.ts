@@ -1,5 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Id, Option } from '@ephox/katamari';
+import { Id, Obj, Option } from '@ephox/katamari';
 
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -12,7 +12,7 @@ const premade = (comp: AlloyComponent): PremadeSpec => {
 };
 
 const getPremade = (spec: AlloySpec): Option<AlloyComponent> => {
-  return Objects.readOptFrom<AlloyComponent>(spec, premadeTag);
+  return Obj.get<any, string>(spec, premadeTag);
 };
 
 const makeApi = (f) => {
