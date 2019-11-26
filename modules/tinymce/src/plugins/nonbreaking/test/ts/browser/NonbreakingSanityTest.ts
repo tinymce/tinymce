@@ -4,6 +4,7 @@ import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 import theme from 'tinymce/themes/silver/Theme';
+import { Unicode } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingSanityTest', (success, failure) => {
 
@@ -27,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingSanityTest', 
                     s.text(str.is('\u00a0'))
                   ]
                 }),
-                s.text(str.is('\uFEFF'))
+                s.text(str.is(Unicode.zeroWidth))
               ]
             })
           ]

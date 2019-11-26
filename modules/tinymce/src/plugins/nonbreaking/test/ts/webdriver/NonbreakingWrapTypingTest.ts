@@ -4,6 +4,7 @@ import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 import theme from 'tinymce/themes/silver/Theme';
 import Env from 'tinymce/core/api/Env';
+import { Unicode } from '@ephox/katamari';
 
 UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', (success, failure) => {
   // Note: Uses RealKeys, so needs a browser. Headless won't work.
@@ -38,7 +39,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                       s.text(str.is('\u00a0'))
                     ]
                   }),
-                  s.text(str.is('\uFEFF' + 'test'))
+                  s.text(str.is(Unicode.zeroWidth + 'test'))
                 ]
               })
             ]
@@ -64,7 +65,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                       s.text(str.is('\u00a0'))
                     ]
                   }),
-                  s.text(str.is('\uFEFF'))
+                  s.text(str.is(Unicode.zeroWidth))
                 ]
               })
             ]
@@ -96,7 +97,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                       s.text(str.is('\u00a0'))
                     ]
                   }),
-                  s.text(str.is('\uFEFF' + 'test'))
+                  s.text(str.is(Unicode.zeroWidth + 'test'))
                 ]
               })
             ]
@@ -125,7 +126,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                       s.text(str.is('\u00a0'))
                     ]
                   }),
-                  s.text(str.is(isGeckoOrIE ? '\uFEFF' + ' ' : '\uFEFF' + '\u00a0'))
+                  s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + ' ' : Unicode.zeroWidth + '\u00a0'))
                 ].concat(isGecko ? [ s.element('br', {})] : [])
               })
             ]
@@ -151,7 +152,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                       s.text(str.is('\u00a0'))
                     ]
                   }),
-                  s.text(str.is('\uFEFF'))
+                  s.text(str.is(Unicode.zeroWidth))
                 ]
               })
             ]
@@ -175,7 +176,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                       s.text(str.is('\u00a0'))
                     ]
                   }),
-                  s.text(str.is(isGeckoOrIE ? '\uFEFF' + 'test ' : '\uFEFF' + 'test\u00a0'))
+                  s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + 'test ' : Unicode.zeroWidth + 'test\u00a0'))
                 ].concat(isGecko ? [ s.element('br', {})] : [])
               })
             ]
@@ -201,7 +202,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                       s.text(str.is('\u00a0'))
                     ]
                   }),
-                  s.text(str.is('\uFEFF'))
+                  s.text(str.is(Unicode.zeroWidth))
                 ]
               })
             ]
@@ -225,7 +226,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                       s.text(str.is('\u00a0'))
                     ]
                   }),
-                  s.text(str.is(isGeckoOrIE ? '\uFEFF' + 'test ' : '\uFEFF' + 'test\u00a0'))
+                  s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + 'test ' : Unicode.zeroWidth + 'test\u00a0'))
                 ].concat(isGecko ? [ s.element('br', {})] : [])
               })
             ]
@@ -249,7 +250,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
                       s.text(str.is('\u00a0'))
                     ]
                   }),
-                  s.text(str.is(isGeckoOrIE ? '\uFEFF' + 'test test ' : '\uFEFF' + 'test test\u00a0'))
+                  s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + 'test test ' : Unicode.zeroWidth + 'test test\u00a0'))
                 ].concat(isGecko ? [ s.element('br', {})] : [])
               })
             ]

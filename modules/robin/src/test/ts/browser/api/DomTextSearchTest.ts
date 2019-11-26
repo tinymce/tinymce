@@ -5,6 +5,7 @@ import { Compare, Element, Html, Insert, InsertAll } from '@ephox/sugar';
 import DomTextSearch from 'ephox/robin/api/dom/DomTextSearch';
 import { TextSeekerOutcome, TextSeekerPhaseConstructor } from 'ephox/robin/textdata/TextSeeker';
 import { KAssert } from '@ephox/katamari-assertions';
+import { Unicode } from '@ephox/katamari';
 
 UnitTest.test('DomTextSearchTest', function () {
   const wordbreaker = function () {
@@ -191,7 +192,7 @@ UnitTest.test('DomTextSearchTest', function () {
     const betaText1 = Element.fromText('be');
     const betaText2 = Element.fromText('ta');
     const gammaText = Element.fromText('');
-    const deltaText = Element.fromText('\uFEFF');
+    const deltaText = Element.fromText(Unicode.zeroWidth);
     const epsilonText = Element.fromText('epsilon');
 
     InsertAll.append(container, [alphaText, betaSpan, gammaText, deltaText, epsilonText]);
