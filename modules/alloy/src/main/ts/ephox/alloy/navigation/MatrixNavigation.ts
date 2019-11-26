@@ -24,21 +24,21 @@ const cycleHorizontal = (matrix, rowIndex, startCol, deltaCol) => {
 const cycleVertical = (matrix, colIndex, startRow, deltaRow) => {
   const nextRowIndex = Num.cycleBy(startRow, deltaRow, 0, matrix.length - 1);
   const colsInNextRow = matrix[nextRowIndex].length;
-  const nextColIndex = Num.cap(colIndex, 0, colsInNextRow - 1);
+  const nextColIndex = Num.clamp(colIndex, 0, colsInNextRow - 1);
   return toCell(matrix, nextRowIndex, nextColIndex);
 };
 
 const moveHorizontal = (matrix, rowIndex, startCol, deltaCol) => {
   const row = matrix[rowIndex];
   const colsInRow = row.length;
-  const newColIndex = Num.cap(startCol + deltaCol, 0, colsInRow - 1);
+  const newColIndex = Num.clamp(startCol + deltaCol, 0, colsInRow - 1);
   return toCell(matrix, rowIndex, newColIndex);
 };
 
 const moveVertical = (matrix, colIndex, startRow, deltaRow) => {
-  const nextRowIndex = Num.cap(startRow + deltaRow, 0, matrix.length - 1);
+  const nextRowIndex = Num.clamp(startRow + deltaRow, 0, matrix.length - 1);
   const colsInNextRow = matrix[nextRowIndex].length;
-  const nextColIndex = Num.cap(colIndex, 0, colsInNextRow - 1);
+  const nextColIndex = Num.clamp(colIndex, 0, colsInNextRow - 1);
   return toCell(matrix, nextRowIndex, nextColIndex);
 };
 

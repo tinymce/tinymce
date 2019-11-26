@@ -2,7 +2,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
 import * as Num from 'ephox/katamari/api/Num';
 
-UnitTest.test('Num.cap', () => {
+UnitTest.test('Num.clamp', () => {
   fc.assert(fc.property(
     fc.nat(1000),
     fc.nat(1000),
@@ -12,8 +12,8 @@ UnitTest.test('Num.cap', () => {
       const med = low + b;
       const high = med + c;
       // low <= med <= high
-      Assert.eq('Number should be unchanged when item is within bounds', med, Num.cap(med, low, high));
-      Assert.eq('Number should snap to min', med, Num.cap(med, low, high));
-      Assert.eq('Number should snap to max', med, Num.cap(high, low, med));
+      Assert.eq('Number should be unchanged when item is within bounds', med, Num.clamp(med, low, high));
+      Assert.eq('Number should snap to min', med, Num.clamp(med, low, high));
+      Assert.eq('Number should snap to max', med, Num.clamp(high, low, med));
   }));
 });

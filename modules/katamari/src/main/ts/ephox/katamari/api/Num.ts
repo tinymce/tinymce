@@ -8,5 +8,5 @@ export const cycleBy = (value: number, delta: number, min: number, max: number):
   return r > max ? min : r < min ? max : r;
 };
 
-export const cap = (value: number, min: number, max: number): number =>
+export const clamp = (value: number, min: number, max: number): number =>
   Math.min(Math.max(value, min), max);

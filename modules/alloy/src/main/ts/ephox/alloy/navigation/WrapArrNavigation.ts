@@ -27,7 +27,7 @@ const cycleVertical = (values, index, numRows, numCols, delta) => {
     const newRow = Num.cycleBy(oldRow, delta, 0, numRows - 1);
     const onLastRow = newRow === numRows - 1;
     const colsInRow = onLastRow ? values.length - (newRow * numCols) : numCols;
-    const newCol = Num.cap(oldColumn, 0, colsInRow - 1);
+    const newCol = Num.clamp(oldColumn, 0, colsInRow - 1);
     return Option.some({
       row: Fun.constant(newRow),
       column: Fun.constant(newCol)
