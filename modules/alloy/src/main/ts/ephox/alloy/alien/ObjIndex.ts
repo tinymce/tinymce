@@ -1,4 +1,3 @@
-import { Objects } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
 
 /*
@@ -29,7 +28,7 @@ const byInnerKey = <T, O>(data: Record<OuterKey, Record<InnerKey, T>>, tuple: (s
   const r: Record<InnerKey, O[]> = {};
   Obj.each(data, (detail: Record<InnerKey, T>, key: OuterKey) => {
     Obj.each(detail, (value: T, indexKey: InnerKey) => {
-      const chain: O[] = Objects.readOr(indexKey, [ ])(r);
+      const chain: O[] = Obj.get(r, indexKey).getOr([]);
       r[indexKey] = chain.concat([
         tuple(key, value)
       ]);

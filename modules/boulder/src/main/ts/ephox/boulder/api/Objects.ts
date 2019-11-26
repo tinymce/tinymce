@@ -12,10 +12,6 @@ const exclude = function (obj: {}, fields: any[]): {} {
   return ObjChanger.exclude(obj, fields);
 };
 
-const readOr = function <T>(key: string, fallback: T): ({}) => T {
-  return ObjReader.readOr(key, fallback);
-};
-
 const wrap = function <V> (key: string, value: V): {[key: string]: V} {
   return ObjWriter.wrap(key, value);
 };
@@ -54,7 +50,6 @@ const hasKey = function (obj: {}, key: string): boolean {
 export {
   narrow,
   exclude,
-  readOr,
   wrap,
   wrapAll,
   indexOnKey,

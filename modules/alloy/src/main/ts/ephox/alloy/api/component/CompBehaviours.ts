@@ -1,4 +1,3 @@
-import { Objects } from '@ephox/boulder';
 import { Arr, Obj } from '@ephox/katamari';
 
 import * as BehaviourBlob from '../../behaviour/common/BehaviourBlob';
@@ -17,7 +16,7 @@ type BehaviourName = string;
 // This goes through the list of behaviours defined for a particular spec (removing anyhing
 // that has been revoked), and returns the BehaviourType (e.g. Sliding)
 const getBehaviours = (spec): Array<AlloyBehaviour<any, any>> => {
-  const behaviours: AlloyBehaviourRecord = Objects.readOr('behaviours', { })(spec);
+  const behaviours: AlloyBehaviourRecord = Obj.get(spec, 'behaviours').getOr({ });
   const keys = Arr.filter(
     Obj.keys(behaviours),
     (k: BehaviourName) => behaviours[k] !== undefined

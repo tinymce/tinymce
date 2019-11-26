@@ -1,5 +1,5 @@
-import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Cell, Fun, Option, Result } from '@ephox/katamari';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Arr, Cell, Fun, Obj, Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import { AlloySpec, PremadeSpec, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
@@ -12,7 +12,7 @@ import * as Component from './Component';
 import { AlloyComponent } from './ComponentApi';
 
 const buildSubcomponents = (spec: SimpleOrSketchSpec): AlloyComponent[] => {
-  const components = Objects.readOr('components', [ ])(spec);
+  const components = Obj.get(spec, 'components').getOr([ ]);
   return Arr.map(components, build);
 };
 

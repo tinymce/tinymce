@@ -113,7 +113,7 @@ const doCreate = (configSchema, schemaSchema, name: string, active, apis, extra,
 
     handlers (info) {
       return getConfig(info).map((behaviourInfo) => {
-        const getEvents = Objects.readOr('events', (a, b) => ({ }))(active);
+        const getEvents = Obj.get(active, 'events').getOr((a, b) => ({ }));
         return getEvents(behaviourInfo.config, behaviourInfo.state);
       }).getOr({ });
     }
