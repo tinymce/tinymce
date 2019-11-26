@@ -32,10 +32,10 @@ const all = function <E> (cluster: WordDecisionItem<E>[]) {
 const scan = function <E, D> (universe: Universe<E, D>, item: E, offset: number) {
   const text = universe.property().getText(item);
   const preLength = Arr.filter(text.substring(0, offset), function (s) {
-    return s !== Unicode.zeroWidth();
+    return s !== Unicode.zeroWidth;
   }).length;
   const postLength = Arr.filter(text.substring(offset, text.length), function (c) {
-    return c === Unicode.zeroWidth();
+    return c === Unicode.zeroWidth;
   }).length;
 
   // We only want to identify words that are all the same language.

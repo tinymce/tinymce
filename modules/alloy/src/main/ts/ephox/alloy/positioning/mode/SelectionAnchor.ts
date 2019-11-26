@@ -42,7 +42,7 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
   const selectionBox = getAnchorSelection(win, anchorInfo).bind((sel) => {
     // This represents the *visual* rectangle of the selection.
     const optRect = WindowSelection.getFirstRect(win, Selection.exactFromRange(sel)).orThunk(() => {
-      const x = Element.fromText(Unicode.zeroWidth());
+      const x = Element.fromText(Unicode.zeroWidth);
       Insert.before(sel.start(), x);
       // Certain things like <p><br/></p> with (p, 0) or <br>) as collapsed selection do not return a client rectangle
       return WindowSelection.getFirstRect(win, Selection.exact(x, 0, x, 1)).map((rect) => {

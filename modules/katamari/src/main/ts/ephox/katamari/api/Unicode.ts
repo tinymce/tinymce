@@ -1,3 +1,1 @@
-export const zeroWidth = function () {
-  return '\uFEFF';
-};
+export const zeroWidth: string = '\uFEFF';
