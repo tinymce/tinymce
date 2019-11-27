@@ -141,7 +141,7 @@ const WindowManager = function (editor: Editor): WindowManager {
      *
      * @method open
      * @param {Object} args Optional name/value settings collection contains things like title/body etc.
-     * @param {Object} params Options like title, file, width, height etc.
+     * @param {Object} params For a list of options, see: <a href="https://www.tiny.cloud/docs/ui-components/dialog/#configurationoptions">Dialog - Configuration options</a>.
      * @option {String} title Window title.
      * @option {Object} body Object containing the items to render in the window.
      */
