@@ -3,7 +3,6 @@ import { Adt, Arr, Fun, Merger, Obj, Option, Thunk, Type } from '@ephox/katamari
 import * as FieldPresence from '../api/FieldPresence';
 import * as Objects from '../api/Objects';
 import { ResultCombine } from '../combine/ResultCombine';
-import * as ObjReader from './ObjReader';
 import * as ObjWriter from './ObjWriter';
 import * as SchemaError from './SchemaError';
 import { SimpleResult, SimpleResultType } from '../alien/SimpleResult';
@@ -49,24 +48,24 @@ const snapshot = function (okey): ValueProcessorAdt {
 
 const strictAccess = function (path, obj, key) {
   // In strict mode, if it undefined, it is an error.
-  return ObjReader.readOptFrom(obj, key).fold(function () {
+  return Obj.get(obj, key).fold(function () {
     return SchemaError.missingStrict(path, key, obj);
   }, SimpleResult.svalue);
 };
 
 const fallbackAccess = function (obj, key, fallbackThunk) {
-  const v = ObjReader.readOptFrom(obj, key).fold(function () {
+  const v = Obj.get(obj, key).fold(function () {
     return fallbackThunk(obj);
   }, Fun.identity);
   return SimpleResult.svalue(v);
 };
 
 const optionAccess = function (obj, key) {
-  return SimpleResult.svalue(ObjReader.readOptFrom(obj, key));
+  return SimpleResult.svalue(Obj.get(obj, key));
 };
 
 const optionDefaultedAccess = function (obj, key, fallback) {
-  const opt = ObjReader.readOptFrom(obj, key).map(function (val) {
+  const opt = Obj.get(obj, key).map(function (val) {
     return val === true ? fallback(obj) : val;
   });
   return SimpleResult.svalue(opt);
@@ -183,14 +182,14 @@ const value = function (validator: ValueValidator): Processor {
 const getSetKeys = function (obj) {
   const keys = Obj.keys(obj);
   return Arr.filter(keys, function (k) {
-    return Objects.hasKey(obj, k);
+    return Obj.hasNonNullableKey(obj, k);
   });
 };
 
 const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
   const delegate = objOf(fields);
 
-  const fieldNames = Arr.foldr(fields, function (acc, f: ValueProcessorAdt) {
+  const fieldNames = Arr.foldr<ValueProcessorAdt, Record<string, string>>(fields, function (acc, f: ValueProcessorAdt) {
     return f.fold(function (key) {
       return Merger.deepMerge(acc, Objects.wrap(key, true));
     }, Fun.constant(acc));
@@ -199,7 +198,7 @@ const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
   const extract = function (path, strength, o) {
     const keys = Type.isBoolean(o) ? [ ] : getSetKeys(o);
     const extra = Arr.filter(keys, function (k) {
-      return !Objects.hasKey(fieldNames, k);
+      return !Obj.hasNonNullableKey(fieldNames, k);
     });
 
     return extra.length === 0  ? delegate.extract(path, strength, o) :

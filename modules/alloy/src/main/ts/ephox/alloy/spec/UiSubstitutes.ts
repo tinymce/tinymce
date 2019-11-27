@@ -1,4 +1,3 @@
-import { Objects } from '@ephox/boulder';
 import { Adt, Arr, Fun, Obj } from '@ephox/katamari';
 
 const _placeholder = 'placeholder';
@@ -20,7 +19,7 @@ const isSubstitute = (uiType) => {
 const subPlaceholder = (owner, detail, compSpec, placeholders) => {
   if (owner.exists((o) => o !== compSpec.owner)) { return adt.single(true, Fun.constant(compSpec)); }
   // Ignore having to find something for the time being.
-  return Objects.readOptFrom<{ replace: () => any}>(placeholders, compSpec.name).fold(() => {
+  return Obj.get(placeholders, compSpec.name).fold(() => {
     throw new Error('Unknown placeholder component: ' + compSpec.name + '\nKnown: [' +
       Obj.keys(placeholders) + ']\nNamespace: ' + owner.getOr('none') + '\nSpec: ' + JSON.stringify(compSpec, null, 2)
     );
@@ -44,7 +43,7 @@ const substitute = (owner, detail, compSpec, placeholders) => {
   return base.fold(
     (req, valueThunk) => {
       const value = valueThunk(detail, compSpec.config, compSpec.validated);
-      const childSpecs = Objects.readOptFrom<any[]>(value, 'components').getOr([ ]);
+      const childSpecs = Obj.get(value, 'components').getOr([ ]);
       const substituted = Arr.bind(childSpecs, (c) => {
         return substitute(owner, detail, c, placeholders);
       });

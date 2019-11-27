@@ -6,7 +6,6 @@
  */
 
 import { Merger, Fun, Id, Arr, Obj, Option } from '@ephox/katamari';
-import { Objects } from '@ephox/boulder';
 import { FormatItem, PreviewSpec } from '../BespokeSelect';
 import Editor from 'tinymce/core/api/Editor';
 
@@ -60,7 +59,7 @@ const register = (editor: Editor, formats, isSelectedFor: IsSelectedForType, get
     return Arr.map(items, (item) => {
       const keys = Obj.keys(item);
       // If it is a submenu, enrich all the subitems.
-      if (Objects.hasKey(item, 'items')) {
+      if (Obj.hasNonNullableKey(item, 'items')) {
         const newItems = doEnrich(item.items);
         return Merger.deepMerge(
           enrichMenu(item),
@@ -68,7 +67,7 @@ const register = (editor: Editor, formats, isSelectedFor: IsSelectedForType, get
             getStyleItems: () => newItems
           }
         ) as FormatItem;
-      } else if (Objects.hasKey(item, 'format')) {
+      } else if (Obj.hasNonNullableKey(item, 'format')) {
         return enrichSupported(item);
 
         // NOTE: This branch is added from the original StyleFormats in mobile

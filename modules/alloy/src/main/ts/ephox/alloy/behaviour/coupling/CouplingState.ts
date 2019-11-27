@@ -1,8 +1,6 @@
-import { Objects } from '@ephox/boulder';
 import { Fun, Obj } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec } from '../../api/component/SpecTypes';
 import { nuState } from '../common/BehaviourState';
 import { CouplingConfigSpec, CouplingConfig } from './CouplingTypes';
 
@@ -14,8 +12,9 @@ const init = (spec: CouplingConfigSpec) => {
     if (! available) {
       throw new Error('Cannot find coupled component: ' + name + '. Known coupled components: ' + JSON.stringify(available, null, 2));
     } else {
-      return Objects.readOptFrom<AlloyComponent>(coupled, name).getOrThunk(() => {
-      const builder = Objects.readOptFrom<(comp) => AlloySpec>(coupleConfig.others, name).getOrDie(
+      // TODO: Likely type error. coupleConfig.others[key] is `() => ((comp: AlloyComponent) => AlloySpec)`, but builder is being treated as a `(comp: AlloyComponent) => AlloySpec`
+      return Obj.get<any, string>(coupled, name).getOrThunk(() => {
+      const builder = Obj.get<any, string>(coupleConfig.others, name).getOrDie(
         'No information found for coupled component: ' + name
       );
       const spec = builder(component);

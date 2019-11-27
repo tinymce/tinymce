@@ -1,5 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Cell, Fun, Option } from '@ephox/katamari';
+import { Cell, Fun, Obj, Option } from '@ephox/katamari';
 import { Compare, Element } from '@ephox/sugar';
 import { Touch, TouchEvent } from '@ephox/dom-globals';
 
@@ -97,7 +97,7 @@ const monitor = (settings: GuiEventSettings) => {
   ]);
 
   const fireIfReady = (event: SugarEvent, type: string): Option<boolean> => {
-    return Objects.readOptFrom<any>(handlers, type).bind((handler: (evt: SugarEvent) => Option<boolean>): Option<boolean> => {
+    return Obj.get(handlers, type).bind((handler: (evt: SugarEvent) => Option<boolean>): Option<boolean> => {
       return handler(event);
     });
   };

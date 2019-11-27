@@ -1,5 +1,4 @@
-import { Objects } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Obj, Option } from '@ephox/katamari';
 
 import { SugarEvent } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -23,8 +22,8 @@ import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec => {
   const lookupAttr = (attr: string): Option<string> => {
-    return Objects.readOptFrom<Record<string, string>>(detail.dom, 'attributes').bind((attrs) => {
-      return Objects.readOptFrom<string>(attrs, attr);
+    return Obj.get(detail.dom, 'attributes').bind((attrs) => {
+      return Obj.get(attrs, attr);
     });
   };
 

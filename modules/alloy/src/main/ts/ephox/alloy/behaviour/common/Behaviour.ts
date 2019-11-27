@@ -1,4 +1,4 @@
-import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Obj, Option, Thunk } from '@ephox/katamari';
 
 import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
@@ -63,7 +63,7 @@ const revokeBehaviour = (name: string) => {
 
 const doCreate = (configSchema, schemaSchema, name: string, active, apis, extra, state): AlloyBehaviour<any, any> => {
   const getConfig = (info) => {
-    return Objects.hasKey(info, name) ? info[name]() : Option.none();
+    return Obj.hasNonNullableKey(info, name) ? info[name]() : Option.none();
   };
 
   const wrappedApis = Obj.map(apis, (apiF, apiName) => {
@@ -101,7 +101,7 @@ const doCreate = (configSchema, schemaSchema, name: string, active, apis, extra,
 
     exhibit (info, base) {
       return getConfig(info).bind((behaviourInfo) => {
-        return Objects.readOptFrom<any>(active, 'exhibit').map((exhibitor) => {
+        return Obj.get(active, 'exhibit').map((exhibitor) => {
           return exhibitor(base, behaviourInfo.config, behaviourInfo.state);
         });
       }).getOr(DomModification.nu({ }));
@@ -113,7 +113,7 @@ const doCreate = (configSchema, schemaSchema, name: string, active, apis, extra,
 
     handlers (info) {
       return getConfig(info).map((behaviourInfo) => {
-        const getEvents = Objects.readOr('events', (a, b) => ({ }))(active);
+        const getEvents = Obj.get(active, 'events').getOr((a, b) => ({ }));
         return getEvents(behaviourInfo.config, behaviourInfo.state);
       }).getOr({ });
     }

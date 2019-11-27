@@ -1,5 +1,4 @@
-import { Objects } from '@ephox/boulder';
-import { Option } from '@ephox/katamari';
+import { Obj, Option } from '@ephox/katamari';
 import { SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as FormCoupledInputsSchema from '../../ui/schema/FormCoupledInputsSchema';
@@ -34,8 +33,8 @@ const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputs
             },
             setValue(comp, value) {
               const parts = AlloyParts.getPartsOrDie(comp, detail, ['field1', 'field2']);
-              if (Objects.hasKey(value, detail.field1Name)) { Representing.setValue(parts.field1(), value[detail.field1Name]); }
-              if (Objects.hasKey(value, detail.field2Name)) { Representing.setValue(parts.field2(), value[detail.field2Name]); }
+              if (Obj.hasNonNullableKey(value, detail.field1Name)) { Representing.setValue(parts.field1(), value[detail.field1Name]); }
+              if (Obj.hasNonNullableKey(value, detail.field2Name)) { Representing.setValue(parts.field2(), value[detail.field2Name]); }
             }
           }
         })

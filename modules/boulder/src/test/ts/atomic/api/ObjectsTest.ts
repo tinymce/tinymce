@@ -74,14 +74,7 @@ UnitTest.test('ObjectsTest', () => {
     // TODO: Think of a good way to property test.
     const subject = { alpha: 'Alpha' };
 
-    KAssert.eqSome('readOpt(alpha) => some(Alpha)', 'Alpha', Objects.readOpt('alpha')(subject));
-    KAssert.eqNone('readOpt(beta) => none', Objects.readOpt('beta')(subject));
-
-    Assert.eq('readOr(alpha) => Alpha', 'Alpha', Objects.readOr('alpha', 'fallback')(subject));
-    Assert.eq('readOr(beta) => fallback', 'fallback', Objects.readOr('beta', 'fallback')(subject));
-
-    KAssert.eqSome('readOptFrom(alpha) => some(Alpha)', 'Alpha', Objects.readOptFrom(subject, 'alpha'));
-    KAssert.eqNone('readOptFrom(beta) => none', Objects.readOptFrom(subject, 'beta'));
+    KAssert.eqSome('readOptFrom(alpha) => some(Alpha)', 'Alpha', Obj.get(subject, 'alpha'));
   };
 
   const testConsolidate = () => {

@@ -1,4 +1,3 @@
-import { Objects } from '@ephox/boulder';
 import { Fun, Obj, Option, Struct } from '@ephox/katamari';
 import { Element, TransformFind } from '@ephox/sugar';
 
@@ -53,8 +52,7 @@ export default () => {
     return Tagger.read(elem).fold(() => {
       return Option.none();
     }, (id) => {
-      const reader = Objects.readOpt(id);
-      return handlers.bind(reader).map((descHandler: CurriedHandler) => {
+      return handlers.bind((h) => Obj.get(h, id)).map((descHandler: CurriedHandler) => {
         return eventHandler(elem, descHandler);
       });
     });
@@ -62,7 +60,7 @@ export default () => {
 
   // Given just the event type, find all handlers regardless of element
   const filterByType = (type: string): UidAndHandler[] => {
-    return Objects.readOptFrom<Record<string, CurriedHandler>>(registry, type).map((handlers) => {
+    return Obj.get(registry, type).map((handlers) => {
       return Obj.mapToArray(handlers, (f, id) => {
         return broadcastHandler(id, f);
       });
@@ -71,8 +69,7 @@ export default () => {
 
   // Given event type, and element, find the handler.
   const find = (isAboveRoot: (elem: Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => {
-    const readType = Objects.readOpt(type);
-    const handlers = readType(registry) as Option<Record<string, CurriedHandler>>;
+    const handlers = Obj.get(registry, type) as Option<Record<string, CurriedHandler>>;
     return TransformFind.closest(target, (elem: Element) => {
       return findHandler(handlers, elem);
     }, isAboveRoot);

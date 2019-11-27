@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Objects } from '@ephox/boulder';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Editor from 'tinymce/core/api/Editor';
+import { Obj } from '@ephox/katamari';
 
 const derive = function (editor: Editor) {
-  const base = Objects.readOptFrom(editor.settings, 'skin_url').fold(function () {
+  const base = Obj.get(editor.settings, 'skin_url').fold(function () {
     return EditorManager.baseURL + '/skins/ui/oxide';
   }, function (url) {
     return url;

@@ -66,7 +66,7 @@ const makeEventLogger = (eventName: string, initialTarget: Element) => {
 };
 
 const processEvent = (eventName: string, initialTarget: Element, f: EventProcessor) => {
-  const status = Objects.readOptFrom<EventConfiguration>(eventConfig.get(), eventName).orThunk(() => {
+  const status = Obj.get(eventConfig.get(), eventName).orThunk(() => {
     const patterns = Obj.keys(eventConfig.get());
     return Arr.findMap(patterns, (p) => {
       return eventName.indexOf(p) > -1 ? Option.some(eventConfig.get()[p]) : Option.none();

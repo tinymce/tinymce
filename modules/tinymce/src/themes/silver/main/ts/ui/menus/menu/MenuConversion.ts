@@ -89,7 +89,7 @@ const generateValueIfRequired = (item: SingleMenuItemApi): SingleMenuItemApi => 
     return item;
   } else {
     // Use the value already in item if it has one.
-    const itemValue = Objects.readOptFrom(item, 'value').getOrThunk(() => Id.generate('generated-menu-item'));
+    const itemValue = Obj.get<any, string>(item, 'value').getOrThunk(() => Id.generate('generated-menu-item'));
     return Merger.deepMerge({ value: itemValue }, item);
   }
 };

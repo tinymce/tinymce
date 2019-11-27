@@ -6,10 +6,9 @@
  */
 
 import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying, Layout, LayoutInside, MaxHeight, MaxWidth, Positioning } from '@ephox/alloy';
-import { Objects } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Element as DomElement } from '@ephox/dom-globals';
-import { Cell, Id, Merger, Option, Result, Thunk } from '@ephox/katamari';
+import { Cell, Id, Merger, Obj, Option, Result, Thunk } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Element, Focus, Scroll } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -208,7 +207,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   editor.on(showContextToolbarEvent, (e) => {
     const scopes = getScopes();
     // TODO: Have this stored in a better structure
-    Objects.readOptFrom<Toolbar.ContextToolbar | Toolbar.ContextForm>(scopes.lookupTable, e.toolbarKey).each((ctx) => {
+    Obj.get(scopes.lookupTable, e.toolbarKey).each((ctx) => {
       launchContext(ctx, e.target === editor ? Option.none() : Option.some(e as DomElement));
       // Forms launched via this way get immediate focus
       InlineView.getContent(contextbar).each(Keying.focusIn);

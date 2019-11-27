@@ -1,5 +1,4 @@
-import { Objects } from '@ephox/boulder';
-import { Option } from '@ephox/katamari';
+import { Obj, Option } from '@ephox/katamari';
 import { Attr, Class } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -13,8 +12,8 @@ export interface TransitionRoute {
 
 // TYPIFY
 const findRoute = function <T>(component: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Option<TransitionProperties> {
-  return Objects.readOptFrom<Record<string, TransitionProperties>>(transConfig.routes, route.start).bind((sConfig) => {
-    return Objects.readOptFrom<TransitionProperties>(sConfig, route.destination);
+  return Obj.get(transConfig.routes, route.start).bind((sConfig) => {
+    return Obj.get(sConfig, route.destination);
   });
 };
 

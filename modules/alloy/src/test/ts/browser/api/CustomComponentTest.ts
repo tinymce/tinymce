@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { FieldSchema, Objects } from '@ephox/boulder';
-import { Cell, Fun } from '@ephox/katamari';
+import { FieldSchema } from '@ephox/boulder';
+import { Cell, Fun, Obj } from '@ephox/katamari';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -138,7 +138,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       ]),
 
       Step.sync(() => {
-        Assertions.assertEq('There should be no internal APIs on component', false, Objects.hasKey(component, 'apis'));
+        Assertions.assertEq('There should be no internal APIs on component', false, Obj.hasNonNullableKey<any, string>(component, 'apis'));
       })
     ];
   }, success, failure);
