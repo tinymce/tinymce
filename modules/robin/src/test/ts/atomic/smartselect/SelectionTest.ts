@@ -2,6 +2,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import Selection from 'ephox/robin/smartselect/Selection';
 import { KAssert } from '@ephox/katamari-assertions';
+import { Unicode } from '@ephox/katamari';
 
 UnitTest.test('SelectionTest', function () {
   const doc1 = TestUniverse(Gene('root', 'root', [
@@ -35,7 +36,7 @@ UnitTest.test('SelectionTest', function () {
     ]),
     TextGene('g', ' see.'),
     TextGene('h', 'plus again'),
-    TextGene('i', '\uFEFF')
+    TextGene('i', Unicode.zeroWidth)
   ]));
 
   const doc3 = TestUniverse(Gene('root', 'root', [
@@ -118,10 +119,10 @@ UnitTest.test('SelectionTest', function () {
 
   checkNone(TestUniverse(Gene('root', 'root', [
     TextGene('alpha', '\uFEFFfeff')
-  ])), 'alpha', '\uFEFF'.length);
+  ])), 'alpha', Unicode.zeroWidth.length);
 
   checkNone(doc3, 'b', ''.length);
-  checkNone(doc3, 'b', '\uFEFF'.length);
+  checkNone(doc3, 'b', Unicode.zeroWidth.length);
   checkNone(doc3, 'b', '\uFEFF\uFEFF'.length);
 
   const doc4 = TestUniverse(Gene('root', 'root', [

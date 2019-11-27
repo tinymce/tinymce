@@ -7,6 +7,7 @@ import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import Utils from '../module/test/Utils';
+import { Unicode } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', (success, failure) => {
   const detection = PlatformDetection.detect();
@@ -43,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
                     s.text(str.is('a\u00A0 '), true)
                   ]
                 }),
-                s.text(str.is('\u00A0'), true),
+                s.text(str.is(Unicode.nbsp), true),
               ]
             })
           ]);
@@ -72,7 +73,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
                     })
                   ]
                 }),
-                s.text(str.is('\u00A0'), true)
+                s.text(str.is(Unicode.nbsp), true)
               ]
             })
           ]);

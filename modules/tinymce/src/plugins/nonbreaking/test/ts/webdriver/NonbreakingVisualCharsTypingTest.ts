@@ -5,6 +5,7 @@ import { PlatformDetection } from '@ephox/sand';
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 import theme from 'tinymce/themes/silver/Theme';
 import VisualCharsPlugin from 'tinymce/plugins/visualchars/Plugin';
+import { Unicode } from '@ephox/katamari';
 
 UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest', (success, failure) => {
   // Note: Uses RealKeys, so needs a browser. Headless won't work.
@@ -43,10 +44,10 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
-                  s.text(str.is('\uFEFF' + 'test'))
+                  s.text(str.is(Unicode.zeroWidth + 'test'))
                 ]
               })
             ]
@@ -69,10 +70,10 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
-                  s.text(str.is('\uFEFF'))
+                  s.text(str.is(Unicode.zeroWidth))
                 ]
               })
             ]
@@ -101,10 +102,10 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
-                  s.text(str.is(isIE ? 'test' : '\uFEFF' + 'test'))
+                  s.text(str.is(isIE ? 'test' : Unicode.zeroWidth + 'test'))
                 ]
               })
             ]
@@ -130,10 +131,10 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
-                  s.text(str.is(detection.browser.isFirefox() ? '\uFEFF' + ' ' : (isIE ? ' ' : '\uFEFF' + '\u00a0')))
+                  s.text(str.is(detection.browser.isFirefox() ? Unicode.zeroWidth + ' ' : (isIE ? ' ' : Unicode.zeroWidth + Unicode.nbsp)))
                 ].concat(detection.browser.isFirefox() ? [ s.element('br', {})] : [])
               })
             ]
@@ -156,10 +157,10 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
-                  s.text(str.is('\uFEFF'))
+                  s.text(str.is(Unicode.zeroWidth))
                 ]
               })
             ]
@@ -180,10 +181,10 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
-                  s.text(str.is(detection.browser.isFirefox() ? '\uFEFF' + 'test ' : (isIE ? 'test ' : '\uFEFF' + 'test\u00a0')))
+                  s.text(str.is(detection.browser.isFirefox() ? Unicode.zeroWidth + 'test ' : (isIE ? 'test ' : Unicode.zeroWidth + 'test\u00a0')))
                 ].concat(detection.browser.isFirefox() ? [ s.element('br', {})] : [])
               })
             ]
@@ -206,10 +207,10 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
-                  s.text(str.is('\uFEFF'))
+                  s.text(str.is(Unicode.zeroWidth))
                 ]
               })
             ]
@@ -230,10 +231,10 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
-                  s.text(str.is(detection.browser.isFirefox() ? '\uFEFF' + 'test ' : (isIE ? 'test ' : '\uFEFF' + 'test\u00a0')))
+                  s.text(str.is(detection.browser.isFirefox() ? Unicode.zeroWidth + 'test ' : (isIE ? 'test ' : Unicode.zeroWidth + 'test\u00a0')))
                 ].concat(detection.browser.isFirefox() ? [ s.element('br', {})] : [])
               })
             ]
@@ -254,10 +255,10 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
-                  s.text(str.is(detection.browser.isFirefox() ? '\uFEFF' + 'test test ' : (isIE ? 'test test ' : '\uFEFF' + 'test test\u00a0')))
+                  s.text(str.is(detection.browser.isFirefox() ? Unicode.zeroWidth + 'test test ' : (isIE ? 'test test ' : Unicode.zeroWidth + 'test test\u00a0')))
                 ].concat(detection.browser.isFirefox() ? [ s.element('br', {})] : [])
               })
             ]

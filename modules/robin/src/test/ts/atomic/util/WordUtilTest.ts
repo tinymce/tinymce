@@ -47,8 +47,8 @@ UnitTest.test('Word Util', function () {
   checkBreakPosition(Option.some(0), ' ', WordUtil.leftBreak);
   checkBreakPosition(Option.some(0), ' word', WordUtil.leftBreak);
   checkBreakPosition(Option.some(4), 'word ', WordUtil.leftBreak);
-  checkBreakPosition(Option.some(4), 'word ' + Unicode.zeroWidth() + '', WordUtil.leftBreak);
-  checkBreakPosition(Option.some(0), ' ' + Unicode.zeroWidth() + 'word', WordUtil.leftBreak);
-  checkBreakPosition(Option.some(0), ' ' + Unicode.zeroWidth() + '' + Unicode.zeroWidth() + 'word', WordUtil.leftBreak);
-  checkBreakPosition(Option.some(0), ' ' + Unicode.zeroWidth() + 'wo' + Unicode.zeroWidth() + 'rd', WordUtil.leftBreak);
+  checkBreakPosition(Option.some(4), 'word ' + Unicode.zeroWidth + '', WordUtil.leftBreak);
+  checkBreakPosition(Option.some(0), ' ' + Unicode.zeroWidth + 'word', WordUtil.leftBreak);
+  checkBreakPosition(Option.some(0), ' ' + Unicode.zeroWidth + '' + Unicode.zeroWidth + 'word', WordUtil.leftBreak);
+  checkBreakPosition(Option.some(0), ' ' + Unicode.zeroWidth + 'wo' + Unicode.zeroWidth + 'rd', WordUtil.leftBreak);
 });

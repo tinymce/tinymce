@@ -10,6 +10,7 @@ import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
 import NodeType from '../dom/NodeType';
 import Tools from '../api/util/Tools';
+import { Unicode } from '@ephox/katamari';
 
 /**
  * Handles inserts of lists into the editor instance.
@@ -23,7 +24,7 @@ const hasOnlyOneChild = function (node) {
 };
 
 const isPaddingNode = function (node) {
-  return node.name === 'br' || node.value === '\u00a0';
+  return node.name === 'br' || node.value === Unicode.nbsp;
 };
 
 const isPaddedEmptyBlock = function (schema, node) {
@@ -92,7 +93,7 @@ const listItems = function (elm: Element) {
 };
 
 const isPadding = function (node) {
-  return node.data === '\u00a0' || NodeType.isBr(node);
+  return node.data === Unicode.nbsp || NodeType.isBr(node);
 };
 
 const isListItemPadded = function (node) {

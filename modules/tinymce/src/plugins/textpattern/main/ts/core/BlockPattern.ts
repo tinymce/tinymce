@@ -6,7 +6,7 @@
  */
 
 import { Node } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Option, Unicode } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -58,7 +58,7 @@ const applyPattern = (editor: Editor, match: BlockPatternMatch): boolean => {
 
 // Finds a matching pattern to the specified text
 const findPattern = <P extends Pattern>(patterns: P[], text: string): Option<P> => {
-  const nuText = text.replace('\u00a0', ' ');
+  const nuText = text.replace(Unicode.nbsp, ' ');
   return Arr.find(patterns, (pattern) => {
     if (text.indexOf(pattern.start) !== 0 && nuText.indexOf(pattern.start) !== 0) {
       return false;

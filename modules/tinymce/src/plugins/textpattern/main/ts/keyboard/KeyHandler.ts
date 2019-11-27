@@ -32,7 +32,7 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
       },
       () => {
         // create a cursor position that we can move to avoid the inline formats
-        editor.insertContent(Unicode.zeroWidth());
+        editor.insertContent(Unicode.zeroWidth);
         InlinePattern.applyMatches(editor, inlineMatches);
         BlockPattern.applyMatches(editor, blockMatches);
         // find the spot before the cursor position
@@ -42,7 +42,7 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
         // clean up the cursor position we used to preserve the format
         spot.each((s) => {
           const node = s.container;
-          if (node.data.charAt(s.offset - 1) === Unicode.zeroWidth()) {
+          if (node.data.charAt(s.offset - 1) === Unicode.zeroWidth) {
             node.deleteData(s.offset - 1, 1);
             cleanEmptyNodes(editor.dom, node.parentNode, (e: Node) => e === editor.dom.getRoot());
           }

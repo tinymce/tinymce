@@ -6,7 +6,7 @@
  */
 
 import { Text } from '@ephox/dom-globals';
-import { Arr, Strings } from '@ephox/katamari';
+import { Arr, Strings, Unicode } from '@ephox/katamari';
 import { Element, Remove } from '@ephox/sugar';
 import { isNbsp, isWhiteSpace } from '../text/CharType';
 
@@ -15,7 +15,7 @@ const normalizeContent = (content: string, isStartOfContent: boolean, isEndOfCon
     // Are we dealing with a char other than some collapsible whitespace or nbsp? if so then just use it as is
     if (isWhiteSpace(c) || isNbsp(c)) {
       if (acc.previousCharIsSpace || (acc.str === '' && isStartOfContent) || (acc.str.length === content.length - 1 && isEndOfContent)) {
-        return { previousCharIsSpace: false, str: acc.str + '\u00a0' };
+        return { previousCharIsSpace: false, str: acc.str + Unicode.nbsp };
       } else {
         return { previousCharIsSpace: true, str: acc.str + ' ' };
       }

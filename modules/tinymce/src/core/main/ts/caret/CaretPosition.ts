@@ -11,7 +11,7 @@ import NodeType from '../dom/NodeType';
 import * as GeomClientRect from '../geom/ClientRect';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as ExtendingChar from '../text/ExtendingChar';
-import { Arr, Options, Fun } from '@ephox/katamari';
+import { Arr, Options, Fun, Unicode } from '@ephox/katamari';
 import { Document, Range, Element, ClientRect, Node } from '@ephox/dom-globals';
 import Predicate from '../util/Predicate';
 
@@ -62,7 +62,7 @@ const isHiddenWhiteSpaceRange = (range: Range): boolean => {
 const getBrClientRect = (brNode: Element): ClientRect => {
   const doc = brNode.ownerDocument;
   const rng = createRange(doc);
-  const nbsp = doc.createTextNode('\u00a0');
+  const nbsp = doc.createTextNode(Unicode.nbsp);
   const parentNode = brNode.parentNode;
   let clientRect;
 

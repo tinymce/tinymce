@@ -1,6 +1,6 @@
 import { ApproxStructure, Keyboard, Keys, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { Arr, Unicode } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -98,7 +98,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
                   children: [
                     s.element('span', {
                       children: [
-                        s.text(str.is('\u00A0' + 'b'))
+                        s.text(str.is(Unicode.nbsp + 'b'))
                       ]
                     }),
                     s.text(str.is(' c'))
@@ -135,7 +135,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
                         s.text(str.is('a'))
                       ]
                     }),
-                    s.text(str.is('\uFEFF')),
+                    s.text(str.is(Unicode.zeroWidth)),
                     s.text(str.is(' b'))
                   ]
                 }),
@@ -162,7 +162,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
               children: [
                 s.element('div', {
                   children: [
-                    s.text(str.is('\uFEFF')),
+                    s.text(str.is(Unicode.zeroWidth)),
                     s.element('span', {
                       children: [
                         s.text(str.is('a'))

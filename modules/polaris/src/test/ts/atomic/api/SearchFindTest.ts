@@ -30,7 +30,7 @@ UnitTest.test('api.Search.findall (using api.Pattern)', function () {
   checkAll([[1, 7]], ' cattle', Pattern.unsafetoken('cattle'));
   checkAll([], 'acattle', Pattern.unsafeword('cattle'));
   checkAll([[1, 7]], ' cattle', Pattern.unsafeword('cattle'));
-  checkAll([], Unicode.zeroWidth() + 'dog ', Pattern.safeword('dog'));
+  checkAll([], Unicode.zeroWidth + 'dog ', Pattern.safeword('dog'));
 
   checkAll([[3, 7], [10, 14]], 'no it\'s i it\'s done.', Pattern.unsafetoken('it\'s'));
   checkAll([[0, 12]], 'catastrophe\'', Pattern.unsafetoken('catastrophe\''));
@@ -45,7 +45,7 @@ UnitTest.test('api.Search.findall (using api.Pattern)', function () {
   checkAll([[0, 3], [4, 7], [8, 11]], 'sre sre sre ', Pattern.unsafeword('sre'));
   checkAll([[1, 4], [5, 8], [9, 12]], ' sre sre sre ', Pattern.unsafeword('sre'));
 
-  checkAll([['this '.length, 'this e'.length + Unicode.zeroWidth().length + 'nds'.length]], 'this e' + Unicode.zeroWidth() + 'nds here', Pattern.unsafeword('e' + Unicode.zeroWidth() + 'nds'));
+  checkAll([['this '.length, 'this e'.length + Unicode.zeroWidth.length + 'nds'.length]], 'this e' + Unicode.zeroWidth + 'nds here', Pattern.unsafeword('e' + Unicode.zeroWidth + 'nds'));
 
   const prefix = Safe.sanitise('[');
   const suffix = Safe.sanitise(']');
