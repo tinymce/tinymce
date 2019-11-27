@@ -12,9 +12,9 @@ import {
   SelectorFilter,
   Text,
   Traverse,
+  Truncate
 } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
-import * as Truncate from 'ephox/agar/alien/Truncate';
 import * as Arbitraries from 'ephox/agar/api/Arbitraries';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import * as Generators from 'ephox/agar/api/Generators';

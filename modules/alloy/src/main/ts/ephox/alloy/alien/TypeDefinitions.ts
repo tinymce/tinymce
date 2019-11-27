@@ -13,5 +13,3 @@ export type SugarEvent = EventArgs;
 export type SugarListener = EventUnbinder;
 export type SugarPosition = Position;
 export type SugarRange = SimRange;
-
-export type GeneralStruct = () => { [ key: string ]: () => any };

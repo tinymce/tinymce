@@ -6,7 +6,7 @@ import * as EventHandler from '../../construct/EventHandler';
 import { EventFormat, SimulatedEvent } from '../../events/SimulatedEvent';
 import * as AlloyTriggers from './AlloyTriggers';
 import * as SystemEvents from './SystemEvents';
-import * as TransformFind from '../../alien/TransformFind';
+import { TransformFind } from '@ephox/sugar';
 import { Fun } from '@ephox/katamari';
 
 export type AlloyEventRecord = Record<string, AlloyEventHandler<EventFormat>>;

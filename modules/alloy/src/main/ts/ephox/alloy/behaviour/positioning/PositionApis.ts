@@ -3,7 +3,7 @@ import { document } from '@ephox/dom-globals';
 import { Adt, Fun, Option } from '@ephox/katamari';
 import { Css, Element, Location } from '@ephox/sugar';
 
-import * as AriaFocus from '../../alien/AriaFocus';
+import * as AriaFocus from '../../aria/AriaFocus';
 import { Bounds, box } from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Stateless } from '../../behaviour/common/BehaviourState';

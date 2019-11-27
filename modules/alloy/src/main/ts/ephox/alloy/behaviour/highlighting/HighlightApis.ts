@@ -1,7 +1,6 @@
-import { Arr, Option, Options, Result } from '@ephox/katamari';
+import { Arr, Option, Options, Result, Num } from '@ephox/katamari';
 import { Class, SelectorFilter, SelectorFind, Element } from '@ephox/sugar';
 
-import * as Cycles from '../../alien/Cycles';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as SystemEvents from '../../api/events/SystemEvents';
@@ -104,7 +103,7 @@ const getDelta = (component: AlloyComponent, hConfig: HighlightingConfig, hState
   });
 
   return current.bind((selected) => {
-    const dest = Cycles.cycleBy(selected, delta, 0, items.length - 1);
+    const dest = Num.cycleBy(selected, delta, 0, items.length - 1);
     return component.getSystem().getByDom(items[dest]).toOption();
   });
 };

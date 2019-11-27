@@ -1,8 +1,7 @@
 import { Objects } from '@ephox/boulder';
 import { Fun, Obj, Option, Struct } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Element, TransformFind } from '@ephox/sugar';
 
-import * as TransformFind from '../alien/TransformFind';
 import * as Tagger from '../registry/Tagger';
 import * as DescribedHandler from './DescribedHandler';
 

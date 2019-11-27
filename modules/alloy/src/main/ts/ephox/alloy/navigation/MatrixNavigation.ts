@@ -1,6 +1,4 @@
-import { Option, Struct } from '@ephox/katamari';
-
-import * as Cycles from '../alien/Cycles';
+import { Num, Option, Struct } from '@ephox/katamari';
 
 const outcome = Struct.immutableBag([ 'rowIndex', 'columnIndex', 'cell' ], [ ]);
 
@@ -19,28 +17,28 @@ const toCell = (matrix, rowIndex, columnIndex) => {
 const cycleHorizontal = (matrix, rowIndex, startCol, deltaCol) => {
   const row = matrix[rowIndex];
   const colsInRow = row.length;
-  const newColIndex = Cycles.cycleBy(startCol, deltaCol, 0, colsInRow - 1);
+  const newColIndex = Num.cycleBy(startCol, deltaCol, 0, colsInRow - 1);
   return toCell(matrix, rowIndex, newColIndex);
 };
 
 const cycleVertical = (matrix, colIndex, startRow, deltaRow) => {
-  const nextRowIndex = Cycles.cycleBy(startRow, deltaRow, 0, matrix.length - 1);
+  const nextRowIndex = Num.cycleBy(startRow, deltaRow, 0, matrix.length - 1);
   const colsInNextRow = matrix[nextRowIndex].length;
-  const nextColIndex = Cycles.cap(colIndex, 0, colsInNextRow - 1);
+  const nextColIndex = Num.clamp(colIndex, 0, colsInNextRow - 1);
   return toCell(matrix, nextRowIndex, nextColIndex);
 };
 
 const moveHorizontal = (matrix, rowIndex, startCol, deltaCol) => {
   const row = matrix[rowIndex];
   const colsInRow = row.length;
-  const newColIndex = Cycles.cap(startCol + deltaCol, 0, colsInRow - 1);
+  const newColIndex = Num.clamp(startCol + deltaCol, 0, colsInRow - 1);
   return toCell(matrix, rowIndex, newColIndex);
 };
 
 const moveVertical = (matrix, colIndex, startRow, deltaRow) => {
-  const nextRowIndex = Cycles.cap(startRow + deltaRow, 0, matrix.length - 1);
+  const nextRowIndex = Num.clamp(startRow + deltaRow, 0, matrix.length - 1);
   const colsInNextRow = matrix[nextRowIndex].length;
-  const nextColIndex = Cycles.cap(colIndex, 0, colsInNextRow - 1);
+  const nextColIndex = Num.clamp(colIndex, 0, colsInNextRow - 1);
   return toCell(matrix, nextRowIndex, nextColIndex);
 };
 

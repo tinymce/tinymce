@@ -1,4 +1,3 @@
-import * as Truncate from '../alien/Truncate'; // Used directly by alloy
 import { StructAssert, StructAssertAdv, StructAssertBasic } from '../assertions/ApproxStructures';
 import * as ApproxStructure from './ApproxStructure';
 import * as Arbitraries from './Arbitraries';
@@ -67,7 +66,6 @@ export {
   UiFinder,
   Waiter,
   Touch,
-  Truncate,
   StructAssert,
   StructAssertBasic,
   StructAssertAdv,

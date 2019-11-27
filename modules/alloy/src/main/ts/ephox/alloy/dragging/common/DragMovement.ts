@@ -1,7 +1,6 @@
-import { Option, Options } from '@ephox/katamari';
+import { Option, Options, Num } from '@ephox/katamari';
 import { Css, Element, Location, Scroll, Traverse } from '@ephox/sugar';
 
-import { cap } from '../../alien/Cycles';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -26,8 +25,8 @@ const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scro
   const bounds = startData.bounds;
   const absoluteCoord = DragCoord.asAbsolute(coords, scroll, origin);
 
-  const newX = cap(absoluteCoord.left(), bounds.x(), bounds.x() + bounds.width() - startData.width);
-  const newY = cap(absoluteCoord.top(), bounds.y(), bounds.y() + bounds.height() - startData.height);
+  const newX = Num.clamp(absoluteCoord.left(), bounds.x(), bounds.x() + bounds.width() - startData.width);
+  const newY = Num.clamp(absoluteCoord.top(), bounds.y(), bounds.y() + bounds.height() - startData.height);
   const newCoords = DragCoord.absolute(newX, newY);
 
   // Translate the absolute coord back into the previous type

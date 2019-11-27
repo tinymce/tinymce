@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Improved `Docking` scroll performance by only calculating the offset origin as required.
 
+### Improved
+- Moved modules from "alien" folder into Sugar, Katamari and other folders in Alloy.
+
+
 # [5.0.2] - 2019-11-11
 
 ### Fixed

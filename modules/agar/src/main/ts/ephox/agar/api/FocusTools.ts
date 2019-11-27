@@ -1,8 +1,7 @@
 import { Result } from '@ephox/katamari';
-import { Compare, Element, Focus, Traverse } from '@ephox/sugar';
+import { Compare, Element, Focus, Traverse, Truncate } from '@ephox/sugar';
 
 import * as SizzleFind from '../alien/SizzleFind';
-import * as Truncate from '../alien/Truncate';
 import { Chain } from './Chain';
 import * as Guard from './Guard';
 import * as Logger from './Logger';

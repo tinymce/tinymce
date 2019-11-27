@@ -1,8 +1,7 @@
 import { Merger, Obj } from '@ephox/katamari';
-import { Attr, Css, InsertAll } from '@ephox/sugar';
+import { Attr, Css, InsertAll, Truncate } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 
-import * as Truncate from '../alien/Truncate';
 import * as ArbChildrenSchema from './ArbChildrenSchema';
 import * as ArbNodes from './ArbNodes';
 import { WeightedChoice } from './WeightedChoice';

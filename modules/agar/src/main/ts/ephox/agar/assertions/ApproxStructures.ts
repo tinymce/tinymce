@@ -1,8 +1,7 @@
 import { Assert, assert, TestLabel } from '@ephox/bedrock-client';
 import { Arr, Fun, Obj, Option } from '@ephox/katamari';
-import { Attr, Classes, Css, Element, Html, Node, Text, Traverse, Value } from '@ephox/sugar';
+import { Attr, Classes, Css, Element, Html, Node, Text, Traverse, Value, Truncate } from '@ephox/sugar';
 
-import * as Truncate from '../alien/Truncate';
 import * as ApproxComparisons from './ApproxComparisons';
 
 export interface StringAssert {

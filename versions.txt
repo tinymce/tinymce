@@ -2,3 +2,6 @@
 # Format: [packagename]@[new_version]
 @ephox/boulder@4.0.0
 @ephox/alloy@5.1.0
+@ephox/katamari@5.0.0
+@ephox/sugar@5.1.0
+@ephox/agar@4.15.0

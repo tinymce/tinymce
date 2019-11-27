@@ -1,8 +1,6 @@
 import { document } from '@ephox/dom-globals';
-import { Comment, Element, Node, Text } from '@ephox/sugar';
+import { Comment, Element, Node, Text, Truncate } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
-
-import * as Truncate from '../alien/Truncate';
 
 const createTag = (name): Element<any> => {
   const partial = name.split('-');

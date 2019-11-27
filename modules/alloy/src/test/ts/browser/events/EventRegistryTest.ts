@@ -1,8 +1,8 @@
-import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, Truncate, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Result } from '@ephox/katamari';
-import { Attr, Compare, Element, Html, Insert, SelectorFilter } from '@ephox/sugar';
+import { Attr, Compare, Element, Html, Insert, SelectorFilter, Truncate } from '@ephox/sugar';
 
 import * as DescribedHandler from 'ephox/alloy/events/DescribedHandler';
 import EventRegistry from 'ephox/alloy/events/EventRegistry';

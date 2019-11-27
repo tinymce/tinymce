@@ -1,7 +1,6 @@
-import * as Truncate from '../alien/Truncate';
 import * as GenSelection from '../arbitrary/GenSelection';
 import * as TagDecorator from '../arbitrary/TagDecorator';
-import { Hierarchy, Html } from '@ephox/sugar';
+import { Hierarchy, Html, Truncate } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 
 const selection = (container, exclusions) => GenSelection.selection(container, exclusions);
