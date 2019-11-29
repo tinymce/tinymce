@@ -138,10 +138,6 @@ const setup = (editor: Editor): RenderInfo => {
     return memAnchorBar.getOpt(container);
   }).getOrDie('Could not find a anchor bar element');
 
-  const lazyMoreButton = () => lazyOuterContainer.bind((container) => {
-    return OuterContainer.getMoreButton(container);
-  }).getOrDie('Could not find more button element');
-
   const lazyToolbar = () => lazyOuterContainer.bind((container) => {
     return OuterContainer.getToolbar(container);
   }).getOrDie('Could not find more toolbar element');
@@ -150,7 +146,7 @@ const setup = (editor: Editor): RenderInfo => {
     return OuterContainer.getThrobber(container);
   }).getOrDie('Could not find throbber element');
 
-  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar, lazyMoreButton);
+  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar);
 
   const partMenubar: AlloySpec = OuterContainer.parts().menubar({
     dom: {
@@ -177,7 +173,6 @@ const setup = (editor: Editor): RenderInfo => {
     },
     split: toolbarDrawer,
     lazyToolbar,
-    lazyMoreButton,
     lazyHeader: () => lazyHeader().getOrDie('Could not find header element'),
     ...verticalDirAttributes
   });

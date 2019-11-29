@@ -11,11 +11,16 @@ import * as Fields from '../../data/Fields';
 import { FloatingToolbarButtonDetail } from '../types/FloatingToolbarButtonTypes';
 import * as ToolbarSchema from './ToolbarSchema';
 import * as AnchorLayouts from '../../positioning/mode/AnchorLayouts';
+import * as SystemEvents from '../../api/events/SystemEvents';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.markers([ 'toggledClass' ]),
   FieldSchema.strict('lazySink'),
   FieldSchema.strictFunction('fetch'),
+  FieldSchema.optionFunction('getBounds'),
+  FieldSchema.optionObjOf('fireDismissalEventInstead', [
+    FieldSchema.defaulted('event', SystemEvents.dismissRequested())
+  ]),
   AnchorLayouts.schema()
 ]);
 

@@ -41,7 +41,6 @@ interface OuterContainerApis {
   setToolbar: (comp: AlloyComponent, groups) => void;
   setToolbars: (comp: AlloyComponent, toolbars) => void;
   refreshToolbar: (comp: AlloyComponent) => void;
-  getMoreButton: (comp: AlloyComponent) => Option<AlloyComponent>;
   getThrobber: (comp: AlloyComponent) => Option<AlloyComponent>;
   focusToolbar: (comp: AlloyComponent) => void;
   setMenubar: (comp: AlloyComponent, groups) => void;
@@ -51,7 +50,6 @@ interface OuterContainerApis {
 interface ToolbarApis {
   setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
   refresh: (toolbar: AlloyComponent) => void;
-  getMoreButton: (toolbar: AlloyComponent) => Option<AlloyComponent>;
 }
 
 const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, OuterContainerSketchSpec> = function (detail, components, spec) {
@@ -94,12 +92,6 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
       const toolbar = Composite.parts.getPart(comp, detail, 'toolbar');
       toolbar.each((toolbar) => {
         return toolbar.getApis<ToolbarApis>().refresh(toolbar);
-      });
-    },
-    getMoreButton(comp) {
-      const toolbar = Composite.parts.getPart(comp, detail, 'toolbar');
-      return toolbar.bind((toolbar) => {
-        return toolbar.getApis<ToolbarApis>().getMoreButton(toolbar);
       });
     },
     getThrobber(comp) {
@@ -312,9 +304,6 @@ export default Sketcher.composite({
       });
 
       apis.setToolbars(comp, renderedToolbars);
-    },
-    getMoreButton(apis, comp) {
-      return apis.getMoreButton(comp);
     },
     refreshToolbar(apis, comp) {
       return apis.refreshToolbar(comp);
