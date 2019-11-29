@@ -18,7 +18,7 @@
  * styles = Styles.parse('border: 1px solid red');
  * styles.color = 'red';
  *
- * console.log(new tinymce.html.StyleSerializer().serialize(styles));
+ * console.log(new tinymce.html.Styles().serialize(styles));
  *
  * @class tinymce.html.Styles
  * @version 3.4
