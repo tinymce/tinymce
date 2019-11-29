@@ -125,9 +125,10 @@ const morphToOriginal = (elem: Element<HTMLElement>, dockInfo: DockingConfig, vi
     .bind((box) => revertToOriginal(elem, dockInfo, box));
 };
 
-const morphToFixed = (elem: Element<HTMLElement>, dockInfo: DockingConfig, viewport: Boxes.Bounds, scroll: SugarPosition, origin: SugarPosition): Option<DragCoord.CoordAdt> => {
+const morphToFixed = (elem: Element<HTMLElement>, dockInfo: DockingConfig, viewport: Boxes.Bounds, scroll: SugarPosition, lazyOrigin: () => SugarPosition): Option<DragCoord.CoordAdt> => {
   const box = Boxes.box(elem);
   if (!isVisibleForModes(dockInfo.modes, box, viewport)) {
+    const origin = lazyOrigin();
     const position = Css.get(elem, 'position');
     // Convert it to fixed (keeping the x coordinate and throwing away the y coordinate)
     setPrior(elem, dockInfo, box.x(), box.y(), position);
@@ -145,10 +146,10 @@ const morphToFixed = (elem: Element<HTMLElement>, dockInfo: DockingConfig, viewp
   }
 };
 
-const getMorph = (component: AlloyComponent, dockInfo: DockingConfig, viewport: Boxes.Bounds, scroll: SugarPosition, origin: SugarPosition): Option<MorphAdt> => {
+const getMorph = (component: AlloyComponent, dockInfo: DockingConfig, viewport: Boxes.Bounds, scroll: SugarPosition, lazyOrigin: () => SugarPosition): Option<MorphAdt> => {
   const elem = component.element();
   const isDocked = Css.getRaw(elem, 'position').is('fixed');
-  return isDocked ? morphToOriginal(elem, dockInfo, viewport) : morphToFixed(elem, dockInfo, viewport, scroll, origin);
+  return isDocked ? morphToOriginal(elem, dockInfo, viewport) : morphToFixed(elem, dockInfo, viewport, scroll, lazyOrigin);
 };
 
 const getMorphToOriginal = (component: AlloyComponent, dockInfo: DockingConfig): Option<MorphAdt> => {
