@@ -1,6 +1,5 @@
 import * as Boxes from '../alien/Boxes';
 import * as EventRoot from '../alien/EventRoot';
-import { SugarEvent } from '../alien/TypeDefinitions';
 import { BehaviourState } from '../behaviour/common/BehaviourState';
 import * as Fields from '../data/Fields';
 import * as Debugging from '../debugging/Debugging';
@@ -261,7 +260,6 @@ export {
   NativeSimulatedEvent,
   CustomSimulatedEvent,
   ReceivingEvent,
-  SugarEvent,
 
   // layout
   Layout,

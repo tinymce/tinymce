@@ -7,6 +7,13 @@ import { BehaviourState } from '../behaviour/common/BehaviourState';
 import { DomDefinitionDetail } from '../dom/DomDefinition';
 import { DomModification, nu as NuModification } from '../dom/DomModification';
 
+interface Modification<T> {
+  name: string;
+  modification: T;
+}
+
+type DomModificationAspectRecord = { [K in keyof DomModification]: Array<Modification<DomModification[K]>> };
+
 // Based on all the behaviour exhibits, and the original dom modification, identify
 // the overall combined dom modification that needs to occur
 const combine = (
@@ -18,37 +25,26 @@ const combine = (
   // Collect all the DOM modifications, indexed by behaviour name (and base for base)
   type BehaviourName = string;
   // classes are array of strings, styles and attributes are a record
-  type ModificationName = keyof DomModification;
-  type ModificationEffect = any;
+  type DomModificationRecord = { [K in keyof DomModification]: DomModification[K] };
 
   // Clone the object so we can change it.
-  const modsByBehaviour: Record<BehaviourName, DomModification> = { ...baseMod };
-  Arr.each(behaviours, (behaviour: AlloyBehaviour<any, any>) => {
+  const modsByBehaviour: Record<BehaviourName, DomModificationRecord> = { ...baseMod };
+  Arr.each(behaviours, (behaviour) => {
     modsByBehaviour[behaviour.name()] = behaviour.exhibit(info, base);
   });
 
-  const nameAndMod = (name: BehaviourName, modification: ModificationEffect) => {
-    return {
-      name,
-      modification
-    };
-  };
-
   // byAspect format: { classes: [ { name: Toggling, modification: [ 'selected' ] } ] }
-  const byAspect = ObjIndex.byInnerKey<any, any>(modsByBehaviour, nameAndMod) as Record<
-    ModificationName,
-    Array<{ name: BehaviourName, modification: ModificationEffect }>
-  >;
+  const byAspect = ObjIndex.byInnerKey(modsByBehaviour, (name, modification) => ({ name, modification })) as DomModificationAspectRecord;
 
-  const combineObjects = (objects: Array<Record<any, any>>) => Arr.foldr(objects, (b, a: { modification: Record<string, string> }) => {
+  const combineObjects = <T extends Record<string, any>>(objects: Array<Modification<T>>): T => Arr.foldr(objects, (b, a) => {
     return { ...a.modification, ...b };
-  }, { });
+  }, { } as T);
 
-  const combinedClasses: string[] = Arr.foldr(byAspect.classes, (b, a: { modification: string[] }) => {
+  const combinedClasses = Arr.foldr(byAspect.classes, (b: string[], a) => {
     return a.modification.concat(b);
   }, [ ]);
-  const combinedAttributes: Record<string, string> = combineObjects(byAspect.attributes);
-  const combinedStyles: Record<string, string> = combineObjects(byAspect.styles);
+  const combinedAttributes = combineObjects(byAspect.attributes);
+  const combinedStyles = combineObjects(byAspect.styles);
 
   return NuModification({
     classes: combinedClasses,

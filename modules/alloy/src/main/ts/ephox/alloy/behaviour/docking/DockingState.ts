@@ -1,8 +1,9 @@
 import { Cell } from '@ephox/katamari';
 
 import { nuState } from '../common/BehaviourState';
+import { DockingState } from './DockingTypes';
 
-const init = () => {
+const init = (): DockingState => {
   const docked = Cell(false);
   const visible = Cell(true);
 

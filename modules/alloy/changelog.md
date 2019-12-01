@@ -12,12 +12,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed `getMoreButton` and `getOverflow` methods from the `SplitSlidingToolbar` component.
 - Removed `getMoreButton` method from the `SplitFloatingToolbar` component.
 - Removed `getAnchor` configuration from the `SplitFloatingToolbar` component.
+- Removed `SugarEvent` from exports list.
 
 ### Added
 - Added new `FloatingToolbar` component.
 - Added new vertical directionality for layouts
 - Added `setGroups` and `toggle` methods and `getBounds` configuration to the `FloatingToolbarButton` component.
- 
+
 ### Fixed
 - Improved `Docking` scroll performance by only calculating the offset origin as required.
 

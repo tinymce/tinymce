@@ -21,7 +21,7 @@ export default (): void => {
     fields: [ ],
     name: 'red.behaviour',
     active: {
-      exhibit (base, info) {
+      exhibit () {
         return DomModification.nu({
           classes: [ 'cat' ],
           attributes: {
@@ -39,7 +39,7 @@ export default (): void => {
     fields: [ ],
     name: 'cat.behaviour',
     active: {
-      exhibit (base, info) {
+      exhibit () {
         return DomModification.nu({
           classes: [ 'cat' ],
           attributes: {

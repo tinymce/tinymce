@@ -1,11 +1,12 @@
-import { document, console } from '@ephox/dom-globals';
-import { Arr, Future, Obj, Result, Option } from '@ephox/katamari';
+import { console, document } from '@ephox/dom-globals';
+import { Arr, Future, Obj, Option, Result } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
+import * as Memento from 'ephox/alloy/api/component/Memento';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Button } from 'ephox/alloy/api/ui/Button';
@@ -16,11 +17,23 @@ import { SplitDropdown } from 'ephox/alloy/api/ui/SplitDropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import * as Memento from 'ephox/alloy/api/component/Memento';
 
 import * as DemoRenders from './forms/DemoRenders';
 
 // tslint:disable:no-console
+
+const makeItem = (v: string, t: string, c?: string): DemoRenders.DemoItem => {
+  return {
+    type: 'item',
+    data: {
+      value: v,
+      meta: {
+        text: t,
+        ...c ? { 'item-class': c } : { }
+      }
+    }
+  };
+};
 
 export default (): void => {
   const gui = Gui.create();
@@ -144,7 +157,7 @@ export default (): void => {
           items: [ wDoubleInput ]
         });
 
-        return Future.pure(menu).map((m) => {
+        return Future.pure(menu).map(() => {
           return Option.some(TieredMenu.singleData('demo.2.menu', menu));
         });
       }
@@ -197,7 +210,7 @@ export default (): void => {
               items: [ wDoubleInput ]
             });
 
-            return Future.pure(menu).map((m) => {
+            return Future.pure(menu).map(() => {
               return Option.some(TieredMenu.singleData('demo.2.menu', menu));
             });
           }
@@ -230,18 +243,6 @@ export default (): void => {
         }
       },
       fetch () {
-        const makeItem = (v, t) => {
-          return {
-            type: 'item',
-            data: {
-              value: v,
-              meta: {
-                text: t
-              }
-            }
-          };
-        };
-
         const data = Arr.map([
           makeItem('alpha', '+Alpha'),
           makeItem('beta', '+Beta'),
@@ -292,23 +293,10 @@ export default (): void => {
       matchWidth: true,
 
       fetch () {
-        const makeItem = (v, t, c) => {
-          return {
-            type: 'item',
-            data: {
-              value: v,
-              meta: {
-                'text': t,
-                'item-class': c
-              }
-            }
-          };
-        };
-
         const data = Arr.map([
           makeItem('alpha', 'Alpha', 'class-alpha'),
           makeItem('beta', 'Beta', 'class-beta'),
-          { type: 'separator', data: { value: 'text', meta: { text: '-- separator --' } } },
+          { type: 'separator', data: { value: 'text', meta: { text: '-- separator --' } } } as DemoRenders.DemoSeparatorItem,
           makeItem('gamma', 'Gamma', 'class-gamma'),
           makeItem('delta', 'Delta', 'class-delta')
         ], DemoRenders.item);
@@ -322,7 +310,7 @@ export default (): void => {
           return Option.some(TieredMenu.singleData('basic-list', menu));
         });
       },
-      onExecute (sandbox, item, itemValue) {
+      onExecute (sandbox, item) {
         console.log('*** dropdown demo execute on: ' + Representing.getValue(item));
       }
     })
@@ -351,24 +339,11 @@ export default (): void => {
 
       toggleClass: 'demo-selected',
 
-      onExecute (sandbox, item, itemValue) {
+      onExecute (sandbox, item) {
         console.trace();
         console.log('*** dropdown menu demo execute on: ' + Representing.getValue(item).value + ' ***');
       },
       fetch () {
-        const makeItem = (v, t, c) => {
-          return {
-            type: 'item',
-            data: {
-              value: v,
-              meta: {
-                'text': t,
-                'item-class': c
-              }
-            }
-          };
-        };
-
         const future = Future.pure({
           primary: 'tools-menu',
           menus: Obj.map({
@@ -433,7 +408,7 @@ export default (): void => {
                       })
                     ])
                   })
-                }
+                } as DemoRenders.DemoWidgetItem
               ], DemoRenders.item)
             },
             'packages-menu': {

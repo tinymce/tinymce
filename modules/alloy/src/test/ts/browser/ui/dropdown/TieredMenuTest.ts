@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, Step, StructAssert } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Objects } from '@ephox/boulder';
 import { Arr, Obj } from '@ephox/katamari';
@@ -8,11 +8,11 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('TieredMenuTest', (success, failure) => {
 
@@ -95,7 +95,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
     //   store.clear();
     // });
 
-    const structureMenu = (selected, itemSelections, hasPopups, isExpandeds) => (s, str, arr) => {
+    const structureMenu = (selected: boolean, itemSelections: boolean[], hasPopups: boolean[], isExpandeds: boolean[]) => (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi) => {
       return s.element('ol', {
         classes: [ arr.has('menu'), (selected ? arr.has : arr.not)('selected-menu') ],
         children: Arr.map(itemSelections, (sel, i) => s.element('li', {
@@ -110,7 +110,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
       });
     };
 
-    const sAssertMenu = (label, structureMenus) => {
+    const sAssertMenu = (label: string, structureMenus: Array<ApproxStructure.Builder<StructAssert>>) => {
       return Assertions.sAssertStructure(
         label,
         ApproxStructure.build((s, str, arr) => {

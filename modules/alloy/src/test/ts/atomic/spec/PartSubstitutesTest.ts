@@ -2,8 +2,10 @@ import { Logger } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import { subs } from 'ephox/alloy/parts/PartSubstitutes';
 import * as PartType from 'ephox/alloy/parts/PartType';
+import * as UiSubstitutes from 'ephox/alloy/spec/UiSubstitutes';
 
 UnitTest.test('PartSubstitutesTest', () => {
   // TODO: Make this test more exhaustive. This is really just a sanity
@@ -12,6 +14,13 @@ UnitTest.test('PartSubstitutesTest', () => {
     'Testing subs',
     () => {
       const detail = {
+        'uid': '1',
+        'dom': {
+          tag: 'div'
+        },
+        'components': [ ] as AlloySpec[],
+        'originalSpec': { },
+        'debug.sketcher': { },
         'partUids': ({
           'required.A': 'a-uid',
           'optional.B' : 'b-uid',
@@ -90,7 +99,7 @@ UnitTest.test('PartSubstitutesTest', () => {
       const internals = substitutes.internals();
       const externals = substitutes.externals();
 
-      const checkSinglePart = (label: string, expected, part) => {
+      const checkSinglePart = (label: string, expected: { required: boolean, spec: any, factory: any }, part: UiSubstitutes.UiSubstitutesAdt) => {
         Logger.sync('Checking: ' + label, () => {
           part.match({
             single: (required, valueThunk) => {
@@ -151,7 +160,7 @@ UnitTest.test('PartSubstitutesTest', () => {
                     uid: 'group.D.2'
                   }
                 }
-              ],
+              ] as any[],
               valueThunks(detail, { }, { })
             );
           }

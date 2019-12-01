@@ -1,16 +1,16 @@
-import { Assertions, GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, Chain, ApproxStructure } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Future, Option, Result } from '@ephox/katamari';
-import { Html, Css, Compare } from '@ephox/sugar';
+import { Compare, Css, Html } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import { InlineView } from 'ephox/alloy/api/ui/InlineView';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 
@@ -53,7 +53,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
 
     gui.add(related);
 
-    const sCheckOpen = (label) => {
+    const sCheckOpen = (label: string) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([
@@ -68,7 +68,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
       );
     };
 
-    const sCheckClosed = (label) => {
+    const sCheckClosed = (label: string) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([

@@ -59,23 +59,23 @@ const configureMenu = (detail: MenuDetail, movementInfo: MenuNormalMovement): Me
 };
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
-  PartType.group({
+  PartType.group<MenuDetail, ItemSpec>({
     factory: {
-      sketch (spec: ItemSpec) {
+      sketch (spec) {
         const itemInfo = ValueSchema.asRawOrDie('menu.spec item', itemSchema, spec);
         return itemInfo.builder(itemInfo);
       }
     },
     name: 'items',
     unit: 'item',
-    defaults (detail: MenuDetail, u) {
+    defaults (detail, u) {
       // Switch this to a common library
       return u.hasOwnProperty('uid') ? u : {
         ...u,
         uid: Tagger.generate('item')
       };
     },
-    overrides (detail: MenuDetail, u) {
+    overrides (detail, u) {
       return {
         type: u.type,
         ignoreFocus: detail.fakeFocus,

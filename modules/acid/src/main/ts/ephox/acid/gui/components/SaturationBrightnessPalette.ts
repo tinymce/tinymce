@@ -13,7 +13,7 @@ export interface SaturationBrightnessPaletteSpec extends Sketcher.SingleSketchSp
 }
 // tslint:enable:no-empty-interface
 
-export interface SaturationBrightnessPaletteSketcher extends Sketcher.SingleSketch<SaturationBrightnessPaletteSpec, SaturationBrightnessPaletteDetail> {
+export interface SaturationBrightnessPaletteSketcher extends Sketcher.SingleSketch<SaturationBrightnessPaletteSpec> {
   setRgba: (slider: AlloyComponent, colour: Rgba) => void;
 }
 

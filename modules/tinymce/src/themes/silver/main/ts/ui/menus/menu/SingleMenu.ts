@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyEvents, FocusManagers, ItemTypes, Keying, MenuTypes, TieredMenu } from '@ephox/alloy';
+import { AlloyEvents, FocusManagers, ItemTypes, Keying, MenuTypes, TieredMenu, TieredMenuTypes } from '@ephox/alloy';
 import { InlineContent, Menu as BridgeMenu, Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Arr, Merger, Option, Options } from '@ephox/katamari';
@@ -115,7 +115,7 @@ export const createPartialMenu = (value: string, items: SingleMenuItemApi[], ite
   return createPartial(value, hasIcons, alloyItems, 1, 'normal');
 };
 
-export const createTieredDataFrom = (partialMenu: Partial<MenuTypes.MenuSpec>) => {
+export const createTieredDataFrom = (partialMenu: TieredMenuTypes.PartialMenuSpec) => {
   return TieredMenu.singleData(partialMenu.value, partialMenu);
 };
 

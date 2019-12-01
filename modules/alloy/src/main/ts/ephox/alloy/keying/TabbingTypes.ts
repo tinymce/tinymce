@@ -1,6 +1,7 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Compare, Height, SelectorFilter, SelectorFind, Element } from '@ephox/sugar';
+import { Compare, Element, Height, SelectorFilter, SelectorFind } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -9,9 +10,8 @@ import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as ArrNavigation from '../navigation/ArrNavigation';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
-import { TabbingConfig, KeyRuleHandler } from './KeyingModeTypes';
+import { KeyRuleHandler, TabbingConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
-import { HTMLElement } from '@ephox/dom-globals';
 
 const create = (cyclicField: FieldProcessorAdt) => {
   const schema: FieldProcessorAdt[] = [
@@ -56,7 +56,7 @@ const create = (cyclicField: FieldProcessorAdt) => {
   };
 
   // Fire an alloy focus on the first visible element that matches the selector
-  const focusIn = (component: AlloyComponent, tabbingConfig: TabbingConfig): void => {
+  const focusIn = (component: AlloyComponent, tabbingConfig: TabbingConfig, tabbingState: Stateless): void => {
     findInitial(component, tabbingConfig).each((target) => {
       tabbingConfig.focusManager.set(component, target);
     });
@@ -67,11 +67,11 @@ const create = (cyclicField: FieldProcessorAdt) => {
       return isTabstop(tabbingConfig, elem);
     }).fold(() => {
       // Even if there is only one, still capture the event if cycling
-      return tabbingConfig.cyclic ? Option.some(true) : Option.none();
+      return tabbingConfig.cyclic ? Option.some<boolean>(true) : Option.none();
     }, (target) => {
       tabbingConfig.focusManager.set(component, target);
       // Kill the event
-      return Option.some(true);
+      return Option.some<boolean>(true);
     });
   };
 
@@ -91,23 +91,23 @@ const create = (cyclicField: FieldProcessorAdt) => {
     });
   };
 
-  const goBackwards: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig, tabbingState) => {
+  const goBackwards: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig) => {
     const navigate = tabbingConfig.cyclic ? ArrNavigation.cyclePrev : ArrNavigation.tryPrev;
     return go(component, simulatedEvent, tabbingConfig, navigate);
   };
 
-  const goForwards: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig, tabbingState) => {
+  const goForwards: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig) => {
     const navigate = tabbingConfig.cyclic ? ArrNavigation.cycleNext : ArrNavigation.tryNext;
     return go(component, simulatedEvent, tabbingConfig, navigate);
   };
 
-  const execute: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig, tabbingState) => {
+  const execute: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig) => {
     return tabbingConfig.onEnter.bind((f) => {
       return f(component, simulatedEvent);
     });
   };
 
-  const exit: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig, tabbingState) => {
+  const exit: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig) => {
     return tabbingConfig.onEscape.bind((f) => {
       return f(component, simulatedEvent);
     });

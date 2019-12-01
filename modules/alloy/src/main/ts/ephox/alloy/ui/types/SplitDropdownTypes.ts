@@ -5,7 +5,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { AnchorOverrides, HasLayoutAnchorSpec } from '../../positioning/mode/Anchoring';
+import { AnchorOverrides, AnchorSpec, HasLayoutAnchorSpec } from '../../positioning/mode/Anchoring';
 import { CommonDropdownDetail } from './DropdownTypes';
 import { TieredMenuSpec, TieredData } from './TieredMenuTypes';
 
@@ -36,7 +36,7 @@ export interface SplitDropdownSpec extends CompositeSketchSpec, HasLayoutAnchorS
   onExecute: (comp: AlloyComponent, button: AlloyComponent) => void;
   onItemExecute: (comp: AlloyComponent, button: AlloyComponent, item: AlloyComponent) => void;
 
-  onOpen?: (anchor, comp: AlloyComponent, menu: AlloyComponent) => void;
+  onOpen?: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
 
   lazySink?: (comp: AlloyComponent) => Result<AlloyComponent, Error>;
   fetch: (comp: AlloyComponent) => Future<Option<TieredData>>;
@@ -49,4 +49,4 @@ export interface SplitDropdownSpec extends CompositeSketchSpec, HasLayoutAnchorS
   };
 }
 
-export interface SplitDropdownSketcher extends CompositeSketch<SplitDropdownSpec, SplitDropdownDetail>, SplitDropdownApis { }
+export interface SplitDropdownSketcher extends CompositeSketch<SplitDropdownSpec>, SplitDropdownApis { }

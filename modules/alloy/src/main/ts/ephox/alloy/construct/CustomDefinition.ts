@@ -2,7 +2,7 @@ import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Option, Result } from '@ephox/katamari';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
-import { SimpleOrSketchSpec, StructDomSchema } from '../api/component/SpecTypes';
+import { ComponentDetail, SimpleOrSketchSpec, StructDomSchema } from '../api/component/SpecTypes';
 import { AlloyEventRecord } from '../api/events/AlloyEvents';
 import { DomDefinitionDetail } from '../dom/DomDefinition';
 import { DomModification, nu as NuModification } from '../dom/DomModification';
@@ -21,7 +21,7 @@ export interface CustomDetail<A> {
   'debug.sketcher': string;
 }
 
-const toInfo = (spec: SimpleOrSketchSpec): Result<CustomDetail<any>, any> => {
+const toInfo = <A>(spec: ComponentDetail): Result<CustomDetail<A>, any> => {
   return ValueSchema.asRaw('custom.definition', ValueSchema.objOf([
     FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOf([
       // Note, no children.

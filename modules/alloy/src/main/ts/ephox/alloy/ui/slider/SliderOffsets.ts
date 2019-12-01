@@ -11,7 +11,7 @@ const top = 'top',
 
 // Screen offsets from bounding client rect
 const getBounds = (component: AlloyComponent): ClientRect => component.element().dom().getBoundingClientRect();
-const getBoundsProperty = (bounds: ClientRect, property: string): number => bounds[property];
+const getBoundsProperty = (bounds: ClientRect, property: keyof ClientRect): number => bounds[property];
 
 const getMinXBounds = (component: AlloyComponent): number => {
   const bounds = getBounds(component);

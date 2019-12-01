@@ -11,7 +11,7 @@ export interface TransitionRoute {
 }
 
 // TYPIFY
-const findRoute = function <T>(component: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Option<TransitionProperties> {
+const findRoute = function (component: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Option<TransitionProperties> {
   return Obj.get(transConfig.routes, route.start).bind((sConfig) => {
     return Obj.get(sConfig, route.destination);
   });
@@ -87,7 +87,7 @@ const progressTo = (comp: AlloyComponent, transConfig: TransitioningConfig, tran
   });
 };
 
-const getState = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless) => {
+const getState = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless): Option<string> => {
   const e = comp.element();
   return Attr.has(e, transConfig.stateAttr) ? Option.some(
     Attr.get(e, transConfig.stateAttr)

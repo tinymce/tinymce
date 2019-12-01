@@ -1,9 +1,7 @@
-import { setTimeout } from '@ephox/dom-globals';
+import { HTMLDocument, setTimeout } from '@ephox/dom-globals';
 import { Id } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attr, Css, Element, Insert, Remove, Traverse } from '@ephox/sugar';
-
-import { SugarDocument } from '../alien/TypeDefinitions';
 
 const isFirefox: boolean = PlatformDetection.detect().browser.isFirefox();
 
@@ -17,7 +15,7 @@ const tokenSelector = (): string => {
 };
 
 // INVESTIGATE: Aria is special for insertion. Think about it more.
-const create = (doc: SugarDocument, text: string): Element => {
+const create = (doc: Element<HTMLDocument>, text: string): Element => {
   const span: Element = Element.fromTag('span', doc.dom());
   Attr.set(span, 'role', 'presentation');
   // This stops it saying other things (possibly blank) between transitions.
@@ -47,7 +45,7 @@ const describe = (item: Element, description: string): Element => {
 };
 
 const base = (getAttrs: (string: string) => { }, parent: Element, text: string): void => {
-  const doc: SugarDocument = Traverse.owner(parent);
+  const doc = Traverse.owner(parent);
 
   // firefox needs aria-describedby to speak a role=alert token, which causes IE11 to read twice
   const token = create(doc, text);

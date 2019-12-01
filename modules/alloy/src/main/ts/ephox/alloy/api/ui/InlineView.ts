@@ -11,7 +11,7 @@ import * as Layout from '../../positioning/layout/Layout';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import * as Dismissal from '../../sandbox/Dismissal';
 import * as Reposition from '../../sandbox/Reposition';
-import { InlineMenuSpec, InlineViewDetail, InlineViewSketcher, InlineViewSpec } from '../../ui/types/InlineViewTypes';
+import { InlineMenuSpec, InlineViewApis, InlineViewDetail, InlineViewSketcher, InlineViewSpec } from '../../ui/types/InlineViewTypes';
 import { Positioning } from '../behaviour/Positioning';
 import { Receiving } from '../behaviour/Receiving';
 import { Representing } from '../behaviour/Representing';
@@ -21,6 +21,19 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { tieredMenu as TieredMenu } from './TieredMenu';
 import { SingleSketchFactory } from './UiSketcher';
+
+interface InlineViewPositionState {
+  mode: 'position';
+  anchor: AnchorSpec;
+  getBounds: () => Option<Boxes.Bounds>;
+}
+
+interface InlineViewMenuState {
+  mode: 'menu';
+  menu: InlineMenuSpec;
+}
+
+type InlineViewState = InlineViewMenuState | InlineViewPositionState;
 
 const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Option<Boxes.Bounds>) => {
   const lazySink: () => ReturnType<LazySink> = () => detail.lazySink(menuSandbox);
@@ -47,11 +60,11 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
       detail.onEscape.map((handler) => {
         return handler(menuSandbox);
       });
-      return Option.some(true);
+      return Option.some<boolean>(true);
     },
 
     onExecute() {
-      return Option.some(true);
+      return Option.some<boolean>(true);
     },
 
     onOpenMenu(tmenu, menu) {
@@ -79,7 +92,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
 };
 
 const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: InlineViewDetail, spec): SketchSpec => {
-  const isPartOfRelated = (sandbox, queryElem) => {
+  const isPartOfRelated = (sandbox: AlloyComponent, queryElem: Element) => {
     const related = detail.getRelated(sandbox);
     return related.exists((rel) => {
       return ComponentStructure.isPartOf(rel, queryElem);
@@ -128,7 +141,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
   };
   const reposition = (sandbox: AlloyComponent) => {
     if (Sandboxing.isOpen(sandbox)) {
-      Representing.getValue(sandbox).each((state) => {
+      Representing.getValue(sandbox).each((state: InlineViewState) => {
         switch (state.mode) {
           case 'menu':
             Sandboxing.getState(sandbox).each((tmenu) => {
@@ -204,7 +217,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
   };
 };
 
-const InlineView = Sketcher.single({
+const InlineView: InlineViewSketcher = Sketcher.single<InlineViewSpec, InlineViewDetail, InlineViewApis>({
   name: 'InlineView',
   configFields: [
     FieldSchema.strict('lazySink'),
@@ -223,37 +236,37 @@ const InlineView = Sketcher.single({
   ],
   factory,
   apis: {
-    showAt (apis, component, anchor, thing) {
+    showAt: (apis, component, anchor, thing) => {
       apis.showAt(component, anchor, thing);
     },
-    showWithin (apis, component, anchor, thing, boxElement) {
+    showWithin: (apis, component, anchor, thing, boxElement) => {
       apis.showWithin(component, anchor, thing, boxElement);
     },
-    showWithinBounds (apis, component, anchor, thing, bounds) {
+    showWithinBounds: (apis, component, anchor, thing, bounds) => {
       apis.showWithinBounds(component, anchor, thing, bounds);
     },
-    showMenuAt(apis, component, anchor, menuSpec) {
+    showMenuAt: (apis, component, anchor, menuSpec) => {
       apis.showMenuAt(component, anchor, menuSpec);
     },
-    showMenuWithinBounds(apis, component, anchor, menuSpec, bounds) {
+    showMenuWithinBounds: (apis, component, anchor, menuSpec, bounds) => {
       apis.showMenuWithinBounds(component, anchor, menuSpec, bounds);
     },
-    hide (apis, component) {
+    hide: (apis, component) => {
       apis.hide(component);
     },
-    isOpen (apis, component) {
+    isOpen: (apis, component) => {
       return apis.isOpen(component);
     },
-    getContent (apis, component) {
+    getContent: (apis, component) => {
       return apis.getContent(component);
     },
-    setContent (apis, component, thing) {
+    setContent: (apis, component, thing) => {
       apis.setContent(component, thing);
     },
-    reposition (apis, component) {
+    reposition: (apis, component) => {
       apis.reposition(component);
     }
   }
-}) as InlineViewSketcher;
+});
 
 export { InlineView };

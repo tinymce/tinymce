@@ -7,6 +7,7 @@ import * as DefaultEvents from '../../events/DefaultEvents';
 import * as Tagger from '../../registry/Tagger';
 import * as CustomSpec from '../../spec/CustomSpec';
 import { NoContextApi } from '../system/NoContextApi';
+import { AlloySystemApi } from '../system/SystemApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as Component from './Component';
 import { AlloyComponent } from './ComponentApi';
@@ -52,7 +53,7 @@ const external = (spec: ExternalElement): PremadeSpec => {
 
   const systemApi = Cell(NoContextApi());
 
-  const connect = (newApi) => {
+  const connect = (newApi: AlloySystemApi) => {
     systemApi.set(newApi);
   };
 

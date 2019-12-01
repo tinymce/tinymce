@@ -1,8 +1,9 @@
 import { Cell, Fun } from '@ephox/katamari';
 
 import { nuState } from '../common/BehaviourState';
+import { SlidingConfig, SlidingState } from './SlidingTypes';
 
-const init = (spec) => {
+const init = (spec: SlidingConfig): SlidingState => {
   const state = Cell(spec.expanded);
 
   const readState = () => {

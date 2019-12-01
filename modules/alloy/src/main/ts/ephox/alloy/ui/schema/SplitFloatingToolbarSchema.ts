@@ -1,9 +1,12 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Fun, Cell } from '@ephox/katamari';
+
 import { Toolbar } from '../../api/ui/Toolbar';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import * as SplitToolbarBase from '../common/SplitToolbarBase';
+import { SplitFloatingToolbarDetail } from '../types/SplitFloatingToolbarTypes';
+import { ToolbarSpec } from '../types/ToolbarTypes';
 import * as ToolbarSchema from './ToolbarSchema';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
@@ -16,7 +19,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 ));
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
-  PartType.required({
+  PartType.required<SplitFloatingToolbarDetail, ToolbarSpec>({
     factory: Toolbar,
     schema: ToolbarSchema.schema(),
     name: 'primary'

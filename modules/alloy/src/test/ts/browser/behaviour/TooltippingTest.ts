@@ -1,16 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  FocusTools,
-  Keyboard,
-  Keys,
-  Logger,
-  Mouse,
-  Step,
-  UiFinder,
-  Waiter,
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, Step, StructAssert, UiFinder, Waiter, } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Result } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
@@ -19,14 +7,14 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
+import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import { Tooltipping } from 'ephox/alloy/api/behaviour/Tooltipping';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
 
@@ -98,7 +86,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
       SelectorFind.descendant(component.element(), '.alpha').getOrDie('Could not find alpha button')
     ).toOption().getOrDie('Could not find alpha button component');
 
-    const sAssertSinkContents = (children) => Waiter.sTryUntil(
+    const sAssertSinkContents = (children: ApproxStructure.Builder<StructAssert[]>) => Waiter.sTryUntil(
       'Waiting for tooltip to appear in sink',
       Assertions.sAssertStructure(
         'Checking structure of sink',

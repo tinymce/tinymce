@@ -35,4 +35,4 @@ export interface InputSpec extends SingleSketchSpec {
   onSetValue?: (comp: AlloyComponent, data: string) => void;
 }
 
-export interface InputSketcher extends SingleSketch<InputSpec, InputDetail> { }
+export interface InputSketcher extends SingleSketch<InputSpec> { }

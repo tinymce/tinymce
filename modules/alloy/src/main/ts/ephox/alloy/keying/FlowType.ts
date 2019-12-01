@@ -1,6 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
-import { SelectorFind, Element } from '@ephox/sugar';
+import { Element, SelectorFind } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -14,10 +14,6 @@ import * as KeyRules from '../navigation/KeyRules';
 import { FlowConfig, KeyRuleHandler } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
-
-// NB: Tsc requires AlloyEventHandler to be imported here.
-// @ts-ignore
-import { AlloyEventHandler } from '../api/events/AlloyEvents';
 
 const schema = [
   FieldSchema.strict('selector'),
@@ -42,7 +38,7 @@ const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent
   });
 };
 
-const focusIn = (component: AlloyComponent, flowConfig: FlowConfig): void => {
+const focusIn = (component: AlloyComponent, flowConfig: FlowConfig, state: Stateless): void => {
   flowConfig.getInitial(component).orThunk(
     () => SelectorFind.descendant(component.element(), flowConfig.selector)
   ).each((first) => {
@@ -59,18 +55,18 @@ const moveRight = (element: Element, focused: Element, info: FlowConfig): Option
 };
 
 const doMove = (movement: KeyRuleHandler<FlowConfig, Stateless>): KeyRuleHandler<FlowConfig, Stateless> => {
-  return (component, simulatedEvent, flowConfig) => {
-    return movement(component, simulatedEvent, flowConfig).bind(() => {
-      return flowConfig.executeOnMove ? execute(component, simulatedEvent, flowConfig) : Option.some(true);
+  return (component, simulatedEvent, flowConfig, flowState) => {
+    return movement(component, simulatedEvent, flowConfig, flowState).bind(() => {
+      return flowConfig.executeOnMove ? execute(component, simulatedEvent, flowConfig) : Option.some<boolean>(true);
     });
   };
 };
 
-const doEscape: KeyRuleHandler<FlowConfig, Stateless>  = (component, simulatedEvent, flowConfig, _flowState) => {
+const doEscape: KeyRuleHandler<FlowConfig, Stateless>  = (component, simulatedEvent, flowConfig) => {
   return flowConfig.onEscape(component, simulatedEvent);
 };
 
-const getKeydownRules = (_component, _se, flowConfig: FlowConfig, _flowState): Array<KeyRules.KeyRule<FlowConfig, Stateless>> => {
+const getKeydownRules = (_component: AlloyComponent, _se: NativeSimulatedEvent, flowConfig: FlowConfig, _flowState: Stateless): Array<KeyRules.KeyRule<FlowConfig, Stateless>> => {
   const westMovers = Keys.LEFT().concat(flowConfig.allowVertical ? Keys.UP() : [ ]);
   const eastMovers = Keys.RIGHT().concat(flowConfig.allowVertical ? Keys.DOWN() : [ ]);
   return [

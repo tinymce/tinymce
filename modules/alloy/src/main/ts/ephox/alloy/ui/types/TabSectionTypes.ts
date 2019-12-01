@@ -30,7 +30,9 @@ export interface TabSectionSpec extends CompositeSketchSpec {
   onDismissTab?: (component: AlloyComponent, button: AlloyComponent) => void;
 }
 
-export interface TabSectionSketcher extends CompositeSketch<TabSectionSpec, TabSectionDetail> {
+export interface TabSectionApis {
   getViewItems: (component: AlloyComponent) => AlloyComponent[];
   showTab: (component: AlloyComponent, tabKey: string) => void;
 }
+
+export interface TabSectionSketcher extends CompositeSketch<TabSectionSpec>, TabSectionApis { }

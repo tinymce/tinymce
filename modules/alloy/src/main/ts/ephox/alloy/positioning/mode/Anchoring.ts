@@ -1,12 +1,11 @@
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Element, SimRange } from '@ephox/sugar';
 
 import { Bounds } from '../../alien/Boxes';
-import { SugarRange } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { OriginAdt } from '../../behaviour/positioning/PositionApis';
 import { Bubble } from '../layout/Bubble';
 import { AnchorBox, AnchorLayout } from '../layout/LayoutTypes';
+import { OriginAdt } from '../layout/Origins';
 
 // doPlace(component, origin, anchoring, posConfig, placee);
 export type AnchorPlacement =
@@ -53,7 +52,7 @@ export interface HasLayoutAnchorSpec {
 
 export interface SelectionAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
   anchor: 'selection';
-  getSelection?: () => Option<SugarRange>;
+  getSelection?: () => Option<SimRange>;
   root: Element;
   bubble?: Bubble;
   overrides?: AnchorOverrides;
@@ -61,7 +60,7 @@ export interface SelectionAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSp
 }
 
 export interface SelectionAnchor extends AnchorDetail<SelectionAnchor>, HasLayoutAnchor {
-  getSelection: Option<() => Option<SugarRange>>;
+  getSelection: Option<() => Option<SimRange>>;
   root: Element;
   bubble: Option<Bubble>;
   overrides: AnchorOverrides;

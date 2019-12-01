@@ -76,4 +76,4 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
   getAnchor?: (comp: AlloyComponent) => AnchorSpec;
 }
 
-export interface TouchMenuSketcher extends CompositeSketch<TouchMenuSpec, TouchMenuDetail> { }
+export interface TouchMenuSketcher extends CompositeSketch<TouchMenuSpec> { }

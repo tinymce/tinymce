@@ -54,7 +54,7 @@ const highlightLast = (component: AlloyComponent, hConfig: HighlightingConfig, h
   });
 };
 
-const highlightAt = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, index): void => {
+const highlightAt = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, index: number): void => {
   getByIndex(component, hConfig, hState, index).fold((err) => {
     throw new Error(err);
   }, (firstComp) => {

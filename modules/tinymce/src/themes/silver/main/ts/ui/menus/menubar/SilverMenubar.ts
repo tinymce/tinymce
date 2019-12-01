@@ -5,24 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  Behaviour,
-  Dropdown,
-  Focusing,
-  Keying,
-  NativeEvents,
-  RawDomSchema,
-  Replacing,
-  Sketcher,
-  SystemEvents,
-  UiSketcher,
-  Tabstopping,
-  AlloyComponent,
-} from '@ephox/alloy';
-import { Toolbar } from '@ephox/bridge';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Dropdown, Focusing, Keying, NativeEvents, RawDomSchema, Replacing, Sketcher, SystemEvents, Tabstopping, UiSketcher, } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Compare, SelectorFind } from '@ephox/sugar';
 import { TranslatedString } from 'tinymce/core/api/util/I18n';
@@ -47,10 +32,12 @@ export interface SilverMenubarDetail extends Sketcher.SingleSketchDetail {
   backstage: UiFactoryBackstage;
 }
 
-export interface SilverMenubarSketch extends Sketcher.SingleSketch<SilverMenubarSpec, SilverMenubarDetail> {
+export interface SilverMenubarApis {
   focus: (comp: AlloyComponent) => void;
   setMenus: (comp: AlloyComponent, groups) => void;
 }
+
+export interface SilverMenubarSketch extends Sketcher.SingleSketch<SilverMenubarSpec>, SilverMenubarApis { }
 
 export interface MenubarItemSpec {
   text: TranslatedString;
@@ -147,7 +134,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
   };
 };
 
-export default Sketcher.single({
+export default Sketcher.single<SilverMenubarSpec, SilverMenubarDetail, SilverMenubarApis>({
   factory,
   name: 'silver.Menubar',
   configFields: [
@@ -165,4 +152,4 @@ export default Sketcher.single({
       apis.setMenus(comp, menus);
     }
   }
-}) as SilverMenubarSketch;
+});

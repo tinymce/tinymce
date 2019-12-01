@@ -3,12 +3,18 @@ import Jsc from '@ephox/wrap-jsverify';
 
 import * as MatrixNavigation from 'ephox/alloy/navigation/MatrixNavigation';
 
+interface GeneratedMatrix {
+  matrix: number[][];
+  row: number;
+  col: number;
+}
+
 UnitTest.test('MatrixNavigationTest', () => {
-  const genRegularMatrix = Jsc.integer(2, 3).generator.flatMap((numRows) => {
+  const genRegularMatrix = Jsc.integer(2, 3).generator.flatMap((numRows: number) => {
     // I want to generate for each row, something.
-    return Jsc.integer(2, 3).generator.flatMap((numCols) => {
-      return Jsc.integer(0, numRows - 1).generator.flatMap((rowIndex) => {
-        return Jsc.integer(0, numCols - 1).generator.map((colIndex) => {
+    return Jsc.integer(2, 3).generator.flatMap((numCols: number) => {
+      return Jsc.integer(0, numRows - 1).generator.flatMap((rowIndex: number) => {
+        return Jsc.integer(0, numCols - 1).generator.map((colIndex: number) => {
           const matrix = [ ];
           for (let i = 0; i < numRows; i++) {
             const row = [ ];
@@ -35,7 +41,7 @@ UnitTest.test('MatrixNavigationTest', () => {
   Jsc.property(
     'Regular matrix: cycleUp and cycleDown should be symmetric',
     arbRegularMatrix,
-    (arb) => {
+    (arb: GeneratedMatrix) => {
       const postUp = MatrixNavigation.cycleUp(arb.matrix, arb.row, arb.col).getOrDie(
         'Should be able to cycleUp!'
       );
@@ -49,7 +55,7 @@ UnitTest.test('MatrixNavigationTest', () => {
   Jsc.property(
     'Regular matrix: cycleLeft and cycleRight should be symmetric',
     arbRegularMatrix,
-    (arb) => {
+    (arb: GeneratedMatrix) => {
       const postLeft = MatrixNavigation.cycleLeft(arb.matrix, arb.row, arb.col).getOrDie(
         'Should be able to cycleLeft'
       );

@@ -23,7 +23,7 @@ export interface ColourPickerSpec extends Sketcher.SingleSketchSpec {
   onInvalidHex?: (component: AlloyComponent) => void;
 }
 
-export interface ColourPickerSketcher extends Sketcher.SingleSketch<ColourPickerSpec, ColourPickerDetail> {
+export interface ColourPickerSketcher extends Sketcher.SingleSketch<ColourPickerSpec> {
 }
 
 const makeFactory = (

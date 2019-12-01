@@ -84,7 +84,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
       });
     };
 
-    const boxWithPosition = (position) => {
+    const boxWithPosition = (position: string) => {
       return ApproxStructure.build((s, str, arr) => {
         return s.element('div', {
           styles: {

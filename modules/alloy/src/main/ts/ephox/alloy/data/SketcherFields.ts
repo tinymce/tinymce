@@ -1,6 +1,6 @@
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
-import { SketchBehaviours } from '../api/component/SketchBehaviours';
 
+import { SketchBehaviours } from '../api/component/SketchBehaviours';
 import { Sandboxing } from '../api/behaviour/Sandboxing';
 import { Receiving } from '../api/behaviour/Receiving';
 import { Composing } from '../api/behaviour/Composing';

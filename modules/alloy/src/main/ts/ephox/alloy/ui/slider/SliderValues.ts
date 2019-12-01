@@ -1,6 +1,6 @@
 import { Option } from '@ephox/katamari';
 
-import { SliderDetail } from '../types/SliderTypes';
+import { HorizontalSliderDetail, SliderDetail, VerticalSliderDetail } from '../types/SliderTypes';
 
 const t = 'top',
       r = 'right',
@@ -8,25 +8,25 @@ const t = 'top',
       l = 'left';
 
 // Values
-const minX = (detail: SliderDetail): number => detail.model.minX;
-const minY = (detail: SliderDetail): number => detail.model.minY;
+const minX = (detail: HorizontalSliderDetail): number => detail.model.minX;
+const minY = (detail: VerticalSliderDetail): number => detail.model.minY;
 
-const min1X = (detail: SliderDetail): number => detail.model.minX - 1;
-const min1Y = (detail: SliderDetail): number => detail.model.minY - 1;
+const min1X = (detail: HorizontalSliderDetail): number => detail.model.minX - 1;
+const min1Y = (detail: VerticalSliderDetail): number => detail.model.minY - 1;
 
-const maxX = (detail: SliderDetail): number => detail.model.maxX;
-const maxY = (detail: SliderDetail): number => detail.model.maxY;
+const maxX = (detail: HorizontalSliderDetail): number => detail.model.maxX;
+const maxY = (detail: VerticalSliderDetail): number => detail.model.maxY;
 
-const max1X = (detail: SliderDetail): number => detail.model.maxX + 1;
-const max1Y = (detail: SliderDetail): number => detail.model.maxY + 1;
+const max1X = (detail: HorizontalSliderDetail): number => detail.model.maxX + 1;
+const max1Y = (detail: VerticalSliderDetail): number => detail.model.maxY + 1;
 
-const range = (detail: SliderDetail, max: (detail: SliderDetail) => number, min: (detail: SliderDetail) => number): number => max(detail) - min(detail);
+const range = <T extends SliderDetail>(detail: T, max: (detail: T) => number, min: (detail: T) => number): number => max(detail) - min(detail);
 
-const xRange = (detail: SliderDetail): number => range(detail, maxX, minX);
-const yRange = (detail: SliderDetail): number => range(detail, maxY, minY);
+const xRange = (detail: HorizontalSliderDetail): number => range(detail, maxX, minX);
+const yRange = (detail: VerticalSliderDetail): number => range(detail, maxY, minY);
 
-const halfX = (detail: SliderDetail): number => xRange(detail) / 2;
-const halfY = (detail: SliderDetail): number => yRange(detail) / 2;
+const halfX = (detail: HorizontalSliderDetail): number => xRange(detail) / 2;
+const halfY = (detail: VerticalSliderDetail): number => yRange(detail) / 2;
 
 const step = (detail: SliderDetail): number => detail.stepSize;
 const snap = (detail: SliderDetail): boolean => detail.snapToGrid;
@@ -34,7 +34,7 @@ const snapStart = (detail: SliderDetail): Option<number> => detail.snapStart;
 const rounded = (detail: SliderDetail): boolean => detail.rounded;
 
 // Not great but... /shrug
-const hasEdge = (detail: SliderDetail, edgeName: string): boolean => detail[edgeName + '-edge'] !== undefined;
+const hasEdge = (detail: SliderDetail, edgeName: string): boolean => (detail as any)[edgeName + '-edge'] !== undefined;
 
 const hasLEdge = (detail: SliderDetail): boolean => hasEdge(detail, l);
 const hasREdge = (detail: SliderDetail): boolean => hasEdge(detail, r);

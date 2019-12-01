@@ -1,5 +1,5 @@
-import { Arr, Option, Options } from '@ephox/katamari';
-import { Css, Width, Focus } from '@ephox/sugar';
+import { Arr, Option } from '@ephox/katamari';
+import { Css, Focus, Width } from '@ephox/sugar';
 
 import { Coupling } from '../api/behaviour/Coupling';
 import { Focusing } from '../api/behaviour/Focusing';
@@ -8,8 +8,8 @@ import { Replacing } from '../api/behaviour/Replacing';
 import { AlloyComponent } from '../api/component/ComponentApi';
 import * as GuiFactory from '../api/component/GuiFactory';
 import { Toolbar } from '../api/ui/Toolbar';
-import { SplitToolbarBaseDetail } from '../ui/types/SplitToolbarBaseTypes';
 import * as AlloyParts from '../parts/AlloyParts';
+import { SplitToolbarBaseDetail } from '../ui/types/SplitToolbarBaseTypes';
 import * as Overflows from './Overflows';
 
 const setGroups = (toolbar: AlloyComponent, storedGroups: AlloyComponent[]) => {
@@ -18,7 +18,7 @@ const setGroups = (toolbar: AlloyComponent, storedGroups: AlloyComponent[]) => {
 };
 
 const findFocusedComp = (comps: AlloyComponent[]): Option<AlloyComponent> => {
-  return Options.findMap(comps, (comp) => {
+  return Arr.findMap(comps, (comp) => {
     return Focus.search(comp.element()).bind((focusedElm) => comp.getSystem().getByDom(focusedElm).toOption());
   });
 };

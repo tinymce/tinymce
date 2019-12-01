@@ -1,12 +1,12 @@
 import { GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Element, EventArgs } from '@ephox/sugar';
 
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
-import * as TapEvent from 'ephox/alloy/events/TapEvent';
 import TestStore from 'ephox/alloy/api/testhelpers/TestStore';
+import * as TapEvent from 'ephox/alloy/events/TapEvent';
 
 UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
   // Needs to be browser because it uses DOM comparison
@@ -22,7 +22,7 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
 
   const alpha = Element.fromText('alpha');
 
-  const touches = (x, y, target) => {
+  const touches = (x: number, y: number, target: Element) => {
     return {
       raw: Fun.constant({
         touches: [
@@ -30,10 +30,10 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
         ]
       }),
       target: Fun.constant(target)
-    };
+    } as EventArgs;
   };
 
-  const sFireIfReady = (event, type) => {
+  const sFireIfReady = (event: EventArgs, type: string) => {
     return Step.sync(() => {
       monitor.fireIfReady(event, type);
     });

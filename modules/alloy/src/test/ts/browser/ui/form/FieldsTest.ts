@@ -7,6 +7,8 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { DataField } from 'ephox/alloy/api/ui/DataField';
 import { FormChooser } from 'ephox/alloy/api/ui/FormChooser';
@@ -14,13 +16,12 @@ import { FormCoupledInputs } from 'ephox/alloy/api/ui/FormCoupledInputs';
 import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import { Input } from 'ephox/alloy/api/ui/Input';
-import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
+import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 
 UnitTest.asynctest('FieldsTest', (success, failure) => {
 
-  const renderChoice = (choiceSpec) => {
+  const renderChoice = (choiceSpec: { value: string; text: string; }): AlloySpec & { value: string } => {
     return {
       value: choiceSpec.value,
       dom: {
@@ -34,7 +35,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
     };
   };
 
-  const labelSpec = {
+  const labelSpec: AlloySpec = {
     dom: {
       tag: 'label',
       innerHtml: 'Label'

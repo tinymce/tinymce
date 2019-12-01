@@ -45,4 +45,4 @@ export interface FloatingToolbarButtonSpec extends CompositeSketchSpec, HasLayou
   };
 }
 
-export interface FloatingToolbarButtonSketcher extends CompositeSketch<FloatingToolbarButtonSpec, FloatingToolbarButtonDetail>, FloatingToolbarButtonApis { }
+export interface FloatingToolbarButtonSketcher extends CompositeSketch<FloatingToolbarButtonSpec>, FloatingToolbarButtonApis { }

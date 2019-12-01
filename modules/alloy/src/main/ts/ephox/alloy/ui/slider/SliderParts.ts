@@ -1,17 +1,18 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Cell, Fun} from '@ephox/katamari';
+import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { EventArgs, Position } from '@ephox/sugar';
 
-import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { OptionalDomSchema } from '../../api/component/SpecTypes';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import * as PartType from '../../parts/PartType';
-import { SliderDetail } from '../../ui/types/SliderTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import * as PartType from '../../parts/PartType';
+import { EdgeActions, SliderDetail } from '../../ui/types/SliderTypes';
 
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();
@@ -21,7 +22,7 @@ const labelPart = PartType.optional({
   name: 'label'
 });
 
-const edgePart = (name: string): PartType.PartTypeAdt => {
+const edgePart = (name: keyof EdgeActions): PartType.PartTypeAdt => {
   return PartType.optional({
     name: '' + name + '-edge',
     overrides(detail: SliderDetail) {
@@ -78,14 +79,14 @@ const blEdgePart = edgePart('bottom-left');
 const ledgePart = edgePart('left');
 
 // The thumb part needs to have position absolute to be positioned correctly
-const thumbPart = PartType.required({
+const thumbPart = PartType.required<SliderDetail, { dom: OptionalDomSchema; events: AlloyEvents.AlloyEventRecord }>({
   name: 'thumb',
   defaults: Fun.constant({
     dom: {
       styles: { position: 'absolute' }
     }
   }),
-  overrides(detail: SliderDetail) {
+  overrides(detail) {
     return {
       events: AlloyEvents.derive([
         // If the user touches the thumb itself, pretend they touched the spectrum instead. This
@@ -112,7 +113,7 @@ const spectrumPart = PartType.required({
     const model = modelDetail.manager;
 
     const setValueFrom = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
-      return model.getValueFromEvent(simulatedEvent).map((value: number | SugarPosition) => {
+      return model.getValueFromEvent(simulatedEvent).map((value: number | Position) => {
         return model.setValueFrom(component, detail, value);
       });
     };
@@ -124,7 +125,7 @@ const spectrumPart = PartType.required({
 
     const mouseEvents = AlloyEvents.derive([
       AlloyEvents.run(NativeEvents.mousedown(), setValueFrom),
-      AlloyEvents.run<SugarEvent>(NativeEvents.mousemove(), (spectrum, se) => {
+      AlloyEvents.run<EventArgs>(NativeEvents.mousemove(), (spectrum, se) => {
         if (detail.mouseIsDown.get()) { setValueFrom(spectrum, se); }
       })
     ]);

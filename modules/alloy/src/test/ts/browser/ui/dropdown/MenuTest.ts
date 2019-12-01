@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Chain, NamedChain, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, NamedChain, StructAssert, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
@@ -9,10 +9,10 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('MenuTest', (success, failure) => {
 
@@ -46,7 +46,7 @@ UnitTest.asynctest('MenuTest', (success, failure) => {
     );
   }, (doc, body, gui, component, store) => {
     // TODO: Flesh out test.
-    const cAssertStructure = (label, expected) => {
+    const cAssertStructure = (label: string, expected: StructAssert) => {
       return Chain.op((element: Element) => {
         Assertions.assertStructure(label, expected, element);
       });
@@ -56,7 +56,7 @@ UnitTest.asynctest('MenuTest', (success, failure) => {
       AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
     });
 
-    const cAssertStore = (label, expected) => {
+    const cAssertStore = (label: string, expected: string[]) => {
       return Chain.op(() => {
         store.assertEq(label, expected);
       });
@@ -73,7 +73,7 @@ UnitTest.asynctest('MenuTest', (success, failure) => {
           NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="alpha"]'), 'alpha'),
           NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="beta"]'), 'beta'),
 
-          cAssertStore('Before focusItem event', [ ]),
+          NamedChain.read('menu', cAssertStore('Before focusItem event', [ ])),
 
           NamedChain.direct('alpha', cTriggerFocusItem, '_'),
 
@@ -89,9 +89,9 @@ UnitTest.asynctest('MenuTest', (success, failure) => {
             });
           })), '_'),
 
-          cAssertStore('After focusItem event (alpha)', [ 'menu.events.focus' ]),
+          NamedChain.read('menu', cAssertStore('After focusItem event (alpha)', [ 'menu.events.focus' ])),
 
-          cClearStore,
+          NamedChain.read('menu', cClearStore),
           NamedChain.direct('beta', cTriggerFocusItem, '_'),
           NamedChain.direct('menu', cAssertStructure('After focusing item on beta', ApproxStructure.build((s, str, arr) => {
             return s.element('ol', {
@@ -104,8 +104,8 @@ UnitTest.asynctest('MenuTest', (success, failure) => {
               ]
             });
           })), '_'),
-          cAssertStore('After focusItem event (beta)', [ 'menu.events.focus' ]),
-          cClearStore
+          NamedChain.read('menu', cAssertStore('After focusItem event (beta)', [ 'menu.events.focus' ])),
+          NamedChain.read('menu', cClearStore)
 
         ])
       ])

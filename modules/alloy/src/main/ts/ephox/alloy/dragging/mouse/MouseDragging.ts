@@ -1,10 +1,10 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { MouseEvent } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
+import { EventArgs } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import DelayedFunction from '../../alien/DelayedFunction';
-import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
@@ -19,7 +19,7 @@ import * as MouseBlockerEvents from './MouseBlockerEvents';
 import * as MouseData from './MouseData';
 import { MouseDraggingConfig } from './MouseDraggingTypes';
 
-const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.AlloyEventRecord => {
+const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState): AlloyEvents.AlloyEventRecord => {
   const updateStartState = (comp: AlloyComponent) => {
     dragState.setStartData(DragUtils.calcStartData(dragConfig, comp));
   };
@@ -29,8 +29,8 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
       // Only update if we have some start data
       dragState.getStartData().each(() => updateStartState(comp));
     }),
-    AlloyEvents.run<SugarEvent>(NativeEvents.mousedown(), (component, simulatedEvent) => {
-      const raw = simulatedEvent.event().raw() as MouseEvent;
+    AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousedown(), (component, simulatedEvent) => {
+      const raw = simulatedEvent.event().raw();
       if (raw.button !== 0) { return; }
       simulatedEvent.stop();
 
@@ -44,7 +44,7 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
         drop: stop,
         delayDrop: delayDrop.schedule,
         forceDrop: stop,
-        move (event: SugarEvent) {
+        move (event) {
           // Stop any pending drops caused by mouseout
           delayDrop.cancel();
           DragUtils.move(component, dragConfig, dragState, MouseData, event);

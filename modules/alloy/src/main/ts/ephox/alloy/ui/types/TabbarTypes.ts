@@ -30,4 +30,4 @@ export interface TabbarSpec extends CompositeSketchSpec {
   tabs: Array<Partial<TabButtonWithViewSpec>>;
 }
 
-export interface TabbarSketcher extends CompositeSketch<TabbarSpec, TabbarDetail> { }
+export interface TabbarSketcher extends CompositeSketch<TabbarSpec> { }

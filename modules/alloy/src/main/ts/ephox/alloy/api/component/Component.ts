@@ -3,6 +3,7 @@ import { Arr, Cell, Fun, Option, Type } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
 import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
+import { ComponentDetail } from '../../api/component/SpecTypes';
 import { AlloySystemApi } from '../../api/system/SystemApi';
 import * as BehaviourBlob from '../../behaviour/common/BehaviourBlob';
 import { BehaviourState } from '../../behaviour/common/BehaviourState';
@@ -53,7 +54,7 @@ const getEvents = (
   return ComponentEvents.combine(bData, info.eventOrder, bList, baseEvents).getOrDie();
 };
 
-const build = (spec): AlloyComponent => {
+const build = (spec: ComponentDetail): AlloyComponent => {
   const getMe = () => {
     return me;
   };
@@ -97,7 +98,7 @@ const build = (spec): AlloyComponent => {
   };
 
   // TYPIFY (any here is for the info.apis() pathway)
-  const config = <D>(behaviour: AlloyBehaviour<any, D>): D | any => {
+  const config = (behaviour: AlloyBehaviour<any, any>): Option<BehaviourBlob.BehaviourConfigAndState<any, any>> => {
     const b = bData;
     const f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : () => {
       throw new Error('Could not find ' + behaviour.name() + ' in ' + JSON.stringify(spec, null, 2));

@@ -1,8 +1,16 @@
 import { Num, Option, Struct } from '@ephox/katamari';
 
-const outcome = Struct.immutableBag([ 'rowIndex', 'columnIndex', 'cell' ], [ ]);
+export type MatrixNavigationOutcome<A> = {
+  rowIndex: () => number,
+  columnIndex: () => number,
+  cell: () => A
+};
 
-const toCell = (matrix, rowIndex, columnIndex) => {
+export type MatrixNavigationFunc<A> = (matrix: A[][], startRow: number, startCol: number) => Option<MatrixNavigationOutcome<A>>;
+
+const outcome: <A>(outcome: { rowIndex: number, columnIndex: number, cell: A }) => MatrixNavigationOutcome<A> = Struct.immutableBag([ 'rowIndex', 'columnIndex', 'cell' ], [ ]);
+
+const toCell = <A>(matrix: A[][], rowIndex: number, columnIndex: number): Option<MatrixNavigationOutcome<NonNullable<A>>> => {
   return Option.from(matrix[rowIndex]).bind((row) => {
     return Option.from(row[columnIndex]).map((cell) => {
       return outcome({
@@ -14,28 +22,28 @@ const toCell = (matrix, rowIndex, columnIndex) => {
   });
 };
 
-const cycleHorizontal = (matrix, rowIndex, startCol, deltaCol) => {
+const cycleHorizontal = <A>(matrix: A[][], rowIndex: number, startCol: number, deltaCol: number) => {
   const row = matrix[rowIndex];
   const colsInRow = row.length;
   const newColIndex = Num.cycleBy(startCol, deltaCol, 0, colsInRow - 1);
   return toCell(matrix, rowIndex, newColIndex);
 };
 
-const cycleVertical = (matrix, colIndex, startRow, deltaRow) => {
+const cycleVertical = <A>(matrix: A[][], colIndex: number, startRow: number, deltaRow: number) => {
   const nextRowIndex = Num.cycleBy(startRow, deltaRow, 0, matrix.length - 1);
   const colsInNextRow = matrix[nextRowIndex].length;
   const nextColIndex = Num.clamp(colIndex, 0, colsInNextRow - 1);
   return toCell(matrix, nextRowIndex, nextColIndex);
 };
 
-const moveHorizontal = (matrix, rowIndex, startCol, deltaCol) => {
+const moveHorizontal = <A>(matrix: A[][], rowIndex: number, startCol: number, deltaCol: number) => {
   const row = matrix[rowIndex];
   const colsInRow = row.length;
   const newColIndex = Num.clamp(startCol + deltaCol, 0, colsInRow - 1);
   return toCell(matrix, rowIndex, newColIndex);
 };
 
-const moveVertical = (matrix, colIndex, startRow, deltaRow) => {
+const moveVertical = <A>(matrix: A[][], colIndex: number, startRow: number, deltaRow: number) => {
   const nextRowIndex = Num.clamp(startRow + deltaRow, 0, matrix.length - 1);
   const colsInNextRow = matrix[nextRowIndex].length;
   const nextColIndex = Num.clamp(colIndex, 0, colsInNextRow - 1);
@@ -43,35 +51,35 @@ const moveVertical = (matrix, colIndex, startRow, deltaRow) => {
 };
 
 // return address(Math.floor(index / columns), index % columns);
-const cycleRight = (matrix, startRow, startCol) => {
+const cycleRight = <A>(matrix: A[][], startRow: number, startCol: number) => {
   return cycleHorizontal(matrix, startRow, startCol, +1);
 };
 
-const cycleLeft = (matrix, startRow, startCol) => {
+const cycleLeft = <A>(matrix: A[][], startRow: number, startCol: number) => {
   return cycleHorizontal(matrix, startRow, startCol, -1);
 };
 
-const cycleUp = (matrix, startRow, startCol) => {
+const cycleUp = <A>(matrix: A[][], startRow: number, startCol: number) => {
   return cycleVertical(matrix, startCol, startRow, -1);
 };
 
-const cycleDown = (matrix, startRow, startCol) => {
+const cycleDown = <A>(matrix: A[][], startRow: number, startCol: number) => {
   return cycleVertical(matrix, startCol, startRow, +1);
 };
 
-const moveLeft = (matrix, startRow, startCol) => {
+const moveLeft = <A>(matrix: A[][], startRow: number, startCol: number) => {
   return moveHorizontal(matrix, startRow, startCol, -1);
 };
 
-const moveRight = (matrix, startRow, startCol) => {
+const moveRight = <A>(matrix: A[][], startRow: number, startCol: number) => {
   return moveHorizontal(matrix, startRow, startCol, +1);
 };
 
-const moveUp = (matrix, startRow, startCol) => {
+const moveUp = <A>(matrix: A[][], startRow: number, startCol: number) => {
   return moveVertical(matrix, startCol, startRow, -1);
 };
 
-const moveDown = (matrix, startRow, startCol) => {
+const moveDown = <A>(matrix: A[][], startRow: number, startCol: number) => {
   return moveVertical(matrix, startCol, startRow, +1);
 };
 

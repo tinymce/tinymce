@@ -3,6 +3,7 @@ import { Arr } from '@ephox/katamari';
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import { Coupling } from '../../api/behaviour/Coupling';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import { AlloySpec } from '../../api/component/SpecTypes';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import { Button } from '../../api/ui/Button';
@@ -10,14 +11,14 @@ import { ToolbarGroup } from '../../api/ui/ToolbarGroup';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as SplitToolbarUtils from '../../toolbar/SplitToolbarUtils';
 import * as SplitSlidingToolbarSchema from '../../ui/schema/SplitSlidingToolbarSchema';
-import { SplitSlidingToolbarDetail, SplitSlidingToolbarSketcher, SplitSlidingToolbarSpec } from '../../ui/types/SplitSlidingToolbarTypes';
+import { SplitSlidingToolbarApis, SplitSlidingToolbarDetail, SplitSlidingToolbarSketcher, SplitSlidingToolbarSpec } from '../../ui/types/SplitSlidingToolbarTypes';
 import { Sliding } from '../behaviour/Sliding';
-import { AlloyComponent } from '../component/ComponentApi';
-import * as Sketcher from './Sketcher';
-import { CompositeSketchFactory } from './UiSketcher';
-import * as GuiFactory from '../component/GuiFactory';
-import { Toolbar } from './Toolbar';
 import { Toggling } from '../behaviour/Toggling';
+import { AlloyComponent } from '../component/ComponentApi';
+import * as GuiFactory from '../component/GuiFactory';
+import * as Sketcher from './Sketcher';
+import { Toolbar } from './Toolbar';
+import { CompositeSketchFactory } from './UiSketcher';
 
 const toggleToolbar = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) => {
   AlloyParts.getPart(toolbar, detail, 'overflow').each((overf) => {
@@ -46,7 +47,7 @@ const refresh = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) => 
 const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToolbarSpec> = (detail, components, spec, externals) => {
   const toolbarToggleEvent = 'alloy.toolbar.toggle';
 
-  const doSetGroups = (toolbar, groups) => {
+  const doSetGroups = (toolbar: AlloyComponent, groups: AlloySpec[]) => {
     const built = Arr.map(groups, toolbar.getSystem().build);
     detail.builtGroups.set(built);
   };
@@ -86,12 +87,12 @@ const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToo
       ]
     ),
     apis: {
-      setGroups(toolbar, groups) {
+      setGroups(toolbar: AlloyComponent, groups: AlloySpec[]) {
         doSetGroups(toolbar, groups);
         refresh(toolbar, detail);
       },
-      refresh: (toolbar) => refresh(toolbar, detail),
-      toggle: (toolbar) => toggleToolbar(toolbar, detail)
+      refresh: (toolbar: AlloyComponent) => refresh(toolbar, detail),
+      toggle: (toolbar: AlloyComponent) => toggleToolbar(toolbar, detail)
     },
     domModification: {
       attributes: { role: 'group' }
@@ -99,22 +100,22 @@ const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToo
   };
 };
 
-const SplitSlidingToolbar = Sketcher.composite({
+const SplitSlidingToolbar: SplitSlidingToolbarSketcher = Sketcher.composite<SplitSlidingToolbarSpec, SplitSlidingToolbarDetail, SplitSlidingToolbarApis>({
   name: 'SplitSlidingToolbar',
   configFields: SplitSlidingToolbarSchema.schema(),
   partFields: SplitSlidingToolbarSchema.parts(),
   factory,
   apis: {
-    setGroups(apis, toolbar, groups) {
+    setGroups: (apis, toolbar, groups) => {
       apis.setGroups(toolbar, groups);
     },
-    refresh(apis, toolbar) {
+    refresh: (apis, toolbar) => {
       apis.refresh(toolbar);
     },
-    toggle(apis, toolbar) {
+    toggle: (apis, toolbar) => {
       apis.toggle(toolbar);
     }
   }
-}) as SplitSlidingToolbarSketcher;
+});
 
 export { SplitSlidingToolbar };

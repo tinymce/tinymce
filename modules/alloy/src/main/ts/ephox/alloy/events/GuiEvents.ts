@@ -2,17 +2,16 @@ import { FieldSchema, ValueSchema, Processor } from '@ephox/boulder';
 import { setTimeout, KeyboardEvent, clearTimeout } from '@ephox/dom-globals';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { DomEvent, Element, Node, SelectorExists } from '@ephox/sugar';
+import { DomEvent, Element, EventArgs, EventUnbinder, Node, SelectorExists } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
-import { SugarEvent, SugarListener } from '../alien/TypeDefinitions';
 import * as SystemEvents from '../api/events/SystemEvents';
 import { EventFormat } from './SimulatedEvent';
 import * as TapEvent from './TapEvent';
 
-const isDangerous = (event: SugarEvent): boolean => {
+const isDangerous = (event: EventArgs<KeyboardEvent>): boolean => {
   // Will trigger the Back button in the browser
-  const keyEv = event.raw() as KeyboardEvent;
+  const keyEv = event.raw();
   return keyEv.which === Keys.BACKSPACE()[0] && !Arr.contains([ 'input', 'textarea' ], Node.name(event.target())) && !SelectorExists.closest(event.target(), '[contenteditable="true"]');
 };
 
@@ -29,7 +28,7 @@ const settingsSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.defaulted('stopBackspace', true)
 ]);
 
-const bindFocus = (container: Element, handler: (evt: SugarEvent) => void): SugarListener => {
+const bindFocus = (container: Element, handler: (evt: EventArgs) => void): EventUnbinder => {
   if (isFirefox) {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
     return DomEvent.capture(container, 'focus', handler);
@@ -38,7 +37,7 @@ const bindFocus = (container: Element, handler: (evt: SugarEvent) => void): Suga
   }
 };
 
-const bindBlur = (container: Element, handler: (evt: SugarEvent) => void): SugarListener => {
+const bindBlur = (container: Element, handler: (evt: EventArgs) => void): EventUnbinder => {
   if (isFirefox) {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
     return DomEvent.capture(container, 'blur', handler);
@@ -86,7 +85,7 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
       'keyup'
     ]),
     (type) => {
-      return DomEvent.bind(container, type, (event: SugarEvent) => {
+      return DomEvent.bind(container, type, (event) => {
         tapEvent.fireIfReady(event, type).each((tapStopped) => {
           if (tapStopped) { event.kill(); }
         });
@@ -97,7 +96,7 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
     }
   );
   const pasteTimeout = Cell(Option.none<number>());
-  const onPaste = DomEvent.bind(container, 'paste', (event: SugarEvent) => {
+  const onPaste = DomEvent.bind(container, 'paste', (event) => {
     tapEvent.fireIfReady(event, 'paste').each((tapStopped) => {
       if (tapStopped) { event.kill(); }
     });
@@ -117,15 +116,15 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
     } else if (settings.stopBackspace === true && isDangerous(event)) {
       event.prevent();
     }
-  }) as SugarListener;
+  });
 
-  const onFocusIn = bindFocus(container, (event: SugarEvent) => {
+  const onFocusIn = bindFocus(container, (event) => {
     const stopped = settings.triggerEvent('focusin', event);
     if (stopped) { event.kill(); }
   });
 
   const focusoutTimeout = Cell(Option.none<number>());
-  const onFocusOut = bindBlur(container, (event: SugarEvent) => {
+  const onFocusOut = bindBlur(container, (event) => {
     const stopped = settings.triggerEvent('focusout', event);
     if (stopped) { event.kill(); }
 

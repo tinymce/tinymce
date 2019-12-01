@@ -1,14 +1,13 @@
 import { ValueSchema } from '@ephox/boulder';
 import { Arr, Obj } from '@ephox/katamari';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
-import { ReceivingEvent } from '../../events/SimulatedEvent';
+import { ReceivingEvent, ReceivingInternalEvent } from '../../events/SimulatedEvent';
 import * as AlloyLogger from '../../log/AlloyLogger';
 import { ReceivingConfig } from './ReceivingTypes';
 
-const chooseChannels = (channels, message) => {
+const chooseChannels = (channels: string[], message: ReceivingInternalEvent) => {
   return message.universal() ? channels : Arr.filter(channels, (ch) => {
     return Arr.contains(message.channels(), ch);
   });
@@ -16,18 +15,20 @@ const chooseChannels = (channels, message) => {
 
 const events = (receiveConfig: ReceivingConfig/*, receiveState */) => {
   return AlloyEvents.derive([
-    AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), (component: AlloyComponent, message: any) => {
+    AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), (component, message) => {
       const channelMap = receiveConfig.channels;
       const channels = Obj.keys(channelMap);
 
-      const targetChannels = chooseChannels(channels, message);
+      // NOTE: Receiving event ignores the whole simulated event part.
+      // TODO: Think about the types for this, or find a better way for this to rely on receiving.
+      const receivingData = message as unknown as ReceivingInternalEvent;
+      const targetChannels = chooseChannels(channels, receivingData);
       Arr.each(targetChannels, (ch) => {
         const channelInfo = channelMap[ch];
         const channelSchema = channelInfo.schema;
         const data = ValueSchema.asRawOrDie(
           'channel[' + ch + '] data\nReceiver: ' + AlloyLogger.element(component.element()),
-          // NOTE: Recieving event ignores the whole simulated event part.
-          channelSchema, message.data()
+          channelSchema, receivingData.data()
         );
         channelInfo.onReceive(component, data);
       });

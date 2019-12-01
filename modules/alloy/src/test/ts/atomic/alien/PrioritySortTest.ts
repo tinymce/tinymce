@@ -5,7 +5,7 @@ import { Arr, Struct } from '@ephox/katamari';
 import * as PrioritySort from 'ephox/alloy/alien/PrioritySort';
 
 UnitTest.test('PrioritySortTest', () => {
-  const checkErr = (expected, input, order) => {
+  const checkErr = <T extends Record<string, () => any>>(expected: string, input: T[], order: string[]) => {
     const actual = PrioritySort.sortKeys('test.sort', 'letter', input, order);
     // TODO: Use ResultAssertions test?
     actual.fold((err) => {
@@ -18,7 +18,7 @@ UnitTest.test('PrioritySortTest', () => {
     });
   };
 
-  const checkVal = (expected, input, order) => {
+  const checkVal = <T extends Record<string, () => any>>(expected: string[], input: T[], order: string[]) => {
     const actual = PrioritySort.sortKeys('test.sort', 'letter', input, order);
     actual.fold((err) => {
       Assert.fail('Unexpected error: ' + err + '\nWas wanting value(' + JSON.stringify(expected, null, 2) + ')');
@@ -28,7 +28,7 @@ UnitTest.test('PrioritySortTest', () => {
   };
 
   const letter = Struct.immutable('letter');
-  const letters = (ls) => {
+  const letters = (ls: string[]) => {
     return Arr.map(ls, (l) => letter(l));
   };
 

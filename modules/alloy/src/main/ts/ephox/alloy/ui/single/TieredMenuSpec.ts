@@ -1,5 +1,5 @@
-import { Arr, Fun, Obj, Option, Options, Cell } from '@ephox/katamari';
-import { Body, Class, Classes, SelectorFind, SelectorFilter, Attr } from '@ephox/sugar';
+import { Arr, Cell, Fun, Obj, Option, Options } from '@ephox/katamari';
+import { Attr, Body, Class, Classes, SelectorFilter, SelectorFind } from '@ephox/sugar';
 
 import * as EditableFields from '../../alien/EditableFields';
 import { Composing } from '../../api/behaviour/Composing';
@@ -39,7 +39,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   const submenuParentItems: Cell<Option<Record<string, AlloyComponent>>> = Cell(Option.none());
 
   const buildMenus = (container: AlloyComponent, primaryName: string, menus: Record<string, PartialMenuSpec>): Record<string, MenuPreparation> => {
-    return Obj.map(menus, (spec: PartialMenuSpec, name: string) => {
+    return Obj.map(menus, (spec, name) => {
 
       const makeSketch = () => {
         return Menu.sketch({
@@ -130,7 +130,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
 
   const getSubmenuParents = (container: AlloyComponent): Record<string, AlloyComponent> => {
     return submenuParentItems.get().getOrThunk(() => {
-      const r = { };
+      const r: Record<string, AlloyComponent> = { };
       const items = SelectorFilter.descendants(container.element(), `.${detail.markers.item}`);
       const parentItems = Arr.filter(items, (i) => Attr.get(i, 'aria-haspopup') === 'true');
       Arr.each(parentItems, (i) => {
@@ -267,7 +267,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     return (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Option<boolean> => {
       return SelectorFind.closest(simulatedEvent.getSource(), '.' + detail.markers.item).bind((target) => {
         return container.getSystem().getByDom(target).toOption().bind((item: AlloyComponent) => {
-          return f(container, item).map(() => true);
+          return f(container, item).map((): boolean => true);
         });
       });
     };

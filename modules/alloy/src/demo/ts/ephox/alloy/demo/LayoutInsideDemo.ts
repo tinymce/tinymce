@@ -11,6 +11,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as LayoutInside from 'ephox/alloy/positioning/layout/LayoutInside';
+import { Layouts } from 'ephox/alloy/positioning/mode/Anchoring';
 
 export default (): void => {
   const gui = Gui.create();
@@ -42,7 +43,7 @@ export default (): void => {
     })
   );
 
-  const makeExample = (id: string, ltrDescription: string, rtlDescription: string, layouts) => {
+  const makeExample = (id: string, ltrDescription: string, rtlDescription: string, layouts: Layouts) => {
     return HtmlDisplay.section(gui, 'Position anchoring to text selection', Container.sketch({
       dom: {
         tag: 'div'

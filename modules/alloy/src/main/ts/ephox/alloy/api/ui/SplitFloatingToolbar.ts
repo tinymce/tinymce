@@ -6,12 +6,12 @@ import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as Layout from '../../positioning/layout/Layout';
 import * as SplitToolbarUtils from '../../toolbar/SplitToolbarUtils';
 import * as SplitFloatingToolbarSchema from '../../ui/schema/SplitFloatingToolbarSchema';
-import { SplitFloatingToolbarDetail, SplitFloatingToolbarSketcher, SplitFloatingToolbarSpec } from '../../ui/types/SplitFloatingToolbarTypes';
+import { SplitFloatingToolbarApis, SplitFloatingToolbarDetail, SplitFloatingToolbarSketcher, SplitFloatingToolbarSpec } from '../../ui/types/SplitFloatingToolbarTypes';
 import { Coupling } from '../behaviour/Coupling';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as GuiFactory from '../component/GuiFactory';
-import { AlloySpec } from '../component/SpecTypes';
 import * as Memento from '../component/Memento';
+import { AlloySpec } from '../component/SpecTypes';
 import { FloatingToolbarButton } from './FloatingToolbarButton';
 import * as Sketcher from './Sketcher';
 
@@ -78,22 +78,22 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
       ]
     ),
     apis: {
-      setGroups(toolbar, groups) {
+      setGroups(toolbar: AlloyComponent, groups: AlloySpec[]) {
         detail.builtGroups.set(Arr.map(groups, toolbar.getSystem().build));
         refresh(toolbar, memFloatingToolbarButton, detail);
       },
-      refresh: (toolbar) => refresh(toolbar, memFloatingToolbarButton, detail),
-      toggle: (toolbar) => {
+      refresh: (toolbar: AlloyComponent) => refresh(toolbar, memFloatingToolbarButton, detail),
+      toggle: (toolbar: AlloyComponent) => {
         memFloatingToolbarButton.getOpt(toolbar).each((floatingToolbarButton) => {
           FloatingToolbarButton.toggle(floatingToolbarButton);
         });
       },
-      reposition: (toolbar) => {
+      reposition: (toolbar: AlloyComponent) => {
         memFloatingToolbarButton.getOpt(toolbar).each((floatingToolbarButton) => {
           FloatingToolbarButton.reposition(floatingToolbarButton);
         });
       },
-      getOverflow: (toolbar) => {
+      getOverflow: (toolbar: AlloyComponent) => {
         return memFloatingToolbarButton.getOpt(toolbar).bind((floatingToolbarButton) => {
           return FloatingToolbarButton.getToolbar(floatingToolbarButton);
         });
@@ -106,28 +106,28 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
   };
 };
 
-const SplitFloatingToolbar = Sketcher.composite({
+const SplitFloatingToolbar: SplitFloatingToolbarSketcher = Sketcher.composite<SplitFloatingToolbarSpec, SplitFloatingToolbarDetail, SplitFloatingToolbarApis>({
   name: 'SplitFloatingToolbar',
   configFields: SplitFloatingToolbarSchema.schema(),
   partFields: SplitFloatingToolbarSchema.parts(),
   factory,
   apis: {
-    setGroups(apis, toolbar, groups) {
+    setGroups: (apis, toolbar, groups) => {
       apis.setGroups(toolbar, groups);
     },
-    refresh(apis, toolbar) {
+    refresh: (apis, toolbar) => {
       apis.refresh(toolbar);
     },
-    reposition(apis, toolbar) {
+    reposition: (apis, toolbar) => {
       apis.reposition(toolbar);
     },
-    toggle(apis, toolbar) {
+    toggle: (apis, toolbar) => {
       apis.toggle(toolbar);
     },
-    getOverflow(apis, toolbar) {
+    getOverflow: (apis, toolbar) => {
       return apis.getOverflow(toolbar);
     }
   }
-}) as SplitFloatingToolbarSketcher;
+});
 
 export { SplitFloatingToolbar };

@@ -17,9 +17,9 @@ export interface CurriedHandler {
   cHandler: Function;
 }
 
-export class UncurriedHandler {
-  public purpose: () => string;
-  public handler: Function;
+export interface UncurriedHandler {
+  purpose: () => string;
+  handler: Function;
 }
 
 export interface UidAndHandler {

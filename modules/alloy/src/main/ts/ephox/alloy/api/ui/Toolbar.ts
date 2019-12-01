@@ -3,14 +3,17 @@ import { Option } from '@ephox/katamari';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ToolbarSchema from '../../ui/schema/ToolbarSchema';
-import { ToolbarSketcher, ToolbarDetail, ToolbarSpec } from '../../ui/types/ToolbarTypes';
+import { ToolbarApis, ToolbarDetail, ToolbarSketcher, ToolbarSpec } from '../../ui/types/ToolbarTypes';
+import { NamedConfiguredBehaviour } from '../behaviour/Behaviour';
 import { Replacing } from '../behaviour/Replacing';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { AlloySpec } from '../component/SpecTypes';
 import { composite } from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = (detail, components, spec, _externals) => {
-  const setGroups = (toolbar, groups) => {
+  const setGroups = (toolbar: AlloyComponent, groups: AlloySpec[]) => {
     getGroupContainer(toolbar).fold(() => {
       // check that the group container existed. It may not have if the components
       // did not list anything, and shell was false.
@@ -22,13 +25,15 @@ const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = (detail, com
     });
   };
 
-  const getGroupContainer = (component) => {
+  const getGroupContainer = (component: AlloyComponent) => {
     return detail.shell ? Option.some(component) : AlloyParts.getPart(component, detail, 'groups');
   };
 
   // In shell mode, the group overrides need to be added to the main container, and there can be no children
-  const extra = detail.shell ? { behaviours: [ Replacing.config({ }) ], components: [ ] } :
-    { behaviours: [ ], components };
+  const extra: {
+    behaviours: Array<NamedConfiguredBehaviour<any, any>>;
+    components: AlloySpec[];
+  } = detail.shell ? { behaviours: [ Replacing.config({ }) ], components: [ ] } : { behaviours: [ ], components };
 
   return {
     uid: detail.uid,
@@ -50,17 +55,17 @@ const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = (detail, com
   };
 };
 
-const Toolbar = composite({
+const Toolbar: ToolbarSketcher = composite<ToolbarSpec, ToolbarDetail, ToolbarApis>({
   name: 'Toolbar',
   configFields: ToolbarSchema.schema(),
   partFields: ToolbarSchema.parts(),
   factory,
   apis: {
-    setGroups (apis, toolbar, groups) {
+    setGroups: (apis, toolbar, groups) => {
       apis.setGroups(toolbar, groups);
     }
   }
-}) as ToolbarSketcher;
+});
 
 export {
   Toolbar

@@ -1,5 +1,5 @@
 import * as ToolbarGroupSchema from '../../ui/schema/ToolbarGroupSchema';
-import { ToolbarGroupDetail, ToolbarGroupSpec, ToolbarGroupSketcher } from '../../ui/types/ToolbarGroupTypes';
+import { ToolbarGroupDetail, ToolbarGroupSketcher, ToolbarGroupSpec } from '../../ui/types/ToolbarGroupTypes';
 import { Keying } from '../behaviour/Keying';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
@@ -29,12 +29,12 @@ const factory: CompositeSketchFactory<ToolbarGroupDetail, ToolbarGroupSpec> = (d
   };
 };
 
-const ToolbarGroup = Sketcher.composite({
+const ToolbarGroup: ToolbarGroupSketcher = Sketcher.composite({
   name: 'ToolbarGroup',
   configFields: ToolbarGroupSchema.schema(),
   partFields: ToolbarGroupSchema.parts(),
   factory
-}) as ToolbarGroupSketcher;
+});
 
 export {
   ToolbarGroup

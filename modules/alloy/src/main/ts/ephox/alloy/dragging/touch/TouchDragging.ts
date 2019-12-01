@@ -1,8 +1,8 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Cell, Fun, Option } from '@ephox/katamari';
+import { EventArgs } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
-import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
@@ -17,7 +17,7 @@ import * as TouchBlockerEvents from './TouchBlockerEvents';
 import * as TouchData from './TouchData';
 import { TouchDraggingConfig } from './TouchDraggingTypes';
 
-const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.AlloyEventRecord => {
+const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState): AlloyEvents.AlloyEventRecord => {
   const blockerCell = Cell<Option<AlloyComponent>>(Option.none());
 
   const updateStartState = (comp: AlloyComponent) => {
@@ -45,7 +45,7 @@ const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<Suga
         // delayDrop is not used by touch
         delayDrop () { },
         forceDrop: stop,
-        move (event: SugarEvent) {
+        move (event) {
           DragUtils.move(component, dragConfig, dragState, TouchData, event);
         }
       };
@@ -60,7 +60,7 @@ const handlers = (dragConfig: TouchDraggingConfig, dragState: DraggingState<Suga
 
       start();
     }),
-    AlloyEvents.run<SugarEvent>(NativeEvents.touchmove(), (component, simulatedEvent) => {
+    AlloyEvents.run<EventArgs>(NativeEvents.touchmove(), (component, simulatedEvent) => {
       simulatedEvent.stop();
       DragUtils.move(component, dragConfig, dragState, TouchData, simulatedEvent.event());
     }),

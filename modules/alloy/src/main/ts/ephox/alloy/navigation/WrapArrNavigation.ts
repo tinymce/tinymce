@@ -1,6 +1,9 @@
-import { Fun, Option, Num } from '@ephox/katamari';
+import { Fun, Num, Option } from '@ephox/katamari';
 
-const withGrid = (values, index, numCols, f) => {
+export type WrapArrNavigationOutcome = { row: () => number, column: () => number};
+export type ArrNavigationFunc<A> = (values: A[], index: number, numRows: number, numCols: number) => Option<A>;
+
+const withGrid = <A>(values: A[], index: number, numCols: number, f: (oldRow: number, oldColumn: number) => Option<WrapArrNavigationOutcome>): Option<A> => {
   const oldRow = Math.floor(index / numCols);
   const oldColumn = index % numCols;
 
@@ -10,7 +13,7 @@ const withGrid = (values, index, numCols, f) => {
   });
 };
 
-const cycleHorizontal = (values, index, numRows, numCols, delta) => {
+const cycleHorizontal = <A>(values: A[], index: number, numRows: number, numCols: number, delta: number) => {
   return withGrid(values, index, numCols, (oldRow, oldColumn) => {
     const onLastRow = oldRow === numRows - 1;
     const colsInRow = onLastRow ? values.length - (oldRow * numCols) : numCols;
@@ -22,7 +25,7 @@ const cycleHorizontal = (values, index, numRows, numCols, delta) => {
   });
 };
 
-const cycleVertical = (values, index, numRows, numCols, delta) => {
+const cycleVertical = <A>(values: A[], index: number, numRows: number, numCols: number, delta: number) => {
   return withGrid(values, index, numCols, (oldRow, oldColumn) => {
     const newRow = Num.cycleBy(oldRow, delta, 0, numRows - 1);
     const onLastRow = newRow === numRows - 1;
@@ -35,19 +38,19 @@ const cycleVertical = (values, index, numRows, numCols, delta) => {
   });
 };
 
-const cycleRight = (values, index, numRows, numCols) => {
+const cycleRight = <A>(values: A[], index: number, numRows: number, numCols: number) => {
   return cycleHorizontal(values, index, numRows, numCols, +1);
 };
 
-const cycleLeft = (values, index, numRows, numCols) => {
+const cycleLeft = <A>(values: A[], index: number, numRows: number, numCols: number) => {
   return cycleHorizontal(values, index, numRows, numCols, -1);
 };
 
-const cycleUp = (values, index, numRows, numCols) => {
+const cycleUp = <A>(values: A[], index: number, numRows: number, numCols: number) => {
   return cycleVertical(values, index, numRows, numCols, -1);
 };
 
-const cycleDown = (values, index, numRows, numCols) => {
+const cycleDown = <A>(values: A[], index: number, numRows: number, numCols: number) => {
   return cycleVertical(values, index, numRows, numCols, +1);
 };
 

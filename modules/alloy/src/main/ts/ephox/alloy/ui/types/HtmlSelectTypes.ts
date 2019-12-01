@@ -27,4 +27,4 @@ export interface HtmlSelectSpec extends SingleSketchSpec {
   data?: string;
 }
 
-export interface HtmlSelectSketcher extends SingleSketch<HtmlSelectSpec, HtmlSelectDetail> { }
+export interface HtmlSelectSketcher extends SingleSketch<HtmlSelectSpec> { }

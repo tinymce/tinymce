@@ -23,7 +23,7 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
 
   // Button tags should not have a default role of button, and only buttons should
   // get a type of button.
-  const getModAttributes = () => {
+  const getModAttributes = (): Record<string, string> => {
     if (tag === 'button') {
       // Default to type button, unless specified otherwise
       const type = lookupAttr('type').getOr('button');
@@ -69,7 +69,7 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
   };
 };
 
-const Button = Sketcher.single({
+const Button: ButtonSketcher = Sketcher.single({
   name: 'Button',
   factory,
   configFields: [
@@ -81,7 +81,7 @@ const Button = Sketcher.single({
     FieldSchema.option('role'),
     FieldSchema.defaulted('eventOrder', { })
   ]
-}) as ButtonSketcher;
+});
 
 export {
   Button

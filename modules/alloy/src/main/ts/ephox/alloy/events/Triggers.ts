@@ -1,16 +1,27 @@
-import { Adt, Arr, Option, Cell } from '@ephox/katamari';
-import { Traverse, Element } from '@ephox/sugar';
+import { Adt, Arr, Cell, Option } from '@ephox/katamari';
+import { Element, Traverse } from '@ephox/sugar';
 
+import { DebuggerLogger } from '../debugging/Debugging';
 import * as DescribedHandler from './DescribedHandler';
 import { ElementAndHandler, UidAndHandler } from './EventRegistry';
 import * as EventSource from './EventSource';
-import { EventFormat, fromSource, fromExternal } from './SimulatedEvent';
+import { EventFormat, fromExternal, fromSource } from './SimulatedEvent';
 
 type LookupEvent = (eventName: string, target: Element) => Option<ElementAndHandler>;
 
-type DebuggerLogger = any;
-
-export interface TriggerAdt extends Adt { }
+export interface TriggerAdt {
+  fold: <T>(
+    stopped: () => T,
+    resume: (elem: Element) => T,
+    complete: () => T
+  ) => T;
+  match: <T> (branches: {
+    stopped: () => T;
+    resume: (elem: Element) => T;
+    complete: () => T;
+  }) => T;
+  log: (label: string) => void;
+}
 
 const adt: {
   stopped: () => TriggerAdt;

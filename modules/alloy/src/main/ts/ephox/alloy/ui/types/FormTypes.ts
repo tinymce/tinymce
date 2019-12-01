@@ -25,8 +25,11 @@ export interface FormParts {
   record(): string[];
 }
 
-export interface FormSketcher {
+export interface FormApis {
   getField: (form: AlloyComponent, key: string) => Option<AlloyComponent>;
+}
+
+export interface FormSketcher extends FormApis {
   // complex
   sketch: (fSpec: FormSpecBuilder) => SketchSpec;
 }

@@ -1,18 +1,20 @@
 import { setTimeout, clearTimeout } from '@ephox/dom-globals';
 import { Fun, Option, Cell } from '@ephox/katamari';
 
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import { nuState } from '../common/BehaviourState';
+import { TooltippingState } from './TooltippingTypes';
 
-const init = () => {
+const init = (): TooltippingState => {
   const timer = Cell(Option.none<number>());
-  const popup = Cell(Option.none<string>());
+  const popup = Cell(Option.none<AlloyComponent>());
 
   const getTooltip = () => {
     return popup.get();
   };
 
-  const setTooltip = (s: string) => {
-    popup.set(Option.some(s));
+  const setTooltip = (comp: AlloyComponent) => {
+    popup.set(Option.some(comp));
   };
 
   const clearTooltip = () => {

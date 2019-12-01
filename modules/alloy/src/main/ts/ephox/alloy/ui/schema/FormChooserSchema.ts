@@ -8,7 +8,9 @@ import { Highlighting } from '../../api/behaviour/Highlighting';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import { OptionalDomSchema } from '../../api/component/SpecTypes';
 import * as Fields from '../../data/Fields';
+import { DomModification } from '../../dom/DomModification';
 import * as PartType from '../../parts/PartType';
 import * as ButtonBase from '../common/ButtonBase';
 import { FormChooserDetail } from '../types/FormChooserTypes';
@@ -31,7 +33,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     }
   }),
 
-  PartType.group({
+  PartType.group<FormChooserDetail, { dom: OptionalDomSchema; behaviours: Behaviour.AlloyBehaviourRecord; domModification: DomModification; events: {}; value: string }>({
     factory: {
       sketch (spec) {
         return Objects.exclude(spec, [ 'value' ]);
@@ -39,7 +41,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     },
     name: 'choices',
     unit: 'choice',
-    overrides (detail: FormChooserDetail, choiceSpec: { value: string }) {
+    overrides (detail, choiceSpec) {
       return {
         dom: {
           // Consider making a domModification, although we probably do not want it overwritten.

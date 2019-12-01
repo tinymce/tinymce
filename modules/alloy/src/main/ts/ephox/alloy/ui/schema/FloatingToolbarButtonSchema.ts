@@ -1,17 +1,20 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
+
 import * as Behaviour from '../../api/behaviour/Behaviour';
+import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';
 import { Toggling } from '../../api/behaviour/Toggling';
+import * as SystemEvents from '../../api/events/SystemEvents';
 import { Toolbar } from '../../api/ui/Toolbar';
+import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
-import { Focusing } from '../../api/behaviour/Focusing';
-import * as Fields from '../../data/Fields';
-import { FloatingToolbarButtonDetail } from '../types/FloatingToolbarButtonTypes';
-import * as ToolbarSchema from './ToolbarSchema';
 import * as AnchorLayouts from '../../positioning/mode/AnchorLayouts';
-import * as SystemEvents from '../../api/events/SystemEvents';
+import { ButtonSpec } from '../types/ButtonTypes';
+import { FloatingToolbarButtonDetail } from '../types/FloatingToolbarButtonTypes';
+import { ToolbarSpec } from '../types/ToolbarTypes';
+import * as ToolbarSchema from './ToolbarSchema';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.markers([ 'toggledClass' ]),
@@ -25,9 +28,9 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 ]);
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
-  PartType.external({
+  PartType.external<FloatingToolbarButtonDetail, ButtonSpec>({
     name: 'button',
-    overrides: (detail: FloatingToolbarButtonDetail) => {
+    overrides: (detail) => {
       return {
         dom: {
           attributes: {
@@ -47,11 +50,11 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     }
   }),
 
-  PartType.external({
+  PartType.external<FloatingToolbarButtonDetail, ToolbarSpec>({
     factory: Toolbar,
     schema: ToolbarSchema.schema(),
     name: 'toolbar',
-    overrides (detail: FloatingToolbarButtonDetail) {
+    overrides (detail) {
       return {
         toolbarBehaviours: Behaviour.derive([
           Keying.config({

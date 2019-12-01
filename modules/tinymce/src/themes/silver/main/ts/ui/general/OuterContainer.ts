@@ -7,14 +7,15 @@
 
 import { AlloyComponent, AlloySpec, Behaviour, Composite, CustomList, Keying, RawDomSchema, Sketcher, SketchSpec, Toolbar, UiSketcher } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
-import { Arr, Id, Option } from '@ephox/katamari';
+import { Arr, Id, Option, Result } from '@ephox/katamari';
 import { ToolbarDrawer } from '../../api/Settings';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 
-import { renderHeader } from '../header/CommonHeader';
-import SilverMenubar from '../menus/menubar/SilverMenubar';
+import { HeaderSpec, renderHeader } from '../header/CommonHeader';
+import SilverMenubar, { SilverMenubarSpec } from '../menus/menubar/SilverMenubar';
 import * as Sidebar from '../sidebar/Sidebar';
 import * as Throbber from '../throbber/Throbber';
-import { renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbar, renderToolbarGroup, ToolbarSpec } from '../toolbar/CommonToolbar';
+import { MoreDrawerData, MoreDrawerToolbarSpec, renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbar, renderToolbarGroup } from '../toolbar/CommonToolbar';
 
 export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
   dom: RawDomSchema;
@@ -27,7 +28,24 @@ export interface OuterContainerSketchDetail extends Sketcher.CompositeSketchDeta
   uid: string;
   behaviours: Record<string, Behaviour.ConfiguredBehaviour<any, any>>;
 }
-export interface OuterContainerSketch extends Sketcher.CompositeSketch<OuterContainerSketchSpec, OuterContainerSketchDetail>, OuterContainerApis {
+export interface OuterContainerSketch extends Sketcher.CompositeSketch<OuterContainerSketchSpec>, OuterContainerApis {
+}
+
+interface MultipleToolbarSketchSpec {
+  uid?: string;
+  dom: RawDomSchema;
+  onEscape: () => { };
+  type: ToolbarDrawer;
+}
+
+interface ToolbarSketchSpec extends MoreDrawerData {
+  uid?: string;
+  dom: RawDomSchema;
+  attributes?: Record<string, string>;
+  onEscape: () => { };
+  type: ToolbarDrawer;
+  getSink: () => Result<AlloyComponent, string>;
+  backstage: UiFactoryBackstage;
 }
 
 interface OuterContainerApis {
@@ -127,7 +145,7 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
   };
 };
 
-const partMenubar = Composite.partType.optional({
+const partMenubar = Composite.partType.optional<OuterContainerSketchDetail, SilverMenubarSpec>({
   factory: SilverMenubar,
   name: 'menubar',
   schema: [
@@ -135,17 +153,17 @@ const partMenubar = Composite.partType.optional({
   ]
 });
 
-const toolbarFactory = (spec) => {
-  if (spec.split === ToolbarDrawer.sliding) {
+const toolbarFactory = (spec: ToolbarSketchSpec) => {
+  if (spec.type === ToolbarDrawer.sliding) {
     return renderSlidingMoreToolbar;
-  } else if (spec.split === ToolbarDrawer.floating) {
+  } else if (spec.type === ToolbarDrawer.floating) {
     return renderFloatingMoreToolbar;
   } else {
     return renderToolbar;
   }
 };
 
-const partMultipleToolbar = Composite.partType.optional({
+const partMultipleToolbar = Composite.partType.optional<OuterContainerSketchDetail, MultipleToolbarSketchSpec>({
   factory: {
     sketch: (spec) => {
       return CustomList.sketch({
@@ -161,11 +179,9 @@ const partMultipleToolbar = Composite.partType.optional({
 
         makeItem: () => {
           return renderToolbar({
-            type: spec.split,
+            type: spec.type,
             uid: Id.generate('multiple-toolbar-item'),
-            backstage: spec.backstage,
             cyclicKeying: false,
-            getSink: spec.getSink,
             initGroups: [ ],
             onEscape: () => Option.none()
           });
@@ -184,12 +200,12 @@ const partMultipleToolbar = Composite.partType.optional({
   ]
 });
 
-const partToolbar = Composite.partType.optional({
+const partToolbar = Composite.partType.optional<OuterContainerSketchDetail, ToolbarSketchSpec>({
   factory: {
     sketch: (spec) => {
       const renderer = toolbarFactory(spec);
-      const toolbarSpec: ToolbarSpec = {
-        type: spec.split,
+      const toolbarSpec: MoreDrawerToolbarSpec = {
+        type: spec.type,
         uid: spec.uid,
         onEscape: () => {
           spec.onEscape();
@@ -217,7 +233,7 @@ const partToolbar = Composite.partType.optional({
   ]
 });
 
-const partHeader = Composite.partType.optional({
+const partHeader = Composite.partType.optional<OuterContainerSketchDetail, HeaderSpec>({
   factory: {
     sketch: renderHeader
   },
@@ -255,7 +271,7 @@ const partThrobber = Composite.partType.optional({
   ]
 });
 
-export default Sketcher.composite({
+export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketchDetail, OuterContainerApis>({
   name: 'OuterContainer',
   factory,
   configFields: [

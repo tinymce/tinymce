@@ -18,7 +18,7 @@ const curried = (handler: Function, purpose: string): CurriedHandler => {
 
 const curryArgs = (descHandler: UncurriedHandler, extraArgs: any[]): CurriedHandler => {
   return curried(
-    Fun.curry.apply(undefined, [ descHandler.handler ].concat(extraArgs)),
+    Fun.curry.apply(undefined, ([ descHandler.handler ] as any).concat(extraArgs)),
     descHandler.purpose()
   );
 };

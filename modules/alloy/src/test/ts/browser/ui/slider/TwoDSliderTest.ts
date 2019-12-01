@@ -6,8 +6,8 @@ import { Element } from '@ephox/sugar';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 
 UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) => {
@@ -188,7 +188,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       );
     });
 
-    const cCheckValue = (expected) => {
+    const cCheckValue = (expected: { x: number; y: number; }) => {
       return Chain.op((parts: any) => {
         const v = Representing.getValue(parts.sliderComp);
         Assert.eq('Checking slider value', expected.x, v.x());
@@ -196,7 +196,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       });
     };
 
-    const sAssertValue = (label, expected) => {
+    const sAssertValue = (label: string, expected: { x: number; y: number; }) => {
       return Logger.t(label, Step.sync(() => {
         const v = Representing.getValue(component);
         Assert.eq(label, expected.x, v.x());

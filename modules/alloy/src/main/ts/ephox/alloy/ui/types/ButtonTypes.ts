@@ -11,7 +11,7 @@ export interface ButtonDetail extends SingleSketchDetail {
   dom: RawDomSchema;
   components: AlloySpec[ ];
   buttonBehaviours: SketchBehaviours;
-  action: Option<() => ButtonAction>;
+  action: Option<ButtonAction>;
   role: Option<string>;
   eventOrder: Record<string, string[]>;
 }
@@ -28,4 +28,4 @@ export interface ButtonSpec extends SingleSketchSpec {
   eventOrder?: Record<string, string[]>;
 }
 
-export interface ButtonSketcher extends SingleSketch<ButtonSpec, ButtonDetail> { }
+export interface ButtonSketcher extends SingleSketch<ButtonSpec> { }

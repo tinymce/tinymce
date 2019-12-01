@@ -1,8 +1,10 @@
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { AlloyEventRecord } from '../../api/events/AlloyEvents';
-import { ConfiguredPart } from '../../parts/AlloyParts';
 import { Option } from '@ephox/katamari';
+
+import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { AlloyEventRecord } from '../../api/events/AlloyEvents';
+import { DomModification } from '../../dom/DomModification';
+import { ConfiguredPart } from '../../parts/AlloyParts';
 
 export type AlloySpec = SimpleOrSketchSpec | PremadeSpec | ConfiguredPart;
 
@@ -29,13 +31,25 @@ export interface RawDomSchema extends OptionalDomSchema {
   tag: string;
 }
 
+export interface ComponentDetail {
+  dom: RawDomSchema;
+  components: AlloyComponent[];
+  events: {
+    events: AlloyEventRecord
+  };
+  apis?: {};
+  behaviours?: AlloyBehaviourRecord;
+  domModification?: Partial<DomModification>;
+  eventOrder?: {};
+}
+
 export interface ComponentSpec {
   dom: RawDomSchema;
   components?: AlloySpec[];
   events?: AlloyEventRecord;
   apis?: {};
   behaviours?: AlloyBehaviourRecord;
-  domModification?: {};
+  domModification?: Partial<DomModification>;
   eventOrder?: {};
 }
 

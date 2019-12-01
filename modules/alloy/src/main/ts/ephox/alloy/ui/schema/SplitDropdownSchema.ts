@@ -6,6 +6,7 @@ import { Coupling } from '../../api/behaviour/Coupling';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';
 import { Toggling } from '../../api/behaviour/Toggling';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import { Button } from '../../api/ui/Button';
@@ -14,6 +15,9 @@ import * as SketcherFields from '../../data/SketcherFields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
 import * as AnchorLayouts from '../../positioning/mode/AnchorLayouts';
+import { ButtonSpec } from '../types/ButtonTypes';
+import { SplitDropdownDetail } from '../types/SplitDropdownTypes';
+import { TieredMenuSpec } from '../types/TieredMenuTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('toggleClass'),
@@ -35,7 +39,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   SketcherFields.sandboxFields()
 ));
 
-const arrowPart = PartType.required({
+const arrowPart = PartType.required<SplitDropdownDetail, ButtonSpec>({
   factory: Button,
   schema: [ FieldSchema.strict('dom') ],
   name: 'arrow',
@@ -55,7 +59,7 @@ const arrowPart = PartType.required({
           role: 'presentation'
         }
       },
-      action (arrow) {
+      action (arrow: AlloyComponent) {
         arrow.getSystem().getByUid(detail.uid).each(AlloyTriggers.emitExecute);
       },
       buttonBehaviours: Behaviour.derive([
@@ -68,7 +72,7 @@ const arrowPart = PartType.required({
   }
 });
 
-const buttonPart = PartType.required({
+const buttonPart = PartType.required<SplitDropdownDetail, ButtonSpec>({
   factory: Button,
   schema: [ FieldSchema.strict('dom') ],
   name: 'button',
@@ -88,7 +92,7 @@ const buttonPart = PartType.required({
           role: 'presentation'
         }
       },
-      action (btn) {
+      action (btn: AlloyComponent) {
         btn.getSystem().getByUid(detail.uid).each((splitDropdown) => {
           detail.onExecute(splitDropdown, btn);
         });
@@ -123,14 +127,14 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     name: 'aria-descriptor'
   }),
 
-  PartType.external({
+  PartType.external<SplitDropdownDetail, TieredMenuSpec>({
     schema: [
       Fields.tieredMenuMarkers()
     ],
     name: 'menu',
     defaults (detail) {
       return {
-        onExecute (tmenu, item) {
+        onExecute (tmenu: AlloyComponent, item: AlloyComponent) {
           tmenu.getSystem().getByUid(detail.uid).each((splitDropdown) => {
             detail.onItemExecute(splitDropdown, tmenu, item);
           });

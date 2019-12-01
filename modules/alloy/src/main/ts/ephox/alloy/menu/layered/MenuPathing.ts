@@ -14,7 +14,7 @@ const transpose = (obj: Record<string, string>): Record<string, string> => {
     return { k: v, v: k };
   });
 };
-const trace = (items: Record<string, string>, byItem, byMenu, finish): string[] => {
+const trace = (items: Record<string, string>, byItem: TriggerItemToMenu, byMenu: MenuToTriggerItem, finish: string): string[] => {
   // Given a finishing submenu (which will be the value of expansions),
   // find the triggering item, find its menu, and repeat the process. If there
   // is no triggering item, we are done.

@@ -5,21 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AddEventsBehaviour,
-  AlloyComponent,
-  AlloyEvents,
-  AlloySpec,
-  Behaviour,
-  Boxes,
-  Focusing,
-  Keying,
-  SplitFloatingToolbar as AlloySplitFloatingToolbar,
-  SplitSlidingToolbar as AlloySplitSlidingToolbar,
-  Tabstopping,
-  Toolbar as AlloyToolbar,
-  ToolbarGroup as AlloyToolbarGroup
-} from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Boxes, Focusing, Keying, SplitFloatingToolbar as AlloySplitFloatingToolbar, SplitSlidingToolbar as AlloySplitSlidingToolbar, Tabstopping, Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup } from '@ephox/alloy';
 import { Arr, Fun, Option, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 import { ToolbarDrawer } from '../../api/Settings';
@@ -40,10 +26,12 @@ export interface ToolbarSpec {
   cyclicKeying: boolean;
   onEscape: (comp: AlloyComponent) => Option<boolean>;
   initGroups: ToolbarGroup[];
+  attributes?: Record<string, string>;
+}
+export interface MoreDrawerToolbarSpec extends ToolbarSpec {
   getSink: () => Result<AlloyComponent, string>;
   backstage: UiFactoryBackstage;
   moreDrawerData?: MoreDrawerData;
-  attributes?: Record<string, string>;
 }
 
 export interface ToolbarGroup {
@@ -103,7 +91,7 @@ const getToolbarbehaviours = (toolbarSpec: ToolbarSpec, modeName, getOverflow: (
   ]);
 };
 
-const renderMoreToolbarCommon = (toolbarSpec: ToolbarSpec, getOverflow: (comp: AlloyComponent) => Option<AlloyComponent>) => {
+const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec, getOverflow: (comp: AlloyComponent) => Option<AlloyComponent>) => {
   const modeName = toolbarSpec.cyclicKeying ? 'cyclic' : 'acyclic';
 
   return {
@@ -131,7 +119,7 @@ const renderMoreToolbarCommon = (toolbarSpec: ToolbarSpec, getOverflow: (comp: A
   };
 };
 
-const renderFloatingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
+const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
   const baseSpec = renderMoreToolbarCommon(toolbarSpec, AlloySplitFloatingToolbar.getOverflow);
   const overflowXOffset = 4;
 
@@ -175,7 +163,7 @@ const renderFloatingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
   });
 };
 
-const renderSlidingMoreToolbar = (toolbarSpec: ToolbarSpec) => {
+const renderSlidingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
   const primary = AlloySplitSlidingToolbar.parts().primary({
     dom: {
       tag: 'div',

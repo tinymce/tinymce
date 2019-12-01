@@ -55,12 +55,12 @@ const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, compo
   };
 };
 
-const Tabbar = Sketcher.composite({
+const Tabbar: TabbarSketcher = Sketcher.composite({
   name: 'Tabbar',
   configFields: TabbarSchema.schema(),
   partFields: TabbarSchema.parts(),
   factory
-}) as TabbarSketcher;
+});
 
 export {
   Tabbar

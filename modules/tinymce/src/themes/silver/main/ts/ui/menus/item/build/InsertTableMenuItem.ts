@@ -5,16 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Focusing, GuiFactory, ItemTypes, ItemWidget, Keying, Memento, NativeEvents, Replacing, SystemEvents, Toggling } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { ItemWidget, AlloyEvents, NativeEvents, Behaviour, AddEventsBehaviour, GuiFactory, Memento, Toggling, AlloyTriggers, Keying, Focusing, CustomEvent, AlloyComponent, AlloySpec, Replacing, SystemEvents, ItemTypes } from '@ephox/alloy';
-import { Id, Arr } from '@ephox/katamari';
+import { Arr, Id } from '@ephox/katamari';
 
 const cellOverEvent = Id.generate('cell-over');
 const cellExecuteEvent = Id.generate('cell-execute');
 
 interface CellEvent extends CustomEvent {
-  col: () => Number;
-  row: () => Number;
+  col: () => number;
+  row: () => number;
 }
 
 const makeCell = (row, col, labelId) => {

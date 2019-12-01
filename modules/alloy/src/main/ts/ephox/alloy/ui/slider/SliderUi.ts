@@ -2,8 +2,8 @@ import { Arr, Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import { Keying } from '../../api/behaviour/Keying';
-import { Representing } from '../../api/behaviour/Representing';
 import { Receiving } from '../../api/behaviour/Receiving';
+import { Representing } from '../../api/behaviour/Representing';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import { AlloySpec } from '../../api/component/SpecTypes';
@@ -44,7 +44,7 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
     const thumb = getThumb(slider);
     refresh(slider, thumb);
     detail.onChange(slider, thumb, newValue);
-    return Option.some(true);
+    return Option.some<boolean>(true);
   };
 
   const resetToMin = (slider: AlloyComponent) => {

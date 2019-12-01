@@ -1,6 +1,9 @@
 import { GeneralSteps, Logger, Step, UiFinder } from '@ephox/agar';
+import { Element } from '@ephox/sugar';
 
-const dismiss = (gui, element) => {
+import { GuiSystem } from 'ephox/alloy/api/system/Gui';
+
+const dismiss = (gui: GuiSystem, element: Element) => {
   gui.broadcastOn([
     'dismiss.popups'
   ], {
@@ -8,13 +11,13 @@ const dismiss = (gui, element) => {
   });
 };
 
-const reposition = (gui) => {
+const reposition = (gui: GuiSystem) => {
   gui.broadcastOn([
     'reposition.popups'
   ], { });
 };
 
-const sDismiss = (label, gui, element) => {
+const sDismiss = (label: string, gui: GuiSystem, element: Element) => {
   return Logger.t(
     'Broadcast dismiss: ' + label,
     GeneralSteps.sequence([
@@ -25,7 +28,7 @@ const sDismiss = (label, gui, element) => {
   );
 };
 
-const sDismissOn = (label, gui, selector) => {
+const sDismissOn = (label: string, gui: GuiSystem, selector: string) => {
   return Logger.t(
     'Broadcast dismiss: ' + label,
     GeneralSteps.sequence([
@@ -38,7 +41,7 @@ const sDismissOn = (label, gui, selector) => {
   );
 };
 
-const sReposition = (label, gui) => {
+const sReposition = (label: string, gui: GuiSystem) => {
   return Logger.t(
     'Broadcast reposition: ' + label,
     GeneralSteps.sequence([

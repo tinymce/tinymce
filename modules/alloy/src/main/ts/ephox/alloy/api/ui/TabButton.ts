@@ -2,7 +2,7 @@ import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Id } from '@ephox/katamari';
 
 import { events } from '../../ui/common/ButtonBase';
-import { TabButtonSketcher, TabButtonDetail, TabButtonSpec } from '../../ui/types/TabButtonTypes';
+import { TabButtonDetail, TabButtonSketcher, TabButtonSpec } from '../../ui/types/TabButtonTypes';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { Representing } from '../behaviour/Representing';
@@ -39,12 +39,12 @@ const factory: SingleSketchFactory<TabButtonDetail, TabButtonSpec> = (detail, sp
   };
 };
 
-const TabButton = Sketcher.single({
+const TabButton: TabButtonSketcher = Sketcher.single({
   name: 'TabButton',
   configFields: [
     FieldSchema.defaulted('uid', undefined),
     FieldSchema.strict('value'),
-    FieldSchema.field('dom', 'dom', FieldPresence.mergeWithThunk((spec) => {
+    FieldSchema.field('dom', 'dom', FieldPresence.mergeWithThunk(() => {
       return {
         attributes: {
           'role': 'tab',
@@ -61,7 +61,7 @@ const TabButton = Sketcher.single({
     FieldSchema.strict('view')
   ],
   factory
-}) as TabButtonSketcher;
+});
 
 export {
   TabButton

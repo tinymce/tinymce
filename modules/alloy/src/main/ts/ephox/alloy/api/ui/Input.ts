@@ -1,6 +1,6 @@
 import { SketchSpec } from '../../api/component/SpecTypes';
 import * as InputBase from '../../ui/common/InputBase';
-import { InputSketcher, InputDetail, InputSpec } from '../../ui/types/InputTypes';
+import { InputDetail, InputSketcher, InputSpec } from '../../ui/types/InputTypes';
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 
@@ -15,11 +15,11 @@ const factory: SingleSketchFactory<InputDetail, InputSpec> = (detail, spec): Ske
   };
 };
 
-const Input = Sketcher.single({
+const Input: InputSketcher = Sketcher.single({
   name: 'Input',
   configFields: InputBase.schema(),
   factory
-}) as InputSketcher;
+});
 
 export {
   Input

@@ -1,17 +1,18 @@
+import { HTMLDocument } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Element, Node, Traverse } from '@ephox/sugar';
-import { SugarDocument } from './TypeDefinitions';
+
 import { AlloyComponent } from '../api/component/ComponentApi';
 
 // Note, elementFromPoint gives a different answer than caretRangeFromPoint
-const elementFromPoint = (doc: SugarDocument, x: number, y: number): Option<Element> => {
+const elementFromPoint = (doc: Element<HTMLDocument>, x: number, y: number): Option<Element> => {
   return Option.from(
     doc.dom().elementFromPoint(x, y)
   ).map(Element.fromDom);
 };
 
 const insideComponent = (component: AlloyComponent, x: number, y: number): Option<Element> => {
-  const isInside = (node) => {
+  const isInside = (node: Element) => {
     return component.element().dom().contains(node.dom());
   };
 
@@ -23,7 +24,7 @@ const insideComponent = (component: AlloyComponent, x: number, y: number): Optio
     });
   };
 
-  const doc: SugarDocument = Traverse.owner(component.element());
+  const doc = Traverse.owner(component.element());
   return elementFromPoint(doc, x, y).filter(isInside).filter(hasValidRect);
 };
 

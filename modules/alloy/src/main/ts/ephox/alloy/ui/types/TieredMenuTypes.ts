@@ -41,11 +41,7 @@ export interface TieredMenuDetail extends SingleSketchDetail {
 
   eventOrder: Record<string, string[]>;
 
-  data: {
-    primary: string;
-    expansions: Record<string, string>;
-    menus: Record<string, PartialMenuSpec>;
-  };
+  data: TieredData;
 }
 
 export interface TieredMenuSpec extends SingleSketchSpec {
@@ -54,27 +50,23 @@ export interface TieredMenuSpec extends SingleSketchSpec {
   components?: AlloySpec[];
   tmenuBehaviours?: AlloyBehaviourRecord;
 
-  onEscape?: (comp: AlloyComponent, item: AlloyComponent) => Option<boolean>;
-  onExecute?: (comp: AlloyComponent, item: AlloyComponent) => Option<boolean>;
-  onOpenMenu?: (comp: AlloyComponent, menu: AlloyComponent) => void;
-  onOpenSubmenu?: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent, triggeringPath: string[]) => void;
+  onEscape: (comp: AlloyComponent, item: AlloyComponent) => Option<boolean>;
+  onExecute: (comp: AlloyComponent, item: AlloyComponent) => Option<boolean>;
+  onOpenMenu: (comp: AlloyComponent, menu: AlloyComponent) => void;
+  onOpenSubmenu: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent, triggeringPath: string[]) => void;
   onCollapseMenu?: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent) => void;
   onRepositionMenu?: (comp: AlloyComponent, item: AlloyComponent, triggers: LayeredItemTrigger[]) => void;
   onHover?: (comp: AlloyComponent, item: AlloyComponent) => void;
+  onHighlight?: (comp: AlloyComponent, target: AlloyComponent) => void;
 
   navigateOnHover?: boolean;
   stayInDom?: boolean;
   highlightImmediately?: boolean;
   fakeFocus?: boolean;
-  onHighlight?: (comp: AlloyComponent, target: AlloyComponent) => void;
 
   eventOrder?: Record<string, string[]>;
 
-  data: {
-    primary: string;
-    expansions: Record<string, string>;
-    menus: Record<string, PartialMenuSpec>;
-  };
+  data: TieredData;
 
   markers: {
     item: string;
@@ -85,6 +77,12 @@ export interface TieredMenuSpec extends SingleSketchSpec {
   };
 }
 
+export type PartialMenuSpec = Partial<MenuSpec> & {
+  dom: MenuSpec['dom'];
+  components: MenuSpec['components'];
+  items: MenuSpec['items'];
+};
+
 export type TieredMenuRecord = Record<string, PartialMenuSpec>;
 
 export interface TieredData {
@@ -93,16 +91,16 @@ export interface TieredData {
   expansions: Record<string, string>;
 }
 
-export type PartialMenuSpec = Partial<MenuSpec>;
-
 export interface TieredMenuApis {
   collapseMenu: (tmenu: AlloyComponent) => void;
   highlightPrimary: (tmenu: AlloyComponent) => void;
   repositionMenus: (tmenu: AlloyComponent) => void;
 }
 
-export interface TieredMenuSketcher extends SingleSketch<TieredMenuSpec, TieredMenuDetail>, TieredMenuApis {
-  tieredData: (primary: string, menus, expansions: Record<string, string>) => TieredData;
+export interface TieredMenuExtras {
+  tieredData: (primary: string, menus: TieredMenuRecord, expansions: Record<string, string>) => TieredData;
   singleData: (name: string, menu: PartialMenuSpec) => TieredData;
   collapseItem: (text: string) => ItemDataTuple;
 }
+
+export interface TieredMenuSketcher extends SingleSketch<TieredMenuSpec>, TieredMenuApis, TieredMenuExtras { }

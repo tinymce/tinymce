@@ -1,6 +1,7 @@
+import { KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
+import { EventArgs } from '@ephox/sugar';
 
-import { SugarEvent } from '../alien/TypeDefinitions';
 import { KeyRuleHandler } from '../keying/KeyingModeTypes';
 import * as KeyMatch from './KeyMatch';
 
@@ -23,7 +24,7 @@ const rule = <C, S>(matches: KeyMatch.KeyMatcher, action: KeyRuleHandler<C, S>):
   };
 };
 
-const choose = <C, S>(transitions: Array<KeyRule<C, S>>, event: SugarEvent): Option<KeyRuleHandler<C, S>> => {
+const choose = <C, S>(transitions: Array<KeyRule<C, S>>, event: EventArgs<KeyboardEvent>): Option<KeyRuleHandler<C, S>> => {
   const transition = Arr.find(transitions, (t) => {
     return t.matches(event);
   });

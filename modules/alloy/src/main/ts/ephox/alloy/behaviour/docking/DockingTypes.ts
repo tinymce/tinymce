@@ -3,6 +3,7 @@ import { Option } from '@ephox/katamari';
 import { Bounds } from '../../alien/Boxes';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { BehaviourState } from '../common/BehaviourState';
 
 export type DockingMode = 'top' | 'bottom';
 
@@ -35,12 +36,12 @@ export interface DockingConfig extends Behaviour.BehaviourConfigDetail {
   onUndocked: (component: AlloyComponent) => void;
 }
 
-export type DockingState = {
+export interface DockingState extends BehaviourState {
   isDocked: () => boolean;
   setDocked: (docked: boolean) => void;
   isVisible: () => boolean;
   setVisible: (visible: boolean) => void;
-};
+}
 
 export interface DockingConfigSpec extends Behaviour.BehaviourConfigSpec {
   contextual?: {

@@ -5,7 +5,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as ToggleModes from 'ephox/alloy/behaviour/toggling/ToggleModes';
 
 UnitTest.test('Browser Test: behaviour.ToggleModesTest', () => {
-  const mTag = (name) => {
+  const mTag = (name: string) => {
     return {
       dom: {
         tag: name

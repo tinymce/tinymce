@@ -8,7 +8,7 @@
 import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying, Layout, LayoutInside, MaxHeight, MaxWidth, Positioning } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Element as DomElement } from '@ephox/dom-globals';
-import { Cell, Id, Merger, Obj, Option, Result, Thunk } from '@ephox/katamari';
+import { Cell, Id, Merger, Obj, Option, Thunk } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Element, Focus, Scroll } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -195,9 +195,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
         uid: Id.generate('context-toolbar'),
         initGroups,
         onEscape: Option.none,
-        cyclicKeying: true,
-        backstage: extras.backstage,
-        getSink: () => Result.error('')
+        cyclicKeying: true
       });
     })() : (() => {
       return ContextForm.renderContextForm(toolbarType, ctx, extras.backstage);

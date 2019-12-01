@@ -21,6 +21,8 @@ export interface ToolbarSpec extends CompositeSketchSpec {
   shell?: boolean;
 }
 
-export interface ToolbarSketcher extends CompositeSketch<ToolbarSpec, ToolbarDetail> {
+export interface ToolbarApis {
   setGroups: (toolbar: AlloyComponent, groups: AlloySpec []) => void;
 }
+
+export interface ToolbarSketcher extends CompositeSketch<ToolbarSpec>, ToolbarApis { }

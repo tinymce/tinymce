@@ -1,8 +1,8 @@
-import { Container } from '@ephox/alloy';
 import { Attr, Css, Node, Traverse } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloyEventRecord } from '../../api/events/AlloyEvents';
+import { Container } from '../../api/ui/Container';
 
 const initialAttribute = 'data-initial-z-index';
 

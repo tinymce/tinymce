@@ -1,17 +1,17 @@
 import { Objects } from '@ephox/boulder';
-import { document, console } from '@ephox/dom-globals';
+import { console, document } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
 import { Class, Element, SelectorFind, Width } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Transitioning } from 'ephox/alloy/api/behaviour/Transitioning';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-
-import { Option } from '@ephox/katamari';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
 // tslint:disable:no-console
 
@@ -21,7 +21,7 @@ export default (): void => {
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  const makeBack = (text: string) => {
+  const makeBack = (text: string): ItemSpec => {
     return {
       data: TieredMenu.collapseItem(text),
       type: 'item',
@@ -33,7 +33,7 @@ export default (): void => {
     };
   };
 
-  const makeItem = (value, text: string) => {
+  const makeItem = (value: string, text: string): ItemSpec => {
     return {
       data: {
         value
@@ -65,7 +65,7 @@ export default (): void => {
     };
   };
 
-  const makeMenu = (value, items) => {
+  const makeMenu = (value: string, items: ItemSpec[]) => {
     return {
       value,
       dom: {
@@ -115,11 +115,11 @@ export default (): void => {
 
     onExecute () {
       console.log('Executing');
-      return Option.some(true);
+      return Option.some<boolean>(true);
     },
     onEscape () {
       console.log('Escaping');
-      return Option.some(true);
+      return Option.some<boolean>(true);
     },
     onOpenMenu (container: AlloyComponent, menu: AlloyComponent) {
       const w = Width.get(container.element());

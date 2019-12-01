@@ -2,12 +2,13 @@ import { Fun } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
 
 import { Focusing } from '../../api/behaviour/Focusing';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 
 const hoverEvent = 'alloy.item-hover';
 const focusEvent = 'alloy.item-focus';
 
-const onHover = (item) => {
+const onHover = (item: AlloyComponent) => {
   // Firstly, check that the focus isn't already inside the item. This
   // is to handle situations like widgets where the widget is inside the item
   // and it has the focus, so as you slightly adjust the mouse, you don't
@@ -19,7 +20,7 @@ const onHover = (item) => {
   }
 };
 
-const onFocus = (item) => {
+const onFocus = (item: AlloyComponent) => {
   AlloyTriggers.emitWith(item, focusEvent, { item });
 };
 

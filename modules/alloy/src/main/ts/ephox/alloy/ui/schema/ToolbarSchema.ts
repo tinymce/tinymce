@@ -13,7 +13,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 ]);
 
 // TODO: Dupe with Toolbar
-const enhanceGroups = (detail) => {
+const enhanceGroups = () => {
   return {
     behaviours: Behaviour.derive([
       Replacing.config({ })

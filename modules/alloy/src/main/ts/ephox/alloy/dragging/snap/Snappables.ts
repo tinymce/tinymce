@@ -1,9 +1,9 @@
-import { Fun, Option, Arr } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
+import { Position } from '@ephox/sugar';
 
-import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as DragCoord from '../../api/data/DragCoord';
-import { SnapsConfig, SnapOutput, SnapPin, SnapConfig } from '../common/DraggingTypes';
+import { SnapConfig, SnapOutput, SnapPin, SnapsConfig } from '../common/DraggingTypes';
 import * as Presnaps from './Presnaps';
 
 // Types of coordinates
@@ -38,7 +38,7 @@ import * as Presnaps from './Presnaps';
 // that we put on it before we snapped it into place (before dropping). Once it's dropped, the presnap
 // position will go away. It is used to avoid the situation where you can't escape the snap unless you
 // move the mouse really quickly :)
-const getCoords = (component: AlloyComponent, snapInfo: SnapsConfig, coord: DragCoord.CoordAdt, delta: SugarPosition): DragCoord.CoordAdt => {
+const getCoords = (component: AlloyComponent, snapInfo: SnapsConfig, coord: DragCoord.CoordAdt, delta: Position): DragCoord.CoordAdt => {
   return Presnaps.get(component, snapInfo).fold(() => {
     return coord;
   }, (fixed) => {
@@ -47,7 +47,7 @@ const getCoords = (component: AlloyComponent, snapInfo: SnapsConfig, coord: Drag
   });
 };
 
-const moveOrSnap = (component, snapInfo, coord, delta, scroll, origin): SnapPin => {
+const moveOrSnap = (component: AlloyComponent, snapInfo: SnapsConfig, coord: DragCoord.CoordAdt, delta: Position, scroll: Position, origin: Position): SnapPin => {
   const newCoord = getCoords(component, snapInfo, coord, delta);
   const snap = snapInfo.mustSnap ? findClosestSnap(component, snapInfo, newCoord, scroll, origin) :
     findSnap(component, snapInfo, newCoord, scroll, origin);
@@ -76,7 +76,7 @@ const stopDrag = (component: AlloyComponent, snapInfo: SnapsConfig): void => {
   Presnaps.clear(component, snapInfo);
 };
 
-const findMatchingSnap = (snaps: SnapConfig[], newCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition): Option<SnapOutput> => {
+const findMatchingSnap = (snaps: SnapConfig[], newCoord: DragCoord.CoordAdt, scroll: Position, origin: Position): Option<SnapOutput> => {
   return Arr.findMap(snaps, (snap) => {
     // NOTE: These are structs because of the immutableBag in Dragging.ts
     const sensor = snap.sensor();
@@ -91,11 +91,11 @@ const findMatchingSnap = (snaps: SnapConfig[], newCoord: DragCoord.CoordAdt, scr
 };
 
 interface SnapCandidate {
-  deltas: Option<SugarPosition>;
+  deltas: Option<Position>;
   snap: Option<SnapConfig>;
 }
 
-const findClosestSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition): Option<SnapOutput> => {
+const findClosestSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCoord: DragCoord.CoordAdt, scroll: Position, origin: Position): Option<SnapOutput> => {
   // You need to pass in the absX and absY so that they can be used for things which only care about snapping one axis and keeping the other one.
   const snaps = snapInfo.getSnapPoints(component);
 
@@ -123,8 +123,8 @@ const findClosestSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCo
         }
       });
     }, {
-      deltas: Option.none(),
-      snap: Option.none()
+      deltas: Option.none<Position>(),
+      snap: Option.none<SnapConfig>()
     });
     return bestSnap.snap.map((snap: SnapConfig): SnapOutput => {
       return {
@@ -139,7 +139,7 @@ const findClosestSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCo
 // y: the absolute position.top of the draggable element
 // deltaX: the amount the mouse has moved horizontally
 // deltaY: the amount the mouse has moved vertically
-const findSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition): Option<SnapOutput> => {
+const findSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCoord: DragCoord.CoordAdt, scroll: Position, origin: Position): Option<SnapOutput> => {
   // You need to pass in the absX and absY so that they can be used for things which only care about snapping one axis and keeping the other one.
   const snaps = snapInfo.getSnapPoints(component);
 
@@ -147,9 +147,11 @@ const findSnap = (component: AlloyComponent, snapInfo: SnapsConfig, newCoord: Dr
   return findMatchingSnap(snaps, newCoord, scroll, origin);
 };
 
-const snapTo = (snap: SnapConfig, scroll: SugarPosition, origin: SugarPosition): SnapPin => {
+const snapTo = (snap: SnapConfig, scroll: Position, origin: Position): SnapPin => {
   return {
-    coord: DragCoord.absorb(snap.output(), snap.output(), scroll, origin),
+    // TODO: This looks to be incorrect and needs fixing as DragCoord definitely needs a number
+    // based drag coord for the second argument here, so this is probably a bug.
+    coord: DragCoord.absorb(snap.output(), snap.output() as any, scroll, origin),
     extra: snap.extra()
   };
 };

@@ -1,7 +1,6 @@
 import { document } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
-import { Class, Css, Element, Traverse } from '@ephox/sugar';
-import { SugarPosition } from 'ephox/alloy/alien/TypeDefinitions';
+import { Class, Css, Element, Position, Traverse } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
@@ -22,7 +21,7 @@ export default (): void => {
   Attachment.attachSystem(body, gui);
   Css.set(body, 'margin-bottom', '2000px');
 
-  const onDrag = (comp: AlloyComponent, targetElement: Element, delta: SugarPosition) => {
+  const onDrag = (comp: AlloyComponent, targetElement: Element, delta: Position) => {
     Traverse.parent(targetElement).bind(Traverse.parent).bind(Traverse.firstChild).each((box) => {
       Css.getRaw(box, 'height').each((h) => {
         const parsedHeight = parseInt(h, 10);

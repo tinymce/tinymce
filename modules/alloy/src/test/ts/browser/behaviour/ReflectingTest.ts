@@ -13,7 +13,7 @@ import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviou
 UnitTest.asynctest('ReflectingTest', (success, failure) => {
 
   GuiSetup.setup((store, doc, body) => {
-    const makeChild = (label) => {
+    const makeChild = (label: string) => {
       return {
         dom: {
           tag: 'span',
@@ -114,7 +114,7 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
       })
     );
   }, (doc, body, gui, component, store) => {
-    const sAssertReflectState = (label, expected, selector) => {
+    const sAssertReflectState = (label: string, expected: any, selector: string) => {
       return Chain.asStep(component.element(), [
         UiFinder.cFindIn(selector),
         Chain.binder(component.getSystem().getByDom),

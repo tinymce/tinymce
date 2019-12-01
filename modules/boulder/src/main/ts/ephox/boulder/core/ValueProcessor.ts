@@ -1,11 +1,11 @@
 import { Adt, Arr, Fun, Merger, Obj, Option, Thunk, Type } from '@ephox/katamari';
+import { SimpleResult, SimpleResultType } from '../alien/SimpleResult';
 
 import * as FieldPresence from '../api/FieldPresence';
 import * as Objects from '../api/Objects';
 import { ResultCombine } from '../combine/ResultCombine';
 import * as ObjWriter from './ObjWriter';
 import * as SchemaError from './SchemaError';
-import { SimpleResult, SimpleResultType } from '../alien/SimpleResult';
 
 // TODO: Handle the fact that strength shouldn't be pushed outside this project.
 export type ValueValidator = (a, strength?: () => any) => SimpleResult<string, any>;
@@ -16,27 +16,32 @@ export interface Processor {
   toString: () => string;
 }
 
-export interface FieldProcessorAdt extends Adt {
-  fold<T>(OnFieldFieldProcessor, StateFieldProcessor): T;
-}
+export type FieldValueProcessor<T> = (key: string, okey: string, presence: FieldPresence.FieldPresenceAdt, prop: Processor) => T;
+export type StateValueProcessor<T> = (okey: string, instantiator: (obj: any) => any) => T;
 
-export interface ValueProcessorAdt extends Adt {
-  fold: (FieldValueProcessor, StateValueProcessor) => any;
+export interface ValueProcessorAdt {
+  fold: <T>(
+    field: FieldValueProcessor<T>,
+    state: StateValueProcessor<T>
+  ) => T;
+  match: <T>(branches: {
+    field: FieldValueProcessor<T>,
+    state: StateValueProcessor<T>
+  }) => T;
+  log: (label: string) => void;
 }
-
-export type FieldValueProcessor = (key: string, okey: string, presence: FieldPresence.FieldPresenceAdt, prop: Processor) => FieldProcessorAdt;
-export type StateValueProcessor = <T>(okey: string, instantiator) => T;
+export type FieldProcessorAdt = ValueProcessorAdt;
 
 export interface ValueProcessor {
-  field: FieldValueProcessor;
-  state: StateValueProcessor;
+  field: FieldValueProcessor<ValueProcessorAdt>;
+  state: StateValueProcessor<ValueProcessorAdt>;
 }
 
 // data ValueAdt = Field fields | state
-const adt = Adt.generate([
+const adt: ValueProcessor = Adt.generate([
   { field: [ 'key', 'okey', 'presence', 'prop' ] },
   { state: [ 'okey', 'instantiator' ] }
-]) as ValueProcessor;
+]);
 
 const output = function (okey, value): ValueProcessorAdt {
   return adt.state(okey, Fun.constant(value));
@@ -211,7 +216,7 @@ const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
   };
 };
 
-const objOf = function (fields: FieldProcessorAdt[]): Processor {
+const objOf = function (fields: ValueProcessorAdt[]): Processor {
   const extract = function (path, strength, o) {
     return cExtract(path, o, fields, strength);
   };

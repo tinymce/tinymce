@@ -9,11 +9,18 @@ import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
+
+interface TestItemSpec {
+  data: {
+    value: string;
+    text: string;
+  };
+}
 
 UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
-  const mungeItem = (itemSpec) => {
+  const mungeItem = (itemSpec: TestItemSpec) => {
     return {
       dom: {
         tag: 'button',
