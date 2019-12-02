@@ -1,6 +1,6 @@
 Version 5.1.3 (TBD)
     Fixed sticky toolbar not undocking when fullscreen mode is activated #TINY-4390
-    Fixed the "Current Window" target not applying when saving from the link dialog #TINY-4063
+    Fixed the "Current Window" target not applying when updating links using the link dialog #TINY-4063
     Fixed disabled menu items not highlighting when focused #TINY-4339
     Fixed touch events passing through dialog collection items to the content underneath on Android devices #TINY-4367
     Fixed keyboard navigation of the Help dialog's Keyboard Navigation tab #TINY-4391
