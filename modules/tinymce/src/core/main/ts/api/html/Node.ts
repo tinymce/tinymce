@@ -47,6 +47,21 @@ const walk = function (node: Node, root: Node | null, prev?: boolean): Node {
   }
 };
 
+const isEmptyTextNode = (node: Node) => {
+  // Non whitespace content
+  if (!whiteSpaceRegExp.test(node.value)) {
+    return false;
+  }
+
+  // Parent is not a span and only spaces or is a span but has styles
+  const parentNode = node.parent;
+  if (parentNode && (parentNode.name !== 'span' || parentNode.attr('style')) && /^[ ]+$/.test(node.value)) {
+    return false;
+  }
+
+  return true;
+};
+
 /**
  * This class is a minimalistic implementation of a DOM like node used by the DomParser class.
  *
@@ -491,7 +506,7 @@ class Node {
         }
 
         // Keep non whitespace text nodes
-        if (node.type === 3 && !whiteSpaceRegExp.test(node.value)) {
+        if (node.type === 3 && !isEmptyTextNode(node)) {
           return false;
         }
 
