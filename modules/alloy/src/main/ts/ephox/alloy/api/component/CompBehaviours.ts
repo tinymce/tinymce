@@ -5,7 +5,7 @@ import * as BehaviourBlob from '../../behaviour/common/BehaviourBlob';
 
 type BehaviourName = string;
 
-// This goes through the list of behaviours defined for a particular spec (removing anyhing
+// This goes through the list of behaviours defined for a particular spec (removing anything
 // that has been revoked), and returns the BehaviourType (e.g. Sliding)
 const getBehaviours = (spec: { behaviours?: AlloyBehaviourRecord }): Array<AlloyBehaviour<any, any, any>> => {
   const behaviours: AlloyBehaviourRecord = Obj.get(spec, 'behaviours').getOr({ });

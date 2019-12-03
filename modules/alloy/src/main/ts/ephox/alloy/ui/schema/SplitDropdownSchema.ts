@@ -43,7 +43,7 @@ const arrowPart = PartType.required<SplitDropdownDetail, ButtonSpec>({
   factory: Button,
   schema: [ FieldSchema.strict('dom') ],
   name: 'arrow',
-  defaults (detail) {
+  defaults () {
     return {
       buttonBehaviours: Behaviour.derive([
         // TODO: Remove all traces of revoking
@@ -76,7 +76,7 @@ const buttonPart = PartType.required<SplitDropdownDetail, ButtonSpec>({
   factory: Button,
   schema: [ FieldSchema.strict('dom') ],
   name: 'button',
-  defaults (detail) {
+  defaults () {
     return {
       buttonBehaviours: Behaviour.derive([
         // TODO: Remove all traces of revoking

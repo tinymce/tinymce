@@ -177,8 +177,8 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         const input = SelectorFind.descendant(inputA.element(), 'input').getOrDie('input element child was not found');
         const span = SelectorFind.descendant(inputA.element(), 'span').getOrDie('span element child was not found');
 
-        const inputID = Attr.get(input, 'id');
-        const spanID = Attr.get(span, 'id');
+        const inputID = Attr.get(input, 'id')!;
+        const spanID = Attr.get(span, 'id')!;
         return s.element('div', {
           children: [
             s.element('input', {

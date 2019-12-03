@@ -8,9 +8,8 @@ import { Highlighting } from '../../api/behaviour/Highlighting';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
-import { OptionalDomSchema } from '../../api/component/SpecTypes';
+import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import * as Fields from '../../data/Fields';
-import { DomModification } from '../../dom/DomModification';
 import * as PartType from '../../parts/PartType';
 import * as ButtonBase from '../common/ButtonBase';
 import { FormChooserDetail } from '../types/FormChooserTypes';
@@ -22,9 +21,9 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 ]);
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
-  PartType.required({
+  PartType.required<FormChooserDetail>({
     name: 'legend',
-    defaults (detail) {
+    defaults () {
       return {
         dom: {
           tag: 'legend'
@@ -33,7 +32,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     }
   }),
 
-  PartType.group<FormChooserDetail, { dom: OptionalDomSchema; behaviours: Behaviour.AlloyBehaviourRecord; domModification: DomModification; events: {}; value: string }>({
+  PartType.group<FormChooserDetail, SimpleOrSketchSpec & { value: string }>({
     factory: {
       sketch (spec) {
         return Objects.exclude(spec, [ 'value' ]);

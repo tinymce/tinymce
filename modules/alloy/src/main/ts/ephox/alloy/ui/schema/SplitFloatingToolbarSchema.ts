@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { Fun, Cell } from '@ephox/katamari';
+import { Cell, Fun } from '@ephox/katamari';
 
 import { Toolbar } from '../../api/ui/Toolbar';
 import * as Fields from '../../data/Fields';
@@ -25,16 +25,16 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     name: 'primary'
   }),
 
-  PartType.external({
+  PartType.external<SplitFloatingToolbarDetail>({
     schema: ToolbarSchema.schema(),
     name: 'overflow'
   }),
 
-  PartType.external({
+  PartType.external<SplitFloatingToolbarDetail>({
     name: 'overflow-button'
   }),
 
-  PartType.external({
+  PartType.external<SplitFloatingToolbarDetail>({
     name: 'overflow-group'
   })
 ]);

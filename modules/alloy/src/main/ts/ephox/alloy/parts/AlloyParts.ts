@@ -74,12 +74,12 @@ const schemas = (parts: PartType.PartTypeAdt[]): FieldProcessorAdt[] => {
   // This actually has to change. It needs to return the schemas for things that will
   // not appear in the components list, which is only externals
   return Arr.bind(parts, (part: PartType.PartTypeAdt) => {
-    return part.fold(
+    return part.fold<Option<PartType.BasePartDetail<any, any>>>(
       Option.none,
-      Option.some as (a: PartType.PartDetail<any, any>) => Option<PartType.PartDetail<any, any>>,
+      Option.some,
       Option.none,
       Option.none
-    ).map((data: PartType.PartDetail<any, any>) => {
+    ).map((data) => {
       return FieldSchema.strictObjOf(data.name, data.schema.concat([
         Fields.snapshot(PartType.original())
       ]));

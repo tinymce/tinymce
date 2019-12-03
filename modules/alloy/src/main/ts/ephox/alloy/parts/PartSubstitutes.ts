@@ -6,7 +6,7 @@ import * as UiSubstitutes from '../spec/UiSubstitutes';
 import { Substitutions } from './AlloyParts';
 import * as PartType from './PartType';
 
-const combine = <D extends CompositeSketchDetail, S extends CompositeSketchSpec, PD extends CompositeSketchDetail>(detail: D, data: PartType.PartDetail<D, S>, partSpec: S, partValidated?: Record<string, any>): D => {
+const combine = <D extends CompositeSketchDetail, S extends CompositeSketchSpec>(detail: D, data: PartType.BasePartDetail<D, S>, partSpec: S, partValidated?: Record<string, any>): S & { uid: string } => {
   // Extremely confusing names and types :(
   return Merger.deepMerge(
     data.defaults(detail, partSpec, partValidated),
@@ -55,7 +55,7 @@ const subs = <D extends CompositeSketchDetail>(owner: string, detail: D, parts: 
       // Group
       (data) => {
         internals[data.pname] = UiSubstitutes.multiple(true, (detail, _partSpec, _partValidated) => {
-          const units: CompositeSketchSpec[] = (detail as any)[data.name];
+          const units: Array<Record<string, any>> = (detail as any)[data.name];
           return Arr.map(units, (u) => {
             // Group multiples do not take the uid because there is more than one.
             return data.factory.sketch(

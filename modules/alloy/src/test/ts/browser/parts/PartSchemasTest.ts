@@ -6,17 +6,19 @@ import Jsc from '@ephox/wrap-jsverify';
 import * as AlloyParts from 'ephox/alloy/parts/AlloyParts';
 import * as PartType from 'ephox/alloy/parts/PartType';
 
+type TestSpec = { defaultValue: number; overriddenValue: number; };
+
 UnitTest.test('Atomic Test: parts.SchemasTest', () => {
-  const internal = PartType.required<any, { value: number; otherValue: number }>({
+  const internal = PartType.required<any, TestSpec>({
     factory: { sketch (x) { return 'sketch.' + x; } },
     schema: [ ],
     name: 'internal',
     pname: '<part.internal>',
-    defaults: Fun.constant({ value: 10 }),
-    overrides: Fun.constant({ otherValue: 10 })
+    defaults: Fun.constant({ defaultValue: 10 }),
+    overrides: Fun.constant({ overriddenValue: 10 })
   });
 
-  const external = PartType.external({
+  const external = PartType.external<any, TestSpec>({
     factory: { sketch (x) { return x + '.external'; } },
     schema: [ ],
     name: 'external',
@@ -24,7 +26,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
     overrides: Fun.constant({ overriddenValue: 15 })
   });
 
-  const optional = PartType.optional({
+  const optional = PartType.optional<any, TestSpec>({
     factory: { sketch (x) { return x + '.optional'; } },
     schema: [ ],
     name: 'optional',
@@ -33,7 +35,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
     overrides: Fun.constant({ overriddenValue: 15 })
   });
 
-  const group = PartType.group({
+  const group = PartType.group<any, TestSpec>({
     factory: { sketch (x) { return x + '.group'; } },
     schema: [ ],
     name: 'group',

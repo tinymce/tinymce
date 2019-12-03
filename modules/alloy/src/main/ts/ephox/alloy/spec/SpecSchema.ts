@@ -30,7 +30,6 @@ const base = (partSchemas: FieldProcessorAdt[], partUidsSchemas: FieldProcessorA
 };
 
 const asRawOrDie = <D extends BaseSketchDetail<any>, S extends BaseSketchSpec>(label: string, schema: FieldProcessorAdt[], spec: S, partSchemas: FieldProcessorAdt[], partUidsSchemas: FieldProcessorAdt[]): D => {
-  // OBVIOUSLY NEVER USED RAW BEFORE !!!!!!!!!!!!!!!!!!!!!
   const baseS = base(partSchemas, partUidsSchemas);
   return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };

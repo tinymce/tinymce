@@ -12,6 +12,7 @@ import * as SketcherFields from '../../data/SketcherFields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
 import * as Layout from '../../positioning/layout/Layout';
+import { TouchMenuDetail } from '../types/TouchMenuTypes';
 
 const anchorAtCentre = (component: AlloyComponent) => {
   const pos = Location.absolute(component.element());
@@ -56,14 +57,14 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 ));
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
-  PartType.external({
+  PartType.external<TouchMenuDetail>({
     schema: [
       Fields.itemMarkers()
     ],
     name: 'menu'
   }),
 
-  PartType.external({
+  PartType.external<TouchMenuDetail>({
     schema: [ FieldSchema.strict('dom') ],
     name: 'view'
   }),

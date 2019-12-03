@@ -1,7 +1,8 @@
 import { Arr, Obj, Option, Result } from '@ephox/katamari';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec, SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
+import * as AlloyLogger from '../../log/AlloyLogger';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
 import { FormApis, FormDetail, FormSketcher, FormSpecBuilder } from '../../ui/types/FormTypes';
@@ -68,7 +69,9 @@ const make = (detail: FormDetail, components: AlloySpec[]) => {
               return Obj.map(resPs, (resPThunk, pName) => {
                 return resPThunk().bind((v) => {
                   const opt = Composing.getCurrent(v);
-                  return toResult(opt, new Error('missing current'));
+                  return toResult(opt, new Error(
+                    `Cannot find a current component to extract the value from for form part '${pName}': ` + AlloyLogger.element(v.element())
+                  ));
                 }).map(Representing.getValue);
               });
             },

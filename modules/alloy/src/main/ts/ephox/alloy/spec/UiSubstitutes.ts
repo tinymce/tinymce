@@ -104,9 +104,8 @@ const oneReplace = (label: string, replacements: UiSubstitutesAdt): Replacement 
   };
 
   const replace = () => {
-    if (called === true) { throw new Error(
-      'Trying to use the same placeholder more than once: ' + label
-    );
+    if (called) {
+      throw new Error('Trying to use the same placeholder more than once: ' + label);
     }
     called = true;
     return replacements;

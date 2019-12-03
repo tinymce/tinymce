@@ -8,7 +8,6 @@ import { Representing } from '../../api/behaviour/Representing';
 import { Sliding } from '../../api/behaviour/Sliding';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
-import { OptionalDomSchema } from '../../api/component/SpecTypes';
 import { Button } from '../../api/ui/Button';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
@@ -40,13 +39,13 @@ const runOnExtra = (detail: ExpandableFormDetail, operation: (comp: AlloyCompone
 };
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
-  PartType.required({
+  PartType.required<ExpandableFormDetail>({
     // factory: Form,
     schema: [ FieldSchema.strict('dom') ],
     name: 'minimal'
   }),
 
-  PartType.required<ExpandableFormDetail, { dom: OptionalDomSchema; behaviours: Behaviour.AlloyBehaviourRecord }>({
+  PartType.required<ExpandableFormDetail>({
     // factory: Form,
     schema: [ FieldSchema.strict('dom') ],
     name: 'extra',

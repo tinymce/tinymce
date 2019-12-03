@@ -90,7 +90,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     }
   }),
 
-  PartType.external({
+  PartType.external<SplitSlidingToolbarDetail>({
     name: 'overflow-group'
   })
 ]);

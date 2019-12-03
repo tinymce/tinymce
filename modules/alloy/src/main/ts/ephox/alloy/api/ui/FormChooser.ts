@@ -1,4 +1,4 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { Attr, SelectorFilter } from '@ephox/sugar';
 
 import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
@@ -49,7 +49,7 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
             return chooser.getSystem().getByDom(focused).map((choice) => {
               Highlighting.highlight(chooser, choice);
               return true;
-            }).toOption().map((_): boolean => true);
+            }).toOption().map(Fun.constant<boolean>(true));
           }
         }),
 
