@@ -1,5 +1,6 @@
-import { GeneralSteps, Pipeline, Step } from '@ephox/agar';
+import { GeneralSteps, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Body } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ToolbarDrawer, ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
@@ -74,12 +75,24 @@ const sTestStickyHeader = (toolbarDrawer: ToolbarDrawer, toolbarLocation: Toolba
             selector: 'div[title="Text color"][aria-expanded=false]'
           }
         ]), 1, isToolbarTop)),
+        ...toolbarDrawer === ToolbarDrawer.default ? [ ] : [ Step.label('Close the more drawer', MenuUtils.sCloseMore(toolbarDrawer)) ],
+
+        Step.label('Toggle fullscreen mode and ensure header moves from docked -> undocked -> docked', GeneralSteps.sequence([
+          StickyUtils.sScrollAndAssertStructure(isToolbarTop, 200, StickyUtils.expectedHalfView),
+          tinyApis.sExecCommand('mceFullscreen'),
+          UiFinder.sWaitForVisible('Wait for fullscreen to be activated', Body.body(), '.tox-fullscreen'),
+          StickyUtils.sAssertEditorContainer(isToolbarTop, StickyUtils.expectedInFullView),
+          tinyApis.sExecCommand('mceFullscreen'),
+          Waiter.sTryUntil('Wait for fullscreen to be deactivated', UiFinder.sNotExists(Body.body(), '.tox-fullscreen')),
+          StickyUtils.sScrollAndAssertStructure(isToolbarTop, 200, StickyUtils.expectedHalfView),
+        ])),
 
         Step.sync(() => teardownPageScroll.get()())
       ], onSuccess, onFailure, logs);
     },
     {
       theme: 'silver',
+      plugins: 'fullscreen',
       base_url: '/project/tinymce/js/tinymce',
       toolbar: 'align | fontsizeselect | fontselect | formatselect | styleselect | insertfile | forecolor | backcolor ',
       resize: 'both',

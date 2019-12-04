@@ -140,10 +140,7 @@ const WindowManager = function (editor: Editor): WindowManager {
      * Opens a new window.
      *
      * @method open
-     * @param {Object} args Optional name/value settings collection contains things like title/body etc.
-     * @param {Object} params Options like title, file, width, height etc.
-     * @option {String} title Window title.
-     * @option {Object} body Object containing the items to render in the window.
+     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/ui-components/dialog/#configurationoptions">Dialog - Configuration options</a>.
      */
     open,
 
@@ -151,12 +148,7 @@ const WindowManager = function (editor: Editor): WindowManager {
      * Opens a new window for the specified url.
      *
      * @method openUrl
-     * @param {Object} args Optional name/value settings collection contains things like width/height/url etc.
-     * @param {Object} params Options like title, file, width, height etc.
-     * @option {String} title Window title.
-     * @option {String} url URL of the file to open in the window.
-     * @option {Number} width Width in pixels.
-     * @option {Number} height Height in pixels.
+     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/ui-components/urldialog/#urldialogconfiguration">URL dialog configuration</a>.
      */
     openUrl,
 
@@ -166,8 +158,8 @@ const WindowManager = function (editor: Editor): WindowManager {
      *
      * @method alert
      * @param {String} message Text to display in the new alert dialog.
-     * @param {function} callback Callback function to be executed after the user has selected ok.
-     * @param {Object} scope Optional scope to execute the callback in.
+     * @param {function} callback (Optional) Callback function to be executed after the user has selected ok.
+     * @param {Object} scope (Optional) Scope to execute the callback in.
      * @example
      * // Displays an alert box using the active editors window manager instance
      * tinymce.activeEditor.windowManager.alert('Hello world!');
@@ -180,8 +172,8 @@ const WindowManager = function (editor: Editor): WindowManager {
      *
      * @method confirm
      * @param {String} message Text to display in the new confirm dialog.
-     * @param {function} callback Callback function to be executed after the user has selected ok or cancel.
-     * @param {Object} scope Optional scope to execute the callback in.
+     * @param {function} callback (Optional) Callback function to be executed after the user has selected ok or cancel.
+     * @param {Object} scope (Optional) Scope to execute the callback in.
      * @example
      * // Displays an confirm box and an alert message will be displayed depending on what you choose in the confirm
      * tinymce.activeEditor.windowManager.confirm("Do you want to do something", function(s) {

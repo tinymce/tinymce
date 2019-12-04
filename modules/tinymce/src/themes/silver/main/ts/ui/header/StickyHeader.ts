@@ -128,6 +128,12 @@ const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void =
     editor.on('SkinLoaded', () => {
       lazyHeader().each(Docking.reset);
     });
+
+    // Need to refresh when we go fullscreen so that if the header is docked,
+    // then it'll undock and viceversa
+    editor.on('FullscreenStateChanged', () => {
+      lazyHeader().each(Docking.refresh);
+    });
   }
 
   // If inline or sticky toolbars is enabled, then when scrolling into view we may still be
