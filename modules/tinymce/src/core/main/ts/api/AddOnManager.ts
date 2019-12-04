@@ -84,8 +84,8 @@ export interface UrlObject { prefix: string; resource: string; suffix: string; }
 
 // This is a work around as constructors will only work with classes,
 // but our plugins are all functions.
-type AddOnCallback<T> = (editor: Editor, url: string, $: DomQueryConstructor) => void | T;
-export type AddOnConstructor<T> = new (editor: Editor, url: string, $: DomQueryConstructor) => T;
+type AddOnCallback<T> = (editor: Editor, url: string, $?: DomQueryConstructor) => void | T;
+export type AddOnConstructor<T> = new (editor: Editor, url: string, $?: DomQueryConstructor) => T;
 
 interface AddOnManager<T> {
   items: AddOnConstructor<T>[];

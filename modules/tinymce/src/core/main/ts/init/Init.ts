@@ -89,7 +89,7 @@ const initTheme = function (editor: Editor) {
     editor.settings.theme = trimLegacyPrefix(theme);
 
     const Theme = ThemeManager.get(theme);
-    editor.theme = new Theme(editor, ThemeManager.urls[theme], editor.$);
+    editor.theme = new Theme(editor, ThemeManager.urls[theme]);
 
     if (editor.theme.init) {
       editor.theme.init(editor, ThemeManager.urls[theme] || editor.documentBaseUrl.replace(/\/$/, ''), editor.$);
