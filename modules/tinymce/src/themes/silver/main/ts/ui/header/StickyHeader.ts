@@ -12,8 +12,8 @@ import { Class, Classes, Compare, Css, Element, Focus, Height, Location, Scroll,
 
 import Editor from 'tinymce/core/api/Editor';
 import { ScrollIntoViewEvent } from 'tinymce/core/api/EventTypes';
-import * as EditorChannels from '../../Channels';
 import { isToolbarLocationTop } from '../../api/Settings';
+import * as EditorChannels from '../../Channels';
 
 const visibility = {
   fadeInClass: 'tox-editor-dock-fadein',
@@ -126,6 +126,12 @@ const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void =
     // changed due the skins styles being applied.
     // Note: Inline handles it's own skin loading, as it needs to do other initial positioning
     editor.on('SkinLoaded', () => {
+      lazyHeader().each(Docking.reset);
+    });
+
+    // Need to reset when we go fullscreen so that if the header is docked,
+    // then it'll undock and viceversa
+    editor.on('FullscreenStateChanged', () => {
       lazyHeader().each(Docking.reset);
     });
   }

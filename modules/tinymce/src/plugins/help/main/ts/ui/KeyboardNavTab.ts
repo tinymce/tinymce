@@ -74,6 +74,7 @@ const description = `<h1>Editor UI keyboard navigation</h1>
 const tab = (): Types.Dialog.TabApi => {
   const body: Types.Dialog.BodyComponentApi = {
     type: 'htmlpanel',
+    presets: 'document',
     html: description
   };
 
