@@ -112,6 +112,10 @@ const expectedInFullView = (s, str, arr): StructAssert[] => {
         arr.has('tox-editor-header'),
         arr.not('tox-editor-dock-fadeout')
       ],
+      styles: {
+        position: str.none(),
+        width: str.none()
+      },
       children: staticPartsInner(s, str, arr)
     })
   ];

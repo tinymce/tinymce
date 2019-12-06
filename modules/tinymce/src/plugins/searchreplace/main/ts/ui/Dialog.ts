@@ -5,12 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Types } from '@ephox/bridge';
 import { Arr, Cell, Singleton } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Actions from '../core/Actions';
-import { Types } from '@ephox/bridge';
 
 export interface DialogData {
   findtext: string;
@@ -43,6 +44,14 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
       api.focus('findtext');
     });
   }
+
+  // Temporarily workaround for iOS/iPadOS dialog placement to hide the keyboard
+  // TODO: Remove in 5.2 once iOS fixed positioning is fixed. See TINY-4441
+  const focusButtonIfRequired = (api: Types.Dialog.DialogInstanceApi<DialogData>, name: string) => {
+    if (Env.browser.isSafari() && Env.deviceType.isTouch() && (name === 'find' || name === 'replace' || name === 'replaceall')) {
+      api.focus(name);
+    }
+  };
 
   const reset = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
     // Clean up the markers if required
@@ -200,8 +209,13 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
         default:
           break;
       }
+
+      focusButtonIfRequired(api, details.name);
     },
-    onSubmit: doFind,
+    onSubmit: (api) => {
+      doFind(api);
+      focusButtonIfRequired(api, 'find');
+    },
     onClose: () => {
       editor.focus();
       Actions.done(editor, currentSearchState);

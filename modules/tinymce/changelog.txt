@@ -19,6 +19,14 @@ Version 5.2.0 (TBD)
     Fixed `file_picker_callback` functionality for Image, Link and Media plugins #TINY-4163
     Fixed issue where floating toolbar drawer sometimes would break if the editor is resized while the drawer is open #TINY-4439
     Fixed incorrect `external_plugins` loading error message #TINY-4503
+Version 5.1.3 (2019-12-04)
+    Fixed sticky toolbar not undocking when fullscreen mode is activated #TINY-4390
+    Fixed the "Current Window" target not applying when updating links using the link dialog #TINY-4063
+    Fixed disabled menu items not highlighting when focused #TINY-4339
+    Fixed touch events passing through dialog collection items to the content underneath on Android devices #TINY-4431
+    Fixed keyboard navigation of the Help dialog's Keyboard Navigation tab #TINY-4391
+    Fixed search and replace dialog disappearing when finding offscreen matches on iOS devices #TINY-4350
+    Fixed performance issues where sticky toolbar was jumping while scrolling on slower browsers #TINY-4475
 Version 5.1.2 (2019-11-19)
     Fixed desktop touch devices using `mobile` configuration overrides #TINY-4345
     Fixed unable to disable the new scrolling toolbar feature #TINY-4345

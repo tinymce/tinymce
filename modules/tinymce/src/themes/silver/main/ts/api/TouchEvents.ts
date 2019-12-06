@@ -26,7 +26,7 @@ const isFarEnough = (touch: Touch, data: TouchHistoryData): boolean => {
   return distX > SIGNIFICANT_MOVE || distY > SIGNIFICANT_MOVE;
 };
 
-const setupLongpress = (editor: Editor) => {
+const setup = (editor: Editor) => {
   const startData = Cell<Option<TouchHistoryData>>(Option.none());
   const longpressFired = Cell<boolean>(false);
 
@@ -67,15 +67,25 @@ const setupLongpress = (editor: Editor) => {
   editor.on('touchend touchcancel', (e) => {
     debounceLongpress.cancel();
 
-    // Cancel the touchend event if a longpress was fired
-    if (e.type === 'touchend' && longpressFired.get()) {
-      startData.get()
-        .filter((data) => data.target().isEqualNode(e.target))
-        .map(() => {
-          e.preventDefault();
-        });
+    if (e.type === 'touchcancel') {
+      return;
     }
+
+    // Cancel the touchend event if a longpress was fired, otherwise fire the tap event
+    startData.get()
+      .filter((data) => data.target().isEqualNode(e.target))
+      .each(() => {
+        if (longpressFired.get()) {
+          e.preventDefault();
+        } else {
+          // Don't use "e" as the args for fire since it'll mutate the type. See TINY-3254
+          const result = editor.fire('tap');
+          if (result.isDefaultPrevented()) {
+            e.preventDefault();
+          }
+        }
+      });
   }, true);
 };
 
-export default { setupLongpress };
+export default { setup };

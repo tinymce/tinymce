@@ -46,18 +46,22 @@ const bounds = (x: number, y: number, width: number, height: number): Bounds => 
 
 const getBounds = (_win?: Window): Bounds => {
   const win = _win === undefined ? window : _win;
+  const doc = win.document;
+  const scroll = Scroll.get(Element.fromDom(doc));
   return get(win).fold(
     () => {
-      const doc = Element.fromDom(win.document);
       const html = win.document.documentElement;
-      const scroll = Scroll.get(doc);
       // Don't use window.innerWidth/innerHeight here, as we don't want to include scrollbars
       // since the right/bottom position is based on the edge of the scrollbar not the window
       const width = html.clientWidth;
       const height = html.clientHeight;
       return bounds(scroll.left(), scroll.top(), width, height);
     },
-    (visualViewport) => bounds(visualViewport.pageLeft, visualViewport.pageTop, visualViewport.width, visualViewport.height)
+    (visualViewport) => {
+      // iOS doesn't update the pageTop/pageLeft when element.scrollIntoView() is called, so we need to fallback to the
+      // scroll position which will always be less than the page top/left values when page top/left are accurate/correct.
+      return bounds(Math.max(visualViewport.pageLeft, scroll.left()), Math.max(visualViewport.pageTop, scroll.top()), visualViewport.width, visualViewport.height);
+    }
   );
 };
 

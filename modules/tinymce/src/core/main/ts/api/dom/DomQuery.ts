@@ -1001,6 +1001,9 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @method hasClass
    * @param {String} className Class name to check for.
    * @return {Boolean} True/false if the set has the specified class.
+   * @example
+   * // To check if the first 'a' element has the class 'anchor':
+   * tinymce.dom.DomQuery('a').hasClass('anchor')
    */
   hasClass (className) {
     return hasClass(this[0], className);
