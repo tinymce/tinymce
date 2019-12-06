@@ -8,21 +8,21 @@
 import { Element, HTMLElement } from '@ephox/dom-globals';
 import { Obj, Type } from '@ephox/katamari';
 import { getAll as getAllOxide } from '@tinymce/oxide-icons-default';
+import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import IconManager from '../api/IconManager';
 import PluginManager from '../api/PluginManager';
+import { ThemeInitFunc } from '../api/SettingsTypes';
 import ThemeManager from '../api/ThemeManager';
-import DOMUtils from '../api/dom/DOMUtils';
 import Tools from '../api/util/Tools';
 import ErrorReporter from '../ErrorReporter';
+import { appendContentCssFromSettings } from './ContentCss';
 import InitContentBody from './InitContentBody';
 import InitIframe from './InitIframe';
-import { appendContentCssFromSettings } from './ContentCss';
-import { ThemeInitFunc } from '../api/SettingsTypes';
 
 const DOM = DOMUtils.DOM;
 
-const initPlugin = function (editor: Editor, initializedPlugins, plugin) {
+const initPlugin = function (editor: Editor, initializedPlugins: string[], plugin: string) {
   const Plugin = PluginManager.get(plugin);
 
   const pluginUrl = PluginManager.urls[plugin] || editor.documentBaseUrl.replace(/\/$/, '');
