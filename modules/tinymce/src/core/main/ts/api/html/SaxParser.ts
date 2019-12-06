@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Schema from './Schema';
-import Entities from './Entities';
 import Tools from '../util/Tools';
+import Entities from './Entities';
+import Schema from './Schema';
 
 /**
  * This class parses HTML code using pure JavaScript and executes various events for each item it finds. It will
@@ -292,7 +292,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
 
     // Precompile RegExps and map objects
     tokenRegExp = new RegExp('<(?:' +
-      '(?:!--([\\w\\W]*?)-->)|' + // Comment
+      '(?:!--([\\w\\W]*?)--!?>)|' + // Comment
       '(?:!\\[CDATA\\[([\\w\\W]*?)\\]\\]>)|' + // CDATA
       '(?:!DOCTYPE([\\w\\W]*?)>)|' + // DOCTYPE
       '(?:\\?([^\\s\\/<>]+) ?([\\w\\W]*?)[?/]>)|' + // PI
