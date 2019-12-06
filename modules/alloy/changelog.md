@@ -19,12 +19,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added new vertical directionality for layouts
 - Added `setGroups` and `toggle` methods and `getBounds` configuration to the `FloatingToolbarButton` component.
 
+### Changed
+- Moved modules from "alien" folder into Sugar, Katamari and other folders in Alloy.
+
 ### Fixed
 - Improved `Docking` scroll performance by only calculating the offset origin as required.
 
-### Improved
-- Moved modules from "alien" folder into Sugar, Katamari and other folders in Alloy.
+# [5.0.7] - 2019-12-02
 
+### Fixed
+- Improved `Docking` scroll performance by only calculating the offset origin as required.
 
 # [5.0.2] - 2019-11-11
 

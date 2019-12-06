@@ -6,10 +6,11 @@
  */
 
 import { Arr } from '@ephox/katamari';
+import { DomQueryConstructor } from './dom/DomQuery';
 import ScriptLoader from './dom/ScriptLoader';
-import Tools from './util/Tools';
 import Editor from './Editor';
 import I18n from './util/I18n';
+import Tools from './util/Tools';
 
 /**
  * This class handles the loading of themes/plugins or other add-ons and their language packs.
@@ -81,17 +82,20 @@ const each = Tools.each;
 
 export interface UrlObject { prefix: string; resource: string; suffix: string; }
 
-export type AddOnCallback<T> = (editor: Editor, url: string) => T;
+// This is a work around as constructors will only work with classes,
+// but our plugins are all functions.
+type AddOnCallback<T> = (editor: Editor, url: string, $?: DomQueryConstructor) => void | T;
+export type AddOnConstructor<T> = new (editor: Editor, url: string, $?: DomQueryConstructor) => T;
 
 interface AddOnManager<T> {
-  items: AddOnCallback<T>[];
+  items: AddOnConstructor<T>[];
   urls: Record<string, string>;
-  lookup: {};
+  lookup: Record<string, { instance: AddOnConstructor<T>; dependencies?: string[] }>;
   _listeners: { name: string, callback: () => void }[];
-  get (name: string): any;
-  dependencies (name: string): any;
+  get (name: string): AddOnConstructor<T>;
+  dependencies (name: string): string[];
   requireLangPack (name: string, languages: string): void;
-  add (id: string, addOn: AddOnCallback<T>, dependencies?: any): AddOnCallback<T>;
+  add (id: string, addOn: AddOnCallback<T>, dependencies?: string[]): AddOnConstructor<T>;
   remove (name: string): void;
   createUrl (baseUrl: UrlObject, dep: string | UrlObject): UrlObject;
   addComponents (pluginName: string, scripts: string[]): void;
@@ -100,9 +104,9 @@ interface AddOnManager<T> {
 }
 
 function AddOnManager<T>(): AddOnManager<T> {
-  const items = [];
+  const items: AddOnConstructor<T>[] = [];
   const urls: Record<string, string> = {};
-  const lookup = {};
+  const lookup: Record<string, { instance: AddOnConstructor<T>; dependencies?: string[] }> = {};
   let _listeners = [];
 
   const get = (name: string) => {
@@ -142,9 +146,10 @@ function AddOnManager<T>(): AddOnManager<T> {
     }
   };
 
-  const add = (id: string, addOn: (editor: Editor, url: string) => any, dependencies?) => {
-    items.push(addOn);
-    lookup[id] = { instance: addOn, dependencies };
+  const add = (id: string, addOn: AddOnCallback<T>, dependencies?: string[]) => {
+    const addOnConstructor = addOn as unknown as AddOnConstructor<T>;
+    items.push(addOnConstructor);
+    lookup[id] = { instance: addOnConstructor, dependencies };
     const result = Arr.partition(_listeners, function (listener) {
       return listener.name === id;
     });
@@ -155,7 +160,7 @@ function AddOnManager<T>(): AddOnManager<T> {
       listener.callback();
     });
 
-    return addOn;
+    return addOnConstructor;
   };
 
   const remove = (name: string) => {

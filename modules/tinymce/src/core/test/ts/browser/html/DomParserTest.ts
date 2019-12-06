@@ -1,10 +1,10 @@
-import { LegacyUnit } from '@ephox/mcagar';
-import { Pipeline, Assertions } from '@ephox/agar';
-import Schema from 'tinymce/core/api/html/Schema';
-import Serializer from 'tinymce/core/api/html/Serializer';
-import DomParser from 'tinymce/core/api/html/DomParser';
+import { Assertions, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+import { LegacyUnit } from '@ephox/mcagar';
+import DomParser from 'tinymce/core/api/html/DomParser';
+import Schema from 'tinymce/core/api/html/Schema';
+import Serializer from 'tinymce/core/api/html/Serializer';
 
 UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
@@ -229,11 +229,23 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Remove empty nodes', function () {
-    parser = DomParser({}, Schema({ valid_elements: '-p,-span[id]' }));
+    parser = DomParser({}, Schema({ valid_elements: '-p,-span[id|style],-strong' }));
     root = parser.parse(
       '<p>a<span></span><span> </span><span id="x">b</span><span id="y"></span></p><p></p><p><span></span></p><p> </p>'
     );
     LegacyUnit.equal(serializer.serialize(root), '<p>a <span id="x">b</span><span id="y"></span></p>');
+
+    root = parser.parse('<p>a&nbsp;<span style="text-decoration: underline"> </span>&nbsp;b</p>');
+    LegacyUnit.equal(serializer.serialize(root), '<p>a\u00a0<span style="text-decoration: underline"> </span>\u00a0b</p>');
+
+    root = parser.parse('<p>a&nbsp;<strong> </strong>&nbsp;b</p>');
+    LegacyUnit.equal(serializer.serialize(root), '<p>a\u00a0<strong> </strong>\u00a0b</p>');
+
+    root = parser.parse('<p>a&nbsp;<span style="text-decoration: underline"></span>&nbsp;b</p>');
+    LegacyUnit.equal(serializer.serialize(root), '<p>a\u00a0\u00a0b</p>');
+
+    root = parser.parse('<p>a&nbsp;<span> </span>&nbsp;b</p>');
+    LegacyUnit.equal(serializer.serialize(root), '<p>a\u00a0 \u00a0b</p>');
   });
 
   suite.test('Parse invalid contents with node filters', function () {

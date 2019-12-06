@@ -8,91 +8,58 @@
 import { Attachment, Channels, Gui, SystemEvents } from '@ephox/alloy';
 import { document, MouseEvent, Node as DomNode, UIEvent } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { DomEvent, Element } from '@ephox/sugar';
+import { DomEvent, Element, EventArgs } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiSystem) => {
-  const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', (evt) => {
+  const broadcastEvent = (name: string, evt: EventArgs) => {
     Arr.each([ mothership, uiMothership ], (ship) => {
-      ship.broadcastOn([ Channels.dismissPopups() ], {
-        target: evt.target()
-      });
+      ship.broadcastEvent(name, evt);
     });
-  });
+  };
 
-  const onTouchstart = DomEvent.bind(Element.fromDom(document), 'touchstart', (evt) => {
+  const broadcastOn = (channel: string, message: Record<string, any>) => {
     Arr.each([ mothership, uiMothership ], (ship) => {
-      ship.broadcastOn([ Channels.dismissPopups() ], {
-        target: evt.target()
-      });
+      ship.broadcastOn([ channel ], message);
     });
-  });
+  };
 
-  const onTouchmove = DomEvent.bind(Element.fromDom(document), 'touchmove', (evt) => {
-    Arr.each([ mothership, uiMothership ], (ship) => {
-      ship.broadcastEvent(SystemEvents.documentTouchmove(), evt);
-    });
-  });
+  const fireDismissPopups = (evt: EventArgs) => broadcastOn(Channels.dismissPopups(), { target: evt.target() });
 
-  const onTouchend = DomEvent.bind(Element.fromDom(document), 'touchend', (evt) => {
-    Arr.each([ mothership, uiMothership ], (ship) => {
-      ship.broadcastEvent(SystemEvents.documentTouchend(), evt);
-    });
-  });
+  // Document touch events
+  const onTouchstart = DomEvent.bind(Element.fromDom(document), 'touchstart', fireDismissPopups);
+  const onTouchmove = DomEvent.bind(Element.fromDom(document), 'touchmove', (evt) => broadcastEvent(SystemEvents.documentTouchmove(), evt));
+  const onTouchend = DomEvent.bind(Element.fromDom(document), 'touchend', (evt) => broadcastEvent(SystemEvents.documentTouchend(), evt));
 
+  // Document mouse events
+  const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', fireDismissPopups);
   const onMouseup = DomEvent.bind(Element.fromDom(document), 'mouseup', (evt) => {
     if (evt.raw().button === 0) {
-      Arr.each([ mothership, uiMothership ], (ship) => {
-        ship.broadcastOn([ Channels.mouseReleased() ], {
-          target: evt.target()
-        });
-      });
+      broadcastOn(Channels.mouseReleased(), { target: evt.target() });
     }
   });
 
-  const onContentMousedown = (raw: MouseEvent) => {
-    Arr.each([ mothership, uiMothership ], (ship) => {
-      ship.broadcastOn([ Channels.dismissPopups() ], {
-        target: Element.fromDom(raw.target as DomNode)
-      });
-    });
-  };
-
+  // Editor content events
+  const onContentClick = (raw: UIEvent) => broadcastOn(Channels.dismissPopups(), { target: Element.fromDom(raw.target as DomNode) });
   const onContentMouseup = (raw: MouseEvent) => {
     if (raw.button === 0) {
-      Arr.each([ mothership, uiMothership ], (ship) => {
-        ship.broadcastOn([ Channels.mouseReleased() ], {
-          target: Element.fromDom(raw.target as DomNode)
-        });
-      });
+      broadcastOn(Channels.mouseReleased(), { target: Element.fromDom(raw.target as DomNode) });
     }
   };
 
-  const onWindowScroll = (evt: UIEvent) => {
-    const sugarEvent = DomEvent.fromRawEvent(evt);
-    Arr.each([ mothership, uiMothership ], (ship) => {
-      ship.broadcastEvent(SystemEvents.windowScroll(), sugarEvent);
-    });
-  };
-
+  // Window events
+  const onWindowScroll = (evt: UIEvent) => broadcastEvent(SystemEvents.windowScroll(), DomEvent.fromRawEvent(evt));
   const onWindowResize = (evt: UIEvent) => {
-    const sugarEvent = DomEvent.fromRawEvent(evt);
-    Arr.each([ mothership, uiMothership ], (ship) => {
-      ship.broadcastOn( [ Channels.repositionPopups() ], { });
-      ship.broadcastEvent(SystemEvents.windowResize(), sugarEvent);
-    });
+    broadcastOn(Channels.repositionPopups(), { });
+    broadcastEvent(SystemEvents.windowResize(), DomEvent.fromRawEvent(evt));
   };
 
-  const onEditorResize = () => {
-    Arr.each([ mothership, uiMothership ], (ship) => {
-      ship.broadcastOn( [ Channels.repositionPopups() ], { });
-    });
-  };
+  const onEditorResize = () => broadcastOn(Channels.repositionPopups(), { });
 
   // Don't start listening to events until the UI has rendered
   editor.on('PostRender', () => {
-    editor.on('mousedown', onContentMousedown);
-    editor.on('touchstart', onContentMousedown);
+    editor.on('click', onContentClick);
+    editor.on('tap', onContentClick);
     editor.on('mouseup', onContentMouseup);
     editor.on('ScrollWindow', onWindowScroll);
     editor.on('ResizeWindow', onWindowResize);
@@ -101,8 +68,8 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
 
   editor.on('remove', () => {
     // We probably don't need these unbinds, but it helps to have them if we move this code out.
-    editor.off('mousedown', onContentMousedown);
-    editor.off('touchstart', onContentMousedown);
+    editor.off('click', onContentClick);
+    editor.off('tap', onContentClick);
     editor.off('mouseup', onContentMouseup);
     editor.off('ScrollWindow', onWindowScroll);
     editor.off('ResizeWindow', onWindowResize);

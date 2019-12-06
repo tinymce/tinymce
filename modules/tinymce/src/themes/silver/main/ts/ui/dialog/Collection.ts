@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, EventFormat, FormField as AlloyFormField, Keying, NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, Tabstopping, } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, EventFormat, FormField as AlloyFormField, Keying, NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, Tabstopping } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
@@ -27,9 +27,9 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
   // DUPE with TextField.
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
-  const runOnItem = (f: (c: AlloyComponent, tgt: Element, itemValue: string) => void) => <T extends EventFormat>(comp: AlloyComponent, se: SimulatedEvent<T>) => {
+  const runOnItem = <T extends EventFormat>(f: (c: AlloyComponent, se: SimulatedEvent<T>, tgt: Element, itemValue: string) => void) => (comp: AlloyComponent, se: SimulatedEvent<T>) => {
     SelectorFind.closest(se.event().target(), '[data-collection-item-value]').each((target: Element<HTMLElement>) => {
-      f(comp, target, Attr.get(target, 'data-collection-item-value'));
+      f(comp, se, target, Attr.get(target, 'data-collection-item-value'));
     });
   };
 
@@ -72,27 +72,28 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
   };
 
   const collectionEvents = [
-    AlloyEvents.run<EventArgs>(NativeEvents.mouseover(), runOnItem((comp, tgt) => {
+    AlloyEvents.run<EventArgs>(NativeEvents.mouseover(), runOnItem((comp, se, tgt) => {
       Focus.focus(tgt);
     })),
-    AlloyEvents.run<EventArgs>(SystemEvents.tapOrClick(), runOnItem((comp, tgt, itemValue) => {
+    AlloyEvents.run<EventArgs>(SystemEvents.tapOrClick(), runOnItem((comp, se, tgt, itemValue) => {
+      se.stop();
       AlloyTriggers.emitWith(comp, formActionEvent, {
         name: spec.name,
         value: itemValue
       });
     })),
-    AlloyEvents.run(NativeEvents.focusin(), runOnItem((comp, tgt, itemValue) => {
+    AlloyEvents.run(NativeEvents.focusin(), runOnItem((comp, se, tgt) => {
       SelectorFind.descendant(comp.element(), '.' + ItemClasses.activeClass).each((currentActive) => {
         Class.remove(currentActive, ItemClasses.activeClass);
       });
       Class.add(tgt, ItemClasses.activeClass);
     })),
-    AlloyEvents.run(NativeEvents.focusout(), runOnItem((comp, tgt, itemValue) => {
+    AlloyEvents.run(NativeEvents.focusout(), runOnItem((comp) => {
       SelectorFind.descendant(comp.element(), '.' + ItemClasses.activeClass).each((currentActive) => {
         Class.remove(currentActive, ItemClasses.activeClass);
       });
     })),
-    AlloyEvents.runOnExecute(runOnItem((comp, tgt, itemValue) => {
+    AlloyEvents.runOnExecute(runOnItem((comp, se, tgt, itemValue) => {
       AlloyTriggers.emitWith(comp, formActionEvent, {
         name: spec.name,
         value: itemValue
