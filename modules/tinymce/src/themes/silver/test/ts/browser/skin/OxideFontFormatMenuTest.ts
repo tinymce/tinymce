@@ -164,7 +164,7 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                                 s.element('p', {
                                   html: str.is('Red paragraph'),
                                   styles: {
-                                    color: (isIE ? str.is('rgb(255,0,0)') : str.is('rgb(255, 0, 0)'))
+                                    color: (isIE ? str.is('#ff0000') : str.is('rgb(255, 0, 0)'))
                                   }
                                 })
                               ]
