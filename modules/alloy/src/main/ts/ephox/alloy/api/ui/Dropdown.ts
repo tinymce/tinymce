@@ -21,7 +21,7 @@ import * as TieredMenu from './TieredMenu';
 import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec => {
-  const lookupAttr = (attr: string): Option<string> => {
+  const lookupAttr = (attr: string) => {
     return Obj.get(detail.dom, 'attributes').bind((attrs) => {
       return Obj.get(attrs, attr);
     });

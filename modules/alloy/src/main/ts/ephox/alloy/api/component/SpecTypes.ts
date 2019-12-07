@@ -12,7 +12,7 @@ export type SimpleOrSketchSpec = SketchSpec | SimpleSpec;
 
 export interface OptionalDomSchema {
   tag?: string;
-  attributes?: Record<string, any>;
+  attributes?: Record<string, string | boolean | number>;
   styles?: Record<string, string>;
   innerHtml?: string;
   classes?: string[];
@@ -20,7 +20,7 @@ export interface OptionalDomSchema {
 
 export interface StructDomSchema {
   tag: string;
-  attributes: Record<string, any>;
+  attributes: Record<string, string | boolean | number>;
   styles: Record<string, string>;
   classes: string[];
   value: Option<string>;
