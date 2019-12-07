@@ -378,6 +378,14 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       return;
     }
 
+    // If setting a style then delegate to the css api, otherwise
+    // this will cause issues when using a content security policy
+    if (name === 'style' && value !== null) {
+      $elm.removeAttr(name);
+      $elm.css(parseStyle(value));
+      return;
+    }
+
     hook = attrHooks[name];
     if (hook && hook.set) {
       hook.set($elm, value, name);

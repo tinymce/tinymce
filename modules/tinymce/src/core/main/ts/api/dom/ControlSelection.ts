@@ -233,7 +233,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     showResizeRect(selectedElm);
 
     Events.fireObjectResized(editor, selectedElm, width, height);
-    dom.setStyles(selectedElm, dom.parseStyle(dom.getAttrib(selectedElm, 'style')));
+    dom.setAttrib(selectedElm, 'style', dom.getAttrib(selectedElm, 'style'));
     editor.nodeChanged();
   };
 
@@ -314,14 +314,13 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
           dom.remove(handleElm);
         }
 
-        handleElm = dom.create('div', {
+        handleElm = dom.add(rootElement, 'div', {
           'id': 'mceResizeHandle' + name,
           'data-mce-bogus': 'all',
           'class': 'mce-resizehandle',
-          'unselectable': 'true'
+          'unselectable': true,
+          'style': 'cursor:' + name + '-resize; margin:0; padding:0'
         });
-        dom.setStyles(handleElm, { cursor: name + '-resize', margin: '0', padding: '0' });
-        dom.add(rootElement, handleElm);
 
         // Hides IE move layer cursor
         // If we set it on Chrome we get this wounderful bug: #6725

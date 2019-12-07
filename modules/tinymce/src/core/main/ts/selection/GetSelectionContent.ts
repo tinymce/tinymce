@@ -7,26 +7,21 @@
 
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import Editor from '../api/Editor';
-import Zwsp from '../text/Zwsp';
 import EventProcessRanges from './EventProcessRanges';
 import FragmentReader from './FragmentReader';
 import MultiRange from './MultiRange';
+import Zwsp from '../text/Zwsp';
+import Editor from '../api/Editor';
 
 const getTextContent = (editor: Editor): string => {
   return Option.from(editor.selection.getRng()).map((rng) => {
-    const dom = editor.dom;
-    const bin = dom.create('div', {
-      'data-mce-bogus': 'all'
+    const bin = editor.dom.add(editor.getBody(), 'div', {
+      'data-mce-bogus': 'all',
+      'style': 'overflow: hidden; opacity: 0;'
     }, rng.cloneContents());
-    dom.setStyles(bin, {
-      overflow: 'hidden',
-      opacity: '0'
-    });
-    dom.add(editor.getBody(), bin);
 
     const text = Zwsp.trim(bin.innerText);
-    dom.remove(bin);
+    editor.dom.remove(bin);
     return text;
   }).getOr('');
 };
