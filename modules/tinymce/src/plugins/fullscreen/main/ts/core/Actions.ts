@@ -107,7 +107,7 @@ const toggleFullscreen = function (editor, fullscreenState) {
     };
 
     if (isTouch) {
-      Thor.clobberStyles(editorContainerS, editorBody);
+      Thor.clobberStyles(editor.dom, editorContainerS, editorBody);
     }
 
     iframeStyle.width = iframeStyle.height = '100%';
@@ -133,7 +133,7 @@ const toggleFullscreen = function (editor, fullscreenState) {
     editorContainerStyle.left = fullscreenInfo.containerLeft;
 
     if (isTouch) {
-      Thor.restoreStyles();
+      Thor.restoreStyles(editor.dom);
     }
     DOM.removeClass(body, 'tox-fullscreen');
     DOM.removeClass(documentElement, 'tox-fullscreen');

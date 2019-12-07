@@ -97,11 +97,6 @@ const settings = {
   template_mdate_format: '[MDATE: %m/%d/%Y : %H:%M:%S]',
   image_caption: true,
   theme: 'silver',
-  mobile: {
-    plugins: [
-      'autosave lists'
-    ]
-  },
   setup (ed) {
     makeSidebar(ed, 'sidebar1', 'green', 200);
   },
@@ -114,7 +109,7 @@ const settings = {
   add_unload_trigger: false,
   autosave_ask_before_unload: false,
   toolbar: 'undo redo sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
-  'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
+  'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl | fullscreen',
 
   // Multiple toolbar array
   // toolbar: ['undo redo sidebar1 align fontsizeselect insertfile | fontselect formatselect styleselect insertfile | styleselect | bold italic',
