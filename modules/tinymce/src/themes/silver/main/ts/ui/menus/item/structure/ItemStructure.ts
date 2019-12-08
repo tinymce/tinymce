@@ -49,11 +49,11 @@ const renderColorStructure = (itemText: Option<string>, itemValue: string, iconS
   const getDom = () => {
     const common = ItemClasses.colorClass;
     const icon = iconSvg.getOr('');
-    const title = itemText.map((text) => providerBackstage.translate(text)).getOr('');
+    const attributes = itemText.map((text) => ({ title: providerBackstage.translate(text) } as Record<string, string>)).getOr({ });
 
     const baseDom = {
       tag: 'div',
-      attributes: { title },
+      attributes,
       classes: [ common ]
     };
 
