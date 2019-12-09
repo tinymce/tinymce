@@ -23,23 +23,23 @@
   "dependencies": {
     "@ephox/alloy": "2.2.3",
     "@ephox/boulder": "3.2.1",
-    "@ephox/darwin": "latest",
-    "@ephox/dom-globals": "latest",
-    "@ephox/imagetools": "latest",
-    "@ephox/katamari": "latest",
-    "@ephox/robin": "latest",
-    "@ephox/sand": "^2.0.0",
-    "@ephox/snooker": "latest",
-    "@ephox/sugar": "latest",
+    "@ephox/darwin": "3.0.39",
+    "@ephox/dom-globals": "1.1.2",
+    "@ephox/imagetools": "3.2.6",
+    "@ephox/katamari": "4.0.3",
+    "@ephox/robin": "7.0.40",
+    "@ephox/sand": "2.0.21",
+    "@ephox/snooker": "5.0.17",
+    "@ephox/sugar": "5.0.14",
     "tslib": "^1.9.3"
   },
   "devDependencies": {
-    "@ephox/agar": "latest",
-    "@ephox/bedrock-client": "^9.0.0",
-    "@ephox/bedrock-server": "^9.0.0",
-    "@ephox/mcagar": "latest",
-    "@ephox/swag": "latest",
-    "@ephox/wrap-jsverify": "latest",
+    "@ephox/agar": "4.14.1",
+    "@ephox/bedrock-client": "9.3.2",
+    "@ephox/bedrock-server": "9.3.2",
+    "@ephox/mcagar": "4.0.42",
+    "@ephox/swag": "4.1.5",
+    "@ephox/wrap-jsverify": "2.0.1",
     "awesome-typescript-loader": "^5.2.0",
     "grunt": "~1.0.2",
     "grunt-contrib-clean": "~1.1.0",
@@ -65,8 +65,15 @@
     "webpack-livereload-plugin": "^2.1.1"
   },
   "resolutions": {
-    "@ephox/sand": "^2.0.0",
-    "@ephox/katamari": "^4.0.0",
-    "@ephox/boulder": "3.3.35"
+    "@ephox/agar": "4.14.1",
+    "@ephox/boss": "3.0.44",
+    "@ephox/boulder": "3.2.1",
+    "@ephox/dragster": "4.0.36",
+    "@ephox/katamari": "4.0.3",
+    "@ephox/robin": "7.0.40",
+    "@ephox/sand": "2.0.21",
+    "@ephox/snooker": "5.0.17",
+    "@ephox/sugar": "5.0.14",
+    "@ephox/phoenix": "5.0.46"
   }
 }
