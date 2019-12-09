@@ -1,4 +1,5 @@
 Version 5.1.4 (TBD)
+    Fixed the `legacyoutput` plugin registering legacy formats after init, causing legacy content to be stripped on the initial load #TINY-4447
     Fixed search and replace not cycling through results when using special characters #TINY-4506
 Version 5.1.3 (2019-12-04)
     Fixed sticky toolbar not undocking when fullscreen mode is activated #TINY-4390
