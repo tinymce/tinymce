@@ -5,16 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Element, Node as SugarNode } from '@ephox/sugar';
 import Data from './Data';
 import Html from './Html';
-import { Node } from '@ephox/dom-globals';
 
 const isMatch = (n: Element) => {
+  const value = SugarNode.value(n);
   return SugarNode.isText(n) &&
-    SugarNode.value(n) !== undefined &&
-    Data.regExp.test(SugarNode.value(n));
+    value !== undefined &&
+    Data.regExp.test(value);
 };
 
 // inlined sugars PredicateFilter.descendants for file size
@@ -41,8 +42,8 @@ const findParentElm = (elm: Node, rootElm: Node) => {
   }
 };
 
-const replaceWithSpans = (html: string) => {
-  return html.replace(Data.regExpGlobal, Html.wrapCharWithSpan);
+const replaceWithSpans = (text: string) => {
+  return text.replace(Data.regExpGlobal, Html.wrapCharWithSpan);
 };
 
 export default {

@@ -33,6 +33,17 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     updatePrev('prev');
   }
 
+  const updateSearchState = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
+    const data = api.getData();
+    const current = currentSearchState.get();
+
+    currentSearchState.set({
+      ...current,
+      matchCase: data.matchcase,
+      wholeWord: data.wholewords
+    });
+  };
+
   const disableAll = function (api: Types.Dialog.DialogInstanceApi<DialogData>, disable: boolean) {
     const buttons = [ 'replace', 'replaceall', 'prev', 'next' ];
     const toggle = disable ? api.disable : api.enable;
@@ -205,6 +216,10 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
         case 'next':
           Actions.next(editor, currentSearchState);
           updateButtonStates(api);
+          break;
+        case 'matchcase':
+        case 'wholewords':
+          updateSearchState(api);
           break;
         default:
           break;

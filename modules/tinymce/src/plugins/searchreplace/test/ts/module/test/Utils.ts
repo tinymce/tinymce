@@ -32,9 +32,23 @@ const sCloseDialog = (ui) => {
   return ui.sClickOnUi('Click cancel button', 'div[role="dialog"] button[aria-label=Close]');
 };
 
+const sClickFind = (ui) => ui.sClickOnUi('Click find', '[role=dialog] button:contains("Find")');
+const sClickNext = (ui) => ui.sClickOnUi('Click next', '[role=dialog] button[title="Next"]');
+const sClickPrev = (ui) => ui.sClickOnUi('Click previous', '[role=dialog] button[title="Previous"]');
+
+const sSelectPreference = (ui, name: string) => GeneralSteps.sequence([
+  ui.sClickOnUi('Click preferences', 'button[title="Preferences"]'),
+  ui.sWaitForPopup('Wait for menu to show', '.tox-selected-menu[role=menu]'),
+  ui.sClickOnUi('Click preferences menu item', '.tox-selected-menu[role=menu] div[title="' + name + '"]')
+]);
+
 export {
   cFindInDialog,
   sAssertFieldValue,
   sOpenDialog,
-  sCloseDialog
+  sCloseDialog,
+  sClickFind,
+  sClickNext,
+  sClickPrev,
+  sSelectPreference
 };
