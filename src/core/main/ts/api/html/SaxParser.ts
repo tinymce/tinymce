@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Schema from './Schema';
-import Entities from './Entities';
 import Tools from '../util/Tools';
+import Entities from './Entities';
+import Schema from './Schema';
 
 declare const unescape: any;
 
@@ -269,7 +269,7 @@ export function SaxParser(settings, schema = Schema()) {
 
     // Precompile RegExps and map objects
     tokenRegExp = new RegExp('<(?:' +
-      '(?:!--([\\w\\W]*?)-->)|' + // Comment
+      '(?:!--([\\w\\W]*?)--!?>)|' + // Comment
       '(?:!\\[CDATA\\[([\\w\\W]*?)\\]\\]>)|' + // CDATA
       '(?:!DOCTYPE([\\w\\W]*?)>)|' + // DOCTYPE
       '(?:\\?([^\\s\\/<>]+) ?([\\w\\W]*?)[?/]>)|' + // PI

@@ -1,3 +1,5 @@
+Version 4.9.7 (TBD)
+    Fixed HTML comments incorrectly being parsed in certain cases #TINY-4511
 Version 4.9.6 (2019-09-02)
     Fixed image browse button sometimes displaying the browse window twice #TINY-3959
 Version 4.9.5 (2019-07-02)
