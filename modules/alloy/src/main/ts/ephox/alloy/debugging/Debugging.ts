@@ -1,6 +1,6 @@
 import { Objects } from '@ephox/boulder';
-import { console, Window, window } from '@ephox/dom-globals';
-import { Arr, Cell, Fun, Obj, Option } from '@ephox/katamari';
+import { console, Node } from '@ephox/dom-globals';
+import { Arr, Cell, Fun, Global, Obj, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -17,9 +17,21 @@ export interface DebuggerLogger {
   write: () => void;
 }
 
+export interface InspectorInfo {
+  '(original.spec)': any;
+  '(dom.ref)': Node;
+  '(element)': string;
+  '(initComponents)': InspectorInfo[];
+  '(components)': InspectorInfo[];
+  '(bound.events)': string;
+  '(behaviours)': string | Record<string, any>;
+}
+
+type LookupInfo = { [key: string]: InspectorInfo } | { error: string };
+
 export interface Inspector {
   systems: Record<string, GuiSystem>;
-  lookup: (uid: string) => Option<any>;
+  lookup: (uid: string) => Option<LookupInfo>;
   events: {
     setToNormal: (eventName: string) => void;
     setToLogging: (eventName: string) => void;
@@ -27,7 +39,9 @@ export interface Inspector {
   };
 }
 
-type WindowWithAlloyGlobal = Window & { __CHROME_INSPECTOR_CONNECTION_TO_ALLOY__: Inspector};
+interface AlloyGlobal {
+  __CHROME_INSPECTOR_CONNECTION_TO_ALLOY__: Inspector;
+}
 
 const unknown = 'unknown';
 
@@ -150,7 +164,7 @@ const monitorEvent = (eventName: string, initialTarget: Element, f: EventProcess
 };
 
 const inspectorInfo = (comp: AlloyComponent) => {
-  const go = (c: AlloyComponent): Record<string, any> => {
+  const go = (c: AlloyComponent): InspectorInfo => {
     const cSpec = c.spec();
 
     return {
@@ -176,7 +190,7 @@ const inspectorInfo = (comp: AlloyComponent) => {
 };
 
 const getOrInitConnection = () => {
-  const win = window as WindowWithAlloyGlobal;
+  const win: AlloyGlobal = Global;
   // The format of the global is going to be:
   // lookup(uid) -> Option { name => data }
   // systems: Set AlloyRoots
@@ -194,13 +208,13 @@ const getOrInitConnection = () => {
       lookup (uid: string) {
         const systems = win[CHROME_INSPECTOR_GLOBAL].systems;
         const connections: string[] = Obj.keys(systems);
-        return Arr.findMap(connections, (conn): Option<any> => {
+        return Arr.findMap(connections, (conn) => {
           const connGui = systems[conn];
-          return connGui.getByUid(uid).toOption().map((comp) => {
+          return connGui.getByUid(uid).toOption().map((comp): LookupInfo => {
             return Objects.wrap(AlloyLogger.element(comp.element()), inspectorInfo(comp));
           });
         }).orThunk(() => {
-          return Option.some({
+          return Option.some<LookupInfo>({
             error: 'Systems (' + connections.join(', ') + ') did not contain uid: ' + uid
           });
         });
