@@ -5,11 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Editor } from 'tinymce/core/api/Editor';
+import DomParser from 'tinymce/core/api/html/DomParser';
+import Serializer from 'tinymce/core/api/html/Serializer';
+import Tools from 'tinymce/core/api/util/Tools';
 import Events from '../api/Events';
 import WordFilter from './WordFilter';
-import { Editor } from 'tinymce/core/api/Editor';
 
-const processResult = function (content, cancelled) {
+const preProcess = (editor: Editor, html: string) => {
+  const parser = DomParser({ }, editor.schema);
+
+  // Strip meta elements
+  parser.addNodeFilter('meta', (nodes) => {
+    Tools.each(nodes, (node) => node.remove());
+  });
+
+  const fragment = parser.parse(html, { forced_root_block: false, isRootContent: true });
+  return Serializer({ validate: editor.settings.validate }, editor.schema).serialize(fragment);
+};
+
+const processResult = function (content: string, cancelled: boolean) {
   return { content, cancelled };
 };
 
@@ -22,10 +37,13 @@ const postProcessFilter = function (editor: Editor, html: string, internal: bool
 const filterContent = function (editor: Editor, content: string, internal: boolean, isWordHtml: boolean) {
   const preProcessArgs = Events.firePastePreProcess(editor, content, internal, isWordHtml);
 
+  // Filter the content to remove potentially dangerous content (eg scripts)
+  const filteredContent = preProcess(editor, preProcessArgs.content);
+
   if (editor.hasEventListeners('PastePostProcess') && !preProcessArgs.isDefaultPrevented()) {
-    return postProcessFilter(editor, preProcessArgs.content, internal, isWordHtml);
+    return postProcessFilter(editor, filteredContent, internal, isWordHtml);
   } else {
-    return processResult(preProcessArgs.content, preProcessArgs.isDefaultPrevented());
+    return processResult(filteredContent, preProcessArgs.isDefaultPrevented());
   }
 };
 
