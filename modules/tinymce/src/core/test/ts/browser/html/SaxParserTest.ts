@@ -1,10 +1,10 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import SaxParser from 'tinymce/core/api/html/SaxParser';
-import Writer from 'tinymce/core/api/html/Writer';
-import Schema from 'tinymce/core/api/html/Schema';
-import Tools from 'tinymce/core/api/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
+import { LegacyUnit } from '@ephox/mcagar';
+import SaxParser from 'tinymce/core/api/html/SaxParser';
+import Schema from 'tinymce/core/api/html/Schema';
+import Writer from 'tinymce/core/api/html/Writer';
+import Tools from 'tinymce/core/api/util/Tools';
 
 UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
   const success = arguments[arguments.length - 2];
@@ -420,6 +420,13 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     parser.parse('<b>a<!-- value -->b</b>');
     LegacyUnit.equal(writer.getContent(), '<b>a<!-- value -->b</b>', 'Parse comment with tags around it.');
     LegacyUnit.deepEqual(counter.counts, { comment: 1, text: 2, start: 1, end: 1 }, 'Parse comment with tags around it counts.');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<!-- value --!>');
+    LegacyUnit.equal(writer.getContent(), '<!-- value -->', 'Parse comment with exclamation in end value.');
+    LegacyUnit.deepEqual(counter.counts, { comment: 1 }, 'Parse comment with exclamation in end value counts.');
   });
 
   suite.test('Parsing cdata', function () {
