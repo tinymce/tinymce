@@ -5,17 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Data from './Data';
-import Nodes from './Nodes';
 import { Arr } from '@ephox/katamari';
 import { Element, Node } from '@ephox/sugar';
+import Data from './Data';
+import Nodes from './Nodes';
 
 const show = function (editor, rootElm) {
   let node, div;
   const nodeList = Nodes.filterDescendants(Element.fromDom(rootElm), Nodes.isMatch);
 
   Arr.each(nodeList, function (n) {
-    const withSpans = Nodes.replaceWithSpans(Node.value(n));
+    const withSpans = Nodes.replaceWithSpans(editor.dom.encode(Node.value(n)));
 
     div = editor.dom.create('div', null, withSpans);
     while ((node = div.lastChild)) {

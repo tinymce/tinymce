@@ -11,9 +11,10 @@ import Data from './Data';
 import Html from './Html';
 
 const isMatch = function (n) {
+  const value = Node.value(n);
   return Node.isText(n) &&
-    Node.value(n) !== undefined &&
-    Data.regExp.test(Node.value(n));
+    value !== undefined &&
+    Data.regExp.test(value);
 };
 
 // inlined sugars PredicateFilter.descendants for file size
@@ -40,8 +41,8 @@ const findParentElm = function (elm, rootElm) {
   }
 };
 
-const replaceWithSpans = function (html) {
-  return html.replace(Data.regExpGlobal, Html.wrapCharWithSpan);
+const replaceWithSpans = function (text: string) {
+  return text.replace(Data.regExpGlobal, Html.wrapCharWithSpan);
 };
 
 export default {
