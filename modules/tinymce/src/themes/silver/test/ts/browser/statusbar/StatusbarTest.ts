@@ -36,6 +36,9 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
         ]
       }),
       s.element('div', {
+        attrs: {
+          'aria-hidden': str.is('true')
+        },
         classes: [ arr.has('tox-statusbar__resize-handle')],
       })
     ];
@@ -63,6 +66,9 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
         ]
       }),
       s.element('div', {
+        attrs: {
+          'aria-hidden': str.is('true')
+        },
         classes: [ arr.has('tox-statusbar__resize-handle')],
       })
     ];

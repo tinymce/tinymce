@@ -7,8 +7,8 @@
 
 import { Behaviour, Dragging, SimpleSpec } from '@ephox/alloy';
 import { Strings } from '@ephox/katamari';
-import I18n from 'tinymce/core/api/util/I18n';
 import Editor from 'tinymce/core/api/Editor';
+import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { get as getIcon } from '../icons/Icons';
 import { resize, ResizeTypes } from '../sizing/Resize';
@@ -22,7 +22,8 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
         tag: 'div',
         classes: [ 'tox-statusbar__resize-handle' ],
         attributes: {
-          title: providersBackstage.translate('Resize') // TODO: tooltips AP-213
+          'title': providersBackstage.translate('Resize'), // TODO: tooltips AP-213
+          'aria-hidden': 'true'
         },
         innerHtml: getIcon('resize-handle', providersBackstage.icons),
       },
