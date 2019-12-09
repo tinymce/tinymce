@@ -22,7 +22,7 @@ const show = (editor: Editor, rootElm: Node) => {
     if (isWrappedNbsp(parent)) {
       Class.add(SugarElement.fromDom(parent), Data.nbspClass);
     } else {
-      const withSpans = Nodes.replaceWithSpans(SugarNode.value(n));
+      const withSpans = Nodes.replaceWithSpans(editor.dom.encode(SugarNode.value(n)));
 
       const div = editor.dom.create('div', null, withSpans);
       let node: any;

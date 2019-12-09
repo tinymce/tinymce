@@ -16,16 +16,10 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTes
     const tinyUi = TinyUi(editor);
 
     const sFindAndAssertFound = (count: number) => GeneralSteps.sequence([
-      tinyUi.sClickOnUi('Click find', '[role=dialog] button:contains("Find")'),
+      Utils.sClickFind(tinyUi),
       tinyApis.sAssertContentPresence({
         '.mce-match-marker': count
       })
-    ]);
-
-    const sSelectPreference = (name: string) => GeneralSteps.sequence([
-      tinyUi.sClickOnUi('Click preferences', 'button[title="Preferences"]'),
-      tinyUi.sWaitForPopup('Wait for menu to show', '.tox-selected-menu[role=menu]'),
-      tinyUi.sClickOnUi('Click match case menu item', '.tox-selected-menu[role=menu] div[title="' + name + '"]')
     ]);
 
     Pipeline.async({}, [
@@ -48,8 +42,19 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTes
         tinyApis.sSetSelection([0, 0], 5, [0, 0], 9),
         Utils.sOpenDialog(tinyUi),
         Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', 'Fish'),
-        sSelectPreference('Match case'),
+        Utils.sSelectPreference(tinyUi, 'Match case'),
         sFindAndAssertFound(1),
+        Utils.sSelectPreference(tinyUi, 'Match case'),
+        Utils.sCloseDialog(tinyUi)
+      ]),
+      Log.stepsAsStep('TBA', 'SearchReplace: Test some content selected with wholewords enabled', [
+        tinyApis.sSetContent('<p>ttt TTT ttt ttttt</p>'),
+        tinyApis.sSetSelection([0, 0], 0, [0, 0], 3),
+        Utils.sOpenDialog(tinyUi),
+        Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', 'ttt'),
+        Utils.sSelectPreference(tinyUi, 'Find whole words only'),
+        sFindAndAssertFound(3),
+        Utils.sSelectPreference(tinyUi, 'Find whole words only'),
         Utils.sCloseDialog(tinyUi)
       ])
     ], onSuccess, onFailure);
