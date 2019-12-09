@@ -1,15 +1,13 @@
-import { document, Element as DomElement } from '@ephox/dom-globals';
+import { document, Element as DomElement, HTMLDocument, Node as DomNode } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Element, Traverse } from '@ephox/sugar';
 
-import { SugarDocument } from '../alien/TypeDefinitions';
-
 export interface Navigation {
-  view: (doc: SugarDocument) => Option<Element>;
-  owner: (elem: Element) => SugarDocument;
+  view: (doc: Element<HTMLDocument>) => Option<Element<DomElement>>;
+  owner: (elem: Element<DomNode>) => Element<HTMLDocument>;
 }
 
-const view = (doc: SugarDocument): Option<Element> => {
+const view = (doc: Element<HTMLDocument>): Option<Element<DomElement>> => {
   // Only walk up to the document this script is defined in.
   // This prevents walking up to the parent window when the editor is in an iframe.
   const element: Option<DomElement> = doc.dom() === document ?
@@ -18,7 +16,7 @@ const view = (doc: SugarDocument): Option<Element> => {
   return element.map(Element.fromDom);
 };
 
-const owner = (element: Element): SugarDocument => {
+const owner = (element: Element<DomNode>): Element<HTMLDocument> => {
   return Traverse.owner(element);
 };
 

@@ -27,18 +27,18 @@ const rebuild = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: San
 };
 
 // Open sandbox transfers focus to the opened menu
-const open = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data) => {
+const open = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data: AlloySpec) => {
   const newState = rebuild(sandbox, sConfig, sState, data);
   sConfig.onOpen(sandbox, newState);
   return newState;
 };
 
-const setContent = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data) => {
+const setContent = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data: AlloySpec) => {
   return sState.get().map(() => rebuild(sandbox, sConfig, sState, data));
 };
 
 // TODO AP-191 write a test for openWhileCloaked
-const openWhileCloaked = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data, transaction: () => void) => {
+const openWhileCloaked = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data: AlloySpec, transaction: () => void) => {
   cloak(sandbox, sConfig, sState);
   open(sandbox, sConfig, sState, data);
   transaction();
@@ -68,7 +68,7 @@ const getState = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sa
   return sState.get();
 };
 
-const store = (sandbox, cssKey, attr, newValue) => {
+const store = (sandbox: AlloyComponent, cssKey: string, attr: string, newValue: string) => {
   Css.getRaw(sandbox.element(), cssKey).fold(() => {
     Attr.remove(sandbox.element(), attr);
   }, (v) => {
@@ -77,7 +77,7 @@ const store = (sandbox, cssKey, attr, newValue) => {
   Css.set(sandbox.element(), cssKey, newValue);
 };
 
-const restore = (sandbox, cssKey, attr) => {
+const restore = (sandbox: AlloyComponent, cssKey: string, attr: string) => {
   if (Attr.has(sandbox.element(), attr)) {
     const oldValue = Attr.get(sandbox.element(), attr);
     Css.set(sandbox.element(), cssKey, oldValue);

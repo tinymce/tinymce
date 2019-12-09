@@ -7,9 +7,9 @@ import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { FocusInsideModes } from 'ephox/alloy/keying/KeyingModeTypes';
 
 UnitTest.asynctest('Widget Keying Test', (success, failure) => {
@@ -25,7 +25,7 @@ UnitTest.asynctest('Widget Keying Test', (success, failure) => {
    */
 
   GuiSetup.setup((store, doc, body) => {
-    const makeButton = (v, t) => {
+    const makeButton = (v: string, t: string) => {
       return Button.sketch({
         dom: { tag: 'button', innerHtml: t },
         action: store.adder(v + '.clicked'),
@@ -37,7 +37,7 @@ UnitTest.asynctest('Widget Keying Test', (success, failure) => {
       });
     };
 
-    const makeWidget = (classes) => {
+    const makeWidget = (classes: string[]) => {
       return {
         dom: {
           tag: 'div',
@@ -60,7 +60,7 @@ UnitTest.asynctest('Widget Keying Test', (success, failure) => {
             focusInside: FocusInsideModes.OnEnterOrSpaceMode,
             onEscape: (comp) => {
               Focusing.focus(comp);
-              return Option.some(true);
+              return Option.some<boolean>(true);
             }
           }),
           Focusing.config({ }),

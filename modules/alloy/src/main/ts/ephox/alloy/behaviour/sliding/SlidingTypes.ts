@@ -3,20 +3,21 @@ import { Element } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { BehaviourState } from '../common/BehaviourState';
 
 export interface SlidingBehaviour extends Behaviour.AlloyBehaviour<SlidingConfigSpec, SlidingConfig> {
   config: (config: SlidingConfigSpec) => Behaviour.NamedConfiguredBehaviour<SlidingConfigSpec, SlidingConfig>;
-  refresh?: (component: AlloyComponent) => void;
-  grow?: (component: AlloyComponent) => void;
-  shrink?: (component: AlloyComponent) => void;
-  immediateShrink?: (component: AlloyComponent) => void;
-  hasGrown?: (component: AlloyComponent) => boolean;
-  hasShrunk?: (component: AlloyComponent) => boolean;
-  isGrowing?: (component: AlloyComponent) => boolean;
-  isShrinking?: (component: AlloyComponent) => boolean;
-  isTransitioning?: (component: AlloyComponent) => boolean;
-  toggleGrow?: (component: AlloyComponent) => void;
-  disableTransitions?: (component: AlloyComponent) => void;
+  refresh: (component: AlloyComponent) => void;
+  grow: (component: AlloyComponent) => void;
+  shrink: (component: AlloyComponent) => void;
+  immediateShrink: (component: AlloyComponent) => void;
+  hasGrown: (component: AlloyComponent) => boolean;
+  hasShrunk: (component: AlloyComponent) => boolean;
+  isGrowing: (component: AlloyComponent) => boolean;
+  isShrinking: (component: AlloyComponent) => boolean;
+  isTransitioning: (component: AlloyComponent) => boolean;
+  toggleGrow: (component: AlloyComponent) => void;
+  disableTransitions: (component: AlloyComponent) => void;
 }
 
 export interface SlidingConfig extends Behaviour.BehaviourConfigDetail {
@@ -37,8 +38,11 @@ export interface SlidingConfig extends Behaviour.BehaviourConfigDetail {
 
 }
 
-export interface SlidingState {
+export interface SlidingState extends BehaviourState {
   isExpanded: () => boolean;
+  setExpanded: () => void;
+  isCollapsed: () => boolean;
+  setCollapsed: () => void;
 }
 
 export interface SlidingConfigSpec extends Behaviour.BehaviourConfigSpec {

@@ -2,11 +2,12 @@ import { Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import * as ComponentStructure from '../../alien/ComponentStructure';
 import * as AriaOwner from '../../aria/AriaOwner';
+import * as MaxWidth from '../../positioning/layout/MaxWidth';
 import { Layouts } from '../../positioning/mode/Anchoring';
 import * as Dismissal from '../../sandbox/Dismissal';
 import * as Reposition from '../../sandbox/Reposition';
 import * as FloatingToolbarButtonSchema from '../../ui/schema/FloatingToolbarButtonSchema';
-import { FloatingToolbarButtonDetail, FloatingToolbarButtonSketcher, FloatingToolbarButtonSpec } from '../../ui/types/FloatingToolbarButtonTypes';
+import { FloatingToolbarButtonApis, FloatingToolbarButtonDetail, FloatingToolbarButtonSketcher, FloatingToolbarButtonSpec } from '../../ui/types/FloatingToolbarButtonTypes';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Coupling } from '../behaviour/Coupling';
 import { Focusing } from '../behaviour/Focusing';
@@ -17,12 +18,11 @@ import { Sandboxing } from '../behaviour/Sandboxing';
 import { Toggling } from '../behaviour/Toggling';
 import { AlloyComponent } from '../component/ComponentApi';
 import { SketchBehaviours } from '../component/SketchBehaviours';
-import { SketchSpec, AlloySpec } from '../component/SpecTypes';
+import { AlloySpec, SketchSpec } from '../component/SpecTypes';
 import { Button } from './Button';
 import * as Sketcher from './Sketcher';
 import { Toolbar } from './Toolbar';
 import { CompositeSketchFactory } from './UiSketcher';
-import * as MaxWidth from '../../positioning/layout/MaxWidth';
 
 const toggle = (button: AlloyComponent, externals: Record<string, any>) => {
   const toolbarSandbox = Coupling.getCoupled(button, 'toolbarSandbox');
@@ -33,7 +33,7 @@ const toggle = (button: AlloyComponent, externals: Record<string, any>) => {
   }
 };
 
-const position = (button: AlloyComponent, toolbar: AlloyComponent, detail: FloatingToolbarButtonDetail, layouts: Layouts) => {
+const position = (button: AlloyComponent, toolbar: AlloyComponent, detail: FloatingToolbarButtonDetail, layouts: Layouts | undefined) => {
   const bounds = detail.getBounds.map((bounder) => bounder());
   const sink = detail.lazySink(button).getOrDie();
 
@@ -47,7 +47,7 @@ const position = (button: AlloyComponent, toolbar: AlloyComponent, detail: Float
   }, toolbar, bounds);
 };
 
-const setGroups = (button: AlloyComponent, toolbar: AlloyComponent, detail: FloatingToolbarButtonDetail, layouts: Layouts, groups: AlloySpec[]) => {
+const setGroups = (button: AlloyComponent, toolbar: AlloyComponent, detail: FloatingToolbarButtonDetail, layouts: Layouts | undefined, groups: AlloySpec[]) => {
   Toolbar.setGroups(toolbar, groups);
   position(button, toolbar, detail, layouts);
   Toggling.on(button);
@@ -84,7 +84,7 @@ const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, de
           mode: 'special',
           onEscape: (comp) => {
             Sandboxing.close(comp);
-            return Option.some(true);
+            return Option.some<boolean>(true);
           }
         }),
         Sandboxing.config({
@@ -139,45 +139,45 @@ const factory: CompositeSketchFactory<FloatingToolbarButtonDetail, FloatingToolb
       )
     }),
     apis: {
-      setGroups(button, groups) {
+      setGroups(button: AlloyComponent, groups: AlloySpec[]) {
         Sandboxing.getState(Coupling.getCoupled(button, 'toolbarSandbox')).each((toolbar) => {
           setGroups(button, toolbar, detail, spec.layouts, groups);
         });
       },
-      reposition(button) {
+      reposition(button: AlloyComponent) {
         Sandboxing.getState(Coupling.getCoupled(button, 'toolbarSandbox')).each((toolbar) => {
           position(button, toolbar, detail, spec.layouts);
         });
       },
-      toggle(button) {
+      toggle(button: AlloyComponent) {
         toggle(button, externals);
       },
-      getToolbar(button) {
+      getToolbar(button: AlloyComponent) {
         return Sandboxing.getState(Coupling.getCoupled(button, 'toolbarSandbox'));
       },
     }
   };
 };
 
-const FloatingToolbarButton = Sketcher.composite({
+const FloatingToolbarButton: FloatingToolbarButtonSketcher = Sketcher.composite<FloatingToolbarButtonSpec, FloatingToolbarButtonDetail, FloatingToolbarButtonApis>({
   name: 'FloatingToolbarButton',
   factory,
   configFields: FloatingToolbarButtonSchema.schema(),
   partFields: FloatingToolbarButtonSchema.parts(),
   apis: {
-    setGroups(apis, button, groups) {
+    setGroups: (apis, button, groups) => {
       apis.setGroups(button, groups);
     },
-    reposition(apis, button) {
+    reposition: (apis, button) => {
       apis.reposition(button);
     },
-    toggle(apis, button) {
+    toggle: (apis, button) => {
       apis.toggle(button);
     },
-    getToolbar(apis, button) {
+    getToolbar: (apis, button) => {
       return apis.getToolbar(button);
     }
   }
-}) as FloatingToolbarButtonSketcher;
+});
 
 export { FloatingToolbarButton };

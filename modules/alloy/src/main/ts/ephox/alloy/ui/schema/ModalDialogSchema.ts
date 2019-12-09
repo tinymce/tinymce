@@ -26,7 +26,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 const basic = { sketch: Fun.identity };
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
-  PartType.optional({
+  PartType.optional<ModalDialogDetail>({
     name: 'draghandle',
     overrides (detail: ModalDialogDetail, spec) {
       return {
@@ -50,30 +50,30 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     }
   }),
 
-  PartType.required({
-    schema:  [ FieldSchema.strict('dom') ],
+  PartType.required<ModalDialogDetail>({
+    schema: [ FieldSchema.strict('dom') ],
     name: 'title'
   }),
 
-  PartType.required({
+  PartType.required<ModalDialogDetail>({
     factory: basic,
-    schema:  [ FieldSchema.strict('dom') ],
+    schema: [ FieldSchema.strict('dom') ],
     name: 'close'
   }),
 
-  PartType.required({
+  PartType.required<ModalDialogDetail>({
     factory: basic,
     schema:  [ FieldSchema.strict('dom') ],
     name: 'body'
   }),
 
-  PartType.optional({
+  PartType.optional<ModalDialogDetail>({
     factory: basic,
     schema:  [ FieldSchema.strict('dom') ],
     name: 'footer'
   }),
 
-  PartType.external({
+  PartType.external<ModalDialogDetail>({
     factory: {
       sketch: (spec, detail) => {
         // Merging should take care of the uid

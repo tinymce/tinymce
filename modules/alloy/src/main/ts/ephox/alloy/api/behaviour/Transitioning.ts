@@ -7,7 +7,7 @@ import { TransitioningBehaviour, TransitionPropertiesSpec, TransitioningConfigSp
 import TransitionSchema from '../../behaviour/transitioning/TransitionSchema';
 import * as Behaviour from './Behaviour';
 
-const createRoutes = (routes): TransitioningConfigSpec['routes'] => {
+const createRoutes = (routes: Record<string, TransitionPropertiesSpec>): TransitioningConfigSpec['routes'] => {
   const r: TransitioningConfigSpec['routes'] = { };
   Obj.each(routes, (v: TransitionPropertiesSpec, k: string) => {
     const waypoints = k.split('<->');
@@ -50,7 +50,7 @@ const createTristate = (first: string, second: string, third: string, transition
   ]);
 };
 
-const Transitioning = Behaviour.create({
+const Transitioning: TransitioningBehaviour = Behaviour.create({
   fields: TransitionSchema,
   name: 'transitioning',
   active: ActiveTransitioning,
@@ -60,7 +60,7 @@ const Transitioning = Behaviour.create({
     createBistate,
     createTristate
   }
-}) as TransitioningBehaviour;
+});
 
 export {
   Transitioning

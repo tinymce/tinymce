@@ -4,20 +4,20 @@ import { Attr, Node } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AriaTogglingConfig } from './TogglingTypes';
 
-const updatePressed = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status): void => {
+const updatePressed = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
   Attr.set(component.element(), 'aria-pressed', status);
   if (ariaInfo.syncWithExpanded) { updateExpanded(component, ariaInfo, status); }
 };
 
-const updateSelected = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status): void => {
+const updateSelected = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
   Attr.set(component.element(), 'aria-selected', status);
 };
 
-const updateChecked = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status): void => {
+const updateChecked = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
   Attr.set(component.element(), 'aria-checked', status);
 };
 
-const updateExpanded = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status): void => {
+const updateExpanded = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
   Attr.set(component.element(), 'aria-expanded', status);
 };
 
@@ -48,7 +48,7 @@ const detectFromRole = (component: AlloyComponent): Option<string[]> => {
   }
 };
 
-const updateAuto = (component: AlloyComponent, _ariaInfo: void, status): void => {
+const updateAuto = (component: AlloyComponent, _ariaInfo: void, status: boolean): void => {
   // Role has priority
   const attributes = detectFromRole(component).orThunk(() => {
     return detectFromTag(component);

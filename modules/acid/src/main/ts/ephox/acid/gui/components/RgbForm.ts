@@ -1,8 +1,4 @@
-import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour,
-  EventFormat, Focusing, Form, FormField, FormTypes, Input, Invalidating, Memento,
-  Representing, SimulatedEvent, Sketcher, SketchSpec, Tabstopping, UiSketcher
-} from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, EventFormat, Focusing, Form, FormField, FormTypes, Input, Invalidating, Memento, Representing, SimulatedEvent, Sketcher, SketchSpec, Tabstopping, UiSketcher } from '@ephox/alloy';
 import { Cell, Fun, Future, Id, Merger, Option, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 import { Hex, Rgba } from '../../api/colour/ColourTypes';
@@ -36,7 +32,7 @@ export interface RgbFormSpec extends Sketcher.SingleSketchSpec {
 }
 // tslint:enable:no-empty-interface
 
-export interface RgbFormSketcher extends Sketcher.SingleSketch<RgbFormSpec, RgbFormDetail> {
+export interface RgbFormSketcher extends Sketcher.SingleSketch<RgbFormSpec> {
   updateHex: (slider: AlloyComponent, colour: Hex) => void;
 }
 

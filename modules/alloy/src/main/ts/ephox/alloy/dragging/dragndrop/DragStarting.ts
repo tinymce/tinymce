@@ -1,9 +1,8 @@
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { DataTransfer } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import { Element, Traverse, Body } from '@ephox/sugar';
+import { Element, Traverse, Body, EventArgs } from '@ephox/sugar';
 
-import { SugarEvent } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
@@ -57,7 +56,7 @@ const schema: FieldProcessorAdt[] = [
     const handlers = (config: DragStartingConfig): AlloyEvents.AlloyEventRecord => AlloyEvents.derive([
       AlloyEvents.run(NativeEvents.dragover(), config.onDragover),
       AlloyEvents.run(NativeEvents.dragend(), config.onDragend),
-      AlloyEvents.run<SugarEvent>(NativeEvents.dragstart(), (component, simulatedEvent) => {
+      AlloyEvents.run<EventArgs>(NativeEvents.dragstart(), (component, simulatedEvent) => {
         const target = simulatedEvent.event().target();
         const transfer: DataTransfer = DataTransfers.getDataTransferFromEvent(simulatedEvent);
 

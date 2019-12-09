@@ -1,6 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
+import { HTMLElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import { SelectorFind, Element } from '@ephox/sugar';
+import { Element, SelectorFind } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -15,10 +16,6 @@ import * as WrapArrNavigation from '../navigation/WrapArrNavigation';
 import { FlatgridConfig, FlatgridState, KeyRuleHandler } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
-
-// NB: Tsc requires AlloyEventHandler to be imported here.
-// @ts-ignore
-import { AlloyEventHandler } from '../api/events/AlloyEvents';
 
 const schema = [
   FieldSchema.strict('selector'),
@@ -46,7 +43,7 @@ const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent
   });
 };
 
-const doMove = (cycle): DomMovement.ElementMover<FlatgridConfig, FlatgridState> => {
+const doMove = (cycle: WrapArrNavigation.ArrNavigationFunc<Element<HTMLElement>>): DomMovement.ElementMover<FlatgridConfig, FlatgridState> => {
   return (element, focused, gridConfig, gridState) => {
     return DomPinpoint.locateVisible(element, focused, gridConfig.selector).bind((identified) => {
       return cycle(
@@ -59,11 +56,11 @@ const doMove = (cycle): DomMovement.ElementMover<FlatgridConfig, FlatgridState> 
   };
 };
 
-const handleTab: KeyRuleHandler<FlatgridConfig, FlatgridState> = (component, simulatedEvent, gridConfig, gridState) => {
-  return gridConfig.captureTab ? Option.some(true) : Option.none();
+const handleTab: KeyRuleHandler<FlatgridConfig, FlatgridState> = (component, simulatedEvent, gridConfig) => {
+  return gridConfig.captureTab ? Option.some<boolean>(true) : Option.none();
 };
 
-const doEscape: KeyRuleHandler<FlatgridConfig, FlatgridState>  = (component, simulatedEvent, gridConfig, gridState) => {
+const doEscape: KeyRuleHandler<FlatgridConfig, FlatgridState>  = (component, simulatedEvent, gridConfig) => {
   return gridConfig.onEscape(component, simulatedEvent);
 };
 

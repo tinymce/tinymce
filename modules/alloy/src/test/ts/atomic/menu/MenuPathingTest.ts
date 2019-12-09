@@ -7,7 +7,7 @@ UnitTest.test('MenuPathingTest', () => {
   const actual = MenuPathing.generate({ }, { });
   Assert.eq('MenuPathingTest', { }, actual);
 
-  const check = (label, expected, menus, expansions) => {
+  const check = (label: string, expected: Record<string, string[]>, menus: Record<string, string[]>, expansions: Record<string, string>) => {
     const actual = MenuPathing.generate(menus, expansions);
     Assert.eq(label, expected, actual);
   };

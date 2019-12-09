@@ -1,6 +1,6 @@
 import { Cell, Option } from '@ephox/katamari';
+import { Position } from '@ephox/sugar';
 
-import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
@@ -43,10 +43,10 @@ export interface EdgeActions {
 }
 
 export interface Manager {
-  setValueFrom: (spectrum: AlloyComponent, detail: SliderDetail, value: number | SugarPosition) => void;
+  setValueFrom: (spectrum: AlloyComponent, detail: SliderDetail, value: number | Position) => void;
   setToMin: (spectrum: AlloyComponent, detail: SliderDetail) => void;
   setToMax: (spectrum: AlloyComponent, detail: SliderDetail) => void;
-  getValueFromEvent: (simulatedEvent: NativeSimulatedEvent) => Option<number | SugarPosition>;
+  getValueFromEvent: (simulatedEvent: NativeSimulatedEvent) => Option<number | Position>;
   setPositionFromValue: (slider: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail, parts: SliderModelDetailParts) => void;
   onLeft: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>;
   onRight: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>;
@@ -65,6 +65,23 @@ export interface SliderModelDetail {
   manager: Manager;
 }
 
+export interface VerticalSliderModelDetail extends SliderModelDetail {
+  minY: number;
+  maxY: number;
+}
+
+export interface HorizontalSliderModelDetail extends SliderModelDetail {
+  minX: number;
+  maxX: number;
+}
+
+export interface TwoDSliderModelDetail extends SliderModelDetail {
+  minX: number;
+  maxX: number;
+  minY: number;
+  maxY: number;
+}
+
 export interface SliderDetail extends CompositeSketchDetail {
   uid: string;
   dom: RawDomSchema;
@@ -72,7 +89,7 @@ export interface SliderDetail extends CompositeSketchDetail {
   sliderBehaviours: SketchBehaviours;
 
   model: SliderModelDetail;
-  rounded?: boolean;
+  rounded: boolean;
   stepSize: number;
   snapToGrid: boolean;
   snapStart: Option<number>;
@@ -85,6 +102,18 @@ export interface SliderDetail extends CompositeSketchDetail {
   onInit: (component: AlloyComponent, thumb: AlloyComponent, spectrum: AlloyComponent, value: number | SliderValue) => void;
 
   mouseIsDown: Cell<boolean>;
+}
+
+export interface VerticalSliderDetail extends SliderDetail {
+  model: VerticalSliderModelDetail;
+}
+
+export interface HorizontalSliderDetail extends SliderDetail {
+  model: HorizontalSliderModelDetail;
+}
+
+export interface TwoDSliderDetail extends SliderDetail {
+  model: TwoDSliderModelDetail;
 }
 
 export interface HorizontalSliderSpecMode {
@@ -130,8 +159,10 @@ export interface SliderSpec extends CompositeSketchSpec {
   onInit?: (component: AlloyComponent, thumb: AlloyComponent, spectrum: AlloyComponent, value: SliderValue) => void;
 }
 
-export interface SliderSketcher extends CompositeSketch<SliderSpec, SliderDetail> {
+export interface SliderApis  {
   resetToMin: (slider: AlloyComponent) => void;
   resetToMax: (slider: AlloyComponent) => void;
   refresh: (slider: AlloyComponent) => void;
 }
+
+export interface SliderSketcher extends CompositeSketch<SliderSpec>, SliderApis { }

@@ -11,7 +11,7 @@ export interface ReceivingConfig extends Behaviour.BehaviourConfigDetail {
   channels: {
     [ key: string ]: {
       schema: Processor;
-      onReceive: (comp: AlloyComponent, any) => void;
+      onReceive: (comp: AlloyComponent, message: any) => void;
     }
   };
 }
@@ -19,7 +19,7 @@ export interface ReceivingConfig extends Behaviour.BehaviourConfigDetail {
 export interface ReceivingConfigSpec extends Behaviour.BehaviourConfigSpec {
   channels: {
     [ key: string]: {
-      onReceive: any;
+      onReceive: (comp: AlloyComponent, message: any) => void;
       schema?: Processor;
     }
   };

@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
 import { SketchSpec } from '../../api/component/SpecTypes';
-import { HtmlSelectSketcher, HtmlSelectDetail, HtmlSelectSpec } from '../../ui/types/HtmlSelectTypes';
+import { HtmlSelectDetail, HtmlSelectSketcher, HtmlSelectSpec } from '../../ui/types/HtmlSelectTypes';
 import { Focusing } from '../behaviour/Focusing';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
@@ -58,7 +58,7 @@ const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, 
   };
 };
 
-const HtmlSelect = Sketcher.single({
+const HtmlSelect: HtmlSelectSketcher = Sketcher.single({
   name: 'HtmlSelect',
   configFields: [
     FieldSchema.strict('options'),
@@ -68,7 +68,7 @@ const HtmlSelect = Sketcher.single({
     FieldSchema.option('data')
   ],
   factory
-}) as HtmlSelectSketcher;
+});
 
 export {
   HtmlSelect

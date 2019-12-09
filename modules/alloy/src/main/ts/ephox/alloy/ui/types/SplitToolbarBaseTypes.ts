@@ -33,5 +33,5 @@ export interface SplitToolbarBaseSpec extends CompositeSketchSpec {
   };
 }
 
-export interface SplitToolbarBaseSketcher<T extends SplitToolbarBaseSpec, U extends SplitToolbarBaseDetail>
-  extends CompositeSketch<T, U>, SplitToolbarBaseApis { }
+export interface SplitToolbarBaseSketcher<T extends SplitToolbarBaseSpec>
+  extends CompositeSketch<T>, SplitToolbarBaseApis { }

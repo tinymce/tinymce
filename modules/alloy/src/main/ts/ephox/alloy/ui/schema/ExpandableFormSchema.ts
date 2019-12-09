@@ -12,6 +12,7 @@ import { Button } from '../../api/ui/Button';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
+import { ButtonSpec } from '../types/ButtonTypes';
 import { ExpandableFormDetail } from '../types/ExpandableFormTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
@@ -38,17 +39,17 @@ const runOnExtra = (detail: ExpandableFormDetail, operation: (comp: AlloyCompone
 };
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
-  PartType.required({
+  PartType.required<ExpandableFormDetail>({
     // factory: Form,
     schema: [ FieldSchema.strict('dom') ],
     name: 'minimal'
   }),
 
-  PartType.required({
+  PartType.required<ExpandableFormDetail>({
     // factory: Form,
     schema: [ FieldSchema.strict('dom') ],
     name: 'extra',
-    overrides (detail: ExpandableFormDetail) {
+    overrides (detail) {
       return {
         behaviours: Behaviour.derive([
           Sliding.config({
@@ -93,7 +94,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     }
   }),
 
-  PartType.required({
+  PartType.required<ExpandableFormDetail, ButtonSpec>({
     factory: Button,
     schema: [ FieldSchema.strict('dom') ],
     name: 'expander',

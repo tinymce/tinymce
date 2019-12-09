@@ -1,12 +1,12 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Class, Traverse, Css } from '@ephox/sugar';
+import { Class, Css, Traverse } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Sliding } from 'ephox/alloy/api/behaviour/Sliding';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 
 UnitTest.asynctest('SlidingTest', (success, failure) => {
@@ -75,7 +75,7 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
       Assertions.assertEq('Ensuring stopped shrinking', false, Class.has(component.element(), 'test-sliding-width-shrinking'));
     });
 
-    const sGrowingSteps = (label) => {
+    const sGrowingSteps = (label: string) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([
@@ -115,7 +115,7 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
       );
     };
 
-    const sShrinkingSteps = (label) => {
+    const sShrinkingSteps = (label: string) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([

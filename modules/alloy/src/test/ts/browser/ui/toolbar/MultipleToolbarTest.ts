@@ -1,13 +1,14 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { CustomList } from 'ephox/alloy/api/ui/CustomList';
 import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
@@ -37,7 +38,7 @@ UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
     );
   }, (doc, body, gui, component, store) => {
 
-    const makeToolbarItem = (itemSpec) => {
+    const makeToolbarItem = (itemSpec: { text: string }): AlloySpec => {
       return {
         dom: {
           tag: 'button',
@@ -47,7 +48,7 @@ UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
       };
     };
 
-    const makeToolbarGroup = (group) => {
+    const makeToolbarGroup = (group: { items: AlloySpec[] }) => {
       const spec = group;
       return {
         dom: {

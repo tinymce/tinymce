@@ -1,25 +1,25 @@
-import { FocusTools, Keyboard, Keys, Mouse, Step, UiControls, UiFinder, Waiter, Assertions } from '@ephox/agar';
+import { Assertions, FocusTools, Keyboard, Keys, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Future, Result, Strings, Option } from '@ephox/katamari';
+import { Arr, Future, Option, Result, Strings } from '@ephox/katamari';
 import { Focus, Value } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
+import { DatasetRepresentingState } from 'ephox/alloy/behaviour/representing/RepresentingTypes';
 import * as DropdownAssertions from 'ephox/alloy/test/dropdown/DropdownAssertions';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
-import { Representing } from 'ephox/alloy/api/behaviour/Representing';
-import { DatasetRepresentingState } from 'ephox/alloy/behaviour/representing/RepresentState';
 
 UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failure) => {
 
@@ -88,7 +88,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
 
   }, (doc, body, gui, component, store) => {
 
-    const item = (key) => {
+    const item = (key: string) => {
       return {
         selector: '.selected-item[data-value="' + key + '"]',
         label: key

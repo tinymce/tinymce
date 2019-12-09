@@ -34,7 +34,7 @@ UnitTest.asynctest('SpecialKeyingTest', (success, failure) => {
     );
 
   }, (doc, body, gui, component, store) => {
-    const press = (expected, key, modifiers) => {
+    const press = (expected: string, key: number, modifiers: { }) => {
       return GeneralSteps.sequence([
         store.sClear,
         Keyboard.sKeydown(doc, key, modifiers),

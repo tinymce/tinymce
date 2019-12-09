@@ -2,12 +2,12 @@ import { Chain, Cursors, Guard, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Window } from '@ephox/dom-globals';
 import { Option, Result } from '@ephox/katamari';
-import { Css, DomEvent, Element, Node, Scroll, SelectorFind, Traverse, WindowSelection } from '@ephox/sugar';
+import { Css, DomEvent, Element, Node, Scroll, SelectorFind, SimRange, Traverse, WindowSelection } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as Frames from '../../../../demo/ts/ephox/alloy/demo/frames/Frames';
@@ -59,7 +59,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
       return frame.element().dom().contentWindow;
     });
 
-    const cSetPath = (rawPath) => {
+    const cSetPath = (rawPath: { startPath: number[]; soffset: number; finishPath: number[]; foffset: number; }) => {
       const path = Cursors.path(rawPath);
 
       return Chain.binder((win: Window) => {
@@ -169,11 +169,11 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
                 finishPath: [ 13 ],
                 foffset: 0
               }), 'range2'),
-              NamedChain.direct('range2', Chain.binder((range2) => {
+              NamedChain.direct('range2', Chain.binder((range2: SimRange) => {
                 const start = range2.start();
                 // NOTE: Safari likes to select the text node.
                 const optElement = Node.isText(start) ? Traverse.parent(start) : Option.some(start);
-                return optElement.map((elem) => {
+                return optElement.filter(Node.isHTMLElement).map((elem) => {
                   elem.dom().scrollIntoView();
                   return Scroll.get(
                     Traverse.owner(elem)

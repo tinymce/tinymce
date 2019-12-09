@@ -1,7 +1,25 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Element } from '@ephox/sugar';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
 import { Arr, Obj, Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
+
+interface ModifiationType {
+  classes: string[];
+  attributes: Record<string, string>;
+  styles: Record<string, string>;
+}
+
+interface DefinitionType {
+  uid: string;
+  tag: string;
+  classes: string[];
+  attributes: Record<string, string>;
+  styles: Record<string, string>;
+  value: Option<string>;
+  innerHtml: Option<string>;
+  domChildren: Element[];
+}
 
 UnitTest.test('DomDefinitionTest', () => {
   /* global assert */
@@ -11,17 +29,17 @@ UnitTest.test('DomDefinitionTest', () => {
   // test became a lot less useful. Therefore, we'll just test a few
   // properties
 
-  const arbOptionOf = (arb) => Jsc.tuple([ Jsc.bool, arb ]).smap(
-    (arr) => {
+  const arbOptionOf = <T>(arb: any) => Jsc.tuple([ Jsc.bool, arb ]).smap(
+    (arr: [boolean, string]) => {
       return arr[0] ? Option.some(arr[1]) : Option.none();
     },
-    (opt) => {
+    (opt: Option<string>) => {
       return opt.fold(
         () => [ false, '' ],
         (v) => [ true, v ]
       );
     },
-    (opt) => opt.fold(
+    (opt: Option<string>) => opt.fold(
       () => 'None',
       (v) => 'Some(' + v + ')'
     )
@@ -36,7 +54,7 @@ UnitTest.test('DomDefinitionTest', () => {
     arbOptionOf(Jsc.string),
     arbOptionOf(Jsc.string)
   ]).smap(
-    (arr) => {
+    (arr: [string, string, string[], Record<string, string>, Record<string, string>, Option<string>, Option<string>]) => {
       return {
         uid: arr[0],
         tag: arr[1],
@@ -44,13 +62,14 @@ UnitTest.test('DomDefinitionTest', () => {
         attributes: arr[3],
         styles: arr[4],
         value: arr[5],
-        innerHtml: arr[6]
+        innerHtml: arr[6],
+        domChildren: [ ] as Element[]
       };
     },
-    (defn) => {
-      return [ defn.uid, defn.tag, defn.classes, defn.attributes, defn.styles, defn.value, defn.innerHtml ];
+    (defn: DefinitionType) => {
+      return [ defn.uid, defn.tag, defn.classes, defn.attributes, defn.styles, defn.value, defn.innerHtml, defn.domChildren ];
     },
-    (defn) => {
+    (defn: DefinitionType) => {
       return JSON.stringify({
         'Definition arbitrary': defn
       }, null, 2);
@@ -62,17 +81,17 @@ UnitTest.test('DomDefinitionTest', () => {
     Jsc.dict(Jsc.nestring),
     Jsc.dict(Jsc.nestring)
   ]).smap(
-    (arr) => {
+    (arr: [ string[], Record<string, string>, Record<string, string>]) => {
       return {
         classes: arr[0],
         attributes: arr[1],
         styles: arr[2],
       };
     },
-    (mod) => {
+    (mod: ModifiationType) => {
       return [ mod.classes, mod.attributes, mod.styles ];
     },
-    (mod) => {
+    (mod: ModifiationType) => {
       return JSON.stringify({
         'Modification arbitrary': mod
       }, null, 2);
@@ -84,7 +103,7 @@ UnitTest.test('DomDefinitionTest', () => {
     [
       arbDefinition,
       arbModification
-    ], (defn, mod) => {
+    ], (defn: DefinitionType, mod: ModifiationType) => {
       const result = DomModification.merge(defn, mod);
       Assert.eq(
         () => 'All classes in mod should be in final result: ' + JSON.stringify(result, null, 2) + '. Should be none left over.',

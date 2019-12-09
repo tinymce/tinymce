@@ -1,6 +1,6 @@
 import { FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Fun, Future, Obj, Result, Option } from '@ephox/katamari';
+import { Arr, Fun, Future, Obj, Option, Result } from '@ephox/katamari';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -8,12 +8,17 @@ import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
+
+interface TestFocusable {
+  label: string;
+  selector: string;
+}
 
 UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
 
@@ -28,7 +33,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
   );
 
   GuiSetup.setup((store, doc, body) => {
-    const makeFlow = (v) => {
+    const makeFlow = (v: string) => {
       return Container.sketch({
         dom: {
           tag: 'span',
@@ -143,7 +148,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
       GuiFactory.build(sink.asSpec())
     );
 
-    const focusables = {
+    const focusables: Record<string, TestFocusable> = {
       toolsMenu: { label: 'tools-menu', selector: '.menu[aria-label="Tools Menu"]' },
       packagesMenu: { label: 'packages-menu', selector: '.menu[aria-label="Packages Menu"]' },
       sortbyMenu: { label: 'sortby-menu', selector: '.menu[aria-label="Sortby Menu"]' },
@@ -166,7 +171,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
       widgetThree: { label: 'widget-item:3', selector: '.item-widget .three' }
     };
 
-    const sTestMenus = (label, stored, focused, active, background, others) => {
+    const sTestMenus = (label: string, stored: string[], focused: TestFocusable, active: TestFocusable[], background: TestFocusable[], others: TestFocusable[]) => {
       const sCheckBackground = GeneralSteps.sequence(
         Arr.bind(background, (bg) => {
           return [

@@ -1,15 +1,15 @@
 import { Objects } from '@ephox/boulder';
 import { TransitionEvent } from '@ephox/dom-globals';
-import { Css } from '@ephox/sugar';
+import { Css, EventArgs } from '@ephox/sugar';
 
-import { SugarEvent } from '../../alien/TypeDefinitions';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
+import { DomDefinitionDetail } from '../../dom/DomDefinition';
 import * as DomModification from '../../dom/DomModification';
 import * as SlidingApis from './SlidingApis';
 import { SlidingConfig, SlidingState } from './SlidingTypes';
 
-const exhibit = (base: { }, slideConfig: SlidingConfig/*, slideState */): { } => {
+const exhibit = (base: DomDefinitionDetail, slideConfig: SlidingConfig/*, slideState */) => {
   const expanded = slideConfig.expanded;
 
   return expanded ? DomModification.nu({
@@ -23,7 +23,7 @@ const exhibit = (base: { }, slideConfig: SlidingConfig/*, slideState */): { } =>
 
 const events = (slideConfig: SlidingConfig, slideState: SlidingState): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
-    AlloyEvents.runOnSource<SugarEvent>(NativeEvents.transitionend(), (component, simulatedEvent) => {
+    AlloyEvents.runOnSource<EventArgs>(NativeEvents.transitionend(), (component, simulatedEvent) => {
       const raw = simulatedEvent.event().raw() as TransitionEvent;
       // This will fire for all transitions, we're only interested in the dimension completion on source
       if (raw.propertyName === slideConfig.dimension.property) {

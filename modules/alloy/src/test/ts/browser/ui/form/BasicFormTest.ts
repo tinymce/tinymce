@@ -3,12 +3,12 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Value } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Form } from 'ephox/alloy/api/ui/Form';
 import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import * as TestForm from 'ephox/alloy/test/form/TestForm';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
 UnitTest.asynctest('Basic Form', (success, failure) => {
@@ -65,7 +65,7 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
   }, (doc, body, gui, component, store) => {
     const helper = TestForm.helper(component);
 
-    const sAssertDisplay = (inputText, selectValue) => {
+    const sAssertDisplay = (inputText: string, selectValue: string) => {
       return Step.sync(() => {
         Assertions.assertStructure(
           'Checking that HTML select and text input have right contents',

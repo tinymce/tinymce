@@ -2,7 +2,7 @@ import { Cell, Option } from '@ephox/katamari';
 
 import { ReflectingState } from './ReflectingTypes';
 
-const init = <S>(spec): ReflectingState<S> => {
+const init = <S>(): ReflectingState<S> => {
   const cell: Cell<Option<S>> = Cell(Option.none<S>());
 
   const set = (optS: Option<S>) => cell.set(optS);

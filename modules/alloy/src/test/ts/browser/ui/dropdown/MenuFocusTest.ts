@@ -7,10 +7,10 @@ import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as FocusManagers from 'ephox/alloy/api/focus/FocusManagers';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { NormalItemSpec, WidgetItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
 UnitTest.asynctest('MenuFocusTest', (success, failure) => {
@@ -21,7 +21,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
       selectedItem: TestDropdownMenu.markers().selectedItem
     };
 
-    const items = (suffix) => [
+    const items = (suffix: string) => [
       {
         type: 'widget',
         data: { value: 'alpha', meta: { text: 'Alpha' } },

@@ -22,7 +22,7 @@ UnitTest.asynctest('Flat Grid Keying Test', (success, failure) => {
   ];
 
   GuiSetup.setup((store, doc, body) => {
-    const item = (classes) => {
+    const item = (classes: string[]) => {
       return Container.sketch({
         dom: {
           tag: 'span',

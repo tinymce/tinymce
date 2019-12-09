@@ -1,13 +1,14 @@
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { Attr, SelectorFilter } from '@ephox/sugar';
 
-import { SketchSpec, AlloySpec } from '../../api/component/SpecTypes';
+import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as FormChooserSchema from '../../ui/schema/FormChooserSchema';
-import { FormChooserSketcher, FormChooserDetail, FormChooserSpec } from '../../ui/types/FormChooserTypes';
+import { FormChooserDetail, FormChooserSketcher, FormChooserSpec } from '../../ui/types/FormChooserTypes';
 import { Composing } from '../behaviour/Composing';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
 import { Representing } from '../behaviour/Representing';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as SystemEvents from '../events/SystemEvents';
@@ -15,7 +16,7 @@ import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (detail, components: AlloySpec[], spec, externals): SketchSpec => {
-  const findByValue = (chooser, value) => {
+  const findByValue = (chooser: AlloyComponent, value: any) => {
     const choices = SelectorFilter.descendants(chooser.element(), '.' + detail.markers.choiceClass);
     const choiceComps = Arr.map(choices, (c) => {
       return chooser.getSystem().getByDom(c).getOrDie();
@@ -48,7 +49,7 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
             return chooser.getSystem().getByDom(focused).map((choice) => {
               Highlighting.highlight(chooser, choice);
               return true;
-            }).toOption().map((_) => true);
+            }).toOption().map(Fun.constant<boolean>(true));
           }
         }),
 
@@ -91,12 +92,12 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
   };
 };
 
-const FormChooser = Sketcher.composite({
+const FormChooser: FormChooserSketcher = Sketcher.composite({
   name: 'FormChooser',
   configFields: FormChooserSchema.schema(),
   partFields: FormChooserSchema.parts(),
   factory
-}) as FormChooserSketcher;
+});
 
 export {
   FormChooser

@@ -1,20 +1,25 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Obj, Option } from '@ephox/katamari';
 
-import { AlloyBehaviour, AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { BehaviourState, BehaviourStateInitialiser, NoState } from './BehaviourState';
+import { AlloyBehaviour, BehaviourRecord, BehaviourConfigDetail, BehaviourConfigSpec } from './BehaviourTypes';
 
-export interface BehaviourConfigAndState<C, S> {
-  config: () => C;
+export interface BehaviourConfigAndState<C extends BehaviourConfigDetail, S extends BehaviourState> {
+  config: C;
   state: S;
 }
 
-export interface BehaviourData {
-  list: Array<AlloyBehaviour<any, any>>;
-  data: Record<string, () => Option<BehaviourConfigAndState<any, BehaviourState>>>;
+export interface BehaviourSpec<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState> {
+  config: C;
+  state: BehaviourStateInitialiser<D, S>;
 }
 
-const generateFrom = (spec: { behaviours: AlloyBehaviourRecord }, all: Array<AlloyBehaviour<any, any>>): BehaviourData => {
+export interface BehaviourData<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState> {
+  list: Array<AlloyBehaviour<C, D, S>>;
+  data: Record<string, () => Option<BehaviourConfigAndState<D, S>>>;
+}
+
+const generateFrom = (spec: { behaviours?: BehaviourRecord }, all: Array<AlloyBehaviour<BehaviourConfigSpec, BehaviourConfigDetail, BehaviourState>>): BehaviourData<BehaviourConfigSpec, BehaviourConfigDetail, BehaviourState> => {
   /*
    * This takes a basic record of configured behaviours, defaults their state
    * and ensures that all the behaviours were valid. Will need to document
@@ -29,8 +34,8 @@ const generateFrom = (spec: { behaviours: AlloyBehaviourRecord }, all: Array<All
     ]);
   });
 
-  type B = Record<string, Option<BehaviourConfigAndState<any, BehaviourStateInitialiser<any>>>>;
-  const validated = ValueSchema.asRaw(
+  type B = Record<string, Option<BehaviourSpec<BehaviourConfigSpec, BehaviourConfigDetail, BehaviourState>>>;
+  const validated = ValueSchema.asRaw<B>(
     'component.behaviours',
     ValueSchema.objOf(schema),
     spec.behaviours
@@ -39,13 +44,12 @@ const generateFrom = (spec: { behaviours: AlloyBehaviourRecord }, all: Array<All
       ValueSchema.formatError(errInfo) + '\nComplete spec:\n' +
         JSON.stringify(spec, null, 2)
     );
-  }, (v: B) => v);
+  }, (v) => v);
 
   return {
-    list: all as Array<AlloyBehaviour<any, any>>,
+    list: all,
     data: Obj.map(validated, (optBlobThunk) => {
-      const optBlob = optBlobThunk;
-      const output = optBlob.map((blob) => ({
+      const output = optBlobThunk.map((blob) => ({
         config: blob.config,
         state: blob.state.init(blob.config)
       }));
@@ -54,11 +58,11 @@ const generateFrom = (spec: { behaviours: AlloyBehaviourRecord }, all: Array<All
   };
 };
 
-const getBehaviours = (bData: BehaviourData): Array<AlloyBehaviour<any, any>> => {
+const getBehaviours = <C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState>(bData: BehaviourData<C, D, S>): Array<AlloyBehaviour<C, D, S>> => {
   return bData.list;
 };
 
-const getData = (bData: BehaviourData): Record<string, () => Option<BehaviourConfigAndState<any, BehaviourState>>> => {
+const getData = <C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState>(bData: BehaviourData<C, D, S>): Record<string, () => Option<BehaviourConfigAndState<D, S>>> => {
   return bData.data;
 };
 

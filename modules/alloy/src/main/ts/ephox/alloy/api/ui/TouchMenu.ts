@@ -1,14 +1,13 @@
 import { TouchEvent } from '@ephox/dom-globals';
 import { Cell, Fun, Option } from '@ephox/katamari';
-import { Focus } from '@ephox/sugar';
+import { EventArgs, Focus } from '@ephox/sugar';
 
 import * as ElementFromPoint from '../../alien/ElementFromPoint';
-import { SugarEvent } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { TransitionPropertiesSpec } from '../../behaviour/transitioning/TransitioningTypes';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as TouchMenuSchema from '../../ui/schema/TouchMenuSchema';
-import { TouchMenuSketcher, TouchMenuDetail, TouchMenuSpec } from '../../ui/types/TouchMenuTypes';
+import { TouchMenuDetail, TouchMenuSketcher, TouchMenuSpec } from '../../ui/types/TouchMenuTypes';
 import * as AddEventsBehaviour from '../behaviour/AddEventsBehaviour';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Coupling } from '../behaviour/Coupling';
@@ -37,10 +36,10 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
     return Sandboxing.getState(sandbox);
   };
 
-  const hoveredState: Cell<boolean> = Cell(false);
+  const hoveredState = Cell<boolean>(false);
 
   const hoverOn = (component: AlloyComponent): void => {
-    if (hoveredState.get() === false) {
+    if (!hoveredState.get()) {
       forceHoverOn(component);
     }
   };
@@ -51,7 +50,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
   };
 
   const hoverOff = (component: AlloyComponent): void => {
-    if (hoveredState.get() === true) {
+    if (hoveredState.get()) {
       detail.onHoverOff(component);
       hoveredState.set(false);
     }
@@ -163,7 +162,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
       //   - if over items, trigger mousemover on item (and hoverOff on button)
       //   - if over button, (dehighlight all items and trigger hoverOn on button if required)
       //   - if over nothing (dehighlight all items and trigger hoverOff on button if required)
-      AlloyEvents.run<SugarEvent>(NativeEvents.touchmove(), (component, simulatedEvent) => {
+      AlloyEvents.run<EventArgs>(NativeEvents.touchmove(), (component, simulatedEvent) => {
         const raw = simulatedEvent.event().raw() as TouchEvent;
         const e = raw.touches[0];
         getMenu(component).each((iMenu) => {
@@ -220,12 +219,12 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
   };
 };
 
-const TouchMenu = Sketcher.composite({
+const TouchMenu: TouchMenuSketcher = Sketcher.composite({
   name: 'TouchMenu',
   configFields: TouchMenuSchema.schema(),
   partFields: TouchMenuSchema.parts(),
   factory
-}) as TouchMenuSketcher;
+});
 
 export {
   TouchMenu

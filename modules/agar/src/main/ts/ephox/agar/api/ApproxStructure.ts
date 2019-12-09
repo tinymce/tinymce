@@ -11,6 +11,11 @@ type StructAssertBasic = ApproxStructures.StructAssertBasic;
 type StructAssertAdv = ApproxStructures.StructAssertAdv;
 type CombinedAssert = ApproxComparisons.CombinedAssert;
 
+export type ArrayApi = typeof arrApi;
+export type StringApi = typeof strApi;
+export type StructApi = typeof structApi;
+export type Builder<T> = (struct: StructApi, str: StringApi, arr: ArrayApi) => T;
+
 const structApi = {
   element: ApproxStructures.element,
   text: ApproxStructures.text,
@@ -36,7 +41,7 @@ const arrApi = {
   hasPrefix: ApproxComparisons.hasPrefix
 };
 
-const build = <T>(f: (struct: typeof structApi, str: typeof strApi, arr: typeof arrApi) => T): T =>
+const build = <T>(f: Builder<T>): T =>
   f(structApi, strApi, arrApi);
 
 const getAttrsExcept = (node: Element<any>, exclude: string[]): Record<string, string> =>

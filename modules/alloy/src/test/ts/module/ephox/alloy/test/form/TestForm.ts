@@ -2,9 +2,10 @@ import { Assertions, Step } from '@ephox/agar';
 import { Obj } from '@ephox/katamari';
 
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-const helper = (component) => {
-  const sAssertRep = (expected) => {
+const helper = (component: AlloyComponent) => {
+  const sAssertRep = (expected: Record<string, string>) => {
     return Step.sync(() => {
       const val = Representing.getValue(component);
       Assertions.assertEq(
@@ -18,7 +19,7 @@ const helper = (component) => {
     });
   };
 
-  const sSetRep = (newValues) => {
+  const sSetRep = (newValues: Record<string, string>) => {
     return Step.sync(() => {
       Representing.setValue(component, newValues);
     });

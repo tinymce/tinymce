@@ -9,8 +9,8 @@ import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
 
@@ -34,7 +34,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
                 Dragging.snap({
                   sensor: DragCoord.fixed(300, 10),
                   range: Position(1000, 30),
-                  output: DragCoord.fixed(Option.none(), Option.some(10))
+                  output: DragCoord.fixed(Option.none<number>(), Option.some(10))
                 })
               ];
             },
@@ -147,7 +147,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
       )
     ]);
 
-    const cScrollTo = (x: number, y: number) => Chain.op(() => {
+    const cScrollTo = (x: number, y: number): Chain<any, any> => Chain.op(() => {
       Scroll.to(x, y);
     });
 

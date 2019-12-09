@@ -1,11 +1,11 @@
-import { Cell, Arr, Option, Obj } from '@ephox/katamari';
+import { Arr, Cell, Obj, Option } from '@ephox/katamari';
 
 import { ItemDataTuple } from '../../ui/types/ItemTypes';
 import { nuState } from '../common/BehaviourState';
-import { RepresentingState } from './RepresentingTypes';
+import { DatasetRepresentingState, ManualRepresentingState, MemoryRepresentingState, RepresentingConfig } from './RepresentingTypes';
 
-const memory = (): RepresentingState => {
-  const data = Cell(null);
+const memory = (): MemoryRepresentingState => {
+  const data = Cell<any>(null);
 
   const readState = () => {
     return {
@@ -31,7 +31,7 @@ const memory = (): RepresentingState => {
   });
 };
 
-const manual = (): RepresentingState => {
+const manual = (): ManualRepresentingState => {
   const readState = () => {
 
   };
@@ -40,12 +40,6 @@ const manual = (): RepresentingState => {
     readState
   });
 };
-
-export interface DatasetRepresentingState extends RepresentingState {
-  lookup: <T extends ItemDataTuple>(itemString: string) => Option<T>;
-  update: <T extends ItemDataTuple>(items: T[]) => void;
-  clear: () => void;
-}
 
 const dataset = (): DatasetRepresentingState => {
   const dataByValue = Cell({ });
@@ -75,8 +69,8 @@ const dataset = (): DatasetRepresentingState => {
   const update = <T extends ItemDataTuple>(items: T[]): void => {
     const currentDataByValue = dataByValue.get();
     const currentDataByText = dataByText.get();
-    const newDataByValue = { };
-    const newDataByText = { };
+    const newDataByValue: Record<string, T> = { };
+    const newDataByText: Record<string, T> = { };
     Arr.each(items, (item) => {
       newDataByValue[item.value] = item;
       Obj.get<any, string>(item, 'meta').each((meta) => {
@@ -101,10 +95,10 @@ const dataset = (): DatasetRepresentingState => {
     lookup,
     update,
     clear
-  }) as DatasetRepresentingState;
+  });
 };
 
-const init = (spec) => {
+const init = (spec: RepresentingConfig) => {
   return spec.store.manager.state(spec);
 };
 

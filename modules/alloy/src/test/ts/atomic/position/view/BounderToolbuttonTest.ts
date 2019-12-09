@@ -1,14 +1,22 @@
-import { Position } from '@ephox/sugar';
 import { UnitTest, assert } from '@ephox/bedrock-client';
+import { Position } from '@ephox/sugar';
 
-import { bounds } from 'ephox/alloy/alien/Boxes';
+import { Bounds, bounds } from 'ephox/alloy/alien/Boxes';
+import { Bubble, BubbleInstance } from 'ephox/alloy/positioning/layout/Bubble';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';
+import { AnchorBox, AnchorElement, AnchorLayout } from 'ephox/alloy/positioning/layout/LayoutTypes';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
-import { Bubble } from 'ephox/alloy/positioning/layout/Bubble';
+
+interface TestDecisionSpec {
+  label: string;
+  x: number;
+  y: number;
+  candidateYforTest?: number;
+}
 
 UnitTest.test('BounderToolbuttonTest', () => {
   /* global assert */
-  const check = (expected, preference, anchor, panel, bubbles, bounds) => {
+  const check = (expected: TestDecisionSpec, preference: AnchorLayout[], anchor: AnchorBox, panel: AnchorElement, bubbles: Bubble, bounds: Bounds) => {
     const actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
     assert.eq(expected.label, actual.label());
     assert.eq(expected.x, actual.x());
@@ -18,9 +26,9 @@ UnitTest.test('BounderToolbuttonTest', () => {
 
   // Layout is for boxes with a bubble pointing to a cursor position (vertically aligned to nearest side)
   // We use it for toolbar buttons, like naughty hobbitses, so this test will change (TBIO-2326) because right now it's insane.
-  const chameleonBubble = (width): Bubble => {
+  const chameleonBubble = (width: number): Bubble => {
     // no it's not a joke, this is a copy of ephox.chameleon.popup.Bubble
-    const northeast = () => {
+    const northeast = (): BubbleInstance => {
       return {
         offset: () => Position(-1, 1),
         classesOn: () => [ ],
@@ -28,7 +36,7 @@ UnitTest.test('BounderToolbuttonTest', () => {
       };
     };
 
-    const northwest = () => {
+    const northwest = (): BubbleInstance => {
       return {
         offset: () => Position(width - 1, 1),
         classesOn: () => [ ],
@@ -36,7 +44,7 @@ UnitTest.test('BounderToolbuttonTest', () => {
       };
     };
 
-    const southeast = () => {
+    const southeast = (): BubbleInstance => {
       return {
         offset: () => Position(-1, -2),
         classesOn: () => [ ],
@@ -44,7 +52,7 @@ UnitTest.test('BounderToolbuttonTest', () => {
       };
     };
 
-    const southwest = () => {
+    const southwest = (): BubbleInstance => {
       return {
         offset: () => Position(width - 1, -2),
         classesOn: () => [ ],
@@ -52,7 +60,7 @@ UnitTest.test('BounderToolbuttonTest', () => {
       };
     };
 
-    const south = () => {
+    const south = (): BubbleInstance => {
       return {
         offset: () => Position(-1, 1),
         classesOn: () => [ ],
@@ -60,7 +68,7 @@ UnitTest.test('BounderToolbuttonTest', () => {
       };
     };
 
-    const north = () => {
+    const north = (): BubbleInstance => {
       return {
         offset: () => Position(-1, 1),
         classesOn: () => [ ],
@@ -68,7 +76,7 @@ UnitTest.test('BounderToolbuttonTest', () => {
       };
     };
 
-    const east = () => {
+    const east = (): BubbleInstance => {
       return {
         offset: () => Position(-1, 1),
         classesOn: () => [ ],
@@ -76,7 +84,7 @@ UnitTest.test('BounderToolbuttonTest', () => {
       };
     };
 
-    const west = () => {
+    const west = (): BubbleInstance => {
       return {
         offset: () => Position(-1, 1),
         classesOn: () => [ ],

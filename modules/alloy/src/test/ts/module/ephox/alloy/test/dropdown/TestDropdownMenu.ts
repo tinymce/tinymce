@@ -1,16 +1,17 @@
-import { Step, Waiter, Assertions, ApproxStructure } from '@ephox/agar';
+import { ApproxStructure, Assertions, Step, Waiter } from '@ephox/agar';
 import { Merger } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import TestStore from 'ephox/alloy/api/testhelpers/TestStore';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
-import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
-import { MenuSpec } from 'ephox/alloy/ui/types/MenuTypes';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
+import { PartialMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
 
-const renderMenu = (spec): Partial<MenuSpec> => {
+const renderMenu = (spec: { value: string; text?: string; items: ItemSpec[] }): PartialMenuSpec => {
   return {
     dom: {
       tag: 'ol',
@@ -26,7 +27,7 @@ const renderMenu = (spec): Partial<MenuSpec> => {
   };
 };
 
-const renderItem = (spec: { type: any, widget?: any, data: { value: string, meta: any }, hasSubmenu: boolean}): ItemSpec => {
+const renderItem = (spec: { type: any, widget?: any, data: { value: string, meta: any }, hasSubmenu?: boolean}): ItemSpec => {
   return spec.type === 'widget' ? {
     type: 'widget',
     data: spec.data,
@@ -57,21 +58,21 @@ const renderItem = (spec: { type: any, widget?: any, data: { value: string, meta
   };
 };
 
-const part = (store) => {
+const part = (store: TestStore) => {
   return {
     dom: {
       tag: 'div'
     },
     markers: itemMarkers,
-    onExecute (dropdown, item) {
+    onExecute (dropdown: AlloyComponent, item: AlloyComponent) {
       const v = Representing.getValue(item);
       return store.adderH('dropdown.menu.execute: ' + v.value)();
     }
   };
 };
 
-const mStoreMenuUid = (component) => {
-  return Step.stateful((value, next, die) => {
+const mStoreMenuUid = (component: AlloyComponent) => {
+  return Step.stateful((value: any, next, die) => {
     const menu = SelectorFind.descendant(component.element(), '.menu').getOrDie('Could not find menu');
     const uid = Tagger.readOrDie(menu);
     next(
@@ -80,7 +81,7 @@ const mStoreMenuUid = (component) => {
   });
 };
 
-const mWaitForNewMenu = (component) => {
+const mWaitForNewMenu = (component: AlloyComponent) => {
   // TODO: Create an API to hide this detail
   return Step.raw((value: any, next, die, logs) => {
     Waiter.sTryUntil(

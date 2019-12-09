@@ -1,12 +1,12 @@
-import { ApproxStructure, Assertions, Step, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Step, StructAssert, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { SplitSlidingToolbar } from 'ephox/alloy/api/ui/SplitSlidingToolbar';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 import * as TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
 
@@ -73,7 +73,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
     );
   }, (doc, body, gui, component, store) => {
 
-    const makeButton = (itemSpec) => {
+    const makeButton = (itemSpec: { text: string }) => {
       return Button.sketch({
         dom: {
           tag: 'button',
@@ -82,7 +82,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
       });
     };
 
-    const sResetWidth = (px) => {
+    const sResetWidth = (px: string) => {
       return Step.sync(() => {
         Css.set(component.element(), 'width', px);
         SplitSlidingToolbar.refresh(component);
@@ -129,7 +129,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
       });
     });
 
-    const sAssertGroups = (label, pGroups, oGroups) => {
+    const sAssertGroups = (label: string, pGroups: StructAssert[], oGroups: StructAssert[]) => {
       return Assertions.sAssertStructure(
         label,
         ApproxStructure.build((s, str, arr) => {

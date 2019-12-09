@@ -5,8 +5,8 @@ import { PlatformDetection } from '@ephox/sand';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Input } from 'ephox/alloy/api/ui/Input';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Input } from 'ephox/alloy/api/ui/Input';
 
 UnitTest.asynctest('InputTest', (success, failure) => {
 
@@ -43,7 +43,7 @@ UnitTest.asynctest('InputTest', (success, failure) => {
       );
     });
 
-    const sCheckInputSelection = (label, expected) => {
+    const sCheckInputSelection = (label: string, expected: { start: number; end: number; }) => {
       return Step.sync(() => {
         Assertions.assertEq(
           label + '\nChecking selectionStart',

@@ -7,19 +7,19 @@ import * as RepresentState from '../../behaviour/representing/RepresentState';
 import * as Behaviour from './Behaviour';
 
 // The self-reference is clumsy.
-const Representing = Behaviour.create({
+const Representing: RepresentingBehaviour = Behaviour.create({
   fields: RepresentSchema,
   name: 'representing',
   active: ActiveRepresenting,
   apis: RepresentApis,
   extra: {
-    setValueFrom (component: AlloyComponent, source: AlloyComponent) {
+    setValueFrom: (component: AlloyComponent, source: AlloyComponent): void => {
       const value = Representing.getValue(source);
       Representing.setValue(component, value);
     }
   },
   state: RepresentState
-}) as RepresentingBehaviour;
+});
 
 export {
   Representing

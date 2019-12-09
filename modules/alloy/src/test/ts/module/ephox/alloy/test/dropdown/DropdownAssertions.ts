@@ -1,7 +1,10 @@
 import { Assertions, Chain, Logger, UiFinder } from '@ephox/agar';
 import { Css, Width } from '@ephox/sugar';
 
-const sSameWidth = (label, gui, dropdown, menuSelector) => {
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { GuiSystem } from 'ephox/alloy/api/system/Gui';
+
+const sSameWidth = (label: string, gui: GuiSystem, dropdown: AlloyComponent, menuSelector: string) => {
   return Logger.t(
     label + '\nChecking that the hotspot width is passed onto the menu width',
     Chain.asStep(gui.element(), [

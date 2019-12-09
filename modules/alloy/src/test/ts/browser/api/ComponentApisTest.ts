@@ -19,7 +19,7 @@ UnitTest.asynctest('ComponentApisTest', (success, failure) => {
       apis: {
         doFirstThing: store.adder('doFirstThing'),
         doSecondThing: store.adder('doSecondThing'),
-        doThirdThing: (comp) => 'thirdThing'
+        doThirdThing: () => 'thirdThing'
       }
     });
   }, (doc, body, gui, component, store) => {

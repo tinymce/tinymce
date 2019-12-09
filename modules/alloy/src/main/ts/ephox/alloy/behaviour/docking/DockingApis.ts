@@ -1,9 +1,8 @@
 import { Arr, Fun, Thunk } from '@ephox/katamari';
-import { Classes, Css, Scroll, Traverse } from '@ephox/sugar';
+import { Classes, Css, Position, Scroll, Traverse } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
-import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as DragCoord from '../../api/data/DragCoord';
 import * as Dockables from './Dockables';
@@ -14,7 +13,7 @@ const morphToStatic = (component: AlloyComponent, config: DockingConfig): void =
   config.onUndocked(component);
 };
 
-const morphToCoord = (component: AlloyComponent, config: DockingConfig, scroll: SugarPosition, origin: SugarPosition, morph: DragCoord.CoordAdt): void => {
+const morphToCoord = (component: AlloyComponent, config: DockingConfig, scroll: Position, origin: Position, morph: DragCoord.CoordAdt): void => {
   const styles = DragCoord.toStyles(morph, scroll, origin);
   Css.setAll(component.element(), styles);
   const method = styles.position === 'fixed' ? config.onDocked : config.onUndocked;

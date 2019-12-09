@@ -1,7 +1,6 @@
 import { Option } from '@ephox/katamari';
-import { Height, Width } from '@ephox/sugar';
+import { EventArgs, Height, Position, Width } from '@ephox/sugar';
 
-import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Snappables from '../snap/Snappables';
 import * as BlockerUtils from './BlockerUtils';
@@ -16,7 +15,7 @@ const calcStartData = (dragConfig: DraggingConfig, comp: AlloyComponent): DragSt
   };
 };
 
-const move = (component: AlloyComponent, dragConfig: DraggingConfig, dragState: DraggingState<SugarPosition>, dragMode: DragModeDeltas<SugarPosition>, event: SugarEvent) => {
+const move = (component: AlloyComponent, dragConfig: DraggingConfig, dragState: DraggingState, dragMode: DragModeDeltas<Position>, event: EventArgs) => {
   const delta = dragState.update(dragMode, event);
   const dragStartData = dragState.getStartData().getOrThunk(() => calcStartData(dragConfig, component));
   delta.each((dlt) => {
@@ -24,7 +23,7 @@ const move = (component: AlloyComponent, dragConfig: DraggingConfig, dragState: 
   });
 };
 
-const stop = (component: AlloyComponent, blocker: Option<AlloyComponent>, dragConfig: DraggingConfig, dragState: DraggingState<SugarPosition>) => {
+const stop = (component: AlloyComponent, blocker: Option<AlloyComponent>, dragConfig: DraggingConfig, dragState: DraggingState) => {
   blocker.each(BlockerUtils.discard);
   dragConfig.snaps.each((snapInfo) => {
     Snappables.stopDrag(component, snapInfo);

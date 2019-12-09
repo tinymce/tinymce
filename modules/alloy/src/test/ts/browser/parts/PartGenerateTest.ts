@@ -39,7 +39,7 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
     schema
   });
 
-  const check = (label, expected, parts) => {
+  const check = (label: string, expected: Record<string, any>, parts: PartType.PartTypeAdt[]) => {
     Logger.sync(label, () => {
       const data = { 'test-data': label };
       const generated = AlloyParts.generate('owner', parts);
@@ -65,7 +65,7 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
     });
   };
 
-  const checkGroup = (label, expected, parts) => {
+  const checkGroup = (label: string, expected: Record<string, any>, parts: PartType.PartTypeAdt[]) => {
     Logger.sync(label, () => {
       const data = { preprocess: 'PREPROCESSOR' };
       const generated = AlloyParts.generate('owner', parts);

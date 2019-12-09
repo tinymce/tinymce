@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Behaviour, Button, GuiFactory, Memento, Replacing, Sketcher, UiSketcher, AlloySpec } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, Behaviour, Button, GuiFactory, Memento, Replacing, Sketcher, UiSketcher } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
-import { Option, Arr } from '@ephox/katamari';
-import { IconProvider, get as getIcon, getFirst } from '../icons/Icons';
+import { Arr, Option } from '@ephox/katamari';
 import { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
+import { get as getIcon, getFirst, IconProvider } from '../icons/Icons';
 
 export interface NotificationSketchApis {
   updateProgress: (comp: AlloyComponent, percent: number) => void;
@@ -39,7 +39,7 @@ export interface NotificationSketchDetail extends Sketcher.SingleSketchDetail {
   translationProvider: (text: Untranslated) => TranslatedString;
 }
 
-export interface NotificationSketcher extends Sketcher.SingleSketch<NotificationSketchSpec, NotificationSketchDetail>, NotificationSketchApis {
+export interface NotificationSketcher extends Sketcher.SingleSketch<NotificationSketchSpec>, NotificationSketchApis {
 
 }
 
@@ -199,7 +199,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
   };
 };
 
-export const Notification = Sketcher.single<NotificationSketchSpec, NotificationSketchDetail>({
+export const Notification: NotificationSketcher = Sketcher.single({
   name: 'Notification',
   factory,
   configFields: [

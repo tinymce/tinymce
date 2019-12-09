@@ -3,13 +3,15 @@ import { Arr, Fun, Obj, Option, Result } from '@ephox/katamari';
 
 import * as ObjIndex from '../alien/ObjIndex';
 import * as PrioritySort from '../alien/PrioritySort';
-import * as DescribedHandler from '../events/DescribedHandler';
-import * as EventHandler from './EventHandler';
-import { UncurriedHandler } from '../events/EventRegistry';
 import { AlloyBehaviour } from '../api/behaviour/Behaviour';
-import { AlloyEventRecord } from '../api/events/AlloyEvents';
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { AlloyEventHandler, AlloyEventRecord } from '../api/events/AlloyEvents';
 import * as BehaviourBlob from '../behaviour/common/BehaviourBlob';
 import { BehaviourState } from '../behaviour/common/BehaviourState';
+import * as DescribedHandler from '../events/DescribedHandler';
+import { UncurriedHandler } from '../events/EventRegistry';
+import { EventFormat, SimulatedEvent } from '../events/SimulatedEvent';
+import * as EventHandler from './EventHandler';
 
 /*
  * The process of combining a component's events
@@ -29,20 +31,20 @@ import { BehaviourState } from '../behaviour/common/BehaviourState';
 
 type Info = Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>;
 
-type BehaviourTuple = {
+type BehaviourTuple<T extends EventFormat> = {
   name: () => string,
-  handler: () => any
+  handler: () => AlloyEventHandler<T>
 };
 
-const behaviourTuple = (name: string, handler: () => any): BehaviourTuple => {
+const behaviourTuple = <T extends EventFormat>(name: string, handler: AlloyEventHandler<T>): BehaviourTuple<T> => {
   return {
     name: Fun.constant(name),
     handler: Fun.constant(handler)
   };
 };
 
-const nameToHandlers = (behaviours, info) => {
-  const r = {};
+const nameToHandlers = (behaviours: Array<AlloyBehaviour<any, any>>, info: Info) => {
+  const r: Record<string, any> = {};
   Arr.each(behaviours, (behaviour) => {
     r[behaviour.name()] = behaviour.handlers(info);
   });
@@ -50,7 +52,7 @@ const nameToHandlers = (behaviours, info) => {
 };
 
 const groupByEvents = (info: Info, behaviours: Array<AlloyBehaviour<any, any>>, base: Record<string, AlloyEventRecord>) => {
-  const behaviourEvents = {
+  const behaviourEvents: Record<string, Record<string, AlloyEventHandler<any>>> = {
     ...base,
     ...nameToHandlers(behaviours, info)
   };
@@ -61,17 +63,17 @@ const groupByEvents = (info: Info, behaviours: Array<AlloyBehaviour<any, any>>, 
 const combine = (
   info: Info,
   eventOrder: Record<string, string[]>,
-  behaviours: Array<AlloyBehaviour<any, any>>,
+  behaviours: Array<AlloyBehaviour<any, any, any>>,
   base: Record<string, AlloyEventRecord>
-): Result<Record<string, UncurriedHandler>, string | Error> => {
-  const byEventName: Record<string, BehaviourTuple[]> = groupByEvents(info, behaviours, base);
+): Result<Record<string, UncurriedHandler>, string> => {
+  const byEventName: Record<string, Array<BehaviourTuple<any>>> = groupByEvents(info, behaviours, base);
   return combineGroups(byEventName, eventOrder);
 };
 
-const assemble = (rawHandler) => {
+const assemble = <T extends EventFormat>(rawHandler: AlloyEventHandler<T>) => {
   const handler = EventHandler.read(rawHandler);
-  return (component, simulatedEvent, ...rest) => {
-    const args = [ component, simulatedEvent ].concat(rest);
+  return (component: AlloyComponent, simulatedEvent: SimulatedEvent<T>, ...rest: any[]) => {
+    const args = ([ component, simulatedEvent ] as any).concat(rest);
     if (handler.abort.apply(undefined, args)) {
       simulatedEvent.stop();
     } else if (handler.can.apply(undefined, args)) {
@@ -80,7 +82,7 @@ const assemble = (rawHandler) => {
   };
 };
 
-const missingOrderError = <T> (eventName: string, tuples: BehaviourTuple[]): Result<T, string[]> => {
+const missingOrderError = <T> (eventName: string, tuples: Array<BehaviourTuple<any>>): Result<T, string[]> => {
   return Result.error([
     'The event (' + eventName + ') has more than one behaviour that listens to it.\nWhen this occurs, you must ' +
     'specify an event ordering for the behaviours in your spec (e.g. [ "listing", "toggling" ]).\nThe behaviours that ' +
@@ -88,7 +90,7 @@ const missingOrderError = <T> (eventName: string, tuples: BehaviourTuple[]): Res
   ]);
 };
 
-const fuse = (tuples: BehaviourTuple[], eventOrder: Record<string, string[]>, eventName: string): Result<any, any> => {
+const fuse = <T extends EventFormat>(tuples: Array<BehaviourTuple<T>>, eventOrder: Record<string, string[]>, eventName: string): Result<AlloyEventHandler<T>, any[]> => {
   // ASSUMPTION: tuples.length will never be 0, because it wouldn't have an entry if it was 0
   const order = eventOrder[eventName];
   if (! order) {
@@ -103,9 +105,9 @@ const fuse = (tuples: BehaviourTuple[], eventOrder: Record<string, string[]>, ev
   }
 };
 
-const combineGroups = (byEventName: Record<string, BehaviourTuple[]>, eventOrder: Record<string, string[]>) => {
+const combineGroups = <T extends EventFormat>(byEventName: Record<string, Array<BehaviourTuple<T>>>, eventOrder: Record<string, string[]>) => {
   const r = Obj.mapToArray(byEventName, (tuples, eventName) => {
-    const combined = tuples.length === 1 ? Result.value(tuples[0].handler()) : fuse(tuples, eventOrder, eventName);
+    const combined: Result<AlloyEventHandler<T>, any[]> = tuples.length === 1 ? Result.value(tuples[0].handler()) : fuse<T>(tuples, eventOrder, eventName);
     return combined.map((handler) => {
       const assembled = assemble(handler);
       const purpose = tuples.length > 1 ? Arr.filter(eventOrder[eventName], (o) => {

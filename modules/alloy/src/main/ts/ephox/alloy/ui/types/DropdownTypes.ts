@@ -69,4 +69,4 @@ export interface DropdownSpec extends CompositeSketchSpec, HasLayoutAnchorSpec {
 
 }
 
-export interface DropdownSketcher extends CompositeSketch<DropdownSpec, DropdownDetail>, DropdownApis { }
+export interface DropdownSketcher extends CompositeSketch<DropdownSpec>, DropdownApis { }

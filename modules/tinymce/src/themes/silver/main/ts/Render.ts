@@ -171,7 +171,7 @@ const setup = (editor: Editor): RenderInfo => {
     onEscape() {
       editor.focus();
     },
-    split: toolbarDrawer,
+    type: toolbarDrawer,
     lazyToolbar,
     lazyHeader: () => lazyHeader().getOrDie('Could not find header element'),
     ...verticalDirAttributes
@@ -183,7 +183,7 @@ const setup = (editor: Editor): RenderInfo => {
       classes: [ 'tox-toolbar-overlord' ]
     },
     onEscape: () => { },
-    split: toolbarDrawer
+    type: toolbarDrawer
   });
 
   const partSocket: AlloySpec = OuterContainer.parts().socket({

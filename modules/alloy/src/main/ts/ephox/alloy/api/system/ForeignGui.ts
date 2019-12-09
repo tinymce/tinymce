@@ -1,8 +1,7 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Fun, Obj, Option } from '@ephox/katamari';
-import { DomEvent, Insert, Element } from '@ephox/sugar';
+import { DomEvent, Element, EventArgs, Insert } from '@ephox/sugar';
 
-import { SugarEvent } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { UncurriedHandler } from '../../events/EventRegistry';
 import * as SimulatedEvent from '../../events/SimulatedEvent';
@@ -44,7 +43,7 @@ const schema = ValueSchema.objOfOnly([
     // The configuration for the behaviours
     FieldSchema.strict('alloyConfig')
   ]),
-  FieldSchema.defaulted('insertion', (root, system) => {
+  FieldSchema.defaulted('insertion', (root: Element, system: AlloyComponent) => {
     Insert.append(root, system.element());
   })
 ]);
@@ -135,7 +134,7 @@ const engage = (spec: ForeignGuiSpec) => {
     });
   });
 
-  const proxyFor = (event, target, descHandler: UncurriedHandler) => {
+  const proxyFor = <T extends SimulatedEvent.EventFormat>(event: T, target: Element, descHandler: UncurriedHandler) => {
     // create a simple alloy wrapping around the element, and add it to the world
     const proxy = getProxy(event, target);
     const component = proxy.component();
@@ -148,7 +147,7 @@ const engage = (spec: ForeignGuiSpec) => {
     unproxy(component);
   };
 
-  const dispatchTo = (type: string, event: SugarEvent): void => {
+  const dispatchTo = (type: string, event: EventArgs): void => {
     /*
      * 1. Check that the event did not originate in our internal alloy root. If it did,
      * we don't need to handle it here. The alloy root will handle it as usual.

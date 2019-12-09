@@ -4,6 +4,7 @@ import { Arr, Option } from '@ephox/katamari';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
@@ -23,7 +24,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
     );
   }, (doc, body, gui, component, store) => {
 
-    const makeTag = (tag: string, classes: string[]) => {
+    const makeTag = (tag: string, classes: string[]): AlloySpec => {
       return {
         dom: {
           tag,

@@ -1,7 +1,8 @@
-import { ApproxStructure, Assertions, Mouse, Pipeline, Step, Logger } from '@ephox/agar';
+import { ApproxStructure, Assertions, Logger, Mouse, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Body, Element, Html, Insert, Node, Remove, Traverse } from '@ephox/sugar';
+import { Body, Element, EventArgs, Html, Insert, Node, Remove, Traverse } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
@@ -10,8 +11,6 @@ import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
-import { document } from '@ephox/dom-globals';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
@@ -35,7 +34,7 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
             })
           ]),
           events: AlloyEvents.derive([
-            AlloyEvents.run<SugarEvent>(NativeEvents.click(), (component, simulatedEvent) => {
+            AlloyEvents.run<EventArgs>(NativeEvents.click(), (component, simulatedEvent) => {
               // We have to remove the proxy first, because we are during a proxied event (click)
               connection.unproxy(component);
               connection.dispatchTo(SystemEvents.execute(), simulatedEvent.event());

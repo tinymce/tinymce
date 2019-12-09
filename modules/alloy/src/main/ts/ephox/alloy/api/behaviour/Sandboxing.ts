@@ -5,13 +5,13 @@ import SandboxSchema from '../../behaviour/sandboxing/SandboxSchema';
 import * as SandboxState from '../../behaviour/sandboxing/SandboxState';
 import { SandboxingBehaviour } from '../../behaviour/sandboxing/SandboxingTypes';
 
-const Sandboxing = Behaviour.create({
+const Sandboxing: SandboxingBehaviour = Behaviour.create({
   fields: SandboxSchema,
   name: 'sandboxing',
   active: ActiveSandbox,
   apis: SandboxApis,
   state: SandboxState
-}) as SandboxingBehaviour;
+});
 
 export {
   Sandboxing

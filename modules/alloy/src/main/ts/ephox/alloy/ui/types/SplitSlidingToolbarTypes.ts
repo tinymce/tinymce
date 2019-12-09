@@ -34,4 +34,6 @@ export interface SplitSlidingToolbarSpec extends SplitToolbarBaseSpec {
   };
 }
 
-export interface SplitSlidingToolbarSketcher extends SplitToolbarBaseSketcher<SplitSlidingToolbarSpec, SplitSlidingToolbarDetail>, SplitToolbarBaseApis { }
+export interface SplitSlidingToolbarApis extends SplitToolbarBaseApis { }
+
+export interface SplitSlidingToolbarSketcher extends SplitToolbarBaseSketcher<SplitSlidingToolbarSpec>, SplitSlidingToolbarApis { }

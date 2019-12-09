@@ -11,7 +11,7 @@ import * as SketcherFields from '../../data/SketcherFields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
 import * as AnchorLayouts from '../../positioning/mode/AnchorLayouts';
-import { DropdownDetail } from '../types/DropdownTypes';
+import { DropdownDetail, DropdownSpec } from '../types/DropdownTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('dom'),
@@ -33,12 +33,12 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 ));
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
-  PartType.external({
+  PartType.external<DropdownDetail, DropdownSpec>({
     schema: [
       Fields.tieredMenuMarkers()
     ],
     name: 'menu',
-    defaults (detail: DropdownDetail) {
+    defaults (detail) {
       return {
         onExecute: detail.onExecute
       };

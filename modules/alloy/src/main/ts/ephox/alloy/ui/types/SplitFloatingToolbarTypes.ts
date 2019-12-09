@@ -21,7 +21,7 @@ export interface SplitFloatingToolbarDetail extends SplitToolbarBaseDetail {
 
 export interface SplitFloatingToolbarApis extends SplitToolbarBaseApis {
   reposition: (toolbar: AlloyComponent) => void;
-  getOverflow: () => Option<AlloyComponent>;
+  getOverflow: (toolbar: AlloyComponent) => Option<AlloyComponent>;
 }
 
 export interface SplitFloatingToolbarSpec extends SplitToolbarBaseSpec {
@@ -39,4 +39,4 @@ export interface SplitFloatingToolbarSpec extends SplitToolbarBaseSpec {
   };
 }
 
-export interface SplitFloatingToolbarSketcher extends SplitToolbarBaseSketcher<SplitFloatingToolbarSpec, SplitFloatingToolbarDetail>, SplitFloatingToolbarApis { }
+export interface SplitFloatingToolbarSketcher extends SplitToolbarBaseSketcher<SplitFloatingToolbarSpec>, SplitFloatingToolbarApis { }

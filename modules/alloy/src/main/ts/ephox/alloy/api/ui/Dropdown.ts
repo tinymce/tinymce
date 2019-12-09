@@ -1,6 +1,6 @@
 import { Fun, Obj, Option } from '@ephox/katamari';
+import { EventArgs } from '@ephox/sugar';
 
-import { SugarEvent } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
@@ -21,13 +21,13 @@ import * as TieredMenu from './TieredMenu';
 import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec => {
-  const lookupAttr = (attr: string): Option<string> => {
+  const lookupAttr = (attr: string) => {
     return Obj.get(detail.dom, 'attributes').bind((attrs) => {
       return Obj.get(attrs, attr);
     });
   };
 
-  const switchToMenu = (sandbox) => {
+  const switchToMenu = (sandbox: AlloyComponent) => {
     Sandboxing.getState(sandbox).each((tmenu) => {
       TieredMenu.tieredMenu.highlightPrimary(tmenu);
     });
@@ -63,9 +63,9 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     }
   };
 
-  const triggerExecute = (comp: AlloyComponent, se: SimulatedEvent<SugarEvent>): Option<boolean> => {
+  const triggerExecute = (comp: AlloyComponent, se: SimulatedEvent<EventArgs>): Option<boolean> => {
     AlloyTriggers.emitExecute(comp);
-    return Option.some(true);
+    return Option.some<boolean>(true);
   };
 
   return {
@@ -95,7 +95,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
           mode: 'special',
           onSpace: triggerExecute,
           onEnter: triggerExecute,
-          onDown: (comp, se) => {
+          onDown: (comp, se): Option<boolean> => {
             if (Dropdown.isOpen(comp)) {
               const sandbox = Coupling.getCoupled(comp, 'sandbox');
               switchToMenu(sandbox);
@@ -103,12 +103,12 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
               Dropdown.open(comp);
             }
 
-            return Option.some(true);
+            return Option.some<boolean>(true);
           },
-          onEscape: (comp, se) => {
+          onEscape: (comp, se): Option<boolean> => {
             if (Dropdown.isOpen(comp)) {
               Dropdown.close(comp);
-              return Option.some(true);
+              return Option.some<boolean>(true);
             } else {
               return Option.none();
             }
@@ -140,19 +140,19 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
   };
 };
 
-const Dropdown = Sketcher.composite({
+const Dropdown: DropdownSketcher = Sketcher.composite<DropdownSpec, DropdownDetail, DropdownApis>({
   name: 'Dropdown',
   configFields: DropdownSchema.schema(),
   partFields: DropdownSchema.parts(),
   factory,
   apis: {
-    open: (apis: DropdownApis, comp) => apis.open(comp),
-    expand: (apis: DropdownApis, comp) => apis.expand(comp),
-    close: (apis: DropdownApis, comp) => apis.close(comp),
-    isOpen: (apis: DropdownApis, comp) => apis.isOpen(comp),
-    repositionMenus: (apis: DropdownApis, comp) => apis.repositionMenus(comp)
+    open: (apis, comp) => apis.open(comp),
+    expand: (apis, comp) => apis.expand(comp),
+    close: (apis, comp) => apis.close(comp),
+    isOpen: (apis, comp) => apis.isOpen(comp),
+    repositionMenus: (apis, comp) => apis.repositionMenus(comp)
   }
-}) as DropdownSketcher;
+});
 
 export {
   Dropdown

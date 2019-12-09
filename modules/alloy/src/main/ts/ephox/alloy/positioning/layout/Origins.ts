@@ -1,26 +1,40 @@
-import { Adt, Option, Fun } from '@ephox/katamari';
-import { Element, Position, Scroll, Width, Height } from '@ephox/sugar';
+import { Adt, Fun, Option } from '@ephox/katamari';
+import { Element, Height, Position, Scroll, Width } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
-import { css as NuRepositionCss, RepositionCss, RepositionDecision} from '../view/Reposition';
-import * as Direction from './Direction';
 import * as OuterPosition from '../../frame/OuterPosition';
+import { css as NuRepositionCss, RepositionCss, RepositionDecision } from '../view/Reposition';
+import * as Direction from './Direction';
 
-export interface OriginAdt extends Adt {
+type NoneOrigin<T> = () => T;
+type RelativeOrigin<T> = (x: number, y: number, width: number, height: number) => T;
+type FixedOrigin<T> = (x: number, y: number, width: number, height: number) => T;
 
+export interface OriginAdt {
+  fold: <T>(
+    none: NoneOrigin<T>,
+    relative: RelativeOrigin<T>,
+    fixed: FixedOrigin<T>
+  ) => T;
+  match: <T>(branches: {
+    none: NoneOrigin<T>;
+    relative: RelativeOrigin<T>;
+    fixed: FixedOrigin<T>;
+  }) => T;
+  log: (label: string) => void;
 }
 
 const adt: {
-  none: () => OriginAdt;
-  relative: (x: number, y: number, width: number, height: number) => OriginAdt;
-  fixed: (x: number, y: number, width: number, height: number) => OriginAdt;
+  none: NoneOrigin<OriginAdt>;
+  relative: RelativeOrigin<OriginAdt>;
+  fixed: FixedOrigin<OriginAdt>;
 } = Adt.generate([
   { none: [ ] },
   { relative: [ 'x', 'y', 'width', 'height' ] },
   { fixed: [ 'x', 'y', 'width', 'height' ] }
 ]);
 
-const positionWithDirection = (posName, decision, x, y, width, height) => {
+const positionWithDirection = (posName: string, decision: RepositionDecision, x: number, y: number, width: number, height: number) => {
   const decisionX = decision.x() - x;
   const decisionY = decision.y() - y;
   const decisionWidth = decision.width();
@@ -32,7 +46,7 @@ const positionWithDirection = (posName, decision, x, y, width, height) => {
   const top = Option.some(decisionY);
   const right = Option.some(decisionRight);
   const bottom = Option.some(decisionBottom);
-  const none = Option.none();
+  const none = Option.none<number>();
 
   return Direction.cata(decision.direction(),
     () => {
@@ -119,9 +133,9 @@ const translate = (origin: OriginAdt, x: number, y: number): Position => {
 
 const cata = <B>(
   subject: OriginAdt,
-  onNone: () => B,
-  onRelative: (x: number, y: number, width: number, height: number) => B,
-  onFixed: (x: number, y: number, width: number, height: number) => B
+  onNone: NoneOrigin<B>,
+  onRelative: RelativeOrigin<B>,
+  onFixed: FixedOrigin<B>
 ): B => {
   return subject.fold<B>(onNone, onRelative, onFixed);
 };

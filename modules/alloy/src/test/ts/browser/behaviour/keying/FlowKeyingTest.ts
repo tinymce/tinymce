@@ -13,7 +13,7 @@ import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
 UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
-    const item = (classes, name) => {
+    const item = (classes: string[], name: string) => {
       return Container.sketch({
         dom: {
           tag: 'span',

@@ -7,6 +7,7 @@ import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import { EventFormat } from '../../events/SimulatedEvent';
+import { ButtonAction } from '../types/ButtonTypes';
 
 const pointerEvents = (): Array<AlloyEvents.AlloyEventKeyAndHandler<EventFormat>> => {
   return [
@@ -22,7 +23,7 @@ const pointerEvents = (): Array<AlloyEvents.AlloyEventKeyAndHandler<EventFormat>
 };
 
 const events = (optAction: Option<(comp: AlloyComponent) => void>): AlloyEvents.AlloyEventRecord => {
-  const executeHandler = (action) => {
+  const executeHandler = (action: ButtonAction) => {
     return AlloyEvents.runOnExecute((component, simulatedEvent) => {
       action(component);
       simulatedEvent.stop();

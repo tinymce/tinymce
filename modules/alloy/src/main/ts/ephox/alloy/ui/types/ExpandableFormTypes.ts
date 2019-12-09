@@ -50,10 +50,12 @@ export interface ExpandableFormSpec {
   onGrown?: (extra: AlloyComponent) => void;
 }
 
-export interface ExpandableFormSketcher extends CompositeSketch<ExpandableFormSpec, ExpandableFormDetail> {
+export interface ExpandableFormApis {
   toggleForm: (component: AlloyComponent) => void;
   getField: (component: AlloyComponent, key: string) => Option<AlloyComponent>;
   collapseForm: (component: AlloyComponent) => void;
   collapseFormImmediately: (component: AlloyComponent) => void;
   expandForm: (component: AlloyComponent) => void;
 }
+
+export interface ExpandableFormSketcher extends CompositeSketch<ExpandableFormSpec>, ExpandableFormApis { }

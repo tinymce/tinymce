@@ -5,13 +5,13 @@ import * as ActiveTooltipping from '../../behaviour/tooltipping/ActiveTooltippin
 import * as TooltippingApis from '../../behaviour/tooltipping/TooltippingApis';
 import * as Behaviour from './Behaviour';
 
-const Tooltipping = Behaviour.create({
+const Tooltipping: TooltippingBehaviour = Behaviour.create({
   fields: TooltippingSchema,
   name: 'tooltipping',
   active: ActiveTooltipping,
   state: TooltippingState,
   apis: TooltippingApis
-}) as TooltippingBehaviour;
+});
 
 export {
   Tooltipping

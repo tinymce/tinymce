@@ -46,7 +46,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
     });
     gui.add(other);
 
-    const sCheckValidOf = (label, comp) => {
+    const sCheckValidOf = (label: string, comp: AlloyComponent) => {
       return Logger.t(
         label,
         Step.control(

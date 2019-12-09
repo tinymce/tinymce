@@ -1,10 +1,10 @@
-import { Class } from '@ephox/sugar';
+import { Class, Element } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Stateless } from '../../behaviour/common/BehaviourState';
 import { SwappingConfig } from './SwappingTypes';
 
-const swap = (element, addCls, removeCls) => {
+const swap = (element: Element, addCls: string, removeCls: string) => {
   Class.remove(element, removeCls);
   Class.add(element, addCls);
 };

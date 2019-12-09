@@ -29,4 +29,4 @@ export interface TabButtonSpec extends SingleSketchSpec {
   domModification?: DomModificationSpec;
 }
 
-export interface TabButtonSketcher extends SingleSketch<TabButtonSpec, TabButtonDetail> { }
+export interface TabButtonSketcher extends SingleSketch<TabButtonSpec> { }

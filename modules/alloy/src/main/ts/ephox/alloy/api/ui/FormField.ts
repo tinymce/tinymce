@@ -5,7 +5,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as FormFieldSchema from '../../ui/schema/FormFieldSchema';
-import { FormFieldDetail, FormFieldSketcher, FormFieldSpec } from '../../ui/types/FormFieldTypes';
+import { FormFieldApis, FormFieldDetail, FormFieldSketcher, FormFieldSpec } from '../../ui/types/FormFieldTypes';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
@@ -80,7 +80,7 @@ const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail,
   };
 };
 
-const FormField =  Sketcher.composite({
+const FormField: FormFieldSketcher = Sketcher.composite<FormFieldSpec, FormFieldDetail, FormFieldApis>({
   name: 'FormField',
   configFields: FormFieldSchema.schema(),
   partFields: FormFieldSchema.parts(),
@@ -89,7 +89,7 @@ const FormField =  Sketcher.composite({
     getField: (apis, comp) => apis.getField(comp),
     getLabel: (apis, comp) => apis.getLabel(comp)
   }
-}) as FormFieldSketcher;
+});
 
 export {
   FormField

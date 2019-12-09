@@ -1,5 +1,5 @@
-import { document, console } from '@ephox/dom-globals';
-import { Arr, Future, Result, Option } from '@ephox/katamari';
+import { console, document } from '@ephox/dom-globals';
+import { Arr, Future, Option, Result } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -72,6 +72,7 @@ export default (): void => {
               components: [
                 Menu.parts().items({ })
               ],
+              items: [],
               value: 'touchmenu',
               markers: DemoRenders.orbMarkers()
             }

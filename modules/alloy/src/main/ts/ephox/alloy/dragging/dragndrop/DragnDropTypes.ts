@@ -4,6 +4,7 @@ import { Element } from '@ephox/sugar';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { DomDefinitionDetail } from '../../dom/DomDefinition';
 import { DomModification } from '../../dom/DomModification';
 import { NativeSimulatedEvent, EventFormat } from '../../events/SimulatedEvent';
 import { DropEvent } from './DropEvent';
@@ -45,7 +46,7 @@ export interface DragStartingConfig {
   onDragover: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragend: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   instance: {
-    exhibit: () => DomModification;
+    exhibit: (base: DomDefinitionDetail, dragInfo: DragStartingConfig) => DomModification;
     handlers: (dragInfo: DragStartingConfig) => {
       dragover: AlloyEvents.AlloyEventHandler<EventFormat>;
       dragend: AlloyEvents.AlloyEventHandler<EventFormat>;
@@ -74,7 +75,7 @@ export interface DroppingConfig {
   onDragenter: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragleave: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   instance: {
-    exhibit: () => DomModification;
+    exhibit: (base: DomDefinitionDetail, dragInfo: DragStartingConfig) => DomModification;
     handlers: (dragInfo: DroppingConfig) => {
       dragover: AlloyEvents.AlloyEventHandler<EventFormat>;
       dragleave: AlloyEvents.AlloyEventHandler<EventFormat>;

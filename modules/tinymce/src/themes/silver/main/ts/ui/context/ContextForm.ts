@@ -7,7 +7,7 @@
 
 import { AlloySpec, AlloyTriggers, Behaviour, Input, Keying, Memento } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Id, Option, Result } from '@ephox/katamari';
+import { Id, Option } from '@ephox/katamari';
 
 import { ToolbarDrawer } from '../../api/Settings';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
@@ -68,9 +68,7 @@ const renderContextForm = (toolbarType: ToolbarDrawer, ctx: Toolbar.ContextForm,
       }
     ],
     onEscape: Option.none,
-    cyclicKeying: true,
-    backstage,
-    getSink: () => Result.error('')
+    cyclicKeying: true
   });
 };
 

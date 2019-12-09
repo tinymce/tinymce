@@ -6,11 +6,20 @@ import { AnchorBox, AnchorElement, AnchorLayout } from '../layout/LayoutTypes';
 import * as Reposition from './Reposition';
 import { SpotInfo } from './SpotInfo';
 
-export interface BounderAttemptAdt extends Adt {
+export interface BounderAttemptAdt {
+  fold: <T>(
+    fit: (reposition: Reposition.RepositionDecision) => T,
+    nofit: (reposition: Reposition.RepositionDecision, deltaW: number, deltaH: number) => T
+  ) => T;
+  match: <T>(branches: {
+    fit: (reposition: Reposition.RepositionDecision) => T;
+    nofit: (reposition: Reposition.RepositionDecision, deltaW: number, deltaH: number) => T;
+  }) => T;
+  log: (label: string) => void;
 }
 
 const adt: {
-  fit: ( reposition: Reposition.RepositionDecision ) => BounderAttemptAdt;
+  fit: (reposition: Reposition.RepositionDecision) => BounderAttemptAdt;
   nofit: (reposition: Reposition.RepositionDecision, deltaW: number, deltaH: number) => BounderAttemptAdt;
 } = Adt.generate([
   { fit:   [ 'reposition' ] },

@@ -5,38 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AddEventsBehaviour,
-  AlloyComponent,
-  AlloyEvents,
-  AlloyTriggers,
-  Behaviour,
-  CustomEvent,
-  Dropdown as AlloyDropdown,
-  Focusing,
-  GuiFactory,
-  Keying,
-  Memento,
-  Replacing,
-  Representing,
-  SimulatedEvent,
-  SketchSpec,
-  SugarEvent,
-  TieredData,
-  Unselecting
-} from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as AlloyDropdown, Focusing, GuiFactory, Keying, Memento, Replacing, Representing, SimulatedEvent, SketchSpec, TieredData, Unselecting } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Future, Id, Merger, Option, Arr, Cell, Fun } from '@ephox/katamari';
+import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
+import { EventArgs } from '@ephox/sugar';
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import { DisablingConfigs } from '../alien/DisablingConfigs';
+import { chevronSetter } from '../button/Behaviours';
 import { renderLabel, renderReplacableIconFromPack } from '../button/ButtonSlices';
+import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Controls';
 import * as Icons from '../icons/Icons';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
-import { DisablingConfigs } from '../alien/DisablingConfigs';
-import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Controls';
-import { chevronSetter } from '../button/Behaviours';
 
 export const updateMenuText = Id.generate('update-menu-text');
 export const updateMenuIcon = Id.generate('update-menu-icon');
@@ -78,7 +60,7 @@ const renderCommonDropdown = <T>(spec: CommonDropdownSpec<T>, prefix: string, sh
    *   expand it (without highlighting any items in the expanded menu).
    *   It also needs to close the previous menu
    */
-  const onLeftOrRightInMenu = (comp: AlloyComponent, se: SimulatedEvent<SugarEvent>) => {
+  const onLeftOrRightInMenu = (comp: AlloyComponent, se: SimulatedEvent<EventArgs>) => {
     // The originating dropdown is stored on the sandbox itself.
     const dropdown: AlloyComponent = Representing.getValue(comp);
 

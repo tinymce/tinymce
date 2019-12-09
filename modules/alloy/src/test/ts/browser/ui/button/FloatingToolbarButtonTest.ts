@@ -1,20 +1,20 @@
-import { ApproxStructure, Assertions, GeneralSteps, Mouse, Step, Keys, Keyboard, Log } from '@ephox/agar';
+import { ApproxStructure, Assertions, GeneralSteps, Keyboard, Keys, Log, Mouse, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Result, Fun, Future, Arr } from '@ephox/katamari';
+import { Arr, Fun, Future, Result } from '@ephox/katamari';
+import { SelectorExists } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Button } from 'ephox/alloy/api/ui/Button';
+import { Behaviour, FloatingToolbarButton, SketchSpec, Tabstopping } from 'ephox/alloy/api/Main';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import * as Sinks from 'ephox/alloy/test/Sinks';
+import { Button } from 'ephox/alloy/api/ui/Button';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';
+import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
-import { FloatingToolbarButton, Behaviour, Tabstopping } from 'ephox/alloy/api/Main';
-import { SelectorExists } from '@ephox/sugar';
 
 UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
   const sinkComp = Sinks.relativeSink();
 
-  const makeButton = (itemSpec) => {
+  const makeButton = (itemSpec: { text: string }): SketchSpec => {
     return Button.sketch({
       dom: {
         tag: 'button',

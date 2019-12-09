@@ -1,16 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  FocusTools,
-  Keyboard,
-  Keys,
-  Logger,
-  Mouse,
-  NamedChain,
-  Step,
-  UiFinder,
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, NamedChain, Step, StructAssert, UiFinder, } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
 import { Attr, Class, Compare } from '@ephox/sugar';
@@ -23,9 +11,9 @@ import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('ModalDialogTest', (success, failure) => {
@@ -160,7 +148,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       })
     );
 
-    const sCheckDialogStructure = (label, expected) => {
+    const sCheckDialogStructure = (label: string, expected: StructAssert) => {
       return Logger.t(
         label,
         Chain.asStep({ }, [

@@ -1,6 +1,6 @@
 import { Obj, Option } from '@ephox/katamari';
-import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 
+import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import { isSketchSpec } from '../../api/ui/Sketcher';
 import * as Tagger from '../../registry/Tagger';
 import { AlloyComponent } from '../../api/component/ComponentApi';
