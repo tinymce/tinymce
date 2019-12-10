@@ -2,6 +2,7 @@ Version 5.2.0 (TBD)
     Added the ability to apply formats to spaces #TINY-4200
     Added new `tinymce.dom.TextSeeker` API to allow searching text across different DOM nodes #TINY-4200
     Added a drop shadow below the toolbar while in sticky mode and introduced Oxide variables to customize it when creating a custom skin #TINY-4343
+    Added iframe and img `loading` attribute to the default schema. Patch contributed by ataylor32. #GH-5112
     Changed iframe mode to set selection on content init if selection doesn't exist #TINY-4139
     Changed table related icons to align them with the visual style of the other icons #TINY-4341
     Changed and improved the visual appearance of the color input field #TINY-2917
