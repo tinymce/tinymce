@@ -254,8 +254,10 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
 
   function unwrapElement(element) {
     const parentNode = element.parentNode;
-    parentNode.insertBefore(element.firstChild, element);
-    element.parentNode.removeChild(element);
+    while (element.childNodes.length > 0) {
+      parentNode.insertBefore(element.childNodes[0], element);
+    }
+    parentNode.removeChild(element);
   }
 
   function hasClass(elm) {
