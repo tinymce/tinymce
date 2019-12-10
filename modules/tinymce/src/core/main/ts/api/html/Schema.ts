@@ -254,8 +254,8 @@ const compileSchema = function (type: SchemaType) {
   add('a', 'href target rel media hreflang type', phrasingContent);
   add('q', 'cite', phrasingContent);
   add('ins del', 'cite datetime', flowContent);
-  add('img', 'src sizes srcset alt usemap ismap width height');
-  add('iframe', 'src name width height', flowContent);
+  add('img', 'src sizes srcset alt usemap ismap width height loading');
+  add('iframe', 'src name width height loading', flowContent);
   add('embed', 'src type width height');
   add('object', 'data type typemustmatch name usemap form width height', [flowContent, 'param'].join(' '));
   add('param', 'name value');
