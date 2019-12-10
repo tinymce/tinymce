@@ -15,11 +15,13 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTes
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
+    const sAssertFound = (count: number) => tinyApis.sAssertContentPresence({
+      '.mce-match-marker': count
+    });
+
     const sFindAndAssertFound = (count: number) => GeneralSteps.sequence([
       Utils.sClickFind(tinyUi),
-      tinyApis.sAssertContentPresence({
-        '.mce-match-marker': count
-      })
+      sAssertFound(count)
     ]);
 
     Pipeline.async({}, [
@@ -56,7 +58,21 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTes
         sFindAndAssertFound(3),
         Utils.sSelectPreference(tinyUi, 'Find whole words only'),
         Utils.sCloseDialog(tinyUi)
-      ])
+      ]),
+      Log.stepsAsStep('TBA', 'SearchReplace: Test some content selected while changing preferences', [
+        tinyApis.sSetContent('<p>fish fish Fish fishy</p>'),
+        tinyApis.sSetSelection([0, 0], 5, [0, 0], 9),
+        Utils.sOpenDialog(tinyUi),
+        Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', 'fish'),
+        sFindAndAssertFound(4),
+        Utils.sSelectPreference(tinyUi, 'Match case'),
+        sAssertFound(0),
+        sFindAndAssertFound(3),
+        Utils.sSelectPreference(tinyUi, 'Find whole words only'),
+        sAssertFound(0),
+        sFindAndAssertFound(2),
+        Utils.sCloseDialog(tinyUi)
+      ]),
     ], onSuccess, onFailure);
   }, {
     plugins: 'searchreplace',

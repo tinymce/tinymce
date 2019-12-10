@@ -220,6 +220,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
         case 'matchcase':
         case 'wholewords':
           updateSearchState(api);
+          reset(api);
           break;
         default:
           break;
