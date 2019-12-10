@@ -1,4 +1,5 @@
 import { GeneralSteps, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 
@@ -6,7 +7,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { ToolbarDrawer, ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
 import * as MenuUtils from './MenuUtils';
 import * as StickyUtils from './StickyHeaderUtils';
-import { Cell } from '@ephox/katamari';
 
 const sTestStickyHeader = (toolbarDrawer: ToolbarDrawer, toolbarLocation: ToolbarLocation) => {
   const isToolbarTop = toolbarLocation === ToolbarLocation.top;
@@ -84,6 +84,9 @@ const sTestStickyHeader = (toolbarDrawer: ToolbarDrawer, toolbarLocation: Toolba
           StickyUtils.sAssertEditorContainer(isToolbarTop, StickyUtils.expectedInFullView),
           tinyApis.sExecCommand('mceFullscreen'),
           Waiter.sTryUntil('Wait for fullscreen to be deactivated', UiFinder.sNotExists(Body.body(), '.tox-fullscreen')),
+          // TODO: Figure out why Chrome 78 needs this wait on MacOS. I suspect it might be because fullscreen sets overflow hidden
+          // we're setting the scroll position before the window has updated
+          Step.wait(100),
           StickyUtils.sScrollAndAssertStructure(isToolbarTop, 200, StickyUtils.expectedHalfView),
         ])),
 
