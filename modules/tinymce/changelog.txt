@@ -1,4 +1,4 @@
-Version 5.1.4 (TBD)
+Version 5.1.4 (2019-12-11)
     Fixed dialog contents disappearing when clicking a checkbox for right-to-left languages #TINY-4518
     Fixed the `legacyoutput` plugin registering legacy formats after editior initialization, causing legacy content to be stripped on the initial load #TINY-4447
     Fixed search and replace not cycling through results when searching using special characters #TINY-4506
