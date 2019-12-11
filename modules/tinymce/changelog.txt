@@ -21,6 +21,13 @@ Version 5.2.0 (TBD)
     Fixed incorrect `external_plugins` loading error message #TINY-4503
     Fixed resize handler was not hidden for ARIA purposes. Patch contributed by Parent5446. #GH-5195
     Fixed an issue where content could be lost if a misspelled word was selected and spellchecking was disabled #TINY-3899
+Version 5.1.4 (2019-12-11)
+    Fixed dialog contents disappearing when clicking a checkbox for right-to-left languages #TINY-4518
+    Fixed the `legacyoutput` plugin registering legacy formats after editior initialization, causing legacy content to be stripped on the initial load #TINY-4447
+    Fixed search and replace not cycling through results when searching using special characters #TINY-4506
+    Fixed the `visualchars` plugin converting HTML-like text to DOM elements in certain cases #TINY-4507
+    Fixed an issue with the `paste` plugin not sanitizing content in some cases #TINY-4510
+    Fixed HTML comments incorrectly being parsed in certain cases #TINY-4511
 Version 5.1.3 (2019-12-04)
     Fixed sticky toolbar not undocking when fullscreen mode is activated #TINY-4390
     Fixed the "Current Window" target not applying when updating links using the link dialog #TINY-4063
