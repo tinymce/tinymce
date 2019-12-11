@@ -1,3 +1,7 @@
+Version 4.9.7 (TBD)
+    Fixed the `visualchars` plugin converting HTML-like text to DOM elements in certain cases #TINY-4507
+    Fixed an issue with the `paste` plugin not sanitizing content in some cases #TINY-4510
+    Fixed HTML comments incorrectly being parsed in certain cases #TINY-4511
 Version 4.9.6 (2019-09-02)
     Fixed image browse button sometimes displaying the browse window twice #TINY-3959
 Version 4.9.5 (2019-07-02)

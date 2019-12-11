@@ -69,7 +69,12 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ProcessFiltersTest', function 
 
       Logger.t('Paste pre/post process passthough as is', Chain.asStep(editor, [
         cProcessPrePost('a', true, Fun.noop, Fun.noop),
-        Assertions.cAssertEq('Should be unchanged', { content: 'a', cancelled: false })
+        Assertions.cAssertEq('Should be unchanged with safe content', { content: 'a', cancelled: false })
+      ])),
+
+      Logger.t('Paste: Paste pre/post process passthough unsafe content', Chain.asStep(editor, [
+        cProcessPrePost('<img src="non-existent.png" onerror="alert(\'!\')">', true, Fun.noop, Fun.noop),
+        Assertions.cAssertEq('Should be changed if dangerous content', { content: '<img src="non-existent.png">', cancelled: false })
       ])),
 
       Logger.t('Paste pre/post process assert internal false', Chain.asStep(editor, [
@@ -111,6 +116,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ProcessFiltersTest', function 
     add_unload_trigger: false,
     indent: false,
     plugins: 'paste',
-    skin_url: '/project/js/tinymce/skins/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray',
+    extended_valid_elements: 'b[*]'
   }, success, failure);
 });
