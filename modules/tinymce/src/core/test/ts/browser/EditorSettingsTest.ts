@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
   Theme();
 
   const expectedDefaultSettings: EditorSettingsType = {
-    toolbar_drawer: 'floating'
+    toolbar_mode: 'floating',
   };
 
   const expectedTouchDefaultSettings: EditorSettingsType = {
@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
 
   const expectedTabletDefaultSettings: EditorSettingsType = {
     ...expectedTouchDefaultSettings,
-    toolbar_drawer: 'scrolling',
+    toolbar_mode: 'scrolling',
     toolbar_sticky: false
   };
 

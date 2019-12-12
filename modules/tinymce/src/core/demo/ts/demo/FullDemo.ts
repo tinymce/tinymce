@@ -149,7 +149,7 @@ export default function () {
     //     name: 'comments', items: [ 'addcomment' ]
     //   }
     // ],
-    toolbar_drawer: 'floating',
+    toolbar_mode: 'floating',
     emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js',
     resize_img_proportional: true
   };

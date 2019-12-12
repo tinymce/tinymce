@@ -96,7 +96,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
       message: 'Floating overflow should open above overflow button',
       settings: {
         width: 500,
-        toolbar_drawer: 'floating',
+        toolbar_mode: 'floating',
         toolbar: Arr.range(10, Fun.constant('bold | italic ')).join('')
       },
       initial: [{
@@ -111,7 +111,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
       message: 'Menu button in overflow toolbar should open up',
       settings: {
         width: 500,
-        toolbar_drawer: 'floating',
+        toolbar_mode: 'floating',
         toolbar: Arr.range(10, Fun.constant('bold | italic ')).join('') + 'align'
       },
       initial: [{
@@ -129,7 +129,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
       message: 'Menubar menu should open above button',
       settings: {
         width: 500,
-        toolbar_drawer: 'floating',
+        toolbar_mode: 'floating',
         toolbar: Arr.range(10, Fun.constant('bold | italic ')).join('') + 'align'
       },
       initial: [{

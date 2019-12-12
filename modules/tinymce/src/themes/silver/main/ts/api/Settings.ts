@@ -76,7 +76,7 @@ const isMultipleToolbars = (editor: Editor): boolean => {
   );
 };
 
-export enum ToolbarDrawer {
+enum ToolbarDrawer {
   default = '',
   floating = 'floating',
   sliding = 'sliding',
@@ -84,6 +84,17 @@ export enum ToolbarDrawer {
 }
 
 const getToolbarDrawer = (editor: Editor): ToolbarDrawer => editor.getParam('toolbar_drawer', '', 'string') as ToolbarDrawer;
+
+export enum ToolbarMode {
+  default = '',
+  floating = 'floating',
+  sliding = 'sliding',
+  scrolling = 'scrolling'
+}
+
+const getToolbarMode = (editor: Editor): ToolbarMode => {
+  return editor.getParam('toolbar_mode', getToolbarDrawer(editor), 'string') as ToolbarMode;
+};
 
 export enum ToolbarLocation {
   top = 'top',
@@ -142,7 +153,7 @@ export {
   getMultipleToolbarsSetting,
   getUiContainer,
   useFixedContainer,
-  getToolbarDrawer,
+  getToolbarMode,
   isDraggableModal,
   isDistractionFree,
   isStickyToolbar,

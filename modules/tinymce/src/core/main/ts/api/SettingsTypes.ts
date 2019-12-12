@@ -171,7 +171,7 @@ export interface RawEditorSettings {
   toolbar7?: string;
   toolbar8?: string;
   toolbar9?: string;
-  toolbar_drawer?: false | 'floating' | 'sliding' | 'scrolling';
+  toolbar_mode?: false | 'floating' | 'sliding' | 'scrolling';
   typeahead_urls?: boolean;
   url_converter?: URLConverter;
   url_converter_scope?: {};
@@ -186,6 +186,7 @@ export interface RawEditorSettings {
   width?: number | string;
 
   // Deprecated settings
+  toolbar_drawer?: false | 'floating' | 'sliding' | 'scrolling';
   editor_deselector?: string;
   editor_selector?: string;
   elements?: string;

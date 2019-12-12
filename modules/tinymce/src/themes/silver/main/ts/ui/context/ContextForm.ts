@@ -9,12 +9,12 @@ import { AlloySpec, AlloyTriggers, Behaviour, Input, Keying, Memento } from '@ep
 import { Toolbar } from '@ephox/bridge';
 import { Id, Option } from '@ephox/katamari';
 
-import { ToolbarDrawer } from '../../api/Settings';
+import { ToolbarMode } from '../../api/Settings';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderToolbar } from '../toolbar/CommonToolbar';
 import { generate } from './ContextFormButtons';
 
-const renderContextForm = (toolbarType: ToolbarDrawer, ctx: Toolbar.ContextForm, backstage: UiFactoryBackstage) => {
+const renderContextForm = (toolbarType: ToolbarMode, ctx: Toolbar.ContextForm, backstage: UiFactoryBackstage) => {
   // Cannot use the FormField.sketch, because the DOM structure doesn't have a wrapping group
   const inputAttributes = ctx.label.fold(
     () => ({ }),
