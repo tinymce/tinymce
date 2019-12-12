@@ -119,7 +119,7 @@ const overrideSettings = (editor: Editor) => {
 
 const setup = (editor: Editor) => {
   overrideSettings(editor);
-  editor.on('init', () => overrideFormats(editor));
+  editor.on('PreInit', () => overrideFormats(editor));
 };
 
 export default {

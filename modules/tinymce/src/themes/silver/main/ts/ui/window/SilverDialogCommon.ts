@@ -104,7 +104,7 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
 const mapMenuButtons = (buttons: Types.Dialog.DialogButton[]): (Types.Dialog.DialogButton | StoragedMenuButton)[] => {
   const mapItems = (button: Types.Dialog.DialogMenuButton): StoragedMenuButton => {
     const items = Arr.map(button.items, (item: Types.Dialog.DialogToggleMenuItem): StoragedMenuItem => {
-      const cell = Cell<Boolean>(false);
+      const cell = Cell<boolean>(false);
       return {
         ...item,
         storage: cell

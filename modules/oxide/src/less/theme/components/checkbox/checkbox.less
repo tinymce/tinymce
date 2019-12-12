@@ -31,7 +31,6 @@
   .tox-checkbox__input {
     /* Hide from view but visible to screen readers */
     height: 1px;
-    left: -10000px;
     overflow: hidden;
     position: absolute;
     top: auto;
@@ -120,6 +119,10 @@
     margin-left: @pad-xs;
   }
 
+  .tox-checkbox__input {
+    left: -10000px;
+  }
+
   .tox-bar {
     .tox-checkbox {
       margin-left: @pad-xs;
@@ -131,6 +134,10 @@
 .tox[dir=rtl] {
   .tox-checkbox__label {
     margin-right: @pad-xs;
+  }
+
+  .tox-checkbox__input {
+    right: -10000px;
   }
 
   .tox-bar {
