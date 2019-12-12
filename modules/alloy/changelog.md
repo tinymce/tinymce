@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [5.0.7] - 2019-12-02
+
+### Fixed
+- Improved `Docking` scroll performance by only calculating the offset origin as required.
+
 # [5.0.2] - 2019-11-11
 
 ### Fixed
