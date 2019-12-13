@@ -4,14 +4,14 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { ToolbarDrawer, ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
+import { ToolbarMode, ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
 import * as MenuUtils from './MenuUtils';
 import * as StickyUtils from './StickyHeaderUtils';
 
-const sTestStickyHeader = (toolbarDrawer: ToolbarDrawer, toolbarLocation: ToolbarLocation) => {
+const sTestStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLocation) => {
   const isToolbarTop = toolbarLocation === ToolbarLocation.top;
 
-  return Step.label('Test editor with toolbar_drawer: ' + toolbarDrawer, Step.raw((_, next, die, logs) => {
+  return Step.label('Test editor with toolbar_mode: ' + toolbarMode, Step.raw((_, next, die, logs) => {
     TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
       const teardownPageScroll = Cell(undefined);
@@ -42,7 +42,7 @@ const sTestStickyHeader = (toolbarDrawer: ToolbarDrawer, toolbarLocation: Toolba
         ])),
 
         Step.label('Open align menu and check sticky states', StickyUtils.sOpenMenuAndTestScrolling(MenuUtils.sOpenAlignMenu('open align'), 1, isToolbarTop)),
-        ...toolbarDrawer === ToolbarDrawer.default ? [ ] : [ Step.label('Open the more drawer to reveal items first', MenuUtils.sOpenMore(toolbarDrawer)) ],
+        ...toolbarMode === ToolbarMode.default ? [ ] : [ Step.label('Open the more drawer to reveal items first', MenuUtils.sOpenMore(toolbarMode)) ],
         Step.label('Open nested Formats menu Align and check sticky states', StickyUtils.sOpenMenuAndTestScrolling(MenuUtils.sOpenNestedMenus([
           {
             // first open this menu
@@ -75,7 +75,7 @@ const sTestStickyHeader = (toolbarDrawer: ToolbarDrawer, toolbarLocation: Toolba
             selector: 'div[title="Text color"][aria-expanded=false]'
           }
         ]), 1, isToolbarTop)),
-        ...toolbarDrawer === ToolbarDrawer.default ? [ ] : [ Step.label('Close the more drawer', MenuUtils.sCloseMore(toolbarDrawer)) ],
+        ...toolbarMode === ToolbarMode.default ? [ ] : [ Step.label('Close the more drawer', MenuUtils.sCloseMore(toolbarMode)) ],
 
         Step.label('Toggle fullscreen mode and ensure header moves from docked -> undocked -> docked', GeneralSteps.sequence([
           StickyUtils.sScrollAndAssertStructure(isToolbarTop, 200, StickyUtils.expectedHalfView),
@@ -105,7 +105,7 @@ const sTestStickyHeader = (toolbarDrawer: ToolbarDrawer, toolbarLocation: Toolba
       width: 400,
       max_height: 500,
       max_width: 500,
-      toolbar_drawer: toolbarDrawer,
+      toolbar_mode: toolbarMode,
       toolbar_location: toolbarLocation,
       toolbar_sticky: true
     }, next, die);

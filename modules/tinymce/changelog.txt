@@ -1,4 +1,5 @@
 Version 5.2.0 (TBD)
+    Changed `toolbar_drawer` setting to `toolbar_mode`. `toolbar_drawer` has been deprecated #TINY-4416
     Added the ability to apply formats to spaces #TINY-4200
     Added new `tinymce.dom.TextSeeker` API to allow searching text across different DOM nodes #TINY-4200
     Added a drop shadow below the toolbar while in sticky mode and introduced Oxide variables to customize it when creating a custom skin #TINY-4343

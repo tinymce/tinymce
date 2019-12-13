@@ -82,7 +82,7 @@ const getDefaultSettings = function (id: string, documentBaseUrl: string, isTouc
   const baseDefaults: RawEditorSettings = {
     id,
     theme: 'silver',
-    toolbar_drawer: 'floating',
+    toolbar_mode: 'floating',
     plugins: '',
     document_base_url: documentBaseUrl,
     add_form_submit_trigger: true,
@@ -120,7 +120,7 @@ const getDefaultSettings = function (id: string, documentBaseUrl: string, isTouc
 const getDefaultMobileSettings = (isPhone: boolean): RawEditorSettings => {
   const defaultMobileSettings: RawEditorSettings = {
     resize: false,               // Editor resize doesn't make sense on mobile
-    toolbar_drawer: 'scrolling', // Use the default side-scrolling toolbar for tablets/phones
+    toolbar_mode: 'scrolling',   // Use the default side-scrolling toolbar for tablets/phones
     toolbar_sticky: false        // Only enable sticky toolbar on desktop by default
   };
 
