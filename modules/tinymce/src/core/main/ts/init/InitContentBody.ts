@@ -24,6 +24,7 @@ import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
+import * as Placeholder from '../content/Placeholder';
 import NodeType from '../dom/NodeType';
 import ForceBlocks from '../ForceBlocks';
 import KeyboardOverrides from '../keyboard/KeyboardOverrides';
@@ -256,6 +257,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   MultiClickSelection.setup(editor);
   KeyboardOverrides.setup(editor);
   ForceBlocks.setup(editor);
+  Placeholder.setup(editor);
 
   Events.firePreInit(editor);
 

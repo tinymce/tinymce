@@ -7,11 +7,11 @@
 
 import { Types } from '@ephox/bridge';
 import { Element, Event, FocusEvent, HTMLElement, Node, Range, UIEvent } from '@ephox/dom-globals';
-import Editor from './Editor';
-import { NativeEventMap } from './util/EventDispatcher';
 import { GetContentArgs } from '../content/GetContent';
 import { SetContentArgs } from '../content/SetContent';
 import { UndoLevel } from '../undo/UndoManagerTypes';
+import Editor from './Editor';
+import { NativeEventMap } from './util/EventDispatcher';
 
 export type ExecCommandEvent = { command: string, ui?: boolean, value?: any };
 
@@ -90,6 +90,7 @@ export interface EditorEventMap extends NativeEventMap {
   'CloseWindow': WindowEvent<any>;
   'OpenWindow': WindowEvent<any>;
   'ProgressState': ProgressStateEvent;
+  'TogglePlaceholder': { state: boolean };
 }
 
 export interface EditorManagerEventMap extends NativeEventMap {
