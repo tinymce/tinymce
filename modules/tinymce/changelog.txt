@@ -2,11 +2,13 @@ Version 5.2.0 (TBD)
     Added the ability to apply formats to spaces #TINY-4200
     Added new `tinymce.dom.TextSeeker` API to allow searching text across different DOM nodes #TINY-4200
     Added a drop shadow below the toolbar while in sticky mode and introduced Oxide variables to customize it when creating a custom skin #TINY-4343
+    Added `quickbars_image_toolbar` setting to allow for the image quickbar to be turned off #TINY-4398
     Changed iframe mode to set selection on content init if selection doesn't exist #TINY-4139
     Changed table related icons to align them with the visual style of the other icons #TINY-4341
     Changed and improved the visual appearance of the color input field #TINY-2917
     Changed fake caret container to use `forced_root_block` when possible #TINY-4190
     Changed so style_formats gets registered to the formatter before the initial content is loaded into the editor. #TINY-4238
+    Changed text selection quickbar to not appear when an image is selected #TINY-4398
     Fixed bug with alignment toolbar buttons sometimes not changing state correctly #TINY-4139
     Fixed content incorrectly scrolling to the top or bottom when pressing enter if they were already in view #TINY-4162
     Fixed `scrollIntoView` potentially hiding elements behind the toolbar #TINY-4162

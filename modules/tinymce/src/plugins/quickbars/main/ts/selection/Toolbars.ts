@@ -9,19 +9,21 @@ import Settings from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
 
 const addToEditor = (editor: Editor) => {
-  editor.ui.registry.addContextToolbar('imageselection', {
-    predicate: (node) => {
-      return node.nodeName === 'IMG' || node.nodeName === 'FIGURE' && /image/i.test(node.className);
-    },
-    items: 'alignleft aligncenter alignright',
-    position: 'node'
-  });
+  const isImage = (node) => node.nodeName === 'IMG' || node.nodeName === 'FIGURE' && /image/i.test(node.className);
+  const imageToolbarItems = Settings.getImageToolbarItems(editor);
+  if (imageToolbarItems.trim().length > 0) {
+    editor.ui.registry.addContextToolbar('imageselection', {
+      predicate: isImage,
+      items: imageToolbarItems,
+      position: 'node'
+    });
+  }
 
   const textToolbarItems = Settings.getTextSelectionToolbarItems(editor);
   if (textToolbarItems.trim().length > 0) {
     editor.ui.registry.addContextToolbar('textselection', {
       predicate: (node) => {
-        return !editor.selection.isCollapsed();
+        return !isImage(node) && !editor.selection.isCollapsed();
       },
       items: textToolbarItems,
       position: 'selection'

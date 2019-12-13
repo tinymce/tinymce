@@ -32,6 +32,11 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ToolbarFalseTest', (succes
         tinyApis.sSetContent('<p>Some <strong>bold</strong> and <em>italic</em> content.</p><p></p>'),
         tinyApis.sSetSelection([1], 0, [1], 0),
         sAssertToolbarNotVisible
+      ]),
+      Log.stepsAsStep('TBA', 'Image toolbar is not shown', [
+        tinyApis.sSetContent('<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></p>'),
+        tinyApis.sSetSelection([0], 0, [0], 0),
+        sAssertToolbarNotVisible
       ])
     ], onSuccess, onFailure);
   }, {
@@ -41,6 +46,7 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ToolbarFalseTest', (succes
     menubar: false,
     quickbars_insert_toolbar: false,
     quickbars_selection_toolbar: false,
+    quickbars_image_toolbar: false,
     base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });
