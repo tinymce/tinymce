@@ -8,6 +8,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { CoordAdt } from '../../api/data/DragCoord';
 import { BehaviourState } from '../../behaviour/common/BehaviourState';
 import { MouseDraggingConfigSpec } from '../mouse/MouseDraggingTypes';
+import { MouseOrTouchDraggingConfigSpec } from '../mouseortouch/MouseOrTouchDraggingTypes';
 import { TouchDraggingConfigSpec } from '../touch/TouchDraggingTypes';
 
 export interface DraggingBehaviour extends Behaviour.AlloyBehaviour<DraggingConfigSpec, DraggingConfig> {
@@ -16,7 +17,7 @@ export interface DraggingBehaviour extends Behaviour.AlloyBehaviour<DraggingConf
   snapTo: (component: AlloyComponent, sConfig: SnapConfig) => void;
 }
 
-export type DraggingMode = 'touch' | 'mouse';
+export type DraggingMode = 'touch' | 'mouse' | 'mouseOrTouch';
 export type SensorCoords = (x: number, y: number) => CoordAdt;
 export type OutputCoords = (x: Option<number>, y: Option<number>) => CoordAdt;
 
@@ -74,7 +75,7 @@ export interface CommonDraggingConfigSpec {
   blockerClass: string;
 }
 
-export type DraggingConfigSpec = MouseDraggingConfigSpec | TouchDraggingConfigSpec;
+export type DraggingConfigSpec = MouseDraggingConfigSpec | TouchDraggingConfigSpec | MouseOrTouchDraggingConfigSpec;
 
 export interface DragModeDeltas<T> {
   getData: (event: SugarEvent) => Option<T>;
