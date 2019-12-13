@@ -1,6 +1,5 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
@@ -8,10 +7,8 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 
 import * as HorizontalModel from './HorizontalModel';
-import * as VerticalModel from './VerticalModel';
 import * as TwoDModel from './TwoDModel';
-
-const isTouch = PlatformDetection.detect().deviceType.isTouch();
+import * as VerticalModel from './VerticalModel';
 
 const SliderSchema: FieldProcessorAdt[] = [
   FieldSchema.defaulted('stepSize', 1),
@@ -55,12 +52,9 @@ const SliderSchema: FieldProcessorAdt[] = [
     }
   )),
 
-  SketchBehaviours.field('sliderBehaviours', [Keying, Representing])
-].concat(!isTouch ? [
-  // Only add if not on a touch device
+  SketchBehaviours.field('sliderBehaviours', [Keying, Representing]),
   FieldSchema.state('mouseIsDown', () => Cell(false))
-] : []
-);
+];
 
 export {
   SliderSchema

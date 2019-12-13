@@ -1,13 +1,13 @@
 import { Objects } from '@ephox/boulder';
+import { Fun } from '@ephox/katamari';
 
 import * as EventRoot from '../../alien/EventRoot';
+import * as TransformFind from '../../alien/TransformFind';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as EventHandler from '../../construct/EventHandler';
 import { EventFormat, SimulatedEvent } from '../../events/SimulatedEvent';
 import * as AlloyTriggers from './AlloyTriggers';
 import * as SystemEvents from './SystemEvents';
-import * as TransformFind from '../../alien/TransformFind';
-import { Fun } from '@ephox/katamari';
 
 export type AlloyEventRecord = Record<string, AlloyEventHandler<EventFormat>>;
 
@@ -76,12 +76,12 @@ const run = function <T extends EventFormat>(name: string, handler: EventRunHand
 
 // Extra can be used when your handler needs more context, and is declared in one spot
 // It's really just convenient partial application.
-const runActionExtra = function <T extends EventFormat>(name: string, action: (t: AlloyComponent, u: any) => void, extra: any): AlloyEventKeyAndHandler<T> {
+const runActionExtra = function <T extends EventFormat>(name: string, action: (t: AlloyComponent, se: SimulatedEvent<T>, u: any) => void, extra: any): AlloyEventKeyAndHandler<T> {
   return {
     key: name,
     value: EventHandler.nu({
-      run (component) {
-        action.apply(undefined, [ component ].concat(extra));
+      run (component, simulatedEvent) {
+        action.apply(undefined, [ component, simulatedEvent ].concat(extra));
       }
     })
   };
