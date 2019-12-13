@@ -1,5 +1,5 @@
-import { FieldSchema, ValueSchema, Processor } from '@ephox/boulder';
-import { setTimeout, KeyboardEvent, clearTimeout } from '@ephox/dom-globals';
+import { FieldSchema, Processor, ValueSchema } from '@ephox/boulder';
+import { clearTimeout, KeyboardEvent, setTimeout } from '@ephox/dom-globals';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, Element, Node, SelectorExists } from '@ephox/sugar';
@@ -50,13 +50,12 @@ const bindBlur = (container: Element, handler: (evt: SugarEvent) => void): Sugar
 const setup = (container: Element, rawSettings: { }): { unbind: () => void } => {
   const settings: GuiEventSettings = ValueSchema.asRawOrDie('Getting GUI events settings', settingsSchema, rawSettings);
 
-  const pointerEvents = PlatformDetection.detect().deviceType.isTouch() ? [
+  const pointerEvents = [
     'touchstart',
     'touchmove',
     'touchend',
     'touchcancel',
-    'gesturestart'
-  ] : [
+    'gesturestart',
     'mousedown',
     'mouseup',
     'mouseover',

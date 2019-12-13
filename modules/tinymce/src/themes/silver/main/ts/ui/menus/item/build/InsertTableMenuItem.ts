@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Focusing, GuiFactory, ItemTypes, ItemWidget, Keying, Memento, NativeEvents, Replacing, SystemEvents, Toggling } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Focusing, GuiFactory, ItemTypes, ItemWidget, Keying, Memento, NativeEvents, NativeSimulatedEvent, Replacing, SystemEvents, Toggling } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Arr, Id } from '@ephox/katamari';
 
@@ -18,8 +18,13 @@ interface CellEvent extends CustomEvent {
 }
 
 const makeCell = (row, col, labelId) => {
-  const emitCellOver = (c) => AlloyTriggers.emitWith(c, cellOverEvent, {row, col} );
-  const emitExecute = (c) => AlloyTriggers.emitWith(c, cellExecuteEvent, {row, col} );
+  const emitCellOver = (c: AlloyComponent) => AlloyTriggers.emitWith(c, cellOverEvent, {row, col} );
+  const emitExecute = (c: AlloyComponent) => AlloyTriggers.emitWith(c, cellExecuteEvent, {row, col} );
+
+  const onClick = (c: AlloyComponent, se: NativeSimulatedEvent) => {
+    se.stop();
+    emitExecute(c);
+  };
 
   return GuiFactory.build({
     dom: {
@@ -33,10 +38,8 @@ const makeCell = (row, col, labelId) => {
       AddEventsBehaviour.config('insert-table-picker-cell', [
         AlloyEvents.run(NativeEvents.mouseover(), Focusing.focus),
         AlloyEvents.run(SystemEvents.execute(), emitExecute),
-        AlloyEvents.run(SystemEvents.tapOrClick(), (c, se) => {
-          se.stop();
-          emitExecute(c);
-        })
+        AlloyEvents.run(NativeEvents.click(), onClick),
+        AlloyEvents.run(SystemEvents.tap(), onClick)
       ]),
       Toggling.config({
         toggleClass: 'tox-insert-table-picker__selected',

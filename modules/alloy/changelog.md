@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [5.1.0] - 2019-12-17
+
+### Changed
+- Changed touch/mouse event handling to work with hybrid devices that accept both mouse and touch events.
+
 # [5.0.7] - 2019-12-02
 
 ### Fixed
