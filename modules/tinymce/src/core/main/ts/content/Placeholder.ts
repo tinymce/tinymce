@@ -44,10 +44,20 @@ const isDeleteEvent = (e: EditorEvent<KeyboardEvent>) => {
   return keyCode === VK.BACKSPACE || keyCode === VK.DELETE;
 };
 
-const isNonTypingEvent = (e: EditorEvent<KeyboardEvent>) => {
-  const keyCode = e.keyCode;
-  // Ctrl/Meta/Alt key pressed, F1-12 or non typing keycode
-  return !isDeleteEvent(e) && (VK.metaKeyPressed(e) || e.altKey || keyCode >= 112 && keyCode <= 123 || Arr.contains(nonTypingKeycodes, keyCode));
+const isNonTypingKeyboardEvent = (e: EditorEvent<unknown>) => {
+  if (isKeyboardEvent(e)) {
+    const keyCode = e.keyCode;
+    // Ctrl/Meta/Alt key pressed, F1-12 or non typing keycode
+    return !isDeleteEvent(e) && (VK.metaKeyPressed(e) || e.altKey || keyCode >= 112 && keyCode <= 123 || Arr.contains(nonTypingKeycodes, keyCode));
+  } else {
+    return false;
+  }
+};
+
+const isTypingKeyboardEvent = (e: EditorEvent<unknown>) => {
+  // 229 === Unidentified, so since we don't know what it is treat it as a non typing event on keyup but as a typing event on keydown
+  // Android will generally always send a 229 keycode since it uses an IME to input text
+  return isKeyboardEvent(e) && !(isDeleteEvent(e) || e.type === 'keyup' && e.keyCode === 229);
 };
 
 const isVisuallyEmpty = (dom: DOMUtils, rootElm: DomElement, forcedRootBlock: string) => {
@@ -75,14 +85,13 @@ const setup = (editor: Editor) => {
   const placeholder = Settings.getPlaceholder(editor);
 
   const updatePlaceholder = (e: EditorEvent<unknown>, initial?: boolean) => {
-    if (isKeyboardEvent(e) && isNonTypingEvent(e)) {
+    if (isNonTypingKeyboardEvent(e)) {
       return;
     }
 
     // Check to see if we should show the placeholder
     const body = editor.getBody();
-    const isTypingEvent = isKeyboardEvent(e) && !isDeleteEvent(e);
-    const showPlaceholder = !isTypingEvent && isVisuallyEmpty(dom, body, rootBlock);
+    const showPlaceholder = isTypingKeyboardEvent(e) ? false : isVisuallyEmpty(dom, body, rootBlock);
 
     // Update the attribute as required
     const isPlaceholderShown = dom.getAttrib(body, placeholderAttr) !== '';
@@ -104,7 +113,7 @@ const setup = (editor: Editor) => {
     editor.on('init', (e) => {
       // Setup the initial state
       updatePlaceholder(e, true);
-      editor.on('change SetContent', updatePlaceholder);
+      editor.on('change SetContent ExecCommand', updatePlaceholder);
 
       // Remove the placeholder attributes on remove
       editor.on('remove', () => {

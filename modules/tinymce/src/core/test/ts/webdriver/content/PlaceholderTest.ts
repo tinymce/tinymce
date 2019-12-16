@@ -91,7 +91,15 @@ UnitTest.asynctest('webdriver.tinymce.core.content.PlaceholderTest', (success, f
         tinyApi.sExecCommand('InsertOrderedList'),
         sAssertPlaceholderNotExists,
         sAssertCount(1)
-      ])
+      ]),
+      Log.stepsAsStep('TINY-3917', 'Check placeholder restores when deleting content via command', [
+        sSetContent('<p>a</p>'),
+        tinyApi.sSetCursor([0, 0], 1),
+        sAssertPlaceholderNotExists,
+        tinyApi.sExecCommand('Delete'),
+        sAssertPlaceholderExists,
+        sAssertCount(1)
+      ]),
     ], onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',
