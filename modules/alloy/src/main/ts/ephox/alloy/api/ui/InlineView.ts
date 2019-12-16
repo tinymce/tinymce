@@ -53,6 +53,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
 
     data: menuSpec.data,
     markers: menuSpec.menu.markers,
+    highlightImmediately: menuSpec.menu.highlightImmediately,
 
     onEscape() {
       // Note for the future: this should possibly also call detail.onHide
