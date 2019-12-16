@@ -5,7 +5,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body, Css, Element, Scroll } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { ToolbarDrawer } from 'tinymce/themes/silver/api/Settings';
+import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
 import Theme from 'tinymce/themes/silver/Theme';
 import { sOpenMore } from '../../module/MenuUtils';
 
@@ -82,7 +82,7 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
           menubar: false,
           inline: true,
           base_url: '/project/tinymce/js/tinymce',
-          toolbar_drawer: 'floating',
+          toolbar_mode: 'floating',
           ...settings
         }, done, die
       );
@@ -107,10 +107,10 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
       }
     }, 400),
     sTestRender('Check width when expanding sliding toolbar while docked', {
-      toolbar_drawer: 'sliding',
+      toolbar_mode: 'sliding',
       width: 400
     }, 400, (editor) => [
-      sOpenMore(ToolbarDrawer.sliding),
+      sOpenMore(ToolbarMode.sliding),
       sAssetWidth(Element.fromDom(editor.getContainer()), 400, 300)
     ]),
   ], success, failure);

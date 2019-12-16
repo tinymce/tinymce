@@ -1,4 +1,4 @@
-import { Pipeline, Step, Logger, Log } from '@ephox/agar';
+import { Log, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
@@ -602,6 +602,13 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteTest', (success, failure)
     editor.execCommand('mceInsertClipboardContent', false, { content: '<img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">' });
 
     LegacyUnit.equal(editor.getContent(), '<p><img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" /></p>');
+  });
+
+  suite.test('TestCase-TBA: Paste: paste data with script', function (editor) {
+    editor.setContent('');
+    editor.execCommand('mceInsertClipboardContent', false, { content: '<p><img src="non-existent.png" onerror="alert(\'!\')" /></p>' });
+
+    LegacyUnit.equal(editor.getContent(), '<p><img src="non-existent.png" /></p>');
   });
 
   suite.test('TestCase-TBA: Paste: paste pre process text (event)', function (editor) {

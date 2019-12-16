@@ -11,7 +11,7 @@ import { Body, Css, Element, Height, Width } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
-import { getMaxWidthSetting, getToolbarDrawer, getUiContainer, isStickyToolbar, isToolbarLocationTop, ToolbarDrawer, useFixedContainer } from '../api/Settings';
+import { getMaxWidthSetting, getToolbarMode, getUiContainer, isStickyToolbar, isToolbarLocationTop, useFixedContainer, ToolbarMode } from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import { setupReadonlyModeSwitch } from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
@@ -32,9 +32,9 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const prevTargetHeight = Cell(Height.get(targetElm));
   const visible = Cell(false);
 
-  const splitSetting = getToolbarDrawer(editor);
-  const isSplitFloatingToolbar = splitSetting === ToolbarDrawer.floating;
-  const isSplitToolbar = splitSetting === ToolbarDrawer.sliding || isSplitFloatingToolbar;
+  const toolbarMode = getToolbarMode(editor);
+  const isSplitFloatingToolbar = toolbarMode === ToolbarMode.floating;
+  const isSplitToolbar = toolbarMode === ToolbarMode.sliding || isSplitFloatingToolbar;
   const isToolbarTop = isToolbarLocationTop(editor);
 
   loadInlineSkin(editor);

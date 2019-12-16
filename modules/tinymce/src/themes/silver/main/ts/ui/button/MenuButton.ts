@@ -5,17 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Disabling, SketchSpec, Tabstopping, AlloyTriggers, MementoRecord } from '@ephox/alloy';
-import { Toolbar, Types } from '@ephox/bridge';
-import { Option, Arr, Cell } from '@ephox/katamari';
+import { AlloyComponent, AlloyTriggers, Disabling, MementoRecord, SketchSpec, Tabstopping } from '@ephox/alloy';
+import { Menu, Toolbar, Types } from '@ephox/bridge';
+import { Arr, Cell, Option } from '@ephox/katamari';
+import { Attr, Class, Focus } from '@ephox/sugar';
+import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderCommonDropdown } from '../dropdown/CommonDropdown';
-import * as NestedMenus from '../menus/menu/NestedMenus';
 import ItemResponse from '../menus/item/ItemResponse';
-import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
-import { Attr, Class, Focus } from '@ephox/sugar';
+import * as NestedMenus from '../menus/menu/NestedMenus';
 import { Omit } from '../Omit';
-import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
+import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
 export type MenuButtonSpec = Omit<Toolbar.ToolbarMenuButton, 'type'>;
 
@@ -67,7 +67,7 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
 };
 
 interface StoragedMenuItem extends Types.Dialog.DialogToggleMenuItem {
-  storage: Cell<Boolean>;
+  storage: Cell<boolean>;
 }
 
 interface StoragedMenuButton extends Omit<Types.Dialog.DialogMenuButton, 'items'> {
@@ -75,8 +75,14 @@ interface StoragedMenuButton extends Omit<Types.Dialog.DialogMenuButton, 'items'
 }
 
 const getFetch = (items: StoragedMenuItem[], getButton: () => MementoRecord, backstage: UiFactoryBackstage) => {
-  const getMenuItemAction = (item) => {
-    return (api) => {
+  const getMenuItemAction = (item: StoragedMenuItem) => {
+    return (api: Menu.ToggleMenuItemInstanceApi) => {
+      // Update the menu item state
+      const newValue = !api.isActive();
+      api.setActive(newValue);
+      item.storage.set(newValue);
+
+      // Fire the form action event
       backstage.shared.getSink().each((sink) => {
         getButton().getOpt(sink).each((orig) => {
           Focus.focus(orig.element());
@@ -86,19 +92,16 @@ const getFetch = (items: StoragedMenuItem[], getButton: () => MementoRecord, bac
           });
         });
       });
-      const newValue = !api.isActive();
-      api.setActive(newValue);
-      item.storage.set(newValue);
     };
   };
 
-  const getMenuItemSetup = (item) => {
-    return (api) => {
+  const getMenuItemSetup = (item: StoragedMenuItem) => {
+    return (api: Menu.ToggleMenuItemInstanceApi) => {
       api.setActive(item.storage.get());
     };
   };
 
-  return (success) => {
+  return (success: (items: Menu.NestedMenuItemContents[]) => void) => {
     success(Arr.map(items, (item) => {
       const text = item.text.fold(() => {
         return {};

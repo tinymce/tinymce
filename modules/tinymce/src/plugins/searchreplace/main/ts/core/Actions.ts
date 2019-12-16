@@ -7,8 +7,8 @@
 
 import { Element, Node } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
-import Editor from 'tinymce/core/api/Editor';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import FindReplaceText from './FindReplaceText';
 
@@ -120,12 +120,15 @@ const removeNode = function (dom: DOMUtils, node: Node) {
   }
 };
 
-const find = function (editor: Editor, currentSearchState: Cell<SearchState>, text: string, matchCase: boolean, wholeWord: boolean) {
-  text = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
-  text = text.replace(/\s/g, '[^\\S\\r\\n]');
-  text = wholeWord ? '\\b' + text + '\\b' : text;
+const escapeSearchText = (text: string, wholeWord: boolean) => {
+  const escapedText = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&').replace(/\s/g, '[^\\S\\r\\n]');
+  return wholeWord ? '\\b' + escapedText + '\\b' : escapedText;
+};
 
-  const count = markAllMatches(editor, currentSearchState, new RegExp(text, matchCase ? 'g' : 'gi'));
+const find = function (editor: Editor, currentSearchState: Cell<SearchState>, text: string, matchCase: boolean, wholeWord: boolean) {
+  const escapedText = escapeSearchText(text, wholeWord);
+
+  const count = markAllMatches(editor, currentSearchState, new RegExp(escapedText, matchCase ? 'g' : 'gi'));
 
   if (count) {
     const newIndex = moveSelection(editor, currentSearchState, true);

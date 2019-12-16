@@ -1,4 +1,4 @@
-import { Assertions, Chain, Pipeline, Guard, Log } from '@ephox/agar';
+import { Assertions, Chain, Guard, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
@@ -73,7 +73,12 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ProcessFiltersTest', (success,
 
       Chain.asStep(editor, Log.chains('TBA', 'Paste: Paste pre/post process passthough as is', [
         cProcessPrePost('a', true, Fun.noop, Fun.noop),
-        Assertions.cAssertEq('Should be unchanged', { content: 'a', cancelled: false })
+        Assertions.cAssertEq('Should be unchanged with safe content', { content: 'a', cancelled: false })
+      ])),
+
+      Chain.asStep(editor, Log.chains('TBA', 'Paste: Paste pre/post process passthough unsafe content', [
+        cProcessPrePost('<img src="non-existent.png" onerror="alert(\'!\')">', true, Fun.noop, Fun.noop),
+        Assertions.cAssertEq('Should be changed if dangerous content', { content: '<img src="non-existent.png">', cancelled: false })
       ])),
 
       Chain.asStep(editor, Log.chains('TBA', 'Paste: Paste pre/post process assert internal false', [
@@ -115,6 +120,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ProcessFiltersTest', (success,
     add_unload_trigger: false,
     indent: false,
     plugins: 'paste',
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    extended_valid_elements: 'b[*]'
   }, success, failure);
 });

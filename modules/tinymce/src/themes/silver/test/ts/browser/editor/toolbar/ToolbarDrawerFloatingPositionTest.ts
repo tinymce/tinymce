@@ -18,7 +18,7 @@ UnitTest.asynctest('Editor Floating Toolbar Drawer Position test', (success, fai
         width: 400,
         base_url: '/project/tinymce/js/tinymce',
         toolbar: 'undo redo | styleselect | bold italic underline | strikethrough superscript subscript | alignleft aligncenter alignright aligncenter | outdent indent | cut copy paste | selectall remove',
-        toolbar_drawer: 'floating'
+        toolbar_mode: 'floating'
       }),
       Chain.async((editor: Editor, onSuccess, onFailure) => {
         const tinyUi = TinyUi(editor);

@@ -8,7 +8,7 @@
 import { AlloyComponent, AlloySpec, Behaviour, Composite, CustomList, Keying, RawDomSchema, Sketcher, SketchSpec, Toolbar, UiSketcher } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Id, Option, Result } from '@ephox/katamari';
-import { ToolbarDrawer } from '../../api/Settings';
+import { ToolbarMode } from '../../api/Settings';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 
 import { HeaderSpec, renderHeader } from '../header/CommonHeader';
@@ -35,7 +35,7 @@ interface MultipleToolbarSketchSpec {
   uid?: string;
   dom: RawDomSchema;
   onEscape: () => { };
-  type: ToolbarDrawer;
+  type: ToolbarMode;
 }
 
 interface ToolbarSketchSpec extends MoreDrawerData {
@@ -43,7 +43,7 @@ interface ToolbarSketchSpec extends MoreDrawerData {
   dom: RawDomSchema;
   attributes?: Record<string, string>;
   onEscape: () => { };
-  type: ToolbarDrawer;
+  type: ToolbarMode;
   getSink: () => Result<AlloyComponent, string>;
   backstage: UiFactoryBackstage;
 }
@@ -154,9 +154,9 @@ const partMenubar = Composite.partType.optional<OuterContainerSketchDetail, Silv
 });
 
 const toolbarFactory = (spec: ToolbarSketchSpec) => {
-  if (spec.type === ToolbarDrawer.sliding) {
+  if (spec.type === ToolbarMode.sliding) {
     return renderSlidingMoreToolbar;
-  } else if (spec.type === ToolbarDrawer.floating) {
+  } else if (spec.type === ToolbarMode.floating) {
     return renderFloatingMoreToolbar;
   } else {
     return renderToolbar;

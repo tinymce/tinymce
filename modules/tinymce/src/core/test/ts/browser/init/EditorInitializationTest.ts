@@ -177,7 +177,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       inline: true,
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      toolbar_drawer: false
+      toolbar_mode: false
     }).then(next, die);
   }));
 

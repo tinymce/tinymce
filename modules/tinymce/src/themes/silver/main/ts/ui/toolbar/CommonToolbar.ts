@@ -8,7 +8,7 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Boxes, Focusing, Keying, SplitFloatingToolbar as AlloySplitFloatingToolbar, SplitSlidingToolbar as AlloySplitSlidingToolbar, Tabstopping, Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup } from '@ephox/alloy';
 import { Arr, Fun, Option, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
-import { ToolbarDrawer } from '../../api/Settings';
+import { ToolbarMode } from '../../api/Settings';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import * as Channels from '../../Channels';
 import { createReadonlyReceivingForOverflow } from '../../ReadOnly';
@@ -21,7 +21,7 @@ export interface MoreDrawerData {
   lazyHeader: () => AlloyComponent;
 }
 export interface ToolbarSpec {
-  type: ToolbarDrawer;
+  type: ToolbarMode;
   uid: string;
   cyclicKeying: boolean;
   onEscape: (comp: AlloyComponent) => Option<boolean>;
@@ -206,7 +206,7 @@ const renderToolbar = (toolbarSpec: ToolbarSpec) => {
     uid: toolbarSpec.uid,
     dom: {
       tag: 'div',
-      classes: ['tox-toolbar'].concat(toolbarSpec.type === ToolbarDrawer.scrolling ? [ 'tox-toolbar--scrolling' ] : [])
+      classes: ['tox-toolbar'].concat(toolbarSpec.type === ToolbarMode.scrolling ? [ 'tox-toolbar--scrolling' ] : [])
     },
     components: [
       AlloyToolbar.parts().groups({})

@@ -140,7 +140,7 @@ export default () => {
     //     name: 'comments', items: [ 'addcomment' ]
     //   }
     // ],
-    toolbar_drawer: 'sliding',
+    toolbar_mode: 'sliding',
     emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js',
   };
 

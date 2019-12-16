@@ -3,7 +3,7 @@ import { AlloyComponent, Behaviour, Focusing, GuiFactory, Keying, TestHelpers, T
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Option } from '@ephox/katamari';
 
-import { ToolbarDrawer } from 'tinymce/themes/silver/api/Settings';
+import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
 import { renderToolbar, renderToolbarGroup } from 'tinymce/themes/silver/ui/toolbar/CommonToolbar';
 
 UnitTest.asynctest('Toolbar Test', (success, failure) => {
@@ -26,7 +26,7 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
     (store, doc, body) => {
       return GuiFactory.build(
         renderToolbar({
-          type: ToolbarDrawer.default,
+          type: ToolbarMode.default,
           uid: 'test-toolbar-uid',
           onEscape: store.adderH('onEscape'),
           cyclicKeying: true,
