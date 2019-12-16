@@ -1,19 +1,19 @@
-import { FocusTools, Logger, UiControls, GeneralSteps, Step, UiFinder, Keyboard, Keys, Mouse } from '@ephox/agar';
+import { FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, Touch, UiControls, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Future, Result, Strings, Option } from '@ephox/katamari';
+import { Arr, Future, Option, Result, Strings } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
-import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
-import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 
 UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (success, failure) => {
 
@@ -160,6 +160,13 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
         'Using mouse to choose item',
         GeneralSteps.sequence([
           Mouse.sClickOn(component.element(), '[role="menuitem"]')
+        ])
+      ),
+
+      testWithChooser(
+        'Using tap to choose item',
+        GeneralSteps.sequence([
+          Touch.sTapOn(component.element(), '[role="menuitem"]')
         ])
       ),
 

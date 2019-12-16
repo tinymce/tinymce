@@ -1,5 +1,5 @@
 import { Document, Touch, TouchEvent, UIEvent, window } from '@ephox/dom-globals';
-import { Element, Location } from '@ephox/sugar';
+import { Element, Location, Node, Traverse } from '@ephox/sugar';
 
 const point = (type: string, element: Element, x: number, y: number) => {
   const touch = {
@@ -52,7 +52,7 @@ const point = (type: string, element: Element, x: number, y: number) => {
 
 const touch = (eventType: string) => {
   return (element: Element) => {
-    const position = Location.absolute(element);
+    const position = Location.absolute(Node.isText(element) ? Traverse.parent(element).getOrDie() : element);
     point(eventType, element, position.left(), position.top());
   };
 };
@@ -60,7 +60,7 @@ const touch = (eventType: string) => {
 const touchAt = (eventType: string) => {
   return (dx: number, dy: number) => {
     return (element: Element) => {
-      const position = Location.absolute(element);
+      const position = Location.absolute(Node.isText(element) ? Traverse.parent(element).getOrDie() : element);
       point(eventType, element, position.left() + dx, position.top() + dy);
     };
   };

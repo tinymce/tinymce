@@ -17,6 +17,12 @@ export interface DraggingBehaviour extends Behaviour.AlloyBehaviour<DraggingConf
   snapTo: (component: AlloyComponent, sConfig: SnapConfig) => void;
 }
 
+/*
+ * Current dragging modes supported:
+ *  - mouse: Will allow dragging when using mouse events only
+ *  - touch: Will allow dragging when using touch events only
+ *  - mouseOrTouch: Will allow dragging with both mouse and touch events
+ */
 export type DraggingMode = 'touch' | 'mouse' | 'mouseOrTouch';
 export type SensorCoords = (x: number, y: number) => CoordAdt;
 export type OutputCoords = (x: Option<number>, y: Option<number>) => CoordAdt;
