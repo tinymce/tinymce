@@ -12,7 +12,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { Css } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import { getMultipleToolbarsSetting, getToolbarDrawer, getToolbarGrouped, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, isToolbarLocationTop, useFixedContainer } from './api/Settings';
+import { getMultipleToolbarsSetting, getToolbarGrouped, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, isToolbarLocationTop, useFixedContainer, getToolbarMode } from './api/Settings';
 import TouchEvents from './api/TouchEvents';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
@@ -159,7 +159,7 @@ const setup = (editor: Editor): RenderInfo => {
     }
   });
 
-  const toolbarDrawer = getToolbarDrawer(editor);
+  const toolbarMode = getToolbarMode(editor);
 
   const partToolbar: AlloySpec = OuterContainer.parts().toolbar({
     dom: {
@@ -171,7 +171,7 @@ const setup = (editor: Editor): RenderInfo => {
     onEscape() {
       editor.focus();
     },
-    type: toolbarDrawer,
+    type: toolbarMode,
     lazyToolbar,
     lazyHeader: () => lazyHeader().getOrDie('Could not find header element'),
     ...verticalDirAttributes
@@ -183,7 +183,7 @@ const setup = (editor: Editor): RenderInfo => {
       classes: [ 'tox-toolbar-overlord' ]
     },
     onEscape: () => { },
-    type: toolbarDrawer
+    type: toolbarMode
   });
 
   const partSocket: AlloySpec = OuterContainer.parts().socket({

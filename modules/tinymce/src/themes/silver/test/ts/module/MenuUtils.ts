@@ -1,7 +1,7 @@
 import { Chain, GeneralSteps, Logger, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { Body } from '@ephox/sugar';
 
-import { ToolbarDrawer } from 'tinymce/themes/silver/api/Settings';
+import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
 
 export interface OpenNestedMenus {
   label: string;
@@ -20,11 +20,11 @@ const sOpenMenuWithSelector = (label: string, selector: string) => {
   );
 };
 
-const sOpenMore = (type: ToolbarDrawer) => {
+const sOpenMore = (type: ToolbarMode) => {
   // type floating or sliding
   const slidingClass = 'div.tox-toolbar__overflow--open:not(.tox-toolbar__overflow--growing)';
   const floatingClass = 'div.tox-toolbar__overflow';
-  const selector = type === ToolbarDrawer.sliding ? slidingClass : floatingClass;
+  const selector = type === ToolbarMode.sliding ? slidingClass : floatingClass;
 
   return Logger.t(
     `Trying to open more drawer`,
@@ -35,11 +35,11 @@ const sOpenMore = (type: ToolbarDrawer) => {
   );
 };
 
-const sCloseMore = (type: ToolbarDrawer) => {
+const sCloseMore = (type: ToolbarMode) => {
   // type floating or sliding
   const slidingClass = 'div.tox-toolbar__overflow--open:not(.tox-toolbar__overflow--growing)';
   const floatingClass = 'div.tox-toolbar__overflow';
-  const selector = type === ToolbarDrawer.sliding ? slidingClass : floatingClass;
+  const selector = type === ToolbarMode.sliding ? slidingClass : floatingClass;
 
   return Logger.t(
     `Trying to close more drawer`,
