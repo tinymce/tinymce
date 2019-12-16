@@ -24,7 +24,7 @@
 
 @collection-list-item-active-background-color: @toolbar-button-hover-background-color;
 @collection-list-item-label-active-text-color: contrast(@collection-list-item-active-background-color, @color-black, @color-white);
-@collection-list-item-enabled-background-color: inherit;
+@collection-list-item-enabled-background-color: @menu-background-color;
 @collection-list-item-label-enabled-text-color: contrast(@collection-list-item-enabled-background-color, @color-black, @color-white);
 
 @collection-toolbar-item-active-background-color: @toolbar-button-hover-background-color;
@@ -216,7 +216,7 @@
     font-size: @font-size-sm;
     height: @collection-item-list-icon-height;
     line-height: @collection-item-list-icon-height;
-    text-transform: normal;
+    text-transform: none;
   }
 
   .tox-collection__item-caret {
