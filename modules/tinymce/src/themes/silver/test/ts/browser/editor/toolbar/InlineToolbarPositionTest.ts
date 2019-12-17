@@ -1,13 +1,13 @@
-import { Assertions, FocusTools, GeneralSteps, Log, Pipeline, Step, UiFinder, Waiter, Chain } from '@ephox/agar';
+import { Assertions, Chain, FocusTools, GeneralSteps, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { Boxes } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document, window, HTMLElement } from '@ephox/dom-globals';
+import { document, HTMLElement, window } from '@ephox/dom-globals';
 import { Arr, Strings } from '@ephox/katamari';
-import { TinyApis, Editor as McEditor } from '@ephox/mcagar';
-import { Attr, Body, Css, Element, SelectorFind, Insert, Remove } from '@ephox/sugar';
+import { Editor as McEditor, TinyApis } from '@ephox/mcagar';
+import { Attr, Body, Css, Element, Insert, Remove, SelectorFind } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 import Theme from 'tinymce/themes/silver/Theme';
-import Editor from 'tinymce/core/api/Editor';
-import { Boxes } from '@ephox/alloy';
 
 UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => {
   Theme();
@@ -27,7 +27,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
 
     Assertions.assertEq(`Container should be absolutely positioned`, 'absolute', Css.get(container, 'position'));
     Assertions.assertEq(`Container left position (${left}) should be 0px`, '0px', left);
-    Assertions.assertEq(`Container should be positioned ${position} contentarea, ${top} should be ~${assertTop}px`, true, Math.abs(top - assertTop) < 3);
+    Assertions.assertEq(`Container should be positioned ${position} contentarea, ${top}px should be ~${assertTop}px`, true, Math.abs(top - assertTop) < 3);
   }));
 
   const sAssertDockedPos = (header: Element, position: 'top' | 'bottom') => Waiter.sTryUntil('Wait for toolbar to be docked', Step.sync(() => {
@@ -39,7 +39,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
 
     Assertions.assertEq(`Header container should be docked (fixed position)`, 'fixed', Css.get(header, 'position'));
     Assertions.assertEq(`Header container left position (${left}) should be 0px`, '0px', left);
-    Assertions.assertEq(`Header container shold be docked to ${position}, ${top} should be ~${assertTop}px`, true, Math.abs(top - assertTop) < 3);
+    Assertions.assertEq(`Header container shold be docked to ${position}, ${top}px should be ~${assertTop}px`, true, Math.abs(top - assertTop) < 3);
     Assertions.assertEq(`Header container previous top position (${prevTop}) should be an integer`, true, prevTop.indexOf('.') === -1);
   }));
 
@@ -159,6 +159,14 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
           sAssertStaticPos(header),
           sDeactivateEditor(editor)
         ]),
+        Log.stepsAsStep('TINY-4530', 'Select item at the start of the content and change format (absolute position)', [
+          sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
+          sAssertAbsolutePos(container, contentAreaContainer, 'above'),
+          sAssertStaticPos(header),
+          tinyApis.sExecCommand('mceToggleFormat', 'div'),
+          sAssertAbsolutePos(container, contentAreaContainer, 'above'),
+          sDeactivateEditor(editor)
+        ])
       ]),
       McEditor.cRemove
     ]),
@@ -198,6 +206,14 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
           sAssertDockedPos(header, 'bottom'),
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child', true),
           sAssertStaticPos(header),
+          sDeactivateEditor(editor)
+        ]),
+        Log.stepsAsStep('TINY-4530', 'Select item at the bottom of the content and change format (absolute position)', [
+          sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child', true),
+          sAssertAbsolutePos(container, contentAreaContainer, 'below'),
+          sAssertStaticPos(header),
+          tinyApis.sExecCommand('mceToggleFormat', 'div'),
+          sAssertAbsolutePos(container, contentAreaContainer, 'below'),
           sDeactivateEditor(editor)
         ])
       ]),

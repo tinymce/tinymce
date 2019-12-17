@@ -22,6 +22,11 @@ import Utils from '../ui/sizing/Utils';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
 
+const getTargetPosition = (targetElm: Element, isToolbarTop: boolean) => {
+  const pos = Boxes.box(targetElm);
+  return isToolbarTop ? pos.y() : pos.bottom();
+};
+
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   let floatContainer;
   const DOM = DOMUtils.DOM;
@@ -29,13 +34,14 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const isSticky = isStickyToolbar(editor);
   const targetElm = Element.fromDom(args.targetNode);
   const editorMaxWidthOpt = getMaxWidthSetting(editor).or(EditorSize.getWidth(editor));
-  const prevTargetHeight = Cell(Height.get(targetElm));
-  const visible = Cell(false);
 
   const toolbarMode = getToolbarMode(editor);
   const isSplitFloatingToolbar = toolbarMode === ToolbarMode.floating;
   const isSplitToolbar = toolbarMode === ToolbarMode.sliding || isSplitFloatingToolbar;
   const isToolbarTop = isToolbarLocationTop(editor);
+
+  const prevPos = Cell(getTargetPosition(targetElm, isToolbarTop));
+  const visible = Cell(false);
 
   loadInlineSkin(editor);
 
@@ -148,11 +154,11 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
     editor.on('NodeChange keydown', () => {
       Delay.requestAnimationFrame(() => {
-        const targetHeight = Height.get(targetElm);
+        const pos = getTargetPosition(targetElm, isToolbarTop);
 
-        if (visible.get() && targetHeight !== prevTargetHeight.get()) {
+        if (visible.get() && pos !== prevPos.get()) {
           updateChromeUi(true);
-          prevTargetHeight.set(targetHeight);
+          prevPos.set(pos);
         }
       });
     });
