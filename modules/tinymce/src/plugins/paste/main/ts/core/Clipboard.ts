@@ -32,12 +32,12 @@ declare let window: any;
  * @param {String} html HTML code to paste into the current selection.
  * @param {Boolean?} internalFlag Optional true/false flag if the contents is internal or external.
  */
-const pasteHtml = (editor: Editor, html: string, internalFlag: boolean) => {
+const pasteHtml = (editor: Editor, html: string, internalFlag: boolean, pasteAsText: boolean) => {
   const internal = internalFlag ? internalFlag : InternalHtml.isMarked(html);
   const args = ProcessFilters.process(editor, InternalHtml.unmark(html), internal);
 
   if (args.cancelled === false) {
-    SmartPaste.insertContent(editor, args.content);
+    SmartPaste.insertContent(editor, args.content, pasteAsText);
   }
 };
 
@@ -52,7 +52,7 @@ const pasteText = (editor: Editor, text: string) => {
   const normalizedText = Whitespace.normalizeWhitespace(encodedText);
   const html = Newlines.convert(normalizedText, editor.settings.forced_root_block, editor.settings.forced_root_block_attrs);
 
-  pasteHtml(editor, html, false);
+  pasteHtml(editor, html, false, true);
 };
 
 export interface ClipboardContents {
@@ -163,9 +163,9 @@ const pasteImage = (editor: Editor, imageItem) => {
       blobInfo = existingBlobInfo;
     }
 
-    pasteHtml(editor, '<img src="' + blobInfo.blobUri() + '">', false);
+    pasteHtml(editor, '<img src="' + blobInfo.blobUri() + '">', false, false);
   } else {
-    pasteHtml(editor, '<img src="' + imageItem.uri + '">', false);
+    pasteHtml(editor, '<img src="' + imageItem.uri + '">', false, false);
   }
 };
 
@@ -297,8 +297,8 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     }
   });
 
-  function insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode, internal) {
-    let content, isPlainTextHtml;
+  function insertClipboardContent(clipboardContent: ClipboardContents, isKeyBoardPaste: boolean, plainTextMode: boolean, internal: boolean) {
+    let content, isPlainTextHtml, isImage;
 
     // Grab HTML from Clipboard API or paste bin as a fallback
     if (hasContentType(clipboardContent, 'text/html')) {
@@ -319,15 +319,16 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     pasteBin.remove();
 
     isPlainTextHtml = (internal === false && Newlines.isPlainText(content));
+    isImage = SmartPaste.isImageUrl(content);
 
     // If we got nothing from clipboard API and pastebin or the content is a plain text (with only
     // some BRs, Ps or DIVs as newlines) then we fallback to plain/text
-    if (!content.length || isPlainTextHtml) {
+    if (!content.length || (isPlainTextHtml && !isImage)) {
       plainTextMode = true;
     }
 
     // Grab plain text from Clipboard API or convert existing HTML to plain text
-    if (plainTextMode) {
+    if (plainTextMode || isImage) {
       // Use plain text contents from Clipboard API unless the HTML contains paragraphs then
       // we should convert the HTML to plain text since works better when pasting HTML/Word contents as plain text
       if (hasContentType(clipboardContent, 'text/plain') && isPlainTextHtml) {
@@ -350,7 +351,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     if (plainTextMode) {
       pasteText(editor, content);
     } else {
-      pasteHtml(editor, content, internal);
+      pasteHtml(editor, content, internal, false);
     }
   }
 
