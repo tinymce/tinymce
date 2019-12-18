@@ -1,7 +1,6 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
-
 import SmartPaste from 'tinymce/plugins/paste/core/SmartPaste';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -39,7 +38,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     LegacyUnit.equal(SmartPaste.isImageUrl(''), false);
   });
 
-  suite.test('TestCase-TBA: Paste: smart paste url on selection', function (editor) {
+  suite.test('TestCase-TBA: Paste: smart paste enabled, paste url on selection', function (editor) {
     editor.focus();
     editor.undoManager.clear();
     editor.setContent('<p>abc</p>');
@@ -51,7 +50,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     LegacyUnit.equal(editor.undoManager.data.length, 3);
   });
 
-  suite.test('TestCase-TBA: Paste: smart paste image url', function (editor) {
+  suite.test('TestCase-TBA: Paste: smart paste enabled, paste image url', function (editor) {
     editor.focus();
     editor.undoManager.clear();
     editor.setContent('<p>abc</p>');
@@ -63,7 +62,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     LegacyUnit.equal(editor.undoManager.data.length, 3);
   });
 
-  suite.test('TestCase-TBA: Paste: smart paste option disabled', function (editor) {
+  suite.test('TestCase-TBA: Paste: smart paste disabled, paste image url', function (editor) {
     editor.focus();
     editor.undoManager.clear();
     editor.setContent('<p>abc</p>');
@@ -73,6 +72,85 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
 
     editor.execCommand('mceInsertClipboardContent', false, { content: 'http://www.site.com/my.jpg' });
     LegacyUnit.equal(editor.getContent(), '<p>ahttp://www.site.com/my.jpgbc</p>');
+    LegacyUnit.equal(editor.undoManager.data.length, 2);
+  });
+
+  suite.test('TestCase-TBA: Paste: smart paste enabled and paste as text enabled, paste image url', function (editor) {
+    editor.focus();
+    editor.undoManager.clear();
+    editor.setContent('<p>abc</p>');
+    LegacyUnit.setSelection(editor, 'p', 1);
+    editor.undoManager.add();
+    editor.paste_as_text = true;
+
+    editor.execCommand('mceInsertClipboardContent', false, { content: 'http://www.site.com/my.jpg' });
+    LegacyUnit.equal(editor.getContent(), '<p>ahttp://www.site.com/my.jpgbc</p>');
+    LegacyUnit.equal(editor.undoManager.data.length, 2);
+  });
+
+  suite.test('TestCase-TBA: Paste: smart paste disabled and paste as text enabled, paste image url', function (editor) {
+    editor.focus();
+    editor.undoManager.clear();
+    editor.setContent('<p>abc</p>');
+    LegacyUnit.setSelection(editor, 'p', 1);
+    editor.undoManager.add();
+    editor.settings.smart_paste = false;
+    editor.paste_as_text = true;
+
+    editor.execCommand('mceInsertClipboardContent', false, { content: 'http://www.site.com/my.jpg' });
+    LegacyUnit.equal(editor.getContent(), '<p>ahttp://www.site.com/my.jpgbc</p>');
+    LegacyUnit.equal(editor.undoManager.data.length, 2);
+  });
+
+  suite.test('TestCase-TBA: Paste: smart paste enabled, paste link html', function (editor) {
+    editor.focus();
+    editor.undoManager.clear();
+    editor.setContent('<p>abc</p>');
+    LegacyUnit.setSelection(editor, 'p', 1);
+    editor.undoManager.add();
+
+    editor.execCommand('mceInsertClipboardContent', false, { content: '<img src="http://www.site.com/my.jpg" />' });
+    LegacyUnit.equal(editor.getContent(), '<p>a<img src="http://www.site.com/my.jpg" />bc</p>');
+    LegacyUnit.equal(editor.undoManager.data.length, 2);
+  });
+
+  suite.test('TestCase-TBA: Paste: smart paste disabled, paste link html', function (editor) {
+    editor.focus();
+    editor.undoManager.clear();
+    editor.setContent('<p>abc</p>');
+    LegacyUnit.setSelection(editor, 'p', 1);
+    editor.undoManager.add();
+    editor.settings.smart_paste = false;
+
+    editor.execCommand('mceInsertClipboardContent', false, { content: '<img src="http://www.site.com/my.jpg" />' });
+    LegacyUnit.equal(editor.getContent(), '<p>a<img src="http://www.site.com/my.jpg" />bc</p>');
+    LegacyUnit.equal(editor.undoManager.data.length, 2);
+  });
+
+  suite.test('TestCase-TBA: Paste: smart paste enabled and paste as text enabled, paste link html', function (editor) {
+    editor.focus();
+    editor.undoManager.clear();
+    editor.setContent('<p>abc</p>');
+    LegacyUnit.setSelection(editor, 'p', 1);
+    editor.undoManager.add();
+    editor.paste_as_text = true;
+
+    editor.execCommand('mceInsertClipboardContent', false, { content: '<img src="http://www.site.com/my.jpg" />' });
+    LegacyUnit.equal(editor.getContent(), '<p>a<img src="http://www.site.com/my.jpg" />bc</p>');
+    LegacyUnit.equal(editor.undoManager.data.length, 2);
+  });
+
+  suite.test('TestCase-TBA: Paste: smart paste disabled and paste as text enabled, paste link html', function (editor) {
+    editor.focus();
+    editor.undoManager.clear();
+    editor.setContent('<p>abc</p>');
+    LegacyUnit.setSelection(editor, 'p', 1);
+    editor.undoManager.add();
+    editor.settings.smart_paste = false;
+    editor.paste_as_text = true;
+
+    editor.execCommand('mceInsertClipboardContent', false, { content: '<img src="http://www.site.com/my.jpg" />' });
+    LegacyUnit.equal(editor.getContent(), '<p>a<img src="http://www.site.com/my.jpg" />bc</p>');
     LegacyUnit.equal(editor.undoManager.data.length, 2);
   });
 
