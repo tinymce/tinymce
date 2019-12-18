@@ -24,6 +24,14 @@ import Utils from './Utils';
 
 declare let window: any;
 
+const doPaste = (editor: Editor, html: string, internal: boolean, pasteAsText: boolean) => {
+  const args = ProcessFilters.process(editor, InternalHtml.unmark(html), internal);
+
+  if (args.cancelled === false) {
+    SmartPaste.insertContent(editor, args.content, pasteAsText);
+  }
+};
+
 /**
  * Pastes the specified HTML. This means that the HTML is filtered and then
  * inserted at the current selection in the editor. It will also fire paste events
@@ -34,11 +42,7 @@ declare let window: any;
  */
 const pasteHtml = (editor: Editor, html: string, internalFlag: boolean, pasteAsText: boolean) => {
   const internal = internalFlag ? internalFlag : InternalHtml.isMarked(html);
-  const args = ProcessFilters.process(editor, InternalHtml.unmark(html), internal);
-
-  if (args.cancelled === false) {
-    SmartPaste.insertContent(editor, args.content, pasteAsText);
-  }
+  doPaste(editor, InternalHtml.unmark(html), internal, pasteAsText);
 };
 
 /**
@@ -51,8 +55,7 @@ const pasteText = (editor: Editor, text: string) => {
   const encodedText = editor.dom.encode(text).replace(/\r\n/g, '\n');
   const normalizedText = Whitespace.normalizeWhitespace(encodedText);
   const html = Newlines.convert(normalizedText, editor.settings.forced_root_block, editor.settings.forced_root_block_attrs);
-
-  pasteHtml(editor, html, false, true);
+  doPaste(editor, html, false, true);
 };
 
 export interface ClipboardContents {
