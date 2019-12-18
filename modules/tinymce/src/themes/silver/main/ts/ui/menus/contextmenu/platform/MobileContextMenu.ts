@@ -14,7 +14,6 @@ import * as MenuParts from '../../menu/MenuParts';
 import * as NestedMenus from '../../menu/NestedMenus';
 import { SingleMenuItemApi } from '../../menu/SingleMenuTypes';
 import { getNodeAnchor, getPointAnchor } from '../Coords';
-import Env from 'tinymce/core/api/Env';
 
 type MenuItems = string | Array<string | SingleMenuItemApi>;
 
@@ -123,9 +122,9 @@ export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMen
   const isiOS = detection.os.isiOS();
   const isOSX = detection.os.isOSX();
   const isAndroid = detection.os.isAndroid();
-  const isTouch = Env.deviceType.isTouch;
+  const isTouch = detection.deviceType.isTouch();
 
-  const shouldHighlightImmediately = () => !(isAndroid || isiOS || (isOSX && isTouch()));
+  const shouldHighlightImmediately = () => !(isAndroid || isiOS || (isOSX && isTouch));
 
   const open = () => {
     const items = buildMenu();
