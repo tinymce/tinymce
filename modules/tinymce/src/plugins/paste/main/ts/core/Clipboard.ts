@@ -24,8 +24,8 @@ import Utils from './Utils';
 
 declare let window: any;
 
-const doPaste = (editor: Editor, html: string, internal: boolean, pasteAsText: boolean) => {
-  const args = ProcessFilters.process(editor, InternalHtml.unmark(html), internal);
+const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText: boolean) => {
+  const args = ProcessFilters.process(editor, content, internal);
 
   if (args.cancelled === false) {
     SmartPaste.insertContent(editor, args.content, pasteAsText);
