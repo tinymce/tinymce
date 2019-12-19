@@ -64,7 +64,7 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
     const wasDown = detail.mouseIsDown.get();
     detail.mouseIsDown.set(false);
 
-    // We don't this to fire if the mouse wasn't pressed down over anything other than the slider.
+    // We don't want this to fire if the mouse wasn't pressed down over anything other than the slider.
     if (wasDown) {
       fireOnChoose();
     }
