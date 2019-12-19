@@ -28,7 +28,7 @@ export const Clipboard = (editor: Editor, pasteFormat: Cell<string>): Clipboard 
 
   return {
     pasteFormat,
-    pasteHtml: (html: string, internalFlag: boolean) => pasteHtml(editor, html, internalFlag, false),
+    pasteHtml: (html: string, internalFlag: boolean) => pasteHtml(editor, html, internalFlag),
     pasteText: (text: string) => pasteText(editor, text),
     pasteImageData: (e: ClipboardEvent | DragEvent, rng: Range) => pasteImageData(editor, e, rng),
     getDataTransferItems,

@@ -40,9 +40,9 @@ const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText
  * @param {String} html HTML code to paste into the current selection.
  * @param {Boolean?} internalFlag Optional true/false flag if the contents is internal or external.
  */
-const pasteHtml = (editor: Editor, html: string, internalFlag: boolean, pasteAsText: boolean) => {
+const pasteHtml = (editor: Editor, html: string, internalFlag: boolean) => {
   const internal = internalFlag ? internalFlag : InternalHtml.isMarked(html);
-  doPaste(editor, InternalHtml.unmark(html), internal, pasteAsText);
+  doPaste(editor, InternalHtml.unmark(html), internal, false);
 };
 
 /**
@@ -166,9 +166,9 @@ const pasteImage = (editor: Editor, imageItem) => {
       blobInfo = existingBlobInfo;
     }
 
-    pasteHtml(editor, '<img src="' + blobInfo.blobUri() + '">', false, false);
+    pasteHtml(editor, '<img src="' + blobInfo.blobUri() + '">', false);
   } else {
-    pasteHtml(editor, '<img src="' + imageItem.uri + '">', false, false);
+    pasteHtml(editor, '<img src="' + imageItem.uri + '">', false);
   }
 };
 
@@ -354,7 +354,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     if (plainTextMode) {
       pasteText(editor, content);
     } else {
-      pasteHtml(editor, content, internal, false);
+      pasteHtml(editor, content, internal);
     }
   }
 

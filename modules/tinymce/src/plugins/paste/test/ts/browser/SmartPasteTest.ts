@@ -108,7 +108,6 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.SmartPasteTest', (success, fai
     LegacyUnit.setSelection(editor, 'p', 1);
     editor.undoManager.add();
     editor.settings.smart_paste = false;
-    editor.paste_as_text = true;
 
     editor.execCommand('mceInsertClipboardContent', false, { text: 'http://www.site.com/my.jpg' });
     LegacyUnit.equal(editor.getContent(), '<p>ahttp://www.site.com/my.jpgbc</p>');
