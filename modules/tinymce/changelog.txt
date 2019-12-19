@@ -1,3 +1,8 @@
+Version 5.1.5 (2019-12-19)
+    Fixed the UI not working with hybrid devices that accept both touch and mouse events #TNY-4521
+    Fixed the `charmap` dialog initially focusing the first tab of the dialog instead of the search input field #TINY-4342
+    Fixed an exception being raised when inserting content if the caret was directly before or after a `contenteditable="false"` element #TINY-4528
+    Fixed a bug with pasting image URLs when paste as text is enabled #TINY-4523
 Version 5.1.4 (2019-12-11)
     Fixed dialog contents disappearing when clicking a checkbox for right-to-left languages #TINY-4518
     Fixed the `legacyoutput` plugin registering legacy formats after editior initialization, causing legacy content to be stripped on the initial load #TINY-4447

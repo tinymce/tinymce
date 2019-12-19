@@ -37,8 +37,9 @@ UnitTest.test('CssTest', function () {
     Css.copy(c, c2);
     Css.copy(m, c2);
 
-    // NOTE: Safari seems to support styles for math ml tags, so the Css.copy(m, c2) clobbers the previous style
-    if (PlatformDetection.detect().browser.isSafari()) { Css.copy(c, c2); }
+    // NOTE: Safari and Firefox 71+ seems to support styles for math ml tags, so the Css.copy(m, c2) clobbers the previous style
+    const browser = PlatformDetection.detect().browser;
+    if (browser.isSafari() || browser.isFirefox() && browser.version.major >= 71) { Css.copy(c, c2); }
 
     Css.get(m, 'display');
     Css.getRaw(m, 'bogus');

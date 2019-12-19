@@ -1,34 +1,24 @@
-import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { FieldProcessorAdt } from '@ephox/boulder';
 import { MouseEvent } from '@ephox/dom-globals';
-import { Fun, Option } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 
-import * as Boxes from '../../alien/Boxes';
 import DelayedFunction from '../../alien/DelayedFunction';
 import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
 import { BlockerDragApi } from '../common/BlockerTypes';
 import * as BlockerUtils from '../common/BlockerUtils';
+import * as DraggingSchema from '../common/DraggingSchema';
 import { DraggingState } from '../common/DraggingTypes';
 import * as DragUtils from '../common/DragUtils';
-import SnapSchema from '../common/SnapSchema';
 import * as MouseBlockerEvents from './MouseBlockerEvents';
 import * as MouseData from './MouseData';
 import { MouseDraggingConfig } from './MouseDraggingTypes';
 
-const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<SugarPosition>): AlloyEvents.AlloyEventRecord => {
-  const updateStartState = (comp: AlloyComponent) => {
-    dragState.setStartData(DragUtils.calcStartData(dragConfig, comp));
-  };
-
-  return AlloyEvents.derive([
-    AlloyEvents.run(SystemEvents.windowScroll(), (comp) => {
-      // Only update if we have some start data
-      dragState.getStartData().each(() => updateStartState(comp));
-    }),
+const events = (dragConfig: MouseDraggingConfig, dragState: DraggingState<SugarPosition>, updateStartState: (comp: AlloyComponent) => void) => {
+  return [
     AlloyEvents.run<SugarEvent>(NativeEvents.mousedown(), (component, simulatedEvent) => {
       const raw = simulatedEvent.event().raw() as MouseEvent;
       if (raw.button !== 0) { return; }
@@ -60,22 +50,17 @@ const handlers = (dragConfig: MouseDraggingConfig, dragState: DraggingState<Suga
 
       start();
     })
-  ]);
+  ];
 };
 
 const schema: FieldProcessorAdt[] = [
-  // TODO: Is this used?
-  FieldSchema.defaulted('useFixed', Fun.never),
-  FieldSchema.strict('blockerClass'),
-  FieldSchema.defaulted('getTarget', Fun.identity),
-  FieldSchema.defaulted('onDrag', Fun.noop),
-  FieldSchema.defaulted('repositionTarget', true),
-  Fields.onHandler('onDrop'),
-  FieldSchema.defaultedFunction('getBounds', Boxes.win),
-  SnapSchema,
+  ...DraggingSchema.schema,
   Fields.output('dragger', {
-    handlers
+    handlers: DragUtils.handlers(events)
   })
 ];
 
-export default schema;
+export {
+  events,
+  schema
+};

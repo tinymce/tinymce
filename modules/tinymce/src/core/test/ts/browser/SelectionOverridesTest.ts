@@ -4,11 +4,11 @@ import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyDom, TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
-import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
-import KeyUtils from '../module/test/KeyUtils';
 import VK from 'tinymce/core/api/util/VK';
-import Theme from 'tinymce/themes/silver/Theme';
+import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import Zwsp from 'tinymce/core/text/Zwsp';
+import Theme from 'tinymce/themes/silver/Theme';
+import KeyUtils from '../module/test/KeyUtils';
 
 UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function () {
   const success = arguments[arguments.length - 2];
@@ -261,6 +261,42 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function () {
     rng = editor._selectionOverrides.showCaret(1, editor.dom.select('p[contenteditable=false]')[1], false);
     LegacyUnit.equal(true, rng === null, 'Should not return a range excluded by ShowCaret event');
     editor._selectionOverrides.hideFakeCaret();
+  });
+
+  suite.test('showBlockCaretContainer before ce=false element', function (editor) {
+    editor.setContent('<p contenteditable="false">a</p>');
+    const para = editor.dom.select('p[contenteditable=false]')[0];
+
+    // Place the selection at the end of the ce=false element
+    const rng = editor.dom.createRng();
+    rng.setStartBefore(para);
+    rng.setEndBefore(para);
+    editor.selection.setRng(rng);
+
+    const caretContainer = editor.dom.select('p[data-mce-caret=before]')[0];
+    editor._selectionOverrides.showBlockCaretContainer(caretContainer);
+
+    LegacyUnit.equal(caretContainer.hasAttribute('data-mce-bogus'), false, 'Bogus attribute should have been removed');
+    LegacyUnit.equal(caretContainer.hasAttribute('data-mce-caret'), false, 'Caret attribute should have been removed');
+    LegacyUnit.equal(editor.getContent(), '<p>\u00a0</p><p contenteditable="false">a</p>');
+  });
+
+  suite.test('showBlockCaretContainer after ce=false element', function (editor) {
+    editor.setContent('<p contenteditable="false">a</p>');
+    const para = editor.dom.select('p[contenteditable=false]')[0];
+
+    // Place the selection at the end of the ce=false element
+    const rng = editor.dom.createRng();
+    rng.setStartAfter(para);
+    rng.setEndAfter(para);
+    editor.selection.setRng(rng);
+
+    const caretContainer = editor.dom.select('p[data-mce-caret=after]')[0];
+    editor._selectionOverrides.showBlockCaretContainer(caretContainer);
+
+    LegacyUnit.equal(caretContainer.hasAttribute('data-mce-bogus'), false, 'Bogus attribute should have been removed');
+    LegacyUnit.equal(caretContainer.hasAttribute('data-mce-caret'), false, 'Caret attribute should have been removed');
+    LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">a</p><p>\u00a0</p>');
   });
 
   suite.test('set range in short ended element', function (editor) {

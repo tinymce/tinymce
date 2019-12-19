@@ -1,20 +1,20 @@
-import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, Touch, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Fun, Future, Result, Option } from '@ephox/katamari';
+import { Arr, Fun, Future, Option, Result } from '@ephox/katamari';
 import { Attr } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { SplitDropdown } from 'ephox/alloy/api/ui/SplitDropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 UnitTest.asynctest('SplitDropdown List', (success, failure) => {
 
@@ -223,6 +223,22 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
       store.sAssertEq('After enter on item', [ 'dropdown.item.execute(split-dropdown, split-tiered-menu, item-alpha)' ]),
       // NOTE: This is due to the itemExecute handler here.
       UiFinder.sNotExists(gui.element(), '[role="menu"]'),
+      store.sClear,
+
+      // Test to make sure tapping on the button/arrow also works
+      store.sAssertEq('Should be empty', [ ]),
+      Touch.sTapOn(gui.element(), '.test-split-button-action'),
+      store.sAssertEq('After tapping on action', [ 'dropdown.execute(split-dropdown, split-dropdown-button)' ]),
+      UiFinder.sNotExists(gui.element(), '[role="menu"]'),
+      store.sClear,
+
+      Touch.sTapOn(gui.element(), '.test-split-button-arrow'),
+      store.sAssertEq('After tapping on action', [ ]),
+      Waiter.sTryUntil(
+        'Waiting until menu appears',
+        UiFinder.sExists(gui.element(), '[role="menu"]')
+      ),
+      FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")'),
       store.sClear
     ];
   }, () => { success(); }, failure);

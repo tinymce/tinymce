@@ -5,25 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  AlloyTriggers,
-  Behaviour,
-  Button,
-  Disabling,
-  FormField as AlloyFormField,
-  Memento,
-  NativeEvents,
-  Representing,
-  SimpleSpec,
-  SimulatedEvent,
-  SugarEvent,
-  SystemEvents,
-  Tabstopping,
-  Toggling,
-  AlloyComponent
-} from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling, FormField as AlloyFormField, Memento, NativeEvents, Representing, SimpleSpec, SimulatedEvent, SugarEvent, SystemEvents, Tabstopping, Toggling } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { DragEvent, FileList } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
@@ -91,7 +73,8 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
       },
       behaviours: Behaviour.derive([
         AddEventsBehaviour.config('input-file-events', [
-          AlloyEvents.cutter(SystemEvents.tapOrClick())
+          AlloyEvents.cutter(NativeEvents.click()),
+          AlloyEvents.cutter(SystemEvents.tap())
         ])
       ])
     }

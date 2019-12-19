@@ -100,11 +100,11 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     return fakeCaret.show(before, node);
   };
 
-  const showBlockCaretContainer = function (blockCaretContainer: HTMLElement) {
+  const showBlockCaretContainer = function (blockCaretContainer: Element) {
     if (blockCaretContainer.hasAttribute('data-mce-caret')) {
       CaretContainer.showCaretContainerBlock(blockCaretContainer);
       setRange(getRange()); // Removes control rect on IE
-      editor.selection.scrollIntoView(blockCaretContainer[0]);
+      editor.selection.scrollIntoView(blockCaretContainer);
     }
   };
 
