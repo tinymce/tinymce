@@ -1,4 +1,4 @@
-Version 4.9.7 (TBD)
+Version 4.9.7 (2019-12-19)
     Fixed the `visualchars` plugin converting HTML-like text to DOM elements in certain cases #TINY-4507
     Fixed an issue with the `paste` plugin not sanitizing content in some cases #TINY-4510
     Fixed HTML comments incorrectly being parsed in certain cases #TINY-4511
