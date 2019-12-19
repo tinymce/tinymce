@@ -1,23 +1,10 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  Cursors,
-  FocusTools,
-  GeneralSteps,
-  Keyboard,
-  Keys,
-  Logger,
-  Mouse,
-  Step,
-  UiFinder,
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, Touch, UiFinder, } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import { Button } from 'ephox/alloy/api/ui/Button';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Button } from 'ephox/alloy/api/ui/Button';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
@@ -78,6 +65,23 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
       ])
     );
 
+    const testButtonTap = Logger.t(
+      'testing button tap',
+      GeneralSteps.sequence([
+        store.sAssertEq('step 1: no taps', [ ]),
+        Touch.sTapOn(gui.element(), 'button'),
+        store.sAssertEq('step 2: post tap', [ 'button.action' ]),
+        store.sClear,
+        Chain.asStep(gui.element(), [
+          UiFinder.cFindIn('button'),
+          Cursors.cFollow([ 0 ]),
+          Touch.cTap
+        ]),
+        store.sAssertEq('step 3: post tap on button text', [ 'button.action' ]),
+        store.sClear
+      ])
+    );
+
     const testExecuting = Logger.t(
       'testing dispatching execute',
       GeneralSteps.sequence([
@@ -118,6 +122,9 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
 
       // Test clicking
       testButtonClick,
+
+      // Test tapping
+      testButtonTap,
 
       // Test focusing
       testFocusing,

@@ -1,6 +1,6 @@
-import { FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter } from '@ephox/agar';
+import { FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, Touch, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr, Fun, Future, Obj, Result, Option } from '@ephox/katamari';
+import { Arr, Fun, Future, Obj, Option, Result } from '@ephox/katamari';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -8,11 +8,11 @@ import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
 UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
@@ -366,6 +366,11 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
       Mouse.sClickOn(gui.element(), focusables.about.selector),
       // Menus are somewhat irrelevant here, because the hover would have changed them,
       // not the click
+      store.sAssertEq('Checking about fired', [ 'dropdown.menu.execute: about' ]),
+      store.sClear,
+
+      // Tap on "about"
+      Touch.sTapOn(gui.element(), focusables.about.selector),
       store.sAssertEq('Checking about fired', [ 'dropdown.menu.execute: about' ]),
       store.sClear,
 

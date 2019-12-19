@@ -81,7 +81,7 @@ const createSelector = (snaps: DraggingTypes.SnapsConfig) => Memento.record(
 
     buttonBehaviours: Behaviour.derive([
       Dragging.config({
-        mode: platform.deviceType.isTouch() ? 'touch' : 'mouse',
+        mode: 'mouseOrTouch',
         blockerClass: 'blocker',
         snaps
       }),
@@ -201,7 +201,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
       });
     });
 
-    editor.on('resize ScrollContent', () => {
+    editor.on('ResizeEditor ResizeWindow ScrollContent', () => {
       snapLastTopLeft();
       snapLastBottomRight();
     });

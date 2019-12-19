@@ -1,4 +1,4 @@
-import { Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter } from '@ephox/agar';
+import { Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, Touch, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Focus, Value } from '@ephox/sugar';
 
@@ -6,6 +6,7 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { ExpandableForm } from 'ephox/alloy/api/ui/ExpandableForm';
@@ -14,7 +15,6 @@ import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import * as TestForm from 'ephox/alloy/test/form/TestForm';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
@@ -249,7 +249,32 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
 
           Keyboard.sKeydown(doc, Keys.tab(), {}),
           FocusTools.sTryOnSelector('Focus should move onto select', doc, 'select'),
+
+          Keyboard.sKeydown(doc, Keys.tab(), { shiftKey: true }),
+          FocusTools.sTryOnSelector('Focus should move onto select', doc, '.test-expander-button'),
+          Keyboard.sKeydown(doc, Keys.enter(), {}),
+
+          Waiter.sTryUntil(
+            'Waiting until it has stopped shrinking',
+            UiFinder.sNotExists(gui.element(), '.expandable-shrinking'),
+            10,
+            10000
+          ),
+
           Mouse.sClickOn(gui.element(), '.test-expander-button'),
+
+          Waiter.sTryUntil(
+            'Waiting until it has stopped growing',
+            UiFinder.sNotExists(gui.element(), '.expandable-growing')
+          ),
+
+          Step.async((next, die) => {
+            Focus.search(component.element()).fold(() => {
+              die('The focus has not stayed in the form');
+            }, next);
+          }),
+
+          Touch.sTapOn(gui.element(), '.test-expander-button'),
 
           Waiter.sTryUntil(
             'Waiting until it has stopped shrinking',
@@ -262,7 +287,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
             Focus.search(component.element()).fold(() => {
               die('The focus has not stayed in the form');
             }, next);
-          })
+          }),
         ])
       ),
 

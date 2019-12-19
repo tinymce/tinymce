@@ -1,20 +1,16 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Cell, Fun} from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
+import { Cell, Fun } from '@ephox/katamari';
 
 import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import * as PartType from '../../parts/PartType';
 import { SliderDetail } from '../../ui/types/SliderTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
-
-const platform = PlatformDetection.detect();
-const isTouch = platform.deviceType.isTouch();
 
 const labelPart = PartType.optional({
   schema: [ FieldSchema.strict('dom') ],
@@ -33,19 +29,14 @@ const edgePart = (name: string): PartType.PartTypeAdt => {
         return {};
       },
         (a) => {
-          const touchEvents = AlloyEvents.derive([
-            AlloyEvents.runActionExtra(NativeEvents.touchstart(), a, [detail])
-          ]);
-
-          const mouseEvents = AlloyEvents.derive([
-            AlloyEvents.runActionExtra(NativeEvents.mousedown(), a, [detail]),
-            AlloyEvents.runActionExtra(NativeEvents.mousemove(), (l, det: SliderDetail) => {
-              if (det.mouseIsDown.get()) { a(l, det); }
-            }, [detail])
-          ]);
-
           return {
-            events: isTouch ? touchEvents : mouseEvents
+            events: AlloyEvents.derive([
+              AlloyEvents.runActionExtra(NativeEvents.touchstart(), a, [detail]),
+              AlloyEvents.runActionExtra(NativeEvents.mousedown(), a, [detail]),
+              AlloyEvents.runActionExtra(NativeEvents.mousemove(), (l, se, det: SliderDetail) => {
+                if (det.mouseIsDown.get()) { a(l, det); }
+              }, [detail])
+            ])
           };
         }
       );
@@ -117,20 +108,8 @@ const spectrumPart = PartType.required({
       });
     };
 
-    const touchEvents = AlloyEvents.derive([
-      AlloyEvents.run(NativeEvents.touchstart(), setValueFrom),
-      AlloyEvents.run(NativeEvents.touchmove(), setValueFrom)
-    ]);
-
-    const mouseEvents = AlloyEvents.derive([
-      AlloyEvents.run(NativeEvents.mousedown(), setValueFrom),
-      AlloyEvents.run<SugarEvent>(NativeEvents.mousemove(), (spectrum, se) => {
-        if (detail.mouseIsDown.get()) { setValueFrom(spectrum, se); }
-      })
-    ]);
-
     return {
-      behaviours: Behaviour.derive(isTouch ? [] : [
+      behaviours: Behaviour.derive([
         // Move left and right along the spectrum
         Keying.config(
           {
@@ -152,7 +131,14 @@ const spectrumPart = PartType.required({
         Focusing.config({})
       ]),
 
-      events: isTouch ? touchEvents : mouseEvents
+      events: AlloyEvents.derive([
+        AlloyEvents.run(NativeEvents.touchstart(), setValueFrom),
+        AlloyEvents.run(NativeEvents.touchmove(), setValueFrom),
+        AlloyEvents.run(NativeEvents.mousedown(), setValueFrom),
+        AlloyEvents.run<SugarEvent>(NativeEvents.mousemove(), (spectrum, se) => {
+          if (detail.mouseIsDown.get()) { setValueFrom(spectrum, se); }
+        })
+      ])
     };
   }
 });
