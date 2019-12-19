@@ -99,7 +99,8 @@ const open = function (editor: Editor, charMap: CharMap[]) {
       }
     }
   };
-  editor.windowManager.open(bridgeSpec);
+  const dialogApi = editor.windowManager.open(bridgeSpec);
+  dialogApi.focus(patternName);
 };
 
 export default {

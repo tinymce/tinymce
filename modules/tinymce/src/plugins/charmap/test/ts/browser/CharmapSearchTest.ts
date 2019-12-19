@@ -35,9 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.SearchTest', (success, failu
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),
         ]),
-        FocusTools.sTryOnSelector('Focus should start on', doc, '[role="tab"]'), // TODO: Remove duped startup of these tests
-        Keyboard.sKeydown(doc, Keys.tab(), { }),
-        FocusTools.sTryOnSelector('Focus should have moved to input', doc, 'input'),
+        FocusTools.sTryOnSelector('Focus should start on', doc, 'input'), // TODO: Remove duped startup of these tests
         FocusTools.sSetActiveValue(doc, 'euro'),
         Chain.asStep(doc, [
           FocusTools.cGetFocused,

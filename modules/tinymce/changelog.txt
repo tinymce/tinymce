@@ -1,4 +1,5 @@
 Version 5.1.5 (TBA)
+    Fixed the `charmap` dialog initially focusing the first tab instead of the search input #TINY-4342
     Fixed bug with pasting image URLs when paste as text is enabled #TINY-4523
 Version 5.1.4 (2019-12-11)
     Fixed dialog contents disappearing when clicking a checkbox for right-to-left languages #TINY-4518

@@ -1,9 +1,9 @@
-import { Chain, FocusTools, Guard, Keyboard, Keys, Log, Pipeline, UiFinder, NamedChain } from '@ephox/agar';
+import { Chain, FocusTools, Guard, Log, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { Result } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body, Element, Css, Traverse } from '@ephox/sugar';
+import { Body, Css, Element, Traverse } from '@ephox/sugar';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -39,9 +39,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.DialogHeightTest', (success,
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),
         ]),
-        FocusTools.sTryOnSelector('Focus should start on', doc, '[role="tab"]'),
-        Keyboard.sKeydown(doc, Keys.tab(), { }),
-        FocusTools.sTryOnSelector('Focus should have moved to input', doc, 'input'),
+        FocusTools.sTryOnSelector('Focus should start on', doc, 'input'),
         Chain.asStep(Body.body() , [
           NamedChain.asChain([
             NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
