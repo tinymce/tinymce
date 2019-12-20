@@ -135,18 +135,14 @@ const register = function (htmlParser, settings, dom) {
     }
   });
 
-  // Convert comments to cdata and handle protected comments
+  // Convert protected comments
   htmlParser.addNodeFilter('#comment', function (nodes) {
     let i = nodes.length, node;
 
     while (i--) {
       node = nodes[i];
 
-      if (node.value.indexOf('[CDATA[') === 0) {
-        node.name = '#cdata';
-        node.type = 4;
-        node.value = node.value.replace(/^\[CDATA\[|\]\]$/g, '');
-      } else if (node.value.indexOf('mce:protected ') === 0) {
+      if (node.value.indexOf('mce:protected ') === 0) {
         node.name = '#text';
         node.type = 3;
         node.raw = true;

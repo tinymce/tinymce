@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Strings } from '@ephox/katamari';
 import Tools from '../util/Tools';
 import Entities from './Entities';
 import Schema from './Schema';
@@ -79,10 +80,6 @@ const isValidPrefixAttrName = function (name: string): boolean {
   return name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
 };
 
-const trimComments = function (text: string): string {
-  return text.replace(/<!--|--!?>/g, '');
-};
-
 const isInvalidUri = (settings: SaxParserSettings, uri: string) => {
   if (settings.allow_html_data_urls) {
     return false;
@@ -98,10 +95,10 @@ const isInvalidUri = (settings: SaxParserSettings, uri: string) => {
  * used to skip all children of a parent element from being processed.
  *
  * @private
- * @method findEndTag
+ * @method findEndTagIndex
  * @param {tinymce.html.Schema} schema Schema instance to use to match short ended elements.
  * @param {String} html HTML string to find the end tag in.
- * @param {Number} startIndex Indext to start searching at should be after the start tag.
+ * @param {Number} startIndex Index to start searching at should be after the start tag.
  * @return {Number} Index of the end tag.
  */
 const findEndTagIndex = function (schema: Schema, html: string, startIndex: number): number {
@@ -130,6 +127,27 @@ const findEndTagIndex = function (schema: Schema, html: string, startIndex: numb
   }
 
   return index;
+};
+
+const isConditionalComment = (html: string, startIndex: number) => /^\s*\[if [\w\W]+\]>.*<!\[endif\](--!?)?>/.test(html.substr(startIndex));
+
+const findCommentEndIndex = (html: string, startTag: string, startIndex: number = 0) => {
+  const lcHtml = html.toLowerCase();
+  if (lcHtml.indexOf('[if ', startIndex) !== -1 && isConditionalComment(lcHtml, startIndex)) {
+    const endIfIndex = lcHtml.indexOf('[endif]', startIndex);
+    return lcHtml.indexOf('>', endIfIndex);
+  } else {
+    const isBogusComment = startTag !== '--';
+    if (isBogusComment) {
+      const endIndex = lcHtml.indexOf('>', startIndex);
+      return endIndex !== -1 ? endIndex : lcHtml.length;
+    } else {
+      const endCommentRegexp = /--!?>/;
+      endCommentRegexp.lastIndex = startIndex;
+      const match = endCommentRegexp.exec(html);
+      return match ? match.index + match[0].length : lcHtml.length;
+    }
+  }
 };
 
 const checkBogusAttribute = (regExp: RegExp, attrString: string): string | null => {
@@ -218,6 +236,38 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       }
     };
 
+    const processComment = (value: string) => {
+      // Ignore empty comments
+      if (value === '') {
+        return;
+      }
+
+      // Padd comment value to avoid browsers from parsing invalid comments as HTML
+      if (value.charAt(0) === '>') {
+        value = ' ' + value;
+      }
+
+      if (!settings.allow_conditional_comments && value.substr(0, 3).toLowerCase() === '[if') {
+        value = ' ' + value;
+      }
+
+      comment(value);
+    };
+
+    const processMalformedComment = (value: string, startIndex: number) => {
+      const startTag = value || '';
+
+      // Find the end of the malformed comment
+      const endIndex = findCommentEndIndex(html, startTag, startIndex);
+      value = html.substr(startIndex, endIndex - startIndex);
+
+      // Malformed comment
+      const commentContent = Strings.startsWith(startTag, '--') ? value.replace(/--!?$/, '') : startTag + value;
+      processComment(commentContent);
+
+      return endIndex + 1;
+    };
+
     const parseAttribute = function (match, name, value, val2, val3) {
       let attrRule, i;
       const trimRegExp = /[\s\u0000-\u001F]+/g;
@@ -295,10 +345,11 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       '(?:!--([\\w\\W]*?)--!?>)|' + // Comment
       '(?:!\\[CDATA\\[([\\w\\W]*?)\\]\\]>)|' + // CDATA
       '(?:!DOCTYPE([\\w\\W]*?)>)|' + // DOCTYPE
+      '(?:!(--)?)|' + // Start malformed comment
       '(?:\\?([^\\s\\/<>]+) ?([\\w\\W]*?)[?/]>)|' + // PI
       '(?:\\/([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)>)|' + // End element
       '(?:([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)((?:\\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\\/|\\s+)>)' + // Start element
-      ')', 'g');
+      ')', 'gi');
 
     attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:[^\"])*)\")|(?:\'((?:[^\'])*)\')|([^>\s]+)))?/g;
 
@@ -313,12 +364,14 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
     processHtml = html + '>';
 
     while ((matches = tokenRegExp.exec(processHtml))) { // Adds and extra '>' to keep regexps from doing catastrofic backtracking on malformed html
+      const matchText = matches[0];
+
       // Text
       if (index < matches.index) {
         text(decode(html.substr(index, matches.index - index)));
       }
 
-      if ((value = matches[6])) { // End element
+      if ((value = matches[7])) { // End element
         value = value.toLowerCase();
 
         // IE will add a ":" in front of elements it doesn't understand like custom elements or HTML5 elements
@@ -327,12 +380,12 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
         }
 
         processEndTag(value);
-      } else if ((value = matches[7])) { // Start element
+      } else if ((value = matches[8])) { // Start element
         // Did we consume the extra character then treat it as text
         // This handles the case with html like this: "text a<b text"
-        if (matches.index + matches[0].length > html.length) {
+        if (matches.index + matchText.length > html.length) {
           text(decode(html.substr(matches.index)));
-          index = matches.index + matches[0].length;
+          index = matches.index + matchText.length;
           continue;
         }
 
@@ -351,7 +404,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
         }
 
         // Always invalidate element if it's marked as bogus
-        const bogusValue = checkBogusAttribute(attrRegExp, matches[8]);
+        const bogusValue = checkBogusAttribute(attrRegExp, matches[9]);
         if (bogusValue !== null) {
           if (bogusValue === 'all') {
             index = findEndTagIndex(schema, html, tokenRegExp.lastIndex);
@@ -373,7 +426,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
           }
 
           // Parse attributes
-          if ((attribsValue = matches[8])) {
+          if ((attribsValue = matches[9])) {
             isInternalElement = attribsValue.indexOf('data-mce-type') !== -1; // Check if the element is an internal element
 
             // If the element has internal attributes then remove it if we are told to do so
@@ -475,7 +528,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
 
         // Treat script, noscript and style a bit different since they may include code that looks like elements
         if ((endRegExp = specialElements[value])) {
-          endRegExp.lastIndex = index = matches.index + matches[0].length;
+          endRegExp.lastIndex = index = matches.index + matchText.length;
 
           if ((matches = endRegExp.exec(html))) {
             if (isValidElement) {
@@ -509,25 +562,30 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
           }
         }
       } else if ((value = matches[1])) { // Comment
-        // Padd comment value to avoid browsers from parsing invalid comments as HTML
-        if (value.charAt(0) === '>') {
-          value = ' ' + value;
-        }
-
-        if (!settings.allow_conditional_comments && value.substr(0, 3).toLowerCase() === '[if') {
-          value = ' ' + value;
-        }
-
-        comment(value);
+        processComment(value);
       } else if ((value = matches[2])) { // CDATA
-        cdata(trimComments(value));
+        // Ensure we are in a valid CDATA context (eg child of svg or mathml)
+        // if we aren't in a valid context, then the cdata should be treated as a comment
+        // See https://html.spec.whatwg.org/multipage/parsing.html#markup-declaration-open-state
+        const isValidCdataSection = stack.length === 0 || schema.isValidChild(stack[stack.length - 1].name, '#cdata');
+        if (isValidCdataSection) {
+          cdata(value);
+        } else {
+          index = processMalformedComment('[CDATA[', matches.index + 9 ); // <![CDATA[ === 9 chars
+          tokenRegExp.lastIndex = index;
+          continue;
+        }
       } else if ((value = matches[3])) { // DOCTYPE
         doctype(value);
-      } else if ((value = matches[4])) { // PI
-        pi(value, matches[5]);
+      } else if ((value = matches[4]) || matchText === '<!') { // Malformed comment
+        index = processMalformedComment(value, matches.index + matchText.length);
+        tokenRegExp.lastIndex = index;
+        continue;
+      } else if ((value = matches[5])) { // PI
+        pi(value, matches[6]);
       }
 
-      index = matches.index + matches[0].length;
+      index = matches.index + matchText.length;
     }
 
     // Text
