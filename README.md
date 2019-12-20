@@ -4,9 +4,9 @@ TinyMCE is the world’s most popular open source web-based WYSIWYG editor.
 
 Trusted and loved by millions of developers, and integrated into thousands of applications, such as:
 
-- Content management systems (CRMs)
+- Content management systems (CMSs)
 - Learning management systems (LMSs)
-- Customer relationship management (CRMs) and marketing automation
+- Customer relationship management (CRM) and marketing automation systems
 - Email marketing systems
 - Content creation in SaaS systems
 
@@ -18,7 +18,7 @@ Trusted and loved by millions of developers, and integrated into thousands of ap
 
 Content is powerful. It can be used to inform, educate, connect, learn, and inspire change.
 
-More of our online applications are providing a platform for people to benefit from the transformational power of content.
+More online applications are providing a platform for people to benefit from the transformational power of content.
 
 With this in mind, as technology continues to advance and evolve, we want to make sure people will always have access to the best tools for creating content, enabling them to participate freely and seamlessly without barriers.
 
@@ -34,7 +34,7 @@ You can access a [full featured demo of TinyMCE](https://www.tiny.cloud/docs/dem
 
 ## Get started with TinyMCE
 
-Get an instance of TinyMCE up and running in less than 5 minutes with the [TinyMCE quick start guide](https://www.tiny.cloud/docs/quick-start/).
+Get an instance of TinyMCE up and running quickly with the [TinyMCE quick start guide](https://www.tiny.cloud/docs/quick-start/).
 
 TinyMCE provides a range of configuration options that allow you to integrate it into your application. Start customizing with a [basic setup](https://www.tiny.cloud/docs/general-configuration-guide/basic-setup/).
 
