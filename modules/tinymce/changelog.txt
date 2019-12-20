@@ -27,6 +27,7 @@ Version 5.2.0 (TBD)
     Fixed validation errors in the CSS where certain properties had the wrong default value #TINY-4491
     Fixed an issue where the element path isn't being cleared when there are no parents #TINY-4412
     Fixed an issue where width and height in svg icons containing `rect` elements were overridden by the CSS reset TINY-4408
+    Fixed keyboard flicker when opening a context menu on mobile #TINY-4540
 Version 5.1.4 (2019-12-11)
     Fixed dialog contents disappearing when clicking a checkbox for right-to-left languages #TINY-4518
     Fixed the `legacyoutput` plugin registering legacy formats after editior initialization, causing legacy content to be stripped on the initial load #TINY-4447
