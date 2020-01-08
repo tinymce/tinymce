@@ -32,7 +32,7 @@ const firePostRender = (editor: Editor) => editor.fire('PostRender');
 
 const fireInit = (editor: Editor) => editor.fire('Init');
 
-const fireTogglePlaceholder = (editor: Editor, state: boolean) => editor.fire('TogglePlaceholder', { state });
+const firePlaceholderToggle = (editor: Editor, state: boolean) => editor.fire('PlaceholderToggle', { state });
 
 export {
   firePreProcess,
@@ -45,5 +45,5 @@ export {
   firePreInit,
   firePostRender,
   fireInit,
-  fireTogglePlaceholder
+  firePlaceholderToggle
 };

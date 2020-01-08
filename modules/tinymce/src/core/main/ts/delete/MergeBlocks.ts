@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option, Fun } from '@ephox/katamari';
-import { Compare, Insert, Remove, Element, Traverse } from '@ephox/sugar';
+import { Arr, Fun, Option } from '@ephox/katamari';
+import { Compare, Element, Insert, Remove, Traverse } from '@ephox/sugar';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
@@ -30,7 +30,7 @@ const extractChildren = (block: Element) => {
 
 const removeEmptyRoot = (rootNode: Element, block: Element) => {
   const parents = Parents.parentsAndSelf(block, rootNode);
-  return Arr.find(parents.reverse(), Empty.isEmpty).each(Remove.remove);
+  return Arr.find(parents.reverse(), (element) => Empty.isEmpty(element)).each(Remove.remove);
 };
 
 const isEmptyBefore = (el: Element) => Arr.filter(Traverse.prevSiblings(el), (el) => !Empty.isEmpty(el)).length === 0;

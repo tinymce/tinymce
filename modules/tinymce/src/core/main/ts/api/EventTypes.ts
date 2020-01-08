@@ -42,6 +42,8 @@ export type WindowEvent<T extends Types.Dialog.DialogData> = { dialog: Types.Dia
 
 export type ProgressStateEvent = { state: boolean, time?: number };
 
+export type PlaceholderToggleEvent = { state: boolean };
+
 export interface EditorEventMap extends NativeEventMap {
   'activate': { relatedTarget: Editor };
   'deactivate': { relatedTarget: Editor };
@@ -90,7 +92,7 @@ export interface EditorEventMap extends NativeEventMap {
   'CloseWindow': WindowEvent<any>;
   'OpenWindow': WindowEvent<any>;
   'ProgressState': ProgressStateEvent;
-  'TogglePlaceholder': { state: boolean };
+  'PlaceholderToggle': PlaceholderToggleEvent;
 }
 
 export interface EditorManagerEventMap extends NativeEventMap {

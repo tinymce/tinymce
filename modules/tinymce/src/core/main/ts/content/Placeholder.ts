@@ -62,7 +62,7 @@ const isTypingKeyboardEvent = (e: EditorEvent<unknown>) => {
 
 const isVisuallyEmpty = (dom: DOMUtils, rootElm: DomElement, forcedRootBlock: string) => {
   // Note: Don't use DOMUtils.isEmpty() here as it treats empty format caret nodes as non empty nodes
-  if (Empty.isEmpty(Element.fromDom(rootElm))) {
+  if (Empty.isEmpty(Element.fromDom(rootElm), false)) {
     const isForcedRootBlockFalse = forcedRootBlock === '';
     // Ensure the node matches the forced_root_block setting, as the content could be an empty list, etc...
     // and also check that the content isn't indented
@@ -101,7 +101,7 @@ const setup = (editor: Editor) => {
       // Also set the aria-placeholder attribute for screen readers
       dom.setAttrib(body, 'aria-placeholder', showPlaceholder ? placeholder : null);
 
-      Events.fireTogglePlaceholder(editor, showPlaceholder);
+      Events.firePlaceholderToggle(editor, showPlaceholder);
 
       // Swap the key listener state
       editor.on(showPlaceholder ? 'keydown' : 'keyup', updatePlaceholder);

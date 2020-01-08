@@ -17,7 +17,7 @@ UnitTest.asynctest('webdriver.tinymce.core.content.PlaceholderTest', (success, f
 
     const sClearCount = Step.sync(() => togglePlaceholderCount.set(0));
     const sAssertCount = (count: number) => Step.sync(() => {
-      Assertions.assertEq('Assert TogglePlaceholder count', count, togglePlaceholderCount.get());
+      Assertions.assertEq('Assert PlaceholderToggle count', count, togglePlaceholderCount.get());
     });
 
     const sSetContent = (content: string) => GeneralSteps.sequence([
@@ -106,7 +106,7 @@ UnitTest.asynctest('webdriver.tinymce.core.content.PlaceholderTest', (success, f
     toolbar: 'undo redo | bold',
     placeholder,
     setup: (editor) => {
-      editor.on('TogglePlaceholder', () => {
+      editor.on('PlaceholderToggle', () => {
         togglePlaceholderCount.set(togglePlaceholderCount.get() + 1);
       });
     }
