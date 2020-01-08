@@ -12,7 +12,7 @@ import * as Events from '../api/Events';
 import DOMUtils from '../api/dom/DOMUtils';
 import DomSerializerFilters from './DomSerializerFilters';
 import DomSerializerPreProcess from './DomSerializerPreProcess';
-import DomParser, { DomParserSettings, ParserArgs } from '../api/html/DomParser';
+import DomParser, { DomParserSettings, ParserArgs, ParserFilter } from '../api/html/DomParser';
 import Schema, { SchemaSettings } from '../api/html/Schema';
 import Serializer, { SerializerSettings } from '../api/html/Serializer';
 import Zwsp from '../text/Zwsp';
@@ -33,6 +33,8 @@ interface DomSerializer {
   schema: Schema;
   addNodeFilter (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void): void;
   addAttributeFilter (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void): void;
+  getNodeFilters (): ParserFilter[];
+  getAttributeFilters (): ParserFilter[];
   serialize (node: DOMElement, parserArgs: { format: 'tree' } & SerializerArgs): Node;
   serialize (node: DOMElement, parserArgs?: SerializerArgs): string;
   addRules (rules: string): void;
@@ -120,7 +122,9 @@ const DomSerializer = function (settings: DomSerializerSettings, editor: Editor)
     addTempAttr: Fun.curry(addTempAttr, htmlParser, tempAttrs),
     getTempAttrs () {
       return tempAttrs;
-    }
+    },
+    getNodeFilters: htmlParser.getNodeFilters,
+    getAttributeFilters: htmlParser.getAttributeFilters
   };
 };
 
