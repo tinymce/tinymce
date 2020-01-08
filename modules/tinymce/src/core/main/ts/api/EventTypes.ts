@@ -7,11 +7,11 @@
 
 import { Types } from '@ephox/bridge';
 import { Element, Event, FocusEvent, HTMLElement, Node, Range, UIEvent } from '@ephox/dom-globals';
-import Editor from './Editor';
-import { NativeEventMap } from './util/EventDispatcher';
 import { GetContentArgs } from '../content/GetContent';
 import { SetContentArgs } from '../content/SetContent';
 import { UndoLevel } from '../undo/UndoManagerTypes';
+import Editor from './Editor';
+import { NativeEventMap } from './util/EventDispatcher';
 
 export type ExecCommandEvent = { command: string, ui?: boolean, value?: any };
 
@@ -41,6 +41,8 @@ export type UndoRedoEvent = { level: UndoLevel };
 export type WindowEvent<T extends Types.Dialog.DialogData> = { dialog: Types.Dialog.DialogInstanceApi<T> };
 
 export type ProgressStateEvent = { state: boolean, time?: number };
+
+export type PlaceholderToggleEvent = { state: boolean };
 
 export interface EditorEventMap extends NativeEventMap {
   'activate': { relatedTarget: Editor };
@@ -90,6 +92,7 @@ export interface EditorEventMap extends NativeEventMap {
   'CloseWindow': WindowEvent<any>;
   'OpenWindow': WindowEvent<any>;
   'ProgressState': ProgressStateEvent;
+  'PlaceholderToggle': PlaceholderToggleEvent;
 }
 
 export interface EditorManagerEventMap extends NativeEventMap {

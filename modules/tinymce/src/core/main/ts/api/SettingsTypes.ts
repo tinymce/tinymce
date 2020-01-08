@@ -135,6 +135,7 @@ export interface RawEditorSettings {
   no_newline_selector?: string;
   nowrap?: boolean;
   object_resizing?: boolean | string;
+  placeholder?: string;
   plugins?: string | string[];
   preview_styles?: boolean | string;
   protect?: RegExp[];

@@ -6,12 +6,15 @@
  */
 
 import { HTMLImageElement } from '@ephox/dom-globals';
-import { Fun, Type, Strings, Arr } from '@ephox/katamari';
+import { Arr, Fun, Strings, Type } from '@ephox/katamari';
 import { UploadHandler } from '../file/Uploader';
+import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
 import { ReferrerPolicy } from './SettingsTypes';
 import I18n from './util/I18n';
 import Tools from './util/Tools';
+
+const DOM = DOMUtils.DOM;
 
 const getBodySetting = (editor: Editor, name: string, defaultValue: string) => {
   const value = editor.getParam(name, defaultValue);
@@ -186,6 +189,11 @@ const getResizeImgProportional = (editor: Editor): boolean => {
   return editor.getParam('resize_img_proportional', true, 'boolean');
 };
 
+const getPlaceholder = (editor: Editor): string => {
+  // Fallback to the original elements placeholder if not set in the settings
+  return editor.getParam('placeholder', DOM.getAttrib(editor.getElement(), 'placeholder'), 'string');
+};
+
 export default {
   getIframeAttrs,
   getDocType,
@@ -222,5 +230,6 @@ export default {
   getDirectionality,
   getInlineBoundarySelector,
   getObjectResizing,
-  getResizeImgProportional
+  getResizeImgProportional,
+  getPlaceholder
 };
