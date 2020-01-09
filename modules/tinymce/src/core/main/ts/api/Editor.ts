@@ -788,8 +788,8 @@ class Editor implements EditorObservable {
    * // Sets the content of a specific editor (my_editor in this example)
    * tinymce.get('my_editor').setContent(data);
    *
-   * // Sets the bbcode contents of the activeEditor editor if the bbcode plugin was added
-   * tinymce.activeEditor.setContent('[b]some[/b] html', {format: 'bbcode'});
+   * // Sets the content of the activeEditor editor using the specified format
+   * tinymce.activeEditor.setContent('<p>Some html</p>', {format: 'html'});
    */
   public setContent (content: string, args?: EditorContent.SetContentArgs): string;
   public setContent (content: Node, args?: EditorContent.SetContentArgs): Node;
