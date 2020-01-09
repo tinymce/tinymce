@@ -6,6 +6,7 @@ Version 5.2.0 (TBD)
     Added a drop shadow below the toolbar while in sticky mode and introduced Oxide variables to customize it when creating a custom skin #TINY-4343
     Added `quickbars_image_toolbar` setting to allow for the image quickbar to be turned off #TINY-4398
     Added iframe and img `loading` attribute to the default schema. Patch contributed by ataylor32. #GH-5112
+    Added new getNodeFilters/getAttributeFilters functions to the editor.serializer instance #TINY-4344
     Changed iframe mode to set selection on content init if selection doesn't exist #TINY-4139
     Changed table related icons to align them with the visual style of the other icons #TINY-4341
     Changed and improved the visual appearance of the color input field #TINY-2917

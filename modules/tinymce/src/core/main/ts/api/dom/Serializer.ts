@@ -113,7 +113,11 @@ const Serializer = function (settings: SerializerSettings, editor?: Editor): Ser
      * @method getTempAttrs
      * @return {String[]} Array with attribute names.
      */
-    getTempAttrs: domSerializer.getTempAttrs
+    getTempAttrs: domSerializer.getTempAttrs,
+
+    getNodeFilters: domSerializer.getNodeFilters,
+
+    getAttributeFilters: domSerializer.getAttributeFilters
   };
 };
 
