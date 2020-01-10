@@ -53,6 +53,14 @@ const hasLinkClassList = function (editorSettings) {
   return getLinkClassList(editorSettings) !== undefined;
 };
 
+const getLinkClassListSetup = function (editorSettings) {
+  return editorSettings.link_class_list_setup;
+};
+
+const hasLinkClassListSetup = function (editorSettings) {
+  return getLinkClassListSetup(editorSettings) !== undefined;
+};
+
 const shouldShowLinkTitle = function (editorSettings) {
   return editorSettings.link_title !== false;
 };
@@ -74,6 +82,8 @@ export default {
   hasRelList,
   getLinkClassList,
   hasLinkClassList,
+  getLinkClassListSetup,
+  hasLinkClassListSetup,
   shouldShowLinkTitle,
   allowUnsafeLinkTarget
 };
