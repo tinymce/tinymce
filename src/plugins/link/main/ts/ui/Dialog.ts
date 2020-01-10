@@ -258,7 +258,10 @@ const showDialog = function (editor, linkList) {
               return editor.formatter.getCssText({ inline: 'a', classes: [item.value] });
             };
           }
-        }
+        },
+        Settings.hasLinkClassSetup(editor.settings)
+          ? Settings.getLinkClassSetup(editor.settings)(editor)
+          : []
       )
     };
   }
