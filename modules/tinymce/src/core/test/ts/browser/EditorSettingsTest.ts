@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, [
       Logger.t('default desktop settings', Step.sync(() => {
-        const defaultSettings = EditorSettings.getDefaultSettings('id', 'documentBaseUrl', false, editor);
+        const defaultSettings = EditorSettings.getDefaultSettings({}, 'id', 'documentBaseUrl', false, editor);
         Obj.each(expectedDefaultSettings, (value, key) => {
           Assertions.assertEq(`Should have default ${key} setting`, value, Obj.get(defaultSettings, key).getOrUndefined());
         });
@@ -51,14 +51,24 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
       })),
 
       Logger.t('default touch device settings', Step.sync(() => {
-        const defaultSettings = EditorSettings.getDefaultSettings('id', 'documentBaseUrl', true, editor);
+        const defaultSettings = EditorSettings.getDefaultSettings({}, 'id', 'documentBaseUrl', true, editor);
         Obj.each(expectedTouchDefaultSettings, (value, key) => {
           Assertions.assertEq(`Should have default ${key} setting`, value, Obj.get(defaultSettings, key).getOrUndefined());
         });
       })),
 
+      Logger.t('when unset, toolbar_mode should fall back to the value of toolbar_drawer', Step.sync(() => {
+        const toolbar_drawer = 'sliding';
+
+        const defaultSettings = EditorSettings.getDefaultSettings({ toolbar_drawer }, 'id', 'documentBaseUrl', true, editor);
+        Assertions.assertEq('Should fall back to value of toolbar_drawer', true, defaultSettings.toolbar_mode === toolbar_drawer);
+
+        const mobileDefaultSettings = EditorSettings.getDefaultMobileSettings({ toolbar_drawer }, false);
+        Assertions.assertEq('Should fall back to value of toolbar_drawer', true, mobileDefaultSettings.toolbar_mode === toolbar_drawer);
+      })),
+
       Logger.t('default tablet settings', Step.sync(() => {
-        const defaultSettings = EditorSettings.getDefaultMobileSettings(false);
+        const defaultSettings = EditorSettings.getDefaultMobileSettings({}, false);
         Obj.each(expectedTabletDefaultSettings, (value, key) => {
           Assertions.assertEq(`Should have default ${key} setting`, value, Obj.get(defaultSettings, key).getOrUndefined());
         });
@@ -66,7 +76,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
       })),
 
       Logger.t('default phone settings', Step.sync(() => {
-        const defaultSettings = EditorSettings.getDefaultMobileSettings(true);
+        const defaultSettings = EditorSettings.getDefaultMobileSettings({}, true);
         Obj.each(expectedPhoneDefaultSettings, (value, key) => {
           Assertions.assertEq(`Should have default ${key} setting`, value, Obj.get(defaultSettings, key).getOrUndefined());
         });
