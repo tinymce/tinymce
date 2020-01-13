@@ -84,7 +84,7 @@ export enum ToolbarMode {
 }
 
 const getToolbarMode = (editor: Editor): ToolbarMode => {
-  return editor.getParam('toolbar_mode', editor.getParam('toolbar_drawer', '', 'string'), 'string') as ToolbarMode;
+  return editor.getParam('toolbar_mode', '', 'string') as ToolbarMode;
 };
 
 export enum ToolbarLocation {
