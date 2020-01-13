@@ -58,13 +58,15 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
       })),
 
       Logger.t('when unset, toolbar_mode should fall back to the value of toolbar_drawer', Step.sync(() => {
-        const toolbar_drawer = 'sliding';
+        const toolbarSettings: EditorSettingsType = {
+          toolbar_drawer: 'sliding'
+        };
 
-        const defaultSettings = EditorSettings.getDefaultSettings({ toolbar_drawer }, 'id', 'documentBaseUrl', true, editor);
-        Assertions.assertEq('Should fall back to value of toolbar_drawer', true, defaultSettings.toolbar_mode === toolbar_drawer);
+        const defaultSettings = EditorSettings.getDefaultSettings(toolbarSettings, 'id', 'documentBaseUrl', true, editor);
+        Assertions.assertEq('Should fall back to value of toolbar_drawer', true, defaultSettings.toolbar_mode === 'sliding');
 
-        const mobileDefaultSettings = EditorSettings.getDefaultMobileSettings({ toolbar_drawer }, false);
-        Assertions.assertEq('Should fall back to value of toolbar_drawer', true, mobileDefaultSettings.toolbar_mode === toolbar_drawer);
+        const mobileDefaultSettings = EditorSettings.getDefaultMobileSettings(toolbarSettings, false);
+        Assertions.assertEq('Should fall back to value of toolbar_drawer', true, mobileDefaultSettings.toolbar_mode === 'sliding');
       })),
 
       Logger.t('default tablet settings', Step.sync(() => {
