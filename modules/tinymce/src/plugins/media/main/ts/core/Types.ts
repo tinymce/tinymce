@@ -20,13 +20,13 @@ export interface MediaData {
 
 export interface DialogSubData {
   value: string;
-  meta: Record<string, any>;
+  meta?: Record<string, any>;
 }
 
 export interface MediaDialogData {
-  source?: DialogSubData;
-  altsource?: DialogSubData;
-  poster?: DialogSubData;
+  source: DialogSubData;
+  altsource: DialogSubData;
+  poster: DialogSubData;
   embed?: string;
   dimensions?: {
     width?: string;

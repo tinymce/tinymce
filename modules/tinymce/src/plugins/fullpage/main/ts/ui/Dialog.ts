@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Parser from '../core/Parser';
-import { Merger, Cell } from '@ephox/katamari';
 
 const open = function (editor: Editor, headState: Cell<string>) {
   const data = Parser.htmlToData(editor, headState.get());
@@ -22,7 +22,7 @@ const open = function (editor: Editor, headState: Cell<string>) {
     docencoding: ''
   };
 
-  const initialData = Merger.merge(defaultData, data);
+  const initialData = { ...defaultData, ...data };
 
   editor.windowManager.open({
     title: 'Metadata and Document Properties',

@@ -7,12 +7,12 @@
 
 import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, VerticalDir } from '@ephox/alloy';
 import { HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
-import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
+import { Arr, Obj, Option, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import { getMultipleToolbarsSetting, getToolbarGrouped, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, isToolbarLocationTop, useFixedContainer, getToolbarMode } from './api/Settings';
+import { getMultipleToolbarsSetting, getToolbarGrouped, getToolbarMode, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, isToolbarLocationTop, useFixedContainer } from './api/Settings';
 import TouchEvents from './api/TouchEvents';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
@@ -383,7 +383,7 @@ const setup = (editor: Editor): RenderInfo => {
       menuItems,
 
       // Apollo, not implemented yet, just patched to work
-      menus: !editor.settings.menu ? {} : Obj.map(editor.settings.menu, (menu) => Merger.merge(menu, { items: menu.items })),
+      menus: !editor.settings.menu ? {} : Obj.map(editor.settings.menu, (menu) => ({ ...menu, items: menu.items })),
       menubar: editor.settings.menubar,
       toolbar: toolbarOpt.getOrThunk(() => editor.getParam('toolbar', true)),
       buttons,

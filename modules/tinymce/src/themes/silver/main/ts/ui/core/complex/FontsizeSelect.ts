@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyTriggers, AlloyComponent } from '@ephox/alloy';
-import * as FormatRegister from './utils/FormatRegister';
-import { Arr, Obj, Option, Fun } from '@ephox/katamari';
+import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
+import { Arr, Fun, Obj, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { createMenuItems, createSelectButton, SelectSpec, FormatItem } from './BespokeSelect';
-import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
+import { updateMenuText } from '../../dropdown/CommonDropdown';
+import { createMenuItems, createSelectButton, FormatterFormatItem, SelectSpec } from './BespokeSelect';
+import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
+import * as FormatRegister from './utils/FormatRegister';
 
 const defaultFontsizeFormats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
 
@@ -75,7 +75,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   const getPreviewFor: FormatRegister.GetPreviewForType = Fun.constant(Fun.constant(Option.none()));
 
-  const onAction = (rawItem: FormatItem) => () => {
+  const onAction = (rawItem: FormatterFormatItem) => () => {
     editor.undoManager.transact(() => {
       editor.focus();
       editor.execCommand('FontSize', false, rawItem.format);

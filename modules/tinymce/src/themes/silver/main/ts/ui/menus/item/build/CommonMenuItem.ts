@@ -5,25 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AddEventsBehaviour,
-  AlloyComponent,
-  AlloyEvents,
-  AlloySpec,
-  Behaviour,
-  Button,
-  Focusing,
-  NativeEvents,
-  Replacing,
-  ItemTypes,
-} from '@ephox/alloy';
-import { Arr, Cell, Fun, Merger, Option } from '@ephox/katamari';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, ItemTypes, NativeEvents, Replacing, } from '@ephox/alloy';
+import { Arr, Cell, Fun, Option } from '@ephox/katamari';
 
 import { DisablingConfigs } from 'tinymce/themes/silver/ui/alien/DisablingConfigs';
 import { onControlAttached, onControlDetached, OnDestroy } from 'tinymce/themes/silver/ui/controls/Controls';
 import { menuItemEventOrder, onMenuItemExecute } from '../ItemEvents';
-import { ItemStructure } from '../structure/ItemStructure';
 import ItemResponse from '../ItemResponse';
+import { ItemStructure } from '../structure/ItemStructure';
 
 export const componentRenderPipeline = (xs: Array<Option<AlloySpec>>) =>
 Arr.bind(xs, (o) => o.toArray());
@@ -101,12 +90,10 @@ export type ItemDataOutput = ItemTypes.NormalItemSpec['data'];
 const buildData = (source: ItemDataInput): ItemDataOutput => {
   return {
     value: source.value,
-    meta: Merger.merge(
-      {
-        text: source.text.getOr('')
-      },
-      source.meta
-    )
+    meta: {
+      text: source.text.getOr(''),
+      ...source.meta
+    }
   };
 };
 

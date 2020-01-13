@@ -5,20 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  AlloyTriggers,
-  Composing,
-  Disabling,
-  Focusing,
-  Form,
-  Reflecting,
-  Representing,
-  TabSection
-} from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, Composing, Disabling, Focusing, Form, Reflecting, Representing, TabSection } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { DialogManager, Types } from '@ephox/bridge';
-import { Merger, Option, Type, Obj, Cell } from '@ephox/katamari';
+import { Cell, Obj, Option, Type } from '@ephox/katamari';
 
 import { formBlockEvent, formCloseEvent, formUnblockEvent } from '../general/FormEvents';
 import { bodyChannel, dialogChannel, footerChannel, titleChannel } from './DialogChannels';
@@ -87,13 +77,13 @@ const getDialogApi = <T extends Types.Dialog.DialogData>(
     // Currently, the decision is to ignore setData calls that fire after the dialog is closed
     withRoot((_) => {
       const prevData = instanceApi.getData();
-      const mergedData = Merger.merge(prevData, newData);
+      const mergedData = { ...prevData, ...newData };
       const newInternalData = validateData(access, mergedData);
       const form = access.getFormWrapper();
       Representing.setValue(form, newInternalData);
       Obj.each(menuItemStates, (v, k) => {
         if (Obj.has(mergedData, k)) {
-          v.set(mergedData[k]);
+          v.set(mergedData[ k ]);
         }
       });
     });
@@ -141,7 +131,7 @@ const getDialogApi = <T extends Types.Dialog.DialogData>(
   const redial = (d: Types.Dialog.DialogApi<T>): void => {
     withRoot((root) => {
       const dialogInit = doRedial(d);
-      root.getSystem().broadcastOn( [ dialogChannel ], dialogInit);
+      root.getSystem().broadcastOn([ dialogChannel ], dialogInit);
 
       root.getSystem().broadcastOn([ titleChannel ], dialogInit.internalDialog);
       root.getSystem().broadcastOn([ bodyChannel ], dialogInit.internalDialog);

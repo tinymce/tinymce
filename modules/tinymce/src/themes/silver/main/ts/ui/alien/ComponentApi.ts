@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Merger, Fun } from '@ephox/katamari';
-import { Toggling, Disabling, Representing, Replacing, AlloyComponent } from '@ephox/alloy';
+import { AlloyComponent, Disabling, Replacing, Representing, Toggling } from '@ephox/alloy';
+import { Fun } from '@ephox/katamari';
 
 // Purpose to wrap internal bits we don't want to expose, like alloy component.
 
@@ -67,7 +67,12 @@ const component = (spec, component: AlloyComponent) => {
     setDisabled: (state: boolean) => Disabling.set(component, state)
   };
 
-  return Merger.merge(defaults, togglingConf, representingConf, replaceingConf);
+  return {
+    ...defaults,
+    ...togglingConf,
+    ...representingConf,
+    ...replaceingConf
+  };
 };
 
 export {

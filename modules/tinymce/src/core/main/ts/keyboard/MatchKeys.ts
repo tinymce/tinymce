@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Merger, Option } from '@ephox/katamari';
 import { KeyboardEvent } from '@ephox/dom-globals';
+import { Arr, Fun, Option } from '@ephox/katamari';
 
 export interface KeyPattern {
   shiftKey?: boolean;
@@ -19,14 +19,15 @@ export interface KeyPattern {
 
 const defaultPatterns = (patterns: KeyPattern[]): KeyPattern[] => {
   return Arr.map(patterns, (pattern) => {
-    return Merger.merge({
+    return {
       shiftKey: false,
       altKey: false,
       ctrlKey: false,
       metaKey: false,
       keyCode: 0,
-      action: Fun.noop
-    }, pattern);
+      action: Fun.noop,
+      ...pattern
+    };
   });
 };
 

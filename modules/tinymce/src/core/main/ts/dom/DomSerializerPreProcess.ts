@@ -6,10 +6,9 @@
  */
 
 import { document, Element } from '@ephox/dom-globals';
-import { Merger } from '@ephox/katamari';
+import Editor from '../api/Editor';
 import * as Events from '../api/Events';
 import Tools from '../api/util/Tools';
-import Editor from '../api/Editor';
 
 const preProcess = function (editor: Editor, node: Element, args) {
   let impl, doc, oldDoc;
@@ -41,7 +40,7 @@ const preProcess = function (editor: Editor, node: Element, args) {
     dom.doc = doc;
   }
 
-  Events.firePreProcess(editor, Merger.merge(args, { node }));
+  Events.firePreProcess(editor, { ...args, node });
 
   if (oldDoc) {
     dom.doc = oldDoc;

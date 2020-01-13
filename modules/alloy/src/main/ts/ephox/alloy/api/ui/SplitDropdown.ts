@@ -1,4 +1,4 @@
-import { Fun, Id, Merger, Option } from '@ephox/katamari';
+import { Fun, Id, Option } from '@ephox/katamari';
 import { Attr } from '@ephox/sugar';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
@@ -44,8 +44,8 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
     return Option.some(true);
   };
 
-  const buttonEvents = Merger.merge(
-    AlloyEvents.derive([
+  const buttonEvents = {
+    ...AlloyEvents.derive([
       AlloyEvents.runOnAttached((component, simulatedEvent) => {
         const ariaDescriptor = AlloyParts.getPart(component, detail, 'aria-descriptor');
         ariaDescriptor.each((descriptor) => {
@@ -55,8 +55,8 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
         });
       }),
     ]),
-    ButtonBase.events(Option.some(action))
-  );
+    ...ButtonBase.events(Option.some(action))
+  };
 
   const apis: SplitDropdownApis = {
     repositionMenus: (comp) => {
