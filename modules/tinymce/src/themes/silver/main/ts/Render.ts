@@ -382,7 +382,6 @@ const setup = (editor: Editor): RenderInfo => {
     const rawUiConfig: RenderUiConfig = {
       menuItems,
 
-      // Apollo, not implemented yet, just patched to work
       menus: !editor.settings.menu ? {} : Obj.map(editor.settings.menu, (menu) => ({ ...menu, items: menu.items })),
       menubar: editor.settings.menubar,
       toolbar: toolbarOpt.getOrThunk(() => editor.getParam('toolbar', true)),
