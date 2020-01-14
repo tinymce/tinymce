@@ -15,7 +15,12 @@ const getDefaultLinkTarget = function (editor: Editor) {
   return editor.getParam('default_link_target', false);
 };
 
+const useHTTPS = (editor: Editor) => {
+  return editor.getParam('use_https', false, 'boolean');
+};
+
 export default {
   getAutoLinkPattern,
-  getDefaultLinkTarget
+  getDefaultLinkTarget,
+  useHTTPS
 };

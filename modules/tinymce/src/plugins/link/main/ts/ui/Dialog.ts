@@ -19,7 +19,7 @@ import { DialogConfirms } from './DialogConfirms';
 import { DialogInfo } from './DialogInfo';
 import { LinkDialogData, LinkDialogInfo } from './DialogTypes';
 
-const handleSubmit = (editor: Editor, info: LinkDialogInfo, assumeExternalTargets: AssumeExternalTargets) => (api: Types.Dialog.DialogInstanceApi<LinkDialogData>) => {
+const handleSubmit = (editor: Editor, info: LinkDialogInfo, assumeExternalTargets: AssumeExternalTargets, useHTTPS: boolean) => (api: Types.Dialog.DialogInstanceApi<LinkDialogData>) => {
   const data: LinkDialogData = api.getData();
 
   if (!data.url.value) {
@@ -49,7 +49,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo, assumeExternalTarget
     attach: data.url.meta !== undefined && data.url.meta.attach ? data.url.meta.attach : () => {}
   };
 
-  DialogConfirms.preprocess(editor, assumeExternalTargets, changedData).get((pData) => {
+  DialogConfirms.preprocess(editor, assumeExternalTargets, useHTTPS, changedData).get((pData) => {
     Utils.link(editor, attachState, pData);
   });
 
@@ -162,7 +162,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.D
 const open = function (editor: Editor) {
   const data = collectData(editor);
   data.map((info) => {
-    const onSubmit = handleSubmit(editor, info, Settings.assumeExternalTargets(editor));
+    const onSubmit = handleSubmit(editor, info, Settings.assumeExternalTargets(editor), Settings.useHTTPS(editor));
     return makeDialog(info, onSubmit, editor);
   }).get((spec) => {
     editor.windowManager.open(spec);
