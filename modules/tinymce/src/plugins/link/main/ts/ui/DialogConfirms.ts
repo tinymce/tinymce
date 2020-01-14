@@ -8,9 +8,8 @@
 import { Arr, Future, Option } from '@ephox/katamari';
 import Delay from 'tinymce/core/api/util/Delay';
 import Editor from 'tinymce/core/api/Editor';
-// import Settings from '../api/Settings';
-// import { AssumeExternalTargets } from '../api/Types';
 
+import Settings from '../api/Settings';
 import { AssumeExternalTargets } from '../api/Types';
 import Utils from '../core/Utils';
 import { LinkDialogOutput } from './DialogTypes';
@@ -55,7 +54,9 @@ const tryProtocolTransform = (assumeExternalTargets: AssumeExternalTargets, useH
   }) : Option.none();
 };
 
-const preprocess = (editor: Editor, assumeExternalTargets: AssumeExternalTargets, useHTTPS: boolean, data: LinkDialogOutput): Future<LinkDialogOutput> => {
+const preprocess = (editor: Editor, data: LinkDialogOutput): Future<LinkDialogOutput> => {
+  const assumeExternalTargets = Settings.assumeExternalTargets(editor);
+  const useHTTPS = Settings.useHTTPS(editor);
   return Arr.findMap(
     [ tryEmailTransform, tryProtocolTransform(assumeExternalTargets, useHTTPS) ],
     (f) => f(data)
