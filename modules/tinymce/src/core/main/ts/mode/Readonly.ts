@@ -119,9 +119,11 @@ const registerReadOnlyContentFilters = (editor: Editor) => {
 
 const isClickEvent = (e: Event): e is MouseEvent => e.type === 'click';
 
-const preventReadOnlyEvents = (e: Event) => {
+const preventReadOnlyEvents = (editor: Editor, e: Event) => {
   const target = e.target as HTMLElement;
-  if (isClickEvent(e) && target.tagName === 'A' && !VK.metaKeyPressed(e)) {
+  const elm = editor.dom.getParent(target, 'a');
+
+  if (isClickEvent(e) && elm && elm.tagName === 'A' && !VK.metaKeyPressed(e)) {
     e.preventDefault();
   }
 };
