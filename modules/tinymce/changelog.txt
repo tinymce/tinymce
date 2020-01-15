@@ -1,4 +1,5 @@
 Version 5.1.6 (TBD)
+    Fixed readonly mode not blocking all clicked links #TINY-4572
     Fixed the context menu not showing in certain cases with hybrid devices #TINY-4569
 Version 5.1.5 (2019-12-19)
     Fixed the UI not working with hybrid devices that accept both touch and mouse events #TNY-4521

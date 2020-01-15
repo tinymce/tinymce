@@ -62,7 +62,7 @@ const fireEvent = (editor: Editor, eventName: string, e: Event) => {
   if (isListening(editor)) {
     editor.fire(eventName, e);
   } else if (isReadOnly(editor)) {
-    preventReadOnlyEvents(e);
+    preventReadOnlyEvents(editor, e);
   }
 };
 
