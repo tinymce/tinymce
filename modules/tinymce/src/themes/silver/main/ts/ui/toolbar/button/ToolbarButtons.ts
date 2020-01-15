@@ -5,51 +5,30 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AddEventsBehaviour,
-  AlloyComponent,
-  AlloyEvents,
-  AlloyTriggers,
-  Behaviour,
-  Button as AlloyButton,
-  Disabling,
-  Focusing,
-  Keying,
-  NativeEvents,
-  Reflecting,
-  Replacing,
-  SketchSpec,
-  SplitDropdown as AlloySplitDropdown,
-  Toggling,
-  SystemEvents,
-  TieredData,
-  TieredMenuTypes,
-  Unselecting,
-  FloatingToolbarButton
-} from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, FloatingToolbarButton, Focusing, Keying, NativeEvents, Reflecting, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling, Unselecting } from '@ephox/alloy';
 import { Toolbar, Types } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
 import { Attr, SelectorFind } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
-import { UiFactoryBackstageProviders, UiFactoryBackstageShared, UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import { ToolbarConfig } from '../../../Render';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
+import { chevronSetter } from '../../button/Behaviours';
 import { renderIconFromPack, renderLabel } from '../../button/ButtonSlices';
 import { onControlAttached, onControlDetached, OnDestroy } from '../../controls/Controls';
 import { componentRenderPipeline } from '../../menus/item/build/CommonMenuItem';
 import { classForPreset } from '../../menus/item/ItemClasses';
+import ItemResponse from '../../menus/item/ItemResponse';
+import { createPartialChoiceMenu } from '../../menus/menu/MenuChoice';
 import { deriveMenuMovement } from '../../menus/menu/MenuMovement';
 import * as MenuParts from '../../menus/menu/MenuParts';
 import { createTieredDataFrom } from '../../menus/menu/SingleMenu';
-import { createPartialChoiceMenu } from '../../menus/menu/MenuChoice';
-import ItemResponse from '../../menus/item/ItemResponse';
 import { ToolbarButtonClasses } from '../button/ButtonClasses';
 import { onToolbarButtonExecute, toolbarButtonEventOrder } from '../button/ButtonEvents';
-import { ToolbarGroup, renderToolbarGroup } from '../CommonToolbar';
-import { ToolbarConfig } from '../../../Render';
-import { chevronSetter } from '../../button/Behaviours';
+import { renderToolbarGroup, ToolbarGroup } from '../CommonToolbar';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
@@ -339,7 +318,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     dom: {
       tag: 'div',
       classes: [ ToolbarButtonClasses.SplitButton ],
-      attributes: Merger.merge({ 'aria-pressed': false }, getTooltipAttributes(spec.tooltip, sharedBackstage.providers))
+      attributes: { 'aria-pressed': false, ...getTooltipAttributes(spec.tooltip, sharedBackstage.providers) }
     },
 
     onExecute (button: AlloyComponent) {

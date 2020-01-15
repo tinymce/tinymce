@@ -53,7 +53,7 @@ const getUserDefinedEmoticons = (editor: Editor) => {
   const userDefinedEmoticons = Settings.getAppendedEmoticons(editor);
   return Obj.map(userDefinedEmoticons, (value: RawEmojiEntry) => {
     // Set some sane defaults for the custom emoji entry
-    return Merger.merge({ keywords: [], category: 'user' }, value);
+    return { keywords: [], category: 'user', ...value };
   });
 };
 

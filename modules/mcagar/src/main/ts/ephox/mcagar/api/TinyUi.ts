@@ -1,6 +1,6 @@
 import { Assertions, Chain, Mouse, Step, UiFinder } from '@ephox/agar';
 import { document } from '@ephox/dom-globals';
-import { Arr, Fun, Merger } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { Element, Visibility } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 import { getThemeSelectors } from './ThemeSelectors';
@@ -131,7 +131,7 @@ export const TinyUi = function (editor: Editor): TinyUi {
   const cFillDialogWith = function (data: Record<string, any>) {
     return Chain.async<Element, Element>(function (element, next, die) {
       getDialogByElement(element).fold(() => die('Can not find dialog'), function (win) {
-        win.fromJSON(Merger.merge(win.toJSON(), data));
+        win.fromJSON({ ...win.toJSON(), ...data });
         next(element);
       });
     });

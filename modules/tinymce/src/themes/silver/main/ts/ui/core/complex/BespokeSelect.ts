@@ -15,23 +15,34 @@ import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
 import ItemResponse from '../../menus/item/ItemResponse';
 import * as NestedMenus from '../../menus/menu/NestedMenus';
 import { ToolbarButtonClasses } from '../../toolbar/button/ButtonClasses';
-import * as FormatRegister from './utils/FormatRegister';
 import { SelectDataset } from './SelectDatasets';
+import * as FormatRegister from './utils/FormatRegister';
 
 export interface PreviewSpec {
   tag: string;
   styleAttr: string;
 }
 
-export interface FormatItem {
-  type: 'separator' | 'submenu' | 'formatter';
+export interface FormatterFormatItem {
+  type: 'formatter';
   title?: TranslateIfNeeded;
-  icon?: string;
-  getStyleItems: () => FormatItem[];
   format: string;
   isSelected: (value: Option<any>) => boolean;
   getStylePreview: () => Option<PreviewSpec>;
 }
+
+export interface SubMenuFormatItem {
+  type: 'submenu';
+  title: TranslateIfNeeded;
+  getStyleItems: () => FormatItem[];
+}
+
+export interface SeparatorFormatItem {
+  type: 'separator';
+  title?: TranslateIfNeeded;
+}
+
+export type FormatItem = FormatterFormatItem | SubMenuFormatItem | SeparatorFormatItem;
 
 export interface SelectSpec {
   tooltip: string;
@@ -43,14 +54,14 @@ export interface SelectSpec {
   // This is used for rendering individual items with styles
   getPreviewFor: FormatRegister.GetPreviewForType;
   // This is used for clicking on the item
-  onAction: (item) => (api) => void;
+  onAction: (item: FormatterFormatItem) => (api) => void;
   // This is used for setting up the handler to change the menu text
   nodeChangeHandler: Option<(comp: AlloyComponent) => (e) => void>;
   // This is true if items should be hidden if they are not an applicable
   // format to the current selection
   shouldHide: boolean;
   // This determines if an item is applicable
-  isInvalid: (item: FormatItem) => boolean;
+  isInvalid: (item: FormatterFormatItem) => boolean;
 
   // This is used for assigning initial values
   setInitialValue: Option<(comp: AlloyComponent) => void>;

@@ -8,7 +8,7 @@
 import { AlloyEvents, FocusManagers, ItemTypes, Keying, MenuTypes, TieredMenu, TieredMenuTypes } from '@ephox/alloy';
 import { InlineContent, Menu as BridgeMenu, Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
-import { Arr, Merger, Option, Options } from '@ephox/katamari';
+import { Arr, Option, Options } from '@ephox/katamari';
 import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
@@ -16,7 +16,7 @@ import ItemResponse from '../item/ItemResponse';
 import * as MenuItems from '../item/MenuItems';
 import { deriveMenuMovement } from './MenuMovement';
 import { markers as getMenuMarkers } from './MenuParts';
-import { createHorizontalPartialMenuWithAlloyItems, createPartialMenuWithAlloyItems, handleError } from './MenuUtils';
+import { createHorizontalPartialMenuWithAlloyItems, createPartialMenuWithAlloyItems, handleError, PartialMenuSpec } from './MenuUtils';
 import { SingleMenuItemApi } from './SingleMenuTypes';
 
 export type ItemChoiceActionHandler = (value: string) => void;
@@ -94,7 +94,7 @@ export const createAutocompleteItems = (items: InlineContent.AutocompleterConten
   );
 };
 
-export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, backstage: UiFactoryBackstage, isHorizontalMenu: boolean): Partial<MenuTypes.MenuSpec> => {
+export const createPartialMenu = (value: string, items: SingleMenuItemApi[], itemResponse: ItemResponse, backstage: UiFactoryBackstage, isHorizontalMenu: boolean): PartialMenuSpec => {
   const hasIcons = menuHasIcons(items);
 
   const alloyItems = Options.cat(
@@ -105,7 +105,7 @@ export const createPartialMenu = (value: string, items: SingleMenuItemApi[], ite
       const itemHasIcon = (i) => isHorizontalMenu ? !i.hasOwnProperty('text') : hasIcons;
       const createItem = (i: SingleMenuItemApi) => createMenuItemFromBridge(i, itemResponse, backstage, itemHasIcon(i), isHorizontalMenu);
       if (item.type === 'nestedmenuitem' && item.getSubmenuItems().length <= 0) {
-        return createItem(Merger.merge(item, {disabled: true}));
+        return createItem({ ...item, disabled: true });
       } else {
         return createItem(item);
       }
@@ -119,7 +119,7 @@ export const createTieredDataFrom = (partialMenu: TieredMenuTypes.PartialMenuSpe
   return TieredMenu.singleData(partialMenu.value, partialMenu);
 };
 
-export const createMenuFrom = (partialMenu: Partial<MenuTypes.MenuSpec>, columns: number | 'auto', focusMode: FocusMode, presets: Types.PresetTypes): MenuTypes.MenuSpec  => {
+export const createMenuFrom = (partialMenu: PartialMenuSpec, columns: number | 'auto', focusMode: FocusMode, presets: Types.PresetTypes): MenuTypes.MenuSpec  => {
   const focusManager = focusMode === FocusMode.ContentFocus ? FocusManagers.highlights() : FocusManagers.dom();
 
   const movement = deriveMenuMovement(columns, presets);

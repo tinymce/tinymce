@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Merger, Obj } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { getRemovedMenuItems } from 'tinymce/themes/silver/api/Settings';
 import { MenubarItemSpec } from './SilverMenubar';
@@ -60,7 +60,7 @@ const parseItemsString = (items: string): string[] => {
 };
 
 const identifyMenus = (editor: Editor, registry: MenuRegistry): MenubarItemSpec[] => {
-  const rawMenuData = Merger.merge(defaultMenus, registry.menus);
+  const rawMenuData = { ...defaultMenus, ...registry.menus };
   const userDefinedMenus = Obj.keys(registry.menus).length > 0;
 
   const menubar: string[] = registry.menubar === undefined || registry.menubar === true ? parseItemsString(defaultMenubar) : parseItemsString(registry.menubar === false ? '' : registry.menubar);

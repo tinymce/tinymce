@@ -6,20 +6,20 @@
  */
 
 import { Element as DOMElement } from '@ephox/dom-globals';
-import { Fun, Merger } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import * as Events from '../api/Events';
 import DOMUtils from '../api/dom/DOMUtils';
-import DomSerializerFilters from './DomSerializerFilters';
-import DomSerializerPreProcess from './DomSerializerPreProcess';
+import Editor from '../api/Editor';
+import * as Events from '../api/Events';
 import DomParser, { DomParserSettings, ParserArgs, ParserFilter } from '../api/html/DomParser';
+import Node from '../api/html/Node';
 import Schema, { SchemaSettings } from '../api/html/Schema';
 import Serializer, { SerializerSettings } from '../api/html/Serializer';
-import Zwsp from '../text/Zwsp';
 import Tools from '../api/util/Tools';
+import Zwsp from '../text/Zwsp';
+import DomSerializerFilters from './DomSerializerFilters';
+import DomSerializerPreProcess from './DomSerializerPreProcess';
 import { isWsPreserveElement } from './ElementType';
-import Node from '../api/html/Node';
-import Editor from '../api/Editor';
 
 export interface SerializerArgs extends ParserArgs {
   format?: string;
@@ -59,7 +59,7 @@ const addTempAttr = function (htmlParser, tempAttrs, name) {
 
 const postProcess = function (editor: Editor, args, content: string) {
   if (!args.no_events && editor) {
-    const outArgs = Events.firePostProcess(editor, Merger.merge(args, { content }));
+    const outArgs = Events.firePostProcess(editor, { ...args, content });
     return outArgs.content;
   } else {
     return content;
@@ -72,7 +72,7 @@ const getHtmlFromNode = function (dom: DOMUtils, node: DOMElement, args) {
 };
 
 const parseHtml = function (htmlParser, html: string, args) {
-  const parserArgs = args.selection ? Merger.merge({ forced_root_block: false }, args) : args;
+  const parserArgs = args.selection ? { forced_root_block: false, ...args } : args;
   const rootNode = htmlParser.parse(html, parserArgs);
   DomSerializerFilters.trimTrailingBr(rootNode);
   return rootNode;
@@ -100,8 +100,8 @@ const DomSerializer = function (settings: DomSerializerSettings, editor: Editor)
   htmlParser = DomParser(settings, schema);
   DomSerializerFilters.register(htmlParser, settings, dom);
 
-  const serialize = function (node, parserArgs?) {
-    const args = Merger.merge({ format: 'html' }, parserArgs ? parserArgs : {});
+  const serialize = function (node, parserArgs = {}) {
+    const args = { format: 'html', ...parserArgs };
     const targetNode = DomSerializerPreProcess.process(editor, node, args);
     const html = getHtmlFromNode(dom, targetNode, args);
     const rootNode = parseHtml(htmlParser, html, args);

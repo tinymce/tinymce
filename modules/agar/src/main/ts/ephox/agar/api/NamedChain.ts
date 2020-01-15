@@ -1,4 +1,4 @@
-import { Arr, Id, Merger, Result } from '@ephox/katamari';
+import { Arr, Id, Result } from '@ephox/katamari';
 
 import { DieFn, NextFn } from '../pipe/Pipe';
 import { Chain } from './Chain';
@@ -32,7 +32,7 @@ const write = (name: string, chain: Chain<NamedData, any>) =>
     chain.runChain(input, (output: any, newLogs: TestLogs) => {
       const self = wrapSingle(name, output);
       return next(
-        Merger.merge(input, self) as NamedData,
+        { ...input, ...self },
         newLogs
       );
     }, die, initLogs);
@@ -57,14 +57,14 @@ const wrapSingle = (name: string, value: any): NamedData => {
   };
 };
 
-const combine = (input: NamedData, name: string, value: any): NamedData => Merger.merge(input, wrapSingle(name, value));
+const combine = (input: NamedData, name: string, value: any): NamedData => ({ ...input, ...wrapSingle(name, value) });
 
 const process = (name: string, chain: Chain<any, any>) =>
   Chain.on((input: NamedData, next: NextFn<NamedData>, die, initLogs: TestLogs) => {
     if (Object.prototype.hasOwnProperty.call(input, name)) {
       const part = input[name];
       chain.runChain(part, (other, newLogs: TestLogs) => {
-        const merged: NamedData = Merger.merge(input, other);
+        const merged: NamedData = { ...input, ...other };
         next(merged, newLogs);
       }, die, initLogs);
     } else {
