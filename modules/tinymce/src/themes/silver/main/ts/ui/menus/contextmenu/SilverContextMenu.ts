@@ -168,6 +168,6 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     // Except ResizeWindow on mobile which fires when the keyboard appears/disappears
     const hideEvents = 'ResizeEditor ScrollContent ScrollWindow longpresscancel' + (isTouch() ? '' : ' ResizeWindow');
     editor.on(hideEvents, hideContextMenu);
-    editor.on(isTouch() ? 'longpress' : 'longpress contextmenu', showContextMenu);
+    editor.on('longpress contextmenu', showContextMenu);
   });
 };
