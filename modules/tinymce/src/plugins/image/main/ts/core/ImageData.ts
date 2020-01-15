@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Node, document } from '@ephox/dom-globals';
-import { Merger } from '@ephox/katamari';
+import { document, HTMLElement, Node } from '@ephox/dom-globals';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Utils from './Utils';
 
@@ -196,7 +195,7 @@ const getStyleValue = (normalizeCss: CssNormalizer, data: ImageData): string => 
 
 const create = (normalizeCss: CssNormalizer, data: ImageData): HTMLElement => {
   const image = document.createElement('img');
-  write(normalizeCss, Merger.merge(data, { caption: false }), image);
+  write(normalizeCss, { ...data, caption: false }, image);
   // Always set alt even if data.alt is an empty string
   setAttrib(image, 'alt', data.alt);
 

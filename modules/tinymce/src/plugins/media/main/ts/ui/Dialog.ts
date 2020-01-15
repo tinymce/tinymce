@@ -7,7 +7,7 @@
 
 import { Types } from '@ephox/bridge';
 import { Element, HTMLElement } from '@ephox/dom-globals';
-import { Arr, Cell, Merger, Obj, Option, Type } from '@ephox/katamari';
+import { Arr, Cell, Obj, Option, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Settings from '../api/Settings';
 import { dataToHtml } from '../core/DataToHtml';
@@ -69,11 +69,12 @@ const unwrap = (data: MediaDialogData, sourceInput?: keyof MediaDialogData): Med
 };
 
 const wrap = (data: MediaData): MediaDialogData => {
-  const wrapped = Merger.merge(data, {
+  const wrapped: MediaDialogData = {
+    ...data,
     source: { value: Obj.get(data, 'source').getOr('') },
     altsource: { value: Obj.get(data, 'altsource').getOr('') },
-    poster: { value: Obj.get(data, 'poster').getOr('') }
-  });
+    poster: { value: Obj.get(data, 'poster').getOr('') },
+  };
 
   // Add additional size values that may or may not have been in the html
   Arr.each([ 'width', 'height' ] as (keyof MediaData)[], (prop) => {
@@ -105,7 +106,10 @@ const isMediaElement = (element: Element) => element.getAttribute('data-mce-obje
 const getEditorData = function (editor: Editor): MediaData {
   const element = editor.selection.getNode();
   const snippet = isMediaElement(element) ? editor.serializer.serialize(element, { selection: true }) : '';
-  return Merger.merge({ embed: snippet }, HtmlToData.htmlToData(Settings.getScripts(editor), snippet));
+  return {
+    embed: snippet,
+    ...HtmlToData.htmlToData(Settings.getScripts(editor), snippet)
+  };
 };
 
 const addEmbedHtml = function (api: Types.Dialog.DialogInstanceApi<MediaDialogData>, editor: Editor) {

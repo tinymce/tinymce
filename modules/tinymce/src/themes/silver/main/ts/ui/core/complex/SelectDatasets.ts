@@ -6,8 +6,8 @@
  */
 
 import { Arr, Obj } from '@ephox/katamari';
-import { SelectData } from './BespokeSelect';
 import Editor from 'tinymce/core/api/Editor';
+import { SelectData } from './BespokeSelect';
 
 const process = (rawFormats): Array<{ title: string, format: string}> => {
   return Arr.map(rawFormats, (item) => {
@@ -24,8 +24,8 @@ const process = (rawFormats): Array<{ title: string, format: string}> => {
 };
 
 export interface BasicSelectItem {
-    title: string;
-    format: string;
+  title: string;
+  format: string;
 }
 
 export interface BasicSelectDataset {

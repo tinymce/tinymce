@@ -1,17 +1,9 @@
 import { ApproxStructure, Assertions, Chain, Guard, Log, Pipeline, Step } from '@ephox/agar';
-import { Element, Html, Node, SelectorFind } from '@ephox/sugar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import {
-  create,
-  defaultData,
-  getStyleValue,
-  isFigure,
-  isImage,
-  read,
-  write
-} from 'tinymce/plugins/image/core/ImageData';
-import { Arr, Merger, Obj } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
+import { Element, Html, Node, SelectorFind } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { create, defaultData, getStyleValue, isFigure, isImage, read, write } from 'tinymce/plugins/image/core/ImageData';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success, failure) => {
   const cSetHtml = (html) => {
@@ -58,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
   const cUpdateModel = (props) => {
     return Chain.control(
       Chain.mapper(function (data: any) {
-        return { model: Merger.merge(data.model, props), image: data.image, parent: data.parent };
+        return { model: { ...data.model, ...props }, image: data.image, parent: data.parent };
       }),
       Guard.addLogging('Update data model')
     );
@@ -96,10 +88,10 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
   Pipeline.async({}, [
     Log.step('TBA', 'Image: getStyleValue from image data', Step.sync(() => {
       Assert.eq('Should not produce any styles', '', getStyleValue(normalizeCss, defaultData()));
-      Assert.eq('Should produce border width', 'border-width: 1px;', getStyleValue(normalizeCss, Merger.merge(defaultData(), { border: '1' })));
-      Assert.eq('Should produce style', 'border-style: solid;', getStyleValue(normalizeCss, Merger.merge(defaultData(), { borderStyle: 'solid' })));
-      Assert.eq('Should produce style & border', 'border-style: solid; border-width: 1px;', getStyleValue(normalizeCss, Merger.merge(defaultData(), { border: '1', borderStyle: 'solid' })));
-      Assert.eq('Should produce compact border', 'border: 2px dotted red;', getStyleValue(normalizeCss, Merger.merge(defaultData(), { style: 'border: 1px solid red', border: '2', borderStyle: 'dotted' })));
+      Assert.eq('Should produce border width', 'border-width: 1px;', getStyleValue(normalizeCss, { ...defaultData(), border: '1' }));
+      Assert.eq('Should produce style', 'border-style: solid;', getStyleValue(normalizeCss, { ...defaultData(), borderStyle: 'solid' }));
+      Assert.eq('Should produce style & border', 'border-style: solid; border-width: 1px;', getStyleValue(normalizeCss, { ...defaultData(), border: '1', borderStyle: 'solid' }));
+      Assert.eq('Should produce compact border', 'border: 2px dotted red;', getStyleValue(normalizeCss, { ...defaultData(), style: 'border: 1px solid red', border: '2', borderStyle: 'dotted' }));
     })),
     Log.chainsAsStep('TBA', 'Image: Create image from data', [
       cCreate({
