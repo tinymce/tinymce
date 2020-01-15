@@ -142,6 +142,9 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
         getTemplateContent(t).then((previewHtml) => {
           updateDialog(api, t, previewHtml);
           api.unblock();
+        }).catch((e) => {
+          updateDialog(api, t, '<p><span style="color: #e03e2d;">Could not load template</span></p>');
+          api.unblock();
         });
       });
     }
@@ -152,6 +155,9 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
     findTemplate(templates, data.template).each((t) => {
       getTemplateContent(t).then((previewHtml) => {
         Templates.insertTemplate(editor, false, previewHtml);
+        api.close();
+      }).catch((e) => {
+        Templates.insertTemplate(editor, false, '');
         api.close();
       });
     });
@@ -221,6 +227,8 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
 
     getTemplateContent(templates[0]).then((previewHtml) => {
       updateDialog(dialogApi, templates[0], previewHtml);
+    }).catch((e) => {
+      updateDialog(dialogApi, templates[0], '<p><span style="color: #e03e2d;">Could not load template</span></p>');
     });
   };
 
