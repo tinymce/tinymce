@@ -6,15 +6,28 @@
  */
 
 import { Element, HTMLElement, Node } from '@ephox/dom-globals';
-import { Fun, Option } from '@ephox/katamari';
-import { Element as SugarElement, Node as SugarNode, PredicateFind, Css, Compare } from '@ephox/sugar';
+import { Fun, Obj, Option } from '@ephox/katamari';
+import { Attr, Compare, Css, Element as SugarElement, Node as SugarNode, TransformFind } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 
-const getSpecifiedFontProp = (propName: string, rootElm: Element, elm: HTMLElement): Option<string> => {
-  const getProperty = (elm) => Css.getRaw(elm, propName);
-  const isRoot = (elm) => Compare.eq(SugarElement.fromDom(rootElm), elm);
+const legacyPropNames: Record<string, string> = {
+  'font-size': 'size',
+  'font-family': 'face'
+};
 
-  return PredicateFind.closest(SugarElement.fromDom(elm), (elm) => getProperty(elm).isSome(), isRoot).bind(getProperty);
+const getSpecifiedFontProp = (propName: string, rootElm: Element, elm: HTMLElement): Option<string> => {
+  const getProperty = (elm: SugarElement) => {
+    return Css.getRaw(elm, propName).orThunk(() => {
+      if (SugarNode.name(elm) === 'font') {
+        return Obj.get(legacyPropNames, propName).bind((legacyPropName) => Attr.getOpt(elm, legacyPropName));
+      } else {
+        return Option.none();
+      }
+    });
+  };
+  const isRoot = (elm: SugarElement) => Compare.eq(SugarElement.fromDom(rootElm), elm);
+
+  return TransformFind.closest(SugarElement.fromDom(elm), (elm) => getProperty(elm), isRoot);
 };
 
 const round = (number: number, precision: number) => {
