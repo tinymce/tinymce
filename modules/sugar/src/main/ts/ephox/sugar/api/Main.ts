@@ -8,6 +8,7 @@ import * as InsertAll from './dom/InsertAll';
 import * as Link from './dom/Link';
 import * as Remove from './dom/Remove';
 import * as Replication from './dom/Replication';
+import * as ShadowDom from './dom/ShadowDom';
 import { EventArgs, EventFilter, EventHandler, EventUnbinder } from './events/Types';
 import * as DomEvent from './events/DomEvent';
 import * as MouseEvent from './events/MouseEvent';
@@ -82,6 +83,7 @@ export {
   Link,
   Remove,
   Replication,
+  ShadowDom,
   EventArgs,
   EventFilter,
   EventHandler,
