@@ -25,6 +25,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Improved `Docking` scroll performance by only calculating the offset origin as required.
 
+# [5.1.0] - 2019-12-17
+
+### Added
+- Added new `mouseOrTouch` mode to dragging to support dragging for both mouse and touch events.
+
+### Changed
+- Changed touch/mouse event handling to work with hybrid devices that accept both mouse and touch events.
+- Changed `AlloyEvents.runActionExtra()` to pass the simulated event to the callback.
+
+### Fixed
+- Fixed the `Slider` component not working in some cases on touch devices.
+
 # [5.0.7] - 2019-12-02
 
 ### Fixed

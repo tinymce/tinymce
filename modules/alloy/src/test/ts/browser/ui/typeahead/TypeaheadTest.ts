@@ -1,4 +1,4 @@
-import { Assertions, FocusTools, Keyboard, Keys, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
+import { Assertions, FocusTools, Keyboard, Keys, Mouse, Step, Touch, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Future, Option, Result, Strings } from '@ephox/katamari';
 import { Focus, Value } from '@ephox/sugar';
@@ -170,6 +170,13 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
       steps.sWaitForNoMenu('After clicking on item'),
       steps.sAssertValue('After clicking on item', 'New-value12'),
 
+      Keyboard.sKeydown(doc, Keys.down(), {}),
+      steps.sWaitForMenu('Pressing down to check for tapping popups'),
+
+      Touch.sTapOn(gui.element(), '.item[data-value="new-value122"]'),
+      steps.sWaitForNoMenu('After tapping on item'),
+      steps.sAssertValue('After tapping on item', 'New-value122'),
+
       // check dismissing popups
       Keyboard.sKeydown(doc, Keys.down(), { }),
       steps.sWaitForMenu('Pressing down to check for dismissing popups'),
@@ -184,7 +191,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
       TestBroadcasts.sDismissOn(
         'typeahead list option: should not close',
         gui,
-        '.item[data-value="new-value122"]'
+        '.item[data-value="new-value1222"]'
       ),
       steps.sWaitForMenu('Broadcasting on item should not dismiss popup'),
 

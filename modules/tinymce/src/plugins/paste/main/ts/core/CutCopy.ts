@@ -12,9 +12,6 @@ import Delay from 'tinymce/core/api/util/Delay';
 import InternalHtml from './InternalHtml';
 import Utils from './Utils';
 
-const noop = function () {
-};
-
 interface SelectionContentData {
   html: string;
   text: string;
@@ -122,7 +119,7 @@ const cut = (editor: Editor) => (evt: ClipboardEvent) => {
 
 const copy = (editor: Editor) => (evt: ClipboardEvent) => {
   if (hasSelectedContent(editor)) {
-    setClipboardData(evt, getData(editor), fallback(editor), noop);
+    setClipboardData(evt, getData(editor), fallback(editor), () => {});
   }
 };
 

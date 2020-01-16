@@ -79,7 +79,7 @@ const setup = (editor: Editor) => {
           e.preventDefault();
         } else {
           // Don't use "e" as the args for fire since it'll mutate the type. See TINY-3254
-          const result = editor.fire('tap');
+          const result = editor.fire('tap', { touches: e.touches });
           if (result.isDefaultPrevented()) {
             e.preventDefault();
           }

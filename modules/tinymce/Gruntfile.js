@@ -269,6 +269,10 @@ module.exports = function (grunt) {
           {
             src: '../../LICENSE.TXT',
             dest: 'js/tinymce/license.txt'
+          },
+          {
+            src: '../../README.md',
+            dest: 'js/tinymce/readme.md'
           }
         ]
       },
@@ -312,6 +316,7 @@ module.exports = function (grunt) {
             'js/tinymce/tinymce.full.min.js',
             'js/tinymce/plugins/moxiemanager',
             'js/tinymce/plugins/visualblocks/img',
+            'js/tinymce/readme.md',
             'readme.md'
           ],
           to: 'dist/tinymce_<%= pkg.version %>.zip',
@@ -421,6 +426,7 @@ module.exports = function (grunt) {
             'js/tinymce/tinymce.full.min.js',
             'js/tinymce/plugins/moxiemanager',
             'js/tinymce/plugins/visualblocks/img',
+            'js/tinymce/readme.md',
             'readme.md',
             'js/tests/.jshintrc'
           ],
@@ -564,7 +570,7 @@ module.exports = function (grunt) {
           'js/tinymce/jquery.tinymce.min.js',
           'js/tinymce/license.txt',
           'changelog.txt',
-          'readme.md'
+          'js/tinymce/readme.md'
         ]
       }
     },

@@ -1,4 +1,4 @@
-import { Chain, Cleaner, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
+import { Chain, Cleaner, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, Touch, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Attr, DomEvent, Element, EventArgs, Insert, Node, Remove, Text } from '@ephox/sugar';
@@ -161,6 +161,33 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
     store.sClear
   ]);
 
+  const sTestTap = GeneralSteps.sequence([
+    Touch.sTapOn(page, '.test-button'),
+    store.sAssertEq(
+      'Checking event log after tapping on test-button',
+      [
+        { eventName: 'touchstart', target: 'test-button' },
+        { eventName: 'alloy.tap', target: 'test-button' },
+        { eventName: 'touchend', target: 'test-button' }
+      ]
+    ),
+    store.sClear,
+    Chain.asStep(page, [
+      UiFinder.cFindIn('.test-button'),
+      Cursors.cFollow([ 0 ]),
+      Touch.cTap
+    ]),
+    store.sAssertEq(
+      'Checking event log after tapping on test-button text',
+      [
+        { eventName: 'touchstart', target: 'text(Button)' },
+        { eventName: 'alloy.tap', target: 'text(Button)' },
+        { eventName: 'touchend', target: 'text(Button)' }
+      ]
+    ),
+    store.sClear
+  ]);
+
   // TODO: VAN-12: Add agar support for input events.
   const sTestInput = Step.pass;
 
@@ -234,6 +261,7 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
     sTestFocusSpan,
     sTestKeydown,
     sTestClick,
+    sTestTap,
     sTestInput,
     sTestMouseover,
     sTestSelectStart,

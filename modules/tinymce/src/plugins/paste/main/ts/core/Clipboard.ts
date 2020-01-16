@@ -24,6 +24,14 @@ import Utils from './Utils';
 
 declare let window: any;
 
+const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText: boolean) => {
+  const args = ProcessFilters.process(editor, content, internal);
+
+  if (args.cancelled === false) {
+    SmartPaste.insertContent(editor, args.content, pasteAsText);
+  }
+};
+
 /**
  * Pastes the specified HTML. This means that the HTML is filtered and then
  * inserted at the current selection in the editor. It will also fire paste events
@@ -34,11 +42,7 @@ declare let window: any;
  */
 const pasteHtml = (editor: Editor, html: string, internalFlag: boolean) => {
   const internal = internalFlag ? internalFlag : InternalHtml.isMarked(html);
-  const args = ProcessFilters.process(editor, InternalHtml.unmark(html), internal);
-
-  if (args.cancelled === false) {
-    SmartPaste.insertContent(editor, args.content);
-  }
+  doPaste(editor, InternalHtml.unmark(html), internal, false);
 };
 
 /**
@@ -51,8 +55,7 @@ const pasteText = (editor: Editor, text: string) => {
   const encodedText = editor.dom.encode(text).replace(/\r\n/g, '\n');
   const normalizedText = Whitespace.normalizeWhitespace(encodedText);
   const html = Newlines.convert(normalizedText, editor.settings.forced_root_block, editor.settings.forced_root_block_attrs);
-
-  pasteHtml(editor, html, false);
+  doPaste(editor, html, false, true);
 };
 
 export interface ClipboardContents {
@@ -297,8 +300,8 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     }
   });
 
-  function insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode, internal) {
-    let content, isPlainTextHtml;
+  function insertClipboardContent(clipboardContent: ClipboardContents, isKeyBoardPaste: boolean, plainTextMode: boolean, internal: boolean) {
+    let content, isPlainTextHtml, isImage;
 
     // Grab HTML from Clipboard API or paste bin as a fallback
     if (hasContentType(clipboardContent, 'text/html')) {
@@ -319,15 +322,16 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     pasteBin.remove();
 
     isPlainTextHtml = (internal === false && Newlines.isPlainText(content));
+    isImage = SmartPaste.isImageUrl(content);
 
     // If we got nothing from clipboard API and pastebin or the content is a plain text (with only
     // some BRs, Ps or DIVs as newlines) then we fallback to plain/text
-    if (!content.length || isPlainTextHtml) {
+    if (!content.length || (isPlainTextHtml && !isImage)) {
       plainTextMode = true;
     }
 
     // Grab plain text from Clipboard API or convert existing HTML to plain text
-    if (plainTextMode) {
+    if (plainTextMode || isImage) {
       // Use plain text contents from Clipboard API unless the HTML contains paragraphs then
       // we should convert the HTML to plain text since works better when pasting HTML/Word contents as plain text
       if (hasContentType(clipboardContent, 'text/plain') && isPlainTextHtml) {

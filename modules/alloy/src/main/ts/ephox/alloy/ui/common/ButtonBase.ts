@@ -1,24 +1,28 @@
 import { Arr, Option } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
+import { EventArgs } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
-import { EventFormat } from '../../events/SimulatedEvent';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { ButtonAction } from '../types/ButtonTypes';
 
-const pointerEvents = (): Array<AlloyEvents.AlloyEventKeyAndHandler<EventFormat>> => {
+const pointerEvents = (): Array<AlloyEvents.AlloyEventKeyAndHandler<EventArgs>> => {
+  const onClick = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
+    simulatedEvent.stop();
+    AlloyTriggers.emitExecute(component);
+  };
+
   return [
     // Trigger execute when clicked
-    AlloyEvents.run(SystemEvents.tapOrClick(), (component, simulatedEvent) => {
-      simulatedEvent.stop();
-      AlloyTriggers.emitExecute(component);
-    }),
+    AlloyEvents.run(NativeEvents.click(), onClick),
+    AlloyEvents.run(SystemEvents.tap(), onClick),
 
     // Other mouse down listeners above this one should not get mousedown behaviour (like dragging)
-    AlloyEvents.cutter(PlatformDetection.detect().deviceType.isTouch() ? NativeEvents.touchstart() : NativeEvents.mousedown())
+    AlloyEvents.cutter(NativeEvents.touchstart()),
+    AlloyEvents.cutter(NativeEvents.mousedown())
   ];
 };
 
