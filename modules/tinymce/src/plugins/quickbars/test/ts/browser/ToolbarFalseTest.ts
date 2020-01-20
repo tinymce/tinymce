@@ -38,29 +38,6 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ToolbarFalseTest', (succes
         tinyApis.sSetSelection([0], 0, [0], 0),
         sAssertToolbarNotVisible
       ]),
-      Log.stepsAsStep('TBA', 'Text selection toolbar is not shown with contenteditable=false', [
-        tinyApis.sSetContent('<p contenteditable="false">abc</p>'),
-        tinyApis.sSelect('p', [0]),
-        sAssertToolbarNotVisible
-      ]),
-      Log.stepsAsStep('TBA', 'Text selection toolbar is not shown with contenteditable=false parent', [
-        tinyApis.sSetContent('<div contenteditable="false"><p>cab</p></div>'),
-        tinyApis.sSelect('div', [0]),
-        sAssertToolbarNotVisible,
-        tinyApis.sSelect('p', [0]),
-        Step.wait(5000),
-        sAssertToolbarNotVisible,
-      ]),
-      Log.stepsAsStep('TBA', 'Image toolbar is not shown with contenteditable=false', [
-        tinyApis.sSetContent('<p><img contenteditable="false" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></p>'),
-        tinyApis.sSelect('img', []),
-        sAssertToolbarNotVisible
-      ]),
-      Log.stepsAsStep('TBA', 'Image toolbar is not shown with contenteditable=false parent', [
-        tinyApis.sSetContent('<p contenteditable="false"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></p>'),
-        tinyApis.sSelect('img', []),
-        sAssertToolbarNotVisible
-      ]),
     ], onSuccess, onFailure);
   }, {
     plugins: 'quickbars link',

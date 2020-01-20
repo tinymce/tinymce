@@ -7,7 +7,7 @@
 
 import { Toolbar } from '@ephox/bridge';
 import { Node as DomNode } from '@ephox/dom-globals';
-import { Option, Options } from '@ephox/katamari';
+import { Option, Arr } from '@ephox/katamari';
 import { Compare, Element, TransformFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
@@ -16,7 +16,7 @@ import { ScopedToolbars } from './ContextToolbarScopes';
 export type LookupResult = { toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm, elem: Element };
 
 const matchTargetWith = (elem: Element, toolbars: Array<Toolbar.ContextToolbar | Toolbar.ContextForm>): Option<LookupResult> => {
-  return Options.findMap(toolbars, (toolbarApi) =>
+  return Arr.findMap(toolbars, (toolbarApi) =>
     toolbarApi.predicate(elem.dom()) ? Option.some({ toolbarApi, elem }) : Option.none());
 };
 
