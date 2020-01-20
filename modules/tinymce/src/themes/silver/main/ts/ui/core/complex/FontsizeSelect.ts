@@ -5,19 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyTriggers, AlloyComponent } from '@ephox/alloy';
-import * as FormatRegister from './utils/FormatRegister';
-import { Arr, Obj, Option, Fun } from '@ephox/katamari';
+import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
+import { Arr, Fun, Obj, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { createMenuItems, createSelectButton, SelectSpec, FormatItem } from './BespokeSelect';
-import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
+import { updateMenuText } from '../../dropdown/CommonDropdown';
+import { createMenuItems, createSelectButton, FormatItem, SelectSpec } from './BespokeSelect';
+import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
+import * as FormatRegister from './utils/FormatRegister';
 
 const defaultFontsizeFormats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
 
 // See https://websemantics.uk/articles/font-size-conversion/ for conversions
-const legacyFontSizes = {
+const legacyFontSizes: Record<string, string> = {
   '8pt': '1',
   '10pt': '2',
   '12pt': '3',
@@ -40,26 +40,24 @@ const toPt = (fontSize: string, precision?: number): string => {
   return fontSize;
 };
 
-const toLegacy = (fontSize: string): string => {
-  return Obj.get(legacyFontSizes as Record<string, string>, fontSize).getOr('');
-};
+const toLegacy = (fontSize: string): string => Obj.get(legacyFontSizes, fontSize).getOr('');
 
 const getSpec = (editor: Editor): SelectSpec => {
   const getMatchingValue = () => {
     let matchOpt = Option.none<{ title: string; format: string; }>();
     const items = dataset.data;
 
-    const px = editor.queryCommandValue('FontSize');
-    if (px) {
+    const fontSize = editor.queryCommandValue('FontSize');
+    if (fontSize) {
       // checking for three digits after decimal point, should be precise enough
       for (let precision = 3; matchOpt.isNone() && precision >= 0; precision--) {
-        const pt = toPt(px, precision);
+        const pt = toPt(fontSize, precision);
         const legacy = toLegacy(pt);
-        matchOpt = Arr.find(items, (item) => item.format === px || item.format === pt || item.format === legacy);
+        matchOpt = Arr.find(items, (item) => item.format === fontSize || item.format === pt || item.format === legacy);
       }
     }
 
-    return { matchOpt, px };
+    return { matchOpt, size: fontSize };
   };
 
   const isSelectedFor = (item: string) => {
@@ -83,9 +81,9 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 
   const updateSelectMenuText = (comp: AlloyComponent) => {
-    const { matchOpt, px } = getMatchingValue();
+    const { matchOpt, size } = getMatchingValue();
 
-    const text = matchOpt.fold(() => px, (match) => match.title);
+    const text = matchOpt.fold(() => size, (match) => match.title);
     AlloyTriggers.emitWith(comp, updateMenuText, {
       text
     });
