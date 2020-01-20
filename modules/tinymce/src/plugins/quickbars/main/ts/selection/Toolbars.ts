@@ -5,11 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Settings from '../api/Settings';
+import { Element } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
+import Settings from '../api/Settings';
 
 const addToEditor = (editor: Editor) => {
-  const isImage = (node) => node.nodeName === 'IMG' || node.nodeName === 'FIGURE' && /image/i.test(node.className);
+  const isEditable = (node: Element) => editor.dom.getContentEditableParent(node) !== 'false';
+  const isImage = (node: Element) => node.nodeName === 'IMG' || node.nodeName === 'FIGURE' && /image/i.test(node.className);
+
   const imageToolbarItems = Settings.getImageToolbarItems(editor);
   if (imageToolbarItems.trim().length > 0) {
     editor.ui.registry.addContextToolbar('imageselection', {
@@ -23,7 +26,7 @@ const addToEditor = (editor: Editor) => {
   if (textToolbarItems.trim().length > 0) {
     editor.ui.registry.addContextToolbar('textselection', {
       predicate: (node) => {
-        return !isImage(node) && !editor.selection.isCollapsed();
+        return !isImage(node) && !editor.selection.isCollapsed() && isEditable(node);
       },
       items: textToolbarItems,
       position: 'selection'
