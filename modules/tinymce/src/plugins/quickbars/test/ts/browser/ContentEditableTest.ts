@@ -28,12 +28,15 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ContentEditableTest', (suc
         tinyApis.sSelect('p[contenteditable=false]', []),
         sAssertToolbarNotVisible
       ]),
-      Log.stepsAsStep('TBA', 'Text selection toolbar is not shown with contenteditable=false parent', [
+      Log.stepsAsStep('TBA', 'Text selection toolbar is not shown with contenteditable=false parent, select parent', [
         tinyApis.sSetContent('<div><p>abc</p></div><div contenteditable="false"><p>cab</p></div>'),
         tinyApis.sSelect('div', []),
         sAssertToolbarVisible,
         tinyApis.sSelect('div[contenteditable=false]', []),
         sAssertToolbarNotVisible,
+      ]),
+      Log.stepsAsStep('TBA', 'Text selection toolbar is not shown with contenteditable=false parent, select child of parent', [
+        tinyApis.sSetContent('<div><p>abc</p></div><div contenteditable="false"><p>cab</p></div>'),
         tinyApis.sSelect('div p', []),
         sAssertToolbarVisible,
         tinyApis.sSelect('div[contenteditable=false] p', []),
@@ -45,9 +48,6 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ContentEditableTest', (suc
     inline: true,
     toolbar: false,
     menubar: false,
-    quickbars_insert_toolbar: true,
-    quickbars_selection_toolbar: true,
-    quickbars_image_toolbar: true,
     base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

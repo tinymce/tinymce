@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ToolbarFalseTest', (succes
         tinyApis.sSetContent('<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></p>'),
         tinyApis.sSetSelection([0], 0, [0], 0),
         sAssertToolbarNotVisible
-      ]),
+      ])
     ], onSuccess, onFailure);
   }, {
     plugins: 'quickbars link',
