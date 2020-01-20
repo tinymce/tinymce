@@ -118,6 +118,29 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     delete editor.settings.default_link_target;
   });
 
+  suite.test('TestCase-TBA: AutoLink: link_use_https=true', function (editor) {
+    editor.settings.link_use_https = true;
+    editor.focus();
+    LegacyUnit.equal(typeUrl(editor, 'http://www.domain.com'), '<p><a href="http://www.domain.com">http://www.domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'https://www.domain.com'), '<p><a href="https://www.domain.com">https://www.domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'ssh://www.domain.com'), '<p><a href="ssh://www.domain.com">ssh://www.domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'ftp://www.domain.com'), '<p><a href="ftp://www.domain.com">ftp://www.domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'www.domain.com'), '<p><a href="https://www.domain.com">www.domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'www.domain.com.'), '<p><a href="https://www.domain.com">www.domain.com</a>.&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'user@domain.com'), '<p><a href="mailto:user@domain.com">user@domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'mailto:user@domain.com'), '<p><a href="mailto:user@domain.com">mailto:user@domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'first-last@domain.com'), '<p><a href="mailto:first-last@domain.com">first-last@domain.com</a>&nbsp;</p>');
+    delete editor.settings.link_use_https;
+  });
+
+  suite.test('TestCase-TBA: AutoLink: link_use_https=false', function (editor) {
+    editor.settings.link_use_https = false;
+    editor.focus();
+    LegacyUnit.equal(typeUrl(editor, 'www.domain.com'), '<p><a href="http://www.domain.com">www.domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'www.domain.com.'), '<p><a href="http://www.domain.com">www.domain.com</a>.&nbsp;</p>');
+    delete editor.settings.link_use_https;
+  });
+
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const steps = Env.browser.isIE() || Env.browser.isEdge() ? [] : suite.toSteps(editor);
     Pipeline.async({}, Log.steps('TBA', 'AutoLink: Test autolink url inputs', steps), onSuccess, onFailure);
