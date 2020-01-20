@@ -152,6 +152,15 @@
  */
 
 /**
+ * Returns <code>true</code> if the user's operating system is ChromeOS.
+ * <br>
+ * <em>Added in TinyMCE 5.1</em>
+ *
+ * @method os.isChromeOS
+ * @return {Boolean} Returns <code>true</code> if the user's operating system is ChromeOS.
+ */
+
+/**
  * Returns <code>true</code> if the user's device is a desktop device.
  * <br>
  * <em>Added in TinyMCE 5.1</em>

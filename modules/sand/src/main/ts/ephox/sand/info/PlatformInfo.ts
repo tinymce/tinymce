@@ -76,8 +76,8 @@ const oses: PlatformInfo[] = [
   },
   {
     name : 'OSX',
-    search : checkContains('os x'),
-    versionRegexes: [/.*?os\ x\ ?([0-9]+)_([0-9]+).*/]
+    search : checkContains('mac os x'),
+    versionRegexes: [/.*?mac\ os\ x\ ?([0-9]+)_([0-9]+).*/]
   },
   {
     name : 'Linux',
@@ -92,7 +92,12 @@ const oses: PlatformInfo[] = [
    name : 'FreeBSD',
    search : checkContains('freebsd'),
    versionRegexes: [ ]
-  }
+  },
+  {
+    name : 'ChromeOS',
+    search : checkContains('cros'),
+    versionRegexes: [/.*?chrome\/([0-9]+)\.([0-9]+).*/]
+  },
 ];
 
 export const PlatformInfo = {

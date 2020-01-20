@@ -71,17 +71,20 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
     Html.set(comp.element(), html.join(''));
   };
 
+  const onClick = runOnItem((comp, se, tgt, itemValue) => {
+    se.stop();
+    AlloyTriggers.emitWith(comp, formActionEvent, {
+      name: spec.name,
+      value: itemValue
+    });
+  });
+
   const collectionEvents = [
     AlloyEvents.run<EventArgs>(NativeEvents.mouseover(), runOnItem((comp, se, tgt) => {
       Focus.focus(tgt);
     })),
-    AlloyEvents.run<EventArgs>(SystemEvents.tapOrClick(), runOnItem((comp, se, tgt, itemValue) => {
-      se.stop();
-      AlloyTriggers.emitWith(comp, formActionEvent, {
-        name: spec.name,
-        value: itemValue
-      });
-    })),
+    AlloyEvents.run<EventArgs>(NativeEvents.click(), onClick),
+    AlloyEvents.run<EventArgs>(SystemEvents.tap(), onClick),
     AlloyEvents.run(NativeEvents.focusin(), runOnItem((comp, se, tgt) => {
       SelectorFind.descendant(comp.element(), '.' + ItemClasses.activeClass).each((currentActive) => {
         Class.remove(currentActive, ItemClasses.activeClass);

@@ -1,4 +1,4 @@
-import { FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter } from '@ephox/agar';
+import { FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, Touch, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Future, Obj, Option, Result } from '@ephox/katamari';
 
@@ -371,6 +371,11 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
       Mouse.sClickOn(gui.element(), focusables.about.selector),
       // Menus are somewhat irrelevant here, because the hover would have changed them,
       // not the click
+      store.sAssertEq('Checking about fired', [ 'dropdown.menu.execute: about' ]),
+      store.sClear,
+
+      // Tap on "about"
+      Touch.sTapOn(gui.element(), focusables.about.selector),
       store.sAssertEq('Checking about fired', [ 'dropdown.menu.execute: about' ]),
       store.sClear,
 

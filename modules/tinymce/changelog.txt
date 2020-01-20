@@ -30,6 +30,15 @@ Version 5.2.0 (TBD)
     Fixed an issue where the element path isn't being cleared when there are no parents #TINY-4412
     Fixed an issue where width and height in svg icons containing `rect` elements were overridden by the CSS reset TINY-4408
     Fixed keyboard flicker when opening a context menu on mobile #TINY-4540
+Version 5.1.6 (TBD)
+    Fixed readonly mode not blocking all clicked links #TINY-4572
+    Fixed the context menu not showing in certain cases with hybrid devices #TINY-4569
+    Fixed the context menu opening in the wrong location when the target is the editor body #TINY-4568
+Version 5.1.5 (2019-12-19)
+    Fixed the UI not working with hybrid devices that accept both touch and mouse events #TNY-4521
+    Fixed the `charmap` dialog initially focusing the first tab of the dialog instead of the search input field #TINY-4342
+    Fixed an exception being raised when inserting content if the caret was directly before or after a `contenteditable="false"` element #TINY-4528
+    Fixed a bug with pasting image URLs when paste as text is enabled #TINY-4523
 Version 5.1.4 (2019-12-11)
     Fixed dialog contents disappearing when clicking a checkbox for right-to-left languages #TINY-4518
     Fixed the `legacyoutput` plugin registering legacy formats after editior initialization, causing legacy content to be stripped on the initial load #TINY-4447

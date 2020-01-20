@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { navigator, window, document, URL } from '@ephox/dom-globals';
+import { document, navigator, URL, window } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 
 /**
@@ -74,6 +74,7 @@ interface Env {
     isLinux: () => boolean;
     isSolaris: () => boolean;
     isFreeBSD: () => boolean;
+    isChromeOS: () => boolean;
   };
   deviceType: {
     isiPad: () => boolean;
@@ -279,6 +280,7 @@ const Env: Env = {
     current: os.current,
     version: os.version,
     isAndroid: os.isAndroid,
+    isChromeOS: os.isChromeOS,
     isFreeBSD: os.isFreeBSD,
     isiOS: os.isiOS,
     isLinux: os.isLinux,

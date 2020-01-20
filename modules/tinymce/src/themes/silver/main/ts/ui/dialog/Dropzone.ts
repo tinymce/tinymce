@@ -74,7 +74,8 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
       },
       behaviours: Behaviour.derive([
         AddEventsBehaviour.config('input-file-events', [
-          AlloyEvents.cutter(SystemEvents.tapOrClick())
+          AlloyEvents.cutter(NativeEvents.click()),
+          AlloyEvents.cutter(SystemEvents.tap())
         ])
       ])
     }

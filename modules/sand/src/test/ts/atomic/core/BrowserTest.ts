@@ -1,6 +1,6 @@
-import PlatformQuery from 'ephox/sand/test/PlatformQuery';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import PlatformQuery from 'ephox/sand/test/PlatformQuery';
 
 UnitTest.test('BrowserTest', function () {
   function check(expectedQuery: string, expectedOs: string, expectedBrowser: string, expectedMajor: number, expectedMinor: number, userAgent: string) {
@@ -61,6 +61,7 @@ UnitTest.test('BrowserTest', function () {
   check('isSafari', 'iOS', 'Safari', 13, 0, 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Mobile/15E148 Safari/604.1');
   check('isSafari', 'OSX', 'Safari', 13, 0, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Safari/605.1.15'); // iPadOS 13
   check('isChrome', 'Android', 'Chrome', 18, 0, 'Mozilla/5.0 (Linux; Android 4.2.2; Nexus 7 Build/JDQ39) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19');
+  check('isChrome', 'ChromeOS', 'Chrome', 78, 0, 'Mozilla/5.0 (X11; CrOS x86_64 12499.66.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.106 Safari/537.36');
 
   checkOSVersion(4 , 2, 'Mozilla/5.0 (Linux; Android 4.2.2; Nexus 7 Build/JDQ39) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19');
   checkOSVersion(6 , 0, 'Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25');
@@ -87,6 +88,7 @@ UnitTest.test('BrowserTest', function () {
   checkOSVersion(2 , 2, 'Mozilla/5.0 (Linux; U; Android 2.2.1; fr-fr; HTC_DesireZ_A7272 Build/FRG83D) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1');
   checkOSVersion(2 , 2, 'Mozilla/5.0 (Linux; U; Android 2.2.1; en-gb; HTC_DesireZ_A7272 Build/FRG83D) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1');
   checkOSVersion(2 , 2, 'Mozilla/5.0 (Linux; U; Android 2.2.1; en-ca; LG-P505R Build/FRG83) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1');
+  checkOSVersion(78, 0, 'Mozilla/5.0 (X11; CrOS x86_64 12499.66.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.106 Safari/537.36');
 
   // WKWebView drops the 'Version/X.X' text
   checkOSVersion(9, 2, 'Mozilla/5.0 (iPad; CPU OS 9_2 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13C75');

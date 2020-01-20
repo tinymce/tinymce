@@ -77,12 +77,12 @@ const run = function <T extends EventFormat>(name: string, handler: EventRunHand
 
 // Extra can be used when your handler needs more context, and is declared in one spot
 // It's really just convenient partial application.
-const runActionExtra = function <T extends EventFormat>(name: string, action: (t: AlloyComponent, u: any) => void, extra: any[]): AlloyEventKeyAndHandler<T> {
+const runActionExtra = function <T extends EventFormat>(name: string, action: (t: AlloyComponent, se: SimulatedEvent<T>, u: any) => void, extra: any[]): AlloyEventKeyAndHandler<T> {
   return {
     key: name,
     value: EventHandler.nu({
-      run (component: AlloyComponent) {
-        action.apply(undefined, ([ component ] as any).concat(extra));
+      run (component: AlloyComponent, simulatedEvent: SimulatedEvent<T>) {
+        action.apply(undefined, ([ component, simulatedEvent ] as any).concat(extra));
       }
     })
   };
