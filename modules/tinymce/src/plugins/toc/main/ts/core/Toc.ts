@@ -10,6 +10,7 @@ import I18n from 'tinymce/core/api/util/I18n';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Guid from './Guid';
+import Slugify from './Slugify';
 
 const tocId = Guid.create('mcetoc_');
 
@@ -29,6 +30,7 @@ const hasHeaders = function (editor) {
 const readHeaders = function (editor) {
   const tocClass = Settings.getTocClass(editor);
   const headerTag = Settings.getTocHeader(editor);
+  const identityType = Settings.getIdentityType(editor);
   const selector = generateSelector(Settings.getTocDepth(editor));
   let headers = editor.$(selector);
 
@@ -40,8 +42,9 @@ const readHeaders = function (editor) {
   }
 
   return Tools.map(headers, function (h) {
+    let innerText = h.innerText;
     return {
-      id: h.id ? h.id : tocId(),
+      id: h.id ? h.id : (identityType == 'standard' ? Slugify.make(innerText) : tocId()),
       level: parseInt(h.nodeName.replace(/^H/i, ''), 10),
       title: editor.$.text(h),
       element: h

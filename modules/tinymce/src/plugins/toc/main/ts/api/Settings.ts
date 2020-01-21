@@ -5,6 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+const getIdentityType = function (editor) {
+  return editor.getParam('identity_type', 'standard');
+};
+
 const getTocClass = function (editor) {
   return editor.getParam('toc_class', 'mce-toc');
 };
@@ -22,5 +26,6 @@ const getTocDepth = function (editor) {
 export default {
   getTocClass,
   getTocHeader,
-  getTocDepth
+  getTocDepth,
+  getIdentityType
 };
