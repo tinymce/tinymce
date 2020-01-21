@@ -121,7 +121,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
   };
 
   function notFoundAlert(api: Types.Dialog.DialogInstanceApi<DialogData>) {
-    editor.windowManager.alert('Could not find the specified template.', () => api.focus('template'));
+    editor.windowManager.alert('Could not load the specified template.', () => api.focus('template'));
   }
 
   const getTemplateContent = (t: InternalTemplate) => {
@@ -146,7 +146,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
         getTemplateContent(t).then((previewHtml) => {
           updateDialog(api, t, previewHtml);
           api.unblock();
-        }).catch((e) => {
+        }).catch(() => {
           notFoundAlert(api);
           updateDialog(api, t, '');
           api.unblock();
@@ -161,9 +161,8 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
       getTemplateContent(t).then((previewHtml) => {
         Templates.insertTemplate(editor, false, previewHtml);
         api.close();
-      }).catch((e) => {
-        Templates.insertTemplate(editor, false, '');
-        api.close();
+      }).catch(() => {
+        notFoundAlert(api);
       });
     });
   };
@@ -232,7 +231,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
 
     getTemplateContent(templates[0]).then((previewHtml) => {
       updateDialog(dialogApi, templates[0], previewHtml);
-    }).catch((e) => {
+    }).catch(() => {
       notFoundAlert(dialogApi);
       updateDialog(dialogApi, templates[0], '');
     });
