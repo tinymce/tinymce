@@ -58,8 +58,8 @@ const useQuickLink = function (editor: Editor) {
   return editor.getParam('link_quicklink', false, 'boolean');
 };
 
-const useHTTPS = (editor: Editor) => {
-  return editor.getParam('link_use_https', false, 'boolean');
+const getDefaultLinkProtocol = (editor: Editor): string => {
+  return editor.getParam('link_default_protocol', 'http', 'string');
 };
 
 export default {
@@ -73,5 +73,5 @@ export default {
   shouldShowLinkTitle,
   allowUnsafeLinkTarget,
   useQuickLink,
-  useHTTPS
+  getDefaultLinkProtocol
 };

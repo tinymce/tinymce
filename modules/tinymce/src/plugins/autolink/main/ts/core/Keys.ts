@@ -58,7 +58,7 @@ const setEnd = function (rng, container, offset) {
 };
 
 const parseCurrentLine = function (editor, endOffset, delimiter) {
-  let rng, end, start, endContainer, bookmark, text, matches, prev, len, rngText, prefix;
+  let rng, end, start, endContainer, bookmark, text, matches, prev, len, rngText;
   const autoLinkPattern = Settings.getAutoLinkPattern(editor);
   const defaultLinkTarget = Settings.getDefaultLinkTarget(editor);
 
@@ -148,12 +148,11 @@ const parseCurrentLine = function (editor, endOffset, delimiter) {
   text = rng.toString().trim();
   matches = text.match(autoLinkPattern);
 
-  const useHTTPS = Settings.useHTTPS(editor);
-  prefix = useHTTPS ? 'https://' : 'http://';
+  const protocol = Settings.getDefaultLinkProtocol(editor);
 
   if (matches) {
     if (matches[1] === 'www.') {
-      matches[1] = prefix + 'www.';
+      matches[1] = protocol + '://www.';
     } else if (/@$/.test(matches[1]) && !/^mailto:/.test(matches[1])) {
       matches[1] = 'mailto:' + matches[1];
     }

@@ -118,8 +118,8 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     delete editor.settings.default_link_target;
   });
 
-  suite.test('TestCase-TBA: AutoLink: link_use_https=true', function (editor) {
-    editor.settings.link_use_https = true;
+  suite.test('TestCase-TBA: AutoLink: link_default_protocol=https', function (editor) {
+    editor.settings.link_default_protocol = 'https';
     editor.focus();
     LegacyUnit.equal(typeUrl(editor, 'http://www.domain.com'), '<p><a href="http://www.domain.com">http://www.domain.com</a>&nbsp;</p>');
     LegacyUnit.equal(typeUrl(editor, 'https://www.domain.com'), '<p><a href="https://www.domain.com">https://www.domain.com</a>&nbsp;</p>');
@@ -130,15 +130,15 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     LegacyUnit.equal(typeUrl(editor, 'user@domain.com'), '<p><a href="mailto:user@domain.com">user@domain.com</a>&nbsp;</p>');
     LegacyUnit.equal(typeUrl(editor, 'mailto:user@domain.com'), '<p><a href="mailto:user@domain.com">mailto:user@domain.com</a>&nbsp;</p>');
     LegacyUnit.equal(typeUrl(editor, 'first-last@domain.com'), '<p><a href="mailto:first-last@domain.com">first-last@domain.com</a>&nbsp;</p>');
-    delete editor.settings.link_use_https;
+    delete editor.settings.link_default_protocol;
   });
 
-  suite.test('TestCase-TBA: AutoLink: link_use_https=false', function (editor) {
-    editor.settings.link_use_https = false;
+  suite.test('TestCase-TBA: AutoLink: link_default_protocol=http', function (editor) {
+    editor.settings.link_default_protocol = 'http';
     editor.focus();
     LegacyUnit.equal(typeUrl(editor, 'www.domain.com'), '<p><a href="http://www.domain.com">www.domain.com</a>&nbsp;</p>');
     LegacyUnit.equal(typeUrl(editor, 'www.domain.com.'), '<p><a href="http://www.domain.com">www.domain.com</a>.&nbsp;</p>');
-    delete editor.settings.link_use_https;
+    delete editor.settings.link_default_protocol;
   });
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {

@@ -40,25 +40,22 @@ const tryEmailTransform = (data: LinkDialogOutput): Option<Transformer> => {
   }) : Option.none();
 };
 
-const tryProtocolTransform = (assumeExternalTargets: AssumeExternalTargets, useHTTPS: boolean) => (data: LinkDialogOutput): Option<Transformer> => {
+const tryProtocolTransform = (assumeExternalTargets: AssumeExternalTargets, defaultLinkProtocol: string) => (data: LinkDialogOutput): Option<Transformer> => {
   const url = data.href;
   const suggestProtocol = (
     assumeExternalTargets === AssumeExternalTargets.WARN && !Utils.hasProtocol(url) ||
     assumeExternalTargets === AssumeExternalTargets.OFF && /^\s*www[\.|\d\.]/i.test(url)
   );
-  const prefix = useHTTPS ? 'https://' : 'http://';
 
   return suggestProtocol ? Option.some({
-    message: `The URL you entered seems to be an external link. Do you want to add the required ${prefix} prefix?`,
-    preprocess: (oldData) => ({ ...oldData, href: prefix + url })
+    message: `The URL you entered seems to be an external link. Do you want to add the required ${defaultLinkProtocol}:// prefix?`,
+    preprocess: (oldData) => ({ ...oldData, href: defaultLinkProtocol + '://' + url })
   }) : Option.none();
 };
 
 const preprocess = (editor: Editor, data: LinkDialogOutput): Future<LinkDialogOutput> => {
-  const assumeExternalTargets = Settings.assumeExternalTargets(editor);
-  const useHTTPS = Settings.useHTTPS(editor);
   return Arr.findMap(
-    [ tryEmailTransform, tryProtocolTransform(assumeExternalTargets, useHTTPS) ],
+    [ tryEmailTransform, tryProtocolTransform(Settings.assumeExternalTargets(editor),  Settings.getDefaultLinkProtocol(editor)) ],
     (f) => f(data)
   ).fold(
     () => Future.pure(data),
