@@ -39,35 +39,10 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DefaultLinkProtocolTest', (succ
           TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="www.google.com"]': 1 })
         ]),
 
-        Log.stepsAsStep('TBA', 'www-urls are prompted to add http:// prefix, cancel', [
+        Log.stepsAsStep('TBA', 'other urls are not prompted to add http:// prefix', [
           TestLinkUi.sInsertLink(tinyUi, 'google.com'),
           TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="google.com"]': 1 })
         ]),
-
-        // Logger.t('www-urls are prompted to add http:// prefix, accept', GeneralSteps.sequence([
-        //   TestLinkUi.sInsertLink(tinyUi, 'www.google.com'),
-        //   TestLinkUi.sWaitForUi(
-        //     'wait for dialog',
-        //     'p:contains("The URL you entered seems to be an external link. Do you want to add the required http:// prefix?")'
-        //   ),
-        //   TestLinkUi.sClickConfirmYes,
-        //   TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="http://www.google.com"]': 1}),
-        // ])),
-
-        // Logger.t('www-urls are prompted to add http:// prefix, cancel', GeneralSteps.sequence([
-        //   TestLinkUi.sInsertLink(tinyUi, 'www.google.com'),
-        //   TestLinkUi.sWaitForUi(
-        //     'wait for dialog',
-        //     'p:contains("The URL you entered seems to be an external link. Do you want to add the required http:// prefix?")'
-        //   ),
-        //   TestLinkUi.sClickConfirmNo,
-        //   TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="www.google.com"]': 1 }),
-        // ])),
-
-        // Logger.t('others urls are not prompted to add http:// prefix', GeneralSteps.sequence([
-        //   TestLinkUi.sInsertLink(tinyUi, 'google.com'),
-        //   TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="google.com"]': 1 }),
-        // ])),
       ]),
 
       Log.stepsAsStep('TBA', 'link_default_protocol: "https"', [
@@ -93,35 +68,10 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DefaultLinkProtocolTest', (succ
           TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="www.google.com"]': 1 })
         ]),
 
-        Log.stepsAsStep('TBA', 'www-urls are prompted to add https:// prefix, cancel', [
+        Log.stepsAsStep('TBA', 'other urls are not prompted to add https:// prefix', [
           TestLinkUi.sInsertLink(tinyUi, 'google.com'),
           TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="google.com"]': 1 })
         ]),
-
-        // Logger.t('www-urls are prompted to add https:// prefix, accept', GeneralSteps.sequence([
-        //   TestLinkUi.sInsertLink(tinyUi, 'www.google.com'),
-        //   TestLinkUi.sWaitForUi(
-        //     'wait for dialog',
-        //     'p:contains("The URL you entered seems to be an external link. Do you want to add the required https:// prefix?")'
-        //   ),
-        //   TestLinkUi.sClickConfirmYes,
-        //   TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="https://www.google.com"]': 1 }),
-        // ])),
-
-        // Logger.t('www-urls are prompted to add https:// prefix, cancel', GeneralSteps.sequence([
-        //   TestLinkUi.sInsertLink(tinyUi, 'www.google.com'),
-        //   TestLinkUi.sWaitForUi(
-        //     'wait for dialog',
-        //     'p:contains("The URL you entered seems to be an external link. Do you want to add the required https:// prefix?")'
-        //   ),
-        //   TestLinkUi.sClickConfirmNo,
-        //   TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="www.google.com"]': 1 }),
-        // ])),
-
-        // Logger.t('other urls are not prompted to add https:// prefix', GeneralSteps.sequence([
-        //   TestLinkUi.sInsertLink(tinyUi, 'google.com'),
-        //   TestLinkUi.sAssertContentPresence(tinyApis, { 'a': 1, 'a[href="google.com"]': 1 }),
-        // ])),
       ]),
     ], onSuccess, onFailure);
   }, {
