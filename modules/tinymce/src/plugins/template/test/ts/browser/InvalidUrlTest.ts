@@ -21,16 +21,14 @@ UnitTest.asynctest('browser.tinymce.plugins.template.InvalidUrlTest', (success, 
     const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert template"]';
 
     Pipeline.async({}, [
-        Log.stepsAsStep('TBA', 'Template: Test loading in snippet from file that does not exist, dialog open', [
+        Log.stepsAsStep('TBA', 'Template: Test loading in snippet from file that does not exist', [
             tinyApis.sSetContent(''),
             tinyApis.sSetSetting('templates', [{ title: 'invalid', description: 'b', url: '/custom/404' }, { title: 'a', description: 'a', content: '<strong>c</strong>' }]),
             Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
             UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
-            // Check alert dialog has appeared
             UiFinder.sWaitForVisible('Waited for alert dialog to be visible', docBody, alertDialogSelector),
             Mouse.sClickOn(docBody, 'button.tox-button:contains(OK)'),
             Waiter.sTryUntil('Alert dialog should close', UiFinder.sNotExists(docBody, alertDialogSelector)),
-            // Close template dialog
             Mouse.sClickOn(docBody, 'button.tox-button:contains(Cancel)'),
             Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
             tinyApis.sAssertContent(''),
