@@ -6,13 +6,13 @@
  */
 
 import { Arr, Future, Option, Type } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 
 import Settings from '../api/Settings';
 import { readImageDataFromSelection } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
 import Utils from '../core/Utils';
 import { ImageDialogInfo, ListItem } from './DialogTypes';
-import Editor from 'tinymce/core/api/Editor';
 
 const collect = (editor: Editor): Future<ImageDialogInfo> => {
   const urlListSanitizer = ListUtils.sanitizer((item) => {
@@ -45,6 +45,7 @@ const collect = (editor: Editor): Future<ImageDialogInfo> => {
   const basePath = Settings.getUploadBasePath(editor);
   const credentials = Settings.getUploadCredentials(editor);
   const handler = Settings.getUploadHandler(editor);
+  const automaticUploads = Settings.isAutomaticUploadsEnabled(editor);
   const prependURL: Option<string> = Option.some(Settings.getPrependUrl(editor)).filter(
     (preUrl) => Type.isString(preUrl) && preUrl.length > 0);
 
@@ -65,7 +66,8 @@ const collect = (editor: Editor): Future<ImageDialogInfo> => {
       basePath,
       credentials,
       handler,
-      prependURL
+      automaticUploads,
+      prependURL,
     };
   });
 };
