@@ -1,26 +1,6 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Keyboard, Keys, Logger, NamedChain, Step, StructAssert, UiFinder } from '@ephox/agar';
-import { document, HTMLElement, window } from '@ephox/dom-globals';
-import { Body, Css, Element, Focus, Scroll, Remove, Insert, SelectorFind } from '@ephox/sugar';
-import Editor from 'tinymce/core/api/Editor';
-
-const createScrollDiv = () => {
-  return Element.fromHtml<HTMLElement>('<div style="height: 5000px;"></div>');
-};
-
-const setupPageScroll = (editor: Editor) => {
-  const uiContainer = Element.fromDom(editor.getContainer());
-
-  const divBefore = createScrollDiv();
-  const divAfter = createScrollDiv();
-
-  Insert.after(uiContainer, divBefore);
-  Insert.before(uiContainer, divAfter);
-
-  return () => {
-    Remove.remove(divBefore);
-    Remove.remove(divAfter);
-  };
-};
+import { document, window } from '@ephox/dom-globals';
+import { Body, Css, Element, Focus, Scroll, SelectorFind } from '@ephox/sugar';
 
 const staticPartsOuter = (s, str, arr): StructAssert[] => {
   // should not change
@@ -249,8 +229,6 @@ const sOpenMenuAndTestScrolling = (sOpenMenu: Step<any, any>, numMenusToClose: n
 };
 
 export {
-  setupPageScroll,
-
   expectedHalfView,
   expectedInFullView,
   expectedEditorHidden,

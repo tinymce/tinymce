@@ -35,7 +35,7 @@ export interface UiFactoryBackstageShared {
   providers?: UiFactoryBackstageProviders;
   interpreter?: (spec: BridgedType) => AlloySpec;
   anchors?: {
-    toolbar: () => HotspotAnchorSpec | NodeAnchorSpec,
+    dialog: () => HotspotAnchorSpec | NodeAnchorSpec,
     banner: () => HotspotAnchorSpec | NodeAnchorSpec,
     cursor: () => SelectionAnchorSpec,
     node: (elem: Option<Element>) => NodeAnchorSpec

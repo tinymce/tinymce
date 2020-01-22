@@ -2,7 +2,7 @@ import { AlloyComponent, Bubble, HotspotAnchorSpec, Layout, LayoutInside, MaxHei
 import { Option } from '@ephox/katamari';
 import { Element, Selection } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { useFixedContainer } from '../api/Settings';
+import { useFixedContainer, isToolbarLocationTop } from '../api/Settings';
 
 const bubbleAlignments = {
   valignCentre: [],
@@ -15,10 +15,8 @@ const bubbleAlignments = {
   top: []
 };
 
-const getToolbarAnchor = (bodyElement: () => Element, lazyAnchorbar: () => AlloyComponent, useFixedToolbarContainer: boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
-  // If using fixed_toolbar_container, anchor to the inside top of the editable area
-  // Else, anchor below the div.tox-anchorbar in the editor chrome
-  const fixedToolbarAnchor = (): NodeAnchorSpec => ({
+const getDialogAnchor = (bodyElement: () => Element, lazyAnchorbar: () => AlloyComponent, useEditableAreaAnchor: boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
+  const editableAreaAnchor = (): NodeAnchorSpec => ({
     anchor: 'node',
     root: bodyElement(),
     node: Option.from(bodyElement()),
@@ -45,13 +43,11 @@ const getToolbarAnchor = (bodyElement: () => Element, lazyAnchorbar: () => Alloy
     }
   });
 
-  return useFixedToolbarContainer ? fixedToolbarAnchor : standardAnchor;
+  return useEditableAreaAnchor ? editableAreaAnchor : standardAnchor;
 };
 
-const getBannerAnchor = (bodyElement: () => Element, lazyAnchorbar: () => AlloyComponent, useFixedToolbarContainer: boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
-  // If using fixed_toolbar_container, anchor to the inside top of the editable area
-  // Else, anchor below the div.tox-anchorbar in the editor chrome
-  const fixedToolbarAnchor = (): NodeAnchorSpec => ({
+const getBannerAnchor = (bodyElement: () => Element, lazyAnchorbar: () => AlloyComponent, useEditableAreaAnchor: boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
+  const editableAreaAnchor = (): NodeAnchorSpec => ({
     anchor: 'node',
     root: bodyElement(),
     node: Option.from(bodyElement()),
@@ -70,7 +66,7 @@ const getBannerAnchor = (bodyElement: () => Element, lazyAnchorbar: () => AlloyC
     }
   });
 
-  return useFixedToolbarContainer ? fixedToolbarAnchor : standardAnchor;
+  return useEditableAreaAnchor ? editableAreaAnchor : standardAnchor;
 };
 
 const getCursorAnchor = (editor: Editor, bodyElement: () => Element) => (): SelectionAnchorSpec => {
@@ -98,9 +94,13 @@ const getAnchors = (editor: Editor, lazyAnchorbar: () => AlloyComponent) => {
   const useFixedToolbarContainer: boolean = useFixedContainer(editor);
   const bodyElement = (): Element => Element.fromDom(editor.getBody());
 
+  // If using fixed_toolbar_container or if the toolbar is positioned at the bottom
+  // of the editor, some things should anchor to the top of the editable area.
+  const useEditableAreaAnchor = useFixedToolbarContainer || !isToolbarLocationTop(editor);
+
   return {
-    toolbar: getToolbarAnchor(bodyElement, lazyAnchorbar, useFixedToolbarContainer),
-    banner: getBannerAnchor(bodyElement, lazyAnchorbar, useFixedToolbarContainer),
+    dialog: getDialogAnchor(bodyElement, lazyAnchorbar, useEditableAreaAnchor),
+    banner: getBannerAnchor(bodyElement, lazyAnchorbar, useEditableAreaAnchor),
     cursor: getCursorAnchor(editor, bodyElement),
     node: getNodeAnchor(bodyElement)
   };
