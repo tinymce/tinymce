@@ -120,6 +120,10 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
     });
   };
 
+  const loadFailedAlert = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
+    editor.windowManager.alert('Could not load the specified template.', () => api.focus('template'));
+  };
+
   const getTemplateContent = (t: InternalTemplate) => {
     return new Promise<string>((resolve, reject) => {
       t.value.url.fold(() => resolve(t.value.content.getOr('')), (url) => XHR.send({
@@ -141,7 +145,9 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
         api.block('Loading...');
         getTemplateContent(t).then((previewHtml) => {
           updateDialog(api, t, previewHtml);
-          api.unblock();
+        }).catch(() => {
+          loadFailedAlert(api);
+          updateDialog(api, t, '');
         });
       });
     }
@@ -153,6 +159,8 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
       getTemplateContent(t).then((previewHtml) => {
         Templates.insertTemplate(editor, false, previewHtml);
         api.close();
+      }).catch(() => {
+        loadFailedAlert(api);
       });
     });
   };
@@ -221,6 +229,9 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
 
     getTemplateContent(templates[0]).then((previewHtml) => {
       updateDialog(dialogApi, templates[0], previewHtml);
+    }).catch(() => {
+      loadFailedAlert(dialogApi);
+      updateDialog(dialogApi, templates[0], '');
     });
   };
 
