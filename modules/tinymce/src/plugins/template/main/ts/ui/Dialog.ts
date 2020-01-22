@@ -120,9 +120,9 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
     });
   };
 
-  function notFoundAlert(api: Types.Dialog.DialogInstanceApi<DialogData>) {
+  const loadFailedAlert = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
     editor.windowManager.alert('Could not load the specified template.', () => api.focus('template'));
-  }
+  };
 
   const getTemplateContent = (t: InternalTemplate) => {
     return new Promise<string>((resolve, reject) => {
@@ -145,11 +145,9 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
         api.block('Loading...');
         getTemplateContent(t).then((previewHtml) => {
           updateDialog(api, t, previewHtml);
-          api.unblock();
         }).catch(() => {
-          notFoundAlert(api);
+          loadFailedAlert(api);
           updateDialog(api, t, '');
-          api.unblock();
         });
       });
     }
@@ -162,7 +160,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
         Templates.insertTemplate(editor, false, previewHtml);
         api.close();
       }).catch(() => {
-        notFoundAlert(api);
+        loadFailedAlert(api);
       });
     });
   };
@@ -232,7 +230,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
     getTemplateContent(templates[0]).then((previewHtml) => {
       updateDialog(dialogApi, templates[0], previewHtml);
     }).catch(() => {
-      notFoundAlert(dialogApi);
+      loadFailedAlert(dialogApi);
       updateDialog(dialogApi, templates[0], '');
     });
   };
