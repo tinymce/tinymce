@@ -207,11 +207,11 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
                     attrs: {
                       role: str.is('group'),
                     },
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-anchorbar') ]
                   })
                 ]
-              }),
-              s.element('div', {
-                classes: [ arr.has('tox-anchorbar') ]
               })
             ]
           }),

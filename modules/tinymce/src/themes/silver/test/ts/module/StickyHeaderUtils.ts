@@ -26,9 +26,6 @@ const staticPartsOuter = (s, str, arr): StructAssert[] => {
   // should not change
   return [
     s.element('div', {
-      classes: [ arr.has('tox-anchorbar') ]
-    }),
-    s.element('div', {
       classes: [ arr.has('tox-sidebar-wrap') ]
     })
   ];
@@ -40,7 +37,10 @@ const staticPartsInner = (s, str, arr): StructAssert[] => {
     s.element('div', {
       classes: [ arr.has('tox-menubar') ]
     }),
-    s.element('div', {})
+    s.element('div', {}),
+    s.element('div', {
+      classes: [ arr.has('tox-anchorbar') ]
+    }),
   ];
 };
 
