@@ -15,9 +15,11 @@ import { UiFactoryBackstage } from '../backstage/Backstage';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { NotificationManagerImpl, NotificationSpec, NotificationApi } from 'tinymce/core/api/NotificationManager';
+import * as Settings from '../api/Settings';
 
 export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): NotificationManagerImpl {
   const backstage: UiFactoryBackstage = extras.backstage;
+  const isToolbarLocationTop = Settings.isToolbarLocationTop(editor);
 
   const getLayoutDirection = (rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc') => {
     switch (rel) {
@@ -80,7 +82,8 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
           classes: [ 'tox-notifications-container' ]
         },
         lazySink: extras.backstage.shared.getSink,
-        fireDismissalEventInstead: { }
+        fireDismissalEventInstead: { },
+        ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { } },
       })
     );
 

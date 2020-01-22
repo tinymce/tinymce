@@ -45,7 +45,7 @@ export interface InlineViewSpec extends SingleSketchSpec {
     event?: string
   };
   fireRepositionEventInstead?: {
-    event: string
+    event?: string
   };
 }
 

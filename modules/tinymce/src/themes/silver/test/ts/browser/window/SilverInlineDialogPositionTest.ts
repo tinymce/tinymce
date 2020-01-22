@@ -161,13 +161,38 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
 
       Pipeline.async({ }, [
         Chain.asStep(Body.body(), [
-          Chain.label('Position of dialogs with toolbar bottom', NamedChain.asChain([
+          Chain.label('Position of dialog should be constant when toolbar bottom docks', NamedChain.asChain([
             NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
 
             // Scroll so that the editor is fully in view
             cScrollRelativeEditor(editor, 'top', -100),
             NamedChain.direct('body', cTestOpen, 'dialog'),
             NamedChain.direct('dialog', cAssertPos('absolute', 113, -1395), '_'),
+
+            // Scroll so that bottom of window overlaps bottom of editor
+            cScrollRelativeEditor(editor, 'bottom', -200),
+            NamedChain.direct('dialog', cAssertPos('absolute', 113, -1395), '_'),
+
+            // Scroll so that top of window overlaps top of editor
+            cScrollRelativeEditor(editor, 'top', 200),
+            NamedChain.direct('dialog', cAssertPos('fixed', 113, 0), '_'),
+
+            NamedChain.direct('body', DialogUtils.cClose, '_'),
+            NamedChain.outputInput
+          ])),
+          Chain.label('Test position when resizing', NamedChain.asChain([
+            NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
+            NamedChain.writeValue('container', Element.fromDom(editor.getContainer())),
+            NamedChain.direct('body', UiFinder.cFindIn('.tox-statusbar__resize-handle'), 'resizeHandle'),
+
+            cScrollRelativeEditor(editor, 'top', -100),
+            NamedChain.direct('body', cTestOpen, 'dialog'),
+            NamedChain.direct('dialog', cAssertPos('absolute', 113, -1395), '_'),
+
+            // Shrink the editor to 300px
+            NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
+            NamedChain.direct('body', cResizeToPos(600, 400, 600, 300), '_'),
+            NamedChain.direct('dialog', cAssertPos('absolute', 113, -1295), '_'),
 
             NamedChain.direct('body', DialogUtils.cClose, '_'),
             NamedChain.outputInput
@@ -194,7 +219,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
 
       Pipeline.async({ }, [
         Chain.asStep(Body.body(), [
-          Chain.label('Position of dialogs with toolbar bottom', NamedChain.asChain([
+          Chain.label('Position of dialog should be constant when toolbar bottom docks', NamedChain.asChain([
             NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
 
             // Scroll so that the editor is fully in view
@@ -203,11 +228,14 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
             NamedChain.read('body', UiFinder.cWaitForVisible('Wait for editor', '.tox-tinymce-inline')),
             NamedChain.direct('body', cTestOpen, 'dialog'),
             NamedChain.direct('dialog', cAssertPos('absolute', 130, -1412), '_'),
-            NamedChain.direct('dialog', cAssertPos('fixed', 105, 0), '_'),
 
-            // Scroll back to top and assert not docked
-            NamedChain.direct('body', cScrollTo(0, 0), '_'),
-            NamedChain.direct('dialog', cAssertPos('absolute', 105, -1987), '_'),
+            // Scroll so that bottom of window overlaps bottom of editor
+            cScrollRelativeEditor(editor, 'bottom', -200),
+            NamedChain.direct('dialog', cAssertPos('absolute', 130, -1412), '_'),
+
+            // Scroll so that top of window overlaps top of editor
+            cScrollRelativeEditor(editor, 'top', 200),
+            NamedChain.direct('dialog', cAssertPos('fixed', 130, 0), '_'),
 
             NamedChain.direct('body', DialogUtils.cClose, '_'),
             NamedChain.outputInput

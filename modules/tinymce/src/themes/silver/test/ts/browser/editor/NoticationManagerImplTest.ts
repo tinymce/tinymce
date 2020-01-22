@@ -198,8 +198,15 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
             // Check items are positioned so that they are stacked
             NamedChain.direct('nError', cAssertPosition('Error notification', 220, -383), '_'),
             NamedChain.direct('nWarn', cAssertPosition('Warning notification', 220, -335), '_'),
-    width: 600
-  }, success, failure);
+
+            // Shrink the editor to 300px
+            NamedChain.direct('body', UiFinder.cFindIn('.tox-statusbar__resize-handle'), 'resizeHandle'),
+            NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
+            NamedChain.direct('body', cResizeToPos(600, 400, 600, 300), '_'),
+
+            // Check items are positioned so that they are stacked
+            NamedChain.direct('nError', cAssertPosition('Error notification', 220, -283), '_'),
+            NamedChain.direct('nWarn', cAssertPosition('Warning notification', 220, -235), '_'),
 
             NamedChain.direct('nError', cCloseNotification, '_'),
             NamedChain.direct('nWarn', cCloseNotification, '_')
