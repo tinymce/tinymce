@@ -11,7 +11,6 @@ import { Arr, Future, Option, Options } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 import Settings from '../api/Settings';
-import { AssumeExternalTargets } from '../api/Types';
 import { ListOptions } from '../core/ListOptions';
 import Utils from '../core/Utils';
 import { DialogChanges } from './DialogChanges';
@@ -19,7 +18,7 @@ import { DialogConfirms } from './DialogConfirms';
 import { DialogInfo } from './DialogInfo';
 import { LinkDialogData, LinkDialogInfo } from './DialogTypes';
 
-const handleSubmit = (editor: Editor, info: LinkDialogInfo, assumeExternalTargets: AssumeExternalTargets) => (api: Types.Dialog.DialogInstanceApi<LinkDialogData>) => {
+const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Types.Dialog.DialogInstanceApi<LinkDialogData>) => {
   const data: LinkDialogData = api.getData();
 
   if (!data.url.value) {
@@ -49,7 +48,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo, assumeExternalTarget
     attach: data.url.meta !== undefined && data.url.meta.attach ? data.url.meta.attach : () => {}
   };
 
-  DialogConfirms.preprocess(editor, assumeExternalTargets, changedData).get((pData) => {
+  DialogConfirms.preprocess(editor, changedData).get((pData) => {
     Utils.link(editor, attachState, pData);
   });
 
@@ -162,7 +161,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.D
 const open = function (editor: Editor) {
   const data = collectData(editor);
   data.map((info) => {
-    const onSubmit = handleSubmit(editor, info, Settings.assumeExternalTargets(editor));
+    const onSubmit = handleSubmit(editor, info);
     return makeDialog(info, onSubmit, editor);
   }).get((spec) => {
     editor.windowManager.open(spec);

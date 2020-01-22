@@ -9,6 +9,7 @@ import { Arr, Future, Option } from '@ephox/katamari';
 import Delay from 'tinymce/core/api/util/Delay';
 import Editor from 'tinymce/core/api/Editor';
 
+import Settings from '../api/Settings';
 import { AssumeExternalTargets } from '../api/Types';
 import Utils from '../core/Utils';
 import { LinkDialogOutput } from './DialogTypes';
@@ -39,7 +40,7 @@ const tryEmailTransform = (data: LinkDialogOutput): Option<Transformer> => {
   }) : Option.none();
 };
 
-const tryProtocolTransform = (assumeExternalTargets: AssumeExternalTargets) => (data: LinkDialogOutput): Option<Transformer> => {
+const tryProtocolTransform = (assumeExternalTargets: AssumeExternalTargets, defaultLinkProtocol: string) => (data: LinkDialogOutput): Option<Transformer> => {
   const url = data.href;
   const suggestProtocol = (
     assumeExternalTargets === AssumeExternalTargets.WARN && !Utils.hasProtocol(url) ||
@@ -47,14 +48,14 @@ const tryProtocolTransform = (assumeExternalTargets: AssumeExternalTargets) => (
   );
 
   return suggestProtocol ? Option.some({
-    message: 'The URL you entered seems to be an external link. Do you want to add the required http:// prefix?',
-    preprocess: (oldData) => ({ ...oldData, href: 'http://' + url })
+    message: `The URL you entered seems to be an external link. Do you want to add the required ${defaultLinkProtocol}:// prefix?`,
+    preprocess: (oldData) => ({ ...oldData, href: defaultLinkProtocol + '://' + url })
   }) : Option.none();
 };
 
-const preprocess = (editor: Editor, assumeExternalTargets: AssumeExternalTargets, data: LinkDialogOutput): Future<LinkDialogOutput> => {
+const preprocess = (editor: Editor, data: LinkDialogOutput): Future<LinkDialogOutput> => {
   return Arr.findMap(
-    [ tryEmailTransform, tryProtocolTransform(assumeExternalTargets) ],
+    [ tryEmailTransform, tryProtocolTransform(Settings.assumeExternalTargets(editor),  Settings.getDefaultLinkProtocol(editor)) ],
     (f) => f(data)
   ).fold(
     () => Future.pure(data),

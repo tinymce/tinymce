@@ -148,9 +148,11 @@ const parseCurrentLine = function (editor, endOffset, delimiter) {
   text = rng.toString().trim();
   matches = text.match(autoLinkPattern);
 
+  const protocol = Settings.getDefaultLinkProtocol(editor);
+
   if (matches) {
     if (matches[1] === 'www.') {
-      matches[1] = 'http://www.';
+      matches[1] = protocol + '://www.';
     } else if (/@$/.test(matches[1]) && !/^mailto:/.test(matches[1])) {
       matches[1] = 'mailto:' + matches[1];
     }
