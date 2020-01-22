@@ -34,6 +34,7 @@ Version 5.2.0 (TBD)
     Fixed keyboard flicker when opening a context menu on mobile #TINY-4540
 Version 5.1.6 (TBD)
     Fixed readonly mode not blocking all clicked links #TINY-4572
+    Fixed legacy font sizes being calculated inconsistently for the `FontSize` query command value #TINY-4555
     Fixed the context menu not showing in certain cases with hybrid devices #TINY-4569
     Fixed the context menu opening in the wrong location when the target is the editor body #TINY-4568
 Version 5.1.5 (2019-12-19)
