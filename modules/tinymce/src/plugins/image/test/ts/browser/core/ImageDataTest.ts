@@ -106,7 +106,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         hspace: '2',
         vspace: '3',
         border: '4',
-        borderStyle: 'dotted'
+        borderStyle: 'dotted',
+        isDecorative: false
       }),
       cReadFromImage,
       cAssertModel({
@@ -121,7 +122,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         hspace: '2',
         vspace: '3',
         border: '4',
-        borderStyle: 'dotted'
+        borderStyle: 'dotted',
+        isDecorative: false
       }),
       cAssertStructure(ApproxStructure.build(function (s, str) {
         return s.element('img', {
@@ -159,7 +161,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         hspace: '',
         vspace: '',
         border: '',
-        borderStyle: ''
+        borderStyle: '',
+        isDecorative: false
       }),
       cReadFromImage,
       cAssertModel({
@@ -174,7 +177,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         hspace: '',
         vspace: '',
         border: '',
-        borderStyle: ''
+        borderStyle: '',
+        isDecorative: false
       }),
       cAssertStructure(ApproxStructure.build(function (s, str) {
         return s.element('img', {
@@ -212,7 +216,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         hspace: '2',
         vspace: '3',
         border: '4',
-        borderStyle: 'dotted'
+        borderStyle: 'dotted',
+        isDecorative: false
       }),
       cReadFromImage,
       cAssertModel({
@@ -227,7 +232,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         hspace: '2',
         vspace: '3',
         border: '4',
-        borderStyle: 'dotted'
+        borderStyle: 'dotted',
+        isDecorative: false
       }),
       cAssertStructure(ApproxStructure.build(function (s, str) {
         return s.element('figure', {
@@ -268,6 +274,62 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
       })),
       cAssertFigure
     ]),
+    Log.chainsAsStep('TBA', 'Image: Create decorative image from data', [
+      cCreate({
+        src: 'some.gif',
+        alt: 'alt',
+        title: 'title',
+        width: '100',
+        height: '200',
+        class: 'class',
+        style: 'border: 1px solid red',
+        caption: false,
+        hspace: '2',
+        vspace: '3',
+        border: '4',
+        borderStyle: 'dotted',
+        isDecorative: true
+      }),
+      cReadFromImage,
+      cAssertModel({
+        src: 'some.gif',
+        alt: '',
+        title: 'title',
+        width: '100',
+        height: '200',
+        class: 'class',
+        style: 'border: 4px dotted red; margin: 3px 2px;',
+        caption: false,
+        hspace: '2',
+        vspace: '3',
+        border: '4',
+        borderStyle: 'dotted',
+        isDecorative: true
+      }),
+      cAssertStructure(ApproxStructure.build(function (s, str) {
+        return s.element('img', {
+          attrs: {
+            src: str.is('some.gif'),
+            alt: str.is(''),
+            title: str.is('title'),
+            width: str.is('100'),
+            height: str.is('200'),
+            class: str.is('class'),
+            role: str.is('presentation')
+          },
+          styles: {
+            'border-width': str.is('4px'),
+            'border-style': str.is('dotted'),
+            'border-color': str.is('red'),
+            'margin-top': str.is('3px'),
+            'margin-bottom': str.is('3px'),
+            'margin-left': str.is('2px'),
+            'margin-right': str.is('2px')
+          }
+        });
+      })),
+      cAssertImage
+    ]),
     Chain.asStep(Element.fromTag('div'), Log.chains('TBA', 'Image: Read/write model to simple image without change', [
       cSetHtml('<img src="some.gif">'),
       cReadFromImage,
@@ -283,7 +345,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         hspace: '',
         vspace: '',
         border: '',
-        borderStyle: ''
+        borderStyle: '',
+        isDecorative: false
       }),
       cWriteToImage,
       cAssertStructure(ApproxStructure.build(function (s, str) {
@@ -327,7 +390,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         hspace: '2',
         vspace: '1',
         border: '1',
-        borderStyle: 'solid'
+        borderStyle: 'solid',
+        isDecorative: false
       }),
       cWriteToImage,
       cAssertStructure(ApproxStructure.build(function (s, str) {
@@ -371,7 +435,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         hspace: '1',
         vspace: '2',
         border: '3',
-        borderStyle: 'dotted'
+        borderStyle: 'dotted',
+        isDecorative: false
       }),
       cWriteToImage,
       cAssertStructure(ApproxStructure.build(function (s, str) {
@@ -415,7 +480,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         hspace: '3',
         vspace: '4',
         border: '4',
-        borderStyle: 'dotted'
+        borderStyle: 'dotted',
+        isDecorative: false
       }),
       cWriteToImage,
       cAssertStructure(ApproxStructure.build(function (s, str) {
@@ -548,7 +614,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         hspace: '',
         vspace: '',
         border: '',
-        borderStyle: ''
+        borderStyle: '',
+        isDecorative: false
       }),
       cWriteToImage,
       cAssertStructure(ApproxStructure.build(function (s, str) {
@@ -593,7 +660,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         hspace: '',
         vspace: '',
         border: '',
-        borderStyle: ''
+        borderStyle: '',
+        isDecorative: false
       }),
       cUpdateModel({
         width: '150',

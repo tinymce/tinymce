@@ -8,6 +8,7 @@
 import { document, HTMLElement, Node } from '@ephox/dom-globals';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Utils from './Utils';
+import { Attr, Element } from '@ephox/sugar';
 
 const DOM = DOMUtils.DOM;
 
@@ -24,6 +25,7 @@ interface ImageData {
   vspace: string;
   border: string;
   borderStyle: string;
+  isDecorative: boolean;
 }
 
 type CssNormalizer = (css: string) => string;
@@ -152,6 +154,19 @@ const getBorderStyle = (image: HTMLElement) => getStyle(image, 'borderStyle');
 const isFigure = (elm: Node) => elm.nodeName === 'FIGURE';
 const isImage = (elm: Node) => elm.nodeName === 'IMG';
 
+const getIsDecorative = (image: HTMLElement) => {
+  const sugarImage = Element.fromDom(image);
+  return Attr.has(sugarImage, 'alt') && Attr.get(sugarImage, 'alt').length === 0 && Attr.has(sugarImage, 'role') && Attr.get(sugarImage, 'role') === 'presentation';
+};
+
+const getAlt = (image: HTMLElement) => {
+  if (getIsDecorative(image)) {
+    return '';
+  } else {
+    return getAttrib(image, 'alt');
+  }
+};
+
 const defaultData = (): ImageData => {
   return {
     src: '',
@@ -165,7 +180,8 @@ const defaultData = (): ImageData => {
     hspace: '',
     vspace: '',
     border: '',
-    borderStyle: ''
+    borderStyle: '',
+    isDecorative: false
   };
 };
 
@@ -197,7 +213,7 @@ const create = (normalizeCss: CssNormalizer, data: ImageData): HTMLElement => {
   const image = document.createElement('img');
   write(normalizeCss, { ...data, caption: false }, image);
   // Always set alt even if data.alt is an empty string
-  setAttrib(image, 'alt', data.alt);
+  setAlt(image, data.alt, data.isDecorative);
 
   if (data.caption) {
     const figure = DOM.create('figure', { class: 'image' });
@@ -215,7 +231,7 @@ const create = (normalizeCss: CssNormalizer, data: ImageData): HTMLElement => {
 const read = (normalizeCss: CssNormalizer, image: HTMLElement): ImageData => {
   return {
     src: getAttrib(image, 'src'),
-    alt: getAttrib(image, 'alt'),
+    alt: getAlt(image),
     title: getAttrib(image, 'title'),
     width: getSize(image, 'width'),
     height: getSize(image, 'height'),
@@ -225,13 +241,34 @@ const read = (normalizeCss: CssNormalizer, image: HTMLElement): ImageData => {
     hspace: getHspace(image),
     vspace: getVspace(image),
     border: getBorder(image),
-    borderStyle: getStyle(image, 'borderStyle')
+    borderStyle: getStyle(image, 'borderStyle'),
+    isDecorative: getIsDecorative(image)
   };
 };
 
 const updateProp = (image: HTMLElement, oldData: ImageData, newData: ImageData, name: string, set: (image: HTMLElement, name: string, value: string) => void) => {
   if (newData[name] !== oldData[name]) {
     set(image, name, newData[name]);
+  }
+};
+
+const setAlt = (image: HTMLElement, alt: string, isDecorative: boolean) => {
+  const sugarImage = Element.fromDom(image);
+  Attr.remove(sugarImage, 'alt');
+  if (isDecorative) {
+    Attr.set(sugarImage, 'alt', '');
+    Attr.set(sugarImage, 'role', 'presentation');
+  } else {
+    Attr.set(sugarImage, 'alt', alt);
+    if (Attr.has(sugarImage, 'role') && Attr.get(sugarImage, 'role') === 'presentation') {
+      Attr.remove(sugarImage, 'role');
+    }
+  }
+};
+
+const updateAlt = (image: HTMLElement, oldData: ImageData, newData: ImageData) => {
+  if (newData.alt !== oldData.alt || newData.isDecorative !== oldData.isDecorative) {
+    setAlt(image, newData.alt, newData.isDecorative);
   }
 };
 
@@ -247,7 +284,6 @@ const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HTMLEleme
 
   updateProp(image, oldData, newData, 'caption', (image, _name, _value) => toggleCaption(image));
   updateProp(image, oldData, newData, 'src', setAttrib);
-  updateProp(image, oldData, newData, 'alt', setAttrib);
   updateProp(image, oldData, newData, 'title', setAttrib);
   updateProp(image, oldData, newData, 'width', setSize('width', normalizeCss));
   updateProp(image, oldData, newData, 'height', setSize('height', normalizeCss));
@@ -257,6 +293,7 @@ const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HTMLEleme
   updateProp(image, oldData, newData, 'vspace', normalized(setVspace, normalizeCss));
   updateProp(image, oldData, newData, 'border', normalized(setBorder, normalizeCss));
   updateProp(image, oldData, newData, 'borderStyle', normalized(setBorderStyle, normalizeCss));
+  updateAlt(image, oldData, newData);
 };
 
 export {

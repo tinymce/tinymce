@@ -29,6 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
         vspace: '',
         border: '',
         borderStyle: '',
+        isDecorative: false,
         ...data
       });
     });

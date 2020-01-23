@@ -31,6 +31,7 @@ const collect = (editor: Editor): Future<ImageDialogInfo> => {
       );
     });
   });
+
   const classList = ListUtils.sanitize(Settings.getClassList(editor));
   const hasAdvTab = Settings.hasAdvTab(editor);
   const hasUploadTab = Settings.hasUploadTab(editor);
@@ -41,6 +42,7 @@ const collect = (editor: Editor): Future<ImageDialogInfo> => {
   const hasImageTitle = Settings.hasImageTitle(editor);
   const hasDimensions = Settings.hasDimensions(editor);
   const hasImageCaption = Settings.hasImageCaption(editor);
+  const hasAccessibilityOptions = Settings.showAccessibilityOptions(editor);
   const url = Settings.getUploadUrl(editor);
   const basePath = Settings.getUploadBasePath(editor);
   const credentials = Settings.getUploadCredentials(editor);
@@ -65,7 +67,8 @@ const collect = (editor: Editor): Future<ImageDialogInfo> => {
       basePath,
       credentials,
       handler,
-      prependURL
+      prependURL,
+      hasAccessibilityOptions
     };
   });
 };

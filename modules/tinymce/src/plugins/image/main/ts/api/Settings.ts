@@ -67,6 +67,10 @@ const getUploadCredentials = (editor: Editor) => {
   return editor.getParam('images_upload_credentials', false, 'boolean');
 };
 
+const showAccessibilityOptions = (editor: Editor) => {
+  return editor.getParam('a11y_advanced_options', false, 'boolean');
+};
+
 export default {
   hasDimensions,
   hasUploadTab,
@@ -82,5 +86,6 @@ export default {
   getUploadUrl,
   getUploadHandler,
   getUploadBasePath,
-  getUploadCredentials
+  getUploadCredentials,
+  showAccessibilityOptions
 };
