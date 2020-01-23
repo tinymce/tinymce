@@ -7,12 +7,14 @@ interface TypedItemAdt<E, D> {
   fold: <U> (
     onBoundary: Handler<E, D, U>,
     onEmpty: Handler<E, D, U>,
-    onText: Handler<E, D, U>
+    onText: Handler<E, D, U>,
+    onNonEditable: Handler<E, D, U>
   ) => U;
   match: <U> (branches: {
     boundary: Handler<E, D, U>;
     empty: Handler<E, D, U>;
     text: Handler<E, D, U>;
+    nonEditable: Handler<E, D, U>;
   }) => U;
   log: (label: string) => void;
 }
@@ -30,10 +32,12 @@ const adt: {
   boundary: TypedItemAdtConstructor;
   empty: TypedItemAdtConstructor;
   text: TypedItemAdtConstructor;
+  nonEditable: TypedItemAdtConstructor;
 } = Adt.generate([
   { boundary: ['item', 'universe'] },
   { empty: ['item', 'universe'] },
-  { text: ['item', 'universe'] }
+  { text: ['item', 'universe'] },
+  { nonEditable: ['item', 'universe'] }
 ]);
 
 const no = Fun.never;
@@ -43,10 +47,10 @@ const one = Fun.constant(1);
 
 const ext = <E, D>(ti: TypedItemAdt<E, D>): TypedItem<E, D> => ({
   ...ti,
-  isBoundary: () => ti.fold(yes, no, no),
-  toText: () => ti.fold<Option<E>>(Option.none, Option.none, (i) => Option.some(i)),
-  is: (other) => ti.fold(no, no, (i, u) => u.eq(i, other)),
-  len: () => ti.fold(zero, one, (i, u) => u.property().getText(i).length),
+  isBoundary: () => ti.fold(yes, no, no, no),
+  toText: () => ti.fold<Option<E>>(Option.none, Option.none, (i) => Option.some(i), Option.none),
+  is: (other) => ti.fold(no, no, (i, u) => u.eq(i, other), no),
+  len: () => ti.fold(zero, one, (i, u) => u.property().getText(i).length, one),
 });
 
 type TypedItemConstructor = <E, D>(item: E, universe: Universe<E, D>) => TypedItem<E, D>;
@@ -55,14 +59,16 @@ type TypedItemConstructor = <E, D>(item: E, universe: Universe<E, D>) => TypedIt
 const text = Fun.compose(ext as any, adt.text as any) as TypedItemConstructor;
 const boundary = Fun.compose(ext as any, adt.boundary as any) as TypedItemConstructor;
 const empty = Fun.compose(ext as any, adt.empty as any) as TypedItemConstructor;
+const nonEditable = Fun.compose(ext as any, adt.empty as any) as TypedItemConstructor;
 
-const cata = function <E, D, U>(subject: TypedItem<E, D>, onBoundary: Handler<E, D, U>, onEmpty: Handler<E, D, U>, onText: Handler<E, D, U>) {
-  return subject.fold(onBoundary, onEmpty, onText);
+const cata = function <E, D, U>(subject: TypedItem<E, D>, onBoundary: Handler<E, D, U>, onEmpty: Handler<E, D, U>, onText: Handler<E, D, U>, onNonEditable: Handler<E, D, U>) {
+  return subject.fold(onBoundary, onEmpty, onText, onNonEditable);
 };
 
 export const TypedItem = {
   text,
   boundary,
   empty,
+  nonEditable,
   cata
 };

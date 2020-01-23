@@ -2,10 +2,13 @@
 import { console } from '@ephox/dom-globals';
 import { Merger } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+import * as Table from './Table';
 
 declare let tinymce: any;
 
 export default function () {
+
+  Table.register();
 
   const makeSidebar = (ed, name: string, background: string, width: number) => {
     ed.ui.registry.addSidebar(name, {

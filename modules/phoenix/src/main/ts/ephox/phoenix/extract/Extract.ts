@@ -21,6 +21,8 @@ const typed = function <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: 
     return [TypedItem.text(item, universe)];
   } else if (universe.property().isEmptyTag(item)) {
     return [TypedItem.empty(item, universe)];
+  } else if (!universe.property().isContentEditable(item)) {
+    return [TypedItem.nonEditable(item, universe)];
   } else if (universe.property().isElement(item)) {
     const children = universe.property().children(item);
     const boundary = universe.property().isBoundary(item) ? [TypedItem.boundary(item, universe)] : [];
