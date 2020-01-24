@@ -15,7 +15,7 @@ const bubbleAlignments = {
   top: []
 };
 
-const getDialogAnchor = (bodyElement: () => Element, lazyAnchorbar: () => AlloyComponent, useEditableAreaAnchor: boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
+const getInlineDialogAnchor = (bodyElement: () => Element, lazyAnchorbar: () => AlloyComponent, useEditableAreaAnchor: boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
   const editableAreaAnchor = (): NodeAnchorSpec => ({
     anchor: 'node',
     root: bodyElement(),
@@ -99,7 +99,7 @@ const getAnchors = (editor: Editor, lazyAnchorbar: () => AlloyComponent) => {
   const useEditableAreaAnchor = useFixedToolbarContainer || !isToolbarLocationTop(editor);
 
   return {
-    dialog: getDialogAnchor(bodyElement, lazyAnchorbar, useEditableAreaAnchor),
+    inlineDialog: getInlineDialogAnchor(bodyElement, lazyAnchorbar, useEditableAreaAnchor),
     banner: getBannerAnchor(bodyElement, lazyAnchorbar, useEditableAreaAnchor),
     cursor: getCursorAnchor(editor, bodyElement),
     node: getNodeAnchor(bodyElement)
