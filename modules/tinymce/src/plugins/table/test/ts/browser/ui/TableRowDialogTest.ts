@@ -1,4 +1,4 @@
-import { Pipeline, UiFinder, Log } from '@ephox/agar';
+import { Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
@@ -216,6 +216,38 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       ]);
     };
 
+    const changeHeaderToBodyTest = () => {
+      const initialHtml = '<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead><tr><td>X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>';
+      const expectedHtml = '<table style="border: 1px solid black; border-collapse: collapse;" border="1"><tbody><tr><td>X</td></tr><tr><td>Y</td></tr></tbody></table>';
+
+      const initialData = {
+        align: '',
+        height: '',
+        type: 'thead',
+        backgroundcolor: '',
+        bordercolor: '',
+        borderstyle: '',
+      };
+
+      return Log.stepsAsStep('TBA', 'Table: Change table row type from header to body', [
+        tinyApis.sSetContent(initialHtml),
+
+        tinyApis.sSelect('tr:nth-child(1) td:nth-child(1)', [0]),
+        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sAssertDialogValues(initialData, true, generalSelectors),
+        TableTestUtils.sSetDialogValues({
+          align: '',
+          height: '',
+          type: 'tbody',
+          backgroundcolor: '',
+          bordercolor: '',
+          borderstyle: '',
+        }, true, generalSelectors),
+        TableTestUtils.sClickDialogButton('clicking save', true),
+        tinyApis.sAssertContent(expectedHtml)
+      ]);
+    };
+
     Pipeline.async({}, [
       tinyApis.sFocus,
       baseGetTest(),
@@ -224,7 +256,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       advGetTest(),
       advGetSetTest(),
       advRemoveTest(),
-      multiUpdateTest()
+      multiUpdateTest(),
+      changeHeaderToBodyTest()
     ], onSuccess, onFailure);
   }, {
     plugins: 'table',
