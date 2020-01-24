@@ -69,6 +69,8 @@ UnitTest.test('DomExtractTest', function () {
           return '-';
         }, function (t) {
           return Text.get(t);
+        }, function (t) {
+          return Text.get(t);
         });
       }).join('');
       assert.eq(expected, actual);

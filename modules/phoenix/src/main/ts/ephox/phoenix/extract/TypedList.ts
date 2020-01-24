@@ -26,12 +26,12 @@ const gen = function <E, D>(unit: TypedItem<E, D>, start: number): Option<SpotRa
     return Option.some(Spot.range(e, start, start + 1));
   }, function (t) {
     return Option.some(Spot.range(t, start, start + unit.len()));
-  });
+  }, () => Option.none());
 };
 
 const justText = function <E, D>(parray: TypedItem<E, D>[]) {
   return Arr.bind(parray, function (x): E[] {
-    return x.fold(Fun.constant([]), Fun.constant([]), function (i) { return [i]; });
+    return x.fold(Fun.constant([]), Fun.constant([]), function (i) { return [i]; }, Fun.constant([]));
   });
 };
 
