@@ -14,10 +14,6 @@ const morphToStatic = (component: AlloyComponent, config: DockingConfig): void =
 };
 
 const morphToCoord = (component: AlloyComponent, config: DockingConfig, scroll: Position, origin: Position, morph: DragCoord.CoordAdt): void => {
-  // Remove properties conflicting with DragCoord.toStyles
-  Css.remove(component.element(), 'bottom');
-  Css.remove(component.element(), 'right');
-
   const styles = DragCoord.toStyles(morph, scroll, origin);
   Css.setAll(component.element(), styles);
   const method = styles.position === 'fixed' ? config.onDocked : config.onUndocked;
