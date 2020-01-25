@@ -497,6 +497,13 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
+    parser.parse('<!-- value ->');
+    LegacyUnit.equal(writer.getContent(), '<!-- value ->-->', 'Parse comment with malformed end sequence.');
+    LegacyUnit.deepEqual(counter.counts, { comment: 1 }, 'Parse comment with malformed end sequence counts.');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
     parser.parse('<!-- value ><div>test</div>');
     LegacyUnit.equal(writer.getContent(), '<!-- value ><div>test</div>-->', 'Parse comment with missing end sequence.');
     LegacyUnit.deepEqual(counter.counts, { comment: 1 }, 'Parse comment with missing end sequence counts.');
@@ -858,7 +865,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     writer.reset();
     parser.parse(
       '<?xml><iframe SRC=&#106&#97&#118&#97&#115&#99&#114&#105&#112&#116&#58&#97&#108&#101&#114&#116&#40&#39&#88&#83&#83&#39&#41>?>',
-      'application/xml'
+      'application/xhtml+xml'
     );
 
     LegacyUnit.equal(
@@ -912,6 +919,13 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     parser.parse('<div><![CDATA[<!--x--><!--y--!>-->]]></div>');
     LegacyUnit.equal(writer.getContent(), '<div><!--[CDATA[<!--x----><!--y-->--&gt;]]&gt;</div>');
     LegacyUnit.deepEqual(counter.counts, { comment: 2, text: 1, start: 1, end: 1 });
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<div><![CDATA[<!--x--><!--y-->--><!--]]></div>', 'application/xhtml+xml');
+    LegacyUnit.equal(writer.getContent(), '<div><![CDATA[<!--x--><!--y-->--><!--]]></div>');
+    LegacyUnit.deepEqual(counter.counts, { cdata: 1, start: 1, end: 1 });
   });
 
   suite.test('Parse special elements', function () {

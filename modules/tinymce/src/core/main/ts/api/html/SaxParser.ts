@@ -137,14 +137,13 @@ const findEndTagIndex = function (schema: Schema, html: string, startIndex: numb
 
 const isConditionalComment = (html: string, startIndex: number) => /^\s*\[if [\w\W]+\]>.*<!\[endif\](--!?)?>/.test(html.substr(startIndex));
 
-const findCommentEndIndex = (html: string, startTag: string, startIndex: number = 0) => {
+const findCommentEndIndex = (html: string, isBogus: boolean, startIndex: number = 0) => {
   const lcHtml = html.toLowerCase();
   if (lcHtml.indexOf('[if ', startIndex) !== -1 && isConditionalComment(lcHtml, startIndex)) {
     const endIfIndex = lcHtml.indexOf('[endif]', startIndex);
     return lcHtml.indexOf('>', endIfIndex);
   } else {
-    const isBogusComment = startTag !== '--';
-    if (isBogusComment) {
+    if (isBogus) {
       const endIndex = lcHtml.indexOf('>', startIndex);
       return endIndex !== -1 ? endIndex : lcHtml.length;
     } else {
@@ -263,14 +262,13 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
 
     const processMalformedComment = (value: string, startIndex: number) => {
       const startTag = value || '';
+      const isBogus = !Strings.startsWith(startTag, '--');
 
-      // Find the end of the malformed comment
-      const endIndex = findCommentEndIndex(html, startTag, startIndex);
+      // Find the end of the malformed/bogus comment
+      const endIndex = findCommentEndIndex(html, isBogus, startIndex);
       value = html.substr(startIndex, endIndex - startIndex);
 
-      // Malformed comment
-      const commentContent = Strings.startsWith(startTag, '--') ? value.replace(/--!?$/, '') : startTag + value;
-      processComment(commentContent);
+      processComment(isBogus ? startTag + value : value);
 
       return endIndex + 1;
     };
@@ -577,7 +575,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
         if (isValidCdataSection) {
           cdata(value);
         } else {
-          index = processMalformedComment('[CDATA[', matches.index + 9 ); // <![CDATA[ === 9 chars
+          index = processMalformedComment('', matches.index + 2 );
           tokenRegExp.lastIndex = index;
           continue;
         }
