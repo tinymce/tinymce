@@ -54,12 +54,12 @@ import Schema from './Schema';
 type AttrList = Array<{ name: string, value: string }> & { map: Record<string, string> };
 
 export interface SaxParserSettings {
-  allow_cdata?: boolean;
   allow_conditional_comments?: boolean;
   allow_html_data_urls?: boolean;
   allow_script_urls?: boolean;
   allow_svg_data_urls?: boolean;
   fix_self_closing?: boolean;
+  preserve_cdata?: boolean;
   remove_internals?: boolean;
   self_closing_elements?: Record<string, {}>;
   validate?: boolean;
@@ -74,7 +74,12 @@ export interface SaxParserSettings {
 }
 
 interface SaxParser {
-  parse (html: string): void;
+  parse (html: string, mimeType?: string): void;
+}
+
+enum ParsingMode {
+  HTML,
+  XML
 }
 
 const isValidPrefixAttrName = function (name: string): boolean {
@@ -197,7 +202,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
    * @method parse
    * @param {String} html Html string to sax parse.
    */
-  const parse = (html: string) => {
+  const parse = (html: string, mimeType: string = 'text/html') => {
     let matches, index = 0, value, endRegExp;
     const stack = [];
     let attrList, i, textData, name;
@@ -209,6 +214,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
     let fixSelfClosing;
     const filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster,xlink:href');
     const scriptUriRegExp = /((java|vb)script|mhtml):/i;
+    const parsingMode = Strings.contains(mimeType, 'xml') ? ParsingMode.XML : ParsingMode.HTML;
 
     const processEndTag = function (name) {
       let pos, i;
@@ -567,7 +573,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       } else if ((value = matches[2])) { // CDATA
         // Ensure we are in a valid CDATA context (eg child of svg or mathml). If we aren't in a valid context then the cdata should
         // be treated as a bogus comment. See https://html.spec.whatwg.org/multipage/parsing.html#markup-declaration-open-state
-        const isValidCdataSection = settings.allow_cdata || stack.length > 0 && schema.isValidChild(stack[stack.length - 1].name, '#cdata');
+        const isValidCdataSection = parsingMode === ParsingMode.XML || settings.preserve_cdata || stack.length > 0 && schema.isValidChild(stack[stack.length - 1].name, '#cdata');
         if (isValidCdataSection) {
           cdata(value);
         } else {
@@ -582,7 +588,15 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
         tokenRegExp.lastIndex = index;
         continue;
       } else if ((value = matches[5])) { // PI
-        pi(value, matches[6]);
+        if (parsingMode === ParsingMode.XML) {
+          pi(value, matches[6]);
+        } else {
+          // Processing Instructions aren't valid in HTML so it should be treated as a bogus comment.
+          // See https://html.spec.whatwg.org/multipage/parsing.html#tag-open-state
+          index = processMalformedComment('?', matches.index + 2); // <? === 2 chars
+          tokenRegExp.lastIndex = index;
+          continue;
+        }
       }
 
       index = matches.index + matchText.length;

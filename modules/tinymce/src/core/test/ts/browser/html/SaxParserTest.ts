@@ -431,6 +431,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     let counter, parser;
     const schemaWithSVGs = Schema({ valid_children: '+svg[#cdata]', custom_elements: 'svg' });
 
+    // Schema with SVG
     counter = createCounter(writer);
     parser = SaxParser(counter, schemaWithSVGs);
     writer.reset();
@@ -459,8 +460,24 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     LegacyUnit.equal(writer.getContent(), '<b>a<!--[CDATA[value]]-->b</b>', 'Parse cdata in HTML with tags around it.');
     LegacyUnit.deepEqual(counter.counts, { comment: 1, start: 1, end: 1, text: 2 }, 'Parse cdata in HTML with tags around it counts.');
 
+    // mime type === application/xml
     counter = createCounter(writer);
-    parser = SaxParser({ ...counter, allow_cdata: true }, schemaWithSVGs);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<![CDATA[test text]]>', 'application/xml');
+    LegacyUnit.equal(writer.getContent(), '<![CDATA[test text]]>', 'Parse cdata with value.');
+    LegacyUnit.deepEqual(counter.counts, { cdata: 1 }, 'Parse cdata with value counts.');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<b>a<![CDATA[value]]>b</b>', 'application/xml');
+    LegacyUnit.equal(writer.getContent(), '<b>a<![CDATA[value]]>b</b>', 'Parse cdata in HTML with tags around it.');
+    LegacyUnit.deepEqual(counter.counts, { cdata: 1, start: 1, end: 1, text: 2 }, 'Parse cdata in HTML with tags around it counts.');
+
+    // Preserve CDATA
+    counter = createCounter(writer);
+    parser = SaxParser({ ...counter, preserve_cdata: true }, schema);
     writer.reset();
     parser.parse('<![CDATA[test text]]>');
     LegacyUnit.equal(writer.getContent(), '<![CDATA[test text]]>', 'Parse cdata with value and preserve_cdata: true.');
@@ -498,21 +515,28 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
-    parser.parse('<?xml version="1.0" encoding="UTF-8" ?>text1');
+    parser.parse('<?xml version="1.0" encoding="UTF-8" ?>text1', 'text/html');
+    LegacyUnit.equal(writer.getContent(), '<!--?xml version="1.0" encoding="UTF-8" ?-->text1', 'Parse PI as HTML with attributes.');
+    LegacyUnit.deepEqual(counter.counts, { comment: 1, text: 1 }, 'Parse PI as HTML with attributes counts.');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<?xml version="1.0" encoding="UTF-8" ?>text1', 'application/xml');
     LegacyUnit.equal(writer.getContent(), '<?xml version="1.0" encoding="UTF-8" ?>text1', 'Parse PI with attributes.');
     LegacyUnit.deepEqual(counter.counts, { pi: 1, text: 1 }, 'Parse PI with attributes counts.');
 
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
-    parser.parse('<?xml?>text1');
+    parser.parse('<?xml?>text1', 'application/xml');
     LegacyUnit.equal(writer.getContent(), '<?xml?>text1', 'Parse PI with no data.');
     LegacyUnit.deepEqual(counter.counts, { pi: 1, text: 1 }, 'Parse PI with data counts.');
 
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
-    parser.parse('<?xml somevalue/>text1');
+    parser.parse('<?xml somevalue/>text1', 'application/xml');
     LegacyUnit.equal(writer.getContent(), '<?xml somevalue?>text1', 'Parse PI with IE style ending.');
     LegacyUnit.deepEqual(counter.counts, { pi: 1, text: 1 }, 'Parse PI with IE style ending counts.');
   });
@@ -833,7 +857,8 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
 
     writer.reset();
     parser.parse(
-      '<?xml><iframe SRC=&#106&#97&#118&#97&#115&#99&#114&#105&#112&#116&#58&#97&#108&#101&#114&#116&#40&#39&#88&#83&#83&#39&#41>?>'
+      '<?xml><iframe SRC=&#106&#97&#118&#97&#115&#99&#114&#105&#112&#116&#58&#97&#108&#101&#114&#116&#40&#39&#88&#83&#83&#39&#41>?>',
+      'application/xml'
     );
 
     LegacyUnit.equal(
