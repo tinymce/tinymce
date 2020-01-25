@@ -56,6 +56,7 @@ export interface DomParserSettings {
   forced_root_block?: boolean | string;
   forced_root_block_attrs?: Record<string, string>;
   padd_empty_with_br?: boolean;
+  preserve_cdata?: boolean;
   remove_trailing_brs?: boolean;
   root_name?: string;
   validate?: boolean;
@@ -472,6 +473,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
       validate,
       allow_script_urls: settings.allow_script_urls,
       allow_conditional_comments: settings.allow_conditional_comments,
+      allow_cdata: settings.preserve_cdata,
 
       // Exclude P and LI from DOM parsing since it's treated better by the DOM parser
       self_closing_elements: cloneAndExcludeBlocks(schema.getSelfClosingElements()),

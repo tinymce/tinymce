@@ -6,12 +6,13 @@
  */
 
 import { Arr, Option } from '@ephox/katamari';
+import DOMUtils from '../api/dom/DOMUtils';
 import Entities from '../api/html/Entities';
 import Zwsp from '../text/Zwsp';
 
 declare const unescape: any;
 
-const register = function (htmlParser, settings, dom) {
+const register = function (htmlParser, settings, dom: DOMUtils) {
   // Convert tabindex back to elements when serializing contents
   htmlParser.addAttributeFilter('data-mce-tabindex', function (nodes, name) {
     let i = nodes.length, node;
@@ -135,14 +136,18 @@ const register = function (htmlParser, settings, dom) {
     }
   });
 
-  // Convert protected comments
+  // Convert comments to cdata and handle protected comments
   htmlParser.addNodeFilter('#comment', function (nodes) {
     let i = nodes.length, node;
 
     while (i--) {
       node = nodes[i];
 
-      if (node.value.indexOf('mce:protected ') === 0) {
+      if (settings.preserve_cdata && node.value.indexOf('[CDATA[') === 0) {
+        node.name = '#cdata';
+        node.type = 4;
+        node.value = dom.decode(node.value.replace(/^\[CDATA\[|\]\]$/g, ''));
+      } else if (node.value.indexOf('mce:protected ') === 0) {
         node.name = '#text';
         node.type = 3;
         node.raw = true;

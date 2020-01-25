@@ -137,6 +137,7 @@ export interface RawEditorSettings {
   object_resizing?: boolean | string;
   placeholder?: string;
   plugins?: string | string[];
+  preserve_cdata?: boolean;
   preview_styles?: boolean | string;
   protect?: RegExp[];
   readonly?: boolean;

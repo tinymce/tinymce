@@ -14,7 +14,8 @@ Version 5.2.0 (TBD)
     Changed and improved the visual appearance of the color input field #TINY-2917
     Changed fake caret container to use `forced_root_block` when possible #TINY-4190
     Changed so `style_formats` gets registered to the formatter before the initial content is loaded into the editor #TINY-4238
-    Fixed incorrect parsing of CDATA and malformed HTML comments #TINY-4625
+    Changed the parser to ignore CDATA nodes to match the HTML parsing spec. A new `preserve_cdata` setting has been added to preserve CDATA nodes if required #TINY-4625
+    Fixed incorrect parsing of malformed HTML comments #TINY-4625
     Fixed `quickbars` selection toolbar appearing on non-editable elements #TINY-4359
     Fixed bug with alignment toolbar buttons sometimes not changing state correctly #TINY-4139
     Fixed content incorrectly scrolling to the top or bottom when pressing enter if they were already in view #TINY-4162

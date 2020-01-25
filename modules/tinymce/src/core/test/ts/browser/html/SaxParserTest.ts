@@ -458,6 +458,13 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     parser.parse('<b>a<![CDATA[value]]>b</b>');
     LegacyUnit.equal(writer.getContent(), '<b>a<!--[CDATA[value]]-->b</b>', 'Parse cdata in HTML with tags around it.');
     LegacyUnit.deepEqual(counter.counts, { comment: 1, start: 1, end: 1, text: 2 }, 'Parse cdata in HTML with tags around it counts.');
+
+    counter = createCounter(writer);
+    parser = SaxParser({ ...counter, allow_cdata: true }, schemaWithSVGs);
+    writer.reset();
+    parser.parse('<![CDATA[test text]]>');
+    LegacyUnit.equal(writer.getContent(), '<![CDATA[test text]]>', 'Parse cdata with value and preserve_cdata: true.');
+    LegacyUnit.deepEqual(counter.counts, { cdata: 1 }, 'Parse cdata with value and preserve_cdata: true counts.');
   });
 
   suite.test('Parsing malformed comments', function () {

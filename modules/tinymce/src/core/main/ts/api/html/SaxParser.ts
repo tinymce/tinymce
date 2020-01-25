@@ -54,6 +54,7 @@ import Schema from './Schema';
 type AttrList = Array<{ name: string, value: string }> & { map: Record<string, string> };
 
 export interface SaxParserSettings {
+  allow_cdata?: boolean;
   allow_conditional_comments?: boolean;
   allow_html_data_urls?: boolean;
   allow_script_urls?: boolean;
@@ -564,10 +565,9 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       } else if ((value = matches[1])) { // Comment
         processComment(value);
       } else if ((value = matches[2])) { // CDATA
-        // Ensure we are in a valid CDATA context (eg child of svg or mathml)
-        // if we aren't in a valid context, then the cdata should be treated as a comment
-        // See https://html.spec.whatwg.org/multipage/parsing.html#markup-declaration-open-state
-        const isValidCdataSection = stack.length === 0 || schema.isValidChild(stack[stack.length - 1].name, '#cdata');
+        // Ensure we are in a valid CDATA context (eg child of svg or mathml). If we aren't in a valid context then the cdata should
+        // be treated as a bogus comment. See https://html.spec.whatwg.org/multipage/parsing.html#markup-declaration-open-state
+        const isValidCdataSection = settings.allow_cdata || stack.length > 0 && schema.isValidChild(stack[stack.length - 1].name, '#cdata');
         if (isValidCdataSection) {
           cdata(value);
         } else {

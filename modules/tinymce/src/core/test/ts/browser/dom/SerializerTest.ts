@@ -645,15 +645,14 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function (success,
   });
 
   suite.test('CDATA', function () {
-    const ser = Serializer({ fix_list_elements : true });
-
+    const ser = Serializer({ fix_list_elements : true, preserve_cdata: true });
     ser.setRules('span');
 
     DOM.setHTML('test', '123<!--[CDATA[<test>]]-->abc');
-    LegacyUnit.equal(ser.serialize(DOM.get('test')), '123<!--[CDATA[<test>]]-->abc');
+    LegacyUnit.equal(ser.serialize(DOM.get('test')), '123<![CDATA[<test>]]>abc');
 
     DOM.setHTML('test', '123<!--[CDATA[<te\n\nst>]]-->abc');
-    LegacyUnit.equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '123<!--[CDATA[<te\n\nst>]]-->abc');
+    LegacyUnit.equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '123<![CDATA[<te\n\nst>]]>abc');
   });
 
   suite.test('BR at end of blocks', function () {
