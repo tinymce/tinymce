@@ -57,7 +57,7 @@ const isValidPrefixAttrName = function (name) {
 };
 
 const trimComments = function (text) {
-  return text.replace(/<!--|-->/g, '');
+  return text.replace(/<!--|--!?>/g, '');
 };
 
 const isInvalidUri = (settings, uri: string) => {
