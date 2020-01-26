@@ -33,7 +33,7 @@ export interface ParserArgs {
   forced_root_block?: boolean | string;
   context?: string;
   isRootContent?: boolean;
-  mimeType?: string;
+  format?: string;
 
   // TODO finish typing the parser args
   [key: string]: any;
@@ -681,7 +681,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
 
     const rootNode = node = new Node(args.context || settings.root_name, 11);
 
-    parser.parse(html, args.mimeType);
+    parser.parse(html, args.format);
 
     // Fix invalid children or report invalid children in a contextual parsing
     if (validate && invalidChildren.length) {

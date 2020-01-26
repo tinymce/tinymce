@@ -17,8 +17,8 @@ UnitTest.asynctest('browser.tinymce.core.html.SerializerTest', function (success
       '<strong>text</strong><img src="1.gif" />'
     );
     LegacyUnit.equal(serializer.serialize(DomParser().parse('<!-- comment -->')), '<!-- comment -->');
-    LegacyUnit.equal(serializer.serialize(DomParser().parse('<![CDATA[cdata]]>', { mimeType: 'application/xml' })), '<![CDATA[cdata]]>');
-    LegacyUnit.equal(serializer.serialize(DomParser().parse('<?xml attr="value" ?>', { mimeType: 'application/xml' })), '<?xml attr="value" ?>');
+    LegacyUnit.equal(serializer.serialize(DomParser().parse('<![CDATA[cdata]]>', { format: 'xml' })), '<![CDATA[cdata]]>');
+    LegacyUnit.equal(serializer.serialize(DomParser().parse('<?xml attr="value" ?>', { format: 'xml' })), '<?xml attr="value" ?>');
     LegacyUnit.equal(serializer.serialize(DomParser().parse('<!DOCTYPE html>')), '<!DOCTYPE html>');
   });
 

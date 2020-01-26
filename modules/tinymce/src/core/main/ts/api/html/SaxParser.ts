@@ -73,8 +73,10 @@ export interface SaxParserSettings {
   text? (text: string, raw?: boolean): void;
 }
 
+type ParserFormat = 'html' | 'xhtml' | 'xml';
+
 interface SaxParser {
-  parse (html: string, mimeType?: string): void;
+  parse (html: string, format?: ParserFormat): void;
 }
 
 enum ParsingMode {
@@ -201,7 +203,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
    * @method parse
    * @param {String} html Html string to sax parse.
    */
-  const parse = (html: string, mimeType: string = 'text/html') => {
+  const parse = (html: string, format: ParserFormat = 'html') => {
     let matches, index = 0, value, endRegExp;
     const stack = [];
     let attrList, i, textData, name;
@@ -213,7 +215,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
     let fixSelfClosing;
     const filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster,xlink:href');
     const scriptUriRegExp = /((java|vb)script|mhtml):/i;
-    const parsingMode = Strings.contains(mimeType, 'xml') ? ParsingMode.XML : ParsingMode.HTML;
+    const parsingMode = format === 'html' ? ParsingMode.HTML : ParsingMode.XML;
 
     const processEndTag = function (name) {
       let pos, i;

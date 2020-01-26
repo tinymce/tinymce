@@ -19,7 +19,7 @@ const parseHeader = function (head: string) {
     validate: false,
     root_name: '#document'
   // Parse as XHTML to allow for inclusion of the XML processing instruction
-  }).parse(head, { mimeType: 'application/xhtml+xml' });
+  }).parse(head, { format: 'xhtml' });
 };
 
 const htmlToData = function (editor: Editor, head: string) {
