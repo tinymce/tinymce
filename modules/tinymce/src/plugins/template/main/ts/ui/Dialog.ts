@@ -161,8 +161,8 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
         Templates.insertTemplate(editor, false, previewHtml);
         api.close();
       }).catch(() => {
-        loadFailedAlert(api);
         api.disable('save');
+        loadFailedAlert(api);
       });
     });
   };
