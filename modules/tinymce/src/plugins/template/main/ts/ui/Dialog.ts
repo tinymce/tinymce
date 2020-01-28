@@ -146,8 +146,9 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
         getTemplateContent(t).then((previewHtml) => {
           updateDialog(api, t, previewHtml);
         }).catch(() => {
-          loadFailedAlert(api);
           updateDialog(api, t, '');
+          api.disable('save');
+          loadFailedAlert(api);
         });
       });
     }
@@ -160,6 +161,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
         Templates.insertTemplate(editor, false, previewHtml);
         api.close();
       }).catch(() => {
+        api.disable('save');
         loadFailedAlert(api);
       });
     });
@@ -230,8 +232,9 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
     getTemplateContent(templates[0]).then((previewHtml) => {
       updateDialog(dialogApi, templates[0], previewHtml);
     }).catch(() => {
-      loadFailedAlert(dialogApi);
       updateDialog(dialogApi, templates[0], '');
+      dialogApi.disable('save');
+      loadFailedAlert(dialogApi);
     });
   };
 
