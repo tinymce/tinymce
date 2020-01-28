@@ -248,6 +248,8 @@ const setup = (editor: Editor): RenderInfo => {
     components: Arr.flatten<AlloySpec>([
       hasMenubar ? [ partMenubar ] : [ ],
       getPartToolbar(),
+      // fixed_toolbar_container anchors to the editable area, else add an anchor bar
+      useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ],
     ]),
     sticky: isStickyToolbar(editor),
     editor,
@@ -257,8 +259,6 @@ const setup = (editor: Editor): RenderInfo => {
   // We need the statusbar to be separate to everything else so resizing works properly
   const editorComponents = Arr.flatten<AlloySpec>([
     isToolbarTop ? [ partHeader ] : [ ],
-    // fixed_toolbar_container anchors to the editable area, else add an anchor bar
-    useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ],
     // Inline mode does not have a socket/sidebar
     isInline ? [ ] : [ socketSidebarContainer ],
     isToolbarTop ? [ ] : [ partHeader ]

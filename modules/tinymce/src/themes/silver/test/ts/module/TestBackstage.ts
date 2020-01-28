@@ -19,7 +19,7 @@ export default function (sink?: AlloyComponent): UiFactoryBackstage {
       providers: TestProviders,
       interpreter: Fun.identity,
       anchors: {
-        toolbar: hotspotAnchorFn,
+        inlineDialog: hotspotAnchorFn,
         banner: hotspotAnchorFn,
         cursor: () => {
           return {

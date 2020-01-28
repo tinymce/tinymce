@@ -7,6 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { ToolbarMode, ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
 import * as MenuUtils from './MenuUtils';
 import * as StickyUtils from './StickyHeaderUtils';
+import { setupPageScroll } from './Utils';
 
 const sTestStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLocation) => {
   const isToolbarTop = toolbarLocation === ToolbarLocation.top;
@@ -22,7 +23,7 @@ const sTestStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoc
         // otherwise the initial scrolling doesn't work
         Step.wait(100),
         Step.label('Setup page for scrolling', Step.sync(() => {
-          teardownPageScroll.set(StickyUtils.setupPageScroll(editor));
+          teardownPageScroll.set(setupPageScroll(editor, 5000));
         })),
         Step.label('Checking startup structure', GeneralSteps.sequence([
           StickyUtils.sAssertEditorContainer(isToolbarTop, StickyUtils.expectedInFullView),

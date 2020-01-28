@@ -68,7 +68,7 @@ const setup = (extras: WindowManagerSetup) => {
 
   const open = <T extends Types.Dialog.DialogData>(config: Types.Dialog.DialogApi<T>, params, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void): Types.Dialog.DialogInstanceApi<T> => {
     if (params !== undefined && params.inline === 'toolbar') {
-      return openInlineDialog(config, backstage.shared.anchors.toolbar(), closeWindow, params.ariaAttrs);
+      return openInlineDialog(config, backstage.shared.anchors.inlineDialog(), closeWindow, params.ariaAttrs);
     } else if (params !== undefined && params.inline === 'cursor') {
       return openInlineDialog(config, backstage.shared.anchors.cursor(), closeWindow, params.ariaAttrs);
     } else {
@@ -144,6 +144,7 @@ const setup = (extras: WindowManagerSetup) => {
       };
 
       const refreshDocking = () => inlineDialog.on((dialog) => {
+        InlineView.reposition(dialog);
         Docking.refresh(dialog);
       });
 
@@ -169,6 +170,7 @@ const setup = (extras: WindowManagerSetup) => {
         },
         // Fires the default dismiss event.
         fireDismissalEventInstead: { },
+        ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { } },
         inlineBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('window-manager-inline-events', [
             // Can't just fireDismissalEvent formCloseEvent, because it is on the parent component of the dialog

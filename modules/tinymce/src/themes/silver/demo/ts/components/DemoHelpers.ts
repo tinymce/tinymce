@@ -109,7 +109,7 @@ const setupDemo = () => {
       interpreter: (x) => x,
       getSink: () => Result.value(sink),
       anchors: {
-        toolbar: () => {
+        inlineDialog: () => {
           // NOTE: Non-sensical
           return {
             anchor: 'hotspot',

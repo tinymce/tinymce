@@ -31,11 +31,11 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
                     s.element('div', {
                       classes: [ arr.has('tox-toolbar-overlord') ],
                       attrs: { role: str.is('group') }
+                    }),
+                    s.element('div', {
+                      classes: [ arr.has('tox-anchorbar') ]
                     })
                   ]
-                }),
-                s.element('div', {
-                  classes: [ arr.has('tox-anchorbar') ]
                 })
               ]
             }),

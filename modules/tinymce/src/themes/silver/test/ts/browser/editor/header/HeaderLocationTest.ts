@@ -20,9 +20,6 @@ UnitTest.asynctest('Menu and toolbar location test', (success, failure) => {
                   classes: [ arr.has('tox-editor-container') ],
                   children: [
                     s.element('div', {
-                      classes: [ arr.has('tox-anchorbar') ]
-                    }),
-                    s.element('div', {
                       classes: [ arr.has('tox-sidebar-wrap') ]
                     }),
                     s.element('div', {
@@ -33,7 +30,10 @@ UnitTest.asynctest('Menu and toolbar location test', (success, failure) => {
                         }),
                         s.element('div', {
                           classes: [ arr.has('tox-toolbar-overlord') ]
-                        })
+                        }),
+                        s.element('div', {
+                          classes: [ arr.has('tox-anchorbar') ]
+                        }),
                       ]
                     }),
                   ]
