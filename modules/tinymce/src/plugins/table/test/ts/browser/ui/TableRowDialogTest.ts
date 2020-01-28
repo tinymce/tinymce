@@ -234,7 +234,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         tinyApis.sSetContent(initialHtml),
 
         tinyApis.sSelect('tr:nth-child(1) td:nth-child(1)', [0]),
-        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(initialData, true, generalSelectors),
         TableTestUtils.sSetDialogValues({
           align: '',
