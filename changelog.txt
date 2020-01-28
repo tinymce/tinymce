@@ -1,5 +1,6 @@
-Version 4.9.8 (TBD)
-    Fixed mobile theme failing to load due to a bundling issue #TINY-4613
+Version 4.9.8 (2020-01-28)
+    Fixed the `mobile` theme failing to load due to a bundling issue #TINY-4613
+    Fixed security issue related to parsing HTML comments and CDATA #TINY-4544
 Version 4.9.7 (2019-12-19)
     Fixed the `visualchars` plugin converting HTML-like text to DOM elements in certain cases #TINY-4507
     Fixed an issue with the `paste` plugin not sanitizing content in some cases #TINY-4510
