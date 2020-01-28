@@ -31,7 +31,7 @@ export default function (): Universe<Element, Document> {
   };
 
   const isContentEditable = (element: Element) => {
-    return Node.isElement(element) && (!Attr.has(element, 'contenteditable') || Attr.get(element, 'contenteditable') !== 'false');
+    return Node.isElement(element) && !(Attr.has(element, 'contenteditable') && Attr.get(element, 'contenteditable') !== 'false');
   };
 
   const comparePosition = function (element: Element, other: Element) {
