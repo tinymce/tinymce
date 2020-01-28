@@ -5,13 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Types } from '@ephox/bridge';
 import { File, URL } from '@ephox/dom-globals';
-import { Arr, FutureResult, Option, Type, Merger } from '@ephox/katamari';
+import { Arr, FutureResult, Merger, Option, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
-import { MainTab } from './MainTab';
-import { ImageData, getStyleValue } from '../core/ImageData';
+import { StyleMap } from 'tinymce/core/api/html/Styles';
+import { getStyleValue, ImageData } from '../core/ImageData';
 import { insertOrUpdateImage, normalizeCss as doNormalizeCss } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
 import Uploader from '../core/Uploader';
@@ -19,9 +20,8 @@ import Utils from '../core/Utils';
 import { AdvTab } from './AdvTab';
 import { collect } from './DialogInfo';
 import { API, ImageDialogData, ImageDialogInfo, ListValue } from './DialogTypes';
+import { MainTab } from './MainTab';
 import { UploadTab } from './UploadTab';
-import { StyleMap } from 'tinymce/core/api/html/Styles';
-import { Types } from '@ephox/bridge';
 
 interface ChangeEvent {
   name: string;
@@ -35,6 +35,7 @@ interface Size {
 interface Helpers {
   onSubmit: (info: ImageDialogInfo) => (api: API) => void;
   imageSize: (url: string) => FutureResult<Size, string>;
+  addToBlobCache: (blobInfo: BlobInfo) => void;
   createBlobCache: (file: File, blobUri: string, dataUrl: string) => BlobInfo;
   alertErr: (api: API, message: string) => void;
   normalizeCss: (cssText: string) => string;
@@ -285,17 +286,27 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
         URL.revokeObjectURL(blobUri);
       };
 
+      const updateSrcAndSwitchTab = (url: string) => {
+        api.setData({ src: { value: url, meta: {} } });
+        api.showTab('general');
+        changeSrc(helpers, info, state, api);
+      };
+
       Utils.blobToDataUri(file).then((dataUrl) => {
         const blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
-        uploader.upload(blobInfo).then((url: string) => {
-          api.setData({ src: { value: url, meta: { } } });
-          api.showTab('general');
-          changeSrc(helpers, info, state, api);
-          finalize();
-        }).catch((err) => {
-          finalize();
-          helpers.alertErr(api, err);
-        });
+        if (info.automaticUploads) {
+          uploader.upload(blobInfo).then((url: string) => {
+            updateSrcAndSwitchTab(url);
+            finalize();
+          }).catch((err) => {
+            finalize();
+            helpers.alertErr(api, err);
+          });
+        } else {
+          helpers.addToBlobCache(blobInfo);
+          updateSrcAndSwitchTab(blobInfo.blobUri());
+          api.unblock();
+        }
       });
     });
 };
@@ -326,9 +337,9 @@ const makeDialogBody = (info: ImageDialogInfo) => {
     const tabPanel: Types.Dialog.TabPanelApi = {
       type: 'tabpanel',
       tabs: Arr.flatten([
-        [MainTab.makeTab(info)],
-        info.hasAdvTab ? [AdvTab.makeTab(info)] : [],
-        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [UploadTab.makeTab(info)] : []
+        [ MainTab.makeTab(info) ],
+        info.hasAdvTab ? [ AdvTab.makeTab(info) ] : [],
+        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [ UploadTab.makeTab(info) ] : []
       ])
     };
     return tabPanel;
@@ -399,8 +410,12 @@ const createBlobCache = (editor: Editor) => (file: File, blobUri: string, dataUr
     blob: file,
     blobUri,
     name: file.name ? file.name.replace(/\.[^\.]+$/, '') : null,
-    base64: dataUrl.split(',')[1]
+    base64: dataUrl.split(',')[ 1 ]
   });
+};
+
+const addToBlobCache = (editor: Editor) => (blobInfo: BlobInfo) => {
+  editor.editorUpload.blobCache.add(blobInfo);
 };
 
 const alertErr = (editor: Editor) => (api: API, message: string) => {
@@ -424,6 +439,7 @@ export const Dialog = (editor: Editor) => {
   const helpers: Helpers = {
     onSubmit: submitHandler(editor),
     imageSize: imageSize(editor),
+    addToBlobCache: addToBlobCache(editor),
     createBlobCache: createBlobCache(editor),
     alertErr: alertErr(editor),
     normalizeCss: normalizeCss(editor),

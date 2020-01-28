@@ -851,7 +851,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
-    parser.parse('<![CDATA[<!--x--><!--y-->--><!--]]>');
+    parser.parse('<![CDATA[<!--x--><!--y--!>--><!--]]>');
     LegacyUnit.equal(writer.getContent(), '<![CDATA[xy]]>');
     LegacyUnit.deepEqual(counter.counts, { cdata: 1 });
   });
