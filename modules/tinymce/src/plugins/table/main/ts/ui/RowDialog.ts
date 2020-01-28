@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Types } from '@ephox/bridge';
 import { Element, HTMLElement, Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -17,7 +18,6 @@ import { hasAdvancedRowTab } from '../api/Settings';
 import { DomModifier } from './DomModifier';
 import Helpers, { RowData } from './Helpers';
 import RowDialogGeneralTab from './RowDialogGeneralTab';
-import { Types } from '@ephox/bridge';
 
 const switchRowType = (dom: DOMUtils, rowElm: HTMLElement, toType: string) => {
   const tableElm = dom.getParent(rowElm, 'table');
@@ -38,7 +38,12 @@ const switchRowType = (dom: DOMUtils, rowElm: HTMLElement, toType: string) => {
     }
   }
 
-  parentElm.appendChild(rowElm);
+  // If moving from the head to the body, add to the top of the body
+  if (toType === 'tbody' && oldParentElm.nodeName === 'THEAD' && parentElm.firstChild) {
+    parentElm.insertBefore(rowElm, parentElm.firstChild);
+  } else {
+    parentElm.appendChild(rowElm);
+  }
 
   if (!oldParentElm.hasChildNodes()) {
     dom.remove(oldParentElm);
