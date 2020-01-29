@@ -18,7 +18,8 @@ const addToEditor = (editor: Editor) => {
     editor.ui.registry.addContextToolbar('imageselection', {
       predicate: isImage,
       items: imageToolbarItems,
-      position: 'node'
+      position: 'node',
+      scope: 'node'
     });
   }
 
@@ -29,7 +30,8 @@ const addToEditor = (editor: Editor) => {
         return !isImage(node) && !editor.selection.isCollapsed() && isEditable(node);
       },
       items: textToolbarItems,
-      position: 'selection'
+      position: 'selection',
+      scope: 'editor'
     });
   }
 };

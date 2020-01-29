@@ -26,8 +26,8 @@ const lookup = (scopes: ScopedToolbars, editor: Editor): Option<LookupResult> =>
 
   const startNode = Element.fromDom(editor.selection.getNode());
 
-  // Ensure the lookup doesn't start on the root node, or a parent element of the root node
-  if (isRoot(startNode) || Compare.contains(startNode, rootElem)) {
+  // Ensure the lookup doesn't start on a parent element of the root node
+  if (Compare.contains(startNode, rootElem)) {
     return Option.none();
   }
 
