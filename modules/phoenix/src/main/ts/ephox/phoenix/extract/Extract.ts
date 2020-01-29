@@ -21,7 +21,7 @@ const typed = function <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: 
     return [TypedItem.text(item, universe)];
   } else if (universe.property().isEmptyTag(item)) {
     return [TypedItem.empty(item, universe)];
-  } else if (!universe.property().isContentEditable(item)) {
+  } else if (universe.property().isNonEditable(item)) {
     return []; // Do not include this at all
   } else if (universe.property().isElement(item)) {
     const children = universe.property().children(item);

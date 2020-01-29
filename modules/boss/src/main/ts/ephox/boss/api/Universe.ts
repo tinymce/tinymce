@@ -58,7 +58,7 @@ export interface Universe<E, D> {
     setText: (element: E, value: string) => void;
     isBoundary: (element: E) => boolean;
     isEmptyTag: (element: E) => boolean;
-    isContentEditable: (element: E) => boolean;
+    isNonEditable: (element: E) => boolean;
   };
   eq: (e1: E, e2: E) => boolean;
   is: (element: E, selector: string) => boolean;

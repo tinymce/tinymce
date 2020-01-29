@@ -109,7 +109,7 @@ export const TestUniverse = function (raw: Gene): TestUniverse {
       getText: Properties.getText,
       isEmptyTag: Properties.isEmptyTag,
       isBoundary: Properties.isBoundary,
-      isContentEditable: Properties.isContentEditable
+      isNonEditable: Properties.isNonEditable
     }),
     eq: Comparator.eq,
     is: Comparator.is,
