@@ -2,12 +2,10 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import NodeType from 'tinymce/core/dom/NodeType';
 import $ from 'tinymce/core/api/dom/DomQuery';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('isText/isElement/isComment', function () {

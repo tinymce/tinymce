@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Log, Pipeline, StructAssert, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Attr, Body, Element } from '@ephox/sugar';
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AppendTest', (success, fai
 
     Pipeline.async({},
       Log.steps('TBA', 'Emoticons: Open dialog, verify custom categories listed and search for custom emoticon', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyUi.sClickOnToolbar('click emoticons', 'button'),
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),

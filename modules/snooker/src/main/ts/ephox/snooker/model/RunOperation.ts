@@ -69,7 +69,7 @@ const fromWarehouse = function (warehouse: Warehouse, generators: Generators) {
 const deriveRows = function (rendered: Structs.RowDetails[], generators: Generators) {
   // The row is either going to be a new row, or the row of any of the cells.
   const findRow = function (details: Structs.DetailNew[]) {
-    const rowOfCells = Options.findMap(details, function (detail) {
+    const rowOfCells = Arr.findMap(details, function (detail) {
       return Traverse.parent(detail.element()).map(function (row) {
         // If the row has a parent, it's within the existing table, otherwise it's a copied row
         const isNew = Traverse.parent(row).isNone();

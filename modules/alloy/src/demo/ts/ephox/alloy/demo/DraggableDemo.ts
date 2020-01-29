@@ -28,7 +28,7 @@ export default (): void => {
         Dragging.snap({
           sensor: DragCoord.fixed(300, 10),
           range: Position(1000, 30),
-          output: DragCoord.fixed(Option.none(), Option.some(10))
+          output: DragCoord.fixed(Option.none<number>(), Option.some(10))
         }),
 
         Dragging.snap({

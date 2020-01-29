@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Step, Touch, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Future, Option, Result } from '@ephox/katamari';
 import { Compare, Css, Html } from '@ephox/sugar';
 
@@ -53,7 +53,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
 
     gui.add(related);
 
-    const sCheckOpen = (label) => {
+    const sCheckOpen = (label: string) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([
@@ -68,7 +68,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
       );
     };
 
-    const sCheckClosed = (label) => {
+    const sCheckClosed = (label: string) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([

@@ -1,27 +1,28 @@
 import { GeneralSteps, Keys, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.delete.DeindentTest', function (success, failure) {
   Theme();
 
-  const sTestDeleteOrBackspaceKey = function (editor, tinyApis, tinyActions, key) {
-    return function (setupHtml, setupPath, setupOffset, expectedHtml, expectedPath, expectedOffet) {
+  const sTestDeleteOrBackspaceKey = function (editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions, key: number) {
+    return function (setupHtml: string, setupPath: number[], setupOffset: number, expectedHtml: string, expectedPath: number[], expectedOffset: number) {
       return GeneralSteps.sequence([
         tinyApis.sSetContent(setupHtml),
         tinyApis.sSetCursor(setupPath, setupOffset),
         tinyApis.sExecCommand('indent'),
-        tinyApis.sNodeChanged,
+        tinyApis.sNodeChanged(),
         tinyActions.sContentKeystroke(key, { }),
         sNormalizeBody(editor),
         tinyApis.sAssertContent(expectedHtml),
-        tinyApis.sAssertSelection(expectedPath, expectedOffet, expectedPath, expectedOffet),
+        tinyApis.sAssertSelection(expectedPath, expectedOffset, expectedPath, expectedOffset),
       ]);
     };
   };
 
-  const sNormalizeBody = function (editor) {
+  const sNormalizeBody = function (editor: Editor) {
     return Step.sync(function () {
       editor.getBody().normalize();
     });
@@ -33,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeindentTest', function (success
     const sTestBackspace = sTestDeleteOrBackspaceKey(editor, tinyApis, tinyActions, Keys.backspace());
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Backspace key on text', GeneralSteps.sequence([
         sTestBackspace('<p>a</p>', [0, 0], 0, '<p>a</p>', [0, 0], 0), // outdent
         sTestBackspace('<p>aa</p>', [0, 0], 1, '<p style="padding-left: 40px;">aa</p>', [0, 0], 1), // no outdent

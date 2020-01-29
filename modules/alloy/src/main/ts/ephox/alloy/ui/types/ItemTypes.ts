@@ -20,7 +20,7 @@ export interface WidgetItemSpec {
   type: 'widget';
   uid?: string;
   components?: AlloySpec[];
-  data?: ItemDataTuple; // why is this necessary?
+  data: ItemDataTuple; // why is this necessary?
   dom: RawDomSchema;
   autofocus?: boolean;
   widgetBehaviours?: AlloyBehaviourRecord;

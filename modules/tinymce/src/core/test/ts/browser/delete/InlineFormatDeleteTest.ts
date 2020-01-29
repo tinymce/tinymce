@@ -3,11 +3,9 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import InlineFormatDelete from 'tinymce/core/delete/InlineFormatDelete';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (success, failure) {
 
   Theme();
 
@@ -43,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function ()
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Backspace/delete in unformatted plain text', GeneralSteps.sequence([
         Logger.t('Backspace after plain text should do nothing', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),

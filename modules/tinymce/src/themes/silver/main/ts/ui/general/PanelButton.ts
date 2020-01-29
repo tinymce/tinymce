@@ -14,11 +14,10 @@ import {
   Unselecting,
   Tabstopping,
   AlloyComponent,
-  LayoutTypes
+  Layouts
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Future, Id, Option, Merger } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 import * as MenuParts from '../menus/menu/MenuParts';
@@ -35,10 +34,7 @@ export interface SwatchPanelButtonSpec {
   presets: Types.PresetTypes;
   getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
   onItemAction: (comp: AlloyComponent, value) => void;
-  layouts?: Option<{
-    onLtr: (elem: Element) => LayoutTypes.AnchorLayout[];
-    onRtl: (elem: Element) => LayoutTypes.AnchorLayout[];
-  }>;
+  layouts?: Layouts;
 }
 
 export const renderPanelButton = (spec: SwatchPanelButtonSpec, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
@@ -52,7 +48,6 @@ export const renderPanelButton = (spec: SwatchPanelButtonSpec, sharedBackstage: 
       Unselecting.config({}),
       Tabstopping.config({})
     ]),
-    // getHotspot: spec.getHotspot,
     layouts: spec.layouts,
     sandboxClasses: ['tox-dialog__popups'],
 

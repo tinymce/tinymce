@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Option, Options, Fun } from '@ephox/katamari';
+import { Arr, Cell, Option, Fun } from '@ephox/katamari';
 
 import { LinkDialogData, LinkDialogInfo, ListItem, ListValue, LinkDialogUrlData } from './DialogTypes';
 
@@ -15,7 +15,7 @@ export interface DialogDelta {
 }
 
 const findTextByValue = (value: string, catalog: ListItem[]): Option<ListValue> => {
-  return Options.findMap(catalog, (item) => {
+  return Arr.findMap(catalog, (item) => {
     // TODO TINY-2236 re-enable this (support will need to be added to bridge)
     // return 'items' in item ? findTextByValue(value, item.items) :
      return Option.some(item).filter((i) => i.value === value);
@@ -55,8 +55,10 @@ const init = (initialData: LinkDialogData, linkSettings: LinkDialogInfo) => {
     // We are going to change the text, because it has not been manually entered by the user.
     if (persistentText.get().length <= 0) {
       const urlText = data.url.meta.text !== undefined ? data.url.meta.text : data.url.value;
+      const urlTitle = data.url.meta.title !== undefined ? data.url.meta.title : '';
       return Option.some({
-        text: urlText
+        text: urlText,
+        title: urlTitle
       });
     } else {
       return Option.none();

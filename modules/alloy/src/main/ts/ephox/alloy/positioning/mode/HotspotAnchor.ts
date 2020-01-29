@@ -13,7 +13,15 @@ const placement = (component: AlloyComponent, anchorInfo: HotspotAnchor, origin:
   const hotspot = anchorInfo.hotspot;
   const anchorBox = Origins.toBox(origin, hotspot.element());
 
-  const layouts = AnchorLayouts.get(component.element(), anchorInfo, Layout.belowOrAbove(), Layout.belowOrAboveRtl());
+  const layouts = AnchorLayouts.get(
+    component.element(),
+    anchorInfo,
+    Layout.belowOrAbove(),
+    Layout.belowOrAboveRtl(),
+    Layout.aboveOrBelow(),
+    Layout.aboveOrBelowRtl(),
+    Option.some(anchorInfo.hotspot.element())
+  );
 
   return Option.some(
     NuAnchor({

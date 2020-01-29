@@ -1,12 +1,15 @@
 import * as Strings from 'ephox/katamari/api/Strings';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, Assert } from '@ephox/bedrock-client';
+import fc from 'fast-check';
+import { Testable } from '@ephox/dispute';
 
-UnitTest.test('trim', function () {
+const { tString } = Testable;
+
+UnitTest.test('Strings.trim: unit tests', () => {
   function check(expectedL, expectedR, expected, input) {
-    assert.eq(expected, Strings.trim(input));
-    assert.eq(expectedL, Strings.lTrim(input));
-    assert.eq(expectedR, Strings.rTrim(input));
+    Assert.eq('trim', expected, Strings.trim(input), tString);
+    Assert.eq('lTrim', expectedL, Strings.lTrim(input), tString);
+    Assert.eq('rTrim', expectedR, Strings.rTrim(input), tString);
   }
 
   check('', '', '', '');
@@ -18,60 +21,49 @@ UnitTest.test('trim', function () {
   check('a ', ' a', 'a', ' a ');
   check('a      ', '    a', 'a', '    a      ');
   check('a    b  cd  ', '    a    b  cd', 'a    b  cd', '    a    b  cd  ');
+});
 
-  Jsc.property(
-    'leftTrim(whitespace + s) === leftTrim(s)',
-    Jsc.string,
-    function (s) {
-      return Jsc.eq(true, Strings.lTrim(' ' + s) === Strings.lTrim(s));
+UnitTest.test('leftTrim(whitespace + s) === leftTrim(s)', () => {
+  fc.assert(fc.property(
+    fc.string(),
+    (s) => {
+      Assert.eq('leftTrim', Strings.lTrim(' ' + s), Strings.lTrim(s), tString);
     }
-  );
+  ));
+});
 
-  Jsc.property(
-    'leftTrim(s + whitespace) !== leftTrim(s) unless leftTrim(s) is empty',
-    Jsc.string,
-    function (s) {
-      return Jsc.eq(false, Strings.lTrim(s + ' ') === Strings.lTrim(s)) || Strings.lTrim(s).length === 0;
+UnitTest.test('rightTrim(s + whitespace) === rightTrim(s)', () => {
+  fc.assert(fc.property(
+    fc.string(),
+    (s) => {
+      Assert.eq('rightTrim', Strings.rTrim(s + ' '), Strings.rTrim(s), tString);
     }
-  );
+  ));
+});
 
-  Jsc.property(
-    'rightTrim(s + whitespace) === rightTrim(s)',
-    Jsc.string,
-    function (s) {
-      return Jsc.eq(true, Strings.rTrim(s + ' ') === Strings.rTrim(s));
+UnitTest.test('trim(whitespace + s) === trim(s)', () => {
+  fc.assert(fc.property(
+    fc.string(),
+    (s) => {
+      Assert.eq('trim', Strings.trim(' ' + s), Strings.trim(s), tString);
     }
-  );
+  ));
+});
 
-  Jsc.property(
-    'rightTrim(whitespace + s) !== rightTrim(s) unless rightTrim(s) is empty',
-    Jsc.string,
-    function (s) {
-      return Jsc.eq(false, Strings.rTrim(' ' + s) === Strings.rTrim(s)) || Strings.rTrim(s).length === 0;
+UnitTest.test('trim(s + whitespace) === trim(s)', () => {
+  fc.assert(fc.property(
+    fc.string(),
+    (s) => {
+      Assert.eq('trim', Strings.trim(s + ' '), Strings.trim(s), tString);
     }
-  );
+  ));
+});
 
-  Jsc.property(
-    'trim(whitespace + s) === trim(s)',
-    Jsc.string,
-    function (s) {
-      return Jsc.eq(true, Strings.trim(' ' + s) === Strings.trim(s));
+UnitTest.test('trim(whitespace + s + whitespace) === trim(s)', () => {
+  fc.assert(fc.property(
+    fc.string(),
+    (s) => {
+      Assert.eq('trim', Strings.trim(' ' + s + ' '), Strings.trim(s), tString);
     }
-  );
-
-  Jsc.property(
-    'trim(s + whitespace) === trim(s)',
-    Jsc.string,
-    function (s) {
-      return Jsc.eq(true, Strings.trim(s + ' ') === Strings.trim(s));
-    }
-  );
-
-  Jsc.property(
-    'trim(whitespace + s + whitespace) === trim(s)',
-    Jsc.string,
-    function (s) {
-      return Jsc.eq(true, Strings.trim(' ' + s + ' ') === Strings.trim(s));
-    }
-  );
+  ));
 });

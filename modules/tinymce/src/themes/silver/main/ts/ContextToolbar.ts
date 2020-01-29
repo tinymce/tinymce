@@ -6,18 +6,17 @@
  */
 
 import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying, Layout, LayoutInside, MaxHeight, MaxWidth, Positioning } from '@ephox/alloy';
-import { Objects } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Element as DomElement } from '@ephox/dom-globals';
-import { Cell, Id, Merger, Option, Result, Thunk } from '@ephox/katamari';
+import { Cell, Id, Merger, Obj, Option, Thunk } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Element, Focus, Scroll } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
-import { getToolbarDrawer, ToolbarDrawer } from './api/Settings';
+import { getToolbarMode, ToolbarMode } from './api/Settings';
 import { hideContextToolbarEvent, showContextToolbarEvent } from './ui/context/ContextEditorEvents';
 import { ContextForm } from './ui/context/ContextForm';
-import * as ContextToolbarBounds from './ui/context/ContextToolbarBounds';
+import { getContextToolbarBounds } from './ui/context/ContextToolbarBounds';
 import ToolbarLookup from './ui/context/ContextToolbarLookup';
 import ToolbarScopes, { ScopedToolbars } from './ui/context/ContextToolbarScopes';
 import { forwardSlideEvent, renderContextToolbar } from './ui/context/ContextUi';
@@ -88,7 +87,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     })
   );
 
-  const getBounds = () => ContextToolbarBounds.getContextToolbarBounds(editor);
+  const getBounds = () => getContextToolbarBounds(editor);
 
   const isRangeOverlapping = (aTop: number, aBottom: number, bTop: number, bBottom: number) => {
     return Math.max(aTop, bTop) <= Math.min(aBottom, bBottom);
@@ -185,20 +184,18 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
     // For context toolbars we don't want to use floating or sliding, so just restrict this
     // to scrolling or wrapping (default)
-    const toolbarType = getToolbarDrawer(editor) === ToolbarDrawer.scrolling ? ToolbarDrawer.scrolling : ToolbarDrawer.default;
+    const toolbarType = getToolbarMode(editor) === ToolbarMode.scrolling ? ToolbarMode.scrolling : ToolbarMode.default;
 
     const scopes = getScopes();
     return ctx.type === 'contexttoolbar' ? (() => {
-      const allButtons = Merger.merge(buttons, scopes.formNavigators);
+      const allButtons = { ...buttons, ...scopes.formNavigators };
       const initGroups = identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items }, extras, Option.some([ 'form:' ]));
       return renderToolbar({
         type: toolbarType,
         uid: Id.generate('context-toolbar'),
         initGroups,
         onEscape: Option.none,
-        cyclicKeying: true,
-        backstage: extras.backstage,
-        getSink: () => Result.error('')
+        cyclicKeying: true
       });
     })() : (() => {
       return ContextForm.renderContextForm(toolbarType, ctx, extras.backstage);
@@ -208,7 +205,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   editor.on(showContextToolbarEvent, (e) => {
     const scopes = getScopes();
     // TODO: Have this stored in a better structure
-    Objects.readOptFrom<Toolbar.ContextToolbar | Toolbar.ContextForm>(scopes.lookupTable, e.toolbarKey).each((ctx) => {
+    Obj.get(scopes.lookupTable, e.toolbarKey).each((ctx) => {
       launchContext(ctx, e.target === editor ? Option.none() : Option.some(e as DomElement));
       // Forms launched via this way get immediate focus
       InlineView.getContent(contextbar).each(Keying.focusIn);

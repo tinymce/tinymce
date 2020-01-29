@@ -1,14 +1,12 @@
 import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
 import SaxParser from 'tinymce/core/api/html/SaxParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import Writer from 'tinymce/core/api/html/Writer';
 import Tools from 'tinymce/core/api/util/Tools';
 
-UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   const writer = Writer(), schema = Schema();
@@ -853,7 +851,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
-    parser.parse('<![CDATA[<!--x--><!--y-->--><!--]]>');
+    parser.parse('<![CDATA[<!--x--><!--y--!>--><!--]]>');
     LegacyUnit.equal(writer.getContent(), '<![CDATA[xy]]>');
     LegacyUnit.deepEqual(counter.counts, { cdata: 1 });
   });

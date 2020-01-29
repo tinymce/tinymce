@@ -6,7 +6,7 @@
  */
 
 import Editor from '../api/Editor';
-import Events from '../api/Events';
+import * as Events from '../api/Events';
 import { Obj, Arr, Cell } from '@ephox/katamari';
 import { console } from '@ephox/dom-globals';
 import { ModeApi } from '../api/Mode';

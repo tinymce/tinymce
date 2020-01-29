@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
-import { ReceivingEvent } from '../../events/SimulatedEvent';
+import { ReceivingEvent, ReceivingInternalEvent } from '../../events/SimulatedEvent';
 import * as InternalAttachment from '../../system/InternalAttachment';
 import { ReflectingConfig, ReflectingState } from './ReflectingTypes';
 
@@ -24,10 +24,13 @@ const events = <I, S>(reflectingConfig: ReflectingConfig<I, S>, reflectingState:
 
   return AlloyEvents.derive([
 
-    AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), (component: AlloyComponent, message: any) => {
+    AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), (component, message) => {
+      // NOTE: Receiving event ignores the whole simulated event part.
+      // TODO: Think about the types for this, or find a better way for this to rely on receiving.
+      const receivingData = message as unknown as ReceivingInternalEvent;
       const channel = reflectingConfig.channel;
-      if (Arr.contains(message.channels(), channel)) {
-        update(component, message.data());
+      if (Arr.contains(receivingData.channels(), channel)) {
+        update(component, receivingData.data());
       }
     }),
 

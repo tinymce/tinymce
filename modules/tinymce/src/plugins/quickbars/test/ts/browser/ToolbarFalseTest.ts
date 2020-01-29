@@ -1,5 +1,5 @@
 import { GeneralSteps, Log, Pipeline, UiFinder, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ToolbarFalseTest', (succes
     ]);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Text selection toolbar is not shown', [
         tinyApis.sSetContent('<p>Some <strong>bold</strong> and <em>italic</em> content.</p><blockquote><p>Some quoted content</p></blockquote>'),
         tinyApis.sSetSelection([0, 0], 0, [0, 0], 4),
@@ -31,6 +31,11 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ToolbarFalseTest', (succes
       Log.stepsAsStep('TBA', 'Insert toolbar is not shown', [
         tinyApis.sSetContent('<p>Some <strong>bold</strong> and <em>italic</em> content.</p><p></p>'),
         tinyApis.sSetSelection([1], 0, [1], 0),
+        sAssertToolbarNotVisible
+      ]),
+      Log.stepsAsStep('TBA', 'Image toolbar is not shown', [
+        tinyApis.sSetContent('<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></p>'),
+        tinyApis.sSetSelection([0], 0, [0], 0),
         sAssertToolbarNotVisible
       ])
     ], onSuccess, onFailure);
@@ -41,6 +46,7 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ToolbarFalseTest', (succes
     menubar: false,
     quickbars_insert_toolbar: false,
     quickbars_selection_toolbar: false,
+    quickbars_image_toolbar: false,
     base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

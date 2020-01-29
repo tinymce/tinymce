@@ -1,11 +1,11 @@
 import * as Strings from 'ephox/katamari/api/Strings';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, Assert } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 
-UnitTest.test('ensureTrailing', function () {
+UnitTest.test('ensureTrailing: unit tests', function () {
   function check(expected, str, suffix) {
     const actual = Strings.ensureTrailing(str, suffix);
-    assert.eq(expected, actual);
+    Assert.eq('ensureTrailing', expected, actual);
   }
 
   check('', '', '');
@@ -14,19 +14,22 @@ UnitTest.test('ensureTrailing', function () {
   check('cat/', 'cat', '/');
   check('cat/', 'cat/', '/');
   check('/', '', '/');
+});
 
-  Jsc.property(
-    'endsWith(ensureTrailing(str, s1), s1) === true',
-    Jsc.string,
-    Jsc.nestring,
-    function (str, s1) {
-      return Jsc.eq(
-        true,
-        Strings.endsWith(
-          Strings.ensureTrailing(str, s1),
-          s1
-        )
-      );
-    }
-  );
+UnitTest.test('ensureTrailing is identity if string already ends with suffix', () => {
+  fc.assert(fc.property(
+    fc.string(),
+    fc.string(),
+    function (prefix, suffix) {
+      const s = prefix + suffix;
+      Assert.eq('id', s, Strings.ensureTrailing(s, suffix));
+    }));
+});
+
+UnitTest.test('ensureTrailing endsWith', () => {
+  fc.assert(fc.property(
+    fc.string(),
+    fc.string(),
+    (s, suffix) => Strings.endsWith(Strings.ensureTrailing(s, suffix), suffix)
+  ));
 });

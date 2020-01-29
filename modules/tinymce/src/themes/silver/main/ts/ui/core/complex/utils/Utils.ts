@@ -8,7 +8,7 @@
 import { Toolbar } from '@ephox/bridge';
 import { Cell, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { FormatItem } from '../BespokeSelect';
+import { FormatterFormatItem } from '../BespokeSelect';
 
 type Unbinder = () => void;
 
@@ -27,7 +27,7 @@ const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.Tool
   return () => unbindCell.get().each((unbind) => unbind());
 };
 
-const onActionToggleFormat = (editor: Editor) => (rawItem: FormatItem) => () => {
+const onActionToggleFormat = (editor: Editor) => (rawItem: FormatterFormatItem) => () => {
   editor.undoManager.transact(() => {
     editor.focus();
     editor.execCommand('mceToggleFormat', false, rawItem.format);

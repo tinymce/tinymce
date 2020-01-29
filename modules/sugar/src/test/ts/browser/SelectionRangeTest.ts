@@ -11,7 +11,7 @@ import * as Html from 'ephox/sugar/api/properties/Html';
 import { Selection } from 'ephox/sugar/api/selection/Selection';
 import { Situ } from 'ephox/sugar/api/selection/Situ';
 import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { window } from '@ephox/dom-globals';
 
 UnitTest.test('WindowSelectionTest', function () {

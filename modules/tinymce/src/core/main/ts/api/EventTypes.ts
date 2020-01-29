@@ -7,11 +7,11 @@
 
 import { Types } from '@ephox/bridge';
 import { Element, Event, FocusEvent, HTMLElement, Node, Range, UIEvent } from '@ephox/dom-globals';
-import Editor from './Editor';
-import { NativeEventMap } from './util/EventDispatcher';
 import { GetContentArgs } from '../content/GetContent';
 import { SetContentArgs } from '../content/SetContent';
 import { UndoLevel } from '../undo/UndoManagerTypes';
+import Editor from './Editor';
+import { NativeEventMap } from './util/EventDispatcher';
 
 export type ExecCommandEvent = { command: string, ui?: boolean, value?: any };
 
@@ -27,7 +27,7 @@ export type ObjectResizedEvent = { target: HTMLElement, width: number, height: n
 
 export type ObjectSelectedEvent = { target: Node, targetClone?: Node };
 
-export type ScrollIntoViewEvent = { elm: HTMLElement, scrollToTop: boolean };
+export type ScrollIntoViewEvent = { elm: HTMLElement, alignToTop: boolean };
 
 export type SetSelectionRangeEvent = { range: Range, forward: boolean };
 
@@ -42,6 +42,8 @@ export type WindowEvent<T extends Types.Dialog.DialogData> = { dialog: Types.Dia
 
 export type ProgressStateEvent = { state: boolean, time?: number };
 
+export type PlaceholderToggleEvent = { state: boolean };
+
 export interface EditorEventMap extends NativeEventMap {
   'activate': { relatedTarget: Editor };
   'deactivate': { relatedTarget: Editor };
@@ -53,6 +55,7 @@ export interface EditorEventMap extends NativeEventMap {
   'remove': { };
   'init': { };
   'ScrollIntoView': ScrollIntoViewEvent;
+  'AfterScrollIntoView': ScrollIntoViewEvent;
   'ObjectResized': ObjectResizedEvent;
   'ObjectResizeStart': ObjectResizedEvent;
   'SwitchMode': SwitchModeEvent;
@@ -89,6 +92,7 @@ export interface EditorEventMap extends NativeEventMap {
   'CloseWindow': WindowEvent<any>;
   'OpenWindow': WindowEvent<any>;
   'ProgressState': ProgressStateEvent;
+  'PlaceholderToggle': PlaceholderToggleEvent;
 }
 
 export interface EditorManagerEventMap extends NativeEventMap {

@@ -7,9 +7,9 @@ import * as HsvColour from '../api/colour/HsvColour';
 import * as RgbaColour from '../api/colour/RgbaColour';
 import { calcHex } from './Calculations';
 import * as ColourEvents from './ColourEvents';
-import HueSlider from './components/HueSlider';
-import RgbForm from './components/RgbForm';
-import SaturationBrightnessPalette from './components/SaturationBrightnessPalette';
+import * as HueSlider from './components/HueSlider';
+import * as RgbForm from './components/RgbForm';
+import * as SaturationBrightnessPalette from './components/SaturationBrightnessPalette';
 
 export interface ColourPickerDetail extends Sketcher.SingleSketchDetail {
   dom: RawDomSchema;
@@ -23,10 +23,13 @@ export interface ColourPickerSpec extends Sketcher.SingleSketchSpec {
   onInvalidHex?: (component: AlloyComponent) => void;
 }
 
-export interface ColourPickerSketcher extends Sketcher.SingleSketch<ColourPickerSpec, ColourPickerDetail> {
+export interface ColourPickerSketcher extends Sketcher.SingleSketch<ColourPickerSpec> {
 }
 
-const makeFactory = (translate: (key: string) => string, getClass: (key: string) => string) => {
+const makeFactory = (
+  translate: (key: string) => string,
+  getClass: (key: string) => string
+): ColourPickerSketcher => {
   const factory = (detail: ColourPickerDetail) => {
     const rgbForm = RgbForm.rgbFormFactory(translate, getClass, detail.onValidHex, detail.onInvalidHex);
     const sbPalette = SaturationBrightnessPalette.paletteFactory(translate, getClass);
@@ -124,6 +127,6 @@ const makeFactory = (translate: (key: string) => string, getClass: (key: string)
   return colourPickerSketcher;
 };
 
-export default {
+export {
   makeFactory
 };

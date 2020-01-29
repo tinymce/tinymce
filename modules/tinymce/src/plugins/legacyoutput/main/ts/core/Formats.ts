@@ -49,7 +49,7 @@ const overrideFormats = (editor: Editor) => {
       toggle: false,
       attributes: {
         size (vars) {
-          return Tools.inArray(fontSizes, vars.value) + 1;
+          return String(Tools.inArray(fontSizes, vars.value) + 1);
         }
       }
     },

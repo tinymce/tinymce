@@ -1,4 +1,5 @@
 import { ApproxStructure, StructAssert } from '@ephox/agar';
+import { Unicode } from '@ephox/katamari';
 
 const sAssertStruct = (paraStruct: StructAssert[]) => ApproxStructure.build((s, str) => {
   return s.element('body', {
@@ -15,12 +16,12 @@ const sAssertSpanStruct = sAssertStruct(ApproxStructure.build((s, str) => {
     s.text(str.is('a')),
     s.element('span', {
       children: [
-        s.text(str.is('\u00a0')),
+        s.text(str.is(Unicode.nbsp)),
       ]
     }),
     s.element('span', {
       children: [
-        s.text(str.is('\u00a0')),
+        s.text(str.is(Unicode.nbsp)),
       ]
     }),
     s.text(str.is('b'))
@@ -30,8 +31,8 @@ const sAssertSpanStruct = sAssertStruct(ApproxStructure.build((s, str) => {
 const sAssertNbspStruct = sAssertStruct(ApproxStructure.build((s, str) => {
   return [
     s.text(str.is('a')),
-    s.text(str.is('\u00a0')),
-    s.text(str.is('\u00a0')),
+    s.text(str.is(Unicode.nbsp)),
+    s.text(str.is(Unicode.nbsp)),
     s.text(str.is('b'))
   ];
 }));

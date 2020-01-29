@@ -1,17 +1,18 @@
 import { Pipeline, Step, Logger, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
+import { atob, Blob } from '@ephox/dom-globals';
 import { Arr, Cell } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
 import { Clipboard } from 'tinymce/plugins/paste/api/Clipboard';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { atob, Blob } from '@ephox/dom-globals';
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
   Theme();
@@ -29,7 +30,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     'R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=='
   ].join('');
 
-  const sTeardown = function (editor) {
+  const sTeardown = function (editor: Editor) {
     return Logger.t('Delete editor settings', Step.sync(function () {
       delete editor.settings.paste_data_images;
       delete editor.settings.images_dataimg_filter;
@@ -37,7 +38,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     }));
   };
 
-  const appendTeardown = function (editor, steps) {
+  const appendTeardown = function (editor: Editor, steps: Step<any, any>[]) {
     return Arr.bind(steps, function (step) {
       return [step, sTeardown(editor)];
     });
@@ -57,7 +58,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
   const noop = function () {
   };
 
-  const mockEvent = function (type, files) {
+  const mockEvent = function (type: string, files) {
     let event, transferName;
 
     event = {
@@ -73,13 +74,13 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     return event;
   };
 
-  const setupContent = function (editor) {
+  const setupContent = function (editor: Editor) {
     editor.setContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 0);
     return editor.selection.getRng();
   };
 
-  const waitFor = function (predicate) {
+  const waitFor = function (predicate: () => boolean) {
     return new Promise(function (resolve, reject) {
       const check = function (time, count) {
         if (predicate()) {
@@ -99,7 +100,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     });
   };
 
-  const waitForSelector = function (editor, selector) {
+  const waitForSelector = function (editor: Editor, selector: string) {
     return waitFor(() => editor.dom.select(selector).length > 0);
   };
 
@@ -119,7 +120,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     clipboard.pasteImageData(event, rng);
 
     waitForSelector(editor, 'img').then(function () {
-      waitFor((editor) => hasCachedItem('mceclip0') && hasCachedItem('mceclip1')).then(() => {
+      waitFor(() => hasCachedItem('mceclip0') && hasCachedItem('mceclip1')).then(() => {
         const cachedBlob1 = editor.editorUpload.blobCache.get('mceclip0');
         const cachedBlob2 = editor.editorUpload.blobCache.get('mceclip1');
         LegacyUnit.equal(base64ImgSrc, cachedBlob1.base64());

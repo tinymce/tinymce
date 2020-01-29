@@ -44,11 +44,12 @@ properties([
 node("primary") {
   timestamps {
     def extExec, extExecHandle, extYarnInstall, grunt
+    def primaryBranch = "develop"
 
     def gitMerge = {
-      if (BRANCH_NAME != "master") {
-        echo "Merging master into this branch to run tests"
-        extExec("git merge --no-commit --no-ff origin/master")
+      if (BRANCH_NAME != primaryBranch) {
+        echo "Merging ${primaryBranch} into this branch to run tests"
+        extExec("git merge --no-commit --no-ff origin/${primaryBranch}")
       }
     }
 
@@ -126,7 +127,7 @@ node("primary") {
         runPhantomTests(extExecHandle)
       }
 
-      if (BRANCH_NAME != "master") {
+      if (BRANCH_NAME != primaryBranch) {
         stage ("Archive Build") {
           extExec("yarn tinymce-grunt prodBuild symlink:js")
           archiveArtifacts artifacts: 'js/**', onlyIfSuccessful: true

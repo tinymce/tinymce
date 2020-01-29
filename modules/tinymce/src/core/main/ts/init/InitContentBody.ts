@@ -6,28 +6,34 @@
  */
 
 import { document, window } from '@ephox/dom-globals';
-import { Insert, Element, Attr } from '@ephox/sugar';
-import EditorUpload from '../api/EditorUpload';
-import ForceBlocks from '../ForceBlocks';
-import { NodeChange } from '../NodeChange';
-import SelectionOverrides from '../SelectionOverrides';
-import UndoManager from '../api/UndoManager';
+import { Attr, Element, Insert } from '@ephox/sugar';
 import Annotator from '../api/Annotator';
-import Formatter from '../api/Formatter';
-import DomSerializer from '../api/dom/Serializer';
 import DOMUtils from '../api/dom/DOMUtils';
 import Selection from '../api/dom/Selection';
+import DomSerializer from '../api/dom/Serializer';
+import Editor from '../api/Editor';
+import EditorUpload from '../api/EditorUpload';
+import * as Events from '../api/Events';
+import Formatter from '../api/Formatter';
 import DomParser from '../api/html/DomParser';
 import Node from '../api/html/Node';
 import Schema from '../api/html/Schema';
-import KeyboardOverrides from '../keyboard/KeyboardOverrides';
-import Delay from '../api/util/Delay';
-import Quirks from '../util/Quirks';
-import Tools from '../api/util/Tools';
-import Editor from '../api/Editor';
-import * as MultiClickSelection from '../selection/MultiClickSelection';
-import * as DetailsElement from '../selection/DetailsElement';
 import Settings from '../api/Settings';
+import UndoManager from '../api/UndoManager';
+import Delay from '../api/util/Delay';
+import Tools from '../api/util/Tools';
+import CaretFinder from '../caret/CaretFinder';
+import CaretPosition from '../caret/CaretPosition';
+import * as Placeholder from '../content/Placeholder';
+import NodeType from '../dom/NodeType';
+import ForceBlocks from '../ForceBlocks';
+import KeyboardOverrides from '../keyboard/KeyboardOverrides';
+import { NodeChange } from '../NodeChange';
+import * as DetailsElement from '../selection/DetailsElement';
+import * as MultiClickSelection from '../selection/MultiClickSelection';
+import { hasAnyRanges } from '../selection/SelectionUtils';
+import SelectionOverrides from '../SelectionOverrides';
+import Quirks from '../util/Quirks';
 
 declare const escape: any;
 
@@ -139,11 +145,27 @@ const autoFocus = function (editor: Editor) {
   }
 };
 
+const moveSelectionToFirstCaretPosition = (editor: Editor) => {
+  // If not inline and no useful selection, we want to set selection to the first valid cursor position
+  // We don't do this on inline because then it selects the editor container
+  // This must run AFTER editor.focus!
+  const root = editor.dom.getRoot();
+  if (!editor.inline && (!hasAnyRanges(editor) || editor.selection.getStart(true) === root)) {
+    CaretFinder.firstPositionIn(root).each((pos: CaretPosition) => {
+      const node = pos.getNode();
+      // If a table is the first caret pos, then walk down one more level
+      const caretPos = NodeType.isTable(node) ? CaretFinder.firstPositionIn(node).getOr(pos) : pos;
+      editor.selection.setRng(caretPos.toRange());
+    });
+  }
+};
+
 const initEditor = function (editor: Editor) {
   editor.bindPendingEventDelegates();
   editor.initialized = true;
-  editor.fire('init');
+  Events.fireInit(editor);
   editor.focus(true);
+  moveSelectionToFirstCaretPosition(editor);
   editor.nodeChanged({ initial: true });
   editor.execCallback('init_instance_callback', editor);
   autoFocus(editor);
@@ -235,8 +257,9 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   MultiClickSelection.setup(editor);
   KeyboardOverrides.setup(editor);
   ForceBlocks.setup(editor);
+  Placeholder.setup(editor);
 
-  editor.fire('PreInit');
+  Events.firePreInit(editor);
 
   if (!settings.browser_spellcheck && !settings.gecko_spellcheck) {
     doc.body.spellcheck = false; // Gecko
@@ -244,7 +267,8 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   }
 
   editor.quirks = Quirks(editor);
-  editor.fire('PostRender');
+
+  Events.firePostRender(editor);
 
   const directionality = Settings.getDirectionality(editor);
   if (directionality !== undefined) {

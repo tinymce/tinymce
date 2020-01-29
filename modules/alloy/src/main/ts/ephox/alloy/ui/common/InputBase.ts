@@ -26,7 +26,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 const focusBehaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => {
   return Behaviour.derive([
     Focusing.config({
-      onFocus: detail.selectOnFocus === false ? Fun.noop : (component) => {
+      onFocus: !detail.selectOnFocus ? Fun.noop : (component) => {
         const input = component.element();
         const value = Value.get(input);
         input.dom().setSelectionRange(0, value.length);
@@ -45,7 +45,7 @@ const behaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => {
           store: {
             mode: 'manual',
             // Propagating its Option
-            initialValue: detail.data.getOr(undefined),
+            ...detail.data.map((data) => ({ initialValue: data } as { initialValue?: string })).getOr({ }),
             getValue (input) {
               return Value.get(input.element());
             },

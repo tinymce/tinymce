@@ -3,12 +3,10 @@ import { Hierarchy, Element } from '@ephox/sugar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import DeleteUtils from 'tinymce/core/delete/DeleteUtils';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 
-UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function (success, failure) {
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {
@@ -32,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function () {
   };
 
   const cWillDeleteLastPositionInElement = function (forward, caretPath, caretOffset, elementPath) {
-    return Chain.mapper(function (actualBlock) {
+    return Chain.injectThunked(function () {
       const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
       const caretNode = Hierarchy.follow(Element.fromDom(viewBlock.get()), caretPath).getOrDie();
 

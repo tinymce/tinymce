@@ -2,8 +2,9 @@ import * as Checked from 'ephox/sugar/api/properties/Checked';
 import Element from 'ephox/sugar/api/node/Element';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import * as Value from 'ephox/sugar/api/properties/Value';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { HTMLInputElement } from '@ephox/dom-globals';
+import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('CheckedTest', function () {
   const container = Element.fromTag('div');
@@ -14,9 +15,9 @@ UnitTest.test('CheckedTest', function () {
 
   InsertAll.append(container, [ alpha, beta, gamma ]);
 
-  assert.eq(true, Checked.find(container).isNone());
+  KAssert.eqNone('eq', Checked.find(container));
   Checked.set(beta, true);
-  assert.eq('beta', Value.get(Checked.find(container).getOrDie()));
+  KAssert.eqSome('eq', 'beta', Checked.find(container).map(Value.get));
   Checked.set(alpha, true);
-  assert.eq('alpha', Value.get(Checked.find(container).getOrDie()));
+  KAssert.eqSome('eq', 'alpha', Checked.find(container).map(Value.get));
 });

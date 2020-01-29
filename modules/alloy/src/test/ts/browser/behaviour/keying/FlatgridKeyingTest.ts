@@ -1,5 +1,5 @@
 import { FocusTools, Keyboard, Keys, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Objects } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
 
@@ -22,7 +22,7 @@ UnitTest.asynctest('Flat Grid Keying Test', (success, failure) => {
   ];
 
   GuiSetup.setup((store, doc, body) => {
-    const item = (classes) => {
+    const item = (classes: string[]) => {
       return Container.sketch({
         dom: {
           tag: 'span',

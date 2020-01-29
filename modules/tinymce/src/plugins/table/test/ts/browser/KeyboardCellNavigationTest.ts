@@ -1,5 +1,5 @@
-import { Keys, Pipeline, RawAssertions, Step, Waiter, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Keys, Log, Pipeline, Step, Waiter } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 
@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.quirks.KeyboardCellNavigationT
 
       Pipeline.async({}, Env.webkit ?
         Log.steps('TBA', 'TestCase-Table-TBA-Create lists within table cells and verify keyboard navigation for the cells', [
-          tinyApis.sFocus,
+          tinyApis.sFocus(),
           tinyApis.sSetContent(
             '<table><tbody><tr><td><ul><li>a</li><li>b</li></ul></td></tr><tr><td><ul><li>c</li><li>d</li></ul></td></tr></tbody></table>'
           ),
@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.quirks.KeyboardCellNavigationT
           Waiter.sTryUntil(
             'editor did not have correct selection',
             Step.sync(function () {
-              RawAssertions.assertEq('state is true', true, selectionChangeState.get());
+              Assert.eq('state is true', true, selectionChangeState.get());
             })
           ),
           tinyApis.sAssertSelection([0, 0, 1, 0, 0, 0, 0], 0, [0, 0, 1, 0, 0, 0, 0], 0)

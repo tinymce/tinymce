@@ -1,6 +1,7 @@
 import { CharacterMap, classify } from './StringMapper';
 import * as UnicodeData from './UnicodeData';
 import { isWordBoundary } from './WordBoundary';
+import { Unicode } from '@ephox/katamari';
 
 const EMPTY_STRING = UnicodeData.EMPTY_STRING;
 const WHITESPACE = UnicodeData.WHITESPACE;
@@ -90,7 +91,7 @@ const getWords = <T>(chars: T[], extract: (char: T) => string, options?: WordOpt
   // tslint:disable-next-line:prefer-for-of
   for (let i = 0; i < chars.length; i++) {
     const ch = extract(chars[i]);
-    if (ch !== '\ufeff') {
+    if (ch !== Unicode.zeroWidth) {
       filteredChars.push(chars[i]);
       extractedChars.push(ch);
     }

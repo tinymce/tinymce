@@ -1,9 +1,11 @@
 import { Cell, Fun, Option } from '@ephox/katamari';
 
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import { nuState } from '../common/BehaviourState';
+import { SandboxingState } from './SandboxingTypes';
 
-const init = () => {
-  const contents = Cell(Option.none());
+const init = (): SandboxingState => {
+  const contents = Cell(Option.none<AlloyComponent>());
 
   const readState = Fun.constant('not-implemented');
 
@@ -11,11 +13,11 @@ const init = () => {
     return contents.get().isSome();
   };
 
-  const set = (c) => {
-    contents.set(Option.some(c));
+  const set = (comp: AlloyComponent) => {
+    contents.set(Option.some(comp));
   };
 
-  const get = (c) => {
+  const get = () => {
     return contents.get();
   };
 

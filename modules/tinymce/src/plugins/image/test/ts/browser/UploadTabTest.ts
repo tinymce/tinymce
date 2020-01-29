@@ -1,5 +1,6 @@
-import { Assertions, Chain, Files, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder, Waiter, FileInput } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Assertions, Chain, FileInput, Files, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Strings } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import Conversions from 'tinymce/core/file/Conversions';
@@ -101,6 +102,15 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       ]), 10, 10000);
     };
 
+    const sAssertSrcTextValueStartsWith = (expectedValue: string) => {
+      return Waiter.sTryUntil('Waited for input to change to start with expected value', Chain.asStep(Body.body(), [
+        UiFinder.cFindIn('label.tox-label:contains("Source") + div > div > input.tox-textfield'),
+        Chain.op((input) => {
+          Assertions.assertEq('Assert field source value ', true, Strings.startsWith(input.dom().value, expectedValue));
+        })
+      ]), 10, 10000);
+    };
+
     // The following tests have been removed from the testing pipeline as they depend
     // on the triggerUpload functionality which is currently not feasible in the state of the code
     const uploadWithCustomRoute = Log.stepsAsStep('TBA', 'Image: Image uploader test with custom route', [
@@ -144,6 +154,19 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
     ]);
 
+    const uploadWithAutomaticUploadsDisabled = Log.stepsAsStep('TBA', 'Image: Image uploader test with automatic uploads disabled', [
+      api.sSetContent(''),
+      api.sSetSetting('automatic_uploads', false),
+      ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
+      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
+      ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
+      sTriggerUpload,
+      ui.sWaitForUi('Wait for General tab to activate', '.tox-tab:contains("General")'),
+      sAssertSrcTextValueStartsWith('blob:'),
+      ui.sClickOnUi('Close dialog', 'button:contains("Cancel")'),
+      api.sDeleteSetting('automatic_uploads')
+    ]);
+
     Pipeline.async({}, [
       uploadTabNotPresent,
       uploadTabPresentOnUploadUrl,
@@ -151,7 +174,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       uploadTabPresentOnUploadHandler,
       uploadWithCustomRoute,
       uploadWithCustomHandler,
-      uploadCustomHandlerBase64String
+      uploadCustomHandlerBase64String,
+      uploadWithAutomaticUploadsDisabled
     ], onSuccess, onFailure);
   }, {
     theme: 'silver',

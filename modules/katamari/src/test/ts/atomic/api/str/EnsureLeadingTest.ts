@@ -1,11 +1,11 @@
 import * as Strings from 'ephox/katamari/api/Strings';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, Assert } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 
-UnitTest.test('ensureLeading', function () {
+UnitTest.test('ensureLeading', () => {
   function check(expected, str, prefix) {
     const actual = Strings.ensureLeading(str, prefix);
-    assert.eq(expected, actual);
+    Assert.eq('ensureLeading', expected, actual);
   }
 
   check('', '', '');
@@ -13,19 +13,10 @@ UnitTest.test('ensureLeading', function () {
   check('ab', 'ab', 'a');
   check('ab', 'b', 'a');
   check('a', '', 'a');
+});
 
-  Jsc.property(
-    'startsWith(ensureLeading(str, s1), s1) === true',
-    Jsc.string,
-    Jsc.nestring,
-    function (str, s1) {
-      return Jsc.eq(
-        true,
-        Strings.startsWith(
-          Strings.ensureLeading(str, s1),
-          s1
-        )
-      );
-    }
-  );
+UnitTest.test('startsWith a prefix', () => {
+  fc.assert(fc.property(fc.string(), fc.string(),
+    (prefix, suffix) => Strings.startsWith(prefix + suffix, prefix)
+  ));
 });

@@ -1,6 +1,6 @@
 import { Mouse, Pipeline, Step } from '@ephox/agar';
 import { Attachment } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { Body, Class } from '@ephox/sugar';
 
@@ -12,9 +12,7 @@ import TestSelectors from '../../module/test/ui/TestSelectors';
 import TestStyles from '../../module/test/ui/TestStyles';
 import { Fun } from '@ephox/katamari';
 
-UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function (success, failure) {
   const detection = PlatformDetection.detect();
 
   const realm = IosRealm(Fun.noop);

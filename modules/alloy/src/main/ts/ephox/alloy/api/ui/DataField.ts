@@ -1,8 +1,8 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Option } from '@ephox/katamari';
-import { DataFieldDetail, DataFieldSketcher, DataFieldSpec } from '../../ui/types/DataFieldTypes';
 
 import { SketchSpec } from '../../api/component/SpecTypes';
+import { DataFieldDetail, DataFieldSketcher, DataFieldSpec } from '../../ui/types/DataFieldTypes';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
 import { SketchBehaviours } from '../component/SketchBehaviours';
@@ -36,7 +36,7 @@ const factory: SingleSketchFactory<DataFieldDetail, DataFieldSpec> = (detail): S
   };
 };
 
-const DataField = Sketcher.single({
+const DataField: DataFieldSketcher = Sketcher.single({
   name: 'DataField',
   factory,
   configFields: [
@@ -45,7 +45,7 @@ const DataField = Sketcher.single({
     FieldSchema.strict('getInitialValue'),
     SketchBehaviours.field('dataBehaviours', [ Representing, Composing ])
   ]
-}) as DataFieldSketcher;
+});
 
 export {
   DataField

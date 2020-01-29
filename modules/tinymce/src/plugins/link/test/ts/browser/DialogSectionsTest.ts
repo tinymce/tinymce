@@ -1,8 +1,8 @@
 import { GeneralSteps, Pipeline, UiFinder, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { console, document } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
+import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -29,6 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
 
     // NOTE: This will open the dialog once. It is expected that you specify all the settings that you want
     // in the sections array. Then once it has opened the dialog, it will check whether each section is
@@ -40,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
             return tinyApis.sDeleteSetting(setting.key);
           }))
         ),
-        TestLinkUi.sOpenLinkDialog,
+        TestLinkUi.sOpenLinkDialog(tinyUi),
         GeneralSteps.sequence(
           Arr.map(
             sections,

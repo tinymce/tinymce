@@ -1,21 +1,22 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { FieldSchema, Objects } from '@ephox/boulder';
-import { Cell, Fun } from '@ephox/katamari';
+import { UnitTest } from '@ephox/bedrock-client';
+import { FieldSchema } from '@ephox/boulder';
+import { Cell, Fun, Obj } from '@ephox/katamari';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 UnitTest.asynctest('CustomComponentTest', (success, failure) => {
 
-  const bA = Cell(null);
-  const bB = Cell(null);
+  type BehaviourA = Behaviour.AlloyBehaviour<any, any> & { behaveA: any };
+  const bA = Cell<BehaviourA | null>(null);
+  const bB = Cell<Behaviour.AlloyBehaviour<any, any> | null>(null);
 
   GuiSetup.setup((store, doc, body) => {
     const behaviourA = Behaviour.create({
@@ -48,7 +49,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       ],
       name: 'behaviourB',
       active: {
-        exhibit (base, info) {
+        exhibit (base, info: { attr: string}) {
           const extra = {
             attributes: {
               'behaviour-b-exhibit': info.attr
@@ -128,7 +129,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       ]),
 
       Step.sync(() => {
-        bA.get().behaveA(component);
+        bA.get()!.behaveA(component);
       }),
 
       store.sAssertEq('Should now have an Api log', [
@@ -138,7 +139,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       ]),
 
       Step.sync(() => {
-        Assertions.assertEq('There should be no internal APIs on component', false, Objects.hasKey(component, 'apis'));
+        Assertions.assertEq('There should be no internal APIs on component', false, Obj.hasNonNullableKey<any, string>(component, 'apis'));
       })
     ];
   }, success, failure);

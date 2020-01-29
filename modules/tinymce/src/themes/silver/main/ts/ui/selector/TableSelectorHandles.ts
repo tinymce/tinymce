@@ -53,7 +53,7 @@ const calcSnap = (selectorOpt: Option<AlloyComponent>, td: Element, x: number, y
   });
 };
 
-const getSnapsConfig = (getSnapPoints: () => DraggingTypes.SnapConfig[], cell: Cell<Option<Element>>, onChange: (td: Element) => void): DraggingTypes.SnapsConfig => {
+const getSnapsConfig = (getSnapPoints: () => DraggingTypes.SnapConfig[], cell: Cell<Option<Element>>, onChange: (td: Element) => void): DraggingTypes.SnapsConfigSpec => {
   // Can't use Option.is() here since we need to do a dom compare, not an equality compare
   const isSameCell = (cellOpt: Option<Element>, td: Element) => cellOpt.exists((currentTd) => Compare.eq(currentTd, td));
 
@@ -72,7 +72,7 @@ const getSnapsConfig = (getSnapPoints: () => DraggingTypes.SnapConfig[], cell: C
   };
 };
 
-const createSelector = (snaps: DraggingTypes.SnapsConfig) => Memento.record(
+const createSelector = (snaps: DraggingTypes.SnapsConfigSpec) => Memento.record(
   Button.sketch({
     dom: {
       tag: 'div',

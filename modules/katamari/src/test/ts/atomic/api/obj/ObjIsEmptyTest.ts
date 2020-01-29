@@ -1,18 +1,19 @@
 import * as Obj from 'ephox/katamari/api/Obj';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import fc from 'fast-check';
+import { UnitTest, Assert } from '@ephox/bedrock-client';
 
-UnitTest.test('ObjIsEmptyTest', function () {
-  assert.eq(true, Obj.isEmpty({}));
-  assert.eq(false, Obj.isEmpty({cat: 'dog'}));
+UnitTest.test('Obj.isEmpty: unit tests', () => {
+  Assert.eq('eq', true, Obj.isEmpty({}));
+  Assert.eq('eq', false, Obj.isEmpty({ cat: 'dog' }));
+});
 
-  Jsc.property(
-    'blargh',
-    Jsc.string,
-    Jsc.json,
-    function (k: string, v: any) {
-      const o = {[k]: v};
-      return Jsc.eq(false, Obj.isEmpty(o));
+UnitTest.test('Obj.isEmpty: single key/value', () => {
+  fc.assert(fc.property(
+    fc.string(),
+    fc.json(),
+    (k: string, v: any) => {
+      const o = { [k]: v };
+      Assert.eq('eq', false, Obj.isEmpty(o));
     }
-  );
+  ));
 });

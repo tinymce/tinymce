@@ -1,7 +1,5 @@
 import { Cell, Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-
-import { SugarEvent } from '../alien/TypeDefinitions';
+import { Element, EventArgs } from '@ephox/sugar';
 
 export interface EventFormat {
   target: () => Element;
@@ -20,7 +18,7 @@ export interface SimulatedEvent<T extends EventFormat> {
   setSource: (elem: Element) => void;
 }
 
-export type NativeSimulatedEvent = SimulatedEvent<SugarEvent>;
+export type NativeSimulatedEvent<T = any> = SimulatedEvent<EventArgs<T>>;
 export type CustomSimulatedEvent = SimulatedEvent<CustomEvent>;
 
 export interface CustomEvent extends EventFormat {
@@ -29,8 +27,10 @@ export interface CustomEvent extends EventFormat {
   [key: string]: () => any;
 }
 
-export interface ReceivingInternalEvent extends EventFormat {
+export interface ReceivingInternalEvent {
+  universal: () => boolean;
   channels: () => string[];
+  data: () => any;
 }
 
 export interface ReceivingEvent extends EventFormat {

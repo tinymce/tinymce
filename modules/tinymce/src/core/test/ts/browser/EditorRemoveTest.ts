@@ -1,5 +1,5 @@
-import { Chain, Logger, Pipeline, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Chain, Logger, Pipeline } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -16,10 +16,10 @@ UnitTest.asynctest('browser.tinymce.core.EditorRemoveTest', (success, failure) =
   const cAssertTextareaDisplayStyle = (expected) => Chain.op((editor: any) => {
     const textareaElement = editor.getElement();
 
-    RawAssertions.assertEq('element does not have the expected style', expected, textareaElement.style.display);
+    Assert.eq('element does not have the expected style', expected, textareaElement.style.display);
   });
 
-  const cCreateEditor = Chain.mapper(() => new Editor('editor', {}, EditorManager));
+  const cCreateEditor = Chain.injectThunked(() => new Editor('editor', {}, EditorManager));
 
   const cRemoveEditor = Chain.op((editor: any) => editor.remove());
 

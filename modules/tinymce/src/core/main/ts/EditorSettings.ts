@@ -78,11 +78,18 @@ const getSectionConfig = function (sectionResult: SectionResult, name: string) {
   return hasSection(sectionResult, name) ? sectionResult.sections()[name] : {};
 };
 
-const getDefaultSettings = function (id: string, documentBaseUrl: string, isTouch: boolean, editor: Editor): RawEditorSettings {
+const getToolbarMode = (settings: RawEditorSettings, defaultVal) => {
+  // If toolbar_mode is unset by the user, fall back to:
+  return Obj.get(settings, 'toolbar_mode')
+    .orThunk(() => Obj.get(settings, 'toolbar_drawer')) // #1 toolbar_drawer
+    .getOr(defaultVal);                                 // #2 defaultVal
+};
+
+const getDefaultSettings = function (settings: RawEditorSettings, id: string, documentBaseUrl: string, isTouch: boolean, editor: Editor): RawEditorSettings {
   const baseDefaults: RawEditorSettings = {
     id,
     theme: 'silver',
-    toolbar_drawer: 'floating',
+    toolbar_mode: getToolbarMode(settings, 'floating'),
     plugins: '',
     document_base_url: documentBaseUrl,
     add_form_submit_trigger: true,
@@ -117,10 +124,10 @@ const getDefaultSettings = function (id: string, documentBaseUrl: string, isTouc
   };
 };
 
-const getDefaultMobileSettings = (isPhone: boolean): RawEditorSettings => {
+const getDefaultMobileSettings = (settings: RawEditorSettings, isPhone: boolean): RawEditorSettings => {
   const defaultMobileSettings: RawEditorSettings = {
     resize: false,               // Editor resize doesn't make sense on mobile
-    toolbar_drawer: 'scrolling', // Use the default side-scrolling toolbar for tablets/phones
+    toolbar_mode: getToolbarMode(settings, 'scrolling'),   // Use the default side-scrolling toolbar for tablets/phones
     toolbar_sticky: false        // Only enable sticky toolbar on desktop by default
   };
 
@@ -176,7 +183,7 @@ const isOnMobile = function (isMobileDevice: boolean, sectionResult: SectionResu
 
 const combineSettings = (isMobileDevice: boolean, isPhone: boolean,  defaultSettings: RawEditorSettings, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings => {
   // Use mobile mode by default on phones, so patch in the default mobile settings
-  const defaultDeviceSettings = isMobileDevice ? { mobile: getDefaultMobileSettings(isPhone) } : { };
+  const defaultDeviceSettings = isMobileDevice ? { mobile: getDefaultMobileSettings(settings, isPhone) } : { };
   const sectionResult = extractSections(['mobile'], Merger.deepMerge(defaultDeviceSettings, settings));
 
   const extendedSettings = Tools.extend(
@@ -203,7 +210,7 @@ const combineSettings = (isMobileDevice: boolean, isPhone: boolean,  defaultSett
 };
 
 const getEditorSettings = function (editor: Editor, id: string, documentBaseUrl: string, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings {
-  const defaultSettings = getDefaultSettings(id, documentBaseUrl, isTouch, editor);
+  const defaultSettings = getDefaultSettings(settings, id, documentBaseUrl, isTouch, editor);
   return combineSettings(isPhone || isTablet, isPhone, defaultSettings, defaultOverrideSettings, settings);
 };
 

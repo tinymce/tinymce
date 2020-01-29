@@ -1,26 +1,48 @@
-import { Objects } from '@ephox/boulder';
-import { Adt, Arr, Fun, Obj } from '@ephox/katamari';
+import { Adt, Arr, Fun, Obj, Option } from '@ephox/katamari';
+
+import { AlloySpec } from '../api/component/SpecTypes';
+import { CompositeSketchDetail } from '../api/ui/Sketcher';
+import { ConfiguredPart } from '../parts/AlloyParts';
+
+interface Replacement {
+  name: () => string;
+  required: () => boolean;
+  used: () => boolean;
+  replace: () => UiSubstitutesAdt;
+}
+
+type ValueThunkFn<R> = <D extends CompositeSketchDetail>(detail: D, spec?: Record<string, any>, partValidated?: Record<string, any>) => R;
+type SingleSubstitution<T> = (required: boolean, valueThunk: ValueThunkFn<AlloySpec>) => T;
+type MultipleSubstitution<T> = (required: boolean, valueThunk: ValueThunkFn<AlloySpec[]>) => T;
+
+export interface UiSubstitutesAdt {
+  fold: <T>(
+    single: SingleSubstitution<T>,
+    multiple: MultipleSubstitution<T>
+  ) => T;
+  match: <T>(branches: {
+    single: SingleSubstitution<T>;
+    multiple: MultipleSubstitution<T>;
+  }) => T;
+  log: (label: string) => void;
+}
 
 const _placeholder = 'placeholder';
 
 const adt: {
-  single: (required: boolean, valueThunk: Function) => Adt;
-  multiple: (required: boolean, valueThunk: Function) => Adt;
+  single: SingleSubstitution<UiSubstitutesAdt>;
+  multiple: MultipleSubstitution<UiSubstitutesAdt>;
 } = Adt.generate([
   { single: [ 'required', 'valueThunk' ] },
   { multiple: [ 'required', 'valueThunks' ] }
 ]);
 
-const isSubstitute = (uiType) => {
-  return Arr.contains([
-    _placeholder
-  ], uiType);
-};
+const isSubstituted = (spec: any): spec is ConfiguredPart => Obj.has(spec, 'uiType');
 
-const subPlaceholder = (owner, detail, compSpec, placeholders) => {
+const subPlaceholder = <D extends CompositeSketchDetail>(owner: Option<string>, detail: D, compSpec: ConfiguredPart, placeholders: Record<string, Replacement>): UiSubstitutesAdt => {
   if (owner.exists((o) => o !== compSpec.owner)) { return adt.single(true, Fun.constant(compSpec)); }
   // Ignore having to find something for the time being.
-  return Objects.readOptFrom<{ replace: () => any}>(placeholders, compSpec.name).fold(() => {
+  return Obj.get(placeholders as any, compSpec.name).fold(() => {
     throw new Error('Unknown placeholder component: ' + compSpec.name + '\nKnown: [' +
       Obj.keys(placeholders) + ']\nNamespace: ' + owner.getOr('none') + '\nSpec: ' + JSON.stringify(compSpec, null, 2)
     );
@@ -30,21 +52,21 @@ const subPlaceholder = (owner, detail, compSpec, placeholders) => {
   });
 };
 
-const scan = (owner, detail, compSpec, placeholders) => {
-  if (compSpec.uiType === _placeholder) {
+const scan = <D extends CompositeSketchDetail>(owner: Option<string>, detail: D, compSpec: AlloySpec, placeholders: Record<string, Replacement>): UiSubstitutesAdt => {
+  if (isSubstituted(compSpec) && compSpec.uiType === _placeholder) {
     return subPlaceholder(owner, detail, compSpec, placeholders);
   } else {
     return adt.single(false, Fun.constant(compSpec));
   }
 };
 
-const substitute = (owner, detail, compSpec, placeholders) => {
+const substitute = <D extends CompositeSketchDetail>(owner: Option<string>, detail: D, compSpec: AlloySpec, placeholders: Record<string, Replacement>): AlloySpec[] => {
   const base = scan(owner, detail, compSpec, placeholders);
 
   return base.fold(
     (req, valueThunk) => {
-      const value = valueThunk(detail, compSpec.config, compSpec.validated);
-      const childSpecs = Objects.readOptFrom<any[]>(value, 'components').getOr([ ]);
+      const value = isSubstituted(compSpec) ? valueThunk(detail, compSpec.config, compSpec.validated) : valueThunk(detail);
+      const childSpecs = Obj.get(value as any, 'components').getOr([]);
       const substituted = Arr.bind(childSpecs, (c) => {
         return substitute(owner, detail, c, placeholders);
       });
@@ -56,21 +78,25 @@ const substitute = (owner, detail, compSpec, placeholders) => {
       ];
     },
     (req, valuesThunk) => {
-      const values = valuesThunk(detail, compSpec.config, compSpec.validated);
-      // Allow a preprocessing step for groups before returning the components
-      const preprocessor = compSpec.validated.preprocess.getOr(Fun.identity);
-      return preprocessor(values);
+      if (isSubstituted(compSpec)) {
+        const values = valuesThunk(detail, compSpec.config, compSpec.validated);
+        // Allow a preprocessing step for groups before returning the components
+        const preprocessor = compSpec.validated.preprocess.getOr(Fun.identity);
+        return preprocessor(values);
+      } else {
+        return valuesThunk(detail);
+      }
     }
   );
 };
 
-const substituteAll = (owner, detail, components, placeholders) => {
+const substituteAll = <D extends CompositeSketchDetail>(owner: Option<string>, detail: D, components: AlloySpec[], placeholders: Record<string, Replacement>): AlloySpec[] => {
   return Arr.bind(components, (c) => {
     return substitute(owner, detail, c, placeholders);
   });
 };
 
-const oneReplace = (label, replacements) => {
+const oneReplace = (label: string, replacements: UiSubstitutesAdt): Replacement => {
   let called = false;
 
   const used = () => {
@@ -78,9 +104,8 @@ const oneReplace = (label, replacements) => {
   };
 
   const replace = () => {
-    if (called === true) { throw new Error(
-      'Trying to use the same placeholder more than once: ' + label
-    );
+    if (called) {
+      throw new Error('Trying to use the same placeholder more than once: ' + label);
     }
     called = true;
     return replacements;
@@ -102,14 +127,14 @@ const oneReplace = (label, replacements) => {
   };
 };
 
-const substitutePlaces = (owner, detail, components, placeholders) => {
+const substitutePlaces = <D extends CompositeSketchDetail>(owner: Option<string>, detail: D, components: AlloySpec[], placeholders: Record<string, UiSubstitutesAdt>) => {
   const ps = Obj.map(placeholders, (ph, name) => {
     return oneReplace(name, ph);
   });
 
   const outcome = substituteAll(owner, detail, components, ps);
 
-  Obj.each(ps, (p) => {
+  Obj.each(ps, (p: Replacement) => {
     if (p.used() === false && p.required()) {
       throw new Error(
         'Placeholder: ' + p.name() + ' was not found in components list\nNamespace: ' + owner.getOr('none') + '\nComponents: ' +
@@ -121,9 +146,8 @@ const substitutePlaces = (owner, detail, components, placeholders) => {
   return outcome;
 };
 
-const singleReplace = (detail, p) => {
-  const replacement = p;
-  return replacement.fold((req, valueThunk) => {
+const singleReplace = <D extends CompositeSketchDetail>(detail: D, p: UiSubstitutesAdt) => {
+  return p.fold((req, valueThunk) => {
     return [ valueThunk(detail) ];
   }, (req, valuesThunk) => {
     return valuesThunk(detail);
@@ -137,7 +161,6 @@ const placeholder = Fun.constant(_placeholder);
 export {
   single,
   multiple,
-  isSubstitute,
   placeholder,
   substituteAll,
   substitutePlaces,

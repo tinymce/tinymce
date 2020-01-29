@@ -92,7 +92,7 @@ export default (): void => {
       fetch (input) {
         const inputValue = Value.get(input.element());
         console.log('text', inputValue);
-        const matching = Arr.bind(dataset, (d) => {
+        const matching: DemoRenders.DemoItems[] = Arr.bind(dataset, (d) => {
           const lText = d.text.toLowerCase();
           const index = lText.indexOf(inputValue.toLowerCase());
           if (index > -1) {
@@ -119,7 +119,7 @@ export default (): void => {
         });
 
         const matches = matching.length > 0 ? matching : [
-          { type: 'separator', text: 'No items' }
+          { type: 'separator', text: 'No items' } as DemoRenders.DemoSeparatorItem
         ];
 
         const future = Future.pure(matches.slice(0, 5));

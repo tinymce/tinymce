@@ -1,6 +1,6 @@
 import Element from 'ephox/sugar/api/node/Element';
 import * as Value from 'ephox/sugar/api/properties/Value';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { HTMLTextAreaElement } from '@ephox/dom-globals';
 
 UnitTest.test('ValueTest', function () {

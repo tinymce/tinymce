@@ -1,11 +1,13 @@
 import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver//Theme';
 
 UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
   Theme();
@@ -707,7 +709,7 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteTest', (success, failur
     );
 
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
-    LegacyUnit.equal(editor.selection.getRng(true).startContainer.nodeType, 3, 'Should be a text node');
+    LegacyUnit.equal(editor.selection.getRng().startContainer.nodeType, 3, 'Should be a text node');
   });
 
   suite.test('TestCase-TBA: Lists: Backspace at block inside li element into li without block element', function (editor) {

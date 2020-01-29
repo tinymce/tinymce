@@ -1,8 +1,10 @@
 import { Log, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
+import { HTMLElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Utils from 'tinymce/plugins/paste/core/Utils';
 import Plugin from 'tinymce/plugins/paste/Plugin';
@@ -11,14 +13,14 @@ import Theme from 'tinymce/themes/silver/Theme';
 import Strings from '../module/test/Strings';
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.PasteTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
   Theme();
 
   /* eslint-disable max-len */
 
-  const sTeardown = function (editor) {
+  const sTeardown = function (editor: Editor) {
     return Logger.t('Delete settings', Step.sync(function () {
       delete editor.settings.paste_remove_styles_if_webkit;
       delete editor.settings.paste_retain_style_properties;
@@ -28,13 +30,13 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteTest', (success, failure)
     }));
   };
 
-  const appendTeardown = function (editor, steps) {
+  const appendTeardown = function (editor: Editor, steps: Step<any, any>[]) {
     return Arr.bind(steps, function (step) {
       return [step, sTeardown(editor)];
     });
   };
 
-  const trimContent = function (content) {
+  const trimContent = function (content: string) {
     return content.replace(/^<p>&nbsp;<\/p>\n?/, '').replace(/\n?<p>&nbsp;<\/p>$/, '');
   };
 
@@ -709,7 +711,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteTest', (success, failure)
 
   suite.test('TestCase-TBA: Paste: paste innerText of textnode with whitespace', function (editor) {
     editor.getBody().innerHTML = '<pre> a </pre>';
-    LegacyUnit.equal(Utils.innerText(editor.getBody().firstChild.innerHTML), ' a ');
+    LegacyUnit.equal(Utils.innerText((editor.getBody().firstChild as HTMLElement).innerHTML), ' a ');
   });
 
   suite.test('TestCase-TBA: Paste: trim html from clipboard fragments', function () {

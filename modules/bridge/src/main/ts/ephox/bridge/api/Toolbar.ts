@@ -24,6 +24,10 @@ import {
   ToolbarToggleButtonInstanceApi,
 } from '../components/toolbar/ToolbarToggleButton';
 import {
+  createFloatingToolbarButton,
+  FloatingToolbarButton
+} from '../components/toolbar/FloatingToolbarButton';
+import {
   ContextToolbar,
   ContextToolbarApi,
   ContextForm,
@@ -62,6 +66,9 @@ export {
   ToolbarToggleButtonApi,
   ToolbarToggleButtonInstanceApi,
   createToggleButton,
+
+  createFloatingToolbarButton,
+  FloatingToolbarButton,
 
   ContextToolbar,
   ContextToolbarPosition,

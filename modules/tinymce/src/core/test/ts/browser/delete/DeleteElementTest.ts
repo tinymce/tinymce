@@ -3,11 +3,9 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Hierarchy, Element } from '@ephox/sugar';
 import DeleteElement from 'tinymce/core/delete/DeleteElement';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function (success, failure) {
 
   Theme();
 
@@ -28,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function () 
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Delete image forwards', GeneralSteps.sequence([
         tinyApis.sSetContent('<p><img src="#1"></p>'),
         tinyApis.sSetCursor([0], 0),

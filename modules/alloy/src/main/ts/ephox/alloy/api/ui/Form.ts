@@ -1,15 +1,16 @@
 import { Arr, Obj, Option, Result } from '@ephox/katamari';
 
-import { SketchSpec } from '../../api/component/SpecTypes';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { AlloySpec, SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
+import * as AlloyLogger from '../../log/AlloyLogger';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
-import { FormSpecBuilder, FormDetail, FormSketcher } from '../../ui/types/FormTypes';
+import { FormApis, FormDetail, FormSketcher, FormSpecBuilder } from '../../ui/types/FormTypes';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const owner = 'form';
 
@@ -25,7 +26,7 @@ const sketch = (fSpec: FormSpecBuilder): SketchSpec => {
   const parts = (() => {
     const record: string[] = [ ];
 
-    const field = (name: string, config: any): AlloyParts.ConfiguredPart => {
+    const field = (name: string, config: SimpleOrSketchSpec): AlloyParts.ConfiguredPart => {
       record.push(name);
       return AlloyParts.generateOne(owner, getPartName(name), config);
     };
@@ -50,7 +51,7 @@ const sketch = (fSpec: FormSpecBuilder): SketchSpec => {
 
 const toResult = <T, E>(o: Option<T>, e: E) => o.fold(() => Result.error(e), Result.value);
 
-const make = (detail: FormDetail, components, spec) => {
+const make = (detail: FormDetail, components: AlloySpec[]) => {
   return {
     uid: detail.uid,
     dom: detail.dom,
@@ -68,7 +69,9 @@ const make = (detail: FormDetail, components, spec) => {
               return Obj.map(resPs, (resPThunk, pName) => {
                 return resPThunk().bind((v) => {
                   const opt = Composing.getCurrent(v);
-                  return toResult(opt, 'missing current');
+                  return toResult(opt, new Error(
+                    `Cannot find a current component to extract the value from for form part '${pName}': ` + AlloyLogger.element(v.element())
+                  ));
                 }).map(Representing.getValue);
               });
             },
@@ -96,7 +99,7 @@ const make = (detail: FormDetail, components, spec) => {
 };
 
 const Form = {
-  getField: GuiTypes.makeApi((apis, component: AlloyComponent, key: string) => {
+  getField: GuiTypes.makeApi((apis: FormApis, component: AlloyComponent, key: string) => {
     return apis.getField(component, key);
   }),
   sketch

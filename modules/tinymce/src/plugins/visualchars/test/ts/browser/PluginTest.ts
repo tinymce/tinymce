@@ -1,5 +1,6 @@
 import { ApproxStructure, Assertions, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Unicode } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/visualchars/Plugin';
@@ -41,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.plugins.visualchars.PluginTest', (success, f
         tinyApis.sAssertContentStructure(sAssertStruct(ApproxStructure.build((s, str) => {
           return [
             s.text(str.is('<img src="image.png">')),
-            s.text(str.is('\u00a0'))
+            s.text(str.is(Unicode.nbsp))
           ];
         }))),
       ])

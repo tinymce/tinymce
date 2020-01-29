@@ -82,4 +82,4 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   initialData?: TypeaheadData;
 }
 
-export interface TypeaheadSketcher extends CompositeSketch<TypeaheadSpec, TypeaheadDetail> { }
+export interface TypeaheadSketcher extends CompositeSketch<TypeaheadSpec> { }

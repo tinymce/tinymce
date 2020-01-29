@@ -1,7 +1,7 @@
-import { Pipeline, UiFinder, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Pipeline, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -19,6 +19,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
 
     const baseHtml = '<table style="border: 1px solid black; border-collapse: collapse;" border="1"><tr><td>X</td></tr></table>';
 
@@ -47,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
         tinyApis.sSetContent(baseHtml),
         tinyApis.sSelect('td', [0]),
-        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(baseData, false, generalSelectors),
         TableTestUtils.sClickDialogButton('cancel dialog', false)
       ]);
@@ -58,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
         tinyApis.sSetContent(baseHtml),
         tinyApis.sSelect('td', [0]),
-        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sSetDialogValues({
           height: '10',
           align: 'right',
@@ -73,7 +74,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       return Log.stepsAsStep('TBA', 'Table: Caption should always stay the firstChild of the table (see TINY-1167)', [
         tinyApis.sSetContent('<table><caption>CAPTION</caption><tbody><tr><td>X</td></tr><tr><td>Y</td></tr></tbody></table>'),
         tinyApis.sSelect('td', [0]),
-        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sOpenTableDialog(tinyUi),
 
         TableTestUtils.sSetDialogValues({
           height: '',
@@ -90,7 +91,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         tinyApis.sSetSetting('table_row_advtab', true),
         tinyApis.sSetContent(advHtml),
         tinyApis.sSelect('td', [0]),
-        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('clicking cancel', false)
       ]);
@@ -109,7 +110,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
           '</table>'
         ),
         tinyApis.sSelect('td', [0]),
-        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sSetDialogValues({
           align: '',
           height: '',
@@ -136,7 +137,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         tinyApis.sSetContent(advHtml),
 
         tinyApis.sSelect('tr:nth-child(1) td:nth-child(1)', [0]),
-        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
         TableTestUtils.sSetDialogValues({
           align: '',
@@ -208,7 +209,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       return Log.stepsAsStep('TBA', 'Table: Table row properties dialog update multiple rows', [
         tinyApis.sSetContent(initialHtml),
         tinyApis.sSelect('tr:nth-child(2) td:nth-child(2)', [0]),
-        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(initialData, true, generalSelectors),
         TableTestUtils.sSetDialogValues(newData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('clicking save', true),
@@ -216,15 +217,48 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       ]);
     };
 
+    const changeHeaderToBodyTest = () => {
+      const initialHtml = '<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead><tr><td>X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>';
+      const expectedHtml = '<table style="border: 1px solid black; border-collapse: collapse;" border="1"><tbody><tr><td>X</td></tr><tr><td>Y</td></tr></tbody></table>';
+
+      const initialData = {
+        align: '',
+        height: '',
+        type: 'thead',
+        backgroundcolor: '',
+        bordercolor: '',
+        borderstyle: '',
+      };
+
+      return Log.stepsAsStep('TBA', 'Table: Change table row type from header to body', [
+        tinyApis.sSetContent(initialHtml),
+
+        tinyApis.sSelect('tr:nth-child(1) td:nth-child(1)', [0]),
+        TableTestUtils.sOpenTableDialog(tinyUi),
+        TableTestUtils.sAssertDialogValues(initialData, true, generalSelectors),
+        TableTestUtils.sSetDialogValues({
+          align: '',
+          height: '',
+          type: 'tbody',
+          backgroundcolor: '',
+          bordercolor: '',
+          borderstyle: '',
+        }, true, generalSelectors),
+        TableTestUtils.sClickDialogButton('clicking save', true),
+        tinyApis.sAssertContent(expectedHtml)
+      ]);
+    };
+
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       baseGetTest(),
       baseGetSetTest(),
       captionTest(),
       advGetTest(),
       advGetSetTest(),
       advRemoveTest(),
-      multiUpdateTest()
+      multiUpdateTest(),
+      changeHeaderToBodyTest()
     ], onSuccess, onFailure);
   }, {
     plugins: 'table',

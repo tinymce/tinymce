@@ -1,5 +1,5 @@
 import { Log, Mouse, Pipeline, Step, Waiter, UiFinder, Assertions, ApproxStructure, Keyboard, Keys } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';

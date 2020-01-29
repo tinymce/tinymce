@@ -3,6 +3,7 @@ const runsInPhantom = [
   '@ephox/alloy',
   '@ephox/mcagar',
   '@ephox/katamari',
+  '@ephox/katamari-test',
   '@ephox/imagetools',
   '@ephox/jax'
 ];
@@ -85,7 +86,7 @@ const bedrockBrowser = (tests, browserName, osName, bucket, buckets, auto) => {
         // we have a few tests that don't play nicely when combined together in the monorepo
         retries: 3
       }
-    }
+    };
   }
 };
 
@@ -197,6 +198,6 @@ Top-level grunt has been replaced by 'yarn build', and the output has moved from
   require('load-grunt-tasks')(grunt, {
     requireResolution: true,
     config: 'package.json',
-    pattern: ['@ephox/bedrock', 'grunt-shell']
+    pattern: ['@ephox/bedrock-server', 'grunt-shell']
   });
 };

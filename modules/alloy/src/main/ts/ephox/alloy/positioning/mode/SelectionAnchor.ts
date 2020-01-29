@@ -1,14 +1,13 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Window } from '@ephox/dom-globals';
 import { Option, Struct, Unicode } from '@ephox/katamari';
-import { Element, Insert, Node, Remove, Selection, Traverse, WindowSelection } from '@ephox/sugar';
+import { Element, Insert, Node, Remove, Selection, SimRange, Traverse, WindowSelection } from '@ephox/sugar';
 
 import * as Descend from '../../alien/Descend';
-import { SugarRange } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
 import * as Origins from '../layout/Origins';
-import { SelectionAnchor, Anchoring } from './Anchoring';
+import { Anchoring, SelectionAnchor } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 import * as ContainerOffsets from './ContainerOffsets';
 import ContentAnchorCommon from './ContentAnchorCommon';
@@ -16,11 +15,11 @@ import ContentAnchorCommon from './ContentAnchorCommon';
 const point: (element: Element, offset: number) => {element: () => Element; offset: () => number; } = Struct.immutable('element', 'offset');
 
 // A range from (a, 1) to (body, end) was giving the wrong bounds.
-const descendOnce = (element, offset) => {
+const descendOnce = (element: Element, offset: number) => {
   return Node.isText(element) ? point(element, offset) : Descend.descendOnce(element, offset);
 };
 
-const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Option<SugarRange> => {
+const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Option<SimRange> => {
   // FIX TEST Test both providing a getSelection and not providing a getSelection
   const getSelection = anchorInfo.getSelection.getOrThunk(() => {
     return () => {
@@ -42,14 +41,14 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
   const selectionBox = getAnchorSelection(win, anchorInfo).bind((sel) => {
     // This represents the *visual* rectangle of the selection.
     const optRect = WindowSelection.getFirstRect(win, Selection.exactFromRange(sel)).orThunk(() => {
-      const x = Element.fromText(Unicode.zeroWidth());
+      const x = Element.fromText(Unicode.zeroWidth);
       Insert.before(sel.start(), x);
       // Certain things like <p><br/></p> with (p, 0) or <br>) as collapsed selection do not return a client rectangle
       return WindowSelection.getFirstRect(win, Selection.exact(x, 0, x, 1)).map((rect) => {
         Remove.remove(x);
         return rect;
       });
-    }) as Option<{ left: () => number, top: () => number, width: () => number, height: () => number}>;
+    });
     return optRect.bind((rawRect) => {
       return ContentAnchorCommon.capRect(rawRect.left(), rawRect.top(), rawRect.width(), rawRect.height());
     });

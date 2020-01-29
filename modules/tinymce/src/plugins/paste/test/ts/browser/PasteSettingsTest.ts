@@ -1,6 +1,5 @@
-import { Assertions, Chain, Pipeline, Guard, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { Merger } from '@ephox/katamari';
+import { Assertions, Chain, Guard, Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/paste/Plugin';
@@ -12,10 +11,11 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteSettingsTest', (success, 
 
   const cCreateInlineEditor = function (settings) {
     return Chain.control(
-      McEditor.cFromSettings(Merger.merge(settings, {
+      McEditor.cFromSettings({
+        ...settings,
         inline: true,
         base_url: '/project/tinymce/js/tinymce'
-      })),
+      }),
       Guard.addLogging('Create inline editor')
     );
   };

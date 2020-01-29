@@ -1,6 +1,7 @@
 import Jsc from '@ephox/wrap-jsverify';
 
-import ArbNodes from './ArbNodes';
+import * as ArbNodes from './ArbNodes';
+import { Unicode } from '@ephox/katamari';
 
 const formatting = {
   type: 'composite',
@@ -172,12 +173,12 @@ const whitespace = {
 
 const zerowidth = {
   type: 'arbitrary',
-  component: ArbNodes.textOfArb(Jsc.constant('\uFEFF'))
+  component: ArbNodes.textOfArb(Jsc.constant(Unicode.zeroWidth))
 };
 
 const zerowidths = {
   type: 'arbitrary',
-  component: ArbNodes.textOfArb(Jsc.elements([ '\u200B', '\uFEFF' ]))
+  component: ArbNodes.textOfArb(Jsc.elements([ '\u200B', Unicode.zeroWidth ]))
 };
 
 const comment = {
@@ -185,7 +186,7 @@ const comment = {
   component: ArbNodes.comment
 };
 
-export default {
+export {
   whitespace,
   formatting,
   inline,

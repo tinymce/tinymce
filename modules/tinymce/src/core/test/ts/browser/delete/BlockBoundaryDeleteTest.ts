@@ -1,13 +1,11 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import BlockBoundaryDelete from 'tinymce/core/delete/BlockBoundaryDelete';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', function (success, failure) {
 
   Theme();
 
@@ -43,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Backspace in same block should remain unchanged', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p>'),
         tinyApis.sSetCursor([0, 0], 1),

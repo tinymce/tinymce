@@ -4,6 +4,7 @@ import { Element } from '@ephox/sugar';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
+import { BehaviourState } from '../common/BehaviourState';
 
 export interface SandboxingBehaviour extends Behaviour.AlloyBehaviour<SandboxingConfigSpec, SandboxingConfig> {
   config: (config: SandboxingConfigSpec) => Behaviour.NamedConfiguredBehaviour<SandboxingConfigSpec, SandboxingConfig>;
@@ -35,9 +36,9 @@ export interface SandboxingConfig extends Behaviour.BehaviourConfigDetail {
   isPartOf: (sandbox: AlloyComponent, data: AlloyComponent, queryElem: Element) => boolean;
 }
 
-export interface SandboxingState {
+export interface SandboxingState extends BehaviourState {
   get: () => Option<AlloyComponent>;
   set: (comp: AlloyComponent) => void;
   isOpen: () => boolean;
-  clear: () => boolean;
+  clear: () => void;
 }

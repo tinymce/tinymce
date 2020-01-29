@@ -8,7 +8,7 @@ import { Unicode, Fun } from '@ephox/katamari';
 // \u00C0 - \u00FF are various language characters (Latin-1)
 // \u0100 - \u017F are various language characters (Latin Extended-A)
 // \u2018 and \u2019 are the smart quote characters
-const charsStr = '\\w' + '\'' + '\\-' + '\\u0100-\\u017F\\u00C0-\\u00FF' + Unicode.zeroWidth() + '\\u2018\\u2019';
+const charsStr = '\\w' + '\'' + '\\-' + '\\u0100-\\u017F\\u00C0-\\u00FF' + Unicode.zeroWidth + '\\u2018\\u2019';
 const wordbreakStr = '[^' + charsStr + ']';
 const wordcharStr = '[' + charsStr + ']';
 

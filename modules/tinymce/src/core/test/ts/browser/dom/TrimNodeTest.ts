@@ -1,12 +1,10 @@
-import { Pipeline, RawAssertions, Step } from '@ephox/agar';
+import { Pipeline, Step } from '@ephox/agar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import TrimNode from 'tinymce/core/dom/TrimNode';
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function (success, failure) {
 
   const dom = DOMUtils(document, {});
 
@@ -17,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function () {
       TrimNode.trimNode(dom, elm.firstChild);
 
       const actual = elm.innerHTML;
-      RawAssertions.assertEq('is correct trimmed html', expectedTrimmedHtml, actual);
+      Assert.eq('is correct trimmed html', expectedTrimmedHtml, actual);
     });
   };
 
@@ -25,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function () {
     const expected = document.implementation.createHTMLDocument('test');
     const actual = TrimNode.trimNode(dom, expected);
 
-    RawAssertions.assertEq('Should return document as is', true, actual === expected);
+    Assert.eq('Should return document as is', true, actual === expected);
   });
 
   Pipeline.async({}, [

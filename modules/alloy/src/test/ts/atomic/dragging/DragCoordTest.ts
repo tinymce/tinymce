@@ -1,12 +1,18 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 
 import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
 
+interface TestConversion {
+  mode: string;
+  nu: (x: number, y: number) => DragCoord.CoordAdt<number>;
+  asPoint: (coord: DragCoord.CoordAdt<number>, scroll: Position, origin: Position) => Position;
+}
+
 UnitTest.test('DragCoordTest', () => {
-  const assertPt = (label, expected, actual) => {
+  const assertPt = (label: string, expected: Position, actual: Position) => {
     const comparing = label + '\nCoordinate Expected: (' + expected.left() + ', ' + expected.top() + ')' +
       '\nCoordinate Actual: (' + actual.left() + ', ' + actual.top() + ')';
 
@@ -20,12 +26,12 @@ UnitTest.test('DragCoordTest', () => {
     { asPoint: DragCoord.asOffset, nu: DragCoord.offset, mode: 'offset' }
   ]);
 
-  const arbPosition = (name) => {
-    return Jsc.tuple([ Jsc.integer, Jsc.integer ]).smap((arr) => {
+  const arbPosition = (name: string) => {
+    return Jsc.tuple([ Jsc.integer, Jsc.integer ]).smap((arr: [ number, number ]) => {
       return Position(arr[0], arr[1]);
-    }, (pos) => {
+    }, (pos: Position) => {
       return [ pos.left(), pos.top() ];
-    }, (pos) => {
+    }, (pos: Position) => {
       return name + ': { left: ' + pos.left() + ', top: ' + pos.top() + '}';
     });
   };
@@ -37,7 +43,7 @@ UnitTest.test('DragCoordTest', () => {
     arbPosition('point'),
     arbPosition('scroll'),
     arbPosition('origin'),
-    (original, transformations, coord, scroll, origin) => {
+    (original: TestConversion, transformations: TestConversion[], coord: Position, scroll: Position, origin: Position) => {
       const o = original.nu(coord.left(), coord.top());
 
       const label = [ original.mode ].concat(Arr.map(transformations, (t) => t.mode));

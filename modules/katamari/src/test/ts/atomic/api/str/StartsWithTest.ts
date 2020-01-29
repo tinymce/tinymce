@@ -1,12 +1,12 @@
 import * as Strings from 'ephox/katamari/api/Strings';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import * as fc from 'fast-check';
 
-UnitTest.test('startsWith', function () {
-  function check(expected, str, prefix) {
-      const actual = Strings.startsWith(str, prefix);
-      assert.eq(expected, actual);
-  }
+UnitTest.test('startsWith: unit tests', () => {
+  const check = (expected, str, prefix) => {
+    const actual = Strings.startsWith(str, prefix);
+    Assert.eq('startsWith', expected, actual);
+  };
 
   check(true, '', '');
   check(true, 'a', '');
@@ -16,14 +16,12 @@ UnitTest.test('startsWith', function () {
 
   check(false, '', 'a');
   check(false, 'caatatetatat', 'cat');
+});
 
-  Jsc.property(
-    'A string added to a string (at the start) must have startsWith as true',
-    Jsc.string,
-    Jsc.nestring,
-    function (str, contents) {
-      const r = contents + str;
-      return Jsc.eq(true, Strings.startsWith(r, contents));
-    }
-  );
+UnitTest.test('startsWith: property test', () => {
+  fc.assert(fc.property(
+    fc.asciiString(),
+    fc.asciiString(),
+    (str, contents) => Strings.startsWith(contents + str, contents)
+  ));
 });

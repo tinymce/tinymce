@@ -1,8 +1,8 @@
-import { ApproxStructure, Assertions, Chain, Log, Logger, Mouse, Pipeline, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Log, Logger, Pipeline, UiFinder } from '@ephox/agar';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body, Element } from '@ephox/sugar';
+import { Body } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('Menu group heading test', (success, failure) => {
   Theme();
@@ -10,13 +10,12 @@ UnitTest.asynctest('Menu group heading test', (success, failure) => {
   TinyLoader.setupLight(
     (editor, onSuccess, onFailure) => {
       const tinyUi = TinyUi(editor);
-      const container = Element.fromDom(editor.getContainer());
 
       Pipeline.async({ }, Logger.ts(
         'Check basic structure and actions',
         [
           Log.stepsAsStep('TINY-2226', 'Menu should contain a group heading with the correct classes and text', [
-            Mouse.sClickOn(container, '.tox-toolbar button'),
+            tinyUi.sClickOnToolbar('Click on styleselect toolbar button', 'button'),
             tinyUi.sWaitForUi('Wait for styleselect menu', '.tox-menu.tox-collection'),
             Chain.asStep(Body.body(), [
               UiFinder.cFindIn('.tox-menu.tox-collection'),

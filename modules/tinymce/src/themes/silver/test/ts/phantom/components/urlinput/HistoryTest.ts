@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 
 import { addToHistory, clearHistory, getHistory } from 'tinymce/themes/silver/backstage/UrlInputHistory';
 

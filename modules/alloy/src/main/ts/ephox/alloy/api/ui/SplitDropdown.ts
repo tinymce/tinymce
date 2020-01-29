@@ -1,4 +1,4 @@
-import { Fun, Id, Option, Merger } from '@ephox/katamari';
+import { Fun, Id, Option } from '@ephox/katamari';
 import { Attr } from '@ephox/sugar';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
@@ -13,6 +13,7 @@ import { Focusing } from '../behaviour/Focusing';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
 import { Toggling } from '../behaviour/Toggling';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as Sketcher from './Sketcher';
@@ -20,31 +21,31 @@ import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = (detail, components, spec, externals) => {
 
-  const switchToMenu = (sandbox) => {
+  const switchToMenu = (sandbox: AlloyComponent) => {
     Composing.getCurrent(sandbox).each((current) => {
       Highlighting.highlightFirst(current);
       Keying.focusIn(current);
     });
   };
 
-  const action = (component) => {
+  const action = (component: AlloyComponent) => {
     const onOpenSync = switchToMenu;
     DropdownUtils.togglePopup(detail, (x) => x, component, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
   };
 
-  const openMenu = (comp) => {
+  const openMenu = (comp: AlloyComponent) => {
     action(comp);
     return Option.some(true);
   };
 
-  const executeOnButton = (comp) => {
+  const executeOnButton = (comp: AlloyComponent) => {
     const button = AlloyParts.getPartOrDie(comp, detail, 'button');
     AlloyTriggers.emitExecute(button);
     return Option.some(true);
   };
 
-  const buttonEvents = Merger.merge(
-    AlloyEvents.derive([
+  const buttonEvents = {
+    ...AlloyEvents.derive([
       AlloyEvents.runOnAttached((component, simulatedEvent) => {
         const ariaDescriptor = AlloyParts.getPart(component, detail, 'aria-descriptor');
         ariaDescriptor.each((descriptor) => {
@@ -54,8 +55,8 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
         });
       }),
     ]),
-    ButtonBase.events(Option.some(action))
-  );
+    ...ButtonBase.events(Option.some(action))
+  };
 
   const apis: SplitDropdownApis = {
     repositionMenus: (comp) => {
@@ -125,15 +126,15 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
   };
 };
 
-const SplitDropdown = Sketcher.composite({
+const SplitDropdown: SplitDropdownSketcher = Sketcher.composite<SplitDropdownSpec, SplitDropdownDetail, SplitDropdownApis>({
   name: 'SplitDropdown',
   configFields: SplitDropdownSchema.schema(),
   partFields: SplitDropdownSchema.parts(),
   factory,
   apis: {
-    repositionMenus: (apis: SplitDropdownApis, comp) => apis.repositionMenus(comp)
+    repositionMenus: (apis, comp) => apis.repositionMenus(comp)
   }
-}) as SplitDropdownSketcher;
+});
 
 export {
   SplitDropdown

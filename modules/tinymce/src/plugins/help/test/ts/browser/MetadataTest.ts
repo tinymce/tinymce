@@ -1,7 +1,6 @@
-import { Pipeline, Mouse, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Pipeline, Log } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
 
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -20,11 +19,11 @@ UnitTest.asynctest('Browser Test: .MetadataTest', (success, failure) => {
   SilverTheme();
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
-    TinyUi(editor);
+    const ui = TinyUi(editor);
 
     Pipeline.async({},
       Log.steps('TBA', 'Help: Assert Help Plugin list contains getMetadata functionality', [
-        Mouse.sClickOn(Element.fromDom(editor.getContainer()), Selectors.toolbarHelpButton),
+        ui.sClickOnToolbar('Click help button', Selectors.toolbarHelpButton),
         PluginAssert.sAssert(
           'Failed to list fake plugins',
           {

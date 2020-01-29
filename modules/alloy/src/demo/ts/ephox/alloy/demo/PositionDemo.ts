@@ -1,5 +1,5 @@
 import { document } from '@ephox/dom-globals';
-import { Class, Css, DomEvent, Element } from '@ephox/sugar';
+import { Class, Css, DomEvent, Element, Traverse } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
@@ -182,7 +182,7 @@ export default (): void => {
             Attachment.attach(sink, popup);
             Positioning.position(sink, {
               anchor: 'selection',
-              root: Element.fromDom(frame.dom().contentWindow.document.body)
+              root: Element.fromDom(Traverse.defaultView(frame).dom().document.body)
             }, popup);
           }
         })

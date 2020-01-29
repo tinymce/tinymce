@@ -5,24 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { Element, Traverse, InsertAll, Insert } from '@ephox/sugar';
-import Bookmarks from '../bookmark/Bookmarks';
-import NodeType from '../dom/NodeType';
-import TreeWalker from '../api/dom/TreeWalker';
-import * as CaretFormat from './CaretFormat';
-import ExpandRange from './ExpandRange';
-import FormatUtils from './FormatUtils';
-import MatchFormat from './MatchFormat';
-import RangeWalk from '../selection/RangeWalk';
-import Tools from '../api/util/Tools';
-import Selection from '../api/dom/Selection';
-import GetBookmark from '../bookmark/GetBookmark';
-import Editor from '../api/Editor';
-import * as SplitRange from '../selection/SplitRange';
+import { Element as DomElement, Node, Range } from '@ephox/dom-globals';
+import { Arr, Option } from '@ephox/katamari';
+import { Element, Insert, InsertAll, Traverse } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
+import Selection from '../api/dom/Selection';
+import TreeWalker from '../api/dom/TreeWalker';
+import Editor from '../api/Editor';
+import { FormatAttrOrStyleValue, FormatVars, RemoveFormat } from '../api/fmt/Format';
 import Settings from '../api/Settings';
+import Tools from '../api/util/Tools';
+import Bookmarks from '../bookmark/Bookmarks';
+import GetBookmark from '../bookmark/GetBookmark';
+import NodeType from '../dom/NodeType';
+import { RangeLikeObject } from '../selection/RangeTypes';
+import RangeWalk from '../selection/RangeWalk';
+import * as SplitRange from '../selection/SplitRange';
+import * as CaretFormat from './CaretFormat';
+import * as ExpandRange from './ExpandRange';
+import * as FormatUtils from './FormatUtils';
+import * as MatchFormat from './MatchFormat';
 
 const MCE_ATTR_RE = /^(src|href|style)$/;
 const each = Tools.each;
@@ -36,14 +38,14 @@ const isChildOfInlineParent = (dom: DOMUtils, node: Node, parent: Node): boolean
   return dom.isChildOf(node, parent) && node !== parent && !dom.isBlock(parent);
 };
 
-const getContainer = function (ed, rng, start?) {
-  let container, offset, lastIdx;
+const getContainer = function (ed: Editor, rng: RangeLikeObject, start?: boolean) {
+  let container: Node, offset: number;
 
   container = rng[start ? 'startContainer' : 'endContainer'];
   offset = rng[start ? 'startOffset' : 'endOffset'];
 
   if (NodeType.isElement(container)) {
-    lastIdx = container.childNodes.length - 1;
+    const lastIdx = container.childNodes.length - 1;
 
     if (!start && offset) {
       offset--;
@@ -65,7 +67,7 @@ const getContainer = function (ed, rng, start?) {
   return container;
 };
 
-const wrap = function (dom, node, name, attrs?) {
+const wrap = function (dom: DOMUtils, node: Node, name: string, attrs?: Record<string, string>) {
   const wrapper = dom.create(name, attrs);
 
   node.parentNode.insertBefore(wrapper, node);
@@ -74,7 +76,7 @@ const wrap = function (dom, node, name, attrs?) {
   return wrapper;
 };
 
-const wrapWithSiblings = (dom: DOMUtils, node: Node, next: boolean, name: string, attrs?): Node => {
+const wrapWithSiblings = (dom: DOMUtils, node: Node, next: boolean, name: string, attrs?: Record<string, string>): Node => {
   const start = Element.fromDom(node);
   const wrapper = Element.fromDom(dom.create(name, attrs));
   const siblings = next ? Traverse.nextSiblings(start) : Traverse.prevSiblings(start);
@@ -99,7 +101,7 @@ const wrapWithSiblings = (dom: DOMUtils, node: Node, next: boolean, name: string
  * @param {Object} format Format object o match with.
  * @return {boolean} true/false if the format matches.
  */
-const matchName = function (dom, node, format) {
+const matchName = function (dom: DOMUtils, node: Node, format) {
   // Check for inline match
   if (isEq(node, format.inline)) {
     return true;
@@ -116,11 +118,11 @@ const matchName = function (dom, node, format) {
   }
 };
 
-const isColorFormatAndAnchor = function (node, format) {
-  return format.links && node.tagName === 'A';
+const isColorFormatAndAnchor = function (node: Node, format) {
+  return format.links && node.nodeName === 'A';
 };
 
-const find = function (dom, node, next, inc?) {
+const find = function (dom: DOMUtils, node: Node, next: boolean, inc?: boolean) {
   node = FormatUtils.getNonWhiteSpaceSibling(node, next, inc);
   return !node || (node.nodeName === 'BR' || dom.isBlock(node));
 };
@@ -143,7 +145,7 @@ const find = function (dom, node, next, inc?) {
  * @param {Object} format Format rule.
  * @return {Node} Input node.
  */
-const removeNode = function (ed, node, format) {
+const removeNode = function (ed: Editor, node: Node, format) {
   const parentNode = node.parentNode;
   let rootBlockElm;
   const dom = ed.dom, forcedRootBlock = Settings.getForcedRootBlock(ed);
@@ -152,11 +154,11 @@ const removeNode = function (ed, node, format) {
     if (!forcedRootBlock) {
       // Append BR elements if needed before we remove the block
       if (dom.isBlock(node) && !dom.isBlock(parentNode)) {
-        if (!find(dom, node, false) && !find(dom, node.firstChild, true, 1)) {
+        if (!find(dom, node, false) && !find(dom, node.firstChild, true, true)) {
           node.insertBefore(dom.create('br'), node.firstChild);
         }
 
-        if (!find(dom, node, true) && !find(dom, node.lastChild, false, 1)) {
+        if (!find(dom, node, true) && !find(dom, node.lastChild, false, true)) {
           node.appendChild(dom.create('br'));
         }
       }
@@ -186,7 +188,7 @@ const removeNode = function (ed, node, format) {
     return;
   }
 
-  dom.remove(node, 1);
+  dom.remove(node, true);
 };
 
 /**
@@ -200,8 +202,8 @@ const removeNode = function (ed, node, format) {
  * @param {Node} compareNode Optional compare node, if specified the styles will be compared to that node.
  * @return {Boolean} True/false if the node was removed or not.
  */
-const removeFormat = function (ed, format, vars?, node?, compareNode?) {
-  let i, attrs, stylesModified;
+const removeFormat = function (ed: Editor, format: RemoveFormat, vars?: FormatVars, node?: Node, compareNode?: Node) {
+  let stylesModified: boolean;
   const dom = ed.dom;
 
   // Check if node matches format
@@ -209,33 +211,36 @@ const removeFormat = function (ed, format, vars?, node?, compareNode?) {
     return false;
   }
 
+  // "matchName" will made sure we're dealing with an element, so cast as one
+  const elm = node as DomElement;
+
   // Should we compare with format attribs and styles
   if (format.remove !== 'all') {
     // Remove styles
-    each(format.styles, function (value, name) {
+    each(format.styles, function (value: FormatAttrOrStyleValue, name: string) {
       value = FormatUtils.normalizeStyleValue(dom, FormatUtils.replaceVars(value, vars), name);
 
       // Indexed array
       if (typeof name === 'number') {
         name = value;
-        compareNode = 0;
+        compareNode = null;
       }
 
       if (format.remove_similar || (!compareNode || isEq(FormatUtils.getStyle(dom, compareNode, name), value))) {
-        dom.setStyle(node, name, '');
+        dom.setStyle(elm, name, '');
       }
 
-      stylesModified = 1;
+      stylesModified = true;
     });
 
     // Remove style attribute if it's empty
-    if (stylesModified && dom.getAttrib(node, 'style') === '') {
-      node.removeAttribute('style');
-      node.removeAttribute('data-mce-style');
+    if (stylesModified && dom.getAttrib(elm, 'style') === '') {
+      elm.removeAttribute('style');
+      elm.removeAttribute('data-mce-style');
     }
 
     // Remove attributes
-    each(format.attributes, function (value, name) {
+    each(format.attributes, function (value: FormatAttrOrStyleValue, name: string) {
       let valueOut;
 
       value = FormatUtils.replaceVars(value, vars);
@@ -243,13 +248,13 @@ const removeFormat = function (ed, format, vars?, node?, compareNode?) {
       // Indexed array
       if (typeof name === 'number') {
         name = value;
-        compareNode = 0;
+        compareNode = null;
       }
 
       if (format.remove_similar || (!compareNode || isEq(dom.getAttrib(compareNode, name), value))) {
         // Keep internal classes
         if (name === 'class') {
-          value = dom.getAttrib(node, name);
+          value = dom.getAttrib(elm, name);
           if (value) {
             // Build new class value where everything is removed except the internal prefixed classes
             valueOut = '';
@@ -261,7 +266,7 @@ const removeFormat = function (ed, format, vars?, node?, compareNode?) {
 
             // We got some internal classes left
             if (valueOut) {
-              dom.setAttrib(node, name, valueOut);
+              dom.setAttrib(elm, name, valueOut);
               return;
             }
           }
@@ -269,15 +274,15 @@ const removeFormat = function (ed, format, vars?, node?, compareNode?) {
 
         // IE6 has a bug where the attribute doesn't get removed correctly
         if (name === 'class') {
-          node.removeAttribute('className');
+          elm.removeAttribute('className');
         }
 
         // Remove mce prefixed attributes
         if (MCE_ATTR_RE.test(name)) {
-          node.removeAttribute('data-mce-' + name);
+          elm.removeAttribute('data-mce-' + name);
         }
 
-        node.removeAttribute(name);
+        elm.removeAttribute(name);
       }
     });
 
@@ -286,13 +291,13 @@ const removeFormat = function (ed, format, vars?, node?, compareNode?) {
       value = FormatUtils.replaceVars(value, vars);
 
       if (!compareNode || dom.hasClass(compareNode, value)) {
-        dom.removeClass(node, value);
+        dom.removeClass(elm, value);
       }
     });
 
     // Check for non internal attributes
-    attrs = dom.getAttribs(node);
-    for (i = 0; i < attrs.length; i++) {
+    const attrs = dom.getAttribs(elm);
+    for (let i = 0; i < attrs.length; i++) {
       const attrName = attrs[i].nodeName;
       if (attrName.indexOf('_') !== 0 && attrName.indexOf('data-') !== 0) {
         return false;
@@ -302,12 +307,12 @@ const removeFormat = function (ed, format, vars?, node?, compareNode?) {
 
   // Remove the inline child if it's empty for example <b> or <span>
   if (format.remove !== 'none') {
-    removeNode(ed, node, format);
+    removeNode(ed, elm, format);
     return true;
   }
 };
 
-const findFormatRoot = function (editor: Editor, container, name, vars, similar) {
+const findFormatRoot = function (editor: Editor, container: Node, name: string, vars: FormatVars, similar: boolean) {
   let formatRoot;
 
   // Find format root
@@ -327,7 +332,7 @@ const findFormatRoot = function (editor: Editor, container, name, vars, similar)
   return formatRoot;
 };
 
-const wrapAndSplit = function (editor: Editor, formatList, formatRoot, container, target, split, format, vars) {
+const wrapAndSplit = function (editor: Editor, formatList, formatRoot: Node, container: Node, target: Node, split: boolean, format, vars: FormatVars) {
   let parent, clone, lastClone, firstClone, i, formatRootParent;
   const dom = editor.dom;
 
@@ -374,13 +379,13 @@ const wrapAndSplit = function (editor: Editor, formatList, formatRoot, container
   return container;
 };
 
-const remove = function (ed: Editor, name: string, vars?, node?, similar?) {
+const remove = function (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range, similar?) {
   const formatList = ed.formatter.get(name), format = formatList[0];
   let bookmark, rng, contentEditable = true;
   const dom = ed.dom;
   const selection: Selection = ed.selection;
 
-  const splitToFormatRoot = function (container) {
+  const splitToFormatRoot = function (container: Node) {
     const formatRoot = findFormatRoot(ed, container, name, vars, similar);
     return wrapAndSplit(ed, formatList, formatRoot, container, container, true, format, vars);
   };
@@ -392,8 +397,8 @@ const remove = function (ed: Editor, name: string, vars?, node?, similar?) {
   };
 
   // Merges the styles for each node
-  const process = function (node) {
-    let children, i, l, lastContentEditable, hasContentEditableState;
+  const process = function (node: Node) {
+    let children: Node[], i, l, lastContentEditable, hasContentEditableState;
 
     // Node has a contentEditable value
     if (NodeType.isElement(node) && dom.getContentEditable(node)) {
@@ -428,7 +433,7 @@ const remove = function (ed: Editor, name: string, vars?, node?, similar?) {
     }
   };
 
-  const unwrap = function (start?) {
+  const unwrap = function (start?: boolean) {
     const node = dom.get(start ? '_start' : '_end');
     let out = node[start ? 'firstChild' : 'lastChild'];
 
@@ -449,18 +454,18 @@ const remove = function (ed: Editor, name: string, vars?, node?, similar?) {
     return out;
   };
 
-  const removeRngStyle = function (rng) {
+  const removeRngStyle = function (rng: Range) {
     let startContainer, endContainer;
     const commonAncestorContainer = rng.commonAncestorContainer;
 
-    rng = ExpandRange.expandRng(ed, rng, formatList, true);
+    let expandedRng = ExpandRange.expandRng(ed, rng, formatList, true);
 
     if (format.split) {
       // Split text nodes
-      rng = SplitRange.split(rng);
+      expandedRng = SplitRange.split(expandedRng);
 
-      startContainer = getContainer(ed, rng, true);
-      endContainer = getContainer(ed, rng);
+      startContainer = getContainer(ed, expandedRng, true);
+      endContainer = getContainer(ed, expandedRng);
 
       if (startContainer !== endContainer) {
         // WebKit will render the table incorrectly if we wrap a TH or TD in a SPAN
@@ -501,7 +506,17 @@ const remove = function (ed: Editor, name: string, vars?, node?, similar?) {
         startContainer = wrap(dom, startContainer, 'span', { 'id': '_start', 'data-mce-type': 'bookmark' });
         endContainer = wrap(dom, endContainer, 'span', { 'id': '_end', 'data-mce-type': 'bookmark' });
 
-        // Split start/end
+        // Split start/end and anything in between
+        const newRng = dom.createRng();
+        newRng.setStartAfter(startContainer);
+        newRng.setEndBefore(endContainer);
+        RangeWalk.walk(dom, newRng, (nodes) => {
+          Arr.each(nodes, (n) => {
+            if (!Bookmarks.isBookmarkNode(n) && !Bookmarks.isBookmarkNode(n.parentNode)) {
+              splitToFormatRoot(n);
+            }
+          });
+        });
         splitToFormatRoot(startContainer);
         splitToFormatRoot(endContainer);
 
@@ -513,14 +528,14 @@ const remove = function (ed: Editor, name: string, vars?, node?, similar?) {
       }
 
       // Update range positions since they might have changed after the split operations
-      rng.startContainer = startContainer.parentNode ? startContainer.parentNode : startContainer;
-      rng.startOffset = dom.nodeIndex(startContainer);
-      rng.endContainer = endContainer.parentNode ? endContainer.parentNode : endContainer;
-      rng.endOffset = dom.nodeIndex(endContainer) + 1;
+      expandedRng.startContainer = startContainer.parentNode ? startContainer.parentNode : startContainer;
+      expandedRng.startOffset = dom.nodeIndex(startContainer);
+      expandedRng.endContainer = endContainer.parentNode ? endContainer.parentNode : endContainer;
+      expandedRng.endOffset = dom.nodeIndex(endContainer) + 1;
     }
 
     // Remove items between start/end
-    RangeWalk.walk(dom, rng, function (nodes) {
+    RangeWalk.walk(dom, expandedRng, function (nodes) {
       each(nodes, function (node) {
         process(node);
 
@@ -542,7 +557,7 @@ const remove = function (ed: Editor, name: string, vars?, node?, similar?) {
 
   // Handle node
   if (node) {
-    if (node.nodeType) {
+    if (FormatUtils.isNode(node)) {
       rng = dom.createRng();
       rng.setStartBefore(node);
       rng.setEndAfter(node);
@@ -584,7 +599,7 @@ const remove = function (ed: Editor, name: string, vars?, node?, similar?) {
   }
 };
 
-export default {
+export {
   removeFormat,
   remove
 };

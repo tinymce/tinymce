@@ -59,6 +59,8 @@ const normalizeHtml = function (html: string): string {
   return writer.getContent();
 };
 
+const sources = ['source', 'altsource'];
+
 const updateHtmlSax = function (html: string, data: Partial<MediaData>, updateAll?: boolean): string {
   const writer = Writer();
   let sourceCount = 0;
@@ -104,7 +106,7 @@ const updateHtmlSax = function (html: string, data: Partial<MediaData>, updateAl
               src: ''
             });
 
-            if (data.source2) {
+            if (data.altsource) {
               setAttributes(attrs, {
                 src: ''
               });
@@ -113,23 +115,22 @@ const updateHtmlSax = function (html: string, data: Partial<MediaData>, updateAl
 
           case 'iframe':
             setAttributes(attrs, {
-              src: data.source1
+              src: data.source
             });
             break;
 
           case 'source':
-            sourceCount++;
-
-            if (sourceCount <= 2) {
+            if (sourceCount < 2) {
               setAttributes(attrs, {
-                src: data['source' + sourceCount],
-                type: data['source' + sourceCount + 'mime']
+                src: data[sources[sourceCount]],
+                type: data[sources[sourceCount] + 'mime']
               });
 
-              if (!data['source' + sourceCount]) {
+              if (!data[sources[sourceCount]]) {
                 return;
               }
             }
+            sourceCount++;
             break;
 
           case 'img':
@@ -147,15 +148,15 @@ const updateHtmlSax = function (html: string, data: Partial<MediaData>, updateAl
 
     end (name) {
       if (name === 'video' && updateAll) {
-        for (let index = 1; index <= 2; index++) {
-          if (data['source' + index]) {
+        for (let index = 0; index < 2; index++) {
+          if (data[sources[index]]) {
             const attrs: any = [];
             attrs.map = {};
 
             if (sourceCount < index) {
               setAttributes(attrs, {
-                src: data['source' + index],
-                type: data['source' + index + 'mime']
+                src: data[sources[index]],
+                type: data[sources[index] + 'mime']
               });
 
               writer.start('source', attrs, true);

@@ -5,13 +5,13 @@ import * as ReflectingState from '../../behaviour/reflecting/ReflectingState';
 import ReflectingSchema from '../../behaviour/reflecting/ReflectingSchema';
 import { ReflectingBehaviour } from '../../behaviour/reflecting/ReflectingTypes';
 
-const Reflecting = Behaviour.create({
+const Reflecting: ReflectingBehaviour<any, any> = Behaviour.create({
   fields: ReflectingSchema,
   name: 'reflecting',
   active: ActiveReflecting,
   apis: ReflectingApis,
   state: ReflectingState
-}) as ReflectingBehaviour<any, any>;
+});
 
 export {
   Reflecting

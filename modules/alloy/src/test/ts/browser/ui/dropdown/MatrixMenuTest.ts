@@ -1,18 +1,19 @@
-import { ApproxStructure, Assertions, Chain, NamedChain, UiFinder, Keyboard, Keys } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { ApproxStructure, Assertions, Chain, Keyboard, Keys, NamedChain, StructAssert, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
 
@@ -39,7 +40,7 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
 
         components: [
           Menu.parts().items({
-            preprocess: (items) => {
+            preprocess: (items: AlloySpec[]) => {
               const chunks = Arr.chunk(items, 2);
               return Arr.map(chunks, (c) => ({
                 dom: {
@@ -66,7 +67,7 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
     );
   }, (doc, body, gui, component, store) => {
     // TODO: Flesh out test.
-    const cAssertStructure = (label, expected) => {
+    const cAssertStructure = (label: string, expected: StructAssert) => {
       return Chain.op((element: Element) => {
         Assertions.assertStructure(label, expected, element);
       });
@@ -76,7 +77,7 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
       AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
     });
 
-    const cAssertSelectedStates = (label, expected) => {
+    const cAssertSelectedStates = (label: string, expected: boolean[]) => {
       return NamedChain.direct('menu', cAssertStructure(label, ApproxStructure.build((s, str, arr) => {
         return s.element('ol', {
           classes: [

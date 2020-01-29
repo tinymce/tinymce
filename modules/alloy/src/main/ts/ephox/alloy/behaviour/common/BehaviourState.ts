@@ -3,11 +3,11 @@ export interface BehaviourState {
   readState: () => any;
 }
 
-export interface BehaviourStateInitialiser<C> {
-  init: (config: C) => BehaviourState;
+export interface BehaviourStateInitialiser<C, S extends BehaviourState> {
+  init: (config: C) => S;
 }
 
-const NoState: BehaviourStateInitialiser<any> = {
+const NoState: BehaviourStateInitialiser<any, BehaviourState> = {
   init: () => {
     return nu({
       readState () {
@@ -21,7 +21,7 @@ export interface Stateless extends BehaviourState {
   // Add placeholder here.
 }
 
-const nu = <T extends BehaviourState>(spec): T => {
+const nu = <T extends BehaviourState>(spec: T): T => {
   return spec;
 };
 

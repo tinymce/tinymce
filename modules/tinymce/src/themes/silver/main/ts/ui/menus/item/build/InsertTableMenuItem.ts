@@ -13,8 +13,8 @@ const cellOverEvent = Id.generate('cell-over');
 const cellExecuteEvent = Id.generate('cell-execute');
 
 interface CellEvent extends CustomEvent {
-  col: () => Number;
-  row: () => Number;
+  col: () => number;
+  row: () => number;
 }
 
 const makeCell = (row, col, labelId) => {

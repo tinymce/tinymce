@@ -1,6 +1,5 @@
 import * as Boxes from '../alien/Boxes';
 import * as EventRoot from '../alien/EventRoot';
-import { SugarEvent } from '../alien/TypeDefinitions';
 import { BehaviourState } from '../behaviour/common/BehaviourState';
 import * as Fields from '../data/Fields';
 import * as Debugging from '../debugging/Debugging';
@@ -106,6 +105,7 @@ import * as TieredMenuTypes from '../ui/types/TieredMenuTypes';
 import * as MenuTypes from '../ui/types/MenuTypes';
 import { Toolbar } from './ui/Toolbar';
 import { ToolbarGroup } from './ui/ToolbarGroup';
+import { FloatingToolbarButton } from './ui/FloatingToolbarButton';
 import { TouchMenu } from './ui/TouchMenu';
 import { Typeahead } from './ui/Typeahead';
 import * as UiSketcher from './ui/UiSketcher';
@@ -116,7 +116,8 @@ import {
   MakeshiftAnchorSpec,
   SelectionAnchorSpec,
   HotspotAnchorSpec,
-  SubmenuAnchorSpec
+  SubmenuAnchorSpec,
+  Layouts
 } from '../positioning/mode/Anchoring';
 
 import * as Layout from '../positioning/layout/Layout';
@@ -130,7 +131,9 @@ import { FocusInsideModes } from '../keying/KeyingModeTypes';
 import * as SlotContainerTypes from '../ui/types/SlotContainerTypes';
 import * as SliderTypes from '../ui/types/SliderTypes';
 import * as FormTypes from '../ui/types/FormTypes';
+import * as TabbarTypes from '../ui/types/TabbarTypes';
 import { CustomList } from './ui/CustomList';
+import * as VerticalDir from '../positioning/mode/VerticalDir';
 
 type AlloyComponent = ComponentApi.AlloyComponent;
 type MementoRecord = Memento.MementoRecord;
@@ -226,6 +229,7 @@ export {
   TieredData,
   Toolbar,
   ToolbarGroup,
+  FloatingToolbarButton,
   TouchMenu,
   Typeahead,
   UiSketcher,
@@ -256,7 +260,6 @@ export {
   NativeSimulatedEvent,
   CustomSimulatedEvent,
   ReceivingEvent,
-  SugarEvent,
 
   // layout
   Layout,
@@ -266,6 +269,7 @@ export {
   MaxHeight,
   MaxWidth,
   LazySink,
+  VerticalDir,
 
   // types
   TieredMenuTypes,
@@ -273,6 +277,7 @@ export {
   SlotContainerTypes,
   SliderTypes,
   FormTypes,
+  TabbarTypes,
   AnchorSpec,
   NodeAnchorSpec,
   MakeshiftAnchorSpec,
@@ -280,6 +285,7 @@ export {
   HotspotAnchorSpec,
   SubmenuAnchorSpec,
   DraggingTypes,
+  Layouts,
 
   FocusInsideModes,
 

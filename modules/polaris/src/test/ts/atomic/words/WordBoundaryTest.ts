@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as StringMapper from 'ephox/polaris/words/StringMapper';
 import * as WordBoundary from 'ephox/polaris/words/WordBoundary';
 

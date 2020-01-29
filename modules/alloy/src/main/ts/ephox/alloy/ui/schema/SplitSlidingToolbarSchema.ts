@@ -7,11 +7,13 @@ import { Keying } from '../../api/behaviour/Keying';
 import { Sliding } from '../../api/behaviour/Sliding';
 import { Toggling } from '../../api/behaviour/Toggling';
 import { Toolbar } from '../../api/ui/Toolbar';
-import * as SplitToolbarBase from '../common/SplitToolbarBase';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
+import * as SplitToolbarBase from '../common/SplitToolbarBase';
+import { ButtonSpec } from '../types/ButtonTypes';
 import { SplitSlidingToolbarDetail } from '../types/SplitSlidingToolbarTypes';
+import { ToolbarSpec } from '../types/ToolbarTypes';
 import * as ToolbarSchema from './ToolbarSchema';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
@@ -23,17 +25,17 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 ));
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
-  PartType.required({
+  PartType.required<SplitSlidingToolbarDetail, ToolbarSpec>({
     factory: Toolbar,
     schema: ToolbarSchema.schema(),
     name: 'primary'
   }),
 
-  PartType.required({
+  PartType.required<SplitSlidingToolbarDetail, ToolbarSpec>({
     factory: Toolbar,
     schema: ToolbarSchema.schema(),
     name: 'overflow',
-    overrides (detail: SplitSlidingToolbarDetail) {
+    overrides (detail) {
       return {
         toolbarBehaviours: Behaviour.derive([
           Sliding.config({
@@ -63,7 +65,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             mode: 'acyclic',
             onEscape: (comp) => {
               AlloyParts.getPart(comp, detail, 'overflow-button').each(Focusing.focus);
-              return Option.some(true);
+              return Option.some<boolean>(true);
             }
           })
         ])
@@ -71,9 +73,9 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     }
   }),
 
-  PartType.external({
+  PartType.external<SplitSlidingToolbarDetail, ButtonSpec>({
     name: 'overflow-button',
-    overrides: (detail: SplitSlidingToolbarDetail) => {
+    overrides: (detail) => {
       return {
         buttonBehaviours: Behaviour.derive([
           Toggling.config({
@@ -88,7 +90,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     }
   }),
 
-  PartType.external({
+  PartType.external<SplitSlidingToolbarDetail>({
     name: 'overflow-group'
   })
 ]);

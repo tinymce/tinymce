@@ -1,8 +1,13 @@
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-
-import * as RawAssertions from 'ephox/agar/api/RawAssertions';
-import { addLogEntry, popLogLevel, pushLogLevel, TestLogs, TestLogEntryState, addStackTrace } from 'ephox/agar/api/TestLogs';
+import {
+  addLogEntry,
+  addStackTrace,
+  popLogLevel,
+  pushLogLevel,
+  TestLogEntryState,
+  TestLogs
+} from 'ephox/agar/api/TestLogs';
 
 UnitTest.test('TestLogsTest', () => {
 
@@ -12,7 +17,7 @@ UnitTest.test('TestLogsTest', () => {
     return addLogEntry(logs, s);
   };
   const assertLog = (expected) => (logs) => {
-    RawAssertions.assertEq('Checking logs', expected, logs.history);
+    Assert.eq('Checking logs', expected, logs.history);
     return logs;
   };
 

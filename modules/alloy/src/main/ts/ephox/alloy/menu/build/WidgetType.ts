@@ -22,7 +22,7 @@ const builder = (detail: WidgetItemDetail) => {
   const subs = AlloyParts.substitutes(WidgetParts.owner(), detail, WidgetParts.parts());
   const components = AlloyParts.components(WidgetParts.owner(), detail, subs.internals());
 
-  const focusWidget = (component) => {
+  const focusWidget = (component: AlloyComponent) => {
     return AlloyParts.getPart(component, detail, 'widget').map((widget) => {
       Keying.focusIn(widget);
       return widget;

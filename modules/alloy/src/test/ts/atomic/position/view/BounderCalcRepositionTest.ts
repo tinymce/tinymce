@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import Jsc from '@ephox/wrap-jsverify';
 
 import { bounds as makeBounds } from 'ephox/alloy/alien/Boxes';
@@ -10,14 +10,14 @@ UnitTest.test('BounderCalcRepositionTest', () => {
   const zeroableArb = Jsc.integer(0, 1000);
 
   const arbTestCase = Jsc.bless({
-    generator: zeroableArb.generator.flatMap((newX) => {
-      return zeroableArb.generator.flatMap((newY) => {
-        return nonZeroArb.generator.flatMap((width) => {
-          return nonZeroArb.generator.flatMap((height) => {
-            return zeroableArb.generator.flatMap((boundsX) => {
-              return zeroableArb.generator.flatMap((boundsY) => {
-                return zeroableArb.generator.flatMap((boundsW) => {
-                  return zeroableArb.generator.map((boundsH) => {
+    generator: zeroableArb.generator.flatMap((newX: number) => {
+      return zeroableArb.generator.flatMap((newY: number) => {
+        return nonZeroArb.generator.flatMap((width: number) => {
+          return nonZeroArb.generator.flatMap((height: number) => {
+            return zeroableArb.generator.flatMap((boundsX: number) => {
+              return zeroableArb.generator.flatMap((boundsY: number) => {
+                return zeroableArb.generator.flatMap((boundsW: number) => {
+                  return zeroableArb.generator.map((boundsH: number) => {
                     return {
                       newX,
                       newY,
@@ -41,7 +41,7 @@ UnitTest.test('BounderCalcRepositionTest', () => {
   Jsc.property(
     'Check that all values have something visible within bounds',
     arbTestCase,
-    (input) => {
+    (input: { newX: number, newY: number, width: number, height: number, boundsX: number, boundsY: number, boundsW: number, boundsH: number}) => {
       const bounds = makeBounds(input.boundsX, input.boundsY, input.boundsW, input.boundsH);
       const output = Bounder.calcReposition(input.newX, input.newY, input.width, input.height, bounds);
 

@@ -1,9 +1,9 @@
-import { Assertions, Chain, Pipeline, Log, Guard } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { Merger, Obj } from '@ephox/katamari';
+import { Assertions, Chain, Guard, Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Obj } from '@ephox/katamari';
 import { Editor as McEditor } from '@ephox/mcagar';
 
-import { PasteBin, getPasteBinParent } from 'tinymce/plugins/paste/core/PasteBin';
+import { getPasteBinParent, PasteBin } from 'tinymce/plugins/paste/core/PasteBin';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -25,14 +25,15 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', (success, failure) 
     }
   ];
 
-  const cCreateEditorFromSettings = function (settings?, html?) {
+  const cCreateEditorFromSettings = function (settings = {}, html?) {
     return Chain.control(
-      McEditor.cFromHtml(html, Merger.merge(settings || {}, {
+      McEditor.cFromHtml(html, {
+        ...settings,
         add_unload_trigger: false,
         indent: false,
         plugins: 'paste',
         base_url: '/project/tinymce/js/tinymce'
-      })),
+      }),
       Guard.addLogging(`Create editor using settings ${settings}`)
     );
   };

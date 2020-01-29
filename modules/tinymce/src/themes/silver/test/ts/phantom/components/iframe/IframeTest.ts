@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { AlloyComponent, Composing, GuiFactory, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 

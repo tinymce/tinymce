@@ -1,16 +1,16 @@
 import { Pipeline, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import SearchreplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import HtmlUtils from '../module/test/HtmlUtils';
 
-UnitTest.asynctest(
-  'browser.tinymce.plugins.searchreplace.SearchReplacePluginTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplacePluginTest', (success, failure) => {
+    const suite = LegacyUnit.createSuite<Editor>();
 
-    const suite = LegacyUnit.createSuite();
     Theme();
     SearchreplacePlugin();
 

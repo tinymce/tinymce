@@ -1,25 +1,21 @@
 import { Merger, Obj } from '@ephox/katamari';
-import { Attr, Css, InsertAll } from '@ephox/sugar';
+import { Attr, Css, InsertAll, Truncate } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 
-import * as Truncate from '../alien/Truncate';
-import ArbChildrenSchema from './ArbChildrenSchema';
-import ArbNodes from './ArbNodes';
+import * as ArbChildrenSchema from './ArbChildrenSchema';
+import * as ArbNodes from './ArbNodes';
 import { WeightedChoice } from './WeightedChoice';
 
-const toTags = function (detail) {
-  return Obj.mapToArray(detail.tags, function (v, k) {
-    return Merger.deepMerge(v, { tag: k });
-  });
-};
+const toTags = (detail) =>
+  Obj.mapToArray(detail.tags, (v, k) => Merger.deepMerge(v, {tag: k}));
 
-const flattenTag = function (tag) {
+const flattenTag = (tag) => {
   const r = {};
-  r[tag] = { weight: 1.0 };
+  r[tag] = {weight: 1.0};
   return r;
 };
 
-const conform = function (detail) {
+const conform = (detail) => {
   if (detail.tags !== undefined) {
     return detail;
   } else {
@@ -29,19 +25,19 @@ const conform = function (detail) {
   }
 };
 
-const addDecorations = function (detail, element) {
+const addDecorations = (detail, element) => {
   const attrDecorator = detail.attributes !== undefined ? detail.attributes : Jsc.constant({}).generator;
   const styleDecorator = detail.styles !== undefined ? detail.styles : Jsc.constant({}).generator;
-  return attrDecorator.flatMap(function (attrs) {
+  return attrDecorator.flatMap((attrs) => {
     Attr.setAll(element, attrs);
-    return styleDecorator.map(function (styles) {
+    return styleDecorator.map((styles) => {
       Css.setAll(element, styles);
       return element;
     });
   });
 };
 
-const makeTag = function (choice) {
+const makeTag = (choice) => {
   const element = ArbNodes.elementOf(choice.tag);
   const attributes = choice.attributes !== undefined ? choice.attributes : {};
   const styles = choice.styles !== undefined ? choice.styles : {};
@@ -50,14 +46,14 @@ const makeTag = function (choice) {
   return element;
 };
 
-export default function (construct) {
-  const combine = function (detail, childGenerator) {
+export const create = (construct) => {
+  const combine = (detail, childGenerator) => {
     const show = Truncate.getHtml;
     const tags = toTags(conform(detail));
 
-    const generator = WeightedChoice.generator(tags).flatMap(function (choiceOption) {
+    const generator = WeightedChoice.generator(tags).flatMap((choiceOption) => {
       const choice = choiceOption.getOrDie('Every entry in tags for: ' + JSON.stringify(detail) + ' must have a tag');
-      return childGenerator.flatMap(function (children) {
+      return childGenerator.flatMap((children) => {
         const parent = makeTag(choice);
         InsertAll.append(parent, children);
         // Use any style and attribute decorators.
@@ -72,31 +68,19 @@ export default function (construct) {
     });
   };
 
-  const composite = function (detail) {
-    return function (rawDepth) {
-      const childGenerator = ArbChildrenSchema.composite(rawDepth, detail, construct);
-      return combine(detail, childGenerator);
-    };
+  const composite = (detail) => (rawDepth) => {
+    const childGenerator = ArbChildrenSchema.composite(rawDepth, detail, construct);
+    return combine(detail, childGenerator);
   };
 
-  const leaf = function (detail) {
-    return function (_) {
-      return combine(detail, ArbChildrenSchema.none);
-    };
+  const leaf = (detail) => (_) => combine(detail, ArbChildrenSchema.none);
+
+  const structure = (detail) => (rawDepth) => {
+    const childGenerator = ArbChildrenSchema.structure(rawDepth, detail, construct);
+    return combine(detail, childGenerator);
   };
 
-  const structure = function (detail) {
-    return function (rawDepth) {
-      const childGenerator = ArbChildrenSchema.structure(rawDepth, detail, construct);
-      return combine(detail, childGenerator);
-    };
-  };
-
-  const arbitrary = function (arb) {
-    return function (_) {
-      return arb.component;
-    };
-  };
+  const arbitrary = (arb) => (_) => arb.component;
 
   return {
     arbitrary,
@@ -104,4 +88,4 @@ export default function (construct) {
     structure,
     composite
   };
-}
+};

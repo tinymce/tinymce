@@ -1,5 +1,5 @@
 import { GeneralSteps, Logger, Pipeline, Keys, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 import VK from 'tinymce/core/api/util/VK';
@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.ImageBlockDeleteTest',  (success
     const tinyActions = TinyActions(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
 
       Log.stepsAsStep('TBA', 'Delete keys for image block element', [
         Logger.t('Should place the selection on the image block element on delete before', GeneralSteps.sequence([

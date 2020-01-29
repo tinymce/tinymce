@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Cleaner, Logger, Step, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { window } from '@ephox/dom-globals';
 import { DomEvent, Element } from '@ephox/sugar';
 
@@ -84,7 +84,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
       });
     };
 
-    const boxWithPosition = (position) => {
+    const boxWithPosition = (position: string) => {
       return ApproxStructure.build((s, str, arr) => {
         return s.element('div', {
           styles: {

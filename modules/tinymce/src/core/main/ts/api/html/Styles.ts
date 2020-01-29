@@ -25,6 +25,7 @@
  */
 
 import Schema from './Schema';
+import { Unicode } from '@ephox/katamari';
 
 export interface StyleMap { [s: string]: string | number; }
 interface Styles {
@@ -55,7 +56,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
   let encodingItems;
   let validStyles;
   let invalidStyles;
-  const invisibleChar = '\uFEFF';
+  const invisibleChar = Unicode.zeroWidth;
 
   settings = settings || {};
 

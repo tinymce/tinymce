@@ -9,6 +9,7 @@ import DomParser from 'tinymce/core/api/html/DomParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
 import { navigator } from '@ephox/dom-globals';
+import { Unicode } from '@ephox/katamari';
 
 /**
  * This class contails various utility functions for the paste plugin.
@@ -113,7 +114,7 @@ function trimHtml(html: string) {
       return ' ';
     }
 
-    return '\u00a0';
+    return Unicode.nbsp;
   }
 
   html = filter(html, [

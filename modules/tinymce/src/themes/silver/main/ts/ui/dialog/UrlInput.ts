@@ -267,7 +267,11 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
 
   const openUrlPicker = (comp: AlloyComponent) => {
     Composing.getCurrent(comp).each((field) => {
-      const urlData = Representing.getValue(field);
+      const componentData = Representing.getValue(field);
+      const urlData = {
+        fieldname: spec.name,
+        ...componentData,
+      };
       optUrlPicker.each((picker) => {
         picker(urlData).get((chosenData) => {
           Representing.setValue(field, chosenData);

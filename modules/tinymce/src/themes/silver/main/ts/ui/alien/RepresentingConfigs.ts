@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { MementoRecord, Representing, AlloyComponent } from '@ephox/alloy';
+import { AlloyComponent, MementoRecord, Representing } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger, Option } from '@ephox/katamari';
 import { Element, Html, Value } from '@ephox/sugar';
@@ -39,7 +39,7 @@ const withComp = <D>(optInitialValue: Option<D>, getter: (c: AlloyComponent) => 
     Merger.deepMerge(
       {
         store: {
-          mode: 'manual',
+          mode: 'manual' as 'manual',
           getValue: getter,
           setValue: setter
         }

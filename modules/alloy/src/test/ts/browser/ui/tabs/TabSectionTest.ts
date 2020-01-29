@@ -1,15 +1,15 @@
-import { ApproxStructure, Assertions, Step, GeneralSteps, Logger } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { SelectorFind } from '@ephox/sugar';
+import { ApproxStructure, Assertions, GeneralSteps, Logger, Step, StructAssert } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Element, SelectorFind } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Tabbar } from 'ephox/alloy/api/ui/Tabbar';
 import { TabSection } from 'ephox/alloy/api/ui/TabSection';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('TabSection Test', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
@@ -89,7 +89,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
       SelectorFind.descendant(component.element(), '.test-tabview').getOrDie('Could not find tabview')
     ).getOrDie();
 
-    const sAssertTabSelection = (label, expected, element) =>
+    const sAssertTabSelection = (label: string, expected: boolean, element: Element) =>
       Assertions.sAssertStructure(label + ' (asserting structure)', ApproxStructure.build((s, str, arr) => {
         return s.element('button', {
           attrs: {
@@ -99,7 +99,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
         });
       }), element);
 
-    const sAssertTabView = (label: string, expected) =>
+    const sAssertTabView = (label: string, expected: ApproxStructure.Builder<StructAssert[]>) =>
       Assertions.sAssertStructure(label + ' (asserting structure)', ApproxStructure.build((s, str, arr) => {
         return s.element('div', {
           children: expected(s, str, arr)

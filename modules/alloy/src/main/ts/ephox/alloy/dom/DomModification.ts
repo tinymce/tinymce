@@ -1,9 +1,8 @@
-
 import { DomDefinitionDetail } from './DomDefinition';
 
 export interface DomModification {
   classes: string[];
-  attributes: Record<string, string>;
+  attributes: Record<string, string | number | boolean>;
   styles: Record<string, string>;
 }
 

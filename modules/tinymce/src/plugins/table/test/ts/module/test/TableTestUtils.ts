@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Guard, Logger, Mouse, NamedChain, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { document, HTMLElement } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
-import { TinyDom } from '@ephox/mcagar';
+import { TinyDom, TinyUi } from '@ephox/mcagar';
 import { Body, Element, SelectorFind, Value, Attr, Html } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
@@ -21,9 +21,9 @@ const sOpenToolbarOn = function (editor, selector, path) {
   ]));
 };
 
-const sOpenTableDialog = Logger.t('Open table dialog', GeneralSteps.sequence([
+const sOpenTableDialog = (ui: TinyUi) => Logger.t('Open table dialog', GeneralSteps.sequence([
   Waiter.sTryUntil('Click table properties toolbar button',
-    Mouse.sClickOn(TinyDom.fromDom(document.body), '.tox-toolbar button:not(.tox-tbtn--disabled)'),
+    ui.sClickOnToolbar('Click on toolbar button', 'button:not(.tox-tbtn--disabled)'),
     50, 1000
   ),
   UiFinder.sWaitForVisible('wait for dialog', TinyDom.fromDom(document.body), '.tox-dialog[role="dialog"]'),

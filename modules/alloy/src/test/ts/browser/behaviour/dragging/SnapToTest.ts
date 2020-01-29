@@ -1,5 +1,5 @@
 import { Chain, Guard, NamedChain } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Option, Result } from '@ephox/katamari';
 import { Css, Position, Scroll } from '@ephox/sugar';
 
@@ -70,7 +70,7 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
     );
   }, (doc, body, gui, component, store) => {
 
-    const cSubject = Chain.mapper(() => {
+    const cSubject = Chain.injectThunked(() => {
       return subject.get(component).element();
     });
 

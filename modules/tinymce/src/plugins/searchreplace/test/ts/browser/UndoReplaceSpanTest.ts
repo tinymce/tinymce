@@ -1,7 +1,7 @@
 import {
     Chain, Log, Mouse, Pipeline, Step, UiControls, UiFinder, Logger
 } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import SearchreplacePlugin from 'tinymce/plugins/searchreplace/Plugin';

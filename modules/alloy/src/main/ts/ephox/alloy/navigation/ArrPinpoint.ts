@@ -1,16 +1,15 @@
-import { Arr, Struct } from '@ephox/katamari';
+import { Arr, Option, Fun } from '@ephox/katamari';
 
-const indexInfo = Struct.immutableBag([ 'index', 'candidates' ], [ ]);
+export interface IndexInfo<A> {
+  index: () => number;
+  candidates: () => A[];
+}
 
-const locate = (candidates, predicate) => {
+export const locate = <A> (candidates: A[], predicate: (a: A) => boolean): Option<IndexInfo<A>> => {
   return Arr.findIndex(candidates, predicate).map((index) => {
-    return indexInfo({
-      index,
-      candidates
+    return ({
+      index: Fun.constant(index),
+      candidates: Fun.constant(candidates)
     });
   });
-};
-
-export {
-  locate
 };

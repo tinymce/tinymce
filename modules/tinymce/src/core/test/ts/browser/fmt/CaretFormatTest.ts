@@ -1,17 +1,15 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { Text } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import * as CaretFormat from 'tinymce/core/fmt/CaretFormat';
 import TypeText from '../../module/test/TypeText';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { isCaretNode, getParentCaretContainer } from 'tinymce/core/fmt/FormatContainer';
-import { Text } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success, failure) {
 
   Theme();
 
@@ -44,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function () {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Apply bold to caret and type bold text after the unformatted text', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p>'),
         tinyApis.sSetCursor([0, 0], 1),
@@ -347,7 +345,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function () {
 
         Assertions.assertDomEq('Should be caret element on child', caret, Element.fromDom(getParentCaretContainer(body.dom(), caret.dom().firstChild)));
         Assertions.assertDomEq('Should be caret element on self', caret, Element.fromDom(getParentCaretContainer(body.dom(), caret.dom())));
-        Assertions.assertEq('Should not be caret element', null, getParentCaretContainer(body, Element.fromTag('span').dom()));
+        Assertions.assertEq('Should not be caret element', null, getParentCaretContainer(body.dom(), Element.fromTag('span').dom()));
         Assertions.assertEq('Should not be caret element', null, getParentCaretContainer(caret.dom(), caret.dom()));
       })),
       Logger.t('replaceWithCaretFormat', Step.sync(function () {

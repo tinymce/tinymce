@@ -6,7 +6,7 @@
  */
 
 import { Element, HTMLElement, MouseEvent, Node, Range } from '@ephox/dom-globals';
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Obj, Unicode } from '@ephox/katamari';
 import { Attr, Compare, Element as SugarElement, Remove, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import Editor from './api/Editor';
 import Env from './api/Env';
@@ -56,7 +56,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
   };
 
   const rootNode = editor.getBody();
-  const fakeCaret = FakeCaret(editor.getBody(), isBlock, () => EditorFocus.hasFocus(editor));
+  const fakeCaret = FakeCaret(editor, rootNode, isBlock, () => EditorFocus.hasFocus(editor));
   const realSelectionId = 'sel-' + editor.dom.uniqueId();
   let selectedContentEditableNode;
 
@@ -462,7 +462,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
       range.setStartAfter($realSelectionContainer[0].firstChild.firstChild);
       range.setEndAfter(targetClone);
     } else {
-      $realSelectionContainer.empty().append('\u00a0').append(targetClone).append('\u00a0');
+      $realSelectionContainer.empty().append(Unicode.nbsp).append(targetClone).append(Unicode.nbsp);
       range.setStart($realSelectionContainer[0].firstChild, 1);
       range.setEnd($realSelectionContainer[0].lastChild, 0);
     }

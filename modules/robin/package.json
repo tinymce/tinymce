@@ -24,6 +24,9 @@
     "@ephox/phoenix": "^5.0.52",
     "@ephox/polaris": "^3.0.43"
   },
+  "devDependencies": {
+    "@ephox/katamari-assertions": "^1.0.0"
+  },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "main": "./lib/main/ts/ephox/robin/api/Main.js",

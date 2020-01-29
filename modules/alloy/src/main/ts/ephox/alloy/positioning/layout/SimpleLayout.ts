@@ -10,11 +10,11 @@ import * as MaxHeight from './MaxHeight';
 import * as Origins from './Origins';
 
 export interface ReparteeOptionsSpec {
-  bounds?: Bounds;
-  origin?: Origins.OriginAdt;
-  preference?: LayoutTypes.AnchorLayout[];
-  maxHeightFunction?: MaxHeightFunction;
-  maxWidthFunction?: MaxWidthFunction;
+  bounds: Bounds;
+  origin: Origins.OriginAdt;
+  preference: LayoutTypes.AnchorLayout[];
+  maxHeightFunction: MaxHeightFunction;
+  maxWidthFunction: MaxWidthFunction;
 }
 
 export interface ReparteeOptions {
@@ -25,9 +25,9 @@ export interface ReparteeOptions {
   maxWidthFunction: () => MaxWidthFunction;
 }
 
-const reparteeOptions = Struct.immutableBag(['bounds', 'origin', 'preference', 'maxHeightFunction', 'maxWidthFunction'], []) as (obj) => ReparteeOptions;
-const defaultOr = (options, key, dephault) => {
-  return options[key] === undefined ? dephault : options[key];
+const reparteeOptions: (obj: ReparteeOptionsSpec) => ReparteeOptions = Struct.immutableBag(['bounds', 'origin', 'preference', 'maxHeightFunction', 'maxWidthFunction'], []);
+const defaultOr = <K extends keyof AnchorOverrides>(options: AnchorOverrides, key: K, dephault: NonNullable<AnchorOverrides[K]>): NonNullable<AnchorOverrides[K]> => {
+  return options[key] === undefined ? dephault : options[key] as NonNullable<AnchorOverrides[K]>;
 };
 
 // This takes care of everything when you are positioning UI that can go anywhere on the screen

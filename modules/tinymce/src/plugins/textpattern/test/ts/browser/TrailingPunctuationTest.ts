@@ -1,9 +1,10 @@
 import { ApproxStructure, GeneralSteps, Logger, Pipeline, Step, Waiter, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.textpattern.TrailingPunctuationTest', (success, failure) => {
@@ -11,18 +12,18 @@ UnitTest.asynctest(
     Theme();
     TextpatternPlugin();
 
-    const sTypeChar = function (editor, character) {
+    const sTypeChar = function (editor: Editor, character: string) {
       return Logger.t(`Type ${character}`, Step.sync(function () {
         const charCode = character.charCodeAt(0);
         editor.fire('keypress', { charCode });
       }));
     };
 
-    const sTypeAndTrigger = function (tinyApis, editor) {
+    const sTypeAndTrigger = function (tinyApis: TinyApis, editor: Editor) {
       return function (label, patternText, trigger, tag, rawText) {
         return Logger.t(label, GeneralSteps.sequence([
           tinyApis.sSetContent('<p>' + patternText + trigger + '</p>'),
-          tinyApis.sFocus,
+          tinyApis.sFocus(),
           tinyApis.sSetCursor([0, 0], patternText.length + 1),
           sTypeChar(editor, trigger),
           Waiter.sTryUntil(

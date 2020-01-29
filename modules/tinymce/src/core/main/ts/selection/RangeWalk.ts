@@ -5,11 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Node } from '@ephox/dom-globals';
+import DOMUtils from '../api/dom/DOMUtils';
 import Tools from '../api/util/Tools';
+import { RangeLikeObject } from './RangeTypes';
 
 const each = Tools.each;
 
-const getEndChild = function (container, index) {
+const getEndChild = function (container: Node, index: number) {
   const childNodes = container.childNodes;
 
   index--;
@@ -23,22 +26,15 @@ const getEndChild = function (container, index) {
   return childNodes[index] || container;
 };
 
-const walk = function (dom, rng, callback) {
+const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => void) {
   let startContainer = rng.startContainer;
   const startOffset = rng.startOffset;
   let endContainer = rng.endContainer;
   const endOffset = rng.endOffset;
-  let ancestor;
-  let startPoint;
-  let endPoint;
-  let node;
-  let parent;
-  let siblings;
-  let nodes;
 
   // Handle table cell selection the table plugin enables
   // you to fake select table cells and perform formatting actions on them
-  nodes = dom.select('td[data-mce-selected],th[data-mce-selected]');
+  const nodes = dom.select('td[data-mce-selected],th[data-mce-selected]');
   if (nodes.length > 0) {
     each(nodes, function (node) {
       callback([node]);
@@ -54,7 +50,7 @@ const walk = function (dom, rng, callback) {
    * @param {Array} nodes Nodes to exclude items from.
    * @return {Array} Array with nodes excluding the start/end container if needed.
    */
-  const exclude = function (nodes) {
+  const exclude = function (nodes: Node[]) {
     let node;
 
     // First node is excluded
@@ -72,7 +68,7 @@ const walk = function (dom, rng, callback) {
     return nodes;
   };
 
-  const collectSiblings = function (node, name, endNode?) {
+  const collectSiblings = function (node: Node, name: string, endNode?: Node) {
     const siblings = [];
 
     for (; node && node !== endNode; node = node[name]) {
@@ -82,7 +78,7 @@ const walk = function (dom, rng, callback) {
     return siblings;
   };
 
-  const findEndPoint = function (node, root) {
+  const findEndPoint = function (node: Node, root: Node) {
     do {
       if (node.parentNode === root) {
         return node;
@@ -92,12 +88,12 @@ const walk = function (dom, rng, callback) {
     } while (node);
   };
 
-  const walkBoundary = function (startNode, endNode, next?) {
+  const walkBoundary = function (startNode: Node, endNode: Node, next?: boolean) {
     const siblingName = next ? 'nextSibling' : 'previousSibling';
 
-    for (node = startNode, parent = node.parentNode; node && node !== endNode; node = parent) {
+    for (let node = startNode, parent = node.parentNode; node && node !== endNode; node = parent) {
       parent = node.parentNode;
-      siblings = collectSiblings(node === startNode ? node : node[siblingName], siblingName);
+      const siblings = collectSiblings(node === startNode ? node : node[siblingName], siblingName);
 
       if (siblings.length) {
         if (!next) {
@@ -125,10 +121,10 @@ const walk = function (dom, rng, callback) {
   }
 
   // Find common ancestor and end points
-  ancestor = dom.findCommonAncestor(startContainer, endContainer);
+  const ancestor = dom.findCommonAncestor(startContainer, endContainer);
 
   // Process left side
-  for (node = startContainer; node; node = node.parentNode) {
+  for (let node = startContainer; node; node = node.parentNode) {
     if (node === endContainer) {
       return walkBoundary(startContainer, ancestor, true);
     }
@@ -139,7 +135,7 @@ const walk = function (dom, rng, callback) {
   }
 
   // Process right side
-  for (node = endContainer; node; node = node.parentNode) {
+  for (let node = endContainer; node; node = node.parentNode) {
     if (node === startContainer) {
       return walkBoundary(endContainer, ancestor);
     }
@@ -150,14 +146,14 @@ const walk = function (dom, rng, callback) {
   }
 
   // Find start/end point
-  startPoint = findEndPoint(startContainer, ancestor) || startContainer;
-  endPoint = findEndPoint(endContainer, ancestor) || endContainer;
+  const startPoint = findEndPoint(startContainer, ancestor) || startContainer;
+  const endPoint = findEndPoint(endContainer, ancestor) || endContainer;
 
   // Walk left leaf
   walkBoundary(startContainer, startPoint, true);
 
   // Walk the middle from start to end point
-  siblings = collectSiblings(
+  const siblings = collectSiblings(
     startPoint === startContainer ? startPoint : startPoint.nextSibling,
     'nextSibling',
     endPoint === endContainer ? endPoint.nextSibling : endPoint

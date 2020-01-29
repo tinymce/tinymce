@@ -1,18 +1,17 @@
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
-import { Attr, Class, Css, Element, Html, Insert, Remove, DomEvent } from '@ephox/sugar';
+import { Attr, Class, Css, DomEvent, Element, Html, Insert, Remove } from '@ephox/sugar';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as Guard from 'ephox/agar/api/Guard';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
-import * as RawAssertions from 'ephox/agar/api/RawAssertions';
 import * as RealMouse from 'ephox/agar/api/RealMouse';
 import { Step } from 'ephox/agar/api/Step';
 import * as UiFinder from 'ephox/agar/api/UiFinder';
 import { Cell } from '@ephox/katamari';
 import { Assertions } from 'ephox/agar/api/Main';
 
-UnitTest.asynctest('RealMouseTest', function (success, failure) {
+UnitTest.asynctest('RealMouseTest', (success, failure) => {
 
   const detection = PlatformDetection.detect();
 
@@ -61,8 +60,8 @@ UnitTest.asynctest('RealMouseTest', function (success, failure) {
     Chain.asStep(container, [
       UiFinder.cFindIn('button[data-test]'),
       Chain.control(
-        Chain.op(function (button) {
-          RawAssertions.assertEq('After hovering', Css.get(other, 'background-color'), Css.get(button, 'background-color'));
+        Chain.op((button) => {
+          Assert.eq('After hovering', Css.get(other, 'background-color'), Css.get(button, 'background-color'));
         }),
         Guard.tryUntil('Waiting for button to turn blue')
       ),
@@ -74,7 +73,7 @@ UnitTest.asynctest('RealMouseTest', function (success, failure) {
         Assertions.assertEq(`button doesn\'t have ${RealMouse.BedrockIdAttribute} attribute`, false, Attr.has(button, RealMouse.BedrockIdAttribute));
       })
     ])
-  ], function () {
+  ], () => {
     binder.unbind();
     Remove.remove(container);
     success();

@@ -1,5 +1,5 @@
 import { Assertions, FocusTools, Keyboard, Keys, Mouse, Step, Touch, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Future, Option, Result, Strings } from '@ephox/katamari';
 import { Focus, Value } from '@ephox/sugar';
 
@@ -13,7 +13,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
-import { DatasetRepresentingState } from 'ephox/alloy/behaviour/representing/RepresentState';
+import { DatasetRepresentingState } from 'ephox/alloy/behaviour/representing/RepresentingTypes';
 import * as DropdownAssertions from 'ephox/alloy/test/dropdown/DropdownAssertions';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
@@ -88,7 +88,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
 
   }, (doc, body, gui, component, store) => {
 
-    const item = (key) => {
+    const item = (key: string) => {
       return {
         selector: '.selected-item[data-value="' + key + '"]',
         label: key

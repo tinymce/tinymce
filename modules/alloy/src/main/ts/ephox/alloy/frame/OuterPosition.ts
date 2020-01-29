@@ -1,12 +1,11 @@
+import { document } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { Element, Location, Position, Scroll } from '@ephox/sugar';
 
 import * as Frames from './Frames';
 import * as Navigation from './Navigation';
-import { document } from '@ephox/dom-globals';
-import { SugarPosition } from '../alien/TypeDefinitions';
 
-const find = (element: Element): SugarPosition => {
+const find = (element: Element): Position => {
   const doc = Element.fromDom(document);
   const scroll = Scroll.get(doc);
 
@@ -14,7 +13,7 @@ const find = (element: Element): SugarPosition => {
   const path = Frames.pathTo(element, Navigation);
 
   return path.fold(Fun.curry(Location.absolute, element), (frames) => {
-    const offset: SugarPosition = Location.viewport(element);
+    const offset = Location.viewport(element);
 
     const r = Arr.foldr(frames, (b, a) => {
       const loc = Location.viewport(a);
@@ -24,7 +23,7 @@ const find = (element: Element): SugarPosition => {
       };
     }, { left: 0, top: 0 });
 
-    return Position(r.left + offset.left() + scroll.left(), r.top + offset.top() + scroll.top()) as SugarPosition;
+    return Position(r.left + offset.left() + scroll.left(), r.top + offset.top() + scroll.top());
   });
 };
 

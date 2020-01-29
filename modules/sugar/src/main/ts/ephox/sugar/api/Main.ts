@@ -70,6 +70,7 @@ import * as VisualViewport from './view/VisualViewport';
 import * as Width from './view/Width';
 import * as SelectionDirection from '../selection/core/SelectionDirection'; // Used directly by dawin
 import { StructRect, RawRect, Rect } from './selection/Rect';
+import * as Truncate from './dom/Truncate';
 
 export {
   Compare,
@@ -137,6 +138,7 @@ export {
   WindowSelection,
   OptionTag,
   SelectTag,
+  Truncate,
   Height,
   Location,
   Platform,

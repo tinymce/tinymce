@@ -1,11 +1,12 @@
 import { Arbitraries, Assertions, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { console, navigator } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 import { Node } from '@ephox/sugar';
-import TinyApis from 'ephox/mcagar/api/TinyApis';
-import TinyLoader from 'ephox/mcagar/api/TinyLoader';
-import TinyScenarios from 'ephox/mcagar/api/TinyScenarios';
+import { Editor } from 'ephox/mcagar/alien/EditorTypes';
+import { TinyApis } from 'ephox/mcagar/api/TinyApis';
+import * as TinyLoader from 'ephox/mcagar/api/TinyLoader';
+import { TinyScenarios } from 'ephox/mcagar/api/TinyScenarios';
 
 const isPhantom = navigator.userAgent.indexOf('PhantomJS') > -1;
 
@@ -27,7 +28,7 @@ UnitTest.asynctest('TinyScenariosTest', (success, failure) => {
 
   // An example test: ensure that when starting with a selection of text nodes, pressing bold twice
   // will at some point create a bold tag.
-  const sAssertion = (editor) => Step.sync(() => {
+  const sAssertion = (editor: Editor) => Step.sync(() => {
     const body = editor.getBody();
     const boldInitial = body.querySelectorAll('strong').length;
     editor.execCommand('bold');
@@ -46,7 +47,7 @@ UnitTest.asynctest('TinyScenariosTest', (success, failure) => {
     const scenarios = TinyScenarios(editor);
 
     Pipeline.async({}, [
-      apis.sFocus,
+      apis.sFocus(),
       scenarios.sAsyncProperty('Test', Arbitraries.content('inline', {}).generator, sAssertion(editor), {
         property: {
           tests: 100

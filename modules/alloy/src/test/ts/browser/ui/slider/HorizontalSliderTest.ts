@@ -1,13 +1,13 @@
-import { Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, RawAssertions, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, Step, UiFinder, Waiter } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 
 UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, failure) => {
@@ -91,7 +91,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
     ]);
 
     const cCheckThumbAtLeft = Chain.op((parts: any) => {
-      RawAssertions.assertEq(
+      Assert.eq(
         'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Left-Edge: (' + parts.ledgeRect.left + '->' + parts.ledgeRect.right + ')',
         true,
@@ -100,7 +100,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
     });
 
     const cCheckThumbAtRight = Chain.op((parts: any) => {
-      RawAssertions.assertEq(
+      Assert.eq(
         'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Right-Edge: (' + parts.redgeRect.left + '->' + parts.redgeRect.right + ')',
         true,
@@ -109,27 +109,27 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
     });
 
     const cCheckThumbPastRight = Chain.op((parts: any) => {
-      RawAssertions.assertEq('Checking thumb past end of spectrum', true,
+      Assert.eq('Checking thumb past end of spectrum', true,
         parts.thumbRect.left > parts.spectrumRect.right
       );
     });
 
     const cCheckThumbBeforeLeft = Chain.op((parts: any) => {
-      RawAssertions.assertEq('Checking thumb before start of spectrum', true,
+      Assert.eq('Checking thumb before start of spectrum', true,
         parts.thumbRect.right < parts.spectrumRect.left
       );
     });
 
-    const cCheckValue = (expected) => {
+    const cCheckValue = (expected: number) => {
       return Chain.op((parts: any) => {
         const v = Representing.getValue(parts.sliderComp);
-        RawAssertions.assertEq('Checking slider value', expected, v.x());
+        Assert.eq('Checking slider value', expected, v.x());
       });
     };
 
-    const sAssertValue = (label, expected) => {
+    const sAssertValue = (label: string, expected: number) => {
       return Logger.t(label, Step.sync(() => {
-        RawAssertions.assertEq(label, expected, Representing.getValue(component).x());
+        Assert.eq(label, expected, Representing.getValue(component).x());
       }));
     };
 

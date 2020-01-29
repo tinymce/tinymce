@@ -6,7 +6,7 @@ import * as Behaviour from '../common/Behaviour';
 import * as ToggleApis from './ToggleApis';
 import { TogglingConfig, TogglingState } from './TogglingTypes';
 
-const exhibit = (base: { }, toggleConfig: TogglingConfig, toggleState: TogglingState): { } => {
+const exhibit = () => {
   return DomModification.nu({ });
 };
 

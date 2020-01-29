@@ -6,7 +6,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import TrimHtml from 'tinymce/core/dom/TrimHtml';
 import ViewBlock from '../../module/test/ViewBlock';
 import Zwsp from 'tinymce/core/text/Zwsp';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest, Assert } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
 declare const escape: any;
@@ -795,6 +795,23 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function (success,
       ser.serialize(DOM.get('test'), { getInner: true }),
       '<p>a</p>'
     );
+  });
+
+  suite.test('addNodeFilter/addAttributeFilter', () => {
+    const ser = Serializer({ });
+    const nodeFilter = () => {};
+    const attrFilter = () => {};
+
+    ser.addNodeFilter('some-tag', nodeFilter);
+    ser.addAttributeFilter('data-something', attrFilter);
+
+    const lastNodeFilter = Arr.last(ser.getNodeFilters()).getOrDie('Failed to get filter');
+    const lastAttributeFilter = Arr.last(ser.getAttributeFilters()).getOrDie('Failed to get filter');
+
+    Assert.eq('Should be the last registred filter element name', 'some-tag', lastNodeFilter.name);
+    Assert.eq('Should be the last registred node filter function', nodeFilter, lastNodeFilter.callbacks[0]);
+    Assert.eq('Should be the last registred filter attribute name', 'data-something', lastAttributeFilter.name);
+    Assert.eq('Should be the last registred attribute filter function', attrFilter, lastAttributeFilter.callbacks[0]);
   });
 
   viewBlock.attach();

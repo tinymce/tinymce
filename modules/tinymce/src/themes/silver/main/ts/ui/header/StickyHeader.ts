@@ -8,9 +8,11 @@
 import { AlloyComponent, Boxes, Channels, Docking, Focusing, Receiving } from '@ephox/alloy';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Cell, Option, Result } from '@ephox/katamari';
-import { Class, Classes, Compare, Css, Element, Focus, Height, Traverse, Width } from '@ephox/sugar';
+import { Class, Classes, Compare, Css, Element, Focus, Height, Location, Scroll, Traverse, Visibility, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { ScrollIntoViewEvent } from 'tinymce/core/api/EventTypes';
+import { isToolbarLocationTop } from '../../api/Settings';
 import * as EditorChannels from '../../Channels';
 
 const visibility = {
@@ -22,17 +24,51 @@ const visibility = {
 const editorStickyOnClass = 'tox-tinymce--toolbar-sticky-on';
 const editorStickyOffClass = 'tox-tinymce--toolbar-sticky-off';
 
-const updateIframeContentFlow = (header: AlloyComponent): void => {
+const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: Element) => {
+  const doc = Traverse.owner(containerHeader);
+  const viewHeight = doc.dom().defaultView.innerHeight;
+  const scrollPos = Scroll.get(doc);
+
+  const markerElement = Element.fromDom(e.elm);
+  const markerPos = Boxes.absolute(markerElement);
+  const markerHeight = Height.get(markerElement);
+  const markerTop = markerPos.y();
+  const markerBottom = markerTop + markerHeight;
+
+  const editorHeaderPos = Location.absolute(containerHeader);
+  const editorHeaderHeight = Height.get(containerHeader);
+  const editorHeaderTop = editorHeaderPos.top();
+  const editorHeaderBottom = editorHeaderTop + editorHeaderHeight;
+
+  // Check to see if the header is docked to the top/bottom of the page (eg is floating)
+  const editorHeaderDockedAtTop = Math.abs(editorHeaderTop - scrollPos.top()) < 2;
+  const editorHeaderDockedAtBottom = Math.abs(editorHeaderBottom - (scrollPos.top() + viewHeight)) < 2;
+
+  // If the element is behind the header at the top of the page, then
+  // scroll the element down by the header height
+  if (editorHeaderDockedAtTop && markerTop < editorHeaderBottom) {
+    Scroll.to(scrollPos.left(), markerTop - editorHeaderHeight, doc);
+    // If the element is behind the header at the bottom of the page, then
+    // scroll the element up by the header height
+  } else if (editorHeaderDockedAtBottom && markerBottom > editorHeaderTop) {
+    const y = (markerTop - viewHeight) + markerHeight + editorHeaderHeight;
+    Scroll.to(scrollPos.left(), y, doc);
+  }
+};
+
+const updateIframeContentFlow = (header: AlloyComponent, isToolbarTop: boolean): void => {
   const elm = header.element();
   Traverse.parent(elm).each((parentElem: Element<HTMLElement>) => {
+    const padding = 'padding-' + (isToolbarTop ? 'top' : 'bottom');
+
     if (Docking.isDocked(header)) {
       const parentWidth = Width.get(parentElem);
       Css.set(elm, 'width', parentWidth + 'px');
       const headerHeight = Height.getOuter(elm);
-      Css.set(parentElem, 'padding-top', headerHeight + 'px');
+      Css.set(parentElem, padding, headerHeight + 'px');
     } else {
       Css.remove(elm, 'width');
-      Css.remove(parentElem, 'padding-top');
+      Css.remove(parentElem, padding);
     }
   });
 };
@@ -83,7 +119,7 @@ const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void =
   if (!editor.inline) {
     // No need to update the content flow in inline mode as the header always floats
     editor.on('ResizeWindow ResizeEditor ResizeContent', () => {
-      lazyHeader().each(updateIframeContentFlow);
+      lazyHeader().each((header) => updateIframeContentFlow(header, isToolbarLocationTop(editor)));
     });
 
     // Need to reset the docking position on skin loaded as the original position will have
@@ -93,12 +129,28 @@ const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void =
       lazyHeader().each(Docking.reset);
     });
 
-    // Need to refresh when we go fullscreen so that if the header is docked,
+    // Need to reset when we go fullscreen so that if the header is docked,
     // then it'll undock and viceversa
     editor.on('FullscreenStateChanged', () => {
-      lazyHeader().each(Docking.refresh);
+      lazyHeader().each(Docking.reset);
     });
   }
+
+  // If inline or sticky toolbars is enabled, then when scrolling into view we may still be
+  // behind the editor header so we need to adjust the scroll position to account for that
+  editor.on('AfterScrollIntoView', (e) => {
+    lazyHeader().each((header) => {
+      // We need to make sure the header docking has refreshed, otherwise if a large scroll occurred
+      // the header may have gone off page and need to be docked before doing calculations
+      Docking.refresh(header);
+
+      // If the header element is still visible, then adjust the scroll position if required
+      const headerElem = header.element();
+      if (Visibility.isVisible(headerElem)) {
+        scrollFromBehindHeader(e, headerElem);
+      }
+    });
+  });
 
   // Update the editor classes once initial rendering has completed
   editor.on('PostRender', () => {
@@ -110,12 +162,14 @@ const isDocked = (lazyHeader: () => Option<AlloyComponent>): boolean => {
   return lazyHeader().map(Docking.isDocked).getOr(false);
 };
 
-const getIframeBehaviours = () => {
+const getIframeBehaviours = (isToolbarTop: boolean) => {
   return [
     Receiving.config({
       channels: {
         [ EditorChannels.toolbarHeightChange() ]: {
-          onReceive: updateIframeContentFlow
+          onReceive: (comp) => {
+            updateIframeContentFlow(comp, isToolbarTop);
+          }
         }
       }
     })
@@ -124,6 +178,7 @@ const getIframeBehaviours = () => {
 
 const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>) => {
   const focusedElm = Cell<Option<Element>>(Option.none());
+  const isToolbarTop = isToolbarLocationTop(editor);
 
   const runOnSinkElement = (f: (sink: Element) => void) => {
     lazySink().each((sink) => f(sink.element()));
@@ -131,14 +186,14 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
 
   const onDockingSwitch = (comp: AlloyComponent) => {
     if (!editor.inline) {
-      updateIframeContentFlow(comp);
+      updateIframeContentFlow(comp, isToolbarTop);
     }
     updateEditorClasses(editor, Docking.isDocked(comp));
     comp.getSystem().broadcastOn( [ Channels.repositionPopups() ], { });
     lazySink().each((sink) => sink.getSystem().broadcastOn( [ Channels.repositionPopups() ], { }));
   };
 
-  const additionalBehaviours = editor.inline ? [ ] : getIframeBehaviours();
+  const additionalBehaviours = editor.inline ? [ ] : getIframeBehaviours(isToolbarTop);
 
   return [
     Focusing.config({ }),
@@ -153,7 +208,8 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
           const box = Boxes.box(Element.fromDom(container));
           // Force the header to hide before it overflows outside the container
           const boxHeight = box.height() - headerHeight;
-          return Option.some(Boxes.bounds(box.x(), box.y(), box.width(), boxHeight));
+          const topBound = box.y() + (isToolbarTop ? 0 : headerHeight);
+          return Option.some(Boxes.bounds(box.x(), topBound, box.width(), boxHeight));
         },
         onShow: () => {
           runOnSinkElement((elem) => updateSinkVisibility(elem, true));
@@ -175,7 +231,7 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
         },
         ...visibility
       },
-      modes: [ 'top' ],
+      modes: [ isToolbarTop ? 'top' : 'bottom' ],
       onDocked: onDockingSwitch,
       onUndocked: onDockingSwitch
     }),

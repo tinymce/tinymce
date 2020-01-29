@@ -1,5 +1,6 @@
 import { Option } from './Option';
 import * as Type from './Type';
+import { Eq } from '@ephox/dispute';
 
 type ArrayMorphism<T, U> = (x: T, i: number) => U;
 type ArrayPredicate<T> = ArrayMorphism<T, boolean>;
@@ -18,7 +19,7 @@ export const indexOf = <T = any>(xs: ArrayLike<T>, x: T): Option<number> => {
   return r === -1 ? Option.none() : Option.some(r);
 };
 
-export const contains = <T = any>(xs: ArrayLike<T>, x: T): boolean => {
+export const contains = <T>(xs: ArrayLike<T>, x: T): boolean => {
   return rawIndexOf(xs, x) > -1;
 };
 
@@ -33,7 +34,7 @@ export const exists = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): bool
   return false;
 };
 
-export const range = <T = any>(num: number, f: (a: number) => T): T[] => {
+export const range = <T>(num: number, f: (a: number) => T): T[] => {
   const r: T[] = [];
   for (let i = 0; i < num; i++) {
     r.push(f(i));
@@ -48,7 +49,7 @@ export const range = <T = any>(num: number, f: (a: number) => T): T[] => {
 // - not using push
 // http://jsperf.com/array-direct-assignment-vs-push/2
 
-export const chunk = <T = any>(array: ArrayLike<T>, size: number): T[][] => {
+export const chunk = <T>(array: ArrayLike<T>, size: number): T[][] => {
   const r: T[][] = [];
   for (let i = 0; i < array.length; i += size) {
     const s: T[] = nativeSlice.call(array, i, i + size);
@@ -79,7 +80,7 @@ export const each = <T = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, void>): void
   }
 };
 
-export const eachr = <T = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, void>): void => {
+export const eachr = <T>(xs: ArrayLike<T>, f: ArrayMorphism<T, void>): void => {
   for (let i = xs.length - 1; i >= 0; i--) {
     const x = xs[i];
     f(x, i);
@@ -122,7 +123,7 @@ export const filter: {
  *  For a good explanation, see the group function (which is a special case of groupBy)
  *  http://hackage.haskell.org/package/base-4.7.0.0/docs/Data-List.html#v:group
  */
-export const groupBy = <T = any>(xs: ArrayLike<T>, f: (a: T) => any): T[][] => {
+export const groupBy = <T>(xs: ArrayLike<T>, f: (a: T) => any): T[][] => {
   if (xs.length === 0) {
     return [];
   } else {
@@ -147,7 +148,7 @@ export const groupBy = <T = any>(xs: ArrayLike<T>, f: (a: T) => any): T[][] => {
   }
 };
 
-export const foldr = <T = any, U = any>(xs: ArrayLike<T>, f: (acc: U, x: T) => U, acc: U): U => {
+export const foldr = <T, U>(xs: ArrayLike<T>, f: (acc: U, x: T) => U, acc: U): U => {
   eachr(xs, function (x) {
     acc = f(acc, x);
   });
@@ -171,7 +172,7 @@ export const find = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Option
   return Option.none();
 };
 
-export const findIndex = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Option<number> => {
+export const findIndex = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Option<number> => {
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
     if (pred(x, i)) {
@@ -198,12 +199,10 @@ export const flatten = <T>(xs: ArrayLike<T[]>): T[] => {
   return r;
 };
 
-export const bind = <T = any, U = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, U[]>): U[] => {
-  const output = map(xs, f);
-  return flatten(output);
-};
+export const bind = <T = any, U = any>(xs: ArrayLike<T>, f: ArrayMorphism<T, U[]>): U[] =>
+  flatten(map(xs, f));
 
-export const forall = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): boolean => {
+export const forall = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): boolean => {
   for (let i = 0, len = xs.length; i < len; ++i) {
     const x = xs[i];
     if (pred(x, i) !== true) {
@@ -213,21 +212,20 @@ export const forall = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): bool
   return true;
 };
 
-export const equal = <T = any>(a1: ArrayLike<T>, a2: T[]) => {
-  return a1.length === a2.length && forall(a1, (x, i) => x === a2[i]);
-};
+export const equal = <T>(a1: ArrayLike<T>, a2: ArrayLike<T>, eq: Eq.Eq<T> = Eq.eqAny) =>
+  Eq.eqArray(eq).eq(a1, a2);
 
-export const reverse = <T = any>(xs: ArrayLike<T>): T[] => {
+export const reverse = <T>(xs: ArrayLike<T>): T[] => {
   const r: T[] = nativeSlice.call(xs, 0);
   r.reverse();
   return r;
 };
 
-export const difference = <T = any>(a1: ArrayLike<T>, a2: ArrayLike<T>): T[] => {
+export const difference = <T>(a1: ArrayLike<T>, a2: ArrayLike<T>): T[] => {
   return filter(a1, (x) => !contains(a2, x));
 };
 
-export const mapToObject = <T = any, U = any>(xs: ArrayLike<T>, f: (x: T, i: number) => U): Record<string, U> => {
+export const mapToObject = <T, U>(xs: ArrayLike<T>, f: (x: T, i: number) => U): Record<string, U> => {
   const r: Record<string, U> = {};
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
@@ -236,16 +234,26 @@ export const mapToObject = <T = any, U = any>(xs: ArrayLike<T>, f: (x: T, i: num
   return r;
 };
 
-export const pure = <T = any>(x: T): T[] => [x];
+export const pure = <T>(x: T): T[] => [x];
 
-export const sort = <T = any>(xs: ArrayLike<T>, comparator?: Comparator<T>): T[] => {
+export const sort = <T>(xs: ArrayLike<T>, comparator?: Comparator<T>): T[] => {
   const copy: T[] = nativeSlice.call(xs, 0);
   copy.sort(comparator);
   return copy;
 };
 
-export const head = <T = any>(xs: ArrayLike<T>): Option<T> => xs.length === 0 ? Option.none() : Option.some(xs[0]);
+export const head = <T>(xs: ArrayLike<T>): Option<T> => xs.length === 0 ? Option.none() : Option.some(xs[0]);
 
-export const last = <T = any>(xs: ArrayLike<T>): Option<T> => xs.length === 0 ? Option.none() : Option.some(xs[xs.length - 1]);
+export const last = <T>(xs: ArrayLike<T>): Option<T> => xs.length === 0 ? Option.none() : Option.some(xs[xs.length - 1]);
 
-export const from: <T = any>(x: ArrayLike<T>) => T[] = Type.isFunction(Array.from) ? Array.from : (x) => nativeSlice.call(x);
+export const from: <T>(x: ArrayLike<T>) => T[] = Type.isFunction(Array.from) ? Array.from : (x) => nativeSlice.call(x);
+
+export const findMap = <A, B>(arr: ArrayLike<A>, f: (a: A, index: number) => Option<B>): Option<B> => {
+  for (let i = 0; i < arr.length; i++) {
+    const r = f(arr[i], i);
+    if (r.isSome()) {
+      return r;
+    }
+  }
+  return Option.none<B>();
+};

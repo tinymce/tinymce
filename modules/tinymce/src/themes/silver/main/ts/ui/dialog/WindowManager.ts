@@ -33,10 +33,11 @@ const validateData = <T extends Types.Dialog.DialogData>(data: T, validator: Pro
   return ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
 };
 
-const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
+const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, isToolbarLocationTop: boolean): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
   // When using sticky toolbars it already handles the docking behaviours so applying docking would
   // do nothing except add additional processing when scrolling, so we don't want to include it here
-  if (isStickyToolbar) {
+  // (Except when the toolbar is located at the bottom since the anchor will be at the top)
+  if (isStickyToolbar && isToolbarLocationTop) {
     return [ ];
   } else {
     return [
@@ -60,13 +61,14 @@ const setup = (extras: WindowManagerSetup) => {
   const backstage = extras.backstage;
   const editor = extras.editor;
   const isStickyToolbar = Settings.isStickyToolbar(editor);
+  const isToolbarLocationTop = Settings.isToolbarLocationTop(editor);
 
   const alertDialog = AlertDialog.setup(extras);
   const confirmDialog = ConfirmDialog.setup(extras);
 
   const open = <T extends Types.Dialog.DialogData>(config: Types.Dialog.DialogApi<T>, params, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void): Types.Dialog.DialogInstanceApi<T> => {
     if (params !== undefined && params.inline === 'toolbar') {
-      return openInlineDialog(config, backstage.shared.anchors.toolbar(), closeWindow, params.ariaAttrs);
+      return openInlineDialog(config, backstage.shared.anchors.inlineDialog(), closeWindow, params.ariaAttrs);
     } else if (params !== undefined && params.inline === 'cursor') {
       return openInlineDialog(config, backstage.shared.anchors.cursor(), closeWindow, params.ariaAttrs);
     } else {
@@ -142,6 +144,7 @@ const setup = (extras: WindowManagerSetup) => {
       };
 
       const refreshDocking = () => inlineDialog.on((dialog) => {
+        InlineView.reposition(dialog);
         Docking.refresh(dialog);
       });
 
@@ -167,6 +170,7 @@ const setup = (extras: WindowManagerSetup) => {
         },
         // Fires the default dismiss event.
         fireDismissalEventInstead: { },
+        ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { } },
         inlineBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('window-manager-inline-events', [
             // Can't just fireDismissalEvent formCloseEvent, because it is on the parent component of the dialog
@@ -174,7 +178,7 @@ const setup = (extras: WindowManagerSetup) => {
               AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
             }),
           ]),
-          ...inlineAdditionalBehaviours(editor, isStickyToolbar)
+          ...inlineAdditionalBehaviours(editor, isStickyToolbar, isToolbarLocationTop)
         ])
       }));
       inlineDialog.set(inlineDialogComp);
@@ -188,7 +192,7 @@ const setup = (extras: WindowManagerSetup) => {
       );
 
       // Refresh the docking position if not using a sticky toolbar
-      if (!isStickyToolbar) {
+      if (!isStickyToolbar || !isToolbarLocationTop) {
         Docking.refresh(inlineDialogComp);
 
         // Bind to the editor resize event and update docking as needed. We don't need to worry about

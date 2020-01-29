@@ -1,9 +1,10 @@
 import { ApproxStructure, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 import VisualCharsPlugin from 'tinymce/plugins/visualchars/Plugin';
 import theme from 'tinymce/themes/silver/Theme';
+import { Unicode } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTest', (success, failure) => {
 
@@ -26,10 +27,10 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTe
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
-                  s.text(str.is('\uFEFF'))
+                  s.text(str.is(Unicode.zeroWidth))
                 ]
               })
             ]
@@ -50,10 +51,10 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTe
                   s.element('span', {
                     classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
                     children: [
-                      s.text(str.is('\u00a0'))
+                      s.text(str.is(Unicode.nbsp))
                     ]
                   }),
-                  s.text(str.is('\uFEFF'))
+                  s.text(str.is(Unicode.zeroWidth))
                 ]
               })
             ]

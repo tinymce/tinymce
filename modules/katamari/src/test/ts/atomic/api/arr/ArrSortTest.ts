@@ -1,20 +1,19 @@
 import * as Arr from 'ephox/katamari/api/Arr';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Testable } from '@ephox/dispute';
+import fc from 'fast-check';
 
-UnitTest.test('ArrSortTest', function () {
-  const testSanity = function () {
-    assert.eq([1, 2, 3], Arr.sort([1, 3, 2]));
-    assert.eq([1, 2, 3], Arr.sort(Object.freeze([1, 3, 2])));
-  };
+const { tArray, tNumber } = Testable;
 
-  testSanity();
+UnitTest.test('Arr.sort: unit test', () => {
+  Assert.eq('sort array', [ 1, 2, 3 ], Arr.sort([ 1, 3, 2 ]), tArray(tNumber));
+  Assert.eq('sort frozen array', [ 1, 2, 3 ], Arr.sort(Object.freeze([ 1, 3, 2 ])), tArray(tNumber));
+});
 
-  Jsc.property(
-    'sort(sort(xs)) === sort(xs)', Jsc.array(Jsc.nat), function (arr) {
-      const sorted = Arr.sort(arr);
-      const resorted = Arr.sort(sorted);
-      return Jsc.eq(sorted, resorted);
+UnitTest.test('Arr.sort: idempotency', () => {
+  fc.assert(fc.property(
+    fc.array(fc.nat()), (arr) => {
+      Assert.eq('idempotency', Arr.sort(arr), Arr.sort(Arr.sort(arr)), tArray(tNumber));
     }
-  );
+  ));
 });

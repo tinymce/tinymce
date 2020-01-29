@@ -1,4 +1,4 @@
-import { Fun, Arr } from '@ephox/katamari';
+import { Fun, Arr, Unicode } from '@ephox/katamari';
 import NodeType from 'tinymce/core/dom/NodeType';
 import { Range } from '@ephox/dom-globals';
 
@@ -110,7 +110,7 @@ const type = function (editor, chr) {
       rng = editor.selection.getRng(true);
 
       if (rng.startContainer.nodeType === 3 && rng.collapsed) {
-        rng.startContainer.insertData(rng.startOffset, needsNbsp(rng, chr) ? '\u00a0' : chr);
+        rng.startContainer.insertData(rng.startOffset, needsNbsp(rng, chr) ? Unicode.nbsp : chr);
         rng.setStart(rng.startContainer, rng.startOffset + 1);
         rng.collapse(true);
         editor.selection.setRng(rng);

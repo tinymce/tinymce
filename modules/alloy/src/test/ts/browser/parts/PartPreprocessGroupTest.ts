@@ -1,10 +1,11 @@
 import { Assertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as AlloyParts from 'ephox/alloy/parts/AlloyParts';
-import * as PartType from 'ephox/alloy/parts/PartType';
 import * as PartSubstitutes from 'ephox/alloy/parts/PartSubstitutes';
+import * as PartType from 'ephox/alloy/parts/PartType';
 
 UnitTest.test('Browser Test: parts.PartProcessGroupTest', () => {
 
@@ -32,7 +33,7 @@ UnitTest.test('Browser Test: parts.PartProcessGroupTest', () => {
       },
 
       placeholders.groupB({
-        preprocess: (comps) => {
+        preprocess: (comps: AlloySpec[]) => {
           const chunks = Arr.chunk(comps, 2);
           return Arr.map(chunks, (c) => {
             return {

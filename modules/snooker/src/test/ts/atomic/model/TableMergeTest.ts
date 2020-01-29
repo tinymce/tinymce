@@ -2,7 +2,7 @@ import { Fun } from '@ephox/katamari';
 import * as Structs from 'ephox/snooker/api/Structs';
 import TableMerge from 'ephox/snooker/test/TableMerge';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Element } from '@ephox/sugar';
 
 UnitTest.test('TableMergeTest', function () {

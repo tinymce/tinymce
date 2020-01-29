@@ -1,10 +1,10 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Touch, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Element, Body } from '@ephox/sugar';
+import { Body, Element } from '@ephox/sugar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
@@ -53,11 +53,6 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
       tinyUi.cWaitForPopup('trigger context menu', '.tox-silver-sink .tox-collection--horizontal [role="menuitem"]')
     ]);
 
-    // Assert focus is on the expected menu item
-    const sAssertFocusOnItem = (label, selector) => {
-      return FocusTools.sTryOnSelector(`Focus should be on: ${label}`, doc, selector);
-    };
-
     // Wait for dialog to open and close dialog
     const sWaitForAndCloseDialog = GeneralSteps.sequence([
       Chain.asStep(editor, [
@@ -72,6 +67,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
 
     const sPressDownArrowKey = Keyboard.sKeydown(doc, Keys.down(), { });
     const sPressEnterKey = Keyboard.sKeydown(doc, Keys.enter(), { });
+    const sPressEscKey = Keyboard.sKeydown(doc, Keys.escape(), {});
 
     const sRepeatDownArrowKey = (index) => {
       return GeneralSteps.sequence(Arr.range(index, () => sPressDownArrowKey));
@@ -121,28 +117,45 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
       });
     }), editorBody);
 
+    const sAssertMenuItems = (items: string[]) => {
+      return Chain.asStep(Body.body(), [
+        Chain.fromParent(UiFinder.cFindIn(mobileContextMenuSelector), Arr.map(items, UiFinder.cExists))
+      ]);
+    };
+
+    const mobileContextMenuSelector = 'div.tox-collection--horizontal';
+    const selectors = {
+      link: '.tox-collection__item:contains("Link...")',
+      removelink: '.tox-collection__item:contains("Remove link")',
+      openlink: '.tox-collection__item:contains("Open link")',
+      cell: '.tox-collection__item:contains("Cell")',
+      row: '.tox-collection__item:contains("Row")',
+      column: '.tox-collection__item:contains("Column")',
+      tableprops: '.tox-collection__item:contains("Table properties")',
+      deletetable: '.tox-collection__item:contains("Delete table")',
+      image: '.tox-collection__item:contains("Image")',
+      editimage: '.tox-collection__item:contains("Edit image")'
+    };
+
     const steps = [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Test context menus on empty editor', [
         sOpenContextMenu('p'),
-        sAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")'),
-        sPressEnterKey,
-        sWaitForAndCloseDialog
+        sAssertMenuItems([selectors.link]),
+        sPressEscKey
       ]),
       Log.stepsAsStep('TBA', 'Test context menus on a link', [
         tinyApis.sSetContent('<p><a href="http://tiny.cloud/">Tiny</a></p>'),
         tinyApis.sSetSelection([ 0, 0, 0 ], 'Ti'.length, [ 0, 0, 0 ], 'Ti'.length),
         sOpenContextMenu('a'),
-        sAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Remove Link', '.tox-collection__item:contains("Remove link")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Open Link', '.tox-collection__item:contains("Open link")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")'),
-        sPressEnterKey,
-        sWaitForAndCloseDialog,
+        sAssertMenuItems([
+          selectors.link,
+          selectors.removelink,
+          selectors.openlink
+        ]),
+        sPressEscKey,
         sOpenContextMenu('a'),
+        FocusTools.sSetFocus('focus the first menu item', Body.body(), selectors.link),
         sPressDownArrowKey,
         sPressEnterKey,
         sAssertRemoveLinkHtmlStructure
@@ -150,45 +163,37 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
       Log.stepsAsStep('TBA', 'Test context menus on a table', [
         tinyApis.sSetContent(tableHtml),
         sOpenContextMenu('td'),
-        sAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Cell', '.tox-collection__item:contains("Cell")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Row', '.tox-collection__item:contains("Row")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Column', '.tox-collection__item:contains("Column")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Table Properties', '.tox-collection__item:contains("Table properties")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")'),
-        Keyboard.sKeydown(doc, Keys.up(), {}),
+        sAssertMenuItems([
+          selectors.link,
+          selectors.cell,
+          selectors.row,
+          selectors.column,
+          selectors.tableprops,
+          selectors.deletetable
+        ]),
+        FocusTools.sSetFocus('focus the table props item', Body.body(), selectors.tableprops),
         sPressEnterKey,
-        sWaitForAndCloseDialog,
+        sWaitForAndCloseDialog
       ]),
       Log.stepsAsStep('TBA', 'Test context menus on image inside a table', [
         tinyApis.sSetContent(imageInTableHtml),
         sOpenContextMenu('img'),
-        sAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Image', '.tox-collection__item:contains("Image")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Edit Image', '.tox-collection__item:contains("Edit image")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Cell', '.tox-collection__item:contains("Cell")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Row', '.tox-collection__item:contains("Row")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Column', '.tox-collection__item:contains("Column")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Table Properties', '.tox-collection__item:contains("Table properties")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")'),
-        // Navigate back to the "Image"" menu item
-        sRepeatDownArrowKey(2),
+        sAssertMenuItems([
+          selectors.link,
+          selectors.image,
+          selectors.editimage,
+          selectors.cell,
+          selectors.row,
+          selectors.column,
+          selectors.tableprops,
+          selectors.deletetable
+        ]),
+        FocusTools.sSetFocus('focus the image item', Body.body(), selectors.image),
         sPressEnterKey,
         sWaitForAndCloseDialog,
         sOpenContextMenu('img'),
         // Navigate to the "Image tools" menu item
+        FocusTools.sSetFocus('focus the first menu item', Body.body(), selectors.link),
         sRepeatDownArrowKey(2),
         sPressEnterKey,
         sWaitForAndCloseDialog
@@ -196,38 +201,30 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
       Log.stepsAsStep('TBA', 'Test context menus on link inside a table', [
         tinyApis.sSetContent(linkInTableHtml),
         sOpenContextMenu('a'),
-        sAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Remove Link', '.tox-collection__item:contains("Remove link")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Open Link', '.tox-collection__item:contains("Open link")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Cell', '.tox-collection__item:contains("Cell")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Row', '.tox-collection__item:contains("Row")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Column', '.tox-collection__item:contains("Column")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Table Properties', '.tox-collection__item:contains("Table properties")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")')
+        sAssertMenuItems([
+          selectors.link,
+          selectors.removelink,
+          selectors.openlink,
+          selectors.cell,
+          selectors.row,
+          selectors.column,
+          selectors.tableprops,
+          selectors.deletetable
+        ]),
       ]),
       Log.stepsAsStep('TBA', 'Test context menus on placeholder image inside a table', [
         // Placeholder images shouldn't show the image/image tools options
         tinyApis.sSetContent(placeholderImageInTableHtml),
         tinyApis.sSelect('img', []),
         sOpenContextMenu('img'),
-        sAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Cell', '.tox-collection__item:contains("Cell")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Row', '.tox-collection__item:contains("Row")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Column', '.tox-collection__item:contains("Column")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Table Properties', '.tox-collection__item:contains("Table properties")'),
-        sPressDownArrowKey,
-        sAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")'),
+        sAssertMenuItems([
+          selectors.link,
+          selectors.cell,
+          selectors.row,
+          selectors.column,
+          selectors.tableprops,
+          selectors.deletetable
+        ]),
       ])
     ];
 

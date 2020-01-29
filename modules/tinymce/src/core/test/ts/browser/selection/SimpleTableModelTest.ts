@@ -2,14 +2,12 @@ import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { Fun, Result } from '@ephox/katamari';
 import { Hierarchy, Element, Html } from '@ephox/sugar';
 import SimpleTableModel from 'tinymce/core/selection/SimpleTableModel';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', function (success, failure) {
 
   const cFromDom = function (html) {
-    return Chain.mapper(function (_) {
+    return Chain.injectThunked(function () {
       return SimpleTableModel.fromDom(Element.fromHtml(html));
     });
   };

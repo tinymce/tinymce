@@ -6,15 +6,15 @@ import { TransitionRoute } from './TransitionApis';
 
 export interface TransitioningBehaviour extends Behaviour.AlloyBehaviour<TransitioningConfigSpec, TransitioningConfig> {
   config: (config: TransitioningConfigSpec) => Behaviour.NamedConfiguredBehaviour<TransitioningConfigSpec, TransitioningConfig>;
-  findRoute?: <T>(comp: AlloyComponent, route: TransitionRoute) => Option<T>;
-  disableTransition?: (comp: AlloyComponent) => void;
-  getCurrentRoute?: any;
-  jumpTo?: (comp: AlloyComponent, destination: string) => void;
-  progressTo?: (comp: AlloyComponent, destination: string) => void;
-  getState?: any;
-  createRoutes?: (route: TransitionRoute, transitions: TransitionPropertiesSpec) => TransitioningConfigSpec['routes'];
-  createBistate?: (first: string, second: string, transitions: TransitionPropertiesSpec) => TransitioningConfigSpec['routes'];
-  createTristate?: (first: string, second: string, third: string, transitions: TransitionPropertiesSpec) => TransitioningConfigSpec['routes'];
+  findRoute: (comp: AlloyComponent, route: TransitionRoute) => Option<TransitionProperties>;
+  disableTransition: (comp: AlloyComponent) => void;
+  getCurrentRoute: (comp: AlloyComponent) => Option<TransitionRoute>;
+  jumpTo: (comp: AlloyComponent, destination: string) => void;
+  progressTo: (comp: AlloyComponent, destination: string) => void;
+  getState: (comp: AlloyComponent) => Option<string>;
+  createRoutes: (routes: Record<string, TransitionPropertiesSpec>) => TransitioningConfigSpec['routes'];
+  createBistate: (first: string, second: string, transitions: TransitionPropertiesSpec) => TransitioningConfigSpec['routes'];
+  createTristate: (first: string, second: string, third: string, transitions: TransitionPropertiesSpec) => TransitioningConfigSpec['routes'];
 }
 
 export interface TransitioningConfig extends Behaviour.BehaviourConfigDetail {

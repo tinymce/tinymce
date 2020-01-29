@@ -1,6 +1,6 @@
 import { Assertions } from '@ephox/agar';
 import { BlobCache, BlobInfoData } from 'tinymce/core/api/file/BlobCache';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { atob, Blob } from '@ephox/dom-globals';
 
 UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function () {

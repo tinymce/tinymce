@@ -8,7 +8,7 @@
 import { Unicode } from '@ephox/katamari';
 import { Node, Text, Traverse } from '@ephox/sugar';
 import { isCaretNode } from '../fmt/FormatContainer';
-import FormatUtils from '../fmt/FormatUtils';
+import * as FormatUtils from '../fmt/FormatUtils';
 import { isAnnotation } from './Identification';
 import Editor from '../api/Editor';
 
@@ -24,7 +24,7 @@ export const enum ChildContext {
 
 const isZeroWidth = (elem): boolean => {
   // TODO: I believe this is the same cursor used in tinymce (Unicode.zeroWidth)?
-  return Node.isText(elem) && Text.get(elem) === Unicode.zeroWidth();
+  return Node.isText(elem) && Text.get(elem) === Unicode.zeroWidth;
 };
 
 const context = (editor: Editor, elem: any, wrapName: string, nodeName: string): ChildContext => {

@@ -6,7 +6,7 @@ import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Body from 'ephox/sugar/api/node/Body';
 import Element from 'ephox/sugar/api/node/Element';
 import * as Html from 'ephox/sugar/api/properties/Html';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('DocumentPositionTest', function () {
   const container = Element.fromTag('div');

@@ -1,5 +1,5 @@
 import { Document, Range, Node as DomNode } from '@ephox/dom-globals';
-import { Option, Options } from '@ephox/katamari';
+import { Option, Arr } from '@ephox/katamari';
 import Element from '../../api/node/Element';
 import * as Node from '../../api/node/Node';
 import * as Traverse from '../../api/search/Traverse';
@@ -20,7 +20,7 @@ import * as TextPoint from './TextPoint';
 const searchInChildren = function (doc: Element<Document>, node: Element<DomNode>, x: number, y: number): Option<Range> {
   const r = doc.dom().createRange();
   const nodes = Traverse.children(node);
-  return Options.findMap(nodes, function (n) {
+  return Arr.findMap(nodes, function (n) {
     // slight mutation because we assume creating ranges is expensive
     r.selectNode(n.dom());
     return Geometry.inRect(r.getBoundingClientRect(), x, y) ?

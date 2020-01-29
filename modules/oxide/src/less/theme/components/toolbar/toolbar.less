@@ -54,6 +54,13 @@
     transition: opacity .3s ease, height .2s linear .1s, visibility 0s linear .3s;
   }
 
+  // Add top borders
+  .tox-menubar + .tox-toolbar,
+  .tox-menubar + .tox-toolbar-overlord .tox-toolbar__primary {
+    border-top: 1px solid @toolbar-separator-color;
+    margin-top: -1px; // Temporary fix to hide menubar bottom border below the toolbar
+  }
+
   .tox-toolbar--scrolling {
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -71,6 +78,12 @@
   .tox-tbtn__icon-wrap {
     //
   }
+}
+
+// Add a top border when toolbar_location is bottom and menubar is hidden
+&.tox-tinymce:not(.tox-tinymce-inline) .tox-editor-header:not(:first-child) .tox-toolbar:first-child,
+&.tox-tinymce:not(.tox-tinymce-inline) .tox-editor-header:not(:first-child) .tox-toolbar-overlord:first-child .tox-toolbar__primary {
+  border-top: 1px solid @toolbar-separator-color;
 }
 
 // Floating more drawer styles. Uses pop toolbar styles

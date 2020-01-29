@@ -6,8 +6,7 @@
  */
 
 import { Toggling } from '@ephox/alloy';
-import { Objects } from '@ephox/boulder';
-import { Arr, Fun, Id, Merger } from '@ephox/katamari';
+import { Arr, Fun, Id, Merger, Obj } from '@ephox/katamari';
 
 import DefaultStyleFormats from '../features/DefaultStyleFormats';
 import StylesMenu from '../ui/StylesMenu';
@@ -54,11 +53,11 @@ const register = function (editor, settings) {
     return newItem;
   };
 
-  const formats = Objects.readOptFrom(settings, 'style_formats').getOr(DefaultStyleFormats);
+  const formats = Obj.get(settings, 'style_formats').getOr(DefaultStyleFormats);
 
   const doEnrich = function (items) {
     return Arr.map(items, function (item) {
-      if (Objects.hasKey(item, 'items')) {
+      if (Obj.hasNonNullableKey(item, 'items')) {
         const newItems = doEnrich(item.items);
         return Merger.deepMerge(
           enrichMenu(item),
@@ -66,7 +65,7 @@ const register = function (editor, settings) {
             items: newItems
           }
         );
-      } else if (Objects.hasKey(item, 'format')) {
+      } else if (Obj.hasNonNullableKey(item, 'format')) {
         return enrichSupported(item);
       } else {
         return enrichCustom(item);
@@ -85,7 +84,7 @@ const prune = function (editor, formats) {
         const newItems = doPrune(item.items);
         return newItems.length > 0 ? [ item ] : [ ];
       } else {
-        const keep = Objects.hasKey(item, 'format') ? editor.formatter.canApply(item.format) : true;
+        const keep = Obj.hasNonNullableKey(item, 'format') ? editor.formatter.canApply(item.format) : true;
         return keep ? [ item ] : [ ];
       }
     });

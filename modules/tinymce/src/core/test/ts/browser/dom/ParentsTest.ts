@@ -2,14 +2,12 @@ import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { Hierarchy, Element, Node } from '@ephox/sugar';
 import Parents from 'tinymce/core/dom/Parents';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function (success, failure) {
 
   const cCreateStructure = function (html) {
-    return Chain.mapper(function (_) {
+    return Chain.injectThunked(function () {
       return Element.fromHtml(html);
     });
   };

@@ -1,15 +1,15 @@
 import { Assertions, GeneralSteps, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Option, Result } from '@ephox/katamari';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { InlineView } from 'ephox/alloy/api/ui/InlineView';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 
@@ -60,7 +60,7 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
 
     gui.add(related);
 
-    const sCheckOpen = (label) => {
+    const sCheckOpen = (label: string) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([
@@ -75,7 +75,7 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
       );
     };
 
-    const sCheckClosed = (label) => {
+    const sCheckClosed = (label: string) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([

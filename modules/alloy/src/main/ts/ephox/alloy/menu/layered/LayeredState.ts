@@ -1,4 +1,3 @@
-import { Objects } from '@ephox/boulder';
 import { Arr, Cell, Obj, Option, Options } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -93,7 +92,7 @@ const init = (): LayeredState => {
       return getPreparedMenu(menuValue).isSome();
     });
 
-    return Objects.readOptFrom<string[]>(paths.get(), itemValue).bind((path) => {
+    return Obj.get(paths.get(), itemValue).bind((path) => {
       // remember the path is [ most-recent-menu, next-most-recent-menu ]
       // convert each menu identifier into { triggeringItem: comp, menu: comp }
 
@@ -116,21 +115,21 @@ const init = (): LayeredState => {
 
   // Given an item, return a list of all menus including the one that it triggered (if there is one)
   const expand = (itemValue: string): Option<string[]> => {
-    return Objects.readOptFrom<string>(expansions.get(), itemValue).map((menu: string) => {
-      const current: string[] = Objects.readOptFrom<string[]>(paths.get(), itemValue).getOr([ ]);
+    return Obj.get(expansions.get(), itemValue).map((menu: string) => {
+      const current: string[] = Obj.get(paths.get(), itemValue).getOr([ ]);
       return [ menu ].concat(current);
     });
   };
 
   const collapse = (itemValue: string): Option<string[]> => {
     // Look up which key has the itemValue
-    return Objects.readOptFrom<string[]>(paths.get(), itemValue).bind((path) => {
+    return Obj.get(paths.get(), itemValue).bind((path) => {
       return path.length > 1 ? Option.some(path.slice(1)) : Option.none();
     });
   };
 
   const refresh = (itemValue: string): Option<string[]> => {
-    return Objects.readOptFrom<string[]>(paths.get(), itemValue);
+    return Obj.get(paths.get(), itemValue);
   };
 
   const getPreparedMenu = (menuValue: string): Option<AlloyComponent> => {
@@ -138,14 +137,14 @@ const init = (): LayeredState => {
   };
 
   const lookupMenu = (menuValue: string): Option<MenuPreparation> => {
-    return Objects.readOptFrom<MenuPreparation>(
+    return Obj.get(
       menus.get(),
       menuValue
     );
   };
 
   const lookupItem = (itemValue: string): Option<string> => {
-    return Objects.readOptFrom<string>(
+    return Obj.get(
       expansions.get(),
       itemValue
     );

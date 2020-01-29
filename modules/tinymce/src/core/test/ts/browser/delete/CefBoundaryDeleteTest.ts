@@ -1,15 +1,17 @@
 import { ApproxStructure, GeneralSteps, Keys, Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 import Zwsp from 'tinymce/core/text/Zwsp';
+import { Unicode } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.core.delete.CefBoundaryDeleteTest',  (success, failure) => {
   Theme();
 
-  const sTestDelete = function (editor, tinyApis, tinyActions) {
+  const sTestDelete = function (editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions) {
     return GeneralSteps.sequence([
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
 
       Logger.t('Should delete single space between cef elements', GeneralSteps.sequence([
         tinyApis.sSetContent('<p><span contenteditable="false">a</span>&nbsp;<span contenteditable="false">b</span>&nbsp;</p>'),
@@ -39,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefBoundaryDeleteTest',  (succes
                         s.text(str.is('b'))
                       ]
                     }),
-                    s.text(str.is('\u00a0'))
+                    s.text(str.is(Unicode.nbsp))
                   ]
                 })
               ]

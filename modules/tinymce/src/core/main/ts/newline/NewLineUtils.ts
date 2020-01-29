@@ -5,12 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Option, Unicode } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+import Editor from '../api/Editor';
+import TreeWalker from '../api/dom/TreeWalker';
 import * as ElementType from '../dom/ElementType';
 import NodeType from '../dom/NodeType';
-import TreeWalker from '../api/dom/TreeWalker';
-import Editor from '../api/Editor';
+import ScrollIntoView from '../dom/ScrollIntoView';
 
 const firstNonWhiteSpaceNodeSibling = function (node) {
   while (node) {
@@ -35,7 +36,7 @@ const moveToCaretPosition = function (editor: Editor, root) {
     const firstChild = firstNonWhiteSpaceNodeSibling(root.firstChild);
 
     if (firstChild && /^(UL|OL|DL)$/.test(firstChild.nodeName)) {
-      root.insertBefore(dom.doc.createTextNode('\u00a0'), root.firstChild);
+      root.insertBefore(dom.doc.createTextNode(Unicode.nbsp), root.firstChild);
     }
   }
 
@@ -82,7 +83,7 @@ const moveToCaretPosition = function (editor: Editor, root) {
   }
 
   editor.selection.setRng(rng);
-  editor.selection.scrollIntoView(root);
+  ScrollIntoView.scrollRangeIntoView(editor, rng);
 };
 
 const getEditableRoot = function (dom, node) {

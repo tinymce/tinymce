@@ -6,6 +6,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [6.0.0] - TBD
+
+### Removed
+- Removed `getMoreButton` and `getOverflow` methods from the `SplitSlidingToolbar` component.
+- Removed `getMoreButton` method from the `SplitFloatingToolbar` component.
+- Removed `getAnchor` configuration from the `SplitFloatingToolbar` component.
+- Removed `SugarEvent` from exports list.
+
+### Added
+- Added new `FloatingToolbar` component.
+- Added new vertical directionality for layouts
+- Added `setGroups` and `toggle` methods and `getBounds` configuration to the `FloatingToolbarButton` component.
+
+### Changed
+- Moved modules from "alien" folder into Sugar, Katamari and other folders in Alloy.
+
+### Fixed
+- Improved `Docking` scroll performance by only calculating the offset origin as required.
+
 # [5.1.0] - 2019-12-17
 
 ### Added

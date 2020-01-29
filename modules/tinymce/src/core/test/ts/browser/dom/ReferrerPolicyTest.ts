@@ -1,5 +1,5 @@
-import { Chain, Logger, Pipeline, RawAssertions, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Chain, Logger, Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import Editor from 'tinymce/core/api/Editor';
@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ReferrerPolicyTest', (success, fail
 
   const cAssertReferrerLinkPresence = (referrerPolicy: ReferrerPolicy, expected: boolean) => Chain.op((editor: Editor) => {
     const links = editor.getDoc().querySelectorAll(`link[referrerpolicy="${referrerPolicy}"]`);
-    RawAssertions.assertEq(`should have link with referrerpolicy="${referrerPolicy}"`, expected, links.length > 0);
+    Assert.eq(`should have link with referrerpolicy="${referrerPolicy}"`, expected, links.length > 0);
   });
 
   const cLoadScript = (url) => Chain.async((input, next, die) => {

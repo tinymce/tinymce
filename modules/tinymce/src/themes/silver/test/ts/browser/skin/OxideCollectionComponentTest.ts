@@ -12,10 +12,10 @@ import {
   UiFinder,
   Log
 } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document, navigator } from '@ephox/dom-globals';
 import { Arr, Option, Options, Result } from '@ephox/katamari';
-import { TinyLoader } from '@ephox/mcagar';
+import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body, Element, Attr } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -31,6 +31,7 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
 
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
+      const tinyUi = TinyUi(editor);
       const doc = Element.fromDom(document);
 
       const structureItem = (optText: Option<string>, optIcon: Option<string>) => (s, str, arr) => {
@@ -62,7 +63,7 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
           TestHelpers.GuiSetup.mAddStyles(doc, [
             ':focus { outline: 2px solid green; }'
           ]),
-          Mouse.sClickOn(Body.body(), '.tox-toolbar button'),
+          tinyUi.sClickOnToolbar('Click on toolbar button', 'button'),
           UiFinder.sWaitForVisible('Waiting for dialog', Body.body(), '[role="dialog"]'),
 
           FocusTools.sTryOnSelector('Focus should start on input', doc, 'input'),

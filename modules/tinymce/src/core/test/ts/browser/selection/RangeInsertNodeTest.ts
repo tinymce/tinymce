@@ -1,7 +1,7 @@
 import { GeneralSteps, Logger, Pipeline, Step, ApproxStructure } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import Editor from 'tinymce/core/api/Editor';
 import { rangeInsertNode } from 'tinymce/core/selection/RangeInsertNode';
 import { Node, DocumentFragment, Document } from '@ephox/dom-globals';
@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeInsertNode', (success, f
 
     Pipeline.async({}, [
       Logger.t('Insert node at start of text', GeneralSteps.sequence([
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetRawContent('<p>a</p>'),
         tinyApis.sSetCursor([0, 0], 0),
         sRangeInsertNode(editor, doc.createTextNode('X')),
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeInsertNode', (success, f
         )
       ])),
       Logger.t('Insert node at end of text', GeneralSteps.sequence([
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetRawContent('<p>a</p>'),
         tinyApis.sSetCursor([0, 0], 1),
         sRangeInsertNode(editor, doc.createTextNode('X')),
@@ -66,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeInsertNode', (success, f
         )
       ])),
       Logger.t('Insert document fragment at start of text', GeneralSteps.sequence([
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetRawContent('<p>a</p>'),
         tinyApis.sSetCursor([0, 0], 0),
         sRangeInsertNode(editor, fragmentFromHtml('X', doc)),

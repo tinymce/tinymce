@@ -6,72 +6,66 @@ import { DieFn, NextFn, Pipe, RunFn } from '../pipe/Pipe';
 import { addLogging, GuardFn } from './Guard';
 import { addLogEntry, TestLogs } from './TestLogs';
 
-export type Step<T, U> = (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => void;
+export interface Step<T, U> {
+  runStep: (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => void;
+}
 
-const raw = function <T, U>(f: RunFn<T, U>): Step<T, U> {
-  return Pipe(f);
-};
+const raw = <T, U>(f: RunFn<T, U>): Step<T, U> =>
+  ({ runStep: Pipe(f) });
 
-const stateful = function <T, U>(f: (v: T, next: (v: U) => void, die: (err) => void) => void): Step<T, U> {
-  return Pipe<T, U>((value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => {
+const stateful = <T, U>(f: (v: T, next: (v: U) => void, die: (err) => void) => void): Step<T, U> =>
+  raw<T, U>((value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => {
     f(
       value,
       (nextValue: U) => next(nextValue, logs),
       (err) => die(err, logs)
     );
   });
-};
 
 // Chiefly used for limiting things with timeouts.
-const control = function <T, U, V>(step: Step<T, U>, guard: GuardFn<T, U, V>): Step<T, V> {
-  return Pipe<T, V>(function (value: T, next: NextFn<V>, die: DieFn, logs: TestLogs) {
-    guard(step, value, next, die, logs);
+const control = <T, U, V>(step: Step<T, U>, guard: GuardFn<T, U, V>): Step<T, V> =>
+  raw<T, V>((value: T, next: NextFn<V>, die: DieFn, logs: TestLogs) => {
+    guard(step.runStep, value, next, die, logs);
   });
-};
 
-const sync = function <T>(f: () => void): Step<T, T> {
-  return Pipe<T, T>(function (value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) {
+const sync = <T>(f: () => void): Step<T, T> =>
+  raw<T, T>((value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) => {
     f();
     next(value, logs);
   });
-};
 
-const async = function <T>(f: (next: () => void, die: (err) => void) => void): Step<T, T> {
-  return Pipe<T, T>(function (value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) {
+const async = <T>(f: (next: () => void, die: (err) => void) => void): Step<T, T> =>
+  raw<T, T>((value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) => {
     f(
       () => next(value, logs),
       (err) => die(err, logs)
     );
   });
-};
 
 // Convenience functions
-const debugging = sync<any>(GeneralActions.debug);
+const debugging: Step<any, any> =
+  sync<any>(GeneralActions.debug);
 
-const log = function <T>(message: string): Step<T, T> {
-  return Pipe<T, T>(function (value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) {
+const log = <T>(message: string): Step<T, T> =>
+  raw<T, T>((value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) => {
     // tslint:disable-next-line:no-console
     console.log(message);
     next(value, addLogEntry(logs, message));
   });
-};
 
-const label = function <T, U>(label: string, chain: Step<T, U>) {
-  return control(chain, addLogging(label));
-};
+const label = <T, U>(label: string, chain: Step<T, U>): Step<T, U> =>
+  control(chain, addLogging(label));
 
-const wait = function <T>(amount: number): Step<T, T> {
-  return async<T>(AsyncActions.delay(amount));
-};
+const wait = <T>(amount: number): Step<T, T> =>
+  async(AsyncActions.delay(amount));
 
-const fail = function <T>(message: string): Step<T, T> {
-  return async<T>(AsyncActions.fail(message));
-};
+const fail = <T>(message: string): Step<T, T> =>
+  async(AsyncActions.fail(message));
 
-const pass = sync<any>(GeneralActions.pass);
+const pass: Step<any, any> = sync<any>(GeneralActions.pass);
 
-const predicate = <T> (p: (value: T) => boolean): Step<T, T> =>
-  stateful<T, T>((value: T, next, die) => {
+const predicate = <T>(p: (value: T) => boolean): Step<T, T> =>
+  stateful((value: T, next, die) => {
     p(value) ? next(value) : die('predicate did not succeed');
   });
 

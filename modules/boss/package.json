@@ -23,6 +23,9 @@
     "@ephox/sugar": "^5.0.20",
     "tslib": "^1.9.3"
   },
+  "devDependencies": {
+    "@ephox/katamari-assertions": "^1.0.0"
+  },
   "scripts": {
     "prepublishOnly": "tsc -b",
     "test": "bedrock-auto -b phantomjs -d src/test/ts",

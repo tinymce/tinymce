@@ -1,11 +1,11 @@
 import * as Strings from 'ephox/katamari/api/Strings';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, Assert } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 
-UnitTest.test('contains', function () {
+UnitTest.test('contains: unit test', () => {
   function check(expected, str, substr) {
     const actual = Strings.contains(str, substr);
-    assert.eq(expected, actual);
+    Assert.eq('contains', expected, actual);
   }
 
   check(false, 'a', 'b');
@@ -19,32 +19,33 @@ UnitTest.test('contains', function () {
   check(true, 'ab', 'a');
   check(true, 'ab', 'b');
   check(true, 'abc', 'b');
+});
 
-  Jsc.property(
-    'A string added to a string (at the end) must be contained within it',
-    Jsc.string,
-    Jsc.nestring,
-    function (str, contents) {
+UnitTest.test('A string added to a string (at the end) must be contained within it', () => {
+  fc.assert(fc.property(
+    fc.string(),
+    fc.string(1, 40),
+    (str, contents) => {
       const r = str + contents;
-      return Jsc.eq(true, Strings.contains(r, contents));
+      Assert.eq('eq', true, Strings.contains(r, contents));
     }
-  );
+  ));
+});
 
-  Jsc.property(
-    'A string added to a string (at the start) must be contained within it',
-    Jsc.string,
-    Jsc.nestring,
-    function (str, contents) {
+UnitTest.test('A string added to a string (at the start) must be contained within it', () => {
+  fc.assert(fc.property(
+    fc.string(),
+    fc.string(1, 40),
+    (str, contents) => {
       const r = contents = str;
-      return Jsc.eq(true, Strings.contains(r, contents));
+      Assert.eq('eq', true, Strings.contains(r, contents));
     }
-  );
+  ));
+});
 
-  Jsc.property(
-    'An empty string should contain nothing',
-    Jsc.nestring,
-    function (value) {
-      return !Strings.contains('', value);
-    }
-  );
+UnitTest.test('An empty string should contain nothing', () => {
+  fc.assert(fc.property(
+    fc.string(1, 40),
+    (value) => !Strings.contains('', value)
+  ));
 });

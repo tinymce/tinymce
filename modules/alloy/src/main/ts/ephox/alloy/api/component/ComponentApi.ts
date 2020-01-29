@@ -1,16 +1,18 @@
+import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
 import { AlloySystemApi } from '../../api/system/SystemApi';
+import { BehaviourConfigAndState } from '../../behaviour/common/BehaviourBlob';
 import { UncurriedHandler } from '../../events/EventRegistry';
 
 export interface AlloyComponent {
   getSystem: () => AlloySystemApi;
-  config: <D>(behaviour: AlloyBehaviour<any, D>) => D | any;
-  hasConfigured: (behaviour) => boolean;
+  config: (behaviour: AlloyBehaviour<any, any>) => Option<BehaviourConfigAndState<any, any>>;
+  hasConfigured: (behaviour: AlloyBehaviour<any, any>) => boolean;
   spec: () => any;
   readState: (behaviourName: string) => any;
-  connect: (newApi) => void;
+  connect: (newApi: AlloySystemApi) => void;
   disconnect: () => void;
   getApis: <A>() => A;
   element: () => Element;

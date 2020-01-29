@@ -1,9 +1,9 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Logger from 'ephox/agar/api/Logger';
 
-UnitTest.test('LoggerTest', function () {
+UnitTest.test('LoggerTest', () => {
   try {
-    Logger.sync('test 1. Foo is not a function', function () {
+    Logger.sync('test 1. Foo is not a function', () => {
       const x: any = {};
       x.foo(); // This line number is asserted ... so keep it up to date !
       return x;

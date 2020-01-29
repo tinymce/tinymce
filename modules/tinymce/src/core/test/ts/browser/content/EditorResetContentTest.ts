@@ -1,5 +1,5 @@
 import { GeneralSteps, Logger, Pipeline, Step, Assertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorResetContentTest', (succe
         Step.sync(() => editor.undoManager.add()),
         tinyApis.sSetContent('<p>some</p><p>other</p><p>content</p>'),
         Step.sync(() => editor.undoManager.add()),
-        tinyApis.sNodeChanged,
+        tinyApis.sNodeChanged(),
         Step.sync(() => {
           Assertions.assertEq('Editor should be dirty', true, editor.isDirty());
           Assertions.assertEq('UndoManager should have some undo levels', true, editor.undoManager.hasUndo());

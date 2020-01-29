@@ -1,5 +1,5 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Height, Width } from '@ephox/sugar';
+import { Element, Height, Width } from '@ephox/sugar';
 
 import * as Fields from '../../data/Fields';
 
@@ -21,13 +21,13 @@ export default [
     'property', {
       width: [
         Fields.output('property', 'width'),
-        Fields.output('getDimension', (elem) => {
+        Fields.output('getDimension', (elem: Element) => {
           return Width.get(elem) + 'px';
         })
       ],
       height: [
         Fields.output('property', 'height'),
-        Fields.output('getDimension', (elem) => {
+        Fields.output('getDimension', (elem: Element) => {
           return Height.get(elem) + 'px';
         })
       ]

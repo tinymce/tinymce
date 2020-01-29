@@ -2,7 +2,7 @@ import { Adt } from './Adt';
 
 type StringMapper = (str: string) => string;
 
-export interface StringMatch extends Adt {
+export interface StringMatch {
   fold: <T>(
     starts: (value: string, f: StringMapper) => T,
     pattern: (regex: RegExp, f: StringMapper) => T,
@@ -11,6 +11,15 @@ export interface StringMatch extends Adt {
     all: () => T,
     not: (other: StringMatch) => T
   ) => T;
+  match: <T>(branches: {
+    starts: (value: string, f: StringMapper) => T;
+    pattern: (regex: RegExp, f: StringMapper) => T;
+    contains: (value: string, f: StringMapper) => T;
+    exact: (value: string, f: StringMapper) => T;
+    all: () => T;
+    not: (other: StringMatch) => T;
+  }) => T;
+  log: (label: string) => void;
 }
 
 const adt = Adt.generate<{

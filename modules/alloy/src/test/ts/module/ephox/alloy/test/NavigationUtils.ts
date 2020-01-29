@@ -1,15 +1,16 @@
 import { FocusTools, GeneralSteps, Keyboard, Step, UiFinder, Waiter } from '@ephox/agar';
+import { HTMLDocument } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Traverse } from '@ephox/sugar';
+import { Element, Traverse } from '@ephox/sugar';
 
 /* global assert */
 
-const range = (num, f) => {
+const range = <T, R>(num: number, f: (v: T, i: number) => R[]) => {
   const array = new Array(num);
   return Arr.bind(array, f);
 };
 
-const sequence = (doc, key, modifiers, identifiers) => {
+const sequence = (doc: Element<HTMLDocument>, key: number, modifiers: { }, identifiers: Array<{ label: string; selector: string }>) => {
   const array = range(identifiers.length, (_, i) => {
     return [
       Keyboard.sKeydown(doc, key, modifiers),
@@ -26,7 +27,7 @@ const sequence = (doc, key, modifiers, identifiers) => {
 };
 
 // Selector based
-const highlights = (container, key, modifiers, identifiers) => {
+const highlights = (container: Element, key: number, modifiers: { }, identifiers: Array<{ label: string; selector: string }>) => {
   const array = range(identifiers.length, (_, i) => {
     const msg = 'Highlight should move from ' + (i > 0 ? identifiers[i - 1].label : '(start)') + ' to ' + identifiers[i].label;
     const doc = Traverse.owner(container);

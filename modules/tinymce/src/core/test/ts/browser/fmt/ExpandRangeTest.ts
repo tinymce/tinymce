@@ -1,24 +1,24 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Range } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Hierarchy, Element } from '@ephox/sugar';
-import ExpandRange from 'tinymce/core/fmt/ExpandRange';
+import * as ExpandRange from 'tinymce/core/fmt/ExpandRange';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import Editor from 'tinymce/core/api/Editor';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (success, failure) {
 
   Theme();
 
-  const cSetRawContent = function (html) {
-    return Chain.op(function (editor: any) {
+  const cSetRawContent = function (html: string) {
+    return Chain.op(function (editor: Editor) {
       editor.getBody().innerHTML = html;
     });
   };
 
-  const cExpandRng = function (startPath, startOffset, endPath, endOffset, format, remove) {
-    return Chain.mapper(function (editor: any) {
+  const cExpandRng = function (startPath: number[], startOffset: number, endPath: number[], endOffset: number, format, excludeTrailingSpaces: boolean = false) {
+    return Chain.mapper(function (editor: Editor) {
       const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
 
@@ -26,12 +26,12 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function () {
       rng.setStart(startContainer.dom(), startOffset);
       rng.setEnd(endContainer.dom(), endOffset);
 
-      return ExpandRange.expandRng(editor, rng, format, remove);
+      return ExpandRange.expandRng(editor, rng, format, excludeTrailingSpaces);
     });
   };
 
-  const cAssertRange = function (editor, startPath, startOffset, endPath, endOffset) {
-    return Chain.op(function (rng: any) {
+  const cAssertRange = function (editor: Editor, startPath: number[], startOffset: number, endPath: number[], endOffset: number) {
+    return Chain.op(function (rng: Range) {
       const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
 
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function () {
     const selectorFormatCollapsed = [{ selector: 'div', classes: 'b', collapsed: true }];
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Expand inline format words', GeneralSteps.sequence([
         Logger.t('In middle of single word in paragraph', Chain.asStep(editor, [
           cSetRawContent('<p>ab</p>'),

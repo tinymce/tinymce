@@ -10,7 +10,7 @@ import {
   UiFinder,
   Waiter,
 } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Body, Element as SugarElement, Element } from '@ephox/sugar';
@@ -105,6 +105,7 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
                                   html: str.is('No'),
                                   classes: [
                                     arr.has('tox-button'),
+                                    arr.has('tox-button--secondary')
                                   ],
                                   attrs: {
                                     'type': str.is('button'),

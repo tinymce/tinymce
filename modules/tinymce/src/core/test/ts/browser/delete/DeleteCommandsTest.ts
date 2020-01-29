@@ -2,11 +2,9 @@ import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import DeleteCommands from 'tinymce/core/delete/DeleteCommands';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.delete.DeleteCommandsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.DeleteCommandsTest', function (success, failure) {
 
   Theme();
 
@@ -26,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteCommandsTest', function ()
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Delete should merge blocks', GeneralSteps.sequence([
         tinyApis.sSetContent('<h1>a</h1><p><span style="color: red;">b</span></p>'),
         tinyApis.sSetCursor([1, 0, 0], 0),

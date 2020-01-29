@@ -1,10 +1,10 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>Oxide Skin development demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://cloud.tinymce.com/5-testing/tinymce.min.js?apiKey=qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc"></script>
+    <script src="/tinymce/tinymce.min.js"></script>
     <style>
         body {
             margin: 2rem;
@@ -41,12 +41,16 @@
 
         tinymce.init({
             selector:'textarea',
-            plugins: 'advlist anchor autolink charmap code codesample directionality fullpage fullscreen help hr image imagetools insertdatetime link lists media nonbreaking pagebreak preview print searchreplace table template textpattern toc visualblocks visualchars wordcount',
+            plugins: 'autoresize advlist anchor autolink charmap code codesample directionality fullpage fullscreen help hr image imagetools insertdatetime link lists media nonbreaking pagebreak preview print searchreplace table template textpattern toc visualblocks visualchars wordcount',
             toolbar: 'undo redo | formatselect | bold italic strikethrough forecolor backcolor blockquote | link table image media | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat fullscreen',
-            toolbar_drawer: 'floating',
+            toolbar_mode: 'floating',
+            toolbar_sticky: true,
             height: 600,
             skin_url: '/skins/ui/' +  skin,
-            content_css: '/skins/content/' + contentcss + '/content.css'
+            content_css: '/skins/content/' + contentcss + '/content.css',
+            templates: [
+              {title: 'Some title', description: 'Some description', content: 'Some content'},
+            ],
         });
 
         function addOptionTo (select) {

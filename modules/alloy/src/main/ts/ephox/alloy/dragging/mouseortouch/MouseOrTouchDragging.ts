@@ -1,5 +1,4 @@
 import { FieldProcessorAdt } from '@ephox/boulder';
-import { Position } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
@@ -10,7 +9,7 @@ import * as MouseDragging from '../mouse/MouseDragging';
 import * as TouchDragging from '../touch/TouchDragging';
 import { MouseOrTouchDraggingConfig } from './MouseOrTouchDraggingTypes';
 
-const events = (dragConfig: MouseOrTouchDraggingConfig, dragState: DraggingState<Position>, updateStartState: (comp: AlloyComponent) => void) => {
+const events = (dragConfig: MouseOrTouchDraggingConfig, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void) => {
   return [
     ...MouseDragging.events(dragConfig, dragState, updateStartState),
     ...TouchDragging.events(dragConfig, dragState, updateStartState),

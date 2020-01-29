@@ -1,5 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
@@ -136,7 +136,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
   };
 
   const sTestOpen = Chain.asStep({ }, [
-    Chain.mapper((_) => {
+    Chain.injectThunked(() => {
       return windowManager.open(dialogA, {}, () => store.adder('closeWindow')() );
     }),
     Chain.op((dialogApi) => {

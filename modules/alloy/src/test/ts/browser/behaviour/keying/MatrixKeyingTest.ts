@@ -1,5 +1,5 @@
 import { FocusTools, Keyboard, Keys } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Objects } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
 
@@ -24,7 +24,7 @@ UnitTest.asynctest('Matrix Keying Test', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
     const rows = Arr.chunk(cells, 6);
 
-    const item = (classes) => {
+    const item = (classes: string[]) => {
       return Container.sketch({
         dom: {
           tag: 'span',

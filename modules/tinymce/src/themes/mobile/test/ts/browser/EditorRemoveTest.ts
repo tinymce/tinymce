@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Chain, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor, UiChains } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { Body, Element, Insert, Remove, Selectors } from '@ephox/sugar';
@@ -54,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.themes.mobile.EditorRemoveTest', (success, f
         NamedChain.outputInput
       ]),
       McEditor.cRemove,
-      Chain.mapper(() => Body.body()),
+      Chain.injectThunked(Body.body),
       Assertions.cAssertStructure('Assert Thor overrides removed from body', ApproxStructure.build((s, str) => {
         return s.element('body', {
           attrs: cleanedThorAttrsStruct(str),

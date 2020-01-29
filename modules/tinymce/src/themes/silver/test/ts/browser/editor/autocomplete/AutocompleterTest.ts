@@ -1,6 +1,6 @@
 import { Logger, Pipeline, Step, Keys, UiFinder, GeneralSteps, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyLoader, TinyUi, TinyApis, TinyActions } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
@@ -379,7 +379,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
       Pipeline.async({ }, Logger.ts(
           'Trigger autocompleter',
           [
-            tinyApis.sFocus,
+            tinyApis.sFocus(),
             Logger.t('Checking first autocomplete (columns = 1) trigger: "+"', sTestFirstAutocomplete),
             Logger.t('Checking first autocomplete (columns = 1) trigger: "+"', sTestFirstAutocomplete2),
             Logger.t('Checking second autocomplete (columns = 2), two sources, trigger ":"', sTestSecondAutocomplete),

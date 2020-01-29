@@ -1,25 +1,33 @@
 import { Arr, Fun, Future, Option, Result } from '@ephox/katamari';
-import { Width, Element, Css } from '@ephox/sugar';
+import { Css, Element, Width } from '@ephox/sugar';
 
 import * as ComponentStructure from '../alien/ComponentStructure';
 import { Composing } from '../api/behaviour/Composing';
 import { Coupling } from '../api/behaviour/Coupling';
 import { Focusing } from '../api/behaviour/Focusing';
 import { Positioning } from '../api/behaviour/Positioning';
+import { Receiving } from '../api/behaviour/Receiving';
 import { Representing } from '../api/behaviour/Representing';
 import { Sandboxing } from '../api/behaviour/Sandboxing';
-import { AlloyComponent } from '../api/component/ComponentApi';
 import { LazySink } from '../api/component/CommonTypes';
+import { AlloyComponent } from '../api/component/ComponentApi';
 import { SketchBehaviours } from '../api/component/SketchBehaviours';
+import { SketchSpec } from '../api/component/SpecTypes';
 import { TieredData, tieredMenu as TieredMenu } from '../api/ui/TieredMenu';
 import * as AriaOwner from '../aria/AriaOwner';
 import * as InternalSink from '../parts/InternalSink';
 import { HotspotAnchorSpec } from '../positioning/mode/Anchoring';
 import * as Tagger from '../registry/Tagger';
 import * as Dismissal from '../sandbox/Dismissal';
-import { CommonDropdownDetail } from '../ui/types/DropdownTypes';
-import { Receiving } from '@ephox/alloy';
 import * as Reposition from '../sandbox/Reposition';
+import { CommonDropdownDetail } from '../ui/types/DropdownTypes';
+
+type OnOpenSyncFunc = (sandbox: AlloyComponent) => void;
+
+export interface SandboxExtras {
+  onClose?: (component: AlloyComponent, menu: AlloyComponent) => void;
+  onOpen?: (component: AlloyComponent, menu: AlloyComponent) => void;
+}
 
 export enum HighlightOnOpen { HighlightFirst, HighlightNone }
 
@@ -35,12 +43,12 @@ const getAnchor = (detail: CommonDropdownDetail<TieredData>, component: AlloyCom
   });
 };
 
-const fetch = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, component): Future<Option<TieredData>> => {
+const fetch = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, component: AlloyComponent): Future<Option<TieredData>> => {
   const fetcher = detail.fetch;
   return fetcher(component).map(mapFetch);
 };
 
-const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, anchor: HotspotAnchorSpec, component, sandbox, externals, highlightOnOpen: HighlightOnOpen): Future<Option<any>> => {
+const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, anchor: HotspotAnchorSpec, component: AlloyComponent, sandbox: AlloyComponent, externals: any, highlightOnOpen: HighlightOnOpen): Future<Option<SketchSpec>> => {
   const futureData: Future<Option<TieredData>> = fetch(detail, mapFetch, component);
 
   const getLazySink = getSink(component, detail);
@@ -92,7 +100,7 @@ const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Optio
 
 // onOpenSync is because some operations need to be applied immediately, not wrapped in a future
 // It can avoid things like flickering due to asynchronous bouncing
-const open = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, hotspot: AlloyComponent, sandbox: AlloyComponent, externals, onOpenSync, highlightOnOpen: HighlightOnOpen) => {
+const open = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, hotspot: AlloyComponent, sandbox: AlloyComponent, externals: any, onOpenSync: OnOpenSyncFunc, highlightOnOpen: HighlightOnOpen) => {
   const anchor = getAnchor(detail, hotspot);
   const processed = openF(detail, mapFetch, anchor, hotspot, sandbox, externals, highlightOnOpen);
   return processed.map((tdata) => {
@@ -113,12 +121,12 @@ const open = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option
   });
 };
 
-const close = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, component, sandbox, _externals, _onOpenSync, _highlightOnOpen: HighlightOnOpen) => {
+const close = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, component: AlloyComponent, sandbox: AlloyComponent, _externals: any, _onOpenSync: OnOpenSyncFunc, _highlightOnOpen: HighlightOnOpen) => {
   Sandboxing.close(sandbox);
   return Future.pure(sandbox);
 };
 
-const togglePopup = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, hotspot: AlloyComponent, externals, onOpenSync, highlightOnOpen: HighlightOnOpen) => {
+const togglePopup = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, hotspot: AlloyComponent, externals: any, onOpenSync: OnOpenSyncFunc, highlightOnOpen: HighlightOnOpen) => {
   const sandbox = Coupling.getCoupled(hotspot, 'sandbox');
   const showing = Sandboxing.isOpen(sandbox);
 
@@ -126,7 +134,7 @@ const togglePopup = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata:
   return action(detail, mapFetch, hotspot, sandbox, externals, onOpenSync, highlightOnOpen);
 };
 
-const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent, useMinWidth) => {
+const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent, useMinWidth: boolean) => {
   const menu = Composing.getCurrent(container).getOr(container);
   const buttonWidth = Width.get(hotspot.element());
   if (useMinWidth) {
@@ -163,10 +171,10 @@ const doRepositionMenus = (sandbox: AlloyComponent) => {
   });
 };
 
-const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyComponent, extras) => {
+const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyComponent, extras?: SandboxExtras) => {
   const ariaOwner = AriaOwner.manager();
 
-  const onOpen = (component, menu) => {
+  const onOpen = (component: AlloyComponent, menu: AlloyComponent) => {
     const anchor = getAnchor(detail, hotspot);
     ariaOwner.link(hotspot.element());
     if (detail.matchWidth) { matchWidth(anchor.hotspot, menu, detail.useMinWidth); }
@@ -174,7 +182,7 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
     if (extras !== undefined && extras.onOpen !== undefined) { extras.onOpen(component, menu); }
   };
 
-  const onClose = (component, menu) => {
+  const onClose = (component: AlloyComponent, menu: AlloyComponent) => {
     ariaOwner.unlink(hotspot.element());
     if (extras !== undefined && extras.onClose !== undefined) { extras.onClose(component, menu); }
   };

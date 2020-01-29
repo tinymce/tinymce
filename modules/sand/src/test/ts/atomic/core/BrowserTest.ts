@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
 import PlatformQuery from 'ephox/sand/test/PlatformQuery';
 

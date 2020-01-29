@@ -1,12 +1,12 @@
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { DraggingConfigSpec, SnapConfig, DraggingState } from '../../dragging/common/DraggingTypes';
-import { Traverse, Scroll, Css } from '@ephox/sugar';
-import * as OffsetOrigin from '../../alien/OffsetOrigin';
-import * as Snappables from '../../dragging/snap/Snappables';
-import * as DragCoord from '../../api/data/DragCoord';
-import { SugarPosition } from '../../alien/TypeDefinitions';
+import { Css, Scroll, Traverse } from '@ephox/sugar';
 
-const snapTo = function (component: AlloyComponent, dragConfig: DraggingConfigSpec, _state: DraggingState<SugarPosition>, snap: SnapConfig): void {
+import * as OffsetOrigin from '../../alien/OffsetOrigin';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import * as DragCoord from '../../api/data/DragCoord';
+import { DraggingConfig, DraggingState, SnapConfig } from '../../dragging/common/DraggingTypes';
+import * as Snappables from '../../dragging/snap/Snappables';
+
+const snapTo = function (component: AlloyComponent, dragConfig: DraggingConfig, _state: DraggingState, snap: SnapConfig): void {
   const target = dragConfig.getTarget(component.element());
   if (dragConfig.repositionTarget) {
     const doc = Traverse.owner(component.element());

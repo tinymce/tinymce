@@ -1,7 +1,7 @@
 import { Arr, Option } from '@ephox/katamari';
 import { Compare, Insert, Element } from '@ephox/sugar';
 
-import * as AriaFocus from '../../alien/AriaFocus';
+import * as AriaFocus from '../../aria/AriaFocus';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import * as Attachment from '../../api/system/Attachment';

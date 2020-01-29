@@ -1,4 +1,4 @@
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import Jsc from '@ephox/wrap-jsverify';
 
 import { convertUnit, nuSize, SizeUnit, Size } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';

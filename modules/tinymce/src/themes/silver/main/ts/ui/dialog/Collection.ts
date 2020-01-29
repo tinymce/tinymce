@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, EventFormat, FormField as AlloyFormField, Keying, NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SugarEvent, SystemEvents, Tabstopping, } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, EventFormat, FormField as AlloyFormField, Keying, NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, Tabstopping } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 
-import { Attr, Class, Element, Focus, Html, SelectorFind } from '@ephox/sugar';
+import { Attr, Class, Element, EventArgs, Focus, Html, SelectorFind } from '@ephox/sugar';
 import I18n from 'tinymce/core/api/util/I18n';
 import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -80,11 +80,11 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
   });
 
   const collectionEvents = [
-    AlloyEvents.run<SugarEvent>(NativeEvents.mouseover(), runOnItem((comp, se, tgt) => {
+    AlloyEvents.run<EventArgs>(NativeEvents.mouseover(), runOnItem((comp, se, tgt) => {
       Focus.focus(tgt);
     })),
-    AlloyEvents.run<SugarEvent>(NativeEvents.click(), onClick),
-    AlloyEvents.run<SugarEvent>(SystemEvents.tap(), onClick),
+    AlloyEvents.run<EventArgs>(NativeEvents.click(), onClick),
+    AlloyEvents.run<EventArgs>(SystemEvents.tap(), onClick),
     AlloyEvents.run(NativeEvents.focusin(), runOnItem((comp, se, tgt) => {
       SelectorFind.descendant(comp.element(), '.' + ItemClasses.activeClass).each((currentActive) => {
         Class.remove(currentActive, ItemClasses.activeClass);

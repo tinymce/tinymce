@@ -3,7 +3,7 @@ import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('Browser Test: .AnchorInlineTest', (success, failure) => {
@@ -17,7 +17,7 @@ UnitTest.asynctest('Browser Test: .AnchorInlineTest', (success, failure) => {
 
     Pipeline.async({},
       Log.steps('TBA', 'Anchor: Add anchor by selecting text content, then check that anchor is inserted correctly', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent('<p>abc 123</p>'),
         tinyApis.sSetSelection([0, 0], 4, [0, 0], 7),
         tinyActions.sContentKeystroke(Keys.space(), {}),

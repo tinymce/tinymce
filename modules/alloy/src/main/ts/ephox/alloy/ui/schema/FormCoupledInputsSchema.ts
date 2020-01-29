@@ -15,7 +15,9 @@ import { FormField } from '../../api/ui/FormField';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
+import { ButtonSpec } from '../types/ButtonTypes';
 import { FormCoupledInputsDetail } from '../types/FormCoupledInputsTypes';
+import { FormFieldSpec } from '../types/FormFieldTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('field1Name', 'field1'),
@@ -31,10 +33,10 @@ const getField = (comp: AlloyComponent, detail: FormCoupledInputsDetail, partNam
 };
 
 const coupledPart = (selfName: string, otherName: string) => {
-  return PartType.required({
+  return PartType.required<FormCoupledInputsDetail, FormFieldSpec>({
     factory: FormField,
     name: selfName,
-    overrides (detail: FormCoupledInputsDetail) {
+    overrides (detail) {
       return {
         fieldBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('coupled-input-behaviour', [
@@ -57,13 +59,13 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   coupledPart('field1', 'field2'),
   coupledPart('field2', 'field1'),
 
-  PartType.required({
+  PartType.required<FormCoupledInputsDetail, ButtonSpec>({
     factory: Button,
     schema: [
       FieldSchema.strict('dom')
     ],
     name: 'lock',
-    overrides (detail: FormCoupledInputsDetail) {
+    overrides (detail) {
       return {
         buttonBehaviours: Behaviour.derive([
           Toggling.config({

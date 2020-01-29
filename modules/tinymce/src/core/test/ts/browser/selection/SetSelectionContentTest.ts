@@ -2,12 +2,10 @@ import { GeneralSteps, Logger, Pipeline, Step, Assertions, ApproxStructure } fro
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Element } from '@ephox/sugar';
 
-UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function (success, failure) {
 
   Theme();
 

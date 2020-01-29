@@ -81,6 +81,7 @@
     { "path": "../darwin" },
     { "path": "../imagetools" },
     { "path": "../katamari" },
+    { "path": "../katamari-assertions" },
     { "path": "../mcagar" },
     { "path": "../polaris" },
     { "path": "../robin" },

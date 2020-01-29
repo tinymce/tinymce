@@ -1,5 +1,5 @@
 import { Chain, UiFinder, Step, Logger, GeneralSteps, Assertions, FocusTools } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
@@ -60,7 +60,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
       const highlightManager = FocusManagers.highlights();
       const domManager = FocusManagers.dom();
 
-      const sFireFocusOn = (focusManager, selector: string) => {
+      const sFireFocusOn = (focusManager: FocusManagers.FocusManager, selector: string) => {
         return Chain.asStep(component.element(), [
           UiFinder.cFindIn(selector),
           Chain.op((elem) => {

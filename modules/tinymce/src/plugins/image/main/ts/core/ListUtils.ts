@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option, Type, Options } from '@ephox/katamari';
+import { Arr, Option, Type } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
 import { ListItem, ListGroup, ListValue } from '../ui/DialogTypes';
 
@@ -45,7 +45,7 @@ const isGroup = (item: ListItem): item is ListGroup => {
 };
 
 const findEntryDelegate = (list: ListItem[], value: string): Option<ListValue> => {
-  return Options.findMap(list, (item) => {
+  return Arr.findMap(list, (item) => {
     if (isGroup(item)) {
       return findEntryDelegate(item.items, value);
     } else if (item.value === value) {

@@ -31,7 +31,7 @@ const temporary = function <E, D>(universe: Universe<E, D>, start: E, soffset: n
   const doc: D = universe.property().document(start);
   const span = universe.create().nu('span', doc);
 
-  const cursor = universe.create().text(Unicode.zeroWidth(), doc);
+  const cursor = universe.create().text(Unicode.zeroWidth, doc);
   universe.insert().append(span, cursor);
 
   const injectAt = universe.property().isEmptyTag(start) ? universe.property().parent(start) : Option.some(start);
@@ -64,7 +64,7 @@ const scan = function <E, D>(universe: Universe<E, D>, start: E, soffset: number
 };
 
 const isUnicode = function <E, D>(universe: Universe<E, D>, element: E) {
-  return universe.property().isText(element) && universe.property().getText(element) === Unicode.zeroWidth();
+  return universe.property().isText(element) && universe.property().getText(element) === Unicode.zeroWidth;
 };
 
 const isSpan = <E, D>(universe: Universe<E, D>, exclusions: (e: E) => boolean) => (elem: E) => {

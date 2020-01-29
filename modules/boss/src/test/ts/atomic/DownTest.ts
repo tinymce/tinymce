@@ -3,7 +3,7 @@ import Down from 'ephox/boss/mutant/Down';
 import Locator from 'ephox/boss/mutant/Locator';
 import Tracks from 'ephox/boss/mutant/Tracks';
 import { Arr, Option } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('DownTest', function () {
   const family = Tracks.track(

@@ -1,8 +1,9 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
 import * as Gather from 'ephox/phoenix/api/general/Gather';
 import * as Finder from 'ephox/phoenix/test/Finder';
+import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('Seeker Test', function () {
   const some = Option.some;
@@ -43,15 +44,7 @@ UnitTest.test('Seeker Test', function () {
   };
 
   const check = function (expected: Option<string>, actual: Option<Gene>) {
-    actual.fold(function () {
-      assert.eq(true, expected.isNone());
-    }, function (act) {
-      expected.fold(function () {
-        assert.fail('Expected none, Actual: ' + act);
-      }, function (exp) {
-        assert.eq(exp, act.id);
-      });
-    });
+    KAssert.eqOption('eq', expected, actual.map((x) => x.id));
   };
 
   const checkBefore = function (expected: Option<string>, id: string) {

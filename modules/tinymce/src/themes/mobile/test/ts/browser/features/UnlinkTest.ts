@@ -1,5 +1,5 @@
 import { GeneralSteps, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Body, Traverse } from '@ephox/sugar';
 
 import TestTheme from '../../module/test/theme/TestTheme';
@@ -54,7 +54,7 @@ UnitTest.asynctest('Browser Test: features.UnlinkTest', function (success, failu
           '.tinymce-mobile-icon-unlink:before { content: "UNLINK"; }',
           '.tinymce-mobile-icon-link:before { content: "LINK"; }'
         ]),
-        apis.sFocus,
+        apis.sFocus(),
 
         apis.sSetContent(
           '<p>no link <a href="www.tinymce.com">tinymce</a></p>'

@@ -1,19 +1,17 @@
-import { Pipeline, RawAssertions, Step } from '@ephox/agar';
+import { Pipeline, Step } from '@ephox/agar';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.FontsizeFormatTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.fmt.FontsizeFormatTest', function (success, failure) {
 
   Theme();
 
   const sAssertMenuItemCount = function (expected, editor) {
     return Step.sync(function () {
       const actual = document.querySelectorAll('.tox-collection__item').length;
-      RawAssertions.assertEq('Should be correct count', expected, actual);
+      Assert.eq('Should be correct count', expected, actual);
     });
   };
 

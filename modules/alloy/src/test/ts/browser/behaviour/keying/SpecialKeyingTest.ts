@@ -1,5 +1,5 @@
 import { FocusTools, GeneralSteps, Keyboard, Keys } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -34,7 +34,7 @@ UnitTest.asynctest('SpecialKeyingTest', (success, failure) => {
     );
 
   }, (doc, body, gui, component, store) => {
-    const press = (expected, key, modifiers) => {
+    const press = (expected: string, key: number, modifiers: { }) => {
       return GeneralSteps.sequence([
         store.sClear,
         Keyboard.sKeydown(doc, key, modifiers),

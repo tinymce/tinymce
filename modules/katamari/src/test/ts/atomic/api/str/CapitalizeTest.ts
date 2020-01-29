@@ -1,12 +1,15 @@
 import * as Strings from 'ephox/katamari/api/Strings';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
+import { Testable } from '@ephox/dispute';
 
-UnitTest.test('capitalize', function () {
-  function check(expected, input) {
+const { tString } = Testable;
+
+UnitTest.test('capitalize: unit tests', () => {
+  const check = (expected, input) => {
     const actual = Strings.capitalize(input);
-    assert.eq(expected, actual);
-  }
+    Assert.eq('capitalize', expected, actual, tString);
+  };
 
   check('', '');
   check('A', 'a');
@@ -16,12 +19,18 @@ UnitTest.test('capitalize', function () {
   check('ABC', 'ABC');
   check('CBA', 'CBA');
   check('CBA', 'cBA');
+  check('Frog', 'frog');
+});
 
-  Jsc.property(
-    'Capitalize(s).substring(1) = s.substring(1)',
-    Jsc.asciistring,
-    function (s) {
-      return s.length <= 1 || Jsc.eq(Strings.capitalize(s).substring(1), s.substring(1));
-    }
-  );
+UnitTest.test('capitalize: tail of the string is unchanged', () => {
+  fc.assert(fc.property(fc.ascii(), fc.asciiString(30), (h, t) => {
+    Assert.eq('tail', t, Strings.capitalize(h + t).substring(1), tString);
+  }));
+});
+
+UnitTest.test('capitalize: head is uppercase', () => {
+  fc.assert(fc.property(fc.ascii(), fc.asciiString(30), (h, t) => {
+    const actualH = Strings.capitalize(h + t).charAt(0);
+    Assert.eq('head is uppercase', h.toUpperCase(), actualH, tString);
+  }));
 });

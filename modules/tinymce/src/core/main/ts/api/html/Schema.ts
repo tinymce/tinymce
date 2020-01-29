@@ -354,7 +354,8 @@ const compileSchema = function (type: SchemaType) {
     addAttrs('input textarea', 'placeholder');
     addAttrs('a', 'download');
     addAttrs('link script img', 'crossorigin');
-    addAttrs('iframe', 'sandbox seamless allowfullscreen'); // Excluded: srcdoc
+    addAttrs('img', 'loading');
+    addAttrs('iframe', 'sandbox seamless allowfullscreen loading'); // Excluded: srcdoc
   }
 
   // Special: iframe, ruby, video, audio, label

@@ -1,10 +1,10 @@
-import DemoContainer from 'ephox/agar/demo/DemoContainer';
+import * as DemoContainer from 'ephox/agar/demo/DemoContainer';
 import { Element } from '@ephox/sugar';
 
-export default <any> function () {
+export const demo = (): void => {
   DemoContainer.init(
     'Keyboard testing',
-    function (success, failure) {
+    (success, failure) => {
 
       const container = Element.fromTag('div');
 

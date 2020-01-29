@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Body } from '@ephox/sugar';
 import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
@@ -17,7 +17,7 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
   const store = TestHelpers.TestStore();
 
   const sTestOpen = Chain.asStep({ }, [
-    Chain.mapper((_) => {
+    Chain.injectThunked(() => {
       return windowManager.openUrl({
         title: 'Silver Test Modal URL Dialog',
         url: '/project/tinymce/src/themes/silver/test/html/iframe.html',

@@ -5,48 +5,48 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Document, Element, Event, HTMLElement, HTMLIFrameElement, Window } from '@ephox/dom-globals';
 import { Registry } from '@ephox/bridge';
+import { Document, Element, Event, HTMLElement, HTMLIFrameElement, Window } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import Annotator from './Annotator';
-import Selection from './dom/Selection';
-import Schema from './html/Schema';
-import Formatter from './Formatter';
 import * as EditorContent from '../content/EditorContent';
-import SelectionOverrides from '../SelectionOverrides';
+import NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
 import { getEditorSettings, getParam, ParamTypeMap } from '../EditorSettings';
-import { EditorSettings, RawEditorSettings } from './SettingsTypes';
+import { BlobInfoImagePair } from '../file/ImageScanner';
 import EditorFocus from '../focus/EditorFocus';
 import Render from '../init/Render';
-import { create, Mode } from './Mode';
+import { NodeChange } from '../NodeChange';
+import SelectionOverrides from '../SelectionOverrides';
+import { UndoManager } from '../undo/UndoManagerTypes';
+import Quirks from '../util/Quirks';
 import AddOnManager from './AddOnManager';
+import Annotator from './Annotator';
 import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';
+import ScriptLoader from './dom/ScriptLoader';
+import Selection from './dom/Selection';
+import DomSerializer from './dom/Serializer';
 import EditorCommands, { EditorCommandCallback } from './EditorCommands';
+import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
+import EditorUpload, { UploadCallback, UploadResult } from './EditorUpload';
 import Env from './Env';
+import Formatter from './Formatter';
+import DomParser from './html/DomParser';
+import Node from './html/Node';
+import Schema from './html/Schema';
+import { create, Mode } from './Mode';
+import NotificationManager from './NotificationManager';
+import { Plugin } from './PluginManager';
+import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import Shortcuts from './Shortcuts';
+import { Theme } from './ThemeManager';
+import { registry } from './ui/Registry';
+import EventDispatcher, { NativeEventMap } from './util/EventDispatcher';
+import I18n, { TranslatedString, Untranslated } from './util/I18n';
 import Tools from './util/Tools';
 import URI from './util/URI';
-import I18n, { TranslatedString, Untranslated } from './util/I18n';
 import WindowManager from './WindowManager';
-import { registry } from './ui/Registry';
-import EditorManager from './EditorManager';
-import NotificationManager from './NotificationManager';
-import { NodeChange } from '../NodeChange';
-import EditorUpload, { UploadCallback } from './EditorUpload';
-import DomSerializer from './dom/Serializer';
-import DomParser from './html/DomParser';
-import Quirks from '../util/Quirks';
-import EventDispatcher, { NativeEventMap } from './util/EventDispatcher';
-import { BlobInfoImagePair } from '../file/ImageScanner';
-import Node from './html/Node';
-import { Theme } from './ThemeManager';
-import { Plugin } from './PluginManager';
-import NodeType from '../dom/NodeType';
-import ScriptLoader from './dom/ScriptLoader';
-import { UndoManager } from '../undo/UndoManagerTypes';
 
 /**
  * This class contains the core logic for a TinyMCE editor.
@@ -235,7 +235,7 @@ class Editor implements EditorObservable {
   public hasHiddenInput: boolean;
   public hasVisual: boolean;
   public hidden: boolean;
-  public iframeElement: HTMLIFrameElement;
+  public iframeElement: HTMLIFrameElement | null;
   public iframeHTML: string;
   public initialized: boolean;
   public notificationManager: NotificationManager;
@@ -788,8 +788,8 @@ class Editor implements EditorObservable {
    * // Sets the content of a specific editor (my_editor in this example)
    * tinymce.get('my_editor').setContent(data);
    *
-   * // Sets the bbcode contents of the activeEditor editor if the bbcode plugin was added
-   * tinymce.activeEditor.setContent('[b]some[/b] html', {format: 'bbcode'});
+   * // Sets the content of the activeEditor editor using the specified format
+   * tinymce.activeEditor.setContent('<p>Some html</p>', {format: 'html'});
    */
   public setContent (content: string, args?: EditorContent.SetContentArgs): string;
   public setContent (content: Node, args?: EditorContent.SetContentArgs): Node;
@@ -1114,7 +1114,7 @@ class Editor implements EditorObservable {
    * @param {function} callback Optional callback with images and status for each image.
    * @return {Promise} Promise instance.
    */
-  public uploadImages (callback?: UploadCallback): Promise<BlobInfoImagePair[]> {
+  public uploadImages (callback?: UploadCallback): Promise<UploadResult[]> {
     return this.editorUpload.uploadImages(callback);
   }
 

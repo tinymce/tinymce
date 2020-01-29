@@ -1,14 +1,13 @@
-import * as Truncate from '../alien/Truncate'; // Used directly by alloy
 import { StructAssert, StructAssertAdv, StructAssertBasic } from '../assertions/ApproxStructures';
 import * as ApproxStructure from './ApproxStructure';
-import Arbitraries from './Arbitraries';
+import * as Arbitraries from './Arbitraries';
 import * as Assertions from './Assertions';
 import { Chain } from './Chain';
 import { Cleaner } from './Cleaner';
 import * as Cursors from './Cursors';
 import * as FocusTools from './FocusTools';
 import * as GeneralSteps from './GeneralSteps';
-import Generators from './Generators';
+import * as Generators from './Generators';
 import { GroupStore } from './GroupStore';
 import * as Guard from './Guard';
 import * as Keyboard from './Keyboard';
@@ -20,11 +19,12 @@ import * as Mouse from './Mouse';
 import { NamedChain } from './NamedChain';
 import { Pipeline } from './Pipeline';
 import * as PropertySteps from './PropertySteps';
-import * as RawAssertions from './RawAssertions';
 import * as RealClipboard from './RealClipboard';
 import { RealKeys } from './RealKeys';
 import * as RealMouse from './RealMouse';
 import { Step } from './Step';
+import * as StepSequence from './StepSequence';
+import * as ChainSequence from './ChainSequence';
 import { TestLogs } from './TestLogs';
 import * as Touch from './Touch';
 import * as UiControls from './UiControls';
@@ -39,10 +39,12 @@ export {
   Arbitraries,
   Assertions,
   Chain,
+  ChainSequence,
   Cleaner,
   Cursors,
   FocusTools,
   GeneralSteps,
+  StepSequence,
   Generators,
   GroupStore,
   Guard,
@@ -55,7 +57,6 @@ export {
   NamedChain,
   Pipeline,
   PropertySteps,
-  RawAssertions,
   RealClipboard,
   RealKeys,
   RealMouse,
@@ -65,7 +66,6 @@ export {
   UiFinder,
   Waiter,
   Touch,
-  Truncate,
   StructAssert,
   StructAssertBasic,
   StructAssertAdv,

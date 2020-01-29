@@ -1,7 +1,7 @@
 import { Chain, FocusTools, GeneralSteps, Guard, Logger, Mouse, Step, UiFinder, Waiter, Assertions, UiControls } from '@ephox/agar';
 import { document, Event, localStorage } from '@ephox/dom-globals';
 import { Type, Obj } from '@ephox/katamari';
-import { TinyDom } from '@ephox/mcagar';
+import { TinyApis, TinyDom, TinyUi } from '@ephox/mcagar';
 import { Element, Value, Body } from '@ephox/sugar';
 
 const doc = TinyDom.fromDom(document);
@@ -14,8 +14,8 @@ const selectors = {
   linklist: 'label.tox-label:contains(Link list) + div.tox-selectfield>select',
 };
 
-const sOpenLinkDialog = Logger.t('Open link dialog', GeneralSteps.sequence([
-  Mouse.sClickOn(TinyDom.fromDom(document.body), '.tox-toolbar button'),
+const sOpenLinkDialog = (ui: TinyUi) => Logger.t('Open link dialog', GeneralSteps.sequence([
+  ui.sClickOnToolbar('Click toolbar button', 'button'),
   UiFinder.sWaitForVisible('wait for link dialog', TinyDom.fromDom(document.body), '[role="dialog"]'),
 ]));
 
@@ -97,15 +97,15 @@ const sWaitForUi = (label: string, selector: string) => {
   ));
 };
 
-const sInsertLink = function (url: string) {
+const sInsertLink = function (ui: TinyUi, url: string) {
   return Logger.t('Insert link', GeneralSteps.sequence([
-    sOpenLinkDialog,
+    sOpenLinkDialog(ui),
     FocusTools.sSetActiveValue(doc, url),
     sClickSave
   ]));
 };
 
-const sAssertContentPresence = (api, presence) => {
+const sAssertContentPresence = (api: TinyApis, presence: Record<string, number>) => {
   return Logger.t('Assert content presence', Waiter.sTryUntil(
     'Waiting for content to have expected presence',
     api.sAssertContentPresence(presence),

@@ -1,5 +1,5 @@
 import { Assertions, Log, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 import { getDimensions, ResizeTypes } from 'tinymce/themes/silver/ui/sizing/Resize';
 import Utils from 'tinymce/themes/silver/ui/sizing/Utils';

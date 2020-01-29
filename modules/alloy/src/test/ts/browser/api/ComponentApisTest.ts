@@ -1,5 +1,5 @@
 import { Step, GeneralSteps, Logger, Assertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
@@ -19,7 +19,7 @@ UnitTest.asynctest('ComponentApisTest', (success, failure) => {
       apis: {
         doFirstThing: store.adder('doFirstThing'),
         doSecondThing: store.adder('doSecondThing'),
-        doThirdThing: (comp) => 'thirdThing'
+        doThirdThing: () => 'thirdThing'
       }
     });
   }, (doc, body, gui, component, store) => {

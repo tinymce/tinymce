@@ -1,17 +1,17 @@
 import { Assertions, Chain, NamedChain } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Css } from '@ephox/sugar';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
-import { Css } from '@ephox/sugar';
 
 UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
 
@@ -55,7 +55,7 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
       };
     });
 
-    const cAssertLayoutDirection = (direction: 'top' | 'bottom') => Chain.op((data: { popup: AlloyComponent }) => {
+    const cAssertLayoutDirection = (direction: 'top' | 'bottom'): Chain<any, any> => Chain.op((data: { popup: AlloyComponent }) => {
       const popup = data.popup.element();
       // Swap the direction name, as the style used is opposite
       const style = direction === 'top' ? 'bottom' : 'top';

@@ -1,11 +1,11 @@
 import { Assertions, Logger, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Attr } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
-import { Button } from 'ephox/alloy/api/ui/Button';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Button } from 'ephox/alloy/api/ui/Button';
 
 UnitTest.asynctest('Browser Test: .ui.button.ButtonTypeTest', (success, failure) => {
 
@@ -66,7 +66,7 @@ UnitTest.asynctest('Browser Test: .ui.button.ButtonTypeTest', (success, failure)
       ]
     });
   }, (doc, body, gui, component, store) => {
-    const sCheck = (label, expected, memento) => {
+    const sCheck = (label: string, expected: string | undefined, memento: Memento.MementoRecord) => {
       return Logger.t(
         label,
         Step.sync(() => {

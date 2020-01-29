@@ -13,7 +13,7 @@ import {
   Guard,
   Log,
 } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';
 import { Body, Element, Value } from '@ephox/sugar';

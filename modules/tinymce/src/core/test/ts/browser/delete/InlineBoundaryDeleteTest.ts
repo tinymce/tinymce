@@ -1,15 +1,14 @@
 import { ApproxStructure, Assertions, GeneralSteps, Keys, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';
 import InlineUtils from 'tinymce/core/keyboard/InlineUtils';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', function (success, failure) {
 
   Theme();
 
@@ -22,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', funct
     );
   };
 
-  const readLocation = function (editor) {
+  const readLocation = function (editor: Editor) {
     const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
     return BoundaryLocation
       .readLocation(isInlineTarget, editor.getBody(), CaretPosition.fromRangeStart(editor.selection.getRng()))
@@ -30,12 +29,12 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', funct
       .getOr('none');
   };
 
-  const sTestDeleteOrBackspaceKey = function (editor, tinyApis, tinyActions, key) {
+  const sTestDeleteOrBackspaceKey = function (editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions, key: number) {
     return function (setupHtml, setupPath, setupOffset, expectedHtml, expectedLocation, expectedPath, expectedOffet) {
       return GeneralSteps.sequence([
         tinyApis.sSetContent(setupHtml),
         tinyApis.sSetCursor(setupPath, setupOffset),
-        tinyApis.sNodeChanged,
+        tinyApis.sNodeChanged(),
         tinyActions.sContentKeystroke(key, { }),
         tinyApis.sAssertContent(expectedHtml),
         Step.sync(function () {
@@ -68,7 +67,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', funct
     const sTestDelete = sTestDeleteOrBackspaceKey(editor, tinyApis, tinyActions, 46);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('Backspace key on text', GeneralSteps.sequence([
         sTestBackspace('<p>a<a href="#">b</a>c</p>', [0, 2], 0, '<p>a<a href="#">b</a>c</p>', 'end', [0, 1, 0], 1),
         sTestBackspace('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 0, '<p>a<a href="#">b</a>c</p>', 'before', [0, 0], 1),

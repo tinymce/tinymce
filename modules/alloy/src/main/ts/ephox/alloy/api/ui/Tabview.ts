@@ -1,4 +1,4 @@
-import { TabviewSketcher, TabviewDetail, TabviewSpec } from '../../ui/types/TabviewTypes';
+import { TabviewDetail, TabviewSketcher, TabviewSpec } from '../../ui/types/TabviewTypes';
 import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
@@ -21,13 +21,13 @@ const factory: SingleSketchFactory<TabviewDetail, TabviewSpec> = (detail, spec) 
   };
 };
 
-const Tabview = Sketcher.single({
+const Tabview: TabviewSketcher = Sketcher.single({
   name: 'Tabview',
   configFields: [
     SketchBehaviours.field('tabviewBehaviours', [ Replacing ])
   ],
   factory
-}) as TabviewSketcher;
+});
 
 export {
   Tabview

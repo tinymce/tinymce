@@ -7,12 +7,12 @@
 
 import { AlloySpec, DomFactory, RawDomSchema } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Fun, Merger, Obj, Option, Arr } from '@ephox/katamari';
+import { Arr, Fun, Obj, Option } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
 import * as ItemClasses from '../ItemClasses';
-import { renderIcon, renderShortcut, renderStyledText, renderText, renderHtml } from './ItemSlices';
+import { renderHtml, renderIcon, renderShortcut, renderStyledText, renderText } from './ItemSlices';
 
 export interface ItemStructure {
   dom: RawDomSchema;
@@ -80,10 +80,11 @@ const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>, r
     };
   }).getOr({});
 
-  const dom = Merger.merge({
+  const dom = {
     tag: 'div',
     classes: [ ItemClasses.navClass, ItemClasses.selectableClass ].concat(rtlClass ? [ ItemClasses.iconClassRtl ] : []),
-  }, domTitle);
+    ...domTitle
+  };
 
   const content = info.htmlContent.fold(() => info.textContent.map(textRender),
     (html) => Option.some(renderHtml(html))

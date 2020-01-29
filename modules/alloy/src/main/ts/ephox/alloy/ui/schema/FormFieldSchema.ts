@@ -5,6 +5,7 @@ import { Composing } from '../../api/behaviour/Composing';
 import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as PartType from '../../parts/PartType';
+import { FormFieldDetail } from '../types/FormFieldTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('prefix', 'form-field'),
@@ -12,12 +13,12 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 ]);
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
-  PartType.optional({
+  PartType.optional<FormFieldDetail>({
     schema: [ FieldSchema.strict('dom') ],
     name: 'label'
   }),
 
-  PartType.optional({
+  PartType.optional<FormFieldDetail, { text: string; }>({
     factory: {
       sketch (spec) {
         return {
@@ -39,7 +40,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     name: 'aria-descriptor'
   }),
 
-  PartType.required({
+  PartType.required<FormFieldDetail, { factory: { sketch: (spec: Record<string, any>) => Record<string, any> } }>({
     factory: {
       sketch (spec) {
         const excludeFactory = Objects.exclude(spec, [ 'factory' ]);

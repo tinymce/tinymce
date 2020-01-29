@@ -1,12 +1,11 @@
 import { Pipeline } from '@ephox/agar';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 
-UnitTest.asynctest('browser.tinymce.core.init.EditorCustomThemeTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.init.EditorCustomThemeTest', function (success, failure) {
+  const suite = LegacyUnit.createSuite<Editor>();
 
   suite.test('getContainer/getContentAreaContainer', function (editor) {
     LegacyUnit.equal(editor.getContainer().id, 'editorContainer', 'Should be the new editorContainer element');

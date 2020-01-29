@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from '../api/Editor';
 import DOMUtils from '../api/dom/DOMUtils';
 import Tools from '../api/util/Tools';
 import Schema from '../api/html/Schema';
-import Editor from '../api/Editor';
 
 /**
  * Internal class for generating previews styles for formats.
@@ -113,7 +113,7 @@ const parsedSelectorToHtml = function (ancestry, editor: Editor) {
   }
 };
 
-const selectorToHtml = function (selector, editor?) {
+const selectorToHtml = function (selector: string, editor?: Editor) {
   return parsedSelectorToHtml(parseSelector(selector), editor);
 };
 
@@ -161,7 +161,7 @@ const parseSelectorItem = function (item) {
   return obj;
 };
 
-const parseSelector = function (selector) {
+const parseSelector = function (selector: string) {
   if (!selector || typeof selector !== 'string') {
     return [];
   }
@@ -329,7 +329,7 @@ const getCssText = function (editor: Editor, format) {
   return previewCss;
 };
 
-export default {
+export {
   getCssText,
   parseSelector,
   selectorToHtml

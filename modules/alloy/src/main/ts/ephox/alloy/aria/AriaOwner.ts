@@ -1,8 +1,6 @@
 import { Fun, Id, Option } from '@ephox/katamari';
 import { Attr, Element, Node, PredicateFind, SelectorFind, Traverse } from '@ephox/sugar';
 
-import { SugarDocument } from '../alien/TypeDefinitions';
-
 const find = (queryElem: Element): Option<Element> => {
   const dependent: Option<Element> = PredicateFind.closest(queryElem, (elem) => {
     if (! Node.isElement(elem)) { return false; }
@@ -12,7 +10,7 @@ const find = (queryElem: Element): Option<Element> => {
 
   return dependent.bind((dep) => {
     const id = Attr.get(dep, 'id');
-    const doc: SugarDocument = Traverse.owner(dep);
+    const doc = Traverse.owner(dep);
 
     return SelectorFind.descendant(doc, '[aria-owns="' + id + '"]');
   });

@@ -9,7 +9,7 @@ import { getElementFromPosition } from '../caret/CaretUtils';
 import NodeType from '../dom/NodeType';
 import { CaretPosition } from '../caret/CaretPosition';
 import { Insert, Element } from '@ephox/sugar';
-import { Option, Fun } from '@ephox/katamari';
+import { Option, Fun, Unicode } from '@ephox/katamari';
 
 const insertTextAtPosition = (text: string, pos: CaretPosition): Option<CaretPosition> => {
   const container = pos.container();
@@ -33,7 +33,7 @@ const insertTextAtPosition = (text: string, pos: CaretPosition): Option<CaretPos
   }
 };
 
-const insertNbspAtPosition = Fun.curry(insertTextAtPosition, '\u00a0');
+const insertNbspAtPosition = Fun.curry(insertTextAtPosition, Unicode.nbsp);
 const insertSpaceAtPosition = Fun.curry(insertTextAtPosition, ' ');
 
 export {

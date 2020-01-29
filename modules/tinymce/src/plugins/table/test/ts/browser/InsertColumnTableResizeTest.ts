@@ -1,5 +1,5 @@
-import { Assertions, Chain, Guard, NamedChain, UiFinder, Log, TestLogs, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Assertions, Chain, Guard, Log, NamedChain, TestLogs, UiFinder } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Editor, TinyDom } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -167,7 +167,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableResizeTest', 
       if (input.widthBefore.isPercent) {
         // due to rounding errors we can be off by one pixel for percentage tables
         const actualDiff = Math.abs(input.widthBefore.px - input.widthAfter.px);
-        RawAssertions.assertEq(`table width should be approx (within 1px): ${input.widthBefore.raw}% (${input.widthBefore.px}px) ~= ${input.widthAfter.raw}% (${input.widthAfter.px}px)`, true,  actualDiff <= 1);
+        Assert.eq(`table width should be approx (within 1px): ${input.widthBefore.raw}% (${input.widthBefore.px}px) ~= ${input.widthAfter.raw}% (${input.widthAfter.px}px)`, true,  actualDiff <= 1);
       } else {
         Assertions.assertEq('table width should not change', input.widthBefore, input.widthAfter);
       }

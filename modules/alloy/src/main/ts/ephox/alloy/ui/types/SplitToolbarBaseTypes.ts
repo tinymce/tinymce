@@ -1,4 +1,4 @@
-import { Cell, Option } from '@ephox/katamari';
+import { Cell } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -12,7 +12,6 @@ export interface SplitToolbarBaseDetail extends CompositeSketchDetail {
   dom: RawDomSchema;
   components: AlloySpec[ ];
   splitToolbarBehaviours: SketchBehaviours;
-
   builtGroups: Cell<AlloyComponent[]>;
 }
 
@@ -20,9 +19,6 @@ export interface SplitToolbarBaseApis {
   setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
   refresh: (toolbar: AlloyComponent) => void;
   toggle: (toolbar: AlloyComponent) => void;
-  getMoreButton: (toolbar: AlloyComponent) => Option<AlloyComponent>;
-  getOverflow: (toolbar: AlloyComponent) => Option<AlloyComponent>;
-  overflowToggledClass: (toolbar: AlloyComponent) => Option<AlloyComponent>;
 }
 
 export interface SplitToolbarBaseSpec extends CompositeSketchSpec {
@@ -37,5 +33,5 @@ export interface SplitToolbarBaseSpec extends CompositeSketchSpec {
   };
 }
 
-export interface SplitToolbarBaseSketcher<T extends SplitToolbarBaseSpec, U extends SplitToolbarBaseDetail>
-  extends CompositeSketch<T, U>, SplitToolbarBaseApis { }
+export interface SplitToolbarBaseSketcher<T extends SplitToolbarBaseSpec>
+  extends CompositeSketch<T>, SplitToolbarBaseApis { }

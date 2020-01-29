@@ -1,17 +1,16 @@
-import { RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 import CurrentWord from 'ephox/robin/util/CurrentWord';
 
 UnitTest.test('CurrentWordTest', function () {
   const check = function (expected: { before: Option<number>, after: Option<number> }, text: string, position: number) {
     const actual = CurrentWord.around(text, position);
-    RawAssertions.assertEq(
+    Assert.eq(
       'Checking before :: Option',
       (expected.before as Option<number | string>).getOr('none'),
       (actual.before() as Option<number | string>).getOr('none')
     );
-    RawAssertions.assertEq(
+    Assert.eq(
       'Checking after :: Option',
       (expected.after as Option<number | string>).getOr('none'),
       (actual.after() as Option<number | string>).getOr('none')

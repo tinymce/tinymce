@@ -6,9 +6,8 @@
  */
 
 import { AlloySpec, SimpleOrSketchSpec, FormTypes } from '@ephox/alloy';
-import { Objects } from '@ephox/boulder';
 import { console } from '@ephox/dom-globals';
-import { Merger } from '@ephox/katamari';
+import { Merger, Obj } from '@ephox/katamari';
 
 import { BridgedType, UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderAlertBanner } from '../general/AlertBanner';
@@ -39,7 +38,7 @@ export type NoFormRenderer = (spec: BridgedType, backstage: UiFactoryBackstage) 
 
 const make = function (render: NoFormRenderer): FormPartRenderer {
   return (parts, spec, backstage) => {
-    return Objects.readOptFrom<string>(spec, 'name').fold(
+    return Obj.get(spec, 'name').fold(
       () => render(spec, backstage),
       (fieldName) => parts.field(fieldName, render(spec, backstage) as SimpleOrSketchSpec)
     );
@@ -101,7 +100,7 @@ const interpretInForm = (parts, spec, oldBackstage) => {
 };
 
 const interpretParts: FormPartRenderer = (parts, spec, backstage) => {
-  return Objects.readOptFrom(factories, spec.type).fold(
+  return Obj.get(factories, spec.type).fold(
     () => {
       console.error(`Unknown factory type "${spec.type}", defaulting to container: `, spec);
       return spec as AlloySpec;

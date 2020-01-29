@@ -2,10 +2,11 @@ import { TestLogs } from '@ephox/agar';
 import { console, document, setTimeout } from '@ephox/dom-globals';
 import { Arr, Fun, Global, Id } from '@ephox/katamari';
 import { Attr, Element, Insert, Remove, SelectorFilter } from '@ephox/sugar';
+import { Editor } from '../alien/EditorTypes';
 
 export type SuccessCallback = (v?: any, logs?: TestLogs) => void;
-export type FailureCallback = (err: Error | string, logs?) => void;
-export type RunCallback = (editor: any, SuccessCallback, FailureCallback) => void;
+export type FailureCallback = (err: Error | string, logs?: TestLogs) => void;
+export type RunCallback = (editor: any, success: SuccessCallback, failure: FailureCallback) => void;
 
 interface Callbacks {
   preInit: (tinymce: any, settings: Record<string, any>) => void;
@@ -32,12 +33,7 @@ const removeTinymceElements = () => {
 };
 
 const setup = (callbacks: Callbacks, settings: Record<string, any>) => {
-  const nuSettings: Record<string, any> = {
-    toolbar_drawer: false,
-    ...settings
-  };
-
-  const target = createTarget(nuSettings.inline);
+  const target = createTarget(settings.inline);
   const randomId = Id.generate('tiny-loader');
   Attr.set(target, 'id', randomId);
 
@@ -58,14 +54,14 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>) => {
   };
 
   // Agar v. ??? supports logging
-  const onFailure = (err: Error | string, logs) => {
+  const onFailure = (err: Error | string, logs?: TestLogs) => {
     // tslint:disable-next-line:no-console
     console.log('Tiny Loader error: ', err);
     // Do no teardown so that the failed test still shows the editor. Important for selection
     callbacks.failure(err, logs);
   };
 
-  const settingsSetup = nuSettings.setup !== undefined ? nuSettings.setup : Fun.noop;
+  const settingsSetup = settings.setup !== undefined ? settings.setup : Fun.noop;
 
   const tinymce = Global.tinymce;
   if (!tinymce) {
@@ -74,9 +70,9 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>) => {
     callbacks.preInit(tinymce, settings);
 
     tinymce.init({
-      ...nuSettings,
+      ...settings,
       selector: '#' + randomId,
-      setup (editor) {
+      setup (editor: Editor) {
         // Execute the setup called by the test.
         settingsSetup(editor);
 
