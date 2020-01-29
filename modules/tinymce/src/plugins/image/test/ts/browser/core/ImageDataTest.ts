@@ -3,10 +3,11 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
 import { Element, Html, Node, SelectorFind } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import { create, defaultData, getStyleValue, isFigure, isImage, read, write } from 'tinymce/plugins/image/core/ImageData';
+import { create, defaultData, getStyleValue, ImageData, isFigure, isImage, read, write } from 'tinymce/plugins/image/core/ImageData';
+import { ImageDialogInfo } from 'tinymce/plugins/image/ui/DialogTypes';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success, failure) => {
-  const cSetHtml = (html) => {
+  const cSetHtml = (html: string) => {
     return Chain.control(
       Chain.op(function (elm: Element) {
         Html.set(elm, html);
@@ -26,9 +27,9 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
     return DOMUtils.DOM.styles.serialize(newCss);
   };
 
-  const cCreate = (data) => {
+  const cCreate = (data: ImageData, hasAccessibilityOptions: boolean) => {
     return Chain.control(
-      Chain.inject(Element.fromDom(create(normalizeCss, data))),
+      Chain.inject(Element.fromDom(create(normalizeCss, data, { hasAccessibilityOptions } as ImageDialogInfo))),
       Guard.addLogging(`Create ${data}`)
     );
   };
@@ -42,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
 
   const cWriteToImage = Chain.control(
     Chain.op(function (data: any) {
-      write(normalizeCss, data.model, data.image.dom());
+      write(normalizeCss, data.model, data.image.dom(), { hasAccessibilityOptions: false } as ImageDialogInfo);
     }),
     Guard.addLogging('Write to image')
   );
@@ -108,7 +109,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         border: '4',
         borderStyle: 'dotted',
         isDecorative: false
-      }),
+      }, false),
       cReadFromImage,
       cAssertModel({
         src: 'some.gif',
@@ -163,7 +164,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         border: '',
         borderStyle: '',
         isDecorative: false
-      }),
+      }, false),
       cReadFromImage,
       cAssertModel({
         src: 'some.gif',
@@ -218,7 +219,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         border: '4',
         borderStyle: 'dotted',
         isDecorative: false
-      }),
+      }, false),
       cReadFromImage,
       cAssertModel({
         src: 'some.gif',
@@ -289,7 +290,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         border: '4',
         borderStyle: 'dotted',
         isDecorative: true
-      }),
+      }, true),
       cReadFromImage,
       cAssertModel({
         src: 'some.gif',

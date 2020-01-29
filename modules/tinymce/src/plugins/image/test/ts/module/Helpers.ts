@@ -32,7 +32,7 @@ export const generalTabSelectors = {
   caption: 'label.tox-label:contains("Caption") + label input.tox-checkbox__input',
   classIndex: 'label.tox-label:contains("Class") + div.tox-selectfield select',
   images: 'label.tox-label:contains("Image list") + div.tox-selectfield select',
-  decorative: 'label.tox-checkbox > input.tox-checkbox__input'
+  decorative: 'label.tox-label:contains("Accessibility") + label.tox-checkbox>input'
 };
 
 export const advancedTabSelectors = {

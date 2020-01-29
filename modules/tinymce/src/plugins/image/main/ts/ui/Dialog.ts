@@ -393,7 +393,7 @@ const submitHandler = (editor: Editor) => (info: ImageDialogInfo) => (api: API) 
   const data: ImageDialogData = Merger.deepMerge(fromImageData(info.image), api.getData());
 
   editor.undoManager.transact(() => {
-    insertOrUpdateImage(editor, toImageData(data));
+    insertOrUpdateImage(editor, toImageData(data), info);
   });
 
   editor.editorUpload.uploadImagesAuto();

@@ -2,13 +2,12 @@ import { ApproxStructure, GeneralSteps, Logger, Pipeline, Step, UiFinder, Waiter
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
-
 import Editor from 'tinymce/core/api/Editor';
 import { ImageData } from 'tinymce/plugins/image/core/ImageData';
-
 import { insertOrUpdateImage } from 'tinymce/plugins/image/core/ImageSelection';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+import { ImageDialogInfo } from 'tinymce/plugins/image/ui/DialogTypes';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (success, failure) => {
   Plugin();
@@ -31,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
         borderStyle: '',
         isDecorative: false,
         ...data
-      });
+      }, { hasAccessibilityOptions: false } as ImageDialogInfo);
     });
   };
 

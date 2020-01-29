@@ -6,9 +6,10 @@
  */
 
 import { document, HTMLElement, Node } from '@ephox/dom-globals';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Utils from './Utils';
 import { Attr, Element } from '@ephox/sugar';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { ImageDialogInfo } from '../ui/DialogTypes';
+import Utils from './Utils';
 
 const DOM = DOMUtils.DOM;
 
@@ -155,8 +156,7 @@ const isFigure = (elm: Node) => elm.nodeName === 'FIGURE';
 const isImage = (elm: Node) => elm.nodeName === 'IMG';
 
 const getIsDecorative = (image: HTMLElement) => {
-  const sugarImage = Element.fromDom(image);
-  return Attr.has(sugarImage, 'alt') && Attr.get(sugarImage, 'alt').length === 0 && Attr.has(sugarImage, 'role') && Attr.get(sugarImage, 'role') === 'presentation';
+  return DOM.getAttrib(image, 'alt').length === 0 && DOM.getAttrib(image, 'role') === 'presentation';
 };
 
 const getAlt = (image: HTMLElement) => {
@@ -209,11 +209,11 @@ const getStyleValue = (normalizeCss: CssNormalizer, data: ImageData): string => 
   return normalizeCss(image.getAttribute('style'));
 };
 
-const create = (normalizeCss: CssNormalizer, data: ImageData): HTMLElement => {
+const create = (normalizeCss: CssNormalizer, data: ImageData, info: ImageDialogInfo): HTMLElement => {
   const image = document.createElement('img');
-  write(normalizeCss, { ...data, caption: false }, image);
+  write(normalizeCss, { ...data, caption: false }, image, info);
   // Always set alt even if data.alt is an empty string
-  setAlt(image, data.alt, data.isDecorative);
+  setAlt(image, data.alt, data.isDecorative, info);
 
   if (data.caption) {
     const figure = DOM.create('figure', { class: 'image' });
@@ -252,23 +252,30 @@ const updateProp = (image: HTMLElement, oldData: ImageData, newData: ImageData, 
   }
 };
 
-const setAlt = (image: HTMLElement, alt: string, isDecorative: boolean) => {
-  const sugarImage = Element.fromDom(image);
-  Attr.remove(sugarImage, 'alt');
+const setAlt = (image: HTMLElement, alt: string, isDecorative: boolean, info: ImageDialogInfo) => {
   if (isDecorative) {
+    DOM.setAttrib(image, 'role', 'presentation');
+    // unfortunately can't set "" attr value with domutils
+    const sugarImage = Element.fromDom(image);
     Attr.set(sugarImage, 'alt', '');
-    Attr.set(sugarImage, 'role', 'presentation');
   } else {
-    Attr.set(sugarImage, 'alt', alt);
-    if (Attr.has(sugarImage, 'role') && Attr.get(sugarImage, 'role') === 'presentation') {
-      Attr.remove(sugarImage, 'role');
+    if (info.hasAccessibilityOptions) {
+      // because domutils, if alt.length === 0 this will remove alt. TODO TINY-4628
+      DOM.setAttrib(image, 'alt', alt);
+    } else {
+      // unfortunately can't set "" attr value with domutils
+      const sugarImage = Element.fromDom(image);
+      Attr.set(sugarImage, 'alt', alt);
+    }
+    if (DOM.getAttrib(image, 'role') === 'presentation') {
+      DOM.setAttrib(image, 'role', '');
     }
   }
 };
 
-const updateAlt = (image: HTMLElement, oldData: ImageData, newData: ImageData) => {
+const updateAlt = (image: HTMLElement, oldData: ImageData, newData: ImageData, info: ImageDialogInfo) => {
   if (newData.alt !== oldData.alt || newData.isDecorative !== oldData.isDecorative) {
-    setAlt(image, newData.alt, newData.isDecorative);
+    setAlt(image, newData.alt, newData.isDecorative, info);
   }
 };
 
@@ -279,7 +286,7 @@ const normalized = (set: (image: HTMLElement, value: string) => void, normalizeC
   };
 };
 
-const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HTMLElement) => {
+const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HTMLElement, info: ImageDialogInfo) => {
   const oldData = read(normalizeCss, image);
 
   updateProp(image, oldData, newData, 'caption', (image, _name, _value) => toggleCaption(image));
@@ -293,7 +300,7 @@ const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HTMLEleme
   updateProp(image, oldData, newData, 'vspace', normalized(setVspace, normalizeCss));
   updateProp(image, oldData, newData, 'border', normalized(setBorder, normalizeCss));
   updateProp(image, oldData, newData, 'borderStyle', normalized(setBorderStyle, normalizeCss));
-  updateAlt(image, oldData, newData);
+  updateAlt(image, oldData, newData, info);
 };
 
 export {
