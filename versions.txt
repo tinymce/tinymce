@@ -5,3 +5,5 @@
 @ephox/katamari@5.0.0
 @ephox/sugar@5.1.0
 @ephox/agar@4.15.0
+@ephox/boss@3.1.0
+@ephox/phoenix@5.1.0
