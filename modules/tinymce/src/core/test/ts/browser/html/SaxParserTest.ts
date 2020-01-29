@@ -570,6 +570,13 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     parser.parse('<!DOCTYPE html>text1');
     LegacyUnit.equal(writer.getContent(), '<!DOCTYPE html>text1', 'Parse HTML5 DOCTYPE.');
     LegacyUnit.deepEqual(counter.counts, { doctype: 1, text: 1 }, 'Parse HTML5 DOCTYPE counts.');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<!doctype html>text1');
+    LegacyUnit.equal(writer.getContent(), '<!DOCTYPE html>text1', 'Parse lowercase DOCTYPE.');
+    LegacyUnit.deepEqual(counter.counts, { doctype: 1, text: 1 }, 'Parse lowercase DOCTYPE counts.');
   });
 
   suite.test('Parse (validate)', function () {

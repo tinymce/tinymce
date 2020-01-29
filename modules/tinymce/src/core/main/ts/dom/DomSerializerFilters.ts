@@ -7,12 +7,14 @@
 
 import { Arr, Option } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
+import DomParser from '../api/html/DomParser';
 import Entities from '../api/html/Entities';
 import Zwsp from '../text/Zwsp';
+import { DomSerializerSettings } from './DomSerializer';
 
 declare const unescape: any;
 
-const register = function (htmlParser, settings, dom: DOMUtils) {
+const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: DOMUtils) => {
   // Convert tabindex back to elements when serializing contents
   htmlParser.addAttributeFilter('data-mce-tabindex', function (nodes, name) {
     let i = nodes.length, node;
