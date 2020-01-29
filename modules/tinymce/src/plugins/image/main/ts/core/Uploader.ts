@@ -6,15 +6,17 @@
  */
 
 import { FormData, XMLHttpRequest } from '@ephox/dom-globals';
+import { Fun } from '@ephox/katamari';
+import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
-import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
-import { Fun } from '@ephox/katamari';
 
 /**
  * This is basically cut down version of tinymce.core.file.Uploader, which we could use directly
  * if it wasn't marked as private.
  */
+
+// TODO: TINY-4601 Remove this file and expose the core uploader instead to remove duplication
 
 export type SuccessCallback = (path: string) => void;
 export type FailureCallback = (error: string) => void;

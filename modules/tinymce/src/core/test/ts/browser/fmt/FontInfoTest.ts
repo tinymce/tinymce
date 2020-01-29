@@ -1,9 +1,9 @@
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 import { LegacyUnit } from '@ephox/mcagar';
 import { Element, Hierarchy } from '@ephox/sugar';
 import FontInfo from 'tinymce/core/fmt/FontInfo';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function () {
   const success = arguments[arguments.length - 2];
@@ -65,6 +65,8 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function () {
     assertSpecificFontProp('fontSize', '<span style="font-size: 14px"><mark></mark></span>', [0, 0], '14px');
     assertSpecificFontProp('fontSize', '<span style="font-size: 10px"><span><mark></mark></span></span>', [0, 0, 0], '10px');
     assertSpecificFontProp('fontSize', '<span style="font-size: 14px"><span><mark></mark></span></span>', [0, 0, 0], '14px');
+    assertSpecificFontProp('fontSize', '<font size="2"></font>', [0], '2');
+    assertSpecificFontProp('fontSize', '<font size="4"><mark></mark></font>', [0, 0], '4');
   });
 
   suite.test('getFontFamily', function () {
@@ -92,6 +94,8 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function () {
       [0, 0, 0],
       'Arial,Helvetica,Verdana'
     );
+    assertSpecificFontProp('fontFamily', '<font face="Comic Sans MS"></font>', [0], 'Comic Sans MS');
+    assertSpecificFontProp('fontFamily', '<font face="Arial, Verdana"><mark></mark></font>', [0, 0], 'Arial,Verdana');
   });
 
   suite.asyncTest('getFontFamily should always return string even if display: none (firefox specific bug)', function (_, done) {

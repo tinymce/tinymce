@@ -80,7 +80,7 @@ const isValidPrefixAttrName = function (name: string): boolean {
 };
 
 const trimComments = function (text: string): string {
-  return text.replace(/<!--|-->/g, '');
+  return text.replace(/<!--|--!?>/g, '');
 };
 
 const isInvalidUri = (settings: SaxParserSettings, uri: string) => {

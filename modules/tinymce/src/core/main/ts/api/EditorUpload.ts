@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLImageElement, Blob } from '@ephox/dom-globals';
+import { Blob, HTMLImageElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Uploader } from '../file/Uploader';
-import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
-import { BlobCache } from './file/BlobCache';
-import UploadStatus from '../file/UploadStatus';
 import ErrorReporter from '../ErrorReporter';
+import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
+import { Uploader } from '../file/Uploader';
+import UploadStatus from '../file/UploadStatus';
 import Editor from './Editor';
+import { BlobCache } from './file/BlobCache';
 import Settings from './Settings';
 
 /**
@@ -22,13 +22,18 @@ import Settings from './Settings';
  * @class tinymce.EditorUpload
  */
 
-export type UploadCallback = (results: Array<{ element: HTMLImageElement, status: boolean }>) => void;
+export interface UploadResult {
+  element: HTMLImageElement;
+  status: boolean;
+}
+
+export type UploadCallback = (results: UploadResult[]) => void;
 
 interface EditorUpload {
   blobCache: BlobCache;
   addFilter (filter: (img: HTMLImageElement) => boolean): void;
-  uploadImages (callback?: UploadCallback): Promise<BlobInfoImagePair[]>;
-  uploadImagesAuto (callback?: UploadCallback): void | Promise<BlobInfoImagePair[]>;
+  uploadImages (callback?: UploadCallback): Promise<UploadResult[]>;
+  uploadImagesAuto (callback?: UploadCallback): void | Promise<UploadResult[]>;
   scanForImages (): Promise<BlobInfoImagePair[]>;
   destroy (): void;
 }
@@ -39,7 +44,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
   const uploadStatus = UploadStatus();
   const urlFilters: Array<(img: HTMLImageElement) => boolean> = [];
 
-  const aliveGuard = function <T>(callback?: (result: T) => any) {
+  const aliveGuard = function <T, R>(callback?: (result: T) => R) {
     return function (result: T) {
       if (editor.selection) {
         return callback(result);
@@ -107,7 +112,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     });
   };
 
-  const uploadImages = function (callback?) {
+  const uploadImages = (callback?: UploadCallback) => {
     if (!uploader) {
       uploader = Uploader(uploadStatus, {
         url: Settings.getImageUploadUrl(editor),
@@ -117,15 +122,13 @@ const EditorUpload = function (editor: Editor): EditorUpload {
       });
     }
 
-    return scanForImages().then(aliveGuard(function (imageInfos) {
-      let blobInfos;
-
-      blobInfos = Arr.map(imageInfos, function (imageInfo) {
+    return scanForImages().then(aliveGuard((imageInfos) => {
+      const blobInfos = Arr.map(imageInfos, (imageInfo) => {
         return imageInfo.blobInfo;
       });
 
-      return uploader.upload(blobInfos, openNotification).then(aliveGuard(function (result) {
-        const filteredResult = Arr.map(result, function (uploadInfo, index) {
+      return uploader.upload(blobInfos, openNotification).then(aliveGuard((result) => {
+        const filteredResult = Arr.map(result, (uploadInfo, index) => {
           const image = imageInfos[index].image;
 
           if (uploadInfo.status && Settings.shouldReplaceBlobUris(editor)) {
@@ -149,7 +152,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     }));
   };
 
-  const uploadImagesAuto = function (callback?) {
+  const uploadImagesAuto = (callback?: UploadCallback) => {
     if (Settings.isAutomaticUploadsEnabled(editor)) {
       return uploadImages(callback);
     }

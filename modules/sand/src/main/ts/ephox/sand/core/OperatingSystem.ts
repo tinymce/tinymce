@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
-import { Version } from '../detect/Version';
 import { UaString } from '../detect/UaString';
+import { Version } from '../detect/Version';
 
 export interface OperatingSystem {
   current: string | undefined;
@@ -12,6 +12,7 @@ export interface OperatingSystem {
   isLinux: () => boolean;
   isSolaris: () => boolean;
   isFreeBSD: () => boolean;
+  isChromeOS: () => boolean;
 }
 
 const windows = 'Windows';
@@ -21,6 +22,7 @@ const linux = 'Linux';
 const osx = 'OSX';
 const solaris = 'Solaris';
 const freebsd = 'FreeBSD';
+const chromeos = 'ChromeOS';
 
 // Though there is a bit of dupe with this and Browser, trying to
 // reuse code makes it much harder to follow and change.
@@ -52,7 +54,8 @@ const nu = function (info: UaString): OperatingSystem {
     isOSX: isOS(osx, current),
     isLinux: isOS(linux, current),
     isSolaris: isOS(solaris, current),
-    isFreeBSD: isOS(freebsd, current)
+    isFreeBSD: isOS(freebsd, current),
+    isChromeOS: isOS(chromeos, current)
   };
 };
 
@@ -66,5 +69,6 @@ export const OperatingSystem = {
   linux: Fun.constant(linux),
   osx: Fun.constant(osx),
   solaris: Fun.constant(solaris),
-  freebsd: Fun.constant(freebsd)
+  freebsd: Fun.constant(freebsd),
+  chromeos: Fun.constant(chromeos)
 };
