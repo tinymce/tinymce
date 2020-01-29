@@ -67,6 +67,10 @@ const getUploadCredentials = (editor: Editor) => {
   return editor.getParam('images_upload_credentials', false, 'boolean');
 };
 
+const showAccessibilityOptions = (editor: Editor) => {
+  return editor.getParam('a11y_advanced_options', false, 'boolean');
+};
+
 const isAutomaticUploadsEnabled = (editor: Editor): boolean => {
   return editor.getParam('automatic_uploads', true, 'boolean');
 };
@@ -87,5 +91,6 @@ export default {
   getUploadHandler,
   getUploadBasePath,
   getUploadCredentials,
+  showAccessibilityOptions,
   isAutomaticUploadsEnabled
 };

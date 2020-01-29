@@ -7,7 +7,8 @@
 
 import { HTMLElement, Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
-import { defaultData, read, ImageData, create, isFigure, write } from './ImageData';
+import { ImageDialogInfo } from '../ui/DialogTypes';
+import { create, defaultData, ImageData, isFigure, read, write } from './ImageData';
 import Utils from './Utils';
 
 const normalizeCss = (editor: Editor, cssText: string): string => {
@@ -51,8 +52,8 @@ const readImageDataFromSelection = (editor: Editor): ImageData => {
   return image ? read((css) => normalizeCss(editor, css), image) : defaultData();
 };
 
-const insertImageAtCaret = (editor: Editor, data: ImageData) => {
-  const elm = create((css) => normalizeCss(editor, css), data);
+const insertImageAtCaret = (editor: Editor, data: ImageData, info: ImageDialogInfo) => {
+  const elm = create((css) => normalizeCss(editor, css), data, info);
 
   editor.dom.setAttrib(elm, 'data-mce-id', '__mcenew');
   editor.focus();
@@ -88,10 +89,10 @@ const deleteImage = (editor: Editor, image: HTMLElement) => {
   }
 };
 
-const writeImageDataToSelection = (editor: Editor, data: ImageData) => {
+const writeImageDataToSelection = (editor: Editor, data: ImageData, info: ImageDialogInfo) => {
   const image = getSelectedImage(editor);
 
-  write((css) => normalizeCss(editor, css), data, image);
+  write((css) => normalizeCss(editor, css), data, image, info);
   syncSrcAttr(editor, image);
 
   if (isFigure(image.parentNode)) {
@@ -104,16 +105,16 @@ const writeImageDataToSelection = (editor: Editor, data: ImageData) => {
   }
 };
 
-const insertOrUpdateImage = (editor: Editor, data: ImageData) => {
+const insertOrUpdateImage = (editor: Editor, data: ImageData, info: ImageDialogInfo) => {
   const image = getSelectedImage(editor);
   if (image) {
     if (data.src) {
-      writeImageDataToSelection(editor, data);
+      writeImageDataToSelection(editor, data, info);
     } else {
       deleteImage(editor, image);
     }
   } else if (data.src) {
-    insertImageAtCaret(editor, data);
+    insertImageAtCaret(editor, data, info);
   }
 };
 

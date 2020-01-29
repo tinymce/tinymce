@@ -36,6 +36,7 @@ export interface ImageDialogInfo {
   hasImageTitle: boolean;
   hasDimensions: boolean;
   hasImageCaption: boolean;
+  hasAccessibilityOptions: boolean;
   url: string;
   basePath: string;
   credentials: boolean;
@@ -60,6 +61,7 @@ export interface ImageDialogData {
       border?: string;
       hspace?: string;
       borderstyle?: string;
+      isDecorative?: boolean;
     }
   };
   images: string;
@@ -77,6 +79,7 @@ export interface ImageDialogData {
   hspace: string;
   borderstyle: string;
   fileinput: File[];
+  isDecorative: boolean;
 }
 
 export type API = Types.Dialog.DialogInstanceApi<ImageDialogData>;
