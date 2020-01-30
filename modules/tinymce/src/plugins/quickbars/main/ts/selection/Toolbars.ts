@@ -29,7 +29,8 @@ const addToEditor = (editor: Editor) => {
         return !isImage(node) && !editor.selection.isCollapsed() && isEditable(node);
       },
       items: textToolbarItems,
-      position: 'selection'
+      position: 'selection',
+      scope: 'editor'
     });
   }
 };
