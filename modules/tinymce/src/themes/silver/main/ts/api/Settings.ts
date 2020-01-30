@@ -80,8 +80,7 @@ export enum ToolbarMode {
   default = 'wrap',
   floating = 'floating',
   sliding = 'sliding',
-  scrolling = 'scrolling',
-  wrap = 'wrap'
+  scrolling = 'scrolling'
 }
 
 const getToolbarMode = (editor: Editor): ToolbarMode => {
