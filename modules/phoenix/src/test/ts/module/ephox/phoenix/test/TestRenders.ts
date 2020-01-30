@@ -9,6 +9,8 @@ const typeditem = function (a: TypedItem<Gene, undefined>) {
     return 'empty(' + item.id + ')';
   }, function (item) {
     return 'text("' + item.text + '")';
+  }, function (item) {
+    return 'text("' + item.text + '")';
   });
 };
 

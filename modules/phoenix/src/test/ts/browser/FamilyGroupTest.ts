@@ -15,6 +15,8 @@ UnitTest.test('FamilyGroupTest', function () {
       return '/';
     }, function (text) {
       return '"' + Text.get(text) + '"';
+    }, function (text) {
+      return '\\';
     });
   };
 
@@ -78,4 +80,13 @@ UnitTest.test('FamilyGroupTest', function () {
       Element.fromText('-- Ghostbusters'),
       Element.fromHtml('<div><p>One</p><p>Two</p><p>Three</p></div>')
     ]);
+
+  check([
+      ['"Dogs and cats"'],
+      ['"Living together "']
+    ], [
+      Element.fromHtml('<p>Dogs and cats</p>'),
+      Element.fromHtml('<p>Living together <span contenteditable="false">Mass hysteria</span></p>')
+    ]
+  );
 });

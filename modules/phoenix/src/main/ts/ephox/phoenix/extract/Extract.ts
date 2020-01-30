@@ -21,6 +21,8 @@ const typed = function <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: 
     return [TypedItem.text(item, universe)];
   } else if (universe.property().isEmptyTag(item)) {
     return [TypedItem.empty(item, universe)];
+  } else if (universe.property().isNonEditable(item)) {
+    return []; // Do not include this at all
   } else if (universe.property().isElement(item)) {
     const children = universe.property().children(item);
     const boundary = universe.property().isBoundary(item) ? [TypedItem.boundary(item, universe)] : [];
@@ -42,7 +44,7 @@ const items = function <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: 
   const raw = function (item: E, _universe: Universe<E, D>) { return item; };
 
   return Arr.map(typedItemList, function (typedItem: TypedItem<E, D>) {
-    return typedItem.fold(raw, raw, raw);
+    return typedItem.fold(raw, raw, raw, raw);
   });
 };
 

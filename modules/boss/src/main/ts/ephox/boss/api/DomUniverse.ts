@@ -30,6 +30,10 @@ export default function (): Universe<Element, Document> {
     return Arr.contains(['br', 'img', 'hr', 'input'], Node.name(element));
   };
 
+  const isNonEditable = (element: Element) => {
+    return Node.isElement(element) && Attr.get(element, 'contenteditable') === 'false';
+  };
+
   const comparePosition = function (element: Element, other: Element) {
     return (element.dom() as DomNode).compareDocumentPosition(other.dom() as DomNode);
   };
@@ -96,7 +100,8 @@ export default function (): Universe<Element, Document> {
       getText: Text.get,
       setText: Text.set,
       isBoundary,
-      isEmptyTag
+      isEmptyTag,
+      isNonEditable
     }),
     eq: Compare.eq,
     is: Compare.is

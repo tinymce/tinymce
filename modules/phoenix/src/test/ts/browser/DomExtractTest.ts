@@ -70,6 +70,8 @@ UnitTest.test('DomExtractTest', function () {
           return '-';
         }, function (t) {
           return Text.get(t);
+        }, function (t) {
+          return Text.get(t);
         });
       }).join('');
       Assert.eq('eq', expected, actual);

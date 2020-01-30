@@ -46,6 +46,10 @@ const isBoundary = function (item: Gene) {
   return Arr.contains(TagBoundaries, item.name);
 };
 
+const isNonEditable = function (item: Gene) {
+  return isElement(item) && item.attrs.contenteditable === 'false';
+};
+
 export default {
   children,
   name,
@@ -57,5 +61,6 @@ export default {
   getText,
   setText,
   isEmptyTag,
-  isBoundary
+  isBoundary,
+  isNonEditable
 };
