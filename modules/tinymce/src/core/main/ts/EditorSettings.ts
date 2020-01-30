@@ -81,7 +81,7 @@ const getSectionConfig = function (sectionResult: SectionResult, name: string) {
 const getToolbarMode = (settings: RawEditorSettings, defaultVal) => {
   // If toolbar_mode is unset by the user, fall back to:
   return Obj.get(settings, 'toolbar_mode')
-    .orThunk(() => Obj.get(settings, 'toolbar_drawer')) // #1 toolbar_drawer
+    .orThunk(() => Obj.get(settings, 'toolbar_drawer').map((val) => val === false ? 'wrap' : val))     // #1 toolbar_drawer
     .getOr(defaultVal);                                 // #2 defaultVal
 };
 
