@@ -64,13 +64,13 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', (success, failure) =
     AddOnManager.PluginManager.load('plugin', '/root/plugin.js');
 
     LegacyUnit.equal(getLanguagePackUrl('sv_SE'), '/root/langs/sv_SE.js');
-    LegacyUnit.equal(getLanguagePackUrl('sv_SE', 'sv,en,us'), '/root/langs/sv.js');
     LegacyUnit.equal(getLanguagePackUrl('sv_SE', 'sv_SE,en_US'), '/root/langs/sv_SE.js');
     LegacyUnit.equal(getLanguagePackUrl('sv'), '/root/langs/sv.js');
     LegacyUnit.equal(getLanguagePackUrl('sv', 'sv'), '/root/langs/sv.js');
     LegacyUnit.equal(getLanguagePackUrl('sv', 'sv,en,us'), '/root/langs/sv.js');
     LegacyUnit.equal(getLanguagePackUrl('sv', 'en,sv,us'), '/root/langs/sv.js');
     LegacyUnit.equal(getLanguagePackUrl('sv', 'en,us,sv'), '/root/langs/sv.js');
+    LegacyUnit.strictEqual(getLanguagePackUrl('sv_SE', 'sv,en,us'), null);
     LegacyUnit.strictEqual(getLanguagePackUrl('sv', 'en,us'), null);
 
     AddOnManager.languageLoad = false;

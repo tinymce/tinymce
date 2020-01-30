@@ -134,20 +134,11 @@ function AddOnManager<T>(): AddOnManager<T> {
   const requireLangPack = (name: string, languages: string) => {
     if (AddOnManager.languageLoad !== false) {
       waitFor(name, () => {
-        let language = I18n.getCode();
-        if (!language) {
+        const language = I18n.getCode();
+        const wrappedLanguages = ',' + (languages || '') + ',';
+
+        if (!language || languages && wrappedLanguages.indexOf(',' + language + ',') === -1) {
           return;
-        }
-
-        if (languages) {
-          languages = ',' + languages + ',';
-
-          // Load short form sv.js or long form sv_SE.js
-          if (languages.indexOf(',' + language.substr(0, 2) + ',') !== -1) {
-            language = language.substr(0, 2);
-          } else if (languages.indexOf(',' + language + ',') === -1) {
-            return;
-          }
         }
 
         ScriptLoader.ScriptLoader.add(urls[ name ] + '/langs/' + language + '.js');

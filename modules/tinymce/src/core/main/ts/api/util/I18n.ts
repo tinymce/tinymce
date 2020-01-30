@@ -30,25 +30,10 @@ const isRaw = (str: any): str is RawString => Type.isObject(str) && Obj.has(str,
 
 const isTokenised = (str: any): str is TokenisedString => Type.isArray(str) && str.length > 1;
 
-const getLanguageCode = (string: string) => string.substr(0, 2);
-
 const data: Record<string, Record<string, string>> = {};
 const currentCode = Cell('en');
 
-const getLanguageData = () => {
-  const current = currentCode.get();
-  const languageCode = getLanguageCode(current);
-  const langData = Obj.get(data, current);
-  if (languageCode !== current) {
-    // Merge the fallback lang code only translations (eg zh)
-    const fallbackData = Obj.get(data, languageCode);
-    return langData
-      .map((data) => ({ ...fallbackData.getOr({}), ...data }))
-      .or(fallbackData);
-  } else {
-    return langData;
-  }
-};
+const getLanguageData = () => Obj.get(data, currentCode.get());
 
 const getData = (): Record<string, Record<string, string>> => {
   return Obj.map(data, (value) => ({ ...value }));
