@@ -33,6 +33,7 @@ export interface ParserArgs {
   forced_root_block?: boolean | string;
   context?: string;
   isRootContent?: boolean;
+  format?: string;
 
   // TODO finish typing the parser args
   [key: string]: any;
@@ -56,6 +57,7 @@ export interface DomParserSettings {
   forced_root_block?: boolean | string;
   forced_root_block_attrs?: Record<string, string>;
   padd_empty_with_br?: boolean;
+  preserve_cdata?: boolean;
   remove_trailing_brs?: boolean;
   root_name?: string;
   validate?: boolean;
@@ -472,6 +474,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
       validate,
       allow_script_urls: settings.allow_script_urls,
       allow_conditional_comments: settings.allow_conditional_comments,
+      preserve_cdata: settings.preserve_cdata,
 
       // Exclude P and LI from DOM parsing since it's treated better by the DOM parser
       self_closing_elements: cloneAndExcludeBlocks(schema.getSelfClosingElements()),
@@ -678,7 +681,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
 
     const rootNode = node = new Node(args.context || settings.root_name, 11);
 
-    parser.parse(html);
+    parser.parse(html, args.format);
 
     // Fix invalid children or report invalid children in a contextual parsing
     if (validate && invalidChildren.length) {

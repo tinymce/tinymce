@@ -5,12 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element as DOMElement } from '@ephox/dom-globals';
+import { Element as DomElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
+import { URLConverter } from '../api/SettingsTypes';
 import DomParser, { DomParserSettings, ParserArgs, ParserFilter } from '../api/html/DomParser';
 import Node from '../api/html/Node';
 import Schema, { SchemaSettings } from '../api/html/Schema';
@@ -27,6 +28,8 @@ export interface SerializerArgs extends ParserArgs {
 
 interface DomSerializerSettings extends DomParserSettings, SchemaSettings, SerializerSettings {
   entity_encoding?: string;
+  url_converter?: URLConverter;
+  url_converter_scope?: {};
 }
 
 interface DomSerializer {
@@ -35,15 +38,15 @@ interface DomSerializer {
   addAttributeFilter (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void): void;
   getNodeFilters (): ParserFilter[];
   getAttributeFilters (): ParserFilter[];
-  serialize (node: DOMElement, parserArgs: { format: 'tree' } & SerializerArgs): Node;
-  serialize (node: DOMElement, parserArgs?: SerializerArgs): string;
+  serialize (node: DomElement, parserArgs: { format: 'tree' } & SerializerArgs): Node;
+  serialize (node: DomElement, parserArgs?: SerializerArgs): string;
   addRules (rules: string): void;
   setRules (rules: string): void;
   addTempAttr (name: string): void;
   getTempAttrs (): string[];
 }
 
-const addTempAttr = function (htmlParser, tempAttrs, name) {
+const addTempAttr = function (htmlParser: DomParser, tempAttrs: string[], name: string) {
   if (Tools.inArray(tempAttrs, name) === -1) {
     htmlParser.addAttributeFilter(name, function (nodes, name) {
       let i = nodes.length;
@@ -57,7 +60,7 @@ const addTempAttr = function (htmlParser, tempAttrs, name) {
   }
 };
 
-const postProcess = function (editor: Editor, args, content: string) {
+const postProcess = function (editor: Editor, args: ParserArgs, content: string) {
   if (!args.no_events && editor) {
     const outArgs = Events.firePostProcess(editor, { ...args, content });
     return outArgs.content;
@@ -66,12 +69,12 @@ const postProcess = function (editor: Editor, args, content: string) {
   }
 };
 
-const getHtmlFromNode = function (dom: DOMUtils, node: DOMElement, args) {
+const getHtmlFromNode = function (dom: DOMUtils, node: DomElement, args) {
   const html = Zwsp.trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node));
   return args.selection || isWsPreserveElement(Element.fromDom(node)) ? html : Tools.trim(html);
 };
 
-const parseHtml = function (htmlParser, html: string, args) {
+const parseHtml = function (htmlParser: DomParser, html: string, args: ParserArgs) {
   const parserArgs = args.selection ? { forced_root_block: false, ...args } : args;
   const rootNode = htmlParser.parse(html, parserArgs);
   DomSerializerFilters.trimTrailingBr(rootNode);
@@ -83,24 +86,23 @@ const serializeNode = function (settings: SerializerSettings, schema: Schema, no
   return htmlSerializer.serialize(node);
 };
 
-const toHtml = function (editor: Editor, settings: SerializerSettings, schema: Schema, rootNode: Node, args) {
+const toHtml = function (editor: Editor, settings: SerializerSettings, schema: Schema, rootNode: Node, args: ParserArgs) {
   const content = serializeNode(settings, schema, rootNode);
   return postProcess(editor, args, content);
 };
 
 const DomSerializer = function (settings: DomSerializerSettings, editor: Editor): DomSerializer {
-  let dom: DOMUtils, schema: Schema, htmlParser;
   const tempAttrs = ['data-mce-selected'];
 
-  dom = editor && editor.dom ? editor.dom : DOMUtils.DOM;
-  schema = editor && editor.schema ? editor.schema : Schema(settings);
+  const dom = editor && editor.dom ? editor.dom : DOMUtils.DOM;
+  const schema = editor && editor.schema ? editor.schema : Schema(settings);
   settings.entity_encoding = settings.entity_encoding || 'named';
   settings.remove_trailing_brs = 'remove_trailing_brs' in settings ? settings.remove_trailing_brs : true;
 
-  htmlParser = DomParser(settings, schema);
+  const htmlParser = DomParser(settings, schema);
   DomSerializerFilters.register(htmlParser, settings, dom);
 
-  const serialize = function (node, parserArgs = {}) {
+  const serialize = function (node: DomElement, parserArgs = {}) {
     const args = { format: 'html', ...parserArgs };
     const targetNode = DomSerializerPreProcess.process(editor, node, args);
     const html = getHtmlFromNode(dom, targetNode, args);

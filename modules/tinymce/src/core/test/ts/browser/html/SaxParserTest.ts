@@ -428,58 +428,122 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
   });
 
   suite.test('Parsing cdata', function () {
-    let counter, parser;
+    let counter, parser: SaxParser;
+    const schemaWithSVGs = Schema({ valid_children: '+svg[#cdata]', custom_elements: 'svg' });
 
+    // Schema with SVG
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schemaWithSVGs);
+    writer.reset();
+    parser.parse('<svg><![CDATA[test text]]></svg>');
+    LegacyUnit.equal(writer.getContent(), '<svg><![CDATA[test text]]></svg>', 'Parse cdata with value.');
+    LegacyUnit.deepEqual(counter.counts, { cdata: 1, start: 1, end: 1 }, 'Parse cdata with value counts.');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schemaWithSVGs);
+    writer.reset();
+    parser.parse('<svg><![CDATA[]]></svg>');
+    LegacyUnit.equal(writer.getContent(), '<svg></svg>', 'Parse cdata without value.');
+    LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse cdata without value counts.');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schemaWithSVGs);
+    writer.reset();
+    parser.parse('<svg><![CDATA[<b>a</b>]]></svg>');
+    LegacyUnit.equal(writer.getContent(), '<svg><![CDATA[<b>a</b>]]></svg>', 'Parse cdata with tag inside.');
+    LegacyUnit.deepEqual(counter.counts, { cdata: 1, start: 1, end: 1 }, 'Parse cdata with tag inside counts.');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schemaWithSVGs);
+    writer.reset();
+    parser.parse('<b>a<![CDATA[value]]>b</b>');
+    LegacyUnit.equal(writer.getContent(), '<b>a<!--[CDATA[value]]-->b</b>', 'Parse cdata in HTML with tags around it.');
+    LegacyUnit.deepEqual(counter.counts, { comment: 1, start: 1, end: 1, text: 2 }, 'Parse cdata in HTML with tags around it counts.');
+
+    // parser format === xml
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
-    parser.parse('<![CDATA[test text]]>');
+    parser.parse('<![CDATA[test text]]>', 'xml');
     LegacyUnit.equal(writer.getContent(), '<![CDATA[test text]]>', 'Parse cdata with value.');
     LegacyUnit.deepEqual(counter.counts, { cdata: 1 }, 'Parse cdata with value counts.');
 
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
-    parser.parse('<![CDATA[]]>');
-    LegacyUnit.equal(writer.getContent(), '', 'Parse cdata without value.');
-    LegacyUnit.deepEqual(counter.counts, {}, 'Parse cdata without value counts.');
+    parser.parse('<b>a<![CDATA[value]]>b</b>', 'xml');
+    LegacyUnit.equal(writer.getContent(), '<b>a<![CDATA[value]]>b</b>', 'Parse cdata in HTML with tags around it.');
+    LegacyUnit.deepEqual(counter.counts, { cdata: 1, start: 1, end: 1, text: 2 }, 'Parse cdata in HTML with tags around it counts.');
 
+    // Preserve CDATA
     counter = createCounter(writer);
-    parser = SaxParser(counter, schema);
+    parser = SaxParser({ ...counter, preserve_cdata: true }, schema);
     writer.reset();
-    parser.parse('<![CDATA[<b>a</b>]]>');
-    LegacyUnit.equal(writer.getContent(), '<![CDATA[<b>a</b>]]>', 'Parse cdata with tag inside.');
-    LegacyUnit.deepEqual(counter.counts, { cdata: 1 }, 'Parse cdata with tag inside counts.');
-
-    counter = createCounter(writer);
-    parser = SaxParser(counter, schema);
-    writer.reset();
-    parser.parse('<b>a<![CDATA[value]]>b</b>');
-    LegacyUnit.equal(writer.getContent(), '<b>a<![CDATA[value]]>b</b>', 'Parse cdata with tags around it.');
-    LegacyUnit.deepEqual(counter.counts, { cdata: 1, start: 1, end: 1, text: 2 }, 'Parse cdata with tags around it counts.');
+    parser.parse('<![CDATA[test text]]>');
+    LegacyUnit.equal(writer.getContent(), '<![CDATA[test text]]>', 'Parse cdata with value and preserve_cdata: true.');
+    LegacyUnit.deepEqual(counter.counts, { cdata: 1 }, 'Parse cdata with value and preserve_cdata: true counts.');
   });
 
-  suite.test('Parse PI', function () {
+  suite.test('Parsing malformed comments', function () {
     let counter, parser;
 
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
-    parser.parse('<?xml version="1.0" encoding="UTF-8" ?>text1');
+    parser.parse('<!- value -->');
+    LegacyUnit.equal(writer.getContent(), '<!--- value ---->', 'Parse comment with missing hyphen.');
+    LegacyUnit.deepEqual(counter.counts, { comment: 1 }, 'Parse comment with missing hyphen counts.');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<!-- value ->');
+    LegacyUnit.equal(writer.getContent(), '<!-- value ->-->', 'Parse comment with malformed end sequence.');
+    LegacyUnit.deepEqual(counter.counts, { comment: 1 }, 'Parse comment with malformed end sequence counts.');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<!-- value ><div>test</div>');
+    LegacyUnit.equal(writer.getContent(), '<!-- value ><div>test</div>-->', 'Parse comment with missing end sequence.');
+    LegacyUnit.deepEqual(counter.counts, { comment: 1 }, 'Parse comment with missing end sequence counts.');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<! value --!>');
+    LegacyUnit.equal(writer.getContent(), '<!-- value --!-->', 'Parse comment with exclamation and missing hyphens.');
+    LegacyUnit.deepEqual(counter.counts, { comment: 1 }, 'Parse comment with exclamation and missing hyphens counts.');
+  });
+
+  suite.test('Parse PI', function () {
+    let counter, parser: SaxParser;
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<?xml version="1.0" encoding="UTF-8" ?>text1', 'html');
+    LegacyUnit.equal(writer.getContent(), '<!--?xml version="1.0" encoding="UTF-8" ?-->text1', 'Parse PI as HTML with attributes.');
+    LegacyUnit.deepEqual(counter.counts, { comment: 1, text: 1 }, 'Parse PI as HTML with attributes counts.');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<?xml version="1.0" encoding="UTF-8" ?>text1', 'xml');
     LegacyUnit.equal(writer.getContent(), '<?xml version="1.0" encoding="UTF-8" ?>text1', 'Parse PI with attributes.');
     LegacyUnit.deepEqual(counter.counts, { pi: 1, text: 1 }, 'Parse PI with attributes counts.');
 
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
-    parser.parse('<?xml?>text1');
+    parser.parse('<?xml?>text1', 'xml');
     LegacyUnit.equal(writer.getContent(), '<?xml?>text1', 'Parse PI with no data.');
     LegacyUnit.deepEqual(counter.counts, { pi: 1, text: 1 }, 'Parse PI with data counts.');
 
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
-    parser.parse('<?xml somevalue/>text1');
+    parser.parse('<?xml somevalue/>text1', 'xml');
     LegacyUnit.equal(writer.getContent(), '<?xml somevalue?>text1', 'Parse PI with IE style ending.');
     LegacyUnit.deepEqual(counter.counts, { pi: 1, text: 1 }, 'Parse PI with IE style ending counts.');
   });
@@ -506,6 +570,13 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     parser.parse('<!DOCTYPE html>text1');
     LegacyUnit.equal(writer.getContent(), '<!DOCTYPE html>text1', 'Parse HTML5 DOCTYPE.');
     LegacyUnit.deepEqual(counter.counts, { doctype: 1, text: 1 }, 'Parse HTML5 DOCTYPE counts.');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<!doctype html>text1');
+    LegacyUnit.equal(writer.getContent(), '<!DOCTYPE html>text1', 'Parse lowercase DOCTYPE.');
+    LegacyUnit.deepEqual(counter.counts, { doctype: 1, text: 1 }, 'Parse lowercase DOCTYPE counts.');
   });
 
   suite.test('Parse (validate)', function () {
@@ -800,7 +871,8 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
 
     writer.reset();
     parser.parse(
-      '<?xml><iframe SRC=&#106&#97&#118&#97&#115&#99&#114&#105&#112&#116&#58&#97&#108&#101&#114&#116&#40&#39&#88&#83&#83&#39&#41>?>'
+      '<?xml><iframe SRC=&#106&#97&#118&#97&#115&#99&#114&#105&#112&#116&#58&#97&#108&#101&#114&#116&#40&#39&#88&#83&#83&#39&#41>?>',
+      'xhtml'
     );
 
     LegacyUnit.equal(
@@ -845,15 +917,22 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1 });
   });
 
-  suite.test('Parse cdata with comments and trim those comments away', function () {
+  suite.test('Parse cdata with comments', function () {
     let counter, parser;
 
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
-    parser.parse('<![CDATA[<!--x--><!--y--!>--><!--]]>');
-    LegacyUnit.equal(writer.getContent(), '<![CDATA[xy]]>');
-    LegacyUnit.deepEqual(counter.counts, { cdata: 1 });
+    parser.parse('<div><![CDATA[<!--x--><!--y--!>-->]]></div>');
+    LegacyUnit.equal(writer.getContent(), '<div><!--[CDATA[<!--x----><!--y-->--&gt;]]&gt;</div>');
+    LegacyUnit.deepEqual(counter.counts, { comment: 2, text: 1, start: 1, end: 1 });
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<div><![CDATA[<!--x--><!--y-->--><!--]]></div>', 'xhtml');
+    LegacyUnit.equal(writer.getContent(), '<div><![CDATA[<!--x--><!--y-->--><!--]]></div>');
+    LegacyUnit.deepEqual(counter.counts, { cdata: 1, start: 1, end: 1 });
   });
 
   suite.test('Parse special elements', function () {

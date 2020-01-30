@@ -100,16 +100,18 @@ const createParser = function (editor: Editor): DomParser {
     }
   });
 
-  parser.addNodeFilter('#cdata', function (nodes: Node[]) {
-    let i = nodes.length, node;
+  if (editor.settings.preserve_cdata) {
+    parser.addNodeFilter('#cdata', function (nodes: Node[]) {
+      let i = nodes.length, node;
 
-    while (i--) {
-      node = nodes[i];
-      node.type = 8;
-      node.name = '#comment';
-      node.value = '[CDATA[' + node.value + ']]';
-    }
-  });
+      while (i--) {
+        node = nodes[i];
+        node.type = 8;
+        node.name = '#comment';
+        node.value = '[CDATA[' + editor.dom.encode(node.value) + ']]';
+      }
+    });
+  }
 
   parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function (nodes: Node[]) {
     let i = nodes.length, node;

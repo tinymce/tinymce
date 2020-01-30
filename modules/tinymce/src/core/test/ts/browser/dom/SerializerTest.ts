@@ -1,13 +1,13 @@
 import { Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
-import Serializer from 'tinymce/core/api/dom/Serializer';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Serializer from 'tinymce/core/api/dom/Serializer';
 import TrimHtml from 'tinymce/core/dom/TrimHtml';
-import ViewBlock from '../../module/test/ViewBlock';
 import Zwsp from 'tinymce/core/text/Zwsp';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
+import ViewBlock from '../../module/test/ViewBlock';
 
 declare const escape: any;
 
@@ -645,8 +645,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function (success,
   });
 
   suite.test('CDATA', function () {
-    const ser = Serializer({ fix_list_elements : true });
-
+    const ser = Serializer({ fix_list_elements : true, preserve_cdata: true });
     ser.setRules('span');
 
     DOM.setHTML('test', '123<!--[CDATA[<test>]]-->abc');
