@@ -1,7 +1,7 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import I18n from 'tinymce/core/api/util/I18n';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
+import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
@@ -9,7 +9,7 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, fail
   suite.test('Translate strings', function () {
     const translate = I18n.translate;
 
-    I18n.add('code', {
+    I18n.add('de_DE', {
       'text': 'text translation',
       'text translation': 'this should return the wrong translation when a translation matches a key, in nested translate calls',
       'value:{0}{1}': 'value translation:{0}{1}',
@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, fail
       'empty string': ''
     });
 
-    I18n.setCode('code');
+    I18n.setCode('de_DE');
 
     LegacyUnit.equal(translate('text'), 'text translation');
     LegacyUnit.equal(translate('untranslated text'), 'untranslated text');
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, fail
 
     // https://github.com/tinymce/tinymce/issues/3029
     LegacyUnit.equal(translate('hasOwnProperty'), 'hasOwnProperty');
-    I18n.add('code', {
+    I18n.add('de_DE', {
       hasOwnProperty: 'good'
     });
     LegacyUnit.equal(translate('hasOwnProperty'), 'good');
@@ -64,6 +64,13 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, fail
 
     // When any translation string is the same as a key, a wrong translation will be made in nested translation calls.
     LegacyUnit.equal(translate(translate(translate(translate('text')))), 'this should return the wrong translation when a translation matches a key, in nested translate calls');
+
+    // Language code only fallback
+    LegacyUnit.equal(translate('langOnly'), 'langOnly');
+    I18n.add('de', {
+      langOnly: 'good'
+    });
+    LegacyUnit.equal(translate('langOnly'), 'good');
 
     I18n.setCode('en');
   });
