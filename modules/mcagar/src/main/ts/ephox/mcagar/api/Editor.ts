@@ -9,7 +9,7 @@ import { Editor as EditorType } from '../alien/EditorTypes';
 const cFromElement = function <T extends EditorType = EditorType>(element: Element, settings: Record<string, any>): Chain<any, T> {
   return Chain.async<any, T>(function (_, next, die) {
     const nuSettings: Record<string, any> = {
-      toolbar_mode: false,
+      toolbar_mode: 'wrap',
       ...settings
     };
 
