@@ -4,11 +4,13 @@ import { document } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
+import { UploadResult } from 'tinymce/core/api/EditorUpload';
 import Env from 'tinymce/core/api/Env';
+import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
+import Delay from 'tinymce/core/api/util/Delay';
 import Conversions from 'tinymce/core/file/Conversions';
 import Theme from 'tinymce/themes/silver/Theme';
-import Delay from 'tinymce/core/api/util/Delay';
-import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
@@ -40,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     return DOMUtils.DOM.createHTML('img', { src: uri });
   };
 
-  const assertResult = function (editor: Editor, uploadedBlobInfo, result) {
+  const assertResult = function (editor: Editor, uploadedBlobInfo: BlobInfo, result: UploadResult[]) {
     LegacyUnit.strictEqual(result.length, 1);
     LegacyUnit.strictEqual(result[0].status, true);
     LegacyUnit.strictEqual(result[0].element.src.indexOf(uploadedBlobInfo.id() + '.png') !== -1, true);
@@ -181,6 +183,39 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
         LegacyUnit.strictEqual(uploadedBlobInfo, null);
       });
     }).then(done);
+  });
+
+  suite.asyncTest('uploadImages reuse filename', (editor, done, die) => {
+    let uploadedBlobInfo;
+
+    editor.settings.images_reuse_filename = true;
+    editor.setContent(imageHtml(testBlobDataUri));
+
+    editor.settings.images_upload_handler = (data: BlobInfo, success) => {
+      uploadedBlobInfo = data;
+      success('custom.png?size=small');
+    };
+
+    const assertResult = function (editor: Editor, uploadedBlobInfo: BlobInfo, result: UploadResult[]) {
+      LegacyUnit.strictEqual(result.length, 1);
+      LegacyUnit.strictEqual(result[0].status, true);
+      LegacyUnit.equal('<p><img src="custom.png?size=small" /></p>', editor.getContent());
+
+      return result;
+    };
+
+    editor.uploadImages((result) => {
+      assertResult(editor, uploadedBlobInfo, result);
+
+      return editor.uploadImages((result) => {
+        const img = editor.$('img')[0];
+        LegacyUnit.strictEqual(hasBlobAsSource(img), false);
+        LegacyUnit.strictEqual(img.src.indexOf('custom.png?size=small&') !== -1, true, 'Check the cache invalidation string was added');
+        LegacyUnit.strictEqual(editor.getContent(), '<p><img src="custom.png?size=small" /></p>');
+        delete editor.settings.images_reuse_filename;
+        done();
+      });
+    });
   });
 
   suite.asyncTest('uploadConcurrentImages', function (editor, done) {
