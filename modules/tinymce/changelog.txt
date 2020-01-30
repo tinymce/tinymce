@@ -19,7 +19,6 @@ Version 5.2.0 (TBD)
     Changed the parser to treat CDATA nodes as bogus HTML comments to match the HTML parsing spec. A new `preserve_cdata` setting has been added to preserve CDATA nodes if required #TINY-4625
     Fixed incorrect parsing of malformed/bogus HTML comments #TINY-4625
     Fixed `quickbars` selection toolbar appearing on non-editable elements #TINY-4359
-    Fixed a number of issues with the editor not rendering when using a strict `style-src` CSP policy #TINY-3896
     Fixed bug with alignment toolbar buttons sometimes not changing state correctly #TINY-4139
     Fixed content incorrectly scrolling to the top or bottom when pressing enter if they were already in view #TINY-4162
     Fixed `scrollIntoView` potentially hiding elements behind the toolbar #TINY-4162

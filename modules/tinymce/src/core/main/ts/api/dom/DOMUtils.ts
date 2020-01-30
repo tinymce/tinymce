@@ -86,7 +86,14 @@ const setupAttrHooks = function (styles: Styles, settings: Partial<DOMUtilsSetti
           $elm.attr('data-mce-style', value);
         }
 
-        $elm.attr('style', value);
+        // If setting a style then delegate to the css api, otherwise
+        // this will cause issues when using a content security policy
+        if (value !== null && typeof value === 'string') {
+          $elm.removeAttr('style');
+          $elm.css(styles.parse(value));
+        } else {
+          $elm.attr('style', value);
+        }
       },
 
       get ($elm) {
@@ -375,14 +382,6 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     originalValue = $elm.attr(name);
 
     if (!$elm.length) {
-      return;
-    }
-
-    // If setting a style then delegate to the css api, otherwise
-    // this will cause issues when using a content security policy
-    if (name === 'style' && value !== null) {
-      $elm.removeAttr(name);
-      $elm.css(parseStyle(value));
       return;
     }
 
