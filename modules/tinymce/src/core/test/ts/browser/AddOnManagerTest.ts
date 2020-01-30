@@ -1,9 +1,9 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
 import AddOnManager from 'tinymce/core/api/AddOnManager';
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import PluginManager from 'tinymce/core/api/PluginManager';
-import { UnitTest } from '@ephox/bedrock-client';
 import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', (success, failure) => {
@@ -58,7 +58,10 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', (success, failure) =
   };
 
   suite.test('requireLangPack', function () {
-    AddOnManager.PluginManager.urls.plugin = '/root';
+    // requiring a language pack waits for the plugin to be loaded
+    LegacyUnit.strictEqual(getLanguagePackUrl('sv', 'sv'), null);
+
+    AddOnManager.PluginManager.load('plugin', '/root/plugin.js');
 
     LegacyUnit.equal(getLanguagePackUrl('sv_SE'), '/root/langs/sv_SE.js');
     LegacyUnit.equal(getLanguagePackUrl('sv_SE', 'sv,en,us'), '/root/langs/sv.js');
@@ -74,12 +77,15 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', (success, failure) =
     LegacyUnit.strictEqual(getLanguagePackUrl('sv', 'sv'), null);
   });
 
-  patch(ScriptLoader.ScriptLoader, 'add', function (origFunc, url) {
+  patch(ScriptLoader.ScriptLoader, 'add', function (origFunc, url, scriptSuccess) {
     languagePackUrl = url;
+    if (scriptSuccess) {
+      scriptSuccess();
+    }
   });
 
   Pipeline.async({}, suite.toSteps({}), function () {
-    success();
     unpatch(ScriptLoader.ScriptLoader);
+    success();
   }, failure);
 });
