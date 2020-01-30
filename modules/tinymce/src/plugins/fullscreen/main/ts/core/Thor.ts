@@ -6,6 +6,7 @@
  */
 import { Arr } from '@ephox/katamari';
 import { Attr, Css, SelectorFilter } from '@ephox/sugar';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Env from 'tinymce/core/api/Env';
 import { SugarElement } from 'tinymce/themes/mobile/alien/TypeDefinitions';
 
@@ -26,10 +27,9 @@ const matchColor = function (editorBody: SugarElement) {
 };
 
 // We clobber all tags, direct ancestors to the editorBody get ancestorStyles, everything else gets siblingStyles
-const clobberStyles = function (container: SugarElement, editorBody: SugarElement) {
+const clobberStyles = function (dom: DOMUtils, container: SugarElement, editorBody: SugarElement) {
   const gatherSibilings = function (element) {
-    const siblings = SelectorFilter.siblings(element, '*:not(.tox-silver-sink)');
-    return siblings;
+    return SelectorFilter.siblings(element, '*:not(.tox-silver-sink)');
   };
 
   const clobber = function (clobberStyle: string) {
@@ -40,7 +40,7 @@ const clobberStyles = function (container: SugarElement, editorBody: SugarElemen
         return;
       } else {
         Attr.set(element, attr, backup);
-        Attr.set(element, 'style', clobberStyle);
+        Css.setAll(element, dom.parseStyle(clobberStyle));
       }
     };
   };
@@ -57,12 +57,12 @@ const clobberStyles = function (container: SugarElement, editorBody: SugarElemen
   clobber(containerStyles + ancestorStyles + bgColor)(container);
 };
 
-const restoreStyles = function () {
+const restoreStyles = function (dom: DOMUtils) {
   const clobberedEls = SelectorFilter.all('[' + attr + ']');
   Arr.each(clobberedEls, function (element) {
     const restore = Attr.get(element, attr);
     if (restore !== 'no-styles') {
-      Attr.set(element, 'style', restore);
+      Css.setAll(element, dom.parseStyle(restore));
     } else {
       Attr.remove(element, 'style');
     }

@@ -28,7 +28,7 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
     const fmt = editor.formatter.get(format);
     return fmt !== undefined ? Option.some({
       tag: fmt.length > 0 ? fmt[0].inline || fmt[0].block || 'div' : 'div',
-      styleAttr: editor.formatter.getCssText(format)
+      styles: editor.dom.parseStyle(editor.formatter.getCssText(format))
     }) : Option.none();
   };
 

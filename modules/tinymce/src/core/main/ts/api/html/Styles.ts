@@ -24,13 +24,13 @@
  * @version 3.4
  */
 
-import Schema from './Schema';
 import { Unicode } from '@ephox/katamari';
+import Schema from './Schema';
 
 export interface StyleMap { [s: string]: string | number; }
 interface Styles {
   toHex(color: string): string;
-  parse(css: string): StyleMap;
+  parse(css: string): Record<string, string>;
   serialize(styles: StyleMap, elementName?: string): string;
 }
 
@@ -92,7 +92,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
      * @param {String} css Style value to parse for example: border:1px solid red;.
      * @return {Object} Object representation of that style like {border: '1px solid red'}
      */
-    parse (css: string): StyleMap {
+    parse (css: string): Record<string, string> {
       const styles: any = {};
       let matches, name, value, isEncoded;
       const urlConverter = settings.url_converter;
@@ -195,7 +195,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
 
       // Decodes the specified string by replacing all _<num> with it's original value \" \' etc
       // It will also decode the \" \' if keepSlashes is set to fale or omitted
-      const decode = function (str, keepSlashes?) {
+      const decode = function (str: string, keepSlashes?: boolean) {
         if (isEncoded) {
           str = str.replace(/\uFEFF[0-9]/g, function (str) {
             return encodingLookup[str];
