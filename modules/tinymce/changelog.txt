@@ -10,6 +10,7 @@ Version 5.2.0 (TBD)
     Added new `getNodeFilters`/`getAttributeFilters` functions to the `editor.serializer` instance #TINY-4344
     Added new `a11y_advanced_options` setting to allow additional accessibility options to be added #FOAM-11
     Added new accessibility options and behaviours to the image dialog using `a11y_advanced_options` #FOAM-11
+    Changed default `toolbar_mode` value from false to `wrap`. The value false has been deprecated #TINY-4617
     Changed `toolbar_drawer` setting to `toolbar_mode`. `toolbar_drawer` has been deprecated #TINY-4416
     Changed iframe mode to set selection on content init if selection doesn't exist #TINY-4139
     Changed table related icons to align them with the visual style of the other icons #TINY-4341

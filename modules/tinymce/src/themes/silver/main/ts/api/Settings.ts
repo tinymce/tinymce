@@ -77,10 +77,10 @@ const isMultipleToolbars = (editor: Editor): boolean => {
 };
 
 export enum ToolbarMode {
-  default = '',
   floating = 'floating',
   sliding = 'sliding',
-  scrolling = 'scrolling'
+  scrolling = 'scrolling',
+  wrap = ''
 }
 
 const getToolbarMode = (editor: Editor): ToolbarMode => {

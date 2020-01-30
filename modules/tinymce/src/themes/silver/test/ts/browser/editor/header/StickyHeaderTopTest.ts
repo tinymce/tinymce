@@ -11,7 +11,7 @@ UnitTest.asynctest('Editor with sticky toolbar', (success, failure) => {
   FullscreenPlugin();
 
   Pipeline.async({}, [
-    sTestStickyHeader(ToolbarMode.default, ToolbarLocation.top),
+    sTestStickyHeader(ToolbarMode.wrap, ToolbarLocation.top),
     sTestStickyHeader(ToolbarMode.floating, ToolbarLocation.top),
     sTestStickyHeader(ToolbarMode.sliding, ToolbarLocation.top),
   ], success, failure);

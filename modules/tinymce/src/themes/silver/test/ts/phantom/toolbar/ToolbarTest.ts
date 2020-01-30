@@ -26,7 +26,7 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
     (store, doc, body) => {
       return GuiFactory.build(
         renderToolbar({
-          type: ToolbarMode.default,
+          type: ToolbarMode.wrap,
           uid: 'test-toolbar-uid',
           onEscape: store.adderH('onEscape'),
           cyclicKeying: true,

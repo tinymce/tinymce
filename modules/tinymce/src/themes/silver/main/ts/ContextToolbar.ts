@@ -184,7 +184,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
     // For context toolbars we don't want to use floating or sliding, so just restrict this
     // to scrolling or wrapping (default)
-    const toolbarType = getToolbarMode(editor) === ToolbarMode.scrolling ? ToolbarMode.scrolling : ToolbarMode.default;
+    const toolbarType = getToolbarMode(editor) === ToolbarMode.scrolling ? ToolbarMode.scrolling : ToolbarMode.wrap;
 
     const scopes = getScopes();
     return ctx.type === 'contexttoolbar' ? (() => {
