@@ -1,6 +1,6 @@
 import { Touch } from '@ephox/dom-globals';
 import { Cell, Fun, Option, Throttler } from '@ephox/katamari';
-import Editor from 'tinymce/core/api/Editor';
+import Editor from '../api/Editor';
 
 // This is based heavily on Alloy's TapEvent.ts, just modified to use TinyMCE's event system.
 
@@ -78,11 +78,7 @@ const setup = (editor: Editor) => {
         if (longpressFired.get()) {
           e.preventDefault();
         } else {
-          // Don't use "e" as the args for fire since it'll mutate the type. See TINY-3254
-          const result = editor.fire('tap', { touches: e.touches });
-          if (result.isDefaultPrevented()) {
-            e.preventDefault();
-          }
+          editor.fire('tap', { ...e, type: 'tap' });
         }
       });
   }, true);

@@ -13,7 +13,6 @@ import { Css } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import { getMultipleToolbarsSetting, getToolbarGrouped, getToolbarMode, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, isToolbarLocationTop, useFixedContainer } from './api/Settings';
-import TouchEvents from './api/TouchEvents';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -331,7 +330,6 @@ const setup = (editor: Editor): RenderInfo => {
   const uiMothership = Gui.takeover(sink);
 
   Events.setup(editor, mothership, uiMothership);
-  TouchEvents.setup(editor);
 
   const getUi = () => {
     const channels = {
