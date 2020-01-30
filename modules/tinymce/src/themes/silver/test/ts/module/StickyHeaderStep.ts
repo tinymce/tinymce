@@ -43,7 +43,7 @@ const sTestStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoc
         ])),
 
         Step.label('Open align menu and check sticky states', StickyUtils.sOpenMenuAndTestScrolling(MenuUtils.sOpenAlignMenu('open align'), 1, isToolbarTop)),
-        ...toolbarMode === ToolbarMode.wrap ? [ ] : [ Step.label('Open the more drawer to reveal items first', MenuUtils.sOpenMore(toolbarMode)) ],
+        ...toolbarMode === ToolbarMode.default ? [ ] : [ Step.label('Open the more drawer to reveal items first', MenuUtils.sOpenMore(toolbarMode)) ],
         Step.label('Open nested Formats menu Align and check sticky states', StickyUtils.sOpenMenuAndTestScrolling(MenuUtils.sOpenNestedMenus([
           {
             // first open this menu
@@ -76,7 +76,7 @@ const sTestStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoc
             selector: 'div[title="Text color"][aria-expanded=false]'
           }
         ]), 1, isToolbarTop)),
-        ...toolbarMode === ToolbarMode.wrap ? [ ] : [ Step.label('Close the more drawer', MenuUtils.sCloseMore(toolbarMode)) ],
+        ...toolbarMode === ToolbarMode.default ? [ ] : [ Step.label('Close the more drawer', MenuUtils.sCloseMore(toolbarMode)) ],
 
         Step.label('Toggle fullscreen mode and ensure header moves from docked -> undocked -> docked', GeneralSteps.sequence([
           StickyUtils.sScrollAndAssertStructure(isToolbarTop, 200, StickyUtils.expectedHalfView),
