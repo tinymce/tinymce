@@ -18,8 +18,7 @@ const addToEditor = (editor: Editor) => {
     editor.ui.registry.addContextToolbar('imageselection', {
       predicate: isImage,
       items: imageToolbarItems,
-      position: 'node',
-      scope: 'node'
+      position: 'node'
     });
   }
 
