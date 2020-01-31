@@ -116,13 +116,13 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
           '</p>', scriptStruct),
         sTestPlaceholder(ui, editor, apis,
           'https://www.youtube.com/watch?v=P_205ZY52pY',
-          '<p><iframe src="//www.youtube.com/embed/P_205ZY52pY" width="560" ' +
+          '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
           'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
           placeholderStructure),
         Utils.sSetSetting(editor.settings, 'media_live_embeds', true),
         sTestPlaceholder(ui, editor, apis,
           'https://www.youtube.com/watch?v=P_205ZY52pY',
-          '<p><iframe src="//www.youtube.com/embed/P_205ZY52pY" width="560" ' +
+          '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
           'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
           iframeStructure)
       ])
