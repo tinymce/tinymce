@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.core.SubmitTest', (success, failure) => {
   Plugin();
   Theme();
 
-  const customEmbed = '<div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.338%; max-width: 650px;"><iframe src="//www.youtube.com/embed/IcgmSRJHu_8" width="560" height="314" allowfullscreen="allowfullscreen" data-mce-fragment="1"></iframe></div>';
+  const customEmbed = '<div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.338%; max-width: 650px;"><iframe src="https://www.youtube.com/embed/IcgmSRJHu_8" width="560" height="314" allowfullscreen="allowfullscreen" data-mce-fragment="1"></iframe></div>';
 
   const sTestResolvedEmbedContentSubmit = (ui: TinyUi, editor: Editor, apis: TinyApis, url: string, expected: string) => {
     return Logger.t(`Assert content ${expected}`, GeneralSteps.sequence([
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.core.SubmitTest', (success, failure) => {
         apis.sSetContent(''),
         apis.sDeleteSetting('media_url_resolver'),
         sTestResolvedEmbedContentSubmit(ui, editor, apis, 'https://www.youtube.com/watch?v=IcgmSRJHu_8',
-          '<p><iframe src="//www.youtube.com/embed/IcgmSRJHu_8" width="560" height="314" ' +
+          '<p><iframe src="https://www.youtube.com/embed/IcgmSRJHu_8" width="560" height="314" ' +
           'allowfullscreen="allowfullscreen"></iframe></p>'),
         apis.sSetContent('')
       ]),
