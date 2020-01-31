@@ -26,6 +26,7 @@ import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as Placeholder from '../content/Placeholder';
 import NodeType from '../dom/NodeType';
+import TouchEvents from '../events/TouchEvents';
 import ForceBlocks from '../ForceBlocks';
 import KeyboardOverrides from '../keyboard/KeyboardOverrides';
 import { NodeChange } from '../NodeChange';
@@ -255,6 +256,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   editor._nodeChangeDispatcher = new NodeChange(editor);
   editor._selectionOverrides = SelectionOverrides(editor);
 
+  TouchEvents.setup(editor);
   DetailsElement.setup(editor);
   MultiClickSelection.setup(editor);
   KeyboardOverrides.setup(editor);

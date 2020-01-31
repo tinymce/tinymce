@@ -146,24 +146,12 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     editor.on('ResizeWindow FullscreenStateChanged', () => fakeCaret.reposition());
 
     const handleTouchSelect = function (editor: Editor) {
-      let moved = false;
-
-      editor.on('touchstart', function () {
-        moved = false;
-      });
-
-      editor.on('touchmove', function () {
-        moved = true;
-      });
-
-      editor.on('touchend', function (e) {
-        if (!moved) {
+      editor.on('tap', (e) => {
           const contentEditableRoot = getContentEditableRoot(editor, e.target);
           if (isContentEditableFalse(contentEditableRoot)) {
             e.preventDefault();
             setContentEditableSelection(CefUtils.selectNode(editor, contentEditableRoot));
           }
-        }
       }, true);
     };
 
