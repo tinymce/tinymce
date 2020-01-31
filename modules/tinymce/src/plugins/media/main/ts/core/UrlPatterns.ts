@@ -67,14 +67,17 @@ const urlPatterns: UrlPattern[] = [
   }
 ];
 
-const getUrl = (pattern: UrlPattern, url: string) => {
-  let protocol: string;
+const getProtocol = (url: string) => {
   const protocolMatches = url.match(/^(https?:\/\/|www\.)(.+)$/i);
   if (protocolMatches && protocolMatches.length > 1) {
-    protocol = protocolMatches[1] === 'www.' ? 'https://' : protocolMatches[1];
+    return protocolMatches[1] === 'www.' ? 'https://' : protocolMatches[1];
   } else {
-    protocol = 'https://';
+    return 'https://';
   }
+};
+
+const getUrl = (pattern: UrlPattern, url: string) => {
+  const protocol = getProtocol(url);
 
   const match = pattern.regex.exec(url);
   let newUrl = protocol + pattern.url;
