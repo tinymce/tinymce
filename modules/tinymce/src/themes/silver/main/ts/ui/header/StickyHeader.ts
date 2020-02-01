@@ -126,7 +126,9 @@ const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void =
     // changed due the skins styles being applied.
     // Note: Inline handles it's own skin loading, as it needs to do other initial positioning
     editor.on('SkinLoaded', () => {
-      lazyHeader().each(Docking.reset);
+      lazyHeader().each((comp) => {
+        Docking.isDocked(comp) ? Docking.reset(comp) : Docking.refresh(comp);
+      });
     });
 
     // Need to reset when we go fullscreen so that if the header is docked,
