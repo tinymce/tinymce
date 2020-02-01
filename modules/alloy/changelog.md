@@ -21,9 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Moved modules from "alien" folder into Sugar, Katamari and other folders in Alloy.
-
-### Fixed
-- Improved `Docking` scroll performance by only calculating the offset origin as required.
+- Changed `Docking` to use `bottom` instead of `top` when docking to the bottom of the viewport.
 
 # [5.1.0] - 2019-12-17
 

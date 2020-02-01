@@ -39,13 +39,14 @@ const sAssertHeaderDocked = (assertDockedTop: boolean) => {
   return Step.sync(() => {
     const header = SelectorFind.descendant(Body.body(), '.tox-editor-header').getOrDie();
 
-    const assertedTop = assertDockedTop ? '0px' : (window.innerHeight - header.dom().clientHeight + 'px');
-    const actualTop = Css.get(header, 'top');
+    const posType = assertDockedTop ? 'top' : 'bottom';
+    const assertedPos = '0px';
+    const actualPos = Css.get(header, posType);
 
     Assertions.assertEq(
-      'Header should be docked to ' + assertDockedTop ? 'top' : 'bottom',
+      'Header should be docked to ' + posType,
       true,
-      actualTop === assertedTop
+      actualPos === assertedPos
     );
   });
 };
