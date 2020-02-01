@@ -138,14 +138,19 @@ const registry = () => {
     addToggleButton: bridge.addToggleButton,
 
     /**
-     * Registers a new floating toolbar button for the toolbar. Renders a floating toolbar when clicked.
+     * Registers a new group toolbar button for the toolbar. Renders a toolbar button that opens a floating toolbar when
+     * clicked.
+     * <br>
+     * <strong>Note:</strong> Group toolbar buttons can only be used when using the floating toolbar mode.
+     * <br>
+     * <em>Added in TinyMCE 5.2</em>
      *
-     * @method addFloatingToolbarButton
-     * @param {String} name Unique name identifying the new floating toolbar button.
-     * @param {Toolbar.FloatingToolbarButtonApi} obj The floating toolbar button configuration object.
+     * @method addGroupToolbarButton
+     * @param {String} name Unique name identifying the new group toolbar button.
+     * @param {Toolbar.GroupToolbarButtonApi} obj The group toolbar button configuration object.
      * @return {void} void
      */
-    addFloatingToolbarButton: bridge.addFloatingToolbarButton,
+    addGroupToolbarButton: bridge.addGroupToolbarButton,
 
     /**
      * Registers a new menu item that will act like a toggle button, showing a tick in the menu item to represent state.

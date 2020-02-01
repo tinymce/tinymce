@@ -12,7 +12,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { Css } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import { getMultipleToolbarsSetting, getToolbarGrouped, getToolbarMode, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, isToolbarLocationTop, useFixedContainer } from './api/Settings';
+import { getMultipleToolbarsSetting, getToolbarGroups, getToolbarMode, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, isToolbarLocationTop, ToolbarMode, useFixedContainer } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import ContextToolbar from './ContextToolbar';
 import Events from './Events';
@@ -60,6 +60,7 @@ export type ToolbarConfig = Array<string | ToolbarGroupSetting> | string | boole
 export interface RenderToolbarConfig {
   toolbar: ToolbarConfig;
   buttons: Record<string, any>;
+  allowToolbarGroups: boolean;
 }
 
 export interface RenderUiConfig extends RenderToolbarConfig {
@@ -370,8 +371,8 @@ const setup = (editor: Editor): RenderInfo => {
     Sidebar.setup(editor);
     Throbber.setup(editor, lazyThrobber, backstage.shared);
 
-    Obj.map(getToolbarGrouped(editor), (toolbarGroupButtonConfig, name) => {
-      editor.ui.registry.addFloatingToolbarButton(name, toolbarGroupButtonConfig);
+    Obj.map(getToolbarGroups(editor), (toolbarGroupButtonConfig, name) => {
+      editor.ui.registry.addGroupToolbarButton(name, toolbarGroupButtonConfig);
     });
 
     // Apply Bridge types
@@ -383,6 +384,7 @@ const setup = (editor: Editor): RenderInfo => {
       menus: !editor.settings.menu ? {} : Obj.map(editor.settings.menu, (menu) => ({ ...menu, items: menu.items })),
       menubar: editor.settings.menubar,
       toolbar: toolbarOpt.getOrThunk(() => editor.getParam('toolbar', true)),
+      allowToolbarGroups: toolbarMode === ToolbarMode.floating,
       buttons,
 
       // Apollo, not implemented yet

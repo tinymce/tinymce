@@ -11,24 +11,19 @@ import { Toolbar } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Result, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { ToolbarButtonClasses } from './button/ButtonClasses';
-import {
-  renderSplitButton,
-  renderToolbarButton,
-  renderToolbarToggleButton,
-  renderFloatingToolbarButton
-} from './button/ToolbarButtons';
+import { getToolbarMode, isToolbarLocationTop, ToolbarMode } from '../../api/Settings';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { RenderToolbarConfig, ToolbarGroupSetting } from '../../Render';
 import { renderMenuButton } from '../button/MenuButton';
 import { createAlignSelect } from '../core/complex/AlignSelect';
 import { createFontSelect } from '../core/complex/FontSelect';
 import { createFontsizeSelect } from '../core/complex/FontsizeSelect';
 import { createFormatSelect } from '../core/complex/FormatSelect';
 import { createStyleSelect } from '../core/complex/StyleSelect';
-import { RenderToolbarConfig, ToolbarGroupSetting } from '../../Render';
+import { ToolbarButtonClasses } from './button/ButtonClasses';
+import { renderFloatingToolbarButton, renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from './button/ToolbarButtons';
 import { ToolbarGroup } from './CommonToolbar';
-import { isToolbarLocationTop } from '../../api/Settings';
 
 export const handleError = (error) => {
   // tslint:disable-next-line:no-console
@@ -116,27 +111,23 @@ const types = {
     }
   ),
 
-  floatingtoolbarbutton: renderFromBridge(
-    Toolbar.createFloatingToolbarButton,
-    (s: Toolbar.FloatingToolbarButton, extras, editor: Editor) => {
-      return renderFloatingToolbarButton(
-        s,
-        extras.backstage,
-        (toolbar) => identifyButtons(
-          editor,
-          {
-            buttons: editor.ui.registry.getAll().buttons,
-            toolbar
-          },
-          extras,
-          Option.none()
-        ),
-        {
-          [VerticalDir.Attribute]: isToolbarLocationTop(editor) ?
-            VerticalDir.AttributeValue.TopToBottom :
-            VerticalDir.AttributeValue.BottomToTop
-        }
-      );
+  grouptoolbarbutton: renderFromBridge(
+    Toolbar.createGroupToolbarButton,
+    (s: Toolbar.GroupToolbarButton, extras, editor: Editor) => {
+      const buttons = editor.ui.registry.getAll().buttons;
+      const identify = (toolbar: string | ToolbarGroupSetting[]) =>
+        identifyButtons(editor, { buttons, toolbar, allowToolbarGroups: false }, extras, Option.none());
+      const attributes = {
+        [VerticalDir.Attribute]: isToolbarLocationTop(editor) ? VerticalDir.AttributeValue.TopToBottom : VerticalDir.AttributeValue.BottomToTop
+      };
+
+      switch (getToolbarMode(editor)) {
+        case ToolbarMode.floating:
+          return renderFloatingToolbarButton(s, extras.backstage, identify, attributes);
+        default:
+          // TODO change this message and add a case when sliding is available
+          throw new Error('Toolbar groups are only supported when using floating toolbar mode');
+      }
     }
   ),
 
@@ -218,7 +209,7 @@ const createToolbar = (toolbarConfig: RenderToolbarConfig): ToolbarGroupSetting[
   }
 };
 
-const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, extras: Extras, prefixes: Option<string[]>): Option<AlloySpec> => {
+const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, allowToolbarGroups: boolean, extras: Extras, prefixes: Option<string[]>): Option<AlloySpec> => {
   return Obj.get(buttons, toolbarItem.toLowerCase()).orThunk(() => {
     return prefixes.bind((ps) => {
       return Arr.findMap(ps, (prefix) => {
@@ -236,7 +227,14 @@ const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem:
       });
     },
     (spec) => {
-      return extractFrom(spec, extras, editor);
+      if (spec.type === 'grouptoolbarbutton' && !allowToolbarGroups) {
+        // TODO change this message when sliding is available
+        // tslint:disable-next-line:no-console
+        console.warn(`Ignoring the '${toolbarItem}' toolbar button. Group toolbar buttons are only supported when using floating toolbar mode and cannot be nested.`);
+        return Option.none();
+      } else {
+        return extractFrom(spec, extras, editor);
+      }
     }
   );
 };
@@ -245,7 +243,7 @@ const identifyButtons = (editor: Editor, toolbarConfig: RenderToolbarConfig, ext
   const toolbarGroups = createToolbar(toolbarConfig);
   const groups = Arr.map(toolbarGroups, (group) => {
     const items = Arr.bind(group.items, (toolbarItem) => {
-      return toolbarItem.trim().length === 0 ? [] : lookupButton(editor, toolbarConfig.buttons, toolbarItem, extras, prefixes).toArray();
+      return toolbarItem.trim().length === 0 ? [] : lookupButton(editor, toolbarConfig.buttons, toolbarItem, toolbarConfig.allowToolbarGroups, extras, prefixes).toArray();
     });
     return {
       title: Option.from(editor.translate(group.name)),

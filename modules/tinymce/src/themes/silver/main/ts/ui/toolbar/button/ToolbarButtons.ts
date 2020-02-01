@@ -12,7 +12,7 @@ import { Attr, SelectorFind } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
-import { ToolbarConfig } from '../../../Render';
+import { ToolbarGroupSetting } from '../../../Render';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
@@ -142,14 +142,14 @@ const renderCommonStructure = (icon: Option<string>, text: Option<string>, toolt
   };
 };
 
-const renderFloatingToolbarButton = (spec: Toolbar.FloatingToolbarButton, backstage: UiFactoryBackstage, identifyButtons: (toolbar: ToolbarConfig) => ToolbarGroup[], attributes: Record<string, string>) => {
+const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage: UiFactoryBackstage, identifyButtons: (toolbar: string | ToolbarGroupSetting[]) => ToolbarGroup[], attributes: Record<string, string>) => {
   const sharedBackstage = backstage.shared;
 
   return FloatingToolbarButton.sketch({
     lazySink: sharedBackstage.getSink,
     fetch: () => {
       return Future.nu((resolve) => {
-        resolve(Arr.map(identifyButtons(spec.toolbar), renderToolbarGroup));
+        resolve(Arr.map(identifyButtons(spec.items), renderToolbarGroup));
       });
     },
     markers: {

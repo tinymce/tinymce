@@ -3,30 +3,33 @@ import {
   ToolbarButton,
   ToolbarButtonApi,
   ToolbarButtonInstanceApi,
-  toolbarButtonSchema,
+  toolbarButtonSchema
 } from '../components/toolbar/ToolbarButton';
 import {
   createMenuButton,
   ToolbarMenuButton,
   ToolbarMenuButtonApi,
-  ToolbarMenuButtonInstanceApi,
+  ToolbarMenuButtonInstanceApi
 } from '../components/toolbar/ToolbarMenuButton';
 import {
   createSplitButton,
   ToolbarSplitButton,
   ToolbarSplitButtonApi,
-  ToolbarSplitButtonInstanceApi,
+  ToolbarSplitButtonInstanceApi
 } from '../components/toolbar/ToolbarSplitButton';
 import {
   createToggleButton,
   ToolbarToggleButton,
   ToolbarToggleButtonApi,
-  ToolbarToggleButtonInstanceApi,
+  ToolbarToggleButtonInstanceApi
 } from '../components/toolbar/ToolbarToggleButton';
 import {
-  createFloatingToolbarButton,
-  FloatingToolbarButton
-} from '../components/toolbar/FloatingToolbarButton';
+  createGroupToolbarButton,
+  GroupToolbarButton,
+  GroupToolbarButtonApi,
+  GroupToolbarButtonInstanceApi
+} from '../components/toolbar/GroupToolbarButton';
+
 import {
   ContextToolbar,
   ContextToolbarApi,
@@ -67,8 +70,10 @@ export {
   ToolbarToggleButtonInstanceApi,
   createToggleButton,
 
-  createFloatingToolbarButton,
-  FloatingToolbarButton,
+  createGroupToolbarButton,
+  GroupToolbarButton,
+  GroupToolbarButtonApi,
+  GroupToolbarButtonInstanceApi,
 
   ContextToolbar,
   ContextToolbarPosition,
