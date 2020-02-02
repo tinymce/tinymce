@@ -126,7 +126,7 @@ const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void =
     }
 
     // No need to update the content flow in inline mode as the header always floats
-    editor.on('ResizeWindow ResizeEditor ResizeContent', () => {
+    editor.on('ResizeWindow ResizeEditor', () => {
       lazyHeader().each((header) => updateIframeContentFlow(header, isToolbarLocationTop(editor)));
     });
 
