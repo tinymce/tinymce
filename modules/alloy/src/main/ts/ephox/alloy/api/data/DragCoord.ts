@@ -20,9 +20,11 @@ export interface CoordAdt<T = number> {
 }
 
 export type StylesCoord = {
-  left: string,
-  top: string,
-  position: string
+  left: Option<string>;
+  right: Option<string>;
+  top: Option<string>;
+  bottom: Option<string>;
+  position: Option<string>;
 };
 
 type CoordTransform = (coords: Position) => Position;
@@ -130,20 +132,22 @@ const getDeltas = (coord1: CoordAdt<number>, coord2: CoordAdt<number>, xRange: n
 };
 
 const toStyles = (coord: CoordAdt<number>, scroll: Position, origin: Position): StylesCoord => {
-  return coord.fold(
+  const stylesOpt = coord.fold(
     (x, y) => {
       // offset
-      return { position: 'absolute', left: x + 'px', top: y + 'px'};
+      return { position: Option.some('absolute'), left: Option.some(x + 'px'), top: Option.some(y + 'px') };
     },
     (x, y) => {
-      return { position: 'absolute', left: (x - origin.left()) + 'px', top: (y - origin.top()) + 'px' };
+      return { position: Option.some('absolute'), left: Option.some((x - origin.left()) + 'px'), top: Option.some((y - origin.top()) + 'px') };
       // absolute
     },
     (x, y) => {
       // fixed
-      return { position: 'fixed', left: x + 'px', top: y + 'px' };
+      return { position: Option.some('fixed'), left: Option.some(x + 'px'), top: Option.some(y + 'px') };
     }
   );
+
+  return { right: Option.none(),  bottom: Option.none(), ...stylesOpt };
 };
 
 const translate = (coord: CoordAdt<number>, deltaX: number, deltaY: number): CoordAdt<number> => {

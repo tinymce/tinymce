@@ -2,11 +2,11 @@ import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
-import { ToolbarMode, ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
+import { ToolbarLocation, ToolbarMode } from 'tinymce/themes/silver/api/Settings';
 import Theme from 'tinymce/themes/silver/Theme';
 import { sTestStickyHeader } from '../../../module/StickyHeaderStep';
 
-UnitTest.asynctest('Editor with sticky toolbar', (success, failure) => {
+UnitTest.asynctest('Editor with sticky bottom toolbar', (success, failure) => {
   Theme();
   FullscreenPlugin();
 

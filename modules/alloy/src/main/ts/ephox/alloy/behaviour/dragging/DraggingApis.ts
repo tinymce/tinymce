@@ -17,7 +17,7 @@ const snapTo = function (component: AlloyComponent, dragConfig: DraggingConfig, 
     const snapPin = Snappables.snapTo(snap, scroll, origin);
 
     const styles = DragCoord.toStyles(snapPin.coord, scroll, origin);
-    Css.setAll(target, styles);
+    Css.setOptions(target, styles);
   }
 };
 

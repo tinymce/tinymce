@@ -1,4 +1,4 @@
-import { Option, Options, Num } from '@ephox/katamari';
+import { Num, Option, Options } from '@ephox/katamari';
 import { Css, Element, Location, Position, Scroll, Traverse } from '@ephox/sugar';
 
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
@@ -77,7 +77,7 @@ const dragBy = (component: AlloyComponent, dragConfig: DraggingConfig, startData
     const newCoord = calcNewCoord(component, dragConfig.snaps, currentCoord, scroll, origin, delta, startData);
 
     const styles = DragCoord.toStyles(newCoord, scroll, origin);
-    Css.setAll(target, styles);
+    Css.setOptions(target, styles);
   }
   // NOTE: On drag just goes with the original delta. It does not know about snapping.
   dragConfig.onDrag(component, target, delta);
