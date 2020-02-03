@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Keyboard, Keys
 import { document, window } from '@ephox/dom-globals';
 import { Body, Css, Element, Focus, Scroll, SelectorFind } from '@ephox/sugar';
 
-const staticPartsOuter = (s, str, arr): StructAssert[] => {
+const staticPartsOuter = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] => {
   // should not change
   return [
     s.element('div', {
@@ -11,7 +11,7 @@ const staticPartsOuter = (s, str, arr): StructAssert[] => {
   ];
 };
 
-const staticPartsInner = (s, str, arr): StructAssert[] => {
+const staticPartsInner = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] => {
   // should not change
   return [
     s.element('div', {
@@ -24,7 +24,7 @@ const staticPartsInner = (s, str, arr): StructAssert[] => {
   ];
 };
 
-const expectedScrollEventBound = (s, str, arr): StructAssert[] => {
+const expectedScrollEventBound = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] => {
   return [
     s.element('div', {
       classes: [
@@ -51,7 +51,7 @@ const sAssertHeaderDocked = (assertDockedTop: boolean) => {
   });
 };
 
-const expectedHalfView = (s, str, arr): StructAssert[] => {
+const expectedHalfView = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] => {
   return [
     s.element('div', {
       classes: [
@@ -68,7 +68,7 @@ const expectedHalfView = (s, str, arr): StructAssert[] => {
   ];
 };
 
-const expectedEditorHidden = (s, str, arr): StructAssert[] => {
+const expectedEditorHidden = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] => {
   return [
     s.element('div', {
       classes: [
