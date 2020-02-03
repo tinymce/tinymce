@@ -13,7 +13,6 @@ import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
-import { chevronSetter } from '../button/Behaviours';
 import { renderLabel, renderReplacableIconFromPack } from '../button/ButtonSlices';
 import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Controls';
 import * as Icons from '../icons/Icons';
@@ -107,10 +106,7 @@ const renderCommonDropdown = <T>(spec: CommonDropdownSpec<T>, prefix: string, sh
             tag: 'div',
             classes: [ `${prefix}__select-chevron` ],
             innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons)
-          },
-          behaviours: Behaviour.derive([
-            chevronSetter(sharedBackstage.providers.icons)
-          ])
+          }
         })
       ]),
       matchWidth: true,

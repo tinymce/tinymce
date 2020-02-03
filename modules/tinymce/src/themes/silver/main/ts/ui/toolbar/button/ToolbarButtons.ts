@@ -16,9 +16,9 @@ import { ToolbarGroupSetting } from '../../../Render';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
-import { chevronSetter } from '../../button/Behaviours';
 import { renderIconFromPack, renderLabel } from '../../button/ButtonSlices';
 import { onControlAttached, onControlDetached, OnDestroy } from '../../controls/Controls';
+import * as Icons from '../../icons/Icons';
 import { componentRenderPipeline } from '../../menus/item/build/CommonMenuItem';
 import { classForPreset } from '../../menus/item/ItemClasses';
 import ItemResponse from '../../menus/item/ItemResponse';
@@ -360,10 +360,8 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         dom: {
           tag: 'button',
           classes: [ ToolbarButtonClasses.Button, 'tox-split-button__chevron' ],
-        },
-        buttonBehaviours: Behaviour.derive([
-          chevronSetter(sharedBackstage.providers.icons)
-        ])
+          innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons)
+        }
       }),
       AlloySplitDropdown.parts()['aria-descriptor']({
         text: sharedBackstage.providers.translate('To open the popup, press Shift+Enter')
