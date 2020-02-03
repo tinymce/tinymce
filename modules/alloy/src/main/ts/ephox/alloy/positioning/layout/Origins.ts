@@ -3,8 +3,9 @@ import { Element, Height, Position, Scroll, Width } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import * as OuterPosition from '../../frame/OuterPosition';
-import { css as NuRepositionCss, RepositionCss, RepositionDecision } from '../view/Reposition';
+import { RepositionDecision } from '../view/Reposition';
 import * as Direction from './Direction';
+import { PositionCss, NuPositionCss } from '../view/PositionCss';
 
 type NoneOrigin<T> = () => T;
 type RelativeOrigin<T> = (x: number, y: number, width: number, height: number) => T;
@@ -47,46 +48,47 @@ const positionWithDirection = (posName: string, decision: RepositionDecision, x:
   const right = Option.some(decisionRight);
   const bottom = Option.some(decisionBottom);
   const none = Option.none<number>();
+  const optPosName = Option.some(posName);
 
   return Direction.cata(decision.direction(),
     () => {
       // southeast
-      return NuRepositionCss(posName, left, top, none, none);
+      return NuPositionCss(optPosName, left, top, none, none);
     },
     () => {
       // southwest
-      return NuRepositionCss(posName, none, top, right, none);
+      return NuPositionCss(optPosName, none, top, right, none);
     },
     () => {
       // northeast
-      return NuRepositionCss(posName, left, none, none, bottom);
+      return NuPositionCss(optPosName, left, none, none, bottom);
     },
     () => {
       // northwest
-      return NuRepositionCss(posName, none, none, right, bottom);
+      return NuPositionCss(optPosName, none, none, right, bottom);
     },
     () => {
       // south
-      return NuRepositionCss(posName, left, top, none, none);
+      return NuPositionCss(optPosName, left, top, none, none);
     },
     () => {
       // north
-      return NuRepositionCss(posName, left, none, none, bottom);
+      return NuPositionCss(optPosName, left, none, none, bottom);
     },
     () => {
       // east
-      return NuRepositionCss(posName, left, top, none, none);
+      return NuPositionCss(optPosName, left, top, none, none);
     },
     () => {
       // west
-      return NuRepositionCss(posName, none, top, right, none);
+      return NuPositionCss(optPosName, none, top, right, none);
     }
   );
 };
 
-const reposition = (origin: OriginAdt, decision: RepositionDecision): RepositionCss => {
+const reposition = (origin: OriginAdt, decision: RepositionDecision): PositionCss => {
   return origin.fold(function () {
-    return NuRepositionCss('absolute', Option.some(decision.x()), Option.some(decision.y()), Option.none(), Option.none());
+    return NuPositionCss(Option.some('absolute'), Option.some(decision.x()), Option.some(decision.y()), Option.none(), Option.none());
   }, function (x, y, width, height) {
     return positionWithDirection('absolute', decision, x, y, width, height);
   }, function (x, y, width, height) {
