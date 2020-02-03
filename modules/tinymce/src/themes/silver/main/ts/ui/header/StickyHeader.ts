@@ -117,8 +117,16 @@ const findFocusedElem = (rootElm: Element, lazySink: () => Result<AlloyComponent
 
 const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void => {
   if (!editor.inline) {
+    // If using bottom toolbar then when the editor resizes we need to reset docking
+    // otherwise it won't know the original toolbar position has moved
+    if (!isToolbarLocationTop(editor)) {
+      editor.on('ResizeEditor', () => {
+        lazyHeader().each(Docking.reset);
+      });
+    }
+
     // No need to update the content flow in inline mode as the header always floats
-    editor.on('ResizeWindow ResizeEditor ResizeContent', () => {
+    editor.on('ResizeWindow ResizeEditor', () => {
       lazyHeader().each((header) => updateIframeContentFlow(header, isToolbarLocationTop(editor)));
     });
 
