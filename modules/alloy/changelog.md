@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed `getMoreButton` method from the `SplitFloatingToolbar` component.
 - Removed `getAnchor` configuration from the `SplitFloatingToolbar` component.
 - Removed `SugarEvent` from exports list.
+- Removed `leftAttr`, `topAttr` and `positionAttr` options from the `Docking` behavior.
 
 ### Added
 - Added new `FloatingToolbar` component.
@@ -22,6 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Moved modules from "alien" folder into Sugar, Katamari and other folders in Alloy.
 - Changed `Docking` to use `bottom` instead of `top` when docking to the bottom of the viewport.
+- Changed `Docking` to restore the position when undocking using styles which it was previously positioned with.
 
 # [5.1.0] - 2019-12-17
 

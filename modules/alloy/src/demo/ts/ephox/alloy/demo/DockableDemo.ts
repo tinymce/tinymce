@@ -66,10 +66,7 @@ export default (): void => {
                 fadeOutClass: 'demo-alloy-dock-fade-out',
                 fadeInClass: 'demo-alloy-dock-fade-in',
                 lazyContext: (component) => component.getSystem().getByUid('panel-container').toOption().map((comp) => Boxes.box(comp.element()))
-              },
-              leftAttr: 'data-dock-left',
-              topAttr: 'data-dock-top',
-              positionAttr: 'data-dock-pos'
+              }
             })
           ])
         })

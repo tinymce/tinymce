@@ -4,7 +4,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { document, HTMLElement, window } from '@ephox/dom-globals';
 import { Arr, Strings } from '@ephox/katamari';
 import { Editor as McEditor, TinyApis } from '@ephox/mcagar';
-import { Attr, Body, Css, Element, Insert, Remove, SelectorFind } from '@ephox/sugar';
+import { Body, Css, Element, Insert, Remove, SelectorFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import Theme from 'tinymce/themes/silver/Theme';
@@ -34,13 +34,11 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     const left = Css.get(header, 'left');
     const top = parseInt(Strings.removeTrailing(Css.get(header, 'top'), 'px'), 10);
 
-    const prevTop = Attr.get(header, 'data-dock-top');
     const assertTop = position === 'top' ? 0 : window.innerHeight - header.dom().clientHeight;
 
     Assertions.assertEq(`Header container should be docked (fixed position)`, 'fixed', Css.get(header, 'position'));
     Assertions.assertEq(`Header container left position (${left}) should be 0px`, '0px', left);
     Assertions.assertEq(`Header container shold be docked to ${position}, ${top}px should be ~${assertTop}px`, true, Math.abs(top - assertTop) < 3);
-    Assertions.assertEq(`Header container previous top position (${prevTop}) should be an integer`, true, prevTop.indexOf('.') === -1);
   }));
 
   const sScrollToElement = (contentAreaContainer: Element, selector: string, alignWindowBottom = false) => Step.sync(() => {

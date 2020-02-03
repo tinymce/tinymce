@@ -1,40 +1,12 @@
 import { HTMLElement } from '@ephox/dom-globals';
-import { Adt, Arr, Option } from '@ephox/katamari';
-import { Attr, Class, Css, Element, Height, Width } from '@ephox/sugar';
+import { Arr, Option, Thunk, Obj } from '@ephox/katamari';
+import { Class, Css, Element, Height, Width } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { DockingConfig, DockingContext, DockingMode } from './DockingTypes';
-
-type StaticMorph<T> = () => T;
-type AbsoluteMorph<T> = (x: number, y: number) => T;
-type FixedMorph<T> = (left: number, top: number, bottom: number, mode: DockingMode) => T;
-
-export interface MorphAdt {
-  fold: <T> (
-    statics: StaticMorph<T>,
-    absolute: AbsoluteMorph<T>,
-    fixed: FixedMorph<T>
-  ) => T;
-  match: <T> (branches: {
-    static: StaticMorph<T>,
-    absolute: AbsoluteMorph<T>,
-    fixed: FixedMorph<T>,
-  }) => T;
-  log: (label: string) => void;
-}
-
-interface MorphConstructor {
-  static: StaticMorph<MorphAdt>;
-  absolute: AbsoluteMorph<MorphAdt>;
-  fixed: FixedMorph<MorphAdt>;
-}
-
-const morphAdt: MorphConstructor = Adt.generate([
-  { static: [ ] },
-  { absolute: [ 'left', 'top' ] },
-  { fixed: [ 'left', 'top', 'bottom', 'mode' ] }
-]);
+import { DockingConfig, DockingContext, DockingMode, DockingState, InitialDockingPosition } from './DockingTypes';
+import * as OffsetOrigin from '../../alien/OffsetOrigin';
+import { PositionCss, NuPositionCss } from '../../positioning/view/PositionCss';
 
 const appear = (component: AlloyComponent, contextualInfo: DockingContext): void => {
   const elem = component.element();
@@ -75,61 +47,68 @@ const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: Bo
   });
 };
 
-const getAttr = (elem: Element<HTMLElement>, attr: string): Option<number> => {
-  return Attr.has(elem, attr) ? Option.some(
-    parseInt(Attr.get(elem, attr), 10)
-  ) : Option.none();
-};
-
-const getPrior = (elem: Element<HTMLElement>, dockInfo: DockingConfig): Option<Boxes.Bounds> => {
-  return getAttr(elem, dockInfo.leftAttr).bind((left) => {
-    return getAttr(elem, dockInfo.topAttr).map((top) => {
-      // Only supports position absolute.
-      const w = Width.get(elem);
-      const h = Height.get(elem);
-      return Boxes.bounds(left, top, w, h);
-    });
+const getPrior = (elem: Element<HTMLElement>, state: DockingState): Option<Boxes.Bounds> => {
+  return state.getInitialPosition().map((pos) => {
+    // Only supports position absolute.
+    return Boxes.bounds(
+      pos.bounds.x(),
+      pos.bounds.y(),
+      Width.get(elem),
+      Height.get(elem)
+    );
   });
 };
 
-const setPrior = (elem: Element<HTMLElement>, dockInfo: DockingConfig, absLeft: string | number, absTop: string | number, position: string): void => {
-  Attr.set(elem, dockInfo.leftAttr, absLeft);
-  Attr.set(elem, dockInfo.topAttr, absTop);
-  Attr.set(elem, dockInfo.positionAttr, position);
+const storePrior = (elem: Element<HTMLElement>, box: Boxes.Bounds, state: DockingState): void => {
+  state.setInitialPosition(Option.some<InitialDockingPosition>({
+    style: Css.getAllRaw(elem),
+    bounds: box
+  }));
 };
 
-const clearPrior = (elem: Element<HTMLElement>, dockInfo: DockingConfig): void => {
-  Attr.remove(elem, dockInfo.leftAttr);
-  Attr.remove(elem, dockInfo.topAttr);
-  Attr.remove(elem, dockInfo.positionAttr);
+const revertToOriginal = (elem: Element<HTMLElement>, box: Boxes.Bounds, state: DockingState): Option<PositionCss> => {
+  return state.getInitialPosition().bind((position) => {
+    state.setInitialPosition(Option.none());
+    const lazyOffsetBox: () => Option<Boxes.Bounds> = Thunk.cached(() => {
+      return OffsetOrigin.getOffsetParent(elem).map(Boxes.box);
+    });
+
+    switch (Obj.get(position.style, 'position').getOr('static')) {
+      case 'static':
+        return Option.some(NuPositionCss(
+          Option.none(),
+          Option.none(),
+          Option.none(),
+          Option.none(),
+          Option.none()
+        ));
+
+      case 'absolute':
+        // What styles to use when restoring the position depends on what the element was originally positioned with
+        return Option.some(NuPositionCss(
+          Option.some('absolute'),
+          Obj.get(position.style, 'left').bind(lazyOffsetBox).map((offsetBox) => box.x() - offsetBox.x()),
+          Obj.get(position.style, 'top').bind(lazyOffsetBox).map((offsetBox) => box.y() - offsetBox.y()),
+          Obj.get(position.style, 'right').bind(lazyOffsetBox).map((offsetBox) => offsetBox.right() - box.right()),
+          Obj.get(position.style, 'bottom').bind(lazyOffsetBox).map((offsetBox) => offsetBox.bottom() - box.bottom()),
+        ));
+
+      default:
+        return Option.none();
+    }
+  });
 };
 
-const revertToOriginal = (elem: Element<HTMLElement>, dockInfo: DockingConfig, box: Boxes.Bounds): Option<MorphAdt> => {
-  const position = Attr.get(elem, dockInfo.positionAttr);
-  // Revert it back to the original position
-  clearPrior(elem, dockInfo);
-  switch (position) {
-    case 'static':
-      return Option.some(morphAdt.static());
-    case 'absolute':
-      return Option.some(morphAdt.absolute(box.x(), box.y()));
-    default:
-      return Option.none();
-  }
-};
-
-const morphToOriginal = (elem: Element<HTMLElement>, dockInfo: DockingConfig, viewport: Boxes.Bounds): Option<MorphAdt> => {
-  return getPrior(elem, dockInfo)
+const morphToOriginal = (elem: Element<HTMLElement>, dockInfo: DockingConfig, viewport: Boxes.Bounds, state: DockingState): Option<PositionCss> => {
+  return getPrior(elem, state)
     .filter((box) => isVisibleForModes(dockInfo.modes, box, viewport))
-    .bind((box) => revertToOriginal(elem, dockInfo, box));
+    .bind((box) => revertToOriginal(elem, box, state));
 };
 
-const morphToFixed = (elem: Element<HTMLElement>, dockInfo: DockingConfig, viewport: Boxes.Bounds): Option<MorphAdt> => {
+const morphToFixed = (elem: Element<HTMLElement>, dockInfo: DockingConfig, viewport: Boxes.Bounds, state: DockingState): Option<PositionCss> => {
   const box = Boxes.box(elem);
   if (!isVisibleForModes(dockInfo.modes, box, viewport)) {
-    const position = Css.get(elem, 'position');
-    // Convert it to fixed (keeping the x coordinate and throwing away the y coordinate)
-    setPrior(elem, dockInfo, box.x(), box.y(), position);
+    storePrior(elem, box, state);
 
     // Calculate the fixed position
     const winBox = Boxes.win();
@@ -138,22 +117,28 @@ const morphToFixed = (elem: Element<HTMLElement>, dockInfo: DockingConfig, viewp
     const bottom = winBox.bottom() - viewport.bottom();
 
     // Check whether we are docking the bottom of the viewport, or the top
-    const dockMode = box.y() <= viewport.y() ? 'top' : 'bottom';
-    return Option.some(morphAdt.fixed(left, top, bottom, dockMode));
+    const isTop = box.y() <= viewport.y();
+    return Option.some(NuPositionCss(
+      Option.some('fixed'),
+      Option.some(left),
+      isTop ? Option.some(top) : Option.none(),
+      Option.none(),
+      !isTop ? Option.some(bottom) : Option.none()
+    ));
   } else {
     return Option.none();
   }
 };
 
-const getMorph = (component: AlloyComponent, dockInfo: DockingConfig, viewport: Boxes.Bounds): Option<MorphAdt> => {
+const getMorph = (component: AlloyComponent, dockInfo: DockingConfig, viewport: Boxes.Bounds, state: DockingState): Option<PositionCss> => {
   const elem = component.element();
   const isDocked = Css.getRaw(elem, 'position').is('fixed');
-  return isDocked ? morphToOriginal(elem, dockInfo, viewport) : morphToFixed(elem, dockInfo, viewport);
+  return isDocked ? morphToOriginal(elem, dockInfo, viewport, state) : morphToFixed(elem, dockInfo, viewport, state);
 };
 
-const getMorphToOriginal = (component: AlloyComponent, dockInfo: DockingConfig): Option<MorphAdt> => {
+const getMorphToOriginal = (component: AlloyComponent, state: DockingState): Option<PositionCss> => {
   const elem = component.element();
-  return getPrior(elem, dockInfo).bind((box) => revertToOriginal(elem, dockInfo, box));
+  return getPrior(elem, state).bind((box) => revertToOriginal(elem, box, state));
 };
 
 export {
