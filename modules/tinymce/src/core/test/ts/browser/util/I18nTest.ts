@@ -1,7 +1,7 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import I18n from 'tinymce/core/api/util/I18n';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
+import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();

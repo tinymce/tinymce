@@ -17,6 +17,7 @@ Version 5.2.0 (TBD)
     Changed table related icons to align them with the visual style of the other icons #TINY-4341
     Changed and improved the visual appearance of the color input field #TINY-2917
     Changed fake caret container to use `forced_root_block` when possible #TINY-4190
+    Changed the `requireLangPack` API to wait until the plugin has been loaded before loading the language pack #TINY-3716
     Changed so `style_formats` gets registered to the formatter before the initial content is loaded into the editor #TINY-4238
     Changed media plugin to use https protocol for media urls by default #TINY-4577
     Changed the parser to treat CDATA nodes as bogus HTML comments to match the HTML parsing spec. A new `preserve_cdata` setting has been added to preserve CDATA nodes if required #TINY-4625
