@@ -189,7 +189,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     const scopes = getScopes();
     return ctx.type === 'contexttoolbar' ? (() => {
       const allButtons = { ...buttons, ...scopes.formNavigators };
-      const initGroups = identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items }, extras, Option.some([ 'form:' ]));
+      const initGroups = identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items, allowToolbarGroups: false }, extras, Option.some([ 'form:' ]));
       return renderToolbar({
         type: toolbarType,
         uid: Id.generate('context-toolbar'),
