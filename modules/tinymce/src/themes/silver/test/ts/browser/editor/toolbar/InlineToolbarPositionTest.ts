@@ -138,14 +138,18 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
           sAssertStaticPos(header),
           sDeactivateEditor(editor)
         ]),
-        Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position)', [
+        Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position) and scroll back to top', [
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
           sAssertDockedPos(header, 'top'),
+          sScrollToElement(contentAreaContainer, ':first-child'),
+          sAssertStaticPos(header),
           sDeactivateEditor(editor)
         ]),
-        Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content (docked position)', [
+        Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content (docked position) and scroll back to top', [
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child'),
           sAssertDockedPos(header, 'top'),
+          sScrollToElement(contentAreaContainer, ':first-child'),
+          sAssertStaticPos(header),
           sDeactivateEditor(editor)
         ]),
         Log.stepsAsStep('TINY-3621', 'Select item at the top of the content and scroll to middle and back', [
@@ -181,14 +185,18 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
         container,
         contentAreaContainer,
       }) => [
-        Log.stepsAsStep('TINY-3621', 'Select item at the start of the content (docked position)', [
+        Log.stepsAsStep('TINY-3621', 'Select item at the start of the content (docked position) and scroll to bottom', [
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
           sAssertDockedPos(header, 'bottom'),
+          sScrollToElement(contentAreaContainer, ':last-child', true),
+          sAssertStaticPos(header),
           sDeactivateEditor(editor)
         ]),
-        Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position)', [
+        Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position) and scroll to bottom', [
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
           sAssertDockedPos(header, 'bottom'),
+          sScrollToElement(contentAreaContainer, ':last-child', true),
+          sAssertStaticPos(header),
           sDeactivateEditor(editor)
         ]),
         Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content (absolute position)', [
