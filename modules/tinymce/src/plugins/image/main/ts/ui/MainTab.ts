@@ -24,7 +24,8 @@ const makeItems = (info: ImageDialogInfo) => {
   const imageDescription = {
     name: 'alt',
     type: 'input',
-    label: 'Alternative description'
+    label: 'Alternative description',
+    disabled: info.hasAccessibilityOptions && info.image.isDecorative
   };
   const imageTitle = {
     name: 'title',
@@ -73,7 +74,7 @@ const makeItems = (info: ImageDialogInfo) => {
   return Arr.flatten<any>([
     [imageUrl],
     imageList.toArray(),
-    info.hasAccessibilityOptions ? [isDecorative] : [],
+    info.hasAccessibilityOptions && info.hasDescription ? [isDecorative] : [],
     info.hasDescription ? [imageDescription] : [],
     info.hasImageTitle ? [imageTitle] : [],
     info.hasDimensions ? [imageDimensions] : [],

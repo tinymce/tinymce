@@ -1,4 +1,4 @@
-import { Chain, GeneralSteps, Log, Pipeline, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Log, Pipeline, UiControls, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Attr, Body } from '@ephox/sugar';
@@ -41,6 +41,28 @@ UnitTest.asynctest('browser.tinymce.plugins.image.A11yImageTest', (success, fail
       return createTestOnContent(name, data, { elementPath: [0], startOffset: 0, endOffset: 0 }, '', expectedContent);
     };
 
+    const testUiStateDisabled = Log.stepsAsStep('FOAM-11', 'Test image UI state', [
+      api.sExecCommand('mceImage', true),
+      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
+      UiFinder.sExists(Body.body(), generalTabSelectors.alt + ':disabled'),
+      ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")'),
+      UiFinder.sNotExists(Body.body(), 'div[role="dialog"]')
+    ]);
+
+    const testUiStateEnabled = (alt: string) => {
+      return Log.stepsAsStep('FOAM-11', 'Test image UI state', [
+        api.sExecCommand('mceImage', true),
+        ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
+        Chain.asStep(Body.body(), [
+          UiFinder.cFindIn(generalTabSelectors.alt),
+          UiControls.cGetValue,
+          Assertions.cAssertEq('Assert input value', alt)
+        ]),
+        ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")'),
+        UiFinder.sNotExists(Body.body(), 'div[role="dialog"]')
+      ]);
+    };
+
     const suiteArr = [
       Log.stepsAsStep('TBA', 'Check the decorative checkbox toggles the alt text input', [
         sInitAndOpenDialog('', { elementPath: [0], offset: 0 }),
@@ -58,6 +80,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.A11yImageTest', (success, fail
           Chain.inject(Body.body()),
           UiFinder.cWaitForState('Check alt text input is enabled', generalTabSelectors.alt, (e) => !Attr.has(e, 'disabled'))
         ]),
+        ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")'),
+        UiFinder.sNotExists(Body.body(), 'div[role="dialog"]')
       ]),
       createTestOnEmptyEditor(
         'Image with alt text',
@@ -69,6 +93,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.A11yImageTest', (success, fail
         },
         '<p><img src="src" alt="alt" /></p>'
       ),
+      testUiStateEnabled('alt'),
       createTestOnEmptyEditor(
         'Decorative image',
         {
@@ -79,6 +104,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.A11yImageTest', (success, fail
         },
         '<p><img role="presentation" src="src" alt="" /></p>'
       ),
+      testUiStateDisabled,
       createTestOnEmptyEditor(
         'Decorative image (should ignore alt text value)',
         {
@@ -90,6 +116,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.A11yImageTest', (success, fail
         },
         '<p><img role="presentation" src="src" alt="" /></p>'
       ),
+      testUiStateDisabled,
       createTestOnContent(
         'Decorative image to informative image',
         {
@@ -102,7 +129,22 @@ UnitTest.asynctest('browser.tinymce.plugins.image.A11yImageTest', (success, fail
         { elementPath: [0], startOffset: 0, endOffset: 1 },
         '<p><img role="presentation" src="src" alt="" /></p>',
         '<p><img src="src" alt="alt" /></p>'
-      )
+      ),
+      testUiStateEnabled('alt'),
+      createTestOnContent(
+        'Informative image to decorative image',
+        {
+          alt: 'alt',
+          src: {
+            value: 'src',
+          },
+          decorative: true
+        },
+        { elementPath: [0], startOffset: 0, endOffset: 1 },
+        '<p><img src="src" alt="alt" /></p>',
+        '<p><img role="presentation" src="src" alt="" /></p>',
+      ),
+      testUiStateDisabled
     ];
     Pipeline.async({}, suiteArr, onSuccess, onFailure);
   }, {
