@@ -1,14 +1,20 @@
-import { Classes } from '@ephox/sugar';
+import { Classes, Css } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Dockables from './Dockables';
 import { DockingConfig, DockingState } from './DockingTypes';
 import { applyPositionCss, PositionCss } from '../../positioning/view/PositionCss';
+import { Arr, Fun } from '@ephox/katamari';
+
+const morphToStatic = (component: AlloyComponent, config: DockingConfig): void => {
+  Arr.each([ 'left', 'right', 'top', 'bottom', 'position' ], (prop) => Css.remove(component.element(), prop));
+  config.onUndocked(component);
+};
 
 const morphToCoord = (component: AlloyComponent, config: DockingConfig, position: PositionCss): void => {
   applyPositionCss(component.element(), position);
-  const method = position.position().is('fixed') ? config.onDocked : config.onUndocked;
+  const method = position.position() === 'fixed' ? config.onDocked : config.onUndocked;
   method(component);
 };
 
@@ -44,16 +50,18 @@ const refreshInternal = (component: AlloyComponent, config: DockingConfig, state
     updateVisibility(component, config, state, viewport);
   }
 
-  Dockables.getMorph(component, config, viewport, state).each((position) => {
+  Dockables.getMorph(component, config, viewport, state).each((morph) => {
     // Toggle the docked state
     state.setDocked(!isDocked);
-
-    if (position.position().is('fixed')) {
-      updateVisibility(component, config, state, viewport, true);
-    }
-
-    // Apply the result
-    morphToCoord(component, config, position);
+    // Apply the morph result
+    morph.fold(
+      () => morphToStatic(component, config),
+      (position) => morphToCoord(component, config, position),
+      (position) => {
+        updateVisibility(component, config, state, viewport, true);
+        morphToCoord(component, config, position);
+      },
+    );
   });
 };
 
@@ -61,8 +69,12 @@ const resetInternal = (component: AlloyComponent, config: DockingConfig, state: 
   // Morph back to the original position
   const elem = component.element();
   state.setDocked(false);
-  Dockables.getMorphToOriginal(component, state).each((position) => {
-    morphToCoord(component, config, position);
+  Dockables.getMorphToOriginal(component, state).each((morph) => {
+    morph.fold(
+      () => morphToStatic(component, config),
+      (position) => morphToCoord(component, config, position),
+      Fun.noop
+    );
   });
 
   // Remove contextual visibility classes

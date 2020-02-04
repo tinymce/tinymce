@@ -8,8 +8,9 @@ import { BehaviourState } from '../common/BehaviourState';
 export type DockingMode = 'top' | 'bottom';
 
 export interface InitialDockingPosition {
-  bounds: Bounds;
   style: Record<string, string>;
+  position: string;
+  bounds: Bounds;
 }
 
 export interface DockingBehaviour extends Behaviour.AlloyBehaviour<DockingConfigSpec, DockingConfig> {
