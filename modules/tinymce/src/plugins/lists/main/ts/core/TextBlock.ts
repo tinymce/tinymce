@@ -8,22 +8,20 @@
 import NodeType from './NodeType';
 import { DocumentFragment, Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
+import Settings from '../api/Settings';
 
 const createTextBlock = (editor: Editor, contentNode: Node): DocumentFragment => {
   const dom = editor.dom;
   const blockElements = editor.schema.getBlockElements();
   const fragment = dom.createFragment();
-  let node, textBlock, blockName, hasContentNode;
-
-  if (editor.settings.forced_root_block) {
-    blockName = editor.settings.forced_root_block;
-  }
+  const blockName = Settings.getForcedRootBlock(editor);
+  let node, textBlock, hasContentNode;
 
   if (blockName) {
     textBlock = dom.create(blockName);
 
-    if (textBlock.tagName === editor.settings.forced_root_block) {
-      dom.setAttribs(textBlock, editor.settings.forced_root_block_attrs);
+    if (textBlock.tagName === blockName.toUpperCase()) {
+      dom.setAttribs(textBlock, Settings.getForcedRootBlockAttrs(editor));
     }
 
     if (!NodeType.isBlock(contentNode.firstChild, blockElements)) {
@@ -57,7 +55,7 @@ const createTextBlock = (editor: Editor, contentNode: Node): DocumentFragment =>
     }
   }
 
-  if (!editor.settings.forced_root_block) {
+  if (!blockName) {
     fragment.appendChild(dom.create('br'));
   } else {
     // BR is needed in empty blocks

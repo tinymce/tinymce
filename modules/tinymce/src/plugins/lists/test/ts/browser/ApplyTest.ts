@@ -959,6 +959,27 @@ UnitTest.asynctest('tinymce.lists.browser.ApplyTest', (success, failure) => {
     LegacyUnit.equal(editor.getBody().innerHTML, '<table><tbody><tr><td><ul><li>a</li></ul>b</td></tr></tbody></table>');
   });
 
+  suite.test('TestCase-TBA: Lists: Apply UL list to single P with forced_root_block_attrs', function (editor) {
+    editor.settings.forced_root_block = 'p';
+    editor.settings.forced_root_block_attrs = {
+      'data-editor': '1'
+    };
+
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+      '<p data-editor="1">a</p>'
+    );
+
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'p', 0);
+    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+
+    LegacyUnit.equal(editor.getContent(), '<ul><li data-editor="1">a</li></ul>');
+    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+
+    editor.settings.forced_root_block = 'p';
+    delete editor.settings.forced_root_block_attrs;
+  });
+
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Lists: Apply list tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
