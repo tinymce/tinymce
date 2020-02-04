@@ -2,7 +2,7 @@ import { Option, Struct } from '@ephox/katamari';
 import { Element, Css } from '@ephox/sugar';
 
 export interface PositionCss {
-  position: () => Option<string>;
+  position: () => string;
   left: () => Option<number>;
   top: () => Option<number>;
   right: () => Option<number>;
@@ -10,7 +10,7 @@ export interface PositionCss {
 }
 
 const NuPositionCss: (
-  position: Option<string>,
+  position: string,
   left: Option<number>,
   top: Option<number>,
   right: Option<number>,
@@ -21,7 +21,7 @@ const applyPositionCss = (element: Element, position: PositionCss) => {
   const addPx = (num: number) => num + 'px';
 
   Css.setOptions(element, {
-    position: position.position(),
+    position: Option.some(position.position()),
     left: position.left().map(addPx),
     top: position.top().map(addPx),
     right: position.right().map(addPx),

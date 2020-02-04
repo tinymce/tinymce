@@ -48,47 +48,46 @@ const positionWithDirection = (posName: string, decision: RepositionDecision, x:
   const right = Option.some(decisionRight);
   const bottom = Option.some(decisionBottom);
   const none = Option.none<number>();
-  const optPosName = Option.some(posName);
 
   return Direction.cata(decision.direction(),
     () => {
       // southeast
-      return NuPositionCss(optPosName, left, top, none, none);
+      return NuPositionCss(posName, left, top, none, none);
     },
     () => {
       // southwest
-      return NuPositionCss(optPosName, none, top, right, none);
+      return NuPositionCss(posName, none, top, right, none);
     },
     () => {
       // northeast
-      return NuPositionCss(optPosName, left, none, none, bottom);
+      return NuPositionCss(posName, left, none, none, bottom);
     },
     () => {
       // northwest
-      return NuPositionCss(optPosName, none, none, right, bottom);
+      return NuPositionCss(posName, none, none, right, bottom);
     },
     () => {
       // south
-      return NuPositionCss(optPosName, left, top, none, none);
+      return NuPositionCss(posName, left, top, none, none);
     },
     () => {
       // north
-      return NuPositionCss(optPosName, left, none, none, bottom);
+      return NuPositionCss(posName, left, none, none, bottom);
     },
     () => {
       // east
-      return NuPositionCss(optPosName, left, top, none, none);
+      return NuPositionCss(posName, left, top, none, none);
     },
     () => {
       // west
-      return NuPositionCss(optPosName, none, top, right, none);
+      return NuPositionCss(posName, none, top, right, none);
     }
   );
 };
 
 const reposition = (origin: OriginAdt, decision: RepositionDecision): PositionCss => {
   return origin.fold(function () {
-    return NuPositionCss(Option.some('absolute'), Option.some(decision.x()), Option.some(decision.y()), Option.none(), Option.none());
+    return NuPositionCss('absolute', Option.some(decision.x()), Option.some(decision.y()), Option.none(), Option.none());
   }, function (x, y, width, height) {
     return positionWithDirection('absolute', decision, x, y, width, height);
   }, function (x, y, width, height) {
