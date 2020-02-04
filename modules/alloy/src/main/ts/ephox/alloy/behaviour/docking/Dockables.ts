@@ -1,6 +1,6 @@
 import { HTMLElement } from '@ephox/dom-globals';
-import { Arr, Option, Thunk, Obj, Adt } from '@ephox/katamari';
-import { Class, Css, Element, Height, Width } from '@ephox/sugar';
+import { Arr, Option, Obj, Adt } from '@ephox/katamari';
+import { Class, Css, Element, Height, Width, Body } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -100,21 +100,21 @@ const storePrior = (elem: Element<HTMLElement>, box: Boxes.Bounds, state: Dockin
 const revertToOriginal = (elem: Element<HTMLElement>, box: Boxes.Bounds, state: DockingState): Option<MorphAdt> => {
   return state.getInitialPosition().bind((position) => {
     state.setInitialPosition(Option.none());
-    const lazyOffsetBox: () => Option<Boxes.Bounds> = Thunk.cached(() => {
-      return OffsetOrigin.getOffsetParent(elem).map(Boxes.box);
-    });
 
     switch (position.position) {
       case 'static':
         return Option.some(morphAdt.static());
+
       case 'absolute':
+        const offsetBox = OffsetOrigin.getOffsetParent(elem).map(Boxes.box).getOrThunk(() => Boxes.box(Body.body()));
         return Option.some(morphAdt.absolute(NuPositionCss(
           'absolute',
-          Obj.get(position.style, 'left').bind(lazyOffsetBox).map((offsetBox) => box.x() - offsetBox.x()),
-          Obj.get(position.style, 'top').bind(lazyOffsetBox).map((offsetBox) => box.y() - offsetBox.y()),
-          Obj.get(position.style, 'right').bind(lazyOffsetBox).map((offsetBox) => offsetBox.right() - box.right()),
-          Obj.get(position.style, 'bottom').bind(lazyOffsetBox).map((offsetBox) => offsetBox.bottom() - box.bottom()),
+          Obj.get(position.style, 'left').map((_) => box.x() - offsetBox.x()),
+          Obj.get(position.style, 'top').map((_) => box.y() - offsetBox.y()),
+          Obj.get(position.style, 'right').map((_) => offsetBox.right() - box.right()),
+          Obj.get(position.style, 'bottom').map((_) => offsetBox.bottom() - box.bottom()),
         )));
+
       default:
         return Option.none<MorphAdt>();
     }
