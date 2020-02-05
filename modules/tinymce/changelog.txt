@@ -37,6 +37,7 @@ Version 5.2.0 (TBD)
     Fixed resize handler was not hidden for ARIA purposes. Patch contributed by Parent5446. #GH-5195
     Fixed an issue where content could be lost if a misspelled word was selected and spellchecking was disabled #TINY-3899
     Fixed validation errors in the CSS where certain properties had the wrong default value #TINY-4491
+    Fixed an issue where forced root block attributes were not applied when removing a list #TINY-4272
     Fixed an issue where the element path isn't being cleared when there are no parents #TINY-4412
     Fixed an issue where width and height in svg icons containing `rect` elements were overridden by the CSS reset #TINY-4408
     Fixed an issue where uploading images with `images_reuse_filename` enabled and that included a query parameter would generate an invalid URL #TINY-4638
