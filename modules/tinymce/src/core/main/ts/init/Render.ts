@@ -40,7 +40,7 @@ const loadLanguage = (scriptLoader, editor: Editor) => {
     const url = languageUrl !== '' ? languageUrl : editor.editorManager.baseURL + '/langs/' + languageCode + '.js';
 
     scriptLoader.add(url, Fun.noop, undefined, () => {
-      ErrorReporter.languageLoadError(url, languageCode);
+      ErrorReporter.languageLoadError(editor, url, languageCode);
     });
   }
 };
@@ -99,19 +99,19 @@ const loadIcons = (scriptLoader: ScriptLoader, editor: Editor) => {
     .orThunk(() => getIconsUrlMetaFromName(editor))
     .each((urlMeta) => {
     scriptLoader.add(urlMeta.url, Fun.noop, undefined, () => {
-      ErrorReporter.iconsLoadError(urlMeta.url, urlMeta.name.getOrUndefined());
+      ErrorReporter.iconsLoadError(editor, urlMeta.url, urlMeta.name.getOrUndefined());
     });
   });
 };
 
-const loadPlugins = (settings: RawEditorSettings, suffix: string) => {
+const loadPlugins = (editor: Editor, settings: RawEditorSettings, suffix: string) => {
   if (Type.isArray(settings.plugins)) {
     settings.plugins = settings.plugins.join(' ');
   }
 
   Tools.each(settings.external_plugins, function (url, name) {
     PluginManager.load(name, url, Fun.noop, undefined, () => {
-      ErrorReporter.pluginLoadError(url, name);
+      ErrorReporter.pluginLoadError(editor, url, name);
     });
     settings.plugins += ' ' + name;
   });
@@ -134,7 +134,7 @@ const loadPlugins = (settings: RawEditorSettings, suffix: string) => {
 
           const dep = PluginManager.createUrl(defaultSettings, depPlugin);
           PluginManager.load(dep.resource, dep, Fun.noop, undefined, () => {
-            ErrorReporter.pluginLoadError(dep.prefix + dep.resource + dep.suffix, dep.resource);
+            ErrorReporter.pluginLoadError(editor, dep.prefix + dep.resource + dep.suffix, dep.resource);
           });
         });
       } else {
@@ -145,7 +145,7 @@ const loadPlugins = (settings: RawEditorSettings, suffix: string) => {
         };
 
         PluginManager.load(plugin, url, Fun.noop, undefined, () => {
-          ErrorReporter.pluginLoadError(url.prefix + url.resource + url.suffix, plugin);
+          ErrorReporter.pluginLoadError(editor, url.prefix + url.resource + url.suffix, plugin);
         });
       }
     }
@@ -158,7 +158,7 @@ const loadScripts = function (editor: Editor, suffix: string) {
   loadTheme(scriptLoader, editor, suffix, function () {
     loadLanguage(scriptLoader, editor);
     loadIcons(scriptLoader, editor);
-    loadPlugins(editor.settings, suffix);
+    loadPlugins(editor, editor.settings, suffix);
 
     scriptLoader.loadQueue(function () {
       if (!editor.removed) {

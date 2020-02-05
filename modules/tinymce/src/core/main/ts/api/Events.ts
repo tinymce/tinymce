@@ -34,6 +34,8 @@ const fireInit = (editor: Editor) => editor.fire('Init');
 
 const firePlaceholderToggle = (editor: Editor, state: boolean) => editor.fire('PlaceholderToggle', { state });
 
+const fireError = (editor: Editor, errortype: string, error: { message: string} ) => editor.fire(errortype, error);
+
 export {
   firePreProcess,
   firePostProcess,
@@ -45,5 +47,6 @@ export {
   firePreInit,
   firePostRender,
   fireInit,
-  firePlaceholderToggle
+  firePlaceholderToggle,
+  fireError
 };

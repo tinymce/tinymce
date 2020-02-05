@@ -62,6 +62,10 @@ export interface EditorEventMap extends NativeEventMap {
   'ScrollWindow': UIEvent;
   'ResizeWindow': UIEvent;
   'SkinLoaded': { };
+  'SkinLoadError': { };
+  'PluginLoadError': { };
+  'IconsLoadError': { };
+  'LanguageLoadError': { };
   'BeforeExecCommand': ExecCommandEvent;
   'ExecCommand': ExecCommandEvent;
   'NodeChange': NodeChangedEvent;
