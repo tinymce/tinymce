@@ -480,6 +480,31 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', (success, failure) => {
     editor.settings.forced_root_block = 'p';
   });
 
+  suite.test('TestCase-TBA: Lists: Remove UL with forced_root_block_attrs', function (editor) {
+    editor.settings.forced_root_block = 'p';
+    editor.settings.forced_root_block_attrs = {
+      'data-editor': '1'
+    };
+
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+      '<ul>' +
+      '<li data-editor="1">a</li>' +
+      '</ul>'
+    );
+
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'li', 0);
+    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+
+    LegacyUnit.equal(editor.getContent(),
+      '<p data-editor="1">a</p>'
+    );
+    LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
+
+    editor.settings.forced_root_block = 'p';
+    delete editor.settings.forced_root_block_attrs;
+  });
+
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Link: Remove tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
