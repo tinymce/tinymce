@@ -57,6 +57,12 @@ const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: Element
 };
 
 const updateIframeContentFlow = (header: AlloyComponent, isToolbarTop: boolean): void => {
+  const getOccupiedHeight = (elm: Element<HTMLElement>) => {
+    return Height.getOuter(elm) +
+      (parseInt(Css.get(elm, 'margin-top'), 10) || 0) +
+      (parseInt(Css.get(elm, 'margin-bottom'), 10) || 0) ;
+  };
+
   const elm = header.element();
   Traverse.parent(elm).each((parentElem: Element<HTMLElement>) => {
     const padding = 'padding-' + (isToolbarTop ? 'top' : 'bottom');
@@ -64,8 +70,7 @@ const updateIframeContentFlow = (header: AlloyComponent, isToolbarTop: boolean):
     if (Docking.isDocked(header)) {
       const parentWidth = Width.get(parentElem);
       Css.set(elm, 'width', parentWidth + 'px');
-      const headerHeight = Height.getOuter(elm);
-      Css.set(parentElem, padding, headerHeight + 'px');
+      Css.set(parentElem, padding, getOccupiedHeight(elm) + 'px');
     } else {
       Css.remove(elm, 'width');
       Css.remove(parentElem, padding);

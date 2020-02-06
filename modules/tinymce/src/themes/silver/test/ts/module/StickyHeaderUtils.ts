@@ -35,21 +35,25 @@ const expectedScrollEventBound = (s: ApproxStructure.StructApi, str: ApproxStruc
   ];
 };
 
-const sAssertHeaderDocked = (assertDockedTop: boolean) => {
-  return Step.sync(() => {
-    const header = SelectorFind.descendant(Body.body(), '.tox-editor-header').getOrDie();
-
-    const posType = assertDockedTop ? 'top' : 'bottom';
-    const assertedPos = '0px';
-    const actualPos = Css.get(header, posType);
-
-    Assertions.assertEq(
-      'Header should be docked to ' + posType,
-      true,
-      actualPos === assertedPos
-    );
-  });
-};
+const sAssertHeaderDocked = (assertDockedTop: boolean) => Chain.asStep(Body.body(), [
+  UiFinder.cFindIn('.tox-editor-header'),
+  Chain.control(
+    Assertions.cAssertStructure(
+      `Header should be docked to ${assertDockedTop ? 'top' : 'bottom'}`,
+      ApproxStructure.build((s, str, arr) => {
+        return s.element('div', {
+          styles: {
+            position: str.is('fixed'),
+            ...assertDockedTop ?
+              { top: str.is('0px') } :
+              { bottom: str.is('0px') }
+          }
+        });
+      })
+    ),
+    Guard.tryUntil('Wait for header structure')
+  )
+]);
 
 const expectedHalfView = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] => {
   return [

@@ -1,4 +1,4 @@
-import { GeneralSteps, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { GeneralSteps, Pipeline, Step, UiFinder, Waiter, Assertions } from '@ephox/agar';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
@@ -31,9 +31,18 @@ const sTestStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoc
         ])),
         Step.label('Checking scroll event listeners are bound, scroll by 1px then assert', StickyUtils.sScrollAndAssertStructure(isToolbarTop, 1, StickyUtils.expectedScrollEventBound)),
         Step.label('Scroll to half the editor should have sticky css markings', GeneralSteps.sequence([
+          Step.stateful((value, next, die) => next(editor.getContentAreaContainer().clientHeight)),
           StickyUtils.sScrollAndAssertStructure(isToolbarTop, 200, StickyUtils.expectedHalfView),
           StickyUtils.sAssertHeaderDocked(isToolbarTop),
-          StickyUtils.sAssertEditorClasses(true)
+          StickyUtils.sAssertEditorClasses(true),
+          Step.stateful((contentAreaContainerHeight, next, die) => {
+            Assertions.assertEq(
+              'ContentAreaContainer height should be the same before as after docking',
+              contentAreaContainerHeight,
+              editor.getContentAreaContainer().clientHeight
+            );
+            next({});
+          }),
         ])),
         Step.label('Scroll down so the editor is hidden from view, it should have hidden css markings', StickyUtils.sScrollAndAssertStructure(isToolbarTop, 500, StickyUtils.expectedEditorHidden)),
         StickyUtils.sAssertHeaderDocked(isToolbarTop),
