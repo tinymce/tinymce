@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 import { Classes, Css, Element, Height, Width } from '@ephox/sugar';
 
 import { Bubble } from '../layout/Bubble';
@@ -7,6 +7,7 @@ import * as Origins from '../layout/Origins';
 import { ReparteeOptions } from '../layout/SimpleLayout';
 import * as Bounder from './Bounder';
 import { RepositionDecision } from './Reposition';
+import { applyPositionCss } from './PositionCss';
 
 /*
  * This is the old repartee API. It is retained in a similar structure to the original form,
@@ -54,18 +55,9 @@ const setWidth = (element: Element, decision: RepositionDecision, options: Repar
 };
 
 const position = (element: Element, decision: RepositionDecision, options: ReparteeOptions) => {
-  const addPx = (num: number) => num + 'px';
-
   // This is a point of difference between Alloy and Repartee. Repartee appears to use Measure to calculate the available space for fixed origin
   // That is not ported yet.
-  const newPosition = Origins.reposition(options.origin(), decision);
-  Css.setOptions(element, {
-    position: Option.some(newPosition.position()),
-    left: newPosition.left().map(addPx),
-    top: newPosition.top().map(addPx),
-    right: newPosition.right().map(addPx),
-    bottom: newPosition.bottom().map(addPx)
-  });
+  applyPositionCss(element, Origins.reposition(options.origin(), decision));
 };
 
 export {

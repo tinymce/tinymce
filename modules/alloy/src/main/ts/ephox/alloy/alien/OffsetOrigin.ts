@@ -2,11 +2,7 @@ import { Element as DomElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Css, Element, Insert, Location, Position, Remove, Traverse } from '@ephox/sugar';
 
-/*
- * This allows the absolute coordinates to be obtained by adding the
- * origin to the offset coordinates and not needing to know scroll.
- */
-const getOrigin = (element: Element): Position => {
+const getOffsetParent = (element: Element): Option<Element<DomElement>> => {
   // Firefox sets the offsetParent to the body when fixed instead of null like
   // all other browsers. So we need to check if the element is fixed and if so then
   // disregard the elements offsetParent.
@@ -22,11 +18,20 @@ const getOrigin = (element: Element): Position => {
       Remove.remove(marker);
       return offsetParent;
     });
-  }).map(Location.absolute).getOrThunk(() => {
+  });
+};
+
+/*
+ * This allows the absolute coordinates to be obtained by adding the
+ * origin to the offset coordinates and not needing to know scroll.
+ */
+const getOrigin = (element: Element): Position => {
+  return getOffsetParent(element).map(Location.absolute).getOrThunk(() => {
     return Position(0, 0);
   });
 };
 
 export {
-  getOrigin
+  getOrigin,
+  getOffsetParent
 };

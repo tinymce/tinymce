@@ -208,9 +208,6 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
   return [
     Focusing.config({ }),
     Docking.config({
-      leftAttr: 'data-dock-left',
-      topAttr: 'data-dock-top',
-      positionAttr: 'data-dock-pos',
       contextual: {
         lazyContext (comp) {
           const headerHeight = Height.getOuter(comp.element());

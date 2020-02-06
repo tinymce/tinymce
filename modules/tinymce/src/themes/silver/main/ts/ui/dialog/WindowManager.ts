@@ -48,9 +48,6 @@ const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, is
           fadeOutClass: 'tox-dialog-dock-fadeout',
           transitionClass: 'tox-dialog-dock-transition'
         },
-        leftAttr: 'data-dock-left',
-        topAttr: 'data-dock-top',
-        positionAttr: 'data-dock-pos',
         modes: [ 'top' ]
       })
     ];

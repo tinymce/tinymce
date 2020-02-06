@@ -1,48 +1,21 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
-import { Classes, Css, Scroll, Traverse } from '@ephox/sugar';
+import { Classes, Css } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
-import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import * as DragCoord from '../../api/data/DragCoord';
 import * as Dockables from './Dockables';
-import { DockingConfig, DockingMode, DockingState } from './DockingTypes';
-
-const addPx = (num: number) => num + 'px';
+import { DockingConfig, DockingState } from './DockingTypes';
+import { applyPositionCss, PositionCss } from '../../positioning/view/PositionCss';
+import { Arr, Fun } from '@ephox/katamari';
 
 const morphToStatic = (component: AlloyComponent, config: DockingConfig): void => {
-  Arr.each([ 'left', 'top', 'bottom', 'position' ], (prop) => Css.remove(component.element(), prop));
+  Arr.each([ 'left', 'right', 'top', 'bottom', 'position' ], (prop) => Css.remove(component.element(), prop));
   config.onUndocked(component);
 };
 
-const morphToAbsolute = (component: AlloyComponent, config: DockingConfig, left: number, top: number): void => {
-  // Calculate the original offsets
-  const elem = component.element();
-  const scroll = Scroll.get(Traverse.owner(elem));
-  const origin = OffsetOrigin.getOrigin(elem);
-
-  // Calculate the new styles
-  const styles = DragCoord.toStyles(DragCoord.absolute(left, top), scroll, origin);
-
-  // Apply the new ones and fire that the element is no longer docked
-  Css.setOptions(elem, styles);
-  config.onUndocked(component);
-};
-
-const morphToFixed = (component: AlloyComponent, config: DockingConfig, left: number, top: number, bottom: number, mode: DockingMode): void => {
-  // Calculate the new styles
-  const isTop = mode === 'top';
-  const styles: Record<string, Option<string>> = {
-    position: Option.some('fixed'),
-    left: Option.some(addPx(left)),
-    right: Option.none(),
-    top: isTop ? Option.some(addPx(top)) : Option.none(),
-    bottom: !isTop ? Option.some(addPx(bottom)) : Option.none(),
-  };
-
-  // Apply the new styles and fire that the element is docked
-  Css.setOptions(component.element(), styles);
-  config.onDocked(component);
+const morphToCoord = (component: AlloyComponent, config: DockingConfig, position: PositionCss): void => {
+  applyPositionCss(component.element(), position);
+  const method = position.position() === 'fixed' ? config.onDocked : config.onUndocked;
+  method(component);
 };
 
 const updateVisibility = (component: AlloyComponent, config: DockingConfig, state: DockingState, viewport: Boxes.Bounds, morphToDocked: boolean = false) => {
@@ -77,16 +50,16 @@ const refreshInternal = (component: AlloyComponent, config: DockingConfig, state
     updateVisibility(component, config, state, viewport);
   }
 
-  Dockables.getMorph(component, config, viewport).each((morph) => {
+  Dockables.getMorph(component, config, viewport, state).each((morph) => {
     // Toggle the docked state
     state.setDocked(!isDocked);
     // Apply the morph result
     morph.fold(
       () => morphToStatic(component, config),
-      (left, top) => morphToAbsolute(component, config, left, top),
-      (left, top, bottom, mode) => {
+      (position) => morphToCoord(component, config, position),
+      (position) => {
         updateVisibility(component, config, state, viewport, true);
-        morphToFixed(component, config, left, top, bottom, mode);
+        morphToCoord(component, config, position);
       },
     );
   });
@@ -96,10 +69,10 @@ const resetInternal = (component: AlloyComponent, config: DockingConfig, state: 
   // Morph back to the original position
   const elem = component.element();
   state.setDocked(false);
-  Dockables.getMorphToOriginal(component, config).each((morph) => {
+  Dockables.getMorphToOriginal(component, state).each((morph) => {
     morph.fold(
       () => morphToStatic(component, config),
-      (left, top) => morphToAbsolute(component, config, left, top),
+      (position) => morphToCoord(component, config, position),
       Fun.noop
     );
   });

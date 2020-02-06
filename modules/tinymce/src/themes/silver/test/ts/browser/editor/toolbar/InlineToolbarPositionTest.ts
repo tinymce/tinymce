@@ -4,7 +4,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { document, HTMLElement, window } from '@ephox/dom-globals';
 import { Arr, Strings } from '@ephox/katamari';
 import { Editor as McEditor, TinyApis } from '@ephox/mcagar';
-import { Attr, Body, Css, Element, Insert, Remove, SelectorFind } from '@ephox/sugar';
+import { Body, Css, Element, Insert, Remove, SelectorFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import Theme from 'tinymce/themes/silver/Theme';
@@ -34,13 +34,11 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     const left = Css.get(header, 'left');
     const top = parseInt(Strings.removeTrailing(Css.get(header, 'top'), 'px'), 10);
 
-    const prevTop = Attr.get(header, 'data-dock-top');
     const assertTop = position === 'top' ? 0 : window.innerHeight - header.dom().clientHeight;
 
     Assertions.assertEq(`Header container should be docked (fixed position)`, 'fixed', Css.get(header, 'position'));
     Assertions.assertEq(`Header container left position (${left}) should be 0px`, '0px', left);
     Assertions.assertEq(`Header container shold be docked to ${position}, ${top}px should be ~${assertTop}px`, true, Math.abs(top - assertTop) < 3);
-    Assertions.assertEq(`Header container previous top position (${prevTop}) should be an integer`, true, prevTop.indexOf('.') === -1);
   }));
 
   const sScrollToElement = (contentAreaContainer: Element, selector: string, alignWindowBottom = false) => Step.sync(() => {
@@ -140,14 +138,18 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
           sAssertStaticPos(header),
           sDeactivateEditor(editor)
         ]),
-        Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position)', [
+        Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position) and scroll back to top', [
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
           sAssertDockedPos(header, 'top'),
+          sScrollToElement(contentAreaContainer, ':first-child'),
+          sAssertStaticPos(header),
           sDeactivateEditor(editor)
         ]),
-        Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content (docked position)', [
+        Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content (docked position) and scroll back to top', [
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child'),
           sAssertDockedPos(header, 'top'),
+          sScrollToElement(contentAreaContainer, ':first-child'),
+          sAssertStaticPos(header),
           sDeactivateEditor(editor)
         ]),
         Log.stepsAsStep('TINY-3621', 'Select item at the top of the content and scroll to middle and back', [
@@ -183,14 +185,18 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
         container,
         contentAreaContainer,
       }) => [
-        Log.stepsAsStep('TINY-3621', 'Select item at the start of the content (docked position)', [
+        Log.stepsAsStep('TINY-3621', 'Select item at the start of the content (docked position) and scroll to bottom', [
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
           sAssertDockedPos(header, 'bottom'),
+          sScrollToElement(contentAreaContainer, ':last-child', true),
+          sAssertStaticPos(header),
           sDeactivateEditor(editor)
         ]),
-        Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position)', [
+        Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position) and scroll to bottom', [
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
           sAssertDockedPos(header, 'bottom'),
+          sScrollToElement(contentAreaContainer, ':last-child', true),
+          sAssertStaticPos(header),
           sDeactivateEditor(editor)
         ]),
         Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content (absolute position)', [
