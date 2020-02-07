@@ -325,7 +325,7 @@ const compileSchema = function (type: SchemaType) {
     addAttrs('iframe', 'longdesc frameborder marginwidth marginheight scrolling align');
     addAttrs('font basefont', 'size color face');
     addAttrs('input', 'usemap align');
-    addAttrs('select', 'onchange');
+    addAttrs('select');
     addAttrs('textarea');
     addAttrs('h1 h2 h3 h4 h5 h6 div p legend caption', 'align');
     addAttrs('ul', 'type compact');
