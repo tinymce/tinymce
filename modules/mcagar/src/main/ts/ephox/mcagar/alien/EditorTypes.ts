@@ -33,6 +33,7 @@ export interface Editor {
 
   getContent: () => string;
   setContent: (content: string) => void;
+  insertContent: (content: string) => void;
 
   execCommand: (command: string, ui?: boolean, value?: any, args?: any) => boolean;
 

@@ -25,6 +25,7 @@ export interface TinyApis {
   sSetSetting: <T> (key: string, value: any) => Step<T, T>;
   sExecCommand: <T> (command: string, value?: any) => Step<T, T>;
   sTryAssertFocus: <T> () => Step<T, T>;
+  sInsertContent: <T> (html: string) => Step<T, T>;
 
   cNodeChanged: <T> () => Chain<T, T>;
   cGetContent: <T> () => Chain<T, string>;
@@ -38,6 +39,16 @@ export const TinyApis = function (editor: Editor): TinyApis {
   const sSetContent = function <T> (html: string) {
     return Step.sync<T>(function () {
       setContent(html);
+    });
+  };
+
+  const insertContent = function (html: string): void {
+    editor.insertContent(html);
+  };
+
+  const sInsertContent = function <T> (html: string) {
+    return Step.sync<T>(function () {
+      insertContent(html);
     });
   };
 
@@ -179,6 +190,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
   return {
     sSetContent,
     cGetContent,
+    sInsertContent,
     sSetRawContent,
     cNodeChanged,
 
