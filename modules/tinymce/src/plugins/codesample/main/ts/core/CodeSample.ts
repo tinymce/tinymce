@@ -34,7 +34,7 @@ const insertCodeSample = (editor: Editor, language: string, code: string) => {
     }, (n) => {
       editor.dom.setAttrib(n, 'class', 'language-' + language);
       n.innerHTML = code;
-      Prism.highlightElement(n);
+      Prism.get(editor).highlightElement(n);
       editor.selection.select(n);
     });
   });

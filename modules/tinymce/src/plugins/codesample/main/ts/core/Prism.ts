@@ -7,5 +7,11 @@
 
 import { Global } from '@ephox/katamari';
 import Prism from '@ephox/wrap-prismjs';
+import Editor from 'tinymce/core/api/Editor';
+import Settings from '../api/Settings';
 
-export default Global.Prism ? Global.Prism : Prism;
+const get = (editor: Editor) => Global.Prism && Settings.useGlobalPrismJS(editor) ? Global.Prism : Prism;
+
+export default {
+  get
+};
