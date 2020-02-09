@@ -12,6 +12,7 @@ Version 5.2.0 (TBD)
     Added new `a11y_advanced_options` setting to allow additional accessibility options to be added #FOAM-11
     Added new accessibility options and behaviours to the image dialog using `a11y_advanced_options` #FOAM-11
     Added the ability to use the window `PrismJS` instance for the `codesample` plugin instead of the bundled version to allow for styling custom languages #TINY-4504
+    Changed the default schema to disallow `onchange` for select elements #TINY-4614
     Changed default `toolbar_mode` value from false to `wrap`. The value false has been deprecated #TINY-4617
     Changed `toolbar_drawer` setting to `toolbar_mode`. `toolbar_drawer` has been deprecated #TINY-4416
     Changed iframe mode to set selection on content init if selection doesn't exist #TINY-4139
