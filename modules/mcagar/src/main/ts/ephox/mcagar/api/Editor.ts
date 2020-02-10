@@ -10,7 +10,7 @@ const cFromElement = function <T extends EditorType = EditorType>(element: Eleme
   return Chain.async<any, T>(function (_, next, die) {
     const nuSettings: Record<string, any> = {
       toolbar_mode: 'wrap',
-      ...settings,
+      ...settings
     };
 
     const randomId = Id.generate('tiny-loader');
