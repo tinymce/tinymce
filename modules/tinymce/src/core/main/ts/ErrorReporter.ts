@@ -8,7 +8,7 @@
 import { window, console } from '@ephox/dom-globals';
 import I18n from './api/util/I18n';
 import Editor from './api/Editor';
-import { fireError } from 'tinymce/core/api/Events';
+import { fireError } from './api/Events';
 
 const displayNotification = (editor: Editor, message: string) => {
   editor.notificationManager.open({
@@ -31,8 +31,8 @@ const uploadError = (editor: Editor, message: string) => {
   displayError(editor, I18n.translate(['Failed to upload image: {0}', message]));
 };
 
-const logError = (editor: Editor, errortype: string, msg: string) => {
-  fireError(editor, errortype, { message: msg });
+const logError = (editor: Editor, errorType: string, msg: string) => {
+  fireError(editor, errorType, { message: msg });
   // tslint:disable-next-line:no-console
   console.error(msg);
 };

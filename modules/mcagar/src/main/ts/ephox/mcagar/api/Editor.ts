@@ -2,7 +2,7 @@ import { Global, Id, Strings, Type } from '@ephox/katamari';
 import { Attr, Element, Insert, Remove, Selectors } from '@ephox/sugar';
 import { Chain } from '@ephox/agar';
 import 'tinymce';
-import { document, setTimeout, console } from '@ephox/dom-globals';
+import { document, setTimeout } from '@ephox/dom-globals';
 import { setTinymceBaseUrl } from '../loader/Urls';
 import { Editor as EditorType } from '../alien/EditorTypes';
 
@@ -40,8 +40,7 @@ const cFromElement = function <T extends EditorType = EditorType>(element: Eleme
         });
 
         editor.on('SkinLoadError', (e) => {
-          // tslint:disable-next-line:no-console
-          console.error(e);
+          die(e.message);
         });
       }
     });
