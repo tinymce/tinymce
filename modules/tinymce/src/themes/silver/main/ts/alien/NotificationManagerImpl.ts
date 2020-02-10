@@ -9,13 +9,12 @@ import { Gui, GuiFactory, InlineView, Layout, LayoutInside, NodeAnchorSpec } fro
 import { Element as DomElement } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { Body, Element } from '@ephox/sugar';
-
-import { Notification } from '../ui/general/Notification';
-import { UiFactoryBackstage } from '../backstage/Backstage';
 import Editor from 'tinymce/core/api/Editor';
+import { NotificationApi, NotificationManagerImpl, NotificationSpec } from 'tinymce/core/api/NotificationManager';
 import Delay from 'tinymce/core/api/util/Delay';
-import { NotificationManagerImpl, NotificationSpec, NotificationApi } from 'tinymce/core/api/NotificationManager';
 import * as Settings from '../api/Settings';
+import { UiFactoryBackstage } from '../backstage/Backstage';
+import { Notification } from '../ui/general/Notification';
 
 export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): NotificationManagerImpl {
   const backstage: UiFactoryBackstage = extras.backstage;
@@ -57,7 +56,9 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
     positionNotifications(notifications);
   };
 
-  const open = function (settings: NotificationSpec, closeCallback: () => void): NotificationApi {
+  const open = (settings: NotificationSpec, closeCallback: () => void): NotificationApi => {
+    const hideCloseButton = !settings.closeButton && settings.timeout && (settings.timeout > 0 || settings.timeout < 0);
+
     const close = () => {
       closeCallback();
       InlineView.hide(notificationWrapper);
@@ -69,6 +70,7 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
         level: Arr.contains(['success', 'error', 'warning', 'warn', 'info'], settings.type) ? settings.type : undefined,
         progress: settings.progressBar === true,
         icon: Option.from(settings.icon),
+        closeButton: !hideCloseButton,
         onAction: close,
         iconProvider: backstage.shared.providers.icons,
         translationProvider: backstage.shared.providers.translate
