@@ -1,5 +1,5 @@
 #!groovy
-@Library('waluigi@v3.0.0') _
+@Library('waluigi@v3.1.0') _
 
 def runTests(name, bedrockCommand) {
   // Clean out the old XML files before running tests, since we junit import *.XML files
@@ -38,11 +38,7 @@ def runPhantomTests() {
   runTests("PhantomJS", bedrockCommand);
 }
 
-properties([
-  disableConcurrentBuilds(),
-  pipelineTriggers([]),
-  buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '1', daysToKeepStr: '', numToKeepStr: ''))
-])
+standardProperties()
 
 node("primary") {
   timestamps {
