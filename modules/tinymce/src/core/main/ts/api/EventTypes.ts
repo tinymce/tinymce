@@ -44,6 +44,8 @@ export type ProgressStateEvent = { state: boolean, time?: number };
 
 export type PlaceholderToggleEvent = { state: boolean };
 
+export type LoadErrorEvent = { message: string };
+
 export interface EditorEventMap extends NativeEventMap {
   'activate': { relatedTarget: Editor };
   'deactivate': { relatedTarget: Editor };
@@ -62,6 +64,10 @@ export interface EditorEventMap extends NativeEventMap {
   'ScrollWindow': UIEvent;
   'ResizeWindow': UIEvent;
   'SkinLoaded': { };
+  'SkinLoadError': LoadErrorEvent;
+  'PluginLoadError': LoadErrorEvent;
+  'IconsLoadError': LoadErrorEvent;
+  'LanguageLoadError': LoadErrorEvent;
   'BeforeExecCommand': ExecCommandEvent;
   'ExecCommand': ExecCommandEvent;
   'NodeChange': NodeChangedEvent;

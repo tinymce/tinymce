@@ -38,6 +38,10 @@ const cFromElement = function <T extends EditorType = EditorType>(element: Eleme
             next(editor);
           }, 0);
         });
+
+        editor.on('SkinLoadError', (e) => {
+          die(e.message);
+        });
       }
     });
   });
