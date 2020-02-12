@@ -47,6 +47,7 @@ Version 5.2.0 (TBD)
     Fixed an issue where uploading images with `images_reuse_filename` enabled and that included a query parameter would generate an invalid URL #TINY-4638
     Fixed the `closeButton` property not working when opening notifications #TINY-4674
     Fixed keyboard flicker when opening a context menu on mobile #TINY-4540
+    Fixed issue where plus icon svg contained strokes #TINY-4681
 Version 5.1.6 (2020-01-28)
     Fixed `readonly` mode not blocking all clicked links #TINY-4572
     Fixed legacy font sizes being calculated inconsistently for the `FontSize` query command value #TINY-4555
