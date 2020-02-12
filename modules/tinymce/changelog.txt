@@ -21,14 +21,14 @@ Version 5.2.0 (TBD)
     Changed and improved the visual appearance of the color input field #TINY-2917
     Changed fake caret container to use `forced_root_block` when possible #TINY-4190
     Changed the `requireLangPack` API to wait until the plugin has been loaded before loading the language pack #TINY-3716
-    Changed so `style_formats` gets registered to the formatter before the initial content is loaded into the editor #TINY-4238
+    Changed the formatter so `style_formats` are registered before the initial content is loaded into the editor #TINY-4238
     Changed media plugin to use https protocol for media urls by default #TINY-4577
     Changed the parser to treat CDATA nodes as bogus HTML comments to match the HTML parsing spec. A new `preserve_cdata` setting has been added to preserve CDATA nodes if required #TINY-4625
     Fixed incorrect parsing of malformed/bogus HTML comments #TINY-4625
     Fixed `quickbars` selection toolbar appearing on non-editable elements #TINY-4359
     Fixed bug with alignment toolbar buttons sometimes not changing state correctly #TINY-4139
     Fixed the `codesample` toolbar button not toggling when selecting code samples other than HTML #TINY-4504
-    Fixed content incorrectly scrolling to the top or bottom when pressing enter if they were already in view #TINY-4162
+    Fixed content incorrectly scrolling to the top or bottom when pressing enter if when the content was already in view #TINY-4162
     Fixed `scrollIntoView` potentially hiding elements behind the toolbar #TINY-4162
     Fixed editor not respecting the `resize_img_proportional` setting due to legacy code #TINY-4236
     Fixed flickering floating toolbar drawer in inline mode #TINY-4210
