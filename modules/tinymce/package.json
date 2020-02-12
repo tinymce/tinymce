@@ -1,6 +1,6 @@
 {
   "name": "tinymce",
-  "version": "5.1.6",
+  "version": "5.2.0",
   "private": true,
   "repository": {
     "type": "git",
@@ -26,6 +26,6 @@
     "tslib": "^1.9.3"
   },
   "devDependencies": {
-    "@ephox/katamari-assertions": "^1.0.0"
+    "@ephox/katamari-assertions": "^1.0.1"
   }
 }
