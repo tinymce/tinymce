@@ -34,5 +34,8 @@
   ],
   "main": "./lib/main/ts/ephox/katamari-assertions/api/Main.js",
   "module": "./lib/main/ts/ephox/katamari-assertions/api/Main.js",
-  "types": "./lib/main/ts/ephox/katamari-assertions/api/Main.d.ts"
+  "types": "./lib/main/ts/ephox/katamari-assertions/api/Main.d.ts",
+  "publishConfig": {
+    "access": "public"
+  }
 }
