@@ -15,7 +15,7 @@ import { AttachState, LinkDialogOutput } from '../ui/DialogTypes';
 
 const hasProtocol = (url: string): boolean => /^\w+:/i.test(url);
 
-const getHref = (elm: HTMLAnchorElement): string => {
+const getHref = (elm: Element): string => {
   // Returns the real href value not the resolved a.href value
   const href = elm.getAttribute('data-mce-href');
   return href ? href : elm.getAttribute('href');
@@ -63,11 +63,11 @@ const getAnchorText = (selection, anchorElm: HTMLAnchorElement) => {
   return trimCaretContainers(text);
 };
 
-const isLink = (elm: HTMLAnchorElement): boolean => {
-  return elm && elm.nodeName === 'A' && !!elm.href;
+const isLink = (elm: Element): elm is HTMLAnchorElement => {
+  return elm && elm.nodeName === 'A' && !!getHref(elm);
 };
 
-const hasLinks = (elements: HTMLAnchorElement[]) => {
+const hasLinks = (elements: Element[]) => {
   return Tools.grep(elements, isLink).length > 0;
 };
 

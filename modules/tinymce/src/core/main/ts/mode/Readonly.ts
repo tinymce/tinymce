@@ -86,7 +86,7 @@ const toggleReadOnly = (editor: Editor, state: boolean) => {
   }
 };
 
-const isReadOnly = (editor: Editor) => editor.readonly === true;
+const isReadOnly = (editor: Editor) => editor.readonly;
 
 const registerFilters = (editor: Editor) => {
   editor.parser.addAttributeFilter('contenteditable', (nodes) => {

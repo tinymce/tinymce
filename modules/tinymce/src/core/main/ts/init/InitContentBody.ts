@@ -217,7 +217,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   // It will not steal focus while setting contentEditable
   body = editor.getBody();
   body.disabled = true;
-  editor.readonly = settings.readonly;
+  editor.readonly = !!settings.readonly;
 
   if (!editor.readonly) {
     if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {

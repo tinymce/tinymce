@@ -292,7 +292,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     });
 
     editor.on('SwitchMode', () => {
-      if (editor.readonly) {
+      if (editor.mode.isReadOnly()) {
         lastAnchor.set(Option.none());
         InlineView.hide(contextbar);
       }
