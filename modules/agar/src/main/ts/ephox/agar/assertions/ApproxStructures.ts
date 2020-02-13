@@ -1,9 +1,7 @@
-import { assert, TestLabel } from '@ephox/bedrock';
+import { Assert, assert, TestLabel } from '@ephox/bedrock-client';
 import { Arr, Fun, Obj, Option } from '@ephox/katamari';
-import { Attr, Classes, Css, Element, Html, Node, Text, Traverse, Value } from '@ephox/sugar';
+import { Attr, Classes, Css, Element, Html, Node, Text, Traverse, Value, Truncate } from '@ephox/sugar';
 
-import * as Truncate from '../alien/Truncate';
-import { assertEq } from '../api/RawAssertions';
 import * as ApproxComparisons from './ApproxComparisons';
 
 export interface StringAssert {
@@ -18,9 +16,9 @@ export interface ArrayAssert {
 
 export interface ElementQueue {
   context(): string;
-  current(): Option<Element>;
-  peek(): Option<Element>;
-  take(): Option<Element>;
+  current(): Option<Element<any>>;
+  peek(): Option<Element<any>>;
+  take(): Option<Element<any>>;
   mark(): {
     reset: () => void ;
     atMark: () => boolean;
@@ -29,7 +27,7 @@ export interface ElementQueue {
 
 export interface StructAssertBasic {
   type?: 'basic';
-  doAssert: (actual: Element) => void;
+  doAssert: (actual: Element<any>) => void;
 }
 
 export interface StructAssertAdv {
@@ -48,7 +46,7 @@ export interface ElementFields {
   children?: StructAssert[];
 }
 
-const elementQueue = function (items: Element[], container: Option<Element>): ElementQueue {
+const elementQueue = (items: Element<any>[], container: Option<Element<any>>): ElementQueue => {
   let i = -1;
 
   const context = () => {
@@ -73,7 +71,7 @@ const elementQueue = function (items: Element[], container: Option<Element>): El
     return current();
   };
 
-  const mark = function () {
+  const mark = () => {
     const x = i;
     const reset = () => {
       i = x;
@@ -94,9 +92,9 @@ const elementQueue = function (items: Element[], container: Option<Element>): El
   };
 };
 
-const element = function (tag: string, fields: ElementFields): StructAssert {
-  const doAssert = function (actual: Element) {
-    assertEq(() => 'Incorrect node name for: ' + Truncate.getHtml(actual), tag, Node.name(actual));
+const element = (tag: string, fields: ElementFields): StructAssert => {
+  const doAssert = (actual: Element<any>): void => {
+    Assert.eq(() => 'Incorrect node name for: ' + Truncate.getHtml(actual), tag, Node.name(actual));
     const attrs = fields.attrs !== undefined ? fields.attrs : {};
     const classes = fields.classes !== undefined ? fields.classes : [];
     const styles = fields.styles !== undefined ? fields.styles : {};
@@ -117,14 +115,14 @@ const element = function (tag: string, fields: ElementFields): StructAssert {
   };
 };
 
-const text = function (s: StringAssert, combineSiblings = false): StructAssert {
-  const doAssert = function (queue: ElementQueue) {
+const text = (s: StringAssert, combineSiblings = false): StructAssert => {
+  const doAssert = (queue: ElementQueue): void => {
     queue.take().fold(() => {
       assert.fail('No more nodes, so cannot check if its text is: ' + s.show() + ' for ' + queue.context());
     }, (actual) => {
-      Text.getOption(actual).fold(function () {
+      Text.getOption(actual).fold(() => {
         assert.fail('Node is not a text node, so cannot check if its text is: ' + s.show() + ' for ' + queue.context());
-      }, function (t: string) {
+      }, (t: string) => {
         let text = t;
         if (combineSiblings) {
           while (queue.peek().map(Node.isText).is(true)) {
@@ -145,7 +143,7 @@ const text = function (s: StringAssert, combineSiblings = false): StructAssert {
   };
 };
 
-const applyAssert = function (structAssert: StructAssert, queue: ElementQueue) {
+const applyAssert = (structAssert: StructAssert, queue: ElementQueue) => {
   if (structAssert.type === 'advanced') {
     structAssert.doAssert(queue);
   } else {
@@ -158,7 +156,7 @@ const applyAssert = function (structAssert: StructAssert, queue: ElementQueue) {
 };
 
 const either = (structAsserts: StructAssert[]): StructAssert => {
-  const doAssert = function (queue: ElementQueue) {
+  const doAssert = (queue: ElementQueue) => {
     const mark = queue.mark();
     for (let i = 0; i < structAsserts.length - 1; i++) {
       try {
@@ -179,7 +177,7 @@ const either = (structAsserts: StructAssert[]): StructAssert => {
 };
 
 const repeat = (min: number, max: number | true = min) => (structAssert: StructAssert): StructAssert => {
-  const doAssert = function (queue: ElementQueue) {
+  const doAssert = (queue: ElementQueue) => {
     let i = 0;
     for (; i < min; i++) {
       applyAssert(structAssert, queue);
@@ -212,8 +210,8 @@ const anythingStruct: StructAssert = {
   doAssert: Fun.noop
 };
 
-const assertAttrs = function (expectedAttrs: Record<string, StringAssert>, actual: Element) {
-  Obj.each(expectedAttrs, function (v, k) {
+const assertAttrs = (expectedAttrs: Record<string, StringAssert>, actual: Element<any>) => {
+  Obj.each(expectedAttrs, (v, k) => {
     if (v.strAssert === undefined) {
       throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* attributes of ' + Truncate.getHtml(actual));
     }
@@ -225,9 +223,9 @@ const assertAttrs = function (expectedAttrs: Record<string, StringAssert>, actua
   });
 };
 
-const assertClasses = function (expectedClasses: ArrayAssert[], actual: Element) {
+const assertClasses = (expectedClasses: ArrayAssert[], actual: Element<any>) => {
   const actualClasses = Classes.get(actual);
-  Arr.each(expectedClasses, function (eCls) {
+  Arr.each(expectedClasses, (eCls) => {
     if (eCls.arrAssert === undefined) {
       throw new Error(JSON.stringify(eCls) + ' is not an *array assertion*.\nSpecified in *expected* classes of ' + Truncate.getHtml(actual));
     }
@@ -235,8 +233,8 @@ const assertClasses = function (expectedClasses: ArrayAssert[], actual: Element)
   });
 };
 
-const assertStyles = function (expectedStyles: Record<string, StringAssert>, actual: Element) {
-  Obj.each(expectedStyles, function (v, k) {
+const assertStyles = (expectedStyles: Record<string, StringAssert>, actual: Element<any>) => {
+  Obj.each(expectedStyles, (v, k) => {
     const actualValue = Css.getRaw(actual, k).getOrThunk(ApproxComparisons.missing);
     if (v.strAssert === undefined) {
       throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* styles of ' + Truncate.getHtml(actual));
@@ -248,8 +246,8 @@ const assertStyles = function (expectedStyles: Record<string, StringAssert>, act
   });
 };
 
-const assertHtml = function (expectedHtml: Option<StringAssert>, actual: Element) {
-  expectedHtml.each(function (expected) {
+const assertHtml = (expectedHtml: Option<StringAssert>, actual: Element<any>) => {
+  expectedHtml.each((expected) => {
     const actualHtml = Html.get(actual);
     if (expected.strAssert === undefined) {
       throw new Error(JSON.stringify(expected) + ' is not a *string assertion*.\nSpecified in *expected* innerHTML of ' + Truncate.getHtml(actual));
@@ -258,8 +256,8 @@ const assertHtml = function (expectedHtml: Option<StringAssert>, actual: Element
   });
 };
 
-const assertValue = function (expectedValue: Option<StringAssert>, actual: Element) {
-  expectedValue.each(function (v) {
+const assertValue = (expectedValue: Option<StringAssert>, actual: Element<any>) => {
+  expectedValue.each((v) => {
     if (v.strAssert === undefined) {
       throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* value of ' + Truncate.getHtml(actual));
     }
@@ -270,10 +268,10 @@ const assertValue = function (expectedValue: Option<StringAssert>, actual: Eleme
   });
 };
 
-const assertChildren = function (expectedChildren: Option<StructAssert[]>, actual) {
-  expectedChildren.each(function (expected) {
+const assertChildren = (expectedChildren: Option<StructAssert[]>, actual) => {
+  expectedChildren.each((expected) => {
     const children = elementQueue(Traverse.children(actual), Option.some(actual));
-    Arr.each(expected, function (structExpectation, i) {
+    Arr.each(expected, (structExpectation, i) => {
       if (structExpectation.doAssert === undefined) {
         throw new Error(JSON.stringify(structExpectation) + ' is not a *structure assertion*.\n' +
           'Specified in *expected* children of ' + Truncate.getHtml(actual));

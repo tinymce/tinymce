@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Input } from 'ephox/alloy/api/ui/Input';

@@ -12,7 +12,7 @@ import {
   cWaitForDialog,
   silverSettings,
 } from '../../module/Helpers';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('All image dialog ui options on empty editor' + (Env.ceFalse ? '' : ' (old IE)'), (success, failure) => {
   SilverTheme();

@@ -1,5 +1,5 @@
-import { Logger, Pipeline, RawAssertions, Step, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Logger, Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 
@@ -15,7 +15,7 @@ UnitTest.asynctest('GetCurrentColorTest', (success, failure) => {
     Step.sync(() => {
       const actual = ColorSwatch.getCurrentColor(editor, format);
 
-      RawAssertions.assertEq(label, expected, actual);
+      Assert.eq(label, expected, actual);
     })
   );
 
@@ -24,13 +24,13 @@ UnitTest.asynctest('GetCurrentColorTest', (success, failure) => {
 
     Pipeline.async({}, browser.isIE() ? [] : [
       Log.stepsAsStep('TBA', 'TextColor: getCurrentColor should return the first found forecolor, not the parent color', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent('<p style="color: blue;">hello <span style="color: red;">world</span></p>'),
         tinyApis.sSetSelection([0, 1, 0], 2, [0, 1, 0], 2),
         sAssertCurrentColor(editor, 'forecolor', 'should return red', 'red')
       ]),
       Log.stepsAsStep('TBA', 'TextColor: getCurrentColor should return the first found backcolor, not the parent color', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent('<p style="background-color: red;">hello <span style="background-color: blue;">world</span></p>'),
         tinyApis.sSetSelection([0, 1, 0], 2, [0, 1, 0], 2),
         sAssertCurrentColor(editor, 'backcolor', 'should return blue', 'blue')

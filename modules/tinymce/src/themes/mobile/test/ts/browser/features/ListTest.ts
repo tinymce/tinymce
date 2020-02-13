@@ -1,5 +1,5 @@
 import { GeneralSteps, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Body, Traverse } from '@ephox/sugar';
 
 import TestTheme from '../../module/test/theme/TestTheme';
@@ -74,7 +74,7 @@ UnitTest.asynctest('Browser Test: features.ListTest', function (success, failure
           '.tinymce-mobile-icon-unordered-list:before { content: "ul"; }',
           '.tinymce-mobile-icon-ordered-list:before { content: "ol"; }'
         ]),
-        apis.sFocus,
+        apis.sFocus(),
         apis.sSetContent(
           '<ol><li>This is an ordered list</li></ol><p>Normal paragraph</p><ul><li>Bullet list</li></ul>'
         ),

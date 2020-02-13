@@ -1,13 +1,13 @@
 import { ApproxStructure, Assertions, FocusTools, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Value } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Container } from 'ephox/alloy/api/ui/Container';
-import { DatasetRepresentingState } from 'ephox/alloy/behaviour/representing/RepresentState';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import { DatasetRepresentingState } from 'ephox/alloy/behaviour/representing/RepresentingTypes';
 import { TypeaheadData } from 'ephox/alloy/ui/types/TypeaheadTypes';
 
 UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
@@ -42,7 +42,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
       })
     );
   }, (doc, body, gui, component, store) => {
-    const sAssertRepValue = (label, expected) => {
+    const sAssertRepValue = (label: string, expected: { value: string; meta: { text: string } }) => {
       return Step.sync(() => {
         const v = Representing.getValue(component);
         Assertions.assertEq(label, expected, v);

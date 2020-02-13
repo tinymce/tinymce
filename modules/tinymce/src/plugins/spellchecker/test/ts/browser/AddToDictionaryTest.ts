@@ -1,7 +1,7 @@
-import { Pipeline, RawAssertions, Step, Chain, UiFinder, Mouse, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { TinyLoader, TinyApis, TinyUi } from '@ephox/mcagar';
-import { Element, Body } from '@ephox/sugar';
+import { Chain, Log, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { Body, Element } from '@ephox/sugar';
 
 import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.AddToDictionaryTest', (
     const ui = TinyUi(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'Spellchecker: Add a new word to dictionary', [
-      api.sFocus,
+      api.sFocus(),
       api.sSetContent('<p>hello world</p>'),
       ui.sClickOnToolbar('click spellcheck button', '[title="Spellcheck"] > .tox-tbtn'),
       api.sSetCursor([ 0, 0, 0 ], 0),
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.AddToDictionaryTest', (
         UiFinder.cFindIn('.tox-collection__item-label:contains("Add to dictionary")'),
         Mouse.cClick
       ]),
-      Step.sync(() => RawAssertions.assertEq('dict should now have hello', ['hello'], dict))
+      Step.sync(() => Assert.eq('dict should now have hello', ['hello'], dict))
     ]), onSuccess, onFailure);
   }, {
     theme: 'silver',

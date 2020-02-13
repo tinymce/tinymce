@@ -2,6 +2,7 @@ import { Adt } from './Adt';
 import * as Arr from './Arr';
 import { Cell } from './Cell';
 import * as Contracts from './Contracts';
+import * as Num from './Num';
 import * as Fun from './Fun';
 import { Future } from './Future';
 import { FutureResult } from './FutureResult';
@@ -16,9 +17,11 @@ import * as Namespace from './Namespace';
 import * as Obj from './Obj';
 import { Option } from './Option';
 import * as Options from './Options';
+import * as OptionInstances from './OptionInstances';
 import * as Resolve from './Resolve';
 import { Result } from './Result';
 import * as Results from './Results';
+import * as ResultInstances from './ResultInstances';
 import * as Singleton from './Singleton';
 import { StringMatch } from './StringMatch';
 import * as Strings from './Strings';
@@ -35,6 +38,7 @@ export {
   Arr,
   Cell,
   Contracts,
+  Num,
   Fun,
   Future,
   FutureResult,
@@ -49,9 +53,11 @@ export {
   Obj,
   Option,
   Options,
+  OptionInstances,
   Resolve,
   Result,
   Results,
+  ResultInstances,
   Singleton,
   StringMatch,
   Strings,

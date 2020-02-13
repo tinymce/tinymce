@@ -1,6 +1,6 @@
-import { Pipeline, Mouse, UiFinder, Chain, Assertions, ApproxStructure, FocusTools, Keyboard, Keys, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { TinyLoader } from '@ephox/mcagar';
+import { Assertions, ApproxStructure, Chain, FocusTools, Keyboard, Keys, Log, Pipeline, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { document } from '@ephox/dom-globals';
 
 import Theme from 'tinymce/themes/silver/Theme';
@@ -49,13 +49,14 @@ UnitTest.asynctest('OxideTablePickerMenuTest', (success, failure) => {
 
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
+      const tinyUi = TinyUi(editor);
       const doc = Element.fromDom(document);
 
       Pipeline.async({ }, Log.steps(
         'TBA',
         'Check structure of table picker',
         [
-          Mouse.sClickOn(Body.body(), '.tox-toolbar button'),
+          tinyUi.sClickOnToolbar('Click on toolbar button', 'button'),
           UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]'),
           Chain.asStep(Body.body(), [
             UiFinder.cFindIn('[role="menu"]'),

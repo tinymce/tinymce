@@ -1,9 +1,7 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Arr, Fun } from '@ephox/katamari';
 
-// NB: Tsc requires ConfiguredBehaviour to be imported here.
-// @ts-ignore
-import { AlloyBehaviourRecord, ConfiguredBehaviour, NamedConfiguredBehaviour, derive } from '../../api/behaviour/Behaviour';
+import { AlloyBehaviourRecord, derive, NamedConfiguredBehaviour } from '../../api/behaviour/Behaviour';
 
 export interface SketchBehaviours {
   dump: AlloyBehaviourRecord;

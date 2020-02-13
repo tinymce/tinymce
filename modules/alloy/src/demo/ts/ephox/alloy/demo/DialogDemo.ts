@@ -136,7 +136,7 @@ export default (): void => {
       lazySink,
       onEscape () {
         console.log('escaping');
-        return Option.some(true);
+        return Option.some<boolean>(true);
       },
       dragBlockClass: 'blocker-class',
 

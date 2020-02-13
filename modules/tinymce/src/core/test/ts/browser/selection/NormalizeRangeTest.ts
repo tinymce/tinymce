@@ -4,13 +4,11 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import NormalizeRange from 'tinymce/core/selection/NormalizeRange';
 import ViewBlock from '../../module/test/ViewBlock';
 import Zwsp from 'tinymce/core/text/Zwsp';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 
-UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function (success, failure) {
   const viewBlock = ViewBlock();
 
   const assertRange = function (root, range, startPath, startOffset, endPath, endOffset) {

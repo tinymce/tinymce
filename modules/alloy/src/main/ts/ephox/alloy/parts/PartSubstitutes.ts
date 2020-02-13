@@ -1,10 +1,12 @@
 import { Arr, Fun, Merger } from '@ephox/katamari';
 
+import { AlloySpec } from '../api/component/SpecTypes';
+import { CompositeSketchDetail, CompositeSketchSpec } from '../api/ui/Sketcher';
 import * as UiSubstitutes from '../spec/UiSubstitutes';
 import { Substitutions } from './AlloyParts';
 import * as PartType from './PartType';
 
-const combine: any = (detail, data: PartType.PartSpec<any>, partSpec, partValidated) => {
+const combine = <D extends CompositeSketchDetail, S extends CompositeSketchSpec>(detail: D, data: PartType.BasePartDetail<D, S>, partSpec: S, partValidated?: Record<string, any>): S & { uid: string } => {
   // Extremely confusing names and types :(
   return Merger.deepMerge(
     data.defaults(detail, partSpec, partValidated),
@@ -14,14 +16,14 @@ const combine: any = (detail, data: PartType.PartSpec<any>, partSpec, partValida
   );
 };
 
-const subs = (owner, detail, parts: PartType.PartTypeAdt[]): Substitutions => {
-  const internals = { };
-  const externals = { };
+const subs = <D extends CompositeSketchDetail>(owner: string, detail: D, parts: PartType.PartTypeAdt[]): Substitutions => {
+  const internals: Record<string, UiSubstitutes.UiSubstitutesAdt> = { };
+  const externals: Record<string, () => AlloySpec> = { };
 
   Arr.each(parts, (part) => {
     part.fold(
       // Internal
-      (data: PartType.PartSpec<any>) => {
+      (data) => {
         internals[data.pname] = UiSubstitutes.single(true, (detail, partSpec, partValidated) => {
           return data.factory.sketch(
             combine(detail, data, partSpec, partValidated)
@@ -30,7 +32,7 @@ const subs = (owner, detail, parts: PartType.PartTypeAdt[]): Substitutions => {
       },
 
       // External
-      (data: PartType.PartSpec<any>) => {
+      (data) => {
         const partSpec = detail.parts[data.name];
         externals[data.name] = Fun.constant(
           data.factory.sketch(
@@ -42,7 +44,7 @@ const subs = (owner, detail, parts: PartType.PartTypeAdt[]): Substitutions => {
       },
 
       // Optional
-      (data: PartType.PartSpec<any>) => {
+      (data) => {
         internals[data.pname] = UiSubstitutes.single(false, (detail, partSpec, partValidated) => {
           return data.factory.sketch(
             combine(detail, data, partSpec, partValidated)
@@ -51,9 +53,9 @@ const subs = (owner, detail, parts: PartType.PartTypeAdt[]): Substitutions => {
       },
 
       // Group
-      (data: PartType.PartSpec<any>) => {
+      (data) => {
         internals[data.pname] = UiSubstitutes.multiple(true, (detail, _partSpec, _partValidated) => {
-          const units = detail[data.name];
+          const units: Array<Record<string, any>> = (detail as any)[data.name];
           return Arr.map(units, (u) => {
             // Group multiples do not take the uid because there is more than one.
             return data.factory.sketch(

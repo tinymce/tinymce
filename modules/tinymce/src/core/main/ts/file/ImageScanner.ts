@@ -95,7 +95,7 @@ const getAllImages = function (elm: HTMLElement): HTMLImageElement[] {
 };
 
 export function ImageScanner(uploadStatus, blobCache: BlobCache): ImageScanner {
-  const cachedPromises = {};
+  const cachedPromises: Record<string, Promise<BlobInfoImagePair>> = {};
 
   const findAll = function (elm: HTMLElement, predicate?: (img: HTMLImageElement) => boolean) {
     let images;
@@ -134,7 +134,7 @@ export function ImageScanner(uploadStatus, blobCache: BlobCache): ImageScanner {
       return false;
     });
 
-    const promises = Arr.map(images, function (img) {
+    const promises = Arr.map(images, function (img): Promise<BlobInfoImagePair> {
       if (cachedPromises[img.src]) {
         // Since the cached promise will return the cached image
         // We need to wrap it and resolve with the actual image
@@ -151,7 +151,7 @@ export function ImageScanner(uploadStatus, blobCache: BlobCache): ImageScanner {
         });
       }
 
-      const newPromise = new Promise<{image, blobInfo}>(function (resolve, reject) {
+      const newPromise = new Promise<BlobInfoImagePair>(function (resolve, reject) {
         imageToBlobInfo(blobCache, img, resolve, reject);
       }).then(function (result) {
         delete cachedPromises[result.image.src];

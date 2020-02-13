@@ -1,11 +1,12 @@
-import { ApproxStructure, Assertions, Logger, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { ApproxStructure, Assertions, Logger } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Cell, Fun, Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import LinkBridge from 'tinymce/themes/mobile/bridge/LinkBridge';
 import { TestHelpers } from '@ephox/alloy';
+import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
   const store = TestHelpers.TestStore();
@@ -50,13 +51,13 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       editorState.start.set(Element.fromText(scenario.nodeText).dom());
       editorState.content.set(scenario.selection);
       const info = LinkBridge.getInfo(editor);
-      RawAssertions.assertEq('Checking getInfo (no link)', {
+      Assert.eq('Checking getInfo (no link)', {
         url: '',
         text: scenario.expected,
         title: '',
         target: ''
       }, Objects.narrow(info, [ 'url', 'text', 'target', 'title' ]));
-      RawAssertions.assertEq('Checking link is not set', true, info.link.isNone());
+      KAssert.eqNone('Checking link is not set', info.link);
     });
   };
 
@@ -74,8 +75,8 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       editorState.start.set(Element.fromHtml(scenario.linkHtml).dom());
       editorState.content.set(scenario.selection);
       const info = LinkBridge.getInfo(editor);
-      RawAssertions.assertEq('Checking getInfo (link)', scenario.expected, Objects.narrow(info, [ 'url', 'text', 'target', 'title' ]));
-      RawAssertions.assertEq('Checking link is set', true, info.link.isSome());
+      Assert.eq('Checking getInfo (link)', scenario.expected, Objects.narrow(info, [ 'url', 'text', 'target', 'title' ]));
+      Assert.eq('Checking link is set', true, info.link.isSome());
     });
   };
 

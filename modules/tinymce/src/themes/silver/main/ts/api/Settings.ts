@@ -76,14 +76,28 @@ const isMultipleToolbars = (editor: Editor): boolean => {
   );
 };
 
-export enum ToolbarDrawer {
-  default = '',
+export enum ToolbarMode {
+  default = 'wrap',
   floating = 'floating',
   sliding = 'sliding',
   scrolling = 'scrolling'
 }
 
-const getToolbarDrawer = (editor: Editor): ToolbarDrawer => editor.getParam('toolbar_drawer', '', 'string') as ToolbarDrawer;
+const getToolbarMode = (editor: Editor): ToolbarMode => {
+  return editor.getParam('toolbar_mode', '', 'string') as ToolbarMode;
+};
+
+export enum ToolbarLocation {
+  top = 'top',
+  bottom = 'bottom'
+}
+
+const getToolbarGroups = (editor: Editor) => {
+  return editor.getParam('toolbar_groups', {}, 'object');
+};
+
+// In case of a string not equal to 'top' nor 'bottom', default to position top
+const isToolbarLocationTop = (editor) => editor.getParam('toolbar_location', ToolbarLocation.top, 'string') !== ToolbarLocation.bottom;
 
 const fixedContainerSelector = (editor): string => editor.getParam('fixed_toolbar_container', '', 'string');
 
@@ -130,8 +144,10 @@ export {
   getMultipleToolbarsSetting,
   getUiContainer,
   useFixedContainer,
-  getToolbarDrawer,
+  getToolbarMode,
   isDraggableModal,
   isDistractionFree,
-  isStickyToolbar
+  isStickyToolbar,
+  isToolbarLocationTop,
+  getToolbarGroups
 };

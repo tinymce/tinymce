@@ -5,17 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Event, Node, document } from '@ephox/dom-globals';
+import { document, Element, Event, Node } from '@ephox/dom-globals';
 import { Element as SugarElement, Selectors } from '@ephox/sugar';
 import NodeType from '../../dom/NodeType';
 import RangePoint from '../../dom/RangePoint';
+import Editor from '../Editor';
 import Env from '../Env';
+import * as Events from '../Events';
+import Settings from '../Settings';
 import Delay from '../util/Delay';
 import Tools from '../util/Tools';
 import VK from '../util/VK';
 import Selection from './Selection';
-import Editor from '../Editor';
-import Events from '../Events';
 
 interface ControlSelection {
   isResizable (elm: Element): boolean;
@@ -65,10 +66,6 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   // Details about each resize handle how to scale etc
   resizeHandles = {
     // Name: x multiplier, y multiplier, delta size x, delta size y
-    /*n: [0.5, 0, 0, -1],
-    e: [1, 0.5, 1, 0],
-    s: [0.5, 1, 0, 1],
-    w: [0, 0.5, -1, 0],*/
     nw: [0, 0, -1, -1],
     ne: [1, 0, 1, -1],
     se: [1, 1, 1, 1],
@@ -101,7 +98,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   };
 
   const isResizable = function (elm) {
-    let selector = editor.settings.object_resizing;
+    let selector = Settings.getObjectResizing(editor);
 
     if (selector === false || Env.iOS) {
       return false;
@@ -138,10 +135,10 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     width = width < 5 ? 5 : width;
     height = height < 5 ? 5 : height;
 
-    if (isImage(selectedElm) && editor.settings.resize_img_proportional !== false) {
+    if (isImage(selectedElm) && Settings.getResizeImgProportional(editor) !== false) {
       proportional = !VK.modifierPressed(e);
     } else {
-      proportional = VK.modifierPressed(e) || (isImage(selectedElm) && selectedHandle[2] * selectedHandle[3] !== 0);
+      proportional = VK.modifierPressed(e);
     }
 
     // Constrain proportions
@@ -456,11 +453,9 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
         }
       });
 
-      editor.dom.bind(rootElement, 'mscontrolselect', function (e) {
-        const delayedSelect = function (node) {
-          Delay.setEditorTimeout(editor, function () {
-            editor.selection.select(node);
-          });
+      const handleMSControlSelect = (e) => {
+        const delayedSelect = (node: Node) => {
+          Delay.setEditorTimeout(editor, () => editor.selection.select(node));
         };
 
         if (isWithinContentEditableFalse(e.target)) {
@@ -478,7 +473,10 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
             delayedSelect(e.target);
           }
         }
-      });
+      };
+
+      dom.bind(rootElement, 'mscontrolselect', handleMSControlSelect);
+      editor.on('remove', () => dom.unbind(rootElement, 'mscontrolselect', handleMSControlSelect));
     }
 
     const throttledUpdateResizeRect = Delay.throttle(function (e) {

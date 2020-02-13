@@ -1,42 +1,38 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as Logger from 'ephox/agar/api/Logger';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
-import StepAssertions from 'ephox/agar/test/StepAssertions';
+import * as StepAssertions from 'ephox/agar/test/StepAssertions';
 
-UnitTest.asynctest('ChainTest', function (success, failure) {
+UnitTest.asynctest('ChainTest', (success, failure) => {
 
-  const cIsEqual = function (expected) {
-    return Chain.async(function (actual, next, die) {
+  const cIsEqual = (expected) =>
+    Chain.async((actual, next, die) => {
       if (expected === actual) {
         next(actual);
       } else {
         die('Cat is not a dog');
       }
     });
-  };
 
-  const cIsEqualAndChange = function (expected, newValue) {
-    return Chain.async(function (actual, next, die) {
+  const cIsEqualAndChange = (expected, newValue) =>
+    Chain.async((actual, next, die) => {
       if (expected === actual) {
         next(newValue);
       } else {
         die('Cat is not a dog');
       }
     });
-  };
 
-  const acc = function (ch) {
-    return Chain.async(function (input, next, die) {
-      next(input + ch);
-    });
-  };
+  const acc = (ch) => Chain.async((input, next, die) => {
+    next(input + ch);
+  });
   const testInputValueFails = StepAssertions.testStepsFail(
     'Output value is not a chain: dog',
     [
       Chain.asStep({}, [
-        Chain.on(function (cInput, cNext, cDie, cLogs) {
+        Chain.on((cInput, cNext, cDie, cLogs) => {
           cNext(<any> 'dog', cLogs);
         })
       ])
@@ -48,7 +44,7 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
     [
       Chain.asStep({}, [
         Chain.on(function (cInput, cNext, cDie, cLogs) {
-          cNext(Chain.wrap('doge'), cLogs);
+          cNext('doge', cLogs);
         })
       ])
     ]
@@ -59,7 +55,7 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
     [
       Chain.asStep({}, [
         Chain.on(function (cInput, cNext, cDie, cLogs) {
-          cNext(Chain.wrap(undefined), cLogs);
+          cNext(undefined, cLogs);
         })
       ])
     ]
@@ -86,15 +82,15 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
   );
 
   const testChainingFailsBecauseChanges = StepAssertions.testStepsFail(
-   'Cat is not a dog',
-   [
-     Chain.asStep('value', [
-       Chain.inject('cat'),
-       cIsEqualAndChange('cat', 'new.cat'),
-       cIsEqualAndChange('cat', 'new.dog')
-     ])
-   ]
- );
+    'Cat is not a dog',
+    [
+      Chain.asStep('value', [
+        Chain.inject('cat'),
+        cIsEqualAndChange('cat', 'new.cat'),
+        cIsEqualAndChange('cat', 'new.dog')
+      ])
+    ]
+  );
 
   const testChainParentPasses = StepAssertions.testStepsPass(
     {},
@@ -132,17 +128,6 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
       acc('i'),
       acc('s')
     ])
-  );
-
-  const testChainEnforcesInput = StepAssertions.testStepsFail(
-    'Input Value is not a chain: raw.input',
-    [
-      Step.raw(function (_, next, die, logs) {
-        Chain.on(function (input: any, n, d, clogs) {
-          n(input, clogs);
-        }).runChain(<any> 'raw.input', next, die, logs);
-      })
-    ]
   );
 
   const testChainAsync = StepAssertions.testChain(
@@ -199,18 +184,6 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
 
   return Pipeline.async({}, [
     Logger.t(
-      '[Should fail validation if the chain function does not wrap the output]\n',
-      testInputValueFails
-    ),
-    Logger.t(
-      '[Should pass validation if the chain function does wrap the output]\n',
-      testInputValuePasses
-    ),
-    Logger.t(
-      '[Should pass validation if the chain function does wrap the output, even if that output is undefined]\n',
-      testInputValueOfUndefinedPasses
-    ),
-    Logger.t(
       '[When a previous link passes a failure that fails a chain, the step should fail]\n',
       testChainingFails
     ),
@@ -234,11 +207,6 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
       '[When using fromChains, chains do accumulate when passing]\n',
       testChainAcc
     ),
-    Logger.t(
-      '[Chains should enforce input conditions]\n',
-      testChainEnforcesInput
-    ),
-
     Logger.t(
       '[Chain should async]\n',
       testChainAsync
@@ -284,12 +252,12 @@ UnitTest.asynctest('ChainTest', function (success, failure) {
       '[Basic API: Chain.injectThunked\n',
       testChainInjectThunked
     )
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });
 
-UnitTest.asynctest('Chain.predicate true', function (success, failure) {
+UnitTest.asynctest('Chain.predicate true', (success, failure) => {
   Pipeline.async('stepstate', [
     StepAssertions.testStepsPass(
       'stepstate',
@@ -300,7 +268,7 @@ UnitTest.asynctest('Chain.predicate true', function (success, failure) {
   ], () => success(), failure);
 });
 
-UnitTest.asynctest('Chain.predicate false', function (success, failure) {
+UnitTest.asynctest('Chain.predicate false', (success, failure) => {
   Pipeline.async('stepstate', [
     StepAssertions.testStepsFail(
       'predicate did not succeed',

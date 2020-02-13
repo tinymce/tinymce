@@ -1,17 +1,18 @@
-import { DataTransfer, File } from '@ephox/dom-globals';
+import { DragEvent, File } from '@ephox/dom-globals';
+import { EventArgs } from '@ephox/sugar';
 
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { SimulatedEvent } from '../../events/SimulatedEvent';
 import * as DataTransfers from './DataTransfers';
 import { DroppingConfig } from './DragnDropTypes';
 
-export interface DropEvent extends NativeSimulatedEvent {
+export interface DropEvent extends SimulatedEvent<EventArgs<DragEvent>> {
   data: string;
   files: File[];
 }
 
-export const createDropEventDetails = (config: DroppingConfig, event: NativeSimulatedEvent): DropEvent => {
-  const rawEvent: any = event.event().raw();
-  const transfer: DataTransfer = rawEvent.dataTransfer;
+export const createDropEventDetails = (config: DroppingConfig, event: SimulatedEvent<EventArgs<DragEvent>>): DropEvent => {
+  const rawEvent = event.event().raw();
+  const transfer = rawEvent.dataTransfer;
   const data = DataTransfers.getData(transfer, config.type);
   const files = DataTransfers.getFiles(transfer);
 

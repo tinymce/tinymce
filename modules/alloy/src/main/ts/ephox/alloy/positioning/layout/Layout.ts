@@ -82,6 +82,9 @@ const west: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: 
 const all = (): AnchorLayout[] => [ southeast, southwest, northeast, northwest, south, north, east, west ];
 const allRtl = (): AnchorLayout[] => [ southwest, southeast, northwest, northeast, south, north, east, west ];
 
+const aboveOrBelow = (): AnchorLayout[] => [ northeast, northwest, southeast, southwest, north, south ];
+const aboveOrBelowRtl = (): AnchorLayout[] => [ northwest, northeast, southwest, southeast, north, south ];
+
 const belowOrAbove = (): AnchorLayout[] => [ southeast, southwest, northeast, northwest, south, north ];
 const belowOrAboveRtl = (): AnchorLayout[] => [ southwest, southeast, northwest, northeast, south, north ];
 
@@ -97,5 +100,7 @@ export {
   all,
   allRtl,
   belowOrAbove,
-  belowOrAboveRtl
+  belowOrAboveRtl,
+  aboveOrBelow,
+  aboveOrBelowRtl
 };

@@ -1,5 +1,5 @@
 import { FocusTools, Keyboard, Keys } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -13,7 +13,7 @@ import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 UnitTest.asynctest('Flow Keying Allow Vertical Test', (success, failure) => {
 
   GuiSetup.setup((store, doc, body) => {
-    const item = (classes, name) => {
+    const item = (classes: string[], name: string) => {
       return Container.sketch({
         dom: {
           tag: 'span',

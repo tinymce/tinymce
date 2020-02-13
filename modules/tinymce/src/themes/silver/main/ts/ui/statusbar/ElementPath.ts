@@ -120,6 +120,8 @@ const renderElementPath = (editor: Editor, settings) => {
             const newPath = updatePath(e.parents);
             if (newPath.length > 0) {
               Replacing.set(comp, getDataPath(newPath));
+            } else {
+              Replacing.set(comp, []);
             }
           });
         })

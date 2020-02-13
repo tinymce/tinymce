@@ -15,7 +15,12 @@ const getDefaultLinkTarget = function (editor: Editor) {
   return editor.getParam('default_link_target', false);
 };
 
+const getDefaultLinkProtocol = (editor: Editor): string => {
+  return editor.getParam('link_default_protocol', 'http', 'string');
+};
+
 export default {
   getAutoLinkPattern,
-  getDefaultLinkTarget
+  getDefaultLinkTarget,
+  getDefaultLinkProtocol
 };

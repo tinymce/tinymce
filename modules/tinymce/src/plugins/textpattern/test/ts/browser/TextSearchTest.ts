@@ -1,14 +1,14 @@
-import { Pipeline, Step, Log, Assertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { Node, Text } from '@ephox/dom-globals';
+import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Text } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
-import { SpotPoint } from 'tinymce/plugins/textpattern/utils/Spot';
 import * as TextSearch from 'tinymce/plugins/textpattern/text/TextSearch';
+import { SpotPoint } from 'tinymce/plugins/textpattern/utils/Spot';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import Utils from '../module/test/Utils';
@@ -18,30 +18,30 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (succes
   Theme();
   TextpatternPlugin();
 
-  const process = (content: string) => (phase: TextSearch.Phase<Node>, element: Node, text: string) => {
-    if (text === content) {
-      return phase.finish(element);
-    } else {
-      return phase.kontinue();
-    }
+  const process = (content: string) => (element: Text, offset: number) => {
+    return element.data === content ? offset : -1;
   };
 
   const repeatLeftUntil = (editor: Editor, content: string) => {
     const rng = editor.selection.getRng();
-    const outcome =  TextSearch.repeatLeft(editor.dom, rng.startContainer, rng.startOffset, process(content), editor.getBody());
-    return outcome.fold(() => null, () => null, (elm) => elm);
+    return TextSearch.repeatLeft(editor.dom, rng.startContainer, rng.startOffset, process(content), editor.getBody()).fold(
+      () => null,
+      (spot) => spot.container
+    );
   };
 
   const repeatRightUntil = (editor: Editor, content: string) => {
     const rng = editor.selection.getRng();
-    const outcome =  TextSearch.repeatRight(editor.dom, rng.startContainer, rng.startOffset, process(content), editor.getBody());
-    return outcome.fold(() => null, () => null, (elm) => elm);
+    return TextSearch.repeatRight(editor.dom, rng.startContainer, rng.startOffset, process(content), editor.getBody()).fold(
+      () => null,
+      (spot) => spot.container
+    );
   };
 
   const assertSpot = (label: string, spotOpt: Option<SpotPoint<Text>>, elementText: String, offset: number) => {
     const spot = spotOpt.getOrDie(`${label} - Spot not found`);
 
-    Assertions.assertEq(label, elementText, spot.element.textContent);
+    Assertions.assertEq(label, elementText, spot.container.textContent);
     Assertions.assertEq(label, offset, spot.offset);
   };
 

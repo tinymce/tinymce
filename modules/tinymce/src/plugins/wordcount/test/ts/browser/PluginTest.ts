@@ -1,7 +1,8 @@
 import { Assertions, GeneralSteps, Keyboard, Keys, Pipeline, Step, Waiter, Logger, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Plugin from 'tinymce/plugins/wordcount/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -11,14 +12,14 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, fai
   Plugin(2);
   Theme();
 
-  const sReset = function (tinyApis) {
+  const sReset = function (tinyApis: TinyApis) {
     return Logger.t('Reset content', GeneralSteps.sequence([
       tinyApis.sSetContent(''),
       sWaitForWordcount(0)
     ]));
   };
 
-  const sAssertWordcount = function (num) {
+  const sAssertWordcount = function (num: number) {
     return Logger.t(`Assert word count ${num}`, Step.sync(function () {
       const countEl = DOMUtils.DOM.select('.tox-statusbar__wordcount')[0];
       const value = countEl ? countEl.innerText : '';
@@ -26,24 +27,24 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, fai
     }));
   };
 
-  const sAssertContent = (tinyApis, expected) => {
+  const sAssertContent = (tinyApis: TinyApis, expected: string) => {
     return GeneralSteps.sequence(Log.steps('TBA', 'asserting contents after undo', [
       tinyApis.sAssertContent(expected)
     ]));
   };
 
-  const sWaitForWordcount = function (num) {
+  const sWaitForWordcount = function (num: number) {
     return Waiter.sTryUntil('wordcount did not change', sAssertWordcount(num));
   };
 
-  const sFakeTyping = function (editor, str) {
+  const sFakeTyping = function (editor: Editor, str: string) {
     return Logger.t(`Fake typing ${str}`, Step.sync(function () {
       editor.getBody().innerHTML = '<p>' + str + '</p>';
       Keyboard.keystroke(Keys.space(), {}, TinyDom.fromDom(editor.getBody()));
     }));
   };
 
-  const sTestSetContent = function (tinyApis) {
+  const sTestSetContent = function (tinyApis: TinyApis) {
     return GeneralSteps.sequence(Log.steps('TBA', 'WordCount: Set test content and assert word count', [
       sReset(tinyApis),
       tinyApis.sSetContent('<p>hello world</p>'),
@@ -51,22 +52,21 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, fai
     ]));
   };
 
-  const sTestKeystroke = function (editor, tinyApis) {
+  const sTestKeystroke = function (editor: Editor, tinyApis: TinyApis) {
     return GeneralSteps.sequence(Log.steps('TBA', 'WordCount: Test keystroke and assert word count', [
       sReset(tinyApis),
       sFakeTyping(editor, 'a b c'),
-      sAssertWordcount(0),
       sWaitForWordcount(3)
     ]));
   };
 
-  const sExecCommand = function (editor, command) {
+  const sExecCommand = function (editor: Editor, command: string) {
     return Logger.t(`Execute ${command}`, Step.sync(function () {
       editor.execCommand(command);
     }));
   };
 
-  const sTestUndoRedo = function (editor, tinyApis) {
+  const sTestUndoRedo = function (editor: Editor, tinyApis: TinyApis) {
     return GeneralSteps.sequence(Log.steps('TBA', 'WordCount: Test undo and redo', [
       sReset(tinyApis),
       tinyApis.sSetContent('<p>a b c</p>'),

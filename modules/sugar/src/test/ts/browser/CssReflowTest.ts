@@ -6,12 +6,10 @@ import * as Html from 'ephox/sugar/api/properties/Html';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { HTMLIFrameElement, HTMLSpanElement } from '@ephox/dom-globals';
 
-UnitTest.asynctest('CssReflowTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('CssReflowTest', function (success, failure) {
 
   const iframe = Element.fromHtml<HTMLIFrameElement>('<iframe style="height:100px; width:500px;" src="/project/@ephox/sugar/src/test/data/cssReflowTest.html"></iframe>');
   Insert.append(Body.body(), iframe);

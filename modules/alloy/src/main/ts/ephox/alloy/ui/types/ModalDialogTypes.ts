@@ -1,14 +1,14 @@
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+import { Bounds } from '../../alien/Boxes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import { LazySink } from '../../api/component/CommonTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
-import { LazySink } from '@ephox/alloy';
-import { Bounds } from '../../alien/Boxes';
 
 export interface ModalDialogDetail extends CompositeSketchDetail {
   uid: string;
@@ -53,14 +53,13 @@ export type GetBusySpec = (
   busyBehaviours: AlloyBehaviourRecord
 ) => AlloySpec;
 
-export interface ModalDialogSketcher extends CompositeSketch<ModalDialogSpec, ModalDialogDetail> {
+export interface ModalDialogApis {
   show: (dialog: AlloyComponent) => void;
   hide: (dialog: AlloyComponent) => void;
   getBody: (dialog: AlloyComponent) => AlloyComponent;
   getFooter: (dialog: AlloyComponent) => AlloyComponent;
-  setBusy(
-    dialog: AlloyComponent,
-    getBusySpec: GetBusySpec
-  );
-  setIdle(dialog: AlloyComponent);
+  setBusy: (dialog: AlloyComponent, getBusySpec: GetBusySpec) => void;
+  setIdle: (dialog: AlloyComponent) => void;
 }
+
+export interface ModalDialogSketcher extends CompositeSketch<ModalDialogSpec>, ModalDialogApis { }

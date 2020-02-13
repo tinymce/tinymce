@@ -1,9 +1,9 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
 import DomParser from 'tinymce/core/api/html/DomParser';
-import Serializer from 'tinymce/core/api/html/Serializer';
 import Schema from 'tinymce/core/api/html/Schema';
-import { UnitTest } from '@ephox/bedrock';
+import Serializer from 'tinymce/core/api/html/Serializer';
 
 UnitTest.asynctest('browser.tinymce.core.html.SerializerTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
@@ -17,8 +17,8 @@ UnitTest.asynctest('browser.tinymce.core.html.SerializerTest', function (success
       '<strong>text</strong><img src="1.gif" />'
     );
     LegacyUnit.equal(serializer.serialize(DomParser().parse('<!-- comment -->')), '<!-- comment -->');
-    LegacyUnit.equal(serializer.serialize(DomParser().parse('<![CDATA[cdata]]>')), '<![CDATA[cdata]]>');
-    LegacyUnit.equal(serializer.serialize(DomParser().parse('<?xml attr="value" ?>')), '<?xml attr="value" ?>');
+    LegacyUnit.equal(serializer.serialize(DomParser().parse('<![CDATA[cdata]]>', { format: 'xml' })), '<![CDATA[cdata]]>');
+    LegacyUnit.equal(serializer.serialize(DomParser().parse('<?xml attr="value" ?>', { format: 'xml' })), '<?xml attr="value" ?>');
     LegacyUnit.equal(serializer.serialize(DomParser().parse('<!DOCTYPE html>')), '<!DOCTYPE html>');
   });
 

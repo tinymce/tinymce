@@ -4,7 +4,7 @@ import { Body } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-const cOpen = <T>(editor: Editor, spec: Types.Dialog.DialogApi<T>, params: Record<string, any>) => Chain.mapper((_) => {
+const cOpen = <T>(editor: Editor, spec: Types.Dialog.DialogApi<T>, params: Record<string, any>) => Chain.injectThunked(() => {
   return editor.windowManager.open(spec, params);
 });
 

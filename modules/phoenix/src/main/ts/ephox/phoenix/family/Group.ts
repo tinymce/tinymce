@@ -17,7 +17,8 @@ const group = function <E, D>(universe: Universe<E, D>, items: E[], optimise?: (
     return item.match({
       boundary: () => Splitting.excludeWithout(item),
       empty: () => Splitting.excludeWith(item),
-      text: () => Splitting.include(item)
+      text: () => Splitting.include(item),
+      nonEditable: () => Splitting.excludeWithout(item)
     });
   });
 

@@ -1,5 +1,5 @@
 import { Log, Pipeline, Chain, UiFinder, FocusTools, Keyboard, Keys, GeneralSteps, Waiter, NamedChain } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader, TinyUi, UiChains} from '@ephox/mcagar';
 
@@ -59,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
       return dom.getAttrib(element, 'src');
     };
 
-    const cGetImageSrc = Chain.mapper(getImageSrc);
+    const cGetImageSrc = Chain.injectThunked(getImageSrc);
 
     const cClickContextToolbarButton = (label) => {
       return Chain.fromParent(tinyUi.cWaitForPopup('wait for Imagetools toolbar', '.tox-pop__dialog div'), [
@@ -84,7 +84,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
     };
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'ImageTools: context toolbar keyboard navigation test', [
         sOpenContextToolbar(srcUrl),
         sPressKeyboardShortcutKey,

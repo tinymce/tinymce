@@ -1,17 +1,14 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 import * as PositionArray from 'ephox/polaris/api/PositionArray';
 import * as Parrays from 'ephox/polaris/test/Parrays';
+import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('api.PositionArray.get', function () {
   const check = function (expected: Option<string>, input: string[], offset: number) {
     const parray = Parrays.make(input);
     const actual = PositionArray.get(parray, offset);
-    expected.fold(function () {
-      assert.eq(true, actual.isNone());
-    }, function (v) {
-      assert.eq(v, actual.getOrDie('getting nothing, expected: ' + v).item());
-    });
+    KAssert.eqOption('eq', expected, actual.map((x) => x.item()));
   };
 
   check(Option.none(),           [], 0);

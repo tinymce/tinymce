@@ -11,7 +11,7 @@ export interface HighlightingBehaviour extends Behaviour.AlloyBehaviour<Highligh
   highlightFirst: (component: AlloyComponent) => void;
   highlightLast: (component: AlloyComponent) => void;
   highlightAt: (component: AlloyComponent, index: number) => void;
-  highlightBy: (component: AlloyComponent, predicate: (any) => any) => void;
+  highlightBy: (component: AlloyComponent, predicate: (comp: AlloyComponent) => boolean) => void;
   isHighlighted: (component: AlloyComponent, queryTarget: any ) => boolean;
   getHighlighted: (component: AlloyComponent) => Option<AlloyComponent>;
   getFirst: (component: AlloyComponent) => Option<AlloyComponent>;

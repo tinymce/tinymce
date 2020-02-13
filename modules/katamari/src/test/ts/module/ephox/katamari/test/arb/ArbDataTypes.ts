@@ -1,77 +1,39 @@
-import * as Fun from 'ephox/katamari/api/Fun';
 import { Option } from 'ephox/katamari/api/Option';
-import { FutureResult } from 'ephox/katamari/api/FutureResult';
 import { Result } from 'ephox/katamari/api/Result';
-import Jsc from '@ephox/wrap-jsverify';
+import { Future } from 'ephox/katamari/api/Future';
+import { setTimeout } from '@ephox/dom-globals';
+import fc from 'fast-check';
 
-const show = function (res: Result<string, string>) {
-  return res.fold(function (e) {
-    return 'Result.error(' + e + ')';
-  }, function (v) {
-    return 'Result.value(' + v + ')';
-  });
-};
+type Arbitrary<A> = fc.Arbitrary<A>;
 
-export const resultError: Result<string, string> = Jsc.string.smap(function (e: string) {
-  return Result.error(e);
-}, function (res) {
-  return res.fold(Fun.identity, Fun.die('This should not happen'));
-}, show);
+export const arbResultError = <A, E> (arbE: Arbitrary<E>): Arbitrary<Result<A, E>> =>
+  arbE.map(Result.error);
 
-export const resultValue: Result<string, string> = Jsc.string.smap(function (e: string) {
-  return Result.value(e);
-}, function (res) {
-  return res.fold(Fun.die('This should not happen'), Fun.identity);
-}, show);
+export const arbResultValue = <A, E> (arbA: Arbitrary<A>): Arbitrary<Result<A, E>> =>
+  arbA.map(Result.value);
 
-export const result = Jsc.oneof([ resultError, resultValue ]);
+export const arbResult = <A, E> (arbA: Arbitrary<A>, arbE: Arbitrary<E>): Arbitrary<Result<A, E>> =>
+  fc.oneof(arbResultError<A, E>(arbE), arbResultValue<A, E>(arbA));
 
-const genFutureResultSchema = result.generator.map(function (result) {
-  const futureResult = FutureResult.nu(function (callback) {
-    callback(result);
-  });
+export const arbOptionNone = <T> () => fc.constant(Option.none());
+export const arbOptionSome = <T> (at: Arbitrary<T>) => at.map(Option.some);
 
-  return {
-    futureResult,
-    contents: result
-  };
-});
+export const arbOption = <T> (at: Arbitrary<T>) => fc.oneof(arbOptionNone(), arbOptionSome(at));
 
-const genFutureResult = result.generator.map(function (result) {
-  return FutureResult.nu(function (callback) {
-    callback(result);
-  });
-});
+export const arbNegativeInteger = () => fc.integer(Number.MIN_SAFE_INTEGER, -1);
 
-export const futureResult  = Jsc.bless({
-  generator: genFutureResult
-});
+export const arbFutureNow = <A> (arbA: Arbitrary<A>): Arbitrary<Future<A>> =>
+  arbA.map(Future.pure);
 
-export const futureResultSchema = Jsc.bless({
-  generator: genFutureResultSchema
-});
+export const arbFutureSoon = <A> (arbA: Arbitrary<A>): Arbitrary<Future<A>> =>
+  arbA.map((a) => Future.nu((cb) => {
+    setTimeout(() => {
+      cb(a);
+    }, 5);
+  }));
 
-export const optionNone = Jsc.constant(Option.none());
-export const optionSome = Jsc.json.smap(function (v) {
-  return Option.some(v);
-}, function (option) {
-  return option.getOrDie();
-});
+export const arbFutureNever = <A> (): Arbitrary<Future<A>> =>
+  fc.constant(Future.nu(() => {}));
 
-export const option = Jsc.oneof([ optionNone, optionSome ]);
-
-const genIndexArrayOf = function (len) {
-  return Jsc.integer(0, len).generator.map(function (aLength: number) {
-    const r: number[] = [];
-    for (let i = 0; i < aLength; i++) {
-      r.push(i);
-    }
-    return r;
-  });
-};
-
-export const indexArrayOf = function (len) {
-  return Jsc.bless({
-    generator: genIndexArrayOf(len)
-  });
-};
+export const arbFutureNowOrSoon = <A> (arbA: Arbitrary<A>): Arbitrary<Future<A>> =>
+  fc.oneof(arbFutureNow(arbA), arbFutureSoon(arbA));

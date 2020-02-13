@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
 import I18n from 'tinymce/core/api/util/I18n';

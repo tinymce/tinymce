@@ -1,21 +1,19 @@
-import { GeneralSteps, Pipeline, Logger, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { GeneralSteps, Log, Logger, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-
 import Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.core.SubmitTest', (success, failure) => {
   Plugin();
   Theme();
 
-  const customEmbed = '<div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.338%; max-width: 650px;"><iframe src="//www.youtube.com/embed/IcgmSRJHu_8" width="560" height="314" allowfullscreen="allowfullscreen" data-mce-fragment="1"></iframe></div>';
+  const customEmbed = '<div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.338%; max-width: 650px;"><iframe src="https://www.youtube.com/embed/IcgmSRJHu_8" width="560" height="314" allowfullscreen="allowfullscreen" data-mce-fragment="1"></iframe></div>';
 
-  const sTestResolvedEmbedContentSubmit = (ui, editor: Editor, apis, url: string, expected: string) => {
+  const sTestResolvedEmbedContentSubmit = (ui: TinyUi, editor: Editor, apis: TinyApis, url: string, expected: string) => {
     return Logger.t(`Assert content ${expected}`, GeneralSteps.sequence([
       Utils.sOpenDialog(ui),
       Utils.sSetFormItemNoEvent(ui, url),
@@ -24,7 +22,7 @@ UnitTest.asynctest('browser.core.SubmitTest', (success, failure) => {
     ]));
   };
 
-  const sTestManualEmbedContentSubmit = (ui, editor: Editor, apis, embed: string, expected: string) => {
+  const sTestManualEmbedContentSubmit = (ui: TinyUi, editor: Editor, apis: TinyApis, embed: string, expected: string) => {
     return Logger.t(`Assert content ${expected}`, GeneralSteps.sequence([
       Utils.sOpenDialog(ui),
       Utils.sPasteTextareaValue(ui, embed),
@@ -33,7 +31,7 @@ UnitTest.asynctest('browser.core.SubmitTest', (success, failure) => {
     ]));
   };
 
-  const sTestEmbedUnchangedAfterOpenCloseDialog = (ui, editor: Editor, apis, expected: string) => {
+  const sTestEmbedUnchangedAfterOpenCloseDialog = (ui: TinyUi, editor: Editor, apis: TinyApis, expected: string) => {
     return GeneralSteps.sequence([
       Utils.sOpenDialog(ui),
       ui.sClickOnUi('click save button', Utils.selectors.saveButton),
@@ -52,7 +50,7 @@ UnitTest.asynctest('browser.core.SubmitTest', (success, failure) => {
         apis.sSetContent(''),
         apis.sDeleteSetting('media_url_resolver'),
         sTestResolvedEmbedContentSubmit(ui, editor, apis, 'https://www.youtube.com/watch?v=IcgmSRJHu_8',
-          '<p><iframe src="//www.youtube.com/embed/IcgmSRJHu_8" width="560" height="314" ' +
+          '<p><iframe src="https://www.youtube.com/embed/IcgmSRJHu_8" width="560" height="314" ' +
           'allowfullscreen="allowfullscreen"></iframe></p>'),
         apis.sSetContent('')
       ]),

@@ -1,9 +1,9 @@
 import { setTimeout, clearTimeout } from '@ephox/dom-globals';
 
-export default (fun: (any) => void, delay: number) => {
-  let ref = null;
+export default <T extends (...args: any[]) => void>(fun: T, delay: number) => {
+  let ref: number | null = null;
 
-  const schedule = (...args): void => {
+  const schedule = (...args: Parameters<T>): void => {
     ref = setTimeout(() => {
       fun.apply(null, args);
       ref = null;

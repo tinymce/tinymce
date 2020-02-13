@@ -1,12 +1,13 @@
-import { document, console, setTimeout } from '@ephox/dom-globals';
+import { console, document, setTimeout } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Result } from '@ephox/katamari';
-import { Class, Element, Value } from '@ephox/sugar';
+import { Class, Element, EventArgs, Value } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import { Tooltipping } from 'ephox/alloy/api/behaviour/Tooltipping';
+import { LazySink } from 'ephox/alloy/api/component/CommonTypes';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
@@ -19,9 +20,7 @@ import { Input } from 'ephox/alloy/api/ui/Input';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
 import { AnchorSpec, SelectionAnchorSpec, SubmenuAnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
-import { LazySink } from 'ephox/alloy/api/component/CommonTypes';
 
 import * as DemoRenders from './forms/DemoRenders';
 
@@ -51,7 +50,7 @@ export default (): void => {
     })
   );
 
-  const makeItem = (v, t, c) => {
+  const makeItem = (v: string, t: string, c: string): DemoRenders.DemoItem => {
     return {
       type: 'item',
       data: {
@@ -106,12 +105,12 @@ export default (): void => {
 
     onEscape () {
       console.log('inline.menu.escape');
-      return Option.some(true);
+      return Option.some<boolean>(true);
     },
 
     onExecute () {
       console.log('inline.menu.execute');
-      return Option.some(true);
+      return Option.some<boolean>(true);
     },
 
     onOpenMenu (sandbox, menu) {
@@ -170,7 +169,7 @@ export default (): void => {
         }
       },
       events: AlloyEvents.derive([
-        AlloyEvents.run<SugarEvent>(NativeEvents.contextmenu(), (component, simulatedEvent) => {
+        AlloyEvents.run<EventArgs>(NativeEvents.contextmenu(), (component, simulatedEvent) => {
           simulatedEvent.event().kill();
           InlineView.showAt(inlineComp, {
             anchor: 'makeshift',

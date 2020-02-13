@@ -1,7 +1,6 @@
 import { Option } from '@ephox/katamari';
-import { Height, Position, Width } from '@ephox/sugar';
+import { EventArgs, Height, Position, Width } from '@ephox/sugar';
 
-import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
@@ -11,7 +10,7 @@ import * as BlockerUtils from './BlockerUtils';
 import { DraggingConfig, DraggingState, DragModeDeltas, DragStartData } from './DraggingTypes';
 import * as DragMovement from './DragMovement';
 
-type EventsFunc<C extends DraggingConfig, A extends EventFormat> = (dragConfig: C, dragState: DraggingState<Position>, updateStartState: (comp: AlloyComponent) => void) => Array<AlloyEvents.AlloyEventKeyAndHandler<A>>;
+type EventsFunc<C extends DraggingConfig, A extends EventFormat> = (dragConfig: C, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void) => Array<AlloyEvents.AlloyEventKeyAndHandler<A>>;
 
 const calcStartData = (dragConfig: DraggingConfig, comp: AlloyComponent): DragStartData => {
   return {
@@ -21,7 +20,7 @@ const calcStartData = (dragConfig: DraggingConfig, comp: AlloyComponent): DragSt
   };
 };
 
-const move = (component: AlloyComponent, dragConfig: DraggingConfig, dragState: DraggingState<SugarPosition>, dragMode: DragModeDeltas<SugarPosition>, event: SugarEvent) => {
+const move = (component: AlloyComponent, dragConfig: DraggingConfig, dragState: DraggingState, dragMode: DragModeDeltas<Position>, event: EventArgs) => {
   const delta = dragState.update(dragMode, event);
   const dragStartData = dragState.getStartData().getOrThunk(() => calcStartData(dragConfig, component));
   delta.each((dlt) => {
@@ -29,7 +28,7 @@ const move = (component: AlloyComponent, dragConfig: DraggingConfig, dragState: 
   });
 };
 
-const stop = (component: AlloyComponent, blocker: Option<AlloyComponent>, dragConfig: DraggingConfig, dragState: DraggingState<SugarPosition>) => {
+const stop = (component: AlloyComponent, blocker: Option<AlloyComponent>, dragConfig: DraggingConfig, dragState: DraggingState) => {
   blocker.each(BlockerUtils.discard);
   dragConfig.snaps.each((snapInfo) => {
     Snappables.stopDrag(component, snapInfo);
@@ -40,7 +39,7 @@ const stop = (component: AlloyComponent, blocker: Option<AlloyComponent>, dragCo
 };
 
 const handlers = <C extends DraggingConfig, A extends EventFormat>(events: EventsFunc<C, A>) => {
-  return (dragConfig: C, dragState: DraggingState<Position>): AlloyEvents.AlloyEventRecord => {
+  return (dragConfig: C, dragState: DraggingState): AlloyEvents.AlloyEventRecord => {
     const updateStartState = (comp: AlloyComponent) => {
       dragState.setStartData(calcStartData(dragConfig, comp));
     };

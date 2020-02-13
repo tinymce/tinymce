@@ -1,12 +1,14 @@
 import { Pipeline, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Text } from '@ephox/dom-globals';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('tinymce.lists.browser.RemoveTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
   Theme();
@@ -425,8 +427,8 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', (success, failure) => {
       '<li>d</li>' +
       '</ul>'
     );
-    LegacyUnit.equal(editor.selection.getStart().firstChild.data, 'b');
-    LegacyUnit.equal(editor.selection.getEnd().firstChild.data, 'c');
+    LegacyUnit.equal((editor.selection.getStart().firstChild as Text).data, 'b');
+    LegacyUnit.equal((editor.selection.getEnd().firstChild as Text).data, 'c');
   });
 
   suite.test('TestCase-TBA: Lists: Remove indented list with multiple items', function (editor) {
@@ -476,6 +478,31 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', (success, failure) => {
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'BR');
 
     editor.settings.forced_root_block = 'p';
+  });
+
+  suite.test('TestCase-TBA: Lists: Remove UL with forced_root_block_attrs', function (editor) {
+    editor.settings.forced_root_block = 'p';
+    editor.settings.forced_root_block_attrs = {
+      'data-editor': '1'
+    };
+
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+      '<ul>' +
+      '<li data-editor="1">a</li>' +
+      '</ul>'
+    );
+
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'li', 0);
+    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+
+    LegacyUnit.equal(editor.getContent(),
+      '<p data-editor="1">a</p>'
+    );
+    LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
+
+    editor.settings.forced_root_block = 'p';
+    delete editor.settings.forced_root_block_attrs;
   });
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {

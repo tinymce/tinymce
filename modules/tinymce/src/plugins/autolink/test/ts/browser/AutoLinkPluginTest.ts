@@ -1,18 +1,19 @@
 import { Pipeline, Log } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/autolink/Plugin';
-import KeyUtils from '../module/test/KeyUtils';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import KeyUtils from '../module/test/KeyUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
   Plugin();
 
-  const typeUrl = function (editor, url) {
+  const typeUrl = function (editor: Editor, url: string) {
     editor.setContent('<p>' + url + '</p>');
     LegacyUnit.setSelection(editor, 'p', url.length);
     KeyUtils.type(editor, ' ');
@@ -115,6 +116,29 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
       '<p><a href="http://www.domain.com" target="_self">http://www.domain.com</a>&nbsp;</p>'
     );
     delete editor.settings.default_link_target;
+  });
+
+  suite.test('TestCase-TBA: AutoLink: link_default_protocol=https', function (editor) {
+    editor.settings.link_default_protocol = 'https';
+    editor.focus();
+    LegacyUnit.equal(typeUrl(editor, 'http://www.domain.com'), '<p><a href="http://www.domain.com">http://www.domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'https://www.domain.com'), '<p><a href="https://www.domain.com">https://www.domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'ssh://www.domain.com'), '<p><a href="ssh://www.domain.com">ssh://www.domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'ftp://www.domain.com'), '<p><a href="ftp://www.domain.com">ftp://www.domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'www.domain.com'), '<p><a href="https://www.domain.com">www.domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'www.domain.com.'), '<p><a href="https://www.domain.com">www.domain.com</a>.&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'user@domain.com'), '<p><a href="mailto:user@domain.com">user@domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'mailto:user@domain.com'), '<p><a href="mailto:user@domain.com">mailto:user@domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'first-last@domain.com'), '<p><a href="mailto:first-last@domain.com">first-last@domain.com</a>&nbsp;</p>');
+    delete editor.settings.link_default_protocol;
+  });
+
+  suite.test('TestCase-TBA: AutoLink: link_default_protocol=http', function (editor) {
+    editor.settings.link_default_protocol = 'http';
+    editor.focus();
+    LegacyUnit.equal(typeUrl(editor, 'www.domain.com'), '<p><a href="http://www.domain.com">www.domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'www.domain.com.'), '<p><a href="http://www.domain.com">www.domain.com</a>.&nbsp;</p>');
+    delete editor.settings.link_default_protocol;
   });
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {

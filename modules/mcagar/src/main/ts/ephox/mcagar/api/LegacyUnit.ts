@@ -1,55 +1,61 @@
 import { Assertions, Logger, Step } from '@ephox/agar';
-import TinyDom from './TinyDom';
+import { Node as DomNode } from '@ephox/dom-globals';
+import { TinyDom } from './TinyDom';
+import { Editor } from '../alien/EditorTypes';
 
-const test = function (message: string, fn: Function) {
-  return function (editor) {
+type SyncTestCallback<T> = (initValue: T) => void;
+type AsyncTestCallback<T> = (initValue: T, done: () => void, die: (err?: any) => void) => void;
+type Offset = 'after' | 'afterNextCharacter' | number;
+
+const test = function <T>(message: string, fn: SyncTestCallback<T>) {
+  return function (initValue: T) {
     return Logger.t(
       message,
       Step.sync(function () {
-        fn(editor);
+        fn(initValue);
       })
     );
   };
 };
 
-const asyncTest = function (message: string, fn: Function) {
-  return function (editor) {
+const asyncTest = function <T>(message: string, fn: AsyncTestCallback<T>) {
+  return function (initValue: T) {
     return Logger.t(
       message,
       Step.async(function (done, die) {
-        fn(editor, done, die);
+        fn(initValue, done, die);
       })
     );
   };
 };
 
-const createSuite = function () {
-  const tests = [];
+const createSuite = function <T = any>() {
+  const tests: Array<(initValue: T) => Step<any, any>> = [];
 
   return {
-    test (message: string, fn: Function) {
+    test (message: string, fn: SyncTestCallback<T>) {
       tests.push(test(message, fn));
     },
 
-    asyncTest (message: string, fn: Function) {
+    asyncTest (message: string, fn: AsyncTestCallback<T>) {
       tests.push(asyncTest(message, fn));
     },
 
-    toSteps (editor) {
+    toSteps (initValue: T) {
       return tests.map(function (test) {
-        return test(editor);
+        return test(initValue);
       });
     }
   };
 };
 
-const execCommand = function execCommand(editor, cmd: string, ui?, value?) {
+const execCommand = function <T extends Editor = Editor> (editor: T, cmd: string, ui?: boolean, value?: any) {
   if (editor.editorCommands.hasCustomCommand(cmd)) {
     editor.execCommand(cmd, ui, value);
   }
 };
 
-const findContainer = function (editor, selector: string) {
+const findContainer = function <T extends Editor = Editor> (editor: T, selector: string | DomNode) {
   let container;
 
   if (typeof selector === 'string') {
@@ -65,12 +71,12 @@ const findContainer = function (editor, selector: string) {
   return container;
 };
 
-const setSelection = function (editor, startSelector: string, startOffset: number, endSelector?: string, endOffset?: number) {
+const setSelection = function <T extends Editor = Editor> (editor: T, startSelector: string, startOffset: Offset, endSelector?: string, endOffset?: Offset) {
   const startContainer = findContainer(editor, startSelector);
   const endContainer = findContainer(editor, endSelector ? endSelector : startSelector);
   const rng = editor.dom.createRng();
 
-  const setRange = function (container, offset, start) {
+  const setRange = function (container: DomNode, offset: Offset | undefined, start: boolean) {
     offset = offset ? offset : 0;
 
     if (offset === 'after') {
@@ -82,7 +88,7 @@ const setSelection = function (editor, startSelector: string, startOffset: numbe
 
       return;
     } else if (offset === 'afterNextCharacter') {
-      container = container.nextSibling;
+      container = container.nextSibling as DomNode;
       offset = 1;
     }
 
@@ -102,15 +108,18 @@ const trimBrs = function (html: string) {
   return html.toLowerCase().replace(/<br[^>]*>|[\r\n]+/gi, '');
 };
 
-const equalDom = function (actual, expected, message?: string) {
+const equalDom = function <T extends DomNode> (actual: T, expected: T, message?: string) {
   Assertions.assertDomEq(typeof message !== 'undefined' ? message : 'Nodes are not equal', TinyDom.fromDom(expected), TinyDom.fromDom(actual));
 };
 
-const equal = function (actual, expected, message?: string) {
+const equal = function <T> (actual: T, expected: T, message?: string) {
   Assertions.assertEq(typeof message !== 'undefined' ? message : 'No message specified', expected, actual);
 };
 
-export default {
+const strictEqual = equal;
+const deepEqual = equal;
+
+export {
   test,
   asyncTest,
   createSuite,
@@ -122,6 +131,6 @@ export default {
 
   equal,
   equalDom,
-  strictEqual: equal,
-  deepEqual: equal
+  strictEqual,
+  deepEqual
 };

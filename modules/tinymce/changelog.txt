@@ -1,3 +1,53 @@
+Version 5.2.0 (2020-02-13)
+    Added the ability to apply formats to spaces #TINY-4200
+    Added new `toolbar_location` setting to allow for positioning the menu and toolbar at the bottom of the editor #TINY-4210
+    Added new `toolbar_groups` setting to allow a custom floating toolbar group to be added to the toolbar when using `floating` toolbar mode #TINY-4229
+    Added new `link_default_protocol` setting to `link` and `autolink` plugin to allow a protocol to be used by default #TINY-3328
+    Added new `placeholder` setting to allow a placeholder to be shown when the editor is empty #TINY-3917
+    Added new `tinymce.dom.TextSeeker` API to allow searching text across different DOM nodes #TINY-4200
+    Added a drop shadow below the toolbar while in sticky mode and introduced Oxide variables to customize it when creating a custom skin #TINY-4343
+    Added `quickbars_image_toolbar` setting to allow for the image quickbar to be turned off #TINY-4398
+    Added iframe and img `loading` attribute to the default schema. Patch contributed by ataylor32. #GH-5112
+    Added new `getNodeFilters`/`getAttributeFilters` functions to the `editor.serializer` instance #TINY-4344
+    Added new `a11y_advanced_options` setting to allow additional accessibility options to be added #FOAM-11
+    Added new accessibility options and behaviours to the image dialog using `a11y_advanced_options` #FOAM-11
+    Added the ability to use the window `PrismJS` instance for the `codesample` plugin instead of the bundled version to allow for styling custom languages #TINY-4504
+    Added error message events that fire when a resource loading error occurs #TINY-4509
+    Changed the default schema to disallow `onchange` for select elements #TINY-4614
+    Changed default `toolbar_mode` value from false to `wrap`. The value false has been deprecated #TINY-4617
+    Changed `toolbar_drawer` setting to `toolbar_mode`. `toolbar_drawer` has been deprecated #TINY-4416
+    Changed iframe mode to set selection on content init if selection doesn't exist #TINY-4139
+    Changed table related icons to align them with the visual style of the other icons #TINY-4341
+    Changed and improved the visual appearance of the color input field #TINY-2917
+    Changed fake caret container to use `forced_root_block` when possible #TINY-4190
+    Changed the `requireLangPack` API to wait until the plugin has been loaded before loading the language pack #TINY-3716
+    Changed the formatter so `style_formats` are registered before the initial content is loaded into the editor #TINY-4238
+    Changed media plugin to use https protocol for media urls by default #TINY-4577
+    Changed the parser to treat CDATA nodes as bogus HTML comments to match the HTML parsing spec. A new `preserve_cdata` setting has been added to preserve CDATA nodes if required #TINY-4625
+    Fixed incorrect parsing of malformed/bogus HTML comments #TINY-4625
+    Fixed `quickbars` selection toolbar appearing on non-editable elements #TINY-4359
+    Fixed bug with alignment toolbar buttons sometimes not changing state correctly #TINY-4139
+    Fixed the `codesample` toolbar button not toggling when selecting code samples other than HTML #TINY-4504
+    Fixed content incorrectly scrolling to the top or bottom when pressing enter if when the content was already in view #TINY-4162
+    Fixed `scrollIntoView` potentially hiding elements behind the toolbar #TINY-4162
+    Fixed editor not respecting the `resize_img_proportional` setting due to legacy code #TINY-4236
+    Fixed flickering floating toolbar drawer in inline mode #TINY-4210
+    Fixed an issue where the template plugin dialog would be indefinitely blocked on a failed template load #TINY-2766
+    Fixed the `mscontrolselect` event not being unbound on IE/Edge #TINY-4196
+    Fixed Confirm dialog footer buttons so only the "Yes" button is highlighted #TINY-4310
+    Fixed `file_picker_callback` functionality for Image, Link and Media plugins #TINY-4163
+    Fixed issue where floating toolbar drawer sometimes would break if the editor is resized while the drawer is open #TINY-4439
+    Fixed incorrect `external_plugins` loading error message #TINY-4503
+    Fixed resize handler was not hidden for ARIA purposes. Patch contributed by Parent5446. #GH-5195
+    Fixed an issue where content could be lost if a misspelled word was selected and spellchecking was disabled #TINY-3899
+    Fixed validation errors in the CSS where certain properties had the wrong default value #TINY-4491
+    Fixed an issue where forced root block attributes were not applied when removing a list #TINY-4272
+    Fixed an issue where the element path isn't being cleared when there are no parents #TINY-4412
+    Fixed an issue where width and height in svg icons containing `rect` elements were overridden by the CSS reset #TINY-4408
+    Fixed an issue where uploading images with `images_reuse_filename` enabled and that included a query parameter would generate an invalid URL #TINY-4638
+    Fixed the `closeButton` property not working when opening notifications #TINY-4674
+    Fixed keyboard flicker when opening a context menu on mobile #TINY-4540
+    Fixed issue where plus icon svg contained strokes #TINY-4681
 Version 5.1.6 (2020-01-28)
     Fixed `readonly` mode not blocking all clicked links #TINY-4572
     Fixed legacy font sizes being calculated inconsistently for the `FontSize` query command value #TINY-4555

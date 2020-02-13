@@ -1,5 +1,5 @@
 import { FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Pipeline, Step, UiControls, UiFinder, Chain } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyLoader, TinyUi, TinyApis } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardN
   SilverTheme();
   SearchReplacePlugin();
 
-  const sOpenDialog = (ui) => {
+  const sOpenDialog = (ui: TinyUi) => {
     return Logger.t('Open dialog', GeneralSteps.sequence([
       ui.sClickOnToolbar('Click on find and replace button, there should be only 1 button in the toolbar', 'div.tox-toolbar__group > button'),
       ui.sWaitForPopup('wait for dialog', 'div.tox-dialog')

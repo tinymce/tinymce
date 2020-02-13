@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, DomFactory, RawDomSchema } from '@ephox/alloy';
+import { AlloySpec, RawDomSchema } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Fun, Merger, Obj, Option, Arr } from '@ephox/katamari';
+import { Arr, Fun, Obj, Option } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
 import * as ItemClasses from '../ItemClasses';
-import { renderIcon, renderShortcut, renderStyledText, renderText, renderHtml } from './ItemSlices';
+import { renderHtml, renderIcon, renderShortcut, renderStyledText, renderText } from './ItemSlices';
 
 export interface ItemStructure {
   dom: RawDomSchema;
@@ -49,14 +49,38 @@ const renderColorStructure = (itemText: Option<string>, itemValue: string, iconS
   const getDom = () => {
     const common = ItemClasses.colorClass;
     const icon = iconSvg.getOr('');
-    const title = itemText.map((text) => ` title="${providerBackstage.translate(text)}"`).getOr('');
+    const attributes = itemText.map((text) => ({ title: providerBackstage.translate(text) } as Record<string, string>)).getOr({ });
+
+    const baseDom = {
+      tag: 'div',
+      attributes,
+      classes: [ common ]
+    };
 
     if (itemValue === colorPickerCommand) {
-      return DomFactory.fromHtml(`<button class="${common} tox-swatches__picker-btn"${title}>${icon}</button>`);
+      return {
+        ...baseDom,
+        tag: 'button',
+        classes: [ ...baseDom.classes, 'tox-swatches__picker-btn' ],
+        innerHtml: icon
+      };
     } else if (itemValue === removeColorCommand) {
-      return DomFactory.fromHtml(`<div class="${common} tox-swatch--remove"${title}>${icon}</div>`);
+      return {
+        ...baseDom,
+        classes: [ ...baseDom.classes, 'tox-swatch--remove' ],
+        innerHtml: icon
+      };
     } else {
-      return DomFactory.fromHtml(`<div class="${common}" style="background-color: ${itemValue}" data-mce-color="${itemValue}"${title}></div>`);
+      return {
+        ...baseDom,
+        attributes: {
+          ...baseDom.attributes,
+          'data-mce-color': itemValue
+        },
+        styles: {
+          'background-color': itemValue
+        }
+      };
     }
   };
 
@@ -80,10 +104,11 @@ const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>, r
     };
   }).getOr({});
 
-  const dom = Merger.merge({
+  const dom = {
     tag: 'div',
     classes: [ ItemClasses.navClass, ItemClasses.selectableClass ].concat(rtlClass ? [ ItemClasses.iconClassRtl ] : []),
-  }, domTitle);
+    ...domTitle
+  };
 
   const content = info.htmlContent.fold(() => info.textContent.map(textRender),
     (html) => Option.some(renderHtml(html))

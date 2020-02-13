@@ -5,10 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling, FormField as AlloyFormField, Memento, NativeEvents, Representing, SimpleSpec, SimulatedEvent, SugarEvent, SystemEvents, Tabstopping, Toggling } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling, FormField as AlloyFormField, Memento, NativeEvents, Representing, SimpleSpec, SimulatedEvent, SystemEvents, Tabstopping, Toggling } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { DragEvent, FileList } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
+import { EventArgs } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -29,12 +30,12 @@ type DropZoneSpec = Omit<Types.DropZone.DropZone, 'type'>;
 export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
 
   // TODO: Consider moving to alloy
-  const stopper: AlloyEvents.EventRunHandler<SugarEvent> = (_: AlloyComponent, se: SimulatedEvent<SugarEvent>): void => {
+  const stopper: AlloyEvents.EventRunHandler<EventArgs> = (_: AlloyComponent, se: SimulatedEvent<EventArgs>): void => {
     se.stop();
   };
 
   // TODO: Consider moving to alloy
-  const sequence = (actions: Array<AlloyEvents.EventRunHandler<SugarEvent>>): AlloyEvents.EventRunHandler<SugarEvent> => {
+  const sequence = (actions: Array<AlloyEvents.EventRunHandler<EventArgs>>): AlloyEvents.EventRunHandler<EventArgs> => {
     return (comp, se) => {
       Arr.each(actions, (a) => {
         a(comp, se);
@@ -42,7 +43,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
     };
   };
 
-  const onDrop: AlloyEvents.EventRunHandler<SugarEvent> = (comp, se) => {
+  const onDrop: AlloyEvents.EventRunHandler<EventArgs> = (comp, se) => {
     if (! Disabling.isDisabled(comp)) {
       const transferEvent = se.event().raw() as DragEvent;
       handleFiles(comp, transferEvent.dataTransfer.files);

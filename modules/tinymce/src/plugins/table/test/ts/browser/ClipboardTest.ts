@@ -1,22 +1,23 @@
 import { Pipeline, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   SilverTheme();
   Plugin();
 
-  const cleanTableHtml = (html) => {
+  const cleanTableHtml = (html: string) => {
     return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
   };
 
-  const selectOne = (editor, start) => {
+  const selectOne = (editor: Editor, start) => {
     start = editor.$(start)[0];
 
     editor.fire('mousedown', { target: start, button: 0 });

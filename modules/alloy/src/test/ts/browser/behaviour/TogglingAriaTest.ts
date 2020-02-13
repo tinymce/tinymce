@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Logger, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
@@ -35,7 +35,7 @@ UnitTest.asynctest('TogglingAriaTest', (success, failure) => {
 
   }, (doc, body, gui, component, store) => {
 
-    const testIsSelected = (label) => {
+    const testIsSelected = (label: string) => {
       return Step.sync(() => {
         Assertions.assertStructure(
           'Asserting structure shows selected\n' + label,
@@ -52,7 +52,7 @@ UnitTest.asynctest('TogglingAriaTest', (success, failure) => {
       });
     };
 
-    const testNotSelected = (label) => {
+    const testNotSelected = (label: string) => {
       return Step.sync(() => {
         Assertions.assertStructure(
           'Asserting structure shows not selected\n' + label,
@@ -69,7 +69,7 @@ UnitTest.asynctest('TogglingAriaTest', (success, failure) => {
       });
     };
 
-    const assertIsSelected = (label, expected) => {
+    const assertIsSelected = (label: string, expected: boolean) => {
       return Logger.t(
         'Asserting isSelected()\n' + label,
         Step.sync(() => {

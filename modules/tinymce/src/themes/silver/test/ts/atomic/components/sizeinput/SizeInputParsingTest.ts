@@ -1,4 +1,4 @@
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { Result, Arr } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 

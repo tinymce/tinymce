@@ -1,5 +1,5 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step, ApproxStructure } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { console, document, window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
@@ -177,7 +177,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       inline: true,
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      toolbar_drawer: false
+      toolbar_mode: 'wrap'
     }).then(next, die);
   }));
 

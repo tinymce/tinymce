@@ -11,7 +11,7 @@ import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { Selection } from 'ephox/sugar/api/selection/Selection';
 import { Situ } from 'ephox/sugar/api/selection/Situ';
 import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { window, HTMLParagraphElement } from '@ephox/dom-globals';
 
 UnitTest.test('Browser Test: SelectionTest', function () {

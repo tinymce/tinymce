@@ -9,8 +9,8 @@ import { Element, Node } from '@ephox/dom-globals';
 import { Arr, Cell, Obj } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
-import FormatUtils from './FormatUtils';
-import MatchFormat from './MatchFormat';
+import * as FormatUtils from './FormatUtils';
+import * as MatchFormat from './MatchFormat';
 
 export type FormatChangeCallback = (state: boolean, data: { node: Node, format: string, parents: any }) => void;
 type FormatCallbacks = Record<string, FormatChangeCallback[]>;

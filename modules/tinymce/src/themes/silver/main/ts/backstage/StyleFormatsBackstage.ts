@@ -6,10 +6,10 @@
  */
 
 import { Arr, Cell, Option } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 import { getStyleFormats } from 'tinymce/themes/silver/ui/core/complex/StyleFormat';
 import { FormatItem } from '../ui/core/complex/BespokeSelect';
 import * as FormatRegister from '../ui/core/complex/utils/FormatRegister';
-import Editor from 'tinymce/core/api/Editor';
 
 const flatten = (fmt): string[] => {
   const subs = fmt.items;
@@ -27,7 +27,7 @@ export const init = (editor: Editor) => {
     const fmt = editor.formatter.get(format);
     return fmt !== undefined ? Option.some({
       tag: fmt.length > 0 ? fmt[0].inline || fmt[0].block || 'div' : 'div',
-      styleAttr: editor.formatter.getCssText(format)
+      styles: editor.dom.parseStyle(editor.formatter.getCssText(format))
     }) : Option.none();
   };
 
@@ -44,7 +44,7 @@ export const init = (editor: Editor) => {
 
   const replaceSettings = Cell(false);
 
-  editor.on('init', () => {
+  editor.on('PreInit', (e) => {
     const formats = getStyleFormats(editor);
     const enriched = FormatRegister.register(editor, formats, isSelectedFor, getPreviewFor);
     settingsFormats.set(enriched);

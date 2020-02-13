@@ -4,6 +4,18 @@ import { Attr, Classes, Css, Element, Node, Traverse } from '@ephox/sugar';
 import * as ApproxComparisons from '../assertions/ApproxComparisons';
 import * as ApproxStructures from '../assertions/ApproxStructures';
 
+type StringAssert = ApproxStructures.StringAssert;
+type ArrayAssert = ApproxStructures.ArrayAssert;
+type StructAssert = ApproxStructures.StructAssert;
+type StructAssertBasic = ApproxStructures.StructAssertBasic;
+type StructAssertAdv = ApproxStructures.StructAssertAdv;
+type CombinedAssert = ApproxComparisons.CombinedAssert;
+
+export type ArrayApi = typeof arrApi;
+export type StringApi = typeof strApi;
+export type StructApi = typeof structApi;
+export type Builder<T> = (struct: StructApi, str: StringApi, arr: ArrayApi) => T;
+
 const structApi = {
   element: ApproxStructures.element,
   text: ApproxStructures.text,
@@ -29,29 +41,19 @@ const arrApi = {
   hasPrefix: ApproxComparisons.hasPrefix
 };
 
-const build = function <T>(f: (struct: typeof structApi, str: typeof strApi, arr: typeof arrApi) => T): T {
-  return f(structApi, strApi, arrApi);
-};
+const build = <T>(f: Builder<T>): T =>
+  f(structApi, strApi, arrApi);
 
-const getAttrsExcept = function (node: Element, exclude: string[]) {
-  return Obj.bifilter(Attr.clone(node), function (value, key) {
-    return !Arr.contains(exclude, key);
-  }).t;
-};
+const getAttrsExcept = (node: Element<any>, exclude: string[]): Record<string, string> =>
+  Obj.bifilter(Attr.clone(node), (value, key) => !Arr.contains(exclude, key)).t;
 
-const toAssertableObj = function (obj: Record<string, any>) {
-  return Obj.map(obj, function (value) {
-    return ApproxComparisons.is(value);
-  });
-};
+const toAssertableObj = (obj: Record<string, string>): Record<string, CombinedAssert> =>
+  Obj.map(obj, ApproxComparisons.is);
 
-const toAssertableArr = function (arr: string[]) {
-  return Arr.map(arr, function (value) {
-    return ApproxComparisons.has(value);
-  });
-};
+const toAssertableArr = (arr: string[]): (StringAssert & ArrayAssert)[] =>
+  Arr.map(arr, ApproxComparisons.has);
 
-const fromElement = function (node: Element): ApproxStructures.StructAssert {
+const fromElement = (node: Element<any>): StructAssert => {
   if (Node.isElement(node)) {
     return ApproxStructures.element(Node.name(node), {
       children: Arr.map(Traverse.children(node), fromElement),
@@ -64,9 +66,8 @@ const fromElement = function (node: Element): ApproxStructures.StructAssert {
   }
 };
 
-const fromHtml = function (html: string) {
-  return fromElement(Element.fromHtml(html));
-};
+const fromHtml = (html: string): StructAssertBasic | StructAssertAdv =>
+  fromElement(Element.fromHtml(html));
 
 export {
   build,

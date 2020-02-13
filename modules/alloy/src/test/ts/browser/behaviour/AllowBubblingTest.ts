@@ -1,5 +1,5 @@
-import { GeneralSteps, Logger, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Logger, Step, StepSequence } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Element, Event } from '@ephox/dom-globals';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -9,14 +9,14 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('AllowBubblingTest', (success, failure) => {
-  const sDispatchScrollEvent = (comp: AlloyComponent) => {
+  const sDispatchScrollEvent = <T> (comp: AlloyComponent): Step<T, T> => {
     return Step.sync(() => {
       const rawEl: Element = comp.element().dom();
       rawEl.dispatchEvent(new Event('scroll'));
     });
   };
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.guiSetup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -39,13 +39,10 @@ UnitTest.asynctest('AllowBubblingTest', (success, failure) => {
         ])
       })
     );
-
-  }, (doc, body, gui, component, store) => {
-    return [
-      Logger.t('Should fire simulated scroll event', GeneralSteps.sequence([
+  }, (doc, body, gui, component, store) =>
+      Logger.t('Should fire simulated scroll event', StepSequence.sequenceSame([
         sDispatchScrollEvent(component),
         store.sAssertEq('Should have fired simulated scroll event', [ 'bubbled.scroll' ])
       ])),
-    ];
-  }, () => { success(); }, failure);
+    () => { success(); }, failure);
 });

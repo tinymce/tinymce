@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option, Options } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 
 export type IconProvider = () => Record<string, string>;
 
@@ -22,7 +22,7 @@ const getOr = (name: string, icons: IconProvider, fallback: Option<string>): str
 };
 
 const getFirst = (names: string[], icons: IconProvider): string => {
-  return Options.findMap(names, (name) => Option.from(icons()[name])).getOrThunk(() => defaultIcon(icons));
+  return Arr.findMap(names, (name) => Option.from(icons()[name])).getOrThunk(() => defaultIcon(icons));
 };
 
 export {

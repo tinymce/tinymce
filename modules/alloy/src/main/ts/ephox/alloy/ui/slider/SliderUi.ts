@@ -1,3 +1,4 @@
+import { DragEvent } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 
 import { Keying } from '../../api/behaviour/Keying';
@@ -10,7 +11,7 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as Channels from '../../api/messages/Channels';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { CustomEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { CustomEvent, EventFormat, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import * as AlloyParts from '../../parts/AlloyParts';
 import { SliderDetail, SliderSpec, SliderValue } from '../types/SliderTypes';
 import * as ModelCommon from './ModelCommon';
@@ -42,7 +43,7 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
     const thumb = getThumb(slider);
     refresh(slider, thumb);
     detail.onChange(slider, thumb, newValue);
-    return Option.some(true);
+    return Option.some<boolean>(true);
   };
 
   const resetToMin = (slider: AlloyComponent) => {
@@ -70,13 +71,13 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
     }
   };
 
-  const onDragStart = (slider: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
+  const onDragStart = (slider: AlloyComponent, simulatedEvent: NativeSimulatedEvent<DragEvent>) => {
     simulatedEvent.stop();
     detail.mouseIsDown.set(true);
     detail.onDragStart(slider, getThumb(slider));
   };
 
-  const onDragEnd = (slider: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
+  const onDragEnd = (slider: AlloyComponent, simulatedEvent: NativeSimulatedEvent<DragEvent>) => {
     simulatedEvent.stop();
     detail.onDragEnd(slider, getThumb(slider));
     choose(slider);
@@ -118,7 +119,7 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
     events: AlloyEvents.derive([
       AlloyEvents.run<CustomEvent>(ModelCommon.sliderChangeEvent(), (slider, simulatedEvent) => {
         changeValue(slider, simulatedEvent.event().value());
-      }),
+      }) as AlloyEvents.AlloyEventKeyAndHandler<EventFormat>,
       AlloyEvents.runOnAttached((slider, simulatedEvent) => {
         // Set the initial value
         const getInitial = modelDetail.getInitialValue();

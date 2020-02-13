@@ -25,7 +25,7 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
     state.clearTimer();
   };
 
-  const show = (comp) => {
+  const show = (comp: AlloyComponent) => {
     if (!state.isShowing()) {
       TooltippingApis.hideAllExclusive(comp, tooltipConfig, state);
       const sink = tooltipConfig.lazySink(comp).getOrDie();
@@ -72,7 +72,7 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
       AlloyEvents.run(SystemEvents.receive(), (comp, message) => {
         // TODO: Think about the types for this, or find a better way for this
         // to rely on receiving.
-        const receivingData = <any> message as ReceivingInternalEvent;
+        const receivingData = message as unknown as ReceivingInternalEvent;
         if (Arr.contains(receivingData.channels(), ExclusivityChannel)) { hide(comp); }
       }),
       AlloyEvents.runOnDetached((comp) => {

@@ -54,8 +54,8 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     };
   };
 
-  const cacheInvalidator = function (): string {
-    return '?' + (new Date()).getTime();
+  const cacheInvalidator = (url: string): string => {
+    return url + (url.indexOf('?') === -1 ? '?' : '&') + (new Date()).getTime();
   };
 
   // Replaces strings without regexps to avoid FF regexp to big issue
@@ -107,7 +107,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     replaceUrlInUndoStack(image.src, resultUri);
 
     editor.$(image).attr({
-      'src': Settings.shouldReuseFileName(editor) ? resultUri + cacheInvalidator() : resultUri,
+      'src': Settings.shouldReuseFileName(editor) ? cacheInvalidator(resultUri) : resultUri,
       'data-mce-src': editor.convertURL(resultUri, 'src')
     });
   };

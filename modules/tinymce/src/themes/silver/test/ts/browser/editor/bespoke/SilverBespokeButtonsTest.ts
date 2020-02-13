@@ -13,7 +13,7 @@ import {
   Step,
   UiFinder,
 } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
@@ -41,7 +41,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         return FocusTools.sTryOnSelector(
           `Focus should be on ${buttonText}`,
           doc,
-          `.tox-toolbar button:contains("${buttonText}")`
+          `.tox-toolbar__group button:contains("${buttonText}")`
         );
       };
 
@@ -49,7 +49,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         return FocusTools.sTryOnSelector(
           `Focus should be on Align`,
           doc,
-          `.tox-toolbar button[aria-label="Align"]`
+          `.tox-toolbar__group button[aria-label="Align"]`
         );
       };
 

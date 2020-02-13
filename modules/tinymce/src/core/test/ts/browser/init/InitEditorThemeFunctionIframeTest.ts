@@ -1,14 +1,12 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Insert, Element, SelectorFind } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest(
   'browser.tinymce.core.init.InitEditorThemeFunctionIframeTest',
-  function () {
-    const success = arguments[arguments.length - 2];
-    const failure = arguments[arguments.length - 1];
+  function (success, failure) {
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       const tinyApis = TinyApis(editor);

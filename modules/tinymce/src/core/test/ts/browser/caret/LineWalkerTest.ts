@@ -5,11 +5,9 @@ import * as LineWalker from 'tinymce/core/caret/LineWalker';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import $ from 'tinymce/core/api/dom/DomQuery';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 

@@ -1,12 +1,12 @@
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
-import DemoContainer from 'ephox/agar/demo/DemoContainer';
+import * as DemoContainer from 'ephox/agar/demo/DemoContainer';
 import { Element } from '@ephox/sugar';
 
-export default <any> function () {
+export const demo = (): void => {
   DemoContainer.init(
     'General Steps Demo',
-    function (success, failure) {
+    (success, failure) => {
       const outcome = Element.fromTag('div');
 
       Pipeline.async({}, [

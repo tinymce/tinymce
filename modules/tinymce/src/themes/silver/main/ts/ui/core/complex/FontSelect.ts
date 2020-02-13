@@ -95,7 +95,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   const getPreviewFor = (item) => () => {
     return Option.some({
       tag: 'div',
-      styleAttr: item.indexOf('dings') === -1 ? 'font-family:' + item : ''
+      styles: item.indexOf('dings') === -1 ? { 'font-family': item } :  { }
     });
   };
 

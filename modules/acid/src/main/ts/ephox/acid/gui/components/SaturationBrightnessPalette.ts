@@ -13,11 +13,11 @@ export interface SaturationBrightnessPaletteSpec extends Sketcher.SingleSketchSp
 }
 // tslint:enable:no-empty-interface
 
-export interface SaturationBrightnessPaletteSketcher extends Sketcher.SingleSketch<SaturationBrightnessPaletteSpec, SaturationBrightnessPaletteDetail> {
+export interface SaturationBrightnessPaletteSketcher extends Sketcher.SingleSketch<SaturationBrightnessPaletteSpec> {
   setRgba: (slider: AlloyComponent, colour: Rgba) => void;
 }
 
-const paletteFactory = (_translate: (key: string) => string, getClass: (key: string) => string) => {
+const paletteFactory = (_translate: (key: string) => string, getClass: (key: string) => string): SaturationBrightnessPaletteSketcher => {
   const spectrumPart = Slider.parts().spectrum({
     dom: {
       tag: 'canvas',
@@ -130,6 +130,6 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
   return saturationBrightnessPaletteSketcher;
 };
 
-export default {
+export {
   paletteFactory
 };

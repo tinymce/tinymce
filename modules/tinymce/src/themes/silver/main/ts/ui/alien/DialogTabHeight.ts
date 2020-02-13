@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloyEvents, Replacing, SystemEvents, TabSection } from '@ephox/alloy';
+import { AlloyComponent, AlloyEvents, Replacing, SystemEvents, TabSection, TabbarTypes } from '@ephox/alloy';
 import { Element as DomElement, window } from '@ephox/dom-globals';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
@@ -13,7 +13,7 @@ import { Css, Element, Focus, Height, SelectorFind, Traverse, Width } from '@eph
 import Delay from 'tinymce/core/api/util/Delay';
 import { formResizeEvent } from '../general/FormEvents';
 
-const measureHeights = (allTabs, tabview, tabviewComp): number[] => {
+const measureHeights = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>, tabview, tabviewComp): number[] => {
   return Arr.map(allTabs, (tab, i) => {
     Replacing.set(tabviewComp, allTabs[i].view());
     const rect = tabview.dom().getBoundingClientRect();
@@ -61,7 +61,8 @@ const getMaxTabviewHeight = (dialog: Element, tabview: Element, tablist: Element
   return maxHeight - chromeHeight;
 };
 
-const showTab = (allTabs, comp: AlloyComponent) => {
+// TODO: add a stronger type for allTabs
+const showTab = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>, comp: AlloyComponent) => {
   Arr.head(allTabs).each((tab) => TabSection.showTab(comp, tab.value));
 };
 
@@ -93,7 +94,7 @@ const updateTabviewHeight = (dialogBody: Element, tabview: Element, maxTabHeight
 
 const getTabview = (dialog: Element<DomElement>) => SelectorFind.descendant(dialog, '[role="tabpanel"]');
 
-const setMode = (allTabs) => {
+const setMode = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>) => {
   const smartTabHeight = (() => {
     const maxTabHeight = Cell<Option<number>>(Option.none());
 

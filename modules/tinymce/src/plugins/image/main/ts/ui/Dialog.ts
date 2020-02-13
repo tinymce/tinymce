@@ -74,7 +74,8 @@ const fromImageData = (image: ImageData): ImageDialogData => ({
   border: image.border,
   hspace: image.hspace,
   borderstyle: image.borderStyle,
-  fileinput: []
+  fileinput: [],
+  isDecorative: image.isDecorative
 });
 
 const toImageData = (data: ImageDialogData): ImageData => ({
@@ -89,7 +90,8 @@ const toImageData = (data: ImageDialogData): ImageData => ({
   hspace: data.hspace,
   vspace: data.vspace,
   border: data.border,
-  borderStyle: data.borderstyle
+  borderStyle: data.borderstyle,
+  isDecorative: data.isDecorative
 });
 
 const addPrependUrl2 = (info: ImageDialogInfo, srcURL: string): Option<string> => {
@@ -116,6 +118,9 @@ const formFillFromMeta2 = (info: ImageDialogInfo, data: ImageDialogData, meta: I
   if (info.hasDescription && Type.isString(meta.alt)) {
     data.alt = meta.alt;
   }
+  if (info.hasAccessibilityOptions) {
+    data.isDecorative = meta.isDecorative || false;
+  }
   if (info.hasImageTitle && Type.isString(meta.title)) {
     data.title = meta.title;
   }
@@ -138,6 +143,9 @@ const formFillFromMeta2 = (info: ImageDialogInfo, data: ImageDialogData, meta: I
     }
   }
   if (info.hasAdvTab) {
+    if (Type.isString(meta.style)) {
+      data.style = meta.style;
+    }
     if (Type.isString(meta.vspace)) {
       data.vspace = meta.vspace;
     }
@@ -322,6 +330,12 @@ const changeHandler = (helpers: Helpers, info: ImageDialogInfo, state: ImageDial
     changeAStyle(helpers, info, api);
   } else if (evt.name === 'fileinput') {
     changeFileInput(helpers, info, state, api);
+  } else if (evt.name === 'isDecorative') {
+    if (api.getData().isDecorative) {
+      api.disable('alt');
+    } else {
+      api.enable('alt');
+    }
   }
 };
 
@@ -379,7 +393,7 @@ const submitHandler = (editor: Editor) => (info: ImageDialogInfo) => (api: API) 
   const data: ImageDialogData = Merger.deepMerge(fromImageData(info.image), api.getData());
 
   editor.undoManager.transact(() => {
-    insertOrUpdateImage(editor, toImageData(data));
+    insertOrUpdateImage(editor, toImageData(data), info);
   });
 
   editor.editorUpload.uploadImagesAuto();

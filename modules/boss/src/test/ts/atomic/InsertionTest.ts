@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Option } from '@ephox/katamari';
 import Insertion from 'ephox/boss/mutant/Insertion';
 import Locator from 'ephox/boss/mutant/Locator';

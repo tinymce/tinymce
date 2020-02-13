@@ -31,6 +31,11 @@ export type ReferrerPolicy = DomReferrerPolicy | 'origin' | 'same-origin' | 'str
 export type URLConverter = (url: string, name: string, elm?: HTMLElement) => string;
 export type URLConverterCallback = (url: string, node: Node, on_save: boolean, name: string) => void;
 
+interface ToolbarGroup {
+  name?: string;
+  items: string[];
+}
+
 export interface RawEditorSettings {
   add_form_submit_trigger?: boolean;
   add_unload_trigger?: boolean;
@@ -130,7 +135,9 @@ export interface RawEditorSettings {
   no_newline_selector?: string;
   nowrap?: boolean;
   object_resizing?: boolean | string;
+  placeholder?: string;
   plugins?: string | string[];
+  preserve_cdata?: boolean;
   preview_styles?: boolean | string;
   protect?: RegExp[];
   readonly?: boolean;
@@ -156,7 +163,7 @@ export interface RawEditorSettings {
   target?: Element;
   theme?: string | ThemeInitFunc;
   theme_url?: string;
-  toolbar?: boolean | string | string[] | { name: string, items: string[]}[];
+  toolbar?: boolean | string | string[] | Array<ToolbarGroup>;
   toolbar1?: string;
   toolbar2?: string;
   toolbar3?: string;
@@ -166,7 +173,7 @@ export interface RawEditorSettings {
   toolbar7?: string;
   toolbar8?: string;
   toolbar9?: string;
-  toolbar_drawer?: false | 'floating' | 'sliding' | 'scrolling';
+  toolbar_mode?: 'floating' | 'sliding' | 'scrolling' | 'wrap';
   typeahead_urls?: boolean;
   url_converter?: URLConverter;
   url_converter_scope?: {};
@@ -181,6 +188,7 @@ export interface RawEditorSettings {
   width?: number | string;
 
   // Deprecated settings
+  toolbar_drawer?: false | 'floating' | 'sliding' | 'scrolling';
   editor_deselector?: string;
   editor_selector?: string;
   elements?: string;

@@ -14,7 +14,7 @@ const locate = function (text: string, offset: number) {
 const previous = function (text: string, offsetOption: Option<number>) {
   const max = offsetOption.getOr(text.length);
   for (let i = max - 1; i >= 0; i--) {
-    if (text.charAt(i) !== Unicode.zeroWidth()) {
+    if (text.charAt(i) !== Unicode.zeroWidth) {
       return Option.some(locate(text, i));
     }
   }
@@ -24,7 +24,7 @@ const previous = function (text: string, offsetOption: Option<number>) {
 const next = function (text: string, offsetOption: Option<number>) {
   const min = offsetOption.getOr(0);
   for (let i = min + 1; i < text.length; i++) {
-    if (text.charAt(i) !== Unicode.zeroWidth()) {
+    if (text.charAt(i) !== Unicode.zeroWidth) {
       return Option.some(locate(text, i));
     }
   }

@@ -1,5 +1,5 @@
 import { Assertions, Chain, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.DifferentEmojiDatabaseTest
       const tinyUi = TinyUi(editor);
 
       Pipeline.async({}, [
-          tinyApis.sFocus,
+          tinyApis.sFocus(),
           tinyUi.sClickOnToolbar('click emoticons', 'button'),
           Chain.asStep({}, [
             tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),

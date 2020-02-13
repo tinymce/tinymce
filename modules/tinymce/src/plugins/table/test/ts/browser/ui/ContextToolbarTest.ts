@@ -1,5 +1,5 @@
 import { Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Mouse, NamedChain, Pipeline, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi, UiChains} from '@ephox/mcagar';
@@ -72,7 +72,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success,
     ]);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Table: context toolbar keyboard navigation test', [
         sAddTableAndOpenContextToolbar(tableHtml),
         sPressKeyboardShortcutKey,

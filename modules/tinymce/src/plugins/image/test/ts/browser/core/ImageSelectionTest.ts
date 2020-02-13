@@ -1,21 +1,21 @@
-import { ApproxStructure, GeneralSteps, Logger, Pipeline, Step, Waiter, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { ApproxStructure, GeneralSteps, Logger, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Merger } from '@ephox/katamari';
-
+import { Element } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
+import { ImageData } from 'tinymce/plugins/image/core/ImageData';
+import { insertOrUpdateImage } from 'tinymce/plugins/image/core/ImageSelection';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-
-import { insertOrUpdateImage } from 'tinymce/plugins/image/core/ImageSelection';
-import { Element } from '@ephox/sugar';
+import { ImageDialogInfo } from 'tinymce/plugins/image/ui/DialogTypes';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (success, failure) => {
   Plugin();
   Theme();
 
-  const sUpdateImageOrFigure = (editor, data) => {
+  const sUpdateImageOrFigure = (editor: Editor, data: Partial<ImageData>) => {
     return Step.sync(() => {
-      insertOrUpdateImage(editor, Merger.merge({
+      insertOrUpdateImage(editor, {
         src: 'image.png',
         alt: '',
         title: '',
@@ -27,8 +27,10 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
         hspace: '',
         vspace: '',
         border: '',
-        borderStyle: ''
-      }, data));
+        borderStyle: '',
+        isDecorative: false,
+        ...data
+      }, { hasAccessibilityOptions: false } as ImageDialogInfo);
     });
   };
 

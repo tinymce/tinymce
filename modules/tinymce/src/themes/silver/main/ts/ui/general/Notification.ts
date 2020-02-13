@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Behaviour, Button, GuiFactory, Memento, Replacing, Sketcher, UiSketcher, AlloySpec } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, Behaviour, Button, GuiFactory, Memento, Replacing, Sketcher, UiSketcher } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
-import { Option, Arr } from '@ephox/katamari';
-import { IconProvider, get as getIcon, getFirst } from '../icons/Icons';
+import { Arr, Option } from '@ephox/katamari';
 import { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
+import { get as getIcon, getFirst, IconProvider } from '../icons/Icons';
 
 export interface NotificationSketchApis {
   updateProgress: (comp: AlloyComponent, percent: number) => void;
@@ -21,6 +21,7 @@ export interface NotificationSketchSpec extends Sketcher.SingleSketchSpec {
   text: string;
   level: 'info' | 'warn' | 'warning' | 'error' | 'success';
   icon: Option<string>;
+  closeButton?: boolean;
   progress: boolean;
   onAction: Function;
   iconProvider: IconProvider;
@@ -29,17 +30,17 @@ export interface NotificationSketchSpec extends Sketcher.SingleSketchSpec {
 
 // tslint:disable-next-line:no-empty-interface
 export interface NotificationSketchDetail extends Sketcher.SingleSketchDetail {
-
   text: string;
   level: Option<'info' | 'warn' | 'warning' | 'error' | 'success'>;
   icon: Option<string>;
+  closeButton: boolean;
   onAction: Function;
-  progress: Boolean;
+  progress: boolean;
   iconProvider: IconProvider;
   translationProvider: (text: Untranslated) => TranslatedString;
 }
 
-export interface NotificationSketcher extends Sketcher.SingleSketch<NotificationSketchSpec, NotificationSketchDetail>, NotificationSketchApis {
+export interface NotificationSketcher extends Sketcher.SingleSketch<NotificationSketchSpec>, NotificationSketchApis {
 
 }
 
@@ -175,7 +176,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
       } as AlloySpec
     ]
     .concat(detail.progress ? [memBannerProgress.asSpec()] : [])
-    .concat(Button.sketch({
+    .concat(!detail.closeButton ? [] : [Button.sketch({
         dom: {
           tag: 'button',
           classes: [ 'tox-notification__dismiss', 'tox-button', 'tox-button--naked', 'tox-button--icon' ]
@@ -193,13 +194,13 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
         action: (comp) => {
           detail.onAction(comp);
         }
-      })
+      })]
     ),
     apis
   };
 };
 
-export const Notification = Sketcher.single<NotificationSketchSpec, NotificationSketchDetail>({
+export const Notification: NotificationSketcher = Sketcher.single({
   name: 'Notification',
   factory,
   configFields: [
@@ -210,6 +211,7 @@ export const Notification = Sketcher.single<NotificationSketchSpec, Notification
     FieldSchema.strict('text'),
     FieldSchema.strict('iconProvider'),
     FieldSchema.strict('translationProvider'),
+    FieldSchema.defaultedBoolean('closeButton', true)
   ],
   apis: {
     updateProgress: (apis: NotificationSketchApis, comp: AlloyComponent, percent: number) => {

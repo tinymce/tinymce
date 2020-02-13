@@ -11,13 +11,14 @@ import CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
 import NormalizeRange from '../../selection/NormalizeRange';
 import RangeCompare from '../../selection/RangeCompare';
 import * as RangeNodes from '../../selection/RangeNodes';
+import { RangeLikeObject } from '../../selection/RangeTypes';
 import RangeWalk from '../../selection/RangeWalk';
 import * as SplitRange from '../../selection/SplitRange';
 import DOMUtils from './DOMUtils';
 
 interface RangeUtils {
   walk (rng: Range, callback: (nodes: Node[]) => void): void;
-  split (rng: Range): SplitRange.SplitRange;
+  split (rng: Range): RangeLikeObject;
   normalize (rng: Range): boolean;
 }
 
@@ -26,7 +27,7 @@ interface RangeUtils {
  *
  * @class tinymce.dom.RangeUtils
  */
-function RangeUtils(dom: DOMUtils) {
+function RangeUtils(dom: DOMUtils): RangeUtils {
   /**
    * Walks the specified range like object and executes the callback for each sibling collection it finds.
    *

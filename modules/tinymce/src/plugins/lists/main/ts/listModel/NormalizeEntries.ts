@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr, Option } from '@ephox/katamari';
 import { Entry } from './Entry';
-import { Arr, Merger, Option } from '@ephox/katamari';
 
 const cloneListProperties = (target: Entry, source: Entry): void => {
   target.listType = source.listType;
-  target.listAttributes = Merger.merge({}, source.listAttributes);
+  target.listAttributes = { ...source.listAttributes };
 };
 
 // Closest entry above in the same list

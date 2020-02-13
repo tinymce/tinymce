@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Pipeline   } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body, Element, Insert, Remove } from '@ephox/sugar';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => {
   SilverTheme();
@@ -48,24 +48,30 @@ UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => 
                       }),
 
                       s.element('div', {
-                        classes: [ arr.has('tox-toolbar') ],
+                        classes: [ arr.has('tox-toolbar-overlord') ],
                         attrs: { role: str.is('group') },
                         children: [
                           s.element('div', {
-                            classes: [ arr.has('tox-toolbar__group') ],
+                            classes: [ arr.has('tox-toolbar__primary') ],
+                            attrs: { role: str.is('group') },
                             children: [
-                              s.element('button', {
-                                classes: [ arr.has('tox-tbtn'), arr.not('tox-btn--enabled') ],
-                                attrs: {
-                                  'aria-label': str.is('Undo')
-                                }
-                              }),
-                              s.element('button', {
-                                classes: [ arr.has('tox-tbtn'), arr.not('tox-btn--enabled') ],
-                                attrs: {
-                                  'aria-label': str.is('Bold')
-                                }
-                              }),
+                              s.element('div', {
+                                classes: [ arr.has('tox-toolbar__group') ],
+                                children: [
+                                  s.element('button', {
+                                    classes: [ arr.has('tox-tbtn'), arr.not('tox-btn--enabled') ],
+                                    attrs: {
+                                      'aria-label': str.is('Undo')
+                                    }
+                                  }),
+                                  s.element('button', {
+                                    classes: [ arr.has('tox-tbtn'), arr.not('tox-btn--enabled') ],
+                                    attrs: {
+                                      'aria-label': str.is('Bold')
+                                    }
+                                  }),
+                                ]
+                              })
                             ]
                           })
                         ]
@@ -93,7 +99,7 @@ UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => 
 
       Pipeline.async({ }, [
         tinyApis.sSetContent('fixed_toolbar_container test'),
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         sToolbarTest(),
       ], onSuccess, onFailure);
     }, {

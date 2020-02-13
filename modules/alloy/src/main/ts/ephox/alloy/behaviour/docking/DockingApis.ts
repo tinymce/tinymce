@@ -1,23 +1,20 @@
-import { Arr, Fun, Thunk } from '@ephox/katamari';
-import { Classes, Css, Scroll, Traverse } from '@ephox/sugar';
+import { Classes, Css } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
-import * as OffsetOrigin from '../../alien/OffsetOrigin';
-import { SugarPosition } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import * as DragCoord from '../../api/data/DragCoord';
 import * as Dockables from './Dockables';
 import { DockingConfig, DockingState } from './DockingTypes';
+import { applyPositionCss, PositionCss } from '../../positioning/view/PositionCss';
+import { Arr, Fun } from '@ephox/katamari';
 
 const morphToStatic = (component: AlloyComponent, config: DockingConfig): void => {
-  Arr.each([ 'left', 'top', 'position' ], (prop) => Css.remove(component.element(), prop));
+  Arr.each([ 'left', 'right', 'top', 'bottom', 'position' ], (prop) => Css.remove(component.element(), prop));
   config.onUndocked(component);
 };
 
-const morphToCoord = (component: AlloyComponent, config: DockingConfig, scroll: SugarPosition, origin: SugarPosition, morph: DragCoord.CoordAdt): void => {
-  const styles = DragCoord.toStyles(morph, scroll, origin);
-  Css.setAll(component.element(), styles);
-  const method = styles.position === 'fixed' ? config.onDocked : config.onUndocked;
+const morphToCoord = (component: AlloyComponent, config: DockingConfig, position: PositionCss): void => {
+  applyPositionCss(component.element(), position);
+  const method = position.position() === 'fixed' ? config.onDocked : config.onUndocked;
   method(component);
 };
 
@@ -47,30 +44,22 @@ const updateVisibility = (component: AlloyComponent, config: DockingConfig, stat
 const refreshInternal = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
   // Absolute coordinates (considers scroll)
   const viewport = config.lazyViewport(component);
-
-  const elem = component.element();
-  const doc = Traverse.owner(elem);
-  const scroll = Scroll.get(doc);
-  // PERFORMANCE: OffsetOrigin.getOrigin() is a little bit slow for scrolling performance, so
-  // only do the calculations as required and cache the result to avoid multiple calls
-  const lazyOrigin = Thunk.cached(() => OffsetOrigin.getOrigin(elem));
-
   // If docked then check if we need to hide/show the component
   const isDocked = state.isDocked();
   if (isDocked) {
     updateVisibility(component, config, state, viewport);
   }
 
-  Dockables.getMorph(component, config, viewport, scroll, lazyOrigin).each((morph) => {
+  Dockables.getMorph(component, config, viewport, state).each((morph) => {
     // Toggle the docked state
     state.setDocked(!isDocked);
     // Apply the morph result
     morph.fold(
       () => morphToStatic(component, config),
-      (x, y) => morphToCoord(component, config, scroll, lazyOrigin(), DragCoord.absolute(x, y)),
-      (x, y) => {
+      (position) => morphToCoord(component, config, position),
+      (position) => {
         updateVisibility(component, config, state, viewport, true);
-        morphToCoord(component, config, scroll, lazyOrigin(), DragCoord.fixed(x, y));
+        morphToCoord(component, config, position);
       },
     );
   });
@@ -80,15 +69,10 @@ const resetInternal = (component: AlloyComponent, config: DockingConfig, state: 
   // Morph back to the original position
   const elem = component.element();
   state.setDocked(false);
-  Dockables.getMorphToOriginal(component, config).each((morph) => {
+  Dockables.getMorphToOriginal(component, state).each((morph) => {
     morph.fold(
       () => morphToStatic(component, config),
-      (x, y) => {
-        const doc = Traverse.owner(elem);
-        const scroll = Scroll.get(doc);
-        const origin = OffsetOrigin.getOrigin(elem);
-        morphToCoord(component, config, scroll, origin, DragCoord.absolute(x, y));
-      },
+      (position) => morphToCoord(component, config, position),
       Fun.noop
     );
   });

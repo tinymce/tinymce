@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
@@ -70,7 +70,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
       );
 
       Pipeline.async({ }, [
-        Step.label('Focus editor', tinyApis.sFocus),
+        Step.label('Focus editor', tinyApis.sFocus()),
 
         Log.step('TBA', 'Immediately launching a context form, and navigating and triggering enter and esc', GeneralSteps.sequence([
           Step.label('Open context form', sOpen('test-form')),
@@ -85,7 +85,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           Step.label('Check that a dialog is displayed', sHasDialog('Immediate context form should have an inner dialog class')),
           Step.label('Press escape', Keyboard.sKeydown(doc, Keys.escape(), { })),
           Step.label('Check that the context popup still exists', UiFinder.sExists(Body.body(), '.tox-pop')),
-          Step.label('Check that the editor still has focus', tinyApis.sTryAssertFocus),
+          Step.label('Check that the editor still has focus', tinyApis.sTryAssertFocus()),
           Step.label('Simulate clicking elsewhere in the editor (fire node change)', sClickAway),
           Step.label('Check that the popup dialog closes', sCheckNoPopDialog)
         ])),
@@ -105,7 +105,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           Step.label('Check context toolbar has inner dialog class', sHasDialog('Restored context toolbar (esc from form) should have an inner dialog class')),
           Step.label('Press escape (again)', Keyboard.sKeydown(doc, Keys.escape(), { })),
           Step.label('Check that the context popup still exists', UiFinder.sExists(Body.body(), '.tox-pop')),
-          Step.label('Check that the editor still has focus', tinyApis.sTryAssertFocus),
+          Step.label('Check that the editor still has focus', tinyApis.sTryAssertFocus()),
           Step.label('Simulate clicking elsewhere in the editor (fire node change)', sClickAway),
           Step.label('Check that the popup dialog closes', sCheckNoPopDialog)
         ]))),

@@ -34,8 +34,10 @@ export interface FormCoupledInputsSpec extends CompositeSketchSpec {
   };
 }
 
-export interface FormCoupledInputsSketcher extends CompositeSketch<FormCoupledInputsSpec, FormCoupledInputsDetail> {
+export interface FormCoupledInputsApis {
   getField1: (comp: AlloyComponent) => Option<AlloyComponent>;
   getField2: (comp: AlloyComponent) => Option<AlloyComponent>;
   getLock: (comp: AlloyComponent) => Option<AlloyComponent>;
 }
+
+export interface FormCoupledInputsSketcher extends CompositeSketch<FormCoupledInputsSpec>, FormCoupledInputsApis { }

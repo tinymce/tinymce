@@ -13,6 +13,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Utils from './Utils';
 import Editor from 'tinymce/core/api/Editor';
+import { Unicode } from '@ephox/katamari';
 
 /**
  * This class parses word HTML into proper TinyMCE markup.
@@ -347,14 +348,14 @@ const filterWordContent = function (editor: Editor, content: string) {
     [/<(\/?)s>/gi, '<$1strike>'],
 
     // Replace nsbp entites to char since it's easier to handle
-    [/&nbsp;/gi, '\u00a0'],
+    [/&nbsp;/gi, Unicode.nbsp],
 
     // Convert <span style="mso-spacerun:yes">___</span> to string of alternating
     // breaking/non-breaking spaces of same length
     [/<span\s+style\s*=\s*"\s*mso-spacerun\s*:\s*yes\s*;?\s*"\s*>([\s\u00a0]*)<\/span>/gi,
       function (str, spaces) {
         return (spaces.length > 0) ?
-          spaces.replace(/./, ' ').slice(Math.floor(spaces.length / 2)).split('').join('\u00a0') : '';
+          spaces.replace(/./, ' ').slice(Math.floor(spaces.length / 2)).split('').join(Unicode.nbsp) : '';
       }
     ]
   ]);

@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 import { Class, Css, Element, Html, Insert, Remove } from '@ephox/sugar';
@@ -14,7 +14,7 @@ import * as UiControls from 'ephox/agar/api/UiControls';
 import * as UiFinder from 'ephox/agar/api/UiFinder';
 import * as Waiter from 'ephox/agar/api/Waiter';
 
-UnitTest.asynctest('Real Effects Test', function (success, failure) {
+UnitTest.asynctest('Real Effects Test', (success, failure) => {
 
   const platform = PlatformDetection.detect();
 
@@ -29,7 +29,7 @@ UnitTest.asynctest('Real Effects Test', function (success, failure) {
 
   const container = Element.fromTag('div');
 
-  const sCreateWorld = Step.sync(function () {
+  const sCreateWorld = Step.sync(() => {
     const input = Element.fromTag('input');
     Insert.append(container, input);
 
@@ -44,8 +44,8 @@ UnitTest.asynctest('Real Effects Test', function (success, failure) {
     Insert.append(body, container);
   });
 
-  const sCheckInput = function (label, expected) {
-    return Chain.asStep(body, [
+  const sCheckInput = (label, expected) =>
+    Chain.asStep(body, [
       Chain.control(
         UiFinder.cFindIn('input'),
         Guard.addLogging(label + '\nlooking for input to check expected')
@@ -53,18 +53,16 @@ UnitTest.asynctest('Real Effects Test', function (success, failure) {
       UiControls.cGetValue,
       Assertions.cAssertEq(label + '\nChecking the input value', expected)
     ]);
-  };
 
-  const sCheckButtonBorder = function (label, expected) {
-    return Chain.asStep(body, [
+  const sCheckButtonBorder = (label, expected) =>
+    Chain.asStep(body, [
       UiFinder.cFindIn('button.test'),
-      Chain.mapper(function (button) {
+      Chain.mapper((button) => {
         const prop = platform.browser.isFirefox() || platform.browser.isEdge() || platform.browser.isIE() ? 'border-right-color' : 'border-color';
         return Css.get(button, prop);
       }),
       Assertions.cAssertEq(label + '\nChecking color of button border', expected)
     ]);
-  };
 
   Pipeline.async({}, [
     sCreateWorld,
@@ -109,7 +107,7 @@ UnitTest.asynctest('Real Effects Test', function (success, failure) {
       'Waiting for hovered state',
       sCheckButtonBorder('Checking hovered state of button border', 'rgb(255, 255, 255)')
     )
-  ], function () {
+  ], () => {
     Remove.remove(container);
     success();
   }, failure);

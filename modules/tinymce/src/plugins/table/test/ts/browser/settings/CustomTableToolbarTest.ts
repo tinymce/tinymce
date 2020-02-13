@@ -1,5 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { SelectorFilter } from '@ephox/sugar';
 
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.CustomTableToolbarTest', funct
 
     Pipeline.async({}, [
       Logger.t('test custom count of toolbar buttons', GeneralSteps.sequence([
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent(tableHtml),
         TableTestUtils.sOpenToolbarOn(editor, 'table td', [0]),
         Chain.asStep({}, [

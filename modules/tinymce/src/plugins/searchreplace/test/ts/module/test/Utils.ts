@@ -1,6 +1,7 @@
 import { Assertions, Chain, GeneralSteps, Guard, UiControls, UiFinder, Waiter } from '@ephox/agar';
+import { TinyUi } from '@ephox/mcagar';
 
-const cFindInDialog = (ui, selector: string) => {
+const cFindInDialog = (ui: TinyUi, selector: string) => {
   return Chain.control(
     Chain.fromChains([
       ui.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
@@ -10,7 +11,7 @@ const cFindInDialog = (ui, selector: string) => {
   );
 };
 
-const sAssertFieldValue = (ui, selector: string, value) => {
+const sAssertFieldValue = (ui: TinyUi, selector: string, value: string) => {
   return Waiter.sTryUntil(`Wait for new ${selector} value`,
     Chain.asStep({}, [
       cFindInDialog(ui, selector),
@@ -20,14 +21,14 @@ const sAssertFieldValue = (ui, selector: string, value) => {
   );
 };
 
-const sOpenDialog = (ui) => {
+const sOpenDialog = (ui: TinyUi) => {
   return GeneralSteps.sequence([
     ui.sClickOnToolbar('click on searchreplace button', 'button[aria-label="Find and replace"]'),
     ui.sWaitForPopup('Wait for dialog', 'div[role="dialog"]')
   ]);
 };
 
-const sCloseDialog = (ui) => {
+const sCloseDialog = (ui: TinyUi) => {
   // Note: Can't use UiChains.cCloseDialog here, as the dialog doesn't have a cancel button in the footer
   return ui.sClickOnUi('Click cancel button', 'div[role="dialog"] button[aria-label=Close]');
 };

@@ -1,5 +1,5 @@
 import { FocusTools, Pipeline, Step, RealMouse } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document, window } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';

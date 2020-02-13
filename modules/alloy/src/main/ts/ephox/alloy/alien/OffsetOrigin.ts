@@ -1,28 +1,37 @@
-import { Css, Element, Insert, Location, Position, Remove, Traverse } from '@ephox/sugar';
+import { Element as DomElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { SugarPosition } from './TypeDefinitions';
+import { Css, Element, Insert, Location, Position, Remove, Traverse } from '@ephox/sugar';
+
+const getOffsetParent = (element: Element): Option<Element<DomElement>> => {
+  // Firefox sets the offsetParent to the body when fixed instead of null like
+  // all other browsers. So we need to check if the element is fixed and if so then
+  // disregard the elements offsetParent.
+  const isFixed = Css.getRaw(element, 'position').is('fixed');
+  const offsetParent = isFixed ? Option.none<Element<DomElement>>() : Traverse.offsetParent(element);
+  return offsetParent.orThunk((): Option<Element<DomElement>> => {
+    const marker = Element.fromTag('span');
+    // PERFORMANCE: Append the marker to the parent element, as adding it before the current element will
+    // trigger the styles to be recalculated which is a little costly (particularly in scroll/resize events)
+    return Traverse.parent(element).bind((parent) => {
+      Insert.append(parent, marker);
+      const offsetParent = Traverse.offsetParent(marker);
+      Remove.remove(marker);
+      return offsetParent;
+    });
+  });
+};
 
 /*
  * This allows the absolute coordinates to be obtained by adding the
  * origin to the offset coordinates and not needing to know scroll.
  */
-const getOrigin = (element: Element): SugarPosition => {
-  // Firefox sets the offsetParent to the body when fixed instead of null like
-  // all other browsers. So we need to check if the element is fixed and if so then
-  // disregard the elements offsetParent.
-  const isFixed = Css.getRaw(element, 'position').is('fixed');
-  const offsetParent = isFixed ? Option.none<Element>() : Traverse.offsetParent(element);
-  return offsetParent.orThunk(() => {
-    const marker = Element.fromTag('span');
-    Insert.before(element, marker);
-    const offsetParent = Traverse.offsetParent(marker);
-    Remove.remove(marker);
-    return offsetParent;
-  }).map(Location.absolute).getOrThunk(() => {
+const getOrigin = (element: Element): Position => {
+  return getOffsetParent(element).map(Location.absolute).getOrThunk(() => {
     return Position(0, 0);
   });
 };
 
 export {
-  getOrigin
+  getOrigin,
+  getOffsetParent
 };

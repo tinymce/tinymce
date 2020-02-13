@@ -1,15 +1,15 @@
-import { Pipeline, Step, RawAssertions } from '@ephox/agar';
+import { Pipeline, Step } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import I18n from 'tinymce/core/api/util/I18n';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.EditorRtlTest', (success, failure) => {
   Theme();
 
   const sAssertRtl = (label: string, rtl: boolean) => Step.sync(() => {
-    RawAssertions.assertEq(label, rtl, I18n.isRtl());
+    Assert.eq(label, rtl, I18n.isRtl());
   });
 
   const sSetLangCode = (code: string) => Step.sync(() => {

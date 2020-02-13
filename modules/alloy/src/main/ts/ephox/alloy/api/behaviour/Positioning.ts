@@ -4,12 +4,12 @@ import * as PositionApis from '../../behaviour/positioning/PositionApis';
 import PositionSchema from '../../behaviour/positioning/PositionSchema';
 import { PositioningBehaviour } from '../../behaviour/positioning/PositioningTypes';
 
-const Positioning = Behaviour.create({
+const Positioning: PositioningBehaviour = Behaviour.create({
   fields: PositionSchema,
   name: 'positioning',
   active: ActivePosition,
   apis: PositionApis
-}) as PositioningBehaviour;
+});
 
 export {
   Positioning

@@ -9,7 +9,7 @@ import * as Selectors from 'ephox/sugar/api/search/Selectors';
 import Checkers from 'ephox/sugar/test/Checkers';
 import Div from 'ephox/sugar/test/Div';
 import TestPage from 'ephox/sugar/test/TestPage';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('SelectorTest', function () {
   // Querying non-element nodes does not throw an error

@@ -5,19 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Strings } from '@ephox/katamari';
 import { Text } from '@ephox/dom-globals';
+import { Arr, Strings, Unicode } from '@ephox/katamari';
 import { Element, Remove } from '@ephox/sugar';
-
-// Don't compare other unicode spaces here, as we're only concerned about whitespace the browser would collapse
-const isCollapsibleWhitespace = (c: string): boolean => ' \f\n\r\t\v'.indexOf(c) !== -1;
+import { isNbsp, isWhiteSpace } from '../text/CharType';
 
 const normalizeContent = (content: string, isStartOfContent: boolean, isEndOfContent: boolean): string => {
   const result = Arr.foldl(content, (acc, c) => {
     // Are we dealing with a char other than some collapsible whitespace or nbsp? if so then just use it as is
-    if (isCollapsibleWhitespace(c) || c === '\u00a0') {
+    if (isWhiteSpace(c) || isNbsp(c)) {
       if (acc.previousCharIsSpace || (acc.str === '' && isStartOfContent) || (acc.str.length === content.length - 1 && isEndOfContent)) {
-        return { previousCharIsSpace: false, str: acc.str + '\u00a0' };
+        return { previousCharIsSpace: false, str: acc.str + Unicode.nbsp };
       } else {
         return { previousCharIsSpace: true, str: acc.str + ' ' };
       }

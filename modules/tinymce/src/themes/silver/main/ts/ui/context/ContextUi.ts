@@ -5,22 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AddEventsBehaviour,
-  AlloyComponent,
-  AlloyEvents,
-  AlloySpec,
-  AlloyTriggers,
-  Behaviour,
-  CustomEvent,
-  InlineView,
-  NativeEvents,
-  SugarEvent,
-  Keying,
-  GuiFactory,
-} from '@ephox/alloy';
-import { Cell, Id, Option, Result, Arr } from '@ephox/katamari';
-import { Class, Css, Element, Focus, Width } from '@ephox/sugar';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, GuiFactory, InlineView, Keying, NativeEvents, } from '@ephox/alloy';
+import { Arr, Cell, Id, Option, Result } from '@ephox/katamari';
+import { Class, Css, Element, EventArgs, Focus, Width } from '@ephox/sugar';
 import Delay from 'tinymce/core/api/util/Delay';
 
 const forwardSlideEvent = Id.generate('forward-slide');
@@ -63,7 +50,7 @@ const renderContextToolbar = (spec: { onEscape: () => Option<boolean>, sink: All
 
     inlineBehaviours: Behaviour.derive([
       AddEventsBehaviour.config('context-toolbar-events', [
-        AlloyEvents.runOnSource<SugarEvent>(NativeEvents.transitionend(), (comp, se) => {
+        AlloyEvents.runOnSource<EventArgs>(NativeEvents.transitionend(), (comp, se) => {
           InlineView.getContent(comp).each((c) => {
             // Css.remove(c.element(), 'opacity');
           });

@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import * as Arrays from 'ephox/polaris/api/Arrays';
 import { Splitting } from 'ephox/polaris/api/Splitting';

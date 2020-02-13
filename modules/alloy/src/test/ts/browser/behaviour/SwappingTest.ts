@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -37,7 +37,7 @@ UnitTest.asynctest('SwappingTest', (success, failure) => {
     );
   }, (doc, body, gui, component, store) => {
     /// string -> [string] -> [string] -> ()
-    const assertClasses = (label, has, not) => {
+    const assertClasses = (label: string, has: string[], not: string[]) => {
       Assertions.assertStructure(
         'Asserting structure after: ' + label,
         ApproxStructure.build((s, str, arr) => {
@@ -52,25 +52,25 @@ UnitTest.asynctest('SwappingTest', (success, failure) => {
       );
     };
 
-    const testHasNoClass = (label) => {
+    const testHasNoClass = (label: string) => {
       return Step.sync(() => {
         assertClasses(label, [], [ ALPHA_CLS(), OMEGA_CLS() ]);
       });
     };
 
-    const testHasAlpha = (label) => {
+    const testHasAlpha = (label: string) => {
       return Step.sync(() => {
         assertClasses(label, [ALPHA_CLS()], [OMEGA_CLS()]);
       });
     };
 
-    const testHasOmega = (label) => {
+    const testHasOmega = (label: string) => {
       return Step.sync(() => {
         assertClasses(label, [OMEGA_CLS()], [ALPHA_CLS()]);
       });
     };
 
-    const testPredicates = (label, isAlpha, isOmega) => {
+    const testPredicates = (label: string, isAlpha: boolean, isOmega: boolean) => {
       return Step.sync(() => {
         Assertions.assertEq(label, isAlpha, Swapping.isAlpha(component));
         Assertions.assertEq(label, isOmega, Swapping.isOmega(component));

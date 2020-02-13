@@ -30,7 +30,8 @@ type CheckerPredicate = typeof CaretPosition.isAbove | typeof CaretPosition.isBe
 type LineInfoFinder = (scope: HTMLElement, start: CaretPosition) => LineInfo;
 type CaretPositionsFinder = (scope: HTMLElement, start: CaretPosition) => CaretPosition[];
 
-const flip = (direction: HDirection, positions: CaretPosition[]) => direction === HDirection.Backwards ? positions.reverse() : positions;
+const flip = (direction: HDirection, positions: CaretPosition[]): CaretPosition[] =>
+  direction === HDirection.Backwards ? Arr.reverse(positions) : positions;
 
 const walk = (direction: HDirection, caretWalker: CaretWalker, pos: CaretPosition): CaretPosition => {
   return direction === HDirection.Forwards ? caretWalker.next(pos) : caretWalker.prev(pos);

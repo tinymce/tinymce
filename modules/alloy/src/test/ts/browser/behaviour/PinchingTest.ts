@@ -1,5 +1,5 @@
 import { Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Pinching } from 'ephox/alloy/api/behaviour/Pinching';
@@ -32,7 +32,7 @@ UnitTest.asynctest('Browser Test: behaviour.PinchingTest', (success, failure) =>
     });
   }, (doc, body, gui, component, store) => {
 
-    const sSendTouchmove = (touches) => {
+    const sSendTouchmove = (touches: Array<{ clientX: number; clientY: number}>) => {
       return Step.sync(() => {
         AlloyTriggers.emitWith(component, NativeEvents.touchmove(), {
           raw: { touches }

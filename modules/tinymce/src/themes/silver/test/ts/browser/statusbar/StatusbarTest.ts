@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Chain, Log, Mouse, NamedChain, Pipeline, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Editor } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import Wordcount from 'tinymce/plugins/wordcount/Plugin';
@@ -36,6 +36,9 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
         ]
       }),
       s.element('div', {
+        attrs: {
+          'aria-hidden': str.is('true')
+        },
         classes: [ arr.has('tox-statusbar__resize-handle')],
       })
     ];
@@ -63,6 +66,9 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
         ]
       }),
       s.element('div', {
+        attrs: {
+          'aria-hidden': str.is('true')
+        },
         classes: [ arr.has('tox-statusbar__resize-handle')],
       })
     ];

@@ -6,7 +6,7 @@
  */
 
 import { Text, Element as DomElement } from '@ephox/dom-globals';
-import { Strings, Option, Arr } from '@ephox/katamari';
+import { Strings, Option, Arr, Unicode } from '@ephox/katamari';
 import { Element, PredicateFind, Node, Css } from '@ephox/sugar';
 import { CaretPosition } from '../caret/CaretPosition';
 import Editor from '../api/Editor';
@@ -19,8 +19,6 @@ import { isAtStartOfBlock, isAtEndOfBlock, isAfterBlock, isBeforeBlock } from '.
 import { isNbsp, isContent } from '../text/CharType';
 import { isAfterBr, isBeforeBr } from '../caret/CaretBr';
 import { isAfterSpace, isBeforeSpace } from '../caret/CaretPositionPredicates';
-
-const nbsp = '\u00a0';
 
 const isInMiddleOfText = (pos: CaretPosition) => CaretPosition.isTextPosition(pos) && !pos.isAtStart() && !pos.isAtEnd();
 
@@ -113,7 +111,7 @@ const isNbspAt = (text: string, offset: number) => {
 
 const hasNbsp = (pos: CaretPosition) => {
   const container = pos.container();
-  return NodeType.isText(container) && Strings.contains(container.data, nbsp);
+  return NodeType.isText(container) && Strings.contains(container.data, Unicode.nbsp);
 };
 
 const normalizeNbspMiddle = (text: string): string => {

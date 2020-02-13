@@ -39,7 +39,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
     const footerNo = renderFooterButton({
       name: 'no',
       text: 'No',
-      primary: true,
+      primary: false,
       align: 'end',
       disabled: false,
       icon: Option.none()

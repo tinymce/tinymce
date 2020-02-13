@@ -1,5 +1,5 @@
 import Redistribution from 'ephox/snooker/resize/Redistribution';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { Size } from '../../../../main/ts/ephox/snooker/resize/Size';
 
 UnitTest.test('RedistributeTest', function () {

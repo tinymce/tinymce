@@ -1,17 +1,16 @@
-import { ApproxStructure, Assertions, Step, GeneralSteps } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { ApproxStructure, Assertions, GeneralSteps, Step, StructAssert } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { SplitFloatingToolbar } from 'ephox/alloy/api/ui/SplitFloatingToolbar';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
-import * as TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
-import * as Layout from 'ephox/alloy/positioning/layout/Layout';
+import * as TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
 
 UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
   // Tests requiring 'flex' do not currently work on phantom. Use the remote to see how it is
@@ -50,16 +49,6 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
         lazySink (comp) {
           return Result.value(sinkComp);
         },
-        getAnchor (comp) {
-          return {
-            anchor: 'hotspot',
-            hotspot: anchorButtonMem.get(comp),
-            layouts: {
-              onRtl: () => [ Layout.southeast ],
-              onLtr: () => [ Layout.southwest ]
-            }
-          };
-        },
         components: [
           pPrimary
         ],
@@ -92,7 +81,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
     gui.add(sinkComp);
     gui.add(GuiFactory.build(anchorButtonMem.asSpec()));
 
-    const makeButton = (itemSpec) => {
+    const makeButton = (itemSpec: { text: string }) => {
       return Button.sketch({
         dom: {
           tag: 'button',
@@ -101,7 +90,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
       });
     };
 
-    const sResetWidth = (px) => {
+    const sResetWidth = (px: string) => {
       return Step.sync(() => {
         Css.set(component.element(), 'width', px);
         SplitFloatingToolbar.refresh(component);
@@ -148,7 +137,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
       });
     });
 
-    const sAssertGroups = (label, pGroups, oGroups) => {
+    const sAssertGroups = (label: string, pGroups: StructAssert[], oGroups: StructAssert[]) => {
       return GeneralSteps.sequence([
         Assertions.sAssertStructure(
           label,

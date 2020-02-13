@@ -1,6 +1,6 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Assertions, Pipeline, Step, Log, Chain } from 'ephox/agar/api/Main';
-import StepAssertions from 'ephox/agar/test/StepAssertions';
+import * as StepAssertions from 'ephox/agar/test/StepAssertions';
 import { Result } from '@ephox/katamari';
 
 UnitTest.asynctest('LogTest', (success, failure) => {
@@ -123,8 +123,9 @@ UnitTest.asynctest('LogTest', (success, failure) => {
     ])
   );
 
-  const logStepPassTestWithMessage = StepAssertions.testStepFail(
-    'right-value',
+  const logStepPassTestWithMessage = StepAssertions.testStepFailPprintError(
+    '"TestCase-13b: right-value"',
+    '"TestCase-13b: wrong-value"',
     StepAssertions.testStepsPass(
       'TestCase-13b: right-value',
       Log.steps('TestCase-13b', 'Steps passing value', [

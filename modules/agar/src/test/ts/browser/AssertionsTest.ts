@@ -1,12 +1,9 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Assertions from 'ephox/agar/api/Assertions';
 
-UnitTest.test('AssertionsTest', function () {
-  const replaceTokens = function (str, values) {
-    return str.replace(/\{\{(\w+)\}\}/gi, function ($0, $1) {
-      return values[$1] ? values[$1] : '';
-    });
-  };
+UnitTest.test('AssertionsTest', () => {
+  const replaceTokens = (str, values) =>
+    str.replace(/\{\{(\w+)\}\}/gi, ($0, $1) => values[$1] ? values[$1] : '');
 
   try {
     Assertions.assertEq('test 2 (assertEq)', 5, 5);
@@ -17,7 +14,7 @@ UnitTest.test('AssertionsTest', function () {
   try {
     Assertions.assertEq('test 1 (assert.eq)', 10, 5);
   } catch (err) {
-    assert.eq('test 1 (assert.eq).\n  Expected: 10\n  Actual: 5', err.message);
+    assert.eq('test 1 (assert.eq)', err.message);
   }
 
   try {

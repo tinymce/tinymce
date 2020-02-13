@@ -1,5 +1,5 @@
 import { Assertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 
 import Newlines from 'tinymce/plugins/paste/core/Newlines';

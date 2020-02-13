@@ -6,6 +6,7 @@
  */
 
 import Node from '../api/html/Node';
+import { Unicode } from '@ephox/katamari';
 
 const paddEmptyNode = function (settings, args, blockElements, node) {
   const brPreferred = settings.padd_empty_with_br || args.insert;
@@ -13,12 +14,12 @@ const paddEmptyNode = function (settings, args, blockElements, node) {
   if (brPreferred && blockElements[node.name]) {
     node.empty().append(new Node('br', 1)).shortEnded = true;
   } else {
-    node.empty().append(new Node('#text', 3)).value = '\u00a0';
+    node.empty().append(new Node('#text', 3)).value = Unicode.nbsp;
   }
 };
 
 const isPaddedWithNbsp = function (node) {
-  return hasOnlyChild(node, '#text') && node.firstChild.value === '\u00a0';
+  return hasOnlyChild(node, '#text') && node.firstChild.value === Unicode.nbsp;
 };
 
 const hasOnlyChild = function (node, name) {

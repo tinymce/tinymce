@@ -4,11 +4,12 @@ import { Chain } from '@ephox/agar';
 import 'tinymce';
 import { document, setTimeout } from '@ephox/dom-globals';
 import { setTinymceBaseUrl } from '../loader/Urls';
+import { Editor as EditorType } from '../alien/EditorTypes';
 
-const cFromElement = function (element, settings: Record<string, any>) {
-  return Chain.async(function (_, next, die) {
+const cFromElement = function <T extends EditorType = EditorType>(element: Element, settings: Record<string, any>): Chain<any, T> {
+  return Chain.async<any, T>(function (_, next, die) {
     const nuSettings: Record<string, any> = {
-      toolbar_drawer: false,
+      toolbar_mode: 'wrap',
       ...settings
     };
 
@@ -28,7 +29,7 @@ const cFromElement = function (element, settings: Record<string, any>) {
     tinymce.init({
       ...nuSettings,
       selector: '#' + randomId,
-      setup (editor) {
+      setup (editor: T) {
         if (Type.isFunction(nuSettings.setup)) {
           nuSettings.setup(editor);
         }
@@ -37,31 +38,38 @@ const cFromElement = function (element, settings: Record<string, any>) {
             next(editor);
           }, 0);
         });
+
+        editor.on('SkinLoadError', (e) => {
+          die(e.message);
+        });
       }
     });
   });
 };
 
-const cFromHtml = function (html: string, settings: Record<string, any>) {
+const cFromHtml = function <T extends EditorType = EditorType> (html: string | null, settings: Record<string, any>): Chain<any, T> {
   const element = html ? Element.fromHtml(html) : Element.fromTag(settings.inline ? 'div' : 'textarea');
   return cFromElement(element, settings);
 };
 
-const cFromSettings = function (settings: Record<string, any>) {
+const cFromSettings = function <T extends EditorType = EditorType> (settings: Record<string, any>): Chain<any, T> {
   return cFromHtml(null, settings);
 };
 
-const cRemove = Chain.op(function (editor: any) {
+const cRemove = Chain.op(function (editor: EditorType) {
   const id = editor.id;
   editor.remove();
   Selectors.one('#' + id).each(Remove.remove);
 });
 
-export default {
+const cCreate = cFromSettings({});
+const cCreateInline = cFromSettings({ inline: true });
+
+export {
   cFromHtml,
   cFromElement,
   cFromSettings,
-  cCreate: cFromSettings({}),
-  cCreateInline: cFromSettings({ inline: true }),
+  cCreate,
+  cCreateInline,
   cRemove
 };

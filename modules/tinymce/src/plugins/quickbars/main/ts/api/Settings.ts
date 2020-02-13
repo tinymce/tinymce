@@ -17,7 +17,12 @@ const getInsertToolbarItems = function (editor: Editor): string {
   return EditorSettings.getToolbarItemsOr(editor, 'quickbars_insert_toolbar', 'quickimage quicktable');
 };
 
+const getImageToolbarItems = function (editor: Editor): string {
+  return EditorSettings.getToolbarItemsOr(editor, 'quickbars_image_toolbar', 'alignleft aligncenter alignright');
+};
+
 export default {
   getTextSelectionToolbarItems,
-  getInsertToolbarItems
+  getInsertToolbarItems,
+  getImageToolbarItems
 };

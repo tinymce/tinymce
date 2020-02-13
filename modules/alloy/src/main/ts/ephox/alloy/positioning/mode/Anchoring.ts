@@ -1,12 +1,11 @@
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Element, SimRange } from '@ephox/sugar';
 
 import { Bounds } from '../../alien/Boxes';
-import { SugarRange } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { OriginAdt } from '../../behaviour/positioning/PositionApis';
 import { Bubble } from '../layout/Bubble';
 import { AnchorBox, AnchorLayout } from '../layout/LayoutTypes';
+import { OriginAdt } from '../layout/Origins';
 
 // doPlace(component, origin, anchoring, posConfig, placee);
 export type AnchorPlacement =
@@ -29,23 +28,31 @@ export interface AnchorOverrides {
   maxWidthFunction?: MaxWidthFunction;
 }
 
+export interface LayoutsDetail {
+  onLtr: (elem: Element) => AnchorLayout[];
+  onRtl: (elem: Element) => AnchorLayout[];
+  onBottomLtr: Option<(elem: Element) => AnchorLayout[]>;
+  onBottomRtl: Option<(elem: Element) => AnchorLayout[]>;
+}
+
 export interface HasLayoutAnchor {
-  layouts: Option<{
-    onLtr: (elem: Element) => AnchorLayout[];
-    onRtl: (elem: Element) => AnchorLayout[];
-  }>;
+  layouts: Option<LayoutsDetail>;
+}
+
+export interface Layouts {
+  onLtr: (elem: Element) => AnchorLayout[];
+  onRtl: (elem: Element) => AnchorLayout[];
+  onBottomLtr?: (elem: Element) => AnchorLayout[];
+  onBottomRtl?: (elem: Element) => AnchorLayout[];
 }
 
 export interface HasLayoutAnchorSpec {
-  layouts?: {
-    onLtr: (elem: Element) => AnchorLayout[];
-    onRtl: (elem: Element) => AnchorLayout[];
-  };
+  layouts?: Layouts;
 }
 
 export interface SelectionAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
   anchor: 'selection';
-  getSelection?: () => Option<SugarRange>;
+  getSelection?: () => Option<SimRange>;
   root: Element;
   bubble?: Bubble;
   overrides?: AnchorOverrides;
@@ -53,7 +60,7 @@ export interface SelectionAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSp
 }
 
 export interface SelectionAnchor extends AnchorDetail<SelectionAnchor>, HasLayoutAnchor {
-  getSelection: Option<() => Option<SugarRange>>;
+  getSelection: Option<() => Option<SimRange>>;
   root: Element;
   bubble: Option<Bubble>;
   overrides: AnchorOverrides;

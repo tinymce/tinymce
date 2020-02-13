@@ -1,5 +1,5 @@
-import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Assertions, Chain, StepSequence, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
@@ -13,28 +13,28 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
 
   const changes: Cell<Array<{state: boolean, name: string, uid: string}>> = Cell([ ]);
 
-  const sAssertChanges = (message: string, expected: Array<{uid: string, state: boolean, name: string}>) => Logger.t(
-    message,
-    // Use a chain so that changes.get() can be evaluated at run-time.
-    Chain.asStep({ }, [
-      Chain.mapper((_) => {
-        return changes.get();
-      }),
-      Chain.op((cs: Array<{uid: string, name: string}>) => {
-        Assertions.assertEq('Checking changes', expected, cs);
-      })
-    ])
-  );
+  const sAssertChanges = <T> (message: string, expected: Array<{uid: string, state: boolean, name: string}>): Step<T, T> =>
+    Logger.t(
+      message,
+      // Use a chain so that changes.get() can be evaluated at run-time.
+      Chain.asStep({ }, [
+        Chain.injectThunked(changes.get),
+        Chain.op((cs: Array<{uid: string, name: string}>) => {
+          Assertions.assertEq('Checking changes', expected, cs);
+        })
+      ])
+    );
 
-  const sClearChanges = Step.sync(() => {
-    changes.set([ ]);
-  });
+  const sClearChanges = <T> (): Step<T, T> =>
+    Step.sync(() => {
+      changes.set([ ]);
+    });
 
   TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
-    const sTestAnnotationEvents = (label: string, start: number[], soffset: number, expected: Array<{ uid: string, name: string, state: boolean}>): any => {
-      return GeneralSteps.sequence([
+    const sTestAnnotationEvents = <T> (label: string, start: number[], soffset: number, expected: Array<{ uid: string, name: string, state: boolean}>): Step<T, T> => {
+      return StepSequence.sequenceSame<T>([
         tinyApis.sSetSelection(start, soffset, start, soffset),
         Waiter.sTryUntil(
           label,
@@ -43,7 +43,8 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
       ]);
     };
 
-    const sTestChanges = GeneralSteps.sequence([
+    const sTestChanges = <T> () => StepSequence.sequenceSame<T>([
+      tinyApis.sFocus(),
       // '<p>This |is the first paragraph</p><p>This is the second.</p><p>This is| the third.</p><p>Spanning |multiple</p><p>par||ag||raphs| now</p>'
       tinyApis.sSetContent([
         '<p>This is the first paragraph</p>',
@@ -68,7 +69,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
       sAnnotate(editor, 'delta', 'id-five', { something: 'comment-five' }),
 
       Step.wait(500),
-      sClearChanges,
+      sClearChanges(),
 
       sAssertHtmlContent(tinyApis, [
         `<p>This <span data-mce-annotation="alpha" data-test-anything="comment-1" data-mce-annotation-uid="id-one" class="mce-annotation">is</span> the first paragraph</p>`,
@@ -197,7 +198,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
           ]
         )
       ),
-      sClearChanges,
+      sClearChanges(),
 
       tinyApis.sSetSelection([ 4, 0, 1, 0 ], 'a'.length, [ 4, 0, 1, 0 ], 'a'.length),
       // Give it time to throttle a node change.
@@ -227,10 +228,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
       ),
     ]);
 
-    Pipeline.async({}, [
-      tinyApis.sFocus,
-      sTestChanges
-    ], onSuccess, onFailure);
+    Pipeline.runStep({}, sTestChanges<{}>(), onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {

@@ -1,10 +1,10 @@
 import * as FocusTools from 'ephox/agar/api/FocusTools';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
-import DemoContainer from 'ephox/agar/demo/DemoContainer';
+import * as DemoContainer from 'ephox/agar/demo/DemoContainer';
 import { Attr, Css, DomEvent, Element, Html, InsertAll, Traverse } from '@ephox/sugar';
 
-export default <any> function () {
-  DemoContainer.init('Focus demos', function (success, failure) {
+export const demo = (): void => {
+  DemoContainer.init('Focus demos', (success, failure) => {
 
     const div = Element.fromTag('div');
 
@@ -23,14 +23,14 @@ export default <any> function () {
 
     InsertAll.append(game, [ instructions, field ]);
 
-    const onClick = function () {
+    const onClick = () => {
       handler.unbind();
       Css.remove(game, 'display');
       Attr.set(button, 'disabled', 'disabled');
 
       Pipeline.async({}, [
         FocusTools.sTryOnSelector('You were not fast enough', Traverse.owner(game), 'input')
-      ], function () {
+      ], () => {
         Css.set(game, 'color', 'blue');
         success();
       }, failure);

@@ -1,6 +1,6 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Focus, SelectorFilter, SelectorFind, Element } from '@ephox/sugar';
+import { Element, Focus, SelectorFilter, SelectorFind } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -10,13 +10,9 @@ import * as DomPinpoint from '../navigation/DomPinpoint';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as MatrixNavigation from '../navigation/MatrixNavigation';
-import { MatrixConfig, KeyRuleHandler } from './KeyingModeTypes';
+import { KeyRuleHandler, MatrixConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
-
-// NB: Tsc requires AlloyEventHandler to be imported here.
-// @ts-ignore
-import { AlloyEventHandler } from '../api/events/AlloyEvents';
 
 const schema: FieldProcessorAdt[] = [
   FieldSchema.strictObjOf('selectors', [
@@ -30,7 +26,7 @@ const schema: FieldProcessorAdt[] = [
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute)
 ];
 
-const focusIn = (component: AlloyComponent, matrixConfig: MatrixConfig): void => {
+const focusIn = (component: AlloyComponent, matrixConfig: MatrixConfig, state: Stateless): void => {
   const focused = matrixConfig.previousSelector(component).orThunk(() => {
     const selectors = matrixConfig.selectors;
     return SelectorFind.descendant(component.element(), selectors.cell);
@@ -53,7 +49,7 @@ const toMatrix = (rows: Element[], matrixConfig: MatrixConfig): Element[][] => {
   });
 };
 
-const doMove = (ifCycle, ifMove): DomMovement.ElementMover<MatrixConfig, Stateless> => {
+const doMove = (ifCycle: MatrixNavigation.MatrixNavigationFunc<Element>, ifMove: MatrixNavigation.MatrixNavigationFunc<Element>): DomMovement.ElementMover<MatrixConfig, Stateless> => {
   return (element, focused, matrixConfig) => {
     const move = matrixConfig.cycles ? ifCycle : ifMove;
     return SelectorFind.closest(focused, matrixConfig.selectors.row).bind((inRow) => {

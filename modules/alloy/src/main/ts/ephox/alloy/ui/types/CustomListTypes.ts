@@ -23,6 +23,8 @@ export interface CustomListSpec extends CompositeSketchSpec {
   setupItem?: (list: AlloyComponent, item: AlloyComponent, data: any, index: number) => void;
 }
 
-export interface CustomListSketcher extends CompositeSketch<CustomListSpec, CustomListDetail> {
-  setItems: (list: AlloyComponent, items: AlloySpec [][]) => void;
+export interface CustomListApis {
+  setItems: (list: AlloyComponent, items: AlloySpec[][]) => void;
 }
+
+export interface CustomListSketcher extends CompositeSketch<CustomListSpec>, CustomListApis { }

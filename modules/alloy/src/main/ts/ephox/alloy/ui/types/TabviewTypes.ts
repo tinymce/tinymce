@@ -15,4 +15,4 @@ export interface TabviewSpec extends SingleSketchSpec {
   tabviewBehaviours?: AlloyBehaviourRecord;
 }
 
-export interface TabviewSketcher extends SingleSketch<TabviewSpec, TabviewDetail> { }
+export interface TabviewSketcher extends SingleSketch<TabviewSpec> { }

@@ -1,5 +1,5 @@
-import { Logger, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Logger } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr, Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
@@ -21,15 +21,15 @@ UnitTest.test('ClusteringTest', function () {
       id + ' => check: ' + label,
       function () {
         const act = Clustering.byLanguage(universe, universe.find(universe.get(), id).getOrDie());
-        RawAssertions.assertEq('start: ' + id + ', check left()', expLeft, checkWords(universe, act.left()));
-        RawAssertions.assertEq('start: ' + id + ', check middle()', expMiddle, checkWords(universe, act.middle()));
-        RawAssertions.assertEq('start: ' + id + ', check right()', expRight, checkWords(universe, act.right()));
-        RawAssertions.assertEq(
+        Assert.eq('start: ' + id + ', check left()', expLeft, checkWords(universe, act.left()));
+        Assert.eq('start: ' + id + ', check middle()', expMiddle, checkWords(universe, act.middle()));
+        Assert.eq('start: ' + id + ', check right()', expRight, checkWords(universe, act.right()));
+        Assert.eq(
           () => 'start: ' + id + ', check lang(): expected: ' + expLang.toString() + ', actual: ' + act.lang().toString(),
           true, expLang.equals(act.lang())
         );
         // .all() is:  tfel + middle + right
-        RawAssertions.assertEq('start: ' + id + ', check all()', expLeft.reverse().concat(expMiddle).concat(expRight), checkWords(universe, act.all()));
+        Assert.eq('start: ' + id + ', check all()', Arr.reverse(expLeft).concat(expMiddle).concat(expRight), checkWords(universe, act.all()));
       }
     );
   };
@@ -188,8 +188,8 @@ UnitTest.test('ClusteringTest', function () {
     const checkGroup = function (label: string, group: WordDecisionItem<Gene>[]) {
       const items = Arr.map(group, function (g) { return g.item(); });
       Arr.each(items, function (x, i) {
-        RawAssertions.assertEq('Checking everything in ' + label + ' has same language', LanguageZones.calculate(universe, x).getOr('none'), actual.lang().getOr('none'));
-        RawAssertions.assertEq(
+        Assert.eq('Checking everything in ' + label + ' has same language', LanguageZones.calculate(universe, x).getOr('none'), actual.lang().getOr('none'));
+        Assert.eq(
           'Check that everything in the ' + label + ' is a text node',
           true,
           universe.property().isText(x)
@@ -197,7 +197,7 @@ UnitTest.test('ClusteringTest', function () {
       });
     };
 
-    RawAssertions.assertEq('Check that the language matches the start', LanguageZones.calculate(universe, start).getOr('none'), actual.lang().getOr('none'));
+    Assert.eq('Check that the language matches the start', LanguageZones.calculate(universe, start).getOr('none'), actual.lang().getOr('none'));
     checkGroup('left', actual.left());
     checkGroup('middle', actual.middle());
     checkGroup('right', actual.right());
@@ -206,7 +206,7 @@ UnitTest.test('ClusteringTest', function () {
       if (i > 0) {
         const prev = actual.all()[i - 1].item().id;
         const current = x.item().id;
-        RawAssertions.assertEq(
+        Assert.eq(
           'The text nodes should be one after the other',
           +1,
           textIds.indexOf(current) - textIds.indexOf(prev)
@@ -216,7 +216,7 @@ UnitTest.test('ClusteringTest', function () {
 
     const blockParent = universe.up().predicate(start, universe.property().isBoundary).getOrDie('No block parent tag found');
     Arr.each(actual.all(), function (x, i) {
-      RawAssertions.assertEq(
+      Assert.eq(
         'All block ancestor tags should be the same as the original',
         blockParent,
         universe.up().predicate(x.item(), universe.property().isBoundary).getOrDie('No block parent tag found')

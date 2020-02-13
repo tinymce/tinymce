@@ -1,22 +1,23 @@
 import { SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ExpandableFormSchema from '../../ui/schema/ExpandableFormSchema';
-import { ExpandableFormSketcher, ExpandableFormDetail, ExpandableFormSpec } from '../../ui/types/ExpandableFormTypes';
+import { ExpandableFormApis, ExpandableFormDetail, ExpandableFormSketcher, ExpandableFormSpec } from '../../ui/types/ExpandableFormTypes';
 import { Representing } from '../behaviour/Representing';
 import { Sliding } from '../behaviour/Sliding';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { Form } from './Form';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const runOnExtra = (detail, operation) => {
-  return (anyComp) => {
+const runOnExtra = (detail: ExpandableFormDetail, operation: (comp: AlloyComponent) => void) => {
+  return (anyComp: AlloyComponent) => {
     AlloyParts.getPart(anyComp, detail, 'extra').each(operation);
   };
 };
 
 const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> = (detail, components, spec, _externals): SketchSpec => {
-  const getParts = (form) => {
+  const getParts = (form: AlloyComponent) => {
     return AlloyParts.getPartsOrDie(form, detail, [ 'minimal', 'extra' ]);
   };
 
@@ -53,7 +54,7 @@ const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> 
       collapseForm: runOnExtra(detail, Sliding.shrink),
       collapseFormImmediately: runOnExtra(detail, Sliding.immediateShrink),
       expandForm: runOnExtra(detail, Sliding.grow),
-      getField (form, key) {
+      getField (form: AlloyComponent, key: string) {
         return AlloyParts.getPart(form, detail, 'minimal').bind((minimal) => {
           return Form.getField(minimal, key);
         }).orThunk(() => {
@@ -67,29 +68,29 @@ const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> 
 
 };
 
-const ExpandableForm = Sketcher.composite({
+const ExpandableForm: ExpandableFormSketcher = Sketcher.composite<ExpandableFormSpec, ExpandableFormDetail, ExpandableFormApis>({
   name: 'ExpandableForm',
   configFields: ExpandableFormSchema.schema(),
   partFields: ExpandableFormSchema.parts(),
   factory,
   apis: {
-    getField (apis, component, key) {
+    getField: (apis, component, key) => {
       return apis.getField(component, key);
     },
-    toggleForm (apis, component) {
+    toggleForm: (apis, component) => {
       apis.toggleForm(component);
     },
-    collapseForm (apis, component) {
+    collapseForm: (apis, component) => {
       apis.collapseForm(component);
     },
-    collapseFormImmediately (apis, component) {
+    collapseFormImmediately: (apis, component) => {
       apis.collapseFormImmediately(component);
     },
-    expandForm (apis, component) {
+    expandForm: (apis, component) => {
       apis.expandForm(component);
     }
   }
-}) as ExpandableFormSketcher;
+});
 
 export {
   ExpandableForm

@@ -4,9 +4,9 @@ import { Element, Hierarchy } from '@ephox/sugar';
 import { Chain } from './Chain';
 
 export interface CursorRange {
-  start: () => Element;
+  start: () => Element<any>;
   soffset: () => number;
-  finish: () => Element;
+  finish: () => Element<any>;
   foffset: () => number;
 }
 
@@ -17,7 +17,7 @@ export interface CursorPath {
   foffset: () => number;
 }
 
-type RangeConstructor = (obj: { start: Element; soffset: number; finish: Element; foffset: number; }) => CursorRange;
+type RangeConstructor = (obj: { start: Element<any>; soffset: number; finish: Element<any>; foffset: number; }) => CursorRange;
 
 const range: RangeConstructor = Struct.immutableBag(['start', 'soffset', 'finish', 'foffset'], []);
 
@@ -30,21 +30,20 @@ export interface CursorSpec {
   offset: number;
 }
 
-const pathFromCollapsed = function (spec: CursorSpec) {
-  return path({
+const pathFromCollapsed = (spec: CursorSpec): CursorPath =>
+  path({
     startPath: spec.element,
     soffset: spec.offset,
     finishPath: spec.element,
     foffset: spec.offset
   });
-};
 
 export interface RangeSpec {
   start: CursorSpec;
   finish?: CursorSpec;
 }
 
-const pathFromRange = function (spec: RangeSpec) {
+const pathFromRange = (spec: RangeSpec): CursorPath => {
   const finish = spec.finish !== undefined ? spec.finish : spec.start;
   return path({
     startPath: spec.start.element,
@@ -54,70 +53,54 @@ const pathFromRange = function (spec: RangeSpec) {
   });
 };
 
-const isCursorSpec = function (spec: CursorSpec | RangeSpec): spec is CursorSpec {
-  return !('start' in spec) && 'element' in spec;
-};
+const isCursorSpec = (spec: CursorSpec | RangeSpec): spec is CursorSpec =>
+  !('start' in spec) && 'element' in spec;
 
-const pathFrom = function (spec: CursorSpec | RangeSpec) {
-  return isCursorSpec(spec) ? pathFromCollapsed(spec) : pathFromRange(spec);
-};
+const pathFrom = (spec: CursorSpec | RangeSpec): CursorPath =>
+  isCursorSpec(spec) ? pathFromCollapsed(spec) : pathFromRange(spec);
 
-const follow = function (container: Element, calcPath: number[]): Result<Element, string> {
-  return Hierarchy.follow(container, calcPath).fold(function () {
-    return Result.error('Could not follow path: ' + calcPath.join(','));
-  }, function (p) {
-    return Result.value(p);
-  });
-};
+const follow = (container: Element<any>, calcPath: number[]): Result<Element<any>, string> =>
+  Hierarchy.follow(container, calcPath).fold(() =>
+      Result.error('Could not follow path: ' + calcPath.join(',')),
+    Result.value
+  );
 
-const followPath = function (container: Element, calcPath: CursorPath) {
-  return follow(container, calcPath.startPath()).bind(function (start) {
-    return follow(container, calcPath.finishPath()).map(function (finish) {
-      return range({
+const followPath = (container: Element<any>, calcPath: CursorPath): Result<CursorRange, string> =>
+  follow(container, calcPath.startPath()).bind((start) =>
+    follow(container, calcPath.finishPath()).map((finish) =>
+      range({
         start,
         soffset: calcPath.soffset(),
         finish,
         foffset: calcPath.foffset()
-      });
-    });
-  });
-};
+      })));
 
-const cFollowPath = function (calcPath: CursorPath) {
-  return Chain.binder(function (container: Element) {
-    return followPath(container, calcPath);
-  });
-};
+const cFollowPath = (calcPath: CursorPath): Chain<Element<any>, CursorRange> =>
+  Chain.binder((container: Element<any>) => followPath(container, calcPath));
 
-const cFollowCursor = function (elementPath: number[], offset: number) {
-  return Chain.binder(function (container: Element) {
-    return follow(container, elementPath).map(function (element) {
-      return range({
+const cFollowCursor = (elementPath: number[], offset: number): Chain<Element<any>, CursorRange> =>
+  Chain.binder((container: Element<any>) =>
+    follow(container, elementPath).map((element) =>
+      range({
         start: element,
         soffset: offset,
         finish: element,
         foffset: offset
-      });
-    });
-  });
-};
+      })
+    )
+  );
 
-const cFollow = function (elementPath: number[]) {
-  return Chain.binder(function (container: Element) {
-    return follow(container, elementPath);
-  });
-};
+const cFollow = (elementPath: number[]): Chain<Element<any>, Element<any>> =>
+  Chain.binder((container: Element<any>) => follow(container, elementPath));
 
 const cToRange = Chain.mapper(range);
 const cToPath = Chain.mapper(path);
 
-const calculate = function (container: Element, calcPath: CursorPath) {
-  return followPath(container, calcPath).getOrDie();
-};
+const calculate = (container: Element<any>, calcPath: CursorPath): CursorRange =>
+  followPath(container, calcPath).getOrDie();
 
-const calculateOne = function (container: Element, calcPath: number[]) {
-  return follow(container, calcPath).getOrDie();
-};
+const calculateOne = (container: Element<any>, calcPath: number[]): Element<any> =>
+  follow(container, calcPath).getOrDie();
 
 export {
   range,

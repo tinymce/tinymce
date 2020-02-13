@@ -1,5 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Log, Pipeline } from '@ephox/agar';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { Obj, Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
@@ -8,8 +8,10 @@ import * as Settings from 'tinymce/plugins/textpattern/api/Settings';
 import { findPatterns } from 'tinymce/plugins/textpattern/core/InlinePattern';
 import { InlinePattern, InlinePatternMatch } from 'tinymce/plugins/textpattern/core/PatternTypes';
 import { PathRange } from 'tinymce/plugins/textpattern/utils/PathRange';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failure) => {
+  Theme();
 
   const inlinePatterns = Settings.getPatternSet({textpattern_patterns: [
     { start: '*', end: '*', format: 'italic' },

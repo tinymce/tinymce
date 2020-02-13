@@ -14,4 +14,4 @@ export interface Plugin {
   [key: string]: any;
 }
 
-export default AddOnManager.PluginManager as AddOnManager<void | Plugin>;
+export default AddOnManager.PluginManager as AddOnManager<Plugin>;

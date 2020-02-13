@@ -1,30 +1,31 @@
 import { Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Step, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Attr, Focus, SelectorFind } from '@ephox/sugar';
+import { Attr, Element, Focus, SelectorFind } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success, failure) => {
-  const manager = (prefix) => {
+  const createManager = (prefix: string) => {
     let active = '';
 
-    const set = (component, focusee) => {
+    const set = (component: AlloyComponent, focusee: Element) => {
       active = Attr.get(focusee, 'class');
     };
 
-    const get = (component) => {
+    const get = (component: AlloyComponent) => {
       return SelectorFind.descendant(component.element(), '.' + active);
     };
 
     // Test only method
-    const sAssert = (label, expected) => {
+    const sAssert = (label: string, expected: string) => {
       return Step.sync(() => {
         Assertions.assertEq(prefix + ' ' + label, expected, active);
       });
@@ -37,7 +38,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
     };
   };
 
-  const makeItems = (tag, prefix, haveTabstop, firstNum) => {
+  const makeItems = (tag: string, prefix: string, haveTabstop: boolean, firstNum: number) => {
     return Arr.map([ firstNum, firstNum + 1, firstNum + 2 ], (num) => {
       return {
         dom: {
@@ -55,7 +56,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
     });
   };
 
-  const acyclicManager = manager('acyclic');
+  const acyclicManager = createManager('acyclic');
   const memAcyclic = Memento.record({
     dom: {
       tag: 'div',
@@ -70,7 +71,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
     ])
   });
 
-  const cyclicManager = manager('cyclic');
+  const cyclicManager = createManager('cyclic');
   const memCyclic = Memento.record({
     dom: {
       tag: 'div',
@@ -85,7 +86,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
     ])
   });
 
-  const flatgridManager = manager('flatgrid');
+  const flatgridManager = createManager('flatgrid');
   const memFlatgrid = Memento.record({
     dom: {
       tag: 'div',
@@ -105,7 +106,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
     ])
   });
 
-  const flowManager = manager('flow');
+  const flowManager = createManager('flow');
   const memFlow = Memento.record({
     dom: {
       tag: 'div',
@@ -121,7 +122,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
     ])
   });
 
-  const matrixManager = manager('matrix');
+  const matrixManager = createManager('matrix');
   const memMatrix = Memento.record({
     dom: {
       tag: 'table',
@@ -149,7 +150,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
     ])
   });
 
-  const menuManager = manager('menu');
+  const menuManager = createManager('menu');
   const memMenu = Memento.record({
     dom: {
       tag: 'div',
@@ -189,20 +190,20 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
 
     (doc, body, gui, component, store) => {
 
-      const sFocusStillUnmoved = (label) => {
+      const sFocusStillUnmoved = (label: string) => {
         return Logger.t(
           label,
           FocusTools.sTryOnSelector('Focus always stays on outer container', doc, '.container')
         );
       };
 
-      const sFocusIn = (component) => {
+      const sFocusIn = (component: AlloyComponent) => {
         return Step.sync(() => {
           Keying.focusIn(component);
         });
       };
 
-      const sKeyInside = (comp, selector, key, modifiers) => {
+      const sKeyInside = (comp: AlloyComponent, selector: string, key: number, modifiers: { }) => {
         return Chain.asStep(comp.element(), [
           UiFinder.cFindIn(selector),
           Chain.op((inside) => {
@@ -218,7 +219,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
       const matrix = memMatrix.get(component);
       const menu = memMenu.get(component);
 
-      const sTestKeying = (label, comp, manager, keyName) => {
+      const sTestKeying = (label: string, comp: AlloyComponent, manager: ReturnType<typeof createManager>, keyName: keyof typeof Keys) => {
         return Logger.t(
           label + ' Keying',
           GeneralSteps.sequence([

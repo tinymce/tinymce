@@ -35,8 +35,7 @@ export interface UiFactoryBackstageShared {
   providers?: UiFactoryBackstageProviders;
   interpreter?: (spec: BridgedType) => AlloySpec;
   anchors?: {
-    toolbar: () => HotspotAnchorSpec | NodeAnchorSpec,
-    toolbarOverflow: () => HotspotAnchorSpec,
+    inlineDialog: () => HotspotAnchorSpec | NodeAnchorSpec,
     banner: () => HotspotAnchorSpec | NodeAnchorSpec,
     cursor: () => SelectionAnchorSpec,
     node: (elem: Option<Element>) => NodeAnchorSpec
@@ -55,7 +54,7 @@ export interface UiFactoryBackstage {
   setContextMenuState?: (state: boolean) => void;
 }
 
-const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyMoreButton: () => AlloyComponent): UiFactoryBackstage => {
+const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent): UiFactoryBackstage => {
   const contextMenuState = Cell(false);
   const backstage: UiFactoryBackstage = {
     shared: {
@@ -67,7 +66,7 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
       interpreter: (s) => {
         return UiFactory.interpretWithoutForm(s, backstage);
       },
-      anchors: Anchors.getAnchors(editor, lazyAnchorbar, lazyMoreButton),
+      anchors: Anchors.getAnchors(editor, lazyAnchorbar),
       getSink: () => Result.value(sink)
     },
     urlinput: UrlInputBackstage(editor),

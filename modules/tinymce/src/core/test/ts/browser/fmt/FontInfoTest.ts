@@ -1,13 +1,11 @@
 import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { LegacyUnit } from '@ephox/mcagar';
 import { Element, Hierarchy } from '@ephox/sugar';
 import FontInfo from 'tinymce/core/fmt/FontInfo';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   const assertComputedFontProp = function (fontProp, html, path, expected) {

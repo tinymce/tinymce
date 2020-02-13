@@ -2,7 +2,7 @@ import { Assertions, Keys, Pipeline, Step, Log } from '@ephox/agar';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import AutoLinkPlugin from 'tinymce/plugins/autolink/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.plugins.autolink.EnterKeyTest', (success, failure) => {
 
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.EnterKeyTest', (success, fa
 
     Pipeline.async({},
       Log.steps('TINY-1202', 'AutoLink: Focus on editor, set content, set cursor at end of content, assert enter/return keystroke and keydown event', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent('<p>abcdefghijk</p>'),
         tinyApis.sSetCursor([0, 0], 'abcdefghijk'.length),
         tinyActions.sContentKeystroke(Keys.enter(), {}),

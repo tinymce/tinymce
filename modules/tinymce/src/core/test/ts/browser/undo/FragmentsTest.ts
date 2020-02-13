@@ -1,12 +1,10 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import Fragments from 'tinymce/core/undo/Fragments';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.undo.FragmentsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.undo.FragmentsTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   const div = function (html) {

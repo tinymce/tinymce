@@ -1,17 +1,17 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { setTimeout } from '@ephox/dom-globals';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
 import * as Waiter from 'ephox/agar/api/Waiter';
-import StepAssertions from 'ephox/agar/test/StepAssertions';
+import * as StepAssertions from 'ephox/agar/test/StepAssertions';
 
-UnitTest.asynctest('WaiterTest', function (success, failure) {
+UnitTest.asynctest('WaiterTest', (success, failure) => {
 
-  const makeTryUntilStep = function (label, interval, amount) {
+  const makeTryUntilStep = (label, interval, amount) => {
     let counter = 0;
     return Waiter.sTryUntil(
       label + ': TryUntil counter',
-      Step.stateful(function (_value, next, die) {
+      Step.stateful((_value, next, die) => {
         counter++;
         if (counter === 5) {
           return next(counter);
@@ -24,11 +24,11 @@ UnitTest.asynctest('WaiterTest', function (success, failure) {
     );
   };
 
-  const makeTryUntilNotStep = function (label, interval, amount) {
+  const makeTryUntilNotStep = (label, interval, amount) => {
     let counter = 0;
     return Waiter.sTryUntilNot(
       label + ': TryUntilNot counter',
-      Step.stateful(function (_value, next, die) {
+      Step.stateful((_value, next, die) => {
         counter++;
         if (counter < 10) {
           return next('Not yet');
@@ -41,15 +41,14 @@ UnitTest.asynctest('WaiterTest', function (success, failure) {
     );
   };
 
-  const makeDelayStep = function (label, timeout, delay) {
-    return Waiter.sTimeout(
+  const makeDelayStep = (label, timeout, delay) =>
+    Waiter.sTimeout(
       label + ': Waiter timeout',
-      Step.async(function (next, die) {
-        setTimeout(function () {
+      Step.async((next, die) => {
+        setTimeout(() => {
           next();
         }, delay);
       }), timeout);
-  };
 
   Pipeline.async({}, [
     StepAssertions.passed('tryUntil with enough time', 5, makeTryUntilStep('enough time', 10, 1000)),
@@ -78,5 +77,7 @@ UnitTest.asynctest('WaiterTest', function (success, failure) {
       makeDelayStep('not enough time', 50, 500)
     )
 
-  ], function () { success(); }, failure);
+  ], () => {
+    success();
+  }, failure);
 });

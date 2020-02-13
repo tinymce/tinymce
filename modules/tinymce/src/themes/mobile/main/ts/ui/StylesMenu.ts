@@ -18,14 +18,14 @@ import Styles from '../style/Styles';
 import Scrollable from '../touch/scroll/Scrollable';
 
 const getValue = function (item): string {
-  return Objects.readOptFrom<string>(item, 'format').getOr(item.title);
+  return Obj.get(item, 'format').getOr(item.title);
 };
 
 const convert = function (formats, memMenuThunk) {
   const mainMenu = makeMenu('Styles', [
   ].concat(
     Arr.map(formats.items, function (k) {
-      return makeItem(getValue(k), k.title, k.isSelected(), k.getPreview(), Objects.hasKey(formats.expansions, getValue(k)));
+      return makeItem(getValue(k), k.title, k.isSelected(), k.getPreview(), Obj.hasNonNullableKey(formats.expansions, getValue(k)));
     })
   ), memMenuThunk, false);
 
@@ -36,7 +36,7 @@ const convert = function (formats, memMenuThunk) {
         item.title,
         item.isSelected !== undefined ? item.isSelected() : false,
         item.getPreview !== undefined ? item.getPreview() : '',
-        Objects.hasKey(formats.expansions, getValue(item))
+        Obj.hasNonNullableKey(formats.expansions, getValue(item))
       );
     });
     return makeMenu(menuName, items, memMenuThunk, true);

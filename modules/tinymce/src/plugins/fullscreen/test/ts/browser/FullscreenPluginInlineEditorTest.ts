@@ -1,5 +1,5 @@
-import { Pipeline, Step, RawAssertions, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
 
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
@@ -15,8 +15,8 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginInlineEdi
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, [ Log.step('TBA', 'FullScreen: Assert isFullscreen api function is present and fullscreen button is absent',
       Step.sync(() => {
-        RawAssertions.assertEq('should have isFullsceen api function', false, editor.plugins.fullscreen.isFullscreen());
-        RawAssertions.assertEq('should not have the fullscreen button', 'undefined', typeof editor.ui.registry.getAll().buttons.fullscreen);
+        Assert.eq('should have isFullsceen api function', false, editor.plugins.fullscreen.isFullscreen());
+        Assert.eq('should not have the fullscreen button', 'undefined', typeof editor.ui.registry.getAll().buttons.fullscreen);
       })
     )], onSuccess, onFailure);
   }, {

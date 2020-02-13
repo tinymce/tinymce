@@ -8,7 +8,7 @@
 import { Option } from '@ephox/katamari';
 import Editor from './api/Editor';
 import DOMUtils from './api/dom/DOMUtils';
-import Events from './api/Events';
+import * as Events from './api/Events';
 
 const DOM = DOMUtils.DOM;
 

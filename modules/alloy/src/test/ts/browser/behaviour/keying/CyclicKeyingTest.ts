@@ -1,5 +1,5 @@
 import { FocusTools, Keyboard, Keys, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -13,7 +13,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 UnitTest.asynctest('Cyclic Keying Test', (success, failure) => {
 
   GuiSetup.setup((store, doc, body) => {
-    const makeButton = (v, t) => {
+    const makeButton = (v: string, t: string) => {
       return Button.sketch({
         dom: { tag: 'button', innerHtml: t },
         action: store.adder(v + '.clicked'),

@@ -1,7 +1,8 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr, Option } from '@ephox/katamari';
 import Subset from 'ephox/robin/parent/Subset';
+import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('SubsetTest', function () {
   const universe = TestUniverse(Gene('root', 'root', [
@@ -29,16 +30,8 @@ UnitTest.test('SubsetTest', function () {
     const start = universe.find(universe.get(), startId).getOrDie();
     const finish = universe.find(universe.get(), finishId).getOrDie();
 
-    const subset = Subset.subset(universe, start, finish);
-    expected.fold(function () {
-      assert.eq(true, subset.isNone());
-    }, function (exp) {
-      subset.fold(function () {
-        assert.fail('Expected some, was none');
-      }, function (actual) {
-        assert.eq(exp, Arr.map(actual, function (x) { return x.id; }));
-      });
-    });
+    const actual = Subset.subset(universe, start, finish).map((g) => Arr.map(g, (x) => x.id));
+    KAssert.eqOption('eq', expected, actual);
   };
 
   check(Option.some(['three-five']), 'three-five', 'five');

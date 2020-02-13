@@ -1,17 +1,18 @@
 import { Chain, Cursors, Guard, NamedChain } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Window } from '@ephox/dom-globals';
 import { Option, Result } from '@ephox/katamari';
 import { Css, DomEvent, Element, SelectorFind, WindowSelection } from '@ephox/sugar';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 
 import * as Frames from '../../../../demo/ts/ephox/alloy/demo/frames/Frames';
-import { Window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
 
@@ -58,11 +59,11 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
       };
     });
 
-    const cGetWin = Chain.mapper((frame: any) => {
+    const cGetWin = Chain.mapper((frame: AlloyComponent) => {
       return frame.element().dom().contentWindow;
     });
 
-    const cSetPath = (rawPath) => {
+    const cSetPath = (rawPath: { startPath: number[]; soffset: number; finishPath: number[]; foffset: number; }) => {
       const path = Cursors.path(rawPath);
 
       return Chain.binder((win: Window) => {

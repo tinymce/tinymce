@@ -1,5 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { Focus, Hierarchy, Element, Body, Node } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';

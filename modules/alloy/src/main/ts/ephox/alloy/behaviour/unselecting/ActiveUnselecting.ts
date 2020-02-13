@@ -3,9 +3,8 @@ import { Fun } from '@ephox/katamari';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as DomModification from '../../dom/DomModification';
-import { UnselectingConfig } from './UnselectingTypes';
 
-const exhibit = (base: { }, unselectConfig: UnselectingConfig): { } => {
+const exhibit = () => {
   return DomModification.nu({
     styles: {
       '-webkit-user-select': 'none',
@@ -19,7 +18,7 @@ const exhibit = (base: { }, unselectConfig: UnselectingConfig): { } => {
   });
 };
 
-const events = (unselectConfig: UnselectingConfig): AlloyEvents.AlloyEventRecord => {
+const events = (): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
     AlloyEvents.abort(NativeEvents.selectstart(), Fun.constant(true))
   ]);

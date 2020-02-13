@@ -1,5 +1,5 @@
 import { Assertions, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body, Css, Element, Location, Scroll } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -73,7 +73,16 @@ UnitTest.asynctest('Inline editor ContextToolbar Position test', (success, failu
             'margin-bottom': '1500px'
           });
         }),
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
+
+        Log.stepsAsStep('TBA', 'Context toolbar position', [
+          tinyApis.sSetContent('<p><a href="http://tiny.cloud">link</a></p>'),
+          sScrollTo(0, -250),
+          tinyApis.sSetCursor([0, 0, 0], 1),
+          UiFinder.sWaitForVisible('Waiting for toolbar to appear below the content area container', Body.body(), '.tox-pop.tox-pop--top.tox-pop--align-left'),
+          sAssertPosition('absolute', 'top', -1489)
+        ]),
+
         Log.stepsAsStep('TBA', 'Context toolbar position while scrolling', [
           // north/south
           sTestPositionWhileScrolling({
@@ -114,7 +123,6 @@ UnitTest.asynctest('Inline editor ContextToolbar Position test', (success, failu
     {
       theme: 'silver',
       inline: true,
-      height: 500,
       base_url: '/project/tinymce/js/tinymce',
       content_style: 'p { margin: 0; }',
       setup: (ed: Editor) => {

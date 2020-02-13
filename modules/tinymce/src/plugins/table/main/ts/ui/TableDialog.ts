@@ -7,7 +7,7 @@
 
 import { Types } from '@ephox/bridge';
 import { Element } from '@ephox/dom-globals';
-import { Fun, Merger, Type } from '@ephox/katamari';
+import { Fun, Type, Unicode } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -82,8 +82,8 @@ const applyDataToElement = (editor: Editor, tableElm, data: TableData) => {
     styles['border-style'] = data.borderstyle;
   }
 
-  attrs.style = dom.serializeStyle(Merger.merge(getDefaultStyles(editor), styles));
-  dom.setAttribs(tableElm, Merger.merge(getDefaultAttributes(editor), attrs));
+  attrs.style = dom.serializeStyle({ ...getDefaultStyles(editor), ...styles });
+  dom.setAttribs(tableElm, { ...getDefaultAttributes(editor), ...attrs });
 };
 
 const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Types.Dialog.DialogInstanceApi<TableData>) => {
@@ -116,7 +116,7 @@ const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Types.Dialog.
 
     if (!captionElm && data.caption) {
       captionElm = dom.create('caption');
-      captionElm.innerHTML = !Env.ie ? '<br data-mce-bogus="1"/>' : '\u00a0';
+      captionElm.innerHTML = !Env.ie ? '<br data-mce-bogus="1"/>' : Unicode.nbsp;
       tableElm.insertBefore(captionElm, tableElm.firstChild);
     }
 

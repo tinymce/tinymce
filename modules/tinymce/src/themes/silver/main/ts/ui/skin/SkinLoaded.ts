@@ -6,14 +6,15 @@
  */
 
 import Events from '../../api/Events';
+import Editor from 'tinymce/core/api/Editor';
 
-const fireSkinLoaded = function (editor) {
-  const done = function () {
+const fireSkinLoaded = (editor: Editor) => {
+  const done = () => {
     editor._skinLoaded = true;
     Events.fireSkinLoaded(editor);
   };
 
-  return function () {
+  return () => {
     if (editor.initialized) {
       done();
     } else {
@@ -22,6 +23,11 @@ const fireSkinLoaded = function (editor) {
   };
 };
 
+const fireSkinLoadError = (editor: Editor, err: string) => {
+  return () => Events.fireSkinLoadError(editor, { message: err });
+};
+
 export default {
-  fireSkinLoaded
+  fireSkinLoaded,
+  fireSkinLoadError
 };

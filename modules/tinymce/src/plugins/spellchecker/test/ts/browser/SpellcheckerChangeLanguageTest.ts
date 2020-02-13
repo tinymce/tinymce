@@ -1,5 +1,5 @@
-import { Pipeline, RawAssertions, Step, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerChangeLangu
       ui.sClickOnToolbar('Click spelling', 'span.tox-split-button__chevron'),
       ui.sWaitForUi('Wait for menu', '.tox-collection__item-label:contains("German")'),
       ui.sClickOnUi('click german', '.tox-collection__item-label:contains("German")'),
-      Step.sync(() => RawAssertions.assertEq('should be "de"', 'de', editor.plugins.spellchecker.getLanguage()))
+      Step.sync(() => Assert.eq('should be "de"', 'de', editor.plugins.spellchecker.getLanguage()))
     ]), onSuccess, onFailure);
   }, {
     theme: 'silver',

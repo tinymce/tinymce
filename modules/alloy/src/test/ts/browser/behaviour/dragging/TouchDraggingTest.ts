@@ -1,5 +1,5 @@
 import { Chain, Guard, NamedChain, Touch, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Option, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Position, Scroll } from '@ephox/sugar';
@@ -43,7 +43,7 @@ UnitTest.asynctest('TouchDraggingTest', (success, failure) => {
                 Dragging.snap({
                   sensor: DragCoord.fixed(300, 10),
                   range: Position(1000, 30),
-                  output: DragCoord.fixed(Option.none(), Option.some(10))
+                  output: DragCoord.fixed(Option.none<number>(), Option.some(10))
                 })
               ];
             },
@@ -156,7 +156,7 @@ UnitTest.asynctest('TouchDraggingTest', (success, failure) => {
       )
     ]);
 
-    const cScrollTo = (x: number, y: number) => Chain.op(() => {
+    const cScrollTo = (x: number, y: number): Chain<any, any> => Chain.op(() => {
       Scroll.to(x, y);
     });
 

@@ -1,7 +1,7 @@
 import { GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.RemoveTrailingWhitespaceFormatTest', (success, failure) => {
 
@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveTrailingWhitespaceFormatTest'
       const boldSelector = 'button[aria-label="Bold"]';
 
       Pipeline.async({}, [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         Logger.t('remove bold with leading whitespace', GeneralSteps.sequence([
           tinyApis.sSetRawContent('<p><strong>a b</strong></p>'),
           tinyApis.sSetSelection([0, 0, 0], 1, [0, 0, 0], 3),

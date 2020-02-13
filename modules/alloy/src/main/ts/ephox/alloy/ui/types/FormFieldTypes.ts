@@ -22,7 +22,9 @@ export interface FormFieldSpec extends CompositeSketchSpec {
   prefix?: string;
 }
 
-export interface FormFieldSketcher extends CompositeSketch<FormFieldSpec, FormFieldDetail> {
+export interface FormFieldApis {
   getField: (container: AlloyComponent) => Option<AlloyComponent>;
   getLabel: (container: AlloyComponent) => Option<AlloyComponent>;
 }
+
+export interface FormFieldSketcher extends CompositeSketch<FormFieldSpec>, FormFieldApis { }

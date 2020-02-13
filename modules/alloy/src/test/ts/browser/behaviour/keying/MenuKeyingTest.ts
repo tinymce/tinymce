@@ -1,5 +1,5 @@
 import { FocusTools, GeneralSteps, Keyboard, Keys, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -11,7 +11,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 UnitTest.asynctest('MenuKeyingTest', (success, failure) => {
 
   GuiSetup.setup((store, doc, body) => {
-    const makeItem = (name) => {
+    const makeItem = (name: string) => {
       return Container.sketch({
         dom: {
           classes: [ 'test-item', name ],
@@ -51,7 +51,7 @@ UnitTest.asynctest('MenuKeyingTest', (success, failure) => {
     );
 
   }, (doc, body, gui, component, store) => {
-    const checkStore = (label, steps, expected) => {
+    const checkStore = (label: string, steps: Array<Step<any, any>>, expected: string[]) => {
       return GeneralSteps.sequence([
         store.sClear
       ].concat(steps).concat([

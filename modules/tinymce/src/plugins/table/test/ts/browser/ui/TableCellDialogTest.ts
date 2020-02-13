@@ -1,6 +1,6 @@
 import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import TableTestUtils from '../../module/test/TableTestUtils';
@@ -20,6 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
 
     const baseHtml = '<table>' +
       '<tbody>' +
@@ -60,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         tinyApis.sSetSetting('table_cell_advtab', false),
         tinyApis.sSetContent(baseHtml),
         tinyApis.sSelect('td', [0]),
-        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(baseData, false, generalSelectors),
         TableTestUtils.sClickDialogButton('close dialog', false)
       ]);
@@ -71,7 +72,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         tinyApis.sSetSetting('table_cell_advtab', false),
         tinyApis.sSetContent(baseHtml),
         tinyApis.sSelect('td', [0]),
-        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(baseData, false, generalSelectors),
         TableTestUtils.sSetDialogValues({
           width: '100',
@@ -107,7 +108,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         tinyApis.sSetSetting('table_cell_advtab', true),
         tinyApis.sSetContent(complexHtml),
         tinyApis.sSelect('th', [0]),
-        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(complexData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('close dialog', false)
       ]);
@@ -134,7 +135,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         tinyApis.sSetSetting('table_cell_advtab', true),
         tinyApis.sSetContent('<table><tr><td>X</td></tr></table>'),
         tinyApis.sSelect('td', [0]),
-        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sSetDialogValues(advData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('submit dialog', true),
         tinyApis.sAssertContent(advHtml)
@@ -176,7 +177,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
       return Log.stepsAsStep('TBA', 'Table: Table cell properties dialog update multiple cells', [
         tinyApis.sSetContent(initialHtml),
         tinyApis.sSelect('td:nth-child(2)', [0]),
-        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(baseAdvData, true, generalSelectors),
         TableTestUtils.sSetDialogValues(newData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('submit', true),
@@ -219,7 +220,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
       return Log.stepsAsStep('TBA', 'Table: Remove all styles', [
         tinyApis.sSetContent(advHtml),
         tinyApis.sSelect('th', [0]),
-        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
         TableTestUtils.sSetDialogValues(emptyData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('submit dialog', true),
@@ -274,22 +275,22 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         tinyApis.sSetSetting('table_cell_advtab', true),
         tinyApis.sSetContent(baseHtml),
         tinyApis.sSelect('td', [0]),
-        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(baseAdvData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('click cancel', false),
         tinyApis.sAssertContent(noSelectBaseHtml),
-        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(baseAdvData, true, generalSelectors),
         TableTestUtils.sSetDialogValues(advData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('submit dialog', true),
         tinyApis.sAssertContent(advHtml),
-        TableTestUtils.sOpenTableDialog,
+        TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
       ]);
     };
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       baseGetTest(),
       baseGetSetTest(),
       advGetTest(),

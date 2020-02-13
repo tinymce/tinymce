@@ -1,11 +1,8 @@
-import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 
-import { SugarPosition } from '../../alien/TypeDefinitions';
-
 export interface BubbleInstance {
-  offset: () => SugarPosition;
+  offset: () => Position;
   classesOn: () => string[];
   classesOff: () => string[];
 }
@@ -49,7 +46,7 @@ export interface BubbleAlignments {
   right?: string[];
 }
 
-const allAlignments = [
+const allAlignments: Array<keyof BubbleAlignments> = [
   'valignCentre',
 
   'alignLeft',
@@ -62,12 +59,12 @@ const allAlignments = [
   'right'
 ];
 
-const nu = (width, yoffset, classes: BubbleAlignments): Bubble => {
-  const getClasses = (prop: string): string[] => {
-    return Objects.readOptFrom<string[]>(classes, prop).getOr([ ]);
+const nu = (width: number, yoffset: number, classes: BubbleAlignments): Bubble => {
+  const getClasses = (prop: keyof BubbleAlignments): string[] => {
+    return Obj.get(classes, prop).getOr([ ]);
   };
 
-  const make = (xDelta: number, yDelta: number, alignmentsOn: string[]) => {
+  const make = (xDelta: number, yDelta: number, alignmentsOn: Array<(keyof BubbleAlignments)>) => {
     const alignmentsOff = Arr.difference(allAlignments, alignmentsOn);
     return {
       offset: () => Position(xDelta, yDelta),

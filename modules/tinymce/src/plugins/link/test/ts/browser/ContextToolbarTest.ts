@@ -1,5 +1,5 @@
 import { Chain, Log, Mouse, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 
@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ContextToolbarTest', (success, 
 
     Pipeline.async({}, [
       TestLinkUi.sClearHistory,
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'no toolbar on by default', [
         tinyApis.sSetContent('<a href="http://www.google.com">google</a>'),
         Mouse.sTrueClickOn(editorEle, 'a'),

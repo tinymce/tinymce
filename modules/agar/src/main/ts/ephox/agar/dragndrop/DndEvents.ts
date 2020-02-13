@@ -41,11 +41,11 @@ const createDragenterEvent = createDndEvent('dragenter');
 const createDropEvent = createDndEvent('drop');
 const createDragEvent = createDndEvent('drag');
 
-const isDefaultPrevented = (evt: DragEvent) => {
+const isDefaultPrevented = (evt: DragEvent): boolean => {
   return evt.defaultPrevented || evt.hasOwnProperty('ieDefaultPrevented');
 };
 
-const dispatchDndEvent = (event: DragEvent, target: Element): DragEvent => {
+const dispatchDndEvent = (event: DragEvent, target: Element<any>): DragEvent => {
   if (event.type === 'dragstart') {
     setReadWriteMode(event.dataTransfer);
   } else if (event.type === 'drop') {
@@ -59,7 +59,7 @@ const dispatchDndEvent = (event: DragEvent, target: Element): DragEvent => {
   return event;
 };
 
-const getWindowFromElement = (element: Element) => {
+const getWindowFromElement = (element: Element<any>): Window => {
   return element.dom().ownerDocument.defaultView;
 };
 

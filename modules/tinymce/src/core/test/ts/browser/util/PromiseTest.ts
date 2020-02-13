@@ -1,11 +1,9 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import Promise from 'tinymce/core/api/util/Promise';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.util.PromiseTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.util.PromiseTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.asyncTest('Promise resolve', function (_, done) {

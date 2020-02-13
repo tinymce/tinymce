@@ -1,29 +1,27 @@
 import { ValueSchema } from '@ephox/boulder';
 import { document } from '@ephox/dom-globals';
-import { Adt, Fun, Option } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { Css, Element, Location } from '@ephox/sugar';
-
-import * as AriaFocus from '../../alien/AriaFocus';
 import { Bounds, box } from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+
+import * as AriaFocus from '../../aria/AriaFocus';
 import { Stateless } from '../../behaviour/common/BehaviourState';
-import { AnchorDetail, Anchoring, AnchorSpec } from '../../positioning/mode/Anchoring';
-import AnchorSchema from '../../positioning/mode/AnchorSchema';
 import * as Anchor from '../../positioning/layout/Anchor';
 import * as Origins from '../../positioning/layout/Origins';
 import * as SimpleLayout from '../../positioning/layout/SimpleLayout';
+import { AnchorDetail, Anchoring, AnchorSpec } from '../../positioning/mode/Anchoring';
+import AnchorSchema from '../../positioning/mode/AnchorSchema';
 import { PositioningConfig } from './PositioningTypes';
 
-export interface OriginAdt extends Adt { }
-
-const getFixedOrigin = (): OriginAdt => {
+const getFixedOrigin = (): Origins.OriginAdt => {
   // Don't use window.innerWidth/innerHeight here, as we don't want to include scrollbars
   // since the right/bottom position is based on the edge of the scrollbar not the window
   const html = document.documentElement;
   return Origins.fixed(0, 0, html.clientWidth, html.clientHeight);
 };
 
-const getRelativeOrigin = (component: AlloyComponent): OriginAdt => {
+const getRelativeOrigin = (component: AlloyComponent): Origins.OriginAdt => {
   const position = Location.absolute(component.element());
   const bounds = component.element().dom().getBoundingClientRect();
 
@@ -32,7 +30,7 @@ const getRelativeOrigin = (component: AlloyComponent): OriginAdt => {
   return Origins.relative(position.left(), position.top(), bounds.width, bounds.height);
 };
 
-const place = (component: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, getBounds: Option<() => Bounds>, placee: AlloyComponent): void => {
+const place = (component: AlloyComponent, origin: Origins.OriginAdt, anchoring: Anchoring, getBounds: Option<() => Bounds>, placee: AlloyComponent): void => {
   const anchor = Anchor.box(anchoring.anchorBox, origin);
   SimpleLayout.simple(anchor, placee.element(), anchoring.bubble, anchoring.layouts, getBounds, anchoring.overrides);
 };

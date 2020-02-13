@@ -2,7 +2,7 @@ import { Assertions, GeneralSteps, Keys, Keyboard, Logger, Pipeline, Step } from
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function (success, failure) {
 
@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function (suc
     };
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
 
       Logger.t('Test normalization for floated images', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a<img src="about:blank" style="float: right"></p>'),

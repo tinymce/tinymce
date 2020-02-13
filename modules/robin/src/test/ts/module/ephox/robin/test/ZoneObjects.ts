@@ -1,8 +1,9 @@
-import { Logger, RawAssertions } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
 import { Gene, TestUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
 import { Zone } from 'ephox/robin/zone/Zones';
+import { Assert } from '@ephox/bedrock-client';
 
 export interface RawZone {
   lang: string;
@@ -30,7 +31,7 @@ const raw = function <E, D> (universe: TestUniverse, zones: Zone<Gene>[]) {
 
 const assertZones = function (label: string, universe: TestUniverse, expected: RawZone[], zones: Zone<Gene>[]) {
   const rawActual = raw(universe, zones);
-  RawAssertions.assertEq(label + '\nChecking zones: ', expected, rawActual);
+  Assert.eq(label + '\nChecking zones: ', expected, rawActual);
 };
 
 const assertProps = function (label: string, universe: TestUniverse, zones: Zone<Gene>[]) {
@@ -47,11 +48,11 @@ const assertProps = function (label: string, universe: TestUniverse, zones: Zone
       function () {
         // Check languages all match the zone language
         Arr.each(elements, function (x, i) {
-          RawAssertions.assertEq(
+          Assert.eq(
             'Checking everything in ' + label + ' has same language. Item: ' + x.id,
             LanguageZones.calculate(universe, x).getOr('none'), zone.lang()
           );
-          RawAssertions.assertEq(
+          Assert.eq(
             'Check that everything in the ' + label + ' is a text node',
             true,
             universe.property().isText(x)
@@ -61,7 +62,7 @@ const assertProps = function (label: string, universe: TestUniverse, zones: Zone
         // Check block tags match across zones
         const blockParent = universe.up().predicate(first, universe.property().isBoundary).getOrDie('No block parent tag found');
         Arr.each(elements, function (x, i) {
-          RawAssertions.assertEq(
+          Assert.eq(
             'All block ancestor tags should be the same as the original',
             blockParent,
             universe.up().predicate(x, universe.property().isBoundary).getOrDie('No block parent tag found')

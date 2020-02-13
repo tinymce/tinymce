@@ -6,25 +6,25 @@
  */
 
 import { HTMLFormElement, window } from '@ephox/dom-globals';
-import { Type, Fun, Option } from '@ephox/katamari';
-import NotificationManager from '../api/NotificationManager';
-import WindowManager from '../api/WindowManager';
+import { Fun, Option, Type } from '@ephox/katamari';
+import { UrlObject } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
 import EventUtils from '../api/dom/EventUtils';
 import ScriptLoader from '../api/dom/ScriptLoader';
+import Editor from '../api/Editor';
 import Env from '../api/Env';
+import IconManager from '../api/IconManager';
+import NotificationManager from '../api/NotificationManager';
+import PluginManager from '../api/PluginManager';
+import Settings from '../api/Settings';
+import { RawEditorSettings } from '../api/SettingsTypes';
+import ThemeManager from '../api/ThemeManager';
+import I18n from '../api/util/I18n';
+import Tools from '../api/util/Tools';
+import WindowManager from '../api/WindowManager';
+import NodeType from '../dom/NodeType';
 import ErrorReporter from '../ErrorReporter';
 import Init from './Init';
-import PluginManager from '../api/PluginManager';
-import ThemeManager from '../api/ThemeManager';
-import Tools from '../api/util/Tools';
-import Editor from '../api/Editor';
-import Settings from '../api/Settings';
-import I18n from '../api/util/I18n';
-import { UrlObject } from '../api/AddOnManager';
-import { RawEditorSettings } from '../api/SettingsTypes';
-import IconManager from '../api/IconManager';
-import NodeType from '../dom/NodeType';
 
 const DOM = DOMUtils.DOM;
 
@@ -40,7 +40,7 @@ const loadLanguage = (scriptLoader, editor: Editor) => {
     const url = languageUrl !== '' ? languageUrl : editor.editorManager.baseURL + '/langs/' + languageCode + '.js';
 
     scriptLoader.add(url, Fun.noop, undefined, () => {
-      ErrorReporter.languageLoadError(url, languageCode);
+      ErrorReporter.languageLoadError(editor, url, languageCode);
     });
   }
 };
@@ -99,19 +99,19 @@ const loadIcons = (scriptLoader: ScriptLoader, editor: Editor) => {
     .orThunk(() => getIconsUrlMetaFromName(editor))
     .each((urlMeta) => {
     scriptLoader.add(urlMeta.url, Fun.noop, undefined, () => {
-      ErrorReporter.iconsLoadError(urlMeta.url, urlMeta.name.getOrUndefined());
+      ErrorReporter.iconsLoadError(editor, urlMeta.url, urlMeta.name.getOrUndefined());
     });
   });
 };
 
-const loadPlugins = (settings: RawEditorSettings, suffix: string) => {
+const loadPlugins = (editor: Editor, settings: RawEditorSettings, suffix: string) => {
   if (Type.isArray(settings.plugins)) {
     settings.plugins = settings.plugins.join(' ');
   }
 
   Tools.each(settings.external_plugins, function (url, name) {
     PluginManager.load(name, url, Fun.noop, undefined, () => {
-      ErrorReporter.pluginLoadError(name, url);
+      ErrorReporter.pluginLoadError(editor, url, name);
     });
     settings.plugins += ' ' + name;
   });
@@ -125,16 +125,16 @@ const loadPlugins = (settings: RawEditorSettings, suffix: string) => {
 
         const dependencies = PluginManager.dependencies(plugin);
 
-        Tools.each(dependencies, function (dep) {
+        Tools.each(dependencies, function (depPlugin) {
           const defaultSettings = {
             prefix: 'plugins/',
-            resource: dep,
+            resource: depPlugin,
             suffix: '/plugin' + suffix + '.js'
           };
 
-          dep = PluginManager.createUrl(defaultSettings, dep);
+          const dep = PluginManager.createUrl(defaultSettings, depPlugin);
           PluginManager.load(dep.resource, dep, Fun.noop, undefined, () => {
-            ErrorReporter.pluginLoadError(dep.prefix + dep.resource + dep.suffix, dep.resource);
+            ErrorReporter.pluginLoadError(editor, dep.prefix + dep.resource + dep.suffix, dep.resource);
           });
         });
       } else {
@@ -145,7 +145,7 @@ const loadPlugins = (settings: RawEditorSettings, suffix: string) => {
         };
 
         PluginManager.load(plugin, url, Fun.noop, undefined, () => {
-          ErrorReporter.pluginLoadError(url.prefix + url.resource + url.suffix, plugin);
+          ErrorReporter.pluginLoadError(editor, url.prefix + url.resource + url.suffix, plugin);
         });
       }
     }
@@ -158,7 +158,7 @@ const loadScripts = function (editor: Editor, suffix: string) {
   loadTheme(scriptLoader, editor, suffix, function () {
     loadLanguage(scriptLoader, editor);
     loadIcons(scriptLoader, editor);
-    loadPlugins(editor.settings, suffix);
+    loadPlugins(editor, editor.settings, suffix);
 
     scriptLoader.loadQueue(function () {
       if (!editor.removed) {

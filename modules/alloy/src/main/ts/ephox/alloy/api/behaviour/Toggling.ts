@@ -5,13 +5,13 @@ import { SetupBehaviourCellState } from '../../behaviour/common/BehaviourCellSta
 import ToggleSchema from '../../behaviour/toggling/ToggleSchema';
 import { TogglingBehaviour } from '../../behaviour/toggling/TogglingTypes';
 
-const Toggling = Behaviour.create({
+const Toggling: TogglingBehaviour = Behaviour.create({
   fields: ToggleSchema,
   name: 'toggling',
   active: ActiveToggle,
   apis: ToggleApis,
   state: SetupBehaviourCellState(false)
-}) as TogglingBehaviour;
+});
 
 export {
   Toggling

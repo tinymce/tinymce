@@ -1,5 +1,5 @@
 import { Assertions, Chain, NamedChain } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { window } from '@ephox/dom-globals';
 
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
@@ -42,7 +42,7 @@ UnitTest.asynctest('MakeshiftPositionTest', (success, failure) => {
     );
 
   }, (doc, body, gui, component, store) => {
-    const cSetupAnchor = (x: number, y: number) => Chain.mapper(() => {
+    const cSetupAnchor = (x: number, y: number) => Chain.injectThunked(() => {
       return {
         anchor: 'makeshift',
         x,

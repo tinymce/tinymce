@@ -1,5 +1,5 @@
 import { Assertions, Log, Pipeline, Step, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body, Css, Element, Location, Scroll } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -64,7 +64,7 @@ UnitTest.asynctest('Distraction free editor ContextToolbar Position test', (succ
       };
 
       Pipeline.async({ }, [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         Step.sync(() => {
           Css.setAll(Element.fromDom(editor.getContentAreaContainer()), {
             'margin-top': '1500px',

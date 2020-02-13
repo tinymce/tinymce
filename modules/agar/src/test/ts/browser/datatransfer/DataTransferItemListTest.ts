@@ -1,5 +1,4 @@
-import { UnitTest, assert } from '@ephox/bedrock';
-import { RawAssertions } from 'ephox/agar/api/Main';
+import { assert, Assert, UnitTest } from '@ephox/bedrock-client';
 import { createFile } from 'ephox/agar/api/Files';
 import { Blob } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
@@ -12,16 +11,16 @@ UnitTest.test('DataTransferItemListTest', () => {
   const testAdding = () => {
     const items = createDataTransferItemList(createDataTransfer());
 
-    RawAssertions.assertEq('Should not be an array', false, Type.isArray(items));
+    Assert.eq('Should not be an array', false, Type.isArray(items));
 
     items.add(createFile('a.txt', 1234, new Blob(['123'], { type: 'text/html' })));
-    RawAssertions.assertEq('Should be expected kind', 'file', items[0].kind);
-    RawAssertions.assertEq('Should be expected length', 1, items.length);
+    Assert.eq('Should be expected kind', 'file', items[0].kind);
+    Assert.eq('Should be expected length', 1, items.length);
 
     items.add('123', 'text/plain');
-    RawAssertions.assertEq('Should be expected kind', 'string', items[1].kind);
-    RawAssertions.assertEq('Should be expected length', 2, items.length);
-    RawAssertions.assertEq('Should be expected data', '123', getData(items[1]).getOr(''));
+    Assert.eq('Should be expected kind', 'string', items[1].kind);
+    Assert.eq('Should be expected length', 2, items.length);
+    Assert.eq('Should be expected data', '123', getData(items[1]).getOr(''));
 
     assert.throwsError(() => {
       items.add('123', 'text/plain');
@@ -37,9 +36,9 @@ UnitTest.test('DataTransferItemListTest', () => {
 
     items.remove(1);
 
-    RawAssertions.assertEq('Should be expected length', 2, items.length);
-    RawAssertions.assertEq('Should be expected kind', 'file', items[0].kind);
-    RawAssertions.assertEq('Should be expected kind', 'string', items[1].kind);
+    Assert.eq('Should be expected length', 2, items.length);
+    Assert.eq('Should be expected kind', 'file', items[0].kind);
+    Assert.eq('Should be expected kind', 'string', items[1].kind);
   };
 
   const testClearing = () => {
@@ -51,7 +50,7 @@ UnitTest.test('DataTransferItemListTest', () => {
 
     items.clear();
 
-    RawAssertions.assertEq('Should be expected length', 0, items.length);
+    Assert.eq('Should be expected length', 0, items.length);
   };
 
   const testMutationWhileInProtectedMode = () => {

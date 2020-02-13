@@ -3,13 +3,11 @@ import { Hierarchy, Element } from '@ephox/sugar';
 import CaretFinder from 'tinymce/core/caret/CaretFinder';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 import { HTMLElement } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (success, failure) {
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {
@@ -51,7 +49,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function () {
   };
 
   const cPositionIn = function (forward, path) {
-    return Chain.mapper(function (_) {
+    return Chain.injectThunked(function () {
       const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie() as Element<HTMLElement>;
       return CaretFinder.positionIn(forward, element.dom());
     });

@@ -1,5 +1,5 @@
-import { Assertions, Log, Logger, Pipeline, RawAssertions, Step, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Assertions, Log, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { navigator, Window, window } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
@@ -17,14 +17,14 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
   const sAssertEditorHeightAbove = (editor: Editor, minHeight: number) => {
     return Logger.t(`Assert editor height is above ${minHeight}`, Step.sync(() => {
       const editorHeight = editor.getContainer().offsetHeight;
-      RawAssertions.assertEq(`should be above: ${editorHeight}>=${minHeight}`, true, editorHeight >= minHeight);
+      Assert.eq(`should be above: ${editorHeight}>=${minHeight}`, true, editorHeight >= minHeight);
     }));
   };
 
   const sAssertEditorHeightBelow = (editor: Editor, minHeight: number) => {
     return Logger.t(`Assert editor height is below ${minHeight}`, Step.sync(() => {
       const editorHeight = editor.getContainer().offsetHeight;
-      RawAssertions.assertEq(`should be below: ${editorHeight}<=${minHeight}`, true, editorHeight <= minHeight);
+      Assert.eq(`should be below: ${editorHeight}<=${minHeight}`, true, editorHeight <= minHeight);
     }));
   };
 
@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
       // Get the editor height, but exclude the 10px margin from the calculations
       const editorContentHeight = editor.getContentAreaContainer().offsetHeight - 10;
       const actualDiff = Math.abs(editorContentHeight - height);
-      RawAssertions.assertEq(`should be approx (within ${diff}px): ${editorContentHeight} ~= ${height}`, true,  actualDiff <= diff);
+      Assert.eq(`should be approx (within ${diff}px): ${editorContentHeight} ~= ${height}`, true,  actualDiff <= diff);
     }));
   };
 
@@ -64,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
             resizeEventsCount.set(resizeEventsCount.get() + 1);
           });
         }),
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         Log.stepsAsStep('TBA', 'AutoResize: Fullscreen toggle scroll state', [
           tinyApis.sExecCommand('mceFullScreen'),
           sAssertScroll(editor, true),

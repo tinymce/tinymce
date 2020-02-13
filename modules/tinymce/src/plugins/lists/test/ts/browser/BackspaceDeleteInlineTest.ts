@@ -1,14 +1,15 @@
 import { Pipeline, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { LegacyUnit } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteInlineTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
   SilverTheme();

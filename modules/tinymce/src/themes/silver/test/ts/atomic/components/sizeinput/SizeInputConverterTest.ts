@@ -1,21 +1,14 @@
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { SizeConversion, Size, noSizeConversion, SizeUnit, ratioSizeConversion, nuSize, makeRatioConverter } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 import { Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 import { largeSensible, units } from './SizeInputShared';
+import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('SizeInputConverterTest', () => {
   const check = (converter: SizeConversion) => (expected: Option<Size>, input: Size) => {
     const result = converter(input);
-    expected.fold(() => {
-      assert.eq(true, result.isNone(), 'Expected none');
-    }, (size) => {
-      result.fold(() => {
-        assert.fail('Expected size');
-      }, (resultSize) => {
-        assert.eq(size, resultSize);
-      });
-    });
+    KAssert.eqOption('eq', expected, result);
   };
 
   const checkRatio2 = check(ratioSizeConversion(2, 'in'));

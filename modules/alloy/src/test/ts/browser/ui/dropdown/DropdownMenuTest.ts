@@ -1,5 +1,5 @@
 import { FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, Touch, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Future, Obj, Option, Result } from '@ephox/katamari';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -15,6 +15,11 @@ import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
+interface TestFocusable {
+  label: string;
+  selector: string;
+}
+
 UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
 
   const sink = Memento.record(
@@ -28,7 +33,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
   );
 
   GuiSetup.setup((store, doc, body) => {
-    const makeFlow = (v) => {
+    const makeFlow = (v: string) => {
       return Container.sketch({
         dom: {
           tag: 'span',
@@ -143,7 +148,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
       GuiFactory.build(sink.asSpec())
     );
 
-    const focusables = {
+    const focusables: Record<string, TestFocusable> = {
       toolsMenu: { label: 'tools-menu', selector: '.menu[aria-label="Tools Menu"]' },
       packagesMenu: { label: 'packages-menu', selector: '.menu[aria-label="Packages Menu"]' },
       sortbyMenu: { label: 'sortby-menu', selector: '.menu[aria-label="Sortby Menu"]' },
@@ -166,7 +171,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
       widgetThree: { label: 'widget-item:3', selector: '.item-widget .three' }
     };
 
-    const sTestMenus = (label, stored, focused, active, background, others) => {
+    const sTestMenus = (label: string, stored: string[], focused: TestFocusable, active: TestFocusable[], background: TestFocusable[], others: TestFocusable[]) => {
       const sCheckBackground = GeneralSteps.sequence(
         Arr.bind(background, (bg) => {
           return [

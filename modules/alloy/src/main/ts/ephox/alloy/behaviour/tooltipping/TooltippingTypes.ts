@@ -41,6 +41,6 @@ export interface TooltippingState extends BehaviourState {
   setTooltip: (popup: AlloyComponent) => void;
   clearTooltip: () => void;
   clearTimer: () => void;
-  resetTimer: (f: Function, delay: number) => void;
+  resetTimer: (f: () => any, delay: number) => void;
   isShowing: () => boolean;
 }

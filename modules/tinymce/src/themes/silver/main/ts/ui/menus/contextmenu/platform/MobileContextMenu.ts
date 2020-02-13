@@ -1,19 +1,19 @@
 import { AlloyComponent, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
 import { MouseEvent, TouchEvent } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Selection, WindowSelection } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { UiFactoryBackstage } from '../../../../backstage/Backstage';
+import { hideContextToolbarEvent } from '../../../context/ContextEditorEvents';
+import { getContextToolbarBounds } from '../../../context/ContextToolbarBounds';
 import ItemResponse from '../../item/ItemResponse';
 import * as MenuParts from '../../menu/MenuParts';
 import * as NestedMenus from '../../menu/NestedMenus';
-import { getNodeAnchor, getSelectionAnchor } from '../Coords';
 import { SingleMenuItemApi } from '../../menu/SingleMenuTypes';
-import { hideContextToolbarEvent } from '../../../context/ContextEditorEvents';
-import { getContextToolbarBounds } from '../../../context/ContextToolbarBounds';
-import { Option } from '@ephox/katamari';
+import { getNodeAnchor, getPointAnchor } from '../Coords';
 
 type MenuItems = string | Array<string | SingleMenuItemApi>;
 
@@ -52,8 +52,8 @@ const isTouchWithinSelection = (editor: Editor, e: EditorEvent<TouchEvent>) => {
   }
 };
 
-const getAnchorSpec = (editor: Editor, isTriggeredByKeyboardEvent: boolean) => {
-  const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getSelectionAnchor(editor);
+const getAnchorSpec = (editor: Editor, isTriggeredByKeyboardEvent: boolean, e: EditorEvent<TouchEvent>) => {
+  const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
   return {
     bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
     layouts,
@@ -96,8 +96,8 @@ const setupiOSOverrides = (editor: Editor) => {
   };
 };
 
-const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, isTriggeredByKeyboardEvent: boolean) => {
-  const anchorSpec = getAnchorSpec(editor, isTriggeredByKeyboardEvent);
+const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, isTriggeredByKeyboardEvent: boolean, highlightImmediately: boolean) => {
+  const anchorSpec = getAnchorSpec(editor, isTriggeredByKeyboardEvent, e);
 
   NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, true).map((menuData) => {
     e.preventDefault();
@@ -105,7 +105,8 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, back
     // Show the context menu, with items set to close on click
     InlineView.showMenuWithinBounds(contextmenu, anchorSpec, {
       menu: {
-        markers: MenuParts.markers('normal')
+        markers: MenuParts.markers('normal'),
+        highlightImmediately
       },
       data: menuData,
       type: 'horizontal'
@@ -121,10 +122,13 @@ export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMen
   const isiOS = detection.os.isiOS();
   const isOSX = detection.os.isOSX();
   const isAndroid = detection.os.isAndroid();
+  const isTouch = detection.deviceType.isTouch();
+
+  const shouldHighlightImmediately = () => !(isAndroid || isiOS || (isOSX && isTouch));
 
   const open = () => {
     const items = buildMenu();
-    show(editor, e, items, backstage, contextmenu, isTriggeredByKeyboardEvent);
+    show(editor, e, items, backstage, contextmenu, isTriggeredByKeyboardEvent, shouldHighlightImmediately());
   };
 
   // On iOS/iPadOS if we've long pressed on a ranged selection then we've already selected the content

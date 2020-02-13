@@ -1,6 +1,7 @@
-import { RawAssertions, Step, Chain } from '@ephox/agar';
-import { Option } from '@ephox/katamari';
+import { Chain, Step } from '@ephox/agar';
+import { Assert } from '@ephox/bedrock-client';
 import { console } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
 
 interface TestStore {
   add: (value: any) => void;
@@ -9,14 +10,14 @@ interface TestStore {
   clear: () => void;
   sClear: Step<any, any>;
   cClear: Chain<any, any>;
-  sAssertEq: (label: string, expected: any) => Step<any, any>;
-  cAssertEq: (label: string, expected: any) => Chain<any, any>;
-  assertEq: (label: string, expected: any) => void;
-  sAssertSortedEq: (label: string, expected: any) => Step<any, any>;
+  sAssertEq: <T> (label: string, expected: any[]) => Step<T, T>;
+  cAssertEq: <T> (label: string, expected: any[]) => Chain<T, T>;
+  assertEq: (label: string, expected: any[]) => void;
+  sAssertSortedEq: (label: string, expected: any[]) => Step<any, any>;
 }
 
 const TestStore = (): TestStore => {
-  let array = [ ];
+  let array: any[] = [ ];
 
   const add = (value: any) => {
     array.push(value);
@@ -48,27 +49,27 @@ const TestStore = (): TestStore => {
     clear();
   });
 
-  const sAssertEq = (label: string, expected: any) => {
+  const sAssertEq = <T> (label: string, expected: any[]): Step<T, T> => {
     return Step.sync(() => {
       // Can't use a normal step here, because we don't need to get array lazily
-      return RawAssertions.assertEq(label, expected, array.slice(0));
+      return Assert.eq(label, expected, array.slice(0));
     });
   };
 
-  const cAssertEq = (label: string, expected: any) => {
+  const cAssertEq = <T> (label: string, expected: any[]): Chain<T, T> => {
     return Chain.op(() => {
       assertEq(label, expected);
     });
   };
 
-  const assertEq = (label: string, expected: any) => {
-    return RawAssertions.assertEq(label, expected, array.slice(0));
+  const assertEq = (label: string, expected: any[]) => {
+    return Assert.eq(label, expected, array.slice(0));
   };
 
-  const sAssertSortedEq = (label: string, expected: any) => {
+  const sAssertSortedEq = (label: string, expected: any[]) => {
     return Step.sync(() => {
       // Can't use a normal step here, because we don't need to get array lazily
-      return RawAssertions.assertEq(label, expected.slice(0).sort(), array.slice(0).sort());
+      return Assert.eq(label, expected.slice(0).sort(), array.slice(0).sort());
     });
   };
 

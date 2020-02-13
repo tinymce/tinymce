@@ -1,4 +1,4 @@
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { getWords, WordOptions } from 'ephox/polaris/words/Words';
 

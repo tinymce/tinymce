@@ -9,7 +9,7 @@ import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
   SilverTheme();
@@ -101,7 +101,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
     }), editorBody);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Test context menus on empty editor', [
         sOpenContextMenu('p'),
         sAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")'),

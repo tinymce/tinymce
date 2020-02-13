@@ -1,8 +1,8 @@
-import { Attr } from '@ephox/sugar';
-import { Option, Id, Fun } from '@ephox/katamari';
+import { Fun, Id, Option } from '@ephox/katamari';
+import { Attr, Element } from '@ephox/sugar';
 
 export default {
-  labelledBy(labelledElement, labelElement) {
+  labelledBy(labelledElement: Element, labelElement: Element) {
     const labelId = Option.from(Attr.get(labelledElement, 'id'))
       .fold(() => {
         const id = Id.generate('dialog-label');

@@ -26,12 +26,27 @@ const fireObjectResized = (editor: Editor, target: HTMLElement, width: number, h
   editor.fire('ObjectResized', { target, width, height });
 };
 
-export default {
+const firePreInit = (editor: Editor) => editor.fire('PreInit');
+
+const firePostRender = (editor: Editor) => editor.fire('PostRender');
+
+const fireInit = (editor: Editor) => editor.fire('Init');
+
+const firePlaceholderToggle = (editor: Editor, state: boolean) => editor.fire('PlaceholderToggle', { state });
+
+const fireError = (editor: Editor, errorType: string, error: { message: string }) => editor.fire(errorType, error);
+
+export {
   firePreProcess,
   firePostProcess,
   fireRemove,
   fireDetach,
   fireSwitchMode,
   fireObjectResizeStart,
-  fireObjectResized
+  fireObjectResized,
+  firePreInit,
+  firePostRender,
+  fireInit,
+  firePlaceholderToggle,
+  fireError
 };

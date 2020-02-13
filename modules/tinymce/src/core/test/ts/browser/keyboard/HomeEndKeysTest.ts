@@ -1,7 +1,7 @@
 import { GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import VK from 'tinymce/core/api/util/VK';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.HomeEndKeysTest', (success, failure) => {
@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.HomeEndKeysTest', (success, fa
       const tinyActions = TinyActions(editor);
 
       Pipeline.async({}, [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         Logger.t('Home key', GeneralSteps.sequence([
           Logger.t('Home key should move caret before cef within the same block', GeneralSteps.sequence([
             tinyApis.sSetContent('<p>123</p><p><span contenteditable="false">CEF</span>456</p>'),

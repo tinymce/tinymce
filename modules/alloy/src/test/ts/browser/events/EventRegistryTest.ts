@@ -1,12 +1,14 @@
-import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, Truncate, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Result } from '@ephox/katamari';
-import { Attr, Compare, Element, Html, Insert, SelectorFilter } from '@ephox/sugar';
+import { Attr, Compare, Element, Html, Insert, SelectorFilter, Truncate } from '@ephox/sugar';
 
 import * as DescribedHandler from 'ephox/alloy/events/DescribedHandler';
 import EventRegistry from 'ephox/alloy/events/EventRegistry';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
+
+type ExpectedType = { id?: string; handler: string; target?: string; purpose?: string; };
 
 UnitTest.asynctest('EventRegistryTest', (success, failure) => {
   const body = Element.fromDom(document.body);
@@ -38,13 +40,13 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
 
   events.registerId([ 'extra-args' ], 'comp-1', {
     'event.alpha': DescribedHandler.uncurried(
-      (extra) => {
+      (extra: string) => {
         return 'event.alpha.1(' + extra + ')';
       },
       'event.alpha.1.handler'
     ),
     'event.only': DescribedHandler.uncurried(
-      (extra) => {
+      (extra: string) => {
         return 'event.only(' + extra + ')';
       },
       'event.only.handler'
@@ -53,14 +55,14 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
 
   events.registerId([ 'extra-args' ], 'comp-4', {
     'event.alpha': DescribedHandler.uncurried(
-      (extra) => {
+      (extra: string) => {
         return 'event.alpha.4(' + extra + ')';
       },
       'event.alpha.4.handler'
     )
   });
 
-  const sAssertFilterByType = (expected, type) => {
+  const sAssertFilterByType = (expected: ExpectedType[], type: string) => {
     return Step.sync(() => {
       const filtered = events.filterByType(type);
       const raw = Arr.map(filtered, (f) => {
@@ -78,7 +80,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
     });
   };
 
-  const sAssertNotFound = (label, type, id) => {
+  const sAssertNotFound = (label: string, type: string, id: string) => {
     return Logger.t(
       'Test: ' + label + '\nLooking for handlers for  id = ' + id + ' and event = ' + type + '. Should not find any',
       GeneralSteps.sequence([
@@ -103,7 +105,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
     );
   };
 
-  const sAssertFind = (label, expected, type, id) => {
+  const sAssertFind = (label: string, expected: ExpectedType, type: string, id: string) => {
     const cFindHandler = Chain.binder((target: Element) => {
       return events.find(isRoot, type, target).fold(
         () => Result.error('No event handler for ' + type + ' on ' + target.dom()),

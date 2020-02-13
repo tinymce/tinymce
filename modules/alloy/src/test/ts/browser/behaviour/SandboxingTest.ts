@@ -1,10 +1,11 @@
 import { Assertions, Chain, GeneralSteps, Logger, Step, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { Node } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Sandboxing } from 'ephox/alloy/api/behaviour/Sandboxing';
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
@@ -39,7 +40,7 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
       })
     );
 
-    const sOpenWith = (data) => {
+    const sOpenWith = (data: AlloySpec) => {
       return Step.sync(() => {
         Sandboxing.open(sandbox, data);
       });
@@ -49,7 +50,7 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
       Sandboxing.close(sandbox);
     });
 
-    const sCheckShowing = (label, expected) => {
+    const sCheckShowing = (label: string, expected: boolean) => {
       return Step.sync(() => {
         Assertions.assertEq(
           label + '\nSandbox should ' + (expected === false ? '*not* ' : '') + 'be open',
@@ -59,7 +60,7 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
       });
     };
 
-    const sCheckOpenState = (label, expected) => {
+    const sCheckOpenState = (label: string, expected: { data: string; store: string[] }) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([
@@ -76,7 +77,7 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
       );
     };
 
-    const sCheckClosedState = (label, expected) => {
+    const sCheckClosedState = (label: string, expected: { store: string[] }) => {
       return Logger.t(
         label,
         GeneralSteps.sequence([
@@ -93,7 +94,7 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
       );
     };
 
-    const makeData = (rawData) => {
+    const makeData = (rawData: string) => {
       return Input.sketch({
         uid: rawData,
         inputAttributes: {

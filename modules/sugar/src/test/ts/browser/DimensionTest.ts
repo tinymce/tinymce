@@ -9,7 +9,7 @@ import * as Width from 'ephox/sugar/api/view/Width';
 import Dimension from 'ephox/sugar/impl/Dimension';
 import Div from 'ephox/sugar/test/Div';
 import MathElement from 'ephox/sugar/test/MathElement';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { UnitTest, assert } from '@ephox/bedrock-client';
 import { HTMLTableElement, HTMLDivElement } from '@ephox/dom-globals';
 
 UnitTest.test('DimensionTest', function () {

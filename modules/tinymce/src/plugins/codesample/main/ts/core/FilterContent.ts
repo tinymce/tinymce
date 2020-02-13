@@ -6,9 +6,9 @@
  */
 
 import { HTMLElement } from '@ephox/dom-globals';
-import Prism from './Prism';
-import Utils from '../util/Utils';
 import Editor from 'tinymce/core/api/Editor';
+import Utils from '../util/Utils';
+import Prism from './Prism';
 
 const setup = function (editor: Editor) {
   const $ = editor.$;
@@ -43,7 +43,7 @@ const setup = function (editor: Editor) {
 
           elm.contentEditable = 'false';
           elm.innerHTML = editor.dom.encode(elm.textContent);
-          Prism.highlightElement(elm);
+          Prism.get(editor).highlightElement(elm);
           elm.className = $.trim(elm.className);
         });
       });

@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
 import * as Attr from 'ephox/sugar/api/properties/Attr';
 import Div from 'ephox/sugar/test/Div';

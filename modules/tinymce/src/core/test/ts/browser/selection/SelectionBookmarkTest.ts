@@ -1,13 +1,12 @@
-import { Assertions, Chain, Logger, Pipeline, RawAssertions } from '@ephox/agar';
+import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
 import { Fun, Option } from '@ephox/katamari';
-import { Hierarchy, Remove, Element, Traverse, Selection, WindowSelection } from '@ephox/sugar';
+import { Element, Hierarchy, Remove, Selection, Traverse, WindowSelection } from '@ephox/sugar';
 import SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { KAssert } from '@ephox/katamari-assertions';
 
-UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', function (success, failure) {
 
   const viewBlock = ViewBlock();
 
@@ -30,14 +29,14 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
   };
 
   const cGetBookmark = function (rootPath) {
-    return Chain.mapper(function () {
+    return Chain.injectThunked(function () {
       const root = Hierarchy.follow(Element.fromDom(viewBlock.get()), rootPath).getOrDie();
       return SelectionBookmark.getBookmark(root);
     });
   };
 
   const cValidateBookmark = function (rootPath) {
-    return Chain.async(function (input: any, next, die) {
+    return Chain.async(function (input: any, next) {
       const root = Hierarchy.follow(Element.fromDom(viewBlock.get()), rootPath).getOrDie();
 
       return input.each(function (b) {
@@ -46,12 +45,12 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
     });
   };
 
-  const cAssertNone = Chain.op(function (x: Option<any>) {
-    RawAssertions.assertEq('should be none', true, x.isNone());
+  const cAssertNone = <T> () => Chain.op(function (x: Option<T>) {
+    KAssert.eqNone('should be none', x);
   });
 
   const cAssertSome = Chain.op(function (x: Option<any>) {
-    RawAssertions.assertEq('should be some', true, x.isSome());
+    Assert.eq('should be some', true, x.isSome());
   });
 
   const cAssertSelection = function (startPath, startOffset, finishPath, finishOffset) {
@@ -169,7 +168,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
       cAssertSome,
       cDeleteElement([0]),
       cValidateBookmark([]),
-      cAssertNone
+      cAssertNone()
     ])),
     Logger.t('three p tags, delete middle and should be none', Chain.asStep(viewBlock, [
       cSetHtml('<p>abc</p><p>xyz</p><p>123</p>'),
@@ -198,11 +197,11 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
       cAssertBookmark([0, 0], 2, [1, 0], 3)
     ])),
     Logger.t('readRange with with win without getSelection should return Option.none', Chain.asStep({}, [
-      Chain.mapper(function () {
+      Chain.injectThunked(function () {
         const mockWin = { getSelection: Fun.constant(null) };
         return SelectionBookmark.readRange(mockWin);
       }),
-      cAssertNone
+      cAssertNone()
     ]))
   ], function () {
     viewBlock.detach();

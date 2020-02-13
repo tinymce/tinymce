@@ -5,7 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-export type ElementMap = Record<string, boolean>;
+import { SchemaMap } from './Schema';
+
 export type Attributes = Array<{ name: string; value: string; }> & { map: Record<string, string> };
 
 const whiteSpaceRegExp = /^[ \t\r\n]*$/;
@@ -45,6 +46,21 @@ const walk = function (node: Node, root: Node | null, prev?: boolean): Node {
       }
     }
   }
+};
+
+const isEmptyTextNode = (node: Node) => {
+  // Non whitespace content
+  if (!whiteSpaceRegExp.test(node.value)) {
+    return false;
+  }
+
+  // Parent is not a span and only spaces or is a span but has styles
+  const parentNode = node.parent;
+  if (parentNode && (parentNode.name !== 'span' || parentNode.attr('style')) && /^[ ]+$/.test(node.value)) {
+    return false;
+  }
+
+  return true;
 };
 
 /**
@@ -458,7 +474,7 @@ class Node {
    * @param {function} predicate Optional predicate that gets called after the other rules determine that the node is empty. Should return true if the node is a content node.
    * @return {Boolean} true/false if the node is empty or not.
    */
-  public isEmpty(elements: ElementMap, whitespace: ElementMap = {}, predicate?: (node: Node) => boolean) {
+  public isEmpty(elements: SchemaMap, whitespace: SchemaMap = {}, predicate?: (node: Node) => boolean) {
     const self = this;
     let node = self.firstChild;
 
@@ -491,7 +507,7 @@ class Node {
         }
 
         // Keep non whitespace text nodes
-        if (node.type === 3 && !whiteSpaceRegExp.test(node.value)) {
+        if (node.type === 3 && !isEmptyTextNode(node)) {
           return false;
         }
 

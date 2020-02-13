@@ -1,7 +1,7 @@
 import { GeneralSteps, Keys, Logger, Pipeline, Assertions, Step } from '@ephox/agar';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysContentEndpointBrModeTest', (success, failure) => {
@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysContentEndpointBrMode
       const tinyActions = TinyActions(editor);
 
       Pipeline.async({}, [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         Logger.t('Arrow keys in figcaption', GeneralSteps.sequence([
           Logger.t('Arrow up from start of figcaption to paragraph before figure', GeneralSteps.sequence([
             tinyApis.sSetContent('<figure><figcaption>a</figcaption></figure>'),

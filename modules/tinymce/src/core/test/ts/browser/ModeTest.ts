@@ -1,5 +1,5 @@
 import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { Class, Element } from '@ephox/sugar';

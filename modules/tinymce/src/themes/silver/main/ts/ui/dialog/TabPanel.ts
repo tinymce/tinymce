@@ -5,7 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Composing, Form as AlloyForm, Keying, Receiving, Representing, SketchSpec, Tabbar as AlloyTabbar, TabSection as AlloyTabSection, Tabstopping } from '@ephox/alloy';
+import {
+  AddEventsBehaviour,
+  AlloyComponent,
+  AlloyEvents,
+  AlloyTriggers,
+  Behaviour,
+  Composing,
+  Form as AlloyForm,
+  Keying,
+  Receiving,
+  Representing,
+  SketchSpec,
+  Tabbar as AlloyTabbar,
+  TabbarTypes,
+  TabSection as AlloyTabSection,
+  Tabstopping
+} from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Arr, Cell, Fun, Merger } from '@ephox/katamari';
 import { toValidValues } from 'tinymce/themes/silver/ui/general/FormValues';
@@ -42,7 +58,7 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
 
   const oldTab = Cell(null);
 
-  const allTabs = Arr.map(spec.tabs, function (tab) {
+  const allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>> = Arr.map(spec.tabs, function (tab) {
     return {
       value: tab.name,
       dom: {

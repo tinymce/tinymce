@@ -3,12 +3,10 @@ import { Cell, Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (success, failure) {
 
   Theme();
 
@@ -85,7 +83,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function () {
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Logger.t('SetSelectionRange event', GeneralSteps.sequence([
         mBindEvent(editor, 'SetSelectionRange'),
         tinyApis.sSetContent('<p>a</p>'),

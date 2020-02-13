@@ -1,7 +1,8 @@
-import { ApproxStructure, GeneralSteps, Pipeline, Waiter, Logger, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { ApproxStructure, GeneralSteps, Pipeline, Waiter, Logger, Log, StructAssert } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -11,7 +12,7 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
   Plugin();
   Theme();
 
-  const sTestPlaceholder = function (ui, editor, apis, url, expected, struct) {
+  const sTestPlaceholder = function (ui: TinyUi, editor: Editor, apis: TinyApis, url: string, expected: string, struct: StructAssert) {
     return Logger.t(`Test placeholder ${expected}`, GeneralSteps.sequence([
       Utils.sOpenDialog(ui),
       Utils.sSetFormItemNoEvent(ui, url),
@@ -23,12 +24,12 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
     ]));
   };
 
-  const sTestScriptPlaceholder = function (ui, editor, apis, expected, struct) {
+  const sTestScriptPlaceholder = function (ui: TinyUi, editor: Editor, apis: TinyApis, expected: string, struct: StructAssert) {
     return Logger.t(`Test script placeholder ${expected}`, GeneralSteps.sequence([
       apis.sSetContent(
         '<script src="http://media1.tinymce.com/123456"></script>' +
         '<script src="http://media2.tinymce.com/123456"></script>'),
-      apis.sNodeChanged,
+      apis.sNodeChanged(),
       Waiter.sTryUntil('Wait for structure check',
         apis.sAssertContentStructure(struct),
         10, 500),
@@ -115,13 +116,13 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
           '</p>', scriptStruct),
         sTestPlaceholder(ui, editor, apis,
           'https://www.youtube.com/watch?v=P_205ZY52pY',
-          '<p><iframe src="//www.youtube.com/embed/P_205ZY52pY" width="560" ' +
+          '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
           'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
           placeholderStructure),
         Utils.sSetSetting(editor.settings, 'media_live_embeds', true),
         sTestPlaceholder(ui, editor, apis,
           'https://www.youtube.com/watch?v=P_205ZY52pY',
-          '<p><iframe src="//www.youtube.com/embed/P_205ZY52pY" width="560" ' +
+          '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
           'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
           iframeStructure)
       ])

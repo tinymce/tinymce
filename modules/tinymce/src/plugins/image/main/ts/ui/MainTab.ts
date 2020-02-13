@@ -24,7 +24,8 @@ const makeItems = (info: ImageDialogInfo) => {
   const imageDescription = {
     name: 'alt',
     type: 'input',
-    label: 'Image description'
+    label: 'Alternative description',
+    disabled: info.hasAccessibilityOptions && info.image.isDecorative
   };
   const imageTitle = {
     name: 'title',
@@ -34,6 +35,15 @@ const makeItems = (info: ImageDialogInfo) => {
   const imageDimensions = {
     name: 'dimensions',
     type: 'sizeinput'
+  };
+  const isDecorative = {
+    type: 'label',
+    label: 'Accessibility',
+    items: [{
+      name: 'isDecorative',
+      type: 'checkbox',
+      label: 'Image is decorative'
+    }]
   };
 
   interface DialogItems {
@@ -64,6 +74,7 @@ const makeItems = (info: ImageDialogInfo) => {
   return Arr.flatten<any>([
     [imageUrl],
     imageList.toArray(),
+    info.hasAccessibilityOptions && info.hasDescription ? [isDecorative] : [],
     info.hasDescription ? [imageDescription] : [],
     info.hasImageTitle ? [imageTitle] : [],
     info.hasDimensions ? [imageDimensions] : [],

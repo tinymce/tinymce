@@ -5,12 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Attachment, Docking } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
-import { Body, Css, Element, Height, Location, Width } from '@ephox/sugar';
+import { AlloyComponent, Attachment, Boxes, Docking, SplitFloatingToolbar } from '@ephox/alloy';
+import { Cell, Option } from '@ephox/katamari';
+import { Body, Css, Element, Height, Width } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { getMaxWidthSetting, getToolbarDrawer, getUiContainer, isStickyToolbar, ToolbarDrawer, useFixedContainer } from '../api/Settings';
+import Delay from 'tinymce/core/api/util/Delay';
+import { getMaxWidthSetting, getToolbarMode, getUiContainer, isStickyToolbar, isToolbarLocationTop, useFixedContainer, ToolbarMode } from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import { setupReadonlyModeSwitch } from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
@@ -21,6 +22,11 @@ import Utils from '../ui/sizing/Utils';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
 
+const getTargetPosition = (targetElm: Element, isToolbarTop: boolean) => {
+  const pos = Boxes.box(targetElm);
+  return isToolbarTop ? pos.y() : pos.bottom();
+};
+
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   let floatContainer;
   const DOM = DOMUtils.DOM;
@@ -29,33 +35,41 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const targetElm = Element.fromDom(args.targetNode);
   const editorMaxWidthOpt = getMaxWidthSetting(editor).or(EditorSize.getWidth(editor));
 
-  const splitSetting = getToolbarDrawer(editor);
-  const split = splitSetting === ToolbarDrawer.sliding || splitSetting === ToolbarDrawer.floating;
+  const toolbarMode = getToolbarMode(editor);
+  const isSplitFloatingToolbar = toolbarMode === ToolbarMode.floating;
+  const isSplitToolbar = toolbarMode === ToolbarMode.sliding || isSplitFloatingToolbar;
+  const isToolbarTop = isToolbarLocationTop(editor);
+
+  const prevPos = Cell(getTargetPosition(targetElm, isToolbarTop));
+  const visible = Cell(false);
 
   loadInlineSkin(editor);
 
   const updateChromePosition = (toolbar: Option<AlloyComponent>) => {
     // Calculate the toolbar offset when using a split toolbar drawer
-    const offset = split ? toolbar.fold(() => 0, (tbar) => {
+    const offset = isSplitToolbar ? toolbar.fold(() => 0, (tbar) => {
       // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
       return tbar.components().length > 1 ? Height.get(tbar.components()[1].element()) : 0;
     }) : 0;
 
     // The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
     // so we need to round this to account for that.
-    const location = Location.absolute(targetElm);
-    const top = location.top() - Height.get(floatContainer.element()) + offset;
+    const targetBounds = Boxes.box(targetElm);
+    const top = isToolbarTop ?
+      targetBounds.y() - Height.get(floatContainer.element()) + offset :
+      targetBounds.bottom();
+
     Css.setAll(uiComponents.outerContainer.element(), {
       position: 'absolute',
       top: Math.round(top) + 'px',
-      left: Math.round(location.left()) + 'px'
+      left: Math.round(targetBounds.x()) + 'px'
     });
 
     // Update the max width of the inline toolbar
     const maxWidth = editorMaxWidthOpt.getOrThunk(() => {
       // No max width, so use the body width, minus the left pos as the maximum
       const bodyMargin = Utils.parseToInt(Css.get(Body.body(), 'margin-left')).getOr(0);
-      return Width.get(Body.body()) - location.left() + bodyMargin;
+      return Width.get(Body.body()) - targetBounds.x() + bodyMargin;
     });
     Css.set(floatContainer.element(), 'max-width', maxWidth + 'px');
   };
@@ -68,7 +82,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     // 4. Inline + fixed_toolbar_container + more drawer: does SplitToolbar
 
     // Refresh split toolbar
-    if (split) {
+    if (isSplitToolbar) {
       OuterContainer.refreshToolbar(uiComponents.outerContainer);
     }
 
@@ -82,9 +96,16 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     if (isSticky) {
       resetDocking ? Docking.reset(floatContainer) : Docking.refresh(floatContainer);
     }
+
+    if (isSplitFloatingToolbar) {
+      OuterContainer.getToolbar(uiComponents.outerContainer).each((toolbar) => {
+        SplitFloatingToolbar.reposition(toolbar);
+      });
+    }
   };
 
   const show = () => {
+    visible.set(true);
     Css.set(uiComponents.outerContainer.element(), 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
     Css.remove(uiComponents.uiMothership.element(), 'display');
@@ -92,6 +113,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 
   const hide = () => {
+    visible.set(false);
     if (uiComponents.outerContainer) {
       Css.set(uiComponents.outerContainer.element(), 'display', 'none');
       DOM.removeClass(editor.getBody(), 'mce-edit-focus');
@@ -124,10 +146,21 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     editor.on('activate', show);
     editor.on('deactivate', hide);
 
-    editor.on('NodeChange SkinLoaded ResizeWindow', () => {
-      if (!editor.hidden) {
+    editor.on('SkinLoaded ResizeWindow', () => {
+      if (visible.get()) {
         updateChromeUi(true);
       }
+    });
+
+    editor.on('NodeChange keydown', () => {
+      Delay.requestAnimationFrame(() => {
+        const pos = getTargetPosition(targetElm, isToolbarTop);
+
+        if (visible.get() && pos !== prevPos.get()) {
+          updateChromeUi(true);
+          prevPos.set(pos);
+        }
+      });
     });
 
     editor.nodeChanged();

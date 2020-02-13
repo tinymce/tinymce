@@ -1,5 +1,5 @@
 import { FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Step, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
     ]);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       TestLinkUi.sClearHistory,
 
       Log.stepsAsStep('TBA', 'Checking that QuickLink can insert a link', [

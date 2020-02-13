@@ -1,11 +1,9 @@
 import { GeneralSteps, Keys, Logger, Pipeline } from '@ephox/agar';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyHrTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyHrTest', function (success, failure) {
 
   Theme();
 
@@ -14,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyHrTest', function () {
     const tinyActions = TinyActions(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
 
       Logger.t('Enter before HR in the beginning of content', GeneralSteps.sequence([
         tinyApis.sSetContent('<hr /><p>a</p>'),
@@ -49,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyHrTest', function () {
       ])),
 
       Logger.t('Enter before HR in the end of content', GeneralSteps.sequence([
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent('<p>a</p><hr />'),
         tinyApis.sSetCursor([], 1),
         tinyActions.sContentKeystroke(Keys.enter(), {}),
@@ -58,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyHrTest', function () {
       ])),
 
       Logger.t('Enter after HR in the end of content', GeneralSteps.sequence([
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent('<p>a</p><hr />'),
         tinyApis.sSetCursor([], 2),
         tinyActions.sContentKeystroke(Keys.enter(), {}),

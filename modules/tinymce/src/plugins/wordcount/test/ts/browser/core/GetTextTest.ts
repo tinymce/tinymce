@@ -1,5 +1,5 @@
-import { Pipeline, Step, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
 import { Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.GetTextTest', (success, fa
       return Step.sync(() => {
         const actual = getText(node, editor.schema);
 
-        RawAssertions.assertEq('should be the same', expected, actual);
+        Assert.eq('should be the same', expected, actual);
       });
     };
 

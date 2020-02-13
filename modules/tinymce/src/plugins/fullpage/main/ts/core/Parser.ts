@@ -5,20 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { HTMLLinkElement } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Node from 'tinymce/core/api/html/Node';
 import Serializer from 'tinymce/core/api/html/Serializer';
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
-import { HTMLLinkElement } from '@ephox/dom-globals';
 
 const parseHeader = function (head: string) {
   // Parse the contents with a DOM parser
   return DomParser({
     validate: false,
     root_name: '#document'
-  }).parse(head);
+  // Parse as XHTML to allow for inclusion of the XML processing instruction
+  }).parse(head, { format: 'xhtml' });
 };
 
 const htmlToData = function (editor: Editor, head: string) {

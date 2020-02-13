@@ -10,6 +10,13 @@ import * as HorizontalModel from './HorizontalModel';
 import * as TwoDModel from './TwoDModel';
 import * as VerticalModel from './VerticalModel';
 
+interface SliderModelSpec {
+  mode: {
+    minX: number;
+    minY: number;
+  };
+}
+
 const SliderSchema: FieldProcessorAdt[] = [
   FieldSchema.defaulted('stepSize', 1),
   FieldSchema.defaulted('onChange', Fun.noop),
@@ -26,14 +33,14 @@ const SliderSchema: FieldProcessorAdt[] = [
       x: [
         FieldSchema.defaulted('minX', 0),
         FieldSchema.defaulted('maxX', 100),
-        FieldSchema.state('value', (spec) => Cell(spec.mode.minX)),
+        FieldSchema.state('value', (spec: SliderModelSpec) => Cell(spec.mode.minX)),
         FieldSchema.strict('getInitialValue'),
         Fields.output('manager', HorizontalModel)
       ],
       y: [
         FieldSchema.defaulted('minY', 0),
         FieldSchema.defaulted('maxY', 100),
-        FieldSchema.state('value', (spec) => Cell(spec.mode.minY)),
+        FieldSchema.state('value', (spec: SliderModelSpec) => Cell(spec.mode.minY)),
         FieldSchema.strict('getInitialValue'),
         Fields.output('manager', VerticalModel)
       ],
@@ -42,7 +49,7 @@ const SliderSchema: FieldProcessorAdt[] = [
         FieldSchema.defaulted('maxX', 100),
         FieldSchema.defaulted('minY', 0),
         FieldSchema.defaulted('maxY', 100),
-        FieldSchema.state('value', (spec) => Cell({
+        FieldSchema.state('value', (spec: SliderModelSpec) => Cell({
           x: Fun.constant(spec.mode.minX),
           y: Fun.constant(spec.mode.minY)
         })),

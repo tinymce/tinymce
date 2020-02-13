@@ -1,5 +1,5 @@
 import { Pipeline, Log, Chain, Assertions, NamedChain } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
 import CodePlugin from 'tinymce/plugins/code/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeTextareaTest', (success, fa
       tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'),
     ]);
 
-    const cGetWhiteSpace = Chain.mapper(() => {
+    const cGetWhiteSpace = Chain.injectThunked(() => {
       const element = editor.getElement();
       return editor.dom.getStyle(element, 'white-space', true);
     });

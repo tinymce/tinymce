@@ -19,6 +19,7 @@
   ],
   "references": [
     { "path": "../katamari" },
-    { "path": "../sugar" },
+    { "path": "../katamari-assertions" },
+    { "path": "../sugar" }
   ]
 }

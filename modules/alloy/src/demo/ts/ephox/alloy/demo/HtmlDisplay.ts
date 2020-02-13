@@ -10,7 +10,7 @@ import { GuiSystem } from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
 
-const register = Thunk.cached((gui) => {
+const register = Thunk.cached((gui: GuiSystem) => {
   Debugging.registerInspector('htmldisplay', gui);
 });
 

@@ -2,10 +2,10 @@ import { Fun } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import { SliderValue, SliderDetail } from '../types/SliderTypes';
+import { SliderValue, TwoDSliderDetail } from '../types/SliderTypes';
 
 import * as ModelCommon from './ModelCommon';
-import { min1X, max1X, min1Y, max1Y, halfX, halfY } from './SliderValues';
+import { halfX, halfY, max1X, max1Y, min1X, min1Y } from './SliderValues';
 
 const xValue = (x: number) => {
   return {
@@ -31,62 +31,62 @@ const fireSliderChange = (component: AlloyComponent, value: SliderValue): void =
 };
 
 // North West XY
-const setToTLEdgeXY = (edge: AlloyComponent, detail: SliderDetail): void => {
+const setToTLEdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
   fireSliderChange(edge, xyValue(min1X(detail), min1Y(detail)));
 };
 
 // North
-const setToTEdge = (edge: AlloyComponent, detail: SliderDetail): void => {
+const setToTEdge = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
   fireSliderChange(edge, yValue(min1Y(detail)));
 };
 
 // North XY
-const setToTEdgeXY = (edge: AlloyComponent, detail: SliderDetail): void => {
+const setToTEdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
   fireSliderChange(edge, xyValue(halfX(detail), min1Y(detail)));
 };
 
 // North East XY
-const setToTREdgeXY = (edge: AlloyComponent, detail: SliderDetail): void => {
+const setToTREdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
   fireSliderChange(edge, xyValue(max1X(detail), min1Y(detail)));
 };
 
 // East
-const setToREdge = (edge: AlloyComponent, detail: SliderDetail): void => {
+const setToREdge = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
   fireSliderChange(edge, xValue(max1X(detail)));
 };
 
 // East XY
-const setToREdgeXY = (edge: AlloyComponent, detail: SliderDetail): void => {
+const setToREdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
   fireSliderChange(edge, xyValue(max1X(detail), halfY(detail)));
 };
 
 // South East XY
-const setToBREdgeXY = (edge: AlloyComponent, detail: SliderDetail): void => {
+const setToBREdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
   fireSliderChange(edge, xyValue(max1X(detail), max1Y(detail)));
 };
 
 // South
-const setToBEdge = (edge: AlloyComponent, detail: SliderDetail): void => {
+const setToBEdge = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
   fireSliderChange(edge, yValue(max1Y(detail)));
 };
 
 // South XY
-const setToBEdgeXY = (edge: AlloyComponent, detail: SliderDetail): void => {
+const setToBEdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
   fireSliderChange(edge, xyValue(halfX(detail), max1Y(detail)));
 };
 
 // South West XY
-const setToBLEdgeXY = (edge: AlloyComponent, detail: SliderDetail): void => {
+const setToBLEdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
   fireSliderChange(edge, xyValue(min1X(detail), max1Y(detail)));
 };
 
 // West
-const setToLEdge = (edge: AlloyComponent, detail: SliderDetail): void => {
+const setToLEdge = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
   fireSliderChange(edge, xValue(min1X(detail)));
 };
 
 // West XY
-const setToLEdgeXY = (edge: AlloyComponent, detail: SliderDetail): void => {
+const setToLEdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
   fireSliderChange(edge, xyValue(min1X(detail), halfY(detail)));
 };
 

@@ -21,6 +21,7 @@
   ],
   "references": [
     { "path": "../katamari" },
+    { "path": "../katamari-assertions" },
     { "path": "../sand" },
   ]
 }

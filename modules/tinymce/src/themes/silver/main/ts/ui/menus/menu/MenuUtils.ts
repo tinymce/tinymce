@@ -1,15 +1,22 @@
-import { MenuTypes, ItemTypes } from '@ephox/alloy';
+import { ItemTypes, MenuTypes } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-
-import { forCollection, forSwatch, forToolbar, forHorizontalCollection } from './MenuStructures';
 import { components as menuComponents, dom as menuDom } from './MenuParts';
+
+import { forCollection, forHorizontalCollection, forSwatch, forToolbar } from './MenuStructures';
 import { SingleMenuItemApi } from './SingleMenuTypes';
 
 export const hasIcon = (item) => item.icon !== undefined || item.type === 'togglemenuitem' || item.type === 'choicemenuitem';
 export const menuHasIcons = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasIcon);
+
+export interface PartialMenuSpec {
+  value: string;
+  dom: MenuTypes.MenuSpec['dom'];
+  components: MenuTypes.MenuSpec['components'];
+  items: MenuTypes.MenuSpec['items'];
+}
 
 export const handleError = (error: ValueSchema.SchemaError<any>): Option<ItemTypes.ItemSpec> => {
   // tslint:disable-next-line:no-console
@@ -19,7 +26,7 @@ export const handleError = (error: ValueSchema.SchemaError<any>): Option<ItemTyp
   return Option.none();
 };
 
-export const createHorizontalPartialMenuWithAlloyItems = (value: string, _hasIcons: boolean, items, _columns: Types.ColumnTypes, _presets: Types.PresetTypes): Partial<MenuTypes.MenuSpec> => {
+export const createHorizontalPartialMenuWithAlloyItems = (value: string, _hasIcons: boolean, items, _columns: Types.ColumnTypes, _presets: Types.PresetTypes): PartialMenuSpec => {
   const structure = forHorizontalCollection(items);
   return {
     value,
@@ -30,7 +37,7 @@ export const createHorizontalPartialMenuWithAlloyItems = (value: string, _hasIco
 };
 
 // TODO: Potentially make this private again.
-export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean, items, columns: Types.ColumnTypes, presets: Types.PresetTypes): Partial<MenuTypes.MenuSpec> => {
+export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean, items, columns: Types.ColumnTypes, presets: Types.PresetTypes): PartialMenuSpec => {
   if (presets === 'color') {
     const structure = forSwatch(columns);
     return {
@@ -83,7 +90,7 @@ export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean
 
   return {
     value,
-    dom:  menuDom(hasIcons, columns, presets),
+    dom: menuDom(hasIcons, columns, presets),
     components: menuComponents,
     items
   };

@@ -1,5 +1,5 @@
 import { Keyboard, Keys, Log, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AutocompletionTest', (succ
     // NOTE: This is almost identical to charmap
     Pipeline.async({},
       Log.steps('TBA', 'Emoticons: Autocomplete, trigger an autocomplete and check it appears', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent('<p>:ha</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 3),
         Keyboard.sKeypress(eDoc, 'a'.charCodeAt(0), { }),

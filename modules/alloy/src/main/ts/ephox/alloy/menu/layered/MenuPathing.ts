@@ -1,4 +1,3 @@
-import { Objects } from '@ephox/boulder';
 import { Arr, Obj, Option } from '@ephox/katamari';
 
 // Not enforced :( Just for readability.
@@ -15,12 +14,12 @@ const transpose = (obj: Record<string, string>): Record<string, string> => {
     return { k: v, v: k };
   });
 };
-const trace = (items: Record<string, string>, byItem, byMenu, finish): string[] => {
+const trace = (items: Record<string, string>, byItem: TriggerItemToMenu, byMenu: MenuToTriggerItem, finish: string): string[] => {
   // Given a finishing submenu (which will be the value of expansions),
   // find the triggering item, find its menu, and repeat the process. If there
   // is no triggering item, we are done.
-  return Objects.readOptFrom<string>(byMenu, finish).bind((triggerItem: string) => {
-    return Objects.readOptFrom<string>(items, triggerItem).bind((triggerMenu: string) => {
+  return Obj.get(byMenu, finish).bind((triggerItem: string) => {
+    return Obj.get(items, triggerItem).bind((triggerMenu: string) => {
       const rest = trace(items, byItem, byMenu, triggerMenu);
       return Option.some([ triggerMenu ].concat(rest));
     });
@@ -44,7 +43,7 @@ const generate = (menus: MenuToItems, expansions: TriggerItemToMenu): ItemToMenu
   });
 
   return Obj.map(items, (menu: string) => {
-    return Objects.readOptFrom<string[]>(menuPaths, menu).getOr([ menu ]);
+    return Obj.get(menuPaths, menu).getOr([ menu ]);
   });
 };
 

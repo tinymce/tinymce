@@ -1,15 +1,15 @@
-import { Assertions, Chain, NamedChain, Truncate, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Assertions, Chain, NamedChain, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Result } from '@ephox/katamari';
-import { Attr, Class, Compare } from '@ephox/sugar';
+import { Attr, Class, Compare, Truncate } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Highlighting } from 'ephox/alloy/api/behaviour/Highlighting';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 UnitTest.asynctest('HighlightingTest', (success, failure) => {
 
@@ -76,33 +76,33 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       ]);
     };
 
-    const cHighlight = Chain.op((item: AlloyComponent) => {
+    const cHighlight: Chain<any, any> = Chain.op((item: AlloyComponent) => {
       Highlighting.highlight(component, item);
     });
 
-    const cDehighlight = Chain.op((item: AlloyComponent) => {
+    const cDehighlight: Chain<any, any> = Chain.op((item: AlloyComponent) => {
       Highlighting.dehighlight(component, item);
     });
 
-    const cDehighlightAll = Chain.op(() => {
+    const cDehighlightAll: Chain<any, any> = Chain.op(() => {
       Highlighting.dehighlightAll(component);
     });
 
-    const cHighlightFirst = Chain.op(() => {
+    const cHighlightFirst: Chain<any, any> = Chain.op(() => {
       Highlighting.highlightFirst(component);
     });
 
-    const cHighlightLast = Chain.op(() => {
+    const cHighlightLast: Chain<any, any> = Chain.op(() => {
       Highlighting.highlightLast(component);
     });
 
-    const cHighlightAt = (index: number) => {
+    const cHighlightAt = (index: number): Chain<any, any> => {
       return Chain.op(() => {
         Highlighting.highlightAt(component, index);
       });
     };
 
-    const cHighlightAtError = (index: number) => {
+    const cHighlightAtError = (index: number): Chain<any, any> => {
       return Chain.binder((v) => {
         try {
           Highlighting.highlightAt(component, index);

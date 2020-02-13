@@ -25,7 +25,7 @@ const factory: SingleSketchFactory<ContainerDetail, ContainerSpec> = (detail): S
   };
 };
 
-const Container = Sketcher.single({
+const Container: ContainerSketcher = Sketcher.single({
   name: 'Container',
   factory,
   configFields: [
@@ -36,7 +36,7 @@ const Container = Sketcher.single({
     FieldSchema.defaulted('domModification', { }),
     FieldSchema.defaulted('eventOrder', { })
   ]
-}) as ContainerSketcher;
+});
 
 export {
   Container

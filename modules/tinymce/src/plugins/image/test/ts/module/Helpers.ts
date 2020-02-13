@@ -10,13 +10,13 @@ export type ImageDialogData = {
     value: string
   },
   alt: string,
+  decorative: boolean
   dimensions: {
     width: string,
     height: string
   },
   caption: boolean,
   classIndex: number, // because the DOM api is setSelectedIndex
-
   border: string,
   hspace: string,
   style: string,
@@ -26,12 +26,13 @@ export type ImageDialogData = {
 
 export const generalTabSelectors = {
   src: 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-control-wrap input.tox-textfield',
-  alt: 'label.tox-label:contains("Image description") + input.tox-textfield',
+  alt: 'label.tox-label:contains("Alternative description") + input.tox-textfield',
   width: 'div.tox-form__controls-h-stack div label:contains("Width") + input.tox-textfield',
   height: 'div.tox-form__controls-h-stack div label:contains("Height") + input.tox-textfield',
   caption: 'label.tox-label:contains("Caption") + label input.tox-checkbox__input',
   classIndex: 'label.tox-label:contains("Class") + div.tox-selectfield select',
-  images: 'label.tox-label:contains("Image list") + div.tox-selectfield select'
+  images: 'label.tox-label:contains("Image list") + div.tox-selectfield select',
+  decorative: 'label.tox-label:contains("Accessibility") + label.tox-checkbox>input'
 };
 
 export const advancedTabSelectors = {
@@ -156,7 +157,7 @@ const cWaitForDialog = () => Chain.control(
     // Hmm. We might need an API to handle the case where you need to pass logs through a subchain.
     NamedChain.direct('tinyUi', Chain.on((tinyUi, next, die, logs) => {
       const subchain = tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]');
-      Chain.pipeline([subchain], (value, newLogs) => next(Chain.wrap(value), newLogs), die, logs);
+      Chain.pipeline([subchain], (value, newLogs) => next(value, newLogs), die, logs);
     }), '_'),
     NamedChain.outputInput
   ]),
@@ -195,7 +196,7 @@ const cAssertInputValue = (selector: string, value: string) => {
 const cOpFromChains = (chains: Chain<any, any>[]) => Chain.control(
   // TODO: Another API case.
   Chain.on((value, next, die, logs) => {
-    Chain.pipeline([Chain.inject(value)].concat(chains), (_, newLogs) => next(Chain.wrap(value), newLogs), die, logs);
+    Chain.pipeline([Chain.inject(value)].concat(chains), (_, newLogs) => next(value, newLogs), die, logs);
   }),
   Guard.addLogging('Chain operations')
 );

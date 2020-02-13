@@ -1,11 +1,9 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import Entities from 'tinymce/core/api/html/Entities';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('encodeRaw', function () {

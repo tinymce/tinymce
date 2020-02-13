@@ -1,5 +1,4 @@
-import { RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
@@ -8,7 +7,7 @@ UnitTest.test('LanguageGetTest', function () {
   const check = function (doc: TestUniverse, id: string, lang: Option<string>) {
     const item = doc.find(doc.get(), id).getOrDie();
     const itemLang = LanguageZones.calculate(doc, item);
-    RawAssertions.assertEq(
+    Assert.eq(
       () => 'check lang(). Expected: ' + lang.getOr('none') + ', actual: ' + itemLang.getOr('none'),
       true,
       lang.equals(itemLang)

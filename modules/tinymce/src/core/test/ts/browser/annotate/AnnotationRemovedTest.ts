@@ -1,5 +1,5 @@
 import { GeneralSteps, Pipeline, Step, Waiter, Logger } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -141,7 +141,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationRemovedTest', (succe
     ]);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       sSetupData,
       sTestGetAndRemove
     ], onSuccess, onFailure);

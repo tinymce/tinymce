@@ -12,7 +12,6 @@ import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import { LazySink } from 'ephox/alloy/api/component/CommonTypes';
-import * as Layout from 'ephox/alloy/positioning/layout/Layout';
 import { CustomList } from 'ephox/alloy/api/ui/CustomList';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
@@ -192,16 +191,6 @@ export default (): void => {
         tag: 'div'
       },
       lazySink,
-      getAnchor: (comp) => {
-        return {
-          anchor: 'hotspot',
-          hotspot: SplitFloatingToolbar.getMoreButton(comp).getOrDie(),
-          layouts: {
-            onRtl: () => [ Layout.southeast ],
-            onLtr: () => [ Layout.southwest ]
-          }
-        };
-      },
       parts: {
         'overflow-group': DemoRenders.toolbarGroup({
           items: [ ]

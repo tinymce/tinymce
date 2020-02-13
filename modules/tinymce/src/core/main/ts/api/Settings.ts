@@ -6,12 +6,15 @@
  */
 
 import { HTMLImageElement } from '@ephox/dom-globals';
-import { Fun, Type, Strings, Arr } from '@ephox/katamari';
+import { Arr, Fun, Strings, Type } from '@ephox/katamari';
 import { UploadHandler } from '../file/Uploader';
+import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
 import { ReferrerPolicy } from './SettingsTypes';
 import I18n from './util/I18n';
 import Tools from './util/Tools';
+
+const DOM = DOMUtils.DOM;
 
 const getBodySetting = (editor: Editor, name: string, defaultValue: string) => {
   const value = editor.getParam(name, defaultValue);
@@ -178,6 +181,19 @@ const getInlineBoundarySelector = (editor: Editor): string => {
   return editor.getParam('inline_boundaries_selector', 'a[href],code,.mce-annotation', 'string');
 };
 
+const getObjectResizing = (editor: Editor) => {
+  return editor.getParam('object_resizing');
+};
+
+const getResizeImgProportional = (editor: Editor): boolean => {
+  return editor.getParam('resize_img_proportional', true, 'boolean');
+};
+
+const getPlaceholder = (editor: Editor): string => {
+  // Fallback to the original elements placeholder if not set in the settings
+  return editor.getParam('placeholder', DOM.getAttrib(editor.getElement(), 'placeholder'), 'string');
+};
+
 export default {
   getIframeAttrs,
   getDocType,
@@ -212,5 +228,8 @@ export default {
   getIndentation,
   getContentCss,
   getDirectionality,
-  getInlineBoundarySelector
+  getInlineBoundarySelector,
+  getObjectResizing,
+  getResizeImgProportional,
+  getPlaceholder
 };

@@ -1,12 +1,11 @@
-import { SugarDocument } from 'ephox/alloy/alien/TypeDefinitions';
 import { Option } from '@ephox/katamari';
 import { Body, Element, Traverse} from '@ephox/sugar';
 import { HTMLFrameElement, HTMLDocument, console } from '@ephox/dom-globals';
 
 // tslint:disable:no-console
 
-const iframeDoc = (element: Element): Option<SugarDocument> => {
-  const dom = element.dom() as HTMLFrameElement;
+const iframeDoc = (element: Element<HTMLFrameElement>): Option<Element<HTMLDocument>> => {
+  const dom = element.dom();
   try {
     const idoc = dom.contentWindow ? dom.contentWindow.document : dom.contentDocument;
     return idoc !== undefined && idoc !== null ? Option.some(Element.fromDom(idoc)) : Option.none();
@@ -19,11 +18,11 @@ const iframeDoc = (element: Element): Option<SugarDocument> => {
 };
 
 // NOTE: This looks like it is only used in the demo. Move out.
-const readDoc = (element: Element): SugarDocument => {
+const readDoc = (element: Element) => {
   const optDoc = iframeDoc(element);
   return optDoc.getOrThunk(() => {
     // INVESTIGATE: This is new, but there is nothing else than can be done here atm. Rethink.
-    return Traverse.owner(element) as SugarDocument;
+    return Traverse.owner(element);
   });
 };
 

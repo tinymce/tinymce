@@ -1,18 +1,18 @@
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Element, EventArgs, Position } from '@ephox/sugar';
 
 import { Bounds } from '../../alien/Boxes';
-import { SugarEvent, SugarPosition } from '../../alien/TypeDefinitions';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { CoordAdt } from '../../api/data/DragCoord';
+import * as AlloyEvents from '../../api/events/AlloyEvents';
 import { BehaviourState } from '../../behaviour/common/BehaviourState';
 import { MouseDraggingConfigSpec } from '../mouse/MouseDraggingTypes';
 import { MouseOrTouchDraggingConfigSpec } from '../mouseortouch/MouseOrTouchDraggingTypes';
 import { TouchDraggingConfigSpec } from '../touch/TouchDraggingTypes';
 
-export interface DraggingBehaviour extends Behaviour.AlloyBehaviour<DraggingConfigSpec, DraggingConfig> {
-  config: (config: DraggingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DraggingConfigSpec, DraggingConfig>;
+export interface DraggingBehaviour extends Behaviour.AlloyBehaviour<DraggingConfigSpec, DraggingConfig, DraggingState> {
+  config: (config: DraggingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DraggingConfigSpec, DraggingConfig, DraggingState>;
   snap: (sConfig: SnapConfigSpec) => SnapConfig;
   snapTo: (component: AlloyComponent, sConfig: SnapConfig) => void;
 }
@@ -29,15 +29,15 @@ export type OutputCoords = (x: Option<number>, y: Option<number>) => CoordAdt;
 
 export interface SnapConfig {
   sensor: () => CoordAdt;
-  range: () => SugarPosition;
-  output: () => CoordAdt;
-  extra?: () => any;
+  range: () => Position;
+  output: () => CoordAdt<Option<number>>;
+  extra: () => any;
 }
 
 export interface SnapConfigSpec {
   sensor: CoordAdt;
-  range: SugarPosition;
-  output: CoordAdt;
+  range: Position;
+  output: CoordAdt<Option<number>>;
   extra?: any;
 }
 
@@ -55,6 +55,15 @@ export interface SnapsConfig {
   getSnapPoints: (comp: AlloyComponent) => SnapConfig[];
   leftAttr: string;
   topAttr: string;
+  onSensor: (component: AlloyComponent, extra: any) => void;
+  lazyViewport: (component: AlloyComponent) => Bounds;
+  mustSnap: boolean;
+}
+
+export interface SnapsConfigSpec {
+  getSnapPoints: (comp: AlloyComponent) => SnapConfig[];
+  leftAttr: string;
+  topAttr: string;
   onSensor?: (component: AlloyComponent, extra: any) => void;
   lazyViewport?: (component: AlloyComponent) => Bounds;
   mustSnap?: boolean;
@@ -63,28 +72,31 @@ export interface SnapsConfig {
 export interface DraggingConfig {
   getTarget: (comp: Element) => Element;
   snaps: Option<SnapsConfig>;
-  onDrop: (comp: AlloyComponent, Element) => void;
+  onDrop: (comp: AlloyComponent, target: Element) => void;
   repositionTarget: boolean;
-  onDrag: (comp: AlloyComponent, target: Element, delta: SugarPosition) => void;
+  onDrag: (comp: AlloyComponent, target: Element, delta: Position) => void;
   getBounds: () => Bounds;
   blockerClass: string;
+  dragger: {
+    handlers: (dragConfig: DraggingConfig, dragState: DraggingState) => AlloyEvents.AlloyEventRecord
+  };
 }
 
 export interface CommonDraggingConfigSpec {
   useFixed?: () => boolean;
   onDrop?: (comp: AlloyComponent, target: Element) => void;
   repositionTarget?: boolean;
-  onDrag?: (comp: AlloyComponent, target: Element, delta: SugarPosition) => void;
+  onDrag?: (comp: AlloyComponent, target: Element, delta: Position) => void;
   getTarget?: (elem: Element) => Element;
   getBounds?: () => Bounds;
-  snaps?: SnapsConfig;
+  snaps?: SnapsConfigSpec;
   blockerClass: string;
 }
 
 export type DraggingConfigSpec = MouseDraggingConfigSpec | TouchDraggingConfigSpec | MouseOrTouchDraggingConfigSpec;
 
 export interface DragModeDeltas<T> {
-  getData: (event: SugarEvent) => Option<T>;
+  getData: (event: EventArgs) => Option<T>;
   getDelta: (old: T, nu: T) => T;
 }
 
@@ -94,9 +106,11 @@ export interface DragStartData {
   bounds: Bounds;
 }
 
-export interface DraggingState<T> extends BehaviourState {
-  update: (mode: DragModeDeltas<T>, dragEvent: SugarEvent) => Option<T>;
+export interface BaseDraggingState<T> extends BehaviourState {
+  update: (mode: DragModeDeltas<T>, dragEvent: EventArgs) => Option<T>;
   setStartData: (data: DragStartData) => void;
   getStartData: () => Option<DragStartData>;
   reset: () => void;
 }
+
+export interface DraggingState extends BaseDraggingState<Position> { }

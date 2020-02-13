@@ -18,6 +18,7 @@
       "tinymce.core.api.dom.Selection",
       "tinymce.core.api.dom.Serializer",
       "tinymce.core.api.dom.Sizzle",
+      "tinymce.core.api.dom.TextSeeker",
       "tinymce.core.api.dom.TreeWalker",
       "tinymce.core.api.Editor",
       "tinymce.core.api.EditorCommands",

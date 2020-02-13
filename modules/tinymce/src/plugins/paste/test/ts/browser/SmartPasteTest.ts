@@ -1,6 +1,8 @@
 import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+
+import Editor from 'tinymce/core/api/Editor';
 import SmartPaste from 'tinymce/plugins/paste/core/SmartPaste';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -17,8 +19,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 // |Paste as text turned on   | paste image URL -> text  | paste image URL -> text |
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.SmartPasteTest', (success, failure) => {
-
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
   Theme();

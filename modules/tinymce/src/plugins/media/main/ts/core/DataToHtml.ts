@@ -19,11 +19,11 @@ export type DataToHtmlCallback = (data: MediaData) => string;
 
 const getIframeHtml = function (data: MediaData) {
   const allowFullscreen = data.allowFullscreen ? ' allowFullscreen="1"' : '';
-  return '<iframe src="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '"' + allowFullscreen + '></iframe>';
+  return '<iframe src="' + data.source + '" width="' + data.width + '" height="' + data.height + '"' + allowFullscreen + '></iframe>';
 };
 
 const getFlashHtml = function (data: MediaData) {
-  let html = '<object data="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '" type="application/x-shockwave-flash">';
+  let html = '<object data="' + data.source + '" width="' + data.width + '" height="' + data.height + '" type="application/x-shockwave-flash">';
 
   if (data.poster) {
     html += '<img src="' + data.poster + '" width="' + data.width + '" height="' + data.height + '" />';
@@ -39,11 +39,11 @@ const getAudioHtml = function (data: MediaData, audioTemplateCallback: DataToHtm
     return audioTemplateCallback(data);
   } else {
     return (
-      '<audio controls="controls" src="' + data.source1 + '">' +
+      '<audio controls="controls" src="' + data.source + '">' +
       (
-        data.source2 ?
-          '\n<source src="' + data.source2 + '"' +
-          (data.source2mime ? ' type="' + data.source2mime + '"' : '') +
+        data.altsource ?
+          '\n<source src="' + data.altsource + '"' +
+          (data.altsourcemime ? ' type="' + data.altsourcemime + '"' : '') +
           ' />\n' : '') +
       '</audio>'
     );
@@ -58,47 +58,47 @@ const getVideoHtml = function (data: MediaData, videoTemplateCallback: DataToHtm
       '<video width="' + data.width +
       '" height="' + data.height + '"' +
       (data.poster ? ' poster="' + data.poster + '"' : '') + ' controls="controls">\n' +
-      '<source src="' + data.source1 + '"' +
-      (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' +
-      (data.source2 ? '<source src="' + data.source2 + '"' +
-        (data.source2mime ? ' type="' + data.source2mime + '"' : '') + ' />\n' : '') +
+      '<source src="' + data.source + '"' +
+      (data.sourcemime ? ' type="' + data.sourcemime + '"' : '') + ' />\n' +
+      (data.altsource ? '<source src="' + data.altsource + '"' +
+        (data.altsourcemime ? ' type="' + data.altsourcemime + '"' : '') + ' />\n' : '') +
       '</video>'
     );
   }
 };
 
 const getScriptHtml = function (data: MediaData) {
-  return '<script src="' + data.source1 + '"></script>';
+  return '<script src="' + data.source + '"></script>';
 };
 
 const dataToHtml = function (editor: Editor, dataIn: MediaData) {
   const data: MediaData = Tools.extend({}, dataIn);
 
-  if (!data.source1) {
+  if (!data.source) {
     Tools.extend(data, HtmlToData.htmlToData(Settings.getScripts(editor), data.embed));
-    if (!data.source1) {
+    if (!data.source) {
       return '';
     }
   }
 
-  if (!data.source2) {
-    data.source2 = '';
+  if (!data.altsource) {
+    data.altsource = '';
   }
 
   if (!data.poster) {
     data.poster = '';
   }
 
-  data.source1 = editor.convertURL(data.source1, 'source');
-  data.source2 = editor.convertURL(data.source2, 'source');
-  data.source1mime = Mime.guess(data.source1);
-  data.source2mime = Mime.guess(data.source2);
+  data.source = editor.convertURL(data.source, 'source');
+  data.altsource = editor.convertURL(data.altsource, 'source');
+  data.sourcemime = Mime.guess(data.source);
+  data.altsourcemime = Mime.guess(data.altsource);
   data.poster = editor.convertURL(data.poster, 'poster');
 
-  const pattern = UrlPatterns.matchPattern(data.source1);
+  const pattern = UrlPatterns.matchPattern(data.source);
 
   if (pattern) {
-    data.source1 = pattern.url;
+    data.source = pattern.url;
     data.type = pattern.type;
     data.allowFullscreen = pattern.allowFullscreen;
     data.width = data.width || String(pattern.w);
@@ -108,7 +108,7 @@ const dataToHtml = function (editor: Editor, dataIn: MediaData) {
   if (data.embed) {
     return UpdateHtml.updateHtml(data.embed, data, true);
   } else {
-    const videoScript = VideoScript.getVideoScriptMatch(Settings.getScripts(editor), data.source1);
+    const videoScript = VideoScript.getVideoScriptMatch(Settings.getScripts(editor), data.source);
     if (videoScript) {
       data.type = 'script';
       data.width = String(videoScript.width);
@@ -127,9 +127,9 @@ const dataToHtml = function (editor: Editor, dataIn: MediaData) {
 
     if (data.type === 'iframe') {
       return getIframeHtml(data);
-    } else if (data.source1mime === 'application/x-shockwave-flash') {
+    } else if (data.sourcemime === 'application/x-shockwave-flash') {
       return getFlashHtml(data);
-    } else if (data.source1mime.indexOf('audio') !== -1) {
+    } else if (data.sourcemime.indexOf('audio') !== -1) {
       return getAudioHtml(data, audioTemplateCallback);
     } else if (data.type === 'script') {
       return getScriptHtml(data);

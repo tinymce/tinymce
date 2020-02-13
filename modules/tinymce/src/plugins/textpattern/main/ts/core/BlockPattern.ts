@@ -6,13 +6,12 @@
  */
 
 import { Node } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Option, Unicode } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import * as TextSearch from '../text/TextSearch';
-import { TextWalker } from '../text/TextWalker';
 import { generatePathRange, resolvePathRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
 import { BlockPattern, BlockPatternMatch, Pattern } from './PatternTypes';
@@ -20,12 +19,13 @@ import { BlockPattern, BlockPatternMatch, Pattern } from './PatternTypes';
 const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern) => {
   // The pattern could be across fragmented text nodes, so we need to find the end
   // of the pattern and then remove all elements between the start/end range
-  const firstTextNode = TextWalker(block, block).next();
-  firstTextNode.each((node) => {
+  const firstTextNode = TextSearch.textAfter(block, 0, block);
+  firstTextNode.each((spot) => {
+    const node = spot.container;
     TextSearch.scanRight(node, pattern.start.length, block).each((end) => {
       const rng = dom.createRng();
       rng.setStart(node, 0);
-      rng.setEnd(end.element, end.offset);
+      rng.setEnd(end.container, end.offset);
 
       Utils.deleteRng(dom, rng, (e: Node) => e === block);
     });
@@ -58,7 +58,7 @@ const applyPattern = (editor: Editor, match: BlockPatternMatch): boolean => {
 
 // Finds a matching pattern to the specified text
 const findPattern = <P extends Pattern>(patterns: P[], text: string): Option<P> => {
-  const nuText = text.replace('\u00a0', ' ');
+  const nuText = text.replace(Unicode.nbsp, ' ');
   return Arr.find(patterns, (pattern) => {
     if (text.indexOf(pattern.start) !== 0 && nuText.indexOf(pattern.start) !== 0) {
       return false;

@@ -36,7 +36,7 @@
 @dialog-title-font-weight: @font-weight-normal;
 @dialog-title-line-height: @line-height-base;
 @dialog-title-text-color: @text-color;
-@dialog-title-text-transform: normal;
+@dialog-title-text-transform: none;
 
 @dialog-body-font-size: @font-size-md;
 @dialog-body-font-style: normal;
@@ -44,7 +44,7 @@
 @dialog-body-line-height: @line-height-base;
 @dialog-body-text-align: left;
 @dialog-body-text-color: @text-color;
-@dialog-body-text-transform: normal;
+@dialog-body-text-transform: none;
 
 @dialog-body-link-color: @color-tint;
 @dialog-body-link-text-decoration: none;
@@ -262,6 +262,10 @@
         color: @dialog-body-link-active-color;
         text-decoration: @dialog-body-link-active-text-decoration;
       }
+    }
+
+    svg {
+      fill: @dialog-body-text-color;
     }
 
     ul {
