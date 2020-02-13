@@ -1,6 +1,6 @@
 {
   "name": "@ephox/katamari-assertions",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Bedrock test assertions for Katamari",
   "repository": {
     "type": "git",
