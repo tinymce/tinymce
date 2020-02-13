@@ -1,7 +1,7 @@
 {
   "name": "@ephox/snooker",
   "description": "This project implements the table model.",
-  "version": "5.1.6",
+  "version": "5.1.7",
   "files": [
     "lib/main",
     "lib/demo",
@@ -19,11 +19,11 @@
   },
   "dependencies": {
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/dragster": "^4.0.43",
-    "@ephox/katamari": "^5.0.0",
-    "@ephox/porkbun": "^4.0.31",
-    "@ephox/robin": "^7.0.47",
-    "@ephox/sugar": "^5.1.0"
+    "@ephox/dragster": "^4.0.44",
+    "@ephox/katamari": "^5.0.1",
+    "@ephox/porkbun": "^4.0.32",
+    "@ephox/robin": "^7.0.48",
+    "@ephox/sugar": "^5.1.1"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
