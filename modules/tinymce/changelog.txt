@@ -1,4 +1,4 @@
-Version 5.2.0 (TBD)
+Version 5.2.0 (2020-02-13)
     Added the ability to apply formats to spaces #TINY-4200
     Added new `toolbar_location` setting to allow for positioning the menu and toolbar at the bottom of the editor #TINY-4210
     Added new `toolbar_groups` setting to allow a custom floating toolbar group to be added to the toolbar when using `floating` toolbar mode #TINY-4229
