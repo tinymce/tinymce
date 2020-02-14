@@ -5,6 +5,8 @@ os: linux
 node_js:
   - node
 
+cache: yarn
+
 addons:
   chrome: stable
 
