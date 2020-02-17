@@ -483,6 +483,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
       dom.remove(newBlock);
       insertNewBlockAfter();
     } else {
+      setForcedBlockAttrs(editor, newBlock);
       NewLineUtils.moveToCaretPosition(editor, newBlock);
     }
   }
