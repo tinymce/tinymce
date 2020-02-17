@@ -6,7 +6,7 @@
  */
 
 import { Element as DomElement, DocumentFragment, KeyboardEvent } from '@ephox/dom-globals';
-import { Arr } from '@ephox/katamari';
+import { Arr, Merger } from '@ephox/katamari';
 import { PredicateFilter, Element, Node } from '@ephox/sugar';
 import Settings from '../api/Settings';
 import * as CaretContainer from '../caret/CaretContainer';
@@ -133,11 +133,35 @@ const getEditableRoot = function (dom, node) {
   return parent !== root ? editableRoot : root;
 };
 
+const mergeCommonAttributes = (editor: Editor, node: HTMLElement, forcedRootBlockAttrs: Record<string, string>): Record<string, string> => {
+  const newAttrs = Merger.deepMerge({}, forcedRootBlockAttrs);
+  const attrStyles = newAttrs.style ? editor.dom.parseStyle(newAttrs.style) : undefined;
+  const attrClasses = newAttrs.class ? newAttrs.class.split(/\s+/) : undefined;
+
+  const styles = node.style ? editor.dom.parseStyle(node.style.cssText) : undefined;
+  if (attrStyles && styles) {
+    const newStyles = {...styles, ...attrStyles};
+    newAttrs.style = editor.dom.serializeStyle(newStyles);
+  }
+
+  const classes = node.className ? node.className.split(/\s+/) : undefined;
+  if (attrClasses && classes) {
+    const filteredClasses = Arr.filter(classes, (c) => !Arr.contains(attrClasses, c));
+    const newClasses = [...attrClasses, ...filteredClasses];
+    newAttrs.class = newClasses.join(' ');
+  }
+
+  return newAttrs;
+};
+
 const setForcedBlockAttrs = function (editor: Editor, node) {
   const forcedRootBlockName = Settings.getForcedRootBlock(editor);
 
   if (forcedRootBlockName && forcedRootBlockName.toLowerCase() === node.tagName.toLowerCase()) {
-    editor.dom.setAttribs(node, Settings.getForcedRootBlockAttrs(editor));
+    const forcedRootBlockAttrs = Settings.getForcedRootBlockAttrs(editor);
+    const mergedAttributes = mergeCommonAttributes(editor, node, forcedRootBlockAttrs);
+
+    editor.dom.setAttribs(node, mergedAttributes);
   }
 };
 
@@ -231,7 +255,6 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
 
     if (name || parentBlockName === 'TABLE' || parentBlockName === 'HR') {
       block = dom.create(name || newBlockName);
-      setForcedBlockAttrs(editor, block);
     } else {
       block = parentBlock.cloneNode(false);
     }
@@ -263,6 +286,8 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
         }
       } while ((node = node.parentNode) && node !== editableRoot);
     }
+
+    setForcedBlockAttrs(editor, block);
 
     emptyBlock(caretNode);
 
@@ -427,6 +452,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
     if (dom.isEmpty(parentBlock)) {
       emptyBlock(parentBlock);
     }
+    setForcedBlockAttrs(editor, newBlock);
     NewLineUtils.moveToCaretPosition(editor, newBlock);
   } else if (isCaretAtStartOrEndOfBlock()) {
     insertNewBlockAfter();
