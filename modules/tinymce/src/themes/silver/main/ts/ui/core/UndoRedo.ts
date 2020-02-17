@@ -14,7 +14,7 @@ const toggleUndoRedoState = (api: Menu.MenuItemInstanceApi, editor: Editor, type
   };
 
   const onUndoStateChange = () => {
-    api.setDisabled(editor.readonly || !checkState());
+    api.setDisabled(editor.mode.isReadOnly() || !checkState());
   };
 
   api.setDisabled(!checkState());

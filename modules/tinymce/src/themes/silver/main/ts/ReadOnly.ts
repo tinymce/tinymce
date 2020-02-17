@@ -63,12 +63,12 @@ export const toggleToReadOnly = (uiComponents: RenderUiComponents, readonly: boo
 export const setupReadonlyModeSwitch = (editor: Editor, uiComponents: RenderUiComponents) => {
   editor.on('init', () => {
     // Force an update of the ui components disabled states if in readonly mode
-    if (editor.readonly) {
+    if (editor.mode.isReadOnly()) {
       toggleToReadOnly(uiComponents, true);
     }
   });
 
-  editor.on('SwitchMode', () => toggleToReadOnly(uiComponents, editor.readonly));
+  editor.on('SwitchMode', () => toggleToReadOnly(uiComponents, editor.mode.isReadOnly()));
 
   if (Settings.isReadOnly(editor)) {
     editor.setMode('readonly');

@@ -144,7 +144,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
 
   editor.on('SwitchMode', () => {
     lazyResize().each(function (resize) {
-      if (editor.readonly) {
+      if (editor.mode.isReadOnly()) {
         resize.hideBars();
       } else {
         resize.showBars();

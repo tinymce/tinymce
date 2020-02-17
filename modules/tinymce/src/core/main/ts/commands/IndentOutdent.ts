@@ -53,7 +53,7 @@ const validateBlocks = (editor: Editor, blocks: Element[]) => {
 
 const canOutdent = (editor: Editor) => {
   const blocks = getBlocksToIndent(editor);
-  return editor.readonly !== true && (blocks.length > 1 || validateBlocks(editor, blocks));
+  return !editor.mode.isReadOnly() && (blocks.length > 1 || validateBlocks(editor, blocks));
 };
 
 const isListComponent = (el: Element) => {
