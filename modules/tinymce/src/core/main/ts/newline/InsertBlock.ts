@@ -6,8 +6,8 @@
  */
 
 import { Element as DomElement, DocumentFragment, KeyboardEvent } from '@ephox/dom-globals';
-import { Arr, Merger } from '@ephox/katamari';
-import { PredicateFilter, Element, Node } from '@ephox/sugar';
+import { Arr, Option, Obj } from '@ephox/katamari';
+import { PredicateFilter, Element, Css, Node } from '@ephox/sugar';
 import Settings from '../api/Settings';
 import * as CaretContainer from '../caret/CaretContainer';
 import NodeType from '../dom/NodeType';
@@ -133,25 +133,31 @@ const getEditableRoot = function (dom, node) {
   return parent !== root ? editableRoot : root;
 };
 
-const mergeCommonAttributes = (editor: Editor, node: HTMLElement, forcedRootBlockAttrs: Record<string, string>): Record<string, string> => {
-  const newAttrs = Merger.deepMerge({}, forcedRootBlockAttrs);
-  const attrStyles = newAttrs.style ? editor.dom.parseStyle(newAttrs.style) : undefined;
-  const attrClasses = newAttrs.class ? newAttrs.class.split(/\s+/) : undefined;
+const applyAttributes = (editor: Editor, node: DomElement, forcedRootBlockAttrs: Record<string, string>) => {
+  // Merge and apply style attribute
+  Option.from(forcedRootBlockAttrs.style)
+    .map(editor.dom.parseStyle)
+    .each((attrStyles) => {
+      const currentStyles = Css.getRaw(Element.fromDom(node), '');
+      const newStyles = { ...currentStyles.getOrNull, ...attrStyles };
+      editor.dom.setStyles(node, newStyles);
+    });
 
-  const styles = node.style ? editor.dom.parseStyle(node.style.cssText) : undefined;
-  if (attrStyles && styles) {
-    const newStyles = {...styles, ...attrStyles};
-    newAttrs.style = editor.dom.serializeStyle(newStyles);
-  }
+  // Merge and apply class attribute
+  Option.from(forcedRootBlockAttrs.class).map((attrClasses) => attrClasses.split(/\s+/)).each((attrClasses) => {
+    Option.from(node.className)
+      .map((currentClasses) => Arr.filter(currentClasses.split(/\s+/), (c) => c !== ''))
+      .each((currentClasses) => {
+        const filteredClasses = Arr.filter(currentClasses, (c) => !Arr.contains(attrClasses, c));
+        const newClasses = [...attrClasses, ...filteredClasses];
+        editor.dom.setAttrib(node, 'class', newClasses.join(' '));
+      });
+  });
 
-  const classes = node.className ? node.className.split(/\s+/) : undefined;
-  if (attrClasses && classes) {
-    const filteredClasses = Arr.filter(classes, (c) => !Arr.contains(attrClasses, c));
-    const newClasses = [...attrClasses, ...filteredClasses];
-    newAttrs.class = newClasses.join(' ');
-  }
-
-  return newAttrs;
+  // Apply any remaining forced root block attributes
+  const appliedAttrs = ['style', 'class'];
+  const remainingAttrs = Obj.filter(forcedRootBlockAttrs, (_, attrs) => !Arr.contains(appliedAttrs, attrs));
+  editor.dom.setAttribs(node, remainingAttrs);
 };
 
 const setForcedBlockAttrs = function (editor: Editor, node) {
@@ -159,9 +165,7 @@ const setForcedBlockAttrs = function (editor: Editor, node) {
 
   if (forcedRootBlockName && forcedRootBlockName.toLowerCase() === node.tagName.toLowerCase()) {
     const forcedRootBlockAttrs = Settings.getForcedRootBlockAttrs(editor);
-    const mergedAttributes = mergeCommonAttributes(editor, node, forcedRootBlockAttrs);
-
-    editor.dom.setAttribs(node, mergedAttributes);
+    applyAttributes(editor, node, forcedRootBlockAttrs);
   }
 };
 
