@@ -69,7 +69,7 @@ node("primary") {
 
     def cleanAndInstall = {
       echo "Installing tools"
-      exec("git clean -fdx modules")
+      exec("git clean -fdx modules scratch js dist")
       yarnInstall()
     }
 
