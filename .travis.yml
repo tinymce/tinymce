@@ -1,0 +1,20 @@
+language: node_js
+
+os: linux
+
+node_js:
+  - node
+
+cache: yarn
+
+addons:
+  chrome: stable
+
+before_script:
+  - npm install -g chromedriver
+
+script:
+  - yarn tslint
+  - yarn build
+  - yarn phantomjs-test
+  - yarn browser-test
