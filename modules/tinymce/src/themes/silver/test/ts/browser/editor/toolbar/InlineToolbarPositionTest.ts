@@ -1,7 +1,7 @@
 import { Assertions, Chain, FocusTools, GeneralSteps, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document, HTMLElement, window } from '@ephox/dom-globals';
+import { document, HTMLElement } from '@ephox/dom-globals';
 import { Arr, Strings } from '@ephox/katamari';
 import { Editor as McEditor, TinyApis } from '@ephox/mcagar';
 import { Body, Css, Element, Insert, Remove, SelectorFind } from '@ephox/sugar';
@@ -32,13 +32,13 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
 
   const sAssertDockedPos = (header: Element, position: 'top' | 'bottom') => Waiter.sTryUntil('Wait for toolbar to be docked', Step.sync(() => {
     const left = Css.get(header, 'left');
-    const top = parseInt(Strings.removeTrailing(Css.get(header, 'top'), 'px'), 10);
+    const top = parseInt(Strings.removeTrailing(Css.get(header, position), 'px'), 10);
 
-    const assertTop = position === 'top' ? 0 : window.innerHeight - header.dom().clientHeight;
+    const assertTop = 0;
 
     Assertions.assertEq(`Header container should be docked (fixed position)`, 'fixed', Css.get(header, 'position'));
     Assertions.assertEq(`Header container left position (${left}) should be 0px`, '0px', left);
-    Assertions.assertEq(`Header container shold be docked to ${position}, ${top}px should be ~${assertTop}px`, true, Math.abs(top - assertTop) < 3);
+    Assertions.assertEq(`Header container should be docked to ${position}, ${top}px should be ~${assertTop}px`, true, Math.abs(top - assertTop) < 3);
   }));
 
   const sScrollToElement = (contentAreaContainer: Element, selector: string, alignWindowBottom = false) => Step.sync(() => {

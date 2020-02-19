@@ -1,10 +1,10 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Cell } from '@ephox/katamari';
-import { Hierarchy, Element } from '@ephox/sugar';
-import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
-import { document, HTMLElement } from '@ephox/dom-globals';
+import { document } from '@ephox/dom-globals';
+import { Cell } from '@ephox/katamari';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Element, Hierarchy, Node } from '@ephox/sugar';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.DragDropOverridesTest', (success, failure) => {
   Theme();
@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.DragDropOverridesTest', (success, failu
       Logger.t('drop draggable element outside of editor', GeneralSteps.sequence([
         tinyApis.sSetContent('<p contenteditable="false">a</p>'),
         Step.sync(() => {
-          const target = Hierarchy.follow(Element.fromDom(editor.getBody()), [0]).getOrDie().dom() as HTMLElement;
+          const target = Hierarchy.follow(Element.fromDom(editor.getBody()), [0]).filter(Node.isElement).getOrDie().dom();
           const rect = target.getBoundingClientRect();
           const button = 0, screenX = (rect.left + rect.width / 2), screenY = (rect.top + rect.height / 2);
 

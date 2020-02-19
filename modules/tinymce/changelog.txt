@@ -1,5 +1,6 @@
 Version 5.2.1 (TBD)
-    Fixed `readonly` mode not returning appropriate boolean value. #TINY-3948
+    Fixed `readonly` mode not returning appropriate boolean value #TINY-3948
+    Fixed the editor incorrectly stealing focus during initialization in IE 11 #TINY-4697
 Version 5.2.0 (2020-02-13)
     Added the ability to apply formats to spaces #TINY-4200
     Added new `toolbar_location` setting to allow for positioning the menu and toolbar at the bottom of the editor #TINY-4210
