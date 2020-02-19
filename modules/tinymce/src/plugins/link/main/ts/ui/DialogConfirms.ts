@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Future, Option } from '@ephox/katamari';
-import Delay from 'tinymce/core/api/util/Delay';
+import { Arr, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import Delay from 'tinymce/core/api/util/Delay';
+import Promise from 'tinymce/core/api/util/Promise';
 
 import Settings from '../api/Settings';
 import { AssumeExternalTargets } from '../api/Types';
@@ -53,13 +54,13 @@ const tryProtocolTransform = (assumeExternalTargets: AssumeExternalTargets, defa
   }) : Option.none();
 };
 
-const preprocess = (editor: Editor, data: LinkDialogOutput): Future<LinkDialogOutput> => {
+const preprocess = (editor: Editor, data: LinkDialogOutput): Promise<LinkDialogOutput> => {
   return Arr.findMap(
     [ tryEmailTransform, tryProtocolTransform(Settings.assumeExternalTargets(editor),  Settings.getDefaultLinkProtocol(editor)) ],
     (f) => f(data)
   ).fold(
-    () => Future.pure(data),
-    (transform) => Future.nu((callback) => {
+    () => Promise.resolve(data),
+    (transform) => new Promise((callback) => {
       delayedConfirm(editor, transform.message, (state) => {
         callback(state ? transform.preprocess(data) : data);
       });

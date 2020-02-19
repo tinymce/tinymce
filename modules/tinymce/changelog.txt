@@ -1,5 +1,5 @@
 Version 5.3.0 (TBD)
-
+    Changed the `link`, `image` and `paste` plugins to use Promises to reduce the bundle size #TINY-4710
 Version 5.2.1 (TBD)
     Fixed `readonly` mode not returning appropriate boolean value #TINY-3948
     Fixed the editor incorrectly stealing focus during initialization in IE 11 #TINY-4697
