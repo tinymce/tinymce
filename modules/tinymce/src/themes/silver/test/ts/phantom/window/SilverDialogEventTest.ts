@@ -87,7 +87,8 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
               providers: {
                 icons: () => <Record<string, string>> {},
                 menuItems: () => <Record<string, any>> {},
-                translate: I18n.translate
+                translate: I18n.translate,
+                isReadonly: () => false
               }
             },
             dialog: {

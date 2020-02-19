@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Channels, Disabling, Receiving } from '@ephox/alloy';
+import { AlloyComponent, Channels, Disabling, Receiving, Behaviour } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Selectors } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from './api/Settings';
 import { RenderUiComponents } from './Render';
-import { Option } from '@ephox/katamari';
 
 export const ReadOnlyChannel = 'silver.readonly';
 
@@ -19,19 +18,9 @@ export interface ReadOnlyData {
   readonly: boolean;
 }
 
-export const ReadOnlyDataSchema = ValueSchema.objOf([
+const ReadOnlyDataSchema = ValueSchema.objOf([
   FieldSchema.strictBoolean('readonly')
 ]);
-
-export const setDisabledAll = (element: AlloyComponent, state: boolean) => {
-  Selectors.all('*', element.element()).forEach((elm) => {
-    element.getSystem().getByDom(elm).each((comp: AlloyComponent) => {
-      if (comp.hasConfigured(Disabling)) {
-        Disabling.set(comp, state);
-      }
-    });
-  });
-};
 
 const broadcastReadonly = (uiComponents: RenderUiComponents, readonly: boolean) => {
   const outerContainer = uiComponents.outerContainer;
@@ -46,7 +35,7 @@ const broadcastReadonly = (uiComponents: RenderUiComponents, readonly: boolean) 
   uiComponents.uiMothership.broadcastOn([ ReadOnlyChannel ], { readonly });
 };
 
-export const toggleToReadOnly = (uiComponents: RenderUiComponents, readonly: boolean) => {
+const toggleToReadOnly = (uiComponents: RenderUiComponents, readonly: boolean) => {
   const outerContainer = uiComponents.outerContainer;
 
   broadcastReadonly(uiComponents, readonly);
@@ -60,7 +49,7 @@ export const toggleToReadOnly = (uiComponents: RenderUiComponents, readonly: boo
   });
 };
 
-export const setupReadonlyModeSwitch = (editor: Editor, uiComponents: RenderUiComponents) => {
+const setupReadonlyModeSwitch = (editor: Editor, uiComponents: RenderUiComponents) => {
   editor.on('init', () => {
     // Force an update of the ui components disabled states if in readonly mode
     if (editor.mode.isReadOnly()) {
@@ -75,17 +64,22 @@ export const setupReadonlyModeSwitch = (editor: Editor, uiComponents: RenderUiCo
   }
 };
 
-export const createReadonlyReceivingForOverflow = (getOverflow: (comp: AlloyComponent) => Option<AlloyComponent>) => {
+const receivingConfig = (): Behaviour.NamedConfiguredBehaviour<any, any> => {
   return Receiving.config({
     channels: {
       [ReadOnlyChannel]: {
         schema: ReadOnlyDataSchema,
-        onReceive: (comp, data: ReadOnlyData) => {
-          getOverflow(comp).each((toolbar) => {
-            setDisabledAll(toolbar, data.readonly);
-          });
+        onReceive(comp, data: ReadOnlyData) {
+          Disabling.set(comp, data.readonly);
         }
       }
     }
   });
+};
+
+export default {
+  ReadOnlyDataSchema,
+  toggleToReadOnly,
+  setupReadonlyModeSwitch,
+  receivingConfig
 };
