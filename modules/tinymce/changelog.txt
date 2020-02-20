@@ -1,4 +1,5 @@
 Version 5.2.1 (TBD)
+    Fixed table resize handles not functioning correctly in Edge #TINY-4160
     Fixed `readonly` mode not returning appropriate boolean value #TINY-3948
     Fixed the editor incorrectly stealing focus during initialization in IE 11 #TINY-4697
 Version 5.2.0 (2020-02-13)
