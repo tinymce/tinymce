@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
 
   const bookmarkSpan = '<span data-mce-type="bookmark" id="mce_2_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow:hidden;line-height:0px"></span>';
   const forcedRootBlock = 'p';
-  const forcedRootBlockAttrs = { style: 'border: 1px solid red;', class: 'abc def' };
+  const forcedRootBlockAttrs = { style: 'color: red;', class: 'abc def' };
 
   const baseExpectedHTML = (innerHTML: string) => `<p class="${forcedRootBlockAttrs.class}" style="${forcedRootBlockAttrs.style}">${innerHTML}</p>`;
 
