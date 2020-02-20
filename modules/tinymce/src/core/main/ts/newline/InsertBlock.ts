@@ -138,8 +138,8 @@ const applyAttributes = (editor: Editor, node: DomElement, forcedRootBlockAttrs:
   Option.from(forcedRootBlockAttrs.style)
     .map(editor.dom.parseStyle)
     .each((attrStyles) => {
-      const currentStyles = Css.getRaw(Element.fromDom(node), '');
-      const newStyles = { ...currentStyles.getOrNull, ...attrStyles };
+      const currentStyles = Css.getAllRaw(Element.fromDom(node));
+      const newStyles = { ...currentStyles, ...attrStyles };
       editor.dom.setStyles(node, newStyles);
     });
 
