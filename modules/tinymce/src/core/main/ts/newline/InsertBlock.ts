@@ -6,7 +6,7 @@
  */
 
 import { Element as DomElement, DocumentFragment, KeyboardEvent } from '@ephox/dom-globals';
-import { Arr, Option, Obj } from '@ephox/katamari';
+import { Arr, Option, Obj, Options } from '@ephox/katamari';
 import { PredicateFilter, Element, Css, Node } from '@ephox/sugar';
 import Settings from '../api/Settings';
 import * as CaretContainer from '../caret/CaretContainer';
@@ -144,14 +144,12 @@ const applyAttributes = (editor: Editor, node: DomElement, forcedRootBlockAttrs:
     });
 
   // Merge and apply class attribute
-  Option.from(forcedRootBlockAttrs.class).map((attrClasses) => attrClasses.split(/\s+/)).each((attrClasses) => {
-    Option.from(node.className)
-      .map((currentClasses) => Arr.filter(currentClasses.split(/\s+/), (c) => c !== ''))
-      .each((currentClasses) => {
-        const filteredClasses = Arr.filter(currentClasses, (c) => !Arr.contains(attrClasses, c));
-        const newClasses = [...attrClasses, ...filteredClasses];
-        editor.dom.setAttrib(node, 'class', newClasses.join(' '));
-      });
+  const attrClasses = Option.from(forcedRootBlockAttrs.class).map((attrC) => attrC.split(/\s+/));
+  const currentClasses = Option.from(node.className).map((currentC) => Arr.filter(currentC.split(/\s+/), (c) => c !== ''));
+  Options.lift2(attrClasses, currentClasses, (attrC, currentC) => {
+    const filteredClasses = Arr.filter(currentC, (c) => !Arr.contains(attrC, c));
+    const newClasses = [...attrC, ...filteredClasses];
+    editor.dom.setAttrib(node, 'class', newClasses.join(' '));
   });
 
   // Apply any remaining forced root block attributes
