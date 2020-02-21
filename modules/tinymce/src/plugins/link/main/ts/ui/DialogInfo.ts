@@ -5,8 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLAnchorElement, Element } from '@ephox/dom-globals';
-import { Future, Option } from '@ephox/katamari';
+import { Element, HTMLAnchorElement } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
 
 import Settings from '../api/Settings';
 import Utils from '../core/Utils';
@@ -16,8 +18,6 @@ import { ClassListOptions } from './sections/ClassListOptions';
 import { LinkListOptions } from './sections/LinkListOptions';
 import { RelOptions } from './sections/RelOptions';
 import { TargetOptions } from './sections/TargetOptions';
-import Editor from 'tinymce/core/api/Editor';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 const nonEmptyAttr = (dom: DOMUtils, elem: string | Element, name: string): Option<string> => {
   const val: string | null = dom.getAttrib(elem, name);
@@ -44,8 +44,8 @@ const extractFromAnchor = (editor: Editor, anchor: HTMLAnchorElement) => {
   };
 };
 
-const collect = (editor: Editor, linkNode: HTMLAnchorElement): Future<LinkDialogInfo> => {
-  return LinkListOptions.getLinks(editor).map((links) => {
+const collect = (editor: Editor, linkNode: HTMLAnchorElement): Promise<LinkDialogInfo> => {
+  return LinkListOptions.getLinks(editor).then((links) => {
     const anchor = extractFromAnchor(editor, linkNode);
     return {
       anchor,

@@ -7,7 +7,7 @@
 
 import { Types } from '@ephox/bridge';
 import { HTMLAnchorElement } from '@ephox/dom-globals';
-import { Arr, Future, Option, Options } from '@ephox/katamari';
+import { Arr, Option, Options } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 import Settings from '../api/Settings';
@@ -48,14 +48,14 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Types.Dialo
     attach: data.url.meta !== undefined && data.url.meta.attach ? data.url.meta.attach : () => {}
   };
 
-  DialogConfirms.preprocess(editor, changedData).get((pData) => {
+  DialogConfirms.preprocess(editor, changedData).then((pData) => {
     Utils.link(editor, attachState, pData);
   });
 
   api.close();
 };
 
-const collectData = (editor): Future<LinkDialogInfo> => {
+const collectData = (editor): Promise<LinkDialogInfo> => {
   const anchorNode: HTMLAnchorElement = Utils.getAnchorElement(editor);
   return DialogInfo.collect(editor, anchorNode);
 };
@@ -160,10 +160,10 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.D
 
 const open = function (editor: Editor) {
   const data = collectData(editor);
-  data.map((info) => {
+  data.then((info) => {
     const onSubmit = handleSubmit(editor, info);
     return makeDialog(info, onSubmit, editor);
-  }).get((spec) => {
+  }).then((spec) => {
     editor.windowManager.open(spec);
   });
 };

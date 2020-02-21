@@ -1,15 +1,15 @@
-import { Assertions, Pipeline, Step, Log } from '@ephox/agar';
+import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
 
 import { AnchorListOptions } from 'tinymce/plugins/link/ui/sections/AnchorListOptions';
 import { ClassListOptions } from 'tinymce/plugins/link/ui/sections/ClassListOptions';
 import { LinkListOptions } from 'tinymce/plugins/link/ui/sections/LinkListOptions';
 import { RelOptions } from 'tinymce/plugins/link/ui/sections/RelOptions';
 import { TargetOptions } from 'tinymce/plugins/link/ui/sections/TargetOptions';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 import { TestLinkUi } from '../module/TestLinkUi';
 
 UnitTest.asynctest('browser.tinymce.plugins.link.ListOptionsTest', (success, failure) => {
@@ -79,7 +79,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ListOptionsTest', (success, fai
           ]);
         }),
         Step.async((next, die) => {
-          LinkListOptions.getLinks(editor).get((links) => {
+          LinkListOptions.getLinks(editor).then((links) => {
             try {
               Assertions.assertEq(
                 'Checking link_list',
