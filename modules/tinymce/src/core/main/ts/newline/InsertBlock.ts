@@ -144,11 +144,11 @@ const applyAttributes = (editor: Editor, node: DomElement, forcedRootBlockAttrs:
     });
 
   // Merge and apply class attribute
-  const attrClasses = Option.from(forcedRootBlockAttrs.class).map((attrC) => attrC.split(/\s+/));
-  const currentClasses = Option.from(node.className).map((currentC) => Arr.filter(currentC.split(/\s+/), (c) => c !== ''));
-  Options.lift2(attrClasses, currentClasses, (attrC, currentC) => {
-    const filteredClasses = Arr.filter(currentC, (c) => !Arr.contains(attrC, c));
-    const newClasses = [...attrC, ...filteredClasses];
+  const attrClassesOpt = Option.from(forcedRootBlockAttrs.class).map((attrClasses) => attrClasses.split(/\s+/));
+  const currentClassesOpt = Option.from(node.className).map((currentClasses) => Arr.filter(currentClasses.split(/\s+/), (clazz) => clazz !== ''));
+  Options.lift2(attrClassesOpt, currentClassesOpt, (attrClasses, currentClasses) => {
+    const filteredClasses = Arr.filter(currentClasses, (clazz) => !Arr.contains(attrClasses, clazz));
+    const newClasses = [...attrClasses, ...filteredClasses];
     editor.dom.setAttrib(node, 'class', newClasses.join(' '));
   });
 
