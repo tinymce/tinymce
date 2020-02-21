@@ -142,8 +142,8 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
         }
       },
       layouts: {
-        onRtl: () => [ Layout.southeast ],
-        onLtr: () => [ Layout.southwest ]
+        onRtl: () => [ Layout.southwest, Layout.southeast, Layout.south ],
+        onLtr: () => [ Layout.southeast, Layout.southwest, Layout.south ]
       },
       components: [],
       fetch: ColorSwatch.getFetch(colorInputBackstage.getColors(), colorInputBackstage.hasCustomColors()),
