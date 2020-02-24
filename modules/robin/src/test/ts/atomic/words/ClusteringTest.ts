@@ -4,7 +4,7 @@ import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr, Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 import { ArbTextIds, arbTextIds } from 'ephox/robin/test/Arbitraries';
-import Clustering from 'ephox/robin/words/Clustering';
+import * as Clustering from 'ephox/robin/words/Clustering';
 import { WordDecisionItem } from 'ephox/robin/words/WordDecision';
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
 

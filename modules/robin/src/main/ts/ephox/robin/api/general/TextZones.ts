@@ -1,6 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Descent } from '@ephox/phoenix';
-import TextZones from '../../zone/TextZones';
+import * as TextZones from '../../zone/TextZones';
 import { Zones } from '../../zone/Zones';
 import { ZoneViewports } from './ZoneViewports';
 

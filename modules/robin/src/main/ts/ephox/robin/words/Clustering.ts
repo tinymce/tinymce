@@ -1,7 +1,7 @@
 import { Universe } from '@ephox/boss';
 import { Arr, Fun } from '@ephox/katamari';
 import { LanguageZones } from '../zone/LanguageZones';
-import ClusterSearch from './ClusterSearch';
+import * as ClusterSearch from './ClusterSearch';
 import { WordDecision } from './WordDecision';
 
 // This identifies the inline edges to the left and right, ignoring any language
@@ -64,7 +64,7 @@ const byLanguage = function <E, D> (universe: Universe<E, D>, item: E) {
   };
 };
 
-export default {
+export {
   byBoundary,
   getEdges,
   byLanguage

@@ -31,6 +31,6 @@ const simplify = function <E, D> (universe: Universe<E, D>, items: E[]) {
   });
 };
 
-export default {
+export {
   simplify
 };

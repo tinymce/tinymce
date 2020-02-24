@@ -218,6 +218,6 @@ const collect = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boo
     doCollect(universe, isRoot, start, soffset, finish, foffset);
 };
 
-export default {
+export {
   collect
 };

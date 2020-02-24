@@ -29,7 +29,7 @@ const selector = function (sel: string) {
   };
 };
 
-export default {
+export {
   predicate,
   selector
 };

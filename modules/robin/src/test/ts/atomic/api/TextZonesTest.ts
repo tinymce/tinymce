@@ -6,7 +6,7 @@ import Jsc from '@ephox/wrap-jsverify';
 import * as TextZones from 'ephox/robin/api/general/TextZones';
 import { ZoneViewports } from 'ephox/robin/api/general/ZoneViewports';
 import { ArbIds, arbIds, ArbRangeIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';
-import PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
+import * as PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
 import { assertProps, raw } from 'ephox/robin/test/ZoneObjects';
 
 UnitTest.test('TextZonesTest', function () {

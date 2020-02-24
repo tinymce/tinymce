@@ -89,7 +89,7 @@ const toRight = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boo
   });
 };
 
-export default {
+export {
   toLeft,
   toRight
 };

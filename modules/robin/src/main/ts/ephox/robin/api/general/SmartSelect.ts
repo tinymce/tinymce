@@ -1,7 +1,7 @@
 import { Universe } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
 import { WordRange } from '../../data/WordRange';
-import Selection from '../../smartselect/Selection';
+import * as Selection from '../../smartselect/Selection';
 
 // The optimise parameter is no longer required in this API.
 // Remove optimise as a code quality task: TBIO-4356

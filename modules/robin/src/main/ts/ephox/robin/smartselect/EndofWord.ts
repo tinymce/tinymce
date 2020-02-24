@@ -1,7 +1,7 @@
 import { Universe } from '@ephox/boss';
 import { Arr, Fun, Option, Unicode } from '@ephox/katamari';
 import { WordRange } from '../data/WordRange';
-import Clustering from '../words/Clustering';
+import * as Clustering from '../words/Clustering';
 import { WordDecisionItem } from '../words/WordDecision';
 
 const toEnd = function <E> (cluster: WordDecisionItem<E>[], start: E, soffset: number) {
@@ -82,7 +82,7 @@ const neither = function <E, D> (universe: Universe<E, D>, item: E, offset: numb
   return info.leftEdge() || info.rightEdge() ? Option.none<WordRange<E>>() : all(info.all());
 };
 
-export default {
+export {
   before,
   after,
   both,

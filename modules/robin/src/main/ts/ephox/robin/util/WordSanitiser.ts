@@ -61,7 +61,7 @@ const text = function (word: string) {
   return r.word();
 };
 
-export default {
+export {
   scope,
   text
 };
