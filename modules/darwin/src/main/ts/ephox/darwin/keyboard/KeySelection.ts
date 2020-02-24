@@ -1,8 +1,8 @@
 import { Option } from '@ephox/katamari';
 import { Awareness, Compare, Element, SelectorFind } from '@ephox/sugar';
 import { Response } from '../selection/Response';
-import CellSelection from '../selection/CellSelection';
-import Util from '../selection/Util';
+import * as CellSelection from '../selection/CellSelection';
+import * as Util from '../selection/Util';
 import { SelectionAnnotation } from '../api/SelectionAnnotation';
 import { IdentifiedExt } from '../selection/Identified';
 
@@ -49,7 +49,7 @@ const update = function (rows: number, columns: number, container: Element, sele
   return CellSelection.shiftSelection(selected, rows, columns, annotations.firstSelectedSelector(), annotations.lastSelectedSelector()).map(updateSelection);
 };
 
-export default {
+export {
   sync,
   detect,
   update

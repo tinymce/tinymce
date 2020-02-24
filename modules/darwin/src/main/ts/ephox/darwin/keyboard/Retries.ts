@@ -3,7 +3,7 @@ import { DomGather } from '@ephox/phoenix';
 import { DomStructure } from '@ephox/robin';
 import { Node, PredicateFind, Element } from '@ephox/sugar';
 import { Carets } from './Carets';
-import Rectangles from './Rectangles';
+import * as Rectangles from './Rectangles';
 import { WindowBridge } from '../api/WindowBridge';
 
 type NoneHandler<T> = () => T;

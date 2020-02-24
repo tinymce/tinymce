@@ -1,5 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import Styles from '../style/Styles';
+import * as Styles from '../style/Styles';
 
 export interface Ephemera {
   selected: () => string;

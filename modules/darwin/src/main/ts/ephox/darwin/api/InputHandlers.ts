@@ -1,14 +1,14 @@
 import { KeyboardEvent, Window } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Struct } from '@ephox/katamari';
 import { Element, EventArgs, Situ } from '@ephox/sugar';
-import KeySelection from '../keyboard/KeySelection';
-import VerticalMovement from '../keyboard/VerticalMovement';
+import * as KeySelection from '../keyboard/KeySelection';
+import * as VerticalMovement from '../keyboard/VerticalMovement';
 import MouseSelection from '../mouse/MouseSelection';
 import { KeyDirection } from '../navigation/KeyDirection';
-import CellSelection from '../selection/CellSelection';
+import * as CellSelection from '../selection/CellSelection';
 import { Response } from '../selection/Response';
 import { SelectionAnnotation } from './SelectionAnnotation';
-import SelectionKeys from './SelectionKeys';
+import * as SelectionKeys from './SelectionKeys';
 import { WindowBridge } from './WindowBridge';
 
 interface RC {
@@ -136,7 +136,7 @@ const external = (win: Window, container: Element, isRoot: (e: Element) => boole
   };
 };
 
-export default {
+export {
   mouse,
   keyboard,
   external
