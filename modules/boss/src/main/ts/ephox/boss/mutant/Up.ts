@@ -1,6 +1,6 @@
 import { Fun, Option } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
-import * as   Comparator from './Comparator';
+import * as Comparator from './Comparator';
 
 const selector = function (item: Gene, query: string): Option<Gene> {
   return item.parent.bind(function (parent) {
