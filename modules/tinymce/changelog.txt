@@ -1,4 +1,5 @@
 Version 5.2.1 (TBD)
+    Fixed table resize handles not functioning correctly in Edge #TINY-4160
     Fixed `readonly` mode not returning appropriate boolean value #TINY-3948
     Fixed `forced_root_block_attrs` setting not applying to new blocks consistently #TINY-4564
     Fixed the editor incorrectly stealing focus during initialization in IE 11 #TINY-4697
