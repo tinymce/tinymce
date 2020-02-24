@@ -16,8 +16,8 @@ import Zwsp from '../text/Zwsp';
 import { isCaretNode } from 'tinymce/core/fmt/FormatContainer';
 import DOMUtils from '../api/dom/DOMUtils';
 import { Element as DomElement, DocumentFragment, KeyboardEvent } from '@ephox/dom-globals';
-import { PredicateFilter, Element, Node } from '@ephox/sugar';
-import { Arr } from '@ephox/katamari';
+import { PredicateFilter, Element, Node, Css } from '@ephox/sugar';
+import { Arr, Option, Options, Obj } from '@ephox/katamari';
 import { Editor } from '../api/Editor';
 import { EditorEvent } from '../api/dom/EventUtils';
 import Bookmarks from '../bookmark/Bookmarks';
@@ -133,11 +133,37 @@ const getEditableRoot = function (dom, node) {
   return parent !== root ? editableRoot : root;
 };
 
-const setForcedBlockAttrs = function (editor, node) {
+const applyAttributes = (editor: Editor, node: DomElement, forcedRootBlockAttrs: Record<string, string>) => {
+  // Merge and apply style attribute
+  Option.from(forcedRootBlockAttrs.style)
+    .map(editor.dom.parseStyle)
+    .each((attrStyles) => {
+      const currentStyles = Css.getAllRaw(Element.fromDom(node));
+      const newStyles = { ...currentStyles, ...attrStyles };
+      editor.dom.setStyles(node, newStyles);
+    });
+
+  // Merge and apply class attribute
+  const attrClassesOpt = Option.from(forcedRootBlockAttrs.class).map((attrClasses) => attrClasses.split(/\s+/));
+  const currentClassesOpt = Option.from(node.className).map((currentClasses) => Arr.filter(currentClasses.split(/\s+/), (clazz) => clazz !== ''));
+  Options.lift2(attrClassesOpt, currentClassesOpt, (attrClasses, currentClasses) => {
+    const filteredClasses = Arr.filter(currentClasses, (clazz) => !Arr.contains(attrClasses, clazz));
+    const newClasses = [...attrClasses, ...filteredClasses];
+    editor.dom.setAttrib(node, 'class', newClasses.join(' '));
+  });
+
+  // Apply any remaining forced root block attributes
+  const appliedAttrs = ['style', 'class'];
+  const remainingAttrs = Obj.bifilter(forcedRootBlockAttrs, (_, attrs) => !Arr.contains(appliedAttrs, attrs)).t;
+  editor.dom.setAttribs(node, remainingAttrs);
+};
+
+const setForcedBlockAttrs = function (editor: Editor, node) {
   const forcedRootBlockName = Settings.getForcedRootBlock(editor);
 
   if (forcedRootBlockName && forcedRootBlockName.toLowerCase() === node.tagName.toLowerCase()) {
-    editor.dom.setAttribs(node, Settings.getForcedRootBlockAttrs(editor));
+    const forcedRootBlockAttrs = Settings.getForcedRootBlockAttrs(editor);
+    applyAttributes(editor, node, forcedRootBlockAttrs);
   }
 };
 
@@ -231,7 +257,6 @@ const insert = function (editor: Editor, evt: EditorEvent<KeyboardEvent>) {
 
     if (name || parentBlockName === 'TABLE' || parentBlockName === 'HR') {
       block = dom.create(name || newBlockName);
-      setForcedBlockAttrs(editor, block);
     } else {
       block = parentBlock.cloneNode(false);
     }
@@ -263,6 +288,8 @@ const insert = function (editor: Editor, evt: EditorEvent<KeyboardEvent>) {
         }
       } while ((node = node.parentNode) && node !== editableRoot);
     }
+
+    setForcedBlockAttrs(editor, block);
 
     emptyBlock(caretNode);
 
@@ -426,6 +453,7 @@ const insert = function (editor: Editor, evt: EditorEvent<KeyboardEvent>) {
     if (dom.isEmpty(parentBlock)) {
       emptyBlock(parentBlock);
     }
+    setForcedBlockAttrs(editor, newBlock);
     NewLineUtils.moveToCaretPosition(editor, newBlock);
   } else if (isCaretAtStartOrEndOfBlock()) {
     insertNewBlockAfter();
@@ -456,6 +484,7 @@ const insert = function (editor: Editor, evt: EditorEvent<KeyboardEvent>) {
       dom.remove(newBlock);
       insertNewBlockAfter();
     } else {
+      setForcedBlockAttrs(editor, newBlock);
       NewLineUtils.moveToCaretPosition(editor, newBlock);
     }
   }

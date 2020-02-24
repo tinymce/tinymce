@@ -1,3 +1,5 @@
+Version 4.9.9 (TBD)
+    Fixed `forced_root_block_attrs` setting not applying to new blocks consistently #TINY-4564
 Version 4.9.8 (2020-01-28)
     Fixed the `mobile` theme failing to load due to a bundling issue #TINY-4613
     Fixed security issue related to parsing HTML comments and CDATA #TINY-4544
