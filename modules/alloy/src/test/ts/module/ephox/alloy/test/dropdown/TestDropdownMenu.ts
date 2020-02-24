@@ -4,14 +4,12 @@ import { SelectorFind } from '@ephox/sugar';
 
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import * as TestStore from 'ephox/alloy/api/testhelpers/TestStore';
+import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 import { PartialMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
-
-type TestStore = TestStore.TestStore;
 
 const renderMenu = (spec: { value: string; text?: string; items: ItemSpec[] }): PartialMenuSpec => {
   return {

@@ -14,7 +14,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
   const platform = PlatformDetection.detect();
   const isIE = platform.browser.isIE();
   const skipInIE = <T, U> (step: Step<T, U>) => isIE ? Step.pass : step;
-  const store = TestHelpers.TestStore.create();
+  const store = TestHelpers.TestStore();
 
   TinyLoader.setupLight(
     (editor, onSuccess, onFailure) => {

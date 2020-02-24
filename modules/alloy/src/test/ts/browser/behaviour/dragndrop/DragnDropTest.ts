@@ -9,10 +9,8 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { DragnDrop } from 'ephox/alloy/api/behaviour/DragnDrop';
-import * as TestStore from 'ephox/alloy/api/testhelpers/TestStore';
+import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 import { StartingDragndropConfigSpec, DropDragndropConfigSpec } from 'ephox/alloy/dragging/dragndrop/DragnDropTypes';
-
-type TestStore = TestStore.TestStore;
 
 UnitTest.asynctest('DragnDropTest', (success, failure) => {
   const platform = PlatformDetection.detect();

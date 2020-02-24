@@ -22,7 +22,7 @@ UnitTest.asynctest('Editor Autocompleter delay response test', (success, failure
     return success();
   }
 
-  const store = TestHelpers.TestStore.create();
+  const store = TestHelpers.TestStore();
 
   interface Scenario {
     triggerChar: string;

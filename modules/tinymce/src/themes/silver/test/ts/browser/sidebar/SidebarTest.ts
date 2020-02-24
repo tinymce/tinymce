@@ -12,7 +12,7 @@ interface EventLog {
 }
 
 UnitTest.asynctest('tinymce.themes.silver.test.browser.sidebar.SidebarTest', function (success, failure) {
-  const store = TestHelpers.TestStore.create();
+  const store = TestHelpers.TestStore();
   Theme();
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {

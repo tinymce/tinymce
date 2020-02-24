@@ -16,7 +16,7 @@ export interface TestStore {
   sAssertSortedEq: (label: string, expected: any[]) => Step<any, any>;
 }
 
-export const create = (): TestStore => {
+export const TestStore = (): TestStore => {
   let array: any[] = [ ];
 
   const add = (value: any) => {

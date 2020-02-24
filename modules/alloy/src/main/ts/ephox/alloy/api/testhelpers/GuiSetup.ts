@@ -6,9 +6,7 @@ import { DomEvent, Element, EventUnbinder, Html, Insert, Remove } from '@ephox/s
 import { AlloyComponent } from '../component/ComponentApi';
 import * as Attachment from '../system/Attachment';
 import * as Gui from '../system/Gui';
-import * as TestStore from './TestStore';
-
-type TestStore = TestStore.TestStore;
+import { TestStore } from './TestStore';
 
 interface KeyLoggerState {
   log: string[];
@@ -21,7 +19,7 @@ interface KeyLoggerState {
  */
 const setup = (createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
                f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Array<Step<any, any>>, success: () => void, failure: (err: any, logs?: TestLogs) => void) => {
-  const store = TestStore.create();
+  const store = TestStore();
 
   const gui = Gui.create();
 

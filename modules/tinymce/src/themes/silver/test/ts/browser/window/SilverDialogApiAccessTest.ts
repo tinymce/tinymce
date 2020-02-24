@@ -15,7 +15,7 @@ UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure)
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const currentApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);
-    const store = TestHelpers.TestStore.create();
+    const store = TestHelpers.TestStore();
 
     const dialogSpec: Types.Dialog.DialogApi<{ fieldA: string; }> = {
       title: 'Silver Test Access Dialog',

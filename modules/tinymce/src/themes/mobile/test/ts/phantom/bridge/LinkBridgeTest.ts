@@ -9,7 +9,7 @@ import { TestHelpers } from '@ephox/alloy';
 import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
-  const store = TestHelpers.TestStore.create();
+  const store = TestHelpers.TestStore();
 
   const editorState = {
     start: Cell(null),

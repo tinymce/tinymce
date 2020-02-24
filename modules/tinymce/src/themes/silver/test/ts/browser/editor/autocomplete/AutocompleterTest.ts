@@ -12,7 +12,7 @@ import { AutocompleterStructure, sAssertAutocompleterStructure, sWaitForAutocomp
 UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
   SilverTheme();
 
-  const store = TestHelpers.TestStore.create();
+  const store = TestHelpers.TestStore();
 
   interface TriggerDetails {
     triggerChar: string;

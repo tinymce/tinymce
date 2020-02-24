@@ -15,7 +15,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
 
   const currentDialogApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);
 
-  const store = TestHelpers.TestStore.create();
+  const store = TestHelpers.TestStore();
 
   const dialogA: Types.Dialog.DialogApi<any> = {
     title: 'DialogA',

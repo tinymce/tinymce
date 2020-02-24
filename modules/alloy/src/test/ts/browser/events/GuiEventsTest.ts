@@ -2,7 +2,7 @@ import { Chain, Cleaner, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logg
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Attr, DomEvent, Element, EventArgs, Insert, Node, Remove, Text } from '@ephox/sugar';
-import * as TestStore from 'ephox/alloy/api/testhelpers/TestStore';
+import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 
 import * as GuiEvents from 'ephox/alloy/events/GuiEvents';
 
@@ -26,8 +26,8 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
   Insert.append(body, page);
   cleanup.add(() => Remove.remove(page));
 
-  const outerStore = TestStore.create();
-  const store = TestStore.create();
+  const outerStore = TestStore();
+  const store = TestStore();
 
   const onBodyKeydown = DomEvent.bind(body, 'keydown', (evt) => {
     if (evt.raw().which === Keys.backspace()) {
