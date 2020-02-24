@@ -1,8 +1,7 @@
-import { ApproxStructure, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Logger, Pipeline, Keys } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { TinyApis, TinyLoader, TinyActions } from '@ephox/mcagar';
 import { Obj } from '@ephox/katamari';
-import InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 import Theme from 'tinymce/themes/modern/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success, failure) => {
@@ -13,21 +12,16 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
   const forcedRootBlockAttrs = { style: 'color: red;', class: 'abc def' };
   const baseExpectedHTML = (innerHTML: string) => `<p class="${forcedRootBlockAttrs.class}" style="${forcedRootBlockAttrs.style}">${innerHTML}</p>`;
 
-  const sInsertNewline = (editor, args) => {
-    return Step.sync(() => {
-      InsertNewLine.insert(editor, args);
-    });
-  };
-
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
+    const tinyActions = TinyActions(editor);
 
     const sAssertNewLine = (label: string, rootBlock: string, rootBlockAttrs: Record<string, string>, initalHTML: string, expectedHTML: (innerHTML: string) => string) =>
       Logger.t(label, GeneralSteps.sequence([
         Logger.t('Insert block before', GeneralSteps.sequence([
           tinyApis.sSetContent(initalHTML),
           tinyApis.sSetCursor([0, 0], 0),
-          sInsertNewline(editor, {}),
+          tinyActions.sContentKeydown(Keys.enter()),
           tinyApis.sAssertContentStructure(
             ApproxStructure.build((s, str, arr) => {
               return s.element('body', {
@@ -43,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
         Logger.t('Split block in the middle', GeneralSteps.sequence([
           tinyApis.sSetContent(initalHTML),
           tinyApis.sSetCursor([0, 0], 1),
-          sInsertNewline(editor, {}),
+          tinyActions.sContentKeydown(Keys.enter()),
           tinyApis.sAssertContentStructure(
             ApproxStructure.build((s, str, arr) => {
               return s.element('body', {
@@ -59,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
         Logger.t('Insert block after', GeneralSteps.sequence([
           tinyApis.sSetContent(initalHTML),
           tinyApis.sSetCursor([0, 0], 2),
-          sInsertNewline(editor, {}),
+          tinyActions.sContentKeydown(Keys.enter()),
           tinyApis.sAssertContentStructure(
             ApproxStructure.build((s, str, arr) => {
               return s.element('body', {
@@ -75,7 +69,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
         Logger.t('Insert block after bookmark', GeneralSteps.sequence([
           tinyApis.sSetRawContent(`<${rootBlock}>${bookmarkSpan}<br data-mce-bogus="1"></${rootBlock}>`),
           tinyApis.sSetCursor([0], 1),
-          sInsertNewline(editor, {}),
+          tinyActions.sContentKeydown(Keys.enter()),
           tinyApis.sAssertContentStructure(
             ApproxStructure.build((s, str) => {
               return s.element('body', {
