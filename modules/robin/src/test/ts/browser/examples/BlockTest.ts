@@ -1,9 +1,9 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 import { Element, Node, Traverse } from '@ephox/sugar';
-import DomLook from 'ephox/robin/api/dom/DomLook';
-import DomParent from 'ephox/robin/api/dom/DomParent';
-import DomStructure from 'ephox/robin/api/dom/DomStructure';
+import * as DomLook from 'ephox/robin/api/dom/DomLook';
+import * as DomParent from 'ephox/robin/api/dom/DomParent';
+import * as DomStructure from 'ephox/robin/api/dom/DomStructure';
 import BrowserCheck from 'ephox/robin/test/BrowserCheck';
 
 UnitTest.test('BlockTest', function () {

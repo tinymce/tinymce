@@ -36,7 +36,7 @@ const isInline = function (element: Element) {
   return Structure.isInline(universe, element);
 };
 
-export default {
+export {
   isBlock,
   isList,
   isFormatting,

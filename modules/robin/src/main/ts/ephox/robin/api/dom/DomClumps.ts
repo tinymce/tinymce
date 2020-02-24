@@ -13,7 +13,7 @@ const fracture = function (isRoot: (e: Element) => boolean, start: Element, soff
   return Clumps.fracture(universe, isRoot, start, soffset, finish, foffset, ceiling);
 };
 
-export default {
+export {
   fractures,
   fracture
 };

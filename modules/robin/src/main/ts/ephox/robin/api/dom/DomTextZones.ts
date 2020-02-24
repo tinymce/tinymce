@@ -17,7 +17,7 @@ const empty = function () {
   return TextZones.empty<Element>();
 };
 
-export default {
+export {
   single,
   range,
   empty

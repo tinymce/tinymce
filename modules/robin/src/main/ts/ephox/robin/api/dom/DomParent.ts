@@ -34,7 +34,7 @@ const breakPath = function (child: Element, isTop: (e: Element) => boolean, brea
   });
 };
 
-export default {
+export {
   sharedOne,
   subset,
   ancestors,

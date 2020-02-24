@@ -10,6 +10,6 @@ const word = function (element: Element, offset: number, optimise?: any) {
   return SmartSelect.word(universe, element, offset);
 };
 
-export default {
+export {
   word
 };

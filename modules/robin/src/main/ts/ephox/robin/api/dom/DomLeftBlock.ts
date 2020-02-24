@@ -12,7 +12,7 @@ const all = function (item: Element) {
   return LeftBlock.all(universe, item);
 };
 
-export default {
+export {
   top,
   all
 };

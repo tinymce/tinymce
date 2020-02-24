@@ -16,7 +16,7 @@ const exact = function (element: Element) {
   return (item: Element) => Look.exact(universe, element)(universe, item);
 };
 
-export default {
+export {
   selector,
   predicate,
   exact

@@ -8,6 +8,6 @@ const simplify = function (elements: Element[]) {
   return Pathway.simplify(universe, elements);
 };
 
-export default {
+export {
   simplify
 };

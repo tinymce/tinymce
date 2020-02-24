@@ -11,7 +11,7 @@ const isWord = function (text: string) {
   return Words.isWord(universe, text);
 };
 
-export default {
+export {
   identify,
   isWord
 };

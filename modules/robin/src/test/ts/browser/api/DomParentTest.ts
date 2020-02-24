@@ -1,7 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Attr, Compare, Element, Hierarchy, Html, SelectorFind } from '@ephox/sugar';
-import DomParent from 'ephox/robin/api/dom/DomParent';
+import * as DomParent from 'ephox/robin/api/dom/DomParent';
 import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test(

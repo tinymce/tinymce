@@ -12,7 +12,7 @@ const range = function (start: Element, soffset: number, finish: Element, foffse
   return TextZone.range(universe, start, soffset, finish, foffset, envLang, onlyLang);
 };
 
-export default {
+export {
   single,
   range
 };
