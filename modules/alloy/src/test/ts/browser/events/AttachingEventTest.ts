@@ -9,7 +9,7 @@ import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import TestStore from 'ephox/alloy/api/testhelpers/TestStore';
+import * as TestStore from 'ephox/alloy/api/testhelpers/TestStore';
 
 UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure) => {
 
@@ -23,7 +23,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure)
     )
   );
 
-  const store = TestStore();
+  const store = TestStore.create();
 
   const wrapper = GuiFactory.build({
     dom: {

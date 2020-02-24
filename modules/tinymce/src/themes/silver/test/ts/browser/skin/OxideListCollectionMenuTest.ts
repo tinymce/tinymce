@@ -12,7 +12,7 @@ import { TestHelpers } from '@ephox/alloy';
 UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
   Theme();
 
-  const store = TestHelpers.TestStore();
+  const store = TestHelpers.TestStore.create();
 
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {

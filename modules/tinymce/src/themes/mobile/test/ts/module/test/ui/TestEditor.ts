@@ -4,7 +4,7 @@ import { Cell, Fun } from '@ephox/katamari';
 import { TestHelpers } from '@ephox/alloy';
 
 export default function () {
-  const store = TestHelpers.TestStore();
+  const store = TestHelpers.TestStore.create();
 
   const editorState = {
     start: Cell(null),

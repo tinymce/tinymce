@@ -9,7 +9,7 @@ import SilverTheme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('Editor ContextToolbar test', (success, failure) => {
   SilverTheme();
 
-  const store = TestHelpers.TestStore();
+  const store = TestHelpers.TestStore.create();
 
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {

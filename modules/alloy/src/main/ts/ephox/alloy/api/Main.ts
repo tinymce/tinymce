@@ -140,7 +140,7 @@ type MementoRecord = Memento.MementoRecord;
 type Bounds = Boxes.Bounds;
 
 // Test code - should eventually move to a separate project
-import TestHelpers from './testhelpers/TestHelpers';
+import * as TestHelpers from './testhelpers/TestHelpers';
 
 // TODO: naughty non API's being exported
 // Type Def Exports

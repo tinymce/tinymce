@@ -15,7 +15,7 @@ UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
 
   const currentApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);
 
-  const store = TestHelpers.TestStore();
+  const store = TestHelpers.TestStore.create();
 
   const sTestOpen = Chain.asStep({ }, [
     Chain.injectThunked(() => {

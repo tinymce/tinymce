@@ -74,7 +74,7 @@ const calcNewAnchor = (optBox: Option<Boxes.BoxByPoint>, rootPoint: CssPosition.
   });
 };
 
-export default {
+export {
   capRect,
   calcNewAnchor
 };

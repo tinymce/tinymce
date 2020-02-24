@@ -14,7 +14,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
   Theme();
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const store = TestHelpers.TestStore();
+    const store = TestHelpers.TestStore.create();
     const currentApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);
 
     const dialogSpec: Types.Dialog.DialogApi<{ fred: string }> = {

@@ -25,7 +25,7 @@ import { TestHelpers } from '@ephox/alloy';
 UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
   Theme();
 
-  const store = TestHelpers.TestStore();
+  const store = TestHelpers.TestStore.create();
 
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
