@@ -15,7 +15,7 @@ const custom = function (item: Gene, renderer: (e: Gene) => string): string {
     : renderer(item);
 };
 
-export default {
+export {
   basic,
   custom
 };

@@ -1,8 +1,8 @@
 import { Arr, Option } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
-import Detach from './Detach';
-import Locator from './Locator';
-import Up from './Up';
+import * as Detach from './Detach';
+import * as Locator from './Locator';
+import * as Up from './Up';
 
 const before = function (anchor: Gene, item: Gene) {
   anchor.parent.each(function (parent) {
@@ -75,7 +75,7 @@ const wrap = function (anchor: Gene, wrapper: Gene) {
   });
 };
 
-export default {
+export {
   before,
   after,
   afterAll,

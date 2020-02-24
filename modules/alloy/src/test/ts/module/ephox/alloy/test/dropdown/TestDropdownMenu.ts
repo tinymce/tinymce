@@ -4,7 +4,7 @@ import { SelectorFind } from '@ephox/sugar';
 
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import TestStore from 'ephox/alloy/api/testhelpers/TestStore';
+import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import * as Tagger from 'ephox/alloy/registry/Tagger';

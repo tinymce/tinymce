@@ -24,7 +24,7 @@ const copyTo = function (source: Gene, destination: Gene) {
   };
 };
 
-export default {
+export {
   get,
   set,
   remove,

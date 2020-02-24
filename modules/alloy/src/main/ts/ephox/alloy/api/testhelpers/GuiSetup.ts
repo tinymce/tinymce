@@ -6,7 +6,7 @@ import { DomEvent, Element, EventUnbinder, Html, Insert, Remove } from '@ephox/s
 import { AlloyComponent } from '../component/ComponentApi';
 import * as Attachment from '../system/Attachment';
 import * as Gui from '../system/Gui';
-import TestStore from './TestStore';
+import { TestStore } from './TestStore';
 
 interface KeyLoggerState {
   log: string[];

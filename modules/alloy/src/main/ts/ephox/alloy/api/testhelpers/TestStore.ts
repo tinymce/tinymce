@@ -3,7 +3,7 @@ import { Assert } from '@ephox/bedrock-client';
 import { console } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 
-interface TestStore {
+export interface TestStore {
   add: (value: any) => void;
   adder: (value: any) => () => void;
   adderH: (value: any) => () => Option<boolean>;
@@ -16,7 +16,7 @@ interface TestStore {
   sAssertSortedEq: (label: string, expected: any[]) => Step<any, any>;
 }
 
-const TestStore = (): TestStore => {
+export const TestStore = (): TestStore => {
   let array: any[] = [ ];
 
   const add = (value: any) => {
@@ -86,5 +86,3 @@ const TestStore = (): TestStore => {
     sAssertSortedEq
   };
 };
-
-export default TestStore;

@@ -1,6 +1,6 @@
 import { Fun, Option } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
-import Comparator from './Comparator';
+import * as Comparator from './Comparator';
 
 const selector = function (item: Gene, query: string): Option<Gene> {
   return item.parent.bind(function (parent) {
@@ -30,7 +30,7 @@ const all = function (item: Gene): Gene[] {
   });
 };
 
-export default {
+export {
   selector,
   closest,
   predicate,

@@ -5,7 +5,7 @@ import { Element, EventArgs } from '@ephox/sugar';
 
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
-import TestStore from 'ephox/alloy/api/testhelpers/TestStore';
+import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 import * as TapEvent from 'ephox/alloy/events/TapEvent';
 
 UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
