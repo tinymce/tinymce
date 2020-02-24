@@ -1,7 +1,7 @@
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import TableOperations from 'ephox/snooker/api/TableOperations';
-import Assertions from 'ephox/snooker/test/Assertions';
+import * as TableOperations from 'ephox/snooker/api/TableOperations';
+import * as Assertions from 'ephox/snooker/test/Assertions';
 import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('EraseOperationsTest', function () {

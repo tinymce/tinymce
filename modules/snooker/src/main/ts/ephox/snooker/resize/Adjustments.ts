@@ -1,12 +1,12 @@
 import { Arr } from '@ephox/katamari';
-import Deltas from '../calc/Deltas';
-import DetailsList from '../model/DetailsList';
+import * as Deltas from '../calc/Deltas';
+import * as DetailsList from '../model/DetailsList';
 import { Warehouse } from '../model/Warehouse';
-import ColumnSizes from './ColumnSizes';
-import Recalculations from './Recalculations';
-import Sizes from './Sizes';
-import TableSize from './TableSize';
-import CellUtils from '../util/CellUtils';
+import * as ColumnSizes from './ColumnSizes';
+import * as Recalculations from './Recalculations';
+import * as Sizes from './Sizes';
+import * as TableSize from './TableSize';
+import * as CellUtils from '../util/CellUtils';
 import { RowData, Detail } from '../api/Structs';
 import { Element } from '@ephox/sugar';
 import { BarPositions, ColInfo, RowInfo } from './BarPositions';
@@ -93,7 +93,7 @@ const adjustWidthTo = function <T extends Detail>(table: Element, list: RowData<
   }
 };
 
-export default {
+export {
   adjustWidth,
   adjustHeight,
   adjustWidthTo

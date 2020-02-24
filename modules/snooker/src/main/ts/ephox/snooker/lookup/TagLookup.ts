@@ -1,7 +1,7 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Compare, Element } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
-import TableLookup from '../api/TableLookup';
+import * as TableLookup from '../api/TableLookup';
 
 const detect = function (cell: Element) {
 
@@ -23,6 +23,6 @@ const detect = function (cell: Element) {
   });
 };
 
-export default {
+export {
   detect
 };

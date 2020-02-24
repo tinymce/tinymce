@@ -1,12 +1,12 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Css, Height, Width, Element } from '@ephox/sugar';
-import DetailsList from '../model/DetailsList';
+import * as DetailsList from '../model/DetailsList';
 import { Warehouse } from '../model/Warehouse';
 import { BarPositions, ColInfo } from '../resize/BarPositions';
-import ColumnSizes from '../resize/ColumnSizes';
-import Redistribution from '../resize/Redistribution';
-import CellUtils from '../util/CellUtils';
-import TableSize from '../resize/TableSize';
+import * as ColumnSizes from '../resize/ColumnSizes';
+import * as Redistribution from '../resize/Redistribution';
+import * as CellUtils from '../util/CellUtils';
+import * as TableSize from '../resize/TableSize';
 import { DetailExt, RowData } from './Structs';
 
 const redistributeToW = function (newWidths: string[], cells: DetailExt[], unit: string) {
@@ -62,6 +62,6 @@ const redistribute = function (table: Element, optWidth: Option<string>, optHeig
 
 };
 
-export default {
+export {
   redistribute
 };

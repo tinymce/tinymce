@@ -1,4 +1,4 @@
-import Sizes from '../resize/Sizes';
+import * as Sizes from '../resize/Sizes';
 import { Element } from '@ephox/sugar';
 
 const halve = function (main: Element, other: Element) {
@@ -10,6 +10,6 @@ const halve = function (main: Element, other: Element) {
   });
 };
 
-export default {
+export {
   halve
 };

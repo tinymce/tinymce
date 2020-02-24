@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import * as Structs from 'ephox/snooker/api/Structs';
-import Transitions from 'ephox/snooker/model/Transitions';
+import * as Transitions from 'ephox/snooker/model/Transitions';
 import { Element } from '@ephox/sugar';
 
 UnitTest.test('TableCounterTest', function () {

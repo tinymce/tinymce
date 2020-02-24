@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import * as Structs from '../api/Structs';
-import GridRow from '../model/GridRow';
+import * as GridRow from '../model/GridRow';
 import { Element } from '@ephox/sugar';
 
 type CompElm = (e1: Element, e2: Element) => boolean;
@@ -80,7 +80,7 @@ const deleteRowsAt = function (grid: Structs.RowCells[], start: number, finish: 
   return grid.slice(0, start).concat(grid.slice(finish + 1));
 };
 
-export default {
+export {
   insertRowAt,
   insertColumnAt,
   splitCellIntoColumns,

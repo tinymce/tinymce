@@ -1,6 +1,6 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Attr, Element, Node, SelectorFilter, SelectorFind, Selectors, Traverse } from '@ephox/sugar';
-import LayerSelector from '../util/LayerSelector';
+import * as LayerSelector from '../util/LayerSelector';
 import * as Structs from './Structs';
 
 // lookup inside this table
@@ -72,7 +72,7 @@ const grid = function (element: Element, rowProp: string, colProp: string) {
   return Structs.grid(rowsCount, cols);
 };
 
-export default {
+export {
   cell,
   firstCell,
   cells,

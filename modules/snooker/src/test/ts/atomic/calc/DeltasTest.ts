@@ -1,5 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import Deltas from 'ephox/snooker/calc/Deltas';
+import * as Deltas from 'ephox/snooker/calc/Deltas';
 import { UnitTest, assert } from '@ephox/bedrock-client';
 import { TableSize } from 'ephox/snooker/resize/Types';
 

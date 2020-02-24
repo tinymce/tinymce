@@ -1,8 +1,8 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import * as Structs from 'ephox/snooker/api/Structs';
-import Fitment from 'ephox/snooker/test/Fitment';
-import TableMerge from 'ephox/snooker/test/TableMerge';
+import * as Fitment from 'ephox/snooker/test/Fitment';
+import * as TableMerge from 'ephox/snooker/test/TableMerge';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
 import { Element } from '@ephox/sugar';
 

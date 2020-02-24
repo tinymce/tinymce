@@ -36,7 +36,7 @@ const cellLength = function (gridRow: Structs.RowCells) {
   return gridRow.cells().length;
 };
 
-export default {
+export {
   addCell,
   setCells,
   mutateCell,

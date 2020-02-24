@@ -1,10 +1,10 @@
 import { Option } from '@ephox/katamari';
 import { Compare, Element } from '@ephox/sugar';
-import DetailsList from '../model/DetailsList';
+import * as DetailsList from '../model/DetailsList';
 import { Warehouse } from '../model/Warehouse';
-import CellFinder from '../selection/CellFinder';
-import CellGroup from '../selection/CellGroup';
-import TableLookup from './TableLookup';
+import * as CellFinder from '../selection/CellFinder';
+import * as CellGroup from '../selection/CellGroup';
+import * as TableLookup from './TableLookup';
 
 const moveBy = function (cell: Element, deltaRow: number, deltaColumn: number) {
   return TableLookup.table(cell).bind(function (table) {
@@ -40,7 +40,7 @@ const getWarehouse = function (table: Element) {
   return Warehouse.generate(list);
 };
 
-export default {
+export {
   moveBy,
   intercepts,
   nestedIntercepts,

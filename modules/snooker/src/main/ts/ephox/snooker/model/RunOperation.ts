@@ -1,12 +1,12 @@
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { Compare, Traverse, Element } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
-import TableLookup from '../api/TableLookup';
-import Redraw from '../operate/Redraw';
+import * as TableLookup from '../api/TableLookup';
+import * as Redraw from '../operate/Redraw';
 import { BarPositions, ColInfo } from '../resize/BarPositions';
-import Bars from '../resize/Bars';
-import DetailsList from './DetailsList';
-import Transitions from './Transitions';
+import * as Bars from '../resize/Bars';
+import * as DetailsList from './DetailsList';
+import * as Transitions from './Transitions';
 import { Warehouse } from './Warehouse';
 import { Generators, GeneratorsWrapper, SimpleGenerators } from '../api/Generators';
 import { ResizeWire } from '../api/ResizeWire';

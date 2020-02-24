@@ -1,5 +1,5 @@
 import * as Structs from 'ephox/snooker/api/Structs';
-import Blocks from 'ephox/snooker/lookup/Blocks';
+import * as Blocks from 'ephox/snooker/lookup/Blocks';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
 import { UnitTest, assert } from '@ephox/bedrock-client';
 import { Element } from '@ephox/sugar';

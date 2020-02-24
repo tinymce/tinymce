@@ -1,9 +1,9 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Css, Element } from '@ephox/sugar';
-import Blocks from '../lookup/Blocks';
-import CellUtils from '../util/CellUtils';
+import * as Blocks from '../lookup/Blocks';
+import * as CellUtils from '../util/CellUtils';
 import * as Util from '../util/Util';
-import Sizes from './Sizes';
+import * as Sizes from './Sizes';
 import { Warehouse } from '../model/Warehouse';
 import { TableSize } from './Types';
 import { BarPositions, RowInfo, ColInfo } from './BarPositions';
@@ -98,7 +98,7 @@ const getRawHeights = function (warehouse: Warehouse, direction: BarPositions<Ro
   return getHeightFrom(warehouse, direction, getRawH, getDeduced);
 };
 
-export default {
+export {
   getRawWidths,
   getPixelWidths,
   getPercentageWidths,
