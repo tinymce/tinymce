@@ -1,4 +1,4 @@
-import Attribution from '../mutant/Attribution';
+import * as Attribution from '../mutant/Attribution';
 import Comparator from '../mutant/Comparator';
 import Creator from '../mutant/Creator';
 import Down from '../mutant/Down';

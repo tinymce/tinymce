@@ -1,4 +1,4 @@
-import Attribution from './Attribution';
+import * as Attribution from './Attribution';
 import { Arr, Option } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
 
