@@ -28,7 +28,7 @@ const run = function <E, D> (strategy: Walks, universe: Universe<E, D>, item: E)
 const top = <E, D> (universe: Universe<E, D> , item: E) => run(Walks.top, universe, item);
 const all = <E, D> (universe: Universe<E, D>, item: E) => run(Walks.all, universe, item);
 
-export default {
+export {
   top,
   all
 };

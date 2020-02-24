@@ -27,7 +27,7 @@ const breakToRight: BreakToRightFn = xBreakToRight;
 type BreakPathFn = <E, D>(universe: Universe<E, D>, child: E, isTop: (e: E) => boolean, breaker: (universe: Universe<E, D>, parent: E, child: E) => Option<LeftRight<E>>) => BrokenPath<E>;
 const breakPath: BreakPathFn = xBreakPath;
 
-export default {
+export {
   sharedOne,
   subset,
   ancestors,

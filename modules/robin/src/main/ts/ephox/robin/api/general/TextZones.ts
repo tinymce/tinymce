@@ -33,7 +33,7 @@ const range = function <E, D> (universe: Universe<E, D>, start: E, soffset: numb
 type EmptyFn = <E>() => Zones<E>;
 const empty: EmptyFn = TextZones.empty;
 
-export default {
+export {
   single,
   range,
   empty

@@ -43,7 +43,7 @@ const fractures = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => b
   });
 };
 
-export default {
+export {
   fractures,
   fracture
 };

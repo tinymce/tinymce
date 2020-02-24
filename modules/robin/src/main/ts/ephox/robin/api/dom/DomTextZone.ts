@@ -1,6 +1,6 @@
 import { DomUniverse } from '@ephox/boss';
 import { Element } from '@ephox/sugar';
-import TextZone from '../general/TextZone';
+import * as TextZone from '../general/TextZone';
 
 const universe = DomUniverse();
 

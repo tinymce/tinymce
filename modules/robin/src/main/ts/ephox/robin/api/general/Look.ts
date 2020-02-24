@@ -16,7 +16,7 @@ const exact = function <E, D> (universe: Universe<E, D>, item: E) {
   return Look.predicate(itemMatch);
 };
 
-export default {
+export {
   selector,
   predicate,
   exact

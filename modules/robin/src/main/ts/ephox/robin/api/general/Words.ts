@@ -10,7 +10,7 @@ const isWord = function (_universe: Universe<any, any>, text: string) {
   return !WordUtil.hasBreak(text);
 };
 
-export default {
+export {
   identify,
   isWord
 };

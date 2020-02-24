@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { DomUniverse, Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { Body, Element, Hierarchy, Insert, InsertAll, Remove, Replication } from '@ephox/sugar';
-import LeftBlock from 'ephox/robin/api/general/LeftBlock';
+import * as LeftBlock from 'ephox/robin/api/general/LeftBlock';
 
 UnitTest.test('LeftBlockTest', function () {
   const universe = DomUniverse();

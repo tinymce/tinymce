@@ -4,7 +4,7 @@ import { Element, Node, Traverse } from '@ephox/sugar';
 import * as DomLook from 'ephox/robin/api/dom/DomLook';
 import * as DomParent from 'ephox/robin/api/dom/DomParent';
 import * as DomStructure from 'ephox/robin/api/dom/DomStructure';
-import BrowserCheck from 'ephox/robin/test/BrowserCheck';
+import * as BrowserCheck from 'ephox/robin/test/BrowserCheck';
 
 UnitTest.test('BlockTest', function () {
   const check = function (expected: string, input: string, look: (e: Element) => Option<Element>) {

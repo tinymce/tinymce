@@ -1,6 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import Parent from '../api/general/Parent';
+import * as Parent from '../api/general/Parent';
 import { breakToLeft, breakToRight, LeftRight } from '../parent/Breaker';
 import Subset from '../parent/Subset';
 

@@ -8,6 +8,6 @@ import Selection from '../../smartselect/Selection';
 type WordFn = <E, D>(universe: Universe<E, D>, item: E, offset: number, optimise?: any) => Option<WordRange<E>>;
 const word: WordFn = Selection.word;
 
-export default {
+export {
   word
 };

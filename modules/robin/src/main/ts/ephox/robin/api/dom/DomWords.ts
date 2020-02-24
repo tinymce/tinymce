@@ -1,5 +1,5 @@
 import { DomUniverse } from '@ephox/boss';
-import Words from '../general/Words';
+import * as Words from '../general/Words';
 
 const universe = DomUniverse();
 

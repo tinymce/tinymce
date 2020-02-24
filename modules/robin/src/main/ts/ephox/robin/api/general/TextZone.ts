@@ -25,7 +25,7 @@ const range = function <E, D> (universe: Universe<E, D>, start: E, soffset: numb
   return TextZone.fromRange(universe, startPt.element(), finishPt.element(), envLang, onlyLang);
 };
 
-export default {
+export {
   single,
   range
 };

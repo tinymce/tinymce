@@ -1,6 +1,6 @@
 import { DomUniverse } from '@ephox/boss';
 import { Element } from '@ephox/sugar';
-import Pathway from '../general/Pathway';
+import * as Pathway from '../general/Pathway';
 
 const universe = DomUniverse();
 

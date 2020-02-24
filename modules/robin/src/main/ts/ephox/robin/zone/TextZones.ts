@@ -1,6 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Fun, Option } from '@ephox/katamari';
-import Parent from '../api/general/Parent';
+import * as Parent from '../api/general/Parent';
 import { ZoneViewports } from '../api/general/ZoneViewports';
 import Clustering from '../words/Clustering';
 import { WordDecision, WordDecisionItem } from '../words/WordDecision';
