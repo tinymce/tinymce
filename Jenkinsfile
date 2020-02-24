@@ -1,4 +1,7 @@
-def runTests(extExecHandle, name, bedrockCommand) {
+#!groovy
+@Library('waluigi@v3.1.0') _
+
+def runTests(name, bedrockCommand) {
   // Clean out the old XML files before running tests, since we junit import *.XML files
   dir('scratch') {
     if (isUnix()) {
@@ -8,7 +11,7 @@ def runTests(extExecHandle, name, bedrockCommand) {
     }
   }
 
-  def successfulTests = extExecHandle(bedrockCommand)
+  def successfulTests = execHandle(bedrockCommand)
 
   echo "Writing JUnit results for " + name + " on node: $NODE_NAME"
   junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
@@ -19,37 +22,26 @@ def runTests(extExecHandle, name, bedrockCommand) {
   }
 }
 
-def runBrowserTests(extExecHandle, name, browser) {
+def runBrowserTests(name, browser) {
   def bedrockCommand = "yarn grunt bedrock-auto:" + browser
-  runTests(extExecHandle, name, bedrockCommand);
+  runTests(name, bedrockCommand);
 }
 
-properties([
-  disableConcurrentBuilds(),
-  pipelineTriggers([]),
-  buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '1', daysToKeepStr: '', numToKeepStr: ''))
-])
+standardProperties()
 
 node("primary") {
   timestamps {
-    def extExec, extExecHandle, extYarnInstall, grunt
     def primaryBranch = "4.x"
 
     def gitMerge = {
       if (BRANCH_NAME != primaryBranch) {
         echo "Merging ${primaryBranch} into this branch to run tests"
-        extExec("git merge --no-commit --no-ff origin/${primaryBranch}")
+        exec("git merge --no-commit --no-ff origin/${primaryBranch}")
       }
     }
 
     stage ("Checkout SCM") {
       checkout scm
-      fileLoader.withGit("ssh://git@stash:7999/van/jenkins-plumbing.git", "master", "8aa93893-84cc-45fc-a029-a42f21197bb3", '') {
-        extExec = fileLoader.load("exec")
-        extExecHandle = fileLoader.load("execHandle")
-        extYarnInstall = fileLoader.load("npm-install")
-        grunt = fileLoader.load("grunt")
-      }
       // cancel build if master doesn't merge cleanly, otherwise tests wil fail
       gitMerge()
     }
@@ -63,8 +55,8 @@ node("primary") {
 
     def cleanAndInstall = {
       echo "Installing tools"
-      extExec "git clean -fdx --exclude=node_modules"
-      extYarnInstall()
+      exec("git clean -fdx --exclude=node_modules")
+      yarnInstall()
     }
 
     def processes = [:]
@@ -80,8 +72,8 @@ node("primary") {
             checkout scm
 
             // windows tends to not have username or email set
-            extExec("git config user.email \"local@build.node\"")
-            extExec("git config user.name \"irrelevant\"")
+            exec("git config user.email \"local@build.node\"")
+            exec("git config user.name \"irrelevant\"")
 
             gitMerge()
 
@@ -89,39 +81,27 @@ node("primary") {
             grunt("dev")
 
             echo "Platform: browser tests for " + permutation.name + " on node: $NODE_NAME"
-            runBrowserTests(extExecHandle, permutation.name, permutation.browser)
+            runBrowserTests(permutation.name, permutation.browser)
           }
         }
       }
     }
 
-    // No actual code runs between SCM checkout and here, just function definition
-    notifyBitbucket()
-    try {
-      // our linux nodes have multiple executors, sometimes yarn creates conflicts
-      lock("Don't run yarn simultaneously") {
-        stage ("Install tools") {
-          cleanAndInstall()
-        }
+    // our linux nodes have multiple executors, sometimes yarn creates conflicts
+    lock("Don't run yarn simultaneously") {
+      stage ("Install tools") {
+        cleanAndInstall()
       }
-
-      stage ("Type check") {
-        grunt("dev")
-        extExec "yarn lint"
-      }
-
-      stage ("Run Tests") {
-        // Run all the tests in parallel
-        parallel processes
-      }
-
-      // bitbucket plugin requires the result to explicitly be success
-      if (currentBuild.resultIsBetterOrEqualTo("SUCCESS")) {
-        currentBuild.result = "SUCCESS"
-      }
-    } catch (err) {
-      currentBuild.result = "FAILED"
     }
-    notifyBitbucket()
+
+    stage ("Type check") {
+      grunt("dev")
+      exec("yarn lint")
+    }
+
+    stage ("Run Tests") {
+      // Run all the tests in parallel
+      parallel processes
+    }
   }
 }
