@@ -23,7 +23,7 @@ const is = function (item: Gene, selector: string) {
   return Option.from(selector.match(ATTR_REGEX)).fold(tagMatch, attrMatch);
 };
 
-export default {
+export {
   eq,
   is
 };

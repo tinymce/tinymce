@@ -1,4 +1,4 @@
-import Styling from 'ephox/boss/mutant/Styling';
+import * as Styling from 'ephox/boss/mutant/Styling';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import { Gene } from 'ephox/boss/api/Gene';
 

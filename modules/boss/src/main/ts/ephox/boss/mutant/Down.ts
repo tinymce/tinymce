@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
-import Comparator from './Comparator';
+import * as Comparator from './Comparator';
 
 const selector = function (item: Gene, query: string): Gene[] {
   return Arr.bind(item.children || [], function (child) {
@@ -16,7 +16,7 @@ const predicate = function (item: Gene, pred: (e: Gene) => boolean): Gene[] {
   });
 };
 
-export default {
+export {
   selector,
   predicate
 };

@@ -1,5 +1,5 @@
-import Properties from './Properties';
-import Up from './Up';
+import * as Properties from './Properties';
+import * as Up from './Up';
 import { Arr, Option } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
 
@@ -45,7 +45,7 @@ const nextSibling = function (item: Gene): Option<Gene> {
   });
 };
 
-export default {
+export {
   comparePosition,
   prevSibling,
   nextSibling

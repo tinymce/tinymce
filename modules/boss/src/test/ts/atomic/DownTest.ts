@@ -1,7 +1,7 @@
 import { Gene } from 'ephox/boss/api/Gene';
-import Down from 'ephox/boss/mutant/Down';
-import Locator from 'ephox/boss/mutant/Locator';
-import Tracks from 'ephox/boss/mutant/Tracks';
+import * as Down from 'ephox/boss/mutant/Down';
+import * as Locator from 'ephox/boss/mutant/Locator';
+import * as Tracks from 'ephox/boss/mutant/Tracks';
 import { Arr, Option } from '@ephox/katamari';
 import { UnitTest, assert } from '@ephox/bedrock-client';
 

@@ -1,9 +1,9 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 import { Gene } from 'ephox/boss/api/Gene';
-import Creator from 'ephox/boss/mutant/Creator';
-import Locator from 'ephox/boss/mutant/Locator';
-import Tracks from 'ephox/boss/mutant/Tracks';
+import * as Creator from 'ephox/boss/mutant/Creator';
+import * as Locator from 'ephox/boss/mutant/Locator';
+import * as Tracks from 'ephox/boss/mutant/Tracks';
 
 import { KAssert } from '@ephox/katamari-assertions';
 

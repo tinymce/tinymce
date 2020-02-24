@@ -22,7 +22,7 @@ const remove = function (item: Gene, property: string) {
   item.css = rest;
 };
 
-export default {
+export {
   get,
   getRaw,
   set,

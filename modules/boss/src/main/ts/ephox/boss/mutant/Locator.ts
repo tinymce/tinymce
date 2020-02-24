@@ -1,7 +1,7 @@
 import { Arr, Option } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
-import Comparator from './Comparator';
-import Creator from './Creator';
+import * as Comparator from './Comparator';
+import * as Creator from './Creator';
 
 const byId = function (item: Gene, id: string): Option<Gene> {
   if (id === undefined) {
@@ -37,7 +37,7 @@ const indexIn = function (parent: Gene, item: Gene) {
   });
 };
 
-export default {
+export {
   byId,
   byItem,
   indexIn

@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
-import Comparator from './Comparator';
-import Locator from './Locator';
+import * as Comparator from './Comparator';
+import * as Locator from './Locator';
 
 const detach = function (root: Gene, target: Gene) {
   return Locator.byItem(root, target).bind(function (item) {
@@ -18,6 +18,6 @@ const detach = function (root: Gene, target: Gene) {
   });
 };
 
-export default {
+export {
   detach
 };
