@@ -11,6 +11,6 @@ const fireVisualBlocks = function (editor: Editor, state: boolean) {
   editor.fire('VisualBlocks', { state });
 };
 
-export default {
+export {
   fireVisualBlocks
 };

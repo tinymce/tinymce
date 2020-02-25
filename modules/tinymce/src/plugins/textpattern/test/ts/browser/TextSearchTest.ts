@@ -11,7 +11,7 @@ import * as TextSearch from 'tinymce/plugins/textpattern/text/TextSearch';
 import { SpotPoint } from 'tinymce/plugins/textpattern/utils/Spot';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import Utils from '../module/test/Utils';
+import * as Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (success, failure) => {
 

@@ -45,6 +45,6 @@ const getDateTime = function (editor, fmt, date?) {
   return fmt;
 };
 
-export default {
+export {
   getDateTime
 };

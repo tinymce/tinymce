@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import VisualBlocks from '../core/VisualBlocks';
+import * as VisualBlocks from '../core/VisualBlocks';
 import Editor from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
 
@@ -15,6 +15,6 @@ const register = function (editor: Editor, pluginUrl: string, enabledState: Cell
   });
 };
 
-export default {
+export {
   register
 };

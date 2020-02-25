@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const setup = function (editor) {
   const $ = editor.$, tocClass = Settings.getTocClass(editor);
@@ -27,6 +27,6 @@ const setup = function (editor) {
   });
 };
 
-export default {
+export {
   setup
 };

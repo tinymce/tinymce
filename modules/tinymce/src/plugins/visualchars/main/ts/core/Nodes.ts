@@ -8,7 +8,7 @@
 import { Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Element, Node as SugarNode } from '@ephox/sugar';
-import Data from './Data';
+import * as Data from './Data';
 import Html from './Html';
 
 const isMatch = (n: Element) => {

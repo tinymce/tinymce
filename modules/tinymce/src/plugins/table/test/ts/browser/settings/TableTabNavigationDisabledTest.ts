@@ -5,7 +5,7 @@ import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-import TableTestUtils from '../../module/test/TableTestUtils';
+import * as TableTestUtils from '../../module/test/TableTestUtils';
 
 /* Note, this test needs a toolbar, but it 'passes', because it is checking that toolbar has
  * been turned off properly. So it fake passes if there is no toolbar support.

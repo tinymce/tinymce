@@ -7,9 +7,9 @@
 
 import { Cell } from '@ephox/katamari';
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Commands from './api/Commands';
-import Bindings from './core/Bindings';
-import Buttons from './ui/Buttons';
+import * as Commands from './api/Commands';
+import * as Bindings from './core/Bindings';
+import * as Buttons from './ui/Buttons';
 
 export default function () {
   PluginManager.add('visualblocks', (editor, pluginUrl) => {

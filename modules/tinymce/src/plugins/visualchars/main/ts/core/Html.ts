@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Data from './Data';
+import * as Data from './Data';
 
 const wrapCharWithSpan = function (value) {
   return '<span data-mce-bogus="1" class="mce-' + Data.charMap[value] + '">' + value + '</span>';

@@ -11,8 +11,8 @@ import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
-import Settings from '../api/Settings';
-import Templates from '../core/Templates';
+import * as Settings from '../api/Settings';
+import * as Templates from '../core/Templates';
 import * as Utils from '../core/Utils';
 
 interface UrlTemplate {
@@ -242,6 +242,6 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
   optTemplates.each(openDialog);
 };
 
-export default {
+export {
   open
 };
