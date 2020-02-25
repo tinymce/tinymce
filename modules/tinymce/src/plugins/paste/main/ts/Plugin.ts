@@ -7,16 +7,16 @@
 
 import { Cell } from '@ephox/katamari';
 import PluginManager from 'tinymce/core/api/PluginManager';
-import DetectProPlugin from './alien/DetectProPlugin';
-import Api from './api/Api';
-import Commands from './api/Commands';
+import * as DetectProPlugin from './alien/DetectProPlugin';
+import * as Api from './api/Api';
+import * as Commands from './api/Commands';
 import { Clipboard } from './api/Clipboard';
-import CutCopy from './core/CutCopy';
-import DragDrop from './core/DragDrop';
-import PrePostProcess from './core/PrePostProcess';
-import Quirks from './core/Quirks';
-import Buttons from './ui/Buttons';
-import Settings from './api/Settings';
+import * as CutCopy from './core/CutCopy';
+import * as DragDrop from './core/DragDrop';
+import * as PrePostProcess from './core/PrePostProcess';
+import * as Quirks from './core/Quirks';
+import * as Buttons from './ui/Buttons';
+import * as Settings from './api/Settings';
 
 export default function () {
   PluginManager.add('paste', function (editor) {

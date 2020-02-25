@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Actions from '../core/Actions';
+import * as Actions from '../core/Actions';
 import * as Settings from './Settings';
 
 const register = function (editor) {

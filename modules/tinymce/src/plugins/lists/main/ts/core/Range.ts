@@ -6,7 +6,7 @@
  */
 
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
-import NodeType from './NodeType';
+import * as NodeType from './NodeType';
 import { Range, Node } from '@ephox/dom-globals';
 
 interface Point {
@@ -52,7 +52,7 @@ const normalizeRange = (rng: Range): Range => {
   return outRng;
 };
 
-export default {
+export {
   getNormalizedPoint,
   normalizeRange
 };

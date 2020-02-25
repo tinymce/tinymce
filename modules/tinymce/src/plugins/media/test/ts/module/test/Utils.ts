@@ -6,7 +6,7 @@ import { TinyApis, TinyUi } from '@ephox/mcagar';
 import { Body, Element, Focus } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
-export const selectors = {
+const selectors = {
   source: 'label:contains(Source) + div.tox-form__controls-h-stack input.tox-textfield',
   width: '.tox-form__controls-h-stack label:contains(Width) + input.tox-textfield',
   height: '.tox-form__controls-h-stack label:contains(Height) + input.tox-textfield',
@@ -284,7 +284,7 @@ const sAssertHeightAndWidth = (ui: TinyUi, height: string, width: string) => {
   ]));
 };
 
-export default {
+export {
   cSetSourceInput,
   cFindTextarea,
   cFakeEvent,

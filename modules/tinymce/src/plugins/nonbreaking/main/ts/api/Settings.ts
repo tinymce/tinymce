@@ -21,7 +21,7 @@ const wrapNbsps = function (editor: Editor) {
   return editor.getParam('nonbreaking_wrap', true, 'boolean');
 };
 
-export default {
+export {
   getKeyboardSpaces,
   wrapNbsps
 };

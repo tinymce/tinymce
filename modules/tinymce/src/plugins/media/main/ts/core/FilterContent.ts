@@ -8,8 +8,8 @@
 import Editor from 'tinymce/core/api/Editor';
 import Node from 'tinymce/core/api/html/Node';
 import Tools from 'tinymce/core/api/util/Tools';
-import Nodes from './Nodes';
-import Sanitize from './Sanitize';
+import * as Nodes from './Nodes';
+import * as Sanitize from './Sanitize';
 
 declare let unescape: any;
 
@@ -119,6 +119,6 @@ const setup = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   setup
 };

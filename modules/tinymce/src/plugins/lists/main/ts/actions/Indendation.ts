@@ -11,8 +11,8 @@ import Editor from 'tinymce/core/api/Editor';
 import { Indentation } from '../listModel/Indentation';
 import { listIndentation } from '../listModel/ListsIndendation';
 import { dlIndentation } from '../core/DlIndentation';
-import Range from '../core/Range';
-import Selection from '../core/Selection';
+import * as Range from '../core/Range';
+import * as Selection from '../core/Selection';
 
 const selectionIndentation = (editor: Editor, indentation: Indentation): boolean => {
   const lists = Arr.map(Selection.getSelectedListRoots(editor), Element.fromDom);

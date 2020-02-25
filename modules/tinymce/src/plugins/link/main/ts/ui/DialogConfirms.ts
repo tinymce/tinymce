@@ -12,7 +12,7 @@ import Promise from 'tinymce/core/api/util/Promise';
 
 import * as Settings from '../api/Settings';
 import { AssumeExternalTargets } from '../api/Types';
-import Utils from '../core/Utils';
+import * as Utils from '../core/Utils';
 import { LinkDialogOutput } from './DialogTypes';
 
 // Delay confirm since onSubmit will move focus

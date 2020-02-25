@@ -6,7 +6,7 @@
  */
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import NodeType from './NodeType';
+import * as NodeType from './NodeType';
 import { createTextBlock } from './TextBlock';
 import Tools from 'tinymce/core/api/util/Tools';
 
@@ -54,6 +54,6 @@ const splitList = function (editor, ul, li) {
   }
 };
 
-export default {
+export {
   splitList
 };

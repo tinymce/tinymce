@@ -9,12 +9,12 @@ import { Types } from '@ephox/bridge';
 import { Element, HTMLElement } from '@ephox/dom-globals';
 import { Arr, Cell, Obj, Option, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { dataToHtml } from '../core/DataToHtml';
 import * as HtmlToData from '../core/HtmlToData';
-import Service from '../core/Service';
+import * as Service from '../core/Service';
 import { DialogSubData, MediaData, MediaDialogData } from '../core/Types';
-import UpdateHtml from '../core/UpdateHtml';
+import * as UpdateHtml from '../core/UpdateHtml';
 
 const extractMeta = (sourceInput: keyof MediaDialogData, data: MediaDialogData): Option<Record<string, string>> => {
   return Obj.get(data, sourceInput).bind((mainData: DialogSubData) => Obj.get(mainData, 'meta'));
@@ -318,7 +318,7 @@ const showDialog = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   showDialog,
   unwrap
 };

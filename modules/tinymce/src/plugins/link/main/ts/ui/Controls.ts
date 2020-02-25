@@ -10,8 +10,8 @@ import { HTMLAnchorElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
-import Actions from '../core/Actions';
-import Utils from '../core/Utils';
+import * as Actions from '../core/Actions';
+import * as Utils from '../core/Utils';
 import * as Settings from '../api/Settings';
 
 const setupButtons = function (editor: Editor) {
@@ -154,7 +154,7 @@ const setupContextToolbars = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   setupButtons,
   setupMenuItems,
   setupContextMenu,

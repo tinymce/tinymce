@@ -12,7 +12,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Settings from '../api/Settings';
 import { ListOptions } from '../core/ListOptions';
-import Utils from '../core/Utils';
+import * as Utils from '../core/Utils';
 import { DialogChanges } from './DialogChanges';
 import { DialogConfirms } from './DialogConfirms';
 import { DialogInfo } from './DialogInfo';
@@ -168,6 +168,6 @@ const open = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   open
 };

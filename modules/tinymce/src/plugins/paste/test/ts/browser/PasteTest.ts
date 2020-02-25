@@ -6,7 +6,7 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import Utils from 'tinymce/plugins/paste/core/Utils';
+import * as Utils from 'tinymce/plugins/paste/core/Utils';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 

@@ -7,11 +7,11 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import * as HtmlToData from './HtmlToData';
-import Mime from './Mime';
+import * as Mime from './Mime';
 import { MediaData } from './Types';
-import UpdateHtml from './UpdateHtml';
+import * as UpdateHtml from './UpdateHtml';
 import * as UrlPatterns from './UrlPatterns';
 import * as VideoScript from './VideoScript';
 

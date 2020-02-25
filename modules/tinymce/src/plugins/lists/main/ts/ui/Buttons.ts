@@ -6,7 +6,7 @@
  */
 
 import Tools from 'tinymce/core/api/util/Tools';
-import NodeType from '../core/NodeType';
+import * as NodeType from '../core/NodeType';
 import Editor from 'tinymce/core/api/Editor';
 import { isCustomList } from '../core/Util';
 
@@ -63,6 +63,6 @@ const register = function (editor: Editor) {
   }
 };
 
-export default {
+export {
   register
 };

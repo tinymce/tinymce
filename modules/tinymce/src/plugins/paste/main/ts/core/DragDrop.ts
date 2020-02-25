@@ -7,9 +7,9 @@
 
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import Delay from 'tinymce/core/api/util/Delay';
-import Settings from '../api/Settings';
-import InternalHtml from './InternalHtml';
-import Utils from './Utils';
+import * as Settings from '../api/Settings';
+import * as InternalHtml from './InternalHtml';
+import * as Utils from './Utils';
 import Editor from 'tinymce/core/api/Editor';
 import { Clipboard } from '../api/Clipboard';
 import { MouseEvent, DataTransfer, Range } from '@ephox/dom-globals';
@@ -108,6 +108,6 @@ const setup = function (editor: Editor, clipboard: Clipboard, draggingInternally
   });
 };
 
-export default {
+export {
   setup
 };

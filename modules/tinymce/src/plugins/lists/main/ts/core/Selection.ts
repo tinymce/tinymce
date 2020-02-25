@@ -11,7 +11,7 @@ import { HTMLElement } from '@ephox/sand';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import NodeType from './NodeType';
+import * as NodeType from './NodeType';
 
 const getParentList = function (editor) {
   const selectionStart = editor.selection.getStart(true);
@@ -97,7 +97,7 @@ const isList = (editor: Editor): boolean => {
   return HTMLElement.isPrototypeOf(list);
 };
 
-export default {
+export {
   isList,
   getParentList,
   getSelectedSubLists,

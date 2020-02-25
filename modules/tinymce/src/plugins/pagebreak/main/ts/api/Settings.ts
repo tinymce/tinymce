@@ -13,7 +13,7 @@ const shouldSplitBlock = function (editor) {
   return editor.getParam('pagebreak_split_block', false);
 };
 
-export default {
+export {
   getSeparatorHtml,
   shouldSplitBlock
 };

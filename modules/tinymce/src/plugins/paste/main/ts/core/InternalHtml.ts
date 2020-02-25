@@ -20,11 +20,13 @@ const isMarked = function (html: string) {
   return html.indexOf(internalMark) !== -1;
 };
 
-export default {
+const internalHtmlMime = () => {
+  return internalMimeType;
+};
+
+export {
   mark,
   unmark,
   isMarked,
-  internalHtmlMime () {
-    return internalMimeType;
-  }
+  internalHtmlMime
 };

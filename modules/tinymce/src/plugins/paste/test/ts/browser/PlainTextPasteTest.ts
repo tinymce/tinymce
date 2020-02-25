@@ -6,7 +6,7 @@ import { Editor as McEditor } from '@ephox/mcagar';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import MockDataTransfer from '../module/test/MockDataTransfer';
+import * as MockDataTransfer from '../module/test/MockDataTransfer';
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', (success, failure) => {
   Theme();

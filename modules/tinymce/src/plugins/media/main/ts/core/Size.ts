@@ -29,9 +29,14 @@ const setSize = function (name: string) {
   };
 };
 
-export default {
-  getMaxWidth: getSize('maxWidth'),
-  getMaxHeight: getSize('maxHeight'),
-  setMaxWidth: setSize('maxWidth'),
-  setMaxHeight: setSize('maxHeight')
+const getMaxWidth = getSize('maxWidth');
+const getMaxHeight = getSize('maxHeight');
+const setMaxWidth = setSize('maxWidth');
+const setMaxHeight = setSize('maxHeight');
+
+export {
+  getMaxWidth,
+  getMaxHeight,
+  setMaxWidth,
+  setMaxHeight
 };

@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import * as DataToHtml from './DataToHtml';
 import { MediaData } from './Types';
 
@@ -53,7 +53,7 @@ const isCached = function (url: string) {
   return cache.hasOwnProperty(url);
 };
 
-export default {
+export {
   getEmbedHtml,
   isCached
 };

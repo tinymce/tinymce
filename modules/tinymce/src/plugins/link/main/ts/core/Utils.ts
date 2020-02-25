@@ -204,7 +204,7 @@ const linkImageFigure = (editor: Editor, fig: Element, attrs: Record<string, str
   }
 };
 
-export default {
+export {
   link,
   unlink,
   isLink,

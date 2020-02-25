@@ -7,9 +7,9 @@
 
 import VK from 'tinymce/core/api/util/VK';
 import * as Settings from '../api/Settings';
-import OpenUrl from './OpenUrl';
-import Utils from './Utils';
-import Dialog from '../ui/Dialog';
+import * as OpenUrl from './OpenUrl';
+import * as Utils from './Utils';
+import * as Dialog from '../ui/Dialog';
 import Editor from 'tinymce/core/api/Editor';
 
 const getLink = (editor: Editor, elm) => {
@@ -104,7 +104,7 @@ const toggleEnabledState = (editor: Editor) => {
   };
 };
 
-export default {
+export {
   openDialog,
   gotoSelectedLink,
   leftClickedOnAHref,

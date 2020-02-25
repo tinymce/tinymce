@@ -6,8 +6,8 @@
  */
 
 import VK from 'tinymce/core/api/util/VK';
-import Settings from '../api/Settings';
-import Actions from './Actions';
+import * as Settings from '../api/Settings';
+import * as Actions from './Actions';
 
 const setup = function (editor) {
   const spaces = Settings.getKeyboardSpaces(editor);
@@ -27,6 +27,6 @@ const setup = function (editor) {
   }
 };
 
-export default {
+export {
   setup
 };

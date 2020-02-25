@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 
-import ProcessFilters from 'tinymce/plugins/paste/core/ProcessFilters';
+import * as ProcessFilters from 'tinymce/plugins/paste/core/ProcessFilters';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 

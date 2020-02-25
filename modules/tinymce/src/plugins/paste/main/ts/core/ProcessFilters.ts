@@ -9,8 +9,8 @@ import Editor from 'tinymce/core/api/Editor';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Serializer from 'tinymce/core/api/html/Serializer';
 import Tools from 'tinymce/core/api/util/Tools';
-import Events from '../api/Events';
-import WordFilter from './WordFilter';
+import * as Events from '../api/Events';
+import * as WordFilter from './WordFilter';
 
 const preProcess = (editor: Editor, html: string) => {
   const parser = DomParser({ }, editor.schema);
@@ -54,6 +54,6 @@ const process = function (editor: Editor, html: string, internal: boolean) {
   return filterContent(editor, content, internal, isWordHtml);
 };
 
-export default {
+export {
   process
 };

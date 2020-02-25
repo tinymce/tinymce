@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import FilterContent from './FilterContent';
+import * as FilterContent from './FilterContent';
 
 const setup = function (editor) {
   editor.on('ResolveName', function (e) {
@@ -15,6 +15,6 @@ const setup = function (editor) {
   });
 };
 
-export default {
+export {
   setup
 };
