@@ -12,6 +12,6 @@ const transform = function (mutation: DragMutation, settings: Partial<DraggerOpt
   return Dragging.setup(mutation, mode, settings);
 };
 
-export default {
+export {
   transform
 };
