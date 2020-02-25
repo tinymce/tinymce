@@ -22,6 +22,6 @@ const derive = function (editor: Editor) {
   };
 };
 
-export default {
+export {
   derive
 };

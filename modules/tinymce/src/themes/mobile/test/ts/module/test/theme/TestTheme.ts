@@ -3,15 +3,15 @@ import { Arr, Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import ThemeManager from 'tinymce/core/api/ThemeManager';
-import Features from 'tinymce/themes/mobile/features/Features';
-import FormatChangers from 'tinymce/themes/mobile/util/FormatChangers';
+import * as Features from 'tinymce/themes/mobile/features/Features';
+import * as FormatChangers from 'tinymce/themes/mobile/util/FormatChangers';
 
 interface Realm {
   system: () => Gui.GuiSystem;
   socket: () => AlloyComponent;
 }
 
-const name = 'test';
+const sName = 'test';
 
 const setup = function (info, onSuccess, onFailure) {
 
@@ -45,7 +45,7 @@ const setup = function (info, onSuccess, onFailure) {
     socket: Fun.constant(socket)
   };
 
-  ThemeManager.add(name, function (editor) {
+  ThemeManager.add(sName, function (editor) {
     return {
       renderUI () {
         editor.fire('SkinLoaded');
@@ -79,14 +79,16 @@ const setup = function (info, onSuccess, onFailure) {
         Replacing.set(toolbar, toolbarItems);
         f(realm, apis, toolbar, socket, buttons, onS, onF);
       }, {
-        theme: name,
+        theme: sName,
         base_url: '/project/tinymce/js/tinymce'
       }, onSuccess, onFailure);
     }
   };
 };
 
-export default {
+const name = Fun.constant(sName);
+
+export {
   setup,
-  name: Fun.constant(name)
+  name
 };

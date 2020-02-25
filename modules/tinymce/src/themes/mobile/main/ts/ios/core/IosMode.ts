@@ -8,16 +8,18 @@
 import { Fun, Singleton, Struct } from '@ephox/katamari';
 import { Class, Css, Element, Focus } from '@ephox/sugar';
 
-import Styles from '../../style/Styles';
-import Scrollable from '../../touch/scroll/Scrollable';
-import MetaViewport from '../../touch/view/MetaViewport';
-import Thor from '../../util/Thor';
-import Scrollables from '../scroll/Scrollables';
-import IosKeyboard from '../view/IosKeyboard';
-import IosEvents from './IosEvents';
-import IosSetup, { IosApi } from './IosSetup';
-import PlatformEditor from './PlatformEditor';
+import * as Styles from '../../style/Styles';
+import * as Scrollable from '../../touch/scroll/Scrollable';
+import * as MetaViewport from '../../touch/view/MetaViewport';
+import * as Thor from '../../util/Thor';
+import * as Scrollables from '../scroll/Scrollables';
+import * as IosKeyboard from '../view/IosKeyboard';
+import * as IosEvents from './IosEvents';
+import * as IosSetup from './IosSetup';
+import * as PlatformEditor from './PlatformEditor';
 import { document } from '@ephox/dom-globals';
+
+type IosApi = IosSetup.IosApi;
 
 const create = function (platform, mask) {
   const meta = MetaViewport.tag();
@@ -159,6 +161,6 @@ const create = function (platform, mask) {
   };
 };
 
-export default {
+export {
   create
 };

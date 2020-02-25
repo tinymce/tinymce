@@ -8,17 +8,17 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Compare, Css, Element, Node, Traverse, PredicateFind } from '@ephox/sugar';
 
-const candidates = [ '9px', '10px', '11px', '12px', '14px', '16px', '18px', '20px', '24px', '32px', '36px' ];
+const candidatesArray = [ '9px', '10px', '11px', '12px', '14px', '16px', '18px', '20px', '24px', '32px', '36px' ];
 
 const defaultSize = 'medium';
 const defaultIndex = 2;
 
 const indexToSize = function (index) {
-  return Option.from(candidates[index]);
+  return Option.from(candidatesArray[index]);
 };
 
 const sizeToIndex = function (size) {
-  return Arr.findIndex(candidates, function (v) {
+  return Arr.findIndex(candidatesArray, function (v) {
     return v === size;
   });
 };
@@ -46,7 +46,7 @@ const getSize = function (editor) {
   };
 
   const elemSize = getRawOrComputed(isRoot, elem);
-  return Arr.find(candidates, function (size) {
+  return Arr.find(candidatesArray, function (size) {
     return elemSize === size;
   }).getOr(defaultSize);
 };
@@ -69,8 +69,10 @@ const apply = function (editor, index) {
   });
 };
 
-export default {
-  candidates: Fun.constant(candidates),
+const candidates = Fun.constant(candidatesArray);
+
+export {
+  candidates,
   get,
   apply
 };

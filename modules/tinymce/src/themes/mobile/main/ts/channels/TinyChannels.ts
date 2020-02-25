@@ -7,12 +7,8 @@
 
 import { Fun } from '@ephox/katamari';
 
-const formatChanged = 'formatChanged';
-const orientationChanged = 'orientationChanged';
-const dropupDismissed = 'dropupDismissed';
+export const formatChanged = Fun.constant('formatChanged');
 
-export default {
-  formatChanged: Fun.constant(formatChanged),
-  orientationChanged: Fun.constant(orientationChanged),
-  dropupDismissed: Fun.constant(dropupDismissed)
-};
+export const orientationChanged = Fun.constant('orientationChanged');
+
+export const dropupDismissed = Fun.constant('dropupDismissed');

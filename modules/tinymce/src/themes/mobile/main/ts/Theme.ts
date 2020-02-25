@@ -14,18 +14,18 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import ThemeManager from 'tinymce/core/api/ThemeManager';
 import Editor from 'tinymce/core/api/Editor';
 
-import TinyCodeDupe from './alien/TinyCodeDupe';
+import * as TinyCodeDupe from './alien/TinyCodeDupe';
 import * as Settings from './api/Settings';
-import TinyChannels from './channels/TinyChannels';
-import Features from './features/Features';
-import Styles from './style/Styles';
-import Orientation from './touch/view/Orientation';
+import * as TinyChannels from './channels/TinyChannels';
+import * as Features from './features/Features';
+import * as Styles from './style/Styles';
+import * as Orientation from './touch/view/Orientation';
 import AndroidRealm from './ui/AndroidRealm';
-import Buttons from './ui/Buttons';
+import * as Buttons from './ui/Buttons';
 import IosRealm from './ui/IosRealm';
-import CssUrls from './util/CssUrls';
-import FormatChangers from './util/FormatChangers';
-import SkinLoaded from './util/SkinLoaded';
+import * as CssUrls from './util/CssUrls';
+import * as FormatChangers from './util/FormatChangers';
+import * as SkinLoaded from './util/SkinLoaded';
 import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
 
 /// not to be confused with editor mode

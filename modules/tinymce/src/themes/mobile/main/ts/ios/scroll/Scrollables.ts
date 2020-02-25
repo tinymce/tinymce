@@ -8,7 +8,7 @@
 import { Fun } from '@ephox/katamari';
 import { Attr, DomEvent, SelectorFind } from '@ephox/sugar';
 
-import Styles from '../../style/Styles';
+import * as Styles from '../../style/Styles';
 
 const dataHorizontal = 'data-' + Styles.resolve('horizontal-scroll');
 
@@ -54,7 +54,7 @@ const exclusive = function (scope, selector) {
   });
 };
 
-export default {
+export {
   exclusive,
   markAsHorizontal
 };

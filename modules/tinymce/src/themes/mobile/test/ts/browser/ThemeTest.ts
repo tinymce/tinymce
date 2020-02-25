@@ -9,7 +9,7 @@ import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
-import Styles from 'tinymce/themes/mobile/style/Styles';
+import * as Styles from 'tinymce/themes/mobile/style/Styles';
 import mobileTheme from 'tinymce/themes/mobile/Theme';
 
 UnitTest.asynctest('browser.tinymce.themes.mobile.ThemeTest', (success, failure) => {

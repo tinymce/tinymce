@@ -26,6 +26,6 @@ const forAndroid = function (editor, f) {
   wrapper(f, editor);
 };
 
-export default {
+export {
   forAndroid
 };

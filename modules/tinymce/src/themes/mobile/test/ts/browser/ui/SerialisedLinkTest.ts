@@ -13,9 +13,9 @@ import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
 import * as LinkButton from 'tinymce/themes/mobile/ui/LinkButton';
 
 import TestEditor from '../../module/test/ui/TestEditor';
-import TestSelectors from '../../module/test/ui/TestSelectors';
-import TestStyles from '../../module/test/ui/TestStyles';
-import TestUi from '../../module/test/ui/TestUi';
+import * as TestSelectors from '../../module/test/ui/TestSelectors';
+import * as TestStyles from '../../module/test/ui/TestStyles';
+import * as TestUi from '../../module/test/ui/TestUi';
 
 UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => {
   const detection = PlatformDetection.detect();

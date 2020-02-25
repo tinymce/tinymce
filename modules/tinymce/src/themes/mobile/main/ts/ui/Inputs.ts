@@ -27,7 +27,7 @@ import { Option } from '@ephox/katamari';
 
 import I18n from 'tinymce/core/api/util/I18n';
 
-import Styles from '../style/Styles';
+import * as Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
 
 const clearInputBehaviour = 'input-clearing';

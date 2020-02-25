@@ -7,9 +7,9 @@
 
 import { Fun } from '@ephox/katamari';
 import { Class } from '@ephox/sugar';
-import Styles from '../../style/Styles';
+import * as Styles from '../../style/Styles';
 
-const scrollable = Styles.resolve('scrollable');
+const scrollableStyle = Styles.resolve('scrollable');
 
 const register = function (element) {
 /*
@@ -17,15 +17,17 @@ const register = function (element) {
  *  central place where to set if an element can be explicitly
  *  scrolled. This is for mobile devices atm.
  */
-  Class.add(element, scrollable);
+  Class.add(element, scrollableStyle);
 };
 
 const deregister = function (element) {
-  Class.remove(element, scrollable);
+  Class.remove(element, scrollableStyle);
 };
 
-export default {
+const scrollable = Fun.constant(scrollableStyle);
+
+export {
   register,
   deregister,
-  scrollable: Fun.constant(scrollable)
+  scrollable
 };

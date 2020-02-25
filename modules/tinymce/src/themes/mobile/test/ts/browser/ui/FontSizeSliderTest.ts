@@ -8,8 +8,8 @@ import * as FontSizeSlider from 'tinymce/themes/mobile/ui/FontSizeSlider';
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
 
 import TestFrameEditor from '../../module/test/ui/TestFrameEditor';
-import TestSelectors from '../../module/test/ui/TestSelectors';
-import TestStyles from '../../module/test/ui/TestStyles';
+import * as TestSelectors from '../../module/test/ui/TestSelectors';
+import * as TestStyles from '../../module/test/ui/TestStyles';
 import { Fun } from '@ephox/katamari';
 
 UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function (success, failure) {

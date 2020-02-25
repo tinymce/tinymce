@@ -8,8 +8,8 @@
 import { Arr } from '@ephox/katamari';
 import { Compare, Element, Node, PredicateFind } from '@ephox/sugar';
 
-import Buttons from '../ui/Buttons';
-import SizeSlider from './SizeSlider';
+import * as Buttons from '../ui/Buttons';
+import * as SizeSlider from './SizeSlider';
 import * as ToolbarWidgets from './ToolbarWidgets';
 import { SketchSpec } from '@ephox/alloy';
 

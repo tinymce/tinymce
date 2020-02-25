@@ -20,6 +20,6 @@ const fireSkinLoaded = function (editor) {
   };
 };
 
-export default {
+export {
   fireSkinLoaded
 };

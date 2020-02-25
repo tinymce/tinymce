@@ -7,7 +7,7 @@
 
 import { Receiving } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
-import TinyChannels from './TinyChannels';
+import * as TinyChannels from './TinyChannels';
 
 const format = function (command, update) {
   return Receiving.config({
@@ -44,7 +44,7 @@ const receive = function (channel, onReceive) {
   };
 };
 
-export default {
+export {
   format,
   orientation,
   receive

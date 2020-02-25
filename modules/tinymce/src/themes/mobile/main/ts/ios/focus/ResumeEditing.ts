@@ -7,7 +7,7 @@
 
 import { Compare, Element, Focus } from '@ephox/sugar';
 
-import CursorRefresh from '../../touch/focus/CursorRefresh';
+import * as CursorRefresh from '../../touch/focus/CursorRefresh';
 
 const resume = function (cWin, frame) {
   Focus.active().each(function (active) {
@@ -25,6 +25,6 @@ const resume = function (cWin, frame) {
   CursorRefresh.refresh(cWin);
 };
 
-export default {
+export {
   resume
 };

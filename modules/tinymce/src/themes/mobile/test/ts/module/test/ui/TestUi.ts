@@ -70,7 +70,7 @@ const sBroadcastState = function (realm, channels, command, state) {
   });
 };
 
-export default {
+export {
   cGetFocused,
   cGetParent,
   sSetFieldValue,

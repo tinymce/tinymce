@@ -52,6 +52,6 @@ const getRectangles = function (cWin) {
   return sel !== undefined && sel.rangeCount > 0 ? getRectsFromRange(sel.getRangeAt(0)) : [ ];
 };
 
-export default {
+export {
   getRectangles
 };

@@ -3,13 +3,13 @@ import { Attachment, Memento, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Body, Class, Traverse } from '@ephox/sugar';
 
-import TinyChannels from 'tinymce/themes/mobile/channels/TinyChannels';
-import Buttons from 'tinymce/themes/mobile/ui/Buttons';
+import * as TinyChannels from 'tinymce/themes/mobile/channels/TinyChannels';
+import * as Buttons from 'tinymce/themes/mobile/ui/Buttons';
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
 
 import TestEditor from '../../module/test/ui/TestEditor';
-import TestStyles from '../../module/test/ui/TestStyles';
-import TestUi from '../../module/test/ui/TestUi';
+import * as TestStyles from '../../module/test/ui/TestStyles';
+import * as TestUi from '../../module/test/ui/TestUi';
 import { Fun } from '@ephox/katamari';
 
 UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {

@@ -13,9 +13,9 @@ import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Cell, Option, Singleton } from '@ephox/katamari';
 import { Css, SelectorFilter, SelectorFind, Width } from '@ephox/sugar';
 
-import Receivers from '../channels/Receivers';
-import SwipingModel from '../model/SwipingModel';
-import Styles from '../style/Styles';
+import * as Receivers from '../channels/Receivers';
+import * as SwipingModel from '../model/SwipingModel';
+import * as Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
 import { HTMLElement } from '@ephox/dom-globals';
 

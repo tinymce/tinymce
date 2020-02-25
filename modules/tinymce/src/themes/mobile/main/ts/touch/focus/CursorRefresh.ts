@@ -44,7 +44,7 @@ const refresh = function (winScope) {
   }
 };
 
-export default {
+export {
   refreshInput,
   refresh
 };
