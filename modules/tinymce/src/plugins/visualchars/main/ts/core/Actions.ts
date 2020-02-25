@@ -6,7 +6,7 @@
  */
 
 import * as Events from '../api/Events';
-import VisualChars from './VisualChars';
+import * as VisualChars from './VisualChars';
 
 const toggleVisualChars = function (editor, toggleState) {
   const body = editor.getBody();

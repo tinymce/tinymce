@@ -13,7 +13,7 @@ import Node from '../api/html/Node';
 import Tools from '../api/util/Tools';
 import * as TrimHtml from '../dom/TrimHtml';
 import * as Zwsp from '../text/Zwsp';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { isWsPreserveElement } from '../dom/ElementType';
 
 const defaultFormat = 'html';

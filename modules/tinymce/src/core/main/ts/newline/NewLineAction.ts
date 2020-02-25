@@ -6,7 +6,7 @@
  */
 
 import { Adt,  Arr,  Option } from '@ephox/katamari';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import * as ContextSelectors from './ContextSelectors';
 import * as NewLineUtils from './NewLineUtils';
 import * as LazyEvaluator from '../util/LazyEvaluator';

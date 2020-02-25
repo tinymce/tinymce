@@ -218,6 +218,6 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
   }
 };
 
-export default {
+export {
   setup
 };

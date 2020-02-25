@@ -131,6 +131,6 @@ const renderElementPath = (editor: Editor, settings) => {
   };
 };
 
-export default {
+export {
   renderElementPath
 };

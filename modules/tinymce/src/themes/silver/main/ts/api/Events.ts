@@ -36,7 +36,7 @@ const fireTextColorChange = (editor: Editor, data: { name: string; color: string
   return editor.fire('TextColorChange', data);
 };
 
-export default {
+export {
   fireSkinLoaded,
   fireSkinLoadError,
   fireResizeEditor,

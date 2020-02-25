@@ -19,7 +19,7 @@ import Formatter from '../api/Formatter';
 import DomParser from '../api/html/DomParser';
 import Node from '../api/html/Node';
 import Schema from '../api/html/Schema';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import UndoManager from '../api/UndoManager';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';

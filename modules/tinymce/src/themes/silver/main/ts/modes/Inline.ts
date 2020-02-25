@@ -18,7 +18,7 @@ import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import * as EditorSize from '../ui/sizing/EditorSize';
-import Utils from '../ui/sizing/Utils';
+import * as Utils from '../ui/sizing/Utils';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
 
@@ -182,4 +182,6 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 };
 
-export default { render };
+export {
+  render
+};

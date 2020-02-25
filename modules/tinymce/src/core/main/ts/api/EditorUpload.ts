@@ -13,7 +13,7 @@ import { Uploader } from '../file/Uploader';
 import UploadStatus from '../file/UploadStatus';
 import Editor from './Editor';
 import { BlobCache } from './file/BlobCache';
-import Settings from './Settings';
+import * as Settings from './Settings';
 
 /**
  * Handles image uploads, updates undo stack and patches over various internal functions.

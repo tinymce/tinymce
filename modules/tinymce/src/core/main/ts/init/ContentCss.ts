@@ -6,7 +6,7 @@
  */
 
 import Editor from '../api/Editor';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { Arr } from '@ephox/katamari';
 
 const isContentCssSkinName = (url: string) => /^[a-z0-9\-]+$/i.test(url);

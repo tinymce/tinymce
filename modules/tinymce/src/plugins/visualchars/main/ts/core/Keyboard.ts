@@ -6,7 +6,7 @@
  */
 
 import Delay from 'tinymce/core/api/util/Delay';
-import VisualChars from './VisualChars';
+import * as VisualChars from './VisualChars';
 
 const setup = function (editor, toggleState) {
   const debouncedToggle = Delay.debounce(function () {
@@ -22,6 +22,6 @@ const setup = function (editor, toggleState) {
   }
 };
 
-export default {
+export {
   setup
 };

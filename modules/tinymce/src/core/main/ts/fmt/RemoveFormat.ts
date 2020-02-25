@@ -13,7 +13,7 @@ import Selection from '../api/dom/Selection';
 import TreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import { FormatAttrOrStyleValue, FormatVars, RemoveFormat } from '../api/fmt/Format';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as GetBookmark from '../bookmark/GetBookmark';

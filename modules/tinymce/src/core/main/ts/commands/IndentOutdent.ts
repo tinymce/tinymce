@@ -10,7 +10,7 @@ import { Arr } from '@ephox/katamari';
 import { Element, Traverse, Css, PredicateFind } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import { isListItem, isList, isTable } from '../dom/ElementType';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import * as NodeType from '../dom/NodeType';
 
 const isEditable = (target: Element) => {

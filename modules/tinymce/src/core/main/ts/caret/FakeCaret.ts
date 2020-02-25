@@ -15,7 +15,7 @@ import * as NodeType from '../dom/NodeType';
 import * as GeomClientRect from '../geom/ClientRect';
 import * as CaretContainer from './CaretContainer';
 import * as CaretContainerRemove from './CaretContainerRemove';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 export interface FakeCaret {
   show: (before: boolean, element: Element) => Range;

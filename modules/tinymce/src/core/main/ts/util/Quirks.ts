@@ -13,7 +13,7 @@ import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import Selection from '../api/dom/Selection';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import Editor from '../api/Editor';
 
 /**

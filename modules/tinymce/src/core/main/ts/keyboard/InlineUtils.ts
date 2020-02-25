@@ -15,7 +15,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import * as NodeType from '../dom/NodeType';
 import * as Bidi from '../text/Bidi';
 import Editor from '../api/Editor';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const isInlineTarget = function (editor: Editor, elm: Node): boolean {
   return Selectors.is(Element.fromDom(elm), Settings.getInlineBoundarySelector(editor));

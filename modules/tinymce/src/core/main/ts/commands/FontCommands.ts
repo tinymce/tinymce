@@ -8,7 +8,7 @@
 import { Range, Node } from '@ephox/dom-globals';
 import { Arr, Option, Strings } from '@ephox/katamari';
 import Editor from '../api/Editor';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import * as FontInfo from '../fmt/FontInfo';
 import * as CaretFinder from '../caret/CaretFinder';
 import * as NodeType from '../dom/NodeType';

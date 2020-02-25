@@ -62,6 +62,6 @@ const register = (editor: Editor) => {
   registerButtons(editor);
 };
 
-export default {
+export {
   register
 };

@@ -16,7 +16,7 @@ import Env from '../api/Env';
 import IconManager from '../api/IconManager';
 import NotificationManager from '../api/NotificationManager';
 import PluginManager from '../api/PluginManager';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { RawEditorSettings } from '../api/SettingsTypes';
 import ThemeManager from '../api/ThemeManager';
 import I18n from '../api/util/I18n';

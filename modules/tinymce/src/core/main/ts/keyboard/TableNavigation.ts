@@ -16,7 +16,7 @@ import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from '
 import * as ScrollIntoView from '../dom/ScrollIntoView';
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { isFakeCaretTableBrowser } from '../caret/FakeCaret';
 
 const moveToRange = (editor: Editor, rng: Range) => {

@@ -8,7 +8,7 @@
 import { Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { getHeightSetting, getMaxHeightSetting, getMaxWidthSetting, getMinHeightSetting, getMinWidthSetting, getWidthSetting } from '../../api/Settings';
-import Utils from './Utils';
+import * as Utils from './Utils';
 
 export const getHeight = (editor: Editor) => {
   const baseHeight = getHeightSetting(editor);

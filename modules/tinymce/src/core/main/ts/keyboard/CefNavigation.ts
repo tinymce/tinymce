@@ -19,7 +19,7 @@ import * as CefUtils from './CefUtils';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as ArrUtils from '../util/ArrUtils';
 import * as InlineUtils from '../keyboard/InlineUtils';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { isBeforeContentEditableFalse, isAfterContentEditableFalse, isBeforeTable, isAfterTable } from '../caret/CaretPositionPredicates';
 import Editor from '../api/Editor';
 import { getPositionsUntilNextLine, getPositionsUntilPreviousLine } from '../caret/LineReader';

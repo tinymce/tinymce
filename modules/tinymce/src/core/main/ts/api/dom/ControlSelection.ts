@@ -12,7 +12,7 @@ import * as RangePoint from '../../dom/RangePoint';
 import Editor from '../Editor';
 import Env from '../Env';
 import * as Events from '../Events';
-import Settings from '../Settings';
+import * as Settings from '../Settings';
 import Delay from '../util/Delay';
 import Tools from '../util/Tools';
 import VK from '../util/VK';

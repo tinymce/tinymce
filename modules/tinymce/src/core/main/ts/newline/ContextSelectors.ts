@@ -6,7 +6,7 @@
  */
 
 import { Element, Selectors } from '@ephox/sugar';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import * as NewLineUtils from './NewLineUtils';
 import Editor from '../api/Editor';
 

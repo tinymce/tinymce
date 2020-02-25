@@ -13,7 +13,7 @@ import Node from '../api/html/Node';
 import Tools from '../api/util/Tools';
 import Serializer from '../api/html/Serializer';
 import * as FilterNode from '../html/FilterNode';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as CaretFinder from '../caret/CaretFinder';
 import * as NodeType from '../dom/NodeType';

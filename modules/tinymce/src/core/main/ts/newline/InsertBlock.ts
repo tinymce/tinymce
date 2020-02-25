@@ -8,7 +8,7 @@
 import { Element as DomElement, DocumentFragment, KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Option, Obj, Options } from '@ephox/katamari';
 import { PredicateFilter, Element, Css, Node } from '@ephox/sugar';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import * as CaretContainer from '../caret/CaretContainer';
 import * as NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
