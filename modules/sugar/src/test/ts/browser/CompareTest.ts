@@ -1,7 +1,7 @@
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import Element from 'ephox/sugar/api/node/Element';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import TestPage from 'ephox/sugar/test/TestPage';
+import * as TestPage from 'ephox/sugar/test/TestPage';
 import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('CompareTest', function () {

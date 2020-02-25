@@ -267,6 +267,6 @@ const init = function (editor: Editor) {
   blockIeDrop(editor);
 };
 
-export default {
+export {
   init
 };

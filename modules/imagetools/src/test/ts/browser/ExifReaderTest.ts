@@ -1,7 +1,7 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Blob, XMLHttpRequest } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
-import Assertion from 'ephox/imagetools/test/Assertion';
+import * as Assertion from 'ephox/imagetools/test/Assertion';
 import { JPEGMeta } from 'ephox/imagetools/api/Main';
 import { Promise } from 'ephox/imagetools/util/Promise';
 

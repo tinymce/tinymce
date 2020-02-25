@@ -1,5 +1,5 @@
 import MouseDrag from './MouseDrag';
-import Dragging from '../core/Dragging';
+import * as Dragging from '../core/Dragging';
 import { DragMode, DragMutation } from './DragApis';
 import { BlockerOptions } from '../detect/Blocker';
 

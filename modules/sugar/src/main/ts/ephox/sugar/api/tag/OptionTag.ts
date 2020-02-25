@@ -7,6 +7,6 @@ const setValue = function (option: Element<HTMLOptionElement>, value: string, te
   optionDom.text = text;
 };
 
-export default {
+export {
   setValue
 };

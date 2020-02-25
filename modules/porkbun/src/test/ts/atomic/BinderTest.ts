@@ -1,6 +1,6 @@
-import Binder from 'ephox/porkbun/Binder';
+import * as Binder from 'ephox/porkbun/Binder';
 import { Event } from 'ephox/porkbun/Event';
-import Events from 'ephox/porkbun/Events';
+import * as Events from 'ephox/porkbun/Events';
 import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('Binder', function () {

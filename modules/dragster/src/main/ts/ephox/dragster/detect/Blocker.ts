@@ -1,5 +1,5 @@
 import { Attr, Class, Css, Element, Remove } from '@ephox/sugar';
-import Styles from '../style/Styles';
+import * as Styles from '../style/Styles';
 
 export interface BlockerOptions {
   layerClass: string;

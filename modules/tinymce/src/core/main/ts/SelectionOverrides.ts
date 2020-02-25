@@ -20,7 +20,7 @@ import { FakeCaret, isFakeCaretTarget } from './caret/FakeCaret';
 import * as LineUtils from './caret/LineUtils';
 import NodeType from './dom/NodeType';
 import RangePoint from './dom/RangePoint';
-import DragDropOverrides from './DragDropOverrides';
+import * as DragDropOverrides from './DragDropOverrides';
 import EditorView from './EditorView';
 import CefFocus from './focus/CefFocus';
 import EditorFocus from './focus/EditorFocus';
