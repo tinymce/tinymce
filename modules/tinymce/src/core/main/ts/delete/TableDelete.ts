@@ -16,7 +16,7 @@ import * as ElementType from '../dom/ElementType';
 import * as Empty from '../dom/Empty';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as Parents from '../dom/Parents';
-import TableCellSelection from '../selection/TableCellSelection';
+import * as TableCellSelection from '../selection/TableCellSelection';
 import Editor from '../api/Editor';
 import { isBeforeTable, isAfterTable } from '../caret/CaretPositionPredicates';
 

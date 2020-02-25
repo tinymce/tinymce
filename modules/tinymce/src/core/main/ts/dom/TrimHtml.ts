@@ -6,7 +6,7 @@
  */
 
 import SaxParser from '../api/html/SaxParser';
-import Zwsp from '../text/Zwsp';
+import * as Zwsp from '../text/Zwsp';
 
 const trimHtml = function (tempAttrs, html) {
   const trimContentRegExp = new RegExp([

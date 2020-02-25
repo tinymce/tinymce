@@ -19,7 +19,7 @@ import * as Bookmarks from '../bookmark/Bookmarks';
 import * as GetBookmark from '../bookmark/GetBookmark';
 import * as NodeType from '../dom/NodeType';
 import { RangeLikeObject } from '../selection/RangeTypes';
-import RangeWalk from '../selection/RangeWalk';
+import * as RangeWalk from '../selection/RangeWalk';
 import * as SplitRange from '../selection/SplitRange';
 import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';

@@ -13,7 +13,7 @@ import CaretPosition from '../caret/CaretPosition';
 import * as BoundaryCaret from './BoundaryCaret';
 import * as BoundaryLocation from './BoundaryLocation';
 import * as InlineUtils from './InlineUtils';
-import WordSelection from '../selection/WordSelection';
+import * as WordSelection from '../selection/WordSelection';
 import Editor from '../api/Editor';
 import DOMUtils from '../api/dom/DOMUtils';
 

@@ -11,12 +11,12 @@ import * as InsertContent from '../content/InsertContent';
 import * as DeleteCommands from '../delete/DeleteCommands';
 import * as FontCommands from '../commands/FontCommands';
 import * as NodeType from '../dom/NodeType';
-import InsertBr from '../newline/InsertBr';
-import SelectionBookmark from '../selection/SelectionBookmark';
+import * as InsertBr from '../newline/InsertBr';
+import * as SelectionBookmark from '../selection/SelectionBookmark';
 import Tools from './util/Tools';
 import * as IndentOutdent from '../commands/IndentOutdent';
 import Editor from './Editor';
-import InsertNewLine from '../newline/InsertNewLine';
+import * as InsertNewLine from '../newline/InsertNewLine';
 import { Bookmark } from '../bookmark/BookmarkTypes';
 
 /**

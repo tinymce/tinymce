@@ -7,7 +7,7 @@
 
 import { Node, Element, document, Range } from '@ephox/dom-globals';
 import * as NodeType from '../dom/NodeType';
-import Zwsp from '../text/Zwsp';
+import * as Zwsp from '../text/Zwsp';
 import { CaretPosition } from './CaretPosition';
 
 /**

@@ -5,7 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/autolink/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import KeyUtils from '../module/test/KeyUtils';
+import * as KeyUtils from '../module/test/KeyUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();

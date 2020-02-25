@@ -12,7 +12,7 @@ import Editor from '../api/Editor';
 import Node from '../api/html/Node';
 import Tools from '../api/util/Tools';
 import * as TrimHtml from '../dom/TrimHtml';
-import Zwsp from '../text/Zwsp';
+import * as Zwsp from '../text/Zwsp';
 import Settings from '../api/Settings';
 import { isWsPreserveElement } from '../dom/ElementType';
 

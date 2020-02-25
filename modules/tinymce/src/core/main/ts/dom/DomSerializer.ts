@@ -17,7 +17,7 @@ import Node from '../api/html/Node';
 import Schema, { SchemaSettings } from '../api/html/Schema';
 import Serializer, { SerializerSettings } from '../api/html/Serializer';
 import Tools from '../api/util/Tools';
-import Zwsp from '../text/Zwsp';
+import * as Zwsp from '../text/Zwsp';
 import * as DomSerializerFilters from './DomSerializerFilters';
 import * as DomSerializerPreProcess from './DomSerializerPreProcess';
 import { isWsPreserveElement } from './ElementType';

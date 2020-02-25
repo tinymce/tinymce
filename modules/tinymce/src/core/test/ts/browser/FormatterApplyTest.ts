@@ -4,8 +4,8 @@ import { Obj } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
-import HtmlUtils from '../module/test/HtmlUtils';
-import KeyUtils from '../module/test/KeyUtils';
+import * as HtmlUtils from '../module/test/HtmlUtils';
+import * as KeyUtils from '../module/test/KeyUtils';
 
 UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();

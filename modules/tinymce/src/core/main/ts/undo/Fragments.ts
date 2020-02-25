@@ -8,7 +8,7 @@
 import { Node, DocumentFragment, document, Element } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import Entities from '../api/html/Entities';
-import Diff from './Diff';
+import * as Diff from './Diff';
 import * as NodeType from '../dom/NodeType';
 
 /**
@@ -90,7 +90,7 @@ const write = function (fragments: string[], elm: Element): Element {
   return elm;
 };
 
-export default {
+export {
   read,
   write
 };

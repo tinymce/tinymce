@@ -11,7 +11,7 @@ import { Css, Element as SugarElement, Height, Insert, Location, Node, Position,
 import Editor from '../api/Editor';
 import { ScrollIntoViewEvent } from '../api/EventTypes';
 import * as OuterPosition from '../frames/OuterPosition';
-import Zwsp from '../text/Zwsp';
+import * as Zwsp from '../text/Zwsp';
 
 interface MarkerInfo {
   element: SugarElement;

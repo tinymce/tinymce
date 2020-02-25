@@ -12,7 +12,7 @@ import Editor from '../api/Editor';
 import * as GetBookmark from '../bookmark/GetBookmark';
 import * as ExpandRange from '../fmt/ExpandRange';
 
-import RangeWalk from '../selection/RangeWalk';
+import * as RangeWalk from '../selection/RangeWalk';
 import { ChildContext, context } from './AnnotationContext';
 import { AnnotatorSettings } from './AnnotationsRegistry';
 import * as Markings from './Markings';

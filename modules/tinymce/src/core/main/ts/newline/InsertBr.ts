@@ -14,7 +14,7 @@ import * as NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
 import * as BoundaryLocation from '../keyboard/BoundaryLocation';
 import * as InlineUtils from '../keyboard/InlineUtils';
-import NormalizeRange from '../selection/NormalizeRange';
+import * as NormalizeRange from '../selection/NormalizeRange';
 import Selection from '../api/dom/Selection';
 import { rangeInsertNode } from '../selection/RangeInsertNode';
 import Editor from '../api/Editor';
@@ -184,6 +184,6 @@ const insert = function (editor: Editor, evt?) {
   }
 };
 
-export default {
+export {
   insert
 };

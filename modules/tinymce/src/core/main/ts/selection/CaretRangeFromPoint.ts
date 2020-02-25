@@ -98,6 +98,6 @@ const fromPoint = function (clientX: number, clientY: number, doc: Document): Ra
   return rng;
 };
 
-export default {
+export {
   fromPoint
 };

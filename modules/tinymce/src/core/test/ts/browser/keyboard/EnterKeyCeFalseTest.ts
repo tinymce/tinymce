@@ -4,7 +4,7 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
-import HtmlUtils from '../../module/test/HtmlUtils';
+import * as HtmlUtils from '../../module/test/HtmlUtils';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();

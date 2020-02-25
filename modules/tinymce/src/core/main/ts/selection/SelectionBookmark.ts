@@ -115,7 +115,7 @@ const restore = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   store,
   storeNative,
   readRange,

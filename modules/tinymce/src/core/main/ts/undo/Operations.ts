@@ -6,7 +6,7 @@
  */
 
 import Editor from '../api/Editor';
-import Levels from './Levels';
+import * as Levels from './Levels';
 import Tools from '../api/util/Tools';
 import { Event } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';

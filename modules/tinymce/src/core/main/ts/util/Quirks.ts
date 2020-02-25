@@ -8,7 +8,7 @@
 import { Range, document, Attr, Selection as DomSelection } from '@ephox/dom-globals';
 import Env from '../api/Env';
 import * as CaretContainer from '../caret/CaretContainer';
-import CaretRangeFromPoint from '../selection/CaretRangeFromPoint';
+import * as CaretRangeFromPoint from '../selection/CaretRangeFromPoint';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';

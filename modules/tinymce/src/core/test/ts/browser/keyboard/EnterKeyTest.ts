@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
-import HtmlUtils from '../../module/test/HtmlUtils';
+import * as HtmlUtils from '../../module/test/HtmlUtils';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();

@@ -80,6 +80,6 @@ const setContent = (editor: Editor, content: string, args) => {
   }
 };
 
-export default {
+export {
   setContent
 };

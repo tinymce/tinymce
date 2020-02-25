@@ -12,10 +12,10 @@ import Settings from '../api/Settings';
 import * as CaretContainer from '../caret/CaretContainer';
 import * as NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
-import InsertLi from './InsertLi';
-import NewLineUtils from './NewLineUtils';
-import NormalizeRange from '../selection/NormalizeRange';
-import Zwsp from '../text/Zwsp';
+import * as InsertLi from './InsertLi';
+import * as NewLineUtils from './NewLineUtils';
+import * as NormalizeRange from '../selection/NormalizeRange';
+import * as Zwsp from '../text/Zwsp';
 import { isCaretNode } from '../fmt/FormatContainer';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
@@ -496,6 +496,6 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   editor.fire('NewBlock', { newBlock });
 };
 
-export default {
+export {
   insert
 };

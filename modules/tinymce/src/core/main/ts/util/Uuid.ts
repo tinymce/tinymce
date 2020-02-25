@@ -27,6 +27,6 @@ const uuid = function (prefix) {
   return prefix + (count++) + seed();
 };
 
-export default {
+export {
   uuid
 };

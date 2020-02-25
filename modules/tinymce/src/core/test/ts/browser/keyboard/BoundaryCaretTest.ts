@@ -4,7 +4,7 @@ import { Hierarchy, Element, Selectors } from '@ephox/sugar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as BoundaryCaret from 'tinymce/core/keyboard/BoundaryCaret';
 import * as BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';
-import Zwsp from 'tinymce/core/text/Zwsp';
+import * as Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/bedrock-client';
 import { HTMLDivElement } from '@ephox/dom-globals';
 

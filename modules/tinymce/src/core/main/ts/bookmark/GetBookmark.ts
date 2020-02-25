@@ -12,7 +12,7 @@ import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
 import * as RangeNodes from '../selection/RangeNodes';
-import Zwsp from '../text/Zwsp';
+import * as Zwsp from '../text/Zwsp';
 import Tools from '../api/util/Tools';
 import Selection from '../api/dom/Selection';
 import DOMUtils from '../api/dom/DOMUtils';

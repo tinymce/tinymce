@@ -7,10 +7,10 @@
 
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import EventProcessRanges from './EventProcessRanges';
-import FragmentReader from './FragmentReader';
-import MultiRange from './MultiRange';
-import Zwsp from '../text/Zwsp';
+import * as EventProcessRanges from './EventProcessRanges';
+import * as FragmentReader from './FragmentReader';
+import * as MultiRange from './MultiRange';
+import * as Zwsp from '../text/Zwsp';
 import Editor from '../api/Editor';
 
 const getTextContent = (editor: Editor): string => {
@@ -67,6 +67,6 @@ const getContent = (editor: Editor, args: any = {}): string => {
   }
 };
 
-export default {
+export {
   getContent
 };

@@ -41,6 +41,6 @@ const normalizeBlockSelectionRange = (rng: Range): Range => {
 
 const normalize = (rng: Range): Range => rng.collapsed ? rng : normalizeBlockSelectionRange(rng);
 
-export default {
+export {
   normalize
 };

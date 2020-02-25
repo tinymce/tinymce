@@ -15,7 +15,7 @@ const getBulletStyles = function (editor) {
   return styles ? styles.split(/[ ,]/) : [];
 };
 
-export default {
+export {
   getNumberStyles,
   getBulletStyles
 };

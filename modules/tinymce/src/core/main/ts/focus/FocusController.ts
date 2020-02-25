@@ -9,7 +9,7 @@ import { document, Element, FocusEvent } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import FocusManager from '../api/FocusManager';
 import DOMUtils from '../api/dom/DOMUtils';
-import SelectionRestore from '../selection/SelectionRestore';
+import * as SelectionRestore from '../selection/SelectionRestore';
 import Delay from '../api/util/Delay';
 import EditorManager from '../api/EditorManager';
 import Editor from '../api/Editor';

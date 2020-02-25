@@ -15,7 +15,7 @@ import * as CaretFinder from '../caret/CaretFinder';
 import { CaretPosition } from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
 import * as RangeNodes from '../selection/RangeNodes';
-import SelectionBookmark from '../selection/SelectionBookmark';
+import * as SelectionBookmark from '../selection/SelectionBookmark';
 import * as FocusController from './FocusController';
 
 const getContentEditableHost = (editor: Editor, node: Node): DomElement =>

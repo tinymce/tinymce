@@ -128,7 +128,7 @@ const typeString = function (editor, str) {
   Arr.each(str.split(''), Fun.curry(type, editor));
 };
 
-export default {
+export {
   type,
   typeString
 };

@@ -17,7 +17,7 @@ import * as LineWalker from '../caret/LineWalker';
 import * as NodeType from '../dom/NodeType';
 import * as CefUtils from './CefUtils';
 import * as RangeNodes from '../selection/RangeNodes';
-import ArrUtils from '../util/ArrUtils';
+import * as ArrUtils from '../util/ArrUtils';
 import * as InlineUtils from '../keyboard/InlineUtils';
 import Settings from '../api/Settings';
 import { isBeforeContentEditableFalse, isAfterContentEditableFalse, isBeforeTable, isAfterTable } from '../caret/CaretPositionPredicates';

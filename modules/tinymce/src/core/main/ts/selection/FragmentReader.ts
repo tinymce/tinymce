@@ -10,8 +10,8 @@ import { Compare, Insert, Replication, Element, Fragment, Node, SelectorFind, Tr
 import * as ElementType from '../dom/ElementType';
 import * as Parents from '../dom/Parents';
 import * as SelectionUtils from './SelectionUtils';
-import SimpleTableModel from './SimpleTableModel';
-import TableCellSelection from './TableCellSelection';
+import * as SimpleTableModel from './SimpleTableModel';
+import * as TableCellSelection from './TableCellSelection';
 
 const findParentListContainer = function (parents) {
   return Arr.find(parents, function (elm) {
@@ -100,6 +100,6 @@ const read = function (rootNode, ranges) {
   return selectedCells.length > 0 ? getTableFragment(rootNode, selectedCells) : getSelectionFragment(rootNode, ranges);
 };
 
-export default {
+export {
   read
 };

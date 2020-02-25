@@ -16,7 +16,7 @@ import ElementUtils from '../api/dom/ElementUtils';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import Serializer from '../api/html/Serializer';
-import RangeNormalizer from '../selection/RangeNormalizer';
+import * as RangeNormalizer from '../selection/RangeNormalizer';
 import Tools from '../api/util/Tools';
 import Selection from '../api/dom/Selection';
 import Editor from '../api/Editor';

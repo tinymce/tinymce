@@ -9,7 +9,7 @@ import { Adt, Fun, Option, Options } from '@ephox/katamari';
 import * as CaretFinder from '../caret/CaretFinder';
 import * as CaretUtils from '../caret/CaretUtils';
 import * as InlineUtils from './InlineUtils';
-import LazyEvaluator from '../util/LazyEvaluator';
+import * as LazyEvaluator from '../util/LazyEvaluator';
 import { getParentCaretContainer } from '../fmt/FormatContainer';
 
 const Location = Adt.generate([

@@ -122,7 +122,7 @@ const isListItemParentBlock = function (editor: Editor) {
   }).isSome();
 };
 
-export default {
+export {
   moveToCaretPosition,
   getEditableRoot,
   getParentBlock,

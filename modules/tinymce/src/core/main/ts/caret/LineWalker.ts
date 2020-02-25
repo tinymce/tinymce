@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import ArrUtils from '../util/ArrUtils';
+import * as ArrUtils from '../util/ArrUtils';
 import * as Dimensions from '../dom/Dimensions';
 import * as CaretCandidate from './CaretCandidate';
 import * as CaretUtils from './CaretUtils';

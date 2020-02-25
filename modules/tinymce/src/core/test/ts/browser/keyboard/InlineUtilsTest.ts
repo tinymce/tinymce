@@ -2,7 +2,7 @@ import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/
 import { Hierarchy, Element, Node } from '@ephox/sugar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as InlineUtils from 'tinymce/core/keyboard/InlineUtils';
-import Zwsp from 'tinymce/core/text/Zwsp';
+import * as Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Text } from '@ephox/dom-globals';
 

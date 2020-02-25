@@ -11,7 +11,7 @@ import DOMUtils from './api/dom/DOMUtils';
 import * as MousePosition from './dom/MousePosition';
 import * as NodeType from './dom/NodeType';
 import Delay from './api/util/Delay';
-import Predicate from './util/Predicate';
+import * as Predicate from './util/Predicate';
 import Editor from './api/Editor';
 
 /**

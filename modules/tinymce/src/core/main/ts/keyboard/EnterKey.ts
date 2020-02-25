@@ -6,7 +6,7 @@
  */
 
 import { KeyboardEvent } from '@ephox/dom-globals';
-import InsertNewLine from '../newline/InsertNewLine';
+import * as InsertNewLine from '../newline/InsertNewLine';
 import VK from '../api/util/VK';
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';

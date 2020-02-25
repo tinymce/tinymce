@@ -14,7 +14,7 @@ import * as NodeType from '../dom/NodeType';
 import Tools from '../api/util/Tools';
 import Selection from '../api/dom/Selection';
 import { getParentCaretContainer } from '../fmt/FormatContainer';
-import Zwsp from '../text/Zwsp';
+import * as Zwsp from '../text/Zwsp';
 import DOMUtils from '../api/dom/DOMUtils';
 import * as CaretFinder from '../caret/CaretFinder';
 import { isPathBookmark, isStringPathBookmark, isIdBookmark, isIndexBookmark, isRangeBookmark, PathBookmark, IdBookmark, Bookmark, IndexBookmark } from './BookmarkTypes';

@@ -13,7 +13,7 @@ import Editor from '../api/Editor';
 import Env from '../api/Env';
 import Settings from '../api/Settings';
 import { TranslatedString } from '../api/util/I18n';
-import Uuid from '../util/Uuid';
+import * as Uuid from '../util/Uuid';
 import * as InitContentBody from './InitContentBody';
 
 const DOM = DOMUtils.DOM;

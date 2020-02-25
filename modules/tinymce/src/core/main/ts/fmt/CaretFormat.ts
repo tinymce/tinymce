@@ -16,7 +16,7 @@ import * as ExpandRange from './ExpandRange';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
 import * as SplitRange from '../selection/SplitRange';
-import Zwsp from '../text/Zwsp';
+import * as Zwsp from '../text/Zwsp';
 import Selection from '../api/dom/Selection';
 import Editor from '../api/Editor';
 import { isCaretNode, getParentCaretContainer } from './FormatContainer';

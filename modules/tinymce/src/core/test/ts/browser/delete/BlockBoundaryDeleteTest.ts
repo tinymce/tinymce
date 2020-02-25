@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } fro
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import * as BlockBoundaryDelete from 'tinymce/core/delete/BlockBoundaryDelete';
-import Zwsp from 'tinymce/core/text/Zwsp';
+import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', function (success, failure) {
