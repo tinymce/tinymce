@@ -8,6 +8,6 @@ const sPaste = function (editor, data) {
   }));
 };
 
-export default {
+export {
   sPaste
 };

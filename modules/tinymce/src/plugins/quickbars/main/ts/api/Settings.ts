@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-import EditorSettings from '../alien/EditorSettings';
+import * as EditorSettings from '../alien/EditorSettings';
 
 const getTextSelectionToolbarItems = function (editor: Editor): string {
   return EditorSettings.getToolbarItemsOr(editor, 'quickbars_selection_toolbar', 'bold italic | quicklink h2 h3 blockquote');
@@ -21,7 +21,7 @@ const getImageToolbarItems = function (editor: Editor): string {
   return EditorSettings.getToolbarItemsOr(editor, 'quickbars_image_toolbar', 'alignleft aligncenter alignright');
 };
 
-export default {
+export {
   getTextSelectionToolbarItems,
   getInsertToolbarItems,
   getImageToolbarItems

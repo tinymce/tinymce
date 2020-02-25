@@ -10,7 +10,7 @@ import * as Utils from 'tinymce/plugins/paste/core/Utils';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import Strings from '../module/test/Strings';
+import * as Strings from '../module/test/Strings';
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.PasteTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();

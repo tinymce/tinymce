@@ -7,7 +7,7 @@
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const displayErrorMessage = function (editor, message) {
   editor.notificationManager.open({
@@ -64,7 +64,7 @@ const cancel = function (editor) {
   editor.resetContent(h);
 };
 
-export default {
+export {
   save,
   cancel
 };

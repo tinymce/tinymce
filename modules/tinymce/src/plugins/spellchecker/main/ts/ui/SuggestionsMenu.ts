@@ -9,8 +9,10 @@ import { HTMLElement } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Actions, { LastSuggestion } from '../core/Actions';
+import * as Actions from '../core/Actions';
 import { DomTextMatcher } from '../core/DomTextMatcher';
+
+type LastSuggestion = Actions.LastSuggestion;
 
 const ignoreAll = true;
 
@@ -84,6 +86,6 @@ const setup = function (editor: Editor, pluginUrl: string, lastSuggestionsState:
   });
 };
 
-export default {
+export {
   setup
 };

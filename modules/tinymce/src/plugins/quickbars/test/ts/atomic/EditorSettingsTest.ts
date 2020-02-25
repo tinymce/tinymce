@@ -1,7 +1,7 @@
 import { Logger } from '@ephox/agar';
 import { Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import Settings from 'tinymce/plugins/quickbars/api/Settings';
+import * as Settings from 'tinymce/plugins/quickbars/api/Settings';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('DialogChanges', () => {

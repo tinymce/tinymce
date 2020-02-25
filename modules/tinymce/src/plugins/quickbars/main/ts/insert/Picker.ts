@@ -49,6 +49,6 @@ const pickFile = (editor: Editor) => {
   });
 };
 
-export default {
+export {
   pickFile
 };
