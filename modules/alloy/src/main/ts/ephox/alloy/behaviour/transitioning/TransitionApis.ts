@@ -53,7 +53,7 @@ const getNewRoute = (comp: AlloyComponent, transConfig: TransitioningConfig, tra
 
 const getCurrentRoute = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless): Option<TransitionRoute> => {
   const el = comp.element();
-    return Attr.has(el, transConfig.destinationAttr) ? Option.some({
+  return Attr.has(el, transConfig.destinationAttr) ? Option.some({
     start: Attr.get(comp.element(), transConfig.stateAttr),
     destination: Attr.get(comp.element(), transConfig.destinationAttr)
   }) : Option.none();
