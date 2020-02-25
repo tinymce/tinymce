@@ -17,7 +17,7 @@ import Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as GetBookmark from '../bookmark/GetBookmark';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import RangeWalk from '../selection/RangeWalk';
 import * as SplitRange from '../selection/SplitRange';

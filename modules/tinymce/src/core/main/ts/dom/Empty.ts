@@ -10,7 +10,7 @@ import { Fun } from '@ephox/katamari';
 import { Compare, Element, SelectorExists } from '@ephox/sugar';
 import TreeWalker from '../api/dom/TreeWalker';
 import * as CaretCandidate from '../caret/CaretCandidate';
-import NodeType from './NodeType';
+import * as NodeType from './NodeType';
 
 const hasWhitespacePreserveParent = function (rootNode: Node, node: Node) {
   const rootElement = Element.fromDom(rootNode);
@@ -78,6 +78,6 @@ const isEmptyNode = function (targetNode: Node, skipBogus: boolean) {
 
 const isEmpty = (elm: Element<Node>, skipBogus: boolean = true) => isEmptyNode(elm.dom(), skipBogus);
 
-export default {
+export {
   isEmpty
 };

@@ -126,7 +126,7 @@ const setup = function (editorManager: EditorManager) {
   editorManager.on('RemoveEditor', Fun.curry(unregisterDocumentEvents, editorManager));
 };
 
-export default {
+export {
   setup,
   isEditorUIElement,
   isEditorContentAreaElement,

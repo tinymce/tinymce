@@ -8,7 +8,7 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { Compare, Insert, Replication, Element, Fragment, Node, SelectorFind, Traverse } from '@ephox/sugar';
 import * as ElementType from '../dom/ElementType';
-import Parents from '../dom/Parents';
+import * as Parents from '../dom/Parents';
 import * as SelectionUtils from './SelectionUtils';
 import SimpleTableModel from './SimpleTableModel';
 import TableCellSelection from './TableCellSelection';

@@ -8,7 +8,7 @@
 import { Element, Range } from '@ephox/dom-globals';
 import CaretPosition from '../caret/CaretPosition';
 import * as CaretUtils from '../caret/CaretUtils';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import Editor from '../api/Editor';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;

@@ -10,7 +10,7 @@ import * as CaretCandidate from './CaretCandidate';
 import CaretPosition from './CaretPosition';
 import * as CaretUtils from './CaretUtils';
 import { CaretWalker } from './CaretWalker';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import { Node, Element, Text } from '@ephox/dom-globals';
 
 const walkToPositionIn = (forward: boolean, root: Node, start: Node) => {

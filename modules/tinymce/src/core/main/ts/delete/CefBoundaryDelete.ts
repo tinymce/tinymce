@@ -13,9 +13,9 @@ import CaretPosition from '../caret/CaretPosition';
 import { isAfterContentEditableFalse, isBeforeContentEditableFalse } from '../caret/CaretPositionPredicates';
 import * as CaretUtils from '../caret/CaretUtils';
 import { CaretWalker, HDirection } from '../caret/CaretWalker';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as CefUtils from '../keyboard/CefUtils';
-import InlineUtils from '../keyboard/InlineUtils';
+import * as InlineUtils from '../keyboard/InlineUtils';
 
 const trimEmptyTextNode = (dom: DOMUtils, node: Node) => {
   if (NodeType.isText(node) && node.data.length === 0) {
@@ -81,6 +81,6 @@ const backspaceDelete = function (editor: Editor, forward: boolean): boolean {
   return deleteCefBoundaryText(editor, forward);
 };
 
-export default {
+export {
   backspaceDelete
 };

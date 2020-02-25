@@ -7,19 +7,19 @@
 
 import { Text, KeyboardEvent } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
-import BlockBoundaryDelete from '../delete/BlockBoundaryDelete';
-import BlockRangeDelete from '../delete/BlockRangeDelete';
-import CefDelete from '../delete/CefDelete';
-import CefBoundaryDelete from '../delete/CefBoundaryDelete';
-import InlineBoundaryDelete from '../delete/InlineBoundaryDelete';
-import InlineFormatDelete from '../delete/InlineFormatDelete';
-import TableDelete from '../delete/TableDelete';
-import MatchKeys from './MatchKeys';
+import * as BlockBoundaryDelete from '../delete/BlockBoundaryDelete';
+import * as BlockRangeDelete from '../delete/BlockRangeDelete';
+import * as CefDelete from '../delete/CefDelete';
+import * as CefBoundaryDelete from '../delete/CefBoundaryDelete';
+import * as InlineBoundaryDelete from '../delete/InlineBoundaryDelete';
+import * as InlineFormatDelete from '../delete/InlineFormatDelete';
+import * as TableDelete from '../delete/TableDelete';
+import * as MatchKeys from './MatchKeys';
 import VK from '../api/util/VK';
 import Editor from '../api/Editor';
-import PageBreakDelete from '../delete/ImageBlockDelete';
+import * as PageBreakDelete from '../delete/ImageBlockDelete';
 import { EditorEvent } from '../api/util/EventDispatcher';
-import Outdent from '../delete/Outdent';
+import * as Outdent from '../delete/Outdent';
 
 const executeKeydownOverride = function (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) {
   MatchKeys.execute([
@@ -66,6 +66,6 @@ const setup = function (editor: Editor, caret: Cell<Text>) {
   });
 };
 
-export default {
+export {
   setup
 };

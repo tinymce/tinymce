@@ -10,12 +10,12 @@ import { Arr, Fun, Option } from '@ephox/katamari';
 import { Compare, Element, Node } from '@ephox/sugar';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
-import DeleteElement from './DeleteElement';
+import * as DeleteElement from './DeleteElement';
 import * as TableDeleteAction from './TableDeleteAction';
 import * as ElementType from '../dom/ElementType';
-import Empty from '../dom/Empty';
-import PaddingBr from '../dom/PaddingBr';
-import Parents from '../dom/Parents';
+import * as Empty from '../dom/Empty';
+import * as PaddingBr from '../dom/PaddingBr';
+import * as Parents from '../dom/Parents';
 import TableCellSelection from '../selection/TableCellSelection';
 import Editor from '../api/Editor';
 import { isBeforeTable, isAfterTable } from '../caret/CaretPositionPredicates';
@@ -139,6 +139,6 @@ const backspaceDelete = (editor: Editor, forward?: boolean) => {
   return editor.selection.isCollapsed() && cells.length === 0 ? deleteCaret(editor, forward, startElm) : deleteRange(editor, startElm);
 };
 
-export default {
+export {
   backspaceDelete
 };

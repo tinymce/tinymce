@@ -8,11 +8,11 @@
 import { Text, KeyboardEvent } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import BoundarySelection from './BoundarySelection';
+import * as BoundarySelection from './BoundarySelection';
 import * as CefNavigation from './CefNavigation';
 import * as TableNavigation from './TableNavigation';
 import * as ContentEndpointNavigation from './ContentEndpointNavigation';
-import MatchKeys from './MatchKeys';
+import * as MatchKeys from './MatchKeys';
 import VK from '../api/util/VK';
 import Editor from '../api/Editor';
 
@@ -47,6 +47,6 @@ const setup = function (editor: Editor, caret: Cell<Text>) {
   });
 };
 
-export default {
+export {
   setup
 };

@@ -6,7 +6,7 @@
  */
 
 import { Option, Fun } from '@ephox/katamari';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import { Text, Node as DomNode, HTMLImageElement } from '@ephox/dom-globals';
 import CaretPosition from './CaretPosition';
 import { isWhiteSpace } from '../text/CharType';

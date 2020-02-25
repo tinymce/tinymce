@@ -26,10 +26,10 @@ import Tools from '../api/util/Tools';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as Placeholder from '../content/Placeholder';
-import NodeType from '../dom/NodeType';
-import TouchEvents from '../events/TouchEvents';
+import * as NodeType from '../dom/NodeType';
+import * as TouchEvents from '../events/TouchEvents';
 import * as ForceBlocks from '../ForceBlocks';
-import KeyboardOverrides from '../keyboard/KeyboardOverrides';
+import * as KeyboardOverrides from '../keyboard/KeyboardOverrides';
 import { NodeChange } from '../NodeChange';
 import * as DetailsElement from '../selection/DetailsElement';
 import * as MultiClickSelection from '../selection/MultiClickSelection';
@@ -335,6 +335,6 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   }
 };
 
-export default {
+export {
   initContentBody
 };

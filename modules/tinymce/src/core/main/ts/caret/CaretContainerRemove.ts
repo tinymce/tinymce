@@ -8,7 +8,7 @@
 import { Arr } from '@ephox/katamari';
 import * as CaretContainer from './CaretContainer';
 import CaretPosition from './CaretPosition';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import Zwsp from '../text/Zwsp';
 import { Node, Text } from '@ephox/dom-globals';
 

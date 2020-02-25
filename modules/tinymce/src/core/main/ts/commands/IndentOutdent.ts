@@ -11,7 +11,7 @@ import { Element, Traverse, Css, PredicateFind } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import { isListItem, isList, isTable } from '../dom/ElementType';
 import Settings from '../api/Settings';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 
 const isEditable = (target: Element) => {
   return PredicateFind.closest(target, (elm) => {

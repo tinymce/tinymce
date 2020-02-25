@@ -10,7 +10,7 @@ import { Fun } from '@ephox/katamari';
 import * as CaretBookmark from './CaretBookmark';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as RangeNodes from '../selection/RangeNodes';
 import Zwsp from '../text/Zwsp';
 import Tools from '../api/util/Tools';

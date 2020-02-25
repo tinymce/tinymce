@@ -10,7 +10,7 @@ import { Element as SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import { CaretPosition } from '../caret/CaretPosition';
 import { isTextBlock } from '../dom/ElementType';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as CaretFinder from '../caret/CaretFinder';
 import RangeNormalizer from './RangeNormalizer';
 

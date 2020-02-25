@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as CaretCandidate from './CaretCandidate';
 import CaretPosition from './CaretPosition';
 import { isBackwards, isForwards, findNode } from './CaretUtils';

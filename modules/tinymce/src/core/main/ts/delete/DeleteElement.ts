@@ -12,8 +12,8 @@ import * as CaretCandidate from '../caret/CaretCandidate';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as MergeText from './MergeText';
-import Empty from '../dom/Empty';
-import NodeType from '../dom/NodeType';
+import * as Empty from '../dom/Empty';
+import * as NodeType from '../dom/NodeType';
 import Editor from '../api/Editor';
 
 const needsReposition = function (pos, elm) {
@@ -176,6 +176,6 @@ const deleteElement = (editor: Editor, forward: boolean, elm: Element, moveCaret
   }
 };
 
-export default {
+export {
   deleteElement
 };

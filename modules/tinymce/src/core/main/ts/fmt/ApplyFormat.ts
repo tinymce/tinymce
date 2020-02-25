@@ -8,7 +8,7 @@
 import { Node } from '@ephox/dom-globals';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import { IdBookmark, IndexBookmark } from '../bookmark/BookmarkTypes';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
 import * as FormatUtils from './FormatUtils';

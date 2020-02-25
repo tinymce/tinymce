@@ -9,9 +9,9 @@ import { Range, Node } from '@ephox/dom-globals';
 import { Arr, Option, Strings } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import Settings from '../api/Settings';
-import FontInfo from '../fmt/FontInfo';
+import * as FontInfo from '../fmt/FontInfo';
 import * as CaretFinder from '../caret/CaretFinder';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 
 const findFirstCaretElement = (editor: Editor) => {
   return CaretFinder.firstPositionIn(editor.getBody()).map((caret) => {

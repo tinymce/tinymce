@@ -7,10 +7,10 @@
 
 import { HTMLElement } from '@ephox/dom-globals';
 import Env from './Env';
-import InsertContent from '../content/InsertContent';
-import DeleteCommands from '../delete/DeleteCommands';
+import * as InsertContent from '../content/InsertContent';
+import * as DeleteCommands from '../delete/DeleteCommands';
 import * as FontCommands from '../commands/FontCommands';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import InsertBr from '../newline/InsertBr';
 import SelectionBookmark from '../selection/SelectionBookmark';
 import Tools from './util/Tools';

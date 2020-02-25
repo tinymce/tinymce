@@ -16,7 +16,7 @@ import { CaretPosition } from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
 import * as RangeNodes from '../selection/RangeNodes';
 import SelectionBookmark from '../selection/SelectionBookmark';
-import FocusController from './FocusController';
+import * as FocusController from './FocusController';
 
 const getContentEditableHost = (editor: Editor, node: Node): DomElement =>
   editor.dom.getParent(node, (node) => editor.dom.getContentEditable(node) === 'true');
@@ -136,7 +136,7 @@ const focus = (editor: Editor, skipFocus: boolean) => {
   skipFocus ? activateEditor(editor) : focusEditor(editor);
 };
 
-export default {
+export {
   focus,
   hasFocus,
   hasEditorOrUiFocus

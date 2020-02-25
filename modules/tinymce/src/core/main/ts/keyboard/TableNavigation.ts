@@ -13,9 +13,9 @@ import CaretPosition from '../caret/CaretPosition';
 import * as CefUtils from './CefUtils';
 import { getPositionsAbove, findClosestHorizontalPositionFromPoint, getPositionsBelow, getPositionsUntilPreviousLine, getPositionsUntilNextLine, BreakType, LineInfo } from '../caret/LineReader';
 import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from '../caret/TableCells';
-import ScrollIntoView from '../dom/ScrollIntoView';
+import * as ScrollIntoView from '../dom/ScrollIntoView';
 import Editor from '../api/Editor';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import Settings from '../api/Settings';
 import { isFakeCaretTableBrowser } from '../caret/FakeCaret';
 

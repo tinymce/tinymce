@@ -11,7 +11,7 @@ import * as CaretContainerInline from '../caret/CaretContainerInline';
 import * as CaretContainerRemove from '../caret/CaretContainerRemove';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import { Text } from '@ephox/dom-globals';
 
 const insertInlinePos = function (pos: CaretPosition, before: boolean) {
@@ -68,6 +68,6 @@ const renderCaret = function (caret: Cell<Text>, location) {
   );
 };
 
-export default {
+export {
   renderCaret
 };

@@ -9,7 +9,7 @@ import { Document, document } from '@ephox/dom-globals';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { Element, Html, Remove, SelectorFilter } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import TrimHtml from '../dom/TrimHtml';
+import * as TrimHtml from '../dom/TrimHtml';
 import Fragments from './Fragments';
 import { UndoLevel, UndoLevelType } from './UndoManagerTypes';
 

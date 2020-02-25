@@ -11,7 +11,7 @@ import { PlatformDetection } from '@ephox/sand';
 import DomQuery from '../api/dom/DomQuery';
 import Editor from '../api/Editor';
 import Delay from '../api/util/Delay';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as GeomClientRect from '../geom/ClientRect';
 import * as CaretContainer from './CaretContainer';
 import * as CaretContainerRemove from './CaretContainerRemove';

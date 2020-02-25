@@ -228,7 +228,7 @@ const trimTrailingBr = function (rootNode) {
   }
 };
 
-export default {
+export {
   register,
   trimTrailingBr
 };

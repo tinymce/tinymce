@@ -14,7 +14,7 @@ import Env from './Env';
 import * as ErrorReporter from '../ErrorReporter';
 import DOMUtils from './dom/DOMUtils';
 import DomQuery from './dom/DomQuery';
-import FocusController from '../focus/FocusController';
+import * as FocusController from '../focus/FocusController';
 import I18n from './util/I18n';
 import Observable from './util/Observable';
 import Promise from './util/Promise';

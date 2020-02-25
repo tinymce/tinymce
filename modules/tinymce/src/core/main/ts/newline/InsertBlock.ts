@@ -10,7 +10,7 @@ import { Arr, Option, Obj, Options } from '@ephox/katamari';
 import { PredicateFilter, Element, Css, Node } from '@ephox/sugar';
 import Settings from '../api/Settings';
 import * as CaretContainer from '../caret/CaretContainer';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
 import InsertLi from './InsertLi';
 import NewLineUtils from './NewLineUtils';

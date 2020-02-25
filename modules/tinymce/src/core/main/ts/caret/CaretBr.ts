@@ -10,7 +10,7 @@ import { CaretPosition } from './CaretPosition';
 import { getElementFromPosition, getElementFromPrevPosition } from './CaretUtils';
 import * as ElementType from '../dom/ElementType';
 import { Arr, Fun } from '@ephox/katamari';
-import Parents from '../dom/Parents';
+import * as Parents from '../dom/Parents';
 import * as CaretFinder from './CaretFinder';
 
 const isBr = (pos: CaretPosition) => getElementFromPosition(pos).exists(ElementType.isBr);

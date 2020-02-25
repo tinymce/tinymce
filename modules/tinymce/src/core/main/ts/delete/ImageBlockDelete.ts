@@ -28,6 +28,6 @@ const backspaceDelete = (editor: Editor, forward: boolean): boolean => {
   return editor.selection.isCollapsed() ? deleteCaret(editor, forward) : false;
 };
 
-export default {
+export {
   backspaceDelete
 };

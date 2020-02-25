@@ -46,7 +46,7 @@ const trimInternal = function (serializer, html) {
 // We might need external/internal trimming in the future so lets keep the separation
 const trimExternal = trimInternal;
 
-export default {
+export {
   trimExternal,
   trimInternal
 };

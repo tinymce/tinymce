@@ -182,19 +182,19 @@ const elementIntoWindow = (editor: Editor, element: HTMLElement, alignToTop?: bo
 const rangeIntoFrame = (editor: Editor, rng: Range, alignToTop?: boolean) => withMarker(editor, intoFrame, rng, alignToTop);
 const elementIntoFrame = (editor: Editor, element: HTMLElement, alignToTop?: boolean) => withElement(editor, element, intoFrame, alignToTop);
 
-const elementIntoView = (editor: Editor, element: HTMLElement, alignToTop?: boolean) => {
+const scrollElementIntoView = (editor: Editor, element: HTMLElement, alignToTop?: boolean) => {
   const scroller = editor.inline ? elementIntoWindow : elementIntoFrame;
   scroller(editor, element, alignToTop);
 };
 
 // This method is made to deal with the user pressing enter, it is not useful
 // if we want for example scroll in content after a paste event.
-const rangeIntoView = (editor: Editor, rng: Range, alignToTop?: boolean) => {
+const scrollRangeIntoView = (editor: Editor, rng: Range, alignToTop?: boolean) => {
   const scroller = editor.inline ? rangeIntoWindow : rangeIntoFrame;
   scroller(editor, rng, alignToTop);
 };
 
-export default {
-  scrollElementIntoView: elementIntoView,
-  scrollRangeIntoView: rangeIntoView
+export {
+  scrollElementIntoView,
+  scrollRangeIntoView
 };

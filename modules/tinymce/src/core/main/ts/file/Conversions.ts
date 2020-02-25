@@ -112,7 +112,7 @@ const blobToDataUri = function (blob: Blob): Promise<string> {
   });
 };
 
-export default {
+export {
   uriToBlob,
   blobToDataUri,
   parseDataUri

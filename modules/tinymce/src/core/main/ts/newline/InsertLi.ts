@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import NewLineUtils from './NewLineUtils';
 import Editor from '../api/Editor';
 

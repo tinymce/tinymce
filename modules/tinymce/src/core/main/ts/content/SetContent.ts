@@ -14,9 +14,9 @@ import Tools from '../api/util/Tools';
 import Serializer from '../api/html/Serializer';
 import * as FilterNode from '../html/FilterNode';
 import Settings from '../api/Settings';
-import EditorFocus from '../focus/EditorFocus';
+import * as EditorFocus from '../focus/EditorFocus';
 import * as CaretFinder from '../caret/CaretFinder';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import { isWsPreserveElement } from '../dom/ElementType';
 
 const defaultFormat = 'html';

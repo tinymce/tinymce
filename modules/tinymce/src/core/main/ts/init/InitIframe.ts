@@ -14,7 +14,7 @@ import Env from '../api/Env';
 import Settings from '../api/Settings';
 import { TranslatedString } from '../api/util/I18n';
 import Uuid from '../util/Uuid';
-import InitContentBody from './InitContentBody';
+import * as InitContentBody from './InitContentBody';
 
 const DOM = DOMUtils.DOM;
 
@@ -123,6 +123,6 @@ const init = function (editor: Editor, boxInfo) {
   }
 };
 
-export default {
+export {
   init
 };

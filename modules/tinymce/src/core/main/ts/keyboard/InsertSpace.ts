@@ -10,8 +10,8 @@ import { Element } from '@ephox/sugar';
 import CaretPosition from '../caret/CaretPosition';
 import Editor from '../api/Editor';
 import { insertNbspAtPosition, insertSpaceAtPosition } from '../caret/InsertText';
-import InlineUtils from './InlineUtils';
-import BoundaryLocation from './BoundaryLocation';
+import * as InlineUtils from './InlineUtils';
+import * as BoundaryLocation from './BoundaryLocation';
 import { needsToHaveNbsp } from './Nbsps';
 import * as CaretFinder from '../caret/CaretFinder';
 

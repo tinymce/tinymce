@@ -6,7 +6,7 @@
  */
 
 import ArrUtils from '../util/ArrUtils';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import DomQuery from '../api/dom/DomQuery';
 import Editor from '../api/Editor';
 

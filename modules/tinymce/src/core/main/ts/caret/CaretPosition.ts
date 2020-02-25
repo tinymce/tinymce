@@ -7,7 +7,7 @@
 
 import * as CaretCandidate from './CaretCandidate';
 import DOMUtils from '../api/dom/DOMUtils';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as GeomClientRect from '../geom/ClientRect';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as ExtendingChar from '../text/ExtendingChar';

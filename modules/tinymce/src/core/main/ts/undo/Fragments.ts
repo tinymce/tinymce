@@ -9,7 +9,7 @@ import { Node, DocumentFragment, document, Element } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import Entities from '../api/html/Entities';
 import Diff from './Diff';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 
 /**
  * This module reads and applies html fragments from/to dom nodes.

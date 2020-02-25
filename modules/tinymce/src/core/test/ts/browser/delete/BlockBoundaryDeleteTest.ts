@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import BlockBoundaryDelete from 'tinymce/core/delete/BlockBoundaryDelete';
+import * as BlockBoundaryDelete from 'tinymce/core/delete/BlockBoundaryDelete';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 

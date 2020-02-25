@@ -73,6 +73,6 @@ const calc = function (editor: Editor, event) {
   return calculatePosition(getBodyPosition(editor), getScrollPosition(editor), getMousePosition(editor, event));
 };
 
-export default {
+export {
   calc
 };

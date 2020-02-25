@@ -10,7 +10,7 @@ import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { CaretPosition } from './CaretPosition';
 import { HDirection, CaretWalker } from './CaretWalker';
 import * as CaretFinder from './CaretFinder';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import { isInSameBlock } from './CaretUtils';
 
 export enum BreakType {

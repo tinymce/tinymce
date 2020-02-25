@@ -8,10 +8,10 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { Element, Traverse } from '@ephox/sugar';
 import CaretPosition from '../caret/CaretPosition';
-import DeleteElement from './DeleteElement';
-import DeleteUtils from './DeleteUtils';
+import * as DeleteElement from './DeleteElement';
+import * as DeleteUtils from './DeleteUtils';
 import * as ElementType from '../dom/ElementType';
-import Parents from '../dom/Parents';
+import * as Parents from '../dom/Parents';
 import * as CaretFormat from '../fmt/CaretFormat';
 import Editor from '../api/Editor';
 
@@ -63,6 +63,6 @@ const backspaceDelete = function (editor: Editor, forward: boolean) {
   return editor.selection.isCollapsed() ? deleteCaret(editor, forward) : false;
 };
 
-export default {
+export {
   backspaceDelete
 };

@@ -1,6 +1,6 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { Element, Html } from '@ephox/sugar';
-import PaddingBr from 'tinymce/core/dom/PaddingBr';
+import * as PaddingBr from 'tinymce/core/dom/PaddingBr';
 import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', function (success, failure) {

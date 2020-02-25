@@ -22,9 +22,9 @@ import ThemeManager from '../api/ThemeManager';
 import I18n from '../api/util/I18n';
 import Tools from '../api/util/Tools';
 import WindowManager from '../api/WindowManager';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as ErrorReporter from '../ErrorReporter';
-import Init from './Init';
+import * as Init from './Init';
 
 const DOM = DOMUtils.DOM;
 
@@ -274,6 +274,6 @@ const render = function (editor: Editor) {
   loadScripts(editor, editor.suffix);
 };
 
-export default {
+export {
   render
 };

@@ -8,9 +8,9 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import * as Bookmarks from './bookmark/Bookmarks';
-import NodeType from './dom/NodeType';
-import Parents from './dom/Parents';
-import EditorFocus from './focus/EditorFocus';
+import * as NodeType from './dom/NodeType';
+import * as Parents from './dom/Parents';
+import * as EditorFocus from './focus/EditorFocus';
 import Settings from './api/Settings';
 import Editor from './api/Editor';
 import { Node } from '@ephox/dom-globals';

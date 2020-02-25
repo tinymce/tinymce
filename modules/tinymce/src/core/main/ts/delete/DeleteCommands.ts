@@ -5,16 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import BlockBoundaryDelete from './BlockBoundaryDelete';
-import BlockRangeDelete from './BlockRangeDelete';
-import CefDelete from './CefDelete';
-import DeleteUtils from './DeleteUtils';
-import BoundaryDelete from './InlineBoundaryDelete';
-import TableDelete from './TableDelete';
-import InlineFormatDelete from './InlineFormatDelete';
-import CefBoundaryDelete from './CefBoundaryDelete';
+import * as BlockBoundaryDelete from './BlockBoundaryDelete';
+import * as BlockRangeDelete from './BlockRangeDelete';
+import * as CefDelete from './CefDelete';
+import * as DeleteUtils from './DeleteUtils';
+import * as BoundaryDelete from './InlineBoundaryDelete';
+import * as TableDelete from './TableDelete';
+import * as InlineFormatDelete from './InlineFormatDelete';
+import * as CefBoundaryDelete from './CefBoundaryDelete';
 import Editor from '../api/Editor';
-import Outdent from './Outdent';
+import * as Outdent from './Outdent';
 
 const nativeCommand = function (editor: Editor, command: string) {
   editor.getDoc().execCommand(command, false, null);
@@ -63,7 +63,7 @@ const forwardDeleteCommand = function (editor: Editor) {
   }
 };
 
-export default {
+export {
   deleteCommand,
   forwardDeleteCommand
 };
