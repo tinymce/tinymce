@@ -98,7 +98,7 @@ const remove = (caretContainerNode: Node) => {
   }
 };
 
-export default {
+export {
   removeAndReposition,
   remove
 };

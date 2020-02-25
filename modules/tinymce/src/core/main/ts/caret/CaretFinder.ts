@@ -96,13 +96,16 @@ const positionIn = (forward: boolean, element: Node): Option<CaretPosition> => {
 const nextPosition = Fun.curry(fromPosition, true) as (root: Node, pos: CaretPosition) => Option<CaretPosition>;
 const prevPosition = Fun.curry(fromPosition, false) as (root: Node, pos: CaretPosition) => Option<CaretPosition>;
 
-export default {
+const firstPositionIn = Fun.curry(positionIn, true) as (element: Element) => Option<CaretPosition>;
+const lastPositionIn = Fun.curry(positionIn, false) as (element: Element) => Option<CaretPosition>;
+
+export {
   fromPosition,
   nextPosition,
   prevPosition,
   navigate,
   navigateIgnore,
   positionIn,
-  firstPositionIn: Fun.curry(positionIn, true) as (element: Element) => Option<CaretPosition>,
-  lastPositionIn: Fun.curry(positionIn, false) as (element: Element) => Option<CaretPosition>
+  firstPositionIn,
+  lastPositionIn
 };

@@ -9,7 +9,7 @@ import { Document, Range } from '@ephox/dom-globals';
 import { Arr, Cell, Id, Option, Unicode } from '@ephox/katamari';
 import { Attr, Class, Classes, Element, Html, Insert, Node, Replication, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import GetBookmark from '../bookmark/GetBookmark';
+import * as GetBookmark from '../bookmark/GetBookmark';
 import * as ExpandRange from '../fmt/ExpandRange';
 
 import RangeWalk from '../selection/RangeWalk';

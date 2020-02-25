@@ -226,8 +226,10 @@ const getBookmark = function (selection: Selection, type: number, normalized: bo
   }
 };
 
-export default {
+const getUndoBookmark = Fun.curry(getOffsetBookmark, Fun.identity, true) as (selection: Selection) => IndexBookmark | PathBookmark;
+
+export {
   getBookmark,
-  getUndoBookmark: Fun.curry(getOffsetBookmark, Fun.identity, true) as (selection: Selection) => IndexBookmark | PathBookmark,
+  getUndoBookmark,
   getPersistentBookmark
 };

@@ -11,7 +11,7 @@ import AddOnManager from './AddOnManager';
 import Editor from './Editor';
 import { RawEditorSettings } from './SettingsTypes';
 import Env from './Env';
-import ErrorReporter from '../ErrorReporter';
+import * as ErrorReporter from '../ErrorReporter';
 import DOMUtils from './dom/DOMUtils';
 import DomQuery from './dom/DomQuery';
 import FocusController from '../focus/FocusController';

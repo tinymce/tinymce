@@ -8,7 +8,7 @@
 import { document } from '@ephox/dom-globals';
 import { Fun, Option, Options } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as CaretUtils from '../caret/CaretUtils';
 import DeleteElement from './DeleteElement';

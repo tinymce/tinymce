@@ -20,7 +20,7 @@ import { isCaretNode } from '../fmt/FormatContainer';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
-import Bookmarks from '../bookmark/Bookmarks';
+import * as Bookmarks from '../bookmark/Bookmarks';
 
 const trimZwsp = (fragment: DocumentFragment) => {
   Arr.each(PredicateFilter.descendants(Element.fromDom(fragment), Node.isText), (text) => {

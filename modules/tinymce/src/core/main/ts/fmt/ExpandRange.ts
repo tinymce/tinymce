@@ -10,7 +10,7 @@ import { Option } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import TextSeeker from '../api/dom/TextSeeker';
 import Editor from '../api/Editor';
-import Bookmarks from '../bookmark/Bookmarks';
+import * as Bookmarks from '../bookmark/Bookmarks';
 import NodeType from '../dom/NodeType';
 import * as RangeNodes from '../selection/RangeNodes';
 import { isContent, isNbsp, isWhiteSpace } from '../text/CharType';

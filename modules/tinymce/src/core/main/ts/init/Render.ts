@@ -23,7 +23,7 @@ import I18n from '../api/util/I18n';
 import Tools from '../api/util/Tools';
 import WindowManager from '../api/WindowManager';
 import NodeType from '../dom/NodeType';
-import ErrorReporter from '../ErrorReporter';
+import * as ErrorReporter from '../ErrorReporter';
 import Init from './Init';
 
 const DOM = DOMUtils.DOM;

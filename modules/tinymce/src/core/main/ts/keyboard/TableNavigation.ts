@@ -8,7 +8,7 @@
 import { HTMLElement, Range, Element } from '@ephox/dom-globals';
 import { Arr, Option, Fun } from '@ephox/katamari';
 import { Element as SugarElement, Attr, Insert } from '@ephox/sugar';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as CefUtils from './CefUtils';
 import { getPositionsAbove, findClosestHorizontalPositionFromPoint, getPositionsBelow, getPositionsUntilPreviousLine, getPositionsUntilNextLine, BreakType, LineInfo } from '../caret/LineReader';

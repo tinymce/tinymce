@@ -9,7 +9,7 @@ import { Fun, Obj, Option, Options } from '@ephox/katamari';
 import { Insert, Remove, Element, Node as SugarNode, PredicateFind, Traverse, Node } from '@ephox/sugar';
 import { Node as DomNode } from '@ephox/dom-globals';
 import * as CaretCandidate from '../caret/CaretCandidate';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as MergeText from './MergeText';
 import Empty from '../dom/Empty';

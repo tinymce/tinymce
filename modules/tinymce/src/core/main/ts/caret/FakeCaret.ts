@@ -14,7 +14,7 @@ import Delay from '../api/util/Delay';
 import NodeType from '../dom/NodeType';
 import * as GeomClientRect from '../geom/ClientRect';
 import * as CaretContainer from './CaretContainer';
-import CaretContainerRemove from './CaretContainerRemove';
+import * as CaretContainerRemove from './CaretContainerRemove';
 import Settings from '../api/Settings';
 
 export interface FakeCaret {

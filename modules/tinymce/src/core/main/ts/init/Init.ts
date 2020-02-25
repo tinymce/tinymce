@@ -15,7 +15,7 @@ import PluginManager from '../api/PluginManager';
 import { ThemeInitFunc } from '../api/SettingsTypes';
 import ThemeManager from '../api/ThemeManager';
 import Tools from '../api/util/Tools';
-import ErrorReporter from '../ErrorReporter';
+import * as ErrorReporter from '../ErrorReporter';
 import { appendContentCssFromSettings } from './ContentCss';
 import InitContentBody from './InitContentBody';
 import InitIframe from './InitIframe';

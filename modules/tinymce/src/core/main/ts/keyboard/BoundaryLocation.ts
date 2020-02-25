@@ -6,7 +6,7 @@
  */
 
 import { Adt, Fun, Option, Options } from '@ephox/katamari';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import * as CaretUtils from '../caret/CaretUtils';
 import InlineUtils from './InlineUtils';
 import LazyEvaluator from '../util/LazyEvaluator';

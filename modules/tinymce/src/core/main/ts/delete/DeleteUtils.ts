@@ -7,7 +7,7 @@
 
 import { Option, Options } from '@ephox/katamari';
 import { Compare, Element, PredicateFind } from '@ephox/sugar';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import { isTextBlock, isListItem } from '../dom/ElementType';
 import InlineUtils from '../keyboard/InlineUtils';
 import Editor from '../api/Editor';

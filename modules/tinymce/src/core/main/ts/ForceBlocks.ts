@@ -7,7 +7,7 @@
 
 import { Arr, Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import Bookmarks from './bookmark/Bookmarks';
+import * as Bookmarks from './bookmark/Bookmarks';
 import NodeType from './dom/NodeType';
 import Parents from './dom/Parents';
 import EditorFocus from './focus/EditorFocus';
@@ -125,6 +125,6 @@ const setup = function (editor: Editor) {
   }
 };
 
-export default {
+export {
   setup
 };

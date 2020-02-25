@@ -14,7 +14,7 @@ import NodeType from '../dom/NodeType';
 import Parents from '../dom/Parents';
 import * as ElementType from '../dom/ElementType';
 import { getElementFromPosition } from '../caret/CaretUtils';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import { isAtStartOfBlock, isAtEndOfBlock, isAfterBlock, isBeforeBlock } from '../caret/BlockBoundary';
 import { isNbsp, isContent } from '../text/CharType';
 import { isAfterBr, isBeforeBr } from '../caret/CaretBr';

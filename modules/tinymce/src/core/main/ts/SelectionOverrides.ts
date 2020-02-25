@@ -21,7 +21,7 @@ import * as LineUtils from './caret/LineUtils';
 import NodeType from './dom/NodeType';
 import RangePoint from './dom/RangePoint';
 import * as DragDropOverrides from './DragDropOverrides';
-import EditorView from './EditorView';
+import * as EditorView from './EditorView';
 import CefFocus from './focus/CefFocus';
 import EditorFocus from './focus/EditorFocus';
 import * as CefUtils from './keyboard/CefUtils';

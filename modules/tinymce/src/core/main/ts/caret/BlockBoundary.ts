@@ -9,7 +9,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import Parents from '../dom/Parents';
 import { Element, Compare } from '@ephox/sugar';
 import { CaretPosition } from './CaretPosition';
-import CaretFinder from './CaretFinder';
+import * as CaretFinder from './CaretFinder';
 import * as ElementType from '../dom/ElementType';
 import { isInSameBlock } from './CaretUtils';
 import { Element as DomElement } from '@ephox/dom-globals';

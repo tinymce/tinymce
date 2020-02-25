@@ -10,7 +10,7 @@ import { Arr, Option, Strings } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import Settings from '../api/Settings';
 import FontInfo from '../fmt/FontInfo';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import NodeType from '../dom/NodeType';
 
 const findFirstCaretElement = (editor: Editor) => {

@@ -8,7 +8,7 @@
 import { HTMLElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Insert, Element } from '@ephox/sugar';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';

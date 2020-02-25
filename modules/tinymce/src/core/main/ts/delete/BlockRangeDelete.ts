@@ -7,7 +7,7 @@
 
 import { Fun, Options } from '@ephox/katamari';
 import { Compare, Element, PredicateFind } from '@ephox/sugar';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import DeleteUtils from './DeleteUtils';
 import MergeBlocks from './MergeBlocks';

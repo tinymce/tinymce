@@ -7,7 +7,7 @@
 
 import { Blob, HTMLImageElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import ErrorReporter from '../ErrorReporter';
+import * as ErrorReporter from '../ErrorReporter';
 import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
 import { Uploader } from '../file/Uploader';
 import UploadStatus from '../file/UploadStatus';

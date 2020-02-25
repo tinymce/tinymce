@@ -8,7 +8,7 @@
 import { Range } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Compare, Element, Node } from '@ephox/sugar';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import DeleteElement from './DeleteElement';
 import * as TableDeleteAction from './TableDeleteAction';

@@ -8,7 +8,7 @@
 import { Node, HTMLElement, Text } from '@ephox/dom-globals';
 import { Arr, Cell, Fun } from '@ephox/katamari';
 import Env from '../api/Env';
-import CaretContainerRemove from '../caret/CaretContainerRemove';
+import * as CaretContainerRemove from '../caret/CaretContainerRemove';
 import CaretPosition from '../caret/CaretPosition';
 import BoundaryCaret from './BoundaryCaret';
 import BoundaryLocation from './BoundaryLocation';

@@ -11,7 +11,7 @@ import { Compare, Element, Focus } from '@ephox/sugar';
 import Selection from '../api/dom/Selection';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import { CaretPosition } from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
 import * as RangeNodes from '../selection/RangeNodes';
