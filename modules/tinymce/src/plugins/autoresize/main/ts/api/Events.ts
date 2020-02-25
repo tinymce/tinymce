@@ -11,6 +11,6 @@ const fireResizeEditor = (editor: Editor) => {
   return editor.fire('ResizeEditor');
 };
 
-export default {
+export {
   fireResizeEditor
 };

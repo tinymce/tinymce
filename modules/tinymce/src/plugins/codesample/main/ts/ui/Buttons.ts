@@ -6,7 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import Dialog from './Dialog';
+import * as Dialog from './Dialog';
 
 const isCodeSampleSelection = (editor: Editor) => {
   const node = editor.selection.getStart();
@@ -34,6 +34,6 @@ const register = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   register
 };

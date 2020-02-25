@@ -6,9 +6,11 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import CodeSample from '../core/CodeSample';
-import Languages, { LanguageSpec } from '../core/Languages';
+import * as CodeSample from '../core/CodeSample';
+import * as Languages from '../core/Languages';
 import { Arr } from '@ephox/katamari';
+
+type LanguageSpec = Languages.LanguageSpec;
 
 const open = (editor: Editor) => {
   const languages: LanguageSpec[] = Languages.getLanguages(editor);
@@ -60,6 +62,6 @@ const open = (editor: Editor) => {
   });
 };
 
-export default {
+export {
   open
 };

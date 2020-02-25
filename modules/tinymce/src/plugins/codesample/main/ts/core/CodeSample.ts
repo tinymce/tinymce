@@ -9,8 +9,8 @@ import { Element } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import Utils from '../util/Utils';
-import Prism from './Prism';
+import * as Utils from '../util/Utils';
+import * as Prism from './Prism';
 
 const getSelectedCodeSample = (editor: Editor) => {
   const node = editor.selection ? editor.selection.getNode() : null;
@@ -45,7 +45,7 @@ const getCurrentCode = (editor: Editor): string => {
   return node.fold(() => '', (n) => n.textContent);
 };
 
-export default {
+export {
   getSelectedCodeSample,
   insertCodeSample,
   getCurrentCode

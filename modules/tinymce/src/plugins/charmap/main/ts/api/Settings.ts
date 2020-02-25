@@ -13,7 +13,7 @@ const getCharMapAppend = function (editor) {
   return editor.settings.charmap_append;
 };
 
-export default {
+export {
   getCharMap,
   getCharMapAppend
 };

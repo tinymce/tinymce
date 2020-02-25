@@ -6,7 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import Anchor from '../core/Anchor';
+import * as Anchor from '../core/Anchor';
 
 const insertAnchor = function (editor: Editor, newId: string) {
   if (!Anchor.isValidId(newId)) {
@@ -61,6 +61,6 @@ const open = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   open
 };

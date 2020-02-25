@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Dialog from '../ui/Dialog';
-import Utils from '../util/Utils';
+import * as Dialog from '../ui/Dialog';
+import * as Utils from '../util/Utils';
 import Editor from 'tinymce/core/api/Editor';
 
 const register = function (editor: Editor) {
@@ -20,6 +20,6 @@ const register = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   register
 };

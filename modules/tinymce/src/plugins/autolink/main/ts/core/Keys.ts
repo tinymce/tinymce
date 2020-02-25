@@ -6,7 +6,7 @@
  */
 
 import Env from 'tinymce/core/api/Env';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
 
 const rangeEqualsDelimiterOrSpace = function (rangeString, delimiter) {
@@ -210,6 +210,6 @@ const setup = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   setup
 };
