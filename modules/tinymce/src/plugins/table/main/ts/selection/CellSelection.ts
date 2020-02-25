@@ -12,8 +12,8 @@ import { Element, Selection, SelectionDirection, Class, Node, Compare } from '@e
 
 import { getCloneElements } from '../api/Settings';
 import * as Util from '../alien/Util';
-import Direction from '../queries/Direction';
-import Ephemera from './Ephemera';
+import * as Direction from '../queries/Direction';
+import * as Ephemera from './Ephemera';
 import * as Events from '../api/Events';
 import { DomParent } from '@ephox/robin';
 

@@ -6,7 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import InsertTable from '../actions/InsertTable';
+import * as InsertTable from '../actions/InsertTable';
 import { Arr, Option, Cell } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { HTMLElement } from '@ephox/dom-globals';

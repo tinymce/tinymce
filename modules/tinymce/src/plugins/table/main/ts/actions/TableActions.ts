@@ -12,7 +12,7 @@ import {
 import { Element, Node } from '@ephox/sugar';
 
 import * as Util from '../alien/Util';
-import Direction from '../queries/Direction';
+import * as Direction from '../queries/Direction';
 import { getCloneElements } from '../api/Settings';
 import { fireNewCell, fireNewRow } from '../api/Events';
 import Editor from 'tinymce/core/api/Editor';

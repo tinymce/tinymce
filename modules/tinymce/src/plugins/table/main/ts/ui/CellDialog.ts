@@ -9,13 +9,15 @@ import { HTMLTableCellElement, Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Styles from '../actions/Styles';
+import * as Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
 import { hasAdvancedCellTab } from '../api/Settings';
-import CellDialogGeneralTab from './CellDialogGeneralTab';
-import Helpers, { CellData } from './Helpers';
+import * as CellDialogGeneralTab from './CellDialogGeneralTab';
+import * as Helpers from './Helpers';
 import { DomModifier } from './DomModifier';
 import { Types } from '@ephox/bridge';
+
+type CellData = Helpers.CellData;
 
 const updateSimpleProps = (modifiers, data: CellData) => {
   modifiers.setAttrib('scope', data.scope);
@@ -179,6 +181,6 @@ const open = (editor: Editor) => {
   });
 };
 
-export default {
+export {
   open
 };

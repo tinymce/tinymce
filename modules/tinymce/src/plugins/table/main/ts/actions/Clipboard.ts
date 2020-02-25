@@ -11,10 +11,10 @@ import { Element, Elements, Node, Replication } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import TableTargets from '../queries/TableTargets';
-import Ephemera from '../selection/Ephemera';
+import * as TableTargets from '../queries/TableTargets';
+import * as Ephemera from '../selection/Ephemera';
 import { Selections } from '../selection/Selections';
-import SelectionTypes from '../selection/SelectionTypes';
+import * as SelectionTypes from '../selection/SelectionTypes';
 import { TableActions } from './TableActions';
 
 const extractSelected = function (cells) {
@@ -75,6 +75,6 @@ const registerEvents = function (editor: Editor, selections: Selections, actions
   });
 };
 
-export default {
+export {
   registerEvents
 };
