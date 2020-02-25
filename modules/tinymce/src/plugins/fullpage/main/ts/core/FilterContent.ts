@@ -8,9 +8,9 @@
 import { document, HTMLLinkElement } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import Parser from './Parser';
-import Protect from './Protect';
+import * as Settings from '../api/Settings';
+import * as Parser from './Parser';
+import * as Protect from './Protect';
 
 const each = Tools.each;
 
@@ -175,6 +175,6 @@ const setup = function (editor: Editor, headState, footState) {
   });
 };
 
-export default {
+export {
   setup
 };

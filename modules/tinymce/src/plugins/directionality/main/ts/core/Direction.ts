@@ -26,6 +26,6 @@ const setDir = function (editor, dir) {
   }
 };
 
-export default {
+export {
   setDir
 };

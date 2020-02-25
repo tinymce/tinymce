@@ -9,8 +9,8 @@ import { Types } from '@ephox/bridge';
 import { Cell } from '@ephox/katamari';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import * as Api from './api/Api';
-import Commands from './api/Commands';
-import Buttons from './ui/Buttons';
+import * as Commands from './api/Commands';
+import * as Buttons from './ui/Buttons';
 import * as Dialog from './ui/Dialog';
 
 export type TabSpecs = Record<string, Types.Dialog.TabApi>;

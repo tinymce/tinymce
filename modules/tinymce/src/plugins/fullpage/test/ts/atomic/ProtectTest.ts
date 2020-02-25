@@ -1,5 +1,5 @@
 import { Assertions } from '@ephox/agar';
-import Protect from 'tinymce/plugins/fullpage/core/Protect';
+import * as Protect from 'tinymce/plugins/fullpage/core/Protect';
 import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('atomic.tinymce.plugins.fullpage.ProtectTest', function () {

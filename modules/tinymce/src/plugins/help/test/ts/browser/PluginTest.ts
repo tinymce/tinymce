@@ -5,8 +5,8 @@ import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import PluginAssert from '../module/PluginAssert';
-import Selectors from '../module/Selectors';
+import * as PluginAssert from '../module/PluginAssert';
+import * as Selectors from '../module/Selectors';
 
 UnitTest.asynctest('browser.plugin.PluginTest', (success, failure) => {
 

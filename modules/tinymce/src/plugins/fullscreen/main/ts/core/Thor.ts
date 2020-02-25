@@ -70,7 +70,7 @@ const restoreStyles = function (dom: DOMUtils) {
   });
 };
 
-export default {
+export {
   clobberStyles,
   restoreStyles
 };

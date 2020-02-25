@@ -7,9 +7,9 @@ import SilverTheme from 'tinymce/themes/silver/Theme';
 
 import FakePlugin from '../module/test/FakePlugin';
 import NoMetaFakePlugin from '../module/test/NoMetaFakePlugin';
-import PluginAssert from '../module/PluginAssert';
+import * as PluginAssert from '../module/PluginAssert';
 
-import Selectors from '../module/Selectors';
+import * as Selectors from '../module/Selectors';
 
 UnitTest.asynctest('Browser Test: .MetadataTest', (success, failure) => {
 
