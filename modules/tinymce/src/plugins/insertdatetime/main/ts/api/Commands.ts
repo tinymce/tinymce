@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Settings from './Settings';
-import Actions from '../core/Actions';
+import * as Settings from './Settings';
+import * as Actions from '../core/Actions';
 
 const register = function (editor) {
   editor.addCommand('mceInsertDate', function () {
@@ -18,6 +18,6 @@ const register = function (editor) {
   });
 };
 
-export default {
+export {
   register
 };

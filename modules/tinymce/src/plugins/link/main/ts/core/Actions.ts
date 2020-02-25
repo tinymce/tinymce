@@ -6,7 +6,7 @@
  */
 
 import VK from 'tinymce/core/api/util/VK';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import OpenUrl from './OpenUrl';
 import Utils from './Utils';
 import Dialog from '../ui/Dialog';

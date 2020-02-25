@@ -6,7 +6,7 @@
  */
 
 import Actions from '../core/Actions';
-import Settings from './Settings';
+import * as Settings from './Settings';
 
 const register = function (editor) {
   editor.addCommand('mceLink', () => {
@@ -21,6 +21,6 @@ const register = function (editor) {
   });
 };
 
-export default {
+export {
   register
 };

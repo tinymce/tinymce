@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const daysShort = 'Sun Mon Tue Wed Thu Fri Sat Sun'.split(' ');
 const daysLong = 'Sunday Monday Tuesday Wednesday Thursday Friday Saturday Sunday'.split(' ');
@@ -78,7 +78,7 @@ const insertDateTime = function (editor, format) {
   }
 };
 
-export default {
+export {
   insertDateTime,
   getDateTime
 };

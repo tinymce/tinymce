@@ -33,7 +33,7 @@ const getFileFilter = function (editor) {
   return editor.getParam('importcss_file_filter');
 };
 
-export default {
+export {
   shouldMergeClasses,
   shouldImportExclusive,
   getSelectorConverter,

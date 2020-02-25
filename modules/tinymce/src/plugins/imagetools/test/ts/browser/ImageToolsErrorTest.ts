@@ -5,7 +5,7 @@ import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import { Html } from '@ephox/sugar';
 import ImagetoolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import ImageUtils from '../module/test/ImageUtils';
+import * as ImageUtils from '../module/test/ImageUtils';
 
 // TODO: This needs to be looked at again once notifications come back
 

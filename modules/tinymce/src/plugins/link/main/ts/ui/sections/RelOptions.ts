@@ -7,7 +7,7 @@
 
 import { Option } from '@ephox/katamari';
 
-import Settings from '../../api/Settings';
+import * as Settings from '../../api/Settings';
 import Utils from '../../core/Utils';
 import { ListOptions } from '../../core/ListOptions';
 import { ListItem } from '../DialogTypes';

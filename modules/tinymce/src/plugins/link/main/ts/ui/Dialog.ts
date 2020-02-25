@@ -10,7 +10,7 @@ import { HTMLAnchorElement } from '@ephox/dom-globals';
 import { Arr, Option, Options } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { ListOptions } from '../core/ListOptions';
 import Utils from '../core/Utils';
 import { DialogChanges } from './DialogChanges';

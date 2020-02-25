@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Settings from '../../api/Settings';
+import * as Settings from '../../api/Settings';
 import { Option } from '@ephox/katamari';
 import { ListItem } from '../DialogTypes';
 import { ListOptions } from '../../core/ListOptions';

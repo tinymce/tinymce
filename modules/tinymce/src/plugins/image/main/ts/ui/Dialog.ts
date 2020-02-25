@@ -16,7 +16,7 @@ import { getStyleValue, ImageData } from '../core/ImageData';
 import { insertOrUpdateImage, normalizeCss as doNormalizeCss } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
 import Uploader from '../core/Uploader';
-import Utils from '../core/Utils';
+import * as Utils from '../core/Utils';
 import { AdvTab } from './AdvTab';
 import { collect } from './DialogInfo';
 import { API, ImageDialogData, ImageDialogInfo, ListValue } from './DialogTypes';

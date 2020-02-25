@@ -10,7 +10,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
 import Promise from 'tinymce/core/api/util/Promise';
 import XHR from 'tinymce/core/api/util/XHR';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { ImageData } from './ImageData';
 
 export interface ImageDimensions {
@@ -166,7 +166,7 @@ const isPlaceholderImage = (imgElm: Element): boolean => {
   return imgElm.nodeName === 'IMG' && (imgElm.hasAttribute('data-mce-object') || imgElm.hasAttribute('data-mce-placeholder'));
 };
 
-export default {
+export {
   getImageSize,
   removePixelSuffix,
   addPixelSuffix,

@@ -8,7 +8,7 @@
 import { Option, Type } from '@ephox/katamari';
 import Promise from 'tinymce/core/api/util/Promise';
 import XHR from 'tinymce/core/api/util/XHR';
-import Settings from '../../api/Settings';
+import * as Settings from '../../api/Settings';
 import { ListOptions } from '../../core/ListOptions';
 import { ListItem } from '../DialogTypes';
 

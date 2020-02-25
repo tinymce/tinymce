@@ -26,7 +26,7 @@ const shouldInsertTimeElement = function (editor) {
   return editor.getParam('insertdatetime_element', false);
 };
 
-export default {
+export {
   getDateFormat,
   getTimeFormat,
   getFormats,

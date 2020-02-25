@@ -66,7 +66,7 @@ const createStateContainer = function () {
   };
 };
 
-export default {
+export {
   sExecCommand,
   sLoadImage,
   sUploadImages,

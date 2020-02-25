@@ -6,7 +6,7 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Formats from './core/Formats';
+import * as Formats from './core/Formats';
 
 /**
  * This class contains all core logic for the legacyoutput plugin.

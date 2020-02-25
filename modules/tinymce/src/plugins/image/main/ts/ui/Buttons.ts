@@ -8,7 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from './Dialog';
 import { isFigure, isImage } from '../core/ImageData';
-import Utils from '../core/Utils';
+import * as Utils from '../core/Utils';
 
 const register = (editor: Editor) => {
   editor.ui.registry.addToggleButton('image', {
@@ -32,6 +32,6 @@ const register = (editor: Editor) => {
 
 };
 
-export default {
+export {
   register
 };

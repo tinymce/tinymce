@@ -14,7 +14,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import URI from 'tinymce/core/api/util/URI';
 
 import * as Settings from '../api/Settings';
-import ImageSize from './ImageSize';
+import * as ImageSize from './ImageSize';
 import * as Proxy from './Proxy';
 import Editor from 'tinymce/core/api/Editor';
 import { HTMLImageElement, Blob, URL } from '@ephox/dom-globals';
@@ -255,7 +255,7 @@ const handleDialogBlob = function (editor: Editor, imageUploadTimerState, img, o
   });
 };
 
-export default {
+export {
   rotate,
   flip,
   getEditableImage,

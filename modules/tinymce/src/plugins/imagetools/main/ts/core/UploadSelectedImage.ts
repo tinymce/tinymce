@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Actions from './Actions';
+import * as Actions from './Actions';
 
 const setup = function (editor, imageUploadTimerState, lastSelectedImageState) {
   editor.on('NodeChange', function (e) {
@@ -25,6 +25,6 @@ const setup = function (editor, imageUploadTimerState, lastSelectedImageState) {
   });
 };
 
-export default {
+export {
   setup
 };

@@ -12,7 +12,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import Actions from '../core/Actions';
 import Utils from '../core/Utils';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const setupButtons = function (editor: Editor) {
   editor.ui.registry.addToggleButton('link', {

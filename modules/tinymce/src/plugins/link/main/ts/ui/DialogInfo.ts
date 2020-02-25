@@ -10,7 +10,7 @@ import { Option } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import Utils from '../core/Utils';
 import { LinkDialogInfo } from './DialogTypes';
 import { AnchorListOptions } from './sections/AnchorListOptions';

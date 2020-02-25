@@ -9,7 +9,7 @@ import { HTMLElement, Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import { ImageDialogInfo } from '../ui/DialogTypes';
 import { create, defaultData, ImageData, isFigure, read, write } from './ImageData';
-import Utils from './Utils';
+import * as Utils from './Utils';
 
 const normalizeCss = (editor: Editor, cssText: string): string => {
   const css = editor.dom.styles.parse(cssText);
