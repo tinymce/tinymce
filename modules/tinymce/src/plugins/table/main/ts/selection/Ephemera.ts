@@ -7,19 +7,19 @@
 
 import { Fun } from '@ephox/katamari';
 
-const sSelected = 'data-mce-selected';
-const sSelectedSelector = 'td[' + sSelected + '],th[' + sSelected + ']';
+const strSelected = 'data-mce-selected';
+const strSelectedSelector = 'td[' + strSelected + '],th[' + strSelected + ']';
 // used with not selectors
-const sAttributeSelector = '[' + sSelected + ']';
-const sFirstSelected = 'data-mce-first-selected';
-const sFirstSelectedSelector = 'td[' + sFirstSelected + '],th[' + sFirstSelected + ']';
-const sLastSelected = 'data-mce-last-selected';
-const sLastSelectedSelector = 'td[' + sLastSelected + '],th[' + sLastSelected + ']';
+const strAttributeSelector = '[' + strSelected + ']';
+const strFirstSelected = 'data-mce-first-selected';
+const strFirstSelectedSelector = 'td[' + strFirstSelected + '],th[' + strFirstSelected + ']';
+const strLastSelected = 'data-mce-last-selected';
+const strLastSelectedSelector = 'td[' + strLastSelected + '],th[' + strLastSelected + ']';
 
-export const selected = Fun.constant(sSelected);
-export const selectedSelector = Fun.constant(sSelectedSelector);
-export const attributeSelector = Fun.constant(sAttributeSelector);
-export const firstSelected = Fun.constant(sFirstSelected);
-export const firstSelectedSelector = Fun.constant(sFirstSelectedSelector);
-export const lastSelected = Fun.constant(sLastSelected);
-export const lastSelectedSelector = Fun.constant(sLastSelectedSelector);
+export const selected = Fun.constant(strSelected);
+export const selectedSelector = Fun.constant(strSelectedSelector);
+export const attributeSelector = Fun.constant(strAttributeSelector);
+export const firstSelected = Fun.constant(strFirstSelected);
+export const firstSelectedSelector = Fun.constant(strFirstSelectedSelector);
+export const lastSelected = Fun.constant(strLastSelected);
+export const lastSelectedSelector = Fun.constant(strLastSelectedSelector);

@@ -11,7 +11,7 @@ interface Realm {
   socket: () => AlloyComponent;
 }
 
-const sName = 'test';
+const strName = 'test';
 
 const setup = function (info, onSuccess, onFailure) {
 
@@ -45,7 +45,7 @@ const setup = function (info, onSuccess, onFailure) {
     socket: Fun.constant(socket)
   };
 
-  ThemeManager.add(sName, function (editor) {
+  ThemeManager.add(strName, function (editor) {
     return {
       renderUI () {
         editor.fire('SkinLoaded');
@@ -79,14 +79,14 @@ const setup = function (info, onSuccess, onFailure) {
         Replacing.set(toolbar, toolbarItems);
         f(realm, apis, toolbar, socket, buttons, onS, onF);
       }, {
-        theme: sName,
+        theme: strName,
         base_url: '/project/tinymce/js/tinymce'
       }, onSuccess, onFailure);
     }
   };
 };
 
-const name = Fun.constant(sName);
+const name = Fun.constant(strName);
 
 export {
   setup,
