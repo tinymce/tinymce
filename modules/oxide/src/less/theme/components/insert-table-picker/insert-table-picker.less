@@ -20,6 +20,11 @@
     flex-wrap: wrap;
     width: @insert-table-picker-cell-size * 10 + 9px;
 
+    @supports (display: grid) {
+      display: grid;
+      grid-template-columns: repeat(10, minmax(@insert-table-picker-cell-size, auto));
+    }
+
     // Cell styles
     > div {
       border-color: @insert-table-picker-border-color;
@@ -52,7 +57,9 @@
     color: @insert-table-picker-label-color;
     display: block;
     font-size: @font-size-sm;
-    padding: @pad-xs;
+    grid-column-end: -1;
+    grid-column-start: 1;
+    padding: @pad-xs 0;
     text-align: center;
     width: 100%;
   }

@@ -1,6 +1,7 @@
 Version 5.3.0 (TBD)
     Changed the `link`, `image` and `paste` plugins to use Promises to reduce the bundle size #TINY-4710
     Fixed the `quickimage` button not restricting the file types to images #TINY-4715
+    Fixed table picker breaking in Firefox on low zoom levels
 Version 5.2.1 (TBD)
     Fixed table resize handles not functioning correctly in Edge #TINY-4160
     Fixed `readonly` mode not returning appropriate boolean value #TINY-3948
