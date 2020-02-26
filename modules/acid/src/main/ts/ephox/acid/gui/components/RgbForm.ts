@@ -134,7 +134,7 @@ const rgbFormFactory = (
       // the hex field to be the six digit version of that same three digit hex code. This is incorrect.
       if (!Focusing.isFocused(hexField)) {
         Representing.setValue(form, {
-          hex: hex.value()
+          hex: hex.value
         });
       }
     });
@@ -142,7 +142,7 @@ const rgbFormFactory = (
   };
 
   const copyRgbToForm = (form: AlloyComponent, rgb: Rgba): void => {
-    const red = rgb.red(); const green = rgb.green(); const blue = rgb.blue();
+    const red = rgb.red; const green = rgb.green; const blue = rgb.blue;
     Representing.setValue(form, { red, green, blue });
   };
 
@@ -163,7 +163,7 @@ const rgbFormFactory = (
 
   const updatePreview = (anyInSystem: AlloyComponent, hex: Hex) => {
     memPreview.getOpt(anyInSystem).each((preview: AlloyComponent) => {
-      Css.set(preview.element(), 'background-color', '#' + hex.value());
+      Css.set(preview.element(), 'background-color', '#' + hex.value);
     });
   };
 
@@ -203,7 +203,7 @@ const rgbFormFactory = (
 
     // TODO: Find way to use this for palette and slider updates
     const setValueRgb = (rgb: Rgba): void => {
-      const red = rgb.red(); const green = rgb.green(); const blue = rgb.blue();
+      const red = rgb.red; const green = rgb.green; const blue = rgb.blue;
       set('red', Option.some(red));
       set('green', Option.some(green));
       set('blue', Option.some(blue));
@@ -302,7 +302,7 @@ const rgbFormFactory = (
         apis: {
           updateHex(form: AlloyComponent, hex: Hex) {
             Representing.setValue(form, {
-              hex: hex.value()
+              hex: hex.value
             });
             copyHexToRgb(form, hex);
             updatePreview(form, hex);
