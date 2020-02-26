@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun } from '@ephox/katamari';
 import { Class } from '@ephox/sugar';
 import * as Styles from '../../style/Styles';
 
@@ -24,7 +23,7 @@ const deregister = function (element) {
   Class.remove(element, scrollableStyle);
 };
 
-const scrollable = Fun.constant(scrollableStyle);
+const scrollable = scrollableStyle;
 
 export {
   register,
