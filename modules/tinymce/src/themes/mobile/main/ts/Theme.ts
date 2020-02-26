@@ -29,8 +29,8 @@ import * as SkinLoaded from './util/SkinLoaded';
 import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
 
 /// not to be confused with editor mode
-const READING = Fun.constant('toReading'); /// 'hide the keyboard'
-const EDITING = Fun.constant('toEditing'); /// 'show the keyboard'
+const READING = 'toReading'; /// 'hide the keyboard'
+const EDITING = 'toEditing'; /// 'show the keyboard'
 
 const renderMobileTheme = function (editor: Editor) {
   const renderUI = function () {
@@ -74,7 +74,7 @@ const renderMobileTheme = function (editor: Editor) {
       realm.setToolbarGroups(ro === true ? toolbars.readOnly : toolbars.main);
 
       editor.setMode(ro === true ? 'readonly' : 'design');
-      editor.fire(ro === true ? READING() : EDITING());
+      editor.fire(ro === true ? READING : EDITING);
       realm.updateMode(ro);
     };
 
@@ -93,7 +93,7 @@ const renderMobileTheme = function (editor: Editor) {
       return toolbars;
     };
 
-    const bindHandler = function (label, handler) {
+    const bindHandler = function (label: string, handler) {
       editor.on(label, handler);
       return {
         unbind () {
@@ -116,11 +116,11 @@ const renderMobileTheme = function (editor: Editor) {
           },
 
           onToReading (handler) {
-            return bindHandler(READING(), handler);
+            return bindHandler(READING, handler);
           },
 
           onToEditing (handler) {
-            return bindHandler(EDITING(), handler);
+            return bindHandler(EDITING, handler);
           },
 
           onScrollToCursor (handler) {

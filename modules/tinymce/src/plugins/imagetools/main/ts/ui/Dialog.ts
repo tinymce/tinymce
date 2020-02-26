@@ -66,18 +66,18 @@ const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
       onCancel: () => { }, // TODO: reimplement me
       onAction: (api, details) => {
         switch (details.name) {
-          case ImageToolsEvents.saveState():
+          case ImageToolsEvents.saveState:
             if (details.value) {
               api.enable('save');
             } else {
               api.disable('save');
             }
             break;
-          case ImageToolsEvents.disable():
+          case ImageToolsEvents.disable:
             api.disable('save');
             api.disable('cancel');
             break;
-          case ImageToolsEvents.enable():
+          case ImageToolsEvents.enable:
             api.enable('cancel');
             break;
         }
