@@ -5,30 +5,30 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Adt, Arr, Fun, Option, Options } from '@ephox/katamari';
+import { Adt, Arr, Option, Options } from '@ephox/katamari';
 import { Compare, Element, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import { Range, Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
 
 interface TableCellRng {
-  start: () => Element<DomElement>;
-  end: () => Element<DomElement>;
+  readonly start: Element<DomElement>;
+  readonly end: Element<DomElement>;
 }
 
 const tableCellRng = (start: Element<DomElement>, end: Element<DomElement>): TableCellRng => ({
-  start: Fun.constant(start),
-  end: Fun.constant(end)
+  start,
+  end
 });
 
 interface TableSelection {
-  rng: () => TableCellRng;
-  table: () => Element<DomElement>;
-  cells: () => Element<DomElement>[];
+  readonly rng: TableCellRng;
+  readonly table: Element<DomElement>;
+  readonly cells: Element<DomElement>[];
 }
 
 const tableSelection = (rng: TableCellRng, table: Element<DomElement>, cells: Element<DomElement>[]): TableSelection => ({
-  rng: Fun.constant(rng),
-  table: Fun.constant(table),
-  cells: Fun.constant(cells)
+  rng,
+  table,
+  cells
 });
 
 const deleteAction = Adt.generate([
@@ -51,9 +51,9 @@ const isExpandedCellRng = (cellRng) => {
 };
 
 const getTableFromCellRng = (cellRng: TableCellRng, isRoot: (e: Element<any>) => boolean): Option<Element<DomElement>> =>
-  getClosestTable(cellRng.start(), isRoot)
+  getClosestTable(cellRng.start, isRoot)
     .bind((startParentTable) =>
-      getClosestTable(cellRng.end(), isRoot)
+      getClosestTable(cellRng.end, isRoot)
         .bind((endParentTable) => Options.someIf(Compare.eq(startParentTable, endParentTable), startParentTable)));
 
 const getTableCells = (table) => SelectorFilter.descendants(table, 'td,th');
@@ -107,9 +107,9 @@ const getCellIndex = <T> (cells: Element<T>[], cell: Element<T>): Option<number>
 
 const getSelectedCells = (tableSelection: TableSelection) => {
   return Options.lift2(
-    getCellIndex(tableSelection.cells(), tableSelection.rng().start()),
-    getCellIndex(tableSelection.cells(), tableSelection.rng().end()),
-    (startIndex, endIndex) => tableSelection.cells().slice(startIndex, endIndex + 1));
+    getCellIndex(tableSelection.cells, tableSelection.rng.start),
+    getCellIndex(tableSelection.cells, tableSelection.rng.end),
+    (startIndex, endIndex) => tableSelection.cells.slice(startIndex, endIndex + 1));
 };
 
 const getAction = (tableSelection) =>
