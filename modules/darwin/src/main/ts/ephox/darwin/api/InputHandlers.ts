@@ -43,7 +43,7 @@ const keyboard = function (win: Window, container: Element, isRoot: (e: Element)
     const keycode = realEvent.which;
     const shiftKey = realEvent.shiftKey === true;
 
-    const handler = CellSelection.retrieve(container, annotations.selectedSelector()).fold(function () {
+    const handler = CellSelection.retrieve(container, annotations.selectedSelector).fold(function () {
       // Shift down should predict the movement and set the selection.
       if (SelectionKeys.isDown(keycode) && shiftKey) {
         return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.down, finish, start, annotations.selectRange);
@@ -68,7 +68,7 @@ const keyboard = function (win: Window, container: Element, isRoot: (e: Element)
           return navigation.fold(function () {
             // The cell selection went outside the table, so clear it and bridge from the first box to before/after
             // the table
-            return CellSelection.getEdges(container, annotations.firstSelectedSelector(), annotations.lastSelectedSelector()).map(function (edges) {
+            return CellSelection.getEdges(container, annotations.firstSelectedSelector, annotations.lastSelectedSelector).map(function (edges) {
               const relative = SelectionKeys.isDown(keycode) || direction.isForward(keycode) ? Situ.after : Situ.before;
               bridge.setRelativeSelection(Situ.on(edges.first(), 0), relative(edges.table()));
               annotations.clear(container);
@@ -99,7 +99,7 @@ const keyboard = function (win: Window, container: Element, isRoot: (e: Element)
   };
 
   const keyup = function (event: EventArgs, start: Element, soffset: number, finish: Element, foffset: number) {
-    return CellSelection.retrieve(container, annotations.selectedSelector()).fold<Option<Response>>(function () {
+    return CellSelection.retrieve(container, annotations.selectedSelector).fold<Option<Response>>(function () {
       const realEvent = event.raw() as KeyboardEvent;
       const keycode = realEvent.which;
       const shiftKey = realEvent.shiftKey === true;

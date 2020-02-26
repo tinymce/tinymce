@@ -38,7 +38,7 @@ const mergable = function (table, selections): Option<any> {
       if (cells.length === 0) {
         return Option.none();
       }
-      return TableSelection.retrieveBox(table, Ephemera.firstSelectedSelector(), Ephemera.lastSelectedSelector()).bind(function (bounds) {
+      return TableSelection.retrieveBox(table, Ephemera.firstSelectedSelector, Ephemera.lastSelectedSelector).bind(function (bounds) {
         return cells.length > 1 ? Option.some({
           bounds: Fun.constant(bounds),
           cells: Fun.constant(cells)
