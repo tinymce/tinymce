@@ -61,7 +61,7 @@ const sWaitForToggledState = function (label, state, realm, memento) {
   );
 };
 
-const sBroadcastState = function (realm, channels, command, state) {
+const sBroadcastState = function (realm, channels: string[], command, state) {
   return Step.sync(function () {
     realm.system().broadcastOn(channels, {
       command,

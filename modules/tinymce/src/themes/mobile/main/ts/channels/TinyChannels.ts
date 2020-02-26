@@ -5,10 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun } from '@ephox/katamari';
+export const formatChanged = 'formatChanged';
 
-export const formatChanged = Fun.constant('formatChanged');
+export const orientationChanged = 'orientationChanged';
 
-export const orientationChanged = Fun.constant('orientationChanged');
-
-export const dropupDismissed = Fun.constant('dropupDismissed');
+export const dropupDismissed = 'dropupDismissed';

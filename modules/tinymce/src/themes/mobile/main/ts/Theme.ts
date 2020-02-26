@@ -61,7 +61,7 @@ const renderMobileTheme = function (editor: Editor) {
     const orientation = Orientation.onChange(outerWindow, {
       onChange () {
         const alloy = realm.system();
-        alloy.broadcastOn([ TinyChannels.orientationChanged() ], { width: Orientation.getActualWidth(outerWindow) });
+        alloy.broadcastOn([ TinyChannels.orientationChanged ], { width: Orientation.getActualWidth(outerWindow) });
       },
       onReady: Fun.noop
     });
@@ -188,7 +188,7 @@ const renderMobileTheme = function (editor: Editor) {
 
       const hideDropup = function () {
         realm.dropup().disappear(function () {
-          realm.system().broadcastOn([ TinyChannels.dropupDismissed() ], { });
+          realm.system().broadcastOn([ TinyChannels.dropupDismissed ], { });
         });
       };
 
