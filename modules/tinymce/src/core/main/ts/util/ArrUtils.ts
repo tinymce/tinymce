@@ -133,7 +133,7 @@ const last = function (collection) {
   return collection[collection.length - 1];
 };
 
-export default {
+export {
   isArray,
   toArray,
   each,

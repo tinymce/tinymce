@@ -7,11 +7,11 @@
 
 import { Fun, Option, Options } from '@ephox/katamari';
 import { Compare, Element, Traverse } from '@ephox/sugar';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
-import DeleteUtils from './DeleteUtils';
-import Empty from '../dom/Empty';
-import NodeType from '../dom/NodeType';
+import * as DeleteUtils from './DeleteUtils';
+import * as Empty from '../dom/Empty';
+import * as NodeType from '../dom/NodeType';
 import { Node } from '@ephox/dom-globals';
 
 interface BlockPosition {
@@ -92,6 +92,6 @@ const read = function (rootNode, forward, rng): Option<BlockBoundary> {
   return rng.collapsed ? readFromRange(rootNode, forward, rng) : Option.none();
 };
 
-export default {
+export {
   read
 };

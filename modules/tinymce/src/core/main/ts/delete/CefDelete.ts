@@ -10,10 +10,10 @@ import { Arr, Option } from '@ephox/katamari';
 import { Element, Remove, SelectorFilter } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as CefDeleteAction from './CefDeleteAction';
-import DeleteElement from './DeleteElement';
-import DeleteUtils from './DeleteUtils';
+import * as DeleteElement from './DeleteElement';
+import * as DeleteUtils from './DeleteUtils';
 
 const deleteElement = function (editor: Editor, forward) {
   return function (element) {
@@ -128,7 +128,7 @@ const backspaceDelete = function (editor: Editor, forward) {
   }
 };
 
-export default {
+export {
   backspaceDelete,
   paddEmptyElement
 };

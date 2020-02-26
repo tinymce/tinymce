@@ -57,6 +57,6 @@ const setup = function (editor: Editor) {
   editor.on('keyup compositionstart', Fun.curry(handleBlockContainer, editor));
 };
 
-export default {
+export {
   setup
 };

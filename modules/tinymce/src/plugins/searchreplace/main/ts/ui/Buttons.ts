@@ -7,7 +7,7 @@
 
 import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import Dialog from './Dialog';
+import * as Dialog from './Dialog';
 import { SearchState } from '../core/Actions';
 
 const showDialog = function (editor: Editor, currentSearchState: Cell<SearchState>) {
@@ -33,6 +33,6 @@ const register = function (editor: Editor, currentSearchState: Cell<SearchState>
   editor.shortcuts.add('Meta+F', '', showDialog(editor, currentSearchState));
 };
 
-export default {
+export {
   register
 };

@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { Class, Element, Focus } from '@ephox/sugar';
-import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import Env from 'tinymce/core/api/Env';
 import { TestHelpers } from '@ephox/alloy';

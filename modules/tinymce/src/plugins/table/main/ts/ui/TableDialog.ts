@@ -12,12 +12,14 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
-import InsertTable from '../actions/InsertTable';
-import Styles from '../actions/Styles';
+import * as InsertTable from '../actions/InsertTable';
+import * as Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
 import { getDefaultAttributes, getDefaultStyles, getTableClassList, hasAdvancedTableTab, shouldStyleWithCss } from '../api/Settings';
-import Helpers, { TableData } from './Helpers';
-import TableDialogGeneralTab from './TableDialogGeneralTab';
+import * as Helpers from './Helpers';
+import * as TableDialogGeneralTab from './TableDialogGeneralTab';
+
+type TableData = Helpers.TableData;
 
 // Explore the layers of the table till we find the first layer of tds or ths
 const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?: string | number) => {
@@ -225,6 +227,6 @@ const open = (editor: Editor, insertNewTable: boolean) => {
   });
 };
 
-export default {
+export {
   open
 };

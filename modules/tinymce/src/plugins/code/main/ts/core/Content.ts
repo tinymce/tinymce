@@ -23,7 +23,7 @@ const getContent = function (editor) {
   return editor.getContent({ source_view: true });
 };
 
-export default {
+export {
   setContent,
   getContent
 };

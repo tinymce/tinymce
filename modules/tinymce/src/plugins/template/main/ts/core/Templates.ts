@@ -7,8 +7,8 @@
 
 import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
-import Settings from '../api/Settings';
-import DateTimeHelper from './DateTimeHelper';
+import * as Settings from '../api/Settings';
+import * as DateTimeHelper from './DateTimeHelper';
 
 const createTemplateList = function (editorSettings, callback) {
   return function () {
@@ -102,7 +102,7 @@ const insertTemplate = function (editor, ui, html) {
   editor.addVisual();
 };
 
-export default {
+export {
   createTemplateList,
   replaceTemplateValues,
   replaceVals,

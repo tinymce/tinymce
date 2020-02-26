@@ -24,6 +24,6 @@ const hasProPlugin = function (editor) {
   }
 };
 
-export default {
+export {
   hasProPlugin
 };

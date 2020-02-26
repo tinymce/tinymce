@@ -7,7 +7,7 @@
 
 import { window } from '@ephox/dom-globals';
 import Env from '../Env';
-import ArrUtils from '../../util/ArrUtils';
+import * as ArrUtils from '../../util/ArrUtils';
 
 type ArrayCallback<T, R> = (x: T, i: number, xs: ReadonlyArray<T>) => R;
 type ObjCallback<T, R> = (value: T[keyof T], key: string, obj: T) => R;

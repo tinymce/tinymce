@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Events from '../../api/Events';
+import * as Events from '../../api/Events';
 import Editor from 'tinymce/core/api/Editor';
 
 const fireSkinLoaded = (editor: Editor) => {
@@ -27,7 +27,7 @@ const fireSkinLoadError = (editor: Editor, err: string) => {
   return () => Events.fireSkinLoadError(editor, { message: err });
 };
 
-export default {
+export {
   fireSkinLoaded,
   fireSkinLoadError
 };

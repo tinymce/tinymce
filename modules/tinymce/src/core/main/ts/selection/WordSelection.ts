@@ -37,7 +37,7 @@ const moveByWord = function (forward: boolean, editor: Editor) {
   }
 };
 
-export default {
+export {
   hasSelectionModifyApi,
   moveByWord
 };

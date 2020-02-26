@@ -11,10 +11,10 @@ import { Element, Insert, Remove, Replication } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Util from '../alien/Util';
-import TableTargets from '../queries/TableTargets';
-import CellDialog from '../ui/CellDialog';
-import RowDialog from '../ui/RowDialog';
-import TableDialog from '../ui/TableDialog';
+import * as TableTargets from '../queries/TableTargets';
+import * as CellDialog from '../ui/CellDialog';
+import * as RowDialog from '../ui/RowDialog';
+import * as TableDialog from '../ui/TableDialog';
 import { TableActions } from '../actions/TableActions';
 import { Selections } from '../selection/Selections';
 import * as TableSelection from '../selection/TableSelection';
@@ -189,6 +189,6 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
   });
 };
 
-export default {
+export {
   registerCommands
 };

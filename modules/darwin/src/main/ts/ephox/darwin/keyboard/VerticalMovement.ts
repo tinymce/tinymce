@@ -3,9 +3,9 @@ import { DomGather } from '@ephox/phoenix';
 import { PlatformDetection } from '@ephox/sand';
 import { Awareness, Compare, CursorPosition, PredicateExists, SelectorFilter, SelectorFind, Traverse, Element, SimRange } from '@ephox/sugar';
 import { Response } from '../selection/Response';
-import Util from '../selection/Util';
-import KeySelection from './KeySelection';
-import TableKeys from './TableKeys';
+import * as Util from '../selection/Util';
+import * as KeySelection from './KeySelection';
+import * as TableKeys from './TableKeys';
 import { WindowBridge } from '../api/WindowBridge';
 import { KeyDirection } from '../navigation/KeyDirection';
 
@@ -110,7 +110,7 @@ const select = function (bridge: WindowBridge, container: Element, isRoot: (e: E
   });
 };
 
-export default {
+export {
   navigate,
   select,
   firstUpCheck,

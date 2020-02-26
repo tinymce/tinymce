@@ -7,9 +7,9 @@
 
 import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import Utils from './Utils';
-import WordFilter from './WordFilter';
+import * as Settings from '../api/Settings';
+import * as Utils from './Utils';
+import * as WordFilter from './WordFilter';
 import Editor from 'tinymce/core/api/Editor';
 import { Element } from '@ephox/dom-globals';
 
@@ -166,6 +166,6 @@ const setup = function (editor: Editor) {
   }
 };
 
-export default {
+export {
   setup
 };

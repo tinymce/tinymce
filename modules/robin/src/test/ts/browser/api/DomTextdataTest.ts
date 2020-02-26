@@ -1,7 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import DomTextdata from 'ephox/robin/api/dom/DomTextdata';
+import * as DomTextdata from 'ephox/robin/api/dom/DomTextdata';
 import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('DomTextdataTest', function () {

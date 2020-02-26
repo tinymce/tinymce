@@ -72,7 +72,7 @@ const initError = function (message: string, ...x: any[]) {
   }
 };
 
-export default {
+export {
   pluginLoadError,
   iconsLoadError,
   languageLoadError,

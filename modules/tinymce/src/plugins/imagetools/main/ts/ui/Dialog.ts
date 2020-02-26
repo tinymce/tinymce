@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Actions from '../core/Actions';
-import ImageSize from '../core/ImageSize';
+import * as Actions from '../core/Actions';
+import * as ImageSize from '../core/ImageSize';
 import * as ImageToolsEvents from './ImageToolsEvents';
 import Editor from 'tinymce/core/api/Editor';
 import { Types } from '@ephox/bridge';
@@ -101,6 +101,6 @@ const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
   });
 };
 
-export default {
+export {
   makeOpen
 };

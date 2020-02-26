@@ -6,9 +6,9 @@
  */
 
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import DateTimeHelper from './DateTimeHelper';
-import Templates from './Templates';
+import * as Settings from '../api/Settings';
+import * as DateTimeHelper from './DateTimeHelper';
+import * as Templates from './Templates';
 
 const setup = function (editor) {
   editor.on('PreProcess', function (o) {
@@ -28,6 +28,6 @@ const setup = function (editor) {
   });
 };
 
-export default {
+export {
   setup
 };

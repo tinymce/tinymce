@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Mouse, Pipeline, UiFinder, Waiter, FocusTools, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Body, Element } from '@ephox/sugar';
-import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { document } from '@ephox/dom-globals';
 import { Types } from '@ephox/bridge';

@@ -7,13 +7,13 @@
 
 import { Blob, HTMLImageElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import ErrorReporter from '../ErrorReporter';
+import * as ErrorReporter from '../ErrorReporter';
 import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
 import { Uploader } from '../file/Uploader';
 import UploadStatus from '../file/UploadStatus';
 import Editor from './Editor';
 import { BlobCache } from './file/BlobCache';
-import Settings from './Settings';
+import * as Settings from './Settings';
 
 /**
  * Handles image uploads, updates undo stack and patches over various internal functions.

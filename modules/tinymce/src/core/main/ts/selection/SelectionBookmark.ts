@@ -10,7 +10,7 @@ import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, Element, Node, Text, Traverse, Selection } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 
 const browser = PlatformDetection.detect().browser;
 
@@ -115,7 +115,7 @@ const restore = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   store,
   storeNative,
   readRange,

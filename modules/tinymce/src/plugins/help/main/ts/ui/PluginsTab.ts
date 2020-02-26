@@ -9,7 +9,7 @@ import { Types } from '@ephox/bridge';
 import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import PluginUrls from '../data/PluginUrls';
+import * as PluginUrls from '../data/PluginUrls';
 
 export interface PluginUrlType {
   key: string;
@@ -112,6 +112,6 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
   };
 };
 
-export default {
+export {
   tab
 };

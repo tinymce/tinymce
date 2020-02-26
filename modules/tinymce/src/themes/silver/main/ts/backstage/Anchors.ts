@@ -106,6 +106,6 @@ const getAnchors = (editor: Editor, lazyAnchorbar: () => AlloyComponent) => {
   };
 };
 
-export default {
+export {
   getAnchors
 };

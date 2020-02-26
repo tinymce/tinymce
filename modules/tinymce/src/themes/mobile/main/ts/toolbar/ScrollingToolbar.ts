@@ -20,9 +20,9 @@ import {
 import { Arr, Cell, Fun } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 
-import Scrollables from '../ios/scroll/Scrollables';
-import Styles from '../style/Styles';
-import Scrollable from '../touch/scroll/Scrollable';
+import * as Scrollables from '../ios/scroll/Scrollables';
+import * as Styles from '../style/Styles';
+import * as Scrollable from '../touch/scroll/Scrollable';
 import * as UiDomFactory from '../util/UiDomFactory';
 
 export default function () {

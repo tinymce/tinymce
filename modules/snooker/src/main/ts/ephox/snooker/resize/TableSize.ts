@@ -1,8 +1,8 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { Width, Element } from '@ephox/sugar';
-import CellUtils from '../util/CellUtils';
-import ColumnSizes from './ColumnSizes';
-import Sizes from './Sizes';
+import * as CellUtils from '../util/CellUtils';
+import * as ColumnSizes from './ColumnSizes';
+import * as Sizes from './Sizes';
 import { TableSize } from './Types';
 
 const percentageSize = function (width: string, element: Element): TableSize {
@@ -83,6 +83,6 @@ const getTableSize = function (element: Element) {
   });
 };
 
-export default {
+export {
   getTableSize
 };

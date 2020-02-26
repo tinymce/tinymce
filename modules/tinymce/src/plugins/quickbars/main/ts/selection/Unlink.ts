@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Bookmark from './Bookmark';
+import * as Bookmark from './Bookmark';
 import Tools from 'tinymce/core/api/util/Tools';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
@@ -78,6 +78,6 @@ const unlinkSelection = function (editor: Editor) {
   unwrapElements(editor, getSelectedAnchors(editor));
 };
 
-export default {
+export {
   unlinkSelection
 };

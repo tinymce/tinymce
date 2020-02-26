@@ -22,6 +22,6 @@ const directionAt = function (element) {
   return dir === 'rtl' ? rtl : ltr;
 };
 
-export default {
+export {
   directionAt
 };

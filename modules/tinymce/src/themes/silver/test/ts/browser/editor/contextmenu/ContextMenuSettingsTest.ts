@@ -1,5 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import Settings from 'tinymce/themes/silver/ui/menus/contextmenu/Settings';
+import * as Settings from 'tinymce/themes/silver/ui/menus/contextmenu/Settings';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 

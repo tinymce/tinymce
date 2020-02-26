@@ -4,8 +4,8 @@ import { TinyLoader } from '@ephox/mcagar';
 
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
-import Settings from 'tinymce/themes/silver/ui/core/color/Settings';
+import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
+import * as Settings from 'tinymce/themes/silver/ui/core/color/Settings';
 
 UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
   SilverTheme();

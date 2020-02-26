@@ -12,7 +12,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { Attr } from '@ephox/sugar';
 
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
-import NavigableObject from '../general/NavigableObject';
+import * as NavigableObject from '../general/NavigableObject';
 import { renderLabel, renderFormFieldWith } from '../alien/FieldLabeller';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { Omit } from '../Omit';

@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import TableTestUtils from '../../module/test/TableTestUtils';
+import * as TableTestUtils from '../../module/test/TableTestUtils';
 
 /* This requires a menubar. Cannot migrate yet. */
 UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultStylesTest', (success, failure) => {

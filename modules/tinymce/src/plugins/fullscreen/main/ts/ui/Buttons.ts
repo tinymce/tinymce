@@ -31,6 +31,6 @@ const register = (editor: Editor, fullscreenState: Cell<object>) => {
   });
 };
 
-export default {
+export {
   register
 };

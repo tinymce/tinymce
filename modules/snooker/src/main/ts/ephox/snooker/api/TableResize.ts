@@ -1,5 +1,5 @@
 import { Event, Events, Bindable } from '@ephox/porkbun';
-import Adjustments from '../resize/Adjustments';
+import * as Adjustments from '../resize/Adjustments';
 import { BarManager } from '../resize/BarManager';
 import { BarPositions, ColInfo } from '../resize/BarPositions';
 import { ResizeWire } from './ResizeWire';

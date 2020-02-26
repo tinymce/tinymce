@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const pasteHtml = (editor: Editor, html: string) => {
   editor.insertContent(html, {
@@ -81,7 +81,7 @@ const insertContent = function (editor: Editor, html: string, pasteAsText: boole
   }
 };
 
-export default {
+export {
   isImageUrl,
   isAbsoluteUrl,
   insertContent

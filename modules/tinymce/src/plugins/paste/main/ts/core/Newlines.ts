@@ -67,7 +67,7 @@ const convert = function (text: string, rootTag: string | boolean, rootAttrs: Ro
   return rootTag ? toBlockElements(text, rootTag === true ? 'p' : rootTag, rootAttrs) : toBRs(text);
 };
 
-export default {
+export {
   isPlainText,
   convert,
   toBRs,

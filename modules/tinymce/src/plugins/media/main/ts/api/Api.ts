@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Dialog from '../ui/Dialog';
+import * as Dialog from '../ui/Dialog';
 
 const get = function (editor) {
   const showDialog = function () {
@@ -17,6 +17,6 @@ const get = function (editor) {
   };
 };
 
-export default {
+export {
   get
 };

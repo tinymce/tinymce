@@ -12,6 +12,6 @@ const safeParse = function (element, attribute) {
   return isNaN(parsed) ? 0 : parsed;
 };
 
-export default {
+export {
   safeParse
 };

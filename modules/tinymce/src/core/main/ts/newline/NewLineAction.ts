@@ -6,10 +6,10 @@
  */
 
 import { Adt,  Arr,  Option } from '@ephox/katamari';
-import Settings from '../api/Settings';
-import ContextSelectors from './ContextSelectors';
-import NewLineUtils from './NewLineUtils';
-import LazyEvaluator from '../util/LazyEvaluator';
+import * as Settings from '../api/Settings';
+import * as ContextSelectors from './ContextSelectors';
+import * as NewLineUtils from './NewLineUtils';
+import * as LazyEvaluator from '../util/LazyEvaluator';
 import Editor from '../api/Editor';
 
 const newLineAction = Adt.generate([
@@ -94,6 +94,6 @@ const getAction = function (editor: Editor, evt?) {
   ], [editor, !!(evt && evt.shiftKey)]).getOr(newLineAction.none());
 };
 
-export default {
+export {
   getAction
 };

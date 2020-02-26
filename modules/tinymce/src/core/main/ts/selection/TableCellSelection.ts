@@ -8,7 +8,7 @@
 import { Arr } from '@ephox/katamari';
 import { Element, SelectorFilter } from '@ephox/sugar';
 import * as ElementType from '../dom/ElementType';
-import MultiRange from './MultiRange';
+import * as MultiRange from './MultiRange';
 import Editor from '../api/Editor';
 
 const getCellsFromRanges = function (ranges) {
@@ -29,7 +29,7 @@ const getCellsFromEditor = function (editor: Editor) {
   return getCellsFromElementOrRanges(MultiRange.getRanges(editor.selection.getSel()), Element.fromDom(editor.getBody()));
 };
 
-export default {
+export {
   getCellsFromRanges,
   getCellsFromElement,
   getCellsFromElementOrRanges,

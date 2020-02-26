@@ -9,8 +9,8 @@ import { ClipboardEvent, DataTransfer, Range } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
-import InternalHtml from './InternalHtml';
-import Utils from './Utils';
+import * as InternalHtml from './InternalHtml';
+import * as Utils from './Utils';
 
 interface SelectionContentData {
   html: string;
@@ -128,6 +128,6 @@ const register = (editor: Editor) => {
   editor.on('copy', copy(editor));
 };
 
-export default {
+export {
   register
 };

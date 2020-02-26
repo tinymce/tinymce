@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as CaretCandidate from './CaretCandidate';
 import CaretPosition from './CaretPosition';
 import { isBackwards, isForwards, findNode } from './CaretUtils';
 import { Node, Element } from '@ephox/dom-globals';
 import { Fun, Arr } from '@ephox/katamari';
-import ArrUtils from '../util/ArrUtils';
+import * as ArrUtils from '../util/ArrUtils';
 
 export interface CaretWalker {
   next(caretPosition: CaretPosition): CaretPosition;

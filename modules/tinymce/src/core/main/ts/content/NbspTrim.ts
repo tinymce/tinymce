@@ -6,7 +6,7 @@
  */
 
 import { Node, Range } from '@ephox/dom-globals';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import { Unicode } from '@ephox/katamari';
 
 const isAfterNbsp = (container: Node, offset: number) => {

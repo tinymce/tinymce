@@ -8,9 +8,9 @@
 import { Menu } from '@ephox/bridge';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import Actions from '../core/Actions';
-import ListUtils from '../core/ListUtils';
+import * as Settings from '../api/Settings';
+import * as Actions from '../core/Actions';
+import * as ListUtils from '../core/ListUtils';
 
 const enum ListType {
   OrderedList = 'OL',
@@ -114,6 +114,6 @@ const register = function (editor) {
   addControl(editor, 'bullist', 'Bullet list', 'InsertUnorderedList', ListType.UnorderedList, Settings.getBulletStyles(editor));
 };
 
-export default {
+export {
   register
 };

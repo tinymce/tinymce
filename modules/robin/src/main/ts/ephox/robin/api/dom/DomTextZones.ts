@@ -1,6 +1,6 @@
 import { DomUniverse } from '@ephox/boss';
 import { Element } from '@ephox/sugar';
-import TextZones from '../general/TextZones';
+import * as TextZones from '../general/TextZones';
 import { ZoneViewports } from '../general/ZoneViewports';
 
 const universe = DomUniverse();
@@ -17,7 +17,7 @@ const empty = function () {
   return TextZones.empty<Element>();
 };
 
-export default {
+export {
   single,
   range,
   empty

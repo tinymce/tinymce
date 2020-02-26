@@ -193,6 +193,6 @@ const get = function (dom: DOMUtils) {
   return formats;
 };
 
-export default {
+export {
   get
 };

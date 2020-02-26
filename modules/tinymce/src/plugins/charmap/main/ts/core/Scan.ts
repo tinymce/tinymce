@@ -40,6 +40,6 @@ const scan = (group: CharMap, pattern: string): CharItem[] => {
   });
 };
 
-export default {
+export {
   scan
 };

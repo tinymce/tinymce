@@ -10,7 +10,7 @@ import * as CaretCandidate from './CaretCandidate';
 import CaretPosition from './CaretPosition';
 import * as CaretUtils from './CaretUtils';
 import { CaretWalker } from './CaretWalker';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import { Node, Element, Text } from '@ephox/dom-globals';
 
 const walkToPositionIn = (forward: boolean, root: Node, start: Node) => {
@@ -96,13 +96,16 @@ const positionIn = (forward: boolean, element: Node): Option<CaretPosition> => {
 const nextPosition = Fun.curry(fromPosition, true) as (root: Node, pos: CaretPosition) => Option<CaretPosition>;
 const prevPosition = Fun.curry(fromPosition, false) as (root: Node, pos: CaretPosition) => Option<CaretPosition>;
 
-export default {
+const firstPositionIn = Fun.curry(positionIn, true) as (element: Element) => Option<CaretPosition>;
+const lastPositionIn = Fun.curry(positionIn, false) as (element: Element) => Option<CaretPosition>;
+
+export {
   fromPosition,
   nextPosition,
   prevPosition,
   navigate,
   navigateIgnore,
   positionIn,
-  firstPositionIn: Fun.curry(positionIn, true) as (element: Element) => Option<CaretPosition>,
-  lastPositionIn: Fun.curry(positionIn, false) as (element: Element) => Option<CaretPosition>
+  firstPositionIn,
+  lastPositionIn
 };

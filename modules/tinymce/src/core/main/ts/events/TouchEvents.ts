@@ -84,4 +84,4 @@ const setup = (editor: Editor) => {
   }, true);
 };
 
-export default { setup };
+export { setup };

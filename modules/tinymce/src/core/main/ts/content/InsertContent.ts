@@ -9,14 +9,14 @@ import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { Element as DomElement, Node } from '@ephox/dom-globals';
 import Env from '../api/Env';
-import InsertList from './InsertList';
+import * as InsertList from './InsertList';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
 import ElementUtils from '../api/dom/ElementUtils';
-import NodeType from '../dom/NodeType';
-import PaddingBr from '../dom/PaddingBr';
+import * as NodeType from '../dom/NodeType';
+import * as PaddingBr from '../dom/PaddingBr';
 import Serializer from '../api/html/Serializer';
-import RangeNormalizer from '../selection/RangeNormalizer';
+import * as RangeNormalizer from '../selection/RangeNormalizer';
 import Tools from '../api/util/Tools';
 import Selection from '../api/dom/Selection';
 import Editor from '../api/Editor';
@@ -362,6 +362,6 @@ const insertAtCaret = function (editor: Editor, value) {
   insertHtmlAtCaret(editor, result.content, result.details);
 };
 
-export default {
+export {
   insertAtCaret
 };

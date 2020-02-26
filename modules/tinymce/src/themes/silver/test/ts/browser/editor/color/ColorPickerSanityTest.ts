@@ -5,7 +5,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Element, SelectorFilter } from '@ephox/sugar';
 
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
+import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 
 UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
   SilverTheme();

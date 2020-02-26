@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import ToggleList from '../actions/ToggleList';
+import * as ToggleList from '../actions/ToggleList';
 import { indentListSelection, outdentListSelection, flattenListSelection } from '../actions/Indendation';
 
 const queryListCommandState = function (editor, listName) {
@@ -47,6 +47,6 @@ const register = function (editor) {
   editor.addQueryStateHandler('InsertDefinitionList', queryListCommandState(editor, 'DL'));
 };
 
-export default {
+export {
   register
 };

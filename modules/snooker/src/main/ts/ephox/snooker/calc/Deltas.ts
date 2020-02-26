@@ -70,6 +70,6 @@ const determine = function (input: number[], column: number, step: number, table
   return context.fold(onNone, onOnly, onLeft, onMiddle, onRight);
 };
 
-export default {
+export {
   determine
 };

@@ -7,9 +7,9 @@
 
 import { Element, Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import Bookmarks from '../bookmark/Bookmarks';
+import * as Bookmarks from '../bookmark/Bookmarks';
 import ElementUtils from '../api/dom/ElementUtils';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
 import * as RemoveFormat from './RemoveFormat';

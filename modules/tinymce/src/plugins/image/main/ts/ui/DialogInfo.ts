@@ -9,10 +9,10 @@ import { Arr, Option, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
 
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { readImageDataFromSelection } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
-import Utils from '../core/Utils';
+import * as Utils from '../core/Utils';
 import { ImageDialogInfo, ListItem } from './DialogTypes';
 
 const collect = (editor: Editor): Promise<ImageDialogInfo> => {

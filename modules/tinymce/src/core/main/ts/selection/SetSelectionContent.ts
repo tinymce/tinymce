@@ -6,7 +6,7 @@
  */
 
 import Editor from '../api/Editor';
-import ScrollIntoView from '../dom/ScrollIntoView';
+import * as ScrollIntoView from '../dom/ScrollIntoView';
 import { Range, DocumentFragment, Text } from '@ephox/dom-globals';
 import { Option, Options } from '@ephox/katamari';
 import { Element, Traverse, Node, Remove } from '@ephox/sugar';
@@ -80,6 +80,6 @@ const setContent = (editor: Editor, content: string, args) => {
   }
 };
 
-export default {
+export {
   setContent
 };

@@ -6,8 +6,10 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import Dialog from '../ui/Dialog';
-import { CharMap } from '../core/CharMap';
+import * as Dialog from '../ui/Dialog';
+import * as CharMap from '../core/CharMap';
+
+type CharMap = CharMap.CharMap;
 
 const register = function (editor: Editor, charMap: CharMap[]) {
   editor.addCommand('mceShowCharmap', function () {
@@ -15,6 +17,6 @@ const register = function (editor: Editor, charMap: CharMap[]) {
   });
 };
 
-export default {
+export {
   register
 };

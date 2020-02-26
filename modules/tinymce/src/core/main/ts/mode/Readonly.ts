@@ -9,7 +9,7 @@ import { Event, HTMLElement, MouseEvent } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { Attr, Class, Element, SelectorFilter } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import EditorFocus from '../focus/EditorFocus';
+import * as EditorFocus from '../focus/EditorFocus';
 import VK from '../api/util/VK';
 
 const internalContentEditableAttr = 'data-mce-contenteditable';

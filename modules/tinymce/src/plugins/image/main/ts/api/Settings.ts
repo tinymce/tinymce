@@ -75,7 +75,7 @@ const isAutomaticUploadsEnabled = (editor: Editor): boolean => {
   return editor.getParam('automatic_uploads', true, 'boolean');
 };
 
-export default {
+export {
   hasDimensions,
   hasUploadTab,
   hasAdvTab,

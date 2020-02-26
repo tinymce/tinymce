@@ -6,8 +6,8 @@
  */
 
 import { Element } from '@ephox/sugar';
-import BlockMergeBoundary from './BlockMergeBoundary';
-import MergeBlocks from './MergeBlocks';
+import * as BlockMergeBoundary from './BlockMergeBoundary';
+import * as MergeBlocks from './MergeBlocks';
 import Editor from '../api/Editor';
 
 const backspaceDelete = (editor: Editor, forward: boolean): boolean => {
@@ -23,6 +23,6 @@ const backspaceDelete = (editor: Editor, forward: boolean): boolean => {
   return position.isSome();
 };
 
-export default {
+export {
   backspaceDelete
 };

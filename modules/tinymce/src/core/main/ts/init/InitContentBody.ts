@@ -19,21 +19,21 @@ import Formatter from '../api/Formatter';
 import DomParser from '../api/html/DomParser';
 import Node from '../api/html/Node';
 import Schema from '../api/html/Schema';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import UndoManager from '../api/UndoManager';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as Placeholder from '../content/Placeholder';
-import NodeType from '../dom/NodeType';
-import TouchEvents from '../events/TouchEvents';
-import ForceBlocks from '../ForceBlocks';
-import KeyboardOverrides from '../keyboard/KeyboardOverrides';
+import * as NodeType from '../dom/NodeType';
+import * as TouchEvents from '../events/TouchEvents';
+import * as ForceBlocks from '../ForceBlocks';
+import * as KeyboardOverrides from '../keyboard/KeyboardOverrides';
 import { NodeChange } from '../NodeChange';
 import * as DetailsElement from '../selection/DetailsElement';
 import * as MultiClickSelection from '../selection/MultiClickSelection';
-import SelectionBookmark from '../selection/SelectionBookmark';
+import * as SelectionBookmark from '../selection/SelectionBookmark';
 import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import Quirks from '../util/Quirks';
@@ -335,6 +335,6 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   }
 };
 
-export default {
+export {
   initContentBody
 };

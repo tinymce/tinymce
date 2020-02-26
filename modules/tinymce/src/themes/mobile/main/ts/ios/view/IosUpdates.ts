@@ -8,8 +8,8 @@
 import { Arr, Future, Futures } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 
-import IosScrolling from '../scroll/IosScrolling';
-import IosViewport from './IosViewport';
+import * as IosScrolling from '../scroll/IosScrolling';
+import * as IosViewport from './IosViewport';
 
 const updateFixed = function (element, property, winY, offsetY) {
   const destination = winY + offsetY;
@@ -42,6 +42,6 @@ const updatePositions = function (container, winY) {
   return Futures.par(updates);
 };
 
-export default {
+export {
   updatePositions
 };

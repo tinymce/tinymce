@@ -61,6 +61,6 @@ const expand = function (items) {
   });
 };
 
-export default {
+export {
   expand
 };

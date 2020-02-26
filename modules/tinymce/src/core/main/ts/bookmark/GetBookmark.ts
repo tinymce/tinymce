@@ -10,9 +10,9 @@ import { Fun } from '@ephox/katamari';
 import * as CaretBookmark from './CaretBookmark';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as RangeNodes from '../selection/RangeNodes';
-import Zwsp from '../text/Zwsp';
+import * as Zwsp from '../text/Zwsp';
 import Tools from '../api/util/Tools';
 import Selection from '../api/dom/Selection';
 import DOMUtils from '../api/dom/DOMUtils';
@@ -226,8 +226,10 @@ const getBookmark = function (selection: Selection, type: number, normalized: bo
   }
 };
 
-export default {
+const getUndoBookmark = Fun.curry(getOffsetBookmark, Fun.identity, true) as (selection: Selection) => IndexBookmark | PathBookmark;
+
+export {
   getBookmark,
-  getUndoBookmark: Fun.curry(getOffsetBookmark, Fun.identity, true) as (selection: Selection) => IndexBookmark | PathBookmark,
+  getUndoBookmark,
   getPersistentBookmark
 };

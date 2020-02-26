@@ -3,13 +3,13 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import InternalHtml from 'tinymce/plugins/paste/core/InternalHtml';
-import Utils from 'tinymce/plugins/paste/core/Utils';
+import * as InternalHtml from 'tinymce/plugins/paste/core/InternalHtml';
+import * as Utils from 'tinymce/plugins/paste/core/Utils';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import MockDataTransfer from '../module/test/MockDataTransfer';
+import * as MockDataTransfer from '../module/test/MockDataTransfer';
 
 UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (success, failure) => {
   let dataTransfer, lastPreProcessEvent, lastPostProcessEvent;

@@ -1,7 +1,7 @@
 import { Universe } from '@ephox/boss';
 import { Adt, Arr, Option, Struct } from '@ephox/katamari';
 import { Descent, Gather, Spot, Transition } from '@ephox/phoenix';
-import Structure from '../api/general/Structure';
+import * as Structure from '../api/general/Structure';
 
 export interface Clump<E> {
   start: () => E;
@@ -218,6 +218,6 @@ const collect = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boo
     doCollect(universe, isRoot, start, soffset, finish, foffset);
 };
 
-export default {
+export {
   collect
 };

@@ -1,7 +1,7 @@
 import { Option } from '@ephox/katamari';
 import { TablePositions, Structs } from '@ephox/snooker';
 import { Compare, SelectorFind, Element } from '@ephox/sugar';
-import CellSelection from '../selection/CellSelection';
+import * as CellSelection from '../selection/CellSelection';
 
 // Explictly calling CellSelection.retrieve so that we can see the API signature.
 const retrieve = function (container: Element, selector: string) {
@@ -23,7 +23,7 @@ const retrieveBox = function (container: Element, firstSelectedSelector: string,
   });
 };
 
-export default {
+export {
   retrieve,
   retrieveBox
 };

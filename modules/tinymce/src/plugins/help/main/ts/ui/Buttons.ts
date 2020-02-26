@@ -22,6 +22,6 @@ const register = (editor: Editor, dialogOpener: () => void) => {
   });
 };
 
-export default {
+export {
   register
 };

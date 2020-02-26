@@ -60,7 +60,7 @@ const create = function () {
   };
 };
 
-export default {
+export {
   create,
   adjust
 };

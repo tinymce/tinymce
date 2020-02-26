@@ -1,8 +1,8 @@
 import { Universe } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
 import { WordRange } from '../data/WordRange';
-import CurrentWord from '../util/CurrentWord';
-import EndofWord from './EndofWord';
+import * as CurrentWord from '../util/CurrentWord';
+import * as EndofWord from './EndofWord';
 
 /*  Given an initial position (item, offset), identify the optional selection range which represents the
  *  word that (item, offset) is on. The start of the word and the end of the word is NOT considered
@@ -32,6 +32,6 @@ const word = function <E, D> (universe: Universe<E, D>, item: E, offset: number)
   });
 };
 
-export default {
+export {
   word
 };

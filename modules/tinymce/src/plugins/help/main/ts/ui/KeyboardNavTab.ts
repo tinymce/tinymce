@@ -85,6 +85,6 @@ const tab = (): Types.Dialog.TabApi => {
   };
 };
 
-export default {
+export {
   tab
 };

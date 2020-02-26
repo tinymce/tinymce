@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import DOMUtils from '../api/dom/DOMUtils';
-import ArrUtils from '../util/ArrUtils';
+import * as ArrUtils from '../util/ArrUtils';
 import CaretPosition from '../caret/CaretPosition';
 import { Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';

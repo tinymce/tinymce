@@ -30,6 +30,6 @@ const register = (editor: Editor, enabledState: Cell<boolean>) => {
   });
 };
 
-export default {
+export {
   register
 };

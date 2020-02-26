@@ -5,8 +5,8 @@ import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Serializer from 'tinymce/core/api/dom/Serializer';
-import TrimHtml from 'tinymce/core/dom/TrimHtml';
-import Zwsp from 'tinymce/core/text/Zwsp';
+import * as TrimHtml from 'tinymce/core/dom/TrimHtml';
+import * as Zwsp from 'tinymce/core/text/Zwsp';
 import ViewBlock from '../../module/test/ViewBlock';
 
 declare const escape: any;

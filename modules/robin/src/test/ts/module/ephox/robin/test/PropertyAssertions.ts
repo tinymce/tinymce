@@ -37,7 +37,7 @@ const check = function <T extends any[]> (label: string, arbitraries: T, f: Func
   Jsc.property.apply(Jsc, [label, ...arbitraries, f]);
 };
 
-export default {
+export {
   check,
   checkWith
 };

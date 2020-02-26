@@ -12,10 +12,10 @@ import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as Events from '../api/Events';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
-import Empty from '../dom/Empty';
+import * as Empty from '../dom/Empty';
 
 const nonTypingKeycodes = [
   // tab, esc, home, end

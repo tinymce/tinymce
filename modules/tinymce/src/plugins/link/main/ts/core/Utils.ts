@@ -9,7 +9,7 @@ import { Element, HTMLAnchorElement } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { AssumeExternalTargets } from '../api/Types';
 import { AttachState, LinkDialogOutput } from '../ui/DialogTypes';
 
@@ -204,7 +204,7 @@ const linkImageFigure = (editor: Editor, fig: Element, attrs: Record<string, str
   }
 };
 
-export default {
+export {
   link,
   unlink,
   isLink,

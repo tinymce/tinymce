@@ -1,5 +1,5 @@
-import HTMLElement from './HTMLElement';
-import Node from './Node';
+import * as HTMLElement from './HTMLElement';
+import * as Node from './Node';
 import * as PlatformDetection from './PlatformDetection';
 
 export {

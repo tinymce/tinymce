@@ -47,6 +47,6 @@ const create = function (): Sherif {
   };
 };
 
-export default {
+export {
   create
 };

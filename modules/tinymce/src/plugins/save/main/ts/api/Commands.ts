@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Actions from '../core/Actions';
+import * as Actions from '../core/Actions';
 
 const register = function (editor) {
   editor.addCommand('mceSave', function () {
@@ -17,6 +17,6 @@ const register = function (editor) {
   });
 };
 
-export default {
+export {
   register
 };

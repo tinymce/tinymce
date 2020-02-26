@@ -7,12 +7,12 @@
 
 import { Cell } from '@ephox/katamari';
 import PluginManager from 'tinymce/core/api/PluginManager';
-import DetectProPlugin from './alien/DetectProPlugin';
-import Api from './api/Api';
-import Commands from './api/Commands';
-import Settings from './api/Settings';
-import Buttons from './ui/Buttons';
-import SuggestionsMenu from './ui/SuggestionsMenu';
+import * as DetectProPlugin from './alien/DetectProPlugin';
+import * as Api from './api/Api';
+import * as Commands from './api/Commands';
+import * as Settings from './api/Settings';
+import * as Buttons from './ui/Buttons';
+import * as SuggestionsMenu from './ui/SuggestionsMenu';
 import { LastSuggestion } from './core/Actions';
 
 export default function () {

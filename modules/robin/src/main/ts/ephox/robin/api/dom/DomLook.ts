@@ -1,6 +1,6 @@
 import { DomUniverse } from '@ephox/boss';
 import { Element } from '@ephox/sugar';
-import Look from '../general/Look';
+import * as Look from '../general/Look';
 
 const universe = DomUniverse();
 
@@ -16,7 +16,7 @@ const exact = function (element: Element) {
   return (item: Element) => Look.exact(universe, element)(universe, item);
 };
 
-export default {
+export {
   selector,
   predicate,
   exact

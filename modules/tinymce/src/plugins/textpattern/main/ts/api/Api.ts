@@ -32,6 +32,6 @@ const get = (patternsState: Cell<PatternSet>) => {
   };
 };
 
-export default {
+export {
   get
 };

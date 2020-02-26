@@ -17,7 +17,7 @@ function trimArg<T>(predicateFn: (a: T) => boolean) {
   };
 }
 
-export default {
+export {
   isCodeSample,
   trimArg
 };

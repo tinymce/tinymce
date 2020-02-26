@@ -60,7 +60,7 @@ const complete = function (model/*, snaps*/) {
   }
 };
 
-export default {
+export {
   init,
   move,
   complete

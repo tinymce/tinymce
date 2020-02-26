@@ -10,8 +10,8 @@ import { ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Css, Insert } from '@ephox/sugar';
 
-import AndroidMode from '../android/core/AndroidMode';
-import TapToEditMask from '../touch/view/TapToEditMask';
+import * as AndroidMode from '../android/core/AndroidMode';
+import * as TapToEditMask from '../touch/view/TapToEditMask';
 import MobileSchema from './MobileSchema';
 import { MobileWebApp } from 'tinymce/themes/mobile/api/IosWebapp';
 
@@ -60,6 +60,6 @@ const produce = function (raw: {any}): MobileWebApp {
   };
 };
 
-export default {
+export {
   produce
 };

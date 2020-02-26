@@ -2,10 +2,10 @@ import { Universe } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
 import { Descent } from '@ephox/phoenix';
 import { ZoneViewports } from '../api/general/ZoneViewports';
-import Clustering from '../words/Clustering';
+import * as Clustering from '../words/Clustering';
 import { WordDecision, WordDecisionItem } from '../words/WordDecision';
 import { LanguageZones } from './LanguageZones';
-import TextZones from './TextZones';
+import * as TextZones from './TextZones';
 import { Zone } from './Zones';
 
 // a Text Zone enforces a language, and returns Option.some only if a single zone was identified
@@ -50,7 +50,7 @@ const empty = function <E> () {
   return Option.none<Zone<E>>();
 };
 
-export default {
+export {
   fromRange,
   fromBounded,
   fromInline,

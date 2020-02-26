@@ -9,8 +9,8 @@ import { Obj } from '@ephox/katamari';
 import { Css, Element, Height, Width } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { getMaxHeightSetting, getMaxWidthSetting, getMinHeightSetting, getMinWidthSetting } from '../../api/Settings';
-import Events from '../../api/Events';
-import Utils from './Utils';
+import * as Events from '../../api/Events';
+import * as Utils from './Utils';
 
 interface EditorDimensions {
   height?: number;

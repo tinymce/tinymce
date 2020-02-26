@@ -8,10 +8,10 @@
 import { Option, Cell } from '@ephox/katamari';
 import * as CaretContainer from '../caret/CaretContainer';
 import * as CaretContainerInline from '../caret/CaretContainerInline';
-import CaretContainerRemove from '../caret/CaretContainerRemove';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretContainerRemove from '../caret/CaretContainerRemove';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import { Text } from '@ephox/dom-globals';
 
 const insertInlinePos = function (pos: CaretPosition, before: boolean) {
@@ -68,6 +68,6 @@ const renderCaret = function (caret: Cell<Text>, location) {
   );
 };
 
-export default {
+export {
   renderCaret
 };

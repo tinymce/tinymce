@@ -1,6 +1,6 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import NodePath from 'tinymce/core/dom/NodePath';
+import * as NodePath from 'tinymce/core/dom/NodePath';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 

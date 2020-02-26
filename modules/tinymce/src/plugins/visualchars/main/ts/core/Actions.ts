@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Events from '../api/Events';
-import VisualChars from './VisualChars';
+import * as Events from '../api/Events';
+import * as VisualChars from './VisualChars';
 
 const toggleVisualChars = function (editor, toggleState) {
   const body = editor.getBody();
@@ -27,6 +27,6 @@ const toggleVisualChars = function (editor, toggleState) {
   selection.moveToBookmark(bookmark);
 };
 
-export default {
+export {
   toggleVisualChars
 };

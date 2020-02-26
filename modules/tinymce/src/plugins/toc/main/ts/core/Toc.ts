@@ -8,8 +8,8 @@
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import I18n from 'tinymce/core/api/util/I18n';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import Guid from './Guid';
+import * as Settings from '../api/Settings';
+import * as Guid from './Guid';
 
 const tocId = Guid.create('mcetoc_');
 
@@ -147,7 +147,7 @@ const updateToc = function (editor) {
   }
 };
 
-export default {
+export {
   hasHeaders,
   insertToc,
   updateToc

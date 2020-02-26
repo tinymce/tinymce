@@ -53,7 +53,7 @@ const flatten = function <E, D> (universe: Universe<E, D>, item: E) {
   );
 };
 
-export default {
+export {
   creepLeft,
   creepRight,
   flatten,

@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Actions from './Actions';
-import Conversions from './Conversions';
-import Picker from './Picker';
+import * as Actions from './Actions';
+import * as Conversions from './Conversions';
+import * as Picker from './Picker';
 import Editor from 'tinymce/core/api/Editor';
 
 const setupButtons = function (editor: Editor) {
@@ -37,6 +37,6 @@ const setupButtons = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   setupButtons
 };

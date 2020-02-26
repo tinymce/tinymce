@@ -6,7 +6,7 @@
  */
 
 import { Obj, Type } from '@ephox/katamari';
-import DefaultFormats from './DefaultFormats';
+import * as DefaultFormats from './DefaultFormats';
 import { Format, Formats } from '../api/fmt/Format';
 import Tools from '../api/util/Tools';
 import Editor from '../api/Editor';

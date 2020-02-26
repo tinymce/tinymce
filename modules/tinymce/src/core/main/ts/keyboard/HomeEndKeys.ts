@@ -7,7 +7,7 @@
 
 import { KeyboardEvent } from '@ephox/dom-globals';
 import * as CefNavigation from './CefNavigation';
-import MatchKeys from './MatchKeys';
+import * as MatchKeys from './MatchKeys';
 import VK from '../api/util/VK';
 import Editor from '../api/Editor';
 
@@ -28,6 +28,6 @@ const setup = (editor: Editor) => {
   });
 };
 
-export default {
+export {
   setup
 };

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Actions from '../core/Actions';
+import * as Actions from '../core/Actions';
 import Editor from 'tinymce/core/api/Editor';
 import { Clipboard } from '../api/Clipboard';
 
@@ -25,6 +25,6 @@ const register = function (editor: Editor, clipboard: Clipboard) {
   });
 };
 
-export default {
+export {
   register
 };

@@ -8,8 +8,8 @@
 import { Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Element, Node as SugarNode } from '@ephox/sugar';
-import Data from './Data';
-import Html from './Html';
+import * as Data from './Data';
+import * as Html from './Html';
 
 const isMatch = (n: Element) => {
   const value = SugarNode.value(n);
@@ -46,7 +46,7 @@ const replaceWithSpans = (text: string) => {
   return text.replace(Data.regExpGlobal, Html.wrapCharWithSpan);
 };
 
-export default {
+export {
   isMatch,
   filterDescendants,
   findParentElm,

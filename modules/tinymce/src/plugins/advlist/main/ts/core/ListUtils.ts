@@ -27,7 +27,7 @@ const getSelectedStyleType = function (editor): Option<string> {
  return Option.from(style);
 };
 
-export default {
+export {
  isTableCellNode,
  isListNode,
  getSelectedStyleType

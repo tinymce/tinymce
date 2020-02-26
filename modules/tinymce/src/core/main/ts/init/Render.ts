@@ -16,15 +16,15 @@ import Env from '../api/Env';
 import IconManager from '../api/IconManager';
 import NotificationManager from '../api/NotificationManager';
 import PluginManager from '../api/PluginManager';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { RawEditorSettings } from '../api/SettingsTypes';
 import ThemeManager from '../api/ThemeManager';
 import I18n from '../api/util/I18n';
 import Tools from '../api/util/Tools';
 import WindowManager from '../api/WindowManager';
-import NodeType from '../dom/NodeType';
-import ErrorReporter from '../ErrorReporter';
-import Init from './Init';
+import * as NodeType from '../dom/NodeType';
+import * as ErrorReporter from '../ErrorReporter';
+import * as Init from './Init';
 
 const DOM = DOMUtils.DOM;
 
@@ -274,6 +274,6 @@ const render = function (editor: Editor) {
   loadScripts(editor, editor.suffix);
 };
 
-export default {
+export {
   render
 };

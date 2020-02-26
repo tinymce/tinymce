@@ -6,7 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import IframeContent from '../core/IframeContent';
+import * as IframeContent from '../core/IframeContent';
 
 export const open = (editor: Editor) => {
 

@@ -6,7 +6,7 @@ import { SelectorFilter } from '@ephox/sugar';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import TableTestUtils from '../../module/test/TableTestUtils';
+import * as TableTestUtils from '../../module/test/TableTestUtils';
 
 /*
  *

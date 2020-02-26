@@ -1,4 +1,4 @@
-import DetailsList from '../model/DetailsList';
+import * as DetailsList from '../model/DetailsList';
 import { Warehouse } from '../model/Warehouse';
 import { Element } from '@ephox/sugar';
 
@@ -8,6 +8,6 @@ const getGridSize = function (table: Element) {
   return warehouse.grid();
 };
 
-export default {
+export {
   getGridSize
 };

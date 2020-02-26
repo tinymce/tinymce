@@ -5,8 +5,8 @@ import * as Node from 'ephox/sugar/api/node/Node';
 import * as PredicateExists from 'ephox/sugar/api/search/PredicateExists';
 import * as PredicateFilter from 'ephox/sugar/api/search/PredicateFilter';
 import * as PredicateFind from 'ephox/sugar/api/search/PredicateFind';
-import Checkers from 'ephox/sugar/test/Checkers';
-import TestPage from 'ephox/sugar/test/TestPage';
+import * as Checkers from 'ephox/sugar/test/Checkers';
+import * as TestPage from 'ephox/sugar/test/TestPage';
 
 UnitTest.test('PredicateTest', function () {
   TestPage.connect(); // description of structure is in TestPage

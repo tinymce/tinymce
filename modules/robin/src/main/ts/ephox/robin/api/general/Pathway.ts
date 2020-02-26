@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import Simplify from '../../pathway/Simplify';
+import * as Simplify from '../../pathway/Simplify';
 
 type SimplifyFn = <E, D>(universe: Universe<E, D>, elements: E[]) => E[];
 
@@ -8,6 +8,6 @@ type SimplifyFn = <E, D>(universe: Universe<E, D>, elements: E[]) => E[];
  */
 const simplify: SimplifyFn = Simplify.simplify;
 
-export default {
+export {
   simplify
 };

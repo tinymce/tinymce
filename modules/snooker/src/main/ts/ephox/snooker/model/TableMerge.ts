@@ -1,8 +1,8 @@
 import { Fun } from '@ephox/katamari';
 import * as Structs from '../api/Structs';
-import Fitment from './Fitment';
-import GridRow from './GridRow';
-import MergingOperations from '../operate/MergingOperations';
+import * as Fitment from './Fitment';
+import * as GridRow from './GridRow';
+import * as MergingOperations from '../operate/MergingOperations';
 import { SimpleGenerators } from '../api/Generators';
 import { Element } from '@ephox/sugar';
 
@@ -69,7 +69,7 @@ const insert = function (index: number, gridA: Structs.RowCells[], gridB: Struct
   return fittedOldGrid.slice(0, index).concat(fittedNewGrid).concat(fittedOldGrid.slice(index, fittedOldGrid.length));
 };
 
-export default {
+export {
   merge,
   insert
 };

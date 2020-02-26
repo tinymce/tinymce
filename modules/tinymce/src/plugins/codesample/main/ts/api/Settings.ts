@@ -15,7 +15,7 @@ const useGlobalPrismJS = (editor: Editor) => {
   return editor.getParam('codesample_global_prismjs', false, 'boolean');
 };
 
-export default {
+export {
   getLanguages,
   useGlobalPrismJS
 };

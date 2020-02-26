@@ -1,6 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import Predicate from 'tinymce/core/util/Predicate';
+import * as Predicate from 'tinymce/core/util/Predicate';
 
 UnitTest.test('atomic.tinymce.core.util.PredicateTest', () => {
   const isAbove = function (target, value) {

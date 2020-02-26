@@ -13,6 +13,6 @@ const getOrDie = function (name: string, scope?: {}) {
   return actual;
 };
 
-export default {
+export {
   getOrDie
 };

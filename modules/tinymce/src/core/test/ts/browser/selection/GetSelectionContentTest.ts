@@ -2,7 +2,7 @@ import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
-import GetSelectionContent from 'tinymce/core/selection/GetSelectionContent';
+import * as GetSelectionContent from 'tinymce/core/selection/GetSelectionContent';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 import Env from 'tinymce/core/api/Env';

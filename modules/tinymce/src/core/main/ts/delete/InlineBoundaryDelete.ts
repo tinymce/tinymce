@@ -8,14 +8,14 @@
 import { document } from '@ephox/dom-globals';
 import { Fun, Option, Options } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as CaretUtils from '../caret/CaretUtils';
-import DeleteElement from './DeleteElement';
-import BoundaryCaret from '../keyboard/BoundaryCaret';
-import BoundaryLocation from '../keyboard/BoundaryLocation';
-import BoundarySelection from '../keyboard/BoundarySelection';
-import InlineUtils from '../keyboard/InlineUtils';
+import * as DeleteElement from './DeleteElement';
+import * as BoundaryCaret from '../keyboard/BoundaryCaret';
+import * as BoundaryLocation from '../keyboard/BoundaryLocation';
+import * as BoundarySelection from '../keyboard/BoundarySelection';
+import * as InlineUtils from '../keyboard/InlineUtils';
 import Editor from '../api/Editor';
 
 const isFeatureEnabled = function (editor: Editor) {
@@ -139,6 +139,6 @@ const backspaceDelete = function (editor: Editor, caret, forward?: boolean) {
   return false;
 };
 
-export default {
+export {
   backspaceDelete
 };

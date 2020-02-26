@@ -10,10 +10,10 @@ import { Arr, Obj, Option, Options } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../api/Settings';
 import { CustomTabSpecs, TabSpecs } from '../Plugin';
-import KeyboardShortcutsTab from './KeyboardShortcutsTab';
-import PluginsTab from './PluginsTab';
-import VersionTab from './VersionTab';
-import KeyboardNavTab from './KeyboardNavTab';
+import * as KeyboardShortcutsTab from './KeyboardShortcutsTab';
+import * as PluginsTab from './PluginsTab';
+import * as VersionTab from './VersionTab';
+import * as KeyboardNavTab from './KeyboardNavTab';
 
 interface TabData {
   tabs: TabSpecs;

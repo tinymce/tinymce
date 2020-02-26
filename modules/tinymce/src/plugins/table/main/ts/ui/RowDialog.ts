@@ -12,12 +12,14 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import Styles from '../actions/Styles';
+import * as Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
 import { hasAdvancedRowTab } from '../api/Settings';
 import { DomModifier } from './DomModifier';
-import Helpers, { RowData } from './Helpers';
-import RowDialogGeneralTab from './RowDialogGeneralTab';
+import * as Helpers from './Helpers';
+import * as RowDialogGeneralTab from './RowDialogGeneralTab';
+
+type RowData = Helpers.RowData;
 
 const switchRowType = (dom: DOMUtils, rowElm: HTMLElement, toType: string) => {
   const tableElm = dom.getParent(rowElm, 'table');
@@ -169,6 +171,6 @@ const open = (editor: Editor) => {
   });
 };
 
-export default {
+export {
   open
 };

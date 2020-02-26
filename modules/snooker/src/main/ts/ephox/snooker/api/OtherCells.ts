@@ -1,6 +1,6 @@
-import DetailsList from '../model/DetailsList';
+import * as DetailsList from '../model/DetailsList';
 import { toDetailList, onCells, TargetSelection } from '../model/RunOperation';
-import Transitions from '../model/Transitions';
+import * as Transitions from '../model/Transitions';
 import { Warehouse } from '../model/Warehouse';
 import { Element } from '@ephox/sugar';
 import { Generators } from './Generators';
@@ -48,6 +48,6 @@ const getOtherCells = (table: Element, target: TargetSelection, generators: Gene
   });
 };
 
-export default {
+export {
   getOtherCells
 };

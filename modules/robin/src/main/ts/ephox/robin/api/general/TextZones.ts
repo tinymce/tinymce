@@ -1,6 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Descent } from '@ephox/phoenix';
-import TextZones from '../../zone/TextZones';
+import * as TextZones from '../../zone/TextZones';
 import { Zones } from '../../zone/Zones';
 import { ZoneViewports } from './ZoneViewports';
 
@@ -33,7 +33,7 @@ const range = function <E, D> (universe: Universe<E, D>, start: E, soffset: numb
 type EmptyFn = <E>() => Zones<E>;
 const empty: EmptyFn = TextZones.empty;
 
-export default {
+export {
   single,
   range,
   empty

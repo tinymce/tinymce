@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const charMap = {
+export const charMap = {
   '\u00a0': 'nbsp',
   '\u00ad': 'shy'
 };
 
-const charMapToRegExp = function (charMap, global?) {
+export const charMapToRegExp = function (charMap, global?) {
   let key, regExp = '';
 
   for (key in charMap) {
@@ -20,7 +20,7 @@ const charMapToRegExp = function (charMap, global?) {
   return new RegExp('[' + regExp + ']', global ? 'g' : '');
 };
 
-const charMapToSelector = function (charMap) {
+export const charMapToSelector = function (charMap) {
   let key, selector = '';
 
   for (key in charMap) {
@@ -33,12 +33,7 @@ const charMapToSelector = function (charMap) {
   return selector;
 };
 
-export default {
-  charMap,
-  regExp: charMapToRegExp(charMap),
-  regExpGlobal: charMapToRegExp(charMap, true),
-  selector: charMapToSelector(charMap),
-  nbspClass: 'mce-nbsp',
-  charMapToRegExp,
-  charMapToSelector
-};
+export const regExp = charMapToRegExp(charMap);
+export const regExpGlobal = charMapToRegExp(charMap, true);
+export const selector = charMapToSelector(charMap);
+export const nbspClass = 'mce-nbsp';

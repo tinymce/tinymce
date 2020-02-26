@@ -140,7 +140,7 @@ const diff = function (left, right) {
   return script;
 };
 
-export default {
+export {
   KEEP,
   DELETE,
   INSERT,

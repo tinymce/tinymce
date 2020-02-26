@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import ImportCss from '../core/ImportCss';
+import * as ImportCss from '../core/ImportCss';
 
 const get = function (editor) {
   const convertSelectorToFormat = function (selectorText) {
@@ -17,6 +17,6 @@ const get = function (editor) {
   };
 };
 
-export default {
+export {
   get
 };

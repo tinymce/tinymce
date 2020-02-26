@@ -2,7 +2,7 @@ import { Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 
-import Newlines from 'tinymce/plugins/paste/core/Newlines';
+import * as Newlines from 'tinymce/plugins/paste/core/Newlines';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 

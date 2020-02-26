@@ -13,7 +13,7 @@ const filterFirstLayer = function (scope: Element, selector: string, predicate: 
   });
 };
 
-export default {
+export {
   firstLayer,
   filterFirstLayer
 };

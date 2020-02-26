@@ -8,15 +8,15 @@
 import { Fun, Option, Throttler } from '@ephox/katamari';
 import { Body, Css, DomEvent, Element, Focus } from '@ephox/sugar';
 
-import Orientation from '../../touch/view/Orientation';
-import CaptureBin from '../../util/CaptureBin';
-import Rectangles from '../../util/Rectangles';
+import * as Orientation from '../../touch/view/Orientation';
+import * as CaptureBin from '../../util/CaptureBin';
+import * as Rectangles from '../../util/Rectangles';
 import FakeSelection from '../focus/FakeSelection';
-import IosScrolling from '../scroll/IosScrolling';
+import * as IosScrolling from '../scroll/IosScrolling';
 import BackgroundActivity from '../smooth/BackgroundActivity';
-import Greenzone from '../view/Greenzone';
-import IosUpdates from '../view/IosUpdates';
-import IosViewport from '../view/IosViewport';
+import * as Greenzone from '../view/Greenzone';
+import * as IosUpdates from '../view/IosUpdates';
+import * as IosViewport from '../view/IosViewport';
 
 const VIEW_MARGIN = 5;
 
@@ -215,6 +215,6 @@ const setup = function (bag) {
   };
 };
 
-export default {
+export {
   setup
 };

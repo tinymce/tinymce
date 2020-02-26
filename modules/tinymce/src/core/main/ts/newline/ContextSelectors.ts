@@ -6,8 +6,8 @@
  */
 
 import { Element, Selectors } from '@ephox/sugar';
-import Settings from '../api/Settings';
-import NewLineUtils from './NewLineUtils';
+import * as Settings from '../api/Settings';
+import * as NewLineUtils from './NewLineUtils';
 import Editor from '../api/Editor';
 
 const matchesSelector = function (editor: Editor, selector: string) {
@@ -24,7 +24,7 @@ const shouldBlockNewLine = function (editor: Editor) {
   return matchesSelector(editor, Settings.getNoNewLineSelector(editor));
 };
 
-export default {
+export {
   shouldInsertBr,
   shouldBlockNewLine
 };

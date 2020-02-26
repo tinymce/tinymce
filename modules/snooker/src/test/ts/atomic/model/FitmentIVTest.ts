@@ -4,8 +4,8 @@ import { Arr, Fun, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
-import Fitment from 'ephox/snooker/test/Fitment';
-import TableMerge from 'ephox/snooker/test/TableMerge';
+import * as Fitment from 'ephox/snooker/test/Fitment';
+import * as TableMerge from 'ephox/snooker/test/TableMerge';
 
 UnitTest.test('FitmentIVTest', function () {
   const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);

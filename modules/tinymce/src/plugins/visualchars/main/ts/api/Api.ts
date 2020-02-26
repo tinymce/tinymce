@@ -15,6 +15,6 @@ const get = function (toggleState) {
   };
 };
 
-export default {
+export {
   get
 };

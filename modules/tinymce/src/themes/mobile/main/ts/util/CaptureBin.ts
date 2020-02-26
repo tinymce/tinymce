@@ -23,6 +23,6 @@ const input = function (parent, operation) {
   Remove.remove(input);
 };
 
-export default {
+export {
   input
 };

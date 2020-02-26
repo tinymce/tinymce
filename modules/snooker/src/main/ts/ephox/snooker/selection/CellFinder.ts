@@ -1,8 +1,8 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { Compare, Element } from '@ephox/sugar';
 import { Warehouse } from '../model/Warehouse';
-import CellBounds from './CellBounds';
-import CellGroup from './CellGroup';
+import * as CellBounds from './CellBounds';
+import * as CellGroup from './CellGroup';
 
 const moveBy = function (warehouse: Warehouse, cell: Element, row: number, column: number) {
   return Warehouse.findItem(warehouse, cell, Compare.eq).bind(function (detail) {
@@ -31,7 +31,7 @@ const parentCell = function (warehouse: Warehouse, innerCell: Element) {
   });
 };
 
-export default {
+export {
   moveBy,
   intercepts,
   parentCell

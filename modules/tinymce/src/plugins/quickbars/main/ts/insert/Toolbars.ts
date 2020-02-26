@@ -6,7 +6,7 @@
  */
 
 import { Element, Node, PredicateFind, SelectorFind } from '@ephox/sugar';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
 
 const addToEditor = (editor: Editor) => {
@@ -31,6 +31,6 @@ const addToEditor = (editor: Editor) => {
   }
 };
 
-export default {
+export {
   addToEditor
 };

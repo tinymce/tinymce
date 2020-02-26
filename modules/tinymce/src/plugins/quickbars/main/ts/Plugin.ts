@@ -6,10 +6,10 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
-import { default as InsertButtons } from './insert/Buttons';
-import { default as InsertToolbars } from './insert/Toolbars';
+import * as InsertButtons from './insert/Buttons';
+import * as InsertToolbars from './insert/Toolbars';
 
-import { default as SelectionToolbars } from './selection/Toolbars';
+import * as SelectionToolbars from './selection/Toolbars';
 
 export default function () {
   PluginManager.add('quickbars', function (editor) {

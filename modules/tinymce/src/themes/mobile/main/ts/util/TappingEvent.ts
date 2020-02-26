@@ -40,6 +40,6 @@ const monitor = function (editorApi) {
   };
 };
 
-export default {
+export {
   monitor
 };

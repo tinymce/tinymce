@@ -11,7 +11,7 @@ import DomParser from 'tinymce/core/api/html/DomParser';
 import Node from 'tinymce/core/api/html/Node';
 import Serializer from 'tinymce/core/api/html/Serializer';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const parseHeader = function (head: string) {
   // Parse the contents with a DOM parser
@@ -306,7 +306,7 @@ const dataToHtml = function (editor, data, head) {
   return html.substring(0, html.indexOf('</body>'));
 };
 
-export default {
+export {
   parseHeader,
   htmlToData,
   dataToHtml

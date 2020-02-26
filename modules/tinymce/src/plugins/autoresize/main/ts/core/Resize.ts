@@ -11,8 +11,8 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Delay from 'tinymce/core/api/util/Delay';
-import Events from '../api/Events';
-import Settings from '../api/Settings';
+import * as Events from '../api/Events';
+import * as Settings from '../api/Settings';
 
 /**
  * This class contains all core logic for the autoresize plugin.
@@ -164,7 +164,7 @@ const setup = (editor: Editor, oldSize: Cell<number>) => {
   }
 };
 
-export default {
+export {
   setup,
   resize
 };

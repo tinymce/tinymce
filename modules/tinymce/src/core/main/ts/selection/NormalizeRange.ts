@@ -8,9 +8,9 @@
 import { Node, HTMLElement, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import * as CaretContainer from '../caret/CaretContainer';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
-import RangeCompare from './RangeCompare';
+import * as RangeCompare from './RangeCompare';
 import DOMUtils from '../api/dom/DOMUtils';
 import { isCaretNode } from '../fmt/FormatContainer';
 import { CaretPosition } from '../caret/CaretPosition';
@@ -296,6 +296,6 @@ const normalize = (dom: DOMUtils, rng: Range): Option<Range> => {
   return RangeCompare.isEq(rng, normRng) ? Option.none() : Option.some(normRng);
 };
 
-export default {
+export {
   normalize
 };

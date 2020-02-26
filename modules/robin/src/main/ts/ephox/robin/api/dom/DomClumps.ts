@@ -1,6 +1,6 @@
 import { DomUniverse } from '@ephox/boss';
 import { Element } from '@ephox/sugar';
-import Clumps from '../general/Clumps';
+import * as Clumps from '../general/Clumps';
 
 const universe = DomUniverse();
 
@@ -13,7 +13,7 @@ const fracture = function (isRoot: (e: Element) => boolean, start: Element, soff
   return Clumps.fracture(universe, isRoot, start, soffset, finish, foffset, ceiling);
 };
 
-export default {
+export {
   fractures,
   fracture
 };

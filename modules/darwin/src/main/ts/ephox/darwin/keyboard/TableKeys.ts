@@ -3,9 +3,9 @@ import { Spot } from '@ephox/phoenix';
 import { PlatformDetection } from '@ephox/sand';
 import { Awareness, Compare, Element } from '@ephox/sugar';
 import { BeforeAfter } from '../navigation/BeforeAfter';
-import BrTags from '../navigation/BrTags';
+import * as BrTags from '../navigation/BrTags';
 import { Carets } from './Carets';
-import Rectangles from './Rectangles';
+import * as Rectangles from './Rectangles';
 import { Retries } from './Retries';
 import { WindowBridge } from '../api/WindowBridge';
 import { KeyDirection } from '../navigation/KeyDirection';
@@ -86,6 +86,6 @@ const handle = function (bridge: WindowBridge, isRoot: (e: Element) => boolean, 
   });
 };
 
-export default {
+export {
   handle
 };

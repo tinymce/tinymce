@@ -35,6 +35,6 @@ const shortcuts: ShortcutActionPairType[] = [
   { shortcuts: ['Meta + Shift + F'], action: 'Switch to or from fullscreen mode' }
 ];
 
-export default {
+export {
   shortcuts
 };

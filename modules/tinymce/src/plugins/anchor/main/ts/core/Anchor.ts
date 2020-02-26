@@ -35,7 +35,7 @@ const insert = function (editor: Editor, id: string) {
   }
 };
 
-export default {
+export {
   isValidId,
   getId,
   insert

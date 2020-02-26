@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import * as Structs from '../api/Structs';
-import TableGrid from './TableGrid';
+import * as TableGrid from './TableGrid';
 import { Warehouse } from './Warehouse';
 import { Generators } from '../api/Generators';
 import { Element } from '@ephox/sugar';
@@ -54,7 +54,7 @@ const toGrid = function (warehouse: Warehouse, generators: Generators, isNew: bo
   return grid;
 };
 
-export default {
+export {
   toDetails,
   toGrid
 };

@@ -6,7 +6,7 @@
  */
 
 import Env from './api/Env';
-import RangeCompare from './selection/RangeCompare';
+import * as RangeCompare from './selection/RangeCompare';
 import Delay from './api/util/Delay';
 import { hasAnyRanges } from './selection/SelectionUtils';
 import Editor from './api/Editor';

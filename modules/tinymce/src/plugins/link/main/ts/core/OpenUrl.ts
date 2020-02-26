@@ -28,6 +28,6 @@ const open = function (url) {
   appendClickRemove(link, evt);
 };
 
-export default {
+export {
   open
 };

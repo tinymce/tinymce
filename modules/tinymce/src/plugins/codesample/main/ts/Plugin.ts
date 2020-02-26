@@ -6,11 +6,11 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Commands from './api/Commands';
-import FilterContent from './core/FilterContent';
-import Buttons from './ui/Buttons';
-import Dialog from './ui/Dialog';
-import Utils from './util/Utils';
+import * as Commands from './api/Commands';
+import * as FilterContent from './core/FilterContent';
+import * as Buttons from './ui/Buttons';
+import * as Dialog from './ui/Dialog';
+import * as Utils from './util/Utils';
 
 export default function () {
   PluginManager.add('codesample', function (editor) {

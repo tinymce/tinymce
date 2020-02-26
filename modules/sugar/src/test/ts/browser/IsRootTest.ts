@@ -9,8 +9,8 @@ import * as SelectorExists from 'ephox/sugar/api/search/SelectorExists';
 import * as SelectorFilter from 'ephox/sugar/api/search/SelectorFilter';
 import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
-import Checkers from 'ephox/sugar/test/Checkers';
-import TestPage from 'ephox/sugar/test/TestPage';
+import * as Checkers from 'ephox/sugar/test/Checkers';
+import * as TestPage from 'ephox/sugar/test/TestPage';
 
 UnitTest.test('IsRootTest', function () {
   TestPage.connect(); // description of structure is in TestPage

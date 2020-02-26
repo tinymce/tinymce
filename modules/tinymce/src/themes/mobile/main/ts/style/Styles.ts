@@ -7,13 +7,15 @@
 
 import { Fun } from '@ephox/katamari';
 
-const prefix = 'tinymce-mobile';
+const strPrefix = 'tinymce-mobile';
 
 const resolve = function (p) {
-  return prefix + '-' + p;
+  return strPrefix + '-' + p;
 };
 
-export default {
+const prefix = Fun.constant(strPrefix);
+
+export {
   resolve,
-  prefix: Fun.constant(prefix)
+  prefix
 };

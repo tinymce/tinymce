@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor, UiChains } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { Body, Element, Insert, Remove, Selectors } from '@ephox/sugar';
-import Styles from 'tinymce/themes/mobile/style/Styles';
+import * as Styles from 'tinymce/themes/mobile/style/Styles';
 import mobileTheme from 'tinymce/themes/mobile/Theme';
 
 UnitTest.asynctest('browser.tinymce.themes.mobile.EditorRemoveTest', (success, failure) => {

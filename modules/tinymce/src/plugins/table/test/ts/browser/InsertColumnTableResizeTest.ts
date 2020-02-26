@@ -5,7 +5,7 @@ import { Editor, TinyDom } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { SelectorFind } from '@ephox/sugar';
-import TableTestUtils from '../module/test/TableTestUtils';
+import * as TableTestUtils from '../module/test/TableTestUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableResizeTest', (success, failure) => {
 

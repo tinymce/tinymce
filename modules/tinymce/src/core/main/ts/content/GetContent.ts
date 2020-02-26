@@ -11,9 +11,9 @@ import { Element } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import Node from '../api/html/Node';
 import Tools from '../api/util/Tools';
-import TrimHtml from '../dom/TrimHtml';
-import Zwsp from '../text/Zwsp';
-import Settings from '../api/Settings';
+import * as TrimHtml from '../dom/TrimHtml';
+import * as Zwsp from '../text/Zwsp';
+import * as Settings from '../api/Settings';
 import { isWsPreserveElement } from '../dom/ElementType';
 
 const defaultFormat = 'html';

@@ -36,7 +36,7 @@ const row = function (r: number, x: number, y: number, w: number, h: number) {
   return blocker;
 };
 
-export default {
+export {
   col,
   row
 };

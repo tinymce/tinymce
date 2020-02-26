@@ -1,5 +1,5 @@
 import { Event, Bindable } from 'ephox/porkbun/Event';
-import Events from 'ephox/porkbun/Events';
+import * as Events from 'ephox/porkbun/Events';
 import SourceEvent from 'ephox/porkbun/SourceEvent';
 import { UnitTest, assert } from '@ephox/bedrock-client';
 

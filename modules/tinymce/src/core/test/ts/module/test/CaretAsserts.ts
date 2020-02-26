@@ -37,7 +37,7 @@ const createRange = function (startContainer, startOffset, endContainer?, endOff
   return rng;
 };
 
-export default {
+export {
   createRange,
   assertCaretPosition,
   assertRange

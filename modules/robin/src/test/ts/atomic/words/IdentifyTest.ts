@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Option } from '@ephox/katamari';
 import { WordScope } from 'ephox/robin/data/WordScope';
-import Identify from 'ephox/robin/words/Identify';
+import * as Identify from 'ephox/robin/words/Identify';
 
 UnitTest.test('words :: Identify', function () {
   const none = Option.none<string>();

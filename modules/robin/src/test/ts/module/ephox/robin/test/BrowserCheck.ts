@@ -20,6 +20,6 @@ const run = function (input: string, f: (e: Element) => void) {
   Remove.remove(container);
 };
 
-export default {
+export {
   run
 };

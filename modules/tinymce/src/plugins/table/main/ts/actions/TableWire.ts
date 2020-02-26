@@ -38,7 +38,7 @@ const remove = function (editor: Editor, wire) {
   }
 };
 
-export default {
+export {
   get,
   remove
 };

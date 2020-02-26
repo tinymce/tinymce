@@ -7,7 +7,7 @@
 
 import { KeyboardEvent } from '@ephox/dom-globals';
 import * as InsertSpace from './InsertSpace';
-import MatchKeys from './MatchKeys';
+import * as MatchKeys from './MatchKeys';
 import VK from '../api/util/VK';
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
@@ -28,6 +28,6 @@ const setup = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   setup
 };

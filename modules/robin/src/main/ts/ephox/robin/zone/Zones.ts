@@ -1,7 +1,7 @@
 import { Universe } from '@ephox/boss';
 import { Arr, Fun, Struct } from '@ephox/katamari';
 import { WordScope } from '../data/WordScope';
-import Identify from '../words/Identify';
+import * as Identify from '../words/Identify';
 import { ZoneDetails } from './LanguageZones';
 
 interface ZoneInput<E> {

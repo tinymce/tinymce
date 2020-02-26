@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { LegacyUnit } from '@ephox/mcagar';
 import { Element, Hierarchy } from '@ephox/sugar';
-import FontInfo from 'tinymce/core/fmt/FontInfo';
+import * as FontInfo from 'tinymce/core/fmt/FontInfo';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();

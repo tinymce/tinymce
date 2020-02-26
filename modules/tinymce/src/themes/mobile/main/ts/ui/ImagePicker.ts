@@ -9,7 +9,7 @@ import { AlloyEvents, Button, Memento, NativeEvents, SketchSpec } from '@ephox/a
 import { BlobConversions } from '@ephox/imagetools';
 import { Id, Option } from '@ephox/katamari';
 
-import Buttons from '../ui/Buttons';
+import * as Buttons from '../ui/Buttons';
 
 const addImage = function (editor, blob) {
   BlobConversions.blobToBase64(blob).then(function (base64) {

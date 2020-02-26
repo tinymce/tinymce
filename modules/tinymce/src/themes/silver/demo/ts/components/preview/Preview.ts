@@ -1,6 +1,6 @@
 import { console } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { setupDemo } from '../DemoHelpers';
 

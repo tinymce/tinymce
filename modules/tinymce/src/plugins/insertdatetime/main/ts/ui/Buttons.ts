@@ -7,8 +7,8 @@
 
 import { Menu } from '@ephox/bridge';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import Actions from '../core/Actions';
+import * as Settings from '../api/Settings';
+import * as Actions from '../core/Actions';
 import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
@@ -46,6 +46,6 @@ const register = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   register
 };

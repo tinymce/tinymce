@@ -8,15 +8,15 @@
 import { HTMLElement, Range, Element } from '@ephox/dom-globals';
 import { Arr, Option, Fun } from '@ephox/katamari';
 import { Element as SugarElement, Attr, Insert } from '@ephox/sugar';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as CefUtils from './CefUtils';
 import { getPositionsAbove, findClosestHorizontalPositionFromPoint, getPositionsBelow, getPositionsUntilPreviousLine, getPositionsUntilNextLine, BreakType, LineInfo } from '../caret/LineReader';
 import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from '../caret/TableCells';
-import ScrollIntoView from '../dom/ScrollIntoView';
+import * as ScrollIntoView from '../dom/ScrollIntoView';
 import Editor from '../api/Editor';
-import NodeType from '../dom/NodeType';
-import Settings from '../api/Settings';
+import * as NodeType from '../dom/NodeType';
+import * as Settings from '../api/Settings';
 import { isFakeCaretTableBrowser } from '../caret/FakeCaret';
 
 const moveToRange = (editor: Editor, rng: Range) => {
