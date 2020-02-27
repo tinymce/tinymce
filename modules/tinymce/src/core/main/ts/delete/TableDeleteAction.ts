@@ -36,7 +36,8 @@ const deleteAction = Adt.generate([
   { emptyCells: [ 'cells' ] }
 ]);
 
-const isRootFromElement = (root: Element<any>) => (cur: Element<any>): boolean => Compare.eq(root, cur);
+const isRootFromElement = (root: Element<any>): (cur: Element<any>) => boolean =>
+  (cur: Element<any>): boolean => Compare.eq(root, cur);
 
 const getClosestCell = (container: DomNode, isRoot: (e: Element<any>) => boolean) => {
   return SelectorFind.closest(Element.fromDom(container), 'td,th', isRoot);
@@ -57,9 +58,10 @@ const getTableFromCellRng = (cellRng: TableCellRng, isRoot: (e: Element<any>) =>
 
 const getTableCells = (table) => SelectorFilter.descendants(table, 'td,th');
 
-const getCellRangeFromStartTable = (cellRng: any, isRoot) => getClosestTable(cellRng.start(), isRoot).bind((table) => {
-  return Arr.last(getTableCells(table)).map((endCell) => tableCellRng(cellRng.start(), endCell));
-});
+const getCellRangeFromStartTable = (cellRng: TableCellRng, isRoot): Option<TableCellRng> =>
+  getClosestTable(cellRng.start, isRoot).bind((table) => {
+    return Arr.last(getTableCells(table)).map((endCell) => tableCellRng(cellRng.start, endCell));
+  });
 
 const partialSelection = (isRoot: (e: Element<any>) => boolean, rng: Range): Option<TableCellRng> => {
   const startCell = getClosestCell(rng.startContainer, isRoot);
