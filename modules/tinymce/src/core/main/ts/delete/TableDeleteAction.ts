@@ -111,11 +111,11 @@ const getSelectedCells = (tableSelection: TableSelection) => {
     (startIndex, endIndex) => tableSelection.cells.slice(startIndex, endIndex + 1));
 };
 
-const getAction = (tableSelection) =>
+const getAction = (tableSelection: TableSelection) =>
   getSelectedCells(tableSelection)
     .map((selected) => {
-      const cells = tableSelection.cells();
-      return selected.length === cells.length ? deleteAction.removeTable(tableSelection.table()) : deleteAction.emptyCells(selected);
+      const cells = tableSelection.cells;
+      return selected.length === cells.length ? deleteAction.removeTable(tableSelection.table) : deleteAction.emptyCells(selected);
     });
 
 export const getActionFromCells = (cells) => deleteAction.emptyCells(cells);
