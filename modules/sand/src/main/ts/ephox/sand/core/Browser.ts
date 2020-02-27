@@ -10,21 +10,15 @@ const firefox = 'Firefox';
 const safari = 'Safari';
 
 export interface Browser {
-  current: string | undefined;
-  version: Version;
-  isEdge: () => boolean;
-  isChrome: () => boolean;
-  isIE: () => boolean;
-  isOpera: () => boolean;
-  isFirefox: () => boolean;
-  isSafari: () => boolean;
+  readonly current: string | undefined;
+  readonly version: Version;
+  readonly isEdge: () => boolean;
+  readonly isChrome: () => boolean;
+  readonly isIE: () => boolean;
+  readonly isOpera: () => boolean;
+  readonly isFirefox: () => boolean;
+  readonly isSafari: () => boolean;
 }
-
-const isBrowser = function (name: string, current: string) {
-  return function () {
-    return current === name;
-  };
-};
 
 const unknown = function () {
   return nu({
@@ -37,17 +31,19 @@ const nu = function (info: UaString): Browser {
   const current = info.current;
   const version = info.version;
 
+  const isBrowser = (name: string) => (): boolean => current === name;
+
   return {
     current,
     version,
 
-    isEdge: isBrowser(edge, current),
-    isChrome: isBrowser(chrome, current),
+    isEdge: isBrowser(edge),
+    isChrome: isBrowser(chrome),
     // NOTE: isIe just looks too weird
-    isIE: isBrowser(ie, current),
-    isOpera: isBrowser(opera, current),
-    isFirefox: isBrowser(firefox, current),
-    isSafari: isBrowser(safari, current)
+    isIE: isBrowser(ie),
+    isOpera: isBrowser(opera),
+    isFirefox: isBrowser(firefox),
+    isSafari: isBrowser(safari)
   };
 };
 
