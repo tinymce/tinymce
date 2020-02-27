@@ -14,12 +14,12 @@ import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
 import { Node } from '@ephox/dom-globals';
 
-interface BlockPosition {
+export interface BlockPosition {
   readonly block: Element<Node>;
   readonly position: CaretPosition;
 }
 
-interface BlockBoundary {
+export interface BlockBoundary {
   readonly from: BlockPosition;
   readonly to: BlockPosition;
 }
