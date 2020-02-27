@@ -52,7 +52,7 @@ UnitTest.test('TextZonesTest', function () {
   const checkSingle = function (info: ArbIds) {
     const item = doc1.find(doc1.get(), info.startId).getOrDie();
     const actual = TextZones.single(doc1, item, 'en', ZoneViewports.anything());
-    assertProps('Testing zones for single(' + info.startId + ')', doc1, actual.zones());
+    assertProps('Testing zones for single(' + info.startId + ')', doc1, actual.zones);
     return true;
   };
 
@@ -60,7 +60,7 @@ UnitTest.test('TextZonesTest', function () {
     const item1 = doc1.find(doc1.get(), info.startId).getOrDie();
     const item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
     const actual = TextZones.range(doc1, item1, 0, item2, 0, 'en', ZoneViewports.anything());
-    assertProps('Testing zones for range(' + info.startId + '->' + info.finishId + ')', doc1, actual.zones());
+    assertProps('Testing zones for range(' + info.startId + '->' + info.finishId + ')', doc1, actual.zones);
     return true;
   };
 
@@ -79,7 +79,7 @@ UnitTest.test('TextZonesTest', function () {
           words: [
             'isolated'
           ]
-        }], raw(doc1, actual.zones()));
+        }], raw(doc1, actual.zones));
     }
   );
 
@@ -98,7 +98,7 @@ UnitTest.test('TextZonesTest', function () {
           words: [
             'isolated-text'
           ]
-        }], raw(doc1, actual.zones()));
+        }], raw(doc1, actual.zones));
     }
   );
 
@@ -124,7 +124,7 @@ UnitTest.test('TextZonesTest', function () {
     const item = doc1.find(doc1.get(), info.startId).getOrDie();
     // Consider other offsets
     const actual = TextZones.range(doc1, item, 0, item, 0, 'en', ZoneViewports.anything());
-    return Jsc.eq(0, actual.zones().length);
+    return Jsc.eq(0, actual.zones.length);
   });
 
   PropertyAssertions.check(

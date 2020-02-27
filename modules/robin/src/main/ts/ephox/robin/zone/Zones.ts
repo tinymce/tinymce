@@ -1,28 +1,32 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Fun, Struct } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { WordScope } from '../data/WordScope';
 import * as Identify from '../words/Identify';
 import { ZoneDetails } from './LanguageZones';
 
 interface ZoneInput<E> {
-  lang: string;
-  words: WordScope[];
-  elements: E[];
+  readonly lang: string;
+  readonly words: WordScope[];
+  readonly elements: E[];
 }
 
 export interface Zone<E> {
-  elements: () => E[];
-  lang: () => string;
-  words: () => WordScope[];
+  readonly elements: E[];
+  readonly lang: string;
+  readonly words: WordScope[];
 }
 
 export interface Zones<E> {
-  zones: () => Zone<E>[];
+  readonly zones: Zone<E>[];
 }
 
-const nu: <E> (input: ZoneInput<E>) => Zone<E> = Struct.immutableBag([ 'elements', 'lang', 'words' ], [ ]);
+const nu = <E> (input: ZoneInput<E>): Zone<E> => ({
+  elements: input.elements,
+  lang: input.lang,
+  words: input.words
+});
 
-const fromWalking = function <E, D> (universe: Universe<E, D>, groups: ZoneDetails<E>[]): Zones<E> {
+export const fromWalking = function <E, D> (universe: Universe<E, D>, groups: ZoneDetails<E>[]): Zones<E> {
   const zones = Arr.map(groups, function (group: ZoneDetails<E>) {
     const details = group.details();
     const lang = group.lang();
@@ -45,10 +49,6 @@ const fromWalking = function <E, D> (universe: Universe<E, D>, groups: ZoneDetai
   });
 
   return {
-    zones: Fun.constant(zones)
+    zones
   };
-};
-
-export const Zones = {
-  fromWalking
 };

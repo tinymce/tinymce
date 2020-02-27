@@ -5,8 +5,10 @@ import { ZoneViewports } from '../api/general/ZoneViewports';
 import * as Clustering from '../words/Clustering';
 import { WordDecision, WordDecisionItem } from '../words/WordDecision';
 import { LanguageZones, ZoneDetails } from './LanguageZones';
-import { Zones } from './Zones';
+import * as Zones from './Zones';
 import * as ZoneWalker from './ZoneWalker';
+
+type Zones<E> = Zones.Zones<E>;
 
 const rangeOn = function <E, D> (universe: Universe<E, D>, first: E, last: E, envLang: string, transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>, viewport: ZoneViewports<E>) {
   const ancestor = universe.eq(first, last) ? Option.some(first) : universe.property().parent(first);
@@ -57,7 +59,7 @@ const fromInline = function <E, D> (universe: Universe<E, D>, element: E, envLan
 
 const empty = function <E> (): Zones<E> {
   return {
-    zones: Fun.constant([])
+    zones: []
   };
 };
 

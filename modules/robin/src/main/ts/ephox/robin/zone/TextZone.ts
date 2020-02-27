@@ -11,12 +11,12 @@ import { Zone } from './Zones';
 // a Text Zone enforces a language, and returns Option.some only if a single zone was identified
 // with that language.
 const filterZone = function <E> (zone: Zone<E>, onlyLang: string) {
-  return zone.lang() === onlyLang ? Option.some(zone) : Option.none<Zone<E>>();
+  return zone.lang === onlyLang ? Option.some(zone) : Option.none<Zone<E>>();
 };
 
 const fromBoundedWith = function <E, D> (universe: Universe<E, D>, left: E, right: E, envLang: string, onlyLang: string, transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>) {
   const output = TextZones.fromBoundedWith(universe, left, right, envLang, transform, ZoneViewports.anything());
-  const zones = output.zones();
+  const zones = output.zones;
   return zones.length === 1 ? filterZone(zones[0], onlyLang) : Option.none<Zone<E>>();
 };
 
