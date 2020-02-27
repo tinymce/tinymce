@@ -37,7 +37,7 @@ module.exports = function (grunt) {
     plugins = grunt.option("plugins");
     icons = grunt.option("icons") || 'default';
 
-    if (!themes && !plugins && !icons) {
+    if (!themes && !plugins) {
       grunt.log.writeln("Use: grunt bundle --themes <comma separated list of themes> --plugins <comma separated list of plugins> --icons <comma separated list of icons>");
       process.exit(-1);
       return;
