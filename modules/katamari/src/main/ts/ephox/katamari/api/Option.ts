@@ -7,71 +7,71 @@ import * as Fun from './Fun';
  */
 export interface Option<T> {
   /** If none, run whenNone; if some(a) run whenSome(a) */
-  fold: <T2> (whenNone: () => T2, whenSome: (v: T) => T2) => T2;
+  readonly fold: <T2> (whenNone: () => T2, whenSome: (v: T) => T2) => T2;
 
   /** is this value some(t)?  */
-  is: (t: T) => boolean;
+  readonly is: (t: T) => boolean;
 
-  isSome: () => boolean;
-  isNone: () => boolean;
+  readonly isSome: () => boolean;
+  readonly isNone: () => boolean;
 
   /** If some(x) return x, otherwise return the specified default value */
-  getOr: (value: T) => T;
+  readonly getOr: (value: T) => T;
 
   /** getOr with a thunked default value */
-  getOrThunk: (makeValue: () => T) => T;
+  readonly getOrThunk: (makeValue: () => T) => T;
 
   /** get the 'some' value; throw if none */
-  getOrDie: (msg?: string) => T;
+  readonly getOrDie: (msg?: string) => T;
 
-  getOrNull: () => T | null;
-  getOrUndefined: () => T | undefined;
+  readonly getOrNull: () => T | null;
+  readonly getOrUndefined: () => T | undefined;
   /**
   - if some: return self
   - if none: return opt
   */
-  or: (opt: Option<T>) => Option<T>;
+  readonly or: (opt: Option<T>) => Option<T>;
 
   /** Same as "or", but uses a thunk instead of a value */
-  orThunk: (makeOption: () => Option<T>) => Option<T>;
+  readonly orThunk: (makeOption: () => Option<T>) => Option<T>;
 
   /** Run a function over the 'some' value.
    *  "map" operation on the Option functor.
    */
-  map: <T2> (mapper: (x: T) => T2) => Option<T2>;
+  readonly map: <T2> (mapper: (x: T) => T2) => Option<T2>;
 
   /** Run a side effect over the 'some' value */
-  each: (worker: (x: T) => void) => void;
+  readonly each: (worker: (x: T) => void) => void;
 
   /** "bind"/"flatMap" operation on the Option Bind/Monad.
    *  Equivalent to >>= in Haskell/PureScript; flatMap in Scala.
    */
-  bind: <T2> (f: (x: T) => Option<T2>) => Option<T2>;
+  readonly bind: <T2> (f: (x: T) => Option<T2>) => Option<T2>;
 
   /** Does this Option contain a value that predicate? */
-  exists: (f: (x: T) => boolean) => boolean;
+  readonly exists: (f: (x: T) => boolean) => boolean;
 
   /** Do all values contained in this option match this predicate? */
-  forall: (f: (x: T) => boolean) => boolean;
+  readonly forall: (f: (x: T) => boolean) => boolean;
 
   /** Return all values in this Option that match the predicate.
    *  The predicate may refine the constituent type using TypeScript type predicates.
    */
-  filter: {
+  readonly filter: {
     <Q extends T>(f: (x: T) => x is Q): Option<Q>;
     (f: (x: T) => boolean): Option<T>;
   };
 
   /** Compare two Options using === */
-  equals: (opt: Option<T>) => boolean;
+  readonly equals: (opt: Option<T>) => boolean;
 
   /** Compare two Options using a specified comparator. */
-  equals_: <T2> (opt: Option<T2>, equality: (a: T, b: T2) => boolean) => boolean;
+  readonly equals_: <T2> (opt: Option<T2>, equality: (a: T, b: T2) => boolean) => boolean;
 
   /** Returns all the values in this Option as an array */
-  toArray: () => T[];
+  readonly toArray: () => T[];
 
-  toString: () => string;
+  readonly toString: () => string;
 }
 
 const none = <T>() => <Option<T>> NONE;
@@ -109,9 +109,6 @@ const NONE: Option<any> = (() => {
     toArray () { return []; },
     toString: Fun.constant('none()')
   };
-  if (Object.freeze) {
-    Object.freeze(me);
-  }
   return me;
 })();
 
