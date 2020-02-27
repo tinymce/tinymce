@@ -46,9 +46,8 @@ const getClosestTable = (cell, isRoot) => {
   return SelectorFind.ancestor(cell, 'table', isRoot);
 };
 
-const isExpandedCellRng = (cellRng: TableCellRng): boolean => {
-  return Compare.eq(cellRng.start, cellRng.end) === false;
-};
+const isExpandedCellRng = (cellRng: TableCellRng): boolean =>
+  !Compare.eq(cellRng.start, cellRng.end);
 
 const getTableFromCellRng = (cellRng: TableCellRng, isRoot: (e: Element<any>) => boolean): Option<Element<DomElement>> =>
   getClosestTable(cellRng.start, isRoot)
