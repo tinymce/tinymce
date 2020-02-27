@@ -348,19 +348,13 @@ const Styles = function (settings?, schema?: Schema): Styles {
       };
 
       const isValid = (name: string, elementName: string): boolean => {
-        let styleMap;
-
-        styleMap = invalidStyles['*'];
+        let styleMap = invalidStyles['*'];
         if (styleMap && styleMap[name]) {
           return false;
         }
 
         styleMap = invalidStyles[elementName];
-        if (styleMap && styleMap[name]) {
-          return false;
-        }
-
-        return true;
+        return !(styleMap && styleMap[name]);
       };
 
       // Serialize styles according to schema
