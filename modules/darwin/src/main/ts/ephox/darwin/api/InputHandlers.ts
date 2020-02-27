@@ -1,10 +1,10 @@
 import { KeyboardEvent, Window } from '@ephox/dom-globals';
-import { Arr, Fun, Option, Struct } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { Element, EventArgs, Situ } from '@ephox/sugar';
 import * as KeySelection from '../keyboard/KeySelection';
 import * as VerticalMovement from '../keyboard/VerticalMovement';
 import MouseSelection from '../mouse/MouseSelection';
-import { KeyDirection } from '../navigation/KeyDirection';
+import * as KeyDirection from '../navigation/KeyDirection';
 import * as CellSelection from '../selection/CellSelection';
 import { Response } from '../selection/Response';
 import { SelectionAnnotation } from './SelectionAnnotation';
@@ -12,11 +12,11 @@ import * as SelectionKeys from './SelectionKeys';
 import { WindowBridge } from './WindowBridge';
 
 interface RC {
-  rows: () => number;
-  cols: () => number;
+  readonly rows: number;
+  readonly cols: number;
 }
 
-const rc: (rows: number, cols: number) => RC = Struct.immutable('rows', 'cols');
+const rc = (rows: number, cols: number): RC => ({rows, cols});
 
 const mouse = function (win: Window, container: Element, isRoot: (e: Element) => boolean, annotations: SelectionAnnotation) {
   const bridge = WindowBridge(win);
@@ -61,7 +61,7 @@ const keyboard = function (win: Window, container: Element, isRoot: (e: Element)
       const update = function (attempts: RC[]) {
         return function () {
           const navigation = Arr.findMap(attempts, function (delta) {
-            return KeySelection.update(delta.rows(), delta.cols(), container, selected, annotations);
+            return KeySelection.update(delta.rows, delta.cols, container, selected, annotations);
           });
 
           // Shift the selected rows and update the selection.
