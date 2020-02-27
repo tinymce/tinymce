@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (s
     });
   };
 
-  const cAssertBlockBoundaryNone = Chain.op(function (blockBoundaryOption: Option<BlockBoundary>) {
+  const cAssertBlockBoundaryNone = Chain.op(function (blockBoundaryOption: Option<BlockBoundary >) {
     Assertions.assertEq('BlockBoundary should be none', true, blockBoundaryOption.isNone());
   });
 
