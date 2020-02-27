@@ -38,13 +38,13 @@ const fromBounded = function <E, D> (universe: Universe<E, D>, left: E, right: E
 const fromRange = function <E, D> (universe: Universe<E, D>, start: E, finish: E, envLang: string, viewport: ZoneViewports<E>) {
   const edges = Clustering.getEdges(universe, start, finish, Fun.constant(false));
   const transform = transformEdges(edges.left(), edges.right());
-  return fromBoundedWith(universe, edges.left().item(), edges.right().item(), envLang, transform, viewport);
+  return fromBoundedWith(universe, edges.left().item, edges.right().item, envLang, transform, viewport);
 };
 
 const transformEdges = function <E> (leftEdge: WordDecisionItem<E>, rightEdge: WordDecisionItem<E>) {
   return function <D> (universe: Universe<E, D>, element: E) {
-    return universe.eq(element, leftEdge.item()) ? leftEdge :
-      universe.eq(element, rightEdge.item()) ? rightEdge : WordDecision.detail(universe, element);
+    return universe.eq(element, leftEdge.item) ? leftEdge :
+      universe.eq(element, rightEdge.item) ? rightEdge : WordDecision.detail(universe, element);
   };
 };
 
@@ -54,7 +54,7 @@ const fromInline = function <E, D> (universe: Universe<E, D>, element: E, envLan
   // change
   const bounded = Clustering.byBoundary(universe, element);
   const transform = transformEdges(bounded.left(), bounded.right());
-  return bounded.isEmpty() ? empty<E>() : fromBoundedWith(universe, bounded.left().item(), bounded.right().item(), envLang, transform, viewport);
+  return bounded.isEmpty() ? empty<E>() : fromBoundedWith(universe, bounded.left().item, bounded.right().item, envLang, transform, viewport);
 };
 
 const empty = function <E> (): Zones<E> {

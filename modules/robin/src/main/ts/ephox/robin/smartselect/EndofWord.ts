@@ -9,7 +9,7 @@ const toEnd = function <E> (cluster: WordDecisionItem<E>[], start: E, soffset: n
     return Option.none<WordRange<E>>();
   }
   const last = cluster[cluster.length - 1];
-  return Option.some(WordRange(start, soffset, last.item(), last.finish()));
+  return Option.some(WordRange(start, soffset, last.item, last.finish));
 };
 
 const fromStart = function <E> (cluster: WordDecisionItem<E>[], finish: E, foffset: number) {
@@ -17,7 +17,7 @@ const fromStart = function <E> (cluster: WordDecisionItem<E>[], finish: E, foffs
     return Option.none<WordRange<E>>();
   }
   const first = cluster[0];
-  return Option.some(WordRange(first.item(), first.start(), finish, foffset));
+  return Option.some(WordRange(first.item, first.start, finish, foffset));
 };
 
 const all = function <E> (cluster: WordDecisionItem<E>[]) {
@@ -26,7 +26,7 @@ const all = function <E> (cluster: WordDecisionItem<E>[]) {
   }
   const first = cluster[0];
   const last = cluster[cluster.length - 1];
-  return Option.some(WordRange(first.item(), first.start(), last.item(), last.finish()));
+  return Option.some(WordRange(first.item, first.start, last.item, last.finish));
 };
 
 const scan = function <E, D> (universe: Universe<E, D>, item: E, offset: number) {
