@@ -19,7 +19,8 @@ export default function () {
       count: 0,
       text: '',
       matchCase: false,
-      wholeWord: false
+      wholeWord: false,
+      matchSelection: false
     });
 
     Commands.register(editor, currentSearchState);

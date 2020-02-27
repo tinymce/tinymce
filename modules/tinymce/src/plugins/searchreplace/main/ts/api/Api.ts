@@ -14,8 +14,8 @@ const get = function (editor: Editor, currentState: Cell<Actions.SearchState>) {
     return Actions.done(editor, currentState, keepEditorSelection);
   };
 
-  const find = function (text: string, matchCase: boolean, wholeWord: boolean) {
-    return Actions.find(editor, currentState, text, matchCase, wholeWord);
+  const find = function (text: string, matchCase: boolean, wholeWord: boolean, matchSelection: boolean) {
+    return Actions.find(editor, currentState, text, matchCase, wholeWord, matchSelection);
   };
 
   const next = function () {

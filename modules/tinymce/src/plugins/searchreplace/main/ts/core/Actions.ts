@@ -18,6 +18,7 @@ export interface SearchState {
   text: string;
   matchCase: boolean;
   wholeWord: boolean;
+  matchSelection: boolean;
 }
 
 const getElmIndex = function (elm: Element) {
@@ -32,6 +33,7 @@ const getElmIndex = function (elm: Element) {
 
 const markAllMatches = function (editor: Editor, currentSearchState: Cell<SearchState>, regex: RegExp) {
   let node, marker;
+  const matchSelection = currentSearchState.get().matchSelection;
 
   marker = editor.dom.create('span', {
     'data-mce-bogus': 1
@@ -42,7 +44,7 @@ const markAllMatches = function (editor: Editor, currentSearchState: Cell<Search
 
   done(editor, currentSearchState, false);
 
-  return FindReplaceText.findAndReplaceDOMText(regex, node, marker, false, editor.schema);
+  return FindReplaceText.findAndReplaceDOMText(editor, regex, node, marker, false, matchSelection);
 };
 
 const unwrap = function (node: Node) {
@@ -125,7 +127,7 @@ const escapeSearchText = (text: string, wholeWord: boolean) => {
   return wholeWord ? '\\b' + escapedText + '\\b' : escapedText;
 };
 
-const find = function (editor: Editor, currentSearchState: Cell<SearchState>, text: string, matchCase: boolean, wholeWord: boolean) {
+const find = function (editor: Editor, currentSearchState: Cell<SearchState>, text: string, matchCase: boolean, wholeWord: boolean, matchSelection: boolean) {
   const escapedText = escapeSearchText(text, wholeWord);
 
   const count = markAllMatches(editor, currentSearchState, new RegExp(escapedText, matchCase ? 'g' : 'gi'));
@@ -137,7 +139,8 @@ const find = function (editor: Editor, currentSearchState: Cell<SearchState>, te
       count,
       text,
       matchCase,
-      wholeWord
+      wholeWord,
+      matchSelection
     });
   }
 

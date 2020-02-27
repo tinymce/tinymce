@@ -6,7 +6,7 @@
  */
 
 import { HTMLElement, Node } from '@ephox/dom-globals';
-import Schema from 'tinymce/core/api/html/Schema';
+import Editor from 'tinymce/core/api/Editor';
 
 function isContentEditableFalse(node: HTMLElement) {
   return node && node.nodeType === 1 && node.contentEditable === 'false';
@@ -16,16 +16,16 @@ function isContentEditableFalse(node: HTMLElement) {
 // released under UNLICENSE that is compatible with LGPL
 // TODO: Handle contentEditable edgecase:
 // <p>text<span contentEditable="false">text<span contentEditable="true">text</span>text</span>text</p>
-function findAndReplaceDOMText(regex: RegExp, node: Node, replacementNode: Node, captureGroup: number | false, schema: Schema) {
+function findAndReplaceDOMText(editor: Editor, regex: RegExp, node: Node, replacementNode: Node, captureGroup: number | false, matchSelection: boolean) {
   let m;
   const matches = [];
-  let text, count = 0, doc;
+  let text, count = 0, selectionMatches = 0, doc;
   let blockElementsMap, hiddenTextElementsMap, shortEndedElementsMap;
 
   doc = node.ownerDocument;
-  blockElementsMap = schema.getBlockElements(); // H1-H6, P, TD etc
-  hiddenTextElementsMap = schema.getWhiteSpaceElements(); // TEXTAREA, PRE, STYLE, SCRIPT
-  shortEndedElementsMap = schema.getShortEndedElements(); // BR, IMG, INPUT
+  blockElementsMap = editor.schema.getBlockElements(); // H1-H6, P, TD etc
+  hiddenTextElementsMap = editor.schema.getWhiteSpaceElements(); // TEXTAREA, PRE, STYLE, SCRIPT
+  shortEndedElementsMap = editor.schema.getShortEndedElements(); // BR, IMG, INPUT
 
   function getMatchIndexes(m: RegExpMatchArray, captureGroup: number | false) {
     captureGroup = captureGroup || 0;
@@ -50,10 +50,10 @@ function findAndReplaceDOMText(regex: RegExp, node: Node, replacementNode: Node,
     return [index, index + m[0].length, [m[0]]];
   }
 
-  function getText(node) {
-    let txt;
+  function getText(node): string {
+    let txt: string;
 
-    if (node.nodeType === 3) {
+    if (node.nodeType === Node.TEXT_NODE) {
       return node.data;
     }
 
@@ -90,7 +90,7 @@ function findAndReplaceDOMText(regex: RegExp, node: Node, replacementNode: Node,
         atIndex++;
       }
 
-      if (curNode.nodeType === 3) {
+      if (curNode.nodeType === Node.TEXT_NODE) {
         if (!endNode && curNode.length + atIndex >= matchLocation[1]) {
           // We've found the ending
           endNode = curNode;
@@ -191,6 +191,20 @@ function findAndReplaceDOMText(regex: RegExp, node: Node, replacementNode: Node,
       const startNode = range.startNode;
       const endNode = range.endNode;
       const matchIndex = range.matchIndex;
+      const rng = editor.selection.getRng();
+
+      if (matchSelection) {
+        const selectionRng = editor.dom.createRng();
+        selectionRng.setStart(startNode, range.startNodeIndex);
+        selectionRng.setEnd(endNode, range.endNodeIndex);
+        // Check if the match is outside the selection
+        if (rng.compareBoundaryPoints(Range.START_TO_START, selectionRng) !== -1 || rng.compareBoundaryPoints(Range.END_TO_END, selectionRng) !== 1) {
+          // TODO: Returning the endNode causes issues in some cases - need to figure out what this should actually return
+          return endNode;
+        }
+
+        selectionMatches++;
+      }
 
       if (startNode === endNode) {
         const node = startNode;
@@ -212,6 +226,7 @@ function findAndReplaceDOMText(regex: RegExp, node: Node, replacementNode: Node,
         }
 
         node.parentNode.removeChild(node);
+        editor.selection.setRng(rng);
 
         return el;
       }
@@ -262,6 +277,11 @@ function findAndReplaceDOMText(regex: RegExp, node: Node, replacementNode: Node,
   if (matches.length) {
     count = matches.length;
     stepThroughMatches(node, matches, genReplacer(replacementNode));
+  }
+
+  if (matchSelection) {
+    editor.selection.collapse(true);
+    return selectionMatches;
   }
 
   return count;
