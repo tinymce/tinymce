@@ -8,7 +8,6 @@
 import { Types } from '@ephox/bridge';
 import { File, URL } from '@ephox/dom-globals';
 import { Arr, FutureResult, Merger, Option, Type } from '@ephox/katamari';
-
 import Editor from 'tinymce/core/api/Editor';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
@@ -119,7 +118,7 @@ const formFillFromMeta2 = (info: ImageDialogInfo, data: ImageDialogData, meta: I
     data.alt = meta.alt;
   }
   if (info.hasAccessibilityOptions) {
-    data.isDecorative = meta.isDecorative || false;
+    data.isDecorative = meta.isDecorative || data.isDecorative || false;
   }
   if (info.hasImageTitle && Type.isString(meta.title)) {
     data.title = meta.title;
