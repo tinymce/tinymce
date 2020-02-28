@@ -46,12 +46,16 @@ const calcReposition = (newX: number, newY: number, width: number, height: numbe
   const deltaW = Math.abs(Math.min(width, xInBounds ? boundsX + boundsWidth - newX : boundsX - (newX + width)));
   const deltaH = Math.abs(Math.min(height, yInBounds ? boundsY + boundsHeight - newY : boundsY - (newY + height)));
 
+  // measure the maximum x and y, taking into account the height and width of the element
+  const maxX = Math.max(bounds.x(), bounds.right() - width);
+  const maxY = Math.max(bounds.y(), bounds.bottom() - height);
+
   // TBIO-3366 + TBIO-4236:
   // Futz with the X position to ensure that x is positive, but not off the right side of the screen.
   // NOTE: bounds.x() is 0 in repartee here.
-  const limitX = Num.clamp(newX, bounds.x(), bounds.right() - width);
+  const limitX = Num.clamp(newX, bounds.x(), maxX);
   // Futz with the Y value to ensure that we're not off the top of the screen
-  const limitY = Num.clamp(newY, bounds.y(), bounds.bottom() - height);
+  const limitY = Num.clamp(newY, bounds.y(), maxY);
 
   return {
     originInBounds,
@@ -63,12 +67,13 @@ const calcReposition = (newX: number, newY: number, width: number, height: numbe
   };
 };
 
-const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bounds): BounderAttemptAdt  => {
+const attempt = (candidate: SpotInfo, width: number, height: number): BounderAttemptAdt  => {
   const candidateX = candidate.x();
   const candidateY = candidate.y();
   const bubbleLeft = candidate.bubble().offset().left();
   const bubbleTop = candidate.bubble().offset().top();
 
+  const bounds = candidate.bounds();
   const boundsY = bounds.y();
   const boundsBottom = bounds.bottom();
 
@@ -113,17 +118,18 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Bou
   // console.log('xfit', (boundsX + boundsWidth), ',', (newX + width), ',', newX);
   // console.log('yfit', (boundsY + boundsHeight), ',', (newY + height), ',', newY, ',', height);
   // console.table([{
-  //   xInBounds,
-  //   xFit,
-  //   limitX,
-  //   minX,
-  //   maxX,
-  //   deltaW,
-  //   boundsX,
-  //   boundsWidth,
-  //   candidateX: candidate.x(),
+  //   newY,
+  //   limitY,
+  //   boundsY,
+  //   boundsBottom,
   //   newX,
-  //   width
+  //   limitX,
+  //   boundsX,
+  //   boundsRight,
+  //   candidateX: candidate.x(),
+  //   candidateY: candidate.y(),
+  //   width,
+  //   height
   // }]);
   // console.log('y', yInBounds, yFit, '\t', Math.round(deltaH), '\t', (boundsY === 0 ? '000' : Math.round(boundsY)), '\t', Math.round(boundsHeight), '\t', Math.round(candidate.y()), '\t', Math.round(newY), '\t', height);
   // console.log('maxheight:', deltaH, maxHeight);
@@ -149,8 +155,8 @@ const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: 
   const panelWidth = elementBox.width();
   const panelHeight = elementBox.height();
   const attemptBestFit = (layout: AnchorLayout, reposition: Reposition.RepositionDecision, deltaW: number, deltaH: number) => {
-    const next: SpotInfo = layout(anchorBox, elementBox, bubbles);
-    const attemptLayout = attempt(next, panelWidth, panelHeight, bounds);
+    const next: SpotInfo = layout(anchorBox, elementBox, bubbles, bounds);
+    const attemptLayout = attempt(next, panelWidth, panelHeight);
 
     // unwrapping fit only to rewrap seems... silly
     return attemptLayout.fold(adt.fit, (newReposition, newDeltaW, newDeltaH) => {

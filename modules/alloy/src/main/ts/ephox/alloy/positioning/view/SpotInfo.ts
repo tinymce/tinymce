@@ -1,4 +1,5 @@
 import { Struct } from '@ephox/katamari';
+import { Bounds } from '../../alien/Boxes';
 import { BubbleInstance } from '../layout/Bubble';
 
 export interface SpotInfo {
@@ -8,6 +9,7 @@ export interface SpotInfo {
   // TYPIFY
   direction: () => any;
   label: () => string;
+  bounds: () => Bounds;
 }
 
 const nu: (
@@ -15,8 +17,9 @@ const nu: (
   y: number,
   bubble: BubbleInstance,
   direction: any,
+  bounds: Bounds,
   label: string
-) => SpotInfo = Struct.immutable('x', 'y', 'bubble', 'direction', 'label');
+) => SpotInfo = Struct.immutable('x', 'y', 'bubble', 'direction', 'bounds', 'label');
 
 export {
   nu

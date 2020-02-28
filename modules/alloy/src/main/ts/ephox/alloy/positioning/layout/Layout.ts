@@ -1,7 +1,12 @@
+import { Fun } from '@ephox/katamari';
+import { Bounds } from '../../alien/Boxes';
 import { nu as NuSpotInfo } from '../view/SpotInfo';
 import { Bubble } from './Bubble';
 import * as Direction from './Direction';
+import { adjustBounds, anchorBottom, anchorLeft, anchorRight, anchorTop } from './LayoutBounds';
 import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
+
+const identity = Fun.identity;
 
 /*
   Layout for menus and inline context dialogs;
@@ -47,36 +52,91 @@ const westEdgeX = (anchor: AnchorBox, element: AnchorElement): number => {
   return anchor.x() - element.width();
 };
 
-const southeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => {
-  return NuSpotInfo(eastX(anchor), southY(anchor), bubbles.southeast(), Direction.southeast(), 'layout-se');
+const southeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, bounds: Bounds) => {
+  return NuSpotInfo(
+    eastX(anchor),
+    southY(anchor),
+    bubbles.southeast(),
+    Direction.southeast(),
+    adjustBounds(bounds, anchor, bubbles.southeast(), anchorLeft, anchorBottom, identity, identity),
+    'layout-se');
 };
 
-const southwest: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => {
-  return NuSpotInfo(westX(anchor, element), southY(anchor), bubbles.southwest(), Direction.southwest(), 'layout-sw');
+const southwest: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, bounds: Bounds) => {
+  return NuSpotInfo(
+    westX(anchor, element),
+    southY(anchor),
+    bubbles.southwest(),
+    Direction.southwest(),
+    adjustBounds(bounds, anchor, bubbles.southwest(), identity, anchorBottom, anchorRight, identity),
+    'layout-sw'
+  );
 };
 
-const northeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => {
-  return NuSpotInfo(eastX(anchor), northY(anchor, element), bubbles.northeast(), Direction.northeast(), 'layout-ne');
+const northeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, bounds: Bounds) => {
+  return NuSpotInfo(
+    eastX(anchor),
+    northY(anchor, element),
+    bubbles.northeast(),
+    Direction.northeast(),
+    adjustBounds(bounds, anchor, bubbles.northeast(), anchorLeft, identity, identity, anchorTop),
+    'layout-ne'
+  );
 };
 
-const northwest: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => {
-  return NuSpotInfo(westX(anchor, element), northY(anchor, element), bubbles.northwest(), Direction.northwest(), 'layout-nw');
+const northwest: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, bounds: Bounds) => {
+  return NuSpotInfo(
+    westX(anchor, element),
+    northY(anchor, element),
+    bubbles.northwest(),
+    Direction.northwest(),
+    adjustBounds(bounds, anchor, bubbles.northwest(), identity, identity, anchorRight, anchorTop),
+    'layout-nw'
+  );
 };
 
-const north: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => {
-  return NuSpotInfo(middleX(anchor, element), northY(anchor, element), bubbles.north(), Direction.north(), 'layout-n');
+const north: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, bounds: Bounds) => {
+  return NuSpotInfo(
+    middleX(anchor, element),
+    northY(anchor, element),
+    bubbles.north(),
+    Direction.north(),
+    adjustBounds(bounds, anchor, bubbles.north(), identity, identity, identity, anchorTop),
+    'layout-n'
+  );
 };
 
-const south: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => {
-  return NuSpotInfo(middleX(anchor, element), southY(anchor), bubbles.south(), Direction.south(), 'layout-s');
+const south: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, bounds: Bounds) => {
+  return NuSpotInfo(
+    middleX(anchor, element),
+    southY(anchor),
+    bubbles.south(),
+    Direction.south(),
+    adjustBounds(bounds, anchor, bubbles.south(), identity, anchorBottom, identity, identity),
+    'layout-s'
+  );
 };
 
-const east: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => {
-  return NuSpotInfo(eastEdgeX(anchor), centreY(anchor, element), bubbles.east(), Direction.east(), 'layout-e');
+const east: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, bounds: Bounds) => {
+  return NuSpotInfo(
+    eastEdgeX(anchor),
+    centreY(anchor, element),
+    bubbles.east(),
+    Direction.east(),
+    adjustBounds(bounds, anchor, bubbles.east(), anchorRight, identity, identity, identity),
+    'layout-e'
+  );
 };
 
-const west: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => {
-  return NuSpotInfo(westEdgeX(anchor, element), centreY(anchor, element), bubbles.west(), Direction.west(), 'layout-w');
+const west: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, bounds: Bounds) => {
+  return NuSpotInfo(
+    westEdgeX(anchor, element),
+    centreY(anchor, element),
+    bubbles.west(),
+    Direction.west(),
+    adjustBounds(bounds, anchor, bubbles.west(), identity, identity, anchorLeft, identity),
+    'layout-w'
+  );
 };
 
 const all = (): AnchorLayout[] => [ southeast, southwest, northeast, northwest, south, north, east, west ];
