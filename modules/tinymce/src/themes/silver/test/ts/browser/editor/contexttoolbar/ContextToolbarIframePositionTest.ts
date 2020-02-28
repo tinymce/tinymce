@@ -1,11 +1,11 @@
-import { Log, Pipeline, UiFinder, Step, Assertions, Keys, Waiter } from '@ephox/agar';
+import { Assertions, Keys, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { window } from '@ephox/dom-globals';
 import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body, Css, Element, Scroll } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failure) => {
   FullscreenPlugin();
@@ -48,6 +48,8 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
         });
       }), 10, 1000);
 
+      const sWaitForToolbarHidden = UiFinder.sWaitForHidden('Waiting for toolbar to be hidden', Body.body(), '.tox-pop');
+
       const sTestPositionWhileScrolling = (scenario: Scenario) => {
         return Log.stepsAsStep('TBA', scenario.label, [
           tinyApis.sSetContent(
@@ -72,7 +74,7 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
 
           // Position the behind the menu/toolbar and check the context toolbar is hidden
           sScrollTo(0, 400),
-          UiFinder.sWaitForHidden('Waiting for toolbar to be hidden', Body.body(), '.tox-pop'),
+          sWaitForToolbarHidden,
 
           // Position the element back into view
           sScrollTo(0, 200),
@@ -81,7 +83,7 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
 
           // Position the element off the top of the screen and check the context toolbar is hidden
           sScrollTo(0, 600),
-          UiFinder.sWaitForHidden('Waiting for toolbar to be hidden', Body.body(), '.tox-pop'),
+          sWaitForToolbarHidden
         ]);
       };
 
@@ -130,7 +132,7 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
           tinyApis.sSetContent(`<p><img src="${imageSrc}" style="height: 380px; width: 100px"></p>`),
           tinyApis.sSelect('img', []),
           UiFinder.sWaitForVisible('Waiting for toolbar to appear to top inside content', Body.body(), '.tox-pop.tox-pop--top'),
-          sAssertPosition('bottom', 269),
+          sAssertPosition('top', -309),
           tinyApis.sSetCursor([0], 1),
           tinyActions.sContentKeystroke(Keys.enter()),
           tinyActions.sContentKeystroke(Keys.enter()),
@@ -138,6 +140,38 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
           tinyApis.sSelect('img', []),
           UiFinder.sWaitForVisible('Waiting for toolbar to appear below content', Body.body(), '.tox-pop.tox-pop--top'),
           sAssertPosition('top', -56),
+        ]),
+
+        Log.stepsAsStep('TINY-4586', 'Line context toolbar remains inside iframe container and doesn\'t overlap the header', [
+          tinyApis.sSetContent(
+            '<p style="height: 400px"></p>' +
+            `<div style="height: 25px;"></div>` +
+            '<p style="height: 400px"></p>'
+          ),
+          sScrollTo(0, 225),
+          tinyApis.sSetCursor( [1, 0], 0),
+
+          // Middle
+          UiFinder.sWaitForVisible('Waiting for toolbar to appear', Body.body(), '.tox-pop.tox-pop--left'),
+          sAssertPosition('top', -155),
+
+          // Scroll so div is below the status bar
+          sScrollTo(0, 50),
+          sWaitForToolbarHidden,
+
+          // Bottom
+          sScrollTo(0, 100),
+          UiFinder.sWaitForVisible('Waiting for toolbar to appear', Body.body(), '.tox-pop.tox-pop--left'),
+          sAssertPosition('top', -40),
+
+          // Scroll so div is behind header
+          sScrollTo(0, 450),
+          sWaitForToolbarHidden,
+
+          // Top
+          sScrollTo(0, 420),
+          UiFinder.sWaitForVisible('Waiting for toolbar to appear', Body.body(), '.tox-pop.tox-pop--left'),
+          sAssertPosition('top', -321)
         ]),
 
         Log.stepsAsStep('TINY-4023', 'Context toolbar is visible in fullscreen mode', [
@@ -189,6 +223,11 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
           predicate: (node) => node.nodeName && node.nodeName.toLowerCase() === 'img',
           items: 'alpha',
           position: 'node'
+        });
+        ed.ui.registry.addContextToolbar('test-line-toolbar', {
+          predicate: (node) => node.nodeName && node.nodeName.toLowerCase() === 'div',
+          items: 'alpha',
+          position: 'line'
         });
       }
     },
