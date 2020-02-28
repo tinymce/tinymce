@@ -3,7 +3,7 @@ var path = require("path");
 
 module.exports = function (grunt) {
   grunt.registerMultiTask("bundle", "Bundles code, themes and bundles to a single file.", function () {
-    var options, contents, themes, plugins;
+    var options, contents, themes, plugins, icons;
 
     function appendFile(src) {
       src = src.replace(/\\/g, '/');
@@ -29,13 +29,16 @@ module.exports = function (grunt) {
     options.themeFileName = options.themeFileName || "theme.min.js";
     options.pluginsDir = options.pluginsDir || "plugins";
     options.pluginFileName = options.pluginFileName || "plugin.min.js";
+    options.iconsDir = options.iconsDir || "icons";
+    options.iconsFileName = options.iconsFileName || "icons.min.js";
     options.outputPath = options.outputPath || "full.min.js";
 
     themes = grunt.option("themes");
     plugins = grunt.option("plugins");
+    icons = grunt.option("icons") || 'default';
 
     if (!themes && !plugins) {
-      grunt.log.writeln("Use: grunt bundle --themes <comma separated list of themes> --plugins <comma separated list of plugins>");
+      grunt.log.writeln("Use: grunt bundle --themes <comma separated list of themes> --plugins <comma separated list of plugins> --icons <comma separated list of icons>");
       process.exit(-1);
       return;
     }
@@ -49,6 +52,7 @@ module.exports = function (grunt) {
 
     append(options.themesDir, options.themeFileName, themes);
     append(options.pluginsDir, options.pluginFileName, plugins);
+    append(options.iconsDir, options.iconsFileName, icons);
 
     if (contents.length > 0) {
       grunt.file.write(options.outputPath, contents);

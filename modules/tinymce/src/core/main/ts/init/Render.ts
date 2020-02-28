@@ -6,7 +6,7 @@
  */
 
 import { HTMLFormElement, window } from '@ephox/dom-globals';
-import { Fun, Option, Type } from '@ephox/katamari';
+import { Arr, Fun, Option, Options, Type } from '@ephox/katamari';
 import { UrlObject } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
 import EventUtils from '../api/dom/EventUtils';
@@ -83,8 +83,8 @@ const getIconsUrlMetaFromUrl = (editor: Editor): Option<UrlMeta> => {
     });
 };
 
-const getIconsUrlMetaFromName = (editor: Editor): Option<UrlMeta> => {
-  return Option.from(Settings.getIconPackName(editor))
+const getIconsUrlMetaFromName = (editor: Editor, name: string | undefined): Option<UrlMeta> => {
+  return Option.from(name)
     .filter((name) => name.length > 0 && !IconManager.has(name))
     .map((name) => {
       return {
@@ -95,9 +95,12 @@ const getIconsUrlMetaFromName = (editor: Editor): Option<UrlMeta> => {
 };
 
 const loadIcons = (scriptLoader: ScriptLoader, editor: Editor) => {
-  getIconsUrlMetaFromUrl(editor)
-    .orThunk(() => getIconsUrlMetaFromName(editor))
-    .each((urlMeta) => {
+  const defaultIconsUrl = getIconsUrlMetaFromName(editor, 'default');
+  const customIconsUrl = getIconsUrlMetaFromUrl(editor).orThunk(() => {
+    return getIconsUrlMetaFromName(editor, Settings.getIconPackName(editor));
+  });
+
+  Arr.each(Options.cat([ defaultIconsUrl, customIconsUrl ]), (urlMeta) => {
     scriptLoader.add(urlMeta.url, Fun.noop, undefined, () => {
       ErrorReporter.iconsLoadError(editor, urlMeta.url, urlMeta.name.getOrUndefined());
     });
