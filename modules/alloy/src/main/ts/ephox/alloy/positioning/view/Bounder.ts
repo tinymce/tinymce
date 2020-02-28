@@ -49,9 +49,9 @@ const calcReposition = (newX: number, newY: number, width: number, height: numbe
   // TBIO-3366 + TBIO-4236:
   // Futz with the X position to ensure that x is positive, but not off the right side of the screen.
   // NOTE: bounds.x() is 0 in repartee here.
-  const limitX = Num.clamp(newX, bounds.x(), bounds.right());
+  const limitX = Num.clamp(newX, bounds.x(), bounds.right() - width);
   // Futz with the Y value to ensure that we're not off the top of the screen
-  const limitY = Num.clamp(newY, bounds.y(), bounds.bottom());
+  const limitY = Num.clamp(newY, bounds.y(), bounds.bottom() - height);
 
   return {
     originInBounds,
