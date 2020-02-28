@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed `Bounder` incorrectly calculating the bottom/right limits, due to not taking into account the element size.
+- Fixed `LayoutInside` incorrectly placing items in the opposite direction.
 
 # [6.0.0] - 2020-02-13
 
