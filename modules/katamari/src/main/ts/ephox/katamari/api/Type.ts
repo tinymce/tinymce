@@ -1,5 +1,14 @@
-const typeOf = (x: any): string =>
-  x === null ? 'null' : isArray(x) ? 'array' : isString(x) ? 'string' : typeof x;
+const typeOf = (x: any): string => {
+  if (x === null) {
+    return 'null';
+  } else if (isArray(x)) {
+    return 'array';
+  } else if (isString(x)) {
+    return 'string';
+  } else {
+    return typeof x;
+  }
+};
 
 const isType = <Yolo>(type: string) => (value: any): value is Yolo =>
   typeOf(value) === type;
@@ -16,8 +25,8 @@ export const isString = (x: any): x is string =>
 export const isObject: (value: any) => boolean =
   isType('object');
 
-export const isArray = (value: any): value is Array<unknown> =>
-  Array.isArray(value);
+export const isArray = (x: any): x is Array<unknown> =>
+  x !== null && typeof x === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array');
 
 export const isNull: (a: any) => a is null =
   eq(null);
