@@ -34,7 +34,7 @@ const normalizePattern = (pattern: RawPattern): Result<Pattern, PatternError> =>
         if (!Arr.forall(pattern.format, Type.isString)) {
           return err(name + ' pattern has non-string items in the `format` array');
         }
-        formats = pattern.format;
+        formats = pattern.format as string[];
       } else if (Type.isString(pattern.format)) {
         formats = [pattern.format];
       } else {
