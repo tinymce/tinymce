@@ -43,11 +43,11 @@ const getNamesFromTabs = (tabs: TabSpecs): TabData => {
   const names = Obj.keys(tabs);
 
   // Move the versions tab to the end if it exists
-  const versionsIdx = Arr.indexOf(names, 'versions');
-  versionsIdx.each((idx) => {
+  const idx = names.indexOf('versions');
+  if (idx !== -1) {
     names.splice(idx, 1);
     names.push('versions');
-  });
+  }
 
   return {tabs, names};
 };
