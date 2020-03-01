@@ -1,13 +1,15 @@
 const typeOf = (x: any): string => {
   if (x === null) {
     return 'null';
-  } else if (isArray(x)) {
-    return 'array';
-  } else if (isString(x)) {
-    return 'string';
-  } else {
-    return typeof x;
   }
+  const t = typeof x;
+  if (t === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array')) {
+    return 'array';
+  }
+  if (t === 'object' && (String.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'String')) {
+    return 'string';
+  }
+  return t;
 };
 
 const isType = <Yolo>(type: string) => (value: any): value is Yolo =>
@@ -19,18 +21,14 @@ const isSimpleType = <Yolo>(type: string) => (value: any): value is Yolo =>
 const eq = <T> (t: T) => (a: any): a is T =>
   t === a;
 
-function isObjectWithConstructorName(x: any, constructorName) {
-  return x !== null && isSimpleType<object>('object')(x) && x.constructor && x.constructor.name === constructorName;
-}
-
-export const isString = (x: any): x is string =>
-  isSimpleType('string')(x) || String.prototype.isPrototypeOf(x) || isObjectWithConstructorName(x, 'String');
+export const isString: (value: any) => value is string =
+  isType('string');
 
 export const isObject: (value: any) => boolean =
   isType('object');
 
-export const isArray = (x: any): x is Array<unknown> =>
-  Array.isArray(x) || isObjectWithConstructorName(x, 'Array');
+export const isArray: (value: any) => value is Array<unknown> =
+  isType('array');
 
 export const isNull: (a: any) => a is null =
   eq(null);
