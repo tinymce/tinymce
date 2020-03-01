@@ -19,14 +19,18 @@ const isSimpleType = <Yolo>(type: string) => (value: any): value is Yolo =>
 const eq = <T> (t: T) => (a: any): a is T =>
   t === a;
 
+function isObjectWithConstructorName(x: any, constructorName) {
+  return x !== null && isSimpleType<object>('object')(x) && x.constructor && x.constructor.name === constructorName;
+}
+
 export const isString = (x: any): x is string =>
-  x !== null && typeof x === 'object' && (String.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'String');
+  isSimpleType('string')(x) || String.prototype.isPrototypeOf(x) || isObjectWithConstructorName(x, 'String');
 
 export const isObject: (value: any) => boolean =
   isType('object');
 
 export const isArray = (x: any): x is Array<unknown> =>
-  x !== null && typeof x === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array');
+  Array.isArray(x) || isObjectWithConstructorName(x, 'Array');
 
 export const isNull: (a: any) => a is null =
   eq(null);
