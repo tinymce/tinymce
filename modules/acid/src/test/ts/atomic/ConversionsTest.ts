@@ -7,8 +7,8 @@ UnitTest.test('ConversionsTest', () => {
   const rgbaWhite = RgbaColour.rgbaColour(255, 255, 255, 1);
 
   const hexBlack = HexColour.fromRgba(rgbaBlack);
-  assert.eq('000000', hexBlack.value());
+  assert.eq('000000', hexBlack.value);
 
   const hexWhite = HexColour.fromRgba(rgbaWhite);
-  assert.eq('ffffff', hexWhite.value());
+  assert.eq('ffffff', hexWhite.value);
 });

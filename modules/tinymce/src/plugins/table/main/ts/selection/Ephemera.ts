@@ -5,8 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun } from '@ephox/katamari';
-
 const strSelected = 'data-mce-selected';
 const strSelectedSelector = 'td[' + strSelected + '],th[' + strSelected + ']';
 // used with not selectors
@@ -16,10 +14,10 @@ const strFirstSelectedSelector = 'td[' + strFirstSelected + '],th[' + strFirstSe
 const strLastSelected = 'data-mce-last-selected';
 const strLastSelectedSelector = 'td[' + strLastSelected + '],th[' + strLastSelected + ']';
 
-export const selected = Fun.constant(strSelected);
-export const selectedSelector = Fun.constant(strSelectedSelector);
-export const attributeSelector = Fun.constant(strAttributeSelector);
-export const firstSelected = Fun.constant(strFirstSelected);
-export const firstSelectedSelector = Fun.constant(strFirstSelectedSelector);
-export const lastSelected = Fun.constant(strLastSelected);
-export const lastSelectedSelector = Fun.constant(strLastSelectedSelector);
+export const selected = strSelected;
+export const selectedSelector = strSelectedSelector;
+export const attributeSelector = strAttributeSelector;
+export const firstSelected = strFirstSelected;
+export const firstSelectedSelector = strFirstSelectedSelector;
+export const lastSelected = strLastSelected;
+export const lastSelectedSelector = strLastSelectedSelector;

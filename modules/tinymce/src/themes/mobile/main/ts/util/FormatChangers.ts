@@ -13,7 +13,7 @@ import * as TinyChannels from '../channels/TinyChannels';
 const fontSizesArray = [ 'x-small', 'small', 'medium', 'large', 'x-large' ];
 
 const fireChange = function (realm, command, state) {
-  realm.system().broadcastOn([ TinyChannels.formatChanged() ], {
+  realm.system().broadcastOn([ TinyChannels.formatChanged ], {
     command,
     state
   });

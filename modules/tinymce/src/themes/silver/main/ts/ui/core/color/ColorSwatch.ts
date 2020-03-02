@@ -132,7 +132,7 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
       const optCurrentRgb = Option.from(getCurrentColor(editor, format));
       return optCurrentRgb.bind((currentRgb) => {
         return RgbaColour.fromString(currentRgb).map((rgba) => {
-          const currentHex = HexColour.fromRgba(rgba).value();
+          const currentHex = HexColour.fromRgba(rgba).value;
           // note: value = '#FFFFFF', currentHex = 'ffffff'
           return Strings.contains(value.toLowerCase(), currentHex);
         });

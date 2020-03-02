@@ -12,7 +12,7 @@ import * as TinyChannels from './TinyChannels';
 const format = function (command, update) {
   return Receiving.config({
     channels: Objects.wrap(
-      TinyChannels.formatChanged(),
+      TinyChannels.formatChanged,
       {
         onReceive (button, data) {
           if (data.command === command) {
@@ -27,7 +27,7 @@ const format = function (command, update) {
 const orientation = function (onReceive) {
   return Receiving.config({
     channels: Objects.wrap(
-      TinyChannels.orientationChanged(),
+      TinyChannels.orientationChanged,
       {
         onReceive
       }
@@ -35,7 +35,7 @@ const orientation = function (onReceive) {
   });
 };
 
-const receive = function (channel, onReceive) {
+const receive = function (channel: string, onReceive) {
   return {
     key: channel,
     value: {

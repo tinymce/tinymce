@@ -5,15 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun } from '@ephox/katamari';
+const prefix = 'tinymce-mobile';
 
-const strPrefix = 'tinymce-mobile';
-
-const resolve = function (p) {
-  return strPrefix + '-' + p;
-};
-
-const prefix = Fun.constant(strPrefix);
+const resolve = (p) =>
+  prefix + '-' + p;
 
 export {
   resolve,

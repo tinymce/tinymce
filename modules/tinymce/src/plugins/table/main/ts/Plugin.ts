@@ -40,8 +40,8 @@ function Plugin(editor: Editor) {
   Buttons.addToolbars(editor);
 
   editor.on('PreInit', function () {
-    editor.serializer.addTempAttr(Ephemera.firstSelected());
-    editor.serializer.addTempAttr(Ephemera.lastSelected());
+    editor.serializer.addTempAttr(Ephemera.firstSelected);
+    editor.serializer.addTempAttr(Ephemera.lastSelected);
   });
 
   if (hasTabNavigation(editor)) {

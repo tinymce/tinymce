@@ -37,8 +37,8 @@ UnitTest.test('Fun: unit tests', () => {
   Assert.eq('eq', [ 'a', 'b', 'c' ], Fun.curry(c)('a', 'b', 'c'));
   Assert.eq('eq', [ 'a', 'b', 'c' ], Fun.curry(c, 'a', 'b')('c'));
 
-  Assert.eq('eq', false, Fun.not(() => true)());
-  Assert.eq('eq', true, Fun.not(() => false)());
+  Assert.eq('eq', false, Fun.not((x: number) => true)(3));
+  Assert.eq('eq', true, Fun.not((x: string) => false)('cat'));
 
   Assert.throws('should die', Fun.die('Died!'));
 

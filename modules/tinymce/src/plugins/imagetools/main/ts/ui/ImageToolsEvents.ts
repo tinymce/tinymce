@@ -5,11 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun } from '@ephox/katamari';
-
-const saveState = Fun.constant('save-state');
-const disable = Fun.constant('disable');
-const enable = Fun.constant('enable');
+const saveState = 'save-state';
+const disable = 'disable';
+const enable = 'enable';
 
 // TODO: dedupe these from ImageToolsEvents.ts in silver
 

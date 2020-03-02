@@ -34,7 +34,7 @@ const up: KeyDirection = {
   failure: BeforeAfter.failedUp
 };
 
-export const KeyDirection = {
+export {
   down,
   up
 };

@@ -116,8 +116,8 @@ const setup = function (realm, editor: Editor) {
       }),
       Receiving.config({
         channels: Objects.wrapAll([
-          Receivers.receive(TinyChannels.orientationChanged(), Toggling.off),
-          Receivers.receive(TinyChannels.dropupDismissed(), Toggling.off)
+          Receivers.receive(TinyChannels.orientationChanged, Toggling.off),
+          Receivers.receive(TinyChannels.dropupDismissed, Toggling.off)
         ])
       })
     ]), editor);

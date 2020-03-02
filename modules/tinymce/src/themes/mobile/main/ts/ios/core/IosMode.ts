@@ -46,7 +46,7 @@ const create = function (platform, mask) {
       scrollEvents.set({
         // Allow only things that have scrollable class to be scrollable. Without this,
         // the toolbar scrolling gets prevented
-        exclusives: Scrollables.exclusive(doc, '.' + Scrollable.scrollable())
+        exclusives: Scrollables.exclusive(doc, '.' + Scrollable.scrollable)
       });
 
       Class.add(platform.container, Styles.resolve('fullscreen-maximized'));

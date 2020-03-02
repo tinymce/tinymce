@@ -46,7 +46,7 @@ const update = function (rows: number, columns: number, container: Element, sele
     return newSels.boxes();
   };
 
-  return CellSelection.shiftSelection(selected, rows, columns, annotations.firstSelectedSelector(), annotations.lastSelectedSelector()).map(updateSelection);
+  return CellSelection.shiftSelection(selected, rows, columns, annotations.firstSelectedSelector, annotations.lastSelectedSelector).map(updateSelection);
 };
 
 export {

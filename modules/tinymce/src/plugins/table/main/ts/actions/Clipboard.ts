@@ -20,7 +20,7 @@ import { TableActions } from './TableActions';
 const extractSelected = function (cells) {
   // Assume for now that we only have one table (also handles the case where we multi select outside a table)
   return TableLookup.table(cells[0]).map(Replication.deep).map(function (replica) {
-    return [ CopySelected.extract(replica, Ephemera.attributeSelector()) ];
+    return [ CopySelected.extract(replica, Ephemera.attributeSelector) ];
   });
 };
 

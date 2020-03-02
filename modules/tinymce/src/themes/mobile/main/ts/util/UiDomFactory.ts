@@ -11,7 +11,7 @@ import * as Styles from '../style/Styles';
 
 const dom = function (rawHtml): RawDomSchema {
   const html = Strings.supplant(rawHtml, {
-    prefix: Styles.prefix()
+    prefix: Styles.prefix
   });
   return DomFactory.fromHtml(html);
 };

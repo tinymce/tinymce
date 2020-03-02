@@ -1,19 +1,16 @@
-import { Fun } from '@ephox/katamari';
 import { Hsv, Rgba } from './ColourTypes';
 
-const hsvColour = (hue: number, saturation: number, value: number): Hsv => {
-  return {
-    hue: Fun.constant(hue),
-    saturation: Fun.constant(saturation),
-    value: Fun.constant(value)
-  };
-};
+const hsvColour = (hue: number, saturation: number, value: number): Hsv => ({
+  hue,
+  saturation,
+  value
+});
 
 const fromRgb = (rgbaColour: Rgba): Hsv => {
   let h = 0; let s = 0; let v = 0;
-  const r = rgbaColour.red() / 255;
-  const g = rgbaColour.green() / 255;
-  const b = rgbaColour.blue() / 255;
+  const r = rgbaColour.red / 255;
+  const g = rgbaColour.green / 255;
+  const b = rgbaColour.blue / 255;
 
   const minRGB = Math.min(r, Math.min(g, b));
   const maxRGB = Math.max(r, Math.max(g, b));
