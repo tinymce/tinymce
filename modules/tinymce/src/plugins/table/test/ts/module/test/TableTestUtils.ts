@@ -4,7 +4,7 @@ import {
 import { Assert } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
 import { TinyDom, TinyUi } from '@ephox/mcagar';
-import { Attribute, Html, SelectorFilter, SelectorFind, SugarBody, SugarElement, Value } from '@ephox/sugar';
+import { Attribute, Checked, Class, Html, SelectorFilter, SelectorFind, SugarBody, SugarElement, Value } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 const getRawWidth = (editor: Editor, elm: HTMLElement) => {
@@ -134,6 +134,13 @@ const sAssertSelectValue = (label, section, expected) => Logger.t('Assert select
   UiFinder.cFindIn('label:contains("' + section + '") + .tox-selectfield select'),
   UiControls.cGetValue,
   Assertions.cAssertEq('Checking select: ' + label, expected)
+]));
+
+const sAssertListBoxValue = (label, section, expected) => Logger.t('Assert selected value ' + expected, Chain.asStep({}, [
+  cWaitForDialog,
+  UiFinder.cFindIn('label:contains("' + section + '") + .tox-listboxfield > .tox-listbox'),
+  Chain.mapper((elem) => Attribute.get(elem, 'data-value')),
+  Assertions.cAssertEq('Checking listbox: ' + label, expected)
 ]));
 
 const cGetBody = Chain.control(
@@ -304,9 +311,11 @@ const sAssertInputValue = (label, selector, expected) => Logger.t(label,
     Chain.op((element) => {
       if (element.dom.type === 'checkbox') {
         Assertions.assertEq(`The input value for ${label} should be: `, expected, element.dom.checked);
-        return;
+      } else if (Class.has(element, 'tox-listbox')) {
+        Assertions.assertEq(`The input value for ${label} should be: `, expected, Attribute.get(element, 'data-value'));
+      } else {
+        Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));
       }
-      Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));
     })
   ]),
 );
@@ -316,10 +325,12 @@ const sSetInputValue = (label, selector, value) => Logger.t(label,
     cGetInput(selector),
     Chain.op((element) => {
       if (element.dom.type === 'checkbox') {
-        element.dom.checked = value;
-        return;
+        Checked.set(element, value);
+      } else if (Class.has(element, 'tox-listbox')) {
+        Attribute.set(element, 'data-value', value);
+      } else {
+        Value.set(element, value);
       }
-      Value.set(element, value);
     })
   ]),
 );
@@ -337,7 +348,7 @@ const sGotoAdvancedTab = Chain.asStep({}, [
 ]);
 
 const advSelectors = {
-  borderstyle: 'label.tox-label:contains(Border style) + div.tox-selectfield>select',
+  borderstyle: 'label.tox-label:contains(Border style) + div.tox-listboxfield > .tox-listbox',
   bordercolor: 'label.tox-label:contains(Border color) + div>input.tox-textfield',
   backgroundcolor: 'label.tox-label:contains(Background color) + div>input.tox-textfield'
 };
@@ -423,6 +434,7 @@ export {
   getCellWidth,
   sAssertDialogPresence,
   sAssertSelectValue,
+  sAssertListBoxValue,
   sChooseTab,
   sOpenToolbarOn,
   sAssertTableStructure,

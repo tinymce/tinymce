@@ -39,7 +39,7 @@ const makeTab = (_info: ImageDialogInfo) => ({
           inputMode: 'numeric'
         },
         {
-          type: 'selectbox',
+          type: 'listbox',
           name: 'borderstyle',
           label: 'Border style',
           items: [

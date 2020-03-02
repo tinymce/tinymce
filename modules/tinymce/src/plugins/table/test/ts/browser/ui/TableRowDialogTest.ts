@@ -11,8 +11,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
   SilverTheme();
 
   const generalSelectors = {
-    type: 'label.tox-label:contains(Row type) + div.tox-selectfield>select',
-    align: 'label.tox-label:contains(Alignment) + div.tox-selectfield>select',
+    type: 'label.tox-label:contains(Row type) + div.tox-listboxfield > .tox-listbox',
+    align: 'label.tox-label:contains(Alignment) + div.tox-listboxfield > .tox-listbox',
     height: 'label.tox-label:contains(Height) + input.tox-textfield'
   };
 

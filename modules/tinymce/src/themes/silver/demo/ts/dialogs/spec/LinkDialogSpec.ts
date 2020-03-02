@@ -22,7 +22,7 @@ export default {
       },
       {
         name: 'target',
-        type: 'selectbox',
+        type: 'listbox',
         label: 'Target',
         items: [
           {

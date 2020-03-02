@@ -11,12 +11,12 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 import { getRowClassList } from '../api/Settings';
 import * as Helpers from './Helpers';
 
-const getClassList = (editor: Editor): Optional<Dialog.SelectBoxSpec> => {
+const getClassList = (editor: Editor): Optional<Dialog.ListBoxSpec> => {
   const classes = Helpers.buildListItems(getRowClassList(editor));
   if (classes.length > 0) {
     return Optional.some({
       name: 'class',
-      type: 'selectbox',
+      type: 'listbox',
       label: 'Class',
       items: classes
     });
@@ -26,7 +26,7 @@ const getClassList = (editor: Editor): Optional<Dialog.SelectBoxSpec> => {
 
 const formChildren: Dialog.BodyComponentSpec[] = [
   {
-    type: 'selectbox',
+    type: 'listbox',
     name: 'type',
     label: 'Row type',
     items: [
@@ -36,7 +36,7 @@ const formChildren: Dialog.BodyComponentSpec[] = [
     ]
   },
   {
-    type: 'selectbox',
+    type: 'listbox',
     name: 'align',
     label: 'Alignment',
     items: [

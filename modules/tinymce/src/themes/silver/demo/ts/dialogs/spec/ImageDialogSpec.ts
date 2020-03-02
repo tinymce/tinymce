@@ -44,7 +44,7 @@ export default {
           },
           {
             name: 'borderstyle',
-            type: 'selectbox',
+            type: 'listbox',
             items: [
               {
                 text: 'dotted',

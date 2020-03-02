@@ -9,6 +9,7 @@ import { customEditorDataProcessor } from '../components/dialog/CustomEditor';
 import { dropZoneDataProcessor } from '../components/dialog/Dropzone';
 import { iframeDataProcessor } from '../components/dialog/Iframe';
 import { inputDataProcessor } from '../components/dialog/Input';
+import { listBoxDataProcessor } from '../components/dialog/ListBox';
 import { selectBoxDataProcessor } from '../components/dialog/SelectBox';
 import { sizeInputDataProcessor } from '../components/dialog/SizeInput';
 import { textAreaDataProcessor } from '../components/dialog/Textarea';
@@ -27,6 +28,7 @@ const dataProcessors = {
   iframe: iframeDataProcessor,
   sizeinput: sizeInputDataProcessor,
   selectbox: selectBoxDataProcessor,
+  listbox: listBoxDataProcessor,
   size: sizeInputDataProcessor,
   textarea: textAreaDataProcessor,
   urlinput: urlInputDataProcessor,

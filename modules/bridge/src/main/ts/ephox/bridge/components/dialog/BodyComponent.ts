@@ -11,6 +11,7 @@ import { Iframe, IframeSpec } from './Iframe';
 import { ImageTools, ImageToolsSpec } from './ImageTools';
 import { Input, InputSpec } from './Input';
 import { Label, LabelSpec } from './Label';
+import { ListBox, ListBoxSpec } from './ListBox';
 import { SelectBox, SelectBoxSpec } from './SelectBox';
 import { SizeInput, SizeInputSpec } from './SizeInput';
 import { Table, TableSpec } from './Table';
@@ -25,6 +26,7 @@ export type BodyComponentSpec
   | CheckboxSpec
   | TextAreaSpec
   | InputSpec
+  | ListBoxSpec
   | SelectBoxSpec
   | SizeInputSpec
   | IframeSpec
@@ -47,6 +49,7 @@ export type BodyComponent
   | Checkbox
   | TextArea
   | Input
+  | ListBox
   | SelectBox
   | SizeInput
   | Iframe

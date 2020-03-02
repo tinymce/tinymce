@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellClassListTest', (succ
         tinyApis.sSetContent(tableHtml),
         tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1),
         tinyApis.sExecCommand('mceTableCellProps'),
-        TableTestUtils.sAssertSelectValue('Class select', 'Class', 'test'),
+        TableTestUtils.sAssertListBoxValue('Select class', 'Class', 'test'),
         TableTestUtils.sClickDialogButton('Trigger test class', true),
         tinyApis.sAssertContentPresence({ 'td.test': 1 })
       ])
