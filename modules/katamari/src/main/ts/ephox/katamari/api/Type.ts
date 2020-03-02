@@ -1,15 +1,14 @@
 const typeOf = (x: any): string => {
+  const t = typeof x;
   if (x === null) {
     return 'null';
-  }
-  const t = typeof x;
-  if (t === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array')) {
+  } else if (t === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array')) {
     return 'array';
-  }
-  if (t === 'object' && (String.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'String')) {
+  } else if (t === 'object' && (String.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'String')) {
     return 'string';
+  } else {
+    return t;
   }
-  return t;
 };
 
 const isType = <Yolo>(type: string) => (value: any): value is Yolo =>
