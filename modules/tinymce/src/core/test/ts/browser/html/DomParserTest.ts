@@ -719,6 +719,24 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     Assertions.assertEq('Should be extected filter', {name: 'node', callbacks: [cb2] }, nodeFilters[nodeFilters.length - 1]);
   });
 
+  suite.test('Convert style in inline tag to span', () => {
+    let parser, root;
+    const schema = Schema();
+
+    parser = DomParser({}, schema);
+    root = parser.parse('<p><strong class="abc" style="color: red; font-size: 10px;">a</strong></p>');
+    LegacyUnit.equal(
+      serializer.serialize(root),
+      '<p><strong class="abc"><span style="color: red; font-size: 10px;">a</span></strong></p>'
+    );
+
+    root = parser.parse('<p><strong class="abc" style="color: red;"><em class="def" style="font-family: monospace;">def</em></strong></p>');
+    LegacyUnit.equal(
+      serializer.serialize(root),
+      '<p><strong class="abc"><span style="color: red;"><em class="def"><span style="font-family: monospace;">def</span></em></span></strong></p>'
+    );
+  });
+
   Pipeline.async({}, suite.toSteps({}), function () {
     success();
   }, failure);

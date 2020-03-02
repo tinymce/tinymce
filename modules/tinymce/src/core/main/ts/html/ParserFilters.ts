@@ -8,9 +8,10 @@
 import Tools from '../api/util/Tools';
 import { isEmpty, paddEmptyNode } from './ParserUtils';
 import Node from '../api/html/Node';
-import { Unicode } from '@ephox/katamari';
+import { Unicode, Arr } from '@ephox/katamari';
+import DomParser, { DomParserSettings } from '../api/html/DomParser';
 
-const register = (parser, settings: any): void => {
+const register = (parser: DomParser, settings: DomParserSettings): void => {
   const schema = parser.schema;
 
   // Remove <br> at end of block elements Gecko and WebKit injects BR elements to
@@ -171,6 +172,24 @@ const register = (parser, settings: any): void => {
       }
     });
   }
+
+  // Remove style attribute from styling elements and apply it to an inner span instead
+  parser.addNodeFilter('strong, b, em, i, u, strike', (nodes) => {
+    Arr.each(nodes, (node) => {
+      if (!node.attr('style')) {
+        return;
+      }
+      const span = Node.create('span', { style: node.attr('data-mce-style') || node.attr('style') });
+      // Insert span inside node
+      while (node.firstChild) {
+        span.append(node.firstChild);
+      }
+      node.append(span);
+      // Remove style attributes from node
+      node.attr('style', null);
+      node.attr('data-mce-style', null);
+    });
+  });
 
   if (settings.validate && schema.getValidClasses()) {
     parser.addAttributeFilter('class', function (nodes) {

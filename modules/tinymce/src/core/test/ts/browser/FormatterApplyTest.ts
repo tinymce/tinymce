@@ -225,7 +225,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b style=\"color: #ff0000; font-size: 10px;\">1234</b></p>', 'Inline element with styles');
+    LegacyUnit.equal(getContent(editor), '<p><b><span style="color: #ff0000; font-size: 10px;">1234</span></b></p>', 'Inline element with styles');
   });
 
   suite.test('Inline element with attributes and styles', function (editor) {
@@ -248,7 +248,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     editor.formatter.apply('format');
     LegacyUnit.equal(
       getContent(editor),
-      '<p><b id="value2" style="color: #ff0000; font-size: 10px;" title="value1">1234</b></p>',
+      '<p><b id="value2" title="value1"><span style="color: #ff0000; font-size: 10px;">1234</span></b></p>',
       'Inline element with attributes and styles'
     );
   });
@@ -721,7 +721,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
       color: '#ff0000',
       title: 'title'
     });
-    LegacyUnit.equal(getContent(editor), '<p><b style="color: #ff0000;" title="title">1234</b></p>', 'Inline element on selected text');
+    LegacyUnit.equal(getContent(editor), '<p><b title="title"><span style="color: #ff0000;">1234</span></b></p>', 'Inline element on selected text');
   });
 
   suite.test('Remove redundant children', function (editor) {
@@ -765,7 +765,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
       color: '#ff',
       title: 'title'
     });
-    LegacyUnit.equal(getContent(editor), '<p><b style="color: #ff00ff;" title="title2">1234</b></p>', 'Inline element on selected text with function values');
+    LegacyUnit.equal(getContent(editor), '<p><b title="title2"><span style="color: #ff00ff;">1234</span></b></p>', 'Inline element on selected text with function values');
   });
 
   suite.test('Block element on selected text', function (editor) {

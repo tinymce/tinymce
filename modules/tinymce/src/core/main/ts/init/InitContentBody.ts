@@ -65,7 +65,7 @@ const createParser = function (editor: Editor): DomParser {
       internalName = 'data-mce-' + name;
 
       // Add internal attribute if we need to we don't on a refresh of the document
-      if (!node.attr(internalName)) {
+      if (value && !node.attr(internalName)) {
         // Don't duplicate these since they won't get modified by any browser
         if (value.indexOf('data:') === 0 || value.indexOf('blob:') === 0) {
           continue;
