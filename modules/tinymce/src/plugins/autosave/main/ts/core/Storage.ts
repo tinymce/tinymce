@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
@@ -64,18 +63,13 @@ const restoreDraft = (editor: Editor) => {
   }
 };
 
-const startStoreDraft = (editor: Editor, started: Cell<boolean>) => {
+const startStoreDraft = (editor: Editor) => {
   const interval = Settings.getAutoSaveInterval(editor);
-
-  if (!started.get()) {
-    Delay.setInterval(() => {
-      if (!editor.removed) {
-        storeDraft(editor);
-      }
-    }, interval);
-
-    started.set(true);
-  }
+  Delay.setInterval(() => {
+    if (!editor.removed) {
+      storeDraft(editor);
+    }
+  }, interval);
 };
 
 const restoreLastDraft = (editor: Editor) => {
