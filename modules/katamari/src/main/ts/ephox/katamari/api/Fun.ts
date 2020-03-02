@@ -42,6 +42,12 @@ function curry <OUT>(fn: (...allArgs: any[]) => OUT, ...initialArgs: any[]): (..
   };
 }
 
+/** Partially apply 1 argument of a 1-ary function.
+ * Special case of "curry" which avoids Function.prototype.apply and has smaller code size footprint.
+ */
+const curry1_1 = <A, B> (f: (a: A) => B, a: A) => (): B =>
+  f(a);
+
 const not = <T> (f: (t: T) => boolean) => (t: T): boolean =>
   !f(t);
 
@@ -70,6 +76,7 @@ export {
   identity,
   tripleEquals,
   curry,
+  curry1_1,
   not,
   die,
   apply,

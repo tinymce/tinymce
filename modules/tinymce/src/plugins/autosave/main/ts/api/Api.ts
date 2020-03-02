@@ -8,15 +8,13 @@
 import * as Storage from '../core/Storage';
 import { Fun } from '@ephox/katamari';
 
-const get = function (editor) {
-  return {
-    hasDraft: Fun.curry(Storage.hasDraft, editor),
-    storeDraft: Fun.curry(Storage.storeDraft, editor),
-    restoreDraft: Fun.curry(Storage.restoreDraft, editor),
-    removeDraft: Fun.curry(Storage.removeDraft, editor),
-    isEmpty: Fun.curry(Storage.isEmpty, editor)
-  };
-};
+const get = (editor) => ({
+  hasDraft: Fun.curry1_1(Storage.hasDraft, editor),
+  storeDraft: Fun.curry1_1(Storage.storeDraft, editor),
+  restoreDraft: Fun.curry1_1(Storage.restoreDraft, editor),
+  removeDraft: Fun.curry1_1(Storage.removeDraft, editor),
+  isEmpty: Fun.curry1_1(Storage.isEmpty, editor)
+});
 
 export {
   get
