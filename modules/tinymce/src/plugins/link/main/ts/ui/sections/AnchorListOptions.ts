@@ -6,12 +6,12 @@
  */
 
 import { HTMLAnchorElement } from '@ephox/dom-globals';
-import { Option, Arr } from '@ephox/katamari';
-import { ListValue } from '../DialogTypes';
+import { Arr, Option } from '@ephox/katamari';
+import { ListItem } from '../DialogTypes';
 
 // NOTE: you currently need anchors in the content for this field to appear
 
-const getAnchors = (editor): Option<ListValue[]> => {
+const getAnchors = (editor): Option<ListItem[]> => {
   const anchorNodes = editor.dom.select('a:not([href])');
   const anchors = Arr.bind(anchorNodes, function (anchor: HTMLAnchorElement) {
     const id = anchor.name || anchor.id;

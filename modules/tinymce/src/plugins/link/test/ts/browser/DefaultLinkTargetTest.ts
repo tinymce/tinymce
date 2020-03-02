@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DefaultLinkTargetTest', (succes
         TestLinkUi.sInsertLink(tinyUi, 'http://www.google.com'),
         TestLinkUi.sAssertContentPresence(tinyApis, { 'a[target="_blank"]': 1, 'a': 1 }),
         TestLinkUi.sOpenLinkDialog(tinyUi),
-        TestLinkUi.sSetHtmlSelectValue('Open link in...', 'Current Window'),
+        TestLinkUi.sSetListBoxItem('Open link in...', 'Current window'),
         TestLinkUi.sClickSave,
         TestLinkUi.sAssertContentPresence(tinyApis, { 'a:not([target="_blank"])': 1, 'a': 1 }),
         tinyApis.sSetContent('')

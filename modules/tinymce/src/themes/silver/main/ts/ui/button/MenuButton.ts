@@ -46,7 +46,7 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
       tooltip: spec.tooltip,
       // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
       role,
-      fetch: (callback) => {
+      fetch: (comp, callback) => {
         spec.fetch((items) => {
           callback(
             NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false)

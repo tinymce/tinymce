@@ -1,8 +1,8 @@
-import { Chain, FocusTools, GeneralSteps, Guard, Logger, Mouse, Step, UiFinder, Waiter, Assertions, UiControls } from '@ephox/agar';
+import { Assertions, Chain, FocusTools, GeneralSteps, Guard, Logger, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { document, Event, localStorage } from '@ephox/dom-globals';
-import { Type, Obj } from '@ephox/katamari';
+import { Obj, Result, Type } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyUi } from '@ephox/mcagar';
-import { Element, Value, Body } from '@ephox/sugar';
+import { Body, Element, Traverse, Value } from '@ephox/sugar';
 
 const doc = TinyDom.fromDom(document);
 
@@ -10,8 +10,8 @@ const selectors = {
   href: 'label.tox-label:contains(URL) + div>div>input.tox-textfield',
   text: 'label.tox-label:contains(Text to display) + input.tox-textfield',
   title: 'label.tox-label:contains(Title) + input.tox-textfield',
-  target: 'label.tox-label:contains(Open link in...) + div.tox-selectfield>select',
-  linklist: 'label.tox-label:contains(Link list) + div.tox-selectfield>select',
+  target: 'label.tox-label:contains(Open link in...) + div.tox-listboxfield>.tox-listbox',
+  linklist: 'label.tox-label:contains(Link list) + div.tox-listboxfield>.tox-listbox',
 };
 
 const sOpenLinkDialog = (ui: TinyUi) => Logger.t('Open link dialog', GeneralSteps.sequence([
@@ -78,11 +78,31 @@ const sAssertInputValue = (label, selector, expected) => {
   );
 };
 
+// const sAssertListBoxValue = (label, selector, expected) => {
+//   return Logger.t(label,
+//     Chain.asStep({}, [
+//       cGetInput(selector),
+//       Chain.op((element) => {
+//         if (element.dom().type === 'checkbox') {
+//           Assertions.assertEq(`The input value for ${label} should be: `, expected, element.dom().checked);
+//           return;
+//         }
+//         Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));
+//       })
+//     ]),
+//   );
+// };
+
 const sAssertDialogContents = (expected: Record<string, any>) => {
   const steps = [sWaitForUi('Wait for dialog to appear', 'div[role="dialog"]')];
   Obj.mapToArray(selectors, (value, key) => {
     if (Obj.has(expected, key)) {
-      steps.push(sAssertInputValue(key, value, expected[key]));
+      if (key === 'target' || key === 'linklist') {
+        // TODO need to figure out a way to get the value here
+        // steps.push(sAssertListboxValue(key, value, expected[key]));
+      } else {
+        steps.push(sAssertInputValue(key, value, expected[key]));
+      }
     }
   });
   return GeneralSteps.sequence(steps);
@@ -175,10 +195,14 @@ const sClearHistory = Step.sync(() => {
   localStorage.removeItem('tinymce-url-history');
 });
 
-const sSetHtmlSelectValue = (group: string, newValue) => Logger.t('Set html select value', Chain.asStep({ }, [
-  cFindInDialog('label:contains("' + group + '") + .tox-selectfield select'),
-  UiControls.cSetValue(newValue),
-  cFireEvent('change')
+const sSetListBoxItem = (group: string, itemText: string) => Logger.t('Set listbox item', Chain.asStep({ }, [
+  cFindInDialog('label:contains("' + group + '") + .tox-listboxfield .tox-listbox'),
+  Mouse.cClick,
+  Chain.inject(Body.body()),
+  UiFinder.cWaitForVisible('Wait for list to open', '.tox-menu.tox-collection--list'),
+  UiFinder.cFindIn('.tox-collection__item-label:contains(' + itemText + ')'),
+  Chain.binder((elm) => Result.fromOption(Traverse.parent(elm), 'Failed to find parent')),
+  Mouse.cClick
 ]));
 
 const sSetInputFieldValue = (group: string, newValue: string) => Logger.t('Set input field value', Chain.asStep({ }, [
@@ -204,6 +228,6 @@ export const TestLinkUi = {
   sInsertLink,
   fireEvent,
   sClearHistory,
-  sSetHtmlSelectValue,
+  sSetListBoxItem,
   sSetInputFieldValue
 };

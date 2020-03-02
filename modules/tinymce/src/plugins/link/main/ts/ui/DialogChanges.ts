@@ -5,20 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Option, Fun } from '@ephox/katamari';
+import { Arr, Cell, Fun, Obj, Option } from '@ephox/katamari';
 
-import { LinkDialogData, LinkDialogInfo, ListItem, ListValue, LinkDialogUrlData } from './DialogTypes';
+import { LinkDialogData, LinkDialogInfo, LinkDialogUrlData, ListGroup, ListItem, ListValue } from './DialogTypes';
 
 export interface DialogDelta {
   url: LinkDialogUrlData;
   text: string;
 }
 
+const isListGroup = (item: ListItem): item is ListGroup => Obj.has(item as Record<string, any>, 'items');
+
 const findTextByValue = (value: string, catalog: ListItem[]): Option<ListValue> => {
   return Arr.findMap(catalog, (item) => {
-    // TODO TINY-2236 re-enable this (support will need to be added to bridge)
-    // return 'items' in item ? findTextByValue(value, item.items) :
-     return Option.some(item).filter((i) => i.value === value);
+    if (isListGroup(item)) {
+      return findTextByValue(value, item.items);
+    } else {
+      return Option.some(item).filter((i) => i.value === value);
+    }
   });
 };
 const getDelta = (persistentText: string, fieldName: string, catalog: ListItem[], data: Partial<LinkDialogData>): Option<DialogDelta> => {

@@ -5,22 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
 import { Types } from '@ephox/bridge';
 import { HTMLAnchorElement } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
 
-export interface ListValue {
-  text: string;
-  value: string;
-}
-
-export interface ListGroup {
-  text: string;
-  items: ListItem[];
-}
-
-// TODO TINY-2236 re-enable this (support will need to be added to bridge)
-export type ListItem = ListValue/*  | ListGroup */;
+export type ListValue = Types.ListBox.ListBoxSingleItemApi;
+export type ListGroup = Types.ListBox.ListBoxNestedItemApi;
+export type ListItem = Types.ListBox.ListBoxItemApi;
 
 export interface LinkDialogInfo {
   anchor: {

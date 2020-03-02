@@ -31,12 +31,13 @@ export interface UpdateMenuIconEvent extends CustomEvent {
 }
 
 export interface CommonDropdownSpec<T> {
+  uid?: string;
   text: Option<string>;
   icon: Option<string>;
   disabled?: boolean;
   tooltip: Option<string>;
   role: Option<string>;
-  fetch: (callback: (tdata: Option<TieredData>) => void) => void;
+  fetch: (comp: AlloyComponent, callback: (tdata: Option<TieredData>) => void) => void;
   onSetup: (itemApi: T) => OnDestroy<T>;
   getApi: (comp: AlloyComponent) => T;
   columns: Types.ColumnTypes;
@@ -90,6 +91,7 @@ const renderCommonDropdown = <T>(spec: CommonDropdownSpec<T>, prefix: string, sh
 
   const memDropdown = Memento.record(
     AlloyDropdown.sketch({
+      ...spec.uid ? { uid: spec.uid } : { },
       ...role,
       dom: {
         tag: 'button',
@@ -156,8 +158,8 @@ const renderCommonDropdown = <T>(spec: CommonDropdownSpec<T>, prefix: string, sh
         menu: MenuParts.part(false, spec.columns, spec.presets)
       },
 
-      fetch: () => {
-        return Future.nu(spec.fetch);
+      fetch: (comp) => {
+        return Future.nu(Fun.curry(spec.fetch, comp));
       }
     })
   );
