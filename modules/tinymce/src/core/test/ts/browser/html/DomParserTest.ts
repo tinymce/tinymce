@@ -734,6 +734,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
       `<p><img src="${blobUri}" /></p>`,
       serializedHtml
     );
+
+    blobCache.destroy();
   });
 
   suite.test('do not extract base64 uris if blob cache is not provided', () => {
