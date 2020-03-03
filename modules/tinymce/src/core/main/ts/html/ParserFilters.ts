@@ -9,8 +9,9 @@ import Tools from '../api/util/Tools';
 import { isEmpty, paddEmptyNode } from './ParserUtils';
 import Node from '../api/html/Node';
 import { Unicode } from '@ephox/katamari';
+import DomParser, { DomParserSettings } from '../api/html/DomParser';
 
-const register = (parser, settings: any): void => {
+const register = (parser: DomParser, settings: DomParserSettings): void => {
   const schema = parser.schema;
 
   // Remove <br> at end of block elements Gecko and WebKit injects BR elements to
@@ -100,17 +101,17 @@ const register = (parser, settings: any): void => {
     });
   }
 
-  parser.addAttributeFilter('href', function (nodes) {
-    let i = nodes.length, node;
+  parser.addAttributeFilter('href', (nodes) => {
+    let i = nodes.length;
 
-    const appendRel = function (rel) {
-      const parts = rel.split(' ').filter(function (p) {
+    const appendRel = (rel: string) => {
+      const parts = rel.split(' ').filter((p) => {
         return p.length > 0;
       });
       return parts.concat(['noopener']).sort().join(' ');
     };
 
-    const addNoOpener = function (rel) {
+    const addNoOpener = (rel: string) => {
       const newRel = rel ? Tools.trim(rel) : '';
       if (!/\b(noopener)\b/g.test(newRel)) {
         return appendRel(newRel);
@@ -121,7 +122,7 @@ const register = (parser, settings: any): void => {
 
     if (!settings.allow_unsafe_link_target) {
       while (i--) {
-        node = nodes[i];
+        const node = nodes[i];
         if (node.name === 'a' && node.attr('target') === '_blank') {
           node.attr('rel', addNoOpener(node.attr('rel')));
         }
@@ -131,7 +132,7 @@ const register = (parser, settings: any): void => {
 
   // Force anchor names closed, unless the setting "allow_html_in_named_anchor" is explicitly included.
   if (!settings.allow_html_in_named_anchor) {
-    parser.addAttributeFilter('id,name', function (nodes) {
+    parser.addAttributeFilter('id,name', (nodes) => {
       let i = nodes.length, sibling, prevSibling, parent, node;
 
       while (i--) {
@@ -152,7 +153,7 @@ const register = (parser, settings: any): void => {
   }
 
   if (settings.fix_list_elements) {
-    parser.addNodeFilter('ul,ol', function (nodes) {
+    parser.addNodeFilter('ul,ol', (nodes) => {
       let i = nodes.length, node, parentNode;
 
       while (i--) {
@@ -173,7 +174,7 @@ const register = (parser, settings: any): void => {
   }
 
   if (settings.validate && schema.getValidClasses()) {
-    parser.addAttributeFilter('class', function (nodes) {
+    parser.addAttributeFilter('class', (nodes) => {
       let i = nodes.length, node, classList, ci, className, classValue;
       const validClasses = schema.getValidClasses();
       let validClassesMap, valid;

@@ -61,6 +61,7 @@ export interface DomParserSettings {
   remove_trailing_brs?: boolean;
   root_name?: string;
   validate?: boolean;
+  inline_styles?: boolean;
 }
 
 interface DomParser {
