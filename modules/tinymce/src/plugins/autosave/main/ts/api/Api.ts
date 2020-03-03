@@ -6,14 +6,13 @@
  */
 
 import * as Storage from '../core/Storage';
-import { Fun } from '@ephox/katamari';
 
 const get = (editor) => ({
-  hasDraft: Fun.curry1_1(Storage.hasDraft, editor),
-  storeDraft: Fun.curry1_1(Storage.storeDraft, editor),
-  restoreDraft: Fun.curry1_1(Storage.restoreDraft, editor),
-  removeDraft: Fun.curry1_2(Storage.removeDraft, editor),
-  isEmpty: Fun.curry1_2(Storage.isEmpty, editor)
+  hasDraft: () => Storage.hasDraft(editor),
+  storeDraft: () => Storage.storeDraft(editor),
+  restoreDraft: () => Storage.restoreDraft(editor),
+  removeDraft: (fire?: boolean) => Storage.removeDraft(editor, fire),
+  isEmpty: (html?: string) => Storage.isEmpty(editor, html)
 });
 
 export {
