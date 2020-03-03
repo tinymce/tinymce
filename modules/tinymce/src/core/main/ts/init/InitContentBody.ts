@@ -77,7 +77,7 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     inline_styles: settings.inline_styles,
     root_name: getRootName(editor),
     validate: true,
-    blobCache
+    blob_cache: blobCache
   });
 };
 

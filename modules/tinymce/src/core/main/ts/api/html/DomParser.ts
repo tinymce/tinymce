@@ -66,7 +66,7 @@ export interface DomParserSettings {
   root_name?: string;
   validate?: boolean;
   inline_styles?: boolean;
-  blobCache?: BlobCache;
+  blob_cache?: BlobCache;
 }
 
 interface DomParser {
@@ -685,7 +685,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
       },
 
       dataUri (match) {
-        const { blobCache } = settings;
+        const { blob_cache: blobCache } = settings;
 
         if (blobCache) {
           return Conversions.buildBlob(match.mime, match.base64).fold(

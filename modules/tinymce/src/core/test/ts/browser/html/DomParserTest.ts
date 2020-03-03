@@ -722,7 +722,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
 
   suite.test('extract base64 uris to blobcache if blob cache is provided', () => {
     const blobCache = BlobCache();
-    const parser = DomParser({ blobCache });
+    const parser = DomParser({ blob_cache: blobCache });
     const base64 = 'R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==';
     const base64Uri = `data:image/gif;base64,${base64}`;
     const serializedHtml = serializer.serialize(parser.parse(`<p><img src="${base64Uri}" /></p>`));
