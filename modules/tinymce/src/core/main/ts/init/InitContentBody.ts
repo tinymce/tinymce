@@ -53,15 +53,15 @@ const appendStyle = function (editor: Editor, text: string) {
 
 const getRootName = (editor: Editor): string => editor.inline ? editor.getElement().nodeName.toLowerCase() : undefined;
 
-const removeUndefined = <T>(obj: Record<string, T>) => {
-  return Obj.filter(obj, (v) => Type.isUndefined(v) === false);
+const removeUndefined = <T>(obj: T): T => {
+  return Obj.filter(obj as Record<string, unknown>, (v) => Type.isUndefined(v) === false) as T;
 };
 
 const mkParserSettings = (editor: Editor): DomParserSettings => {
   const settings = editor.settings;
   const blobCache = editor.editorUpload.blobCache;
 
-  return removeUndefined({
+  return removeUndefined<DomParserSettings>({
     allow_conditional_comments: settings.allow_conditional_comments,
     allow_html_in_named_anchor: settings.allow_html_in_named_anchor,
     allow_script_urls: settings.allow_script_urls,
@@ -84,7 +84,7 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
 const mkSerializerSettings = (editor: Editor): SerializerSettings => {
   const settings = editor.settings;
 
-  return removeUndefined({
+  return removeUndefined<SerializerSettings>({
     // DomParser settings
     allow_conditional_comments: settings.allow_conditional_comments,
     allow_html_in_named_anchor: settings.allow_html_in_named_anchor,
