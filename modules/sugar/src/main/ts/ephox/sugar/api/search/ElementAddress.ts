@@ -1,4 +1,4 @@
-import { Arr, Fun, Struct } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import * as Compare from '../dom/Compare';
 import Element from '../node/Element';
 import * as PredicateFind from './PredicateFind';
@@ -21,8 +21,19 @@ export interface AddressInParent<P, C, E> {
   index: () => number;
 }
 
-const inAncestor: <A, D, E> (ancestor: Element<A>, descendants: Element<D>[], element: Element<E>, index: number) => AddressInAncestor<A, D, E> = Struct.immutable('ancestor', 'descendants', 'element', 'index');
-const inParent: <P, C, E>(parent: Element<P>, children: Element<C>[], element: Element<E>, index: number) => AddressInParent<P, C, E> = Struct.immutable('parent', 'children', 'element', 'index');
+const inAncestor = <A, D, E> (ancestor: Element<A>, descendants: Element<D>[], element: Element<E>, index: number): AddressInAncestor<A, D, E> => ({
+  ancestor: Fun.constant(ancestor),
+  descendants: Fun.constant(descendants),
+  element: Fun.constant(element),
+  index: Fun.constant(index)
+});
+
+const inParent = <P, C, E>(parent: Element<P>, children: Element<C>[], element: Element<E>, index: number): AddressInParent<P, C, E> => ({
+  parent: Fun.constant(parent),
+  children: Fun.constant(children),
+  element: Fun.constant(element),
+  index: Fun.constant(index)
+});
 
 const childOf = function (element: Element<DomNode>, ancestor: Element<DomNode>) {
   return PredicateFind.closest(element, function (elem) {

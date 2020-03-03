@@ -1,11 +1,14 @@
-import { Arr, Option, Struct, Unicode } from '@ephox/katamari';
+import { Arr, Fun, Option, Unicode } from '@ephox/katamari';
 
 export interface CharPos {
   ch: () => string;
   offset: () => number;
 }
 
-const charpos: (ch: string, offset: number) => CharPos = Struct.immutable('ch', 'offset');
+const charpos = (ch: string, offset: number): CharPos => ({
+  ch: Fun.constant(ch),
+  offset:  Fun.constant(offset)
+});
 
 const locate = function (text: string, offset: number) {
   return charpos(text.charAt(offset), offset);

@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Fun, Option, Struct } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 
 interface Bisect<E> {
   before: () => E[];
@@ -22,9 +22,16 @@ export interface BrokenPath<E> {
   splits: () => BrokenPathSplits<E>[];
 }
 
-const leftRight: <E> (left: E, right: E) => LeftRight<E> = Struct.immutable('left', 'right');
+const leftRight = <E> (left: E, right: E): LeftRight<E> => ({
+  left: Fun.constant(left),
+  right: Fun.constant(right)
+});
 
-const brokenPath: <E> (first: E, second: Option<E>, splits: BrokenPathSplits<E>[]) => BrokenPath<E> = Struct.immutable('first', 'second', 'splits');
+const brokenPath = <E> (first: E, second: Option<E>, splits: BrokenPathSplits<E>[]): BrokenPath<E> => ({
+  first: Fun.constant(first),
+  second: Fun.constant(second),
+  splits: Fun.constant(splits)
+});
 
 const bisect = function <E, D>(universe: Universe<E, D>, parent: E, child: E): Option<Bisect<E>> {
   const children = universe.property().children(parent);
