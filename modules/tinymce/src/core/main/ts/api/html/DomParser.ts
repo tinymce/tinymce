@@ -12,6 +12,10 @@ import Tools from '../util/Tools';
 import Node from './Node';
 import SaxParser from './SaxParser';
 import Schema from './Schema';
+import { BlobCache } from '../file/BlobCache';
+import { uniqueId } from '../../file/ImageScanner';
+import * as Conversions from '../../file/Conversions';
+import { buildBase64DataUri } from 'tinymce/core/html/Base64Uris';
 
 /**
  * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
@@ -62,6 +66,7 @@ export interface DomParserSettings {
   root_name?: string;
   validate?: boolean;
   inline_styles?: boolean;
+  blobCache?: BlobCache;
 }
 
 interface DomParser {
@@ -676,6 +681,23 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
           }
 
           node = node.parent;
+        }
+      },
+
+      dataUri (match) {
+        const { blobCache } = settings;
+
+        if (blobCache) {
+          return Conversions.buildBlob(match.mime, match.base64).fold(
+            () => buildBase64DataUri(match),
+            (blob) => {
+              const blobInfo = blobCache.create(uniqueId(), blob, match.base64);
+              blobCache.add(blobInfo);
+              return blobInfo.blobUri();
+            }
+          );
+        } else {
+          return buildBase64DataUri(match);
         }
       }
     }, schema);

@@ -38,6 +38,7 @@ import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import Quirks from '../util/Quirks';
 import { EditorSettings } from '../api/SettingsTypes';
+import { BlobCache } from '../api/file/BlobCache';
 
 declare const escape: any;
 
@@ -51,7 +52,7 @@ const appendStyle = function (editor: Editor, text: string) {
   Insert.append(head, tag);
 };
 
-const mkParserSettings = (settings: EditorSettings): DomParserSettings => {
+const mkParserSettings = (settings: EditorSettings, blobCache: BlobCache): DomParserSettings => {
   return {
     allow_conditional_comments: settings.allow_conditional_comments,
     allow_html_in_named_anchor: settings.allow_html_in_named_anchor,
@@ -67,7 +68,8 @@ const mkParserSettings = (settings: EditorSettings): DomParserSettings => {
     remove_trailing_brs: settings.remove_trailing_brs,
     inline_styles: settings.inline_styles,
     root_name: settings.root_name,
-    validate: true
+    validate: true,
+    blobCache
   };
 };
 
@@ -92,7 +94,7 @@ const mkSerializerSettings = (settings: EditorSettings): SerializerSettings => {
 };
 
 const createParser = function (editor: Editor): DomParser {
-  const parser = DomParser(mkParserSettings(editor.settings), editor.schema);
+  const parser = DomParser(mkParserSettings(editor.settings, editor.editorUpload.blobCache), editor.schema);
 
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
   parser.addAttributeFilter('src,href,style,tabindex', function (nodes, name) {

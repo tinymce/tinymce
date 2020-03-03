@@ -30,7 +30,7 @@ export interface ImageScanner {
 
 let count = 0;
 
-const uniqueId = function (prefix?: string): string {
+export const uniqueId = function (prefix?: string): string {
   return (prefix || 'blobid') + (count++);
 };
 
