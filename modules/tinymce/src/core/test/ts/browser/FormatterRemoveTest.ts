@@ -480,23 +480,12 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
     );
   });
 
-  suite.test('Remove block format from first block with forced_root_block: false', function (editor) {
-    editor.settings.forced_root_block = false;
-    editor.formatter.register('format', { block: 'h1' });
-    editor.getBody().innerHTML = '<h1>a</h1>b';
-    LegacyUnit.setSelection(editor, 'h1', 0, 'h1', 1);
-    editor.formatter.remove('format');
-    LegacyUnit.equal(getContent(editor), 'a<br />b', 'Lines should be separated with br');
-    editor.settings.forced_root_block = 'p';
-  });
-
   suite.test('Remove format from first position in table cell', function (editor) {
     editor.formatter.register('format', { inline: 'b' });
     editor.getBody().innerHTML = '<table><tbody><tr><td><b>ab</b> cd</td></tr></tbody></table>';
     LegacyUnit.setSelection(editor, 'b', 0, 'b', 2);
     editor.formatter.remove('format');
     LegacyUnit.equal(getContent(editor), '<table><tbody><tr><td>ab cd</td></tr></tbody></table>', 'Should have removed format.');
-    editor.settings.forced_root_block = 'p';
   });
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
