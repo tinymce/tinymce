@@ -189,7 +189,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
 
     waitForSelector(editor, 'img').then(function () {
       LegacyUnit.equal(editor.getContent(), '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" />a</p>');
-      LegacyUnit.strictEqual(editor.dom.select('img')[0].src.indexOf('data:'), 0);
+      LegacyUnit.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
 
       done();
     }).catch(die);
@@ -213,7 +213,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
 
     waitForSelector(editor, 'img').then(function () {
       LegacyUnit.equal(editor.getContent(), '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" />a</p>');
-      LegacyUnit.strictEqual(editor.dom.select('img')[0].src.indexOf('data:'), 0);
+      LegacyUnit.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
 
       done();
     }).catch(die);
