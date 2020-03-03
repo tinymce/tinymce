@@ -1,4 +1,4 @@
-import { Struct } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import { AnchorBox } from './LayoutTypes';
@@ -14,7 +14,10 @@ export interface Anchor {
   origin: () => Origins.OriginAdt;
 }
 
-const anchor: (anchorBox: AnchorBox, origin: Origins.OriginAdt) => Anchor = Struct.immutable('anchorBox', 'origin');
+const anchor = (anchorBox: AnchorBox, origin: Origins.OriginAdt): Anchor => ({
+  anchorBox: Fun.constant(anchorBox),
+  origin: Fun.constant(origin)
+});
 
 const element = (anchorElement: Element, origin: Origins.OriginAdt): Anchor => {
   const anchorBox = Origins.toBox(origin, anchorElement);

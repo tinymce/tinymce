@@ -1,12 +1,29 @@
 import { window } from '@ephox/dom-globals';
-import { Fun, Struct } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 import { Height, Location, Width, Element, VisualViewport } from '@ephox/sugar';
 
 import { CssPositionAdt } from './CssPosition';
 import * as OuterPosition from '../frame/OuterPosition';
 
-const pointed = Struct.immutable('point', 'width', 'height') as (point: CssPositionAdt, width: number, height: number) => BoxByPoint;
-const rect = Struct.immutable('x', 'y', 'width', 'height');
+const pointed = (point: CssPositionAdt, width: number, height: number): BoxByPoint => ({
+  point: Fun.constant(point),
+  width: Fun.constant(width),
+  height: Fun.constant(height)
+});
+
+export interface Rect {
+  x: () => number;
+  y: () => number;
+  width: () => number;
+  height: () => number;
+}
+
+const rect = (x: number, y: number, width: number, height: number): Rect => ({
+  x: Fun.constant(x),
+  y: Fun.constant(y),
+  width: Fun.constant(width),
+  height: Fun.constant(height)
+});
 
 export interface Bounds {
   x: () => number;

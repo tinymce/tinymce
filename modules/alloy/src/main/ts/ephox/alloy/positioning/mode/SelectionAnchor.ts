@@ -1,6 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Window } from '@ephox/dom-globals';
-import { Option, Struct, Unicode } from '@ephox/katamari';
+import { Fun, Option, Unicode } from '@ephox/katamari';
 import { Element, Insert, Node, Remove, Selection, SimRange, Traverse, WindowSelection } from '@ephox/sugar';
 
 import * as Descend from '../../alien/Descend';
@@ -12,7 +12,16 @@ import * as AnchorLayouts from './AnchorLayouts';
 import * as ContainerOffsets from './ContainerOffsets';
 import * as ContentAnchorCommon from './ContentAnchorCommon';
 
-const point: (element: Element, offset: number) => {element: () => Element; offset: () => number; } = Struct.immutable('element', 'offset');
+// TODO: This structure exists in a few places
+export interface ElementAndOffset {
+  element: () => Element;
+  offset: () => number;
+}
+
+const point = (element: Element, offset: number): ElementAndOffset => ({
+  element: Fun.constant(element),
+  offset: Fun.constant(offset)
+});
 
 // A range from (a, 1) to (body, end) was giving the wrong bounds.
 const descendOnce = (element: Element, offset: number) => {

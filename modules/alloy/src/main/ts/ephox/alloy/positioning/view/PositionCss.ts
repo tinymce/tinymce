@@ -1,4 +1,4 @@
-import { Option, Struct } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { Element, Css } from '@ephox/sugar';
 
 export interface PositionCss {
@@ -9,13 +9,19 @@ export interface PositionCss {
   bottom: () => Option<number>;
 }
 
-const NuPositionCss: (
+const NuPositionCss = (
   position: string,
   left: Option<number>,
   top: Option<number>,
   right: Option<number>,
   bottom: Option<number>
-) => PositionCss = Struct.immutable('position', 'left', 'top', 'right', 'bottom');
+): PositionCss => ({
+  position: Fun.constant(position),
+  left: Fun.constant(left),
+  top: Fun.constant(top),
+  right: Fun.constant(right),
+  bottom: Fun.constant(bottom)
+});
 
 const applyPositionCss = (element: Element, position: PositionCss) => {
   const addPx = (num: number) => num + 'px';

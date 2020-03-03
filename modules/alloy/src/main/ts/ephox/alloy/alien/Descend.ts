@@ -1,4 +1,4 @@
-import { Struct } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 import { Node, Text, Traverse, Element } from '@ephox/sugar';
 
 export interface ElementAndOffset {
@@ -6,8 +6,10 @@ export interface ElementAndOffset {
   offset: () => number;
 }
 
-const point: (element: Element, offset: number) => ElementAndOffset =
-  Struct.immutable('element', 'offset');
+const point = (element: Element, offset: number): ElementAndOffset => ({
+  element: Fun.constant(element),
+  offset: Fun.constant(offset)
+});
 
 // NOTE: This only descends once.
 const descendOnce = (element: Element, offset: number): ElementAndOffset => {

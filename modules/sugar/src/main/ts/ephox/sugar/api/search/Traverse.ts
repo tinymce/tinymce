@@ -110,17 +110,17 @@ const hasChildNodes = function (element: Element<DomNode>) {
   return element.dom().hasChildNodes();
 };
 
-export interface Spot<E> {
+export interface ElementAndOffset<E> {
   element: () => Element<E>;
   offset: () => number;
 }
 
-const spot = <E>(element: Element<E>, offset: number): Spot<E> => ({
+const spot = <E>(element: Element<E>, offset: number): ElementAndOffset<E> => ({
   element: Fun.constant(element),
   offset: Fun.constant(offset)
 });
 
-const leaf = function (element: Element<DomNode>, offset: number): Spot<DomNode> {
+const leaf = function (element: Element<DomNode>, offset: number): ElementAndOffset<DomNode> {
   const cs = children(element);
   return cs.length > 0 && offset < cs.length ? spot(cs[offset], 0) : spot(element, offset);
 };
