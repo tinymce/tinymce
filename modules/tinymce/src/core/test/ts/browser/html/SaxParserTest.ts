@@ -993,6 +993,55 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     );
   });
 
+  suite.test('Retain base64 images', function () {
+    const counter = createCounter(writer);
+    const parser = SaxParser(counter, schema);
+
+    writer.reset();
+    parser.parse('a<img src="data:image/gif;base64,R0/yw==" /><img src="data:image/jpeg;base64,R1/yw==" /><!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->b');
+    LegacyUnit.equal(writer.getContent(), 'a<img src="data:image/gif;base64,R0/yw==" /><img src="data:image/jpeg;base64,R1/yw==" /><!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->b');
+  });
+
+  suite.test('Replace base64 images with custom string', function () {
+    const parser = SaxParser({
+      comment (text) {
+        writer.comment(text);
+      },
+
+      cdata (text) {
+        writer.cdata(text);
+      },
+
+      text (text, raw) {
+        writer.text(text, raw);
+      },
+
+      start (name, attrs, empty) {
+        writer.start(name, attrs, empty);
+      },
+
+      end (name) {
+        writer.end(name);
+      },
+
+      pi (name, text) {
+        writer.pi(name, text);
+      },
+
+      doctype (text) {
+        writer.doctype(text);
+      },
+
+      dataUri (match) {
+        return `custom:${match.mime},${match.base64}`;
+      }
+    }, schema);
+
+    writer.reset();
+    parser.parse('a<img src="data:image/gif;base64,R0/yw==" /><img src="data:image/jpeg;base64,R1/yw==" />b');
+    LegacyUnit.equal(writer.getContent(), 'a<img src=\"custom:image/gif,R0/yw==\" /><img src=\"custom:image/jpeg,R1/yw==\" />b');
+  });
+
   Pipeline.async({}, suite.toSteps({}), function () {
     success();
   }, failure);

@@ -5,10 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Strings } from '@ephox/katamari';
+import { Strings, Obj } from '@ephox/katamari';
 import Tools from '../util/Tools';
 import Entities from './Entities';
 import Schema from './Schema';
+import { extractBase64DataUris, restoreDataUris, buildBase64DataUri, Base64Extract, Base64UriMatch } from '../../html/Base64Uris';
 
 /**
  * This class parses HTML code using pure JavaScript and executes various events for each item it finds. It will
@@ -71,6 +72,7 @@ export interface SaxParserSettings {
   pi? (name: string, text: string): void;
   start? (name: string, attrs: AttrList, empty: boolean): void;
   text? (text: string, raw?: boolean): void;
+  dataUri? (match: Base64UriMatch): string;
 }
 
 type ParserFormat = 'html' | 'xhtml' | 'xml';
@@ -206,16 +208,10 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
   const end = settings.end ? settings.end : noop;
   const pi = settings.pi ? settings.pi : noop;
   const doctype = settings.doctype ? settings.doctype : noop;
+  const dataUri = settings.dataUri ? settings.dataUri : buildBase64DataUri;
 
-  /**
-   * Parses the specified HTML string and executes the callbacks for each item it finds.
-   *
-   * @example
-   * SaxParser({...}).parse('<b>text</b>');
-   * @method parse
-   * @param {String} html Html string to sax parse.
-   */
-  const parse = (html: string, format: ParserFormat = 'html') => {
+  const parseHtml = (base64Extract: Base64Extract, format: ParserFormat = 'html') => {
+    const html = base64Extract.html;
     let matches, index = 0, value, endRegExp;
     const stack = [];
     let attrList, i, textData, name;
@@ -256,6 +252,8 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       }
     };
 
+    const processText = (value: string, raw?: boolean) => text(restoreDataUris(value, base64Extract), raw);
+
     const processComment = (value: string) => {
       // Ignore empty comments
       if (value === '') {
@@ -271,8 +269,10 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
         value = ' ' + value;
       }
 
-      comment(value);
+      comment(restoreDataUris(value, base64Extract));
     };
+
+    const processAttr = (value: string) => Obj.get(base64Extract.uris, value).map(dataUri).getOr(value);
 
     const processMalformedComment = (value: string, startIndex: number) => {
       const startTag = value || '';
@@ -287,12 +287,12 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       return endIndex + 1;
     };
 
-    const parseAttribute = (match: RegExp, name: string, value?: string, val2?: string, val3?: string) => {
+    const parseAttribute = (match: string, name: string, value?: string, val2?: string, val3?: string) => {
       let attrRule, i;
       const trimRegExp = /[\s\u0000-\u001F]+/g;
 
       name = name.toLowerCase();
-      value = name in fillAttrsMap ? name : decode(value || val2 || val3 || ''); // Handle boolean attribute than value attribute
+      value = processAttr(name in fillAttrsMap ? name : decode(value || val2 || val3 || '')); // Handle boolean attribute than value attribute
 
       // Validate name and value pass through all data- attributes
       if (validate && !isInternalElement && isValidPrefixAttrName(name) === false) {
@@ -387,7 +387,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
 
       // Text
       if (index < matches.index) {
-        text(decode(html.substr(index, matches.index - index)));
+        processText(decode(html.substr(index, matches.index - index)));
       }
 
       if ((value = matches[MatchType.ElementEnd])) { // End element
@@ -403,7 +403,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
         // Did we consume the extra character then treat it as text
         // This handles the case with html like this: "text a<b text"
         if (matches.index + matchText.length > html.length) {
-          text(decode(html.substr(matches.index)));
+          processText(decode(html.substr(matches.index)));
           index = matches.index + matchText.length;
           continue;
         }
@@ -562,7 +562,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
 
           if (isValidElement) {
             if (textData.length > 0) {
-              text(textData, true);
+              processText(textData, true);
             }
 
             end(value);
@@ -616,7 +616,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
 
     // Text
     if (index < html.length) {
-      text(decode(html.substr(index)));
+      processText(decode(html.substr(index)));
     }
 
     // Close any open elements
@@ -627,6 +627,18 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
         end(value.name);
       }
     }
+  };
+
+  /**
+   * Parses the specified HTML string and executes the callbacks for each item it finds.
+   *
+   * @example
+   * SaxParser({...}).parse('<b>text</b>');
+   * @method parse
+   * @param {String} html Html string to sax parse.
+   */
+  const parse = (html: string, format: ParserFormat = 'html') => {
+    parseHtml(extractBase64DataUris(html), format);
   };
 
   return {
