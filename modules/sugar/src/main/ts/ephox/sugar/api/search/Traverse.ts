@@ -1,5 +1,5 @@
-import { HTMLElement, Node as DomNode, Element as DomElement } from '@ephox/dom-globals';
-import { Arr, Fun, Option, Struct, Type } from '@ephox/katamari';
+import { HTMLElement, Node as DomNode } from '@ephox/dom-globals';
+import { Arr, Fun, Option, Type } from '@ephox/katamari';
 import * as Recurse from '../../alien/Recurse';
 import * as Compare from '../dom/Compare';
 import Element from '../node/Element';
@@ -110,12 +110,17 @@ const hasChildNodes = function (element: Element<DomNode>) {
   return element.dom().hasChildNodes();
 };
 
-const spot: <E>(element: Element<E>, offset: number) => {
+export interface Spot<E> {
   element: () => Element<E>;
   offset: () => number;
-} = Struct.immutable('element', 'offset');
+}
 
-const leaf = function (element: Element<DomNode>, offset: number) {
+const spot = <E>(element: Element<E>, offset: number): Spot<E> => ({
+  element: Fun.constant(element),
+  offset: Fun.constant(offset)
+});
+
+const leaf = function (element: Element<DomNode>, offset: number): Spot<DomNode> {
   const cs = children(element);
   return cs.length > 0 && offset < cs.length ? spot(cs[offset], 0) : spot(element, offset);
 };
