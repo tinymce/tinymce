@@ -1,5 +1,6 @@
 Version 5.2.1 (TBD)
     Fixed "is decorative" checkbox in the image dialog not staying checked on certain actions #FOAM-11
+    Fixed possible uncaught exception when creating a parser #TINY-4742
     Fixed table selection not functioning correctly in Microsoft Edge 44 or higher #TINY-3862
     Fixed table resize handles not functioning correctly in Microsoft Edge #TINY-4160
     Fixed the floating toolbar disconnecting from the toolbar when adding content in inline mode #TINY-4725
