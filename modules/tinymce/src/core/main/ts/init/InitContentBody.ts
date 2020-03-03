@@ -37,8 +37,7 @@ import * as SelectionBookmark from '../selection/SelectionBookmark';
 import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import Quirks from '../util/Quirks';
-import { EditorSettings } from '../api/SettingsTypes';
-import { BlobCache } from '../api/file/BlobCache';
+import { Obj, Type } from '@ephox/katamari';
 
 declare const escape: any;
 
@@ -52,29 +51,17 @@ const appendStyle = function (editor: Editor, text: string) {
   Insert.append(head, tag);
 };
 
-const mkParserSettings = (settings: EditorSettings, blobCache: BlobCache): DomParserSettings => {
-  return {
-    allow_conditional_comments: settings.allow_conditional_comments,
-    allow_html_in_named_anchor: settings.allow_html_in_named_anchor,
-    allow_script_urls: settings.allow_script_urls,
-    allow_unsafe_link_target: settings.allow_unsafe_link_target,
-    convert_fonts_to_spans: settings.convert_fonts_to_spans,
-    fix_list_elements: settings.fix_list_elements,
-    font_size_legacy_values: settings.font_size_legacy_values,
-    forced_root_block: settings.forced_root_block,
-    forced_root_block_attrs: settings.forced_root_block_attrs,
-    padd_empty_with_br: settings.padd_empty_with_br,
-    preserve_cdata: settings.preserve_cdata,
-    remove_trailing_brs: settings.remove_trailing_brs,
-    inline_styles: settings.inline_styles,
-    root_name: settings.root_name,
-    validate: true,
-    blobCache
-  };
+const getRootName = (editor: Editor): string => editor.inline ? editor.getElement().nodeName.toLowerCase() : undefined;
+
+const removeUndefined = <T>(obj: Record<string, T>) => {
+  return Obj.filter(obj, (v) => Type.isUndefined(v) === false);
 };
 
-const mkSerializerSettings = (settings: EditorSettings): SerializerSettings => {
-  return {
+const mkParserSettings = (editor: Editor): DomParserSettings => {
+  const settings = editor.settings;
+  const blobCache = editor.editorUpload.blobCache;
+
+  return removeUndefined({
     allow_conditional_comments: settings.allow_conditional_comments,
     allow_html_in_named_anchor: settings.allow_html_in_named_anchor,
     allow_script_urls: settings.allow_script_urls,
@@ -88,13 +75,71 @@ const mkSerializerSettings = (settings: EditorSettings): SerializerSettings => {
     preserve_cdata: settings.preserve_cdata,
     remove_trailing_brs: settings.remove_trailing_brs,
     inline_styles: settings.inline_styles,
-    root_name: settings.root_name,
-    validate: true
-  };
+    root_name: getRootName(editor),
+    validate: true,
+    blobCache
+  });
+};
+
+const mkSerializerSettings = (editor: Editor): SerializerSettings => {
+  const settings = editor.settings;
+
+  return removeUndefined({
+    // DomParser settings
+    allow_conditional_comments: settings.allow_conditional_comments,
+    allow_html_in_named_anchor: settings.allow_html_in_named_anchor,
+    allow_script_urls: settings.allow_script_urls,
+    allow_unsafe_link_target: settings.allow_unsafe_link_target,
+    convert_fonts_to_spans: settings.convert_fonts_to_spans,
+    fix_list_elements: settings.fix_list_elements,
+    font_size_legacy_values: settings.font_size_legacy_values,
+    forced_root_block: settings.forced_root_block,
+    forced_root_block_attrs: settings.forced_root_block_attrs,
+    padd_empty_with_br: settings.padd_empty_with_br,
+    preserve_cdata: settings.preserve_cdata,
+    remove_trailing_brs: settings.remove_trailing_brs,
+    inline_styles: settings.inline_styles,
+    root_name: getRootName(editor),
+    validate: true,
+
+    // SerializerSettings
+    url_converter: settings.url_converter,
+    url_converter_scope: settings.url_converter_scope,
+
+    // Writer settings
+    element_format: settings.element_format,
+    entities: settings.entities,
+    entity_encoding: settings.entity_encoding,
+    indent: settings.indent,
+    indent_after: settings.indent_after,
+    indent_before: settings.indent_before,
+
+    // Schema settings
+    block_elements: settings.block_elements,
+    boolean_attributes: settings.boolean_attributes,
+    custom_elements: settings.custom_elements,
+    extended_valid_elements: settings.extended_valid_elements,
+    invalid_elements: settings.invalid_elements,
+    invalid_styles: settings.invalid_styles,
+    move_caret_before_on_enter_elements: settings.move_caret_before_on_enter_elements,
+    non_empty_elements: settings.non_empty_elements,
+    schema: settings.schema,
+    self_closing_elements: settings.self_closing_elements,
+    short_ended_elements: settings.short_ended_elements,
+    special: settings.special,
+    text_block_elements: settings.text_block_elements,
+    text_inline_elements: settings.text_inline_elements,
+    valid_children: settings.valid_children,
+    valid_classes: settings.valid_classes,
+    valid_elements: settings.valid_elements,
+    valid_styles: settings.valid_styles,
+    verify_html: settings.verify_html,
+    whitespace_elements: settings.whitespace_elements,
+  });
 };
 
 const createParser = function (editor: Editor): DomParser {
-  const parser = DomParser(mkParserSettings(editor.settings, editor.editorUpload.blobCache), editor.schema);
+  const parser = DomParser(mkParserSettings(editor), editor.schema);
 
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
   parser.addAttributeFilter('src,href,style,tabindex', function (nodes, name) {
@@ -260,9 +305,6 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
     editor.contentWindow = window;
     editor.bodyElement = targetElm;
     editor.contentAreaContainer = targetElm;
-
-    // TODO: Fix this
-    settings.root_name = targetElm.nodeName.toLowerCase();
   }
 
   // It will not steal focus while setting contentEditable
@@ -299,7 +341,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   });
 
   editor.parser = createParser(editor);
-  editor.serializer = DomSerializer(mkSerializerSettings(settings), editor);
+  editor.serializer = DomSerializer(mkSerializerSettings(editor), editor);
   editor.selection = Selection(editor.dom, editor.getWin(), editor.serializer, editor);
   editor.annotator = Annotator(editor);
   editor.formatter = Formatter(editor);

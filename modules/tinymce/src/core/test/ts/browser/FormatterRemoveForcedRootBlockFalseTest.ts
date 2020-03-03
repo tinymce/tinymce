@@ -9,7 +9,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveForcedRootBlockFalseTest
 
   Theme();
 
-  const getContent = (editor: Editor) {
+  const getContent = (editor: Editor) => {
     return editor.getContent().toLowerCase().replace(/[\r]+/g, '');
   };
 
