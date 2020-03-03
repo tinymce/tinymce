@@ -95,6 +95,34 @@ UnitTest.test('Check curry', () => {
   }));
 });
 
+UnitTest.test('Check curry1_1', () => {
+  fc.assert(fc.property(fc.integer(), (a) => {
+    const f = (a) => [ a ];
+    Assert.eq('curry 1_1', Fun.curry1_1(f, a)(), [ a ]);
+  }));
+});
+
+UnitTest.test('Check curry1_2', () => {
+  fc.assert(fc.property(fc.integer(), fc.integer(), (a, b) => {
+    const f = (a, b) => [ a, b ];
+    Assert.eq('curry 1_2', Fun.curry1_2(f, a)(b), [ a, b ]);
+  }));
+});
+
+UnitTest.test('Check curry1_3', () => {
+  fc.assert(fc.property(fc.integer(), fc.integer(), fc.string(), (a, b, c) => {
+    const f = (a, b, c) => [ a, b, c ];
+    Assert.eq('curry 1_2', Fun.curry1_3(f, a)(b, c), [ a, b, c ]);
+  }));
+});
+
+UnitTest.test('Check curry1_4', () => {
+  fc.assert(fc.property(fc.integer(), fc.integer(), fc.string(), fc.integer(), (a, b, c, d) => {
+    const f = (a, b, c, d) => [ a, b, c, d ];
+    Assert.eq('curry 1_2', Fun.curry1_4(f, a)(b, c, d), [ a, b, c, d ]);
+  }));
+});
+
 UnitTest.test('Check not :: not(f(x)) === !f(x)', () => {
   fc.assert(fc.property(fc.json(), fc.func(fc.boolean()), (x, f) => {
     const g = Fun.not(f);
