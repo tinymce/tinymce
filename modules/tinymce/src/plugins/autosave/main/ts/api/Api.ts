@@ -12,8 +12,8 @@ const get = (editor) => ({
   hasDraft: Fun.curry1_1(Storage.hasDraft, editor),
   storeDraft: Fun.curry1_1(Storage.storeDraft, editor),
   restoreDraft: Fun.curry1_1(Storage.restoreDraft, editor),
-  removeDraft: Fun.curry1_1(Storage.removeDraft, editor),
-  isEmpty: Fun.curry1_1(Storage.isEmpty, editor)
+  removeDraft: Fun.curry1_2(Storage.removeDraft, editor),
+  isEmpty: Fun.curry1_2(Storage.isEmpty, editor)
 });
 
 export {
