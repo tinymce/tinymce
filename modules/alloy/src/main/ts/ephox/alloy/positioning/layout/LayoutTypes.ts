@@ -1,4 +1,3 @@
-import { Bounds } from '../../alien/Boxes';
 import { SpotInfo } from '../view/SpotInfo';
 import { Bubble } from './Bubble';
 
@@ -17,6 +16,5 @@ export interface AnchorElement {
 export type AnchorLayout = (
   anchor: AnchorBox,
   element: AnchorElement,
-  bubbles: Bubble,
-  bounds: Bounds
+  bubbles: Bubble
 ) => SpotInfo;

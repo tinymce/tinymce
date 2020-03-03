@@ -1,7 +1,8 @@
 import { Adt, Arr, Fun, Num } from '@ephox/katamari';
-import { Bounds } from '../../alien/Boxes';
+import * as Boxes from '../../alien/Boxes';
 import { Bubble } from '../layout/Bubble';
 import * as Direction from '../layout/Direction';
+import * as LayoutBounds from '../layout/LayoutBounds';
 import { AnchorBox, AnchorElement, AnchorLayout } from '../layout/LayoutTypes';
 import * as Reposition from './Reposition';
 import { SpotInfo } from './SpotInfo';
@@ -26,7 +27,7 @@ const adt: {
   { nofit: [ 'reposition', 'deltaW', 'deltaH' ] }
 ]);
 
-const calcReposition = (newX: number, newY: number, width: number, height: number, bounds: Bounds) => {
+const calcReposition = (newX: number, newY: number, width: number, height: number, bounds: Boxes.Bounds) => {
   const boundsX = bounds.x();
   const boundsY = bounds.y();
   const boundsWidth = bounds.width();
@@ -50,11 +51,10 @@ const calcReposition = (newX: number, newY: number, width: number, height: numbe
   const maxX = Math.max(bounds.x(), bounds.right() - width);
   const maxY = Math.max(bounds.y(), bounds.bottom() - height);
 
-  // TBIO-3366 + TBIO-4236:
-  // Futz with the X position to ensure that x is positive, but not off the right side of the screen.
+  // Futz with the X value to ensure that we're not off the left or right of the screen
   // NOTE: bounds.x() is 0 in repartee here.
   const limitX = Num.clamp(newX, bounds.x(), maxX);
-  // Futz with the Y value to ensure that we're not off the top of the screen
+  // Futz with the Y value to ensure that we're not off the top or bottom of the screen
   const limitY = Num.clamp(newY, bounds.y(), maxY);
 
   return {
@@ -67,24 +67,25 @@ const calcReposition = (newX: number, newY: number, width: number, height: numbe
   };
 };
 
-const attempt = (candidate: SpotInfo, width: number, height: number): BounderAttemptAdt  => {
+const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Boxes.Bounds): BounderAttemptAdt  => {
   const candidateX = candidate.x();
   const candidateY = candidate.y();
-  const bubbleLeft = candidate.bubble().offset().left();
-  const bubbleTop = candidate.bubble().offset().top();
+  const bubbleOffsets = candidate.bubble().offset();
+  const bubbleLeft = bubbleOffsets.left();
+  const bubbleTop = bubbleOffsets.top();
 
-  const bounds = candidate.bounds();
-  const boundsY = bounds.y();
-  const boundsBottom = bounds.bottom();
-
-  const boundsX = bounds.x();
-  const boundsRight = bounds.right();
+  // adjust the bounds to account for the layout and bubble restrictions
+  const adjustedBounds = LayoutBounds.adjustBounds(bounds, candidate.boundsRestriction(), bubbleOffsets);
+  const boundsY = adjustedBounds.y();
+  const boundsBottom = adjustedBounds.bottom();
+  const boundsX = adjustedBounds.x();
+  const boundsRight = adjustedBounds.right();
 
   // candidate position is excluding the bubble, so add those values as well
   const newX = candidateX + bubbleLeft;
   const newY = candidateY + bubbleTop;
 
-  const { originInBounds, sizeInBounds, limitX, limitY, deltaW, deltaH } = calcReposition(newX, newY, width, height, bounds);
+  const { originInBounds, sizeInBounds, limitX, limitY, deltaW, deltaH } = calcReposition(newX, newY, width, height, adjustedBounds);
 
   // TBIO-3367 + TBIO-3387:
   // Futz with the "height" of the popup to ensure if it doesn't fit it's capped at the available height.
@@ -151,12 +152,12 @@ const attempt = (candidate: SpotInfo, width: number, height: number): BounderAtt
  * bubbles: the bubbles for the popup (see api.Bubble)
  * bounds: the screen
  */
-const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: AnchorElement, bubbles: Bubble, bounds: Bounds): Reposition.RepositionDecision => {
+const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: AnchorElement, bubbles: Bubble, bounds: Boxes.Bounds): Reposition.RepositionDecision => {
   const panelWidth = elementBox.width();
   const panelHeight = elementBox.height();
   const attemptBestFit = (layout: AnchorLayout, reposition: Reposition.RepositionDecision, deltaW: number, deltaH: number) => {
-    const next: SpotInfo = layout(anchorBox, elementBox, bubbles, bounds);
-    const attemptLayout = attempt(next, panelWidth, panelHeight);
+    const next: SpotInfo = layout(anchorBox, elementBox, bubbles);
+    const attemptLayout = attempt(next, panelWidth, panelHeight, bounds);
 
     // unwrapping fit only to rewrap seems... silly
     return attemptLayout.fold(adt.fit, (newReposition, newDeltaW, newDeltaH) => {

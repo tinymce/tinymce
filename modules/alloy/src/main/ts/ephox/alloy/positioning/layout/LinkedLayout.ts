@@ -1,10 +1,7 @@
-import { Fun } from '@ephox/katamari';
 import { nu as NuSpotInfo } from '../view/SpotInfo';
 import * as Direction from './Direction';
-import { adjustBounds, anchorBottom, anchorLeft, anchorRight, anchorTop } from './LayoutBounds';
+import { AnchorBoxBounds, boundsRestriction } from './LayoutBounds';
 import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
-
-const identity = Fun.identity;
 
 /*
   Layout for submenus;
@@ -32,45 +29,45 @@ const southY = (anchor: AnchorBox): number => {
   return anchor.y();
 };
 
-const southeast: AnchorLayout = (anchor, element, bubbles, bounds) => {
+const southeast: AnchorLayout = (anchor, element, bubbles) => {
   return NuSpotInfo(
     eastX(anchor),
     southY(anchor),
     bubbles.southeast(),
     Direction.southeast(),
-    adjustBounds(bounds, anchor, bubbles.southeast(), anchorRight, anchorTop, identity, identity),
+    boundsRestriction(anchor, { left: AnchorBoxBounds.RightEdge, top: AnchorBoxBounds.TopEdge }),
     'link-layout-se');
 };
 
-const southwest: AnchorLayout = (anchor, element, bubbles, bounds) => {
+const southwest: AnchorLayout = (anchor, element, bubbles) => {
   return NuSpotInfo(
     westX(anchor, element),
     southY(anchor),
     bubbles.southwest(),
     Direction.southwest(),
-    adjustBounds(bounds, anchor, bubbles.southwest(), identity, anchorTop, anchorLeft, identity),
+    boundsRestriction(anchor, { right: AnchorBoxBounds.LeftEdge, top: AnchorBoxBounds.TopEdge }),
     'link-layout-sw'
   );
 };
 
-const northeast: AnchorLayout = (anchor, element, bubbles, bounds) => {
+const northeast: AnchorLayout = (anchor, element, bubbles) => {
   return NuSpotInfo(
     eastX(anchor),
     northY(anchor, element),
     bubbles.northeast(),
     Direction.northeast(),
-    adjustBounds(bounds, anchor, bubbles.northeast(), anchorRight, identity, identity, anchorBottom),
+    boundsRestriction(anchor, { left: AnchorBoxBounds.RightEdge, bottom: AnchorBoxBounds.BottomEdge }),
     'link-layout-ne'
   );
 };
 
-const northwest: AnchorLayout = (anchor, element, bubbles, bounds) => {
+const northwest: AnchorLayout = (anchor, element, bubbles) => {
   return NuSpotInfo(
     westX(anchor, element),
     northY(anchor, element),
     bubbles.northwest(),
     Direction.northwest(),
-    adjustBounds(bounds, anchor, bubbles.northwest(), identity, identity, anchorLeft, anchorBottom),
+    boundsRestriction(anchor, { right: AnchorBoxBounds.LeftEdge, bottom: AnchorBoxBounds.BottomEdge }),
     'link-layout-nw'
   );
 };
