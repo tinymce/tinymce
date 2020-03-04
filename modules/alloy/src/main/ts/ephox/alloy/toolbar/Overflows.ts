@@ -3,7 +3,7 @@ import { Arr, Fun, Option } from '@ephox/katamari';
 import * as PositionArray from '../alien/PositionArray';
 
 // TODO: what types are these? I think it's AlloyComponent[], AlloyComponent, number
-const output = (within: any, extra: any, withinWidth: number) => ({
+const output = <T>(within: T[], extra: T, withinWidth: number) => ({
   within: Fun.constant(within),
   extra: Fun.constant(extra),
   withinWidth: Fun.constant(withinWidth)
