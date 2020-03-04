@@ -1,9 +1,11 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Option, Struct } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { Direction, Successor, Transition, Traverse } from '../api/data/Types';
 
-type TraverseConstructor = <E>(item: E, mode: Transition) => Traverse<E>;
-const traverse: TraverseConstructor = Struct.immutable('item', 'mode');
+const traverse = <E>(item: E, mode: Transition): Traverse<E> => ({
+  item: Fun.constant(item),
+  mode: Fun.constant(mode)
+});
 
 const backtrack: Transition = function (universe, item, _direction, transition = sidestep) {
   return universe.property().parent(item).map(function (p) {

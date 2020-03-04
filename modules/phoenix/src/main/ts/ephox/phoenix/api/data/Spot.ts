@@ -1,20 +1,31 @@
-import { Struct } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 import { SpotDelta, SpotPoint, SpotPoints, SpotRange, SpotText } from './Types';
 
-type PointConstructor = <E> (element: E, offset: number) => SpotPoint<E>;
-const point: PointConstructor = Struct.immutable('element', 'offset');
+const point = <E> (element: E, offset: number): SpotPoint<E> => ({
+  element: Fun.constant(element),
+  offset: Fun.constant(offset)
+});
 
-type DeltaConstructor = <E> (element: E, deltaOffset: number) => SpotDelta<E>;
-const delta: DeltaConstructor = Struct.immutable('element', 'deltaOffset');
+const delta = <E> (element: E, deltaOffset: number): SpotDelta<E> => ({
+  element: Fun.constant(element),
+  deltaOffset: Fun.constant(deltaOffset)
+});
 
-type RangeConstructor = <E> (element: E, start: number, finish: number) => SpotRange<E>;
-const range: RangeConstructor = Struct.immutable('element', 'start', 'finish');
+const range = <E> (element: E, start: number, finish: number): SpotRange<E> => ({
+  element: Fun.constant(element),
+  start: Fun.constant(start),
+  finish: Fun.constant(finish)
+});
 
-type PointsConstructor = <E> (begin: SpotPoint<E>, end: SpotPoint<E>) => SpotPoints<E>;
-const points: PointsConstructor = Struct.immutable('begin', 'end');
+const points = <E> (begin: SpotPoint<E>, end: SpotPoint<E>): SpotPoints<E> => ({
+  begin: Fun.constant(begin),
+  end: Fun.constant(end)
+});
 
-type TextConstructor = <E> (element: E, text: any) => SpotText<E>;
-const text: TextConstructor = Struct.immutable('element', 'text');
+const text = <E> (element: E, text: any): SpotText<E> => ({
+  element: Fun.constant(element),
+  text: Fun.constant(text)
+});
 
 export {
   point,
