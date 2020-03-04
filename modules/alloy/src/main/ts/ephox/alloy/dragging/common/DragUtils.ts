@@ -10,9 +10,9 @@ import * as BlockerUtils from './BlockerUtils';
 import { DraggingConfig, DraggingState, DragModeDeltas, DragStartData } from './DraggingTypes';
 import * as DragMovement from './DragMovement';
 
-type EventsFunc<C extends DraggingConfig, A extends EventFormat> = (dragConfig: C, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void) => Array<AlloyEvents.AlloyEventKeyAndHandler<A>>;
+type EventsFunc<C extends DraggingConfig<E>, A extends EventFormat, E> = (dragConfig: C, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void) => Array<AlloyEvents.AlloyEventKeyAndHandler<A>>;
 
-const calcStartData = (dragConfig: DraggingConfig, comp: AlloyComponent): DragStartData => {
+const calcStartData = <E>(dragConfig: DraggingConfig<E>, comp: AlloyComponent): DragStartData => {
   return {
     bounds: dragConfig.getBounds(),
     height: Height.getOuter(comp.element()),
@@ -20,7 +20,7 @@ const calcStartData = (dragConfig: DraggingConfig, comp: AlloyComponent): DragSt
   };
 };
 
-const move = (component: AlloyComponent, dragConfig: DraggingConfig, dragState: DraggingState, dragMode: DragModeDeltas<Position>, event: EventArgs) => {
+const move = <E>(component: AlloyComponent, dragConfig: DraggingConfig<E>, dragState: DraggingState, dragMode: DragModeDeltas<Position>, event: EventArgs) => {
   const delta = dragState.update(dragMode, event);
   const dragStartData = dragState.getStartData().getOrThunk(() => calcStartData(dragConfig, component));
   delta.each((dlt) => {
@@ -28,7 +28,7 @@ const move = (component: AlloyComponent, dragConfig: DraggingConfig, dragState: 
   });
 };
 
-const stop = (component: AlloyComponent, blocker: Option<AlloyComponent>, dragConfig: DraggingConfig, dragState: DraggingState) => {
+const stop = <E>(component: AlloyComponent, blocker: Option<AlloyComponent>, dragConfig: DraggingConfig<E>, dragState: DraggingState) => {
   blocker.each(BlockerUtils.discard);
   dragConfig.snaps.each((snapInfo) => {
     Snappables.stopDrag(component, snapInfo);
@@ -38,7 +38,7 @@ const stop = (component: AlloyComponent, blocker: Option<AlloyComponent>, dragCo
   dragConfig.onDrop(component, target);
 };
 
-const handlers = <C extends DraggingConfig, A extends EventFormat>(events: EventsFunc<C, A>) => {
+const handlers = <C extends DraggingConfig<E>, A extends EventFormat, E>(events: EventsFunc<C, A, E>) => {
   return (dragConfig: C, dragState: DraggingState): AlloyEvents.AlloyEventRecord => {
     const updateStartState = (comp: AlloyComponent) => {
       dragState.setStartData(calcStartData(dragConfig, comp));
