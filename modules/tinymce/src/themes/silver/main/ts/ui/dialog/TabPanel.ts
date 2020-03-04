@@ -29,7 +29,7 @@ import { interpretInForm } from 'tinymce/themes/silver/ui/general/UiFactory';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { setMode } from '../alien/DialogTabHeight';
 import { formTabChangeEvent } from '../general/FormEvents';
-import NavigableObject from '../general/NavigableObject';
+import * as NavigableObject from '../general/NavigableObject';
 import { Types } from '@ephox/bridge';
 import { Omit } from '../Omit';
 

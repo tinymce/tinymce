@@ -71,7 +71,7 @@ const restoreStyles = function () {
   });
 };
 
-export default {
+export {
   clobberStyles,
   restoreStyles
 };

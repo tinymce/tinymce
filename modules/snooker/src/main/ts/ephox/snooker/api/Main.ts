@@ -1,26 +1,26 @@
 import { CellLocation } from './CellLocation';
-import CellMutations from './CellMutations';
-import CellNavigation from './CellNavigation';
-import CellProperties from './CellProperties';
-import CopyRows from './CopyRows';
-import CopySelected from './CopySelected';
+import * as CellMutations from './CellMutations';
+import * as CellNavigation from './CellNavigation';
+import * as CellProperties from './CellProperties';
+import * as CopyRows from './CopyRows';
+import * as CopySelected from './CopySelected';
 import { Generators } from './Generators';
 import { ResizeDirection } from './ResizeDirection';
 import { ResizeWire } from './ResizeWire';
-import Sizes from './Sizes';
+import * as Sizes from './Sizes';
 import * as Structs from './Structs';
-import TableContent from './TableContent';
+import * as TableContent from './TableContent';
 import TableDirection from './TableDirection';
-import TableFill from './TableFill';
-import TableGridSize from './TableGridSize';
-import TableLookup from './TableLookup';
-import TableOperations from './TableOperations';
-import TablePositions from './TablePositions';
+import * as TableFill from './TableFill';
+import * as TableGridSize from './TableGridSize';
+import * as TableLookup from './TableLookup';
+import * as TableOperations from './TableOperations';
+import * as TablePositions from './TablePositions';
 import * as TableRender from './TableRender';
 import { TableResize } from './TableResize';
 import * as RunOperation from '../model/RunOperation';
-import GridRow from '../model/GridRow';
-import OtherCells from './OtherCells';
+import * as GridRow from '../model/GridRow';
+import * as OtherCells from './OtherCells';
 
 export {
   CellLocation,

@@ -7,9 +7,9 @@
 
 import { Cell } from '@ephox/katamari';
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Api from './api/Api';
-import Commands from './api/Commands';
-import Buttons from './ui/Buttons';
+import * as Api from './api/Api';
+import * as Commands from './api/Commands';
+import * as Buttons from './ui/Buttons';
 import { SearchState } from './core/Actions';
 
 export default function () {

@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Body, Compare, Element, Insert, Remove, SelectorFilter, SelectorFind } from '@ephox/sugar';
-import TableLookup from 'ephox/snooker/api/TableLookup';
+import * as TableLookup from 'ephox/snooker/api/TableLookup';
 
 UnitTest.test('TableLookupTest', function () {
   const testerFound = function (html: string, triggerSelector: string, resultSelector: string, label: string) {

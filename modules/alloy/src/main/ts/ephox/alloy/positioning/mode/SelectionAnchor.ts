@@ -10,7 +10,7 @@ import * as Origins from '../layout/Origins';
 import { Anchoring, SelectionAnchor } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 import * as ContainerOffsets from './ContainerOffsets';
-import ContentAnchorCommon from './ContentAnchorCommon';
+import * as ContentAnchorCommon from './ContentAnchorCommon';
 
 const point: (element: Element, offset: number) => {element: () => Element; offset: () => number; } = Struct.immutable('element', 'offset');
 

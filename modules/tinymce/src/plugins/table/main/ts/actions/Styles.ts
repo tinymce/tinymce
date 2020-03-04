@@ -55,7 +55,7 @@ const unApplyVAlign = function (editor: Editor, elm: Element) {
   });
 };
 
-export default {
+export {
   applyAlign,
   applyVAlign,
   unApplyAlign,

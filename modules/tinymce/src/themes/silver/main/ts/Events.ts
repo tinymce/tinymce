@@ -90,4 +90,4 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
   });
 };
 
-export default { setup };
+export { setup };

@@ -91,7 +91,7 @@ const paste = function (doc: Element): SimpleGenerators {
   };
 };
 
-export default {
+export {
   cellOperations,
   paste
 };

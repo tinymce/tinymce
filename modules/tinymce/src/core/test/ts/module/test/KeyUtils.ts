@@ -107,6 +107,6 @@ const type = function (editor, chr) {
   fakeEvent(startElm, 'keyup', evt);
 };
 
-export default {
+export {
   type
 };

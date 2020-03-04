@@ -10,13 +10,13 @@ import { Option, Options } from '@ephox/katamari';
 import Env from '../api/Env';
 import * as CaretBookmark from './CaretBookmark';
 import CaretPosition from '../caret/CaretPosition';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import Tools from '../api/util/Tools';
 import Selection from '../api/dom/Selection';
 import { getParentCaretContainer } from '../fmt/FormatContainer';
-import Zwsp from '../text/Zwsp';
+import * as Zwsp from '../text/Zwsp';
 import DOMUtils from '../api/dom/DOMUtils';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import { isPathBookmark, isStringPathBookmark, isIdBookmark, isIndexBookmark, isRangeBookmark, PathBookmark, IdBookmark, Bookmark, IndexBookmark } from './BookmarkTypes';
 
 const addBogus = (dom: DOMUtils, node: DomNode): DomNode => {
@@ -266,6 +266,6 @@ const resolve = (selection: Selection, bookmark: Bookmark): Option<Range> => {
   return Option.none();
 };
 
-export default {
+export {
   resolve
 };

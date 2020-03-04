@@ -7,7 +7,7 @@
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Tools from 'tinymce/core/api/util/Tools';
-import NodeType from './NodeType';
+import * as NodeType from './NodeType';
 
 const DOM = DOMUtils.DOM;
 
@@ -44,7 +44,7 @@ const normalizeLists = function (dom, element) {
   });
 };
 
-export default {
+export {
   normalizeList,
   normalizeLists
 };

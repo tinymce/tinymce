@@ -31,7 +31,7 @@ const setInlineStyles = (editor: Editor, inline_styles: boolean) => {
   editor.settings.inline_styles = inline_styles;
 };
 
-export default {
+export {
   getFontFormats,
   getFontSizeFormats,
   setFontSizeFormats,

@@ -2,7 +2,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Spot } from '@ephox/phoenix';
 import { Pattern } from '@ephox/polaris';
 import { Compare, Element, Html, Insert, InsertAll } from '@ephox/sugar';
-import DomTextSearch from 'ephox/robin/api/dom/DomTextSearch';
+import * as DomTextSearch from 'ephox/robin/api/dom/DomTextSearch';
 import { TextSeekerOutcome, TextSeekerPhaseConstructor } from 'ephox/robin/textdata/TextSeeker';
 import { KAssert } from '@ephox/katamari-assertions';
 import { Unicode } from '@ephox/katamari';

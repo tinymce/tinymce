@@ -4,7 +4,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
+import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 
 UnitTest.asynctest('GetCurrentColorTest', (success, failure) => {
   SilverTheme();

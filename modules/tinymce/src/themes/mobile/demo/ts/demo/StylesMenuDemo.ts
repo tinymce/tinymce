@@ -3,7 +3,7 @@ import { console } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
-import StylesMenu from 'tinymce/themes/mobile/ui/StylesMenu';
+import * as StylesMenu from 'tinymce/themes/mobile/ui/StylesMenu';
 import * as UiDomFactory from 'tinymce/themes/mobile/util/UiDomFactory';
 
 export default function () {

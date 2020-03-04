@@ -28,7 +28,7 @@ const parentsAndSelf = (start: Element, root: Element): Element[] => {
   return [start].concat(parents(start, root));
 };
 
-export default {
+export {
   parentsUntil,
   parents,
   parentsAndSelf

@@ -21,6 +21,7 @@ export interface NotificationSketchSpec extends Sketcher.SingleSketchSpec {
   text: string;
   level: 'info' | 'warn' | 'warning' | 'error' | 'success';
   icon: Option<string>;
+  closeButton?: boolean;
   progress: boolean;
   onAction: Function;
   iconProvider: IconProvider;
@@ -29,12 +30,12 @@ export interface NotificationSketchSpec extends Sketcher.SingleSketchSpec {
 
 // tslint:disable-next-line:no-empty-interface
 export interface NotificationSketchDetail extends Sketcher.SingleSketchDetail {
-
   text: string;
   level: Option<'info' | 'warn' | 'warning' | 'error' | 'success'>;
   icon: Option<string>;
+  closeButton: boolean;
   onAction: Function;
-  progress: Boolean;
+  progress: boolean;
   iconProvider: IconProvider;
   translationProvider: (text: Untranslated) => TranslatedString;
 }
@@ -175,7 +176,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
       } as AlloySpec
     ]
     .concat(detail.progress ? [memBannerProgress.asSpec()] : [])
-    .concat(Button.sketch({
+    .concat(!detail.closeButton ? [] : [Button.sketch({
         dom: {
           tag: 'button',
           classes: [ 'tox-notification__dismiss', 'tox-button', 'tox-button--naked', 'tox-button--icon' ]
@@ -193,7 +194,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
         action: (comp) => {
           detail.onAction(comp);
         }
-      })
+      })]
     ),
     apis
   };
@@ -210,6 +211,7 @@ export const Notification: NotificationSketcher = Sketcher.single({
     FieldSchema.strict('text'),
     FieldSchema.strict('iconProvider'),
     FieldSchema.strict('translationProvider'),
+    FieldSchema.defaultedBoolean('closeButton', true)
   ],
   apis: {
     updateProgress: (apis: NotificationSketchApis, comp: AlloyComponent, percent: number) => {

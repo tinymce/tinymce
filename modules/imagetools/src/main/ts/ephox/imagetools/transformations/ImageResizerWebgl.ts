@@ -202,6 +202,6 @@ function _loadShader(gl: WebGLRenderingContext, source: string, type: string) {
   return shader;
 }
 
-export default {
+export {
   scale
 };

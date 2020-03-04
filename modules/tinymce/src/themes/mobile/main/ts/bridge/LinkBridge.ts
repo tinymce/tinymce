@@ -112,7 +112,7 @@ const query = function (editor) {
   return SelectorFind.closest(start, 'a');
 };
 
-export default {
+export {
   getInfo,
   applyInfo,
   query

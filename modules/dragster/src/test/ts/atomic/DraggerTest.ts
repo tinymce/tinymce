@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Option } from '@ephox/katamari';
 import { Element, Position } from '@ephox/sugar';
 import { DragMode, DragSink, DragApi } from 'ephox/dragster/api/DragApis';
-import Dragging from 'ephox/dragster/core/Dragging';
+import * as Dragging from 'ephox/dragster/core/Dragging';
 
 UnitTest.test('DraggerTest', function () {
   let optApi: Option<DragApi> = Option.none();

@@ -117,7 +117,7 @@ const shiftSelection = function (boxes: Element[], deltaRow: number, deltaColumn
   });
 };
 
-export default {
+export {
   identify,
   retrieve,
   shiftSelection,

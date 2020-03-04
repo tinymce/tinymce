@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as CaretContainer from './CaretContainer';
 import { Node, HTMLElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';

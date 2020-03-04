@@ -16,7 +16,7 @@ import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
 
 import * as Util from '../alien/Util';
-import TableTargets from './TableTargets';
+import * as TableTargets from './TableTargets';
 import { TableActions } from '../actions/TableActions';
 
 const forward = function (editor: Editor, isRoot, cell, lazyWire) {
@@ -82,6 +82,6 @@ const handle = function (event: KeyboardEvent, editor: Editor, actions: TableAct
   }
 };
 
-export default {
+export {
   handle
 };

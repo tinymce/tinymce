@@ -13,9 +13,9 @@ import { Objects } from '@ephox/boulder';
 import { Arr, Merger, Obj, Option } from '@ephox/katamari';
 import { Css, SelectorFind, Width } from '@ephox/sugar';
 
-import Receivers from '../channels/Receivers';
-import Styles from '../style/Styles';
-import Scrollable from '../touch/scroll/Scrollable';
+import * as Receivers from '../channels/Receivers';
+import * as Styles from '../style/Styles';
+import * as Scrollable from '../touch/scroll/Scrollable';
 
 const getValue = function (item): string {
   return Obj.get(item, 'format').getOr(item.title);
@@ -223,6 +223,6 @@ const sketch = function (settings) {
   return memMenu.asSpec();
 };
 
-export default {
+export {
   sketch
 };

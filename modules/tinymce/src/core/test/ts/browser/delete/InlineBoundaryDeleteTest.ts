@@ -4,8 +4,8 @@ import { Fun } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
-import BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';
-import InlineUtils from 'tinymce/core/keyboard/InlineUtils';
+import * as BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';
+import * as InlineUtils from 'tinymce/core/keyboard/InlineUtils';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', function (success, failure) {

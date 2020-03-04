@@ -8,13 +8,15 @@
 import { Replacing, Gui, AlloyComponent } from '@ephox/alloy';
 import { Fun, Singleton } from '@ephox/katamari';
 
-import IosWebapp, { MobileWebApp } from '../api/IosWebapp';
-import Styles from '../style/Styles';
+import * as IosWebapp from '../api/IosWebapp';
+import * as Styles from '../style/Styles';
 import ScrollingToolbar from '../toolbar/ScrollingToolbar';
-import CommonRealm from './CommonRealm';
+import * as CommonRealm from './CommonRealm';
 import * as Dropup from './Dropup';
 import OuterContainer from './OuterContainer';
 import { SugarElement } from '../alien/TypeDefinitions';
+
+type MobileWebApp = IosWebapp.MobileWebApp;
 
 export interface MobileRealm {
   system(): Gui.GuiSystem;

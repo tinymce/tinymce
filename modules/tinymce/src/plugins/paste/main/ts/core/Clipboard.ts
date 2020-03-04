@@ -5,22 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { DataTransfer, ClipboardEvent, HTMLImageElement, Range, Image, Event, DragEvent, navigator, KeyboardEvent, File } from '@ephox/dom-globals';
-import { Cell, Futures, Future, Arr, Singleton } from '@ephox/katamari';
+import { ClipboardEvent, DataTransfer, DragEvent, Event, File, HTMLImageElement, Image, KeyboardEvent, navigator, Range } from '@ephox/dom-globals';
+import { Arr, Cell, Singleton } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import VK from 'tinymce/core/api/util/VK';
-import Events from '../api/Events';
-import InternalHtml from './InternalHtml';
-import Newlines from './Newlines';
+import * as Events from '../api/Events';
+import * as InternalHtml from './InternalHtml';
+import * as Newlines from './Newlines';
 import { PasteBin } from './PasteBin';
-import ProcessFilters from './ProcessFilters';
-import SmartPaste from './SmartPaste';
+import * as ProcessFilters from './ProcessFilters';
+import * as SmartPaste from './SmartPaste';
+import * as Utils from './Utils';
 import * as Whitespace from './Whitespace';
-import Utils from './Utils';
 
 declare let window: any;
 
@@ -175,8 +176,8 @@ const pasteImage = (editor: Editor, imageItem) => {
 const isClipboardEvent = (event: Event): event is ClipboardEvent => event.type === 'paste';
 
 const readBlobsAsDataUris = (items: File[]) => {
-  return Futures.traverse(items, (item: any) => {
-    return Future.nu((resolve) => {
+  return Promise.all(Arr.map(items, (item: any) => {
+    return new Promise((resolve) => {
       const blob = item.getAsFile ? item.getAsFile() : item;
 
       const reader = new window.FileReader();
@@ -188,7 +189,7 @@ const readBlobsAsDataUris = (items: File[]) => {
       };
       reader.readAsDataURL(blob);
     });
-  });
+  }));
 };
 
 const getImagesFromDataTransfer = (dataTransfer: DataTransfer) => {
@@ -215,7 +216,7 @@ const pasteImageData = (editor, e: ClipboardEvent | DragEvent, rng: Range) => {
     if (images.length > 0) {
       e.preventDefault();
 
-      readBlobsAsDataUris(images).get((blobResults) => {
+      readBlobsAsDataUris(images).then((blobResults) => {
         if (rng) {
           editor.selection.setRng(rng);
         }

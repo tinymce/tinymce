@@ -8,10 +8,10 @@
 import { Fun, Future } from '@ephox/katamari';
 import { Attr, Css, Traverse } from '@ephox/sugar';
 
-import Styles from '../../style/Styles';
-import DataAttributes from '../../util/DataAttributes';
-import SmoothAnimation from '../smooth/SmoothAnimation';
-import IosViewport from '../view/IosViewport';
+import * as Styles from '../../style/Styles';
+import * as DataAttributes from '../../util/DataAttributes';
+import * as SmoothAnimation from '../smooth/SmoothAnimation';
+import * as IosViewport from '../view/IosViewport';
 
 const animator = SmoothAnimation.create();
 
@@ -117,7 +117,7 @@ const moveWindowScroll = function (toolbar, viewport, destY) {
   });
 };
 
-export default {
+export {
   moveScrollAndTop,
   moveOnlyScroll,
   moveOnlyTop,

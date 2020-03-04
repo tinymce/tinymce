@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Dialog from '../ui/Dialog';
+import * as Dialog from '../ui/Dialog';
 
 const register = function (editor) {
   const showDialog = function () {
@@ -15,6 +15,6 @@ const register = function (editor) {
   editor.addCommand('mceMedia', showDialog);
 };
 
-export default {
+export {
   register
 };

@@ -1,8 +1,8 @@
 import { assert } from '@ephox/bedrock-client';
 import { Arr, Fun, Result } from '@ephox/katamari';
 import * as Structs from 'ephox/snooker/api/Structs';
-import TableMerge from 'ephox/snooker/model/TableMerge';
-import Fitment from 'ephox/snooker/test/Fitment';
+import * as TableMerge from 'ephox/snooker/model/TableMerge';
+import * as Fitment from 'ephox/snooker/test/Fitment';
 import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 import { Element } from '@ephox/sugar';
 
@@ -56,7 +56,7 @@ const suite = function (label: string, startAddress: Structs.Address, gridA: () 
   mergeTest(expectedMergeGrids, startAddress, gridA, gridB, generator, comparator);
 };
 
-export default {
+export {
   mergeTest,
   mergeIVTest,
   suite

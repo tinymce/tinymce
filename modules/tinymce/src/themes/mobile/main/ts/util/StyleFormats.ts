@@ -9,8 +9,8 @@ import { Toggling } from '@ephox/alloy';
 import { Arr, Fun, Id, Merger, Obj } from '@ephox/katamari';
 
 import DefaultStyleFormats from '../features/DefaultStyleFormats';
-import StylesMenu from '../ui/StylesMenu';
-import StyleConversions from './StyleConversions';
+import * as StylesMenu from '../ui/StylesMenu';
+import * as StyleConversions from './StyleConversions';
 
 const register = function (editor, settings) {
 
@@ -112,7 +112,7 @@ const ui = function (editor, formats, onDone) {
   });
 };
 
-export default {
+export {
   register,
   ui
 };

@@ -1,6 +1,6 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { Hierarchy, Element } from '@ephox/sugar';
-import MergeBlocks from 'tinymce/core/delete/MergeBlocks';
+import * as MergeBlocks from 'tinymce/core/delete/MergeBlocks';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';

@@ -6,7 +6,7 @@
  */
 
 import { Fun, Option, Struct } from '@ephox/katamari';
-import CellOperations from './CellOperations';
+import * as CellOperations from './CellOperations';
 
 const noMenu = function (cell) {
   return {
@@ -43,7 +43,7 @@ const pasteRows = function (selections, table, cell, clipboard, generators) {
   };
 };
 
-export default {
+export {
   noMenu,
   forMenu,
   notCell,

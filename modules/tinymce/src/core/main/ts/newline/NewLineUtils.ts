@@ -10,8 +10,8 @@ import { Element } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import TreeWalker from '../api/dom/TreeWalker';
 import * as ElementType from '../dom/ElementType';
-import NodeType from '../dom/NodeType';
-import ScrollIntoView from '../dom/ScrollIntoView';
+import * as NodeType from '../dom/NodeType';
+import * as ScrollIntoView from '../dom/ScrollIntoView';
 
 const firstNonWhiteSpaceNodeSibling = function (node) {
   while (node) {
@@ -122,7 +122,7 @@ const isListItemParentBlock = function (editor: Editor) {
   }).isSome();
 };
 
-export default {
+export {
   moveToCaretPosition,
   getEditableRoot,
   getParentBlock,

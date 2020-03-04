@@ -1,16 +1,7 @@
 import * as StrAppend from '../str/StrAppend';
-import * as StringParts from '../str/StringParts';
 
-const checkRange = function (str: string, substr: string, start: number) {
-  if (substr === '') {
-    return true;
-  }
-  if (str.length < substr.length) {
-    return false;
-  }
-  const x = str.substr(start, start + substr.length);
-  return x === substr;
-};
+const checkRange = (str: string, substr: string, start: number): boolean =>
+  substr === '' || str.length >= substr.length && str.substr(start, start + substr.length) === substr;
 
 /** Given a string and object, perform template-replacements on the string, as specified by the object.
  * Any template fields of the form ${name} are replaced by the string or number specified as obj["name"]
@@ -72,15 +63,15 @@ export const endsWith = function (str: string, suffix: string) {
   return checkRange(str, suffix, str.length - suffix.length);
 };
 
+const blank = (r: RegExp) => (s: string): string =>
+  s.replace(r, '');
+
 /** removes all leading and trailing spaces */
-export const trim = function (str: string) {
-  return str.replace(/^\s+|\s+$/g, '');
-};
+export const trim: (s: string) => string =
+  blank(/^\s+|\s+$/g);
 
-export const lTrim = function (str: string) {
-  return str.replace(/^\s+/g, '');
-};
+export const lTrim: (s: string) => string =
+  blank(/^\s+/g);
 
-export const rTrim = function (str: string) {
-  return str.replace(/\s+$/g, '');
-};
+export const rTrim: (s: string) => string =
+  blank(/\s+$/g);

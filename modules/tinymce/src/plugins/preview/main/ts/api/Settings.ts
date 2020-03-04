@@ -22,7 +22,7 @@ const shouldUseContentCssCors = (editor: Editor): boolean => {
   return editor.getParam('content_css_cors', false, 'boolean');
 };
 
-export default {
+export {
   getPreviewDialogWidth,
   getPreviewDialogHeight,
   getContentStyle,

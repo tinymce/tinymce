@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Attachment, Boxes, Docking, SplitFloatingToolbar } from '@ephox/alloy';
+import { AlloyComponent, Attachment, Boxes, Channels, Docking } from '@ephox/alloy';
 import { Cell, Option } from '@ephox/katamari';
 import { Body, Css, Element, Height, Width } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -18,16 +18,20 @@ import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import * as EditorSize from '../ui/sizing/EditorSize';
-import Utils from '../ui/sizing/Utils';
+import * as Utils from '../ui/sizing/Utils';
 import { inline as loadInlineSkin } from './../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
 
-const getTargetPosition = (targetElm: Element, isToolbarTop: boolean) => {
+const getTargetPosAndHeight = (targetElm: Element, isToolbarTop: boolean) => {
   const pos = Boxes.box(targetElm);
-  return isToolbarTop ? pos.y() : pos.bottom();
+  return {
+    pos: isToolbarTop ? pos.y() : pos.bottom(),
+    height: pos.height()
+  };
 };
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
+  const { mothership, uiMothership, outerContainer } = uiComponents;
   let floatContainer;
   const DOM = DOMUtils.DOM;
   const useFixedToolbarContainer = useFixedContainer(editor);
@@ -36,11 +40,10 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const editorMaxWidthOpt = getMaxWidthSetting(editor).or(EditorSize.getWidth(editor));
 
   const toolbarMode = getToolbarMode(editor);
-  const isSplitFloatingToolbar = toolbarMode === ToolbarMode.floating;
-  const isSplitToolbar = toolbarMode === ToolbarMode.sliding || isSplitFloatingToolbar;
+  const isSplitToolbar = toolbarMode === ToolbarMode.sliding || toolbarMode === ToolbarMode.floating;
   const isToolbarTop = isToolbarLocationTop(editor);
 
-  const prevPos = Cell(getTargetPosition(targetElm, isToolbarTop));
+  const prevPosAndHeight = Cell(getTargetPosAndHeight(targetElm, isToolbarTop));
   const visible = Cell(false);
 
   loadInlineSkin(editor);
@@ -59,7 +62,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       targetBounds.y() - Height.get(floatContainer.element()) + offset :
       targetBounds.bottom();
 
-    Css.setAll(uiComponents.outerContainer.element(), {
+    Css.setAll(outerContainer.element(), {
       position: 'absolute',
       top: Math.round(top) + 'px',
       left: Math.round(targetBounds.x()) + 'px'
@@ -74,6 +77,10 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     Css.set(floatContainer.element(), 'max-width', maxWidth + 'px');
   };
 
+  const repositionFloatingUiComponents = () => {
+    uiMothership.broadcastOn([ Channels.repositionPopups() ], { });
+  };
+
   const updateChromeUi = (resetDocking: boolean = false) => {
     // Handles positioning, docking and SplitToolbar (more drawer) behaviour. Modes:
     // 1. Basic inline: does positioning and docking
@@ -83,12 +90,12 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
     // Refresh split toolbar
     if (isSplitToolbar) {
-      OuterContainer.refreshToolbar(uiComponents.outerContainer);
+      OuterContainer.refreshToolbar(outerContainer);
     }
 
     // Positioning
     if (!useFixedToolbarContainer) {
-      const toolbar = OuterContainer.getToolbar(uiComponents.outerContainer);
+      const toolbar = OuterContainer.getToolbar(outerContainer);
       updateChromePosition(toolbar);
     }
 
@@ -97,28 +104,25 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       resetDocking ? Docking.reset(floatContainer) : Docking.refresh(floatContainer);
     }
 
-    if (isSplitFloatingToolbar) {
-      OuterContainer.getToolbar(uiComponents.outerContainer).each((toolbar) => {
-        SplitFloatingToolbar.reposition(toolbar);
-      });
-    }
+    // Floating toolbar
+    repositionFloatingUiComponents();
   };
 
   const show = () => {
     visible.set(true);
-    Css.set(uiComponents.outerContainer.element(), 'display', 'flex');
+    Css.set(outerContainer.element(), 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
-    Css.remove(uiComponents.uiMothership.element(), 'display');
+    Css.remove(uiMothership.element(), 'display');
     updateChromeUi();
   };
 
   const hide = () => {
     visible.set(false);
     if (uiComponents.outerContainer) {
-      Css.set(uiComponents.outerContainer.element(), 'display', 'none');
+      Css.set(outerContainer.element(), 'display', 'none');
       DOM.removeClass(editor.getBody(), 'mce-edit-focus');
     }
-    Css.set(uiComponents.uiMothership.element(), 'display', 'none');
+    Css.set(uiMothership.element(), 'display', 'none');
   };
 
   const render = () => {
@@ -127,16 +131,16 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       return;
     }
 
-    floatContainer = OuterContainer.getHeader(uiComponents.outerContainer).getOrDie();
+    floatContainer = OuterContainer.getHeader(outerContainer).getOrDie();
 
     const uiContainer = getUiContainer(editor);
-    Attachment.attachSystem(uiContainer, uiComponents.mothership);
-    Attachment.attachSystem(uiContainer, uiComponents.uiMothership);
+    Attachment.attachSystem(uiContainer, mothership);
+    Attachment.attachSystem(uiContainer, uiMothership);
 
     setToolbar(editor, uiComponents, rawUiConfig, backstage);
 
     OuterContainer.setMenubar(
-      uiComponents.outerContainer,
+      outerContainer,
       identifyMenus(editor, rawUiConfig)
     );
 
@@ -154,11 +158,17 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
     editor.on('NodeChange keydown', () => {
       Delay.requestAnimationFrame(() => {
-        const pos = getTargetPosition(targetElm, isToolbarTop);
+        const posAndHeight = getTargetPosAndHeight(targetElm, isToolbarTop);
+        const prev = prevPosAndHeight.get();
 
-        if (visible.get() && pos !== prevPos.get()) {
-          updateChromeUi(true);
-          prevPos.set(pos);
+        if (visible.get()) {
+          if (posAndHeight.pos !== prev.pos) {
+            updateChromeUi(true);
+            prevPosAndHeight.set(posAndHeight);
+          } else if (posAndHeight.height !== prev.height) {
+            repositionFloatingUiComponents();
+            prevPosAndHeight.set(posAndHeight);
+          }
         }
       });
     });
@@ -178,8 +188,10 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   setupReadonlyModeSwitch(editor, uiComponents);
 
   return {
-    editorContainer: uiComponents.outerContainer.element().dom()
+    editorContainer: outerContainer.element().dom()
   };
 };
 
-export default { render };
+export {
+  render
+};

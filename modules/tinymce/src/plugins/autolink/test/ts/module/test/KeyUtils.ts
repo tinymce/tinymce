@@ -1,5 +1,5 @@
 import { Fun, Arr, Unicode } from '@ephox/katamari';
-import NodeType from 'tinymce/core/dom/NodeType';
+import * as NodeType from 'tinymce/core/dom/NodeType';
 import { Range } from '@ephox/dom-globals';
 
 const charCodeToKeyCode = function (charCode) {
@@ -128,7 +128,7 @@ const typeString = function (editor, str) {
   Arr.each(str.split(''), Fun.curry(type, editor));
 };
 
-export default {
+export {
   type,
   typeString
 };

@@ -8,9 +8,9 @@
 import { Representing, SketchSpec } from '@ephox/alloy';
 import { Option, Thunk } from '@ephox/katamari';
 
-import LinkBridge from '../bridge/LinkBridge';
-import RangePreserver from '../util/RangePreserver';
-import Buttons from './Buttons';
+import * as LinkBridge from '../bridge/LinkBridge';
+import * as RangePreserver from '../util/RangePreserver';
+import * as Buttons from './Buttons';
 import * as Inputs from './Inputs';
 import * as SerialisedDialog from './SerialisedDialog';
 

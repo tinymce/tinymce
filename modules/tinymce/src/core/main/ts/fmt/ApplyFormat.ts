@@ -6,22 +6,22 @@
  */
 
 import { Node } from '@ephox/dom-globals';
-import Bookmarks from '../bookmark/Bookmarks';
+import * as Bookmarks from '../bookmark/Bookmarks';
 import { IdBookmark, IndexBookmark } from '../bookmark/BookmarkTypes';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
 import * as FormatUtils from './FormatUtils';
 import * as Hooks from './Hooks';
 import * as MatchFormat from './MatchFormat';
 import * as MergeFormats from './MergeFormats';
-import RangeNormalizer from '../selection/RangeNormalizer';
+import * as RangeNormalizer from '../selection/RangeNormalizer';
 import { RangeLikeObject } from '../selection/RangeTypes';
-import RangeWalk from '../selection/RangeWalk';
+import * as RangeWalk from '../selection/RangeWalk';
 import Tools from '../api/util/Tools';
 import Selection from '../api/dom/Selection';
 import { isCaretNode } from './FormatContainer';
-import GetBookmark from '../bookmark/GetBookmark';
+import * as GetBookmark from '../bookmark/GetBookmark';
 import Editor from '../api/Editor';
 import { FormatVars } from '../api/fmt/Format';
 import DOMUtils from '../api/dom/DOMUtils';

@@ -1,7 +1,7 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { Compare, Element } from '@ephox/sugar';
 import { CellLocation } from './CellLocation';
-import TableLookup from './TableLookup';
+import * as TableLookup from './TableLookup';
 
 /*
  * Identify the index of the current cell within all the cells, and
@@ -47,7 +47,7 @@ const prev = function (current: Element, isRoot?: (e: Element) => boolean) {
   });
 };
 
-export default {
+export {
   next,
   prev
 };

@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import { getRowClassList } from '../api/Settings';
-import Helpers from './Helpers';
+import * as Helpers from './Helpers';
 import { Option } from '@ephox/katamari';
 import { Types } from '@ephox/bridge';
 
@@ -72,6 +72,6 @@ const getItems = (editor: Editor) => {
   );
 };
 
-export default {
+export {
   getItems
 };

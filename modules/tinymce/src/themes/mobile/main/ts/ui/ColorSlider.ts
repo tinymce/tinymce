@@ -8,8 +8,8 @@
 import { Behaviour, Slider, Toggling, SketchSpec } from '@ephox/alloy';
 import { Css } from '@ephox/sugar';
 
-import Receivers from '../channels/Receivers';
-import Styles from '../style/Styles';
+import * as Receivers from '../channels/Receivers';
+import * as Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
 import * as ToolbarWidgets from './ToolbarWidgets';
 
@@ -116,7 +116,7 @@ const sketch = function (realm, editor) {
   }, editor);
 };
 
-export default {
+export {
   makeItems,
   sketch
 };

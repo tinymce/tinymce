@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Buttons from './Buttons';
+import * as Buttons from './Buttons';
 import { SketchSpec } from '@ephox/alloy';
 
 const button = function (realm, clazz, makeItems, editor): SketchSpec {

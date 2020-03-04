@@ -7,6 +7,6 @@ const assertEq = function (expected: any, actual: any, label: string) {
   console.log('passed');
 };
 
-export default {
+export {
   assertEq
 };

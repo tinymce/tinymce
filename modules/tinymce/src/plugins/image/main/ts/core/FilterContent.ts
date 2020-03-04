@@ -40,6 +40,6 @@ const setup = (editor: Editor) => {
   });
 };
 
-export default {
+export {
   setup
 };

@@ -41,6 +41,6 @@ const lookup = (scopes: ScopedToolbars, editor: Editor): Option<LookupResult> =>
   });
 };
 
-export default {
+export {
   lookup
 };

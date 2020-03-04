@@ -9,7 +9,7 @@ import { Node, Range } from '@ephox/dom-globals';
 import { Option, Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import TreeWalker from '../api/dom/TreeWalker';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as CaretContainer from './CaretContainer';
 import * as CaretCandidate from './CaretCandidate';
 import { CaretPosition } from './CaretPosition';

@@ -6,7 +6,7 @@
  */
 
 import SaxParser from '../api/html/SaxParser';
-import Zwsp from '../text/Zwsp';
+import * as Zwsp from '../text/Zwsp';
 
 const trimHtml = function (tempAttrs, html) {
   const trimContentRegExp = new RegExp([
@@ -46,7 +46,7 @@ const trimInternal = function (serializer, html) {
 // We might need external/internal trimming in the future so lets keep the separation
 const trimExternal = trimInternal;
 
-export default {
+export {
   trimExternal,
   trimInternal
 };

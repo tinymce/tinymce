@@ -138,11 +138,16 @@ const getActiveApi = function (editor) {
   });
 };
 
-export default {
-  getBody: getOrDerive('getBody', getBodyFromFrame),
-  getDoc: getOrDerive('getDoc', getDocFromFrame),
-  getWin: getOrDerive('getWin', getWinFromFrame),
-  getSelection: getOrDerive('getSelection', getSelectionFromFrame),
+const getBody = getOrDerive('getBody', getBodyFromFrame);
+const getDoc = getOrDerive('getDoc', getDocFromFrame);
+const getWin = getOrDerive('getWin', getWinFromFrame);
+const getSelection = getOrDerive('getSelection', getSelectionFromFrame);
+
+export {
+  getBody,
+  getDoc,
+  getWin,
+  getSelection,
   getFrame,
   getActiveApi
 };

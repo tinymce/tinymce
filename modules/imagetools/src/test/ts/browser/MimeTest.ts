@@ -1,4 +1,4 @@
-import Assertion from 'ephox/imagetools/test/Assertion';
+import * as Assertion from 'ephox/imagetools/test/Assertion';
 import * as Mime from 'ephox/imagetools/util/Mime';
 import { UnitTest } from '@ephox/bedrock-client';
 

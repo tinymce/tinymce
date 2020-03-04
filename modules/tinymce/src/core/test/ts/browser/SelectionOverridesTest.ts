@@ -7,9 +7,9 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import VK from 'tinymce/core/api/util/VK';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
-import Zwsp from 'tinymce/core/text/Zwsp';
+import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
-import KeyUtils from '../module/test/KeyUtils';
+import * as KeyUtils from '../module/test/KeyUtils';
 
 UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();

@@ -5,8 +5,8 @@ import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import PluginAssert from '../module/PluginAssert';
-import Selectors from '../module/Selectors';
+import * as PluginAssert from '../module/PluginAssert';
+import { selectors } from '../module/Selectors';
 
 UnitTest.asynctest('browser.plugin.PluginTest', (success, failure) => {
 
@@ -18,14 +18,14 @@ UnitTest.asynctest('browser.plugin.PluginTest', (success, failure) => {
 
     Pipeline.async({},
       Log.steps('TBA', 'Help: Assert Help Plugin list contains Help', [
-        ui.sClickOnToolbar('Click help button', Selectors.toolbarHelpButton),
+        ui.sClickOnToolbar('Click help button', selectors.toolbarHelpButton),
         PluginAssert.sAssert(
           'Failed to find `Help` plugin',
           {
             'a:contains("Help")': 1
           },
-          Selectors.dialog,
-          Selectors.pluginsTab
+          selectors.dialog,
+          selectors.pluginsTab
         )
       ])
     , onSuccess, onFailure);

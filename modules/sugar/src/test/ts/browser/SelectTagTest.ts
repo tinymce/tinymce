@@ -1,5 +1,5 @@
 import Element from 'ephox/sugar/api/node/Element';
-import Select from 'ephox/sugar/api/tag/SelectTag';
+import * as Select from 'ephox/sugar/api/tag/SelectTag';
 import { UnitTest } from '@ephox/bedrock-client';
 import { HTMLSelectElement } from '@ephox/dom-globals';
 import { KAssert } from '@ephox/katamari-assertions';

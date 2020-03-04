@@ -8,8 +8,8 @@
 import Tools from 'tinymce/core/api/util/Tools';
 import URI from 'tinymce/core/api/util/URI';
 import XHR from 'tinymce/core/api/util/XHR';
-import Events from '../api/Events';
-import Settings from '../api/Settings';
+import * as Events from '../api/Events';
+import * as Settings from '../api/Settings';
 import { DomTextMatcher } from './DomTextMatcher';
 import Editor from 'tinymce/core/api/Editor';
 import { Cell, Obj } from '@ephox/katamari';
@@ -219,7 +219,7 @@ const markErrors = function (editor: Editor, startedState: Cell<boolean>, textMa
   Events.fireSpellcheckStart(editor);
 };
 
-export default {
+export {
   spellcheck,
   checkIfFinished,
   addToDictionary,

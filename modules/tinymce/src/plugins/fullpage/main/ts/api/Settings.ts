@@ -37,7 +37,7 @@ const getDefaultDocType = function (editor) {
   return editor.getParam('fullpage_default_doctype', '<!DOCTYPE html>');
 };
 
-export default {
+export {
   shouldHideInSourceView,
   getDefaultXmlPi,
   getDefaultEncoding,

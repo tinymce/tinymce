@@ -7,8 +7,8 @@
 
 import { Node, ClientRect, HTMLElement } from '@ephox/dom-globals';
 import { Fun, Arr } from '@ephox/katamari';
-import ArrUtils from '../util/ArrUtils';
-import NodeType from '../dom/NodeType';
+import * as ArrUtils from '../util/ArrUtils';
+import * as NodeType from '../dom/NodeType';
 import { NodeClientRect, getClientRects } from '../dom/Dimensions';
 import * as GeomClientRect from '../geom/ClientRect';
 import * as CaretUtils from './CaretUtils';

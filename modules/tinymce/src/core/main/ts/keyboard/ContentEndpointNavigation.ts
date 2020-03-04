@@ -9,7 +9,7 @@ import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
 import { Fun, Arr } from '@ephox/katamari';
 import { Insert, Element, Compare, PredicateFind, Node, Attr } from '@ephox/sugar';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { document } from '@ephox/dom-globals';
 import * as ElementType from '../dom/ElementType';
 import { isAtLastLine, isAtFirstLine } from '../caret/LineReader';

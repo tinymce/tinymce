@@ -6,10 +6,10 @@
  */
 
 import { Adt, Fun, Option, Options } from '@ephox/katamari';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import * as CaretUtils from '../caret/CaretUtils';
-import InlineUtils from './InlineUtils';
-import LazyEvaluator from '../util/LazyEvaluator';
+import * as InlineUtils from './InlineUtils';
+import * as LazyEvaluator from '../util/LazyEvaluator';
 import { getParentCaretContainer } from '../fmt/FormatContainer';
 
 const Location = Adt.generate([
@@ -201,11 +201,14 @@ const findLocation = function (forward, isInlineTarget, rootNode, pos) {
   });
 };
 
-export default {
+const prevLocation = Fun.curry(findLocation, false);
+const nextLocation = Fun.curry(findLocation, true);
+
+export {
   readLocation,
   findLocation,
-  prevLocation: Fun.curry(findLocation, false),
-  nextLocation: Fun.curry(findLocation, true),
+  prevLocation,
+  nextLocation,
   getElement,
   outside,
   inside

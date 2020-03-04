@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import * as Structs from 'ephox/snooker/api/Structs';
-import MergingOperations from 'ephox/snooker/operate/MergingOperations';
+import * as MergingOperations from 'ephox/snooker/operate/MergingOperations';
 import { Element } from '@ephox/sugar';
 
 UnitTest.test('MergeOperationsTest', function () {

@@ -10,9 +10,9 @@ import {
     Class, Classes, Css, DomEvent, Element, Insert, InsertAll, Remove, Traverse
 } from '@ephox/sugar';
 
-import Styles from '../../style/Styles';
-import Rectangles from '../../util/Rectangles';
-import ResumeEditing from './ResumeEditing';
+import * as Styles from '../../style/Styles';
+import * as Rectangles from '../../util/Rectangles';
+import * as ResumeEditing from './ResumeEditing';
 
 export default function (win, frame) {
   // NOTE: This may be required for android also.

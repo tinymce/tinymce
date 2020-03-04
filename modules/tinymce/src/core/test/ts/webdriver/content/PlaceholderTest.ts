@@ -2,6 +2,7 @@ import { Assertions, GeneralSteps, Log, Pipeline, RealKeys, Step, Waiter } from 
 import { UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -36,6 +37,18 @@ UnitTest.asynctest('webdriver.tinymce.core.content.PlaceholderTest', (success, f
 
     const sAssertPlaceholderExists = sAssertPlaceholder(true);
     const sAssertPlaceholderNotExists = sAssertPlaceholder(false);
+
+    // The Delete command doesn't work on IE 11 so skip it
+    const browserSpecificTests = PlatformDetection.detect().browser.isIE() ? [ ] : [
+      Log.stepsAsStep('TINY-3917', 'Check placeholder restores when deleting content via command', [
+        sSetContent('<p>a</p>'),
+        tinyApi.sSetCursor([0, 0], 1),
+        sAssertPlaceholderNotExists,
+        tinyApi.sExecCommand('Delete'),
+        sAssertPlaceholderExists,
+        sAssertCount(1)
+      ])
+    ];
 
     Pipeline.async({}, [
       tinyApi.sFocus(),
@@ -91,16 +104,8 @@ UnitTest.asynctest('webdriver.tinymce.core.content.PlaceholderTest', (success, f
         tinyApi.sExecCommand('InsertOrderedList'),
         sAssertPlaceholderNotExists,
         sAssertCount(1)
-      ]),
-      Log.stepsAsStep('TINY-3917', 'Check placeholder restores when deleting content via command', [
-        sSetContent('<p>a</p>'),
-        tinyApi.sSetCursor([0, 0], 1),
-        sAssertPlaceholderNotExists,
-        tinyApi.sExecCommand('Delete'),
-        sAssertPlaceholderExists,
-        sAssertCount(1)
-      ]),
-    ], onSuccess, onFailure);
+      ])
+    ].concat(browserSpecificTests), onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'undo redo | bold',

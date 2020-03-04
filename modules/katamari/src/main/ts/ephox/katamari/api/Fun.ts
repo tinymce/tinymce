@@ -42,11 +42,8 @@ function curry <OUT>(fn: (...allArgs: any[]) => OUT, ...initialArgs: any[]): (..
   };
 }
 
-const not = <T extends any[]> (f: (...args: T) => boolean) => {
-  return function (...args: T): boolean {
-    return !f.apply(null, args);
-  };
-};
+const not = <T> (f: (t: T) => boolean) => (t: T): boolean =>
+  !f(t);
 
 const die = function (msg: string) {
   return function () {

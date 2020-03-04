@@ -9,7 +9,7 @@ import { HTMLElement, Node } from '@ephox/dom-globals';
 import Tools from 'tinymce/core/api/util/Tools';
 import SaxParser from 'tinymce/core/api/html/SaxParser';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Size from './Size';
+import * as Size from './Size';
 import { MediaData } from './Types';
 import { VideoScript, getVideoScriptMatch } from './VideoScript';
 

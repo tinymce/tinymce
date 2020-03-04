@@ -8,10 +8,10 @@
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import DOMUtils from './api/dom/DOMUtils';
-import MousePosition from './dom/MousePosition';
-import NodeType from './dom/NodeType';
+import * as MousePosition from './dom/MousePosition';
+import * as NodeType from './dom/NodeType';
 import Delay from './api/util/Delay';
-import Predicate from './util/Predicate';
+import * as Predicate from './util/Predicate';
 import Editor from './api/Editor';
 
 /**
@@ -267,6 +267,6 @@ const init = function (editor: Editor) {
   blockIeDrop(editor);
 };
 
-export default {
+export {
   init
 };

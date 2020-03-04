@@ -52,7 +52,7 @@ const trimBlockTrailingBr = function (elm) {
   });
 };
 
-export default {
+export {
   removeTrailingBr,
   fillWithPaddingBr,
   isPaddedElement,

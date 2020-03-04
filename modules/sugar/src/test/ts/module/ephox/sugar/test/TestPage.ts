@@ -71,7 +71,7 @@ const connect = function () {
   Insert.append(body, container);
 };
 
-export default {
+export {
   container,
   d1,
   p1,

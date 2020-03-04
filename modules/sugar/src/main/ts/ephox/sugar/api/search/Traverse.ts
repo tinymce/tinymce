@@ -1,6 +1,6 @@
 import { HTMLElement, Node as DomNode, Element as DomElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Struct, Type } from '@ephox/katamari';
-import Recurse from '../../alien/Recurse';
+import * as Recurse from '../../alien/Recurse';
 import * as Compare from '../dom/Compare';
 import Element from '../node/Element';
 

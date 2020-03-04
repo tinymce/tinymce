@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Actions from '../core/Actions';
-import ImageSize from '../core/ImageSize';
+import * as Actions from '../core/Actions';
+import * as ImageSize from '../core/ImageSize';
 import * as ImageToolsEvents from './ImageToolsEvents';
 import Editor from 'tinymce/core/api/Editor';
 import { Types } from '@ephox/bridge';
@@ -66,18 +66,18 @@ const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
       onCancel: () => { }, // TODO: reimplement me
       onAction: (api, details) => {
         switch (details.name) {
-          case ImageToolsEvents.saveState():
+          case ImageToolsEvents.saveState:
             if (details.value) {
               api.enable('save');
             } else {
               api.disable('save');
             }
             break;
-          case ImageToolsEvents.disable():
+          case ImageToolsEvents.disable:
             api.disable('save');
             api.disable('cancel');
             break;
-          case ImageToolsEvents.enable():
+          case ImageToolsEvents.enable:
             api.enable('cancel');
             break;
         }
@@ -101,6 +101,6 @@ const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
   });
 };
 
-export default {
+export {
   makeOpen
 };

@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Actions from '../core/Actions';
-import CharMap from '../core/CharMap';
+import * as Actions from '../core/Actions';
+import * as CharMap from '../core/CharMap';
 
 const get = function (editor) {
   const getCharMap = function () {
@@ -23,6 +23,6 @@ const get = function (editor) {
   };
 };
 
-export default {
+export {
   get
 };

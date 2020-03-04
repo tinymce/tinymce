@@ -9,7 +9,7 @@ import { document, HTMLElement, Node } from '@ephox/dom-globals';
 import { Attr, Element } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { ImageDialogInfo } from '../ui/DialogTypes';
-import Utils from './Utils';
+import * as Utils from './Utils';
 
 const DOM = DOMUtils.DOM;
 

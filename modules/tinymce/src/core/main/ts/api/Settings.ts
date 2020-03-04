@@ -194,7 +194,7 @@ const getPlaceholder = (editor: Editor): string => {
   return editor.getParam('placeholder', DOM.getAttrib(editor.getElement(), 'placeholder'), 'string');
 };
 
-export default {
+export {
   getIframeAttrs,
   getDocType,
   getDocumentBaseUrl,

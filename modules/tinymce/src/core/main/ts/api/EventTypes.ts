@@ -21,7 +21,7 @@ export type SetContentEvent = SetContentArgs & { paste: boolean, selection: bool
 
 export type NewBlockEvent = { newBlock: Element };
 
-export type NodeChangedEvent = { element: Element, parents: Node[], selectionChange?: boolean };
+export type NodeChangedEvent = { element: Element, parents: Node[], selectionChange?: boolean, initial?: boolean };
 
 export type ObjectResizedEvent = { target: HTMLElement, width: number, height: number };
 
@@ -44,6 +44,8 @@ export type ProgressStateEvent = { state: boolean, time?: number };
 
 export type PlaceholderToggleEvent = { state: boolean };
 
+export type LoadErrorEvent = { message: string };
+
 export interface EditorEventMap extends NativeEventMap {
   'activate': { relatedTarget: Editor };
   'deactivate': { relatedTarget: Editor };
@@ -62,6 +64,10 @@ export interface EditorEventMap extends NativeEventMap {
   'ScrollWindow': UIEvent;
   'ResizeWindow': UIEvent;
   'SkinLoaded': { };
+  'SkinLoadError': LoadErrorEvent;
+  'PluginLoadError': LoadErrorEvent;
+  'IconsLoadError': LoadErrorEvent;
+  'LanguageLoadError': LoadErrorEvent;
   'BeforeExecCommand': ExecCommandEvent;
   'ExecCommand': ExecCommandEvent;
   'NodeChange': NodeChangedEvent;

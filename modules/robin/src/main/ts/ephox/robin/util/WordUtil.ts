@@ -46,7 +46,7 @@ const hasBreak = function (text: string) {
   return rightBreak(text).isSome();
 };
 
-export default {
+export {
   firstWord,
   lastWord,
   leftBreak,

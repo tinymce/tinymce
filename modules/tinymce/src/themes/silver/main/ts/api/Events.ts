@@ -12,6 +12,10 @@ const fireSkinLoaded = (editor: Editor) => {
   return editor.fire('SkinLoaded');
 };
 
+const fireSkinLoadError = (editor: Editor, error: { message: string }) => {
+  return editor.fire('SkinLoadError', error);
+};
+
 const fireResizeEditor = (editor: Editor) => {
   return editor.fire('ResizeEditor');
 };
@@ -32,8 +36,9 @@ const fireTextColorChange = (editor: Editor, data: { name: string; color: string
   return editor.fire('TextColorChange', data);
 };
 
-export default {
+export {
   fireSkinLoaded,
+  fireSkinLoadError,
   fireResizeEditor,
   fireScrollContent,
   fireBeforeRenderUI,

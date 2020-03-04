@@ -6,7 +6,7 @@
  */
 
 import * as Settings from '../api/Settings';
-import Actions from '../core/Actions';
+import * as Actions from '../core/Actions';
 import Editor from 'tinymce/core/api/Editor';
 
 const register = function (editor: Editor) {
@@ -18,6 +18,6 @@ const register = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   register
 };

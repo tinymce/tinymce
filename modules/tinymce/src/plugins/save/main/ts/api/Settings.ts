@@ -17,7 +17,7 @@ const hasOnCancelCallback = function (editor) {
   return !!editor.getParam('save_oncancelcallback');
 };
 
-export default {
+export {
   enableWhenDirty,
   hasOnSaveCallback,
   hasOnCancelCallback

@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import { Attr, Node, Traverse, Element } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
-import TableLookup from '../api/TableLookup';
+import * as TableLookup from '../api/TableLookup';
 
 /*
  * Takes a DOM table and returns a list of list of:
@@ -41,7 +41,7 @@ const fromPastedRows = function (rows: Element[], example: Structs.RowCells) {
   });
 };
 
-export default {
+export {
   fromTable,
   fromPastedRows
 };

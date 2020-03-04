@@ -50,7 +50,7 @@ const isNonEditable = function (item: Gene) {
   return isElement(item) && item.attrs.contenteditable === 'false';
 };
 
-export default {
+export {
   children,
   name,
   parent,

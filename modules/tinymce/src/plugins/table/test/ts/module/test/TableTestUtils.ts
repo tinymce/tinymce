@@ -303,7 +303,7 @@ const sAssertDialogValues = (data, hasAdvanced, generalSelectors) => {
   return sAssertTabContents(data, generalSelectors);
 };
 
-export default {
+export {
   sAssertDialogPresence,
   sAssertSelectValue,
   sChooseTab,

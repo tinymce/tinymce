@@ -10,7 +10,7 @@ import TreeWalker from '../api/dom/TreeWalker';
 import Selection from '../api/dom/Selection';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import { FormatAttrOrStyleValue, FormatVars } from '../api/fmt/Format';
 
 const isNode = (node: any): node is Node => !!(node as any).nodeType;

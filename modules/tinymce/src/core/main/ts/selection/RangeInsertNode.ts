@@ -7,7 +7,7 @@
 
 import { Range, Node, DocumentFragment } from '@ephox/dom-globals';
 import DOMUtils from '../api/dom/DOMUtils';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import { Option } from '@ephox/katamari';
 
 const trimEmptyTextNode = (dom: DOMUtils, node: Node) => {

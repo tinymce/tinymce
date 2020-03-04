@@ -26,6 +26,6 @@ const backspaceDelete = function (editor: Editor, _caret, _forward?: boolean) {
   return false;
 };
 
-export default {
+export {
   backspaceDelete
 };

@@ -19,7 +19,7 @@ const getDefaultLinkProtocol = (editor: Editor): string => {
   return editor.getParam('link_default_protocol', 'http', 'string');
 };
 
-export default {
+export {
   getAutoLinkPattern,
   getDefaultLinkTarget,
   getDefaultLinkProtocol

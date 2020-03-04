@@ -20,6 +20,6 @@ const create = function (typeDefs: Record<string, Event>) {
   };
 };
 
-export default {
+export {
   create
 };

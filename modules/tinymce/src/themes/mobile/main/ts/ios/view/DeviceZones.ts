@@ -7,7 +7,7 @@
 
 import { Css, Height, Traverse } from '@ephox/sugar';
 
-import Orientation from '../../touch/view/Orientation';
+import * as Orientation from '../../touch/view/Orientation';
 import * as Devices from './Devices';
 
 // Green zone is the area below the toolbar and above the keyboard, its considered the viewable
@@ -63,7 +63,7 @@ const updatePadding = function (contentBody, socket, dropup) {
   Css.set(contentBody, 'padding-bottom', deltaHeight + 'px');
 };
 
-export default {
+export {
   getGreenzone,
   updatePadding
 };

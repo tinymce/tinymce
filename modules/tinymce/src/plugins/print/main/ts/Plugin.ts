@@ -6,8 +6,8 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Commands from './api/Commands';
-import Buttons from './ui/Buttons';
+import * as Commands from './api/Commands';
+import * as Buttons from './ui/Buttons';
 
 export default function () {
   PluginManager.add('print', function (editor) {

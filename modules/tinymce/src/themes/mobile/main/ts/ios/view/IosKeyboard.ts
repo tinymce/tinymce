@@ -8,8 +8,8 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { DomEvent, Focus, Node } from '@ephox/sugar';
 
-import CaptureBin from '../../util/CaptureBin';
-import ResumeEditing from '../focus/ResumeEditing';
+import * as CaptureBin from '../../util/CaptureBin';
+import * as ResumeEditing from '../focus/ResumeEditing';
 
 /*
  * Stubborn IOS Keyboard mode:
@@ -119,7 +119,7 @@ const timid = function (outerBody, cWin, page, frame/*, toolstrip, toolbar*/) {
   };
 };
 
-export default {
+export {
   stubborn,
   timid
 };

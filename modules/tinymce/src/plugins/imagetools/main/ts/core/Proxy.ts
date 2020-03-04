@@ -6,8 +6,8 @@
  */
 
 import Promise from 'tinymce/core/api/util/Promise';
-import Errors from './Errors';
-import Utils from './Utils';
+import * as Errors from './Errors';
+import * as Utils from './Utils';
 import { Blob } from '@ephox/dom-globals';
 
 /**

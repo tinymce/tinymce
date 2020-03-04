@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
 
 const setup = function (editor: Editor) {
@@ -26,6 +26,6 @@ const setup = function (editor: Editor) {
   }
 };
 
-export default {
+export {
   setup
 };

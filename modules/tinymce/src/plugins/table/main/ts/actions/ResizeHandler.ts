@@ -10,8 +10,8 @@ import { Option } from '@ephox/katamari';
 import { ResizeWire, TableDirection, TableResize } from '@ephox/snooker';
 import { Element as SugarElement } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';
-import Direction from '../queries/Direction';
-import TableWire from './TableWire';
+import * as Direction from '../queries/Direction';
+import * as TableWire from './TableWire';
 import { hasTableResizeBars, hasObjectResizing, isPixelsForced, isPercentagesForced } from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
@@ -144,7 +144,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
 
   editor.on('SwitchMode', () => {
     lazyResize().each(function (resize) {
-      if (editor.readonly) {
+      if (editor.mode.isReadOnly()) {
         resize.hideBars();
       } else {
         resize.showBars();

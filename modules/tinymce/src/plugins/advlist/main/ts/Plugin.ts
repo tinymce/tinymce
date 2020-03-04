@@ -7,8 +7,8 @@
 
 import PluginManager from 'tinymce/core/api/PluginManager';
 import Tools from 'tinymce/core/api/util/Tools';
-import Commands from './api/Commands';
-import Buttons from './ui/Buttons';
+import * as Commands from './api/Commands';
+import * as Buttons from './ui/Buttons';
 
 export default function () {
   PluginManager.add('advlist', function (editor) {

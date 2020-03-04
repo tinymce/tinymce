@@ -149,6 +149,7 @@ module.exports = function (grunt) {
         core: {
           files: [
             { src: 'js/tinymce/tinymce.js', dest: 'js/tinymce/tinymce.min.js' },
+            { src: 'js/tinymce/icons/default/icons.js', dest: 'js/tinymce/icons/default/icons.min.js' },
             { src: 'src/core/main/js/JqueryIntegration.js', dest: 'js/tinymce/jquery.tinymce.min.js' }
           ]
         },
@@ -279,6 +280,16 @@ module.exports = function (grunt) {
           }
         ]
       },
+      'default-icons': {
+        files: [
+          {
+            expand: true,
+            cwd: '../oxide-icons-default/dist/icons/default',
+            src: '**',
+            dest: 'js/tinymce/icons/default'
+          }
+        ]
+      },
       'ui-skins': {
         files: gruntUtils.flatMap(oxideUiSkinMap, function (name, mappedName) {
           return [
@@ -315,6 +326,7 @@ module.exports = function (grunt) {
           excludes: [
             'js/**/plugin.js',
             'js/**/theme.js',
+            'js/**/icons.js',
             'js/**/*.map',
             'js/tinymce/tinymce.full.min.js',
             'js/tinymce/plugins/moxiemanager',
@@ -337,6 +349,7 @@ module.exports = function (grunt) {
           'js/tinymce/plugins',
           'js/tinymce/skins/**/*.min.css',
           'js/tinymce/skins/**/*.woff',
+          'js/tinymce/icons',
           'js/tinymce/themes',
           'js/tinymce/tinymce.min.js',
           'js/tinymce/jquery.tinymce.min.js',
@@ -456,6 +469,7 @@ module.exports = function (grunt) {
           'js/tinymce/langs',
           'js/tinymce/plugins',
           'js/tinymce/skins',
+          'js/tinymce/icons',
           'js/tinymce/themes',
           'js/tinymce/license.txt'
         ]
@@ -529,13 +543,15 @@ module.exports = function (grunt) {
                   'scripts': [
                     'tinymce.js',
                     'plugins/*/plugin.js',
-                    'themes/*/theme.js'
+                    'themes/*/theme.js',
+                    'themes/*/icons.js',
                   ],
                   'files': [
                     'tinymce.min.js',
                     'plugins/*/plugin.min.js',
                     'themes/*/theme.min.js',
-                    'skins/**'
+                    'skins/**',
+                    'icons/*/icons.min.js'
                   ]
                 }
               },
@@ -561,11 +577,17 @@ module.exports = function (grunt) {
               getDirs('js/tinymce/themes'),
               zipUtils.generateIndex('themes', 'theme')
             );
+            zipUtils.addIndexFiles(
+              zip,
+              getDirs('js/tinymce/icons'),
+              zipUtils.generateIndex('icons', 'icons')
+            );
           },
           to: 'dist/tinymce_<%= pkg.version %>_component.zip'
         },
         src: [
           'js/tinymce/skins',
+          'js/tinymce/icons',
           'js/tinymce/plugins',
           'js/tinymce/themes',
           'js/tinymce/tinymce.js',
@@ -617,6 +639,7 @@ module.exports = function (grunt) {
           { src: 'js/tinymce/plugins', dest: '/content/scripts/tinymce/plugins' },
           { src: 'js/tinymce/themes', dest: '/content/scripts/tinymce/themes' },
           { src: 'js/tinymce/skins', dest: '/content/scripts/tinymce/skins' },
+          { src: 'js/tinymce/icons', dest: '/content/scripts/tinymce/icons' },
           { src: 'js/tinymce/tinymce.js', dest: '/content/scripts/tinymce/tinymce.js' },
           { src: 'js/tinymce/tinymce.min.js', dest: '/content/scripts/tinymce/tinymce.min.js' },
           { src: 'js/tinymce/jquery.tinymce.min.js', dest: '/content/scripts/tinymce/jquery.tinymce.min.js' },
@@ -660,6 +683,7 @@ module.exports = function (grunt) {
           { src: 'js/tinymce/plugins', dest: '/content/scripts/tinymce/plugins' },
           { src: 'js/tinymce/themes', dest: '/content/scripts/tinymce/themes' },
           { src: 'js/tinymce/skins', dest: '/content/scripts/tinymce/skins' },
+          { src: 'js/tinymce/icons', dest: '/content/scripts/tinymce/icons' },
           { src: 'js/tinymce/tinymce.js', dest: '/content/scripts/tinymce/tinymce.js' },
           { src: 'js/tinymce/tinymce.min.js', dest: '/content/scripts/tinymce/tinymce.min.js' },
           { src: 'js/tinymce/jquery.tinymce.min.js', dest: '/content/scripts/tinymce/jquery.tinymce.min.js' },
@@ -673,8 +697,10 @@ module.exports = function (grunt) {
         options: {
           themesDir: 'js/tinymce/themes',
           pluginsDir: 'js/tinymce/plugins',
+          iconsDir: 'js/tinymce/icons',
           pluginFileName: 'plugin.min.js',
           themeFileName: 'theme.min.js',
+          iconsFileName: 'icons.min.js',
           outputPath: 'js/tinymce/tinymce.full.min.js'
         },
 
@@ -687,8 +713,10 @@ module.exports = function (grunt) {
         options: {
           themesDir: 'js/tinymce/themes',
           pluginsDir: 'js/tinymce/plugins',
+          iconsDir: 'js/tinymce/icons',
           pluginFileName: 'plugin.js',
           themeFileName: 'theme.js',
+          iconsFileName: 'icons.js',
           outputPath: 'js/tinymce/tinymce.full.js'
         },
 
@@ -807,8 +835,8 @@ module.exports = function (grunt) {
     'rollup',
     'unicode',
     'concat',
-    'uglify',
-    'copy'
+    'copy',
+    'uglify'
   ]);
 
   grunt.registerTask('prod', [
@@ -827,7 +855,8 @@ module.exports = function (grunt) {
     // as well as making development easier, then we can update 'yarn dev' to run 'oxide-build' in parallel with 'tinymce-grunt dev'
     // that will save 2-3 seconds on incremental builds
     'copy:ui-skins',
-    'copy:content-skins'
+    'copy:content-skins',
+    'copy:default-icons'
   ]);
 
   grunt.registerTask('unicode', ['uglify:emoticons-raw']);

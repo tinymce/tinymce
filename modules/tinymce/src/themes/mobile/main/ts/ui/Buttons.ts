@@ -8,8 +8,8 @@
 import { Behaviour, Button, Toggling, Unselecting, SketchSpec } from '@ephox/alloy';
 import { Merger, Option } from '@ephox/katamari';
 
-import Receivers from '../channels/Receivers';
-import Styles from '../style/Styles';
+import * as Receivers from '../channels/Receivers';
+import * as Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
 
 const forToolbarCommand = function (editor, command) {
@@ -72,7 +72,7 @@ const forToolbar = function (clazz, action, extraBehaviours, editor): SketchSpec
   });
 };
 
-export default {
+export {
   forToolbar,
   forToolbarCommand,
   forToolbarStateAction,

@@ -9,13 +9,13 @@ import { Element, HTMLAnchorElement } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { AssumeExternalTargets } from '../api/Types';
 import { AttachState, LinkDialogOutput } from '../ui/DialogTypes';
 
 const hasProtocol = (url: string): boolean => /^\w+:/i.test(url);
 
-const getHref = (elm: HTMLAnchorElement): string => {
+const getHref = (elm: Element): string => {
   // Returns the real href value not the resolved a.href value
   const href = elm.getAttribute('data-mce-href');
   return href ? href : elm.getAttribute('href');
@@ -63,11 +63,11 @@ const getAnchorText = (selection, anchorElm: HTMLAnchorElement) => {
   return trimCaretContainers(text);
 };
 
-const isLink = (elm: HTMLAnchorElement): boolean => {
-  return elm && elm.nodeName === 'A' && !!elm.href;
+const isLink = (elm: Element): elm is HTMLAnchorElement => {
+  return elm && elm.nodeName === 'A' && !!getHref(elm);
 };
 
-const hasLinks = (elements: HTMLAnchorElement[]) => {
+const hasLinks = (elements: Element[]) => {
   return Tools.grep(elements, isLink).length > 0;
 };
 
@@ -204,7 +204,7 @@ const linkImageFigure = (editor: Editor, fig: Element, attrs: Record<string, str
   }
 };
 
-export default {
+export {
   link,
   unlink,
   isLink,

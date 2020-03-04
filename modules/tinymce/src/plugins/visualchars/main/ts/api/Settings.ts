@@ -11,6 +11,6 @@ const isEnabledByDefault = (editor: Editor) => {
   return editor.getParam('visualchars_default_state', false);
 };
 
-export default {
+export {
   isEnabledByDefault
 };

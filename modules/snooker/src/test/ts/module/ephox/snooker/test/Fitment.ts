@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import * as Structs from 'ephox/snooker/api/Structs';
-import Fitment, { Delta } from 'ephox/snooker/model/Fitment';
+import * as Fitment from 'ephox/snooker/model/Fitment';
 import { assert } from '@ephox/bedrock-client';
 import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 
@@ -43,7 +43,7 @@ const measureTest = function (expected: { error: string } | {rowDelta: number, c
   });
 };
 
-const tailorTest = function (expected: Structs.ElementNew[][], startAddress: Structs.Address, gridA: () => Structs.ElementNew[][], delta: Delta, generator: () => SimpleGenerators) {
+const tailorTest = function (expected: Structs.ElementNew[][], startAddress: Structs.Address, gridA: () => Structs.ElementNew[][], delta: Fitment.Delta, generator: () => SimpleGenerators) {
   // Based on the Fitment.measure
   // Increase gridA by the row/col delta values
   // The result is a new grid that will perfectly fit gridB into gridA
@@ -51,7 +51,7 @@ const tailorTest = function (expected: Structs.ElementNew[][], startAddress: Str
   assertGrids(mapToStructGrid(expected), tailoredGrid);
 };
 
-const tailorIVTest = function (expected: { rows: number, cols: number }, startAddress: Structs.Address, gridA: () => Structs.ElementNew[][], delta: Delta, generator: () => SimpleGenerators) {
+const tailorIVTest = function (expected: { rows: number, cols: number }, startAddress: Structs.Address, gridA: () => Structs.ElementNew[][], delta: Fitment.Delta, generator: () => SimpleGenerators) {
   const tailoredGrid = Fitment.tailor(mapToStructGrid(gridA()), delta, generator());
   const rows = tailoredGrid.length;
   const cols = tailoredGrid[0].cells().length;
@@ -59,7 +59,7 @@ const tailorIVTest = function (expected: { rows: number, cols: number }, startAd
   assert.eq(expected.cols, cols);
 };
 
-export default {
+export {
   measureTest,
   tailorTest,
   tailorIVTest

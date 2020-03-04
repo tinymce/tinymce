@@ -4,7 +4,7 @@ import { Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { Body, Value } from '@ephox/sugar';
-import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { TestHelpers } from '@ephox/alloy';
 import TestExtras from '../../module/TestExtras';

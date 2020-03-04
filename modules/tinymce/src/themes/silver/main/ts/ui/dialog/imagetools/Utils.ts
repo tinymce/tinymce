@@ -76,7 +76,7 @@ const parseJson = function (text) {
   return json;
 };
 
-export default {
+export {
   traverse,
   readBlob,
   requestUrlAsBlob,

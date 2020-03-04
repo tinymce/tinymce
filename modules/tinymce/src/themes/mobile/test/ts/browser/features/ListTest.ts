@@ -2,8 +2,8 @@ import { GeneralSteps, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Body, Traverse } from '@ephox/sugar';
 
-import TestTheme from '../../module/test/theme/TestTheme';
-import TestUi from '../../module/test/ui/TestUi';
+import * as TestTheme from '../../module/test/theme/TestTheme';
+import * as TestUi from '../../module/test/ui/TestUi';
 import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('Browser Test: features.ListTest', function (success, failure) {

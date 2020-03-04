@@ -14,7 +14,7 @@ import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
 import * as UiFactory from 'tinymce/themes/silver/ui/general/UiFactory';
 import { SelectData } from '../ui/core/complex/BespokeSelect';
 import { IconProvider } from '../ui/icons/Icons';
-import Anchors from './Anchors';
+import * as Anchors from './Anchors';
 import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInputBackstage';
 import { DialogBackstage, UiFactoryBackstageForDialog } from './DialogBackstage';
 import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';

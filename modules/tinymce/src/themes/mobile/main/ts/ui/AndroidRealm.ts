@@ -8,10 +8,10 @@
 import { Replacing, Gui, AlloyComponent } from '@ephox/alloy';
 import { Fun, Singleton } from '@ephox/katamari';
 
-import AndroidWebapp from '../api/AndroidWebapp';
-import Styles from '../style/Styles';
+import * as AndroidWebapp from '../api/AndroidWebapp';
+import * as Styles from '../style/Styles';
 import ScrollingToolbar from '../toolbar/ScrollingToolbar';
-import CommonRealm from './CommonRealm';
+import * as CommonRealm from './CommonRealm';
 import * as Dropup from './Dropup';
 import OuterContainer from './OuterContainer';
 import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';

@@ -7,12 +7,12 @@
 
 import { Singleton } from '@ephox/katamari';
 import { Class } from '@ephox/sugar';
-import AndroidEvents from './AndroidEvents';
-import AndroidSetup from './AndroidSetup';
-import PlatformEditor from '../../ios/core/PlatformEditor';
-import Thor from '../../util/Thor';
-import Styles from '../../style/Styles';
-import MetaViewport from '../../touch/view/MetaViewport';
+import * as AndroidEvents from './AndroidEvents';
+import * as AndroidSetup from './AndroidSetup';
+import * as PlatformEditor from '../../ios/core/PlatformEditor';
+import * as Thor from '../../util/Thor';
+import * as Styles from '../../style/Styles';
+import * as MetaViewport from '../../touch/view/MetaViewport';
 
 const create = function (platform, mask) {
 
@@ -64,6 +64,6 @@ const create = function (platform, mask) {
   };
 };
 
-export default {
+export {
   create
 };

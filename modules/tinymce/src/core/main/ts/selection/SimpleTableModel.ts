@@ -142,7 +142,7 @@ const subsection = function (table, startElement, endElement) {
   });
 };
 
-export default {
+export {
   fromDom,
   toDom,
   subsection

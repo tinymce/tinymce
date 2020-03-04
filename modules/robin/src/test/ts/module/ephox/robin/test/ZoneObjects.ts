@@ -13,11 +13,11 @@ export interface RawZone {
 
 const rawOne = function (universe: TestUniverse, zone: Zone<Gene>): RawZone {
   return {
-    lang: zone.lang(),
-    elements: Arr.map(zone.elements(), function (elem) {
+    lang: zone.lang,
+    elements: Arr.map(zone.elements, function (elem) {
       return elem.id;
     }),
-    words: Arr.map(zone.words(), function (w) {
+    words: Arr.map(zone.words, function (w) {
       return w.word();
     })
   };
@@ -36,7 +36,7 @@ const assertZones = function (label: string, universe: TestUniverse, expected: R
 
 const assertProps = function (label: string, universe: TestUniverse, zones: Zone<Gene>[]) {
   Arr.each(zones, function (zone) {
-    const elements = zone.elements();
+    const elements = zone.elements;
     if (elements.length === 0) {
       return;
     }
@@ -50,7 +50,7 @@ const assertProps = function (label: string, universe: TestUniverse, zones: Zone
         Arr.each(elements, function (x, i) {
           Assert.eq(
             'Checking everything in ' + label + ' has same language. Item: ' + x.id,
-            LanguageZones.calculate(universe, x).getOr('none'), zone.lang()
+            LanguageZones.calculate(universe, x).getOr('none'), zone.lang
           );
           Assert.eq(
             'Check that everything in the ' + label + ' is a text node',

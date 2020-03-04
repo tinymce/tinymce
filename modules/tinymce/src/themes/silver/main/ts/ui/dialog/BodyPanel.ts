@@ -12,7 +12,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import * as FormValues from '../general/FormValues';
-import NavigableObject from '../general/NavigableObject';
+import * as NavigableObject from '../general/NavigableObject';
 import { interpretInForm } from '../general/UiFactory';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { Omit } from '../Omit';

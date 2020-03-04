@@ -67,6 +67,6 @@ const urls = [
   { key: 'autocorrect', name: 'Autocorrect*'}
 ];
 
-export default {
+export {
   urls
 };

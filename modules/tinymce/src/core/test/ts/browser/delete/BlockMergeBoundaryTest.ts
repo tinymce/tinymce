@@ -1,10 +1,12 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { Hierarchy, Element } from '@ephox/sugar';
-import BlockMergeBoundary from 'tinymce/core/delete/BlockMergeBoundary';
+import * as BlockMergeBoundary from 'tinymce/core/delete/BlockMergeBoundary';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
+
+type BlockBoundary = BlockMergeBoundary.BlockBoundary;
 
 UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (success, failure) {
   const viewBlock = ViewBlock();
@@ -25,31 +27,31 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (s
     });
   };
 
-  const cAssertBlockBoundaryPositions = function (fromPath, fromOffset, toPath, toOffset) {
-    return Chain.op(function (blockBoundaryOption: Option<any>) {
+  const cAssertBlockBoundaryPositions = function (fromPath, fromOffset, toPath, toOffset): Chain<Option<BlockBoundary>, Option<BlockBoundary>> {
+    return Chain.op(function (blockBoundaryOption: Option<BlockMergeBoundary.BlockBoundary>) {
       const fromContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), fromPath).getOrDie();
       const toContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), toPath).getOrDie();
       const blockBoundary = blockBoundaryOption.getOrDie();
 
-      Assertions.assertDomEq('Should be expected from container', fromContainer, Element.fromDom(blockBoundary.from().position().container()));
-      Assertions.assertEq('Should be expected from offset', fromOffset, blockBoundary.from().position().offset());
-      Assertions.assertDomEq('Should be expected to container', toContainer, Element.fromDom(blockBoundary.to().position().container()));
-      Assertions.assertEq('Should be expected to offset', toOffset, blockBoundary.to().position().offset());
+      Assertions.assertDomEq('Should be expected from container', fromContainer, Element.fromDom(blockBoundary.from.position.container()));
+      Assertions.assertEq('Should be expected from offset', fromOffset, blockBoundary.from.position.offset());
+      Assertions.assertDomEq('Should be expected to container', toContainer, Element.fromDom(blockBoundary.to.position.container()));
+      Assertions.assertEq('Should be expected to offset', toOffset, blockBoundary.to.position.offset());
     });
   };
 
-  const cAssertBlockBoundaryBlocks = function (fromBlockPath, toBlockPath) {
-    return Chain.op(function (blockBoundaryOption: Option<any>) {
+  const cAssertBlockBoundaryBlocks = function (fromBlockPath: number[], toBlockPath: number[]): Chain<Option<BlockBoundary>, Option<BlockBoundary>> {
+    return Chain.op(function (blockBoundaryOption: Option<BlockBoundary>) {
       const expectedFromBlock = Hierarchy.follow(Element.fromDom(viewBlock.get()), fromBlockPath).getOrDie();
       const expectedToBlock = Hierarchy.follow(Element.fromDom(viewBlock.get()), toBlockPath).getOrDie();
       const blockBoundary = blockBoundaryOption.getOrDie();
 
-      Assertions.assertDomEq('Should be expected from block', expectedFromBlock, blockBoundary.from().block());
-      Assertions.assertDomEq('Should be expected to block', expectedToBlock, blockBoundary.to().block());
+      Assertions.assertDomEq('Should be expected from block', expectedFromBlock, blockBoundary.from.block);
+      Assertions.assertDomEq('Should be expected to block', expectedToBlock, blockBoundary.to.block);
     });
   };
 
-  const cAssertBlockBoundaryNone = Chain.op(function (blockBoundaryOption: Option<any>) {
+  const cAssertBlockBoundaryNone = Chain.op(function (blockBoundaryOption: Option<BlockBoundary >) {
     Assertions.assertEq('BlockBoundary should be none', true, blockBoundaryOption.isNone());
   });
 

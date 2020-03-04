@@ -7,12 +7,12 @@
 
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Compare, Element, Insert, Remove, Traverse } from '@ephox/sugar';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
-import Empty from '../dom/Empty';
-import PaddingBr from '../dom/PaddingBr';
-import Parents from '../dom/Parents';
+import * as Empty from '../dom/Empty';
+import * as PaddingBr from '../dom/PaddingBr';
+import * as Parents from '../dom/Parents';
 
 const getChildrenUntilBlockBoundary = (block: Element) => {
   const children = Traverse.children(block);
@@ -101,6 +101,6 @@ const mergeBlocks = (rootNode: Element, forward: boolean, block1: Element, block
   return forward ? mergeBlockInto(rootNode, block2, block1) : mergeBlockInto(rootNode, block1, block2);
 };
 
-export default {
+export {
   mergeBlocks
 };

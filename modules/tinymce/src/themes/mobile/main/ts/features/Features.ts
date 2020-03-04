@@ -11,15 +11,15 @@ import { Arr, Obj, Option, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import Receivers from '../channels/Receivers';
-import TinyChannels from '../channels/TinyChannels';
-import Styles from '../style/Styles';
-import Buttons from '../ui/Buttons';
-import ColorSlider from '../ui/ColorSlider';
+import * as Receivers from '../channels/Receivers';
+import * as TinyChannels from '../channels/TinyChannels';
+import * as Styles from '../style/Styles';
+import * as Buttons from '../ui/Buttons';
+import * as ColorSlider from '../ui/ColorSlider';
 import * as FontSizeSlider from '../ui/FontSizeSlider';
 import * as ImagePicker from '../ui/ImagePicker';
 import * as LinkButton from '../ui/LinkButton';
-import StyleFormats from '../util/StyleFormats';
+import * as StyleFormats from '../util/StyleFormats';
 
 const defaults = [ 'undo', 'bold', 'italic', 'link', 'image', 'bullist', 'styleselect' ];
 
@@ -116,8 +116,8 @@ const setup = function (realm, editor: Editor) {
       }),
       Receiving.config({
         channels: Objects.wrapAll([
-          Receivers.receive(TinyChannels.orientationChanged(), Toggling.off),
-          Receivers.receive(TinyChannels.dropupDismissed(), Toggling.off)
+          Receivers.receive(TinyChannels.orientationChanged, Toggling.off),
+          Receivers.receive(TinyChannels.dropupDismissed, Toggling.off)
         ])
       })
     ]), editor);
@@ -169,7 +169,7 @@ const detect = function (settings, features) {
   });
 };
 
-export default {
+export {
   identify,
   setup,
   detect

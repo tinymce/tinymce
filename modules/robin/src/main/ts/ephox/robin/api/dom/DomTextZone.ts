@@ -1,6 +1,6 @@
 import { DomUniverse } from '@ephox/boss';
 import { Element } from '@ephox/sugar';
-import TextZone from '../general/TextZone';
+import * as TextZone from '../general/TextZone';
 
 const universe = DomUniverse();
 
@@ -12,7 +12,7 @@ const range = function (start: Element, soffset: number, finish: Element, foffse
   return TextZone.range(universe, start, soffset, finish, foffset, envLang, onlyLang);
 };
 
-export default {
+export {
   single,
   range
 };

@@ -14,7 +14,7 @@ const convertToRange = function (win: Window, selection: Selection) {
 
 const makeSitus = Situs.create;
 
-export default {
+export {
   convertToRange,
   makeSitus
 };

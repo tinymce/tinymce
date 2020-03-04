@@ -15,6 +15,7 @@ const pickFile = (editor: Editor) => {
   return new Promise((resolve: (files: File[]) => void) => {
     const fileInput: HTMLInputElement = document.createElement('input');
     fileInput.type = 'file';
+    fileInput.accept = 'image/*';
     fileInput.style.position = 'fixed';
     fileInput.style.left = '0';
     fileInput.style.top = '0';
@@ -49,6 +50,6 @@ const pickFile = (editor: Editor) => {
   });
 };
 
-export default {
+export {
   pickFile
 };

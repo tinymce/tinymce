@@ -37,7 +37,7 @@ const sWaitForToolstrip = function (realm) {
   );
 };
 
-export default {
+export {
   addStyles,
   removeStyles,
   sWaitForToolstrip

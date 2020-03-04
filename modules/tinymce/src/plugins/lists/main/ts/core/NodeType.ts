@@ -77,7 +77,7 @@ const isChildOfBody = function (dom, elm) {
   return dom.isChildOf(elm, dom.getRoot());
 };
 
-export default {
+export {
   isTextNode,
   isListNode,
   isOlUlNode,

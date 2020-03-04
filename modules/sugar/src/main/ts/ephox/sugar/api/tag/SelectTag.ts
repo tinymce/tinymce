@@ -26,7 +26,7 @@ const setSelected = function (select: Element<HTMLSelectElement>, index: number)
   select.dom().selectedIndex = index;
 };
 
-export default {
+export {
   getValue,
   add,
   addAll,

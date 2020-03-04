@@ -8,12 +8,12 @@
 import { Arr, Fun, Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
-import TinyChannels from '../channels/TinyChannels';
+import * as TinyChannels from '../channels/TinyChannels';
 
-const fontSizes = [ 'x-small', 'small', 'medium', 'large', 'x-large' ];
+const fontSizesArray = [ 'x-small', 'small', 'medium', 'large', 'x-large' ];
 
 const fireChange = function (realm, command, state) {
-  realm.system().broadcastOn([ TinyChannels.formatChanged() ], {
+  realm.system().broadcastOn([ TinyChannels.formatChanged ], {
     command,
     state
   });
@@ -34,7 +34,9 @@ const init = function (realm, editor: Editor) {
   });
 };
 
-export default {
+const fontSizes = Fun.constant(fontSizesArray);
+
+export {
   init,
-  fontSizes: Fun.constant(fontSizes)
+  fontSizes
 };

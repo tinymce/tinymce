@@ -1,6 +1,6 @@
 import { document } from '@ephox/dom-globals';
 import { Css, DomEvent, Element, Insert, SelectorFind } from '@ephox/sugar';
-import Dragger from 'ephox/dragster/api/Dragger';
+import * as Dragger from 'ephox/dragster/api/Dragger';
 import Sizers from 'ephox/dragster/demo/Sizers';
 import * as Grow from 'ephox/dragster/transform/Grow';
 import * as Relocate from 'ephox/dragster/transform/Relocate';

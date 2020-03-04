@@ -11,7 +11,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Resource from 'tinymce/core/api/Resource';
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const ALL_CATEGORY = 'All';
 

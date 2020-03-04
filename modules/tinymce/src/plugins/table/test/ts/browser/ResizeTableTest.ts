@@ -5,7 +5,7 @@ import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import TableTestUtils from '../module/test/TableTestUtils';
+import * as TableTestUtils from '../module/test/TableTestUtils';
 import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, failure) => {

@@ -7,7 +7,7 @@
 
 import { Element } from '@ephox/sugar';
 import * as ElementType from './ElementType';
-import NodeType from './NodeType';
+import * as NodeType from './NodeType';
 import Tools from '../api/util/Tools';
 
 const surroundedBySpans = function (node) {
@@ -71,6 +71,6 @@ const trimNode = function (dom, node) {
   return node;
 };
 
-export default {
+export {
   trimNode
 };

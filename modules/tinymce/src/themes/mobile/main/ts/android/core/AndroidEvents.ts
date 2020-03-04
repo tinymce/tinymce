@@ -10,7 +10,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, DomEvent, Element, Focus, Node, Traverse } from '@ephox/sugar';
 
-import TappingEvent from '../../util/TappingEvent';
+import * as TappingEvent from '../../util/TappingEvent';
 import { HTMLInputElement } from '@ephox/dom-globals';
 
 const isAndroid6 = PlatformDetection.detect().os.version.major >= 6;
@@ -99,6 +99,6 @@ const initEvents = function (editorApi, toolstrip, alloy) {
   };
 };
 
-export default {
+export {
   initEvents
 };

@@ -13,13 +13,10 @@ const type = Adt.generate([
   { single: [ 'selection' ] }
 ]);
 
-const cata = function (subject, onNone, onMultiple, onSingle) {
+export const cata = function (subject, onNone, onMultiple, onSingle) {
   return subject.fold(onNone, onMultiple, onSingle);
 };
 
-export default {
-  cata,
-  none: type.none,
-  multiple: type.multiple,
-  single: type.single
-};
+export const none = type.none;
+export const multiple = type.multiple;
+export const single = type.single;

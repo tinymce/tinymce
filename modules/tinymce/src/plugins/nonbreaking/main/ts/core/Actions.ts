@@ -6,7 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const stringRepeat = (string, repeats) => {
   let str = '';
@@ -32,6 +32,6 @@ const insertNbsp = (editor: Editor, times: number) => {
   editor.undoManager.transact(() => editor.insertContent(html));
 };
 
-export default {
+export {
   insertNbsp
 };

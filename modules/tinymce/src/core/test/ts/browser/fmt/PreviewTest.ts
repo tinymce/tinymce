@@ -5,7 +5,7 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Preview from 'tinymce/core/fmt/Preview';
 import Theme from 'tinymce/themes/silver/Theme';
-import HtmlUtils from '../../module/test/HtmlUtils';
+import * as HtmlUtils from '../../module/test/HtmlUtils';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();

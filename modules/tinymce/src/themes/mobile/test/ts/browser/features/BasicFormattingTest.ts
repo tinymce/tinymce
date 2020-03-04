@@ -4,8 +4,8 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { Body, Traverse } from '@ephox/sugar';
 
-import TestTheme from '../../module/test/theme/TestTheme';
-import TestUi from '../../module/test/ui/TestUi';
+import * as TestTheme from '../../module/test/theme/TestTheme';
+import * as TestUi from '../../module/test/ui/TestUi';
 
 UnitTest.asynctest('Browser Test: features.BasicFormattingTest', function (success, failure) {
   const browser = PlatformDetection.detect().browser;

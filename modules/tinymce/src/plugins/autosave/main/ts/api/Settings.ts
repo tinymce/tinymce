@@ -13,14 +13,13 @@ const shouldAskBeforeUnload = (editor) => {
 };
 
 const getAutoSavePrefix = (editor) => {
-  let prefix = editor.getParam('autosave_prefix', 'tinymce-autosave-{path}{query}{hash}-{id}-');
+  const location = document.location;
 
-  prefix = prefix.replace(/\{path\}/g, document.location.pathname);
-  prefix = prefix.replace(/\{query\}/g, document.location.search);
-  prefix = prefix.replace(/\{hash\}/g, document.location.hash);
-  prefix = prefix.replace(/\{id\}/g, editor.id);
-
-  return prefix;
+  return editor.getParam('autosave_prefix', 'tinymce-autosave-{path}{query}{hash}-{id}-')
+  .replace(/{path}/g, location.pathname)
+  .replace(/{query}/g, location.search)
+  .replace(/{hash}/g, location.hash)
+  .replace(/{id}/g, editor.id);
 };
 
 const shouldRestoreWhenEmpty = (editor) => {

@@ -41,7 +41,7 @@ const onOrientationReady = function (outerWindow, refreshView) {
   }, 100);
 };
 
-export default {
+export {
   setSelectionAtTouch,
   onOrientationReady
 };

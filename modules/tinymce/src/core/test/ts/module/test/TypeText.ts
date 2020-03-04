@@ -58,6 +58,6 @@ const sTypeContentAtSelection = function (doc, text) {
   return GeneralSteps.sequence(Arr.map(text.split(''), Fun.curry(sTypeChar, doc)));
 };
 
-export default {
+export {
   sTypeContentAtSelection
 };

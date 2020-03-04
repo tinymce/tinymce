@@ -2,7 +2,7 @@ import { Chain, Cleaner, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logg
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Attr, DomEvent, Element, EventArgs, Insert, Node, Remove, Text } from '@ephox/sugar';
-import TestStore from 'ephox/alloy/api/testhelpers/TestStore';
+import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 
 import * as GuiEvents from 'ephox/alloy/events/GuiEvents';
 

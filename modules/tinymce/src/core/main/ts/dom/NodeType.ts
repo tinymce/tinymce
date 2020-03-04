@@ -101,7 +101,7 @@ const isBr = matchNodeNames<HTMLBRElement>(['br']);
 const isContentEditableTrue = hasContentEditableState('true') as (node: Node) => node is HTMLElement;
 const isContentEditableFalse = hasContentEditableState('false') as (node: Node) => node is HTMLElement;
 
-export default {
+export {
   isText,
   isElement,
   isComment,

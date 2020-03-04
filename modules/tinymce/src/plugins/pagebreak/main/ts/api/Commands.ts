@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import FilterContent from '../core/FilterContent';
+import * as FilterContent from '../core/FilterContent';
 
 const register = function (editor) {
   editor.addCommand('mcePageBreak', function () {
@@ -17,6 +17,6 @@ const register = function (editor) {
   });
 };
 
-export default {
+export {
   register
 };

@@ -4,15 +4,15 @@ import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr, Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 import { ArbTextIds, arbTextIds } from 'ephox/robin/test/Arbitraries';
-import Clustering from 'ephox/robin/words/Clustering';
+import * as Clustering from 'ephox/robin/words/Clustering';
 import { WordDecisionItem } from 'ephox/robin/words/WordDecision';
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
 
 UnitTest.test('ClusteringTest', function () {
   const checkWords = function (universe: TestUniverse, words: WordDecisionItem<Gene>[]) {
     return Arr.map(words, function (a) {
-      const text = universe.property().getText(a.item());
-      return text.substring(a.start(), a.finish());
+      const text = universe.property().getText(a.item);
+      return text.substring(a.start, a.finish);
     });
   };
 
@@ -177,16 +177,16 @@ UnitTest.test('ClusteringTest', function () {
   };
 
   interface ClusteringLangs {
-    all: () => WordDecisionItem<Gene>[];
-    left: () => WordDecisionItem<Gene>[];
-    middle: () => WordDecisionItem<Gene>[];
-    right: () => WordDecisionItem<Gene>[];
-    lang: () => Option<string>;
+    readonly all: () => WordDecisionItem<Gene>[];
+    readonly left: () => WordDecisionItem<Gene>[];
+    readonly middle: () => WordDecisionItem<Gene>[];
+    readonly right: () => WordDecisionItem<Gene>[];
+    readonly lang: () => Option<string>;
   }
 
   const checkProps = function (universe: TestUniverse, textIds: string[], start: Gene, actual: ClusteringLangs) {
     const checkGroup = function (label: string, group: WordDecisionItem<Gene>[]) {
-      const items = Arr.map(group, function (g) { return g.item(); });
+      const items = Arr.map(group, function (g) { return g.item; });
       Arr.each(items, function (x, i) {
         Assert.eq('Checking everything in ' + label + ' has same language', LanguageZones.calculate(universe, x).getOr('none'), actual.lang().getOr('none'));
         Assert.eq(
@@ -204,8 +204,8 @@ UnitTest.test('ClusteringTest', function () {
 
     Arr.each(actual.all(), function (x, i) {
       if (i > 0) {
-        const prev = actual.all()[i - 1].item().id;
-        const current = x.item().id;
+        const prev = actual.all()[i - 1].item.id;
+        const current = x.item.id;
         Assert.eq(
           'The text nodes should be one after the other',
           +1,
@@ -219,7 +219,7 @@ UnitTest.test('ClusteringTest', function () {
       Assert.eq(
         'All block ancestor tags should be the same as the original',
         blockParent,
-        universe.up().predicate(x.item(), universe.property().isBoundary).getOrDie('No block parent tag found')
+        universe.up().predicate(x.item, universe.property().isBoundary).getOrDie('No block parent tag found')
       );
     });
   };

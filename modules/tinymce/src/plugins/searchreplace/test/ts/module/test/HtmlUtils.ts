@@ -39,7 +39,7 @@ const normalizeHtml = function (html) {
   return writer.getContent();
 };
 
-export default {
+export {
   cleanHtml,
   normalizeHtml
 };

@@ -8,10 +8,10 @@
 import { Attr, Document, document, DocumentFragment, Element, HTMLElement, HTMLElementEventMap, HTMLElementTagNameMap, NamedNodeMap, Node, Range, Window, window } from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
 import { VisualViewport } from '@ephox/sugar';
-import NodeType from '../../dom/NodeType';
-import Position from '../../dom/Position';
+import * as NodeType from '../../dom/NodeType';
+import * as Position from '../../dom/Position';
 import { StyleSheetLoader } from '../../dom/StyleSheetLoader';
-import TrimNode from '../../dom/TrimNode';
+import * as TrimNode from '../../dom/TrimNode';
 import Env from '../Env';
 import { GeomRect } from '../geom/Rect';
 import Entities from '../html/Entities';

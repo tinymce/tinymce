@@ -15,7 +15,7 @@ import { Types } from '@ephox/bridge';
 import { document, HTMLInputElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Body, Element as SugarElement } from '@ephox/sugar';
-import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
 UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {

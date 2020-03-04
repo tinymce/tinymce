@@ -6,7 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import UpdateHtml from './UpdateHtml';
+import * as UpdateHtml from './UpdateHtml';
 
 declare let escape: any;
 declare let unescape: any;
@@ -49,6 +49,6 @@ const setup = (editor: Editor) => {
   });
 };
 
-export default {
+export {
   setup
 };

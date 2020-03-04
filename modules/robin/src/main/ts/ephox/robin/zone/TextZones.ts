@@ -1,12 +1,14 @@
 import { Universe } from '@ephox/boss';
 import { Fun, Option } from '@ephox/katamari';
-import Parent from '../api/general/Parent';
+import * as Parent from '../api/general/Parent';
 import { ZoneViewports } from '../api/general/ZoneViewports';
-import Clustering from '../words/Clustering';
+import * as Clustering from '../words/Clustering';
 import { WordDecision, WordDecisionItem } from '../words/WordDecision';
 import { LanguageZones, ZoneDetails } from './LanguageZones';
-import { Zones } from './Zones';
-import ZoneWalker from './ZoneWalker';
+import * as Zones from './Zones';
+import * as ZoneWalker from './ZoneWalker';
+
+type Zones<E> = Zones.Zones<E>;
 
 const rangeOn = function <E, D> (universe: Universe<E, D>, first: E, last: E, envLang: string, transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>, viewport: ZoneViewports<E>) {
   const ancestor = universe.eq(first, last) ? Option.some(first) : universe.property().parent(first);
@@ -36,13 +38,13 @@ const fromBounded = function <E, D> (universe: Universe<E, D>, left: E, right: E
 const fromRange = function <E, D> (universe: Universe<E, D>, start: E, finish: E, envLang: string, viewport: ZoneViewports<E>) {
   const edges = Clustering.getEdges(universe, start, finish, Fun.constant(false));
   const transform = transformEdges(edges.left(), edges.right());
-  return fromBoundedWith(universe, edges.left().item(), edges.right().item(), envLang, transform, viewport);
+  return fromBoundedWith(universe, edges.left().item, edges.right().item, envLang, transform, viewport);
 };
 
 const transformEdges = function <E> (leftEdge: WordDecisionItem<E>, rightEdge: WordDecisionItem<E>) {
   return function <D> (universe: Universe<E, D>, element: E) {
-    return universe.eq(element, leftEdge.item()) ? leftEdge :
-      universe.eq(element, rightEdge.item()) ? rightEdge : WordDecision.detail(universe, element);
+    return universe.eq(element, leftEdge.item) ? leftEdge :
+      universe.eq(element, rightEdge.item) ? rightEdge : WordDecision.detail(universe, element);
   };
 };
 
@@ -52,16 +54,16 @@ const fromInline = function <E, D> (universe: Universe<E, D>, element: E, envLan
   // change
   const bounded = Clustering.byBoundary(universe, element);
   const transform = transformEdges(bounded.left(), bounded.right());
-  return bounded.isEmpty() ? empty<E>() : fromBoundedWith(universe, bounded.left().item(), bounded.right().item(), envLang, transform, viewport);
+  return bounded.isEmpty() ? empty<E>() : fromBoundedWith(universe, bounded.left().item, bounded.right().item, envLang, transform, viewport);
 };
 
 const empty = function <E> (): Zones<E> {
   return {
-    zones: Fun.constant([])
+    zones: []
   };
 };
 
-export default {
+export {
   fromRange,
   transformEdges,
   fromBounded,

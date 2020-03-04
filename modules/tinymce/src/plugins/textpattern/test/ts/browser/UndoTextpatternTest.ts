@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import Utils from '../module/test/Utils';
+import * as Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.tinymce.plugins.textpattern.UndoTextpatternTest', (success, failure) => {
 

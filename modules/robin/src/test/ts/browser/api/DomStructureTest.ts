@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import DomStructure from 'ephox/robin/api/dom/DomStructure';
+import * as DomStructure from 'ephox/robin/api/dom/DomStructure';
 
 UnitTest.test('DomStructureTest', function () {
   const expectInlineElements = ['span', 'em', 'strong', 'b', 'i', 'a'];

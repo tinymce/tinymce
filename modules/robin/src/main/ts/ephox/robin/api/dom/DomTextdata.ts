@@ -8,6 +8,6 @@ const from = function (elements: Element[], current: Element, offset: number) {
   return Textdata.from(universe, elements, current, offset);
 };
 
-export default {
+export {
   from
 };

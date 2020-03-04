@@ -6,7 +6,7 @@ import { Body, Attr, Class } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
-import HtmlUtils from '../module/test/HtmlUtils';
+import * as HtmlUtils from '../module/test/HtmlUtils';
 import URI from 'tinymce/core/api/util/URI';
 import Theme from 'tinymce/themes/silver/Theme';
 

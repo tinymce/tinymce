@@ -1,7 +1,7 @@
 import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
 import { Fun, Option } from '@ephox/katamari';
 import { Element, Hierarchy, Remove, Selection, Traverse, WindowSelection } from '@ephox/sugar';
-import SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
+import * as SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
 import ViewBlock from '../../module/test/ViewBlock';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { KAssert } from '@ephox/katamari-assertions';

@@ -4,7 +4,7 @@ import { TinyApis, TinyLoader, TinyUi, TinyDom } from '@ephox/mcagar';
 import MediaPlugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import Utils from '../module/test/Utils';
+import * as Utils from '../module/test/Utils';
 import { document } from '@ephox/dom-globals';
 import { Html } from '@ephox/sugar';
 

@@ -28,7 +28,7 @@ import { Attr, Node } from '@ephox/sugar';
 
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formCloseEvent } from '../general/FormEvents';
-import NavigableObject from '../general/NavigableObject';
+import * as NavigableObject from '../general/NavigableObject';
 import { dialogChannel } from './DialogChannels';
 import { renderInlineBody } from './SilverDialogBody';
 import { SilverDialogEvents } from './SilverDialogEvents';

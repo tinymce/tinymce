@@ -84,7 +84,7 @@ const subset = function <E, D>(universe: Universe<E, D>, start: E, end: E) {
   });
 };
 
-export default {
+export {
   subset,
   ancestors
 };

@@ -6,9 +6,9 @@ import * as SelectorExists from 'ephox/sugar/api/search/SelectorExists';
 import * as SelectorFilter from 'ephox/sugar/api/search/SelectorFilter';
 import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
 import * as Selectors from 'ephox/sugar/api/search/Selectors';
-import Checkers from 'ephox/sugar/test/Checkers';
+import * as Checkers from 'ephox/sugar/test/Checkers';
 import Div from 'ephox/sugar/test/Div';
-import TestPage from 'ephox/sugar/test/TestPage';
+import * as TestPage from 'ephox/sugar/test/TestPage';
 import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('SelectorTest', function () {

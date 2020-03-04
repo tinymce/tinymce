@@ -6,7 +6,7 @@
  */
 
 import { getElementFromPosition } from '../caret/CaretUtils';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import { CaretPosition } from '../caret/CaretPosition';
 import { Insert, Element } from '@ephox/sugar';
 import { Option, Fun, Unicode } from '@ephox/katamari';

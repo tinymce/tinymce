@@ -1,10 +1,10 @@
 import { Arr, Option } from '@ephox/katamari';
 import { Class, Css, Height, Insert, Location, Remove, SelectorFilter, Width, Element, Position } from '@ephox/sugar';
-import Blocks from '../lookup/Blocks';
-import DetailsList from '../model/DetailsList';
+import * as Blocks from '../lookup/Blocks';
+import * as DetailsList from '../model/DetailsList';
 import { Warehouse } from '../model/Warehouse';
-import Styles from '../style/Styles';
-import Bar from './Bar';
+import * as Styles from '../style/Styles';
+import * as Bar from './Bar';
 import { ResizeWire } from '../api/ResizeWire';
 import { BarPositions, RowInfo, ColInfo } from './BarPositions';
 
@@ -90,7 +90,7 @@ const isColBar = function (element: Element) {
   return Class.has(element, resizeColBar);
 };
 
-export default {
+export {
   refresh,
   hide,
   show,

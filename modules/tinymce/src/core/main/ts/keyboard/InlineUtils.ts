@@ -12,10 +12,10 @@ import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
 import * as CaretUtils from '../caret/CaretUtils';
 import DOMUtils from '../api/dom/DOMUtils';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as Bidi from '../text/Bidi';
 import Editor from '../api/Editor';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const isInlineTarget = function (editor: Editor, elm: Node): boolean {
   return Selectors.is(Element.fromDom(elm), Settings.getInlineBoundarySelector(editor));
@@ -79,7 +79,7 @@ type NormalisePostionFn = (pos: CaretPosition) => CaretPosition;
 const normalizeForwards = Fun.curry(normalizePosition, true) as NormalisePostionFn;
 const normalizeBackwards = Fun.curry(normalizePosition, false) as NormalisePostionFn;
 
-export default {
+export {
   isInlineTarget,
   findRootInline,
   isRtl,

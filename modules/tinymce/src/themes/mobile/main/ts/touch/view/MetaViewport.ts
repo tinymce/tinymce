@@ -50,6 +50,6 @@ const tag = function () {
   };
 };
 
-export default {
+export {
   tag
 };

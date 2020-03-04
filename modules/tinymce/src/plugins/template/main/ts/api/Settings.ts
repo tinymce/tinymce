@@ -39,7 +39,7 @@ const getMdateFormat = (editor: Editor) => {
   return editor.getParam('template_mdate_format', editor.translate('%Y-%m-%d'));
 };
 
-export default {
+export {
   getCreationDateClasses,
   getModificationDateClasses,
   getSelectedContentClasses,

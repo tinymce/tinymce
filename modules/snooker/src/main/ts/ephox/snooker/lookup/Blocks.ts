@@ -75,7 +75,7 @@ const rows = function (warehouse: Warehouse) {
 
 };
 
-export default {
+export {
   columns,
   rows
 };

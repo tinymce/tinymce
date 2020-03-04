@@ -156,7 +156,7 @@ const addToolbars = (editor: Editor) => {
   }
 };
 
-export default {
+export {
   addButtons,
   addToolbars
 };

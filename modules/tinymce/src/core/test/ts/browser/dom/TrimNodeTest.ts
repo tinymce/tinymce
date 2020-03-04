@@ -1,6 +1,6 @@
 import { Pipeline, Step } from '@ephox/agar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import TrimNode from 'tinymce/core/dom/TrimNode';
+import * as TrimNode from 'tinymce/core/dom/TrimNode';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 

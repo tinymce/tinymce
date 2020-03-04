@@ -31,6 +31,6 @@ const register = function (editor: Editor, clipboard: Clipboard) {
   });
 };
 
-export default {
+export {
   register
 };

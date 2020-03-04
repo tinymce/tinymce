@@ -83,7 +83,7 @@ const checkCharCode = (chars, event) => {
   });
 };
 
-export default {
+export {
   handleEnter,
   handleInlineKey,
   checkCharCode,

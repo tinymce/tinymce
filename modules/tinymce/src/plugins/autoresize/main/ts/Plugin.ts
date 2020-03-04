@@ -7,8 +7,8 @@
 
 import { Cell } from '@ephox/katamari';
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Commands from './api/Commands';
-import Resize from './core/Resize';
+import * as Commands from './api/Commands';
+import * as Resize from './core/Resize';
 
 /**
  * This class contains all core logic for the autoresize plugin.

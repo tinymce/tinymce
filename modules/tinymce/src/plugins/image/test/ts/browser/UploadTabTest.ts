@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Strings } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
-import Conversions from 'tinymce/core/file/Conversions';
+import * as Conversions from 'tinymce/core/file/Conversions';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 

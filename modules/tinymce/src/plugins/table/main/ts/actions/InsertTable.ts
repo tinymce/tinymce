@@ -60,6 +60,6 @@ const insert = (editor: Editor, columns: number, rows: number): HTMLElement => {
   }).getOr(null);
 };
 
-export default {
+export {
   insert
 };

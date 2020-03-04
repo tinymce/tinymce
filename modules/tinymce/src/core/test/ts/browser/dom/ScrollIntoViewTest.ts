@@ -4,7 +4,7 @@ import { window } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
-import ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
+import * as ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
 import Theme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
 

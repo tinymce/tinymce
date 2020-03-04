@@ -7,18 +7,18 @@
 
 import { Element, HTMLElement } from '@ephox/dom-globals';
 import { Obj, Type } from '@ephox/katamari';
-import { getAll as getAllOxide } from '@tinymce/oxide-icons-default';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import IconManager from '../api/IconManager';
 import PluginManager from '../api/PluginManager';
+import * as Settings from '../api/Settings';
 import { ThemeInitFunc } from '../api/SettingsTypes';
 import ThemeManager from '../api/ThemeManager';
 import Tools from '../api/util/Tools';
-import ErrorReporter from '../ErrorReporter';
+import * as ErrorReporter from '../ErrorReporter';
 import { appendContentCssFromSettings } from './ContentCss';
-import InitContentBody from './InitContentBody';
-import InitIframe from './InitIframe';
+import * as InitContentBody from './InitContentBody';
+import * as InitIframe from './InitIframe';
 
 const DOM = DOMUtils.DOM;
 
@@ -65,12 +65,11 @@ const initPlugins = function (editor: Editor) {
 };
 
 const initIcons = (editor: Editor) => {
-  const iconPackName: string = Tools.trim(editor.settings.icons);
+  const iconPackName: string = Tools.trim(Settings.getIconPackName(editor));
   const currentIcons = editor.ui.registry.getAll().icons;
 
-  const defaultIcons = getAllOxide();
   const loadIcons = {
-    ...defaultIcons,
+    ...IconManager.get('default').icons,
     ...IconManager.get(iconPackName).icons
   };
 
@@ -175,6 +174,6 @@ const init = function (editor: Editor) {
   }
 };
 
-export default {
+export {
   init
 };

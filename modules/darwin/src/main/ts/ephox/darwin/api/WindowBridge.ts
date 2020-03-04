@@ -2,7 +2,7 @@ import { ClientRect, DOMRect, Element as DomElement, Window } from '@ephox/dom-g
 import { Option } from '@ephox/katamari';
 import { Element, RawRect, Rect, Scroll, Selection, SimRange, Situ, WindowSelection } from '@ephox/sugar';
 import { Situs } from '../selection/Situs';
-import Util from '../selection/Util';
+import * as Util from '../selection/Util';
 
 export interface WindowBridge {
   elementFromPoint: (x: number, y: number) => Option<Element>;

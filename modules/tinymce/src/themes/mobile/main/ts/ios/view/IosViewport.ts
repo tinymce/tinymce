@@ -8,10 +8,10 @@
 import { Adt, Arr, Fun } from '@ephox/katamari';
 import { Attr, Css, Height, SelectorFilter, Traverse } from '@ephox/sugar';
 
-import Styles from '../../style/Styles';
-import Scrollable from '../../touch/scroll/Scrollable';
-import DataAttributes from '../../util/DataAttributes';
-import DeviceZones from './DeviceZones';
+import * as Styles from '../../style/Styles';
+import * as Scrollable from '../../touch/scroll/Scrollable';
+import * as DataAttributes from '../../util/DataAttributes';
+import * as DeviceZones from './DeviceZones';
 
 const fixture = Adt.generate([
   { fixed: [ 'element', 'property', 'offsetY' ] },
@@ -192,7 +192,7 @@ const takeover = function (viewport, contentBody, toolbar, dropup) {
   };
 };
 
-export default {
+export {
   findFixtures,
   takeover,
   getYFixedData

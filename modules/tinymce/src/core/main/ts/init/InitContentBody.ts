@@ -13,25 +13,27 @@ import Selection from '../api/dom/Selection';
 import DomSerializer from '../api/dom/Serializer';
 import Editor from '../api/Editor';
 import EditorUpload from '../api/EditorUpload';
+import Env from '../api/Env';
 import * as Events from '../api/Events';
 import Formatter from '../api/Formatter';
 import DomParser from '../api/html/DomParser';
 import Node from '../api/html/Node';
 import Schema from '../api/html/Schema';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import UndoManager from '../api/UndoManager';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as Placeholder from '../content/Placeholder';
-import NodeType from '../dom/NodeType';
-import TouchEvents from '../events/TouchEvents';
-import ForceBlocks from '../ForceBlocks';
-import KeyboardOverrides from '../keyboard/KeyboardOverrides';
+import * as NodeType from '../dom/NodeType';
+import * as TouchEvents from '../events/TouchEvents';
+import * as ForceBlocks from '../ForceBlocks';
+import * as KeyboardOverrides from '../keyboard/KeyboardOverrides';
 import { NodeChange } from '../NodeChange';
 import * as DetailsElement from '../selection/DetailsElement';
 import * as MultiClickSelection from '../selection/MultiClickSelection';
+import * as SelectionBookmark from '../selection/SelectionBookmark';
 import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import Quirks from '../util/Quirks';
@@ -158,7 +160,13 @@ const moveSelectionToFirstCaretPosition = (editor: Editor) => {
       const node = pos.getNode();
       // If a table is the first caret pos, then walk down one more level
       const caretPos = NodeType.isTable(node) ? CaretFinder.firstPositionIn(node).getOr(pos) : pos;
-      editor.selection.setRng(caretPos.toRange());
+      // Don't set the selection on IE, as since it's a single selection model setting the selection will cause
+      // it to grab focus, so instead store the selection in the bookmark
+      if (Env.browser.isIE()) {
+        SelectionBookmark.storeNative(editor, caretPos.toRange());
+      } else {
+        editor.selection.setRng(caretPos.toRange());
+      }
     });
   }
 };
@@ -217,7 +225,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   // It will not steal focus while setting contentEditable
   body = editor.getBody();
   body.disabled = true;
-  editor.readonly = settings.readonly;
+  editor.readonly = !!settings.readonly;
 
   if (!editor.readonly) {
     if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {
@@ -327,6 +335,6 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   }
 };
 
-export default {
+export {
   initContentBody
 };

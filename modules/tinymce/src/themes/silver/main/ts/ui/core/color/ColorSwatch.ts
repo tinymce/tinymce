@@ -9,8 +9,8 @@ import { HexColour, RgbaColour } from '@ephox/acid';
 import { Menu, Toolbar, Types } from '@ephox/bridge';
 import { Cell, Fun, Option, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import Settings from './Settings';
-import Events from '../../../api/Events';
+import * as Settings from './Settings';
+import * as Events from '../../../api/Events';
 
 export interface ColorSwatchDialogData {
   colorpicker: string;
@@ -105,12 +105,12 @@ const applyColor = function (editor: Editor, format, value, onChoice: (v: string
   }
 };
 
-const getMenuColors = (colors: Menu.ChoiceMenuItemApi[], hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
+const getColors = (colors: Menu.ChoiceMenuItemApi[], hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
   return colors.concat(Settings.getCurrentColors().concat(getAdditionalColors(hasCustom)));
 };
 
 const getFetch = (colors: Menu.ChoiceMenuItemApi[], hasCustom: boolean) => (callback) => {
-  callback(getMenuColors(colors, hasCustom));
+  callback(getColors(colors, hasCustom));
 };
 
 const setIconColor = (splitButtonApi: Toolbar.ToolbarSplitButtonInstanceApi, name: string, newColor: string) => {
@@ -132,7 +132,7 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
       const optCurrentRgb = Option.from(getCurrentColor(editor, format));
       return optCurrentRgb.bind((currentRgb) => {
         return RgbaColour.fromString(currentRgb).map((rgba) => {
-          const currentHex = HexColour.fromRgba(rgba).value();
+          const currentHex = HexColour.fromRgba(rgba).value;
           // note: value = '#FFFFFF', currentHex = 'ffffff'
           return Strings.contains(value.toLowerCase(), currentHex);
         });
@@ -261,4 +261,12 @@ const register = (editor: Editor) => {
   registerTextColorMenuItem(editor, 'backcolor', 'hilitecolor', 'Background color');
 };
 
-export default { register, getColors: getMenuColors, getFetch, colorPickerDialog, getCurrentColor, getColorCols, calcCols };
+export {
+  register,
+  getColors,
+  getFetch,
+  colorPickerDialog,
+  getCurrentColor,
+  getColorCols,
+  calcCols
+};

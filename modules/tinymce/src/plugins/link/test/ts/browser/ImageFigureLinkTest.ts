@@ -1,7 +1,7 @@
 import { Assertions, Logger, Log, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
-import LinkPluginUtils from 'tinymce/plugins/link/core/Utils';
+import * as LinkPluginUtils from 'tinymce/plugins/link/core/Utils';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { TestLinkUi } from '../module/TestLinkUi';

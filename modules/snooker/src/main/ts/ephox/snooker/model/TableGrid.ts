@@ -1,5 +1,5 @@
 import { Arr, Fun } from '@ephox/katamari';
-import GridRow from './GridRow';
+import * as GridRow from './GridRow';
 import { RowCells, ElementNew } from '../api/Structs';
 import { Element } from '@ephox/sugar';
 
@@ -50,6 +50,6 @@ const subgrid = function (grid: RowCells[], row: number, column: number, compara
   };
 };
 
-export default {
+export {
   subgrid
 };

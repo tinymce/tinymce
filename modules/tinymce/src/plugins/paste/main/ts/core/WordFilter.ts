@@ -10,8 +10,8 @@ import Node from 'tinymce/core/api/html/Node';
 import Schema from 'tinymce/core/api/html/Schema';
 import Serializer from 'tinymce/core/api/html/Serializer';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import Utils from './Utils';
+import * as Settings from '../api/Settings';
+import * as Utils from './Utils';
 import Editor from 'tinymce/core/api/Editor';
 import { Unicode } from '@ephox/katamari';
 
@@ -484,7 +484,7 @@ const preProcess = function (editor: Editor, content) {
   return Settings.shouldUseDefaultFilters(editor) ? filterWordContent(editor, content) : content;
 };
 
-export default {
+export {
   preProcess,
   isWordContent
 };

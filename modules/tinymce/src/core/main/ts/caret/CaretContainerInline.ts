@@ -6,8 +6,8 @@
  */
 
 import { Fun } from '@ephox/katamari';
-import NodeType from '../dom/NodeType';
-import Zwsp from '../text/Zwsp';
+import * as NodeType from '../dom/NodeType';
+import * as Zwsp from '../text/Zwsp';
 import { Node, Text } from '@ephox/dom-globals';
 
 const isText = NodeType.isText;

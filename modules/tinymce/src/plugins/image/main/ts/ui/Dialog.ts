@@ -7,7 +7,7 @@
 
 import { Types } from '@ephox/bridge';
 import { File, URL } from '@ephox/dom-globals';
-import { Arr, FutureResult, Merger, Option, Type } from '@ephox/katamari';
+import { Arr, Merger, Option, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
@@ -16,7 +16,7 @@ import { getStyleValue, ImageData } from '../core/ImageData';
 import { insertOrUpdateImage, normalizeCss as doNormalizeCss } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
 import Uploader from '../core/Uploader';
-import Utils from '../core/Utils';
+import * as Utils from '../core/Utils';
 import { AdvTab } from './AdvTab';
 import { collect } from './DialogInfo';
 import { API, ImageDialogData, ImageDialogInfo, ListValue } from './DialogTypes';
@@ -34,7 +34,7 @@ interface Size {
 
 interface Helpers {
   onSubmit: (info: ImageDialogInfo) => (api: API) => void;
-  imageSize: (url: string) => FutureResult<Size, string>;
+  imageSize: (url: string) => Promise<Size>;
   addToBlobCache: (blobInfo: BlobInfo) => void;
   createBlobCache: (file: File, blobUri: string, dataUrl: string) => BlobInfo;
   alertErr: (api: API, message: string) => void;
@@ -176,12 +176,10 @@ const calculateImageSize = (helpers: Helpers, info: ImageDialogInfo, state: Imag
   const url = data.src.value;
   const meta = data.src.meta || {};
   if (!meta.width && !meta.height && info.hasDimensions) {
-    helpers.imageSize(url).get((result) => {
-      result.each((size) => {
-        if (state.open) {
-          api.setData({ dimensions: size });
-        }
-      });
+    helpers.imageSize(url).then((size) => {
+      if (state.open) {
+        api.setData({ dimensions: size });
+      }
     });
   }
 };
@@ -401,18 +399,12 @@ const submitHandler = (editor: Editor) => (info: ImageDialogInfo) => (api: API) 
   api.close();
 };
 
-const imageSize = (editor: Editor) => (url: string): FutureResult<Size, string> => {
-  return FutureResult.nu((completer) => {
-    Utils.getImageSize(editor.documentBaseURI.toAbsolute(url), (data) => {
-      const result = data.map((dimensions) => {
-        return {
-          width: String(dimensions.width),
-          height: String(dimensions.height)
-        };
-      });
-
-      completer(result);
-    });
+const imageSize = (editor: Editor) => (url: string): Promise<Size> => {
+  return Utils.getImageSize(editor.documentBaseURI.toAbsolute(url)).then((dimensions) => {
+    return {
+      width: String(dimensions.width),
+      height: String(dimensions.height)
+    };
   });
 };
 
@@ -457,7 +449,7 @@ export const Dialog = (editor: Editor) => {
     parseStyle: parseStyle(editor),
     serializeStyle: serializeStyle(editor),
   };
-  const open = () => collect(editor).map(makeDialog(helpers)).get((spec) => {
+  const open = () => collect(editor).then(makeDialog(helpers)).then((spec) => {
     editor.windowManager.open(spec);
   });
 

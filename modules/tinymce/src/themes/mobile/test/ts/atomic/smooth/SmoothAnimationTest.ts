@@ -1,4 +1,4 @@
-import SmoothAnimation from 'tinymce/themes/mobile/ios/smooth/SmoothAnimation';
+import * as SmoothAnimation from 'tinymce/themes/mobile/ios/smooth/SmoothAnimation';
 import { UnitTest } from '@ephox/bedrock-client';
 import { KAssert } from '@ephox/katamari-assertions';
 

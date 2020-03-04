@@ -7,7 +7,7 @@
 
 import { Element } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import EditorView from '../EditorView';
+import * as EditorView from '../EditorView';
 import { NotificationManagerImpl } from '../ui/NotificationManagerImpl';
 import Editor from './Editor';
 import Delay from './util/Delay';
@@ -25,6 +25,7 @@ export interface NotificationSpec {
   icon?: string;
   progressBar?: boolean;
   timeout?: number;
+  closeButton?: boolean;
 }
 
 export interface NotificationApi {

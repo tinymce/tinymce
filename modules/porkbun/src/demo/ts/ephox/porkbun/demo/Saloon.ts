@@ -1,5 +1,5 @@
-import Binder from 'ephox/porkbun/Binder';
-import Events from 'ephox/porkbun/Events';
+import * as Binder from 'ephox/porkbun/Binder';
+import * as Events from 'ephox/porkbun/Events';
 import { Event, Bindable } from 'ephox/porkbun/Event';
 import { Outlaw, ShootingEvent, Saloon } from './Types';
 
@@ -78,6 +78,6 @@ const create = function (): Saloon {
   };
 };
 
-export default {
+export {
   create
 };

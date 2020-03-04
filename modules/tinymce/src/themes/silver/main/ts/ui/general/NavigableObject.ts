@@ -72,7 +72,7 @@ const isPseudoStop = function (element) {
   return SelectorExists.closest(element, [ '.' + beforeObject, '.' + afterObject ].join(','), Fun.constant(false));
 };
 
-export default {
+export {
   isPseudoStop,
   onFocus,
   craft

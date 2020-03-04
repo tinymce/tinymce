@@ -8,8 +8,8 @@
 import { Behaviour, Slider, Toggling, SketchSpec } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 
-import Receivers from '../channels/Receivers';
-import Styles from '../style/Styles';
+import * as Receivers from '../channels/Receivers';
+import * as Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
 
 const schema = ValueSchema.objOfOnly([
@@ -85,6 +85,6 @@ const sketch = function (rawSpec): SketchSpec {
   });
 };
 
-export default {
+export {
   sketch
 };

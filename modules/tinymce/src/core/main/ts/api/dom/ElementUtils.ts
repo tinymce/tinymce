@@ -6,7 +6,7 @@
  */
 
 import { Attr } from '@ephox/dom-globals';
-import Bookmarks from '../../bookmark/Bookmarks';
+import * as Bookmarks from '../../bookmark/Bookmarks';
 import Tools from '../util/Tools';
 import DOMUtils from './DOMUtils';
 

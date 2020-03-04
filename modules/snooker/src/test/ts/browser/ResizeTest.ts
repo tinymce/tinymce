@@ -2,10 +2,10 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Body, Element, Insert, Remove, Css } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
-import Deltas from 'ephox/snooker/calc/Deltas';
-import DetailsList from 'ephox/snooker/model/DetailsList';
+import * as Deltas from 'ephox/snooker/calc/Deltas';
+import * as DetailsList from 'ephox/snooker/model/DetailsList';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
-import TableSize from 'ephox/snooker/resize/TableSize';
+import * as TableSize from 'ephox/snooker/resize/TableSize';
 import { HTMLTableElement, HTMLDivElement } from '@ephox/dom-globals';
 
 UnitTest.test('ResizeTest', function () {

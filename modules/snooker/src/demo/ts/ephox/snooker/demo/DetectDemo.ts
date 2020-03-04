@@ -3,7 +3,7 @@ import { Fun, Obj, Option, Options } from '@ephox/katamari';
 import { Attr, Css, Direction, DomEvent, Element, Insert, InsertAll, Node, Ready, Replication, SelectorFind, EventArgs } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
-import TableOperations from 'ephox/snooker/api/TableOperations';
+import * as TableOperations from 'ephox/snooker/api/TableOperations';
 import { TableResize } from 'ephox/snooker/api/TableResize';
 import { Generators } from 'ephox/snooker/api/Generators';
 import { BarPositions, ColInfo } from 'ephox/snooker/resize/BarPositions';

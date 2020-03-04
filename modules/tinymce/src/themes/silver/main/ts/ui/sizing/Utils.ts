@@ -26,7 +26,7 @@ const calcCappedSize = (size: number, minSize: Option<number>, maxSize: Option<n
   return minOverride.or(maxOverride).getOr(size);
 };
 
-export default {
+export {
   calcCappedSize,
   parseToInt,
   numToPx

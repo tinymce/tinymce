@@ -1,6 +1,6 @@
 {
   "name": "@ephox/katamari-assertions",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Bedrock test assertions for Katamari",
   "repository": {
     "type": "git",
@@ -17,7 +17,7 @@
     "@ephox/bedrock-client": "^9.3.2",
     "@ephox/dispute": "^1.0.3",
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^4.0.5",
+    "@ephox/katamari": "^5.0.1",
     "@ephox/wrap-promise-polyfill": "^2.2.0",
     "tslib": "^1.9.3"
   },
@@ -34,5 +34,8 @@
   ],
   "main": "./lib/main/ts/ephox/katamari-assertions/api/Main.js",
   "module": "./lib/main/ts/ephox/katamari-assertions/api/Main.js",
-  "types": "./lib/main/ts/ephox/katamari-assertions/api/Main.d.ts"
+  "types": "./lib/main/ts/ephox/katamari-assertions/api/Main.d.ts",
+  "publishConfig": {
+    "access": "public"
+  }
 }

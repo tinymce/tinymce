@@ -22,6 +22,6 @@ const openLink = function (target) {
   document.body.removeChild(link);
 };
 
-export default {
+export {
   openLink
 };

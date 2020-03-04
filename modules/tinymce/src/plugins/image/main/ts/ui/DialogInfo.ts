@@ -5,21 +5,22 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Future, Option, Type } from '@ephox/katamari';
+import { Arr, Option, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import Promise from 'tinymce/core/api/util/Promise';
 
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { readImageDataFromSelection } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
-import Utils from '../core/Utils';
+import * as Utils from '../core/Utils';
 import { ImageDialogInfo, ListItem } from './DialogTypes';
 
-const collect = (editor: Editor): Future<ImageDialogInfo> => {
+const collect = (editor: Editor): Promise<ImageDialogInfo> => {
   const urlListSanitizer = ListUtils.sanitizer((item) => {
     return editor.convertURL(item.value || item.url, 'src');
   });
 
-  const futureImageList = Future.nu<Option<ListItem[]>>((completer) => {
+  const futureImageList = new Promise<Option<ListItem[]>>((completer) => {
     Utils.createImageList(editor, (imageList) => {
       completer(
         urlListSanitizer(imageList).map(
@@ -51,7 +52,7 @@ const collect = (editor: Editor): Future<ImageDialogInfo> => {
   const prependURL: Option<string> = Option.some(Settings.getPrependUrl(editor)).filter(
     (preUrl) => Type.isString(preUrl) && preUrl.length > 0);
 
-  return futureImageList.map((imageList): ImageDialogInfo => {
+  return futureImageList.then((imageList): ImageDialogInfo => {
     return {
       image,
       imageList,

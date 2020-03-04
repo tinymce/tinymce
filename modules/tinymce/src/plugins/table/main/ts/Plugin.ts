@@ -9,17 +9,17 @@ import { Cell, Option } from '@ephox/katamari';
 import { KeyboardEvent } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Clipboard from './actions/Clipboard';
+import * as Clipboard from './actions/Clipboard';
 import { TableActions } from './actions/TableActions';
-import Commands from './api/Commands';
+import * as Commands from './api/Commands';
 import { getResizeHandler } from './actions/ResizeHandler';
-import TabContext from './queries/TabContext';
+import * as TabContext from './queries/TabContext';
 import CellSelection from './selection/CellSelection';
-import Ephemera from './selection/Ephemera';
+import * as Ephemera from './selection/Ephemera';
 import { Selections } from './selection/Selections';
 import { getSelectionTargets } from './selection/SelectionTargets';
-import Buttons from './ui/Buttons';
-import MenuItems from './ui/MenuItems';
+import * as Buttons from './ui/Buttons';
+import * as MenuItems from './ui/MenuItems';
 import { hasTabNavigation } from './api/Settings';
 import { getApi } from './api/Api';
 import { Element } from '@ephox/sugar';
@@ -40,8 +40,8 @@ function Plugin(editor: Editor) {
   Buttons.addToolbars(editor);
 
   editor.on('PreInit', function () {
-    editor.serializer.addTempAttr(Ephemera.firstSelected());
-    editor.serializer.addTempAttr(Ephemera.lastSelected());
+    editor.serializer.addTempAttr(Ephemera.firstSelected);
+    editor.serializer.addTempAttr(Ephemera.lastSelected);
   });
 
   if (hasTabNavigation(editor)) {

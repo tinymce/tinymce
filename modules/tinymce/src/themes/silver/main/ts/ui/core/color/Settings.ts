@@ -116,7 +116,7 @@ const addColor = (color: string) => {
   colorCache.add(color);
 };
 
-export default {
+export {
   mapColors,
   getColorCols,
   hasCustomColors,

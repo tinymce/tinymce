@@ -6,7 +6,7 @@
  */
 
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const hasClass = function (checkClassName) {
   return function (node) {
@@ -111,6 +111,6 @@ const setup = function (editor) {
   });
 };
 
-export default {
+export {
   setup
 };

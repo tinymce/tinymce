@@ -41,6 +41,6 @@ const register = (editor: Editor) => {
   registerMenuItems(editor);
 };
 
-export default {
+export {
   register
 };

@@ -2,7 +2,7 @@ import { Pipeline, Step, Log } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
 import AutolinkPlugin from 'tinymce/plugins/autolink/Plugin';
-import KeyUtils from '../module/test/KeyUtils';
+import * as KeyUtils from '../module/test/KeyUtils';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 

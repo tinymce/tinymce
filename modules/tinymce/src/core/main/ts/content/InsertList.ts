@@ -8,7 +8,7 @@
 import { Element, Range } from '@ephox/dom-globals';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import Tools from '../api/util/Tools';
 import { Unicode } from '@ephox/katamari';
 
@@ -199,7 +199,7 @@ const insertAtCaret = function (serializer, dom, rng, fragment): Range {
   return insertMiddle(liTarget, liElms, rootNode, rng);
 };
 
-export default {
+export {
   isListFragment,
   insertAtCaret,
   isParentBlockLi,

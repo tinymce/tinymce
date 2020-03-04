@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import SizeSlider from './SizeSlider';
+import * as SizeSlider from './SizeSlider';
 import * as ToolbarWidgets from './ToolbarWidgets';
-import FontSizes from '../util/FontSizes';
+import * as FontSizes from '../util/FontSizes';
 import * as UiDomFactory from '../util/UiDomFactory';
 import { SketchSpec } from '@ephox/alloy';
 

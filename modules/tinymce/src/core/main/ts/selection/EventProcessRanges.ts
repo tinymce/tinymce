@@ -15,6 +15,6 @@ const processRanges = (editor, ranges: Range[]): Range[] => {
   });
 };
 
-export default {
+export {
   processRanges
 };

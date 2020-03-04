@@ -1,7 +1,7 @@
 import { Fun, Option, Strings } from '@ephox/katamari';
 import { Attr, Css, Height, Node, Width, Element } from '@ephox/sugar';
-import TableLookup from '../api/TableLookup';
-import RuntimeSize from './RuntimeSize';
+import * as TableLookup from '../api/TableLookup';
+import * as RuntimeSize from './RuntimeSize';
 import { TableSize } from './Types';
 
 export interface GenericWidth {
@@ -9,19 +9,19 @@ export interface GenericWidth {
   unit: () => string;
 }
 
-const genericSizeRegex = /(\d+(\.\d+)?)(\w|%)*/;
-const percentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
-const pixelBasedSizeRegex = /(\d+(\.\d+)?)px|em/;
+const rGenericSizeRegex = /(\d+(\.\d+)?)(\w|%)*/;
+const rPercentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
+const rPixelBasedSizeRegex = /(\d+(\.\d+)?)px|em/;
 
-const setPixelWidth = function (cell: Element, amount: number) {
+export const setPixelWidth = function (cell: Element, amount: number) {
   Css.set(cell, 'width', amount + 'px');
 };
 
-const setPercentageWidth = function (cell: Element, amount: number) {
+export const setPercentageWidth = function (cell: Element, amount: number) {
   Css.set(cell, 'width', amount + '%');
 };
 
-const setHeight = function (cell: Element, amount: number) {
+export const setHeight = function (cell: Element, amount: number) {
   Css.set(cell, 'height', amount + 'px');
 };
 
@@ -63,7 +63,7 @@ const getSpan = function (cell: Element, type: string) {
   return Attr.has(cell, type) ? parseInt(Attr.get(cell, type), 10) : 1;
 };
 
-const getRawWidth = function (element: Element) {
+export const getRawWidth = function (element: Element) {
   // Try to use the style width first, otherwise attempt to get attribute width
   const cssWidth = Css.getRaw(element, 'width');
   return cssWidth.fold(function () {
@@ -78,7 +78,7 @@ const normalizePercentageWidth = function (cellWidth: number, tableSize: TableSi
 };
 
 const choosePercentageSize = function (element: Element, width: string, tableSize: TableSize) {
-  const percentMatch = percentageBasedSizeRegex.exec(width);
+  const percentMatch = rPercentageBasedSizeRegex.exec(width);
   if (percentMatch !== null) {
     return parseFloat(percentMatch[1]);
   } else {
@@ -88,7 +88,7 @@ const choosePercentageSize = function (element: Element, width: string, tableSiz
 };
 
 // Get a percentage size for a percentage parent table
-const getPercentageWidth = function (cell: Element, tableSize: TableSize) {
+export const getPercentageWidth = function (cell: Element, tableSize: TableSize) {
   const width = getRawWidth(cell);
   return width.fold(function () {
     const intWidth = Width.get(cell);
@@ -103,11 +103,11 @@ const normalizePixelWidth = function (cellWidth: number, tableSize: TableSize) {
 };
 
 const choosePixelSize = function (element: Element, width: string, tableSize: TableSize) {
-  const pixelMatch = pixelBasedSizeRegex.exec(width);
+  const pixelMatch = rPixelBasedSizeRegex.exec(width);
   if (pixelMatch !== null) {
     return parseInt(pixelMatch[1], 10);
   }
-  const percentMatch = percentageBasedSizeRegex.exec(width);
+  const percentMatch = rPercentageBasedSizeRegex.exec(width);
   if (percentMatch !== null) {
     const floatWidth = parseFloat(percentMatch[1]);
     return normalizePixelWidth(floatWidth, tableSize);
@@ -115,7 +115,7 @@ const choosePixelSize = function (element: Element, width: string, tableSize: Ta
   return Width.get(element);
 };
 
-const getPixelWidth = function (cell: Element, tableSize: TableSize) {
+export const getPixelWidth = function (cell: Element, tableSize: TableSize) {
   const width = getRawWidth(cell);
   return width.fold(function () {
     return Width.get(cell);
@@ -124,14 +124,14 @@ const getPixelWidth = function (cell: Element, tableSize: TableSize) {
   });
 };
 
-const getHeight = function (cell: Element) {
+export const getHeight = function (cell: Element) {
   return get(cell, 'rowspan', getTotalHeight);
 };
 
-const getGenericWidth = function (cell: Element): Option<GenericWidth> {
+export const getGenericWidth = function (cell: Element): Option<GenericWidth> {
   const width = getRawWidth(cell);
   return width.bind(function (w) {
-    const match = genericSizeRegex.exec(w);
+    const match = rGenericSizeRegex.exec(w);
     if (match !== null) {
       return Option.some({
         width: Fun.constant(parseFloat(match[1])),
@@ -143,20 +143,9 @@ const getGenericWidth = function (cell: Element): Option<GenericWidth> {
   });
 };
 
-const setGenericWidth = function (cell: Element, amount: number, unit: string) {
+export const setGenericWidth = function (cell: Element, amount: number, unit: string) {
   Css.set(cell, 'width', amount + unit);
 };
 
-export default {
-  percentageBasedSizeRegex: Fun.constant(percentageBasedSizeRegex),
-  pixelBasedSizeRegex: Fun.constant(pixelBasedSizeRegex),
-  setPixelWidth,
-  setPercentageWidth,
-  setHeight,
-  getPixelWidth,
-  getPercentageWidth,
-  getGenericWidth,
-  setGenericWidth,
-  getHeight,
-  getRawWidth
-};
+export const percentageBasedSizeRegex = Fun.constant(rPercentageBasedSizeRegex);
+export const pixelBasedSizeRegex = Fun.constant(rPixelBasedSizeRegex);

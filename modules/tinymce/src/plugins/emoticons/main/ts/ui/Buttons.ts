@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Dialog from './Dialog';
+import * as Dialog from './Dialog';
 import Editor from 'tinymce/core/api/Editor';
 import { EmojiDatabase } from '../core/EmojiDatabase';
 
@@ -25,6 +25,6 @@ const register = function (editor: Editor, database: EmojiDatabase): void {
   });
 };
 
-export default {
+export {
   register
 };

@@ -8,13 +8,13 @@
 import { HTMLElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Insert, Element } from '@ephox/sugar';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
-import BoundaryLocation from '../keyboard/BoundaryLocation';
-import InlineUtils from '../keyboard/InlineUtils';
-import NormalizeRange from '../selection/NormalizeRange';
+import * as BoundaryLocation from '../keyboard/BoundaryLocation';
+import * as InlineUtils from '../keyboard/InlineUtils';
+import * as NormalizeRange from '../selection/NormalizeRange';
 import Selection from '../api/dom/Selection';
 import { rangeInsertNode } from '../selection/RangeInsertNode';
 import Editor from '../api/Editor';
@@ -184,6 +184,6 @@ const insert = function (editor: Editor, evt?) {
   }
 };
 
-export default {
+export {
   insert
 };

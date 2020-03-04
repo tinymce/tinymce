@@ -26,7 +26,7 @@ const getForcedRootBlockAttrs = (editor: Editor): Record<string, string> => {
   return editor.getParam('forced_root_block_attrs', {});
 };
 
-export default {
+export {
   shouldIndentOnTab,
   getForcedRootBlock,
   getForcedRootBlockAttrs

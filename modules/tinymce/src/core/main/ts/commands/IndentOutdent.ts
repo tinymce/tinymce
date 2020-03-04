@@ -10,8 +10,8 @@ import { Arr } from '@ephox/katamari';
 import { Element, Traverse, Css, PredicateFind } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import { isListItem, isList, isTable } from '../dom/ElementType';
-import Settings from '../api/Settings';
-import NodeType from '../dom/NodeType';
+import * as Settings from '../api/Settings';
+import * as NodeType from '../dom/NodeType';
 
 const isEditable = (target: Element) => {
   return PredicateFind.closest(target, (elm) => {
@@ -53,7 +53,7 @@ const validateBlocks = (editor: Editor, blocks: Element[]) => {
 
 const canOutdent = (editor: Editor) => {
   const blocks = getBlocksToIndent(editor);
-  return editor.readonly !== true && (blocks.length > 1 || validateBlocks(editor, blocks));
+  return !editor.mode.isReadOnly() && (blocks.length > 1 || validateBlocks(editor, blocks));
 };
 
 const isListComponent = (el: Element) => {

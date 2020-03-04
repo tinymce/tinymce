@@ -10,7 +10,7 @@ import { Cell } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import FindReplaceText from './FindReplaceText';
+import * as FindReplaceText from './FindReplaceText';
 
 export interface SearchState {
   index: number;

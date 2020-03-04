@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Prism from './Prism';
-import Utils from '../util/Utils';
-import { Option } from '@ephox/katamari';
-import Editor from 'tinymce/core/api/Editor';
 import { Element } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
+import * as Utils from '../util/Utils';
+import * as Prism from './Prism';
 
 const getSelectedCodeSample = (editor: Editor) => {
   const node = editor.selection ? editor.selection.getNode() : null;
@@ -34,7 +34,7 @@ const insertCodeSample = (editor: Editor, language: string, code: string) => {
     }, (n) => {
       editor.dom.setAttrib(n, 'class', 'language-' + language);
       n.innerHTML = code;
-      Prism.highlightElement(n);
+      Prism.get(editor).highlightElement(n);
       editor.selection.select(n);
     });
   });
@@ -45,7 +45,7 @@ const getCurrentCode = (editor: Editor): string => {
   return node.fold(() => '', (n) => n.textContent);
 };
 
-export default {
+export {
   getSelectedCodeSample,
   insertCodeSample,
   getCurrentCode

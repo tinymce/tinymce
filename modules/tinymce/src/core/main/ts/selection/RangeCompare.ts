@@ -13,6 +13,6 @@ const isEq = function (rng1: Range, rng2: Range) {
     (rng1.endContainer === rng2.endContainer && rng1.endOffset === rng2.endOffset);
 };
 
-export default {
+export {
   isEq
 };

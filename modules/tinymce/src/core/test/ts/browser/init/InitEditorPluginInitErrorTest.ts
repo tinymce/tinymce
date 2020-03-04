@@ -4,9 +4,12 @@ import { UnitTest } from '@ephox/bedrock-client';
 
 import Theme from 'tinymce/themes/silver/Theme';
 import PluginManager from 'tinymce/core/api/PluginManager';
+import ErrorHelper from '../../module/test/ErrorHelpers';
 
 UnitTest.asynctest('browser.tinymce.core.init.InitEditorPluginInitErrorTest', (success, failure) => {
   Theme();
+
+  const errorHelper = ErrorHelper();
 
   PluginManager.add('errorplugin', () => {
     throw new Error('Failed to initialize plugin');
@@ -30,10 +33,14 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorPluginInitErrorTest', (s
         Assertions.assertEq('Notification should have a message', 'Failed to initialize plugin: errorplugin', notification.settings.text);
         Assertions.assertEq('Notification should be an error', 'error', notification.settings.type);
         notification.close();
+      })),
+      Log.step('TBA', 'Plugin load error should be reported', Step.sync(() => {
+        errorHelper.sAssertErrorLogged('Error is reported', 'Failed to initialize plugin: errorplugin');
       }))
     ], onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',
-    plugins: 'errorplugin'
+    plugins: 'errorplugin',
+    setup: (editor) => errorHelper.trackErrors(editor, 'PluginLoadError')
   }, success, failure);
 });

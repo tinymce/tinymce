@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Mouse, NamedChain, Pipeline, Step, UiFinder, StructAssert } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Body, Element } from '@ephox/sugar';
-import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
 UnitTest.asynctest('WindowManager:tabbed-dialog Test', (success, failure) => {

@@ -140,6 +140,6 @@ const walk = function <E, D> (universe: Universe<E, D>, start: E, finish: E, def
   return stack.done();
 };
 
-export default {
+export {
   walk
 };

@@ -8,7 +8,7 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as AriaDescribe from '../../aria/AriaDescribe';
-import AriaLabel from '../../aria/AriaLabel';
+import * as AriaLabel from '../../aria/AriaLabel';
 import { CustomEvent } from '../../events/SimulatedEvent';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ModalDialogSchema from '../../ui/schema/ModalDialogSchema';

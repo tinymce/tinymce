@@ -52,6 +52,6 @@ const merge = function (cells: Element[]) {
   InsertAll.append(cells[0], contents);
 };
 
-export default {
+export {
   merge
 };

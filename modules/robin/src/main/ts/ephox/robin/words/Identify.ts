@@ -1,7 +1,7 @@
 import { Arr, Option } from '@ephox/katamari';
 import { Pattern, Search } from '@ephox/polaris';
 import { WordScope } from '../data/WordScope';
-import WordSanitiser from '../util/WordSanitiser';
+import * as WordSanitiser from '../util/WordSanitiser';
 
 // Returns: [array of WordScope Struct] containing all words from string allText
 const words = function (allText: string) {
@@ -21,6 +21,6 @@ const words = function (allText: string) {
   });
 };
 
-export default {
+export {
   words
 };

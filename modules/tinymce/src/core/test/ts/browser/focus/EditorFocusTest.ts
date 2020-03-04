@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { Focus, Hierarchy, Element, Body, Node } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import EditorFocus from 'tinymce/core/focus/EditorFocus';
+import * as EditorFocus from 'tinymce/core/focus/EditorFocus';
 import Theme from 'tinymce/themes/silver/Theme';
 import { document, HTMLElement } from '@ephox/dom-globals';
 

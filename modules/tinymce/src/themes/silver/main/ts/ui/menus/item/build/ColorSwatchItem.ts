@@ -10,7 +10,7 @@ import { Menu } from '@ephox/bridge';
 import { Id } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
-import ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
+import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 import { createPartialChoiceMenu } from '../../menu/MenuChoice';
 import { deriveMenuMovement } from '../../menu/MenuMovement';
 import * as MenuParts from '../../menu/MenuParts';

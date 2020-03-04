@@ -22,6 +22,6 @@ const loadImage = function (image) {
   });
 };
 
-export default {
+export {
   loadImage
 };

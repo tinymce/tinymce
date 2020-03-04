@@ -91,6 +91,6 @@ const setup = function (mutation: DragMutation, mode: DragMode, settings: Partia
   };
 };
 
-export default {
+export {
   setup
 };

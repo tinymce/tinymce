@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element, Blob, HTMLElement, FileReader } from '@ephox/dom-globals';
-import { Result } from '@ephox/katamari';
+import { Blob, document, Element, FileReader, HTMLElement } from '@ephox/dom-globals';
+import Editor from 'tinymce/core/api/Editor';
+import { StyleMap } from 'tinymce/core/api/html/Styles';
 import Promise from 'tinymce/core/api/util/Promise';
 import XHR from 'tinymce/core/api/util/XHR';
-import Settings from '../api/Settings';
-import { StyleMap } from 'tinymce/core/api/html/Styles';
-import Editor from 'tinymce/core/api/Editor';
+import * as Settings from '../api/Settings';
 import { ImageData } from './ImageData';
 
 export interface ImageDimensions {
@@ -24,36 +23,38 @@ const parseIntAndGetMax = (val1: any, val2: any) => {
   return Math.max(parseInt(val1, 10), parseInt(val2, 10));
 };
 
-const getImageSize = (url: string, callback: (dimensions: Result<ImageDimensions, string>) => void) => {
-  const img = document.createElement('img');
+const getImageSize = (url: string): Promise<ImageDimensions> => {
+  return new Promise((callback) => {
+    const img = document.createElement('img');
 
-  const done = (dimensions: Result<ImageDimensions, string>) => {
-    if (img.parentNode) {
-      img.parentNode.removeChild(img);
-    }
+    const done = (dimensions: Promise<ImageDimensions>) => {
+      if (img.parentNode) {
+        img.parentNode.removeChild(img);
+      }
 
-    callback(dimensions);
-  };
+      callback(dimensions);
+    };
 
-  img.onload = () => {
-    const width = parseIntAndGetMax(img.width, img.clientWidth);
-    const height = parseIntAndGetMax(img.height, img.clientHeight);
-    const dimensions = { width, height };
-    done(Result.value(dimensions));
-  };
+    img.onload = () => {
+      const width = parseIntAndGetMax(img.width, img.clientWidth);
+      const height = parseIntAndGetMax(img.height, img.clientHeight);
+      const dimensions = { width, height };
+      done(Promise.resolve(dimensions));
+    };
 
-  img.onerror = () => {
-    done(Result.error(`Failed to get image dimensions for: ${url}`));
-  };
+    img.onerror = () => {
+      done(Promise.reject(`Failed to get image dimensions for: ${url}`));
+    };
 
-  const style = img.style;
-  style.visibility = 'hidden';
-  style.position = 'fixed';
-  style.bottom = style.left = '0px';
-  style.width = style.height = 'auto';
+    const style = img.style;
+    style.visibility = 'hidden';
+    style.position = 'fixed';
+    style.bottom = style.left = '0px';
+    style.width = style.height = 'auto';
 
-  document.body.appendChild(img);
-  img.src = url;
+    document.body.appendChild(img);
+    img.src = url;
+  });
 };
 
 const removePixelSuffix = (value: string): string => {
@@ -165,7 +166,7 @@ const isPlaceholderImage = (imgElm: Element): boolean => {
   return imgElm.nodeName === 'IMG' && (imgElm.hasAttribute('data-mce-object') || imgElm.hasAttribute('data-mce-placeholder'));
 };
 
-export default {
+export {
   getImageSize,
   removePixelSuffix,
   addPixelSuffix,

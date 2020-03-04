@@ -8,6 +8,7 @@
 import { window, console } from '@ephox/dom-globals';
 import I18n from './api/util/I18n';
 import Editor from './api/Editor';
+import { fireError } from './api/Events';
 
 const displayNotification = (editor: Editor, message: string) => {
   editor.notificationManager.open({
@@ -30,7 +31,8 @@ const uploadError = (editor: Editor, message: string) => {
   displayError(editor, I18n.translate(['Failed to upload image: {0}', message]));
 };
 
-const logError = (msg: string) => {
+const logError = (editor: Editor, errorType: string, msg: string) => {
+  fireError(editor, errorType, { message: msg });
   // tslint:disable-next-line:no-console
   console.error(msg);
 };
@@ -41,16 +43,16 @@ const createLoadError = (type: string, url: string, name?: string) => {
     `Failed to load ${type} url: ${url}`;
 };
 
-const pluginLoadError = (url: string, name?: string) => {
-  logError(createLoadError('plugin', url, name));
+const pluginLoadError = (editor: Editor, url: string, name?: string) => {
+  logError(editor, 'PluginLoadError', createLoadError('plugin', url, name));
 };
 
-const iconsLoadError = (url: string, name?: string) => {
-  logError(createLoadError('icons', url, name));
+const iconsLoadError = (editor: Editor, url: string, name?: string) => {
+  logError(editor, 'IconsLoadError', createLoadError('icons', url, name));
 };
 
-const languageLoadError = (url: string, name: string) => {
-  logError(createLoadError('language', url, name));
+const languageLoadError = (editor: Editor, url: string, name: string) => {
+  logError(editor, 'LanguageLoadError', createLoadError('language', url, name));
 };
 
 const pluginInitError = (editor: Editor, name: string, err) => {
@@ -70,7 +72,7 @@ const initError = function (message: string, ...x: any[]) {
   }
 };
 
-export default {
+export {
   pluginLoadError,
   iconsLoadError,
   languageLoadError,

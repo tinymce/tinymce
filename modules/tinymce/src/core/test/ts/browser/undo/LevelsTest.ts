@@ -2,7 +2,7 @@ import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
-import Levels from 'tinymce/core/undo/Levels';
+import * as Levels from 'tinymce/core/undo/Levels';
 import { UndoLevelType } from 'tinymce/core/undo/UndoManagerTypes';
 import Theme from 'tinymce/themes/silver/Theme';
 

@@ -7,11 +7,11 @@
 
 import { DomFactory, RawDomSchema } from '@ephox/alloy';
 import { Strings } from '@ephox/katamari';
-import Styles from '../style/Styles';
+import * as Styles from '../style/Styles';
 
 const dom = function (rawHtml): RawDomSchema {
   const html = Strings.supplant(rawHtml, {
-    prefix: Styles.prefix()
+    prefix: Styles.prefix
   });
   return DomFactory.fromHtml(html);
 };

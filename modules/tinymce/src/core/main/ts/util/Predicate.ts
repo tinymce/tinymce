@@ -35,7 +35,7 @@ const and = function (...x: any[]) {
   };
 };
 
-export default {
+export {
   and,
   or
 };

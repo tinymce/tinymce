@@ -7,7 +7,7 @@
 
 import { Element } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const addToEditor = (editor: Editor) => {
   const isEditable = (node: Element) => editor.dom.getContentEditableParent(node) !== 'false';
@@ -35,6 +35,6 @@ const addToEditor = (editor: Editor) => {
   }
 };
 
-export default {
+export {
   addToEditor
 };

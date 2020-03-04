@@ -1,8 +1,8 @@
 import { Universe } from '@ephox/boss';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import Parent from '../api/general/Parent';
+import * as Parent from '../api/general/Parent';
 import { breakToLeft, breakToRight, LeftRight } from '../parent/Breaker';
-import Subset from '../parent/Subset';
+import * as Subset from '../parent/Subset';
 
 // Find the subsection of DIRECT children of parent from [first, last])
 const slice = function <E, D> (universe: Universe<E, D>, parent: E, first: Option<E>, last: Option<E>) {
@@ -90,6 +90,6 @@ const fracture = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => bo
   return universe.eq(start, finish) ? same(universe, isRoot, start, ceiling) : diff(universe, isRoot, start, finish, ceiling);
 };
 
-export default {
+export {
   fracture
 };

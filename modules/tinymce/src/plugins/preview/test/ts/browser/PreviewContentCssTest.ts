@@ -3,7 +3,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import PreviewPlugin from 'tinymce/plugins/preview/Plugin';
-import IframeContent from 'tinymce/plugins/preview/core/IframeContent';
+import * as IframeContent from 'tinymce/plugins/preview/core/IframeContent';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
 

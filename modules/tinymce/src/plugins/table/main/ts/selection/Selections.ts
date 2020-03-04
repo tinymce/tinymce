@@ -7,8 +7,8 @@
 
 import { TableSelection } from '@ephox/darwin';
 import * as Util from '../alien/Util';
-import Ephemera from './Ephemera';
-import SelectionTypes from './SelectionTypes';
+import * as Ephemera from './Ephemera';
+import * as SelectionTypes from './SelectionTypes';
 import Editor from 'tinymce/core/api/Editor';
 
 export interface Selections {
@@ -19,7 +19,7 @@ export const Selections = function (editor: Editor) {
   const get = function () {
     const body = Util.getBody(editor);
 
-    return TableSelection.retrieve(body, Ephemera.selectedSelector()).fold(function () {
+    return TableSelection.retrieve(body, Ephemera.selectedSelector).fold(function () {
       if (editor.selection.getStart() === undefined) {
         return SelectionTypes.none();
       } else {

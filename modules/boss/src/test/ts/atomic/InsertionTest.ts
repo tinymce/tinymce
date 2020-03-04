@@ -1,9 +1,9 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Option } from '@ephox/katamari';
-import Insertion from 'ephox/boss/mutant/Insertion';
-import Locator from 'ephox/boss/mutant/Locator';
-import Logger from 'ephox/boss/mutant/Logger';
-import Tracks from 'ephox/boss/mutant/Tracks';
+import * as Insertion from 'ephox/boss/mutant/Insertion';
+import * as Locator from 'ephox/boss/mutant/Locator';
+import * as Logger from 'ephox/boss/mutant/Logger';
+import * as Tracks from 'ephox/boss/mutant/Tracks';
 import { Gene } from 'ephox/boss/api/Gene';
 
 UnitTest.test('InsertionTest', function () {

@@ -1,6 +1,6 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import Zwsp from 'tinymce/core/text/Zwsp';
+import * as Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('atomic.tinymce.core.text.ZwspTest', function (success, failure) {

@@ -7,7 +7,7 @@
 
 import { Node, Text } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
-import NodeType from './NodeType';
+import * as NodeType from './NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
 
 interface TextWalker {

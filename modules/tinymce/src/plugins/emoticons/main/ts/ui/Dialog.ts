@@ -129,6 +129,6 @@ const open = function (editor: Editor, database: EmojiDatabase) {
   }
 };
 
-export default {
+export {
   open
 };

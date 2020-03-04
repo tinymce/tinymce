@@ -8,10 +8,10 @@
 import { Fun, Option } from '@ephox/katamari';
 import { Attr, DomEvent, Element } from '@ephox/sugar';
 
-import Styles from '../../style/Styles';
-import DataAttributes from '../../util/DataAttributes';
-import Rectangles from '../../util/Rectangles';
-import ResumeEditing from '../focus/ResumeEditing';
+import * as Styles from '../../style/Styles';
+import * as DataAttributes from '../../util/DataAttributes';
+import * as Rectangles from '../../util/Rectangles';
+import * as ResumeEditing from '../focus/ResumeEditing';
 
 // This amount is added to the minimum scrolling distance when calculating how much to scroll
 // because the soft keyboard has appeared.
@@ -87,6 +87,6 @@ const setup = function (outerWindow, cWin) {
   };
 };
 
-export default {
+export {
   setup
 };

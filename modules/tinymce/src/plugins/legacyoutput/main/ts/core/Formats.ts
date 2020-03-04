@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const overrideFormats = (editor: Editor) => {
   const alignElements = 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table',
@@ -122,6 +122,6 @@ const setup = (editor: Editor) => {
   editor.on('PreInit', () => overrideFormats(editor));
 };
 
-export default {
+export {
   setup
 };

@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-# [6.0.0] - TBD
+# [6.0.0] - 2020-02-13
 
 ### Removed
 - Removed `getMoreButton` and `getOverflow` methods from the `SplitSlidingToolbar` component.

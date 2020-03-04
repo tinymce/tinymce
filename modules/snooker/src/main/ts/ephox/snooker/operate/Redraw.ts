@@ -98,7 +98,7 @@ const copy = function <T extends Detail> (grid: RowDataNew<T>[]) {
   return rows;
 };
 
-export default {
+export {
   render,
   copy
 };

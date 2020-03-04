@@ -10,7 +10,7 @@ import Writer from 'tinymce/core/api/html/Writer';
 import SaxParser from 'tinymce/core/api/html/SaxParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Size from './Size';
+import * as Size from './Size';
 import { MediaData } from './Types';
 
 const DOM = DOMUtils.DOM;
@@ -204,6 +204,6 @@ const updateHtml = function (html: string, data: Partial<MediaData>, updateAll?:
   return isEphoxEmbed(html) ? updateEphoxEmbed(html, data) : updateHtmlSax(html, data, updateAll);
 };
 
-export default {
+export {
   updateHtml
 };

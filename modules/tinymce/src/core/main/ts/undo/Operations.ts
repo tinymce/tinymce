@@ -6,12 +6,12 @@
  */
 
 import Editor from '../api/Editor';
-import Levels from './Levels';
+import * as Levels from './Levels';
 import Tools from '../api/util/Tools';
 import { Event } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { UndoManager, Locks, Index, UndoLevel, UndoBookmark } from './UndoManagerTypes';
-import GetBookmark from '../bookmark/GetBookmark';
+import * as GetBookmark from '../bookmark/GetBookmark';
 import { setTyping, endTyping } from './TypingState';
 import { isUnlocked } from './Locks';
 

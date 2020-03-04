@@ -14,19 +14,19 @@ import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import { getMultipleToolbarsSetting, getToolbarGroups, getToolbarMode, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, isToolbarLocationTop, ToolbarMode, useFixedContainer } from './api/Settings';
 import * as Backstage from './backstage/Backstage';
-import ContextToolbar from './ContextToolbar';
-import Events from './Events';
-import Iframe from './modes/Iframe';
-import Inline from './modes/Inline';
-import FormatControls from './ui/core/FormatControls';
+import * as ContextToolbar from './ContextToolbar';
+import * as Events from './Events';
+import * as Iframe from './modes/Iframe';
+import * as Inline from './modes/Inline';
+import * as FormatControls from './ui/core/FormatControls';
 import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterContainer';
 import * as StaticHeader from './ui/header/StaticHeader';
 import * as StickyHeader from './ui/header/StickyHeader';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
-import TableSelectorHandles from './ui/selector/TableSelectorHandles';
+import * as TableSelectorHandles from './ui/selector/TableSelectorHandles';
 import * as Sidebar from './ui/sidebar/Sidebar';
 import * as EditorSize from './ui/sizing/EditorSize';
-import Utils from './ui/sizing/Utils';
+import * as Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
 import * as Throbber from './ui/throbber/Throbber';
 
@@ -406,6 +406,6 @@ const setup = (editor: Editor): RenderInfo => {
   return {mothership, uiMothership, backstage, renderUI, getUi};
 };
 
-export default {
+export {
   setup
 };

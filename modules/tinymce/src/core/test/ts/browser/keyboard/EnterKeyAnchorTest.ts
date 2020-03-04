@@ -1,7 +1,7 @@
 import { ApproxStructure, GeneralSteps, Keys, Logger, Pipeline } from '@ephox/agar';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
-import Zwsp from 'tinymce/core/text/Zwsp';
+import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 

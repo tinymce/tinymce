@@ -50,7 +50,7 @@ const updateMode = function (socket, switchToEdit, readOnly, root) {
   f(socket, switchToEdit);
 };
 
-export default {
+export {
   makeEditSwitch,
   makeSocket,
   updateMode

@@ -1,6 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Descent } from '@ephox/phoenix';
-import TextZone from '../../zone/TextZone';
+import * as TextZone from '../../zone/TextZone';
 
 /*
  * TextZone returns an Optional zone if that zone is the right language (onlyLang)
@@ -25,7 +25,7 @@ const range = function <E, D> (universe: Universe<E, D>, start: E, soffset: numb
   return TextZone.fromRange(universe, startPt.element(), finishPt.element(), envLang, onlyLang);
 };
 
-export default {
+export {
   single,
   range
 };

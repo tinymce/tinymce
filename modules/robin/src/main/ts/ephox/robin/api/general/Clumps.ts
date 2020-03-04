@@ -1,9 +1,9 @@
 import { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { Split } from '@ephox/phoenix';
-import Clumps from '../../clumps/Clumps';
-import EntryPoints from '../../clumps/EntryPoints';
-import Fractures from '../../clumps/Fractures';
+import * as Clumps from '../../clumps/Clumps';
+import * as EntryPoints from '../../clumps/EntryPoints';
+import * as Fractures from '../../clumps/Fractures';
 
 /*
  * clumping fracture: *fractures* method.
@@ -43,7 +43,7 @@ const fractures = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => b
   });
 };
 
-export default {
+export {
   fractures,
   fracture
 };

@@ -20,6 +20,6 @@ const blobToBase64 = function (blob: Blob) {
   });
 };
 
-export default {
+export {
   blobToBase64
 };

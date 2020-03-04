@@ -1,5 +1,5 @@
 import { DomUniverse } from '@ephox/boss';
-import Words from '../general/Words';
+import * as Words from '../general/Words';
 
 const universe = DomUniverse();
 
@@ -11,7 +11,7 @@ const isWord = function (text: string) {
   return Words.isWord(universe, text);
 };
 
-export default {
+export {
   identify,
   isWord
 };

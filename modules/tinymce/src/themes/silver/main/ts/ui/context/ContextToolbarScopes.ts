@@ -81,6 +81,6 @@ const categorise = (contextToolbars: Record<string, Toolbar.ContextFormApi | Too
   };
 };
 
-export default {
+export {
   categorise
 };

@@ -2,7 +2,7 @@ import { Assertions, GeneralSteps, Logger, Pipeline, Step, Keyboard, Keys } from
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Remove, Replication, Element, Attr, Html, SelectorFilter } from '@ephox/sugar';
-import TableDelete from 'tinymce/core/delete/TableDelete';
+import * as TableDelete from 'tinymce/core/delete/TableDelete';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 import Editor from 'tinymce/core/api/Editor';

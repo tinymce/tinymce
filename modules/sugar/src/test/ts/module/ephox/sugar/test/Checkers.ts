@@ -18,7 +18,7 @@ const checkList = (expected: ArrayLike<Element<unknown>>, actual: ArrayLike<Elem
 
 const isName = (name) => (x) => Node.name(x) === name;
 
-export default {
+export {
   checkOpt,
   checkList,
   isName,

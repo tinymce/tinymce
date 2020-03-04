@@ -6,7 +6,7 @@ import { PlatformDetection } from '@ephox/sand';
 import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import Utils from '../module/test/Utils';
+import * as Utils from '../module/test/Utils';
 import { Unicode } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', (success, failure) => {

@@ -6,7 +6,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Cell, Option } from '@ephox/katamari';
 import { Body } from '@ephox/sugar';
 import ImagetoolsPlugin from 'tinymce/plugins/imagetools/Plugin';
-import ImageUtils from '../module/test/ImageUtils';
+import * as ImageUtils from '../module/test/ImageUtils';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import Promise from 'tinymce/core/api/util/Promise';
 

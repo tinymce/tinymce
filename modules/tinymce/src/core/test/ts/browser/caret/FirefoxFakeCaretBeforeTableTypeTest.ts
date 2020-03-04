@@ -3,7 +3,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import KeyUtils from '../../module/test/KeyUtils';
+import * as KeyUtils from '../../module/test/KeyUtils';
 import Env from 'tinymce/core/api/Env';
 import Editor from 'tinymce/core/api/Editor';
 

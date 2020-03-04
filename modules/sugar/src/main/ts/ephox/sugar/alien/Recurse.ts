@@ -23,6 +23,6 @@ const toArray = function  <T = any>(target: T, f: (t: T) => Option<T>) {
   return r;
 };
 
-export default {
+export {
   toArray
 };

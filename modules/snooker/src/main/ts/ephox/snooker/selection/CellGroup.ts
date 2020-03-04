@@ -1,6 +1,6 @@
 import * as Structs from '../api/Structs';
 import { Warehouse } from '../model/Warehouse';
-import CellBounds from './CellBounds';
+import * as CellBounds from './CellBounds';
 import { Compare, Element } from '@ephox/sugar';
 
 const getBounds = function (detailA: Structs.DetailExt, detailB: Structs.DetailExt) {
@@ -28,7 +28,7 @@ const getBox = function (warehouse: Warehouse, startCell: Element, finishCell: E
   });
 };
 
-export default {
+export {
   getAnyBox,
   getBox
 };

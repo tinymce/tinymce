@@ -6,8 +6,8 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import Settings from '../api/Settings';
-import Actions from './Actions';
+import * as Settings from '../api/Settings';
+import * as Actions from './Actions';
 
 const setup = (editor: Editor, toggleState) => {
   editor.on('init', () => {
@@ -18,6 +18,6 @@ const setup = (editor: Editor, toggleState) => {
   });
 };
 
-export default {
+export {
   setup
 };

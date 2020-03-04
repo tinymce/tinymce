@@ -29,7 +29,7 @@ const getContextMenu = function (editor: Editor): string[] {
   return getMenuItems(editor, 'contextmenu', 'link linkchecker image imagetools table spellchecker configurepermanentpen');
 };
 
-export default {
+export {
   shouldNeverUseNative,
   getContextMenu,
   isContextMenuDisabled

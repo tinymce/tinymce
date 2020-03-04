@@ -12,6 +12,6 @@ const register = (editor: Editor) => {
   editor.addCommand('mceImage', Dialog(editor).open);
 };
 
-export default {
+export {
   register
 };

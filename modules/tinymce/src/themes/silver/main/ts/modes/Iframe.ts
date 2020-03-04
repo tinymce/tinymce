@@ -10,7 +10,7 @@ import { Cell, Throttler } from '@ephox/katamari';
 import { Body, DomEvent, Element, Position, Css } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import Events from '../api/Events';
+import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import { setupReadonlyModeSwitch } from '../ReadOnly';
@@ -137,4 +137,6 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 };
 
-export default { render };
+export {
+  render
+};

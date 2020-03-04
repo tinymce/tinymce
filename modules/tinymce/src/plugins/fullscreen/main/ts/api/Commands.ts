@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Actions from '../core/Actions';
+import * as Actions from '../core/Actions';
 
 const register = function (editor, fullscreenState) {
   editor.addCommand('mceFullScreen', function () {
@@ -13,6 +13,6 @@ const register = function (editor, fullscreenState) {
   });
 };
 
-export default {
+export {
   register
 };

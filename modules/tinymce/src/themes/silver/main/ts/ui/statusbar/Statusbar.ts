@@ -12,7 +12,7 @@ import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { get as getIcon } from '../icons/Icons';
 import { resize, ResizeTypes } from '../sizing/Resize';
-import ElementPath from './ElementPath';
+import * as ElementPath from './ElementPath';
 import { renderWordCount } from './WordCount';
 
 const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {

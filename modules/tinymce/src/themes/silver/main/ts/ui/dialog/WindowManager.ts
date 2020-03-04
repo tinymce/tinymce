@@ -232,6 +232,6 @@ const setup = (extras: WindowManagerSetup) => {
   };
 };
 
-export default {
+export {
   setup
 };

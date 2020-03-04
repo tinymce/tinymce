@@ -1,7 +1,7 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { Hierarchy, Element, Node } from '@ephox/sugar';
-import Parents from 'tinymce/core/dom/Parents';
+import * as Parents from 'tinymce/core/dom/Parents';
 import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function (success, failure) {

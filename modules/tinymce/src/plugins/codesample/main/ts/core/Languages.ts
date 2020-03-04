@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Settings from '../api/Settings';
-import CodeSample from './CodeSample';
+import * as Settings from '../api/Settings';
+import * as CodeSample from './CodeSample';
 import Editor from 'tinymce/core/api/Editor';
 
 export interface LanguageSpec {
@@ -41,7 +41,7 @@ const getCurrentLanguage = (editor: Editor, fallback: string): string => {
   });
 };
 
-export default {
+export {
   getLanguages,
   getCurrentLanguage
 };

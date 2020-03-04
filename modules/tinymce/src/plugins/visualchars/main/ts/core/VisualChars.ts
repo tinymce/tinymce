@@ -9,8 +9,8 @@ import { Element, Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Class, Element as SugarElement, Node as SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import Data from './Data';
-import Nodes from './Nodes';
+import * as Data from './Data';
+import * as Nodes from './Nodes';
 
 const isWrappedNbsp = (node) => node.nodeName.toLowerCase() === 'span' && node.classList.contains('mce-nbsp-wrap');
 
@@ -61,7 +61,7 @@ const toggle = (editor: Editor) => {
   editor.selection.moveToBookmark(bookmark);
 };
 
-export default {
+export {
   show,
   hide,
   toggle

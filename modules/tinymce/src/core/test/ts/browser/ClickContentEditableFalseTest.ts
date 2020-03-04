@@ -1,7 +1,7 @@
 import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Hierarchy, Element } from '@ephox/sugar';
-import TypeText from '../module/test/TypeText';
+import * as TypeText from '../module/test/TypeText';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 import { HTMLElement } from '@ephox/dom-globals';

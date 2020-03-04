@@ -7,9 +7,9 @@
 
 import { KeyboardEvent } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import InsertBlock from './InsertBlock';
-import InsertBr from './InsertBr';
-import NewLineAction from './NewLineAction';
+import * as InsertBlock from './InsertBlock';
+import * as InsertBr from './InsertBr';
+import * as NewLineAction from './NewLineAction';
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
 
@@ -25,6 +25,6 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   );
 };
 
-export default {
+export {
   insert
 };

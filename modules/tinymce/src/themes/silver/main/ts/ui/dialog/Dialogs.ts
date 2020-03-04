@@ -10,7 +10,7 @@ import { Body, Class } from '@ephox/sugar';
 import Env from 'tinymce/core/api/Env';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import NavigableObject from '../general/NavigableObject';
+import * as NavigableObject from '../general/NavigableObject';
 
 const isTouch = Env.deviceType.isTouch();
 

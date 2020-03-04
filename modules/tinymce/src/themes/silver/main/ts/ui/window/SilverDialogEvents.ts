@@ -36,7 +36,7 @@ import {
   formTabChangeEvent,
   FormTabChangeEvent
 } from '../general/FormEvents';
-import NavigableObject from '../general/NavigableObject';
+import * as NavigableObject from '../general/NavigableObject';
 
 export interface ExtraListeners {
   onBlock: (blockEvent: FormBlockEvent) => void;

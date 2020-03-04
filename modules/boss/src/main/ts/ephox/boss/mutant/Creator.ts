@@ -34,7 +34,7 @@ const text = function (value: string): Gene {
   };
 };
 
-export default {
+export {
   nu,
   clone,
   text,

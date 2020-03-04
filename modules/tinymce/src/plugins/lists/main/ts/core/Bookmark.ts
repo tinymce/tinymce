@@ -6,7 +6,7 @@
  */
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Range from './Range';
+import * as Range from './Range';
 
 const DOM = DOMUtils.DOM;
 
@@ -120,7 +120,7 @@ const resolveBookmark = function (bookmark) {
   return Range.normalizeRange(rng);
 };
 
-export default {
+export {
   createBookmark,
   resolveBookmark
 };

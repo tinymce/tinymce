@@ -1,6 +1,6 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import NodeType from 'tinymce/core/dom/NodeType';
+import * as NodeType from 'tinymce/core/dom/NodeType';
 import $ from 'tinymce/core/api/dom/DomQuery';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';

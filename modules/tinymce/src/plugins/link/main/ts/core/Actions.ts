@@ -6,16 +6,17 @@
  */
 
 import VK from 'tinymce/core/api/util/VK';
-import Settings from '../api/Settings';
-import OpenUrl from './OpenUrl';
-import Utils from './Utils';
-import Dialog from '../ui/Dialog';
+import * as Settings from '../api/Settings';
+import * as OpenUrl from './OpenUrl';
+import * as Utils from './Utils';
+import * as Dialog from '../ui/Dialog';
+import Editor from 'tinymce/core/api/Editor';
 
-const getLink = function (editor, elm) {
+const getLink = (editor: Editor, elm) => {
   return editor.dom.getParent(elm, 'a[href]');
 };
 
-const getSelectedLink = function (editor) {
+const getSelectedLink = (editor: Editor) => {
   return getLink(editor, editor.selection.getStart());
 };
 
@@ -23,7 +24,7 @@ const hasOnlyAltModifier = function (e) {
   return e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false;
 };
 
-const gotoLink = function (editor, a) {
+const gotoLink = (editor: Editor, a) => {
   if (a) {
     const href = Utils.getHref(a);
     if (/^#/.test(href)) {
@@ -37,19 +38,19 @@ const gotoLink = function (editor, a) {
   }
 };
 
-const openDialog = function (editor) {
+const openDialog = (editor: Editor) => {
   return function () {
     Dialog.open(editor);
   };
 };
 
-const gotoSelectedLink = function (editor) {
+const gotoSelectedLink = (editor: Editor) => {
   return function () {
     gotoLink(editor, getSelectedLink(editor));
   };
 };
 
-const leftClickedOnAHref = function (editor) {
+const leftClickedOnAHref = (editor: Editor) => {
   return function (elm) {
     let sel, rng, node;
     // TODO: this used to query the context menu plugin directly. Is that a good idea?
@@ -67,7 +68,7 @@ const leftClickedOnAHref = function (editor) {
   };
 };
 
-const setupGotoLinks = function (editor) {
+const setupGotoLinks = (editor: Editor) => {
   editor.on('click', function (e) {
     const link = getLink(editor, e.target);
     if (link && VK.metaKeyPressed(e)) {
@@ -85,24 +86,25 @@ const setupGotoLinks = function (editor) {
   });
 };
 
-const toggleActiveState = function (editor) {
+const toggleActiveState = (editor: Editor) => {
   return function (api) {
-    const nodeChangeHandler = (e) => api.setActive(!editor.readonly && !!Utils.getAnchorElement(editor, e.element));
+    const nodeChangeHandler = (e) => api.setActive(!editor.mode.isReadOnly() && !!Utils.getAnchorElement(editor, e.element));
     editor.on('NodeChange', nodeChangeHandler);
     return () => editor.off('NodeChange', nodeChangeHandler);
   };
 };
 
-const toggleEnabledState = function (editor) {
+const toggleEnabledState = (editor: Editor) => {
   return function (api) {
-    api.setDisabled(!Utils.hasLinks(editor.dom.getParents(editor.selection.getStart())));
+    const parents = editor.dom.getParents(editor.selection.getStart());
+    api.setDisabled(!Utils.hasLinks(parents));
     const nodeChangeHandler = (e) => api.setDisabled(!Utils.hasLinks(e.parents));
     editor.on('NodeChange', nodeChangeHandler);
     return () => editor.off('NodeChange', nodeChangeHandler);
   };
 };
 
-export default {
+export {
   openDialog,
   gotoSelectedLink,
   leftClickedOnAHref,

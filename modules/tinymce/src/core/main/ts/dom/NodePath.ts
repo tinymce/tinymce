@@ -40,7 +40,7 @@ const resolve = function (rootNode, path) {
   return node;
 };
 
-export default {
+export {
   create,
   resolve
 };

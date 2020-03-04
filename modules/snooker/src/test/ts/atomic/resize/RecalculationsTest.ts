@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Struct } from '@ephox/katamari';
 import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
-import Recalculations from 'ephox/snooker/resize/Recalculations';
+import * as Recalculations from 'ephox/snooker/resize/Recalculations';
 import { Element } from '@ephox/sugar';
 
 UnitTest.test('RecalculationsTest', function () {

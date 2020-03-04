@@ -4,7 +4,7 @@ import Env from 'tinymce/core/api/Env';
 import { CaretWalker } from 'tinymce/core/caret/CaretWalker';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
-import CaretAsserts from '../../module/test/CaretAsserts';
+import * as CaretAsserts from '../../module/test/CaretAsserts';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 

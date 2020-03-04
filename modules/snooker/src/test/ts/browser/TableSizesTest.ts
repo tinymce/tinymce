@@ -3,7 +3,7 @@ import { document } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { Body, Css, Element, Html, Insert, InsertAll, Remove, SelectorFilter } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
-import Sizes from 'ephox/snooker/api/Sizes';
+import * as Sizes from 'ephox/snooker/api/Sizes';
 
 UnitTest.test('Table Sizes Test (fusebox)', function () {
   const percentTable = '<table style="width: 100%;">' +

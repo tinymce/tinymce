@@ -31,8 +31,8 @@ import { Css, Element, Traverse } from '@ephox/sugar';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBackstage';
 import { renderLabel } from '../alien/FieldLabeller';
-import ColorSwatch from '../core/color/ColorSwatch';
-import Settings from '../core/color/Settings';
+import * as ColorSwatch from '../core/color/ColorSwatch';
+import * as Settings from '../core/color/Settings';
 import { renderPanelButton } from '../general/PanelButton';
 import { formChangeEvent } from '../general/FormEvents';
 import { Omit } from '../Omit';
@@ -142,8 +142,8 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
         }
       },
       layouts: {
-        onRtl: () => [ Layout.southeast ],
-        onLtr: () => [ Layout.southwest ]
+        onRtl: () => [ Layout.southwest, Layout.southeast, Layout.south ],
+        onLtr: () => [ Layout.southeast, Layout.southwest, Layout.south ]
       },
       components: [],
       fetch: ColorSwatch.getFetch(colorInputBackstage.getColors(), colorInputBackstage.hasCustomColors()),

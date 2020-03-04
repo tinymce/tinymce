@@ -6,15 +6,15 @@
  */
 
 import { Element } from '@ephox/sugar';
-import BlockMergeBoundary from './BlockMergeBoundary';
-import MergeBlocks from './MergeBlocks';
+import * as BlockMergeBoundary from './BlockMergeBoundary';
+import * as MergeBlocks from './MergeBlocks';
 import Editor from '../api/Editor';
 
 const backspaceDelete = (editor: Editor, forward: boolean): boolean => {
   const rootNode = Element.fromDom(editor.getBody());
 
   const position = BlockMergeBoundary.read(rootNode.dom(), forward, editor.selection.getRng()).bind((blockBoundary) =>
-    MergeBlocks.mergeBlocks(rootNode, forward, blockBoundary.from().block(), blockBoundary.to().block()));
+    MergeBlocks.mergeBlocks(rootNode, forward, blockBoundary.from.block, blockBoundary.to.block));
 
   position.each(function (pos) {
     editor.selection.setRng(pos.toRange());
@@ -23,6 +23,6 @@ const backspaceDelete = (editor: Editor, forward: boolean): boolean => {
   return position.isSome();
 };
 
-export default {
+export {
   backspaceDelete
 };

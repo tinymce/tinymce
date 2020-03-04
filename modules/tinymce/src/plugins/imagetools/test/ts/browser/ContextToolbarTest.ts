@@ -7,7 +7,7 @@ import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 import { Element } from '@ephox/sugar';
-import ImageUtils from '../module/test/ImageUtils';
+import * as ImageUtils from '../module/test/ImageUtils';
 import ImageOps from '../module/test/ImageOps';
 import { Option } from '@ephox/katamari';
 

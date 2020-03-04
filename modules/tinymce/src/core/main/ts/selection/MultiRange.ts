@@ -32,7 +32,7 @@ const hasMultipleRanges = function (selection) {
   return getRanges(selection).length > 1;
 };
 
-export default {
+export {
   getRanges,
   getSelectedNodes,
   hasMultipleRanges

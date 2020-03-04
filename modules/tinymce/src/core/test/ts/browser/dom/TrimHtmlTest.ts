@@ -1,8 +1,8 @@
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { DomSerializer } from 'tinymce/core/dom/DomSerializer';
-import TrimHtml from 'tinymce/core/dom/TrimHtml';
-import Zwsp from 'tinymce/core/text/Zwsp';
+import * as TrimHtml from 'tinymce/core/dom/TrimHtml';
+import * as Zwsp from 'tinymce/core/text/Zwsp';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('browser.tinymce.core.dom.TrimHtmlTest', function () {

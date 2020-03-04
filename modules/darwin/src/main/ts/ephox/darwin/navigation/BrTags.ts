@@ -76,7 +76,7 @@ const process = function (analysis: BeforeAfter): Option<SpotPoint<Element>> {
   );
 };
 
-export default {
+export {
   tryBr,
   process
 };

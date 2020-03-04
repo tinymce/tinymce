@@ -6,7 +6,7 @@ import { Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import TableTestUtils from '../module/test/TableTestUtils';
+import * as TableTestUtils from '../module/test/TableTestUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.AlignedCellRowStyleChangeTest', (success, failure) => {
   SilverTheme();

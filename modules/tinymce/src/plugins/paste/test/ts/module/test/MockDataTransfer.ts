@@ -56,6 +56,6 @@ const create = function (inputData) {
   return result;
 };
 
-export default {
+export {
   create
 };

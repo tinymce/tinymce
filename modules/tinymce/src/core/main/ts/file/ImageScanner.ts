@@ -8,7 +8,7 @@
 import { HTMLElement, HTMLImageElement } from '@ephox/dom-globals';
 import { Fun, Arr } from '@ephox/katamari';
 import Promise from '../api/util/Promise';
-import Conversions from './Conversions';
+import * as Conversions from './Conversions';
 import Env from '../api/Env';
 import { BlobCache, BlobInfo } from '../api/file/BlobCache';
 

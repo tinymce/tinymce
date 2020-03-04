@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { document, window } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { TestHelpers } from '@ephox/alloy';
 import TestExtras from '../../module/TestExtras';

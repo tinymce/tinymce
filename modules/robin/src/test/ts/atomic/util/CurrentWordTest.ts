@@ -1,6 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
-import CurrentWord from 'ephox/robin/util/CurrentWord';
+import * as CurrentWord from 'ephox/robin/util/CurrentWord';
 
 UnitTest.test('CurrentWordTest', function () {
   const check = function (expected: { before: Option<number>, after: Option<number> }, text: string, position: number) {

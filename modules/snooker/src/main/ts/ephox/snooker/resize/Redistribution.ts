@@ -115,7 +115,7 @@ const toIntegers = function (values: string[]) {
 
 const validate = Size.from;
 
-export default {
+export {
   validate,
   redistribute,
   sum,

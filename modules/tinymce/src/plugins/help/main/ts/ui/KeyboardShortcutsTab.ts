@@ -6,8 +6,8 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import KeyboardShortcuts from '../data/KeyboardShortcuts';
-import ConvertShortcut from '../alien/ConvertShortcut';
+import * as KeyboardShortcuts from '../data/KeyboardShortcuts';
+import * as ConvertShortcut from '../alien/ConvertShortcut';
 import { Types } from '@ephox/bridge';
 
 export interface ShortcutActionPairType {
@@ -36,6 +36,6 @@ const tab = (): Types.Dialog.TabApi => {
   };
 };
 
-export default {
+export {
   tab
 };

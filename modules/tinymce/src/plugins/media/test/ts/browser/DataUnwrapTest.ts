@@ -4,7 +4,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 import { MediaData, MediaDialogData } from '../../../main/ts/core/Types';
-import Dialog from '../../../main/ts/ui/Dialog';
+import * as Dialog from '../../../main/ts/ui/Dialog';
 
 UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
   Plugin();

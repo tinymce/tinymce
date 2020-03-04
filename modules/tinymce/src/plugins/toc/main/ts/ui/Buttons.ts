@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Settings from '../api/Settings';
-import Toc from '../core/Toc';
+import * as Settings from '../api/Settings';
+import * as Toc from '../core/Toc';
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from '@ephox/bridge';
 
 const toggleState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi) => {
-  const toggleDisabledState = () => api.setDisabled(editor.readonly || !Toc.hasHeaders(editor));
+  const toggleDisabledState = () => api.setDisabled(editor.mode.isReadOnly() || !Toc.hasHeaders(editor));
 
   toggleDisabledState();
   editor.on('LoadContent SetContent change', toggleDisabledState);
@@ -53,6 +53,6 @@ const register = (editor: Editor) => {
   });
 };
 
-export default {
+export {
   register
 };

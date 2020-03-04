@@ -49,7 +49,7 @@ const matchRowHeight = function (warehouse: Warehouse, heights: number[]) {
   });
 };
 
-export default {
+export {
   recalculateWidth,
   recalculateHeight,
   matchRowHeight

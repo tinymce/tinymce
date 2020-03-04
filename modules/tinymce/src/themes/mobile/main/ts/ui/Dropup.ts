@@ -8,8 +8,8 @@
 import { Behaviour, Container, GuiFactory, Replacing, Sliding, AlloyComponent } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
 
-import Receivers from '../channels/Receivers';
-import Styles from '../style/Styles';
+import * as Receivers from '../channels/Receivers';
+import * as Styles from '../style/Styles';
 import { SugarElement } from 'tinymce/themes/mobile/alien/TypeDefinitions';
 import { window } from '@ephox/dom-globals';
 

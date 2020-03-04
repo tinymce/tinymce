@@ -1,6 +1,6 @@
 import { DomUniverse } from '@ephox/boss';
 import { Element } from '@ephox/sugar';
-import Structure from '../general/Structure';
+import * as Structure from '../general/Structure';
 
 const universe = DomUniverse();
 
@@ -36,7 +36,7 @@ const isInline = function (element: Element) {
   return Structure.isInline(universe, element);
 };
 
-export default {
+export {
   isBlock,
   isList,
   isFormatting,

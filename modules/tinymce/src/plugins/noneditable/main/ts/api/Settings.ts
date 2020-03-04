@@ -23,7 +23,7 @@ const getNonEditableRegExps = function (editor) {
   }
 };
 
-export default {
+export {
   getNonEditableClass,
   getEditableClass,
   getNonEditableRegExps

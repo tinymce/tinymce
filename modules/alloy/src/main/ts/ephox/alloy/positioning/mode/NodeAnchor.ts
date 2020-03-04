@@ -7,7 +7,7 @@ import * as Origins from '../layout/Origins';
 import { NodeAnchor, Anchoring } from './Anchoring';
 import * as ContainerOffsets from './ContainerOffsets';
 import * as AnchorLayouts from './AnchorLayouts';
-import ContentAnchorCommon from './ContentAnchorCommon';
+import * as ContentAnchorCommon from './ContentAnchorCommon';
 
 const placement = (component: AlloyComponent, anchorInfo: NodeAnchor, origin: Origins.OriginAdt): Option<Anchoring> => {
   const rootPoint = ContainerOffsets.getRootPoint(component, origin, anchorInfo);

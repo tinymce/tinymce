@@ -79,7 +79,7 @@ const onChange = function (outerWindow, listeners) {
   };
 };
 
-export default {
+export {
   get,
   onChange,
   getActualWidth

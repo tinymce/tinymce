@@ -46,7 +46,7 @@ const getEntireBox = function (bridge: WindowBridge, element: Element) {
   }
 };
 
-export default {
+export {
   getBoxAt,
   getEntireBox
 };

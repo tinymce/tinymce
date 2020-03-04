@@ -10,7 +10,7 @@ import { Element, Fragment, InsertAll, Remove } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { fireListEvent } from '../api/Events';
 import { ListAction } from '../core/ListAction';
-import Selection from '../core/Selection';
+import * as Selection from '../core/Selection';
 import { createTextBlock } from '../core/TextBlock';
 import { composeList } from './ComposeList';
 import { Entry, isIndented, isSelected } from './Entry';

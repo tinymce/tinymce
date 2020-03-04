@@ -1,6 +1,6 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import Conversions from 'tinymce/core/file/Conversions';
+import * as Conversions from 'tinymce/core/file/Conversions';
 import Env from 'tinymce/core/api/Env';
 import { UnitTest } from '@ephox/bedrock-client';
 

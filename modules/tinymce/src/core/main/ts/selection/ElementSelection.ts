@@ -10,7 +10,7 @@ import { Option } from '@ephox/katamari';
 import { Node as SugarNode, Traverse, Element as SugarElement } from '@ephox/sugar';
 import TreeWalker from '../api/dom/TreeWalker';
 import { moveEndPoint } from './SelectionUtils';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import DOMUtils from '../api/dom/DOMUtils';
 
 const getEndpointElement = (root: Element, rng: Range, start: boolean, real: boolean, resolve: (elm, offset: number) => number) => {

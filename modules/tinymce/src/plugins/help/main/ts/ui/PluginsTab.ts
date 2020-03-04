@@ -6,10 +6,10 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import PluginUrls from '../data/PluginUrls';
+import * as PluginUrls from '../data/PluginUrls';
 
 export interface PluginUrlType {
   key: string;
@@ -52,7 +52,8 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
       '</div>';
   };
 
-  const makeLink = Fun.curry(Strings.supplant, '<a href="${url}" target="_blank" rel="noopener">${name}</a>');
+  const makeLink = (p: {name: string, url: string}): string =>
+    `<a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`;
 
   const maybeUrlize = (editor, key: string) => {
     return Arr.find(PluginUrls.urls, function (x: PluginUrlType) {
@@ -69,7 +70,7 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
     const keys = Obj.keys(editor.plugins);
     return editor.settings.forced_plugins === undefined ?
       keys :
-      Arr.filter(keys, Fun.not(Fun.curry(Arr.contains, editor.settings.forced_plugins)));
+      Arr.filter(keys, (k) => !Arr.contains(editor.settings.forced_plugins, k));
   };
 
   const pluginLister = (editor) => {
@@ -112,6 +113,6 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
   };
 };
 
-export default {
+export {
   tab
 };

@@ -26,7 +26,7 @@ const unprotectHtml = function (html) {
   });
 };
 
-export default {
+export {
   protectHtml,
   unprotectHtml
 };

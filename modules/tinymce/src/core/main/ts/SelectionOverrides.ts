@@ -18,12 +18,12 @@ import * as CaretUtils from './caret/CaretUtils';
 import { CaretWalker } from './caret/CaretWalker';
 import { FakeCaret, isFakeCaretTarget } from './caret/FakeCaret';
 import * as LineUtils from './caret/LineUtils';
-import NodeType from './dom/NodeType';
-import RangePoint from './dom/RangePoint';
-import DragDropOverrides from './DragDropOverrides';
-import EditorView from './EditorView';
-import CefFocus from './focus/CefFocus';
-import EditorFocus from './focus/EditorFocus';
+import * as NodeType from './dom/NodeType';
+import * as RangePoint from './dom/RangePoint';
+import * as DragDropOverrides from './DragDropOverrides';
+import * as EditorView from './EditorView';
+import * as CefFocus from './focus/CefFocus';
+import * as EditorFocus from './focus/EditorFocus';
 import * as CefUtils from './keyboard/CefUtils';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;

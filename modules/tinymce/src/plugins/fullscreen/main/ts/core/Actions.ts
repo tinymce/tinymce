@@ -10,8 +10,8 @@ import { Css, Element, VisualViewport } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
-import Events from '../api/Events';
-import Thor from './Thor';
+import * as Events from '../api/Events';
+import * as Thor from './Thor';
 
 const DOM = DOMUtils.DOM;
 
@@ -147,6 +147,6 @@ const toggleFullscreen = function (editor, fullscreenState) {
   }
 };
 
-export default {
+export {
   toggleFullscreen
 };

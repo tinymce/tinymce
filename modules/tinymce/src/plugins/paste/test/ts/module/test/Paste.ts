@@ -1,5 +1,5 @@
 import { Step, Logger } from '@ephox/agar';
-import MockDataTransfer from './MockDataTransfer';
+import * as MockDataTransfer from './MockDataTransfer';
 
 const sPaste = function (editor, data) {
   return Logger.t(`Paste ${data}`, Step.sync(function () {
@@ -8,6 +8,6 @@ const sPaste = function (editor, data) {
   }));
 };
 
-export default {
+export {
   sPaste
 };

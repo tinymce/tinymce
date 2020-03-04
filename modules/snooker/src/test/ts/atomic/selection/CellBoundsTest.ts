@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
-import CellBounds from 'ephox/snooker/selection/CellBounds';
+import * as CellBounds from 'ephox/snooker/selection/CellBounds';
 import { UnitTest, assert } from '@ephox/bedrock-client';
 import { Element } from '@ephox/sugar';
 

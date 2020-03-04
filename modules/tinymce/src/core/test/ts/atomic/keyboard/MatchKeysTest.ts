@@ -1,7 +1,7 @@
 import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Cell } from '@ephox/katamari';
-import MatchKeys from 'tinymce/core/keyboard/MatchKeys';
+import * as MatchKeys from 'tinymce/core/keyboard/MatchKeys';
 
 UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (success, failure) {
   const state = Cell([]);

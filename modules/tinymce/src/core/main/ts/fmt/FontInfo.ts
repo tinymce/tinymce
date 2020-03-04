@@ -65,8 +65,12 @@ const getFontProp = (propName: string) => {
   };
 };
 
-export default {
-  getFontSize: getFontProp('font-size'),
-  getFontFamily: Fun.compose(normalizeFontFamily, getFontProp('font-family')) as (rootElm: Element, elm: Node) => string,
+const getFontSize = getFontProp('font-size');
+
+const getFontFamily = Fun.compose(normalizeFontFamily, getFontProp('font-family')) as (rootElm: Element, elm: Node) => string;
+
+export {
+  getFontSize,
+  getFontFamily,
   toPt
 };

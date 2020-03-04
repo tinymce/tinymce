@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 import { Hex, Hsv, Rgba } from './ColourTypes';
 import * as HexColour from './HexColour';
 
@@ -9,14 +9,12 @@ const round = Math.round;
 const rgbRegex = /^rgb\((\d+),\s*(\d+),\s*(\d+)\)/;
 const rgbaRegex = /^rgba\((\d+),\s*(\d+),\s*(\d+),\s*(\d?(?:\.\d+)?)\)/;
 
-const rgbaColour = (red: number, green: number, blue: number, alpha: number): Rgba => {
-  return {
-    red: Fun.constant(red),
-    green: Fun.constant(green),
-    blue: Fun.constant(blue),
-    alpha: Fun.constant(alpha)
-  };
-};
+const rgbaColour = (red: number, green: number, blue: number, alpha: number): Rgba => ({
+  red,
+  green,
+  blue,
+  alpha
+});
 
 const isRgbaComponent = (value: string): boolean => {
   const num = parseInt(value, 10);
@@ -25,9 +23,9 @@ const isRgbaComponent = (value: string): boolean => {
 
 const fromHsv = (hsv: Hsv): Rgba => {
   let r; let g; let b;
-  const hue = (hsv.hue() || 0) % 360;
-  let saturation = hsv.saturation() / 100;
-  let brightness = hsv.value() / 100;
+  const hue = (hsv.hue || 0) % 360;
+  let saturation = hsv.saturation / 100;
+  let brightness = hsv.value / 100;
   saturation = max(0, min(saturation, 1));
   brightness = max(0, min(brightness, 1));
 
@@ -121,9 +119,9 @@ const fromString = (rgbaString: string): Option<Rgba> => {
   return Option.none();
 };
 
-const toString = (rgba: Rgba): string => `rgba(${rgba.red()},${rgba.green()},${rgba.blue()},${rgba.alpha()})`;
+const toString = (rgba: Rgba): string => `rgba(${rgba.red},${rgba.green},${rgba.blue},${rgba.alpha})`;
 
-const redColour = Fun.constant(rgbaColour(255, 0, 0, 1));
+const red = rgbaColour(255, 0, 0, 1);
 
 export {
   rgbaColour,
@@ -132,5 +130,5 @@ export {
   fromHex,
   fromString,
   toString,
-  redColour as red
+  red
 };

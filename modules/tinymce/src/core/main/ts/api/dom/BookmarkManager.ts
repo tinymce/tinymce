@@ -7,7 +7,7 @@
 
 import { Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import Bookmarks from '../../bookmark/Bookmarks';
+import * as Bookmarks from '../../bookmark/Bookmarks';
 import { Bookmark } from '../../bookmark/BookmarkTypes';
 import Selection from './Selection';
 

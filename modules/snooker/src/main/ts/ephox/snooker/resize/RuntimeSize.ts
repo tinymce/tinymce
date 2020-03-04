@@ -37,7 +37,7 @@ const getHeight = function (cell: Element) {
   return needManualCalc() ? getCalculatedHeight(cell) : getProp(cell, 'height', Height.get(cell));
 };
 
-export default {
+export {
   getWidth,
   getHeight
 };

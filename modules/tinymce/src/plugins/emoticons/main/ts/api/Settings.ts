@@ -21,7 +21,7 @@ const getAppendedEmoticons = (editor: Editor) => {
   return editor.getParam('emoticons_append', {}, 'object');
 };
 
-export default {
+export {
   getEmoticonDatabaseUrl,
   getEmoticonDatabaseId,
   getAppendedEmoticons

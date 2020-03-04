@@ -15,7 +15,7 @@ import * as MatchFormat from '../fmt/MatchFormat';
 import * as Preview from '../fmt/Preview';
 import * as RemoveFormat from '../fmt/RemoveFormat';
 import * as ToggleFormat from '../fmt/ToggleFormat';
-import FormatShortcuts from '../keyboard/FormatShortcuts';
+import * as FormatShortcuts from '../keyboard/FormatShortcuts';
 import { Format, FormatVars } from './fmt/Format';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import Editor from './Editor';

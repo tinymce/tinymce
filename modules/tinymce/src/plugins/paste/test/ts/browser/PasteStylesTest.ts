@@ -6,7 +6,7 @@ import Env from 'tinymce/core/api/Env';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import Paste from '../module/test/Paste';
+import * as Paste from '../module/test/Paste';
 
 UnitTest.asynctest('Browser Test: .PasteStylesTest', (success, failure) => {
 

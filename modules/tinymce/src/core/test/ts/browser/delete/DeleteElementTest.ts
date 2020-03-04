@@ -1,7 +1,7 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Hierarchy, Element } from '@ephox/sugar';
-import DeleteElement from 'tinymce/core/delete/DeleteElement';
+import * as DeleteElement from 'tinymce/core/delete/DeleteElement';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 

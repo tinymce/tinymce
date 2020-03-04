@@ -11,11 +11,11 @@ import { PlatformDetection } from '@ephox/sand';
 import DomQuery from '../api/dom/DomQuery';
 import Editor from '../api/Editor';
 import Delay from '../api/util/Delay';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as GeomClientRect from '../geom/ClientRect';
 import * as CaretContainer from './CaretContainer';
-import CaretContainerRemove from './CaretContainerRemove';
-import Settings from '../api/Settings';
+import * as CaretContainerRemove from './CaretContainerRemove';
+import * as Settings from '../api/Settings';
 
 export interface FakeCaret {
   show: (before: boolean, element: Element) => Range;

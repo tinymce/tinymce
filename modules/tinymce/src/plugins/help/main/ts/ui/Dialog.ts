@@ -10,10 +10,10 @@ import { Arr, Obj, Option, Options } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../api/Settings';
 import { CustomTabSpecs, TabSpecs } from '../Plugin';
-import KeyboardShortcutsTab from './KeyboardShortcutsTab';
-import PluginsTab from './PluginsTab';
-import VersionTab from './VersionTab';
-import KeyboardNavTab from './KeyboardNavTab';
+import * as KeyboardShortcutsTab from './KeyboardShortcutsTab';
+import * as PluginsTab from './PluginsTab';
+import * as VersionTab from './VersionTab';
+import * as KeyboardNavTab from './KeyboardNavTab';
 
 interface TabData {
   tabs: TabSpecs;
@@ -43,11 +43,11 @@ const getNamesFromTabs = (tabs: TabSpecs): TabData => {
   const names = Obj.keys(tabs);
 
   // Move the versions tab to the end if it exists
-  const versionsIdx = Arr.indexOf(names, 'versions');
-  versionsIdx.each((idx) => {
+  const idx = names.indexOf('versions');
+  if (idx !== -1) {
     names.splice(idx, 1);
     names.push('versions');
-  });
+  }
 
   return {tabs, names};
 };

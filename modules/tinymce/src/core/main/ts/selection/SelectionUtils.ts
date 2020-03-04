@@ -8,7 +8,7 @@
 import { Range } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { Compare, Element, Node, Traverse } from '@ephox/sugar';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
 import Tools from '../api/util/Tools';
 import Editor from '../api/Editor';

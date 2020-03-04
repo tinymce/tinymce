@@ -6,7 +6,7 @@ import URI from 'tinymce/core/api/util/URI';
 import ImagetoolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-import ImageUtils from '../module/test/ImageUtils';
+import * as ImageUtils from '../module/test/ImageUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (success, failure) => {
   const uploadHandlerState = ImageUtils.createStateContainer();

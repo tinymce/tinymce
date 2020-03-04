@@ -58,7 +58,7 @@ const execute = function (patterns: KeyPattern[], evt: KeyboardEvent): Option<Ke
   return Arr.find(match(patterns, evt), (pattern) => pattern.action());
 };
 
-export default {
+export {
   match,
   action,
   execute

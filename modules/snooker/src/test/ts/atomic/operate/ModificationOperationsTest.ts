@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { Generators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
-import ModificationOperations from 'ephox/snooker/operate/ModificationOperations';
+import * as ModificationOperations from 'ephox/snooker/operate/ModificationOperations';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
 import { Element } from '@ephox/sugar';
 

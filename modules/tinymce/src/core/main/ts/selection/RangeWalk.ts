@@ -167,6 +167,6 @@ const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: No
   walkBoundary(endContainer, endPoint);
 };
 
-export default {
+export {
   walk
 };

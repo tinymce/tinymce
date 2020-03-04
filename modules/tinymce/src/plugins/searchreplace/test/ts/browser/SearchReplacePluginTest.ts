@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 import SearchreplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import HtmlUtils from '../module/test/HtmlUtils';
+import * as HtmlUtils from '../module/test/HtmlUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplacePluginTest', (success, failure) => {
     const suite = LegacyUnit.createSuite<Editor>();

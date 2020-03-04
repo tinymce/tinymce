@@ -7,7 +7,7 @@ import ImagetoolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
 import ImageOps from '../module/test/ImageOps';
-import ImageUtils from '../module/test/ImageUtils';
+import * as ImageUtils from '../module/test/ImageUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', (success, failure) => {
 

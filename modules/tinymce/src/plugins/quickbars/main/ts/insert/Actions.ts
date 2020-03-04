@@ -63,7 +63,7 @@ const insertBlob = function (editor: Editor, base64: string, blob: Blob) {
   editor.insertContent(editor.dom.createHTML('img', { src: blobInfo.blobUri() }));
 };
 
-export default {
+export {
   insertTable,
   insertBlob
 };

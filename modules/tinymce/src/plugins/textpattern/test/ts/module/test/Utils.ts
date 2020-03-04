@@ -120,9 +120,11 @@ const forcedRootBlockStructHelper = function (tag: string, content: string) {
   });
 };
 
-export default {
+const sSetContentAndPressEnter = sSetContentAndFireKeystroke(Keys.enter());
+
+export {
   sSetContentAndPressSpace,
-  sSetContentAndPressEnter: sSetContentAndFireKeystroke(Keys.enter()),
+  sSetContentAndPressEnter,
   withTeardown,
   bodyStruct,
   inlineStructHelper,

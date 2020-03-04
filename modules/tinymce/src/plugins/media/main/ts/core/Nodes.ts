@@ -7,8 +7,8 @@
 
 import Env from 'tinymce/core/api/Env';
 import Node from 'tinymce/core/api/html/Node';
-import Settings from '../api/Settings';
-import Sanitize from './Sanitize';
+import * as Settings from '../api/Settings';
+import * as Sanitize from './Sanitize';
 import * as VideoScript from './VideoScript';
 import Editor from 'tinymce/core/api/Editor';
 
@@ -165,7 +165,7 @@ const placeHolderConverter = function (editor: Editor) {
   };
 };
 
-export default {
+export {
   createPreviewIframeNode,
   createPlaceholderNode,
   placeHolderConverter

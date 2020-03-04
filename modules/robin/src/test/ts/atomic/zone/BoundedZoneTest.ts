@@ -2,15 +2,15 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { ZoneViewports } from 'ephox/robin/api/general/ZoneViewports';
 import { ArbRangeIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';
-import PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
+import * as PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
 import { assertProps, assertZones, RawZone } from 'ephox/robin/test/ZoneObjects';
-import TextZones from 'ephox/robin/zone/TextZones';
+import * as TextZones from 'ephox/robin/zone/TextZones';
 
 UnitTest.test('BoundedZoneTest', function () {
   const check = function (universe: TestUniverse, expected: RawZone[], id: string) {
     const item = universe.find(universe.get(), id).getOrDie();
     const actual = TextZones.fromBounded(universe, item, item, 'en', ZoneViewports.anything());
-    assertZones('Starting from: ' + id, universe, expected, actual.zones());
+    assertZones('Starting from: ' + id, universe, expected, actual.zones);
   };
 
   const doc1 = TestUniverse(Gene('root', 'root', [
@@ -119,7 +119,7 @@ UnitTest.test('BoundedZoneTest', function () {
     const item1 = doc1.find(doc1.get(), info.startId).getOrDie();
     const item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
     const actual = TextZones.fromBounded(doc1, item1, item2, 'en', ZoneViewports.anything());
-    assertProps('Testing zones for ' + info.startId + '->' + info.finishId, doc1, actual.zones());
+    assertProps('Testing zones for ' + info.startId + '->' + info.finishId, doc1, actual.zones);
     return true;
   });
 });

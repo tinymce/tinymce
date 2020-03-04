@@ -6,8 +6,8 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import ColorSwatch from '../ui/core/color/ColorSwatch';
-import Settings from '../ui/core/color/Settings';
+import * as ColorSwatch from '../ui/core/color/ColorSwatch';
+import * as Settings from '../ui/core/color/Settings';
 import { Menu } from '@ephox/bridge';
 import { Option } from '@ephox/katamari';
 

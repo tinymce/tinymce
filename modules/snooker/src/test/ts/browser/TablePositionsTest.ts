@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { document, HTMLElement } from '@ephox/dom-globals';
 import { Element, Insert, InsertAll, Remove, SelectorFilter, SelectorFind } from '@ephox/sugar';
-import TablePositions from 'ephox/snooker/api/TablePositions';
+import * as TablePositions from 'ephox/snooker/api/TablePositions';
 import { Option } from '@ephox/katamari';
 
 UnitTest.test('RectangularTest', function () {

@@ -35,7 +35,7 @@ const scanRight = function (item: Element, offset: number) {
   return TextSearch.scanRight(universe, item, offset);
 };
 
-export default {
+export {
   previousChar,
   nextChar,
   repeatLeft,

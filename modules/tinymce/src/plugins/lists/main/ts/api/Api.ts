@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Delete from '../core/Delete';
+import * as Delete from '../core/Delete';
 import Editor from 'tinymce/core/api/Editor';
 
 const get = function (editor: Editor) {
@@ -16,6 +16,6 @@ const get = function (editor: Editor) {
   };
 };
 
-export default {
+export {
   get
 };

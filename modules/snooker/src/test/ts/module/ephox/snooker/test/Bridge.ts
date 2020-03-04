@@ -51,7 +51,7 @@ const generators: Generators = {
   }
 };
 
-export default {
+export {
   targetStub,
   generators
 };

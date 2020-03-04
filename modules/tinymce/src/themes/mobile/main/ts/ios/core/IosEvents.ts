@@ -8,7 +8,7 @@
 import { Arr, Throttler } from '@ephox/katamari';
 import { Compare, DomEvent, Height } from '@ephox/sugar';
 
-import TappingEvent from '../../util/TappingEvent';
+import * as TappingEvent from '../../util/TappingEvent';
 
 const initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
   const saveSelectionFirst = function () {
@@ -185,6 +185,6 @@ const initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
   };
 };
 
-export default {
+export {
   initEvents
 };

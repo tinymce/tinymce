@@ -2,7 +2,7 @@ import { GeneralSteps, Logger, Pipeline, Step, Assertions, Waiter } from '@ephox
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
-import RangePoint from 'tinymce/core/dom/RangePoint';
+import * as RangePoint from 'tinymce/core/dom/RangePoint';
 
 UnitTest.asynctest('browser.tinymce.core.dom.RangePointsTest', (success, failure) => {
   Theme();

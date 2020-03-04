@@ -3,9 +3,9 @@ import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { Attr, Body, Css, Element, Hierarchy, Html, Insert, Remove, SelectorFilter, SelectorFind, Traverse } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
-import TableOperations from 'ephox/snooker/api/TableOperations';
-import Bars from 'ephox/snooker/resize/Bars';
-import Bridge from 'ephox/snooker/test/Bridge';
+import * as TableOperations from 'ephox/snooker/api/TableOperations';
+import * as Bars from 'ephox/snooker/resize/Bars';
+import * as Bridge from 'ephox/snooker/test/Bridge';
 import { BarPositions, ColInfo } from 'ephox/snooker/resize/BarPositions';
 import { PlatformDetection } from '@ephox/sand';
 import { RunOperationOutput, TargetSelection, TargetElement, TargetPasteRows } from 'ephox/snooker/model/RunOperation';
@@ -169,7 +169,7 @@ const checkUnmerge = function (expected: string, input: string, unmergablePaths:
   Bars.destroy(wire);
 };
 
-export default {
+export {
   checkOld,
   checkPaste,
   checkStructure,

@@ -9,9 +9,11 @@ import { Menu, Toolbar } from '@ephox/bridge';
 import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import Actions, { LastSuggestion } from '../core/Actions';
+import * as Settings from '../api/Settings';
+import * as Actions from '../core/Actions';
 import { DomTextMatcher } from '../core/DomTextMatcher';
+
+type LastSuggestion = Actions.LastSuggestion;
 
 const spellcheckerEvents = 'SpellcheckStart SpellcheckEnd';
 
@@ -105,6 +107,6 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
 
 };
 
-export default {
+export {
   register
 };

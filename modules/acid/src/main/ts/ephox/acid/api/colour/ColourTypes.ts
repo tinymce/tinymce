@@ -1,16 +1,16 @@
 export interface Hex {
-  value: () => string;
+  readonly value: string;
 }
 
 export interface Hsv {
-  hue: () => number;
-  saturation: () => number;
-  value: () => number;
+  readonly hue: number;
+  readonly saturation: number;
+  readonly value: number;
 }
 
 export interface Rgba {
-  red: () => number;
-  green: () => number;
-  blue: () => number;
-  alpha: () => number;
+  readonly red: number;
+  readonly green: number;
+  readonly blue: number;
+  readonly alpha: number;
 }

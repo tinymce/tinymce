@@ -1,5 +1,5 @@
 import { Assertions } from '@ephox/agar';
-import Features from 'tinymce/themes/mobile/features/Features';
+import * as Features from 'tinymce/themes/mobile/features/Features';
 import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.test('features.IdentifyToolbarTest', function () {

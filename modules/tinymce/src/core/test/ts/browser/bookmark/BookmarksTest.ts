@@ -2,7 +2,7 @@ import { Assertions, Chain, Logger, NamedChain, Pipeline } from '@ephox/agar';
 import { ApiChains, Editor } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
+import * as GetBookmark from 'tinymce/core/bookmark/GetBookmark';
 import { Element, Hierarchy, Html, Remove, Replication, SelectorFilter } from '@ephox/sugar';
 import { Arr, Result } from '@ephox/katamari';
 import {
@@ -12,7 +12,7 @@ import {
   isRangeBookmark,
   isStringPathBookmark
 } from 'tinymce/core/bookmark/BookmarkTypes';
-import ResolveBookmark from 'tinymce/core/bookmark/ResolveBookmark';
+import * as ResolveBookmark from 'tinymce/core/bookmark/ResolveBookmark';
 
 UnitTest.asynctest('browser.tinymce.core.bookmark.BookmarksTest', (success, failure) => {
   Theme();

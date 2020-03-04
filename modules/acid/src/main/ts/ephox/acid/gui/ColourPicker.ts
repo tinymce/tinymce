@@ -35,7 +35,7 @@ const makeFactory = (
     const sbPalette = SaturationBrightnessPalette.paletteFactory(translate, getClass);
 
     const state = {
-      paletteRgba: Fun.constant(Cell(RgbaColour.red()))
+      paletteRgba: Fun.constant(Cell(RgbaColour.red))
     };
 
     const memPalette = Memento.record(
@@ -71,7 +71,7 @@ const makeFactory = (
         const value = simulatedEvent.event().value();
         const oldRgb = state.paletteRgba().get();
         const hsvColour = HsvColour.fromRgb(oldRgb);
-        const newHsvColour = HsvColour.hsvColour(hsvColour.hue(), value.x(), (100 - value.y()));
+        const newHsvColour = HsvColour.hsvColour(hsvColour.hue, value.x(), (100 - value.y()));
         const rgb = RgbaColour.fromHsv(newHsvColour);
         const nuHex = HexColour.fromRgba(rgb);
         runUpdates(form, nuHex, updates);

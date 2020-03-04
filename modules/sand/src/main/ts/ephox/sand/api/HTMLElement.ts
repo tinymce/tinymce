@@ -1,5 +1,5 @@
 import { Resolve } from '@ephox/katamari';
-import Global from '../util/Global';
+import * as Global from '../util/Global';
 import { Window, HTMLElement } from '@ephox/dom-globals';
 
 /*
@@ -20,6 +20,6 @@ const isPrototypeOf = function (x: any): x is HTMLElement {
   return htmlElement(scope).prototype.isPrototypeOf(x);
 };
 
-export default {
+export {
   isPrototypeOf
 };

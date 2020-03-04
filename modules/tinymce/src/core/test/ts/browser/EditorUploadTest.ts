@@ -9,7 +9,7 @@ import { UploadResult } from 'tinymce/core/api/EditorUpload';
 import Env from 'tinymce/core/api/Env';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import Delay from 'tinymce/core/api/util/Delay';
-import Conversions from 'tinymce/core/file/Conversions';
+import * as Conversions from 'tinymce/core/file/Conversions';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) => {

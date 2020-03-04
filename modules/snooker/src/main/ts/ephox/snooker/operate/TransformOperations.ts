@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import * as Structs from '../api/Structs';
-import GridRow from '../model/GridRow';
+import * as GridRow from '../model/GridRow';
 import { Element } from '@ephox/sugar';
 
 type CompElm = (e1: Element, e2: Element) => boolean;
@@ -53,7 +53,7 @@ const replaceRow = function (grid: Structs.RowCells[], index: number, comparator
   return replaceIn(grid, targets, comparator, substitution);
 };
 
-export default {
+export {
   replaceColumn,
   replaceRow
 };

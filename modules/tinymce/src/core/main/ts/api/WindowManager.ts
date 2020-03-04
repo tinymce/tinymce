@@ -7,7 +7,7 @@
 
 import { Types } from '@ephox/bridge';
 import { Arr, Option } from '@ephox/katamari';
-import SelectionBookmark from '../selection/SelectionBookmark';
+import * as SelectionBookmark from '../selection/SelectionBookmark';
 import WindowManagerImpl from '../ui/WindowManagerImpl';
 import Editor from './Editor';
 

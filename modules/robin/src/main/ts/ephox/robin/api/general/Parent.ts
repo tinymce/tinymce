@@ -2,7 +2,7 @@ import { Universe } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
 import { breakPath as xBreakPath, breakToLeft as xBreakToLeft, breakToRight as xBreakToRight, BrokenPath, LeftRight } from '../../parent/Breaker';
 import { Looker, oneAll } from '../../parent/Shared';
-import SubsetFn from '../../parent/Subset';
+import * as SubsetFn from '../../parent/Subset';
 
 type SharedOneFn = <E, D> (universe: Universe<E, D>, look: Looker<E, D>, elements: E[]) => Option<E>;
 const sharedOne: SharedOneFn = oneAll;
@@ -27,7 +27,7 @@ const breakToRight: BreakToRightFn = xBreakToRight;
 type BreakPathFn = <E, D>(universe: Universe<E, D>, child: E, isTop: (e: E) => boolean, breaker: (universe: Universe<E, D>, parent: E, child: E) => Option<LeftRight<E>>) => BrokenPath<E>;
 const breakPath: BreakPathFn = xBreakPath;
 
-export default {
+export {
   sharedOne,
   subset,
   ancestors,

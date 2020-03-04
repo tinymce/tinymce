@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
-import HtmlUtils from '../module/test/HtmlUtils';
+import * as HtmlUtils from '../module/test/HtmlUtils';
 
 UnitTest.asynctest('browser.tinymce.core.ForceBlocksTest', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();

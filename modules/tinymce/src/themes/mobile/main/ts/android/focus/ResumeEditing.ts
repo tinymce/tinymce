@@ -49,6 +49,6 @@ const resume = function (cWin) {
   });
 };
 
-export default {
+export {
   resume
 };

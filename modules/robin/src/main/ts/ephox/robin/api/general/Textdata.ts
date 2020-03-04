@@ -1,15 +1,15 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { Spot, SpotRange } from '@ephox/phoenix';
 import { PositionArray } from '@ephox/polaris';
 
 interface TextdataGet<E> {
-  list: () => SpotRange<E>[];
-  text: () => string;
+  readonly list: SpotRange<E>[];
+  readonly text: string;
 }
 
 export interface Textdata<E> extends TextdataGet<E> {
-  cursor: () => Option<number>;
+  readonly cursor: Option<number>;
 }
 
 /**
@@ -27,13 +27,13 @@ const get = function <E, D> (universe: Universe<E, D>, elements: E[]) {
   }, '');
 
   return {
-    list: Fun.constant(list),
-    text: Fun.constant(allText)
+    list,
+    text: allText
   };
 };
 
 const cursor = function <E, D> (universe: Universe<E, D>, data: TextdataGet<E>, current: E, offset: number): Textdata<E> {
-  const position = PositionArray.find(data.list(), function (item) {
+  const position = PositionArray.find(data.list, function (item) {
     return universe.eq(item.element(), current);
   }).map(function (element) {
     return element.start() + offset;
@@ -42,7 +42,7 @@ const cursor = function <E, D> (universe: Universe<E, D>, data: TextdataGet<E>, 
   return {
     list: data.list,
     text: data.text,
-    cursor: Fun.constant(position)
+    cursor: position
   };
 };
 

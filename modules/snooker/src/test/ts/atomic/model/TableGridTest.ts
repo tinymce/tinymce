@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import * as Structs from 'ephox/snooker/api/Structs';
-import TableGrid from 'ephox/snooker/model/TableGrid';
+import * as TableGrid from 'ephox/snooker/model/TableGrid';
 import { UnitTest, assert } from '@ephox/bedrock-client';
 import { Element } from '@ephox/sugar';
 

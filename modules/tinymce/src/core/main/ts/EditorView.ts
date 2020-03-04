@@ -65,7 +65,7 @@ const isEditorAttachedToDom = function (editor: Editor) {
   }).getOr(false);
 };
 
-export default {
+export {
   isXYInContentArea,
   isEditorAttachedToDom
 };

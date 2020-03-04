@@ -1,7 +1,7 @@
 import { Arr, Fun, Result } from '@ephox/katamari';
 import * as Structs from '../api/Structs';
 import * as Util from '../util/Util';
-import GridRow from './GridRow';
+import * as GridRow from './GridRow';
 import { SimpleGenerators } from '../api/Generators';
 
 export interface Delta {
@@ -76,7 +76,7 @@ const tailor = function (gridA: Structs.RowCells[], delta: Delta, generator: Sim
   return tailoredGrid;
 };
 
-export default {
+export {
   measure,
   measureWidth,
   tailor

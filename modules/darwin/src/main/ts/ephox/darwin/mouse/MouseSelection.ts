@@ -1,6 +1,6 @@
 import { Option } from '@ephox/katamari';
 import { Compare, SelectorFind, Element, EventArgs } from '@ephox/sugar';
-import CellSelection from '../selection/CellSelection';
+import * as CellSelection from '../selection/CellSelection';
 import { WindowBridge } from '../api/WindowBridge';
 import { SelectionAnnotation } from '../api/SelectionAnnotation';
 

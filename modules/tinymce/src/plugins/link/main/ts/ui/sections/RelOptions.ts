@@ -7,8 +7,8 @@
 
 import { Option } from '@ephox/katamari';
 
-import Settings from '../../api/Settings';
-import Utils from '../../core/Utils';
+import * as Settings from '../../api/Settings';
+import * as Utils from '../../core/Utils';
 import { ListOptions } from '../../core/ListOptions';
 import { ListItem } from '../DialogTypes';
 import Editor from 'tinymce/core/api/Editor';

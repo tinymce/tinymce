@@ -1,6 +1,6 @@
 import { Arr, Option } from '@ephox/katamari';
 import * as Structs from '../api/Structs';
-import GridRow from '../model/GridRow';
+import * as GridRow from '../model/GridRow';
 import { Element } from '@ephox/sugar';
 
 type CompElm = (e1: Element, e2: Element) => boolean;
@@ -78,7 +78,7 @@ const splitRows = function (grid: Structs.RowCells[], index: number, comparator:
   return grid;
 };
 
-export default {
+export {
   merge,
   unmerge,
   splitRows

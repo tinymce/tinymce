@@ -71,7 +71,7 @@ const shouldUseDefaultFilters = (editor: Editor): boolean => {
   return editor.getParam('paste_enable_default_filters', true);
 };
 
-export default {
+export {
   shouldBlockDrop,
   shouldPasteDataImages,
   shouldFilterDrop,

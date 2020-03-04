@@ -11,12 +11,12 @@ import { Compare, Element, Focus } from '@ephox/sugar';
 import Selection from '../api/dom/Selection';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
 import { CaretPosition } from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
 import * as RangeNodes from '../selection/RangeNodes';
-import SelectionBookmark from '../selection/SelectionBookmark';
-import FocusController from './FocusController';
+import * as SelectionBookmark from '../selection/SelectionBookmark';
+import * as FocusController from './FocusController';
 
 const getContentEditableHost = (editor: Editor, node: Node): DomElement =>
   editor.dom.getParent(node, (node) => editor.dom.getContentEditable(node) === 'true');
@@ -136,7 +136,7 @@ const focus = (editor: Editor, skipFocus: boolean) => {
   skipFocus ? activateEditor(editor) : focusEditor(editor);
 };
 
-export default {
+export {
   focus,
   hasFocus,
   hasEditorOrUiFocus

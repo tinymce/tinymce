@@ -6,7 +6,7 @@ import Env from 'tinymce/core/api/Env';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
-import HtmlUtils from '../../module/test/HtmlUtils';
+import * as HtmlUtils from '../../module/test/HtmlUtils';
 
 UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, failure) {
   const DOM = DOMUtils(document, { keep_values : true, schema : Schema() });

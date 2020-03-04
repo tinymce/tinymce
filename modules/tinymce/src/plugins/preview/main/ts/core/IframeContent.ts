@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import Env from 'tinymce/core/api/Env';
 
 const getPreviewHtml = function (editor: Editor) {
@@ -71,6 +71,6 @@ const getPreviewHtml = function (editor: Editor) {
   return previewHtml;
 };
 
-export default {
+export {
   getPreviewHtml,
 };

@@ -6,9 +6,9 @@
  */
 
 import { Fun } from '@ephox/katamari';
-import IosScrolling from '../scroll/IosScrolling';
-import DeviceZones from './DeviceZones';
-import CursorRefresh from '../../touch/focus/CursorRefresh';
+import * as IosScrolling from '../scroll/IosScrolling';
+import * as DeviceZones from './DeviceZones';
+import * as CursorRefresh from '../../touch/focus/CursorRefresh';
 
 const scrollIntoView = function (cWin, socket, dropup, top, bottom) {
   const greenzone = DeviceZones.getGreenzone(socket, dropup);
@@ -23,6 +23,6 @@ const scrollIntoView = function (cWin, socket, dropup, top, bottom) {
   }
 };
 
-export default {
+export {
   scrollIntoView
 };

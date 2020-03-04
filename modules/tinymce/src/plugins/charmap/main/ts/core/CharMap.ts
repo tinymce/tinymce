@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { Arr } from '@ephox/katamari';
 
 const isArray = Tools.isArray;
@@ -412,6 +412,6 @@ const getCharMap = function (editor: Editor): CharMap[] {
   ].concat(groups) : groups;
 };
 
-export default {
+export {
   getCharMap
 };

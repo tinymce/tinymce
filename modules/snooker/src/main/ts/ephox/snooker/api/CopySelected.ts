@@ -1,8 +1,8 @@
 import { Arr, Obj, Struct } from '@ephox/katamari';
 import { Attr, Css, Element, Insert, Remove, Selectors } from '@ephox/sugar';
-import DetailsList from '../model/DetailsList';
+import * as DetailsList from '../model/DetailsList';
 import { Warehouse } from '../model/Warehouse';
-import LayerSelector from '../util/LayerSelector';
+import * as LayerSelector from '../util/LayerSelector';
 import { DetailExt, RowData } from './Structs';
 import { HTMLElement } from '@ephox/dom-globals';
 
@@ -121,6 +121,6 @@ const extract = function (table: Element, selectedSelector: string) {
   return table;
 };
 
-export default {
+export {
   extract
 };

@@ -26,6 +26,6 @@ const register = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   register
 };

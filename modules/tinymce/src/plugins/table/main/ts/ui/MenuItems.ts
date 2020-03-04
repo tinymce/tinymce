@@ -8,7 +8,7 @@
 import { Menu } from '@ephox/bridge';
 import { Node } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import InsertTable from '../actions/InsertTable';
+import * as InsertTable from '../actions/InsertTable';
 import { hasTableGrid } from '../api/Settings';
 import { SelectionTargets } from '../selection/SelectionTargets';
 
@@ -124,6 +124,6 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
   });
 };
 
-export default {
+export {
   addMenuItems
 };

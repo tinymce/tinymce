@@ -1,6 +1,6 @@
 import { DomUniverse } from '@ephox/boss';
 import { Element } from '@ephox/sugar';
-import LeftBlock from '../general/LeftBlock';
+import * as LeftBlock from '../general/LeftBlock';
 
 const universe = DomUniverse();
 
@@ -12,7 +12,7 @@ const all = function (item: Element) {
   return LeftBlock.all(universe, item);
 };
 
-export default {
+export {
   top,
   all
 };
