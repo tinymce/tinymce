@@ -10,8 +10,8 @@ import * as Origins from './Origins';
  * It is only useful for fixed origins; relative needs to do everything the old way.
  */
 export interface Anchor {
-  anchorBox: () => AnchorBox;
-  origin: () => Origins.OriginAdt;
+  readonly anchorBox: () => AnchorBox;
+  readonly origin: () => Origins.OriginAdt;
 }
 
 const anchor = (anchorBox: AnchorBox, origin: Origins.OriginAdt): Anchor => ({
