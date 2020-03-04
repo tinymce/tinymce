@@ -14,8 +14,8 @@ import * as ContentAnchorCommon from './ContentAnchorCommon';
 
 // TODO: This structure exists in a few places
 export interface ElementAndOffset {
-  element: () => Element;
-  offset: () => number;
+  readonly element: () => Element;
+  readonly offset: () => number;
 }
 
 const point = (element: Element, offset: number): ElementAndOffset => ({

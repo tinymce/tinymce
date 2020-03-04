@@ -111,8 +111,8 @@ const hasChildNodes = function (element: Element<DomNode>) {
 };
 
 export interface ElementAndOffset<E> {
-  element: () => Element<E>;
-  offset: () => number;
+  readonly element: () => Element<E>;
+  readonly offset: () => number;
 }
 
 const spot = <E>(element: Element<E>, offset: number): ElementAndOffset<E> => ({

@@ -12,10 +12,10 @@ const pointed = (point: CssPositionAdt, width: number, height: number): BoxByPoi
 });
 
 export interface Rect {
-  x: () => number;
-  y: () => number;
-  width: () => number;
-  height: () => number;
+  readonly x: () => number;
+  readonly y: () => number;
+  readonly width: () => number;
+  readonly height: () => number;
 }
 
 const rect = (x: number, y: number, width: number, height: number): Rect => ({
@@ -26,18 +26,18 @@ const rect = (x: number, y: number, width: number, height: number): Rect => ({
 });
 
 export interface Bounds {
-  x: () => number;
-  y: () => number;
-  width: () => number;
-  height: () => number;
-  right: () => number;
-  bottom: () => number;
+  readonly x: () => number;
+  readonly y: () => number;
+  readonly width: () => number;
+  readonly height: () => number;
+  readonly right: () => number;
+  readonly bottom: () => number;
 }
 
 export interface BoxByPoint {
-  point: () => CssPositionAdt;
-  width: () => number;
-  height: () => number;
+  readonly point: () => CssPositionAdt;
+  readonly width: () => number;
+  readonly height: () => number;
 }
 
 const bounds = (x: number, y: number, width: number, height: number): Bounds => {

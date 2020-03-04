@@ -2,8 +2,8 @@ import { Fun } from '@ephox/katamari';
 import { Node, Text, Traverse, Element } from '@ephox/sugar';
 
 export interface ElementAndOffset {
-  element: () => Element;
-  offset: () => number;
+  readonly element: () => Element;
+  readonly offset: () => number;
 }
 
 const point = (element: Element, offset: number): ElementAndOffset => ({

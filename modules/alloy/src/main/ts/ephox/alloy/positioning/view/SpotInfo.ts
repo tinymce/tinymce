@@ -2,12 +2,12 @@ import { Fun } from '@ephox/katamari';
 import { BubbleInstance } from '../layout/Bubble';
 
 export interface SpotInfo {
-  x: () => number;
-  y: () => number;
-  bubble: () => BubbleInstance;
+  readonly x: () => number;
+  readonly y: () => number;
+  readonly bubble: () => BubbleInstance;
   // TYPIFY
-  direction: () => any;
-  label: () => string;
+  readonly direction: () => any;
+  readonly label: () => string;
 }
 
 const nu = (

@@ -2,11 +2,11 @@ import { Fun, Option } from '@ephox/katamari';
 import { Element, Css } from '@ephox/sugar';
 
 export interface PositionCss {
-  position: () => string;
-  left: () => Option<number>;
-  top: () => Option<number>;
-  right: () => Option<number>;
-  bottom: () => Option<number>;
+  readonly position: () => string;
+  readonly left: () => Option<number>;
+  readonly top: () => Option<number>;
+  readonly right: () => Option<number>;
+  readonly bottom: () => Option<number>;
 }
 
 const NuPositionCss = (
