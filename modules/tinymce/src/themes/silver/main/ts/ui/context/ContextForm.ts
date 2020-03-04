@@ -8,13 +8,12 @@
 import { AlloySpec, AlloyTriggers, Behaviour, Input, Keying, Memento } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Id, Option } from '@ephox/katamari';
-
 import { ToolbarMode } from '../../api/Settings';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { renderToolbar } from '../toolbar/CommonToolbar';
+import { renderToolbar, ToolbarGroup } from '../toolbar/CommonToolbar';
 import { generate } from './ContextFormButtons';
 
-const renderContextForm = (toolbarType: ToolbarMode, ctx: Toolbar.ContextForm, providers: UiFactoryBackstageProviders) => {
+const buildInitGroups = (ctx: Toolbar.ContextForm, providers: UiFactoryBackstageProviders): ToolbarGroup[] => {
   // Cannot use the FormField.sketch, because the DOM structure doesn't have a wrapping group
   const inputAttributes = ctx.label.fold(
     () => ({ }),
@@ -52,25 +51,29 @@ const renderContextForm = (toolbarType: ToolbarMode, ctx: Toolbar.ContextForm, p
 
   const commands = generate(memInput, ctx.commands, providers);
 
-  return renderToolbar({
-    type: toolbarType,
-    uid: Id.generate('context-toolbar'),
-    initGroups: [
-      {
-        title: Option.none(),
-        items: [ memInput.asSpec() ]
-      },
-      {
-        title: Option.none(),
-        items: commands.asSpecs() as AlloySpec[]
-      }
-    ],
-    onEscape: Option.none,
-    cyclicKeying: true,
-    providers
-  });
+  return [
+    {
+      title: Option.none(),
+      items: [ memInput.asSpec() ]
+    },
+    {
+      title: Option.none(),
+      items: commands.asSpecs() as AlloySpec[]
+    }
+  ];
 };
 
+
+const renderContextForm = (toolbarType: ToolbarMode, ctx: Toolbar.ContextForm, providers: UiFactoryBackstageProviders) => renderToolbar({
+  type: toolbarType,
+  uid: Id.generate('context-toolbar'),
+  initGroups: buildInitGroups(ctx, providers),
+  onEscape: Option.none,
+  cyclicKeying: true,
+  providers
+});
+
 export const ContextForm = {
-  renderContextForm
+  renderContextForm,
+  buildInitGroups
 };

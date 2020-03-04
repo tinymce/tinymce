@@ -8,13 +8,14 @@
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Obj } from '@ephox/katamari';
 import { ValueSchema } from '@ephox/boulder';
+import { ContextTypes } from '../../ContextToolbar';
 
 // Divide the defined toolbars into forms, node scopes, and editor scopes
 export interface ScopedToolbars {
   forms: Record<string, Toolbar.ContextForm>; // run through Bridge.
-  inNodeScope: Array<Toolbar.ContextForm | Toolbar.ContextToolbar>;
-  inEditorScope: Array<Toolbar.ContextForm | Toolbar.ContextToolbar>;
-  lookupTable: Record<string, Toolbar.ContextForm | Toolbar.ContextToolbar>;
+  inNodeScope: Array<ContextTypes>;
+  inEditorScope: Array<ContextTypes>;
+  lookupTable: Record<string, ContextTypes>;
   formNavigators: Record<string, Toolbar.ToolbarButtonApi | Toolbar.ToolbarToggleButtonApi>; // this stays API due to toolbar applying bridge
 }
 
@@ -22,10 +23,10 @@ const categorise = (contextToolbars: Record<string, Toolbar.ContextFormApi | Too
 
   // TODO: Use foldl/foldr and avoid as much mutation.
   const forms: Record<string, Toolbar.ContextForm> = { };
-  const inNodeScope: Array<Toolbar.ContextForm | Toolbar.ContextToolbar> = [ ];
-  const inEditorScope: Array<Toolbar.ContextForm | Toolbar.ContextToolbar> = [ ];
+  const inNodeScope: Array<ContextTypes> = [ ];
+  const inEditorScope: Array<ContextTypes> = [ ];
   const formNavigators: Record<string, Toolbar.ToolbarButtonApi | Toolbar.ToolbarToggleButtonApi> = { };
-  const lookupTable: Record<string, Toolbar.ContextToolbar | Toolbar.ContextForm> = { };
+  const lookupTable: Record<string, ContextTypes> = { };
 
   const registerForm = (key: string, toolbarApi: Toolbar.ContextFormApi) => {
     const contextForm = ValueSchema.getOrDie(Toolbar.createContextForm(toolbarApi));
