@@ -13,11 +13,18 @@ import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import { uniqueId } from '../file/ImageScanner';
 import * as Conversions from '../file/Conversions';
 import { parseDataUri } from './Base64Uris';
+import Env from '../api/Env';
+
+const isInternalImageSource = (src: string) => src === Env.transparentSrc;
 
 const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSettings) => {
   const { blob_cache: blobCache } = settings;
   const processImage = (img: Node): void => {
     const inputSrc = img.attr('src');
+
+    if (isInternalImageSource(inputSrc)) {
+      return;
+    }
 
     parseDataUri(inputSrc).map(({ type, data }) => Conversions.buildBlob(type, data).each(
       (blob) => {

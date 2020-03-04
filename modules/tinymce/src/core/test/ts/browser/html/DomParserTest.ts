@@ -6,6 +6,7 @@ import DomParser from 'tinymce/core/api/html/DomParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import Serializer from 'tinymce/core/api/html/Serializer';
 import { BlobCache } from 'tinymce/core/api/file/BlobCache';
+import Env from 'tinymce/core/api/Env';
 
 UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
@@ -733,6 +734,21 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
       'Should be html with blob uri',
       `<p><img src="${blobUri}" /></p>`,
       serializedHtml
+    );
+
+    blobCache.destroy();
+  });
+
+  suite.test('do not extract base64 uris for transparent images used by for example the page break plugin', () => {
+    const blobCache = BlobCache();
+    const parser = DomParser({ blob_cache: blobCache });
+    const html = `<p><img src="${Env.transparentSrc}" /></p>`;
+    const root = parser.parse(html);
+
+    Assertions.assertEq(
+      'Should be the unchanged transparent image source',
+      Env.transparentSrc,
+      root.getAll('img')[0].attr('src')
     );
 
     blobCache.destroy();
