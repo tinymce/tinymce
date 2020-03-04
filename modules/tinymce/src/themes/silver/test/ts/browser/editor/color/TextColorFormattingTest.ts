@@ -2,7 +2,7 @@ import { ApproxStructure, Pipeline, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { Unicode } from '@ephox/katamari/src/main/ts/ephox/katamari/api/Main';
+import { Unicode } from '@ephox/katamari';
 import Env from 'tinymce/core/api/Env';
 
 UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
@@ -94,7 +94,7 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
    });
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
