@@ -9,7 +9,7 @@ import { Strings, Obj } from '@ephox/katamari';
 import Tools from '../util/Tools';
 import Entities from './Entities';
 import Schema from './Schema';
-import { extractBase64DataUris, restoreDataUris, buildBase64DataUri, Base64Extract, Base64UriMatch } from '../../html/Base64Uris';
+import { extractBase64DataUris, restoreDataUris, Base64Extract } from '../../html/Base64Uris';
 
 /**
  * This class parses HTML code using pure JavaScript and executes various events for each item it finds. It will
@@ -72,7 +72,6 @@ export interface SaxParserSettings {
   pi? (name: string, text: string): void;
   start? (name: string, attrs: AttrList, empty: boolean): void;
   text? (text: string, raw?: boolean): void;
-  dataUri? (match: Base64UriMatch): string;
 }
 
 type ParserFormat = 'html' | 'xhtml' | 'xml';
@@ -208,9 +207,8 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
   const end = settings.end ? settings.end : noop;
   const pi = settings.pi ? settings.pi : noop;
   const doctype = settings.doctype ? settings.doctype : noop;
-  const dataUri = settings.dataUri ? settings.dataUri : buildBase64DataUri;
 
-  const parseHtml = (base64Extract: Base64Extract, format: ParserFormat = 'html') => {
+  const parseInternal = (base64Extract: Base64Extract, format: ParserFormat = 'html') => {
     const html = base64Extract.html;
     let matches, index = 0, value, endRegExp;
     const stack = [];
@@ -272,7 +270,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       comment(restoreDataUris(value, base64Extract));
     };
 
-    const processAttr = (value: string) => Obj.get(base64Extract.uris, value).map(dataUri).getOr(value);
+    const processAttr = (value: string) => Obj.get(base64Extract.uris, value).getOr(value);
 
     const processMalformedComment = (value: string, startIndex: number) => {
       const startTag = value || '';
@@ -638,7 +636,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
    * @param {String} html Html string to sax parse.
    */
   const parse = (html: string, format: ParserFormat = 'html') => {
-    parseHtml(extractBase64DataUris(html), format);
+    parseInternal(extractBase64DataUris(html), format);
   };
 
   return {

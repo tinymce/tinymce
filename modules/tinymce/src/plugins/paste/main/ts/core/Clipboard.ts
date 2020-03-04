@@ -458,8 +458,8 @@ const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteForma
       return src.indexOf('webkit-fake-url') === 0;
     };
 
-    const isBlobUri = (src: string) => {
-      return src.indexOf('blob:') === 0;
+    const isDataUri = (src: string) => {
+      return src.indexOf('data:') === 0;
     };
 
     if (!editor.settings.paste_data_images && isPasteInsert(args)) {
@@ -475,7 +475,7 @@ const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteForma
         // Safari on Mac produces webkit-fake-url see: https://bugs.webkit.org/show_bug.cgi?id=49141
         if (isWebKitFakeUrl(src)) {
           remove(nodes[i]);
-        } else if (!editor.settings.allow_html_data_urls && isBlobUri(src)) {
+        } else if (!editor.settings.allow_html_data_urls && isDataUri(src)) {
           remove(nodes[i]);
         }
       }

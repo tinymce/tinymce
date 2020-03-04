@@ -84,58 +84,44 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
 const mkSerializerSettings = (editor: Editor): SerializerSettings => {
   const settings = editor.settings;
 
-  return removeUndefined<SerializerSettings>({
-    // DomParser settings
-    allow_conditional_comments: settings.allow_conditional_comments,
-    allow_html_in_named_anchor: settings.allow_html_in_named_anchor,
-    allow_script_urls: settings.allow_script_urls,
-    allow_unsafe_link_target: settings.allow_unsafe_link_target,
-    convert_fonts_to_spans: settings.convert_fonts_to_spans,
-    fix_list_elements: settings.fix_list_elements,
-    font_size_legacy_values: settings.font_size_legacy_values,
-    forced_root_block: settings.forced_root_block,
-    forced_root_block_attrs: settings.forced_root_block_attrs,
-    padd_empty_with_br: settings.padd_empty_with_br,
-    preserve_cdata: settings.preserve_cdata,
-    remove_trailing_brs: settings.remove_trailing_brs,
-    inline_styles: settings.inline_styles,
-    root_name: getRootName(editor),
-    validate: true,
+  return {
+    ...mkParserSettings(editor),
+    ...removeUndefined<SerializerSettings>({
+      // SerializerSettings
+      url_converter: settings.url_converter,
+      url_converter_scope: settings.url_converter_scope,
 
-    // SerializerSettings
-    url_converter: settings.url_converter,
-    url_converter_scope: settings.url_converter_scope,
+      // Writer settings
+      element_format: settings.element_format,
+      entities: settings.entities,
+      entity_encoding: settings.entity_encoding,
+      indent: settings.indent,
+      indent_after: settings.indent_after,
+      indent_before: settings.indent_before,
 
-    // Writer settings
-    element_format: settings.element_format,
-    entities: settings.entities,
-    entity_encoding: settings.entity_encoding,
-    indent: settings.indent,
-    indent_after: settings.indent_after,
-    indent_before: settings.indent_before,
-
-    // Schema settings
-    block_elements: settings.block_elements,
-    boolean_attributes: settings.boolean_attributes,
-    custom_elements: settings.custom_elements,
-    extended_valid_elements: settings.extended_valid_elements,
-    invalid_elements: settings.invalid_elements,
-    invalid_styles: settings.invalid_styles,
-    move_caret_before_on_enter_elements: settings.move_caret_before_on_enter_elements,
-    non_empty_elements: settings.non_empty_elements,
-    schema: settings.schema,
-    self_closing_elements: settings.self_closing_elements,
-    short_ended_elements: settings.short_ended_elements,
-    special: settings.special,
-    text_block_elements: settings.text_block_elements,
-    text_inline_elements: settings.text_inline_elements,
-    valid_children: settings.valid_children,
-    valid_classes: settings.valid_classes,
-    valid_elements: settings.valid_elements,
-    valid_styles: settings.valid_styles,
-    verify_html: settings.verify_html,
-    whitespace_elements: settings.whitespace_elements,
-  });
+      // Schema settings
+      block_elements: settings.block_elements,
+      boolean_attributes: settings.boolean_attributes,
+      custom_elements: settings.custom_elements,
+      extended_valid_elements: settings.extended_valid_elements,
+      invalid_elements: settings.invalid_elements,
+      invalid_styles: settings.invalid_styles,
+      move_caret_before_on_enter_elements: settings.move_caret_before_on_enter_elements,
+      non_empty_elements: settings.non_empty_elements,
+      schema: settings.schema,
+      self_closing_elements: settings.self_closing_elements,
+      short_ended_elements: settings.short_ended_elements,
+      special: settings.special,
+      text_block_elements: settings.text_block_elements,
+      text_inline_elements: settings.text_inline_elements,
+      valid_children: settings.valid_children,
+      valid_classes: settings.valid_classes,
+      valid_elements: settings.valid_elements,
+      valid_styles: settings.valid_styles,
+      verify_html: settings.verify_html,
+      whitespace_elements: settings.whitespace_elements,
+    })
+  };
 };
 
 const createParser = function (editor: Editor): DomParser {

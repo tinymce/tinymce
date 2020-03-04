@@ -5,40 +5,42 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Id, Obj } from '@ephox/katamari';
+import { Id, Obj, Option } from '@ephox/katamari';
 
-export interface Base64UriMatch {
-  mime: string;
-  base64: string;
-}
+export type UriMap = Record<string, string>;
 
 export interface Base64Extract {
   prefix: string;
-  uris: Record<string, Base64UriMatch>;
+  uris: UriMap;
   html: string;
 }
 
+export interface Base64UriParts {
+  type: string;
+  data: string;
+}
+
 export const extractBase64DataUris = (html: string): Base64Extract => {
-  const dataImageUri = /data:(image\/[a-z]+);base64,([a-z0-9\+\/=]+)/gi;
-  const chunks = [];
-  const uris = {};
+  const dataImageUri = /data:[^;]+;base64,([a-z0-9\+\/=]+)/gi;
+  const chunks: string[] = [];
+  const uris: UriMap = {};
   const prefix = Id.generate('img');
   let matches: RegExpExecArray;
   let index = 0;
   let count = 0;
 
   while ((matches = dataImageUri.exec(html))) {
-    const [matchText, mime, base64] = matches;
+    const [uri] = matches;
     const imageId = prefix + '_' + count++;
 
-    uris[imageId] = { mime, base64 };
+    uris[imageId] = uri;
 
     if (index < matches.index) {
       chunks.push(html.substr(index, matches.index - index));
     }
 
     chunks.push(imageId);
-    index = matches.index + matchText.length;
+    index = matches.index + uri.length;
   }
 
   if (index === 0) {
@@ -52,12 +54,17 @@ export const extractBase64DataUris = (html: string): Base64Extract => {
   }
 };
 
-export const buildBase64DataUri = (match: Base64UriMatch) => {
-  return `data:${match.mime};base64,${match.base64}`;
-};
-
 export const restoreDataUris = (html: string, result: Base64Extract) => {
   return html.replace(new RegExp(`${result.prefix}_[0-9]+`, 'g'), (imageId) => {
-    return Obj.get(result.uris, imageId).map(buildBase64DataUri).getOr(imageId);
+    return Obj.get(result.uris, imageId).getOr(imageId);
   });
+};
+
+export const parseDataUri = (uri: string): Option<Base64UriParts> => {
+  const matches = /data:([^;]+);base64,([a-z0-9\+\/=]+)/i.exec(uri);
+  if (matches) {
+    return Option.some({ type: matches[1], data: decodeURIComponent(matches[2]) });
+  } else {
+    return Option.none();
+  }
 };

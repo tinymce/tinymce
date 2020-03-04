@@ -8,8 +8,30 @@
 import Tools from '../api/util/Tools';
 import { isEmpty, paddEmptyNode } from './ParserUtils';
 import Node from '../api/html/Node';
-import { Unicode } from '@ephox/katamari';
+import { Unicode, Arr } from '@ephox/katamari';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
+import { uniqueId } from '../file/ImageScanner';
+import * as Conversions from '../file/Conversions';
+import { parseDataUri } from './Base64Uris';
+
+const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSettings) => {
+  const { blob_cache: blobCache } = settings;
+  const processImage = (img: Node): void => {
+    const inputSrc = img.attr('src');
+
+    parseDataUri(inputSrc).map(({ type, data }) => Conversions.buildBlob(type, data).each(
+      (blob) => {
+        const blobInfo = blobCache.create(uniqueId(), blob, data);
+        blobCache.add(blobInfo);
+        img.attr('src', blobInfo.blobUri());
+      }
+    ));
+  };
+
+  if (blobCache) {
+    parser.addAttributeFilter('src', (nodes) => Arr.each(nodes, processImage));
+  }
+};
 
 const register = (parser: DomParser, settings: DomParserSettings): void => {
   const schema = parser.schema;
@@ -215,6 +237,8 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
       }
     });
   }
+
+  registerBase64ImageFilter(parser, settings);
 };
 
 export {
