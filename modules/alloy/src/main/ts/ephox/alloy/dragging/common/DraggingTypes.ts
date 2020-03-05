@@ -11,10 +11,10 @@ import { MouseDraggingConfigSpec } from '../mouse/MouseDraggingTypes';
 import { MouseOrTouchDraggingConfigSpec } from '../mouseortouch/MouseOrTouchDraggingTypes';
 import { TouchDraggingConfigSpec } from '../touch/TouchDraggingTypes';
 
-export interface DraggingBehaviour extends Behaviour.AlloyBehaviour<DraggingConfigSpec, DraggingConfig, DraggingState> {
-  config: (config: DraggingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DraggingConfigSpec, DraggingConfig, DraggingState>;
-  snap: (sConfig: SnapConfigSpec) => SnapConfig;
-  snapTo: (component: AlloyComponent, sConfig: SnapConfig) => void;
+export interface DraggingBehaviour<E> extends Behaviour.AlloyBehaviour<DraggingConfigSpec<E>, DraggingConfig<E>, DraggingState> {
+  config: (config: DraggingConfigSpec<E>) => Behaviour.NamedConfiguredBehaviour<DraggingConfigSpec<E>, DraggingConfig<E>, DraggingState>;
+  snap: (sConfig: SnapConfigSpec<E>) => SnapConfig<E>;
+  snapTo: (component: AlloyComponent, sConfig: SnapConfig<E>) => void;
 }
 
 /*
@@ -27,73 +27,73 @@ export type DraggingMode = 'touch' | 'mouse' | 'mouseOrTouch';
 export type SensorCoords = (x: number, y: number) => CoordAdt;
 export type OutputCoords = (x: Option<number>, y: Option<number>) => CoordAdt;
 
-export interface SnapConfig {
+export interface SnapConfig<E> {
   sensor: () => CoordAdt;
   range: () => Position;
   output: () => CoordAdt<Option<number>>;
-  extra: () => any;
+  extra: () => Option<E>;
 }
 
-export interface SnapConfigSpec {
+export interface SnapConfigSpec<E> {
   sensor: CoordAdt;
   range: Position;
   output: CoordAdt<Option<number>>;
-  extra?: any;
+  extra?: E;
 }
 
-export interface SnapOutput {
+export interface SnapOutput<E> {
   output: () => CoordAdt;
-  extra: any;
+  extra: () => Option<E>;
 }
 
-export interface SnapPin {
+export interface SnapPin<E> {
   coord: CoordAdt;
-  extra: any;
+  extra: Option<E>;
 }
 
-export interface SnapsConfig {
-  getSnapPoints: (comp: AlloyComponent) => SnapConfig[];
+export interface SnapsConfig<E> {
+  getSnapPoints: (comp: AlloyComponent) => Array<SnapConfig<E>>;
   leftAttr: string;
   topAttr: string;
-  onSensor: (component: AlloyComponent, extra: any) => void;
+  onSensor: (component: AlloyComponent, extra: E) => void;
   lazyViewport: (component: AlloyComponent) => Bounds;
   mustSnap: boolean;
 }
 
-export interface SnapsConfigSpec {
-  getSnapPoints: (comp: AlloyComponent) => SnapConfig[];
+export interface SnapsConfigSpec<E> {
+  getSnapPoints: (comp: AlloyComponent) => Array<SnapConfig<E>>;
   leftAttr: string;
   topAttr: string;
-  onSensor?: (component: AlloyComponent, extra: any) => void;
+  onSensor?: (component: AlloyComponent, extra: E) => void;
   lazyViewport?: (component: AlloyComponent) => Bounds;
   mustSnap?: boolean;
 }
 
-export interface DraggingConfig {
+export interface DraggingConfig<E> {
   getTarget: (comp: Element) => Element;
-  snaps: Option<SnapsConfig>;
+  snaps: Option<SnapsConfig<E>>;
   onDrop: (comp: AlloyComponent, target: Element) => void;
   repositionTarget: boolean;
   onDrag: (comp: AlloyComponent, target: Element, delta: Position) => void;
   getBounds: () => Bounds;
   blockerClass: string;
   dragger: {
-    handlers: (dragConfig: DraggingConfig, dragState: DraggingState) => AlloyEvents.AlloyEventRecord
+    handlers: (dragConfig: DraggingConfig<E>, dragState: DraggingState) => AlloyEvents.AlloyEventRecord
   };
 }
 
-export interface CommonDraggingConfigSpec {
+export interface CommonDraggingConfigSpec<E> {
   useFixed?: () => boolean;
   onDrop?: (comp: AlloyComponent, target: Element) => void;
   repositionTarget?: boolean;
   onDrag?: (comp: AlloyComponent, target: Element, delta: Position) => void;
   getTarget?: (elem: Element) => Element;
   getBounds?: () => Bounds;
-  snaps?: SnapsConfigSpec;
+  snaps?: SnapsConfigSpec<E>;
   blockerClass: string;
 }
 
-export type DraggingConfigSpec = MouseDraggingConfigSpec | TouchDraggingConfigSpec | MouseOrTouchDraggingConfigSpec;
+export type DraggingConfigSpec<E> = MouseDraggingConfigSpec<E> | TouchDraggingConfigSpec<E> | MouseOrTouchDraggingConfigSpec<E>;
 
 export interface DragModeDeltas<T> {
   getData: (event: EventArgs) => Option<T>;
