@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Fun, Option, Unicode } from '@ephox/katamari';
+import { Arr, Option, Unicode } from '@ephox/katamari';
 import { WordRange } from '../data/WordRange';
 import * as Clustering from '../words/Clustering';
 import { WordDecisionItem } from '../words/WordDecision';
@@ -30,10 +30,10 @@ const all = function <E> (cluster: WordDecisionItem<E>[]) {
 };
 
 interface ScanResult<E> {
-  readonly all: () => WordDecisionItem<E>[];
-  readonly leftEdge: () => boolean;
-  readonly rightEdge: () => boolean;
-  readonly text: () => string;
+  readonly all: WordDecisionItem<E>[];
+  readonly leftEdge: boolean;
+  readonly rightEdge: boolean;
+  readonly text: string;
 }
 
 const scan = function <E, D> (universe: Universe<E, D>, item: E, offset: number): ScanResult<E> {
@@ -48,15 +48,15 @@ const scan = function <E, D> (universe: Universe<E, D>, item: E, offset: number)
   // We only want to identify words that are all the same language.
   const cluster = Clustering.byLanguage(universe, item);
   // We are at the left edge of the cluster.
-  const atLeftEdge = preLength === 0 && cluster.left().length === 0;
+  const leftEdge = preLength === 0 && cluster.left().length === 0;
   // We are at the right edge of the cluster.
-  const atRightEdge = (offset + postLength) === text.length && cluster.right().length === 0;
+  const rightEdge = (offset + postLength) === text.length && cluster.right().length === 0;
 
   return {
-    all: cluster.all,
-    leftEdge: Fun.constant(atLeftEdge),
-    rightEdge: Fun.constant(atRightEdge),
-    text: Fun.constant(text)
+    all: cluster.all(),
+    leftEdge,
+    rightEdge,
+    text
   };
 };
 
@@ -65,7 +65,7 @@ const scan = function <E, D> (universe: Universe<E, D>, item: E, offset: number)
 // end of the cluster.
 const before = function <E, D> (universe: Universe<E, D>, item: E, offset: number, bindex: number) {
   const info = scan(universe, item, offset);
-  return info.rightEdge() ? Option.none<WordRange<E>>() : toEnd(info.all(), item, bindex);
+  return info.rightEdge ? Option.none<WordRange<E>>() : toEnd(info.all, item, bindex);
 };
 
 // There was only a break in the node after the current position, so
@@ -73,7 +73,7 @@ const before = function <E, D> (universe: Universe<E, D>, item: E, offset: numbe
 // start of the cluster to the index.
 const after = function <E, D> (universe: Universe<E, D>, item: E, offset: number, aindex: number) {
   const info = scan(universe, item, offset);
-  return info.leftEdge() ? Option.none<WordRange<E>>() : fromStart(info.all(), item, aindex);
+  return info.leftEdge ? Option.none<WordRange<E>>() : fromStart(info.all, item, aindex);
 };
 
 // We don't need to use the cluster, because we are in the middle of two breaks. Only return something
@@ -86,7 +86,7 @@ const both = function <E, D> (universe: Universe<E, D>, item: E, offset: number,
 // then we extend the length of the cluster.
 const neither = function <E, D> (universe: Universe<E, D>, item: E, offset: number) {
   const info = scan(universe, item, offset);
-  return info.leftEdge() || info.rightEdge() ? Option.none<WordRange<E>>() : all(info.all());
+  return info.leftEdge || info.rightEdge ? Option.none<WordRange<E>>() : all(info.all);
 };
 
 export {
