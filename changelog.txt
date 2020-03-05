@@ -1,4 +1,5 @@
 Version 4.9.9 (TBD)
+    Fixed table selection not functioning correctly in Edge 44 or higher #TINY-3862
     Fixed `forced_root_block_attrs` setting not applying to new blocks consistently #TINY-4564
     Fixed table resize handles not functioning correctly in Microsoft Edge #TINY-4160
 Version 4.9.8 (2020-01-28)

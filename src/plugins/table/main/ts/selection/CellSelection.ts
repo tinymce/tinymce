@@ -6,21 +6,20 @@
  */
 
 import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
+import { Event, HTMLElement, KeyboardEvent, MouseEvent } from '@ephox/dom-globals';
 import { Fun, Option, Struct } from '@ephox/katamari';
+import { DomParent } from '@ephox/robin';
 import { TableLookup } from '@ephox/snooker';
-import {
-    Element, Selection, SelectionDirection, Class
-} from '@ephox/sugar';
+import { Class, Element, Selection, SelectionDirection } from '@ephox/sugar';
 
+import Env from 'tinymce/core/api/Env';
 import * as Util from '../alien/Util';
 import Direction from '../queries/Direction';
 import Ephemera from './Ephemera';
-import { DomParent } from '@ephox/robin';
 
 const hasInternalTarget = (e: Event) => {
   return Class.has(Element.fromDom(e.target as HTMLElement), 'ephox-snooker-resizer-bar') === false;
 };
-import { KeyboardEvent, MouseEvent, Event, HTMLElement } from '@ephox/dom-globals';
 
 export default function (editor, lazyResize) {
   const handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);
@@ -134,6 +133,13 @@ export default function (editor, lazyResize) {
       // Only added by Chrome/Firefox in June 2015.
       // This is only to fix a 1px bug (TBIO-2836) so return true if we're on an older browser
       if (raw.buttons === undefined) {
+        return true;
+      }
+
+      // Edge 44+ broke the "buttons" property so that it now returns 0 always on mouseover
+      // so we can't detect if the left mouse button is down. The deprecated "which" property
+      // also can't be used as it returns 1 at all times, as such just return true.
+      if (Env.ie && Env.ie >= 12 && raw.buttons === 0) {
         return true;
       }
 
