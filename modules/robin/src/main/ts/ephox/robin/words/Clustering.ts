@@ -5,9 +5,9 @@ import * as ClusterSearch from './ClusterSearch';
 import { WordDecision, WordDecisionItem } from './WordDecision';
 
 interface Edges<E> {
-  left: () => WordDecisionItem<E>;
-  isEmpty: () => boolean;
-  right: () => WordDecisionItem<E>
+  readonly left: () => WordDecisionItem<E>;
+  readonly isEmpty: () => boolean;
+  readonly right: () => WordDecisionItem<E>
 }
 
 // This identifies the inline edges to the left and right, ignoring any language
