@@ -1,12 +1,12 @@
-import { Assertions, Chain, Guard, NamedChain, Mouse, Pipeline, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { Body, Css, Element, Height, Scroll, Traverse } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 import Theme from 'tinymce/themes/silver/Theme';
-import Editor from 'tinymce/core/api/Editor';
 import * as DialogUtils from '../../module/DialogUtils';
 import { cResizeToPos, cScrollRelativeEditor } from '../../module/UiChainUtils';
 import { setupPageScroll } from '../../module/Utils';
@@ -167,15 +167,15 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
             // Scroll so that the editor is fully in view
             cScrollRelativeEditor(editor, 'top', -100),
             NamedChain.direct('body', cTestOpen, 'dialog'),
-            NamedChain.direct('dialog', cAssertPos('absolute', 113, -1395), '_'),
+            NamedChain.direct('dialog', cAssertPos('absolute', 105, -1387), '_'),
 
             // Scroll so that bottom of window overlaps bottom of editor
             cScrollRelativeEditor(editor, 'bottom', -200),
-            NamedChain.direct('dialog', cAssertPos('absolute', 113, -1395), '_'),
+            NamedChain.direct('dialog', cAssertPos('absolute', 105, -1387), '_'),
 
             // Scroll so that top of window overlaps top of editor
             cScrollRelativeEditor(editor, 'top', 200),
-            NamedChain.direct('dialog', cAssertPos('fixed', 113, 0), '_'),
+            NamedChain.direct('dialog', cAssertPos('fixed', 105, 0), '_'),
 
             NamedChain.direct('body', DialogUtils.cClose, '_'),
             NamedChain.outputInput
@@ -187,12 +187,12 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
 
             cScrollRelativeEditor(editor, 'top', -100),
             NamedChain.direct('body', cTestOpen, 'dialog'),
-            NamedChain.direct('dialog', cAssertPos('absolute', 113, -1395), '_'),
+            NamedChain.direct('dialog', cAssertPos('absolute', 105, -1387), '_'),
 
             // Shrink the editor to 300px
             NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
             NamedChain.direct('body', cResizeToPos(600, 400, 600, 300), '_'),
-            NamedChain.direct('dialog', cAssertPos('absolute', 113, -1295), '_'),
+            NamedChain.direct('dialog', cAssertPos('absolute', 105, -1287), '_'),
 
             NamedChain.direct('body', DialogUtils.cClose, '_'),
             NamedChain.outputInput
@@ -227,15 +227,15 @@ UnitTest.asynctest('WindowManager:inline-dialog Position Test', (success, failur
             Chain.op(() => editor.focus()),
             NamedChain.read('body', UiFinder.cWaitForVisible('Wait for editor', '.tox-tinymce-inline')),
             NamedChain.direct('body', cTestOpen, 'dialog'),
-            NamedChain.direct('dialog', cAssertPos('absolute', 130, -1412), '_'),
+            NamedChain.direct('dialog', cAssertPos('absolute', 106, -1388), '_'),
 
             // Scroll so that bottom of window overlaps bottom of editor
             cScrollRelativeEditor(editor, 'bottom', -200),
-            NamedChain.direct('dialog', cAssertPos('absolute', 130, -1412), '_'),
+            NamedChain.direct('dialog', cAssertPos('absolute', 106, -1388), '_'),
 
             // Scroll so that top of window overlaps top of editor
             cScrollRelativeEditor(editor, 'top', 200),
-            NamedChain.direct('dialog', cAssertPos('fixed', 130, 0), '_'),
+            NamedChain.direct('dialog', cAssertPos('fixed', 106, 0), '_'),
 
             NamedChain.direct('body', DialogUtils.cClose, '_'),
             NamedChain.outputInput

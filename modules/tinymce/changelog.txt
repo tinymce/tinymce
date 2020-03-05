@@ -12,7 +12,10 @@ Version 5.2.1 (TBD)
     Fixed `readonly` mode not returning appropriate boolean value #TINY-3948
     Fixed `forced_root_block_attrs` setting not applying to new blocks consistently #TINY-4564
     Fixed the editor incorrectly stealing focus during initialization in Microsoft IE #TINY-4697
+    Fixed the context toolbar overlapping with the menu bar and toolbar #TINY-4586
+    Fixed notification and inline dialog positioning issues when using the bottom toolbar #TINY-4586
     Fixed the `colorinput` popup appearing offscreen on mobile devices #TINY-4711
+    Fixed an issue where dragging images could cause them to be duplicated #TINY-4195
 Version 5.2.0 (2020-02-13)
     Added the ability to apply formats to spaces #TINY-4200
     Added new `toolbar_location` setting to allow for positioning the menu and toolbar at the bottom of the editor #TINY-4210
