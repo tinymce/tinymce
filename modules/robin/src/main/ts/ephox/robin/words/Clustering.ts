@@ -7,7 +7,7 @@ import { WordDecision, WordDecisionItem } from './WordDecision';
 interface Edges<E> {
   readonly left: () => WordDecisionItem<E>;
   readonly isEmpty: () => boolean;
-  readonly right: () => WordDecisionItem<E>
+  readonly right: () => WordDecisionItem<E>;
 }
 
 // This identifies the inline edges to the left and right, ignoring any language
