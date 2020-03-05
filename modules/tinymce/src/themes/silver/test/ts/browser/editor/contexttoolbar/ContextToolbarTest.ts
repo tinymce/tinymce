@@ -1,4 +1,4 @@
-import { Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
+import { Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
@@ -17,9 +17,13 @@ UnitTest.asynctest('Editor ContextToolbar test', (success, failure) => {
 
       Pipeline.async({ }, [
         Log.stepsAsStep('TBA', 'Moving selection away from the context toolbar predicate should make it disappear', [
-          tinyApis.sFocus(),
           tinyApis.sSetContent('<p>One <a href="http://tiny.cloud">link</a> Two</p>'),
+          // Need to wait a little before checking the context toolbar isn't shown,
+          // since we don't have anything we can wait for a change in
+          Step.wait(100),
+          UiFinder.sNotExists(Body.body(), '.tox-pop'),
           tinyApis.sSetCursor([ 0, 1, 0 ], 'L'.length),
+          tinyApis.sFocus(),
           UiFinder.sWaitForVisible('Waiting for toolbar', Body.body(), '.tox-pop'),
           // NOTE: This internally fires a nodeChange
           tinyApis.sSetCursor([ 0, 0 ], 'O'.length),
