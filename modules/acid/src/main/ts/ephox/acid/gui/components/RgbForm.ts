@@ -227,7 +227,7 @@ const rgbFormFactory = (
       copyRgbToForm(form, rgb);
       setValueRgb(rgb);
 
-      AlloyTriggers.emitWith(form, ColourEvents.fieldsUpdate(), {
+      AlloyTriggers.emitWith(form, ColourEvents.fieldsUpdate, {
         hex
       });
 
