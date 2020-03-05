@@ -1,6 +1,8 @@
 import { nu as NuSpotInfo } from '../view/SpotInfo';
 import * as Direction from './Direction';
+import { AnchorBoxBounds, boundsRestriction } from './LayoutBounds';
 import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
+
 /*
   Layout for submenus;
   Either left or right of the anchor menu item. Never above or below.
@@ -28,19 +30,46 @@ const southY = (anchor: AnchorBox): number => {
 };
 
 const southeast: AnchorLayout = (anchor, element, bubbles) => {
-  return NuSpotInfo(eastX(anchor), southY(anchor), bubbles.southeast(), Direction.southeast(), 'link-layout-se');
+  return NuSpotInfo(
+    eastX(anchor),
+    southY(anchor),
+    bubbles.southeast(),
+    Direction.southeast(),
+    boundsRestriction(anchor, { left: AnchorBoxBounds.RightEdge, top: AnchorBoxBounds.TopEdge }),
+    'link-layout-se');
 };
 
 const southwest: AnchorLayout = (anchor, element, bubbles) => {
-  return NuSpotInfo(westX(anchor, element), southY(anchor), bubbles.southwest(), Direction.southwest(), 'link-layout-sw');
+  return NuSpotInfo(
+    westX(anchor, element),
+    southY(anchor),
+    bubbles.southwest(),
+    Direction.southwest(),
+    boundsRestriction(anchor, { right: AnchorBoxBounds.LeftEdge, top: AnchorBoxBounds.TopEdge }),
+    'link-layout-sw'
+  );
 };
 
 const northeast: AnchorLayout = (anchor, element, bubbles) => {
-  return NuSpotInfo(eastX(anchor), northY(anchor, element), bubbles.northeast(), Direction.northeast(), 'link-layout-ne');
+  return NuSpotInfo(
+    eastX(anchor),
+    northY(anchor, element),
+    bubbles.northeast(),
+    Direction.northeast(),
+    boundsRestriction(anchor, { left: AnchorBoxBounds.RightEdge, bottom: AnchorBoxBounds.BottomEdge }),
+    'link-layout-ne'
+  );
 };
 
 const northwest: AnchorLayout = (anchor, element, bubbles) => {
-  return NuSpotInfo(westX(anchor, element), northY(anchor, element), bubbles.northwest(), Direction.northwest(), 'link-layout-nw');
+  return NuSpotInfo(
+    westX(anchor, element),
+    northY(anchor, element),
+    bubbles.northwest(),
+    Direction.northwest(),
+    boundsRestriction(anchor, { right: AnchorBoxBounds.LeftEdge, bottom: AnchorBoxBounds.BottomEdge }),
+    'link-layout-nw'
+  );
 };
 
 const all = (): AnchorLayout[] => {

@@ -1,8 +1,8 @@
-import { ApproxStructure, Assertions, Chain, Guard, NamedChain, Pipeline, UiFinder, Mouse } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Element, Traverse, Body } from '@ephox/sugar';
+import { Body, Element, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationApi } from 'tinymce/core/api/NotificationManager';
@@ -196,8 +196,8 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
             NamedChain.write('nWarn', cOpenNotification(editor, 'warning', 'Message 2')),
 
             // Check items are positioned so that they are stacked
-            NamedChain.direct('nError', cAssertPosition('Error notification', 220, -383), '_'),
-            NamedChain.direct('nWarn', cAssertPosition('Warning notification', 220, -335), '_'),
+            NamedChain.direct('nError', cAssertPosition('Error notification', 220, -399), '_'),
+            NamedChain.direct('nWarn', cAssertPosition('Warning notification', 220, -351), '_'),
 
             // Shrink the editor to 300px
             NamedChain.direct('body', UiFinder.cFindIn('.tox-statusbar__resize-handle'), 'resizeHandle'),
@@ -205,8 +205,8 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
             NamedChain.direct('body', cResizeToPos(600, 400, 600, 300), '_'),
 
             // Check items are positioned so that they are stacked
-            NamedChain.direct('nError', cAssertPosition('Error notification', 220, -283), '_'),
-            NamedChain.direct('nWarn', cAssertPosition('Warning notification', 220, -235), '_'),
+            NamedChain.direct('nError', cAssertPosition('Error notification', 220, -299), '_'),
+            NamedChain.direct('nWarn', cAssertPosition('Warning notification', 220, -251), '_'),
 
             NamedChain.direct('nError', cCloseNotification, '_'),
             NamedChain.direct('nWarn', cCloseNotification, '_')
