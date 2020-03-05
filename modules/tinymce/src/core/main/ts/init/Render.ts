@@ -83,21 +83,21 @@ const getIconsUrlMetaFromUrl = (editor: Editor): Option<UrlMeta> => {
     });
 };
 
-const getIconsUrlMetaFromName = (editor: Editor, name: string | undefined): Option<UrlMeta> => {
+const getIconsUrlMetaFromName = (editor: Editor, name: string | undefined, suffix: string): Option<UrlMeta> => {
   return Option.from(name)
     .filter((name) => name.length > 0 && !IconManager.has(name))
     .map((name) => {
       return {
-        url: `${editor.editorManager.baseURL}/icons/${name}/icons.js`,
+        url: `${editor.editorManager.baseURL}/icons/${name}/icons${suffix}.js`,
         name: Option.some(name)
       };
     });
 };
 
-const loadIcons = (scriptLoader: ScriptLoader, editor: Editor) => {
-  const defaultIconsUrl = getIconsUrlMetaFromName(editor, 'default');
+const loadIcons = (scriptLoader: ScriptLoader, editor: Editor, suffix: string) => {
+  const defaultIconsUrl = getIconsUrlMetaFromName(editor, 'default', suffix);
   const customIconsUrl = getIconsUrlMetaFromUrl(editor).orThunk(() => {
-    return getIconsUrlMetaFromName(editor, Settings.getIconPackName(editor));
+    return getIconsUrlMetaFromName(editor, Settings.getIconPackName(editor), '');
   });
 
   Arr.each(Options.cat([ defaultIconsUrl, customIconsUrl ]), (urlMeta) => {
@@ -160,7 +160,7 @@ const loadScripts = function (editor: Editor, suffix: string) {
 
   loadTheme(scriptLoader, editor, suffix, function () {
     loadLanguage(scriptLoader, editor);
-    loadIcons(scriptLoader, editor);
+    loadIcons(scriptLoader, editor, suffix);
     loadPlugins(editor, editor.settings, suffix);
 
     scriptLoader.loadQueue(function () {
