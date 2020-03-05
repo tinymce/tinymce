@@ -4,7 +4,11 @@ import { LanguageZones } from '../zone/LanguageZones';
 import * as ClusterSearch from './ClusterSearch';
 import { WordDecision, WordDecisionItem } from './WordDecision';
 
-type Edges<E> = { left: () => WordDecisionItem<E>; isEmpty: () => boolean; right: () => WordDecisionItem<E> };
+interface Edges<E> {
+  left: () => WordDecisionItem<E>;
+  isEmpty: () => boolean;
+  right: () => WordDecisionItem<E>
+}
 
 // This identifies the inline edges to the left and right, ignoring any language
 // boundaries
@@ -45,11 +49,11 @@ const getEdges = function <E, D> (universe: Universe<E, D>, start: E, finish: E,
 };
 
 interface Grouping<E> {
-  all: () => WordDecisionItem<E>[];
-  middle: () => WordDecisionItem<E>[];
-  left: () => WordDecisionItem<E>[];
-  right: () => WordDecisionItem<E>[];
-  lang: () => Option<string>
+  readonly all: () => WordDecisionItem<E>[];
+  readonly middle: () => WordDecisionItem<E>[];
+  readonly left: () => WordDecisionItem<E>[];
+  readonly right: () => WordDecisionItem<E>[];
+  readonly lang: () => Option<string>
 }
 
 // Return a grouping of: left, middle, right, lang, and all. It will use
