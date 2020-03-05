@@ -993,6 +993,15 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     );
   });
 
+  suite.test('Retain base64 images', function () {
+    const counter = createCounter(writer);
+    const parser = SaxParser(counter, schema);
+
+    writer.reset();
+    parser.parse('a<img src="data:image/gif;base64,R0/yw==" /><img src="data:image/jpeg;base64,R1/yw==" /><!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->b');
+    LegacyUnit.equal(writer.getContent(), 'a<img src="data:image/gif;base64,R0/yw==" /><img src="data:image/jpeg;base64,R1/yw==" /><!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->b');
+  });
+
   Pipeline.async({}, suite.toSteps({}), function () {
     success();
   }, failure);

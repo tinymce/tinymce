@@ -458,7 +458,7 @@ const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteForma
       return src.indexOf('webkit-fake-url') === 0;
     };
 
-    const isDataUri = (src) => {
+    const isDataUri = (src: string) => {
       return src.indexOf('data:') === 0;
     };
 

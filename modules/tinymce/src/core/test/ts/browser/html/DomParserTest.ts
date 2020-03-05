@@ -5,6 +5,8 @@ import { LegacyUnit } from '@ephox/mcagar';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import Serializer from 'tinymce/core/api/html/Serializer';
+import { BlobCache } from 'tinymce/core/api/file/BlobCache';
+import Env from 'tinymce/core/api/Env';
 
 UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
@@ -717,6 +719,51 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
 
     Assertions.assertEq('Should be expected filter', {name: 'attr', callbacks: [cb1] }, attrFilters[attrFilters.length - 1]);
     Assertions.assertEq('Should be extected filter', {name: 'node', callbacks: [cb2] }, nodeFilters[nodeFilters.length - 1]);
+  });
+
+  suite.test('extract base64 uris to blobcache if blob cache is provided', () => {
+    const blobCache = BlobCache();
+    const parser = DomParser({ blob_cache: blobCache });
+    const base64 = 'R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==';
+    const base64Uri = `data:image/gif;base64,${base64}`;
+    const serializedHtml = serializer.serialize(parser.parse(`<p><img src="${base64Uri}" /></p>`));
+    const blobInfo = blobCache.findFirst((bi) => bi.base64() === base64);
+    const blobUri = blobInfo.blobUri();
+
+    Assertions.assertEq(
+      'Should be html with blob uri',
+      `<p><img src="${blobUri}" /></p>`,
+      serializedHtml
+    );
+
+    blobCache.destroy();
+  });
+
+  suite.test('do not extract base64 uris for transparent images used by for example the page break plugin', () => {
+    const blobCache = BlobCache();
+    const parser = DomParser({ blob_cache: blobCache });
+    const html = `<p><img src="${Env.transparentSrc}" /></p>`;
+    const root = parser.parse(html);
+
+    Assertions.assertEq(
+      'Should be the unchanged transparent image source',
+      Env.transparentSrc,
+      root.getAll('img')[0].attr('src')
+    );
+
+    blobCache.destroy();
+  });
+
+  suite.test('do not extract base64 uris if blob cache is not provided', () => {
+    const parser = DomParser();
+    const html = '<p><img src="data:image/gif;base64,R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==" /></p>';
+    const serializedHtml = serializer.serialize(parser.parse(html));
+
+    Assertions.assertEq(
+      'Should be html with base64 uri retained',
+      html,
+      serializedHtml
+    );
   });
 
   Pipeline.async({}, suite.toSteps({}), function () {

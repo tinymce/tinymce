@@ -12,6 +12,7 @@ import Tools from '../util/Tools';
 import Node from './Node';
 import SaxParser from './SaxParser';
 import Schema from './Schema';
+import { BlobCache } from '../file/BlobCache';
 
 /**
  * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
@@ -61,6 +62,8 @@ export interface DomParserSettings {
   remove_trailing_brs?: boolean;
   root_name?: string;
   validate?: boolean;
+  inline_styles?: boolean;
+  blob_cache?: BlobCache;
 }
 
 interface DomParser {
