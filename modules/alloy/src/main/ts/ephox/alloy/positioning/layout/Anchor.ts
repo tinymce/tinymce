@@ -1,4 +1,4 @@
-import { Struct } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import { AnchorBox } from './LayoutTypes';
@@ -10,11 +10,14 @@ import * as Origins from './Origins';
  * It is only useful for fixed origins; relative needs to do everything the old way.
  */
 export interface Anchor {
-  anchorBox: () => AnchorBox;
-  origin: () => Origins.OriginAdt;
+  readonly anchorBox: () => AnchorBox;
+  readonly origin: () => Origins.OriginAdt;
 }
 
-const anchor: (anchorBox: AnchorBox, origin: Origins.OriginAdt) => Anchor = Struct.immutable('anchorBox', 'origin');
+const anchor = (anchorBox: AnchorBox, origin: Origins.OriginAdt): Anchor => ({
+  anchorBox: Fun.constant(anchorBox),
+  origin: Fun.constant(origin)
+});
 
 const element = (anchorElement: Element, origin: Origins.OriginAdt): Anchor => {
   const anchorBox = Origins.toBox(origin, anchorElement);

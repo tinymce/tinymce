@@ -1,4 +1,4 @@
-import { Fun, Obj, Option, Struct } from '@ephox/katamari';
+import { Fun, Obj, Option } from '@ephox/katamari';
 import { Element, TransformFind } from '@ephox/sugar';
 
 import * as Tagger from '../registry/Tagger';
@@ -9,8 +9,10 @@ export interface ElementAndHandler {
   descHandler: () => CurriedHandler;
 }
 
-const eventHandler: (element: Element, descHandler: CurriedHandler) => ElementAndHandler =
-  Struct.immutable('element', 'descHandler');
+const eventHandler = (element: Element, descHandler: CurriedHandler): ElementAndHandler => ({
+  element: Fun.constant(element),
+  descHandler: Fun.constant(descHandler)
+});
 
 export interface CurriedHandler {
   purpose: () => string;

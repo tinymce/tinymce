@@ -1,4 +1,4 @@
-import { Arr, Fun, Option, Struct } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { Remove, Element } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';
 import { run, onCell, onCells, onMergable, onUnmergable, onPaste, onPasteRows, ExtractPasteRows, ExtractPaste, ExtractMergable } from '../model/RunOperation';
@@ -28,7 +28,10 @@ const prune = function (table: Element) {
   }
 };
 
-const outcome: (grid: Structs.RowCells[], cursor: Option<Element>) => TableOperationResult = Struct.immutable('grid', 'cursor');
+const outcome = (grid: Structs.RowCells[], cursor: Option<Element>): TableOperationResult => ({
+  grid: Fun.constant(grid),
+  cursor: Fun.constant(cursor)
+});
 
 const elementFromGrid = function (grid: Structs.RowCells[], row: number, column: number) {
   return findIn(grid, row, column).orThunk(function () {

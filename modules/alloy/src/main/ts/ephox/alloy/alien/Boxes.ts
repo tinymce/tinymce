@@ -1,26 +1,43 @@
 import { window } from '@ephox/dom-globals';
-import { Fun, Struct } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 import { Height, Location, Width, Element, VisualViewport } from '@ephox/sugar';
 
 import { CssPositionAdt } from './CssPosition';
 import * as OuterPosition from '../frame/OuterPosition';
 
-const pointed = Struct.immutable('point', 'width', 'height') as (point: CssPositionAdt, width: number, height: number) => BoxByPoint;
-const rect = Struct.immutable('x', 'y', 'width', 'height');
+const pointed = (point: CssPositionAdt, width: number, height: number): BoxByPoint => ({
+  point: Fun.constant(point),
+  width: Fun.constant(width),
+  height: Fun.constant(height)
+});
+
+export interface Rect {
+  readonly x: () => number;
+  readonly y: () => number;
+  readonly width: () => number;
+  readonly height: () => number;
+}
+
+const rect = (x: number, y: number, width: number, height: number): Rect => ({
+  x: Fun.constant(x),
+  y: Fun.constant(y),
+  width: Fun.constant(width),
+  height: Fun.constant(height)
+});
 
 export interface Bounds {
-  x: () => number;
-  y: () => number;
-  width: () => number;
-  height: () => number;
-  right: () => number;
-  bottom: () => number;
+  readonly x: () => number;
+  readonly y: () => number;
+  readonly width: () => number;
+  readonly height: () => number;
+  readonly right: () => number;
+  readonly bottom: () => number;
 }
 
 export interface BoxByPoint {
-  point: () => CssPositionAdt;
-  width: () => number;
-  height: () => number;
+  readonly point: () => CssPositionAdt;
+  readonly width: () => number;
+  readonly height: () => number;
 }
 
 const bounds = (x: number, y: number, width: number, height: number): Bounds => {

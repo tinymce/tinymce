@@ -1,6 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Window } from '@ephox/dom-globals';
-import { Option, Struct, Unicode } from '@ephox/katamari';
+import { Option, Unicode } from '@ephox/katamari';
 import { Element, Insert, Node, Remove, Selection, SimRange, Traverse, WindowSelection } from '@ephox/sugar';
 
 import * as Descend from '../../alien/Descend';
@@ -12,10 +12,20 @@ import * as AnchorLayouts from './AnchorLayouts';
 import * as ContainerOffsets from './ContainerOffsets';
 import * as ContentAnchorCommon from './ContentAnchorCommon';
 
-const point: (element: Element, offset: number) => {element: () => Element; offset: () => number; } = Struct.immutable('element', 'offset');
+// TODO: This structure exists in a few places
+export interface ElementAndOffset<T> {
+  readonly element: Element<T>;
+  readonly offset: number;
+}
 
+const point = <T> (element: Element, offset: number): ElementAndOffset<T> => ({
+  element,
+  offset
+});
+
+// TODO: remove "any"
 // A range from (a, 1) to (body, end) was giving the wrong bounds.
-const descendOnce = (element: Element, offset: number) => {
+const descendOnce = (element: Element, offset: number): ElementAndOffset<any> => {
   return Node.isText(element) ? point(element, offset) : Descend.descendOnce(element, offset);
 };
 
@@ -30,7 +40,7 @@ const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Option<Si
   return getSelection().map((sel) => {
     const modStart = descendOnce(sel.start(), sel.soffset());
     const modFinish = descendOnce(sel.finish(), sel.foffset());
-    return Selection.range(modStart.element(), modStart.offset(), modFinish.element(), modFinish.offset());
+    return Selection.range(modStart.element, modStart.offset, modFinish.element, modFinish.offset);
   });
 };
 

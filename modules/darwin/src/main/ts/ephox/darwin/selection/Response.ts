@@ -1,4 +1,4 @@
-import { Struct, Option } from '@ephox/katamari';
+import { Option, Fun } from '@ephox/katamari';
 import { Situs } from './Situs';
 
 export interface Response {
@@ -6,7 +6,10 @@ export interface Response {
   kill: () => boolean;
 }
 
-const create: (selection: Option<Situs>, kill: boolean) => Response = Struct.immutable('selection', 'kill');
+const create = (selection: Option<Situs>, kill: boolean): Response => ({
+  selection: Fun.constant(selection),
+  kill: Fun.constant(kill)
+});
 
 export const Response = {
   create

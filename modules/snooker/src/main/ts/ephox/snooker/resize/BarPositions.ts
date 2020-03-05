@@ -1,4 +1,4 @@
-import { Arr, Fun, Struct, Option } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { Height, Location, Width, Element } from '@ephox/sugar';
 
 export interface RowInfo {
@@ -17,8 +17,15 @@ export interface BarPositions<T> {
   positions: (array: Option<Element>[], table: Element) => Option<T>[];
 }
 
-const rowInfo: (row: number, y: number) => RowInfo = Struct.immutable('row', 'y');
-const colInfo: (col: number, x: number) => ColInfo = Struct.immutable('col', 'x');
+const rowInfo = (row: number, y: number): RowInfo => ({
+  row: Fun.constant(row),
+  y: Fun.constant(y)
+});
+
+const colInfo = (col: number, x: number): ColInfo => ({
+  col: Fun.constant(col),
+  x: Fun.constant(x)
+});
 
 const rtlEdge = function (cell: Element) {
   const pos = Location.absolute(cell);

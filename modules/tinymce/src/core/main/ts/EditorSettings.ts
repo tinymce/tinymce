@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Merger, Obj, Option, Strings, Struct, Type } from '@ephox/katamari';
+import { Arr, Fun, Merger, Obj, Option, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import Editor from './api/Editor';
@@ -26,7 +26,11 @@ interface SectionResult {
   settings: () => RawEditorSettings;
 }
 
-const sectionResult = Struct.immutable('sections', 'settings');
+const sectionResult = (sections: Record<string, Partial<RawEditorSettings>>, settings: RawEditorSettings): SectionResult => ({
+  sections: Fun.constant(sections),
+  settings: Fun.constant(settings)
+});
+
 const deviceDetection = PlatformDetection.detect().deviceType;
 const isTouch = deviceDetection.isTouch();
 const isPhone = deviceDetection.isPhone();
