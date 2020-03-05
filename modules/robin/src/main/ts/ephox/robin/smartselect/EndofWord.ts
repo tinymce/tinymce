@@ -48,12 +48,12 @@ const scan = function <E, D> (universe: Universe<E, D>, item: E, offset: number)
   // We only want to identify words that are all the same language.
   const cluster = Clustering.byLanguage(universe, item);
   // We are at the left edge of the cluster.
-  const leftEdge = preLength === 0 && cluster.left().length === 0;
+  const leftEdge = preLength === 0 && cluster.left.length === 0;
   // We are at the right edge of the cluster.
-  const rightEdge = (offset + postLength) === text.length && cluster.right().length === 0;
+  const rightEdge = (offset + postLength) === text.length && cluster.right.length === 0;
 
   return {
-    all: cluster.all(),
+    all: cluster.all,
     leftEdge,
     rightEdge,
     text

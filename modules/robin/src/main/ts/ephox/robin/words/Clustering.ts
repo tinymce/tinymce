@@ -5,9 +5,9 @@ import * as ClusterSearch from './ClusterSearch';
 import { WordDecision, WordDecisionItem } from './WordDecision';
 
 interface Edges<E> {
-  readonly left: () => WordDecisionItem<E>;
-  readonly isEmpty: () => boolean;
-  readonly right: () => WordDecisionItem<E>;
+  readonly left: WordDecisionItem<E>;
+  readonly isEmpty: boolean;
+  readonly right: WordDecisionItem<E>;
 }
 
 // This identifies the inline edges to the left and right, ignoring any language
@@ -21,12 +21,12 @@ const byBoundary = function <E, D> (universe: Universe<E, D>, item: E): Edges<E>
     return ClusterSearch.isEmpty(universe, item);
   };
 
-  const isEmpty = edges.isEmpty() && isMiddleEmpty();
+  const isEmpty = edges.isEmpty && isMiddleEmpty();
 
   return {
     left: edges.left,
     right: edges.right,
-    isEmpty: Fun.constant(isEmpty)
+    isEmpty: isEmpty
   };
 };
 
@@ -42,18 +42,18 @@ const getEdges = function <E, D> (universe: Universe<E, D>, start: E, finish: E,
   const isEmpty = toLeft.length === 0 && toRight.length === 0;
 
   return {
-    left: Fun.constant(leftEdge),
-    right: Fun.constant(rightEdge),
-    isEmpty: Fun.constant(isEmpty)
+    left: leftEdge,
+    right: rightEdge,
+    isEmpty: isEmpty
   };
 };
 
 interface Grouping<E> {
-  readonly all: () => WordDecisionItem<E>[];
-  readonly middle: () => WordDecisionItem<E>[];
-  readonly left: () => WordDecisionItem<E>[];
-  readonly right: () => WordDecisionItem<E>[];
-  readonly lang: () => Option<string>
+  readonly all: WordDecisionItem<E>[];
+  readonly middle: WordDecisionItem<E>[];
+  readonly left: WordDecisionItem<E>[];
+  readonly right: WordDecisionItem<E>[];
+  readonly lang: Option<string>;
 }
 
 // Return a grouping of: left, middle, right, lang, and all. It will use
@@ -70,11 +70,11 @@ const byLanguage = function <E, D> (universe: Universe<E, D>, item: E): Grouping
   const all = Arr.reverse(toLeft).concat(middle).concat(toRight);
 
   return {
-    all: Fun.constant(all),
-    left: Fun.constant(toLeft),
-    middle: Fun.constant(middle),
-    right: Fun.constant(toRight),
-    lang: Fun.constant(optLang)
+    all,
+    left: toLeft,
+    middle,
+    right: toRight,
+    lang: optLang
   };
 };
 

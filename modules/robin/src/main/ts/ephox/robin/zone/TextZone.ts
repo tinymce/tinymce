@@ -27,16 +27,16 @@ const fromBounded = function <E, D> (universe: Universe<E, D>, left: E, right: E
 const fromRange = function <E, D> (universe: Universe<E, D>, start: E, finish: E, envLang: string, onlyLang: string) {
   const isLanguageBoundary = LanguageZones.strictBounder(envLang, onlyLang);
   const edges = Clustering.getEdges(universe, start, finish, isLanguageBoundary);
-  const transform = TextZones.transformEdges(edges.left(), edges.right());
-  return fromBoundedWith(universe, edges.left().item, edges.right().item, envLang, onlyLang, transform);
+  const transform = TextZones.transformEdges(edges.left, edges.right);
+  return fromBoundedWith(universe, edges.left.item, edges.right.item, envLang, onlyLang, transform);
 };
 
 const fromInline = function <E, D> (universe: Universe<E, D>, element: E, envLang: string, onlyLang: string) {
   const isLanguageBoundary = LanguageZones.strictBounder(envLang, onlyLang);
   const edges = Clustering.getEdges(universe, element, element, isLanguageBoundary);
-  const transform = TextZones.transformEdges(edges.left(), edges.right());
-  return edges.isEmpty() ? scour(universe, element, envLang, onlyLang) :
-    fromBoundedWith(universe, edges.left().item, edges.right().item, envLang, onlyLang, transform);
+  const transform = TextZones.transformEdges(edges.left, edges.right);
+  return edges.isEmpty ? scour(universe, element, envLang, onlyLang) :
+    fromBoundedWith(universe, edges.left.item, edges.right.item, envLang, onlyLang, transform);
 };
 
 const scour = function <E, D> (universe: Universe<E, D>, element: E, envLang: string, onlyLang: string) {
