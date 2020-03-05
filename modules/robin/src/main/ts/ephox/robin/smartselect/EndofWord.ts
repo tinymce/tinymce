@@ -29,7 +29,14 @@ const all = function <E> (cluster: WordDecisionItem<E>[]) {
   return Option.some(WordRange(first.item, first.start, last.item, last.finish));
 };
 
-const scan = function <E, D> (universe: Universe<E, D>, item: E, offset: number) {
+interface ScanResult<E> {
+  readonly all: () => WordDecisionItem<E>[];
+  readonly leftEdge: () => boolean;
+  readonly rightEdge: () => boolean;
+  readonly text: () => string;
+}
+
+const scan = function <E, D> (universe: Universe<E, D>, item: E, offset: number): ScanResult<E> {
   const text = universe.property().getText(item);
   const preLength = Arr.filter(text.substring(0, offset), function (s) {
     return s !== Unicode.zeroWidth;
