@@ -32,7 +32,7 @@ UnitTest.test('ClumpsTest', function () {
     const rawActual = Clumps.collect(doc, isRoot, start, soffset, finish, foffset);
 
     const actual = Arr.map(rawActual, function (a): RawRange {
-      return { start: a.start().id, soffset: a.soffset(), finish: a.finish().id, foffset: a.foffset() };
+      return { start: a.start.id, soffset: a.soffset, finish: a.finish.id, foffset: a.foffset };
     });
 
     assert.eq(expected, actual);

@@ -1,13 +1,13 @@
 import { Universe } from '@ephox/boss';
-import { Adt, Arr, Fun, Option } from '@ephox/katamari';
+import { Adt, Arr, Option } from '@ephox/katamari';
 import { Descent, Gather, Spot, Transition } from '@ephox/phoenix';
 import * as Structure from '../api/general/Structure';
 
 export interface Clump<E> {
-  start: () => E;
-  soffset: () => number;
-  finish: () => E;
-  foffset: () => number;
+  start: E;
+  soffset: number;
+  finish: E;
+  foffset: number;
 }
 
 interface ClumpsScan<E> {
@@ -44,10 +44,10 @@ interface ClumpRange<E> {
 }
 
 const clump = <E> (start: E, soffset: number, finish: E, foffset: number): Clump<E> => ({
-  start: Fun.constant(start),
-  soffset: Fun.constant(soffset),
-  finish: Fun.constant(finish),
-  foffset: Fun.constant(foffset)
+  start,
+  soffset,
+  finish,
+  foffset,
 });
 
 const descendBlock = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, block: E) {
