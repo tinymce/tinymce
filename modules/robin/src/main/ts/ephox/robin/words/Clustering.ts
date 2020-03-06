@@ -26,7 +26,7 @@ const byBoundary = function <E, D> (universe: Universe<E, D>, item: E): Edges<E>
   return {
     left: edges.left,
     right: edges.right,
-    isEmpty: isEmpty
+    isEmpty
   };
 };
 
@@ -44,7 +44,7 @@ const getEdges = function <E, D> (universe: Universe<E, D>, start: E, finish: E,
   return {
     left: leftEdge,
     right: rightEdge,
-    isEmpty: isEmpty
+    isEmpty
   };
 };
 
