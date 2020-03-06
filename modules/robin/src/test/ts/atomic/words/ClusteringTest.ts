@@ -21,15 +21,15 @@ UnitTest.test('ClusteringTest', function () {
       id + ' => check: ' + label,
       function () {
         const act = Clustering.byLanguage(universe, universe.find(universe.get(), id).getOrDie());
-        Assert.eq('start: ' + id + ', check left()', expLeft, checkWords(universe, act.left()));
-        Assert.eq('start: ' + id + ', check middle()', expMiddle, checkWords(universe, act.middle()));
-        Assert.eq('start: ' + id + ', check right()', expRight, checkWords(universe, act.right()));
+        Assert.eq('start: ' + id + ', check left()', expLeft, checkWords(universe, act.left));
+        Assert.eq('start: ' + id + ', check middle()', expMiddle, checkWords(universe, act.middle));
+        Assert.eq('start: ' + id + ', check right()', expRight, checkWords(universe, act.right));
         Assert.eq(
-          () => 'start: ' + id + ', check lang(): expected: ' + expLang.toString() + ', actual: ' + act.lang().toString(),
-          true, expLang.equals(act.lang())
+          () => 'start: ' + id + ', check lang(): expected: ' + expLang.toString() + ', actual: ' + act.lang.toString(),
+          true, expLang.equals(act.lang)
         );
         // .all() is:  tfel + middle + right
-        Assert.eq('start: ' + id + ', check all()', Arr.reverse(expLeft).concat(expMiddle).concat(expRight), checkWords(universe, act.all()));
+        Assert.eq('start: ' + id + ', check all()', Arr.reverse(expLeft).concat(expMiddle).concat(expRight), checkWords(universe, act.all));
       }
     );
   };
@@ -177,18 +177,18 @@ UnitTest.test('ClusteringTest', function () {
   };
 
   interface ClusteringLangs {
-    readonly all: () => WordDecisionItem<Gene>[];
-    readonly left: () => WordDecisionItem<Gene>[];
-    readonly middle: () => WordDecisionItem<Gene>[];
-    readonly right: () => WordDecisionItem<Gene>[];
-    readonly lang: () => Option<string>;
+    readonly all: WordDecisionItem<Gene>[];
+    readonly left: WordDecisionItem<Gene>[];
+    readonly middle: WordDecisionItem<Gene>[];
+    readonly right: WordDecisionItem<Gene>[];
+    readonly lang: Option<string>;
   }
 
   const checkProps = function (universe: TestUniverse, textIds: string[], start: Gene, actual: ClusteringLangs) {
     const checkGroup = function (label: string, group: WordDecisionItem<Gene>[]) {
       const items = Arr.map(group, function (g) { return g.item; });
       Arr.each(items, function (x, i) {
-        Assert.eq('Checking everything in ' + label + ' has same language', LanguageZones.calculate(universe, x).getOr('none'), actual.lang().getOr('none'));
+        Assert.eq('Checking everything in ' + label + ' has same language', LanguageZones.calculate(universe, x).getOr('none'), actual.lang.getOr('none'));
         Assert.eq(
           'Check that everything in the ' + label + ' is a text node',
           true,
@@ -197,14 +197,14 @@ UnitTest.test('ClusteringTest', function () {
       });
     };
 
-    Assert.eq('Check that the language matches the start', LanguageZones.calculate(universe, start).getOr('none'), actual.lang().getOr('none'));
-    checkGroup('left', actual.left());
-    checkGroup('middle', actual.middle());
-    checkGroup('right', actual.right());
+    Assert.eq('Check that the language matches the start', LanguageZones.calculate(universe, start).getOr('none'), actual.lang.getOr('none'));
+    checkGroup('left', actual.left);
+    checkGroup('middle', actual.middle);
+    checkGroup('right', actual.right);
 
-    Arr.each(actual.all(), function (x, i) {
+    Arr.each(actual.all, function (x, i) {
       if (i > 0) {
-        const prev = actual.all()[i - 1].item.id;
+        const prev = actual.all[i - 1].item.id;
         const current = x.item.id;
         Assert.eq(
           'The text nodes should be one after the other',
@@ -215,7 +215,7 @@ UnitTest.test('ClusteringTest', function () {
     });
 
     const blockParent = universe.up().predicate(start, universe.property().isBoundary).getOrDie('No block parent tag found');
-    Arr.each(actual.all(), function (x, i) {
+    Arr.each(actual.all, function (x, i) {
       Assert.eq(
         'All block ancestor tags should be the same as the original',
         blockParent,

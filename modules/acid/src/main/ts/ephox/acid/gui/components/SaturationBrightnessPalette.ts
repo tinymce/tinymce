@@ -75,7 +75,7 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
     });
 
     const onChange = (slider: AlloyComponent, _thumb: AlloyComponent, value: number | SliderTypes.SliderValue) => {
-      AlloyTriggers.emitWith(slider, ColourEvents.paletteUpdate(), {
+      AlloyTriggers.emitWith(slider, ColourEvents.paletteUpdate, {
         value
       });
     };

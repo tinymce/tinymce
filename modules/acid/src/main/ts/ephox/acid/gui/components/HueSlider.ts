@@ -45,7 +45,7 @@ const sliderFactory = (translate: (key: string) => string, getClass: (key: strin
     ]),
 
     onChange: (slider: AlloyComponent, _thumb: any, value: any) => {
-      AlloyTriggers.emitWith(slider, sliderUpdate(), {
+      AlloyTriggers.emitWith(slider, sliderUpdate, {
         value
       });
     }
