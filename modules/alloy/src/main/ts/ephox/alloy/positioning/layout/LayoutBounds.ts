@@ -1,4 +1,4 @@
-import { Arr, Obj, Option } from '@ephox/katamari';
+import { Arr, Fun, Obj, Option } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 import * as Boxes from '../../alien/Boxes';
 import { AnchorBox } from './LayoutTypes';
@@ -40,15 +40,25 @@ export const boundsRestriction = (anchor: AnchorBox, restrictions: Partial<Recor
 };
 
 export const adjustBounds = (bounds: Boxes.Bounds, boundsRestrictions: BoundsRestriction, bubbleOffsets: Position) => {
-  const applyRestriction = (dir: BoundsRestrictionKeys) => {
+  const applyRestriction = (dir: BoundsRestrictionKeys, current: number) => {
     const bubbleOffset = dir === 'top' || dir === 'bottom' ? bubbleOffsets.top() : bubbleOffsets.left();
-    return Obj.get(boundsRestrictions, dir).bind((v) => v).map((v) => v + bubbleOffset);
+    return Obj.get(boundsRestrictions, dir).bind(Fun.identity)
+      .bind((restriction): Option<number> => {
+        // Ensure the restriction is within the current bounds
+        if (dir === 'left' || dir === 'top') {
+          return restriction >= current ? Option.some(restriction) : Option.none();
+        } else {
+          return restriction <= current ? Option.some(restriction) : Option.none();
+        }
+      })
+      .map((restriction) => restriction + bubbleOffset)
+      .getOr(current);
   };
 
-  const adjustedLeft = applyRestriction('left').getOr(bounds.x());
-  const adjustedTop = applyRestriction('top').getOr(bounds.y());
-  const adjustedRight = applyRestriction('right').getOr(bounds.right());
-  const adjustedBottom = applyRestriction('bottom').getOr(bounds.bottom());
+  const adjustedLeft = applyRestriction('left', bounds.x());
+  const adjustedTop = applyRestriction('top', bounds.y());
+  const adjustedRight = applyRestriction('right', bounds.right());
+  const adjustedBottom = applyRestriction('bottom', bounds.bottom());
 
   return Boxes.bounds(adjustedLeft, adjustedTop, adjustedRight - adjustedLeft, adjustedBottom - adjustedTop);
 };
