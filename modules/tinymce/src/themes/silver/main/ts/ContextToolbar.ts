@@ -244,6 +244,11 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   const launchContextToolbar = () => {
+    // Don't launch if the editor doesn't have focus
+    if (!editor.hasFocus()) {
+      return;
+    }
+
     const scopes = getScopes();
     ToolbarLookup.lookup(scopes, editor).fold(
       () => {
@@ -275,7 +280,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     editor.on('ScrollContent ScrollWindow longpress', hideOrRepositionIfNecessary);
 
     // FIX: Make it go away when the action makes it go away. E.g. deleting a column deletes the table.
-    editor.on('click keyup SetContent ObjectResized ResizeEditor', (e) => {
+    editor.on('click keyup focus SetContent ObjectResized ResizeEditor', () => {
       // Fixing issue with chrome focus on img.
       resetTimer(
         Delay.setEditorTimeout(editor, launchContextToolbar, 0)

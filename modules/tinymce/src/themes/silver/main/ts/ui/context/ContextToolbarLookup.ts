@@ -7,7 +7,7 @@
 
 import { Toolbar } from '@ephox/bridge';
 import { Node as DomNode } from '@ephox/dom-globals';
-import { Option, Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { Compare, Element, TransformFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
@@ -33,10 +33,15 @@ const lookup = (scopes: ScopedToolbars, editor: Editor): Option<LookupResult> =>
 
   return matchTargetWith(startNode, scopes.inNodeScope).orThunk(() => {
     return matchTargetWith(startNode, scopes.inEditorScope).orThunk(() => {
-      return TransformFind.ancestor(startNode, (elem) => {
-        // TransformFind will try to transform before doing the isRoot check, so we need to check here as well
-        return isRoot(elem) ? Option.none() : matchTargetWith(elem, scopes.inNodeScope);
-      }, isRoot);
+      // Don't continue to traverse if the start node is the root node
+      if (isRoot(startNode)) {
+        return Option.none();
+      } else {
+        return TransformFind.ancestor(startNode, (elem) => {
+          // TransformFind will try to transform before doing the isRoot check, so we need to check here as well
+          return isRoot(elem) ? Option.none() : matchTargetWith(elem, scopes.inNodeScope);
+        }, isRoot);
+      }
     });
   });
 };
