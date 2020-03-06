@@ -8,6 +8,7 @@ Version 5.3.0 (TBD)
     Fixed issue with loading or pasting contents with large base64 encoded images on Safari #TINY-4715
 Version 5.2.1 (TBD)
     Fixed "is decorative" checkbox in the image dialog not staying checked on certain actions #FOAM-11
+    Fixed possible uncaught exception when a style attribute is removed using a parser filter #TINY-4742
     Fixed table selection not functioning correctly in Microsoft Edge 44 or higher #TINY-3862
     Fixed table resize handles not functioning correctly in Microsoft Edge #TINY-4160
     Fixed the floating toolbar disconnecting from the toolbar when adding content in inline mode #TINY-4725
@@ -18,6 +19,7 @@ Version 5.2.1 (TBD)
     Fixed notification and inline dialog positioning issues when using the bottom toolbar #TINY-4586
     Fixed the `colorinput` popup appearing offscreen on mobile devices #TINY-4711
     Fixed an issue where dragging images could cause them to be duplicated #TINY-4195
+    Fixed context toolbars activating without the editor having focus #TINY-4754
 Version 5.2.0 (2020-02-13)
     Added the ability to apply formats to spaces #TINY-4200
     Added new `toolbar_location` setting to allow for positioning the menu and toolbar at the bottom of the editor #TINY-4210

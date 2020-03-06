@@ -129,17 +129,16 @@ const createParser = function (editor: Editor): DomParser {
 
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
   parser.addAttributeFilter('src,href,style,tabindex', function (nodes, name) {
-    let i = nodes.length, node;
+    let i = nodes.length, node: Node, value: string;
     const dom = editor.dom;
-    let value, internalName;
+    const internalName = 'data-mce-' + name;
 
     while (i--) {
       node = nodes[i];
       value = node.attr(name);
-      internalName = 'data-mce-' + name;
 
       // Add internal attribute if we need to we don't on a refresh of the document
-      if (!node.attr(internalName)) {
+      if (value && !node.attr(internalName)) {
         // Don't duplicate these since they won't get modified by any browser
         if (value.indexOf('data:') === 0 || value.indexOf('blob:') === 0) {
           continue;

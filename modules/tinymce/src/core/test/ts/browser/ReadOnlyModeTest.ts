@@ -200,6 +200,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
         sAssertResizeBars(true)
       ]),
       Log.stepsAsStep('TBA', 'Context toolbar should hide in readonly mode', [
+        tinyApis.sFocus(),
         sSetMode('design'),
         tinyApis.sSetContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
         tinyApis.sSetCursor([0, 0, 0, 0, 0], 0),
