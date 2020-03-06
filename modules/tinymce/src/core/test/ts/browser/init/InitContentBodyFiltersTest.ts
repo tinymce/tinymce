@@ -3,8 +3,9 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
+import { Arr } from '@ephox/katamari';
 
-UnitTest.asynctest('browser.tinymce.core.init.InitContentParserSelectionTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.core.init.InitContentBodyFiltersTest', (success, failure) => {
   Theme();
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
@@ -22,15 +23,15 @@ UnitTest.asynctest('browser.tinymce.core.init.InitContentParserSelectionTest', (
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
-      ed.on('Init', () => {
+      ed.on('init', () => {
         ed.parser.addNodeFilter('p', (nodes) => {
-          nodes.forEach((node) => {
+          Arr.each(nodes, (node) => {
             // Remove style attributes from node
             node.attr('style', null);
             node.attr('data-mce-style', null);
           });
         });
-      }, true);
+      });
     },
   }, success, failure);
 });
