@@ -47,7 +47,7 @@ const clump = <E> (start: E, soffset: number, finish: E, foffset: number): Clump
   start,
   soffset,
   finish,
-  foffset,
+  foffset
 });
 
 const descendBlock = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, block: E) {
