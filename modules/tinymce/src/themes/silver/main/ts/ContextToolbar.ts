@@ -101,7 +101,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     });
 
     // Translate to the top level document, as nodeBounds is relative to the iframe viewport
-    const diffTop = editor.inline ? Scroll.get().top() : Boxes.absolute(Element.fromDom(editor.getBody())).y();
+    const diffTop = editor.inline ? Scroll.get().top() : Boxes.absolute(Element.fromDom(editor.getBody())).y;
 
     return {
       y: nodeBounds.top + diffTop,
@@ -122,8 +122,8 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     return !isRangeOverlapping(
       lastElementBounds.y,
       lastElementBounds.bottom,
-      contextToolbarBounds.y(),
-      contextToolbarBounds.bottom()
+      contextToolbarBounds.y,
+      contextToolbarBounds.bottom
     );
   };
 

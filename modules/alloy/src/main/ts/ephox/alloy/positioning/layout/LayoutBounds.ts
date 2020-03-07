@@ -23,13 +23,13 @@ type Restriction = AnchorBoxBounds;
 const getRestriction = (anchor: AnchorBox, restriction: Restriction) => {
   switch (restriction) {
     case AnchorBoxBounds.LeftEdge:
-      return anchor.x();
+      return anchor.x;
     case AnchorBoxBounds.RightEdge:
-      return anchor.x() + anchor.width();
+      return anchor.x + anchor.width;
     case AnchorBoxBounds.TopEdge:
-      return anchor.y();
+      return anchor.y;
     case AnchorBoxBounds.BottomEdge:
-      return anchor.y() + anchor.height();
+      return anchor.y + anchor.height;
   }
 };
 
@@ -55,10 +55,10 @@ export const adjustBounds = (bounds: Boxes.Bounds, boundsRestrictions: BoundsRes
       .getOr(current);
   };
 
-  const adjustedLeft = applyRestriction('left', bounds.x());
-  const adjustedTop = applyRestriction('top', bounds.y());
-  const adjustedRight = applyRestriction('right', bounds.right());
-  const adjustedBottom = applyRestriction('bottom', bounds.bottom());
+  const adjustedLeft = applyRestriction('left', bounds.x);
+  const adjustedTop = applyRestriction('top', bounds.y);
+  const adjustedRight = applyRestriction('right', bounds.right);
+  const adjustedBottom = applyRestriction('bottom', bounds.bottom);
 
   return Boxes.bounds(adjustedLeft, adjustedTop, adjustedRight - adjustedLeft, adjustedBottom - adjustedTop);
 };

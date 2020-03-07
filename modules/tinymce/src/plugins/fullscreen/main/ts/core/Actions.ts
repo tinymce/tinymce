@@ -19,8 +19,8 @@ const getScrollPos = function () {
   const vp = VisualViewport.getBounds(window);
 
   return {
-    x: vp.x(),
-    y: vp.y()
+    x: vp.x,
+    y: vp.y
   };
 };
 

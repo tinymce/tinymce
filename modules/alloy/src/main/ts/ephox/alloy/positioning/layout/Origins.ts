@@ -116,8 +116,8 @@ const viewport = (origin: OriginAdt, getBounds: Option<() => Boxes.Bounds>): Box
     /* Use any bounds supplied or remove the scroll position of the bounds for fixed. */
     return origin.fold(b, b, () => {
       const bounds = b();
-      const pos = translate(origin, bounds.x(), bounds.y());
-      return Boxes.bounds(pos.left(), pos.top(), bounds.width(), bounds.height());
+      const pos = translate(origin, bounds.x, bounds.y);
+      return Boxes.bounds(pos.left(), pos.top(), bounds.width, bounds.height);
     });
   });
 };

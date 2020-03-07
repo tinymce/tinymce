@@ -140,10 +140,10 @@ const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
       const docElem = Traverse.documentElement(headerElem);
       const docBounds = Boxes.absolute(docElem);
       return Boxes.bounds(
-        headerBounds.x() + overflowXOffset,
-        docBounds.y(),
-        headerBounds.width() - overflowXOffset * 2,
-        docBounds.height()
+        headerBounds.x + overflowXOffset,
+        docBounds.y,
+        headerBounds.width - overflowXOffset * 2,
+        docBounds.height
       );
     },
     parts: {

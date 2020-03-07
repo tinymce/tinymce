@@ -28,10 +28,10 @@ const adt: {
 ]);
 
 const calcReposition = (newX: number, newY: number, width: number, height: number, bounds: Boxes.Bounds) => {
-  const boundsX = bounds.x();
-  const boundsY = bounds.y();
-  const boundsWidth = bounds.width();
-  const boundsHeight = bounds.height();
+  const boundsX = bounds.x;
+  const boundsY = bounds.y;
+  const boundsWidth = bounds.width;
+  const boundsHeight = bounds.height;
 
   // simple checks for "is the top left inside the view"
   const xInBounds = newX >= boundsX;
@@ -48,14 +48,14 @@ const calcReposition = (newX: number, newY: number, width: number, height: numbe
   const deltaH = Math.abs(Math.min(height, yInBounds ? boundsY + boundsHeight - newY : boundsY - (newY + height)));
 
   // measure the maximum x and y, taking into account the height and width of the element
-  const maxX = Math.max(bounds.x(), bounds.right() - width);
-  const maxY = Math.max(bounds.y(), bounds.bottom() - height);
+  const maxX = Math.max(bounds.x, bounds.right - width);
+  const maxY = Math.max(bounds.y, bounds.bottom - height);
 
   // Futz with the X value to ensure that we're not off the left or right of the screen
   // NOTE: bounds.x() is 0 in repartee here.
-  const limitX = Num.clamp(newX, bounds.x(), maxX);
+  const limitX = Num.clamp(newX, bounds.x, maxX);
   // Futz with the Y value to ensure that we're not off the top or bottom of the screen
-  const limitY = Num.clamp(newY, bounds.y(), maxY);
+  const limitY = Num.clamp(newY, bounds.y, maxY);
 
   return {
     originInBounds,
@@ -76,10 +76,10 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Box
 
   // adjust the bounds to account for the layout and bubble restrictions
   const adjustedBounds = LayoutBounds.adjustBounds(bounds, candidate.boundsRestriction(), bubbleOffsets);
-  const boundsY = adjustedBounds.y();
-  const boundsBottom = adjustedBounds.bottom();
-  const boundsX = adjustedBounds.x();
-  const boundsRight = adjustedBounds.right();
+  const boundsY = adjustedBounds.y;
+  const boundsBottom = adjustedBounds.bottom;
+  const boundsX = adjustedBounds.x;
+  const boundsRight = adjustedBounds.right;
 
   // candidate position is excluding the bubble, so add those values as well
   const newX = candidateX + bubbleLeft;
@@ -153,8 +153,8 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Box
  * bounds: the screen
  */
 const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: AnchorElement, bubbles: Bubble, bounds: Boxes.Bounds): Reposition.RepositionDecision => {
-  const panelWidth = elementBox.width();
-  const panelHeight = elementBox.height();
+  const panelWidth = elementBox.width;
+  const panelHeight = elementBox.height;
   const attemptBestFit = (layout: AnchorLayout, reposition: Reposition.RepositionDecision, deltaW: number, deltaH: number) => {
     const next: SpotInfo = layout(anchorBox, elementBox, bubbles);
     const attemptLayout = attempt(next, panelWidth, panelHeight, bounds);
@@ -179,19 +179,19 @@ const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: 
     },
     // fold base case: No candidates, it's never going to be correct, so do whatever
     adt.nofit(Reposition.decision({
-      x: anchorBox.x(),
-      y: anchorBox.y(),
-      width: elementBox.width(),
-      height: elementBox.height(),
-      maxHeight: elementBox.height(),
-      maxWidth: elementBox.width(),
+      x: anchorBox.x,
+      y: anchorBox.y,
+      width: elementBox.width,
+      height: elementBox.height,
+      maxHeight: elementBox.height,
+      maxWidth: elementBox.width,
       direction: Direction.southeast(),
       classes: {
         on: [],
         off: []
       },
       label: 'none',
-      candidateYforTest: anchorBox.y()
+      candidateYforTest: anchorBox.y
     }), -1, -1)
   );
 

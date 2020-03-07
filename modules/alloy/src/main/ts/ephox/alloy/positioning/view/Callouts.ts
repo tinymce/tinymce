@@ -1,4 +1,3 @@
-import { Fun } from '@ephox/katamari';
 import { Classes, Css, Element, Height, Width } from '@ephox/sugar';
 
 import { Bubble } from '../layout/Bubble';
@@ -16,8 +15,8 @@ import { applyPositionCss } from './PositionCss';
 
 const elementSize = (p: Element): AnchorElement => {
   return {
-    width: Fun.constant(Width.getOuter(p)),
-    height: Fun.constant(Height.getOuter(p))
+    width: Width.getOuter(p),
+    height: Height.getOuter(p)
   };
 };
 
