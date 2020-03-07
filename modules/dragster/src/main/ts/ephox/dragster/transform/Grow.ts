@@ -1,10 +1,9 @@
-import { Fun } from '@ephox/katamari';
 import { Event, Events, Bindable } from '@ephox/porkbun';
 import { Height, Width, Element } from '@ephox/sugar';
 
 export interface GrowEvent {
-  x: () => number;
-  y: () => number;
+  readonly x: number;
+  readonly y: number;
 }
 
 interface GrowEvents {
@@ -17,8 +16,8 @@ interface GrowEvents {
 }
 
 interface Growth {
-  x: () => number;
-  y: () => number;
+  readonly x: number;
+  readonly y: number;
 }
 
 type GrowthFn = (x: number, y: number) => Growth;
@@ -33,9 +32,9 @@ const grower = function (f: GrowthFn) {
       const growth = f(x, y);
       const width = Width.get(element);
       const height = Height.get(element);
-      Width.set(element, width + growth.x());
-      Height.set(element, height + growth.y());
-      events.trigger.grow(growth.x(), growth.y());
+      Width.set(element, width + growth.x);
+      Height.set(element, height + growth.y);
+      events.trigger.grow(growth.x, growth.y);
     };
 
     return {
@@ -47,22 +46,22 @@ const grower = function (f: GrowthFn) {
 
 const both = grower(function (x, y): Growth {
   return {
-    x: Fun.constant(x),
-    y: Fun.constant(y)
+    x,
+    y
   };
 });
 
 const horizontal = grower(function (x, y): Growth  {
   return {
-    x: Fun.constant(x),
-    y: Fun.constant(0)
+    x,
+    y: 0
   };
 });
 
 const vertical = grower(function (x, y): Growth  {
   return {
-    x: Fun.constant(0),
-    y: Fun.constant(y)
+    x: 0,
+    y
   };
 });
 
