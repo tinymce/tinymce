@@ -35,10 +35,10 @@ const measureTest = function (expected: { error: string } | {rowDelta: number, c
     }
   }, function (delta) {
     if ('rowDelta' in expected) {
-      assert.eq(expected.rowDelta, delta.rowDelta(), 'rowDelta expected: ' + expected.rowDelta + ' actual: ' + delta.rowDelta());
-      assert.eq(expected.colDelta, delta.colDelta(), 'colDelta expected: ' + expected.colDelta + ' actual: ' + delta.colDelta());
+      assert.eq(expected.rowDelta, delta.rowDelta, 'rowDelta expected: ' + expected.rowDelta + ' actual: ' + delta.rowDelta);
+      assert.eq(expected.colDelta, delta.colDelta, 'colDelta expected: ' + expected.colDelta + ' actual: ' + delta.colDelta);
     } else {
-      assert.fail('Expected error "' + expected.error + '" but instead got rowDelta=' + delta.rowDelta() + ' colDelta=' + delta.colDelta());
+      assert.fail('Expected error "' + expected.error + '" but instead got rowDelta=' + delta.rowDelta + ' colDelta=' + delta.colDelta);
     }
   });
 };
