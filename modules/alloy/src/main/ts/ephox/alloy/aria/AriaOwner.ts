@@ -1,4 +1,4 @@
-import { Fun, Id, Option } from '@ephox/katamari';
+import { Id, Option } from '@ephox/katamari';
 import { Attr, Element, Node, PredicateFind, SelectorFind, Traverse } from '@ephox/sugar';
 
 const find = (queryElem: Element): Option<Element> => {
@@ -17,7 +17,7 @@ const find = (queryElem: Element): Option<Element> => {
 };
 
 export interface AriaManager {
-  id: () => string;
+  id: string;
   link: (elem: Element) => void;
   unlink: (elem: Element) => void;
 }
@@ -34,7 +34,7 @@ const manager = (): AriaManager => {
   };
 
   return {
-    id: Fun.constant(ariaId),
+    id: ariaId,
     link,
     unlink
   };

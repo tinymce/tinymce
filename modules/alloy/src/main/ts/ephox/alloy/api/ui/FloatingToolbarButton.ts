@@ -75,7 +75,7 @@ const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, de
     dom: {
       tag: 'div',
       attributes: {
-        id: ariaOwner.id()
+        id: ariaOwner.id
       }
     },
     behaviours: Behaviour.derive(
