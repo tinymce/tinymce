@@ -1,23 +1,21 @@
-import { Num, Option, Struct } from '@ephox/katamari';
+import { Num, Option } from '@ephox/katamari';
 
 export type MatrixNavigationOutcome<A> = {
-  rowIndex: () => number,
-  columnIndex: () => number,
-  cell: () => A
+  rowIndex: number,
+  columnIndex: number,
+  cell: A
 };
 
 export type MatrixNavigationFunc<A> = (matrix: A[][], startRow: number, startCol: number) => Option<MatrixNavigationOutcome<A>>;
 
-const outcome: <A>(outcome: { rowIndex: number, columnIndex: number, cell: A }) => MatrixNavigationOutcome<A> = Struct.immutableBag([ 'rowIndex', 'columnIndex', 'cell' ], [ ]);
-
 const toCell = <A>(matrix: A[][], rowIndex: number, columnIndex: number): Option<MatrixNavigationOutcome<NonNullable<A>>> => {
   return Option.from(matrix[rowIndex]).bind((row) => {
     return Option.from(row[columnIndex]).map((cell) => {
-      return outcome({
+      return {
         rowIndex,
         columnIndex,
         cell
-      });
+      };
     });
   });
 };
