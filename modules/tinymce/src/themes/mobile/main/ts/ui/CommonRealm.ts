@@ -14,7 +14,7 @@ const makeEditSwitch = (webapp): AlloyComponent => {
     Button.sketch({
       dom: UiDomFactory.dom('<div class="${prefix}-mask-edit-icon ${prefix}-icon"></div>'),
       action() {
-        webapp.run(w => {
+        webapp.run((w) => {
           w.setReadOnly(false);
         });
       }
