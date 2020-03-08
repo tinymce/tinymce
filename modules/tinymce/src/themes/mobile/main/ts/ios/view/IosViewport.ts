@@ -7,7 +7,7 @@
 
 import { Adt, Arr, Fun } from '@ephox/katamari';
 import { Attr, Css, Element, Height, SelectorFilter, Traverse } from '@ephox/sugar';
-import { Element as DomElement } from '@ephox/dom-globals';
+import { Element as DomElement, Node as DomNode, HTMLElement } from '@ephox/dom-globals';
 
 import * as Styles from '../../style/Styles';
 import * as Scrollable from '../../touch/scroll/Scrollable';
@@ -31,7 +31,7 @@ const getYFixedData = (element: Element<DomElement>): number =>
 const getYFixedProperty = (element: Element<DomElement>): string =>
   Attr.get(element, yFixedProperty);
 
-const getLastWindowSize = (element): number =>
+const getLastWindowSize = (element: Element<DomElement>): number =>
   DataAttributes.safeParse(element, windowSizeData);
 
 const classifyFixed = (element: Element<DomElement>, offsetY: number) => {
@@ -103,7 +103,7 @@ const takeoverViewport = (toolbarHeight: number, height: number, viewport: Eleme
   };
 };
 
-const takeoverDropup = (dropup: Element<DomElement>, toolbarHeight, viewportHeight): { restore: () => void } => {
+const takeoverDropup = (dropup: Element<DomElement>): { restore: () => void } => {
   const oldDropupStyle = Attr.get(dropup, 'style');
   Css.setAll(dropup, {
     position: 'absolute',
@@ -124,7 +124,7 @@ const takeoverDropup = (dropup: Element<DomElement>, toolbarHeight, viewportHeig
   };
 };
 
-const deriveViewportHeight = (viewport, toolbarHeight: number, dropupHeight: number) => {
+const deriveViewportHeight = (viewport: Element<DomElement>, toolbarHeight: number, dropupHeight: number) => {
   // Note, Mike thinks this value changes when the URL address bar grows and shrinks. If this value is too high
   // the main problem is that scrolling into the greenzone may not scroll into an area that is viewable. Investigate.
   const outerWindow = Traverse.owner(viewport).dom().defaultView;
@@ -133,7 +133,7 @@ const deriveViewportHeight = (viewport, toolbarHeight: number, dropupHeight: num
   return winH - toolbarHeight - dropupHeight;
 };
 
-const takeover = (viewport, contentBody, toolbar, dropup) => {
+const takeover = (viewport: Element<HTMLElement>, contentBody: Element<DomNode>, toolbar: Element<HTMLElement>, dropup: Element<HTMLElement>) => {
   const outerWindow = Traverse.owner(viewport).dom().defaultView;
   const toolbarSetup = takeoverToolbar(toolbar);
   const toolbarHeight = Height.get(toolbar);
@@ -142,7 +142,7 @@ const takeover = (viewport, contentBody, toolbar, dropup) => {
 
   const viewportSetup = takeoverViewport(toolbarHeight, viewportHeight, viewport);
 
-  const dropupSetup = takeoverDropup(dropup, toolbarHeight, viewportHeight);
+  const dropupSetup = takeoverDropup(dropup);
 
   let isActive = true;
 
