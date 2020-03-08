@@ -5,7 +5,7 @@ import { Arr, Fun, Result } from '@ephox/katamari';
 import { Attr, Compare, Element, Html, Insert, SelectorFilter, Truncate } from '@ephox/sugar';
 
 import * as DescribedHandler from 'ephox/alloy/events/DescribedHandler';
-import EventRegistry from 'ephox/alloy/events/EventRegistry';
+import EventRegistry, { ElementAndHandler } from 'ephox/alloy/events/EventRegistry';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 type ExpectedType = { id?: string; handler: string; target?: string; purpose?: string; };
@@ -123,12 +123,12 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
             NamedChain.direct('target', cFindHandler, 'handler'),
             NamedChain.bundle(Result.value)
           ]),
-          Chain.op((actual) => {
+          Chain.op((actual: ElementAndHandler) => {
             const section = actual.handler;
             Assertions.assertEq(
               'find(' + type + ', ' + id + ') = true',
               expected.target,
-              Attr.get(section.element(), 'data-test-uid')
+              Attr.get(section.element, 'data-test-uid')
             );
             Assertions.assertEq(
               () => 'find(' + type + ', ' + id + ') = ' + JSON.stringify(expected.handler),
