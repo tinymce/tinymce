@@ -8,7 +8,7 @@ export type MatrixNavigationOutcome<A> = {
 
 export type MatrixNavigationFunc<A> = (matrix: A[][], startRow: number, startCol: number) => Option<MatrixNavigationOutcome<A>>;
 
-const toCell = <A>(matrix: A[][], rowIndex: number, columnIndex: number): Option<MatrixNavigationOutcome<NonNullable<A>>> => {
+const toCell = <A>(matrix: A[][], rowIndex: number, columnIndex: number): Option<MatrixNavigationOutcome<A>> => {
   return Option.from(matrix[rowIndex]).bind((row) => {
     return Option.from(row[columnIndex]).map((cell) => {
       return {
