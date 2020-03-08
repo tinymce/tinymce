@@ -13,26 +13,26 @@ import { AlloyEventRecord } from '../events/AlloyEvents';
 import * as Gui from './Gui';
 
 export interface ForeignGuiSpec {
-  root: Element;
-  dispatchers: Dispatcher[];
-  insertion?: (root: Element, system: Gui.GuiSystem) => void;
+  readonly root: Element;
+  readonly dispatchers: Dispatcher[];
+  readonly insertion?: (root: Element, system: Gui.GuiSystem) => void;
 }
 
 export interface DispatchedAlloyConfig {
-  events?: AlloyEventRecord;
-  behaviours: AlloyBehaviourRecord;
-  eventOrder?: Record<string, string[]>;
+  readonly events?: AlloyEventRecord;
+  readonly behaviours: AlloyBehaviourRecord;
+  readonly eventOrder?: Record<string, string[]>;
 }
 
 export interface Dispatcher {
-  getTarget: (elem: Element) => Option<Element>;
-  alloyConfig: DispatchedAlloyConfig;
+  readonly getTarget: (elem: Element) => Option<Element>;
+  readonly alloyConfig: DispatchedAlloyConfig;
 }
 
 export interface ForeignGuiDetail {
-  root: Element;
-  dispatchers: Dispatcher[];
-  insertion: (root: Element, system: Gui.GuiSystem) => void;
+  readonly root: Element;
+  readonly dispatchers: Dispatcher[];
+  readonly insertion: (root: Element, system: Gui.GuiSystem) => void;
 }
 
 const schema = ValueSchema.objOfOnly([
