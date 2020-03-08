@@ -1,4 +1,5 @@
 import { Struct } from '@ephox/katamari';
+import { DirectionAdt } from '../layout/Direction';
 
 export interface RepositionDecisionSpec {
   x: number;
@@ -23,7 +24,7 @@ export interface RepositionDecision {
   height: () => number;
   maxHeight: () => number;
   maxWidth: () => number;
-  direction: () => any;
+  direction: () => DirectionAdt;
   classes: () => {
     off: string[];
     on: string[]
