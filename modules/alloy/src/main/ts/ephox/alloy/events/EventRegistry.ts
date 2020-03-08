@@ -5,8 +5,8 @@ import * as Tagger from '../registry/Tagger';
 import * as DescribedHandler from './DescribedHandler';
 
 export interface ElementAndHandler {
-  element: Element;
-  descHandler: CurriedHandler;
+  readonly element: Element;
+  readonly descHandler: CurriedHandler;
 }
 
 const eventHandler = (element: Element, descHandler: CurriedHandler): ElementAndHandler => ({
@@ -15,18 +15,18 @@ const eventHandler = (element: Element, descHandler: CurriedHandler): ElementAnd
 });
 
 export interface CurriedHandler {
-  purpose: () => string;
-  cHandler: Function;
+  readonly purpose: () => string;
+  readonly cHandler: Function;
 }
 
 export interface UncurriedHandler {
-  purpose: () => string;
-  handler: Function;
+  readonly purpose: () => string;
+  readonly handler: Function;
 }
 
 export interface UidAndHandler {
-  id: () => string;
-  descHandler: () => CurriedHandler;
+  readonly id: () => string;
+  readonly descHandler: () => CurriedHandler;
 }
 
 const broadcastHandler = (id: string, handler: CurriedHandler): UidAndHandler => {
