@@ -31,7 +31,7 @@ const layout = (anchorBox: AnchorBox, element: Element, bubbles: Bubble, options
 };
 
 const setClasses = (element: Element, decision: RepositionDecision) => {
-  const classInfo = decision.classes();
+  const classInfo = decision.classes;
   Classes.remove(element, classInfo.off);
   Classes.add(element, classInfo.on);
 };
@@ -46,12 +46,12 @@ const setHeight = (element: Element, decision: RepositionDecision, options: Repa
   // The old API enforced MaxHeight.anchored() for fixed position. That no longer seems necessary.
   const maxHeightFunction = options.maxHeightFunction();
 
-  maxHeightFunction(element, decision.maxHeight());
+  maxHeightFunction(element, decision.maxHeight);
 };
 
 const setWidth = (element: Element, decision: RepositionDecision, options: ReparteeOptions) => {
   const maxWidthFunction = options.maxWidthFunction();
-  maxWidthFunction(element, decision.maxWidth());
+  maxWidthFunction(element, decision.maxWidth);
 };
 
 const position = (element: Element, decision: RepositionDecision, options: ReparteeOptions) => {
