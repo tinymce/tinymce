@@ -1,4 +1,4 @@
-import { Fun, Obj } from '@ephox/katamari';
+import { Obj } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import * as DomState from '../alien/DomState';
@@ -9,9 +9,10 @@ import * as CompBehaviours from '../api/component/CompBehaviours';
 import { DispatchedAlloyConfig } from '../api/system/ForeignGui';
 import * as BehaviourBlob from '../behaviour/common/BehaviourBlob';
 import * as ComponentEvents from '../construct/ComponentEvents';
+import { UncurriedHandler } from '../events/EventRegistry';
 
 export default () => {
-  const getEvents = (elem: Element, spec: DispatchedAlloyConfig) => {
+  const getEvents = (elem: Element, spec: DispatchedAlloyConfig): { readonly elem: Element; readonly evts: Record<string, UncurriedHandler> } => {
     const evts = DomState.getOrCreate(elem, () => {
       // If we haven't already setup this particular element, then generate any state and config
       // required by its behaviours and put it in the cache.
@@ -31,8 +32,8 @@ export default () => {
     });
 
     return {
-      elem: Fun.constant(elem),
-      evts: Fun.constant(evts)
+      elem,
+      evts
     };
   };
 

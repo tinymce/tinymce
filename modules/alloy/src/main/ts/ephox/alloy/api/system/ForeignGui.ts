@@ -168,7 +168,7 @@ const engage = (spec: ForeignGuiSpec) => {
 
       // get any info for this current element, creating it if necessary
       const data = cache.getEvents(mission.target, mission.dispatcher.alloyConfig);
-      const events = data.evts();
+      const events = data.evts;
 
       // if this dispatcher defines this event, proxy it and fire the handler
       if (Obj.hasNonNullableKey(events, type)) { proxyFor(event, mission.target, events[type]); }
