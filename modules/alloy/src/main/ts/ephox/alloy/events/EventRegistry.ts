@@ -5,13 +5,13 @@ import * as Tagger from '../registry/Tagger';
 import * as DescribedHandler from './DescribedHandler';
 
 export interface ElementAndHandler {
-  element: () => Element;
-  descHandler: () => CurriedHandler;
+  element: Element;
+  descHandler: CurriedHandler;
 }
 
 const eventHandler = (element: Element, descHandler: CurriedHandler): ElementAndHandler => ({
-  element: Fun.constant(element),
-  descHandler: Fun.constant(descHandler)
+  element,
+  descHandler
 });
 
 export interface CurriedHandler {

@@ -93,9 +93,9 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
             }, (h) => {
               return Result.error(
                 'Unexpected handler found: ' + JSON.stringify({
-                  element: Truncate.getHtml(h.element()),
+                  element: Truncate.getHtml(h.element),
                   // INVESTIGATE: Should this have changed?
-                  handler: h.descHandler()
+                  handler: h.descHandler
                 })
               );
             });
