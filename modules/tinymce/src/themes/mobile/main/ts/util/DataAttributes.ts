@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Attr } from '@ephox/sugar';
+import { Attr, Element } from '@ephox/sugar';
+import { Element as DomElement } from '@ephox/dom-globals';
 
-const safeParse = function (element, attribute) {
+const safeParse = (element: Element<DomElement>, attribute: string): number => {
   const parsed = parseInt(Attr.get(element, attribute), 10);
   return isNaN(parsed) ? 0 : parsed;
 };

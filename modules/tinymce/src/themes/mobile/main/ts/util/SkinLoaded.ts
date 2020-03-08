@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const fireSkinLoaded = function (editor) {
-  const done = function () {
+const fireSkinLoaded = (editor): () => void => {
+  const done = () => {
     editor._skinLoaded = true;
     editor.fire('SkinLoaded');
   };
 
-  return function () {
+  return () => {
     if (editor.initialized) {
       done();
     } else {

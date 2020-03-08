@@ -17,7 +17,7 @@ import OuterContainer from './OuterContainer';
 import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
 import { MobileWebApp } from 'tinymce/themes/mobile/api/IosWebapp';
 
-export default function (scrollIntoView: () => void) {
+export default (scrollIntoView: () => void): MobileRealm => {
   const alloy = OuterContainer({
     classes: [ Styles.resolve('android-container') ]
   }) as Gui.GuiSystem;
@@ -36,39 +36,39 @@ export default function (scrollIntoView: () => void) {
   alloy.add(socket);
   alloy.add(dropup.component());
 
-  const setToolbarGroups = function (rawGroups) {
+  const setToolbarGroups = (rawGroups) => {
     const groups = toolbar.createGroups(rawGroups);
     toolbar.setGroups(groups);
   };
 
-  const setContextToolbar = function (rawGroups) {
+  const setContextToolbar = (rawGroups) => {
     const groups = toolbar.createGroups(rawGroups);
     toolbar.setContextToolbar(groups);
   };
 
   // You do not always want to do this.
-  const focusToolbar = function () {
+  const focusToolbar = () => {
     toolbar.focus();
   };
 
-  const restoreToolbar = function () {
+  const restoreToolbar = () => {
     toolbar.restoreToolbar();
   };
 
-  const init = function (spec) {
+  const init = (spec) => {
     webapp.set(
       AndroidWebapp.produce(spec)
     );
   };
 
-  const exit = function () {
-    webapp.run(function (w) {
+  const exit = () => {
+    webapp.run((w) => {
       w.exit();
       Replacing.remove(socket, switchToEdit);
     });
   };
 
-  const updateMode = function (readOnly) {
+  const updateMode = (readOnly) => {
     CommonRealm.updateMode(socket, switchToEdit, readOnly, alloy.root());
   };
 
@@ -84,5 +84,5 @@ export default function (scrollIntoView: () => void) {
     updateMode,
     socket: Fun.constant(socket),
     dropup: Fun.constant(dropup)
-  } as MobileRealm;
-}
+  };
+};

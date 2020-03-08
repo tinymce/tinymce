@@ -32,7 +32,7 @@ export interface MobileRealm {
   dropup(): Dropup.DropUp;
 }
 
-export default function (scrollIntoView: () => void) {
+export default (scrollIntoView: () => void): MobileRealm => {
   const alloy = OuterContainer({
     classes: [ Styles.resolve('ios-container') ]
   }) as Gui.GuiSystem;
@@ -102,5 +102,5 @@ export default function (scrollIntoView: () => void) {
     updateMode,
     socket: Fun.constant(socket),
     dropup: Fun.constant(dropup)
-  } as MobileRealm;
-}
+  };
+};

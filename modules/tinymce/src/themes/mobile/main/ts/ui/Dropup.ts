@@ -20,7 +20,7 @@ export interface DropUp {
   element: () => SugarElement;
 }
 
-const build = function (refresh, scrollIntoView): DropUp {
+const build = (refresh, scrollIntoView): DropUp => {
   const dropup = GuiFactory.build(
     Container.sketch({
       dom: {
@@ -51,16 +51,16 @@ const build = function (refresh, scrollIntoView): DropUp {
             scrollIntoView();
           }
         }),
-        Receivers.orientation(function (component, data) {
+        Receivers.orientation((component, data) => {
           disappear(Fun.noop);
         })
       ])
     })
   ) as AlloyComponent;
 
-  const appear = function (menu, update, component) {
+  const appear = (menu, update, component) => {
     if (Sliding.hasShrunk(dropup) === true && Sliding.isTransitioning(dropup) === false) {
-      window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(() => {
         update(component);
         Replacing.set(dropup, [ menu() ]);
         Sliding.grow(dropup);
@@ -68,8 +68,8 @@ const build = function (refresh, scrollIntoView): DropUp {
     }
   };
 
-  const disappear = function (onReadyToShrink) {
-    window.requestAnimationFrame(function () {
+  const disappear = (onReadyToShrink) => {
+    window.requestAnimationFrame(() => {
       onReadyToShrink();
       Sliding.shrink(dropup);
     });
