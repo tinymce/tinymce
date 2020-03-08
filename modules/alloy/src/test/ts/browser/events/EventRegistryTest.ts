@@ -123,8 +123,8 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
             NamedChain.direct('target', cFindHandler, 'handler'),
             NamedChain.bundle(Result.value)
           ]),
-          Chain.op((actual: ElementAndHandler) => {
-            const section = actual.handler;
+          Chain.op((actual) => {
+            const section: ElementAndHandler = actual.handler;
             Assertions.assertEq(
               'find(' + type + ', ' + id + ') = true',
               expected.target,
@@ -133,7 +133,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
             Assertions.assertEq(
               () => 'find(' + type + ', ' + id + ') = ' + JSON.stringify(expected.handler),
               expected.handler,
-              section.descHandler().cHandler()
+              section.descHandler.cHandler()
             );
           })
         ])
