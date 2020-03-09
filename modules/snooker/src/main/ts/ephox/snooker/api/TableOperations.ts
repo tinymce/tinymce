@@ -15,8 +15,8 @@ import * as TableContent from './TableContent';
 import * as TableLookup from './TableLookup';
 
 export interface TableOperationResult {
-  grid: () => Structs.RowCells[];
-  cursor: () => Option<Element>;
+  readonly grid: () => Structs.RowCells[];
+  readonly cursor: () => Option<Element>;
 }
 
 type CompElm = (e1: Element, e2: Element) => boolean;
