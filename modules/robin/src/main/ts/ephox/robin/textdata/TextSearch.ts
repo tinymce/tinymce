@@ -46,7 +46,7 @@ const lfind = (str: string, regex: RegExp): Option<number> => {
   return match !== undefined && match !== null && match.index !== undefined && match.index >= 0 ? Option.some(match.index) : Option.none<number>();
 };
 
-export const TextSearch = {
+export {
   previous,
   next,
   rfind,
