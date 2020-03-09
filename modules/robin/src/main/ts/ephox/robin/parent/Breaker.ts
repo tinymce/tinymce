@@ -7,30 +7,30 @@ interface Bisect<E> {
 }
 
 export interface LeftRight<E> {
-  readonly left: () => E;
-  readonly right: () => E;
+  readonly left: E;
+  readonly right: E;
 }
 
 export interface BrokenPathSplits<E> {
-  readonly first: () => E;
-  readonly second: () => E;
+  readonly first: E;
+  readonly second: E;
 }
 
 export interface BrokenPath<E> {
-  readonly first: () => E;
-  readonly second: () => Option<E>;
-  readonly splits: () => BrokenPathSplits<E>[];
+  readonly first: E;
+  readonly second: Option<E>;
+  readonly splits: BrokenPathSplits<E>[];
 }
 
 const leftRight = <E> (left: E, right: E): LeftRight<E> => ({
-  left: Fun.constant(left),
-  right: Fun.constant(right)
+  left,
+  right
 });
 
 const brokenPath = <E> (first: E, second: Option<E>, splits: BrokenPathSplits<E>[]): BrokenPath<E> => ({
-  first: Fun.constant(first),
-  second: Fun.constant(second),
-  splits: Fun.constant(splits)
+  first,
+  second,
+  splits
 });
 
 const bisect = function <E, D>(universe: Universe<E, D>, parent: E, child: E): Option<Bisect<E>> {
@@ -91,8 +91,8 @@ const breakPath = function <E, D>(universe: Universe<E, D>, item: E, isTop: (e: 
         return breaker(universe, parent, child).map(function (breakage) {
           const extra = [{ first: breakage.left, second: breakage.right }];
           // Our isTop is based on the left-side parent, so keep it regardless of split.
-          const nextChild = isTop(parent) ? parent : breakage.left();
-          return next(nextChild, Option.some(breakage.right()), splits.concat(extra));
+          const nextChild = isTop(parent) ? parent : breakage.left;
+          return next(nextChild, Option.some(breakage.right), splits.concat(extra));
         });
       }).getOr(fallback);
     }
