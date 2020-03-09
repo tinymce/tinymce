@@ -9,12 +9,16 @@ import EditorManager from 'tinymce/core/api/EditorManager';
 import Editor from 'tinymce/core/api/Editor';
 import { Obj } from '@ephox/katamari';
 
-const derive = function (editor: Editor) {
-  const base = Obj.get(editor.settings, 'skin_url').fold(function () {
-    return EditorManager.baseURL + '/skins/ui/oxide';
-  }, function (url) {
-    return url;
-  });
+export interface CssUrls {
+  readonly content: string;
+  readonly ui: string;
+}
+
+const derive = (editor: Editor): CssUrls => {
+  const base = Obj.get(editor.settings, 'skin_url').fold(
+    () => EditorManager.baseURL + '/skins/ui/oxide',
+    (url) => url
+  );
 
   return {
     content: base + '/content.mobile.min.css',

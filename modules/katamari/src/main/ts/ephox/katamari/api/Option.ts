@@ -160,7 +160,7 @@ const some = <T>(a: T): Option<T> => {
   return me;
 };
 
-const from = <T>(value: T | undefined | null): Option<NonNullable<T>> => value === null || value === undefined ? NONE : some(value as NonNullable<T>);
+const from = <T>(value: T | undefined | null): Option<T> => value === null || value === undefined ? NONE : some(value);
 
 export const Option = {
   some,

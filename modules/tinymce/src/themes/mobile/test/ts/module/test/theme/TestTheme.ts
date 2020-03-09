@@ -5,11 +5,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import ThemeManager from 'tinymce/core/api/ThemeManager';
 import * as Features from 'tinymce/themes/mobile/features/Features';
 import * as FormatChangers from 'tinymce/themes/mobile/util/FormatChangers';
-
-interface Realm {
-  system: () => Gui.GuiSystem;
-  socket: () => AlloyComponent;
-}
+import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
 
 const strName = 'test';
 
@@ -40,7 +36,16 @@ const setup = function (info, onSuccess, onFailure) {
   alloy.add(toolbar);
   alloy.add(socket);
 
-  const realm = {
+  const realm: MobileRealm = {
+    dropup: Fun.die('not implemented'),
+    element: Fun.die('not implemented'),
+    exit: Fun.die('not implemented'),
+    focusToolbar: Fun.die('not implemented'),
+    init: Fun.die('not implemented'),
+    restoreToolbar: Fun.die('not implemented'),
+    setContextToolbar: Fun.die('not implemented'),
+    setToolbarGroups: Fun.die('not implemented'),
+    updateMode: Fun.die('not implemented'),
     system: Fun.constant(alloy),
     socket: Fun.constant(socket)
   };
@@ -58,7 +63,7 @@ const setup = function (info, onSuccess, onFailure) {
   });
 
   return {
-    use (f: (realm: Realm, apis: TinyApis, toolbar: AlloyComponent, socket: AlloyComponent, buttons, onSuccess: () => void, onFailure: (err?: any) => void) => void) {
+    use (f: (realm: MobileRealm, apis: TinyApis, toolbar: AlloyComponent, socket: AlloyComponent, buttons, onSuccess: () => void, onFailure: (err?: any) => void) => void) {
       TinyLoader.setup(function (editor, onS, onF) {
         const features = Features.setup(realm, editor);
 

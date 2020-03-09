@@ -5,20 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Button, Toggling, Unselecting, SketchSpec } from '@ephox/alloy';
+import { Behaviour, Button, Toggling, Unselecting, SketchSpec, RawDomSchema, AlloyComponent } from '@ephox/alloy';
 import { Merger, Option } from '@ephox/katamari';
 
 import * as Receivers from '../channels/Receivers';
 import * as Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
+import Editor from 'tinymce/core/api/Editor';
 
-const forToolbarCommand = function (editor, command) {
-  return forToolbar(command, function () {
+const forToolbarCommand = (editor, command): SketchSpec => {
+  return forToolbar(command, () => {
     editor.execCommand(command);
-  }, { }, editor);
+  }, {}, editor);
 };
 
-const getToggleBehaviours = function (command) {
+const getToggleBehaviours = (command: string) => {
   return Behaviour.derive([
     Toggling.config({
       toggleClass: Styles.resolve('toolbar-button-selected'),
@@ -27,28 +28,28 @@ const getToggleBehaviours = function (command) {
         mode: 'pressed'
       }
     }),
-    Receivers.format(command, function (button, status) {
+    Receivers.format(command, (button, status) => {
       const toggle = status ? Toggling.on : Toggling.off;
       toggle(button);
     })
   ]);
 };
 
-const forToolbarStateCommand = function (editor, command) {
+const forToolbarStateCommand = (editor, command: string): SketchSpec => {
   const extraBehaviours = getToggleBehaviours(command);
 
-  return forToolbar(command, function () {
+  return forToolbar(command, () => {
     editor.execCommand(command);
   }, extraBehaviours, editor);
 };
 
 // The action is not just executing the same command
-const forToolbarStateAction = function (editor, clazz, command, action) {
+const forToolbarStateAction = (editor, clazz: string, command, action): SketchSpec => {
   const extraBehaviours = getToggleBehaviours(command);
   return forToolbar(clazz, action, extraBehaviours, editor);
 };
 
-const getToolbarIconButton = (clazz, editor) => {
+const getToolbarIconButton = (clazz: string, editor: Editor): RawDomSchema => {
   const icons = editor.ui.registry.getAll().icons;
   const optOxideIcon = Option.from(icons[clazz]);
 
@@ -58,19 +59,18 @@ const getToolbarIconButton = (clazz, editor) => {
   );
 };
 
-const forToolbar = function (clazz, action, extraBehaviours, editor): SketchSpec {
-  return Button.sketch({
+const forToolbar = (clazz: string, action: (c: AlloyComponent) => void, extraBehaviours, editor: Editor): SketchSpec =>
+  Button.sketch({
     dom: getToolbarIconButton(clazz, editor),
     action,
 
     buttonBehaviours: Merger.deepMerge(
       Behaviour.derive([
-        Unselecting.config({ })
+        Unselecting.config({})
       ]),
       extraBehaviours
     )
   });
-};
 
 export {
   forToolbar,

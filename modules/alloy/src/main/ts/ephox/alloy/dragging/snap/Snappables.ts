@@ -78,7 +78,6 @@ const stopDrag = <E>(component: AlloyComponent, snapInfo: SnapsConfig<E>): void 
 
 const findMatchingSnap = <E>(snaps: Array<SnapConfig<E>>, newCoord: DragCoord.CoordAdt, scroll: Position, origin: Position): Option<SnapOutput<E>> => {
   return Arr.findMap(snaps, (snap) => {
-    // NOTE: These are structs because of the immutableBag in Dragging.ts
     const sensor = snap.sensor();
     const inRange = DragCoord.withinRange(newCoord, sensor, snap.range().left(), snap.range().top(), scroll, origin);
     return inRange ? Option.some(
@@ -102,7 +101,6 @@ const findClosestSnap = <E>(component: AlloyComponent, snapInfo: SnapsConfig<E>,
   const matchSnap = findMatchingSnap(snaps, newCoord, scroll, origin);
   return matchSnap.orThunk((): Option<SnapOutput<E>> => {
     const bestSnap = Arr.foldl(snaps, (acc: SnapCandidate<E>, snap: SnapConfig<E>): SnapCandidate<E> => {
-      // NOTE: These are structs because of the immutableBag in Dragging.ts
       const sensor = snap.sensor();
       const deltas = DragCoord.getDeltas(newCoord, sensor, snap.range().left(), snap.range().top(), scroll, origin);
       return acc.deltas.fold(() => {
