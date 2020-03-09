@@ -3,9 +3,9 @@ import * as Structs from '../api/Structs';
 import { Element } from '@ephox/sugar';
 
 export interface Warehouse {
-  grid: () => Structs.Grid;
-  access: () => Record<string, Structs.DetailExt>;
-  all: () => Structs.RowData<Structs.DetailExt>[];
+  readonly grid: () => Structs.Grid;
+  readonly access: () => Record<string, Structs.DetailExt>;
+  readonly all: () => Structs.RowData<Structs.DetailExt>[];
 }
 
 const key = function (row: number, column: number) {
