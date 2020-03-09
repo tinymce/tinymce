@@ -19,53 +19,53 @@ type ColInfo = BarPositions.ColInfo;
 type BarPositions<A> = BarPositions.BarPositions<A>;
 
 export interface RunOperationOutput {
-  cursor: () => Option<Element>;
-  newRows: () => Element[];
-  newCells: () => Element[];
+  readonly cursor: () => Option<Element>;
+  readonly newRows: () => Element[];
+  readonly newCells: () => Element[];
 }
 
 export interface TargetElement {
-  element: () => Element;
+  readonly element: () => Element;
 }
 
 export interface TargetSelection {
-  selection: () => Element[];
+  readonly selection: () => Element[];
 }
 
 export interface TargetMergable {
-  mergable: () => Option<ExtractMergable>;
+  readonly mergable: () => Option<ExtractMergable>;
 }
 
 export interface TargetUnmergable {
-  unmergable: () => Option<Element[]>;
+  readonly unmergable: () => Option<Element[]>;
 }
 
 export interface TargetPaste {
-  element: () => Element;
-  generators: () => SimpleGenerators;
-  clipboard: () => Element;
+  readonly element: () => Element;
+  readonly generators: () => SimpleGenerators;
+  readonly clipboard: () => Element;
 }
 
 export interface TargetPasteRows {
-  selection: () => Element[];
-  generators: () => SimpleGenerators;
-  clipboard: () => Element[];
+  readonly selection: () => Element[];
+  readonly generators: () => SimpleGenerators;
+  readonly clipboard: () => Element[];
 }
 
 export interface ExtractMergable {
-  cells: () => Element[];
-  bounds: () => Structs.Bounds;
+  readonly cells: () => Element[];
+  readonly bounds: () => Structs.Bounds;
 }
 
 export interface ExtractPaste extends Structs.DetailExt {
-  generators: () => SimpleGenerators;
-  clipboard: () => Element;
+  readonly generators: () => SimpleGenerators;
+  readonly clipboard: () => Element;
 }
 
 export interface ExtractPasteRows {
-  cells: Structs.DetailExt[];
-  generators: () => SimpleGenerators;
-  clipboard: () => Element[];
+  readonly cells: Structs.DetailExt[];
+  readonly generators: () => SimpleGenerators;
+  readonly clipboard: () => Element[];
 }
 
 const fromWarehouse = (warehouse: Warehouse, generators: Generators) => Transitions.toGrid(warehouse, generators, false);
