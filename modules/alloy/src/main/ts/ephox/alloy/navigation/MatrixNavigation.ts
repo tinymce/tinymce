@@ -1,9 +1,9 @@
 import { Num, Option } from '@ephox/katamari';
 
 export type MatrixNavigationOutcome<A> = {
-  rowIndex: number,
-  columnIndex: number,
-  cell: A
+  readonly rowIndex: number,
+  readonly columnIndex: number,
+  readonly cell: A
 };
 
 export type MatrixNavigationFunc<A> = (matrix: A[][], startRow: number, startCol: number) => Option<MatrixNavigationOutcome<A>>;
