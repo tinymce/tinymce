@@ -94,8 +94,9 @@ const toDetailList = (grid: Structs.RowCells[], generators: Generators): RowData
 };
 
 const findInWarehouse = (warehouse: Warehouse, element: Element): Option<DetailExt> => {
-  const all = Arr.bind(warehouse.all, (r) => r.cells());
-  return Arr.find(all, (e) => Compare.eq(element, e.element()));
+  return Arr.findMap(warehouse.all, (r) =>
+    Arr.find(r.cells(), (e) => Compare.eq(element, e.element()))
+  );
 };
 
 type EqEle = (e1: Element, e2: Element) => boolean;
