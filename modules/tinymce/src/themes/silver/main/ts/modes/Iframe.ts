@@ -32,17 +32,22 @@ const setupEvents = (editor: Editor) => {
   const lastWindowDimensions = Cell(Position(contentWindow.innerWidth, contentWindow.innerHeight));
   const lastDocumentDimensions = Cell(Position(initialDocEle.offsetWidth, initialDocEle.offsetHeight));
 
-  const resize = (e) => {
-    // Don't use the initial doc ele, as there's a small chance it may have changed
-    const docEle = editor.getDoc().documentElement;
-
-    // Check if the window or document dimensions have changed and if so then trigger a content resize event
+  const resizeWindow = (e) => {
+    // Check if the window dimensions have changed and if so then trigger a content resize event
     const outer = lastWindowDimensions.get();
-    const inner = lastDocumentDimensions.get();
     if (outer.left() !== contentWindow.innerWidth || outer.top() !== contentWindow.innerHeight) {
       lastWindowDimensions.set(Position(contentWindow.innerWidth, contentWindow.innerHeight));
       Events.fireResizeContent(editor, e);
-    } else if (inner.left() !== docEle.offsetWidth || inner.top() !== docEle.offsetHeight) {
+    }
+  };
+
+  const resizeDocument = (e) => {
+    // Don't use the initial doc ele, as there's a small chance it may have changed
+    const docEle = editor.getDoc().documentElement;
+
+    // Check if the document dimensions have changed and if so then trigger a content resize event
+    const inner = lastDocumentDimensions.get();
+    if (inner.left() !== docEle.offsetWidth || inner.top() !== docEle.offsetHeight) {
       lastDocumentDimensions.set(Position(docEle.offsetWidth, docEle.offsetHeight));
       Events.fireResizeContent(editor, e);
     }
@@ -50,15 +55,16 @@ const setupEvents = (editor: Editor) => {
 
   const scroll = (e) => Events.fireScrollContent(editor, e);
 
-  DOM.bind(contentWindow, 'resize', resize);
+  DOM.bind(contentWindow, 'resize', resizeWindow);
   DOM.bind(contentWindow, 'scroll', scroll);
 
   // Bind to async load events and trigger a content resize event if the size has changed
-  const elementLoad = DomEvent.capture(Element.fromDom(editor.getBody()), 'load', resize);
+  const elementLoad = DomEvent.capture(Element.fromDom(editor.getBody()), 'load', resizeDocument);
 
+  editor.on('NodeChange', resizeDocument);
   editor.on('remove', () => {
     elementLoad.unbind();
-    DOM.unbind(contentWindow, 'resize', resize);
+    DOM.unbind(contentWindow, 'resize', resizeWindow);
     DOM.unbind(contentWindow, 'scroll', scroll);
   });
 };
