@@ -2,24 +2,24 @@ import { Universe } from '@ephox/boss';
 import { Arr, Fun, Option } from '@ephox/katamari';
 
 interface Bisect<E> {
-  before: () => E[];
-  after: () => E[];
+  readonly before: () => E[];
+  readonly after: () => E[];
 }
 
 export interface LeftRight<E> {
-  left: () => E;
-  right: () => E;
+  readonly left: () => E;
+  readonly right: () => E;
 }
 
 export interface BrokenPathSplits<E> {
-  first: () => E;
-  second: () => E;
+  readonly first: () => E;
+  readonly second: () => E;
 }
 
 export interface BrokenPath<E> {
-  first: () => E;
-  second: () => Option<E>;
-  splits: () => BrokenPathSplits<E>[];
+  readonly first: () => E;
+  readonly second: () => Option<E>;
+  readonly splits: () => BrokenPathSplits<E>[];
 }
 
 const leftRight = <E> (left: E, right: E): LeftRight<E> => ({
