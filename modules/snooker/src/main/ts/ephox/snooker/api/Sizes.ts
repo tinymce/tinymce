@@ -38,7 +38,7 @@ const getUnit = function (newSize: string) {
 const redistribute = function (table: Element, optWidth: Option<string>, optHeight: Option<string>, direction: BarPositions<ColInfo>) {
   const list = DetailsList.fromTable(table);
   const warehouse = Warehouse.generate(list);
-  const rows = warehouse.all();
+  const rows = warehouse.all;
   const cells = Warehouse.justCells(warehouse);
   const tableSize = TableSize.getTableSize(table);
 

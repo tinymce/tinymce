@@ -2,6 +2,7 @@ import { Arr, Fun, Option } from '@ephox/katamari';
 import { Warehouse } from '../model/Warehouse';
 import * as Util from '../util/Util';
 import { DetailExt } from '../api/Structs';
+import { Element } from '@ephox/sugar';
 
 /*
  * Identify for each column, a cell that has colspan 1. Note, this
@@ -9,8 +10,8 @@ import { DetailExt } from '../api/Structs';
  * sizes that are only available through the difference of two
  * spanning columns.
  */
-const columns = function (warehouse: Warehouse) {
-  const grid = warehouse.grid();
+const columns = function (warehouse: Warehouse): Option<Element>[] {
+  const grid = warehouse.grid;
   const cols = Util.range(0, grid.columns());
   const rowsArr = Util.range(0, grid.rows());
 
@@ -35,7 +36,7 @@ const columns = function (warehouse: Warehouse) {
   });
 };
 
-const decide = function (getBlock: () => DetailExt[], isSingle: (detail: DetailExt) => boolean, getFallback: () => Option<DetailExt>) {
+const decide = function (getBlock: () => DetailExt[], isSingle: (detail: DetailExt) => boolean, getFallback: () => Option<DetailExt>): Option<Element> {
   const inBlock = getBlock();
   const singleInBlock = Arr.find(inBlock, isSingle);
 
@@ -46,8 +47,8 @@ const decide = function (getBlock: () => DetailExt[], isSingle: (detail: DetailE
   return detailOption.map(function (detail) { return detail.element(); });
 };
 
-const rows = function (warehouse: Warehouse) {
-  const grid = warehouse.grid();
+const rows = function (warehouse: Warehouse): Option<Element>[] {
+  const grid = warehouse.grid;
   const rowsArr = Util.range(0, grid.rows());
   const cols = Util.range(0, grid.columns());
 

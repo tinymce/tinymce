@@ -41,7 +41,7 @@ const recalculateHeight = function (warehouse: Warehouse, heights: number[]) {
 };
 
 const matchRowHeight = function (warehouse: Warehouse, heights: number[]) {
-  return Arr.map(warehouse.all(), function (row, i) {
+  return Arr.map(warehouse.all, function (row, i) {
     return {
       element: row.element,
       height: Fun.constant(heights[i])

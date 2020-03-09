@@ -45,7 +45,7 @@ const adjustWidth = function (table: Element, delta: number, index: number, dire
   });
 
   // Set the overall width of the table.
-  if (index === warehouse.grid().columns() - 1) {
+  if (index === warehouse.grid.columns() - 1) {
     tableSize.setTableWidth(table, newWidths, step);
   }
 };

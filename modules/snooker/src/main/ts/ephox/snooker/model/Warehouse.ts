@@ -1,11 +1,11 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import * as Structs from '../api/Structs';
 import { Element } from '@ephox/sugar';
 
 export interface Warehouse {
-  readonly grid: () => Structs.Grid;
-  readonly access: () => Record<string, Structs.DetailExt>;
-  readonly all: () => Structs.RowData<Structs.DetailExt>[];
+  readonly grid: Structs.Grid;
+  readonly access: Record<string, Structs.DetailExt>;
+  readonly all: Structs.RowData<Structs.DetailExt>[];
 }
 
 const key = function (row: number, column: number) {
@@ -13,7 +13,7 @@ const key = function (row: number, column: number) {
 };
 
 const getAt = function (warehouse: Warehouse, row: number, column: number) {
-  const raw = warehouse.access()[key(row, column)];
+  const raw = warehouse.access[key(row, column)];
   return raw !== undefined ? Option.some(raw) : Option.none<Structs.DetailExt>();
 };
 
@@ -26,7 +26,7 @@ const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T,
 };
 
 const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: number) => boolean) {
-  const all = Arr.bind(warehouse.all(), function (r) { return r.cells(); });
+  const all = Arr.bind(warehouse.all, function (r) { return r.cells(); });
   return Arr.filter(all, predicate);
 };
 
@@ -82,16 +82,14 @@ const generate = function <T extends Structs.Detail>(list: Structs.RowData<T>[])
   const grid = Structs.grid(maxRows, maxColumns);
 
   return {
-    grid: Fun.constant(grid),
-    access: Fun.constant(access),
-    all: Fun.constant(cells)
+    grid,
+    access,
+    all: cells
   };
 };
 
 const justCells = function (warehouse: Warehouse) {
-  const rows = Arr.map(warehouse.all(), function (w) {
-    return w.cells();
-  });
+  const rows = Arr.map(warehouse.all, (w) => w.cells());
 
   return Arr.flatten(rows);
 };
