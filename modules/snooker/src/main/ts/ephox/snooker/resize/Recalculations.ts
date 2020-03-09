@@ -4,7 +4,7 @@ import { Warehouse } from '../model/Warehouse';
 // Returns the sum of elements of measures in the half-open range [start, end)
 // Measures is in pixels, treated as an array of integers or integers in string format.
 // NOTE: beware of accumulated rounding errors over multiple columns - could result in noticeable table width changes
-const total = function (start: number, end: number, measures: number[]) {
+const total = function (start: number, end: number, measures: number[]): number {
   let r = 0;
   for (let i = start; i < end; i++) {
     r += measures[i] !== undefined ? measures[i] : 0;
