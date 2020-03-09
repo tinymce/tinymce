@@ -29,8 +29,8 @@ UnitTest.test('RecalculationsTest', function () {
     Arr.each(expected, function (expt) {
       assert.eq(expt.widths(), Arr.map(actualW, function (cell) {
         return {
-          element: cell.element(),
-          width: cell.width()
+          element: cell.element,
+          width: cell.width
         };
       }));
 

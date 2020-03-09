@@ -14,9 +14,9 @@ const total = function (start: number, end: number, measures: number[]): number 
 };
 
 interface CellWidthSpan {
-  readonly colspan: () => number;
-  readonly width: () => number;
-  readonly element: () => Element;
+  readonly colspan: number;
+  readonly width: number;
+  readonly element: Element;
 }
 
 // Returns an array of all cells in warehouse with updated cell-widths, using
@@ -28,9 +28,9 @@ const recalculateWidth = function (warehouse: Warehouse, widths: number[]): Cell
     // width of a spanning cell is sum of widths of representative columns it spans
     const width = total(cell.column(), cell.column() + cell.colspan(), widths);
     return {
-      element: cell.element,
-      width: Fun.constant(width),
-      colspan: cell.colspan
+      element: cell.element(),
+      width,
+      colspan: cell.colspan()
     };
   });
 };
