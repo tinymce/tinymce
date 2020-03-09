@@ -6,35 +6,35 @@ import { ResizeWire } from './ResizeWire';
 import { Element } from '@ephox/sugar';
 
 export interface BeforeTableResizeEvent {
-  table: () => Element;
+  readonly table: () => Element;
 }
 
 export interface AfterTableResizeEvent {
-  table: () => Element;
+  readonly table: () => Element;
 }
 
 type TableResizeEventRegistry = {
-  beforeResize: Bindable<BeforeTableResizeEvent>,
-  afterResize: Bindable<AfterTableResizeEvent>,
-  startDrag: Bindable<{}>
+  readonly beforeResize: Bindable<BeforeTableResizeEvent>,
+  readonly afterResize: Bindable<AfterTableResizeEvent>,
+  readonly startDrag: Bindable<{}>
 };
 
 interface TableResizeEvents {
-  registry: TableResizeEventRegistry;
-  trigger: {
-    beforeResize: (table: Element) => void;
-    afterResize: (table: Element) => void;
-    startDrag: () => void;
+  readonly registry: TableResizeEventRegistry;
+  readonly trigger: {
+    readonly beforeResize: (table: Element) => void;
+    readonly afterResize: (table: Element) => void;
+    readonly startDrag: () => void;
   };
 }
 
 export interface TableResize {
-  on: () => void;
-  off: () => void;
-  hideBars: () => void;
-  showBars: () => void;
-  destroy: () => void;
-  events: TableResizeEventRegistry;
+  readonly on: () => void;
+  readonly off: () => void;
+  readonly hideBars: () => void;
+  readonly showBars: () => void;
+  readonly destroy: () => void;
+  readonly events: TableResizeEventRegistry;
 }
 
 const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>): TableResize => {
