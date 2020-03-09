@@ -3,7 +3,7 @@ import { Compare, Traverse, Element } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
 import * as TableLookup from '../api/TableLookup';
 import * as Redraw from '../operate/Redraw';
-import { BarPositions, ColInfo } from '../resize/BarPositions';
+import * as BarPositions from '../resize/BarPositions';
 import * as Bars from '../resize/Bars';
 import * as DetailsList from './DetailsList';
 import * as Transitions from './Transitions';
@@ -15,6 +15,8 @@ import { TableOperationResult } from '../api/TableOperations';
 type DetailExt = Structs.DetailExt;
 type DetailNew = Structs.DetailNew;
 type RowDataNew<A> = Structs.RowDataNew<A>;
+type ColInfo = BarPositions.ColInfo;
+type BarPositions<A> = BarPositions.BarPositions<A>;
 
 export interface RunOperationOutput {
   cursor: () => Option<Element>;

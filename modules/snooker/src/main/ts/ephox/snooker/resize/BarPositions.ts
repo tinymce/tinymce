@@ -93,7 +93,7 @@ const rtl: BarPositions<ColInfo> = {
   positions: (optElements: Option<Element>[]) => findPositions(getRightEdge, getLeftEdge, optElements),
 };
 
-export const BarPositions = {
+export {
   height,
   rtl,
   ltr

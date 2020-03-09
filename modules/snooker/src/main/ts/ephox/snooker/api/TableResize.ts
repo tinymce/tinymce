@@ -1,9 +1,12 @@
 import { Event, Events, Bindable } from '@ephox/porkbun';
 import * as Adjustments from '../resize/Adjustments';
 import { BarManager } from '../resize/BarManager';
-import { BarPositions, ColInfo } from '../resize/BarPositions';
+import * as BarPositions from '../resize/BarPositions';
 import { ResizeWire } from './ResizeWire';
 import { Element } from '@ephox/sugar';
+
+type ColInfo = BarPositions.ColInfo;
+type BarPositions<A> = BarPositions.BarPositions<A>;
 
 export interface BeforeTableResizeEvent {
   readonly table: () => Element;
