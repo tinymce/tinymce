@@ -6,7 +6,7 @@
  */
 
 import { Fun, Option } from '@ephox/katamari';
-import { Compare, DomEvent, Element, WindowSelection, StructRect } from '@ephox/sugar';
+import { Compare, DomEvent, Element, WindowSelection, StructRect, RawRect } from '@ephox/sugar';
 
 const getBodyFromFrame = function (frame) {
   return Option.some(Element.fromDom(frame.dom().contentWindow.document.body));
@@ -42,7 +42,7 @@ const getOrDerive = function (name, f) {
   };
 };
 
-const getOrListen = function (editor, doc, name, type) {
+const getOrListen = function (editor, doc, name, type: string) {
   return editor[name].getOrThunk(function () {
     return function (handler) {
       return DomEvent.bind(doc, type, handler);
@@ -50,7 +50,8 @@ const getOrListen = function (editor, doc, name, type) {
   });
 };
 
-const toRect = function (rect) {
+// TODO: This function belongs in modules/sugar/src/main/ts/ephox/sugar/api/selection/Rect.ts
+const toRect = function (rect: RawRect): StructRect {
   return {
     left: Fun.constant(rect.left),
     top: Fun.constant(rect.top),

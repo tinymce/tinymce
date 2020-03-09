@@ -7,9 +7,10 @@
 
 import * as Buttons from './Buttons';
 import { SketchSpec } from '@ephox/alloy';
+import { MobileRealm } from './IosRealm';
 
-const button = function (realm, clazz, makeItems, editor): SketchSpec {
-  return Buttons.forToolbar(clazz, function () {
+const button = (realm: MobileRealm, clazz: string, makeItems, editor): SketchSpec => {
+  return Buttons.forToolbar(clazz, () => {
     const items = makeItems();
     realm.setContextToolbar([
       {
@@ -18,7 +19,7 @@ const button = function (realm, clazz, makeItems, editor): SketchSpec {
         items
       }
     ]);
-  }, { }, editor);
+  }, {}, editor);
 };
 
 export {

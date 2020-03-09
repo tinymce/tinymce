@@ -32,8 +32,8 @@ import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
 const READING = 'toReading'; /// 'hide the keyboard'
 const EDITING = 'toEditing'; /// 'show the keyboard'
 
-const renderMobileTheme = function (editor: Editor) {
-  const renderUI = function () {
+const renderMobileTheme = (editor: Editor) => {
+  const renderUI = () => {
     const targetNode = editor.getElement();
     const cssUrls = CssUrls.derive(editor);
 
@@ -44,7 +44,7 @@ const renderMobileTheme = function (editor: Editor) {
       SkinLoaded.fireSkinLoaded(editor)();
     }
 
-    const doScrollIntoView = function () {
+    const doScrollIntoView = () => {
       editor.fire('ScrollIntoView');
     };
 
@@ -52,11 +52,11 @@ const renderMobileTheme = function (editor: Editor) {
     const original = Element.fromDom(targetNode);
     Attachment.attachSystemAfter(original, realm.system());
 
-    const findFocusIn = function (elem) {
-      return Focus.search(elem).bind(function (focused) {
-        return realm.system().getByDom(focused).toOption();
-      });
+    const findFocusIn = (elem) => {
+      return Focus.search(elem).bind((focused) =>
+        realm.system().getByDom(focused).toOption());
     };
+
     const outerWindow = targetNode.ownerDocument.defaultView;
     const orientation = Orientation.onChange(outerWindow, {
       onChange () {
@@ -66,7 +66,7 @@ const renderMobileTheme = function (editor: Editor) {
       onReady: Fun.noop
     });
 
-    const setReadOnly = function (dynamicGroup, readOnlyGroups, mainGroups, ro) {
+    const setReadOnly = (dynamicGroup, readOnlyGroups, mainGroups, ro) => {
       if (ro === false) {
         editor.selection.collapse();
       }
@@ -78,7 +78,7 @@ const renderMobileTheme = function (editor: Editor) {
       realm.updateMode(ro);
     };
 
-    const configureToolbar = function (dynamicGroup, readOnlyGroups, mainGroups) {
+    const configureToolbar = (dynamicGroup, readOnlyGroups, mainGroups) => {
       const dynamic = dynamicGroup.get();
       const toolbars = {
         readOnly: dynamic.backToMask.concat(readOnlyGroups.get()),
@@ -93,7 +93,7 @@ const renderMobileTheme = function (editor: Editor) {
       return toolbars;
     };
 
-    const bindHandler = function (label: string, handler) {
+    const bindHandler = (label: string, handler) => {
       editor.on(label, handler);
       return {
         unbind () {
@@ -102,7 +102,7 @@ const renderMobileTheme = function (editor: Editor) {
       };
     };
 
-    editor.on('init', function () {
+    editor.on('init', () => {
       realm.init({
         editor: {
           getFrame () {
@@ -124,11 +124,11 @@ const renderMobileTheme = function (editor: Editor) {
           },
 
           onScrollToCursor (handler) {
-            editor.on('ScrollIntoView', function (tinyEvent) {
+            editor.on('ScrollIntoView', (tinyEvent) => {
               handler(tinyEvent);
             });
 
-            const unbind = function () {
+            const unbind = () => {
               editor.off('ScrollIntoView');
               orientation.destroy();
             };
@@ -160,7 +160,7 @@ const renderMobileTheme = function (editor: Editor) {
               evt.kill();
             } else if (Node.name(target) === 'a') {
               const component = realm.system().getByDom(Element.fromDom(editor.editorContainer));
-              component.each(function (container) {
+              component.each((container) => {
                 /// view mode
                 if (Swapping.isAlpha(container)) {
                   TinyCodeDupe.openLink(target.dom());
@@ -186,8 +186,8 @@ const renderMobileTheme = function (editor: Editor) {
         }
       });
 
-      const hideDropup = function () {
-        realm.dropup().disappear(function () {
+      const hideDropup = () => {
+        realm.dropup().disappear(() => {
           realm.system().broadcastOn([ TinyChannels.dropupDismissed ], { });
         });
       };
@@ -196,7 +196,7 @@ const renderMobileTheme = function (editor: Editor) {
         label: 'The first group',
         scrollable: false,
         items: [
-          Buttons.forToolbar('back', function (/* btn */) {
+          Buttons.forToolbar('back', (/* btn */) => {
             editor.selection.collapse();
             realm.exit();
           }, { }, editor)
@@ -207,7 +207,7 @@ const renderMobileTheme = function (editor: Editor) {
         label: 'Back to read only',
         scrollable: false,
         items: [
-          Buttons.forToolbar('readonly-back', function (/* btn */) {
+          Buttons.forToolbar('readonly-back', (/* btn */) => {
             setReadOnly(dynamicGroup, readOnlyGroups, mainGroups, true);
           }, {}, editor)
         ]
@@ -282,6 +282,6 @@ const renderMobileTheme = function (editor: Editor) {
   };
 };
 
-export default function () {
+export default () => {
   ThemeManager.add('mobile', renderMobileTheme);
-}
+};

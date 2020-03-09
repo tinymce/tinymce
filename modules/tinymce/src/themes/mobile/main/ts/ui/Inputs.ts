@@ -93,22 +93,20 @@ const field = function (name, placeholder) {
   };
 };
 
-const hidden = function (name) {
-  return {
-    name,
-    spec: DataField.sketch({
-      dom: {
-        tag: 'span',
-        styles: {
-          display: 'none'
-        }
-      },
-      getInitialValue () {
-        return Option.none();
+const hidden = (name) => ({
+  name,
+  spec: DataField.sketch({
+    dom: {
+      tag: 'span',
+      styles: {
+        display: 'none'
       }
-    }) as SketchSpec
-  };
-};
+    },
+    getInitialValue() {
+      return Option.none();
+    }
+  }) as SketchSpec
+});
 
 export {
   field,

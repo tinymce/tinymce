@@ -9,26 +9,27 @@ import { Arr, Fun, Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 import * as TinyChannels from '../channels/TinyChannels';
+import { MobileRealm } from '../ui/IosRealm';
 
-const fontSizesArray = [ 'x-small', 'small', 'medium', 'large', 'x-large' ];
+const fontSizesArray: readonly string[] = [ 'x-small', 'small', 'medium', 'large', 'x-large' ];
 
-const fireChange = function (realm, command, state) {
+const fireChange = (realm: MobileRealm, command: string, state: boolean): void => {
   realm.system().broadcastOn([ TinyChannels.formatChanged ], {
     command,
     state
   });
 };
 
-const init = function (realm, editor: Editor) {
+const init = (realm: MobileRealm, editor: Editor): void => {
   const allFormats = Obj.keys(editor.formatter.get());
-  Arr.each(allFormats, function (command) {
-    editor.formatter.formatChanged(command, function (state) {
+  Arr.each(allFormats, (command) => {
+    editor.formatter.formatChanged(command, (state) => {
       fireChange(realm, command, state);
     });
   });
 
-  Arr.each([ 'ul', 'ol' ], function (command) {
-    editor.selection.selectorChanged(command, function (state, data) {
+  Arr.each([ 'ul', 'ol' ], (command) => {
+    editor.selection.selectorChanged(command, (state, data) => {
       fireChange(realm, command, state);
     });
   });
