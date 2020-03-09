@@ -68,7 +68,8 @@ export interface ExtractPasteRows {
   readonly clipboard: () => Element[];
 }
 
-const fromWarehouse = (warehouse: Warehouse, generators: Generators) => Transitions.toGrid(warehouse, generators, false);
+const fromWarehouse = (warehouse: Warehouse, generators: Generators) =>
+  Transitions.toGrid(warehouse, generators, false);
 
 const deriveRows = (rendered: Structs.RowDetails[], generators: Generators) => {
   // The row is either going to be a new row, or the row of any of the cells.
