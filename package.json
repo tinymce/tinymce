@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@ephox/bedrock-client": "^9.3.2",
-    "@ephox/bedrock-server": "^9.3.2",
+    "@ephox/bedrock-server": "^9.5.1",
     "@ephox/dom-globals": "^1.1.2",
     "@ephox/oxide-icons-tools": "^2.1.1",
     "@ephox/swag": "^4.1.5",
@@ -79,7 +79,7 @@
     "tsconfig-paths-webpack-plugin": "^3.2.0",
     "tslib": "^1.9.3",
     "tslint": "^5.20.1",
-    "typescript": "^3.7.2",
+    "typescript": "^3.8.3",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0",
