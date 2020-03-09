@@ -169,10 +169,10 @@ const rgbFormFactory = (
 
   const factory: UiSketcher.SingleSketchFactory<RgbFormDetail, RgbFormSpec> = (): SketchSpec => {
     const state = {
-      red: Fun.constant(Cell(Option.some(255))),
-      green: Fun.constant(Cell(Option.some(255))),
-      blue: Fun.constant(Cell(Option.some(255))),
-      hex: Fun.constant(Cell(Option.some('ffffff')))
+      red: Cell(Option.some(255)),
+      green: Cell(Option.some(255)),
+      blue: Cell(Option.some(255)),
+      hex: Cell(Option.some('ffffff'))
     };
 
     const copyHexToRgb = (form: AlloyComponent, hex: Hex) => {
@@ -182,11 +182,11 @@ const rgbFormFactory = (
     };
 
     const get = (prop: keyof typeof state): Option<any> => {
-      return state[prop]().get();
+      return state[prop].get();
     };
 
     const set = (prop: keyof typeof state, value: Option<any>): void => {
-      state[prop]().set(value);
+      state[prop].set(value);
     };
 
     const getValueRgb = () => {

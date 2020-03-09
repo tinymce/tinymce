@@ -1,5 +1,5 @@
 import { assert } from '@ephox/bedrock-client';
-import { Arr, Fun, Result } from '@ephox/katamari';
+import { Arr, Result } from '@ephox/katamari';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as TableMerge from 'ephox/snooker/model/TableMerge';
 import * as Fitment from 'ephox/snooker/test/Fitment';
@@ -49,10 +49,7 @@ const mergeIVTest = function (asserter: (result: Result<Structs.RowCells[], stri
 
 const suite = function (label: string, startAddress: Structs.Address, gridA: () => Structs.ElementNew[][], gridB: () => Structs.ElementNew[][], generator: () => SimpleGenerators, comparator: (a: Element, b: Element) => boolean, expectedMeasure: {rowDelta: number, colDelta: number }, expectedTailor: Structs.ElementNew[][], expectedMergeGrids: Structs.ElementNew[][]) {
   Fitment.measureTest(expectedMeasure, startAddress, gridA, gridB);
-  Fitment.tailorTest(expectedTailor, startAddress, gridA, {
-    rowDelta: Fun.constant(expectedMeasure.rowDelta),
-    colDelta: Fun.constant(expectedMeasure.colDelta)
-  }, generator);
+  Fitment.tailorTest(expectedTailor, startAddress, gridA, expectedMeasure, generator);
   mergeTest(expectedMergeGrids, startAddress, gridA, gridB, generator, comparator);
 };
 

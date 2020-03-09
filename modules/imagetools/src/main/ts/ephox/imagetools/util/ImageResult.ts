@@ -24,9 +24,7 @@ function create(getCanvas: Promise<HTMLCanvasElement>, blob: Blob, uri: string):
     return Promise.resolve(blob);
   }
 
-  function toDataURL() {
-    return uri;
-  }
+  const toDataURL = Fun.constant(uri);
 
   function toBase64() {
     return uri.split(',')[1];

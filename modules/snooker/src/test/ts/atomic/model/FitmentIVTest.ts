@@ -85,8 +85,8 @@ UnitTest.test('FitmentIVTest', function () {
     const rowDelta = rand(-GRID_MAX, GRID_MAX);
     const colDelta = rand(-GRID_MAX, GRID_MAX);
     return {
-      rowDelta: Fun.constant(rowDelta),
-      colDelta: Fun.constant(colDelta)
+      rowDelta,
+      colDelta
     };
   };
 
@@ -128,8 +128,8 @@ UnitTest.test('FitmentIVTest', function () {
     const gridSpecA = gridGen(false);
     const start = startGen(gridSpecA);
     const delta = deltaGen();
-    const expectedRows = delta.rowDelta() < 0 ? Math.abs(delta.rowDelta()) + gridSpecA.rows() : gridSpecA.rows();
-    const expectedCols = delta.colDelta() < 0 ? Math.abs(delta.colDelta()) + gridSpecA.cols() : gridSpecA.cols();
+    const expectedRows = delta.rowDelta < 0 ? Math.abs(delta.rowDelta) + gridSpecA.rows() : gridSpecA.rows();
+    const expectedCols = delta.colDelta < 0 ? Math.abs(delta.colDelta) + gridSpecA.cols() : gridSpecA.cols();
 
     const info = {
       start: {
@@ -140,10 +140,7 @@ UnitTest.test('FitmentIVTest', function () {
         rows: gridSpecA.rows(),
         cols: gridSpecA.cols()
       },
-      delta: {
-        rowDelta: delta.rowDelta(),
-        colDelta: delta.colDelta()
-      },
+      delta,
       expected: {
         rows: expectedRows,
         cols: expectedCols

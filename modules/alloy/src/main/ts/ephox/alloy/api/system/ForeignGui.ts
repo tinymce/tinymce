@@ -13,26 +13,26 @@ import { AlloyEventRecord } from '../events/AlloyEvents';
 import * as Gui from './Gui';
 
 export interface ForeignGuiSpec {
-  root: Element;
-  dispatchers: Dispatcher[];
-  insertion?: (root: Element, system: Gui.GuiSystem) => void;
+  readonly root: Element;
+  readonly dispatchers: Dispatcher[];
+  readonly insertion?: (root: Element, system: Gui.GuiSystem) => void;
 }
 
 export interface DispatchedAlloyConfig {
-  events?: AlloyEventRecord;
-  behaviours: AlloyBehaviourRecord;
-  eventOrder?: Record<string, string[]>;
+  readonly events?: AlloyEventRecord;
+  readonly behaviours: AlloyBehaviourRecord;
+  readonly eventOrder?: Record<string, string[]>;
 }
 
 export interface Dispatcher {
-  getTarget: (elem: Element) => Option<Element>;
-  alloyConfig: DispatchedAlloyConfig;
+  readonly getTarget: (elem: Element) => Option<Element>;
+  readonly alloyConfig: DispatchedAlloyConfig;
 }
 
 export interface ForeignGuiDetail {
-  root: Element;
-  dispatchers: Dispatcher[];
-  insertion: (root: Element, system: Gui.GuiSystem) => void;
+  readonly root: Element;
+  readonly dispatchers: Dispatcher[];
+  readonly insertion: (root: Element, system: Gui.GuiSystem) => void;
 }
 
 const schema = ValueSchema.objOfOnly([
@@ -168,7 +168,7 @@ const engage = (spec: ForeignGuiSpec) => {
 
       // get any info for this current element, creating it if necessary
       const data = cache.getEvents(mission.target, mission.dispatcher.alloyConfig);
-      const events = data.evts();
+      const events = data.evts;
 
       // if this dispatcher defines this event, proxy it and fire the handler
       if (Obj.hasNonNullableKey(events, type)) { proxyFor(event, mission.target, events[type]); }

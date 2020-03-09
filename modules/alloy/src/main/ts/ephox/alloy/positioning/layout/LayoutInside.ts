@@ -12,32 +12,32 @@ import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
 
 // returns left edge of anchor - used to display element to the left, left edge against the anchor
 const westEdgeX = (anchor: AnchorBox): number => {
-  return anchor.x();
+  return anchor.x;
 };
 
 // returns middle of anchor minus half the element width - used to horizontally centre element to the anchor
 const middleX = (anchor: AnchorBox, element: AnchorElement): number => {
-  return anchor.x() + (anchor.width() / 2) - (element.width() / 2);
+  return anchor.x + (anchor.width / 2) - (element.width / 2);
 };
 
 // returns right edge of anchor minus element width - used to display element to the right, right edge against the anchor
 const eastEdgeX = (anchor: AnchorBox, element: AnchorElement): number => {
-  return anchor.x() + anchor.width() - element.width();
+  return anchor.x + anchor.width - element.width;
 };
 
 // returns top edge - used to display element to the top, top edge against the anchor
 const northY = (anchor: AnchorBox): number => {
-  return anchor.y();
+  return anchor.y;
 };
 
 // returns bottom edge minus element height - used to display element at the bottom, bottom edge against the anchor
 const southY = (anchor: AnchorBox, element: AnchorElement): number => {
-  return anchor.y() + anchor.height() - element.height();
+  return anchor.y + anchor.height - element.height;
 };
 
 // returns centre of anchor minus half the element height - used to vertically centre element to the anchor
 const centreY = (anchor: AnchorBox, element: AnchorElement): number => {
-  return anchor.y() + (anchor.height() / 2) - (element.height() / 2);
+  return anchor.y + (anchor.height / 2) - (element.height / 2);
 };
 
 // positions element in bottom right of the anchor

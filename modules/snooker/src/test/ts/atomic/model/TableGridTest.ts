@@ -10,8 +10,8 @@ UnitTest.test('TableGrid.subgrid test', function () {
 
   const check = function (expected: { colspan: number, rowspan: number }, row: number, column: number, grid: Structs.RowCells[]) {
     const actual = TableGrid.subgrid(grid, row, column, Fun.tripleEquals);
-    assert.eq(expected.rowspan, actual.rowspan());
-    assert.eq(expected.colspan, actual.colspan());
+    assert.eq(expected.rowspan, actual.rowspan);
+    assert.eq(expected.colspan, actual.colspan);
   };
 
   const world = [

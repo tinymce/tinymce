@@ -22,8 +22,8 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
 
     const containerAreaBounds = Boxes.box(contentArea);
     const assertTop = position === 'above' ?
-      containerAreaBounds.y() - container.dom().clientHeight :
-      containerAreaBounds.bottom();
+      containerAreaBounds.y - container.dom().clientHeight :
+      containerAreaBounds.bottom;
 
     Assertions.assertEq(`Container should be absolutely positioned`, 'absolute', Css.get(container, 'position'));
     Assertions.assertEq(`Container left position (${left}) should be 0px`, '0px', left);

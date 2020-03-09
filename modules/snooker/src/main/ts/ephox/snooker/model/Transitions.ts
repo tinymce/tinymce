@@ -25,8 +25,8 @@ const toDetails = function (grid: Structs.RowCells[], comparator: (a: Element, b
       // if we have seen this one, then skip it.
       if (seen[ri][ci] === false) {
         const result = TableGrid.subgrid(grid, ri, ci, comparator);
-        updateSeen(ri, ci, result.rowspan(), result.colspan());
-        return [ Structs.detailnew(cell.element(), result.rowspan(), result.colspan(), cell.isNew()) ];
+        updateSeen(ri, ci, result.rowspan, result.colspan);
+        return [ Structs.detailnew(cell.element(), result.rowspan, result.colspan, cell.isNew()) ];
       } else {
         return [] as Structs.DetailNew[];
       }

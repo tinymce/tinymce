@@ -431,10 +431,10 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
     // Returns viewport size excluding scrollbars
     return {
-      x: vp.x(),
-      y: vp.y(),
-      w: vp.width(),
-      h: vp.height()
+      x: vp.x,
+      y: vp.y,
+      w: vp.width,
+      h: vp.height
     };
   };
 

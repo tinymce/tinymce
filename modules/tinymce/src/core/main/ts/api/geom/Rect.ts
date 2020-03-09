@@ -14,10 +14,10 @@ import { ClientRect } from '@ephox/dom-globals';
  */
 
 export interface GeomRect {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
+  readonly x: number;
+  readonly y: number;
+  readonly w: number;
+  readonly h: number;
 }
 
 interface Rect {

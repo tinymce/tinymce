@@ -83,7 +83,7 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
         NamedChain.read('editor', Chain.op((editor) => {
           const assertBounds = (bound: 'x' | 'y' | 'right' | 'bottom') => {
             const expectedBound = asserted[bound];
-            const actualBound = actual[bound]();
+            const actualBound = actual[bound];
 
             Assertions.assertEq(
               `Expect context toolbar bounds.${bound} === ${expectedBound} (Actual: ${actualBound})`,
@@ -113,10 +113,10 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
         settings: { inline: true },
         scroll: { relativeTop: true, delta: -10 },
         assertBounds: (bounds: TestBounds) => ({
-          x: bounds.content.x(),
-          y: bounds.header.bottom(),
-          right: bounds.content.right(),
-          bottom: bounds.viewport.bottom(),
+          x: bounds.content.x,
+          y: bounds.header.bottom,
+          right: bounds.content.right,
+          bottom: bounds.viewport.bottom,
         }),
       }),
       sTestScenario({
@@ -124,10 +124,10 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
         settings: { menubar: false, inline: true, toolbar: false },
         scroll: { relativeTop: true, delta: -10 },
         assertBounds: (bounds: TestBounds) => ({
-          x: bounds.content.x(),
-          y: bounds.viewport.y(),
-          right: bounds.content.right(),
-          bottom: bounds.viewport.bottom(),
+          x: bounds.content.x,
+          y: bounds.viewport.y,
+          right: bounds.content.right,
+          bottom: bounds.viewport.bottom,
         }),
       }),
       sTestScenario({
@@ -135,10 +135,10 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
         settings: { },
         scroll: { relativeTop: true, delta: -10 },
         assertBounds: (bounds: TestBounds) => ({
-          x: bounds.content.x(),
-          y: bounds.header.bottom(),
-          right: bounds.content.right(),
-          bottom: bounds.container.bottom(),
+          x: bounds.content.x,
+          y: bounds.header.bottom,
+          right: bounds.content.right,
+          bottom: bounds.container.bottom,
         }),
       }),
       sTestScenario({
@@ -146,10 +146,10 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
         settings: { height: 400 },
         scroll: { relativeTop: true, delta: 200 },
         assertBounds: (bounds: TestBounds) => ({
-          x: bounds.content.x(),
-          y: bounds.viewport.y(),
-          right: bounds.content.right(),
-          bottom: bounds.container.bottom(),
+          x: bounds.content.x,
+          y: bounds.viewport.y,
+          right: bounds.content.right,
+          bottom: bounds.container.bottom,
         }),
       }),
       sTestScenario({
@@ -157,10 +157,10 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
         settings: { height: 400 },
         scroll: { relativeTop: false, delta: -200 },
         assertBounds: (bounds: TestBounds) => ({
-          x: bounds.content.x(),
-          y: bounds.content.y(),
-          right: bounds.content.right(),
-          bottom: bounds.viewport.bottom(),
+          x: bounds.content.x,
+          y: bounds.content.y,
+          right: bounds.content.right,
+          bottom: bounds.viewport.bottom,
         }),
       }),
     ])),
@@ -171,10 +171,10 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
         settings: { toolbar_location: 'bottom' },
         scroll: { relativeTop: true, delta: -10 },
         assertBounds: (bounds: TestBounds) => ({
-          x: bounds.content.x(),
-          y: bounds.container.y(),
-          right: bounds.content.right(),
-          bottom: bounds.header.y(),
+          x: bounds.content.x,
+          y: bounds.container.y,
+          right: bounds.content.right,
+          bottom: bounds.header.y,
         }),
       }),
       sTestScenario({
@@ -182,10 +182,10 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
         settings: { inline: true, toolbar_location: 'bottom' },
         scroll: { relativeTop: true, delta: -10 },
         assertBounds: (bounds: TestBounds) => ({
-          x: bounds.content.x(),
-          y: bounds.viewport.y(),
-          right: bounds.content.right(),
-          bottom: bounds.header.y(),
+          x: bounds.content.x,
+          y: bounds.viewport.y,
+          right: bounds.content.right,
+          bottom: bounds.header.y,
         }),
       }),
     ])),

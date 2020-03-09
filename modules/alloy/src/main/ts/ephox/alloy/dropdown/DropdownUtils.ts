@@ -195,7 +195,7 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
       classes: detail.sandboxClasses,
       // TODO: Add aria-selected attribute
       attributes: {
-        id: ariaOwner.id(),
+        id: ariaOwner.id,
         role: 'listbox'
       }
     },

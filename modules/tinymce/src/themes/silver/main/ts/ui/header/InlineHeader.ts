@@ -59,13 +59,13 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
     // so we need to round this to account for that.
     const targetBounds = Boxes.box(targetElm);
     const top = isToolbarTop ?
-      targetBounds.y() - Height.get(floatContainer.get().element()) + offset :
-      targetBounds.bottom();
+      targetBounds.y - Height.get(floatContainer.get().element()) + offset :
+      targetBounds.bottom;
 
     Css.setAll(outerContainer.element(), {
       position: 'absolute',
       top: Math.round(top) + 'px',
-      left: Math.round(targetBounds.x()) + 'px'
+      left: Math.round(targetBounds.x) + 'px'
     });
   };
 

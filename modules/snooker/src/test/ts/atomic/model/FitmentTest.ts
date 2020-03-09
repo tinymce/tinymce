@@ -72,8 +72,8 @@ UnitTest.test('FitmentTest', function () {
       [en('d', false), en('e', false), en('f', false)],
       [en('g', false), en('h', false), en('i', false)]
     ], start(0, 0), gridA, {
-      rowDelta: Fun.constant(1),
-      colDelta: Fun.constant(1)
+      rowDelta: 1,
+      colDelta: 1
     }, generator, Fun.noop);
 
   check(
@@ -83,8 +83,8 @@ UnitTest.test('FitmentTest', function () {
       [en('d', false), en('e', false), en('f', false)],
       [en('g', false), en('h', false), en('i', false)]
     ], start(1, 1), gridA, {
-      rowDelta: Fun.constant(0),
-      colDelta: Fun.constant(0)
+      rowDelta: 0,
+      colDelta: 0
     }, generator, Fun.noop);
 
   check(
@@ -95,8 +95,8 @@ UnitTest.test('FitmentTest', function () {
       [en('g', false),   en('h', false),   en('i', false),   en('?_2', true)],
       [en('?_3', true), en('?_4', true), en('?_5', true), en('?_6', true)]
     ], start(2, 2), gridA, {
-      rowDelta: Fun.constant(-1),
-      colDelta: Fun.constant(-1)
+      rowDelta: -1,
+      colDelta: -1
     }, generator, Fun.noop);
 
   check(
@@ -106,8 +106,8 @@ UnitTest.test('FitmentTest', function () {
       [en('d', false), en('e', false), en('f', false), en('?_1', true)],
       [en('g', false), en('h', false), en('i', false), en('?_2', true)]
     ], start(0, 2), gridA, {
-      rowDelta: Fun.constant(1),
-      colDelta: Fun.constant(-1)
+      rowDelta: 1,
+      colDelta: -1
     }, generator, Fun.noop);
 
   check(
