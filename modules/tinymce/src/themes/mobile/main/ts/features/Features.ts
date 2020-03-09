@@ -20,7 +20,7 @@ import * as FontSizeSlider from '../ui/FontSizeSlider';
 import * as ImagePicker from '../ui/ImagePicker';
 import * as LinkButton from '../ui/LinkButton';
 import * as StyleFormats from '../util/StyleFormats';
-import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
+import { MobileRealm } from '../ui/IosRealm';
 
 const defaults = [ 'undo', 'bold', 'italic', 'link', 'image', 'bullist', 'styleselect' ];
 
