@@ -122,8 +122,8 @@ const run = <RAW, INFO, GW extends GeneratorsWrapper>(operation: Operation<INFO,
     Bars.refresh(wire, table, BarPositions.height, direction);
     return Option.some({
       cursor: out.cursor,
-      newRows: newElements.newRows,
-      newCells: newElements.newCells
+      newRows: Fun.constant(newElements.newRows),
+      newCells: Fun.constant(newElements.newCells)
     });
   });
 };
