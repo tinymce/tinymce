@@ -60,9 +60,7 @@ const doMove = (ifCycle: MatrixNavigation.MatrixNavigationFunc<Element>, ifMove:
         return DomPinpoint.findIndex(allRows, inRow).bind((rowIndex) => {
           // Now, make the matrix.
           const matrix = toMatrix(allRows, matrixConfig);
-          return move(matrix, rowIndex, colIndex).map((next) => {
-            return next.cell();
-          });
+          return move(matrix, rowIndex, colIndex).map((next) => next.cell);
         });
       });
     });

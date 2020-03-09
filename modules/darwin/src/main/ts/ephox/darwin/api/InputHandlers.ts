@@ -126,8 +126,8 @@ const external = (win: Window, container: Element, isRoot: (e: Element) => boole
   return (start: Element, finish: Element) => {
     annotations.clearBeforeUpdate(container);
     CellSelection.identify(start, finish, isRoot).each(function (cellSel) {
-      const boxes = cellSel.boxes().getOr([]);
-      annotations.selectRange(container, boxes, cellSel.start(), cellSel.finish());
+      const boxes = cellSel.boxes.getOr([]);
+      annotations.selectRange(container, boxes, cellSel.start, cellSel.finish);
 
       // stop the browser from creating a big text selection, place the selection at the end of the cell where the cursor is
       bridge.selectContents(finish);

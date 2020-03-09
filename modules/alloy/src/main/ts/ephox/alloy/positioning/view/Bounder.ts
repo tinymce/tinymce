@@ -4,24 +4,24 @@ import { Bubble } from '../layout/Bubble';
 import * as Direction from '../layout/Direction';
 import * as LayoutBounds from '../layout/LayoutBounds';
 import { AnchorBox, AnchorElement, AnchorLayout } from '../layout/LayoutTypes';
-import * as Reposition from './Reposition';
+import { RepositionDecision } from './Reposition';
 import { SpotInfo } from './SpotInfo';
 
 export interface BounderAttemptAdt {
   fold: <T>(
-    fit: (reposition: Reposition.RepositionDecision) => T,
-    nofit: (reposition: Reposition.RepositionDecision, deltaW: number, deltaH: number) => T
+    fit: (reposition: RepositionDecision) => T,
+    nofit: (reposition: RepositionDecision, deltaW: number, deltaH: number) => T
   ) => T;
   match: <T>(branches: {
-    fit: (reposition: Reposition.RepositionDecision) => T;
-    nofit: (reposition: Reposition.RepositionDecision, deltaW: number, deltaH: number) => T;
+    fit: (reposition: RepositionDecision) => T;
+    nofit: (reposition: RepositionDecision, deltaW: number, deltaH: number) => T;
   }) => T;
   log: (label: string) => void;
 }
 
 const adt: {
-  fit: (reposition: Reposition.RepositionDecision) => BounderAttemptAdt;
-  nofit: (reposition: Reposition.RepositionDecision, deltaW: number, deltaH: number) => BounderAttemptAdt;
+  fit: (reposition: RepositionDecision) => BounderAttemptAdt;
+  nofit: (reposition: RepositionDecision, deltaW: number, deltaH: number) => BounderAttemptAdt;
 } = Adt.generate([
   { fit:   [ 'reposition' ] },
   { nofit: [ 'reposition', 'deltaW', 'deltaH' ] }
@@ -98,7 +98,7 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Box
   const eastAvailable = Fun.constant(boundsRight - limitX);
   const maxWidth = Direction.cataHorizontal(candidate.direction(), eastAvailable, /* middle */ eastAvailable, westAvailable);
 
-  const reposition = Reposition.decision({
+  const reposition: RepositionDecision = {
     x: limitX,
     y: limitY,
     width: deltaW,
@@ -112,7 +112,7 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Box
     },
     label: candidate.label(),
     candidateYforTest: newY
-  });
+  };
 
   // useful debugging that I don't want to lose
   // console.log(candidate.label());
@@ -152,10 +152,10 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Box
  * bubbles: the bubbles for the popup (see api.Bubble)
  * bounds: the screen
  */
-const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: AnchorElement, bubbles: Bubble, bounds: Boxes.Bounds): Reposition.RepositionDecision => {
+const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: AnchorElement, bubbles: Bubble, bounds: Boxes.Bounds): RepositionDecision => {
   const panelWidth = elementBox.width();
   const panelHeight = elementBox.height();
-  const attemptBestFit = (layout: AnchorLayout, reposition: Reposition.RepositionDecision, deltaW: number, deltaH: number) => {
+  const attemptBestFit = (layout: AnchorLayout, reposition: RepositionDecision, deltaW: number, deltaH: number) => {
     const next: SpotInfo = layout(anchorBox, elementBox, bubbles);
     const attemptLayout = attempt(next, panelWidth, panelHeight, bounds);
 
@@ -178,7 +178,7 @@ const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: 
       return b.fold(adt.fit, bestNext);
     },
     // fold base case: No candidates, it's never going to be correct, so do whatever
-    adt.nofit(Reposition.decision({
+    adt.nofit({
       x: anchorBox.x(),
       y: anchorBox.y(),
       width: elementBox.width(),
@@ -192,12 +192,12 @@ const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: 
       },
       label: 'none',
       candidateYforTest: anchorBox.y()
-    }), -1, -1)
+    }, -1, -1)
   );
 
   // unwrapping 'reposition' from the adt, for both fit & nofit the first arg is the one we need,
   // so we can cheat and use Fun.identity
-  return abc.fold(Fun.identity, Fun.identity) as Reposition.RepositionDecision;
+  return abc.fold(Fun.identity, Fun.identity) as RepositionDecision;
 };
 
 export { attempts, calcReposition };

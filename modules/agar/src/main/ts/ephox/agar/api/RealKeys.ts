@@ -1,6 +1,6 @@
-import { Adt, Arr, Option, Struct } from '@ephox/katamari';
+import { Adt, Arr, Fun, Option } from '@ephox/katamari';
 
-import { MixedKeyModifiers, newModifiers } from '../keyboard/FakeKeys';
+import { KeyModifiers, MixedKeyModifiers, newModifiers } from '../keyboard/FakeKeys';
 import * as SeleniumAction from '../server/SeleniumAction';
 import { Step } from './Step';
 
@@ -31,12 +31,12 @@ interface Modifiers {
   altKey: () => Option<boolean>;
 }
 
-const modifierList = Struct.immutableBag<Modifiers>([], [
-  'ctrlKey',
-  'metaKey',
-  'shiftKey',
-  'altKey'
-]);
+const modifierList = (obj: KeyModifiers): Modifiers => ({
+  ctrlKey: Fun.constant(Option.from(obj.ctrlKey)),
+  metaKey: Fun.constant(Option.from(obj.metaKey)),
+  shiftKey: Fun.constant(Option.from(obj.shiftKey)),
+  altKey: Fun.constant(Option.from(obj.altKey))
+});
 
 const toSimpleFormat = (keys: KeyPressAdt[]) =>
   Arr.map(keys, (key: KeyPressAdt) => key.fold<any>((modifiers: Modifiers, letter: string) => ({
