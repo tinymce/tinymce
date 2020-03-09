@@ -2,8 +2,8 @@ import { Universe } from '@ephox/boss';
 import { Arr, Fun, Option } from '@ephox/katamari';
 
 interface Bisect<E> {
-  readonly before: () => E[];
-  readonly after: () => E[];
+  readonly before: E[];
+  readonly after: E[];
 }
 
 export interface LeftRight<E> {
@@ -38,8 +38,8 @@ const bisect = function <E, D>(universe: Universe<E, D>, parent: E, child: E): O
   const index = Arr.findIndex(children, Fun.curry(universe.eq, child));
   return index.map(function (ind) {
     return {
-      before: Fun.constant(children.slice(0, ind)),
-      after: Fun.constant(children.slice(ind + 1))
+      before: children.slice(0, ind),
+      after: children.slice(ind + 1)
     };
   });
 };
@@ -51,7 +51,7 @@ const bisect = function <E, D>(universe: Universe<E, D>, parent: E, child: E): O
 const breakToRight = function <E, D>(universe: Universe<E, D>, parent: E, child: E) {
   return bisect(universe, parent, child).map(function (parts) {
     const second = universe.create().clone(parent);
-    universe.insert().appendAll(second, parts.after());
+    universe.insert().appendAll(second, parts.after);
     universe.insert().after(parent, second);
     return leftRight(parent, second);
   });
@@ -64,8 +64,8 @@ const breakToRight = function <E, D>(universe: Universe<E, D>, parent: E, child:
 const breakToLeft = function <E, D>(universe: Universe<E, D>, parent: E, child: E) {
   return bisect(universe, parent, child).map(function (parts) {
     const prior = universe.create().clone(parent);
-    universe.insert().appendAll(prior, parts.before().concat([child]));
-    universe.insert().appendAll(parent, parts.after());
+    universe.insert().appendAll(prior, parts.before.concat([child]));
+    universe.insert().appendAll(parent, parts.after);
     universe.insert().before(parent, prior);
     return leftRight(prior, parent);
   });
