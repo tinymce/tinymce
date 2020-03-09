@@ -1,4 +1,6 @@
-/** @deprecated Use RawRect instead */
+/**
+ * @deprecated Use RawRect instead
+ */
 export interface StructRect {
   left: () => number;
   top: () => number;
