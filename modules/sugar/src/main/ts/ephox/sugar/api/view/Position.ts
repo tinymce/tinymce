@@ -1,9 +1,9 @@
 import { Fun } from '@ephox/katamari';
 
 export interface Position {
-  left: () => number;
-  top: () => number;
-  translate: (x: number, y: number) => Position;
+  readonly left: () => number;
+  readonly top: () => number;
+  readonly translate: (x: number, y: number) => Position;
 }
 
 const r = function (left: number, top: number): Position {

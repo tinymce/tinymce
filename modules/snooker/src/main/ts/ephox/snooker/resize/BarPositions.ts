@@ -2,13 +2,13 @@ import { Arr, Fun, Option } from '@ephox/katamari';
 import { Height, Location, Width, Element } from '@ephox/sugar';
 
 export interface RowInfo {
-  readonly row: () => number;
-  readonly y: () => number;
+  readonly row: number;
+  readonly y: number;
 }
 
 export interface ColInfo {
-  readonly col: () => number;
-  readonly x: () => number;
+  readonly col: number;
+  readonly x: number;
 }
 
 export interface BarPositions<T> {
@@ -18,13 +18,13 @@ export interface BarPositions<T> {
 }
 
 const rowInfo = (row: number, y: number): RowInfo => ({
-  row: Fun.constant(row),
-  y: Fun.constant(y)
+  row,
+  y
 });
 
 const colInfo = (col: number, x: number): ColInfo => ({
-  col: Fun.constant(col),
-  x: Fun.constant(x)
+  col,
+  x
 });
 
 const rtlEdge = function (cell: Element) {
