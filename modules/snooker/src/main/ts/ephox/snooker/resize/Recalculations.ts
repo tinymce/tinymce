@@ -1,5 +1,6 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { Warehouse } from '../model/Warehouse';
+import { Element } from '@ephox/sugar';
 
 // Returns the sum of elements of measures in the half-open range [start, end)
 // Measures is in pixels, treated as an array of integers or integers in string format.
@@ -12,9 +13,15 @@ const total = function (start: number, end: number, measures: number[]): number 
   return r;
 };
 
+interface CellWidthSpan {
+  readonly colspan: () => number;
+  readonly width: () => number;
+  readonly element: () => Element;
+}
+
 // Returns an array of all cells in warehouse with updated cell-widths, using
 // the array 'widths' of the representative widths of each column of the table 'warehouse'
-const recalculateWidth = function (warehouse: Warehouse, widths: number[]) {
+const recalculateWidth = function (warehouse: Warehouse, widths: number[]): CellWidthSpan[] {
   const all = Warehouse.justCells(warehouse);
 
   return Arr.map(all, function (cell) {
