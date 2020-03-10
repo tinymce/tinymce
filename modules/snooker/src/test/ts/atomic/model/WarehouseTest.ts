@@ -7,7 +7,7 @@ import { Element } from '@ephox/sugar';
 UnitTest.test('WarehouseTest', function () {
   const check = function (expected: Record<string, string>, input: Structs.RowData<Structs.Detail>[]) {
     const actual = Warehouse.generate(input);
-    assert.eq(expected, Obj.map(actual.access(), function (x) { return x.element(); }));
+    assert.eq(expected, Obj.map(actual.access, function (x) { return x.element(); }));
   };
 
   const s = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as any as Element, rowspan, colspan);

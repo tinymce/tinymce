@@ -1,10 +1,10 @@
 export interface PRegExp {
-  term: () => RegExp;
-  prefix: (match: RegExpExecArray) => number;
-  suffix: (match: RegExpExecArray) => number;
+  readonly term: () => RegExp;
+  readonly prefix: (match: RegExpExecArray) => number;
+  readonly suffix: (match: RegExpExecArray) => number;
 }
 
 export interface PRange {
-  start: () => number;
-  finish: () => number;
+  readonly start: () => number;
+  readonly finish: () => number;
 }

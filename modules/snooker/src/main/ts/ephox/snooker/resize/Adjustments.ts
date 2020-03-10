@@ -41,11 +41,11 @@ const adjustWidth = function (table: Element, delta: number, index: number, dire
   // Set the width of each cell based on the column widths
   const newSizes = Recalculations.recalculateWidth(warehouse, newWidths);
   Arr.each(newSizes, function (cell) {
-    tableSize.setElementWidth(cell.element(), cell.width());
+    tableSize.setElementWidth(cell.element, cell.width);
   });
 
   // Set the overall width of the table.
-  if (index === warehouse.grid().columns() - 1) {
+  if (index === warehouse.grid.columns() - 1) {
     tableSize.setTableWidth(table, newWidths, step);
   }
 };
@@ -82,7 +82,7 @@ const adjustWidthTo = function <T extends Detail>(table: Element, list: RowData<
   // Set the width of each cell based on the column widths
   const newSizes = Recalculations.recalculateWidth(warehouse, widths);
   Arr.each(newSizes, function (cell) {
-    tableSize.setElementWidth(cell.element(), cell.width());
+    tableSize.setElementWidth(cell.element, cell.width);
   });
 
   // const total = Arr.foldr(widths, function (b, a) { return a + b; }, 0);

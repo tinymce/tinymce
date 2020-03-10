@@ -2,29 +2,29 @@ import { Arr, Fun, Option } from '@ephox/katamari';
 import { Height, Location, Width, Element } from '@ephox/sugar';
 
 export interface RowInfo {
-  row: () => number;
-  y: () => number;
+  readonly row: number;
+  readonly y: number;
 }
 
 export interface ColInfo {
-  col: () => number;
-  x: () => number;
+  readonly col: number;
+  readonly x: number;
 }
 
 export interface BarPositions<T> {
-  delta: (delta: number, table: Element) => number;
-  edge: (e: Element) => number;
-  positions: (array: Option<Element>[], table: Element) => Option<T>[];
+  readonly delta: (delta: number, table: Element) => number;
+  readonly edge: (e: Element) => number;
+  readonly positions: (array: Option<Element>[], table: Element) => Option<T>[];
 }
 
 const rowInfo = (row: number, y: number): RowInfo => ({
-  row: Fun.constant(row),
-  y: Fun.constant(y)
+  row,
+  y
 });
 
 const colInfo = (col: number, x: number): ColInfo => ({
-  col: Fun.constant(col),
-  x: Fun.constant(x)
+  col,
+  x
 });
 
 const rtlEdge = function (cell: Element) {
@@ -93,7 +93,7 @@ const rtl: BarPositions<ColInfo> = {
   positions: (optElements: Option<Element>[]) => findPositions(getRightEdge, getLeftEdge, optElements),
 };
 
-export const BarPositions = {
+export {
   height,
   rtl,
   ltr

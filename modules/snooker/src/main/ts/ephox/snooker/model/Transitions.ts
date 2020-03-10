@@ -37,9 +37,9 @@ const toDetails = function (grid: Structs.RowCells[], comparator: (a: Element, b
 
 const toGrid = function (warehouse: Warehouse, generators: Generators, isNew: boolean) {
   const grid: Structs.RowCells[] = [];
-  for (let i = 0; i < warehouse.grid().rows(); i++) {
+  for (let i = 0; i < warehouse.grid.rows(); i++) {
     const rowCells: Structs.ElementNew[] = [];
-    for (let j = 0; j < warehouse.grid().columns(); j++) {
+    for (let j = 0; j < warehouse.grid.columns(); j++) {
       // The element is going to be the element at that position, or a newly generated gap.
       const element = Warehouse.getAt(warehouse, i, j).map(function (item) {
         return Structs.elementnew(item.element(), isNew);
@@ -48,7 +48,7 @@ const toGrid = function (warehouse: Warehouse, generators: Generators, isNew: bo
       });
       rowCells.push(element);
     }
-    const row = Structs.rowcells(rowCells, warehouse.all()[i].section());
+    const row = Structs.rowcells(rowCells, warehouse.all[i].section());
     grid.push(row);
   }
   return grid;

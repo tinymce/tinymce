@@ -16,8 +16,8 @@ export interface Zones<E> {
 
 export const fromWalking = function <E, D> (universe: Universe<E, D>, groups: ZoneDetails<E>[]): Zones<E> {
   const zones = Arr.map(groups, function (group: ZoneDetails<E>) {
-    const details = group.details();
-    const lang = group.lang();
+    const details = group.details;
+    const lang = group.lang;
 
     const line = Arr.map(details, (x) => x.text).join('');
 

@@ -21,15 +21,15 @@ const statsStruct = (minRow: number, minCol: number, maxRow: number, maxCol: num
 });
 
 const findSelectedStats = (house: Warehouse, isSelected: (detail: DetailExt) => boolean): StatsStruct => {
-  const totalColumns = house.grid().columns();
-  const totalRows = house.grid().rows();
+  const totalColumns = house.grid.columns();
+  const totalRows = house.grid.rows();
 
   /* Refactor into a method returning a struct to hide the mutation */
   let minRow = totalRows;
   let minCol = totalColumns;
   let maxRow = 0;
   let maxCol = 0;
-  Obj.each(house.access(), (detail) => {
+  Obj.each(house.access, (detail) => {
     if (isSelected(detail)) {
       const startRow = detail.row();
       const endRow = startRow + detail.rowspan() - 1;
@@ -61,8 +61,8 @@ const makeCell = <T>(list: RowData<T>[], seenSelected: boolean, rowIndex: number
 };
 
 const fillInGaps = <T>(list: RowData<T>[], house: Warehouse, stats: StatsStruct, isSelected: (detail: DetailExt) => boolean) => {
-  const totalColumns = house.grid().columns();
-  const totalRows = house.grid().rows();
+  const totalColumns = house.grid.columns();
+  const totalRows = house.grid.rows();
   // unselected cells have been deleted, now fill in the gaps in the model
   for (let i = 0; i < totalRows; i++) {
     let seenSelected = false;
