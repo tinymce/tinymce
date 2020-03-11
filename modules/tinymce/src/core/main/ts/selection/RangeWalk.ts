@@ -26,6 +26,18 @@ const getEndChild = function (container: Node, index: number) {
   return childNodes[index] || container;
 };
 
+const clampToExistingChildren = function (container: Node, index: number) {
+  const childNodes = container.childNodes;
+
+  if (index >= childNodes.length) {
+    index = childNodes.length - 1;
+  } else if (index < 0) {
+    index = 0;
+  }
+
+  return childNodes[index] || container;
+};
+
 const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => void) {
   let startContainer = rng.startContainer;
   const startOffset = rng.startOffset;
@@ -107,7 +119,7 @@ const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: No
 
   // If index based start position then resolve it
   if (startContainer.nodeType === 1 && startContainer.hasChildNodes()) {
-    startContainer = startContainer.childNodes[startOffset];
+    startContainer = clampToExistingChildren(startContainer, startOffset);
   }
 
   // If index based end position then resolve it
