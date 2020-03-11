@@ -178,7 +178,7 @@ EditorManager = {
 
   setup () {
     const self = this;
-    let baseURL, documentBaseURL, suffix = '', preInit, src;
+    let baseURL, documentBaseURL, suffix = '';
 
     // Get base URL for the current document
     documentBaseURL = URI.getDocumentBaseUrl(document.location);
@@ -194,7 +194,7 @@ EditorManager = {
     }
 
     // If tinymce is defined and has a base use that or use the old tinyMCEPreInit
-    preInit = window.tinymce || window.tinyMCEPreInit;
+    const preInit = window.tinymce || window.tinyMCEPreInit;
     if (preInit) {
       baseURL = preInit.base || preInit.baseURL;
       suffix = preInit.suffix;
@@ -202,7 +202,10 @@ EditorManager = {
       // Get base where the tinymce script is located
       const scripts = document.getElementsByTagName('script');
       for (let i = 0; i < scripts.length; i++) {
-        src = scripts[i].src;
+        const src = scripts[i].src || '';
+        if (src === '') {
+          continue;
+        }
 
         // Script types supported:
         // tinymce.js tinymce.min.js tinymce.dev.js
@@ -222,7 +225,7 @@ EditorManager = {
       // We didn't find any baseURL by looking at the script elements
       // Try to use the document.currentScript as a fallback
       if (!baseURL && document.currentScript) {
-        src = (<any> document.currentScript).src;
+        const src = (<any> document.currentScript).src;
 
         if (src.indexOf('.min') !== -1) {
           suffix = '.min';
