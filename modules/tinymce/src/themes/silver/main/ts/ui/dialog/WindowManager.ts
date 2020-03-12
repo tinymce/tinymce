@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Docking, GuiFactory, HotspotAnchorSpec, InlineView, Keying, MakeshiftAnchorSpec, ModalDialog, NodeAnchorSpec, SelectionAnchorSpec, SystemEvents, } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Docking, GuiFactory, HotspotAnchorSpec, InlineView, Keying, MakeshiftAnchorSpec, ModalDialog, NodeAnchorSpec, SelectionAnchorSpec, SystemEvents } from '@ephox/alloy';
 import { Processor, ValueSchema } from '@ephox/boulder';
 import { DialogManager, Types } from '@ephox/bridge';
 import { Option, Singleton } from '@ephox/katamari';
-import { Body, Element } from '@ephox/sugar';
+import { Body, Element, SelectorExists } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../../api/Settings';
@@ -31,6 +31,10 @@ type InlineDialogAnchor = HotspotAnchorSpec | MakeshiftAnchorSpec | NodeAnchorSp
 
 const validateData = <T extends Types.Dialog.DialogData>(data: T, validator: Processor) => {
   return ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
+};
+
+const isAlertOrConfirmDialog = (target: Element): boolean => {
+  return SelectorExists.closest(target, '.tox-alert-dialog') || SelectorExists.closest(target, '.tox-confirm-dialog');
 };
 
 const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, isToolbarLocationTop: boolean): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
@@ -170,13 +174,14 @@ const setup = (extras: WindowManagerSetup) => {
         ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { } },
         inlineBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('window-manager-inline-events', [
-            // Can't just fireDismissalEvent formCloseEvent, because it is on the parent component of the dialog
             AlloyEvents.run(SystemEvents.dismissRequested(), (comp, se) => {
               AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
-            }),
+            })
           ]),
           ...inlineAdditionalBehaviours(editor, isStickyToolbar, isToolbarLocationTop)
-        ])
+        ]),
+        // Treat alert or confirm dialogs as part of the inline dialog
+        isExtraPart: (comp, target) => isAlertOrConfirmDialog(target)
       }));
       inlineDialog.set(inlineDialogComp);
 

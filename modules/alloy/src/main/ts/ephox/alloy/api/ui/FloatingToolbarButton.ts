@@ -100,11 +100,10 @@ const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, de
         Receiving.config({
           channels: {
             ...Dismissal.receivingChannel({
-              isExtraPart: Fun.constant(false),
+              isExtraPart: Fun.never,
               ...detail.fireDismissalEventInstead.map((fe) => ({ fireEventInstead: { event: fe.event }} as any)).getOr({ })
             }),
             ...Reposition.receivingChannel({
-              isExtraPart: Fun.constant(false),
               doReposition: () => {
                 Sandboxing.getState(Coupling.getCoupled(button, 'toolbarSandbox')).each((toolbar) => {
                   position(button, toolbar, detail, spec.layouts);
