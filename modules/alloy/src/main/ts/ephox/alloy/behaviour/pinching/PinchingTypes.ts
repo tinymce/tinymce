@@ -4,9 +4,9 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { BaseDraggingState } from '../../dragging/common/DraggingTypes';
 
 export interface PinchDragData {
-  readonly deltaX: () => number;
-  readonly deltaY: () => number;
-  readonly deltaDistance: () => number;
+  readonly deltaX: number;
+  readonly deltaY: number;
+  readonly deltaDistance: number;
 }
 
 export interface PinchingBehaviour extends Behaviour.AlloyBehaviour<PinchingConfigSpec, PinchingConfig> {
