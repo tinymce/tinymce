@@ -28,10 +28,10 @@ export type SensorCoords = (x: number, y: number) => CoordAdt;
 export type OutputCoords = (x: Option<number>, y: Option<number>) => CoordAdt;
 
 export interface SnapConfig<E> {
-  readonly sensor: () => CoordAdt;
-  readonly range: () => Position;
-  readonly output: () => CoordAdt<Option<number>>;
-  readonly extra: () => Option<E>;
+  readonly sensor: CoordAdt;
+  readonly range: Position;
+  readonly output: CoordAdt<Option<number>>;
+  readonly extra: Option<E>;
 }
 
 export interface SnapConfigSpec<E> {
@@ -42,8 +42,8 @@ export interface SnapConfigSpec<E> {
 }
 
 export interface SnapOutput<E> {
-  readonly output: () => CoordAdt;
-  readonly extra: () => Option<E>;
+  readonly output: CoordAdt;
+  readonly extra: Option<E>;
 }
 
 export interface SnapPin<E> {
