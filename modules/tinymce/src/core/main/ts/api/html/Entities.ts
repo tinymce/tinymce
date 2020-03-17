@@ -272,6 +272,7 @@ const decode = (text: string): string => {
       if (numeric > 0xFFFF) {
         numeric -= 0x10000;
 
+        // eslint-disable-next-line no-bitwise
         return String.fromCharCode(0xD800 + (numeric >> 10), 0xDC00 + (numeric & 0x3FF));
       }
 

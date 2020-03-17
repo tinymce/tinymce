@@ -12,7 +12,7 @@ const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, compo
   return {
     'uid': detail.uid,
     'dom': detail.dom,
-    'components': components,
+    components,
     'debug.sketcher': 'Tabbar',
 
     'domModification': {

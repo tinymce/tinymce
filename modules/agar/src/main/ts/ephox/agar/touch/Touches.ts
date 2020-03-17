@@ -17,6 +17,7 @@ const point = (type: string, element: Element<any>, x: number, y: number): void 
 
   // Adapted from https://stackoverflow.com/a/42447620/11275515
   if (typeof TouchEvent === 'function' && typeof Touch === 'function') {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     const touchAction = new Touch(touch);
     const ev: TouchEvent = new TouchEvent(type, {

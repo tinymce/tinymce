@@ -207,7 +207,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     editor.uploadImages((result) => {
       assertResult(editor, uploadedBlobInfo, result);
 
-      return editor.uploadImages((result) => {
+      editor.uploadImages((result) => {
         const img = editor.$('img')[0];
         LegacyUnit.strictEqual(hasBlobAsSource(img), false);
         LegacyUnit.strictEqual(img.src.indexOf('custom.png?size=small&') !== -1, true, 'Check the cache invalidation string was added');
