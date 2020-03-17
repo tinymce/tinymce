@@ -2,7 +2,7 @@ import * as PredicateFind from './PredicateFind';
 import * as Selectors from './Selectors';
 import ClosestOrAncestor from '../../impl/ClosestOrAncestor';
 import Element from '../node/Element';
-import { Node as DomNode, Element as DomElement, Document } from '@ephox/dom-globals';
+import { Node as DomNode, Element as DomElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 
 // TODO: An internal SelectorFilter module that doesn't Element.fromDom() everything

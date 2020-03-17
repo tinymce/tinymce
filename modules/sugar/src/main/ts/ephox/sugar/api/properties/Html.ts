@@ -4,7 +4,7 @@ import * as Insert from '../dom/Insert';
 import * as InsertAll from '../dom/InsertAll';
 import * as Remove from '../dom/Remove';
 import * as Traverse from '../search/Traverse';
-import { HTMLElement, Document, Node as DomNode } from '@ephox/dom-globals';
+import { HTMLElement, Node as DomNode } from '@ephox/dom-globals';
 
 const get = function (element: Element<HTMLElement>) {
   return element.dom().innerHTML;
