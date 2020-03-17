@@ -17,6 +17,8 @@ import BackgroundActivity from '../smooth/BackgroundActivity';
 import * as Greenzone from '../view/Greenzone';
 import * as IosUpdates from '../view/IosUpdates';
 import * as IosViewport from '../view/IosViewport';
+import { HTMLElement, HTMLIFrameElement, Node as DomNode, Window } from '@ephox/dom-globals';
+import { IosKeyboardConstructor } from 'tinymce/themes/mobile/ios/view/IosKeyboard';
 
 const VIEW_MARGIN = 5;
 
@@ -109,19 +111,31 @@ export interface IosApi {
   destroy: () => void;
 }
 
-const setup = function (bag) {
-  const cWin = bag.cWin();
-  const ceBody = bag.ceBody();
-  const socket = bag.socket();
-  const toolstrip = bag.toolstrip();
-  const toolbar = bag.toolbar();
-  const contentElement = bag.contentElement();
-  const keyboardType = bag.keyboardType();
-  const outerWindow = bag.outerWindow();
-  const dropup = bag.dropup();
+interface IosSetupOptions {
+  readonly cWin: Window;
+  readonly ceBody: Element<DomNode>;
+  readonly socket: Element<HTMLElement>;
+  readonly toolstrip: Element<HTMLElement>;
+  readonly contentElement: Element<HTMLIFrameElement>;
+  readonly keyboardType: IosKeyboardConstructor;
+  readonly outerWindow: Window;
+  readonly dropup: Element<HTMLElement>;
+  readonly outerBody: Element<DomNode>;
+}
+
+const setup = function (bag: IosSetupOptions) {
+  const cWin = bag.cWin;
+  const ceBody = bag.ceBody;
+  const socket = bag.socket;
+  const toolstrip = bag.toolstrip;
+  const contentElement = bag.contentElement;
+  const keyboardType = bag.keyboardType;
+  const outerWindow = bag.outerWindow;
+  const dropup = bag.dropup;
+  const outerBody = bag.outerBody;
 
   const structure = IosViewport.takeover(socket, ceBody, toolstrip, dropup);
-  const keyboardModel = keyboardType(bag.outerBody(), cWin, Body.body(), contentElement, toolstrip, toolbar);
+  const keyboardModel = keyboardType(outerBody, cWin, Body.body(), contentElement);
 
   const toEditing = function () {
     // Consider inlining, though it will make it harder to follow the API
@@ -134,7 +148,7 @@ const setup = function (bag) {
   };
 
   const onToolbarTouch = function (event) {
-    keyboardModel.onToolbarTouch(event);
+    keyboardModel.onToolbarTouch();
   };
 
   const onOrientation = Orientation.onChange(outerWindow, {
@@ -155,7 +169,7 @@ const setup = function (bag) {
     }
   });
 
-  const onScroll = register(toolstrip, socket, bag.outerBody(), outerWindow, structure, cWin);
+  const onScroll = register(toolstrip, socket, outerBody, outerWindow, structure, cWin);
 
   const unfocusedSelection = FakeSelection(cWin, contentElement);
 
