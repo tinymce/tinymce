@@ -1,4 +1,4 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
@@ -38,6 +38,26 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplacePluginTes
     suite.test('TestCase-TBA: SearchReplace: Find single match, whole words: true', function (editor) {
       editor.setContent('a Ax');
       LegacyUnit.equal(1, editor.plugins.searchreplace.find('a', false, true));
+    });
+
+    suite.test('TestCase-TINY-4522: SearchReplace: Find special characters match', function (editor) {
+      editor.setContent('^^ ^^ ^^^^');
+      LegacyUnit.equal(4, editor.plugins.searchreplace.find('^^'));
+      editor.setContent('50$ 50$50$');
+      LegacyUnit.equal(3, editor.plugins.searchreplace.find('50$'));
+    });
+
+    suite.test('TestCase-TINY-4522: SearchReplace: Find special characters match, whole words: true', function (editor) {
+      editor.setContent('^^ ^^ ^^^^');
+      LegacyUnit.equal(2, editor.plugins.searchreplace.find('^^', false, true));
+      editor.setContent('50$ 50$50$');
+      LegacyUnit.equal(1, editor.plugins.searchreplace.find('50$', false, true));
+    });
+
+    suite.test('TestCase-TINY-4522: SearchReplace: Find word with punctuation, whole words: true', function (editor) {
+      editor.setContent('\'test\' "test" \u2018test\u2019 test: test; test! test. test? test,');
+      LegacyUnit.equal(9, editor.plugins.searchreplace.find('test', false, true));
+      LegacyUnit.equal(1, editor.plugins.searchreplace.find('test!', false, true));
     });
 
     suite.test('TestCase-TBA: SearchReplace: Find multiple matches', function (editor) {

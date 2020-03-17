@@ -20,6 +20,7 @@ export interface InlineViewDetail extends SingleSketchDetail {
   onHide: (component: AlloyComponent) => void;
   onEscape: Option<(component: AlloyComponent) => void>;
   getRelated: (component: AlloyComponent) => Option<AlloyComponent>;
+  isExtraPart: (component: AlloyComponent, target: Element) => boolean;
   lazySink: LazySink;
   eventOrder: Record<string, string[]>;
   fireDismissalEventInstead: Option<{
@@ -40,6 +41,7 @@ export interface InlineViewSpec extends SingleSketchSpec {
   onHide?: (component: AlloyComponent) => void;
   onEscape?: (component: AlloyComponent) => void;
   getRelated?: (component: AlloyComponent) => Option<AlloyComponent>;
+  isExtraPart?: (component: AlloyComponent, target: Element) => boolean;
   eventOrder?: Record<string, string[]>;
   fireDismissalEventInstead?: {
     event?: string

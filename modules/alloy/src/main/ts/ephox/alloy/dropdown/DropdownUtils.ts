@@ -228,10 +228,9 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
         Receiving.config({
           channels: {
             ...Dismissal.receivingChannel({
-              isExtraPart: Fun.constant(false)
+              isExtraPart: Fun.never
             }),
             ...Reposition.receivingChannel({
-              isExtraPart: Fun.constant(false),
               doReposition: doRepositionMenus
             })
           }

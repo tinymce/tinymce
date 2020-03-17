@@ -11,10 +11,10 @@ import { Option } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderModalBody } from './SilverDialogBody';
+import * as SilverDialogCommon from './SilverDialogCommon';
 import { SilverDialogEvents } from './SilverDialogEvents';
 import { renderModalFooter } from './SilverDialogFooter';
 import { getDialogApi } from './SilverDialogInstanceApi';
-import * as SilverDialogCommon from './SilverDialogCommon';
 
 const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra, backstage: UiFactoryBackstage) => {
   const header = SilverDialogCommon.getHeader(dialogInit.internalDialog.title, backstage);
@@ -31,7 +31,11 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverD
     buttons: storagedMenuButtons
   }, backstage);
 
-  const dialogEvents = SilverDialogEvents.initDialog(() => instanceApi, SilverDialogCommon.getEventExtras(() => dialog, extra));
+  const dialogEvents = SilverDialogEvents.initDialog(
+    () => instanceApi,
+    SilverDialogCommon.getEventExtras(() => dialog, extra),
+    backstage.shared.getSink
+  );
 
   const dialogSize = dialogInit.internalDialog.size !== 'normal'
     ? dialogInit.internalDialog.size === 'large'

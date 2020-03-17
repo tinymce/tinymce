@@ -200,11 +200,10 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
         Receiving.config({
           channels: {
             ...Dismissal.receivingChannel({
-              isExtraPart: Fun.constant(false),
+              isExtraPart: spec.isExtraPart,
               ...detail.fireDismissalEventInstead.map((fe) => ({ fireEventInstead: { event: fe.event }} as any)).getOr({ })
             }),
             ...Reposition.receivingChannel({
-              isExtraPart: Fun.constant(false),
               ...detail.fireRepositionEventInstead.map((fe) => ({ fireEventInstead: { event: fe.event }} as any)).getOr({ }),
               doReposition: reposition
             })
@@ -233,6 +232,7 @@ const InlineView: InlineViewSketcher = Sketcher.single<InlineViewSpec, InlineVie
       FieldSchema.defaulted('event', SystemEvents.repositionRequested())
     ]),
     FieldSchema.defaulted('getRelated', Option.none),
+    FieldSchema.defaulted('isExtraPart', Fun.never),
     FieldSchema.defaulted('eventOrder', Option.none)
   ],
   factory,
