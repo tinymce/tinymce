@@ -30,11 +30,15 @@ const cClose = Chain.fromChainsWith(Body.body(), [
 
 const sClose = Chain.asStep({}, [ cClose ]);
 
+const sWaitForOpen = (selector: string = '[role=dialog]') => UiFinder.sWaitForVisible('Wait for the dialog to open', Body.body(), selector);
+
 export {
   sOpen,
   sClose,
 
   cOpen,
   cOpenWithStore,
-  cClose
+  cClose,
+
+  sWaitForOpen
 };
