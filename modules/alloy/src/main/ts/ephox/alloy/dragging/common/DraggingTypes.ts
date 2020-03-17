@@ -28,89 +28,89 @@ export type SensorCoords = (x: number, y: number) => CoordAdt;
 export type OutputCoords = (x: Option<number>, y: Option<number>) => CoordAdt;
 
 export interface SnapConfig<E> {
-  sensor: () => CoordAdt;
-  range: () => Position;
-  output: () => CoordAdt<Option<number>>;
-  extra: () => Option<E>;
+  readonly sensor: CoordAdt;
+  readonly range: Position;
+  readonly output: CoordAdt<Option<number>>;
+  readonly extra: Option<E>;
 }
 
 export interface SnapConfigSpec<E> {
-  sensor: CoordAdt;
-  range: Position;
-  output: CoordAdt<Option<number>>;
-  extra?: E;
+  readonly sensor: CoordAdt;
+  readonly range: Position;
+  readonly output: CoordAdt<Option<number>>;
+  readonly extra?: E;
 }
 
 export interface SnapOutput<E> {
-  output: () => CoordAdt;
-  extra: () => Option<E>;
+  readonly output: CoordAdt;
+  readonly extra: Option<E>;
 }
 
 export interface SnapPin<E> {
-  coord: CoordAdt;
-  extra: Option<E>;
+  readonly coord: CoordAdt;
+  readonly extra: Option<E>;
 }
 
 export interface SnapsConfig<E> {
-  getSnapPoints: (comp: AlloyComponent) => Array<SnapConfig<E>>;
-  leftAttr: string;
-  topAttr: string;
-  onSensor: (component: AlloyComponent, extra: E) => void;
-  lazyViewport: (component: AlloyComponent) => Bounds;
-  mustSnap: boolean;
+  readonly getSnapPoints: (comp: AlloyComponent) => Array<SnapConfig<E>>;
+  readonly leftAttr: string;
+  readonly topAttr: string;
+  readonly onSensor: (component: AlloyComponent, extra: E) => void;
+  readonly lazyViewport: (component: AlloyComponent) => Bounds;
+  readonly mustSnap: boolean;
 }
 
 export interface SnapsConfigSpec<E> {
-  getSnapPoints: (comp: AlloyComponent) => Array<SnapConfig<E>>;
-  leftAttr: string;
-  topAttr: string;
-  onSensor?: (component: AlloyComponent, extra: E) => void;
-  lazyViewport?: (component: AlloyComponent) => Bounds;
-  mustSnap?: boolean;
+  readonly getSnapPoints: (comp: AlloyComponent) => Array<SnapConfig<E>>;
+  readonly leftAttr: string;
+  readonly topAttr: string;
+  readonly onSensor?: (component: AlloyComponent, extra: E) => void;
+  readonly lazyViewport?: (component: AlloyComponent) => Bounds;
+  readonly mustSnap?: boolean;
 }
 
 export interface DraggingConfig<E> {
-  getTarget: (comp: Element) => Element;
-  snaps: Option<SnapsConfig<E>>;
-  onDrop: (comp: AlloyComponent, target: Element) => void;
-  repositionTarget: boolean;
-  onDrag: (comp: AlloyComponent, target: Element, delta: Position) => void;
-  getBounds: () => Bounds;
-  blockerClass: string;
-  dragger: {
-    handlers: (dragConfig: DraggingConfig<E>, dragState: DraggingState) => AlloyEvents.AlloyEventRecord
+  readonly getTarget: (comp: Element) => Element;
+  readonly snaps: Option<SnapsConfig<E>>;
+  readonly onDrop: (comp: AlloyComponent, target: Element) => void;
+  readonly repositionTarget: boolean;
+  readonly onDrag: (comp: AlloyComponent, target: Element, delta: Position) => void;
+  readonly getBounds: () => Bounds;
+  readonly blockerClass: string;
+  readonly dragger: {
+    readonly handlers: (dragConfig: DraggingConfig<E>, dragState: DraggingState) => AlloyEvents.AlloyEventRecord
   };
 }
 
 export interface CommonDraggingConfigSpec<E> {
-  useFixed?: () => boolean;
-  onDrop?: (comp: AlloyComponent, target: Element) => void;
-  repositionTarget?: boolean;
-  onDrag?: (comp: AlloyComponent, target: Element, delta: Position) => void;
-  getTarget?: (elem: Element) => Element;
-  getBounds?: () => Bounds;
-  snaps?: SnapsConfigSpec<E>;
-  blockerClass: string;
+  readonly useFixed?: () => boolean;
+  readonly onDrop?: (comp: AlloyComponent, target: Element) => void;
+  readonly repositionTarget?: boolean;
+  readonly onDrag?: (comp: AlloyComponent, target: Element, delta: Position) => void;
+  readonly getTarget?: (elem: Element) => Element;
+  readonly getBounds?: () => Bounds;
+  readonly snaps?: SnapsConfigSpec<E>;
+  readonly blockerClass: string;
 }
 
 export type DraggingConfigSpec<E> = MouseDraggingConfigSpec<E> | TouchDraggingConfigSpec<E> | MouseOrTouchDraggingConfigSpec<E>;
 
 export interface DragModeDeltas<T> {
-  getData: (event: EventArgs) => Option<T>;
-  getDelta: (old: T, nu: T) => T;
+  readonly getData: (event: EventArgs) => Option<T>;
+  readonly getDelta: (old: T, nu: T) => T;
 }
 
 export interface DragStartData {
-  width: number;
-  height: number;
-  bounds: Bounds;
+  readonly width: number;
+  readonly height: number;
+  readonly bounds: Bounds;
 }
 
 export interface BaseDraggingState<T> extends BehaviourState {
-  update: (mode: DragModeDeltas<T>, dragEvent: EventArgs) => Option<T>;
-  setStartData: (data: DragStartData) => void;
-  getStartData: () => Option<DragStartData>;
-  reset: () => void;
+  readonly update: (mode: DragModeDeltas<T>, dragEvent: EventArgs) => Option<T>;
+  readonly setStartData: (data: DragStartData) => void;
+  readonly getStartData: () => Option<DragStartData>;
+  readonly reset: () => void;
 }
 
 export interface DraggingState extends BaseDraggingState<Position> { }
